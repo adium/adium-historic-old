@@ -1106,6 +1106,7 @@
 				F5A3237004A7A9EC01888466,
 				F5A3238104A7C61201888466,
 				11C157D304A88D33008E0C76,
+				6E97F13604A94C1800472FFF,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1184,6 +1185,7 @@
 				11B96D82049AF87D00C6304D,
 				F5A3236F04A7A9EC01888466,
 				11C157C404A88D33008E0C76,
+				6E97F13504A94C1800472FFF,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -1294,6 +1296,7 @@
 				4B66890004A60CD900A8010A,
 				F5A3237404A7AA6401888466,
 				11C157E104A8955B008E0C76,
+				6E97F13704A94C1800472FFF,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -2432,6 +2435,7 @@
 				4B81631203D1C24E00A8010A,
 				4BE8E5390483B59800A8010A,
 				F50F253F03B042BC01A80202,
+				6E97F12F04A94C0100472FFF,
 				4B71CD4E03CBCA2600A8010A,
 			);
 			isa = PBXGroup;
@@ -3595,6 +3599,7 @@
 				11B96D96049AF8E100C6304D,
 				F5A3238B04A7C61801888466,
 				11C157E004A891FE008E0C76,
+				6E97F13804A94C1800472FFF,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9474,6 +9479,239 @@
 //6E2
 //6E3
 //6E4
+		6E97F12F04A94C0100472FFF = {
+			children = (
+				6E97F13D04A94C5400472FFF,
+				6E97F13E04A94C5400472FFF,
+				6E97F13F04A94C5400472FFF,
+				6E97F14004A94C5400472FFF,
+				6E97F13B04A94C5400472FFF,
+				6E97F13C04A94C5400472FFF,
+			);
+			isa = PBXGroup;
+			name = "Idle Message";
+			refType = 4;
+		};
+		6E97F13004A94C1800472FFF = {
+			buildActionMask = 2147483647;
+			files = (
+				6E97F14304A94C5400472FFF,
+				6E97F14504A94C5400472FFF,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6E97F13104A94C1800472FFF = {
+			buildActionMask = 2147483647;
+			files = (
+				6E97F14104A94C5400472FFF,
+				6E97F14204A94C5400472FFF,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6E97F13204A94C1800472FFF = {
+			buildActionMask = 2147483647;
+			files = (
+				6E97F14404A94C5400472FFF,
+				6E97F14604A94C5400472FFF,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6E97F13304A94C1800472FFF = {
+			buildActionMask = 2147483647;
+			files = (
+				6E97F14704A94C6600472FFF,
+				6E97F14804A94C6800472FFF,
+				6E97F14904A94C6900472FFF,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6E97F13404A94C1800472FFF = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6E97F13504A94C1800472FFF = {
+			buildPhases = (
+				6E97F13004A94C1800472FFF,
+				6E97F13104A94C1800472FFF,
+				6E97F13204A94C1800472FFF,
+				6E97F13304A94C1800472FFF,
+				6E97F13404A94C1800472FFF,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Idle Message";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				6E97F13904A94C3E00472FFF,
+				6E97F13A04A94C3E00472FFF,
+			);
+			isa = PBXBundleTarget;
+			name = "Idle Message";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Idle Message";
+			productReference = 6E97F13604A94C1800472FFF;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>IdleMessagePlugin</string>
+</dict>
+</plist>
+";
+		};
+		6E97F13604A94C1800472FFF = {
+			isa = PBXBundleReference;
+			path = "Idle Message.AdiumPlugin";
+			refType = 3;
+		};
+		6E97F13704A94C1800472FFF = {
+			isa = PBXTargetDependency;
+			target = 6E97F13504A94C1800472FFF;
+		};
+		6E97F13804A94C1800472FFF = {
+			fileRef = 6E97F13604A94C1800472FFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E97F13904A94C3E00472FFF = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		6E97F13A04A94C3E00472FFF = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		6E97F13B04A94C5400472FFF = {
+			isa = PBXFileReference;
+			name = IdleMessagePrefs.nib;
+			path = "Plugins/Idle Message/IdleMessagePrefs.nib";
+			refType = 4;
+		};
+		6E97F13C04A94C5400472FFF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = IdleMessageDefaultPrefs.plist;
+			path = "Plugins/Idle Message/IdleMessageDefaultPrefs.plist";
+			refType = 4;
+		};
+		6E97F13D04A94C5400472FFF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = IdleMessagePlugin.h;
+			path = "Plugins/Idle Message/IdleMessagePlugin.h";
+			refType = 4;
+		};
+		6E97F13E04A94C5400472FFF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = IdleMessagePlugin.m;
+			path = "Plugins/Idle Message/IdleMessagePlugin.m";
+			refType = 4;
+		};
+		6E97F13F04A94C5400472FFF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = IdleMessagePreferences.h;
+			path = "Plugins/Idle Message/IdleMessagePreferences.h";
+			refType = 4;
+		};
+		6E97F14004A94C5400472FFF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = IdleMessagePreferences.m;
+			path = "Plugins/Idle Message/IdleMessagePreferences.m";
+			refType = 4;
+		};
+		6E97F14104A94C5400472FFF = {
+			fileRef = 6E97F13B04A94C5400472FFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E97F14204A94C5400472FFF = {
+			fileRef = 6E97F13C04A94C5400472FFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E97F14304A94C5400472FFF = {
+			fileRef = 6E97F13D04A94C5400472FFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E97F14404A94C5400472FFF = {
+			fileRef = 6E97F13E04A94C5400472FFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E97F14504A94C5400472FFF = {
+			fileRef = 6E97F13F04A94C5400472FFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E97F14604A94C5400472FFF = {
+			fileRef = 6E97F14004A94C5400472FFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E97F14704A94C6600472FFF = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E97F14804A94C6800472FFF = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E97F14904A94C6900472FFF = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		6ECE6C2004749C9600CAEAD0 = {
 			isa = PBXFileReference;
 			name = AwayStatusWindow.nib;
