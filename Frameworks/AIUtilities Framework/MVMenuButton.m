@@ -29,14 +29,14 @@
 //
 - (id)copyWithZone:(NSZone*)zone
 {
-	MVMenuButton	*newButton = [[MVMenuButton alloc] initWithFrame:[self frame]];
+	MVMenuButton	*newButton = [[[self class] alloc] initWithFrame:[self frame]];
 
 	//Copy our config
 	[newButton setControlSize:controlSize];
 	[newButton setImage:bigImage];
 	[newButton setSmallImage:smallImage];
 	[newButton setDrawsArrow:drawsArrow];
-	
+
 	//Copy super's config
 	[newButton setMenu:[[[self menu] copy] autorelease]];
 	
