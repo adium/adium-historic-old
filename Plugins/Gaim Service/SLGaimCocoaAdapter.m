@@ -149,9 +149,7 @@ static AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 		theContact = [accountLookup(buddy->account) mainThreadContactWithUID:[NSString stringWithUTF8String:buddy->name]];
 		
 		//Associate the handle with ui_data and the buddy with our statusDictionary
-//		buddy->node.ui_data = [theContact retain];
-		buddy->node.ui_data = theContact;
-//		[contactDict setObject:[NSValue valueWithPointer:buddy] forKey:[theContact internalObjectID]];
+		buddy->node.ui_data = [theContact retain];
 	}
 	
 	return theContact;
@@ -524,7 +522,7 @@ static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
 												withObject:contactLookupFromBuddy(buddy)];
 		
 		//Clear the ui_data
-        buddy->node.ui_data = NULL;
+		[(id)buddy->node.ui_data release]; buddy->node.ui_data = NULL;
     }
 }
 
