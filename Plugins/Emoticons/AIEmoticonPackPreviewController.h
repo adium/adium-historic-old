@@ -14,18 +14,19 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-@class AIEmoticonPackPreviewView, AIEmoticonPreferences, AIEmoticonsPlugin, AIEmoticonPack;
+#import <Adium/AIObject.h>
 
-@interface AIEmoticonPackPreviewController : NSObject {
+@class AIEmoticonPackPreviewView, AIEmoticonPreferences, AIEmoticonPack;
+
+@interface AIEmoticonPackPreviewController : AIObject {
 	IBOutlet	NSButton					*checkBox_enablePack;
 	IBOutlet	AIEmoticonPackPreviewView	*previewView;
 
 	AIEmoticonPack			*emoticonPack;
-	AIEmoticonsPlugin		*plugin;
 	AIEmoticonPreferences	*preferences;
 }
 
-+ (id)previewControllerForPack:(AIEmoticonPack *)inPack withPlugin:(AIEmoticonsPlugin *)inPlugin preferences:(AIEmoticonPreferences *)inPreferences;
++ (id)previewControllerForPack:(AIEmoticonPack *)inPack preferences:(AIEmoticonPreferences *)inPreferences;
 - (IBAction)togglePack:(id)sender;
 
 - (NSView *)view;

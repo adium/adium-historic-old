@@ -21,21 +21,20 @@
 #import "AIEmoticonPreferences.h"
 
 @interface AIEmoticonPackPreviewController (PRIVATE)
-- (id)initForPack:(AIEmoticonPack *)inPack withPlugin:(AIEmoticonsPlugin *)inPlugin preferences:(AIEmoticonPreferences *)inPreferences;
+- (id)initForPack:(AIEmoticonPack *)inPack preferences:(AIEmoticonPreferences *)inPreferences;
 @end
 
 @implementation AIEmoticonPackPreviewController
 
-+ (id)previewControllerForPack:(AIEmoticonPack *)inPack withPlugin:(AIEmoticonsPlugin *)inPlugin preferences:(AIEmoticonPreferences *)inPreferences
++ (id)previewControllerForPack:(AIEmoticonPack *)inPack preferences:(AIEmoticonPreferences *)inPreferences
 {
-	return([[[self alloc] initForPack:inPack withPlugin:inPlugin preferences:inPreferences] autorelease]);
+	return([[[self alloc] initForPack:inPack preferences:inPreferences] autorelease]);
 }
 
-- (id)initForPack:(AIEmoticonPack *)inPack withPlugin:(AIEmoticonsPlugin *)inPlugin preferences:(AIEmoticonPreferences *)inPreferences
+- (id)initForPack:(AIEmoticonPack *)inPack preferences:(AIEmoticonPreferences *)inPreferences
 {
 	if(self = [super init]){
 		emoticonPack = [inPack retain];
-		plugin = [inPlugin retain];
 		preferences = [inPreferences retain];
 
 		[NSBundle loadNibNamed:@"EmoticonPackPreview" owner:self];
@@ -47,16 +46,18 @@
 - (void)dealloc
 {
 	[emoticonPack release];
-	[plugin release];
 	[preferences release];
-	[previewView release];
+	
+	/* It seems like we should be releasing previewView here.  Doing so leads to a double release when the view is
+	 * removed its superview, though.. no idea what's going wrong, but it's not a leak... it's just weird. -eds */
+	//[previewView release];
 
 	[super dealloc];
 }
 
 - (IBAction)togglePack:(id)sender
 {
-	[plugin setEmoticonPack:emoticonPack enabled:![emoticonPack isEnabled]];
+	[[adium emoticonController] setEmoticonPack:emoticonPack enabled:![emoticonPack isEnabled]];
 	[preferences toggledPackController:self];
 }
 
