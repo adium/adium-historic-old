@@ -110,8 +110,6 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 
 		//Theme
 		if(notification == nil || !key || [key isEqualToString:KEY_LIST_THEME_NAME]){
-			NSLog(@"%@",[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME
-																 group:PREF_GROUP_CONTACT_LIST]);
 			[AISCLViewPlugin applySetWithName:[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME
 			 																		   group:PREF_GROUP_CONTACT_LIST]
 									extension:LIST_THEME_EXTENSION
@@ -121,8 +119,6 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 		
 		//Layout
 		if(notification == nil || !key || [key isEqualToString:KEY_LIST_LAYOUT_NAME]){
-			NSLog(@"%@",[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME
-																 group:PREF_GROUP_CONTACT_LIST]);
 			[AISCLViewPlugin applySetWithName:[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME
 			 																		   group:PREF_GROUP_CONTACT_LIST]
 									extension:LIST_LAYOUT_EXTENSION
