@@ -32,7 +32,7 @@
 #define VIEW_CONTACTS_LOGS  		AILocalizedString(@"View Contact's Logs",nil)
 #define VIEW_LOGS	    			AILocalizedString(@"View Logs",nil)
 
-#define	CURRENT_LOG_VERSION			1 		//Version of the log index.  Increase this number to reset everyones index.
+#define	CURRENT_LOG_VERSION			2 		//Version of the log index.  Increase this number to reset everyones index.
 
 @interface AILoggerPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
