@@ -23,9 +23,9 @@
         NSArray *keyAndValue = [obj componentsSeparatedByString:@"="];
 
         if(([keyAndValue count] >= 2) &&
-		   ([[keyAndValue objectAtIndex:0] isEqualToString:key]){
-			   return [keyAndValue objectAtIndex:1];
-		   }
+		   ([[keyAndValue objectAtIndex:0] isEqualToString:key])){
+			return [keyAndValue objectAtIndex:1];
+		}
     }
 	
 	return nil;
