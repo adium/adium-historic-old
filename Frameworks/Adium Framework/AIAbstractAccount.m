@@ -23,6 +23,7 @@
 #import "AIPreferenceController.h"
 #import "AIService.h"
 #import "AIStatus.h"
+#import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AISleepNotification.h>
 #import <AIUtilities/AIStringAdditions.h>
@@ -975,5 +976,20 @@
 	}
 }
 
+/*!
+ * @brief Set display name
+ *
+ * Set the display name which is used for this account locally (and remotely if supported by the protocol)
+ */
+- (void)setDisplayName:(NSString *)displayName
+{
+	if([displayName length] == 0) displayName = nil; 
+	
+	[self setPreference:(displayName ?
+						 [[NSAttributedString stringWithString:displayName] dataRepresentation] :
+						 nil)
+				 forKey:@"FullNameAttr"
+				  group:GROUP_ACCOUNT_STATUS];
+}	
 
 @end
