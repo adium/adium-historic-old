@@ -7,7 +7,7 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {showAboutBox = id; }; 
+            ACTIONS = {confirmQuit = id; showAboutBox = id; }; 
             CLASS = AIAdium; 
             LANGUAGE = ObjC; 
             OUTLETS = {

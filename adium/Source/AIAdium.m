@@ -171,5 +171,13 @@
         forKey:@"Version"]];
 }
 
+- (IBAction)confirmQuit:(id)sender
+{
+    if(NSRunCriticalAlertPanel(@"Really Quit Adium?", @"Are you sure you want to quit Adium?", @"OK", @"Cancel", nil) == NSAlertDefaultReturn)
+    {
+        [NSApp terminate:nil];
+    }
+}
+
 @end
 
