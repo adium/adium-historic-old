@@ -38,6 +38,12 @@
 	[self _updateGrid];
 }
 
+- (void)removeAllViews
+{
+	[self removeAllSubviews];
+	[self _updateGrid];
+}
+
 //Set the frame of our view
 - (void)setFrame:(NSRect)frameRect
 {

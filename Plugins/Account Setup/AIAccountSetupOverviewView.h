@@ -22,5 +22,7 @@
 }
 
 - (IBAction)toggleInactiveServices:(id)sender;
+- (void)newAccountOnService:(AIService *)service;
+- (void)editExistingAccount:(AIAccount *)account;
 
 @end

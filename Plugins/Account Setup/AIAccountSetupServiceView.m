@@ -24,9 +24,11 @@
 @implementation AIAccountSetupServiceView
 
 //
-- (id)initWithService:(AIService *)inService
+- (id)initWithService:(AIService *)inService delegate:(id)inDelegate
 {
 	[super init];
+
+	delegate = inDelegate;
 	
 	//Cache a bunch of our drawing information
 	service = [inService retain];
@@ -42,28 +44,35 @@
 //
 - (void)dealloc
 {
+	[self stopTrackingCursor];
 	[service release];
 	[serviceIcon release];
 	
 	[super dealloc];
 }
 
-//
-- (void)resetCursorRects
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow
 {
-	if(trackingTag){
-		[self removeTrackingRect:trackingTag];
-		trackingTag = 0;
+	NSLog(@"moving to %@",newWindow);
+	if(!newWindow){
+		[self stopTrackingCursor];
 	}
-	
+}
+
+- (void)startTrackingCursor
+{
 	if([self window]){
+		NSLog(@"%@ add",self);
+		NSTrackingRectTag	trackingTag;
+		
+		trackingRects = [[NSMutableArray alloc] init];
 		
 		if([accounts count]){
 			NSEnumerator	*enumerator = [accounts objectEnumerator];
 			AIAccount		*account;
 			
 			while(account = [enumerator nextObject]){
-
+				
 				NSRect	rect = NSMakeRect(serviceIconSize.width + SERVICE_ICON_NAME_PADDING,
 										  [self frame].size.height - (serviceNameSize.height + (accountNameHeight + ACCOUNT_NAME_SPACING) * ([accounts indexOfObject:account]+1)),
 										  [self frame].size.width - (serviceIconSize.width + SERVICE_ICON_NAME_PADDING),
@@ -74,10 +83,7 @@
 											  owner:self
 										   userData:account
 									   assumeInside:NO];
-				
-				
-				
-				
+				[trackingRects addObject:[NSNumber numberWithInt:trackingTag]];
 			}
 			
 			
@@ -86,8 +92,33 @@
 										  owner:self
 									   userData:nil
 								   assumeInside:NO];
+			[trackingRects addObject:[NSNumber numberWithInt:trackingTag]];
 		}
 	}
+	
+}
+
+- (void)stopTrackingCursor
+{
+	if([trackingRects count]){
+		NSLog(@"%@ remove",self);
+		NSEnumerator	*enumerator = [trackingRects objectEnumerator];
+		NSNumber		*trackingTag;
+		
+		while(trackingTag = [enumerator nextObject]){
+			[self removeTrackingRect:(NSTrackingRectTag)[trackingTag intValue]];
+		}
+		
+		[trackingRects release];
+		trackingRects = nil;
+	}
+}
+
+//
+- (void)resetCursorRects
+{
+	[self stopTrackingCursor];
+	[self startTrackingCursor];
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent
@@ -104,26 +135,28 @@
 	[self setNeedsDisplay:YES];
 }
 
-
-
-
 - (void)mouseDown:(NSEvent *)theEvent
 {
-
+	if(hoveredAccount){
+		[delegate editExistingAccount:hoveredAccount];
+	}else{
+		[delegate newAccountOnService:service];
+	}
 }
 
 
 
 
 
-
-
-- (void)addAccounts:(NSArray *)array
+- (void)setAccounts:(NSArray *)array
 {
-	accounts = [array retain];
-	
-	[self setFrameSize:NSMakeSize([self frame].size.width, 32 + accountNameHeight * [accounts count])];
+	if(accounts != array){
+		[accounts release];
+		accounts = [array retain];
+		[self setFrameSize:NSMakeSize([self frame].size.width, 32 + accountNameHeight * [accounts count])];
+	}
 }
+
 
 //Service icon size
 - (void)setServiceIconSize:(NSSize)inSize

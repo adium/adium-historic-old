@@ -1,6 +1,30 @@
 {
     IBClasses = (
         {
+            ACTIONS = {okay = id; }; 
+            CLASS = AIAccountSetupEditAccountView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_autoConnect" = NSButton; 
+                "button_register" = NSButton; 
+                "imageView_userIcon" = ESImageViewWithImagePicker; 
+                "image_serviceIcon" = NSImageView; 
+                "tabView_auxiliary" = NSTabView; 
+                "textField_accountName" = NSTextField; 
+                "textField_serviceName" = NSTextField; 
+                "textField_userNameLabel" = NSTextField; 
+                "view_accountDetails" = NSView; 
+            }; 
+            SUPERCLASS = AIAccountSetupView; 
+        }, 
+        {
+            ACTIONS = {cancel = id; }; 
+            CLASS = AIAccountSetupNewAccountView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"image_serviceIcon" = NSImageView; "textField_serviceName" = NSTextField; }; 
+            SUPERCLASS = AIAccountSetupView; 
+        }, 
+        {
             ACTIONS = {toggleInactiveServices = id; }; 
             CLASS = AIAccountSetupOverviewView; 
             LANGUAGE = ObjC; 
@@ -23,7 +47,11 @@
         {
             CLASS = AIAccountSetupWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"view_overview" = NSView; }; 
+            OUTLETS = {
+                "view_editAccount" = AIAccountSetupView; 
+                "view_newAccount" = AIAccountSetupView; 
+                "view_overview" = AIAccountSetupView; 
+            }; 
             SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
