@@ -713,7 +713,6 @@
 //Ignoring the result of this can cause all sorts of nastiness
 - (DCMessageViewType)preferredMessageView
 {
-
 	DCMessageViewType viewToUse = DCStandardMessageView;
 
 	if(USE_WEBKIT_PLUGIN && [NSApp isOnPantherOrBetter] && [NSApp isWebKitAvailable] ) {
