@@ -287,13 +287,13 @@
 }
 
 //
-- (void)windowDidBecomeMain:(NSNotification *)notification
+- (void)windowDidBecomeKey:(NSNotification *)notification
 {
     [interface containerDidBecomeActive:(NSTabViewItem <AIInterfaceContainer> *)[tabView_messages selectedTabViewItem]];
 }
 
 //
-- (void)windowDidResignMain:(NSNotification *)notification
+- (void)windowDidResignKey:(NSNotification *)notification
 {
     [interface containerDidBecomeActive:nil];
 }
