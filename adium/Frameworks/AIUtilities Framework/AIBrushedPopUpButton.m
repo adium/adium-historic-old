@@ -135,7 +135,10 @@
     int 		capWidth, capHeight;
     int			centeredLabelY;
     BOOL		highlighted = [[self cell] isHighlighted];
-    
+
+    //Disable sub-pixel rendering.  It looks horrible with embossed text
+    CGContextSetShouldSmoothFonts([[NSGraphicsContext currentContext] graphicsPort], 0);
+
     //Get the font and displayed string
     font = [self font];
     if(popUpTitle){

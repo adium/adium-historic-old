@@ -55,7 +55,7 @@
 
     //Set our contents
     [self setView:[messageView view]];
-    
+
     return(self);
 }
 
@@ -199,6 +199,9 @@
     NSColor			*backgroundColor = nil;
     BOOL 			selected;
 
+    //Disable sub-pixel rendering.  It looks horrible with embossed text
+    CGContextSetShouldSmoothFonts([[NSGraphicsContext currentContext] graphicsPort], 0);
+
     //
     selected = ([[self tabView] selectedTabViewItem] == self);
     backgroundColor = [[listObject displayArrayForKey:@"Label Color"] averageColor];
@@ -211,7 +214,7 @@
 
     textRect.size.width -= LABEL_SIDE_PAD*2;
     textRect.origin.x += LABEL_SIDE_PAD;
-    
+
     //Background
     if(backgroundColor && !selected){
         backgroundColor = [backgroundColor colorUsingColorSpaceName:NSDeviceRGBColorSpace];
