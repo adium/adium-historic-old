@@ -60,6 +60,7 @@
 - (void)removeAllSubviews:(NSView *)view;
 - (void)configureWithSubview:(NSView *)view_inView;
 - (void)oneTimeEvent:(NSButton *)inButton;
+- (void)onlyWhileActive:(NSButton *)inButton;
 - (NSMenu *)actionListMenu;
 - (NSMenu *)eventMenu;
 - (BOOL)hasAlerts;
@@ -71,7 +72,6 @@
 - (void)setOffset:(int)inOffset;
 - (void)changeOffsetBy:(int)changeOffset;
 - (void)replaceDictAtIndex:(int)inRow withDict:(NSDictionary *)newDict;
-- (void)executeAppropriateAction:(NSString *)action inMenu:(NSMenu *)actionMenu;
 - (AIListObject *)activeObject;
 - (void)reloadFromPrefs;
 

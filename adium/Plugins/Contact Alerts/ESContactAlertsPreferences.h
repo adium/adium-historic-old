@@ -8,7 +8,6 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 #import "ESContactAlerts.h"
-//#import "ESContactAlertsPrefsTableView.h"
 #import "ESContactAlertsActionColumn.h"
 
 @class AIAdium, AIAlternatingRowTableView, AIListContact, ESContactAlertsPlugin;
@@ -19,6 +18,7 @@
     IBOutlet	ESContactAlertsActionColumn	*actionColumn;
     IBOutlet	NSButton			*button_delete;
     IBOutlet	NSButton			*button_oneTime;
+    IBOutlet	NSButton			*button_active;
     IBOutlet	NSPopUpButton			*popUp_contactList;
     IBOutlet	NSView				*view_main;
 
@@ -35,7 +35,8 @@
 + (ESContactAlertsPreferences *)contactAlertsPreferencesWithOwner:(id)inOwner;
 
 - (IBAction)deleteEventAction:(id)sender;
+- (IBAction)addedEvent:(id)sender;
+- (IBAction)anInstanceChanged:(id)sender;
 - (IBAction)oneTimeEvent:(id)sender;
-- (IBAction)addedEvent:(id)sendert;
--(IBAction)anInstanceChanged:(id)sender;
+- (IBAction)onlyWhileActive:(id)sender;
 @end

@@ -132,11 +132,20 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
     //Update the outline view
     [tableView_actions reloadData];
+
+
+//    [[[tableView_actions tableColumns] objectAtIndex:1] sizeToFit];
+//    [[[tableView_actions tableColumns] objectAtIndex:0] sizeToFit];
 }
 
 -(IBAction)oneTimeEvent:(id)sender
 {
     [instance oneTimeEvent:button_oneTime];
+}
+
+-(IBAction)onlyWhileActive:(id)sender
+{
+    [instance oneTimeEvent:button_active];
 }
 
 -(IBAction)deleteEventAction:(id)sender

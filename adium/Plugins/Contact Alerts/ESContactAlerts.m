@@ -94,7 +94,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     //remove observer
     [[owner notificationCenter] removeObserver:self name:One_Time_Event_Fired object:activeContactObject];
     
-    
     [owner release];
     [tableView_actions release];
     [activeContactObject release];
@@ -142,11 +141,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 {
     [eventActionArray replaceObjectAtIndex:(inRow-offset) withObject:newDict];
     [self saveEventActionArray];
-}
-
--(void)executeAppropriateAction:(NSString *)action inMenu:(NSMenu *)actionMenu
-{
-    [actionMenu performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
 }
 
 -(void)setOffset:(int)inOffset
@@ -847,8 +841,15 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 
 - (void)oneTimeEvent:(NSButton *)inButton
 {
+    [selectedActionDict setObject:[NSNumber numberWithInt:[inButton state]] forKey:KEY_EVENT_DELETE];
+    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
 
-   [selectedActionDict setObject:[NSNumber numberWithInt:[inButton state]] forKey:KEY_EVENT_DELETE];
+    [self saveEventActionArray];
+}
+
+- (void)onlyWhileActive:(NSButton *)inButton
+{
+    [selectedActionDict setObject:[NSNumber numberWithInt:[inButton state]] forKey:KEY_EVENT_ACTIVE];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
 
     [self saveEventActionArray];

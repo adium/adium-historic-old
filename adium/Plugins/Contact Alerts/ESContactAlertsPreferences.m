@@ -102,12 +102,16 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [tableView_actions setTarget:self];
     [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
     [tableView_actions setDataSource:self];
-    
+
     [button_delete setEnabled:NO];
     [button_oneTime setEnabled:NO];
 
     //Update the outline view
     [tableView_actions reloadData];
+    
+//    [[[tableView_actions tableColumns] objectAtIndex:2] sizeToFit];
+//    [[[tableView_actions tableColumns] objectAtIndex:1] sizeToFit];
+//    [[[tableView_actions tableColumns] objectAtIndex:0] sizeToFit];
     
     if ([prefAlertsArray count]) //some alerts do exist
     {
@@ -149,6 +153,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 {
     int offset = 0;
     int arrayCounter;
+    int thisInstanceCount;
     NSMutableArray *contactArray =  [[owner contactController] allContactsInGroup:nil subgroups:YES];
     [contactArray sortUsingFunction:alphabeticalSort context:nil];
     NSEnumerator 	*enumerator = 	[contactArray objectEnumerator];
@@ -158,18 +163,21 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [prefAlertsArray retain];
 
     AIListContact * contact;
+    NSLog(@"begin loading instances");
     while (contact = [enumerator nextObject])
     {
         ESContactAlerts * thisInstance = [[[ESContactAlerts alloc] initForObject:contact withDetailsView:view_main withTable:tableView_actions withPrefView:view_prefView owner:owner] autorelease];
-        [thisInstance setOffset:offset];
-
-        for (arrayCounter=0 ; arrayCounter<[thisInstance count] ; arrayCounter++)
+        if (thisInstanceCount = [thisInstance count])
         {
-            [prefAlertsArray addObject:thisInstance];
+            [thisInstance setOffset:offset];
+            for (arrayCounter=0 ; arrayCounter < thisInstanceCount ; arrayCounter++)
+            {
+                [prefAlertsArray addObject:thisInstance];
+            }
+            offset += [thisInstance count];
         }
-        offset += [thisInstance count];
     }
-
+    NSLog(@"instances done");
     [actionColumn setPrefAlertsArray:prefAlertsArray];
 }
 
@@ -185,16 +193,30 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [instance oneTimeEvent:button_oneTime];
 }
 
+-(IBAction)onlyWhileActive:(id)sender
+{
+    [instance oneTimeEvent:button_active];
+}
+
 -(IBAction)deleteEventAction:(id)sender
 {
     if ([tableView_actions selectedRow] != -1) 
     {
-    int index = [prefAlertsArray indexOfObject:instance];
-    
+        AIListObject *activeObject = [instance activeObject]; //store it now so we'll be okay if deletion releases the instance
+
+        int index = [prefAlertsArray indexOfObject:instance];
+
+    [instance deleteEventAction:nil]; //delete the event from the instance
+        int count = [instance count]; //store new count now
+        
+    [[owner notificationCenter] postNotificationName:Pref_Changed_Alerts
+                                              object:activeObject
+                                            userInfo:nil]; //notify that the change occured
+
     [prefAlertsArray removeObjectAtIndex:index]; //take one instance for this contact out of our array
     [actionColumn setPrefAlertsArray:prefAlertsArray];
     
-    index += [instance count] - 1;
+    index += count;
     NSRange theRange;
 
     theRange.length = [prefAlertsArray count] - index;
@@ -213,12 +235,9 @@ int alphabeticalSort(id objectA, id objectB, void *context);
             [thisInstance changeOffsetBy:-1]; //tell each instance it has one less offset
         }
     }
-    [instance deleteEventAction:nil]; //delete the event from the instance
     [self tableViewSelectionDidChange:nil];
-    
-    [[owner notificationCenter] postNotificationName:Pref_Changed_Alerts
-                                              object:[instance activeObject]
-                                            userInfo:nil];
+
+
     }
 }
 

@@ -97,9 +97,8 @@
             BOOL success = YES;
 
             if ([action compare:@"Sound"] == 0) {
-                NSString	*soundPath = [actionDict objectForKey:KEY_EVENT_PATH];
-                if(soundPath != nil && [soundPath length] != 0) {
-                    [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
+                if(details != nil && [details length] != 0) {
+                    [[owner soundController] playSoundAtPath:details]; //Play the sound
                 }
                 else
                     success = NO;
