@@ -184,9 +184,14 @@
 			[savedAccountsToConnect addObject:[account internalObjectID]];
 		}
 		
-		//Store the current status state for use on next launch
-		AIStatus	*currentStatus = [account statusState];
-		[account setPreference:(currentStatus ?
+		/* Store the current status state for use on next launch.
+		 *
+		 * We use the statusObjectForKey:@"StatusState" accessor rather than [account statusState]
+		 * because we don't want anything besides the account's actual status state.  That is, we don't
+		 * want the default available state if the account doesn't have a state yet, and we want the
+		 * real last-state-which-was-set (not the offline one) if the account is offline. */
+		AIStatus	*currentStatus = [account statusObjectForKey:@"StatusState"];
+		[account setPreference:((currentStatus && (currentStatus != offlineStatusState)) ?
 								[NSKeyedArchiver archivedDataWithRootObject:currentStatus] :
 								nil)
 						forKey:@"LastStatus"
