@@ -1179,6 +1179,7 @@
 				4BF715A70503ABB300A8010A,
 				F50A326B03B579BD01A8010A,
 				4B40E1CA03DB5B7E00A8010A,
+				9EA6430D053E6BFD00415B25,
 			);
 			buildSettings = {
 				DEBUGGING_SYMBOLS = NO;
@@ -1375,7 +1376,6 @@
 				4B0AABB305228F9700A8010A,
 				4B0AABB405228F9700A8010A,
 				4B0AABB505228F9700A8010A,
-				BF7BF5F0052BA13000000202,
 				D3B4A91F052DD87700A8010B,
 				D3D3D474052E5B6F00A8010B,
 				D3DA2E3B052E657600A8010B,
@@ -5036,6 +5036,7 @@
 				4B40E1DA03DB5B9600A8010A,
 				4B5B152B0493BFB100A8010A,
 				4B55411E044DF01600A8010A,
+				BF7BF5F0052BA13000000202,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14089,6 +14090,39 @@
 			settings = {
 			};
 		};
+		9EA6430D053E6BFD00415B25 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			generatedFileNames = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			neededFileNames = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "buildnum=`./Other/buildnum`\nbuilddate=`date +%m/%d/%y`\necho $buildnum \"|\" $builddate > build/Adium.app/Contents/Resources/buildnum\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
+		};
+		9EA6430E053E7C9E00415B25 = {
+			isa = PBXExecutableFileReference;
+			path = buildnum;
+			refType = 4;
+		};
+		9EA6430F053E7CAD00415B25 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = buildnum.c;
+			refType = 4;
+		};
+		9EA64310053E7CB400415B25 = {
+			children = (
+				9EA6430F053E7CAD00415B25,
+				9EA6430E053E7C9E00415B25,
+			);
+			isa = PBXGroup;
+			name = buildnum;
+			refType = 4;
+		};
 		9EA81D61044A611A00415B22 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -14143,6 +14177,7 @@
 		};
 		9EB3C52204F94D96001D1F74 = {
 			children = (
+				9EA64310053E7CB400415B25,
 				F59DB6AD033EB74801A8010A,
 				9EB3C52304F94DB7001D1F74,
 			);

@@ -42,6 +42,19 @@ LNAboutBoxController *sharedInstance = nil;
 
     avatarArray = [[NSMutableArray alloc] init];
     
+    buildDate = @"-1";
+    buildNumber = @"-1";
+    char *path, date[256], num[256];
+    if(path = (char *)[[[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil] cString])
+    {
+        FILE *f = fopen(path, "r");
+        fscanf(f, "%s | %s", &num, &date);
+        if(*num)
+            buildNumber = [[NSString stringWithFormat:@"Build Number: %s", num] retain];
+        if(*date)
+            buildDate = [[NSString stringWithFormat:@"Build Date: %s", date] retain];
+    }
+    
     return(self);
 }
 
@@ -49,7 +62,11 @@ LNAboutBoxController *sharedInstance = nil;
 - (void)dealloc
 {
     [owner release];
-
+    
+    [avatarArray release];
+    [buildNumber release];
+    [buildDate release];
+    
     [super dealloc];
 }
 
@@ -92,8 +109,7 @@ LNAboutBoxController *sharedInstance = nil;
     [[linkTextView_siteLink textStorage] setAttributedString:siteLink];
     [linkTextView_siteLink resetCursorRects];
 
-    [textField_buildDate setStringValue:[NSString stringWithFormat:@"Build Date: %s", __DATE__]];
-    [textField_buildTime setStringValue:[NSString stringWithFormat:@"Build Time: %s", __TIME__]];
+    [button_buildButton setTitle:buildDate];
 
     [[self window] center];
 }
@@ -141,6 +157,14 @@ LNAboutBoxController *sharedInstance = nil;
 }
 
 
+- (IBAction)buildFieldClicked:(id)sender
+{
+    if((++numberOfBuildFieldClicks)%2 == 0)
+        [button_buildButton setTitle:buildDate];
+    else
+        [button_buildButton setTitle:buildNumber];
+}
+
 - (void)_adiumDuckOptionClicked
 {
     
@@ -161,6 +185,5 @@ LNAboutBoxController *sharedInstance = nil;
         [[owner soundController] playSoundNamed:@"/Aquatech/Ghost Hiss.aiff"];  
     }
 }
-
 
 @end
