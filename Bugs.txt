@@ -35,11 +35,6 @@
 - Create default layouts & styles for the contact list preferences
 - What to do with contact list bottom bar?
 
-[Adam has these almost done locally, don't do them :) ]
-- Extended status doesn't update on the list when it changes
-- Extended status sometimes draws outside the cell (and is therefore cropped)
-    instead of increasing cell height
-
 //------------------------------------------------------------------------------------
 // Bugs - Adium
 //------------------------------------------------------------------------------------
