@@ -825,7 +825,6 @@
 //Validate a menu item
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	NSLog(@"validating %@",[menuItem title]);
     BOOL enabled = YES;
 	
     if(menuItem == menuItem_closeTab){
