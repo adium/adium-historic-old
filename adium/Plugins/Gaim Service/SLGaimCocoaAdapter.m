@@ -767,36 +767,38 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
 	
 	[adiumAccount mainPerformSelector:@selector(receivedIMChatMessage:inChat:)
-										   withObject:messageDict
-										   withObject:imChatLookupFromConv(conv)];
+						   withObject:messageDict
+						   withObject:imChatLookupFromConv(conv)];
 }
 
 static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
 	if (flags & GAIM_MESSAGE_SYSTEM){
 		NSString			*messageString = [NSString stringWithUTF8String:message];
-		AIChatUpdateType	updateType = -1;
-		
-		if([messageString rangeOfString:@"timed out"].location != NSNotFound){
-			updateType = AIChatTimedOut;
-		}else if([messageString rangeOfString:@"closed the conversation"].location != NSNotFound){
-			updateType = AIChatClosedWindow;
-		}
-		
-		if (updateType != -1){
-			AIChat	*chat = nil;
-			if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
-				chat = chatLookupFromConv(conv);
-			}else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM){
-				chat = imChatLookupFromConv(conv);
+		if (messageString){
+			AIChatUpdateType	updateType = -1;
+			
+			if([messageString rangeOfString:@"timed out"].location != NSNotFound){
+				updateType = AIChatTimedOut;
+			}else if([messageString rangeOfString:@"closed the conversation"].location != NSNotFound){
+				updateType = AIChatClosedWindow;
 			}
-
-			if (chat){
-				NSObject<AdiumGaimDO>	*adiumAccount = accountLookup(conv->account);
-
-				[adiumAccount mainPerformSelector:@selector(updateForChat:type:)
-									   withObject:chat
-									   withObject:[NSNumber numberWithInt:updateType]];
+			
+			if (updateType != -1){
+				AIChat	*chat = nil;
+				if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+					chat = chatLookupFromConv(conv);
+				}else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM){
+					chat = imChatLookupFromConv(conv);
+				}
+				
+				if (chat){
+					NSObject<AdiumGaimDO>	*adiumAccount = accountLookup(conv->account);
+					
+					[adiumAccount mainPerformSelector:@selector(updateForChat:type:)
+										   withObject:chat
+										   withObject:[NSNumber numberWithInt:updateType]];
+				}
 			}
 		}
 	}

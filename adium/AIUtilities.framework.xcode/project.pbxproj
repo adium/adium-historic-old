@@ -4905,7 +4905,7 @@
 				LIBRARY_STYLE = DYNAMIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
-				OTHER_LDFLAGS = "-seg1addr 0x10100000";
+				OTHER_LDFLAGS = "-seg1addr 0x10150000";
 				PRODUCT_NAME = AIUtilities;
 				WRAPPER_EXTENSION = framework;
 			};
