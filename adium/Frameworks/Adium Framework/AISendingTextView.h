@@ -43,14 +43,14 @@
     NSSize			lastPostedSize;
 	NSSize			_desiredSizeCached;
     
-    NSScrollView	*associatedScrollView;
+    NSView			*associatedView;
 }
 
 - (id)initWithFrame:(NSRect)frameRect;
 - (NSSize)desiredSize;
 
-- (void)setAssociatedScrollView:(NSScrollView *)inScrollView;
-- (NSScrollView *)associatedScrollView;
+- (void)setAssociatedView:(NSView *)inView;
+- (NSView *)associatedView;
 
 - (void)setSendOnReturn:(BOOL)inBool;
 - (void)setSendOnEnter:(BOOL)inBool;
