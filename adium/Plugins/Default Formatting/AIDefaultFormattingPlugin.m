@@ -90,13 +90,13 @@
         attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, subBackgroundColor, NSBackgroundColorAttributeName, nil];
     }
 
+    //Set them as the typing attributes for all new text
+    [inTextEntryView setTypingAttributes:attributes];
+
     //Apply the attributes to the existing content
     contents = [[[inTextEntryView attributedString] mutableCopy] autorelease];
     [contents setAttributes:attributes range:NSMakeRange(0,[contents length])];
     [inTextEntryView setAttributedString:contents];
-
-    //Set them as the typing attributes for all new text
-    [inTextEntryView setTypingAttributes:attributes];
 }
 
 

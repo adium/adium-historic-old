@@ -126,7 +126,7 @@ static NSImage		*tabCloseFrontPressed = nil;
         haveLoadedImages = YES;
     }
 
-    tabViewItem = [inTabViewItem retain];
+    tabViewItem = inTabViewItem;
     selected = NO;
     dragging = NO;
     trackingTag = 0;
@@ -142,9 +142,6 @@ static NSImage		*tabCloseFrontPressed = nil;
 
 - (void)dealloc
 {
-    [tabViewItem release];
-
-
     [super dealloc];
 }
 

@@ -16,7 +16,11 @@
             ACTIONS = {closeWindow = id; }; 
             CLASS = AIMessageWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {interface = id; "tabView_messages" = NSTabView; }; 
+            OUTLETS = {
+                interface = id; 
+                "tabView_messages" = NSTabView; 
+                "tabsView_customTabs" = AICustomTabsView; 
+            }; 
             SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = AIMiniToolbar; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 

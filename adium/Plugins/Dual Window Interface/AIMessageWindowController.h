@@ -19,11 +19,12 @@
 #define AIMessageWindow_ControllerOrderChanged 		@"AIMessageWindow_ControllerOrderChanged"
 #define AIMessageWindow_SelectedControllerChanged 	@"AIMessageWindow_SelectedControllerChanged"
 
-@class AIAdium, AIMessageSendingTextView, AIMiniToolbar, AIMessageViewController, AIColoredBoxView;
+@class AIAdium, AIMessageSendingTextView, AIMiniToolbar, AIMessageViewController, AICustomTabsView;
 @protocol AIContainerInterface, AIInterfaceContainer;
 
 @interface AIMessageWindowController : NSWindowController {
-    IBOutlet	NSTabView	*tabView_messages;
+    IBOutlet	NSTabView		*tabView_messages;
+    IBOutlet	AICustomTabsView	*tabsView_customTabs;
 
     AIAdium			*owner;
     BOOL			windowIsClosing;
@@ -33,6 +34,8 @@
 
     BOOL			tabIsShowing;
     BOOL			autohide_tabBar;
+
+    float			tabHeight;
 }
 
 + (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(id <AIContainerInterface>)inInterface;
@@ -42,6 +45,11 @@
 - (void)selectTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
 - (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
 - (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
-- (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem removingChat:(BOOL)remove;
-
+- (BOOL)containsMessageContainer:(NSTabViewItem <AIInterfaceContainer> *)tabViewItem;
+- (NSTabViewItem <AIInterfaceContainer> *)containerForListObject:(AIListObject *)inListObject;
+- (BOOL)selectNextTabViewItemContainer;
+- (BOOL)selectPreviousTabViewItemContainer;
+- (void)selectFirstTabViewItemContainer;
+- (void)selectLastTabViewItemContainer;
+- (NSTabViewItem <AIInterfaceContainer> *)containerForChat:(AIChat *)inChat;
 @end

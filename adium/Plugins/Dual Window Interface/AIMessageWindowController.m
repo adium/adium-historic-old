@@ -38,6 +38,8 @@
 - (void)windowDidLoad;
 - (void)installToolbar;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (void)_updateWindowTitle;
+- (void)_updateTabBarVisibility;
 @end
 
 @implementation AIMessageWindowController
@@ -60,13 +62,47 @@
     return([tabView_messages tabViewItems]);
 }
 
+//
+- (BOOL)containsMessageContainer:(NSTabViewItem <AIInterfaceContainer> *)tabViewItem
+{
+    return([[self messageContainerArray] indexOfObjectIdenticalTo:tabViewItem] != NSNotFound);
+}
+
+//returns if we have it
+- (NSTabViewItem <AIInterfaceContainer> *)containerForListObject:(AIListObject *)inListObject
+{
+    NSEnumerator		*enumerator;
+    AIMessageTabViewItem	*container;
+
+    enumerator = [[self messageContainerArray] objectEnumerator];
+    while((container = [enumerator nextObject])){
+        if([[[container messageViewController] chat] listObject] == inListObject) break;
+    }
+
+    return(container);
+}
+
+//returns if we have it
+- (NSTabViewItem <AIInterfaceContainer> *)containerForChat:(AIChat *)inChat
+{
+    NSEnumerator		*enumerator;
+    AIMessageTabViewItem	*container;
+
+    enumerator = [[self messageContainerArray] objectEnumerator];
+    while((container = [enumerator nextObject])){
+        if([[container messageViewController] chat] == inChat) break;
+    }
+
+    return(container);
+}
+
 //Returns the selected container
 - (NSTabViewItem <AIInterfaceContainer> *)selectedTabViewItemContainer
 {
     return([tabView_messages selectedTabViewItem]);
 }
 
-//Select a container
+//Select a specific container
 - (void)selectTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
 {
     [self showWindow:nil];
@@ -76,30 +112,60 @@
     }
 }
 
+//Select the next container, returns YES if a new container was selected
+- (BOOL)selectNextTabViewItemContainer
+{
+    NSTabViewItem	*previousSelection = [tabView_messages selectedTabViewItem];
+
+    [self showWindow:nil];
+    [tabView_messages selectNextTabViewItem:nil];
+
+    return([tabView_messages selectedTabViewItem] != previousSelection); 
+}
+
+//Select the previous container, returns YES if a new container was selected
+- (BOOL)selectPreviousTabViewItemContainer
+{
+    NSTabViewItem	*previousSelection = [tabView_messages selectedTabViewItem];
+
+    [self showWindow:nil];
+    [tabView_messages selectPreviousTabViewItem:nil];
+
+    return([tabView_messages selectedTabViewItem] != previousSelection);
+}
+
+//Select our first container
+- (void)selectFirstTabViewItemContainer
+{
+    [self showWindow:nil];
+    [tabView_messages selectFirstTabViewItem:nil];
+}
+
+//Select our last container
+- (void)selectLastTabViewItemContainer
+{
+    [self showWindow:nil];
+    [tabView_messages selectLastTabViewItem:nil];
+}
+
 //Add a tab view item container (without changing the current selection)
 - (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
 {
     [self window]; //Ensure our window has loaded
     [tabView_messages addTabViewItem:inTabViewItem]; //Add the tab
+    [interface containerDidOpen:inTabViewItem]; //Let the interface know it opened
     [self showWindow:nil]; //Show the window
 }
 
 //Remove a tab view item container
 - (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
 {
-    [self removeTabViewItemContainer:inTabViewItem removingChat:YES];
-}
-
-- (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem removingChat:(BOOL)remove
-{
-    [(AIMessageTabViewItem *)inTabViewItem tabShouldClose:nil closingChat:remove];
     //If the tab is selected, select the next tab.
     if(inTabViewItem == [tabView_messages selectedTabViewItem]){
 	[tabView_messages selectNextTabViewItem:nil];
     }
     
     [tabView_messages removeTabViewItem:inTabViewItem];
-
     [interface containerDidClose:inTabViewItem];
 
     //If that was our last container, close the window (unless we're already closing)
@@ -157,9 +223,7 @@
         [tabView_messages removeTabViewItem:[tabView_messages tabViewItemAtIndex:0]];
     }
 
-//    [[self window] setShowsResizeIndicator:NO];
     [[self window] setBottomCornerRounded:NO]; //Sneaky lil private method
-
     [[self window] useOptimizedDrawing:YES]; //should be set to YES unless subview overlap... we should be good to go.  check the docs on this for more info.
 }
 
@@ -170,10 +234,8 @@
     NSEnumerator			*enumerator;
     AIMessageTabViewItem		*tabViewItem;
 
-    //We are closing
-    windowIsClosing = YES;
-    
-    //The USA PATRIOT act must be stopped.  Tell the notificationCenter about it.
+    //Close down
+    windowIsClosing = YES; //This is used to prevent sending more close commands than needed.
     [[owner notificationCenter] removeObserver:self];
     
     //Close all our tabs
@@ -195,29 +257,32 @@
     return(NO);
 }
 
+//
 - (void)windowDidBecomeMain:(NSNotification *)notification
 {
     [interface containerDidBecomeActive:(NSTabViewItem <AIInterfaceContainer> *)[tabView_messages selectedTabViewItem]];
 }
 
+//
 - (void)windowDidResignMain:(NSNotification *)notification
 {
     [interface containerDidBecomeActive:nil];
 }
 
+//
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if (notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0) {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0) {
+        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
-    autohide_tabBar = [[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
+        autohide_tabBar = [[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 
-    //This is ridiculously indirect, but I can't find a better way to let the notification be posted with the proper object
-    [[[[[self messageContainerArray] objectAtIndex:0] tabView] delegate] tabViewDidChangeNumberOfTabViewItems:[[[self messageContainerArray] objectAtIndex:0] tabView]];
+        //
+        [self _updateTabBarVisibility];
     }
 }
 
-//Tabs Delegate ---------------------------------------------------------------
+//
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem
 {
     AIListObject	*selectedContact = [[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject];
@@ -236,6 +301,7 @@
     }
 }
 
+//
 - (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
     if(tabViewItem != nil){
@@ -244,60 +310,83 @@
         if([[self window] isMainWindow]){ //If our window is main, set the newly selected container as active
             [interface containerDidBecomeActive:(AIMessageTabViewItem *)tabViewItem];
         }
+
+        //[self _updateWindowTitle]; //Reflect change in window title
     }
 }
 
+//
 - (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)TabView
 {
-
-#define TABS_HEIGHT_CHANGE	18
-
-    if (autohide_tabBar && ([tabView_messages numberOfTabViewItems] == 1) && tabIsShowing) {
-	NSSize newSize = [TabView frame].size;
-	newSize.height = 0;
-	[TabView setFrameSize:newSize];
-
-	NSRect newFrame = [tabView_messages frame];
-	newFrame.size.height += TABS_HEIGHT_CHANGE;
-	newFrame.origin.y -= TABS_HEIGHT_CHANGE;
-	[tabView_messages setFrame:newFrame];
-
-	[[self window] setTitle:[NSString stringWithFormat:@"Adium : %@", [[[[[[self messageContainerArray] objectAtIndex:0] messageViewController] chat] listObject] displayName]]];
-
-	[[self window] display];
-
-	tabIsShowing = NO;
-    }
-
-    //at 2 items or if we're not supposed to hide the bar, unhide it if it's not currently showing
-    if ((([tabView_messages numberOfTabViewItems] == 2) || !autohide_tabBar) && !tabIsShowing) {
-	NSSize newSize = [TabView frame].size;
-	newSize.height = 22;
-	[TabView setFrameSize:newSize];
-	
-	NSRect newFrame = [tabView_messages frame];
-	newFrame.size.height -= TABS_HEIGHT_CHANGE;
-	newFrame.origin.y += TABS_HEIGHT_CHANGE;
-	[tabView_messages setFrame:newFrame];
-
-	[[self window] setTitle:@"Adium : Messages"];
-		
-	[[self window] display];
-
-	tabIsShowing = YES;
-    }
+    [self _updateTabBarVisibility];
+    [self _updateWindowTitle];
 }
 
+//
 - (void)customTabViewDidChangeOrderOfTabViewItems:(AICustomTabsView *)TabView
 {
     //Refresh interface menus
     [interface containerOrderDidChange];
 }
 
+//
 - (void)customTabView:(AICustomTabsView *)tabView shouldCloseTabViewItem:(NSTabViewItem *)tabViewItem
 {
     //Close the message tab
     [[owner interfaceController] closeChat:[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat]];
+}
+
+//Update our window title
+- (void)_updateWindowTitle
+{
+    if([tabView_messages numberOfTabViewItems] == 1){
+        [[self window] setTitle:[NSString stringWithFormat:@"Adium : %@", [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] labelString]]];
+    }else{
+        [[self window] setTitle:@"Adium : Messages"];
+    }
+}
+
+//Hide/show our tab bar
+- (void)_updateTabBarVisibility
+{
+    NSSize	tabSize;
+    NSRect 	newFrame;
+
+    if(autohide_tabBar && ([tabView_messages numberOfTabViewItems] == 1) && tabIsShowing){
+        //Remember the correct tab height
+        tabSize = [tabsView_customTabs frame].size;
+        tabHeight = tabSize.height;
+
+        //Resize tabs so they're not visible
+        tabSize.height = 0;
+        [tabsView_customTabs setFrameSize:tabSize];
+        tabIsShowing = NO;
+
+        //Adjust other views
+        newFrame = [tabView_messages frame];
+        newFrame.size.height += tabHeight;
+        newFrame.origin.y -= tabHeight;
+        [tabView_messages setFrame:newFrame];
+
+        //Refresh
+        [[self window] setViewsNeedDisplay:YES];
+
+    }else if((([tabView_messages numberOfTabViewItems] == 2) || !autohide_tabBar) && !tabIsShowing) {
+        //Restore tabs to the correct height
+        tabSize = [tabsView_customTabs frame].size;
+        tabSize.height = tabHeight;
+        [tabsView_customTabs setFrameSize:tabSize];
+        tabIsShowing = YES;
+
+        //Adjust other views
+        newFrame = [tabView_messages frame];
+        newFrame.size.height -= tabHeight;
+        newFrame.origin.y += tabHeight;
+        [tabView_messages setFrame:newFrame];
+
+        //Refresh
+        [[self window] setViewsNeedDisplay:YES];
+    }
 }
 
 @end

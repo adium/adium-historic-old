@@ -53,6 +53,7 @@
     availableForSending = YES;
     currentHistoryLocation = -1;
     [self setDrawsBackground:YES];
+    _desiredSizeCached = NSMakeSize(0,0);
 
     //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:self];
@@ -147,35 +148,32 @@
 //Catch new lines as they're inserted
 - (void)insertText:(id)aString
 {
-    NSString * theString;
+    NSString 	*theString = nil;
+    BOOL 	insertText = YES;
 
-    if ([aString isKindOfClass:[NSString class]])
+    if([aString isKindOfClass:[NSString class]]){
         theString = aString;
-    else if ([aString isKindOfClass:[NSAttributedString class]])
+    }else if([aString isKindOfClass:[NSAttributedString class]]){
         theString = [aString string];
+    }
 
-    if (theString)
-    {
-    BOOL insertText = YES;
-    
-    //working...
+    //Let Adium know we're adding content
     [[owner contentController] stringAdded:theString toTextEntryView:self];
 
+    //Catch newlines as they're inserted
     if([theString length] && [theString characterAtIndex:0] == 10){
         NSParameterAssert([returnArray count] != 0);
 
         if([[returnArray objectAtIndex:0] boolValue]){ //if the return should send
             if(availableForSending) [target performSelector:selector]; //Notify the target
-            
             insertText = NO;
         }
 
         [returnArray removeObjectAtIndex:0]; //remove the return
     }
-    
+
     if(insertText){
         [super insertText:aString];
-    }
     }
 }
 
@@ -189,7 +187,7 @@
         NSEvent		*theEvent = [eventArray objectAtIndex:index];
         unsigned short 	keyCode = [theEvent keyCode];
         
-        if(keyCode == 36 || keyCode == 76 || keyCode == 52){ // if return or enter is pressed
+        if(keyCode == 36 || keyCode == 76 || keyCode == 52){ //if return or enter is pressed
             if([theEvent modifierFlags] & NSAlternateKeyMask){ //if option is pressed as well, the return always goes through
                 [returnArray addObject:[NSNumber numberWithBool:NO]];
         
@@ -206,10 +204,6 @@
     [super interpretKeyEvents:eventArray];
 }
 
-- (void)textDidChange:(NSNotification *)notification
-{
-    [[owner contentController] contentsChangedInTextEntryView:self];
-}
 
 
 // Required protocol methods ---
@@ -262,8 +256,10 @@
 	[historyArray removeObjectAtIndex:0];
     }
 }
+
+
 //Contact menu ---------------------------------------------------------------
-//Set and return the selected contact (to auto-configure the contact menu)
+//Set and return the selected chat (to auto-configure the contact menu)
 - (void)setChat:(AIChat *)inChat
 {
     if(chat != inChat){
@@ -276,6 +272,46 @@
 }
 
 
+//Auto Sizing --------------------------------------------------------------------------
+//Returns our desired size
+- (NSSize)desiredSize
+{
+    if(_desiredSizeCached.width == 0){
+        float 		textHeight;
+
+        if([[self textStorage] length] != 0){
+            //If there is text in this view, let the container tell us its height
+            textHeight = [[self layoutManager] usedRectForTextContainer:[self textContainer]].size.height;
+
+        }else{
+            NSAttributedString	*attrString;
+
+            //Otherwise, we use the current typing attributes to guess what the height of a line should be
+            attrString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[self typingAttributes]] autorelease];
+            textHeight = [attrString heightWithWidth:1e7];
+
+        }
+
+        _desiredSizeCached = NSMakeSize([self frame].size.width, textHeight);
+    }
+
+    return(_desiredSizeCached);
+}
+
+//Post a size changed notification (if necessary)
+- (void)textDidChange:(NSNotification *)notification
+{
+    //Reset cache
+    _desiredSizeCached = NSMakeSize(0,0); 
+
+    //Post notification if side changed
+    if(!NSEqualSizes([self desiredSize], lastPostedSize)){
+        [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self];
+        lastPostedSize = [self desiredSize];
+    }
+}
+
+
 //Private ------------------------------------------------------------------------------------
 - (void)dealloc
 {
@@ -285,5 +321,6 @@
     [returnArray release]; returnArray = nil;
     [super dealloc];
 }
+
 
 @end
