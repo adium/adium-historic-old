@@ -107,7 +107,9 @@
 - (ESContactAlertsController *)contactAlertsController{
     return(contactAlertsController);
 }
-
+- (BZActivityWindowController *)activityWindowController {
+	return activityWindowController;
+}
 
 //Notifications --------------------------------------------------------------------------------------------------------
 #pragma mark Notifications
@@ -217,6 +219,8 @@
     [dockController initController];
     [fileTransferController initController];
     [contactAlertsController initController];
+	[NSBundle loadNibNamed:@"ActivityWindow" owner:self];
+    [activityWindowController initController];
 	
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 	
@@ -424,8 +428,11 @@ void Adium_HandleSignal(int i){
     if(createIt) {
         NSLog(@"Creating directory %@ for resource folder name %@\n", [targetPath stringByAbbreviatingWithTildeInPath], name);
         if(![mgr createDirectoryAtPath:targetPath attributes:nil]) {
-			targetPath = nil;
 			NSLog(@"\tFAILED!\n");
+			targetPath = nil;
+#warning localise these
+			//future expansion: provide a button to launch Disk Utility --boredzo
+			NSRunAlertPanel(/*title*/ [NSString stringWithFormat:@"Could not create the %@ folder\n", name], /*msg*/ @"Try running Repair Permissions from Disk Utility.", /*defaultButton*/ @"OK", /*alternateButton*/ nil, /*otherButton*/ nil);
 		}
     } else {
         targetPath = [existing objectAtIndex:0];
@@ -497,4 +504,5 @@ void Adium_HandleSignal(int i){
     
 	return pathArray;
 }
+
 @end
