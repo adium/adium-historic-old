@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.53 2004/04/17 03:33:18 adamiser Exp $
+$Id: ToDoList.txt,v 1.54 2004/04/17 04:00:29 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -104,7 +104,9 @@ Other:
 
 	+ '--insensitive' flag in AIEmoticon (to be placed in the TextEquivalents.txt file) that allows emoticons' text equivalents to be case-insensitive (without applying this nature globally to all emoticons).
 		Colin: Didn't Mac-arena do this already?
-    + "New message..." dialog should search for all contacts, and then after that offer the protocols from where you can talk to the buddy found. The way it works now seems a bit rare, as you have to select the protocol first, and maybe you just don't remember or something and you type the name (address book for example) of your buddy just to see it doesn't work.
+    	+ "New message..." dialog should search for all contacts, and then after that offer the protocols from where you can talk to the buddy found. The way it works now seems a bit rare, as you have to select the protocol first, and maybe you just don't remember or something and you type the name (address book for example) of your buddy just to see it doesn't work.
+	+ Add preferences to disable 'Fast User Switching' auto-away, and to customize the message.
+
 
 -------------------------------------------------------------------------------------------------------
 Big Stuff
