@@ -197,7 +197,7 @@ static NSMenu       *bookmarkSets;
 {
     // fetch the importer class from the menu item and call its parsing method
     NSObject<SHBookmarkImporter> *importer = [menuItem representedObject];
-    return [importer parseBookmarksForOwner:self];
+    return [[importer parseBookmarksForOwner:self] retain];
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)sender
