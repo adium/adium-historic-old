@@ -79,6 +79,8 @@ static NDRunLoopMessenger   *runLoopMessenger = nil;
 #pragma mark Init
 - (id)init
 {
+	[super init];
+	
 	sourceId = 0;
     sourceInfoDict = [[NSMutableDictionary alloc] init];
     accountDict = [[NSMutableDictionary alloc] init];
@@ -962,7 +964,6 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	}	
 		
 	//If we didn't grab a translated version using AILocalizedString, at least display the English version Gaim supplied
-	//XXX Not threadsafe 
 #warning This generates really ugly output in most cases; the title should not be used as it is
 	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
 										  withObject:([errorMessage length] ? errorMessage : primaryString)
