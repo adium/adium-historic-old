@@ -14,8 +14,8 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIFileManagerAdditions.h"
-
-#define PATH_TRASH			@"~/.Trash"		//Path to the trash
+#include <sys/types.h>
+#include <unistd.h>
 
 @implementation NSFileManager (AIFileManagerAdditions)
 
