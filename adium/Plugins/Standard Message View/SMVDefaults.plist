@@ -5,7 +5,7 @@
 	<key>Prefix Font</key>
 	<string>LucidaGrande-Bold,11</string>
 	<key>Prefix Format</key>
-	<string>%a</string>
+	<string>%a %r</string>
 	<key>Show Time Stamps</key>
 	<true/>
         <key>Show AM-PM</key>

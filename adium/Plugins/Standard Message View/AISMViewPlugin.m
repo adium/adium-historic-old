@@ -33,7 +33,7 @@
     //Register themable preferences
     [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:SMV_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         
-    //Setup a time stamp format based on this user's locale
+    //Set up a time stamp format based on this user's locale
     NSString    *format = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] objectForKey:KEY_SMV_TIME_STAMP_FORMAT];
     if(!format || [format length] == 0){
         [[adium preferenceController] setPreference:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO]
