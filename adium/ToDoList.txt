@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.85 2004/05/02 04:59:04 adamiser Exp $
+$Id: ToDoList.txt,v 1.86 2004/05/02 05:25:02 adamiser Exp $
 
 
 Legend
@@ -56,6 +56,7 @@ Unconfirmed bugs
 * Apple scripts can stall Adium when iTunes 4.5's Print dialogue is open
 * Changing timezone doesn't update time stamps immediately (I'm not surprised, but this would be cool)
 * Update checker reporting a new version when non exists? (possibly a caching error?)
+* Messages with invalid looking HTML <tags> received via jabber (from ICQ user over transport), the invalid tags are being eaten? (Our HTML decoder isn't eating them, is libgaim?) 
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
