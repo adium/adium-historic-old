@@ -16,7 +16,7 @@
 #import "AIFlexibleTableView.h"
 #import "AIFlexibleTableCell.h"
 
-#define COPY_MENU_ITEM @"Copy"
+#define COPY_MENU_ITEM AILocalizedString(@"Copy","Copy to the clipboard")
 
 @interface AIFlexibleTableView (PRIVATE)
 - (void)_init;
