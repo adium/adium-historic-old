@@ -37,18 +37,6 @@
 	[self performSelectorOnMainThread:aSelector withObject:nil waitUntilDone:flag];
 }
 
-//Included to allow uniform coding
-- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1
-{
-	[self mainPerformSelector:aSelector withObject:argument1 waitUntilDone:NO];
-}
-
-//Included to allow uniform coding - wrapped for performSelectorOnMainThread:withObject:waitUntilDone:
-- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 waitUntilDone:(BOOL)flag
-{
-	[self performSelectorOnMainThread:aSelector withObject:argument1 waitUntilDone:flag];
-}
-
 - (id)mainPerformSelector:(SEL)aSelector returnValue:(BOOL)flag
 {
 	id returnValue;
@@ -75,6 +63,18 @@
 	return(returnValue);
 }
 
+//Included to allow uniform coding
+- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1
+{
+	[self mainPerformSelector:aSelector withObject:argument1 waitUntilDone:NO];
+}
+
+//Included to allow uniform coding - wrapped for performSelectorOnMainThread:withObject:waitUntilDone:
+- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 waitUntilDone:(BOOL)flag
+{
+	[self performSelectorOnMainThread:aSelector withObject:argument1 waitUntilDone:flag];
+}
+
 //Perform a selector on the main thread, optionally taking an argument, and return its return value
 - (id)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 returnValue:(BOOL)flag
 {
@@ -99,6 +99,11 @@
 	}
 	
 	return(returnValue);
+}
+
+- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2
+{
+	[self mainPerformSelector:aSelector withObject:argument1 withObject:argument2 waitUntilDone:NO];
 }
 
 //Perform a selector on the main thread, optionally taking an argument, and return its return value
@@ -128,10 +133,6 @@
 	return(returnValue);
 }
 
-- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2
-{
-	[self mainPerformSelector:aSelector withObject:argument1 withObject:argument2 waitUntilDone:NO];
-}
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 waitUntilDone:(BOOL)flag
 {
 	NSInvocation *invocation;
@@ -149,6 +150,34 @@
 {
 	[self mainPerformSelector:aSelector withObject:argument1 withObject:argument2 withObject:argument3 waitUntilDone:NO];
 }
+//Perform a selector on the main thread, optionally taking an argument, and return its return value
+- (id)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 withObject:(id)argument3 returnValue:(BOOL)flag
+{
+	id returnValue;
+	
+	if (flag){
+		NSInvocation *invocation;
+		
+		invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+		[invocation setSelector:aSelector];
+		[invocation setArgument:&argument1 atIndex:2];
+		[invocation setArgument:&argument2 atIndex:3];
+		[invocation setArgument:&argument3 atIndex:4];
+		
+		[self performSelectorOnMainThread:@selector(handleInvocation:)
+							   withObject:invocation
+							waitUntilDone:YES];
+		
+		[invocation getReturnValue:&returnValue];
+		
+	}else{
+		returnValue = nil;
+		[self mainPerformSelector:aSelector withObject:argument1 withObject:argument2 withObject:argument3 waitUntilDone:NO];
+	}
+	
+	return(returnValue);
+}
+
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 withObject:(id)argument3 waitUntilDone:(BOOL)flag
 {
 	NSInvocation *invocation;
