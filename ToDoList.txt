@@ -94,7 +94,6 @@ Standardize/enhance Xtras pref panes [brian]
   Keeping the modular design, but ditching all the negative effects of it could be very beneficial
 	
 //Message Tabs
-  - Truncate tab names with ellipses instead of clipping
   - Enforce a larger minimum width for tabs
   - Use a chevron to display tabs that don't fit on the tab bar (like safari)
   - New close button graphic
@@ -144,7 +143,6 @@ Standardize/enhance Xtras pref panes [brian]
 //Growl notifications
   - Remove existing notification code
   - Add global preferences for which events to display
-  - Add contact alerts for contact or group notifications
 
 //Contact list editing
   We need contact list editing to feel safe
@@ -158,7 +156,6 @@ Standardize/enhance Xtras pref panes [brian]
 //Improved info window
   Update the info window appearance and profile display
   - Fix support for sub-profile links
-  - Display profiles for other services in addition to AIM
   - Use WebKit to handle the HTML unless there is some overwhelming reason we parse it
     // this should resolve several issues and gives great benefits - like tooltips & copy link
   
@@ -230,9 +227,6 @@ Standardize/enhance Xtras pref panes [brian]
 
 //Status on message window
   - Show our current status on the message window
-
-//Emoticons
-	- Symlink in iChat emoticons
 
 //Documentation
 	- User documentation
