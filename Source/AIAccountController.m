@@ -1260,10 +1260,10 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		NSString	*accountTitle = [account formattedUID];
 		float		fraction;
 		NSString	*titleFormat;
-		
+
 		//Default to <New Account> if a name is not available
 		if(!accountTitle || ![accountTitle length]) accountTitle = NEW_ACCOUNT_DISPLAY_TEXT;
-		
+
 		//Get the status and service icons for this account so we can add them to the menu
 		NSImage	*statusIcon = [AIStatusIcons statusIconForListObject:account type:AIStatusIconList direction:AIIconNormal];
 		NSImage	*serviceIcon = [AIServiceIcons serviceIconForObject:account type:AIServiceIconSmall direction:AIIconNormal];
@@ -1272,18 +1272,20 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		if([[account statusObjectForKey:@"Online"] boolValue]){
 			fraction = MENU_IMAGE_FRACTION_ONLINE;
 			titleFormat = ACCOUNT_DISCONNECT_MENU_TITLE;
+
 		}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
 			fraction = MENU_IMAGE_FRACTION_CONNECTING;
 			titleFormat = ACCOUNT_CONNECTING_MENU_TITLE;
-			
+
 		}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
 			fraction = MENU_IMAGE_FRACTION_CONNECTING;
 			titleFormat = ACCOUNT_DISCONNECTING_MENU_TITLE;
+
 		}else{
 			fraction = MENU_IMAGE_FRACTION_OFFLINE;
 			titleFormat = ACCOUNT_CONNECT_MENU_TITLE;
 		}
-	
+
 		//Composite the status icon and service icon together
 		//We're only allowed one icon per menu item, so we need to combine our separate icons into a single image
 		NSSize	statusSize = [statusIcon size];
@@ -1298,10 +1300,10 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		[serviceIcon drawInRect:compositeRect atSize:[statusIcon size] position:IMAGE_POSITION_LEFT fraction:1.0];
 		[statusIcon drawInRect:compositeRect atSize:[statusIcon size] position:IMAGE_POSITION_RIGHT fraction:fraction];
 		[composite unlockFocus];
-		
+
 		//Update the menu item
 		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
-		[menuItem setTitle:accountTitle];
+		[menuItem setTitle:[NSString stringWithFormat:titleFormat,accountTitle]];
 		[menuItem setImage:composite];		
 		[menuItem setEnabled:(![[account statusObjectForKey:@"Connecting"] boolValue] &&
 							  ![[account statusObjectForKey:@"Disconnecting"] boolValue])];
