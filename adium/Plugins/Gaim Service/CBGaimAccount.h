@@ -104,7 +104,7 @@
 -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type;
 
 //Private
-- (void)setAwayMessage:(id)message;
-- (void)setProfile:(id)profile;
+- (void)setAwayMessage:(NSAttributedString *)message;
+- (void)setProfile:(NSAttributedString *)profile;
 
 @end

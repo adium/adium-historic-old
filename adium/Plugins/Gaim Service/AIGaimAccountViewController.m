@@ -75,11 +75,14 @@
     }
     
     //Configure the account name field
+    //AIM: 2 to 16 characters
+    //mac.com address are an extension of AIM addresses: the username can be 2 to 16 characters
+        //so we need 24 characters (16 + @mac.com) as well as the @ symbol.
     [textField_handle setFormatter:
 	[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@. "]
-						      length:16
+						      length:24
 					       caseSensitive:NO
-						errorMessage:@"You user name must be 16 characters or less, contain only letters and numbers, and must start with a letter."]];
+						errorMessage:@"Your user name must be 16 characters or less, contain only letters and numbers, and start with a letter."]];
     
     //Pull out our tabs
 //    auxilaryTabs = [[view_auxilaryTabView tabViewItems] copy];

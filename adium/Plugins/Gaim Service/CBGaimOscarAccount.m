@@ -192,18 +192,19 @@ struct oscar_data {
     }
 }
 
-- (void)setProfile:(id)profile
+- (void)setProfile:(NSAttributedString *)profile
 {
-    if (profile) {
-        int length = [[NSAttributedString stringWithData:profile] length];
-        if (length > 1024) {
+    if (profile){
+        int length = [profile length];
+        if (length > 1024){
             [[adium interfaceController] handleErrorMessage:@"Error Setting Profile"
                                             withDescription:[NSString stringWithFormat:@"Your info is too large, and could not be set.\r\rAIM and ICQ limit profiles to 1024 characters (Your current profile is %i characters)",length]];
-        } 
-        else 
-            [super setProfile:profile];   
-    } else
+        }else{
+            [super setProfile:profile];
+        }
+    }else{
         [super setProfile:profile];
+    }
 }
 
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
