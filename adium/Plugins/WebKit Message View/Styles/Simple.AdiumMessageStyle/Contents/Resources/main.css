@@ -9,10 +9,6 @@
 	display: inline;
 }
 
-.prefix .senderScreenName {
-	display: none;
-}
-
 .prefix .timestampafter {
 	display: none;
 }
