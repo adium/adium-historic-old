@@ -18,40 +18,31 @@
 
 @implementation NSCursor (AICursorAdditions)
 
-//I'm passing [AIImageUtilities class] to imageNamed:forClass so the image is loaded from the AIUtilities framework.  Since this class consists of additions to NSCursor, using [self class] will search for the image in NSCursor's framework's bundle, which is wrong.
-
-+ (NSCursor *)openGrabHandCursor
+//these methods always use an Appearance-themed cursor.
+//first they look for the NSCursor methods that are only available on Panther and later.
+//failing that, they call Appearance Manager's SetThemeCursor function.
++ (void)setOpenGrabHandCursor
 {
-    static NSCursor 	*openGrabHandCursor = nil;
-
-    if(!openGrabHandCursor){
-        openGrabHandCursor = [[NSCursor alloc] initWithImage:[AIImageUtilities imageNamed:@"OpenGrabHandCursor" forClass:[AIImageUtilities class]] hotSpot:NSMakePoint(8,8)];
-    }
-
-    return(openGrabHandCursor);
+	if([self respondsToSelector:@selector(openHandCursor)])
+		[[NSCursor openHandCursor] set];
+	else
+		SetThemeCursor(kThemeOpenHandCursor);
 }
 
-+ (NSCursor *)closedGrabHandCursor
++ (void)setClosedGrabHandCursor
 {
-    static NSCursor 	*closedGrabHandCursor = nil;
-
-    if(!closedGrabHandCursor){
-        closedGrabHandCursor = [[NSCursor alloc] initWithImage:[AIImageUtilities imageNamed:@"ClosedGrabHandCursor" forClass:[AIImageUtilities class]] hotSpot:NSMakePoint(8,8)];
-    }
-
-    return(closedGrabHandCursor);
+	if([self respondsToSelector:@selector(closedHandCursor)])
+		[[NSCursor closedHandCursor] set];
+	else
+		SetThemeCursor(kThemeClosedHandCursor);
 }
 
-+ (NSCursor *)handPointCursor
++ (void)setHandPointCursor
 {
-    static NSCursor 	*handPointCursor = nil;
-
-    if(!handPointCursor){
-        handPointCursor = [[NSCursor alloc] initWithImage:[AIImageUtilities imageNamed:@"HandPointCursor" forClass:[AIImageUtilities class]] hotSpot:NSMakePoint(5,0)];
-    }
-
-    return(handPointCursor);
+	if([self respondsToSelector:@selector(pointingHandCursor)])
+		[[NSCursor pointingHandCursor] set];
+	else
+		SetThemeCursor(kThemePointingHandCursor);
 }
-
 
 @end
