@@ -87,8 +87,8 @@ BOOL pantherOrLater;
 
 - (void)drawRect:(NSRect)rect
 {
-    NSPoint         tempPoint;
-    NSRect          tempRect;
+    NSPoint         buddyIconPoint;
+    NSRect          buddyIconLabelRect, buddyNameRect, buddyStatusRect, queueRect;
     NSString        *tempString;
     NSShadow        *tempShadow;
     
@@ -97,6 +97,7 @@ BOOL pantherOrLater;
     NSRectFill([self frame]);
     [backdropImage compositeToPoint: NSZeroPoint operation:NSCompositeSourceOver];
     
+    // Set up the shadow for Panther or later
     if (pantherOrLater) {
         NSSize      shadowSize;
         tempShadow = [[[NSShadow alloc] init] autorelease];
@@ -106,19 +107,37 @@ BOOL pantherOrLater;
         [tempShadow setShadowBlurRadius:5.0];
         [tempShadow set];
     }
-        
+    
+    // Set up the Rects
+    if (queueField && (![queueField isEqualToString:@""])) {
+        // Buddy Icon Image and label
+        buddyIconPoint = NSMakePoint(82.0,150.0);
+        buddyIconLabelRect = NSMakeRect(80.0,148.0,52.0,52.0);
+        // Main buddy name
+        buddyNameRect = NSMakeRect(12.0,116.0,187.0,30.0);
+        // Main buddy Status
+        buddyStatusRect = NSMakeRect(12.0,73.0,187.0,44.0);
+        // Queue stack
+        queueRect = NSMakeRect(12.0,8.0,187.0,52.0);
+    } else {
+        // Buddy Icon Image and label
+        buddyIconPoint = NSMakePoint(82.0,120.0);
+        buddyIconLabelRect = NSMakeRect(80.0,118.0,52.0,52.0);
+        // Main buddy name
+        buddyNameRect = NSMakeRect(12.0,86.0,187.0,30.0);
+        // Main buddy Status
+        buddyStatusRect = NSMakeRect(12.0,43.0,187.0,44.0);
+        // Queue stack empty, no rect
+        queueRect = NSMakeRect(0.0,0.0,0.0,0.0);
+    }
+    
     // Paint the buddy icon or placeholder
     if (buddyIconLabelColor) {
-        NSSize      shadowSize;
-        tempPoint.x = 80.0;
-        tempPoint.y = 148.0;
-        tempRect.size.width = 52.0;
-        tempRect.size.height = 52.0;
-        tempRect.origin = tempPoint;
         [buddyIconLabelColor set];
-        [NSBezierPath fillRect:tempRect];
+        [NSBezierPath fillRect:buddyIconLabelRect];
 	
-	if(pantherOrLater) {        
+	if(pantherOrLater) {
+            NSSize      shadowSize;
             shadowSize.width = 0.0;
             shadowSize.height = 0.0;
             [tempShadow setShadowOffset:shadowSize];
@@ -126,46 +145,28 @@ BOOL pantherOrLater;
             [tempShadow set];
         }
     }
-    tempPoint.x = 82.0;
-    tempPoint.y = 150.0;
-    [buddyIconImage compositeToPoint: tempPoint operation:NSCompositeSourceOver];
+    [buddyIconImage compositeToPoint: buddyIconPoint operation:NSCompositeSourceOver];
     if (buddyIconBadge) {
-        [buddyIconBadge compositeToPoint: tempPoint operation:NSCompositeSourceOver];
+        [buddyIconBadge compositeToPoint: buddyIconPoint operation:NSCompositeSourceOver];
     }
             
     // Set the color of text to white and paint all the strings,
-    tempPoint.x = 12.0;
-    tempPoint.y = 116.0;
-    tempRect.size.width = 187.0;
-    tempRect.size.height = 30.0;
-    tempRect.origin = tempPoint;
     tempString = [NSString stringWithString: mainBuddyName];
-    [tempString drawInRect: NSMakeRect(tempPoint.x + 1.0,tempPoint.y - 1.0, tempRect.size.width, tempRect.size.height) withAttributes: mainAttributesMask];
-    [mainBuddyName drawInRect: tempRect withAttributes: mainAttributes];
+    [tempString drawInRect: NSMakeRect(buddyNameRect.origin.x + 1.0, buddyNameRect.origin.y - 1.0, buddyNameRect.size.width, buddyNameRect.size.height) withAttributes: mainAttributesMask];
+    [mainBuddyName drawInRect: buddyNameRect withAttributes: mainAttributes];
     
-    tempPoint.y = 73.0;
-    tempRect.size.height = 44.0;
-    tempRect.origin = tempPoint;
     tempString = [NSString stringWithString: mainBuddyStatus];
-    [tempString drawInRect: NSMakeRect(tempPoint.x + 1.0,tempPoint.y - 1.0, tempRect.size.width, tempRect.size.height) withAttributes: mainStatusAttributesMask];
-    [mainBuddyStatus drawInRect: tempRect withAttributes: mainStatusAttributes];
+    [tempString drawInRect: NSMakeRect(buddyStatusRect.origin.x + 1.0,buddyStatusRect.origin.y - 1.0, buddyStatusRect.size.width, buddyStatusRect.size.height) withAttributes: mainStatusAttributesMask];
+    [mainBuddyStatus drawInRect: buddyStatusRect withAttributes: mainStatusAttributes];
     
     if (queueField && (![queueField isEqualToString:@""])) {
         // Paint the divider line
-        tempPoint.x = 12.0;
-        tempPoint.y = 66.0;
-        tempRect.size.width = 187.0;
-        tempRect.size.height = 1.0;
-        tempRect.origin = tempPoint;
         [[NSColor whiteColor] set];
-        [NSBezierPath fillRect:tempRect];
+        [NSBezierPath fillRect:NSMakeRect(12.0,66.0,187.0,1.0)];
         
-        tempPoint.y = 8.0;
-        tempRect.size.height = 52.0;
-        tempRect.origin = tempPoint;
         tempString = [NSString stringWithString: queueField];
-        [tempString drawInRect: NSMakeRect(tempPoint.x + 1.0,tempPoint.y - 1.0, tempRect.size.width, tempRect.size.height) withAttributes: secondaryAttributesMask];
-        [queueField drawInRect: tempRect withAttributes: secondaryAttributes];
+        [tempString drawInRect: NSMakeRect(queueRect.origin.x + 1.0,queueRect.origin.y - 1.0, queueRect.size.width, queueRect.size.height) withAttributes: secondaryAttributesMask];
+        [queueField drawInRect: queueRect withAttributes: secondaryAttributes];
     }
 }
 
