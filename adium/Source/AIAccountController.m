@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.75 2004/04/03 17:52:59 adamiser Exp $
+// $Id: AIAccountController.m,v 1.76 2004/04/09 21:37:28 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -392,10 +392,17 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	[newAccount setPreference:[serviceType filterUID:inUID removeIgnoredCharacters:NO]
 					   forKey:@"FormattedUID"
 						group:GROUP_ACCOUNT_STATUS];
-	[self insertAccount:newAccount atIndex:[accountArray indexOfObject:inAccount]];
 	
-	//Delete the old account
-	[self deleteAccount:inAccount];
+	int oldAccountIndex = [accountArray indexOfObject:inAccount];
+	//The accout should be in the accountArray, but sanity checking never hurt anyone
+	if (oldAccountIndex != NSNotFound) {
+		[self insertAccount:newAccount atIndex:oldAccountIndex];
+		
+		//Delete the old account
+		[self deleteAccount:inAccount];
+	}else{
+		[self insertAccount:newAccount atIndex:0];	
+	}
 	
     return(newAccount);
 }
