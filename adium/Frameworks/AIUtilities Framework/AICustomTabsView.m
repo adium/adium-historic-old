@@ -21,6 +21,7 @@
 #import <AIUtilities/AIUtilities.h>
 #import "AIMessageViewController.h"
 #import "AIMessageTabViewItem.h"
+#import "AIEventAdditions.h"
 
 #define TAB_DRAG_DISTANCE 	4	//Distance required before a drag kicks in
 
@@ -357,8 +358,9 @@
 
     if(tabCell){
         //Give the tab cell a chance to handle tracking
-        if(![tabCell willTrackMouse:theEvent inRect:[tabCell frame] ofView:self]){
-            //Select the tab
+        if(![tabCell willTrackMouse:theEvent inRect:[tabCell frame] ofView:self]
+            && ![NSEvent cmdKey]){
+            //Select the tab (if we're not holding down cmd)
             [tabView selectTabViewItem:[tabCell tabViewItem]];
         }
     }
@@ -376,7 +378,8 @@
         if( (lastClickLocation.x - clickLocation.x) > TAB_DRAG_DISTANCE || (lastClickLocation.x - clickLocation.x) < -TAB_DRAG_DISTANCE ||
             (lastClickLocation.y - clickLocation.y) > TAB_DRAG_DISTANCE || (lastClickLocation.y - clickLocation.y) < -TAB_DRAG_DISTANCE ){
             //if we've moved enough, initiate a drag
-            [self _beginDragOfTab:selectedCustomTabCell fromOffset:NSMakeSize(clickLocation.x, clickLocation.y)];
+            [self _beginDragOfTab:[self _cellAtPoint:clickLocation]
+                fromOffset:NSMakeSize(clickLocation.x, clickLocation.y)];
         }
     }
 
