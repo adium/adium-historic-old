@@ -594,13 +594,12 @@
 
     switch(connectionPhase){
         case 1: //Send the "flap on" packet
-            if([socket readyForSending]){
-                [socket sendData:[@"FLAPON\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            if([socket sendData:[@"FLAPON\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]]){
                 connectionPhase++;
             }
         break;
         case 2: //Receive the server version
-            if([socket readyForReceiving] && (packet = [AIMTOC2Packet packetFromSocket:socket sequence:0])){
+            if((packet = [AIMTOC2Packet packetFromSocket:socket sequence:0])){
                 if([packet dataByte:0] != 0 || [packet dataByte:1] != 0 || [packet dataByte:2] != 0 || [packet dataByte:3] != 1){
                     NSLog(@"ADIUM_ERROR:Invalid Server Version");
                     [self disconnect];
@@ -616,15 +615,14 @@
             }
         break;
         case 3: //Send the sign on packets
-            if([socket readyForSending]){
-
-                //Send the first sign on packet
-                [[AIMTOC2Packet signOnPacketForScreenName:[screenName compactedString] sequence:&localSequence] sendToSocket:socket];
+            //Send the first sign on packet
+            if([[AIMTOC2Packet signOnPacketForScreenName:[screenName compactedString] sequence:&localSequence] sendToSocket:socket]){
 
                 //Send the login string
                 [self sendCommand:[self loginStringForName:screenName password:password]];
 
                 connectionPhase = 0;
+                
             }
         break;
     }
@@ -643,7 +641,7 @@
     
     if(connectionPhase == 0){ //Send & Receive regular AIM commands
         //Receive any incoming packets
-        while([socket readyForReceiving] && (packet = [AIMTOC2Packet packetFromSocket:socket sequence:&remoteSequence])){
+        while((packet = [AIMTOC2Packet packetFromSocket:socket sequence:&remoteSequence])){
             if([packet frameType] == FRAMETYPE_DATA){
                 NSString		*message = [packet string];
                 NSString		*command = [message TOCStringArgumentAtIndex:0];
@@ -746,25 +744,31 @@
     }
 
     //Send any packets in the outQue
-    while([outQue count] && [socket readyForSending]){
+    BOOL packetProcessed = YES;
+    while([outQue count] && packetProcessed){ //When a packet fails to send, we stop trying until the next update timer fires.
         AIMTOC2Packet	*packet = [outQue objectAtIndex:0];
 
         if([packet length] <= 2048){
-            [[outQue objectAtIndex:0] sendToSocket:socket];
+            packetProcessed = [[outQue objectAtIndex:0] sendToSocket:socket];
+            
         }else{
             NSLog(@"Attempted to send invalid packet (Too large, %i)",[packet length]);
+            packetProcessed = YES; //Processed as in deleted :D
+            
         }
 
-        if(textView_trafficWatchDEBUG){
-            [[textView_trafficWatchDEBUG textStorage] appendString:@"-> "
-                                                    withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11],NSFontAttributeName,[NSColor blackColor],NSForegroundColorAttributeName,nil]];
-            [[textView_trafficWatchDEBUG textStorage] appendString:[NSString stringWithFormat:@"%@",[[outQue objectAtIndex:0] string]]
-                                                    withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11],NSFontAttributeName,[NSColor colorWithCalibratedRed:0.0 green:0.4 blue:0.0 alpha:1.0],NSForegroundColorAttributeName,nil]];
-            [[textView_trafficWatchDEBUG textStorage] appendString:@"\r" withAttributes:[NSDictionary dictionary]];
-            [textView_trafficWatchDEBUG scrollRangeToVisible:NSMakeRange([[textView_trafficWatchDEBUG textStorage] length],0)];
+        if(packetProcessed){ //If a packet fails to send, we don't log or remove it
+            if(textView_trafficWatchDEBUG){
+                [[textView_trafficWatchDEBUG textStorage] appendString:@"-> "
+                                                        withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11],NSFontAttributeName,[NSColor blackColor],NSForegroundColorAttributeName,nil]];
+                [[textView_trafficWatchDEBUG textStorage] appendString:[NSString stringWithFormat:@"%@",[[outQue objectAtIndex:0] string]]
+                                                        withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11],NSFontAttributeName,[NSColor colorWithCalibratedRed:0.0 green:0.4 blue:0.0 alpha:1.0],NSForegroundColorAttributeName,nil]];
+                [[textView_trafficWatchDEBUG textStorage] appendString:@"\r" withAttributes:[NSDictionary dictionary]];
+                [textView_trafficWatchDEBUG scrollRangeToVisible:NSMakeRange([[textView_trafficWatchDEBUG textStorage] length],0)];
+            }
+
+            [outQue removeObjectAtIndex:0];
         }
-        
-        [outQue removeObjectAtIndex:0];
     }
 }
 
@@ -796,7 +800,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.77 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.78 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)

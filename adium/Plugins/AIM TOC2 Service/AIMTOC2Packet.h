@@ -31,7 +31,7 @@ typedef enum{ FRAMETYPE_SIGNON = 1, FRAMETYPE_DATA, FRAMETYPE_ERROR, FRAMETYPE_S
 + (id)signOnPacketForScreenName:(NSString *)inName sequence:(unsigned short *)inSequence;
 + (id)packetOfType:(FRAMETYPE)inFrameType sequence:(unsigned short *)inSequence data:(NSData *)inData;
 - (char)dataByte:(int)index;
-- (void)sendToSocket:(AISocket *)inSocket;
+- (BOOL)sendToSocket:(AISocket *)inSocket;
 - (FRAMETYPE)frameType;
 - (unsigned short)sequence;
 - (unsigned short)length;

@@ -9770,32 +9770,6 @@
 			settings = {
 			};
 		};
-		4BF5BA1E042F3CD500A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AIURLLoader.h;
-			path = "Frameworks/AIUtilities Framework/AIURLLoader.h";
-			refType = 4;
-		};
-		4BF5BA1F042F3CD500A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AIURLLoader.m;
-			path = "Frameworks/AIUtilities Framework/AIURLLoader.m";
-			refType = 4;
-		};
-		4BF5BA20042F3CD500A8010A = {
-			fileRef = 4BF5BA1E042F3CD500A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BF5BA21042F3CD500A8010A = {
-			fileRef = 4BF5BA1F042F3CD500A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BF5BA22042F3CE200A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -12644,7 +12618,6 @@
 				4B3E502403EC538D00A8010A,
 				4B3E502803EC651400A8010A,
 				4B254C4703F6E09600A8010A,
-				4BF5BA20042F3CD500A8010A,
 				4BF5BA24042F3CE200A8010A,
 				4B30ADFC044228BA00A8010A,
 				4B30AE0A0442680000A8010A,
@@ -12734,7 +12707,6 @@
 				4B4C45A0040AC65700A8010A,
 				4B4C45A1040AC65700A8010A,
 				4B4C45A2040AC65800A8010A,
-				4BF5BA21042F3CD500A8010A,
 				4BF5BA25042F3CE200A8010A,
 				4B30ADFD044228BA00A8010A,
 				4B30AE0B0442680000A8010A,
@@ -13418,8 +13390,6 @@
 			children = (
 				F579394E033E74E401A8010A,
 				F579394F033E74E401A8010A,
-				4BF5BA1E042F3CD500A8010A,
-				4BF5BA1F042F3CD500A8010A,
 			);
 			isa = PBXGroup;
 			name = Networking;

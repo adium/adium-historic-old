@@ -81,12 +81,11 @@
     }
 }
 
-- (void)sendToSocket:(AISocket *)inSocket
+- (BOOL)sendToSocket:(AISocket *)inSocket
 {
     char		headerBytes[HEADER_LENGTH];
     unsigned short	dataLength = [data length];
     NSMutableData	*packetData;
-
 
     //Create the header
     headerBytes[0] = '*';
@@ -99,7 +98,7 @@
     packetData = [NSMutableData dataWithBytes:headerBytes length:HEADER_LENGTH];
     [packetData appendData:data];
 
-    [inSocket sendData:packetData];
+    return([inSocket sendData:packetData]);
 }
 
 - (FRAMETYPE)frameType{
@@ -150,7 +149,7 @@
     [super init];
 
     //Get the header
-    if([inSocket getData:&headerData ofLength:HEADER_LENGTH]){
+    if([inSocket getData:&headerData ofLength:HEADER_LENGTH remove:NO]){
 
         //Increase the sequence
         
@@ -166,7 +165,7 @@
         }
 
         //Get the packet contents
-        if([inSocket getData:&packetData ofLength:(HEADER_LENGTH + length)]){
+        if([inSocket getData:&packetData ofLength:(HEADER_LENGTH + length) remove:NO]){
             const char	*bytes = [packetData bytes];
 
             //Remove the data from the socket

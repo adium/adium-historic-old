@@ -30,6 +30,8 @@
 
 @interface AISocket (PRIVATE)
 - (id)initWithHost:(NSString *)host port:(int)port;
+- (BOOL)readyForSending;
+- (BOOL)readyForReceiving;
 @end
 
 @implementation AISocket
@@ -47,147 +49,125 @@
     return(isValid);
 }
 
-//Returns YES if the connection is ready for sending
-- (BOOL)readyForSending
-{
-    struct timeval 	timeOut;
-    fd_set 		writefds;
-    int			result;
-
-    //Set the timeout to 0
-    timeOut.tv_sec = 0;
-    timeOut.tv_usec = 0;
-
-    //Set up the writefds
-    FD_ZERO(&writefds);
-    FD_SET(theSocket, &writefds);
-
-    result = select(theSocket + 1, NULL, &writefds, NULL, &timeOut);
-    
-    {//Check for errors (that could case a SIGPIPE ?:\)
-        int 	error;
-        int	size = sizeof(error);
-        
-        getsockopt(theSocket, SOL_SOCKET, SO_ERROR, &error, &size);
-        if(error != 0){
-            NSLog(@"Socket(opt) error: %i",(int)error);
-            isValid = NO;
-            return(NO);
-        }
-    }
-
-    return(result != 0);
-}
-
-//Returns YES if the connection is ready for receiving
-- (BOOL)readyForReceiving
-{
-    struct timeval 	timeOut;
-    fd_set 		receivefds;
-    int			result;
-
-    //Set the timeout to 0
-    timeOut.tv_sec = 0;
-    timeOut.tv_usec = 0;
-
-    //Set up the writefds
-    FD_ZERO(&receivefds);
-    FD_SET(theSocket, &receivefds);
-
-    result = select(theSocket + 1, &receivefds, NULL, NULL, &timeOut);
-
-    return(result != 0);
-}
-
 //Send data
-- (void)sendData:(NSData *)inData
+- (BOOL)sendData:(NSData *)inData
 {
-    const char		*bytes;
-    int			length;
-    int			bytesSent;
+    BOOL success = NO;
 
-    //get the data bytes and length
-    bytes = [inData bytes];
-    length = [inData length];
+    //If we are ready for sending, send out the buffer contents
+    if([self readyForSending]){
+        const char		*bytes = [inData bytes];
+        int			length = [inData length];
+        int			bytesLeft = length;
+        int			bytesSent = 0;
 
-    //send it
-    bytesSent = send(theSocket, bytes, length, 0);
+        //send it
+        while(bytesLeft > 0){
+            bytesSent = send(theSocket, bytes + (length - bytesLeft), bytesLeft, 0);
+            if(bytesSent <= 0){
+                isValid = NO;
+                break;
+            }
+            
+            bytesLeft -= bytesSent;
+        }
 
-    if(bytesSent != length){
-        NSLog(@"sent (%i/%i)",bytesSent,length);
+        success = YES;
     }
+
+    return(success);
 }
+
 
 //Get data
-- (BOOL)getData:(NSData **)outData ofLength:(int)inLength
+- (BOOL)getData:(NSData **)outData ofLength:(int)inLength remove:(BOOL)remove
 {
+    BOOL		allDataAvailable;
     int		 	bytesRead;
     char		tempBuffer[8192];
 
+    //
+    *outData = nil;
+    allDataAvailable = NO;
+
+    //
     if([readBuffer length] >= inLength){ // this data is fully in the buffer
         //Return the correct bytes from the buffer
-        *outData = [NSData dataWithBytes:[readBuffer bytes] length:inLength];
-        return(YES);
+        *outData = readBuffer;
+        allDataAvailable = YES;
 
     }else{ // This data hasn't arrived yet (or has only partially arrived)
-        //Read the bytes (or remaining bytes) from the net
-        bytesRead = recv(theSocket,&tempBuffer,(inLength - [readBuffer length]),0);
 
-        if(bytesRead == -1){
-            NSLog(@"Packet Error: NO DATA AVAILABLE!");
-            return(NO);
-        }else if(bytesRead == 0){
-            NSLog(@"Disconnected.");
-            isValid = NO;
-            return(NO);
-        }else{
-            //Append the bytes to the read buffer
-            [readBuffer appendBytes:tempBuffer length:bytesRead];
+        if([self readyForReceiving]){
+            //Read the bytes (or remaining bytes) from the net
+            bytesRead = recv(theSocket, &tempBuffer, (inLength - [readBuffer length]), 0);
 
-            *outData = readBuffer; //Return the data read so far
-            return([readBuffer length] == inLength); //We YES if we have all the data
+            if(bytesRead == 0){ //Our socket is disconnected
+                isValid = NO;
+
+            }else if(bytesRead > 0){
+                //Append the bytes to the read buffer
+                [readBuffer appendBytes:tempBuffer length:bytesRead];
+
+                *outData = readBuffer; //Return the data read so far
+                allDataAvailable = ([readBuffer length] == inLength); //YES if we have all the data
+
+                //Remove the bytes from the read buffer (if desired)
+                if(allDataAvailable && remove){
+                    [self removeDataBytes:inLength];
+                }
+            }
+
         }
     }
+
+    return(allDataAvailable);
 }
-//Read upto \r\n
-- (void)getDataToNewline:(NSData **)outData
-{
-    char tempBuffer[1024];
-    int bytesRead;
-    NSString *readStr;
-    NSMutableData *readBuf = [[[NSMutableData alloc] init] autorelease];
 
-    while(bytesRead = recv(theSocket, &tempBuffer, sizeof(tempBuffer), MSG_PEEK))
-    {
-        if(bytesRead >= 1)
-        {      
-            readStr = [NSString stringWithCString:tempBuffer length:bytesRead];
-            NSRange newLineRange = [readStr rangeOfString:@"\r\n"];
-                        
-            if(newLineRange.location != NSNotFound)
-            {
-                [readBuf appendBytes: [[readStr substringToIndex:newLineRange.location +
-                        newLineRange.length] cString] 
-                    length:newLineRange.location+newLineRange.length];
-                        
-                recv(theSocket, &tempBuffer, (newLineRange.location+newLineRange.length) * sizeof(char), 0); 
-                break;
-            }
-            else
-            {
-                [readBuf appendBytes:[readStr cString] length:[readStr cStringLength]];
-                recv(theSocket, &tempBuffer, sizeof(tempBuffer), 0);
-            }
-        }
-        else if(bytesRead == 0)
-        {
-                NSLog(@"Disconnected.");
-                isValid = NO; 
-                return;
+- (BOOL)getDataToNewline:(NSData **)outData remove:(BOOL)remove
+{
+    BOOL	lineAvailable;
+    char 	tempBuffer[8192];
+    const char	*bytes;
+    int 	length;
+    int 	c;
+
+    //Read a chunk of data into the buffer
+    if([self readyForReceiving]){
+        int	bytesRead;
+
+        bytesRead = recv(theSocket, &tempBuffer, sizeof(tempBuffer), 0);
+
+        if(bytesRead == 0){ //Our socket is disconnected
+            isValid = NO;
+        }else if(bytesRead > 0){ //Append the bytes to the read buffer
+            [readBuffer appendBytes:tempBuffer length:bytesRead];
         }
     }
-        
-    *outData = readBuf;
+
+    //
+    *outData = readBuffer;
+    lineAvailable = NO;
+
+    //Search the buffer for a newline (Scanning manually is faster than letting NSString handle it)
+    length = [readBuffer length];
+    bytes = [readBuffer bytes];
+
+    for(c = 0; c < length - 1; c++){
+        if(bytes[c] == '\r' && bytes[c+1] == '\n'){
+            *outData = [NSData dataWithBytes:bytes length:(c + 2)];
+            lineAvailable = YES;
+            
+            //Remove the bytes from the read buffer (if desired)
+            if(remove){
+                [self removeDataBytes:(c + 2)];
+            }
+
+            break;
+        }
+    }
+
+    return(lineAvailable);
 }
 
 //Remove data from the buffer
@@ -201,9 +181,14 @@
         const char *bytes = [readBuffer bytes];
 
         //subtract the bytes
-        [readBuffer autorelease]; readBuffer = nil;
+        [readBuffer autorelease];
         readBuffer = [[NSMutableData alloc] initWithBytes:&bytes[inLength] length:([readBuffer length] - inLength)];
     }
+}
+
+- (NSString *)hostIP
+{
+    return(hostIP);
 }
 
 
@@ -247,9 +232,9 @@
     inet_aton(address, &(socketAddress.sin_addr));
     memset(&(socketAddress.sin_zero),'\0',8);
 
-    //Set up the read buffer
+    //Set up the send & read buffer
     readBuffer = [[NSMutableData alloc] init];
-
+    
     //Connect
     isValid = YES;    
     if(connect(theSocket, (struct sockaddr *)&socketAddress, sizeof(struct sockaddr)) != 0 && errno != EINPROGRESS){    
@@ -260,17 +245,64 @@
     return(self);
 }
 
-- (NSString *)hostIP
+//Returns YES if the connection is ready for sending
+- (BOOL)readyForSending
 {
-    return(hostIP);
+    struct timeval 	timeOut;
+    fd_set 		writefds;
+    int			result;
+
+    //Set the timeout to 0
+    timeOut.tv_sec = 0;
+    timeOut.tv_usec = 0;
+
+    //Set up the writefds
+    FD_ZERO(&writefds);
+    FD_SET(theSocket, &writefds);
+
+    result = select(theSocket + 1, NULL, &writefds, NULL, &timeOut);
+
+    {//Check for errors (that could case a SIGPIPE ?:\)
+        int 	error;
+        int	size = sizeof(error);
+
+        getsockopt(theSocket, SOL_SOCKET, SO_ERROR, &error, &size);
+        if(error != 0){
+            NSLog(@"Socket(opt) error: %i",(int)error);
+            isValid = NO;
+            return(NO);
+        }
+    }
+
+    return(result != 0);
+}
+
+//Returns YES if the connection is ready for receiving
+- (BOOL)readyForReceiving
+{
+    struct timeval 	timeOut;
+    fd_set 		receivefds;
+    int			result;
+
+    //Set the timeout to 0
+    timeOut.tv_sec = 0;
+    timeOut.tv_usec = 0;
+
+    //Set up the writefds
+    FD_ZERO(&receivefds);
+    FD_SET(theSocket, &receivefds);
+
+    result = select(theSocket + 1, &receivefds, NULL, NULL, &timeOut);
+
+    return(result != 0);
 }
 
 - (void)dealloc
 {
     close(theSocket);
-    [readBuffer release]; readBuffer = nil;
-    [hostIP release]; hostIP = nil;
-    
+    [readBuffer release];
+    [hostIP release];
+   
     [super dealloc];
 }
 
