@@ -187,7 +187,7 @@ float ToolbarHeightForWindow(NSWindow *window)
 	NSScreen	*currentScreen = [theWindow screen];
 	int			desiredHeight = [contactListView desiredHeight];
 	float		toolbarHeight;
-	BOOL		anchorToRightEdge;
+	BOOL		anchorToRightEdge = NO;
 	
 	windowFrame = [theWindow frame];
 	newWindowFrame = windowFrame;
