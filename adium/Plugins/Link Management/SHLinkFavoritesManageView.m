@@ -80,7 +80,7 @@
 
 - (IBAction)addLink:(id)sender
 {
-    [[SHLinkEditorWindowController alloc] initAddLinkFavoritesWindowController];
+    [[SHLinkEditorWindowController alloc] initAddLinkFavoritesWindowControllerWithView:[self superview]];
 }
 
 - (void)configureControlDimming

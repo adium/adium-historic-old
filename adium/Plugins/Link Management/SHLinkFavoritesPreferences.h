@@ -15,5 +15,5 @@
     IBOutlet SHLinkFavoritesManageView  *favoritesList;
 
 }
-
+- (IBAction)addLink:(id)sender;
 @end
