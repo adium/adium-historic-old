@@ -172,9 +172,7 @@ static NSString *MobileServiceID = nil;
 						statusMsgString = [self stringWithBytes:userinfo->away
 														 length:userinfo->away_len
 													   encoding:userinfo->away_encoding];
-						if ([[theContact UID] isEqualToString:@"n110941"]){
-							NSLog(@"%s:\n=%s=\n=%i=\n=%s=\n(%@)",buddy->name,userinfo->away,userinfo->away_len,userinfo->away_encoding,statusMsgString);
-						}
+
 						//If the away message changed, make sure the contact is marked as away
 						BOOL		newAway;
 						NSNumber	*storedValue;
@@ -421,7 +419,7 @@ aim_srv_setavailmsg(od->sess, text);
 		
 	}
 	
-	NSLog(@"[%s] [%i] [%i]",bytes,length,desiredEncoding);
+//	NSLog(@"[%s] [%i] [%i]",bytes,length,desiredEncoding);
 
 	return [[[NSString alloc] initWithBytes:bytes length:length encoding:desiredEncoding] autorelease];
 }
