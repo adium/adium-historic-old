@@ -7,7 +7,10 @@
 
 #import "ESGaimTrepiaAccountViewController.h"
 
-
 @implementation ESGaimTrepiaAccountViewController
+
+- (NSString *)nibName{
+    return(@"ESGaimTrepiaAccountView");
+}
 
 @end

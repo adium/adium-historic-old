@@ -39,6 +39,9 @@
 	<key>Yahoo:Port</key>
 	<integer>5050</integer>
 	
+	<key>Novell:Port</key>
+	<integer>8300</integer>
+	
 	<key>Proxy Type</key>
 	<integer>1</integer>
 	<key>Proxy Needs Authentication</key>
