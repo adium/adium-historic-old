@@ -49,11 +49,14 @@
 
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
-	NSURL 			*scriptURL = [NSURL fileURLWithPath:[details objectForKey:KEY_APPLESCRIPT_TO_RUN]];
+	NSURL 			*scriptURL;
+	NSAppleScript   *script;
 	
-	NSAppleScript   *script = [[[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil] autorelease];
+	scriptURL = [NSURL fileURLWithPath:[details objectForKey:KEY_APPLESCRIPT_TO_RUN]];
+	script = [[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil];
 	
 	[script executeAndReturnError:nil];
+	[script release];
 }
 
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
