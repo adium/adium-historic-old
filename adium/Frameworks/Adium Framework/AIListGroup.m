@@ -28,8 +28,7 @@
     [super initWithUID:inUID serviceID:nil];
 	
     containedObjects = [[NSMutableArray alloc] init];
-    expanded = YES;
-	
+
 	//Default invisible
     visibleCount = 0;
 	visible = NO;
@@ -37,21 +36,6 @@
     
     return(self);
 }
-
-
-//Expanded State -------------------------------------------------------------------------------------------------------
-#pragma mark Expanded State
-//Set the expanded/collapsed state of this group (PRIVATE: For the contact list view to let us know our state)
-- (void)setExpanded:(BOOL)inExpanded
-{
-    expanded = inExpanded;
-}
-//Returns the current expanded/collapsed state of this group
-- (BOOL)isExpanded
-{
-    return(expanded);
-}
-
 
 //Visibility -----------------------------------------------------------------------------------------------------------
 #pragma mark Visibility

@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Tue Mar 23 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIOutlineView.h"
@@ -20,6 +19,14 @@
 	
 	float   groupRowHeight;
 	float   contentRowHeight;
+	
+	NSImage		*backgroundImage;
+	float 		backgroundFade;
+	BOOL		drawsBackground;
+	
+	NSColor		*backgroundColor;
+	
+	BOOL		drawHighlightOnlyWhenMain;
 }
 
 - (void)setContentCell:(id)cell;
@@ -28,6 +35,13 @@
 - (id)contentCell;
 - (id)groupCell;
 	
+- (void)setBackgroundImage:(NSImage *)inImage;
+- (void)setBackgroundFade:(float)fade;
+- (void)setDrawsBackground:(BOOL)inDraw;
+
+- (void)setDrawHighlightOnlyWhenMain:(BOOL)inFlag;
+- (BOOL)drawHighlightOnlyWhenMain;
+
 @end
 
 @interface NSObject (AIMultiCellVariableHeightCell)

@@ -18,16 +18,6 @@
 
 #import "AIListOutlineView.h"
 
-#import "AIListCell.h"
-#import "AIListGroupGradientCell.h"
-#import "AIListContactCell.h"
-#import "AIListContactBubbleCell.h"
-#import "AIListGroupMockieCell.h"
-#import "AIListContactMockieCell.h"
-#import "AIListContactBubbleToFitCell.h"
-#import "AIListGroupBubbleCell.h"
-#import "AIListGroupBubbleToFitCell.h"
-
 #import "AIListLayoutWindowController.h"
 #import "AIListThemeWindowController.h"
 
@@ -99,20 +89,7 @@
 - (id)init
 {	
     [super initWithWindowNibName:[self nibName]];
-	NSLog(@"%@ initWithWindowNibName:%@",self,[self nibName]);
     return(self);
-}
-
-//Dealloc
-- (void)dealloc
-{
-	[contactListView setDelegate:nil];
-
-	[groupCell release];
-	[contentCell release];
-
-	NSLog(@"%@ dealloc",self);
-    [super dealloc];
 }
 
 //Our window nib name
@@ -124,6 +101,10 @@
 //Setup the window after it has loaded
 - (void)windowDidLoad
 {
+	[super windowDidLoad];
+	
+	[contactListView setDrawHighlightOnlyWhenMain:YES];
+	
     NSString	*frameString;
     
     //Exclude this window from the window menu (since we add it manually)
@@ -131,7 +112,7 @@
     
     //Restore the window position
     frameString = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
-	NSLog(@"%@",frameString);
+	NSLog(@"AIListWindowController: frame: %@",frameString);
 	if(frameString){
 		NSRect		windowFrame = NSRectFromString(frameString);
 		
@@ -147,16 +128,6 @@
 	
     minWindowSize = [[self window] minSize];
 	
-    //Configure the contact list view
-	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
-	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[AIListContactCell alloc] init]];	
-
-	//Targeting
-    [contactListView setTarget:self];
-	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
-	[scrollView_contactList setDrawsBackground:NO];
-    [scrollView_contactList setAutoScrollToBottom:NO];
-    [scrollView_contactList setAutoHideScrollBar:YES];
     [[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(contactListDesiredSizeChanged:)
 												 name:AIViewDesiredSizeDidChangeNotification
@@ -191,13 +162,13 @@
 //Close the contact list window
 - (BOOL)windowShouldClose:(id)sender
 {
-	NSLog(@"should close");
+	[super windowShouldClose:sender];
+	
     //Stop observing
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
-	[tooltipTracker release];
-    
+
 	//Save the window position
 	[[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME
@@ -252,181 +223,46 @@
 			[self autorelease];
 		}
 	}
-	
-	
-	
+
 	//Layout ------------
     if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_LAYOUT])){
-        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
-		int				windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
-		float			backgroundAlpha	= [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
-		LIST_CELL_STYLE	contactCellStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE] intValue];
-		Class			cellClass;
-
+        NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
+		NSDictionary	*themeDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
+		
 		//
-		autoResizeVertically = [[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
-		autoResizeHorizontally = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
+		autoResizeVertically = [[layoutDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
+		autoResizeHorizontally = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
 		[[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontally)];
 		[self contactListDesiredSizeChanged:nil];
 		
-		//Group Cell
-		[groupCell release];
-		if(windowStyle == WINDOW_STYLE_MOCKIE){
-			groupCell = [[AIListGroupMockieCell alloc] init];
-		}else{
-			switch([[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_CELL_STYLE] intValue]){
-				case CELL_STYLE_STANDARD: 	cellClass = [AIListGroupCell class]; break;
-				case CELL_STYLE_BRICK: 		cellClass = [AIListGroupGradientCell class]; break;
-				case CELL_STYLE_BUBBLE: 	cellClass = [AIListGroupBubbleCell class]; break;
-				default: /*case CELL_STYLE_BUBBLE_FIT:*/ cellClass = [AIListGroupBubbleToFitCell class]; break;
-			}
-			groupCell = [[cellClass alloc] init];	
-		}
-		[contactListView setGroupCell:groupCell];
+		[self updateLayoutFromPrefDict:layoutDict];
 		
-		//Contact Cell
-		//Disallow standard and brick for pillows
-		if(windowStyle == WINDOW_STYLE_PILLOWS &&
-		   (contactCellStyle == CELL_STYLE_STANDARD || contactCellStyle == CELL_STYLE_BRICK)){
-			contactCellStyle = CELL_STYLE_BUBBLE;
-		}
-		//Disallow bubble and bubble to fit for mockie
-		if(windowStyle == WINDOW_STYLE_MOCKIE &&
-		   (contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT)){
-			contactCellStyle = CELL_STYLE_STANDARD;
-		}
-		[contentCell release];
-		switch(contactCellStyle){
-			case CELL_STYLE_STANDARD: 	cellClass = [AIListContactCell class]; break;
-//			case CELL_STYLE_BRICK: 		cellClass = [AIListContactBrickCell class]; break;
-			case CELL_STYLE_BUBBLE: 	cellClass = [AIListContactBubbleCell class]; break;
-			default: /*case CELL_STYLE_BUBBLE_FIT:*/ cellClass = [AIListContactBubbleToFitCell class]; break;
-		}
-		contentCell = [[cellClass alloc] init];
-		[contactListView setContentCell:contentCell];
-		
-		//Alignment
-		[contentCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue]];
-		[groupCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
-		[contentCell setUserIconSize:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue]];
+		[self updateCellRelatedThemePreferencesFromDict:themeDict];
+		[self updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];
 
-		[contentCell setUserIconVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
-		[contentCell setExtendedStatusVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
-		[contentCell setStatusIconsVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
-		[contentCell setServiceIconsVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue]];
-		
-		[contentCell setUserIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue]];
-		[contentCell setStatusIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
-		[contentCell setServiceIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];
-		
-		//Fonts
-		[contentCell setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_FONT] representedFont]];
-		[contentCell setStatusFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_FONT] representedFont]];
-		[groupCell setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont]];
-		
-		//Bubbles special cases
-		if(contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT){
-			[contentCell setSplitVerticalSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
-			[contentCell setLeftSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
-			[contentCell setRightSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
-		}else{
-			[contentCell setSplitVerticalPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
-			[contentCell setLeftPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
-			[contentCell setRightPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
-		}
-
-		//Mockie special cases
-		if(windowStyle == WINDOW_STYLE_MOCKIE){
-			[groupCell setTopSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
-		}
-		
-		//Background
-		if(windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_PILLOWS){
-			[contentCell setBackgroundOpacity:backgroundAlpha];
-			[contactListView setDrawsBackground:NO];
-		}else{
-			[contactListView setDrawsBackground:YES];
-		}
-
-		//Shadow
-		[[self window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
-		
-		//Outline View
-		[self updateCellRelatedThemePreferences];
-		[self updateTransparency];
-		[contactListView setGroupCell:groupCell];
-		[contactListView setContentCell:contentCell];
-		[contactListView setNeedsDisplay:YES];
-		[self contactListDesiredSizeChanged:nil];
 	}
 	
 	//Theme
     if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_THEME])){
-        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
-		NSString		*imagePath = [prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH];
-		float			backgroundAlpha	= [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY
-																					group:PREF_GROUP_LIST_LAYOUT] floatValue];
+        NSDictionary	*themeDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
+		NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
+
+		NSString		*imagePath = [themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH];
+		float			backgroundAlpha	= [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
+		
 		//Background Image
-		if(imagePath && [imagePath length] && [[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]){
+		if(imagePath && [imagePath length] && [[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]){
 			[contactListView setBackgroundImage:[[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease]];
 		}else{
 			[contactListView setBackgroundImage:nil];
 		}
 		
 		//Background
-		[self updateCellRelatedThemePreferences];
-		[self updateTransparency];
+		[self updateCellRelatedThemePreferencesFromDict:themeDict];
+
+		[self updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];
 	}
 }
-
-- (void)updateTransparency
-{
-	NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
-	NSDictionary	*themeDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
-	float			backgroundAlpha	= [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
-	int				windowStyle = [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
-		
-	[contactListView setBackgroundFade:([[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue] * backgroundAlpha)];
-	[contactListView setBackgroundColor:[[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
-	[contactListView setAlternatingRowColor:[[[themeDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
-
-	//Mockie and pillow special cases
-	if(windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_PILLOWS){
-		backgroundAlpha = 0.0;
-		[contactListView setDrawsAlternatingRows:NO];
-	}else{
-		[contactListView setDrawsAlternatingRows:(backgroundAlpha == 0.0 ? NO : [[themeDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue])];
-	}
-	
-	//Transparency.  Bye bye CPU cycles, I'll miss you!
-	[[self window] setOpaque:(backgroundAlpha == 1.0)];
-	[contactListView setUpdateShadowsWhileDrawing:(backgroundAlpha < 0.8)];
-	//--
-}
-
-- (void)updateCellRelatedThemePreferences
-{
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
-
-	if([groupCell respondsToSelector:@selector(setBackgroundColor:gradientColor:)]){
-		[groupCell setBackgroundColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]
-						gradientColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
-	}
-	
-	if([groupCell respondsToSelector:@selector(setShadowColor:)]){
-		[groupCell setShadowColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
-	}
-	
-	if([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_GROUP_CELL_STYLE
-												 group:PREF_GROUP_LIST_LAYOUT] intValue] == CELL_STYLE_STANDARD){
-		[groupCell setTextColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR] representedColor]];
-	}else{
-		[groupCell setTextColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR_INVERTED] representedColor]];
-	}
-
-	[contentCell setBackgroundColorIsStatus:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_AS_STATUS] boolValue]];
-}
-
 
 
 //- (float)backgroundAlpha
@@ -442,19 +278,8 @@
 //}
 //
 
-
-
-
-
-
-
-
-
-//Double click in outline view
-- (IBAction)performDefaultActionOnSelectedContact:(id)sender
-{
-    AIListObject	*selectedObject = [sender itemAtRow:[sender selectedRow]];
-	
+- (IBAction)performDefaultActionOnSelectedContact:(AIListObject *)selectedObject withSender:(id)sender
+{	
     if([selectedObject isKindOfClass:[AIListGroup class]]){
         //Expand or collapse the group
         if([sender isItemExpanded:selectedObject]){
@@ -677,15 +502,6 @@
 //{
 //#warning ###    [contactListView _performFullRecalculation];
 //}
-	
-
-
-
-
-
-
-
-
 
 //Content Updating -----------------------------------------------------------------------------------------------------
 #pragma mark Content Updating
@@ -695,8 +511,8 @@
 	id		object = [notification object];
 	//Redisplay and resize
 	if(!object || object == contactList){
-		[contactList release]; contactList = [[[adium contactController] contactList] retain];
-		[contactListView reloadData];
+		
+		[self setContactListRoot:[[adium contactController] contactList]];
 #warning ###		[contactListView _performFullRecalculation];
 	}else{
 		NSDictionary	*userInfo = [notification userInfo];
@@ -755,67 +571,6 @@
     }
 }
 
-//Outline View data source ---------------------------------------------------------------------------------------------
-#pragma mark Outline View data source
-//
-- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
-{
-    if(item == nil){
-		return((index >= 0 && index < [contactList containedObjectsCount]) ? [contactList objectAtIndex:index] : nil);
-    }else{
-        return((index >= 0 && index < [item containedObjectsCount]) ? [item objectAtIndex:index] : nil);
-    }
-}
-
-//
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
-{
-    if([item isKindOfClass:[AIListGroup class]]){
-        return(YES);
-    }else{
-        return(NO);
-    }
-}
-
-//
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
-{
-    if(item == nil){
-        return([contactList visibleCount]);
-    }else{
-        return([item visibleCount]);
-    }
-}
-
-//Before one of our cells gets told to draw, we need to make sure it knows what contact it's drawing for.
-- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
-{
-	[(AIListCell *)cell setListObject:item];
-	[(AIListCell *)cell setControlView:outlineView];
-	
-//	
-//	int	icons = [iconArray count];
-//    int	columns = [tableView numberOfColumns];
-//    int index;
-//	
-//    index = (row * columns) + [tableView indexOfTableColumn:tableColumn];
-//	
-//	
-//	
-//    if(index >= 0 && index < icons && (index == selectedIconIndex)){
-//        [cell setHighlighted:YES];
-//    }else{
-//        [cell setHighlighted:NO];
-//    }
-	
-}
-
-//
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
-{
-    return(@"");
-}
-
 //
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {    
@@ -833,70 +588,10 @@
 }
 
 //
-- (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
-{
-    [item setExpanded:state];
-}
-
-//
-- (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
-{
-    return([item isExpanded]);
-}
-
-//
-- (NSMenu *)outlineView:(NSOutlineView *)outlineView menuForEvent:(NSEvent *)theEvent
-{
-    NSPoint	location;
-    int		row;
-    id		item;
-
-    //Get the clicked item
-    location = [outlineView convertPoint:[theEvent locationInWindow] fromView:[[outlineView window] contentView]];
-    row = [outlineView rowAtPoint:location];
-    item = [outlineView itemAtRow:row];
-
-    //Select the clicked row and bring the window forward
-    [outlineView selectRow:row byExtendingSelection:NO];
-    [[outlineView window] makeKeyAndOrderFront:nil];
-
-    //Hide any open tooltip
-    [self hideTooltip];
-
-    //Return the context menu
-	AIListObject	*listObject = (AIListObject *)[contactListView firstSelectedItem];
-	BOOL			isGroup = [listObject isKindOfClass:[AIListGroup class]];
-	NSArray			*locationsArray = [NSArray arrayWithObjects:
-		[NSNumber numberWithInt:(isGroup ? Context_Group_Manage : Context_Contact_Manage)],
-		[NSNumber numberWithInt:Context_Contact_Action],
-		[NSNumber numberWithInt:Context_Contact_ListAction],
-		[NSNumber numberWithInt:Context_Contact_NegativeAction],
-		[NSNumber numberWithInt:Context_Contact_Additions], nil];
-	
-    return([[adium menuController] contextualMenuWithLocations:locationsArray
-												 forListObject:listObject]);
-}
-
-- (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
-{
-	//Kill any selections
-	[outlineView deselectAll:nil];
-
-	//Begin the drag
-	if(dragItems) [dragItems release];
-	dragItems = [items retain];
-
-	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject",nil] owner:self];
-	[pboard setString:@"Private" forType:@"AIListObject"];
-
-	return(YES);
-}
-//
 - (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
 	
-	//No longer in a drag, so allow tooltips again
 	//No dropping into contacts
     if([avaliableType isEqualToString:@"AIListObject"]){
 		id	primaryDragItem = [dragItems objectAtIndex:0];
@@ -918,8 +613,7 @@
 			}
 			
 		}
-		
-		
+
 		if(index == -1 && ![item isKindOfClass:[AIListGroup class]]){
 			return(NSDragOperationNone);
 		}
@@ -938,7 +632,7 @@
 		//The tree root is not associated with our root contact list group, so we need to make that association here
 		if(item == nil) item = contactList;
 		
-		//Move the list object to it's new location
+		//Move the list object to its new location
 		if([item isKindOfClass:[AIListGroup class]]){
 			[[adium contactController] moveListObjects:dragItems toGroup:item index:index];
 		}
@@ -955,30 +649,6 @@
 - (void)outlineViewItemDidCollapse:(NSNotification *)notification
 {
 	[self contactListDesiredSizeChanged:nil];
-}
-
-
-//Tooltip --------------------------------------------------------------------------------------------------------------
-#pragma mark Tooltip
-//Show tooltip
-- (void)showTooltipAtPoint:(NSPoint)screenPoint
-{
-	NSPoint			viewPoint = [contactListView convertPoint:[[self window] convertScreenToBase:screenPoint] fromView:nil];
-	AIListObject	*hoveredObject = [contactListView itemAtRow:[contactListView rowAtPoint:viewPoint]];
-	
-	if([hoveredObject isKindOfClass:[AIListContact class]]){
-		[[adium interfaceController] showTooltipForListObject:hoveredObject
-												atScreenPoint:screenPoint
-													 onWindow:[self window]];
-	}else{
-		[self hideTooltip];
-	}
-}
-
-//Hide tooltip
-- (void)hideTooltip
-{
-	[[adium interfaceController] showTooltipForListObject:nil atScreenPoint:NSMakePoint(0,0) onWindow:nil];
 }
 
 

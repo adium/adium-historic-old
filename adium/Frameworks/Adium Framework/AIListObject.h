@@ -37,7 +37,8 @@ typedef enum {
 	float					orderIndex;				//Placement of this contact within a group
 	
 	NSMutableArray			*containedObjects;			//Manually ordered array of contents
-
+    BOOL					expanded;			//Exanded/Collapsed state of this object
+	
 	NSImage					*_listUserIcon;
 	NSSize					_listUserIconSize;
 }
@@ -113,5 +114,10 @@ typedef enum {
 //mutableOwnerArray delegate and methods
 - (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner;
 - (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(AIListObject *)anObject withOwner:(AIListObject *)inOwner;
+
+
+//Expanded State (PRIVATE: For the contact list view to let us know our state)
+- (void)setExpanded:(BOOL)inExpanded;
+- (BOOL)isExpanded;
 
 @end

@@ -3,10 +3,11 @@
 //  Adium
 //
 //  Created by Adam Iser on Tue Mar 23 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIMultiCellOutlineView.h"
+
+#warning Evan: Should be further subclassed to separate out a class which adds the drawing methods?
 
 @interface AIMultiCellOutlineView (PRIVATE)
 - (void)resetRowHeightCache;
@@ -39,6 +40,11 @@
 	contentRowHeight = 0;
 	groupRowHeight = 0;
 	totalHeight = 0;
+	drawHighlightOnlyWhenMain = NO;
+	
+	backgroundImage = nil;
+	backgroundFade = 1.0;
+	drawsBackground = YES;
 }
 
 - (void)dealloc
@@ -141,7 +147,7 @@
 	id		cell = ([self isExpandable:item] ? groupCell : contentCell);
 	
 	if(row >= 0 && row < [self numberOfRows]){ //Somebody keeps calling this method with row = numberOfRows, which is wrong.
-#warning crashing on [self delegate] on quit?
+
 		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
 
 		//Draw the grid
@@ -240,6 +246,136 @@
 		
 		totalHeight = origin;
 	}
+}
+
+
+//Background -----------------------------------------------------------------
+//
+- (void)setBackgroundImage:(NSImage *)inImage
+{
+	[backgroundImage release]; backgroundImage = nil;
+	
+	backgroundImage = [inImage retain];
+	[backgroundImage setFlipped:YES];
+	
+	[[self superview] setCopiesOnScroll:(!backgroundImage)];
+	[self setNeedsDisplay:YES];
+}
+
+- (void)setDrawsBackground:(BOOL)inDraw
+{
+	drawsBackground = inDraw;
+}
+
+- (void)setBackgroundFade:(float)fade
+{
+	backgroundFade = fade;
+}
+
+- (void)setBackgroundColor:(NSColor *)inColor
+{
+	[backgroundColor release];
+	backgroundColor = [inColor retain];
+}
+
+- (NSColor *)backgroundColor
+{
+	return(backgroundColor);
+}
+
+- (void)viewWillMoveToSuperview:(NSView *)newSuperview
+{
+	[super viewWillMoveToSuperview:newSuperview];
+
+	[(NSClipView *)newSuperview setCopiesOnScroll:(!backgroundImage)];
+}
+
+//
+- (void)drawBackgroundInClipRect:(NSRect)clipRect
+{
+	NSRect visRect = [[self enclosingScrollView] documentVisibleRect];
+	
+#warning --
+	[super drawBackgroundInClipRect:clipRect];
+	
+	if(drawsBackground){
+		//BG Color
+		[backgroundColor set];
+		NSRectFill(clipRect);
+		
+		//Image
+		if(backgroundImage){
+			NSSize	imageSize = [backgroundImage size];
+			
+			[backgroundImage drawInRect:NSMakeRect(visRect.origin.x, visRect.origin.y, imageSize.width, imageSize.height)
+							   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
+							  operation:NSCompositeSourceOver
+							   fraction:backgroundFade];
+		}	
+	}else{
+		[[NSColor clearColor] set];
+		NSRectFill(clipRect);
+	}
+}
+
+
+//Custom highlight management
+- (void)setDrawHighlightOnlyWhenMain:(BOOL)inFlag
+{
+	drawHighlightOnlyWhenMain = inFlag;	
+}
+- (BOOL)drawHighlightOnlyWhenMain
+{
+	return drawHighlightOnlyWhenMain;
+}
+
+- (void)highlightSelectionInClipRect:(NSRect)clipRect
+{
+#warning 10.3 only
+	if(!drawHighlightOnlyWhenMain || [[self window] isMainWindow]){
+		NSIndexSet *indices = [self selectedRowIndexes];
+		unsigned int bufSize = [indices count];
+		unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
+		unsigned int i;
+		NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
+		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
+		
+		for(i = 0; i < bufSize; i++) {
+			unsigned int startIndex = buf[i];
+			unsigned int endIndex = startIndex;
+			
+			//Process the selected rows in clumps
+#warning merging
+			while(i < bufSize-1 && buf[i+1] == endIndex + 1){
+				i++;
+				endIndex++;
+			}
+			
+			NSLog(@"select from %i to %i",startIndex,endIndex);
+			
+			NSRect selectRect;
+			if(startIndex == endIndex){
+				selectRect = [self rectOfRow:startIndex];
+			}else{
+				selectRect = NSUnionRect([self rectOfRow:startIndex],[self rectOfRow:endIndex]);
+			}
+			
+			//Draw the gradient
+			AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
+			[gradient drawInRect:selectRect];
+			
+			//Draw a line at the light side, to make it look a lot cleaner
+			selectRect.size.height = 1;
+			[[NSColor alternateSelectedControlColor] set];
+			NSRectFillUsingOperation(selectRect, NSCompositeSourceOver);
+			
+			
+			//
+		}
+		
+		free(buf);
+	}
+	
 }
 
 @end

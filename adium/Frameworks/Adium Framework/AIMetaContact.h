@@ -14,6 +14,7 @@
 	NSMutableDictionary		*statusCacheDict;	//Cache of the status of our contained objects
 	
 	AIListContact			*_preferredContact;
+	NSArray					*_listContacts;
 	
 	BOOL					containsOnlyOneUniqueContact;
 	BOOL					containsOnlyOneService;
@@ -36,5 +37,7 @@
 
 - (BOOL)containsOnlyOneUniqueContact;
 - (BOOL)containsOnlyOneService;
+- (int)uniqueContainedObjectsCount;
+- (AIListObject *)uniqueObjectAtIndex:(int)inIndex;
 
 @end

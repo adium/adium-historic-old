@@ -15,7 +15,7 @@
 
 @class AIModularPaneCategoryView, ESImageViewWithImagePicker;
 
-@interface AIContactInfoWindowController : AIWindowController {	
+@interface AIContactInfoWindowController : AIAbstractListWindowController {	
 	IBOutlet		NSTabView						*tabView_category;
 	IBOutlet		ESImageViewWithImagePicker		*imageView_userIcon;
 	IBOutlet		NSTextField						*textField_accountName;
@@ -26,6 +26,8 @@
 	IBOutlet		AIModularPaneCategoryView		*view_Alerts;
 	IBOutlet		AIModularPaneCategoryView		*view_Settings;
 
+	IBOutlet		NSDrawer						*drawer_metaContact;
+	
 	AIListObject	*displayedObject;
 	NSMutableArray	*loadedPanes;
 }

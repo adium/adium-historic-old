@@ -16,8 +16,6 @@
 #import "AIListOutlineView.h"
 
 #define	CONTACT_LIST_EMPTY_MESSAGE      AILocalizedString(@"No Available Contacts","Message to display when the contact list is empty")
-#define TOOL_TIP_CHECK_INTERVAL			45.0	//Check for mouse X times a second
-#define TOOL_TIP_DELAY					25.0	//Number of check intervals of no movement before a tip is displayed
 #define EMPTY_HEIGHT					48
 #define EMPTY_WIDTH						140
 
@@ -27,10 +25,7 @@
 {
 	[super initWithFrame:frame];
 	
-	backgroundImage = nil;
-	backgroundFade = 1.0;
 	updateShadowsWhileDrawing = NO;
-	drawsBackground = YES;
 
 	[self sizeLastColumnToFit];
 	
@@ -39,7 +34,6 @@
 
 - (void)dealloc
 {
-	NSLog(@"%@ dealloc",self);
 	[backgroundImage release];
 	[super dealloc];
 }
@@ -180,165 +174,6 @@
 //	
 //	return([image autorelease]);
 //}
-
-	
-	
-	
-	//We do custom highlight management when putting the label around the contact only
-	- (void)highlightSelectionInClipRect:(NSRect)clipRect
-	{
-#warning 10.3 only
-		if([[self window] isMainWindow]){
-			NSIndexSet *indices = [self selectedRowIndexes];
-			unsigned int bufSize = [indices count];
-			unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
-			unsigned int i;
-			NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
-			[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
-			
-			for(i = 0; i < bufSize; i++) {
-				unsigned int startIndex = buf[i];
-				unsigned int endIndex = startIndex;
-				
-				//Process the selected rows in clumps
-#warning merging
-				while(i < bufSize-1 && buf[i+1] == endIndex + 1){
-					i++;
-					endIndex++;
-				}
-				
-				NSLog(@"select from %i to %i",startIndex,endIndex);
-				
-				NSRect selectRect;
-				if(startIndex == endIndex){
-					selectRect = [self rectOfRow:startIndex];
-				}else{
-					selectRect = NSUnionRect([self rectOfRow:startIndex],[self rectOfRow:endIndex]);
-				}
-				
-				//Draw the gradient
-				AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
-				[gradient drawInRect:selectRect];
-				
-				//Draw a line at the light side, to make it look a lot cleaner
-				selectRect.size.height = 1;
-				[[NSColor alternateSelectedControlColor] set];
-				NSRectFillUsingOperation(selectRect, NSCompositeSourceOver);
-				
-				
-				//
-			}
-			
-			free(buf);
-		}
-		
-	}
-	
-	
-	
-		
-		
-//		
-//		
-//		
-//		
-//		
-//		NSIndexSet	*indexSet = [self selectedRowIndexes];
-//		
-//		- (NSIndexSet *)selectedRowIndexes;
-//
-//		
-//		
-//		
-//		NSLog(@"%i x %i",(int)clipRect.size.width,(int)clipRect.size.height);
-//		
-//		
-//		
-		
-		
-		
-		
-		//		NSLog(@"highlightSelectionInClipRect");
-////		if (!labelAroundContactOnly) {
-//			[super highlightSelectionInClipRect:clipRect];
-//		}
-		
-	
-	
-	
-	
-	
-	
-	
-	
-
-//Background -----------------------------------------------------------------
-//
-- (void)setBackgroundImage:(NSImage *)inImage
-{
-	[backgroundImage release]; backgroundImage = nil;
-	
-	backgroundImage = [inImage retain];
-	[backgroundImage setFlipped:YES];
-	
-	[[self superview] setCopiesOnScroll:(!backgroundImage)];
-	[self setNeedsDisplay:YES];
-}
-
-- (void)setDrawsBackground:(BOOL)inDraw
-{
-	drawsBackground = inDraw;
-}
-
-- (void)setBackgroundFade:(float)fade
-{
-	backgroundFade = fade;
-}
-
-- (void)setBackgroundColor:(NSColor *)inColor
-{
-	[backgroundColor release];
-	backgroundColor = [inColor retain];
-}
-
-- (NSColor *)backgroundColor
-{
-	return(backgroundColor);
-}
-
-- (void)viewWillMoveToSuperview:(NSView *)newSuperview
-{
-	[super viewWillMoveToSuperview:newSuperview];
-	[(NSClipView *)newSuperview setCopiesOnScroll:(!backgroundImage)];
-}
-
-//
-- (void)drawBackgroundInClipRect:(NSRect)clipRect
-{
-	NSRect visRect = [[self enclosingScrollView] documentVisibleRect];
-
-#warning --
-	[super drawBackgroundInClipRect:clipRect];
-	
-	if(drawsBackground){
-		//BG Color
-		[backgroundColor set];
-		NSRectFill(clipRect);
-		
-		//Image
-		if(backgroundImage){
-			NSSize	imageSize = [backgroundImage size];
-			
-			[backgroundImage drawInRect:NSMakeRect(visRect.origin.x, visRect.origin.y, imageSize.width, imageSize.height)
-							   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
-							  operation:NSCompositeSourceOver
-							   fraction:backgroundFade];
-		}	
-	}else{
-		[[NSColor clearColor] set];
-		NSRectFill(clipRect);
-	}
-}
 
 
 //Parent window transparency -----------------------------------------------------------------

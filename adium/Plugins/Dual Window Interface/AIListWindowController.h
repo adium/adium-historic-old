@@ -13,20 +13,16 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAutoScrollView, AIListOutlineView, AIListCell;
 @protocol AIContactListViewController, AIInterfaceContainer, AIContainerInterface;
+
+#import "AIAbstractListWindowController.h"
 
 #define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
 #define KEY_SCL_BORDERLESS					@"Borderless"
 #define KEY_DUAL_RESIZE_VERTICAL			@"Autoresize Vertical"
 #define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
 
-@interface AIListWindowController : AIWindowController <AIInterfaceContainer> {
-    IBOutlet	AIAutoScrollView		*scrollView_contactList;
-    IBOutlet	AIListOutlineView		*contactListView;
-	
-	AISmoothTooltipTracker				*tooltipTracker;
-
+@interface AIListWindowController : AIAbstractListWindowController <AIInterfaceContainer> {
 //    id <AIContactListViewController>	contactListViewController;
 
     NSDictionary						*toolbarItems;
@@ -36,21 +32,9 @@
     BOOL								autoResizeVertically;
     BOOL								autoResizeHorizontally;
 
-
-	AIListCell	*contentCell;
-	AIListCell	*groupCell;
-
-
-
-    AIListGroup			*contactList;
 	
-    BOOL                horizontalResizingEnabled;
+    BOOL								horizontalResizingEnabled;
     
-	
-	BOOL				inDrag;
-	NSArray				*dragItems;
-	
-	BOOL				alreadyDidDealloc;
 	
 }
 

@@ -13,8 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /** 
- * $Revision: 1.46 $
- *  $Date: 2004/08/21 05:14:42 $
+ * $Revision: 1.47 $
+ *  $Date: 2004/08/23 17:23:12 $
  *  $Author#
  *
  **/
@@ -69,4 +69,5 @@
 #import "AIWindowController.h"
 #import "AIContextMenuTextView.h"
 #import "DCJoinChatViewController.h"
+#import "AIAbstractListWindowController.h"
 //#import "DCJoinChatWindowController.h"

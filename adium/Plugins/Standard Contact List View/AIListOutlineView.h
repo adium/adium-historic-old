@@ -45,20 +45,7 @@
 	
 	//Selection hiding
 //	int					lastSelectedRow;
-	BOOL updateShadowsWhileDrawing;
-
-	NSImage		*backgroundImage;
-	float 		backgroundFade;
-	BOOL		drawsBackground;
-	
-	NSColor		*backgroundColor;
-	
-	//Tooltops
-//	NSTimer				*tooltipMouseLocationTimer;
-//	NSPoint				tooltipLocation;
-//	NSPoint				lastMouseLocation;
-//    NSTrackingRectTag	tooltipTrackingTag;        
-//    int 				tooltipCount;
+	BOOL updateShadowsWhileDrawing;	
 }
 
 - (void)setDelegate:(id)delegate;
@@ -80,10 +67,7 @@
 - (AIListObject *)listObject;
 
 - (void)setUpdateShadowsWhileDrawing:(BOOL)update;
-- (void)setBackgroundImage:(NSImage *)inImage;
-- (void)setBackgroundFade:(float)fade;
-- (void)setDrawsBackground:(BOOL)inDraw;
-	
+
 @end
 
 @interface NSObject (AIStandardListOutlineViewDelegate)
