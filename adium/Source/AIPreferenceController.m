@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.52 2004/06/28 03:27:30 evands Exp $
+// $Id: AIPreferenceController.m,v 1.53 2004/07/09 21:00:57 evands Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -210,7 +210,7 @@
 	
 	//Load if necessary
 	if(!prefs){
-		prefs = [NSMutableDictionary dictionaryAtPath:[userDirectory stringByAppendingPathComponent:path]
+		prefs = [NSMutableDictionary dictionaryAtPath:[userDirectory stringByAppendingPathComponent:[path safeFilenameString]]
 											 withName:objectKey
 											   create:YES];
 		[objectPrefCache setObject:prefs forKey:cacheKey];
@@ -226,7 +226,7 @@
 
 	//Add back to cache and save
 	[objectPrefCache setObject:prefs forKey:cacheKey];
-    [prefs writeToPath:[userDirectory stringByAppendingPathComponent:path]
+    [prefs writeToPath:[userDirectory stringByAppendingPathComponent:[path safeFilenameString]]
 			  withName:objectKey];
 }
 
