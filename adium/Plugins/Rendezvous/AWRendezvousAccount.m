@@ -62,6 +62,12 @@
     
 }
 
+//No need for a password for Rendezvous accounts
+- (BOOL)requiresPassword
+{
+	return NO;
+}
+
 - (void)connect
 {
     // Say we're connecting...
