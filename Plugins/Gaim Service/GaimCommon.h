@@ -18,11 +18,6 @@
 //Gaim includes
 #include <Libgaim/libgaim.h>
 
-#define KEY_ACCOUNT_GAIM_PROXY_TYPE			@"Proxy Type"
-#define KEY_ACCOUNT_GAIM_PROXY_HOST			@"Proxy Host"
-#define KEY_ACCOUNT_GAIM_PROXY_PORT			@"Proxy Port"
-#define KEY_ACCOUNT_GAIM_PROXY_USERNAME		@"Proxy Username"
-#define KEY_ACCOUNT_GAIM_PROXY_PASSWORD		@"Proxy Password"
 #define KEY_ACCOUNT_GAIM_CHECK_MAIL			@"Check Mail"
 
 #define GAIM_ORPHANS_GROUP_NAME				"__AdiumOrphansUE9FHUE7I"  //A group name no sane user would have
@@ -47,16 +42,3 @@ typedef enum
 	GAIM_BUDDY_DIRECTIM_DISCONNECTED = 0x22 /**< Disconnected from the buddy via DirectIM.  */
 	
 } GaimBuddyEvent;
-
-//Proxy types
-typedef enum
-{
-	Gaim_Proxy_None		= 0,
-	Gaim_Proxy_Default_SOCKS5  = 1,
-	Gaim_Proxy_HTTP		= 2,
-	Gaim_Proxy_SOCKS4   = 3,
-	Gaim_Proxy_SOCKS5   = 4,
-	Gaim_Proxy_Default_HTTP = 5,
-	Gaim_Proxy_Default_SOCKS4 = 6,
-} AdiumGaimProxyType;
-
