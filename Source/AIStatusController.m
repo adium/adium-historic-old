@@ -1442,7 +1442,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		NSData		*lastStatusStateData = [lastStatusStates objectForKey:[NSNumber numberWithInt:statusType]];
 		AIStatus	*lastStatusStateOfThisType = [NSKeyedUnarchiver unarchiveObjectWithData:lastStatusStateData];
 
-		baseStatusState = lastStatusStateOfThisType;
+		baseStatusState = [[lastStatusStateOfThisType retain] autorelease];
 	}
 	
 	//don't use the current status state as a base.  Going from Away to Available, don't autofill the Available
