@@ -20,7 +20,7 @@
   with the trend to move 'content' out of the preference window.
 
 //Auto-completion
-  Tab auto-completion in the message window
+  Tab auto-completion in the message window [Evan: How would one insert a tab with this implemented?]
 	- Contact names (Mainly for multi-user chat)
 
 //Fast User Switching
@@ -36,7 +36,7 @@
 	- Remove preference obfuscation, preferences in one nib, hooked directly to their code
 	- Remove many unneeded plugin classes, interfaces, clutter
   Keeping the modular design, but ditching all the negative effects of it could be very beneficial
-	
+
 //Message Tabs
   - Enforce a larger minimum width for tabs
   - Use a chevron to display tabs that don't fit on the tab bar (like safari)
