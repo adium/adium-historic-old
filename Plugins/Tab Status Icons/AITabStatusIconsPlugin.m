@@ -28,9 +28,18 @@
 - (NSString *)_statusIDForListObject:(AIListObject *)listObject;
 @end
 
+/*
+ * @class AITabStatusIconsPlugin
+ * @brief Tab status icons component
+ *
+ * This component is effectively glue to AIStatusIcons to provide status and typing/unviewed content icons
+ * for chats.
+ */
 @implementation AITabStatusIconsPlugin
 
-//
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	//Observe list object changes
@@ -45,20 +54,25 @@
 									 object:nil];
 }
 
+/*
+ * @brief The status icon set changed; update our objects and chats.
+ */
 - (void)statusIconSetDidChange:(NSNotification *)aNotification
 {
 	[[adium contactController] updateAllListObjectsForObserver:self];
 	[[adium contentController] updateAllChatsForObserver:self];
 }
 
-//Apply the correct tab icon according to status
+/*
+ * @brief Apply the correct tab icon according to status
+ */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
     NSSet		*modifiedAttributes = nil;
 	
 	if(inModifiedKeys == nil ||
 	   [inModifiedKeys containsObject:@"Stranger"] ||
-	   [inModifiedKeys containsObject:@"Away"] ||
+	   [inModifiedKeys containsObject:@"StatusState"] ||
 	   [inModifiedKeys containsObject:@"IsIdle"] ||
 	   [inModifiedKeys containsObject:@"Online"]){
 		
@@ -80,6 +94,9 @@
 	return(modifiedAttributes);
 }
 
+/*
+ * @brief Update a chat for typing and unviewed content icons
+ */
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	NSSet		*modifiedAttributes = nil;
