@@ -453,8 +453,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			//If we need to encode non-ASCII to HTML, append string character by character, replacing any non-ascii characters with the designated unicode
 			//escape sequence.
 			if (encodeNonASCII) {
-				int i;
-				for(i = 0; i < [chunk length]; i++){
+				unsigned i;
+				unsigned length = [chunk length];
+				for(i = 0; i < length; i++){
 					unichar currentChar = [chunk characterAtIndex:i];
 					if(currentChar > 127){
 						[string appendFormat:@"&#%d;", currentChar];
