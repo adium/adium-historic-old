@@ -112,6 +112,15 @@ float _v(float m1, float m2, float hue);
                                      alpha:[convertedColor alphaComponent]]);
 }
 
+- (NSColor *)darkenAndAdjustSaturationBy:(float)amount
+{
+    NSColor	*convertedColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+    
+    return([NSColor colorWithCalibratedHue:[convertedColor hueComponent]
+                                saturation:([convertedColor saturationComponent] + amount)
+                                brightness:([convertedColor brightnessComponent] - amount)
+                                     alpha:[convertedColor alphaComponent]]);
+}
 
 //Linearly adjust a color
 #define cap(x) { if(x < 0){x = 0;}else if(x > 1){x = 1;} }

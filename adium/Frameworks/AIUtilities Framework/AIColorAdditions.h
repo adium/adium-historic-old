@@ -29,6 +29,7 @@ char intToHex(int digit);
 - (BOOL)equalToRGBColor:(NSColor *)inColor;
 - (BOOL)colorIsDark;
 - (NSColor *)darkenBy:(float)amount;
+- (NSColor *)darkenAndAdjustSaturationBy:(float)amount;
 - (NSString *)hexString;
 - (NSString *)stringRepresentation;
 - (void)getHue:(float *)hue luminance:(float *)luminance saturation:(float *)saturation;

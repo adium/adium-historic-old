@@ -291,7 +291,7 @@
         //Fill the label background now if it would overwrite left views if done later
         if (!labelAroundContactOnly) {
 			if ([(AISCLOutlineView *)controlView useGradient])
-				[self drawGradientWithFirstColor:[backgroundColor darkenBy:0.2] secondColor:backgroundColor inBezierPath:pillPath];
+				[self drawGradientWithFirstColor:[backgroundColor darkenAndAdjustSaturationBy:0.2] secondColor:backgroundColor inBezierPath:pillPath];
 			else {
 				[backgroundColor set];
 				[pillPath fill];
@@ -366,7 +366,7 @@
             [pillPath transformUsingAffineTransform:leftViewCompensation];
 		
         if ([(AISCLOutlineView *)controlView useGradient])
-			[self drawGradientWithFirstColor:[backgroundColor darkenBy:0.2] secondColor:backgroundColor inBezierPath:pillPath];
+			[self drawGradientWithFirstColor:[backgroundColor darkenAndAdjustSaturationBy:0.2] secondColor:backgroundColor inBezierPath:pillPath];
 		else {
 			[backgroundColor set];
 			[pillPath fill];
