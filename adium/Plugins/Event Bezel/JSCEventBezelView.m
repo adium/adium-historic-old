@@ -199,7 +199,6 @@
     buddyNameRect.size.height = buddyNameSize.height;
     
     // Paint the main name label if selected, and the strings
-    if (useBuddyNameLabel && buddyIconLabelColor) {
         NSRect  labelRect;
         int     borderWidth = (buddyNameSize.height / 2.0);
         int     maxWidth = ((187.0*relativeX) - buddyNameSize.height);
@@ -208,11 +207,15 @@
         } else {
             labelRect = NSMakeRect(106.0*relativeX - (buddyNameSize.width / 2.0),buddyNameRect.origin.y,buddyNameSize.width,buddyNameSize.height-2.0);
         }
+    if (useBuddyNameLabel && buddyIconLabelColor) {
         [buddyIconLabelColor set];
-        [NSBezierPath fillRect: labelRect];
+    } else {
+		[[[NSColor blackColor] colorWithAlphaComponent:0.3] set];
+	}
+		[NSBezierPath fillRect: labelRect];
         [[NSBezierPath bezierPathWithOvalInRect: NSMakeRect(labelRect.origin.x - (labelRect.size.height / 2.0),labelRect.origin.y,labelRect.size.height,labelRect.size.height)] fill];
         [[NSBezierPath bezierPathWithOvalInRect: NSMakeRect(labelRect.origin.x + labelRect.size.width - (labelRect.size.height / 2.0),labelRect.origin.y,labelRect.size.height,labelRect.size.height)] fill];
-    }
+
     if (useBuddyNameLabel && buddyNameLabelColor) {
         [mainAttributes setObject: buddyNameLabelColor forKey:NSForegroundColorAttributeName];
     } else {
