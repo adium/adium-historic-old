@@ -265,6 +265,11 @@
             segmentRect.origin.x = 0;
             segmentRect.size.width = [self frame].size.width;
 
+            //Whipe any existing color
+            [[NSColor clearColor] set];
+            NSRectFill(segmentRect); //fillRect: doesn't work here... must behave differently w/ alpha
+
+            //Draw our grid color
             [alternatingRowColor set];
             [NSBezierPath fillRect:segmentRect];
         }
