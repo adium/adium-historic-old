@@ -824,6 +824,27 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34327BD6060D2FE6003D7AD9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
+			name = GaimServiceDefaults.plist;
+			path = "Plugins/Gaim Service/GaimServiceDefaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34327CA6060D4093003D7AD9 = {
+			fileRef = 34327BD6060D2FE6003D7AD9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34327CA9060D40A1003D7AD9 = {
+			fileRef = 34327BD6060D2FE6003D7AD9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3439FD8A05794B4400B2E449 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -3961,6 +3982,7 @@
 				4BD675A806001E760049CAF7,
 				4BD6771E06002FD50049CAF7,
 				4B74D3340602641C00C21B7C,
+				34327CA6060D4093003D7AD9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9885,6 +9907,7 @@
 				34415EFE059FB4190019246B,
 				34415F91059FB85F0019246B,
 				34F1529605E9FDF200B32FD7,
+				34327CA9060D40A1003D7AD9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10021,6 +10044,7 @@
 				340915F105C0A5DF00CDE3DD,
 				4B7F278905440C8D00CDFC90,
 				4B7F278A05440C8D00CDFC90,
+				34327BD6060D2FE6003D7AD9,
 				34415880059F8F050019246B,
 				3441587A059F8EFC0019246B,
 				4B7F279005440CA100CDFC90,
