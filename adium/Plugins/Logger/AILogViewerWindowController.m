@@ -290,7 +290,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 	
     if(displayedLog != theLog){
 		[displayedLog release];
-		displayedLog = [log retain];
+		displayedLog = [theLog retain];
 		
 		if(theLog){	    
 			//Open the log
@@ -681,7 +681,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 							
 							//Add the log
 							[resultsLock lock];
-							[selectedLogArray addObject:log];
+							[selectedLogArray addObject:theLog];
 							[resultsLock unlock];
 							
 							//Update our status
@@ -829,7 +829,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 		}
 		[resultsLock unlock];
 		
-		[self displayLog:log];
+		[self displayLog:theLog];
     }
 }
 
