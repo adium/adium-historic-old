@@ -88,14 +88,14 @@
 
     //Show preference window toolabr item
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"ShowPreferences"
-					    label:@"Preferences"
-				     paletteLabel:@"Open Preferences"
-				          toolTip:@"Open Preferences"
-				           target:self
-				  settingSelector:@selector(setImage:)
-				      itemContent:[NSImage imageNamed:@"settings" forClass:[self class]]
-				           action:@selector(showPreferenceWindow:)
-					     menu:nil];
+														  label:@"Preferences"
+												   paletteLabel:@"Open Preferences"
+														toolTip:@"Open Preferences"
+														 target:self
+												settingSelector:@selector(setImage:)
+													itemContent:[NSImage imageNamed:@"settings" forClass:[self class]]
+														 action:@selector(showPreferenceWindow:)
+														   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"General"];
 }
 

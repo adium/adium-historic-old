@@ -150,15 +150,16 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[self _configureAdvancedPreferencesTable];
 
 	//Prepare our array of preference views.  We place these in an array to cut down on a ton of duplicate code.
-	viewArray = [[NSArray arrayWithObjects:
+	viewArray = [[NSArray alloc] initWithObjects:
 		view_Accounts,
 		view_General,
 		view_Appearance,
-		view_Messages, 
+		view_Messages,
+		view_Status,
 		view_Events,
 		view_FileTransfer,
 		view_Advanced,
-		nil] retain];
+		nil];
 }
 
 /*!
