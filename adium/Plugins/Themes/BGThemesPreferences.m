@@ -30,6 +30,7 @@
 -(void)applyPreferenceFromKey:(NSString *)key inDict:(NSDictionary *)dict;
 -(NSString *)selectedThemePath;
 - (void)_addThemeDictAtPath:(NSString *)themePath toArray:(NSMutableArray *)inThemes;
+- (void)xtrasChanged:(NSNotification *)notification;
 @end
 
 @implementation BGThemesPreferences
@@ -59,13 +60,14 @@
     [tableView_themesList setDrawsAlternatingRows:YES];
     [tableView_themesList setTarget:self];
     [tableView_themesList setDoubleAction:@selector(applyTheme:)];
-    [self buildThemesList];
+
 	
-	//Observe for installation of new styles
+	//Observe for installation of new themes
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(xtrasChanged:)
 									   name:Adium_Xtras_Changed
 									 object:nil];
+	[self xtrasChanged:nil];
 }
 
 - (void)viewWillClose
@@ -119,7 +121,7 @@
 
 - (void)xtrasChanged:(NSNotification *)notification
 {
-	if ([[notification object] caseInsensitiveCompare:THEME_EXTENSION] == 0){
+	if (notification == nil || [[notification object] caseInsensitiveCompare:THEME_EXTENSION] == 0){
 		[self buildThemesList];
 	}
 }
