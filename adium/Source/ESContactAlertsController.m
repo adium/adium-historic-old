@@ -3,7 +3,7 @@
 //  Adium XCode
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//
+//  $Id: ESContactAlertsController.m,v 1.9 2003/12/08 05:34:48 jmelloy Exp $
 
 
 /*
