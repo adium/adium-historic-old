@@ -4,7 +4,7 @@
 //
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
-//
+//  $Id: ESFileTransferController.m,v 1.4 2003/12/08 06:03:52 jmelloy Exp $
 
 #import "ESFileTransferController.h"
 
