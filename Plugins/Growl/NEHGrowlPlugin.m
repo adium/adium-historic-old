@@ -94,25 +94,25 @@
 		title = contactName;
 		
 		if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
-			description = NSLocalizedString(@"came online","");
+			description = AILocalizedString(@"came online","");
 		}else if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
-			description = NSLocalizedString(@"went offline","");
+			description = AILocalizedString(@"went offline","");
 		}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]) {
-			description = NSLocalizedString(@"went away","");
+			description = AILocalizedString(@"went away","");
 		}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]) {
-			description = NSLocalizedString(@"is available","");
+			description = AILocalizedString(@"is available","");
 		}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]) {
-			description = NSLocalizedString(@"is idle","");
+			description = AILocalizedString(@"is idle","");
 		}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]) {
-			description = NSLocalizedString(@"is no longer idle","");
+			description = AILocalizedString(@"is no longer idle","");
 		}else if([notificationName isEqualToString: Content_FirstContentRecieved]){
 			message = [[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] string];
-			description = [NSString stringWithFormat: NSLocalizedString(@"%@","New content notification"), message];
+			description = [NSString stringWithFormat: AILocalizedString(@"%@","New content notification"), message];
 		}else if([notificationName isEqualToString: Content_DidReceiveContent]) {
 			if(![NSApp isHidden])
 				return;
 			message = [[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] string];
-			description = [NSString stringWithFormat: NSLocalizedString(@"%@","Message notification while hidden"), message];
+			description = [NSString stringWithFormat: AILocalizedString(@"%@","Message notification while hidden"), message];
 		}else{
 			description = @"OMGWTFBBQ!";
 		}

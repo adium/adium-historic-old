@@ -28,22 +28,22 @@ static BOOL didInitGG = NO;
 	switch (step)
 	{
 		case 0:
-			return NSLocalizedString(@"Connecting",nil);
+			return AILocalizedString(@"Connecting",nil);
 			break;
 		case 1:
-			return NSLocalizedString(@"Looking up server",nil);
+			return AILocalizedString(@"Looking up server",nil);
 			break;
 		case 2:
-			return NSLocalizedString(@"Reading data",nil);
+			return AILocalizedString(@"Reading data",nil);
 			break;			
 		case 3:
-			return NSLocalizedString(@"Balancer handshake",nil);
+			return AILocalizedString(@"Balancer handshake",nil);
 			break;
 		case 4:
-			return NSLocalizedString(@"Reading server key",nil);
+			return AILocalizedString(@"Reading server key",nil);
 			break;
 		case 5:
-			return NSLocalizedString(@"Exchanging key hash",nil);
+			return AILocalizedString(@"Exchanging key hash",nil);
 			break;
 	}
 	return nil;

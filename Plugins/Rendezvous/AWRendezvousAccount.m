@@ -134,7 +134,7 @@
 												 account:self
 													 UID:[contact uniqueID]];  
 	
-	[user setRemoteGroupName:NSLocalizedString(@"Rendezvous", @"Rendezvous group name")];
+	[user setRemoteGroupName:AILocalizedString(@"Rendezvous", @"Rendezvous group name")];
 	[user setStatusObject:[contact statusMessage] forKey:@"StatusMessageString" notify:NO];
 	
 	[user setStatusObject:nil forKey:@"Away" notify:NO];

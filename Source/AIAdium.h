@@ -124,7 +124,8 @@
 #define USE_WEBKIT_PLUGIN		TRUE
 
 //Localization
-#define AILocalizedString(key, comment) [[NSBundle bundleForClass: [self class]] localizedStringForKey: (key) value:@"" table:nil]
+#define AILocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key,nil,[NSBundle bundleForClass: [self class]],comment)
+#define AILocalizedStringFromTable(key, table, comment) NSLocalizedStringFromTableInBundle(key,table,[NSBundle bundleForClass: [self class]],comment)
 
 //Static strings
 #define DeclareString(var)			static NSString * (var) = nil;

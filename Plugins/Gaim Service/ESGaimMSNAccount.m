@@ -45,28 +45,28 @@ static BOOL didInitMSN = NO;
 	switch (step)
 	{
 		case 0:
-			return NSLocalizedString(@"Connecting",nil);
+			return AILocalizedString(@"Connecting",nil);
 			break;
 		case 1:
-			return NSLocalizedString(@"Connecting",nil);
+			return AILocalizedString(@"Connecting",nil);
 			break;
 		case 2:
-			return NSLocalizedString(@"Syncing with server",nil);
+			return AILocalizedString(@"Syncing with server",nil);
 			break;			
 		case 3:
-			return NSLocalizedString(@"Requesting to send password",nil);
+			return AILocalizedString(@"Requesting to send password",nil);
 			break;
 		case 4:
-			return NSLocalizedString(@"Syncing with server",nil);
+			return AILocalizedString(@"Syncing with server",nil);
 			break;
 		case 5:
-			return NSLocalizedString(@"Requesting to send password",nil);
+			return AILocalizedString(@"Requesting to send password",nil);
 			break;
 		case 6:
-			return NSLocalizedString(@"Password sent",nil);
+			return AILocalizedString(@"Password sent",nil);
 			break;
 		case 7:
-			return NSLocalizedString(@"Retrieving buddy list",nil);
+			return AILocalizedString(@"Retrieving buddy list",nil);
 			break;
 			
 	}

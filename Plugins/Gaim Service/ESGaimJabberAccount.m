@@ -27,10 +27,10 @@ static NSDictionary		*presetStatusesDictionary = nil;
 {
 	if (!presetStatusesDictionary){
 		presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
-			NSLocalizedString(@"Away",nil),				[NSNumber numberWithInt:JABBER_STATE_AWAY],
-			NSLocalizedString(@"Chatty",nil),			[NSNumber numberWithInt:JABBER_STATE_CHAT],
-			NSLocalizedString(@"Extended Away",nil),	[NSNumber numberWithInt:JABBER_STATE_XA],
-			NSLocalizedString(@"Do Not Disturb",nil),	[NSNumber numberWithInt:JABBER_STATE_DND],nil] retain];
+			AILocalizedString(@"Away",nil),				[NSNumber numberWithInt:JABBER_STATE_AWAY],
+			AILocalizedString(@"Chatty",nil),			[NSNumber numberWithInt:JABBER_STATE_CHAT],
+			AILocalizedString(@"Extended Away",nil),	[NSNumber numberWithInt:JABBER_STATE_XA],
+			AILocalizedString(@"Do Not Disturb",nil),	[NSNumber numberWithInt:JABBER_STATE_DND],nil] retain];
 	}
 	
 	[super initAccount];
@@ -119,29 +119,29 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 
 - (NSString *)unknownGroupName {
-    return (NSLocalizedString(@"Roster","Roster - the Jabber default group"));
+    return (AILocalizedString(@"Roster","Roster - the Jabber default group"));
 }
 
 - (NSString *)connectionStringForStep:(int)step
 {
 	switch (step) {
 		case 0:
-			return NSLocalizedString(@"Connecting",nil);
+			return AILocalizedString(@"Connecting",nil);
 			break;
 		case 1:
-			return NSLocalizedString(@"Initializing Stream",nil);
+			return AILocalizedString(@"Initializing Stream",nil);
 			break;
 		case 2:
-			return NSLocalizedString(@"Reading data",nil);
+			return AILocalizedString(@"Reading data",nil);
 			break;			
 		case 3:
-			return NSLocalizedString(@"Authenticating",nil);
+			return AILocalizedString(@"Authenticating",nil);
 			break;
 		case 5:
-			return NSLocalizedString(@"Initializing Stream",nil);
+			return AILocalizedString(@"Initializing Stream",nil);
 			break;
 		case 6:
-			return NSLocalizedString(@"Authenticating",nil);
+			return AILocalizedString(@"Authenticating",nil);
 			break;
 	}
 	return nil;
