@@ -181,9 +181,15 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 //Scan an Adium date string, supahfast C style
 //Submitted by Mac-arena the Bored Zo
 void scandate(const char *sample, unsigned long *outyear, unsigned long *outmonth, unsigned long *outdate) {
-    //read three numbers, starting after a space.
+    //read three numbers, starting after:
+	
+	//a space...
     while(*sample != ' ') ++sample;
-    sample += 2; //skip over the ' ('
+	
+	//...followed by a (
+	while(*sample != '(') ++sample;
+	
+    sample += 1; //start with the next character
     
     /*get the year*/ {
 		while(*sample < '0' || *sample > '9') ++sample;
