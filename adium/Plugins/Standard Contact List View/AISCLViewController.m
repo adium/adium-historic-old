@@ -157,7 +157,9 @@
     
     //Resize the contact list horizontally
     if(horizontalResizingEnabled){
-        if([keys containsObject:@"Display Name"] || [keys containsObject:@"Left View"] || [keys containsObject:@"Right View"]){
+        if([keys containsObject:@"Display Name"] || [keys containsObject:@"Left View"] ||
+		   [keys containsObject:@"Right View"] || [keys containsObject:@"Right Text"] ||
+		   [keys containsObject:@"Left Text"]){
             [contactListView updateHorizontalSizeForObject:object];
         }
     }

@@ -42,22 +42,26 @@
 
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {    
-    if([inObject isKindOfClass:[AIListGroup class]] && (visibleCount || allCount) && ([inModifiedKeys containsObject:@"Object Count"] || [inModifiedKeys containsObject:@"VisibleObjectCount"]))
-    {
-        NSString *addString = nil;
-        
-        if(visibleCount && allCount)
-            addString = [NSString stringWithFormat:@" (%i/%i)", [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue], [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
-        else if(visibleCount)
-            addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue]];
-        else if(allCount)
-            addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
-        
-        if(addString)
-            [[inObject displayArrayForKey:@"Right Text"] setPrimaryObject:addString withOwner:self];
-    }
-    
-    return(nil);
+	NSArray		*modifiedAttributes = nil;
+	
+	if([inObject isKindOfClass:[AIListGroup class]]){
+		if(inModifiedKeys == nil || ( (visibleCount || allCount) && ([inModifiedKeys containsObject:@"Object Count"] || [inModifiedKeys containsObject:@"VisibleObjectCount"])))
+		{
+			NSString *addString = nil;
+			
+			if(visibleCount && allCount)
+				addString = [NSString stringWithFormat:@" (%i/%i)", [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue], [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
+			else if(visibleCount)
+				addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue]];
+			else if(allCount)
+				addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
+			
+			[[inObject displayArrayForKey:@"Right Text"] setPrimaryObject:addString withOwner:self];
+			modifiedAttributes = [NSArray arrayWithObject:@"Right Text"];
+		}
+	}
+	
+    return(modifiedAttributes);
 }
 
 - (void)uninstallPlugin
