@@ -658,7 +658,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 - (NSString *)description
 {
-    return(@"LIBGAIM (Do not use)");
+    return(@"LibGaim (Unstable)");
 }
 
 - (AIServiceType *)handleServiceType

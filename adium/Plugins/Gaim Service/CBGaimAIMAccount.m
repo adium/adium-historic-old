@@ -13,9 +13,7 @@
 
 - (id <AIAccountViewController>)accountView
 {
-    //Comment out the line below to enable account pane :)
-    //return([AIGaimAccountViewController accountViewForAccount:self]);
-    return(nil);
+    return([AIGaimAccountViewController accountViewForAccount:self]);
 }
 
 @end
