@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.62 2004/04/07 05:14:02 dchoby98 Exp $
+// $Id: AIContentController.m,v 1.63 2004/04/07 05:26:53 dchoby98 Exp $
 
 #import "AIContentController.h"
 
@@ -338,7 +338,6 @@
 		#warning dchoby98: Another bad place to put Chat_DidOpen
 		if([inObject trackContent] && [[chat contentObjectArray] count] < 1) {
 			[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
-			NSLog(@"#### Posted Chat_DidOpen from addIncomingContentObject");
 		}
 
         //Add/Display the object
@@ -450,8 +449,7 @@
 
 	#warning dchoby98: Is there a better place to post the Chat_DidOpen notification?
 	[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
-	NSLog(@"#### Posted Chat_DidOpen from openChatWithContact");
-
+	
 	return(chat);	
 }
 
