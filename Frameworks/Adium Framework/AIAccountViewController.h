@@ -17,7 +17,7 @@
 
 @protocol AIListObjectObserver;
 
-@interface AIAccountViewController : AIObject <AIListObjectObserver> {
+@interface AIAccountViewController : AIObject {
 	//These are the views used in Adium's account preferences.  If views aren't provided by a custom account view
 	//nib, default views with the most common controls will be used.  There is no need to provide a custom nib
 	//if your account code only needs the default controls.
