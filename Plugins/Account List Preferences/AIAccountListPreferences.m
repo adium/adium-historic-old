@@ -31,7 +31,7 @@
 - (void)configureAccountList;
 - (void)accountListChanged:(NSNotification *)notification;
 - (void)_configureResponderChain:(NSTimer *)inTimer;
-- (void)passwordReturnedForRegister:(NSString *)inPassword;
+- (void)passwordReturnedForRegister:(NSString *)inPassword context:(id)inContext;
 @end
 
 @implementation AIAccountListPreferences
@@ -281,17 +281,17 @@
 			//Retrieve the user's password and then call connect
 			[[adium accountController] passwordForAccount:configuredForAccount 
 										  notifyingTarget:self
-												 selector:@selector(passwordReturnedForRegister:)
+												 selector:@selector(passwordReturnedForRegister:context:)
 												  context:nil];
 		}else{
 			//Connect immediately without retrieving a password
-			[self passwordReturnedForRegister:nil];
+			[self passwordReturnedForRegister:nil context:nil];
 		}
 	}
 }
 
 //Callback after the user enters their password for registering
-- (void)passwordReturnedForRegister:(NSString *)inPassword
+- (void)passwordReturnedForRegister:(NSString *)inPassword context:(id)inContext
 {
 	if (inPassword || ![configuredForAccount requiresPassword]){
 		[configuredForAccount performRegisterWithPassword:inPassword];
