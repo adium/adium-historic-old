@@ -171,11 +171,12 @@ static ESContactAlertsWindowController *sharedAlertsWindowInstance = nil;
     [[adium notificationCenter] removeObserver:self]; //remove any previous observers
 
     //Observe account changes
+	/*
     [[adium notificationCenter] addObserver:self 
 								   selector:@selector(accountListChanged:) 
 									   name:Account_ListChanged 
 									 object:nil];
-
+*/
 
     [[adium notificationCenter] addObserver:self
 								   selector:@selector(externalChangedAlerts:) 
