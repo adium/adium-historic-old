@@ -31,6 +31,8 @@ Adium, Copyright 2001-2005, Adam Iser
 	if(self = [super init]){
 		//Register this service with Adium
 		[[adium accountController] registerService:self];
+		
+		[self registerStatuses];
 	}
 	
 	return(self);
@@ -327,6 +329,13 @@ Adium, Copyright 2001-2005, Adam Iser
 {
 	return YES;
 }
+
+/*!
+ * @brief Register statuses
+ *
+ * Called automatically.  Services should register any supported status with the statusController.
+ */
+- (void)registerStatuses{};
 
 //Utilities ------------------------------------------------------------------------------------------------------------
 #pragma mark Utilities

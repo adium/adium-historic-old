@@ -56,6 +56,7 @@ typedef enum {
 - (BOOL)canCreateGroupChats;
 - (BOOL)canRegisterNewAccounts;
 - (BOOL)supportsProxySettings;
+- (void)registerStatuses;
 
 //Utilities
 - (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored;
