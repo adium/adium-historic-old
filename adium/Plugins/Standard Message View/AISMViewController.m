@@ -826,6 +826,7 @@
 					case 'a': [string appendString:[[content source] displayName]]; break;
 					case 'n': [string appendString:[[content source] formattedUID]]; break;
 					case 't': [string appendString:[timeStampFormatter stringForObjectValue:[content date]]]; break;
+					case 'r': if([content autoreply])[string appendString:@"(Autoreply)"]; break;
 					default: break;
 				}
 				
@@ -849,6 +850,7 @@
 						case 'a': present = ([[[content source] displayName] compare:[[content source] formattedUID]] != 0); break;
 						case 'n': present = YES; break;
 						case 't': present = YES; break;
+						case 'r': present = [content autoreply]; break;
 						default: present = NO; break;
 					}
 					
