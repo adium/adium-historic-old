@@ -19,6 +19,8 @@
 
 #define SHOW_CLOSE_BUTTON_FOR_SINGLE_TAB	YES		//Show close button when there is only one tab?
 
+#warning We use -icon on NSTabViewItem in this method multiple times, which is implemented in our AIMessagTabViewItem in Adium.
+
 //Images (Shared between AICustomTabCell instances)
 static NSImage		*tabFrontLeft = nil;
 static NSImage		*tabFrontMiddle = nil;
@@ -29,7 +31,7 @@ static NSImage		*tabCloseFrontPressed = nil;
 static NSImage		*tabCloseFrontRollover = nil;
 
 #define TAB_CLOSE_LEFTPAD		-1		//Padding left of close button
-#define TAB_CLOSE_RIGHTPAD		0		//Padding right of close button
+#define TAB_CLOSE_RIGHTPAD		1		//Padding right of close button
 
 #define TAB_CLOSE_Y_OFFSET		0       //Vertical offset of close button from center
 
