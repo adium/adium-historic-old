@@ -140,7 +140,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 			if(linkURL){
 				unsigned int	eventMask;
 				NSDate			*distantFuture;
-				int				linkCount;
+				unsigned		linkCount;
 				BOOL			done = NO;
 				BOOL			inRects = NO;
 				
@@ -273,8 +273,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 		
 		if(linkURL){
             NSRectArray linkRects;
-            int			index;
-            int			linkCount;
+            unsigned	index;
+            unsigned	linkCount;
 			
             //Get an array of rects that define the location of this link
             linkRects = [layoutManager rectArrayForCharacterRange:scanRange
