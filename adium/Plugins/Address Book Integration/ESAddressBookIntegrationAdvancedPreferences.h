@@ -8,8 +8,12 @@
 @interface ESAddressBookIntegrationAdvancedPreferences : AIPreferencePane {
     IBOutlet    NSTextField             *format_textField;
     IBOutlet	NSPopUpButton			*format_menu;
-    IBOutlet    NSButton                *checkBox_syncAutomatic;
-	IBOutlet	NSButton				*checkBox_preferABImages;
+    IBOutlet    NSButton				*checkBox_syncAutomatic;
+	IBOutlet	NSButton				*checkBox_useABImages;
+	IBOutlet	NSButtonCell			*radio_preferABImages;
+	IBOutlet	NSButtonCell			*radio_dontPreferABImages;
+	IBOutlet	NSMatrix				*matrix_imagePriority;
+	
     IBOutlet    NSButton                *checkBox_useNickName;
 	IBOutlet	NSButton				*checkBox_enableImport;
 }

@@ -49,7 +49,9 @@
 	[format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue]]];
 	[checkBox_useNickName setState:[[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue]];
 	[checkBox_syncAutomatic setState:[[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue]];
-	[checkBox_preferABImages setState:[[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue]];
+	[checkBox_useABImages setState:[[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue]];
+
+	[matrix_imagePriority selectCellAtRow:([[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue] ? 0 : 1) column:0];
 	
 	[self configureControlDimming];
 }
@@ -60,6 +62,7 @@
 	
 	BOOL			enableImport = [[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue];
 	BOOL			preferABImages = [[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue];	
+	BOOL			useImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
 	
 	//Use Nick Name and the format menu are irrelevent if importing of names is not enabled
 	[checkBox_useNickName setEnabled:enableImport];	
@@ -67,9 +70,14 @@
 
 	//We will not allow image syncing if AB images are preferred
 	//so disable the control and uncheck the box to indicate this to the user
+	//dchoby98: UGLY, we need to fix this
 	[checkBox_syncAutomatic setEnabled:!preferABImages];
 	if (preferABImages)
 		[checkBox_syncAutomatic setState:NSOffState];
+	
+	//Disable the image priority matrix if we aren't using images
+	[matrix_imagePriority setEnabled:useImages];
+		
 }
 
 - (void)configureFormatMenu
@@ -119,6 +127,10 @@
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
                                              forKey:KEY_AB_IMAGE_SYNC
                                               group:PREF_GROUP_ADDRESSBOOK];
+	} else if (sender == checkBox_useABImages) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
+                                             forKey:KEY_AB_USE_IMAGES
+                                              group:PREF_GROUP_ADDRESSBOOK];
     } else if (sender == checkBox_useNickName) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
                                              forKey:KEY_AB_USE_NICKNAME
@@ -127,8 +139,9 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
                                              forKey:KEY_AB_ENABLE_IMPORT
                                               group:PREF_GROUP_ADDRESSBOOK];
-	} else if (sender == checkBox_preferABImages) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
+	} else if (sender == matrix_imagePriority) {
+		//Row 0 is the 'high priority' row
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:(([matrix_imagePriority selectedRow]==0) ? YES : NO)]
                                              forKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES
                                               group:PREF_GROUP_ADDRESSBOOK];
 	}
