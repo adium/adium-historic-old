@@ -21,6 +21,8 @@
     IBOutlet	NSView				*view_prefView;
 
     NSMutableArray				*dockEventArray;
+
+    BOOL				usingCustomBehaviorSet;
     /*    IBOutlet 	NSTextField	*bounceField;
     IBOutlet	NSTextField	*delayField;
     IBOutlet	NSButton	*enableBouncingCheckBox;

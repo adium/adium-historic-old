@@ -19,6 +19,11 @@
 
 #define PREF_GROUP_DOCK_BEHAVIOR			@"DockBehavior"
 #define KEY_EVENT_CUSTOM_DOCK_BEHAVIOR			@"Custom Dock Behavior"
+
+
+#define KEY_DOCK_EVENT_BEHAVIOR		@"Behavior"
+#define	KEY_DOCK_EVENT_NOTIFICATION	@"Notification"
+
 /*
 #define PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT		@"dock_bounce_onDidReceiveContent"
 #define PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY	@"dock_bounce_onDidReceiveContent_delay"

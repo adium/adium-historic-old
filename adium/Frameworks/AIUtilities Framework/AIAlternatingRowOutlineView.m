@@ -74,7 +74,6 @@
     alternatingColumnRange = NSMakeRange(0,0);
 
     //Group expand/collapse notifications
-    NSLog(@"addObserver");
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:self];
 

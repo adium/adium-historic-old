@@ -82,7 +82,6 @@ static char *hash_password(const char * const password);
     //Init
     outQue = [[NSMutableArray alloc] init];
     handleDict = [[NSMutableDictionary alloc] init];
-    idleHandleArray = nil;
     pingTimer = nil;
     pingInterval = nil;
     firstPing = nil;
@@ -414,10 +413,6 @@ static char *hash_password(const char * const password);
     }
     [[owner contactController] setHoldContactListUpdates:NO];
 
-    //Stop tracking all idle handles
-    [idleHandleTimer invalidate]; [idleHandleTimer release]; idleHandleTimer = nil;
-    [idleHandleArray release]; idleHandleArray = nil;
-    
     //Clean up and close down
     [socket release]; socket = nil;
     [pingTimer invalidate];
@@ -833,7 +828,7 @@ static char *hash_password(const char * const password);
         //Get the handle's status from the update event
         online = ([[message TOCStringArgumentAtIndex:2] characterAtIndex:0] == 'T');
         warning = [[message TOCStringArgumentAtIndex:3] intValue];
-        idleTime = [[message TOCStringArgumentAtIndex:5] doubleValue];
+        idleTime = ([[message TOCStringArgumentAtIndex:5] doubleValue] * 60.0);
         signOnDate = [NSDate dateWithTimeIntervalSince1970:[[message TOCStringArgumentAtIndex:4] doubleValue]];
 
         if([userFlags length] < 3){
@@ -880,12 +875,14 @@ static char *hash_password(const char * const password);
         }
 
         //Idle time (seconds)
-        storedValue = [handleStatusDict objectForKey:@"Idle"];
-        if(storedValue == nil || idleTime != [storedValue doubleValue]){
-            [handleStatusDict setObject:[NSNumber numberWithDouble:idleTime] forKey:@"Idle"];
-            [alteredStatusKeys addObject:@"Idle"];
-
-            [self handle:handle isIdle:(idleTime != 0)];
+        storedDate = [handleStatusDict objectForKey:@"IdleSince"];
+        if(storedDate == nil || (idleTime != -[storedDate timeIntervalSinceNow])){
+            if(idleTime == 0){
+                [handleStatusDict removeObjectForKey:@"IdleSince"];
+            }else{
+                [handleStatusDict setObject:[NSDate dateWithTimeIntervalSinceNow:-idleTime] forKey:@"IdleSince"];
+            }
+            [alteredStatusKeys addObject:@"IdleSince"];
         }
 
         //Sign on date
@@ -1325,51 +1322,10 @@ static char *hash_password(const char * const password) {
     return(string);
 }
 
-//Adds or removes a handle from our idle tracking array
-//Handles in the array have their idle times increased every minute
-- (void)handle:(AIHandle *)inHandle isIdle:(BOOL)inIdle
-{
-    if(inIdle){
-        if(!idleHandleArray){
-            idleHandleArray = [[NSMutableArray alloc] init];
-            idleHandleTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateIdleHandlesTimer:) userInfo:nil repeats:YES] retain];
-        }
-        [idleHandleArray addObject:inHandle];
-    }else{
-        [idleHandleArray removeObject:inHandle];
-        if([idleHandleArray count] == 0){
-            [idleHandleTimer invalidate]; [idleHandleTimer release]; idleHandleTimer = nil;
-            [idleHandleArray release]; idleHandleArray = nil;
-        }
-    }
-}
-
-- (void)updateIdleHandlesTimer:(NSTimer *)inTimer
-{
-    NSEnumerator	*enumerator;
-    AIHandle		*handle;
-
-    [[owner contactController] setHoldContactListUpdates:YES]; //Hold updates to prevent multiple updates and re-sorts
-
-    enumerator = [idleHandleArray objectEnumerator];
-    while((handle = [enumerator nextObject])){
-        NSMutableDictionary	*handleStatusDict = [handle statusDictionary];
-        double			idleValue = [[handleStatusDict objectForKey:@"Idle"] doubleValue];
-
-        //Increase the stored idle time
-        [handleStatusDict setObject:[NSNumber numberWithDouble:++idleValue] forKey:@"Idle"];
-
-        //Post a status changed message
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Idle"]];
-    }
-
-    [[owner contactController] setHoldContactListUpdates:NO]; //Resume updates
-}
-
 // Removes all the possible status flags (that are valid on AIM/TOC) from the passed handle
 - (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle
 {
-    NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"Idle",@"Signon Date",@"Away",@"Client",@"TextProfile",nil];
+    NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",@"TextProfile",nil];
 
     [[handle statusDictionary] removeObjectsForKeys:keyArray];
     [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray];
@@ -1380,9 +1336,6 @@ static char *hash_password(const char * const password) {
 {
     [screenName release];
     [password release];
-
-    [idleHandleArray release];
-    [idleHandleTimer invalidate]; [idleHandleTimer release];
 
     [outQue release];
     [screenName release];

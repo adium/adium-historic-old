@@ -30,7 +30,6 @@ extern void* objc_getClass(const char *name);
 @interface AIMiChatAccount (PRIVATE)
 - (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle;
 - (NSArray *)applyProperties:(NSDictionary *)inProperties toHandle:(AIHandle *)inHandle;
-- (void)handle:(AIHandle *)inHandle isIdle:(BOOL)inIdle;
 - (void)firstSignOnUpdateReceived;
 - (void)waitForLastSignOnUpdate:(NSTimer *)inTimer;
 @end
@@ -45,8 +44,6 @@ extern void* objc_getClass(const char *name);
 
     //init
     handleDict = [[NSMutableDictionary alloc] init];
-    idleHandleArray = nil;
-    idleHandleTimer = nil;
     
     //Connect to the iChatAgent
     connection = [NSConnection connectionWithRegisteredName:@"iChat" host:nil];
@@ -331,10 +328,6 @@ extern void* objc_getClass(const char *name);
             }
             [[owner contactController] setHoldContactListUpdates:NO];
 
-            //Stop tracking all idle handles
-            [idleHandleTimer invalidate]; [idleHandleTimer release]; idleHandleTimer = nil;
-            [idleHandleArray release]; idleHandleArray = nil;            
-            
             //Clean up and close down
             [screenName release]; screenName = nil;
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
@@ -517,31 +510,30 @@ extern void* objc_getClass(const char *name);
     if((storedValue = [inProperties objectForKey:@"FZPersonStatus"])){
         BOOL			online;
         BOOL			away;
-        double			idleTime;
+        NSDate			*idleSince;
 
         switch([storedValue intValue]){
             case 1: //Offline, signed OFF
                 online = NO;
                 away = NO;
-                idleTime = 0;
+                idleSince = nil;
             break;
             case 2: //Idle (or Idle & Away)
                 online = YES;
 
-                storedDate = [inProperties objectForKey:@"FZPersonAwaySince"];
-                idleTime = -([storedDate timeIntervalSinceNow] / 60.0);
+                idleSince = [inProperties objectForKey:@"FZPersonAwaySince"];
 
                 away = NO; //iChat doesn't differentiate between idle and idle+away :(
             break;
             case 3: //Away
                 online = YES;
                 away = YES;
-                idleTime = 0;
+                idleSince = nil;
             break;
             case 4: //Online, signed ON (no ailments)
                 online = YES;
                 away = NO;
-                idleTime = 0;
+                idleSince = nil;
             break;
             default:
                 NSLog(@"%@: unknown status %i",[inHandle UID], [storedValue intValue]);
@@ -549,7 +541,7 @@ extern void* objc_getClass(const char *name);
         }
 
         //If the handle was AWAY or IDLE, and is no longer, remove its status message
-        if(([[handleStatusDict objectForKey:@"Idle"] doubleValue] || [[handleStatusDict objectForKey:@"Away"] intValue]) && (!idleTime && !away)){
+        if(([handleStatusDict objectForKey:@"IdleSince"] || [[handleStatusDict objectForKey:@"Away"] intValue]) && (!idleSince && !away)){
             [handleStatusDict removeObjectForKey:@"StatusMessage"];
             [alteredStatusKeys addObject:@"StatusMessage"];
         }
@@ -562,11 +554,14 @@ extern void* objc_getClass(const char *name);
         }
 
         //Idle time (seconds)
-        storedValue = [handleStatusDict objectForKey:@"Idle"];
-        if(storedValue == nil || idleTime != [storedValue doubleValue]){
-            [handleStatusDict setObject:[NSNumber numberWithDouble:idleTime] forKey:@"Idle"];
-            [alteredStatusKeys addObject:@"Idle"];
-            [self handle:inHandle isIdle:(idleTime != 0)]; //Set up the idle tracking for this handle
+        storedDate = [handleStatusDict objectForKey:@"IdleSince"];
+        if(storedDate == nil || ![storedDate isEqualToDate:idleSince]){
+            if(!idleSince){
+                [handleStatusDict removeObjectForKey:@"IdleSince"];
+            }else{
+                [handleStatusDict setObject:idleSince forKey:@"IdleSince"];
+            }
+            [alteredStatusKeys addObject:@"IdleSince"];
         }
 
         //Away
@@ -579,50 +574,6 @@ extern void* objc_getClass(const char *name);
 
     return(alteredStatusKeys);
 }
-
-
-//Adds or removes a handle from our idle tracking array
-//Handles in the array have their idle times increased every minute
-- (void)handle:(AIHandle *)inHandle isIdle:(BOOL)inIdle
-{
-    if(inIdle){
-        if(!idleHandleArray){
-            idleHandleArray = [[NSMutableArray alloc] init];
-            idleHandleTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateIdleHandlesTimer:) userInfo:nil repeats:YES] retain];
-        }
-        [idleHandleArray addObject:inHandle];
-    }else{
-        [idleHandleArray removeObject:inHandle];
-        if([idleHandleArray count] == 0){
-            [idleHandleTimer invalidate]; [idleHandleTimer release]; idleHandleTimer = nil;
-            [idleHandleArray release]; idleHandleArray = nil;
-        }
-    }
-}
-
-- (void)updateIdleHandlesTimer:(NSTimer *)inTimer
-{
-    NSEnumerator	*enumerator;
-    AIHandle		*handle;
-
-    [[owner contactController] setHoldContactListUpdates:YES]; //Hold updates to prevent multiple updates and re-sorts
-
-    enumerator = [idleHandleArray objectEnumerator];
-    while((handle = [enumerator nextObject])){
-        NSMutableDictionary	*handleStatusDict = [handle statusDictionary];
-        double			idleValue = [[handleStatusDict objectForKey:@"Idle"] doubleValue];
-
-        //Increase the stored idle time
-        [handleStatusDict setObject:[NSNumber numberWithDouble:++idleValue] forKey:@"Idle"];
-
-        //Post a status changed message
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Idle"]];
-    }
-
-    [[owner contactController] setHoldContactListUpdates:NO]; //Resume updates
-}
-
-
 
 
 
@@ -669,7 +620,7 @@ extern void* objc_getClass(const char *name);
 //Removes all the possible status flags (that are valid on AIM/iChat) from the passed handle
 - (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle
 {
-    NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"Idle",@"Signon Date",@"Away",@"Client",@"TextProfile",@"StatusMessage",nil];
+    NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",@"TextProfile",@"StatusMessage",nil];
 
     [[handle statusDictionary] removeObjectsForKeys:keyArray];
     [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray];

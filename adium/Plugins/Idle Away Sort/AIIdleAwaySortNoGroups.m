@@ -66,8 +66,8 @@ int idleAwaySortNoGroups(id objectA, id objectB, void *context)
         }else if(!groupA && groupB){
             return(NSOrderedDescending);
         }else if(!groupA && !groupB){
-            BOOL idleAwayA = ([[objectA statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1] || [[objectA statusArrayForKey:@"Idle"] greatestIntegerValue]);
-            BOOL idleAwayB = ([[objectB statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1] || [[objectB statusArrayForKey:@"Idle"] greatestIntegerValue]);
+            BOOL idleAwayA = ([[objectA statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1] || [[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
+            BOOL idleAwayB = ([[objectB statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1] || [[objectB statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
             
             if(idleAwayA && !idleAwayB){
                 return(NSOrderedDescending);

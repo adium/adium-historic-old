@@ -48,18 +48,12 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_TIME_DEFAULT_PREFERENCES forClass:[self class]] forGroup:PREF_GROUP_IDLE_TIME]; //Register our default preferences
     preferences = [[IdleTimePreferences idleTimePreferencesWithOwner:owner] retain]; 
 
-    //Observe account status changes
-//    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:nil];
-
     //Observe preference changed notifications, and setup our initial values
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
     
     //Install the menu item to manually set idle time
     [self installIdleMenu];
-
-    //Install our tooltip entry
-    [[owner interfaceController] registerContactListTooltipEntry:self];
 
     //Install all the toolbar item to manually set idle time
 /*    AIMiniToolbarItem	*toolbarItem;
@@ -275,18 +269,6 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     [[owner menuController] addMenuItem:menuItem toLocation:LOC_File_Status];
 }
 
-//Update our menu when the idle status changes
-/*- (void)accountStatusChanged:(NSNotification *)notification
-{
-    if([notification object] == nil){ //We ignore account-specific status changes
-        NSString	*modifiedKey = [[notification userInfo] objectForKey:@"Key"];
-
-        if([modifiedKey compare:@"IdleSince"] == 0){
-            [self updateIdleMenu]; //Update our away menu
-        }
-    }
-}*/
-
 //Update the idle time menu
 - (void)updateIdleMenu
 {
@@ -323,37 +305,6 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
     return(YES);
 }
-
-
-
-//Tooltip entry ---------------------------------------------------------------------------------
-- (NSString *)label
-{
-    return(@"Idle");
-}
-
-- (NSString *)entryForObject:(AIListObject *)inObject
-{
-    NSString	*entry = nil;
-
-    if([inObject isKindOfClass:[AIListContact class]]){
-        int idle = [[(AIListContact *)inObject statusArrayForKey:@"Idle"] greatestIntegerValue];
-
-        if(idle){
-            int	hours = (int)(idle / 60);
-            int	minutes = (int)(idle % 60);
-
-            if(hours){
-                entry = [NSString stringWithFormat:@"%i hour%@, %i minute%@", hours, (hours == 1 ? @"": @"s"), minutes, (minutes == 1 ? @"": @"s")];
-            }else{
-                entry = [NSString stringWithFormat:@"%i minute%@", minutes, (minutes == 1 ? @"": @"s")];
-            }
-        }
-    }
-
-    return(entry);
-}
-
 
 @end
 

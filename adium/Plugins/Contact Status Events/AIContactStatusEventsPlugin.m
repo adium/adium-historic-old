@@ -47,8 +47,7 @@
 - (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
 {
     //To increase the speed of heavy contact list operations (connecting/disconnecting/etc), we don't sent out any events when the contact list updates are delayed.
-    if(![[owner contactController] holdContactListUpdates]){
-        
+    if(![[owner contactController] holdContactListUpdates]){        
         if([inModifiedKeys containsObject:@"Online"]){ //Sign on/off
             NSNumber	*online = [[inHandle statusDictionary] objectForKey:@"Online"];
 
@@ -91,23 +90,18 @@
                 }
             }
 
-        }else if([inModifiedKeys containsObject:@"Idle"]){ //Idle / UnIdle
-            NSNumber	*idle = [[inHandle statusDictionary] objectForKey:@"Idle"];
+        }else if([inModifiedKeys containsObject:@"IdleSince"]){ //Idle / UnIdle
+            NSDate	*idleSince = [[inHandle statusDictionary] objectForKey:@"IdleSince"];            
+            BOOL	oldStatus = [[idleDict objectForKey:[inHandle UIDAndServiceID]] boolValue]; //UID is not unique enough
+            BOOL	newStatus = (idleSince != nil);
 
-            if(idle){ //We only send out events if the handle has a value (nil values mean the flag is being cleared)
-                BOOL	oldStatus = [[idleDict objectForKey:[inHandle UIDAndServiceID]] boolValue]; //UID is not unique enough
-                BOOL	newStatus = ([idle doubleValue] != 0);
-    
-                if(newStatus != oldStatus){
-                    [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO)
-                                                            object:inHandle
-                                                            userInfo:nil];
-                    [idleDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inHandle UIDAndServiceID]];
-                }
+            if(newStatus != oldStatus){
+                [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO)
+                                                          object:inHandle
+                                                        userInfo:nil];
+                [idleDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inHandle UIDAndServiceID]];
             }
-
         }
-            
     }
 
     return(nil);

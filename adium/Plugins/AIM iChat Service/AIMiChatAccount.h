@@ -26,10 +26,6 @@
     NSString		*screenName;
 
     NSMutableDictionary	*handleDict;
-
-    NSMutableArray	*idleHandleArray;
-    NSTimer		*idleHandleTimer;
-
     
     BOOL		isOnline;
 

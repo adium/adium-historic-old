@@ -25,6 +25,7 @@
 - (NSMenu *)behaviorListMenu;
 - (NSMenu *)behaviorSetMenu;
 - (NSMenu *)eventMenu;
+- (void)saveDockEventArray;
 @end
 
 @implementation AIDockBehaviorPreferences
@@ -50,44 +51,42 @@
 - (IBAction)deleteEvent:(id)sender
 {
     //Remove the event
-//    [eventSoundArray removeObjectAtIndex:[tableView_sounds selectedRow]];
+    [dockEventArray removeObjectAtIndex:[tableView_events selectedRow]];
 
     //Save event sound preferences
-//    [self saveEventSoundArray];
+    [self saveDockEventArray];
 }
 
 //Select a behavior from one of the event popUp menus
-- (IBAction)selectBehavior:(id)sender
-{
+//- (IBAction)selectBehavior:(id)sender
+//{
 /*    NSString	*soundPath = [sender representedObject];
 
     if(soundPath != nil && [soundPath length] != 0){
         [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
     }*/
-}
+//}
 
 //Called by the event popUp menu (Inserts a new event)
 - (IBAction)newEvent:(id)sender
 {
-/*    NSMutableDictionary	*soundDict;
+    NSMutableDictionary	*eventDict;
 
-    //If the user just modified a premade sound set, save it as their custom set, and switch them to 'custom'.
-    if(!usingCustomSoundSet){
-        [self saveEventSoundArray];
-        [self selectSoundSet:nil];
+    //If the user just modified a premade behavior set, save it as their custom set, and switch them to 'custom'.
+    if(!usingCustomBehaviorSet){
+        [self saveDockEventArray];
+        [self selectBehaviorSet:nil];
     }
 
     //Add the new event
-    soundDict = [[NSMutableDictionary alloc] init];
-    [soundDict setObject:[sender representedObject] forKey:KEY_EVENT_SOUND_NOTIFICATION];
-    [soundDict setObject:@"WhatShouldTheDefaultSoundBe!?" forKey:KEY_EVENT_SOUND_PATH];
-    [eventSoundArray addObject:soundDict];
+    eventDict = [[NSMutableDictionary alloc] init];
+    [eventDict setObject:[sender representedObject] forKey:KEY_DOCK_EVENT_NOTIFICATION];
+    [eventDict setObject:[NSNumber numberWithInt:0] forKey:KEY_DOCK_EVENT_BEHAVIOR];
+    [dockEventArray addObject:eventDict];
 
-    //Save event sound preferences
-    [self saveEventSoundArray];*/
+    //Save event preferences
+    [self saveDockEventArray];
 }
-
-
 
 
 
@@ -339,21 +338,21 @@
     NSString	*identifier = [tableColumn identifier];
 
     if([identifier compare:TABLE_COLUMN_EVENT] == 0){
-/*        NSDictionary	*soundDict;
+        NSDictionary	*behaviorDict;
         NSString	*notification;
         NSDictionary	*eventDict;
         NSString	*displayName;
 
         //Get the notification string
-        soundDict = [dockEventArray objectAtIndex:row];
-        notification = [soundDict objectForKey:KEY_EVENT_SOUND_NOTIFICATION];
+        behaviorDict = [dockEventArray objectAtIndex:row];
+        notification = [behaviorDict objectForKey:KEY_DOCK_EVENT_NOTIFICATION];
 
         //Get that notification's display name
         eventDict = [[owner eventNotifications] objectForKey:notification];
         displayName = [eventDict objectForKey:KEY_EVENT_DISPLAY_NAME];
 
         return(displayName ? displayName : notification);
-*/
+
     }else{
         return(nil);
 

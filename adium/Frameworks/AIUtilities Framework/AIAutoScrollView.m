@@ -55,16 +55,12 @@
 
     //Then auto-scroll
     if(autoScroll) [self scrollToBottom];
-
-    //Set our correct scrollbar visibility
-    if(autoHideScrollBar){
-        [self setCorrectScrollbarVisibility];
-    }
 }
 
 //When our document resizes
 - (void)documentFrameDidChange:(NSNotification *)notification
 {
+//    NSLog(@"documentFrameDidChange");
     if(autoScrollToBottom){
         NSRect	documentVisibleRect = [self documentVisibleRect];
         NSRect	newDocumentFrame = [[self documentView] frame];
@@ -77,7 +73,14 @@
         //Remember the new frame
         oldDocumentFrame = newDocumentFrame;
     }
+}
 
+//Called as the view resizes or scrolls
+- (void)reflectScrolledClipView:(NSClipView *)cView;
+{
+    [super reflectScrolledClipView:cView];
+
+    //Set our correct scrollbar visibility
     if(autoHideScrollBar){
         [self setCorrectScrollbarVisibility];
     }

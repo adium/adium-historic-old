@@ -169,7 +169,7 @@
 {
     //Remove any existing observer (if one exists)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
-    
+
     //Observe scrollview frame changes (so we can update our cursor tracking rect)
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSViewFrameDidChangeNotification object:[inSuperview superview]];
 
