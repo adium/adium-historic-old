@@ -51,29 +51,29 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_ANNOUNCER]){
-	NSDictionary * dict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ANNOUNCER];
-
-	speechEnabled = [[dict objectForKey:KEY_ANNOUNCER_ENABLED] boolValue];
-	speakOutgoing = [[dict objectForKey:KEY_ANNOUNCER_OUTGOING] boolValue];
-	speakIncoming = [[dict objectForKey:KEY_ANNOUNCER_INCOMING] boolValue];
-	speakMessages = speakOutgoing || speakIncoming;
+		NSDictionary * dict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ANNOUNCER];
+		
+		speechEnabled = [[dict objectForKey:KEY_ANNOUNCER_ENABLED] boolValue];
+		speakOutgoing = [[dict objectForKey:KEY_ANNOUNCER_OUTGOING] boolValue];
+		speakIncoming = [[dict objectForKey:KEY_ANNOUNCER_INCOMING] boolValue];
+		speakMessages = speakOutgoing || speakIncoming;
         
-	speakMessageText = [[dict objectForKey:KEY_ANNOUNCER_MESSAGETEXT] boolValue];
-	speakStatus = [[dict objectForKey:KEY_ANNOUNCER_STATUS] boolValue];
-
-	speakTime = [[dict objectForKey:KEY_ANNOUNCER_TIME] boolValue];
-	speakSender = [[dict objectForKey:KEY_ANNOUNCER_SENDER] boolValue];
-
-	BOOL	newValue = ((speakMessages || speakStatus) && speechEnabled);
-
+		speakMessageText = [[dict objectForKey:KEY_ANNOUNCER_MESSAGETEXT] boolValue];
+		speakStatus = [[dict objectForKey:KEY_ANNOUNCER_STATUS] boolValue];
+		
+		speakTime = [[dict objectForKey:KEY_ANNOUNCER_TIME] boolValue];
+		speakSender = [[dict objectForKey:KEY_ANNOUNCER_SENDER] boolValue];
+		
+		BOOL	newValue = ((speakMessages || speakStatus) && speechEnabled);
+		
         if(newValue != observingContent){
             observingContent = newValue;
-
+			
             if(!observingContent){ //Stop Observing
                 [[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
             }else{ //Start Observing
                 [[adium notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
-	    }
+			}
         }
     }
 }
