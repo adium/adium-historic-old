@@ -24,7 +24,7 @@ extern void* objc_getClass(const char *name);
 //
 
 @interface AIMiChatAccount (PRIVATE)
-- (void)removeAllStatusFlagsFromHandle:(AIContactHandle *)handle;
+- (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle;
 - (NSArray *)applyProperties:(NSDictionary *)inProperties toHandle:(AIHandle *)inHandle;
 - (void)handle:(AIHandle *)inHandle isIdle:(BOOL)inIdle;
 - (void)firstSignOnUpdateReceived;
@@ -138,7 +138,27 @@ extern void* objc_getClass(const char *name);
 
 - (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
 {
-    return(nil);
+    AIHandle	*handle;
+
+    if(inTemporary) inGroup = @"__Strangers";
+    if(!inGroup) inGroup = @"Unknown";
+
+    //Check to see if the handle already exists
+    if([handleDict objectForKey:inUID]){
+        [self removeHandleWithUID:inUID]; //Remove it
+    }
+
+    //Create the handle
+    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] description] UID:inUID serverGroup:inGroup temporary:inTemporary forAccount:self];
+
+    //Add the handle
+    [handleDict setObject:handle forKey:[handle UID]]; //Add it locally
+    //Add it server-side
+
+    //Update the contact list
+    [[owner contactController] handle:handle addedToAccount:self];
+
+    return(handle);
 }
 
 - (BOOL)removeHandleWithUID:(NSString *)inUID
@@ -158,7 +178,6 @@ extern void* objc_getClass(const char *name);
         id		messageObject;
 
         message = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message]];
-		//message = [NSString stringWithFormat:@"<html><body ichatballooncolor=\"#F4DE1F\" ichattextcolor=\"#000000\"><font ABSZ=\"12\" color=\"#000000\" face=\"Helvetica\">%@</font></body></html>", [[(AIContentMessage *) object message] string]];
 
         //Create a chat & send the message
         //(I guess I could cache these chats)
@@ -220,7 +239,7 @@ extern void* objc_getClass(const char *name);
 - (oneway void)service:(id)inService loginStatusChanged:(int)inStatus message:(id)inMessage reason:(int)inReason
 {
     NSEnumerator	*enumerator;
-    AIContactHandle	*handle;
+    AIHandle		*handle;
     
     switch(inStatus){
         case 0: //Offline
@@ -327,7 +346,7 @@ extern void* objc_getClass(const char *name);
 
 - (oneway void)service:(id)inService chat:(id)chat messageReceived:(id)inMessage
 {
-    AIContactHandle	*handle;
+    AIHandle		*handle;
     NSAttributedString	*messageText;
     AIContentMessage	*messageObject;
     int			flags = [inMessage flags];
@@ -340,8 +359,12 @@ extern void* objc_getClass(const char *name);
         }
     }else{
         if(!([inMessage flags] & kMessageOutgoingFlag)){//Ignore echoed messages (anything outgoing)
-                                                        //Get the handle and message
+            //Get the handle and message
             handle = [handleDict objectForKey:[inMessage sender]];
+            if(!handle){ //Stranger
+                handle = [self addHandleWithUID:[inMessage sender] serverGroup:nil temporary:YES];
+            }
+            
             messageText = [AIHTMLDecoder decodeHTML:[inMessage body]];
 
             //Add the message
@@ -375,7 +398,7 @@ extern void* objc_getClass(const char *name);
             handle = [AIHandle handleWithServiceID:[[service handleServiceType] identifier]
                                                 UID:compactedName
                                         serverGroup:@"iChat"
-                                            temporary:[[buddyPropertiesDict objectForKey:@"FZPersonIsBuddy"] boolValue]
+                                            temporary:![[buddyPropertiesDict objectForKey:@"FZPersonIsBuddy"] boolValue]
                                         forAccount:self];
             [handleDict setObject:handle forKey:compactedName];
 
@@ -398,16 +421,24 @@ extern void* objc_getClass(const char *name);
 - (NSArray *)applyProperties:(NSDictionary *)inProperties toHandle:(AIHandle *)inHandle
 {
     NSNumber		*storedValue;
+    NSString		*storedString;
     NSDate		*storedDate;
     NSMutableArray	*alteredStatusKeys = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableDictionary	*handleStatusDict = [inHandle statusDictionary];
 
-    //Status (Online, Away, and Idle)
-    if((storedValue = [inProperties objectForKey:@"FZPersonStatusMessage"])){
-        NSLog(@"%@ Away Message: \"%@\"",[inHandle UID],storedValue);
+    //Away message
+    if((storedString = [inProperties objectForKey:@"FZPersonStatusMessage"])){
+        NSAttributedString	*statusMessage;
+
+        statusMessage = [handleStatusDict objectForKey:@"StatusMessage"];
+        if(!statusMessage || [[statusMessage string] compare:storedString] != 0){
+            [handleStatusDict setObject:[[[NSAttributedString alloc] initWithString:storedString] autorelease] forKey:@"StatusMessage"];
+            [alteredStatusKeys addObject:@"StatusMessage"];
+        }
     }
 
+    //Status (Online, Away, and Idle)
     if((storedValue = [inProperties objectForKey:@"FZPersonStatus"])){
-        NSMutableDictionary	*handleStatusDict = [inHandle statusDictionary];
         BOOL			online;
         BOOL			away;
         double			idleTime;
@@ -481,8 +512,8 @@ extern void* objc_getClass(const char *name);
     }else{
         [idleHandleArray removeObject:inHandle];
         if([idleHandleArray count] == 0){
-            [idleHandleTimer invalidate]; [idleHandleTimer release];
-            [idleHandleArray release];
+            [idleHandleTimer invalidate]; [idleHandleTimer release]; idleHandleTimer = nil;
+            [idleHandleArray release]; idleHandleArray = nil;
         }
     }
 }
@@ -554,16 +585,12 @@ extern void* objc_getClass(const char *name);
 }
 
 //Removes all the possible status flags (that are valid on AIM/iChat) from the passed handle
-- (void)removeAllStatusFlagsFromHandle:(AIContactHandle *)handle
+- (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle
 {
- /*   NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"Idle",@"Signon Date",@"Away",@"Client",nil];
-    int		loop;
+    NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"Idle",@"Signon Date",@"Away",@"Client",@"TextProfile",@"StatusMessage",nil];
 
-    for(loop = 0;loop < [keyArray count];loop++){
-        [[handle statusArrayForKey:[keyArray objectAtIndex:loop]] removeObjectsWithOwner:self];
-    }
-
-    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray];*/
+    [[handle statusDictionary] removeObjectsForKeys:keyArray];
+    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray];
 }
 
 @end

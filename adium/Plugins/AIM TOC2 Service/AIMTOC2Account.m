@@ -1261,8 +1261,8 @@ static char *hash_password(const char * const password) {
     }else{
         [idleHandleArray removeObject:inHandle];
         if([idleHandleArray count] == 0){
-            [idleHandleTimer invalidate]; [idleHandleTimer release];
-            [idleHandleArray release];
+            [idleHandleTimer invalidate]; [idleHandleTimer release]; idleHandleTimer = nil;
+            [idleHandleArray release]; idleHandleArray = nil;
         }
     }
 }

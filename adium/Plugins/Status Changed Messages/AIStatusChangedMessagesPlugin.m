@@ -19,6 +19,8 @@
 
 - (void)installPlugin
 {
+    [[owner contactController] registerContactObserver:self];
+
     [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusAwayYes:) name:@"Contact_StatusAwayYes" object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusAwayNo:) name:@"Contact_StatusAwayNo" object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusOnlineYes:) name:@"Contact_StatusOnlineYes" object:nil];
@@ -26,6 +28,20 @@
     [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusIdleYes:) name:@"Contact_StatusIdleYes" object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusIdleNo:) name:@"Contact_StatusIdleNo" object:nil];
 }
+
+- (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
+{
+    if([inModifiedKeys containsObject:@"StatusMessage"]){
+        NSString	*statusMessage = [[[inHandle statusDictionary] objectForKey:@"StatusMessage"] string];
+
+        if(statusMessage && [statusMessage length] != 0){
+            [self statusMessage:[NSString stringWithFormat:@"Away Message: \"%@\"",statusMessage] forHandle:inHandle];
+        }
+    }
+
+    return(nil);
+}
+
 
 - (void)Contact_StatusAwayYes:(NSNotification *)notification{
     [self statusMessage:@"%@ went away" forHandle:[notification object]];
@@ -45,7 +61,6 @@
 - (void)Contact_StatusIdleNo:(NSNotification *)notification{
     [self statusMessage:@"%@ became active" forHandle:[notification object]];
 }
-
 
 
 //Post a status message

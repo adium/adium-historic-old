@@ -132,7 +132,7 @@
 
     //Set up a dictionary to hold our subgroups
     groupDict = [[[NSMutableDictionary alloc] init] autorelease];
-
+    
     //Process the handles
     enumerator = [[[account availableHandles] allValues] objectEnumerator];
     while((handle = [enumerator nextObject])){
