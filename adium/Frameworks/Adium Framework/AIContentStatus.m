@@ -76,7 +76,7 @@
     destination = [inDest retain];
 
     //Store the date and message
-    if(!date){
+    if(!inDate){
         date = [[NSDate date] retain];
     }else{
         date = [inDate retain];
