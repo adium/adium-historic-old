@@ -17,7 +17,7 @@
 	<key>MSN:HTTP Connect Method</key>
 	<false/>
 	<key>MSN:Display Names As Status</key>
-	<true/>
+	<false/>
 	<key>MSN:Conversation Closed</key>
 	<true/>	
 	<key>MSN:Conversation Timed Out</key>
