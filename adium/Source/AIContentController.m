@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.105 2004/08/15 20:47:38 evands Exp $
+// $Id: AIContentController.m,v 1.106 2004/08/16 07:30:19 evands Exp $
 
 #import "AIContentController.h"
 
@@ -724,7 +724,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 
 			//Inform the account of its creation and post a notification if successful
 			if([(AIAccount<AIAccount_Content> *)account openChat:chat]){
-				[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
+				[[owner notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
 			}else{
 				[chatArray removeObject:chat];
 				chat = nil;
@@ -780,7 +780,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 			
 			//Inform the account of its creation and post a notification if successful
 			if([(AIAccount<AIAccount_Content> *)account openChat:chat]){
-				[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
+				[[owner notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
 			}else{
 				[chatArray removeObject:chat];
 				chat = nil;
@@ -790,7 +790,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 	return(chat);
 }
 
-- (AIChat *)openChat:(AIChat *)chat
+- (void)openChat:(AIChat *)chat
 {
 	if(chat){		
 		if (![chatArray containsObjectIdenticalTo:chat]){
