@@ -119,7 +119,10 @@ int HTMLEquivalentForFontSize(int fontSize);
 
             //Family
             if([familyName caseInsensitiveCompare:currentFamily] != 0){
-                [string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"0\"",familyName]];
+                int langNum = 11; /*While this seems to work, I do not understand why.  A better option must exist. 
+                                    11 seems to mean "supports ASCII and foreign language" or something, as all languages tested
+                                    worked fine.*/
+                [string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"%i\"",familyName,langNum]];
                 [currentFamily release]; currentFamily = [familyName retain];
             }
 
