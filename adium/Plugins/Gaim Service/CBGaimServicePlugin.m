@@ -564,10 +564,13 @@ static void adiumGaimDestroy(GaimXfer *xfer)
 static void adiumGaimRequestFile(GaimXfer *xfer)
 {
     GaimXferType xferType = gaim_xfer_get_type(xfer);
-    if ( xferType == GAIM_XFER_RECEIVE ) {
+    if (xferType == GAIM_XFER_RECEIVE) {
         NSLog(@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
         [accountLookup(xfer->account) accountXferRequestFileReceiveWithXfer:xfer];
-    } 
+    } else if (xferType == GAIM_XFER_SEND) {
+		NSCAssert(xfer->local_filename != nil, @"adiumGaimRequestFile: Attempted to send nil file...");
+		gaim_xfer_request_accepted(xfer, xfer->local_filename);
+	}
 }
 
 static void adiumGaimAskCancel(GaimXfer *xfer)

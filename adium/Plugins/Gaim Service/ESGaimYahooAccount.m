@@ -62,15 +62,15 @@
 	
 	GaimXfer *xfer = yahoo_xfer_new(gc,destsn);
 	
-	//gaim will free filename when necessary
-	char *filename = g_strdup([[fileTransfer localFilename] UTF8String]);
-	
 	//Associate the fileTransfer and the xfer with each other
 	[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
     xfer->ui_data = [fileTransfer retain];
 	
-    //accept the request
-    gaim_xfer_request_accepted(xfer, filename);
+	//Set the filename
+	gaim_xfer_set_local_filename(xfer, [[fileTransfer localFilename] UTF8String]);
+	
+    //request that the transfer begins
+	gaim_xfer_request(xfer);
     
     //tell the fileTransferController to display appropriately
     [[adium fileTransferController] beganFileTransfer:fileTransfer];
