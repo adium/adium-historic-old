@@ -144,19 +144,11 @@
 		};
 		11C157D504A88DE0008E0C76 = {
 			children = (
-				C41BF732063D006D0006C041,
-				C41BF733063D006D0006C041,
 				3C73F83E04D62A2900A80106,
 				3C73F83F04D62A2900A80106,
-				4B584E06055DD6A000E89D48,
-				4B584E07055DD6A000E89D48,
 				11C157D804A88E04008E0C76,
 				11C157D904A88E04008E0C76,
-				F5F0FE9C04B12CAC01A80106,
-				F5F0FE9D04B12CAC01A80106,
-				F5F0FEA004B1336C01A80106,
-				C497514905BBAC25009958A6,
-				F5F0FEA204B133AB01A80106,
+				4B737B4B065D4FDC0062AB94,
 			);
 			isa = PBXGroup;
 			name = Emoticons;
@@ -4482,7 +4474,6 @@
 				7E824CE606387FAF00813072,
 				7E824CEA06387FAF00813072,
 				BF000238063A4D2E0019910B,
-				C41BF734063D006D0006C041,
 				4B909C87064D72EE0074C9A8,
 				4B909C8B064D75400074C9A8,
 				4B091035065CE9D600FF0528,
@@ -5095,7 +5086,6 @@
 				7E824CE706387FAF00813072,
 				7E824CEB06387FAF00813072,
 				BF000239063A4D2E0019910B,
-				C41BF735063D006D0006C041,
 				4B909C88064D72EE0074C9A8,
 				4B909C8A064D75400074C9A8,
 				4B091036065CE9D600FF0528,
@@ -8688,8 +8678,8 @@
 		4947F5EA0655E90C00B791E5 = {
 			children = (
 				6CED9083065B686A00A9C196,
-				5207012A065D437D00ABF39C,
-				5207012B065D437D00ABF39C,
+				4B7378B9065D4FBA0062AB94,
+				4B7378BA065D4FBA0062AB94,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -11464,6 +11454,51 @@
 			lastKnownFileType = text.plist;
 			name = TextForcingDefaults.plist;
 			path = "Plugins/Text Forcing/TextForcingDefaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7378B9065D4FBA0062AB94 = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 4B737B13065D4FBE0062AB94;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B7378BA065D4FBA0062AB94 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 4B737B14065D4FBE0062AB94;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B737B13065D4FBE0062AB94 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
+		};
+		4B737B14065D4FBE0062AB94 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
+		};
+		4B737B4B065D4FDC0062AB94 = {
+			children = (
+				F5F0FE9C04B12CAC01A80106,
+				F5F0FE9D04B12CAC01A80106,
+				4B584E06055DD6A000E89D48,
+				4B584E07055DD6A000E89D48,
+				F5F0FEA004B1336C01A80106,
+				C497514905BBAC25009958A6,
+				F5F0FEA204B133AB01A80106,
+			);
+			isa = PBXGroup;
+			name = Preferences;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -16762,36 +16797,6 @@
 //522
 //523
 //524
-		5207012A065D437D00ABF39C = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 52070131065D438200ABF39C;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5207012B065D437D00ABF39C = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 52070132065D438200ABF39C;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		52070131065D438200ABF39C = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
-		};
-		52070132065D438200ABF39C = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
-		};
 		520FE39C05BE1FC5002D063D = {
 			buildActionMask = 2147483647;
 			files = (
@@ -19885,36 +19890,6 @@
 //C42
 //C43
 //C44
-		C41BF732063D006D0006C041 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = BGEmoticonPackTableView.h;
-			path = Plugins/Emoticons/BGEmoticonPackTableView.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C41BF733063D006D0006C041 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = BGEmoticonPackTableView.m;
-			path = Plugins/Emoticons/BGEmoticonPackTableView.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C41BF734063D006D0006C041 = {
-			fileRef = C41BF732063D006D0006C041;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C41BF735063D006D0006C041 = {
-			fileRef = C41BF733063D006D0006C041;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		C4243C8F0638E4C7007AD2D9 = {
 			children = (
 				C4243C920638E4EA007AD2D9,
@@ -22736,7 +22711,7 @@
 		F5F0FEA204B133AB01A80106 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
+			lastKnownFileType = text.plist.xml;
 			name = EmoticonDefaults.plist;
 			path = Plugins/Emoticons/EmoticonDefaults.plist;
 			refType = 4;

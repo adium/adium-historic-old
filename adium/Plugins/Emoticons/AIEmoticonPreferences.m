@@ -194,7 +194,12 @@
         }
 
     }
-	}
+}
+
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
+{
+	[self moveSelectedPacksToTrash]; 
+}
 
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
