@@ -575,6 +575,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		}
 	}else{
 		//We shouldn't send the content, so something was done with it.. clear the text entry view
+		//XXX - Nobody is observing this notification... -ai
 		[[adium notificationCenter] postNotificationName:Interface_ShouldClearTextEntryView
 												  object:chat 
 												userInfo:nil];
