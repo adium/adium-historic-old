@@ -13,17 +13,16 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.48 2004/01/08 03:59:46 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.49 2004/01/08 07:19:10 evands Exp $
 
 #import "AIInterfaceController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"
-#define ERROR_MESSAGE_WINDOW_TITLE		@"Adium : Error"
+#define ERROR_MESSAGE_WINDOW_TITLE		AILocalizedString(@"Adium : Error","Error message window title")
 #define LABEL_ENTRY_SPACING                     4.0
 #define DISPLAY_IMAGE_ON_RIGHT                  NO
 
 @interface AIInterfaceController (PRIVATE)
-- (void)loadDualInterface;
 - (void)flashTimer:(NSTimer *)inTimer;
 - (NSAttributedString *)_tooltipTitleForObject:(AIListObject *)object;
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object;
@@ -62,7 +61,7 @@
     [contactListViewArray release]; contactListViewArray = nil;
     [messageViewArray release]; messageViewArray = nil;
     [interfaceArray release]; interfaceArray = nil;
-        
+    
     [super dealloc];
 }
 
@@ -70,59 +69,10 @@
 {
     //Load the interface
     [[interfaceArray objectAtIndex:0] openInterface];
-
+    
     //Configure our dynamic paste menu item
     [menuItem_paste setDynamic:YES];
     [menuItem_pasteFormatted setDynamic:YES];
-}
-
-
-//Interface chat opening and closing
-- (IBAction)initiateMessage:(id)sender
-{
-    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] initiateNewMessage];
-}
-
-- (void)openChat:(AIChat *)inChat
-{
-	NSEnumerator *enumerator;
-	AIListObject *listObject;
-    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] openChat:inChat];
-	
-	//Set the # of chats for all the list objects to +1
-	enumerator = [[inChat participatingListObjects] objectEnumerator];
-	while(listObject = [enumerator nextObject]){
-		int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
-		[listObject setStatusObject:[NSNumber numberWithInt:(currentCount + 1)]
-						  withOwner:listObject
-							 forKey:@"ChatsCount"
-							 notify:YES];
-	}
-}
-
-- (void)closeChat:(AIChat *)inChat
-{
-	NSEnumerator *enumerator;
-	AIListObject *listObject;
-	
-    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] closeChat:inChat];
-	
-	//Set the # of chats for all the list objects to -1
-	enumerator = [[inChat participatingListObjects] objectEnumerator];
-	while(listObject = [enumerator nextObject]){
-		int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
-		if(currentCount > 0) {
-			[listObject setStatusObject:[NSNumber numberWithInt:(currentCount - 1)]
-							  withOwner:listObject
-								 forKey:@"ChatsCount"
-								 notify:YES];
-		}
-	}
-}
-
-- (void)setActiveChat:(AIChat *)inChat
-{
-    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] setActiveChat:inChat];
 }
 
 - (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows
@@ -136,7 +86,8 @@
     [interfaceArray addObject:inController];
 }
 
-
+//Contact List -----------------------------------
+#pragma mark Contact list
 // Registers a view to handle the contact list.  The user may chose from the available views
 // The view only needs to be added to the interface, it is entirely self sufficient
 - (void)registerContactListViewPlugin:(id <AIContactListViewPlugin>)inPlugin
@@ -148,7 +99,8 @@
     return([[contactListViewArray objectAtIndex:0] contactListViewController]);
 }
 
-
+//Messaging & Chats -----------------------------------
+#pragma mark Messaging & Chats
 // Registers a view to handle the contact list.  The user may chose from the available views
 // The view only needs to be added to the interface, it is entirely self sufficient
 - (void)registerMessageViewPlugin:(id <AIMessageViewPlugin>)inPlugin
@@ -160,10 +112,56 @@
     return([[messageViewArray objectAtIndex:0] messageViewControllerForChat:inChat]);
 }
 
+//Interface chat opening and closing
+- (IBAction)initiateMessage:(id)sender
+{
+    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] initiateNewMessage];
+}
 
+- (void)setActiveChat:(AIChat *)inChat
+{
+    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] setActiveChat:inChat];
+}
 
+- (void)openChat:(AIChat *)inChat
+{
+    NSEnumerator *enumerator;
+    AIListObject *listObject;
+    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] openChat:inChat];
+    
+    //Set the # of chats for all the list objects to +1
+    enumerator = [[inChat participatingListObjects] objectEnumerator];
+    while(listObject = [enumerator nextObject]){
+        int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
+        [listObject setStatusObject:[NSNumber numberWithInt:(currentCount + 1)]
+                          withOwner:listObject
+                             forKey:@"ChatsCount"
+                             notify:YES];
+    }
+}
+
+- (void)closeChat:(AIChat *)inChat
+{
+    NSEnumerator *enumerator;
+    AIListObject *listObject;
+    
+    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] closeChat:inChat];
+    
+    //Set the # of chats for all the list objects to -1
+    enumerator = [[inChat participatingListObjects] objectEnumerator];
+    while(listObject = [enumerator nextObject]){
+        int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
+        if(currentCount > 0) {
+            [listObject setStatusObject:[NSNumber numberWithInt:(currentCount - 1)]
+                              withOwner:listObject
+                                 forKey:@"ChatsCount"
+                                 notify:YES];
+        }
+    }
+}
 
 //Errors
+#pragma mark Errors
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc
 {
     [self handleMessage:inTitle withDescription:inDesc withWindowTitle:ERROR_MESSAGE_WINDOW_TITLE];
@@ -172,21 +170,26 @@
 - (void)handleMessage:(NSString *)inTitle withDescription:(NSString *)inDesc withWindowTitle:(NSString *)inWindowTitle;
 {
     NSDictionary	*errorDict;
-
+    
     //Post a notification that an error was recieved
     errorDict = [NSDictionary dictionaryWithObjectsAndKeys:inTitle,@"Title",inDesc,@"Description",inWindowTitle,@"Window Title",nil];
     [[owner notificationCenter] postNotificationName:Interface_ErrorMessageReceived object:nil userInfo:errorDict];
 }
 
 //Flashing
+#pragma mark Flashing
 - (void)registerFlashObserver:(id <AIFlashObserver>)inObserver
 {
     //Create a flash observer array and install the flash timer
     if(flashObserverArray == nil){
         flashObserverArray = [[NSMutableArray alloc] init];
-        flashTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/2.0) target:self selector:@selector(flashTimer:) userInfo:nil repeats:YES] retain];
+        flashTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/2.0) 
+                                                       target:self 
+                                                     selector:@selector(flashTimer:) 
+                                                     userInfo:nil
+                                                      repeats:YES] retain];
     }
-
+    
     //Add the new observer to the array
     [flashObserverArray addObject:inObserver];
 }
@@ -195,7 +198,7 @@
 {
     //Remove the observer from our array
     [flashObserverArray removeObject:inObserver];
-
+    
     //Release the observer array and uninstall the timer
     if([flashObserverArray count] == 0){
         [flashObserverArray release]; flashObserverArray = nil;
@@ -208,9 +211,9 @@
 {
     NSEnumerator	*enumerator;
     id<AIFlashObserver>	observer;
-
+    
     flashState++;
-
+    
     enumerator = [flashObserverArray objectEnumerator];
     while((observer = [enumerator nextObject])){
         [observer flash:flashState];
@@ -222,7 +225,8 @@
     return(flashState);
 }
 
-
+//Tooltips -----------------------------------
+#pragma mark Tooltips
 
 // Registers code to display tooltip info about a contact
 - (void)registerContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry secondaryEntry:(BOOL)isSecondary
@@ -238,17 +242,17 @@
 {
     if(object){
         if(object == tooltipListObject){ //If we already have this tooltip open
-            //Move the existing tooltip
+                                         //Move the existing tooltip
             [AITooltipUtilities showTooltipWithTitle:tooltipTitle body:tooltipBody image:tooltipImage imageOnRight:DISPLAY_IMAGE_ON_RIGHT onWindow:nil atPoint:point orientation:TooltipBelow];
-
+            
         }else{ //This is a new tooltip
             NSArray                     *tabArray;
             NSMutableParagraphStyle     *paragraphStyleTitle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
             NSMutableParagraphStyle     *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-
+            
             //Hold onto the new object
             [tooltipListObject release]; tooltipListObject = [object retain];
-
+            
             //Buddy Icon
             [tooltipImage release]; tooltipImage = nil;
             AIMutableOwnerArray *ownerArray = [tooltipListObject statusArrayForKey:@"UserIcon"];
@@ -267,14 +271,20 @@
             //If there is an image, set the title tab and indentation settings independently
             if (tooltipImage) {
                 //Set a right-align tab at the maximum label width and a left-align just past it
-                tabArray = [[NSArray alloc] initWithObjects:[[NSTextTab alloc] initWithType:NSRightTabStopType location:maxLabelWidth],[[NSTextTab alloc] initWithType:NSLeftTabStopType location:maxLabelWidth + LABEL_ENTRY_SPACING],nil];
-
+                tabArray = [[NSArray alloc] initWithObjects:[[NSTextTab alloc] initWithType:NSRightTabStopType 
+                                                                                   location:maxLabelWidth]
+                                                            ,[[NSTextTab alloc] initWithType:NSLeftTabStopType 
+                                                                                   location:maxLabelWidth + LABEL_ENTRY_SPACING]
+                                                            ,nil];
+                
                 [paragraphStyleTitle setTabStops:tabArray];
                 [tabArray release];
                 tabArray = nil;
                 [paragraphStyleTitle setHeadIndent:(maxLabelWidth + LABEL_ENTRY_SPACING)];
                 
-                [tooltipTitle addAttribute:NSParagraphStyleAttributeName value:paragraphStyleTitle range:NSMakeRange(0,[tooltipTitle length])];
+                [tooltipTitle addAttribute:NSParagraphStyleAttributeName 
+                                     value:paragraphStyleTitle
+                                     range:NSMakeRange(0,[tooltipTitle length])];
                 
                 //Reset the max label width since the body will be independent
                 maxLabelWidth = 0;
@@ -285,25 +295,40 @@
             tooltipBody = [[self _tooltipBodyForObject:object] retain];
             
             //Set a right-align tab at the maximum label width for the body and a left-align just past it
-            tabArray = [[[NSArray alloc] initWithObjects:[[[NSTextTab alloc] initWithType:NSRightTabStopType location:maxLabelWidth] autorelease],
-                [[[NSTextTab alloc] initWithType:NSLeftTabStopType location:maxLabelWidth + LABEL_ENTRY_SPACING] autorelease], nil] autorelease];
+            tabArray = [[NSArray alloc] initWithObjects:[[[NSTextTab alloc] initWithType:NSRightTabStopType 
+                                                                                 location:maxLabelWidth] autorelease]
+                                                        ,[[[NSTextTab alloc] initWithType:NSLeftTabStopType 
+                                                                                location:maxLabelWidth + LABEL_ENTRY_SPACING] autorelease]
+                                                        ,nil];
             [paragraphStyle setTabStops:tabArray];
+            [tabArray release];
             [paragraphStyle setHeadIndent:(maxLabelWidth + LABEL_ENTRY_SPACING)];
             
             [tooltipBody addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,[tooltipBody length])];
             //If there is no image, also use these settings for the top part
             if (!tooltipImage) {
-                 [tooltipTitle addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,[tooltipTitle length])];
+                [tooltipTitle addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,[tooltipTitle length])];
             }
             
             //Display the new tooltip
-            [AITooltipUtilities showTooltipWithTitle:tooltipTitle body:tooltipBody image:tooltipImage imageOnRight:DISPLAY_IMAGE_ON_RIGHT onWindow:nil atPoint:point orientation:TooltipBelow];
+            [AITooltipUtilities showTooltipWithTitle:tooltipTitle
+                                                body:tooltipBody 
+                                               image:tooltipImage
+                                        imageOnRight:DISPLAY_IMAGE_ON_RIGHT
+                                            onWindow:nil
+                                             atPoint:point 
+                                         orientation:TooltipBelow];
         }
-
+        
     }else{
         //Hide the existing tooltip
         if(tooltipListObject){
-            [AITooltipUtilities showTooltipWithTitle:nil body:nil image:nil onWindow:nil atPoint:point orientation:TooltipBelow];
+            [AITooltipUtilities showTooltipWithTitle:nil 
+                                                body:nil
+                                               image:nil 
+                                            onWindow:nil
+                                             atPoint:point
+                                         orientation:TooltipBelow];
             [tooltipListObject release]; tooltipListObject = nil;
         }
     }
@@ -391,7 +416,7 @@
     
     while((entryString = [enumerator nextObject])){        
         NSAttributedString * labelString = [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t",[labelEnumerator nextObject]]
-                                                                           attributes:labelDict] autorelease];
+                                                                            attributes:labelDict] autorelease];
         
         //Add a carriage return
         [titleString appendString:@"\r" withAttributes:labelEndLineDict];
@@ -418,7 +443,7 @@
     NSFont                          *toolTipsFont = [NSFont toolTipsFontOfSize:10];
     NSMutableDictionary             *labelDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
         [fontManager convertFont:[NSFont toolTipsFontOfSize:9] toHaveTrait:NSBoldFontMask], NSFontAttributeName, nil];
-    NSMutableDictionary             *labelEndLineDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:1] , NSFontAttributeName, nil];
+    NSMutableDictionary             *labelEndLineDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:1], NSFontAttributeName, nil];
     NSMutableDictionary             *entryDict =[NSMutableDictionary dictionaryWithObjectsAndKeys:
         toolTipsFont, NSFontAttributeName, nil];
     
@@ -446,7 +471,8 @@
                 [entryArray addObject:entryString];
                 [labelArray addObject:labelString];
                 
-                NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@:",labelString] attributes:labelDict];
+                NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@:",labelString] 
+                                                                                         attributes:labelDict];
                 
                 //The largest size should be the label's size plus the distance to the next tab at least a space past its end
                 labelWidth = [labelAttribString size].width;
@@ -458,7 +484,7 @@
         }
         [entryString release];
     }
-
+    
     //Add labels plus entires to the toolTip
     enumerator = [entryArray objectEnumerator];
     labelEnumerator = [labelArray objectEnumerator];
@@ -477,7 +503,7 @@
         [tipString appendAttributedString:labelString];
         
         NSRange fullLength = NSMakeRange(0, [entryString length]);
-       
+        
         //remove any background coloration
         [entryString removeAttribute:NSBackgroundColorAttributeName range:fullLength];
         
@@ -489,15 +515,16 @@
             fullLength = NSMakeRange(0, [entryString length]);
         if ([entryString replaceOccurrencesOfString:@"\n" withString:@"\n\t\t" options:NSLiteralSearch range:fullLength])
             fullLength = NSMakeRange(0, [entryString length]);
-                
+        
         //Run the entry through the filters and add it to tipString
         [tipString appendAttributedString:
-            [[owner contentController] filteredAttributedString:[entryString addAttributes:entryDict range:fullLength]]];
+            [[owner contentController] fullyFilteredAttributedString:[entryString addAttributes:entryDict range:fullLength]]];
     }
     return([tipString autorelease]);
 }
 
 //Custom pasting ----------------------------------------------------------------------------------------------------
+#pragma mark Custom Pasting
 @protocol _RESPONDS_TO_PASTE //Just a temp protocol to suppress compiler warnings
 - (void)pasteAsPlainText:(id)sender;
 - (void)pasteAsRichText:(id)sender;
@@ -508,13 +535,13 @@
 - (IBAction)paste:(id)sender
 {
     NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-
+    
     if([responder respondsToSelector:@selector(pasteAsPlainText:)]){
         [(NSResponder<_RESPONDS_TO_PASTE> *)responder pasteAsPlainText:sender];
-
+        
     }else if([responder respondsToSelector:@selector(paste:)]){
         [(NSResponder<_RESPONDS_TO_PASTE> *)responder paste:sender];
-
+        
     }
 }
 
@@ -522,18 +549,19 @@
 - (IBAction)pasteFormatted:(id)sender
 {
     NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-
+    
     if([responder respondsToSelector:@selector(pasteAsPlainText:)]){
         [(NSResponder<_RESPONDS_TO_PASTE> *)responder pasteAsRichText:sender];
-
+        
     }else if([responder respondsToSelector:@selector(paste:)]){
         [(NSResponder<_RESPONDS_TO_PASTE> *)responder paste:sender];
-
+        
     }
 }
 
 
 //Custom Bold / Italic menu items----------------------------------------------------------------------------------
+#pragma mark Custom Bold / Italic
 //The standard ones do not dim correctly when unavailable
 - (IBAction)toggleFontTrait:(id)sender
 {
