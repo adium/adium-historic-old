@@ -1,13 +1,17 @@
 {
     IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {changePreference = id; }; 
-            CLASS = AITextProfilePreferences; 
+            CLASS = IdleMessagePreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"textView_textProfile" = NSTextView; "view_prefView" = NSView; }; 
+            OUTLETS = {
+                "checkBox_enableIdleMessage" = NSButton; 
+                "textView_idleMessage" = NSTextView; 
+                "view_prefView" = NSView; 
+            }; 
             SUPERCLASS = NSObject; 
-        }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        }
     ); 
     IBVersion = 1; 
 }
