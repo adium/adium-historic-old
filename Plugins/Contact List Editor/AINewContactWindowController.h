@@ -17,15 +17,19 @@
 #define KEY_ADD_CONTACT_TO		@"Add Contacts to account"
 
 @interface AINewContactWindowController : AIWindowController <AIListObjectObserver> {
-	IBOutlet	NSPopUpButton		*popUp_contactType;
-	IBOutlet	NSPopUpButton		*popUp_targetGroup;
-	IBOutlet	NSTextField			*textField_contactName;
-	IBOutlet	NSTextField			*textField_contactAlias;
-	IBOutlet	NSTableView			*tableView_accounts;
-	IBOutlet	NSButton			*button_add;
+	IBOutlet	NSPopUpButton				*popUp_contactType;
+	IBOutlet	NSPopUpButton				*popUp_targetGroup;
+	IBOutlet	NSTextField					*textField_contactName;
+	IBOutlet	NSTextField					*textField_contactAlias;
+	IBOutlet	NSTableView					*tableView_accounts;
+	IBOutlet	NSButton					*button_add;
 	
-	IBOutlet	NSTextField			*textField_contactNameLabel;
-	
+	IBOutlet	AILocalizationTextField		*textField_type;
+	IBOutlet	AILocalizationTextField		*textField_alias;
+	IBOutlet	AILocalizationTextField		*textField_inGroup;
+	IBOutlet	AILocalizationTextField		*textField_addToAccounts;
+	IBOutlet	NSTextField					*textField_contactNameLabel;
+
 	NSArray							*accounts;
 	NSString						*contactName;
 	AIService						*service;

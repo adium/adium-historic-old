@@ -82,7 +82,12 @@
 
 //Setup the window before it is displayed
 - (void)windowDidLoad
-{
+{	
+	[textField_type setStringValue:AILocalizedString(@"Contact Type:","Contact type service dropdown label in Add Contact")];
+	[textField_alias setStringValue:AILocalizedString(@"Alias:",nil)];
+	[textField_inGroup setStringValue:AILocalizedString(@"In Group:",nil)];
+	[textField_addToAccounts setStringValue:AILocalizedString(@"Add to Accounts:",nil)];
+
 	originalContactNameLabelFrame = [textField_contactNameLabel frame];
 	
 	[self buildContactTypeMenu];
@@ -425,17 +430,18 @@
 
 - (void)updateContactNameLabel
 {
-	NSString	*userNameLabel = (service ? [service userNameLabel] : nil);
-	NSRect		oldFrame;
-	NSRect		newFrame;
-
+	NSRect          oldFrame;
+	NSRect          newFrame;
+	
 	oldFrame = [textField_contactNameLabel frame];
 
 	//If the old frame is smaller than our original frame, treat the old frame as that original frame
 	//for resizing and positioning purposes
 	if(oldFrame.size.width < originalContactNameLabelFrame.size.width){
-		oldFrame = originalContactNameLabelFrame;
+			oldFrame = originalContactNameLabelFrame;
 	}
+	
+	NSString	*userNameLabel = (service ? [service userNameLabel] : nil);
 
 	//Set to the userNameLabel, using a default value if we have no userNameLabel, then sizeToFit
 	[textField_contactNameLabel setStringValue:[(userNameLabel ? userNameLabel : AILocalizedString(@"Contact ID",nil)) stringByAppendingString:@":"]];
@@ -457,15 +463,33 @@
 	[textField_contactNameLabel setFrame:newFrame];	
 	[textField_contactNameLabel setNeedsDisplay:YES];
 
-	//Resize the window to fit the contactNameLabel if the current size is not correct
-	if(newFrame.size.width != oldFrame.size.width){
+	//Resize the window to fit the contactNameLabel if the current origin is not correct; the resut
+	NSLog(@"%@ vs. %@",NSStringFromRect(newFrame),NSStringFromRect(originalContactNameLabelFrame));
+	if(newFrame.origin.x < 17){
 		NSRect	windowFrame = [[self window] frame];
-		float	difference = newFrame.size.width - oldFrame.size.width;
+		float	difference = 17 - newFrame.origin.x;
 
 		windowFrame.origin.x -= difference;
 		windowFrame.size.width += difference;
-
+		NSLog(@"new  Adjusting window to %@",NSStringFromRect(windowFrame));
 		[[self window] setFrame:windowFrame display:YES animate:YES];
+
+	}else if(oldFrame.origin.x <= 17){
+		NSRect	windowFrame = [[self window] frame];
+		float	difference = oldFrame.origin.x - newFrame.origin.x;
+		
+		if(newFrame.origin.x + difference < originalContactNameLabelFrame.origin.x){
+			difference = originalContactNameLabelFrame.origin.x - newFrame.origin.x;
+		}
+		
+		windowFrame.origin.x -= difference;
+		windowFrame.size.width += difference;
+		NSLog(@"old Adjusting window to %@",NSStringFromRect(windowFrame));
+		[[self window] setFrame:windowFrame display:YES animate:YES];
+
+	}else{
+		//Display to remove any artifacts from the frame changing
+		[[self window] display];
 	}
 }
 
