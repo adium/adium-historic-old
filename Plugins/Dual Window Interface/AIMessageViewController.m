@@ -369,7 +369,7 @@
 
 		alertDict = [NSMutableDictionary dictionary];
 		[alertDict setObject:detailsDict forKey:@"ActionDetails"];
-		[alertDict setObject:CONTACT_STATUS_ONLINE_YES forKey:@"EventID"];
+		[alertDict setObject:CONTACT_SEEN_ONLINE_YES forKey:@"EventID"];
 		[alertDict setObject:@"SendMessage" forKey:@"ActionID"];
 		[alertDict setObject:[NSNumber numberWithBool:YES] forKey:@"OneTime"]; 
 		
