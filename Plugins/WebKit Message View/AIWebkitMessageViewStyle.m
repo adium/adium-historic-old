@@ -66,6 +66,9 @@ DeclareString(AppendNextMessage);
 	[super init];
 	styleBundle = [inBundle retain];
 	stylePath = [[styleBundle resourcePath] retain];
+
+	//Default behavior
+	allowTextBackgrounds = YES;
 	
 	//Prepare our append content BOM scripts.  These are shared between all AIWebkitMessageViewStyle instances.
 	if(!AppendMessageWithScroll){
@@ -209,7 +212,7 @@ DeclareString(AppendNextMessage);
 }
 
 /*!
- * @brief Set visibility of background colors
+ * @brief Set visibility of message background colors
  */
 - (void)setAllowTextBackgrounds:(BOOL)inValue
 {
