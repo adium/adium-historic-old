@@ -1,6 +1,11 @@
 {
     IBClasses = (
         {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {
             CLASS = AIDockIconPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
