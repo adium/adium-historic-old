@@ -8,7 +8,7 @@
 #import "ESGaimICQAccount.h"
 
 @interface ESGaimICQAccountViewController : ESGaimAccountViewController {
-	IBOutlet	NSTextField		*textField_encoding;
+	IBOutlet	NSPopUpButton		*popUp_encoding;
 }
 
 @end
