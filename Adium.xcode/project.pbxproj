@@ -212,7 +212,7 @@
 			buildStyles = (
 				4A9504CCFFE6A4B311CA0CBA,
 				4A9504CDFFE6A4B311CA0CBA,
-				3445BC1B057EA05400D4D68B,
+				34B4B64B0708B5E4002C4C6D,
 			);
 			hasScannedForEncodings = 1;
 			isa = PBXProject;
@@ -2355,23 +2355,6 @@
 			settings = {
 			};
 		};
-		3445BC1B057EA05400D4D68B = {
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEBUGGING_SYMBOLS = NO;
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OPTIMIZATION_CFLAGS = "-mcpu=7450 -O3 -pipe -fsigned-char -maltivec -mabi=altivec -mpowerpc-gfxopt -mtune=7450";
-				OTHER_CFLAGS = "-DCRASH_REPORTER -DADIUM_COMPONENTS";
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				ZERO_LINK = NO;
-			};
-			isa = PBXBuildStyle;
-			name = RC;
-		};
 		3448717006D1E57700DA778C = {
 			explicitFileType = "wrapper.pb-project";
 			isa = PBXFileReference;
@@ -2595,8 +2578,8 @@
 		};
 		344C0D4306B6D5E300DA7200 = {
 			children = (
-				344C0D4E06B6D63800DA7200,
 				344C0D4F06B6D63800DA7200,
+				344C0D4E06B6D63800DA7200,
 				344C0D4806B6D61B00DA7200,
 				344C0D4C06B6D62600DA7200,
 			);
@@ -5143,6 +5126,44 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34B4B5A10708B049002C4C6D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESDebugController.h;
+			path = Source/ESDebugController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B4B5A20708B049002C4C6D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESDebugController.m;
+			path = Source/ESDebugController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B4B5A30708B049002C4C6D = {
+			fileRef = 34B4B5A10708B049002C4C6D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B4B5A40708B049002C4C6D = {
+			fileRef = 34B4B5A20708B049002C4C6D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B4B64B0708B5E4002C4C6D = {
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				OTHER_CFLAGS = "-DCRASH_REPORTER -DADIUM_COMPONENTS -DDEBUG_BUILD";
+			};
+			isa = PBXBuildStyle;
+			name = "Deployment-Debug";
+		};
 		34B5875A058D801D00E7EF0D = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -5622,6 +5643,7 @@
 				34A48B3906F64B27002C7C5F,
 				3461621506FB482D009181D8,
 				3429BB05070378F700EED705,
+				34B4B5A30708B049002C4C6D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6202,6 +6224,7 @@
 				34A48B3A06F64B27002C7C5F,
 				3461621606FB482D009181D8,
 				3429BB06070378F700EED705,
+				34B4B5A40708B049002C4C6D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9479,7 +9502,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "-DDEVELOPMENT_BUILD -DADIUM_COMPONENTS";
+				OTHER_CFLAGS = "-DDEVELOPMENT_BUILD -DADIUM_COMPONENTS -DDEBUG_BUILD";
 				PRECOMP_DESTINATION_DIR = "";
 				ZERO_LINK = YES;
 			};
@@ -22730,6 +22753,8 @@
 				F57938AB033E737001A8010A,
 				F55B415C03AB8B5601A8010A,
 				F55B415D03AB8B5601A8010A,
+				34B4B5A10708B049002C4C6D,
+				34B4B5A20708B049002C4C6D,
 				9E95316703C8E0BE00415B22,
 				9E95316903C8E0C700415B22,
 				34FDD6E305632BFD00F5B30F,
