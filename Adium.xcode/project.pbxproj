@@ -111,11 +111,9 @@
 				4B7F78B50597F42400162728,
 				34BD9DE105314751000AB133,
 				7E6642C20653363A0050E8C8,
-				34BD9EB405314758000AB133,
 				4B7F278305440C0800CDFC90,
 				34BD9EF10531476E000AB133,
 				346C9DA406004754000F5A8A,
-				6C5C3C2505F6532600490341,
 				6C5C3C2605F6532600490341,
 				3499F45006309AC80035B468,
 				3499F45106309AC80035B468,
@@ -175,9 +173,7 @@
 				BFEBDBFE0669029800CBF845,
 				34BD9DAF05314751000AB133,
 				7E6642C10653363A0050E8C8,
-				34BD9E9405314758000AB133,
 				4B7F278205440C0800CDFC90,
-				34BD9EB50531475B000AB133,
 				B72537BB058C4577004BA969,
 				3419F3A605314BE000C68BA3,
 				34BD9EE00531476D000AB133,
@@ -253,6 +249,31 @@
 		};
 		3401925D06406D9200192BC4 = {
 			fileRef = 3401925B06406D9200192BC4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3402D38307CB04DB0044F818 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = English;
+			path = "Frameworks/Adium Framework/English.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402D38A07CB04FC0044F818 = {
+			children = (
+				3402D38307CB04DB0044F818,
+			);
+			isa = PBXVariantGroup;
+			name = Localizable.strings;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3402D38B07CB04FC0044F818 = {
+			fileRef = 3402D38A07CB04FC0044F818;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -953,18 +974,6 @@
 			);
 			isa = PBXRezBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F6EF05314E6D00C68BA3 = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F6F205314E8200C68BA3 = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		3419F6F505314E9C00C68BA3 = {
 			fileRef = 34BD9DE105314751000AB133;
@@ -6785,20 +6794,6 @@
 			settings = {
 			};
 		};
-		34BD98B20531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
-			remoteInfo = Adium.Framework;
-		};
-		34BD98BB0531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
-			remoteInfo = Adium.Framework;
-		};
 		34BD98D10531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -8036,6 +8031,7 @@
 				4B588C9907AC23A9001832A9,
 				34E00F8707B92B89000DF265,
 				34943DEF07BAD918000F2A03,
+				3402D38B07CB04FC0044F818,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8199,162 +8195,6 @@
 			path = Adium.framework;
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		34BD9E9405314758000AB133 = {
-			buildPhases = (
-				34BD9E9705314758000AB133,
-				34BD9E9E05314758000AB133,
-				34BD9EA605314758000AB133,
-				34BD9EAD05314758000AB133,
-				34BD9EB105314758000AB133,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/AIM__TOC2_.plist;
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = "AIM (TOC2)";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				34BD9E9505314758000AB133,
-			);
-			isa = PBXNativeTarget;
-			name = "AIM (TOC2)";
-			productInstallPath = /Adium.app/Contents/PlugIns/;
-			productName = AIMTOC2.AdiumService;
-			productReference = 34BD9EB405314758000AB133;
-			productType = "com.apple.product-type.bundle";
-		};
-		34BD9E9505314758000AB133 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 34BD98B20531467B000AB133;
-		};
-		34BD9E9705314758000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9E9E05314758000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9EA605314758000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9EAD05314758000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F6EF05314E6D00C68BA3,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9EB105314758000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9EB405314758000AB133 = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = "AIM (TOC2).AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		34BD9EB50531475B000AB133 = {
-			buildPhases = (
-				34BD9EB80531475B000AB133,
-				34BD9EBC0531475B000AB133,
-				34BD9EBE0531475B000AB133,
-				34BD9EC20531475B000AB133,
-				34BD9EC70531475B000AB133,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = .../acid/build;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				HEADER_SEARCH_PATHS = .../acid/build/acid.framework/Versions/A/Headers;
-				INFOPLIST_FILE = Plists/Jabber.plist;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = Jabber;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost";
-				WRAPPER_EXTENSION = AdiumPlugin;
-				ZERO_LINK = YES;
-			};
-			dependencies = (
-				34BD9EB60531475B000AB133,
-			);
-			isa = PBXNativeTarget;
-			name = Jabber;
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
-			productName = Jabber;
-			productReference = 6C5C3C2505F6532600490341;
-			productType = "com.apple.product-type.bundle";
-		};
-		34BD9EB60531475B000AB133 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 34BD98BB0531467B000AB133;
-		};
-		34BD9EB80531475B000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9EBC0531475B000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9EBE0531475B000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9EC20531475B000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F6F205314E8200C68BA3,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9EC70531475B000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34BD9EE00531476D000AB133 = {
 			buildPhases = (
@@ -13694,6 +13534,7 @@
 				4B587CAB07ABFF18001832A9,
 				4BE5AC7F07AFD46800422AD5,
 				3448055407AC5203006A7F7B,
+				3402D38A07CB04FC0044F818,
 			);
 			isa = PBXGroup;
 			name = "Happy Framework";
@@ -18455,14 +18296,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		6C5C3C2505F6532600490341 = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = Jabber.AdiumPlugin;
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		6C5C3C2605F6532600490341 = {
 			explicitFileType = wrapper.cfbundle;
