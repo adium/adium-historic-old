@@ -342,7 +342,7 @@
     if (chat) {
         AIListObject *listObject = [chat listObject];
         if(listObject){
-			[self setTypingFlagOfContact:(AIListContact *)listContact to:NO];
+			[self setTypingFlagOfContact:(AIListContact *)listObject to:NO];
 		}
 
 		[chat release]; conv->ui_data = nil;
