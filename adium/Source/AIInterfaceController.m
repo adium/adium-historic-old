@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.100 2004/08/16 07:30:19 evands Exp $
+// $Id: AIInterfaceController.m,v 1.101 2004/08/16 19:07:22 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIStandardListWindowController.h"
@@ -399,7 +399,6 @@
 		[[owner contentController] increaseUnviewedContentOfChat:chat];
 	}
 }
-#warning possible to simplify interface protocol any?
 
 
 //Dynamically ordering / grouping tabs ---------------------------------------------------------------------------------
@@ -1162,7 +1161,6 @@
 
 	}else if(menuItem == menuItem_closeChat){
 		return(activeChat != nil);
-#warning && [activeChat contaningWindow] numberOfTabs > 1
 		
 	}else{
 		return(YES);
