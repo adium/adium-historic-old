@@ -71,5 +71,10 @@
     return(handleServiceType);
 }
 
+- (DCJoinChatViewController *)joinChatView
+{
+	return([DCJoinChatViewController joinChatView]);
+}
+
 @end
 
