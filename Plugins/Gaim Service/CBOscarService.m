@@ -16,17 +16,18 @@
 
 #import "AIGaimOscarAccountViewController.h"
 #import "AIStatusController.h"
-#import "CBGaimOscarAccount.h"
 #import "CBOscarService.h"
 #import "DCGaimOscarJoinChatViewController.h"
 
+/*
+ * @class CBOscarService
+ * @brief Superclass for ESAIMService and ESICQService
+ *
+ * This service is abstract and should not be used directly.
+ */
 @implementation CBOscarService
 
 //Account Creation
-- (Class)accountClass{
-	return([CBGaimOscarAccount class]);
-}
-
 - (AIAccountViewController *)accountViewController{
     return([AIGaimOscarAccountViewController accountViewController]);
 }
@@ -36,20 +37,8 @@
 }
 
 //Service Description
-- (NSString *)serviceCodeUniqueID{
-	return(@"libgaim-oscar");
-}
-- (NSString *)serviceID{
-	return(@"");
-}
 - (NSString *)serviceClass{
 	return(@"AIM-compatible");
-}
-- (NSString *)shortDescription{
-	return(@"");
-}
-- (NSString *)longDescription{
-	return(@"");
 }
 - (NSCharacterSet *)allowedCharacters{
 	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._- "]);
@@ -60,25 +49,28 @@
 - (NSCharacterSet *)ignoredCharacters{
 	return([NSCharacterSet characterSetWithCharactersInString:@" "]);
 }
-- (int)allowedLength{
-	return(999);
-}
-- (int)allowedLengthForUIDs{
-	return(999);
-}
-- (BOOL)caseSensitive{
-	return(NO);
-}
 - (AIServiceImportance)serviceImportance{
 	return(AIServiceUnsupported);
 }
-- (BOOL)canCreateGroupChats{
-	return(YES);
+
+#pragma mark Must be subclassed
+- (NSString *)serviceCodeUniqueID{
+	return(@""); /* Subclasses should return a value starting with libgaim-oscar */
 }
-- (NSString *)userNameLabel{
-    return(AILocalizedString(@"Screen Name",nil)); //ScreenName
+- (NSString *)shortDescription{
+	return(@"");
+}
+- (NSString *)longDescription{
+	return(@"");
+}
+- (NSString *)serviceID{
+	return(@"");
 }
 
+#pragma mark Statuses
+/*
+ * @brief Register statuses
+ */
 - (void)registerStatuses{
 	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
 							 withDescription:STATUS_DESCRIPTION_AVAILABLE
@@ -88,6 +80,11 @@
 	[[adium statusController] registerStatus:STATUS_NAME_AWAY
 							 withDescription:STATUS_DESCRIPTION_AWAY
 									  ofType:AIAwayStatusType
+								  forService:self];
+	
+	[[adium statusController] registerStatus:STATUS_NAME_INVISIBLE
+							 withDescription:STATUS_DESCRIPTION_INVISIBLE
+									  ofType:AIInvisibleStatusType
 								  forService:self];
 }
 

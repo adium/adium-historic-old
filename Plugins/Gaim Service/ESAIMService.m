@@ -15,10 +15,15 @@
  */
 
 #import "ESAIMService.h"
+#import "ESGaimAIMAccount.h"
 
 @implementation ESAIMService
 
 //Service Description
+- (Class)accountClass{
+	return([ESGaimAIMAccount class]);
+}
+
 - (NSString *)serviceCodeUniqueID{
 	return(@"libgaim-oscar-AIM");
 }
@@ -39,6 +44,12 @@
 }
 - (AIServiceImportance)serviceImportance{
 	return(AIServicePrimary);
+}
+- (BOOL)canCreateGroupChats{
+	return(YES);
+}
+- (NSString *)userNameLabel{
+    return(AILocalizedString(@"Screen Name",nil)); //ScreenName
 }
 
 @end
