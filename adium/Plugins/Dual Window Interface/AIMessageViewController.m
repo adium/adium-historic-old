@@ -159,9 +159,9 @@
         [[owner notificationCenter] addObserver:self selector:@selector(didSendMessage:) name:Interface_DidSendEnteredMessage object:inChat];
 
         //Create the message view
-        [view_messages release];
-        view_messages = [[owner interfaceController] messageViewForChat:chat];
-        [scrollView_messages setAndSizeDocumentView:view_messages];
+        [messageViewController release];
+        messageViewController = [[[owner interfaceController] messageViewControllerForChat:chat] retain];
+        [scrollView_messages setAndSizeDocumentView:[messageViewController messageView]];
         [scrollView_messages setNextResponder:textView_outgoing];
         [scrollView_messages setAutoScrollToBottom:YES];
         [scrollView_messages setAutoHideScrollBar:NO];
@@ -220,7 +220,6 @@
     //
     currentTextEntryHeight = 0;
     view_accountSelection = nil;
-    view_messages = nil;
     account = nil;
     object = nil;
     chat = nil;
@@ -273,6 +272,12 @@
 
 - (void)dealloc
 {
+    //Close chat
+    if(chat){
+        [[owner contentController] closeChat:chat];
+        [chat release]; chat = nil;
+    }
+
     //remove notifications
     [[owner notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -280,6 +285,9 @@
     //nib
     [view_contents removeAllSubviews];
     [view_contents release]; view_contents = nil;
+
+    [view_accountSelection release];
+    [messageViewController release];
 
     [owner release]; owner = nil;
     [interface release]; interface = nil;

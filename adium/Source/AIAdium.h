@@ -170,15 +170,23 @@ typedef enum {
 
 @end
 
-@protocol AIContactListViewController <NSObject>
+@protocol AIContactListViewController <NSObject>	//Controls a contact list view
 - (NSView *)contactListView;
-- (void)closeContactListView:(NSView *)inView;
+@end
+
+@protocol AIContactListViewPlugin <NSObject>	//Manages contact list view controllers
+- (id <AIContactListViewController>)contactListViewController;
 @end
 
 @protocol AIMessageViewController <NSObject>
-- (NSView *)messageViewForChat:(AIChat *)inChat;
-- (void)closeMessageView:(NSView *)inView;
+- (NSView *)messageView;
 @end
+
+@protocol AIMessageViewPlugin <NSObject>	//manages message view controllers
+- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
+@end
+
+
 
 @protocol AITextEntryView //Handles any attributed text entry
 - (NSAttributedString *)attributedString;
@@ -434,12 +442,12 @@ typedef enum {
 - (void)registerInterfaceController:(id <AIInterfaceController>)inController;
 
 //Contact list views
-- (void)registerContactListViewController:(id <AIContactListViewController>)inController;
+- (void)registerContactListViewPlugin:(id <AIContactListViewPlugin>)inPlugin;
 - (id <AIContactListViewController>)contactListViewController;
 
 //Message views
-- (void)registerMessageViewController:(id <AIMessageViewController>)inController;
-- (NSView *)messageViewForChat:(AIChat *)inChat;
+- (void)registerMessageViewPlugin:(id <AIMessageViewPlugin>)inPlugin;
+- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
 
 //Messaging
 - (IBAction)initiateMessage:(id)sender;

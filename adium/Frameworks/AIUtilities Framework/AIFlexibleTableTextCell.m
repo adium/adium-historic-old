@@ -103,7 +103,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 }
 
 - (void)dealloc
-{
+{    
     [textStorage release];
     [textContainer release];
     [layoutManager release];

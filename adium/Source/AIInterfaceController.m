@@ -87,26 +87,28 @@
 
 // Registers a view to handle the contact list.  The user may chose from the available views
 // The view only needs to be added to the interface, it is entirely self sufficient
-- (void)registerContactListViewController:(id <AIContactListViewController>)inController
+- (void)registerContactListViewPlugin:(id <AIContactListViewPlugin>)inPlugin
 {
-    [contactListViewArray addObject:inController];
+    [contactListViewArray addObject:inPlugin];
 }
 - (id <AIContactListViewController>)contactListViewController
 {
-    return([contactListViewArray objectAtIndex:0]);
+    return([[contactListViewArray objectAtIndex:0] contactListViewController]);
 }
 
 
 // Registers a view to handle the contact list.  The user may chose from the available views
 // The view only needs to be added to the interface, it is entirely self sufficient
-- (void)registerMessageViewController:(id <AIMessageViewController>)inController
+- (void)registerMessageViewPlugin:(id <AIMessageViewPlugin>)inPlugin
 {
-    [messageViewArray addObject:inController];
+    [messageViewArray addObject:inPlugin];
 }
-- (NSView *)messageViewForChat:(AIChat *)inChat
+- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat
 {
-    return([[messageViewArray objectAtIndex:0] messageViewForChat:inChat]);
+    return([[messageViewArray objectAtIndex:0] messageViewControllerForChat:inChat]);
 }
+
+
 
 
 //Errors

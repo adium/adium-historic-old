@@ -33,7 +33,7 @@
 @class AIListGroup, AICLPreferences, AISCLOutlineView;
 @protocol AIContactListViewController;
 
-@interface AISCLViewPlugin : AIPlugin <AIContactListViewController> {
+@interface AISCLViewPlugin : AIPlugin <AIContactListViewPlugin> {
     NSMutableArray	*controllerArray;
     AICLPreferences	*preferences;
 

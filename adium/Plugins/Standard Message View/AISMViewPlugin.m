@@ -26,46 +26,18 @@
 
 - (void)installPlugin
 {
-    controllerArray = [[NSMutableArray alloc] init];
-    
-    [[owner interfaceController] registerMessageViewController:self];
+    //Register ourself as a message list view plugin
+    [[owner interfaceController] registerMessageViewPlugin:self];
 
-    //Register our default preferences
+    //Register our default preferences and install our preference view
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SMV_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-
-    //Install the preference view
     preferences = [[AISMPreferences messageViewPreferencesWithOwner:owner] retain];
 }
 
-- (void)uninstallPlugin
+//Return a message view controller
+- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat
 {
-    //[[owner interfaceController] unregisterMessageViewController:self];
-}
-
-//returns a NEW message view configured for the specified handle
-- (NSView *)messageViewForChat:(AIChat *)inChat
-{
-    AISMViewController	*controller = [AISMViewController messageViewControllerForChat:inChat owner:owner];
-
-    [controllerArray addObject:controller];
-
-    return([controller messageView]);
-}
-
-- (void)closeMessageView:(NSView *)inView
-{
-    NSEnumerator	*enumerator;
-    AISMViewController	*controller;
-
-    //Remove the view from our array
-    enumerator = [controllerArray objectEnumerator];
-    while((controller = [enumerator nextObject])){
-        if([controller messageView] == inView){
-	    
-            [controllerArray removeObject:controller];
-            return; //We've found and removed our view, return.
-        }
-    }
+    return([AISMViewController messageViewControllerForChat:inChat owner:owner]);
 }
 
 @end

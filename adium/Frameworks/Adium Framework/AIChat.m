@@ -76,5 +76,10 @@
     [contentObjectArray addObjectsFromArray:inContent];
 }
 
+- (void)removeAllContent
+{
+    [contentObjectArray release]; contentObjectArray = [[NSMutableArray alloc] init];
+}
+
 
 @end

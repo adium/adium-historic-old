@@ -28,56 +28,21 @@
 
 - (void)installPlugin
 {
-    controllerArray = [[NSMutableArray alloc] init];
+    //Register ourself as a contact list view plugin
+    [[owner interfaceController] registerContactListViewPlugin:self];
 
-    //Register ourself as an available contact list view
-    [[owner interfaceController] registerContactListViewController: self];
-
-    //Register our default preferences
+    //Register our default preferences and install our preference view
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST];
-
-    //Install the preference view
     preferences = [[AICLPreferences contactListPreferencesWithOwner:owner] retain];
 }
 
-- (void)uninstallPlugin
+//Return a new contact list view controller
+- (id <AIContactListViewController>)contactListViewController
 {
-    //[[owner interfaceController] unregisterContactListViewController: self];
+    return([AISCLViewController contactListViewControllerWithOwner:owner]);
 }
-
-- (void)dealloc
-{
-    [controllerArray release];
-
-    [super dealloc];
-}
-
-//Return a new contact list view
-- (NSView *)contactListView
-{
-    AISCLViewController	*controller = [AISCLViewController contactListViewControllerWithOwner:owner];
-
-    [controllerArray addObject:controller];
-
-    return([controller contactListView]);
-}
-
-//Close a contact list view
-- (void)closeContactListView:(NSView *)inView
-{
-    NSEnumerator	*enumerator;
-    AISCLViewController	*controller;
-
-    //Remove the view from our array
-    enumerator = [controllerArray objectEnumerator];
-    while((controller = [enumerator nextObject])){
-        if([controller contactListView] == inView){
-            [controller closeView];
-            [controllerArray removeObject:controller];
-            return; //We've found and removed our view, return.
-        }
-    }
-}
-
 
 @end
+
+
+

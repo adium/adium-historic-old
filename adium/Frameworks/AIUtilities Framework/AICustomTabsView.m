@@ -83,6 +83,7 @@
     [tabBackground release];
     [tabDivider release];
     [dragTab release];
+    [selectedCustomTab release];
 
     [super dealloc];
 }

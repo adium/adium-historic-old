@@ -31,7 +31,6 @@ long unsigned int	waitingSleepArgument;
     [super load];
 
     //Observe system power events
-    NSLog(@"Observing sleep...");
     root_port = IORegisterForSystemPower(0, &notify, callback, &anIterator);
     if(root_port){
         CFRunLoopAddSource(CFRunLoopGetCurrent(),
@@ -48,12 +47,10 @@ long unsigned int	waitingSleepArgument;
 + (void)holdSleep:(NSNotification *)notification
 {
     holdSleep++;
-    NSLog(@"Hold sleep requested %i", holdSleep);
 }
 + (void)continueSleep:(NSNotification *)notification
 {
     holdSleep--;
-    NSLog(@"Hold sleep removed %i", holdSleep);
 
     if(holdSleep == 0){
         //Permit sleep now
@@ -65,8 +62,6 @@ long unsigned int	waitingSleepArgument;
 //
 void callback(void * x, io_service_t y, natural_t messageType, void * messageArgument)
 {
-    NSLog(@"messageType %08lx, arg %08lx",(long unsigned int)messageType, (long unsigned int)messageArgument);
-
     switch ( messageType ) {
         case kIOMessageSystemWillSleep:
             //Let everyone know we will sleep

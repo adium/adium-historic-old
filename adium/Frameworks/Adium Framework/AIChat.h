@@ -25,5 +25,6 @@
 - (NSArray *)contentObjectArray;
 - (void)addContentObject:(AIContentObject *)inObject;
 - (void)appendContentArray:(NSArray *)inContent;
+- (void)removeAllContent;
 
 @end

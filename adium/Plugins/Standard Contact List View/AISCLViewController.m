@@ -66,7 +66,6 @@
     [[owner notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
-//    [contactListView setIndentationPerLevel:0];
     [contactListView setTarget:self];
     [contactListView setDataSource:self];
     [contactListView setDelegate:self];
@@ -78,18 +77,11 @@
     return(self);
 }
 
-- (void)closeView
-{
+- (void)dealloc
+{    
     //Remove observers (general)
-    [[owner notificationCenter] removeObserver:self name:Contact_ListChanged object:nil];
-    [[owner notificationCenter] removeObserver:self name:Contact_OrderChanged object:nil];
-    [[owner notificationCenter] removeObserver:self name:ListObject_AttributesChanged object:nil];
-    [[owner notificationCenter] removeObserver:self name:Preference_GroupChanged object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSOutlineViewItemDidExpandNotification object:contactListView];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSOutlineViewItemDidCollapseNotification object:contactListView];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:nil];
+    [[owner notificationCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     //Hide any open tooltips
     [self _endTrackingMouse];
@@ -100,6 +92,8 @@
     [contactListView setDelegate:nil];
     [contactListView release];
     [owner release];
+
+    [super dealloc];
 }
 
 //Return our contact list view
@@ -203,8 +197,6 @@
     //Update the tooltip tracking rect
     [self updateTooltipTrackingRect];
 }
-
-
 
 //Double click in outline view
 - (IBAction)performDefaultActionOnSelectedContact:(id)sender
@@ -343,7 +335,6 @@
 
 - (void)_desiredSizeChanged
 {
-    NSLog(@"desiredFrameChanged");
     [[owner notificationCenter] postNotificationName:Interface_ViewDesiredSizeDidChange
                                               object:contactListView];
 }
@@ -473,8 +464,5 @@
 }
 
 @end
-
-
-
 
 

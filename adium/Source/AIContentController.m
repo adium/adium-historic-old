@@ -307,6 +307,9 @@
     [(AIAccount<AIAccount_Content> *)[inChat account] closeChat:inChat];
     [chatDict removeObjectForKey:key];
 
+    //Remove all content from the chat
+    [inChat removeAllContent];
+
     return(YES);
 }
 
