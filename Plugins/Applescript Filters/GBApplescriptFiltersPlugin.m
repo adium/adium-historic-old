@@ -27,6 +27,7 @@
 #import <Adium/AIContentObject.h>
 #import <Adium/AIHTMLDecoder.h>
 
+#define TITLE_INSERT_SCRIPT		AILocalizedString(@"Insert Script",nil)
 #define SCRIPT_BUNDLE_EXTENSION	@"AdiumScripts"
 #define SCRIPTS_PATH_NAME		@"Scripts"
 #define SCRIPT_EXTENSION		@"scpt"
@@ -67,7 +68,10 @@ static int numExecuted = 0;
 	componentInstance = nil;
 	
 	//Prepare our script menu item (which will have the Scripts menu as its submenu)
-	scriptMenuItem = [[NSMenuItem alloc] initWithTitle:SCRIPTS_MENU_NAME target:self action:@selector(dummyTarget:) keyEquivalent:@""];
+	scriptMenuItem = [[NSMenuItem alloc] initWithTitle:TITLE_INSERT_SCRIPT 
+												target:self
+												action:@selector(dummyTarget:)
+										 keyEquivalent:@""];
 
 	//Perform substitutions on outgoing content in a thread
 	[[adium contentController] registerContentFilter:self 
@@ -93,14 +97,16 @@ static int numExecuted = 0;
 	[[adium menuController] addContextualMenuItem:[scriptMenuItem copy] toLocation:Context_TextView_Edit];
 }
 
-//Uninstall
-- (void)uninstallPlugin
+- (void)dealloc
 {
-//	[[adium contentController] unregisterOutgoingContentFilter:self];
-//	[[adium contentController] unregisterStringFilter:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[adium notificationCenter] removeObserver:self];
+	
 	[scriptArray release]; scriptArray = nil;
     [flatScriptArray release]; flatScriptArray = nil;
 	[scriptMenuItem release]; scriptMenuItem = nil;
+	
+	[super dealloc];
 }
 
 - (void)xtrasChanged:(NSNotification *)notification
@@ -228,7 +234,7 @@ static int numExecuted = 0;
 	[flatScriptArray sortUsingFunction:_scriptKeywordLengthSort context:nil];
 	
 	//Build the menu
-	[scriptMenu release]; scriptMenu = [[NSMenu alloc] initWithTitle:SCRIPTS_MENU_NAME];
+	[scriptMenu release]; scriptMenu = [[NSMenu alloc] initWithTitle:TITLE_INSERT_SCRIPT];
 	[self _appendScripts:scriptArray toMenu:scriptMenu];
 	[scriptMenuItem setSubmenu:scriptMenu];
 	
@@ -710,7 +716,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	[button setImage:[NSImage imageNamed:@"scriptToolbar" forClass:[self class]]];
 	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:SCRIPT_IDENTIFIER
 														   label:AILocalizedString(@"Scripts",nil)
-													paletteLabel:AILocalizedString(@"Insert Script",nil)
+													paletteLabel:TITLE_INSERT_SCRIPT
 														 toolTip:AILocalizedString(@"Insert a script",nil)
 														  target:self
 												 settingSelector:@selector(setView:)
