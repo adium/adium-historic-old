@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
-//  $Id: ESFileTransferController.m,v 1.15 2004/07/09 22:52:18 evands Exp $
+//  $Id: ESFileTransferController.m,v 1.16 2004/07/13 07:18:38 evands Exp $
 
 #import "ESFileTransferController.h"
 
@@ -48,7 +48,7 @@
 	[savePanel setTitle:[NSString stringWithFormat:@"Receive File from %@",[[fileTransfer contact] displayName]]];
 
 	[[owner contactAlertsController] generateEvent:FILE_TRANSFER_REQUEST
-											object:[fileTransfer contact] 
+									 forListObject:[fileTransfer contact] 
 										  userInfo:fileTransfer];
 	
 	if ([savePanel runModalForDirectory:nil file:defaultName] == NSFileHandlingPanelOKButton) {
@@ -92,7 +92,7 @@
 {
     NSLog(@"began a file transfer...");
 	[[owner contactAlertsController] generateEvent:FILE_TRANSFER_BEGAN
-											object:[fileTransfer contact] 
+									 forListObject:[fileTransfer contact] 
 										  userInfo:fileTransfer];
 }
 
@@ -100,7 +100,7 @@
 {
     NSLog(@"canceled a file transfer...");	
 	[[owner contactAlertsController] generateEvent:FILE_TRANSFER_CANCELED
-											object:[fileTransfer contact] 
+									 forListObject:[fileTransfer contact] 
 										  userInfo:fileTransfer];
 }
 
@@ -108,7 +108,7 @@
 {
 	NSLog(@"Halleluyah, Jafar! Transfer complete.");
 	[[owner contactAlertsController] generateEvent:FILE_TRANSFER_COMPLETE
-											object:[fileTransfer contact] 
+									 forListObject:[fileTransfer contact] 
 										  userInfo:fileTransfer];
 }
 //Menu or context menu item for sending a file was selected - possible only when a listContact is selected
