@@ -126,6 +126,12 @@
 	return([contentArray objectEnumerator]);
 }
 
+//
+- (NSArray *)allValues
+{
+	return(contentArray);
+}
+
 
 //Return the number of objects
 - (unsigned)count

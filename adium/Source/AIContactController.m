@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.73 2004/01/09 18:35:09 adamiser Exp $
+// $Id: AIContactController.m,v 1.74 2004/01/09 20:32:41 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -174,9 +174,8 @@
 			[inGroup addObject:object];
 			
 		}else if([type compare:@"AIListGroup"] == 0){
-			object = [self groupWithUID:[infoDict objectForKey:@"UID"]];
+			object = [self groupWithUID:[infoDict objectForKey:@"UID"] createInGroup:inGroup];
 			
-			[inGroup addObject:object];
 			[(AIListGroup *)object setExpanded:[[infoDict objectForKey:@"Expanded"] boolValue]];
 			[self _loadListObjectsFromGroupContent:[infoDict objectForKey:@"Content"]
 										 intoGroup:(AIListGroup *)object];
@@ -198,55 +197,109 @@
     }
 }
 
-//Remote grouping of a list object has changed
+//Compare containing groups to remote groups, and sync the local groups as necessary to match remote.
 - (void)listObjectRemoteGroupingChanged:(AIListContact *)inObject oldGroupName:(NSString *)oldGroupName
-{
-	AIMutableOwnerArray		*remoteGroups = [inObject remoteGroupArray];
-	NSEnumerator			*enumerator;
-	NSString				*groupName;
-	BOOL					keepAtOldLocation = NO;
+{	
+	NSMutableArray		*remoteGroups = [[[inObject remoteGroupArray] allValues] mutableCopy];
+	NSEnumerator		*enumerator;
+	AIListGroup			*localGroup;
+	NSString			*remoteGroupName;
+	BOOL				listChanged = NO;
+	
+	//Run through the local groups, removing any which should no longer be present
+	enumerator = [[inObject containingGroups] objectEnumerator];
+	while(localGroup = [enumerator nextObject]){
+		NSString	*localGroupUID = [localGroup UID];
+		
+		if([remoteGroups containsObject:localGroupUID]){
+			while([remoteGroups containsObject:localGroupUID]) [remoteGroups removeObject:localGroupUID];
+		}else{ 
+			//The contact should no longer be in this group
+			[localGroup removeObject:inObject];
+			NSLog(@"Grouping:  Removed %@ from %@",[inObject displayName],[localGroup displayName]);
+			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:localGroup];
+		}
+	}
+
+	//Add the contact to any remaining groups
+	enumerator = [remoteGroups objectEnumerator];
+	while(remoteGroupName = [enumerator nextObject]){
+		//The contact needs to be added to this group
+		localGroup = [self groupWithUID:remoteGroupName createInGroup:contactList];
+		[localGroup addObject:inObject];
+		NSLog(@"Grouping:  Added %@ to %@",[inObject displayName],remoteGroupName);
+		if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:localGroup];
+	}
 	
 	//
-	if(updatesAreDelayed) delayedContentChanges++;
 	
-	//First, let's check to see if any account still wants the object in the old location.  If no one still wants it
-	//there we can remove it - otherwise, it stays.
-	if(oldGroupName){
-		enumerator = [remoteGroups objectEnumerator];
-		while(groupName = [enumerator nextObject]){
-			if([oldGroupName compare:groupName] == 0){
-				keepAtOldLocation = YES;
-				break;
-			}
-		}
-		
-		if(!keepAtOldLocation){
-			AIListGroup *oldGroup = [self groupWithUID:oldGroupName];
+	
+	
 
-			[oldGroup removeObject:inObject];
-			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:inObject];
-		}
-	}
 	
-	//Second, we check to make sure the object is in every requested group
-	//If it's not in a group, we create that group at the root of the contact list (if necessary) and stick it in there
-	enumerator = [remoteGroups objectEnumerator];
-	while(groupName = [enumerator nextObject]){
-		AIListGroup		*group = [self groupWithUID:groupName];
-		
-		//Add to list if necessary
-		if([[group containingGroups] count] == 0){
-			[contactList addObject:group];
-		}
-		
-		//Add the object if necessary
-		if(![group containsObject:inObject]){
-			[group addObject:inObject];
-			
-			//Post a list content changed notification for the object
-			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:inObject];
-		}
-	}
+	
+	//make a copy of the remote groups
+	//Run through the local groups
+	//for each, check for all remotes w/ that name
+	//if no remote w/ that name, remove from local group
+	//remove that remote group from our array copy
+	
+	//for all names still in remote array, add to local group
+	
+	
+	
+//	
+//	
+//	
+//	
+//	
+//	
+//	AIMutableOwnerArray		*remoteGroups = [inObject remoteGroupArray];
+//	NSEnumerator			*enumerator;
+//	NSString				*groupName;
+//	BOOL					keepAtOldLocation = NO;
+//	
+//	//
+//	if(updatesAreDelayed) delayedContentChanges++;
+//	
+//	//First, let's check to see if any account still wants the object in the old location.  If no one still wants it
+//	//there we can remove it - otherwise, it stays.
+//	if(oldGroupName){
+//		enumerator = [remoteGroups objectEnumerator];
+//		while(groupName = [enumerator nextObject]){
+//			if([oldGroupName compare:groupName] == 0){
+//				keepAtOldLocation = YES;
+//				break;
+//			}
+//		}
+//		
+//		if(!keepAtOldLocation){
+//			AIListGroup *oldGroup = [self groupWithUID:oldGroupName];
+//
+//			[oldGroup removeObject:inObject];
+//			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:inObject];
+//		}
+//	}
+//	
+//	//Second, we check to make sure the object is in every requested group
+//	//If it's not in a group, we create that group at the root of the contact list (if necessary) and stick it in there
+//	enumerator = [remoteGroups objectEnumerator];
+//	while(groupName = [enumerator nextObject]){
+//		AIListGroup		*group = [self groupWithUID:groupName];
+//		
+//		//Add to list if necessary
+//		if([[group containingGroups] count] == 0){
+//			[contactList addObject:group];
+//		}
+//		
+//		//Add the object if necessary
+//		if(![group containsObject:inObject]){
+//			[group addObject:inObject];
+//			
+//			//Post a list content changed notification for the object
+//			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:inObject];
+//		}
+//	}
 }
 
 //Called after modifying a contact's status
@@ -531,7 +584,7 @@
 }
 
 //Retrieve a group from the contact list (Creating if necessary)
-- (AIListGroup *)groupWithUID:(NSString *)groupUID
+- (AIListGroup *)groupWithUID:(NSString *)groupUID createInGroup:(AIListGroup *)targetGroup
 {
 	AIListGroup		*group = [groupDict objectForKey:groupUID];
 	
@@ -541,6 +594,12 @@
 		[self _informObserversOfObjectCreation:group];
 		
 		[groupDict setObject:group forKey:groupUID];
+		
+		//Add to target group
+		if(targetGroup){
+			[targetGroup addObject:group];
+			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:targetGroup];
+		}
 	}
 	
 	return(group);

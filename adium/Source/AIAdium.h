@@ -475,7 +475,7 @@ typedef enum {
 //Contact list access
 - (AIListGroup *)contactList;
 - (AIListContact *)contactWithService:(NSString *)serviceID UID:(NSString *)UID;
-- (AIListGroup *)groupWithUID:(NSString *)groupUID;
+- (AIListGroup *)groupWithUID:(NSString *)groupUID createInGroup:(AIListGroup *)targetGroup;
 - (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups;
 
 //Contact status & Attributes
