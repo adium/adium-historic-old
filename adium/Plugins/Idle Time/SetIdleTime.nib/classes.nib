@@ -2,7 +2,7 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {apply = id; configureControls = id; setDaysStepper = id; stepDaysValue = id; }; 
+            ACTIONS = {apply = id; configureControls = id; }; 
             CLASS = IdleTimeWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {

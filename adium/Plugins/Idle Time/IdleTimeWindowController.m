@@ -101,9 +101,15 @@ static IdleTimeWindowController *sharedInstance = nil;
         h = [textField_IdleHours intValue];
         m = [textField_IdleMinutes intValue];
         t = (d * 86400) + (h * 3600) + (m * 60);
-        [(AIAccount<AIAccount_IdleTime> *)theAccount setIdleTime:t manually:TRUE];
+        if ([theAccount conformsToProtocol:@protocol(AIAccount_IdleTime)])
+        {
+            [(AIAccount<AIAccount_IdleTime> *)theAccount setIdleTime:t manually:TRUE];
+        }
     }else{
-        [(AIAccount<AIAccount_IdleTime> *)theAccount setIdleTime:0 manually:FALSE];
+        if ([theAccount conformsToProtocol:@protocol(AIAccount_IdleTime)])
+        {
+            [(AIAccount<AIAccount_IdleTime> *)theAccount setIdleTime:0 manually:FALSE];
+        }
     }
 }
 
