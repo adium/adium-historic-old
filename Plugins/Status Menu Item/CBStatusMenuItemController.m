@@ -14,7 +14,8 @@
 
 @implementation CBStatusMenuItemController
 
-CBStatusMenuItemController *sharedStatusMenuInstance = nil;
+static	CBStatusMenuItemController	*sharedStatusMenuInstance = nil;
+static	NSImage						*unviewedContentImage = nil;
 
 //Returns the shared instance, possibly initializing and creating a new one.
 + (CBStatusMenuItemController *)statusMenuItemController
@@ -35,6 +36,10 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
         [statusItem setImage:[NSImage imageNamed:@"adium.png" forClass:[self class]]];
         [statusItem setAlternateImage:[NSImage imageNamed:@"adiumHighlight.png" forClass:[self class]]];
 
+		if (!unviewedContentImage){
+			unviewedContentImage = [[NSImage imageNamed:@"unviewedContent.png" forClass:[self class]] retain];
+		}
+		
         //Create and install the menu
         theMenu = [[NSMenu alloc] init];
         [theMenu setAutoenablesItems:YES];
@@ -197,7 +202,7 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
                 //Set the represented object
                 [menuItem setRepresentedObject:chat];
                 //Set the image
-                [menuItem setImage:[NSImage imageNamed:@"unviewedContent.png" forClass:[self class]]];
+                [menuItem setImage:unviewedContentImage];
                 //Add it to the menu
                 [menu addItem:menuItem];
             }
