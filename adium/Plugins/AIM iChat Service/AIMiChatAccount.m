@@ -20,7 +20,7 @@
 #import "InstantMessageFramework.h"
 
 #define SIGN_ON_MAX_WAIT	5.0		//Max amount of time to wait for first sign on packet
-#define SIGN_ON_UPKEEP_INTERVAL	1.0		//Max wait before sign up updates
+#define SIGN_ON_UPKEEP_INTERVAL	2.0		//Max wait before sign up updates
 
 
 //
@@ -48,100 +48,41 @@ extern void* objc_getClass(const char *name);
     //Connect to the iChatAgent
     connection = [NSConnection connectionWithRegisteredName:@"iChat" host:nil];
     FZDaemon = [[connection rootProxy] retain];
-
-//    [connection setIndependentConversationQueueing:YES];
     
     //Get the AIM Service
     services   = [FZDaemon allServices];
     AIMService = [[[FZDaemon allServices] objectAtIndex:0] retain];
-	
-//	NSLog (@"Number of services: %i", [services count]);
 
     //Register as a listener
-    [FZDaemon addListener:self capabilities:15]; //15 is what iChat uses... dunno the meaning    
-    [AIMService addListener:self signature:@"com.adiumX.adium" capabilities:15]; //15 is what iChat uses... dunno the meaning
+    [FZDaemon addListener:self capabilities:15];
+    [AIMService addListener:self signature:@"com.apple.iChat" capabilities:15];
 
     //Clear the online state flag - this account should always load as offline (online state is not restored)
-    //Option 2:Clearing the online state, and using the classic 'auto-Connect' option system
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
 }
 
-// Return a view for the connection window
-- (NSView *)accountView
-{
-    return(nil);
+- (NSView *)accountView{
+    return(nil); // Return a view for the connection window
 }
-
-
-// Return a unique ID specific to THIS account plugin, and the user's account name
 - (NSString *)accountID{
-    return([NSString stringWithFormat:@"iChat.%@",[[AIMService loginID] compactedString]]);
+    return([NSString stringWithFormat:@"iChat.%@",[[AIMService loginID] compactedString]]); // The user's account name
 }
-//The user's account name
 - (NSString *)UID{
-    return([[AIMService loginID] compactedString]);
+    return([[AIMService loginID] compactedString]); //The user's account name
 }
-//The service ID (shared by any account code accessing this service)
 - (NSString *)serviceID{
-    return(@"AIM");
+    return(@"AIM"); //The service ID (shared by any account code accessing this service)
 }
-//ServiceID.UID
 - (NSString *)UIDAndServiceID{
-    return([NSString stringWithFormat:@"%@.%@",[self serviceID],[self UID]]);
+    return([NSString stringWithFormat:@"%@.%@",[self serviceID],[self UID]]); //ServiceID.UID
+}
+- (NSString *)accountDescription{
+    return([AIMService loginID]); //Readable description of this account's username
 }
 
-
-
-
-// Return a readable description of this account's username
-- (NSString *)accountDescription
-{
-    return([AIMService loginID]);
-}
-
-// AIAccount_Groups ----------------------------------------------------------------------------------
-// Create a group in the specified groups
-/*- (BOOL)addGroup:(AIContactGroup *)newGroup
-{
-    return(YES);
-}
-
-// Remove a group from the specified groups
-- (BOOL)removeGroup:(AIContactGroup *)group
-{
-    return(YES);
-}
-
-// Rename a group
-- (BOOL)renameGroup:(AIContactGroup *)group to:(NSString *)inName
-{
-    return(YES);
-}*/
 
 // AIAccount_Contacts --------------------------------------------------------------------------------
-// Add an object to the specified groups
-/*- (BOOL)addObject:(AIContactObject *)object
-{
-    return(YES);
-}
-
-// Remove a handle from the specified groups
-- (BOOL)removeObject:(AIContactObject *)object
-{
-    return(YES);
-}
-
-- (BOOL)renameObject:(AIContactObject *)object to:(NSString *)inName
-{
-    return(YES);
-}
-
-- (BOOL)contactListEditable
-{
-    return(NO);
-}*/
-
 - (NSDictionary *)availableHandles
 {
     return(handleDict);
@@ -149,7 +90,7 @@ extern void* objc_getClass(const char *name);
 
 - (BOOL)contactListEditable
 {
-    return(YES);
+    return(NO);
 }
 
 - (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
@@ -161,7 +102,7 @@ extern void* objc_getClass(const char *name);
 
     //Check to see if the handle already exists
     if([handleDict objectForKey:inUID]){
-        [self removeHandleWithUID:inUID]; //Remove it
+        [self removeHandleWithUID:inUID]; //If it goes, remove it
     }
 
     //Create the handle
@@ -182,7 +123,6 @@ extern void* objc_getClass(const char *name);
     return(YES);
 }
 
-// Add a group to this account
 - (BOOL)addServerGroup:(NSString *)inGroup
 {
     return(YES);
@@ -197,7 +137,6 @@ extern void* objc_getClass(const char *name);
 {
     return(YES);
 }
-
 
 
 // AIAccount_Messaging --------------------------------------------------------------------------------
@@ -223,19 +162,22 @@ extern void* objc_getClass(const char *name);
     return(YES);
 }
 
+// Return YES if we're available for sending the specified content
 - (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIHandle *)inHandle
 {
     BOOL available = NO;
 
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
-        //If we're online, ("and the contant is online" - implement later), return YES
-        if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE){
+        //If we're online, ("and the contact is online", nil, or not on our list), return YES
+        if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE && //If we're online
+           (![[handleDict allValues] containsObject:inHandle] || [[[inHandle statusDictionary] objectForKey:@"Online"] intValue])){
             available = YES;
         }
     }
 
     return(available);
 }
+
 
 // AIAccount_Status --------------------------------------------------------------------------------
 - (NSArray *)supportedStatusKeys
@@ -308,7 +250,6 @@ extern void* objc_getClass(const char *name);
 
 
 
-
 // Private --------------------------------------------------------------------------------------------
 //Received when our login status changes
 - (oneway void)service:(id)inService loginStatusChanged:(int)inStatus message:(id)inMessage reason:(int)inReason
@@ -316,7 +257,7 @@ extern void* objc_getClass(const char *name);
     NSEnumerator	*enumerator;
     AIHandle		*handle;
 
-//    NSLog(@"loginStatusChanged %i message:%@ reason:%i",inStatus,inMessage,inReason);
+    NSLog(@"(iChat)loginStatusChanged %i message:%@ reason:%i",inStatus,inMessage,inReason);
     
     switch(inStatus){
         case 0: //Offline
@@ -339,14 +280,10 @@ extern void* objc_getClass(const char *name);
         break;
 
         case 2: //Disconnecting
-            //Squelch sounds and updates while we sign off
-//            [[owner contactController] delayContactListUpdatesFor:5];
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
         break;
             
         case 3: //Connecting
-            //Squelch sounds and updates while we sign on
-//            [[owner contactController] delayContactListUpdatesFor:10];
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
 
             //Hold onto the account name
@@ -361,9 +298,8 @@ extern void* objc_getClass(const char *name);
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
             [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
 
-            
-            //Adium waits for the first sign on update, and then checks for aditional updates every .2 seconds.  When the stream of updates stops, the account can be assumed online, and contact list updates resumed.
-            //If no updates are receiced for 5 seconds, we assume 'no available contacts' and resume contact list updates.
+            //Adium waits for the first sign on update, and then checks for aditional updates every X seconds.  When the stream of updates stops, the account can be assumed online, and contact list updates resumed.
+            //If no updates are receiced for X seconds, we assume 'no available contacts' and resume contact list updates.
             numberOfSignOnUpdates = 0;
             processingSignOnUpdates = YES;
             waitingForFirstUpdate = YES;
@@ -383,6 +319,7 @@ extern void* objc_getClass(const char *name);
 
 - (void)firstSignOnUpdateReceived
 {
+    NSLog(@"firstSignOnUpdateReceived");
     if(waitingForFirstUpdate){
         waitingForFirstUpdate = NO;
     
@@ -403,52 +340,85 @@ extern void* objc_getClass(const char *name);
 - (void)waitForLastSignOnUpdate:(NSTimer *)inTimer
 {
     if(numberOfSignOnUpdates == 0){
+        NSLog(@"waitForLastSignOnUpdate Done");
         processingSignOnUpdates = NO;
         //No updates received, sign on is complete
         [inTimer invalidate]; //Stop this timer
         [[owner contactController] setHoldContactListUpdates:NO]; //Resume contact list updates
         [[owner contactController] handlesChangedForAccount:self]; //
     }else{
+        NSLog(@"waitForLastSignOnUpdate %i",numberOfSignOnUpdates);
         numberOfSignOnUpdates = 0;
     }
 }
 
-
+//A message was received
 - (oneway void)service:(id)inService chat:(id)chat messageReceived:(id)inMessage
 {
-    AIHandle		*handle;
-    NSAttributedString	*messageText;
-    AIContentMessage	*messageObject;
     int			flags = [inMessage flags];
-    
-//    NSLog(@"(%i)%@:%@ [%i,%@]", [inMessage bodyFormat], [inMessage sender], [inMessage body], [inMessage flags], [inMessage time]);
+    NSString		*compactedName = [[inMessage sender] compactedString];
 
-    if(flags & kMessageTypingFlag){
-        if(!(flags & kMessageOutgoingFlag)){
-            NSLog(@"(iChat) %@ is typing",[inMessage sender]);
+//    NSLog(@"(iChat)messageReceived:(%i)%@:%@ [%i,%@]", [inMessage bodyFormat], [inMessage sender], [inMessage body], [inMessage flags], [inMessage time]);
+
+    //Ignore echoed messages (anything outgoing)
+    if(!(flags & kMessageOutgoingFlag)){
+        AIHandle		*handle;
+        NSAttributedString	*messageText;
+        AIContentMessage	*messageObject;
+        id			cachedChat;
+        
+        //Get the handle sending this message
+        handle = [handleDict objectForKey:compactedName];
+        if(!handle){ //Stranger
+            handle = [self addHandleWithUID:compactedName serverGroup:nil temporary:YES];
         }
-    }else{
-        if(!([inMessage flags] & kMessageOutgoingFlag)){//Ignore echoed messages (anything outgoing)
-            //Get the handle and message
-            handle = [handleDict objectForKey:[inMessage sender]];
-            if(!handle){ //Stranger
-                handle = [self addHandleWithUID:[inMessage sender] serverGroup:nil temporary:YES];
-            }
-            
-            messageText = [AIHTMLDecoder decodeHTML:[inMessage body]];
+        
+        //Ensure the handle's cached 'chat' is correct
+        cachedChat = [[handle statusDictionary] objectForKey:@"iChat_Chat"];
+        if(cachedChat == nil || cachedChat != chat){
+            [[handle statusDictionary] setObject:chat forKey:@"iChat_Chat"];
+            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"iChat_Chat"]];
+        }
 
-            //Add the message
-            messageObject = [AIContentMessage messageWithSource:handle destination:self date:nil message:messageText];
+        //If the buddy is typing
+        if((flags & kMessageTypingFlag) && !(flags & kMessageStoppedTypingFlag)){
+            NSNumber	*isTyping = [[handle statusDictionary] objectForKey:@"Typing"];
+            if(!isTyping || [isTyping boolValue] == NO){
+                [[handle statusDictionary] setObject:[NSNumber numberWithInt:YES] forKey:@"Typing"];
+                [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]];
+                NSLog(@"(iChat) %@ is typing",compactedName);
+            }
+        }
+
+        //If the buddy is not typing
+        if(flags & kMessageStoppedTypingFlag){
+            NSNumber	*isTyping = [[handle statusDictionary] objectForKey:@"Typing"];
+            if(isTyping && [isTyping boolValue] == YES){
+                [[handle statusDictionary] setObject:[NSNumber numberWithInt:NO] forKey:@"Typing"];
+                [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]];
+                NSLog(@"(iChat) %@ is not typing",compactedName);
+            }
+        }
+
+        //If this is not just a "typing" message, Process the received message string
+        if(!(flags & kMessageTypingFlag)){
+            messageText = [AIHTMLDecoder decodeHTML:[inMessage body]];
+            messageObject = [AIContentMessage messageWithSource:[handle containingContact] destination:self date:nil message:messageText];
             [[owner contentController] addIncomingContentObject:messageObject];
         }
     }
+
+
+    
 }
 
 - (oneway void)service:(id)inService buddyPropertiesChanged:(NSArray *)inProperties
 {
     NSEnumerator	*buddyEnumerator;
     NSDictionary	*buddyPropertiesDict;
-    
+
+    NSLog(@"(iChat)buddyPropertiesChanged:(%i)",[inProperties count]);
+        
     buddyEnumerator = [inProperties objectEnumerator];
     while((buddyPropertiesDict = [buddyEnumerator nextObject])){
         NSString	*compactedName = [buddyPropertiesDict objectForKey:@"FZPersonID"];
@@ -578,22 +548,23 @@ extern void* objc_getClass(const char *name);
 
 
 - (oneway void)service:(id)inService requestOutgoingFileXfer:(id)file{
-//    NSLog(@"Woot: requestOutgoingFileXfer (%@)",file);
+    NSLog(@"(iChat)requestOutgoingFileXfer (%@)",file);
 }
 - (oneway void)service:(id)inService requestIncomingFileXfer:(id)file{
-//    NSLog(@"Woot: requestIncomingFileXfer (%@)",file);
+    NSLog(@"(iChat)requestIncomingFileXfer (%@)",file);
 }
 - (oneway void)service:(id)inService chat:(id)chat member:(id)member statusChanged:(int)inStatus{
-//    NSLog(@"Woot: chat:member:statusChanged (%@, %@, %i)",chat,member,inStatus);
+    NSLog(@"(iChat)chat:member:statusChanged (%@, %@, %i)",chat,member,inStatus);
 }
 - (oneway void)service:(id)inService chat:(id)chat showError:(id)error{
+    NSLog(@"(iChat)chat:showError (%@, %@)",chat,error);
     [[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"iChat Error (%@)", screenName] withDescription:error];
 }
 - (oneway void)service:(id)inService chat:(id)chat statusChanged:(int)inStatus{
-//    NSLog(@"Woot: chat:statusChanged (%@, %i)",chat,inStatus);
+    NSLog(@"(iChat)chat:statusChanged (%@, %i)",chat,inStatus);
 }
 - (oneway void)service:(id)inService directIMRequestFrom:(id)from invitation:(id)invitation{
-//    NSLog(@"Woot: directIMRequestFrom (%@, %@)",from,invitation);
+    NSLog(@"(iChat)directIMRequestFrom (%@, %@)",from,invitation);
 }
 - (oneway void)service:(id)inService invitedToChat:(id)chat isChatRoom:(char)isRoom invitation:(id)invitation{
     if(!isRoom){
@@ -605,16 +576,16 @@ extern void* objc_getClass(const char *name);
     }    
 }
 - (oneway void)service:(id)inService youAreDesignatedNotifier:(char)notifier{
-//    NSLog(@"(iChat)Adium is designated notifier (%i)",(int)notifier);
+    NSLog(@"(iChat)Adium is designated notifier (%i)",(int)notifier);
 }
 - (oneway void)service:(id)inService buddyPictureChanged:(id)buddy imageData:(id)image{
-//    NSLog(@"Woot: buddyPictureChanged (%@)",buddy);
+    NSLog(@"(iChat)buddyPictureChanged (%@)",buddy);
 }
 - (oneway void)openNotesChanged:(id)unknown{
-//    NSLog(@"(iChat)openNotesChanged (%@)",unknown);
+    NSLog(@"(iChat)openNotesChanged (%@)",unknown);
 }
 - (oneway void)myStatusChanged:(id)unknown{
-//    NSLog(@"(iChat)myStatusChanged (%@)",unknown);
+    NSLog(@"(iChat)myStatusChanged (%@)",unknown);
 }
 
 //Removes all the possible status flags (that are valid on AIM/iChat) from the passed handle

@@ -193,7 +193,7 @@
     //Let the handle observer process all existing contacts
     enumerator = [[self allContactsInGroup:nil subgroups:YES] objectEnumerator];
     while((contact = [enumerator nextObject])){
-        [inObserver updateContact:contact handle:nil keys:nil];
+        [inObserver updateContact:contact keys:nil];
     }
 
     //Resort and update the contact list (Since the observer has most likely changed attributes)
@@ -210,10 +210,8 @@
     listContact = [inHandle containingContact];
     if(listContact){
         NSDictionary		*handleStatusDict = [inHandle statusDictionary];
-        NSMutableArray		*modifiedAttributeKeys;
         NSEnumerator		*enumerator;
         NSString		*key;
-        id <AIContactObserver>	observer;
         
         //Apply all the changed status values to the handle's containing contact
         if(inModifiedKeys){
@@ -227,40 +225,51 @@
             [ownerArray setObject:[handleStatusDict objectForKey:key] withOwner:inHandle];
         }
 
-        //Let all the observers know the contact has changed
-        modifiedAttributeKeys = [NSMutableArray array];
-        enumerator = [contactObserverArray objectEnumerator];
-        while((observer = [enumerator nextObject])){
-            NSArray	*newKeys;
+        //Acknowledge the contact status changes
+        [self contactStatusChanged:listContact modifiedStatusKeys:inModifiedKeys];
+    }
+}
 
-            if((newKeys = [observer updateContact:listContact handle:inHandle keys:inModifiedKeys])){
-                [modifiedAttributeKeys addObjectsFromArray:newKeys];
-            }
-        }
+//Called after modifying a contact's status directly (and not through a handle)
+- (void)contactStatusChanged:(AIListContact *)inContact modifiedStatusKeys:(NSArray *)inModifiedKeys
+{
+    NSEnumerator		*enumerator;
+    NSMutableArray		*modifiedAttributeKeys;
+    id <AIContactObserver>	observer;
 
-        //Resort the contact list (If necessary)
-        if(!holdUpdates && //Skip sorting when updates are delayed
-           ([[self activeSortController] shouldSortForModifiedStatusKeys:inModifiedKeys] ||
-            [[self activeSortController] shouldSortForModifiedAttributeKeys:modifiedAttributeKeys])){
+    //Let all the observers know the contact has changed
+    modifiedAttributeKeys = [NSMutableArray array];
+    enumerator = [contactObserverArray objectEnumerator];
+    while((observer = [enumerator nextObject])){
+        NSArray	*newKeys;
 
-            [self sortListGroup:[listContact containingGroup] mode:AISortGroupAndSuperGroups];
-            [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:[listContact containingGroup]];
-        }
-
-        //Post a 'status' changed message, signaling that the object's status has changed.
-        if(inModifiedKeys){
-            [[owner notificationCenter] postNotificationName:Contact_StatusChanged object:listContact userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
-        }else{
-            [[owner notificationCenter] postNotificationName:Contact_StatusChanged object:listContact];
-        }
-
-        //Post an attributes changed message (if necessary)
-        if([modifiedAttributeKeys count] != 0){
-            [[owner notificationCenter] postNotificationName:Contact_AttributesChanged object:listContact userInfo:[NSDictionary dictionaryWithObject:modifiedAttributeKeys forKey:@"Keys"]];
+        if((newKeys = [observer updateContact:inContact keys:inModifiedKeys])){
+            [modifiedAttributeKeys addObjectsFromArray:newKeys];
         }
     }
 
+    //Resort the contact list (If necessary)
+    if(!holdUpdates && //Skip sorting when updates are delayed
+       ([[self activeSortController] shouldSortForModifiedStatusKeys:inModifiedKeys] ||
+        [[self activeSortController] shouldSortForModifiedAttributeKeys:modifiedAttributeKeys])){
+
+        [self sortListGroup:[inContact containingGroup] mode:AISortGroupAndSuperGroups];
+        [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:[inContact containingGroup]];
+    }
+
+    //Post a 'status' changed message, signaling that the object's status has changed.
+    if(inModifiedKeys){
+        [[owner notificationCenter] postNotificationName:Contact_StatusChanged object:inContact userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
+    }else{
+        [[owner notificationCenter] postNotificationName:Contact_StatusChanged object:inContact];
+    }
+
+    //Post an attributes changed message (if necessary)
+    if([modifiedAttributeKeys count] != 0){
+        [[owner notificationCenter] postNotificationName:Contact_AttributesChanged object:inContact userInfo:[NSDictionary dictionaryWithObject:modifiedAttributeKeys forKey:@"Keys"]];
+    }
 }
+
 
 //Call after modifying an object's display attributes
 - (void)objectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys
@@ -403,7 +412,7 @@
     //Set the new index and resort
     contact = [self contactInGroup:nil withService:serviceID UID:UID];
     [contact setOrderIndex:index];
-    NSLog(@"index %@ to %0.2f",[contact UID],index);
+
     [self sortListGroup:[contact containingGroup] mode:AISortGroupAndSuperGroups];
     [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
 
@@ -447,13 +456,8 @@
             }
         }
 
-
-        NSLog(@"Set Order to: %0.2f  (%0.2f + %0.2f) / 2.0 = %0.2f",index,index,closestIndex,(index + closestIndex) / 2.0);
-
         //Set the index to the halfway point
         index = (index + closestIndex) / 2.0;
-    }else{
-        NSLog(@"Set Order to: %0.2f",index);
     }
 
     //Save the new index
@@ -485,7 +489,7 @@
 }
 
 //Returns the desired destination handle
-- (AIHandle *)handleOfContact:(AIListContact *)inContact forReceivingContentType:(NSString *)inType fromAccount:(AIAccount *)inAccount create:(BOOL)create
+- (AIHandle *)handleOfContact:(AIListContact *)inContact forReceivingContentType:(NSString *)inType fromAccount:(AIAccount *)inAccount
 {
     NSEnumerator	*enumerator;
     AIHandle		*handle = nil;
@@ -496,11 +500,6 @@
         if([handle account] == inAccount) break;
     }
 
-    //If a handle doesn't exist, create one
-    if(!handle && create){
-        handle = [(AIAccount<AIAccount_Handles> *)inAccount addHandleWithUID:[inContact UID] serverGroup:nil temporary:YES];
-    }
-    
     return(handle);
 }
 

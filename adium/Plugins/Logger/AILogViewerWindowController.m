@@ -419,7 +419,7 @@ int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
 {
     int	row = [tableView_results selectedRow];
 
-    if(row != NSNotFound){
+    if(row >= 0 && row < [selectedLogArray count]){
         NSDictionary	*logDict = [selectedLogArray objectAtIndex:row];
 
         [self displayLogAtPath:[logDict objectForKey:@"Path"]];

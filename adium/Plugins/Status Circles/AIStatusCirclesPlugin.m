@@ -67,7 +67,7 @@
     [super dealloc];
 }
 
-- (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
 {
     NSArray		*modifiedAttributes = nil;
     
@@ -79,12 +79,13 @@
         [inModifiedKeys containsObject:@"UnviewedContent"] ||
         [inModifiedKeys containsObject:@"UnrespondedContent"] ||
         [inModifiedKeys containsObject:@"Signed On"] ||
-        [inModifiedKeys containsObject:@"Signed Off"]){
+        [inModifiedKeys containsObject:@"Signed Off"] ||
+        [inModifiedKeys containsObject:@"Typing"]){
 
         AIMutableOwnerArray	*iconArray, *tabIconArray;
         AIStatusCircle		*statusCircle;
         NSColor			*circleColor;
-        int			away, warning, online, unviewedContent, unrespondedContent, signedOn, signedOff;
+        int			typing, away, warning, online, unviewedContent, unrespondedContent, signedOn, signedOff;
         double			idle;
         
         //Get the status circle
@@ -100,6 +101,7 @@
         }
 
         //Get all the values
+        typing = [[inContact statusArrayForKey:@"Typing"] greatestIntegerValue];
         away = [[inContact statusArrayForKey:@"Away"] greatestIntegerValue];
         idle = [[inContact statusArrayForKey:@"Idle"] greatestDoubleValue];
         warning = [[inContact statusArrayForKey:@"Warning"] greatestIntegerValue];
@@ -110,10 +112,12 @@
         signedOff = [[inContact statusArrayForKey:@"Signed Off"] greatestIntegerValue];
         
         //Set the circle color
-        if (signedOff){
+        if(signedOff){
 	    circleColor = signedOffColor;
 	}else if(!online){
 	    circleColor = signedOffColor;
+        }else if(typing){
+            circleColor = typingColor;
         }else if(signedOn){
 	    circleColor = signedOnColor;
         }else if(idle != 0 && away){
@@ -146,7 +150,7 @@
             [statusCircle setState:(([[owner interfaceController] flashState] % 2) ? AICircleFlashA: AICircleFlashB)];
         }
 
-        modifiedAttributes = [NSArray arrayWithObject:@"Left View"];
+        modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Tab Left View", nil];
     }
 
     //Update our flash array (To reflect unviewed content)
@@ -237,7 +241,8 @@
 	//Release the old values..
 	//Cache the preference values
 	displayIdleTime = [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue];
-	
+
+        typingColor = [[[prefDict objectForKey:KEY_TYPING_COLOR] representedColor] retain];
 	signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
 	signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
 	onlineColor = [[[prefDict objectForKey:KEY_ONLINE_COLOR] representedColor] retain];
@@ -246,7 +251,7 @@
 	idleAwayColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
 	openTabColor = [[[prefDict objectForKey:KEY_OPEN_TAB_COLOR] representedColor] retain];
 	unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
-	warningColor = [[[prefDict objectForKey:KEY_WARNING_COLOR] representedColor] retain];
+        warningColor = [[[prefDict objectForKey:KEY_WARNING_COLOR] representedColor] retain];
 
 	NSEnumerator		*enumerator;
 	AIListContact		*contact;
@@ -254,7 +259,7 @@
 	enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
 
 	while(contact = [enumerator nextObject]){
-	    [self updateContact:contact handle:nil keys:nil];
+	    [self updateContact:contact keys:nil];
 	}
 
 	[[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];

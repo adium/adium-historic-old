@@ -21,6 +21,7 @@
 
 #define KEY_DISPLAY_IDLE_TIME		@"Display Idle Time"
 
+#define KEY_TYPING_COLOR		@"Typing Color"
 #define KEY_AWAY_COLOR			@"Away Color"
 #define KEY_IDLE_AWAY_COLOR		@"Idle & Away Color"
 #define KEY_IDLE_COLOR			@"Idle Color"
@@ -41,6 +42,7 @@
 
     BOOL		displayIdleTime;
 
+    NSColor		*typingColor;
     NSColor		*signedOffColor;
     NSColor		*signedOnColor;
     NSColor		*onlineColor;

@@ -282,8 +282,8 @@
     if(inContact){
         enumerator = [accountArray objectEnumerator];
         while((account = [enumerator nextObject])){
-            AIHandle	*handle = [[owner contactController] handleOfContact:inContact forReceivingContentType:inType fromAccount:account create:NO];
-    
+            AIHandle	*handle = [[owner contactController] handleOfContact:inContact forReceivingContentType:inType fromAccount:account];
+            
             if(handle && [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:handle]){
                 return(account);
             }

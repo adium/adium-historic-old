@@ -5,10 +5,14 @@
 
 enum {
     kMessageNoFlags		= 0L,
-//    kUnknown		= (1L << 0),
-//    kUnknown		= (1L << 1),
+    kMessageStoppedTypingFlag	= (1L << 0),
+//    kUnknown			= (1L << 1),
     kMessageOutgoingFlag	= (1L << 2),
     kMessageTypingFlag		= (1L << 3),
+//    kUnknown			= (1L << 4),
+//    kUnknown			= (1L << 5),
+//    kUnknown			= (1L << 6),
+//    kUnknown			= (1L << 7),
 };    
 
 @protocol FZDaemon <NSObject>

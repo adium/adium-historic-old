@@ -45,12 +45,13 @@
 
     //observe
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    
+        
     [self preferencesChanged:nil];
 
     //Create our table view
     messageView = [[AIFlexibleTableView alloc] init];
     [messageView setDelegate:self];
+    [messageView setForwardsKeyEvents:YES];
 
     senderCol = [[AIFlexibleTableColumn alloc] init];
     [messageView addColumn:senderCol];
@@ -269,7 +270,7 @@
     }
 
     //Create the cell
-    cell = [AIFlexibleTableTextCell cellWithString:[NSString stringWithFormat:(outgoing ? prefixOutgoing : prefixIncoming),(outgoing ? [(AIAccount *)messageSource accountDescription] : [[(AIHandle *)messageSource containingContact] displayName])]
+    cell = [AIFlexibleTableTextCell cellWithString:[NSString stringWithFormat:(outgoing ? prefixOutgoing : prefixIncoming),(outgoing ? [(AIAccount *)messageSource accountDescription] : [(AIListContact *)messageSource displayName])]
                                              color:prefixColor
                                               font:prefixFont
                                          alignment:NSRightTextAlignment

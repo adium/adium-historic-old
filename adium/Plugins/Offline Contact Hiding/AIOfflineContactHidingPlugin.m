@@ -30,7 +30,7 @@
     //[[owner contactController] unregisterHandleObserver:self];
 }
 
-- (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
 {
     NSArray		*modifiedAttributes = nil;
     

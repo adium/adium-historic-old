@@ -67,6 +67,7 @@
 - (void)reloadData;
 - (void)reloadRow:(int)inRow;
 - (void)setContentBottomAligned:(BOOL)inValue;
+- (void)setForwardsKeyEvents:(BOOL)inValue;
 - (void)resizeCellHeight:(AIFlexibleTableCell *)inCell;
 
 @end

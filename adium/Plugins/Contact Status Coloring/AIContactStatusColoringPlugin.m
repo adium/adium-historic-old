@@ -69,7 +69,7 @@
     //[[owner contactController] unregisterHandleObserver:self];
 }
 
-- (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
 {
     NSArray		*modifiedAttributes = nil;
 
@@ -231,7 +231,7 @@
 	enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
 
 	while((contact = [enumerator nextObject])){
-	    [self updateContact:contact handle:nil keys:nil];
+	    [self updateContact:contact keys:nil];
 	}
 
 	[[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];

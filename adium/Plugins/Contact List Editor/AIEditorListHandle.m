@@ -29,8 +29,6 @@
     temporary = inTemporary;
     containingGroup = nil;
     orderIndex = -1;
-
-    NSLog(@"%@ (%@)",UID,serviceID);
     
     return(self);
 }
@@ -64,7 +62,6 @@
 }
 - (void)setServiceID:(NSString *)inServiceID
 {
-    NSLog(@"%@ set serviceID:%@",UID,inServiceID);
     [serviceID release];
     serviceID = [inServiceID retain];
 }

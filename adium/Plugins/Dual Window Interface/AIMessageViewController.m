@@ -55,7 +55,7 @@
         //Send the message
         [[owner notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:contact userInfo:nil];
         message = [AIContentMessage messageWithSource:account
-                                          destination:handle
+                                          destination:contact
                                                  date:nil
                                               message:[[[textView_outgoing attributedString] copy] autorelease]];
 
@@ -94,11 +94,11 @@
 - (void)setAccount:(AIAccount *)inAccount
 {
     [account release]; account = nil;
-    [handle release]; handle = nil;
+//    [handle release]; handle = nil;
 
     //Set the account
     account = [inAccount retain];
-    handle = [[[owner contactController] handleOfContact:contact forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:account create:YES] retain];
+//    handle = [[[owner contactController] handleOfContact:contact forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:account create:YES] retain];
 }
 - (AIAccount *)account{
     return(account);
@@ -142,7 +142,7 @@
     contact = [inContact retain];
     currentTextEntryHeight = 0;
     account = nil;
-    handle = nil;
+//    handle = nil;
 
     if(inAccount){
         [self setAccount:inAccount];
@@ -213,10 +213,13 @@
 
 //Our contact's status did change
 - (void)contactStatusChanged:(NSNotification *)notification
-{    
+{
+    AIHandle	*handle;
+    
     //Enable/Disable our text view sending
+    handle = [[owner contactController] handleOfContact:contact forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:account];
     [textView_outgoing setAvailableForSending:[(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:handle]];
-
+        
     //Update our toolbar
     [toolbar_bottom configureForObjects:nil];
 }

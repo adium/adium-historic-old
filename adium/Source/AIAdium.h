@@ -145,7 +145,7 @@ typedef enum {
 
 // Public core controller protocols ------------------------------------------------------------
 @protocol AIContactObserver //notified of changes
-    - (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys;
+    - (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys;
 @end
 
 @protocol AIContactLeftView //Draws to the left of a handle
@@ -345,10 +345,11 @@ typedef enum {
 - (AIListGroup *)groupInGroup:(AIListGroup *)inGroup withUID:(NSString *)UID;
 
 //Handle access
-- (AIHandle *)handleOfContact:(AIListContact *)inContact forReceivingContentType:(NSString *)inType fromAccount:(AIAccount *)inAccount create:(BOOL)create;
+- (AIHandle *)handleOfContact:(AIListContact *)inContact forReceivingContentType:(NSString *)inType fromAccount:(AIAccount *)inAccount;
 
 //Contact status & Attributes
 - (void)handleStatusChanged:(AIHandle *)inHandle modifiedStatusKeys:(NSArray *)inModifiedKeys;
+- (void)contactStatusChanged:(AIListContact *)inContact modifiedStatusKeys:(NSArray *)inModifiedKeys;
 - (void)registerContactObserver:(id)inObserver;
 - (void)objectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
 
