@@ -132,7 +132,7 @@
         
         [self _applyAlias:[[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inObject]
                  toObject:inObject
-                  delayed:NO];
+                  delayed:YES];
     }
 }
 
