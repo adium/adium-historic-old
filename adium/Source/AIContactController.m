@@ -85,7 +85,7 @@
 //    NSMutableDictionary	*groupStateDict;
 
     //Break down the contact list to put all handles/groups in one place
-    [self breakDownContactList];
+//    [self breakDownContactList];
 
 #warning group state saving off temporarily
     //Get the group state dict
