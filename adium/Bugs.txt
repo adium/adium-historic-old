@@ -14,11 +14,6 @@
 	link attributes of the attributed message are not filtered.  This prevents subprofile links from
 	working.
 
-- Message formatting is reset on send
-	If the user changes their message formatting, it should stay until that window is closed.  This
-	causes problems for users who use right-to-left text entry, and users wishing to use a special
-	message format temporarily.
-
 - Applescripts are parsed in other's profiles
 	This is a potential security risk if the user has scripts that run shell commands.  We shuold
 	not be parsing script commands sent by other users (via profiles)
