@@ -234,17 +234,6 @@ DeclareString(FormattedUID);
 			if (containingObject)
 				[containingObject listObject:self didSetStatusObject:value forKey:key notify:notify];
 			[self listObject:self didSetStatusObject:value forKey:key notify:notify];
-			
-			//If notify, send out the notification now; otherwise, add it to changedStatusKeys for later notification 
-			if (notify){
-				[[adium contactController] listObjectStatusChanged:self
-												modifiedStatusKeys:[NSArray arrayWithObject:key]
-															silent:NO];
-			}else{
-				if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
-				[changedStatusKeys addObject:key];
-				
-			}
 		}
 	}
 }
@@ -334,9 +323,21 @@ DeclareString(FormattedUID);
    return([[statusDictionary objectForKey:key] string]);
 }
 
-//Subclasses may wish to override these
+//Subclasses may wish to override these - they must be sure to call super's implementation, too!
 - (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
-{
+{				
+	//If notify, send out the notification now; otherwise, add it to changedStatusKeys for later notification 
+	if (notify){
+		[[adium contactController] listObjectStatusChanged:self
+										modifiedStatusKeys:[NSArray arrayWithObject:key]
+													silent:NO];
+	}else{
+		if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
+		[changedStatusKeys addObject:key];
+		
+	}
+	
+	//Cache the setting of a formatted UID so we'll have it while offline after the next launch
 	if (inObject == self) {
 		if ([key isEqualToString:FormattedUID]){
 			[self setPreference:value forKey:key group:ObjectStatusCache];
