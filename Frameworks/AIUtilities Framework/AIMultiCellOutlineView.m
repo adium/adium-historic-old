@@ -81,7 +81,9 @@
 	int		row = [self rowAtPoint:viewPoint];
 	id		item = [self itemAtRow:row];
 	
-	if([self isExpandable:item] && viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.height){
+	if((item) && 
+	   ([self isExpandable:item]) && 
+	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.height)){
 		if([self isItemExpanded:item]){
 			[self collapseItem:item];
 		}else{
