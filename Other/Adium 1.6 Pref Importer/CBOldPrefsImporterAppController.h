@@ -7,17 +7,20 @@
 
 @interface CBOldPrefsImporterAppController : NSObject 
 {
-    IBOutlet	NSWindow		*window_main;
-    IBOutlet	NSPopUpButton		*popUpButton_account;
-    IBOutlet	NSProgressIndicator	*progressIndicator;
-    IBOutlet	NSTextField		*currentTask;
-    IBOutlet    NSImageView             *image_AdiumImage;
-    IBOutlet	NSWindow		*theSheet;
-    IBOutlet	NSPanel			*importListSheet;
-    IBOutlet	NSPopUpButton		*popUpButton_user;
-    IBOutlet	NSButton		*button_OK;
-    IBOutlet	NSButton		*button_Cancel;
+    IBOutlet	NSWindow				*window_main;
+    IBOutlet	NSPopUpButton			*popUpButton_account;
+    IBOutlet	NSProgressIndicator		*progressIndicator;
+    IBOutlet	NSTextField				*currentTask;
+    IBOutlet    NSImageView				*image_AdiumImage;
+    IBOutlet	NSWindow				*theSheet;
+    IBOutlet	NSPanel					*importListSheet;
+    IBOutlet	NSPopUpButton			*popUpButton_user;
+    IBOutlet	NSButton				*button_OK;
+    IBOutlet	NSButton				*button_Cancel;
     IBOutlet    NSButton                *button_ImportAwayMessages;
+	IBOutlet	NSButton				*button_Adium_Logs;
+	IBOutlet	NSButton				*button_Adium_Aliases;
+	IBOutlet	NSButton				*button_Adium_Contacts;
     IBOutlet    NSPopUpButton           *popUpButton_Clients;
     IBOutlet    NSButton                *button_Import;
     IBOutlet    NSProgressIndicator     *spinner_importProgress;

@@ -61,7 +61,14 @@
 	
 	//No Adium 1.x prefs
 	if([popUpButton_account numberOfItems] == 0){
-		NSBeginAlertSheet(@"Nothing to import", @"Quit", nil, nil, window_main, NSApp, @selector(terminate:), nil, nil, @"I cannot find any Adium 1.x preferences to import.");
+		[popUpButton_account setEnabled:NO];
+		[button_Adium_Logs setEnabled:NO];
+		[button_Adium_Aliases setEnabled:NO];
+		[button_Adium_Contacts setEnabled:NO];	
+		[popUpButton_account addItemWithTitle:@"No Adium 1.x Prefs found."];
+		[popUpButton_account selectItemWithTitle:@"No Adium 1.x Prefs found."];
+	//NSBeginAlertSheet(@"Nothing to import", @"Quit", nil, nil, window_main, NSApp, @selector(terminate:), nil, nil, @"I cannot find any Adium 1.x preferences to import.");
+	
 	}
 	
 	//No Adium 2.0 prefs
