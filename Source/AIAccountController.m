@@ -357,6 +357,20 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	return(servicesArray);
 }
 
+- (BOOL)serviceWithUniqueIDIsOnline:(NSString *)identifier
+{
+	AIService		*service = [self serviceWithUniqueID:identifier];
+    NSEnumerator	*enumerator = [accountArray objectEnumerator];
+    AIAccount		*account;
+    
+    while((account = [enumerator nextObject])){
+		if(([account service] == service) &&
+		   [account online]) return YES;
+    }
+    
+    return(NO);
+}
+
 //Register service code
 - (void)registerService:(AIService *)inService
 {
@@ -504,7 +518,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	
 	return(accountsArray);
 }
-
 
 - (AIAccount *)firstAccountWithService:(AIService *)service
 {
