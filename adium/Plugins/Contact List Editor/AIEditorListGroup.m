@@ -7,6 +7,7 @@
 //
 
 #import "AIEditorListGroup.h"
+#import "AIEditorListHandle.h"
 
 int alphabeticalSort(id objectA, id objectB, void *context);
 
@@ -41,6 +42,21 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 - (AIEditorListObject *)objectAtIndex:(unsigned)index
 {
     return([contents objectAtIndex:index]);
+}
+
+- (AIEditorListObject *)objectNamed:(NSString *)inName isGroup:(BOOL)isGroup
+{
+    NSEnumerator	*enumerator;
+    AIEditorListObject	*object;
+    
+    enumerator = [contents objectEnumerator];
+    while((object = [enumerator nextObject])){
+        if((isGroup && [object isKindOfClass:[AIEditorListGroup class]]) || (!isGroup && [object isKindOfClass:[AIEditorListHandle class]])){
+            if([inName compare:[object UID]] == 0) return(object);
+        }
+    }
+
+    return(nil);
 }
 
 - (NSEnumerator *)objectEnumerator

@@ -158,13 +158,14 @@ static char *hash_password(const char * const password);
     if(inTemporary) inGroup = @"__Strangers";
     if(!inGroup) inGroup = @"Unknown";
 
-    //Check to see if the handle already exists
-    if([handleDict objectForKey:inUID]){
-        [self removeHandleWithUID:inUID]; //Remove it
+    //Check to see if the handle already exists, and remove the duplicate if it does
+    if(handle = [handleDict objectForKey:inUID]){
+        NSLog(@"Removing existing %@",inUID);
+        [self removeHandleWithUID:inUID]; //Remove the handle
     }
 
     //Create the handle
-    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] description] UID:inUID serverGroup:inGroup temporary:inTemporary forAccount:self];
+    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier] UID:inUID serverGroup:inGroup temporary:inTemporary forAccount:self];
 
     //Add the handle
     [self AIM_AddHandle:[handle UID] toGroup:[handle serverGroup]]; //Add it server-side
@@ -533,7 +534,7 @@ static char *hash_password(const char * const password);
                 NSString		*message = [packet string];
                 NSString		*command = [message TOCStringArgumentAtIndex:0];
 
-//                NSLog(@"<- %@",[packet string]);
+                NSLog(@"(%@)<- %@",screenName,[packet string]);
 
                 if([command compare:@"SIGN_ON"] == 0){
                     [self AIM_HandleSignOn:message];
@@ -594,7 +595,7 @@ static char *hash_password(const char * const password);
     //Send any packets in the outQue
     while([outQue count] && [socket readyForSending]){
         [[outQue objectAtIndex:0] sendToSocket:socket];
-//        NSLog(@"-> %@",[[outQue objectAtIndex:0] string]);
+        NSLog(@"(%@)-> %@",screenName,[[outQue objectAtIndex:0] string]);
         [outQue removeObjectAtIndex:0];
     }
 }
@@ -617,6 +618,7 @@ static char *hash_password(const char * const password);
 {
     NSMutableArray	*contentsArray;
 
+    NSLog(@"add %@ to %@",handleUID,groupName);
     //If this handle is in the delete dict, it is removed, otherwise the handle is placed in the add dict.
     contentsArray = [deleteDict objectForKey:groupName];
     if(contentsArray && [contentsArray containsObject:handleUID]){

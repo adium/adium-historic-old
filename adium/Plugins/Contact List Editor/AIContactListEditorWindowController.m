@@ -23,12 +23,9 @@
 #import "AIEditorListGroup.h"
 #import "AIEditorListHandle.h"
 #import "AIEditorCollection.h"
-#import "AIEditorAccountCollection.h"
-#import "AIEditorImportCollection.h"
 #import "AIContactListEditorPlugin.h"
 #import "AIContactListCollectionCell.h"
-#import "AIEditorAllContactsCollection.h"
-#import "AIEditorBlockedCollection.h"
+#import "AIContactListEditorPlugin.h"
 
 #define	PREF_GROUP_CONTACT_LIST			@"Contact List"
 #define CONTACT_LIST_EDITOR_NIB			@"ContactListEditorWindow"
@@ -43,24 +40,21 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner plugin:(AIContactListEditorPlugin *)inPlugin;
 - (void)sizeContentColumnsToFit:(NSNotification *)notification;
 - (void)installToolbar;
-- (void)generateCollectionsArray;
 - (IBAction)toggleDrawer:(id)sender;
-- (void)generateCollectionsArray;
 - (void)configureForCollection:(id <AIEditorCollection>)collection;
-- (void)refreshContentOutlineView;
 - (IBAction)delete:(id)sender;
 - (void)concludeDeleteSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (AIEditorListGroup *)groupNamed:(NSString *)targetGroupName onCollection:(id <AIEditorCollection>)collection;
 - (AIEditorListGroup *)createGroupNamed:(NSString *)name onCollection:(id <AIEditorCollection>)collection temporary:(BOOL)temporary;
+- (AIEditorListHandle *)createHandleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group onCollection:(id <AIEditorCollection>)collection temporary:(BOOL)temporary;
 - (int)allHandlesInGroup:(AIEditorListGroup *)group belongToCollection:(id <AIEditorCollection>)collection;
 - (void)renameObject:(AIEditorListObject *)object to:(NSString *)name;
 - (AIEditorListGroup *)selectedGroup;
 - (void)scrollToAndEditObject:(AIEditorListObject *)object column:(NSTableColumn *)column;
 - (void)moveObject:(AIEditorListObject *)object fromCollection:(id <AIEditorCollection>)sourceCollection toGroup:(AIEditorListGroup *)destGroup collection:(id <AIEditorCollection>)destCollection;
-- (void)_addObject:(AIEditorListObject *)object toCollection:(id <AIEditorCollection>)collection;
-- (void)_removeObject:(AIEditorListObject *)object fromCollection:(id <AIEditorCollection>)collection;
 - (AIEditorListHandle *)handleNamed:(NSString *)targetHandleName onCollection:(id <AIEditorCollection>)collection;
 - (AIEditorListHandle *)_handleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group;
+- (void)deleteObject:(AIEditorListObject *)object fromCollection:(id <AIEditorCollection>)collection;
 @end
 
 @implementation AIContactListEditorWindowController
@@ -95,8 +89,11 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     
     //Install observers
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_StatusChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_HandlesChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(collectionStatusChanged:) name:Editor_CollectionStatusChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(collectionArrayChanged:) name:Editor_CollectionArrayChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(collectionContentChanged:) name:Editor_CollectionContentChanged object:nil];
+
+    
 
     //Load our images
     folderImage = [[AIImageUtilities imageNamed:@"Folder" forClass:[self class]] retain];
@@ -107,6 +104,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[owner notificationCenter] removeObserver:self];
     
     [owner release];
     [folderImage release];
@@ -152,10 +150,9 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     
     //Install our window toolbar and generate our collections
     [self installToolbar];
-    [self generateCollectionsArray];
 
     //If the user has multiple collections, open the drawer
-    if([collectionsArray count] > 1){
+    if([[plugin collectionsArray] count] > 1){
         [self toggleDrawer:nil];
     }
 }
@@ -184,46 +181,29 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 // Content modified notifications
 // --------------------------------------------------
-//Notified when the account list changes
-- (void)accountListChanged:(NSNotification *)notification
+//A collection's content has changed
+- (void)collectionContentChanged:(NSNotification *)notification
 {
-    //Rebuild the collections array
-    [self generateCollectionsArray];
+    [outlineView_contactList reloadData]; //Redisplay the content view
 }
+
+//A collection's status has changed
+- (void)collectionStatusChanged:(NSNotification *)notification
+{
+    [tableView_sourceList reloadData]; //Redisplay our collection view
+}
+
+//The collection array has changed
+- (void)collectionArrayChanged:(NSNotification *)notification
+{
+    [tableView_sourceList reloadData]; //Redisplay our collection view
+    [self tableViewSelectionIsChanging:nil]; //Update the content view
+}
+
 
 
 // Collections table view
 // --------------------------------------------------
-//Builds the collection array
-- (void)generateCollectionsArray
-{
-    NSEnumerator	*accountEnumerator;
-    AIAccount		*account;
-
-    //Create the array
-    [collectionsArray release];
-    collectionsArray = [[NSMutableArray alloc] init];
-
-    //Add an 'all contacts' collection
-    [collectionsArray addObject:[AIEditorAllContactsCollection allContactsCollectionWithOwner:owner]];
-    
-    //Add a collection for each account
-    accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
-    while((account = [accountEnumerator nextObject])){
-        [collectionsArray addObject:[AIEditorAccountCollection editorCollectionForAccount:account]];
-    }
-
-    //Blocked collection
-//    [collectionsArray addObject:[AIEditorBlockedCollection blockedCollectionWithOwner:owner]];
-    
-    //Add a single (empty) collection for imported contacts 
-    [collectionsArray addObject:[AIEditorImportCollection editorCollection]];
-    
-    //Update the selected collection
-    [tableView_sourceList reloadData];
-    [self tableViewSelectionIsChanging:nil];
-}
-
 //As the selection changes, update the outline view to reflect the selected collection
 - (void)tableViewSelectionIsChanging:(NSNotification *)notification
 {
@@ -235,7 +215,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         if(selectedRow < 0 || selectedRow >= [tableView_sourceList numberOfRows]) selectedRow = 0; 
 
         //Configure the outline view for the new selection
-        selectedCollection = [collectionsArray objectAtIndex:selectedRow];
+        selectedCollection = [[plugin collectionsArray] objectAtIndex:selectedRow];
         [self configureForCollection:selectedCollection];
         
     }
@@ -266,7 +246,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     //Add the ownership columns
     if([collection showOwnershipColumns]){ //If this collection requests display of the ownership column
         //Do a quick count of how many collections want to be in the ownership column
-        enumerator = [collectionsArray objectEnumerator];
+        enumerator = [[plugin collectionsArray] objectEnumerator];
         while((object = [enumerator nextObject])){
             if([object includeInOwnershipColumn]){
                 ownerCount++;
@@ -276,7 +256,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         //We don't display the ownership column unless there are two or more collections that request it.
         if(ownerCount > 1){
             //Add a column for all collections that want one
-            enumerator = [collectionsArray objectEnumerator];
+            enumerator = [[plugin collectionsArray] objectEnumerator];
             while((object = [enumerator nextObject])){
                 if([object includeInOwnershipColumn]){
                     NSTableColumn	*tableColumn = [[[NSTableColumn alloc] initWithIdentifier:object] autorelease];
@@ -317,7 +297,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     }
     
     //Redraw the content outline view
-    [self refreshContentOutlineView];
+    [outlineView_contactList reloadData];
 
     //Set the columns to the correct width
     [self sizeContentColumnsToFit:nil];
@@ -380,17 +360,11 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     // reapply the selection...
 }
 
-//Refresh the outline view and update its group state
-- (void)refreshContentOutlineView
-{
-    [outlineView_contactList reloadData]; //Reload the view
-}
-
 
 // Collection Table View Delegate ---------------------------------------------------------
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    return([collectionsArray count]);
+    return([[plugin collectionsArray] count]);
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
@@ -400,7 +374,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    id <AIEditorCollection> collection = [collectionsArray objectAtIndex:row];
+    id <AIEditorCollection> collection = [[plugin collectionsArray] objectAtIndex:row];
 
     [cell setEnabled:[collection enabled]];
     [cell setImage:[collection icon]]; //Set the correct account icon
@@ -488,20 +462,42 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         [self renameObject:item to:object]; //Rename the object
 
     }else if([identifier conformsToProtocol:@protocol(AIEditorCollection)]){
+        id <AIEditorCollection> collection = identifier;
+        AIEditorListHandle	*handle;
+       
         if([object intValue]){ //Add
-            [self _addObject:item toCollection:identifier];
-                        
+            
+            if([item isKindOfClass:[AIEditorListHandle class]]){ //Handle
+                NSString		*groupName;
+                AIEditorListGroup	*group;
+
+                //Find the correct group on the new collection
+                groupName = [[(AIEditorListHandle *)item containingGroup] UID];
+                group = [self groupNamed:groupName onCollection:collection];
+                if(!group){ //If the group doesn't exist, create it
+                    group = [self createGroupNamed:groupName onCollection:collection temporary:NO];
+                }
+
+                //Add a duplicate of the handle to the group and collection
+                [self createHandleNamed:[(AIEditorListHandle *)item UID] inGroup:group onCollection:collection temporary:NO];
+
+            }
+
         }else{ //Remove
-            [self _removeObject:item fromCollection:identifier];
+            handle = [self handleNamed:[item UID] onCollection:collection]; //Find the correct handle
+            [self deleteObject:handle fromCollection:collection]; //Remove the handle
 
         }
-                
+
     }else if([identifier conformsToProtocol:@protocol(AIListEditorColumnController)]){ //custom column
         //Pass the new value to the column controller
         if([item isKindOfClass:[AIEditorListHandle class]]){
             [(id <AIListEditorColumnController>)identifier editorColumnSetStringValue:object forServiceID:[(AIEditorListHandle *)item serviceID] UID:[(AIEditorListHandle *)item UID]];
         }
     }
+
+    //Refresh the outline view
+    [outlineView_contactList reloadData];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
@@ -587,7 +583,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         }
     }
 
-    [self refreshContentOutlineView]; //Refresh
+    [outlineView_contactList reloadData]; //Refresh
 
     //Select all the groups and handles
     {
@@ -741,24 +737,18 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         //Delete all the handles
         enumerator = [[targetDict objectForKey:HANDLE_DELETE_KEY] objectEnumerator];
         while((object = [enumerator nextObject])){
-            if(![object temporary]){ //Since temp objects aren't yet in the collecting, we skip this call
-                [selectedCollection deleteObject:object];
-            }
-            [[object containingGroup] removeObject:object];
+            [self deleteObject:object fromCollection:selectedCollection]; //Remove the handle
         }
 
         //Delete all the groups
         enumerator = [[targetDict objectForKey:GROUP_DELETE_KEY] objectEnumerator];
         while((object = [enumerator nextObject])){
-            if(![object temporary]){ //Since temp objects aren't yet in the collecting, we skip this call
-                [selectedCollection deleteObject:object];
-            }
-            [[object containingGroup] removeObject:object];
+            [self deleteObject:object fromCollection:selectedCollection]; //Remove the group
         }
     }
     
     [targetDict release];
-    [self refreshContentOutlineView]; //Refresh
+    [outlineView_contactList reloadData]; //Refresh
 }
 
 //Create a new group
@@ -768,7 +758,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
     //Create the new group
     newGroup = [self createGroupNamed:@"New Group" onCollection:selectedCollection temporary:YES];
-    [self refreshContentOutlineView];
+    [outlineView_contactList reloadData];
     
     //Select, scroll to, and edit the new group
     [self scrollToAndEditObject:newGroup column:[outlineView_contactList tableColumnWithIdentifier:@"handle"]];
@@ -786,9 +776,8 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [outlineView_contactList expandItem:selectedGroup];
 
     //Create the new handle
-    newHandle = [[AIEditorListHandle alloc] initWithServiceID:[selectedCollection serviceID] UID:@"New Contact" temporary:YES];
-    [selectedGroup addObject:newHandle];
-    [self refreshContentOutlineView];        
+    newHandle = [self createHandleNamed:@"New Contact" inGroup:selectedGroup onCollection:selectedCollection temporary:YES];
+    [outlineView_contactList reloadData];
 
     //Select, scroll to, and edit the new handle
     [self scrollToAndEditObject:newHandle column:[outlineView_contactList tableColumnWithIdentifier:@"handle"]];
@@ -813,7 +802,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //Finish up the importing panel
 - (void)concludeImportPanel:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-    NSEnumerator *enumerator = [collectionsArray objectEnumerator];
+/*    NSEnumerator *enumerator = [[plugin collectionsArray] objectEnumerator];
     id anObject;
     int index = 0;
     AIEditorImportCollection *defaultCollection = [AIEditorImportCollection editorCollection];
@@ -826,7 +815,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
             {
                 if([[anObject name] isEqual:[defaultCollection name]])//if it's empty..
                 {
-                    [collectionsArray replaceObjectAtIndex:index 
+                    [[plugin collectionsArray] replaceObjectAtIndex:index 
                         withObject:[AIEditorImportCollection editorCollectionWithPath:
                             [[panel filenames] objectAtIndex:0]]];
                             //...replace it
@@ -837,7 +826,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
                     //so append 
                 }
                 //we want to do these things regardless
-                selectedCollection = [collectionsArray objectAtIndex:index]; //select it
+                selectedCollection = [[plugin collectionsArray] objectAtIndex:index]; //select it
                 [tableView_sourceList selectRow:index byExtendingSelection:NO]; //highlight it
                 
                 break; //and get out!
@@ -845,8 +834,8 @@ static AIContactListEditorWindowController *sharedInstance = nil;
             else //otherwise
                 ++index; //move on
         }
-        [self refreshContentOutlineView]; //refresh
-    }
+        [outlineView_contactList reloadData]; //refresh
+    }*/
 }
 
 
@@ -995,6 +984,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     return(nil);
 }
 
+//Find a handle
 - (AIEditorListHandle *)handleNamed:(NSString *)targetHandleName onCollection:(id <AIEditorCollection>)collection
 {
     return([self _handleNamed:targetHandleName inGroup:[collection list]]);
@@ -1023,25 +1013,38 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     return(nil);
 }
 
-
-
-//Create a group
-- (AIEditorListGroup *)createGroupNamed:(NSString *)name onCollection:(id <AIEditorCollection>)collection temporary:(BOOL)temporary
+//Returns the currently "selected" group, or the group who's handles is selected
+- (AIEditorListGroup *)selectedGroup
 {
-    AIEditorListGroup	*group;
+    AIEditorListObject	*selectedItem;
+    AIEditorListGroup	*selectedGroup;
 
-    if(temporary){        
-        group = [[AIEditorListGroup alloc] initWithUID:name temporary:YES];
-        [[collection list] addObject:group]; //We don't add the group to the collection, since it's only temporary
-
+    //Get the currently selected group
+    selectedItem = [outlineView_contactList itemAtRow:[outlineView_contactList selectedRow]];
+    if(selectedItem == nil){
+        selectedGroup = [selectedCollection list];
+    }else if([selectedItem isKindOfClass:[AIEditorListHandle class]]){
+        selectedGroup = [selectedItem containingGroup];
     }else{
-        group = [[AIEditorListGroup alloc] initWithUID:name temporary:NO]; 	//Create the group
-        [[collection list] addObject:group];					//Add it to the list
-        [collection addObject:group];						//Let the collection add it
-
+        selectedGroup = (AIEditorListGroup *)selectedItem;
     }
 
-    return(group);
+    return(selectedGroup);
+}
+
+//Select, scroll to, and edit a list object
+- (void)scrollToAndEditObject:(AIEditorListObject *)object column:(NSTableColumn *)column
+{
+    int		row;
+
+    [outlineView_contactList indexOfTableColumnWithIdentifier:@"handle"];
+
+    row = [outlineView_contactList rowForItem:object];
+    [outlineView_contactList scrollRowToVisible:row];
+    [outlineView_contactList selectRow:row byExtendingSelection:NO];
+    if([self outlineView:outlineView_contactList shouldEditTableColumn:column item:object]){
+        [outlineView_contactList editColumn:[outlineView_contactList indexOfTableColumn:column] row:row withEvent:nil select:YES];
+    }
 }
 
 //Returns 2 for mixed, 1 for all handles owned, 0 for all handles not owned
@@ -1072,6 +1075,51 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     }
 }
 
+
+//List Manipulation (sends out notifications)
+//Create a handle
+- (AIEditorListHandle *)createHandleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group onCollection:(id <AIEditorCollection>)collection temporary:(BOOL)temporary
+{
+    AIEditorListHandle	*handle;
+
+    if(temporary){
+        handle = [[AIEditorListHandle alloc] initWithServiceID:[collection serviceID] UID:name temporary:YES];
+        [group addObject:handle]; //We don't add the handle to the collection, since it's only temporary        
+        
+    }else{
+        handle = [[AIEditorListHandle alloc] initWithServiceID:[collection serviceID] UID:name temporary:NO]; //Create the handle
+        [group addObject:handle];	//Add it to the list
+        [collection addObject:handle];	//Let the collection add it
+
+        //Post an object added notification
+        [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:collection userInfo:[NSDictionary dictionaryWithObject:handle forKey:@"Object"]];
+    }
+
+    
+    return(handle);
+}
+
+//Create a group
+- (AIEditorListGroup *)createGroupNamed:(NSString *)name onCollection:(id <AIEditorCollection>)collection temporary:(BOOL)temporary
+{
+    AIEditorListGroup	*group;
+
+    if(temporary){        
+        group = [[AIEditorListGroup alloc] initWithUID:name temporary:YES];
+        [[collection list] addObject:group]; //We don't add the group to the collection, since it's only temporary
+
+    }else{
+        group = [[AIEditorListGroup alloc] initWithUID:name temporary:NO]; 	//Create the group
+        [[collection list] addObject:group];					//Add it to the list
+        [collection addObject:group];						//Let the collection add it
+
+        //Post an object added notification
+        [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:collection userInfo:[NSDictionary dictionaryWithObject:group forKey:@"Object"]];
+    }
+
+    return(group);
+}
+
 //Rename an object (correctly sets temporary objects as permanent) 
 - (void)renameObject:(AIEditorListObject *)object to:(NSString *)name
 {
@@ -1081,124 +1129,66 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         [selectedCollection addObject:object];
         [object setTemporary:NO];
 
+        //Post an object added notification
+        [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:selectedCollection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
+
     }else{
         [selectedCollection renameObject:object to:name];
         [object setUID:name]; //Rename the object after the collection has had a chance to rename
+
+        //Posta renamed notification
+        [[owner notificationCenter] postNotificationName:Editor_RenamedObjectOnCollection object:selectedCollection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
     }
 
     [[object containingGroup] sort]; //resort the containing group
-    [self refreshContentOutlineView]; //Refresh
-}
 
-//Returns the currently "selected" group, or the group who's handles is selected
-- (AIEditorListGroup *)selectedGroup
-{
-    AIEditorListObject	*selectedItem;
-    AIEditorListGroup	*selectedGroup;
-
-    //Get the currently selected group
-    selectedItem = [outlineView_contactList itemAtRow:[outlineView_contactList selectedRow]];
-    if(selectedItem == nil){
-        selectedGroup = [selectedCollection list];
-    }else if([selectedItem isKindOfClass:[AIEditorListHandle class]]){
-        selectedGroup = [selectedItem containingGroup];
-    }else{
-        selectedGroup = (AIEditorListGroup *)selectedItem;
-    }
-
-    return(selectedGroup);
-}
-
-//Select, scroll to, and edit a list object
-- (void)scrollToAndEditObject:(AIEditorListObject *)object column:(NSTableColumn *)column
-{
-    int		row;
-
-    [outlineView_contactList indexOfTableColumnWithIdentifier:@"handle"];
-        
-    row = [outlineView_contactList rowForItem:object];
-    [outlineView_contactList scrollRowToVisible:row];
-    [outlineView_contactList selectRow:row byExtendingSelection:NO];
-    if([self outlineView:outlineView_contactList shouldEditTableColumn:column item:object]){
-        [outlineView_contactList editColumn:[outlineView_contactList indexOfTableColumn:column] row:row withEvent:nil select:YES];
-    }
 }
 
 //Move an object
 - (void)moveObject:(AIEditorListObject *)object fromCollection:(id <AIEditorCollection>)sourceCollection toGroup:(AIEditorListGroup *)destGroup collection:(id <AIEditorCollection>)destCollection
 {
+    [object retain]; //Temporarily hold onto the object
+
     if(sourceCollection == destCollection){
         //Allow the collection to move the object
         [sourceCollection moveObject:object toGroup:destGroup];
 
         //Swap it from one group to the other
-        [object retain];
         [[object containingGroup] removeObject:object];
+        [[owner notificationCenter] postNotificationName:Editor_RemovedObjectFromCollection object:sourceCollection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
+
         [destGroup addObject:object];
-        [object release];
+        [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:destCollection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
 
     }else{
-        [object retain];
-
         //Remove from the source collection
         [sourceCollection deleteObject:object];
         [[object containingGroup] removeObject:object];
+        [[owner notificationCenter] postNotificationName:Editor_RemovedObjectFromCollection object:sourceCollection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
 
         //Add to the destination collection
         [destGroup addObject:object];
         [destCollection addObject:object];
-
-        [object release];
-    }
-}
-
-//Add a copy of an existing object to another collection (In response to a checkbox click)
-- (void)_addObject:(AIEditorListObject *)object toCollection:(id <AIEditorCollection>)collection
-{
-    AIEditorListHandle		*newHandle;
-    NSString			*groupName;
-    AIEditorListGroup		*group;
-
-    if([object isKindOfClass:[AIEditorListHandle class]]){
-        AIEditorListHandle	*handle = (AIEditorListHandle *)object;
-
-        //Create a duplicate of the handle
-        newHandle = [[AIEditorListHandle alloc] initWithServiceID:[handle serviceID] UID:[handle UID] temporary:NO];
-
-        //Find the correct group on the new collection
-        groupName = [[handle containingGroup] UID];
-        group = [self groupNamed:groupName onCollection:collection];
-
-        //If the group doesn't exist, create it
-        if(!group){
-            group = [self createGroupNamed:groupName onCollection:collection temporary:NO];
-        }
-
-        //Add the new handle to the group and collection
-        [group addObject:newHandle];
-        [collection addObject:newHandle];
-        [self refreshContentOutlineView];
+        [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:destCollection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
     }
 
+    [object release];
 }
 
-//Remove the correct object from the specified collection
-- (void)_removeObject:(AIEditorListObject *)object fromCollection:(id <AIEditorCollection>)collection
+//Delete an object
+- (void)deleteObject:(AIEditorListObject *)object fromCollection:(id <AIEditorCollection>)collection
 {
-    AIEditorListHandle	*handle;
+    [object retain]; //Hold onto the object until we're done with it
 
-    //Find the correct handle
-    handle = [self handleNamed:[object UID] onCollection:collection];
+    if(![object temporary]){ //Since temp objects aren't yet in the collecting, we skip this call
+        [collection deleteObject:object];
+    }
+    [[object containingGroup] removeObject:object];
 
-    //Remove the handle
-    [collection deleteObject:handle];
-    [[handle containingGroup] removeObject:handle];
+    [[owner notificationCenter] postNotificationName:Editor_RemovedObjectFromCollection object:collection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
 
-    //Refresh
-    [self refreshContentOutlineView];
+    [object release];
 }
-
-
 
 @end
 

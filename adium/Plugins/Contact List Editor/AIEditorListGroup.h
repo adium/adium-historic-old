@@ -21,5 +21,6 @@
 - (NSEnumerator *)objectEnumerator;
 - (unsigned)count;
 - (void)sort;
+- (AIEditorListObject *)objectNamed:(NSString *)inName isGroup:(BOOL)isGroup;
 
 @end

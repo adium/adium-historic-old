@@ -9,17 +9,17 @@
 #import <Cocoa/Cocoa.h>
 #import "AIEditorCollection.h"
 
-@class AIAdium, AIEditorListGroup, AIEditorAccountCollection;
+@class AIAdium, AIEditorListGroup, AIEditorAccountCollection, AIContactListEditorPlugin;
 
 @interface AIEditorAllContactsCollection : NSObject <AIEditorCollection> {
     AIAdium				*owner;
 
     AIEditorListGroup			*list;
+    AIContactListEditorPlugin		*plugin;
 
 }
 
-+ (AIEditorAllContactsCollection *)allContactsCollectionWithOwner:(id)inOwner;
-- (id)initWithOwner:(id)inOwner;
++ (AIEditorAllContactsCollection *)allContactsCollectionWithOwner:(id)inOwner plugin:(id)inPlugin;
 - (NSString *)name;
 - (NSImage *)icon;
 - (BOOL)enabled;
