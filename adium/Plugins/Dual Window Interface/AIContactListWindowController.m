@@ -22,7 +22,7 @@
 #define CONTACT_LIST_WINDOW_NIB				@"ContactListWindow"		//Filename of the contact list window nib
 #define CONTACT_LIST_WINDOW_TRANSPARENT_NIB @"ContactListWindowTransparent" //Filename of the minimalist transparent version
 #define CONTACT_LIST_TOOLBAR				@"ContactList"				//ID of the contact list toolbar
-#define	KEY_DUAL_CONTACT_LIST_WINDOW_FRAME	@"Dual Contact List Frame"
+#define	KEY_DUAL_CONTACT_LIST_WINDOW_FRAME	@"Dual Contact List Frame 2"
 #define TOOLBAR_CONTACT_LIST				@"ContactList"				//Toolbar identifier
 
 #define EDGE_CATCH_X				10
