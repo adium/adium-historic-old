@@ -361,6 +361,7 @@
 				//Check for each service the address book supports
 				while(serviceID = [servicesEnumerator nextObject]){
 					NSString		*addressBookKey = [serviceDict objectForKey:serviceID];
+#warning AIM, ICQ, and dot mac are interchangable in this context. What to do?
 					NSEnumerator	*accountsArray = [[[adium accountController] accountsWithService:[[adium accountController] firstServiceWithServiceID:serviceID]] objectEnumerator];
 					AIAccount		*account;
 					
