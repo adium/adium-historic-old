@@ -390,9 +390,9 @@
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op
 {
     if(op == NSTableViewDropAbove && row != -1){
-        return(YES);
+        return(NSDragOperationPrivate);
     }else{
-        return(NO);
+        return(NSDragOperationNone);
     }
 }
 
