@@ -153,8 +153,6 @@ AIAccountSetupWindowController *sharedAccountSetupWindowInstance = nil;
 //Resize the window for the displayed content view
 - (void)sizeWindowForContent
 {
-	NSSize size = [activeView desiredSize];
-	NSLog(@"sizewindow to %i %i",(int)size.width,(int)size.height);
 	[[self window] setContentSize:[activeView desiredSize] display:YES animate:[[self window] isVisible]];
 }
 

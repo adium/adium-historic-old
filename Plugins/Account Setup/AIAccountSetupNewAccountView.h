@@ -17,13 +17,9 @@
 	IBOutlet	NSTextField			*textField_serviceHelp;
 	IBOutlet	NSButtonCell		*radio_registerNew;
 	IBOutlet	NSButtonCell		*radio_useExisting;
-	
     IBOutlet	NSView				*view_accountDetails;
-	IBOutlet	ESDelayedTextField	*textField_accountName;
-	IBOutlet	NSTextField			*textField_userNameLabel;
 
 	AIAccountViewController			*accountViewController;
-	
 	AIAccount						*account;
 }
 
