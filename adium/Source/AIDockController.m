@@ -54,7 +54,12 @@
     [self preferencesChanged:nil];
 
     //We always want to stop bouncing when Adium is made active
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillBecomeActive:) name:NSApplicationWillBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillChangeActive:) name:NSApplicationWillBecomeActiveNotification object:nil];
+
+    //We also stop bouncing when Adium is no longer active
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillChangeActive:) name:NSApplicationWillResignActiveNotification object:nil];
+
+    
 }
 
 - (void)closeController
@@ -405,6 +410,7 @@
                                                   userInfo:nil
                                                    repeats:YES] retain];
 }
+//Activated by the time after each delay
 - (void)bounceWithTimer:(NSTimer *)timer
 {
     //Bounce
@@ -445,7 +451,7 @@
 }
 
 //
-- (void)appWillBecomeActive:(NSNotification *)notification
+- (void)appWillChangeActive:(NSNotification *)notification
 {
     [self _stopBouncing]; //Stop any bouncing
 }
