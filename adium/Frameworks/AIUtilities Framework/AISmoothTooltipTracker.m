@@ -5,6 +5,9 @@
 //  Created by Adam Iser on Tue Jul 27 2004.
 //
 
+//Note: You must setDelegate:nil before deallocing the delegate; NSTimers retain their targets, so
+//the AISmoothTooltipTracker instance may remain around even after being released.
+
 #import "AISmoothTooltipTracker.h"
 
 #define TOOL_TIP_CHECK_INTERVAL				45.0	//Check for mouse X times a second
@@ -54,6 +57,14 @@
 	[super dealloc];
 }
 
+- (void)setDelegate:(id)inDelegate
+{
+	if (delegate != inDelegate){
+		[self _stopTrackingMouse];
+		
+		delegate = inDelegate;
+	}
+}
 
 //Cursor Rects ---------------------------------------------------------------------------------------------------------
 #pragma mark Cursor Rects
