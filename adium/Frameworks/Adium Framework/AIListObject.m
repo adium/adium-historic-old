@@ -531,7 +531,6 @@ DeclareString(FormattedUID);
 			[contacts setObject:tempList forKey:service];
 		}
 	}
-	NSLog(@"#### dictionaryOfServicesAndListContacts: %@",contacts);
 	
 	return contacts;
 }
