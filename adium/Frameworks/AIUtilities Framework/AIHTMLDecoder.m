@@ -203,7 +203,7 @@ DeclareString(TagCharStartString);
         }
 
         //Font (If the color, font, or size has changed)
-        if(includeFontTags && ([color compare:currentColor] || pointSize != currentSize || [familyName compare:currentFamily])){
+        if(includeFontTags && (pointSize != currentSize || [familyName compare:currentFamily] || [color compare:currentColor] || (currentColor && !color))){
             //Close any existing font tags, and open a new one
             if(closeFontTags && openFontTag){
                 [string appendString:CloseFontTag];
@@ -234,7 +234,7 @@ DeclareString(TagCharStartString);
             }
 
             //Color
-            if(includeColorTags && color && [color compare:currentColor] != 0){
+            if(includeColorTags && ([color compare:currentColor] || (currentColor && !color))){
                 [string appendString:[NSString stringWithFormat:@" COLOR=\"#%@\"",color]];
                 [currentColor release]; currentColor = [color retain];
             }
