@@ -29,7 +29,7 @@
 AIAccountListPreferencesPlugin,
 AIAccountMenuAccessPlugin,
 AIAliasSupportPlugin,
-AIAlphabeticalSortPlugin,
+AIAlphabeticalSort,
 AIAutoIdlePlugin,
 AIAutoLinkingPlugin,
 AIAutoReplyPlugin,
@@ -56,7 +56,7 @@ AIEmoticonsPlugin,
 AIEventSoundsPlugin,
 AIExtendedStatusPlugin,
 AILoggerPlugin,	
-AIManualSortPlugin,
+AIManualSort,
 AIMessageAliasPlugin,
 AINewMessagePanelPlugin,
 AIOfflineContactHidingPlugin,
@@ -96,7 +96,7 @@ ESMetaContactContentsPlugin,
 ESOpenMessageWindowContactAlertPlugin,
 ESSafariLinkToolbarItemPlugin,
 ESSendMessageContactAlertPlugin,
-ESStatusSortPlugin,
+ESStatusSort,
 ESUserIconHandlingPlugin,
 ErrorMessageHandlerPlugin,
 GBApplescriptFiltersPlugin,
@@ -125,7 +125,7 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[AIAccountListPreferencesPlugin class]];
 	[self _loadComponentClass:[AIAccountMenuAccessPlugin class]];
 	[self _loadComponentClass:[AIAliasSupportPlugin class]];
-	[self _loadComponentClass:[AIAlphabeticalSortPlugin class]];
+	[self _loadComponentClass:[AIAlphabeticalSort class]];
 	[self _loadComponentClass:[AIAutoIdlePlugin class]];
 	[self _loadComponentClass:[AIAutoLinkingPlugin class]];
 	[self _loadComponentClass:[AIAutoReplyPlugin class]];
@@ -150,7 +150,7 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[AIEventSoundsPlugin class]];
 	[self _loadComponentClass:[AIExtendedStatusPlugin class]];
 	[self _loadComponentClass:[AILoggerPlugin class]];	
-	[self _loadComponentClass:[AIManualSortPlugin class]];
+	[self _loadComponentClass:[AIManualSort class]];
 	[self _loadComponentClass:[AIMessageAliasPlugin class]];
 	[self _loadComponentClass:[AINewMessagePanelPlugin class]];
 	[self _loadComponentClass:[AIOfflineContactHidingPlugin class]];
@@ -190,7 +190,7 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[ESOpenMessageWindowContactAlertPlugin class]];
 	[self _loadComponentClass:[ESSafariLinkToolbarItemPlugin class]];
 	[self _loadComponentClass:[ESSendMessageContactAlertPlugin class]];
-	[self _loadComponentClass:[ESStatusSortPlugin class]];
+	[self _loadComponentClass:[ESStatusSort class]];
 	[self _loadComponentClass:[ESUserIconHandlingPlugin class]];
 	[self _loadComponentClass:[ErrorMessageHandlerPlugin class]];
 	[self _loadComponentClass:[GBApplescriptFiltersPlugin class]];

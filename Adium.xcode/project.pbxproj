@@ -5,6 +5,21 @@
 	};
 	objectVersion = 39;
 	objects = {
+		074DDB5C07CB413F0033AFF7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CBContactLastSeenPlugin.m;
+			path = Source/CBContactLastSeenPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		074DDB5D07CB413F0033AFF7 = {
+			fileRef = 074DDB5C07CB413F0033AFF7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		07836212077B0CA90032D975 = {
 			fileRef = 4B970BF80535B864002F28F9;
 			isa = PBXBuildFile;
@@ -382,7 +397,7 @@
 			};
 		};
 		3402E03F07CB0E400044F818 = {
-			fileEncoding = 30;
+			fileEncoding = 10;
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist.strings;
 			name = English;
@@ -430,7 +445,7 @@
 			};
 		};
 		3402E05607CB0EDE0044F818 = {
-			fileEncoding = 30;
+			fileEncoding = 10;
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist.strings;
 			name = English;
@@ -3826,6 +3841,7 @@
 				347E7AA207CAF8DA00350507,
 				347E7AA107CAF8DA00350507,
 				347E7A9607CAF8AF00350507,
+				074DDB5C07CB413F0033AFF7,
 				347E7A9507CAF8AE00350507,
 				347E7A9407CAF8AE00350507,
 				347E7AB907CAF94A00350507,
@@ -7732,6 +7748,7 @@
 				347E7ABC07CAF94A00350507,
 				347E7AC307CAF96000350507,
 				347E7ACF07CAF98500350507,
+				074DDB5D07CB413F0033AFF7,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
