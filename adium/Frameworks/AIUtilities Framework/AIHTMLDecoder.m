@@ -25,7 +25,6 @@
 int HTMLEquivalentForFontSize(int fontSize);
 
 @interface AIHTMLDecoder (PRIVATE)
-+ (NSDictionary *)parseArguments:(NSString *)arguments;
 + (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 + (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 + (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
@@ -148,7 +147,17 @@ DeclareString(TagCharStartString);
 // closeStyleTagsOnFontChange: YES to close and re-insert style tags when opening a new font tag
 // encodeNonASCII: YES to encode non-ASCII characters as their HTML equivalents
 // simpleTagsOnly: YES to separate out FONT tags and include only the most basic HTML elements
-+ (NSString *)encodeHTML:(NSAttributedString *)inMessage headers:(BOOL)includeHeaders fontTags:(BOOL)includeFontTags includingColorTags:(BOOL)includeColorTags closeFontTags:(BOOL)closeFontTags styleTags:(BOOL)includeStyleTags closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange encodeNonASCII:(BOOL)encodeNonASCII imagesPath:(NSString *)imagesPath attachmentsAsText:(BOOL)attachmentsAsText simpleTagsOnly:(BOOL)simpleOnly
++ (NSString *)encodeHTML:(NSAttributedString *)inMessage
+				 headers:(BOOL)includeHeaders 
+				fontTags:(BOOL)includeFontTags
+	  includingColorTags:(BOOL)includeColorTags 
+		   closeFontTags:(BOOL)closeFontTags
+			   styleTags:(BOOL)includeStyleTags
+ closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange 
+		  encodeNonASCII:(BOOL)encodeNonASCII 
+			  imagesPath:(NSString *)imagesPath
+	   attachmentsAsText:(BOOL)attachmentsAsText
+		  simpleTagsOnly:(BOOL)simpleOnly
 {
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
     NSRange			searchRange;
@@ -318,11 +327,7 @@ DeclareString(TagCharStartString);
 					[[NSFileManager defaultManager] createDirectoriesForPath:imagesPath];
 					
 					if([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:fileName atomically:YES]){
-						[string appendString:@"<img src=\""];
-						[string appendString:fileURL];
-						[string appendString:@"\" alt=\""];
-						[string appendString:[attachment string]];
-						[string appendString:@"\">"];
+						[string appendString:@"<img src=\"%@\" alt=\"%@\">",fileURL,[attachment string]]];
 						[chunk release]; chunk = nil;
 					}
 					else
