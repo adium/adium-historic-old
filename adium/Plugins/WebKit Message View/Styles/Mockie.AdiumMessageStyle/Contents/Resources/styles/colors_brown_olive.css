@@ -1,0 +1,66 @@
+body {
+	background: #eff2ef;
+	font: 11px "Lucida Grande";
+}
+
+.incoming .buddyicon {
+	background: rgba(178,125,75,0.2);
+}
+
+.incoming .sender {
+	background: no-repeat url(../images/brown/topleft.png);
+}
+
+.incoming .time_initial
+{
+	background: no-repeat url(../images/brown/topright.png) right;
+}
+
+.incoming .time_consecutive {
+	color: #b27d4b;
+}
+
+.incoming .message
+{
+	background: rgba(178,125,75,0.2);
+}
+
+.incoming .time_consecutive + p {
+	border-top: 1px solid rgba(178,125,75,0.4);
+}
+
+.incoming a:hover
+{
+	background: #b27d4b;
+	color: white;
+}
+
+.outgoing .buddyicon {
+	background: rgba(116,157,95,0.2);
+}
+
+.outgoing .sender {
+	background: no-repeat url(../images/olive/topleft.png);
+}
+
+.outgoing .time_initial
+{
+	background: no-repeat url(../images/olive/topright.png) right;
+}
+
+.outgoing .time_consecutive {
+	color: #749d5f;
+}
+
+.outgoing .message {
+	background: rgba(116,157,95,0.2);
+}
+
+.outgoing .time_consecutive + p {
+	border-top: 1px solid rgba(116,157,95,0.4);
+}
+
+.outgoing a:hover {
+	background: #749d5f;
+	color: white;
+}

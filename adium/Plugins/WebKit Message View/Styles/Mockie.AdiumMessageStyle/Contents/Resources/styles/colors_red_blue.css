@@ -1,66 +1,66 @@
 body {
-	background: #E6E9F2;
+	background: #f2e5e6;
 	font: 11px "Lucida Grande";
 }
 
 .incoming .buddyicon {
-	background: rgba(255,0,1,0.2);
+	background: rgba(0,45,255,0.2);
 }
 
 .incoming .sender {
-	background: no-repeat url(../images/red/topleft.png);
+	background: no-repeat url(../images/blue/topleft.png);
 }
 
 .incoming .time_initial
 {
-	background: no-repeat url(../images/red/topright.png) right;
+	background: no-repeat url(../images/blue/topright.png) right;
 }
 
 .incoming .time_consecutive {
-	color: #FF0001;
+	color: #002cff;
 }
 
-.incoming .message {
-	background: rgba(255,0,1,0.2);
+.incoming .message
+{
+	background: rgba(0,45,255,0.2);
 }
 
 .incoming .time_consecutive + p {
-	border-top: 1px solid rgba(255,0,1,0.4);
+	border-top: 1px solid rgba(0,45,255,0.4);
 }
 
-.incoming a:hover {
-	background: #FF0001;
+.incoming a:hover
+{
+	background: #002CFF;
 	color: white;
 }
 
 .outgoing .buddyicon {
-	background: rgba(0,45,255,0.2);
+	background: rgba(255,0,1,0.2);
 }
 
 .outgoing .sender {
-	background: no-repeat url(../images/blue/topleft.png);
+	background: no-repeat url(../images/red/topleft.png);
 }
 
 .outgoing .time_initial
 {
-	background: no-repeat url(../images/blue/topright.png) right;
+	background: no-repeat url(../images/red/topright.png) right;
 }
 
 .outgoing .time_consecutive {
-	color: #002cff;
+	color: #FF0001;
 }
 
-.outgoing .message
-{
-	background: rgba(0,45,255,0.2);
+.outgoing .message {
+	background: rgba(255,0,1,0.2);
 }
 
 .outgoing .time_consecutive + p {
-	border-top: 1px solid rgba(0,45,255,0.4);
+	border-top: 1px solid rgba(255,0,1,0.4);
 }
 
-.outgoing a:hover
-{
-	background: #002CFF;
+.outgoing a:hover {
+	background: #FF0001;
 	color: white;
 }
