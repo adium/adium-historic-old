@@ -275,7 +275,7 @@ static AIStatusType statusTypeForListObject(AIListObject *listObject)
 #define	PREVIEW_MENU_IMAGE_SIZE		13
 #define	PREVIEW_MENU_IMAGE_MARGIN	2
 
-+ (NSImage *)previewMenuImageForStatusIconsAtPath:(NSString *)inPath
++ (NSImage *)previewMenuImageForIconPackAtPath:(NSString *)inPath
 {
 	NSImage			*image;
 	NSDictionary	*iconDict;
