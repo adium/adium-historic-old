@@ -15,6 +15,7 @@
 {
 	NSDictionary		*attributes;
 	NSAttributedString	*sample;
+#warning 10.3 only
 	NSShadow			*shadow = nil;
 		
 	//Background
@@ -29,6 +30,7 @@
 
 	//Shadow
 	if([textShadowColor color]){
+#warning 10.3 only
 		shadow = [[[NSShadow alloc] init] autorelease];
 		[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
 		[shadow setShadowBlurRadius:2.0];
@@ -36,6 +38,7 @@
 	}
 
 	//Text
+#warning 10.3 only
 	attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSFont systemFontOfSize:12], NSFontAttributeName,
 		[NSParagraphStyle styleWithAlignment:NSCenterTextAlignment], NSParagraphStyleAttributeName,
