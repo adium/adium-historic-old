@@ -17,22 +17,22 @@
 
 @interface AIFlexibleTableFramedTextCell : AIFlexibleTableTextCell {
     BOOL        drawTopDivider;
-    BOOL	drawTop;
-    BOOL	drawBottom;
+    BOOL		drawTop;
+    BOOL		drawBottom;
     BOOL        drawSides;
     
     NSColor 	*borderColorOpaque;
-    NSColor	*bubbleColorOpaque;
-    NSColor	*dividerColorOpaque;
+    NSColor		*bubbleColorOpaque;
+    NSColor		*dividerColorOpaque;
     
     NSColor 	*borderColor;
-    NSColor	*bubbleColor;
-    NSColor	*dividerColor;
+    NSColor		*bubbleColor;
+    NSColor		*dividerColor;
     
-    int		framePadLeft;
-    int		framePadRight;
-    int		framePadTop;
-    int		framePadBottom;
+    int			framePadLeft;
+    int			framePadRight;
+    int			framePadTop;
+    int			framePadBottom;
     
 }
 + (AIFlexibleTableFramedTextCell *)cellWithAttributedString:(NSAttributedString *)inString;
