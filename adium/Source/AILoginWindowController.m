@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AILoginWindowController.m,v 1.4 2003/12/14 04:33:54 jmelloy Exp $
+// $Id: AILoginWindowController.m,v 1.5 2004/03/02 02:47:17 adamiser Exp $
 
 #import "AILoginWindowController.h"
 #import "AILoginController.h"
@@ -116,7 +116,7 @@
                                            create:YES];
 
     //Save the 'display on launch' checkbox state
-    [loginDict setObject:[NSNumber numberWithBool:[checkbox_displayOnStartup state]] forKey:LOGIN_HIDE_WINDOW];
+    [loginDict setObject:[NSNumber numberWithBool:[checkbox_displayOnStartup state]] forKey:LOGIN_SHOW_WINDOW];
     
     //Save the login they used
     [loginDict setObject:selectedUserName forKey:LOGIN_LAST_USER];
@@ -222,7 +222,7 @@
     [[self window] center];
 
     //Setup the 'display on launch' checkbox
-    [checkbox_displayOnStartup setState:[[loginDict objectForKey:LOGIN_HIDE_WINDOW] boolValue]];
+    [checkbox_displayOnStartup setState:[[loginDict objectForKey:LOGIN_SHOW_WINDOW] boolValue]];
 
     //Select the login they used last
     lastLogin = [loginDict objectForKey:LOGIN_LAST_USER];
