@@ -860,7 +860,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 }
 
-//Create a new group
+//Create a new handle
 - (IBAction)handle:(id)sender
 {
     AIEditorListHandle	*newHandle;
@@ -1049,7 +1049,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 
 // Private ------------------------------------------------------------------
-//Returns the currently "selected" group, or the group who's handles is selected
+//Returns the currently "selected" group, or the group whose handles are selected
 - (int)selectedIndexAndGroup:(AIEditorListGroup **)group
 {
     id			selectedItem;
