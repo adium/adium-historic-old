@@ -149,7 +149,7 @@ BOOL pantherOrLater;
     }
     [buddyIconImage compositeToPoint: buddyIconPoint operation:NSCompositeSourceOver];
     if (buddyIconBadge) {
-        [buddyIconBadge compositeToPoint: buddyIconPoint operation:NSCompositeSourceOver];
+        [buddyIconBadge compositeToPoint: NSMakePoint(buddyIconPoint.x -6.0, buddyIconPoint.y - 6-0) operation:NSCompositeSourceOver];
     }
             
     // Set the color of text to white and paint all the strings,
