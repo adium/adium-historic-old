@@ -758,11 +758,26 @@ static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type
 		GaimConvIm  *im = gaim_conversation_get_im_data(conv);
 		switch (type) {
 			case GAIM_CONV_UPDATE_TYPING: {
-				NSNumber	*isTyping = [NSNumber numberWithBool:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
+				
+				AITypingState typingState;
+				
+				switch (gaim_conv_im_get_typing_state(im)){
+					case GAIM_TYPING:
+						typingState = AITyping;
+						break;
+					case GAIM_NOT_TYPING:
+						typingState = AINotTyping;
+						break;
+					case GAIM_TYPED:
+						typingState = AIEnteredText;
+						break;
+				}
+				
+				NSNumber	*typingStateNumber = [NSNumber numberWithInt:typingState];
 				
 				[accountLookup(conv->account) mainPerformSelector:@selector(typingUpdateForIMChat:typing:)
 													   withObject:imChatLookupFromConv(conv)
-													   withObject:isTyping];
+													   withObject:typingStateNumber];
 				break;
 			}
 			case GAIM_CONV_UPDATE_AWAY: {
@@ -1928,20 +1943,36 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}
 }
 
-- (oneway void)sendTyping:(BOOL)typing inChat:(AIChat *)chat
+- (oneway void)sendTyping:(AITypingState)typingState inChat:(AIChat *)chat
 {
 	[runLoopMessenger target:self 
 			 performSelector:@selector(gaimThreadSendTyping:inChat:)
-				  withObject:[NSNumber numberWithBool:typing]
+				  withObject:[NSNumber numberWithInt:typingState]
 				  withObject:chat];
 }
-- (oneway void)gaimThreadSendTyping:(NSNumber *)typing inChat:(AIChat *)chat
+- (oneway void)gaimThreadSendTyping:(NSNumber *)typingState inChat:(AIChat *)chat
 {
 	GaimConversation *conv = convLookupFromChat(chat,nil);
 	if (conv){
+		//		BOOL isTyping = (([typingState intValue] == AINotTyping) ? FALSE : TRUE);
+
+		GaimTypingState gaimTypingState;
+		
+		switch ([typingState intValue]){
+			case AINotTyping:
+				gaimTypingState = GAIM_NOT_TYPING;
+				break;
+			case AITyping:
+				gaimTypingState = GAIM_TYPING;
+				break;
+			case AIEnteredText:
+				gaimTypingState = GAIM_TYPED;
+				break;
+		}
+	
 		serv_send_typing(gaim_conversation_get_gc(conv),
 						 gaim_conversation_get_name(conv),
-						 ([typing boolValue] ? GAIM_TYPING : GAIM_NOT_TYPING));
+						 gaimTypingState);
 	}	
 }
 
