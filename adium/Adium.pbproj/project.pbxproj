@@ -110,6 +110,7 @@
 				4B52A57D03EDB96E00A8010A,
 				4B9E73DE03F7085300A8010A,
 				4BDDCA08041104ED00A8010A,
+				4B7BD8640412584500A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -164,6 +165,7 @@
 				4B52A57C03EDB96E00A8010A,
 				4B9E73DD03F7085300A8010A,
 				4BDDCA07041104ED00A8010A,
+				4B7BD8630412584500A8010A,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -201,6 +203,7 @@
 				4B52A58603EDB9D200A8010A,
 				4B254C4803F7073900A8010A,
 				4BDDCA01041104BB00A8010A,
+				4B7BD8690412586500A8010A,
 				F5B53FBE0333AB9201A8010A,
 				F53EA2B502C8020E01A8010A,
 				F5A01D85037980F201A8010A,
@@ -282,6 +285,7 @@
 				4B52A57E03EDB96E00A8010A,
 				4B9E73DF03F7085300A8010A,
 				4BDDCA09041104ED00A8010A,
+				4B7BD8650412584500A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -1194,6 +1198,7 @@
 				4B52A57F03EDB96E00A8010A,
 				4B9E73E003F7085300A8010A,
 				4BDDCA0A041104ED00A8010A,
+				4B7BD8660412584500A8010A,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2306,6 +2311,211 @@
 		};
 		4B7BD56904123BF500A8010A = {
 			fileRef = 4B7BD56704123BF500A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7BD85E0412584500A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B7BD86C0412588A00A8010A,
+				4B7BD870041258F400A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B7BD85F0412584500A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B7BD8600412584500A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B7BD86D0412588A00A8010A,
+				4B7BD871041258F400A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B7BD8610412584500A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B7BD87204125A5C00A8010A,
+				4B7BD87304125A5D00A8010A,
+				4B7BD87404125A5D00A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B7BD8620412584500A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B7BD8630412584500A8010A = {
+			buildPhases = (
+				4B7BD85E0412584500A8010A,
+				4B7BD85F0412584500A8010A,
+				4B7BD8600412584500A8010A,
+				4B7BD8610412584500A8010A,
+				4B7BD8620412584500A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Manual Sort";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4B7BD8670412584900A8010A,
+				4B7BD8680412584B00A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Manual Sort";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Manual Sort";
+			productReference = 4B7BD8640412584500A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIManualSortPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4B7BD8640412584500A8010A = {
+			isa = PBXBundleReference;
+			path = "Manual Sort.AdiumPlugin";
+			refType = 3;
+		};
+		4B7BD8650412584500A8010A = {
+			isa = PBXTargetDependency;
+			target = 4B7BD8630412584500A8010A;
+		};
+		4B7BD8660412584500A8010A = {
+			fileRef = 4B7BD8640412584500A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7BD8670412584900A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4B7BD8680412584B00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4B7BD8690412586500A8010A = {
+			children = (
+				4B7BD86A0412588A00A8010A,
+				4B7BD86B0412588A00A8010A,
+				4B7BD86E041258F400A8010A,
+				4B7BD86F041258F400A8010A,
+			);
+			isa = PBXGroup;
+			name = "Manual Sort";
+			path = "";
+			refType = 4;
+		};
+		4B7BD86A0412588A00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIManualSortPlugin.h;
+			path = "Plugins/Manual Sort/AIManualSortPlugin.h";
+			refType = 4;
+		};
+		4B7BD86B0412588A00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIManualSortPlugin.m;
+			path = "Plugins/Manual Sort/AIManualSortPlugin.m";
+			refType = 4;
+		};
+		4B7BD86C0412588A00A8010A = {
+			fileRef = 4B7BD86A0412588A00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7BD86D0412588A00A8010A = {
+			fileRef = 4B7BD86B0412588A00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7BD86E041258F400A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIManualSort.h;
+			path = "Plugins/Manual Sort/AIManualSort.h";
+			refType = 4;
+		};
+		4B7BD86F041258F400A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIManualSort.m;
+			path = "Plugins/Manual Sort/AIManualSort.m";
+			refType = 4;
+		};
+		4B7BD870041258F400A8010A = {
+			fileRef = 4B7BD86E041258F400A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7BD871041258F400A8010A = {
+			fileRef = 4B7BD86F041258F400A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7BD87204125A5C00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7BD87304125A5D00A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7BD87404125A5D00A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
 			settings = {
 			};

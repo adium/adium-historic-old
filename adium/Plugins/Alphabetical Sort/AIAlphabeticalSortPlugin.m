@@ -13,8 +13,6 @@
 #import "AIAlphabeticalSort.h"
 #import "AIAlphabeticalSortNoGroups.h"
 
-int alphabeticalSort(id objectA, id objectB, void *context);
-
 @implementation AIAlphabeticalSortPlugin
 
 - (void)installPlugin
