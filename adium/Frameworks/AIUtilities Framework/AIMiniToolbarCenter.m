@@ -65,9 +65,8 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 }
 
 //Show the customization palette
-- (IBAction)customizeToolbars:(id)sender
+- (IBAction)customizeToolbar:(AIMiniToolbar *)toolbar
 {
-    NSArray		*itemArray;
     NSEnumerator	*enumerator;
     AIMiniToolbarItem	*toolbarItem;
     
@@ -82,19 +81,24 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 
     //Build an array of views for every available toolbar item
     if(itemImageArray) [itemImageArray release];
+    if(itemArray) [itemArray release];
     itemImageArray = [[NSMutableArray alloc] init];
-    itemArray = [itemDict allValues];
-    enumerator = [itemArray objectEnumerator];
+    itemArray = [[NSMutableArray alloc] init];
+    enumerator = [[itemDict allValues] objectEnumerator];
     while((toolbarItem = [enumerator nextObject])){
-        NSView	*itemView = [toolbarItem view];
-        NSRect	itemFrame = [itemView frame];
-        NSImage	*itemImage = [[NSImage alloc] initWithSize:itemFrame.size];
-        
-        [itemImage lockFocus];
-            [itemView drawRect:NSMakeRect(0, 0, itemFrame.size.width, itemFrame.size.height)];
-        [itemImage unlockFocus];
-
-        [itemImageArray addObject:[itemImage autorelease]];
+        if([toolbarItem configureForObjects:[toolbar configurationObjects]]){
+            //Add the item if it applies to this toolbar's objects
+            NSView	*itemView = [toolbarItem view];
+            NSRect	itemFrame = [itemView frame];
+            NSImage	*itemImage = [[NSImage alloc] initWithSize:itemFrame.size];
+            
+            [itemImage lockFocus];
+                [itemView drawRect:NSMakeRect(0, 0, itemFrame.size.width, itemFrame.size.height)];
+            [itemImage unlockFocus];
+    
+            [itemImageArray addObject:[itemImage autorelease]];
+            [itemArray addObject:toolbarItem];
+        }
     }
 
     //Display the customization palette
@@ -151,7 +155,7 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    return([itemDict count]);
+    return([itemArray count]);
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
@@ -161,9 +165,9 @@ static AIMiniToolbarCenter *defaultCenter = nil;
     if([identifier compare:@"icon"] == 0){
         return([itemImageArray objectAtIndex:row]);
     }else if([identifier compare:@"label"] == 0){
-        return([[[itemDict allValues] objectAtIndex:row] paletteLabel]);
+        return([[itemArray objectAtIndex:row] paletteLabel]);
     }else{
-        return([[itemDict allValues] objectAtIndex:row]);
+        return([itemArray objectAtIndex:row]);
     }
 }
 

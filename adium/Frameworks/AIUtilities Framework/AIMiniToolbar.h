@@ -44,6 +44,7 @@
 - (void)setIdentifier:(NSString *)inIdentifier;
 - (NSString *)identifier;
 - (void)configureForObjects:(NSDictionary *)inObjects;
+- (NSDictionary *)configurationObjects;
 - (void)insertItemWithIdentifier:(NSString *)itemIdentifier atIndex:(int)index;
 - (void)insertItemWithIdentifier:(NSString *)itemIdentifier atIndex:(int)index allowDuplicates:(BOOL)allowDuplicates;
 - (void)removeItemAtIndex:(int)index;

@@ -136,29 +136,26 @@
 //    }
 }
 
-- (void)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
+- (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
 {
     NSString	*identifier = [inToolbarItem identifier];
+    BOOL	enabled = YES;
 
     if([identifier compare:@"NewMessage"] == 0){
         AIContactObject		*handle = [inObjects objectForKey:@"ContactObject"];
-   
-        if(handle && [handle isKindOfClass:[AIContactHandle class]]){
-            [inToolbarItem setEnabled:YES];
-        }else{
-            [inToolbarItem setEnabled:NO];
-        }
+        NSView<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
+
+        enabled = (handle && [handle isKindOfClass:[AIContactHandle class]] && !text);
 
     }else if([identifier compare:@"SendMessage"] == 0 || [identifier compare:@"SendMessageButton"] == 0){
         AIContactObject		*handle = [inObjects objectForKey:@"ContactObject"];
         NSView<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
-    
-        if(handle && [handle isKindOfClass:[AIContactHandle class]] && text){
-            [inToolbarItem setEnabled:YES];
-        }else{
-            [inToolbarItem setEnabled:NO];
-        }
+
+        enabled = (handle && [handle isKindOfClass:[AIContactHandle class]] && text);
     }
+
+    [inToolbarItem setEnabled:enabled];
+    return(enabled);
 }
 
 

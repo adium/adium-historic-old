@@ -21,7 +21,7 @@
 #define AIMiniToolbar_ItemsChanged	@"AIMiniToolbar_ItemsChanged"
 #define AIMiniToolbar_RefreshItem	@"AIMiniToolbar_RefreshItem"
 
-@class AIMiniToolbarItem;
+@class AIMiniToolbarItem, AIMiniToolbar;
 
 @interface AIMiniToolbarCenter : NSObject {
     IBOutlet	NSPanel		*panel_customization;
@@ -30,6 +30,7 @@
     BOOL			customizing;
     
     NSMutableArray		*itemImageArray;
+    NSMutableArray		*itemArray;
 
     NSMutableDictionary		*toolbarDict;
     NSMutableDictionary		*itemDict;
@@ -42,7 +43,7 @@
 - (void)registerItem:(AIMiniToolbarItem *)inItem;
 - (AIMiniToolbarItem *)itemWithIdentifier:(NSString *)inIdentifier;
 
-- (IBAction)customizeToolbars:(id)sender;
+- (IBAction)customizeToolbar:(AIMiniToolbar *)toolbar;
 - (BOOL)customizing;
 - (IBAction)endCustomization:(id)sender;
 - (void)dragItemAtRow:(int)dragRow fromPoint:(NSPoint)inLocation withEvent:(NSEvent *)inEvent;

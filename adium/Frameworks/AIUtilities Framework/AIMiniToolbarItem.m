@@ -195,7 +195,7 @@
 
 
 //Configure this item
-- (void)configureForObjects:(NSDictionary *)inObjects{
+- (BOOL)configureForObjects:(NSDictionary *)inObjects{
     //Retain the configuration objects
     if(objects != inObjects){
         [objects release]; objects = [inObjects retain];
@@ -203,7 +203,9 @@
 
     //Inform our delegate so it can configure this item
     if(delegate){
-        [delegate configureToolbarItem:self forObjects:inObjects];
+        return([delegate configureToolbarItem:self forObjects:inObjects]);
+    }else{
+        return(YES);
     }
 }
 - (NSDictionary *)configurationObjects{

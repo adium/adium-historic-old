@@ -129,9 +129,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     [super dealloc];
 }
 
-- (void)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
+- (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
 {
-
+    return(YES);
 }
 
 

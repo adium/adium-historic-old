@@ -24,6 +24,7 @@
     [toolbarItem setAction:@selector(bold:)];
     [toolbarItem setToolTip:@"Bold"];
     [toolbarItem setEnabled:YES];
+    [toolbarItem setDelegate:self];
     [toolbarItem setPaletteLabel:@"Bold text"];
     [toolbarItem setAllowsDuplicatesInToolbar:NO];
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
@@ -71,9 +72,20 @@
     [textEntryView setAttributedString:text]; 
 }
 
-- (void)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
+- (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
 {
+    NSString	*identifier = [inToolbarItem identifier];
+    BOOL	enabled = YES;
 
+    if([identifier compare:@"Bold"] == 0){
+        AIContactObject		*handle = [inObjects objectForKey:@"ContactObject"];
+        NSView<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
+
+        enabled = (handle && [handle isKindOfClass:[AIContactHandle class]] && text);
+    }
+
+    [inToolbarItem setEnabled:enabled];
+    return(enabled);
 }
         
 @end

@@ -122,6 +122,9 @@
         [item configureForObjects:inObjects];
     }
 }
+- (NSDictionary *)configurationObjects{
+    return(representedObjects);
+}
 
 //Add an item to this toolbar
 - (void)insertItemWithIdentifier:(NSString *)itemIdentifier atIndex:(int)index
@@ -174,7 +177,7 @@
 //Customize this toolbar
 - (IBAction)customize:(id)sender
 {
-    [[AIMiniToolbarCenter defaultCenter] customizeToolbars:nil];
+    [[AIMiniToolbarCenter defaultCenter] customizeToolbar:self];
 }
 
 //Display our contextual menu

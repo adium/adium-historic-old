@@ -18,7 +18,7 @@
 @class AIMiniToolbarItem;
 
 @protocol AIMiniToolbarItemDelegate
-- (void)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects;
+- (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects;
 @end
 
 @interface AIMiniToolbarItem : NSObject {
@@ -65,7 +65,7 @@
 - (void)setFlexibleWidth:(BOOL)inflexibleWidth;
 - (BOOL)flexibleWidth;
 
-- (void)configureForObjects:(NSDictionary *)inObjects;
+- (BOOL)configureForObjects:(NSDictionary *)inObjects;
 - (NSDictionary *)configurationObjects;
 
 @end
