@@ -27,19 +27,25 @@
 
 @implementation AITooltipUtilities
 
-static	NSPanel		*tooltipWindow;
-static	NSTextField	*textField_tooltip;
-static	NSString	*tooltipString;
-static	NSPoint		tooltipPoint;
+static	NSPanel			*tooltipWindow;
+static	NSTextField		*textField_tooltip;
+static	NSString		*tooltipString;
+static	NSPoint			tooltipPoint;
+static	AITooltipOrientation	tooltipOrientation;
 
 //Tooltips
-+ (void)showTooltipWithString:(NSString *)inString onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint
++ (void)showTooltipWithString:(NSString *)inString onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
 {    
     if(inString){ //If passed a string
+        BOOL	newLocation = (!NSEqualPoints(inPoint,tooltipPoint) || tooltipOrientation != inOrientation);
+
+        //Update point and orientation
+        tooltipPoint = inPoint;
+        tooltipOrientation = inOrientation;
+
         if(!tooltipString){
             [self _createTooltip];
 
-            tooltipPoint = inPoint;
             [tooltipString release]; tooltipString = [inString retain];
             [textField_tooltip setStringValue:tooltipString];
 
@@ -48,15 +54,14 @@ static	NSPoint		tooltipPoint;
         }else{
             //Update the existing tooltip's string and or position
             if([inString compare:tooltipString] != 0){
-                tooltipPoint = inPoint;
                 [tooltipString release]; tooltipString = [inString retain];
                 [textField_tooltip setStringValue:tooltipString];
                 [self _sizeTooltip];
             }
-            if(!NSEqualPoints(inPoint,tooltipPoint)){
-                tooltipPoint = inPoint;
+            if(newLocation){
                 [tooltipWindow setFrameOrigin:[self _tooltipFrameOrigin]];
             }
+            
         }
 
     }else{ //If passed a nil string, hide any existing tooltip
@@ -65,7 +70,6 @@ static	NSPoint		tooltipPoint;
         }
 
     }
-
 }
 
 //Create the tooltip
@@ -134,16 +138,31 @@ static	NSPoint		tooltipPoint;
     NSRect	tooltipRect = [textField_tooltip bounds];
 
     //Adjust the tooltip so it fits completely on the screen
-    if(tooltipPoint.x > (screenRect.origin.x + screenRect.size.width - tooltipRect.size.width)){
-        tooltipRect.origin.x = tooltipPoint.x - 2 - tooltipRect.size.width;
-    }else{
-        tooltipRect.origin.x = tooltipPoint.x + 10;
-    }
+    if(tooltipOrientation == TooltipAbove){
+        if(tooltipPoint.x > (screenRect.origin.x + screenRect.size.width - tooltipRect.size.width)){
+            tooltipRect.origin.x = tooltipPoint.x - 2 - tooltipRect.size.width;
+        }else{
+            tooltipRect.origin.x = tooltipPoint.x;
+        }
 
-    if(tooltipPoint.y < (screenRect.origin.y + tooltipRect.size.height)){
-        tooltipRect.origin.y = tooltipPoint.y + 2;
+        if(tooltipPoint.y > (screenRect.origin.y + screenRect.size.height - tooltipRect.size.height)){
+            tooltipRect.origin.y = screenRect.origin.y + screenRect.size.height - tooltipRect.size.height;
+        }else{
+            tooltipRect.origin.y = tooltipPoint.y + 2;
+        }
+        
     }else{
-        tooltipRect.origin.y = tooltipPoint.y - 2 - tooltipRect.size.height;
+        if(tooltipPoint.x > (screenRect.origin.x + screenRect.size.width - tooltipRect.size.width)){
+            tooltipRect.origin.x = tooltipPoint.x - 2 - tooltipRect.size.width;
+        }else{
+            tooltipRect.origin.x = tooltipPoint.x + 10;
+        }
+
+        if(tooltipPoint.y < (screenRect.origin.y + tooltipRect.size.height)){
+            tooltipRect.origin.y = tooltipPoint.y + 2;
+        }else{
+            tooltipRect.origin.y = tooltipPoint.y - 2 - tooltipRect.size.height;
+        }
     }
 
     return(tooltipRect.origin);
