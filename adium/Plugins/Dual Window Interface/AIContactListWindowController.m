@@ -36,6 +36,7 @@
 - (id)initWithInterface:(id <AIContainerInterface>)inInterface;
 - (void)contactSelectionChanged:(NSNotification *)notification;
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification;
+- (void)centerWindowOnMainScreenIfNeeded:(NSNotification *)notification;
 - (void)windowDidLoad;
 - (BOOL)windowShouldClose:(id)sender;
 - (NSRect)_desiredWindowFrame;
@@ -65,6 +66,11 @@
     //Observe preference changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     
+	//Watch for resolution and screen configuration changes
+    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
+														   selector:@selector(centerWindowOnMainScreenIfNeeded:) 
+															   name:NSApplicationDidChangeScreenParametersNotification 
+															 object:nil];
     return(self);
 }
 
@@ -73,6 +79,7 @@
 {
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 	
     [interface release];
 	[toolbarItems release];
@@ -84,13 +91,6 @@
 - (void)windowDidLoad
 {
     NSString	*savedFrame;
-    
-    //Restore the window position
-    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
-    if(savedFrame) [[self window] setFrame:NSRectFromString(savedFrame) display:YES];            
-	topLeftAnchorPoint.x = NSMinX([[self window] frame]);
-	topLeftAnchorPoint.y = NSMaxY([[self window] frame]);
-    minWindowSize = [[self window] minSize];
     
     //Swap in the contact list view
     contactListViewController = [[[adium interfaceController] contactListViewController] retain];
@@ -110,6 +110,19 @@
     //Toolbar (can not be added to a borderless window)
     if(!borderless) [self _configureToolbar];
     
+    //Restore the window position
+    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
+    if(savedFrame) {
+		[[self window] setFrame:NSRectFromString(savedFrame) display:YES];
+	}
+	
+	//Make sure our window is on a screen; if it isn't, center it on the main screen
+	[self centerWindowOnMainScreenIfNeeded:nil];
+	
+	topLeftAnchorPoint.x = NSMinX([[self window] frame]);
+	topLeftAnchorPoint.y = NSMaxY([[self window] frame]);
+    minWindowSize = [[self window] minSize];
+	
     //Apply initial preference-based settings
     [self preferencesChanged:nil];
     
@@ -377,13 +390,22 @@
 }
 
 //Remember the top-left anchor point when user moves the window.
-- (void)windowDidMove:(NSNotification *)aNotification{
+- (void)windowDidMove:(NSNotification *)notification
+{
 	if(autoResizeVertically){
 		topLeftAnchorPoint.x = NSMinX([[self window] frame]);
 		topLeftAnchorPoint.y = NSMaxY([[self window] frame]);
 	}
 }
 
+- (void)centerWindowOnMainScreenIfNeeded:(NSNotification *)notification
+{
+	if (![[self window] screen]){
+		[[self window] setFrameOrigin:[[NSScreen mainScreen] frame].origin];
+		[[self window] center];
+	}
+}
+	
 //Prevent the system from altering our window positioning
 - (BOOL)shouldCascadeWindows
 {
