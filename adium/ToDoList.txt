@@ -61,6 +61,7 @@ Other:
     	+ Don't spawn new windows when we're hidden, instead que them and open the windows next time we're unhidden
 	+ Display new mail notices for the accounts that support it.  This is bloat - but some people expect it.
 	+ Symlink the iChat emoticons much like we symlink the iChat sounds
+	+ Allow all xtras to be installed without a restart
 
 //-------------------------------------------------------------------------------------------------------
 // Big Stuff
