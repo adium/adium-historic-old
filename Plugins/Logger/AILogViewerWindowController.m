@@ -400,17 +400,16 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 				}
 				
 				if(logText && [logText length]){
-					NSRange     scrollRange = NSMakeRange([logText length],0);
-					
 					//Add pretty formatting to links
 					logText = [logText stringByAddingFormattingForLinks];
-                                        
-                                        if(showEmoticons)
-                                        {
-                                            //Filter appropriately (replaces emoticons)
-                                            logText = [[adium contentController] filterAttributedString:logText usingFilterType:AIFilterMessageDisplay direction:AIFilterOutgoing context:nil];
-                                        }
+
+					//Filter emoticons
+					if(showEmoticons){
+						logText = [[adium contentController] filterAttributedString:logText usingFilterType:AIFilterMessageDisplay direction:AIFilterOutgoing context:nil];
+					}
 					
+					NSRange     scrollRange = NSMakeRange([logText length],0);
+
 					//If we are searching by content, highlight the search results
 					if(searchMode == LOG_SEARCH_CONTENT){
 						NSEnumerator    *enumerator;
