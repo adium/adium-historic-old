@@ -65,6 +65,7 @@
 //Status
 - (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey;
 - (void)setStatusObject:(id)value withOwner:(id)owner forKey:(NSString *)key notify:(BOOL)notify;
+- (void)setStatusObject:(id)value primary:(BOOL)primary withOwner:(id)owner forKey:(NSString *)key notify:(BOOL)notify;
 - (void)setStatusObject:(id)value withOwner:(id)owner forKey:(NSString *)key afterDelay:(NSTimeInterval)delay;
 - (void)notifyOfChangedStatusSilently:(BOOL)silent;
 - (id)statusObjectForKey:(NSString *)key withOwner:(id)owner;
