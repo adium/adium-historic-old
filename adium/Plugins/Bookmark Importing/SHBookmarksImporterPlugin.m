@@ -122,12 +122,12 @@ static NSMenu       *bookmarkSets;
     //      1. the menuItem being validated must be the main "Bookmarks" menu item, else stop.
     //      2. we get the item array for the menu and enumerate it.
     //      3. for each menu item:
-    //          1. check to see that the menu item's represented item impliments the importer protocol, else stop.
+    //          1. check to see that the menu item's represented item impliments the SHBookmarkImporter protocol, else stop.
     //          2. check to see that the relevant bookmarks file has been updated, else go to the next enumerator object.
-    //          3. remove the menu item's submenu's items and call the importer to give us a rebuild menu of bookmarks
+    //          3. remove the menu item's submenu's items and call the importer to give us a rebuilt menu of bookmarks
     //          4. copy the new menu into the contextual "Bookmarks" menu item submenu.
     //
-    // The actual implementation is exactly the above, but if the item isn't the main menu's "Bookmarks" item
+    // The actual implementation is the same as above, but if the item isn't the main menu's "Bookmarks" item
     // we check to see if it's the analogous contextual menu item, and repeat, adjusting the menu copying portion appropriately.
     
     if([(NSMenuItem *)menuItem isEqualTo:bookmarkRootMenuItem]){
