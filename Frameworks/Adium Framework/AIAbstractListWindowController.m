@@ -18,6 +18,8 @@
 #import "AIListGroupBubbleCell.h"
 #import "AIListGroupBubbleToFitCell.h"
 
+#define FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10];
+
 @implementation AIAbstractListWindowController
 
 - (id)initWithWindowNibName:(NSString *)windowNibName
@@ -155,9 +157,18 @@
 	[contentCell setExtendedStatusIsBelowName:[[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION] boolValue]];
 	
 	//Fonts
-	[contentCell setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_FONT] representedFont]];
-	[contentCell setStatusFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_FONT] representedFont]];
-	[groupCell setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont]];
+	{
+		NSFont	*theFont;
+		
+		theFont = [[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_FONT] representedFont];
+		[contentCell setFont:(theFont ? theFont : FONT_IF_FONT_NOT_FOUND)];
+		
+		theFont = [[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_FONT] representedFont];
+		[contentCell setFont:(theFont ? theFont : FONT_IF_FONT_NOT_FOUND)];
+		
+		theFont = [[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont];
+		[contentCell setFont:(theFont ? theFont : FONT_IF_FONT_NOT_FOUND)];
+	}
 	
 	//Bubbles special cases
 	if(windowStyle != WINDOW_STYLE_MOCKIE &&
