@@ -27,26 +27,23 @@
     //[[adium contactController] unregisterHandleObserver:self];
 }
 
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
-{
-    NSArray		*modifiedAttributes = nil;
-    
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{    
     if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"] || [inModifiedKeys containsObject:@"Signed Off"]){
-        AIMutableOwnerArray	*hiddenArray = [inObject displayArrayForKey:@"Hidden"];
-        int			online = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
-        int			justSignedOff = [[inObject statusArrayForKey:@"Signed Off"] containsAnyIntegerValueOf:1];
-        
-        //Insert an updated value
-        if(!online && !justSignedOff){
-            [hiddenArray setObject:[NSNumber numberWithInt:YES] withOwner:self]; //Hidden
-        }else{
-            [hiddenArray setObject:nil withOwner:self]; //Remove any 'hidden' value we've previously inserted
-        }
-
-        modifiedAttributes = [NSArray arrayWithObject:@"Hidden"];
-    }
-
-    return(modifiedAttributes);
+		if([inObject isKindOfClass:[AIListContact class]]){
+			int		online = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
+			int		justSignedOff = [[inObject statusArrayForKey:@"Signed Off"] containsAnyIntegerValueOf:1];
+			
+			//Insert an updated value
+			if(!online && !justSignedOff){
+				[inObject setVisible:NO]; //Hidden
+			}else{
+				[inObject setVisible:YES]; //Visible
+			}
+		}
+	}
+	
+    return(nil);
 }
 
 @end

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.42 2003/12/29 04:04:59 evands Exp $
+// $Id: AIAccountController.m,v 1.43 2004/01/08 03:59:45 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -367,19 +367,16 @@
 //Switches the service of the specified account
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService
 {
-    AIAccount	*newAccount = nil;
-    
-    if (inAccount) {
-        NSString    *accountUID = [[[inAccount UID] copy] autorelease]; //Deleting the account will release the UID
-        int		index = [accountArray indexOfObject:inAccount];
+    AIAccount	*newAccount;
+    NSString    *accountUID = [[[inAccount UID] copy] autorelease]; //Deleting the account will release the UID
+    int			index = [accountArray indexOfObject:inAccount];
 	
-        //Delete the existing account
-        [self deleteAccount:inAccount];
-        
-        //Add an account with the new UID
-        newAccount = [self accountOfType:[inService identifier] withUID:accountUID];
-        [self insertAccount:newAccount atIndex:index];
-    }
+    //Delete the existing account
+    [self deleteAccount:inAccount];
+    
+    //Add an account with the new UID
+    newAccount = [self accountOfType:[inService identifier] withUID:accountUID];
+    [self insertAccount:newAccount atIndex:index];
     
     return(newAccount);
 }
@@ -475,8 +472,8 @@
     NSEnumerator	*enumerator;
     AIAccount		*account;
     
-    // Preferred account for this contact --
-    // The preferred account always has priority, as long as it is available for sending content
+    //Preferred account for this contact --
+    //The preferred account always has priority, as long as it is available for sending content
     if(inObject){
         NSString    *accountID = [inObject preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT group:PREF_GROUP_PREFERRED_ACCOUNTS];
 		
@@ -487,18 +484,9 @@
         }
     }
     
-    // Last account used to message anyone --
-    // Next, the last account used to message someone is picked, as long as it is available for sending content
-    NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[inObject serviceID]];
-    if(lastAccountID && (account = [self accountWithID:lastAccountID])){
-        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
-            return(account);
-        }
-    }
-    
-    // First available account that can see the object
-    // If this is the first message opened in this session, the first account with the contact on it's contact list is
-    // choosen
+    //First available account that can see the object
+    //If this is the first message opened in this session, the first account with the contact on it's contact list is
+    //choosen
     {
         enumerator = [accountArray objectEnumerator];
         while((account = [enumerator nextObject])){
@@ -508,21 +496,28 @@
         }        
     }
     
-    // If the handle does not exist on any contact lists, the first account available for sending content is used
-    // First available account that can see the handle --
+    //Last account used to message anyone --
+    //Next, the last account used to message someone is picked, as long as it is available for sending content
+    NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[inObject serviceID]];
+    if(lastAccountID && (account = [self accountWithID:lastAccountID])){
+        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
+            return(account);
+        }
+    }
+    
+    //If the handle does not exist on any contact lists, the first account available for sending content is used
+    //First available account that can see the handle --
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        AIHandle	*handle = [(AIListContact *)inObject handleForAccount:account];
-		
-        if((!handle || [[handle serviceID] compare:[[[account service] handleServiceType] identifier]] == 0) &&
+        if(([[inObject serviceID] compare:[[[account service] handleServiceType] identifier]] == 0) &&
            [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
             return(account);
         }
     }
     
-    // Nothing found (no accounts are available to send)
-    // If no accounts are available, the first one is returned
-    return([accountArray objectAtIndex:0]);
+    //Nothing found (no accounts are available to send)
+    //If no accounts are available, the first one is returned
+    return([accountArray count] ? [accountArray objectAtIndex:0] : nil);
 }
 
 //Watch outgoing content, remembering the user's choice of source account

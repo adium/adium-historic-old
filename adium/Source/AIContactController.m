@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.66 2004/01/07 21:33:10 adamiser Exp $
+// $Id: AIContactController.m,v 1.67 2004/01/08 03:59:46 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -47,6 +47,9 @@
 - (float)_setOrderIndexOfKey:(NSString *)key to:(float)index;
 - (void)_addDelayedUpdate;
 - (void)_performDelayedUpdates:(NSTimer *)timer;
+- (void)loadContactList;
+- (NSArray *)_arrayRepresentationOfGroupContent:(AIListGroup *)inGroup;
+- (void)_loadListObjectsFromGroupContent:(NSArray *)contentArray intoGroup:(AIListGroup *)inGroup;
 @end
 
 //Used to suppress compiler warnings
