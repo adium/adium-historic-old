@@ -76,10 +76,10 @@
 		NSString	*replacement = nil;
 		
 		if([context isKindOfClass:[AIContentObject class]]){
-			replacement = [[context destination] displayName];
+			replacement = [[context destination] UID]; //This exists primarily for AIM compatibility; AIM uses the UID (no formatting).
 		}else if([context isKindOfClass:[AIListObject class]]){
 			replacement = [[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																				  toContact:context] displayName];
+																				  toContact:context] formattedUID];
 		}
 		
 		if(replacement){
