@@ -650,6 +650,29 @@ const char *gaim_url_encode(const char *str);
  */
 gboolean gaim_email_is_valid(const char *address);
 
+/**
+ * This function extracts a list of URIs from the a "text/uri-list" string
+ * It was "borrowed" from gnome_uri_list_extract_uris
+ * 
+ * @param uri_list an uri-list in the standard format.
+ *
+ * @return a GList containing strings allocated with g_malloc that have been 
+ *	splitted from uri-list.
+ */
+GList* gaim_uri_list_extract_uris (const gchar* uri_list);
+
+/**
+ * This function extracts a list of filenames from the a "text/uri-list" string
+ * It was "borrowed" from gnome_uri_list_extract_filenames
+ * 
+ * @param uri_list an uri-list in the standard format.
+ *
+ * @return a GList containing strings allocated with g_malloc that contain the 
+ * 	filenames in the uri-list. Note that unlike gaim_uri_list_extract_uris() 
+ * 	function, this will discard any non-file uri from the result value.
+ */
+GList* gaim_uri_list_extract_filenames (const gchar* uri_list);
+
 /*@}*/
 
 /**************************************************************************
@@ -666,7 +689,7 @@ gboolean gaim_email_is_valid(const char *address);
  *
  * @return The UTF-8 string, or @c NULL if it could not be converted.
  */
-char *gaim_utf8_try_convert(const char *str);
+gchar *gaim_utf8_try_convert(const char *str);
 
 /**
  * Compares two UTF-8 strings.

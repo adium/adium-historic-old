@@ -28,7 +28,7 @@
 
 void jabber_bytestreams_parse(JabberStream *js, xmlnode *packet);
 void jabber_si_parse(JabberStream *js, xmlnode *packet);
-void jabber_si_xfer_ask_send(GaimBlistNode *node, gpointer data);
+void jabber_si_xfer_send(GaimConnection *gc, const char *who, const char *file);
 
 //**Adium
 GaimXfer *jabber_outgoing_xfer_new(GaimConnection *gc, const char *name);
