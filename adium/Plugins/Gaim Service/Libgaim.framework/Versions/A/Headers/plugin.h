@@ -29,11 +29,14 @@
 #include "signals.h"
 #include "value.h"
 
-typedef struct _GaimPlugin     GaimPlugin;         /**< GaimPlugin       */
-typedef struct _GaimPluginInfo GaimPluginInfo;     /**< GaimPluginInfo   */
+typedef struct _GaimPlugin           GaimPlugin;
+typedef struct _GaimPluginInfo       GaimPluginInfo;
+typedef struct _GaimPluginUiInfo     GaimPluginUiInfo;
 typedef struct _GaimPluginLoaderInfo GaimPluginLoaderInfo;
 
 typedef int GaimPluginPriority; /**< Plugin priority. */
+
+#include "pluginpref.h"
 
 /**
  * Plugin types.
@@ -52,6 +55,9 @@ typedef enum
 #define GAIM_PRIORITY_LOWEST  -9999
 
 #define GAIM_PLUGIN_FLAG_INVISIBLE 0x01
+
+#define GAIM_PLUGIN_API_VERSION 3
+#define GAIM_LOADER_API_VERSION 2
 
 /**
  * Detailed information about a plugin.
@@ -81,6 +87,7 @@ struct _GaimPluginInfo
 
 	void *ui_info;
 	void *extra_info;
+	void *prefs_info;
 };
 
 /**
@@ -88,6 +95,8 @@ struct _GaimPluginInfo
  */
 struct _GaimPluginLoaderInfo
 {
+	unsigned int api_version;
+
 	GList *exts;
 
 	gboolean (*probe)(GaimPlugin *plugin);
@@ -113,6 +122,18 @@ struct _GaimPlugin
 
 #define GAIM_PLUGIN_LOADER_INFO(plugin) \
 	((GaimPluginLoaderInfo *)(plugin)->info->extra_info)
+
+struct _GaimPluginUiInfo {
+	GaimPluginPrefFrame *(*get_plugin_pref_frame)(GaimPlugin *plugin);
+
+	void *iter;                                           /**< Reserved */
+};
+
+#define GAIM_PLUGIN_HAS_PREF_FRAME(plugin) \
+	((plugin)->info != NULL && (plugin)->info->prefs_info != NULL)
+
+#define GAIM_PLUGIN_UI_INFO(plugin) \
+	((GaimPluginUiInfo*)(plugin)->info->prefs_info)
 
 /**
  * Handles the initialization of modules.
@@ -364,7 +385,7 @@ void gaim_plugins_unregister_probe_notify_cb(void (*func)(void *));
 /**
  * Registers a function that will be called when a plugin is loaded.
  *
- * @param func The callback functino.
+ * @param func The callback function.
  * @param data Data to pass to the callback.
  */
 void gaim_plugins_register_load_notify_cb(void (*func)(GaimPlugin *, void *),
@@ -373,14 +394,14 @@ void gaim_plugins_register_load_notify_cb(void (*func)(GaimPlugin *, void *),
 /**
  * Unregisters a function that would be called when a plugin is loaded.
  *
- * @param func The callback functino.
+ * @param func The callback function.
  */
 void gaim_plugins_unregister_load_notify_cb(void (*func)(GaimPlugin *, void *));
 
 /**
  * Registers a function that will be called when a plugin is unloaded.
  *
- * @param func The callback functino.
+ * @param func The callback function.
  * @param data Data to pass to the callback.
  */
 void gaim_plugins_register_unload_notify_cb(void (*func)(GaimPlugin *, void *),
@@ -389,7 +410,7 @@ void gaim_plugins_register_unload_notify_cb(void (*func)(GaimPlugin *, void *),
 /**
  * Unregisters a function that would be called when a plugin is unloaded.
  *
- * @param func The callback functino.
+ * @param func The callback function.
  */
 void gaim_plugins_unregister_unload_notify_cb(void (*func)(GaimPlugin *,
 														   void *));

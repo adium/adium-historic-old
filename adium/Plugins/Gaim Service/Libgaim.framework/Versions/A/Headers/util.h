@@ -127,12 +127,12 @@ void gaim_quotedp_decode (const char *str, char **ret_str, int *ret_len);
  * =? designates the beginning of the encoded-word
  * ?= designates the end of the encoded-word
  * ? segments the encoded word into three pieces.  The first piece is
- *   the character set, the second peice is the encoding, and the
+ *   the character set, the second piece is the encoding, and the
  *   third piece is the encoded text.
  *
  * @param str The string to convert back.
  *
- * @return The readble string.
+ * @return The readable string.
  */
 char *gaim_mime_decode_field (const char *str);
 
@@ -426,15 +426,13 @@ gboolean gaim_str_has_suffix(const char *s, const char *x);
  * Looks for %n, %d, or %t in a string, and replaces them with the
  * specified name, date, and time, respectively.
  *
- * The returned string is stored in a static buffer, so the result
- * should be g_strdup()'d if it's intended to be used for long.
- *
  * @param str  The string that may contain the special variables.
  * @param name The sender name.
  *
- * @return A new string where the special variables are expanded.
+ * @return A newly allocated string where the special variables are
+ *         expanded.  This should be g_free'd by the caller.
  */
-const char *gaim_str_sub_away_formatters(const char *str, const char *name);
+gchar *gaim_str_sub_away_formatters(const char *str, const char *name);
 
 /**
  * Duplicates a string and replaces all newline characters from the

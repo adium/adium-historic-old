@@ -55,13 +55,6 @@ struct proto_chat_entry {
 	gboolean secret;
 };
 
-struct proto_pref {
-	char *key;
-	char *label;
-	int min;
-	int max;
-};
-
 #endif /* _MULTI_H_ */
 
 /* A big line. */
