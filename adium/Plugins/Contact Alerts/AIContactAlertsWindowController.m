@@ -38,6 +38,9 @@
 - (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu;
 - (NSMenuItem *)eventMenuItem:(NSString *)event withDisplay:(NSString *)displayName;
 - (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name;
+- (void)testSelectedEvent;
+- (void) removeAllSubviews:(NSView *)view;
+- (void) configureWithSubview:(NSView *)view_inView;
 @end
 
 @implementation AIContactAlertsWindowController
@@ -67,6 +70,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 - (IBAction)closeWindow:(id)sender
 {
     if([self windowShouldClose:nil]){
+        [self removeAllSubviews:view_main];
         //Save the window position
         [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                              forKey:KEY_CONTACT_ALERTS_WINDOW_FRAME
@@ -112,24 +116,23 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
     [tableView_actions setDataSource:self];
 
-    [popUp_actionDetails setEnabled:NO];
-    [popUp_actionDetails removeAllItems];
-    [textField_actionDetails setEnabled:NO];
     [textField_actionDetails setDelegate:self];
     [button_delete setEnabled:NO];
     [button_oneTime setEnabled:NO];
 
-    [textField_description_popUp setStringValue:@""];
-    [textField_description_textField setStringValue:@""];
-
     [eventActionArray release];
     eventActionArray =  [[[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject] retain];
 
+    [self removeAllSubviews:view_main];
+    [view_details release];    view_details = view_blank; [view_details retain];
+    [view_main addSubview:view_details];
+    [view_main setAutoresizingMask:NSViewMaxYMargin];
+
     if (!eventActionArray)
-         eventActionArray = [[NSMutableArray alloc] init];
+        eventActionArray = [[NSMutableArray alloc] init];
     else
         if ([eventActionArray count]) [tableView_actions selectRow:0 byExtendingSelection:NO];
-   
+
     //Update the outline view
     [tableView_actions reloadData];
 }
@@ -198,7 +201,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 - (IBAction)actionBounceDock:(id)sender
 {    [self configureForMenuDetails:@"Dock behavior:" menuToDisplay:[self behaviorListMenu]];	}
 
-//Builds and returns an event menu
+    //Builds and returns an event menu
 - (NSMenu *)eventMenu
 {
     NSMenu		*eventMenu = [[NSMenu alloc] init];
@@ -216,7 +219,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [eventMenu addItem:[self eventMenuItem:@"Typing" withDisplay:@"Is Typing"]];
     [eventMenu addItem:[self eventMenuItem:@"UnviewedContent" withDisplay:@"Has Unviewed Content"]];
     [eventMenu addItem:[self eventMenuItem:@"Warning" withDisplay:@"Was Warned"]];
-    
+
     return(eventMenu);
 }
 
@@ -233,7 +236,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     }
     else
         [actionDict setObject:@"1" forKey:KEY_EVENT_STATUS];
-    
+
     //Add the new event
     [actionDict setObject:[[sender representedObject] objectForKey:KEY_EVENT_DISPLAYNAME] forKey:KEY_EVENT_DISPLAYNAME];
     [actionDict setObject:event forKey:KEY_EVENT_NOTIFICATION];
@@ -244,7 +247,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [self saveEventActionArray];
 
     [tableView_actions selectRow:([eventActionArray count]-1) byExtendingSelection:NO]; //select the new event
-    
+
     //Update the outline view
     [tableView_actions reloadData];
 
@@ -267,26 +270,59 @@ static AIContactAlertsWindowController *sharedInstance = nil;
         details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
 
     [textField_description_textField setStringValue:instructions];
-    [textField_description_popUp setStringValue:@""];
-    [popUp_actionDetails setEnabled:NO];
-    [popUp_actionDetails removeAllItems];
-    [textField_actionDetails setEnabled:YES];
-
     [textField_actionDetails setStringValue:(details ? details : @"")];
+
+    if (view_details != view_details_text)
+        [self configureWithSubview:view_details_text];
 }
 
 - (void) configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu
 {
     int row = [tableView_actions selectedRow];
     [textField_description_popUp setStringValue:instructions];
-    [textField_description_textField setStringValue:@""];
-    [popUp_actionDetails setEnabled:YES];
-    [textField_actionDetails setEnabled:NO];
     [popUp_actionDetails setMenu:detailsMenu];
     if (row != -1)
-    {
         [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]]];
+
+    if (view_details != view_details_menu)
+        [self configureWithSubview:view_details_menu];
+}
+
+- (void) configureWithSubview:(NSView *)view_inView
+{
+    [view_main replaceSubview:view_details with:view_blank];
+
+    NSRect	containerFrame = [[self window] frame];
+    NSSize	minimumSize = [[self window] minSize];
+    int 	heightChange = [view_inView frame].size.height - [view_details frame].size.height;
+
+    containerFrame.size.height += heightChange;
+    containerFrame.origin.y -= heightChange;
+    minimumSize.height += heightChange;
+    [[self window] setFrame:containerFrame display:YES animate:YES];
+    [[self window] setMinSize:minimumSize];
+    
+    [view_main replaceSubview:view_blank with:view_inView];
+    [view_main setFrame:[view_inView frame]];
+    
+    [view_details release];
+    view_details = view_inView;
+    [view_details retain];
+    [view_main display];
+}
+
+- (void) removeAllSubviews:(NSView *)view
+{
+    NSArray * subviewsArray = [view subviews];
+    NSEnumerator * enumerator = [subviewsArray objectEnumerator];
+    NSView * theSubview;
+    NSRect	containerFrame = [[self window] frame];
+    while (theSubview = [enumerator nextObject])
+    {
+        containerFrame.size.height -= [theSubview frame].size.height;
+        [theSubview removeFromSuperviewWithoutNeedingDisplay];
     }
+    [[self window] setFrame:containerFrame display:NO animate:NO];
 }
 
 //used for each item of the eventMenu
@@ -310,16 +346,19 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 - (IBAction)deleteEventAction:(id)sender
 {
     int row = [tableView_actions selectedRow];
-    if (row != -1)
+//    if (row != -1)
     {
         //Remove the event
-        [eventActionArray removeObjectAtIndex:[tableView_actions selectedRow]];
+        [eventActionArray removeObjectAtIndex:row];
 
         //Save event sound preferences
         [self saveEventActionArray];
 
         //Update the outline view
         [tableView_actions reloadData];
+    
+        //if any events are left, force the table to trigger its action and modify the view appropriately
+        if ([eventActionArray count]) [self tableViewSelectionDidChange:nil];
     }
 }
 
@@ -332,13 +371,12 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     while(actionDict = [actionsEnumerator nextObject])
     {
         NSString * event_status = [actionDict objectForKey:KEY_EVENT_STATUS];
-            NSString * action = [actionDict objectForKey:KEY_EVENT_ACTION];
-            NSString * details = [actionDict objectForKey:KEY_EVENT_DETAILS];
-            NSString * event= [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
-            NSString * delete = [actionDict objectForKey:KEY_EVENT_DELETE];
-            NSString * displayName = [actionDict objectForKey:KEY_EVENT_DISPLAYNAME];
-            NSLog (@"action %@ details %@ delete %@ event %@ displayName %@ status %@",action,details,delete,event,displayName,event_status);
-            
+        NSString * action = [actionDict objectForKey:KEY_EVENT_ACTION];
+        NSString * details = [actionDict objectForKey:KEY_EVENT_DETAILS];
+        NSString * event= [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
+        NSString * delete = [actionDict objectForKey:KEY_EVENT_DELETE];
+        NSString * displayName = [actionDict objectForKey:KEY_EVENT_DISPLAYNAME];
+        NSLog (@"action %@ details %@ delete %@ event %@ displayName %@ status %@",action,details,delete,event,displayName,event_status);
     }
     */
     [[owner preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
@@ -420,7 +458,6 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 //Builds and returns a dock behavior list menu
 - (NSMenu *)behaviorListMenu
 {
-//    NSMenu		*behaviorMenu = [[[NSMenu alloc] init] autorelease];
     NSMenu		*behaviorMenu = [[NSMenu alloc] init];
 
     //Build the menu items
@@ -470,7 +507,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 - (IBAction)oneTimeEvent:(id)sender
 {
     int row = [tableView_actions selectedRow];
-    if (row != -1)
+//    if (row != -1)
     {
         NSMutableDictionary	*selectedActionDict;
 
@@ -566,23 +603,20 @@ static AIContactAlertsWindowController *sharedInstance = nil;
         NSDictionary * selectedActionDict = [eventActionArray objectAtIndex:row]; 
         NSString *action = [selectedActionDict objectForKey:KEY_EVENT_ACTION];
         NSString *delete = [selectedActionDict objectForKey:KEY_EVENT_DELETE];
-        [actionMenu performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]];
+        [actionMenu performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
         if ([delete compare:@"YES"] == 0)
             [button_oneTime setState:NSOnState];
         else
             [button_oneTime setState:NSOffState];
+        [button_delete setEnabled:YES];
+        [button_oneTime setEnabled:YES];
     }
     else //no selection
     {
-        [popUp_actionDetails setEnabled:NO];
-        [popUp_actionDetails removeAllItems];
-        [textField_actionDetails setEnabled:NO];
-
-        [textField_description_popUp setStringValue:@""];
-        [textField_description_textField setStringValue:@""];
+        [self configureWithSubview:view_blank];
+        [button_delete setEnabled:NO];
+        [button_oneTime setEnabled:NO];
     }
-    [button_delete setEnabled:(row != -1)]; //Enable/disable the delete button correctly
-    [button_oneTime setEnabled:(row != -1)];
 }
 
 //editing is over
@@ -599,7 +633,6 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
 - (BOOL)shouldSelectRow:(int)inRow
 {
-
     return(YES);
 }
 
@@ -618,6 +651,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [activeContactObject release];
     [eventActionArray release];
     [popUp_addEvent release];
+    [view_details release];
     [super dealloc];
 }
 
@@ -627,12 +661,17 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     NSString	*savedFrame;
 
     //Restore the window position
+    NSSize minimum = [[self window] minSize];
+    NSRect defaultFrame = [[self window] frame];
     savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_CONTACT_ALERTS_WINDOW_FRAME];
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
+        NSRect newFrame = [[self window] frame];
+        newFrame.size.height = defaultFrame.size.height;
+        [[self window] setFrame:newFrame display:YES];
+        [[self window] setMinSize:minimum];
     }else{
         [[self window] center];
     }
-
 }
 @end
