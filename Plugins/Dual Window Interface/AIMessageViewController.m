@@ -114,7 +114,7 @@
 	[controllerView_messages setFrame:[scrollView_messages frame]];
 	
 	//scrollView_messages is originally a placeholder; replace it with controllerView_messages
-	[[scrollView_messages superview] replaceSubview:scrollView_messages with:controllerView_messages];
+	[[customView_messages superview] replaceSubview:customView_messages with:controllerView_messages];
 	
 	//scrollView_messages should now be a containing view from the controller; it may or may not be the same as controllerView_messages
 	scrollView_messages = [messageViewController messageScrollView];
@@ -584,8 +584,7 @@
 			textHeight = entryMinHeight;
 		}
 
-		//Why magic + 1?
-		targetRect = NSMakeRect(superFrame.origin.y, superFrame.origin.x, superFrame.size.width + 1, textHeight);
+		targetRect = NSMakeRect(superFrame.origin.y, superFrame.origin.x, superFrame.size.width, textHeight);
 		if(!NSEqualSizes([scrollView_outgoing frame].size, targetRect.size)){
 			[scrollView_outgoing setHasVerticalScroller:(textHeight == entryMaxHeight)];
 			[scrollView_outgoing setFrame:targetRect];
@@ -598,8 +597,8 @@
 		//Split View with UserList and Messages.  Why magic + 1's?
 		targetRect = NSMakeRect(superFrame.origin.x,
 								superFrame.origin.y,
-								(superFrame.size.width + 1),
-								superFrame.size.height + 1);
+								(superFrame.size.width),
+								superFrame.size.height);
 		if(!NSEqualRects([splitView_messages frame], targetRect)){
 			[splitView_messages setFrame:targetRect];
 			[splitView_messages setNeedsDisplay:YES];

@@ -28,7 +28,8 @@
 	float								entryMinHeight;
 		
 				NSView					*controllerView_messages;
-    IBOutlet	NSView					*scrollView_messages;
+	IBOutlet	NSView					*scrollView_messages;
+	IBOutlet	NSView					*customView_messages;
 
 	IBOutlet	NSSplitView				*splitView_messages;
 	IBOutlet	NSSplitView				*splitView_textEntryHorizontal;

@@ -27,6 +27,7 @@
             OUTLETS = {
                 "button_inviteUser" = NSButton; 
                 "button_send" = AIPlasticButton; 
+                "customView_messages" = NSView; 
                 delegate = id; 
                 "scrollView_messages" = NSView; 
                 "scrollView_outgoing" = NSScrollView; 
