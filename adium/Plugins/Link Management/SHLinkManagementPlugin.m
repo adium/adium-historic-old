@@ -43,16 +43,18 @@
 {
     //add a new link
     NSResponder         *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-    [[[SHLinkEditorWindowController alloc] initAddLinkWindowControllerWithResponder:responder] autorelease];
-    
+    if([responder isKindOfClass:[NSTextView class]]){
+        [[[SHLinkEditorWindowController alloc] initAddLinkWindowControllerWithResponder:responder] autorelease];
+    }
 }
 
 - (IBAction)editFormattedLink:(id)sender
 {
     //edit existing link/text
     NSResponder         *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-    [[[SHLinkEditorWindowController alloc] initEditLinkWindowControllerWithResponder:responder] autorelease];
-    
+    if([responder isKindOfClass:[NSTextView class]]) {
+        [[[SHLinkEditorWindowController alloc] initEditLinkWindowControllerWithResponder:responder] autorelease];
+    }
 }
 
 @end
