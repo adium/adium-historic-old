@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.53 2004/07/09 21:00:57 evands Exp $
+// $Id: AIPreferenceController.m,v 1.54 2004/07/27 19:15:39 evands Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -36,8 +36,8 @@
 	objectPrefCache = [[NSMutableDictionary alloc] init];
     themablePreferences = [[NSMutableDictionary alloc] init];
     delayedNotificationGroups = [[NSMutableSet alloc] init];
-    shouldDelay = NO;
-    
+    preferenceChangeDelays = 0;
+	
     //Create the 'ByObject' and 'Accounts' object specific preference directory
 	[[NSFileManager defaultManager] createDirectoriesForPath:[[[owner loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]];
 	[[NSFileManager defaultManager] createDirectoriesForPath:[[[owner loginController] userDirectory] stringByAppendingPathComponent:ACCOUNT_PREFS_PATH]];
@@ -269,7 +269,7 @@
     }
     [self savePreferences:prefDict forGroup:groupName];
 	
-	if (shouldDelay) {
+	if (preferenceChangeDelays > 0) {
         [delayedNotificationGroups addObject:groupName];
     } else {
         //Broadcast a group changed notification
@@ -283,9 +283,13 @@
 //This should be used like [lockFocus] / [unlockFocus] around groups of preference changes
 - (void)delayPreferenceChangedNotifications:(BOOL)inDelay
 {
-    if (inDelay != shouldDelay) {
-        shouldDelay = inDelay;
-        if (!inDelay) {
+	if (inDelay){
+		preferenceChangeDelays++;
+	}else{
+		preferenceChangeDelays--;
+	}
+	
+    if (!preferenceChangeDelays) {
             NSEnumerator    *enumerator = [delayedNotificationGroups objectEnumerator];
             NSString        *groupName;
             while (groupName = [enumerator nextObject])
@@ -293,7 +297,6 @@
 														  object:nil
 														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",nil]];
             [delayedNotificationGroups removeAllObjects];
-        }
     }
 }
 
@@ -321,7 +324,9 @@
 {
     NSString	*path = [[owner loginController] userDirectory];
     
-    [prefDict writeToPath:path withName:groupName];
+    if (![prefDict writeToPath:path withName:groupName]){
+		NSLog(@"preferenceController: Error writing %@ to %@ withName %@",prefDict,path,groupName);
+	}
 }
 
 @end

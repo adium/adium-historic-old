@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.h,v 1.21 2004/05/27 15:52:17 dchoby98 Exp $ 
+// $Id: AIPreferenceController.h,v 1.22 2004/07/27 19:15:39 evands Exp $ 
 
 //Preference groups
 #define PREF_GROUP_GENERAL              @"General"
@@ -62,7 +62,7 @@ typedef enum {
     NSMutableDictionary		*themablePreferences;
 	NSMutableDictionary		*objectPrefCache;			//Object specific preferences
     
-    BOOL					shouldDelay;
+    int						preferenceChangeDelays;
     NSMutableSet			*delayedNotificationGroups;  //Group names for delayed notifications
 }
 
