@@ -532,7 +532,10 @@ void Adium_HandleSignal(int i){
 
 	//Copy each discovered path into the pathArray after adding our subfolder path
 	while(path = [searchPathEnumerator nextObject]){
-		[pathArray addObject:[path stringByAppendingPathComponent:adiumFolderName]];
+		NSString	*fullPath = [path stringByAppendingPathComponent:adiumFolderName];
+		if([[NSFileManager defaultManager] fileExistsAtPath:fullPath]) {
+			[pathArray addObject:fullPath];
+		}
 	}
 	
 	//Add the path to the resource in Adium's bundle
