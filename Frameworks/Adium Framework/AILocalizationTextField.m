@@ -33,6 +33,11 @@
 	[self _handleSizingWithOldFrame:oldFrame stringValue:inStringValue];
 }
 
+- (NSControl *)viewForSizing
+{
+	return(self);
+}
+
 #include "AILocalizationControl.m"
 
 @end

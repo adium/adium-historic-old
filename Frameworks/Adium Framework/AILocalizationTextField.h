@@ -17,10 +17,4 @@
 	AILocalizationAnchorMovementType	rightAnchorMovementType;
 }
 
-- (void)_resizeWindow:(NSWindow *)inWindow leftBy:(float)difference;
-- (void)_resizeWindow:(NSWindow *)inWindow rightBy:(float)difference;
-- (void)setRightAnchorMovementType:(AILocalizationAnchorMovementType)inType;
-
-- (void)_handleSizingWithOldFrame:(NSRect)oldFrame stringValue:(NSString *)inStringValue;
-
 @end

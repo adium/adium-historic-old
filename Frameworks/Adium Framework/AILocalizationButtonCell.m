@@ -1,19 +1,19 @@
 //
-//  AILocalizationButton.m
+//  AILocalizationButtonCell.m
 //  Adium
 //
-//  Created by Evan Schoenberg on 12/3/04.
+//  Created by Evan Schoenberg on 12/31/04.
 //  Copyright 2004-2005 The Adium Team. All rights reserved.
 //
 
-#import "AILocalizationButton.h"
+#import "AILocalizationButtonCell.h"
 
-@implementation AILocalizationButton
 
+@implementation AILocalizationButtonCell
 //Set up our defaults
 - (void)_initLocalizationControl
 {
-	rightAnchorMovementType = AILOCALIZATION_MOVE_SELF;
+	rightAnchorMovementType = AILOCALIZATION_MOVE_ANCHOR;
 }
 
 - (void)setTitle:(NSString *)inTitle
@@ -22,7 +22,7 @@
 	
 	//If the old frame is smaller than our original frame, treat the old frame as that original frame
 	//for resizing and positioning purposes
-	oldFrame  = [self frame];
+	oldFrame  = [[self viewForSizing] frame];
 	if(oldFrame.size.width < originalFrame.size.width){
 		oldFrame = originalFrame;
 	}
@@ -35,7 +35,7 @@
 
 - (NSControl *)viewForSizing
 {
-	return(self);
+	return([self controlView]);
 }
 
 #include "AILocalizationControl.m"
