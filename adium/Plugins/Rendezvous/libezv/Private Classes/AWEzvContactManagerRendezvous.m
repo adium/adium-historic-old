@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.9 2004/06/19 04:51:14 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.10 2004/07/16 02:16:47 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -642,12 +642,12 @@ NSData *decode_dns(char* buffer, int len )
     
     if (resultType == DNSServiceBrowserReplyRemoveInstance) {
 	/* delete the contact */
-        contact = [contacts objectForKey:[[[NSString alloc] initWithUTF8String:replyName] autorelease]];
+        contact = [contacts objectForKey:[NSString stringWithUTF8String:replyName]];
 
 	[[client client] userLoggedOut:contact];
     
 	/* remove the contact from our data structures */
-	[contacts removeObjectForKey:[NSString stringWithCString:replyName]];
+	[contacts removeObjectForKey:[NSString stringWithUTF8String:replyName]];
 	return;
     } else if (resultType != DNSServiceBrowserReplyAddInstance) {
 	AWEzvLog(@"Unknown rendezvous browser return type");
@@ -658,10 +658,10 @@ NSData *decode_dns(char* buffer, int len )
     
     /* initialise contact */
     contact = [[AWEzvContact alloc] init];
-    [contact setUniqueID:[[[NSString alloc] initWithUTF8String:replyName] autorelease]];
+    [contact setUniqueID:[NSString stringWithUTF8String:replyName]];
     [contact setManager:self];
     /* save contact in dictionary */
-    [contacts setObject:contact forKey:[[[NSString alloc] initWithUTF8String:replyName] autorelease]];
+    [contacts setObject:contact forKey:[NSString stringWithUTF8String:replyName]];
     
     /* and resolve contact */
     /* initialise context */
@@ -927,7 +927,7 @@ void av_browse_reply  (DNSServiceBrowserReplyResultType resultType,
 		    void *context) {
     
     AWEzvContactManager *self = context;
-    if ([[self myavname] compare:[[[NSString alloc] initWithUTF8String:replyName] autorelease]] != NSOrderedSame)
+    if ([[self myavname] compare:[NSString stringWithCString:replyName]] != NSOrderedSame)
 	[self browseResult:resultType name:replyName type:replyType domain:replyDomain flags:flags av:YES];
 }
 
@@ -941,7 +941,7 @@ void resolve_reply (struct sockaddr	*interface,
 		    
     AWEzvContact	*contact = context;
     AWEzvContactManager *self = [contact manager];
-    [self updateContact:contact withData:[[AWEzvRendezvousData alloc] initWithPlist:[NSString stringWithCString:txtRecord]] withAddress:address av:NO];
+    [self updateContact:contact withData:[[AWEzvRendezvousData alloc] initWithPlist:[NSString stringWithUTF8String:txtRecord]] withAddress:address av:NO];
 }
 
 /* when we receive a reply to an AV resolve request */
@@ -953,5 +953,5 @@ void av_resolve_reply (struct sockaddr	*interface,
     AWEzvContact	*contact = context;
     AWEzvContactManager *self = [contact manager];
     
-    [self updateContact:contact withData:[[AWEzvRendezvousData alloc] initWithAVTxt:[NSString stringWithCString:txtRecord]] withAddress:address av:YES];
+    [self updateContact:contact withData:[[AWEzvRendezvousData alloc] initWithAVTxt:[NSString stringWithUTF8String:txtRecord]] withAddress:address av:YES];
 }

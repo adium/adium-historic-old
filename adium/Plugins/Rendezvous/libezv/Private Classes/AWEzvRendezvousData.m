@@ -1,9 +1,9 @@
 /*
  * Project:     Libezv
- * File:        AWEzvRendezvousData.m
+ * File:        AWEzvRendezvousData.h
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvRendezvousData.m,v 1.2 2004/06/15 16:08:30 proton Exp $
+ * CVS tag:     $Id: AWEzvRendezvousData.m,v 1.3 2004/07/16 02:16:47 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -303,15 +303,16 @@ NSString	*endn = @"\x00\x00\x00\x00";
 	
 	/* add length of field data, then field data */
 	value = [keys objectForKey:key];
-	fieldlen = [(NSData *)value length];
 	if ([value isKindOfClass: [NSData class]]) {
 	    fieldlen = fieldlen | ~0x7FFF;
+	} else {
+	    fieldlen = strlen([(NSString *)value UTF8String]);
 	}
 	[data appendBytes:&fieldlen length:2];
 	if ([value isKindOfClass: [NSData class]]) {
 	    [data appendBytes:[value bytes] length:[(NSData *)value length]];
 	} else {
-	    [data appendBytes:[value UTF8String] length:[(NSData *)value length]];
+	    [data appendBytes:[value UTF8String] length:strlen([value UTF8String])];
 	}
     }
     
@@ -463,7 +464,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
 	}
     }
     
-    return [NSData dataWithBytes:[infoData UTF8String] length:[infoData length]];
+    return [NSData dataWithBytes:[infoData UTF8String] length:strlen([infoData UTF8String])];
 }
 
 
