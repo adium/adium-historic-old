@@ -17,7 +17,7 @@
 #import "AIContactController.h"
 #import "AIContactIdlePlugin.h"
 #import "AIInterfaceController.h"
-#import <AIUtilities/BZArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 #import <Adium/AIListObject.h>
 
 #define IDLE_UPDATE_INTERVAL	60.0

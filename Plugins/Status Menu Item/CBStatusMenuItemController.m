@@ -20,7 +20,7 @@
 #import "AIStatusController.h"
 #import "CBStatusMenuItemController.h"
 #import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/BZArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>

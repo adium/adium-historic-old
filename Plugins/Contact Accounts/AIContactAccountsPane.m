@@ -23,6 +23,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIListGroup.h>
 #import <Adium/AILocalizationTextField.h>
 #import <Adium/AIMetaContact.h>
 

@@ -18,7 +18,7 @@
 #import "AIViewAdditions.h"
 #import "AIEventAdditions.h"
 #import "AICustomTabDragging.h"
-#import "ESArrayAdditions.h"
+#import "AIArrayAdditions.h"
 #import "AIWindowAdditions.h"
 #import "ESImageAdditions.h"
 

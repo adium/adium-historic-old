@@ -12554,7 +12554,7 @@
 			sourceTree = "<group>";
 		};
 		4B292D3107A9C8E100C5F882 = {
-			fileEncoding = 30;
+			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIStatusController.m;

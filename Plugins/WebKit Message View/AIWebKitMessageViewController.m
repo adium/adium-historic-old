@@ -23,7 +23,7 @@
 #import "ESWebKitMessageViewPreferences.h"
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/BZArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/ESDateFormatterAdditions.h>
 #import <AIUtilities/NEHMutableStringAdditions.h>
 #import <Adium/AIAccount.h>
