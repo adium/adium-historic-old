@@ -165,16 +165,16 @@
 		if (containingGroup)
 			[containingGroup listObject:self didSetStatusObject:value forKey:key];
 		
-		if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
-		[changedStatusKeys addObject:key];
+		//If notify, send out the notification now; otherwise, add it to changedStatusKeys for later notification 
+		if (notify){
+			[[adium contactController] listObjectStatusChanged:self
+											modifiedStatusKeys:[NSArray arrayWithObject:key]
+														silent:NO];
+		}else{
+			if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
+			[changedStatusKeys addObject:key];
+		}
 	}
-    
-    if(notify && [changedStatusKeys count]){
-		[[adium contactController] listObjectStatusChanged:self
-										modifiedStatusKeys:changedStatusKeys
-													silent:NO];
-		[changedStatusKeys release]; changedStatusKeys = nil;
-    }
 }
 
 //Perform a status change after a short delay
@@ -209,7 +209,7 @@
 - (void)notifyOfChangedStatusSilently:(BOOL)silent
 {
     if([changedStatusKeys count]){
-		//Clear changedStatusKeys incase this status change invokes another, and we re-enter this code
+		//Clear changedStatusKeys in case this status change invokes another, and we re-enter this code
 		NSArray	*keys = changedStatusKeys;
 		changedStatusKeys = nil;
 		
