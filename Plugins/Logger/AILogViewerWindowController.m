@@ -226,18 +226,16 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 	}
 }
 
+//
+- (NSString *)adiumFrameAutosaveName
+{
+	return(KEY_LOG_VIEWER_WINDOW_FRAME);
+}
+
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
-    NSString	*savedFrame;
-	
-    //Restore the window position
-    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_LOG_VIEWER_WINDOW_FRAME];
-    if(savedFrame){
-        [[self window] setFrameFromString:savedFrame];
-    }else{
-        [[self window] center];
-    }
+	[super windowDidLoad];
     
 	//Toolbar
 	[self installToolbar];
@@ -314,6 +312,8 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 //Called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
+	[super windowShouldClose:sender];
+	
     //Disable the search field.  If we don't disable the search field, it will often try to call it's target action
     //after the window has closed (and we are gone).  I'm not sure why this happens, but disabling the field
     //before we close the window down seems to prevent the crash.
@@ -323,11 +323,6 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     [self stopSearching];
     [plugin cleanUpLogContentSearching];
     
-    //Save the window position
-    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
-                                         forKey:KEY_LOG_VIEWER_WINDOW_FRAME
-                                          group:PREF_GROUP_WINDOW_POSITIONS];
-	
     //Clean up
     [sharedLogViewerInstance autorelease]; sharedLogViewerInstance = nil;
 	[toolbarItems release];
