@@ -7,7 +7,6 @@
 //
 
 #import "GaimService.h"
-#import "ESGaimAccountViewController.h"
 
 @implementation GaimService
 
