@@ -10,13 +10,14 @@
 
 @interface SHSafariBookmarksImporter : NSObject <SHBookmarkImporter> {
     id               owner;
-    NSMenu          *bookmarksMenu;
-    NSMenu          *bookmarksSupermenu;
+//    NSMenu          *bookmarksMenu;
+//    NSMenu          *bookmarksSupermenu;
     NSDate          *lastModDate;
 }
 
 -(NSMenu *)parseBookmarksForOwner:(id)inObject;
 -(NSString *)menuTitle;
 -(BOOL)bookmarksExist;
+-(BOOL)bookmarksUpdated;
 
 @end
