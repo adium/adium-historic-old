@@ -570,4 +570,40 @@
 	}
 }
 
+//Our default drag image will be cropped incorrectly, so we need a custom one here
+- (NSImage *)dragImageForRows:(NSArray *)dragRows event:(NSEvent *)dragEvent dragImageOffset:(NSPointPointer)dragImageOffset
+{
+	NSRect			rowRect, cellRect;
+	int				row = [[dragRows objectAtIndex:0] intValue];
+	NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
+	NSCell			*cell = [column dataCellForRow:row];
+	NSImage			*image;
+	
+	//Since our cells draw outside their bounds, this drag image code will create a drag image as big as the table row
+	//and then draw the cell into it at the regular size.  This way the cell can overflow it's bounds as normal and not
+	//spill outside the drag image.
+	rowRect = [self rectOfRow:row];
+	cellRect = [self frameOfCellAtColumn:0 row:row];
+	image = [[NSImage alloc] initWithSize:rowRect.size];
+
+	
+	//Draw (Since the OLV is normally flipped, we have to be flipped when drawing)
+	[image setFlipped:YES];
+	[image lockFocus];
+	
+	//Render the cell
+	[[self dataSource] outlineView:self willDisplayCell:cell forTableColumn:column item:[self itemAtRow:row]];
+	[cell drawWithFrame:NSMakeRect(cellRect.origin.x - rowRect.origin.x, cellRect.origin.y - rowRect.origin.y,cellRect.size.width,cellRect.size.height) inView:self];
+
+	//Offset the drag image (Remember: The system centers it by default, so this is an offset from center)
+	NSPoint clickLocation = [self convertPoint:[dragEvent locationInWindow] fromView:nil];
+	*dragImageOffset = NSMakePoint((rowRect.size.width / 2.0) - clickLocation.x, 0);
+	
+	[image unlockFocus];
+	[image setFlipped:NO];
+	
+	return([image autorelease]);
+}
+
+
 @end
