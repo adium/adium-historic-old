@@ -19,7 +19,7 @@
 
 - (void)installPlugin
 {
-    //register our prefs
+    //register our defaults
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS 
 																		forClass:[self class]] 
 										  forGroup:PREF_GROUP_CONTACT_LIST];
