@@ -113,9 +113,6 @@ static int		labelSize;
 
     //Pre-render the tab background -----------------------------------------------------
     [tabView removeTabViewItem:tabItem];
-    
-    [window makeKeyAndOrderFront:nil]; [window retain];
-
     tabViewRect = NSMakeRect(0, 0, TAB_LEFT_JUNK + TAB_BACKGROUND_WIDTH + TAB_RIGHT_JUNK, TAB_BOTTOM_JUNK + TAB_TOTAL_HEIGHT);
     tabScratchImage = [[[NSImage alloc] initWithSize:tabViewRect.size] autorelease];
     [tabScratchImage setFlipped:YES];
