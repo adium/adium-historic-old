@@ -1003,10 +1003,18 @@
 	AIListContact	*contact;
 	NSString		*contactUID = [NSString stringWithUTF8String:(buddy->name)];
 	
+	//Evan: temporary assert
+	NSAssert(contactUID != nil,@"contactAssociatedWithBuddy: contactUID was nil");
+	
 	//Get our contact
 	contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
 												  accountID:[self uniqueObjectID]
 														UID:[contactUID compactedString]];
+	
+	//Evan: temporary asserts
+	NSAssert ([[service handleServiceType] identifier] != nil,@"contactAssociatedWithBuddy: [[service handleServiceType] identifier] was nil");
+	NSAssert ([contactUID compactedString] != nil,@"contactAssociatedWithBuddy: [contactUID compactedString] was nil");
+	NSAssert (contact != nil,@"contactAssociatedWithBuddy: contact was nil");
 	
     //Associate the handle with ui_data and the buddy with our statusDictionary
     buddy->node.ui_data = [contact retain];
