@@ -29,7 +29,7 @@
     
     NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarkPath traverseLink:YES];
     [lastModDate autorelease]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
-    
+
     return [SHMozillaCommonParser parseBookmarksfromString:bookmarkString];
 }
 
