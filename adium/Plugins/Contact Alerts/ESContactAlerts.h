@@ -49,6 +49,7 @@
 
     NSMenu				*actionListMenu_cached;
     NSMenu				*eventMenu_cached;
+    NSMenu				*soundMenu_cached;
 
     NSString				*oldIdentifier;
     

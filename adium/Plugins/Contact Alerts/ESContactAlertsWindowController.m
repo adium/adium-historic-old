@@ -119,8 +119,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [tableView_actions setTarget:self];
     [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
     [tableView_actions setDataSource:self];
- //   [tableView_actions retain];
-
+    
     [button_delete setEnabled:NO];
     [button_oneTime setEnabled:NO];
 
@@ -154,11 +153,11 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     {
         [instance deleteEventAction:nil];
         [self tableViewSelectionDidChange:nil];
-    }
     
     [[owner notificationCenter] postNotificationName:Window_Changed_Alerts
                                               object:[instance activeObject]
                                             userInfo:nil];
+    }
 }
 
 -(IBAction)addedEvent:(id)sender

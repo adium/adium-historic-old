@@ -84,13 +84,12 @@
     while(actionDict = [actionsEnumerator nextObject])
     {
         event = [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
-        //NSLog(@"modified keys are %@; the event is %@; the statusArrayForKey is %@; giv is %i and looking for %i",inModifiedKeys, event, [inObject statusArrayForKey:event], [[inObject statusArrayForKey:event] greatestIntegerValue],  [[actionDict objectForKey:KEY_EVENT_STATUS] intValue]);
+ //       NSLog(@"modified keys are %@; the event is %@; the statusArrayForKey is %@; giv is %i and looking for %i",inModifiedKeys, event, [inObject statusArrayForKey:event], [[inObject statusArrayForKey:event] greatestIntegerValue],  [[actionDict objectForKey:KEY_EVENT_STATUS] intValue]);
 
         status = [[inObject statusArrayForKey:event] greatestIntegerValue];
         event_status = [[actionDict objectForKey:KEY_EVENT_STATUS] intValue];
         status_matches = (status && event_status) || (!status && !event_status); //XOR
         if ( status_matches && [inModifiedKeys containsObject:event] ) { //actions to take when an event is matched go here
-
             NSString * action = [actionDict objectForKey:KEY_EVENT_ACTION];
             NSString * details = [actionDict objectForKey:KEY_EVENT_DETAILS];
             int delete = [[actionDict objectForKey:KEY_EVENT_DELETE] intValue];
@@ -117,7 +116,7 @@
                 NSString * service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
                 AIListContact * contact = [[owner contactController] contactInGroup:nil withService:service UID:uid];
 
-                if (![(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]) //desired account not available
+                if (![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]) //desired account not available
                 {
                     if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) //use another account if necessary pref
                     {
@@ -127,7 +126,7 @@
                         //use first acccount on the same service as the handle and available to send content
                         while(account = [accountEnumerator nextObject]){
                             if ( [[contact serviceID] compare:[[[account service] handleServiceType] identifier]] == 0 &&
-                                 [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil])
+                                 [[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account])
                             {
                                 [onlineAccounts addObject:account];
                             }
@@ -202,8 +201,7 @@
             else if ([action compare:@"Open Message"] == 0) { //Force open a chat window
                 NSDictionary * detailsDict = [actionDict objectForKey:KEY_EVENT_DETAILS_DICT];
                 AIAccount * account = [[owner accountController] accountWithID:details];
-
-                if (![(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]) //desired account not available
+                if ([[account statusObjectForKey:@"Status"] intValue] == STATUS_OFFLINE) //desired account not available
                 {
                     success = NO; //as of now, we can't open our window
                     if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) //use another account if necessary pref
@@ -213,7 +211,7 @@
                         accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
                         //use first acccount on the same service as the handle and available to send content
                         while(account = [accountEnumerator nextObject]){
-                            if ( [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil])
+                            if ( [[account statusObjectForKey:@"Status"] intValue] == STATUS_ONLINE)
                             {
                                 [onlineAccounts addObject:account];
                             }
