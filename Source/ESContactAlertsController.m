@@ -277,16 +277,32 @@ DeclareString(KeyOneTimeAlert);
 	id <AIEventHandler>	eventHandler;
 	
 	eventHandler = [eventHandlers objectForKey:eventID];
+	if(!eventHandler) eventHandler = [globalOnlyEventHandlers objectForKey:eventID];
+	
+	if (eventHandler){
+		return [eventHandler globalShortDescriptionForEventID:eventID];
+	}
+	
+	return @"";
+}
 
-	if (eventHandler){
-		return [eventHandler globalShortDescriptionForEventID:eventID];
+- (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
+										listObject:(AIListObject *)listObject
+										  userInfo:(id)userInfo
+									includeSubject:(BOOL)includeSubject
+{
+	id <AIEventHandler>	eventHandler;
+
+	eventHandler = [eventHandlers objectForKey:eventID];
+	if(!eventHandler) eventHandler = [globalOnlyEventHandlers objectForKey:eventID];
+
+	if(eventHandler){
+		return([eventHandler naturalLanguageDescriptionForEventID:eventID
+													   listObject:listObject
+														 userInfo:userInfo
+												   includeSubject:includeSubject]);
 	}
-	
-	eventHandler = [globalOnlyEventHandlers objectForKey:eventID];
-	if (eventHandler){
-		return [eventHandler globalShortDescriptionForEventID:eventID];
-	}
-	
+
 	return @"";
 }
 
