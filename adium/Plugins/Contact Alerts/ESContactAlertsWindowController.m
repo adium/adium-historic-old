@@ -112,7 +112,7 @@
 //Add new alert
 - (IBAction)addAlert:(id)sender
 {
-	[CSNewContactAlertWindowController editAlert:nil onWindow:[self window] notifyingTarget:self userInfo:nil];
+	[CSNewContactAlertWindowController editAlert:nil forListObject:listObject onWindow:[self window] notifyingTarget:self userInfo:nil];
 }
 
 //Edit existing alert
@@ -120,7 +120,7 @@
 {
 	NSDictionary	*alert = [alertArray objectAtIndex:[tableView_actions selectedRow]];
 
-	[CSNewContactAlertWindowController editAlert:alert onWindow:[self window] notifyingTarget:self userInfo:alert];
+	[CSNewContactAlertWindowController editAlert:alert forListObject:listObject onWindow:[self window] notifyingTarget:self userInfo:alert];
 }
 
 //Delete an alert
