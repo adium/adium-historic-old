@@ -50,59 +50,76 @@
 
 #define KEY_LIST_THEME_GROUP_BACKGROUND				@"Group Background"
 #define KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT	@"Group Background Gradient"
+#define KEY_LIST_THEME_GROUP_TEXT_COLOR				@"Group Text Color"
+
+//#define KEY_LIST_THEME_
+
+@class AITextColorPreviewView;
 
 @interface AIListThemeWindowController : AIWindowController {
-    IBOutlet	NSButton	*checkBox_signedOff;
-    IBOutlet	NSColorWell	*colorWell_signedOff;
-    IBOutlet	NSColorWell	*colorWell_signedOffLabel;
+    IBOutlet	NSButton				*checkBox_signedOff;
+    IBOutlet	NSColorWell				*colorWell_signedOff;
+    IBOutlet	NSColorWell				*colorWell_signedOffLabel;
+	IBOutlet	AITextColorPreviewView	*preview_signedOff;
 	
-    IBOutlet	NSButton	*checkBox_signedOn;
-    IBOutlet	NSColorWell	*colorWell_signedOn;
-    IBOutlet	NSColorWell	*colorWell_signedOnLabel;
+    IBOutlet	NSButton				*checkBox_signedOn;
+    IBOutlet	NSColorWell				*colorWell_signedOn;
+    IBOutlet	NSColorWell				*colorWell_signedOnLabel;
+	IBOutlet	AITextColorPreviewView	*preview_signedOn;
 	
-    IBOutlet	NSButton	*checkBox_away;
-    IBOutlet	NSColorWell	*colorWell_away;
-    IBOutlet	NSColorWell	*colorWell_awayLabel;
+    IBOutlet	NSButton				*checkBox_away;
+    IBOutlet	NSColorWell				*colorWell_away;
+    IBOutlet	NSColorWell				*colorWell_awayLabel;
+	IBOutlet	AITextColorPreviewView	*preview_away;
 	
-    IBOutlet	NSButton	*checkBox_idle;
-    IBOutlet	NSColorWell	*colorWell_idle;
-    IBOutlet	NSColorWell	*colorWell_idleLabel;
+    IBOutlet	NSButton				*checkBox_idle;
+    IBOutlet	NSColorWell				*colorWell_idle;
+    IBOutlet	NSColorWell				*colorWell_idleLabel;
+	IBOutlet	AITextColorPreviewView	*preview_idle;
 	
-    IBOutlet	NSButton	*checkBox_typing;
-    IBOutlet	NSColorWell	*colorWell_typing;
-    IBOutlet	NSColorWell	*colorWell_typingLabel;
+    IBOutlet	NSButton				*checkBox_typing;
+    IBOutlet	NSColorWell				*colorWell_typing;
+    IBOutlet	NSColorWell				*colorWell_typingLabel;
+	IBOutlet	AITextColorPreviewView	*preview_typing;
 	
-    IBOutlet	NSButton	*checkBox_unviewedContent;
-    IBOutlet	NSColorWell	*colorWell_unviewedContent;
-    IBOutlet	NSColorWell	*colorWell_unviewedContentLabel;
+    IBOutlet	NSButton				*checkBox_unviewedContent;
+    IBOutlet	NSColorWell				*colorWell_unviewedContent;
+    IBOutlet	NSColorWell				*colorWell_unviewedContentLabel;
+	IBOutlet	AITextColorPreviewView	*preview_unviewedContent;
 	
-    IBOutlet	NSButton	*checkBox_online;
-    IBOutlet	NSColorWell	*colorWell_online;
-    IBOutlet	NSColorWell	*colorWell_onlineLabel;
+    IBOutlet	NSButton				*checkBox_online;
+    IBOutlet	NSColorWell				*colorWell_online;
+    IBOutlet	NSColorWell				*colorWell_onlineLabel;
+	IBOutlet	AITextColorPreviewView	*preview_online;
 	
-    IBOutlet	NSButton	*checkBox_idleAndAway;
-    IBOutlet	NSColorWell	*colorWell_idleAndAway;
-    IBOutlet	NSColorWell	*colorWell_idleAndAwayLabel;
+    IBOutlet	NSButton				*checkBox_idleAndAway;
+    IBOutlet	NSColorWell				*colorWell_idleAndAway;
+    IBOutlet	NSColorWell				*colorWell_idleAndAwayLabel;
+	IBOutlet	AITextColorPreviewView	*preview_idleAndAway;
 	
-    IBOutlet	NSButton	*checkBox_offline;
-    IBOutlet	NSColorWell	*colorWell_offline;
-    IBOutlet	NSColorWell	*colorWell_offlineLabel;
+    IBOutlet	NSButton				*checkBox_offline;
+    IBOutlet	NSColorWell				*colorWell_offline;
+    IBOutlet	NSColorWell				*colorWell_offlineLabel;
+	IBOutlet	AITextColorPreviewView	*preview_offline;
 	
-	IBOutlet	NSButton	*checkBox_useBackgroundImage;
-	IBOutlet	NSButton	*button_setBackgroundImage;
-	IBOutlet	NSTextField	*textField_backgroundImagePath;
+	IBOutlet	NSButton				*checkBox_useBackgroundImage;
+	IBOutlet	NSButton				*button_setBackgroundImage;
+	IBOutlet	NSTextField				*textField_backgroundImagePath;
 	
-	IBOutlet	NSColorWell	*colorWell_background;
-	IBOutlet	NSColorWell	*colorWell_grid;
+	IBOutlet	NSColorWell				*colorWell_background;
+	IBOutlet	AITextColorPreviewView	*preview_background;
+	IBOutlet	NSColorWell				*colorWell_grid;
+	IBOutlet	AITextColorPreviewView	*preview_grid;
 	
-	IBOutlet	NSSlider	*slider_backgroundFade;
-	IBOutlet	NSTextField	*textField_backgroundFade;
+	IBOutlet	NSSlider				*slider_backgroundFade;
+	IBOutlet	NSTextField				*textField_backgroundFade;
 	
-	
-	IBOutlet	NSColorWell	*colorWell_groupBackground;
-	IBOutlet	NSColorWell	*colorWell_groupBackgroundGradient;
+	IBOutlet	NSColorWell				*colorWell_groupText;
+	IBOutlet	NSColorWell				*colorWell_groupBackground;
+	IBOutlet	NSColorWell				*colorWell_groupBackgroundGradient;
+	IBOutlet	AITextColorPreviewView	*preview_groupBackground;
 
-	IBOutlet	NSTextField	*textField_themeName;
+	IBOutlet	NSTextField				*textField_themeName;
 	
 	NSString				*themeName;
 }
