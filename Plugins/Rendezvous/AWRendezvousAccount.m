@@ -125,38 +125,49 @@
 - (void) userChangedState:(AWEzvContact *)contact
 {
     AIListContact	*listContact;
-	NSString		*contactName;
+	NSString		*contactName, *statusMessage;
+	NSDate			*idleSinceDate;
 	
     listContact = [[adium contactController] contactWithService:service
 												 account:self
 													 UID:[contact uniqueID]];  
 	
 	[listContact setRemoteGroupName:AILocalizedString(@"Rendezvous", @"Rendezvous group name")];
-	[listContact setStatusObject:[contact statusMessage] forKey:@"StatusMessageString" notify:NO];
-	
-	[listContact setStatusObject:nil forKey:@"Away" notify:NO];
-	[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
-	
+
 	switch ([contact status]) {
 		case AWEzvAway:
-			[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
+			if (![listContact integerStatusObjectForKey:@"Away"]){
+				[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
+			}
 			break;
 		case AWEzvOnline:
 		case AWEzvIdle:
 		default:
-			[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
+			if (![listContact online]){
+				[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
+			}
 	}
 	
-	if ([contact idleSinceDate])
-		[listContact setStatusObject:[contact idleSinceDate] forKey:@"IdleSince" notify:NO];
-    else
+	if (idleSinceDate = [contact idleSinceDate]){
+		//Only set the new date object if the time interval has changed
+		if ([[listContact statusObjectForKey:@"IdleSince"] timeIntervalSinceDate:idleSinceDate] != 0){
+			[listContact setStatusObject:idleSinceDate forKey:@"IdleSince" notify:NO];
+		}
+	}else{
 		[listContact setStatusObject:nil forKey:@"IdleSince" notify:NO];
+	}
 	
-    if ([contact statusMessage])
-		[listContact setStatusObject:[[[NSAttributedString alloc] initWithString:[contact statusMessage]] autorelease]
-					   forKey:@"StatusMessage" notify:NO];
-    else
+    if (statusMessage = [contact statusMessage]){
+		NSString	*oldStatusMessage = [listContact stringFromAttributedStatusObjectForKey:@"StatusMessage"];
+		
+		if (!oldStatusMessage || ![oldStatusMessage isEqualToString:statusMessage]){
+			[listContact setStatusObject:[[[NSAttributedString alloc] initWithString:statusMessage] autorelease]
+								  forKey:@"StatusMessage"
+								  notify:NO];
+		}
+	}else{
 		[listContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
+	}
 	
     [listContact setStatusObject:[contact contactImage] forKey:KEY_USER_ICON notify:NO];
 
