@@ -14,6 +14,7 @@ Contacts:
             // core functionality is done, now I'm adding AB syncing, and possibly AIM Buddy Note sycing
 	+ Context menus
 		* Do we need to show the "Add Contact..." item, greyed out, on basically all contacts?
+			[Dave] Is there an easy way to hide it when not needed? I don't know of one with our system
 		* Do we sure "Delete" should be in the context menu? How often is this used?
 Alerts:
 	+ Allow user to have more control over what is spoken by the announcer plugin
