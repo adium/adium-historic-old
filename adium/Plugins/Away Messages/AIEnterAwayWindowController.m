@@ -153,6 +153,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 - (void)dealloc
 {
     [owner release];
+    [awayMessageArray release];
 
     [super dealloc];
 }
