@@ -381,7 +381,7 @@ float ToolbarHeightForWindow(NSWindow *window)
 {
 	id		object = [[notification object] containingObject];
 
-	//The notification passes the contact who's order changed.  This means that we must reload the group containing
+	//The notification passes the contact whose order changed.  This means that we must reload the group containing
 	//that contact in order to correctly update the list.
 	if(!object || (object == contactList)){ //Treat a nil object as equivalent to the contact list
 		[contactListView reloadData];
