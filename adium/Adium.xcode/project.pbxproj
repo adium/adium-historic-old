@@ -2092,7 +2092,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "buildnum=`$SYMROOT/../Other/buildnum`\nbuilddate=`perl -e 'print time;'`\nme=`whoami`\necho $buildnum \"|\" $builddate \"|\" $me > $SYMROOT/Adium.app/Contents/Resources/buildnum\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
+			shellScript = "buildnum=`$SYMROOT/../Other/buildnum`\nbuilddate=`perl -e 'print time;'`\nme=`whoami`\necho $buildnum \"|\" $builddate \"|\" $me > $SYMROOT/Adium.app/Contents/Resources/buildnum\necho \\<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?\\>\\<!DOCTYPE plist PUBLIC \\\"-//Apple Computer//DTD PLIST 1.0//EN\\\" \\\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\\\"\\>\\<plist version=\\\"1.0\\\"\\>\\<dict\\>\\<key\\>adium-version\\</key\\>\\<real\\>$builddate\\</key\\>\\</dict\\>\\</plist\\> > $SYMROOT/version.plist\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
 		};
 		346433BA05E408CF00498DE6 = {
 			fileEncoding = 30;
