@@ -23,7 +23,7 @@
     int	index = [self indexOfItemWithRepresentedObject:object];
     [self selectItemAtIndex:index];
 }
-- (void)selectItemWithTag:(int)tag
+- (void)compatibleSelectItemWithTag:(int)tag
 {
     int	index = [self indexOfItemWithTag:tag];
     [self selectItemAtIndex:index];
