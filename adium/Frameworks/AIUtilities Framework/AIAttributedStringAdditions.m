@@ -155,10 +155,10 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 //adjust the colors in the string so they're visible on the background, adjusting brightness in proportion to the original background
 - (void)adjustColorsToShowOnBackgroundRelativeToOriginalBackground:(NSColor *)backgroundColor
 {
-    int 	index = 0;
-    int         stringLength = [self length];
-    float	backgroundBrightness, backgroundSum;
-    NSColor         *backColor;
+    int             index = 0;
+    int             stringLength = [self length];
+    float           backgroundBrightness=nil, backgroundSum=nil;
+    NSColor         *backColor=nil;
     //--get the brightness of our background--
     if (backgroundColor) {
         backColor = [backgroundColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];

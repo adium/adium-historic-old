@@ -419,8 +419,10 @@
 //This method is automatically called when our size or position changes, allowing for our cells to re-configure any cursor tracking rects they've set up.
 - (void)resetCursorRects
 {
-    //Reset cursor tracking for our visible rect
-    [self _resetCursorRectsForVisibleRect:[[self enclosingScrollView] documentVisibleRect]];
+    if (!lockFocus) {
+        //Reset cursor tracking for our visible rect
+        [self _resetCursorRectsForVisibleRect:[[self enclosingScrollView] documentVisibleRect]];
+    }
 }
 
 //If we're being removed from the window, we need to remove our tracking rects
