@@ -261,7 +261,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 				[str replaceOccurrencesOfString:pattern 
 									 withString:[self hashLookup:pattern] 
 										options:NSLiteralSearch 
-										  range:NSMakeRange(0,[mesg length])];
+										  range:NSMakeRange(0,[str length])];
             }
         }
     }
