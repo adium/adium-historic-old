@@ -464,7 +464,7 @@
 	unsigned	i = 0;
 	
 	while (alignmentChoices[i] != -1){
-		NSString	*menuTitle;
+		NSString	*menuTitle = nil;
 		
 		switch(alignmentChoices[i]) {
 			case NSLeftTextAlignment:	menuTitle = AILocalizedString(@"Left",nil);
@@ -496,7 +496,7 @@
 	unsigned	i = 0;
 	
 	while (positionChoices[i] != -1){
-		NSString	*menuTitle;
+		NSString	*menuTitle = nil;
 		
 		switch(positionChoices[i]) {
 			case LIST_POSITION_LEFT:
