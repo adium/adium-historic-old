@@ -39,7 +39,7 @@
 @end
 
 @interface AIAccountController : NSObject<AIListObjectObserver>{
-    IBOutlet	AIAdium		*owner;	
+    IBOutlet	AIAdium		*adium;	
 	
     NSMutableArray			*accountArray;				//Array of active accounts
     NSMutableDictionary		*availableServiceDict;		//Dictionary of available services
@@ -80,6 +80,7 @@
 
 //Account Editing
 - (AIAccount *)newAccountAtIndex:(int)index;
+- (AIAccount *)newAccountAtIndex:(int)index forService:(AIService *)service;
 - (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index save:(BOOL)shouldSave;
 - (void)deleteAccount:(AIAccount *)inAccount save:(BOOL)shouldSave;
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService;
