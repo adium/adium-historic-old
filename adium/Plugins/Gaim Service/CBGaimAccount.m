@@ -14,7 +14,48 @@
 //don't change this
 #define NO_GROUP @"__NoGroup__"
 
+@interface CBGaimAccount (PRIVATE)
+- (AIChat*)_openChatWithHandle:(AIHandle*)handle andConversation:(GaimConversation*)conv;
+- (void)displayError:(NSString *)errorDesc;
+@end
+
 @implementation CBGaimAccount
+
+- (GaimAccount*)gaimAccount
+{
+    return account;
+}
+
+/*****************************/
+/* accountConnection methods */
+/*****************************/
+
+- (void)accountConnectionReportDisconnect:(const char*)text
+{
+    [self displayError: [NSString stringWithUTF8String: text]];
+}
+
+- (void)accountConnectionConnected
+{
+    [[owner accountController]
+        setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
+        forKey:@"Status" account:self];
+}
+
+- (void)accountConnectionDisconnected
+{
+    NSLog(@"accountConnectionDisconnected starting");
+    [[owner accountController] 
+        setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
+        forKey:@"Status" account:self];
+
+    //Remove all our handles
+    NSLog(@"removing handles");
+    [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
+    // TODO: what should we do with the GaimConversations, GaimChats, and GaimBuddys?
+    [[owner contactController] handlesChangedForAccount:self];
+    NSLog(@"accountConnectionDisconnected ending");
+}
 
 /************************/
 /* accountBlist methods */
@@ -163,18 +204,66 @@
     [[owner contactController] handlesChangedForAccount:self];
 }
 
+/***********************/
+/* accountConv methods */
+/***********************/
+
+- (void)accountConvReceivedIM: (const char*)message inConversation: (GaimConversation*)conv withFlags: (GaimMessageFlags)flags atTime: (time_t)mtime
+{
+    /*
+     * TODO:
+     * This gets called both when after we send a message and when we receive
+     * one. This is kind of nice - Adium can be kind of premature about thinking
+     * something has been sent okay and this gives us the potential to solve
+     * this problem. Unfortunately, I don't see how to distinguish between the
+     * two types - who is always null.
+     */
+    AIChat *chat = (AIChat*) conv->ui_data;
+    NSString *uid = [NSString stringWithUTF8String: conv->name];
+    AIHandle *handle = [handleDict objectForKey: uid];
+    if (chat == nil) {
+        // Need to start a new chat
+        if (handle == nil) {
+            handle = [self addHandleWithUID:uid
+                                serverGroup:nil
+                                  temporary:YES];
+        }
+        chat = [self _openChatWithHandle: handle andConversation: conv];
+    } else {
+        NSAssert(handle != nil, @"Existing chat yet no existing handle?");
+    }
+    NSAttributedString *body = [AIHTMLDecoder decodeHTML:[NSString stringWithUTF8String: message]];
+    AIContentMessage *messageObject =
+        [AIContentMessage messageInChat:chat
+                             withSource:[handle containingContact]
+                            destination:self
+                                   date:nil
+                                message:body
+                              autoreply:NO];
+    [[owner contentController] addIncomingContentObject:messageObject];
+}
+
 /********************************/
 /* AIAccount subclassed methods */
 /********************************/
 
 - (void)initAccount
 {
+    NSLog(@"CBGaimAccount initAccount");
     handleDict = [[NSMutableDictionary alloc] init];
+    chatDict = [[NSMutableDictionary alloc] init];
+    account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
+    gaim_accounts_add(account);
+    NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
 }
 
 - (void)dealloc
 {
+    NSLog(@"CBGaimAccount dealloc");
+    [chatDict release];
     [handleDict release];
+    gaim_accounts_delete(account); account = NULL;
+    // TODO: remove this from the account dict that the ServicePlugin keeps
     
     [super dealloc];
 }
@@ -215,18 +304,7 @@
                     setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING]
                     forKey:@"Status" account:self];
                 
-                //delete the account, sign everybody off
-                GaimAccount *account;
-                if(account = gaim_accounts_find([[self UID] UTF8String], [self protocolPlugin]))
-                {
-                    gaim_account_disconnect(account);
-                    gaim_accounts_delete(account);
-                }
-                
-                //done
-                [[owner accountController] 
-                    setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
-                    forKey:@"Status" account:self];
+                gaim_account_disconnect(account);
             }
         }
     }
@@ -245,22 +323,7 @@
         GaimAccount *testAccount = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
         gaim_account_set_password(testAccount, [inPassword cString]);
         
-        //this is a bit of a hack, but it will do for now
         GaimConnection *conn =  gaim_account_connect(testAccount);
-        if(gaim_connection_get_state(conn) != GAIM_DISCONNECTED) //if we're not disconneted, signed on!
-        {
-            gaim_accounts_add(testAccount);
-            
-            [[owner accountController]
-                setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
-                forKey:@"Status" account:self];
-        }
-        else //aw nuts, something must have happened.
-        {
-            [[owner accountController] 
-                    setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
-                    forKey:@"Status" account:self];
-        }
     }
 }
 
@@ -284,6 +347,99 @@
 
 - (NSString *)UID { return nil; }
 - (NSString *)serviceID { return nil; }
+
+/*********************/
+/* AIAccount_Content */
+/*********************/
+
+- (BOOL)sendContentObject:(AIContentObject*)object
+{
+    BOOL            sent = NO;
+
+    if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0) {
+        AIContentMessage *cm = (AIContentMessage*)object;
+        NSString *body = [AIHTMLDecoder encodeHTML:[cm message]
+                                           headers:YES
+                                          fontTags:YES
+                                     closeFontTags:NO
+                                         styleTags:YES
+                        closeStyleTagsOnFontChange:NO];
+        AIChat *chat = [cm chat];
+        GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
+        NSAssert(conv != NULL, @"Not a gaim conversation");
+        GaimConvIm *im = gaim_conversation_get_im_data(conv);
+        gaim_conv_im_send(im, [body UTF8String]);
+        sent = YES;
+    }
+    return sent;
+}
+
+- (BOOL)availableForSendingContentType:(NSString*)inType toListObject:(AIListObject*)inListObject
+{
+    BOOL available = NO;
+    BOOL weAreOnline = ([[[owner accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+
+    if ([inType compare:CONTENT_MESSAGE_TYPE] == 0 && weAreOnline) {
+        // TODO: check if they are online
+        available = YES;
+    }
+    return available;
+}
+
+- (AIChat*)openChatWithListObject:(AIListObject*)inListObject
+{
+    AIHandle *handle;
+    AIChat *chat = nil;
+
+    if ([inListObject isKindOfClass:[AIListContact class]]) {
+        handle = [(AIListContact*)inListObject handleForAccount:self];
+        if (!handle) {
+            handle = [self addHandleWithUID:[[inListObject UID] compactedString]
+                                serverGroup:nil
+                                  temporary:YES];
+        }
+        chat = [self _openChatWithHandle:handle andConversation:NULL];
+    }
+    return chat;
+}
+
+- (AIChat*)_openChatWithHandle:(AIHandle*)handle andConversation:(GaimConversation*)conv
+{
+    AIChat *chat;
+    if (!(chat = [chatDict objectForKey:[handle UID]])) {
+        AIListContact *contact = [handle containingContact];
+        BOOL handleIsOnline;
+        chat = [AIChat chatWithOwner:owner forAccount:self];
+        [chat addParticipatingListObject:contact];
+        handleIsOnline = YES; // TODO
+        [[chat statusDictionary] setObject:[NSNumber numberWithBool:handleIsOnline] forKey:@"Enabled"];
+        if (conv == NULL) {
+            conv = gaim_conversation_new(GAIM_CONV_IM, account, [[handle UID] UTF8String]);
+        }
+        conv->ui_data = chat;
+        [[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
+        [chatDict setObject:chat forKey:[handle UID]];
+        [[owner contentController] noteChat:chat forAccount:self];
+    }
+    return chat;
+}
+
+- (BOOL)closeChat:(AIChat*)inChat
+{
+    /*
+    AIHandle *handle = [(AIListContact*)[inChat listObject] handleForAccount:self];
+    if ([handle temporary]) {
+        [self removeHandleWithUID:[handle UID]];
+    }
+    GaimConversation *conv = (GaimConversation*) [[[inChat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
+    NSAssert(conv != nil, @"No gaim conversation associated with chat");
+    gaim_conversation_destroy(conv);
+    [chatDict removeOjectForKey: inChat];
+    return YES;
+    */
+    return NO;
+}
+
 
 /*********************/
 /* AIAccount_Handles */

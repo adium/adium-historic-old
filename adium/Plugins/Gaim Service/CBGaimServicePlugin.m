@@ -14,9 +14,27 @@
 
 #define GAIM_EVENTLOOP_INTERVAL     0.02         //Interval at which to run libgaim's main event loop
 
+/*
+ * Maps GaimAccount*s to CBGaimAccount*s.
+ * This is necessary because the gaim people didn't put the same void *ui_data
+ * in here that they put in most of their other structures. Maybe we should
+ * ask them for one so we can take this out.
+ */
 NSMutableDictionary *_accountDict;
 
 @implementation CBGaimServicePlugin
+
+/*
+ * Finds a CBGaimAccount* for a GaimAccount*.
+ * See _accountDict.
+ */
+static CBGaimAccount* accountLookup(GaimAccount *acct)
+{
+    NSLog(@"Looking up GaimAccount 0x%x", acct);
+    CBGaimAccount *ret = (CBGaimAccount*) [_accountDict objectForKey:[NSValue valueWithPointer:acct]];
+    NSCAssert(ret != nil, @"Account not found in dictionary");
+    return ret;
+}
 
 // Debug ------------------------------------------------------------------------------------------------------
 static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, const char *format, va_list args)
@@ -38,27 +56,32 @@ static GaimDebugUiOps adiumGaimDebugOps = {
 // Connection ------------------------------------------------------------------------------------------------------
 static void adiumGaimConnConnectProgress(GaimConnection *gc, const char *text, size_t step, size_t step_count)
 {
-    NSLog(@"Connecting: %i (%s) %i / %i", gc, text, step, step_count);
+    NSLog(@"Connecting: gc=0x%x (%s) %i / %i", gc, text, step, step_count);
 }
 
 static void adiumGaimConnConnected(GaimConnection *gc)
 {
-    NSLog(@"Connected: %i", gc);
+    NSLog(@"Connected: gc=%x", gc);
+    [accountLookup(gc->account) accountConnectionConnected];
 }
 
 static void adiumGaimConnDisconnected(GaimConnection *gc)
 {
-    NSLog(@"Disconnected: %i", gc);
+    NSLog(@"Disconnected: gc=%x", gc);
+    if (_accountDict == nil) // unloadPlugin has already been called; this has been destroyed
+        return;
+    [accountLookup(gc->account) accountConnectionDisconnected];
 }
 
 static void adiumGaimConnNotice(GaimConnection *gc, const char *text)
 {
-    NSLog(@"Connection Notice: %i (%s)", gc, text);
+    NSLog(@"Connection Notice: gc=%x (%s)", gc, text);
 }
 
 static void adiumGaimConnReportDisconnect(GaimConnection *gc, const char *text)
 {
-    NSLog(@"Connection Disconnected: %i (%s)", gc, text);
+    NSLog(@"Connection Disconnected: gc=%x (%s)", gc, text);
+    [accountLookup(gc->account) accountConnectionReportDisconnect:text];
 }
 
 static GaimConnectionUiOps adiumGaimConnectionOps = {
@@ -87,19 +110,8 @@ static void adiumGaimBlistNewNode(GaimBlistNode *node)
     if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
     { 
         //NSLog(@"Aloha");
-        GaimBuddy *buddy;
-        if(buddy = (GaimBuddy *)node)
-        {
-            id theAccount = [_accountDict objectForKey:
-                [NSString stringWithFormat:@"%s.%s", 
-                    (char *)gaim_account_get_protocol_id(buddy->account),
-                    (char *)gaim_account_get_username(buddy->account)]];
-                        
-            if([theAccount respondsToSelector:@selector(accountBlistNewNode:)])
-                [theAccount accountBlistNewNode:node];
-        }
-        else
-            NSLog(@"what the shit");
+        GaimBuddy *buddy = (GaimBuddy*)node;
+        [accountLookup(buddy->account) accountBlistNewNode:node];
     }
 }
 
@@ -224,6 +236,7 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 {
     NSLog(@"adiumGaimConvWriteIm: name=%s, who=%s: %s",
           conv->name, who, message);
+    [accountLookup(conv->account) accountConvReceivedIM: message inConversation: conv withFlags: flags atTime: mtime];
 }
 
 static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
@@ -371,7 +384,7 @@ static GaimConvWindowUiOps adiumGaimWindowOps = {
 static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, const char *primary, const char *secondary, GCallback cb, void *userData)
 {
     //Values passed can be null
-    NSLog(@"adiumGaimNotifyMessage");
+    NSLog(@"adiumGaimNotifyMessage: %s: %s, %s", title, primary, secondary);
     return(nil);
 }
 
@@ -514,18 +527,18 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
     //Tell libgaim to load it's other pieces
     gaim_prefs_load();
-    gaim_accounts_load();
+    //gaim_accounts_load();
     gaim_pounces_load();
     
     //Setup the buddy list
     gaim_set_blist(gaim_blist_new());
-    gaim_blist_load();
+    //gaim_blist_load();
 
     //Install the libgaim event loop timer
     [NSTimer scheduledTimerWithTimeInterval:GAIM_EVENTLOOP_INTERVAL target:self selector:@selector(gaimEventLoopTimer:) userInfo:nil repeats:YES];
 
     //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"AIM/GAIM"
+    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"AIM"
                                                       description:@"LIBGAIM (Do not use)"
                                                             image:nil
                                                     caseSensitive:NO
@@ -540,6 +553,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (void)uninstallPlugin
 {
     [_accountDict release];
+    _accountDict = nil;
 }
 
 //Periodic timer to run libgaim's event loop
@@ -559,7 +573,9 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 {
     CBGaimAIMAccount *anAccount = [[[CBGaimAIMAccount alloc] initWithProperties:inProperties service:self owner:inOwner] autorelease];
     
-    [_accountDict setObject:anAccount forKey:[anAccount UIDAndServiceID]];
+    GaimAccount *gaimAcct = [anAccount gaimAccount];
+    NSLog(@"Adding GaimAccount 0x%x to account dict", gaimAcct);
+    [_accountDict setObject:anAccount forKey:[NSValue valueWithPointer:gaimAcct]];
     
     return anAccount;
 }
