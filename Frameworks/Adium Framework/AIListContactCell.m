@@ -284,6 +284,7 @@
 	NSRect	rect = inRect;
 	if(userIconVisible){
 		NSImage *image = [self userIconImageOfSize:NSMakeSize(userIconSize, userIconSize)];
+		if(!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
 		
 		rect = [image drawInRect:rect
 						  atSize:NSMakeSize(userIconSize, userIconSize)
@@ -420,7 +421,7 @@
 - (NSImage *)userIconImageOfSize:(NSSize)inSize
 {
 	[AIUserIcons setListUserIconSize:inSize];
-	return([AIUserIcons listUserIconForContact:listObject]);
+	return([AIUserIcons listUserIconForContact:(AIListContact *)listObject]);
 }
 
 //Contact status image
@@ -432,7 +433,7 @@
 //Contact service image
 - (NSImage *)serviceImage
 {
-	return([AIServiceIcons serviceIconForContact:listObject flipped:YES]);
+	return([AIServiceIcons serviceIconForObject:listObject type:AIServiceIconList direction:AIIconFlipped]);
 }
 
 //YES if our status should draw below the label text
