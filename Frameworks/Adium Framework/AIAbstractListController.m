@@ -461,6 +461,7 @@
 												 forListObject:listObject]);
 }
 
+#pragma mark Finder-style searching
 - (void)outlineView:(NSOutlineView *)outlineView userDidTypeString:(NSString *)inputString
 {
 	NSEnumerator	*enumerator;
@@ -506,6 +507,7 @@
 	}
 }
 
+#pragma mark Drag and drop
 - (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
 {
 	//Kill any selections
@@ -526,6 +528,15 @@
 	if(dragItems){
 		[dragItems release]; dragItems = nil;
 	}
+
+	return YES;
+}
+
+- (void)outlineView:(NSOutlineView *)outlineView draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation
+{
+	if(dragItems){
+		[dragItems release]; dragItems = nil;
+	}	
 }
 
 - (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
