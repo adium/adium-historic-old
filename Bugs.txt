@@ -19,10 +19,6 @@
 // Adium X 0.70 remaining issues
 //------------------------------------------------------------------------------------
 [HIGH]
-Vertical resizing errors
-  - Vertical resizing is initially too small by the height of the toolbar in Standard
-	with the toolbar showing
-
 Messages & Chat
   - Initial messages from invisible contacts sometimes don't open new message windows
   - Chat windows can re-open when contact status changed (If using cmd-n to change source
