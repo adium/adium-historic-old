@@ -689,26 +689,28 @@
 			settings = {
 			};
 		};
-		4BBC8CDA03B9FB0F00A8010A = {
-			fileEncoding = 4;
+		4BBC8E4B03BA0DB900A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = AIFontAdditions.h;
+			name = AIFontAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIFontAdditions.h";
 			refType = 4;
 		};
-		4BBC8CDB03B9FB0F00A8010A = {
-			fileEncoding = 4;
+		4BBC8E4C03BA0DB900A8010A = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = AIFontAdditions.m;
+			name = AIFontAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIFontAdditions.m";
 			refType = 4;
 		};
-		4BBC8CDC03B9FB0F00A8010A = {
-			fileRef = 4BBC8CDA03B9FB0F00A8010A;
+		4BBC8E4D03BA0DB900A8010A = {
+			fileRef = 4BBC8E4B03BA0DB900A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
 		};
-		4BBC8CDD03B9FB0F00A8010A = {
-			fileRef = 4BBC8CDB03B9FB0F00A8010A;
+		4BBC8E4E03BA0DB900A8010A = {
+			fileRef = 4BBC8E4C03BA0DB900A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1966,7 +1968,7 @@
 				F55B415B03AB8B2601A8010A,
 				F55B417303AB8C5601A8010A,
 				F55596B603B784C801A8010A,
-				4BBC8CDC03B9FB0F00A8010A,
+				4BBC8E4D03BA0DB900A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2032,7 +2034,7 @@
 				F55B415703AB8B0901A8010A,
 				F55B417503AB8C6201A8010A,
 				F55596B703B784C801A8010A,
-				4BBC8CDD03B9FB0F00A8010A,
+				4BBC8E4E03BA0DB900A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5870,7 +5872,6 @@
 		F5793978033E74F001A8010A = {
 			children = (
 				F5793952033E74E401A8010A,
-				4BBC8CDA03B9FB0F00A8010A,
 				F55596B403B784C801A8010A,
 				F55B415903AB8B2601A8010A,
 				F55B417203AB8C5601A8010A,
@@ -5904,6 +5905,7 @@
 				F570A58803704A8F01A8010A,
 				F570A58A03704A8F01A8010A,
 				F570A59003704AB901A8010A,
+				4BBC8E4B03BA0DB900A8010A,
 			);
 			isa = PBXGroup;
 			name = Headers;
@@ -6288,7 +6290,7 @@
 			children = (
 				F5793939033E74E401A8010A,
 				F579393B033E74E401A8010A,
-				4BBC8CDB03B9FB0F00A8010A,
+				4BBC8E4C03BA0DB900A8010A,
 				F579394D033E74E401A8010A,
 				F5793956033E74E401A8010A,
 				F579393F033E74E401A8010A,
