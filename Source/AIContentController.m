@@ -900,14 +900,16 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 {
 	NSEnumerator	*enumerator;
 	AIChat			*chat = nil;
-	NSString		*uniqueChatID;
 	
 	enumerator = [chatArray objectEnumerator];
-	uniqueChatID = [AIChat uniqueChatIDForChatWithName:inName onAccount:account];
+
 	while(chat = [enumerator nextObject]){
 		
 		//If the chat we want already exists
-		if([[chat uniqueChatID] isEqualToString:uniqueChatID]) break;
+		if(([chat account] == account) &&
+		   ([[chat name] isEqualToString:inName])){
+			break;
+		}
 	}	
 	
 	return chat;
