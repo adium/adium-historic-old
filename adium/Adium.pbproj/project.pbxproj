@@ -1286,7 +1286,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Adium</string>
 	<key>CFBundleGetInfoString</key>
-	<string>2.0, Copyright 2001-2002 Adam Iser.</string>
+	<string>2.0, Copyright 2001-2003 Adam Iser</string>
 	<key>CFBundleHelpBookFolder</key>
 	<string>Adium Help</string>
 	<key>CFBundleHelpBookName</key>
@@ -1307,6 +1307,8 @@
 	<string>AdIM</string>
 	<key>CFBundleVersion</key>
 	<string>2.0</string>
+	<key>NSAppleScriptEnabled</key>
+	<true/>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
