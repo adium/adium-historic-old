@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIMiniToolbar, AIListObject, AIAccount, AISendingTextView, AIAutoScrollView, AIChat, AIPlasticButton, AIAccountSelectionView, AIContactInfoWindowController;
+@class AIMiniToolbar, AIListObject, AIAccount, AISendingTextView, AIAutoScrollView, AIChat, AIPlasticButton, AIAccountSelectionView, AITabStatusIconsPlugin;
 @protocol AIAccountSelectionViewDelegate, AIMessageViewController;
 
 @interface AIMessageViewController : AIObject <AIAccountSelectionViewDelegate> {

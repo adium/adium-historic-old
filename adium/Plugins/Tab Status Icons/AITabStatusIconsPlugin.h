@@ -16,4 +16,6 @@
 	NSImage		*tabTyping;
 }
 
++ (NSImage *)iconForListObject:(AIListObject *)listObject;
+
 @end
