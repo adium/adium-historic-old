@@ -37,7 +37,7 @@
 }
 
 //Configure for the action
-- (void)configureForActionDetails:(NSDictionary *)inDetails
+- (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)listObject
 {
 	//If the user has a custom sound selected, we need to create an entry in the menu for it
 	NSString	*selectedSound = [inDetails objectForKey:KEY_ALERT_SOUND_PATH];
