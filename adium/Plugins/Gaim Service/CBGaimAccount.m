@@ -30,7 +30,7 @@
 
 //- (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy;
 - (void)removeAllStatusFlagsFromContact:(AIListContact *)contact silently:(BOOL)silent;
-- (void)setTypingFlagOfContact:(AIListContact *)contact to:(NSNumber *)typingState;
+- (void)setTypingFlagOfChat:(AIChat *)inChat to:(NSNumber *)typingState;
 - (void)_updateAway:(AIListContact *)theContact toAway:(BOOL)newAway;
 
 - (AIChat*)_openChatWithContact:(AIListContact *)contact andConversation:(GaimConversation*)conv;
@@ -461,10 +461,11 @@ static id<GaimThread> gaimThread = nil;
 
 //Open a chat for Adium
 - (BOOL)openChat:(AIChat *)chat
-{	
+{
 	//Correctly enable/disable the chat
-
-	[[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
+	[chat setStatusObject:[NSNumber numberWithBool:YES]
+				   forKey:@"Enabled" 
+				   notify:YES];
 	
 	//Track
 	[chatDict setObject:chat forKey:[chat uniqueChatID]];
@@ -482,10 +483,7 @@ static id<GaimThread> gaimThread = nil;
 	[gaimThread closeChat:chat];
 	
 	//Be sure any remaining typing flag is cleared as the chat closes
-	AIListObject	*listObject = [chat listObject];
-	if (listObject){
-		[self setTypingFlagOfContact:(AIListContact *)listObject to:nil];
-	}		
+	[self setTypingFlagOfChat:chat to:nil];
 	
 	[chatDict removeObjectForKey:[chat uniqueChatID]];
 	
@@ -497,9 +495,8 @@ static id<GaimThread> gaimThread = nil;
 	AIChat *chat;
 	
 	//First, make sure the chat is created
-	[[adium contentController] mainPerformSelector:@selector(chatWithContact:initialStatus:)
+	[[adium contentController] mainPerformSelector:@selector(chatWithContact:)
 										withObject:contact
-										withObject:nil
 									 waitUntilDone:YES];
 		
 	//Now return the existing chat
@@ -512,8 +509,12 @@ static id<GaimThread> gaimThread = nil;
 {
 	AIChat *chat;
 
-	//First, make sure the chat is created
-	[[adium contentController] mainPerformSelector:@selector(chatWithName:onAccount:initialStatus:)
+	/*
+	 First, make sure the chat is created - we will get here from a call in which Gaim has already
+	 created the GaimConversation, so there's no need for a chatCreationInfo dictionary.
+	 */
+	
+	[[adium contentController] mainPerformSelector:@selector(chatWithName:onAccount:chatCreationInfo:)
 										withObject:name
 										withObject:self
 										withObject:nil
@@ -528,8 +529,8 @@ static id<GaimThread> gaimThread = nil;
 //Typing update in an IM
 - (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(NSNumber *)typingState
 {
-	[self setTypingFlagOfContact:(AIListContact*)[chat listObject]
-							  to:typingState];
+	[self setTypingFlagOfChat:chat
+						   to:typingState];
 }
 
 //Multiuser chat update
@@ -551,8 +552,8 @@ static id<GaimThread> gaimThread = nil;
 
 	sourceContact = (AIListContact*) [chat listObject];
 	
-	//Clear the typing flag of the listContact
-	[self setTypingFlagOfContact:sourceContact to:nil];
+	//Clear the typing flag of the chat since a message was just received
+	[self setTypingFlagOfChat:chat to:nil];
 	
 	GaimDebug (@"receivedIMChatMessage: Received %@ from %@",[messageDict objectForKey:@"Message"],[sourceContact UID]);
 
@@ -1566,6 +1567,14 @@ static id<GaimThread> gaimThread = nil;
 	[self setStatusObject:image forKey:KEY_USER_ICON notify:YES];
 }
 
+#pragma mark Group Chat
+- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage
+{
+	[gaimThread inviteContact:contact toChat:chat withMessage:inviteMessage];
+	
+	return YES;
+}
+
 /********************************/
 /* AIAccount subclassed methods */
 /********************************/
@@ -1616,21 +1625,6 @@ static id<GaimThread> gaimThread = nil;
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage
 {
 	return [self encodedAttributedString:inAttributedString forListObject:inListObject];
-}
-
-- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat
-{
-	[gaimThread inviteContact:contact toChat:chat];
-	
-	return YES;
-}
-
-- (BOOL)createNewGroupChatWithChat:(AIChat *)chat
-{
-	//AIChat *chat = [[adium contentController] chatWithContact:contact initialStatus:nil];
-	//[chat setName:@"Adium Test Chat"];
-	//[gaimThread createNewGroupChat:chat withListObject:contact];
-	return YES;
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
@@ -1692,19 +1686,16 @@ static id<GaimThread> gaimThread = nil;
 	return contactStatusFlagsArray;
 }
 
-- (void)setTypingFlagOfContact:(AIListContact *)contact to:(NSNumber *)typingStateNumber
+- (void)setTypingFlagOfChat:(AIChat *)chat to:(NSNumber *)typingStateNumber
 {
-    NSNumber *currentValue = [contact statusObjectForKey:@"Typing"];
+    NSNumber *currentValue = [chat statusObjectForKey:KEY_TYPING];
 
     if((typingStateNumber && !currentValue) ||
 	   (!typingStateNumber && currentValue) ||
 	   (!([typingStateNumber compare:currentValue] == 0))){
-		[contact setStatusObject:typingStateNumber
-						  forKey:@"Typing"
-						  notify:NO];
-		
-		//Apply any changes
-		[contact notifyOfChangedStatusSilently:silentAndDelayed];
+		[chat setStatusObject:typingStateNumber
+					   forKey:KEY_TYPING
+					   notify:YES];
     }
 }
 
@@ -1716,13 +1707,9 @@ static id<GaimThread> gaimThread = nil;
 	AIChat *chat = [chatDict objectForKey:[contact uniqueObjectID]];
 	if(chat){
 		//Enable/disable the chat
-		[[chat statusDictionary] setObject:[NSNumber numberWithBool:enable] forKey:@"Enabled"];
-		
-		//Notify
-		[[adium notificationCenter] postNotificationName:Content_ChatStatusChanged
-												  object:chat 
-												userInfo:[NSDictionary dictionaryWithObject:
-												[NSArray arrayWithObject:@"Enabled"] forKey:@"Keys"]];            
+		[chat setStatusObject:[NSNumber numberWithBool:enable] 
+					   forKey:@"Enabled"
+					   notify:YES];
 	}
 }
 

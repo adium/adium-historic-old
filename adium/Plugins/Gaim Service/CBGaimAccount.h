@@ -140,7 +140,6 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage;
-- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat;
-- (BOOL)createNewGroupChatWithChat:(AIChat *)chat;
+- (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 
 @end
