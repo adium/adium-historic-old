@@ -103,7 +103,7 @@ typedef enum {
 }
 
 //Chats
-- (NSArray *)allChatsWithContact:(AIListContact *)inContact;
+- (NSSet *)allChatsWithContact:(AIListContact *)inContact;
 - (AIChat *)openChatWithContact:(AIListContact *)inContact;
 - (AIChat *)chatWithContact:(AIListContact *)inContact;
 - (AIChat *)existingChatWithContact:(AIListContact *)inContact;
