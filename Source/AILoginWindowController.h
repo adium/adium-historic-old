@@ -23,11 +23,13 @@
     IBOutlet		NSButton	*checkbox_displayOnStartup;
 
     AILoginController	 		*owner;
-    NSMutableArray			*userArray;
-
+    NSMutableArray				*userArray;
+	
+	NSTimer						*loginTimer;
 }
 
 + (AILoginWindowController *)loginWindowControllerWithOwner:(id)inOwner;
 - (IBAction)closeWindow:(id)sender;
+- (void)disableLoginTimeout;
 
 @end
