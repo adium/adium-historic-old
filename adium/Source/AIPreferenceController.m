@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+// $Id: AIPreferenceController.m,v 1.30 2003/12/08 07:02:34 jmelloy Exp $
+
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
 #import "AIPreferenceCategory.h"
