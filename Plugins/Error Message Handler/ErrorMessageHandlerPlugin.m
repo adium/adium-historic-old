@@ -173,7 +173,7 @@
 										  userInfo:(id)userInfo
 									includeSubject:(BOOL)includeSubject
 {
-	NSString	*description;
+	NSString	*description = nil;
 
 	if([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]){
 		NSString	*title = [userInfo objectForKey:@"Title"];

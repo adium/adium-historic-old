@@ -30,6 +30,7 @@
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/ESImageViewWithImagePicker.h>
 #import <AIUtilities/ESOutlineViewAdditions.h>
+#import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListOutlineView.h>
 #import <Adium/AIMetaContact.h>

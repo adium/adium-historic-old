@@ -19,9 +19,10 @@
 #import "AIAccountController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/ESDateFormatterAdditions.h>
-#import <Adium/AIContentObject.h>
-#import <Adium/AIContentMessage.h>
 #import <Adium/AIAccount.h>
+#import <Adium/AIContentMessage.h>
+#import <Adium/AIContentObject.h>
+#import <Adium/AIListContact.h>
 
 @interface AIMessageAliasPlugin (PRIVATE)
 - (NSMutableAttributedString *)replaceKeywordsInString:(NSAttributedString *)original context:(id)context;
