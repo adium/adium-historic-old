@@ -25,20 +25,9 @@
 
 @interface SLGaimCocoaAdapter (PRIVATE)
 - (void)callTimerFunc:(NSTimer*)timer;
+- (void)initLibGaim;
 @end
 
-static NSRunLoop			*runLoop = nil;
-static NSMutableDictionary  *sourceInfoDict = nil;
-
-//The next source key; continuously incrementing
-static guint sourceId = nil;
-
-//Dictionaries to track gaim<->adium interactions
-NSMutableDictionary *accountDict = nil;
-NSMutableDictionary *contactDict = nil;
-NSMutableDictionary *chatDict = nil;
-
-@implementation SLGaimCocoaAdapter
 
 /*
  * A pointer to the single instance of this class active in the application.
@@ -48,28 +37,26 @@ NSMutableDictionary *chatDict = nil;
  **/
 static SLGaimCocoaAdapter   *myself;
 
-static NSConnection			*servicePluginConnection;
+//Dictionaries to track gaim<->adium interactions
+NSMutableDictionary *accountDict = nil;
+NSMutableDictionary *contactDict = nil;
+NSMutableDictionary *chatDict = nil;
+
+//Event loop stsatic variables
+static guint				sourceId = nil;		//The next source key; continuously incrementing
+static NSRunLoop			*runLoop = nil;
+static NSMutableDictionary  *sourceInfoDict = nil;
+
+@implementation SLGaimCocoaAdapter
 
 #pragma mark Init
 
-+ (void)createThreadedGaimCocoaAdapter/*:(NSArray *)portArray*/
++ (void)createThreadedGaimCocoaAdapter
 {
 	NSAutoreleasePool   *pool;
 	SLGaimCocoaAdapter  *gaimCocoaAdapter;
 	pool = [[NSAutoreleasePool alloc] init];
 
-	/*
-
-	NSConnection		*serverConnection;
-
-
-
-	NSLog(@"createThreadedGaimCocoaAdapter %x ; %x",runLoop, [NSRunLoop currentRunLoop]);
-	servicePluginConnection = [[NSConnection connectionWithReceivePort:[portArray objectAtIndex:0]
-															  sendPort:[portArray objectAtIndex:1]] retain];
-	[servicePluginConnection enableMultipleThreads];
-	[[servicePluginConnection rootProxy] setGaimThread:myself];
-	 */
     gaimCocoaAdapter = [[self alloc] init];
 	
     [pool release];
@@ -121,11 +108,12 @@ static NSConnection			*servicePluginConnection;
 	return myself;
 }
 
-- (void)addAdiumAccount:(id)adiumAccount
+- (void)addAdiumAccount:(id<AdiumGaimDO>)adiumAccount
 {
 	GaimAccount *account = [adiumAccount gaimAccount];
 	account->ui_data = adiumAccount;
 }
+
 #pragma mark Init
 - (id)init
 {
@@ -155,11 +143,6 @@ static NSConnection			*servicePluginConnection;
     return self;
 }
 
-- (void)threadTest:(NSNotification *)notification
-{
-	NSLog(@"\t\t\tgot the test");
-}
-
 #pragma mark Gaim wrapper
 
 
@@ -176,9 +159,9 @@ static NSConnection* accountLookup(GaimAccount *acct)
 	NSLog(@"looked up %@ %@",acct->ui_data,ret);
     return ret;
 }*/
-static id<AdiumGaimDO>* accountLookup(GaimAccount *acct)
+static id<AdiumGaimDO> accountLookup(GaimAccount *acct)
 {
-	id<AdiumGaimDO> *adiumGaimAccount = acct->ui_data;
+	id<AdiumGaimDO> adiumGaimAccount = (id<AdiumGaimDO>)acct->ui_data;
 
     return adiumGaimAccount;
 }
@@ -307,6 +290,7 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 	return conv;
 }
 
+
 #pragma mark Debug
 // Debug ------------------------------------------------------------------------------------------------------
 static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, const char *format, va_list args)
@@ -329,9 +313,7 @@ static GaimDebugUiOps adiumGaimDebugOps = {
 static void adiumGaimConnConnectProgress(GaimConnection *gc, const char *text, size_t step, size_t step_count)
 {
     if(GAIM_DEBUG) NSLog(@"Connecting: gc=0x%x (%s) %i / %i", gc, text, step, step_count);
-#warning XXX
-//	[accountLookup(gc->account) accountConnectionProgressStep:step of:step_count withText:text];
-    
+	[accountLookup(gc->account) accountConnectionProgressStep:step of:step_count];
 }
 
 static void adiumGaimConnConnected(GaimConnection *gc)
@@ -339,7 +321,6 @@ static void adiumGaimConnConnected(GaimConnection *gc)
     if(GAIM_DEBUG) NSLog(@"Connected: gc=%x", gc);
 
 	[accountLookup(gc->account) accountConnectionConnected];
-   NSLog(@"done connecting.");
 }
 
 static void adiumGaimConnDisconnected(GaimConnection *gc)
@@ -543,9 +524,9 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 		}
 		
 		if (updateSelector){
-			[accountLookup(buddy->account) performSelector:updateSelector
-															withObject:theContact
-															withObject:data];
+			[accountLookup(buddy->account) doSelector:updateSelector
+										   withObject:theContact
+										   withObject:data];
 		}else{
 			[accountLookup(buddy->account) updateContact:theContact
 															forEvent:event];
@@ -850,8 +831,7 @@ static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, c
 {
     //Values passed can be null
     NSLog(@"adiumGaimNotifyMessage: %s: %s, %s", title, primary, secondary);
-#warning XXX
-//	[servicePluginInstance handleNotifyMessageOfType:type withTitle:title primary:primary secondary:secondary];
+	[myself handleNotifyMessageOfType:type withTitle:title primary:primary secondary:secondary];
 
     return(nil);
 }
@@ -1485,7 +1465,31 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}
 }
 
-- (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:groupName
+- (oneway void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
+{
+	const char  *buddyUID = [objectUID UTF8String];
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	const char  *groupUTF8String = [groupName UTF8String];
+	
+	//Get the group (Create if necessary)
+	GaimGroup *group = gaim_find_group(groupUTF8String);
+	if(!group){
+		group = gaim_group_new(groupUTF8String);
+		gaim_blist_add_group(group, NULL);
+	}
+	
+	//Verify the buddy does not already exist and create it
+	GaimBuddy *buddy = gaim_find_buddy(account,buddyUID);
+	if(!buddy){
+		buddy = gaim_buddy_new(account, buddyUID, NULL);
+		
+		//Add the buddy locally to libgaim and then to the serverside list
+		gaim_blist_add_buddy(buddy, NULL, group, NULL);
+		serv_add_buddy(account->gc, buddyUID, group);
+	}	
+}
+
+- (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
 {
 	const char  *buddyUID = [objectUID UTF8String];
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
@@ -1499,22 +1503,73 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}
 }
 
-
-- (void)makeAccount:(CBGaimAccount *)account performSelector:(SEL)selector
+- (oneway void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
-	[account performSelector:selector];
+	const char  *buddyUID = [objectUID UTF8String];
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	
+	//Get the destination group (creating if necessary)
+	const char  *groupUTF8String = [groupName UTF8String];
+	GaimGroup 	*destGroup = gaim_find_group(groupUTF8String);
+	if(!destGroup) destGroup = gaim_group_new(groupUTF8String);
+	
+	//Get the gaim buddy and group for this move
+	GaimBuddy *buddy = gaim_find_buddy(account,buddyUID);
+	GaimGroup *oldGroup = gaim_find_buddys_group(buddy);
+	if(buddy){
+		if (oldGroup) {
+			//Procede to move the buddy gaim-side and locally
+			serv_move_buddy(buddy, oldGroup, destGroup);
+		} else {
+			//The buddy was not in any group before; add the buddy to the desired group
+			serv_add_buddy(account->gc, buddyUID, destGroup);
+		}
+	}	
 }
 
-- (void)makeAccount:(CBGaimAccount *)account performSelector:(SEL)selector withObject:(id)object
+- (oneway void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
 {
-	[account performSelector:selector withObject:object];
+    GaimGroup *group = gaim_find_group([oldGroupName UTF8String]);
+	
+	//If we don't have a group with this name, just ignore the rename request
+    if(group){
+		//Rename gaimside, which will rename serverside as well
+		gaim_blist_rename_group(group, [newGroupName UTF8String]);
+
+		/*
+	     //Is this needed?
+		 gaim_blist_remove_group(group);                         //remove the old one gaimside
+		 */
+	}	
 }
 
-- (void)makeAccount:(CBGaimAccount *)account performSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject
+- (oneway void)closeChat:(AIChat *)chat
 {
-	[account performSelector:selector withObject:firstObject withObject:secondObject];
+	GaimConversation *conv = convLookupFromChat(chat,nil);
+	
+	AIListObject *listObject = [chat listObject];
+	if (listObject){
+		[chatDict setObject:nil forKey:[listObject uniqueObjectID]];
+	}else{
+		//Multiuser chat.  Bleh.
+	}
+	
+	if (conv){
+		AIChat *uiDataChat = conv->ui_data;
+		if (chat == uiDataChat){
+			[uiDataChat release];
+		}
+		conv->ui_data = nil;
+		
+		gaim_conversation_destroy(conv);
+	}
 }
 
+- (void)dealloc
+{
+	gaim_signals_disconnect_by_handle(gaim_adium_get_handle());
+	[super dealloc];
+}
 
 
 @end
