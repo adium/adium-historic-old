@@ -1,8 +1,7 @@
 //-------------------------------------------------------------------------------------------------------
 // Adium 0.8
 //-------------------------------------------------------------------------------------------------------
-Log Viewer - ability to delete a contact (whole folder) at once from drawer. [brian]  // in progress
-Log Viewer - respect case of IDs for logging [brian]
+Log Viewer - respect case of IDs for logging [brian] // in progress
 Log Viewer - fix "View X's Logs" to use the new filtering style [brian]
 Preferences -> Keys - ability to add Shift mask for Return/Enter [brian]
 Standardize/enhance Xtras pref panes [brian]
