@@ -207,7 +207,8 @@
 						  keyEquivalent:@""];
     
     //Add it to the menubar
-    if([self shouldConfigureForAway]){
+	menuConfiguredForAway = [self shouldConfigureForAway];
+    if(menuConfiguredForAway){
         [[adium menuController] addMenuItem:menuItem_removeAway toLocation:LOC_File_Status];
          if ([NSApp isOnPantherOrBetter]) {
              [[adium menuController] addMenuItem:menuItem_removeAway_alternate toLocation:LOC_File_Status];
@@ -249,30 +250,30 @@
     NSString    *key = [[notification userInfo] objectForKey:@"Key"];
     
     if(notification == nil || [group compare:PREF_GROUP_AWAY_MESSAGES] == 0){
-	//Rebuild the away menu
-	if([key compare:KEY_SAVED_AWAYS] == 0){
-	    [self _updateAwaySubmenus];
-	}
-	
-    }else if(notification == nil ||([group compare:GROUP_ACCOUNT_STATUS] == 0 && [notification object] == nil)){
-	if([key compare:@"AwayMessage"] == 0){
-	    //Update our away menus
-	    [self _updateMenusToReflectAwayState:[self shouldConfigureForAway]];
-	    [self _updateAwaySubmenus];
-	    
-	    //Remove existing content sent/received observer, and install new (if away)
-	    [[adium notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
-	    [[adium notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
-	    [[adium notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
-	    if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] != nil){
-		[[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
-		[[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
-		[[adium notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
-	    }
-	    
-	    //Flush our array of 'responded' contacts
-	    [receivedAwayMessage release]; receivedAwayMessage = [[NSMutableArray alloc] init];
-	}
+		//Rebuild the away menu
+		if([key compare:KEY_SAVED_AWAYS] == 0){
+			[self _updateAwaySubmenus];
+		}
+		
+    }else if(notification == nil || ([group compare:GROUP_ACCOUNT_STATUS] == 0 && [notification object] == nil)){
+		if([key compare:@"AwayMessage"] == 0){
+			//Update our away menus
+			[self _updateMenusToReflectAwayState:[self shouldConfigureForAway]];
+			[self _updateAwaySubmenus];
+			
+			//Remove existing content sent/received observer, and install new (if away)
+			[[adium notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
+			[[adium notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
+			[[adium notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
+			if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] != nil){
+				[[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
+				[[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
+				[[adium notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
+			}
+			
+			//Flush our array of 'responded' contacts
+			[receivedAwayMessage release]; receivedAwayMessage = [[NSMutableArray alloc] init];
+		}
     }
 }
 
