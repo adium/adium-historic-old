@@ -35,7 +35,7 @@
     //--Calculate Max Width and Flip all of the Images---
     for(index = 0; index < [imageArray count]; index++){
     
-        maxWidth += [[imageArray objectAtIndex:index] size].width; 
+        maxWidth += ([(NSImage *)[imageArray objectAtIndex:index] size]).width; 
         [[imageArray objectAtIndex:index] setFlipped:TRUE];
     }
 
