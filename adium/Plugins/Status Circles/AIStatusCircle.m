@@ -53,6 +53,11 @@
     _maxWidth = 0;
     cachedHeight = 0;
     
+/*    statusSquare = [[AIImageUtilities 
+imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
+    [statusSquare setFlipped:YES]; */
+
+    
     return(self);
 }
 
@@ -124,6 +129,46 @@
 //Draw
 - (void)drawInRect:(NSRect)inRect
 {
+/*    //set up the border
+    float rad = inRect.size.height * 0.5;
+    NSBezierPath *aRect = [[[NSBezierPath alloc] init] autorelease];
+    [aRect appendBezierPathWithArcWithCenter:NSMakePoint(inRect.origin.x + rad, inRect.origin.y + rad) radius:rad startAngle:180 endAngle:270];
+    [aRect appendBezierPathWithArcWithCenter:NSMakePoint(inRect.origin.x + (inRect.size.width - rad), inRect.origin.y + rad) radius:rad startAngle:270 endAngle:0];
+    [aRect appendBezierPathWithArcWithCenter:NSMakePoint(inRect.origin.x + (inRect.size.width - rad), inRect.origin.y + (inRect.size.height - rad)) radius:rad startAngle:0 endAngle:90];
+    [aRect appendBezierPathWithArcWithCenter:NSMakePoint(inRect.origin.x + rad, inRect.origin.y + (inRect.size.height - rad)) radius:rad startAngle:90 endAngle:180];
+    [aRect closePath];
+    
+    //draw bg color
+    [((state == AICircleFlashA) ? flashColor : color) set];
+    [aRect fill];
+    
+    //draw text
+    NSAttributedString	*attrString = [self attributedStringForHeight:inRect.size.height];
+    NSSize		stringSize = [self attributedStringSizeForHeight:inRect.size.height];
+    [attrString drawInRect:NSMakeRect(inRect.origin.x, inRect.origin.y + (inRect.size.height - stringSize.height)/2, inRect.size.width, stringSize.height)];
+    
+   */ /* //create the background rect
+    NSBezierPath *bRect = [NSBezierPath bezierPathWithRect:inRect];
+    [bRect appendBezierPath:aRect];
+    [bRect setWindingRule:NSEvenOddWindingRule];
+    [[NSColor whiteColor] set];
+    [bRect fill]; */ /*
+    
+    //mmmm, plastic-y
+    //[statusSquare drawInRect:[aRect bounds] fromRect:NSMakeRect(2, 3, [statusSquare size].width-4, [statusSquare size].height-6) operation:NSCompositePlusDarker fraction:1.0];
+    
+  */ /* //create the background rect
+    NSBezierPath *bRect = [NSBezierPath bezierPathWithRect:inRect];
+    [bRect appendBezierPath:aRect];
+    [bRect setWindingRule:NSEvenOddWindingRule];
+    [[NSColor whiteColor] set];
+    [bRect fill]; */ /*
+    
+     //pretty border
+    [[[NSColor darkGrayColor] colorWithAlphaComponent:0.4] set];
+    [aRect setLineWidth:(inRect.size.height * 0.25 * (2.0/15.0))];
+    [aRect stroke]; */
+
     NSBezierPath 		*pillPath;
     float			circleRadius, circleWidth, lineWidth;
     float 			innerLeft, innerRight, innerTop, innerBottom, centerY;
