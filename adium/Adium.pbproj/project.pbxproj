@@ -61,6 +61,225 @@
 //102
 //103
 //104
+//110
+//111
+//112
+//113
+//114
+		114A79B30470C383001F3502 = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		114A79B40470C385001F3502 = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		114A79B50470C3DA001F3502 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		114A79BA0470C433001F3502 = {
+			fileRef = 115C72070470BD91007DDD3A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		115C72010470BD91007DDD3A = {
+			buildActionMask = 2147483647;
+			files = (
+				115C72100470BEFB007DDD3A,
+				115C72140470BF33007DDD3A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		115C72020470BD91007DDD3A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		115C72030470BD91007DDD3A = {
+			buildActionMask = 2147483647;
+			files = (
+				115C72110470BEFB007DDD3A,
+				115C72150470BF33007DDD3A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		115C72040470BD91007DDD3A = {
+			buildActionMask = 2147483647;
+			files = (
+				114A79B30470C383001F3502,
+				114A79B40470C385001F3502,
+				114A79B50470C3DA001F3502,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		115C72050470BD91007DDD3A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		115C72060470BD91007DDD3A = {
+			buildPhases = (
+				115C72010470BD91007DDD3A,
+				115C72020470BD91007DDD3A,
+				115C72030470BD91007DDD3A,
+				115C72040470BD91007DDD3A,
+				115C72050470BD91007DDD3A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Idle Sort";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				115C720A0470BE34007DDD3A,
+				115C720B0470BE34007DDD3A,
+			);
+			isa = PBXBundleTarget;
+			name = "Idle Sort";
+			productName = "Idle Sort";
+			productReference = 115C72070470BD91007DDD3A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIIdleSortPlugin</string>
+</dict>
+</plist>
+";
+		};
+		115C72070470BD91007DDD3A = {
+			isa = PBXBundleReference;
+			path = "Idle Sort.AdiumPlugin";
+			refType = 3;
+		};
+		115C72080470BD91007DDD3A = {
+			isa = PBXTargetDependency;
+			target = 115C72060470BD91007DDD3A;
+		};
+		115C72090470BD91007DDD3A = {
+			fileRef = 115C72070470BD91007DDD3A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		115C720A0470BE34007DDD3A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		115C720B0470BE34007DDD3A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		115C720D0470BE5E007DDD3A = {
+			children = (
+				115C720E0470BEFB007DDD3A,
+				115C720F0470BEFB007DDD3A,
+				115C72120470BF33007DDD3A,
+				115C72130470BF33007DDD3A,
+			);
+			isa = PBXGroup;
+			name = "Idle Sort";
+			refType = 4;
+		};
+		115C720E0470BEFB007DDD3A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIIdleSortPlugin.h;
+			path = "Plugins/Idle Sort/AIIdleSortPlugin.h";
+			refType = 4;
+		};
+		115C720F0470BEFB007DDD3A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIIdleSortPlugin.m;
+			path = "Plugins/Idle Sort/AIIdleSortPlugin.m";
+			refType = 4;
+		};
+		115C72100470BEFB007DDD3A = {
+			fileRef = 115C720E0470BEFB007DDD3A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		115C72110470BEFB007DDD3A = {
+			fileRef = 115C720F0470BEFB007DDD3A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		115C72120470BF33007DDD3A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIIdleSortNoGroups.h;
+			path = "Plugins/Idle Sort/AIIdleSortNoGroups.h";
+			refType = 4;
+		};
+		115C72130470BF33007DDD3A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIIdleSortNoGroups.m;
+			path = "Plugins/Idle Sort/AIIdleSortNoGroups.m";
+			refType = 4;
+		};
+		115C72140470BF33007DDD3A = {
+			fileRef = 115C72120470BF33007DDD3A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		115C72150470BF33007DDD3A = {
+			fileRef = 115C72130470BF33007DDD3A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//110
+//111
+//112
+//113
+//114
 //170
 //171
 //172
@@ -121,6 +340,7 @@
 				4BD7D0E104620E7200A8010A,
 				B7AE6657046578640051E914,
 				9E2E306E046CA9BF00415B22,
+				115C72070470BD91007DDD3A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -186,6 +406,7 @@
 				4BD7D0E004620E7200A8010A,
 				B7AE6656046578640051E914,
 				9E2E306D046CA9BF00415B22,
+				115C72060470BD91007DDD3A,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -284,6 +505,7 @@
 				4B18A5270459F8B000A8010A,
 				4BD7D0D304620DAC00A8010A,
 				4BD7D0E204620E7300A8010A,
+				115C72080470BD91007DDD3A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -392,6 +614,7 @@
 				4BF290CB03F9FE8D00A8010A,
 				4BDF17250450CBDE00A8010A,
 				4B1CA9D80458D76E00A8010A,
+				115C72090470BD91007DDD3A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2239,6 +2462,7 @@
 				4B4FA11704125F3F00A8010A,
 				4B0473C2043E443A00A8010A,
 				4B55411E044DF01600A8010A,
+				114A79BA0470C433001F3502,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2415,6 +2639,7 @@
 				4B254C4803F7073900A8010A,
 				4BED5A5303C34F1E00A8010A,
 				4B4FA10E04125E2600A8010A,
+				115C720D0470BE5E007DDD3A,
 				4B7BD8690412586500A8010A,
 			);
 			isa = PBXGroup;
