@@ -28,7 +28,11 @@
 //init and close
 - (void)initController
 {
+    NSString *familyPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Default Icon Family.adiumIconFamily"];
     currentTimer = nil;
+    [self setIconFamily:[AIIconFamily iconFamilyFromFolder:familyPath]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:NSApplicationWillTerminateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillBecomeActive:) name:NSApplicationWillBecomeActiveNotification object:nil];
 }
 
 - (void)closeController
@@ -39,17 +43,46 @@
 //icon family methods
 - (AIIconFamily *)currentIconFamily
 {
-    return nil;
+    return iconFamily;
 }
-- (void)setIconFamily:(AIIconFamily *)iconFamily
-{
 
+- (void)setIconFamily:(AIIconFamily *)newIconFamily
+{
+    [self setIconFamily:newIconFamily initializingClosed:NO];
+}
+
+- (void)setIconFamily:(AIIconFamily *)newIconFamily initializingClosed:(BOOL)closed
+{
+    [iconFamily release];
+    iconFamily = [newIconFamily retain];
+    if (closed) {
+        [self setAppIcon:[iconFamily closedImage]];
+    } else {
+        [self setAppIcon:[iconFamily openedImage]];
+    }
+}
+
+- (void)alert
+{
+    [self setAppIcon:[iconFamily alertImage]];
+    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(resetAppIcon:) userInfo:nil repeats:NO];
+}
+
+- (void)setAppIcon:(NSImage *)newIcon
+{
+    [currentIcon release];
+    currentIcon = [newIcon retain];
+
+    [[owner notificationCenter] postNotification:[NSNotification notificationWithName:Dock_IconWillChange object:newIcon]];
+    [[NSApplication sharedApplication] setApplicationIconImage:newIcon];
+    [[owner notificationCenter] postNotification:[NSNotification notificationWithName:Dock_IconDidChange object:newIcon]];
 }
 
 //bouncing
 - (void)bounce //for external use only.
 {
     [self privBounce];
+    [self alert];
 }
 
 - (void)bounceWithInterval:(double)delay times:(int)num
@@ -57,6 +90,7 @@
     if(!currentTimer)
     {
         [self privBounce]; // do one right away
+        [self alert];
     
         currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay+1 target:self selector: @selector(bounceWithTimer:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:delay],@"delay",[NSNumber numberWithInt:num-1],@"num",nil] repeats:NO]; // delay+1 so we take into account the time it takes to bounce. num-1 to because we did one already.
     }
@@ -67,6 +101,7 @@
     if(!currentTimer && ![NSApp isActive])
     {
         [self privBounce]; // do one right away
+        [self alert];
 
         [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(startEternalTimer:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:delay], @"delay", nil] repeats:NO];
     }
@@ -107,6 +142,7 @@
 - (void)bounceWithTimer:(NSTimer *)timer
 {
     [self privBounce];
+    [self alert];
     
     if([[[timer userInfo] objectForKey:@"num"] intValue] > 1)
     {
@@ -127,12 +163,24 @@
         currentTimer = nil;
     } else {
         [self privBounce];
+        [self alert];
     }
 }
 
-- (void)setAppIcon:(NSImage *)newIcon
+- (void)resetAppIcon:(NSTimer *)timer
 {
-    [[NSApplication sharedApplication] setApplicationIconImage:newIcon];
+    [self setAppIcon:[iconFamily openedImage]];
+}
+
+- (void)appWillTerminate:(NSNotification *)notification
+{
+    [self setAppIcon:[iconFamily closedImage]];
+}
+
+- (void)appWillBecomeActive:(NSNotification *)notification
+{
+    if (currentIcon == [iconFamily alertImage])
+        [self setAppIcon:[iconFamily openedImage]];
 }
 
 @end
