@@ -44,8 +44,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 - (void)awakeFromNib
 {
-	image_O = [NSImage imageNamed:@"O"];
-	image_X = [NSImage imageNamed:@"X"];
+	image_O = [[NSImage imageNamed:@"O" forClass:[self class]] retain];
+	image_X = [[NSImage imageNamed:@"X" forClass:[self class]] retain];
 }
 
 - (void)handleMessage:(NSString *)msg ofType:(NSString *)type

@@ -20,7 +20,7 @@
 {
     NSBundle	*ownerBundle;
     NSString	*imagePath;
-    NSImage	*image;
+    NSImage		*image;
 	
     //Get the bundle
     ownerBundle = [NSBundle bundleForClass:inClass];
