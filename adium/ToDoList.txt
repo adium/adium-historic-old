@@ -112,13 +112,18 @@ Status badges:
 	+ Allow user to select icon sets (packaged in a bundle) in preferences
 
 Event Notifications (the feature formerly known as Event Bezel):
-    + Give the contact alert a nice icon.
+	This will be replaced with Growl.
+	+ Implement Growl App Bridge.framework
+	+ Build in a way to install plugin if user requests to use notifications
+
+/*    + Give the contact alert a nice icon.
     + Give the notification window a close widget to quick-dismish the event, if it is the last one close the thing entirely. Maybe if clicking it with option hold down should close all queued events altogether.
     + Give the notification window a mail dock icon like badge to show the total number of recent events to be shown on it
     + Add small pretty protocol icons (we need nice icons for this)
     # Add status icons (the desired thing should be to use the same ones as the ones in the forthcoming new contact list)
 	# Give the notification window a titlebar, and allow it to be repositioned while visible.
       not sure about adding a titlebar to it [Jorge]
+*/
 
 [Colin]
 Contact Blocking:
@@ -137,6 +142,7 @@ Documentation
 		
 	+ Developer Documentation
 		+ We already have some documentation. This needs to be gone through
+		= PLace deprecated documentation in a separate folder
 		+ Creating webkit themes
 		+ Address book integration
 
@@ -183,6 +189,7 @@ Deferring of initial message:
    Don't pop up a message window if one doesn't already exist.  Use some kind of dock indicator / list indicator.  Double click on list or dock menu item would display the message.  If a window is already open, new messages would create a tab as normal.  We could associate this option with the state system for some pretty cool behavior.
 
 Contact List import/export:
+	+ Export to plist
    Import/export code is not fun. 
 
 Sorting:  Allow a 'minor' sort option like iChat?  (iChat uses the last selected as the subsort).  Not sure if this would be useful.
