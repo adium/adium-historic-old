@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.63 2004/07/05 22:37:54 evands Exp $
+// $Id: AIDockController.m,v 1.64 2004/07/05 22:38:13 evands Exp $
 
 #import "AIDockController.h"
 
@@ -111,8 +111,6 @@
 			NSString	    *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
 			NSString		*lastLaunchedVersion = [[owner preferenceController] preferenceForKey:KEY_LAST_VERSION_LAUNCHED
 																							group:PREF_GROUP_GENERAL];
-			
-			lastLaunchedVersion = nil;
 			
 			//On launch we only need to update the icon file if this is a new version of Adium.  When preferences
 			//change we always want to update it
