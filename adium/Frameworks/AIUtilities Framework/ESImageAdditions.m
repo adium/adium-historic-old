@@ -9,7 +9,7 @@
 #import "ESImageAdditions.h"
 #import "pxmLib.h"
 
-#define RESOURCE_ID_CLOSE_BUTTON_AQUA       10212
+#define RESOURCE_ID_CLOSE_BUTTON_AQUA       201
 #define RESOURCE_ID_CLOSE_BUTTON_GRAPHITE   10191
 #define RESOURCE_TYPE_CLOSE_BUTTON	    'pxm#'
 
@@ -166,37 +166,37 @@
     NSImage     *closeImage = nil;
     
     if(FSPathMakeRef([theFilePath fileSystemRepresentation], &ref, NULL) == noErr){
-	HFSUniStr255    forkName;
-	SInt16		refNum;
-	Handle		resource;
-	pxmRef		pixmap;
-	GWorldPtr       gWorld;
-	int		resourceID;
-	
-	if(inTint == NSBlueControlTint){
-	    resourceID = RESOURCE_ID_CLOSE_BUTTON_AQUA;
-	}else{ //inTint == NSGraphiteControlTint
-	    resourceID = RESOURCE_ID_CLOSE_BUTTON_GRAPHITE;
-	}
-	
-	//Extract the close button's pxm# resource for the close button
-	FSGetDataForkName(&forkName);
-	FSOpenResourceFile(&ref, forkName.length, forkName.unicode, fsRdPerm, &refNum);
-	resource = GetResource(RESOURCE_TYPE_CLOSE_BUTTON,resourceID);
-	
-	//Use the Sprocket pxm# code to extract the correct close button image
-	HLock(resource);
-	pixmap = pxmCreate(*resource, GetHandleSize(resource));
-	HUnlock(resource);
-	pxmMakeGWorld(pixmap, &gWorld);
-	pxmRenderImage(pixmap, state, gWorld);
-	
-	//Place this image into an NSImage, and return
-	closeImage = [NSImage imageFromGWorld:gWorld];
-	
-	//Close up
-	pxmDispose(pixmap);
-	CloseResFile(refNum);
+		HFSUniStr255    forkName;
+		SInt16		refNum;
+		Handle		resource;
+		pxmRef		pixmap;
+		GWorldPtr       gWorld;
+		int		resourceID;
+		
+		if(inTint == NSBlueControlTint){
+			resourceID = RESOURCE_ID_CLOSE_BUTTON_AQUA;
+		}else{ //inTint == NSGraphiteControlTint
+			resourceID = RESOURCE_ID_CLOSE_BUTTON_GRAPHITE;
+		}
+		
+		//Extract the close button's pxm# resource for the close button
+		FSGetDataForkName(&forkName);
+		FSOpenResourceFile(&ref, forkName.length, forkName.unicode, fsRdPerm, &refNum);
+		resource = GetResource(RESOURCE_TYPE_CLOSE_BUTTON,resourceID);
+		
+		//Use the Sprocket pxm# code to extract the correct close button image
+		HLock(resource);
+		pixmap = pxmCreate(*resource, GetHandleSize(resource));
+		HUnlock(resource);
+		pxmMakeGWorld(pixmap, &gWorld);
+		pxmRenderImage(pixmap, state, gWorld);
+		
+		//Place this image into an NSImage, and return
+		closeImage = [NSImage imageFromGWorld:gWorld];
+		
+		//Close up
+		pxmDispose(pixmap);
+		CloseResFile(refNum);
     }
     
     return(closeImage);
