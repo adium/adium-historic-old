@@ -150,23 +150,6 @@
 					  bodyBackground:NO]);
 }
 
-//MSN (as of libgaim 1.1.0) tells us a buddy is away when they are merely idle.  Avoid passing that information on.
-- (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data
-{
-	const char  *uidUTF8String = [[theContact UID] UTF8String];
-	GaimBuddy   *buddy;
-	BOOL		shouldUpdateAway = YES;
-
-	if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
-		(MSN_AWAY_TYPE(buddy->uc) == MSN_IDLE)){
-			shouldUpdateAway = NO;
-	}
-
-	if(shouldUpdateAway){
-		[super updateWentAway:theContact withData:data];
-	}
-}
-
 #pragma mark Status
 //Update our full name on connect
 - (oneway void)accountConnectionConnected
@@ -335,6 +318,29 @@
 	
 	return (statusName);
 }
+
+/*
+ * @brief Update the status message and away state of the contact
+ */
+- (void)updateStatusForContact:(AIListContact *)theContact toStatusType:(NSNumber *)statusTypeNumber statusName:(NSString *)statusName statusMessage:(NSAttributedString *)statusMessage
+{
+	const char  *uidUTF8String = [[theContact UID] UTF8String];
+	GaimBuddy   *buddy;
+	BOOL		shouldUpdateAway = YES;
+	
+	if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
+		(MSN_AWAY_TYPE(buddy->uc) == MSN_IDLE)){
+		shouldUpdateAway = NO;
+	}
+	
+	if(shouldUpdateAway){
+		[super updateStatusForContact:theContact
+						 toStatusType:statusTypeNumber
+						   statusName:statusName
+						statusMessage:statusMessage];
+	}	
+}
+
 
 /*!
  * @brief Return the gaim status type to be used for a status

@@ -23,7 +23,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 		SEL				updateSelector = nil;
 		id				data = nil;
 		BOOL			letAccountHandleUpdate = YES;
-		AIAccount		*account = accountLookup(buddy->account);
+		CBGaimAccount	*account = accountLookup(buddy->account);
 		AIListContact   *theContact = contactLookupFromBuddy(buddy);
 
 		switch(event){
