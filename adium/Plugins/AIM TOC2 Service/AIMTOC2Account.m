@@ -158,11 +158,6 @@
     return(@"AIM");
 }
 
-//ServiceID.UID
-- (NSString *)UIDAndServiceID{
-    return([NSString stringWithFormat:@"%@.%@",[self serviceID],[self UID]]);
-} 
-
 // Return a readable description of this account's username
 - (NSString *)accountDescription
 {
@@ -886,7 +881,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.93 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.94 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)

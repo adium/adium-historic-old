@@ -231,11 +231,6 @@ const int STARTUP_TIME = 20;
     return @"Jabber";
 }
 
-- (NSString *)UIDAndServiceID //serviceid.uid
-{
-    return [NSString stringWithFormat:@"%@.%@",[self serviceID],[self UID]];
-}
-
 - (NSString *)accountDescription
 {
     return [self UID];

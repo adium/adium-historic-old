@@ -538,10 +538,6 @@
     return [NSString stringWithFormat:@"GAIM-%@.%@", [self serviceID], [self UID]];
 }
 
-- (NSString *)UIDAndServiceID {
-    return [NSString stringWithFormat:@"%@.%@", [self serviceID], [self UID]];
-}
-
 - (NSString *)accountDescription {
     return [self UIDAndServiceID];
 }

@@ -73,6 +73,10 @@ typedef enum {
     //- (void)initiateSendOfFile:(NSString *)filename toContact:(AIListContact *)inContact;
 @end
 
+/*!
+ * @class AIAccount
+ * An account of ours (one we connect to and use to talk to handles)
+ */
 @interface AIAccount : NSObject {
     AIAdium			*owner;
     id <AIServiceController>	service;
