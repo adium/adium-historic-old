@@ -140,7 +140,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Returns the RELATIVE path to the folder where the log should be written
 + (NSString *)relativePathForLogWithObject:(NSString *)object onAccount:(AIAccount *)account
 {	
-    return([NSString stringWithFormat:@"%@.%@/%@", [[account service] serviceID], [account UID], object]);
+    return([NSString stringWithFormat:@"%@.%@/%@", [[account service] serviceID], [[account UID] safeFilenameString], object]);
 }
 
 //Returns the file name for the log
@@ -149,7 +149,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	NSString	*dateString = [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil];
 	NSString	*extension = (plainText ? @"adiumLog" : @"html");
 	
-	return([NSString stringWithFormat:@"%@ (%@).%@", [object safeFilenameString], dateString, extension]);
+	return([NSString stringWithFormat:@"%@ (%@).%@", object, dateString, extension]);
 }
 
 //Takes the RELATIVE path to a log, and returns a FULL path
@@ -319,6 +319,8 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     FILE		*file;
 
 	//Get the log path and name
+	object = [object safeFilenameString];
+
 	fileName = [AILoggerPlugin fileNameForLogWithObject:object onDate:date plainText:!logHTML];
 	relativePath = [AILoggerPlugin relativePathForLogWithObject:object onAccount:account];
 	fullPath = [AILoggerPlugin fullPathOfLogAtRelativePath:relativePath];
