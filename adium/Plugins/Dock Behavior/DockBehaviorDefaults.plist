@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Active Behavior Set</key>
-	<string>None</string>
+	<string>On New Messages</string>
 	<key>Custom Behavior</key>
 	<array/>
 </dict>
