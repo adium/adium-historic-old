@@ -38,7 +38,7 @@ try {
 %>
 
 <html>
-<head><title><%= title %></title>
+<head><title>Add Contact: <%= title %></title>
 <body>
 <form action="insertMeta.jsp" method="get">
 <select name="user_id">

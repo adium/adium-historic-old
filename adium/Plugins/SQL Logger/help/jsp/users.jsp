@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date: 2004/05/15 17:56:46 $ -->
+<!--$Rev: 697 $ $Date: 2004/05/22 04:01:28 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -149,32 +149,28 @@ try {
         out.println("</div>");
 
 
-        metaStmt = conn.prepareStatement("select meta_id, name, preferred from meta_container natural join meta_contact where user_id = ?");
+        metaStmt = conn.prepareStatement("select meta_id, name, preferred from meta_container natural join meta_contact where user_id = ? order by name");
 
         metaStmt.setInt(1, rset.getInt("user_id"));
 
         metaSet = metaStmt.executeQuery();
 
         if(metaSet != null && metaSet.isBeforeFirst()) {
-            out.println("<p>Select preferred meta-contact for this user</p>");
+            out.println("<p>Select preferred meta-contact for this user:</p>");
 
-            out.println("<form action=\"updatePreferredMeta.jsp\" method=\"post\">");
+            out.println("<form action=\"updatePreferredMeta.jsp\" method=\"get\">");
             out.println("<input type=\"hidden\" name=\"user_id\" value=\"" + 
                 rset.getInt("user_id") + "\" />");
-            out.println("<select name=\"meta_id\">");
-            out.println("<option value=\"0\" selected=\"selected\">Choose One</option>");
             while(metaSet.next()) {
-                out.print("<option value=\"" + metaSet.getString("meta_id") + 
+                out.print("<input type=\"radio\" name=\"meta_id\" value=\"" + metaSet.getString("meta_id") + 
                     "\"");
                 if(metaSet.getBoolean("preferred")) {
-                    out.print(" selected=\"selected\"");
+                    out.print(" checked=\"checked\"");
                 }
-                out.print(" />" + metaSet.getString("name") + "</option>");
+                out.print(" />" + metaSet.getString("name") + "<br />");
             }
 
-            out.println("</select>");
-            
-            out.println("<br /><br/><span style=\"float:right; padding-right: 225px\"><input type=\"submit\"></span>");
+            out.println("<span style=\"float:right; padding-right: 225px\"><input type=\"submit\"></span>");
             out.println("</form>");
         }
 %>
