@@ -1128,6 +1128,10 @@ static id<GaimThread> gaimThread = nil;
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
 	
+	//Update our away and idle status
+	[self updateStatusForKey:@"AwayMessage"];
+	[self updateStatusForKey:@"IdleSince"];
+	
     //Silence updates
     [self silenceAllContactUpdatesForInterval:18.0];
 	[[adium contactController] delayListObjectNotificationsUntilInactivity];
@@ -1214,13 +1218,6 @@ static id<GaimThread> gaimThread = nil;
                                     withDescription:connectionNotice];
 }
 
-//Account is finishing login
-- (oneway void)accountFinishLogin
-{
-	[self updateStatusForKey:@"AwayMessage"];
-	[self updateStatusForKey:@"IdleSince"];
-}
-
 //Our account has disconnected
 - (oneway void)accountConnectionDisconnected
 {
@@ -1303,6 +1300,8 @@ static id<GaimThread> gaimThread = nil;
 {    
 	[super updateStatusForKey:key];
 
+	if(GAIM_DEBUG) NSLog(@"Updating status for key: %@",key);
+	
     //Now look at keys which only make sense while online
 #warning Need to think about this....
 	/*
@@ -1375,7 +1374,7 @@ static id<GaimThread> gaimThread = nil;
 		
 		[gaimThread setInfo:profileHTML onAccount:self];
 		
-		if (GAIM_DEBUG) NSLog(@"updating profile to %@",[profile string]);
+		if(GAIM_DEBUG) NSLog(@"updating profile to %@",[profile string]);
 		
 		//We now have a profile
 		[self setStatusObject:profile forKey:@"TextProfile" notify:YES];
@@ -1531,22 +1530,7 @@ static id<GaimThread> gaimThread = nil;
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-	if (account->gc->flags & GAIM_CONNECTION_HTML){
-		return([AIHTMLDecoder encodeHTML:inAttributedString
-								 headers:YES
-								fontTags:YES
-					  includingColorTags:YES
-						   closeFontTags:YES
-							   styleTags:YES
-			  closeStyleTagsOnFontChange:YES
-						  encodeNonASCII:NO
-							  imagesPath:nil
-					   attachmentsAsText:YES
-		  attachmentImagesOnlyForSending:YES
-							  simpleTagsOnly:NO]);
-	}else{
-		return [inAttributedString string];
-	}
+	return [inAttributedString string]; //Default behavior is plain text
 }
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage
