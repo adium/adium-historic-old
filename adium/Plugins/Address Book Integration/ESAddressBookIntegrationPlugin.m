@@ -84,7 +84,7 @@
 				[trackingDict setObject:inObject forKey:[NSNumber numberWithInt:tag]];
                 
                 //Load the name if appropriate
-                if (displayFormat != None) {
+                if (enableImport) {
                     NSString *firstName = [person valueForProperty:kABFirstNameProperty];
                     NSString *lastName = [person valueForProperty:kABLastNameProperty];
                     NSString *nickName;
@@ -143,6 +143,7 @@
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_ADDRESSBOOK] == 0){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
         //load new displayFormat
+		enableImport = [[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue];
         displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
         automaticSync = [[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue];
         useNickName = [[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue];

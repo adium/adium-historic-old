@@ -10,6 +10,7 @@
     IBOutlet	NSPopUpButton			*format_menu;
     IBOutlet    NSButton                *checkBox_syncAutomatic;
     IBOutlet    NSButton                *checkBox_useNickName;
+	IBOutlet	NSButton				*checkBox_enableImport;
 }
 
 - (IBAction)changePreference:(id)sender;

@@ -77,14 +77,7 @@
                                     keyEquivalent:@""] autorelease];
     [menuItem setTag:LastFirst];
     [choicesMenu addItem:menuItem];
-    
-    menuItem = [[[NSMenuItem alloc] initWithTitle:ADDRESS_BOOK_NONE_OPTION
-                                           target:self
-                                           action:@selector(changeFormat:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setTag:None];
-    [choicesMenu addItem:menuItem];
-    
+
     [format_menu setMenu:choicesMenu];
 
     NSRect oldFrame = [format_menu frame];
@@ -97,12 +90,16 @@
 {
     if(notification == nil || [PREF_GROUP_ADDRESSBOOK compare:[[notification userInfo] objectForKey:@"Group"]] == 0){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
-        
+        bool			enableImport = [[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue];
+
+		[checkBox_enableImport setState:enableImport];
+
         [format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue]]];
-    
-        [checkBox_syncAutomatic setState:[[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue]];
-        [checkBox_useNickName setState:[[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue]];
-        [checkBox_useNickName setEnabled:[[format_menu selectedItem] tag] != None];
+		[format_menu setEnabled:enableImport];
+
+		[checkBox_syncAutomatic setState:[[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue]];
+		[checkBox_useNickName setState:[[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue]];
+		[checkBox_useNickName setEnabled:enableImport];
     }
 }
 
@@ -124,7 +121,11 @@
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
                                              forKey:KEY_AB_USE_NICKNAME
                                               group:PREF_GROUP_ADDRESSBOOK];
-    }
+    } else if (sender == checkBox_enableImport) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
+                                             forKey:KEY_AB_ENABLE_IMPORT
+                                              group:PREF_GROUP_ADDRESSBOOK];
+	}
 }
 
 @end

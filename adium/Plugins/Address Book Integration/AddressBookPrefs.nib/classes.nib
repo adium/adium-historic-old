@@ -18,23 +18,11 @@
             CLASS = ESAddressBookIntegrationAdvancedPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "checkBox_enableImages" = NSButton; 
+                "checkBox_enableImport" = NSButton; 
                 "checkBox_syncAutomatic" = NSButton; 
                 "checkBox_useNickName" = NSButton; 
                 "format_menu" = NSPopUpButton; 
-                "format_textField" = NSTextField; 
-            }; 
-            SUPERCLASS = AIPreferencePane; 
-        }, 
-        {
-            CLASS = ESAnnouncerPreferences; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                "checkBox_incoming" = NSButton; 
-                "checkBox_outgoing" = NSButton; 
-                "checkBox_sender" = NSButton; 
-                "checkBox_status" = NSButton; 
-                "checkBox_time" = NSButton; 
+                myOutlet = id; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
