@@ -7,3 +7,4 @@
  */
 
 #import "SHHyperlinkScanner.h"
+#import "SHMarkedHyperlink.h"

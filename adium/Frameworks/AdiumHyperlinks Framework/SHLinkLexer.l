@@ -14,8 +14,8 @@
  *					      performace gains we might get.)
  */
 #define YY_NO_UNPUT
-#include "SHLinkLexer.h"
 unsigned int SHStringOffset;
+#include "SHLinkLexer.h"
 %}
 
 
@@ -36,12 +36,13 @@ yahooIMSpec	ymsgr:sendim\?.+
 
 %x CANONICAL
 %%
+\w
 
-<CANONICAL>{urlSpecifier}   {BEGIN INITIAL; return SH_URL_VALID;}
-<CANONICAL>{ipURL}          {BEGIN INITIAL; return SH_URL_VALID;}
-<CANONICAL>.*		    {BEGIN INITIAL; return SH_URL_INVALID;}
+<CANONICAL>{urlSpecifier}   {SHStringOffset += SHleng; BEGIN INITIAL; return SH_URL_VALID;}
+<CANONICAL>{ipURL}          {SHStringOffset += SHleng; BEGIN INITIAL; return SH_URL_VALID;}
+<CANONICAL>.*		    {SHStringOffset += SHleng; BEGIN INITIAL; return SH_URL_INVALID;}
 
-file:\/\/\/.*		    {return SH_FILE_VALID;}
+file:\/\/\/.*		    {SHStringOffset += SHleng; return SH_FILE_VALID;}
 
 https?:\/\/	|
 ftp:\/\/	|
@@ -55,14 +56,14 @@ smb:\/\/	|
 itms:\/\/	|
 gopher:\/\/		    {SHStringOffset += SHleng; BEGIN CANONICAL;}
 
-mailto:{mailSpecifier}      {return SH_MAILTO_VALID;}
-{mailSpecifier}		    {return SH_MAILTO_DEGENERATE;}	
+mailto:{mailSpecifier}      {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
+{mailSpecifier}		    {SHStringOffset += SHleng; return SH_MAILTO_DEGENERATE;}	
 
-{urlSpecifier}		    {return SH_URL_DEGENERATE;}
+{urlSpecifier}		    {SHStringOffset += SHleng; return SH_URL_DEGENERATE;}
 
-{jabberSpec}		    {return SH_URL_VALID;}
-{aolIMSpec}		    {return SH_URL_VALID;}
-{yahooIMSpec}		    {return SH_URL_VALID;}
+{jabberSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
+{aolIMSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
+{yahooIMSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 
-.			    {SHStringOffset++; return SH_URL_INVALID;}
+.			    {return SH_URL_INVALID;}
 %%

@@ -16,7 +16,7 @@ void SH_delete_buffer(SH_BUFFER_STATE);
 
 extern unsigned int SHStringOffset;
 
-
+@class SHMarkedHyperlink;
 @interface SHHyperlinkScanner : NSObject {
 
     BOOL     useStrictChecking;
@@ -30,7 +30,7 @@ extern unsigned int SHStringOffset;
 -(BOOL)isStrictCheckingEnabled;
 
 -(BOOL)isStringValidURL:(NSString *)inString;
--(NSRange)nextURLFromString:(NSString *)inString;
+-(SHMarkedHyperlink *)nextURLFromString:(NSString *)inString;
 
 -(NSArray *)allURLsFromString:(NSString *)inString;
 -(NSArray *)allURLsFromTextView:(NSTextView *)inView;

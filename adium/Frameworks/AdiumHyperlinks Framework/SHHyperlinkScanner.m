@@ -4,9 +4,11 @@
 
 
 #import "SHLinkLexer.h"
+#import "SHMarkedHyperlink.h"
 #import "SHHyperlinkScanner.h"
 
 @implementation SHHyperlinkScanner
+
 #pragma mark Init
 -(id)init
 {
@@ -40,57 +42,77 @@
 #pragma mark primative methods
 -(BOOL)isStringValidURL:(NSString *)inString
 {
-    URI_VERIFICATION_STATUS validStatus = 0;
+    URI_VERIFICATION_STATUS validStatus = SH_URL_INVALID;
     SH_BUFFER_STATE buf;
     
     buf = SH_scan_string([inString UTF8String]);
     
+    NSLog(@"-(BOOL)isStringValidURL:@\"%@\"",inString);
+    
     validStatus = SHlex();
     if(validStatus == SH_URL_VALID || validStatus == SH_MAILTO_VALID || validStatus == SH_FILE_VALID){
         SH_delete_buffer(buf);
+        buf = NULL;
         return YES;
     }else if((validStatus == SH_URL_DEGENERATE || validStatus == SH_MAILTO_DEGENERATE) && !useStrictChecking){
         SH_delete_buffer(buf);
+        buf = NULL;
         return YES;
     }else{
         SH_delete_buffer(buf);
+        buf = NULL;
+        //SHStringOffset += [inString length];
         return NO;
     }
 }
 
--(NSRange)nextURLFromString:(NSString *)inString
+-(SHMarkedHyperlink *)nextURLFromString:(NSString *)inString
 {
-    NSString *scanString = [inString substringFromIndex:SHStringOffset];
-    URI_VERIFICATION_STATUS validStatus = 0;
-    SH_BUFFER_STATE buf;
+    NSLog(@"fetching next URL from String: %@",inString);
+    NSString    *scanString = [[[NSString alloc] init] autorelease];
+    int location = SHStringOffset;
     
-    while(SHStringOffset < [scanString length]){
-        buf = SH_scan_string([[scanString substringFromIndex:SHStringOffset] UTF8String]);
-    
-        validStatus = SHlex();
-        if(validStatus == SH_URL_VALID || validStatus == SH_MAILTO_VALID || validStatus == SH_FILE_VALID){
-            SH_delete_buffer(buf);
-             return NSMakeRange(SHStringOffset,SHleng);
+    NSScanner *preScanner = [[NSScanner alloc] initWithString:inString];
+    [preScanner setScanLocation:location];
+    while([preScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&scanString]){
+        SHStringOffset = [preScanner scanLocation] - [scanString length];
+        //NSRange sRange = [inString rangeOfString:scanString options:nil range:NSMakeRange(location,[inString length]-location)];
+        
+        if([self isStringValidURL:scanString]){
+            NSRange urlRange = NSMakeRange([preScanner scanLocation] - [scanString length],[scanString length]);
+            
+            SHMarkedHyperlink *markedLink = [[SHMarkedHyperlink alloc] initWithString:scanString
+                                                                         parentString:inString
+                                                                             andRange:urlRange];
+            return markedLink;
         }
-        else if((validStatus == SH_URL_DEGENERATE || validStatus == SH_MAILTO_DEGENERATE) && !useStrictChecking){
-            SH_delete_buffer(buf);
-            return NSMakeRange(SHStringOffset,SHleng);
-        }
+        
+        location = SHStringOffset;
     }
-    return NSMakeRange(0,0);
+    SHStringOffset = [inString length];
+    return nil;
 }
 
 #pragma mark blah
 -(NSArray *)allURLsFromString:(NSString *)inString
 {
+    NSLog(@"fetching all urls");
     SHStringOffset = 0;
-    NSMutableArray *rangeArray = [[NSMutableArray arrayWithCapacity:1] autorelease];
-    NSRange strRange = NSMakeRange(0,0);
+    NSMutableArray *rangeArray = [[[NSMutableArray alloc] init] autorelease];
+    SHMarkedHyperlink *markedLink = nil;
+    
     while([inString length] > SHStringOffset){
-        strRange = [self nextURLFromString:inString];
-        [rangeArray addObject:NSStringFromRange(strRange)];
+        if(markedLink = [self nextURLFromString:inString]){
+            [rangeArray addObject:markedLink];
+        }
+        NSLog(@"SHStringOffset = %u",SHStringOffset);
     }
-    return (NSArray *)rangeArray;
+    
+    if([rangeArray count] > 0){
+        return (NSArray *)rangeArray;
+    }else{
+        return nil;
+    }
 }
 
 -(NSArray *)allURLsFromTextView:(NSTextView *)inView
@@ -100,26 +122,32 @@
 
 -(NSAttributedString *)linkifyString:(NSAttributedString *)inString
 {
+    NSLog(@"linkifying string");
     NSArray *rangeArray = [self allURLsFromString:[inString string]];
     NSEnumerator *enumerator = [rangeArray objectEnumerator];
-    NSString *linkRangeString = nil;
-    NSRange linkRange;
+    SHMarkedHyperlink *markedLink;
     
     
-    NSMutableAttributedString *newString = [[NSMutableAttributedString alloc] initWithAttributedString:inString];
+    NSMutableAttributedString *newString = [[[NSMutableAttributedString alloc] initWithAttributedString:inString] autorelease];
     
-    while(linkRangeString = [enumerator nextObject]){
-        linkRange = NSRangeFromString(linkRangeString);
-        [newString addAttribute:NSLinkAttributeName value:[[inString string] substringWithRange:linkRange] range:linkRange];
+    while(markedLink = [enumerator nextObject]){
+        NSRange linkRange = [markedLink range];
+        [newString addAttribute:NSLinkAttributeName value:[[markedLink URL] retain] range:linkRange];
     }
-    return (NSAttributedString *)newString;
+    
+    NSLog(@"finished linkifying");
+    return newString;
 }
 
 -(void)linkifyTextView:(NSTextView *)inView
 {
-    inView = [[NSMutableAttributedString alloc] initWithAttributedString:
+    NSMutableAttributedString *newView;
+    
+    newView = [[[NSMutableAttributedString alloc] initWithAttributedString:
                                                 [self linkifyString:
                                                 [inView attributedSubstringFromRange:
-                                                NSMakeRange(0,[[inView string] length])]]];
+                                                NSMakeRange(0,[[inView string] length])]]] autorelease];
+                                                
+    [[inView textStorage] setAttributedString:newView];
 }
 @end
