@@ -159,8 +159,8 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     int currentRow = [instance currentRow];
     if (currentRow != -1)
     {
+        [tableView_actions deselectRow:currentRow];
 	[instance deleteEventAction:nil];
-	//[tableView_actions deselectRow:currentRow];
 	[tableView_actions reloadData];
 	if (currentRow < [instance count]){
 	    [tableView_actions selectRow:currentRow byExtendingSelection:NO];
