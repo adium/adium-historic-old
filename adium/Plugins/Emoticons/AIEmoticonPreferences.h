@@ -30,4 +30,6 @@
     NSArray                                 *dragRows;
 }
 
+-(void)moveSelectedPacksToTrash;
+
 @end
