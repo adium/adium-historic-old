@@ -63,6 +63,15 @@ struct oscar_data {
 - (void)initAccount
 {
     [super initAccount];
+	
+	delayedUpdateTimers = [[NSMutableArray alloc] init];
+}
+
+- (void)dealloc
+{
+	[delayedUpdateTimers release];
+	
+	[super dealloc];
 }
 
 - (const char*)protocolPlugin
@@ -94,22 +103,39 @@ struct oscar_data {
  */
  
 
+- (void)accountConnectionDisconnected
+{
+	//We have to track and invalidate these timers.. they will crash us if fired after a disconnect.
+	NSEnumerator	*enumerator = [delayedUpdateTimers objectEnumerator];
+	NSTimer			*timer;
+	
+	while(timer = [enumerator nextObject]){
+		[timer invalidate];
+	}
+	
+	//
+	[super accountConnectionDisconnected];
+}
+
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
+	NSTimer		*timer;
+	
     //General updates
     [super accountUpdateBuddy:buddy];
 	
-#warning we delay for 2 seconds to wait for the away message to come in... is there not some kind of notification when this happens instead?
-
-	[NSTimer scheduledTimerWithTimeInterval:OSCAR_DELAYED_UPDATE_INTERVAL target:self selector:@selector(_delayedBlistUpdate:) userInfo:[NSValue valueWithPointer:buddy] repeats:NO];
+	//we delay for 2 seconds to wait for the away message to come in... is there not some kind of notification when this happens instead?
+	timer = [NSTimer scheduledTimerWithTimeInterval:OSCAR_DELAYED_UPDATE_INTERVAL target:self selector:@selector(_delayedBlistUpdate:) userInfo:[NSValue valueWithPointer:buddy] repeats:NO];
+	[delayedUpdateTimers addObject:timer];
 }
 
 - (void)_delayedBlistUpdate:(NSTimer *)inTimer
 {
     GaimBlistNode * node = [[inTimer userInfo] pointerValue];
     
+	[delayedUpdateTimers removeObject:inTimer];
+	
     //AIM-specific updates
-    
     if(node)
     {
         //extract the GaimBuddy from whatever we were passed - we should always get buddies, not contacts, in curent code

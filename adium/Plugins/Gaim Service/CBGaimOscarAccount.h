@@ -12,7 +12,7 @@
 
 @interface CBGaimOscarAccount : CBGaimAccount <AIAccount_Files,AIAccount_Privacy>
 {
-
+	NSMutableArray		*delayedUpdateTimers;
 }
 
 //Overriden from CBGaimAccount
