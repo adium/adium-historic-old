@@ -126,13 +126,15 @@
 //Clean up our preference pane
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
+    [plugin loadEmoticonsIfNecessary:NO]; //let the plugin unload its emoticons if it doesn't seem them anymore (if parsing is disabled)
     [view_prefView release]; view_prefView = nil;
-
 }
 
 //Configures our view for the current preferences
 - (void)configureView
 {
+    [plugin loadEmoticonsIfNecessary:YES]; //if the plugin hasn't already loaded emoticons (because parsing is disabled) load them now
+    
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS];
 
     //Enablement
