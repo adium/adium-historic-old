@@ -277,9 +277,8 @@ DeclareString(AppendNextMessage);
 		// Add the date header (should be farmed out to a separate function)
 		if( shouldShowDateHeader ) {
 						
-			dateMessage = [NSString stringWithFormat:@"%@",[[(AIContentContext *)content date] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatString]
-																													timeZone:nil
-																													  locale:nil]];
+			dateMessage = [[NSDateFormatter localizedDateFormatter] stringForObjectValue:[(AIContentContext *)content date]];
+			
 			dateSeparator = [AIContentStatus statusInChat:[content chat]
 											   withSource:[[content chat] listObject]
 											  destination:[[content chat] account]
@@ -301,9 +300,7 @@ DeclareString(AppendNextMessage);
 		if( [previousDate dayOfCommonEra] != [[[NSDate date] dateWithCalendarFormat:nil
 																		   timeZone:nil] dayOfCommonEra] ) {
 			
-			dateMessage = [NSString stringWithFormat:@"%@",[[NSDate date] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatString] 
-																							   timeZone:nil
-																								 locale:nil]];
+			dateMessage = [[NSDateFormatter localizedDateFormatter] stringForObjectValue:[NSDate date]];
 		
 			dateSeparator = [AIContentStatus statusInChat:[content chat]
 										   withSource:[[content chat] listObject]
