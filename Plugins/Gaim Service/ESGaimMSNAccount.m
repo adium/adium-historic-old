@@ -12,6 +12,8 @@
 #define KEY_MSN_HOST	@"MSN:Host"
 #define KEY_MSN_PORT	@"MSN:Port"
 
+#define DEFAULT_MSN_PASSPORT_DOMAIN @"@hotmail.com"
+
 @interface ESGaimMSNAccount (PRIVATE)
 -(void)_setFriendlyNameTo:(NSAttributedString *)inAlias;
 @end
@@ -19,6 +21,24 @@
 @implementation ESGaimMSNAccount
 
 static BOOL didInitMSN = NO;
+
+//Intercept account creation to ensure the UID will have a domain ending -- the default is @hotmail.com
+- (id)initWithUID:(NSString *)inUID accountNumber:(int)inAccountNumber service:(AIService *)inService
+{
+	NSString	*correctUID;
+
+	if((inUID) &&
+	   ([inUID length] > 0) && 
+	   ([inUID rangeOfString:@"@"].location == NSNotFound)){
+		correctUID = [inUID stringByAppendingString:DEFAULT_MSN_PASSPORT_DOMAIN];
+	}else{
+		correctUID = inUID;
+	}
+
+	[super initWithUID:correctUID accountNumber:inAccountNumber service:inService];
+	
+	return(self);
+}
 
 - (void)initAccount
 {
@@ -168,15 +188,29 @@ static BOOL didInitMSN = NO;
 {
 	NSString	*friendlyName = [attributedFriendlyName string];
 	
-	if (!friendlyName || ![friendlyName isEqualToString:currentFriendlyName]){
+	if (!friendlyName || ![friendlyName isEqualToString:[self statusObjectForKey:@"AccountServerDisplayName"]]){
 		
 		if (gaim_account_is_connected(account)){
 			GaimDebug (@"Updating FullNameAttr to %@",friendlyName);
 			
 			msn_set_friendly_name(account->gc, [friendlyName UTF8String]);
-			[currentFriendlyName release]; currentFriendlyName = [friendlyName retain];
+
+			if([friendlyName length] == 0) displayName = nil;
+			
+			[[self displayArrayForKey:@"Display Name"] setObject:friendlyName
+													   withOwner:self];
+			//notify
+			[[adium contactController] listObjectAttributesChanged:self
+													  modifiedKeys:[NSSet setWithObject:@"Display Name"]];			
 		}
 	}
+}
+
+//Return YES if the display name (in the preference key @"FullNameAttr") should be managed by AIAccount.
+//Return NO if a subclass will handle making it visible to the user (for example, if it should be filtered, first).
+- (BOOL)superclassManagesDisplayName
+{
+	return NO;
 }
 
 - (BOOL)useDisplayNameAsStatusMessage
