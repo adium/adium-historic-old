@@ -69,21 +69,26 @@ SecAccessRef createAccess(NSString *accessLabel)
 {
 	NSString			*passwordString = nil;
 	OSStatus			ret;
+	SecKeychainStatus	status;
 	
-	//These will be filled in by GetPasswordKeychain
-	char				*passwordData = nil;
-	UInt32				passwordLength = nil;
-
-	NSAssert((service && [service length] > 0),@"getPasswordFromKeychainForService: service wasn't acceptable!");
-	NSAssert((account && [account length] > 0),@"getPasswordFromKeychainForService: account wasn't acceptable!");
+	ret = SecKeychainGetStatus(NULL, &status);
 	
-	ret = GetPasswordKeychain([service UTF8String],[account UTF8String],&passwordData,&passwordLength,NULL);
-	
-    if (ret == noErr){
-        passwordString = [NSString stringWithCString:passwordData length:passwordLength];
+	if((ret == noErr) && (status & kSecReadPermStatus)){
+		//These will be filled in by GetPasswordKeychain
+		char				*passwordData = nil;
+		UInt32				passwordLength = nil;
 		
-		//Cleanup
-		SecKeychainItemFreeContent(NULL,passwordData);
+		NSAssert((service && [service length] > 0),@"getPasswordFromKeychainForService: service wasn't acceptable!");
+		NSAssert((account && [account length] > 0),@"getPasswordFromKeychainForService: account wasn't acceptable!");
+		
+		ret = GetPasswordKeychain([service UTF8String],[account UTF8String],&passwordData,&passwordLength,NULL);
+		
+		if (ret == noErr){
+			passwordString = [NSString stringWithCString:passwordData length:passwordLength];
+			
+			//Cleanup
+			SecKeychainItemFreeContent(NULL,passwordData);
+		}
 	}
 	
     return passwordString;
@@ -93,39 +98,47 @@ SecAccessRef createAccess(NSString *accessLabel)
 + (BOOL)putPasswordInKeychainForService:(NSString *)service account:(NSString *)account password:(NSString *)password
 {
     OSStatus			ret;
-	SecKeychainItemRef  itemRef = nil;
+	SecKeychainStatus	status;
+	BOOL				success = NO;
 	
-	const char			*serviceUTF8String = [service UTF8String];
-	const char			*accountUTF8String = [account UTF8String];
-	const char			*passwordUTF8String = [password UTF8String];
+	ret = SecKeychainGetStatus(NULL, &status);
 	
-	ret = GetPasswordKeychain(serviceUTF8String,accountUTF8String,NULL,NULL,&itemRef);
-
-	if (ret == errSecItemNotFound){
+	if((ret == noErr) && (status & kSecWritePermStatus)){
+		SecKeychainItemRef  itemRef = nil;
+		
+		const char			*serviceUTF8String = [service UTF8String];
+		const char			*accountUTF8String = [account UTF8String];
+		const char			*passwordUTF8String = [password UTF8String];
+		
+		ret = GetPasswordKeychain(serviceUTF8String,accountUTF8String,NULL,NULL,&itemRef);
+		
+		if (ret == errSecItemNotFound){
 			//No item in the keychain, so add a new generic password
-		
-		//Create initial access control settings for the item
-		SecAccessRef access = createAccess([NSString stringWithFormat:@"Adium: %@",service]);
-		
-		// Set up attribute vector (each attribute consists of {tag, length, pointer})
-		SecKeychainAttribute attrs[] = { 
-		{ kSecAccountItemAttr, strlen(accountUTF8String), (void *)accountUTF8String },
-		{ kSecServiceItemAttr, strlen(serviceUTF8String), (void *)serviceUTF8String } };
-		
-		SecKeychainAttributeList attributes = { sizeof(attrs) / sizeof(attrs[0]), attrs };
-
-		ret = SecKeychainItemCreateFromContent(kSecGenericPasswordItemClass,
-											   &attributes,
-											   strlen(passwordUTF8String),
-											   passwordUTF8String,
-											   NULL, // use the default keychain
-											   access,
-											   &itemRef);
-		if (access) CFRelease(access);
-		
-	}else if (ret == noErr){
+			
+			//Create initial access control settings for the item
+			SecAccessRef access = createAccess([NSString stringWithFormat:@"Adium: %@",service]);
+			
+			// Set up attribute vector (each attribute consists of {tag, length, pointer})
+			SecKeychainAttribute attrs[] = { 
+			{ kSecAccountItemAttr, strlen(accountUTF8String), (void *)accountUTF8String },
+			{ kSecServiceItemAttr, strlen(serviceUTF8String), (void *)serviceUTF8String } };
+			
+			SecKeychainAttributeList attributes = { sizeof(attrs) / sizeof(attrs[0]), attrs };
+			
+			ret = SecKeychainItemCreateFromContent(kSecGenericPasswordItemClass,
+												   &attributes,
+												   strlen(passwordUTF8String),
+												   passwordUTF8String,
+												   NULL, // use the default keychain
+												   access,
+												   &itemRef);
+			if (access) CFRelease(access);
+			
+			if(ret == noErr) success = YES;
+			
+		}else if (ret == noErr){
 			//Item already present, so change it to the new password
-		
+			
 			// Set up attribute vector (each attribute consists of {tag, length, pointer}):
 			SecKeychainAttribute attrs[] = { 
 			{ kSecAccountItemAttr, strlen(accountUTF8String), (void *)accountUTF8String },
@@ -137,11 +150,15 @@ SecAccessRef createAccess(NSString *accessLabel)
 														  strlen(passwordUTF8String),	// length of password
 														  passwordUTF8String			// pointer to password data
 														  );
+			
+			if(ret == noErr) success = YES;
+		}
+		
+		//Cleanup
+		if(itemRef) CFRelease(itemRef);
 	}
 	
-	//Cleanup
-	if(itemRef) CFRelease(itemRef);
-	return(ret == noErr);
+	return(success);
 }
 
 // Removes a password from the keychain
