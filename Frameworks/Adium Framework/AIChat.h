@@ -31,6 +31,14 @@ typedef enum {
 	AIChatClosedWindow
 } AIChatUpdateType;
 
+#define KEY_ENCRYPTED_CHAT_PREFERENCE	@"Encrypted Chat Preference"
+
+typedef enum {
+	EncryptedChat_Never,
+	EncryptedChat_Manually,
+	EncryptedChat_Automatically,
+	EncryptedChat_RejectUnencryptedMessages
+} AIEncryptedChatPreference;
 
 //Chat errors should be indicated by setting a status object on this key 
 //with an NSNumber of the appropriate error type as its object
