@@ -566,10 +566,12 @@
 	return([AIUserIcons listUserIconForContact:(AIListContact *)listObject size:userIconSize]);
 }
 
-//Contact status image
+//Contact state or status image
 - (NSImage *)statusImage
 {
-	return([listObject displayArrayObjectForKey:@"List Status Icon"]);
+	NSImage *stateIcon = [listObject displayArrayObjectForKey:@"List State Icon"];
+	if(!stateIcon) stateIcon = [listObject displayArrayObjectForKey:@"List Status Icon"];
+	return(stateIcon);
 }
 
 //Contact service image
