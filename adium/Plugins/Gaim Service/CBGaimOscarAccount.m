@@ -105,50 +105,67 @@ static BOOL didInitOscar = NO;
 				return ([inAttributedString string]);
 				
 			}else{
-				//We have a list object and are sending both to and from an AIM account; encode to HTML and look for outgoing images
-				NSString	*returnString;
-				
-				returnString = [AIHTMLDecoder encodeHTML:inAttributedString
-												 headers:YES
-												fontTags:YES
-									  includingColorTags:YES
-										   closeFontTags:NO
-											   styleTags:YES
-							  closeStyleTagsOnFontChange:NO
-										  encodeNonASCII:NO
-											  imagesPath:@"/tmp"
-									   attachmentsAsText:NO
-						  attachmentImagesOnlyForSending:YES
-										  simpleTagsOnly:NO];
-				
-				if ([returnString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound){
-					//There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
-					//and sending after it is if one is established
-					NSLog(@"No Direct Connect for you! Come back two year!");
+				if (GAIM_DEBUG){
+					//We have a list object and are sending both to and from an AIM account; encode to HTML and look for outgoing images
+					NSString	*returnString;
 					
-					//Check for a oscar_direct_im (dim) currently open
-					struct oscar_direct_im  *dim;
-					const char				*who = [[inListObject UID] UTF8String];
+					returnString = [AIHTMLDecoder encodeHTML:inAttributedString
+													 headers:YES
+													fontTags:YES
+										  includingColorTags:YES
+											   closeFontTags:NO
+												   styleTags:YES
+								  closeStyleTagsOnFontChange:NO
+											  encodeNonASCII:NO
+												  imagesPath:@"/tmp"
+										   attachmentsAsText:NO
+							  attachmentImagesOnlyForSending:YES
+											  simpleTagsOnly:NO];
 					
-					dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
-					
-					if (dim && (dim->connected)){
-						//We have a connected dim already; process the string and keep the modified copy
-						returnString = [self stringByProcessingImgTagsForDirectIM:returnString];
+					if ([returnString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound){
+						//There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
+						//and sending after it is if one is established
+						NSLog(@"No Direct Connect for you! Come back two year!");
 						
-					}else{
-						//Either no dim, or the dim we have is no longer conected (oscar_direct_im_initiate_immediately will reconnect it)
-						oscar_direct_im_initiate_immediately(account->gc, who);
+						//Check for a oscar_direct_im (dim) currently open
+						struct oscar_direct_im  *dim;
+						const char				*who = [[inListObject UID] UTF8String];
 						
-						//Add this content message to the sending queue for this contact to be sent once a connection is established
-						//XXX
+						dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
 						
-						//Return nil for now to indicate that the message should not be sent
-						returnString = nil;
+						if (dim && (dim->connected)){
+							//We have a connected dim already; process the string and keep the modified copy
+							returnString = [self stringByProcessingImgTagsForDirectIM:returnString];
+							
+						}else{
+							//Either no dim, or the dim we have is no longer conected (oscar_direct_im_initiate_immediately will reconnect it)
+							oscar_direct_im_initiate_immediately(account->gc, who);
+							
+							//Add this content message to the sending queue for this contact to be sent once a connection is established
+							//XXX
+							
+							//Return nil for now to indicate that the message should not be sent
+							returnString = nil;
+						}
 					}
+					
+					return (returnString);
+					
+				} else {
+#warning DirectIM is not ready for prime time.  Temporary.
+					return([AIHTMLDecoder encodeHTML:inAttributedString
+													 headers:YES
+													fontTags:YES
+										  includingColorTags:YES
+											   closeFontTags:NO
+												   styleTags:YES
+								  closeStyleTagsOnFontChange:NO
+											  encodeNonASCII:NO
+												  imagesPath:nil
+										   attachmentsAsText:YES
+							  attachmentImagesOnlyForSending:YES
+											  simpleTagsOnly:NO]);
 				}
-				
-				return (returnString);
 			}
 			
 		}else{ //Send HTML when signed in as an AIM account and we don't know what sort of user we are sending to (most likely multiuser chat)
