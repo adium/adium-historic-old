@@ -52,7 +52,7 @@
 {
     validStatus = SH_URL_INVALID; // assume the URL is invalid
     SH_BUFFER_STATE buf;  // buffer for flex to scan from
-
+NSLog(inString);
     // initialize the buffer (flex automatically switches to the buffer in this function)
     buf = SH_scan_string([inString UTF8String]);
 
@@ -94,13 +94,14 @@
     [skipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     [skipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
     [skipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
+    [skipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@",\"'"]];
     
     // scan upto the next whitespace char so that we don't unnecessarity confuse flex
     // otherwise we end up validating urls that look like this "http://www.adiumx.com/ <--cool"
     NSScanner *preScanner = [[[NSScanner alloc] initWithString:inString] autorelease];
     [preScanner setCharactersToBeSkipped:skipSet];
     [preScanner setScanLocation:location];
-    while([preScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&scanString]){
+    while([preScanner scanUpToCharactersFromSet:skipSet intoString:&scanString]){
         SHStringOffset = [preScanner scanLocation] - [scanString length];
         
         // if we have a valid URL then save the scanned string, and make a SHMarkedHyperlink out of it.
