@@ -100,8 +100,8 @@
     }
     
     toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:AILocalizedString(@"LinkEditor",nil)
-                                                           label:AILocalizedString(@"Link Editor",nil)
-                                                    paletteLabel:AILocalizedString(@"Link Editor",nil)
+                                                           label:AILocalizedString(@"Link",nil)
+                                                    paletteLabel:AILocalizedString(@"Insert Link",nil)
                                                          toolTip:AILocalizedString(@"Add/Edit Hyperlink",nil)
                                                           target:self
                                                  settingSelector:@selector(setImage:)
