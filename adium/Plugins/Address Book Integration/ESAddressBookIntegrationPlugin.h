@@ -29,7 +29,8 @@ typedef enum {
 
     ESAddressBookIntegrationAdvancedPreferences *advancedPreferences;
     
-    NSDictionary        *propertyDict;
+    NSDictionary        *serviceDict;
+	NSMutableDictionary *addressBookDict;
     NSMutableDictionary *trackingDict;
     int                 meTag;
     
