@@ -212,9 +212,10 @@
     } else {
 		[[[NSColor blackColor] colorWithAlphaComponent:0.3] set];
 	}
-		[NSBezierPath fillRect: labelRect];
-        [[NSBezierPath bezierPathWithOvalInRect: NSMakeRect(labelRect.origin.x - (labelRect.size.height / 2.0),labelRect.origin.y,labelRect.size.height,labelRect.size.height)] fill];
-        [[NSBezierPath bezierPathWithOvalInRect: NSMakeRect(labelRect.origin.x + labelRect.size.width - (labelRect.size.height / 2.0),labelRect.origin.y,labelRect.size.height,labelRect.size.height)] fill];
+	NSBezierPath	*labelPath = [NSBezierPath bezierPathWithOvalInRect: NSMakeRect(labelRect.origin.x - (labelRect.size.height / 2.0),labelRect.origin.y,labelRect.size.height,labelRect.size.height)];
+	[labelPath appendBezierPathWithRect: labelRect];
+	[labelPath appendBezierPathWithOvalInRect: NSMakeRect(labelRect.origin.x + labelRect.size.width - (labelRect.size.height / 2.0),labelRect.origin.y,labelRect.size.height,labelRect.size.height)];
+	[labelPath fill];
 
     if (useBuddyNameLabel && buddyNameLabelColor) {
         [mainAttributes setObject: buddyNameLabelColor forKey:NSForegroundColorAttributeName];
