@@ -6,8 +6,6 @@
 //  Created by Adam Iser on Fri Sep 26 2003.
 //
 
-#ifdef DEVELOPMENT_BUILD
-
 #import "AIStressTestAccount.h"
 #import "AIStressTestPlugin.h"
 
@@ -417,4 +415,3 @@
 
 @end
 
-#endif
