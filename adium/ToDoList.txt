@@ -121,6 +121,7 @@ Event Info (Implement as a new plugin, to replace bezel):
 
     	Details:
 	+ Give the notification window a titlebar, and allow it to be repositioned while visible.
+	  I think that making only the titlebar clickable would be neat for unobstrusiveness [Jorge]
 	# Stack bezels when multiple events arrive
 	  - I am strongly against the clutter of stacks, I vote for queue events [Jorge]
 	+ Color the entire bezel to match the event being displayed
