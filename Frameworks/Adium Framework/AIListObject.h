@@ -15,6 +15,7 @@
  */
 
 #import "ESObjectWithStatus.h"
+#import "AIStatus.h"
 
 @class AIListObject, AIService, AIMutableOwnerArray, AIListGroup;
 
@@ -108,7 +109,15 @@ typedef enum {
 
 //Key-Value pairing
 - (BOOL)online;
+
+- (AIStatus *)statusState;
+- (void)setStatusWithName:(NSString *)name
+			   statusType:(AIStatusType)type
+			statusMessage:(NSAttributedString *)statusMessage
+				   notify:(NotifyTiming)notify;
+- (void)setBaseAvailableStatusAndNotify:(NotifyTiming)notify;
 - (AIStatusSummary)statusSummary;
+
 - (BOOL)isStranger;
 
 - (NSString *)displayName;
