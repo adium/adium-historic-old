@@ -67,7 +67,9 @@
 		
 	}else{
 		returnValue = nil;
-		[self performSelectorOnMainThread:aSelector waitUntilDone:NO];
+		[self performSelectorOnMainThread:aSelector 
+							   withObject:nil
+							waitUntilDone:NO];
 	}
 
 	return(returnValue);
