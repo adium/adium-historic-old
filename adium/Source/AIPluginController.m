@@ -13,13 +13,12 @@
 					      | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 					      \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.15 2004/01/13 19:52:15 adamiser Exp $
+//$Id: AIPluginController.m,v 1.16 2004/01/13 20:02:52 adamiser Exp $
 #import "AIPluginController.h"
 
-#warning ## Temporarily disabled
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
-#define DIRECTORY_EXTERNAL_PLUGINS		@"/Plugins/tmp"		//Path to the external plugins
-#define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"		//File extension of a plugin
+#define DIRECTORY_EXTERNAL_PLUGINS		@"/Plugins"				//Path to the external plugins
+#define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"			//File extension of a plugin
 
 @interface AIPluginController (PRIVATE)
 - (void)loadPlugins;
