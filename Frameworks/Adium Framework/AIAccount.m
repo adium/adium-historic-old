@@ -137,7 +137,7 @@
  * Returns an array of status keys supported by this account.  This account will not be informed of changes to keys
  * it does not support.  Available keys are:
  *   @"Display Name", @"Online", @"Offline", @"IdleSince", @"IdleManuallySet", @"User Icon"
- *   @"Away", @"AwayMessage", @"TextProfile", @"DefaultUserIconFilename", @"Invisible", @"AvailableMessage"
+ *   @"TextProfile", @"DefaultUserIconFilename", @"StatusState"
  * @return NSSet of supported keys
  */
 - (NSSet *)supportedPropertyKeys
