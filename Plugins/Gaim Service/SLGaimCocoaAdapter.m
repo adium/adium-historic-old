@@ -2141,19 +2141,25 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		}		
 	}
 	
-	if (shouldSendMessage){
-		switch (gaim_conversation_get_type(conv)) {				
-			case GAIM_CONV_IM: {
-				GaimConvIm			*im = gaim_conversation_get_im_data(conv);
-				gaim_conv_im_send_with_flags(im,[encodedMessage UTF8String],[flags intValue]);
-				break;
+	if(shouldSendMessage){
+		const char *encodedMessageUTF8String;
+		
+		if(encodedMessageUTF8String = [encodedMessage UTF8String]){
+			switch (gaim_conversation_get_type(conv)) {				
+				case GAIM_CONV_IM: {
+					GaimConvIm			*im = gaim_conversation_get_im_data(conv);
+					gaim_conv_im_send_with_flags(im,encodedMessageUTF8String,[flags intValue]);
+					break;
+				}
+					
+				case GAIM_CONV_CHAT: {
+					GaimConvChat	*gaimChat = gaim_conversation_get_chat_data(conv);
+					gaim_conv_chat_send(gaimChat,encodedMessageUTF8String);
+					break;
+				}
 			}
-				
-			case GAIM_CONV_CHAT: {
-				GaimConvChat	*gaimChat = gaim_conversation_get_chat_data(conv);
-				gaim_conv_chat_send(gaimChat,[encodedMessage UTF8String]);
-				break;
-			}
+		}else{
+			GaimDebug (@"*** Error encoding %@ to UTF8",encodedMessage);
 		}
 	}
 }
