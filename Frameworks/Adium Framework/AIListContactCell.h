@@ -9,26 +9,26 @@
 #import "AIListLayoutWindowController.h"
 
 @interface AIListContactCell : AIListCell {
-	BOOL		userIconVisible;
-	BOOL		extendedStatusVisible;
-	BOOL		statusIconsVisible;
-	BOOL		serviceIconsVisible;
-	NSSize		userIconSize;
-	int			statusFontHeight;
-	int			labelFontHeight;
+	BOOL				userIconVisible;
+	BOOL				extendedStatusVisible;
+	BOOL				statusIconsVisible;
+	BOOL				serviceIconsVisible;
+	NSSize				userIconSize;
+	int					statusFontHeight;
+	int					labelFontHeight;
+			
+	BOOL				backgroundColorIsStatus;
+
+	LIST_POSITION		userIconPosition;
+	LIST_POSITION		statusIconPosition;
+	LIST_POSITION		serviceIconPosition;
 	
-	BOOL		backgroundColorIsStatus;
+	float				backgroundOpacity;
 
-	BOOL		userIconPosition;
-	BOOL		statusIconPosition;
-	BOOL		serviceIconPosition;
-	
-	float		backgroundOpacity;
+	NSFont				*statusFont;
+	NSColor				*statusColor;
 
-	NSFont			*statusFont;
-	NSColor			*statusColor;
-
-	NSDictionary	*_statusAttributes;
+	NSDictionary		*_statusAttributes;
 }
 
 //Status Text
