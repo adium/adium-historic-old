@@ -1258,7 +1258,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
 	if(menuItem){
 		NSString	*accountTitle = [account formattedUID];
-		float		fraction;
 		NSString	*titleFormat;
 
 		//Default to <New Account> if a name is not available
@@ -1270,19 +1269,14 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 		//Determine how much to dim the icons (depending on connectivity)
 		if([[account statusObjectForKey:@"Online"] boolValue]){
-			fraction = MENU_IMAGE_FRACTION_ONLINE;
 			titleFormat = ACCOUNT_DISCONNECT_MENU_TITLE;
 
 		}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
-			fraction = MENU_IMAGE_FRACTION_CONNECTING;
 			titleFormat = ACCOUNT_CONNECTING_MENU_TITLE;
 
 		}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
-			fraction = MENU_IMAGE_FRACTION_CONNECTING;
 			titleFormat = ACCOUNT_DISCONNECTING_MENU_TITLE;
-
 		}else{
-			fraction = MENU_IMAGE_FRACTION_OFFLINE;
 			titleFormat = ACCOUNT_CONNECT_MENU_TITLE;
 		}
 
@@ -1298,7 +1292,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		NSImage	*composite = [[NSImage alloc] initWithSize:compositeSize];
 		[composite lockFocus];
 		[serviceIcon drawInRect:compositeRect atSize:[statusIcon size] position:IMAGE_POSITION_LEFT fraction:1.0];
-		[statusIcon drawInRect:compositeRect atSize:[statusIcon size] position:IMAGE_POSITION_RIGHT fraction:fraction];
+		[statusIcon drawInRect:compositeRect atSize:[statusIcon size] position:IMAGE_POSITION_RIGHT fraction:1.0];
 		[composite unlockFocus];
 
 		//Update the menu item
