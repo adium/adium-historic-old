@@ -191,17 +191,17 @@
 			note = GROWL_CONTACT_UNIDLE;
 		}else if([notificationName isEqualToString: Content_FirstContentRecieved]){
 			message = [[[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] safeString] string];
-			description = [NSString stringWithFormat: AILocalizedString(@"%@","New content notification"), message];
+			description = [NSString stringWithFormat:AILocalizedString(@"sent you %@","Growl content received description, where %@ is the received message"), message];
 			note = GROWL_FIRST_MESSAGE;
 		}else if([notificationName isEqualToString: Content_DidReceiveContent]) {
 			
 			message = [[[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] safeString] string];
 			if(![NSApp isActive]) {
 				if([NSApp isHidden]) {
-					description = [NSString stringWithFormat: AILocalizedString(@"%@","Message notification while hidden"), message];
+					description = [NSString stringWithFormat:AILocalizedString(@"sent you %@","Growl content received description, where %@ is the received message"), message];
 					note = GROWL_HIDDEN_MESSAGE;
 				} else {
-					description = [NSString stringWithFormat: AILocalizedString(@"%@","Message notification while in background"), message];
+					description = [NSString stringWithFormat:AILocalizedString(@"sent you %@","Growl content received description, where %@ is the received message"), message];
 					note = GROWL_BACKGROUND_MESSAGE;
 				}
 			} else {
