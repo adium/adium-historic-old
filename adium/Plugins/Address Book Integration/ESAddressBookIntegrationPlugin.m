@@ -160,10 +160,11 @@
 {
     if (inData) {
         //Check if we retrieved data from the 'me' address book card
-        if ((tag == meTag) && useABImages) {
+/*        if ((tag == meTag) && useABImages) {
 			[[adium preferenceController] setPreference:inData forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
             meTag = -1;
         }else{
+*/
 			NSNumber                *tagNumber = [NSNumber numberWithInt:tag];
 			
 			if( useABImages ) {
@@ -185,7 +186,7 @@
 			}
 			//No further need for the dictionary entry
 			[trackingDict removeObjectForKey:tagNumber];
-		}
+//		}
 	}
 }
 
@@ -240,7 +241,11 @@
         //Begin loading image data for the "me" address book entry, if one exists
         ABPerson *me;
         if (me = [[ABAddressBook sharedAddressBook] me]) {
-            meTag = [me beginLoadingImageDataForClient:self];
+			NSData *imageData = [me imageData];
+			if (imageData){
+				[[adium preferenceController] setPreference:imageData forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
+			}
+//            meTag = [me beginLoadingImageDataForClient:self];
         }
 	NS_HANDLER
 		NSLog(@"ABIntegration: Caught %@: %@", [localException name], [localException reason]);
