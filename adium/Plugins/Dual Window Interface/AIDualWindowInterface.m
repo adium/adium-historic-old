@@ -232,12 +232,24 @@
     [[owner menuController] addMenuItem:menuItem_closeTab toLocation:LOC_File_Close];
 
     //Add our other menu items
-    menuItem_previousMessage = [[NSMenuItem alloc] initWithTitle:PREVIOUS_MESSAGE_MENU_TITLE target:self action:@selector(previousMessage:) keyEquivalent:@"["];
-    [[owner menuController] addMenuItem:menuItem_previousMessage toLocation:LOC_Window_Commands];
+    {
+        /* Using the cursor keys
+            unichar 	left = NSLeftArrowFunctionKey;
+            NSString	*leftKey =[NSString stringWithCharacters:&left length:1];
+            unichar 	right = NSRightArrowFunctionKey;
+            NSString	*rightKey = [NSString stringWithCharacters:&right length:1];
+         */
 
-    menuItem_nextMessage = [[NSMenuItem alloc] initWithTitle:NEXT_MESSAGE_MENU_TITLE target:self action:@selector(nextMessage:) keyEquivalent:@"]"];
-    [[owner menuController] addMenuItem:menuItem_nextMessage toLocation:LOC_Window_Commands];
+        /* Using the [ ] keys */
+        NSString	*leftKey = @"[";
+        NSString	*rightKey = @"]";
 
+        menuItem_previousMessage = [[NSMenuItem alloc] initWithTitle:PREVIOUS_MESSAGE_MENU_TITLE target:self action:@selector(previousMessage:) keyEquivalent:leftKey];
+        [[owner menuController] addMenuItem:menuItem_previousMessage toLocation:LOC_Window_Commands];
+
+        menuItem_nextMessage = [[NSMenuItem alloc] initWithTitle:NEXT_MESSAGE_MENU_TITLE target:self action:@selector(nextMessage:) keyEquivalent:rightKey];
+        [[owner menuController] addMenuItem:menuItem_nextMessage toLocation:LOC_Window_Commands];
+    }    
 
     return(self);
 }
