@@ -8,6 +8,11 @@
 
 #import "ESDockAlertDetailPane.h"
 
+@interface ESDockAlertDetailPane (PRIVATE)
+- (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name;
+- (NSMenu *)behaviorListMenu;
+@end
+
 @implementation ESDockAlertDetailPane
 
 //Pane Details
@@ -21,7 +26,7 @@
 //Configure the detail view
 - (void)viewDidLoad
 {
-    [popUp_actionDetails setMenu:[AIDockBehaviorPlugin behaviorListMenuForTarget:self]];
+    [popUp_actionDetails setMenu:[self behaviorListMenu]];
 }
 
 //Configure for the action
@@ -50,6 +55,36 @@
 {
 	//Empty
 }
+
+//Builds and returns a dock behavior list menu
+- (NSMenu *)behaviorListMenu
+{
+    NSMenu			*behaviorMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
+    DOCK_BEHAVIOR	behavior;
+	
+	for(behavior = 0; behavior < BOUNCE_DELAY60; behavior++){
+		NSString *name = [[adium dockController] descriptionForBehavior:behavior];
+		[behaviorMenu addItem:[self menuItemForBehavior:behavior withName:name]];
+	}
+    
+    [behaviorMenu setAutoenablesItems:NO];
+    
+    return(behaviorMenu);
+}
+
+//
+- (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name
+{
+    NSMenuItem		*menuItem;
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
+																	 target:self
+																	 action:@selector(selectBehavior:)
+															  keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:[NSNumber numberWithInt:behavior]];
+    
+    return(menuItem);
+}
+
 
 @end
 

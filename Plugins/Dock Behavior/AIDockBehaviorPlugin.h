@@ -15,9 +15,6 @@
 
 #define PREF_GROUP_DOCK_BEHAVIOR			@"DockBehavior"
 
-#define KEY_DOCK_CUSTOM_BEHAVIOR			@"Custom Behavior"
-#define KEY_DOCK_ACTIVE_BEHAVIOR_SET		@"Active Behavior Set"
-
 #define KEY_EVENT_DOCK_BEHAVIOR				@"Behavior"
 #define	KEY_EVENT_DOCK_EVENT_ID				@"Notification"
 
@@ -25,25 +22,8 @@
 
 #define DOCK_BEHAVIOR_ALERT_IDENTIFIER		@"BounceDockIcon"
 
-@class AIDockBehaviorPreferences;
-
 @interface AIDockBehaviorPlugin : AIPlugin <AIActionHandler> {
-    AIDockBehaviorPreferences 	*preferences;
 
-    NSMutableDictionary		*behaviorDict;
-    NSArray			*presetBehavior;
 }
-
-- (void)installPlugin;
-
-- (void)setActivePreset:(NSString *)presetName;
-- (NSString *)activePreset;
-- (NSArray *)behaviorForPreset:(NSString *)presetName;
-- (void)setCustomBehavior:(NSArray *)inBehavior;
-- (NSArray *)customBehavior;
-- (NSArray *)availablePresets;
-
-+ (NSMenu *)behaviorListMenuForTarget:(id)target;
-+ (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name target:(id)target;
 
 @end
