@@ -282,7 +282,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     NSView          *view = [eventData objectForKey:@"view"];
 
 	//Scrubs the tab if control is down.
-	if (([theEvent modifierFlags] & NSControlKeyMask) && !selected) {
+	if(([theEvent modifierFlags] & NSAlternateKeyMask) && !selected){
 		[[tabViewItem tabView] selectTabViewItem:tabViewItem];
 	}
 	
