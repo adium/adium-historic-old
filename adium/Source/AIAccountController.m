@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.44 2004/01/08 07:19:09 evands Exp $
+// $Id: AIAccountController.m,v 1.45 2004/01/08 21:19:50 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -339,11 +339,11 @@
     NSParameterAssert(inAccount != nil);
     NSParameterAssert(accountArray != nil);
     NSParameterAssert([accountArray indexOfObject:inAccount] != NSNotFound);
-    
-    [inAccount retain]; //Don't let the account dealloc until we have a chance to notify everyone that it's gone
-    [accountArray removeObject:inAccount];
-    [self accountListChanged];
-    [inAccount release];
+
+	[inAccount retain]; //Don't let the account dealloc until we have a chance to notify everyone that it's gone
+	[accountArray removeObject:inAccount];
+	[self accountListChanged];
+	[inAccount release];
 }
 
 //Change the UID of an existing account
@@ -354,8 +354,8 @@
         NSString    *serviceIdentifier = [[[[inAccount service] identifier] copy] autorelease]; //Deleting the account will release the serviceID
         int		index = [accountArray indexOfObject:inAccount];
         
-        //Delete the existing account
-        [self deleteAccount:inAccount];
+        //Delete the existing account (Deleting immediately would be bad since this method has been called by the account)
+        [self performSelector:@selector(deleteAccount:) withObject:inAccount afterDelay:0.0001];
         
         //Add an account with the new UID
         newAccount = [self accountOfType:serviceIdentifier withUID:inUID];
