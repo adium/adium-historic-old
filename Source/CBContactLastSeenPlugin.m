@@ -155,7 +155,7 @@
 							@"%@\n%@ %@\n%@", 
 							lastSeenStatus,
 							[NSDateFormatter stringForTimeIntervalSinceDate:lastSeenDate showingSeconds:NO abbreviated:NO],
-							[[[NSUserDefaults standardUserDefaults] objectForKey:NSEarlierTimeDesignations] objectAtIndex:3],
+							[[[NSUserDefaults standardUserDefaults] objectForKey:NSEarlierTimeDesignations] lastObject],
 							[sinceDateFormatter stringForObjectValue:lastSeenDate]]]; 
 		}
 	}
