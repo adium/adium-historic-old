@@ -4684,6 +4684,7 @@
 				7E901610066ABD92005E1FD7,
 				7E5B1DCE066ACE8D00EE5E57,
 				7ED73236066B005D0069616E,
+				7EC35CAD066B0CBA002129B7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5305,6 +5306,7 @@
 				7E901611066ABD92005E1FD7,
 				7E5B1DCF066ACE8D00EE5E57,
 				7ED73237066B005D0069616E,
+				7EC35CAE066B0CBA002129B7,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8902,7 +8904,7 @@
 			children = (
 				6CED9083065B686A00A9C196,
 				4BDC4CC4066227DB00C28445,
-				7ED72FA3066B002E0069616E,
+				7EC35A1A066B0C84002129B7,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -18816,6 +18818,8 @@
 		};
 		7E64083E06629DEE006A5552 = {
 			children = (
+				7EC35CAB066B0CB9002129B7,
+				7EC35CAC066B0CB9002129B7,
 				7ED73234066B005C0069616E,
 				7ED73235066B005C0069616E,
 				7E5B1DCC066ACE8C00EE5E57,
@@ -19307,20 +19311,50 @@
 			settings = {
 			};
 		};
-		7ED72FA3066B002E0069616E = {
+		7EC35A1A066B0C84002129B7 = {
 			fileType = archive.ar;
 			isa = PBXReferenceProxy;
 			path = libezv.a;
 			refType = 3;
-			remoteRef = 7ED73231066B005B0069616E;
+			remoteRef = 7EC35CA6066B0CA6002129B7;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		7ED73231066B005B0069616E = {
+		7EC35CA6066B0CA6002129B7 = {
 			containerPortal = 4947F5E90655E90C00B791E5;
 			isa = PBXContainerItemProxy;
 			proxyType = 2;
 			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
 			remoteInfo = "libezv (Static)";
+		};
+		7EC35CAB066B0CB9002129B7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHOmniWebBookmarksImporter.h;
+			path = "Plugins/Bookmark Importing/SHOmniWebBookmarksImporter.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7EC35CAC066B0CB9002129B7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHOmniWebBookmarksImporter.m;
+			path = "Plugins/Bookmark Importing/SHOmniWebBookmarksImporter.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7EC35CAD066B0CBA002129B7 = {
+			fileRef = 7EC35CAB066B0CB9002129B7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7EC35CAE066B0CBA002129B7 = {
+			fileRef = 7EC35CAC066B0CB9002129B7;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		7ED73234066B005C0069616E = {
 			fileEncoding = 30;
