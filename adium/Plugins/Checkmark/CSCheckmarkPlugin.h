@@ -17,6 +17,6 @@
 	BOOL						displayCheckmark;
 }
 
-
+- (void)installPlugin;
 
 @end

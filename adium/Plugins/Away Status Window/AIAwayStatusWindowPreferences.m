@@ -30,14 +30,10 @@
     return(@"AwayStatusWindowPrefs");
 }
 
-- (NSArray *)restorablePreferences
+- (NSDictionary *)restorablePreferences
 {
-	NSDictionary	*defaultPrefs;
-	NSMutableArray  *defaultsDict;
-		
-	defaultPrefs = [NSDictionary dictionaryNamed:AWAY_STATUS_DEFAULT_PREFS forClass:[self class]];
-	defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_AWAY_STATUS_WINDOW];
-	
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:AWAY_STATUS_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_AWAY_STATUS_WINDOW];	
 	return(defaultsDict);
 }
 

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.30 2004/02/03 05:23:45 dchoby98 Exp $
+// $Id: AIPreferenceWindowController.m,v 1.31 2004/02/03 15:47:40 dchoby98 Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -444,7 +444,6 @@ static AIPreferenceWindowController *sharedInstance = nil;
 		}
 		
 		[self outlineView:outlineView_advanced shouldSelectItem:[outlineView_advanced itemAtRow:previousRow]];
-		//[outlineView_advanced reloadItem:[outlineView_advanced itemAtRow:previousRow]];
 
 	}
 }

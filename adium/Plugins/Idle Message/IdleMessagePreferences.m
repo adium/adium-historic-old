@@ -29,6 +29,13 @@
     return(@"IdleMessagePrefs");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:IDLE_MESSAGE_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_IDLE_MESSAGE];
+	return(defaultsDict);
+}
+
 //Configure the preference view
 - (void)viewDidLoad
 {
