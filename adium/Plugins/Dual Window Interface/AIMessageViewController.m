@@ -80,8 +80,8 @@
 
         message = [AIContentMessage messageInChat:chat
                                        withSource:account
-                                      destination:nil
-                                             date:nil
+                                      destination:nil //meaningless, since we get better info from the AIChat
+                                             date:nil //created for us by AIContentMessage
                                           message:[[[textView_outgoing attributedString] copy] autorelease]
                                         autoreply:NO];
 
