@@ -43,11 +43,30 @@
 //Init
 - (id)init
 {
-    [super init];
-	[[adium preferenceController] addPreferencePane:self];
-    return(self);
+	if((self = [super init])) {
+		[[adium preferenceController] addPreferencePane:self];
+	}
+	return self;
 }
 
+- (void)dealloc
+{
+	[restoreDict release];
+
+	[super dealloc];
+}
+
+//as far as I can tell, -[NSPreferencePane compare:] compares nib names.
+//this does the same thing, but case-insensitively.
+- (NSComparisonResult)caseInsensitiveCompare:(id)other
+{
+	NSString *nibName = [self nibName];
+	if([other isKindOfClass:[NSString class]]) {
+		return [nibName caseInsensitiveCompare:other];
+	} else {
+		return [nibName caseInsensitiveCompare:[other nibName]];
+	}
+}
 
 //For subclasses -------------------------------------------------------------------------------
 //Preference category
