@@ -8,7 +8,7 @@ body {
 .container {
     position: relative;
     background: url("images/bottom_right.png") bottom right no-repeat;
-	margin: 13px -5px 15px 38px;
+	margin: 15px 0px 0px 43px;
 }
                 
 .sender {
@@ -81,7 +81,7 @@ body {
 .status_container {
     position: relative;
     background: url("images/status_background.png");
-    margin: -16px 25px 13px 27px;
+    margin: 0px 30px -1px 32px;
     color: #fff;
     text-shadow: 1px 1px 3px #aaa;
     font-size: 9px;
