@@ -42,33 +42,35 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	haveTalkedDays = [[prefDict objectForKey:KEY_HAVE_TALKED_DAYS] intValue];
-	haveNotTalkedDays = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_DAYS] intValue];
-	displayMode = [[prefDict objectForKey:KEY_DISPLAY_MODE] intValue];
-	
-	haveTalkedUnits = [[prefDict objectForKey:KEY_HAVE_TALKED_UNITS] intValue];
-	haveNotTalkedUnits = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_UNITS] intValue];
-	
-	shouldDisplay = [[prefDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue];
-	linesToDisplay = [[prefDict objectForKey:KEY_DISPLAY_LINES] intValue];
-	
-	dimRecentContext = [[prefDict objectForKey:KEY_DIM_RECENT_CONTEXT] boolValue];
-	
-	if(shouldDisplay && linesToDisplay > 0 && !isObserving) {
-		//Observe new message windows only if we aren't already observing them
-		isObserving = YES;
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(addContextDisplayToWindow:)
-										   name:Chat_DidOpen 
-										 object:nil];
+	//Only change our preferences in response to global preference notifications; specific objects use this group as well.
+	if(object == nil){
+		haveTalkedDays = [[prefDict objectForKey:KEY_HAVE_TALKED_DAYS] intValue];
+		haveNotTalkedDays = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_DAYS] intValue];
+		displayMode = [[prefDict objectForKey:KEY_DISPLAY_MODE] intValue];
 		
-	}else if(isObserving && (!shouldDisplay || linesToDisplay <= 0)){
-		//Remove observer
-		isObserving = NO;
-		[[adium notificationCenter] removeObserver:self name:Chat_DidOpen object:nil];
+		haveTalkedUnits = [[prefDict objectForKey:KEY_HAVE_TALKED_UNITS] intValue];
+		haveNotTalkedUnits = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_UNITS] intValue];
 		
+		shouldDisplay = [[prefDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue];
+		linesToDisplay = [[prefDict objectForKey:KEY_DISPLAY_LINES] intValue];
+		
+		dimRecentContext = [[prefDict objectForKey:KEY_DIM_RECENT_CONTEXT] boolValue];
+		
+		if(shouldDisplay && linesToDisplay > 0 && !isObserving) {
+			//Observe new message windows only if we aren't already observing them
+			isObserving = YES;
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(addContextDisplayToWindow:)
+											   name:Chat_DidOpen 
+											 object:nil];
+			
+		}else if(isObserving && (!shouldDisplay || linesToDisplay <= 0)){
+			//Remove observer
+			isObserving = NO;
+			[[adium notificationCenter] removeObserver:self name:Chat_DidOpen object:nil];
+			
+		}
 	}
-	
 }
 
 // Save the last few lines of a conversation when it closes
@@ -181,7 +183,6 @@
 	chat = (AIChat *)[notification object];
 		
 	NSDictionary	*chatDict = [[chat listObject] preferenceForKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
-	
 	NSDictionary	*messageDict;
 	
 	if( chatDict && shouldDisplay && linesToDisplay > 0 ) {
