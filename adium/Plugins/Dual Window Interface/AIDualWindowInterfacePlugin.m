@@ -106,11 +106,7 @@
 	[messageWindowControllerArray removeAllObjects];
     }
     if(contactListWindowController){
-	NSLog(@"calling close:nil");
         [contactListWindowController close:nil];
-	NSLog(@"releasing");
-        [contactListWindowController release];  //NOTE: causing a crash?
-	NSLog(@"done - contactListWindowController closed");
     }
 
     //Stop observing

@@ -61,9 +61,12 @@
 //Close this container
 - (void)close:(id)sender
 {
+    //In response to windowShouldClose, the interface controller releases us.  At that point, noone would be retaining this instance of AIContactListWindowController, and we would be deallocated.  The call to [self window] will crash if we are deallocated.  A dirty, but functional fix is to temporarily retain ourself here.
+    [self retain];
     if([self windowShouldClose:nil]){
         [[self window] close];
     }
+    [self release];
 }
 
 
