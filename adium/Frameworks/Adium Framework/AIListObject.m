@@ -45,17 +45,20 @@
 }
 
 
-//Identifying information
+//Identification --------------------------------------------------------------------------------
+//UID, identification of this object
 - (NSString *)UID
 {
     return(UID);
 }
 
+//
 - (NSString *)serviceID
 {
     return(serviceID);
 }
 
+//
 - (NSString *)UIDAndServiceID //ServiceID.UID
 {
     if(serviceID){
@@ -74,23 +77,73 @@
     return(orderIndex);
 }
 
-//Display
+
+// Display --------------------------------------------------------------------------------
+/*
+ A list object basically has 4 different variations of display.
+
+ - UID, the base UID of the contact "aiser123"
+ - ServerDisplayName, formating or alteration of the UID provided by the account code "AIser 123"
+ - DisplayName, short formatted name provided by plugins "Adam Iser"
+ - LongDisplayName, long formatted name provided by plugins "Adam Iser (AIser 123)"
+
+ A value will always be returned by these methods, so if there is no long display name present it will fall back to display name, serverDisplayName, and finally UID (which is guaranteed to be present).  Use whichever one seems best suited for what is being displayed.
+ */
+
+//Server display name, specified by server
+- (NSString *)serverDisplayName
+{
+    AIMutableOwnerArray	*displayName;
+    NSString		*outName;
+
+    displayName = [self statusArrayForKey:@"Display Name"];
+    if(displayName != nil && [displayName count] != 0){
+        outName = [displayName objectAtIndex:0];
+    }else{
+        outName = UID;
+    }
+    
+    return(outName);
+}
+
+//Display name, influenced by plugins
 - (NSString *)displayName
 {
-    return(nil); //Arbitrary, as we should never use a non-subclassed version of this method
+    AIMutableOwnerArray	*displayName;
+    NSString		*outName;
+    
+    displayName = [self displayArrayForKey:@"Display Name"];
+    if(displayName != nil && [displayName count] != 0){
+        outName = [displayName objectAtIndex:0];
+    }else{
+        outName = [self serverDisplayName];
+    }
+
+    return(outName);
 }
 
+//Long display name, influenced by plugins
 - (NSString *)longDisplayName
 {
-    return(nil); //Arbitrary, as we should never use a non-subclassed version of this method
+    AIMutableOwnerArray * longNameArray;
+    NSString *outName;
+
+    longNameArray = [self displayArrayForKey:@"Long Display Name"];
+    if (longNameArray && [longNameArray count]){
+        outName = [longNameArray objectAtIndex:0];
+    } else{
+        outName = [self displayName];
+    }
+    return (outName);
 }
 
+//Access to the display arrays for this object
 - (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey
 {
     AIMutableOwnerArray	*array = [displayDictionary objectForKey:inKey];
 
     if(!array){
-//	NSLog(@"array for key:%@ not found and created", inKey);
+        //	NSLog(@"array for key:%@ not found and created", inKey);
         array = [[AIMutableOwnerArray alloc] init];
         [displayDictionary setObject:array forKey:inKey];
         [array release];
@@ -99,7 +152,8 @@
     return(array);
 }
 
-//Nesting
+
+//Nesting --------------------------------------------------------------------------------
 //Returns the group this object is in (will be nil for the root object)
 - (AIListGroup *)containingGroup
 {
@@ -117,7 +171,8 @@
     }
 }
 
-//Status
+
+//Status --------------------------------------------------------------------------------
 //Returns the requested status array for this object
 - (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey
 {

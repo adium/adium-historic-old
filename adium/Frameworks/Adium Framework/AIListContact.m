@@ -90,46 +90,6 @@
     return([handleArray count]);
 }
 
-- (NSString *)displayName
-{
-    AIMutableOwnerArray	*displayName;
-    NSString		*outName;
-
-    //'Alias' Dislay Name
-    displayName = [self displayArrayForKey:@"Display Name"];
-    if(displayName != nil && [displayName count] != 0){
-        outName = [displayName objectAtIndex:0];
-
-    }else{ //Server Dislay Name
-        displayName = [self statusArrayForKey:@"Display Name"];
-        if(displayName != nil && [displayName count] != 0){
-            outName = [displayName objectAtIndex:0];
-
-        }else if([handleArray count] != 0){ //UID
-            outName = [[handleArray objectAtIndex:0] UID];
-
-        }else{
-            outName = UID;
-
-        }
-    }
-
-    return(outName);
-}
-
-- (NSString *)longDisplayName
-{
-    AIMutableOwnerArray * longNameArray;
-    NSString *outName;
-
-    longNameArray = [self displayArrayForKey:@"Long Display Name"];
-    if (longNameArray && [longNameArray count]){
-        outName = [longNameArray objectAtIndex:0];
-    } else{
-        outName = [self displayName];
-    }
-    return (outName);
-}
 
 
 @end

@@ -66,21 +66,21 @@
     NSMenu		*choicesMenu = [[NSMenu alloc] init];
     NSMenuItem		*menuItem;
 
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Display Name"
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Alias"
                                            target:self
                                            action:@selector(changeFormat:)
                                     keyEquivalent:@""] autorelease];
     [menuItem setTag:DISPLAY_NAME];
     [choicesMenu addItem:menuItem];
 
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Display Name (Screen Name)"
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Alias (Screen Name)"
                                            target:self
                                            action:@selector(changeFormat:)
                                     keyEquivalent:@""] autorelease];
     [menuItem setTag:DISPLAY_NAME_SCREEN_NAME];
     [choicesMenu addItem:menuItem];
 
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Screen Name (Display Name)"
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Screen Name (Alias)"
                                            target:self
                                            action:@selector(changeFormat:)
                                     keyEquivalent:@""] autorelease];

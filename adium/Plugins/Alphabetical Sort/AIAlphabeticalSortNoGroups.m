@@ -69,7 +69,7 @@ int alphabeticalSortNoGroups(id objectA, id objectB, void *context)
         }else if(!groupA && groupB){
             return(NSOrderedDescending);
         }else if(!groupA && !groupB){
-            return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
+            return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
         }else{
             //Keep groups in manual order
             if([objectA orderIndex] > [objectB orderIndex]){

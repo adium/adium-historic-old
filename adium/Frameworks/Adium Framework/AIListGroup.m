@@ -30,25 +30,6 @@
     return(self);
 }
 
-- (NSString *)displayName
-{
-    return(UID);
-}
-
-- (NSString *)longDisplayName
-{
-    AIMutableOwnerArray * longNameArray;
-    NSString *outName;
-
-    longNameArray = [self displayArrayForKey:@"Long Display Name"];
-    if (longNameArray && [longNameArray count]){
-        outName = [longNameArray objectAtIndex:0];
-    } else{
-        outName = [self displayName];
-    }
-    return (outName);
-}
-
 //Contained Objects
 //Returns the specified object
 - (id)objectAtIndex:(unsigned)index

@@ -26,8 +26,6 @@
 
 - (id)initWithUID:(NSString *)inUID;
 
-- (NSString *)displayName;
-
 //Contained Objects
 - (NSEnumerator *)objectEnumerator;
 - (id)objectAtIndex:(unsigned)index;
