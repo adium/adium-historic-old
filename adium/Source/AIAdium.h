@@ -184,6 +184,9 @@ typedef enum {
 @end
 
 @protocol AIContactSortController <NSObject>
+- (NSString *)identifier;
+- (NSString *)description;
+- (NSString *)displayName;
 - (void)sortContactObjects:(NSMutableArray *)inObjects;
 - (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys;
 - (BOOL)shouldSortForModifiedAttributeKeys:(NSArray *)inModifiedKeys;
@@ -265,8 +268,10 @@ typedef enum {
     AIContactGroup		*contactList;
     AIContactGroup		*strangerGroup;
     NSMutableArray		*handleObserverArray;
-    NSMutableArray		*sortControllerArray;
     int				delayedUpdating;
+
+    NSMutableArray		*sortControllerArray;
+    id<AIContactSortController> activeSortController;
 
     AIPreferenceCategory	*contactInfoCategory;
 }
@@ -291,7 +296,11 @@ typedef enum {
 - (void)registerHandleObserver:(id)inObserver;
 
 - (void)registerContactSortController:(id <AIContactSortController>)inController;
+- (NSArray *)sortControllerArray;
+- (void)setActiveSortController:(id <AIContactSortController>)inController;
+- (id <AIContactSortController>)activeSortController;
 - (void)sortContactGroup:(AIContactGroup *)inGroup mode:(AISortMode)sortMode;
+        
 
 - (void)showInfoForContact:(AIContactHandle *)inContact;
 - (void)addContactInfoView:(AIPreferenceViewController *)inView;
