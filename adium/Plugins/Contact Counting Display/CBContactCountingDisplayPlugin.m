@@ -19,7 +19,6 @@
 
 - (void)installPlugin
 {
-	
     //register our prefs
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS 
 																		forClass:[self class]] 
@@ -87,22 +86,22 @@
 		   ( (visibleCount || allCount) && ([inModifiedKeys containsObject:@"ObjectCount"] || 
 											[inModifiedKeys containsObject:@"VisibleObjectCount"]))) {
 			NSString *addString = nil;
-                    
-                    if(showOffline) // if we are showing offline, override everything with just count
-                    {
-                        addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
-                    }
-                    else if(!showOffline)
-                    {
-                        if(visibleCount && allCount)
-                            addString = [NSString stringWithFormat:@" (%i/%i)", [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue], [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
-			else if(visibleCount)
-                            addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue]];
-			else if(allCount)
-                            addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
-                    }
-                    [[inObject displayArrayForKey:@"Right Text"] setObject:addString withOwner:self priorityLevel:High_Priority];
-                    modifiedAttributes = [NSArray arrayWithObject:@"Right Text"];
+			
+			if(showOffline) // if we are showing offline, override everything with just count
+			{
+				addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
+			}
+			else if(!showOffline)
+			{
+				if(visibleCount && allCount)
+					addString = [NSString stringWithFormat:@" (%i/%i)", [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue], [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
+				else if(visibleCount)
+					addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue]];
+				else if(allCount)
+					addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
+			}
+			[[inObject displayArrayForKey:@"Right Text"] setObject:addString withOwner:self priorityLevel:High_Priority];
+			modifiedAttributes = [NSArray arrayWithObject:@"Right Text"];
 		}
 	}
 	
