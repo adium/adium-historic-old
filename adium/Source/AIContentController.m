@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.111 2004/08/21 05:14:50 evands Exp $
+// $Id: AIContentController.m,v 1.112 2004/08/23 23:39:28 evands Exp $
 
 #import "AIContentController.h"
 
@@ -1012,20 +1012,23 @@ static BOOL					threadedFiltersInUse = NO;
 {
     NSMutableArray	*foundChats = [NSMutableArray array];
     NSEnumerator	*chatEnumerator;
-    AIChat		*chat;
-
+    AIChat			*chat;
+	NSArray			*objectArray;
+	
+	if ([inObject isKindOfClass:[AIMetaContact class]]){
+		objectArray = [(AIMetaContact *)inObject containedObjects];
+	}else{
+		objectArray = [NSArray arrayWithObject:inObject];
+	}
+	
     //Scan all the open chats
     chatEnumerator = [chatArray objectEnumerator];
     while((chat = [chatEnumerator nextObject])){
-        NSEnumerator	*objectEnumerator;
-        AIListObject	*object;
+		NSArray			*participatingListObjects = [chat participatingListObjects];
 
-        //Scan the objects participating in this chat, looking for the requested object
-        objectEnumerator = [[chat participatingListObjects] objectEnumerator];
-        while((object = [objectEnumerator nextObject])){
-            if(object == inObject){
-                [foundChats addObject:chat];
-            }
+		//Scan the objects participating in this chat, looking for the requested object
+		if ([participatingListObjects firstObjectCommonWithArray:objectArray]){
+			[foundChats addObject:chat];
         }
     }
 
