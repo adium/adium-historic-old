@@ -136,4 +136,6 @@
 - (AIChat *)chatWithContact:(AIListContact *)contact;
 - (oneway void)requestAddContactWithUID:(NSString *)contactUID;
 
+- (void)gotGroupForContact:(AIListContact *)contact;
+
 @end

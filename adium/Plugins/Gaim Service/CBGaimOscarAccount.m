@@ -16,6 +16,7 @@ static NSString *ICQServiceID = nil;
 static NSString *MobileServiceID = nil;
 
 @interface CBGaimOscarAccount (PRIVATE)
+-(NSString *)serversideCommentForContact:(AIListContact *)theContact;
 -(NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
 @end
 
@@ -381,6 +382,13 @@ static BOOL didInitOscar = NO;
 	}
 }
 
+- (void)gotGroupForContact:(AIListContact *)theContact
+{
+	[theContact setStatusObject:[self serversideCommentForContact:theContact]
+						 forKey:@"Notes"
+						 notify:YES];
+}
+
 - (NSArray *)contactStatusFlags
 {
 	static NSArray *contactStatusFlagsArray = nil;
@@ -435,6 +443,8 @@ aim_srv_setavailmsg(od->sess, text);
     [super rejectFileReceiveRequest:fileTransfer];    
 }
 
+
+//Only return YES if the user's capabilities include AIM_CAPS_SENDFILE indicating support for file transfer
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
 {
 	OscarData			*od;
@@ -462,6 +472,8 @@ aim_srv_setavailmsg(od->sess, text);
 }
 
 #pragma mark Contact notes
+
+
 -(NSString *)serversideCommentForContact:(AIListContact *)theContact
 {	
 	NSString *serversideComment = nil;

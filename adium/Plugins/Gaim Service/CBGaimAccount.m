@@ -103,6 +103,8 @@ static id<GaimThread> gaimThread = nil;
 	}else{
 		[theContact setRemoteGroupName:[self _mapIncomingGroupName:nil]];
 	}
+	
+	[self gotGroupForContact:theContact];
 }
 
 - (oneway void)updateContact:(AIListContact *)theContact
@@ -351,6 +353,8 @@ static id<GaimThread> gaimThread = nil;
 {
 	[[adium contactController] requestAddContactWithUID:UID serviceID:[self serviceID]];
 }
+
+- (void)gotGroupForContact:(AIListContact *)listContact {};
 
 /*********************/
 /* AIAccount_Handles */
