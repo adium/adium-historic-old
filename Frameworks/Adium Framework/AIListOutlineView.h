@@ -33,11 +33,14 @@ typedef enum {
 	AIBackgroundStyle	backgroundStyle;
 	
 	NSColor				*backgroundColor;
+	
+	BOOL				ignoreMinimumWidth;
 }
 
 - (void)setDelegate:(id)delegate;
 - (int)desiredHeight;
 - (int)desiredWidth;
+- (void)setIgnoreMinimumWidth:(BOOL)inFlag;
 
 //Selection Hiding
 - (void)configureSelectionHidingForNewSuperview:(NSView *)newSuperview;
