@@ -65,6 +65,7 @@
     [[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
+    //Watch for resolution and screen configuration changes
     [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(screenParametersChanged:) name:NSApplicationDidChangeScreenParametersNotification object:nil];
         
     [contactListView setTarget:self];
