@@ -33,6 +33,7 @@
 - (NSMenuItem *)eventMenuItem:(NSString *)event withDisplay:(NSString *)displayName;
 - (NSMenu *)sendToContactMenu;
 - (NSMenu *)soundListMenu;
+- (void)autosizeAndCenterPopUpButton:(NSPopUpButton *)button;
 @end
 
 
@@ -50,7 +51,8 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
     tableView_actions = inTable;
     [tableView_actions retain];
-
+    [tableView_actions setDoubleAction:@selector(testSelectedEvent)];
+    
     view_main = inView;
     [view_main retain];
 
@@ -70,84 +72,46 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     return self;
 }
 
-- (void)configForObject:(AIListObject *)inObject
-{
-    [activeContactObject release];
-    activeContactObject = inObject;
-    [activeContactObject retain];
-
-    //unregister old observers?
-    //   [[owner notificationCenter] removeObserver:self name:One_Time_Event_Fired object:activeContactObject];
-
-    [self reload:activeContactObject usingCache:YES];
-
-}
-
 - (void)dealloc
 {
-    //remove observer
-//    [[owner notificationCenter] removeObserver:self];
-
     [owner release];
     [activeContactObject release];
     [eventActionArray release];
     [view_blank release];
 }
 
+// Functions for the window and preference pane to learn about our contact's alerts ---------------------------------------
+
+//--Configuration and modification--
+- (void)configForObject:(AIListObject *)inObject
+{
+    [activeContactObject release];
+    activeContactObject = inObject;
+    [activeContactObject retain];
+    
+    [self reload:activeContactObject usingCache:YES];
+}
 - (void)currentRowIs:(int)currentRow
 {
     row = currentRow;
     if (row != -1) selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
 }
-
-- (int)currentRow
-{
-    return row;
-}
-- (NSMutableArray *)eventActionArray
-{
-    return eventActionArray;
-}
-
-- (NSMutableDictionary *)dictAtIndex:(int)inRow
-{
-    return ([eventActionArray objectAtIndex:inRow]);
-}
-
--(BOOL)hasAlerts
-{
-    if ([eventActionArray count])
-        return YES;
-    else
-        return NO;
-}
-
--(int)count
-{
-    return ([eventActionArray count]);
-}
-
--(void)replaceDictAtIndex:(int)inRow withDict:(NSDictionary *)newDict
+- (void)replaceDictAtIndex:(int)inRow withDict:(NSDictionary *)newDict
 {
     [eventActionArray replaceObjectAtIndex:inRow withObject:newDict];
     [self saveEventActionArray];
 }
-
-- (AIListObject *)activeObject
-{
-    return activeContactObject;
-}
-
+//Refresh the event action array we have for object
 - (void)reload:(AIListObject *)object usingCache:(BOOL)useCache
 {
     if (object) //nil objects can't be loaded, clearly
     {
         NSMutableArray * newActionArray =  nil;
         NSString * UID = [object UID];
-
+        
         if (useCache)
             newActionArray = [cachedAlertsDict objectForKey:UID];
-
+        
         if (!newActionArray) //not cached yet or not using cache
         {
             newActionArray = [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:object]; //load from prefs
@@ -156,10 +120,10 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
             else
                 [cachedAlertsDict removeObjectForKey:UID]; //pref is now clear - remove from our cache
         }
-
+        
         if (!newActionArray)
             newActionArray = [[NSMutableArray alloc] init];
-
+        
         if ([[object UID] compare:[activeContactObject UID]] == 0) //this is our currently active contact
         {
             [eventActionArray release];
@@ -169,7 +133,21 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     }
 }
 
-//Actions!
+//--Accessing information--
+- (int)currentRow
+{   return row;                                         }
+- (NSMutableArray *)eventActionArray
+{   return eventActionArray;                            }
+- (NSMutableDictionary *)dictAtIndex:(int)inRow
+{   return ([eventActionArray objectAtIndex:inRow]);    }
+-(BOOL)hasAlerts
+{   return ([eventActionArray count] > 0);              }
+-(int)count
+{   return ([eventActionArray count]);                  }
+- (AIListObject *)activeObject
+{   return activeContactObject;                         }
+
+// Actions! ---------------------------------------------------------------------------------------------------------------------
 - (NSMenu *)actionListMenu //menu of possible actions
 {
     if (!actionListMenu_cached)
@@ -221,7 +199,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
         actionListMenu_cached = actionListMenu;
     }
-
     return(actionListMenu_cached);
 }
 
@@ -229,19 +206,19 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 - (IBAction)actionDisplayAlert:(id)sender
 {   	[self configureForTextDetails:@"Alert text:"];		}
 
-    //setup display for speaking text
+//setup display for speaking text
 - (IBAction)actionSpeakText:(id)sender
 {    [self configureForTextDetails:@"Text to speak:"];		}
 
-    //setup display for playing a sound
+//setup display for playing a sound
 - (IBAction)actionPlaySound:(id)sender
 {    [self configureForMenuDetails:@"Sound to play:" menuToDisplay:[self soundListMenu]];	}
 
-    //setup display for bouncing the dock
+//setup display for bouncing the dock
 - (IBAction)actionBounceDock:(id)sender
 {    [self configureForMenuDetails:@"Dock behavior:" menuToDisplay:[self behaviorListMenu]];	}
 
-    //setup display for opening message window
+//setup display for opening message window
 - (IBAction)actionOpenMessage:(id)sender
 {
     NSMutableDictionary * detailsDict;
@@ -337,31 +314,13 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     [[view_details_message window] makeFirstResponder:textField_message_actionDetails];
 }
 
-//Builds and returns an event menu
-- (NSMenu *)eventMenu
+// Saving --------------------------------------------------------------------------------------------------------------------------------
+//Save the event actions (contact context sensitive)
+- (void)saveEventActionArray
 {
-    if (!eventMenu_cached)
-    {
-        NSMenu		*eventMenu = [[NSMenu alloc] init];
-
-        //Add the static/display menu item
-        [eventMenu addItemWithTitle:@"Add Event…" target:nil action:nil keyEquivalent:@""];
-
-        //Add a menu item for each event
-        [eventMenu addItem:[self eventMenuItem:@"Signed On" withDisplay:@"Signed On"]];
-        [eventMenu addItem:[self eventMenuItem:@"Signed Off" withDisplay:@"Signed Off"]];
-        [eventMenu addItem:[self eventMenuItem:@"Away" withDisplay:@"Went Away"]];
-        [eventMenu addItem:[self eventMenuItem:@"!Away" withDisplay:@"Came Back From Away"]];
-        [eventMenu addItem:[self eventMenuItem:@"Idle" withDisplay:@"Became Idle"]];
-        [eventMenu addItem:[self eventMenuItem:@"!Idle" withDisplay:@"Became Unidle"]];
-        [eventMenu addItem:[self eventMenuItem:@"Typing" withDisplay:@"Is Typing"]];
-        [eventMenu addItem:[self eventMenuItem:@"UnviewedContent" withDisplay:@"Has Unviewed Content"]];
-        [eventMenu addItem:[self eventMenuItem:@"Warning" withDisplay:@"Was Warned"]];
-        eventMenu_cached = eventMenu;
-    }
-    return(eventMenu_cached);
+    [[owner preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
 }
-
+//Send Message
 -(IBAction)saveMessageDetails:(id)sender
 {
     NSMutableDictionary *detailsDict = [[NSMutableDictionary alloc] init];
@@ -386,7 +345,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
     [self saveEventActionArray];
 }
-
+//Open Message Window
 -(IBAction)saveOpenMessageDetails:(id)sender
 {
     NSMutableDictionary *detailsDict = [[NSMutableDictionary alloc] init];
@@ -398,7 +357,79 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     [self saveEventActionArray];
 }
 
-//Builds and returns a sound list menu - from AIEventSoundsPreferences.m
+// Menus --------------------------------------------------------------------------------------------------------------
+
+//--Events--
+//Builds and returns an event menu
+- (NSMenu *)eventMenu
+{
+    if (!eventMenu_cached)
+    {
+        NSMenu		*eventMenu = [[NSMenu alloc] init];
+        
+        //Add the static/display menu item
+        [eventMenu addItemWithTitle:@"Add Event…" target:nil action:nil keyEquivalent:@""];
+        
+        //Add a menu item for each event
+        [eventMenu addItem:[self eventMenuItem:@"Signed On" withDisplay:@"Signed On"]];
+        [eventMenu addItem:[self eventMenuItem:@"Signed Off" withDisplay:@"Signed Off"]];
+        [eventMenu addItem:[self eventMenuItem:@"Away" withDisplay:@"Went Away"]];
+        [eventMenu addItem:[self eventMenuItem:@"!Away" withDisplay:@"Came Back From Away"]];
+        [eventMenu addItem:[self eventMenuItem:@"Idle" withDisplay:@"Became Idle"]];
+        [eventMenu addItem:[self eventMenuItem:@"!Idle" withDisplay:@"Became Unidle"]];
+        [eventMenu addItem:[self eventMenuItem:@"Typing" withDisplay:@"Is Typing"]];
+        [eventMenu addItem:[self eventMenuItem:@"UnviewedContent" withDisplay:@"Has Unviewed Content"]];
+        [eventMenu addItem:[self eventMenuItem:@"Warning" withDisplay:@"Was Warned"]];
+        eventMenu_cached = eventMenu;
+    }
+    return(eventMenu_cached);
+}
+//Used for each item of the eventMenu
+-(NSMenuItem *)eventMenuItem:(NSString *)event withDisplay:(NSString *)displayName
+{
+    NSMenuItem *menuItem;
+    NSMutableDictionary *menuDict;
+    
+    menuItem = [[[NSMenuItem alloc] initWithTitle:displayName
+                                           target:self
+                                           action:@selector(newEvent:)
+                                    keyEquivalent:@""] autorelease];
+    menuDict = [[[NSMutableDictionary alloc] init] retain];
+    [menuDict setObject:displayName 	forKey:KEY_EVENT_DISPLAYNAME];
+    [menuDict setObject:event 		forKey:KEY_EVENT_NOTIFICATION];
+    [menuItem setRepresentedObject:menuDict];
+    return menuItem;
+}
+//Called by the event popUp menu (Inserts a new event)
+- (IBAction)newEvent:(id)sender
+{
+    NSMutableDictionary	*actionDict;
+    NSString * event = [[sender representedObject] objectForKey:KEY_EVENT_NOTIFICATION];
+    actionDict = [[NSMutableDictionary alloc] init];
+    if ( [event hasPrefix:@"!"] ) //negative status
+    {
+        event = [event stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"!"]];
+        [actionDict setObject:@"0" forKey:KEY_EVENT_STATUS];
+    }
+    else
+        [actionDict setObject:@"1" forKey:KEY_EVENT_STATUS];
+    
+    //Add the new event
+    [actionDict setObject:[[sender representedObject] objectForKey:KEY_EVENT_DISPLAYNAME] forKey:KEY_EVENT_DISPLAYNAME];
+    [actionDict setObject:event forKey:KEY_EVENT_NOTIFICATION];
+    [actionDict setObject:@"Sound" forKey:KEY_EVENT_ACTION]; //Sound is default action
+    [actionDict setObject:[NSNumber numberWithInt:NSOffState] forKey:KEY_EVENT_DELETE]; //default to recurring events
+    [actionDict setObject:[NSNumber numberWithInt:NSOffState] forKey:KEY_EVENT_ACTIVE]; //default to ignore active/inactive
+    [eventActionArray addObject:actionDict];
+    
+    [self saveEventActionArray];
+    
+    if ([[tableView_actions dataSource] respondsToSelector:@selector(addedEvent:)])
+        [[tableView_actions dataSource] performSelector:@selector(addedEvent:) withObject:self];
+}
+
+//--Sounds--
+//Builds and returns a sound list menu
 - (NSMenu *)soundListMenu
 {
     if (!soundMenu_cached)
@@ -406,69 +437,154 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         NSEnumerator	*enumerator;
         NSDictionary	*soundSetDict;
         NSMenu		*soundMenu = [[NSMenu alloc] init];
-
+        NSMenuItem	*menuItem;
+            
         enumerator = [[[owner soundController] soundSetArray] objectEnumerator];
         while((soundSetDict = [enumerator nextObject])){
-            NSEnumerator	*soundEnumerator;
-            NSString	*soundSetPath;
-            NSString	*soundPath;
-            NSMenuItem	*menuItem;
-
+            NSEnumerator    *soundEnumerator;
+            NSString        *soundSetPath;
+            NSString        *soundPath;
+            NSArray         *soundSetContents = [soundSetDict objectForKey:KEY_SOUND_SET_CONTENTS];
             //Add an item for the set
-            if([soundMenu numberOfItems] != 0){
-                [soundMenu addItem:[NSMenuItem separatorItem]]; //Divider
-            }
-            soundSetPath = [soundSetDict objectForKey:KEY_SOUND_SET];
-            menuItem = [[[NSMenuItem alloc] initWithTitle:[soundSetPath lastPathComponent]
-                                                   target:nil
-                                                   action:nil
-                                            keyEquivalent:@""] autorelease];
-            [menuItem setEnabled:NO];
-            [soundMenu addItem:menuItem];
-
-            //Add an item for each sound
-            soundEnumerator = [[soundSetDict objectForKey:KEY_SOUND_SET_CONTENTS] objectEnumerator];
-            while((soundPath = [soundEnumerator nextObject])){
-                NSImage	*soundImage;
-                NSString	*soundTitle;
-
-                //Get the sound title and image
-                soundTitle = [[soundPath lastPathComponent] stringByDeletingPathExtension];
-                soundImage = [[NSWorkspace sharedWorkspace] iconForFile:soundPath];
-                [soundImage setSize:NSMakeSize(SOUND_MENU_ICON_SIZE,SOUND_MENU_ICON_SIZE)];
-
-                //Build the menu item
-                menuItem = [[[NSMenuItem alloc] initWithTitle:soundTitle
-                                                       target:self
-                                                       action:@selector(selectSound:)
+            if (soundSetContents && [soundSetContents count]) {
+                if([soundMenu numberOfItems] != 0){
+                    [soundMenu addItem:[NSMenuItem separatorItem]]; //Divider
+                }
+                soundSetPath = [soundSetDict objectForKey:KEY_SOUND_SET];
+                menuItem = [[[NSMenuItem alloc] initWithTitle:[soundSetPath lastPathComponent]
+                                                       target:nil
+                                                       action:nil
                                                 keyEquivalent:@""] autorelease];
-                [menuItem setRepresentedObject:soundPath];
-                [menuItem setImage:soundImage];
-
+                [menuItem setEnabled:NO];
                 [soundMenu addItem:menuItem];
+                
+                //Add an item for each sound
+                soundEnumerator = [soundSetContents objectEnumerator];
+                while((soundPath = [soundEnumerator nextObject])){
+                    NSImage	*soundImage;
+                    NSString	*soundTitle;
+                    
+                    //Get the sound title and image
+                    soundTitle = [[soundPath lastPathComponent] stringByDeletingPathExtension];
+                    soundImage = [[NSWorkspace sharedWorkspace] iconForFile:soundPath];
+                    [soundImage setSize:NSMakeSize(SOUND_MENU_ICON_SIZE,SOUND_MENU_ICON_SIZE)];
+                    
+                    //Build the menu item
+                    menuItem = [[[NSMenuItem alloc] initWithTitle:soundTitle
+                                                           target:self
+                                                           action:@selector(selectSound:)
+                                                    keyEquivalent:@""] autorelease];
+                    [menuItem setRepresentedObject:soundPath];
+                    [menuItem setImage:soundImage];
+                    
+                    [soundMenu addItem:menuItem];
+                }
             }
         }
+        //Add the Other... item
+        menuItem = [[[NSMenuItem alloc] initWithTitle:@"Other..."
+                                               target:self
+                                               action:@selector(selectSound:)
+                                        keyEquivalent:@""] autorelease];            
+        [soundMenu addItem:menuItem];
+        
         [soundMenu setAutoenablesItems:NO];
         soundMenu_cached = soundMenu;
     }
+    
+    //Add custom sounds to the menu as needed
+    if (row != -1 && ([(NSString *)[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_ACTION] compare:@"Sound"] == 0)) {
+        //add it if it's not already in the menu
+        NSString *soundPath = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
+        if (soundPath && ([soundPath length] != 0) && [popUp_actionDetails indexOfItemWithRepresentedObject:soundPath] == -1) {
+            NSImage	*soundImage;
+            NSString	*soundTitle;
+            NSMenuItem	*menuItem;
+            
+            //Add an "Other" header if necessary
+            if ([popUp_actionDetails indexOfItemWithTitle:@"Other"] == -1) {
+                [soundMenu_cached insertItem:[NSMenuItem separatorItem] atIndex:([soundMenu_cached numberOfItems]-1)]; //Divider
+                menuItem = [[[NSMenuItem alloc] initWithTitle:@"Other"
+                                                       target:nil
+                                                       action:nil
+                                                keyEquivalent:@""] autorelease];
+                [menuItem setEnabled:NO];
+                [soundMenu_cached insertItem:menuItem atIndex:([soundMenu_cached numberOfItems]-1)];
+            }
+            
+            //Get the sound title and image
+            soundTitle = [[soundPath lastPathComponent] stringByDeletingPathExtension];
+            soundImage = [[NSWorkspace sharedWorkspace] iconForFile:soundPath];
+            [soundImage setSize:NSMakeSize(SOUND_MENU_ICON_SIZE,SOUND_MENU_ICON_SIZE)];
+            
+            //Build the menu item
+            menuItem = [[[NSMenuItem alloc] initWithTitle:soundTitle
+                                                   target:self
+                                                   action:@selector(selectSound:)
+                                            keyEquivalent:@""] autorelease];
+            [menuItem setRepresentedObject:soundPath];
+            [menuItem setImage:soundImage];
+            
+            [soundMenu_cached insertItem:menuItem atIndex:([soundMenu_cached numberOfItems]-1)];
+        }
+    }
+    
     return(soundMenu_cached);
 }
 //Select a sound from one of the sound popUp menus
 - (IBAction)selectSound:(id)sender
 {
     NSString	*soundPath = [sender representedObject];
-
+    [self autosizeAndCenterPopUpButton:popUp_actionDetails];
+    
     if(soundPath != nil && [soundPath length] != 0){
         [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
+        [selectedActionDict setObject:soundPath forKey:KEY_EVENT_DETAILS];
+        [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+
+        //Save event sound preferences
+        [self saveEventActionArray];
+    } else { //selected "Other..."
+        NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+        [openPanel 
+            beginSheetForDirectory:nil
+                              file:nil
+                             types:[NSSound soundUnfilteredFileTypes] //allow all the sounds NSSound understands
+                    modalForWindow:[view_main window]
+                     modalDelegate:self
+                    didEndSelector:@selector(concludeOtherPanel:returnCode:contextInfo:)
+                       contextInfo:nil];        
     }
-
-    [selectedActionDict setObject:soundPath forKey:KEY_EVENT_DETAILS];
-    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
-
-    //Save event sound preferences
-    [self saveEventActionArray];
+}
+//Finish up the Other... panel
+- (void)concludeOtherPanel:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    if(returnCode == NSOKButton){
+        NSString *soundPath = [[panel filenames] objectAtIndex:0];
+        
+        [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
+        [selectedActionDict setObject:soundPath forKey:KEY_EVENT_DETAILS];
+        [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+        
+        //Save event sound preferences
+        [self saveEventActionArray];
+        
+        //Update the menu and and the selection
+        [popUp_actionDetails setMenu:[self soundListMenu]];
+        [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:soundPath]];
+        [self autosizeAndCenterPopUpButton:popUp_actionDetails];
+    }
+}
+- (void)autosizeAndCenterPopUpButton:(NSPopUpButton *)button
+{
+    [button sizeToFit];
+    NSRect menuFrame = [button frame];
+    menuFrame.origin.x = ([[button superview] frame].size.width / 2) - (menuFrame.size.width / 2);
+    [button setFrame:menuFrame];   
+    [[button superview] display];
 }
 
+//--Dock bouncing behaviors--
 //Builds and returns a dock behavior list menu
 - (NSMenu *)behaviorListMenu
 {
@@ -488,7 +604,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
     return(behaviorMenu);
 }
-
 - (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name
 {
     NSMenuItem		*menuItem;
@@ -501,7 +616,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
     return(menuItem);
 }
-
 //The user selected a behavior
 - (IBAction)selectBehavior:(id)sender
 {
@@ -514,6 +628,28 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     [self saveEventActionArray];
 }
 
+//--Open Message Window--
+- (NSMenu *)accountForOpenMessageMenu
+{
+    NSEnumerator * accountEnumerator;
+    AIAccount * account;
+    NSMenu * accountMenu = [[NSMenu alloc] init];
+    
+    accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+    while(account = [accountEnumerator nextObject]){
+        NSMenuItem 	*menuItem;
+        NSString	*accountDescription;
+        accountDescription = [account accountDescription];
+        menuItem = [[[NSMenuItem alloc] initWithTitle:accountDescription
+                                               target:self
+                                               action:@selector(selectAccount:)
+                                        keyEquivalent:@""] autorelease];
+        [menuItem setRepresentedObject:account];
+        [accountMenu addItem:menuItem];
+    }
+    
+    return accountMenu;
+}
 - (IBAction)selectAccount:(id)sender
 {
     AIAccount * account = [sender representedObject];
@@ -526,6 +662,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     [self saveEventActionArray];
 }
 
+//--Send Message--
 //builds an alphabetical menu of contacts for all online accounts; online contacts are sorted to the top and seperated
 //from offline ones by a seperator reading "Offline"
 //uses alphabeticalGroupOfflineSort and calls saveMessageDetails: when a selection is made
@@ -565,7 +702,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
                                                         target:nil
                                                         action:nil
                                                  keyEquivalent:@""] autorelease];
-                //[groupItem setRepresentedObject:[contact containingGroup]];
                 [groupItem setEnabled:NO];
                 [contactMenu addItem:groupItem];
                 firstOfflineSearch = YES; //start searching for an offline contact
@@ -594,46 +730,12 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     }
     return contactMenu;
 }
-
-
-
-int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
-{
-    BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-    BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-    BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
-    BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
-
-
-    NSString  	*groupNameA = [[objectA containingGroup] displayName];
-    NSString  	*groupNameB = [[objectB containingGroup] displayName];
-    if(groupA && !groupB){
-        return(NSOrderedAscending);
-    }else if(!groupA && groupB){
-        return(NSOrderedDescending);
-    }
-    else if ([groupNameA compare:groupNameB] == 0)
-    {
-        if(invisibleA && !invisibleB){
-            return(NSOrderedDescending);
-        }else if(!invisibleA && invisibleB){
-            return(NSOrderedAscending);
-        }else{
-            return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
-        }
-    }
-    else
-        return([groupNameA caseInsensitiveCompare:groupNameB]);
-}
-
-
-
 - (NSMenu *)accountMenu
 {
     NSEnumerator * accountEnumerator;
     AIAccount * account;
     NSMenu * accountMenu = [[NSMenu alloc] init];
-
+    
     accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
     while(account = [accountEnumerator nextObject]){
         NSMenuItem 	*menuItem;
@@ -646,73 +748,69 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
         [menuItem setRepresentedObject:account];
         [accountMenu addItem:menuItem];
     }
-
+    
     return accountMenu;
 }
 
-- (NSMenu *)accountForOpenMessageMenu
+// Subview management -------------------------------------------------------------------------------------
+//Swap out subviews
+- (void)configureWithSubview:(NSView *)view_inView
 {
-    NSEnumerator * accountEnumerator;
-    AIAccount * account;
-    NSMenu * accountMenu = [[NSMenu alloc] init];
-
-    accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
-    while(account = [accountEnumerator nextObject]){
-        NSMenuItem 	*menuItem;
-        NSString	*accountDescription;
-        accountDescription = [account accountDescription];
-        menuItem = [[[NSMenuItem alloc] initWithTitle:accountDescription
-                                               target:self
-                                               action:@selector(selectAccount:)
-                                        keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:account];
-        [accountMenu addItem:menuItem];
-    }
-
-    return accountMenu;
-}
-
-//Save the event actions (contact context sensitive)
-- (void)saveEventActionArray
-{
-    [[owner preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
-}
-
-
-//Called by the event popUp menu (Inserts a new event)
-- (IBAction)newEvent:(id)sender
-{
-    NSMutableDictionary	*actionDict;
-    NSString * event = [[sender representedObject] objectForKey:KEY_EVENT_NOTIFICATION];
-    actionDict = [[NSMutableDictionary alloc] init];
-    if ( [event hasPrefix:@"!"] ) //negative status
+    if (!view_inView) view_inView = view_blank; //pass nil to signify the blank subview
+    
+    int 	heightChange = [view_inView frame].size.height - [[[view_main subviews] objectAtIndex:0] frame].size.height;
+    NSView * oldView = [[view_main subviews] objectAtIndex:0];
+    [view_main replaceSubview:oldView with:view_blank];
+    
+    NSRect	containerFrame = [[view_main window] frame];
+    
+    NSSize	minimumSize = [[view_main window] minSize];
+    containerFrame.size.height += heightChange;
+    containerFrame.origin.y -= heightChange;
+    minimumSize.height += heightChange;
+    
+    [[view_main window] setFrame:containerFrame display:YES animate:NO];
+    [[view_main window] setMinSize:minimumSize];
+    
+    if (view_pref != nil) //we're inside the preference pane
     {
-        event = [event stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"!"]];
-        [actionDict setObject:@"0" forKey:KEY_EVENT_STATUS];
+        containerFrame = [view_pref frame];
+        containerFrame.size.height += heightChange;
+        containerFrame.origin.y -= heightChange;
+        [view_pref setFrame:containerFrame];
+        
+        containerFrame = [[[view_pref superview] superview] frame];
+        containerFrame.size.height += heightChange;
+        [[[view_pref superview] superview] setFrame:containerFrame];
+        [view_pref setFrameOrigin:NSMakePoint(0,0)];
+        [[[view_pref superview] superview] setNeedsDisplay:YES];
     }
-    else
-        [actionDict setObject:@"1" forKey:KEY_EVENT_STATUS];
-
-    //Add the new event
-    [actionDict setObject:[[sender representedObject] objectForKey:KEY_EVENT_DISPLAYNAME] forKey:KEY_EVENT_DISPLAYNAME];
-    [actionDict setObject:event forKey:KEY_EVENT_NOTIFICATION];
-    [actionDict setObject:@"Sound" forKey:KEY_EVENT_ACTION]; //Sound is default action
-    [actionDict setObject:[NSNumber numberWithInt:NSOffState] forKey:KEY_EVENT_DELETE]; //default to recurring events
-    [actionDict setObject:[NSNumber numberWithInt:NSOffState] forKey:KEY_EVENT_ACTIVE]; //default to ignore active/inactive
-    [eventActionArray addObject:actionDict];
-
-    [self saveEventActionArray];
-
- //   [tableView_actions selectRow:([eventActionArray count]-1) byExtendingSelection:NO]; //select the new event
-
-    if ([[tableView_actions dataSource] respondsToSelector:@selector(addedEvent:)])
-        [[tableView_actions dataSource] performSelector:@selector(addedEvent:) withObject:self];
-
-    //Update the outline view
-//    [tableView_actions reloadData];
-
+    [view_main replaceSubview:view_blank with:view_inView];
+    [view_main setFrameSize:[view_inView frame].size];
+    [view_main setNeedsDisplay:YES];
 }
-
+//Clear a view of all subviews
+- (void)removeAllSubviews:(NSView *)view
+{
+    NSArray 	* subviewsArray = [view subviews];
+    NSEnumerator * enumerator = [subviewsArray objectEnumerator];
+    NSView 	* theSubview;
+    NSRect	containerFrame = [[view_main window] frame];
+    NSSize	minimumSize = [[view_main window] minSize];
+    int	 	heightChange;
+    
+    while (theSubview = [enumerator nextObject])
+    {
+        heightChange = -[theSubview frame].size.height;
+        containerFrame.size.height += heightChange;
+        containerFrame.origin.y -= heightChange;
+        minimumSize.height += heightChange;
+        [theSubview removeFromSuperviewWithoutNeedingDisplay];
+    }
+    [[view_main window] setFrame:containerFrame display:YES animate:YES];
+    [[view_main window] setMinSize:minimumSize];
+}
+//Generic text subview configuration
 - (void)configureForTextDetails:(NSString *)instructions
 {
     NSString *details =  [[[NSString alloc] init] autorelease];
@@ -735,7 +833,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [self configureWithSubview:view_details_text];
     [[view_details_text window] makeFirstResponder:textField_actionDetails];
 }
-
+//Generic menu configuration
 - (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu
 {
     [selectedActionDict setObject:[NSNumber numberWithInt:1] forKey:KEY_EVENT_DETAILS_UNIQUE];
@@ -745,111 +843,37 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [textField_description_popUp setStringValue:instructions];
     [popUp_actionDetails setMenu:detailsMenu];
     [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]]];
-
+    [self autosizeAndCenterPopUpButton:popUp_actionDetails];
+    
     [self configureWithSubview:view_details_menu];
 }
 
-- (void)configureWithSubview:(NSView *)view_inView
-{
-    if (!view_inView) view_inView = view_blank; //pass nil to signify the blank subview
-
-    int 	heightChange = [view_inView frame].size.height - [[[view_main subviews] objectAtIndex:0] frame].size.height;
-    NSView * oldView = [[view_main subviews] objectAtIndex:0];
-    [view_main replaceSubview:oldView with:view_blank];
-
-    NSRect	containerFrame = [[view_main window] frame];
-
-    NSSize	minimumSize = [[view_main window] minSize];
-    containerFrame.size.height += heightChange;
-    containerFrame.origin.y -= heightChange;
-    minimumSize.height += heightChange;
-
-    [[view_main window] setFrame:containerFrame display:YES animate:NO];
-    [[view_main window] setMinSize:minimumSize];
-
-    if (view_pref != nil)
-    {
-        containerFrame = [view_pref frame];
-        containerFrame.size.height += heightChange;
-        containerFrame.origin.y -= heightChange;
-        [view_pref setFrame:containerFrame];
-
-        containerFrame = [[[view_pref superview] superview] frame];
-        containerFrame.size.height += heightChange;
-        [[[view_pref superview] superview] setFrame:containerFrame];
-        [view_pref setFrameOrigin:NSMakePoint(0,0)];
-        [[[view_pref superview] superview] setNeedsDisplay:YES];
-
-    }
-
-    [view_main replaceSubview:view_blank with:view_inView];
-    [view_main setFrameSize:[view_inView frame].size];
-    [view_main setNeedsDisplay:YES];
-
-}
-
-- (void)removeAllSubviews:(NSView *)view
-{
-    NSArray 	* subviewsArray = [view subviews];
-    NSEnumerator * enumerator = [subviewsArray objectEnumerator];
-    NSView 	* theSubview;
-    NSRect	containerFrame = [[view_main window] frame];
-    NSSize	minimumSize = [[view_main window] minSize];
-    int	 	heightChange;
-
-    while (theSubview = [enumerator nextObject])
-    {
-        heightChange = -[theSubview frame].size.height;
-        containerFrame.size.height += heightChange;
-        containerFrame.origin.y -= heightChange;
-        minimumSize.height += heightChange;
-        [theSubview removeFromSuperviewWithoutNeedingDisplay];
-    }
-    [[view_main window] setFrame:containerFrame display:YES animate:YES];
-    [[view_main window] setMinSize:minimumSize];
-}
-
-
-
-//used for each item of the eventMenu
--(NSMenuItem *)eventMenuItem:(NSString *)event withDisplay:(NSString *)displayName
-{
-    NSMenuItem *menuItem;
-    NSMutableDictionary *menuDict;
-
-    menuItem = [[[NSMenuItem alloc] initWithTitle:displayName
-                                           target:self
-                                           action:@selector(newEvent:)
-                                    keyEquivalent:@""] autorelease];
-    menuDict = [[[NSMutableDictionary alloc] init] retain];
-    [menuDict setObject:displayName 	forKey:KEY_EVENT_DISPLAYNAME];
-    [menuDict setObject:event 		forKey:KEY_EVENT_NOTIFICATION];
-    [menuItem setRepresentedObject:menuDict];
-    return menuItem;
-}
+// Table events -----------------------------------------------------------------------------------------
 
 //Delete the selected action
 -(IBAction)deleteEventAction:(id)sender
 {
-//    [self configureWithSubview:nil];
     //Remove the event
     [eventActionArray removeObjectAtIndex:row];
 
     //Save event sound preferences
     [self saveEventActionArray];
-
-    //Update the outline view
-//    [tableView_actions reloadData];
 }
 
-//editing is over - save in KEY_EVENT_DETAILS
-//- (void)controlTextDidEndEditing:(NSNotification *)notification
-- (void)controlTextDidChange:(NSNotification *)notification
+//Double-click response
+- (void)testSelectedEvent
 {
-    [selectedActionDict setObject:[[notification object] stringValue] forKey:KEY_EVENT_DETAILS];
-    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
-    [self saveEventActionArray];
+    if (row != -1) {
+        if ([(NSString *)[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_ACTION] compare:@"Sound"] == 0) {
+            NSString * sound = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
+            if (sound && [sound length] != 0) {
+                [[owner soundController] playSoundAtPath:sound]; //Play the sound
+            }
+        }
+    }
 }
+
+// The generic buttons -----------------------------------------------------------------------------------
 
 - (void)oneTimeEvent:(NSButton *)inButton
 {
@@ -858,7 +882,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 
     [self saveEventActionArray];
 }
-
 - (void)onlyWhileActive:(NSButton *)inButton
 {
     [selectedActionDict setObject:[NSNumber numberWithInt:[inButton state]] forKey:KEY_EVENT_ACTIVE];
@@ -867,6 +890,17 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [self saveEventActionArray];
 }
 
+// Notification handling -----------
+
+//Our primary text field was modified - save in KEY_EVENT_DETAILS (catch here instead of when it sends its action so a sudden window closure won't leave us without saving
+- (void)controlTextDidChange:(NSNotification *)notification
+{
+    [selectedActionDict setObject:[[notification object] stringValue] forKey:KEY_EVENT_DETAILS];
+    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+    [self saveEventActionArray];
+}
+
+// Update when a one time event fires while we're open
 - (void)oneTimeEventFired:(NSNotification *)notification
 {
     [self reload:[notification object] usingCache:NO];
@@ -876,16 +910,48 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [tableView_actions reloadData];
 }
 
+// Comparison testing of ESContactAlerts instances -----------------------------------------------------------------
+
 //determine if two instances of ESContactAlerts refer to the same contact
 - (BOOL)isEqual:(id)inInstance
 {
     BOOL contactTest = ( [[activeContactObject UIDAndServiceID] compare:[[inInstance activeObject] UIDAndServiceID]] == 0 );
     return contactTest;
 }
-
 //hash string is simply based on the UIDAndServiceID's NSString hash
-- (unsigned) hash
+- (unsigned)hash
 {
     return ( [[activeContactObject UIDAndServiceID] hash] );
 }
+
+//Sorting function
+int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
+{
+    BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
+    BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
+    BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
+    BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
+    
+    
+    NSString  	*groupNameA = [[objectA containingGroup] displayName];
+    NSString  	*groupNameB = [[objectB containingGroup] displayName];
+    if(groupA && !groupB){
+        return(NSOrderedAscending);
+    }else if(!groupA && groupB){
+        return(NSOrderedDescending);
+    }
+    else if ([groupNameA compare:groupNameB] == 0)
+    {
+        if(invisibleA && !invisibleB){
+            return(NSOrderedDescending);
+        }else if(!invisibleA && invisibleB){
+            return(NSOrderedAscending);
+        }else{
+            return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
+        }
+    }
+    else
+        return([groupNameA caseInsensitiveCompare:groupNameB]);
+}
+
 @end
