@@ -53,9 +53,9 @@
     [service removeAccount:gaimAcct];
 }
 
-- (BOOL)configureGaimProxySettings
+- (NSDictionary *)systemSOCKSSettingsDictionary
 {
-    return [service configureGaimProxySettings];
+    return [service systemSOCKSSettingsDictionary];
 }
 
 - (NSString *)gaimDescriptionSuffix

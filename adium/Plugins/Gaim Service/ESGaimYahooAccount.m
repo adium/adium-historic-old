@@ -8,6 +8,9 @@
 #import "ESGaimYahooAccountViewController.h"
 #import "ESGaimYahooAccount.h"
 
+#define KEY_YAHOO_HOST  @"Yahoo:Host"
+#define KEY_YAHOO_PORT  @"Yahoo:Port"
+
 @implementation ESGaimYahooAccount
 
 - (const char*)protocolPlugin
@@ -38,6 +41,16 @@
 					   encodeNonASCII:NO
 						   imagesPath:nil
 					attachmentsAsText:YES]);
+}
+
+- (NSString *)hostKey
+{
+	return KEY_YAHOO_HOST;
+}
+
+- (NSString *)portKey
+{
+	return KEY_YAHOO_PORT;
 }
 
 @end

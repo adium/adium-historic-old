@@ -10,6 +10,9 @@
 
 #define OSCAR_DELAYED_UPDATE_INTERVAL   3
 
+#define KEY_OSCAR_HOST  @"Oscar:Host"
+#define KEY_OSCAR_PORT  @"Oscar:Port"
+
 //From oscar.c
 typedef struct _OscarData OscarData;
 struct _OscarData {
@@ -110,6 +113,16 @@ struct buddyinfo {
 	return nil;
 }
 
+- (NSString *)hostKey
+{
+	return KEY_OSCAR_HOST;
+}
+- (NSString *)portKey
+{
+	return KEY_OSCAR_PORT;
+}
+
+#pragma mark Buddy updates
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
 {
 	[super accountUpdateBuddy:buddy forEvent:event];
