@@ -27,9 +27,10 @@
 	
 	//These common controls are used by most protocols, so we place them here as a convenience to protocol code.
 	//Custom account view nibs are encouraged to connect to these outlets.
+	IBOutlet	NSTextField		*textField_accountUIDLabel;		//Label on UID field
 	IBOutlet	NSTextField		*textField_accountUID;			//UID field
 	IBOutlet	NSTextField		*textField_password;			//Password field
-
+	
 	//Instance variables
     AIAccount			*account;
 	NSArray				*auxiliaryTabs;
@@ -45,5 +46,6 @@
 - (NSString *)nibName;
 - (NSArray *)auxiliaryTabs;
 - (void)saveFieldsImmediately;
+- (void)updatePasswordField;
 
 @end
