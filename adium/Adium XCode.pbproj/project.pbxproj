@@ -1971,6 +1971,7 @@
 			files = (
 				3419F38605314BC900C68BA3,
 				3419F38705314BC900C68BA3,
+				3474CC8B0573481900FED0B0,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1992,6 +1993,7 @@
 			files = (
 				3419F38905314BC900C68BA3,
 				3419F38A05314BC900C68BA3,
+				3474CC890573481900FED0B0,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2013,6 +2015,7 @@
 			files = (
 				3419F38C05314BC900C68BA3,
 				3419F38D05314BC900C68BA3,
+				3474CC8A0573481900FED0B0,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2300,7 +2303,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3B305314BE000C68BA3 = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = folder;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "SQL Logger.AdiumPlugin";
@@ -5152,6 +5155,50 @@
 			path = Plugins/Announcer/ESAnnouncerPreferences.m;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		3474CC860573481800FED0B0 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = SendingKeyPrefsAdvanced.nib;
+			path = "Plugins/Sending Key Preferences/SendingKeyPrefsAdvanced.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3474CC870573481900FED0B0 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AISendingKeyPreferencesAdvanced.m;
+			path = "Plugins/Sending Key Preferences/AISendingKeyPreferencesAdvanced.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3474CC880573481900FED0B0 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AISendingKeyPreferencesAdvanced.h;
+			path = "Plugins/Sending Key Preferences/AISendingKeyPreferencesAdvanced.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3474CC890573481900FED0B0 = {
+			fileRef = 3474CC860573481800FED0B0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3474CC8A0573481900FED0B0 = {
+			fileRef = 3474CC870573481900FED0B0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3474CC8B0573481900FED0B0 = {
+			fileRef = 3474CC880573481900FED0B0;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		3481DDE405704EEC00CD38D6 = {
 			expectedFileType = folder;
@@ -20665,6 +20712,9 @@
 				4BDDCA110411054900A8010A,
 				4BDDCA120411054900A8010A,
 				4BDDCA150411057300A8010A,
+				3474CC880573481900FED0B0,
+				3474CC870573481900FED0B0,
+				3474CC860573481800FED0B0,
 				4B04137C041111F200A8010A,
 			);
 			isa = PBXGroup;
