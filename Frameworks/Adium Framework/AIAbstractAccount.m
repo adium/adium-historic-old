@@ -27,7 +27,7 @@ Adium, Copyright 2001-2005, Adam Iser
 @implementation AIAccount(Abstract)
 
 /*!
- * Init an account
+ * @brief Init an account
  */
 - (id)initWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID service:(AIService *)inService
 {
@@ -61,7 +61,7 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 
 /*!
- * Dealloc
+ * @brief Dealloc
  */
 - (void)dealloc
 {
@@ -92,7 +92,7 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 
 /*!
- * Improved description for NSLog
+ * @brief Improved description for NSLog
  */
 - (NSString *)description
 {
@@ -464,7 +464,7 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 
 /*!
- * Start the auto-refreshing status timer
+ * @brief Start the auto-refreshing status timer
  */
 - (void)_startAttributedRefreshTimer
 {
@@ -478,7 +478,7 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 
 /*!
- * Stop the auto-refreshing status timer
+ * @brief Stop the auto-refreshing status timer
  */
 - (void)_stopAttributedRefreshTimer
 {
