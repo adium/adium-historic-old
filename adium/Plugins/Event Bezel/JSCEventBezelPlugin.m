@@ -8,7 +8,7 @@
 
 #import "JSCEventBezelPlugin.h"
 #import "JSCEventBezelPreferences.h"
-#import "AIContactStatusColoringPlugin.h"
+#import "AIListThemeWindowController.h"
 
 #define CONTACT_BEZEL_NIB   @"ContactEventBezel"
 #define EVENT_BEZEL_ALERT   AILocalizedString(@"Show Event Notification Window",nil)
@@ -135,7 +135,8 @@
     NSImage                     *tempBuddyIcon = nil;
     NSString                    *statusMessage = nil;
     NSDictionary                *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
-    NSDictionary                *colorPreferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+#warning growl!
+    NSDictionary                *colorPreferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
     
     if([notificationName isEqualToString:Content_FirstContentRecieved]) {
 		NSArray *participatingListObjects = [[notification object] participatingListObjects];
