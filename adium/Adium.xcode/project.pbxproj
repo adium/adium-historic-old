@@ -370,6 +370,80 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		3404893106173DAB004D0B7E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESVersionCheckerWindowController.h;
+			path = "Plugins/Version Checker/ESVersionCheckerWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3404893206173DAB004D0B7E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESVersionCheckerWindowController.m;
+			path = "Plugins/Version Checker/ESVersionCheckerWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3404893306173DAB004D0B7E = {
+			fileRef = 3404893106173DAB004D0B7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3404893406173DAB004D0B7E = {
+			fileRef = 3404893206173DAB004D0B7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34048AC50617CB4C004D0B7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SLGaimCocoaAdapter.h;
+			path = "Plugins/Gaim Service/SLGaimCocoaAdapter.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34048AC60617CB4C004D0B7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SLGaimCocoaAdapter.m;
+			path = "Plugins/Gaim Service/SLGaimCocoaAdapter.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34048AC70617CB4C004D0B7E = {
+			fileRef = 34048AC50617CB4C004D0B7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34048AC80617CB4C004D0B7E = {
+			fileRef = 34048AC60617CB4C004D0B7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34048B620617D4AE004D0B7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = eventloop.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34048B630617D4AE004D0B7E = {
+			fileRef = 34048B620617D4AE004D0B7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34086A1005E5E17B00ABB759 = {
 			children = (
 				34086A7705E5E42500ABB759,
@@ -1060,7 +1134,7 @@
 				3453573F059AEE1000A83D9E,
 				344157F9059F61870019246B,
 				34415809059F631A0019246B,
-				34535740059AEE1000A83D9E,
+				3461F425061942D10054C1A8,
 				3441580E059F648D0019246B,
 				3453573E059AEE1000A83D9E,
 				3441581C059F67060019246B,
@@ -2005,14 +2079,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34535740059AEE1000A83D9E = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = libgcrypt.7.dylib;
-			path = "Plugins/Gaim Service/LIBS/libgcrypt.7.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34535741059AEE1000A83D9E = {
 			fileRef = 3453573D059AEE1000A83D9E;
 			isa = PBXBuildFile;
@@ -2027,12 +2093,6 @@
 		};
 		34535743059AEE1000A83D9E = {
 			fileRef = 3453573F059AEE1000A83D9E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34535744059AEE1000A83D9E = {
-			fileRef = 34535740059AEE1000A83D9E;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2094,6 +2154,46 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "buildnum=`$SYMROOT/../Other/buildnum`\nbuilddate=`perl -e 'print time;'`\nme=`whoami`\necho $buildnum \"|\" $builddate \"|\" $me > $SYMROOT/Adium.app/Contents/Resources/buildnum\necho \\<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?\\>\\<!DOCTYPE plist PUBLIC \\\"-//Apple Computer//DTD PLIST 1.0//EN\\\" \\\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\\\"\\>\\<plist version=\\\"1.0\\\"\\>\\<dict\\>\\<key\\>adium-version\\</key\\>\\<real\\>$builddate\\</real\\>\\</dict\\>\\</plist\\> > $SYMROOT/version.plist\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
+		};
+		3461F425061942D10054C1A8 = {
+			isa = PBXFileReference;
+			lastKnownFileType = "compiled.mach-o.dylib";
+			name = libgcrypt.7.adium.dylib;
+			path = "Plugins/Gaim Service/LIBS/libgcrypt.7.adium.dylib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3461F426061942D10054C1A8 = {
+			fileRef = 3461F425061942D10054C1A8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3461F431061943000054C1A8 = {
+			fileRef = 3461F425061942D10054C1A8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3461F432061943B60054C1A8 = {
+			isa = PBXFileReference;
+			lastKnownFileType = "compiled.mach-o.dylib";
+			name = libiconv.2.dylib;
+			path = "Plugins/Gaim Service/LIBS/libiconv.2.dylib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3461F433061943B60054C1A8 = {
+			fileRef = 3461F432061943B60054C1A8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3461F439061943D80054C1A8 = {
+			fileRef = 3461F432061943B60054C1A8;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		346C970505FF8EEB000F5A8A = {
 			fileEncoding = 30;
@@ -3628,6 +3728,7 @@
 				4B0DB3AE06122B94004F47D9,
 				34D5B281061263B300B98336,
 				9E6417070613C55D006AF387,
+				3404893306173DAB004D0B7E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3932,6 +4033,8 @@
 				34D5B283061263B600B98336,
 				4B5829D20613D0A90004BD25,
 				4B5829E60613D0BD0004BD25,
+				34F58F34061A76C500B4B5D6,
+				34F58F35061A76C500B4B5D6,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4249,6 +4352,7 @@
 				4B0DB3AF06122B94004F47D9,
 				34D5B262061260AE00B98336,
 				9E6417080613C55D006AF387,
+				3404893406173DAB004D0B7E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4418,14 +4522,13 @@
 				34415820059F67140019246B,
 				3419FE230531586A00C68BA3,
 				4B7845FA059B558C0048A8BA,
-				4BFEA735059B679200874BD5,
+				3461F439061943D80054C1A8,
 				3419FE240531586A00C68BA3,
 				4B7F279C05440CB900CDFC90,
 				4B7F279D05440CB900CDFC90,
-				4B7F279E05440CB900CDFC90,
-				4B7F279F05440CB900CDFC90,
 				4B7845F4059B53E50048A8BA,
 				4B7845F5059B54680048A8BA,
+				3461F431061943000054C1A8,
 				520FE46305BE20EB002D063D,
 			);
 			isa = PBXCopyFilesBuildPhase;
@@ -6994,6 +7097,34 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		34F58F32061A76C500B4B5D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "archer-flipped.png";
+			path = "Plugins/Version Checker/archer-flipped.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F58F33061A76C500B4B5D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = archer.png;
+			path = "Plugins/Version Checker/archer.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F58F34061A76C500B4B5D6 = {
+			fileRef = 34F58F32061A76C500B4B5D6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F58F35061A76C500B4B5D6 = {
+			fileRef = 34F58F33061A76C500B4B5D6;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34F77075052B72C4004616D4 = {
 			fileEncoding = 30;
@@ -10143,6 +10274,8 @@
 				34F142A905E95B4D00B32FD7,
 				34F142AC05E962A500B32FD7,
 				34F152A605E9FEB500B32FD7,
+				34048AC70617CB4C004D0B7E,
+				34048B630617D4AE004D0B7E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10188,6 +10321,7 @@
 				34F142A405E95B0F00B32FD7,
 				34F142A505E95B0F00B32FD7,
 				34F142A805E95B4D00B32FD7,
+				34048AC80617CB4C004D0B7E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10200,21 +10334,20 @@
 				6C3E0731054471E400A4AE2E,
 				4B7F279705440CB900CDFC90,
 				4B7F279805440CB900CDFC90,
-				4B7F279905440CB900CDFC90,
-				4B7F279A05440CB900CDFC90,
 				343FA4530567DC460049DFFB,
 				34E839060583207E00F2AADB,
 				34E83B0B05832B4300F2AADB,
 				34535741059AEE1000A83D9E,
 				34535742059AEE1000A83D9E,
 				34535743059AEE1000A83D9E,
-				34535744059AEE1000A83D9E,
 				4B7845F0059B50AF0048A8BA,
 				34F2BD0B059CF1E90005B238,
 				344157FA059F61870019246B,
 				3441580A059F631A0019246B,
 				3441580F059F648D0019246B,
 				3441581D059F67070019246B,
+				3461F426061942D10054C1A8,
+				3461F433061943B60054C1A8,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10235,8 +10368,8 @@
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS/include\" \"Plugins/Gaim Service/LIBS/include/libgaim\" \"Plugins/Gaim Service/LIBS/include/glib-2.0\"";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"Plugins/Gaim Service/Protocols\"";
-				OTHER_LDFLAGS = "-framework Foundation -framework AppKit -undefined suppress -flat_namespace";
+				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"/Users/evands/adium/Plugins/Gaim Service/LIBS\"";
+				OTHER_LDFLAGS = "-undefined suppress -flat_namespace";
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -10364,12 +10497,13 @@
 		};
 		4B7F279005440CA100CDFC90 = {
 			children = (
+				34048AC50617CB4C004D0B7E,
+				34048AC60617CB4C004D0B7E,
 				4B7845EF059B50AF0048A8BA,
 				34F2BD0A059CF1E80005B238,
 				4B7F279205440CB800CDFC90,
+				3461F432061943B60054C1A8,
 				4B7F279305440CB900CDFC90,
-				4B7F279405440CB900CDFC90,
-				4B7F279505440CB900CDFC90,
 				3453573D059AEE1000A83D9E,
 				343FA4520567DC460049DFFB,
 				34F152AE05E9FF0100B32FD7,
@@ -10399,22 +10533,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B7F279405440CB900CDFC90 = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = libiconv.2.dylib;
-			path = "Plugins/Gaim Service/LIBS/libiconv.2.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7F279505440CB900CDFC90 = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = libintl.2.dylib;
-			path = "Plugins/Gaim Service/LIBS/libintl.2.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B7F279705440CB900CDFC90 = {
 			fileRef = 4B7F279205440CB800CDFC90;
 			isa = PBXBuildFile;
@@ -10427,18 +10545,6 @@
 			settings = {
 			};
 		};
-		4B7F279905440CB900CDFC90 = {
-			fileRef = 4B7F279405440CB900CDFC90;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7F279A05440CB900CDFC90 = {
-			fileRef = 4B7F279505440CB900CDFC90;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B7F279C05440CB900CDFC90 = {
 			fileRef = 4B7F279205440CB800CDFC90;
 			isa = PBXBuildFile;
@@ -10447,18 +10553,6 @@
 		};
 		4B7F279D05440CB900CDFC90 = {
 			fileRef = 4B7F279305440CB900CDFC90;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7F279E05440CB900CDFC90 = {
-			fileRef = 4B7F279405440CB900CDFC90;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7F279F05440CB900CDFC90 = {
-			fileRef = 4B7F279505440CB900CDFC90;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -15283,12 +15377,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BFEA735059B679200874BD5 = {
-			fileRef = 34535740059AEE1000A83D9E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 //4B0
 //4B1
 //4B2
@@ -16827,9 +16915,13 @@
 //834
 		83DB8F21061145C400A5C28C = {
 			children = (
-				83DB8F220611460E00A5C28C,
 				83DB8F230611460E00A5C28C,
+				83DB8F220611460E00A5C28C,
+				3404893106173DAB004D0B7E,
+				3404893206173DAB004D0B7E,
 				83DB8F240611460E00A5C28C,
+				34F58F32061A76C500B4B5D6,
+				34F58F33061A76C500B4B5D6,
 			);
 			isa = PBXGroup;
 			name = "Version Checker";
@@ -17676,6 +17768,7 @@
 				9E2BD8A5054BE18B00558E56,
 				9E2BD8A6054BE18B00558E56,
 				9E2BD8A7054BE18B00558E56,
+				34048B620617D4AE004D0B7E,
 				9E2BD8A8054BE18C00558E56,
 				9E2BD8A9054BE18C00558E56,
 				9E2BD8AA054BE18C00558E56,
