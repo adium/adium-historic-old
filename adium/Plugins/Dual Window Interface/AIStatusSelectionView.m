@@ -110,7 +110,7 @@
     [popUpMenu removeAllItemsButFirst];
 
     //Available
-    menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_NAME_AVAILABLE target:self action:@selector(selectNewStatus:) keyEquivalent:@""];
+    menuItem = [[[NSMenuItem alloc] initWithTitle:STATUS_NAME_AVAILABLE target:self action:@selector(selectNewStatus:) keyEquivalent:@""] autorelease];
     [popUpMenu addItem:menuItem];
     [popUpMenu addItem:[NSMenuItem separatorItem]];
     
@@ -121,7 +121,7 @@
 
     //Offline
     [popUpMenu addItem:[NSMenuItem separatorItem]];
-    menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_NAME_OFFLINE target:self action:@selector(selectNewStatus:) keyEquivalent:@""];
+    menuItem = [[[NSMenuItem alloc] initWithTitle:STATUS_NAME_OFFLINE target:self action:@selector(selectNewStatus:) keyEquivalent:@""] autorelease];
     [popUpMenu addItem:menuItem];
 
     //Update our menu's selection
@@ -170,7 +170,7 @@
                 away = [[away substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"É"];
             }
 
-            menuItem = [[NSMenuItem alloc] initWithTitle:away target:self action:@selector(selectNewStatus:) keyEquivalent:@""];
+            menuItem = [[[NSMenuItem alloc] initWithTitle:away target:self action:@selector(selectNewStatus:) keyEquivalent:@""] autorelease];
             [menuItem setRepresentedObject:awayDict];
             [awayMenu addItem:menuItem];
         }
