@@ -24,20 +24,19 @@
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    if([[tableColumn identifier] isEqual:@"spacer"])
-    {
+    if([[tableColumn identifier] isEqual:@"spacer"]){
         return @" ";
-    }
-    else if([[tableColumn identifier] isEqual:@"service"]){
+		
+    }else if([[tableColumn identifier] isEqual:@"service"]){
         return [[[adium accountController] firstServiceTypeWithServiceID:[[controller_LogViewer serviceArray] objectAtIndex:row]] menuImage];
-    }
-    else if([[tableColumn identifier] isEqual:@"account"]){
+		
+    }else if([[tableColumn identifier] isEqual:@"account"]){
         return [[controller_LogViewer fromArray] objectAtIndex:row];
-    }
-    else if([[tableColumn identifier] isEqual:@"contact"]){
+		
+    }else if([[tableColumn identifier] isEqual:@"contact"]){
         return [[controller_LogViewer toArray] objectAtIndex:row];
-    }
-	else{
+		
+    }else{
 		return @"";
 	}
 }
