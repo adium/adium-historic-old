@@ -15,6 +15,10 @@ Adium, Copyright 2001-2005, Adam Iser
 
 #import "AIAutoReplyPlugin.h"
 
+@interface AIAutoReplyPlugin (PRIVATE)
+- (void)activeStatusStateChanged:(NSNotification *)notification;
+@end
+
 /*!
  * @class AIAutoReplyPlugin
  * @brief Provides AutoReply functionality for the state system
@@ -38,8 +42,11 @@ Adium, Copyright 2001-2005, Adam Iser
 	//Init
 	receivedAutoReply = nil;
 	
-	//Observe account status changes for our auto-reply system
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(activeStatusStateChanged:)
+									   name:AIActiveStatusStateChangedNotification
+									 object:nil];
+	[self activeStatusStateChanged:nil];
 }
 
 /*!
@@ -59,32 +66,31 @@ Adium, Copyright 2001-2005, Adam Iser
  * Update our chat monitoring in response to account status changes.  If there are no accounts with an auto-reply
  * flag set we stop monitoring messages for optimal performance.
  */
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
-					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+- (void)activeStatusStateChanged:(NSNotification *)notification
 {
-	if(!object && (!key || [key isEqualToString:STATUS_AUTO_REPLY])){
-		//Stop observing chat
-		[[adium notificationCenter] removeObserver:self name:CONTENT_MESSAGE_RECEIVED object:nil];
-		[[adium notificationCenter] removeObserver:self name:CONTENT_MESSAGE_SENT object:nil];
-		[[adium notificationCenter] removeObserver:self name:Chat_WillClose object:nil];
+	AIStatus	*statusState = (notification ? [notification object] : [[adium statusController] activeStatusState]);
 
-		//Observe chat if an auto-reply is active
-		if([[adium preferenceController] preferenceForKey:STATUS_AUTO_REPLY group:GROUP_ACCOUNT_STATUS]){
-			[[adium notificationCenter] addObserver:self
-										   selector:@selector(didReceiveContent:) 
-											   name:CONTENT_MESSAGE_RECEIVED object:nil];
-			[[adium notificationCenter] addObserver:self
-										   selector:@selector(didSendContent:)
-											   name:CONTENT_MESSAGE_SENT object:nil];
-			[[adium notificationCenter] addObserver:self
-										   selector:@selector(chatWillClose:)
-											   name:Chat_WillClose object:nil];
-		}
-		
-		//Reset our list of contacts who have already received an auto-reply
-		[receivedAutoReply release];
-		receivedAutoReply = [[NSMutableArray alloc] init];
+	//Stop observing chat
+	[[adium notificationCenter] removeObserver:self name:CONTENT_MESSAGE_RECEIVED object:nil];
+	[[adium notificationCenter] removeObserver:self name:CONTENT_MESSAGE_SENT object:nil];
+	[[adium notificationCenter] removeObserver:self name:Chat_WillClose object:nil];
+	
+	//Observe chat if an auto-reply is active
+	if([statusState hasAutoReply]){
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(didReceiveContent:) 
+										   name:CONTENT_MESSAGE_RECEIVED object:nil];
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(didSendContent:)
+										   name:CONTENT_MESSAGE_SENT object:nil];
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(chatWillClose:)
+										   name:Chat_WillClose object:nil];
 	}
+	
+	//Reset our list of contacts who have already received an auto-reply
+	[receivedAutoReply release];
+	receivedAutoReply = [[NSMutableArray alloc] init];
 }
 
 /*!
@@ -124,17 +130,18 @@ Adium, Copyright 2001-2005, Adam Iser
 - (void)sendAutoReplyFromAccount:(id)source toContact:(id)destination onChat:(AIChat *)chat
 {
 	AIContentMessage	*responseContent;
-	NSData  			*autoReply;
+	NSAttributedString 	*autoReply;
 
-	autoReply = [[adium preferenceController] preferenceForKey:STATUS_AUTO_REPLY group:GROUP_ACCOUNT_STATUS];
-	responseContent = [AIContentMessage messageInChat:chat
-										   withSource:source
-										  destination:destination
-												 date:nil
-											  message:[NSAttributedString stringWithData:autoReply]
-											autoreply:YES];
-	
-	[[adium contentController] sendContentObject:responseContent];
+	if(autoReply = [[[adium statusController] activeStatusState] autoReply]){
+		responseContent = [AIContentMessage messageInChat:chat
+											   withSource:source
+											  destination:destination
+													 date:nil
+												  message:autoReply
+												autoreply:YES];
+		
+		[[adium contentController] sendContentObject:responseContent];
+	}
 }
 
 /*!
