@@ -86,7 +86,6 @@
 	}
 }
 
-#warning XXX - can we use saveConfigurationForAccount: instead and stop storing account? -ai
 //Save current control values
 - (void)saveConfiguration
 {
