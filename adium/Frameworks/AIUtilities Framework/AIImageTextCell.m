@@ -72,6 +72,11 @@
     }
 }
 
+- (void)setMaxImageWidth:(float)inWidth
+{
+	
+}
+
 //Draw
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
@@ -87,20 +92,49 @@
     //Draw the cell's image
     if(image != nil){
         NSSize	size = [image size];
-        NSPoint	destPoint = cellFrame.origin;
+        NSSize  destSize = size;
+		NSPoint	destPoint = cellFrame.origin;
 
         //Adjust the rects
-        destPoint.y += cellFrame.size.height;
+        destPoint.y += 1;
         destPoint.x += 2;
-        cellFrame.size.width -= size.width + 4;
-        cellFrame.origin.x += size.width + 5;
 
-        //Center image vertically
-        if(size.height < cellFrame.size.height){
-            destPoint.y -= (cellFrame.size.height - size.height) / 2.0;
-        }
-        
-        [image compositeToPoint:destPoint operation:NSCompositeSourceOver];
+
+        //Center image vertically, or scale as needed
+		if (destSize.height > cellFrame.size.height){
+			 float proportionChange = cellFrame.size.height / size.height;
+			 destSize.height = cellFrame.size.height;
+			 destSize.width = size.width * proportionChange;
+		 }
+		 
+		 if (destSize.width > 24){
+			 float proportionChange = 24 / destSize.width;
+			 destSize.width = 24;
+			 destSize.height = destSize.height * proportionChange;
+		 }
+		 
+		if(destSize.height < cellFrame.size.height){
+			destPoint.y += (cellFrame.size.height - destSize.height) / 2.0;
+		} 
+			
+		 cellFrame.size.width -= destSize.width + 4;
+		 cellFrame.origin.x += destSize.width + 5;
+		 
+		BOOL flippedIt = NO;
+		if (![image isFlipped]){
+			[image setFlipped:YES];
+			flippedIt = YES;
+		}
+		
+//		NSLog(@"%f %f",destPoint.y,destSize.height);
+		[image drawInRect:NSMakeRect(destPoint.x,destPoint.y,destSize.width,destSize.height)
+				 fromRect:NSMakeRect(0,0,size.width,size.height)
+				operation:NSCompositeSourceOver
+				 fraction:1.0];
+		if (flippedIt){
+			[image setFlipped:NO];
+		}
+       // [image compositeToPoint:destPoint operation:NSCompositeSourceOver];
     }
     
     //Draw the cell's text
