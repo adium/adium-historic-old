@@ -74,7 +74,9 @@
 	//Expand/Collapse groups on mouse DOWN instead of mouse up (Makes it feel a ton faster)
 	if((item) && 
  	   ([self isExpandable:item]) && 
- 	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.width)){
+ 	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.height)){
+		//XXX - This is kind of a hack.  We need to check < WidthOfDisclosureTriangle, and are using the fact that
+		//      the disclosure width is about the same as the height of the row to fudge it. -ai
 
 		if([self isItemExpanded:item]){
 			[self collapseItem:item];
