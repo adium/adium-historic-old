@@ -1,18 +1,7 @@
 //------------------------------------------------------------------------------------
 // Already Fixed, awaiting the next Adium release
 //------------------------------------------------------------------------------------
-- Crash when re-arranging emoticon packs
-- Crash when displaying/dismissing certain error messages
-- Crash when accepting an invitation to join a multiuser chat
-- Status messages have '{}' appended to them in Jaguar.
-- [MSN] Crash moving contacts between groups
-- [ICQ] Displaying raw HTML (Messages sent from iChat)
-- Mockie message style rendering incorrectly in very wide windows
-- HTML <BR/> tags appearing in certain received messages
-- Short emoticons mask longer ones
-- Links with ampersands don't display properly
-- Away messages don't go back up after a reconnect
-- Auto-reconnect too aggressive / inconsistent in behavior
+
 //------------------------------------------------------------------------------------
 // Bugs - Adium
 //------------------------------------------------------------------------------------
