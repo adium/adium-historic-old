@@ -15,6 +15,7 @@
  */
 
 #import "AIListCell.h"
+#import "AIListGroup.h"
 #import "AIListObject.h"
 #import "AIListOutlineView.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>

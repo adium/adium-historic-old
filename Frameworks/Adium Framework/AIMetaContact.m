@@ -17,6 +17,7 @@
 #import "AIMetaContact.h"
 #import "AIContactController.h"
 #import "AIListContact.h"
+#import "AIListGroup.h"
 #import "AIService.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIArrayAdditions.h>

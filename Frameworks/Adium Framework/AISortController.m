@@ -15,6 +15,7 @@
  */
 
 #import "AIListContact.h"
+#import "AIListGroup.h"
 #import "AISortController.h"
 
 int basicGroupVisibilitySort(id objectA, id objectB, void *context);
