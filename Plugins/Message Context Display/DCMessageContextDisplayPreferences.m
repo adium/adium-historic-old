@@ -34,7 +34,7 @@
     return(@"MessageContextDisplayPrefs");
 }
 - (NSImage *)image{
-	return([NSImage imageNamed:@"pref-messages" forClass:[AIPreferenceWindowController class]]);
+	return([NSImage imageNamed:@"pref-messagehistory" forClass:[AIPreferenceWindowController class]]);
 }
 
 - (NSDictionary *)restorablePreferences
