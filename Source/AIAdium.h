@@ -142,7 +142,7 @@
 #ifdef DEBUG_BUILD
 #define	AILog(fmt, ...) [[[AIObject sharedAdiumInstance] debugController] adiumDebug:fmt, ## __VA_ARGS__]
 #else
-#define AILog(fmt, ...) //
+#define AILog(fmt, ...) /**/
 #endif
 
 //Static strings
