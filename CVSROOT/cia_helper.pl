@@ -6,12 +6,14 @@ my $input;
 while(<STDIN>) {
     $input .= $_;
 }
+print @ARGV;
 
-print "Running CIA";
-my $output = `/usr/bin/perl /cvsroot/adium/CVSROOT/ciabot.pl < $input`;
+print "Running CIA\n";
+my $output = `/usr/bin/perl /cvsroot/adium/CVSROOT/ciabot.pl < "$input"`;
 print $output;
 
-print "Mailing RSS";
-$output = `/usr/bin/perl /cvsroot/adium/CVSROOT/cia_mailbucket.pl < $input`;
+print "Mailing RSS\n";
+
+$output = `/usr/bin/perl /cvsroot/adium/CVSROOT/cia_mailbucket.pl < "$input"`;
 
 print $output;
