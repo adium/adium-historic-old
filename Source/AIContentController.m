@@ -1272,35 +1272,6 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	return([NSArray arrayWithObject:inObject]);
 }
 
-
-//Emoticons ---------------------------------------------------------------------------------------------
-#pragma mark Emoticons
-//emoticonPacks is an array of all AIEmoticonPack objects that are active, maintained by the Emoticons plugin
-// primary use: emoticon menu for grouping by pack, if you find another, congrats!
-- (void)setEmoticonPacks:(NSArray *)inEmoticonPacks
-{
-    if(emoticonPacks != inEmoticonPacks){
-        [emoticonPacks release];
-        emoticonPacks = [inEmoticonPacks retain];
-    }
-}
-- (NSArray *)emoticonPacks
-{
-    return emoticonPacks;   
-}
-//emoticonsArray is an array of all AIEmoticon objects in the active emoticon set, maintained by the Emoticons plugin
-- (void)setEmoticonsArray:(NSArray *)inEmoticonsArray
-{
-    if(emoticonsArray != inEmoticonsArray){
-        [emoticonsArray release];
-        emoticonsArray = [inEmoticonsArray retain];
-    }
-}
-- (NSArray *)emoticonsArray
-{
-    return emoticonsArray;   
-}
-
 #pragma mark Contact Alerts
 
 - (NSString *)shortDescriptionForEventID:(NSString *)eventID

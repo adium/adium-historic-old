@@ -287,9 +287,6 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
         while(emoticonPack = [enumerator nextObject]){
             [_activeEmoticons addObjectsFromArray:[emoticonPack emoticons]];
         }
-        
-        //Let the contentController know about the active emoticons
-        [[adium contentController] setEmoticonsArray:_activeEmoticons];
     }
 	
     //
@@ -371,8 +368,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		//Sort as per the saved ordering
 		[self _sortArrayOfEmoticonPacks:_activeEmoticonPacks];
     }
-    //Let the contentController know about the active emoticons by pack - easier for emoticon menu grouping
-    [[adium contentController] setEmoticonPacks:_activeEmoticonPacks];
+
     return(_activeEmoticonPacks);
 }
 
@@ -680,8 +676,6 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
 {
     [_activeEmoticonPacks release]; _activeEmoticonPacks = nil;
     
-    //Let the contentController know about the lack of active emoticons
-    [[adium contentController] setEmoticonsArray:nil];
     [_activeEmoticons release]; _activeEmoticons = nil;
     
     [_emoticonHintCharacterSet release]; _emoticonHintCharacterSet = nil;
