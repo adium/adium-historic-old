@@ -177,21 +177,21 @@
 		[textField_accountUIDLabel setStringValue:[(userNameLabel ? userNameLabel : @"User Name") stringByAppendingString:@":"]];
 		
 		//UID
-		NSString	*formattedUID = [account preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS];
-		[textField_accountUID setStringValue:(formattedUID && [formattedUID length] ? formattedUID : [account UID])];
+		NSString	*formattedUID = [account formattedUID];
+		[textField_accountUID setStringValue:(formattedUID ? [account formattedUID] : @"")];
 		[textField_accountUID setFormatter:
 			[AIStringFormatter stringFormatterAllowingCharacters:[[account service] allowedCharactersForAccountName]
 														  length:[[account service] allowedLengthForAccountName]
 												   caseSensitive:[[account service] caseSensitive]
 													errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.",nil)]];
+
+		//Can't change the UID while the account is online
+		//XXX update this if the account connectivity changes -eds
+		[textField_accountUID setEnabled:![account online]];
 		
 		//Password
 		NSString	*savedPassword = [[adium accountController] passwordForAccount:account];
-		if(savedPassword && [savedPassword length] != 0){
-			[textField_password setStringValue:savedPassword];
-		}else{
-			[textField_password setStringValue:@""];
-		}
+		[textField_password setStringValue:[savedPassword length] ? savedPassword : @""];
 		
 		//User alias (display name)
 		NSString *alias = [[[account preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
@@ -231,21 +231,22 @@
  */
 - (void)saveConfiguration
 {
-	//UID
-	if(![[account UID] isEqualToString:[textField_accountUID stringValue]]){
-		[[adium accountController] changeUIDOfAccount:account to:[textField_accountUID stringValue]];			
+	//UID - account 
+	NSString	*newUID = [textField_accountUID stringValue];
+	if(![[account UID] isEqualToString:newUID] ||
+	   ![[account formattedUID] isEqualToString:newUID]){
+		[account filterAndSetUID:newUID];
 	}
 
 	//Password
 	NSString		*password = [textField_password secureStringValue];
-	NSString		*oldPassword;
+	NSString		*oldPassword = [[adium accountController] passwordForAccount:account];
 	
 	if(password && [password length] != 0){
-		oldPassword = [[adium accountController] passwordForAccount:account];
 		if (![password isEqualToString:oldPassword]){
 			[[adium accountController] setPassword:password forAccount:account];
 		}
-	}else{
+	}else if(oldPassword && [oldPassword length] != 0){
 		[[adium accountController] forgetPasswordForAccount:account];
 	}
 	
@@ -284,7 +285,7 @@
  * @brief Invoked when a preference is changed
  *
  * This method is invoked when a preference is changed, and may be used to dynamically enable/disable controls or
- * change other aspects of the view dynamically.  It should not be used to save changes, changes should only be saved
+ * change other aspects of the view dynamically.  It should not be used to save changes; changes should only be saved
  * from within the saveConfiguration method.
  */
 - (IBAction)changedPreference:(id)sender
