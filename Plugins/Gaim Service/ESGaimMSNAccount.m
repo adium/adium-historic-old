@@ -226,7 +226,10 @@
 
 - (BOOL)displayConversationTimedOut
 {
+	return NO;
+	/*
 	return displayConversationTimedOut;
+	 */
 }
 
 
