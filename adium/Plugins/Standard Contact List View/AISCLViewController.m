@@ -262,9 +262,10 @@
 
         [contactListView performFullRecalculation];
         
-        [[contactListView window] compatibleInvalidateShadow];
-        [[contactListView window] display];
-        [[contactListView window] compatibleInvalidateShadow];
+#warning Adam: These are slow, we dont want to do them unless absolutely necessary
+//        [[contactListView window] compatibleInvalidateShadow];
+//        [[contactListView window] display];
+//        [[contactListView window] compatibleInvalidateShadow];
     }
    
 

@@ -16668,6 +16668,7 @@
 				3419F73605314F8B00C68BA3,
 				3419F73705314F8B00C68BA3,
 				34BDA1810531483F000AB133,
+				4BCF630205AF525900733F34,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22695,6 +22696,12 @@
 			path = "Plugins/Standard Message View/AISMViewController.h";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BCF630205AF525900733F34 = {
+			fileRef = F531836F019E40BB01A80165;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BCFEC5803F5718700A8010A = {
 			children = (

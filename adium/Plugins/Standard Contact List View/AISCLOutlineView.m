@@ -169,8 +169,9 @@
     [self deselectAll:nil];
     
     //Updates shadows from the change in selection
-    [[self window] compatibleInvalidateShadow];
-    [[self window] display];
+#warning Adam: These are slow, we dont want to do them unless absolutely necessary
+//    [[self window] compatibleInvalidateShadow];
+//    [[self window] display];
 }
 
 
