@@ -25,10 +25,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 @interface NEHTicTacToePlugin : AIPlugin {
 	NSMenuItem				* menuItem_TTTBoard;
 	NSMenuItem				* menuItem_invite;
-	NSMenuItem				* menuItem_resetTTT;
 }
 
 - (void)showBoard: (id)sender;
-- (void)resetTTT: (id)sender;
 
 @end
