@@ -132,11 +132,12 @@
 
 //Adium Notifications
 #define CONTACT_STATUS_ONLINE_YES		@"Contact_StatusOnlineYes"
-#define CONTACT_STATUS_ONLINE_NO		@"Contact_StatusOnlineNO"
+#define CONTACT_STATUS_ONLINE_NO		@"Contact_StatusOnlineNo"
 #define CONTACT_STATUS_AWAY_YES			@"Contact_StatusAwayYes"
 #define CONTACT_STATUS_AWAY_NO			@"Contact_StatusAwayNo"
 #define CONTACT_STATUS_IDLE_YES			@"Contact_StatusIdleYes"
 #define CONTACT_STATUS_IDLE_NO			@"Contact_StatusIdleNo"
+#define CONTACT_STATUS_MESSAGE			@"Contact_StatusMessage"
 #define CONTENT_MESSAGE_SENT			@"Content_MessageSent"
 #define CONTENT_MESSAGE_RECEIVED		@"Content_MessageReceived"
 #define CONTENT_MESSAGE_RECEIVED_FIRST	@"Content_MessageReceivedFirst"
