@@ -91,15 +91,17 @@
 
 - (int)desiredWidth
 {
-	int row;
-	int widestCell = 0;
+	unsigned	row;
+	unsigned	widestCell = 0;
+	unsigned	numberOfRows = [self numberOfRows];
+	id			theDelegate = [self delegate];
 	
 	//Enumerate all rows, find the widest one
-	for(row = 0; row < [self numberOfRows]; row++){
+	for(row = 0; row < numberOfRows; row++){
 		id				item = [self itemAtRow:row];
 		AIListCell		*cell = ([self isExpandable:item] ? groupCell : contentCell);
 		
-		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
+		[theDelegate outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
 		int	width = [cell cellWidth];
 		if(width > widestCell) widestCell = width;
 	}
