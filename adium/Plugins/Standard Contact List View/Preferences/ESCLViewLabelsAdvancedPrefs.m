@@ -84,8 +84,9 @@
     [checkbox_outlineLabels         setEnabled:labelsAreEnabled];
     [slider_labelOpacity            setEnabled:labelsAreEnabled];
     [checkbox_labelGroups           setEnabled:labelsAreEnabled];
+    [checkbox_useGradient           setEnabled:labelsAreEnabled];
     [colorWell_labelGroupsColor     setEnabled:labelsAreEnabled];
-    [colorWell_labelGroupsColor setEnabled:(labelsAreEnabled ? [checkbox_labelGroups state] : NO)];
+    [colorWell_labelGroupsColor		setEnabled:(labelsAreEnabled ? [checkbox_labelGroups state] : NO)];
 }
 
 @end
