@@ -17,7 +17,6 @@ Adium, Copyright 2001-2005, Adam Iser
 
 }
 
-- (NSString *)identifier;
 - (void)addAccountMenuItems:(NSArray *)menuItemArray;
 - (void)removeAccountMenuItems:(NSArray *)menuItemArray;
 
