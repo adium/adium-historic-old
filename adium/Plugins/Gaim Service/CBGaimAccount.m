@@ -464,10 +464,10 @@
     }
 }
 
-- (void)removeListObjects:(NSArray *)objects
+- (void)removeContacts:(NSArray *)objects
 {
 	NSEnumerator	*enumerator = [objects objectEnumerator];
-	AIListObject	*object;
+	AIListContact	*object;
 	
 	while(object = [enumerator nextObject]){
 		NSString	*group = [object remoteGroupNameForAccount:self];
@@ -482,7 +482,7 @@
 - (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)inGroup
 {
 	NSEnumerator	*enumerator = [objects objectEnumerator];
-	AIListObject	*object;
+	AIListContact	*object;
 	
 	while(object = [enumerator nextObject]){
 		//Get the group (Create if necessary)
