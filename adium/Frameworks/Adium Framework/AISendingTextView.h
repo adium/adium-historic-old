@@ -54,6 +54,7 @@
 
 - (void)setSendOnReturn:(BOOL)inBool;
 - (void)setSendOnEnter:(BOOL)inBool;
+- (void)setClearOnEscape:(BOOL)inBool;
 - (void)setPushPop:(BOOL)inBool;
 
 - (void)setTarget:(id)inTarget action:(SEL)inSelector;
