@@ -6154,6 +6154,8 @@
 				347797E40729A86100A8CE8C,
 				347797ED0729A89500A8CE8C,
 				34FC6D7107318F6600801C83,
+				9E6A9BF70732CB500032C9F6,
+				9E6A9BF80732CB500032C9F6,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20547,8 +20549,38 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		9E6A9BF50732CB500032C9F6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = adiumOfflineHighlight.png;
+			path = "Plugins/Status Menu Item/adiumOfflineHighlight.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E6A9BF60732CB500032C9F6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = adiumOffline.png;
+			path = "Plugins/Status Menu Item/adiumOffline.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E6A9BF70732CB500032C9F6 = {
+			fileRef = 9E6A9BF50732CB500032C9F6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E6A9BF80732CB500032C9F6 = {
+			fileRef = 9E6A9BF60732CB500032C9F6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		9E791D8505768A3000547562 = {
 			children = (
+				9E6A9BF50732CB500032C9F6,
+				9E6A9BF60732CB500032C9F6,
 				9E791E26057746D100547562,
 				6C0FD8C20578D47B00D70FEB,
 				9E28FDE506ADB30D0041553E,
