@@ -308,7 +308,13 @@
 - (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID
 {
 	ABPerson		*person = nil;
-	NSDictionary *dict = [addressBookDict objectForKey:serviceID];
+	NSDictionary *dict;
+	
+	if ([serviceID isEqualToString:@"Mac"]) {
+		dict = [addressBookDict objectForKey:@"AIM"];
+	} else {
+		dict = [addressBookDict objectForKey:serviceID];
+	} 
 	
 	if (dict){
 		NSString *uniqueID = [dict objectForKey:[UID compactedString]];
