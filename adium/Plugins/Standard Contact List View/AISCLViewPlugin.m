@@ -25,7 +25,7 @@
 #import "AIContactListAdvancedPrefs.h"
 
 
-#define BORDERLESS_CONTACT_LIST	YES
+#define BORDERLESS_CONTACT_LIST	NO
 
 @interface AISCLViewPlugin (PRIVATE)
 @end
