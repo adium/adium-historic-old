@@ -141,9 +141,9 @@ DeclareString(Idle);
  */
 - (void)setIdleForObject:(AIListObject *)inObject silent:(BOOL)silent
 {
-	NSDate	*idleSince = [inObject statusObjectForKey:@"IdleSince"];
-	BOOL shouldNotify = NO;
-
+	NSDate		*idleSince = [inObject statusObjectForKey:@"IdleSince"];
+	NSNumber	*idleNumber = nil;
+	
 	if(idleSince){ //Set the handle's 'idle' value
 		int	idle = -[idleSince timeIntervalSinceNow] / 60.0;
 		
@@ -152,21 +152,14 @@ DeclareString(Idle);
 			idle = -1;
 		}
 
-		[inObject setStatusObject:[NSNumber numberWithInt:idle]
-						   forKey:@"Idle"
-						   notify:NotifyLater];
-
-	}else{ //Remove its idle value
-		[inObject setStatusObject:nil
-						   forKey:@"Idle"
-						   notify:NotifyLater];
-		shouldNotify = YES;
+		idleNumber = [NSNumber numberWithInt:idle];
 	}
 
-	//Apply the change
-	if(shouldNotify){
-		[inObject notifyOfChangedStatusSilently:silent];
-	}
+	[inObject setStatusObject:idleNumber
+					   forKey:@"Idle"
+					   notify:NotifyLater];
+
+	[inObject notifyOfChangedStatusSilently:silent];
 }
 
 
