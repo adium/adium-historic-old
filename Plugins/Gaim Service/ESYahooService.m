@@ -83,7 +83,15 @@
 							 withDescription:STATUS_DESCRIPTION_AWAY
 									  ofType:AIAwayStatusType
 								  forService:self];
+
+	[[adium statusController] registerStatus:STATUS_NAME_INVISIBLE
+							 withDescription:STATUS_DESCRIPTION_INVISIBLE
+									  ofType:AIInvisibleStatusType
+								  forService:self];
 	
+	/* Yahoo supports custom statuses... ESGaimYahooAccount will convert a properly written cusutom status
+	 * into the Yahoo-specific statuses as necessary. Uncomment to explicitly add support for these statuses. */
+	/*
 	[[adium statusController] registerStatus:STATUS_NAME_BRB
 							 withDescription:STATUS_DESCRIPTION_BRB
 									  ofType:AIAwayStatusType
@@ -128,7 +136,8 @@
 							 withDescription:STATUS_DESCRIPTION_STEPPED_OUT
 									  ofType:AIAwayStatusType
 								  forService:self];
-
+	 */
+	
 	/*
 	m = g_list_append(m, _("Be Right Back"));
 	m = g_list_append(m, _("Busy"));

@@ -60,7 +60,6 @@
  *
  * @result The gaim status equivalent
  */
-#warning Novell invisible = "Appear Offline"
 - (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
 						  message:(NSAttributedString **)statusMessage
 {
@@ -82,13 +81,25 @@
 			
 		case AIAwayStatusType:
 		{
+			NSString	*statusMessageString = (*statusMessage ? [*statusMessage string] : @"");
+
 			if ([statusName isEqualToString:STATUS_NAME_AWAY])
 				gaimStatusType = "Away";
 			else if([statusName isEqualToString:STATUS_NAME_BUSY])
 				gaimStatusType = "Busy";
 			
+			//With a status message of "Busy" we should ensure we actually go to the Busy state, not the generic away
+			//with a message of Busy.
+			if([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BUSY] == NSOrderedSame){
+				gaimStatusType = "Busy";
+				*statusMessage = nil;
+			}
+			
 			break;
 		}
+			
+		case AIInvisibleStatusType:
+			gaimStatusType = "Appear Offline";
 	}
 	
 	/* XXX Novell supports status messages along with Away and Busy, so let our message stay 

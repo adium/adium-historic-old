@@ -110,6 +110,11 @@
 							 withDescription:STATUS_DESCRIPTION_EXTENDED_AWAY
 									  ofType:AIAwayStatusType
 								  forService:self];
+	
+	[[adium statusController] registerStatus:STATUS_NAME_INVISIBLE
+							 withDescription:STATUS_DESCRIPTION_INVISIBLE
+									  ofType:AIInvisibleStatusType
+								  forService:self];
 }
 
 @end

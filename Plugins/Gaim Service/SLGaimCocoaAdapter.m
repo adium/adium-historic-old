@@ -17,7 +17,7 @@
 #import "AIInterfaceController.h"
 #import "AILoginController.h"
 #import "CBGaimAccount.h"
-#import "CBGaimOscarAccount.h"
+#import "ESGaimAIMAccount.h"
 #import "CBGaimServicePlugin.h"
 #import "SLGaimCocoaAdapter.h"
 #import "adiumGaimCore.h"

@@ -45,24 +45,6 @@
 	gaim_prefs_set_int(MW_PRPL_OPT_BLIST_ACTION, contactListChoice);
 }
 
-//Away and away return
-- (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data
-{
-	[super updateWentAway:theContact withData:data];
-	[theContact setStatusObject:[self statusMessageForContact:theContact]
-						 forKey:@"StatusMessage"
-						 notify:YES];
-}
-
-- (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data
-{
-	[super updateAwayReturn:theContact withData:data];
-	
-	[theContact setStatusObject:[self statusMessageForContact:theContact]
-						 forKey:@"StatusMessage"
-						 notify:YES];
-}
-
 #pragma mark Status Messages
 - (void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
 {
@@ -85,14 +67,30 @@
 
 - (void)updateStatusMessage:(AIListContact *)theContact
 {
-	NSAttributedString	*newStatusMessage = [self statusMessageForContact:theContact];
-	NSAttributedString	*oldStatusMessage = [theContact statusObjectForKey:@"StatusMessage"];
-
-	if(!oldStatusMessage || ![[newStatusMessage string] isEqualToString:[oldStatusMessage string]]){
-		[theContact setStatusObject:newStatusMessage
-							 forKey:@"StatusMessage"
-							 notify:YES];
+	if (gaim_account_is_connected(account)){
+		const char  *uidUTF8String = [[theContact UID] UTF8String];
+		GaimBuddy   *buddy;
+		
+		NSLog(@"%@: update %@",self, theContact);
+		
+		if (buddy = gaim_find_buddy(account, uidUTF8String)){			
+			AIStatusType	statusType = ((buddy->uc & UC_UNAVAILABLE) ? AIAwayStatusType : AIAvailableStatusType);
+			
+			[theContact setStatusWithName:nil
+							   statusType:statusType
+							statusMessage:[self statusMessageForContact:theContact]
+								   notify:NotifyLater];
+			
+			//Apply the change
+			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+		}
 	}
+}
+
+//Away and away return
+- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
+{
+	[self updateStatusMessage:theContact];
 }
 
 - (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact
@@ -146,9 +144,12 @@
 			
 		case AIAwayStatusType:
 		{
+			NSString	*statusMessageString = (*statusMessage ? [*statusMessage string] : @"");
+
 			if ([statusName isEqualToString:STATUS_NAME_AWAY])
 				gaimStatusType = "Away";
-			else if([statusName isEqualToString:STATUS_NAME_DND])
+			else if(([statusName isEqualToString:STATUS_NAME_DND]) ||
+					([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
 				gaimStatusType = "Do Not Disturb";
 			
 			break;

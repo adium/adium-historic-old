@@ -83,6 +83,10 @@
 									  ofType:AIAwayStatusType
 								  forService:self];
 	
+	[[adium statusController] registerStatus:STATUS_NAME_INVISIBLE
+							 withDescription:STATUS_DESCRIPTION_INVISIBLE
+									  ofType:AIInvisibleStatusType
+								  forService:self];
 /*
  m = g_list_append(m, _("Available"));
 	m = g_list_append(m, _("Away"));
