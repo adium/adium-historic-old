@@ -60,7 +60,7 @@
 
 - (NSString *)gaimDescriptionSuffix
 {
-    return(@" (LibGaim)");
+    return(@"");
 }
 
 - (AIAccountViewController *)accountView
