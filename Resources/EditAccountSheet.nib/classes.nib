@@ -35,6 +35,7 @@
                 "textField_accountDescription" = NSTextField; 
                 "textField_serviceName" = NSTextField; 
                 "view_accountOptions" = NSView; 
+                "view_accountPrivacy" = NSView; 
                 "view_accountProfile" = NSView; 
                 "view_accountProxy" = NSView; 
                 "view_accountSetup" = NSView; 
