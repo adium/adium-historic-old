@@ -575,11 +575,18 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 #pragma mark Preferred Source Accounts
 //Returns the preferred choice for sending content to the passed list object
 //When presenting the user with a list of accounts, this should be the one selected by default
-- (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
+- (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact 
+{
+	return ([self preferredAccountForSendingContentType:inType toContact:inContact includeOffline:NO]);
+}
+
+- (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline
 {
 	AIAccount	*account;
 	
     if(inContact){
+		NSEnumerator	*enumerator;
+		
 		//If we've messaged this object previously, and the account we used to message it is online, return that account
         int accountID = [[inContact preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
 											   group:PREF_GROUP_PREFERRED_ACCOUNTS] intValue];
@@ -599,19 +606,37 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		//Return the last account used to message someone on this service
 		NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[[inContact service] serviceID]];
 		if(lastAccountID && (account = [self accountWithAccountNumber:[lastAccountID intValue]])){
-			if([account availableForSendingContentType:inType toContact:nil]){
+			if([account availableForSendingContentType:inType toContact:nil] || includeOffline){
+				return(account);
+			}
+		}
+		
+		if (includeOffline){
+			//If inObject is an AIListContact return the account the object is on even if the account is offline
+			if(account = [inContact account]){
 				return(account);
 			}
 		}
 		
 		//First available account in our list of the correct service type
-		NSEnumerator	*enumerator = [accountArray objectEnumerator];
+		enumerator = [accountArray objectEnumerator];
 		while(account = [enumerator nextObject]){
 			if([inContact service] == [account service] &&
-			   [account availableForSendingContentType:inType toContact:nil]){
+			   ([account availableForSendingContentType:inType toContact:nil] || includeOffline)){
 				return(account);
 			}
 		}
+		
+		//First available account in our list of a compatible service type
+		enumerator = [accountArray objectEnumerator];
+		while(account = [enumerator nextObject]){
+			if([[inContact serviceClass] isEqualToString:[account serviceClass]] &&
+			   ([account availableForSendingContentType:inType toContact:nil] || includeOffline)){
+				return(account);
+			}
+		}
+		
+		
 	}else{
 		//First available account in our list
 		NSEnumerator	*enumerator = [accountArray objectEnumerator];
