@@ -28,18 +28,13 @@
 
 
 
-@class AIListGroup, AICLPreferences;
+@class AIListGroup, AICLPreferences, AISCLOutlineView;
 @protocol AIContactListViewController;
 
 @interface AISCLViewPlugin : AIPlugin <AIContactListViewController> {
-
+    NSMutableArray	*controllerArray;
     AICLPreferences	*preferences;
 
-    AIListGroup		*contactList;
-    NSMutableArray	*SCLViewArray;
-    
 }
-
-- (IBAction)performDefaultActionOnSelectedContact:(id)sender;
 
 @end

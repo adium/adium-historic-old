@@ -3405,6 +3405,32 @@
 			settings = {
 			};
 		};
+		4BAC8E9C0448412300A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISCLViewController.h;
+			path = "Plugins/Standard Contact List View/AISCLViewController.h";
+			refType = 4;
+		};
+		4BAC8E9D0448412300A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISCLViewController.m;
+			path = "Plugins/Standard Contact List View/AISCLViewController.m";
+			refType = 4;
+		};
+		4BAC8E9E0448412300A8010A = {
+			fileRef = 4BAC8E9C0448412300A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAC8E9F0448412300A8010A = {
+			fileRef = 4BAC8E9D0448412300A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BACB70103C8CB5E00A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -6370,6 +6396,8 @@
 			children = (
 				F57939A1033E75CB01A8010A,
 				F57939A2033E75CB01A8010A,
+				4BAC8E9C0448412300A8010A,
+				4BAC8E9D0448412300A8010A,
 				F579399F033E75CB01A8010A,
 				F57939A0033E75CB01A8010A,
 				F579399D033E75CB01A8010A,
@@ -6391,6 +6419,7 @@
 				F57939A5033E75CB01A8010A,
 				F57939A7033E75CB01A8010A,
 				F544A5E103B3628B01A8010A,
+				4BAC8E9E0448412300A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6411,6 +6440,7 @@
 				F57939A6033E75CB01A8010A,
 				F57939A8033E75CB01A8010A,
 				F544A5E203B3628B01A8010A,
+				4BAC8E9F0448412300A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

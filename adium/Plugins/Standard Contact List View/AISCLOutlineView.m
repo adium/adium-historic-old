@@ -19,6 +19,7 @@
 #import "AIContactListCheckBox.h"
 #import "AIAdium.h"
 #import "AISCLViewPlugin.h"
+#import "AISCLViewController.h"
 
 #define	CONTACT_LIST_EMPTY_MESSAGE		@"No Available Contacts"		//Message to display when the contact list is empty
 
@@ -30,6 +31,7 @@
 - (void)cleanUpScrollbarHiding;
 - (void)configureTransparencyForWindow:(NSWindow *)inWindow;
 - (void)setCorrectScrollbarVisibility;
+- (void)frameChanged:(NSNotification *)notification;
 @end
 
 @implementation AISCLOutlineView
@@ -110,7 +112,7 @@
 {
     if(!([theEvent modifierFlags] & NSCommandKeyMask)){
         if([theEvent keyCode] == 36){ //Enter or return
-            [(AISCLViewPlugin *)[self delegate] performDefaultActionOnSelectedContact:self];
+            [(AISCLViewController *)[self delegate] performDefaultActionOnSelectedContact:self];
 
         }else if([theEvent keyCode] == 123){ //left
             AIListObject 	*object = [self itemAtRow:[self selectedRow]];
@@ -160,7 +162,12 @@
 
 - (void)viewDidMoveToSuperview
 {
-    [self setCorrectScrollbarVisibility];
+    [self frameChanged:nil]; //Force a frame changed event for our new superview
+
+    //Inform our delegate that we moved to another superview
+    if([[self delegate] respondsToSelector:@selector(view:didMoveToSuperview:)]){
+        [[self delegate] view:self didMoveToSuperview:[self superview]];        
+    }
 }
 - (void)itemDidExpand:(NSNotification *)notification
 {
@@ -235,6 +242,19 @@
 
         [emptyMessage release];
     }
+}
+
+
+
+//Custom mouse tracking ----------------------------------------------------------------------
+- (void)setAcceptsMouseMovedEvents:(BOOL)flag
+{
+    [[self window] setAcceptsMouseMovedEvents:flag];
+}
+
+- (void)mouseMoved:(NSEvent *)theEvent
+{
+    [[self delegate] mouseMoved:theEvent];
 }
 
 @end

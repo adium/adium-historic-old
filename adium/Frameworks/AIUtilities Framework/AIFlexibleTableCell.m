@@ -102,6 +102,7 @@
 }
 
 
+
 //Access ------------------------------------------------------------------------------
 - (NSSize)paddingInset
 {
@@ -120,11 +121,24 @@
     return(nil);
 }
 
-//Cursor Tracking ---
+//Cursor Tracking ----------------------------------------------------------------------
 - (BOOL)resetCursorRectsInView:(NSView *)controlView visibleRect:(NSRect)visibleRect
 {
     return(NO);
 }
+
+//Handle a mouse down
+- (BOOL)mouseDown:(NSEvent *)theEvent
+{
+    return(NO);
+}
+
+//Handle a mouse moved
+- (void)mouseMoved:(NSEvent *)theEvent
+{
+    
+}
+
 
 //Selecting ----------------------------------------------------------------------------
 //Returns a character index within this cell for the specified point

@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
 #import "AIInterfaceController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"
@@ -154,6 +155,19 @@
 {
     return(flashState);
 }
+
+//list object tooltips
+- (void)showTooltipForListObject:(AIListObject *)object atPoint:(NSPoint)point
+{
+    if(object){
+        [AITooltipUtilities showTooltipWithString:[NSString stringWithFormat:@"%@ (%@)",[object displayName],[object UID]] onWindow:nil atPoint:point];
+    }else{
+        [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:point];
+    }
+}
+
+
+
 
 @end
 

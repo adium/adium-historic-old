@@ -98,6 +98,7 @@
     contactListViewController = [[[owner interfaceController] contactListViewController] retain];
     contactListView = [[contactListViewController contactListView] retain];
     [scrollView_contactList setAndSizeDocumentView:contactListView];
+    [[self window] makeFirstResponder:contactListView];
 
     //Register for the selection notification
     [[owner notificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:contactListView];

@@ -29,5 +29,6 @@
 
 - (void)setFont:(NSFont *)inFont;
 - (NSFont *)font;
+- (void)setAcceptsMouseMovedEvents:(BOOL)flag;
 
 @end
