@@ -125,7 +125,7 @@
 	NSString	*variant = [newStyleDict objectForKey:@"variant"];
 	if (variant){
 		NSString	*variantKey = [plugin keyForDesiredVariantOfStyle:newStyleName];
-		[[adium preferenceController] setPreference:variant
+		[[adium preferenceController] setPreference:([variant length] ? variant : nil)
 											 forKey:variantKey
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
