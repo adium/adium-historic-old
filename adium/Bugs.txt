@@ -36,6 +36,10 @@
 - Fights for Yahoo connection
     If Adium is knocked off yahoo by another client, it will auto-reconnect.
 
+- Auto-reconnect too aggressive
+    If an AIM account fails to connect due to signing on and off too quickly, Adium will continue to
+    try and reconnect, displaying the error message over and over and trying its best to get that 
+    name blocked for as long as possible.
 
 
 //-------------------------------------------------------------------------------------------------------
