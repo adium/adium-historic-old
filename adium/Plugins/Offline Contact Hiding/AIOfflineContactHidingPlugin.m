@@ -33,7 +33,7 @@
 													 target:self
 													 action:@selector(toggleOfflineContactsMenu:)
 											  keyEquivalent:@""];
-        [[adium menuController] addMenuItem:[NSMenuItem separatorItem] toLocation:LOC_View_General];		
+	[[adium menuController] addMenuItem:(NSMenuItem *)[NSMenuItem separatorItem] toLocation:LOC_View_General];		
 	[[adium menuController] addMenuItem:showOfflineMenuItem toLocation:LOC_View_General];		
 
 	//Observe contact and preference changes
