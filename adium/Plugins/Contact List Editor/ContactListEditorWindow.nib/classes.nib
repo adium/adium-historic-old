@@ -11,6 +11,7 @@
             CLASS = AIContactListEditorWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_import" = NSButton; 
                 "button_newGroup" = NSButton; 
                 "button_newHandle" = NSButton; 
                 "customView_tableHeader" = AISCLEditHeaderView; 
