@@ -499,23 +499,6 @@
     }
 }
 
-//Returns the desired destination handle
-- (AIHandle *)handleOfContact:(AIListContact *)inContact forReceivingContentType:(NSString *)inType fromAccount:(AIAccount *)inAccount
-{
-    NSEnumerator	*enumerator;
-    AIHandle		*handle = nil;
-    
-    //Search for an existing handle belonging to the account
-    enumerator = [inContact handleEnumerator];
-    while((handle = [enumerator nextObject])){
-        if([handle account] == inAccount) break;
-    }
-
-    return(handle);
-}
-
-
-
 
 // Contact Access --------------------------------------------------------------------------------
 //Returns the main contact list group

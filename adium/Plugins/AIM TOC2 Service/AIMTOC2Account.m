@@ -291,7 +291,7 @@ static char *hash_password(const char * const password);
 
         if([message length] <= AIM_PACKET_MAX_LENGTH){
             //Get the handle for receiving this content
-            handle = [[owner contactController] handleOfContact:[object destination] forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:self];
+            handle = [[object destination] handleForAccount:self];
             if(!handle){
                 handle = [self addHandleWithUID:[[[object destination] UID] compactedString] serverGroup:nil temporary:YES];
             }
@@ -308,7 +308,7 @@ static char *hash_password(const char * const password);
         BOOL	typing;
 
         //Get the handle for receiving this content
-        handle = [[owner contactController] handleOfContact:[object destination] forReceivingContentType:CONTENT_TYPING_TYPE fromAccount:self];
+        handle = [[object destination] handleForAccount:self];
         typing = [(AIContentTyping *)object typing];
 
         //Send the typing client event
@@ -559,7 +559,7 @@ static char *hash_password(const char * const password);
                 o = d - a + b + 71665152;
 
 //                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
-                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.70 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
+                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.71 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
 
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 

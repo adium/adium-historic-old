@@ -101,7 +101,7 @@
             [menuItem setRepresentedObject:anAccount];
 
             //They are disabled if the account is offline
-            if(![(AIAccount<AIAccount_Content> *)anAccount availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:nil]){
+            if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toContact:nil onAccount:anAccount]){
                 [menuItem setEnabled:NO];
             }
 

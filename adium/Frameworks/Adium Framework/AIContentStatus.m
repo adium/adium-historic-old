@@ -35,6 +35,16 @@
     return(CONTENT_STATUS_TYPE);
 }
 
+- (BOOL)filterObject
+{
+    return(YES); //Staus content can pass through the content filters (I'm sure something will want to filter them in the future)
+}
+
+- (BOOL)trackObject
+{
+    return(YES); //Status content should be tracked by the contact
+}
+
 //Return our status message content
 - (NSString *)message{
     return(message);

@@ -294,17 +294,10 @@
     //Walk our way down the account list, looking for the first account with a handle in this contact
     accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
     while((account = [accountEnumerator nextObject])){
-        NSEnumerator		*handleEnumerator;
         AIHandle		*contactHandle;
 
-        //Check out all handles in the contact
-        handleEnumerator = [contact handleEnumerator];
-        while((contactHandle = [handleEnumerator nextObject])){
-
-            if([contactHandle account] == account){ //We found a match
-                return([contactHandle serverGroup]);
-            }
-
+        if(contactHandle = [contact handleForAccount:account]){ //We found one
+            return([contactHandle serverGroup]);
         }
     }
 

@@ -220,12 +220,9 @@
 
 //Our contact's status did change
 - (void)contactStatusChanged:(NSNotification *)notification
-{
-    AIHandle	*handle;
-    
+{    
     //Enable/Disable our text view sending
-    handle = [[owner contactController] handleOfContact:contact forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:account];
-    [textView_outgoing setAvailableForSending:[(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:handle]];
+    [textView_outgoing setAvailableForSending:[[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toContact:contact onAccount:account]];
         
     //Update our toolbar
     [toolbar_bottom configureForObjects:nil];

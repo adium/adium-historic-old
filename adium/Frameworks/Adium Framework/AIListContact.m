@@ -50,9 +50,23 @@
 
 
 //Contained Handles
-- (NSEnumerator *)handleEnumerator
+/*- (NSEnumerator *)handleEnumerator
 {
     return([handleArray objectEnumerator]);
+}*/
+
+- (AIHandle *)handleForAccount:(AIAccount *)inAccount
+{
+    NSEnumerator	*enumerator;
+    AIHandle		*handle;
+    
+    //Search for an existing handle belonging to the account
+    enumerator = [handleArray objectEnumerator];
+    while((handle = [enumerator nextObject])){
+        if([handle account] == inAccount) break;
+    }
+
+    return(handle);
 }
 
 - (void)addHandle:(AIHandle *)inHandle

@@ -162,8 +162,8 @@ extern void* objc_getClass(const char *name);
 
         //Get the message & destination handle
         message = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message] encodeFullString:YES];
-        handle = [[owner contactController] handleOfContact:[object destination] forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:self];
-
+        handle = [[object destination] handleForAccount:self];
+ 
         //Create a chat & send the message
         chat = [[handle statusDictionary] objectForKey:@"iChat_Chat"];
         if(chat == nil || chat != chat){
@@ -183,7 +183,7 @@ extern void* objc_getClass(const char *name);
         BOOL		typing;
 
         //Get the dest handle & cached chat
-        handle = [[owner contactController] handleOfContact:[object destination] forReceivingContentType:CONTENT_TYPING_TYPE fromAccount:self];
+        handle = [[object destination] handleForAccount:self];
         chat = [[handle statusDictionary] objectForKey:@"iChat_Chat"];
         typing = [(AIContentTyping *)object typing];
         

@@ -35,6 +35,16 @@
     return(CONTENT_MESSAGE_TYPE);
 }
 
+- (BOOL)filterObject
+{
+    return(YES); //Message content should pass through the content filters
+}
+
+- (BOOL)trackObject
+{
+    return(YES); //Message content should be tracked by the contact
+}
+
 //The attributed message contents
 - (NSAttributedString *)message{
     return(message);
