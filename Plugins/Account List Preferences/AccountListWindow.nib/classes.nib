@@ -1,37 +1,51 @@
 {
     IBClasses = (
         {
-            ACTIONS = {
-                changeUIDField = id; 
-                deleteAccount = id; 
-                newAccount = id; 
-                registerAccount = id; 
-                selectServiceType = id; 
-                toggleAutoConnect = id; 
-                toggleConnectStatus = id; 
-            }; 
+            ACTIONS = {deleteAccount = id; editAccount = id; }; 
             CLASS = AIAccountListWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_autoConnect" = NSButton; 
                 "button_deleteAccount" = NSButton; 
+                "button_editAccount" = NSButton; 
                 "button_newAccount" = NSButton; 
-                "button_register" = NSButton; 
-                "button_toggleConnect" = NSButton; 
-                "imageView_userIcon" = ESImageViewWithImagePicker; 
-                "popupMenu_serviceList" = NSPopUpButton; 
-                "progress_status" = NSProgressIndicator; 
                 "scrollView_accountList" = AIAutoScrollView; 
-                "tabView_auxiliary" = NSTabView; 
                 "tableView_accountList" = NSTableView; 
-                "textField_accountName" = ESDelayedTextField; 
-                "textField_status" = NSTextField; 
-                "textField_userNameLabel" = NSTextField; 
+                "textField_overview" = NSTextField; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {
+            CLASS = AIAlternatingRowOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIOutlineView; 
+        }, 
+        {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {
+            ACTIONS = {okay = id; }; 
+            CLASS = AIEditAccountWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_autoConnect" = NSButton; 
+                "imageView_userIcon" = ESImageViewWithImagePicker; 
+                "image_serviceIcon" = NSImageView; 
+                "tabView_auxiliary" = NSTabView; 
+                "textField_accountDescription" = NSTextField; 
+                "textField_serviceName" = NSTextField; 
                 "view_accountDetails" = NSView; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 
-        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {
+            CLASS = AIMultiCellOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIVariableHeightOutlineView; 
+        }, 
+        {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButton; }, 
         {
             CLASS = AIPlasticDropDownButton; 
@@ -40,6 +54,12 @@
         }, 
         {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {
+            CLASS = AIVariableHeightOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIAlternatingRowOutlineView; 
+        }, 
+        {CLASS = AIVerticallyCenteredTextCell; LANGUAGE = ObjC; SUPERCLASS = NSCell; }, 
         {
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 
