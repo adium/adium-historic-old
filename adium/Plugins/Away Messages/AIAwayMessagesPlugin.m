@@ -261,14 +261,6 @@
     NSString    *group = [[notification userInfo] objectForKey:@"Group"];
     NSString    *key = [[notification userInfo] objectForKey:@"Key"];
     
-    if(notification == nil || [group isEqualToString:PREF_GROUP_AWAY_MESSAGES]){
-		//Rebuild the away menu
-		if([key compare:KEY_SAVED_AWAYS] == 0){
-			[self _updateAwaySubmenus];
-		}
-		
-    }
-	
 	if(notification == nil || ([group isEqualToString:GROUP_ACCOUNT_STATUS] && [notification object] == nil)){
 		if(!key || [key compare:@"AwayMessage"] == 0){
 			//Update our away menus
@@ -298,7 +290,14 @@
 			//Flush our array of 'responded' contacts
 			[receivedAwayMessage release]; receivedAwayMessage = [[NSMutableArray alloc] init];
 		}
-    }
+    } else if([group isEqualToString:PREF_GROUP_AWAY_MESSAGES]){
+		//Rebuild the away menu
+		if([key compare:KEY_SAVED_AWAYS] == 0){
+			[self _updateAwaySubmenus];
+		}
+		
+	}
+	
 }
 
 //--- Private
