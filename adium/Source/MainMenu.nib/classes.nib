@@ -72,17 +72,25 @@
         {
             ACTIONS = {
                 closeChatMenu = id; 
+                closeContactList = id; 
                 closeMenu = id; 
-                initiateMessage = id; 
+                nextMessage = id; 
                 paste = id; 
                 pasteFormatted = id; 
+                previousMessage = id; 
                 runToolbarCustomizationPalette = id; 
+                showChatWindow = id; 
+                showContactList = id; 
+                showContactListAndBringToFront = id; 
+                toggleContactList = id; 
                 toggleFontTrait = id; 
                 toggleToolbarShown = id; 
             }; 
             CLASS = AIInterfaceController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                interface = id; 
+                menuController = AIMenuController; 
                 "menuItem_bold" = NSMenuItem; 
                 "menuItem_close" = NSMenuItem; 
                 "menuItem_closeChat" = NSMenuItem; 

@@ -29,7 +29,10 @@
     participatingListObjects = [[NSMutableArray alloc] init];
     dateOpened = [[NSDate date] retain];
 	uniqueChatID = nil;
-	
+	_serviceImage = nil;
+	_cachedImage = nil;
+	_cachedMiniImage = nil;
+
     return(self);
 }
 
@@ -41,8 +44,53 @@
     [participatingListObjects release];
   	[dateOpened release]; 
 	[uniqueChatID release]; uniqueChatID = nil;
+  	[_serviceImage release]; 
+  	[_cachedImage release]; 
+  	[_cachedMiniImage release]; 
 	
     [super dealloc];
+}
+
+//Big image
+- (NSImage *)chatImage
+{
+	AIListObject 	*listObject = [self listObject];
+	NSImage			*image = nil;
+	
+	if(listObject){
+		//Use the contact's image
+		image = [[listObject displayArrayForKey:KEY_USER_ICON] objectValue];
+		if(!image){
+			//If that is not available, use the contact's service image (cached, since it's a lot of work to look up)
+			if(!_serviceImage){
+				_serviceImage = [[[[adium accountController] accountWithObjectID:[(AIListContact *)listObject accountID]] serviceMenuImage] retain];
+			}
+			image = _serviceImage;
+		}
+	}
+
+	return(image);
+}
+
+//lil image
+- (NSImage *)chatMenuImage
+{
+	AIListObject 	*listObject = [self listObject];
+	
+	if(listObject){
+		//If the image has changed, re-render our mini image
+		if(_cachedImage != [self chatImage]){
+			//Hold onto the new image, we'll need it later to know when the image has changed :)
+			[_cachedImage release];
+			_cachedImage = [[self chatImage] retain];
+
+			//Flush the old mini image, and render a new one
+			[_cachedMiniImage release];
+			_cachedMiniImage = [[_cachedImage imageByScalingToSize:NSMakeSize(16,16)] retain];
+		}
+	}
+
+	return(_cachedMiniImage);
 }
 
     
@@ -73,6 +121,7 @@
 	[dateOpened release]; 
 	dateOpened = [inDate retain];
 }
+
 
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status

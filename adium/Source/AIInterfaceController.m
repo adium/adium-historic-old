@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.75 2004/07/12 22:24:37 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.76 2004/07/12 23:24:36 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -99,8 +99,8 @@ arrangeChats = YES;
 												   target:self
 												   action:@selector(toggleContactList:)
 											keyEquivalent:@"/"] autorelease];
-	[[owner menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
-	[[owner menuController] addMenuItem:[[item copy] autorelease] toLocation:LOC_Dock_Status];
+	[menuController addMenuItem:item toLocation:LOC_Window_Fixed];
+	[menuController addMenuItem:[[item copy] autorelease] toLocation:LOC_Dock_Status];
 
 #warning dont observe if not enabled
 	[[owner notificationCenter] addObserver:self 
@@ -492,11 +492,13 @@ arrangeChats = YES;
 //    NSEnumerator			*tabViewEnumerator;
 //    NSEnumerator			*windowEnumerator;
     int						windowKey = 1;
+	BOOL					respondsToSetIndentationLevel = [menuItem_paste respondsToSelector:@selector(setIndentationLevel:)];
+	
 	
     //Remove any existing menus
     enumerator = [windowMenuArray objectEnumerator];
     while((item = [enumerator nextObject])){
-        [[owner menuController] removeMenuItem:item];
+        [menuController removeMenuItem:item];
     }
     [windowMenuArray release]; windowMenuArray = [[NSMutableArray alloc] init];
 	
@@ -522,7 +524,6 @@ arrangeChats = YES;
 		//Add items for the chats it contains
 		while(chat = [contentEnumerator nextObject]){
 			NSString		*windowKeyString;
-			NSString		*chatMenuTitle = [NSString stringWithFormat:@"   %@",[chat name]];
 			
 			//Prepare a key equivalent for the controller
 			if(windowKey < 10){
@@ -533,11 +534,13 @@ arrangeChats = YES;
 				windowKeyString = [NSString stringWithString:@""];
 			}
 			
-			item = [[[NSMenuItem alloc] initWithTitle:([contentArray count] > 1 ? chatMenuTitle : [chat name])
+			item = [[[NSMenuItem alloc] initWithTitle:[chat name]
 											   target:self
 											   action:@selector(showChatWindow:)
 										keyEquivalent:windowKeyString] autorelease];
+			if([contentArray count] > 1 && respondsToSetIndentationLevel) [item setIndentationLevel:1];
 			[item setRepresentedObject:chat];
+			[item setImage:[chat chatMenuImage]];
 			[self _addItemToMainMenuAndDock:item];
 			
 			windowKey++;
@@ -551,13 +554,13 @@ arrangeChats = YES;
 - (void)_addItemToMainMenuAndDock:(NSMenuItem *)item
 {
 	//Add to main menu first
-	[[owner menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
+	[menuController addMenuItem:item toLocation:LOC_Window_Fixed];
 	[windowMenuArray addObject:item];
 	
 	//Make a copy, and add to the dock
 	item = [[item copy] autorelease];
 	[item setKeyEquivalent:@""];
-	[[owner menuController] addMenuItem:item toLocation:LOC_Dock_Status];
+	[menuController addMenuItem:item toLocation:LOC_Dock_Status];
 	[windowMenuArray addObject:item];
 }
 

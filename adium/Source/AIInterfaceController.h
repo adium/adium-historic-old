@@ -87,9 +87,10 @@
 
 @end
 
-@class AIContactListWindowController;
+@class AIContactListWindowController, AIMenuController;
 
 @interface AIInterfaceController : NSObject {
+	IBOutlet	AIMenuController	*menuController;
     IBOutlet	AIAdium			*owner;
 	
     IBOutlet	NSMenuItem		*menuItem_close;
@@ -139,6 +140,7 @@
 	
 	BOOL	groupChatsByContactGroup;
 	BOOL	arrangeChats;
+	
 	
 }
 
