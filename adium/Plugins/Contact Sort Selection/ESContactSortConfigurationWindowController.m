@@ -35,8 +35,8 @@
 	//Configure the view
 	NSView  *configureView = [controller configureView];
 
-	[[self window] setContentView:configureView];
 	[[self window] setContentSize:[configureView frame].size];
+	[[self window] setContentView:configureView];
 }
 
 @end
