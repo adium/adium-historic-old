@@ -15,7 +15,6 @@
 
 #import "AICustomTabsView.h"
 #import "AICustomTabCell.h"
-#import "AIImageUtilities.h"
 #import "AIViewAdditions.h"
 #import "AIEventAdditions.h"
 #import "AICustomTabDragging.h"
@@ -474,11 +473,11 @@ static  NSImage			*tabDivider = nil;
     //Load our images (Images are shared between all AICustomTabsView instances)
     if(!haveLoadedImages){
 		if([[self window] isTextured]){
-			tabDivider = [[AIImageUtilities imageNamed:@"Tab_Divider" forClass:[self class]] retain];
-			tabBackground = [[AIImageUtilities imageNamed:@"Tab_Background" forClass:[self class]] retain];
+			tabDivider = [[NSImage imageNamed:@"Tab_Divider" forClass:[self class]] retain];
+			tabBackground = [[NSImage imageNamed:@"Tab_Background" forClass:[self class]] retain];
 		}else{
-			tabDivider = [[AIImageUtilities imageNamed:@"Aqua_Tab_Divider" forClass:[self class]] retain];
-			tabBackground = [[AIImageUtilities imageNamed:@"Aqua_Tab_Background" forClass:[self class]] retain];
+			tabDivider = [[NSImage imageNamed:@"Aqua_Tab_Divider" forClass:[self class]] retain];
+			tabBackground = [[NSImage imageNamed:@"Aqua_Tab_Background" forClass:[self class]] retain];
 		}
 		
         haveLoadedImages = YES;

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.45 2004/03/13 01:21:11 adamiser Exp $
+// $Id: AIPreferenceController.m,v 1.46 2004/03/26 03:42:57 adamiser Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -66,7 +66,7 @@
 				          toolTip:@"Open Preferences"
 				           target:self
 				  settingSelector:@selector(setImage:)
-				      itemContent:[AIImageUtilities imageNamed:@"settings" forClass:[self class]]
+				      itemContent:[NSImage imageNamed:@"settings" forClass:[self class]]
 				           action:@selector(showPreferenceWindow:)
 					     menu:nil];
     [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"General"];

@@ -14,6 +14,7 @@ typedef enum {
 
 @interface NSImage (ESImageAdditions)
 
++ (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass;
 - (NSData *)JPEGRepresentation;
 - (void)tileInRect:(NSRect)rect;
 + (NSImage *)imageFromGWorld:(GWorldPtr)gWorldPtr;

@@ -7,7 +7,7 @@
 {
 	handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Jabber"
 													  description:@"Jabber Service"
-															image:[AIImageUtilities imageNamed:@"LilYellowDuck" forClass:[self class]]
+															image:[NSImage imageNamed:@"LilYellowDuck" forClass:[self class]]
 													caseSensitive:NO
 												allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]
 													allowedLength:129] retain];

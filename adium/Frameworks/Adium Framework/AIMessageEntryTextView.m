@@ -51,7 +51,7 @@ static NSImage *pushIndicatorImage = nil;
 	[self setAllowsUndo:YES];
 	
     //
-    if(!pushIndicatorImage) pushIndicatorImage = [[AIImageUtilities imageNamed:@"stackImage" forClass:[self class]] retain];
+    if(!pushIndicatorImage) pushIndicatorImage = [[NSImage imageNamed:@"stackImage" forClass:[self class]] retain];
 
     //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:self];
@@ -472,7 +472,7 @@ static NSImage *pushIndicatorImage = nil;
             NSMakeRect(0, 0, [pushIndicatorImage size].width, [pushIndicatorImage size].height)]; 
 		[indicator setButtonType:NSMomentaryPushButton];
         [indicator setAutoresizingMask:(NSViewMinXMargin)];
-        [indicator setImage:[AIImageUtilities imageNamed:@"stackImage" forClass:[self class]]];
+        [indicator setImage:[NSImage imageNamed:@"stackImage" forClass:[self class]]];
         [indicator setImagePosition:NSImageOnly];
 		[indicator setBezelStyle:NSRegularSquareBezelStyle];
 		[indicator setBordered:NO];

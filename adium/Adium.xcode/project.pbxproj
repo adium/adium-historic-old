@@ -4860,7 +4860,6 @@
 				34BD9DE805314755000AB133,
 				34BD9DE905314755000AB133,
 				34BD9DEA05314755000AB133,
-				34BD9DEB05314755000AB133,
 				34BD9DEC05314755000AB133,
 				34BD9DED05314755000AB133,
 				34BD9DEE05314755000AB133,
@@ -4984,12 +4983,6 @@
 		};
 		34BD9DEA05314755000AB133 = {
 			fileRef = F5793944033E74E401A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9DEB05314755000AB133 = {
-			fileRef = F5793946033E74E401A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5521,7 +5514,6 @@
 				34BD9E4F05314755000AB133,
 				34BD9E5005314755000AB133,
 				34BD9E5105314755000AB133,
-				34BD9E5205314755000AB133,
 				34BD9E5305314755000AB133,
 				34BD9E5405314755000AB133,
 				34BD9E5505314755000AB133,
@@ -5644,12 +5636,6 @@
 		};
 		34BD9E5105314755000AB133 = {
 			fileRef = F5793945033E74E401A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E5205314755000AB133 = {
-			fileRef = F5793947033E74E401A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -19903,12 +19889,10 @@
 		};
 		F549EF0E036B0F8D01A8010A = {
 			children = (
-				9EEDAD9A05E7463D00CB537D,
 				9EEDAD9B05E7463D00CB537D,
+				9EEDAD9A05E7463D00CB537D,
 				F570A5AD03704C1101A8010A,
 				F570A5AE03704C1101A8010A,
-				F5793946033E74E401A8010A,
-				F5793947033E74E401A8010A,
 				34F142AA05E962A400B32FD7,
 			);
 			isa = PBXGroup;
@@ -21153,24 +21137,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIImageTextCell.m;
 			path = "Frameworks/AIUtilities Framework/AIImageTextCell.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5793946033E74E401A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIImageUtilities.h;
-			path = "Frameworks/AIUtilities Framework/AIImageUtilities.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5793947033E74E401A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIImageUtilities.m;
-			path = "Frameworks/AIUtilities Framework/AIImageUtilities.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};

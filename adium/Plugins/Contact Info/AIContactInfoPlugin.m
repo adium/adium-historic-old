@@ -66,7 +66,7 @@
 									 toolTip:@"Show Info"
 									  target:self
 								 settingSelector:@selector(setImage:)
-								     itemContent:[AIImageUtilities imageNamed:@"info" forClass:[self class]]
+								     itemContent:[NSImage imageNamed:@"info" forClass:[self class]]
 									  action:@selector(showContactInfo:)
 									    menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];

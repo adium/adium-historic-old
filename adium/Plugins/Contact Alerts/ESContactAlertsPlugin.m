@@ -32,7 +32,7 @@
 
     //Add our 'contact alerts' toolbar item
     toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"ContactAlerts"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"alerts" forClass:[self class]]];
+    [toolbarItem setImage:[NSImage imageNamed:@"alerts" forClass:[self class]]];
     [toolbarItem setTarget:self];
     [toolbarItem setAction:@selector(toolbarContactAlerts:)];
     [toolbarItem setEnabled:YES];

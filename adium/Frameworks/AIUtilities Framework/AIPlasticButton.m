@@ -24,12 +24,12 @@
     [self setImage:nil];
     
     //Load images
-    plasticCaps = [[AIImageUtilities imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
-    plasticMiddle = [[AIImageUtilities imageNamed:@"PlasticButtonNormal_Middle" forClass:[self class]] retain];
-    plasticPressedCaps = [[AIImageUtilities imageNamed:@"PlasticButtonPressed_Caps" forClass:[self class]] retain];
-    plasticPressedMiddle = [[AIImageUtilities imageNamed:@"PlasticButtonPressed_Middle" forClass:[self class]] retain];
-    plasticDefaultCaps = [[AIImageUtilities imageNamed:@"PlasticButtonDefault_Caps" forClass:[self class]] retain];
-    plasticDefaultMiddle = [[AIImageUtilities imageNamed:@"PlasticButtonDefault_Middle" forClass:[self class]] retain];
+    plasticCaps = [[NSImage imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
+    plasticMiddle = [[NSImage imageNamed:@"PlasticButtonNormal_Middle" forClass:[self class]] retain];
+    plasticPressedCaps = [[NSImage imageNamed:@"PlasticButtonPressed_Caps" forClass:[self class]] retain];
+    plasticPressedMiddle = [[NSImage imageNamed:@"PlasticButtonPressed_Middle" forClass:[self class]] retain];
+    plasticDefaultCaps = [[NSImage imageNamed:@"PlasticButtonDefault_Caps" forClass:[self class]] retain];
+    plasticDefaultMiddle = [[NSImage imageNamed:@"PlasticButtonDefault_Middle" forClass:[self class]] retain];
 
     return(self);    
 }

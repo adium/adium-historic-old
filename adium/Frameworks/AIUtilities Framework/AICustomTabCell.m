@@ -15,7 +15,6 @@
 
 #import "AICustomTabCell.h"
 #import "AICustomTabsView.h"
-#import "AIImageUtilities.h"
 #import "AICursorAdditions.h"
 
 #define SHOW_CLOSE_BUTTON_FOR_SINGLE_TAB	YES		//Show close button when there is only one tab?
@@ -59,9 +58,9 @@ static NSImage		*tabCloseFrontRollover = nil;
 	
     //Share these images between all AICustomTabCell instances
     if(!haveLoadedImages){
-		tabFrontLeft = [[AIImageUtilities imageNamed:@"Aqua_Tab_Left" forClass:[self class]] retain];
-		tabFrontMiddle = [[AIImageUtilities imageNamed:@"Aqua_Tab_Middle" forClass:[self class]] retain];
-		tabFrontRight = [[AIImageUtilities imageNamed:@"Aqua_Tab_Right" forClass:[self class]] retain];
+		tabFrontLeft = [[NSImage imageNamed:@"Aqua_Tab_Left" forClass:[self class]] retain];
+		tabFrontMiddle = [[NSImage imageNamed:@"Aqua_Tab_Middle" forClass:[self class]] retain];
+		tabFrontRight = [[NSImage imageNamed:@"Aqua_Tab_Right" forClass:[self class]] retain];
 		
 		NSControlTint	tint = [NSColor currentControlTintSupportingJag];
 		tabCloseFront = [[NSImage systemCloseButtonImageForState:AIButtonActive controlTint:tint] retain];

@@ -22,7 +22,7 @@
 {
     //Space
 /*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Space"];
-    [toolbarItem setView:[AIFramedMiniToolbarButton framedMiniToolbarButtonWithImage:[AIImageUtilities imageNamed:@"space" forClass:[self class]] forToolbarItem:toolbarItem]];
+    [toolbarItem setView:[AIFramedMiniToolbarButton framedMiniToolbarButtonWithImage:[NSImage imageNamed:@"space" forClass:[self class]] forToolbarItem:toolbarItem]];
     [toolbarItem setTarget:nil];
     [toolbarItem setAction:nil];
     [toolbarItem setToolTip:@""];
@@ -33,7 +33,7 @@
 
     //Flexible Space
     toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"FlexibleSpace"];
-    [toolbarItem setView:[AIFramedMiniToolbarButton framedMiniToolbarButtonWithImage:[AIImageUtilities imageNamed:@"space" forClass:[self class]] forToolbarItem:toolbarItem]];
+    [toolbarItem setView:[AIFramedMiniToolbarButton framedMiniToolbarButtonWithImage:[NSImage imageNamed:@"space" forClass:[self class]] forToolbarItem:toolbarItem]];
     [toolbarItem setTarget:nil];
     [toolbarItem setAction:nil];
     [toolbarItem setToolTip:@""];
@@ -45,7 +45,7 @@
 */
     //Divider
 /*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Divider"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"divider" forClass:[self class]]];
+    [toolbarItem setImage:[NSImage imageNamed:@"divider" forClass:[self class]]];
     [toolbarItem setTarget:nil];
     [toolbarItem setAction:nil];
     [toolbarItem setToolTip:@""];
@@ -63,14 +63,14 @@
 									 toolTip:@"Message"
 									  target:self
 								 settingSelector:@selector(setImage:)
-								     itemContent:[AIImageUtilities imageNamed:@"message" forClass:[self class]]
+								     itemContent:[NSImage imageNamed:@"message" forClass:[self class]]
 									  action:@selector(newMessage:)
 									    menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 
     //Close Message
 /*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"CloseMessage"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"close" forClass:[self class]]];
+    [toolbarItem setImage:[NSImage imageNamed:@"close" forClass:[self class]]];
     [toolbarItem setTarget:self];
     [toolbarItem setAction:@selector(closeMessage:)];
     [toolbarItem setEnabled:YES];
@@ -81,7 +81,7 @@
 */
     //Send Message
 /*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"SendMessage"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"message" forClass:[self class]]];
+    [toolbarItem setImage:[NSImage imageNamed:@"message" forClass:[self class]]];
     [toolbarItem setTarget:self];
     [toolbarItem setAction:@selector(sendMessage:)];
     [toolbarItem setEnabled:YES];
@@ -92,7 +92,7 @@
 
     //Send Message (button)
     toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"SendMessageButton"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"sendButton" forClass:[self class]]];
+    [toolbarItem setImage:[NSImage imageNamed:@"sendButton" forClass:[self class]]];
     [toolbarItem setTarget:self];
     [toolbarItem setAction:@selector(sendMessage:)];
     [toolbarItem setEnabled:YES];

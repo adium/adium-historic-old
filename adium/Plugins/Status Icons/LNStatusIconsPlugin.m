@@ -23,8 +23,8 @@
     //Observe
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
-    idleImage = [[AIImageUtilities imageNamed:@"IdleIcon" forClass:[self class]] retain];
-    awayImage = [[AIImageUtilities imageNamed:@"AwayIcon" forClass:[self class]] retain];
+    idleImage = [[NSImage imageNamed:@"IdleIcon" forClass:[self class]] retain];
+    awayImage = [[NSImage imageNamed:@"AwayIcon" forClass:[self class]] retain];
 }
 
 - (void)uninstallPlugin

@@ -34,7 +34,7 @@
 							toolTip:@"Bold text"
 							 target:self
 						settingSelector:@selector(setImage:)
-						    itemContent:[AIImageUtilities imageNamed:@"Bold_Off" forClass:[self class]]
+						    itemContent:[NSImage imageNamed:@"Bold_Off" forClass:[self class]]
 							 action:@selector(bold:)
 							   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
@@ -46,7 +46,7 @@
 							toolTip:@"Italic text"
 							 target:self
 						settingSelector:@selector(setImage:)
-						    itemContent:[AIImageUtilities imageNamed:@"Bold_On" forClass:[self class]]
+						    itemContent:[NSImage imageNamed:@"Bold_On" forClass:[self class]]
 							 action:@selector(italic:)
 							   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
@@ -58,7 +58,7 @@
 							toolTip:@"Underline text"
 							 target:self
 						settingSelector:@selector(setImage:)
-						    itemContent:[AIImageUtilities imageNamed:@"Bold_On" forClass:[self class]]
+						    itemContent:[NSImage imageNamed:@"Bold_On" forClass:[self class]]
 							 action:@selector(underline:)
 							   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];

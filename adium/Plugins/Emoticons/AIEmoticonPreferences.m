@@ -62,8 +62,8 @@
     [table_emoticons setDrawsAlternatingRows:YES];
     
     //Configure our buttons
-    [button_addEmoticons setImage:[AIImageUtilities imageNamed:@"plus" forClass:[self class]]];
-    [button_removeEmoticons setImage:[AIImageUtilities imageNamed:@"minus" forClass:[self class]]];
+    [button_addEmoticons setImage:[NSImage imageNamed:@"plus" forClass:[self class]]];
+    [button_removeEmoticons setImage:[NSImage imageNamed:@"minus" forClass:[self class]]];
     
     //Observe prefs    
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];

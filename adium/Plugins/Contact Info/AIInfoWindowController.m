@@ -80,7 +80,7 @@ static AIListObject				*activeListObject = nil;
         [buddyImage setScalesWhenResized:YES];
         [buddyImage setSize:NSMakeSize(48,48)];
     }else{
-        buddyImage = [AIImageUtilities imageNamed:@"DefaultIcon" forClass:[self class]];
+        buddyImage = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
     }
     
     imageAttatchment = [[[NSTextAttachmentCell alloc] initImageCell:buddyImage] autorelease];
