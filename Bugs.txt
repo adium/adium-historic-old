@@ -27,7 +27,9 @@
 - In Mockie style, with offline contacts hidden and a contact from an empty group (the
     contact is the first to connect from that group) signs on, the vertical scrollbar
     appears although it is not needed.
-
+- Need to check whether ~/L/AS/Adium 2.0/Contact List/ exists before trying to save
+	contact list themes there.
+	
 [Will not do]
 - Create default layouts & styles for the contact list preferences
 - What to do with contact list bottom bar?
