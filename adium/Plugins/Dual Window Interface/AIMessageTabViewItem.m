@@ -1,17 +1,17 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-\---------------------------------------------------------------------------------------------------------/
- | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
- | General Public License as published by the Free Software Foundation; either version 2 of the License,
- | or (at your option) any later version.
- |
- | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
- | Public License for more details.
- |
- | You should have received a copy of the GNU General Public License along with this program; if not,
- | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- \------------------------------------------------------------------------------------------------------ */
+                                              \---------------------------------------------------------------------------------------------------------/
+                                              | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+                                              | General Public License as published by the Free Software Foundation; either version 2 of the License,
+                                              | or (at your option) any later version.
+                                              |
+                                              | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+                                              | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+                                              | Public License for more details.
+                                              |
+                                              | You should have received a copy of the GNU General Public License along with this program; if not,
+                                              | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+                                              \------------------------------------------------------------------------------------------------------ */
 
 #import "AIMessageTabViewItem.h"
 #import "AIMessageViewController.h"
@@ -65,7 +65,7 @@
     [messageView release];
     [[owner notificationCenter] removeObserver:self];
     [owner release];
-    
+
     [super dealloc];
 }
 
@@ -110,7 +110,7 @@
 
 //
 - (void)_observeListObjectAttributes:(AIListObject *)inListObject
-{    
+{
     //Observe it's primary list object's status
     [[owner notificationCenter] removeObserver:self name:ListObject_AttributesChanged object:nil];
     if(inListObject){
@@ -122,12 +122,12 @@
 - (void)chatStatusChanged:(NSNotification *)notification
 {
     NSArray	*keys = [[notification userInfo] objectForKey:@"Keys"];
-    
+
     //If the display name changed, we resize the tabs
     if(notification == nil || [keys containsObject:@"DisplayName"]){
         //This should really be looked at and possibly a better method found.  This works and causes an automatic update to each open tab.  But it feels like a hack.  There is probably a more elegant method.  Something like [[[self tabView] delegate] redraw];  I guess that's what this causes to happen, but the indirectness bugs me. - obviously not the best solution, but good enough for now.
         [[[self tabView] delegate] tabViewDidChangeNumberOfTabViewItems:[self tabView]];
-    }    
+    }
 }
 
 //
@@ -219,10 +219,10 @@
     if(backgroundColor && !selected){
         backgroundColor = [backgroundColor colorUsingColorSpaceName:NSDeviceRGBColorSpace];
         backgroundColor = [NSColor colorWithCalibratedHue:[backgroundColor hueComponent]
-                             saturation:[backgroundColor saturationComponent]
-                             brightness:([backgroundColor brightnessComponent] - 0.2)
+                                               saturation:[backgroundColor saturationComponent]
+                                               brightness:([backgroundColor brightnessComponent] - 0.2)
                                                     alpha:0.8];
-            
+
         int 		innerLeft, innerRight, innerTop, innerBottom;
         float 		centerY, circleRadius;
         NSBezierPath	*pillPath;
@@ -270,15 +270,15 @@
                                 drawInRect:NSOffsetRect(textRect, 0, -1)];
         [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.16 alpha:1.0]]
                                 drawInRect:textRect];
-        
+
     }
-/*
-    //Draw name
-    [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
+    /*
+     //Draw name
+     [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
                                     drawInRect:NSOffsetRect(labelRect, 0, -1)];
-    [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.16 alpha:1.0]]
+     [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.16 alpha:1.0]]
                                     drawInRect:labelRect];
-*/
+     */
 }
 
 - (NSSize)sizeOfLabel:(BOOL)computeMin
@@ -315,7 +315,7 @@
     NSFont			*font = [NSFont boldSystemFontOfSize:11];
     NSAttributedString		*displayName;
     NSMutableParagraphStyle	*paragraphStyle;
-    
+
     //Paragraph Style (Turn off clipping by word)
     paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
     [paragraphStyle setLineBreakMode:NSLineBreakByClipping];

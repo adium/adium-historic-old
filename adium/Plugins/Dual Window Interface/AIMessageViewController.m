@@ -1,17 +1,17 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-\---------------------------------------------------------------------------------------------------------/
- | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
- | General Public License as published by the Free Software Foundation; either version 2 of the License,
- | or (at your option) any later version.
- |
- | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
- | Public License for more details.
- |
- | You should have received a copy of the GNU General Public License along with this program; if not,
- | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- \------------------------------------------------------------------------------------------------------ */
+                                              \---------------------------------------------------------------------------------------------------------/
+                                              | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+                                              | General Public License as published by the Free Software Foundation; either version 2 of the License,
+                                              | or (at your option) any later version.
+                                              |
+                                              | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+                                              | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+                                              | Public License for more details.
+                                              |
+                                              | You should have received a copy of the GNU General Public License along with this program; if not,
+                                              | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+                                              \------------------------------------------------------------------------------------------------------ */
 
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
@@ -85,7 +85,7 @@
                                           message:[[[textView_outgoing attributedString] copy] autorelease]
                                         autoreply:NO];
 
-        
+
         if([[owner contentController] sendContentObject:message]){
             [[owner notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:chat userInfo:nil];
         }
@@ -115,7 +115,7 @@
         if(chat){
             NSEnumerator	*enumerator;
             AIContentObject	*contentObject;
-            
+
             //Extract the content from our existing chat
             savedContent = [[[chat contentObjectArray] retain] autorelease];
 
@@ -124,7 +124,7 @@
             while(contentObject = [enumerator nextObject]){
                 [contentObject setChat:inChat];
             }
-            
+
             //Close our existing chat
             [[owner contentController] closeChat:chat];
             [chat release]; chat = nil;
@@ -137,12 +137,12 @@
         if(savedContent){
             [chat setContentArray:savedContent];
         }
-    
+
         //Get our new account
         [account release]; account = [[inChat account] retain];
         //Config the outgoing text view
         [textView_outgoing setChat:chat];
-    
+
         //Register for sending notifications
         [[owner notificationCenter] removeObserver:self name:Interface_SendEnteredMessage object:nil];
         [[owner notificationCenter] removeObserver:self name:Interface_DidSendEnteredMessage object:nil];
@@ -161,12 +161,12 @@
         //
         [scrollView_userList setAutoScrollToBottom:NO];
         [scrollView_userList setAutoHideScrollBar:YES];
-        
+
         //Observe the chat
         [[owner notificationCenter] removeObserver:self name:Content_ChatStatusChanged object:nil];
         [[owner notificationCenter] addObserver:self selector:@selector(chatStatusChanged:) name:Content_ChatStatusChanged object:chat];
         [self chatStatusChanged:nil];
-        
+
         //Update our participating list objects list
         [[owner notificationCenter] removeObserver:self name:Content_ChatParticipatingListObjectsChanged object:nil];
         [[owner notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:) name:Content_ChatParticipatingListObjectsChanged object:chat];
@@ -210,6 +210,26 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing];
 }
 
+//Set the message entry text view and force a textDidChange: notification
+- (void)setTextEntryViewTo:(NSData *)data
+{
+    [textView_outgoing replaceCharactersInRange:NSMakeRange(0, [[textView_outgoing textStorage] length]) withRTF:data];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing];
+#warning Need to resize our input view somehow.  The below seems reasonable but doesn't work.
+    /* [[textView_outgoing layoutManager] textContainerChangedGeometry:[textView_outgoing textContainer]];
+    [self sizeAndArrangeSubviews];
+    */
+}
+
+/*
+ //Append to the message entry text view and force a textDidChange: notification
+ - (void)appendToTextEntryView:(NSAttributedString *)inString
+ {
+     [[textView_outgoing textStorage] appendAttributedString:inString];
+     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing];
+ }
+ */
+
 
 //Private -----------------------------------------------------------------------------
 //Init
@@ -247,7 +267,7 @@
 
     //Register for notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sizeAndArrangeSubviews) name:NSViewFrameDidChangeNotification object:view_contents];
-    
+
     return(self);
 }
 
@@ -265,7 +285,7 @@
 }
 
 - (void)dealloc
-{    
+{
     //Close chat
     if(chat){
         [[owner contentController] closeChat:chat];
@@ -305,7 +325,7 @@
 {
     NSArray	*participatingListObjects = [chat participatingListObjects];
     BOOL	listVisible;
-    
+
     //We display the user list if it contains more than one user, or if someone has specified that it be visible.
     if([[[chat statusDictionary] objectForKey:@"AlwaysShowUserList"] boolValue] ||
        [participatingListObjects count] > 1){
@@ -354,7 +374,7 @@
 - (void)textDidChange:(NSNotification *)notification
 {
     BOOL enabled;
-    
+    //    NSLog(@"text did change! textHeight says %f and current is %f",[self textHeight],currentTextEntryHeight);
     //Resize our contents to fit the text (If it's height has changed)
     if([self textHeight] != currentTextEntryHeight){
         [self sizeAndArrangeSubviews];
@@ -366,7 +386,7 @@
     if([button_send isEnabled] != enabled){
         [button_send setEnabled:enabled];
     }
-    
+
 }
 
 #define TEXT_ENTRY_PADDING 2
@@ -379,11 +399,11 @@
 
     superFrame.origin.y = 0;
     superFrame.origin.x = 0;
-    
+
     //Account
     if(view_accountSelection){
         height = [view_accountSelection frame].size.height;
-        
+
         [view_accountSelection setFrame:NSMakeRect(0, superFrame.size.height - height, superFrame.size.width, height)];
         superFrame.size.height -= height;
     }
@@ -394,7 +414,7 @@
                                      superFrame.origin.y - 1,
                                      [button_send frame].size.width,
                                      [button_send frame].size.height)];
-    
+
     //Text entry
     currentTextEntryHeight = [self textHeight];
     [scrollView_outgoingView setHasVerticalScroller:(currentTextEntryHeight == ENTRY_TEXTVIEW_MAX_HEIGHT)];
@@ -412,7 +432,7 @@
     }else{
         [scrollView_userList setFrame:NSMakeRect(10000, 10000, 0, 0)]; //Shove it way off screen for now
     }
-    
+
     //Messages
     [scrollView_messages setFrame:NSMakeRect(0, superFrame.origin.y, superFrame.size.width, superFrame.size.height)];
 }
@@ -421,20 +441,19 @@
 {
     float 		textHeight;
 
-    //When the view is empty, usedRectForTextContainer will return an incorrect height, so we calculate it manually using the typing attributes    
+    //When the view is empty, usedRectForTextContainer will return an incorrect height, so we calculate it manually using the typing attributes
     if([[textView_outgoing textStorage] length] == 0){
         NSAttributedString	*attrString;
 
         //Manually determine the font's height
         attrString = [[[NSAttributedString alloc] initWithString:@" AbcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[textView_outgoing typingAttributes]] autorelease];
         textHeight = [attrString heightWithWidth:10000] + ENTRY_TEXTVIEW_PADDING; //Arbitrarily large number
-        
+
     }else{
         //Let the container tell us its height
         textHeight = [[textView_outgoing layoutManager] usedRectForTextContainer:[textView_outgoing textContainer]].size.height + ENTRY_TEXTVIEW_PADDING;
-
     }
-    
+
     if(textHeight > ENTRY_TEXTVIEW_MAX_HEIGHT){
         textHeight = ENTRY_TEXTVIEW_MAX_HEIGHT;
     }else if(textHeight < ENTRY_TEXTVIEW_MIN_HEIGHT){

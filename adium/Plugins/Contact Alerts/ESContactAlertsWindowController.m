@@ -60,7 +60,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     if([self windowShouldClose:nil]){
 
         [[owner notificationCenter] removeObserver:self]; //remove all observers
-        
+
         [instance removeAllSubviews:view_main];
         //Save the window position
         [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
@@ -82,9 +82,14 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
     //Observers
     [[owner notificationCenter] removeObserver:self]; //remove any previous observers
+
+    //Observe account changes
+    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+
     [[owner notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:Pref_Changed_Alerts object:activeContactObject];
     [[owner notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:One_Time_Event_Fired object:activeContactObject];
-    
+
+
     //Set window title
     [[self window] setTitle:[NSString stringWithFormat:@"%@'s Alerts",[activeContactObject displayName]]];
 
@@ -94,7 +99,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [popUp_contactList setMenu:[self switchContactMenu]];
     [popUp_contactList selectItemAtIndex:[popUp_contactList indexOfItemWithRepresentedObject:activeContactObject]];
 
-//    [instance release];
+    //    [instance release];
     if (!instance)
     {
         instance = [[ESContactAlerts alloc] initWithDetailsView:view_main withTable:tableView_actions withPrefView:nil owner:owner];
@@ -122,7 +127,8 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [tableView_actions setTarget:self];
     [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
     [tableView_actions setDataSource:self];
-    
+    [[self window] makeFirstResponder:tableView_actions];
+
     [button_delete setEnabled:NO];
     [button_oneTime setEnabled:NO];
 
@@ -136,8 +142,8 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [tableView_actions reloadData];
 
 
-//    [[[tableView_actions tableColumns] objectAtIndex:1] sizeToFit];
-//    [[[tableView_actions tableColumns] objectAtIndex:0] sizeToFit];
+    //    [[[tableView_actions tableColumns] objectAtIndex:1] sizeToFit];
+    //    [[[tableView_actions tableColumns] objectAtIndex:0] sizeToFit];
 }
 
 -(IBAction)oneTimeEvent:(id)sender
@@ -156,10 +162,10 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     {
         [instance deleteEventAction:nil];
         [self tableViewSelectionDidChange:nil];
-    
-    [[owner notificationCenter] postNotificationName:Window_Changed_Alerts
-                                              object:activeContactObject
-                                            userInfo:nil];
+
+        [[owner notificationCenter] postNotificationName:Window_Changed_Alerts
+                                                  object:activeContactObject
+                                                userInfo:nil];
     }
 }
 
@@ -257,11 +263,11 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     {
         NSDictionary * selectedActionDict = [instance dictAtIndex:row];
         NSString *action = [selectedActionDict objectForKey:KEY_EVENT_ACTION];
-        
+
         [actionMenu performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
         [button_oneTime setState:[[selectedActionDict objectForKey:KEY_EVENT_DELETE] intValue]];
         [button_active setState:[[selectedActionDict objectForKey:KEY_EVENT_ACTIVE] intValue]];
-        
+
         [button_delete setEnabled:YES];
         [button_oneTime setEnabled:YES];
         [button_active setEnabled:YES];
@@ -392,6 +398,17 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     return contactMenu;
 }
 
+- (void)accountListChanged:(NSNotification *)notification
+{
+    //    NSLog(@"accountListChanged");
+    [popUp_contactList setMenu:[self switchContactMenu]];
+    if ( activeContactObject && ([popUp_contactList indexOfItemWithRepresentedObject:activeContactObject] == -1) ) {
+        if ([popUp_contactList numberOfItems] ) {
+            [popUp_contactList selectItemAtIndex:0];
+            activeContactObject = [[popUp_contactList selectedItem] representedObject];
+        }
+    }
+}
 
 - (IBAction) switchToContact:(id) sender
 {

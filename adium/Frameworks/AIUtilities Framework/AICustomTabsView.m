@@ -1,22 +1,26 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-\---------------------------------------------------------------------------------------------------------/
- | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
- | General Public License as published by the Free Software Foundation; either version 2 of the License,
- | or (at your option) any later version.
- |
- | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
- | Public License for more details.
- |
- | You should have received a copy of the GNU General Public License along with this program; if not,
- | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- \------------------------------------------------------------------------------------------------------ */
+                                              \---------------------------------------------------------------------------------------------------------/
+                                              | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+                                              | General Public License as published by the Free Software Foundation; either version 2 of the License,
+                                              | or (at your option) any later version.
+                                              |
+                                              | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+                                              | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+                                              | Public License for more details.
+                                              |
+                                              | You should have received a copy of the GNU General Public License along with this program; if not,
+                                              | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+                                              \------------------------------------------------------------------------------------------------------ */
 
 #import "AICustomTabsView.h"
 #import "AICustomTabCell.h"
 #import "AIImageUtilities.h"
 #import "AIViewAdditions.h"
+#import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
+#import "AIMessageViewController.h"
+#import "AIMessageTabViewItem.h"
 
 #define TAB_DRAG_DISTANCE 	4	//Distance required before a drag kicks in
 
@@ -31,6 +35,7 @@
 - (AICustomTabCell *)_cellAtPoint:(NSPoint)clickLocation;
 - (void)_startTrackingCursor;
 - (void)_stopTrackingCursor;
+- (NSArray *)acceptableDragTypes;
 @end
 
 #define CUSTOM_TABS_FPS		30.0		//Animation speed
@@ -62,16 +67,16 @@
     [super initWithFrame:frameRect];
     tabCellArray = nil;
     selectedCustomTabCell = nil;
-    
+
     //Load our images
     tabDivider = [[AIImageUtilities imageNamed:@"Tab_Divider" forClass:[self class]] retain];
 
     //register as a drag observer:
-    [self registerForDraggedTypes:[NSArray arrayWithObject:NSRTFPboardType]];
-    
-    //Configure our tab cells    
+    [self registerForDraggedTypes:[self acceptableDragTypes]];
+
+    //Configure our tab cells
     [self rebuildCells];
-    
+
     return(self);
 }
 
@@ -82,7 +87,7 @@
     [tabDivider release];
     [selectedCustomTabCell release];
     [dragTabCell release];
-    
+
     [super dealloc];
 }
 
@@ -102,15 +107,15 @@
 - (void)rebuildCells
 {
     int	loop;
-    
+
     //Remove any existing tab cells
     [tabCellArray release]; tabCellArray = [[NSMutableArray alloc] init];
-    
+
     //Create a tab cell for each tabViewItem
     for(loop = 0;loop < [tabView numberOfTabViewItems];loop++){
         NSTabViewItem		*tabViewItem = [tabView tabViewItemAtIndex:loop];
         AICustomTabCell		*tabCell;
-        
+
         //Create a new tab cell
         tabCell = [AICustomTabCell customTabForTabViewItem:tabViewItem];
         [tabCell setSelected:(tabViewItem == [tabView selectedTabViewItem])];
@@ -119,7 +124,7 @@
         if(tabViewItem == [tabView selectedTabViewItem]){
             [selectedCustomTabCell release]; selectedCustomTabCell = [tabCell retain];
         }
-        
+
         //Add the tab cell to our array
         [tabCellArray addObject:tabCell];
     }
@@ -135,7 +140,7 @@
     AICustomTabCell	*tabCell, *nextTabCell;
     NSRect		tabFrame;
     NSRect		drawRect;
-    
+
     //Get the active tab's frame
     tabFrame = [selectedCustomTabCell frame];
 
@@ -242,13 +247,13 @@
 {
     //Stop cursor tracking
     [self _stopTrackingCursor];
-    
+
     //Rebuild cells
     [self rebuildCells];
 
     //Start cursor tracking
     [self _startTrackingCursor];
-    
+
     //Inform our delegate
     if([delegate respondsToSelector:@selector(customTabViewDidChangeNumberOfTabViewItems:)]){
         [delegate customTabViewDidChangeNumberOfTabViewItems:self];
@@ -326,7 +331,7 @@
 - (void)mouseEntered:(NSEvent *)theEvent
 {
     AICustomTabCell	*tabCell = [theEvent userData];
-    
+
     [tabCell setHighlighted:YES];
     [self setNeedsDisplay:YES];
 }
@@ -353,7 +358,7 @@
     if(tabCell == selectedCustomTabCell){
         //Give the tab cell a chance to handle tracking
         [tabCell willTrackMouse:theEvent inRect:[tabCell frame] ofView:self];
-        
+
     }else if(tabCell != nil){
         //Select the tab
         [tabView selectTabViewItem:[tabCell tabViewItem]];
@@ -376,7 +381,7 @@
             [self _beginDragOfTab:selectedCustomTabCell fromOffset:NSMakeSize(clickLocation.x, clickLocation.y)];
         }
     }
-    
+
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
@@ -501,18 +506,49 @@
     return(tabsChanged || tabHasBeenDragged);
 }
 
+- (NSArray *)acceptableDragTypes {
+    return [NSArray arrayWithObjects:NSRTFPboardType,nil];
+}
+
+//called continuously as the drag is over the tab bar
 - (unsigned int)draggingUpdated:(id <NSDraggingInfo>)sender {
     NSPoint		dragLocation = [self convertPoint:[sender draggingLocation] fromView:nil];
     AICustomTabCell	*tabCell = [self _cellAtPoint:dragLocation];
+    NSDragOperation	operation;
+    if(tabCell != nil) {
+        operation = NSDragOperationCopy;
 
-    if(tabCell != nil && ( [tabView selectedTabViewItem] != [tabCell tabViewItem] ) ){
-        //Select the tab
-        [tabView selectTabViewItem:[tabCell tabViewItem]];
+        if ( [tabView selectedTabViewItem] != [tabCell tabViewItem] ) //Select the tab
+            [tabView selectTabViewItem:[tabCell tabViewItem]];
     }
-    
-    return NSDragOperationNone;
+    else {
+        operation = NSDragOperationNone;
+    }
+    return operation;
 }
 
+//redisplay as necessary here
+- (void)concludeDragOperation:(id <NSDraggingInfo>)sender
+{
+}
+
+//importing of data should occur here
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
+{
+    NSPoint		dragLocation = [self convertPoint:[sender draggingLocation] fromView:nil];
+    AICustomTabCell	*tabCell = [self _cellAtPoint:dragLocation];
+    if(tabCell != nil) //dropped on top of a tabCell
+    {
+        NSPasteboard *pboard = [sender draggingPasteboard];
+        NSString *type = [pboard availableTypeFromArray:[NSArray arrayWithObjects:NSRTFPboardType,nil]];
+        if (type && [type isEqualToString:NSRTFPboardType]) { //got RTF data
+            AIMessageTabViewItem * theTabViewItem = (AIMessageTabViewItem *)[tabCell tabViewItem];
+            [[theTabViewItem messageViewController] setTextEntryViewTo:[pboard dataForType:NSRTFPboardType]];
+            return YES;
+        }
+    }
+    return NO; //if we made it here, the drag operation didn't work
+}
 
 
 // Context menu ------------------------------------------------------------------------
@@ -528,7 +564,7 @@
             return([delegate customTabView:self menuForTabViewItem:[tabCell tabViewItem]]);
         }
     }
-    
+
     return(nil);
 }
 
@@ -604,34 +640,34 @@
         //Get the object's size
         size = [tabCell size];//[object frame].size;
 
-        //If this tab is > next biggest, use the 'reduced' width calculated above
-        if(size.width > reduceThreshold){
-            size.width = reducedWidth;
-        }
-
-        origin = NSMakePoint(xLocation, 0 );
-
-        //Move the item closer to its desired location
-        if(!absolute){
-            if(origin.x > [tabCell frame].origin.x){
-                int distance = (origin.x - [tabCell frame].origin.x) * 0.6;
-                if(distance < 1) distance = 1;
-
-                origin.x = [tabCell frame].origin.x + distance;
-
-                if(finished) finished = NO;
-            }else if(origin.x < [tabCell frame].origin.x){
-                int distance = ([tabCell frame].origin.x - origin.x) * 0.6;
-                if(distance < 1) distance = 1;
-
-                origin.x = [tabCell frame].origin.x - distance;
-                if(finished) finished = NO;
+            //If this tab is > next biggest, use the 'reduced' width calculated above
+            if(size.width > reduceThreshold){
+                size.width = reducedWidth;
             }
-        }
 
-        [tabCell setFrame:NSMakeRect(origin.x, origin.y, size.width, size.height)];
+            origin = NSMakePoint(xLocation, 0 );
 
-        xLocation += size.width - CUSTOM_TABS_OVERLAP; //overlap the tabs a bit
+            //Move the item closer to its desired location
+            if(!absolute){
+                if(origin.x > [tabCell frame].origin.x){
+                    int distance = (origin.x - [tabCell frame].origin.x) * 0.6;
+                    if(distance < 1) distance = 1;
+
+                    origin.x = [tabCell frame].origin.x + distance;
+
+                    if(finished) finished = NO;
+                }else if(origin.x < [tabCell frame].origin.x){
+                    int distance = ([tabCell frame].origin.x - origin.x) * 0.6;
+                    if(distance < 1) distance = 1;
+
+                    origin.x = [tabCell frame].origin.x - distance;
+                    if(finished) finished = NO;
+                }
+            }
+
+            [tabCell setFrame:NSMakeRect(origin.x, origin.y, size.width, size.height)];
+
+            xLocation += size.width - CUSTOM_TABS_OVERLAP; //overlap the tabs a bit
     }
 
     [self setNeedsDisplay:YES];
