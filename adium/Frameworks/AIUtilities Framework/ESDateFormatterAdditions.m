@@ -8,6 +8,14 @@
 
 #import "ESDateFormatterAdditions.h"
 
+typedef enum
+{
+    NONE,
+    SECONDS,
+    AMPM,
+    BOTH
+} StringType;
+
 @implementation NSDateFormatter (ESDateFormatterAdditions)
 
 + (NSString *)localizedDateFormatStringShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm
@@ -17,35 +25,35 @@
     NSString *checkString = [[NSUserDefaults standardUserDefaults] stringForKey:NSTimeFormatString];
     BOOL isCache = [cacheCheck isEqualToString:checkString]; //look for a cached value
 
-    NSString **pointer = nil;
+    StringType type;
         
     if(!seconds && !showAmPm)
     {
         if(isCache && formatString)
             return formatString;
         else
-            pointer = &formatString;
+            type = NONE;
     }
     else if(seconds && !showAmPm)
     {
         if(isCache && formatStringWithSeconds)
             return formatStringWithSeconds;
         else
-            pointer = &formatStringWithSeconds;
+            type = SECONDS;
     }
     else if(!seconds & showAmPm)
     {
         if(isCache && formatStringWithAMorPM)
             return formatStringWithAMorPM;
         else
-            pointer = &formatStringWithAMorPM;
+            type = AMPM;
     }
     else
     {
         if(isCache && formatStringWithSecondsAndAMorPM)
             return formatStringWithSecondsAndAMorPM;
         else
-            pointer = &formatStringWithSecondsAndAMorPM;
+            type = BOTH;
     }
     
     if(!isCache)
@@ -74,10 +82,14 @@
         }
     }
     
-    *pointer = (NSString *)localizedDateFormatString;
-    
-    NSLog(localizedDateFormatString);
-    
+    switch(type)
+    {
+        case NONE: formatString = localizedDateFormatString; break;
+        case SECONDS: formatStringWithSeconds = localizedDateFormatString; break;
+        case AMPM: formatStringWithAMorPM = localizedDateFormatString; break;
+        case BOTH: formatStringWithSecondsAndAMorPM= localizedDateFormatString; break;
+    }
+
     return localizedDateFormatString;
 }
 @end
