@@ -97,13 +97,14 @@
 }
 
 - (void)dealloc
-{
+{    
     [[owner notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     //Cleanup our nib
     [view_accountView release];
-    
+    [auxilaryTabs release];
+   
     [owner release];
     [account release];
 
