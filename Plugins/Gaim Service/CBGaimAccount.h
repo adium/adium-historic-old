@@ -57,6 +57,7 @@
 - (BOOL)useDisplayNameAsStatusMessage;
 - (BOOL)displayConversationClosed;
 - (BOOL)displayConversationTimedOut;
+- (AIService *)_serviceForUID:(NSString *)contactUID;
 
 	//AIAccount_Files
 	//Instructs the account to accept a file transfer request
