@@ -283,6 +283,7 @@
     [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_CONNECTING]
                                         forKey:@"Status" account:self];
     NSLog(@"starting session");
+    delay = FALSE;
     [session startSession:myID onPort:5222];
 }
 
@@ -361,11 +362,6 @@
         NSLog(@"adding handle");
         handle = [self addHandleWithUID:from serverGroup:nil temporary:YES];
     }
-    if(![[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
-        NSLog(@"setting handle to online");
-        [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:NO silent:YES];
-    }
     NSLog(@"containing contact: %@", [handle containingContact]);
     NSLog(@"creating chat");
     AIChat *chat = [self _openChatWithHandle:handle];
@@ -394,16 +390,15 @@
             handle = [self addHandleWithUID:uid serverGroup:nil temporary:NO];
         }
         NSMutableDictionary *handleStatusDict = [handle statusDictionary];
-        [handleStatusDict setObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status"];
-        [handleStatusDict setObject:[NSNumber numberWithBool:NO] forKey:@"Online"];        
+        [handleStatusDict setObject:[NSNumber numberWithBool:NO] forKey:@"Online"];
         [[owner contactController] handleStatusChanged:handle
-                                    modifiedStatusKeys:[NSArray arrayWithObjects: @"Online", @"Status", nil]
+                                    modifiedStatusKeys:[NSArray arrayWithObject: @"Online"]
                                                delayed:NO
                                                 silent:NO];
     } else { // JPRESENCE_JID_DEFAULT_CHANGED
         JabberPresence *pres = [n object];
         NSString *uid = [[pres from] userhost];
-        NSLog(@"default presence change for %@", uid);
+        NSLog(@"default presence change for %@ (%@: %@)", uid, [pres show], [pres status]);
         AIHandle *handle = [handleDict objectForKey: uid];
         if (!handle) {
             // Acid apparently sends presence changes before roster changes
@@ -416,7 +411,7 @@
         NSString *newShow = [pres show];
         bool newAway = (newShow != nil);
         id oldAway = [handleStatusDict objectForKey:@"Away"];
-        if (oldAway == nil || oldAway != newAway) {
+        if (oldAway == nil || [oldAway boolValue] != newAway) {
             [changed addObject: @"Away"];
             [handleStatusDict setObject:[NSNumber numberWithBool:newAway] forKey:@"Away"];
         }
@@ -432,17 +427,15 @@
         }
 
         id oldOnline = [handleStatusDict objectForKey:@"Online"];
-        if (oldOnline == nil || oldOnline == NO) {
+        if (oldOnline == nil || [oldOnline boolValue] == NO) {
             [changed addObject: @"Online"];
-            [changed addObject: @"Status"];
             [handleStatusDict setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
-            [handleStatusDict setObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status"];
         }
         
         [[owner contactController] handleStatusChanged:handle
                                     modifiedStatusKeys:changed
-                                               delayed:NO
-                                                silent:NO];        
+                                               delayed:delay
+                                                silent:delay];        
     }
 }
 
@@ -450,7 +443,6 @@
 
 -(void) onBeginUpdate {
     NSLog(@"onBeginUpdate");
-    delay = TRUE;
 }
 
 -(void) onEndUpdate {
@@ -460,7 +452,7 @@
 
 -(void) onItem:(id)item addedToGroup:(NSString*)group
 {
-    if ([item conformsTo: @protocol(JabberRosterItem)]) {
+    if ([item conformsToProtocol: @protocol(JabberRosterItem)]) {
         // Item created and/or added to group
         NSLog(@"item %@ added to group %@", [item displayName], group);
         NSString *uid = [[item JID] userhost];
@@ -478,7 +470,7 @@
 
 - (void) onItem:(id)item removedFromGroup:(NSString*)group
 {
-    if ([item conformsTo: @protocol(JabberRosterItem)]) {
+    if ([item conformsToProtocol: @protocol(JabberRosterItem)]) {
         // Item destroyed and/or removed from a group
         NSString *uid = [[item JID] userhost];
         NSLog(@"item %@ removed from from %@", [item displayName], group);
