@@ -3386,6 +3386,44 @@
 			settings = {
 			};
 		};
+		9CDF247703E8CBAA000001C9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIDockBehaviorPreferences.h;
+			path = "Plugins/Dock Behavior/AIDockBehaviorPreferences.h";
+			refType = 4;
+		};
+		9CDF247803E8CBAA000001C9 = {
+			fileRef = 9CDF247703E8CBAA000001C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9CDF247903E8CBBC000001C9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIDockBehaviorPreferences.m;
+			path = "Plugins/Dock Behavior/AIDockBehaviorPreferences.m";
+			refType = 4;
+		};
+		9CDF247A03E8CBBC000001C9 = {
+			fileRef = 9CDF247903E8CBBC000001C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9CDF247B03E8CBC6000001C9 = {
+			isa = PBXFileReference;
+			name = DockBehaviorPreferences.nib;
+			path = "Plugins/Dock Behavior/DockBehaviorPreferences.nib";
+			refType = 4;
+		};
+		9CDF247C03E8CBC6000001C9 = {
+			fileRef = 9CDF247B03E8CBC6000001C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //9C0
 //9C1
 //9C2
@@ -3399,6 +3437,7 @@
 		9E1C294A03DE4E6F00415B22 = {
 			children = (
 				9EB7C05803D52BA200415B22,
+				9CDF247703E8CBAA000001C9,
 			);
 			isa = PBXGroup;
 			name = Headers;
@@ -3460,6 +3499,8 @@
 			children = (
 				9E1C294A03DE4E6F00415B22,
 				9EB7C05903D52BA200415B22,
+				9CDF247903E8CBBC000001C9,
+				9CDF247B03E8CBC6000001C9,
 			);
 			isa = PBXGroup;
 			name = "Dock Behavior";
@@ -3490,6 +3531,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B72129003DE1C8B00A8010A,
+				9CDF247803E8CBAA000001C9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3497,6 +3539,7 @@
 		9EDAC4E803D5160100415B22 = {
 			buildActionMask = 2147483647;
 			files = (
+				9CDF247C03E8CBC6000001C9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3505,6 +3548,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B72128F03DE1C8A00A8010A,
+				9CDF247A03E8CBBC000001C9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
