@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.93 2004/05/05 04:06:25 adamiser Exp $
+$Id: ToDoList.txt,v 1.94 2004/05/05 04:39:53 adamiser Exp $
 
 
 Legend
@@ -27,6 +27,8 @@ Bugs
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
 * Connection failures due to a disconnected network (at least with Airport) cause the password to be cleared and re-prompted for.
+
+* Simple webkit style has some bottom redraw/margin issues and is not displaying some of the dividing lines above a status change.
 
 Applescripts:
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
