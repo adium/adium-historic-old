@@ -49,8 +49,8 @@
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
 
 	//Delete selection menu item
-    menuItem = [[[NSMenuItem alloc] initWithTitle:DELETE_CONTACT target:self action:@selector(deleteSelection:) keyEquivalent:@"\b"] autorelease];
-    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
+    menuItem_delete = [[NSMenuItem alloc] initWithTitle:DELETE_CONTACT target:self action:@selector(deleteSelection:) keyEquivalent:@"\b"];
+    [[adium menuController] addMenuItem:menuItem_delete toLocation:LOC_Contact_Editing];
 	
     //Edit contact list toolbar item
     NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"EditContactList"
@@ -74,6 +74,16 @@
     [AIContactListEditorWindowController closeSharedInstance]; //Close the contact list editor
 }
 
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	if(menuItem == menuItem_delete){
+		return([[adium contactController] selectedListObject] && [[adium contactController] selectedContaininigGroup]);
+	}
+	
+	return(YES);
+}
+
+
 //Show the contact list editor window
 - (IBAction)showContactListEditor:(id)sender
 {
@@ -88,13 +98,14 @@
 
 //
 - (IBAction)deleteSelection:(id)sender
-{
-	NSLog(@"Don't delete %@, that's your friend!",[[[adium contactController] selectedListObject] displayName]);
-//	AIListObject	*object = [[adium contactController] selectedContact];
-//	
-//	if(object){
-//		[[adium contactController] removeListObjects:[NSArray arrayWithObject:object] fromGroup:group];
-//	}
+{	
+	AIListObject	*object = [[adium contactController] selectedListObject];
+	AIListGroup		*group = [[adium contactController] selectedContaininigGroup];
+	
+	if(object && group){
+		NSLog(@"Deleting %@ from %@",[object displayName],[group displayName]);
+		[[adium contactController] removeListObjects:[NSArray arrayWithObject:object] fromGroup:group];
+	}
 }
 
 

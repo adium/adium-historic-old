@@ -36,6 +36,7 @@
 //@end
 
 @interface AIContactListEditorPlugin : AIPlugin {
+	NSMenuItem			*menuItem_delete;
 //    NSMutableArray	*listEditorColumnControllerArray;
 //    NSMutableArray	*collectionsArray;
 }
