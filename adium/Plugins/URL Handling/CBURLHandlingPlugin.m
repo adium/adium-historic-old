@@ -79,12 +79,13 @@
 		AIAccount			*account;
 		
 		account = [[adium accountController] accountWithObjectID:[contact accountID]];
-#warning Need default sending options.
+
 		contentMessage = [AIContentMessage messageInChat:chat
 											  withSource:account
 											 destination:contact
 													date:nil
-												 message:[[[NSAttributedString alloc] initWithString:message attributes:nil] autorelease]
+												 message:[[[NSAttributedString alloc] initWithString:message 
+																						  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
 											   autoreply:NO];
 		[[adium contentController] sendContentObject:contentMessage];
 	}
