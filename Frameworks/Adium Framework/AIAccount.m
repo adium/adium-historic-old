@@ -174,7 +174,7 @@
 //System is switching to another account
 - (void)fastUserSwitchLeave:(NSNotification *)notification
 {
-	if([[self statusObjectForKey:@"Online"] boolValue]){
+	if([self online]){
 		[self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 		disconnectedByFastUserSwitch = YES;
 	}
@@ -183,8 +183,10 @@
 //System is returning to our account
 - (void)fastUserSwitchReturn:(NSNotification *)notification
 {
-	[self setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-	disconnectedByFastUserSwitch = NO;
+	if (disconnectedByFastUserSwitch){
+		[self setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+		disconnectedByFastUserSwitch = NO;
+	}
 }
 
 //Return YES if this account should disconnect when the system switches to another account
