@@ -100,7 +100,6 @@ NSAttributedString *_safeString(NSAttributedString *inString);
     backgroundColor = [backgroundColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
     backgroundBrightness = [backgroundColor brightnessComponent];
     backgroundSum = [backgroundColor redComponent] + [backgroundColor greenComponent] + [backgroundColor blueComponent];
-    [backgroundColor release];
     
     //we need to scan each colored "chunk" of the message - and check to make sure it is a "visible" color
     while(index < stringLength){
