@@ -36,6 +36,7 @@
 								kABMSNInstantProperty,@"MSN",
 								kABYahooInstantProperty,@"Yahoo!",
 								kABICQInstantProperty,@"ICQ",nil] retain];
+	
     //Tracking dictionary for asynchronous image loads
     trackingDict = [[NSMutableDictionary alloc] init];
     
@@ -115,7 +116,7 @@
 				}
 			}
 		}
-    } else if ((automaticSync && !preferAddressBookImages) && [inModifiedKeys containsObject: @"UserIcon"]) {
+    } else if ((automaticSync && !preferAddressBookImages && useABImages) && [inModifiedKeys containsObject: @"UserIcon"]) {
         
 		//Find the person
         ABPerson *person = [self searchForObject:inObject];
@@ -142,6 +143,7 @@
         automaticSync = [[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue];
         useNickName = [[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue];
 		preferAddressBookImages = [[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue];
+		useABImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
 		
         [self updateAllContacts];
     }
