@@ -1,0 +1,59 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {okay = id; }; 
+            CLASS = AIAccountSetupEditAccountView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_autoConnect" = NSButton; 
+                "button_register" = NSButton; 
+                "imageView_userIcon" = ESImageViewWithImagePicker; 
+                "image_serviceIcon" = NSImageView; 
+                "tabView_auxiliary" = NSTabView; 
+                "textField_accountDescription" = NSTextField; 
+                "textField_accountName" = ESDelayedTextField; 
+                "textField_serviceName" = NSTextField; 
+                "textField_userNameLabel" = NSTextField; 
+                "view_accountDetails" = NSView; 
+            }; 
+            SUPERCLASS = AIAccountSetupView; 
+        }, 
+        {
+            CLASS = AIAccountSetupView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {controller = AIAccountSetupWindowController; }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {
+            ACTIONS = {cancel = id; okay = id; }; 
+            CLASS = AIEditAccountWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "imageView_userIcon" = ESImageViewWithImagePicker; 
+                "image_serviceIcon" = NSImageView; 
+                "tabView_auxiliary" = NSTabView; 
+                "textField_accountDescription" = NSTextField; 
+                "textField_serviceName" = NSTextField; 
+                "view_accountOptions" = NSView; 
+                "view_accountProfile" = NSView; 
+                "view_accountProxy" = NSView; 
+                "view_accountSetup" = NSView; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {showImagePicker = id; }; 
+            CLASS = ESImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
