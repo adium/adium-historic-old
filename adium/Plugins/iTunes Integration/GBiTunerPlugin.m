@@ -53,14 +53,23 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 //Load the scripts and build (returning) a script menu of them
 - (NSMenu *)loadScriptsAndBuildScriptMenu
 {
-	NSMenu			*scriptMenu = [[NSMenu alloc] initWithTitle:@"Scripts"];
-	NSString		*internalPath = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_SCRIPTS];
+	NSMenu		*scriptMenu   = [[NSMenu alloc] initWithTitle:@"Scripts"];
+	NSString	*internalPath = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_SCRIPTS];
 	
-	//Load the scripts, sort them, and stick them in our menu
+	//load built-in scripts (scripts that are in the bundle).
 	[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:[internalPath stringByExpandingTildeInPath]
 													   intoUsageDict:scriptDict]];
-	[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:PATH_EXTERNAL_SCRIPTS
-													   intoUsageDict:scriptDict]];
+
+	//load scripts that have been added into the Application Support folders.
+	NSArray *scriptsFolders = [adium applicationSupportPathsForName:@"Scripts"];
+	NSEnumerator *enumerator = [scriptsFolders objectEnumerator];
+	NSString *path;
+
+	while((path = [enumerator nextObject]) != nil) {
+		[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:path
+														   intoUsageDict:scriptDict]];
+	}
+
 	[self _sortScriptsByTitle:scriptArray];
 	[self _appendScripts:scriptArray toMenu:scriptMenu atLevel:0];
 
