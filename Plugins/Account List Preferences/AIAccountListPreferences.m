@@ -293,7 +293,9 @@
 //Callback after the user enters their password for registering
 - (void)passwordReturnedForRegister:(NSString *)inPassword
 {
-	[configuredForAccount performRegisterWithPassword:inPassword];
+	if (inPassword || ![configuredForAccount requiresPassword]){
+		[configuredForAccount performRegisterWithPassword:inPassword];
+	}
 }
 
 //User toggled the autoconnect preference
