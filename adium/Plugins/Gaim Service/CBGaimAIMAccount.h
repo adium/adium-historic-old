@@ -1,6 +1,6 @@
 //
 //  CBGaimAIMAccount.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Colin Barrett on Sat Nov 01 2003.
 //

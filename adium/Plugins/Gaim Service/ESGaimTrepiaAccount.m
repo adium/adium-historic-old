@@ -1,6 +1,6 @@
 //
 //  ESGaimTrepiaAccount.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Sun Feb 22 2004.
 //

@@ -1,6 +1,6 @@
 /*
  *  CBGaimOscarAccount.h
- *  Adium XCode
+ *  Adium
  *
  *  Created by Colin Barrett on Thu Nov 06 2003.
  *

@@ -332,33 +332,38 @@
 
 - (void)accountConvUpdated:(GaimConversation*)conv type:(GaimConvUpdateType)type
 {
-    AIChat *chat = (AIChat*) conv->ui_data;
-    GaimConvIm *im = gaim_conversation_get_im_data(conv);
-    //We don't do anything yet with updates for conversations that aren't IM conversations 
-    if (chat && im) {
-        AIListContact *listContact = (AIListContact*) [chat listObject];
-        NSAssert(listContact != nil, @"Conversation with no one?");
-
-        switch (type) {
-            case GAIM_CONV_UPDATE_TYPING:
-                [self setTypingFlagOfContact:listContact to:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
+    AIChat		*chat = (AIChat*) conv->ui_data;
+	switch (gaim_conversation_get_type(conv)) {
+		case GAIM_CONV_IM:
+		{
+			GaimConvIm  *im = gaim_conversation_get_im_data(conv);
+			//We don't do anything yet with updates for conversations that aren't IM conversations 
+			if (chat && im) {
+				AIListContact *listContact = (AIListContact*) [chat listObject];
+				NSAssert(listContact != nil, @"Conversation with no one?");
+				
+				switch (type) {
+					case GAIM_CONV_UPDATE_TYPING:
+						[self setTypingFlagOfContact:listContact to:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
+						break;
+					case GAIM_CONV_UPDATE_AWAY:
+						//If the conversation update is UPDATE_AWAY, it seems to suppress the typing state being updated
+						//Reset gaim's typing tracking, then update to receive a GAIM_CONV_UPDATE_TYPING message
+						gaim_conv_im_set_typing_state(im, GAIM_NOT_TYPING);
+						gaim_conv_im_update_typing(im);
+						break;
+					default:
+						NSLog(@"got a conv update %i",type);
+						break;
+				}
+			}
 			break;
-            case GAIM_CONV_UPDATE_AWAY:
-                //If the conversation update is UPDATE_AWAY, it seems to suppress the typing state being updated
-                //Reset gaim's typing tracking, then update to receive a GAIM_CONV_UPDATE_TYPING message
-                gaim_conv_im_set_typing_state(im, GAIM_NOT_TYPING);
-                gaim_conv_im_update_typing(im);
+		}
+		case GAIM_CONV_CHAT:
+		{
 			break;
-            default:
-				NSLog(@"got a conv update %i",type);
-//            {
-//                NSNumber *typing=[[handle statusDictionary] objectForKey:@"Typing"];
-//                if (typing && [typing boolValue])
-//                    NSLog(@"handle %@ is typing and got a nontyping update of type %i",[listContact displayName],type);
-//            }
-			break;
-        }
-    }
+		}
+	}
 }
 
 - (void)accountConvReceivedIM:(const char*)message inConversation:(GaimConversation*)conv withFlags:(GaimMessageFlags)flags atTime: (time_t)mtime
