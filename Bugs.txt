@@ -76,6 +76,7 @@
 - The setFrame:display:animate: call in AIDockingWindow can cause a rare beachball.
 	This frame change should be made into a manual series of frame changes to avoid this.
 
+- Our 'strangers' state is broken.  When'd that happen?
 
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
@@ -85,8 +86,6 @@
 
 - [Yahoo] File transfer limitations
     Files over 1 MB in size fail to send
-
-- [Yahoo] yahoo_codes_to_html() mangles A HREF tags with other tags within the text
 
 - [Jaber] Authorization problems
 
