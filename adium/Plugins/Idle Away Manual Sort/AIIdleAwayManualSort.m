@@ -31,24 +31,40 @@ int idleAwayManualSort(id objectA, id objectB, BOOL groups);
 	return(&idleAwayManualSort);
 }
 
+- (BOOL)alwaysSortGroupsToTop
+{
+	return(NO);
+}
+
 int idleAwayManualSort(id objectA, id objectB, BOOL groups)
 {
-	if(!groups){
-		BOOL idleAwayA = ([[objectA statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1] || [[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
-		BOOL idleAwayB = ([[objectB statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1] || [[objectB statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
+	//Groups to the bottom
+	BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
+	BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
+	
+	if(groupA && !groupB){
+		return(NSOrderedDescending);
+	}else if(!groupA && groupB){
+		return(NSOrderedAscending);
+	}else{
+		//Idle and Away grouped below others
+		if(!groups){
+			BOOL idleAwayA = ([[objectA statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1] || [[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
+			BOOL idleAwayB = ([[objectB statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1] || [[objectB statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
+			
+			if(idleAwayA && !idleAwayB){
+				return(NSOrderedDescending);
+			}else if(!idleAwayA && idleAwayB){
+				return(NSOrderedAscending);
+			}
+		}
 		
-		if(idleAwayA && !idleAwayB){
+		//Manual order
+		if([objectA orderIndex] > [objectB orderIndex]){
 			return(NSOrderedDescending);
-		}else if(!idleAwayA && idleAwayB){
+		}else{
 			return(NSOrderedAscending);
 		}
-	}
-	
-	//manual order
-	if([objectA orderIndex] > [objectB orderIndex]){
-		return(NSOrderedDescending);
-	}else{
-		return(NSOrderedAscending);
 	}
 }
 
