@@ -28,8 +28,10 @@ body
 
 .messagebody {
 	padding: 1px 7px 1px 30px;
+	overflow: auto;
 }
 
 .nextmessagebody {
 	padding: 1px 7px 1px 30px;
+	overflow: auto;
 }

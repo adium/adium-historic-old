@@ -70,7 +70,7 @@ body {
 
 .message p {
 	margin: 0;
-	overflow: hidden;
+	overflow: auto;
 }
 
 .message p.additional {

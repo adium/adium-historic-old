@@ -82,7 +82,9 @@ a { text-decoration: none; }
 	font-family: Helvetica;
 }
 
-.message { }
+.message {
+	overflow: auto;
+}
 .context_message { color: #B6B6B6; }
 
 .message, .context_message
