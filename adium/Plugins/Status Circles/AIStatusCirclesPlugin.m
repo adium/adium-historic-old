@@ -47,7 +47,7 @@
 - (BOOL)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
 {
     BOOL	handleChanged = NO;
-
+    
     if(	inModifiedKeys == nil || 
         [inModifiedKeys containsObject:@"Away"] || 
         [inModifiedKeys containsObject:@"Idle"] || 
