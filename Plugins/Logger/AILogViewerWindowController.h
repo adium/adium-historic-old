@@ -62,6 +62,7 @@ typedef enum {
     AILog				*displayedLog;			//Currently selected/displayed log
 	
 	NSMutableDictionary	*toolbarItems;
+	NSImage				*blankImage;
 }
 
 + (id)openForPlugin:(id)inPlugin;
