@@ -43,7 +43,6 @@ static NSImage *pushIndicatorImage = nil;
 	homeToStartOfLine = NO;
     insertingText = NO;
 	resizing = NO;
-	defaultTypingAttributes = nil;
     historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
     pushArray = [[NSMutableArray alloc] init];
     currentHistoryLocation = 0;
@@ -69,8 +68,6 @@ static NSImage *pushIndicatorImage = nil;
 	
     [chat release];
     [associatedView release];
-    [defaultTypingAttributes release];
-    [returnArray release]; returnArray = nil;
     [historyArray release]; historyArray = nil;
     [pushArray release]; pushArray = nil;
     [super dealloc];
