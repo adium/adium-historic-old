@@ -23,6 +23,7 @@
     NSString                                *crashLog;		//Current crash log
     
     NSString                                *buildNumber, *buildDate;
+	NSAppleScript							*slayerScript;
 }
 
 - (void)awakeFromNib;
@@ -30,7 +31,7 @@
 - (IBAction)showPrivacyDetails:(id)sender;
 - (IBAction)closePrivacyDetails:(id)sender;
 
-- (IBAction)reportCrashForLogAtPath:(NSString *)inPath;
+- (BOOL)reportCrashForLogAtPath:(NSString *)inPath;
 - (void)sendReport:(NSDictionary *)crashReport;
 - (IBAction)send:(id)sender;
 
