@@ -7,19 +7,32 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            ACTIONS = {closeWindow = id; selectSearchType = id; updateSearch = id; }; 
+            ACTIONS = {
+                closeWindow = id; 
+                deleteSelectedLogs = id; 
+                selectSearchType = id; 
+                updateSearch = id; 
+            }; 
             CLASS = AILogViewerWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_deleteLogs" = NSButton; 
+                "popUp_jagSearchMode" = NSPopUpButton; 
                 progressIndicator = NSProgressIndicator; 
-                "searchField_logs" = NSSearchField; 
+                "searchField_logs" = id; 
                 "tableView_results" = NSTableView; 
                 "textField_progress" = NSTextField; 
                 "textView_content" = NSTextView; 
             }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSWindow; LANGUAGE = ObjC; SUPERCLASS = NSResponder; }
     ); 
     IBVersion = 1; 
 }
