@@ -21,14 +21,14 @@
 - (void)selectItemWithRepresentedObject:(id)object
 {
     int	index = [self indexOfItemWithRepresentedObject:object];
-	if ((index != -1) || ([self numberOfItems] > 0)){
+	if ((index != -1) && ([self numberOfItems] > 0)){
 		[self selectItemAtIndex:index];
 	}
 }
 - (void)compatibleSelectItemWithTag:(int)tag
 {
     int	index = [self indexOfItemWithTag:tag];
-	if ((index != -1) || ([self numberOfItems] > 0)){
+	if ((index != -1) && ([self numberOfItems] > 0)){
 		[self selectItemAtIndex:index];
 	}
 }
