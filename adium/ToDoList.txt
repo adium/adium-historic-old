@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.128 2004/05/12 23:13:46 bgannin Exp $
+$Id: ToDoList.txt,v 1.129 2004/05/12 23:24:41 earthmkii Exp $
 
 
 Legend
@@ -277,6 +277,7 @@ Too many tabs issue:
         
 Link Management:
     Just throwing out a thought for discussion... how about a button like those for emoticons or push/pop with add/edit and a list of favorites to make them accessible within the message view without using contextual menus? In that same vein... what about autocompleting recognized URLs (such as www.ad completes to www.adiumx.com if its a favorite)? 
+	//Steve: yeah, both of those seem to be good ideas, and the link editor window is certainly abstract enough to be called through most any mechanism, and I had always intended a button to be included for it eventually.  Auto-completing URLs is an interesting idea... and would work very well if done right.  I'd comment more, but I'm feeling a little under the weather right now. :\
     
 -------------------------------------------------------------------------------------------------------
 Unfixable(?) Issues
