@@ -145,14 +145,9 @@
 
 
 - (void) fontPreviewField:(JVFontPreviewField *)field didChangeToFont:(NSFont *)font {
-	[preview setFontFamily:[font familyName]];
+	[preview setFontFamily:[font fontName]];
 	[[preview preferences] setDefaultFontSize:[font pointSize]];
-	
-	//The family name is stored in the WebKit preferences but can't always get us back to a real font, as the fontName
-	//may differ, so we store the font name separately for UI purposes
-	[[adium preferenceController] setPreference:[font fontName]
-										forKey:[plugin fontNameKeyForStyle:[[popUp_styles selectedItem] title]]
-										 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+
 	[self updatePreview];
 }
 
@@ -378,18 +373,9 @@
 	[button_restoreDefaultBackgroundColor setEnabled:!disableCustomBackground];
 	
 	//Font menus
-	NSString	*fontName = [[adium preferenceController] preferenceForKey:[plugin fontNameKeyForStyle:[style name]]
-																	 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	NSFont		*font;
-	float		fontSize = [[preview preferences] defaultFontSize];
-	if (fontName){
-		font = [NSFont cachedFontWithName:fontName
-									 size:fontSize];
-	}else{
-		font = [NSFont fontWithName:[preview fontFamily]
-							   size:fontSize];
-	}
-	
+	NSFont		*font = [NSFont cachedFontWithName:[preview fontFamily]
+											  size:[[preview preferences] defaultFontSize]];
+
 	[fontPreviewField_currentFont setFont:font];
 	[popUp_minimumFontSize selectItemAtIndex:[[popUp_minimumFontSize menu] indexOfItemWithTag:[[preview preferences] minimumFontSize]]];
 }

@@ -192,10 +192,6 @@ DeclareString(AppendNextMessage);
 {
 	return [NSString stringWithFormat:@"%@:Background Color",desiredStyle];
 }
-- (NSString *)fontNameKeyForStyle:(NSString *)desiredStyle
-{
-	return [NSString stringWithFormat:@"%@:Font Name",desiredStyle];	
-}
 
 - (BOOL)boolForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant boolDefault:(BOOL)defaultValue
 {
