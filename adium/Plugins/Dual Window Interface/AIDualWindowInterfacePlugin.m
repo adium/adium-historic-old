@@ -225,11 +225,9 @@
 			NSRect          newFrame;
             
             //Default to the width of the source message window, and the drop point
-            if(!(screenPoint.x == -1 || screenPoint.y == -1)){
-                newFrame.size.width = oldMessageWindowFrame.size.width;
-                newFrame.size.height = oldMessageWindowFrame.size.height;   
-                newFrame.origin = screenPoint;
-            }
+			newFrame.size.width = oldMessageWindowFrame.size.width;
+			newFrame.size.height = oldMessageWindowFrame.size.height;   
+			newFrame.origin = screenPoint;
             
             //Create a new window, set the frame
             newMessageWindow = [self _createMessageWindow];
