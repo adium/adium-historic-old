@@ -433,7 +433,9 @@
         }
         
         GaimConvIm *im = gaim_conversation_get_im_data(conv);
+        NSLog(@"sending %s",[body UTF8String]);
         gaim_conv_im_send(im, [body UTF8String]);
+        NSLog(@"sent");
         sent = YES;
     }
     return sent;

@@ -116,6 +116,7 @@ typedef enum
 } GaimMessageFlags;
 
 #include "account.h"
+#include "log.h"
 #include "buddyicon.h"
 #include "server.h"
 
@@ -241,7 +242,9 @@ struct _GaimConversation
 	char *title;                /**< The window title.                  */
 
 	gboolean logging;           /**< The status of logging.             */
-
+	
+	GaimLog *log;               /**< This conversation's log            */
+	
 	GList *send_history;        /**< The send history.                  */
 	GString *history;           /**< The conversation history.          */
 
@@ -597,6 +600,14 @@ void gaim_conversation_set_unseen(GaimConversation *conv,
  * @return The conversation's unseen state.
  */
 GaimUnseenState gaim_conversation_get_unseen(const GaimConversation *conv);
+
+/**
+ * Sets the specified conversation's name.
+ *
+ * @param conv The conversation.
+ * @param name The conversation's name.
+ */
+void gaim_conversation_set_name(GaimConversation *conv, const char *name);
 
 /**
  * Returns the specified conversation's name.
@@ -1228,6 +1239,20 @@ const char *gaim_conv_placement_get_name(const char *id);
  * @return A pointer to the function.
  */
 GaimConvPlacementFunc gaim_conv_placement_get_fnc(const char *id);
+
+/**
+ * Sets the current conversation placement function.
+ *
+ * @param func The new conversation placement function.
+ */
+void gaim_conv_placement_set_current_func(GaimConvPlacementFunc func);
+
+/**
+ * Returns the current conversation placement function.
+ *
+ * @return The current conversation placement function.
+ */
+GaimConvPlacementFunc gaim_conv_placement_get_current_func(void);
 
 /**
  * Returns the id of the specified conversation placement function.
