@@ -1107,7 +1107,28 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)setPrivacyOptions:(PRIVACY_OPTION)option
 {
 	if(account){
-		account->perm_deny = option;
+		GaimPrivacyType privacyType;
+
+		switch(option){
+			case PRIVACY_ALLOW_ALL:
+			default:
+				privacyType = GAIM_PRIVACY_ALLOW_ALL;
+				break;
+			case PRIVACY_DENY_ALL:
+				privacyType = GAIM_PRIVACY_DENY_ALL;
+				break;
+			case PRIVACY_ALLOW_USERS:
+				privacyType = GAIM_PRIVACY_ALLOW_USERS;
+				break;
+			case PRIVACY_DENY_USERS:
+				privacyType = GAIM_PRIVACY_DENY_USERS;
+				break;
+			case PRIVACY_ALLOW_CONTACTLIST:
+				privacyType = GAIM_PRIVACY_ALLOW_BUDDYLIST;
+				break;
+			
+		}
+		account->perm_deny = privacyType;
 		serv_set_permit_deny(gaim_account_get_connection(account));
 	}
 }
@@ -1115,7 +1136,32 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 #warning To Colin: If account is nil (the GaimAccount has not been made) we do not have access to account->perm_deny.
 - (PRIVACY_OPTION)privacyOptions
 {
-	return (account ? account->perm_deny : -1);
+	PRIVACY_OPTION privacyOption = -1;
+	
+	if(account){
+		GaimPrivacyType privacyType = account->perm_deny;
+		
+		switch(privacyType){
+			case GAIM_PRIVACY_ALLOW_ALL:
+			default:
+				privacyOption = PRIVACY_ALLOW_ALL;
+				break;
+			case GAIM_PRIVACY_DENY_ALL:
+				privacyOption = PRIVACY_DENY_ALL;
+				break;
+			case GAIM_PRIVACY_ALLOW_USERS:
+				privacyOption = PRIVACY_ALLOW_USERS;
+				break;
+			case GAIM_PRIVACY_DENY_USERS:
+				privacyOption = PRIVACY_DENY_USERS;
+				break;
+			case GAIM_PRIVACY_ALLOW_BUDDYLIST:
+				privacyOption = PRIVACY_ALLOW_CONTACTLIST;
+				break;
+		}
+	}
+
+	return(privacyOption);
 }
 
 /*****************************************************/
@@ -1508,8 +1554,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
 	
-	//Update our away and idle status
-	[self updateStatusForKey:@"AwayMessage"];
+	//Update our status and idle status
+	[self updateStatusForKey:@"StatusState"];
 	[self updateStatusForKey:@"IdleSince"];
 	
     //Silence updates
@@ -1737,25 +1783,20 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 /*!
-* @brief Set the account to an AIStatus status state
+ * @brief Perform the setting of a status state
  *
  * Sets the account to a passed status state.  The account should set itself to best possible status given the return
- * values of statusState's accessors.
+ * values of statusState's accessors.  The passed statusMessage has been filtered; it should be used rather than
+ * [statusState statusMessage], which returns an unfiltered statusMessage.
+ *
+ * @param statusState The state to enter
+ * @param statusMessage The filtered status message to use.
  */
-#warning Evan: Support for the autorefreshing filter keywords is not in place.
-/*
- 		}else if([key isEqualToString:@"AwayMessage"]){
-			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountAwayTo:)];			
-*/			
-
-- (void)setStatusState:(AIStatus *)statusState
+- (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage
 {
 	if([self online]){
-		NSAttributedString	*statusMessage;
 		char				*gaimStatusType;
 		NSString			*encodedStatusMessage;
-		
-		statusMessage = [statusState statusMessage];
 		
 		//Get the gaim status type from this class or subclasses, which may also potentially modify or nullify our statusMessage
 		gaimStatusType = [self gaimStatusTypeForStatus:statusState
