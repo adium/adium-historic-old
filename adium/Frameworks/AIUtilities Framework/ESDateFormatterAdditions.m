@@ -24,11 +24,12 @@ typedef enum
         
     NSString *checkString = [[NSUserDefaults standardUserDefaults] stringForKey:NSTimeFormatString];
     BOOL isCache, screwedOver = NO;
-    if(checkString)
+
+    if(cacheCheck)
         isCache = [cacheCheck isEqual:checkString]; //look for a cached value
     else
     {
-	isCache = YES;
+	isCache = NO;
     	screwedOver = YES;
     }
     
