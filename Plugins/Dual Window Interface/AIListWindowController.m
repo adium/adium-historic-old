@@ -222,9 +222,7 @@
 		[[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontally)];
 		[self contactListDesiredSizeChanged:nil];
 		
-		[self updateLayoutFromPrefDict:layoutDict];
-		
-		[self updateCellRelatedThemePreferencesFromDict:themeDict];
+		[self updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
 		[self updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];
 
 	}
@@ -245,7 +243,6 @@
 		
 		//Background
 		[self updateCellRelatedThemePreferencesFromDict:themeDict];
-
 		[self updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];
 	}
 }
