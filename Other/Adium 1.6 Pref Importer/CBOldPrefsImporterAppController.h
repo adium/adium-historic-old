@@ -6,6 +6,9 @@
 //  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
+
+#import "BDImportController.h"
+
 @interface CBOldPrefsImporterAppController : NSObject 
 {
     IBOutlet	NSWindow				*window_main;
@@ -31,6 +34,7 @@
     IBOutlet    NSTabView               *tabView_optionsTab;
     IBOutlet	AIContentController     *contentController;
     IBOutlet    NSButton                *button_importAllProteusAways;
+	IBOutlet	BDImportController		*importer;
 
 	
 	NSMutableDictionary		*iconDict;

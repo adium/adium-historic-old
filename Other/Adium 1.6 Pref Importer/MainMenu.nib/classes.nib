@@ -1,7 +1,23 @@
 {
     IBClasses = (
         {
+            CLASS = BDImportController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_Cancel" = NSButton; 
+                "button_Import" = NSButton; 
+                "button_proteusAddAccount" = NSButton; 
+                "button_proteusDelAccount" = NSButton; 
+                "image_proteusImage" = NSImageView; 
+                "panel_importPanel" = NSPanel; 
+                "tabView_ClientTab" = NSTabView; 
+                "table_proteusAccounts" = NSTableView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
             ACTIONS = {
+                changeClientSelection = id; 
                 importAliases = id; 
                 importAwayMessages = id; 
                 importContacts = id; 
@@ -17,14 +33,15 @@
                 "button_Cancel" = NSButton; 
                 "button_ImportAwayMessages" = NSButton; 
                 "button_OK" = NSButton; 
-                "button_importAllProteusAways" = NSButton; 
                 currentTask = NSTextField; 
-                "image_AdiumImage" = NSImageView; 
+                "image_Backdrop" = NSImageView; 
                 importListSheet = NSPanel; 
+                importer = BDImportController; 
                 "popUpButton_Clients" = NSPopUpButton; 
                 "popUpButton_account" = NSPopUpButton; 
                 "popUpButton_user" = NSPopUpButton; 
                 progressIndicator = NSProgressIndicator; 
+                "spinner_ClientProgress" = NSProgressIndicator; 
                 "spinner_importProgress" = NSProgressIndicator; 
                 "tabView_ClientTabs" = NSTabView; 
                 "tabView_optionsTab" = NSTabView; 
