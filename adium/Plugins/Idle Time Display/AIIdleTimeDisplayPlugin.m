@@ -17,6 +17,8 @@
 #import "AIIdleTimeDisplayPlugin.h"
 #import "AIIdleTimeDisplayPreferences.h"
 
+#define IDLE_TIME_THEMABLE_PREFS    @"Idle Time Themable Prefs"
+
 @interface AIIdleTimeDisplayPlugin (PRIVATE)
 - (NSString *)idleStringForSeconds:(int)seconds;
 - (void)addToFlashArray:(AIListObject *)inObject;
@@ -34,7 +36,12 @@
     idleTextColor = nil;
 
     //Register our default preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_TIME_DISPLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_TIME_DISPLAY_DEFAULT_PREFS forClass:[self class]] 
+					  forGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
+    //Register themable preferences
+    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:IDLE_TIME_THEMABLE_PREFS forClass:[self class]]
+						     forGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
+    
     [self preferencesChanged:nil];
 
     //Our preference view
