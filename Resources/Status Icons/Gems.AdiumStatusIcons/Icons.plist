@@ -12,23 +12,20 @@
 		<string>away.png</string>
 		<key>Idle</key>
 		<string>idle.png</string>
+		<key>Invisible</key>
+		<string>invisible.png</string>
+		<key>Mobile</key>
+		<string>mobile.png</string>
 		<key>Offline</key>
 		<string>offline.png</string>
 		<key>Unknown</key>
 		<string>unknown.png</string>
 		<key>content</key>
 		<string>content.png</string>
-		<key>typing</key>
-		<string>typing.png</string>
 		<key>enteredtext</key>
 		<string>enteredtext.png</string>
-		<key>Wireless</key>
-		<string>wireless.png</string>
-		<key>Invisible</key>
-		<string>invisible.png</string>
-
-
-		
+		<key>typing</key>
+		<string>typing.png</string>
 	</dict>
 	<key>Tabs</key>
 	<dict>
@@ -38,22 +35,20 @@
 		<string>tab-away.png</string>
 		<key>Idle</key>
 		<string>tab-idle.png</string>
+		<key>Invisible</key>
+		<string>tab-invisible.png</string>
+		<key>Mobile</key>
+		<string>tab-mobile.png</string>
 		<key>Offline</key>
 		<string>tab-offline.png</string>
 		<key>Unknown</key>
 		<string>tab-unknown.png</string>
 		<key>content</key>
 		<string>tab-content.png</string>
-		<key>typing</key>
-		<string>tab-typing.png</string>
 		<key>enteredtext</key>
 		<string>tab-enteredtext.png</string>
-		<key>Wireless</key>
-		<string>tab-wireless.png</string>
-		<key>Invisible</key>
-		<string>tab-invisible.png</string>
-
-
+		<key>typing</key>
+		<string>tab-typing.png</string>
 	</dict>
 </dict>
 </plist>
