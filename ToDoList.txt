@@ -10,7 +10,6 @@
 - Webkit background image type selector needs to be re-implemented
 - Status window when away preference is not implemented
 - Status set state after inactivity is not implemented
-- Finish implementing and commit state icons on the contact list code
 - MSN display names as extended status isn't working
 - Implement 'edit menu' sheets for deleting list layouts and themes
 - Improve behavior when customizing existing layouts and themes

@@ -22,6 +22,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
+#import <AIUtilities/CBApplicationAdditions.h>
 
 #define CUSTOM_TITLE AILocalizedString(@"Custom",nil)
 

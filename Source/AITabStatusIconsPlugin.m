@@ -105,13 +105,24 @@
 		[inModifiedKeys containsObject:KEY_TYPING] ||
 		[inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
 		
-
+		//Apply the state icon to our chat
 		NSImage	*icon = [AIStatusIcons statusIconForChat:inChat
 														type:AIStatusIconTab
 												   direction:AIIconNormal];
 		[[inChat displayArrayForKey:@"Tab State Icon"] setObject:icon withOwner:self];
-		
 		modifiedAttributes = [NSSet setWithObject:@"Tab State Icon"];
+
+		//Also apply the state icon to our contact if this is a one-on-one chat
+		if([inChat listObject]){
+			AIListContact *contact = [[adium contactController] parentContactForListObject:[inChat listObject]];
+			
+			NSImage	*icon = [AIStatusIcons statusIconForChat:inChat
+														type:AIStatusIconList
+												   direction:AIIconNormal];
+			[[contact displayArrayForKey:@"List State Icon"] setObject:icon withOwner:self];
+			[[adium contactController] listObjectAttributesChanged:contact
+													  modifiedKeys:[NSSet setWithObject:@"List State Icon"]];
+		}		
 	}
 	
 	return(modifiedAttributes);
