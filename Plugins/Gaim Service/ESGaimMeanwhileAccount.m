@@ -71,8 +71,8 @@
 		const char  *uidUTF8String = [[theContact UID] UTF8String];
 		GaimBuddy   *buddy;
 		
-		NSLog(@"%@: update %@",self, theContact);
-		
+		NSLog(@"%@: update %@ gives %x",self, theContact, gaim_find_buddy(account, uidUTF8String));
+	
 		if (buddy = gaim_find_buddy(account, uidUTF8String)){			
 			AIStatusType	statusType = ((buddy->uc & UC_UNAVAILABLE) ? AIAwayStatusType : AIAvailableStatusType);
 			
@@ -90,6 +90,7 @@
 //Away and away return
 - (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
 {
+	NSLog(@"update away");
 	[self updateStatusMessage:theContact];
 }
 
@@ -108,6 +109,7 @@
 		statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
 														 attributes:nil] autorelease];
 	}
+	NSLog(@"%@ stauts message is %@",theContact,statusMessage);
 	
 	return statusMessage;
 }
@@ -164,5 +166,21 @@
 	return gaimStatusType;
 }
 
-#endif
+#pragma mark Account Action Menu Items
+- (NSString *)titleForAccountActionMenuLabel:(const char *)label
+{
+	if(strcmp(label, "Set Active Message...") == 0){
+		return(nil);
+		
+	}else if(strcmp(label, "Import Sametime List...") == 0){
+		return(AILocalizedString(@"Import Sametime List...",nil));
+		
+	}else if(strcmp(label, "Export Sametime List...") == 0){
+		return(AILocalizedString(@"Export Sametime List...",nil));
+	}
+
+	return([super titleForAccountActionMenuLabel:label]);
+}
+
+#endif /* #ifndef MEANWHILE_NOT_AVAILABLE */
 @end

@@ -165,6 +165,19 @@
     return [super removeListObject:inObject fromPrivacyList:type]; 
 }
 
+#pragma mark Account Action Menu Items
+- (NSString *)titleForAccountActionMenuLabel:(const char *)label
+{
+	if(strcmp(label, "Set User Info...") == 0){
+		return(nil);
+	}else if(strcmp(label, "Show Buddies Awaiting Authorization") == 0){
+		/* XXX Depends on adiumGaimRequestFields() */
+		return(nil);
+	}
+
+	return([super titleForAccountActionMenuLabel:label]);
+}
+
 @end
 
 #pragma mark Coding Notes

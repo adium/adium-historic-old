@@ -448,4 +448,11 @@
 	return gaimStatusType;
 }
 
+#pragma mark Account Action Menu Items
+- (NSString *)titleForAccountActionMenuLabel:(const char *)label
+{
+	/* XXX All Jabber account actions depend upon adiumGaimRequestFields */
+	return(nil);
+}
+
 @end

@@ -1311,6 +1311,20 @@ NSMutableDictionary* get_chatDict(void)
 }
 
 
+- (oneway void)gaimThreadPerformAccountMenuActionFromDict:(NSDictionary *)dict
+{
+	GaimPluginAction	*pam = [[dict objectForKey:@"GaimPluginAction"] pointerValue];
+
+	if (pam->callback)
+		pam->callback(pam);
+}
+
+- (oneway void)performAccountMenuActionFromDict:(NSDictionary *)dict
+{
+	[gaimThreadProxy gaimThreadPerformAccountMenuActionFromDict:dict];
+}
+
+
 #pragma mark Secure messaging
 - (oneway void)gaimThreadRequestSecureMessaging:(BOOL)inSecureMessaging
 										 inChat:(AIChat *)inChat
