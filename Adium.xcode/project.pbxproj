@@ -3060,6 +3060,21 @@
 			settings = {
 			};
 		};
+		34539E9B077BD09500A83891 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
+			name = SpeechPresets.plist;
+			path = "Plugins/Global Events Preferences/SpeechPresets.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34539E9C077BD09600A83891 = {
+			fileRef = 34539E9B077BD09500A83891;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34564738069F43A800F728BC = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -3310,6 +3325,7 @@
 				4BA5325D050FC5E800A8010A,
 				4B68D3880463330600A8010A,
 				4B791B2C05350BA20000969C,
+				34539E9B077BD09500A83891,
 				346BA3630774C35400628F06,
 			);
 			isa = PBXGroup;
@@ -6596,6 +6612,7 @@
 				34C68B660778FCB900EB423C,
 				34C6A24F077A7B2500EB423C,
 				34C6A3BC077A8CB500EB423C,
+				34539E9C077BD09600A83891,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
