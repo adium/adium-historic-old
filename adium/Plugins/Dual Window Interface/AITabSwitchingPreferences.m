@@ -16,7 +16,7 @@
     return(AIPref_Keys);
 }
 - (NSString *)label{
-    return(@"Tab Keys");
+    return(AILocalizedString(@"Tab Keys","Label of preference pane for modifying the keys used to switch message tabs"));
 }
 - (NSString *)nibName{
     return(@"TabSwitchPrefs");
