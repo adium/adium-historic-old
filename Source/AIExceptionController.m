@@ -78,7 +78,10 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 - (void)raise
 {
 	if(!catchExceptions){
-		NSLog(@"%@", @"Exception-catching is off");
+		NSString	*theName = [self name];
+		NSString	*theReason = [self reason];
+
+		NSLog(@"Exception catching off: Did not catch %@ - %@",theName,theReason);
 		[super raise];
 	}else{
 		NSString	*theReason = [self reason];
