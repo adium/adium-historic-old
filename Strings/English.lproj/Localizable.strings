@@ -39,8 +39,8 @@
 
 /* AIAlphabeticalSort */
 "Alphabetically" = "Alphabetically";
-"Configure Alphabetical Sort..." = "Configure Alphabetical Sort…";
-"Configure Alphabetical Sort" = "Configure Alphabetical Sort";
+"Configure Alphabetical Sort..." = "Configure Alphabetical Sorting…";
+"Configure Alphabetical Sort" = "Configure Alphabetical Sorting";
 
 /* AIAwayMessagePreferences */
 "Away Messages" = "Away Messages";
@@ -71,7 +71,7 @@
 "Rename Group..." = "Rename Group…";
 
 /* AIContactSortSelectionPlugin */
-"Configure Sort..." = "Configure Sort…";
+"Configure Sorting..." = "Configure Sorting…";
 "Sort Contacts" = "Sort Contacts";
 
 /* AIContactStatusColoringPreferences */
@@ -310,8 +310,8 @@
 
 /* ESStatusSort */
 "by Status" = "by Status";
-"Configure Status Sort..." = "Configure Status Sort…";
-"Configure Status Sort" = "Configure Status Sort";
+"Configure Status Sort..." = "Configure Status Sorting…";
+"Configure Status Sort" = "Configure Status Sorting";
 
 /* ESVersionCheckerWindowController */
 "Adium was updated on %@. Your copy is %@old.  Would you like to update?" = "Adium was updated on %@. Your copy is %@old.  Would you like to update?";

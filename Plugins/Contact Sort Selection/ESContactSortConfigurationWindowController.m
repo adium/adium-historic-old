@@ -56,7 +56,7 @@
 {
 	[super windowDidLoad];
 	
-	[[self window] setTitle:AILocalizedString(@"Configure Sort","Configure Sort window title")];
+	[[self window] setTitle:AILocalizedString(@"Configure Sorting","Configure Sort window title")];
 }
 
 @end
