@@ -285,7 +285,6 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (IBAction)sendMessage:(id)sender
 {
-	[self _showUserListView];
     if([[textView_outgoing attributedString] length] != 0){ //If message length is 0, don't send
         AIContentMessage			*message;
 		NSMutableAttributedString	*outgoingAttributedString = [[[textView_outgoing textStorage] copy] autorelease];
