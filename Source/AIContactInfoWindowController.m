@@ -47,15 +47,15 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //Return the shared contact info window
 + (id)showInfoWindowForListObject:(AIListObject *)listObject
 {
-	static loadedPanes = NO;
-	if(!loadedPanes){		
+	static BOOL didLoadPanes = NO;
+	if(!didLoadPanes){		
 		//Install our panes
 		[AIContactAccountsPane contactInfoPane];
 		[AIContactProfilePane contactInfoPane];
 		[AIContactSettingsPane contactInfoPane];
 		[ESContactAlertsPane contactInfoPane];
 		
-		loadedPanes = YES;
+		didLoadPanes = YES;
 	}
 
     //Create the window
