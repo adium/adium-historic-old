@@ -181,15 +181,15 @@ DeclareString(FormattedUID);
 //Quickly set a status key for this object
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
 {
-	[statusUpdateLock lock];
-	
 	if(key){
+		[statusUpdateLock lock];
 		if(value){
 			[statusDictionary setObject:value forKey:key];
 		}else{
 			[statusDictionary removeObjectForKey:key];
 		}
-
+		[statusUpdateLock unlock];
+		
 		//Inform our containing group and ourself (in case subclasses want to know) about the new status object value
 		if (containingGroup)
 			[containingGroup listObject:self didSetStatusObject:value forKey:key];
@@ -201,12 +201,14 @@ DeclareString(FormattedUID);
 											modifiedStatusKeys:[NSArray arrayWithObject:key]
 														silent:NO];
 		}else{
+			[statusUpdateLock lock];
+			
 			if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
 			[changedStatusKeys addObject:key];
+			
+			[statusUpdateLock unlock];
 		}
 	}
-	
-	[statusUpdateLock unlock];
 }
 
 //Perform a status change after a short delay
