@@ -592,6 +592,7 @@ typedef enum {
 
     NSMutableArray			*paneArray;		//An array of preference panes
     NSMutableDictionary			*groupDict;		//A dictionary of pref dictionaries
+    NSMutableDictionary			*themablePreferences;
     
     BOOL                                shouldDelay;
     NSMutableSet                        *delayedNotificationGroups;  //Group names for delayed notifications
@@ -604,10 +605,14 @@ typedef enum {
 //Preference views
 - (void)addPreferencePane:(AIPreferencePane *)inPane;
 
-//Defaults and access to preferencecs
+//Defaults and access to preferences
 - (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)groupName;
 - (NSDictionary *)preferencesForGroup:(NSString *)groupName;
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName;
+
+//Themable preferences
+- (void)registerThemableKeys:(NSArray *)keysArray forGroup:(NSString *)groupName;
+- (NSDictionary *)themablePreferences;
 
 - (BOOL)tempImportOldPreferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;
 //- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.36 2003/12/22 17:54:38 adamiser Exp $
+// $Id: AIPreferenceController.m,v 1.37 2004/01/11 09:40:43 evands Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -32,6 +32,7 @@
     //
     paneArray = [[NSMutableArray alloc] init];
     groupDict = [[NSMutableDictionary alloc] init];
+    themablePreferences = [[NSMutableDictionary alloc] init];
     delayedNotificationGroups = [[NSMutableSet alloc] init];
     shouldDelay = NO;
     
@@ -76,7 +77,7 @@
     [delayedNotificationGroups release]; delayedNotificationGroups = nil;
     [paneArray release]; paneArray = nil;
     [groupDict release]; groupDict = nil;
-
+    [themablePreferences release]; themablePreferences = nil;
     [super dealloc];
 }
 
@@ -126,6 +127,21 @@
             [prefDict setObject:[defaultDict objectForKey:key] forKey:key];
         }
     }
+}
+
+- (void)registerThemableKeys:(NSArray *)keysArray forGroup:(NSString *)groupName
+{
+    NSMutableSet *keySet = [themablePreferences objectForKey:groupName];
+    if (!keySet)
+	keySet = [[[NSMutableSet alloc] init] autorelease];
+    
+    [keySet addObjectsFromArray:keysArray];
+    
+    [themablePreferences setObject:keySet forKey:groupName];
+}
+- (NSDictionary *)themablePreferences
+{
+    return (themablePreferences);
 }
 
 //Using Handle/Group Specific Preferences --------------------------------------------------------------
