@@ -14796,6 +14796,32 @@
 			isa = PBXTargetDependency;
 			target = F53B9A0602CCED6401A8010A;
 		};
+		BF959DD2053938C700000202 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = CSBezierPathAdditions.h;
+			path = "Frameworks/AIUtilities Framework/CSBezierPathAdditions.h";
+			refType = 4;
+		};
+		BF959DD3053938C700000202 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = CSBezierPathAdditions.m;
+			path = "Frameworks/AIUtilities Framework/CSBezierPathAdditions.m";
+			refType = 4;
+		};
+		BF959DD4053938C700000202 = {
+			fileRef = BF959DD2053938C700000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF959DD5053938C700000202 = {
+			fileRef = BF959DD3053938C700000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		BF9CEA9A052BCCE500000202 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -17505,6 +17531,7 @@
 				4B740FBB051D500C00A8010A,
 				34F77077052B72C4004616D4,
 				D34F70BF05359A5D00A8010B,
+				BF959DD4053938C700000202,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17620,6 +17647,7 @@
 				4B740FBC051D500C00A8010A,
 				34F77078052B72C4004616D4,
 				D34F70C005359A5D00A8010B,
+				BF959DD5053938C700000202,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20930,6 +20958,8 @@
 			children = (
 				F5793938033E74E401A8010A,
 				F5793939033E74E401A8010A,
+				BF959DD2053938C700000202,
+				BF959DD3053938C700000202,
 				F579393A033E74E401A8010A,
 				F579393B033E74E401A8010A,
 				4B30ADFA044228BA00A8010A,
