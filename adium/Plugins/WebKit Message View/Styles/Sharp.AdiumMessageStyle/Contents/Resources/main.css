@@ -46,10 +46,14 @@
 	color: #468C46;
 }
 
-.context .focus {
+.context .focus, .context .nofocus {
 	background-color: rgba(0,0,0,0.05);
 	border: 1px dotted #D8D8D8;
 	color: gray;
+}
+
+.context .nofocus {
+	border-bottom-style: none;
 }
 
 .context .name, .context .timestamp {
