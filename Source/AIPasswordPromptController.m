@@ -46,15 +46,7 @@
 
 - (void)windowDidLoad
 {
-    NSString	*savedFrame;
-    
-    //Restore the window position
-    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PASSWORD_WINDOW_FRAME];
-    if(savedFrame){
-        [[self window] setFrameFromString:savedFrame];
-    }else{
-        [[self window] center];
-    }
+	[[self window] center];
 }
 
 - (NSString *)savedPasswordKey
@@ -120,13 +112,7 @@
 // called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
-    //Save the window position
-    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
-                                         forKey:KEY_PASSWORD_WINDOW_FRAME
-                                          group:PREF_GROUP_WINDOW_POSITIONS];
-	
     [self autorelease];
-	
     return(YES);
 }
 
