@@ -12,6 +12,7 @@
 
 #define VERSION_AVAILABLE_NIB		@"VersionAvailable"
 #define VERSION_UPTODATE_NIB		@"VersionUpToDate"
+#define CONNECT_ERROR_NIB               @"VersionCannotConnect"
 
 @interface ESVersionCheckerWindowController (PRIVATE)
 - (void)showWindowFromBuild:(NSDate *)currentDate toBuild:(NSDate *)newestDate;
@@ -35,6 +36,14 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	if(sharedVersionCheckerInstance) [sharedVersionCheckerInstance release];
 	sharedVersionCheckerInstance = [[self alloc] initWithWindowNibName:VERSION_AVAILABLE_NIB];
 	[sharedVersionCheckerInstance showWindowFromBuild:currentBuildDate toBuild:latestBuildDate];
+}
+
+//Display the 'Connection error' panel
++ (void)showCannotConnectWindow
+{
+    if(sharedVersionCheckerInstance) [sharedVersionCheckerInstance release];
+    sharedVersionCheckerInstance = [[self alloc] initWithWindowNibName:CONNECT_ERROR_NIB];
+    [sharedVersionCheckerInstance showWindowFromBuild:nil toBuild:nil];
 }
 
 //Called as the window closes, release the shared window controller
