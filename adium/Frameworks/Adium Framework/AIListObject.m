@@ -357,48 +357,22 @@
 //Server display name, specified by server
 - (NSString *)serverDisplayName
 {
-    AIMutableOwnerArray	*serverDisplayName;
-    NSString			*outName;
-
-    serverDisplayName = [self statusArrayForKey:@"Display Name"];
-    if(serverDisplayName != nil && [serverDisplayName count] != 0){
-        outName = [serverDisplayName objectAtIndex:0];
-    }else{
-        outName = UID;
-    }
-    
-    return(outName);
+    NSString	*outName = [[self statusArrayForKey:@"Display Name"] objectValue];
+    return(outName ? outName : UID);
 }
 
 //Display name, influenced by plugins
 - (NSString *)displayName
 {
-    AIMutableOwnerArray	*displayName;
-    NSString		*outName;
-    
-    displayName = [self displayArrayForKey:@"Display Name"];
-    if(displayName != nil && [displayName count] != 0){
-        outName = [displayName objectAtIndex:0];
-    }else{
-        outName = [self serverDisplayName];
-    }
-	
-    return (outName);
+    NSString	*outName = [[self displayArrayForKey:@"Display Name"] objectValue];
+    return(outName ? outName : [self serverDisplayName]);
 }
 
 //Long display name, influenced by plugins
 - (NSString *)longDisplayName
 {
-    AIMutableOwnerArray * longNameArray;
-    NSString *outName;
-
-    longNameArray = [self displayArrayForKey:@"Long Display Name"];
-    if (longNameArray && [longNameArray count]){
-        outName = [longNameArray objectAtIndex:0];
-    } else{
-        outName = [self displayName];
-    }
-    return (DISPLAY_ORDERING ? [outName stringByAppendingFormat:@" (%0.2f)",orderIndex] : outName);
+    NSString	*outName = [[self displayArrayForKey:@"Long Display Name"] objectValue];
+    return(outName ? outName : [self displayName]);
 }
 
 @end

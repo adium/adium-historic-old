@@ -127,10 +127,9 @@
             ABPerson * person;
             
             if (person = [results objectAtIndex:0]){
-				AIMutableOwnerArray	*statusArray = [inObject displayArrayForKey:@"UserIcon"];
-				
-				if([statusArray count]){
-                    [person setImageData: [[statusArray firstImage] TIFFRepresentation]];
+				NSImage	*image = [[inObject displayArrayForKey:@"UserIcon"] objectValue];
+				if(image){
+                    [person setImageData:[image TIFFRepresentation]];
                 }
             }
         }
@@ -182,7 +181,7 @@
 			//Apply the image at lowest priority
 			[[listObject displayArrayForKey:@"UserIcon"] setObject:image 
 														 withOwner:self
-													 priorityLevel:Lowest_Priority];
+													 priorityLevel:Low_Priority];
 			//Notify
 			[[adium contactController] listObjectAttributesChanged:listObject
 													  modifiedKeys:[NSArray arrayWithObject:@"UserIcon"]];		

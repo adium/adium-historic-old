@@ -37,7 +37,7 @@
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     if([inModifiedKeys containsObject:@"UnviewedContent"]){
-        if([[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){
+        if([[inObject statusArrayForKey:@"UnviewedContent"] intValue]){
             //If this is the first contact with unviewed content, animate the dock
             if(!unviewedState){
                 [[adium dockController] setIconStateNamed:@"Alert"];

@@ -169,7 +169,7 @@
 
     //
     selected = ([[self tabView] selectedTabViewItem] == self);
-    textColor = [[listObject displayArrayForKey:@"Tab Text Color"] averageColor];
+    textColor = [[listObject displayArrayForKey:@"Tab Text Color"] objectValue];
     if(!textColor) textColor = (texturedWindow ? [NSColor colorWithCalibratedWhite:0.16 alpha:1.0] : [NSColor controlTextColor]);
 
     //Emboss the name (Textured window only)

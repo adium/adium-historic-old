@@ -35,7 +35,7 @@
     NSAttributedString	*entry = nil;
 
     //Get the away state
-    warningLevel = [[inObject statusArrayForKey:@"Warning"] greatestIntegerValue];
+    warningLevel = [[inObject statusArrayForKey:@"Warning"] intValue];
     
     //Return the correct string
     if(warningLevel != 0){

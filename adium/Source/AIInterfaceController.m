@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.54 2004/02/20 06:53:40 evands Exp $
+// $Id: AIInterfaceController.m,v 1.55 2004/02/21 20:53:01 adamiser Exp $
 
 #import "AIInterfaceController.h"
 
@@ -237,13 +237,8 @@
             [tooltipListObject release]; tooltipListObject = [object retain];
             
             //Buddy Icon
-            [tooltipImage release]; tooltipImage = nil;
-            AIMutableOwnerArray *ownerArray = [tooltipListObject displayArrayForKey:@"UserIcon"];
-            if(ownerArray && [ownerArray count]){
-                tooltipImage = [[ownerArray objectAtIndex:0] retain];
-            }else{
-                tooltipImage = nil;
-            }
+            [tooltipImage release];
+			tooltipImage = [[[tooltipListObject displayArrayForKey:@"UserIcon"] objectValue] retain];
             
             //Reset the maxLabelWidth for the tooltip generation
             maxLabelWidth = 0;
