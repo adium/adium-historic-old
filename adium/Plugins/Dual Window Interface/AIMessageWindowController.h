@@ -24,12 +24,14 @@
 
 @interface AIMessageWindowController : NSWindowController {
     IBOutlet	NSTabView	*tabView_messages;
-    
+
     AIAdium			*owner;
     BOOL			windowIsClosing;
     id <AIContainerInterface> 	interface;
 
     NSMutableDictionary		*toolbarItems;
+
+    BOOL			tabIsShowing;
 }
 
 + (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(id <AIContainerInterface>)inInterface;

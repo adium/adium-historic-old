@@ -118,7 +118,8 @@
     owner = [inOwner retain];
     interface = [inInterface retain];
     windowIsClosing = NO;
-
+    tabIsShowing = YES;
+    
     [super initWithWindowNibName:windowNibName owner:self];
     [self window];	//Load our window
         
@@ -233,7 +234,7 @@
 {
     NSSize newSize = [TabView frame].size;
     
-    if ([tabView_messages numberOfTabViewItems] == 1) {
+    if (([tabView_messages numberOfTabViewItems] == 1) && tabIsShowing) {
 	newSize.height = 0;
 	[TabView setFrameSize:newSize];
 
@@ -246,8 +247,9 @@
 	    [[[[[[self messageContainerArray] objectAtIndex:0] messageViewController] chat] listObject] displayName]]];
 	
 	[[self window] display];
-	
-    } else if ([tabView_messages numberOfTabViewItems] == 2) {
+
+	tabIsShowing = NO;
+    } else if (([tabView_messages numberOfTabViewItems] == 2) && !tabIsShowing) {
 	newSize.height = 22;
 	[TabView setFrameSize:newSize];
 	
@@ -258,6 +260,8 @@
 
 	[[self window] setTitle:@"Adium : Messages"];
 	[[self window] display];
+
+	tabIsShowing = YES;
     } 
 }
 
