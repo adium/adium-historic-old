@@ -43,7 +43,8 @@
 
 -(void)switchHandler:(NSNotification*) notification
 {
-    if ([[notification name] isEqualToString:NSWorkspaceSessionDidResignActiveNotification]) {
+    if (notification && 
+		[[notification name] isEqualToString:NSWorkspaceSessionDidResignActiveNotification]) {
 		//Deactivation - go away
  
         //Go away if we aren't already away
