@@ -5,7 +5,6 @@
 # Loosely based on cvslog by Russ Allbery <rra@stanford.edu>
 # Copyright 1998  Board of Trustees, Leland Stanford Jr. University
 #
-#
 # Copyright 2001, 2003, 2004  Petr Baudis <pasky@ucw.cz>
 #
 # This program is free software; you can redistribute it and/or modify it under
@@ -22,14 +21,14 @@
 #
 #       ALL        $CVSROOT/CVSROOT/ciabot.pl %{,,,s} $USER project from_email dest_email ignore_regexp
 #
-# Note that the last four parameters are optional, you can alternatively change
-# the defaults below in the configuration section.
+# IMPORTANT: The %{,,,s} in loginfo is new, and is required for proper operation.
 #
-# If it does not work, try to disable $xml_rpc in the configuration section
-# below.
+#            Make sure that you add the script to 'checkoutlist' and give it
+#            0755 permissions -before- committing it or adding it.
 #
+#            Note that the last four parameters are optional, you can alternatively
+#            change the defaults below in the configuration section.
 #
-# $Id: ciabot.pl,v 1.26 2004/01/23 05:20:26 ramoth4 Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $rpc_uri $sendmail $sync_delay
@@ -99,8 +98,17 @@ my @dir; # This array stores all the affected directories
 my @dirfiles;  # This array is mapped to the @dir array and contains files
                # affected in each directory
 
+# A nice nonprinting character we can use as a separator relatively safely.
+# The commas in loginfo above give us 4 commas and a space between file
+# names given to us on the command line. This is the separator used internally.
+# Now we can handle filenames containing spaces, and probably anything except
+# strings of 4 commas or the ASCII bell character.
+#
+# This was inspired by the suggestion in:
+#  http://mail.gnu.org/archive/html/info-cvs/2003-04/msg00267.html
+#
 
-$" = ":";
+$" = "\7";
 
 ### Input data loading
 
