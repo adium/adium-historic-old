@@ -25,6 +25,7 @@
 #define KEY_EVENT_BEZEL_IMAGE_BADGES        @"Show Image Badges"
 #define KEY_EVENT_BEZEL_COLOR_LABELS        @"Show Color Labels"
 #define KEY_EVENT_BEZEL_DURATION            @"Duration"
+#define KEY_EVENT_BEZEL_NAME_LABELS          @"Show Name Labels"
 
 @class JSCEventBezelPreferences;
 
@@ -33,7 +34,7 @@
     JSCEventBezelPreferences    *preferences;
     
     NSMutableArray              *eventArray;
-    BOOL                        showEventBezel, useColorLabels;
+    BOOL                        showEventBezel;
     int                         prefsPosition;
 }
 

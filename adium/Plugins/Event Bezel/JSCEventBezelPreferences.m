@@ -45,6 +45,7 @@
     [checkBox_firstMessage setEnabled: [checkBox_showBezel state]];
     [checkBox_imageBadges setEnabled: [checkBox_showBezel state]];
     [checkBox_colorLabels setEnabled: [checkBox_showBezel state]];
+    [checkBox_nameLabels setEnabled: [checkBox_showBezel state]];
     [slider_duration setEnabled: [checkBox_showBezel state]];
 }
 
@@ -118,6 +119,13 @@
     [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                          forKey:KEY_EVENT_BEZEL_COLOR_LABELS
                                           group:PREF_GROUP_EVENT_BEZEL];
+}
+
+- (IBAction)toggleNameLabels:(id)sender
+{
+    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                         forKey:KEY_EVENT_BEZEL_NAME_LABELS
+                                          group:PREF_GROUP_EVENT_BEZEL];
 
 }
 
@@ -149,7 +157,7 @@
     [checkBox_firstMessage setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue]];
     [checkBox_imageBadges setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IMAGE_BADGES] boolValue]];
     [checkBox_colorLabels setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_COLOR_LABELS] boolValue]];
-
+    [checkBox_nameLabels setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_NAME_LABELS] boolValue]];
     
     // Enable or disable checkboxes based on the "show bezel" checkbox
     [popUp_position setEnabled: [checkBox_showBezel state]];
@@ -162,6 +170,7 @@
     [checkBox_firstMessage setEnabled: [checkBox_showBezel state]];
     [checkBox_imageBadges setEnabled: [checkBox_showBezel state]];
     [checkBox_colorLabels setEnabled: [checkBox_showBezel state]];
+    [checkBox_nameLabels setEnabled: [checkBox_showBezel state]];
     [slider_duration setEnabled: [checkBox_showBezel state]];
 }
 

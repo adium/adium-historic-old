@@ -98,6 +98,8 @@ withMessage:(NSString *)message
         if (message) {
             [bezelView setMainBuddyStatus: [NSString stringWithFormat: @"%@: %@",[bezelView mainBuddyStatus], message]];
         }
+        [bezelView setUseBuddyIconLabel: useBuddyIconLabel];
+        [bezelView setUseBuddyNameLabel: useBuddyNameLabel];
         
         [bezelWindow setDisplayDuration: bezelDuration];
         
@@ -159,6 +161,11 @@ withMessage:(NSString *)message
     [bezelView setBuddyIconLabelColor: newColor];
 }
 
+- (void)setBuddyNameLabelColor:(NSColor *)newColor
+{
+    [bezelView setBuddyNameLabelColor: newColor];
+}
+
 - (BOOL)imageBadges
 {
     return imageBadges;
@@ -177,6 +184,26 @@ withMessage:(NSString *)message
 - (void)setBezelDuration:(int)newDuration
 {
     bezelDuration = newDuration;
+}
+
+- (BOOL)useBuddyIconLabel
+{
+    return useBuddyIconLabel;
+}
+
+- (void)setUseBuddyIconLabel:(BOOL)b
+{
+    useBuddyIconLabel = b;
+}
+
+- (BOOL)useBuddyNameLabel
+{
+    return useBuddyNameLabel;
+}
+
+- (void)setUseBuddyNameLabel:(BOOL)b
+{
+    useBuddyNameLabel = b;
 }
 
 @end
