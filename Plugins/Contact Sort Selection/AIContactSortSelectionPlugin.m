@@ -90,7 +90,7 @@
 	NSString					*identifier;
 	
 	//
-	identifier = [[[adium preferenceController] preferencesForKey:KEY_CURRENT_SORT_MODE_IDENTIFIER
+	identifier = [[adium preferenceController] preferencesForKey:KEY_CURRENT_SORT_MODE_IDENTIFIER
 															group:PREF_GROUP_CONTACT_SORTING];
 	
 	//
