@@ -198,14 +198,15 @@
 	NSRange	range;
 	
 	if ([content isKindOfClass:[AIContentMessage class]]) {
-        range = [inString rangeOfString:@"%sender"];
-        if(range.location != NSNotFound){
-            [inString replaceCharactersInRange:range withString:[[content source] displayName]];
-        }
-    
+        // this must be before %sender, so it gets the "ScreenName" part.
         range = [inString rangeOfString:@"%senderScreenName"];
         if(range.location != NSNotFound){
            [inString replaceCharactersInRange:range withString:[[content source] UID]];
+        }
+        
+        range = [inString rangeOfString:@"%sender"];
+        if(range.location != NSNotFound){
+            [inString replaceCharactersInRange:range withString:[[content source] displayName]];
         }
         
         range = [inString rangeOfString:@"%service"];
