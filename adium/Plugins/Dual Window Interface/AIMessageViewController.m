@@ -18,7 +18,6 @@
 //#import "AIDualWindowInterfacePlugin.h"
 #import "AIAccountSelectionView.h"
 #import "CSMessageToOfflineContactWindowController.h"
-#import "DCInviteUserToChatWindowController.h"
 #import "AIContactInfoWindowController.h"
 
 #define MESSAGE_VIEW_NIB					@"MessageView"		//Filename of the message view nib
@@ -356,7 +355,6 @@
 
 - (IBAction)inviteUser:(id)sender
 {
-	[DCInviteUserToChatWindowController showSheetInWindow:[view_contents window] forMessageViewController:self];
 }
 
 //Sets our text entry view as the first responder
