@@ -9,9 +9,11 @@
 #import "AIListGroupCell.h"
 
 #define VERTICAL_GROUP_PADDING	2
+#define FLIPPY_RIGHT_PADDING	2
+#define FLIPPY_LEFT_PADDING		1
 #define GROUP_FONT_SIZE			11
 
-#define GROUP_TEXT_ALIGN		NSLeftTextAlignment //NSCenterTextAlignment
+#define GROUP_TEXT_ALIGN		NSCenterTextAlignment// NSLeftTextAlignment //NSCenterTextAlignment
 
 //NSLeftTextAlignment		= 0, /* Visually left aligned */
 //NSRightTextAlignment	= 1, /* Visually right aligned */
@@ -57,6 +59,10 @@
 //Draw content of our cell
 - (void)drawContentWithFrame:(NSRect)rect
 {
+	//Fixed Indent
+	rect.origin.x += FLIPPY_LEFT_PADDING;
+	rect.size.width -= FLIPPY_LEFT_PADDING;
+	
 	//Draw flippy
 	[[self flippyColor] set];
 	
@@ -77,10 +83,10 @@
 	[arrowPath fill];
 
 	if([self textAlignment] != NSCenterTextAlignment){
-		rect.origin.x += rect.size.height*.4 + rect.size.height*.2;
-		rect.size.width -= rect.size.height*.4 + rect.size.height*.2;
+		rect.origin.x += rect.size.height*.4 + rect.size.height*.2 + FLIPPY_RIGHT_PADDING;
+		rect.size.width -= rect.size.height*.4 + rect.size.height*.2 + FLIPPY_RIGHT_PADDING;
 	}
-		
+
 	[self drawDisplayNameWithFrame:rect];
 }
 

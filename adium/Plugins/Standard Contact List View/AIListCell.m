@@ -121,12 +121,26 @@
 	return(NSLeftTextAlignment);
 }
 
+- (int)topPadding
+{
+	return(0);
+}
+
+- (int)bottomPadding
+{
+	return(0);
+}
+	
 //Drawing
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView{
     [self drawInteriorWithFrame:cellFrame inView:controlView];
 }
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {	
+	//Padding
+	cellFrame.origin.y += [self topPadding];
+	cellFrame.size.height -= [self bottomPadding] + [self topPadding];
+	
 	if(listObject){
 		[self drawBackgroundWithFrame:cellFrame];
 		[self drawContentWithFrame:cellFrame];
@@ -137,10 +151,11 @@
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
 	//
-	
-	
-	
 }
+
+
+
+
 
 //Draw content of our cell
 - (void)drawContentWithFrame:(NSRect)rect

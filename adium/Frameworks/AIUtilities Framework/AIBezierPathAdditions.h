@@ -24,5 +24,7 @@
 + (NSBezierPath *)bezierPathWithRoundedRect:(NSRect)rect radius:(float)radius;
 + (NSBezierPath *)bezierPathRoundedRectOfSize:(NSSize)backgroundSize;
 + (NSBezierPath *)bezierPathWithRoundedRect:(NSRect)bounds;
++ (NSBezierPath *)bezierPathWithRoundedTopCorners:(NSRect)rect radius:(float)radius;
++ (NSBezierPath *)bezierPathWithRoundedBottomCorners:(NSRect)rect radius:(float)radius;
 
 @end
