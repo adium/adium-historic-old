@@ -7,9 +7,11 @@
 //
 
 @interface AIConnectPanelWindowController : AIWindowController {
-
+	IBOutlet	NSPopUpButton		*popupMenu_serviceList;
 }
 
 + (AIConnectPanelWindowController *)connectPanelWindowController;
+- (IBAction)connect:(id)sender;
+- (IBAction)showAccounts:(id)sender;
 
 @end

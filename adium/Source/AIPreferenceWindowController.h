@@ -16,20 +16,20 @@
 @class AIFlippedCategoryView;
 
 @interface AIPreferenceWindowController : AIWindowController {
-    IBOutlet	NSTabView			*tabView_category;
+    IBOutlet	NSTabView					*tabView_category;
 
     IBOutlet	AIFlippedCategoryView		*view_Accounts;
 
-    IBOutlet	NSTabView			*tabView_contactList;
+    IBOutlet	NSTabView					*tabView_contactList;
     IBOutlet	AIFlippedCategoryView		*view_ContactList_General;
     IBOutlet	AIFlippedCategoryView		*view_ContactList_Groups;
     IBOutlet	AIFlippedCategoryView		*view_ContactList_Contacts;
 
-    IBOutlet	NSTabView			*tabView_messages;
+    IBOutlet	NSTabView					*tabView_messages;
     IBOutlet	AIFlippedCategoryView		*view_Messages_Display;
     IBOutlet	AIFlippedCategoryView		*view_Messages_Sending;
 
-    IBOutlet	NSTabView			*tabView_status;
+    IBOutlet	NSTabView					*tabView_status;
     IBOutlet	AIFlippedCategoryView		*view_Status_Away;
     IBOutlet	AIFlippedCategoryView		*view_Status_Idle;
 
@@ -41,24 +41,24 @@
     
     IBOutlet 	AIFlippedCategoryView		*view_Emoticons;
 
-    IBOutlet	NSOutlineView			*outlineView_advanced;
-    IBOutlet	AIFlippedCategoryView		*view_Advanced;
-    IBOutlet	NSTextField			*textField_advancedTitle;
-    IBOutlet	AIColoredBoxView		*coloredBox_advancedTitle;
-	IBOutlet	NSButton				*button_restoreDefaults;
+    IBOutlet	NSOutlineView				*outlineView_advanced;
+    IBOutlet	AIFlippedCategoryView   	*view_Advanced;
+    IBOutlet	NSTextField					*textField_advancedTitle;
+    IBOutlet	AIColoredBoxView			*coloredBox_advancedTitle;
+	IBOutlet	NSButton					*button_restoreDefaults;
     
     NSMutableArray		*loadedPanes;
     NSMutableArray		*loadedAdvancedPanes;
 
-    NSMutableDictionary		*toolbarItems;
+    NSMutableDictionary *toolbarItems;
     NSMutableArray		*_advancedCategoryArray;
 	
-    int				yPadding;    
+    int					yPadding;    
 }
 
 + (AIPreferenceWindowController *)preferenceWindowController;
 + (void)closeSharedInstance;
 - (IBAction)closeWindow:(id)sender;
-- (void)showView:(AIPreferenceViewController *)inView;
+- (void)showCategory:(PREFERENCE_CATEGORY)inCategory;
 
 @end

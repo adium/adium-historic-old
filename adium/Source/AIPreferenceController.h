@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.h,v 1.13 2004/02/26 23:22:51 adamiser Exp $ 
+// $Id: AIPreferenceController.h,v 1.14 2004/03/13 01:21:11 adamiser Exp $ 
 
 //Preference groups
 #define PREF_GROUP_GENERAL              @"General"
@@ -77,7 +77,7 @@ typedef enum {
 
 //Preference window
 - (IBAction)showPreferenceWindow:(id)sender;
-- (void)openPreferencesToPane:(AIPreferencePane *)inPane;
+- (void)openPreferencesToCategory:(PREFERENCE_CATEGORY)category;
 
 //Preference views
 - (void)addPreferencePane:(AIPreferencePane *)inPane;

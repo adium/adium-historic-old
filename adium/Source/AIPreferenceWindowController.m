@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.35 2004/03/12 06:26:58 evands Exp $
+// $Id: AIPreferenceWindowController.m,v 1.36 2004/03/13 01:21:12 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -66,28 +66,27 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     }
 }
 
-//Make the specified preference view visible
-- (void)showView:(AIPreferenceViewController *)inView
+//Make the specified preference category visible
+- (void)showCategory:(PREFERENCE_CATEGORY)inCategory
 {
-/*    NSEnumerator 		*enumerator;
-    AIPreferenceCategory	*category;
-
-    [self window]; //make sure the window has loaded
-
-    //Show the category that was selected
-    enumerator = [[[adium preferenceController] categoryArray] objectEnumerator];
-    while((category = [enumerator nextObject])){
-        NSEnumerator 			*viewEnumerator;
-        AIPreferenceViewController	*view;
-        
-        viewEnumerator = [[category viewArray] objectEnumerator];
-        while((view = [viewEnumerator nextObject])){
-            if(inView == view){
-                [self showCategory:category];
-                break;
-            }    
-        }
-    }*/
+	int 			tabIdentifier;
+	NSTabViewItem	*tabViewItem;
+	
+	//Ensure the window has loaded
+	[self window];
+	
+	//Select the category
+	switch(inCategory){
+		case AIPref_Accounts: tabIdentifier = 1; break;
+		case AIPref_Dock: tabIdentifier = 5; break;
+		case AIPref_Sound: tabIdentifier = 6; break;
+		case AIPref_Emoticons: tabIdentifier = 7; break;
+		case AIPref_Alerts: tabIdentifier = 8; break;
+		default: tabIdentifier = 1; break;
+	}
+	tabViewItem = [tabView_category tabViewItemWithIdentifier:[NSString stringWithFormat:@"%i",tabIdentifier]];
+	[self tabView:tabView_category willSelectTabViewItem:tabViewItem];
+	[tabView_category selectTabViewItem:tabViewItem];
 }
 
 //Close the window
@@ -144,11 +143,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     tabViewItem = [tabView_category tabViewItemAtIndex:selectedTab];
     [self tabView:tabView_category willSelectTabViewItem:tabViewItem];
     [tabView_category selectTabViewItem:tabViewItem];    
-
-    //Set selected toolbar item (10.3 or higher)
-    if([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]){
-        [[[self window] toolbar] setSelectedItemIdentifier:[tabViewItem identifier]];
-    }
 
 	//Enable the "Restore Defaults" Button
 	[button_restoreDefaults setEnabled:YES];
@@ -341,6 +335,12 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 
     //Update the window title
     [[self window] setTitle:[NSString stringWithFormat:@"%@ : %@",PREFERENCE_WINDOW_TITLE,[tabViewItem label]]];    
+
+	//Update the selected toolbar item (10.3 or higher)
+    if([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]){
+        [[[self window] toolbar] setSelectedItemIdentifier:[tabViewItem identifier]];
+    }
+	
 }
 
 //Insert all the preference panes for the category into the passed view
