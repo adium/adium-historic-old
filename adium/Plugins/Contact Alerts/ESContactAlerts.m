@@ -39,10 +39,10 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 
 - (id)initWithDetailsView:(NSView *)inView withTable:(AIAlternatingRowTableView*)inTable withPrefView:(NSView *)inPrefView
 {
+    [super init];
+
     actionListMenu_cached = nil;
     cachedAlertsDict = [[NSMutableDictionary alloc] init];
-    
-    [adium retain];
     
     tableView_actions = inTable;
     [tableView_actions retain];
@@ -65,7 +65,6 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     //let the controller know that we exist
     [[adium contactAlertsController] createAlertsArrayWithOwner:self];
     
-    [super init];
     return self;
 }
 
