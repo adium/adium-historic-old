@@ -6,7 +6,6 @@
 //
 
 @interface NEHGrowlPlugin : AIPlugin <AIActionHandler> {
-	NSDictionary	*events;
 	BOOL			 showWhileAway;
 }
 

@@ -14,6 +14,31 @@
 #define KEY_EVENT_BEZEL_SHOW_AWAY           AILocalizedString(@"Show While Away",nil)
 #define GROWL_ALERT							AILocalizedString(@"Show Growl Notification",nil)
 
+#define	GROWL_CONTACT_SIGNON				@"Contact Signed On"
+#define GROWL_CONTACT_SIGNOFF				@"Contact Signed Off"
+#define GROWL_CONTACT_AWAY					@"Contact Went Away"
+#define GROWL_CONTACT_UNAWAY				@"Contact Is Available"
+#define GROWL_CONTACT_IDLE					@"Contact Went Idle"
+#define GROWL_CONTACT_UNIDLE				@"Contact Is No Longer Idle"
+#define GROWL_FIRST_MESSAGE					@"New Message Received"
+#define GROWL_HIDDEN_MESSAGE				@"Message Received while hidden"
+#define GROWL_FT_REQUEST					@"File Transfer Requested"
+#define GROWL_FT_BEGAN						@"File Transfer Began"
+#define GROWL_FT_CANCELED					@"File Transfer Canceled"
+#define GROWL_FT_COMPLETE					@"File Transfer Complete"
+
+//-------------------------------------------------------------------
+//In order to add another notification to this plugin:
+// - Add a define right above this block so you can easily refer to its Growl name
+// - If the notification maps to an Adium notification, add that to the events array in -installPlugin
+// - Add it to the arrays in -(void)registerAdium:
+//		- You must add it to allNotes if it is to be displayed
+//		- Add it to defNotes only if it should be enabled in the growl Prefpane by default
+// - Add a case for it in the if chain in -(void)handleEvent:
+//		- set title to an appropriate title (If unset, it will be the name of the contact for the notification, if applicable)
+//		- set description to the description
+//		- set note to the name of your notification (one of the defines)
+
 @implementation NEHGrowlPlugin
 
 - (void)installPlugin
@@ -22,25 +47,25 @@
 	NSEnumerator	*enumerator;
 	
 	//Set up the events
-	events = [[NSDictionary alloc] initWithObjectsAndKeys:
-				@"Contact Signed On", CONTACT_STATUS_ONLINE_YES,
-				@"Contact Signed Off", CONTACT_STATUS_ONLINE_NO,
-				@"Contact Went Away", CONTACT_STATUS_AWAY_YES,
-				@"Contact Is Available", CONTACT_STATUS_AWAY_NO,
-				@"Contact Went Idle", CONTACT_STATUS_IDLE_YES,
-				@"Contact Is No Longer Idle", CONTACT_STATUS_IDLE_NO,
-				@"New Message Received", Content_FirstContentRecieved,
-				@"Message Received while hidden", Content_DidReceiveContent,
-				@"File Transfer Requested", FILE_TRANSFER_REQUEST,
-				@"File Transfer Began", FILE_TRANSFER_BEGAN,
-				@"File Transfer Canceled", FILE_TRANSFER_CANCELED,
-				@"File Transfer Complete", FILE_TRANSFER_COMPLETE,
-				nil];
+	NSArray	* events = [NSArray arrayWithObjects:
+									CONTACT_STATUS_ONLINE_YES,
+									CONTACT_STATUS_ONLINE_NO,
+									CONTACT_STATUS_AWAY_YES,
+									CONTACT_STATUS_AWAY_NO,
+									CONTACT_STATUS_IDLE_YES,
+									CONTACT_STATUS_IDLE_NO,
+									Content_FirstContentRecieved,
+									Content_DidReceiveContent,
+									FILE_TRANSFER_REQUEST,
+									FILE_TRANSFER_BEGAN,
+									FILE_TRANSFER_CANCELED,
+									FILE_TRANSFER_COMPLETE,
+									nil];
 	
 	//Launch Growl if needed
 	[GrowlApplicationBridge launchGrowlIfInstalledNotifyingTarget:self selector:@selector(registerAdium:) context:NULL];
 	
-	enumerator = [events keyEnumerator];
+	enumerator = [events objectEnumerator];
 	while(note = [enumerator nextObject]) {
 		[[adium notificationCenter] addObserver:self selector:@selector(handleEvent:) name:note object:nil];
 	}
@@ -58,7 +83,6 @@
 
 - (void)dealloc
 {
-	[events release];
 	[super dealloc];
 }
 
@@ -66,11 +90,41 @@
 {
 	//Register us with Growl
 	
-	NSArray * objects = [[events objectEnumerator] allObjects];
+	NSArray * allNotes = [NSArray arrayWithObjects:
+									GROWL_CONTACT_SIGNON,
+									GROWL_CONTACT_SIGNOFF,
+									GROWL_CONTACT_AWAY,
+									GROWL_CONTACT_UNAWAY,
+									GROWL_CONTACT_IDLE,
+									GROWL_CONTACT_UNIDLE,
+									GROWL_FIRST_MESSAGE,
+									GROWL_HIDDEN_MESSAGE,
+									GROWL_FT_REQUEST,
+									GROWL_FT_BEGAN,
+									GROWL_FT_CANCELED,
+									GROWL_FT_COMPLETE,
+									nil];
+	
+	//Set which notes are enabled by default
+	NSArray	* defNotes = [NSArray arrayWithObjects:
+									GROWL_CONTACT_SIGNON,
+									GROWL_CONTACT_SIGNOFF,
+									GROWL_CONTACT_AWAY,
+									GROWL_CONTACT_UNAWAY,
+									GROWL_CONTACT_IDLE,
+									GROWL_CONTACT_UNIDLE,
+									GROWL_FIRST_MESSAGE,
+									//GROWL_HIDDEN_MESSAGE,
+									GROWL_FT_REQUEST,
+									GROWL_FT_BEGAN,
+									GROWL_FT_CANCELED,
+									GROWL_FT_COMPLETE,
+									nil];
+		
 	NSDictionary * growlReg = [NSDictionary dictionaryWithObjectsAndKeys:
 		@"Adium", GROWL_APP_NAME,
-		objects, GROWL_NOTIFICATIONS_ALL,
-		objects, GROWL_NOTIFICATIONS_DEFAULT,
+		allNotes, GROWL_NOTIFICATIONS_ALL,
+		defNotes, GROWL_NOTIFICATIONS_DEFAULT,
 		nil];
 	
 	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:GROWL_APP_REGISTRATION
@@ -83,6 +137,7 @@
 	if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] && ! showWhileAway)
 		return;
 	
+	NSString		*note;
 	NSString		*title;
 	NSString		*description;
 	NSString		*message;
@@ -114,34 +169,47 @@
 		
 		if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
 			description = AILocalizedString(@"came online","");
+			note = GROWL_CONTACT_SIGNON;
 		}else if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
 			description = AILocalizedString(@"went offline","");
+			note = GROWL_CONTACT_SIGNOFF;
 		}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]) {
 			description = AILocalizedString(@"went away","");
+			note = GROWL_CONTACT_AWAY;
 		}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]) {
 			description = AILocalizedString(@"is available","");
+			note = GROWL_CONTACT_UNAWAY;
 		}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]) {
 			description = AILocalizedString(@"is idle","");
+			note = GROWL_CONTACT_IDLE;
 		}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]) {
 			description = AILocalizedString(@"is no longer idle","");
+			note = GROWL_CONTACT_UNIDLE;
 		}else if([notificationName isEqualToString: Content_FirstContentRecieved]){
 			message = [[[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] safeString] string];
 			description = [NSString stringWithFormat: AILocalizedString(@"%@","New content notification"), message];
+			note = GROWL_FIRST_MESSAGE;
 		}else if([notificationName isEqualToString: Content_DidReceiveContent]) {
 			if(![NSApp isHidden])
 				return;
 			message = [[[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] safeString] string];
 			description = [NSString stringWithFormat: AILocalizedString(@"%@","Message notification while hidden"), message];
+			note = GROWL_HIDDEN_MESSAGE;
 		}else if([notificationName isEqualToString: FILE_TRANSFER_REQUEST]) {
 			description = AILocalizedString(@"wants to send you a file","");
+			note = GROWL_FT_REQUEST;
 		}else if([notificationName isEqualToString: FILE_TRANSFER_BEGAN]) {
 			description = AILocalizedString(@"began a file transfer","");
+			note = GROWL_FT_BEGAN;
 		}else if([notificationName isEqualToString: FILE_TRANSFER_CANCELED]) {
 			description = AILocalizedString(@"canceled a file transfer","");
+			note = GROWL_FT_CANCELED;
 		}else if([notificationName isEqualToString: FILE_TRANSFER_COMPLETE]) {
 			description = AILocalizedString(@"completed a file transfer","");
+			note = GROWL_FT_COMPLETE;
 		}else{
-			description = @"OMGWTFBBQ!";
+			NSLog(@"Unknown notification: %@",notificationName);
+			return;
 		}
 
 		iconData = [contact userIconData];
@@ -153,7 +221,7 @@
 		}
 		
 		NSDictionary * growlEvent = [NSDictionary dictionaryWithObjectsAndKeys:
-										[events objectForKey: notificationName], GROWL_NOTIFICATION_NAME,
+										note, GROWL_NOTIFICATION_NAME,
 										title, GROWL_NOTIFICATION_TITLE,
 										description, GROWL_NOTIFICATION_DESCRIPTION,
 										@"Adium", GROWL_APP_NAME,
