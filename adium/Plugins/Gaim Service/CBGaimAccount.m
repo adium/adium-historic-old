@@ -120,6 +120,7 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
 {
+	NSLog(@"\"%@\" \"%@\"",[gaimAlias compactedString],[theContact UID]);
 	if ([[gaimAlias compactedString] isEqualToString:[theContact UID]]) {
 		if (![[theContact statusObjectForKey:@"FormattedUID"] isEqualToString:gaimAlias]) {
 			[theContact setStatusObject:[[gaimAlias copy] autorelease]

@@ -293,7 +293,7 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 			//***NOTE: need to check if the chat is an IM or a CHAT and handle accordingly
 			if (listObject){
 				const char			*destination = [[listObject UID] UTF8String];
-				conv = gaim_conversation_new(GAIM_CONV_IM, [[accountDict objectForKey:[adiumAccount uniqueObjectID]] pointerValue], destination);
+				conv = gaim_conversation_new(GAIM_CONV_IM, accountLookupFromAdiumAccount(adiumAccount), destination);
 				
 				//associate the AIChat with the gaim conv
 				imChatLookupFromConv(conv);
