@@ -48,9 +48,9 @@ Adium, Copyright 2001-2005, Adam Iser
  * @param inAccountNumber A unique number for the account being created.
  * @return An <tt>AIAccount</tt> object for this service.
  */
-- (id)accountWithUID:(NSString *)inUID accountNumber:(int)inAccountNumber
+- (id)accountWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID
 {
-	return([[[[self accountClass] alloc] initWithUID:inUID accountNumber:inAccountNumber service:self] autorelease]);
+	return([[[[self accountClass] alloc] initWithUID:inUID internalObjectID:inInternalObjectID service:self] autorelease]);
 }
 
 /*!
