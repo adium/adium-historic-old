@@ -16,6 +16,10 @@
 #import "IdleMessagePreferences.h"
 #import "IdleMessagePlugin.h"
 
+@interface IdleMessagePreferences (PRIVATE)
+- (void)textDidEndEditing:(NSNotification *)notification;
+@end
+
 @implementation IdleMessagePreferences
 
 //Preference pane properties
@@ -23,7 +27,7 @@
     return(AIPref_Advanced_Status);
 }
 - (NSString *)label{
-    return(@"Idle Message");
+    return(AILocalizedString(@"Idle Message",nil));
 }
 - (NSString *)nibName{
     return(@"IdleMessagePrefs");
@@ -39,12 +43,19 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_MESSAGE];
-    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"IdleMessage" group:GROUP_ACCOUNT_STATUS]];
+    NSDictionary		*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_MESSAGE];
+    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"IdleMessage"
+																												   group:GROUP_ACCOUNT_STATUS]];
 
     //Idle message
     [checkBox_enableIdleMessage setState:[[preferenceDict objectForKey:KEY_IDLE_MESSAGE_ENABLED] boolValue]];
     [[textView_idleMessage textStorage] setAttributedString:idleMessage];
+}
+
+//force the textView to save its contents when the view will close
+- (void)viewWillClose
+{
+	[self textDidEndEditing:nil];
 }
 
 // Called in response to all preference controls, applies new settings
@@ -60,8 +71,12 @@
 //User finished editing their idle message
 - (void)textDidEndEditing:(NSNotification *)notification;
 {
-    [[adium preferenceController] setPreference:[[textView_idleMessage textStorage] dataRepresentation] forKey:@"IdleMessage" group:GROUP_ACCOUNT_STATUS];
-    [[adium preferenceController] setPreference:[[textView_idleMessage textStorage] dataRepresentation]
+	NSData  *idleMessageData = [[textView_idleMessage textStorage] dataRepresentation];
+	
+    [[adium preferenceController] setPreference:idleMessageData 
+										 forKey:@"IdleMessage"
+										  group:GROUP_ACCOUNT_STATUS];
+    [[adium preferenceController] setPreference:idleMessageData
                                          forKey:KEY_IDLE_MESSAGE
                                           group:PREF_GROUP_IDLE_MESSAGE];
 }
