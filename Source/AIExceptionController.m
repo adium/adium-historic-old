@@ -111,13 +111,14 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			}else{
 				NSString	*bundlePath = [[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath];
 				NSString	*crashReporterPath = [bundlePath stringByAppendingPathComponent:RELATIVE_PATH_TO_CRASH_REPORTER];
+				NSString	*versionString = [[NSProcessInfo processInfo] operatingSystemVersionString];
 				
 				NSLog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@", theName,theReason);
 				AILog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@", theName,theReason);
 				
 				//Pass the exception to the crash reporter and close this application
-				[[NSString stringWithFormat:@"Exception:\t%@\nReason:\t%@\nStack trace:\n%@",
-					theName,theReason,backtrace] writeToFile:EXCEPTIONS_PATH atomically:YES];
+				[[NSString stringWithFormat:@"OS Version:\t%@\nException:\t%@\nReason:\t%@\nStack trace:\n%@",
+					versionString,theName,theReason,backtrace] writeToFile:EXCEPTIONS_PATH atomically:YES];
 				
 				[[NSWorkspace sharedWorkspace] launchApplication:crashReporterPath];
 				exit(-1);
