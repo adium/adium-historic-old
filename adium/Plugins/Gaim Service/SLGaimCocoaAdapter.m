@@ -1496,7 +1496,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 {
 	const char  *buddyUID = [objectUID UTF8String];
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	const char  *groupUTF8String = [groupName UTF8String];
+	const char  *groupUTF8String = (groupName ? [groupName UTF8String] : "");
 	
 	//Get the group (Create if necessary)
 	GaimGroup *group = gaim_find_group(groupUTF8String);
@@ -1518,13 +1518,14 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
 {
-	const char  *buddyUID = [objectUID UTF8String];
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	const char  *buddyUID = [objectUID UTF8String];
+	const char  *groupUTF8String = (groupName ? [groupName UTF8String] : "");
 	
 	GaimBuddy 	*buddy = gaim_find_buddy(account, buddyUID);
 	
 	//Remove this contact from the server-side and gaim-side lists
-	serv_remove_buddy(account->gc, buddyUID, [groupName UTF8String]);
+	serv_remove_buddy(account->gc, buddyUID, groupUTF8String);
 	if (buddy){
 		gaim_blist_remove_buddy(buddy);
 	}
@@ -1536,7 +1537,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	
 	//Get the destination group (creating if necessary)
-	const char  *groupUTF8String = [groupName UTF8String];
+	const char  *groupUTF8String = (groupName ? [groupName UTF8String] : "");
 	GaimGroup 	*destGroup = gaim_find_group(groupUTF8String);
 	if(!destGroup) destGroup = gaim_group_new(groupUTF8String);
 	
