@@ -8,7 +8,7 @@ body {
 .container {
     position: relative;
     background: url("images/bottom_right.png") bottom right no-repeat;
-	margin: 12px -6px 0px 37px;
+	margin: 13px -5px 15px 38px;
 }
                 
 .sender {
@@ -81,7 +81,7 @@ body {
 .status_container {
     position: relative;
     background: url("images/status_background.png");
-    margin: 14px 46px -17px 48px;
+    margin: -16px 25px 13px 27px;
     color: #fff;
     text-shadow: 1px 1px 3px #aaa;
     font-size: 9px;
@@ -109,5 +109,5 @@ body {
 
 #Chat {
 	overflow: hidden;
-	margin-bottom: -6px;
+	margin-bottom: -8px;
 }
