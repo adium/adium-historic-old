@@ -85,21 +85,23 @@
 //Post a status message on all active chats for this object
 - (void)statusMessage:(NSString *)message forObject:(AIListObject *)object withType:(NSString *)type
 {
-    NSEnumerator	*enumerator;
-    AIChat			*chat;
+    NSEnumerator		*enumerator;
+    AIChat				*chat;
+	NSAttributeString	*attributedMessage = [[[NSAttributedString alloc] initWithString:message
+																			  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease];
 	
     enumerator = [[[adium contentController] allChatsWithListObject:object] objectEnumerator];
     while((chat = [enumerator nextObject])){
         AIContentStatus	*content;
-        
+
         //Create our content object
         content = [AIContentStatus statusInChat:chat
                                      withSource:object
                                     destination:[chat account]
                                            date:[NSDate date]
-                                        message:[NSAttributedString stringWithString:message]
+                                        message:attributedMessage
 									 withType:type];
-		
+
         //Add the object
         [[adium contentController] receiveContentObject:content];
     }
