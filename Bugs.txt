@@ -23,6 +23,8 @@
 - In Mockie style, with offline contacts hidden and a contact from an empty group (the
     contact is the first to connect from that group) signs on, the vertical scrollbar
     appears although it is not needed.
+- Vertical resizing doesn't lock the bottom of the contact list in place in all the
+	right situations.
 - Need to check whether ~/L/AS/Adium 2.0/Contact List/ exists before trying to save
 	contact list themes there.
 	
@@ -31,6 +33,9 @@
 - MetaContact ordering does not always restore properly
 - Source account is not always accurate when a contact within a metaContact is messaged
 - MetaContacts should remember the last messaged contact and use that rather than the "preferredContact" by default
+- To/From bar in messages can get into a weird infinite loop when multiple possible source
+	and target accounts/contacts exist on the same serviceClass
+- Away message is output multiple times when an open chat's contact goes away and that contact is within a metaContact
 
 [Other]
 - Small contact list icons lead to blurry Get Info metacontact drawer icons
@@ -66,6 +71,7 @@
 - The setFrame:display:animate: call in AIDockingWindow can cause a rare beachball.
 	This frame change should be made into a manual series of frame changes to avoid this.
 
+
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
@@ -74,6 +80,8 @@
 
 - [Yahoo] File transfer limitations
     Files over 1 MB in size fail to send
+
+- [Yahoo] yahoo_codes_to_html() mangles A HREF tags with other tags within the text
 
 - [Jaber] Authorization problems
 
