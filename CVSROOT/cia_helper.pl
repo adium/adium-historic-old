@@ -3,11 +3,10 @@
 use strict;
 
 my $input;
+
 while(<STDIN>) {
     $input .= $_;
 }
-
-print $input;
 
 print "Running CIA\n";
 open(CIA,  "| /usr/bin/perl /cvsroot/adium/CVSROOT/ciabot.pl @ARGV");
