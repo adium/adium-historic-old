@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.40 2004/02/08 00:23:00 adamiser Exp $
+// $Id: AIPreferenceController.m,v 1.41 2004/02/08 08:39:28 ramoth4 Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -276,9 +276,10 @@
 //Load a preference group
 - (NSMutableDictionary *)loadPreferenceGroup:(NSString *)groupName
 {
-    NSMutableDictionary	*prefDict;
-
-    if(!(prefDict = [groupDict objectForKey:groupName])){
+    NSMutableDictionary	*prefDict = nil;
+    
+    //We may not have logged in as a user yet.
+    if([[owner loginController] userDirectory] && !(prefDict = [groupDict objectForKey:groupName])){
         NSString 	*path = [[owner loginController] userDirectory];
 
         prefDict = [NSMutableDictionary dictionaryAtPath:path withName:groupName create:YES];
