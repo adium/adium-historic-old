@@ -1,6 +1,6 @@
 //
 //  ESWebFrameViewAdditions.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Fri Mar 05 2004.
 //
