@@ -113,7 +113,7 @@
 	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
 	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
 	[contactListView setContentCell:[[AIListContactCell alloc] init]];
-	[contactListView setGroupCell:[[AIListGroupGradientCell alloc] init]];	
+	[contactListView setGroupCell:[[AIListGroupCell alloc] init]];	
 
 #warning grr
 	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[AIListContactCell alloc] init]];	

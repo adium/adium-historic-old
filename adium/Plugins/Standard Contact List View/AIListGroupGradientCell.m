@@ -17,6 +17,11 @@
 	return([NSColor whiteColor]);
 }
 
+- (NSColor *)textColorInView:(NSView *)controlView
+{
+	return([NSColor whiteColor]);
+}
+
 //Draw a gradient behind our group
 - (void)drawBackgroundWithFrame:(NSRect)rect inView:(NSView *)controlView
 {

@@ -28,6 +28,11 @@
 	return([NSFont boldSystemFontOfSize:GROUP_FONT_SIZE]);
 }
 
+- (NSColor *)textColorInView:(NSView *)controlView
+{
+	return([NSColor blackColor]);
+}
+
 //Draw content of our cell
 - (void)drawContentWithFrame:(NSRect)rect inView:(NSView *)controlView
 {
@@ -50,8 +55,8 @@
 	[arrowPath closePath];
 	[arrowPath fill];
 
-	rect.origin.x += rect.size.height*.4 + rect.size.height*.7;
-	rect.size.width -= rect.size.height*.4 + rect.size.height*.7;
+	rect.origin.x += rect.size.height*.4 + rect.size.height*.2;
+	rect.size.width -= rect.size.height*.4 + rect.size.height*.2;
 	
 	
 	[self drawDisplayNameWithFrame:rect inView:controlView];
