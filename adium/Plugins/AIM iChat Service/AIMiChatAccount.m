@@ -213,14 +213,14 @@ extern void* objc_getClass(const char *name);
 // AIAccount_Status --------------------------------------------------------------------------------
 - (NSArray *)supportedStatusKeys
 {
-    return([NSArray arrayWithObjects:@"Online", nil]);
+    return([NSArray arrayWithObjects:@"Online", @"AwayMessage", @"IdleSince", nil]);
 }
 
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    if([key compare:@"Online"] == 0){
-        ACCOUNT_STATUS status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+    ACCOUNT_STATUS 	status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
 
+    if([key compare:@"Online"] == 0){
         if([inValue boolValue]){ //Connect
             if((status != STATUS_ONLINE)||(status != STATUS_CONNECTING)){
                 [AIMService login];
@@ -229,6 +229,52 @@ extern void* objc_getClass(const char *name);
             if((status != STATUS_OFFLINE)||(status != STATUS_DISCONNECTING)){
                 [AIMService logout];
             }
+        }
+    }
+        
+    //Ignore the following keys unless we're online
+    if(status == STATUS_ONLINE){
+        NSMutableDictionary	*myStatusDict = [[[NSMutableDictionary alloc] init] autorelease];
+        BOOL 			away, idle;
+
+        //Idle
+        if([key compare:@"IdleSince"] == 0){
+            //There must be a better way to set idle time.  iChat inserts some kind of NSDate (2139-05-29 00:52:50 -0500) with the key "FZPersonAwaySince", but if I insert the same date it has no effect (other than making the iChat app think it's idle).  I found this private function in AIMService, but obviously it's internal to AIMService, and most likely called in response to whatever triggers an idle value.  I'm missing something somewhere, but this'll do for now.
+            if(inValue){
+                [AIMService _setIdleTime:(unsigned int)(-[inValue timeIntervalSinceNow])];
+            }else{
+                [AIMService _setIdleTime:(unsigned int)0];
+            }
+            
+            idle = (inValue != nil);
+        }else{
+            idle = ([self statusObjectForKey:@"IdleSince"] != nil);
+        }
+
+        //Away
+        if([key compare:@"AwayMessage"] == 0){
+            NSString	*awayMessage = [[NSAttributedString stringWithData:inValue] string];
+
+            [myStatusDict setObject:(awayMessage != nil ? awayMessage : @"") forKey:@"FZPersonStatusMessage"];
+            away = (inValue != nil);
+        }else{
+            away = ([NSAttributedString stringWithData:[self statusObjectForKey:@"AwayMessage"]] != nil);
+        }
+
+        //State (Online/offline/idle/away)
+        if([key compare:@"IdleSince"] == 0 || [key compare:@"AwayMessage"] == 0){ 
+            if(idle && away || idle){ //iChat treats these as the same :(
+                [myStatusDict setObject:[NSNumber numberWithInt:2] forKey:@"FZPersonStatus"];
+            }else if(away){
+                [myStatusDict setObject:[NSNumber numberWithInt:3] forKey:@"FZPersonStatus"];
+            }else{
+                [myStatusDict setObject:[NSNumber numberWithInt:4] forKey:@"FZPersonStatus"];
+            }
+        }
+
+        //Set the status
+        if([myStatusDict count]){
+            [FZDaemon changeMyStatus:myStatusDict];
         }
     }
 }
