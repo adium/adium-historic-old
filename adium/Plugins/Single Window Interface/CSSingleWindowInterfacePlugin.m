@@ -24,8 +24,11 @@
 	menuItem_showMainWindow = [[NSMenuItem alloc] initWithTitle:@"Show Main Window…" target:self action:@selector(openInterface) keyEquivalent:@"N"];
 	[[adium menuController] addMenuItem:menuItem_showMainWindow toLocation:LOC_File_New];
 	
-	menuItem_close = [[NSMenuItem alloc] initWithTitle:@"Close" target:windowController action:@selector(close) keyEquivalent:@"w"];
+	menuItem_close = [[NSMenuItem alloc] initWithTitle:@"Close" target:nil action:@selector(performClose:) keyEquivalent:@"w"];
 	[[adium menuController] addMenuItem:menuItem_close toLocation:LOC_File_Close];
+	
+	menuItem_collapseContactList = [[NSMenuItem alloc] initWithTitle:@"Hide Contact List" target:windowController action:@selector(collapseContactList:) keyEquivalent:@"/"];
+	[[adium menuController] addMenuItem:menuItem_collapseContactList toLocation:LOC_Window_Fixed];
 }
 
 - (void)uninstallPlugin
@@ -60,6 +63,7 @@
 {
 	NSLog(@"Close chat: %@", [inChat participatingListObjects]);
 	[windowController closeChat:inChat];
+	[inChat removeAllContent];
 }
 
 - (void)setActiveChat:(AIChat *)inChat

@@ -8,6 +8,7 @@
 
 #import "CSSingleWindowInterfaceWindowController.h"
 #import "CSSingleWindowInterfacePlugin.h"
+#import "CSCurrentChatsListViewController.h"
 #import "AIMessageViewController.h"
 
 #define SINGLE_WINDOW_NIB @"Single Window Interface"
@@ -15,8 +16,6 @@
 @interface CSSingleWindowInterfaceWindowController (PRIVATE)
 
 -(id)initWithInterface:(CSSingleWindowInterfacePlugin *)inInterface;
-- (BOOL)_messageViewControllerHasBeenCreatedForChat:(AIChat*)inChat;
-- (AIMessageViewController*)_messageViewControllerForChat:(AIChat*)inChat;
 
 @end
 
@@ -33,7 +32,7 @@
 	if(self = [super initWithWindowNibName:SINGLE_WINDOW_NIB])
 	{
 		interface = inInterface;
-		messageViewControllerArray = [[NSMutableArray array] retain];
+		currentChatsController = [[CSCurrentChatsListViewController alloc] init];
 	}
 	return self;
 }
@@ -48,8 +47,10 @@
     //Close the contact list view
     [contactListViewController release];
     [contactListView release];
+	
+	//Close the current chats view
+	[currentChatsController release];
     
-	[messageViewControllerArray release];
     [super dealloc];
 }
 
@@ -68,10 +69,33 @@
     [scrollView_contactList setBorderType:NSBezelBorder];
     [[self window] makeFirstResponder:contactListView];
     
+	[scrollView_currentChatsList setAndSizeDocumentView:[currentChatsController view]];
+	[scrollView_currentChatsList setAutoScrollToBottom:NO];
+    [scrollView_currentChatsList setAutoHideScrollBar:YES];
+    [scrollView_currentChatsList setBorderType:NSBezelBorder];
+	
     [box_messageView setContentView:view_noActiveChat];
 	
 	//Register for the selection notification
     [[adium notificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:contactListView];
+}
+
+- (void)collapseContactList:(id)sender
+{
+	NSMenuItem *item = (NSMenuItem*)sender;
+	if (item) {
+		NSRect newFrame = [scrollView_contactList frame];
+		if ([[item title] isEqualToString:HIDE_CONTACT_LIST]) {
+			[item setTitle:SHOW_CONTACT_LIST];
+			[item setRepresentedObject:[NSNumber numberWithInt:newFrame.size.width]];
+			newFrame.size.width = 0;
+			[scrollView_contactList setFrame:newFrame];
+		} else {
+			[item setTitle:HIDE_CONTACT_LIST];
+			newFrame.size.width = [[item representedObject] intValue];
+			[scrollView_contactList setFrame:newFrame];
+		}
+	}
 }
 
 #pragma mark Contact Selection
@@ -88,83 +112,34 @@
 
 - (void)addChat:(AIChat *)inChat
 {
-	if (![self _messageViewControllerHasBeenCreatedForChat:inChat]) {
-		AIMessageViewController *controller = [[AIMessageViewController messageViewControllerForChat:inChat] retain];
-		[messageViewControllerArray addObject:controller];
-	} else NSLog(@"AddChat failed");
+	[currentChatsController openChat:inChat];
 }
 
 - (void)setChat:(AIChat *)inChat
 {
 	AIMessageViewController *currentMessageViewController;
-	if ([self _messageViewControllerHasBeenCreatedForChat:inChat]) {
-		currentMessageViewController = [self _messageViewControllerForChat:inChat];
-
-		[box_messageView setContentView:[currentMessageViewController view]];
-		[[self window] setTitle:[NSString stringWithFormat:@"Adium : %@", [[[inChat participatingListObjects] objectAtIndex:0] displayName]]];
-		activeChat = inChat;
-	}
+	
+	currentMessageViewController = [currentChatsController messageViewControllerForChat:inChat];
+	[currentChatsController setChat:inChat];
+	
+	[box_messageView setContentView:[currentMessageViewController view]];
+	[[self window] setTitle:[NSString stringWithFormat:@"Adium : %@", [[[inChat participatingListObjects] objectAtIndex:0] displayName]]];
 }
     
 - (void)closeChat:(AIChat *)inChat
 {
-	int index = [messageViewControllerArray indexOfObject:activeChat]; 
+	[currentChatsController closeChat:inChat];
 	
-	NSLog(@"1. index = %d",index);
-	
-	if(index == [messageViewControllerArray count] - 1 && index > 0) //last chat
-		index--; //subtract 1
-		
-	if([messageViewControllerArray count] <= 1)
-	{
-	    [messageViewControllerArray removeObject:activeChat];
-	    [box_messageView setContentView:view_noActiveChat];
-	}
-   	else
-   	{
-        [messageViewControllerArray removeObject:activeChat];
-    
-        if (index >= 0) //do we need this? we can take it out later
-            [[adium interfaceController] setActiveChat:[[messageViewControllerArray objectAtIndex:index] chat]];
-    }
-}
-
-#pragma mark Private
-
-- (BOOL)_messageViewControllerHasBeenCreatedForChat:(AIChat*)inChat
-{
-	NSEnumerator *messageViewControllerEnumerator;
-	AIMessageViewController *currentMessageViewController;
-	
-	if ([messageViewControllerArray count] <= 0) return NO;
-	
-	messageViewControllerEnumerator = [messageViewControllerArray objectEnumerator];
-	while (currentMessageViewController = [messageViewControllerEnumerator nextObject]) {
-		if ([currentMessageViewController chat] == inChat) return YES;
-	}
-	return NO;
-}
-
-- (AIMessageViewController*)_messageViewControllerForChat:(AIChat*)inChat
-{ //loacking the controllers, it was screwing me up!
-	AIMessageViewController *currentMessageViewController;
-	if ([self _messageViewControllerHasBeenCreatedForChat:inChat]) {
-		NSEnumerator *messageViewControllerEnumerator = [messageViewControllerArray objectEnumerator];
-		
-		while (currentMessageViewController = [messageViewControllerEnumerator nextObject]) {
-			if ([currentMessageViewController chat] == inChat) return (currentMessageViewController);
-		}
-	}
-	return nil;
+	[box_messageView setContentView:view_noActiveChat];
 }
 
 #pragma mark Delegate Methods
 
 - (BOOL)windowShouldClose:(id)sender
 {
-	if([messageViewControllerArray count] > 0) 
+	if([currentChatsController count] > 0) 
 	{ 
-		[[adium interfaceController] closeChat:activeChat];
+		[currentChatsController tableViewDeleteSelectedRows:nil];
 		return NO;
 	}
     return YES;
