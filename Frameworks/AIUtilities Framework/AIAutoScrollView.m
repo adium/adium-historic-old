@@ -90,7 +90,10 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
 
     if(autoScrollToBottom){
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentFrameDidChange:) name:NSViewFrameDidChangeNotification object:aView];
+        [[NSNotificationCenter defaultCenter] addObserver:self 
+												 selector:@selector(documentFrameDidChange:) 
+													 name:NSViewFrameDidChangeNotification
+												   object:aView];
 
         [self scrollToBottom];
     }
