@@ -62,35 +62,6 @@
 //112
 //113
 //114
-		11B96D81049AF85900C6304D = {
-			children = (
-				11B96D97049AF8FB00C6304D,
-				11B96D98049AF8FB00C6304D,
-			);
-			isa = PBXGroup;
-			name = "Contact Warning Level";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		11B96D97049AF8FB00C6304D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIContactWarningLevelPlugin.h;
-			path = "Plugins/Contact Warning Level/AIContactWarningLevelPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		11B96D98049AF8FB00C6304D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIContactWarningLevelPlugin.m;
-			path = "Plugins/Contact Warning Level/AIContactWarningLevelPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		11C157D504A88DE0008E0C76 = {
 			children = (
 				3C73F83E04D62A2900A80106,
@@ -3566,16 +3537,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		3470638906010161004F0D20 = {
-			children = (
-				3479A83B05DC9F2400998B3D,
-			);
-			isa = PBXGroup;
-			name = "Contact List";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		347065E406015DC5004F0D20 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -3643,48 +3604,29 @@
 		};
 		3479A83B05DC9F2400998B3D = {
 			children = (
-				4BD7D0CA04620D7C00A8010A,
-				3479A8AF05DCA15400998B3D,
-				4BD7D0CB04620D8800A8010A,
-				9E39940D078E8281001E09A4,
-				C4382545062E795000F5A31D,
-				6C05CA1505492EE70088ECBF,
-				4B6688F804A60CC300A8010A,
-				34ADC00205F3A75700ABFCAA,
-				11B96D81049AF85900C6304D,
-				34C18C6106CAE78000FF5FF9,
+				347E7A8D07CAF88200350507,
+				347E7A8E07CAF88200350507,
+				347E7A9807CAF8AF00350507,
+				347E7A9707CAF8AF00350507,
+				347E7AB207CAF93700350507,
+				347E7AB107CAF93700350507,
+				347E7AC207CAF95F00350507,
+				347E7AC107CAF95F00350507,
+				347E7AA207CAF8DA00350507,
+				347E7AA107CAF8DA00350507,
+				347E7A9607CAF8AF00350507,
+				347E7A9507CAF8AE00350507,
+				347E7A9407CAF8AE00350507,
+				347E7AB907CAF94A00350507,
+				347E7ABA07CAF94A00350507,
+				347E7ACE07CAF98500350507,
+				347E7ACD07CAF98400350507,
+				347E7AA907CAF8EE00350507,
+				347E7AA807CAF8EE00350507,
 			);
 			isa = PBXGroup;
 			name = Tooltips;
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3479A8AF05DCA15400998B3D = {
-			children = (
-				3479A8B505DCA18200998B3D,
-				3479A8B605DCA18200998B3D,
-			);
-			isa = PBXGroup;
-			name = "Contact Client";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3479A8B505DCA18200998B3D = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESContactClientPlugin.h;
-			path = "Plugins/Contact Client/ESContactClientPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3479A8B605DCA18200998B3D = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESContactClientPlugin.m;
-			path = "Plugins/Contact Client/ESContactClientPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -4289,6 +4231,291 @@
 			settings = {
 			};
 		};
+		347E7A8D07CAF88200350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIContactAwayPlugin.h;
+			path = Source/AIContactAwayPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7A8E07CAF88200350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIContactAwayPlugin.m;
+			path = Source/AIContactAwayPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7A8F07CAF88200350507 = {
+			fileRef = 347E7A8D07CAF88200350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7A9007CAF88200350507 = {
+			fileRef = 347E7A8E07CAF88200350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7A9407CAF8AE00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESContactClientPlugin.m;
+			path = Source/ESContactClientPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7A9507CAF8AE00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESContactClientPlugin.h;
+			path = Source/ESContactClientPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7A9607CAF8AF00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CBContactLastSeenPlugin.h;
+			path = Source/CBContactLastSeenPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7A9707CAF8AF00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIContactIdlePlugin.m;
+			path = Source/AIContactIdlePlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7A9807CAF8AF00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIContactIdlePlugin.h;
+			path = Source/AIContactIdlePlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7A9907CAF8AF00350507 = {
+			fileRef = 347E7A9407CAF8AE00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7A9A07CAF8AF00350507 = {
+			fileRef = 347E7A9507CAF8AE00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7A9B07CAF8AF00350507 = {
+			fileRef = 347E7A9607CAF8AF00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7A9C07CAF8AF00350507 = {
+			fileRef = 347E7A9707CAF8AF00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7A9D07CAF8AF00350507 = {
+			fileRef = 347E7A9807CAF8AF00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7AA107CAF8DA00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = BGContactNotesPlugin.m;
+			path = Source/BGContactNotesPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7AA207CAF8DA00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = BGContactNotesPlugin.h;
+			path = Source/BGContactNotesPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7AA307CAF8DA00350507 = {
+			fileRef = 347E7AA107CAF8DA00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7AA407CAF8DA00350507 = {
+			fileRef = 347E7AA207CAF8DA00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7AA807CAF8EE00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SAContactOnlineForPlugin.m;
+			path = Source/SAContactOnlineForPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7AA907CAF8EE00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SAContactOnlineForPlugin.h;
+			path = Source/SAContactOnlineForPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7AAA07CAF8EE00350507 = {
+			fileRef = 347E7AA807CAF8EE00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7AAB07CAF8EE00350507 = {
+			fileRef = 347E7AA907CAF8EE00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7AB107CAF93700350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIContactOnlineSincePlugin.m;
+			path = Source/AIContactOnlineSincePlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7AB207CAF93700350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIContactOnlineSincePlugin.h;
+			path = Source/AIContactOnlineSincePlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7AB307CAF93700350507 = {
+			fileRef = 347E7AB107CAF93700350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7AB407CAF93700350507 = {
+			fileRef = 347E7AB207CAF93700350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7AB907CAF94A00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESContactServersideDisplayName.h;
+			path = Source/ESContactServersideDisplayName.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7ABA07CAF94A00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESContactServersideDisplayName.m;
+			path = Source/ESContactServersideDisplayName.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7ABB07CAF94A00350507 = {
+			fileRef = 347E7AB907CAF94A00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7ABC07CAF94A00350507 = {
+			fileRef = 347E7ABA07CAF94A00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7AC107CAF95F00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIContactWarningLevelPlugin.m;
+			path = Source/AIContactWarningLevelPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7AC207CAF95F00350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIContactWarningLevelPlugin.h;
+			path = Source/AIContactWarningLevelPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7AC307CAF96000350507 = {
+			fileRef = 347E7AC107CAF95F00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7AC407CAF96000350507 = {
+			fileRef = 347E7AC207CAF95F00350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7ACD07CAF98400350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESMetaContactContentsPlugin.m;
+			path = Source/ESMetaContactContentsPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7ACE07CAF98500350507 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESMetaContactContentsPlugin.h;
+			path = Source/ESMetaContactContentsPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347E7ACF07CAF98500350507 = {
+			fileRef = 347E7ACD07CAF98400350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347E7AD007CAF98500350507 = {
+			fileRef = 347E7ACE07CAF98500350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3483928405E68B05002BC6C0 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -4729,6 +4956,7 @@
 				F50CD61C03603BE201A8010A,
 				4BB5CBB006EDF04D009B4517,
 				F53B9AC502CD12AB01A8010A,
+				3479A83B05DC9F2400998B3D,
 			);
 			isa = PBXGroup;
 			name = "Contact List";
@@ -5888,34 +6116,6 @@
 			settings = {
 			};
 		};
-		34ADC00205F3A75700ABFCAA = {
-			children = (
-				34ADC03505F3A86600ABFCAA,
-				34ADC03605F3A86600ABFCAA,
-			);
-			isa = PBXGroup;
-			name = "Contact Serverside Display Name";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34ADC03505F3A86600ABFCAA = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESContactServersideDisplayName.h;
-			path = "Plugins/Contact Serverside Display Name/ESContactServersideDisplayName.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34ADC03605F3A86600ABFCAA = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESContactServersideDisplayName.m;
-			path = "Plugins/Contact Serverside Display Name/ESContactServersideDisplayName.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34ADE00205159186003B2F21 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -6714,15 +6914,8 @@
 				4BD6737306001BF00049CAF7,
 				4BD6737506001BF00049CAF7,
 				4BD6739906001C3F0049CAF7,
-				4BD673A206001C4D0049CAF7,
-				4BD673B406001C5D0049CAF7,
 				4BD673B606001C5E0049CAF7,
 				4BD673CD06001C960049CAF7,
-				4BD673D806001CA20049CAF7,
-				4BD673DA06001CA30049CAF7,
-				4BD673DD06001CA40049CAF7,
-				4BD673DE06001CA40049CAF7,
-				4BD673E006001CA50049CAF7,
 				4BD6741B06001CEF0049CAF7,
 				4BD6741F06001CF00049CAF7,
 				4BD6742106001CF20049CAF7,
@@ -6774,7 +6967,6 @@
 				BF000238063A4D2E0019910B,
 				4B909C87064D72EE0074C9A8,
 				4B909C8B064D75400074C9A8,
-				4B091035065CE9D600FF0528,
 				4BBF41E30661194A001D31E1,
 				7E64084706629E10006A5552,
 				7E64084B06629E10006A5552,
@@ -6799,7 +6991,6 @@
 				6EC1684C06C170A000F9FAD3,
 				6EC1684E06C170A000F9FAD3,
 				C45F7F6506C75E210056B1F2,
-				34C18C6E06CAE7BF00FF5FF9,
 				343EAB8C06EF859C001CDAFF,
 				343EAB8E06EF859C001CDAFF,
 				343EAB9206EF8604001CDAFF,
@@ -6841,7 +7032,6 @@
 				07836212077B0CA90032D975,
 				3452A9F807891C8A00C3C494,
 				344F4A4D078DDC9700226DFC,
-				9E399410078E82FE001E09A4,
 				4BDAF69807A1561000276D68,
 				4B7A567A07A1754400BDC540,
 				34DFF5FC07A63DB100B92233,
@@ -6879,6 +7069,16 @@
 				347E791407CAA51500350507,
 				347E791607CAA51500350507,
 				347E791707CAA51500350507,
+				347E7A8F07CAF88200350507,
+				347E7A9A07CAF8AF00350507,
+				347E7A9B07CAF8AF00350507,
+				347E7A9D07CAF8AF00350507,
+				347E7AA407CAF8DA00350507,
+				347E7AAB07CAF8EE00350507,
+				347E7AB407CAF93700350507,
+				347E7ABB07CAF94A00350507,
+				347E7AC407CAF96000350507,
+				347E7AD007CAF98500350507,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7242,15 +7442,8 @@
 				4BD6737406001BF00049CAF7,
 				4BD6737606001BF10049CAF7,
 				4BD6739B06001C410049CAF7,
-				4BD673A306001C4E0049CAF7,
-				4BD673B506001C5E0049CAF7,
 				4BD673B706001C5F0049CAF7,
 				4BD673CE06001C960049CAF7,
-				4BD673D906001CA20049CAF7,
-				4BD673DB06001CA30049CAF7,
-				4BD673DC06001CA40049CAF7,
-				4BD673DF06001CA50049CAF7,
-				4BD673E106001CA60049CAF7,
 				4BD6741C06001CEF0049CAF7,
 				4BD6742006001CF10049CAF7,
 				4BD6742206001CF30049CAF7,
@@ -7303,7 +7496,6 @@
 				BF000239063A4D2E0019910B,
 				4B909C88064D72EE0074C9A8,
 				4B909C8A064D75400074C9A8,
-				4B091036065CE9D600FF0528,
 				4BBF41E40661194A001D31E1,
 				7E64084806629E10006A5552,
 				7E64084C06629E10006A5552,
@@ -7328,7 +7520,6 @@
 				6EC1684D06C170A000F9FAD3,
 				6EC1684F06C170A000F9FAD3,
 				C45F7F6606C75E210056B1F2,
-				34C18C6F06CAE7BF00FF5FF9,
 				343EAB8B06EF859C001CDAFF,
 				343EAB8D06EF859C001CDAFF,
 				343EAB9306EF8604001CDAFF,
@@ -7369,7 +7560,6 @@
 				34C68B5B0778FC6400EB423C,
 				3452A9F907891C8A00C3C494,
 				344F4A4E078DDC9900226DFC,
-				9E399411078E82FE001E09A4,
 				4BDAF69907A1561000276D68,
 				4B7A567B07A1754400BDC540,
 				34DFF5FD07A63DB400B92233,
@@ -7407,6 +7597,15 @@
 				347E791307CAA51500350507,
 				347E791507CAA51500350507,
 				347E791807CAA51500350507,
+				347E7A9007CAF88200350507,
+				347E7A9907CAF8AF00350507,
+				347E7A9C07CAF8AF00350507,
+				347E7AA307CAF8DA00350507,
+				347E7AAA07CAF8EE00350507,
+				347E7AB307CAF93700350507,
+				347E7ABC07CAF94A00350507,
+				347E7AC307CAF96000350507,
+				347E7ACF07CAF98500350507,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8447,47 +8646,6 @@
 		};
 		34C18B0D06CAC95400FF5FF9 = {
 			fileRef = 34E839050583207E00F2AADB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34C18C6106CAE78000FF5FF9 = {
-			children = (
-				34C18C6C06CAE7BF00FF5FF9,
-				34C18C6D06CAE7BF00FF5FF9,
-			);
-			isa = PBXGroup;
-			name = "MetaContact Contents";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34C18C6C06CAE7BF00FF5FF9 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESMetaContactContentsPlugin.h;
-			path = "Plugins/MetaContact Contents/ESMetaContactContentsPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34C18C6D06CAE7BF00FF5FF9 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESMetaContactContentsPlugin.m;
-			path = "Plugins/MetaContact Contents/ESMetaContactContentsPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34C18C6E06CAE7BF00FF5FF9 = {
-			fileRef = 34C18C6C06CAE7BF00FF5FF9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34C18C6F06CAE7BF00FF5FF9 = {
-			fileRef = 34C18C6D06CAE7BF00FF5FF9;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -12357,18 +12515,6 @@
 			settings = {
 			};
 		};
-		4B091035065CE9D600FF0528 = {
-			fileRef = C4382548062E798500F5A31D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B091036065CE9D600FF0528 = {
-			fileRef = C4382549062E798500F5A31D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B09D5C005D5265800BC00F0 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -13494,7 +13640,6 @@
 		4B587C0807ABFC8E001832A9 = {
 			children = (
 				4B4F5B25042D637700A8010A,
-				3470638906010161004F0D20,
 				34306FE3076F53F60025102A,
 				4B4F5B2A042D63E200A8010A,
 				4B4F5B23042D636700A8010A,
@@ -13736,35 +13881,6 @@
 			lastKnownFileType = text.plist;
 			name = AwaySpellingDefaults.plist;
 			path = "Plugins/Away Messages/AwaySpellingDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B6688F804A60CC300A8010A = {
-			children = (
-				4B66890404A60D3300A8010A,
-				4B66890504A60D3300A8010A,
-			);
-			isa = PBXGroup;
-			name = "Contact Online Since";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B66890404A60D3300A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIContactOnlineSincePlugin.h;
-			path = "Plugins/Contact Online Since/AIContactOnlineSincePlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B66890504A60D3300A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIContactOnlineSincePlugin.m;
-			path = "Plugins/Contact Online Since/AIContactOnlineSincePlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -16730,30 +16846,6 @@
 			settings = {
 			};
 		};
-		4BD673A206001C4D0049CAF7 = {
-			fileRef = 4BD7D0D704620DF900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673A306001C4E0049CAF7 = {
-			fileRef = 4BD7D0D804620DF900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673B406001C5D0049CAF7 = {
-			fileRef = 4BD7D0E604620EA200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673B506001C5E0049CAF7 = {
-			fileRef = 4BD7D0E704620EA200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD673B606001C5E0049CAF7 = {
 			fileRef = 4B31E8C004C46A9100A8010A;
 			isa = PBXBuildFile;
@@ -16774,66 +16866,6 @@
 		};
 		4BD673CE06001C960049CAF7 = {
 			fileRef = F5793990033E759C01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673D806001CA20049CAF7 = {
-			fileRef = 34ADC03505F3A86600ABFCAA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673D906001CA20049CAF7 = {
-			fileRef = 34ADC03605F3A86600ABFCAA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673DA06001CA30049CAF7 = {
-			fileRef = 3479A8B505DCA18200998B3D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673DB06001CA30049CAF7 = {
-			fileRef = 3479A8B605DCA18200998B3D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673DC06001CA40049CAF7 = {
-			fileRef = 6C05CA1605492F350088ECBF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673DD06001CA40049CAF7 = {
-			fileRef = 6C05CA1705492F360088ECBF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673DE06001CA40049CAF7 = {
-			fileRef = 4B66890404A60D3300A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673DF06001CA50049CAF7 = {
-			fileRef = 4B66890504A60D3300A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673E006001CA50049CAF7 = {
-			fileRef = 11B96D97049AF8FB00C6304D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673E106001CA60049CAF7 = {
-			fileRef = 11B96D98049AF8FB00C6304D;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -17435,64 +17467,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AILogViewerWindowController.m;
 			path = Plugins/Logger/AILogViewerWindowController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BD7D0CA04620D7C00A8010A = {
-			children = (
-				4BD7D0D704620DF900A8010A,
-				4BD7D0D804620DF900A8010A,
-			);
-			isa = PBXGroup;
-			name = "Contact Away";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BD7D0CB04620D8800A8010A = {
-			children = (
-				4BD7D0E604620EA200A8010A,
-				4BD7D0E704620EA200A8010A,
-			);
-			isa = PBXGroup;
-			name = "Contact Idle";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BD7D0D704620DF900A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIContactAwayPlugin.h;
-			path = "Plugins/Contact Away/AIContactAwayPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BD7D0D804620DF900A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIContactAwayPlugin.m;
-			path = "Plugins/Contact Away/AIContactAwayPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BD7D0E604620EA200A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIContactIdlePlugin.h;
-			path = "Plugins/Contact Idle/AIContactIdlePlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BD7D0E704620EA200A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIContactIdlePlugin.m;
-			path = "Plugins/Contact Idle/AIContactIdlePlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -18443,35 +18417,6 @@
 //6C2
 //6C3
 //6C4
-		6C05CA1505492EE70088ECBF = {
-			children = (
-				6C05CA1605492F350088ECBF,
-				6C05CA1705492F360088ECBF,
-			);
-			isa = PBXGroup;
-			name = "Contact Online For";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C05CA1605492F350088ECBF = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SAContactOnlineFor.m;
-			path = "Plugins/Contact Online For/SAContactOnlineFor.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C05CA1705492F360088ECBF = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SAContactOnlineForPlugin.h;
-			path = "Plugins/Contact Online For/SAContactOnlineForPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		6C0FD8C20578D47B00D70FEB = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -20628,46 +20573,6 @@
 			settings = {
 			};
 		};
-		9E39940D078E8281001E09A4 = {
-			children = (
-				9E39940E078E82FE001E09A4,
-				9E39940F078E82FE001E09A4,
-			);
-			isa = PBXGroup;
-			name = "Contact Last Seen";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E39940E078E82FE001E09A4 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CBContactLastSeenPlugin.h;
-			path = "Plugins/Contact Last Seen/CBContactLastSeenPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E39940F078E82FE001E09A4 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CBContactLastSeenPlugin.m;
-			path = "Plugins/Contact Last Seen/CBContactLastSeenPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E399410078E82FE001E09A4 = {
-			fileRef = 9E39940E078E82FE001E09A4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E399411078E82FE001E09A4 = {
-			fileRef = 9E39940F078E82FE001E09A4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		9E4CF9D104AA69B000415B22 = {
 			children = (
 				347E788807CA978D00350507,
@@ -21670,35 +21575,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = BGEmoticonMenuPlugin.m;
 			path = "Plugins/Emoticon Menu/BGEmoticonMenuPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C4382545062E795000F5A31D = {
-			children = (
-				C4382548062E798500F5A31D,
-				C4382549062E798500F5A31D,
-			);
-			isa = PBXGroup;
-			name = "Contact Notes";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C4382548062E798500F5A31D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = BGContactNotesPlugin.h;
-			path = "Plugins/Contact Notes/BGContactNotesPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C4382549062E798500F5A31D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = BGContactNotesPlugin.m;
-			path = "Plugins/Contact Notes/BGContactNotesPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
