@@ -119,7 +119,6 @@
 				3499F45106309AC80035B468,
 				4947F5CB0655E85200B791E5,
 				BFEBDBFF0669029800CBF845,
-				52C623DA06697AC00006C387,
 				7ECB106706A4D1AD00812D5F,
 			);
 			isa = PBXGroup;
@@ -183,7 +182,6 @@
 				346C9C4806004517000F5A8A,
 				346C9C5306004525000F5A8A,
 				4947F5BC0655E85200B791E5,
-				52C623D906697AC00006C387,
 				7ECB106606A4D1AD00812D5F,
 			);
 		};
@@ -2707,12 +2705,6 @@
 			settings = {
 			};
 		};
-		3448769D06D1EF9100DA778C = {
-			fileRef = 3448758D06D1EBDF00DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3448769F06D1EFA000DA778C = {
 			fileRef = 3448758D06D1EBDF00DA778C;
 			isa = PBXBuildFile;
@@ -2946,6 +2938,50 @@
 			path = "Plugins/Fast User Switching Support/ESFastUserSwitchingSupportPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		344F4A09078DD9FE00226DFC = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Growl.framework;
+			path = Plugins/Growl/Growl.framework;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344F4A4A078DDC9100226DFC = {
+			fileRef = 52C623DF06697B1D0006C387;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344F4A4B078DDC9300226DFC = {
+			fileRef = 344F4A09078DD9FE00226DFC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344F4A4C078DDC9500226DFC = {
+			fileRef = 6CFB75BC06F5957D00091DC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344F4A4D078DDC9700226DFC = {
+			fileRef = 52C623E206697B3B0006C387;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344F4A4E078DDC9900226DFC = {
+			fileRef = 52C623E306697B3B0006C387;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344F4A52078DDCBB00226DFC = {
+			fileRef = 344F4A09078DD9FE00226DFC;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34503C7E058F96C400FB7AD1 = {
 			fileEncoding = 30;
@@ -6087,7 +6123,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" \"Plugins/Gaim Service\" Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" \"Plugins/Gaim Service\" Frameworks /Users/evands/adium/Plugins/Growl";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6120,7 +6156,6 @@
 				346C9D46060046AB000F5A8A,
 				4B6EA1BE058FA6900070A9A1,
 				4B215DB0059896B000305B3C,
-				4B53CD9406B08AE300FCDA0C,
 				344C0F0806B7099F00DA7200,
 			);
 			isa = PBXNativeTarget;
@@ -6350,6 +6385,7 @@
 				4BE35BA80787183600D1130E,
 				4BE35BE20787267B00D1130E,
 				3452A9F807891C8A00C3C494,
+				344F4A4D078DDC9700226DFC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6677,6 +6713,8 @@
 				E03E2FF40785F02E007E75C3,
 				4BE35BFD0787271100D1130E,
 				3452AA0B07891DFC00C3C494,
+				344F4A4A078DDC9100226DFC,
+				344F4A4C078DDC9500226DFC,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6940,6 +6978,7 @@
 				4BE35BA90787183600D1130E,
 				4BE35BE30787267B00D1130E,
 				3452A9F907891C8A00C3C494,
+				344F4A4E078DDC9900226DFC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7057,6 +7096,7 @@
 				34B588A1058D833A00E7EF0D,
 				34C18B0D06CAC95400FF5FF9,
 				348E5ACB06D2A74C004C051C,
+				344F4A4B078DDC9300226DFC,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7084,6 +7124,7 @@
 				7E6642F7065336BA0050E8C8,
 				3419FE230531586A00C68BA3,
 				520FE46305BE20EB002D063D,
+				344F4A52078DDCBB00226DFC,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7110,7 +7151,6 @@
 				344C0F0D06B709AC00DA7200,
 				3419FDE40531585600C68BA3,
 				4B90B54C064220AB00D23731,
-				4B53CD9506B08B2100FCDA0C,
 				340B9BD4069C735900FE1E57,
 			);
 			isa = PBXCopyFilesBuildPhase;
@@ -9810,12 +9850,6 @@
 			settings = {
 			};
 		};
-		34FF935106DE3F5F00C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 //340
 //341
 //342
@@ -12498,24 +12532,6 @@
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B53CD9306B08AE300FCDA0C = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 52C623D906697AC00006C387;
-			remoteInfo = Growl;
-		};
-		4B53CD9406B08AE300FCDA0C = {
-			isa = PBXTargetDependency;
-			target = 52C623D906697AC00006C387;
-			targetProxy = 4B53CD9306B08AE300FCDA0C;
-		};
-		4B53CD9506B08B2100FCDA0C = {
-			fileRef = 52C623DA06697AC00006C387;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B54D10605028BC400A8010A = {
 			fileEncoding = 30;
@@ -17865,111 +17881,12 @@
 			target = 520FE3A005BE1FC5002D063D;
 			targetProxy = 520FE46F05BE2494002D063D;
 		};
-		52C623D506697AC00006C387 = {
-			buildActionMask = 2147483647;
-			files = (
-				52C623E406697B3B0006C387,
-				9EE165580682F7F100AB822A,
-				52C623E506697B3B0006C387,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		52C623D606697AC00006C387 = {
-			buildActionMask = 2147483647;
-			files = (
-				52C623E006697B1D0006C387,
-				6CFB75BD06F5957D00091DC9,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		52C623D706697AC00006C387 = {
-			buildActionMask = 2147483647;
-			files = (
-				52C623E606697B3B0006C387,
-				9EE1655C0682F7F900AB822A,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		52C623D806697AC00006C387 = {
-			buildActionMask = 2147483647;
-			files = (
-				34FF935106DE3F5F00C1D683,
-				3448769D06D1EF9100DA778C,
-				52C623EC066A558E0006C387,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		52C623D906697AC00006C387 = {
-			buildPhases = (
-				52C623D506697AC00006C387,
-				52C623D606697AC00006C387,
-				52C623D706697AC00006C387,
-				52C623D806697AC00006C387,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = "Plists/Growl-Info.plist";
-				PRODUCT_NAME = Growl;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-			);
-			isa = PBXNativeTarget;
-			name = Growl;
-			productName = Growl;
-			productReference = 52C623DA06697AC00006C387;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>Growl</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.Growl</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-</dict>
-</plist>
-";
-			productType = "com.apple.product-type.bundle";
-		};
-		52C623DA06697AC00006C387 = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = Growl.AdiumPlugin;
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		52C623DE06697AFA0006C387 = {
 			children = (
 				6CFB75BC06F5957D00091DC9,
-				9EE161AE06819C6F00AB822A,
-				9EE161AF06819C6F00AB822A,
-				52C623E106697B3B0006C387,
 				52C623E206697B3B0006C387,
 				52C623E306697B3B0006C387,
+				344F4A09078DD9FE00226DFC,
 				52C623DF06697B1D0006C387,
 			);
 			isa = PBXGroup;
@@ -17984,21 +17901,6 @@
 			lastKnownFileType = text.xml;
 			name = "Growl-Info.plist";
 			path = "Plists/Growl-Info.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52C623E006697B1D0006C387 = {
-			fileRef = 52C623DF06697B1D0006C387;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52C623E106697B3B0006C387 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = GrowlDefines.h;
-			path = Plugins/Growl/GrowlDefines.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -18019,30 +17921,6 @@
 			path = Plugins/Growl/NEHGrowlPlugin.m;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		52C623E406697B3B0006C387 = {
-			fileRef = 52C623E106697B3B0006C387;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52C623E506697B3B0006C387 = {
-			fileRef = 52C623E206697B3B0006C387;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52C623E606697B3B0006C387 = {
-			fileRef = 52C623E306697B3B0006C387;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		52C623EC066A558E0006C387 = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 //520
 //521
@@ -18479,12 +18357,6 @@
 			path = Plugins/Growl/GrowlAlert.png;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		6CFB75BD06F5957D00091DC9 = {
-			fileRef = 6CFB75BC06F5957D00091DC9;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 //6C0
 //6C1
@@ -20907,36 +20779,6 @@
 			path = "Plugins/Contact Counting Display/CBContactCountingDisplayPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		9EE161AE06819C6F00AB822A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = GrowlApplicationBridge.h;
-			path = Plugins/Growl/GrowlApplicationBridge.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9EE161AF06819C6F00AB822A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = GrowlApplicationBridge.m;
-			path = Plugins/Growl/GrowlApplicationBridge.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9EE165580682F7F100AB822A = {
-			fileRef = 9EE161AE06819C6F00AB822A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9EE1655C0682F7F900AB822A = {
-			fileRef = 9EE161AF06819C6F00AB822A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 //9E0
 //9E1
