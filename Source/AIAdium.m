@@ -13,24 +13,24 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import "AILoginController.h"
-#import "AISoundController.h"
 #import "AIAccountController.h"
-#import "AIToolbarController.h"
-#import "AIInterfaceController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
-#import "AIPreferenceController.h"
-#import "AIMenuController.h"
-#import "AIDockController.h"
-#import "ESFileTransferController.h"
-#import "ESContactAlertsController.h"
-#import "LNAboutBoxController.h"
-#import "AICorePluginLoader.h"
 #import "AICoreComponentLoader.h"
+#import "AICorePluginLoader.h"
 #import "AICrashController.h"
+#import "AIDockController.h"
 #import "AIExceptionController.h"
-
+#import "AIInterfaceController.h"
+#import "AILoginController.h"
+#import "AIMenuController.h"
+#import "AIPreferenceController.h"
+#import "AISoundController.h"
+#import "AIStatusController.h"
+#import "AIToolbarController.h"
+#import "ESContactAlertsController.h"
+#import "ESFileTransferController.h"
+#import "LNAboutBoxController.h"
 
 //#define NEW_APPLICATION_SUPPORT_DIRECTORY
 
@@ -126,9 +126,10 @@
 - (ESDebugController *)debugController{
 	return(debugController);
 }
-//- (BZActivityWindowController *)activityWindowController {
-//	return activityWindowController;
-//}
+- (AIStatusController *)statusController{
+    return(statusController);
+}
+
 
 //Notifications --------------------------------------------------------------------------------------------------------
 #pragma mark Notifications
@@ -200,6 +201,7 @@
     [dockController initController];
     [fileTransferController initController];
 	[applescriptabilityController initController];
+	[statusController initController];
 	
 	[componentLoader initController];
 	
@@ -234,6 +236,7 @@
 	[componentLoader closeController];
     [contactAlertsController closeController];
     [fileTransferController closeController];
+	[statusController closeController];
     [dockController closeController];
     [interfaceController closeController];
     [contentController closeController];
