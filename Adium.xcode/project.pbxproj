@@ -332,6 +332,7 @@
 		3402E02307CB0D1B0044F818 = {
 			children = (
 				3402E01F07CB0D150044F818,
+				34A6E9BA07D6365A00972830,
 			);
 			isa = PBXVariantGroup;
 			name = ProxyPasswordPrompt.nib;
@@ -347,6 +348,7 @@
 		3402E02507CB0D1B0044F818 = {
 			children = (
 				3402E02007CB0D150044F818,
+				34A6E9B807D6365000972830,
 			);
 			isa = PBXVariantGroup;
 			name = PasswordPrompt.nib;
@@ -399,6 +401,7 @@
 		3402E04107CB0E4D0044F818 = {
 			children = (
 				3402E03F07CB0E400044F818,
+				34A6E9AB07D635B100972830,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -6078,6 +6081,31 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		34A6E9AB07D635B100972830 = {
+			fileEncoding = 10;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = French;
+			path = Resources/French.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A6E9B807D6365000972830 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/PasswordPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A6E9BA07D6365A00972830 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/ProxyPasswordPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		34AC36B907B5C51400145239 = {
 			fileEncoding = 30;
