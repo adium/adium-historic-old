@@ -58,6 +58,10 @@
 								   encoding:NSASCIIStringEncoding] autorelease]);
 }
 
++ (id)stringWithData:(NSData *)data encoding:(NSStringEncoding)encoding
+{
+	return [[[self alloc] initWithData:data encoding:encoding] autorelease];
+}
 
 /*	compactedString
  *	returns the string in all lowercase without spaces
