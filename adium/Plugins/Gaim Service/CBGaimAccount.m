@@ -80,20 +80,18 @@
 	/*
 	if(GAIM_DEBUG) NSLog(@"update: %s",buddy->name);
     
-    int                     online;
+    int                     online;*/
     AIListContact           *theContact;
 	
     //Get the node's ui_data
     theContact = (AIListContact *)buddy->node.ui_data;
 	
 	//Create the contact if necessary
-    if(!theContact) theContact = [self contactAssociatedWithBuddy:buddy];
-*/
-	
-	//evands: moved to GAIM_BUDDY_SIGNON.  Hopefully it will work fine there.
-	/*
+    //if(!theContact) theContact = [self contactAssociatedWithBuddy:buddy];
+
+		
     //Group changes - gaim buddies start off in no group, so this is an important update for us
-    if(![theContact remoteGroupName]){
+    if(theContact && ![theContact remoteGroupName]){
         GaimGroup *g = gaim_find_buddys_group(buddy);
 		if(g){
 		    NSString *groupName = [NSString stringWithUTF8String:g->name];
@@ -102,7 +100,7 @@
 			}
         }
     }
-	 */
+	 
 
     //Apply any changes
 //	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
@@ -150,15 +148,16 @@
 				}
 				
 				//Group changes - gaim buddies start off in no group, so this is an important update for us
-				if(![theContact remoteGroupName]){
-					GaimGroup *g = gaim_find_buddys_group(buddy);
-					if(g){
-						NSString *groupName = [NSString stringWithUTF8String:g->name];
-						if(groupName && [groupName length] != 0){
-							[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
-						}
-					}
-				}
+				//(ADAM) - Moved back to accountUpdateBuddy.  We need to add offline contacts to the correct group for accurate group totals
+//				if(![theContact remoteGroupName]){
+//					GaimGroup *g = gaim_find_buddys_group(buddy);
+//					if(g){
+//						NSString *groupName = [NSString stringWithUTF8String:g->name];
+//						if(groupName && [groupName length] != 0){
+//							[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
+//						}
+//					}
+//				}
 			}
 		}   break;
 		case GAIM_BUDDY_SIGNOFF:
