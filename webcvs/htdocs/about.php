@@ -49,6 +49,7 @@
                 <p>Meanwhile, here are some samples from users like you (thanks!):</p>
                 <?php echo RandomActionShoot(); ?><br /><br />
                 <?php echo RandomActionShoot(); ?><br /><br />
+                <?php echo RandomActionShoot(); ?><br /><br />
                 <?php echo RandomActionShoot(); ?>
                 </div>
                 <div class="boxThinBottom"></div>
