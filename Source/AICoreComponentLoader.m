@@ -62,8 +62,6 @@ AIMessageAliasPlugin,
 AINewMessagePanelPlugin,
 AIOfflineContactHidingPlugin,
 AISCLViewPlugin,
-AISendingKeyPreferencesPlugin,
-AIServiceIconPreferencesPlugin,
 AISpellCheckingPlugin,
 AIStandardToolbarItemsPlugin,
 AIStatusChangedMessagesPlugin,
@@ -72,7 +70,6 @@ AITextForcingPlugin,
 AITextToolbarItemsPlugin,
 AITypingNotificationPlugin,
 AIVideoChatInterfacePlugin,
-AIVolumeControlPlugin,
 BGContactNotesPlugin,
 BGEmoticonMenuPlugin,
 CBActionSupportPlugin,
@@ -109,7 +106,8 @@ IdleMessagePlugin,
 SAContactOnlineForPlugin,
 SHBookmarksImporterPlugin,
 SHLinkManagementPlugin,
-ESGlobalEventsPreferencesPlugin/*,
+ESGlobalEventsPreferencesPlugin,
+ESGeneralPreferencesPlugin/*,
 JSCEventBezelPlugin*/;
 
 @interface AICoreComponentLoader (PRIVATE)
@@ -161,8 +159,6 @@ JSCEventBezelPlugin*/;
 	[self _loadComponentClass:[AINewMessagePanelPlugin class]];
 	[self _loadComponentClass:[AIOfflineContactHidingPlugin class]];
 	[self _loadComponentClass:[AISCLViewPlugin class]];
-	[self _loadComponentClass:[AISendingKeyPreferencesPlugin class]];
-	[self _loadComponentClass:[AIServiceIconPreferencesPlugin class]];
 	[self _loadComponentClass:[AISpellCheckingPlugin class]];
 	[self _loadComponentClass:[AIStandardToolbarItemsPlugin class]];
 	[self _loadComponentClass:[AIStatusChangedMessagesPlugin class]];
@@ -171,7 +167,6 @@ JSCEventBezelPlugin*/;
 	[self _loadComponentClass:[AITextToolbarItemsPlugin class]];
 	[self _loadComponentClass:[AITypingNotificationPlugin class]];
 	[self _loadComponentClass:[AIVideoChatInterfacePlugin class]];
-	[self _loadComponentClass:[AIVolumeControlPlugin class]];
 	[self _loadComponentClass:[BGContactNotesPlugin class]];
 	[self _loadComponentClass:[BGEmoticonMenuPlugin class]];
 	[self _loadComponentClass:[CBActionSupportPlugin class]];
@@ -210,6 +205,7 @@ JSCEventBezelPlugin*/;
 	[self _loadComponentClass:[SHBookmarksImporterPlugin class]];
 	[self _loadComponentClass:[SHLinkManagementPlugin class]];
 	[self _loadComponentClass:[ESGlobalEventsPreferencesPlugin class]];
+	[self _loadComponentClass:[ESGeneralPreferencesPlugin class]];
 }
 
 //Give all components a chance to close
