@@ -8,14 +8,15 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIMessageViewController;
+@class AIMessageViewController, AIAdium;
 @protocol AIInterfaceContainer;
 
 @interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer> {
     AIMessageViewController 	*messageView;
+    AIAdium			*owner;
 }
 
-+ (AIMessageTabViewItem *)messageTabViewItemWithIdentifier:(id)identifier messageView:(AIMessageViewController *)inMessageView;
++ (AIMessageTabViewItem *)messageTabViewItemWithIdentifier:(id)identifier messageView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
 - (void)makeActive:(id)sender;
 - (void)close:(id)sender;
 - (NSString *)labelString;

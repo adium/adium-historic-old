@@ -18,11 +18,19 @@
 #import "AIContactStatusColoringPlugin.h"
 #import "AIAdium.h"
 
+@interface AIContactStatusColoringPlugin (PRIVATE)
+- (void)applyColorToHandle:(AIContactHandle *)inHandle;
+- (void)addToFlashArray:(AIContactHandle *)inHandle;
+- (void)removeFromFlashArray:(AIContactHandle *)inHandle;
+@end
+
 @implementation AIContactStatusColoringPlugin
 
 - (void)installPlugin
 {
     [[owner contactController] registerHandleObserver:self];
+
+    flashingContactArray = [[NSMutableArray alloc] init];
 }
 
 - (void)uninstallPlugin
@@ -38,35 +46,102 @@
         [inModifiedKeys containsObject:@"Away"] || 
         [inModifiedKeys containsObject:@"Idle"] || 
         [inModifiedKeys containsObject:@"Warning"] ||
-        [inModifiedKeys containsObject:@"Online"]){
+        [inModifiedKeys containsObject:@"Online"] ||
+        [inModifiedKeys containsObject:@"UnviewedContent"]){
 
-        AIMutableOwnerArray	*colorArray = [inHandle displayArrayForKey:@"Text Color"];
-        int			away, idle, warning, online;
-
-        //Get all the values
-        away = [[inHandle statusArrayForKey:@"Away"] greatestIntegerValue];
-        idle = [[inHandle statusArrayForKey:@"Idle"] greatestIntegerValue];
-        warning = [[inHandle statusArrayForKey:@"Warning"] greatestIntegerValue];
-        online = [[inHandle statusArrayForKey:@"Online"] greatestIntegerValue];
-
-        //Remove our current ailments
-        [colorArray removeObjectsWithOwner:self];
-
-        if(!online){
-            [colorArray addObject:[NSColor colorWithCalibratedRed:(68.0/255.0) green:(0.0/255.0) blue:(1.0/255.0) alpha:1.0] withOwner:self];
-        }else if(idle && away){
-            [colorArray addObject:[NSColor colorWithCalibratedRed:(89.0/255.0) green:(89.0/255.0) blue:(59.0/255.0) alpha:1.0] withOwner:self];            
-        }else if(idle){
-            [colorArray addObject:[NSColor colorWithCalibratedRed:(67.0/255.0) green:(67.0/255.0) blue:(67.0/255.0) alpha:1.0] withOwner:self];
-        }else if(away){
-            [colorArray addObject:[NSColor colorWithCalibratedRed:(66.0/255.0) green:(66.0/255.0) blue:(0.0/255.0) alpha:1.0] withOwner:self];
-        }
-
+        //Update the handle's text color
+        [self applyColorToHandle:inHandle];
         modifiedAttributes = [NSArray arrayWithObject:@"Text Color"];
     }
 
-    return(modifiedAttributes);
+    //Update our flash array
+    if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"UnviewedContent"]){
+        int unviewedContent = [[inHandle statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
 
+        if(unviewedContent && ![flashingContactArray containsObject:inHandle]){ //Start flashing
+            [self addToFlashArray:inHandle];
+        }else if(!unviewedContent && [flashingContactArray containsObject:inHandle]){ //Stop flashing
+            [self removeFromFlashArray:inHandle];
+        }
+    }
+
+    return(modifiedAttributes);
+}
+
+//Applies the correct text color to the passed handle
+- (void)applyColorToHandle:(AIContactHandle *)inHandle
+{
+    AIMutableOwnerArray		*colorArray = [inHandle displayArrayForKey:@"Text Color"];
+    int				away, idle, warning, online, unviewedContent;
+    NSColor			*color = nil;
+
+    //Get all the values
+    away = [[inHandle statusArrayForKey:@"Away"] greatestIntegerValue];
+    idle = [[inHandle statusArrayForKey:@"Idle"] greatestIntegerValue];
+    warning = [[inHandle statusArrayForKey:@"Warning"] greatestIntegerValue];
+    online = [[inHandle statusArrayForKey:@"Online"] greatestIntegerValue];
+    unviewedContent = [[inHandle statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
+
+    //Remove the existing color
+    [colorArray removeObjectsWithOwner:self];
+
+    //Determine the correct color
+    if(unviewedContent && ([[owner interfaceController] flashState] % 2)){
+        color = [NSColor orangeColor];
+    }else if(!online){
+        color = [NSColor colorWithCalibratedRed:(68.0/255.0) green:(0.0/255.0) blue:(1.0/255.0) alpha:1.0];
+    }else if(idle && away){
+        color = [NSColor colorWithCalibratedRed:(89.0/255.0) green:(89.0/255.0) blue:(59.0/255.0) alpha:1.0];
+    }else if(idle){
+        color = [NSColor colorWithCalibratedRed:(67.0/255.0) green:(67.0/255.0) blue:(67.0/255.0) alpha:1.0];
+    }else if(away){
+        color = [NSColor colorWithCalibratedRed:(66.0/255.0) green:(66.0/255.0) blue:(0.0/255.0) alpha:1.0];
+    }
+
+    //Add the new color
+    if(color){
+        [colorArray addObject:color withOwner:self];
+    }
+}
+
+//Flash all handles with unviewed content
+- (void)flash:(int)value
+{
+    NSEnumerator	*enumerator;
+    AIContactHandle	*handle;
+
+    enumerator = [flashingContactArray objectEnumerator];
+    while((handle = [enumerator nextObject])){
+        [self applyColorToHandle:handle];
+        
+        //Force a redraw
+        [[owner notificationCenter] postNotificationName:Contact_AttributesChanged object:handle userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Text Color"] forKey:@"Keys"]];
+    }
+}
+
+//Add a handle to the flash array
+- (void)addToFlashArray:(AIContactHandle *)inHandle
+{
+    //Ensure that we're observing the flashing
+    if([flashingContactArray count] == 0){
+        [[owner interfaceController] registerFlashObserver:self];
+    }
+
+    //Add the contact to our flash array
+    [flashingContactArray addObject:inHandle];
+    [self flash:[[owner interfaceController] flashState]];
+}
+
+//Remove a handle from the flash array
+- (void)removeFromFlashArray:(AIContactHandle *)inHandle
+{
+    //Remove the contact from our flash array
+    [flashingContactArray removeObject:inHandle];
+
+    //If we have no more flashing contacts, stop observing the flashes
+    if([flashingContactArray count] == 0){
+        [[owner interfaceController] unregisterFlashObserver:self];
+    }
 }
 
 @end

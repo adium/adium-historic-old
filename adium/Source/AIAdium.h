@@ -197,6 +197,10 @@ typedef enum {
 - (void)closeInterface;
 @end
 
+@protocol AIFlashObserver <NSObject>
+- (void)flash:(int)value;
+@end
+
 
 // Public core controller methods ------------------------------------------------------------
 @interface AILoginController : NSObject{
@@ -317,6 +321,10 @@ typedef enum {
     NSMutableArray		*messageViewArray;
     NSMutableArray		*interfaceArray;
 
+    NSMutableArray		*flashObserverArray;
+    NSTimer			*flashTimer;
+    int				flashState;
+    
     NSString		*errorTitle;
     NSString		*errorDesc;
 }
@@ -328,6 +336,9 @@ typedef enum {
 - (IBAction)initiateMessage:(id)sender;
 - (void)registerInterfaceController:(id <AIInterfaceController>)inController;
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;
+- (void)registerFlashObserver:(id <AIFlashObserver>)inObserver;
+- (void)unregisterFlashObserver:(id <AIFlashObserver>)inObserver;
+- (int)flashState;
 
 @end
 

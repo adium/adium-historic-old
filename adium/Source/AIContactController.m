@@ -391,7 +391,7 @@
 
     //Post an attributes changed message (if necessary)
     if([modifiedAttributeKeys count] != 0){
-        [[owner notificationCenter] postNotificationName:Contact_ObjectChanged object:inHandle userInfo:[NSDictionary dictionaryWithObject:modifiedAttributeKeys forKey:@"Keys"]];
+        [[owner notificationCenter] postNotificationName:Contact_AttributesChanged object:inHandle userInfo:[NSDictionary dictionaryWithObject:modifiedAttributeKeys forKey:@"Keys"]];
     }
 }
 

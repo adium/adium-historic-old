@@ -18,8 +18,8 @@
 
 @protocol AIHandleObserver;
 
-@interface AIContactStatusColoringPlugin : AIPlugin <AIHandleObserver> {
-
+@interface AIContactStatusColoringPlugin : AIPlugin <AIHandleObserver, AIFlashObserver> {
+    NSMutableArray	*flashingContactArray;
 }
 
 @end

@@ -155,11 +155,18 @@
 //Redisplay the modified object
 - (void)contactAttributesChanged:(NSNotification *)notification
 {
-    NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
+    AIContactHandle	*handle = [notification object];
+    NSEnumerator	*enumerator;
     AISCLOutlineView	*SCLView;
 
+    enumerator = [SCLViewArray objectEnumerator];
     while((SCLView = [enumerator nextObject])){
-        [SCLView setNeedsDisplay:YES];
+        int row = [SCLView rowForItem:handle];
+
+        if(row >= 0){
+            [SCLView setNeedsDisplayInRect:[SCLView rectOfRow:row]];
+        }
+
     }
 }
 

@@ -441,7 +441,7 @@
 
         //Create the message view & tab
         controller = [AIMessageViewController messageViewControllerWithHandle:inHandle account:inAccount content:inContent owner:owner interface:self];
-        container = [AIMessageTabViewItem messageTabViewItemWithIdentifier:inHandle messageView:controller];
+        container = [AIMessageTabViewItem messageTabViewItemWithIdentifier:inHandle messageView:controller owner:owner];
 
         //Add it to the message window & Rebuild the window menu
         [messageWindowController addTabViewItemContainer:container];

@@ -20,6 +20,7 @@
 
 @interface AIInterfaceController (PRIVATE)
 - (void)loadDualInterface;
+- (void)flashTimer:(NSTimer *)inTimer;
 @end
 
 @implementation AIInterfaceController
@@ -31,6 +32,10 @@
     messageViewArray = [[NSMutableArray alloc] init];
     interfaceArray = [[NSMutableArray alloc] init];
 
+    flashObserverArray = nil;
+    flashTimer = nil;
+    flashState = 0;
+    
     [owner registerEventNotification:Interface_ErrorMessageReceived displayName:@"Error"];
     [owner registerEventNotification:Interface_InitiateMessage displayName:@"Initiate Message"];
 }
@@ -105,6 +110,50 @@
     [[owner notificationCenter] postNotificationName:Interface_ErrorMessageReceived object:nil userInfo:errorDict];
 }
 
+
+//Flashing
+- (void)registerFlashObserver:(id <AIFlashObserver>)inObserver
+{
+    //Create a flash observer array and install the flash timer
+    if(flashObserverArray == nil){
+        flashObserverArray = [[NSMutableArray alloc] init];
+        flashTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/2.0) target:self selector:@selector(flashTimer:) userInfo:nil repeats:YES] retain];
+    }
+
+    //Add the new observer to the array
+    [flashObserverArray addObject:inObserver];
+}
+
+- (void)unregisterFlashObserver:(id <AIFlashObserver>)inObserver
+{
+    //Remove the observer from our array
+    [flashObserverArray removeObject:inObserver];
+
+    //Release the observer array and uninstall the timer
+    if([flashObserverArray count] == 0){
+        [flashObserverArray release]; flashObserverArray = nil;
+        [flashTimer invalidate];
+        [flashTimer release]; flashTimer = nil;
+    }
+}
+
+- (void)flashTimer:(NSTimer *)inTimer
+{
+    NSEnumerator	*enumerator;
+    id<AIFlashObserver>	observer;
+
+    flashState++;
+
+    enumerator = [flashObserverArray objectEnumerator];
+    while((observer = [enumerator nextObject])){
+        [observer flash:flashState];
+    }
+}
+
+- (int)flashState
+{
+    return(flashState);
+}
 
 @end
 

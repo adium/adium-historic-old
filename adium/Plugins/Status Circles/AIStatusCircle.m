@@ -17,40 +17,72 @@
 
 //#define CIRCLE_SIZE 16
 
+@interface AIStatusCircle (PRIVATE)
+- (id)init;
+@end
+
 @implementation AIStatusCircle
 
-+ (id)statusCircleWithColor:(NSColor *)inColor dot:(BOOL)inDot
++ (id)statusCircle
 {
-    return([[[self alloc] initWithColor:inColor dot:inDot] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
-- (id)initWithColor:(NSColor *)inColor dot:(BOOL)inDot
+- (id)init
 {
     [super init];
 
-    color = [inColor retain];
-    dot = inDot;
-
+    color = nil;
+    flashColor = nil;
+    state = AICircleNormal;
+    
     return(self);
 }
 
 - (void)dealloc
 {
     [color release];
-
+    [flashColor release];
+    
     [super dealloc];
 }
 
+//Set the circle state
+- (void)setState:(AICircleState)inState
+{
+    state = inState;
+}
 
+//Set the circle color
+- (void)setColor:(NSColor *)inColor
+{
+    if(color != inColor){
+        [color release];
+        color = [inColor retain];
+    }
+}
+
+//Set the alternate/flash color
+- (void)setFlashColor:(NSColor *)inColor
+{
+    if(flashColor != inColor){
+        [flashColor release];
+        flashColor = [inColor retain];
+    }
+}
+
+
+//Returns our desired width
 - (int)widthForHeight:(int)inHeight
 {
     return(inHeight - 2);
 }
 
+//Draw
 - (void)drawInRect:(NSRect)inRect
 {
     NSBezierPath 		*pillPath;
-    float 			innerLeft, innerRight, innerTop, innerBottom, centerY, insideWidth, circleRadius;
+    float 			innerLeft, innerRight, innerTop, innerBottom, centerY, insideWidth, circleRadius, lineWidth;
 
 /*
   innerLeft     innerRight
@@ -67,6 +99,7 @@
     //Calculate
     insideWidth = 0;
     circleRadius = (inRect.size.height - 2) / 2.0;
+    lineWidth = (circleRadius * (2.0/15.0));
     innerLeft = inRect.origin.x + circleRadius;
     innerRight = inRect.origin.x + insideWidth + circleRadius;
     innerTop = inRect.origin.y + 1 + circleRadius * 2;
@@ -90,33 +123,53 @@
         //left cap
         [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius startAngle:270 endAngle:90 clockwise:YES];
 
-
-    [pillPath setLineWidth:(circleRadius * (2.0/15.0))]; // 2/15ths of the circle size
-
     //draw the contents
-    [color set];
+    [((state == AICircleFlashA) ? flashColor : color) set];
+    [pillPath setLineWidth:lineWidth];
     [pillPath fill];
 
     //draw the dot (for unreplied messages)
-    if(dot){
+    if(state == AICircleDot){
         NSRect		dotRect;
         NSBezierPath 	*dotPath;
 
         dotRect = NSMakeRect(inRect.origin.x + (circleRadius - (circleRadius*(1.0/6.0))),
-                             inRect.origin.y + (circleRadius),
-                             circleRadius*(1.0/3.0),		//1/3rd the width of the main circle
-                             (circleRadius*(1.0/3.0)));		//1/3rd the width of the main circle
+                                inRect.origin.y + (circleRadius),
+                                circleRadius*(1.0/3.0),		//1/3rd the width of the main circle
+                                (circleRadius*(1.0/3.0)));		//1/3rd the width of the main circle
 
         dotPath = [NSBezierPath bezierPathWithOvalInRect:dotRect];
-        [dotPath setLineWidth:(circleRadius * 0.13333)];
+        [dotPath setLineWidth:lineWidth];
         [[NSColor blackColor] set];
         [dotPath stroke];
     }
 
-    //draw the pill frame
-    [[NSColor grayColor] set];
+    //Draw the inner circle (for unviewed messages)
+    if(state == AICircleFlashA || state == AICircleFlashB){
+        NSBezierPath *insideCircle;
+
+        //Create the circle path
+        insideCircle = [NSBezierPath bezierPath];
+        [insideCircle appendBezierPathWithArcWithCenter: NSMakePoint(inRect.origin.x + circleRadius, inRect.origin.y + 1 + circleRadius) radius:(circleRadius/(2.0)) startAngle:90 endAngle:270 clockwise:YES];
+        [insideCircle appendBezierPathWithArcWithCenter: NSMakePoint(inRect.origin.x + circleRadius, inRect.origin.y + 1 + circleRadius) radius:(circleRadius/(2.0)) startAngle:270 endAngle:90 clockwise:YES];
+
+        //Draw
+        [((state == AICircleFlashA) ? color : flashColor) set];
+        [insideCircle fill];
+
+        [insideCircle setLineWidth:lineWidth];
+        [[NSColor blackColor] set];
+        [insideCircle stroke];
+    }
+
+    //Draw the pill frame
+    [((state == AICircleFlashA || state == AICircleFlashB) ? [NSColor blackColor] : [NSColor grayColor]) set];
     [pillPath stroke];
 
+}
+
+
+@end
 
 
 
@@ -276,32 +329,5 @@
     return(pillInsideWidth + circleRadius * 2.0);
 
 */
-
-
-
-
-
-
-}
-
-
-
-
-
-
-
-
-
-@end
-
-
-
-
-
-
-
-
-
-
 
 
