@@ -26,6 +26,7 @@
 - (void)configureNameAndService;
 - (void)setContactName:(NSString *)contact;
 - (void)setServiceID:(NSString *)inServiceID;
+- (void)selectGroup:(id)sender;
 @end
 
 @implementation AINewContactWindowController
@@ -401,8 +402,13 @@
 				return YES;
 			}
 		}
+		return NO;
 	}
-	return NO;
+	return YES;
+}
+
+- (void)selectGroup:(id)sender
+{
 }
 
 @end
