@@ -115,7 +115,7 @@
 		
 		AIListObject   *destinationObject = [contentObject destination];
 		if ([destinationObject isKindOfClass:[AIAccount class]] /*&& 
-			[(AIAccount *)destinationObject shouldSendAutoresponsesWhileAway*/] ){
+			[(AIAccount *)destinationObject shouldSendAutoresponsesWhileAway]*/ ){
 			
 			NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"Autoresponse"
 																														   group:GROUP_ACCOUNT_STATUS]];
