@@ -9,7 +9,9 @@ Version 0.71
 - Fixed issues with background coloration of events displayed in the Dock
 - Fixed issues with running Adium from folders with certain unusual characters
 - Fixed issues with spoken text in combination with the "mute while away" option
+- Fixed issues with autolinkification of URLs including extended characters
 - Fixed issues with the Tic-Tac-Toe game
+- Fixed a crash when invoking certain Applescript filters, including the Broadcaster and iTunes Controller filters
 - Fixed a crash from malformed Address Book entries
 - Fixed a crash when opening a message window with no accounts online
 - Improved Rendezvous performance
