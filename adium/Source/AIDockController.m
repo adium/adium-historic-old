@@ -12,5 +12,71 @@
  | You should have received a copy of the GNU General Public License along with this program; if not,
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
+
+#import <Adium/Adium.h>
+#import "AIDockController.h"
+
+@implementation AIDockController
  
- //Nothing here yet
+//init and close
+- (void)initController
+{
+    
+}
+
+- (void)closeController
+{
+
+}
+
+//icon family methods
+- (AIIconFamily *)currentIconFamily
+{
+
+}
+- (void)setIconFamily:(AIIconFamily *)iconFamily
+{
+
+}
+
+//bouncing
+- (void)bounce
+{
+    if([NSApplication instancesRespondToSelector:@selector(requestUserAttention:)])
+    {
+        [NSApp requestUserAttention:NSInformationalRequest];
+    }
+}
+- (void)bounceWithInterval:(float)delay times:(int)num // if num = 0, bounce forever
+{
+    if(delay == 0 && num == 0) //bouncing is constant and forvever
+    {
+        if([NSApplication instancesRespondToSelector:@selector(requestUserAttention:)])
+        {
+            [NSApp requestUserAttention:NSCriticalRequest];
+        }
+        
+    }
+    else //there is some kind of interval, or we want to bounce a certain # of times
+    {
+        if(num == 0) // bounce forever!!
+        {
+            [NSTimer scheduledTimerWithTimeInterval:(double)delay target:self selector: @selector(bounce) userInfo:nil repeats:YES];
+        }
+        else // bounce num # of times
+        {
+            //Dont know what to do here...so bounce forever for now.
+            [NSTimer scheduledTimerWithTimeInterval:(double)delay target:self selector: @selector(bounce) userInfo:nil repeats:YES];
+        }
+    }
+}
+
+- (void)stopBouncing
+{
+        if([NSApplication instancesRespondToSelector:@selector(cancelUserAttentionRequest:)])
+        {
+            [NSApp cancelUserAttentionRequest:0];
+        }
+}
+
+@end

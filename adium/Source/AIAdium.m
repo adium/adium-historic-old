@@ -24,6 +24,7 @@
 #import "AIPluginController.h"
 #import "AIPreferenceController.h"
 #import "AIMenuController.h"
+#import "AIDockController.h"
 #import <AIUtilities/AIUtilities.h>
 
 #define ADIUM_DEFAULT_PREFS 			@"Default Preferences"				//File name of Adium's default preferences
@@ -78,6 +79,10 @@
     return(toolbarController);
 }
 
+- (AIDockController *)dockController{
+    return(dockController);
+}
+
 // Internal --------------------------------------------------------------------------------
 
 - (void)applicationWillFinishLaunching:(NSNotification *)notification
@@ -107,6 +112,7 @@
     [contactController initController];
     [contentController initController];
     [interfaceController initController];
+    [dockController initController];
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 
     [preferenceController registerDefaults:[NSDictionary dictionaryNamed:ADIUM_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
@@ -121,6 +127,7 @@
 {
     //Close the controllers in reverse order
     [pluginController closeController]; //should always load last.  Plugins rely on all the controllers.
+    [dockController initController];
     [interfaceController closeController];
     [contentController closeController];
     [contactController closeController];
