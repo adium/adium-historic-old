@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.87 2004/06/20 23:49:14 evands Exp $
+// $Id: AIAccountController.m,v 1.88 2004/06/30 21:58:26 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -687,10 +687,13 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     NSEnumerator		*enumerator;
     AIAccount			*account;
     
+	NSString			*ONLINE = @"Online";
+	
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        if([[account supportedPropertyKeys] containsObject:@"Online"]){
-            [account setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+        if([[account supportedPropertyKeys] containsObject:ONLINE] &&
+		   [[account preferenceForKey:ONLINE group:GROUP_ACCOUNT_STATUS] boolValue]){
+            [account setPreference:nil forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
         }
     }
 }
