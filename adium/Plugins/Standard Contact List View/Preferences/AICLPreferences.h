@@ -13,6 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#define	PREF_GROUP_CONTACT_LIST			@"Contact List"
+#define KEY_LIST_LAYOUT_NAME	@"List Layout Name"
+#define KEY_LIST_THEME_NAME		@"List Theme Name"
 
 @interface AICLPreferences : AIPreferencePane {
     IBOutlet	NSView			*view_prefViewGeneral;
@@ -36,6 +39,8 @@
 	IBOutlet	NSButton		*button_layoutEdit;
 	IBOutlet	NSButton		*button_themeEdit;
 	
+	BOOL	ignoreSelectionChanges;
+	
 	NSArray		*layoutArray;
 	NSArray		*themeArray;
 
@@ -51,5 +56,7 @@
 - (IBAction)deleteTheme:(id)sender;
 - (IBAction)editTheme:(id)sender;
 - (IBAction)editLayout:(id)sender;
+
++ (BOOL)deleteSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
 
 @end

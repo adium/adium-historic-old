@@ -52,8 +52,14 @@
 	currentThemeName = [@"Default" retain];
 	[self updateLayouts];
 	[self updateThemes];
+//	[self updateSelectedLayoutAndTheme];
 	
 	
+	//Observe for installation of new themes/layouts
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(xtrasChanged:)
+									   name:Adium_Xtras_Changed
+									 object:nil];
 	
 	//Images
 	layoutStandard = [[NSImage imageNamed:@"style-standard" forClass:[self class]] retain];
@@ -115,6 +121,7 @@
     //Grid
     [checkBox_alternatingGrid setState:[[preferenceDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue]];
     [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_SCL_GRID_COLOR] representedColor]];	
+	
 }
 
 //Preference view is closing
@@ -168,6 +175,15 @@
 	}
 }
 
+- (void)xtrasChanged:(NSNotification *)notification
+{
+	if(notification == nil || [[notification object] caseInsensitiveCompare:LIST_LAYOUT_EXTENSION] == 0){
+		[self updateLayouts];
+	}else if(notification == nil || [[notification object] caseInsensitiveCompare:LIST_THEME_EXTENSION] == 0){
+		[self updateThemes];
+	}
+}
+
 //Called in response to a font panel change
 - (void)changeFont:(id)sender
 {
@@ -204,6 +220,7 @@
 
 - (IBAction)editTheme:(id)sender
 {
+	NSLog(@"editing %@",currentThemeName);
 	[AIListThemeWindowController listThemeOnWindow:[[self view] window] withName:currentThemeName];
 }
 - (IBAction)editLayout:(id)sender
@@ -221,16 +238,18 @@
 {
 	[layoutArray release];
 	layoutArray = [[self availableSetsWithExtension:LIST_LAYOUT_EXTENSION fromFolder:LIST_LAYOUT_FOLDER] retain];
-	NSLog(@"%@",layoutArray);
+//	NSLog(@"%@",layoutArray);
 	[tableView_layout reloadData];
+	[self updateSelectedLayoutAndTheme];
 }
 
 - (void)updateThemes
 {
 	[themeArray release];
 	themeArray = [[self availableSetsWithExtension:LIST_THEME_EXTENSION fromFolder:LIST_THEME_FOLDER] retain];
-	NSLog(@"%@",themeArray);
+//	NSLog(@"%@",themeArray);
 	[tableView_theme reloadData];
+	[self updateSelectedLayoutAndTheme];
 }
 
 
@@ -257,7 +276,7 @@
 		NSString *path = [contextInfo objectForKey:@"path"];
 		if(path){
 			[[NSFileManager defaultManager] trashFileAtPath:path];
-			[self updateLayouts];
+			[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:LIST_LAYOUT_EXTENSION];
 		}
 	}
 }
@@ -266,7 +285,7 @@
 //Delete
 - (IBAction)deleteTheme:(id)sender
 {
-	NSDictionary	*selected = [layoutArray objectAtIndex:[tableView_layout selectedRow]];
+	NSDictionary	*selected = [themeArray objectAtIndex:[tableView_theme selectedRow]];
 	NSBeginAlertSheet(AILocalizedString(@"Delete Theme",nil), 
 					  AILocalizedString(@"Delete",nil), 
 					  AILocalizedString(@"Cancel",nil),
@@ -286,7 +305,7 @@
 		NSString *path = [contextInfo objectForKey:@"path"];
 		if(path){
 			[[NSFileManager defaultManager] trashFileAtPath:path];
-			[self updateThemes];
+			[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:LIST_THEME_EXTENSION];
 		}
 	}
 }
@@ -295,16 +314,34 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
+- (void)updateSelectedLayoutAndTheme
+{
+	NSEnumerator	*enumerator;
+	NSDictionary	*dict;
+	
+	[currentLayoutName release];
+	[currentThemeName release];
+	
+	currentLayoutName = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_CONTACT_LIST] retain];
+	currentThemeName = [[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_CONTACT_LIST] retain];
+	
+	ignoreSelectionChanges = YES;
+	enumerator = [layoutArray objectEnumerator];
+	while(dict = [enumerator nextObject]){
+		if([[dict objectForKey:@"name"] isEqualToString:currentLayoutName]){
+			[tableView_layout selectRow:[layoutArray indexOfObject:dict] byExtendingSelection:NO];
+		}
+	}
+	
+	enumerator = [themeArray objectEnumerator];
+	while(dict = [enumerator nextObject]){
+		if([[dict objectForKey:@"name"] isEqualToString:currentThemeName]){
+			[tableView_theme selectRow:[themeArray indexOfObject:dict] byExtendingSelection:NO];
+		}
+	}
+	ignoreSelectionChanges = NO;
+	
+}
 
 
 
@@ -349,16 +386,29 @@
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
-	NSTableView	*tableView = [notification object];
+	if(!ignoreSelectionChanges){
+		NSTableView	*tableView = [notification object];
 
-	if(tableView == tableView_layout){
-		NSDictionary	*layoutDict = [layoutArray objectAtIndex:[tableView selectedRow]];
-		[self applySet:[layoutDict objectForKey:@"preferences"] toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
-		
-	}else if(tableView == tableView_theme){
-		NSDictionary	*themeDict = [themeArray objectAtIndex:[tableView selectedRow]];
-		[self applySet:[themeDict objectForKey:@"preferences"] toPreferenceGroup:PREF_GROUP_LIST_THEME];
-		
+		if(tableView == tableView_layout){
+			NSDictionary	*layoutDict = [layoutArray objectAtIndex:[tableView selectedRow]];
+			[self applySet:[layoutDict objectForKey:@"preferences"] toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
+			
+			[[adium preferenceController] setPreference:[layoutDict objectForKey:@"name"]
+												 forKey:KEY_LIST_LAYOUT_NAME
+												  group:PREF_GROUP_CONTACT_LIST];
+			
+		}else if(tableView == tableView_theme){
+			NSDictionary	*themeDict = [themeArray objectAtIndex:[tableView selectedRow]];
+			[self applySet:[themeDict objectForKey:@"preferences"] toPreferenceGroup:PREF_GROUP_LIST_THEME];
+			
+			[[adium preferenceController] setPreference:[themeDict objectForKey:@"name"]
+												 forKey:KEY_LIST_THEME_NAME
+												  group:PREF_GROUP_CONTACT_LIST];
+			
+		}
+
+		[self updateSelectedLayoutAndTheme];
+	
 	}
 }
 
@@ -457,7 +507,6 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	NSString	*path = [destFolder stringByAppendingPathComponent:fileName];
 	
 	if([[[[AIObject sharedAdiumInstance] preferenceController] preferencesForGroup:preferenceGroup] writeToFile:path atomically:NO]){
-#warning	[self buildThemesList];
 		return(YES);
 	}else{
 		NSRunAlertPanel(@"Error Saving Theme",
@@ -469,6 +518,15 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 						path);
 		return(NO);
 	}
+}
+
++ (BOOL)deleteSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder
+{
+	NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
+	NSString	*fileName = [setName stringByAppendingPathExtension:extension];
+	NSString	*path = [destFolder stringByAppendingPathComponent:fileName];
+	
+	return([[NSFileManager defaultManager] removeFileAtPath:path handler:nil]);
 }
 
 
