@@ -93,9 +93,11 @@
 		if(!silentAndDelayed){
 			if(online){
 				[theContact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Signed On" notify:NO];
+				[theContact setStatusObject:nil withOwner:self forKey:@"Signed Off" notify:NO];
 				[theContact setStatusObject:nil withOwner:self forKey:@"Signed On" afterDelay:15];
 			}else{
 				[theContact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Signed Off" notify:NO];
+				[theContact setStatusObject:nil withOwner:self forKey:@"Signed On" notify:NO];
 				[theContact setStatusObject:nil withOwner:self forKey:@"Signed Off" afterDelay:15];
 			}
 		}
