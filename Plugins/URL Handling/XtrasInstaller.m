@@ -24,6 +24,10 @@
 - (void)closeInstaller;
 @end
 
+/*
+ * @class XtrasInstaller
+ * @brief Class which displays a progress window and downloads an AdiumXtra, decompresses it, and installs it.
+ */
 @implementation XtrasInstaller
 
 //XtrasInstaller does not autorelease because it will release itself when closed
