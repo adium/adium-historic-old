@@ -19,6 +19,8 @@
 	IBOutlet	NSButtonCell	*radioButton_haveTalked;
 	IBOutlet	NSButtonCell	*radioButton_haveNotTalked;
 	
+	IBOutlet	NSButton		*checkBox_doNotDim;
+	
 	IBOutlet	NSMatrix		*matrix_radioButtons;
 	
 	IBOutlet	NSTextField		*textField_linesToDisplay;
