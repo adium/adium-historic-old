@@ -140,6 +140,7 @@
 	stateArray = [[[adium statusController] stateArray] retain];
 
 	[tableView_stateList reloadData];
+	[self updateTableControlAvailability];
 	
 	//Update the auto away status pop up as necessary
 	[self configureAutoAwayStatusStatePopUp];
