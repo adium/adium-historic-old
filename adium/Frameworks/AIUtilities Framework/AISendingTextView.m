@@ -80,9 +80,16 @@
 - (void)insertText:(id)aString
 {
     BOOL 		insertText = YES;
+	NSString	*theString;
+	
+	if([aString isKindOfClass:[NSString class]]){
+        theString = aString;
+    }else if([aString isKindOfClass:[NSAttributedString class]]){
+        theString = [aString string];
+    }
 	
     //Catch newlines as they're inserted
-    if([(NSString *)aString length] && [(NSString *)aString characterAtIndex:0] == 10){
+    if([theString length] && [theString characterAtIndex:0] == 10){
         if([returnArray count]){
             if([[returnArray objectAtIndex:0] boolValue]){ //if the return should send
                 if(sendingEnabled) [self sendContent:nil]; //Send the content
