@@ -105,13 +105,15 @@ static NSMutableCharacterSet *skipSet = nil;
     NSScanner *preScanner = [[[NSScanner alloc] initWithString:inString] autorelease];
     [preScanner setCharactersToBeSkipped:skipSet];
     [preScanner setScanLocation:location];
+	
     while([preScanner scanUpToCharactersFromSet:skipSet intoString:&scanString]){
         unsigned int localStringLen = [scanString length];
         if(localStringLen > 2 && [scanString characterAtIndex:localStringLen - 1] == ','){
             scanString = [NSString stringWithString:[scanString substringToIndex:localStringLen - 1]];
         }
+
         SHStringOffset = [preScanner scanLocation] - [scanString length];
-        
+
         // if we have a valid URL then save the scanned string, and make a SHMarkedHyperlink out of it.
         // this way, we can preserve things like the matched string (to be converted to a NSURL),
         // parent string, it's validation status (valid, file, degenerate, etc), and it's range in the parent string

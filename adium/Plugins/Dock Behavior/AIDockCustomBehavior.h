@@ -27,6 +27,5 @@
 + (void)closeDockBehaviorCustomPanel;
 - (IBAction)deleteEvent:(id)sender;
 - (IBAction)closeWindow:(id)sender;
-- (IBAction)newEvent:(id)sender;
 
 @end

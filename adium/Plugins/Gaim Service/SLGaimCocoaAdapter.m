@@ -214,6 +214,20 @@ static AIChat* imChatLookupFromConv(GaimConversation *conv)
 		chat = [accountLookup(conv->account) mainThreadChatWithContact:sourceContact];
 		
 		//Associate the GaimConversation with the AIChat
+		/* 
+			//XXX - Evan: Gotten this here:
+		 2004-06-25 14:34:58.452 Adium[22065] An uncaught exception was raised
+		 2004-06-25 14:34:58.452 Adium[22065] *** -[NSCFDictionary setObject:forKey:]: attempt to insert nil key
+		 2004-06-25 14:34:58.452 Adium[22065] *** Uncaught exception: <NSInvalidArgumentException> *** -[NSCFDictionary setObject:forKey:]: attempt to insert nil key
+		 
+		 called by 
+		 4   com.adiumX.Gaim          	0x05da1374 imChatLookupFromConv + 0x248 (SLGaimCocoaAdapter.m:218)
+		 5   com.adiumX.Gaim          	0x05da2bbc adiumGaimConvWriteIm + 0x1a0 (SLGaimCocoaAdapter.m:693)
+		 6   Libgaim                  	0x11071d2c serv_got_im + 0x2b8 (icplusplus.c:27)
+		 
+		 Put a guard in AIChat for uniqueChatID never to be nil, but it seems odd this would even be possible.
+		 Seemed to be on messages from AOL System Msg - perhaps conv->name is nil?
+		 */
 		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
 		conv->ui_data = [chat retain];
 	}

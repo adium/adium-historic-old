@@ -34,7 +34,7 @@
     soundPathDict = nil;
 
     //Install our contact alert
-	[[adium contactAlertsController] registerActionID:@"PlaySound" withHandler:self];
+	[[adium contactAlertsController] registerActionID:SOUND_ALERT_IDENTIFIER withHandler:self];
     
     //Setup our preferences
     preferences = [[AIEventSoundPreferences preferencePaneForPlugin:self] retain];
@@ -42,7 +42,12 @@
 
     //Observe preference changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
+	
+	//Wait for Adium to finish launching before we set up our sounds so the event plugins are ready
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(adiumFinishedLaunching:)
+									   name:Adium_PluginsDidFinishLoading
+									 object:nil];
 }
 
 - (void)uninstallPlugin
@@ -56,62 +61,57 @@
     [[NSNotificationCenter defaultCenter] removeObserver:preferences];
 }
 
+- (void)adiumFinishedLaunching:(NSNotification *)notification
+{
+	[self preferencesChanged:nil];
+	[[adium notificationCenter] removeObserver:self
+										  name:Adium_PluginsDidFinishLoading
+										object:nil];
+}
 
 //Called when the preferences change, reregister for the notifications
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_SOUNDS]){
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
-        NSString	*soundSetPath;
+        NSString		*soundSetPath;
         NSEnumerator	*enumerator;
         NSDictionary	*eventDict;
-
-        //Reset our observations
-        [[adium notificationCenter] removeObserver:self];
-        [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-        
+		NSArray			*eventSoundArray;
+		
         //Load the soundset
-        [eventSoundArray release]; eventSoundArray = nil;
-        
         soundSetPath = [preferenceDict objectForKey:KEY_EVENT_SOUND_SET];
         if(soundSetPath && [soundSetPath length] != 0){ //Soundset
             [self loadSoundSetAtPath:[soundSetPath stringByExpandingBundlePath] creator:nil description:nil sounds:&eventSoundArray]; //Load the soundset
         }else{ //Custom
-            eventSoundArray = [[preferenceDict objectForKey:KEY_EVENT_CUSTOM_SOUNDSET] retain]; //Load the user's custom set
+            eventSoundArray = [preferenceDict objectForKey:KEY_EVENT_CUSTOM_SOUNDSET]; //Load the user's custom set
         }
 
-        //Put the sound paths into a dictionary (so it's quicker to lookup sounds), and observe the notifications
-        [soundPathDict release]; soundPathDict = [[NSMutableDictionary alloc] init];
-        
-//        [[adium contactAlertsController] removeAllGlobalAlertsWithAction:SOUND_ALERT_IDENTIFIER];
-//        
+		//Clear out old global sound alerts
+		[[adium contactAlertsController] removeAllGlobalAlertsWithActionID:SOUND_ALERT_IDENTIFIER];
+
+		//        
         enumerator = [eventSoundArray objectEnumerator];
         while((eventDict = [enumerator nextObject])){
 
-            NSString	*notificationName = [eventDict objectForKey:KEY_EVENT_SOUND_NOTIFICATION];
-            NSString	*soundPath = [[eventDict objectForKey:KEY_EVENT_SOUND_PATH] stringByExpandingBundlePath];
-//
-//            [[adium contactAlertsController] addGlobalAction:SOUND_ALERT_IDENTIFIER 
-            //Observe the notification
-            [[adium notificationCenter] addObserver:self
-                                           selector:@selector(eventNotification:)
-                                               name:notificationName
-                                             object:nil];
-
-            //Add the sound path to our dictionary
-            [soundPathDict setObject:soundPath forKey:notificationName];
+            NSString		*eventID = [eventDict objectForKey:KEY_EVENT_SOUND_EVENT_ID];
+            NSString		*soundPath = [eventDict objectForKey:KEY_EVENT_SOUND_PATH];
+			NSDictionary	*soundAlert = [NSDictionary dictionaryWithObjectsAndKeys:eventID, KEY_EVENT_ID,
+				SOUND_ALERT_IDENTIFIER, KEY_ACTION_ID, 
+				[NSDictionary dictionaryWithObject:soundPath forKey: KEY_ALERT_SOUND_PATH], KEY_ACTION_DETAILS,nil];
+			
+            [[adium contactAlertsController] addGlobalAlert:soundAlert];
         }
     }
 }
 
+#warning No longer being used; mute while away currently broken
 - (void)eventNotification:(NSNotification *)notification
 {
     NSDictionary    *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
     if (!([[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue] && [[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]))
         [[adium soundController] playSoundAtPath:[soundPathDict objectForKey:[notification name]]];
 }
-
-
 
 //Loads various info from a sound set file
 - (BOOL)loadSoundSetAtPath:(NSString *)inPath creator:(NSString **)outCreator description:(NSString **)outDesc sounds:(NSArray **)outArray
@@ -144,11 +144,9 @@
 
         //Scan the events
         if(outArray){
-            NSMutableArray	*soundArray = [[NSMutableArray alloc] init];
+            NSMutableArray	*soundArray = [NSMutableArray array];
 
             while(![scanner isAtEnd]){
-                NSEnumerator	*enumerator;
-                NSDictionary	*eventDict;
                 NSString	*event;
                 NSString	*soundPath;
 
@@ -158,29 +156,27 @@
                 //get the event display name
                 [scanner scanUpToString:SOUND_EVENT_QUOTE intoString:&event];
                 [scanner scanString:SOUND_EVENT_QUOTE intoString:nil];
-
+				
                 //and sound
                 [scanner scanUpToCharactersFromSet:newlineSet intoString:&soundPath];
                 [scanner scanCharactersFromSet:newlineSet intoString:nil];
-
+				
                 //Locate the notification associated with the given display name
-                enumerator = [[[adium eventNotifications] allValues] objectEnumerator];
-                while((eventDict = [enumerator nextObject])){
-                    if([event isEqualToString:[eventDict objectForKey:KEY_EVENT_DISPLAY_NAME]]){
-                        //Add this sound to our array
-                        [soundArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-			    [eventDict objectForKey:KEY_EVENT_NOTIFICATION], KEY_EVENT_SOUND_NOTIFICATION,
-			    [[inPath stringByAppendingPathComponent:soundPath] stringByCollapsingBundlePath], KEY_EVENT_SOUND_PATH,
-			    nil]];
-                    }
-                }
-            }
-
+				NSString	*eventID = [[adium contactAlertsController] eventIDForEnglishDisplayName:event];
+				if (eventID){
+					//Add this sound to our array
+					[soundArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+						eventID, KEY_EVENT_SOUND_EVENT_ID,
+						[[inPath stringByAppendingPathComponent:soundPath] stringByCollapsingBundlePath], KEY_EVENT_SOUND_PATH,
+						nil]];
+				}
+			}
+	
             *outArray = soundArray;
             success = YES;
         }
     }
-
+	
     return(success);
 }
 

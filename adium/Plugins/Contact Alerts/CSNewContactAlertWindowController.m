@@ -51,8 +51,8 @@
 	//Create a mutable copy of the alert dictionary we're passed.  If we're passed nil, create the default alert.
 	alert = [inAlert mutableCopy];
 	if(!alert){
-		alert = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[[adium contactAlertsController] defaultEventID], @"EventID",
-																	[[adium contactAlertsController] defaultActionID], @"ActionID", nil];
+		alert = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[[adium contactAlertsController] defaultEventID], KEY_EVENT_ID,
+																	[[adium contactAlertsController] defaultActionID], KEY_ACTION_ID, nil];
 	}
 	
 	return(self);
@@ -74,7 +74,7 @@
 {
 	//Configure window
 	[[self window] center];
-	[popUp_event setMenu:[[adium contactAlertsController] menuOfEventsWithTarget:self]];
+	[popUp_event setMenu:[[adium contactAlertsController] menuOfEventsWithTarget:self forGlobalMenu:NO]];
 	[popUp_action setMenu:[[adium contactAlertsController] menuOfActionsWithTarget:self]];
 
 	//Set things up for the current event

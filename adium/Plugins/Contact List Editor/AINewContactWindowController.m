@@ -227,7 +227,6 @@
 	}
 }
 
-
 //Contact Name ---------------------------------------------------------------------------------------------------------
 #pragma mark Contact Name
 //Fill in the name field if we came from a tab

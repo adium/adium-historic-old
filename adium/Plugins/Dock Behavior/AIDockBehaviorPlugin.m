@@ -34,7 +34,7 @@
     NSString	*path;
 
     //Install our contact alert
-	[[adium contactAlertsController] registerActionID:@"BounceDockIcon" withHandler:self];
+	[[adium contactAlertsController] registerActionID:DOCK_BEHAVIOR_ALERT_IDENTIFIER withHandler:self];
 	
     //
     behaviorDict = nil;
@@ -54,8 +54,20 @@
 								   selector:@selector(preferencesChanged:)
 									   name:Preference_GroupChanged
 									 object:nil];
+	
+	//Wait for Adium to finish launching before we set up our dock behavior so the event plugins are ready
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(adiumFinishedLaunching:)
+									   name:Adium_PluginsDidFinishLoading
+									 object:nil];
+}
+
+- (void)adiumFinishedLaunching:(NSNotification *)notification
+{
     [self preferencesChanged:nil];
-    
+	[[adium notificationCenter] removeObserver:self
+										  name:Adium_PluginsDidFinishLoading
+										object:nil];		
 }
 
 - (void)uninstallPlugin
@@ -71,17 +83,10 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DOCK_BEHAVIOR]){
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
-        NSArray		*behaviorArray;
-        NSString	*activeBehaviorSet;
+        NSArray			*behaviorArray;
+        NSString		*activeBehaviorSet;
         NSEnumerator	*enumerator;
         NSDictionary	*dictionary;
-        
-        //Reset our observations
-        [[adium notificationCenter] removeObserver:self];
-        [[adium notificationCenter] addObserver:self
-									   selector:@selector(preferencesChanged:)
-										   name:Preference_GroupChanged 
-										 object:nil];
 
         //Load the behaviorSet
         activeBehaviorSet = [preferenceDict objectForKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET];
@@ -93,33 +98,22 @@
 
         }
 
-        //Put the behavior info into a dictionary (so it's quicker to lookup), and observe the notifications
-        [behaviorDict release]; behaviorDict = [[NSMutableDictionary alloc] init];
+		//Clear out old global sound alerts
+		[[adium contactAlertsController] removeAllGlobalAlertsWithActionID:DOCK_BEHAVIOR_ALERT_IDENTIFIER];
+		
+		//        
         enumerator = [behaviorArray objectEnumerator];
         while((dictionary = [enumerator nextObject])){
-            NSString	*notificationName = [dictionary objectForKey:KEY_DOCK_EVENT_NOTIFICATION];
-            NSNumber	*behavior = [dictionary objectForKey:KEY_DOCK_EVENT_BEHAVIOR];
-
-            //Observe the notification
-            [[adium notificationCenter] addObserver:self
-                                           selector:@selector(eventNotification:)
-                                               name:notificationName
-                                             object:nil];
-
-            //Add the sound path to our dictionary
-            [behaviorDict setObject:behavior forKey:notificationName];
+			
+            NSString		*eventID = [dictionary objectForKey:KEY_EVENT_DOCK_EVENT_ID];
+            NSNumber		*behavior = [dictionary objectForKey:KEY_EVENT_DOCK_BEHAVIOR];
+			NSDictionary	*soundAlert = [NSDictionary dictionaryWithObjectsAndKeys:eventID, KEY_EVENT_ID,
+				DOCK_BEHAVIOR_ALERT_IDENTIFIER, KEY_ACTION_ID, 
+				[NSDictionary dictionaryWithObject:behavior forKey:KEY_DOCK_BEHAVIOR_TYPE], KEY_ACTION_DETAILS,nil];
+			
+            [[adium contactAlertsController] addGlobalAlert:soundAlert];
         }
-
     }
-}
-
-//Called in response to an event that will invoke behavior
-- (void)eventNotification:(NSNotification *)notification
-{
-    int	behavior = [[behaviorDict objectForKey:[notification name]] intValue];
-
-    //Perform the behavior
-    [[adium dockController] performBehavior:behavior];
 }
 
 //Active behavior preset.  Pass and return nil for custom behavior
@@ -215,11 +209,6 @@ Methods for custom behvaior and contact alert classes
     
     return(menuItem);
 }
-
-
-
-
-
 
 //Bounce Dock Alert ----------------------------------------------------------------------------------------------------
 #pragma mark Bounce Dock Alert

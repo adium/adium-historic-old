@@ -85,7 +85,6 @@
 			//Cache using the raw data if possible, otherwise create a TIFF representation to cache
 			//Note: TIFF supports transparency but not animation
 			NSData  *userIconData = [inObject statusObjectForKey:@"UserIconData"];
-			
 			[self _cacheUserIconData:(userIconData ? userIconData : [userIcon TIFFRepresentation]) forObject:inObject];
 			
 			[[adium contactController] listObjectAttributesChanged:inObject

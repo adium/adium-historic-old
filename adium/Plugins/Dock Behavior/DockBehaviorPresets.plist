@@ -11,13 +11,13 @@
                 <key>Behavior</key>
                 <integer>1</integer>
                 <key>Notification</key>
-                <string>Content_FirstContentRecieved</string>
+                <string>Content_MessageReceivedFirst</string>
             </dict>
             <dict>
                 <key>Behavior</key>
                 <integer>1</integer>
                 <key>Notification</key>
-                <string>Content_DidReceiveContent</string>
+                <string>Content_MessageReceived</string>
             </dict>
             <dict>
                 <key>Behavior</key>

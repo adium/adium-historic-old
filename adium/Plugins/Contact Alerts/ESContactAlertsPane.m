@@ -118,8 +118,11 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context)
 //Delete an alert
 - (IBAction)deleteAlert:(id)sender
 {
-	[[adium contactAlertsController] removeAlert:[alertArray objectAtIndex:[tableView_actions selectedRow]]
-								  fromListObject:listObject];
+	unsigned int selectedRow = [tableView_actions selectedRow];
+	if (selectedRow != -1){
+		[[adium contactAlertsController] removeAlert:[alertArray objectAtIndex:selectedRow]
+									  fromListObject:listObject];
+	}
 }
 
 //Callback from 'new alert' panel.  (Add the alert, or update existing alert)

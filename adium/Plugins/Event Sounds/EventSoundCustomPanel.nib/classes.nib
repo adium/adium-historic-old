@@ -11,14 +11,14 @@
             SUPERCLASS = NSTableView; 
         }, 
         {
-            ACTIONS = {closeWindow = id; newEventSound = id; }; 
+            ACTIONS = {closeWindow = id; }; 
             CLASS = AIEventSoundCustom; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "popUp_addEvent" = NSPopUpButton; 
                 "tableView_sounds" = AIAlternatingRowTableView; 
             }; 
-            SUPERCLASS = NSWindowController; 
+            SUPERCLASS = AIWindowController; 
         }, 
         {
             ACTIONS = {
@@ -41,6 +41,7 @@
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {
             ACTIONS = {changePreference = id; }; 
@@ -54,6 +55,11 @@
                 "view_containerView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }

@@ -24,10 +24,10 @@
 #define KEY_EVENT_CUSTOM_SOUNDSET	@"Event Custom Sounds"
 #define KEY_EVENT_SOUND_SET		@"Event Sound Set"
 #define	KEY_EVENT_SOUND_PATH		@"Path"
-#define	KEY_EVENT_SOUND_NOTIFICATION	@"Notification"
+#define	KEY_EVENT_SOUND_EVENT_ID	@"Notification"
 #define KEY_EVENT_MUTE_WHILE_AWAY       @"Mute While Away"
 
-#define SOUND_ALERT_IDENTIFIER        @"Sound"
+#define SOUND_ALERT_IDENTIFIER        @"PlaySound"
 
 #define SOUND_MENU_ICON_SIZE		16
 
@@ -39,7 +39,6 @@
 @interface AIEventSoundsPlugin : AIPlugin <AIActionHandler> {
     AIEventSoundPreferences	*preferences;
 
-    NSArray			*eventSoundArray;
     NSMutableDictionary		*soundPathDict;
 }
 

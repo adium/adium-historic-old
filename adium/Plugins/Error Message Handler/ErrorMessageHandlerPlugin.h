@@ -15,13 +15,10 @@
 
 @class ErrorMessageWindowController;
 
-#define CONTACT_ALERT_IDENTIFIER            @"Alert"
+#define ERROR_MESSAGE_CONTACT_ALERT_IDENTIFIER		@"DisplayAlert"
+#define	KEY_ALERT_TEXT								@"AlertText"
 
-
-#define	KEY_ALERT_TEXT						@"AlertText"
-
-
-@interface ErrorMessageHandlerPlugin : AIPlugin <AIActionHandler> {
+@interface ErrorMessageHandlerPlugin : AIPlugin <AIActionHandler, AIEventHandler> {
 
 }
 

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.87 2004/06/26 22:32:35 dchoby98 Exp $
+// $Id: AIContentController.m,v 1.88 2004/06/28 03:27:30 evands Exp $
 
 #import "AIContentController.h"
 
@@ -39,11 +39,6 @@
 
     //Emoticons array
     emoticonsArray = nil;
-    
-    //Register our event notifications for message sending and receiving
-    [owner registerEventNotification:Content_DidReceiveContent displayName:@"Message Received"];
-    [owner registerEventNotification:Content_FirstContentRecieved displayName:@"Message Received (New)"]; 
-    [owner registerEventNotification:Content_DidSendContent displayName:@"Message Sent"];
 }
 
 //close

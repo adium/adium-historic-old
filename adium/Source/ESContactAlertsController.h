@@ -6,6 +6,8 @@
 
 @protocol AIEventHandler <NSObject>
 - (NSString *)shortDescriptionForEventID:(NSString *)eventID;
+- (NSString *)globalShortDescriptionForEventID:(NSString *)eventID;
+- (NSString *)englishGlobalShortDescriptionForEventID:(NSString *)eventID;
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject;
 @end
 
@@ -23,7 +25,6 @@
 #define KEY_DEFAULT_EVENT_ID		@"Default Event ID"
 #define KEY_DEFAULT_ACTION_ID		@"Default Action ID"
 
-
 //Event Dictionary keys
 #define	KEY_EVENT_ID				@"EventID"
 #define	KEY_ACTION_ID				@"ActionID"
@@ -34,6 +35,7 @@
 @interface ESContactAlertsController : NSObject {
     IBOutlet	AIAdium			*owner;
 	
+	NSMutableDictionary			*globalOnlyEventHandlers;
 	NSMutableDictionary			*eventHandlers;
 	NSMutableDictionary			*actionHandlers;
 }
@@ -44,10 +46,13 @@
 
 //Events
 - (void)registerEventID:(NSString *)eventID withHandler:(id <AIEventHandler>)handler;
+- (void)registerEventID:(NSString *)eventID withHandler:(id <AIEventHandler>)handler globalOnly:(BOOL)global;
 - (NSDictionary *)eventHandlers;
-- (NSMenu *)menuOfEventsWithTarget:(id)target;
+- (NSMenu *)menuOfEventsWithTarget:(id)target forGlobalMenu:(BOOL)global;
 - (void)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject;
 - (NSString *)defaultEventID;
+- (NSString *)eventIDForEnglishDisplayName:(NSString *)displayName;
+- (NSString *)globalShortDescriptionForEventID:(NSString *)eventID;
 
 //Actions
 - (void)registerActionID:(NSString *)actionID withHandler:(id <AIActionHandler>)handler;
@@ -58,6 +63,8 @@
 //Alerts
 - (NSArray *)alertsForListObject:(AIListObject *)listObject;
 - (void)addAlert:(NSDictionary *)alert toListObject:(AIListObject *)listObject;
+- (void)addGlobalAlert:(NSDictionary *)newAlert;
 - (void)removeAlert:(NSDictionary *)victimAlert fromListObject:(AIListObject *)listObject;
+- (void)removeAllGlobalAlertsWithActionID:(NSString *)actionID;
 
 @end
