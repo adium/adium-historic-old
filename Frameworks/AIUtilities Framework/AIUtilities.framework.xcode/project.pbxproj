@@ -5105,7 +5105,7 @@
 				LIBRARY_STYLE = DYNAMIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
-				OTHER_LDFLAGS = "-seg1addr 0x11000000";
+				OTHER_LDFLAGS = "-seg1addr 0x12000000";
 				PRODUCT_NAME = AIUtilities;
 				WARNING_CFLAGS = " -Wno-long-double";
 				WRAPPER_EXTENSION = framework;
