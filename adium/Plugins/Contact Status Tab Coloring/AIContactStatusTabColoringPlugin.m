@@ -117,18 +117,18 @@
 	// status colors are automatically used if the custom colors are disabled
 	
     //Signed off, signed on, or typing (These do not show if there is unviewed content)
-    if(!color && !unviewedContent){
+    if(!color && !unviewedContent && (unviewedContentEnabled || contactListUnviewedContentEnabled)){
 		if( ![inObject integerStatusObjectForKey:@"Signed Off"] &&
 			![inObject integerStatusObjectForKey:@"Online"]){
 			color = offlineColor;
 			
-        }else if( [inObject integerStatusObjectForKey:@"Signed Off"] ){
+        }else if( [inObject integerStatusObjectForKey:@"Signed Off"] && (signedOffEnabled || contactListSignedOffEnabled) ){
             color = signedOffColor;
         
-        }else if( [inObject integerStatusObjectForKey:@"Signed On"] ){
+        }else if( [inObject integerStatusObjectForKey:@"Signed On"] && (signedOnEnabled || contactListSignedOnEnabled) ){
             color = signedOnColor;
 
-        }else if( [inObject integerStatusObjectForKey:@"Typing"] ){
+        }else if( [inObject integerStatusObjectForKey:@"Typing"] && (typingEnabled || contactListTypingEnabled) ){
             color = typingColor;
 
         }
@@ -140,11 +140,11 @@
         idle = [inObject doubleStatusObjectForKey:@"Idle"];
 
         //Idle And Away, Away, or Idle
-        if( away && (idle != 0) ){
+        if( away && (idle != 0) && (idleAndAwayEnabled || contactListIdleAndAwayEnabled) ){
             color = idleAndAwayColor;
-        }else if( away ){
+        }else if( away && (awayEnabled || contactListAwayEnabled) ){
             color = awayColor;
-        }else if( idle != 0 ){
+        }else if( idle != 0 && (idleEnabled || contactListIdleEnabled) ){
             color = idleColor;
         }
     }
@@ -216,6 +216,15 @@
         offlineEnabled = [[prefDict objectForKey:KEY_TAB_OFFLINE_ENABLED] boolValue] && customColorsEnabled;
         unviewedFlashEnabled = [[prefDict objectForKey:KEY_TAB_UNVIEWED_FLASH_ENABLED] boolValue] && customColorsEnabled;
 		
+		contactListAwayEnabled = [[prefDict objectForKey:KEY_AWAY_ENABLED] boolValue];
+        contactListIdleEnabled = [[prefDict objectForKey:KEY_IDLE_ENABLED] boolValue];
+        contactListSignedOffEnabled = [[prefDict objectForKey:KEY_SIGNED_OFF_ENABLED] boolValue];
+		contactListSignedOnEnabled = [[prefDict objectForKey:KEY_SIGNED_ON_ENABLED] boolValue];
+		contactListTypingEnabled = [[prefDict objectForKey:KEY_TYPING_ENABLED] boolValue];
+        contactListUnviewedContentEnabled = [[prefDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue];
+        contactListIdleAndAwayEnabled = [[prefDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue];
+        contactListOfflineEnabled = [[prefDict objectForKey:KEY_OFFLINE_ENABLED] boolValue];		
+	
 		//Release the old values..
 		//Cache the new colors
 		[signedOffColor release];

@@ -28,6 +28,17 @@
 #define KEY_TAB_UNVIEWED_FLASH_ENABLED	@"Tab Unviewed Flash Enabled"
 #define KEY_TAB_USE_CUSTOM_COLORS       @"Tab Use Custom Colors"
 
+// Contact List Colors Enabled
+#define KEY_AWAY_ENABLED			@"Away Enabled"
+#define KEY_IDLE_ENABLED			@"Idle Enabled"
+#define KEY_TYPING_ENABLED			@"Typing Enabled"
+#define KEY_SIGNED_OFF_ENABLED		@"Signed Off Enabled"
+#define KEY_SIGNED_ON_ENABLED		@"Signed On Enabled"
+#define KEY_UNVIEWED_ENABLED		@"Unviewed Content Enabled"
+#define KEY_ONLINE_ENABLED			@"Online Enabled"
+#define KEY_IDLE_AWAY_ENABLED		@"Idle And Away Enabled"
+#define KEY_OFFLINE_ENABLED			@"Offline Enabled"
+
 // Custom Tab Colors
 #define KEY_TAB_AWAY_COLOR		@"Tab Away Color"
 #define KEY_TAB_IDLE_COLOR		@"Tab Idle Color"
@@ -76,6 +87,15 @@
     BOOL		idleAndAwayEnabled;
 	BOOL		offlineEnabled;
     BOOL		unviewedFlashEnabled;
+	
+    BOOL		contactListAwayEnabled;
+    BOOL		contactListIdleEnabled;
+    BOOL		contactListSignedOffEnabled;
+    BOOL		contactListSignedOnEnabled;
+    BOOL		contactListTypingEnabled;
+    BOOL		contactListUnviewedContentEnabled;
+    BOOL		contactListIdleAndAwayEnabled;
+	BOOL		contactListOfflineEnabled;
     
     NSColor		*awayColor;
     NSColor		*idleColor;
