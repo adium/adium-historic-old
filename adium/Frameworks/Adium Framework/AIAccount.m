@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.62 2004/06/07 06:53:53 evands Exp $
+// $Id: AIAccount.m,v 1.63 2004/06/24 14:31:49 evands Exp $
 
 #import "AIAccount.h"
 
@@ -425,7 +425,7 @@
 //Update Silencing -----------------------------------------------------------------------------------------------------
 #pragma mark Update Silencing
 //Silence update for the specified interval
-- (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval
+- (void)silenceAllContactUpdatesForInterval:(NSTimeInterval)interval
 {
     silentAndDelayed = YES;
 	
