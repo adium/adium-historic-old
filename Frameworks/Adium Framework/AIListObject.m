@@ -53,17 +53,6 @@ DeclareString(FormattedUID);
 		
 	visible = YES;
 
-	
-	NSString *formattedUID = [self preferenceForKey:FormattedUID 
-											  group:ObjectStatusCache 
-							  ignoreInheritedValues:YES];
-	if (formattedUID && ![formattedUID isEqualToString:UID]){
-		//No need to go through the whole rigamarole of setStatusObject:forKey:, especially since that will end up resaving the preference we just loaded
-		//This whole formattedUID preference thing is basically just a hack for protocols which have a formatted UID we only get once we sign on; this way
-		//offline contacts display with the properly formatted UID instead of the compactedString version Adium generally uses for internal bookkeeping.
-		[statusDictionary setObject:formattedUID forKey:FormattedUID];
-	}
-
 	//Load the order index for this object (which will be appropriate for the last group it was in)
 	NSNumber	*orderIndexNumber = [self preferenceForKey:KEY_ORDER_INDEX
 													 group:ObjectStatusCache 
@@ -233,13 +222,6 @@ DeclareString(FormattedUID);
 	if (containingObject){
 		[containingObject object:self didSetStatusObject:value forKey:key notify:notify];
 	}
-
-	//Cache the setting of a formatted UID so we'll have it while offline after the next launch
-	if (inObject == self) {
-		if ([key isEqualToString:FormattedUID]){
-			[self setPreference:value forKey:key group:ObjectStatusCache];
-		}
-	}
 	
 	[super object:inObject didSetStatusObject:value forKey:key notify:notify];
 }
@@ -364,7 +346,6 @@ DeclareString(FormattedUID);
 {
     return(OBJECT_PREFS_PATH);
 }
-
 
 //Display Name Convenience Methods -------------------------------------------------------------------------------------
 #pragma mark Display Name Convenience Methods
