@@ -54,7 +54,7 @@
 									 groupName:nil];
 	[webView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 	[webView setFrameLoadDelegate:self];
-	[webView setPolicyDelegate:self];
+	[webView setPolicyDelegate:plugin]; //Send policy questions directly to the plugin
 	[webView setUIDelegate:self];
 	[webView setMaintainsBackForwardList:NO];
 	[webView unregisterDraggedTypes]; 
@@ -217,21 +217,12 @@
 	webViewIsReady = YES;
 }
 
-//Prevent the webview from following external links.  We direct these to the users web browser.
-- (void)webView:(WebView *)sender
-    decidePolicyForNavigationAction:(NSDictionary *)actionInformation
-    request:(NSURLRequest *)request
-    frame:(WebFrame *)frame
-    decisionListener:(id<WebPolicyDecisionListener>)listener
+
+#pragma mark WebUIDelegate
+- (NSArray *)webView:(WebView *)sender contextMenuItemsForElement:(NSDictionary *)element defaultMenuItems:(NSArray *)defaultMenuItems
 {
-    int actionKey = [[actionInformation objectForKey: WebActionNavigationTypeKey] intValue];
-    if (actionKey == WebNavigationTypeOther){
-		[listener use];
-    } else {
-		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
-		[[NSWorkspace sharedWorkspace] openURL:url];
-		[listener ignore];
-    }
+	return [plugin webView:sender contextMenuItemsForElement:element defaultMenuItems:defaultMenuItems forChat:chat];
 }
+
 
 @end
