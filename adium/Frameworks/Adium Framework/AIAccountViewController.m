@@ -180,34 +180,17 @@
     NSString    *accountName = [textField_accountName stringValue];
     
     if([[accountName compactedString] compare:[account UID]] != 0){
-        //If the name has changed completely, create a new account
-        //
-        // ####
-        // When we call changeUIDOfAccount, the account controller will delete us from the account list.
-        // This deletion will spawn a rebuild of the account preferences window, which will in turn delete
-        // this account view controller and all it's views.  The act of deleting the view which sent us this
-        // message will cause a crash as we exit below.
-        // 
-        // I've implemented a quick 'patchy' fix.  If you see a real fix for this problem, make it be :)
-        // ####
-        //
-        [self performSelector:@selector(_delayedChangeTo:) withObject:accountName afterDelay:0.0001];
+		NSString    *flatUserName = [accountName compactedString];
+		AIAccount   *targetAccount = account;
+		
+		//Create a new account & Update our custom formatting
+		targetAccount = [[adium accountController] changeUIDOfAccount:account to:flatUserName];
+		[targetAccount setPreference:accountName forKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
         
     }else{
         [account setPreference:accountName forKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
         
     }
 }
-- (void)_delayedChangeTo:(NSString *)toName{
-    NSString    *flatUserName = [toName compactedString];
-    AIAccount   *targetAccount = account;
-    
-    //Create a new account
-    targetAccount = [[adium accountController] changeUIDOfAccount:account to:flatUserName];
-    
-    //Update our custom formatting
-    [targetAccount setPreference:toName forKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
-}
-
 
 @end
