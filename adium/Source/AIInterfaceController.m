@@ -64,6 +64,10 @@
 {
     //Load the interface
     [[interfaceArray objectAtIndex:0] openInterface];
+
+    //Configure our dynamic paste menu item
+    [menuItem_paste setDynamic:YES];
+    [menuItem_pasteFormatted setDynamic:YES];
 }
 
 
@@ -236,6 +240,41 @@
 }
 
 
+
+//Custom pasting ----------------------------------------------------------------------------------------------------
+@protocol _RESPONDS_TO_PASTE //Just a temp protocol to suppress compiler warnings
+- (void)pasteAsPlainText:(id)sender;
+- (void)pasteAsRichText:(id)sender;
+- (void)paste:(id)sender;
+@end
+
+//Paste, stripping formatting
+- (IBAction)paste:(id)sender
+{
+    NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+
+    if([responder respondsToSelector:@selector(pasteAsPlainText:)]){
+        [(NSResponder<_RESPONDS_TO_PASTE> *)responder pasteAsPlainText:sender];
+
+    }else if([responder respondsToSelector:@selector(paste:)]){
+        [(NSResponder<_RESPONDS_TO_PASTE> *)responder paste:sender];
+
+    }
+}
+
+//Paste with formatting
+- (IBAction)pasteFormatted:(id)sender
+{
+    NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+
+    if([responder respondsToSelector:@selector(pasteAsPlainText:)]){
+        [(NSResponder<_RESPONDS_TO_PASTE> *)responder pasteAsRichText:sender];
+
+    }else if([responder respondsToSelector:@selector(paste:)]){
+        [(NSResponder<_RESPONDS_TO_PASTE> *)responder paste:sender];
+
+    }
+}
 
 @end
 
