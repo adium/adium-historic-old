@@ -102,15 +102,14 @@
     }
     else if([pattern isEqualToString:@"%m"])
     {
-	id *contact = [content source]; 	
+	id contact = [content source]; 	
 	
-	if( [[contact className] isKindOfClass:[AIListContact class]] )
-	{
-	    return [contact displayName];
-	}
-	else
-	{
-	    return [contact UID];
+	if( [[contact className] isKindOfClass:[AIListContact class]] ) {
+	    return [(AIListContact *)contact displayName];
+	} else if ([[contact className] isKindOfClass:[AIAccount class]] ){
+	    return [(AIAccount *)contact UID];
+	} else {
+	    return @"";
 	}
     }
     else if([pattern isEqualToString:@"%t"])
