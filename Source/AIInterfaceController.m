@@ -1287,6 +1287,41 @@
 	}
 }
 
+#pragma mark Window levels
+- (NSMenu *)menuForWindowLevelsNotifyingTarget:(id)target
+{
+	NSMenu		*windowPositionMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
+	NSMenuItem	*menuItem;
+
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Above other windows",nil)
+																	 target:target
+																	 action:@selector(selectedWindowLevel:)
+															  keyEquivalent:@""] autorelease];
+	[menuItem setEnabled:YES];
+	[menuItem setTag:AIFloatingWindowLevel];
+	[windowPositionMenu addItem:menuItem];
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Normal",nil)
+																	 target:target
+																	 action:@selector(selectedWindowLevel:)
+															  keyEquivalent:@""] autorelease];
+	[menuItem setEnabled:YES];
+	[menuItem setTag:AINormalWindowLevel];
+	[windowPositionMenu addItem:menuItem];
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Below other windows",nil)
+																	 target:target
+																	 action:@selector(selectedWindowLevel:)
+															  keyEquivalent:@""] autorelease];
+	[menuItem setEnabled:YES];
+	[menuItem setTag:AIDesktopWindowLevel];
+	[windowPositionMenu addItem:menuItem];
+	
+	
+	[windowPositionMenu setAutoenablesItems:NO];
+	return([windowPositionMenu autorelease]);
+}
+
 @end
 
 
