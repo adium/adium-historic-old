@@ -406,12 +406,6 @@
 }
 
 // AIAccount_Status --------------------------------------------------------------------------------
-// Returns an array of the status keys we support
-- (NSArray *)supportedPropertyKeys
-{
-    return([NSArray array]);
-}
-
 // Respond to account status changes
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
