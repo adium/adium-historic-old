@@ -41,7 +41,8 @@
 
 - (CONTACT_INFO_CATEGORY)contactInfoCategory
 {
-	
+	// This gets overriden by subclasses.
+	return AIInfo_Profile;
 }
 
 //Configure the pane for a list object

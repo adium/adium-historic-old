@@ -723,7 +723,7 @@
 {
     NSEnumerator    *keyEnumerator = [autoRefreshingKeys objectEnumerator];
     NSString        *key;
-    while(key = [keyEnumerator nextObject]){
+    while((key = [keyEnumerator nextObject])){
 		[self updateStatusForKey:key];
     }
 }
@@ -839,7 +839,7 @@
 	NSEnumerator	*enumerator = [[self contactStatusObjectKeys] objectEnumerator];
 	NSString		*key;
 	
-	while(key = [enumerator nextObject]){
+	while((key = [enumerator nextObject])){
 		[listContact setStatusObject:nil forKey:key notify:NotifyLater];
 	}
 	
@@ -861,7 +861,7 @@
 	enumerator = [[[adium contactController] allContactsInGroup:nil
 													  subgroups:YES 
 													  onAccount:self] objectEnumerator];
-	while(listContact = [enumerator nextObject]){
+	while((listContact = [enumerator nextObject])){
 		[listContact setRemoteGroupName:nil];
 		[self removeStatusObjectsFromContact:listContact silently:YES];
 	}

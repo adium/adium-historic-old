@@ -653,7 +653,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	//KBOTC's odd hackish body background thingy for WMV since no one else will add it
 	if(thingsToInclude.bodyBackground){
 		[string setString:@""];
-		if(pageColor = [inMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil]){
+		if((pageColor = [inMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil])){
 		[string setString:[pageColor hexString]];
 		[string replaceOccurrencesOfString:@"\"" withString:@"" options:NSLiteralSearch range:NSMakeRange(0, [string length])];
 		}

@@ -95,6 +95,9 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 		case AIOfflineStatusType:
 			return STATUS_NAME_OFFLINE;
 			break;
+		default:
+			return STATUS_NAME_OFFLINE;
+			break;
 	}
 }
 							 
@@ -201,6 +204,8 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 			return(NO);
 		}
 	}
+
+	return NO;
 }
 
 //Returns the state icon for the passed chat (new content, typing, ...)
@@ -295,11 +300,11 @@ static AIStatusType statusTypeForListObject(AIListObject *listObject)
 		int				xOrigin = 0;
 
 		[image lockFocus];
-		while(iconID = [enumerator nextObject]){
+		while((iconID = [enumerator nextObject])){
 			NSString	*anIconPath = [inPath stringByAppendingPathComponent:[previewIconNames objectForKey:iconID]];
 			NSImage		*anIcon;
 			
-			if(anIcon = [[[NSImage alloc] initWithContentsOfFile:anIconPath] autorelease]){
+			if((anIcon = [[[NSImage alloc] initWithContentsOfFile:anIconPath] autorelease])){
 				NSSize	anIconSize = [anIcon size];
 				NSRect	targetRect = NSMakeRect(xOrigin, 0, PREVIEW_MENU_IMAGE_SIZE, PREVIEW_MENU_IMAGE_SIZE);
 				

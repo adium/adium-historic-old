@@ -31,7 +31,7 @@
  */
 - (id)init
 {
-	if(self = [super init]){
+	if((self = [super init])){
 		//Register this service with Adium
 		[[adium accountController] registerService:self];
 		

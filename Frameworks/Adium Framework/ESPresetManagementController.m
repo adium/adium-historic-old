@@ -60,7 +60,7 @@
 
 - (id)initWithWindowNibName:(NSString *)windowNibName presets:(NSArray *)inPresets namedByKey:(NSString *)inNameKey withDelegate:(id)inDelegate
 {
-    if(self = [super initWithWindowNibName:windowNibName]){
+    if((self = [super initWithWindowNibName:windowNibName])){
 		presets = [inPresets retain];
 		nameKey = [inNameKey retain];
 		delegate = [inDelegate retain];

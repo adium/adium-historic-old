@@ -83,7 +83,7 @@ struct message
   */
 - (id)init
 {
-	if( self = [super init] )
+	if((self = [super init]))
 	{
 		NSMutableDictionary		* theThreadDictionary;
 		id						theOneForThisThread;
@@ -92,7 +92,7 @@ struct message
 		messageRetry = DEFAULT_PORT_MESSAGE_RETRY;
 		
 		theThreadDictionary = [[NSThread currentThread] threadDictionary];
-		if( theOneForThisThread = [theThreadDictionary objectForKey:kThreadDictionaryKey] )
+		if((theOneForThisThread = [theThreadDictionary objectForKey:kThreadDictionaryKey]))
 		{
 			[self release];
 			self = theOneForThisThread;

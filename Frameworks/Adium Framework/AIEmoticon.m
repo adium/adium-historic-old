@@ -47,7 +47,7 @@
 //Init
 - (AIEmoticon *)initWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName pack:(AIEmoticonPack *)inPack
 {
-    if (self = [super init]){
+    if ((self = [super init])){
 		path = [inPath retain];
 		name = [inName retain];
 		textEquivalents = [inTextEquivalents retain];

@@ -335,7 +335,8 @@
  */
 - (BOOL)joinGroupChatNamed:(NSString *)name
 {
-	//XXX - Do we need this method?  All chats are supposed to be treated equally and assuming a 'name' seems protocol specific -ai
+	// XXX - Do we need this method?  All chats are supposed to be treated equally and assuming a 'name' seems protocol specific -ai
+	return NO;
 }
 
 /*!

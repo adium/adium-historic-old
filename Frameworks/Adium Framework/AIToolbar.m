@@ -55,7 +55,7 @@
 
 	//Post the notification for each item
 	enumerator = [[self items] objectEnumerator];
-	while(item = [enumerator nextObject]){
+	while((item = [enumerator nextObject])){
 		[defaultCenter postNotificationName:NSToolbarDidRemoveItemNotification
 									 object:self
 								   userInfo:[NSDictionary dictionaryWithObject:item

@@ -534,7 +534,7 @@
 		
 		//The backgroundOpacity is our eventual target; Temporary Display Opacity will be a fraction from 0 to 1 which
 		//should be applied to that target
-		if(opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"]){
+		if((opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"])){
 			targetOpacity *= [opacityNumber floatValue];
 		}
 		
@@ -593,7 +593,7 @@
 		return(SELECTED_IMAGE_OPACITY);
 	}else{
 		NSNumber	*opacityNumber;
-		if(opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"]){
+		if((opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"])){
 			return([opacityNumber floatValue]);
 		}else{
 			return([[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue]);

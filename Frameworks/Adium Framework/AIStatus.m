@@ -71,7 +71,7 @@
  */
 - (id)init
 {
-	if(self = [super init]){
+	if((self = [super init])){
 		statusDict = [[NSMutableDictionary alloc] init];
 	}
 	

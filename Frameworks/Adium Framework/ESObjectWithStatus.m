@@ -45,7 +45,7 @@ DeclareString(Value);
 
 	//Invalidate any outstanding delayed status changes
 	enumerator = [delayedStatusTimers objectEnumerator];
-	while(timer = [enumerator nextObject]){
+	while((timer = [enumerator nextObject])){
 		[timer invalidate];
 	}
 	[delayedStatusTimers release]; delayedStatusTimers = nil;

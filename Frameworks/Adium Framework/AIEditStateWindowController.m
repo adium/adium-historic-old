@@ -70,7 +70,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 
 	NSNumber	*targetHash = [NSNumber numberWithUnsignedInt:[inTarget hash]];
 		
-	if(controller = [controllerDict objectForKey:targetHash]){
+	if((controller = [controllerDict objectForKey:targetHash])){
 		[controller setOriginalStatusState:inStatusState forType:inStatusType];
 		[controller setAccount:inAccount];
 		[controller configureForAccountAndWorkingStatusState];
@@ -106,7 +106,7 @@ static	NSMutableDictionary	*controllerDict = nil;
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget showSaveCheckbox:(BOOL)inShowSaveCheckbox
 {
-    if(self = [super initWithWindowNibName:windowNibName]){
+    if((self = [super initWithWindowNibName:windowNibName])){
 		[self setOriginalStatusState:inStatusState forType:inStatusType];
 		[self setAccount:inAccount];
 		

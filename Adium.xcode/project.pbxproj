@@ -8018,14 +8018,12 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				INFOPLIST_FILE = Plists/Adium_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = "-seg1addr 0x10000000";
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = Adium;
 				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = framework;
+				WARNING_CFLAGS = "-Wall";
 			};
 			dependencies = (
 				34D8371407CBFC4C006466F2,

@@ -341,7 +341,7 @@ int actionSort(id objectA, id objectB, void *context)
 	
 	enumerator = [[[adium contactAlertsController] sortedArrayOfEventIDsFromArray:[contactAlertsDict allKeys]] objectEnumerator];
 	
-	while(eventID = [enumerator nextObject]){
+	while((eventID = [enumerator nextObject])){
 		[contactAlertsEvents addObject:eventID];
 		[contactAlertsActions addObject:[[contactAlertsDict objectForKey:eventID] sortedArrayUsingFunction:actionSort
 																								   context:NULL]];
@@ -349,7 +349,7 @@ int actionSort(id objectA, id objectB, void *context)
 	
 	//Now add events which have no actions at present
 	enumerator = [[[adium contactAlertsController] sortedArrayOfEventIDsFromArray:[[adium contactAlertsController] allEventIDs]] objectEnumerator];
-	while(eventID = [enumerator nextObject]){
+	while((eventID = [enumerator nextObject])){
 		if(![contactAlertsEvents containsObject:eventID]){
 			[contactAlertsEvents addObject:eventID];
 			
@@ -578,7 +578,7 @@ int actionSort(id objectA, id objectB, void *context)
 													  ofRow:row];
 
 		enumerator = [[inOutlineView tableColumns] objectEnumerator];
-		while(tableColumn = [enumerator nextObject]){
+		while((tableColumn = [enumerator nextObject])){
 			NSString	*identifier = [tableColumn identifier];
 			
 			if([identifier isEqualToString:@"event"] || ([identifier isEqualToString:@"action"] && !eventIsExtended)){
@@ -716,7 +716,7 @@ int actionSort(id objectA, id objectB, void *context)
 
 	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
 	enumerator = [contactEventArray objectEnumerator];
-	while(eventDict = [enumerator nextObject]){			
+	while((eventDict = [enumerator nextObject])){
 		[[adium contactAlertsController] removeAlert:eventDict fromListObject:listObject];
 	}
 	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
