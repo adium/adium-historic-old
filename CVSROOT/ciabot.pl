@@ -120,8 +120,10 @@ $" = "\7";
 # and then the list of files modified.
 
 @files = split (' ,,,', ($ARGV[0] or ''));
-$dir[0] = shift @files or die "$0: no directory specified\n";
-$dirfiles[0] = "@files" or die "$0: no files specified\n";
+#$dir[0] = shift @files or die "$0: no directory specified\n";
+#$dirfiles[0] = "@files" or die "$0: no files specified\n";
+$dir[0] = shift @files or exit 1;
+$dirfiles[0] = "@files" or exit 1;
 
 
 # Guess module name.
