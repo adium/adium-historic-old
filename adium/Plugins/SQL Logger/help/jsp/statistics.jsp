@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 728 $ $Date: 2004/05/07 18:06:12 $ -->
+<!--$Rev: 730 $ $Date: 2004/05/09 17:13:19 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -413,7 +413,7 @@ try {
     }
 
     maxDistance = max * 1.25;
-    
+
     out.print("<br />\n<table height=\"250\" width=\"350\"" +
     " cellspacing=\"0\"><tr>");
 
@@ -522,6 +522,7 @@ try {
             " and message_date > smv.message_date - '10 minutes'::interval) "+
         " and (sender_id = ? or recipient_id = ?) "+
         " group by sender_sn, recipient_sn, message "+
+        " having count(*) > 1 " +
         " order by count(*) desc limit 20");
     
     pstmt.setInt(1, sender);
@@ -538,9 +539,10 @@ try {
                 " and recipient_id in (smv.sender_id, smv.recipient_id) "+
                 " and message_date < smv.message_date " +
                 " and message_date > smv.message_date - '10 minutes'::interval) "+
-            " and (sender_id = user_id or recipient_id = user_id) "+
+            " and (sender_id = user_id or recipient_id = user_id) " +
             " and meta_id = ? " +
-            " group by sender_sn, recipient_sn, message "+
+            " group by sender_sn, recipient_sn, message " +
+            " having count(*) > 1 " +
             " order by count(*) desc limit 20");
 
         pstmt.setInt(1, meta_id);
@@ -570,6 +572,41 @@ try {
     }
     out.print("</table>");
 
+%>
+                </div>
+                <div class="boxWideBottom"></div>
+
+                <h1>Most Popular Users</h1>
+                <div class="boxWideTop"></div>
+                <div class="boxWideContent">
+<%
+    pstmt = conn.prepareStatement("select username, sum(num_messages), (select message from messages where sender_id = user_id order by random() limit 1) as message from users, user_statistics where user_id = sender_id and (sender_id = ? or recipient_id = ?) group by username, user_id order by sum desc, username limit 20");
+
+    pstmt.setInt(1, sender);
+    pstmt.setInt(2, sender);
+    
+    if(meta_id != 0) {
+        pstmt = conn.prepareStatement("select username, sum(num_messages), (select message from messages where sender_id = user_id order by random() limit 1) as message from users natural join meta_contact, user_statistics where user_id = sender_id and (sender_id = user_id or recipient_id = user_id) and meta_id = ? group by username, user_id order by sum desc, username limit 20");
+
+        pstmt.setInt(1, meta_id);
+    }
+
+
+    rset = pstmt.executeQuery();
+
+    out.println("<table>");
+    out.println("<tr><td>#</td><td>Username</td><td>Total</td><td>Random Quote</td></tr>");
+
+    while(rset.next()) {
+        out.println("<tr>");
+        out.println("<td>" + rset.getRow() + "</td>");
+        out.println("<td>" + rset.getString("username") + "</td>");
+        out.println("<td>" + rset.getString("sum") + "</td>");
+        out.println("<td>" + rset.getString("message") + "</td>");
+        out.println("</tr>");
+    }
+
+    out.println("</table>");
 %>
                 </div>
                 <div class="boxWideBottom"></div>

@@ -132,6 +132,10 @@ form {
     font-size: 11px;
 }
 
+.boxWideBottom {
+    background: url(../images/boxWideBottomBorder.png) no-repeat;
+}
+
 /*<group=Weblog>*/
 
 .weblogDateHeader {
@@ -141,10 +145,6 @@ form {
 }
 
 /*</group>*/
-
-.boxWideBottom {
-    background: url(../images/boxWideBottomBorder.png) no-repeat;
-}
 
 #sidebar-a {
     background: right  repeat-y;
