@@ -14,6 +14,7 @@
 	NSImage		*tabAvailable;
 	NSImage		*tabContent;
 	NSImage		*tabTyping;
+	NSImage		*tabEnteredText;
 }
 
 @end
