@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.76 2004/08/12 00:47:02 evands Exp $
+// $Id: AIAccount.m,v 1.77 2004/08/18 04:33:16 evands Exp $
 
 #import "AIAccount.h"
 
@@ -424,9 +424,10 @@
 	
 }
 
-- (const char *)customServerToCheckForReachability
+//By default, accounts connect/disconnect as network reachability changes
+- (BOOL)connectivityBasedOnNetworkReachability
 {
-	return nil;
+	return YES;
 }
 
 //Contact Status -------------------------------------------------------------------------------------------------------
