@@ -111,8 +111,10 @@ static void adiumGaimBlistNewNode(GaimBlistNode *node)
 {
     NSCAssert(node != nil, @"BlistNewNode on null node");
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
-        GaimBuddy *buddy = (GaimBuddy*) node;
-        [accountLookup(buddy->account) accountNewBuddy:buddy];
+		GaimBuddy *buddy = (GaimBuddy*) node;
+        [accountLookup(buddy->account) performSelectorOnMainThread:@selector(accountNewBuddy:)
+														withObject:[NSValue valueWithPointer:buddy]
+													 waitUntilDone:NO];
     }
 }
 
@@ -129,7 +131,9 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
         // ui_data will be NULL if we've connected and disconnected;
         // this purges our handles but not gaim's. So look up the account.
         GaimBuddy *buddy = (GaimBuddy*) node;
-        [accountLookup(buddy->account) accountUpdateBuddy:buddy];
+        [accountLookup(buddy->account) performSelectorOnMainThread:@selector(accountUpdateBuddy:)
+														withObject:[NSValue valueWithPointer:buddy]
+													 waitUntilDone:NO];
     }
 }
 
@@ -138,7 +142,9 @@ static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
     NSCAssert(node != nil, @"BlistRemove on null node");
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
         GaimBuddy *buddy = (GaimBuddy*) node;
-        [accountLookup(buddy->account) accountRemoveBuddy:buddy];
+		[accountLookup(buddy->account) performSelectorOnMainThread:@selector(accountRemoveBuddy:)
+														withObject:[NSValue valueWithPointer:buddy]
+													 waitUntilDone:NO];
     }
 }
 
@@ -190,12 +196,27 @@ static void adiumGaimConvDestroy(GaimConversation *conv)
 
 static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-	[accountLookup(conv->account) accountConvReceivedChatMessage:message inConversation:conv from:who withFlags:flags atTime:mtime];
+	NSDictionary *messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:message],@"Message",
+		[NSString stringWithUTF8String:who],@"Source",
+		[NSValue valueWithPointer:conv],@"GaimConversation",
+		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
+		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
+	
+	[accountLookup(conv->account) performSelectorOnMainThread:@selector(receivedChatMessage:) 
+												   withObject:messageDict
+												waitUntilDone:NO];
 }
 
 static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-    [accountLookup(conv->account) accountConvReceivedIM:message inConversation:conv withFlags:flags atTime:mtime];
+	NSDictionary *messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:message],@"Message",
+		[NSValue valueWithPointer:conv],@"GaimConversation",
+		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
+		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
+		
+	[accountLookup(conv->account) performSelectorOnMainThread:@selector(receivedIM:) 
+												   withObject:messageDict
+												waitUntilDone:NO];
 }
 
 //Never actually called as of gaim 0.75
@@ -485,6 +506,8 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	}	
 		
 	//If we didn't grab a translated version using AILocalizedString, at least display the English version Gaim supplied
+	//XXX Not threadsafe 
+#warning This generates really ugly output in most cases; the title should not be used as it is
 	[[adium interfaceController] handleMessage:([errorMessage length] ? errorMessage : primaryString)
 							  withDescription:([description length] ? description : ([secondaryString length] ? secondaryString : @"") )
 							  withWindowTitle:titleString];
@@ -521,7 +544,12 @@ static void *adiumGaimRequestInput(const char *title, const char *primary, const
 		[infoDict setObject:[NSString stringWithUTF8String:secondary] forKey:@"Secondary Text"];
 	}
 	
-	[ESGaimRequestWindowController showInputWindowWithDict:infoDict multiline:multiline masked:masked];
+	[infoDict setObject:[NSNumber numberWithBool:multiline] forKey:@"Multiline"];
+	[infoDict setObject:[NSNumber numberWithBool:masked] forKey:@"Masked"];
+	
+	[ESGaimRequestWindowController performSelectorOnMainThread:@selector(showInputWindowWithDict:)
+													withObject:infoDict
+												 waitUntilDone:NO];
 
     return(nil);
 }
@@ -533,6 +561,7 @@ static void *adiumGaimRequestChoice(const char *title, const char *primary, cons
 }
 
 //Gaim requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
+#warning Modal. Need to fix and make threadsafe.
 static void *adiumGaimRequestAction(const char *title, const char *primary, const char *secondary, unsigned int default_action, void *userData, size_t actionCount, va_list actions)
 {
 	if (GAIM_DEBUG) NSLog(@"adiumGaimRequestAction");
@@ -825,32 +854,33 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 };
 
 - (void)_initGaim
-{
-    //Register ourself as libgaim's UI handler
-    gaim_core_set_ui_ops(&adiumGaimCoreOps);
-    if(!gaim_core_init("Adium")) {
-        NSLog(@"Failed to initialize gaim core");
-    }
-	
+{	
 	//Handle libgaim events with the Cocoa event loop
-	eventLoopAdapter = [[SLGaimCocoaAdapter alloc] init];
-	//Plugins
-	//
-//	if (/*!gaim_init_ssl_plugin() || */ !gaim_init_ssl_gnutls_plugin()) NSLog(@"Error: No SSL Support");
-//	
-//    if(!gaim_init_gg_plugin()) NSLog(@"Error: No Gadu Gadu Support");
-//	//    if(!gaim_init_irc_plugin()) NSLog(@"Error: No IRC Support");
-//    if(!gaim_init_jabber_plugin()) NSLog(@"Error: No Jabber Support");
-//	if(!gaim_init_msn_plugin()) NSLog(@"Error: No MSN Support");
-//    if(!gaim_init_napster_plugin()) NSLog(@"Error: No Napster Support");
-//    if(!gaim_init_oscar_plugin()) NSLog(@"Error: No Oscar Support");
-//	//    if(!gaim_init_rendezvous_plugin()) NSLog(@"Error: No Rendezvous Support");
-//	//    if(!gaim_init_toc_plugin()) NSLog(@"Error: No TOC Support");
-//    if(!gaim_init_trepia_plugin()) NSLog(@"Error: No Trepia Support");
-//    if(!gaim_init_yahoo_plugin()) NSLog(@"Error: No Yahoo Support");
-//	if(!gaim_init_novell_plugin()) NSLog(@"Error: No Novell Support");
-//	
-    //Setup the buddy list
+	NSArray *portArray;
+	NSPort  *port1,*port2;
+	port1 = [NSPort port];
+    port2 = [NSPort port];
+    kitConnection = [[NSConnection alloc] initWithReceivePort:port1
+													 sendPort:port2];
+    [kitConnection setRootObject:self];
+	
+    /* Ports switched here. */
+    portArray = [NSArray arrayWithObjects:port2, port1, nil];
+
+	[NSThread detachNewThreadSelector:@selector(_initThreadedGaim:)
+							 toTarget:self
+						   withObject:portArray];
+}	
+	
+- (void)_initThreadedGaim:(NSArray *)portArray
+{
+	//Register ourself as libgaim's UI handler
+	gaim_core_set_ui_ops(&adiumGaimCoreOps);
+	if(!gaim_core_init("Adium")) {
+		NSLog(@"Failed to initialize gaim core");
+	}
+	
+	//Setup the buddy list
     gaim_set_blist(gaim_blist_new());
 	
     //Setup libgaim core preferences
@@ -868,6 +898,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	
 	//Configure signals for receiving gaim events
 	[self configureSignals];	
+	NSLog(@"configured.");
+	[SLGaimCocoaAdapter createThreadedGaimCocoaAdapter:portArray];
 }
 
 #pragma mark Plugin Installation
@@ -883,12 +915,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	//Register our defaults
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS forClass:[self class]]
 										  forGroup:GROUP_ACCOUNT_STATUS];
-
-/*	
-		[NSThread detachNewThreadSelector:@selector(_initGaim)
-								 toTarget:self
-							   withObject:nil];
- */
 	
 	[self _initGaim];
 
@@ -922,8 +948,9 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     [YahooService release]; YahooService = nil;
 	[YahooJapanService release]; YahooJapanService = nil;
 	[NovellService release]; NovellService = nil;
-	
-	[eventLoopAdapter release]; eventLoopAdapter = nil;
+
+	[gaimCocoaAdapter release]; gaimCocoaAdapter = nil;
+	[kitConnection release]; kitConnection = nil;
 }
 
 #pragma mark AccountDict Methods

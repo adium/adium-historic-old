@@ -7,14 +7,17 @@
 //  Created by Scott Lamb on Sun Nov 2 2003.
 //
 
-#import <Foundation/Foundation.h>
+#import  <Foundation/Foundation.h>
 #include <stdlib.h>
 #include <glib.h>
-#include <libgaim/eventloop.h>
 
 #import "SLGaimCocoaAdapter.h"
 #import <CoreFoundation/CFSocket.h>
 #import <CoreFoundation/CFRunLoop.h>
+
+#import "GaimCommon.h"
+#import "CBGaimServicePlugin.h"
+#import "CBGaimAccount.h"
 
 static void socketCallback(CFSocketRef s,
                            CFSocketCallBackType callbackType,
@@ -25,6 +28,8 @@ static void socketCallback(CFSocketRef s,
 @interface SLGaimCocoaAdapter (PRIVATE)
 - (void)callTimerFunc:(NSTimer*)timer;
 @end
+
+static NSRunLoop	*runLoop = nil;
 
 @implementation SLGaimCocoaAdapter
 
@@ -73,7 +78,7 @@ struct SourceInfo {
 
 #pragma mark Add
 
-static guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
+guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 {
 //    NSLog(@"New %u-ms timer (tag %u)", interval, sourceId);
 
@@ -112,7 +117,7 @@ static guint adium_timeout_add(guint interval, GSourceFunc function, gpointer da
 	}
 }
 
-static guint adium_input_add(int fd, GaimInputCondition condition,
+guint adium_input_add(int fd, GaimInputCondition condition,
                             GaimInputFunction func, gpointer user_data)
 {
     struct SourceInfo *info = g_new(struct SourceInfo, 1);
@@ -127,20 +132,22 @@ static guint adium_input_add(int fd, GaimInputCondition condition,
     CFSocketRef socket = CFSocketCreateWithNative(NULL, fd, callBackTypes, socketCallback, &context);
     NSCAssert(socket != NULL, @"CFSocket creation failed");
     info->socket = socket;
-
+	
     // Re-enable callbacks automatically and _don't_ close the socket on
     // invalidate
     CFSocketSetSocketFlags(socket,   kCFSocketAutomaticallyReenableDataCallBack
-                                   | kCFSocketAutomaticallyReenableWriteCallBack);
-
+						   | kCFSocketAutomaticallyReenableWriteCallBack);
+	
     // Add it to our run loop
     CFRunLoopSourceRef rls = CFSocketCreateRunLoopSource(NULL, socket, 0);
-    CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopCommonModes);
-
-    sourceId++;
+	
+	//    CFRunLoopAddSource([[NSRunLoop currentRunLoop] getCFRunLoop], rls, kCFRunLoopCommonModes);
+	CFRunLoopAddSource([runLoop getCFRunLoop], rls, kCFRunLoopCommonModes);
+	
+	sourceId++;
 	
 	info->rls = rls;
-    info->timer = NULL;
+	info->timer = NULL;
     info->tag = sourceId;
     info->ioFunction = func;
     info->user_data = user_data;
@@ -155,11 +162,11 @@ static guint adium_input_add(int fd, GaimInputCondition condition,
 #pragma mark Remove
 
 //Like g_source_remove, return TRUE if successful, FALSE if not
-static guint adium_timeout_remove(guint tag) {
+guint adium_timeout_remove(guint tag) {
     return (adium_source_remove(tag));
 }
 
-static guint adium_source_remove(guint tag) {
+guint adium_source_remove(guint tag) {
     struct SourceInfo *sourceInfo = (struct SourceInfo*)
 									[[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
 	
@@ -185,7 +192,7 @@ static guint adium_source_remove(guint tag) {
 }
 
 #pragma mark Socket Callback
-static void socketCallback(CFSocketRef s,
+void socketCallback(CFSocketRef s,
                            CFSocketCallBackType callbackType,
                            CFDataRef address,
                            const void *data,
@@ -203,6 +210,25 @@ static void socketCallback(CFSocketRef s,
 
 
 #pragma mark Init
+
++ (void)createThreadedGaimCocoaAdapter:(NSArray *)portArray
+{
+	NSAutoreleasePool *pool;
+	NSConnection *serverConnection;
+    SLGaimCocoaAdapter *gaimCocoaAdapter;
+
+    pool = [[NSAutoreleasePool alloc] init];
+
+    gaimCocoaAdapter = [[self alloc] init];
+	
+	runLoop = [[NSRunLoop currentRunLoop] retain];
+    [[NSRunLoop currentRunLoop] run];
+	
+    [pool release];
+
+    return;
+}
+
 - (id)init
 {
 	sourceId = 0;
@@ -210,7 +236,22 @@ static void socketCallback(CFSocketRef s,
     NSAssert(myself == nil, @"SLGaimCocoaAdapter is a singleton");
     myself = self;
     gaim_eventloop_set_ui_ops(&adiumEventLoopUiOps);
+	
+	NSConnection *destConnection = [[NSConnection alloc] init];    // create connection object
+	[destConnection registerName:@"GaimThread"];
+	[destConnection setRootObject:self];
+	
     return self;
+}
+
+- (void)disconnect:(CBGaimAccount *)account
+{
+	[account performDisconnect];
+}
+
+- (void)connect:(CBGaimAccount *)account
+{
+	[account performConnect];
 }
 
 @end

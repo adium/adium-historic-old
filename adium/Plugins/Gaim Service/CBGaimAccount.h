@@ -5,6 +5,7 @@
 //  Created by Colin Barrett on Sun Oct 19 2003.
 
 #import "GaimCommon.h"
+#import "SLGaimCocoaAdapter.h"
 
 @interface CBGaimAccount : AIAccount <AIAccount_List, AIAccount_Content, AIAccount_Privacy>
 {     
@@ -23,6 +24,8 @@
 	
 	NSMutableArray		*permittedContactsArray;
 	NSMutableArray		*deniedContactsArray;
+	
+	id					gaimThread;
 }
 
 - (const char*)protocolPlugin;
@@ -38,6 +41,7 @@
 - (NSString *)unknownGroupName;
 - (NSArray *)contactStatusFlags;
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError;
+- (AIListContact *)_mainThreadContactWithUID:(NSString *)sourceUID;
 
 	//AIAccount_Files
 	//Instructs the account to accept a file transfer request
@@ -55,11 +59,10 @@
 - (void)configureAccountProxy;
 - (void)disconnect;
 - (NSString *)connectionStringForStep:(int)step;
-- (void)resetLibGaimAccount;
 - (void)configureGaimAccountForConnect;
 - (NSString *)host;
-- (int)port;
 - (NSString *)hostKey;
+- (int)port;
 - (NSString *)portKey;
 
 	//Account status
@@ -81,16 +84,18 @@
 - (void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text;
 
 	//accountBlist
-- (void)accountNewBuddy:(GaimBuddy*)buddy;
-- (void)accountUpdateBuddy:(GaimBuddy*)buddy;
+- (void)accountNewBuddy:(NSValue *)buddyValue;
+- (void)accountUpdateBuddy:(NSValue *)buddyValue;
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event;
-- (void)accountRemoveBuddy:(GaimBuddy*)buddy;
+- (void)accountRemoveBuddy:(NSValue *)buddyValue;
 
 	//accountConv
 - (void)accountConvDestroy:(GaimConversation*)conv;
 - (void)accountConvUpdated:(GaimConversation*)conv type:(GaimConvUpdateType)type;
-- (void)accountConvReceivedIM:(const char*)message inConversation:(GaimConversation*)conv withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
-- (void)accountConvReceivedChatMessage:(const char*)message inConversation:(GaimConversation*)conv from:(const char *)source withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
+//- (void)accountConvReceivedIM:(const char*)message inConversation:(GaimConversation*)conv withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
+//- (void)accountConvReceivedChatMessage:(const char*)message inConversation:(GaimConversation*)conv from:(const char *)source withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
+- (void)receivedIM:(NSDictionary *)messageDict;
+- (void)receivedChatMessage:(NSDictionary *)messageDict;
 - (void)accountConvAddedUser:(const char *)user inConversation:(GaimConversation *)conv;
 - (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv;
 - (void)accountConvRemovedUser:(const char *)user inConversation:(GaimConversation *)conv;
@@ -107,5 +112,8 @@
 -(void)accountPrivacyList:(PRIVACY_TYPE)type added:(const char *)name;
 -(void)accountPrivacyList:(PRIVACY_TYPE)type removed:(const char *)name;
 
+
+-(void)performDisconnect;
+-(void)performConnect;
 
 @end
