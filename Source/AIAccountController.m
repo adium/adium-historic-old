@@ -331,32 +331,41 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Returns a menu of all services.
 //- Selector called on service selection is selectAccount:
 //- The menu item's represented objects are the service controllers they represent
-- (NSMenu *)menuOfServicesWithTarget:(id)target
+- (NSMenu *)menuOfServicesWithTarget:(id)target activeServicesOnly:(BOOL)activeServicesOnly longDescription:(BOOL)longDescription
 {	
 	AIServiceImportance	importance;
 	BOOL				firstPass = YES;
-
+	unsigned			numberOfItems = 0;
+	NSArray				*serviceArray;
+	
 	//Prepare our menu
 	NSMenu *menu = [[NSMenu alloc] init];
 	[menu setAutoenablesItems:NO];
 
+	serviceArray = (activeServicesOnly ? [self activeServices] : [self availableServices]);
+	
 	//Divide our menu into sections.  This helps separate less importance services from the others (sorry guys!)
 	for(importance = AIServicePrimary; importance <= AIServiceUnsupported; importance++){
 		NSEnumerator	*enumerator;
 		AIService		*service;
-
-		//Divider
-		if(firstPass){
-			firstPass = NO;
-		}else{
-			[menu addItem:[NSMenuItem separatorItem]];
-		}
+		unsigned		currentNumberOfItems;
+		BOOL			addedDivider = NO;
 		
+		//Divider
+		currentNumberOfItems = [menu numberOfItems];
+		if (currentNumberOfItems > numberOfItems){
+			[menu addItem:[NSMenuItem separatorItem]];
+			numberOfItems = currentNumberOfItems + 1;
+			addedDivider = YES;
+		}
+
 		//Insert a menu item for each service of this importance
-		enumerator = [[self availableServices] objectEnumerator];
+		enumerator = [serviceArray objectEnumerator];
 		while((service = [enumerator nextObject])){
 			if([service serviceImportance] == importance){
-				NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service longDescription]
+				NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:(longDescription ?
+																		[service longDescription] :
+																		[service shortDescription])
 																target:target 
 																action:@selector(selectServiceType:) 
 														 keyEquivalent:@""] autorelease];
@@ -366,6 +375,12 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 														   direction:AIIconNormal]];
 				[menu addItem:item];
 			}
+		}
+		
+		//If we added a divider but didn't add any items, remove it
+		currentNumberOfItems = [menu numberOfItems];
+		if (addedDivider && (currentNumberOfItems <= numberOfItems) && (currentNumberOfItems > 0)){
+			[menu removeItemAtIndex:(currentNumberOfItems-1)];
 		}
 	}
 	
