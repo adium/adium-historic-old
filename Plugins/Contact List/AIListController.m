@@ -180,13 +180,22 @@
 
 		//Now, figure out how big the view wants to be and add that to our frame
 		newWindowFrame.size.height += [contactListView desiredHeight];
-	
+
 		//If the window is against the left or right edges of the screen, we use the full screenFrame as our
 		//bound, since most users docks will not extend to the edges of the screen.
 		if((newWindowFrame.origin.x < screenFrame.origin.x + EDGE_CATCH_X) ||
 		   ((newWindowFrame.origin.x + newWindowFrame.size.width) > (screenFrame.origin.x + screenFrame.size.width - EDGE_CATCH_X))){
+			NSArray *screens;
+
 			boundingFrame = screenFrame;
-			boundingFrame.size.height -= 22; //We still cannot violate the menubar, so account for it here.
+
+			//We still cannot violate the menuBar, so account for it here if we are on the menuBar screen.
+			if ((screens = [NSScreen screens]) &&
+				([screens count]) &&
+				(currentScreen == [screens objectAtIndex:0])){
+				boundingFrame.size.height -= 22;
+			}
+
 		}else{
 			boundingFrame = visibleScreenFrame;
 		}
@@ -204,14 +213,14 @@
 				newWindowFrame.origin.y = (windowFrame.origin.y + windowFrame.size.height) - newWindowFrame.size.height;
 			}
 		}
-		
+
 		//Keep the window from hanging off any screen edge (This is optional and could be removed if this annoys people)
 		if(NSMinX(newWindowFrame) < NSMinX(boundingFrame)) newWindowFrame.origin.x = NSMinX(boundingFrame);
 		if(NSMinY(newWindowFrame) < NSMinY(boundingFrame)) newWindowFrame.origin.y = NSMinY(boundingFrame);
 		if(NSMaxX(newWindowFrame) > NSMaxX(boundingFrame)) newWindowFrame.origin.x = NSMaxX(boundingFrame) - newWindowFrame.size.width;
 		if(NSMaxY(newWindowFrame) > NSMaxY(boundingFrame)) newWindowFrame.origin.y = NSMaxY(boundingFrame) - newWindowFrame.size.height;
 	}
-	
+
 	return(newWindowFrame);
 }
 
@@ -244,7 +253,7 @@
 	}else{
 		NSDictionary	*userInfo = [notification userInfo];
 		AIListGroup		*containingGroup = [userInfo objectForKey:@"ContainingGroup"];
-		
+
 		if(!containingGroup || containingGroup == contactList){
 			//Reload the whole tree if the containing group is our root
 			[contactListView reloadData];
@@ -283,7 +292,7 @@
 	}else{
 		[contactListView reloadItem:object reloadChildren:YES];
 	}
-	
+
 	//If we need a resize we can do that now that the outline view has been reloaded
 	if(needsAutoResize){
 		[self contactListDesiredSizeChanged];
@@ -296,10 +305,10 @@
 {
     AIListObject	*object = [notification object];
     NSArray			*keys = [[notification userInfo] objectForKey:@"Keys"];
-    
+
 	//Redraw the modified object
 	[contactListView redisplayItem:object];
-	
+
     //Resize the contact list horizontally
     if(autoResizeHorizontally){
 		if(object && [keys containsObject:@"Display Name"]){
