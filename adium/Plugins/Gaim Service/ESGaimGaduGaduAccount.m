@@ -8,6 +8,10 @@
 #import "ESGaimGaduGaduAccountViewController.h"
 #import "ESGaimGaduGaduAccount.h"
 
+@interface ESGaimGaduGaduAccount (PRIVATE)
+- (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact;
+@end
+
 @implementation ESGaimGaduGaduAccount
 
 
@@ -53,6 +57,49 @@ static BOOL didInitGG = NO;
 - (NSString *)portKey
 {
 	return KEY_GADU_GADU_PORT;
+}
+
+- (oneway void)accountConnectionConnected
+{
+	[super accountConnectionConnected];	
+
+	GaimConnection  *gc = [self gaimAccount]->gc;
+	
+	gg_userlist_request(((struct agg_data *)gc->proto_data)->sess, GG_USERLIST_GET, NULL);
+}
+
+//Away and away return
+- (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data
+{
+	[super updateWentAway:theContact withData:data];
+	[theContact setStatusObject:[self statusMessageForContact:theContact]
+						 forKey:@"StatusMessage"
+						 notify:YES];
+}
+
+- (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data
+{
+	[super updateWentAway:theContact withData:data];
+	
+	[theContact setStatusObject:[self statusMessageForContact:theContact]
+						 forKey:@"StatusMessage"
+						 notify:YES];
+}
+
+- (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact
+{
+	NSAttributedString  *statusMessage = nil;
+	
+	GaimBuddy *buddy = gaim_find_buddy([self gaimAccount],[[theContact UID] UTF8String]);
+	if (buddy && buddy->proto_data){
+		NSString	*statusMessageString = [NSString stringWithUTF8String:buddy->proto_data];
+		if (statusMessageString && [statusMessageString length]){
+			statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
+															 attributes:nil] autorelease];
+		}
+	}   
+	
+	return statusMessage;
 }
 
 @end
