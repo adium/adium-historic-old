@@ -22,7 +22,6 @@
 - (void)connect:(NSTimer *)timer;
 - (void)update:(NSTimer *)timer;
 - (void)disconnect;
-- (NSDictionary *)parseMessage:(NSData *)payload;
 - (BOOL)sendPayloadMessage:(NSString *)message onSocket:(AISocket *)Socket;
 - (void)sendMessageHelper:(NSTimer *)timer;
 - (void)startSBSessionHelper:(NSTimer *)timer;
@@ -919,7 +918,7 @@
 					}
 					else
 					{	// MSG command.  Payload has a standard format, including information on how to interpret it.
-						NSDictionary *messageLoad = [self parseMessage:inData];
+						NSDictionary *messageLoad = [MSNAccount parseMessage:inData];
 						NSString	*contentType = [[[messageLoad objectForKey:@"Content-Type"] componentsSeparatedByString:@";"] objectAtIndex:0];
 						
 						NSLog (@"MSN Message received of type %@", contentType);
@@ -1063,7 +1062,7 @@
 }
 
 // Returns fields as NSString key/value pairs, and the body under the key "MSG Body"
-- (NSDictionary *)parseMessage:(NSData *)payload
++ (NSDictionary *)parseMessage:(NSData *)payload
 {
 	int curMode = 0;
 	
@@ -1544,7 +1543,7 @@
                 
                 if ([command isEqualToString:@"MSG"])
                 {
-                    NSDictionary *messageLoad = [self parseMessage:theData];
+                    NSDictionary *messageLoad = [MSNAccount parseMessage:theData];
                     NSString	*contentType = [[[messageLoad objectForKey:@"Content-Type"] componentsSeparatedByString:@";"] objectAtIndex:0];
                     
                     NSLog (@"***MSN Message received of type %@, content: %@", contentType, [messageLoad objectForKey:@"MSG Body"]);
