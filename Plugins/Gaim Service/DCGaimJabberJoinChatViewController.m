@@ -7,6 +7,9 @@
 
 #import "DCGaimJabberJoinChatViewController.h"
 #import "DCJoinChatWindowController.h"
+#import "CBGaimAccount.h"
+
+#define DEFAULT_CONFERENCE_SERVER [NSString stringWithFormat:@"conference.%@",[(CBGaimAccount *)inAccount host]]
 
 @interface DCGaimJabberJoinChatViewController (PRIVATE)
 - (void)validateEnteredText;
@@ -19,6 +22,9 @@
 	[delegate setJoinChatEnabled:NO];
 	[[view window] makeFirstResponder:textField_roomName];
 
+	if([[textField_server cell] respondsToSelector:@selector(setPlaceholderString:)])
+		[[textField_server cell] setPlaceholderString:DEFAULT_CONFERENCE_SERVER];
+		
 	[super configureForAccount:inAccount];
 }
 
@@ -36,14 +42,16 @@
 	if( !password || ![password length] )
 		password = @"temp";
 	
+	if( !server || ![server length] )
+		server = DEFAULT_CONFERENCE_SERVER;
+			
 	chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",server,@"server",handle,@"handle",password,@"password",nil];
 
-	[self doJoinChatWithName:room
+	[self doJoinChatWithName:[NSString stringWithFormat:@"%@@%@",room,server]
 				   onAccount:inAccount
 			chatCreationInfo:chatCreationInfo
 			invitingContacts:nil
-	  withInvitationMessage:nil];
-
+	   withInvitationMessage:nil];
 }
 
 - (NSString *)nibName
@@ -60,13 +68,13 @@
 - (void)validateEnteredText
 {
 	NSString *roomLen = [textField_roomName stringValue];
-	NSString *serverLen = [textField_server stringValue];
+	//NSString *serverLen = [textField_server stringValue];
 	//NSString *handleLen = [textField_handle stringValue];
 	//NSString *passwordLen = [textField_password stringValue];
 	BOOL enabled = NO;
 	
-	if( roomLen && [roomLen length] &&
-		serverLen && [serverLen length]
+	if( roomLen && [roomLen length] 
+		//&& serverLen && [serverLen length]
 		//&& handleLen && [handleLen length]
 		//&& passwordLen && [passwordLen length]
 		) {
