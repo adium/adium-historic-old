@@ -58,11 +58,17 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
 {
-	if (disconnectionError && ([disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound)) {
-		[[adium accountController] forgetPasswordForAccount:self];
+	BOOL shouldAttemptReconnect = YES;
+	
+	if (disconnectionError){
+		if ([disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound) {
+			[[adium accountController] forgetPasswordForAccount:self];
+		}else if ([disconnectionError rangeOfString:@"logged in on a different machine or device"].location != NSNotFound) {
+			shouldAttemptReconnect = NO;
+		}
 	}
-		
-	return YES;
+	
+	return shouldAttemptReconnect;
 }
 
 - (NSString *)hostKey
