@@ -25,7 +25,7 @@
 @interface AIAwayStatusWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
 - (void)updateAwayTime:(id)userInfo;
-//- (NSString *)getTheTime:(time_t)secs;
+- (NSString *)getTheTime:(time_t)secs;
 @end
 
 @implementation AIAwayStatusWindowController
@@ -128,13 +128,12 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     owner = [inOwner retain];
     
     awayDate = [[NSDate date] retain];
-    /*awayTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0
+    awayTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0
         target:self
         selector:@selector(updateAwayTime:)
         userInfo:nil
-        repeats:YES]*/
-    //retain];
-    //alloc] init];
+        repeats:YES]
+    retain];
     return(self);
 }
 
@@ -200,25 +199,15 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     return(NO);
 }
 
-/*- (void)updateAwayTime:(id)userInfo
-{
-    NSLog(@"updating");
-    //NSTimeInterval secs = [awayDate timeIntervalSinceNow];
-    
-    /*short min = secs / 60;
-    if(min == 0) min = 1;
-    
-    short hour = min / 60;
-    
+- (void)updateAwayTime:(id)userInfo
+{    
     [textField_awayTime setStringValue:
-        [NSString stringWithFormat:@"%.1hd:%.2hd", hour, min]];*/
-        /*
-        [textField_awayTime setStringValue:
-            [NSString stringWithFormat:@"Since %@ (%@)",
-                [[NSDate date] getTimestampWithSeconds:NO] , [self getTheTime:(time_t)[awayDate timeIntervalSince1970]]]];
-}*/
+        [NSString stringWithFormat:@"Since %@ (%@)",
+            [awayDate descriptionWithCalendarFormat:@"%1I:%M %p" timeZone:nil locale:nil], 
+            [self getTheTime:(time_t)[awayDate timeIntervalSince1970]]]];
+}
 
-/*- (NSString *)getTheTime:(time_t)then
+- (NSString *)getTheTime:(time_t)then
 {
     time_t t = then;
     time_t now = time(NULL);
@@ -238,7 +227,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
                 return [NSString stringWithFormat:
                 @"%d:%d hours", (int)diff/3600, (int)((int)diff % 3600)/60];
     }
-}*/
+}
 
 @end
 
