@@ -90,17 +90,9 @@
 }
 
 #pragma mark Toolbar Item stuff
-//- (void)toolbarWillAddItem:(NSNotification *)notification
-//{
-//    NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
-//    
-//    if([[item itemIdentifier] isEqualToString:@"linkEditor"
-//}
 
 - (void)registerToolbarItem
 {
-    MVMenuButton *button;
-
     //Unregister the existing toolbar item first
     if(toolbarItem){
         [[adium toolbarController] unregisterToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
