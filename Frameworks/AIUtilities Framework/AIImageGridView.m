@@ -15,8 +15,6 @@ Adium, Copyright 2001-2005, Adam Iser
 
 #import "AIImageGridView.h"
 
-#warning Needs documentation.
-
 #define MIN_PADDING			1			//The minimum padding between images
 
 @interface AIImageGridView (PRIVATE)
@@ -327,7 +325,8 @@ Adium, Copyright 2001-2005, Adam Iser
 //Cursor left our view, stop tracking its movement
 - (void)mouseExited:(NSEvent *)theEvent
 {
-#warning What if other views want mouse moved events?
+	//XXX - What if other views want mouse moved events?
+	//Well thats just too bad then >:) -ai
 	[[self window] setAcceptsMouseMovedEvents:NO];
 	[self _setHoveredIndex:-1];
 }

@@ -21,6 +21,13 @@ Adium, Copyright 2001-2005, Adam Iser
 
 @class AIScaledImageCell;
 
+/*!
+ * @class AIImageGridView
+ * @brief View that displays a grid of images
+ *
+ * This view displays images in a grid similiar to iPhoto.  Image size is adjustable and the view handles image layout
+ * and spacing automatically.
+ */
 @interface AIImageGridView : NSView {
 	id					delegate;
 	AIScaledImageCell	*cell;
@@ -40,20 +47,82 @@ Adium, Copyright 2001-2005, Adam Iser
 	BOOL		_respondsToImageHovered;
 }
 
-//Configuration
+/*!
+ * @brief Set the delegate for this view
+ *
+ * The delegate is informed of selection changes, cursor movement, and serves as the data source for the images
+ * that will be displayed.
+ * @param inDelegate Delegate and datasource 
+ */
 - (void)setDelegate:(id)inDelegate;
+
+/*!
+ * @brief Retrieve the delegate for this view
+ *
+ * @return the current delegate 
+ */
 - (id)delegate;
+
+/*!
+ * @brief Set the size images will display
+ *
+ * Set the size for image display and layout within the grid.  The view will automatically re-layout and column the
+ * the images as this value is changed.
+ * @param inSize <tt>NSSize</tt> for image display
+ */
 - (void)setImageSize:(NSSize)inSize;
+
+/*!
+ * @brief Retrieve image display size
+ *
+ * @return <tt>NSSize</tt> current image size
+ */
 - (NSSize)imageSize;
+
+/*!
+ * @brief Reload images from delegate
+ *
+ * Invokes a reload of images from the delegate.  Call this method when the images or number of images changes and the
+ * view needs re-layout in response.  The view will automatically redisplay if needed.
+ */
 - (void)reloadData;
 		
-//Drawing and sizing
+/*!
+ * @brief Returns the rect occupied by an image in our grid
+ *
+ * @param index Index of the image
+ * @return <tt>NSRect</tt> the image occupies in our grid
+ */
 - (NSRect)rectForImageAtIndex:(int)index;
+
+/*!
+ * @brief Returns the image present at a point in our grid
+ *
+ * @param point Location
+ * @return index of the image at point
+ */
 - (int)imageIndexAtPoint:(NSPoint)point;
+
+/*!
+ * @brief Redisplay an image in our grid
+ *
+ * @param index Index of the image
+ */
 - (void)setNeedsDisplayOfImageAtIndex:(int)index;
 
-//Behavior
+/*!
+ * @brief Set the selected image
+ *
+ * Set the currently selected image.  The delegate is informed of selection changes.
+ * @param index Image index to select
+ */
 - (void)selectIndex:(int)index;
+
+/*!
+ * @brief Retrieve the selected image
+ *
+ * @return index of the currently selected image
+ */
 - (int)selectedIndex;
 
 @end
