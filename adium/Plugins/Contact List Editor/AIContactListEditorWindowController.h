@@ -17,11 +17,11 @@
 #define ALIAS_COLUMN_WIDTH	160		//Width of the alias column
 #define SUB_COLUMN_WIDTH	12		//Width of the account columns
 
-@class AIContactGroup, AIContactObject, AIAlternatingRowOutlineView, AISCLEditHeaderView, AIEditorCollection, AIContactListEditorPlugin, AIAutoScrollView;
+@class AIBrowser, AIContactGroup, AIContactObject, AIAlternatingRowOutlineView, AISCLEditHeaderView, AIEditorCollection, AIContactListEditorPlugin, AIAutoScrollView;
 
 @interface AIContactListEditorWindowController : AIWindowController {
 
-	IBOutlet	NSBrowser		*browser_contactList;
+	IBOutlet	AIBrowser		*browser_contactList;
 
 	NSMutableArray	*columns;
 	NSMutableDictionary	*serviceImageDict;

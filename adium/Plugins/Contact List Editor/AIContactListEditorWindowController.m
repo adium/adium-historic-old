@@ -21,6 +21,7 @@
 #import "AIContactListEditorPlugin.h"
 #import "AIEditorImportCollection.h"
 #import "AIListEditorCell.h"
+#import "AIBrowser.h"
 
 #define	PREF_GROUP_CONTACT_LIST			@"Contact List"
 #define CONTACT_LIST_EDITOR_NIB			@"ContactListEditorWindow"
@@ -114,12 +115,13 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 - (void)windowDidLoad
 {
     //Make the browser user our custom browser cell.
-    [browser_contactList setCellClass:[AIListEditorCell class]];
+//    [browser_contactList setCellClass:[AIListEditorCell class]];
 	
     //Tell the browser to send us messages when it is clicked.
-    [browser_contactList setTarget: self];
-    [browser_contactList setAction: @selector(browserSingleClick:)];
-    [browser_contactList setDoubleAction: @selector(browserDoubleClick:)];
+	[browser_contactList setDataSource:self];
+//    [browser_contactList setTarget: self];
+//    [browser_contactList setAction: @selector(browserSingleClick:)];
+//    [browser_contactList setDoubleAction: @selector(browserDoubleClick:)];
 	
 	
 	
@@ -1240,6 +1242,40 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 }
 	
 // Browser delegate ----------------------------------------------------------------------------------------------------
+
+- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+{
+	if(!item) item = [[adium contactController] contactList];
+	return([item objectAtIndex:index]);
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+{
+	if(!item) item = [[adium contactController] contactList];
+	return([item isKindOfClass:[AIListGroup class]]);
+}
+
+- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+{
+	if(!item) item = [[adium contactController] contactList];
+	return([item count]);
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+{
+	if(!item) item = [[adium contactController] contactList];
+	return([item displayName]);
+}
+
+
+
+
+
+
+
+
+
+
 - (AIListGroup *)browser:(NSBrowser *)browser groupForColumn:(int)column
 {
 	AIListGroup *group = [[adium contactController] contactList];
