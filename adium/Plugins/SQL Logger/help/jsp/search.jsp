@@ -237,18 +237,18 @@ try {
                                 <label for="start_date">Date Range: </label>
                             </td>
                             <td colspan="2">
-                                <input type="text" name="start" <% 
+                                <input type="text" name="start" <%
                                     if (date_start != null)
-                                        out.print("value=\"" + date_start + 
-                                        "\""); 
+                                        out.print("value=\"" + date_start +
+                                        "\"");
                                         %> id="start_date" />
-                        
+
                                     <label for="finish_date">
                                         &nbsp;--&nbsp;
                                     </label>
-                                    <input type="text" name="finish" <% 
+                                    <input type="text" name="finish" <%
                                         if (date_finish != null)
-                                            out.print("value=\"" + date_finish + "\""); 
+                                            out.print("value=\"" + date_finish + "\"");
                                         %> id="finish_date" />
                             </td>
                         </tr>
@@ -295,12 +295,12 @@ try {
                 searchType = "tsearch2";
             }
         }
-        
+
         //If the user hasn't installed tsearch, be slow & simple
         if(searchType.equals("none")) {
             String cmdArray[] = new String[10];
             int cmdCntr = 0;
-            
+
             out.print("<div align=\"center\">");
             out.print("<i>This query is case sensitive for speed.<br>");
             out.print("For a non-case-sensitive, faster query, "+
@@ -312,13 +312,23 @@ try {
             "message ~ ? ");
 
             if (sender != null) {
-                shortQuery += " and sender_sn like ? ";
-                cmdArray[cmdCntr++] = sender;
+                if(!sender.startsWith("!")) {
+                    shortQuery += " and sender_sn like ? ";
+                    cmdArray[cmdCntr++] = sender;
+                } else {
+                    shortQuery += " and sender_sn not like ? ";
+                    cmdArray[cmdCntr++] = sender.substring(1);
+                }
             }
 
             if (recipient != null) {
-                shortQuery += "and recipient_sn like ? ";
-                cmdArray[cmdCntr++] = recipient;
+                if(!sender.startsWith("!")) {
+                    shortQuery += "and recipient_sn like ? ";
+                    cmdArray[cmdCntr++] = recipient;
+                } else {
+                    shortQuery += " and recipient_sn like ? ";
+                    cmdArray[cmdCntr++] = recipient.substring(1);
+                }
             }
 
             if(date_start != null) {
@@ -330,7 +340,7 @@ try {
                 shortQuery += " and message_date <= ? ";
                 cmdArray[cmdCntr++] = date_finish;
             }
-            
+
             if (orderBy != null) {
                 shortQuery += " order by " + orderBy;
                 cmdArray[cmdCntr++] = orderBy;
@@ -411,13 +421,23 @@ try {
             cmdAry[cmdCntr++] = new String(searchKey);
 
             if (sender != null) {
-                queryString += "and s.username like ?";
-                cmdAry[cmdCntr++] = new String(sender);
+                if(sender.startsWith("!")) {
+                    queryString += "and s.username not like ? ";
+                    cmdAry[cmdCntr++] = new String(sender.substring(1));
+                } else {
+                    queryString += "and s.username like ? ";
+                    cmdAry[cmdCntr++] = new String(sender);
+                }
             }
 
             if (recipient != null) {
-                queryString += " and r.username like ? ";
-                cmdAry[cmdCntr++] = new String(recipient);
+                if (recipient.startsWith("!")) {
+                    queryString += "and r.username not like ? ";
+                    cmdAry[cmdCntr++] = new String(sender.substring(1));
+                } else {
+                    queryString += " and r.username like ? ";
+                    cmdAry[cmdCntr++] = new String(recipient);
+                }
             }
 
             for (int i=0; i < exactMatch.size(); i++) {
@@ -429,7 +449,7 @@ try {
                 queryString += " and message_date >= ? ";
                 cmdAry[cmdCntr++] = new String(date_start);
             }
-            
+
             if(date_finish != null) {
                 queryString += " and message_date <= ? ";
                 cmdAry[cmdCntr++] = new String(date_finish);
@@ -446,11 +466,10 @@ try {
 
         }
         beginTime = System.currentTimeMillis();
-
         try {
             rset = pstmt.executeQuery();
         } catch (SQLException e) {
-            out.println("<span style=\"color:red\">" + e.getMessage() + 
+            out.println("<span style=\"color:red\">" + e.getMessage() +
                 "</span>");
         }
         queryTime = System.currentTimeMillis() - beginTime;
@@ -462,7 +481,7 @@ try {
 <%
 
         out.print("<br />");
-        
+
             while(rset != null && rset.next()) {
                 warning = rset.getWarnings();
                 if(warning != null) {
@@ -471,34 +490,34 @@ try {
                         out.print("<br />" + warning.getMessage());
                     }
                 }
-    
+
                 String messageContent = rset.getString("message");
                 messageContent = messageContent.replaceAll("\n", "<br>");
                 messageContent = messageContent.replaceAll("   ", " &nbsp; ");
-    
+
                 out.print(rset.getString("sender_sn") +
                 ":&#8203;" + rset.getString("recipient_sn"));
                 out.print("<p style=\"text-indent: 30px\">" +
                     messageContent + "<br />");
-    
+
                 Timestamp dateTime = rset.getTimestamp("message_date");
                 long time = dateTime.getTime();
                 long finishTime = time + 15*60*1000;
                 long startTime = time - 15*60*1000;
                 long finishThirty = time + 30*60*1000;
                 long startThirty = time - 30*60*1000;
-    
+
                 Timestamp finish = new Timestamp(finishTime);
                 Timestamp start = new Timestamp(startTime);
-    
+
                 Timestamp thirtyFinish = new Timestamp(finishThirty);
                 Timestamp thirtyStart = new Timestamp(startThirty);
-    
+
                 String cleanString = searchKey;
                 cleanString = cleanString.replaceAll("&", " ");
                 cleanString = cleanString.replaceAll("!", " ");
                 cleanString = cleanString.replaceAll("\\|", " ");
-    
+
                 out.print("<a href=\"index.jsp?from=" +
                 rset.getString("sender_sn") +
                 "&amp;to=" + rset.getString("recipient_sn") +
@@ -508,7 +527,7 @@ try {
                 "#" + rset.getInt("message_id") + "\">");
                 out.print("&#177;15&nbsp;");
                 out.print("</a>");
-    
+
                 out.print("<a href=\"index.jsp?from=" +
                 rset.getString("sender_sn") +
                 "&amp;to=" + rset.getString("recipient_sn") +
@@ -518,12 +537,12 @@ try {
                 "#" + rset.getInt("message_id") + "\">");
                 out.print("&#177;30&nbsp;");
                 out.print("</a>");
-    
+
                 out.print("<span style=\"float:right\">" +
                     rset.getDate("message_date") +
                     "&nbsp;" + rset.getTime("message_date") +
                     "</span></p>\n");
-    
+
             }
 
         } else if (rset != null && !rset.isBeforeFirst()) {
