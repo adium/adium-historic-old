@@ -47,6 +47,12 @@
 	[self preferencesChanged:nil];
 }
 
+- (void)dealloc
+{
+	[events release];
+	[super dealloc];
+}
+
 - (void)registerAdium:(void*)context
 {
 	//Register us with Growl
