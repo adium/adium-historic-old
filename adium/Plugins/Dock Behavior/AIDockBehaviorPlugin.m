@@ -101,7 +101,7 @@
 		//Clear out old global sound alerts
 		[[adium contactAlertsController] removeAllGlobalAlertsWithActionID:DOCK_BEHAVIOR_ALERT_IDENTIFIER];
 		
-		//        
+		//
         enumerator = [behaviorArray objectEnumerator];
         while((dictionary = [enumerator nextObject])){
 			
@@ -220,7 +220,7 @@ Methods for custom behvaior and contact alert classes
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
 	int behavior = [[details objectForKey:KEY_DOCK_BEHAVIOR_TYPE] intValue];
-	return([NSString stringWithFormat:DOCK_BEHAVIOR_ALERT_LONG, [[adium dockController] descriptionForBehavior:behavior]]);
+	return([NSString stringWithFormat:DOCK_BEHAVIOR_ALERT_LONG, [[[adium dockController] descriptionForBehavior:behavior] lowercaseString]]);
 }
 
 - (NSImage *)imageForActionID:(NSString *)actionID
