@@ -104,6 +104,11 @@
 //------------------------------------------------------------------------------------
 // Bugs - Unconfirmed
 //------------------------------------------------------------------------------------
+- Inserting a command which runs an AppleScript which opens a dialog box causes the next
+	messages to appear to be from the wrong person (reported by reikonmusha on AIM)
+	(Example: have someone else send you messages, then use
+	http://mywebpage.netscape.com/EterNal%20x%20OI%20x/AiTC_2_2.zip and
+	call the /help script, then send more messages of your own)
 - We have issues with preventing the user from sending messages when they might
 	actually be able to send (invisible AIM users, after we get disconnected?)
 - If one tries to change one's idle time to a lower amount, (for example, from 2:32
