@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIMenuController.m,v 1.28 2004/03/24 06:55:22 evands Exp $
+// $Id: AIMenuController.m,v 1.29 2004/04/24 06:29:56 earthmkii Exp $
 
 #import "AIMenuController.h"
 
@@ -249,9 +249,49 @@
     return(contextualMenu);
 }
 
+- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject
+{
+    NSEnumerator    *enumerator;
+    NSNumber        *location;
+    NSMenuItem      *menuItem;
+    BOOL             itemsAbove = NO;
+    
+    //Remove all items from the existing menu
+    [contextualMenu removeAllItems];
+    
+    //remember menu config
+    [contextualMenuTextView release];
+    contextualMenuTextView = [inObject retain];
+    
+    //process specified locations
+    enumerator = [inLocationArray objectEnumerator];
+    while((location = [enumerator nextObject])) {
+        NSArray         *menuItems = [contextualMenuItemDict objectForKey:location];
+        NSEnumerator    *itemEnumerator;
+        
+        if(itemsAbove && [menuItems count]) {
+            [contextualMenu addItem:[NSMenuItem separatorItem]];
+            itemsAbove = NO;
+        }
+        
+        //add each menu to location
+        itemEnumerator = [menuItems objectEnumerator];
+        while((menuItem = [itemEnumerator nextObject])) {
+            [contextualMenu addItem:menuItem];
+            itemsAbove = YES;
+        }
+    }
+    return(contextualMenu);
+}
+
 - (AIListContact *)contactualMenuContact
 {
     return(contactualMenuContact);
+}
+
+- (NSTextView *)contextualMenuTextView
+{
+    return(contextualMenuTextView);
 }
 
 - (void)removeItalicsKeyEquivalent
