@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.64 2004/01/07 21:27:45 adamiser Exp $
+// $Id: AIContactController.m,v 1.65 2004/01/07 21:29:17 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -481,196 +481,14 @@
 }
 
 
-
 //Contact List ---------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-//Ordering
-- (void)loadContactOrdering
-{
-    NSEnumerator	*enumerator;
-    NSString		*key;
-    NSNumber		*position;
-
-    //Load the contact list ordering (Name -> Index)
-    listOrderDict = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST] objectForKey:KEY_CONTACT_LIST_ORDER] mutableCopy];
-    if(!listOrderDict) listOrderDict = [[NSMutableDictionary alloc] init];
-
-    //Find the largest contact order index (Helps speed up index adding)
-    largestOrder = 0;
-    enumerator = [[listOrderDict allValues] objectEnumerator];
-    while((position = [enumerator nextObject])){
-        int order = [position intValue];
-        if(order > largestOrder) largestOrder = order;
-    }
-
-    //Build a reverse-lookup dictionary (Index -> Name) (Helps speed up index setting)
-    reverseListOrderDict = [[NSMutableDictionary alloc] init];
-    enumerator = [[listOrderDict allKeys] objectEnumerator];
-    while((key = [enumerator nextObject])){
-        NSNumber	*index = [listOrderDict objectForKey:key];
-
-        [reverseListOrderDict setObject:key forKey:index];
-    }
-
-}
-
-- (void)saveContactOrdering
-{
-    NSEnumerator	*enumerator;
-    NSMutableArray	*orderIndexArray;
-    NSMutableDictionary	*spreadDict;
-    NSNumber		*orderIndex;
-    int			index;
-    
-    //We want to spread the index values out so they start at 1 and work up to remove any fractional numbers and gaps.  This greatly lowers any chance that the user will EVER overload a floating point index.  It'll also automatically fix any duplicate errors (if they happen to come up).
-    //Sort all the current index values from least to greatest
-    orderIndexArray = [[[listOrderDict allValues] mutableCopy] autorelease];;
-    [orderIndexArray sortUsingSelector:@selector(compare:)];
-    
-    //Re-assign a value 1 to n for each key in order.
-    index = 1;
-    spreadDict = [NSMutableDictionary dictionary];
-    enumerator = [orderIndexArray objectEnumerator];
-    while((orderIndex = [enumerator nextObject])){
-        NSString	*key;
-        
-        key = [reverseListOrderDict objectForKey:orderIndex]; //Find the key for this index
-        [spreadDict setObject:[NSNumber numberWithInt:index++]  forKey:key]; //Re-assign it to the new index
-    }
-
-    //Save the spread order index information
-    [[owner preferenceController] setPreference:spreadDict
-                                         forKey:KEY_CONTACT_LIST_ORDER
-                                          group:PREF_GROUP_CONTACT_LIST];
-}
-
-//Get a contact order index ---
-- (float)orderIndexOfContact:(AIListContact *)contact
-{
-    return([self orderIndexOfKey:[contact UIDAndServiceID]]);
-}
-- (float)orderIndexOfGroup:(AIListGroup *)group
-{
-    return([self orderIndexOfKey:[group UID]]);
-}
-- (float)orderIndexOfKey:(NSString *)key
-{
-    NSNumber	*index = [listOrderDict objectForKey:key];
-    
-    if(!index){
-        //If this contact doesn't have an index, put it at the end of the list (largest order)
-        index = [NSNumber numberWithFloat:largestOrder];
-        [listOrderDict setObject:index forKey:key];
-        [reverseListOrderDict setObject:key forKey:index];
-        largestOrder++;
-    }
-
-    return([index floatValue]);
-}
-
-//Set a contact order index --
-//Returns the actual index that was used... if desired would have produced a conflict
-- (float)setOrderIndexOfContactWithServiceID:(NSString *)serviceID UID:(NSString *)UID to:(float)index
-{
-    AIListContact	*contact;
-
-    //Get a unique index
-    index = [self _setOrderIndexOfKey:[NSString stringWithFormat:@"%@.%@",serviceID,UID] to:index];
-    
-    //Set the new index and resort
-    contact = [self contactInGroup:nil withService:serviceID UID:UID];
-    [contact setOrderIndex:index];
-
-    [self sortListGroup:[contact containingGroup] mode:AISortGroupAndSuperGroups];
-    [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
-
-    return(index);
-}
-- (float)setOrderIndexOfGroupWithUID:(NSString *)UID to:(float)index
-{
-    AIListGroup		*group;
-
-    //Get a unique index
-    index = [self _setOrderIndexOfKey:UID to:index];
-
-    //Set the new index and resort
-    group = [self groupInGroup:nil withUID:UID];
-    [group setOrderIndex:index];
-    [self sortListGroup:[group containingGroup] mode:AISortGroupAndSuperGroups];
-    [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
-
-    return(index);
-}
-
-//Saves and returns a non-conflicting index for the desired key
-- (float)_setOrderIndexOfKey:(NSString *)key to:(float)index
-{
-    NSString		*conflictingContactKey;
-
-    //Check for a conflict
-    conflictingContactKey = [reverseListOrderDict objectForKey:[NSNumber numberWithFloat:index]];
-    if(conflictingContactKey){
-        NSEnumerator	*enumerator;
-        NSNumber	*indexNumber;
-        float		closestIndex = ORDER_INDEX_SMALLEST;
-
-        //Find the closest index to this one (less than) (Doesn't matter who's it is, just what it is)
-        enumerator = [[listOrderDict allValues] objectEnumerator];
-        while((indexNumber = [enumerator nextObject])){
-            float indexValue = [indexNumber floatValue];
-
-            if(indexValue < index && (index - indexValue) < (index - closestIndex)){ //If this one is closer to our target index
-                closestIndex = indexValue;
-            }
-        }
-
-        //Set the index to the halfway point
-        index = (index + closestIndex) / 2.0;
-    }
-
-    //Save the new index
-    [listOrderDict setObject:[NSNumber numberWithFloat:index] forKey:key];
-    [reverseListOrderDict setObject:key forKey:[NSNumber numberWithFloat:index]];
-
-    return(index);
-}
-
-
-
-//Sort a group
-- (void)sortListGroup:(AIListGroup *)inGroup mode:(AISortMode)sortMode
-{
-    if(inGroup == nil) inGroup = contactList; //Passing nil sorts the entire contact list
-    
-    //Sort the group (and subgroups)
-    [inGroup sortGroupAndSubGroups:(sortMode == AISortGroupAndSubGroups)
-                    sortController:activeSortController];
-
-    //Sort any groups above it
-    if(sortMode == AISortGroupAndSuperGroups){
-        AIListGroup	*group = inGroup;
-
-        while((group = [group containingGroup])){
-            [group sortGroupAndSubGroups:NO sortController:activeSortController];
-        }
-    }
-}
-
-
-// Contact Access --------------------------------------------------------------------------------
 //Returns the main contact list group
-- (AIListGroup *)contactList;
+- (AIListGroup *)contactList
 {
     return(contactList);
 }
 
-//Returns a flat array of all the contacts in a group (and all subgroups if desired).
+//Returns a flat array of all the contacts in a group (and all subgroups, if desired).
 - (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups
 {
     NSMutableArray	*contactArray = [[NSMutableArray alloc] init];
@@ -678,7 +496,7 @@
     AIListObject	*object;
     
     if(inGroup == nil) inGroup = contactList; //Passing nil scans the entire contact list
-
+	
     enumerator = [inGroup objectEnumerator];
     while((object = [enumerator nextObject])){
         if([object isKindOfClass:[AIListGroup class]]){
@@ -689,74 +507,42 @@
             [contactArray addObject:object];
         }
     }
-
+	
     return([contactArray autorelease]);
 }
 
-//Returns the handle with the specified Service and UID in the group (or any subgroups)
-- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(NSString *)serviceID UID:(NSString *)UID
+//Retrieve a contact from the contact list (Creating if necessary)
+- (AIListContact *)contactWithService:(NSString *)serviceID UID:(NSString *)UID
 {
-    return([self contactInGroup:inGroup withService:serviceID UID:UID serverGroup:nil create:NO]);
-}
-- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(NSString *)serviceID UID:(NSString *)UID serverGroup:(NSString *)serverGroup
-{
-    return([self contactInGroup:inGroup withService:serviceID UID:UID serverGroup:serverGroup create:NO]);
-}
-
-//Returns the handle with the specified Service and UID in the group (or any subgroups)
-- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(NSString *)serviceID UID:(NSString *)UID serverGroup:(NSString *)serverGroup create:(BOOL)create
-{
-    NSEnumerator	*enumerator;
-    AIListObject 	*object;
-    AIListContact	*subGroupObject;
-    
-    if(!inGroup) inGroup = contactList;
-    
-    enumerator = [inGroup objectEnumerator];
-    while((object = [enumerator nextObject])){
-        if([object isKindOfClass:[AIListGroup class]]){
-            if((subGroupObject = [self contactInGroup:(AIListGroup *)object withService:serviceID UID:UID serverGroup:serverGroup create:NO])){
-                return(subGroupObject); //Match in a subgroup
-            }
-        }else if([object isKindOfClass:[AIListContact class]]){
-            if([UID compare:[object UID]] == 0){
-                if(!serverGroup || [serverGroup compare:[inGroup UID]] == 0){ //ensure the groups match
-                    if(!serviceID || [serviceID compare:[(AIListContact *)object serviceID]] == 0){ //ensure the services match
-                        return((AIListContact *)object); //Match
-                    }
-                }
-            }
-        }
-    }
-
-    if(create){
-        return([contactListGeneration createContactWithUID:UID serviceID:serviceID]);
-    }else{
-        return(nil);
-    }
+	NSString		*key = [NSString stringWithFormat:@"%@.%@", serviceID, UID];
+	AIListContact	*contact = [contactDict objectForKey:key];
+	
+	if(!contact){
+		//Create
+		contact = [[[AIListContact alloc] initWithUID:UID serviceID:serviceID] autorelease];
+		[self _informObserversOfObjectCreation:contact];
+		
+		//Add
+		[contactDict setObject:contact forKey:key];
+	}
+	
+	return(contact);
 }
 
-//Returns the group with the specified UID in the group (or any subgroups)
-- (AIListGroup *)groupInGroup:(AIListGroup *)inGroup withUID:(NSString *)UID
+//Retrieve a group from the contact list (Creating if necessary)
+- (AIListGroup *)groupWithUID:(NSString *)groupUID
 {
-    NSEnumerator	*enumerator;
-    AIListGroup 	*object;
-
-    if(!inGroup) inGroup = contactList;
-
-    enumerator = [inGroup objectEnumerator];
-    while((object = [enumerator nextObject])){
-        if([object isKindOfClass:[AIListGroup class]]){
-            if([UID compare:[object UID]] == 0){
-                return(object); //Match
-            }
-            if((object = [self groupInGroup:object withUID:UID])){
-                return(object); //Match in a subgroup
-            }
-        }
-    }
-
-    return(nil);
+	AIListGroup		*group = [groupDict objectForKey:groupUID];
+	
+	if(!group){
+		//Create
+		group = [[[AIListGroup alloc] initWithUID:groupUID] autorelease];
+		[self _informObserversOfObjectCreation:group];
+		
+		[groupDict setObject:group forKey:groupUID];
+	}
+	
+	return(group);
 }
 
 @end
