@@ -111,41 +111,44 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 				scriptEnumerator = [[scriptBundle objectForInfoDictionaryKey:@"Scripts"] objectEnumerator];
 				
 				while (scriptDict = [scriptEnumerator nextObject]){
-					NSString		*scriptFileName, *keyword, *title, *arguments;
+					NSString		*scriptFileName, *scriptFilePath, *keyword, *title, *arguments;
 					NSURL			*scriptURL;
 					NSNumber		*prefixOnlyNumber;
 					
-					scriptFileName = [scriptDict objectForKey:@"File"];
-					scriptURL = [NSURL fileURLWithPath:[scriptBundle pathForResource:scriptFileName
-																			  ofType:SCRIPT_EXTENSION]];
-					keyword = [scriptDict objectForKey:@"Keyword"];
-					title = [scriptDict objectForKey:@"Title"];
-					
-					if(scriptURL && keyword && [keyword length] && title && [title length]){
-						NSMutableDictionary	*infoDict;
+					if ((scriptFileName = [scriptDict objectForKey:@"File"]) &&
+						(scriptFilePath = [scriptBundle pathForResource:scriptFileName
+																 ofType:SCRIPT_EXTENSION])){
 						
-						arguments = [scriptDict objectForKey:@"Arguments"];
+						scriptURL = [NSURL fileURLWithPath:scriptFilePath];
+						keyword = [scriptDict objectForKey:@"Keyword"];
+						title = [scriptDict objectForKey:@"Title"];
 						
-						//Assume "Prefix Only" is NO unless told otherwise
-						prefixOnlyNumber = [scriptDict objectForKey:@"Prefix Only"];
-						if (!prefixOnlyNumber) prefixOnlyNumber = [NSNumber numberWithBool:NO];
-						
-						infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-							scriptURL, @"Path", keyword, @"Keyword", title, @"Title", 
-							prefixOnlyNumber, @"PrefixOnly", nil];
-						
-						//The bundle may not be part of (or for defining) a set of scripts
-						if (scriptsSetName){
-							[infoDict setObject:scriptsSetName forKey:@"Set"];
+						if(scriptURL && keyword && [keyword length] && title && [title length]){
+							NSMutableDictionary	*infoDict;
+							
+							arguments = [scriptDict objectForKey:@"Arguments"];
+							
+							//Assume "Prefix Only" is NO unless told otherwise
+							prefixOnlyNumber = [scriptDict objectForKey:@"Prefix Only"];
+							if (!prefixOnlyNumber) prefixOnlyNumber = [NSNumber numberWithBool:NO];
+							
+							infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+								scriptURL, @"Path", keyword, @"Keyword", title, @"Title", 
+								prefixOnlyNumber, @"PrefixOnly", nil];
+							
+							//The bundle may not be part of (or for defining) a set of scripts
+							if (scriptsSetName){
+								[infoDict setObject:scriptsSetName forKey:@"Set"];
+							}
+							//Arguments may be nil
+							if (arguments){
+								[infoDict setObject:arguments forKey:@"Arguments"];
+							}
+							
+							//Place the entry in our script arrays
+							[scripts addObject:infoDict];
+							[useArray addObject:infoDict];
 						}
-						//Arguments may be nil
-						if (arguments){
-							[infoDict setObject:arguments forKey:@"Arguments"];
-						}
-
-						//Place the entry in our script arrays
-						[scripts addObject:infoDict];
-						[useArray addObject:infoDict];
 					}
 				}
 			}
