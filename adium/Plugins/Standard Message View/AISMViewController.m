@@ -504,15 +504,15 @@
 	
 	//Show a date header if the messages were on different dates
 	if( !contentIsSimilar && ([(NSCalendarDate *)[previousContent date] dayOfCommonEra] != [(NSCalendarDate *)[content date] dayOfCommonEra])) {
-
+		
 		//NSString *dateMessage = [NSString stringWithFormat:@"%@",[[content date] descriptionWithCalendarFormat:@"%X" timeZone:nil locale:nil]];
 		NSString *dateMessage = [NSString stringWithFormat:@"%@",[[content date] descriptionWithCalendarFormat:@"%A, %B %d, %Y" timeZone:nil locale:nil]];	
 		dateSeparator = [AIContentStatus statusInChat:[content chat]
-											   withSource:[[content chat] listObject]
-											  destination:[[content chat] account]
-													 date:nil
-												  message:dateMessage
-												 withType:@"date_separator"];
+										   withSource:[[content chat] listObject]
+										  destination:[[content chat] account]
+												 date:nil
+											  message:[NSAttributedString stringWithString:dateMessage]
+											 withType:@"date_separator"];
 		
 		//Add the date header
 		AIFlexibleTableRow *row = [self _rowForAddingContentStatus:dateSeparator];
@@ -983,7 +983,7 @@
 					case 'a': [string appendString:[[content source] displayName]]; break;
 					case 'n': [string appendString:[[content source] formattedUID]]; break;
 					case 't': [string appendString:[timeStampFormatter stringForObjectValue:[content date]]]; break;
-					case 'r': if([content autoreply])[string appendString:@" (Autoreply)"]; break;
+					case 'r': if([content isAutoreply])[string appendString:@" (Autoreply)"]; break;
 					default: break;
 				}
 				
@@ -1007,7 +1007,7 @@
 						case 'a': present = ([[[content source] displayName] compare:[[content source] formattedUID]] != 0); break;
 						case 'n': present = YES; break;
 						case 't': present = YES; break;
-						case 'r': present = [content autoreply]; break;
+						case 'r': present = [content isAutoreply]; break;
 						default: present = NO; break;
 					}
 					

@@ -110,7 +110,7 @@
     AIContentObject 	*contentObject = [[notification userInfo] objectForKey:@"Object"];
     
     //If the user received a message which another user sent (not an autoreply), send our away message to source
-    if(([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0) && ![(AIContentMessage *)contentObject autoreply]){
+    if(([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0) && ![(AIContentMessage *)contentObject isAutoreply]){
         
         NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"Autoresponse"
 																													   group:GROUP_ACCOUNT_STATUS]];

@@ -18,13 +18,15 @@
 #define CONTENT_STATUS_TYPE		@"Status"		//Type ID for this content
 
 @interface AIContentStatus : AIContentObject {
-    NSString		*message;
 	NSString		*statusType;
 }
 
-+ (id)statusInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage withType:(NSString *)inType;
-- (NSString *)message;
-- (void)setMessage:(NSString *)inMessage;
++ (id)statusInChat:(AIChat *)inChat
+		withSource:(id)inSource
+	   destination:(id)inDest
+			  date:(NSDate *)inDate 
+		   message:(NSAttributedString *)inMessage
+		  withType:(NSString *)inType;
 - (NSString *)status;
 
 @end

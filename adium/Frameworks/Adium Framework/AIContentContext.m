@@ -17,17 +17,13 @@
 #import "AIContentObject.h"
 #import "AIAccount.h"
 
-@interface AIContentContext (PRIVATE)
-- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage autoreply:(BOOL)inAutoreply;
-@end
-
 @implementation AIContentContext
 
 // Right now, a ContentContext object is identical to a ContentMessage object
 // Except that they return different types...
 // ...which lets message views treat them differently
 
-//Return the type ID of this content
+//Content Identifier
 - (NSString *)type
 {
     return(CONTENT_CONTEXT_TYPE);

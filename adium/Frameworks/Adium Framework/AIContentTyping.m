@@ -19,29 +19,16 @@
     return([[[self alloc] initWithChat:inChat source:inSource destination:inDest typing:inTyping] autorelease]);
 }
 
-//Return the type ID of this content
-- (NSString *)type{
-    return(CONTENT_TYPING_TYPE);
-}
-
-//YES if typing, NO if not typing
-- (BOOL)typing{
-    return(typing);
-}
-
-
-// Private ------------------------------------------------------------------------------
-//init
 - (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest typing:(BOOL)inTyping
 {
     [super initWithChat:inChat source:inSource destination:inDest date:nil];
-
+	
 	//Typing content should NOT be filtered, tracked, or displayed
 	filterContent = NO;
 	trackContent = NO;
 	displayContent = NO;
-
-	//Store typing
+	
+	//Store typing state
     typing = inTyping;
     
     return(self);
@@ -50,6 +37,20 @@
 - (void)dealloc
 {
     [super dealloc];
+}
+
+//Content Identifier
+- (NSString *)type
+{
+    return(CONTENT_TYPING_TYPE);
+}
+
+//YES if typing, NO if not typing
+- (void)setTyping:(BOOL)inTyping{
+	typing = inTyping;
+}
+- (BOOL)typing{
+    return(typing);
 }
 
 @end

@@ -20,14 +20,16 @@
 @class AIChat;
 
 @interface AIContentMessage : AIContentObject {
-    NSAttributedString 		*message;
-    BOOL			autoreply;
-    
+    BOOL					isAutoreply;
 }
 
-+ (id)messageInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage autoreply:(BOOL)inAutoreply;
-- (NSAttributedString *)message;
-- (void)setMessage:(NSAttributedString *)inMessage;
-- (BOOL)autoreply;
++ (id)messageInChat:(AIChat *)inChat
+		 withSource:(id)inSource
+		destination:(id)inDest
+			   date:(NSDate *)inDate
+			message:(NSAttributedString *)inMessage 
+		  autoreply:(BOOL)inAutoreply;
+- (void)setIsAutoreply:(BOOL)inAutoreply;
+- (BOOL)isAutoreply;
 
 @end

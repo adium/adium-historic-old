@@ -14,6 +14,6 @@
 }
 
 + (id)typingContentInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest typing:(BOOL)inTyping;
-- (BOOL)typing;			//YES if typing, NO if not typing
+- (BOOL)typing;
 
 @end

@@ -284,7 +284,7 @@ DeclareString(AppendNextMessage);
 											   withSource:[[content chat] listObject]
 											  destination:[[content chat] account]
 													 date:[content date]
-												  message:dateMessage
+												  message:[NSAttributedString stringWithString:dateMessage]
 												 withType:@"date_separator"];
 			//Add the date header
 			[self _addContentStatus:dateSeparator similar:NO toWebView:webView fromStylePath:stylePath];
@@ -309,7 +309,7 @@ DeclareString(AppendNextMessage);
 										   withSource:[[content chat] listObject]
 										  destination:[[content chat] account]
 												 date:[content date]
-											  message:dateMessage
+											  message:[NSAttributedString stringWithString:dateMessage]
 											 withType:@"date_separator"];
 			//Add the date header
 			[self _addContentStatus:dateSeparator similar:NO toWebView:webView fromStylePath:stylePath];
@@ -460,7 +460,7 @@ DeclareString(AppendNextMessage);
 					senderDisplay = [source longDisplayName];
 				}
 				
-				if ([(AIContentMessage *)content autoreply]){
+				if ([(AIContentMessage *)content isAutoreply]){
 					senderDisplay = [NSString stringWithFormat:@"%@ %@",senderDisplay,AILocalizedString(@"(Autoreply)","Short word inserted after the sender's name when displaying a message which was an autoresponse")];
 				}
 				
@@ -500,7 +500,7 @@ DeclareString(AppendNextMessage);
 		do{
 			range = [inString rangeOfString:@"%message%"];
 			if(range.location != NSNotFound){
-				[inString replaceCharactersInRange:range withString:[(AIContentStatus *)content message]];
+				[inString replaceCharactersInRange:range withString:[[(AIContentStatus *)content message] string]];
 			}
 		} while(range.location != NSNotFound);
 				

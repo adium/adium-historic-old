@@ -67,7 +67,7 @@
 // Send a content object
 - (BOOL)sendContentObject:(AIContentObject *)object
 {
-    if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0 && ![(AIContentMessage *)object autoreply]){
+    if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0 && ![(AIContentMessage *)object isAutoreply]){
         NSString	*message = [[(AIContentMessage *)object message] string];
         NSArray		*commands = [message componentsSeparatedByString:@" "];
         NSString	*type = [commands objectAtIndex:0];

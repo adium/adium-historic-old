@@ -17,71 +17,70 @@
 #import "AIContentObject.h"
 
 @interface AIContentStatus (PRIVATE)
-- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage withType:(NSString *)inStatus;
+- (id)initWithChat:(AIChat *)inChat
+			source:(id)inSource
+	   destination:(id)inDest
+			  date:(NSDate *)inDate
+		   message:(NSAttributedString *)inMessage
+		  withType:(NSString *)inStatus;
 @end
-
 
 @implementation AIContentStatus
 
 //Create a new status content object
-+ (id)statusInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage withType:(NSString *)inStatus
++ (id)statusInChat:(AIChat *)inChat
+		withSource:(id)inSource
+	   destination:(id)inDest
+			  date:(NSDate *)inDate
+		   message:(NSAttributedString *)inMessage
+		  withType:(NSString *)inStatus
 {
-    return([[[self alloc] initWithChat:inChat source:inSource destination:inDest date:inDate message:inMessage withType:inStatus] autorelease]);
+    return([[[self alloc] initWithChat:inChat
+								source:inSource
+						   destination:inDest
+								  date:inDate
+							   message:inMessage
+							  withType:inStatus] autorelease]);
 }
 
-//Return the type ID of this content
+//init
+- (id)initWithChat:(AIChat *)inChat
+			source:(id)inSource
+	   destination:(id)inDest
+			  date:(NSDate *)inDate
+		   message:(NSAttributedString *)inMessage
+		  withType:(NSString *)inStatus
+{
+    [super initWithChat:inChat source:inSource destination:inDest date:inDate message:inMessage];
+	
+	//Filter so that triggers in messages can be resolved, don't track status changes
+	filterContent = YES;
+	trackContent = NO;
+
+    //Store source and dest
+	statusType = [inStatus retain];
+	
+    return(self);
+}
+
+//Dealloc
+- (void)dealloc
+{
+	[statusType release];
+	
+    [super dealloc];
+}
+
+//Content Identifier
 - (NSString *)type
 {
     return(CONTENT_STATUS_TYPE);
 }
 
-//Return our status message content
-- (NSString *)message{
-    return(message);
-}
-
-//Return the type of status change this is
-- (NSString *)status {
-	return statusType;
-}
-
-- (void)setMessage:(NSString *)inMessage{
-    if(message != inMessage){
-        [message release]; //we should probably hold onto the original content...
-                           //That would allow us to 'refilter' a piece of content to dynamically update the previously displayed messages as preferences are changed... which would be very cool
-        message = [inMessage retain];
-    }
-}
-
-// Private ------------------------------------------------------------------------------
-//init
-- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage withType:(NSString *)inStatus
+//The type of status change this is
+- (NSString *)status
 {
-    [super initWithChat:inChat source:inSource destination:inDest date:inDate];
-
-	//Filter so that triggers in messages can be resolved
-	filterContent = YES;
-	//Don't track status changes
-	trackContent = NO;
-
-	//plainText = YES;
-	
-    //Store source and dest
-    source = [inSource retain];
-    destination = [inDest retain];
-
-    message = [inMessage retain];
-	statusType = [inStatus retain];
-
-    return(self);
-}
-
-- (void)dealloc
-{
-    [message release];
-	[statusType release];
-	
-    [super dealloc];
+	return(statusType);
 }
 
 @end

@@ -435,7 +435,7 @@
 												 withSource:source
 												destination:nil
 													   date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
-													message:message
+													message:[NSAttributedString stringWithString:message]
 												   withType:statusMessageType];
 		}
 		
