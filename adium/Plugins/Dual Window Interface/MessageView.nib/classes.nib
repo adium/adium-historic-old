@@ -1,5 +1,6 @@
 {
     IBClasses = (
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AICompletingTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {

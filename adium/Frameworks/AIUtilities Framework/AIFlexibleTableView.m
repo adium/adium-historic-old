@@ -26,8 +26,7 @@
 - (void)buildMessageCellArray;
 - (BOOL)_addCellsForRow:(int)inRow;
 - (BOOL)_removeCellsForRow:(int)inRow;
-- (void)resizeContents;
-- (void)resizeToFillContainerView;
+- (void)resizeContents:(BOOL)resizeContents;
 - (void)_init;
 - (void)_endEditing;
 - (void)_setSelected:(BOOL)selected row:(int)inRow;
@@ -79,7 +78,6 @@
     oldWidth = 0;
     
     contentBottomAligned = YES;
-    scrollsOnNewContent = YES;
 
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 }
@@ -89,11 +87,6 @@
 //Set the content cells bottom aligned
 - (void)setContentBottomAligned:(BOOL)inValue{
     contentBottomAligned = inValue;
-}
-
-//YES for auto-scroll functionality
-- (void)setScrollsOnNewContent:(BOOL)inValue{
-    scrollsOnNewContent = inValue;
 }
 
 
@@ -173,15 +166,8 @@
     }
 }
 
-
-//Enable/disable mouse moved events
-- (void)setAcceptsMouseMovedEvents:(BOOL)flag
-{
-    [[self window] setAcceptsMouseMovedEvents:flag];
-}
-
 //pass mouse moved events to the hovered cell
-- (void)mouseMoved:(NSEvent *)theEvent
+/*- (void)mouseMoved:(NSEvent *)theEvent
 {
     AIFlexibleTableCell		*cell;
     int				row, column;
@@ -192,7 +178,7 @@
     cell = [self cellAtPoint:hoverLocation row:&row column:&column];
 
     [cell mouseMoved:theEvent];
-}
+}*/
 
 
 
@@ -369,7 +355,6 @@
     return(YES);
 }
 
-
 - (void)viewDidMoveToSuperview
 {
     //Remove existing
@@ -380,36 +365,31 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollViewFrameChanged:) name:NSViewFrameDidChangeNotification object:[self enclosingScrollView]];
 
         //fit our new view
-        [self resizeToFillContainerView];
-        [self resizeContents];
-        [self setNeedsDisplay:YES];
+        [self resizeContents:YES];
     }
 }
 
 //Called when our scroll view's frame changes.  Adjust to fill the new frame
 - (void)scrollViewFrameChanged:(NSNotification *)notification
 {
+    BOOL resizeContents = NO;
+
     //Resize our cells
     //To make things faster, we only resize our contents if the width changed (requiring a column/cell resize), or if our view doesn't fully fill it's containing scrollview vertically (requiring a resize to keep the content bottom-aligned).
     if([self frame].size.width != oldWidth || !([self frame].size.height > [[self enclosingScrollView] documentVisibleRect].size.height)){
-        [self resizeContents];
+        resizeContents = YES;
     }
     oldWidth = [self frame].size.width;
     
     //Resize ourself vertically and redisplay
-    [self resizeToFillContainerView];
-    [self setNeedsDisplay:YES];
+    [self resizeContents:resizeContents];
 }
 
 //called when a live resize ends, perform a full resize
 - (void)viewDidEndLiveResize
-{
-    //Resize our cells, our view vertically, and redisplay
-    [self resizeContents];
-    [self resizeToFillContainerView];
-    [self setNeedsDisplay:YES];
+{ //Resize our cells, our view vertically, and redisplay
+    [self resizeContents:YES];
 }
-
 
 
 //Delegate / Content -------------------------------------------------------------------------------
@@ -440,17 +420,18 @@
 //Load the content in a newly added row (Quicker than doing a full reload of the content)
 - (void)loadNewRow
 {
+    BOOL resizeContents = NO;
+    
     //Add the new content
     //To make things run faster, we can skip resizing of our contents if these conditions are true:
     // - The column widths do not change (signified by _addCellsForRow returning YES)
     // - Our view fully fill its scrollview vertically (otherwise we need to resize to keep our cells bottom aligned)
     if([self _addCellsForRow:([delegate numberOfRows] - 1)] || !([self frame].size.height > [[self enclosingScrollView] documentVisibleRect].size.height)){
-        [self resizeContents];
+        resizeContents = YES;
     }
 
     //Resize and redisplay
-    [self resizeToFillContainerView];
-    [self setNeedsDisplay:YES];
+    [self resizeContents:resizeContents];
 }
 
 //Call when the data is changed, reloads the content of all cells
@@ -484,9 +465,7 @@
     }
 
     //Resize and redisplay
-    [self resizeContents];
-    [self resizeToFillContainerView];
-    [self setNeedsDisplay:YES];
+    [self resizeContents:YES];
 }
 
 //Reload the content of a single row
@@ -499,20 +478,13 @@
     needResize |= [self _addCellsForRow:inRow];
     
     //Remove the row and add the new cells
-    if(needResize){
-        [self resizeContents];
-    }
-
-    [self resizeToFillContainerView];
-    [self setNeedsDisplay:YES];
+    [self resizeContents:needResize];
 }
 
 //Resize the specified cell's row to the correct height
 - (void)resizeCellHeight:(AIFlexibleTableCell *)inCell
-{
-    //For now just resize everything
-    [self resizeContents];
-    [self setNeedsDisplay:YES];
+{ //For now just resize everything
+    [self resizeContents:YES];
 }
 
 
@@ -548,9 +520,6 @@
         [[self nextResponder] tryToPerform:@selector(keyDown:) with:theEvent]; //Pass it this key event
     }
 }
-
-
-
 
 
 //Row Selection ---------------------------------------------------------------------------------
@@ -806,22 +775,30 @@
 
 //Sizing calculations ------------------------------------------------------------------------------
 //Recalculate our table view's dimensions so it completely fills the contianing scrollview's visible rect
-- (void)resizeToFillContainerView
+- (void)resizeContents:(BOOL)resizeContents
 {
-    NSScrollView		*enclosingScrollView;
     NSRect			documentVisibleRect;
-    BOOL			autoScroll = NO;
     NSSize			size;
 
-    enclosingScrollView = [self enclosingScrollView];
-    documentVisibleRect = [enclosingScrollView documentVisibleRect];
+    //Resize Content
+    if(resizeContents){
+        //Resize our columns first
+        [self _resizeColumns];
 
-    //Before resizing the view, we decide if the user is close to the bottom of our view.  If they are, we want to keep them at the bottom no matter what happens during the resize.
-    if(scrollsOnNewContent){
-        autoScroll = ((documentVisibleRect.origin.y + documentVisibleRect.size.height) > ([self frame].size.height - AUTOSCROLL_CATCH_SIZE));
+        //During a live resize, we don't recalcluate row heights to give things a little speed boost
+        if([self inLiveResize]){
+            [self _resizeCellsRowHeightsChanged:NO];
+        }else{
+            [self _resizeRows];
+            [self _resizeCellsRowHeightsChanged:YES];
+        }
+
+        //Reset our tracking rects
+        [self resetCursorRects];
     }
-
+    
     //Resize our view
+    documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
     size.width = documentVisibleRect.size.width;
     size.height = contentsHeight;
     if(size.height < documentVisibleRect.size.height){
@@ -831,29 +808,8 @@
         [self setFrameSize:size];
     }
 
-    //If the user was near the bottom, move them back to the bottom (autoscroll)
-    if(autoScroll){
-        [[enclosingScrollView contentView] scrollToPoint:NSMakePoint(0, [self frame].size.height - documentVisibleRect.size.height)];
-        [enclosingScrollView reflectScrolledClipView:[enclosingScrollView contentView]];
-    }
-}
-
-//Resize our columns, rows, and cells so everything is visible and correctly positioned
-- (void)resizeContents
-{    
-    //Resize our columns first
-    [self _resizeColumns];
-
-    //During a live resize, we don't recalcluate row heights to give things a little speed boost
-    if([self inLiveResize]){
-        [self _resizeCellsRowHeightsChanged:NO];
-    }else{
-        [self _resizeRows];
-        [self _resizeCellsRowHeightsChanged:YES];
-    }
-
-    //Reset our tracking rects
-    [self resetCursorRects];
+    //Redisplay
+    [self setNeedsDisplay:YES];
 }
 
 //Resize the columns

@@ -59,4 +59,5 @@
 #import "AITableViewAdditions.h"
 #import "AIURLLoader.h"
 #import "AITooltipUtilities.h"
-
+#import "AILinkTrackingController.h"
+#import "AILinkTextView.h"

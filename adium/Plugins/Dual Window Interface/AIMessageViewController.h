@@ -34,6 +34,7 @@
     AIListContact		*contact;
     AIHandle			*handle;
     AIAccount			*account;
+    float			currentTextEntryHeight;
 }
 
 + (AIMessageViewController *)messageViewControllerForContact:(AIListContact *)inContact account:(AIAccount *)inAccount content:(NSAttributedString *)inContent owner:(id)inOwner interface:(id <AIContainerInterface>)inInterface;

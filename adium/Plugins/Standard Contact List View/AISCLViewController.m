@@ -388,7 +388,7 @@
 - (void)mouseEntered:(NSEvent *)theEvent
 {
     trackingMouseMovedEvents = YES;
-    [contactListView setAcceptsMouseMovedEvents:YES]; //Start generating mouse-moved events
+    [[contactListView window] setAcceptsMouseMovedEvents:YES]; //Start generating mouse-moved events
 
     //Start our mouse movement timer
     tooltipCount = 0;
@@ -420,7 +420,7 @@
 - (void)_endTrackingMouse
 {
     trackingMouseMovedEvents = NO;
-    [contactListView setAcceptsMouseMovedEvents:NO]; //Stop generating mouse-moved events
+    [[contactListView window] setAcceptsMouseMovedEvents:NO]; //Stop generating mouse-moved events
     [self _showTooltipAtPoint:NSMakePoint(0,0)]; //Hide the tooltip
     [tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
 }

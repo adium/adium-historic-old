@@ -74,8 +74,9 @@
 //Add a tab view item container (without changing the current selection)
 - (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
 {
-    [self showWindow:nil];
-    [tabView_messages addTabViewItem:inTabViewItem];
+    [self window]; //Ensure our window has loaded
+    [tabView_messages addTabViewItem:inTabViewItem]; //Add the tab
+    [self showWindow:nil]; //Show the window
 }
 
 //Remove a tab view item container

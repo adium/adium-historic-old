@@ -144,7 +144,6 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 */
 - (void)setIdleState:(AIIdleState)inState
 {
-    NSLog(@"IdleState:%i",(int)inState);
     [self _closeIdleState:idleState]; //Close down current state
     [self _openIdleState:inState]; //Start up new state
     idleState = inState;

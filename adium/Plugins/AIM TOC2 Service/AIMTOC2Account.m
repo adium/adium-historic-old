@@ -924,8 +924,6 @@ static char *hash_password(const char * const password);
     NSString		*value;
     NSString		*currentGroup = @"__NoGroup?";
     int			index = 0;
-
-    NSLog(@"Config:%@",configString);
     
     //Create a scanner
     scanner = [NSScanner scannerWithString:configString];
