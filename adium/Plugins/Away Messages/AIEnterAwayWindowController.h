@@ -8,14 +8,19 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class	AIAdium;
+@class	AIAdium, AISendingTextView;
 
 @interface AIEnterAwayWindowController : NSWindowController {
     AIAdium	*owner;
+
+    IBOutlet	AISendingTextView	*textView_awayMessage;
+    IBOutlet	NSButton		*button_setAwayMessage;
     
 }
 
 + (AIEnterAwayWindowController *)enterAwayWindowControllerForOwner:(id)inOwner;
 - (IBAction)closeWindow:(id)sender;
+- (IBAction)cancel:(id)sender;
+- (IBAction)setAwayMessage:(id)sender;
 
 @end
