@@ -61,7 +61,6 @@
 
 @interface AIAccountController (PRIVATE)
 - (void)loadAccounts;
-- (void)saveAccounts;
 - (void)_addMenuItemsToMenu:(NSMenu *)menu withTarget:(id)target forAccounts:(NSArray *)accounts;
 - (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred includeOffline:(BOOL)includeOffline;
 

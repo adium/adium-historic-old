@@ -90,6 +90,7 @@ typedef enum
 
 //Accounts
 - (NSArray *)accountArray;
+- (void)saveAccounts;
 - (NSArray *)activeServicesIncludingCompatibleServices:(BOOL)includeCompatible;
 - (AIAccount *)accountWithInternalObjectID:(NSString *)objectID;
 - (NSArray *)accountsWithService:(AIService *)service;
