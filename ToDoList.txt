@@ -9,7 +9,6 @@
 - Message formatting [Adam]
 - MSN preferences to Accounts Options
 - Typing preferences to Accounts Privacy
-- Emoticon pack list gets all funky when the scrollbar is showing
 
 [Accounts]
 - Window should save its size/position
@@ -33,6 +32,13 @@
 [Other]
 - Something is seriously slowing down our connection process. Shark it and fix. [Evan]
 - The iChat status icon pack's "text entered" state is inconsistent with the rest (pencil vs. chat bubble)
+
+[Menu Items]
+- Block/Unblock as a single menu item [Colin]
+- Block/Unblock should change titles dynamically
+- Invite to Chat should change titles dynamically
+- Change Configure Sort and Sort Options to "Configure Sorting" and "Sorting Options"
+
 
 //-------------------------------------------------------------------------------------------------------
 // Possible Thoughts
