@@ -1446,7 +1446,7 @@
                 else
                 {
                     NSLog (@"Socket received unrecognized command:");
-                    NSLog ([NSString stringWithCString:[theData bytes] length:[theData length]-2]);
+                    NSLog (@"%s", [NSString stringWithCString:[theData bytes] length:[theData length]-2]);
                 }
             }
             break;
