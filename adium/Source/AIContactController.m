@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.82 2004/01/17 03:39:37 adamiser Exp $
+// $Id: AIContactController.m,v 1.83 2004/01/17 03:50:10 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -528,7 +528,7 @@
 {
 	AIListContact	*contact = nil;
 	
-	if(serviceID && UID){ //Ignore invalid requests
+	if(serviceID && [serviceID length] && UID && [UID length]){ //Ignore invalid requests
 		NSString		*key = [NSString stringWithFormat:@"%@.%@", serviceID, UID];
 		
 		contact = [contactDict objectForKey:key];
