@@ -71,7 +71,7 @@ float movementY = currentLocation.y - previousLocation.y;
         newOrigin.y += movementY;
         previousLocation = currentLocation;
 		
-		NSLog(@"%@: %f + %f > %f + %f",currentScreen,newOrigin.y,windowFrame.size.height,[currentScreen visibleFrame].origin.y,[currentScreen visibleFrame].size.height);
+//		NSLog(@"%@: %f + %f > %f + %f",currentScreen,newOrigin.y,windowFrame.size.height,[currentScreen visibleFrame].origin.y,[currentScreen visibleFrame].size.height);
 		
 		//Keep the window from going under the menu bar (on the main screen)
 		NSRect  screenFrame = [currentScreen visibleFrame];
