@@ -51,7 +51,9 @@
 - (void)makeTextEntryViewFirstResponder;
 - (void)setAccount:(AIAccount *)inAccount;
 - (void)closeMessageView;
+- (void)closeMessageViewClosingChat:(BOOL)closeChat;
 - (AIChat *)chat;
+- (AIListObject *)listObject;
 - (AIAccount *)account;
 - (void)setDelegate:(id)inDelegate;
 - (void)setChat:(AIChat *)inChat;

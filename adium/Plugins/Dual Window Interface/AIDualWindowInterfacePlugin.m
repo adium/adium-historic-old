@@ -23,8 +23,10 @@
 #import "AIMessageTabViewItem.h"
 #import "AINewMessagePrompt.h"
 #import "AIDualWindowPreferences.h"
+#import "ESDualWindowMessageWindowPreferences.h"
 
 #define DUAL_INTERFACE_DEFAULT_PREFS		@"DualWindowDefaults"
+#define DUAL_INTERFACE_WINDOW_DEFAULT_PREFS	@"DualWindowMessageDefaults"
 
 #define CONTACT_LIST_WINDOW_MENU_TITLE		@"Contact List"		//Title for the contact list menu item
 #define MESSAGES_WINDOW_MENU_TITLE		@"Messages"		//Title for the messages window menu item
@@ -33,7 +35,6 @@
 #define PREVIOUS_MESSAGE_MENU_TITLE		@"Previous Message"
 #define NEXT_MESSAGE_MENU_TITLE			@"Next Message"
 
-#define ALWAYS_CREATE_NEW_WINDOWS 		NO
 
 @interface AIDualWindowInterfacePlugin (PRIVATE)
 - (void)addMenuItems;
@@ -49,6 +50,7 @@
 - (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat inMessageWindowController:(AIMessageWindowController *)messageWindowController;
 - (void)closeTabViewItem:(AIMessageTabViewItem *)inTab;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (void)openChatWithObject:(AIListObject *)inObject inWindow:(AIMessageWindowController *)inWindow;
 @end
 
 @implementation AIDualWindowInterfacePlugin
@@ -76,10 +78,12 @@
 
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+        [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
     //Install Preference Views
     preferenceController = [[AIDualWindowPreferences dualWindowInterfacePreferencesWithOwner:owner] retain];
-
+    preferenceMessageController = [[ESDualWindowMessageWindowPreferences dualWindowMessageWindowInterfacePreferencesWithOwner:owner] retain];
+    
     //Open the contact list window
     [self showContactList:nil];
 
@@ -119,7 +123,10 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if (notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0) {
-	alwaysCreateNewWindows = ALWAYS_CREATE_NEW_WINDOWS;
+	NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+
+	alwaysCreateNewWindows = [[preferenceDict objectForKey:KEY_ALWAYS_CREATE_NEW_WINDOWS] boolValue];
+	useLastWindow = [[preferenceDict objectForKey:KEY_USE_LAST_WINDOW] boolValue];
     }
 }
 
@@ -163,6 +170,94 @@
     [[owner interfaceController] closeChat:[[inTab messageViewController] chat]];
 }
 
+- (IBAction)openChatInNewWindow:(id)sender
+{
+    AIListObject * inObject = [[owner menuController] contactualMenuContact];
+    if (inObject) [self openChatWithObject:inObject inWindow:nil];
+}
+
+- (IBAction)openChatInPrimaryWindow:(id)sender
+{
+    AIListObject * inObject = [[owner menuController] contactualMenuContact];
+    if (inObject) [self openChatWithObject:inObject inWindow:[messageWindowControllerArray count] ? [messageWindowControllerArray objectAtIndex:0] : nil];
+}
+
+- (IBAction)consolidateAllChats:(id)sender
+{
+    AIMessageWindowController * messageWindowController;
+    AIMessageTabViewItem * tabViewItem;
+    NSEnumerator * windowEnumerator;
+    NSEnumerator * tabViewEnumerator;
+
+    AIMessageWindowController * firstMessageWindowController = [messageWindowControllerArray objectAtIndex:0];
+    //enumerate all windows
+    windowEnumerator = [messageWindowControllerArray objectEnumerator];
+    while (messageWindowController = [windowEnumerator nextObject])
+    {
+	if ([[messageWindowController messageContainerArray] count] != 0){
+
+	    //Add a menu item for each open message container in this window
+	    tabViewEnumerator = [[messageWindowController messageContainerArray] objectEnumerator];
+	    while((tabViewItem = [tabViewEnumerator nextObject])){
+		[self openChatWithObject:[[tabViewItem messageViewController] listObject] inWindow:firstMessageWindowController];
+	    }
+	}
+    }
+}
+
+- (void)openChatWithObject:(AIListObject *)inObject inWindow:(AIMessageWindowController *)messageWindowController
+{
+    AIChat * theChat;
+    AIMessageWindowController * oldMesssageWindowController = nil;
+    AIMessageViewController * messageViewController;
+    
+    AIMessageTabViewItem * tabViewItem = [self _messageTabForListObject:inObject];
+
+    if (!tabViewItem){
+	theChat = [[owner contentController] openChatOnAccount:nil withListObject:inObject];
+	tabViewItem = [self _messageTabForListObject:inObject];
+	oldMesssageWindowController = [self messageWindowControllerForContainer:tabViewItem];
+		    [oldMesssageWindowController removeTabViewItemContainer:tabViewItem removingChat:NO];
+	[self _createMessageTabForChat:theChat inMessageWindowController:messageWindowController];
+	[self openChat:theChat]; //switch to it and configure as necessary
+	[self buildWindowMenu]; //Rebuild our window menu
+	
+    }else{
+	oldMesssageWindowController = [self messageWindowControllerForContainer:tabViewItem];
+	
+	theChat = [[tabViewItem messageViewController] chat];
+
+    if ((!messageWindowController) || ([[messageWindowController messageContainerArray] indexOfObjectIdenticalTo:tabViewItem] == NSNotFound)){ //tab view isn't in this window already (or we want a new window)
+
+	//same as other routine - consolidate
+
+	//Make sure our message window is loaded
+	if(!messageWindowController || ![messageWindowControllerArray count]){
+	    messageWindowController = [AIMessageWindowController messageWindowControllerWithOwner:owner interface:self];
+
+	    //Register to be notified when the message window closes
+	    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageWindowWillClose:) name:NSWindowWillCloseNotification object:[messageWindowController window]];
+
+	    //Add the messageWindowController to our array
+	    [messageWindowControllerArray addObject:messageWindowController];
+	    activeWindowControllerIndex = [messageWindowControllerArray count] - 1;
+	} else {
+	    activeWindowControllerIndex = [messageWindowControllerArray indexOfObjectIdenticalTo:messageWindowController];
+	}
+	
+	//Create the message view & tab
+	messageViewController = [[tabViewItem messageViewController] retain];
+	[oldMesssageWindowController removeTabViewItemContainer:tabViewItem removingChat:NO];
+
+	tabViewItem = [AIMessageTabViewItem messageTabWithView:messageViewController owner:owner];
+	[messageWindowController addTabViewItemContainer:tabViewItem];
+
+    }
+    [self buildWindowMenu]; //Rebuild our window menu   
+
+    }
+ 
+}
 //Show the message window
 - (IBAction)showMessageWindow:(id)sender
 {
@@ -318,6 +413,7 @@
 	AIMessageWindowController * messageWindowController = [self messageWindowControllerForContainer:(AIMessageTabViewItem *)inContainer];
 	[messageWindowController showWindow:nil];
 	activeWindowControllerIndex = [messageWindowControllerArray indexOfObjectIdenticalTo:messageWindowController];
+	lastUsedMessageWindowControllerIndex = activeWindowControllerIndex;
     }
     else
 	activeWindowControllerIndex = -1; //no active window controller -> contact list
@@ -405,6 +501,7 @@
         //If one already exists, we want to use it for this new chat
         if(messageTabContainer){
             [[messageTabContainer messageViewController] setChat:inChat];
+	    [[self messageWindowControllerForContainer:messageTabContainer] showWindow:nil];
         }
     }
 
@@ -476,6 +573,16 @@
         menuItem_nextMessage = [[NSMenuItem alloc] initWithTitle:NEXT_MESSAGE_MENU_TITLE target:self action:@selector(nextMessage:) keyEquivalent:rightKey];
         [[owner menuController] addMenuItem:menuItem_nextMessage toLocation:LOC_Window_Commands];
     }
+
+    //Add contextual menu items
+    menuItem_openInNewWindow = [[NSMenuItem alloc] initWithTitle:@"Chat in New Window" target:self action:@selector(openChatInNewWindow:) keyEquivalent:@""];
+    [[owner menuController] addContextualMenuItem:menuItem_openInNewWindow toLocation:Context_Contact_Additions];
+    
+    menuItem_openInPrimaryWindow = [[NSMenuItem alloc] initWithTitle:@"Chat in Primary Window" target:self action:@selector(openChatInPrimaryWindow:) keyEquivalent:@""];
+    [[owner menuController] addContextualMenuItem:menuItem_openInPrimaryWindow toLocation:Context_Contact_Additions];
+
+    menuItem_consolidate = [[NSMenuItem alloc] initWithTitle:@"Consolidate All Chats" target:self action:@selector(consolidateAllChats:) keyEquivalent:@"O"];
+    [[owner menuController] addMenuItem:menuItem_consolidate toLocation:LOC_Window_Commands];
 }
 
 //Build the contents of the 'window' menu
@@ -499,7 +606,7 @@
 
     //Contact list window
     //Add toolbar Menu
-    item = [[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE target:self action:@selector(showContactList:) keyEquivalent:@"1"];
+    item = [[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE target:self action:@selector(showContactList:) keyEquivalent:@"`"];
     [item setRepresentedObject:contactListWindowController];
     [[owner menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
     [windowMenuArray addObject:[item autorelease]];
@@ -530,7 +637,9 @@
 
 		    //Prepare a key equivalent for the controller
 		    if(windowKey < 10){
-			windowKeyString = [NSString stringWithFormat:@"%i",windowKey];
+			windowKeyString = [NSString stringWithFormat:@"%i",(windowKey-1)];
+		    }else if (windowKey == 10){
+			windowKeyString = [NSString stringWithString:@"0"];
 		    }else{
 			windowKeyString = [NSString stringWithString:@""];
 		    }
@@ -592,6 +701,11 @@
         if(![messageWindowControllerArray count]) enabled = NO;
     }else if(menuItem == menuItem_previousMessage){
         if(![messageWindowControllerArray count]) enabled = NO;
+    }else if (menuItem == menuItem_openInNewWindow || menuItem == menuItem_openInPrimaryWindow){
+	enabled = ([[owner menuController] contactualMenuContact] != nil);
+    }else if (menuItem == menuItem_consolidate)
+    {
+	if ([messageWindowControllerArray count] <= 1) enabled = NO; //only with more than one window open
     }
 
     return(enabled);
@@ -649,10 +763,16 @@
 - (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat
 {
     AIMessageTabViewItem	*messageTabContainer;
+    AIMessageWindowController	*messageWindowController;
+    
     if (![messageWindowControllerArray count] || alwaysCreateNewWindows)
-	messageTabContainer = [self _createMessageTabForChat:inChat inMessageWindowController:nil];
+	messageWindowController = nil;
+    else if (useLastWindow)
+	messageWindowController = [messageWindowControllerArray objectAtIndex:lastUsedMessageWindowControllerIndex];
     else
-	messageTabContainer = [self _createMessageTabForChat:inChat inMessageWindowController:[messageWindowControllerArray objectAtIndex:0]];
+	messageWindowController = [messageWindowControllerArray objectAtIndex:0];
+    
+    messageTabContainer = [self _createMessageTabForChat:inChat inMessageWindowController:messageWindowController];
 
     return messageTabContainer;
 }

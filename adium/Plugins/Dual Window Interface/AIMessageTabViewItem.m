@@ -55,7 +55,7 @@
 
     //Set our contents
     [self setView:[messageView view]];
-
+    
     return(self);
 }
 
@@ -175,9 +175,13 @@
 - (BOOL)tabShouldClose:(id)sender
 {
     //Close down our message view
-    [messageView closeMessageView];
-
-    return(YES);
+    return ([self tabShouldClose:sender closingChat:YES]);
+}
+ 
+- (BOOL)tabShouldClose:(id)sender closingChat:(BOOL)allowedToCloseChat
+{
+    [messageView closeMessageViewClosingChat:allowedToCloseChat];
+    return YES;
 }
 
 //Drawing
