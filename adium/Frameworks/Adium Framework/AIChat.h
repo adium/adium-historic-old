@@ -32,7 +32,9 @@
 
 - (NSDate *)dateOpened;
 - (void)setDateOpened:(NSDate *)inDate;
+
 - (BOOL)isOpen;
+- (void)setIsOpen:(BOOL)flag;
 
 - (NSArray *)participatingListObjects;
 - (void)addParticipatingListObject:(AIListContact *)inObject;
