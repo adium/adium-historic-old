@@ -63,9 +63,9 @@
 
     if (!closedIcon) NSLog(@"closedIcon = nil");
 
-    NSLog([closedIcon description]);
-    NSLog([openedIcon description]);
-    NSLog([alertIcon description]);
+//    NSLog([closedIcon description]);
+//    NSLog([openedIcon description]);
+//    NSLog([alertIcon description]);
 
     
     return [self initWithClosedImage:closedIcon openedImage:openedIcon alertImage:alertIcon];

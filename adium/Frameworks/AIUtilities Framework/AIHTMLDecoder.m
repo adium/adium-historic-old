@@ -245,6 +245,7 @@ int HTMLEquivalentForFontSize(int fontSize)
 
                     //LINK
                     }else if([chunkString caseInsensitiveCompare:@"A"] == 0){
+                        [textAttributes setLinkURL:@"http://www.adiumx.com"];
                         [textAttributes setUnderline:YES];
                         [textAttributes setTextColor:[NSColor blueColor]];
 
@@ -252,6 +253,7 @@ int HTMLEquivalentForFontSize(int fontSize)
                         [scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
 
                     }else if([chunkString caseInsensitiveCompare:@"/A"] == 0){
+                        [textAttributes setLinkURL:nil];
                         [textAttributes setUnderline:NO];
                         [textAttributes setTextColor:[NSColor blackColor]];
 

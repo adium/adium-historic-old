@@ -41,7 +41,7 @@
 #import "AIMiniToolbarCenter.h"
 #import "AICustomTabsView.h"
 #import "AICustomTab.h"
-#import "AICursorUtilities.h"
+#import "AICursorAdditions.h"
 #import "AIAnimatedFloater.h"
 #import "AIAnimatedView.h"
 #import "AITabViewAdditions.h"

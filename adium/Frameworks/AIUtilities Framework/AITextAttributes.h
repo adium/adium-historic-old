@@ -36,5 +36,6 @@
 - (void)setUnderline:(BOOL)inUnderline;
 - (void)setTextColor:(NSColor *)inColor;
 - (void)setBackgroundColor:(NSColor *)inColor;
+- (void)setLinkURL:(NSString *)inURL;
 
 @end

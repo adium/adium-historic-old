@@ -36,11 +36,10 @@
             width = cellWidth;
             columnWidthDidChange = YES;
         }
-    }else{ //If our width is flexible, resize the cell to fit
-        [inCell sizeCellForWidth:width];
     }
 
-    //Add the cell
+    //Size and add the cell
+    [inCell sizeCellForWidth:width];
     [cellArray insertObject:inCell atIndex:inRow];
 
     return(columnWidthDidChange);

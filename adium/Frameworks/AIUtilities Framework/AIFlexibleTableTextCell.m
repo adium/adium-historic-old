@@ -8,6 +8,8 @@
 
 #import "AIFlexibleTableTextCell.h"
 #import "AIFlexibleTableView.h"
+#import "AICursorAdditions.h"
+#import "AIFlexibleLink.h"
 
 #define FRACTIONAL_PADDING 1.0
 #define	EDITOR_X_INSET	-6
@@ -16,6 +18,7 @@
 @interface AIFlexibleTableTextCell (PRIVATE)
 - (NSRange)validRangeFromIndex:(int)sourceIndex to:(int)destIndex;
 - (NSTextStorage *)createTextSystemWithString:(NSAttributedString *)inString size:(NSSize)inSize container:(NSTextContainer **)outContainer layoutManager:(NSLayoutManager **)outLayoutManager;
+- (void)_buildLinkArray;
 @end
 
 @implementation AIFlexibleTableTextCell
@@ -60,6 +63,7 @@
     textStorage = nil;
     textContainer = nil;
     layoutManager = nil;
+    linkArray = nil;
 
     cellSize = [inString size];
     string = [inString retain];
@@ -105,12 +109,6 @@
 {
     //Draw our string contents
     if(drawContents){
-        //Correctly size the text container
-        if(!NSEqualSizes([textContainer containerSize], cellFrame.size)){
-            [textContainer setContainerSize:cellFrame.size];
-            glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
-        }
-
         //Draw
         if(!selected || ![[tableView window] isKeyWindow] || [[tableView window] firstResponder] != tableView){
             [layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:cellFrame.origin];
@@ -126,6 +124,19 @@
             //Remove the white
             [layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:NSMakeRange(0,[textStorage length])];
 
+        }
+    }
+
+    //Draw blue frames around the links
+    {
+        NSEnumerator	*enumerator;
+        AIFlexibleLink	*link;
+
+        //Insert a tracking rect for each link
+        enumerator = [linkArray objectEnumerator];
+        while((link = [enumerator nextObject])){
+            [[NSColor blueColor] set];
+            [NSBezierPath strokeRect:[link trackingRect]];
         }
     }
 }
@@ -287,8 +298,96 @@
     return([aTextStorage autorelease]);
 }
 
-@end
 
+// Link Tracking -------------------------------------------------------------------------------
+//Reset our cursor tracking rects in the view
+- (BOOL)resetCursorRectsInView:(NSView *)controlView visibleRect:(NSRect)visibleRect
+{
+    NSEnumerator	*enumerator;
+    AIFlexibleLink	*link;
+
+    //Remove all existing tracking rects
+    enumerator = [linkArray objectEnumerator];
+    while((link = [enumerator nextObject])){
+        [controlView removeTrackingRect:[link trackingTag]];
+    }
+
+    if(visibleRect.size.width && visibleRect.size.height){
+        //Rebuild our link array
+        [self _buildLinkArray];
+        
+        //Insert a tracking rect for each link
+        enumerator = [linkArray objectEnumerator];
+        while((link = [enumerator nextObject])){
+            NSTrackingRectTag	trackingTag;
+
+            trackingTag = [controlView addTrackingRect:NSIntersectionRect([link trackingRect],visibleRect) owner:self userData:link assumeInside:NO];
+            [link setTrackingTag:trackingTag];
+        }
+    }
+
+    return(YES);
+}    
+
+//Builds an array of links within our text content
+- (void)_buildLinkArray
+{
+    int scanLocation = 0;
+    int stringLength = [string length];
+
+    //Release the old array
+    [linkArray release]; linkArray = nil;
+
+    //Process all links
+    while(scanLocation != NSNotFound && scanLocation < stringLength){
+        NSRange		linkRange;
+        NSString	*linkURL;
+
+        //Search for a link
+        if((linkURL = [textStorage attribute:NSLinkAttributeName atIndex:scanLocation effectiveRange:&linkRange])){
+            NSRectArray		linkRects;
+            int			index;
+            int			linkCount;
+
+            //Get an array of rects that define the location of this link
+            linkRects = [layoutManager rectArrayForCharacterRange:linkRange
+                                     withinSelectedCharacterRange:linkRange
+                                                  inTextContainer:textContainer
+                                                        rectCount:&linkCount];
+
+            //A link may be spread across multiple rects.. if so, it's okay to treat the link as multiple, seperate links.
+            for(index = 0; index < linkCount; index++){
+                NSRect	linkRect = linkRects[index];
+
+                //Adjust the link to our table view's coordinates
+                linkRect.origin.y += [self frame].origin.y;
+                linkRect.origin.x += [self frame].origin.x;
+
+                //Create and add the link
+                AIFlexibleLink	*link = [[[AIFlexibleLink alloc] initWithTrackingRect:linkRect url:linkURL] autorelease];
+                if(!linkArray) linkArray = [[NSMutableArray alloc] init];
+                [linkArray addObject:link];
+            }
+        }
+
+        //Move along the string (In preperation for another search)
+        scanLocation = linkRange.location + linkRange.length;
+    }
+}
+
+//Called when the mouse enters a link rect
+- (void)mouseEntered:(NSEvent *)theEvent
+{
+    [[NSCursor handPointCursor] set]; //Set the link cursor
+}
+
+//Called when the mouse leaves a link rect
+- (void)mouseExited:(NSEvent *)theEvent
+{
+    [[NSCursor arrowCursor] set]; //Restore the regular cursor
+}
+
+@end
 
 
 

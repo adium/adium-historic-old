@@ -54,7 +54,7 @@ extern void* objc_getClass(const char *name);
     services   = [FZDaemon allServices];
     AIMService = [[[FZDaemon allServices] objectAtIndex:0] retain];
 	
-	NSLog (@"Number of services: %i", [services count]);
+//	NSLog (@"Number of services: %i", [services count]);
 
     //Register as a listener
     [FZDaemon addListener:self capabilities:15]; //15 is what iChat uses... dunno the meaning    
@@ -351,7 +351,7 @@ extern void* objc_getClass(const char *name);
     AIContentMessage	*messageObject;
     int			flags = [inMessage flags];
     
-    NSLog(@"(%i)%@:%@ [%i,%@]", [inMessage bodyFormat], [inMessage sender], [inMessage body], [inMessage flags], [inMessage time]);
+//    NSLog(@"(%i)%@:%@ [%i,%@]", [inMessage bodyFormat], [inMessage sender], [inMessage body], [inMessage flags], [inMessage time]);
 
     if(flags & kMessageTypingFlag){
         if(!(flags & kMessageOutgoingFlag)){

@@ -117,6 +117,15 @@
     }
 }
 
+- (void)setLinkURL:(NSString *)inURL
+{
+    if(inURL){
+        [dictionary setObject:inURL forKey:NSLinkAttributeName];
+    }else{
+        [dictionary removeObjectForKey:NSLinkAttributeName];
+    }
+}
+
 //Returns a dictinary of attributes
 - (NSDictionary *)dictionary
 {

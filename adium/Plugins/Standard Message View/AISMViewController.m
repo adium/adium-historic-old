@@ -55,6 +55,7 @@
     timeCol = [[AIFlexibleTableColumn alloc] init];
     [messageView addColumn:timeCol];
 
+    
     [messageView reloadData];
     
     //Observe
@@ -133,34 +134,9 @@
     //Get the content objects
     content = [contentArray objectAtIndex:([contentArray count] - 1) - inRow]; //Content is stored in reverse order
     if(inRow > 0) previousContent = [contentArray objectAtIndex:[contentArray count] - inRow];
+
     
-
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){ //Message content
-/*        AIContentMessage	*contentMessage = (AIContentMessage *)object;
-        id			messageSource = [contentMessage source];
-        BOOL			duplicateSource, outgoing;
-        NSColor			*backgroundColor;
-        NSAttributedString	*message;
-        BOOL			backgroundIsDark;
-        NSColor	*gridColor;
-        
-        //Figure our some basic information about this content
-        outgoing = ([messageSource isKindOfClass:[AIAccount class]]);
-        duplicateSource = (previousContent && [previousContent source] == messageSource);
-
-        //Get the background color
-        message = [contentMessage message];
-        backgroundColor = [message attribute:NSBackgroundColorAttributeName atIndex:0 longestEffectiveRange:nil inRange:NSMakeRange(0, [message length])];
-        if(!backgroundColor) backgroundColor = [NSColor whiteColor];//(outgoing ? backColorOut : backColorIn);
-        backgroundIsDark = [backgroundColor colorIsDark];
-
-
-
-        gridColor = [backgroundColor darkenBy:(backgroundIsDark ? - (gridDarkness + DARKEN_LIGHTEN_MODIFIER) : gridDarkness)];
-*/
-        //        BOOL			displayPrefix;
-//        BOOL			displayTimeStamps;
-
         //Create and return a cell
         if(inCol == senderCol){
             cell = [self senderCellForContent:content previousContent:previousContent];
@@ -217,6 +193,7 @@
     return(cell);
 }
 
+//Returns an empty cell
 - (AIFlexibleTableCell *)emptyCellForContent:(id <AIContentObject>)content
 {
     AIFlexibleTableCell	*cell;
@@ -233,6 +210,7 @@
     return(cell);
 }
 
+//Returns a message cell
 - (AIFlexibleTableCell *)messageCellForContent:(AIContentMessage *)content previousContent:(id <AIContentObject>)previousContent
 {
     AIFlexibleTableCell	*cell;
@@ -247,6 +225,7 @@
     return(cell);
 }
 
+//Returns a sender cell
 - (AIFlexibleTableCell *)senderCellForContent:(AIContentMessage *)content previousContent:(id <AIContentObject>)previousContent
 {
     id			messageSource = [content source];
