@@ -122,6 +122,14 @@
 {
     return(0);
 }
+- (int)allowedLengthForAccountName
+{
+	return([self allowedLength]);
+}
+- (int)allowedLengthForUIDs
+{
+	return([self allowedLength]);
+}
 
 //Case sensitivity of account and contact names.  Determines if usernames such as "Adam" and "adam" are unique.
 - (BOOL)caseSensitive
