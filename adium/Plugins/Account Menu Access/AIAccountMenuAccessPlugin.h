@@ -13,12 +13,12 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface AIAccountMenuAccessPlugin : AIPlugin <AIListObjectObserver> {
-    NSMutableArray		*accountMenuArray;
-	
-	NSImage				*image_Online;
-	NSImage				*image_Connecting;
-	NSImage				*image_Offline;
+@interface AIAccountMenuAccessPlugin : AIPlugin <AccountMenuPlugin> {
+
 }
+
+- (NSString *)identifier;
+- (void)addAccountMenuItems:(NSArray *)menuItemArray;
+- (void)removeAccountMenuItems:(NSArray *)menuItemArray;
 
 @end
