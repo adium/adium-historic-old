@@ -458,18 +458,21 @@
 	while(webViewIsReady && [newContent count]){
 		AIContentObject *content = [newContent objectAtIndex:0];
 		
+		//Display the content
 		[plugin processContent:content
 		   withPreviousContent:previousContent 
 					forWebView:preview
 				 fromStylePath:stylePath
 				allowingColors:allowColors];
 		
-		//
+		//Remember the last content inserted (Used mainly for combining consecutive messages)
 		[previousContent release];
 		previousContent = [content retain];
 		
-		//de-queue
-		[newContent removeObjectAtIndex:0];
+		//Remove the content we just displayed from the queue
+		if ([newContent count]){
+			[newContent removeObjectAtIndex:0];
+		}
 	}
 	
 	//cleanup previous 

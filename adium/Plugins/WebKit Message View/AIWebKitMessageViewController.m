@@ -178,7 +178,7 @@
 		[previousContent release];
 		previousContent = [content retain];
 
-		//Remove the content we just displayed from the que
+		//Remove the content we just displayed from the queue
 		if ([newContent count]){
 			[newContent removeObjectAtIndex:0];
 		}
