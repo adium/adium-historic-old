@@ -63,6 +63,7 @@ NSMutableDictionary *chatDict = nil;
 static guint				sourceId = nil;		//The next source key; continuously incrementing
 static NSMutableDictionary  *sourceInfoDict = nil;
 static NDRunLoopMessenger   *runLoopMessenger = nil;
+static BOOL					isOnTigerOrBetter = NO;
 
 void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 void gaim_xfer_choose_file_cancel_cb(void *user_data, const char *filename);
@@ -100,6 +101,8 @@ int gaim_xfer_choose_file(GaimXfer *xfer);
 - (id)init
 {
 	[super init];
+	
+	isOnTigerOrBetter = [NSApp isOnTigerOrBetter];
 	
 	sourceId = 0;
     sourceInfoDict = [[NSMutableDictionary alloc] init];
@@ -1629,7 +1632,7 @@ void callTimerFunc(CFRunLoopTimerRef timer, void *info)
 {
 	struct SourceInfo *sourceInfo = info;
 	
-	// NSLog(@"%x: Fired %f-ms timer (tag %u)",[NSRunLoop currentRunLoop],CFRunLoopTimerGetInterval(timer)*1000,sourceInfo->tag);
+	GaimDebug (@"%x: Fired %f-ms timer (tag %u)",[NSRunLoop currentRunLoop],CFRunLoopTimerGetInterval(timer)*1000,sourceInfo->tag);
 	if (! sourceInfo->sourceFunction(sourceInfo->user_data)) {
         adium_source_remove(sourceInfo->tag);
 	}
@@ -1637,7 +1640,7 @@ void callTimerFunc(CFRunLoopTimerRef timer, void *info)
 
 guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 {
-    // NSLog(@"%x: New %u-ms timer (tag %u)",[NSRunLoop currentRunLoop], interval, sourceId);
+    GaimDebug (@"%x: New %u-ms timer (tag %u)",[NSRunLoop currentRunLoop], interval, sourceId);
 	
     struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
 	
@@ -1677,14 +1680,18 @@ guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 guint adium_input_add(int fd, GaimInputCondition condition,
 					  GaimInputFunction func, gpointer user_data)
 {
-    struct SourceInfo *info = g_new(struct SourceInfo, 1);
-
+    struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
+	
     // Build the CFSocket-style callback flags to use from the gaim ones
     CFOptionFlags callBackTypes = 0;
     if ((condition & GAIM_INPUT_READ ) != 0) callBackTypes |= kCFSocketReadCallBack;
-    if ((condition & GAIM_INPUT_WRITE) != 0) callBackTypes |= kCFSocketWriteCallBack;
-	
-	if ([NSApplication isOnTigerOrBetter]) callBackTypes |= kCFSocketConnectCallBack;
+    if ((condition & GAIM_INPUT_WRITE) != 0){
+		if (isOnTigerOrBetter){
+			callBackTypes |= kCFSocketWriteCallBack | kCFSocketConnectCallBack;
+		}else{
+			callBackTypes |= kCFSocketWriteCallBack;
+		}
+	}
 	
 //	if ((condition & GAIM_INPUT_CONNECT) != 0) callBackTypes |= kCFSocketConnectCallBack;
 	
