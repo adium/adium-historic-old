@@ -11,6 +11,7 @@
 - (void)makeAccount:(id)account performSelector:(SEL)selector;
 - (void)makeAccount:(id)account performSelector:(SEL)selector withObject:(id)object;
 - (void)makeAccount:(id)account performSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject;
+- (void)test; 
 @end
 
 /*!
@@ -24,6 +25,7 @@
 }
 
 + (void)createThreadedGaimCocoaAdapter:(NSArray *)portArray;
++ (void)connectToAccountWithPorts:(NSArray *)portArray;
 - (void)makeAccount:(id)account performSelector:(SEL)selector;
 - (void)makeAccount:(id)account performSelector:(SEL)selector withObject:(id)object;
 - (void)makeAccount:(id)account performSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject;

@@ -8,6 +8,7 @@
 //
 
 #import  <Foundation/Foundation.h>
+#include <Libgaim/libgaim.h>
 #include <stdlib.h>
 #include <glib.h>
 
@@ -238,11 +239,29 @@ void socketCallback(CFSocketRef s,
     gaim_eventloop_set_ui_ops(&adiumEventLoopUiOps);
 	
 	NSConnection *destConnection = [[NSConnection alloc] init];    // create connection object
-	[destConnection registerName:@"GaimThread"];
 	[destConnection setRootObject:self];
+	[destConnection registerName:@"GaimThread"];
+	NSLog(@"destConnection = %@",destConnection);
+
+	NSLog(@"Inited GaimCocoaAdapter");
+
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addConnection:) name:@"AISocketTest" object:nil];
+	
 	
     return self;
 }
+
++ (void)connectToAccountWithPorts:(NSArray *)portArray
+{
+	NSConnection 	*serverConnection;
+	NSLog(@"connectToAccountWithPorts");
+    serverConnection = [NSConnection connectionWithReceivePort:[portArray objectAtIndex:0]
+													  sendPort:[portArray objectAtIndex:1]];
+	
+	[[serverConnection rootProxy] setGaimThread:myself];
+}
+
 
 #pragma mark Thread accessors
 
@@ -260,7 +279,5 @@ void socketCallback(CFSocketRef s,
 {
 	[account performSelector:selector withObject:firstObject withObject:secondObject];
 }
-
-
 
 @end
