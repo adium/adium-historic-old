@@ -345,7 +345,7 @@ int HTMLEquivalentForFontSize(int fontSize)
                                     [textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.5 alpha:1.0]];
                                 }
                             } else {
-                                [textAttributes setTextColor:[NSColor grayColor]];
+                                [textAttributes setTextColor:[NSColor blackColor]];
                             }
                             
                             //Process the font tag's contents
