@@ -297,16 +297,8 @@
 		
         //Get the message in a sendable format (HTML or plain text)
         if(!connectedWithICQ){
-            message = [self validCopyOfString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message]
-                                                                headers:YES
-                                                               fontTags:YES
-													 includingColorTags:YES
-                                                          closeFontTags:NO
-                                                              styleTags:YES
-                                             closeStyleTagsOnFontChange:NO
-                                                         encodeNonASCII:YES
-                                                             imagesPath:nil
-													  attachmentsAsText:YES]];
+            message = [self validCopyOfString:[self encodedAttributedString:[(AIContentMessage *)object message]
+															  forListObject:[object destination]]];
         }else{
             message = [self validCopyOfString:[[(AIContentMessage *)object message] string]];
         }
@@ -769,7 +761,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.131 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.132 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
