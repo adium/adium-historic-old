@@ -22,7 +22,7 @@
     IBOutlet 	NSTextField			*textField_description_textField;
     IBOutlet	NSTextField			*textField_actionDetails;
     IBOutlet	NSPopUpButton			*popUp_actionDetails;
-
+    IBOutlet	NSButton			*button_oneTime;
     NSMenu					*actionMenu;
     
     AIAdium					*owner;
@@ -43,5 +43,5 @@
 - (IBAction)actionSendMessage:(id)sender;
 - (IBAction)selectSound:(id)sender;
 - (IBAction)selectBehavior:(id)sender;
-
+- (IBAction)oneTimeEvent:(id)sender;
 @end
