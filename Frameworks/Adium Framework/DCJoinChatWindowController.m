@@ -141,14 +141,6 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
     return(YES);
 }
 
-//Close this window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-		 [[self window] close];
-    }
-}
-
 //Dealloc
 - (void)dealloc
 {    

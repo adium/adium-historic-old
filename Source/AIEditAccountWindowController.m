@@ -130,20 +130,6 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 
 /*
- * @brief Close this window (or end the sheet, as appropriate)
- */
-- (IBAction)closeWindow:(id)sender
-{
-	if([self windowShouldClose:nil]){
-		if([[self window] isSheet]){
-			[NSApp endSheet:[self window]];
-		}else{
-			[[self window] close];
-		}
-	}
-}
-
-/*
  * @brief Called as the user list edit sheet closes, dismisses the sheet
  */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo

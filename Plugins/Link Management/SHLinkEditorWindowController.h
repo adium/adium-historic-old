@@ -34,7 +34,6 @@
 
 + (void)showLinkEditorForTextView:(NSTextView *)inTextView onWindow:(NSWindow *)parentWindow showFavorites:(BOOL)showFavorites notifyingTarget:(id)inTarget;
 
-- (IBAction)closeWindow:(id)sender;
 - (IBAction)cancel:(id)sender;
 
 - (IBAction)acceptURL:(id)sender;

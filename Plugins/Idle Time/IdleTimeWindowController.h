@@ -37,7 +37,6 @@
 - (IBAction)apply:(id)sender;
 - (IBAction)configureControls:(id)sender;
 + (void)closeSharedInstance;
-- (IBAction)closeWindow:(id)sender;
 - (BOOL)windowShouldClose:(id)sender;
 
 @end

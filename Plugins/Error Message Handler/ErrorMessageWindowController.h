@@ -37,6 +37,5 @@
 - (void)displayError:(NSString *)inTitle withDescription:(NSString *)inDesc withTitle:(NSString *)inWindowTitle;
 - (IBAction)okay:(id)sender;
 - (IBAction)okayToAll:(id)sender;
-- (IBAction)closeWindow:(id)sender;
 
 @end

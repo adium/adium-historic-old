@@ -407,14 +407,6 @@ static NSString                             *filterForContactName = nil;	//Conta
     [self selectDisplayedLog];
 }
 
-//Close the window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
-
 //Called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {

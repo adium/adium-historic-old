@@ -24,6 +24,5 @@
 + (void)promptForNewGroupOnWindow:(NSWindow *)parentWindow;
 - (IBAction)cancel:(id)sender;
 - (IBAction)addGroup:(id)sender;
-- (IBAction)closeWindow:(id)sender;
 
 @end

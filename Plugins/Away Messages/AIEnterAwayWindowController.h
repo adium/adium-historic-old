@@ -33,7 +33,6 @@
 }
 
 + (AIEnterAwayWindowController *)enterAwayWindowController;
-- (IBAction)closeWindow:(id)sender;
 - (IBAction)cancel:(id)sender;
 - (IBAction)setAwayMessage:(id)sender;
 - (IBAction)save:(id)sender;

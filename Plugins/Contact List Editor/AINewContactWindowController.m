@@ -123,14 +123,6 @@
     return(NO);
 }
 
-//Close this window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
-
 //Called as the user list edit sheet closes, dismisses the sheet
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {

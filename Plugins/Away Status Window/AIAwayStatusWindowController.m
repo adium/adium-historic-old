@@ -95,14 +95,6 @@ AIAwayStatusWindowController	*sharedAwayStatusInstance = nil;
     [self updateAwayTime:nil];    
 }
 
-//Closes this window
-- (void)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
-
 //Do some housekeeping before closing the away status window
 - (BOOL)windowShouldClose:(id)sender
 {

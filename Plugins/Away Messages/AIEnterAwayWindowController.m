@@ -47,14 +47,6 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
     return(sharedEnterAwayInstance);
 }
 
-//Closes this window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
-
 //Cancel
 - (IBAction)cancel:(id)sender
 {
