@@ -19,6 +19,9 @@
 - (oneway void)closeChat:(AIChat *)chat;
 - (void)connectAccount:(id)adiumAccount;
 - (void)disconnectAccount:(id)adiumAccount;
+- (oneway void)xferRequest:(GaimXfer *)xfer;
+- (oneway void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName;
+- (oneway void)xferRequestRejected:(GaimXfer *)xfer;
 @end
 
 /*!
@@ -44,6 +47,9 @@
 - (oneway void)closeChat:(AIChat *)chat;
 - (void)connectAccount:(id)adiumAccount;
 - (void)disconnectAccount:(id)adiumAccount;
+- (oneway void)xferRequest:(GaimXfer *)xfer;
+- (oneway void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName;
+- (oneway void)xferRequestRejected:(GaimXfer *)xfer;
 
 - (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
 - (void *)handleNotifyEmails:(size_t)count detailed:(BOOL)detailed subjects:(const char **)subjects froms:(const char **)froms tos:(const char **)tos urls:(const char **)urls;

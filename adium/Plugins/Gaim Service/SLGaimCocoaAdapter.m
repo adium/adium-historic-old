@@ -626,7 +626,8 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 	
 	[accountLookup(conv->account) mainPerformSelector:@selector(receivedMultiChatMessage:inChat:)
 										   withObject:messageDict
-										   withObject:chatLookupFromConv(conv)];
+										   withObject:chatLookupFromConv(conv)
+										waitUntilDone:YES];
 }
 
 static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
@@ -637,7 +638,8 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 		
 	[accountLookup(conv->account) mainPerformSelector:@selector(receivedIMChatMessage:inChat:)
 										   withObject:messageDict
-										   withObject:imChatLookupFromConv(conv)];
+										   withObject:imChatLookupFromConv(conv)
+										waitUntilDone:YES];
 }
 
 //Never actually called as of gaim 0.75
@@ -1783,6 +1785,40 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		gaim_conversation_destroy(conv);
 	}
 }
+
+- (oneway void)xferRequest:(GaimXfer *)xfer
+{
+	[runLoopMessenger target:self performSelector:@selector(gaimThreadXferRequest:)
+				  withObject:[NSValue valueWithPointer:xfer]];
+}
+- (oneway void)gaimThreadXferRequest:(NSValue *)xferValue
+{
+	GaimXfer	*xfer = [xferValue pointerValue];
+	gaim_xfer_request(xfer);
+}
+
+- (oneway void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName
+{
+	[runLoopMessenger target:self performSelector:@selector(gaimThreadXferRequestAccepted:withFileName:)
+				  withObject:[NSValue valueWithPointer:xfer]
+				  withObject:xferFileName];	
+}
+- (oneway void)gaimThreadXferRequestAccepted:(NSValue *)xferValue withFileName:(NSString *)xferFileName
+{
+	GaimXfer	*xfer = [xferValue pointerValue];
+	gaim_xfer_request_accepted(xfer, [xferFileName UTF8String]);
+}
+- (oneway void)xferRequestRejected:(GaimXfer *)xfer
+{
+	[runLoopMessenger target:self performSelector:@selector(gaimThreadXferRequestRejected:)
+				  withObject:[NSValue valueWithPointer:xfer]];
+}
+- (oneway void)gaimThreadXferRequestRejected:(NSValue *)xferValue
+{
+	GaimXfer	*xfer = [xferValue pointerValue];
+	gaim_xfer_request_denied(xfer);
+}
+
 
 - (void)dealloc
 {
