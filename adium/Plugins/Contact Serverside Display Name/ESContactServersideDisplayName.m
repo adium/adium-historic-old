@@ -31,7 +31,7 @@
     serverDisplayName = [inObject statusObjectForKey:@"Server Display Name"];
     
     //Return the correct string
-    if(serverDisplayName){
+    if(serverDisplayName && ![serverDisplayName isEqualToString:[inObject displayName]]){
 		entry = [[NSAttributedString alloc] initWithString:serverDisplayName];
     }
 	
