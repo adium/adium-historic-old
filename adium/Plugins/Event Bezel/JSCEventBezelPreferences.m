@@ -83,6 +83,8 @@
             key = KEY_EVENT_BEZEL_SHOW_HIDDEN;
         } else if (sender == checkBox_showAway) {
             key = KEY_EVENT_BEZEL_SHOW_AWAY;
+        } else if (sender == checkBox_includeText) {
+            key = KEY_EVENT_BEZEL_INCLUDE_TEXT;
         }
         
         if (key) {
@@ -126,6 +128,8 @@
             [checkBox_noIdle setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_NO_IDLE] boolValue]];
             [checkBox_idle setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IDLE] boolValue]];
             [checkBox_firstMessage setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue]];
+            [checkBox_includeText setEnabled: [checkBox_firstMessage state]];
+            [checkBox_includeText setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_INCLUDE_TEXT] boolValue]];
             [checkBox_imageBadges setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IMAGE_BADGES] boolValue]];
             [checkBox_colorLabels setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_COLOR_LABELS] boolValue]];
             [checkBox_nameLabels setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_NAME_LABELS] boolValue]];

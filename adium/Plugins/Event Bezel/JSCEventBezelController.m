@@ -88,8 +88,9 @@ withMessage:(NSString *)message
         
         [bezelView setMainBuddyName: contactName];
         
+        BOOL isMessageEvent = [event isEqualToString: @"says"];
         if ((!imageBadges) || [event isEqualToString: @"is now online"] || [event isEqualToString: @"is available"] ||
-                [event isEqualToString: @"is no longer idle"] || [event isEqualToString: @"says"]) {
+                [event isEqualToString: @"is no longer idle"] || isMessageEvent) {
             [bezelView setBuddyIconBadgeType: @""];
         } else if ([event isEqualToString: @"has gone offline"]) {
             [bezelView setBuddyIconBadgeType: @"offline"];
@@ -98,11 +99,15 @@ withMessage:(NSString *)message
         } else if ([event isEqualToString: @"is idle"]) {
             [bezelView setBuddyIconBadgeType: @"idle"];
         }
-        [bezelView setMainBuddyStatus: event];
         
-        if (message) {
-            [bezelView setMainBuddyStatus: [NSString stringWithFormat: @"%@: %@",[bezelView mainBuddyStatus], message]];
+        if  (isMessageEvent && [self includeText] && message) {
+            [bezelView setMainBuddyStatus: [NSString stringWithFormat: @"%@: %@",event, message]];
+        } else if (!isMessageEvent && message) {
+            [bezelView setMainBuddyStatus: [NSString stringWithFormat: @"%@ \"%@\"",event, message]];
+        } else {
+            [bezelView setMainBuddyStatus: event];
         }
+        
         [bezelView setUseBuddyIconLabel: useBuddyIconLabel];
         [bezelView setUseBuddyNameLabel: useBuddyNameLabel];
         
@@ -276,6 +281,16 @@ withMessage:(NSString *)message
 - (void)setDoFadeIn:(BOOL)b
 {
     doFadeIn = b;
+}
+
+- (BOOL)includeText
+{
+    return includeText;
+}
+
+- (void)setIncludeText:(BOOL)b
+{
+    includeText = b;
 }
 
 @end
