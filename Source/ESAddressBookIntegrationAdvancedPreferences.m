@@ -81,17 +81,17 @@
 {
 	[self configureFormatMenu];
 	
-	[label_formatNamesAs setStringValue:AILocalizedString(@"Format name as:", "Format name as: [popup menu of choices like 'First, Last']")];
-	[label_names setStringValue:AILocalizedString(@"Names",nil)];
-	[label_images setStringValue:AILocalizedString(@"Images",nil)];
-	[label_contacts setStringValue:AILocalizedString(@"Contacts",nil)];
+	[label_formatNamesAs setLocalizedString:AILocalizedString(@"Format name as:", "Format name as: [popup menu of choices like 'First, Last']")];
+	[label_names setLocalizedString:AILocalizedString(@"Names",nil)];
+	[label_images setLocalizedString:AILocalizedString(@"Images",nil)];
+	[label_contacts setLocalizedString:AILocalizedString(@"Contacts",nil)];
 	
-	[checkBox_enableImport setTitle:AILocalizedString(@"Import my contacts' names from the Address Book",nil)];
-	[checkBox_useNickName setTitle:AILocalizedString(@"Use nickname if available",nil)];
-	[checkBox_useABImages setTitle:AILocalizedString(@"Use Address Book images as contacts' icons",nil)];
-	[checkBox_preferABImages setTitle:AILocalizedString(@"Even if the contact already has a contact icon",nil)];
-	[checkBox_syncAutomatic setTitle:AILocalizedString(@"Overwrite Address Book images with contacts' icons",nil)];
-	[checkBox_metaContacts setTitle:AILocalizedString(@"Consolidate contacts listed in the card",nil)];	
+	[checkBox_enableImport setLocalizedString:AILocalizedString(@"Import my contacts' names from the Address Book",nil)];
+	[checkBox_useNickName setLocalizedString:AILocalizedString(@"Use nickname if available",nil)];
+	[checkBox_useABImages setLocalizedString:AILocalizedString(@"Use Address Book images as contacts' icons",nil)];
+	[checkBox_preferABImages setLocalizedString:AILocalizedString(@"Even if the contact already has a contact icon",nil)];
+	[checkBox_syncAutomatic setLocalizedString:AILocalizedString(@"Overwrite Address Book images with contacts' icons",nil)];
+	[checkBox_metaContacts setLocalizedString:AILocalizedString(@"Consolidate contacts listed in the card",nil)];	
 
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
     

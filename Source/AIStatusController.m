@@ -1048,6 +1048,10 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	AIStatusType statusTypeA = [objectA statusType];
 	AIStatusType statusTypeB = [objectB statusType];
 	
+	//We treat Invisible statuses as being the same as Away for purposes of the menu
+	if(statusTypeA == AIInvisibleStatusType) statusTypeA = AIAwayStatusType;
+	if(statusTypeB == AIInvisibleStatusType) statusTypeB = AIAwayStatusType;
+	
 	if(statusTypeA > statusTypeB){
 		return NSOrderedDescending;
 	}else if(statusTypeB > statusTypeA){
@@ -1116,6 +1120,9 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	enumerator = [[self stateArrayForMenuItems] objectEnumerator];
 	while(statusState = [enumerator nextObject]){
 		AIStatusType thisStatusType = [statusState statusType];
+		
+		//We treat Invisible statuses as being the same as Away for purposes of the menu
+		if(thisStatusType == AIInvisibleStatusType) thisStatusType = AIAwayStatusType;
 		
 		//Add the "Custom..." state option and a separatorItem before beginning to add items for a new statusType
 		if(currentStatusType != thisStatusType){

@@ -105,13 +105,13 @@
  */
 - (void)windowDidLoad
 {
-	[textField_type setStringValue:AILocalizedString(@"Contact Type:","Contact type service dropdown label in Add Contact")];
-	[textField_alias setStringValue:AILocalizedString(@"Alias:",nil)];
-	[textField_inGroup setStringValue:AILocalizedString(@"In Group:",nil)];
-	[textField_addToAccounts setStringValue:AILocalizedString(@"Add to Accounts:",nil)];
+	[textField_type setLocalizedString:AILocalizedString(@"Contact Type:","Contact type service dropdown label in Add Contact")];
+	[textField_alias setLocalizedString:AILocalizedString(@"Alias:",nil)];
+	[textField_inGroup setLocalizedString:AILocalizedString(@"In Group:",nil)];
+	[textField_addToAccounts setLocalizedString:AILocalizedString(@"Add to Accounts:",nil)];
 
-	[button_add setTitle:AILocalizedString(@"Add",nil)];
-	[button_cancel setTitle:AILocalizedString(@"Cancel",nil)];
+	[button_add setLocalizedString:AILocalizedString(@"Add",nil)];
+	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
 
 	originalContactNameLabelFrame = [textField_contactNameLabel frame];
 	

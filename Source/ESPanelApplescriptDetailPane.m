@@ -45,8 +45,8 @@
 
 	scriptPath = nil;
 	
-	[label_applescript setStringValue:AILocalizedString(@"Applescript:",nil)];
-	[button_browse setTitle:AILocalizedString(@"Browse...",nil)];
+	[label_applescript setLocalizedString:AILocalizedString(@"Applescript:",nil)];
+	[button_browse setLocalizedString:AILocalizedString(@"Browse...",nil)];
 }
 
 /*

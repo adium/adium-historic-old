@@ -40,7 +40,7 @@
 	[super viewDidLoad];
 	
 	[checkBox_speakEventTime setTitle:SPEAK_EVENT_TIME];
-	[checkBox_speakContactName setTitle:AILocalizedString(@"Speak Name",nil)];
+	[checkBox_speakContactName setLocalizedString:AILocalizedString(@"Speak Name",nil)];
 	[popUp_voices setMenu:[self voicesMenu]];
 }
 

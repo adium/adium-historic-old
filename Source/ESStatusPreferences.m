@@ -50,7 +50,7 @@
 {
 	//Configure the controls
 	[self configureStateList];
-	[button_editState setTitle:AILocalizedString(@"Edit",nil)];
+	[button_editState setLocalizedString:AILocalizedString(@"Edit",nil)];
 	
 	/* Register as an observer of state array changes so we can refresh our list
 	 * in response to changes. */

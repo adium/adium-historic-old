@@ -51,7 +51,7 @@
 {
 	[super viewDidLoad];
 	
-	[checkBox_sticky setStringValue:AILocalizedString(@"Sticky","Growl contact alert label")];
+	[checkBox_sticky setLocalizedString:AILocalizedString(@"Sticky","Growl contact alert label")];
 }
 
 /*
