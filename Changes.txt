@@ -15,12 +15,15 @@ Version 0.73
 - Fixed a crash related to Systemwide Proxy Settings in certain situations
 - Fixed a potential crash when deleting an account
 - Fixed a memory leak
+- (AIM) Fixed a crash when canceling file transfers
+- (Gadu-Gadu) Fixed a crash when sending certain messages
 - (MSN) Fixed issues with idle states
 - (Sametime) Fixed issues with away messages and away states
 - (Yahoo) Fixed issues with away messages
 - Improved date display when receiving queued messages from previous days
 - Improved handling of links in the Get Info window
-- Updated to libgaim 1.1.0
+- Improved logging of autoresponses
+- Updated to libgaim 1.1.1
 
 Version 0.72 (11/16/2004)
 - Fixed major stability issues involving Applescript filters
