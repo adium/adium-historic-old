@@ -375,6 +375,8 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 			[menuItem setImage:image];
 			[menuItem setEnabled:YES];
 			[menuItems addObject:menuItem];
+			[menuItem release];
+
 			[alreadyAddedTitles addObject:title];
 		}
 	}
@@ -1155,6 +1157,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 															  direction:AIIconNormal] copy] autorelease]];
 			[menuItem setTag:currentStatusType];
 			[menuItemArray addObject:menuItem];
+			[menuItem release];
 
 			//Add a divider
 			[menuItemArray addObject:[NSMenuItem separatorItem]];
@@ -1187,6 +1190,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 													  direction:AIIconNormal] copy] autorelease]];
 	[menuItem setTag:currentStatusType];
 	[menuItemArray addObject:menuItem];
+	[menuItem release];
 
 	//Now add a separator and the Offline state option
 	[menuItemArray addObject:[NSMenuItem separatorItem]];
@@ -1201,7 +1205,8 @@ int _statusArraySort(id objectA, id objectB, void *context)
 													  direction:AIIconNormal] copy] autorelease]];
 	[menuItem setTag:AIOfflineStatusType];
 	[menuItemArray addObject:menuItem];
-	
+	[menuItem release];
+
 	//Now that we are done creating the menu items, tell the plugin about them
 	[stateMenuPlugin addStateMenuItems:menuItemArray];
 
@@ -1674,6 +1679,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 													  direction:AIIconNormal] copy] autorelease]];
 	[menuItem setTag:AIOfflineStatusType];
 	[statusStatesMenu addItem:menuItem];
+	[menuItem release];
 
 	[statusStatesMenu setMenuChangedMessagesEnabled:YES];
 
