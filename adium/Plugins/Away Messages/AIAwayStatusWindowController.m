@@ -28,13 +28,24 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     if(!mySharedInstance){
         mySharedInstance = [[self alloc] initWithWindowNibName:AWAY_STATUS_WINDOW_NIB owner:inOwner];
     }
+    
     return(mySharedInstance);
 }
 
 // Called by menu items to force updates, including closing the window
 + (void)updateAwayStatusWindow
 {
-    [mySharedInstance updateWindow];
+    if(mySharedInstance) {
+        [mySharedInstance updateWindow];
+    }
+}
+
+// Sets the window visibility -- used with the pref to hide/show the window
++ (void)setWindowVisible:(bool)visible
+{
+    if(mySharedInstance) {
+        [mySharedInstance setVisible:visible];
+    }
 }
 
 // Called when "Come Back" button is clicked
@@ -47,22 +58,54 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
 // 
 - (void)updateWindow
 {
+
+    // Get the show window status
+    bool shouldShow = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_SHOW_AWAY_STATUS_WINDOW] boolValue];
+    
+    // Get the window floating status
+    bool shouldFloat = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_FLOAT_AWAY_STATUS_WINDOW] boolValue];
+
+    // Get the hide on deactivate status
+    bool shouldHide = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_HIDE_IN_BACKGROUND_AWAY_STATUS_WINDOW] boolValue];
+    
     // Get the away message. Returns null string if none.
     NSAttributedString *awayMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"AwayMessage" account:nil]];
 
     // Is an away message still up?
     if(awayMessage) {
-        // There is an away message, update the message text
+
+        // Should we should the away message?
+        if( shouldShow ) {
+            [self showWindow:nil];
+            // Set window level (floating or normal)
+            [[self window] setFloatingPanel:shouldFloat];
+            // Set hide on deactivate status
+            [[self window] setHidesOnDeactivate:shouldHide];
+        } else {
+            [[self window] orderOut:nil];
+        }
+        
+        // Update the message text
         [[textView_awayMessage textStorage] setAttributedString:awayMessage];
+        
     } else {
         // No away message, hide the window
         if([self windowShouldClose:nil]){
             [[self window] close];
         }
     }
-
+    
 }
 
+- (void)setVisible:(bool)visible
+{
+    if( visible )
+    {
+        [[self window] orderFront:nil];
+    } else {
+        [[self window] orderOut:nil];
+    }
+}
 
 //Private ----------------------------------------------------------------
 //init the window controller

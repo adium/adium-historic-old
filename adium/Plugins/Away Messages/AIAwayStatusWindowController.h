@@ -13,13 +13,15 @@
 @interface AIAwayStatusWindowController : NSWindowController {
     AIAdium *owner;
     
-    IBOutlet NSButton *button_comeBack;
-    IBOutlet NSTextView *textView_awayMessage;
-    IBOutlet NSTextField *textField_awayTime;
+    IBOutlet NSButton 		*button_comeBack;
+    IBOutlet NSTextView 	*textView_awayMessage;
+    IBOutlet NSTextField	*textField_awayTime;
 }
 
 + (AIAwayStatusWindowController *)awayStatusWindowControllerForOwner:(id)inOwner;
 + (void)updateAwayStatusWindow;
++ (void)setWindowVisible:(bool)visible;
 - (IBAction)comeBack:(id)sender;
 - (void)updateWindow;
+- (void)setVisible:(bool)visible;
 @end

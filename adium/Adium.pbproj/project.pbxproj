@@ -440,7 +440,6 @@
 				B7AE6657046578640051E914,
 				9E2E306E046CA9BF00415B22,
 				115C72070470BD91007DDD3A,
-				4B7FAE9E047D6A0400A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -507,7 +506,6 @@
 				B7AE6656046578640051E914,
 				9E2E306D046CA9BF00415B22,
 				115C72060470BD91007DDD3A,
-				4B7FAE9D047D6A0400A8010A,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -606,7 +604,6 @@
 				4BD7D0D304620DAC00A8010A,
 				4BD7D0E204620E7300A8010A,
 				115C72080470BD91007DDD3A,
-				4B7FAE9F047D6A0400A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -2524,7 +2521,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				4B7FAEA0047D6A0400A8010A,
 				4BD7D0E304620E7300A8010A,
 				4BD7D0D404620DAC00A8010A,
 				4B18A5280459F8B000A8010A,
@@ -3080,24 +3076,6 @@
 		};
 		4B4FA12C04126C5F00A8010A = {
 			fileRef = F53B9A0702CCED6401A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B506DAC047DB5B600A8010A = {
-			fileRef = F53B9A0702CCED6401A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B506DAD047DB5B600A8010A = {
-			fileRef = F53B9A0F02CCED8B01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B506DAE047DB5B600A8010A = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4363,123 +4341,6 @@
 			settings = {
 			};
 		};
-		4B7FAE98047D6A0400A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-				4B7FAEA8047D6E3600A8010A,
-				4BCD96A7047E40A600A8010A,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B7FAE99047D6A0400A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-				4B7FAEA6047D6E2E00A8010A,
-				4BCD96AA047E40CA00A8010A,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B7FAE9A047D6A0400A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-				4B7FAEA7047D6E3500A8010A,
-				4BCD96A8047E40A600A8010A,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B7FAE9B047D6A0400A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-				4B506DAC047DB5B600A8010A,
-				4B506DAD047DB5B600A8010A,
-				4B506DAE047DB5B600A8010A,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B7FAE9C047D6A0400A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B7FAE9D047D6A0400A8010A = {
-			buildPhases = (
-				4B7FAE98047D6A0400A8010A,
-				4B7FAE99047D6A0400A8010A,
-				4B7FAE9A047D6A0400A8010A,
-				4B7FAE9B047D6A0400A8010A,
-				4B7FAE9C047D6A0400A8010A,
-			);
-			buildSettings = {
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "Default Formatting";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				4B7FAEA9047D703800A8010A,
-				4B7FAEAA047D703800A8010A,
-			);
-			isa = PBXBundleTarget;
-			name = "Default Formatting";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
-			productName = "Default Formatting";
-			productReference = 4B7FAE9E047D6A0400A8010A;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string></string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string></string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string></string>
-	<key>CFBundlePackageType</key>
-	<string>BNDL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>0.0.1d1</string>
-	<key>NSPrincipalClass</key>
-	<string>AIDefaultFormattingPlugin</string>
-</dict>
-</plist>
-";
-		};
-		4B7FAE9E047D6A0400A8010A = {
-			isa = PBXBundleReference;
-			path = "Default Formatting.AdiumPlugin";
-			refType = 3;
-		};
-		4B7FAE9F047D6A0400A8010A = {
-			isa = PBXTargetDependency;
-			target = 4B7FAE9D047D6A0400A8010A;
-		};
-		4B7FAEA0047D6A0400A8010A = {
-			fileRef = 4B7FAE9E047D6A0400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B7FAEA1047D6A3400A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -4501,32 +4362,6 @@
 			path = "Plugins/Default Formatting/FormattingDefaults.plist";
 			refType = 4;
 		};
-		4B7FAEA6047D6E2E00A8010A = {
-			fileRef = 4B7FAEA5047D6E2E00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7FAEA7047D6E3500A8010A = {
-			fileRef = 4B7FAEA2047D6A3400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7FAEA8047D6E3600A8010A = {
-			fileRef = 4B7FAEA1047D6A3400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7FAEA9047D703800A8010A = {
-			isa = PBXTargetDependency;
-			target = F53B9A0E02CCED8B01A8010A;
-		};
-		4B7FAEAA047D703800A8010A = {
-			isa = PBXTargetDependency;
-			target = F53B9A0602CCED6401A8010A;
-		};
 		4B81631203D1C24E00A8010A = {
 			children = (
 				4B81631E03D1C2A600A8010A,
@@ -4544,6 +4379,7 @@
 				4B187A0703D5E95500A8010A,
 				4B187A0803D5E95500A8010A,
 				4B64797A03DC321800A8010A,
+				6EE26787047EEBAB00637E34,
 			);
 			isa = PBXGroup;
 			name = "Away Messages";
@@ -4571,6 +4407,7 @@
 				4BF1F04603D7B92D00A8010A,
 				4B64797B03DC321800A8010A,
 				6ECE6C2104749C9600CAEAD0,
+				6EE26788047EEBAB00637E34,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5650,29 +5487,11 @@
 			path = "Plugins/Default Formatting/AIDefaultFormattingPreferences.m";
 			refType = 4;
 		};
-		4BCD96A7047E40A600A8010A = {
-			fileRef = 4BCD96A5047E40A600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCD96A8047E40A600A8010A = {
-			fileRef = 4BCD96A6047E40A600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BCD96A9047E40CA00A8010A = {
 			isa = PBXFileReference;
 			name = DefaultFormattingPrefs.nib;
 			path = "Plugins/Default Formatting/DefaultFormattingPrefs.nib";
 			refType = 4;
-		};
-		4BCD96AA047E40CA00A8010A = {
-			fileRef = 4BCD96A9047E40CA00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4BCDEB2E03D4CACA00A8010A = {
 			children = (
@@ -7473,6 +7292,19 @@
 		};
 		6ECE6C250474BB1700CAEAD0 = {
 			fileRef = 6ECE6C230474BB1700CAEAD0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EE26787047EEBAB00637E34 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AwayStatusPrefs.plist;
+			path = "Plugins/Away Messages/AwayStatusPrefs.plist";
+			refType = 4;
+		};
+		6EE26788047EEBAB00637E34 = {
+			fileRef = 6EE26787047EEBAB00637E34;
 			isa = PBXBuildFile;
 			settings = {
 			};

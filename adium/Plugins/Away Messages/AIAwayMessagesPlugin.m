@@ -49,6 +49,14 @@
     [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
+    //Open an away status window if we woke up away
+    if([[owner accountController] statusObjectForKey:@"AwayMessage" account:nil]) {
+        // Get an away status window
+        [AIAwayStatusWindowController awayStatusWindowControllerForOwner:owner];
+        // Tell it to update in case we were already away
+        [AIAwayStatusWindowController updateAwayStatusWindow];
+    }
+    
     [self accountStatusChanged:nil];
 }
 
@@ -61,11 +69,12 @@
 //Called by the away menu, sets the selected away (sender)
 - (IBAction)setAwayMessage:(id)sender
 {
+    
     NSAttributedString	*awayMessage = [sender representedObject];
     [[owner accountController] setStatusObject:awayMessage forKey:@"AwayMessage" account:nil];
 
-    // Get an away status window and update its contents
-    [[AIAwayStatusWindowController awayStatusWindowControllerForOwner:owner] showWindow:nil];
+    // Get an away status window
+    [AIAwayStatusWindowController awayStatusWindowControllerForOwner:owner];
     // Tell it to update in case we were already away
     [AIAwayStatusWindowController updateAwayStatusWindow];
 

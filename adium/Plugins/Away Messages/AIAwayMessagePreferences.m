@@ -11,9 +11,11 @@
 #import "AIAdium.h"
 #import "AIAwayMessagePreferences.h"
 #import "AIAwayMessagesPlugin.h"
+#import "AIAwayStatusWindowController.h"
 
 #define AWAY_MESSAGES_PREF_NIB		@"AwayMessagePrefs"	//Name of preference nib
 #define AWAY_MESSAGES_PREF_TITLE	@"Away Messages"	//Title of the preference view
+#define AWAY_MESSAGE_WINDOW_PREF_TITLE	@"Away Status Window" //Title of preference view
 #define AWAY_NEW_MESSAGE_STRING		@"(New Away Message)"
 #define AWAY_LIST_IMAGE			@"AwayIcon"		//Away list image filename
 
@@ -54,6 +56,42 @@
     [tableView_aways reloadData];
 }
 
+- (IBAction)toggleShowAway:(id)sender
+{
+    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SHOW_AWAY_STATUS_WINDOW
+                                              group:PREF_GROUP_AWAY_STATUS_WINDOW];
+    
+    //Enable the "float away" and "hide on deactivate" checkboxes if this one is checked
+    [checkBox_floatAway setEnabled:[checkBox_showAway state]];
+    [checkBox_hideInBackground setEnabled:[checkBox_showAway state]];
+
+    // Force a live update of the window status
+    [AIAwayStatusWindowController updateAwayStatusWindow];
+        
+}
+
+- (IBAction)toggleFloatAway:(id)sender
+{
+    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                         forKey:KEY_FLOAT_AWAY_STATUS_WINDOW
+                                          group:PREF_GROUP_AWAY_STATUS_WINDOW];
+
+    // Force a live update of the window status
+    [AIAwayStatusWindowController updateAwayStatusWindow];
+    
+}
+- (IBAction)toggleHideInBackground:(id)sender
+{
+    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                         forKey:KEY_HIDE_IN_BACKGROUND_AWAY_STATUS_WINDOW
+                                          group:PREF_GROUP_AWAY_STATUS_WINDOW];
+
+    // Force a live update of the window status
+    [AIAwayStatusWindowController updateAwayStatusWindow];
+}
+
+
 //Private ---------------------------------------------------------------------------
 //init
 - (id)initWithOwner:(id)inOwner
@@ -64,6 +102,9 @@
     owner = [inOwner retain];
     awayMessageArray = nil;
 
+    //Register our default preferences
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AWAY_STATUS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_AWAY_STATUS_WINDOW];
+    
     //Load the pref view nib
     [NSBundle loadNibNamed:AWAY_MESSAGES_PREF_NIB owner:self];
 
@@ -72,6 +113,10 @@
     
     //Install our preference view
     preferenceViewController = [AIPreferenceViewController controllerWithName:AWAY_MESSAGES_PREF_TITLE categoryName:PREFERENCE_CATEGORY_STATUS view:view_prefView];
+    [[owner preferenceController] addPreferenceView:preferenceViewController];
+
+    //Install Away Status Window preference view
+    preferenceViewController = [AIPreferenceViewController controllerWithName:AWAY_MESSAGE_WINDOW_PREF_TITLE categoryName:PREFERENCE_CATEGORY_STATUS view:view_awayWindowPrefView];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
     //Load our aways
@@ -98,6 +143,17 @@
     [tableView_aways addColumn:messageColumn];
 
     [tableView_aways reloadData];
+
+    // Set the values of the checkboxes
+    [checkBox_showAway setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_SHOW_AWAY_STATUS_WINDOW] boolValue]];
+
+    [checkBox_floatAway setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_FLOAT_AWAY_STATUS_WINDOW] boolValue]];
+
+    [checkBox_hideInBackground setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_HIDE_IN_BACKGROUND_AWAY_STATUS_WINDOW] boolValue]];
+
+    // Enable or disable checkboxes based on the "show away" checkbox
+    [checkBox_floatAway setEnabled:[checkBox_showAway state]];
+    [checkBox_hideInBackground setEnabled:[checkBox_showAway state]];
 }
 
 //Load the away messages into awayMessageArray
