@@ -22,8 +22,4 @@ Adium, Copyright 2001-2005, Adam Iser
 	NSMenuItem		*editStatusMenuItem;
 }
 
-- (void)updateStateMenu;
-- (void)updateStateMenuSelection;
-- (NSString *)titleForMenuDisplayOfState:(AIStatus *)statusState;
-
 @end
