@@ -26,16 +26,16 @@
 {
     //Dictionary of the scripts to be run for various keys\r
     scriptDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-        @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r set theAlbum to album of current track \r end tell \r return theAlbum as string \r end if",@"%_album",
-        @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r set theArtist to artist of current track \r end tell \r return theArtist as string \r end if",@"%_artist",
-        @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r set theGenre to genre of current track \r end tell \r return theGenre as string \r end if",@"%_genre",
-        @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r set theTrack to name of current track \r end tell \r return theTrack as string \r end if",@"%_track",
-        @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r  set theYear to year of current track \r end tell \r return theYear as string \r end if",@"%_year",
-        @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r  set theRating to the rating of current track \r end tell \r return theRating * 5 div 100 & \"/5\" as string \r end if",@"%_rating",
-        @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r  set theComposer to the composer of current track \r end tell \r return theComposer as string \r end if",@"%_composer",
-        @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r  set theStatus to player state \r end tell \r return theStatus as string \r end if",@"%_status",
-        @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r  set thePosition to player position \r end tell \r return thePosition div 60 & \":\" & thePosition mod 60 as string \r end if",@"%_position",
-        @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r  set thePlayCount to the played count of the current track \r end tell \r return thePlayCount as string \r end if",@"%_playcount",
+        [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"getiTunesCurrentAlbum" ofType:@"scpt"]],@"%_album",
+        [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"getiTunesCurrentArtist" ofType:@"scpt"]],@"%_artist",
+        [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"getiTunesCurrentGenre" ofType:@"scpt"]],@"%_genre",
+        [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"getiTunesCurrentName" ofType:@"scpt"]],@"%_track",
+        [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"getiTunesCurrentYear" ofType:@"scpt"]],@"%_year",
+        [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"getiTunesCurrentRating" ofType:@"scpt"]],@"%_rating",
+        [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"getiTunesCurrentComposer" ofType:@"scpt"]],@"%_composer",
+        [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"getiTunesCurrentStatus" ofType:@"scpt"]],@"%_status",
+        [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"getiTunesCurrentPosition" ofType:@"scpt"]],@"%_position",
+        [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"getiTunesCurrentPlayCount" ofType:@"scpt"]],@"%_playcount",
         nil];
     
     //Register us as a filter
@@ -104,9 +104,9 @@
 {
     NSString        *returnString = nil;
     
-    NSString *scriptString = [scriptDict objectForKey:pattern];
-    if (scriptString){
-        NSAppleScript   *script = [[NSAppleScript alloc] initWithSource:scriptString];
+    NSURL *scriptURL = [scriptDict objectForKey:pattern];
+    if (scriptURL){
+        NSAppleScript   *script = [[NSAppleScript alloc] initWithContentsOfURL:scriptURL error: nil];
         returnString = [[script executeAndReturnError:nil] stringValue];
         [script release];
     }
