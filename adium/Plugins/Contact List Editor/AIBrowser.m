@@ -111,6 +111,8 @@
 	[[column scrollView] setFrameOrigin:position];
 	[self addSubview:[column scrollView]];
 	[columnArray addObject:column];
+	
+	[self sizeToFit];
 }
 				   
 - (void)removeLastColumn
@@ -119,10 +121,15 @@
 	
 	[[column scrollView] removeFromSuperview];
 	[columnArray removeObject:column];
+
+	[self sizeToFit];
 }
 
-
-
+- (void)sizeToFit
+{
+	[self setFrameSize:NSMakeSize((([columnArray count] + 1) * (COLUMN_WIDTH + 4)) - 4, [self frame].size.height)];
+	[self setNeedsDisplay:YES];
+}
 
 
 
@@ -146,35 +153,35 @@
 {
 	NSTableView		*table = [notification object];
 	int				columnIndex;
-	id 				selectedItem;
+	id 				selectedItem = nil;
 		
 	//Get this column's index and the selected item
 	columnIndex = [columnArray indexOfObject:[self columnForTableView:table]];
 	if(columnIndex == NSNotFound) columnIndex = 0;
-	selectedItem = [dataSource browserView:self
-									 child:[table selectedRow]
-									ofItem:[[self columnForTableView:table] representedObject]];
-	NSLog(@"%i >= %i",(int)columnIndex, [columnArray count]);
+	
+	if([table numberOfSelectedRows] != 0){
+		selectedItem = [dataSource browserView:self
+										 child:[table selectedRow]
+										ofItem:[[self columnForTableView:table] representedObject]];
+	}
+
 	//Close down all table views after this one
 	while(columnIndex < [columnArray count]){
 		[self removeLastColumn];
 	}
 	
 	//Add table view for the selected item
-	[self addColumn:[self newColumnForObject:selectedItem]];
+	if(selectedItem){
+		[self addColumn:[self newColumnForObject:selectedItem]];
+	}
 }
 
-
-
-
-
-
-//- (void)drawRect:(NSRect)rect
-//{
-//	[[NSColor orangeColor] set];
-//	[NSBezierPath fillRect:rect];
-//	[super drawRect:rect];
-//}
+- (void)drawRect:(NSRect)rect
+{
+	[[NSColor orangeColor] set];
+	[NSBezierPath fillRect:rect];
+	[super drawRect:rect];
+}
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
