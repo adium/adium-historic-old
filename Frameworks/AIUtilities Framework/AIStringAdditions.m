@@ -22,24 +22,30 @@
 //Random alphanumeric string
 + (NSString *)randomStringOfLength:(unsigned int)inLength
 {
-	NSMutableString	*string = [[NSMutableString alloc] init];
-	int				i;
-	
-	//Prepare our random
 	srandom(TickCount());
-	
-	//Add the random characters
-	for(i = 0; i < inLength; i++){
-		//get a random number between 0 and 35
-		int randomNum = (random() % 36);
-		//0-9 are the digits; add 7 to get to A-Z
-		if (randomNum > 9) randomNum+=7;
-		
-		char randomChar = '0' + randomNum;
-		[string appendFormat:@"%c",randomChar];
+
+	if(!inLength) return [NSString string];
+
+	NSString *string = nil;
+	char *buf = malloc(inLength);
+
+	if(buf) {
+		static const char alphanumeric[] = {
+			'0', '1', '2', '3', '4', '5', '6', '7',
+			'8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+			'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+			'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
+			'W', 'X', 'Y', 'Z'
+		};
+		register unsigned remaining = inLength;
+		while(remaining--) {
+			buf[remaining] = alphanumeric[random() % sizeof(alphanumeric)];
+		}
+		string = [[[NSString alloc] initWithBytes:buf length:inLength encoding:NSASCIIStringEncoding] autorelease];
+		free(buf);
 	}
-	
-	return([string autorelease]);
+
+	return string;
 }
 
 + (NSString *)stringWithContentsOfASCIIFile:(NSString *)path
@@ -318,10 +324,11 @@
     while(s < sourceLength){
         char	ch = cSource[s];
 		
-        if( (ch >= 'a' && ch <= 'z') ||
-            (ch >= 'A' && ch <= 'Z') ||
-            (ch >= '0' && ch <= '9') ||
-            (ch == 95) || (ch == 45)){ //'_' or '-'
+        if( (ch >= 'a'  &&  ch <= 'z') ||
+            (ch >= 'A'  &&  ch <= 'Z') ||
+            (ch >= '0'  &&  ch <= '9') ||
+            (ch == '_') || (ch == '-'))
+		{
             
             cDest[d] = ch;
             d++;
@@ -472,12 +479,18 @@
 					//decimal: "#..."
 //					NSLog(@"characterAtIndex:1 == '%C'", [entity characterAtIndex:1]);
 					[numScanner setScanLocation:1];
-					appendIt = [numScanner scanInt:(int *)&number];
+					appendIt = [numScanner scanUnsignedInt:(int *)&number];
 				}
 //				NSLog(@"appendIt: %u", appendIt);
 				if(appendIt) {
-#warning add surrogate support!
-					[result appendFormat:@"%C", (unichar)number];
+					unichar chars[2] = { number, 0xffff };
+					CFIndex length = 1;
+					if(number > 0xffff) {
+						//split into surrogate pair
+						AIGetSurrogates(number, &chars[0], &chars[1]);
+						++length;
+					}
+					CFStringAppendCharacters((CFMutableStringRef)result, chars, length);
 				}
 			} else {
 				//named entity. for now, we only support the five essential ones.

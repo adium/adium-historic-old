@@ -30,6 +30,8 @@
 #define ReleaseString(var)			if ( (var) ) { [(var) release]; (var) = nil; } 
 //#endif
 
+#import <AIUtilities/AIFunctions.h>
+
 #import <AIUtilities/AIAlternatingRowOutlineView.h>
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIAnimatedFloater.h>
@@ -72,6 +74,7 @@
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIRolloverButton.h>
 #import <AIUtilities/AIScaledImageCell.h>
+#import <AIUtilities/AIScannerAdditions.h>
 #import <AIUtilities/AIScrollViewAdditions.h>
 #import <AIUtilities/AISendingTextView.h>
 #import <AIUtilities/AISleepNotification.h>
