@@ -29,6 +29,7 @@ typedef enum {
 	AIPref_General,
 	AIPref_Appearance,
     AIPref_Messages,
+	AIPref_Status,
 	AIPref_Events,
 	AIPref_FileTransfer,
     AIPref_Advanced
