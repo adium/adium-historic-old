@@ -95,30 +95,37 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName contactName:(NSString *)contactName
 {
-	//When a new contact is created, if we aren't already silent and delayed, set it  a second to cover our initial
-	//status updates
-	if (!silentAndDelayed){
-		[self silenceAllContactUpdatesForInterval:2.0];
-		[[adium contactController] delayListObjectNotificationsUntilInactivity];		
+	//A quick sign on/sign off can leave these messages in the threaded messaging queue... we most definitely don't want
+	//to put the contact back into a remote group after signing off, as a ghost will appear. Spooky!
+	if([self online]){
+		NSLog(@"%@: Update %@ to %@",self,theContact,groupName);
+
+		//When a new contact is created, if we aren't already silent and delayed, set it  a second to cover our initial
+		//status updates
+
+		if (!silentAndDelayed){
+			[self silenceAllContactUpdatesForInterval:2.0];
+			[[adium contactController] delayListObjectNotificationsUntilInactivity];		
+		}
+		
+		//If the name we were passed differs from the current formatted UID of the contact, it's itself a formatted UID
+		//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
+		if(![contactName isEqualToString:[theContact formattedUID]] && ![contactName isEqualToString:[theContact UID]]){
+			[theContact setStatusObject:contactName
+								 forKey:@"FormattedUID"
+								 notify:NotifyLater];
+		}
+		
+		if(groupName && [groupName isEqualToString:@GAIM_ORPHANS_GROUP_NAME]){
+			[theContact setRemoteGroupName:nil];
+		}else if(groupName && [groupName length] != 0){
+			[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
+		}else{
+			[theContact setRemoteGroupName:[self _mapIncomingGroupName:nil]];
+		}
+		
+		[self gotGroupForContact:theContact];
 	}
-	
-	//If the name we were passed differs from the current formatted UID of the contact, it's itself a formatted UID
-	//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
-	if(![contactName isEqualToString:[theContact formattedUID]] && ![contactName isEqualToString:[theContact UID]]){
-		[theContact setStatusObject:contactName
-							 forKey:@"FormattedUID"
-							 notify:NotifyLater];
-	}
-	
-	if(groupName && [groupName isEqualToString:@GAIM_ORPHANS_GROUP_NAME]){
-		[theContact setRemoteGroupName:nil];
-	}else if(groupName && [groupName length] != 0){
-		[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
-	}else{
-		[theContact setRemoteGroupName:[self _mapIncomingGroupName:nil]];
-	}
-	
-	[self gotGroupForContact:theContact];
 }
 
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
@@ -974,10 +981,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		GaimDebug (@"added user %@ in chat %@",contactName,[chat name]);
 	}	
 }
-- (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv
+
+- (oneway void)addUsersArray:(NSArray *)usersArray toChat:(AIChat *)chat
 {
-	GaimDebug (@"added a whole list!");
+	NSEnumerator	*enumerator = [usersArray objectEnumerator];
+	NSString		*contactName;
+	while(contactName = [enumerator nextObject]){
+		[self addUser:contactName toChat:chat];
+	}
 }
+
 - (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
 {
 	if (chat){
@@ -988,9 +1001,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		GaimDebug (@"removed user %@ in chat %@",contactName,[chat name]);
 	}	
 }
-- (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv
+
+- (oneway void)removeUsersArray:(NSArray *)usersArray fromChat:(AIChat *)chat
 {
-	GaimDebug (@"removed a whole list!");
+	NSEnumerator	*enumerator = [usersArray objectEnumerator];
+	NSString		*contactName;
+	while(contactName = [enumerator nextObject]){
+		[self removeUser:contactName fromChat:chat];
+	}
 }
 
 /*********************/
