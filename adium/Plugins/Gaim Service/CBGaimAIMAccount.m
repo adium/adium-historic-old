@@ -5,44 +5,17 @@
 //  Created by Colin Barrett on Sat Nov 01 2003.
 //
 
+#import "AIGaimAccountViewController.h"
 #import "CBGaimAIMAccount.h"
 #import "aim.h"
 
-#define SCREEN_NAME @"TekJew"
-
 @implementation CBGaimAIMAccount
-
-- (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService
-{
-    return([super initWithUID:SCREEN_NAME service:inService]);
-}
-
-- (void)initAccount
-{
-//    screenName = [NSString stringWithUTF8String:SCREEN_NAME];
-    [super initAccount];
-}
-
-/*- (NSString *)UID{
-    return([NSString stringWithUTF8String:SCREEN_NAME]);
-}
-    
-- (NSString *)serviceID{
-    return @"AIM";
-}*/
-
-// Return a readable description of this account's username
-/*- (NSString *)accountDescription
-{
-    NSString	*description = [propertiesDict objectForKey:@"Handle"];
-    
-    return((description && [description length]) ? description : [self UID]);
-}*/
 
 - (id <AIAccountViewController>)accountView
 {
-    //return accountView;
-    return nil;
+    //Comment out the line below to enable account pane :)
+    //return([AIGaimAccountViewController accountViewForAccount:self]);
+    return(nil);
 }
 
 @end

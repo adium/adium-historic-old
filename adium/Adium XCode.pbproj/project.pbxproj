@@ -18023,6 +18023,50 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B3FF506059771400063B7A7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIGaimAccountViewController.h;
+			path = "Plugins/Gaim Service/AIGaimAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B3FF507059771400063B7A7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIGaimAccountViewController.m;
+			path = "Plugins/Gaim Service/AIGaimAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B3FF508059771410063B7A7 = {
+			fileRef = 4B3FF506059771400063B7A7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B3FF509059771410063B7A7 = {
+			fileRef = 4B3FF507059771400063B7A7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B3FF50A059772910063B7A7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = GaimOscarAIMAccountView.nib;
+			path = "Plugins/Gaim Service/GaimOscarAIMAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B3FF50B059772910063B7A7 = {
+			fileRef = 4B3FF50A059772910063B7A7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B435D440528AEEA00A8010A = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -19406,6 +19450,7 @@
 				9EE058DA05548F9400505F31,
 				9EE058DB05548F9400505F31,
 				9EA125EF055B633000ECF349,
+				4B3FF508059771410063B7A7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19413,6 +19458,7 @@
 		4B7F277F05440C0800CDFC90 = {
 			buildActionMask = 2147483647;
 			files = (
+				4B3FF50B059772910063B7A7,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19424,6 +19470,7 @@
 				4B7F278E05440C8D00CDFC90,
 				9EE05872055483DE00505F31,
 				9EA125E9055B630900ECF349,
+				4B3FF509059771410063B7A7,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19525,10 +19572,13 @@
 				4B7F278A05440C8D00CDFC90,
 				4B7F278705440C8D00CDFC90,
 				4B7F278805440C8D00CDFC90,
+				4B3FF506059771400063B7A7,
+				4B3FF507059771400063B7A7,
 				9EA125EE055B633000ECF349,
 				9EA125E8055B630900ECF349,
 				9EE0586F055483DE00505F31,
 				9EE05870055483DE00505F31,
+				4B3FF50A059772910063B7A7,
 				4B7F279005440CA100CDFC90,
 			);
 			isa = PBXGroup;
