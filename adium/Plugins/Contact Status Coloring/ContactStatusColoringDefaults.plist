@@ -66,5 +66,7 @@
 	<string>138,186,255</string>
 	<key>Group Background Gradient</key>
 	<string>106,169,255</string>
+	<key>Group Text Color</key>
+	<string>0,0,0</string>    
 </dict>
 </plist>
