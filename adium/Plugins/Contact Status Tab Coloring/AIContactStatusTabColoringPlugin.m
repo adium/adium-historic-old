@@ -236,14 +236,14 @@
 		if( awayEnabled ) {
 			awayColor = [[[prefDict objectForKey:KEY_TAB_AWAY_COLOR] representedColor] retain];
 		} else {
-			awayColor = [[[prefDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor] retain];
+			awayColor = [[[prefDict objectForKey:KEY_AWAY_COLOR] representedColor] retain];
 		}
 		
 		[idleColor release];
 		if( idleEnabled ) {
 			idleColor = [[[prefDict objectForKey:KEY_TAB_IDLE_COLOR] representedColor] retain];
 		} else {
-			idleColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor] retain];
+			idleColor = [[[prefDict objectForKey:KEY_IDLE_COLOR] representedColor] retain];
 		}
 		
 		[typingColor release];
@@ -264,14 +264,14 @@
 		if( idleAndAwayEnabled ) {
 			idleAndAwayColor = [[[prefDict objectForKey:KEY_TAB_IDLE_AWAY_COLOR] representedColor] retain];
 		} else {
-			idleAndAwayColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor] retain];
+			idleAndAwayColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
 		}
 		
 		[offlineColor release];
 		if( offlineEnabled ) {
 			offlineColor = [[[prefDict objectForKey:KEY_TAB_OFFLINE_COLOR] representedColor] retain];
 		} else {
-			offlineColor = [[[prefDict objectForKey:KEY_LABEL_OFFLINE_COLOR] representedColor] retain];
+			offlineColor = [[[prefDict objectForKey:KEY_OFFLINE_COLOR] representedColor] retain];
 		}
 
 		

@@ -28,6 +28,7 @@
 #define KEY_TAB_UNVIEWED_FLASH_ENABLED	@"Tab Unviewed Flash Enabled"
 #define KEY_TAB_USE_CUSTOM_COLORS       @"Tab Use Custom Colors"
 
+// Custom Tab Colors
 #define KEY_TAB_AWAY_COLOR		@"Tab Away Color"
 #define KEY_TAB_IDLE_COLOR		@"Tab Idle Color"
 #define KEY_TAB_TYPING_COLOR		@"Tab Typing Color"
@@ -38,6 +39,7 @@
 #define KEY_TAB_IDLE_AWAY_COLOR		@"Tab Idle And Away Color"
 #define KEY_TAB_OFFLINE_COLOR		@"Tab Offline Color"
 
+// Contact List Colors
 #define KEY_LABEL_AWAY_COLOR		@"Away Label Color"
 #define KEY_LABEL_IDLE_COLOR		@"Idle Label Color"
 #define KEY_LABEL_TYPING_COLOR		@"Typing Label Color"
@@ -47,6 +49,16 @@
 #define KEY_LABEL_ONLINE_COLOR		@"Online Label Color"
 #define KEY_LABEL_IDLE_AWAY_COLOR	@"Idle And Away Label Color"
 #define KEY_LABEL_OFFLINE_COLOR		@"Offline Label Color"
+
+#define KEY_AWAY_COLOR			@"Away Color"
+#define KEY_IDLE_COLOR			@"Idle Color"
+#define KEY_TYPING_COLOR		@"Typing Color"
+#define KEY_SIGNED_OFF_COLOR		@"Signed Off Color"
+#define KEY_SIGNED_ON_COLOR		@"Signed On Color"
+#define KEY_UNVIEWED_COLOR		@"Unviewed Content Color"
+#define KEY_ONLINE_COLOR		@"Online Color"
+#define KEY_IDLE_AWAY_COLOR		@"Idle And Away Color"
+#define KEY_OFFLINE_COLOR		@"Offline Color"
 
 @class AIContactStatusTabColoringPreferences;
 
