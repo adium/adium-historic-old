@@ -11,13 +11,15 @@
 #define SEND_FILE				AILocalizedString(@"Send File",nil)
 #define CONTACT					AILocalizedString(@"Contact",nil)
 
+#define	SEND_FILE_IDENTIFIER	@"SendFile"
+
 @implementation ESFileTransferController
 //init and close
 - (void)initController
 {
     //Install the Get Info menu item
 	sendFileMenuItem = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:SEND_FILE_TO_CONTACT,CONTACT]
-												  target:self action:@selector(menuSendFile:)
+												  target:self action:@selector(sendFileToSelectedContact:)
 										   keyEquivalent:@"F"];
 	[sendFileMenuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
 	[[owner menuController] addMenuItem:sendFileMenuItem toLocation:LOC_Contact_Action];
@@ -33,6 +35,19 @@
 	[[owner contactAlertsController] registerEventID:FILE_TRANSFER_BEGAN withHandler:self globalOnly:YES];
 	[[owner contactAlertsController] registerEventID:FILE_TRANSFER_CANCELED withHandler:self globalOnly:YES];
 	[[owner contactAlertsController] registerEventID:FILE_TRANSFER_COMPLETE withHandler:self globalOnly:YES];
+	
+	//Add our toolbar item
+	NSToolbarItem	*toolbarItem;
+    toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:SEND_FILE_IDENTIFIER
+														  label:AILocalizedString(@"Send File",nil)
+												   paletteLabel:AILocalizedString(@"Send File",nil)
+														toolTip:AILocalizedString(@"Send a file",nil)
+														 target:self
+												settingSelector:@selector(setImage:)
+													itemContent:[NSImage imageNamed:@"sendfile" forClass:[self class]]
+														 action:@selector(sendFileToSelectedContact:)
+														   menu:nil];
+    [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 }
 
 - (void)closeController
@@ -112,22 +127,29 @@
 
 - (void)transferComplete:(ESFileTransfer *)fileTransfer
 {
-	NSLog(@"Halleluyah, Jafar! Transfer complete.");
+	AILog(@"Transfer complete!");
+	NSLog(@"Transfer complete!");
+
 	[[owner contactAlertsController] generateEvent:FILE_TRANSFER_COMPLETE
 									 forListObject:[fileTransfer contact] 
 										  userInfo:fileTransfer];
 }
 //Menu or context menu item for sending a file was selected - possible only when a listContact is selected
-- (IBAction)menuSendFile:(id)sender
+- (IBAction)sendFileToSelectedContact:(id)sender
 {
-	//Get the "selected" list object (that is, the first responder which returns a listObject)
-	AIListObject	*selectedObject = [[owner contactController] selectedListObject];	
+	//Get the "selected" list object (contact list or message window)
+	AIListObject	*selectedObject;
+	AIListContact   *listContact = nil;
 	
-	AIListContact   *listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
-																			  forListContact:(AIListContact *)selectedObject];
-
+	selectedObject = [[owner contactController] selectedListObject];
+	if ([selectedObject isKindOfClass:[AIListContact class]]){
+		listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+																 forListContact:(AIListContact *)selectedObject];
+	}
 	
-	[self requestForSendingFileToListContact:listContact];
+	if(listContact){
+		[self requestForSendingFileToListContact:listContact];
+	}
 }
 //Prompt for a new contact with the current tab's name
 - (IBAction)contextualMenuSendFile:(id)sender
@@ -175,6 +197,20 @@
 		}
     }
 	
+    return(listContact != nil);
+}
+
+#warning Evan: Why is this not getting called? (And do we want it to be?)
+- (BOOL)validateToolBarItem:(NSToolbarItem *)theItem
+{
+	AIListContact   *listContact = nil;
+	
+	AIListObject	*selectedObject = [[owner contactController] selectedListObject];
+	if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
+		listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+																 forListContact:(AIListContact *)selectedObject];
+	}
+	NSLog(@"validating %@ gives %@",theItem,listContact);
     return(listContact != nil);
 }
 
