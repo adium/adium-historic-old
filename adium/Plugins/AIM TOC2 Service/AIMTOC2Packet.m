@@ -102,7 +102,7 @@
     [inSocket sendData:packetData];
 }
 
-- (unsigned char)frameType{
+- (FRAMETYPE)frameType{
     return(frameType);
 }
 

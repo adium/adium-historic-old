@@ -43,6 +43,7 @@ static char *hash_password(const char * const password);
 - (void)AIM_HandleConfig:(NSString *)message;
 - (void)AIM_HandleMessageIn:(NSString *)inCommand;
 - (void)AIM_HandleGotoURL:(NSString *)message;
+- (void)AIM_HandlePing;
 - (void)AIM_SendMessage:(NSString *)inMessage toHandle:(NSString *)handleUID;
 - (void)AIM_SetIdle:(double)inSeconds;
 - (void)AIM_SetProfile:(NSString *)profile;
@@ -53,6 +54,7 @@ static char *hash_password(const char * const password);
 - (void)connect;
 - (void)disconnect;
 - (void)updateContactStatus:(NSNotification *)notification;
+- (void)pingFailure:(NSTimer *)inTimer;
 @end
 
 @implementation AIMTOC2Account
@@ -66,6 +68,8 @@ static char *hash_password(const char * const password);
     //Outgoing message que
     outQue = [[NSMutableArray alloc] init];
 
+    pingTimer = nil;
+    
     //Delayed handle modification
     deleteDict = [[NSMutableDictionary alloc] init];
     addDict = [[NSMutableDictionary alloc] init];
@@ -333,6 +337,9 @@ static char *hash_password(const char * const password);
         screenName = [[propertiesDict objectForKey:@"Handle"] copy];
         password = [inPassword copy];
 
+        pingInterval = nil;
+        firstPing = nil;
+        
         //Start connecting
         connectionPhase = 1;
         updateTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0 / 10.0) //(1.0 / x) x times per second
@@ -362,6 +369,9 @@ static char *hash_password(const char * const password);
     [password release]; password = nil;
 
     [socket release]; socket = nil;
+
+    [pingTimer invalidate];
+    [pingTimer release]; pingTimer = nil;
 
     [updateTimer invalidate];
     [updateTimer release]; updateTimer = nil;
@@ -396,55 +406,61 @@ static char *hash_password(const char * const password);
     if(connectionPhase == 0){ //Send & Receive regular AIM commands
         //Receive any incoming packets
         while([socket readyForReceiving] && (packet = [AIMTOC2Packet packetFromSocket:socket sequence:&remoteSequence])){
-            NSString		*message = [packet string];
-            NSString		*command = [message TOCStringArgumentAtIndex:0];
+            if([packet frameType] == FRAMETYPE_DATA){
+                NSString		*message = [packet string];
+                NSString		*command = [message TOCStringArgumentAtIndex:0];
 
-            //NSLog(@"<- %@",[packet string]);
+                //NSLog(@"<- %@",[packet string]);
 
-            if([command compare:@"SIGN_ON"] == 0){
-                [self AIM_HandleSignOn:message];
+                if([command compare:@"SIGN_ON"] == 0){
+                    [self AIM_HandleSignOn:message];
 
-            }else if([command compare:@"ERROR"] == 0){
-                [self AIM_HandleError:message];
+                }else if([command compare:@"ERROR"] == 0){
+                    [self AIM_HandleError:message];
 
-            }else if([command compare:@"NICK"] == 0){
-                [self AIM_HandleNick:message];
+                }else if([command compare:@"NICK"] == 0){
+                    [self AIM_HandleNick:message];
 
-            }else if([command compare:@"CONFIG2"] == 0){
-                [self AIM_HandleConfig:message];
-                [self AIM_SetStatus];	//Set our status
-                
-                //Send AIM the init done message (at this point we become visible to other buddies)
-                [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_init_done" sequence:&localSequence]];
+                }else if([command compare:@"CONFIG2"] == 0){
+                    [self AIM_HandleConfig:message];
+                    [self AIM_SetStatus];	//Set our status
 
-                [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
-                [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
+                    //Send AIM the init done message (at this point we become visible to other buddies)
+                    [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_init_done" sequence:&localSequence]];
 
-            }else if([command compare:@"PAUSE"] == 0){
-            }else if([command compare:@"NEW_BUDDY_REPLY2"] == 0){
-            }else if([command compare:@"IM_IN2"] == 0){
-                [self AIM_HandleMessageIn:message];
-            
-            }else if([command compare:@"UPDATE_BUDDY2"] == 0){
-                [self AIM_HandleUpdateBuddy:message];
+                    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
+                    [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
 
-            }else if([command compare:@"GOTO_URL"] == 0){
-                [self AIM_HandleGotoURL:message];
-                      
-            }else if([command compare:@"EVILED"] == 0){
-            }else if([command compare:@"CHAT_JOIN"] == 0){
-            }else if([command compare:@"CHAT_LEFT"] == 0){
-            }else if([command compare:@"CHAT_IN"] == 0){
-            }else if([command compare:@"CHAT_INVITE"] == 0){
-            }else if([command compare:@"CHAT_UPDATE_BUDDY"] == 0){
-            }else if([command compare:@"ADMIN_NICK_STATUS"] == 0){
-            }else if([command compare:@"ADMIN_PASSWD_STATUS"] == 0){
-            }else if([command compare:@"RVOUS_PROPOSE"] == 0){
-                NSLog(@"RVOUS_PROPOSE");
+                }else if([command compare:@"PAUSE"] == 0){
+                }else if([command compare:@"NEW_BUDDY_REPLY2"] == 0){
+                }else if([command compare:@"IM_IN2"] == 0){
+                    [self AIM_HandleMessageIn:message];
+
+                }else if([command compare:@"UPDATE_BUDDY2"] == 0){
+                    [self AIM_HandleUpdateBuddy:message];
+
+                }else if([command compare:@"GOTO_URL"] == 0){
+                    [self AIM_HandleGotoURL:message];
+
+                }else if([command compare:@"EVILED"] == 0){
+                }else if([command compare:@"CHAT_JOIN"] == 0){
+                }else if([command compare:@"CHAT_LEFT"] == 0){
+                }else if([command compare:@"CHAT_IN"] == 0){
+                }else if([command compare:@"CHAT_INVITE"] == 0){
+                }else if([command compare:@"CHAT_UPDATE_BUDDY"] == 0){
+                }else if([command compare:@"ADMIN_NICK_STATUS"] == 0){
+                }else if([command compare:@"ADMIN_PASSWD_STATUS"] == 0){
+                }else if([command compare:@"RVOUS_PROPOSE"] == 0){
+                }else{
+                    NSLog(@"Unexpected TOC command '%@'",command);
+                }
+
+            }else if([packet frameType] == FRAMETYPE_KEEPALIVE){
+                [self AIM_HandlePing];
+
             }else{
-                //NSLog(@"Unknown TOC command %@",command);
+                NSLog(@"Unexpected packet frametype: %i",[packet frameType]);
             }
-
         }
 
     }else{ //Send & Receive the sign on commands
@@ -986,6 +1002,47 @@ static char *hash_password(const char * const password);
         [[owner interfaceController] handleErrorMessage:@"Invalid Server Response" withDescription:@"The AIM server has returned HTML that Adium does not recognize."];
     }
 }
+
+//Handle a server ping
+- (void)AIM_HandlePing
+{
+    if(pingInterval){
+        //Reset the ping timer
+        if(pingTimer){
+            [pingTimer invalidate];
+            [pingTimer release]; pingTimer = nil;
+        }
+        pingTimer = [[NSTimer scheduledTimerWithTimeInterval:pingInterval target:self selector:@selector(pingFailure:) userInfo:nil repeats:NO] retain];
+
+    }else{ //A ping interval has not yet been established
+        if(!firstPing){ //Record the date our first ping was recieved
+            firstPing = [[NSDate date] retain];
+            NSLog(@"First ping recieved");
+
+        }else{ //On the second ping...
+               //Determine the amount of time that has elapsed between the pings
+            pingInterval = [[NSDate date] timeIntervalSinceDate:firstPing];
+
+            [firstPing release]; firstPing = nil;
+            NSLog(@"Ping interval: %i seconds",(int)pingInterval);
+
+            //We multiply the ping interval by 2.2 to allow the ping time to arrive late (and to prevent disconnect if a single ping is lost).  The closer the scale is to 1, the more sensitive the ping will become.  The further away from 1, the longer it will take to realize a ping failure.  With a ping of 50 seconds, 2.2 would disconnect us 110 seconds after the latest ping, so anywhere between 60 and 170 seconds after the connection is lost.  This is responsive enough to prove useful, but lax enough to handle fairly extreme lag (and even the loss of a ping packet).
+            pingInterval *= 2.2;
+
+            //Install a timer to auto-disconnect after the ping interval
+            pingTimer = [[NSTimer scheduledTimerWithTimeInterval:pingInterval target:self selector:@selector(pingFailure:) userInfo:nil repeats:NO] retain];
+        }
+    }
+}
+
+//Called if the server ping fails to arrive
+- (void)pingFailure:(NSTimer *)inTimer
+{
+    NSLog(@"Server's ping not recieved, disconnecting.");
+
+    [self disconnect];
+}
+
 
 - (void)AIM_SetIdle:(double)inSeconds
 {

@@ -40,6 +40,10 @@
     NSTimer		*messageDelayTimer;	// Timer that drives the delayed handle updating
     
     NSDictionary	*preferencesDict;	// Our preferences dictionary
+
+    NSTimer		*pingTimer;
+    NSTimeInterval	pingInterval;
+    NSDate		*firstPing;
 }
 
 - (void)initAccount;
