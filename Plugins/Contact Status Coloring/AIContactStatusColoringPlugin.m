@@ -112,7 +112,7 @@
 			[inModifiedKeys containsObject:@"Online"] ||
 			[inModifiedKeys containsObject:@"Signed On"] || 
 			[inModifiedKeys containsObject:@"Signed Off"]){
-			
+
 			//Update the contact's text color
 			[self _applyColorToContact:(AIListContact *)inObject];
 			modifiedAttributes = [NSSet setWithObjects:@"Text Color", @"Inverted Text Color", @"Label Color", nil];
@@ -225,7 +225,7 @@
         invertedColor = onlineInvertedColor;
         labelColor = onlineLabelColor;
     }
-	
+
     //Apply the color and opacity
     [[inContact displayArrayForKey:@"Text Color"] setObject:color withOwner:self];
     [[inContact displayArrayForKey:@"Inverted Text Color"] setObject:invertedColor withOwner:self];
@@ -480,7 +480,7 @@
 	offlineEnabled = [[prefDict objectForKey:KEY_OFFLINE_ENABLED] boolValue];
 	
 	//Update all objects
-	if(key){
+	if(!firstTime){
 		[[adium contactController] updateAllListObjectsForObserver:self];
 	}
 }
