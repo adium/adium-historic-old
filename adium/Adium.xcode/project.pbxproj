@@ -3796,15 +3796,17 @@
 				4B191D8B0611C10800E8A4E7,
 				3420E6640611D80100AE67E3,
 				4B0DB3B506123423004F47D9,
-				34D5B283061263B600B98336,
 				4B5829D20613D0A90004BD25,
 				4B5829E60613D0BD0004BD25,
-				34F58F34061A76C500B4B5D6,
 				34F58F35061A76C500B4B5D6,
 				BF99B520061D74C300BF2252,
 				BF99B524061D74DA00BF2252,
 				BF99B525061D74DA00BF2252,
 				BF99B526061D74DA00BF2252,
+				4B55F0A40620F2FB001AB995,
+				4B55F0A60620F2FF001AB995,
+				4B55F0A80620F303001AB995,
+				4B55F0AA0620F307001AB995,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6542,12 +6544,6 @@
 			settings = {
 			};
 		};
-		34D5B283061263B600B98336 = {
-			fileRef = 83DB8F240611460E00A5C28C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34E0F188053AE56F00031341 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -6811,14 +6807,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34F58F32061A76C500B4B5D6 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "archer-flipped.png";
-			path = "Plugins/Version Checker/archer-flipped.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34F58F33061A76C500B4B5D6 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -6826,12 +6814,6 @@
 			path = "Plugins/Version Checker/archer.png";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34F58F34061A76C500B4B5D6 = {
-			fileRef = 34F58F32061A76C500B4B5D6;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34F58F35061A76C500B4B5D6 = {
 			fileRef = 34F58F33061A76C500B4B5D6;
@@ -8881,6 +8863,63 @@
 			path = "Plugins/Volume Control/VolumeControlPrefs.nib";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B55F0A30620F2FB001AB995 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = agent.png;
+			path = "Plugins/Version Checker/agent.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B55F0A40620F2FB001AB995 = {
+			fileRef = 4B55F0A30620F2FB001AB995;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B55F0A50620F2FF001AB995 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = VersionAvailable.nib;
+			path = "Plugins/Version Checker/VersionAvailable.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B55F0A60620F2FF001AB995 = {
+			fileRef = 4B55F0A50620F2FF001AB995;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B55F0A70620F303001AB995 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = VersionUpToDate.nib;
+			path = "Plugins/Version Checker/VersionUpToDate.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B55F0A80620F303001AB995 = {
+			fileRef = 4B55F0A70620F303001AB995;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B55F0A90620F307001AB995 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "VersionChecker Defaults.plist";
+			path = "Plugins/Version Checker/VersionChecker Defaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B55F0AA0620F307001AB995 = {
+			fileRef = 4B55F0A90620F307001AB995;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B5827E80613CE9D0004BD25 = {
 			fileEncoding = 30;
@@ -16490,9 +16529,11 @@
 				83DB8F220611460E00A5C28C,
 				3404893106173DAB004D0B7E,
 				3404893206173DAB004D0B7E,
-				83DB8F240611460E00A5C28C,
-				34F58F32061A76C500B4B5D6,
+				4B55F0A90620F307001AB995,
+				4B55F0A50620F2FF001AB995,
+				4B55F0A70620F303001AB995,
 				34F58F33061A76C500B4B5D6,
+				4B55F0A30620F2FB001AB995,
 			);
 			isa = PBXGroup;
 			name = "Version Checker";
@@ -16514,14 +16555,6 @@
 			lastKnownFileType = sourcecode.c.h;
 			name = CPFVersionChecker.h;
 			path = "Plugins/Version Checker/CPFVersionChecker.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		83DB8F240611460E00A5C28C = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = VersionChecker.nib;
-			path = "Plugins/Version Checker/VersionChecker.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
