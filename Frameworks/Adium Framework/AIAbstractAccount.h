@@ -23,6 +23,7 @@
 - (void)setUserIconData:(NSData *)inData;
 - (NSString *)host;
 - (int)port;
+- (void)filterAndSetUID:(NSString *)inUID;
 
 //Status
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object

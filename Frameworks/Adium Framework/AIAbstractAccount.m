@@ -45,6 +45,8 @@
 {
 	//We need to get our internal object ID setup before we call super init
 	internalObjectID = [inInternalObjectID retain];
+	inUID = [self accountWillSetUID:inUID];
+
     [super initWithUID:inUID service:inService];
 	
 	namesAreCaseSensitive = [[self service] caseSensitive];
@@ -156,7 +158,7 @@
 }
 
 /*!
-* @brief Connect Port
+ * @brief Connect Port
  *
  * Convenience method for retrieving the connect port for this account
  */
@@ -165,6 +167,41 @@
 	return([[self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS] intValue]);
 }
 
+/*!
+ * @brief Change the UID of this account
+ */
+- (void)filterAndSetUID:(NSString *)inUID
+{
+	//Filter our UID both with and without removing ignored characters
+	NSString	*newProposedUID = [[self service] filterUID:inUID removeIgnoredCharacters:YES];
+	NSString	*newProposedFormattedUID = [[self service] filterUID:inUID removeIgnoredCharacters:NO];
+	BOOL		didChangeUID = NO;
+
+	//Give the account a chance to modify the UID
+	newProposedUID = [self accountWillSetUID:newProposedUID];
+
+	//Set our UID first (since [self formattedUID] uses the UID as necessary)
+	if(![newProposedUID isEqualToString:[self UID]]){
+		[UID release];
+		UID = [newProposedUID retain];
+		
+		//Save our changed UID
+		[[adium accountController] saveAccounts];
+		
+		didChangeUID = YES;
+	}
+
+	//Set our formatted UID if necessary
+	if(![newProposedFormattedUID isEqualToString:[self formattedUID]]){
+		[self setPreference:newProposedFormattedUID
+					 forKey:@"FormattedUID"
+					  group:GROUP_ACCOUNT_STATUS];
+	}
+	
+	if(didChangeUID){
+		[self didChangeUID];
+	}
+}
 
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
