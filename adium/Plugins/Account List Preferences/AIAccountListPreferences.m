@@ -171,7 +171,6 @@
 	[responderChainTimer release];
 	responderChainTimer = nil;
 	
-	NSLog(@"%@  canDraw:%i  window:%@", view, [view canDraw], [view window]);
 	if([view canDraw]){
 		NSView	*accountView = [accountViewController view];
 		
