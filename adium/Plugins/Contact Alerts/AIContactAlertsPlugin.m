@@ -76,7 +76,6 @@
     int status, event_status;
     BOOL status_matches;
 
-
     actionsEnumerator = [eventActionArray objectEnumerator];
     while(actionDict = [actionsEnumerator nextObject])
     {
@@ -86,7 +85,7 @@
         status = [[inObject statusArrayForKey:event] greatestIntegerValue];
         event_status = [[actionDict objectForKey:KEY_EVENT_STATUS] intValue];
         status_matches = (status && event_status) || (!status && !event_status); //XOR
-        if ( status_matches && [inModifiedKeys containsObject:event]) { //actions to take when an event is matched go here
+        if ( status_matches && [inModifiedKeys containsObject:event] ) { //actions to take when an event is matched go here
 
             NSString * action = [actionDict objectForKey:KEY_EVENT_ACTION];
             NSString * details = [actionDict objectForKey:KEY_EVENT_DETAILS];
