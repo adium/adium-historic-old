@@ -30,7 +30,8 @@
     NSTimer 			*tooltipTimer;
     int 				tooltipCount;
     BOOL                allowTooltipsInBackground;
-	
+
+	BOOL				inDrag;
 	AIListObject		*dragItem;
     
 }

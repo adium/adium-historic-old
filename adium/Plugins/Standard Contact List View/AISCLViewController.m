@@ -65,6 +65,7 @@
     contactListView = [[AISCLOutlineView alloc] initWithFrame:NSMakeRect(0,0,100,100)]; //Arbitrary frame
     tooltipTrackingTag = -1;
     trackingMouseMovedEvents = NO;
+	inDrag = NO;
     tooltipTimer = nil;
     tooltipCount = 0;
 
@@ -72,13 +73,24 @@
 	[contactListView registerForDraggedTypes:[NSArray arrayWithObject:@"AIListObject"]];
 	
     //Install the necessary observers
-    [[adium notificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(contactOrderChanged:) name:Contact_OrderChanged object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(contactListChanged:) 
+									   name:Contact_ListChanged
+									 object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(contactOrderChanged:)
+									   name:Contact_OrderChanged 
+									 object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) 
+									   name:ListObject_AttributesChanged
+									 object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) 
+									   name:Preference_GroupChanged 
+									 object:nil];
 
     //Watch for resolution and screen configuration changes
-    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(screenParametersChanged:) name:NSApplicationDidChangeScreenParametersNotification object:nil];
+    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
+														   selector:@selector(screenParametersChanged:) 
+															   name:NSApplicationDidChangeScreenParametersNotification 
+															 object:nil];
         
     [contactListView setTarget:self];
     [contactListView setDataSource:self];
@@ -488,8 +500,9 @@
 	//Kill any selections
 	[outlineView deselectAll:nil];
 	
-	//Hide any open tooltip
+	//Hide any open tooltip and disable tooltips for the duration
     [self _hideTooltip];
+	inDrag = YES;
 	
 	//Begin the drag
 	if(dragItem) [dragItem release];
@@ -504,7 +517,10 @@
 - (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
-
+	
+	//No longer in a drag, so allow tooltips again
+	inDrag = NO;
+	
 	//No dropping into contacts
     if([avaliableType compare:@"AIListObject"] == 0){
 		if(index == -1 && ![item isKindOfClass:[AIListGroup class]]){
@@ -672,8 +688,9 @@
 - (void)_showTooltipAtPoint:(NSPoint)screenPoint
 {
     if(screenPoint.x != 0 && screenPoint.y != 0){
-        if( (allowTooltipsInBackground && [NSApp isActive]) || 
-            ([[contactListView window] isKeyWindow]) ){
+        if( ((allowTooltipsInBackground && [NSApp isActive]) || 
+            ([[contactListView window] isKeyWindow])) &&
+			!inDrag ){
             NSPoint		viewPoint;
             AIListObject	*hoveredObject;
             int			hoveredRow;
