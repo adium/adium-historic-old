@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import <Webkit/WebKit.h>
 
 @class AIAdium, AIAlternatingRowOutlineView, AIListContact;
 

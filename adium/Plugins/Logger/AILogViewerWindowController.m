@@ -18,6 +18,7 @@
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
 #import "AILoggerPlugin.h"
+#import <Webkit/WebKit.h>
 
 #define LOG_VIEWER_NIB				@"LogViewer"
 #define KEY_LOG_VIEWER_WINDOW_FRAME		@"Log Viewer Frame"
@@ -372,11 +373,16 @@ static AILogViewerWindowController *sharedInstance = nil;
 - (void)displayLogAtPath:(NSString *)path
 {
     NSAttributedString	*logText;
-    
+    NSString		*logFileText;
     //Load the log
-    logText = [[[NSAttributedString alloc] initWithString:[NSString stringWithContentsOfFile:path]] autorelease];
+
+    logFileText = [NSString stringWithContentsOfFile:path];
+
+    logText = [[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logFileText]] autorelease];
+    
     [[textView_content textStorage] setAttributedString:logText];
 
+    
     //Scroll to the top
     [textView_content scrollRangeToVisible:NSMakeRange(0,0)];    
 }
@@ -532,7 +538,13 @@ static AILogViewerWindowController *sharedInstance = nil;
     if(row >= 0 && row < [selectedLogArray count]){
         NSDictionary	*logDict = [selectedLogArray objectAtIndex:row];
 
+        NSString *logFile = [NSString stringWithFormat:@"file://%@", [logDict objectForKey:@"Path"]];
+
+        NSLog(@"%@", logFile);
+
         [self displayLogAtPath:[logDict objectForKey:@"Path"]];
+        //[[textView_content mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.visualdistortion.org"]]];
+        
     }
 }
 
