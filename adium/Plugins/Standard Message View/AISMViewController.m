@@ -40,6 +40,8 @@
 - (id)_cellInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
 - (id)_lastCellInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
 - (NSArray *)_cellsInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
+- (NSAttributedString *)_stringByRemoveTextColor:(NSAttributedString *)inString;
+- (NSAttributedString *)_messageStringForContent:(AIContentMessage *)content;
 @end
 
 @implementation AISMViewController
@@ -230,7 +232,8 @@
     BOOL                contentIsSimilar = NO;
     
     //We should merge if the previous content is a message and from the same source
-    if(combineMessages && previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source]){
+    if((!inlinePrefixes || combineMessages) &&
+       (previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source])){
         contentIsSimilar = YES;
     }
     
@@ -451,18 +454,24 @@
 //Also depends on current color preferences and user icon visibility.
 - (AIFlexibleTableCell *)_messageCellForContent:(AIContentMessage *)content includingPrefixes:(BOOL)includePrefixes shouldPerformHeadIndent:(BOOL)performHeadIndent
 {
-    AIFlexibleTableFramedTextCell     *messageCell;
+    AIFlexibleTableFramedTextCell   *messageCell;
+    NSAttributedString		    *messageString;
     
-    messageCell = [AIFlexibleTableFramedTextCell cellWithAttributedString:(includePrefixes ? [self _prefixStringForContent:content performHeadIndent:performHeadIndent] : [content message])];
-    
+    //Get the message string
+    if(includePrefixes){
+	messageString = [self _prefixStringForContent:content performHeadIndent:performHeadIndent];
+    }else{
+	messageString = [self _messageStringForContent:content];
+    }
+
+    //Create the cell for this string
+    messageCell = [AIFlexibleTableFramedTextCell cellWithAttributedString:messageString];
     [messageCell setPaddingLeft:0 top:0 right:(showUserIcons ? 4 : 0) bottom:0];
-    
     if(inlinePrefixes){
         [messageCell setInternalPaddingLeft:(showUserIcons ? 7 : 10) top:2 right:5 bottom:2];
     }else{
-        [messageCell setInternalPaddingLeft:4 top:2 right:4 bottom:2];
+      [messageCell setInternalPaddingLeft:4 top:2 right:4 bottom:2];
     }
-
     [messageCell setVariableWidth:YES];
     [messageCell setDrawTop:YES];
     [messageCell setDrawBottom:(inlinePrefixes)];
@@ -486,6 +495,16 @@
 }
     
 //Prefix Creation --------------------------------------------------------------------------------------------------
+//Message without a prefix
+- (NSAttributedString *)_messageStringForContent:(AIContentMessage *)content
+{
+    if(!ignoreTextColor){
+	return([content message]);
+    }else{
+	return([self _stringByRemoveTextColor:[content message]]);
+    }    
+}
+
 //Build and return an attributed string for the content using the current prefix preference
 - (NSAttributedString *)_prefixStringForContent:(AIContentMessage *)content performHeadIndent:(BOOL)performHeadIndent
 {
@@ -504,10 +523,14 @@
         //headIndent = [prefixString size].width;
         //headIndent = 25.0;
         
-        [prefixString appendAttributedString:[content message]];
+	if(!ignoreTextColor){
+	    [prefixString appendAttributedString:[content message]];
+	}else{
+	    [prefixString appendAttributedString:[self _stringByRemoveTextColor:[content message]]];
+	}
         [prefixString appendAttributedString:[self _prefixWithFormat:[prefixFormat substringFromIndex:messageRange.location] forContent:content]];
         
-        if (performHeadIndent) {
+        if(performHeadIndent) {
             NSMutableParagraphStyle     *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
             NSRange                     firstLineRange = [[prefixString string] lineRangeForRange:NSMakeRange(0,0)];
             
@@ -648,6 +671,7 @@
     return(nil);
 }
 
+//Finds multiple cells in a row with the specified class
 - (NSArray *)_cellsInRow:(AIFlexibleTableRow *)row withClass:(Class)class
 {
     NSMutableArray      *cellArray = [[NSMutableArray alloc] init];
@@ -661,4 +685,14 @@
     
     return([cellArray autorelease]);
 }
+
+//Forces an attributed string to the default text color
+- (NSAttributedString *)_stringByRemoveTextColor:(NSAttributedString *)inString
+{
+    NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
+    [mutableTemp addAttribute:NSForegroundColorAttributeName value:[NSColor blackColor] range:NSMakeRange(0,[mutableTemp length])];
+    return(mutableTemp);
+}
+
 @end
+
