@@ -322,6 +322,7 @@
 				34BDA19F05314849000AB133,
 				34BDA1B205314852000AB133,
 				34BDA1C60531485C000AB133,
+				344EE94B057456BE000F342B,
 				34BDA1D805314867000AB133,
 				34BDA1EA05314875000AB133,
 				3419F2E605314B6500C68BA3,
@@ -426,6 +427,7 @@
 				34BDA1A005314851000AB133,
 				6C60B13C0560594B00CAD137,
 				34BDA1B30531485B000AB133,
+				344EE91105744F5F000F342B,
 				34BDA1C705314866000AB133,
 				34BDA1D905314874000AB133,
 				3419F2D705314B6400C68BA3,
@@ -5092,6 +5094,199 @@
 			settings = {
 			};
 		};
+		344EE90D05744F5F000F342B = {
+			buildActionMask = 2147483647;
+			files = (
+				344EE92F0574510C000F342B,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		344EE90E05744F5F000F342B = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		344EE90F05744F5F000F342B = {
+			buildActionMask = 2147483647;
+			files = (
+				344EE9300574510C000F342B,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		344EE91005744F5F000F342B = {
+			buildActionMask = 2147483647;
+			files = (
+				344EE91A05744FFB000F342B,
+				344EE91B05744FFB000F342B,
+				344EE91C05744FFB000F342B,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		344EE91105744F5F000F342B = {
+			buildPhases = (
+				344EE90D05744F5F000F342B,
+				344EE90E05744F5F000F342B,
+				344EE90F05744F5F000F342B,
+				344EE91005744F5F000F342B,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = Plists/Fast_User_Switching_Support.plist;
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_REZFLAGS = "";
+				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
+				PRODUCT_NAME = "Fast User Switching Support";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "Fast User Switching Support";
+			productName = "Fast User Switching Support";
+			productReference = 344EE91205744F5F000F342B;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Fast User Switching Support</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Fast_User_Switching_Support</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		344EE91205744F5F000F342B = {
+			expectedFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			name = "Fast User Switching Support.bundle";
+			path = "/Users/evands/adium/build/Fast User Switching Support.bundle";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		344EE91A05744FFB000F342B = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344EE91B05744FFB000F342B = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344EE91C05744FFB000F342B = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344EE91D0574500F000F342B = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 344EE91105744F5F000F342B;
+			remoteInfo = "Fast User Switching Support";
+		};
+		344EE91E0574500F000F342B = {
+			isa = PBXTargetDependency;
+			target = 344EE91105744F5F000F342B;
+			targetProxy = 344EE91D0574500F000F342B;
+		};
+		344EE9210574504B000F342B = {
+			children = (
+				344EE92D0574510C000F342B,
+				344EE92E0574510C000F342B,
+			);
+			isa = PBXGroup;
+			name = "Fast User Switching Support";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344EE92D0574510C000F342B = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESFastUserSwitchingSupportPlugin.h;
+			path = "Plugins/Fast User Switching Support/ESFastUserSwitchingSupportPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344EE92E0574510C000F342B = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESFastUserSwitchingSupportPlugin.m;
+			path = "Plugins/Fast User Switching Support/ESFastUserSwitchingSupportPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344EE92F0574510C000F342B = {
+			fileRef = 344EE92D0574510C000F342B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344EE9300574510C000F342B = {
+			fileRef = 344EE92E0574510C000F342B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344EE94B057456BE000F342B = {
+			expectedFileType = folder;
+			isa = PBXFileReference;
+			path = "Fast User Switching Support.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		344EE953057456BE000F342B = {
+			fileRef = 344EE94B057456BE000F342B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344EE97C05745706000F342B = {
+			fileRef = 344EE94B057456BE000F342B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		345DFF4A05564DB200CEE7B3 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -6888,6 +7083,7 @@
 				34BD9CF2053146CC000AB133,
 				6C60B1AB05605FAD00CAD137,
 				34BD9CF3053146CC000AB133,
+				344EE91E0574500F000F342B,
 				6C3E0150054445BA00A4AE2E,
 				34BD9D0A053146CC000AB133,
 				34BD9CF4053146CC000AB133,
@@ -7413,6 +7609,7 @@
 				4BBEC8BA0563E7CD0013C8F7,
 				4BCB9B5F0567FF5D001D3559,
 				343C89AA05704D8E005E0632,
+				344EE953057456BE000F342B,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7889,6 +8086,7 @@
 				3419FE040531585600C68BA3,
 				6C60B1D40560634F00CAD137,
 				3419FE050531585600C68BA3,
+				344EE97C05745706000F342B,
 				3419FE060531585600C68BA3,
 				3419FE070531585600C68BA3,
 				3419FE080531585600C68BA3,
@@ -16367,6 +16565,7 @@
 		};
 		4B13323E0459BDF900A8010A = {
 			children = (
+				344EE9210574504B000F342B,
 				BF7BF5E7052BA0EF00000202,
 				F510B76D03339ED501A8010A,
 				4B1332140459B9A000A8010A,
