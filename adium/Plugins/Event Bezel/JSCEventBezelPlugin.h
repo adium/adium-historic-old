@@ -13,6 +13,7 @@
 #define EVENT_BEZEL_DEFAULT_PREFS       @"EventBezelPrefs"
 #define PREF_GROUP_EVENT_BEZEL          @"Event Bezel"
 #define KEY_SHOW_EVENT_BEZEL            @"Show Event Bezel"
+#define KEY_EVENT_BEZEL_POSITION        @"Event Bezel Position"
 
 @class JSCEventBezelPreferences;
 
