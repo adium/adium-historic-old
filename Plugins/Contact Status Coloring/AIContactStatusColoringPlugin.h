@@ -28,7 +28,7 @@
     BOOL		typingEnabled;
     BOOL		unviewedContentEnabled;
     BOOL		onlineEnabled;
-    BOOL		idleAndAwayEnabled;
+    BOOL		awayAndIdleEnabled;
 	BOOL		offlineEnabled;
     
 	BOOL		transitionsEnabled;
@@ -41,7 +41,7 @@
     NSColor		*typingColor;
     NSColor		*unviewedContentColor;
     NSColor		*onlineColor;
-    NSColor		*idleAndAwayColor;
+    NSColor		*awayAndIdleColor;
 	NSColor		*offlineColor;
     
     NSColor		*awayInvertedColor;
@@ -51,7 +51,7 @@
     NSColor		*typingInvertedColor;
     NSColor		*unviewedContentInvertedColor;
     NSColor		*onlineInvertedColor;
-    NSColor		*idleAndAwayInvertedColor;
+    NSColor		*awayAndIdleInvertedColor;
 	NSColor		*offlineInvertedColor;
 	
     NSColor		*awayLabelColor;
@@ -61,7 +61,7 @@
     NSColor		*typingLabelColor;
     NSColor		*unviewedContentLabelColor;
     NSColor		*onlineLabelColor;
-    NSColor		*idleAndAwayLabelColor;
+    NSColor		*awayAndIdleLabelColor;
 	NSColor		*offlineLabelColor;
 	
     float		alpha;

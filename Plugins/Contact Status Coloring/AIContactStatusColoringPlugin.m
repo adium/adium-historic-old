@@ -57,7 +57,7 @@
     typingColor = nil;
     unviewedContentColor = nil;
     onlineColor = nil;
-    idleAndAwayColor = nil;
+    awayAndIdleColor = nil;
 	offlineColor = nil;
 	
     awayInvertedColor = nil;
@@ -67,7 +67,7 @@
     typingInvertedColor = nil;
     unviewedContentInvertedColor = nil;
     onlineInvertedColor = nil;
-    idleAndAwayInvertedColor = nil;
+    awayAndIdleInvertedColor = nil;
 	offlineInvertedColor = nil;
 	
     awayLabelColor = nil;
@@ -77,7 +77,7 @@
     typingLabelColor = nil;
     unviewedContentLabelColor = nil;
     onlineLabelColor = nil;
-    idleAndAwayLabelColor = nil;
+    awayAndIdleLabelColor = nil;
 	offlineLabelColor = nil;
 	
 	offlineImageFading = NO;
@@ -122,8 +122,8 @@
 		if(	inModifiedKeys == nil ||
 			[inModifiedKeys containsObject:KEY_TYPING] ||
 			[inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT] || 
-			[inModifiedKeys containsObject:@"Away"] ||
-			[inModifiedKeys containsObject:@"Idle"] ||
+			[inModifiedKeys containsObject:@"StatusState"] ||
+			[inModifiedKeys containsObject:@"IsIdle"] ||
 			[inModifiedKeys containsObject:@"Online"] ||
 			[inModifiedKeys containsObject:@"Signed On"] || 
 			[inModifiedKeys containsObject:@"Signed Off"]){
@@ -224,20 +224,22 @@
     }
 
     if(!color){
+		AIStatusSummary statusSummary = [inContact statusSummary];
+
         //Prefetch these values, we need them multiple times below
         away = [inContact integerStatusObjectForKey:@"Away" fromAnyContainedObject:NO];
         idle = [inContact integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO];
 
         //Idle And Away, Away, or Idle
-        if(idleAndAwayEnabled && away && (idle != 0)){
-            color = idleAndAwayColor;
-            invertedColor = idleAndAwayInvertedColor;
-            labelColor = idleAndAwayLabelColor;
-        }else if(awayEnabled && away){
+        if(awayAndIdleEnabled && (statusSummary == AIAwayAndIdleStatus)){
+            color = awayAndIdleColor;
+            invertedColor = awayAndIdleInvertedColor;
+            labelColor = awayAndIdleLabelColor;
+        }else if(awayEnabled && ((statusSummary == AIAwayStatus) || (statusSummary == AIAwayAndIdleStatus))){
             color = awayColor;
             invertedColor = awayInvertedColor;
             labelColor = awayLabelColor;
-        }else if(idleEnabled && (idle != 0)){
+        }else if(idleEnabled && ((statusSummary == AIIdleStatus) || (statusSummary == AIAwayAndIdleStatus))){
             color = idleColor;
             invertedColor = idleInvertedColor;
             labelColor = idleLabelColor;
@@ -440,7 +442,7 @@
 		[typingColor release];
 		[unviewedContentColor release];
 		[onlineColor release];
-		[idleAndAwayColor release];
+		[awayAndIdleColor release];
 		[offlineColor release];
 		
 		[signedOffInvertedColor release];
@@ -450,7 +452,7 @@
 		[typingInvertedColor release];
 		[unviewedContentInvertedColor release];
 		[onlineInvertedColor release];
-		[idleAndAwayInvertedColor release];
+		[awayAndIdleInvertedColor release];
 		[offlineInvertedColor release];
 		
 		[awayLabelColor release];
@@ -460,7 +462,7 @@
 		[typingLabelColor release];
 		[unviewedContentLabelColor release];
 		[onlineLabelColor release];
-		[idleAndAwayLabelColor release];
+		[awayAndIdleLabelColor release];
 		[offlineLabelColor release];
 		
 		//
@@ -475,7 +477,7 @@
 		typingColor = [[[prefDict objectForKey:KEY_TYPING_COLOR] representedColor] retain];
 		unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
 		onlineColor = [[[prefDict objectForKey:KEY_ONLINE_COLOR] representedColor] retain];
-		idleAndAwayColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
+		awayAndIdleColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
 		offlineColor = [[[prefDict objectForKey:KEY_OFFLINE_COLOR] representedColor] retain];
 		
 		signedOffInvertedColor = [[signedOffColor colorWithInvertedLuminance] retain];
@@ -485,7 +487,7 @@
 		typingInvertedColor = [[typingColor colorWithInvertedLuminance] retain];
 		unviewedContentInvertedColor = [[unviewedContentColor colorWithInvertedLuminance] retain];
 		onlineInvertedColor = [[onlineColor colorWithInvertedLuminance] retain];
-		idleAndAwayInvertedColor = [[idleAndAwayColor colorWithInvertedLuminance] retain];
+		awayAndIdleInvertedColor = [[awayAndIdleColor colorWithInvertedLuminance] retain];
 		offlineInvertedColor = [[offlineColor colorWithInvertedLuminance] retain];
 		
 		awayLabelColor = [[[prefDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColorWithAlpha:alpha] retain];
@@ -495,7 +497,7 @@
 		typingLabelColor = [[[prefDict objectForKey:KEY_LABEL_TYPING_COLOR] representedColorWithAlpha:alpha] retain];
 		unviewedContentLabelColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColorWithAlpha:alpha] retain];
 		onlineLabelColor = [[[prefDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColorWithAlpha:alpha] retain];
-		idleAndAwayLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColorWithAlpha:alpha] retain];
+		awayAndIdleLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColorWithAlpha:alpha] retain];
 		offlineLabelColor = [[[prefDict objectForKey:KEY_LABEL_OFFLINE_COLOR] representedColorWithAlpha:alpha] retain];
 		
 		//
@@ -506,7 +508,7 @@
 		typingEnabled = [[prefDict objectForKey:KEY_TYPING_ENABLED] boolValue];
 		unviewedContentEnabled = [[prefDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue];
 		onlineEnabled = [[prefDict objectForKey:KEY_ONLINE_ENABLED] boolValue];
-		idleAndAwayEnabled = [[prefDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue];
+		awayAndIdleEnabled = [[prefDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue];
 		offlineEnabled = [[prefDict objectForKey:KEY_OFFLINE_ENABLED] boolValue];
 		
 		//Update all objects
