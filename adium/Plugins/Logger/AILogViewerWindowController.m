@@ -819,7 +819,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     NSString	*identifier = [tableColumn identifier];
-    NSString	*value = nil;
+    id          value = nil;
     
     [resultsLock lock];
     if(row < 0 || row >= [selectedLogArray count]){
@@ -833,10 +833,15 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 		}else if([identifier isEqualToString:@"From"]){
                     value = [broken objectAtIndex:1];
 		}else if([identifier isEqualToString:@"Date"]){
-			value = [dateFormatter stringForObjectValue:[theLog date]];
+                    value = [dateFormatter stringForObjectValue:[theLog date]];
 		}
                 else if([identifier isEqualToString:@"Service"]){
-                    value = [broken objectAtIndex:0];
+                    if([[broken objectAtIndex:0] isEqual:@"AIM"]){
+                        value = [[[[adium accountController] serviceControllerWithIdentifier:[[broken objectAtIndex:0] stringByAppendingString:@"-LIBGAIM"]] handleServiceType] menuImage];
+                    }
+                    else{
+                        value = [[[[adium accountController] serviceControllerWithIdentifier:[broken objectAtIndex:0]] handleServiceType] menuImage];
+                    }
                 }
     }
     [resultsLock unlock];
