@@ -17,9 +17,12 @@
 #define KEY_EVENT_ACTION		@"Action"
 #define KEY_EVENT_ACTIONSET		@"Contact Actions"
 #define KEY_EVENT_DETAILS		@"Details"
+#define KEY_EVENT_PATH			@"Path"
 #define KEY_EVENT_STATUS		@"Status"
 #define KEY_EVENT_DISPLAYNAME		@"Display Name"
 #define KEY_EVENT_DELETE		@"Delete"
+#define KEY_EVENT_DETAILS_UNIQUE	@"Unique Details"
+
 
 #define KEY_EVENT_DETAILS_DICT		@"Details Dictionary"
 #define KEY_MESSAGE_SENDTO_UID		@"Destination UID"

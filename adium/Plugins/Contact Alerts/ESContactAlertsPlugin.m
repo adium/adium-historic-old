@@ -97,7 +97,7 @@
             BOOL success = YES;
 
             if ([action compare:@"Sound"] == 0) {
-                NSString	*soundPath = details;
+                NSString	*soundPath = [actionDict objectForKey:KEY_EVENT_PATH];
                 if(soundPath != nil && [soundPath length] != 0) {
                     [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
                 }
@@ -172,16 +172,17 @@
 
                 if (!success && [[detailsDict objectForKey:KEY_MESSAGE_ERROR] intValue]) //Would have had it if it weren't for those pesky account and contact kids...
                 {
-                    NSAttributedString *alertMessage = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"The attempt to send \"%@\" to %@ %@",[message string],[contact displayName],errorReason]];
+                    NSString *alertMessage = [[NSString alloc] initWithString:[NSString stringWithFormat:@"The attempt to send \"%@\" to %@ %@",[message string],[contact displayName],errorReason]];
                     NSString *title = [[NSString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", [inObject displayName], [actionDict objectForKey:KEY_EVENT_DISPLAYNAME]]];
-                    NSRunInformationalAlertPanel(title, [alertMessage string], @"Okay", nil, nil);
+                    [[owner interfaceController] handleMessage:title withDescription:alertMessage withWindowTitle:@"Error Sending Message"];
                 }
             }
 
             else if ([action compare:@"Alert"] == 0) {
-                NSAttributedString *alertMessage = [[NSAttributedString alloc] initWithString:details];
+                //NSAttributedString *alertMessage = [[NSAttributedString alloc] initWithString:details];
                 NSString *title = [[NSString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", [inObject displayName], [actionDict objectForKey:KEY_EVENT_DISPLAYNAME]]];
-                NSRunInformationalAlertPanel(title, [alertMessage string], @"Okay", nil, nil);
+                [[owner interfaceController] handleMessage:title withDescription:details withWindowTitle:@"Contact Alert"];
+              //  NSRunInformationalAlertPanel(title, [alertMessage string], @"Okay", nil, nil);
             }
 
             else if ([action compare:@"Bounce"] == 0) {
