@@ -426,7 +426,7 @@ NSSound finished playing callback
 
         if([[file lastPathComponent] characterAtIndex:0] != '.' &&
            [[file pathExtension] caseInsensitiveCompare:SOUND_SET_PATH_EXTENSION] != 0 &&
-           ![[file pathComponents] containsObject:@"CVS"]){ //Ignore certain files
+           ![[file pathComponents] containsObject:@".svn"]){ //Ignore certain files
 
             //Determine if this is a file or a directory
             fullPath = [soundFolderPath stringByAppendingPathComponent:file];
