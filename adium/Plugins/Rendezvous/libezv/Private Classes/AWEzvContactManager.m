@@ -3,7 +3,7 @@
  * File:        AWEzvContactManager.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManager.m,v 1.1 2004/05/15 18:47:09 evands Exp $
+ * CVS tag:     $Id: AWEzvContactManager.m,v 1.2 2004/06/16 10:25:40 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -32,6 +32,7 @@
  */
 
 #import "AWEzvContactManager.h"
+#import "AWEzvContactPrivate.h"
 
 @implementation AWEzvContactManager
 
@@ -46,7 +47,19 @@
 }
 
 - (AWEzvContact *)contactForIdentifier:(NSString *)uniqueID {
-    return [contacts objectForKey:uniqueID];
+    AWEzvContact *contact;
+    
+    contact = [contacts objectForKey:uniqueID];
+    /* try a case insensitive search if not found */
+    if (contact == nil) {
+	NSEnumerator *enumerator = [contacts objectEnumerator];
+
+	while ((contact = [enumerator nextObject])) {
+	    if ([[contact uniqueID] caseInsensitiveCompare:uniqueID] == NSOrderedSame)
+		break;
+	}
+    }
+    return contact;
 }
 
 - (AWEzv *)client {
