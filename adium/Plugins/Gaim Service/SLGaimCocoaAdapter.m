@@ -76,7 +76,7 @@ struct SourceInfo {
 
 static guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 {
-    NSLog(@"New %u-ms timer (tag %u)", interval, sourceId);
+//    NSLog(@"New %u-ms timer (tag %u)", interval, sourceId);
 
     struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
 
@@ -104,7 +104,7 @@ static guint adium_timeout_add(guint interval, GSourceFunc function, gpointer da
 {
     struct SourceInfo *info = [[timer userInfo] pointerValue];
     if ([sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:info->tag]] == nil) {
-        NSLog(@"Timer %u notification arrived after source removed", info->tag);
+//        NSLog(@"Timer %u notification arrived after source removed", info->tag);
         return;
     }
 	
