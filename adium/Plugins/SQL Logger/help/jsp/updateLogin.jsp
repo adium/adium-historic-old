@@ -4,7 +4,7 @@
 <%@ page import='java.util.Properties' %>
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/crash/post-comments.jsp $-->
-<!--$Rev: 504 $ $Date: 2004/06/30 05:19:55 $-->
+<!--$Rev: 504 $ $Date: 2004/07/11 22:30:23 $-->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
