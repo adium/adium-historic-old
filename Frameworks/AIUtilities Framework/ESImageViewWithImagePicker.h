@@ -94,4 +94,11 @@
 */ 
 - (void)setTitle:(NSString *)inTitle;
 
+/*!
+ * @brief Show the image picker window
+ *
+ * Displays the image picker window.  This is automatically invoked when the image view is double clicked
+ */ 
+- (IBAction)showImagePicker:(id)sender;
+
 @end
