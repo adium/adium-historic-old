@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.80 2004/04/14 23:01:27 evands Exp $
+// $Id: AIAccountController.m,v 1.81 2004/04/21 15:47:45 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -40,7 +40,7 @@
 - (void)loadAccounts;
 - (void)saveAccounts;
 - (void)_addMenuItemsToMenu:(NSMenu *)menu withTarget:(id)target forAccounts:(NSArray *)accounts;
-- (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred;
+- (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred includeOffline:(BOOL)includeOffline;
 @end
 
 @implementation AIAccountController
@@ -536,6 +536,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 - (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType
 								   toListObject:(AIListObject *)inObject
 									 withTarget:(id)target
+								 includeOffline:(BOOL)includeOffline
 {
 	NSMenu		*menu;
 	NSArray		*topAccounts, *bottomAccounts;
@@ -543,11 +544,13 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	//Get the list of accounts for each section of our menu
 	topAccounts = [self _accountsForSendingContentType:CONTENT_MESSAGE_TYPE
 										  toListObject:inObject
-											 preferred:YES];
+											 preferred:YES
+										includeOffline:includeOffline];
 	bottomAccounts = [self _accountsForSendingContentType:CONTENT_MESSAGE_TYPE
 											 toListObject:inObject
-												preferred:NO];
-	
+												preferred:NO
+										   includeOffline:includeOffline];
+
 	//Build the menu
 	menu = [[NSMenu alloc] init];
 	[menu setAutoenablesItems:NO];
@@ -573,7 +576,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	}
 }
 
-- (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred
+- (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred includeOffline:(BOOL)includeOffline
 {
 	NSMutableArray	*sourceAccounts = [NSMutableArray array];
 	NSEnumerator	*enumerator = [[[owner accountController] accountArray] objectEnumerator];
@@ -581,11 +584,14 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	
 	while(account = [enumerator nextObject]){
 		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
-			if([[inObject serviceID] compare:[[[account service] handleServiceType] identifier]] == 0){
+			if(!inObject && !inPreferred){
+				[sourceAccounts addObject:account];
+
+			}else if([[inObject serviceID] compare:[[[account service] handleServiceType] identifier]] == 0){
 				BOOL			knowsObject = NO;
 				BOOL			canFindObject = NO;
 				AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject serviceID]
-																								 accountID:[account UID]
+																								 accountID:[account uniqueObjectID]
 																									   UID:[inObject UID]];
 				
 				//Does the account know this object?
@@ -598,9 +604,12 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 				canFindObject = [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE
 																						   toListObject:nil];
 				
-				if((inPreferred && knowsObject) || (!inPreferred && !knowsObject && canFindObject)){
+				if((inPreferred && knowsObject) ||						//Online and can see the object
+				   (!inPreferred && !knowsObject && canFindObject) ||	//Online and may be able to see the object
+				   (!inPreferred && !knowsObject && includeOffline)){	//Offline, but may be able to see the object if online
 					[sourceAccounts addObject:account];
 				}
+				
 			}
 		}
 	}
