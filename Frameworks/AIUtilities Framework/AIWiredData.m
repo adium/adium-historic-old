@@ -101,7 +101,7 @@
 }
 
 - (id)subdataWithRange:(NSRange)range {
-	return [[[self alloc] initWithBytes:([data bytes] + range.location) length:range.length] autorelease];
+	return [[[[self class] alloc] initWithBytes:([self bytes] + range.location) length:range.length] autorelease];
 }
 
 #pragma mark Copying backing
