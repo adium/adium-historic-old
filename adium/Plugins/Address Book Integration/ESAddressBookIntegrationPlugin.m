@@ -440,7 +440,7 @@
 				[displayNameArray setObject:displayName withOwner:self];
 				
 				[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
-														  object:inObject
+														  object:metaContact
 														userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
 																							 forKey:@"Notify"]];				
 			}
