@@ -68,7 +68,6 @@
 - (float)widthForHeight:(int)inHeight
 {
     return(maxWidth);
-
 }
 
 

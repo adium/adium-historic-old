@@ -19,6 +19,8 @@
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"
 #define ERROR_MESSAGE_WINDOW_TITLE		@"Adium : Error"
+#define MAX_TOOLTIP_ENTRY_WIDTH                 200.0
+#define DISPLAY_IMAGE_ON_RIGHT                  NO
 
 @interface AIInterfaceController (PRIVATE)
 - (void)loadDualInterface;
@@ -206,7 +208,7 @@
     if(object){
         if(object == tooltipListObject){ //If we already have this tooltip open
             //Move the existing tooltip
-            [AITooltipUtilities showTooltipWithTitle:tooltipTitle body:tooltipBody image:tooltipImage onWindow:nil atPoint:point orientation:TooltipBelow];
+            [AITooltipUtilities showTooltipWithTitle:tooltipTitle body:tooltipBody image:tooltipImage imageOnRight:DISPLAY_IMAGE_ON_RIGHT onWindow:nil atPoint:point orientation:TooltipBelow];
 
         }else{ //This is a new tooltip
             //Hold onto the new object
@@ -226,15 +228,11 @@
             if(ownerArray && [ownerArray count]){
                 tooltipImage = [[ownerArray objectAtIndex:0] retain];
             }else{
-                tooltipImage = [[AIImageUtilities imageNamed:@"DefaultIcon" forClass:[self class]] retain];
+                tooltipImage = nil;
             }
             
-            //If a body exists, add a blank line to the title to provide white space between the two
-            //if ([tooltipBody length])
-            //    [tooltipTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\r"]];
-            
             //Display the new tooltip
-            [AITooltipUtilities showTooltipWithTitle:tooltipTitle body:tooltipBody image:tooltipImage onWindow:nil atPoint:point orientation:TooltipBelow];
+            [AITooltipUtilities showTooltipWithTitle:tooltipTitle body:tooltipBody image:tooltipImage imageOnRight:DISPLAY_IMAGE_ON_RIGHT onWindow:nil atPoint:point orientation:TooltipBelow];
         }
 
     }else{
@@ -250,9 +248,11 @@
 {
     NSString                    *displayName = [object displayName];
     NSString                    *uid = [object UID];
+    //Configure fonts and attributes
+    NSFontManager       *fontManager = [NSFontManager sharedFontManager];
     
     NSDictionary        *titleDict = [NSDictionary dictionaryWithObjectsAndKeys:
-        [NSNumber numberWithInt:1], NSUnderlineStyleAttributeName, [NSFont toolTipsFontOfSize:12], NSFontAttributeName, nil];
+        [fontManager convertFont:[NSFont toolTipsFontOfSize:12] toHaveTrait:NSBoldFontMask],NSFontAttributeName, nil];
     
     //"<DisplayName>" (or) "<DisplayName> (<UID>)"
     if([displayName compare:uid] == 0){
@@ -274,10 +274,13 @@
     NSDictionary        *entryDict =[NSDictionary dictionaryWithObjectsAndKeys:
         toolTipsFont, NSFontAttributeName, nil];
     
-    //entries from plugins
+    //Entries from plugins
     if([contactListTooltipEntryArray count] != 0){
         id <AIContactListTooltipEntry>	tooltipEntry;
         NSEnumerator			*enumerator;
+        NSMutableAttributedString       *lineBreakAndTabToColumnString = nil;     
+        int                             lineBreakAndTabToColumnStringLength;
+        BOOL                            firstEntry = YES;
         
         //Calculate the widest label
         enumerator = [contactListTooltipEntryArray objectEnumerator];
@@ -293,29 +296,87 @@
                 maxLabelSize = labelSize;
         }
         
-        BOOL firstEntry = YES;
         //Add labels plus entires to the toolTip
         enumerator = [contactListTooltipEntryArray objectEnumerator];
+        
         while((tooltipEntry = [enumerator nextObject])){
-            NSString	*entryString = [tooltipEntry entryForObject:object];
-            if(entryString){
+            NSMutableString	*entryString = [[tooltipEntry entryForObject:object] mutableCopy];
+            if(entryString && [entryString length]){
                 //Tab over from each label until it has the width of the widest one (plus the widest one's tab)
-                NSMutableString * labelString = [[NSMutableString alloc] initWithString:[NSString stringWithFormat:@"%@ ",[tooltipEntry label]]]; 
-                while (maxLabelSize >= [[[NSMutableAttributedString alloc] initWithString:labelString attributes:labelDict] size].width) {
-                    [labelString appendString:@"\t"];
+                //  NSMutableAttributedString * labelString = [[NSMutableString alloc] initWithString:[NSString stringWithFormat:@"%@ ",[tooltipEntry label]]]; 
+                NSMutableAttributedString * labelString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ ",[tooltipEntry label]]
+                                                                                                 attributes:labelDict];
+                //Add tabs after the label to line the entries up in a column
+                while (maxLabelSize >= [labelString size].width) {
+                    [labelString appendString:@"\t" withAttributes:labelDict];
+                }
+                //Generate the tab-to-column string; it's the same for each entry so only generate it once if at all
+                if (!lineBreakAndTabToColumnString) {
+                    lineBreakAndTabToColumnString = [[NSMutableAttributedString alloc] initWithString:@"\r" attributes:entryDict];                        
+                    while (maxLabelSize >= [lineBreakAndTabToColumnString size].width) {
+                        [lineBreakAndTabToColumnString appendString:@"\t" withAttributes:entryDict];
+                    }
+                    lineBreakAndTabToColumnStringLength = [lineBreakAndTabToColumnString length];
                 }
                 
                 if (firstEntry) {
                     //Add the label (with its spacing)
-                    [tipString appendString:labelString withAttributes:labelDict];
+                    [tipString appendAttributedString:labelString];
                     firstEntry = NO;
                 } else {
                     //Add a carriage return and the label (with its spacing)
-                    [tipString appendString:[NSString stringWithFormat:@"\r%@",labelString]
-                         withAttributes:labelDict];
+                    [tipString appendString:@"\r" withAttributes:labelDict];
+                    [tipString appendAttributedString:labelString];
                 }
+                
+                //convert returns to new lines so return can be used internally without interference
+                [entryString replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, [entryString length])];
+                
+                int entryStringLength = [entryString length];
+                NSMutableAttributedString * entryAttribString = [[NSMutableAttributedString alloc] initWithString:entryString attributes:entryDict];
+                
+                int lineBreakIndex = 0; 
+
+                NSRange replacementRange;   replacementRange.length=1;
+                                
+                NSRange remainingRange = NSMakeRange(0, [entryAttribString length]);
+                float currentSizeForRange = [[entryAttribString attributedSubstringFromRange:remainingRange] size].width;
+                
+                lineBreakAndTabToColumnStringLength--; //because it will be used to replace a character, its effective change-in-length is one less
+                
+                while (currentSizeForRange > MAX_TOOLTIP_ENTRY_WIDTH) {           
+                    //Hone the length down - the amount the length goes down each time is arbitrary and simply an accuracy-speed tradeoff
+                    while (currentSizeForRange > MAX_TOOLTIP_ENTRY_WIDTH) {
+                        remainingRange.length -= 4;
+                        currentSizeForRange = [[entryAttribString attributedSubstringFromRange:remainingRange] size].width;
+                    }
+                    
+                    //Find the first character of the current word
+                    lineBreakIndex = [entryAttribString nextWordFromIndex:(lineBreakIndex + remainingRange.length) forward:NO];
+                   
+                    //Replace the space before it with the line-break plus tabs
+                    replacementRange.location = lineBreakIndex-1;
+                    [entryAttribString replaceCharactersInRange:replacementRange withAttributedString:lineBreakAndTabToColumnString];
+                    
+                    //Update lineBreakIndex
+                    lineBreakIndex = lineBreakIndex + lineBreakAndTabToColumnStringLength;
+                    
+                    //Our string is now lineBreakAndTabToColumnStringLength longer after the replacement
+                    entryStringLength += lineBreakAndTabToColumnStringLength;
+                    
+                    //Update the remaining range to scan
+                    remainingRange.location = lineBreakIndex;
+                    remainingRange.length = entryStringLength-lineBreakIndex;
+                    
+                    currentSizeForRange = [[entryAttribString attributedSubstringFromRange:remainingRange] size].width;
+                }
+                
+                NSMutableString * finalEntryString = [[entryAttribString string] mutableCopy];
+                //convert new lines (and returns which were changed to new lines before the while loop) into new-line-plus-tabs
+                [finalEntryString replaceOccurrencesOfString:@"\n" withString:[lineBreakAndTabToColumnString string] options:NSLiteralSearch range:NSMakeRange(0, [finalEntryString length])];
+                
                 //Add the entry
-                [tipString appendString:entryString withAttributes:entryDict];
+                [tipString appendString:finalEntryString withAttributes:entryDict];
             }
         }
     }

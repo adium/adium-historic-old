@@ -42,9 +42,13 @@
 - (void)setImage:(NSImage *)inImage
 {
     if(inImage != image){
-        [image release];
-        image = [inImage retain];
-        sourceRect = NSMakeRect(0,0,[image size].width,[image size].height);
+        if (image) {
+            [image release]; image = nil;
+        }
+        if (inImage) {
+            image = [inImage retain];
+            sourceRect = NSMakeRect(0,0,[image size].width,[image size].height);
+        }
         [self setNeedsDisplay:YES];
     }
 }
@@ -61,13 +65,14 @@
 
 - (void)drawRect:(NSRect)rect
 {
-/*
-    //Clear
-    [[NSColor clearColor] set];
-    [NSBezierPath fillRect:rect];
-*/
     //Draw
-    [image drawInRect:rect fromRect:sourceRect operation:NSCompositeSourceOver fraction:1.0];
+    if (image) {
+        [image drawInRect:rect fromRect:sourceRect operation:NSCompositeSourceOver fraction:1.0];
+    } else {
+        //Clear
+        [[NSColor clearColor] set];
+        [NSBezierPath fillRect:rect];
+    }
 }
 
 @end

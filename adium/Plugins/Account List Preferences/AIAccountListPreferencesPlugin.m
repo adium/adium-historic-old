@@ -296,6 +296,9 @@
             index = [accountArray count]-1;
             [tableView_accountList selectRow:index byExtendingSelection:NO];
         }
+        
+        //Update our display
+        [self tableViewSelectionDidChange:nil];
     }
 }
 

@@ -183,14 +183,14 @@
 // Auto Sizing --------------------------------------------------------------------------
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
-    [self updateHorizontalSizeForObject:inObject ];
+    [self updateHorizontalSizeForObject:inObject];
     return nil; //we don't change any attributes
 }
 
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
     NSArray		*keys = [[notification userInfo] objectForKey:@"Keys"];
-    if([keys containsObject:@"Display Name"]){
+    if([keys containsObject:@"Display Name"] || [keys containsObject:@"Left View"] || [keys containsObject:@"Right View"]){
         if ([self updateHorizontalSizeForObject:[notification object]])   
             [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self]; //Resize
     }
@@ -228,7 +228,6 @@
             }
         }   
     }
-    
     return changed;
 }
 

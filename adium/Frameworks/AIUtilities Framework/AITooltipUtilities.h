@@ -27,4 +27,6 @@ typedef enum {
 + (void)showTooltipWithString:(NSString *)inString onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation;
 + (void)showTooltipWithAttributedString:(NSAttributedString *)inString onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation;
 + (void)showTooltipWithTitle:(NSAttributedString *)inTitle body:(NSAttributedString *)inBody image:(NSImage *)inImage onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation;
++ (void)showTooltipWithTitle:(NSAttributedString *)inTitle body:(NSAttributedString *)inBody image:(NSImage *)inImage imageOnRight:(BOOL)inImageOnRight onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation;
+
 @end

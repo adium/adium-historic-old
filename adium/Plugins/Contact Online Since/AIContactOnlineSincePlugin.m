@@ -32,16 +32,15 @@
 
 - (NSString *)entryForObject:(AIListObject *)inObject
 {
-    if([inObject isKindOfClass:[AIListContact class]]){
+    if([inObject isKindOfClass:[AIListContact class]] && [[(AIListContact *)inObject statusArrayForKey:@"Online"] greatestIntegerValue]){
         NSDate	*signonDate, *currentDate;
-
         currentDate = [NSDate date];
         signonDate = [[(AIListContact *)inObject statusArrayForKey:@"Signon Date"] earliestDate];
         
         if(signonDate){
             NSString		*currentDay, *signonDay, *signonTime;
             NSDateFormatter	*dayFormatter, *timeFormatter;
-    
+            
             //Create the formatters
             dayFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%m/%d/%y" allowNaturalLanguage:YES] autorelease];
             timeFormatter = [[[NSDateFormatter alloc] initWithDateFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:YES] allowNaturalLanguage:YES] autorelease];
@@ -50,7 +49,7 @@
             currentDay = [dayFormatter stringForObjectValue:currentDate];
             signonDay = [dayFormatter stringForObjectValue:signonDate];
             signonTime = [timeFormatter stringForObjectValue:signonDate];
-
+            
             if([currentDay compare:signonDay] == 0){ //Show time
                 return(signonTime);
                 
