@@ -398,8 +398,9 @@
 				[self setAccountAwayTo:nil];
 				break;
 			case AIAwayStatusType:
+			case AIInvisibleStatusType:
 				[self setAccountAwayTo:statusMessage];
-				break;		
+				break;
 		}
 	}
 }
