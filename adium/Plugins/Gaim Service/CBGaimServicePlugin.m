@@ -36,7 +36,6 @@ static CBGaimAccount* accountLookup(GaimAccount *acct)
 {
 //    NSLog(@"Looking up GaimAccount 0x%x", acct);
     CBGaimAccount *ret = (CBGaimAccount*) [_accountDict objectForKey:[NSValue valueWithPointer:acct]];
-    NSCAssert(ret != nil, @"Account not found in dictionary");
     return ret;
 }
 
@@ -649,6 +648,11 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     [_accountDict setObject:anAccount forKey:[NSValue valueWithPointer:gaimAcct]];
     
     return anAccount;
+}
+
+- (void)removeAccount:(GaimAccount *)gaimAcct
+{
+    [_accountDict removeObjectForKey:[NSValue valueWithPointer:gaimAcct]];
 }
 
 - (NSString *)identifier

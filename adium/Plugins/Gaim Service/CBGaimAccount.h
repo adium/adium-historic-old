@@ -99,4 +99,7 @@
 //Instructs the account to reject a file receive request
 - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer;
 
+//AIAccount_Privacy
+-(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type;
+-(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type;
 @end

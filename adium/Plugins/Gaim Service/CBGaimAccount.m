@@ -28,6 +28,7 @@
 - (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle;
 - (NSString *)_userIconCachePath;
 - (void)setTypingFlagOfHandle:(AIHandle *)handle to:(BOOL)typing;
+- (AIHandle *)createHandleAssociatingWithBuddy:(GaimBuddy *)buddy;
 @end
 
 @implementation CBGaimAccount
@@ -124,26 +125,7 @@
 {
     //NSLog(@"accountNewBuddy (%s)", buddy->name);
     
-    
-     GaimGroup   *group = gaim_find_buddys_group(buddy); //get the group
-    NSString    *groupName;
-    if (group)
-        groupName = [NSString stringWithCString:(group->name)];
-    else
-        groupName = NO_GROUP;
-    
-    
-    AIHandle *handle = [AIHandle
-        handleWithServiceID:[self serviceID]
-        UID:[[NSString stringWithUTF8String:buddy->name] compactedString]
-        serverGroup:groupName
-        temporary:NO
-        forAccount:self];
-    [handleDict setObject:handle forKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
-    
-    //Associate the handle with ui_data and the buddy with our statusDictionary
-    buddy->node.ui_data = [handle retain];
-    [[handle statusDictionary] setObject:[NSValue valueWithPointer:buddy] forKey:@"GaimBuddy"];
+    [self createHandleAssociatingWithBuddy:buddy];
 }
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
@@ -152,12 +134,17 @@
 
     NSMutableArray *modifiedKeys = [NSMutableArray array];
     AIHandle *theHandle = (AIHandle*) buddy->node.ui_data;
-    NSAssert(theHandle != nil, @"Buddy has no associated handle");
+    if (!theHandle) { //no associated handle - gaim has a buddy for us but we are no longer tracking that buddy
+        
+        //use the buddy's information gaimside to create the needed Adium handle
+        theHandle = [self createHandleAssociatingWithBuddy:buddy];
+        //Update the contact list
+        [[owner contactController] handle:theHandle addedToAccount:self];
+    }
     
     int online = (GAIM_BUDDY_IS_ONLINE(buddy) ? 1 : 0);
     
     NSMutableDictionary * statusDict = [theHandle statusDictionary];
-    //NSLog(@"%d", online);
     
     //see if our online state is up to date
     if([[statusDict objectForKey:@"Online"] intValue] != online)
@@ -264,15 +251,13 @@
 
 - (void)accountRemoveBuddy:(GaimBuddy*)buddy
 {
-    NSLog(@"accountRemoveBuddy (%s)", buddy->name);
     //stored the key as a compactedString originally
     [handleDict removeObjectForKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
+
     if (buddy->node.ui_data != NULL) {
         [(AIHandle *)buddy->node.ui_data release];
         buddy->node.ui_data = NULL;
         [[owner contactController] handlesChangedForAccount:self];
-    } else {
-        NSLog(@"Removing a node we don't have a handle for");   
     }
 }
 
@@ -498,6 +483,8 @@
 - (void)dealloc
 {
     NSLog(@"CBGaimAccount dealloc");
+    [service removeAccount:account];
+    
 //    [chatDict release];
     [handleDict release];
     [filesToSendArray release];
@@ -508,7 +495,7 @@
     }
 
     //  is deleting the accoutn necessary?  this seems to throw an exception.
-    //    gaim_accounts_delete(account); account = NULL;
+    gaim_accounts_delete(account); account = NULL;
     
     // TODO: remove this from the account dict that the ServicePlugin keeps
     
@@ -885,6 +872,32 @@
     return NO;
 }
 
+- (AIHandle *)createHandleAssociatingWithBuddy:(GaimBuddy *)buddy
+{
+    GaimGroup   *group = gaim_find_buddys_group(buddy); //get the group
+    NSString    *groupName;
+    if (group)
+    groupName = [NSString stringWithCString:(group->name)];
+    else
+    groupName = NO_GROUP;
+
+
+    AIHandle *handle = [AIHandle
+        handleWithServiceID:[self serviceID]
+                        UID:[[NSString stringWithUTF8String:buddy->name] compactedString]
+                serverGroup:groupName
+                  temporary:NO
+                 forAccount:self];
+    [handleDict setObject:handle forKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
+
+    //Associate the handle with ui_data and the buddy with our statusDictionary
+    buddy->node.ui_data = [handle retain];
+    [[handle statusDictionary] setObject:[NSValue valueWithPointer:buddy] forKey:@"GaimBuddy"];
+ 
+    return handle;
+}
+
+
 - (void)displayError:(NSString *)errorDesc
 {
     [[owner interfaceController] handleErrorMessage:@"Gaim error"
@@ -898,16 +911,16 @@
 -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type
 {
     if (type == PRIVACY_PERMIT)
-        return (gaim_privacy_permit_add(account,[inObject UID],FALSE));
+        return (gaim_privacy_permit_add(account,[[inObject UID] UTF8String],FALSE));
     else
-        return (gaim_privacy_deny_add(account,[inObject UID],FALSE));
+        return (gaim_privacy_deny_add(account,[[inObject UID] UTF8String],FALSE));
 }
 -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type
 {
     if (type == PRIVACY_PERMIT)
-        return (gaim_privacy_permit_remove(account,[inObject UID],FALSE));
+        return (gaim_privacy_permit_remove(account,[[inObject UID] UTF8String],FALSE));
     else
-        return (gaim_privacy_deny_remove(account,[inObject UID],FALSE));
+        return (gaim_privacy_deny_remove(account,[[inObject UID] UTF8String],FALSE));
 }
 
 

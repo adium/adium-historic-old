@@ -31,4 +31,6 @@
         IBOutlet 	NSView		*view_preferences;
 }
 
+- (void)removeAccount:(GaimAccount *)gaimAcct;
+
 @end
