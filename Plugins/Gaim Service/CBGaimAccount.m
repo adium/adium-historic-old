@@ -776,13 +776,20 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			
 			//source may be (null) for system messages like topic changes
 			listContact = (source ? [self contactWithUID:source] : nil);
-			GaimDebug (@"receivedMultiChatMessage: Received %@ from %@ in %@",[attributedMessage string],[listContact UID],[chat name]);
 
-			[self _receivedMessage:attributedMessage
-							inChat:chat 
-				   fromListContact:listContact
-							 flags:flags
-							  date:date];
+			if(listContact){
+				[self _receivedMessage:attributedMessage
+								inChat:chat 
+					   fromListContact:listContact
+								 flags:flags
+								  date:date];
+			}else{
+				//If we didn't get a listContact, this is a gaim status message... display it as such.
+				[[adium contentController] displayStatusMessage:[attributedMessage string]
+														ofType:@"gaim"
+														inChat:chat];
+
+			}
 		}
 	}
 }
