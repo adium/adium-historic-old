@@ -286,19 +286,9 @@
 
 - (void)deleteTemporaryFiles
 {
-	NSEnumerator	*enumerator;
-	NSFileManager	*defaultManager = [NSFileManager defaultManager];
-	NSString		*cachePath = [@"~/Library/Caches/Adium" stringByExpandingTildeInPath];
-	NSString		*tempFilePrefix = @"TEMP";
-	NSString		*fileName;
-	
-	enumerator = [[defaultManager directoryContentsAtPath:cachePath] objectEnumerator];
-	while(fileName = [enumerator nextObject]){
-		if([fileName hasPrefix:tempFilePrefix]){
-			[defaultManager removeFileAtPath:[cachePath stringByAppendingPathComponent:fileName]
-									 handler:nil];
-		}
-	}
+	[[NSFileManager defaultManager] removeFilesInDirectory:@"~/Library/Caches/Adium"
+												withPrefix:@"TEMP"
+											 movingToTrash:NO];
 }
 
 
@@ -693,6 +683,8 @@ void Adium_HandleSignal(int i){
 		returnString = @"0.68";
 	}else if ([inString isEqualToString:@"0.7b2"]){
 		returnString = @"0.681";
+	}else if ([inString isEqualToString:@"0.7b3"]){
+		returnString = @"0.682";
 	}
 	
 	return(returnString ? returnString : inString);
