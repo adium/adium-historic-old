@@ -14,26 +14,13 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAccountListWindowController.h"
+#import "AIEditAccountWindowController.h"
 
-#define	ACCOUNT_DRAG_TYPE					@"AIAccount"	    										//ID for an account drag
-#define	ACCOUNT_CONNECT_BUTTON_TITLE		AILocalizedString(@"Connect","Connect an account")	    	//Menu item title for the connect item
-#define	ACCOUNT_DISCONNECT_BUTTON_TITLE		AILocalizedString(@"Disconnect","Disconnect an account")    //Menu item title
-#define	ACCOUNT_CONNECTING_BUTTON_TITLE		AILocaliedString(@"Connecting...",nil)						//Menu item title
-#define	ACCOUNT_DISCONNECTING_BUTTON_TITLE	AILocalizedString(@"Disconnecting...",nil)					//Menu item title
-
-#define ACCOUNT_LIST_WINDOW_NIB				@"AccountListWindow"
+#define	ACCOUNT_DRAG_TYPE					@"AIAccount"	    			//ID for an account drag
 
 @interface AIAccountListWindowController (PRIVATE)
-- (void)configureViewForAccount:(AIAccount *)inAccount;
-- (void)configureViewForService:(AIService *)inService;
-- (void)_addCustomViewAndTabsForController:(AIAccountViewController *)inControler;
-- (void)_removeCustomViewAndTabs;
-- (void)enableDisableControls;
-- (void)updateAccountConnectionProgress;
 - (void)configureAccountList;
 - (void)accountListChanged:(NSNotification *)notification;
-- (void)_configureResponderChain:(NSTimer *)inTimer;
-- (void)passwordReturnedForRegister:(NSString *)inPassword context:(id)inContext;
 @end
 
 @implementation AIAccountListWindowController
@@ -42,7 +29,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 + (AIAccountListWindowController *)accountListWindowController
 {
     if(!sharedAccountWindowInstance){
-        sharedAccountWindowInstance = [[self alloc] initWithWindowNibName:ACCOUNT_LIST_WINDOW_NIB];
+        sharedAccountWindowInstance = [[self alloc] initWithWindowNibName:@"AccountListWindow"];
     }
     return(sharedAccountWindowInstance);
 }
@@ -61,37 +48,26 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     [super dealloc];
 }
 
-
-
-//Configure the preference view
+//Configure
 - (void)windowDidLoad
 {
-    //init
-    accountViewController = nil;
-	configuredForService = nil;
-	configuredForAccount = nil;
+	//Center this panel
+	[[self window] center];
+
+	//Configure the account list
+	[self configureAccountList];
+	[self updateAccountOverview];
 	
-	//Configure controls
+	//Build the 'add account' menu
 	NSMenu	*serviceMenu = [[adium accountController] menuOfServicesWithTarget:self 
 															activeServicesOnly:NO
 															   longDescription:YES
-																		format:AILocalizedString(@"Add %@ Account...",nil)];
+																		format:AILocalizedString(@"%@",nil)];
 	[serviceMenu setAutoenablesItems:YES];
 	[button_newAccount setMenu:serviceMenu];
-    [textField_accountName setDelayInterval:1.0];
-	[self configureAccountList];
 
-	//Observe account list objects so we can enable/disable our controls for connected accounts
+	//Observe accounts so we can display accurate status
     [[adium contactController] registerListObjectObserver:self];
-	
-	//If no account are available, create one.  Called on a delay so it doesn't happen until our view
-	//is visible in the preference window (And the first-responder stuff works correctly)
-	if([[[adium accountController] accountArray] count] == 0){
-		[self performSelector:@selector(selectServiceType:) withObject:nil afterDelay:0.0001];
-	}
-	
-	//Center this panel
-	[[self window] center];
 }
 
 //Close
@@ -102,311 +78,16 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     }
 }
 
-//closing
+//Closing
 - (BOOL)windowShouldClose:(id)sender
 {
 	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 	
-	//Halt any incomplete timers
-	[responderChainTimer invalidate];
-	[responderChainTimer release];
-	responderChainTimer = nil;
-	
-	//Get any final changes to the UID field
-	[textField_accountName fireImmediately];
-	
 	//Cleanup and close our shared instance
-	[configuredForAccount release]; configuredForAccount = nil;
-    [accountViewController release]; accountViewController = nil;
 	[sharedAccountWindowInstance autorelease]; sharedAccountWindowInstance = nil;
 	
 	return(YES);
-}
-
-
-//Configuring ---------------------------------------------------------------------------------------------
-#pragma mark Configuring
-//Configure the account preferences for an account
-- (void)configureViewForAccount:(AIAccount *)inAccount
-{
-	NSData	*iconData;
-
-	//If necessary, configure for the account's service first
-	if([inAccount service] != configuredForService){
-		[self configureViewForService:[inAccount service]];
-	}
-
-	//Configure for the account
-	[configuredForAccount release]; configuredForAccount = [inAccount retain];
-	[accountViewController configureForAccount:inAccount];
-	[self enableDisableControls];
-	[self updateAccountConnectionProgress];
-
-	//Fill in the account's name and auto-connect status
-	NSString	*formattedUID = [inAccount preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS];
-	[textField_accountName setStringValue:(formattedUID && [formattedUID length] ? formattedUID : [inAccount UID])];
-	[button_autoConnect setState:[[inAccount preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]];
-	
-	//User icon
-	if(iconData = [inAccount preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
-		NSImage *image = [[NSImage alloc] initWithData:iconData];
-		[imageView_userIcon setImage:image];
-		[image release];
-	}        
-}
-
-//Configure the account preferences for a service.  This determines which controls are loaded and the allowed values
-- (void)configureViewForService:(AIService *)inService
-{
-	//Select the new service
-	configuredForService = inService;
-//    [popupMenu_serviceList selectItemAtIndex:[popupMenu_serviceList indexOfItemWithRepresentedObject:inService]];
-	
-	//Insert the custom controls for this service
-	[self _removeCustomViewAndTabs];
-	[self _addCustomViewAndTabsForController:[inService accountViewController]];
-	
-	//Custom username string
-	NSString *userNameLabel = [inService userNameLabel];
-	[textField_userNameLabel setStringValue:[(userNameLabel ? userNameLabel : @"User Name") stringByAppendingString:@":"]];
-	
-	//Restrict the account name field to valid characters and length
-    [textField_accountName setFormatter:
-		[AIStringFormatter stringFormatterAllowingCharacters:[inService allowedCharactersForAccountName]
-													  length:[inService allowedLengthForAccountName]
-											   caseSensitive:[inService caseSensitive]
-												errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.",nil)]];
-	
-	//Hide/show the Register button as appropriate
-	BOOL shouldShowRegisterButton = [inService canRegisterNewAccounts];
-	if ([button_register respondsToSelector:@selector(setHidden:)]){
-		[button_register setHidden:(!shouldShowRegisterButton)];
-	}else{
-		[button_register setEnabled:(!shouldShowRegisterButton)];
-	}
-}
-
-//Add the custom views for a controller
-- (void)_addCustomViewAndTabsForController:(AIAccountViewController *)inControler
-{
-	NSView					*accountView;
-	NSEnumerator			*enumerator;
-	NSTabViewItem			*tabViewItem;
-	
-	//Get account view
-	accountViewController = [inControler retain];
-	accountView = [accountViewController setupView];
-	
-    //Swap in the account details view
-    [view_accountDetails addSubview:accountView];
-	float accountViewHeight = [accountView frame].size.height;
-    [accountView setFrameOrigin:NSMakePoint(0,([view_accountDetails frame].size.height - accountViewHeight))];
-
-	//Setup the responder chain
-	[self _configureResponderChain:nil];
-	
-	//Swap in the account auxiliary tabs
-    enumerator = [[accountViewController auxiliaryTabs] objectEnumerator];
-    while(tabViewItem = [enumerator nextObject]){
-        [tabView_auxiliary addTabViewItem:tabViewItem];
-    }
-	
-    //There must be a better way to do this.  When moving tabs over, they will stay selected - resulting in multiple
-	//selected tabs.  My quick fix is to manually select each tab in the view.  Not the greatest, but it'll
-	//work for now.
-    [tabView_auxiliary selectLastTabViewItem:nil];
-    int i;
-    for(i = 1;i < [tabView_auxiliary numberOfTabViewItems];i++){
-        [tabView_auxiliary selectPreviousTabViewItem:nil];
-    }
-}
-
-//Hook up the responder chain
-//Must wait until our view is visible to do this, otherwise our requests to set the chain up will be ignored.
-//So, this method waits until our view becomes visible, and then sets up the chain :)
-- (void)_configureResponderChain:(NSTimer *)inTimer
-{
-	[responderChainTimer invalidate];
-	[responderChainTimer release];
-	responderChainTimer = nil;
-	
-//	if([view canDraw]){
-		NSView	*accountView = [accountViewController setupView];
-		
-		//Name field goes to first control in account view
-		[textField_accountName setNextKeyView:[accountView nextValidKeyView]];
-		
-		//Last control in account view goes to account list
-		NSView	*nextView = [accountView nextKeyView];
-		while([nextView nextKeyView]) nextView = [nextView nextKeyView];
-		[nextView setNextKeyView:tableView_accountList];
-		
-		//Account list goes to service menu
-//		[tableView_accountList setNextKeyView:popupMenu_serviceList];
-/*	}else{
-		responderChainTimer = [[NSTimer scheduledTimerWithTimeInterval:0.001
-															   target:self
-															 selector:@selector(_configureResponderChain:)
-															 userInfo:nil
-															  repeats:NO] retain]; 
-	}*/
-}
-
-//Remove any existing custom views
-- (void)_removeCustomViewAndTabs
-{
-	int selectedTabIndex;
-	
-    //Remove any tabs
-    if([tabView_auxiliary selectedTabViewItem]){
-        selectedTabIndex = [tabView_auxiliary indexOfTabViewItem:[tabView_auxiliary selectedTabViewItem]];
-    }
-    while([tabView_auxiliary numberOfTabViewItems] > 1){
-        [tabView_auxiliary removeTabViewItem:[tabView_auxiliary tabViewItemAtIndex:[tabView_auxiliary numberOfTabViewItems] - 1]];
-    }
-    
-    //Close any currently open controllers
-    [view_accountDetails removeAllSubviews];
-    [accountViewController release]; accountViewController = nil;
-}
-
-
-//Controls -------------------------------------------------------------------------------------------------------------
-#pragma mark Controls
-- (IBAction)changeUIDField:(id)sender
-{
-	NSString *newUID = [textField_accountName stringValue];
-	if(![[configuredForAccount UID] isEqualToString:newUID])
-		[[adium accountController] changeUIDOfAccount:configuredForAccount to:newUID];	
-}
-
-//
-- (IBAction)toggleConnectStatus:(id)sender
-{		
-	//Get any final changes to the UID field
-	[textField_accountName fireImmediately];
-
-	if([[configuredForAccount statusObjectForKey:@"Connecting"] boolValue]){
-		//cancel the currently connecting account - if the user's into that sort of thing.
-		[configuredForAccount setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-		
-	}else{
-		BOOL	goOnline = (![[configuredForAccount statusObjectForKey:@"Online"] boolValue] &&
-							![[configuredForAccount statusObjectForKey:@"Disconnecting"] boolValue]);
-		
-		//If a field doesn't send its action until the user presses enter (the password field, for example), we should save
-		//immediately so the newly-inputted value is available as we try to connect
-		if (goOnline){
-			[accountViewController saveFieldsImmediately];
-		}
-		
-		[configuredForAccount setPreference:[NSNumber numberWithBool:goOnline] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-	}
-}
-
-- (IBAction)registerAccount:(id)sender
-{
-	//If a field doesn't send its action until the user presses enter (the password field, for example), we should save
-	//immediately so the newly-inputted value is available as we try to register
-	[accountViewController saveFieldsImmediately];
-	
-	if (![configuredForAccount UID]){
-		NSRunAlertPanel(AILocalizedString(@"Unable to Register",nil),
-						AILocalizedString(@"Please input a username and password before clicking Register.",nil),
-						AILocalizedString(@"OK",nil), nil, nil);
-	}else{
-		if ([configuredForAccount requiresPassword]){
-			//Retrieve the user's password and then call connect
-			[[adium accountController] passwordForAccount:configuredForAccount 
-										  notifyingTarget:self
-												 selector:@selector(passwordReturnedForRegister:context:)
-												  context:nil];
-		}else{
-			//Connect immediately without retrieving a password
-			[self passwordReturnedForRegister:nil context:nil];
-		}
-	}
-}
-
-//Callback after the user enters their password for registering
-- (void)passwordReturnedForRegister:(NSString *)inPassword context:(id)inContext
-{
-	if (inPassword || ![configuredForAccount requiresPassword]){
-		[configuredForAccount performRegisterWithPassword:inPassword];
-	}
-}
-
-//User toggled the autoconnect preference
-- (IBAction)toggleAutoConnect:(id)sender
-{
-	BOOL		autoConnect = [sender state];
-	
-	[configuredForAccount setPreference:[NSNumber numberWithBool:autoConnect]
-								 forKey:@"AutoConnect"
-								  group:GROUP_ACCOUNT_STATUS];
-}
-
-//User changed account icon
-- (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)sender didChangeToImage:(NSImage *)image
-{
-    [configuredForAccount setPreference:[image PNGRepresentation] forKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
-}
-- (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)sender
-{
-	[configuredForAccount setPreference:nil forKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
-}
-
-//Disable controls for account that are connected
-- (void)enableDisableControls
-{
-	BOOL	accountEditable = (![[configuredForAccount statusObjectForKey:@"Online"] boolValue] &&
-							   ![[configuredForAccount statusObjectForKey:@"Connecting"] boolValue] &&
-							   ![[configuredForAccount statusObjectForKey:@"Disconnecting"] boolValue]);
-	
-//	[popupMenu_serviceList setEnabled:(configuredForAccount && accountEditable)];
-	[textField_accountName setEnabled:(configuredForAccount && accountEditable)];
-	[button_autoConnect setEnabled:(configuredForAccount != nil)];
-	[button_deleteAccount setEnabled:([accountArray count] > 1 && configuredForAccount && accountEditable)];
-}
-
-//Update status string and bar
-- (void)updateAccountConnectionProgress
-{
-	BOOL	accountBusy = ([[configuredForAccount statusObjectForKey:@"Connecting"] boolValue] ||
-						   [[configuredForAccount statusObjectForKey:@"Disconnecting"] boolValue]);
-
-	//Update the status string and progress bar
-	if(!accountBusy){
-		[textField_status setStringValue:@""];
-		[progress_status setDoubleValue:0.0];
-		if([progress_status respondsToSelector:@selector(setHidden:)]) [progress_status setHidden:YES];
-
-	}else{
-		NSString	*status = [configuredForAccount statusObjectForKey:@"ConnectionProgressString"];
-		float		progressPercent = ([[configuredForAccount statusObjectForKey:@"ConnectionProgressPercent"] floatValue]*100);
-		[textField_status setStringValue:(status ? status : @"")];
-		
-		if ((progressPercent > 0) && (progressPercent <= 100)){
-			if([progress_status respondsToSelector:@selector(setHidden:)]) [progress_status setHidden:NO];
-			[progress_status setDoubleValue:progressPercent];
-		}
-		
-	}
-	
-	//Force the controls to display
-	//[textField_status setNeedsDisplay:YES];
-	//[progress_status  setNeedsDisplay:YES];
-	
-	//Update the 'connect' button's title to match its action
-	if([[configuredForAccount statusObjectForKey:@"Online"] boolValue]){
-		[button_toggleConnect setTitle:@"Disconnect"];
-	}else if([[configuredForAccount statusObjectForKey:@"Connecting"] boolValue] ||
-			 [[configuredForAccount statusObjectForKey:@"Disconnecting"] boolValue]){
-		[button_toggleConnect setTitle:@"Cancel"];
-	}else{
-		[button_toggleConnect setTitle:@"Connect"];
-	}
 }
 
 //Account status changed.  Disable the service menu and user name field for connected accounts
@@ -424,119 +105,67 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 			if(accountRow >= 0 && accountRow < [accountArray count]){
 				[tableView_accountList setNeedsDisplayInRect:[tableView_accountList rectOfRow:accountRow]];
 			}
-
-			//If this account is the one we're displaying, update our control availability and progress display
-			if(inObject == configuredForAccount){		
-				[self enableDisableControls];
-				[self updateAccountConnectionProgress];
-			}			
+			
+			//Update our account overview
+			[self updateAccountOverview];
 		}
 	}
     
     return(nil);
 }
 
-//We need to make sure all changes to the account have been saved before a service switch occurs.
-//This code is called when the service menu is opened, and takes focus away from the first responder,
-//causing it to save any outstanding changes.
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
-{
-	//XXX
-//	[[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
-		[[button_newAccount window] makeFirstResponder:button_newAccount];
-	
-	return(YES);
-}
 
-
-//Account List ---------------------------------------------------------------------------------------------------------
-#pragma mark Account List
-//Configure the account list table
-- (void)configureAccountList
-{
-    AIImageTextCell			*cell;
-	
-    //Configure our tableView
-    cell = [[AIImageTextCell alloc] init];
-    [cell setFont:[NSFont systemFontOfSize:13]];
-    [[tableView_accountList tableColumnWithIdentifier:@"description"] setDataCell:cell];
-	[cell release];
-	
-    [tableView_accountList registerForDraggedTypes:[NSArray arrayWithObjects:ACCOUNT_DRAG_TYPE,nil]];
-    [scrollView_accountList setAutoHideScrollBar:YES];
-    
-	//Keep an eye on list changes so we can update as necessary
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(accountListChanged:) 
-									   name:Account_ListChanged 
-									 object:nil];
-	
-	[self accountListChanged:nil];
-}
-
-//Account list changed, refresh our table
-- (void)accountListChanged:(NSNotification *)notification
-{
-    //Update our reference to the accounts
-    [accountArray release]; accountArray = [[[adium accountController] accountArray] retain];
-
-    //Refresh the table (if the window is loaded)
-    if(tableView_accountList != nil){
-		[tableView_accountList reloadData];
-
-		//Update selected account
-		[self tableViewSelectionDidChange:nil];
-    }
-
-	[self enableDisableControls];
-}
-
+//Actions --------------------------------------------------------------------------------------------------------------
+#pragma mark Actions
 //Create a new account
 - (IBAction)selectServiceType:(id)sender
 {
-	AIService	*service = [sender representedObject];
-    int			index = [tableView_accountList selectedRow] + 1;
-	
-    AIAccount	*newAccount;
-    
-    //Add the new account
-    newAccount = [[adium accountController] newAccountAtIndex:index forService:service];
+    AIAccount	*account;
 
-    //Select the new account
-    [tableView_accountList selectRow:index byExtendingSelection:NO];
-    
-    //Select the 'Account' tab and put focus on the account fields
-    [tabView_auxiliary selectTabViewItemAtIndex:0];
-    [[textField_accountName window] makeFirstResponder:textField_accountName];
+	//Create the new account.  Our list will automatically update in response to the account being created
+	account = [[adium accountController] newAccountAtIndex:-1 forService:[sender representedObject]];
+
+	//And then, we can select and edit the new account
+    [tableView_accountList selectRow:[accountArray indexOfObject:account] byExtendingSelection:NO];
+    [self editAccount:nil];
+}
+
+//Edit the selected account
+- (IBAction)editAccount:(id)sender
+{
+    int	selectedRow = [tableView_accountList selectedRow];
+	if(selectedRow >= 0 && selectedRow < [accountArray count]){		
+		[AIEditAccountWindowController editAccount:[accountArray objectAtIndex:selectedRow] onWindow:[self window]];
+    }
 }
 
 //Delete the selected account
 - (IBAction)deleteAccount:(id)sender
 {
-    int 	index;
+    int 		index = [tableView_accountList selectedRow];
     AIAccount	*targetAccount;
     NSString    *accountFormattedUID;
     
-    NSParameterAssert(accountArray != nil); NSParameterAssert([accountArray count] > 1);
-    
+    NSParameterAssert(accountArray != nil);
+	NSParameterAssert(index >= 0 && index < [accountArray count]);
+
     //Confirm
-    index = [tableView_accountList selectedRow];
-    NSParameterAssert(index >= 0 && index < [accountArray count]);
     targetAccount = [accountArray objectAtIndex:index];
     accountFormattedUID = [targetAccount formattedUID];
-
+	
     NSBeginAlertSheet(@"Delete Account",@"Delete",@"Cancel",@"",[self window], self, 
 					  @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, 
 					  @"Delete the account %@?", [accountFormattedUID length] ? accountFormattedUID : NEW_ACCOUNT_DISPLAY_TEXT);
 }
 
-//Finishes the delete action when the sheet is closed
+//Finish account deletion (when the sheet is closed)
 - (void)deleteAccountSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     AIAccount 	*targetAccount = contextInfo;
     int			index;
     
-    NSParameterAssert(targetAccount != nil); NSParameterAssert([targetAccount isKindOfClass:[AIAccount class]]);
+    NSParameterAssert(targetAccount != nil);
+	NSParameterAssert([targetAccount isKindOfClass:[AIAccount class]]);
     
     if(returnCode == NSAlertDefaultReturn){
         //Delete it
@@ -548,10 +177,77 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
             index = [accountArray count]-1;
             [tableView_accountList selectRow:index byExtendingSelection:NO];
         }
-        
-        //Update our display
-        [self tableViewSelectionDidChange:nil];
     }
+}
+
+
+//Account List ---------------------------------------------------------------------------------------------------------
+#pragma mark Account List
+//Configure the account list table
+- (void)configureAccountList
+{
+    AIImageTextCell			*cell;
+	
+	//Setup our buttons
+	[button_editAccount setTitle:@"Edit"];
+	
+	//Configure our table view
+	[tableView_accountList setDoubleAction:@selector(editAccount:)];
+	[tableView_accountList setIntercellSpacing:NSMakeSize(4,4)];
+    [scrollView_accountList setAutoHideScrollBar:YES];
+
+	//Enable dragging of accounts
+	[tableView_accountList registerForDraggedTypes:[NSArray arrayWithObjects:ACCOUNT_DRAG_TYPE,nil]];
+	
+    //Custom vertically-centered text cell for account names
+    cell = [[AIVerticallyCenteredTextCell alloc] init];
+    [cell setFont:[NSFont systemFontOfSize:13]];
+    [[tableView_accountList tableColumnWithIdentifier:@"name"] setDataCell:cell];
+	[cell release];
+    
+	//Observer changes to the account list
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(accountListChanged:) 
+									   name:Account_ListChanged 
+									 object:nil];
+	[self accountListChanged:nil];
+}
+
+//Account list changed, refresh our table
+- (void)accountListChanged:(NSNotification *)notification
+{
+    //Update our list of accounts
+    [accountArray release];
+	accountArray = [[[adium accountController] accountArray] retain];
+	
+	//Refresh the account table
+	[tableView_accountList reloadData];
+	[self updateControlAvailability];
+	[self updateAccountOverview];
+}
+
+//Update our account overview
+- (void)updateAccountOverview
+{
+	NSEnumerator	*enumerator = [accountArray objectEnumerator];
+	AIAccount		*account;
+	int				online = 0;
+	
+	//Count online accounts
+	while(account = [enumerator nextObject]){
+		if([[account statusObjectForKey:@"Online"] boolValue]) online++;
+	}
+	
+	[textField_overview setStringValue:[NSString stringWithFormat:@"%i accounts, %i online", [accountArray count], online]];
+}
+
+//Update control availability based on list selection
+- (void)updateControlAvailability
+{
+	BOOL	selection = ([tableView_accountList selectedRow] != -1);
+
+	[button_editAccount setEnabled:selection];
+	[button_deleteAccount setEnabled:selection];
 }
 
 
@@ -560,43 +256,47 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 //Delete the selected row
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
-    [self deleteAccount:nil]; //Delete them
+    [self deleteAccount:nil];
 }
 
-//Return the number of accounts
+//Number of rows
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    return([accountArray count]);
+	return([accountArray count]);
 }
 
-//Return the account description or image
+//Table values
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	NSString *formattedUID = [[accountArray objectAtIndex:row] formattedUID];
-    return([formattedUID length] ? formattedUID : NEW_ACCOUNT_DISPLAY_TEXT);
-}
-
-- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
-{
-    AIAccount   *account = [accountArray objectAtIndex:row];
-	NSString	*status = nil;
+	NSString 	*identifier = [tableColumn identifier];
+	AIAccount	*account = [accountArray objectAtIndex:row];
 	
-	//Update the 'connect' button's title to match it's action
-	if([[account statusObjectForKey:@"Online"] boolValue]){
-		status = @"Online";
-	}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
-		status = @"Connecting";
-	}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
-		status = @"Disconnecting";
+	if([identifier isEqualToString:@"icon"]){
+		return([AIServiceIcons serviceIconForObject:account type:AIServiceIconLarge direction:AIIconNormal]);
+
+	}else if([identifier isEqualToString:@"name"]){
+		return([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT);
+		
+	}else if([identifier isEqualToString:@"statusicon"]){
+		return([AIStatusIcons statusIconForListObject:account type:AIStatusIconList direction:AIIconNormal]);
+		
+	}else if([identifier isEqualToString:@"enabled"]){
+		return([account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS]);
 	}
 	
-	[cell setImage:[AIServiceIcons serviceIconForObject:account type:AIServiceIconLarge direction:AIIconNormal]];
-	[cell setSubString:(status ?
-						[NSString stringWithFormat:@"%@ - %@", [[account service] shortDescription], status] :
-						[[account service] shortDescription])];
-	[cell setDrawsGradientHighlight:YES];
+	return(nil);
 }
 
+//Clicked checkbox
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+	if([[tableColumn identifier] isEqualToString:@"enabled"]){
+		[[accountArray objectAtIndex:row] setPreference:object forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+		[[accountArray objectAtIndex:row] setPreference:object forKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS];
+	}
+}
+
+//Drag start
 - (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
 {
     tempDragAccount = [accountArray objectAtIndex:[[rows objectAtIndex:0] intValue]];
@@ -607,6 +307,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     return(YES);
 }
 
+//Drag validate
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op
 {
     if(op == NSTableViewDropAbove && row != -1){
@@ -616,21 +317,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     }
 }
 
-- (void)tableViewSelectionWillChange:(NSNotification *)notification
-{
-	//Make sure we get any final changes to the account name (this would require typing and then switching within half a second, but better safe than sorry.)
-	[textField_accountName fireImmediately];
-}
-
-- (void)tableViewSelectionDidChange:(NSNotification *)notification
-{
-    int	selectedRow = [tableView_accountList selectedRow];
-	
-	if(selectedRow >= 0 && selectedRow < [accountArray count]){		
-		[self configureViewForAccount:[accountArray objectAtIndex:selectedRow]];
-    }
-}
-
+//Drag complete
 - (BOOL)tableView:(NSTableView*)tv acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)op
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:ACCOUNT_DRAG_TYPE]];
@@ -648,34 +335,10 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     }
 }
 
-- (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
+//Selection change
+- (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
-    NSResponder	*existingResponder = [[tabView window] firstResponder];
-    
-    //Take focus away from any controls to ensure that they register changes and save
-    [[tabView window] makeFirstResponder:tabView];
-	
-    //Put focus back
-    [[tabView window] makeFirstResponder:existingResponder];
+	[self updateControlAvailability];
 }
 
-#if 0
-/* XXX Tiger Thoughts */
-/*
-NSWindow
-
-Methods have been added to allow a window to automatically recalculate the key view loop after views have been added.
-- (void)setAutorecalculatesKeyViewLoop:(BOOL)flag;
-- (BOOL)autorecalculatesKeyViewLoop;
-- (void)recalculateKeyViewLoop;
-	If the autorecalculatesKeyViewLoop is YES, then whenever a view is added to the window, the key view loop
-	is dirtied and recalculated automatically when -[NSWindow selectKeyViewFollowingView] or
--[NSWindow selectKeyViewPrecedingView] are called. If autorecalculatesKeyViewLoop is NO, then adding views
-	will not dirty the key view loop and the loop will not be recalculated. You can always call explicitly
-	recalculateKeyViewLoop to recalculate the loop and clear the dirty key view loop flag. The method is also 
-	called if the key view loop needs to be calculated when the window is first ordered in. The loop computed
-	is the same as the default one if initialFirstResponder is not set. It is based on the geometric order of 
-	the views in the window.
-*/
-#endif
 @end
