@@ -25,12 +25,15 @@
     IBOutlet	NSButton		*button_setFont;
     IBOutlet	NSTextField		*textField_fontName;
     IBOutlet	NSButton		*checkBox_alternatingGrid;
+    IBOutlet	NSColorWell		*colorWell_contact;
     IBOutlet	NSColorWell		*colorWell_group;
-    IBOutlet	NSColorWell		*colorWell_group_inverted;
     IBOutlet	NSColorWell		*colorWell_background;
     IBOutlet	NSColorWell		*colorWell_grid;
     IBOutlet	NSSlider		*slider_opacity;
     IBOutlet	NSTextField		*textField_opacityPercent;
+
+    IBOutlet	NSTextField	*test_1;
+    IBOutlet	NSTextField	*test_2;
 
     NSDictionary		*preferenceDict;
 }

@@ -70,7 +70,7 @@
     [contactListView setDataSource:self];
     [contactListView setDelegate:self];
     [contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
-
+    
     //Fetch and update the contact list
     [self contactListChanged:nil];
     
@@ -144,8 +144,8 @@
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
         NSFont		*font = [[prefDict objectForKey:KEY_SCL_FONT] representedFont];
         float		alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
-        NSColor		*color = [[prefDict objectForKey:KEY_SCL_GROUP_COLOR] representedColor];
-        NSColor		*invertedColor = [[prefDict objectForKey:KEY_SCL_GROUP_COLOR_INVERTED] representedColor];
+        NSColor		*color = [[prefDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor];
+        NSColor		*groupColor = [[prefDict objectForKey:KEY_SCL_GROUP_COLOR] representedColor];
         NSColor		*backgroundColor = [[prefDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColorWithAlpha:alpha];
         NSColor		*gridColor = [[prefDict objectForKey:KEY_SCL_GRID_COLOR] representedColorWithAlpha:alpha];
         BOOL		alternatingGrid = [[prefDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue];
@@ -155,7 +155,8 @@
         
         //Display
         [contactListView setFont:font];
-        [contactListView setColor:color andInvertedColor:invertedColor];
+        [contactListView setColor:color];
+        [contactListView setGroupColor:groupColor];
         [contactListView setRowHeight:[font defaultLineHeightForFont]];
         [contactListView setBackgroundColor:backgroundColor];
         

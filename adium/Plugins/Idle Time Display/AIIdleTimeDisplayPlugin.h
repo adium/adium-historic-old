@@ -13,24 +13,20 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#import <Adium/Adium.h>
 #import <Cocoa/Cocoa.h>
 
-@interface NSString (AIColorAdditions)
+#define IDLE_TIME_DISPLAY_DEFAULT_PREFS	@"IdleTimeDisplayDefaults"
+#define PREF_GROUP_IDLE_TIME_DISPLAY	@"Idle Display"
 
-- (NSColor *)hexColor;
-- (NSColor *)representedColor;
-- (NSColor *)representedColorWithAlpha:(float)alpha;
+#define KEY_DISPLAY_IDLE_TIME		@"Display Idle Time"
 
-@end
+@class AIIdleTimeDisplayPreferences;
 
-@interface NSColor (AIColorAdditions)
+@interface AIIdleTimeDisplayPlugin : AIPlugin <AIListObjectObserver> {
+    AIIdleTimeDisplayPreferences *preferences;
 
-- (BOOL)colorIsDark;
-- (NSColor *)darkenBy:(float)amount;
-- (NSString *)hexString;
-- (NSString *)stringRepresentation;
-- (void)getHue:(float *)hue luminance:(float *)luminance saturation:(float *)saturation;
-+ (NSColor *)colorWithCalibratedHue:(float)hue luminance:(float)luminance saturation:(float)saturation alpha:(float)alpha;
-- (NSColor *)colorWithInvertedLuminance;
+    BOOL		displayIdleTime;
+}
 
 @end

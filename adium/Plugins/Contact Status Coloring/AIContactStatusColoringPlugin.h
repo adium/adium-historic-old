@@ -20,26 +20,19 @@
 #define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
 
 #define KEY_AWAY_COLOR			@"Away Color"
-#define KEY_IDLE_AWAY_COLOR		@"Idle & Away Color"
 #define KEY_IDLE_COLOR			@"Idle Color"
-#define KEY_ONLINE_COLOR		@"Online Color"
-#define KEY_OPEN_TAB_COLOR		@"Open Tab Color"
 #define KEY_TYPING_COLOR		@"Typing Color"
 #define KEY_SIGNED_OFF_COLOR		@"Signed Off Color"
 #define KEY_SIGNED_ON_COLOR		@"Signed On Color"
 #define KEY_UNVIEWED_COLOR		@"Unviewed Content Color"
-#define KEY_WARNING_COLOR		@"Warning Color"
 
-#define KEY_AWAY_INVERTED_COLOR			@"Away Inverted Color"
-#define KEY_IDLE_AWAY_INVERTED_COLOR		@"Idle & Away Inverted Color"
-#define KEY_IDLE_INVERTED_COLOR			@"Idle Inverted Color"
-#define KEY_ONLINE_INVERTED_COLOR		@"Online Inverted Color"
-#define KEY_OPEN_TAB_INVERTED_COLOR		@"Open Tab Inverted Color"
-#define KEY_SIGNED_OFF_INVERTED_COLOR		@"Signed Off Inverted Color"
-#define KEY_SIGNED_ON_INVERTED_COLOR		@"Signed On Inverted Color"
-#define KEY_TYPING_INVERTED_COLOR		@"Typing Inverted Color"
-#define KEY_UNVIEWED_INVERTED_COLOR		@"Unviewed Content Inverted Color"
-#define KEY_WARNING_INVERTED_COLOR		@"Warning Inverted Color"
+#define KEY_BACK_AWAY_COLOR		@"Away Background Color"
+#define KEY_BACK_IDLE_COLOR		@"Idle Background Color"
+#define KEY_BACK_TYPING_COLOR		@"Typing Background Color"
+#define KEY_BACK_SIGNED_OFF_COLOR	@"Signed Off Background Color"
+#define KEY_BACK_SIGNED_ON_COLOR	@"Signed On Background Color"
+#define KEY_BACK_UNVIEWED_COLOR		@"Unviewed Content Background Color"
+
 
 @class AIContactStatusColoringPreferences;
 
@@ -50,25 +43,25 @@
 
     NSColor		*awayColor;
     NSColor		*idleColor;
-    NSColor		*idleAwayColor;
-    NSColor		*onlineColor;
-    NSColor		*openTabColor;
     NSColor		*signedOffColor;
     NSColor		*signedOnColor;
     NSColor		*typingColor;
     NSColor		*unviewedContentColor;
-    NSColor		*warningColor;
 
     NSColor		*awayInvertedColor;
     NSColor		*idleInvertedColor;
-    NSColor		*idleAwayInvertedColor;
-    NSColor		*onlineInvertedColor;
-    NSColor		*openTabInvertedColor;
     NSColor		*signedOffInvertedColor;
     NSColor		*signedOnInvertedColor;
     NSColor		*typingInvertedColor;
     NSColor		*unviewedContentInvertedColor;
-    NSColor		*warningInvertedColor;
+
+    NSColor		*backAwayColor;
+    NSColor		*backIdleColor;
+    NSColor		*backSignedOffColor;
+    NSColor		*backSignedOnColor;
+    NSColor		*backTypingColor;
+    NSColor		*backUnviewedContentColor;
+    
 }
 
 @end

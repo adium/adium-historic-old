@@ -2,21 +2,19 @@
     IBClasses = (
         {
             ACTIONS = {changePreference = id; }; 
-            CLASS = AIContactStatusColoringPreferences; 
+            CLASS = AIStatusCirclesPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkBox_displayIdle" = NSButton; 
                 "colorWell_away" = NSColorWell; 
-                "colorWell_backAway" = NSColorWell; 
-                "colorWell_backIdle" = NSColorWell; 
-                "colorWell_backSignedOff" = NSColorWell; 
-                "colorWell_backSignedOn" = NSColorWell; 
-                "colorWell_backTyping" = NSColorWell; 
-                "colorWell_backUnviewedContent" = NSColorWell; 
                 "colorWell_idle" = NSColorWell; 
+                "colorWell_idleAway" = NSColorWell; 
+                "colorWell_online" = NSColorWell; 
+                "colorWell_openTab" = NSColorWell; 
                 "colorWell_signedOff" = NSColorWell; 
                 "colorWell_signedOn" = NSColorWell; 
-                "colorWell_typing" = NSColorWell; 
                 "colorWell_unviewedContent" = NSColorWell; 
+                "colorWell_warning" = NSColorWell; 
                 "view_prefView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 

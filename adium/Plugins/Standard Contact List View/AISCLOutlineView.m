@@ -29,10 +29,8 @@
 
 @interface AISCLOutlineView (PRIVATE)
 - (void)configureView;
-- (void)frameChanged:(NSNotification *)notification;
 - (void)configureTransparency;
 - (void)configureTransparencyForWindow:(NSWindow *)inWindow;
-- (void)frameChanged:(NSNotification *)notification;
 @end
 
 @implementation AISCLOutlineView
@@ -45,14 +43,18 @@
 
     font = nil;
     color = nil;
-    
+    invertedColor = nil;
+    groupColor = nil;
+    invertedGroupColor = nil;
+        
     //Set up the table view
     tableColumn = [[[NSTableColumn alloc] init] autorelease];
     [tableColumn setDataCell:[[[AISCLCell alloc] init] autorelease]];
     [tableColumn setEditable:NO];
+    [tableColumn setResizable:NO];
     [self setDrawsGrid:NO];
     [self addTableColumn:tableColumn];
-    [self setAutoresizesAllColumnsToFit:YES];
+    [self setAutoresizesAllColumnsToFit:NO]; //System needs to leave this alone, I handle it manually
     [self setOutlineTableColumn:tableColumn];
     [self setHeaderView:nil];
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
@@ -64,21 +66,31 @@
 - (void)dealloc
 {
     //Stop observing frame changes!
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:[self enclosingScrollView]];
-
+    if([self window]){
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeMainNotification object:[self window]];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignMainNotification object:[self window]];
+    }
+    
     //Cleanup
     [font release];
     [color release];
+    [invertedColor release];
+    [groupColor release];
+    [invertedGroupColor release];
     [super dealloc];
 }
 
 //Called before we're inserted in a window
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview
 {
-    //Observe frame changes
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:[self enclosingScrollView]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameChanged:) name:NSViewFrameDidChangeNotification object:[newSuperview superview]];
-    
+    //Observe our window becoming and resigning main
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeMainNotification object:[self window]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignMainNotification object:[self window]];
+    if([newSuperview window]){
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecameMain:) name:NSWindowDidBecomeMainNotification object:[newSuperview window]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowResignedMain:) name:NSWindowDidResignMainNotification object:[newSuperview window]];
+    }
+
     //Turn on transparency for our destination window (if necessary)
     [self configureTransparencyForWindow:[newSuperview window]];
 }
@@ -86,7 +98,6 @@
 - (void)viewDidMoveToSuperview
 {
     [super viewDidMoveToSuperview];
-    [self frameChanged:nil]; //Force a frame changed event for our new superview
 
     //Inform our delegate that we moved to another superview
     if([[self delegate] respondsToSelector:@selector(view:didMoveToSuperview:)]){
@@ -94,17 +105,33 @@
     }
 }
 
-//Called when our frame changes
-- (void)frameChanged:(NSNotification *)notification
-{
-    [self sizeLastColumnToFit]; //Keep the table column at full width
-}
-
 //Override set frame size to force our rect to always be the correct height.  Without this the scrollview will stretch too tall vertically when resized beyond the bottom of our contact list.
 - (void)setFrame:(NSRect)frameRect
 {
     frameRect.size.height = [self numberOfRows] * ([self rowHeight] + [self intercellSpacing].height);
     [super setFrame:frameRect];
+
+    NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
+    [column setResizable:YES];
+    [self sizeLastColumnToFit]; //Keep the table column at full width
+    [column setResizable:NO];
+}
+
+
+// Selection Hiding --------------------------------------------------------------------
+//Hide the selection
+- (void)windowBecameMain:(NSNotification *)notification
+{
+    if(lastSelectedRow >= 0 && lastSelectedRow < [self numberOfRows]){
+        [self selectRow:lastSelectedRow byExtendingSelection:NO];
+    }
+}
+
+//Restore the selection
+- (void)windowResignedMain:(NSNotification *)notification
+{
+    lastSelectedRow = [self selectedRow];
+    [self deselectAll:nil];
 }
 
 
@@ -153,10 +180,8 @@
             NSSize		cellSize;
 
             [[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:[self itemAtRow:i]];
-            //    NSLog(@"%i",(int)[cell cellSize].width);
 
             cellSize = [cell cellSizeForBounds:NSMakeRect(0,0,0,[self rowHeight])];
-
             cellSize.width += [self intercellSpacing].width;
             cellSize.width += [self levelForRow:i] * [self indentationPerLevel];
 
@@ -242,25 +267,14 @@
 }
 
 //Custom color settings -----------------------------------------------------------------
+//Contact color
 - (void)setColor:(NSColor *)inColor
-{
-    [self setColor:inColor andInvertedColor:[self invertedColor]];
-}
-- (void)setInvertedColor:(NSColor *)inInvertedColor
-{
-    [self setColor:[self color] andInvertedColor:inInvertedColor];
-}
-
-- (void)setColor:(NSColor *)inColor andInvertedColor:(NSColor *)inInvertedColor
-{
+{    
     if(color != inColor){
         [color release];
         color = [inColor retain];
-    }
-    
-    if(invertedColor != inInvertedColor){
         [invertedColor release];
-        invertedColor = [inInvertedColor retain];
+        invertedColor = [[inColor colorWithInvertedLuminance] retain];
     }
 }
 - (NSColor *)color{
@@ -269,6 +283,24 @@
 - (NSColor *)invertedColor{
     return(invertedColor);
 }
+
+//Group color
+- (void)setGroupColor:(NSColor *)inColor
+{
+    if(groupColor != inColor){
+        [groupColor release];
+        groupColor = [inColor retain];
+        [invertedGroupColor release];
+        invertedGroupColor = [[inColor colorWithInvertedLuminance] retain];
+    }
+}
+- (NSColor *)groupColor{
+    return(groupColor);
+}
+- (NSColor *)invertedGroupColor{
+    return(invertedGroupColor);
+}
+
 
 //No available contacts -----------------------------------------------------------------
 //Draw a custom 'no available contacts' message when the list is empty

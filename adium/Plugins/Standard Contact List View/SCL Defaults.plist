@@ -10,10 +10,10 @@
 	<string>255,255,255</string>
 	<key>Grid Color</key>
 	<string>237,237,240</string>
+	<key>Contact Color</key>
+	<string>0,0,0</string>
 	<key>Group Color</key>
 	<string>0,0,0</string>
-	<key>Group Inverted Color</key>
-	<string>255,255,255</string>
 	<key>Opacity</key>
 	<real>1.0</real>
 </dict>

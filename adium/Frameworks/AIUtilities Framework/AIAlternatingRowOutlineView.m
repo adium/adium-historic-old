@@ -220,7 +220,7 @@
     int		numberOfColumns, numberOfRows;
 
     //Draw the rest of the outline view first
-    [super drawRect:rect];
+ [super drawRect:rect];
 
     //Setup
     numberOfRows = [self numberOfRows];
