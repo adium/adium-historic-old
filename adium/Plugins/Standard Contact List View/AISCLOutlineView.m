@@ -69,7 +69,8 @@
     [tableColumn setResizable:NO];
     [self setDrawsGrid:NO];
     [self addTableColumn:tableColumn];
-    [self setAutoresizesAllColumnsToFit:NO]; //System needs to leave this alone, I handle it manually
+    [self setAutoresizesAllColumnsToFit:NO]; //System needs to leave this alone; we handle it manually
+	[self setAllowsMultipleSelection:YES];
     [self setOutlineTableColumn:tableColumn];
     [self setHeaderView:nil];
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
@@ -538,8 +539,8 @@
 														  dequeue:NO];
 
 		//Quick hack to hide any active tooltips
-		if([[self delegate] respondsToSelector:@selector(_endTrackingMouse)])
-			[[self delegate] performSelector:@selector(_endTrackingMouse)];
+		if([[self delegate] respondsToSelector:@selector(_hideTooltip)])
+			[[self delegate] performSelector:@selector(_hideTooltip)];
 		
 		//Pass along the event (either to ourself or our window, depending on what it is)
 		if([nextEvent type] == NSLeftMouseUp){
@@ -573,33 +574,55 @@
 - (NSImage *)dragImageForRows:(NSArray *)dragRows event:(NSEvent *)dragEvent dragImageOffset:(NSPointPointer)dragImageOffset
 {
 	NSRect			rowRect, cellRect;
-	int				row = [[dragRows objectAtIndex:0] intValue];
+	int				count = [dragRows count];
+	
+	int				firstRow = [[dragRows objectAtIndex:0] intValue];
 	NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
-	NSCell			*cell = [column dataCellForRow:row];
+	NSCell			*cell;
 	NSImage			*image;
 	
 	//Since our cells draw outside their bounds, this drag image code will create a drag image as big as the table row
-	//and then draw the cell into it at the regular size.  This way the cell can overflow it's bounds as normal and not
+	//and then draw the cell into it at the regular size.  This way the cell can overflow its bounds as normal and not
 	//spill outside the drag image.
-	rowRect = [self rectOfRow:row];
-	cellRect = [self frameOfCellAtColumn:0 row:row];
-	image = [[NSImage alloc] initWithSize:rowRect.size];
+	rowRect = [self rectOfRow:firstRow];
+	image = [[NSImage alloc] initWithSize:NSMakeSize(rowRect.size.width,
+													 rowRect.size.height*count + [self intercellSpacing].height*(count-1))];
 
 	
+NSEnumerator	*enumerator = [dragRows objectEnumerator];
+NSNumber		*rowNumber;
+int				row;
+float			yOffset = 0;
+
 	//Draw (Since the OLV is normally flipped, we have to be flipped when drawing)
 	[image setFlipped:YES];
 	[image lockFocus];
-	
-	//Render the cell
-	[[self dataSource] outlineView:self willDisplayCell:cell forTableColumn:column item:[self itemAtRow:row]];
-	[cell drawWithFrame:NSMakeRect(cellRect.origin.x - rowRect.origin.x, cellRect.origin.y - rowRect.origin.y,cellRect.size.width,cellRect.size.height) inView:self];
 
-	//Offset the drag image (Remember: The system centers it by default, so this is an offset from center)
-	NSPoint clickLocation = [self convertPoint:[dragEvent locationInWindow] fromView:nil];
-	*dragImageOffset = NSMakePoint((rowRect.size.width / 2.0) - clickLocation.x, 0);
+	while (rowNumber = [enumerator nextObject]){
+		row = [rowNumber intValue];
+		cell = [column dataCellForRow:row];
+		cellRect = [self frameOfCellAtColumn:0 row:row];
+		
+		//Render the cell
+		[[self dataSource] outlineView:self willDisplayCell:cell forTableColumn:column item:[self itemAtRow:row]];
+//		NSLog(@"%i is %f %f %f = %f",row,cellRect.origin.y,rowRect.origin.y,yOffset,cellRect.origin.y - rowRect.origin.y + yOffset);
+		[cell drawWithFrame:NSMakeRect(cellRect.origin.x - rowRect.origin.x, /*cellRect.origin.y - rowRect.origin.y +*/ yOffset,cellRect.size.width,cellRect.size.height)
+					 inView:self];
+		yOffset += (rowRect.size.height + [self intercellSpacing].height);
+	}
 	
 	[image unlockFocus];
 	[image setFlipped:NO];
+	
+	//Offset the drag image (Remember: The system centers it by default, so this is an offset from center)
+	NSPoint clickLocation = [self convertPoint:[dragEvent locationInWindow] fromView:nil];
+	
+#warning Evan to Adam: Here is the dragImageOffset
+	//Not right
+//	float dragImageOffsetY = ((yOffset - (rowRect.size.height + [self intercellSpacing].height))/2.0) + (([self frameOfCellAtColumn:0 row:firstRow].origin.y / 2.0) - clickLocation.y);
+	
+	//Not right but close
+	*dragImageOffset = NSMakePoint((rowRect.size.width / 2.0) - clickLocation.x, -(([self frameOfCellAtColumn:0 row:firstRow].origin.y) - clickLocation.y));
 	
 	return([image autorelease]);
 }

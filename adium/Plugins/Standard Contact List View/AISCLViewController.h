@@ -28,10 +28,13 @@
     BOOL                horizontalResizingEnabled;
     
     NSTimer 			*tooltipTimer;
+	NSTimer				*tooltipMouseLocationTimer;
     int 				tooltipCount;
+	NSPoint				lastMouseLocation;
 
 	BOOL				inDrag;
-	AIListObject		*dragItem;
+//	AIListObject		*dragItem;
+	NSArray				*dragItems;
     
 }
 
