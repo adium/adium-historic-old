@@ -22,11 +22,16 @@
 @end
 
 @interface AIAccountSelectionView : NSView <AIListObjectObserver> {
-    AIAdium				*adium;
-    
+    AIAdium						*adium;
+	
     IBOutlet	NSView			*view_contents;
-    IBOutlet	NSPopUpButton		*popUp_accounts;
 
+	IBOutlet	NSBox			*box_accounts;
+	IBOutlet	NSPopUpButton   *popUp_accounts;
+	
+	IBOutlet	NSBox			*box_contacts;
+	IBOutlet	NSPopUpButton   *popUp_contacts;
+	
     id <AIAccountSelectionViewDelegate>	delegate;
 }
 

@@ -235,6 +235,19 @@
     return([chat account]);
 }
 
+- (void)setListObject:(AIListContact *)listContact
+{
+	if(listContact != [chat listObject]){
+		[[adium contentController] switchChat:chat toListContact:listContact];
+	}
+}
+
+//For our account selector view
+- (AIListContact *)listObject
+{
+    return([chat listObject]);
+}
+
 //Toggle the visibility of our account selection menu
 - (void)setAccountSelectionMenuVisible:(BOOL)visible
 {
@@ -264,12 +277,6 @@
     [self sizeAndArrangeSubviews];
 	[view_contents setNeedsDisplay:YES];
 
-}
-
-//For our account selector view
-- (AIListObject *)listObject
-{
-    return([chat listObject]);
 }
 
 //Selected item in the group chat view
