@@ -19,8 +19,15 @@
 #import "AINewMessagePromptController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 
+/*
+ * @class AINewMessagePanelPlugin
+ * @brief Component to provide the New Message window, which allows messaging an arbitrary contact
+ */
 @implementation AINewMessagePanelPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	newMessageMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"New Chat...",nil)
@@ -31,7 +38,9 @@
 	
 }	
 
-//Initiate a chat
+/*
+ * @brief Show the prompt
+ */
 - (IBAction)newMessage:(id)sender
 {
 	[AINewMessagePromptController showPrompt];
