@@ -9,8 +9,9 @@ Version 0.54
 - Fixed Webkit Message View for Japanese and Chinese users (the fix in 0.53 was incomplete)
 - Fixed issues related to custom links
 - Fixed a cosmetic issue as the contact list loaded
-- Fixed a bug which caused colors in messages to be sent improperly
-- Fixed AIM file sending
+- Fixed a bug which caused colors in messages to be sent improperly (broken in 0.53)
+- Fixed AIM file sending (broken in 0.53)
+- Fixed Gadu-Gadu, Jabber, and Trepia account preferences to include password, server, and proxy fields (addition in 0.53 was incomplete)
 
 Version 0.53 (4/30/2004)				
 - Added Webkit Message View (6 distinct styles, or create your own!  Customizable fonts and backgrounds!) [10.3 only]
