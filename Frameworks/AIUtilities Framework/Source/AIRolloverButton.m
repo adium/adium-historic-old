@@ -26,6 +26,8 @@
 
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	if(trackingTag != -1){
 		[self removeTrackingRect:trackingTag];
 		trackingTag = -1;
