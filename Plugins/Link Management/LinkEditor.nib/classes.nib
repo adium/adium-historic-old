@@ -1,5 +1,6 @@
 {
     IBClasses = (
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             CLASS = AIWindowController; 
@@ -16,6 +17,7 @@
                 "button_Cancel" = NSButton; 
                 "button_OK" = NSButton; 
                 "imageView_invalidURLAlert" = NSImageView; 
+                "scrollView_URL" = AIAutoScrollView; 
                 target = id; 
                 "textField_linkText" = NSTextField; 
                 "textView_URL" = SHAutoValidatingTextView; 

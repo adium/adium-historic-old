@@ -10,7 +10,7 @@
 #define KEY_LINK_URL					@"URL"
 #define KEY_LINK_TITLE					@"Title"
 
-@class SHAutoValidatingTextView;
+@class SHAutoValidatingTextView, AIAutoScrollView;
 
 @interface SHLinkEditorWindowController : AIWindowController {
     
@@ -18,6 +18,7 @@
     IBOutlet    NSButton                    *button_Cancel;
     
     IBOutlet    NSTextField                 *textField_linkText;
+	IBOutlet	AIAutoScrollView			*scrollView_URL;
     IBOutlet    SHAutoValidatingTextView    *textView_URL;
     IBOutlet    NSImageView                 *imageView_invalidURLAlert;
     

@@ -105,6 +105,8 @@
     if(![NSApp isOnPantherOrBetter]){
         [imageView_invalidURLAlert setImage:[NSImage imageNamed:@"space" forClass:[self class]]];
     }
+	
+	[scrollView_URL setAlwaysDrawFocusRingIfFocused:YES];
 }
 
 //Window is closing
@@ -224,16 +226,48 @@
 
 - (BOOL)textView:(NSTextView *)aTextView doCommandBySelector:(SEL)aSelector
 {
-    NSEvent *event = [NSApp currentEvent];
-    unsigned short keyCode = [event keyCode];
-    if(aSelector == @selector(insertNewline:))
-    {
-        if(keyCode == 36 || keyCode == 76 || keyCode == 52){
+//    NSEvent *event = [NSApp currentEvent];
+  //  unsigned short keyCode = [event keyCode];
+    if(aSelector == @selector(insertNewline:)){
+    //    if(keyCode == NSNewlineCharacter || keyCode == NSEnterCharacter || keyCode == NSCarriageReturnCharacter){
             [self acceptURL:nil];
-            return YES;
-        }
-    }
-    return NO;
+            return(YES);
+      //  }
+    }else if(aSelector == @selector(insertTab:)){
+		[[textView_URL window] selectNextKeyView:self];
+		return(YES);
+		
+	}else if(aSelector == @selector(insertBacktab:)){
+		[[textView_URL window] selectPreviousKeyView:self];
+		return(YES);
+	}
+	
+    return(NO);
 }
 
+/*
+- (BOOL)textView:(NSTextView *)aTextView shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString
+{
+	NSLog(@"%i : %@ shouldChange in range %@ to string \"%@\"",
+		  [inString length],
+		  aTextView,
+		  NSStringFromRange(affectedCharRange),
+		  replacementString);
+	BOOL shouldChange = YES;
+	
+	if([inString length] == 1){
+		unichar		 inChar = [inString characterAtIndex:0];
+		if(inChar == NSTabCharacter){
+			
+			shouldChange = NO;
+			
+		}else if(inChar == NSBackTabCharacter){
+			
+			shouldChange = NO;
+		}
+	}
+
+	return(YES);
+}
+*/
 @end
