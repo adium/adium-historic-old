@@ -44,7 +44,7 @@ extern void* objc_getClass(const char *name);
     FZDaemon = [[connection rootProxy] retain];
 
     //Get the AIM Service
-    services = [FZDaemon allServices];
+    services   = [FZDaemon allServices];
     AIMService = [[[FZDaemon allServices] objectAtIndex:0] retain];
 	
 	NSLog (@"Number of services: %i", [services count]);
