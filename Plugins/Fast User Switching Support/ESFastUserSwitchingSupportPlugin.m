@@ -35,10 +35,13 @@
 
 -(void)uninstallPlugin
 {
-	//Clear the fast switch away if we had it up before
-	[self switchHandler:nil];
-
-	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+	if([NSApp isOnPantherOrBetter]) //only uninstall on Panther
+    {
+		//Clear the fast switch away if we had it up before
+		[self switchHandler:nil];
+		
+		[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+	}
 }
 
 -(void)switchHandler:(NSNotification*) notification
