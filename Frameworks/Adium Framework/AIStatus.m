@@ -154,7 +154,7 @@
 	AIStatusType	statusType;
 	
 	if([self shouldForceInitialIdleTime]){
-		statusName = @"idle";
+		statusName = @"Idle";
 		statusType = AIAwayStatusType;
 	}else{
 		statusName = [self statusName];
