@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+// $Id: AIAccountController.m,v 1.36 2003/12/20 03:45:48 jmelloy Exp $
+
 #import "AIAccountController.h"
 #import "AILoginController.h"
 #import "AIPreferenceController.h"
