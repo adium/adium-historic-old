@@ -15,74 +15,80 @@
 @interface GBiTunerPlugin (PRIVATE)
 - (void)_appendScripts:(NSArray *)scripts toMenu:(NSMenu *)menu atLevel:(int)level;
 - (void)_sortScriptsByTitle:(NSMutableArray *)sortArray;
-- (NSMutableArray *)_loadScriptsFromDirectory:(NSString *)dirPath intoUsageDict:(NSMutableDictionary *)useDict;
+- (NSMutableArray *)_loadScriptsFromDirectory:(NSString *)dirPath intoUsageArray:(NSMutableArray *)useArray;
 - (NSMenu *)loadScriptsAndBuildScriptMenu;
 - (NSString*)hashLookup:(NSString *)pattern;
 - (id)_filterString:(NSString *)inString originalObject:(id)originalObject;
+- (NSString *)_executeScript:(NSDictionary *)infoDict;
 @end
 
 int _scriptTitleSort(id scriptA, id scriptB, void *context);
 
 @implementation GBiTunerPlugin
 
-//install plugin
+//Install plugin
 - (void)installPlugin
 {
+	//User scripts
+	[AIFileUtilities createDirectory:PATH_EXTERNAL_SCRIPTS];
+	
 	//Perform substitutions on outgoing content
 	[[adium contentController] registerOutgoingContentFilter:self];
 
 	//Perform simple string substitutions
 	[[adium contentController] registerStringFilter:self];
 	
-	//We have an array of scripts, which is used to build the menu.
-	//Each entry in the array is a dict with the script's title and keyword
-	scriptArray = [[NSMutableArray alloc] init];
-
-	//We also have a dict for quick lookup and actual substitution with the scripts
-	//The dict contains script paths with the keyword as their key
-	scriptDict = [[NSMutableDictionary alloc] init];
+	//We have an array of scripts for building the menu, and a dictionary of scripts used for the actual substition
+	scriptArray = nil;
+	flatScriptArray = nil;
 	
-	//Load all our scripts, and stick them in the script menu
+	//Prepare our script menu
+	scriptMenu = nil;
 	scriptMenuItem = [[NSMenuItem alloc] initWithTitle:@"Script" target:self action:@selector(dummyTarget:) keyEquivalent:@""];
 	[[adium menuController] addMenuItem:scriptMenuItem toLocation:LOC_Edit_Additions];
-	//Wait until the first time the menu is accessed to generate the submenu of scripts, in validateMenuItem:
-	hasGeneratedScriptMenu = NO;
-	[AIFileUtilities createDirectory:PATH_EXTERNAL_SCRIPTS];
 }
 
-//Load the scripts and build (returning) a script menu of them
-- (NSMenu *)loadScriptsAndBuildScriptMenu
+//Uninstall
+- (void)uninstallPlugin
 {
-	NSMenu		*scriptMenu   = [[NSMenu alloc] initWithTitle:@"Scripts"];
-	NSString	*internalPath = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_SCRIPTS];
-	
-	//load built-in scripts (scripts that are in the bundle).
-	[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:[internalPath stringByExpandingTildeInPath]
-													   intoUsageDict:scriptDict]];
-
-	//load scripts that have been added into the Application Support folders.
-	NSArray *scriptsFolders = [adium applicationSupportPathsForName:@"Scripts"];
-	NSEnumerator *enumerator = [scriptsFolders objectEnumerator];
-	NSString *path;
-
-	while((path = [enumerator nextObject]) != nil) {
-		[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:path
-														   intoUsageDict:scriptDict]];
-	}
-
-	[self _sortScriptsByTitle:scriptArray];
-	[self _appendScripts:scriptArray toMenu:scriptMenu atLevel:0];
-
-	return([scriptMenu autorelease]);
+	[[adium contentController] unregisterOutgoingContentFilter:self];
+	[[adium contentController] unregisterStringFilter:self];
+	[scriptArray release];
+    [flatScriptArray release];
+	[scriptMenuItem release];
 }
 
-//Script Loading
-- (NSMutableArray *)_loadScriptsFromDirectory:(NSString *)dirPath intoUsageDict:(NSMutableDictionary *)useDict
+
+//Script Loading -------------------------------------------------------------------------------------------------------
+#pragma mark Script Loading
+//Load our scripts
+- (void)loadScripts
+{
+	NSString		*internalPath = [[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_SCRIPTS] stringByExpandingTildeInPath];
+	NSEnumerator	*enumerator;
+	NSString 		*path;
+	
+	//
+	[scriptArray release]; scriptArray = [[NSMutableArray alloc] init];
+	[flatScriptArray release]; flatScriptArray = [[NSMutableArray alloc] init];
+	
+	//Load built-in scripts (within the bundle).
+	[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:internalPath intoUsageArray:flatScriptArray]];
+	
+	//Load external scripts (Application Support folders)
+	enumerator = [[adium applicationSupportPathsForName:@"Scripts"] objectEnumerator];
+	while(path = [enumerator nextObject]){
+		[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:path intoUsageArray:flatScriptArray]];
+	}
+}
+
+//Load a subset of scripts
+- (NSMutableArray *)_loadScriptsFromDirectory:(NSString *)dirPath intoUsageArray:(NSMutableArray *)useArray
 {
  	NSMutableArray		*scripts = [NSMutableArray array];
 	NSEnumerator		*enumerator;
     NSString			*file;
-
+	
 	enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:dirPath] objectEnumerator];
     while((file = [enumerator nextObject])){
 		if([[file lastPathComponent] characterAtIndex:0] != '.'){
@@ -96,7 +102,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 				[scripts addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 					@"Group", @"Type",
 					[file lastPathComponent], @"Title",
-					[self _loadScriptsFromDirectory:fullPath intoUsageDict:useDict], @"Content",
+					[self _loadScriptsFromDirectory:fullPath intoUsageArray:useArray], @"Content",
 					nil]];
 				
 			}else{
@@ -105,23 +111,42 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 				NSAppleScript   *script = [[[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil] autorelease];
 				NSString		*keyword = [[script executeFunction:@"keyword" error:nil] stringValue];
 				NSString		*title = [[script executeFunction:@"title" error:nil] stringValue];
+				BOOL			prefixOnly = [[script executeFunction:@"prefixonly" error:nil] booleanValue];
 				
 				if(keyword && [keyword length] && title && [title length]){
-					//Place an entry in our scripts array, used for the script menu
-					[scripts addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-						@"Script", @"Type", scriptURL, @"Path", keyword, @"Keyword", title, @"Title", nil]];
+					NSDictionary	*infoDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Script", @"Type",
+						scriptURL, @"Path", keyword, @"Keyword", title, @"Title",
+						[NSNumber numberWithBool:prefixOnly], @"PrefixOnly", nil];
 					
-					//Place an entry for this script in our usage dict, used for the text substitution
-					[useDict setObject:scriptURL forKey:keyword];
+					//Place the entry in our script arrays
+					[scripts addObject:infoDict];
+					[useArray addObject:infoDict];
 				}
 			}
 		}
 	}
-
+	
 	return(scripts);
 }
 
-//Script Sorting
+
+//Script Menu ----------------------------------------------------------------------------------------------------------
+#pragma mark Script Menu
+//Build the script menu
+- (void)buildScriptMenu
+{
+	if(!scriptArray) [self loadScripts];
+	
+	//Sort the scripts
+	[self _sortScriptsByTitle:scriptArray];
+		
+	//Build the menu
+	[scriptMenu release]; scriptMenu = [[NSMenu alloc] initWithTitle:@"Scripts"];
+	[self _appendScripts:scriptArray toMenu:scriptMenu atLevel:0];
+	[scriptMenuItem setSubmenu:scriptMenu];
+}
+
+//Alphabetize scripts
 - (void)_sortScriptsByTitle:(NSMutableArray *)sortArray
 {
 	NSEnumerator	*enumerator;
@@ -142,7 +167,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 	return([(NSString *)[scriptA objectForKey:@"Title"] compare:[scriptB objectForKey:@"Title"]]);
 }
 
-//Script menu
+//Append menu items for the scripts to a menu
 - (void)_appendScripts:(NSArray *)scripts toMenu:(NSMenu *)menu atLevel:(int)level
 {
 	NSEnumerator	*enumerator;
@@ -166,27 +191,25 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 															target:self
 															action:@selector(selectScript:)
 													 keyEquivalent:@""] autorelease];
-
+			
 			[item setRepresentedObject:appendDict];
 			if([item respondsToSelector:@selector(setIndentationLevel:)]) [item setIndentationLevel:level];
 			[menu addItem:item];
 			
 		}else if([type compare:@"Group"] == 0){
 			NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[appendDict objectForKey:@"Title"]
-							target:nil
-							action:nil
-					 keyEquivalent:@""] autorelease];
+															target:nil
+															action:nil
+													 keyEquivalent:@""] autorelease];
 			
 			[item setRepresentedObject:appendDict];
 			if([item respondsToSelector:@selector(setIndentationLevel:)]) [item setIndentationLevel:level];
 			[menu addItem:item];
-
+			
 			//Add the items in this group
 			[self _appendScripts:[appendDict objectForKey:@"Content"] toMenu:menu atLevel:level+1];
 		}
-						
 	}
-	
 }
 
 //Insert the selected script (CALL BY MENU ONLY)
@@ -211,18 +234,26 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 	}
 }
 
+//Just a target so we get the validateMenuItem: call for the script menu
+-(IBAction)dummyTarget:(id)sender{
+}
+
 //Disable the insertion if a text field is not active
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if (!hasGeneratedScriptMenu) {
-		[scriptMenuItem setSubmenu:[self loadScriptsAndBuildScriptMenu]];
-		hasGeneratedScriptMenu = YES;
+	if(!scriptMenu) [self buildScriptMenu];
+
+	if(menuItem == scriptMenuItem){
+		return(YES); //Always keep the submenu enabled so users can see the available scripts
+	}else{
+		NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+		return(responder && [responder isKindOfClass:[NSText class]]);
 	}
-	
-	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-	return(responder && [responder isKindOfClass:[NSText class]]);
 }
 
+
+//Message Filtering ----------------------------------------------------------------------------------------------------
+#pragma mark Message Filtering
 //Filter messages for keywords to replace
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
 {
@@ -237,63 +268,46 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 - (id)_filterString:(NSString *)inString originalObject:(id)originalObject
 {
 	id<DummyStringProtocol>		mesg = nil;
-	NSMutableString				* str = nil;
-	NSRange						range;
-	
-	if (!hasGeneratedScriptMenu) {
-		[scriptMenuItem setSubmenu:[self loadScriptsAndBuildScriptMenu]];
-		hasGeneratedScriptMenu = YES;
+
+    if(inString){
+		NSEnumerator				*enumerator;
+		NSDictionary				*infoDict;
+		
+		//Ensure scripts have loaded
+		if(!scriptArray) [self loadScripts];
+		
+		//Replace all keywords
+		enumerator = [flatScriptArray objectEnumerator];
+		while(infoDict = [enumerator nextObject]){
+			NSString	*keyword = [infoDict objectForKey:@"Keyword"];
+			BOOL		prefixOnly = [[infoDict objectForKey:@"PrefixOnly"] boolValue];
+
+			if((prefixOnly && [inString hasPrefix:keyword]) ||
+			   (!prefixOnly && [inString rangeOfString:keyword].location != NSNotFound)){
+								
+				//Execute the script
+				NSString	*scriptResult = [self _executeScript:infoDict];
+				
+				//Swap the result into our string
+				if(!mesg) mesg = [[originalObject mutableCopy] autorelease];
+				[[mesg mutableString] replaceOccurrencesOfString:keyword 
+													  withString:(scriptResult ? scriptResult : @"")
+														 options:NSLiteralSearch 
+														   range:NSMakeRange(0,[[mesg mutableString] length])];
+			}
+		}
 	}
 	
-    if(inString){
-		NSEnumerator	*enumerator = [scriptDict keyEnumerator];
-        NSString		*pattern;	
-        
-        //This loop gets run for every key in the dictionary
-		while(pattern = [enumerator nextObject]){
-            //if the original string contained this pattern
-			range = [inString rangeOfString:pattern];
-            if(range.location != NSNotFound) {
-				if(!mesg) {
-					mesg = [[originalObject mutableCopy] autorelease];
-					str = [mesg mutableString];
-				}
-				[str replaceOccurrencesOfString:pattern 
-									 withString:[self hashLookup:pattern] 
-										options:NSLiteralSearch 
-										  range:NSMakeRange(0,[str length])];
-            }
-        }
-    }
-	
-    return (mesg ? mesg : originalObject);
-}
-- (NSString *)hashLookup:(NSString *)pattern
-{
-    NSString        *returnString = nil;
-    
-    NSURL *scriptURL = [scriptDict objectForKey:pattern];
-    if(scriptURL){
-        NSAppleScript   *script = [[[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil] autorelease];
-        returnString = [[script executeFunction:@"substitute" error:nil] stringValue];
-    }
- 
-	//Returning a zero length string will cause crashes, so never let that happen.
-    return((returnString && [returnString length]) ? returnString : @" ");	
+    return(mesg ? mesg : originalObject);
 }
 
--(IBAction)dummyTarget:(id)sender
+//Execute the script, returning it's output
+- (NSString *)_executeScript:(NSDictionary *)infoDict
 {
-	//Just a target so we get the validateMenuItem: call for the script menu
-}
-
-- (void)uninstallPlugin
-{
-	[[adium contentController] unregisterOutgoingContentFilter:self];
-	[[adium contentController] unregisterStringFilter:self];
-    [scriptDict release];
-	[scriptArray release];
-	[scriptMenuItem release];
+	NSURL 			*scriptURL = [infoDict objectForKey:@"Path"];
+	NSAppleScript   *script = [[[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil] autorelease];
+		
+	return([[script executeFunction:@"substitute" error:nil] stringValue]);
 }
 
 @end

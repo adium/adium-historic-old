@@ -10,10 +10,11 @@
 @protocol AIContentFilter;
 
 @interface GBiTunerPlugin : AIPlugin <AIContentFilter, AIStringFilter> {    
-    NSMutableDictionary		*scriptDict;		//Lookup dict for script usage
-	NSMutableArray			*scriptArray;		//Ordered array for script menu
-	NSMenuItem				*scriptMenuItem;
-	BOOL					hasGeneratedScriptMenu;
+	NSMenuItem				*scriptMenuItem;		//Script menu parent
+	NSMenu 					*scriptMenu;			//Submenu of scripts
+
+	NSMutableArray			*flatScriptArray;		//Flat array of scripts
+	NSMutableArray			*scriptArray;			//Ordered array for script menu
 }
 
 @end
