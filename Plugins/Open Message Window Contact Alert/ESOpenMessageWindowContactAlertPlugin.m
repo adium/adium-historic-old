@@ -8,8 +8,8 @@
 #import "ESOpenMessageWindowContactAlertPlugin.h"
 //#import "ESOpenMessageWindowContactAlert.h"
 
-#define OPEN_MESSAGE_ALERT_SHORT	@"Open a message window"
-#define OPEN_MESSAGE_ALERT_LONG		@"Open a message window"
+#define OPEN_MESSAGE_ALERT_SHORT	AILocalizedString(@"Open a message window",nil)
+#define OPEN_MESSAGE_ALERT_LONG		OPEN_MESSAGE_ALERT_SHORT
 
 @implementation ESOpenMessageWindowContactAlertPlugin
 
