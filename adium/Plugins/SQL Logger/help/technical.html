@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html>
+<html xmlns:xalan="http://xml.apache.org/xslt">
 <head>
-<meta content="text/html; charset=ascii" http-equiv="Content-Type">
+<meta http-equiv="Content-Type" content="text/html; charset=ascii">
 <title>Adium SQL Logger Technical Details</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
@@ -25,7 +25,7 @@
 <a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a><br><a href="http://www.visualdistortion.org/guestbook.jsp" class="offsides">Guestbook</a><br><a href="http://www.visualdistortion.org/pictures/" class="offsides">Pictures</a><br><a href="http://www.visualdistortion.org/films/" class="offsides">Films</a><br><a href="http://www.visualdistortion.org/music/" class="offsides">Music</a>
 </td>
 <td>
-<p>This page describes a few more technical details of Adium's SQL Logging
+<p>This page describes a few more technical details of the Adium SQL Logging
     Plugin.</p>
 <div align="center">
       <a href="#adium.sql">adium.sql</a> | 
@@ -99,7 +99,7 @@
       tables.</p>
 <a name="tsearch.sql"><h2>tsearch.sql</h2></a><p>tsearch indexing requires a special method and index type to do it's
       magic.  It uses a column message_idx, where it stores a list
-      of all the words used in the IM in their &quot;base form&quot;.  Storing in a base
+      of all the words used in the IM in their "base form".  Storing in a base
       form allows it to do stemming.  (Searching for 'kicking' will return
       'kicking', 'kick', 'kicks', etc).  It uses a GiST index to track these
       terms down very quickly, which I REALLY don't understand.  But it does
@@ -126,7 +126,7 @@
       There is not a lot of difference between
       the two, except that parser works on Adium logs before 2.0, and parser-2
       goes over Adium 2.0 logs.</p>
-<p>The perl scripts require a few modules for talking to the database.  It
+<p>The Perl scripts require a few modules for talking to the database.  It
       requires <code>DBI</code> and <code>DBD::Pg</code>.  DBI is a standard
       database-independant perl module.  You can download it with either CPAN
       or fink. (<a href="http://fink.sourceforge.net" class="offsite">http://fink.sourceforge.net</a>)</p>
@@ -148,7 +148,7 @@
     Set the following:</p>
 <div class="tutorialcode">
     <pre>setenv POSTGRES_INCLUDE=/usr/local/pgsql/include
-      setenv POSTGRES_LIB=&quot;/usr/local/pgsql/lib -lssl -lcrypto&quot;
+      setenv POSTGRES_LIB="/usr/local/pgsql/lib -lssl -lcrypto"
 setenv DBI_DSN=DBI:Pg:dbname=<i>username</i>
 setenv DBI_USER=<i>username</i>
 setenv DBI_PASS=<i>password</i></pre>
@@ -156,7 +156,7 @@ setenv DBI_PASS=<i>password</i></pre>
 <p>If you are running Bash as your shell or using Panther:</p>
 <div class="tutorialcode">
   <pre>export POSTGRES_INCLUDE=/usr/local/pgsql/include
-export POSTGRES_LIB=&quot;/usr/local/pgsql/lib -lssl -lcrypto&quot;
+export POSTGRES_LIB="/usr/local/pgsql/lib -lssl -lcrypto"
 export DBI_DSN=DBI:Pg:dbname=<i>username</i>
 export DBI_USER=<i>username</i>
 export DBI_PASS=<i>password</i></pre>
@@ -176,8 +176,8 @@ export DBI_PASS=<i>password</i></pre>
     fail.  If you are sure you have the environmental variables
     POSTGRES_INCLUDE and POSTGRES_LIB set correctly, you can force an install.</p>
 <div class="tutorialcode"><pre>sudo perl -MCPAN -e shell 'force install DBD::Pg'</pre></div>
-<p>If you want to install via fink, the packages are called &quot;dbi-pm&quot; and
-    &quot;dbd-pg-pg&quot; [unstable]</p>
+<p>If you want to install via fink, the packages are called "dbi-pm" and
+    "dbd-pg-pg" [unstable]</p>
 <p>
 <code>parser.pl</code> will look in <code>~/Library/Application
       Support/Adium/Users</code> for all of the Adium 1.6 logs.  When it's
@@ -209,7 +209,7 @@ export DBI_PASS=<i>password</i></pre>
         to move the logs out and try again.</li>
       <li>If the database is Unicode-encoded, it will be very picky about
         inserting characters it doesn't know into it.  Since Adium doesn't log
-        as unicode, this could cause some problems.</li>
+        as Unicode, this could cause some problems.</li>
       <li>If you are getting undefined errors like this:
         <pre>dyld: perl Undefined symbols:
           _BIO_free

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html>
+<html xmlns:xalan="http://xml.apache.org/xslt">
 <head>
-<meta content="text/html; charset=ascii" http-equiv="Content-Type">
+<meta http-equiv="Content-Type" content="text/html; charset=ascii">
 <title>Adium SQL Logging Instructions</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
@@ -125,12 +125,12 @@
       </ul>
     </ul>
     </p>
-<p>The JSP files will allow you to view IMs with a web interface.  These
+<p>The JSP files will allow you to view logs through a web interface.  These
     can be used locally and from the world-wide web.</p>
 <p>The SQL files are a language that tells the database what type of
     information to store and tables to create.  They are split into two files: 
-    the file called &quot;adium.sql&quot; will create the default table
-    layout.  tsearch.sql will enable it to use a module called &quot;tsearch&quot;,
+    the file called "adium.sql" will create the default table
+    layout.  tsearch.sql will enable it to use a module called "tsearch",
     which allows for very, very fast searching.  It requires slightly more
     setup, which is why it has been split into a different file.</p>
 <p>To create the table needed for message logging, open a terminal window
@@ -158,7 +158,7 @@ jmelloy=#</pre></div>
 </div>
 <p>After typing that, you should see the confirmation message <code>ALTER
       USER</code>. That changes only new instances of your user, so either
-    quit psql (<code>\q</code>) and start again, or type <code>set search_path=adium,public;</code>.  After doing either of those, type &quot;\d&quot; and you should see something like this:</p>
+    quit psql (<code>\q</code>) and start again, or type <code>set search_path=adium,public;</code>.  After doing either of those, type "\d" and you should see something like this:</p>
 <div class="tutorialcode"><pre>jmelloy=# \d
                    List of relations
  Schema |           Name           |   Type   |  Owner  
@@ -178,12 +178,12 @@ jmelloy=#</pre></div>
   history.  Message_v contains a combination of everything: the message, the
   screenname who sent it, and their display name at the time the message was
   sent.  Message_v is complicated and slightly slow.  simple_message_v is very
-bare-bones: the sending and receiving screenames, the message, and a date.</p>
+bare-bones: the sending and receiving screennames, the message, and a date.</p>
 <p>At this point, you're ready to use the plugin.
   You can run <code>parser.pl</code> to insert all of your old logs into the
   database.  
-  To run the script, a few modules are needed for your perl installation.
-  The first one is called &quot;DBI&quot; (DataBase Interface) and the second &quot;DBD-PG&quot;
+  To run the script, a few modules are needed for your Perl installation.
+  The first one is called "DBI" (DataBase Interface) and the second "DBD-PG"
   (DataBase Driver-PostgreSQL).  Both can be gotten from fink or CPAN.
   The fink modules are called dbi-pm and dbd-pg-pm (in unstable).  More
   information on installation and use can be found in <a href="technical.html#parser.pl">Technical Details</a>.
@@ -195,23 +195,23 @@ bare-bones: the sending and receiving screenames, the message, and a date.</p>
   </p>
 <p>Download the newest source of Adium
     2.0 from CVS, and compile it.  Instructions for downloading through
-    anonymous CVS access can be found <a href="http://sourceforge.net/cvs/?group_id=67507" class="offsite">here</a>.  To compile, open &quot;Adium.pbproj&quot; and hit the
-    &quot;Build&quot; button in the top left.
-    Switch the target to &quot;SQL Logger&quot; (it should start at &quot;Adium&quot;) and hit
-  &quot;Build&quot;.  Move the newly created &quot;SQL
-  Logger.AdiumPlugin&quot; to <code>~/Library/Application Support/Adium
-    2.0/Plugins&quot;</code>.  That should be all it takes to install it.
+    anonymous CVS access can be found <a href="http://sourceforge.net/cvs/?group_id=67507" class="offsite">here</a>.  To compile, open "Adium.pbproj" and hit the
+    "Build" button in the top left.
+    Switch the target to "SQL Logger" (it should start at "Adium") and hit
+  "Build".  Move the newly created "SQL
+  Logger.AdiumPlugin" to <code>~/Library/Application Support/Adium
+    2.0/Plugins"</code>.  That should be all it takes to install it.
   Alternately, you can download a compiled binary from <a href="http://adium.sourceforge.net" class="offsite">http://adium.sourceforge.net</a>.  Currently, the binary
   is updated about once a week.
   </p>
 <p>You can also download a compiled plugin here: <a href="http://www.visualdistortion.org/adium/sql-logger.tar.gz" class="offsite">sql-logger.tar.gz</a>, uncompress it, and drop it
   in the Adium application as discussed above.  This will not work without
   PostgreSQL installed on your system, and the proper database setup.</p>
-<p>Currently, the plugin doesn't have any prefs.  If your databae setup is
+<p>Currently, the plugin doesn't have any preferences.  If your database setup is
   non-standard, you need to set an environmental variable (PGHOST, PGUSER,
   etc) as described in the PostgreSQL docs.  If the plugin is installed correctly, it works very unobtrusively.  It
   never does anything unless there is a problem, so if you start it up and
-  don't get an &quot;Unable to Connect to Database&quot; dialog, it's probably
+  don't get an "Unable to Connect to Database" dialog, it's probably
   working.</p>
 <p>To check that either parser.pl worked correctly, and/or it's correctly
   logging, type <code>psql</code>.  To view messages:</p>
