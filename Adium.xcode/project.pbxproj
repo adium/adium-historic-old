@@ -9143,6 +9143,9 @@
 			fileRef = 34E00F7407B92B2E000DF265;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34E00F7707B92B2F000DF265 = {
@@ -10052,6 +10055,9 @@
 			fileRef = 34F2E81007C2CD5E007EAAAB;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34F2E81807C2CD6B007EAAAB = {
@@ -10076,6 +10082,9 @@
 			fileRef = 34F2E81807C2CD6B007EAAAB;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34F2E81B07C2CD6C007EAAAB = {
@@ -10112,6 +10121,9 @@
 			fileRef = 34F2E83907C2CDBD007EAAAB;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34F2E8C907C2D08F007EAAAB = {
