@@ -24,6 +24,18 @@
 static NSMenu   *bookmarksMenu;
 static NSMenu   *bookmarksSupermenu;
 
++ (id)newInstanceOfImporter
+{
+    return [[[self alloc] init] autorelease];
+}
+
+- (id)init
+{
+    [super init];
+    
+    return self;
+}
+
 -(NSMenu *)parseBookmarksForOwner:(id)inObject
 {
     owner = inObject;

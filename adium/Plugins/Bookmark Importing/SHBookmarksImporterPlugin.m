@@ -59,7 +59,7 @@ static NSMenu       *bookmarkSets;
 // method to nicely install new importers
 - (void)installImporterClass:(Class)inClass
 {
-    id object = [[[inClass alloc] init] autorelease];
+    id object = [inClass newInstanceOfImporter];
     
     if(object){
         [importerArray addObject:object];
