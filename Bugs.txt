@@ -27,9 +27,9 @@
 - Double clicking two names in succession causes the first name to highlight
     the second time. (wordsaboutmehere)
 - Group Bubbles on, Show Offline Contacts then Hide Offline Contacts causes the list
-    to reposition itself. 
+    to reposition itself. [Evan: I can't reproduce this]
 - Group Bubbles on, vertical resizing on, Show Offline Contacts... list maximizes
-    to full vertical size of screen.
+    to full vertical size of screen. [Evan: I can't reproduce this]
 
 [Other]
 - Metacontact drawer in get info crashes upon dragging
