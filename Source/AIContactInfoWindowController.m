@@ -171,7 +171,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 				label = AILocalizedString(@"Accounts","tab view item title for Accounts a contact is on in the Contact Info window");
 				break;
 			case AIInfo_Alerts:
-				label = AILocalizedString(@"Alerts","tab view item title for Contact Alerts (Alerts)");
+				label = AILocalizedString(@"Events","tab view item title for Contact Alerts (Events)");
 				break;
 			case AIInfo_Settings:
 				label = AILocalizedString(@"Settings","tab view item title for Contact Settings (Settings)");
