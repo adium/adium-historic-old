@@ -345,6 +345,7 @@ typedef enum {
 - (NSArray *)accountArray;
 - (AIAccount *)accountWithID:(NSString *)inID;
 - (AIAccount *)accountForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
+- (int)numberOfAccountsAvailableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
 
 //Managing accounts
 - (AIAccount *)newAccountAtIndex:(int)index;

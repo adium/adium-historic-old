@@ -336,7 +336,7 @@
                                                                       object:inObject];
 
         if(accountID && (account = [self accountWithID:accountID])){
-            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]){
+            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
                 return(account);
             }
         }
@@ -346,7 +346,7 @@
     // Next, the last account used to message someone is picked, as long as it is available for sending content
     NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[inObject serviceID]];
     if(lastAccountID && (account = [self accountWithID:lastAccountID])){
-        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]){
+        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
             return(account);
         }
     }
@@ -356,7 +356,7 @@
     {
         enumerator = [accountArray objectEnumerator];
         while((account = [enumerator nextObject])){
-            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inObject]){
+            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:inObject]){
                 return(account);
             }
         }        
@@ -369,7 +369,7 @@
         AIHandle	*handle = [(AIListContact *)inObject handleForAccount:account];
 
         if((!handle || [[handle serviceID] compare:[[[account service] handleServiceType] identifier]] == 0) &&
-           [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]){
+           [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
             return(account);
         }
     }
@@ -379,6 +379,23 @@
     return([accountArray objectAtIndex:0]);
 }
 
+- (int)numberOfAccountsAvailableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject
+{
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
+    
+    int number = 0;
+    
+    // Accounts that can see the object
+    enumerator = [accountArray objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:inObject]){
+            number++;
+        }            
+    }  
+    
+    return number;
+}
 
 - (void)setProperty:(id)inValue forKey:(NSString *)key account:(AIAccount *)inAccount
 {
