@@ -82,8 +82,6 @@
     
     int                     online;*/
 	
-	NSLog(@"%s UPDATE",buddy->name);
-	
     AIListContact           *theContact;
 	
     //Get the node's ui_data
@@ -126,7 +124,6 @@
 		//Online / Offline
 		case GAIM_BUDDY_SIGNON:
 		{
-			NSLog(@"%s signed on",buddy->name);
 			NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
 			if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != YES)){
 				[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
@@ -154,7 +151,6 @@
 		}   break;
 		case GAIM_BUDDY_SIGNOFF:
 		{
-			NSLog(@"%s signed off",buddy->name);
 			NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
 			if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != NO)){
 				[theContact setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:NO];
@@ -616,7 +612,8 @@
 		
 		//Remove this contact from the server-side and gaim-side lists
 		serv_remove_buddy(gc, [[object UID] UTF8String], [groupName UTF8String]);
-		gaim_blist_remove_buddy(buddy);
+		if (buddy)
+			gaim_blist_remove_buddy(buddy);
 
 		//Remove it from Adium's list
 		[object setRemoteGroupName:nil];
