@@ -24,10 +24,10 @@
 # Note that the last three parameters are optional, you can alternatively change
 # the defaults below in the configuration section.
 #
-# $Id: ciabot.pl,v 1.3 2003/10/31 09:26:32 slamb Exp $
+# $Id: ciabot.pl,v 1.4 2003/11/10 08:47:38 ramoth4 Exp $
 
 use strict;
-use vars qw ($project $from_email $dest_email @sendmail $max_lines $max_files
+use vars qw ($project $from_email $dest_email $sendmail $max_lines $max_files
 		$sync_delay $xml $commit_template $branch_template
 		$trimmed_template);
 
@@ -45,7 +45,7 @@ $dest_email = 'commits@picogui.org';
 # Path to your sendmail binary. If you have it at a different place (and
 # outside of $PATH), add your location at the start of the list. By all means
 # keep the trailing empty string in the array.
-@sendmail = ('/usr/lib/sendmail', '/usr/sbin/sendmail', '/usr/bin/sendmail', '');
+$sendmail = '/usr/lib/sendmail';
 
 # The maximal number of lines the log message should have.
 $max_lines = 12;
@@ -198,11 +198,8 @@ if (-f $syncfile) {
 
 {
   my $sendmail;
-  foreach $sendmail (@sendmail) {
-    $sendmail eq '' and die "$0: no sendmail found\n";
-    -x $sendmail or next;
-  }
-  print "Will use sendmail: $sendmail\n";
+
+  #print "Will use sendmail: $sendmail\n";
   open (MAIL, "| $sendmail -t -oi -oem")
       or die "$0: can't execute sendmail: $!";
 }
