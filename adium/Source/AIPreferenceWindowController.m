@@ -24,6 +24,7 @@
 #define	KEY_PREFERENCE_WINDOW_FRAME		@"Preference Window Frame"
 #define KEY_PREFERENCE_SELECTED_CATEGORY	@"Preference Selected Category"
 #define FLAT_PADDING_OFFSET 45
+#define PREFERENCE_WINDOW_TITLE			@"Preferences"
 
 @interface AIPreferenceWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
@@ -278,6 +279,8 @@ static AIPreferenceWindowController *sharedInstance = nil;
         }
     }
 
+    //Update the window title
+    [[self window] setTitle:[NSString stringWithFormat:@"%@ : %@",PREFERENCE_WINDOW_TITLE,[tabViewItem label]]];    
 }
 
 - (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIFlippedCategoryView *)inView showContainers:(BOOL)includeContainers

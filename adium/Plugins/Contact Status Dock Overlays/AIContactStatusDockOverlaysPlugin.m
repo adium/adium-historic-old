@@ -174,7 +174,6 @@
     enumerator = [unviewedObjectsArray reverseObjectEnumerator];
     while((contact = [enumerator nextObject]) && top >= 0 && bottom < 128){
         float			left, right, arcRadius, stringInset;
-        NSAttributedString	*nameString;
         NSBezierPath		*path;
         NSColor			*backColor = nil, *textColor = nil, *borderColor = nil;
 

@@ -141,58 +141,93 @@
     AICustomTabCell	*tabCell, *nextTabCell;
     NSRect		tabFrame;
     NSRect		drawRect;
+    NSPoint		drawPointA, drawPointB;
 
     //Get the active tab's frame
     tabFrame = [selectedCustomTabCell frame];
 
     //Paint black over region left of active tab
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.20] set];
     drawRect = NSMakeRect(rect.origin.x,
                           rect.origin.y + 1,
                           tabFrame.origin.x - rect.origin.x,
                           rect.size.height - 1);
-    [NSBezierPath fillRect:drawRect];
+    if(NSIntersectsRect(drawRect, rect)){
+        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.20] set];
+        [NSBezierPath fillRect:NSIntersectionRect(drawRect, rect)];
+    }
 
     //Draw the black tab line left of active tab
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.38] set];
-    [NSBezierPath strokeLineFromPoint:NSMakePoint(drawRect.origin.x, drawRect.origin.y + drawRect.size.height - 0.5)
-                              toPoint:NSMakePoint(drawRect.origin.x + drawRect.size.width, drawRect.origin.y + drawRect.size.height - 0.5)];
+    drawPointA = NSMakePoint(drawRect.origin.x, drawRect.origin.y + drawRect.size.height - 0.5);
+    drawPointB = NSMakePoint(drawRect.origin.x + drawRect.size.width, drawRect.origin.y + drawRect.size.height - 0.5);
+    if(drawPointA.y > rect.origin.y && drawPointA.y < NSMaxY(rect)){
+        //Crop line to fit within drawn rect
+        if(drawPointA.x < rect.origin.x) drawPointA.x = rect.origin.x;
+        if(drawPointB.x > NSMaxX(rect)) drawPointB.x = NSMaxX(rect);
+        
+        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.38] set];
+        [NSBezierPath strokeLineFromPoint:drawPointA toPoint:drawPointB];
+    }
 
     //Paint black over region right of active tab
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.20] set];
     drawRect = NSMakeRect(tabFrame.origin.x + tabFrame.size.width,
                           rect.origin.y + 1,
                           (rect.origin.x + rect.size.width) - (tabFrame.origin.x + tabFrame.size.width),
                           rect.size.height - 1);
-    [NSBezierPath fillRect:drawRect];
+    if(NSIntersectsRect(drawRect, rect)){
+        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.20] set];
+        [NSBezierPath fillRect:NSIntersectionRect(drawRect, rect)];
+    }
 
     //Draw the black tab line right of active tab
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.38] set];
-    [NSBezierPath strokeLineFromPoint:NSMakePoint(drawRect.origin.x, drawRect.origin.y + drawRect.size.height - 0.5)
-                              toPoint:NSMakePoint(drawRect.origin.x + drawRect.size.width, drawRect.origin.y + drawRect.size.height - 0.5)];
+    drawPointA = NSMakePoint(drawRect.origin.x, drawRect.origin.y + drawRect.size.height - 0.5);
+    drawPointB = NSMakePoint(drawRect.origin.x + drawRect.size.width, drawRect.origin.y + drawRect.size.height - 0.5);
+    if(drawPointA.y > rect.origin.y && drawPointA.y < NSMaxY(rect)){
+        //Crop line to fit within drawn rect
+        if(drawPointA.x < rect.origin.x) drawPointA.x = rect.origin.x;
+        if(drawPointB.x > NSMaxX(rect)) drawPointB.x = NSMaxX(rect);
+        
+        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.38] set];
+        [NSBezierPath strokeLineFromPoint:drawPointA toPoint:drawPointB];
+    }
 
     //Bottom edge light
-    [[NSColor colorWithCalibratedWhite:1.0 alpha:0.16] set];
-    [NSBezierPath strokeLineFromPoint:NSMakePoint(rect.origin.x, rect.origin.y + 1.5)
-                              toPoint:NSMakePoint(rect.origin.x + rect.size.width, rect.origin.y + 1.5)];
-
+    drawPointA = NSMakePoint(rect.origin.x, rect.origin.y + 1.5);
+    drawPointB = NSMakePoint(rect.origin.x + rect.size.width, rect.origin.y + 1.5);
+    if(drawPointA.y > rect.origin.y && drawPointA.y < NSMaxY(rect)){
+        //Crop line to fit within drawn rect
+        if(drawPointA.x < rect.origin.x) drawPointA.x = rect.origin.x;
+        if(drawPointB.x > NSMaxX(rect)) drawPointB.x = NSMaxX(rect);
+        
+        [[NSColor colorWithCalibratedWhite:1.0 alpha:0.16] set];
+        [NSBezierPath strokeLineFromPoint:drawPointA toPoint:drawPointB];
+    }
+    
     //Bottom edge dark
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.41] set];
-    [NSBezierPath strokeLineFromPoint:NSMakePoint(rect.origin.x, rect.origin.y + 0.5)
-                              toPoint:NSMakePoint(rect.origin.x + rect.size.width, rect.origin.y + 0.5)];
+    drawPointA = NSMakePoint(rect.origin.x, rect.origin.y + 0.5);
+    drawPointB = NSMakePoint(rect.origin.x + rect.size.width, rect.origin.y + 0.5);
+    if(drawPointA.y > rect.origin.y && drawPointA.y < NSMaxY(rect)){
+        //Crop line to fit within drawn rect
+        if(drawPointA.x < rect.origin.x) drawPointA.x = rect.origin.x;
+        if(drawPointB.x > NSMaxX(rect)) drawPointB.x = NSMaxX(rect);
 
+        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.41] set];
+        [NSBezierPath strokeLineFromPoint:drawPointA toPoint:drawPointB];
+    }
+    
     //Draw our tabs
     enumerator = [tabCellArray objectEnumerator];
     tabCell = [enumerator nextObject];
     while((nextTabCell = [enumerator nextObject]) || tabCell){
         NSRect	cellFrame = [tabCell frame];
 
-        //Draw the tab cell
-        [tabCell drawWithFrame:cellFrame inView:self];
+        if(NSIntersectsRect(cellFrame, rect)){
+            //Draw the tab cell
+            [tabCell drawWithFrame:cellFrame inView:self];
 
-        //Draw the divider
-        if(tabCell != selectedCustomTabCell && (!nextTabCell || nextTabCell != selectedCustomTabCell)){
-            [tabDivider compositeToPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width - 2, cellFrame.origin.y) operation:NSCompositeSourceOver];
+            //Draw the divider
+            if(tabCell != selectedCustomTabCell && (!nextTabCell || nextTabCell != selectedCustomTabCell)){
+                [tabDivider compositeToPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width - 2, cellFrame.origin.y) operation:NSCompositeSourceOver];
+            }
         }
 
         tabCell = nextTabCell;
@@ -222,6 +257,9 @@
     AICustomTabCell	*tabCell;
     NSTabViewItem	*selectedTab = [inTabView selectedTabViewItem];
 
+    //Set old cell for a redisplay
+    [self setNeedsDisplayInRect:[selectedCustomTabCell frame]];
+
     //Record the new selected tab cell, and correctly set it as selected
     enumerator = [tabCellArray objectEnumerator];
     while((tabCell = [enumerator nextObject])){
@@ -234,8 +272,8 @@
         }
     }
 
-    //Redisplay
-    [self setNeedsDisplay:YES];
+    //Redisplay new cell
+    //[self setNeedsDisplayInRect:[selectedCustomTabCell frame]];
 
     //Inform our delegate
     if([delegate respondsToSelector:@selector(customTabView:didSelectTabViewItem:)]){
@@ -266,6 +304,10 @@
 {
     [super setFrame:frameRect];
     [self arrangeCellsAbsolute:YES];
+
+    //Reset cursor tracking
+    [self _stopTrackingCursor];
+    [self _startTrackingCursor];
 }
 
 //Stop dragging in metal mode
@@ -292,13 +334,6 @@
 
 
 //Cursor Tracking -----------------------------------------------------------------------
-- (void)resetCursorRects
-{
-    //Reset our cursor rects
-    [self _stopTrackingCursor];
-    [self _startTrackingCursor];
-}
-
 - (void)_startTrackingCursor
 {
     //Track only if we're within a valid window
@@ -306,11 +341,23 @@
         NSEnumerator		*enumerator;
         AICustomTabCell		*tabCell;
         NSTrackingRectTag	trackingTag;
+        NSPoint			localPoint;
+
+        //Local mouse location
+        localPoint = [[self window] convertScreenToBase:[NSEvent mouseLocation]];
+        localPoint = [self convertPoint:localPoint fromView:nil];
 
         //Install a tracking rect for each open tab
         enumerator = [tabCellArray objectEnumerator];
         while((tabCell = [enumerator nextObject])){
-            trackingTag = [self addTrackingRect:[tabCell frame] owner:self userData:tabCell assumeInside:NO];
+            NSRect trackRect = [tabCell frame];
+
+            //Compensate for overlap
+            trackRect.origin.x += CUSTOM_TABS_OVERLAP;
+            trackRect.size.width -= CUSTOM_TABS_OVERLAP;
+
+            //
+            trackingTag = [self addTrackingRect:trackRect owner:self userData:tabCell assumeInside:NSPointInRect(localPoint, trackRect)];
             [tabCell setTrackingTag:trackingTag];
         }
     }
@@ -334,7 +381,7 @@
     AICustomTabCell	*tabCell = [theEvent userData];
 
     [tabCell setHighlighted:YES];
-    [self setNeedsDisplay:YES];
+    [self setNeedsDisplayInRect:[tabCell frame]];
 }
 
 - (void)mouseExited:(NSEvent *)theEvent
@@ -342,7 +389,7 @@
     AICustomTabCell	*tabCell = [theEvent userData];
 
     [tabCell setHighlighted:NO];
-    [self setNeedsDisplay:YES];
+    [self setNeedsDisplayInRect:[tabCell frame]];
 }
 
 
@@ -598,10 +645,10 @@
     int			xLocation;
     BOOL		finished = YES;
 
-    int		reducedWidth = 0;
-    int		reduceThreshold = 1000000;
     int		tabExtraWidth;
     int		totalTabWidth;
+    int		reducedWidth = 0;
+    int		reduceThreshold = 1000000;
 
     //Get the total tab width
     totalTabWidth = [self totalTabWidth];
@@ -641,39 +688,41 @@
         NSPoint	origin;
 
         //Get the object's size
-        size = [tabCell size];//[object frame].size;
+        size = [tabCell size];
 
-            //If this tab is > next biggest, use the 'reduced' width calculated above
-            if(size.width > reduceThreshold){
-                size.width = reducedWidth;
+        //If this tab is > next biggest, use the 'reduced' width calculated above
+        if(size.width > reduceThreshold){
+            size.width = reducedWidth;
+        }
+
+        origin = NSMakePoint(xLocation, 0 );
+
+        //Move the item closer to its desired location
+        if(!absolute){
+            if(origin.x > [tabCell frame].origin.x){
+                int distance = (origin.x - [tabCell frame].origin.x) * 0.6;
+                if(distance < 1) distance = 1;
+
+                origin.x = [tabCell frame].origin.x + distance;
+
+                if(finished) finished = NO;
+            }else if(origin.x < [tabCell frame].origin.x){
+                int distance = ([tabCell frame].origin.x - origin.x) * 0.6;
+                if(distance < 1) distance = 1;
+
+                origin.x = [tabCell frame].origin.x - distance;
+                if(finished) finished = NO;
             }
+        }
 
-            origin = NSMakePoint(xLocation, 0 );
+        [tabCell setFrame:NSMakeRect(origin.x, origin.y, size.width, size.height)];
 
-            //Move the item closer to its desired location
-            if(!absolute){
-                if(origin.x > [tabCell frame].origin.x){
-                    int distance = (origin.x - [tabCell frame].origin.x) * 0.6;
-                    if(distance < 1) distance = 1;
-
-                    origin.x = [tabCell frame].origin.x + distance;
-
-                    if(finished) finished = NO;
-                }else if(origin.x < [tabCell frame].origin.x){
-                    int distance = ([tabCell frame].origin.x - origin.x) * 0.6;
-                    if(distance < 1) distance = 1;
-
-                    origin.x = [tabCell frame].origin.x - distance;
-                    if(finished) finished = NO;
-                }
-            }
-
-            [tabCell setFrame:NSMakeRect(origin.x, origin.y, size.width, size.height)];
-
-            xLocation += size.width - CUSTOM_TABS_OVERLAP; //overlap the tabs a bit
+        xLocation += size.width - CUSTOM_TABS_OVERLAP; //overlap the tabs a bit
     }
 
+    //Redisplay
     [self setNeedsDisplay:YES];
+
     return(finished);
 }
 

@@ -45,6 +45,7 @@
 
     int			tabXOrigin;
 
+
     NSPoint		lastClickLocation;
     
     //Delegate

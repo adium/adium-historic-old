@@ -17,16 +17,6 @@
 
 
 @interface AICustomTabCell : NSCell {
-    //Images
-    NSImage		*tabBackLeft;
-    NSImage		*tabBackMiddle;
-    NSImage		*tabBackRight;
-    NSImage		*tabFrontLeft;
-    NSImage		*tabFrontMiddle;
-    NSImage		*tabFrontRight;
-    NSImage		*tabCloseFront;
-    NSImage		*tabCloseBack;
-    NSImage		*tabCloseFrontPressed;
     
     //Properties
     BOOL		selected;
