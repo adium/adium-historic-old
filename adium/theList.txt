@@ -58,6 +58,7 @@ Contact List Display:
 
 Other:
 	+ Create a plugin to hide the AIM "Your screen name is now signed in 2 locations" messages
+	# Rename all the classes in AIUtilities to have the prefix "AI" so that the framework is uniform.  This framework is designed to be Adium-independent, so we should make it easier to use in this way.
 
 
 -------------------------------------------------------------------------------------------------------
