@@ -215,10 +215,11 @@ CBStatusMenuItemController *sharedInstance = nil;
 {
     /* TODO: Do this conditiional without class reflection. */
     if ( inModifiedKeys
-         && ( ( [ inModifiedKeys containsObject:@"Online" ] && [ inObject isKindOfClass:[ AIListContact class ] ] )
-              && ( [ [ inObject statusArrayForKey:@"Online" ] greatestIntegerValue ] > 0 ) )
-         && [ [ inObject statusArrayForKey:@"Away" ] greatestIntegerValue ] == 0
-         && [ [ inObject statusArrayForKey:@"Idle" ] greatestDoubleValue ] == 0 )
+         && ( [ [ inObject statusArrayForKey:@"Online" ] greatestIntegerValue ] > 0 )
+         && [ inObject isKindOfClass:[ AIListContact class ] ]
+         /*&& ( [ inModifiedKeys containsObject:@"Online" ]  )*/
+         && ( [ [ inObject statusArrayForKey:@"Away" ] greatestIntegerValue ] == 0
+              && [ [ inObject statusArrayForKey:@"Idle" ] greatestDoubleValue ] == 0 ) )
     {
         /* If someone (not us) is not idle or away, display them. */
 
