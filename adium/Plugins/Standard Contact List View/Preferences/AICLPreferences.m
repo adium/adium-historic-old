@@ -131,7 +131,7 @@
 
 - (IBAction)spawnLayout:(id)sender
 {
-	[[AIListLayoutWindowController listLayoutOnWindow:[[self view] window]] retain];
+	[AIListLayoutWindowController listLayoutOnWindow:[[self view] window]];
 }
 
 

@@ -31,12 +31,14 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
     [super initWithWindowNibName:windowNibName];
-
+	NSLog(@"%@ initWithWindowNibName",self);
+	
 	return(self);
 }
 
 - (void)dealloc
 {
+	NSLog(@"%@ dealloc",self);
     [super dealloc];
 }
 
@@ -84,7 +86,6 @@
 }
 
 
-
 //Window Methods -------------------------------------------------------------------------------------------------------
 - (void)configureControls
 {
@@ -93,6 +94,13 @@
 	[popUp_contactTextAlignment compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue]];
 	[popUp_groupTextAlignment compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
 	
+	[slider_userIconSize setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue]];
+	[self updateDisplayedUserIconSize];
+	
+	[checkBox_userIconVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
+	[checkBox_extendedStatusVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
+	[checkBox_statusIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
+	[checkBox_serviceIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue]];
 }
 
 - (void)preferenceChanged:(id)sender
@@ -101,12 +109,51 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_ALIGNMENT
 											  group:PREF_GROUP_LIST_LAYOUT];
+		
 	}else if(sender == popUp_groupTextAlignment){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT
 											  group:PREF_GROUP_LIST_LAYOUT];
+		
+	}else if(sender == popUp_windowStyle){
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
+											 forKey:KEY_LIST_LAYOUT_WINDOW_STYLE
+											  group:PREF_GROUP_LIST_LAYOUT];
+
+	}else if(sender == slider_userIconSize){
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+											 forKey:KEY_LIST_LAYOUT_USER_ICON_SIZE
+											  group:PREF_GROUP_LIST_LAYOUT];
+		[self updateDisplayedUserIconSize];
+		
+	}else if(sender == checkBox_userIconVisible){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_LIST_LAYOUT_SHOW_ICON
+											  group:PREF_GROUP_LIST_LAYOUT];
+		
+	}else if(sender == checkBox_extendedStatusVisible){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS
+											  group:PREF_GROUP_LIST_LAYOUT];
+		
+	}else if(sender == checkBox_statusIconsVisible){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS
+											  group:PREF_GROUP_LIST_LAYOUT];
+		
+	}else if(sender == checkBox_serviceIconsVisible){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS
+											  group:PREF_GROUP_LIST_LAYOUT];
+		
 	}
 	
+}
+
+- (void)updateDisplayedUserIconSize
+{
+	int	iconSize = [slider_userIconSize intValue];
+	[textField_userIconSize setStringValue:[NSString stringWithFormat:@"%ix%i",iconSize,iconSize]];
 }
 
 

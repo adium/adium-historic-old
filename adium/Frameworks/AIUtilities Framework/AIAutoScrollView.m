@@ -47,6 +47,7 @@
 
 - (void)_init
 {
+	NSLog(@"%@ _init",self);
     autoScrollToBottom = NO;
     autoHideScrollBar = NO;
     updateShadowsWhileScrolling = NO;
@@ -56,6 +57,7 @@
 
 - (void)dealloc
 {
+	NSLog(@"%@ dealloc",self);
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
 
     [super dealloc];

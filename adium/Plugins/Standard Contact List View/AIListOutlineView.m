@@ -21,6 +21,18 @@
 
 @implementation AIListOutlineView
 
+- (id)initWithFrame:(NSRect)frame
+{
+	NSLog(@"%@ initWithFrame",self);
+	return([super initWithFrame:frame]);
+}
+
+- (void)dealloc
+{
+	NSLog(@"%@ dealloc",self);
+	[super dealloc];
+}
+
 //Prevent the display of a focus ring around the contact list in 10.3 and greater
 - (NSFocusRingType)focusRingType
 {
@@ -32,6 +44,7 @@
 {
 	[super setDelegate:delegate];
 }
+
 
 
 //Frame and superview tracking -----------------------------------------------------------------------------------------
@@ -80,9 +93,11 @@
 //When our view is inserted into a window, observe that window so we can hide selection when it's not main
 - (void)configureSelectionHidingForNewSuperview:(NSView *)newSuperview
 {
+	NSLog(@"off");
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeMainNotification object:[self window]];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignMainNotification object:[self window]];
     if([newSuperview window]){
+		NSLog(@"on");
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecameMain:) name:NSWindowDidBecomeMainNotification object:[newSuperview window]];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowResignedMain:) name:NSWindowDidResignMainNotification object:[newSuperview window]];
     }

@@ -29,6 +29,12 @@
 	return(self);
 }
 
+- (void)dealloc
+{
+	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+	[super dealloc];
+}
+
 //Borderless nib
 - (NSString *)nibName
 {

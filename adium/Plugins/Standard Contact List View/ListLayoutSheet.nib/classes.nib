@@ -5,8 +5,15 @@
             CLASS = AIListLayoutWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkBox_extendedStatusVisible" = NSButton; 
+                "checkBox_serviceIconsVisible" = NSButton; 
+                "checkBox_statusIconsVisible" = NSButton; 
+                "checkBox_userIconVisible" = NSButton; 
                 "popUp_contactTextAlignment" = NSPopUpButton; 
                 "popUp_groupTextAlignment" = NSPopUpButton; 
+                "popUp_windowStyle" = NSPopUpButton; 
+                "slider_userIconSize" = NSSlider; 
+                "textField_userIconSize" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 

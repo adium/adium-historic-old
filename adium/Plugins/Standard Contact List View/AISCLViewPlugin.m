@@ -24,8 +24,8 @@
 #import "AIBorderlessListWindowController.h"
 #import "AIContactListAdvancedPrefs.h"
 
+#import "AIListLayoutWindowController.h"
 
-#define BORDERLESS_CONTACT_LIST	NO
 
 @interface AISCLViewPlugin (PRIVATE)
 @end
@@ -51,6 +51,37 @@
     preferencesAdvanced = [[ESCLViewAdvancedPreferences preferencePane] retain];
     preferencesLabelsAdvanced = [[ESCLViewLabelsAdvancedPrefs preferencePane] retain];
 	[[AIContactListAdvancedPrefs preferencePane] retain];
+
+	//Observe list closing
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(contactListDidClose)
+									   name:Interface_ContactListDidClose
+									 object:nil];
+
+    //Observe preference changes
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
+    [self preferencesChanged:nil];
+}
+
+
+//Preferences have changed
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if((notification == nil) ||
+	   ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_LAYOUT] &&
+		[(NSString *)[[notification userInfo] objectForKey:@"Key"] isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE])){
+		
+		windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
+																	group:PREF_GROUP_LIST_LAYOUT] intValue];
+		NSLog(@"style %i",windowStyle);
+		if(contactListWindowController){
+			[self closeContactList];
+			[self showContactListAndBringToFront:NO];
+		}
+	}
 }
 
 
@@ -61,7 +92,7 @@
 - (void)showContactListAndBringToFront:(BOOL)bringToFront
 {
     if(!contactListWindowController){ //Load the window
-		if(BORDERLESS_CONTACT_LIST){
+		if(windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_BORDERLESS){
 			contactListWindowController = [[AIBorderlessListWindowController listWindowController] retain];
 		}else{
 			contactListWindowController = [[AIStandardListWindowController listWindowController] retain];
@@ -81,6 +112,7 @@
 {
     if(contactListWindowController){
         [[contactListWindowController window] performClose:nil];
+		[self contactListDidClose];
     }
 }
 
