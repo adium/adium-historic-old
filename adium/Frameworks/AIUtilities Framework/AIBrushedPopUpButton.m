@@ -118,6 +118,7 @@
     frame.size.width = [title sizeWithAttributes:textAttributes].width - (LABEL_INSET_SMALL * 2) + TRIANGLE_PADDING_X + [popUpTriangle size].width + [popUpRolloverCaps size].width;
     
     [self setFrame:frame];
+    [self resetCursorRects];
 }
 
 - (void)drawRect:(NSRect)rect
