@@ -30,16 +30,6 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 
 /*
- * @brief Identifier as an account menu plugin
- *
- * Implemented as required by the AccountMenuPlugin protocol
- */
-- (NSString *)identifier
-{
-	return(@"AccountMenuAccess");
-}
-
-/*
  * @brief Add account menu items to our location
  *
  * Implemented as required by the AccountMenuPlugin protocol.
