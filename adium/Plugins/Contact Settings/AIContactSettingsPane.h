@@ -8,10 +8,12 @@
 
 @interface AIContactSettingsPane : AIContactInfoPane {
 	IBOutlet	ESDelayedTextField		*textField_alias;
-	
+	IBOutlet	ESDelayedTextField		*textField_notes;
+
 	AIListObject		*listObject;
 }
 
 - (IBAction)setAlias:(id)sender;
+- (IBAction)setNotes:(id)sender;
 
 @end

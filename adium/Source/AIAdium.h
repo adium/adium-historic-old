@@ -51,7 +51,7 @@
     IBOutlet	AIDockController            *dockController;
     IBOutlet    ESFileTransferController    *fileTransferController;
     IBOutlet    ESContactAlertsController   *contactAlertsController;
-    IBOutlet    BZActivityWindowController  *activityWindowController;
+//    IBOutlet    BZActivityWindowController  *activityWindowController;
     
     NSNotificationCenter                    *notificationCenter;
     NSMutableDictionary                     *eventNotifications;
@@ -75,7 +75,7 @@
 - (AIDockController *)dockController;
 - (ESFileTransferController *)fileTransferController;
 - (ESContactAlertsController *)contactAlertsController;
-- (BZActivityWindowController *)activityWindowController;
+//- (BZActivityWindowController *)activityWindowController;
 
 - (NSNotificationCenter *)notificationCenter;
 - (void)registerEventNotification:(NSString *)inNotification displayName:(NSString *)displayName;

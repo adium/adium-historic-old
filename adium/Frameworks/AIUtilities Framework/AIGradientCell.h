@@ -15,5 +15,6 @@
 - (BOOL)drawsGradientHighlight;
 - (void)setIgnoresFocus:(BOOL)inIgnoresFocus;
 - (BOOL)ignoresFocus;
-	
+- (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
+
 @end
