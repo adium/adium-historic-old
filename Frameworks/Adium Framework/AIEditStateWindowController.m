@@ -472,7 +472,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 
 	//Idle start
 	double	idleStart = [statusState forcedInitialIdleTime];
-	[textField_idleMinutes setStringValue:[NSString stringWithFormat:@"%i",(int)(idleStart/60)]];
+	[textField_idleMinutes setStringValue:[NSString stringWithFormat:@"%i",(int)(idleStart%60)]];
 	[textField_idleHours setStringValue:[NSString stringWithFormat:@"%i",(int)(idleStart/3600)]];
 
 	//Update visiblity and size
