@@ -127,10 +127,7 @@
 - (void)processBezelForNotification:(NSNotification *)notification 
 {
     AIListContact   *contact;
-    NSEnumerator    *accountEnumerator;
-    AIAccount       *account;
     BOOL            isFirstMessage = NO;
-    BOOL            showBezel = NO;
     
     NSString        *notificationName = [notification name];
     
