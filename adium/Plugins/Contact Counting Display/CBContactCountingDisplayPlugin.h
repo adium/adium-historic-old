@@ -10,5 +10,9 @@
 {
 
 }
+- (void)installPlugin;
+- (void)uninstallPlugin;
 
+- (void)preferencesChanged:(NSNotification *)notification;
+- (void)contactsChanged:(NSNotification *)notification;
 @end
