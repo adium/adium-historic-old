@@ -118,7 +118,8 @@
         }
     }
     
-    //Let everyone know the contact list changed
+    //Resort the contact list, and let everyone know it changed
+    [[owner contactController] sortListGroup:contactList mode:AISortGroupAndSubGroups];
     [[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
 }
 
