@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.118 2004/03/21 18:59:28 evands Exp $
+// $Id: AIContactController.m,v 1.119 2004/03/29 20:45:23 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -435,15 +435,16 @@
 	
 	//Send out global attribute & status changed notifications (to cover any delayed updates)
 	if(updatesOccured){
+		//Resort the list
+		[self sortContactList];
+		
+		//Inform observers of any changes
 		if(delayedAttributeChanges){
 			[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:nil];
 		}
 		if(delayedContentChanges){
 			[[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
 		}
-		
-		//Resort the list
-		[self sortContactList];
 		
         //Reset the delayed update count back to 0
 		delayedStatusChanges = 0;
