@@ -71,7 +71,7 @@
 //Returns the display name of this emoticon
 - (NSString *)name
 {
-    return([[path lastPathComponent] stringByDeletingPathExtension]);
+    return name;
 }
 
 //Enable/Disable this emoticon
