@@ -9,18 +9,39 @@
 #import "ESGaimYahooAccount.h"
 
 #import <Libgaim/yahoo_filexfer.h>
+#include <Libgaim/yahoo.h>
 
 #define KEY_YAHOO_HOST  @"Yahoo:Host"
 #define KEY_YAHOO_PORT  @"Yahoo:Port"
 
 @implementation ESGaimYahooAccount
 
-static BOOL didInitYahoo = NO;
+static BOOL				didInitYahoo = NO;
+static NSDictionary		*presetStatusesDictionary = nil;
 
 - (const char*)protocolPlugin
 {
 	if (!didInitYahoo) didInitYahoo = gaim_init_yahoo_plugin();
     return "prpl-yahoo";
+}
+
+- (void)initAccount
+{
+	if (!presetStatusesDictionary){
+		presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
+			AILocalizedString(@"Be Right Back",nil),	[NSNumber numberWithInt:YAHOO_STATUS_BRB],
+			AILocalizedString(@"Busy",nil),				[NSNumber numberWithInt:YAHOO_STATUS_BUSY],
+			AILocalizedString(@"Not At Home",nil),		[NSNumber numberWithInt:YAHOO_STATUS_NOTATHOME],
+			AILocalizedString(@"Not At My Desk",nil),   [NSNumber numberWithInt:YAHOO_STATUS_NOTATDESK],
+			AILocalizedString(@"Not In The Office",nil),[NSNumber numberWithInt:YAHOO_STATUS_NOTINOFFICE],
+			AILocalizedString(@"On The Phone",nil),		[NSNumber numberWithInt:YAHOO_STATUS_ONPHONE],
+			AILocalizedString(@"On Vacation",nil),		[NSNumber numberWithInt:YAHOO_STATUS_ONVACATION],
+			AILocalizedString(@"Out To Lunch",nil),		[NSNumber numberWithInt:YAHOO_STATUS_OUTTOLUNCH],
+			AILocalizedString(@"Stepped Out",nil),		[NSNumber numberWithInt:YAHOO_STATUS_STEPPEDOUT],
+			AILocalizedString(@"Invisible",nil),		[NSNumber numberWithInt:YAHOO_STATUS_INVISIBLE],
+			AILocalizedString(@"Idle",nil),				[NSNumber numberWithInt:YAHOO_STATUS_IDLE],
+			AILocalizedString(@"Offline",nil),			[NSNumber numberWithInt:YAHOO_STATUS_OFFLINE],nil] retain];
+	}
 }
 
 #pragma mark Connection
@@ -56,20 +77,7 @@ static BOOL didInitYahoo = NO;
 
 #pragma mark Encoding
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
-{
-    //gaim's yahoo_html_to_codes seems to be messed up...
-	/*return ([AIHTMLDecoder encodeHTML:inAttributedString
-							  headers:NO
-							 fontTags:NO
-				   includingColorTags:NO
-						closeFontTags:NO
-							styleTags:NO
-		   closeStyleTagsOnFontChange:NO
-					   encodeNonASCII:NO
-						   imagesPath:nil
-					attachmentsAsText:YES
-						   simpleTagsOnly:YES]);*/
-	
+{	
 	return([AIHTMLDecoder encodeHTML:inAttributedString
 							 headers:NO
 							fontTags:YES
@@ -104,6 +112,83 @@ static BOOL didInitYahoo = NO;
 - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
 {
     [super rejectFileReceiveRequest:fileTransfer];    
+}
+
+
+#pragma mark Status Messages
+- (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent) event
+{
+	[super accountUpdateBuddy:buddy forEvent:event];
+	
+	AIListContact	*theContact;
+	if (buddy != nil) {
+		//Get the node's ui_data
+		theContact = (AIListContact *)buddy->node.ui_data;
+		if (theContact /*&& GAIM_BUDDY_IS_ONLINE(buddy)*/){
+			SEL updateSelector = nil;
+			switch (event){
+				//case GAIM_BUDDY_SIGNON:
+				case GAIM_BUDDY_STATUS_MESSAGE:
+				//case GAIM_BUDDY_AWAY:
+				//case GAIM_BUDDY_AWAY_RETURN:
+				//case GAIM_BUDDY_MISCELLANEOUS:{ //handle status messages
+				{
+					updateSelector = @selector(updateStatusMessage:);
+					break;
+				}
+			}
+			
+			if (updateSelector){
+				[self performSelectorOnMainThread:updateSelector
+									   withObject:theContact
+									waitUntilDone:NO];
+			}
+		}
+	}
+}
+- (void)updateStatusMessage:(AIListContact *)theContact
+{
+	struct yahoo_data   *od;
+	struct yahoo_friend *userInfo;
+	GaimBuddy			*buddy;
+	
+	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
+	
+	if ((od = gc->proto_data) &&
+		(userInfo = g_hash_table_lookup(od->friends, gaim_normalize(buddy->account, buddy->name)))) {
+		
+		NSString		*statusMsgString = nil;
+		NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
+		
+		if (userInfo != NULL){
+			if (userInfo->msg != NULL) {
+				//<muse>if it is, why is status custom??</muse>
+				statusMsgString = [NSString stringWithUTF8String:userInfo->msg];
+			} else if (userInfo->status != YAHOO_STATUS_AVAILABLE) {
+				statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:userInfo->status]];
+			}
+			
+			if (statusMsgString && [statusMsgString length]) {
+				if (![statusMsgString isEqualToString:oldStatusMsgString]) {
+					NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:statusMsgString];
+					
+					[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
+					[theContact setStatusObject:[attrStr autorelease] forKey:@"StatusMessage" notify:NO];
+					
+					//apply changes
+					[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+				}
+				
+			} else if (oldStatusMsgString && [oldStatusMsgString length]) {
+				//If we had a message before, remove it
+				[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
+				[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
+				
+				//apply changes
+				[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+			}
+		}
+	}
 }
 
 @end
