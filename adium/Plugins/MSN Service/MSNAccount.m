@@ -565,6 +565,39 @@
 
 - (void)getPackets:(NSTimer *)timer
 {
+    /*possible soltion to the problem of payload commands:
+    switch()
+    {
+        case: 0
+            if(readyForReceiving)
+            {
+                if(theres a cached command)
+                    use it
+                else
+                    snag the command from the socket
+                    
+                if(command == command that needs to read a payload)
+                {
+                    if(phase1)
+                        do stuff to get ready to send read in our payload
+                    else if(phase2)
+                        use the case2 stuff from below, to read in the payload
+                    else if(phase3)
+                        process the payload command.
+                    else
+                        error cheking go here
+                }
+                other commands
+            }
+            else
+                error checking go here
+            break;
+            
+        case 1: 
+            sending stuff go here
+            break;
+    }*/
+    
     /*NSData *inData = nil; //don't want old data hanving around
     if ([socket isValid])
     {
@@ -603,6 +636,9 @@
                         temp = [[temp componentsSeparatedByString:@" "]
                             componentsJoinedByString:@""];
                         
+                        //format the stuff in the right format.
+                        //CODE_GO_HERE
+                        
                         //set it in userInfo
                         [[timer userInfo] setObject:temp forKey:@"String"];
                         
@@ -633,7 +669,7 @@
                 }
                 break;
                 
-            case 2: //Receive a payload command, the length is in String. 
+            case 2: //Receive a payload command, the length is in String.
                     //Afterward, the data will be in String, AS AN NSDATA. BE CAREFUL
                 if([socket readyForReceiving])
                 {
