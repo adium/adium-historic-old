@@ -14,18 +14,21 @@
 \------------------------------------------------------------------------------------------------------ */
 
 @interface BGThemeManageView : NSView {
-    IBOutlet AIAlternatingRowTableView *table;
-    IBOutlet NSButton *removeButton;
-    IBOutlet NSButton *applyButton;
-    NSString	*defaultThemePath;
-    NSFileManager *mgr;
-    NSArray *themes;
-    id themesPlugin;
-    int themeCount;
+    IBOutlet 	AIAlternatingRowTableView 	*table;
+    IBOutlet 	NSButton 					*removeButton;
+    IBOutlet 	NSButton 					*applyButton;
+	
+    NSString			*defaultThemePath;
+    NSFileManager		*mgr;
+    NSArray 			*themes;
+    id 					themesPlugin;
+    int 				themeCount;
 }
+
 -(NSString *)selectedTheme;
 -(IBAction)removeTheme:(id)sender;
 -(IBAction)applyTheme:(id)sender;
 -(void)setPlugin:(id)newPlugin;
 -(void)buildThemesList;
+
 @end

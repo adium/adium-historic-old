@@ -34,11 +34,11 @@
 
 -(void)createThemeNamed:(NSString *)newName by:(NSString *)newAuthor version:(NSString *)newVersion
 {
-    NSArray                     *themableKeys;
+    NSArray				*themableKeys;
     NSString			*group;
     NSString			*key;
     NSEnumerator		*keyEnumerator;
-    NSMutableDictionary         *newTheme = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *newTheme = [NSMutableDictionary dictionary];
     NSEnumerator		*enumerator = [[[adium preferenceController] themablePreferences] keyEnumerator];
 	
     // set basic attributes of theme
@@ -85,8 +85,10 @@
     NSArray *adiumComponents = [key componentsSeparatedByString:KEY_GROUP_SEPARATOR];
 
     //Verify we got components - two of them, to be exact
-    if (adiumComponents && ([adiumComponents count]==2)){
-        [[adium preferenceController] setPreference:[dict objectForKey:key] forKey:[adiumComponents objectAtIndex:0] group:[adiumComponents objectAtIndex:1]];
+    if(adiumComponents && ([adiumComponents count]==2)){
+        [[adium preferenceController] setPreference:[dict objectForKey:key]
+											 forKey:[adiumComponents objectAtIndex:0]
+											  group:[adiumComponents objectAtIndex:1]];
     }
 }
 /// ====== end efficiency ================
@@ -106,4 +108,5 @@
     }
     [[adium preferenceController] delayPreferenceChangedNotifications:NO];
 }
+
 @end
