@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+// $Id: AIInterfaceController.m,v 1.41 2003/12/08 06:12:37 jmelloy Exp $
+
 #import "AIInterfaceController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"
