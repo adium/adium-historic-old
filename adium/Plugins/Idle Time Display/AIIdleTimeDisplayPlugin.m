@@ -81,9 +81,8 @@
 
 	}
 
-        if(displayIdleTime){
-
-	    idleView = [viewArray objectWithOwner:self];
+        if(displayIdleTime && idle != 0){
+            idleView = [viewArray objectWithOwner:self];
             //Add an idle view if one doesn't exist
             if(!idleView){
                 idleView = [AIIdleView idleView];
@@ -91,17 +90,16 @@
             }
 
             //Set the correct time
-            [idleView setStringContent:(idle != 0 ? [self idleStringForSeconds:idle] : @"")];
+            [idleView setStringContent:[self idleStringForSeconds:idle]];
 
             //Set the correct color
             [idleView setColor:idleTextColor];
-
+            
         }else{
             //Remove the idle view if one exists
             if(idleView){
                 [viewArray setObject:nil withOwner:self];
             }
-
         }
 
 	modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Right View", nil];

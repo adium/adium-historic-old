@@ -81,11 +81,11 @@
 - (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax
 {
     //Return the requested width
-    if(computeMax){
-        return([self maxWidthForHeight:inHeight]);
-    }else{
+    //if(computeMax){
+    //    return([self maxWidthForHeight:inHeight]);
+    //}else{
         return([self attributedStringSizeForHeight:inHeight].width + 1.0);
-    }    
+    //}    
 }
 
 //Draw

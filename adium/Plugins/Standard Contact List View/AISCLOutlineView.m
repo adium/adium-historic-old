@@ -173,10 +173,26 @@
 
         desiredHeight = [self numberOfRows] * ([self rowHeight] + [self intercellSpacing].height);
 
-        int i;
-        int desiredWidth = 50;
+        int desiredWidth = 160;
+/*
+ What we're doing here is way to computationally intense, and doesn't even work right.  The desired behavior would resize the list like:
 
-        for(i = 0; i < [self numberOfRows]; i++){
+ Buddy 1               
+ Idle Buddy            1:02
+ Buddy has a long name
+
+ The commented behavior below resizes to this:
+
+ Buddy 1
+ Idle Buddy       1:02
+ Buddy has a long name
+
+ Which doesn't look good with a large list.  Not sure of an easy or fast way to fix this at the moment.  What's wrong is that views are only applied to specific contacts.  So the idle view is only present on the idle buddy, and not the one with a long name.  I guess a fix for this would involve custom desired size methods for AISCLCell that would return the desired left/middle/right widths separately.  That will still be slow, but would atleast work right.  We'd need caching of those widths to improve speed.  I probably should tackle this.
+ */
+/*
+ //        int i;
+
+ for(i = 0; i < [self numberOfRows]; i++){
             NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
             AISCLCell 		*cell = [column dataCell];
             NSSize		cellSize;
@@ -190,7 +206,7 @@
             if(cellSize.width > desiredWidth){
                 desiredWidth = cellSize.width;
             }
-        }
+        }*/
 
         if(desiredWidth < DESIRED_MIN_WIDTH) desiredWidth = DESIRED_MIN_WIDTH;
         if(desiredHeight < DESIRED_MIN_HEIGHT) desiredHeight = DESIRED_MIN_HEIGHT;
