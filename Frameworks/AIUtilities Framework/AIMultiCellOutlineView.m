@@ -153,7 +153,7 @@
 		//Draw the grid
 		if([self drawsAlternatingRows] && [cell drawGridBehindCell]){
 			[self _drawRowInRect:NSIntersectionRect([self rectOfRow:row], rect)
-						 colored:(!(row % 2) && ![self isRowSelected:row])
+						 colored:!(row % 2)
 						selected:(row == [self selectedRow])];			
 		}
 		
