@@ -34,8 +34,6 @@
         <real>2.0</real>
         <key>Tooltips In Background</key>
         <false/>
-        <key>Tooltips With Other Apps Active</key>
-        <false/>
         <key>Label Around Contact</key>
         <false/>
         <key>Outline Labels</key>

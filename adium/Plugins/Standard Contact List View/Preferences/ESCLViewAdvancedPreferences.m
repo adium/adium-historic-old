@@ -54,10 +54,6 @@
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SCL_BACKGROUND_TOOLTIPS
                                               group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-    }else if(sender == checkbox_tooltipsInBackgroundOtherApps){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_SCL_BACKGROUND_TOOLTIPS_OTHERAPPS
-                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
     }
            
     [self configureControlDimming];
@@ -77,7 +73,6 @@
     [checkbox_outlineGroups setState:[[preferenceDict objectForKey:KEY_SCL_OUTLINE_GROUPS] boolValue]];
     [colorWell_outlineGroupsColor setColor:[[preferenceDict objectForKey:KEY_SCL_OUTLINE_GROUPS_COLOR] representedColor]];
     [checkbox_tooltipsInBackground setState:[[preferenceDict objectForKey:KEY_SCL_BACKGROUND_TOOLTIPS] boolValue]];
-    [checkbox_tooltipsInBackgroundOtherApps setState:[[preferenceDict objectForKey:KEY_SCL_BACKGROUND_TOOLTIPS_OTHERAPPS] boolValue]];
     
     [self configureControlDimming];
 }
@@ -86,8 +81,6 @@
 - (void)configureControlDimming
 {
 //    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-    
-    [checkbox_tooltipsInBackgroundOtherApps setEnabled:[checkbox_tooltipsInBackground state]];
     
     //Outlining of groups uses NSStrokeColorAttributeName, which was introduced in Panther
     if (![NSApp isOnPantherOrBetter]) {

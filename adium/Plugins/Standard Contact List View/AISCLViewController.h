@@ -30,7 +30,6 @@
     NSTimer 		*tooltipTimer;
     int 		tooltipCount;
     BOOL                allowTooltipsInBackground;
-    BOOL                allowTooltipsWhileInOtherApps;
     
     BOOL                shadows;
 }
