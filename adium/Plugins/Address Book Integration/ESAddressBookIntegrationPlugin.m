@@ -187,7 +187,6 @@
                 [statusArray setObject:image withOwner:self];
                 [[adium contactController] listObjectStatusChanged:listObject
                                                 modifiedStatusKeys:[NSArray arrayWithObject:@"UserIcon"]
-                                                           delayed:NO
                                                             silent:NO];
             }
             
