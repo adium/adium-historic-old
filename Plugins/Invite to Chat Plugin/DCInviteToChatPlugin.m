@@ -75,7 +75,7 @@
 	NSArray			*repArray = [sender representedObject];
 	AIListContact	*listContact = [repArray objectAtIndex:1];
 	AIChat			*chat = [repArray objectAtIndex:0];
-	NSString		*service = [repArray objectAtIndex:2];
+	AIService		*service = [repArray objectAtIndex:2];
 	
 	[DCInviteToChatWindowController inviteToChatWindowForChat:chat contact:listContact service:service];
 }

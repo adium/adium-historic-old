@@ -11,11 +11,11 @@
 	IBOutlet	NSTextField		*textField_chatName;
 	
 	AIListContact				*contact;
-	NSString					*service;
+	AIService					*service;
 	AIChat						*chat;
 }
 
-+ (void)inviteToChatWindowForChat:(AIChat *)inChat contact:(AIListContact *)inContact service:(NSString *)inService;
++ (void)inviteToChatWindowForChat:(AIChat *)inChat contact:(AIListContact *)inContact service:(AIService *)inService;
 + (void)closeSharedInstance;
 
 - (IBAction)invite:(id)sender;

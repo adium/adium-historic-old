@@ -14,7 +14,7 @@
 - (void)windowDidLoad;
 - (BOOL)windowShouldClose:(id)sender;
 - (BOOL)shouldCascadeWindows;
-- (void)setChat:(AIChat *)inChat contact:(AIListContact *)inContact service:(NSString *)inService;
+- (void)setChat:(AIChat *)inChat contact:(AIListContact *)inContact service:(AIService *)inService;
 @end
 
 @implementation DCInviteToChatWindowController
@@ -22,7 +22,7 @@
 static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 
 //Create a new invite to chat window
-+ (void)inviteToChatWindowForChat:(AIChat *)inChat contact:(AIListContact *)inContact service:(NSString *)inService
++ (void)inviteToChatWindowForChat:(AIChat *)inChat contact:(AIListContact *)inContact service:(AIService *)inService
 {
 	
     if(!sharedInviteToChatInstance){
@@ -69,7 +69,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
     return(self);
 }
 
-- (void)setChat:(AIChat *)inChat contact:(AIListContact *)inContact service:(NSString *)inService
+- (void)setChat:(AIChat *)inChat contact:(AIListContact *)inContact service:(AIService *)inService
 {
 	contact = inContact;
 	service = inService;
