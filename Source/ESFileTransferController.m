@@ -3,6 +3,8 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
+//  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
+//
 //  $Id$
 
 #import "ESFileTransferController.h"

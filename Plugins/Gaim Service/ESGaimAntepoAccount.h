@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on 11/21/04.
-//  Copyright 2004 The Adium Team. All rights reserved.
+//  Copyright 2004-2005 The Adium Team. All rights reserved.
 //
 
 #import "ESGaimJabberAccount.h"

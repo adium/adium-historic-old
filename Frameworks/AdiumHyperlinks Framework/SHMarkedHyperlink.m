@@ -3,6 +3,8 @@
 //  Adium
 //
 //  Created by Stephen Holt on Tue May 11 2004.
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
+//
 //
 // This is just an ADT... hardly even that.
 // the method names are description enough, aren't they?

@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Adam Iser on 12/10/04.
-//  Copyright (c) 2004 The Adium Team. All rights reserved.
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
 #import "AIViewGridView.h"

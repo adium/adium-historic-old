@@ -3,6 +3,8 @@
 //  Adium
 //
 //  Created by Stephen Holt on Sat Apr 17 2004.
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
+//
 
 #define LINK_MANAGEMENT_DEFAULTS        @"LinkManagementDefaults"
 #define PREF_GROUP_LINK_FAVORITES       @"URL Favorites"

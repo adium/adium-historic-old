@@ -4,7 +4,7 @@
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
- * Copyright (C) 2004 Andrew Wellington.
+ * Copyright (C) 2004-2005 Andrew Wellington.
  * All rights reserved.
  * 
  * This program is free software; you can redistribute it and/or modify it

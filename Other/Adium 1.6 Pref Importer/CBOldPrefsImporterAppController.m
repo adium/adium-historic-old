@@ -1,8 +1,9 @@
 //
-//CBOldPrefsImporterAppController.m
-//Adium
+//  CBOldPrefsImporterAppController.m
+//  Adium
 //
-//Created by Colin Barrett on Sun Aug 24 2003.
+//  Created by Colin Barrett on Sun Aug 24 2003.
+//  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
 #import "CBOldPrefsImporterAppController.h"

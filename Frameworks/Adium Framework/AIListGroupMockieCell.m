@@ -3,6 +3,7 @@
 //  Adium
 //
 //  Created by Adam Iser on Fri Jul 30 2004.
+//  Copyright 2004-2005 The Adium Team. All rights reserved.
 //
 
 #import "AIListGroupMockieCell.h"

@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Jorge Salvador Caffarena.
-//  Copyright (c) 2003 All rights reserved.
+//  Copyright (c) 2003-2005 All rights reserved.
 //
 
 #import "JSCEventBezelPreferences.h"

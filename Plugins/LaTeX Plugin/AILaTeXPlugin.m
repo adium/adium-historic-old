@@ -3,6 +3,7 @@
 //  Adium
 //
 //  Created by Stephen Poprocki on Sat Dec 13 2003.
+//  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
 // User must have a working LaTeX and Equation Service installation for anything to happen.

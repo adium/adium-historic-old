@@ -3,6 +3,8 @@
 //  Adium
 //
 //  Created by David Clark on Tuesday, March 23, 2004.
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
+//
 
 // Object pref keys
 #define PREF_GROUP_CONTEXT_DISPLAY  @"Message Context Display"

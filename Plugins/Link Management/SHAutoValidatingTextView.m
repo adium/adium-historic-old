@@ -3,6 +3,8 @@
 //  Adium
 //
 //  Created by Stephen Holt on Sat Apr 17 2004.
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
+//
 
 
 #import "SHAutoValidatingTextView.h"

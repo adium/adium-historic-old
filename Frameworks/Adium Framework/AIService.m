@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Adam Iser on 8/24/04.
-//  Copyright (c) 2004 The Adium Team. All rights reserved.
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
 #import "AIService.h"

@@ -3,6 +3,7 @@
 //  Adium
 //
 //  Created by Gregory Barchard on Wed Dec 10 2003.
+//  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
 #import "GBApplescriptFiltersPlugin.h"
