@@ -43,13 +43,14 @@ static CBGaimAccount* accountLookup(GaimAccount *acct)
 // Debug ------------------------------------------------------------------------------------------------------
 static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, const char *format, va_list args)
 {
-   /*gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
+/*   gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
 
     //Log error
     if(!category) category = "general"; //Category can be nil
     NSLog(@"(Debug: %s) %s", category, arg_s);
     
-    g_free(arg_s);*/
+    g_free(arg_s);
+    */
 }
 
 static GaimDebugUiOps adiumGaimDebugOps = {
@@ -397,6 +398,8 @@ static void *adiumGaimRequestChoice(const char *title, const char *primary, cons
 
 static void *adiumGaimRequestAction(const char *title, const char *primary, const char *secondary, unsigned int default_action, void *userData, size_t actionCount, va_list actions)
 {
+    //Called when someone attempts to add you to:
+        //their MSN buddy list
     NSLog(@"adiumGaimRequestAction");
     return(nil);
 }
@@ -517,8 +520,8 @@ static void adiumGaimPrefsInit(void)
     gaim_prefs_add_none("/gaim");
     gaim_prefs_add_none("/gaim/adium");
     gaim_prefs_add_none("/gaim/adium/blist");
-    gaim_prefs_add_bool("/gaim/adium/blist/show_offline_buddies", false);
-    gaim_prefs_add_bool("/gaim/adium/blist/show_empty_groups", false);
+    gaim_prefs_add_bool("/gaim/adium/blist/show_offline_buddies", TRUE);
+    gaim_prefs_add_bool("/gaim/adium/blist/show_empty_groups", TRUE);
 }
 
 static void adiumGaimCoreDebugInit(void)
@@ -565,28 +568,21 @@ static GaimCoreUiOps adiumGaimCoreOps = {
         NSLog(@"Failed to initialize gaim core");
     }
     
-    NSLog(@"loading plugins");
     //Tell libgaim to load its plugins
     plugin_search_paths[0] = (char *)[[[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:@"/Contents/Frameworks/Protocols/"] stringByExpandingTildeInPath] UTF8String];
     plugin_search_paths[1] = (char *)[[[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:@"/Contents/Frameworks/Plugins/"] stringByExpandingTildeInPath] UTF8String];
     gaim_plugins_set_search_paths(sizeof(plugin_search_paths) / sizeof(*plugin_search_paths), plugin_search_paths);
     gaim_plugins_probe(NULL);
-
-    //Tell libgaim to load its other pieces
-    gaim_prefs_init();
-    gaim_prefs_load();
-    //gaim_accounts_load();
-    gaim_pounces_load();
     
     //Setup the buddy list
     gaim_set_blist(gaim_blist_new());
     //gaim_blist_load();
     
     //Privacy
-    gaim_privacy_init();
+    //gaim_privacy_init();
     
     /* Proxy */
-    gaim_proxy_init();
+    //gaim_proxy_init();
     //[self configureGaimProxySettings];
         
     //Setup libgaim core preferences
