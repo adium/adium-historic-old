@@ -127,7 +127,7 @@ typedef enum {
 #define KEY_LIST_THEME_GRID_ENABLED					@"Grid Enabled"
 #define KEY_LIST_THEME_BACKGROUND_AS_STATUS			@"Background As Status"
 
-#define KEY_LIST_THEME_IMAGE_OPACITY				@"Offline Image Opacity"
+#define KEY_LIST_THEME_FADE_OFFLINE_IMAGES			@"Fade Offline Images"
 
 @interface AIAbstractListWindowController : AIWindowController {
     IBOutlet	AIAutoScrollView		*scrollView_contactList;

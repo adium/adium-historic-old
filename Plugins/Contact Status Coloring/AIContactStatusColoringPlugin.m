@@ -26,6 +26,9 @@
 
 @implementation AIContactStatusColoringPlugin
 
+#define OFFLINE_IMAGE_OPACITY	0.5
+#define FULL_IMAGE_OPACITY		1.0
+
 #define CONTACT_STATUS_THEMABLE_PREFS   		@"Contact Status Coloring Themable Prefs"
 #define CONTACT_STATUS_COLORING_DEFAULT_PREFS	@"ContactStatusColoringDefaults"
 
@@ -63,10 +66,11 @@
     idleAndAwayLabelColor = nil;
 	offlineLabelColor = nil;
 	
+	offlineImageFading = NO;
+	
 	
     //Setup our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LIST_THEME];
-//    preferences = [[AIContactStatusColoringPreferences preferencePane] retain];
     
     //Register themable preferences
     [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:CONTACT_STATUS_THEMABLE_PREFS 
@@ -78,7 +82,6 @@
 									   name:Preference_GroupChanged 
 									 object:nil];
     [self preferencesChanged:nil];
-
 }
 
 //
@@ -122,7 +125,7 @@
     NSColor			*color = nil, *invertedColor = nil, *labelColor = nil;
     int				unviewedContent, away;
     int				idle;
-	float			opacity = 1.0;
+	float			opacity = FULL_IMAGE_OPACITY;
 
     //Prefetch the value for unviewed content, we need it multiple times below
     unviewedContent = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
@@ -143,7 +146,7 @@
 			color = offlineColor;
 			invertedColor = offlineInvertedColor;
 			labelColor = offlineLabelColor;
-			opacity = offlineOpacity;
+			if(offlineImageFading) opacity = OFFLINE_IMAGE_OPACITY;
 			
 		}else if(signedOffEnabled && ([inObject integerStatusObjectForKey:@"Signed Off"])){
             color = signedOffColor;
@@ -276,7 +279,7 @@
 		
         //
         alpha = 1.0;
-		offlineOpacity = [[prefDict objectForKey:KEY_LIST_THEME_IMAGE_OPACITY] floatValue];
+		offlineImageFading = [[prefDict objectForKey:KEY_LIST_THEME_FADE_OFFLINE_IMAGES] boolValue];
 		
 		//Cache the preference values
         signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];

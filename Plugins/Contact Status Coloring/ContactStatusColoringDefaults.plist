@@ -74,7 +74,7 @@
 	<string>255,255,255</string> 
 	<key>Contact Status Text Color</key>
 	<string>128,128,128</string> 
-	<key>Offline Image Opacity</key>
-    <real>0.5</real>
+	<key>Fade Offline Images</key>
+	<true/>
 </dict>
 </plist>
