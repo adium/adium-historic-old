@@ -9,6 +9,7 @@
 
 #define STATUS_SORT_DEFAULT_PREFS   @"StatusSortDefaults"
 
+#define KEY_GROUP_AVAILABLE			@"Status:Group Available"
 #define KEY_GROUP_AWAY				@"Status:Group Away"
 #define KEY_GROUP_IDLE				@"Status:Group Idle"
 #define KEY_SORT_IDLE_TIME			@"Status:Sort by Idle Time"
@@ -16,6 +17,7 @@
 
 int statusSort(id objectA, id objectB, BOOL groups);
 
+static BOOL groupAvailable;
 static BOOL	groupAway;
 static BOOL	groupIdle;
 static BOOL	sortIdleTime;
@@ -36,6 +38,7 @@ static BOOL	resolveAlphabetically;
 	
 	//Load our preferences
 	NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING];
+	groupAvailable = [[prefDict objectForKey:KEY_GROUP_AVAILABLE] boolValue];
 	groupAway = [[prefDict objectForKey:KEY_GROUP_AWAY] boolValue];
 	groupIdle = [[prefDict objectForKey:KEY_GROUP_IDLE] boolValue];
 	sortIdleTime = [[prefDict objectForKey:KEY_SORT_IDLE_TIME] boolValue];
@@ -71,6 +74,7 @@ static BOOL	resolveAlphabetically;
 
 - (void)viewDidLoad
 {
+	[checkBox_groupAvailable setState:groupAvailable];
 	[checkBox_groupAway setState:groupAway];
 	[checkBox_groupIdle setState:groupIdle];
 	[checkBox_sortIdleTime setState:sortIdleTime];
@@ -84,7 +88,12 @@ static BOOL	resolveAlphabetically;
 }
 - (IBAction)changePreference:(id)sender
 {
-	if (sender == checkBox_groupAway){
+	if (sender == checkBox_groupAvailable){
+		groupAvailable = [sender state];
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:groupAvailable]
+                                             forKey:KEY_GROUP_AVAILABLE
+                                              group:PREF_GROUP_CONTACT_SORTING];		
+	}else if (sender == checkBox_groupAway){
 		groupAway = [sender state];
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:groupAway]
                                              forKey:KEY_GROUP_AWAY
@@ -137,27 +146,38 @@ int statusSort(id objectA, id objectB, BOOL groups)
 			return NSOrderedDescending;
 		}
 		
-		//Get the idle times now rather than potentially doing it twice below
+		//Get the away state and idle times now rather than potentially doing each twice below
+		BOOL awayA = ([objectA integerStatusObjectForKey:@"Away"]);
+		BOOL awayB = ([objectB integerStatusObjectForKey:@"Away"]);
+		
 		double idleA = ([objectA doubleStatusObjectForKey:@"Idle"]);
 		double idleB = ([objectB doubleStatusObjectForKey:@"Idle"]);
+		
+		//If grouping by availability and one is either idle or away and the other is neither, we have our ordering
+		if (groupAvailable){
+			BOOL unavailableA = (awayA || idleA);
+			BOOL unavailableB = (awayB || idleB);
+			if (unavailableA && !unavailableB){
+				return(NSOrderedDescending);
+			}else if (unavailableB && !unavailableA){
+				return (NSOrderedAscending);
+			}
+		}
 		
 		//If grouping by idle and one is idle but the other is not, we have our ordering
 		if (groupIdle){
 			if (idleA && !idleB){
 				return(NSOrderedDescending);
-			}else if(!idleA && idleB){
+			}else if(idleB && !idleA){
 				return(NSOrderedAscending);
 			}
 		}
 		
 		//If grouping by away and one contact is away but the other isn't, we have our ordering
-		if (groupAway){			
-			BOOL awayA = ([objectA integerStatusObjectForKey:@"Away"]);
-			BOOL awayB = ([objectB integerStatusObjectForKey:@"Away"]);
-			
+		if (groupAway){
 			if(awayA && !awayB){
 				return(NSOrderedDescending);
-			}else if(!awayA && awayB){
+			}else if(awayB && !awayA){
 				return(NSOrderedAscending);
 			}
 		}
