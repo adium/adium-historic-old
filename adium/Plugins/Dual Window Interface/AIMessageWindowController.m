@@ -225,8 +225,6 @@
 	AIChat	*chat = [inTabViewItem chat];
 
 	if([containedChats indexOfObject:chat] != index){
-		if([tabView_messages indexOfTabViewItem:inTabViewItem] < index) index--;
-		
 		[tabView_customTabs moveTab:inTabViewItem toIndex:index selectTab:NO];
 		[containedChats moveObject:chat toIndex:index];
 		

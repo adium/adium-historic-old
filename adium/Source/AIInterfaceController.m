@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.80 2004/07/13 20:31:47 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.81 2004/07/14 16:22:16 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -38,7 +38,7 @@
 - (void)_resortChat:(AIChat *)chat;
 - (void)_resortAllChats;
 - (int)_indexForInsertingChat:(AIChat *)chat intoContainerNamed:(NSString *)containerName;
-- (NSArray *)_listObjectsForChatsInContainerNamed:(NSString *)containerName ignoringChat:(AIChat *)ignoreChat;
+- (NSArray *)_listObjectsForChatsInContainerNamed:(NSString *)containerName;
 - (void)_addItemToMainMenuAndDock:(NSMenuItem *)item;
 - (NSAttributedString *)_tooltipTitleForObject:(AIListObject *)object;
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object;
@@ -371,6 +371,8 @@ arrangeChats = YES;
 {
 	NSString	*containerName = [interface containerNameForChat:chat];
 	
+	NSLog(@"Move chat %@ to index:%i among: %@",chat,[self _indexForInsertingChat:chat intoContainerNamed:containerName],[self _listObjectsForChatsInContainerNamed:containerName]);
+	
 	[interface moveChat:chat toContainerNamed:containerName
 				  index:[self _indexForInsertingChat:chat intoContainerNamed:containerName]];
 	
@@ -392,7 +394,7 @@ arrangeChats = YES;
 		int				index = 0;
 		
 		//Sort the chats in this container
-		listObjects = [self _listObjectsForChatsInContainerNamed:containerName ignoringChat:nil];
+		listObjects = [self _listObjectsForChatsInContainerNamed:containerName];
 		sortedListObjects = [listObjects mutableCopy];
 		[sortController sortListObjects:sortedListObjects];
 		
@@ -412,14 +414,14 @@ arrangeChats = YES;
 	AISortController	*sortController = [[owner contactController] activeSortController];
 
 	return([sortController indexForInserting:[chat listObject]
-								 intoObjects:[self _listObjectsForChatsInContainerNamed:containerName ignoringChat:chat]]);
+								 intoObjects:[self _listObjectsForChatsInContainerNamed:containerName]]);
 }
 
 //Build array of list objects to sort
 //We can't keep track of this easily since participating list objects may change due to multi-user chat
 //Multi-user chats make this so difficult :(
 #warning would love to do away with this
-- (NSArray *)_listObjectsForChatsInContainerNamed:(NSString *)containerName ignoringChat:(AIChat *)ignoreChat
+- (NSArray *)_listObjectsForChatsInContainerNamed:(NSString *)containerName
 {
 	NSMutableArray	*listObjects = [NSMutableArray array];
 	NSEnumerator	*enumerator;
@@ -428,12 +430,10 @@ arrangeChats = YES;
 
 	enumerator = [[self openChatsInContainerNamed:containerName] objectEnumerator];
 	while(chat = [enumerator nextObject]){
-		if(chat != ignoreChat){
-			listObject = [chat listObject];
-			if(listObject) [listObjects addObject:listObject];
-		}
+		listObject = [chat listObject];
+		if(listObject) [listObjects addObject:listObject];
 	}
-
+	
 	return(listObjects);
 }
 
