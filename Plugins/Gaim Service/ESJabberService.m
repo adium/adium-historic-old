@@ -48,6 +48,10 @@
 - (NSCharacterSet *)allowedCharacters{
 	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-()"]);
 }
+- (NSCharacterSet *)allowedCharactersForUIDs{ 
+	/* Allow % for use in transport names, username%hotmail.com@msn.blah.jabber.org */
+	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-()%"]);
+}
 - (NSCharacterSet *)ignoredCharacters{
 	return([NSCharacterSet characterSetWithCharactersInString:@""]);
 }
