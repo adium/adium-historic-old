@@ -2071,6 +2071,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}	
 }
 
+#pragma mark Alias
 - (oneway void)setAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount
 {
 	[runLoopMessenger target:self
@@ -2097,6 +2098,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}
 }
 
+#pragma mark Chats
 - (oneway void)openChat:(AIChat *)chat onAccount:(id)adiumAccount
 {
 	[runLoopMessenger target:self performSelector:@selector(gaimThreadOpenChat:onAccount:)
@@ -2269,6 +2271,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 {
 	[runLoopMessenger target:self
 			 performSelector:@selector(gaimThreadOSCAREditComment:forUID:onAccount:)
+				  withObject:comment
 				  withObject:inUID
 				  withObject:adiumAccount];
 }
@@ -2287,7 +2290,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		}
 	}
 }
-		
+
 - (oneway void)MSNRequestBuddyIconFor:(NSString *)inUID onAccount:(id)adiumAccount
 {
 	[runLoopMessenger target:self
@@ -2303,6 +2306,49 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		msn_request_buddy_icon(account->gc, [inUID UTF8String]);
 	}
 }
+
+
+#pragma mark Request callbacks
+- (oneway void)doRequestInputCbValue:(NSValue *)callBackValue
+				   withUserDataValue:(NSValue *)userDataValue 
+						 inputString:(NSString *)string
+{	
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadDoRequestInputCbValue:withUserDataValue:inputString:)
+				  withObject:callBackValue
+				  withObject:userDataValue
+				  withObject:string];
+}
+- (oneway void)gaimThreadDoRequestInputCbValue:(NSValue *)callBackValue
+							 withUserDataValue:(NSValue *)userDataValue 
+								   inputString:(NSString *)string
+{
+	GaimRequestInputCb callBack = [callBackValue pointerValue];
+	if (callBack){
+		callBack([userDataValue pointerValue],[string UTF8String]);
+	}	
+}
+
+- (oneway void)doRequestActionCbValue:(NSValue *)callBackValue
+					withUserDataValue:(NSValue *)userDataValue
+						callBackIndex:(NSNumber *)callBackIndexNumber
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadDoRequestActionCbValue:withUserDataValue:callBackIndex:)
+				  withObject:callBackValue
+				  withObject:userDataValue
+				  withObject:callBackIndexNumber];
+}
+- (oneway void)gaimThreadDoRequestActionCbValue:(NSValue *)callBackValue
+							  withUserDataValue:(NSValue *)userDataValue 
+								  callBackIndex:(NSNumber *)callBackIndexNumber
+{
+	GaimRequestActionCb callBack = [callBackValue pointerValue];
+	if (callBack){
+		callBack([userDataValue pointerValue],[callBackIndexNumber intValue]);
+	}
+}
+
 
 #pragma mark Gaim Images
 - (NSString *)_processGaimImagesInString:(NSString *)inString forAdiumAccount:(NSObject<AdiumGaimDO> *)adiumAccount

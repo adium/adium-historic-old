@@ -6,7 +6,6 @@
 //
 
 #import "CBGaimServicePlugin.h"
-#import "SLGaimCocoaAdapter.h"
 
 #import "GaimServices.h"
 
