@@ -15,7 +15,7 @@ else
 	lastbuild=$today
 fi
 
-cd ~/adium
+cd adium
 
 #This gaim stuff has more conflicts and angst than the WB
 rm -f "Plugins/Gaim Service/LIBS/liboscar.a"
@@ -30,13 +30,13 @@ ranlib "Plugins/Gaim Service/LIBS/liboscar.a"
 rm -r "build/PrefixHeaders"
 
 #Log everything
-Utilities/Build/cvs2cl.pl --no-times --day-of-week --prune --hide-filenames --file CompleteChanges
-Utilities/Build//cvs2cl.pl --no-times --day-of-week -l "-d'>=$lastbuild'" --prune --hide-filenames --file ChangeLog
+../cvs2cl.pl --no-times --day-of-week --prune --hide-filenames --file CompleteChanges
+../cvs2cl.pl --no-times --day-of-week -l "-d'>=$lastbuild'" --prune --hide-filenames --file ChangeLog
 cp ChangeLog ChangeLog_$prettydate
 #build it
 xcodebuild -target Adium GENERATE_DEBUGGING_SYMBOLS=NO COPY_PHASE_STRIP=YES DEBUGGING_SYMBOLS=NO MACOSX_DEPLOYMENT_TARGET=10.2 ZERO_LINK=NO OPTIMIZATION_CFLAGS=-Os FIX_AND_CONTINUE=NO OTHER_CFLAGS=-DDEPLOYMENT_BUILD
 #Package it
-Utilities/Build/buildDMG.pl -buildDir . -compressionLevel 9 -dmgName "Adium_$prettydate" -volName "Adium_$prettydate" build/Adium.app ChangeLog
+../buildDMG.pl -buildDir . -compressionLevel 9 -dmgName "Adium_$prettydate" -volName "Adium_$prettydate" build/Adium.app ChangeLog
 
 mkdir ~/AdiumBuilds
 
