@@ -38,6 +38,7 @@
 	plugin = [inPlugin retain];
     previousContent = nil;
 	newContentTimer = nil;
+	stylePath = nil;
 	webViewIsReady = NO;
 	newContent = [[NSMutableArray alloc] init];
 	
