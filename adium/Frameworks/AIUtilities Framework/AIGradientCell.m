@@ -3,7 +3,6 @@
 //  Adium XCode
 //
 //  Created by Chris Serino on Wed Jan 28 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIGradientCell.h"

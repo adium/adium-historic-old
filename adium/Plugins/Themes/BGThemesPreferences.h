@@ -3,9 +3,8 @@
 //  Adium XCode
 //
 //  Created by Brian Ganninger on Sat Jan 03 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
-#import <Foundation/Foundation.h>
+
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 #import "BGThemeManageView.h"

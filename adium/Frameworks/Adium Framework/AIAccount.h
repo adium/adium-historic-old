@@ -125,6 +125,8 @@ typedef enum {
 }
 
 - (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService;
+- (void)changedUIDto:(NSString *)inUID;
+- (void)accountUIDdidChange;
 
 - (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval;
 - (void)autoReconnectAfterDelay:(int)delay;
