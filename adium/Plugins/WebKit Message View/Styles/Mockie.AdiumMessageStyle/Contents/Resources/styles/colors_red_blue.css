@@ -1,0 +1,72 @@
+body {
+	background: #E6E9F2;
+}
+
+.incoming .buddyicon {
+	background: rgba(255,0,1,0.2);
+	border: 1px solid #ff0001;
+}
+
+.incoming .sender {
+	background: no-repeat url(../images/red/topleft.png);
+}
+
+.incoming .time_initial
+{
+	background: no-repeat url(../images/red/topright.png) right;
+}
+
+.incoming .time_consecutive {
+	color: #FF0001;
+}
+
+.incoming .message {
+	background: rgba(255,0,1,0.2);
+}
+
+.incoming .time_consecutive + p {
+	border-top: 1px dashed #FF0001;
+}
+
+.incoming a:hover {
+	background: #FF0001;
+	color: white;
+}
+
+.outgoing .buddyicon {
+	background: rgba(0,45,255,0.2);
+	border: 1px solid #002cff;
+}
+
+.outgoing .sender {
+	background: no-repeat url(../images/blue/topleft.png);
+}
+
+.outgoing .time_initial
+{
+	background: no-repeat url(../images/blue/topright.png) right;
+}
+
+.outgoing .time_consecutive {
+	color: #002cff;
+}
+
+.outgoing .message
+{
+	background: rgba(0,45,255,0.2);
+}
+
+.outgoing .time_consecutive + p {
+	border-top: 1px dashed #002cff;
+}
+
+.outgoing a:hover
+{
+	background: #002CFF;
+	color: white;
+}
+
+.context + .actual {
+	border-top: 4px dashed rgba(0,0,0,0.1);
+	padding-top: 5px;
+}
