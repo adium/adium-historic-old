@@ -230,6 +230,20 @@
 	
 	if ([content isKindOfClass:[AIContentMessage class]]) {
 		
+		range = [inString rangeOfString:@"%userIconPath%"];
+		if(range.location != NSNotFound){
+            NSString    *userIconPath = [[content source] statusObjectForKey:@"UserIconPath"];
+            if (userIconPath){
+                [inString replaceCharactersInRange:range withString:[NSString stringWithFormat:@"file://%@", userIconPath]];
+            }else{
+                if ([content isOutgoing]){
+                    [inString replaceCharactersInRange:range withString:@"Outgoing/buddy_icon.png"];
+                }else{
+                    [inString replaceCharactersInRange:range withString:@"Incoming/buddy_icon.png"];
+                }
+            }
+		}
+		
         range = [inString rangeOfString:@"%senderScreenName%"];
         if(range.location != NSNotFound){
            [inString replaceCharactersInRange:range withString:[[content source] UID]];
