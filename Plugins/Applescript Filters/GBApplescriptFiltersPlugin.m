@@ -17,9 +17,9 @@
 - (void)_sortScriptsByTitle:(NSMutableArray *)sortArray;
 - (NSMutableArray *)_loadScriptsFromDirectory:(NSString *)dirPath intoUsageArray:(NSMutableArray *)useArray;
 - (id)_filterString:(NSString *)inString originalObject:(id)originalObject;
-- (NSString *)_executeScript:(NSDictionary *)infoDict withArguments:(NSArray *)arguments;
-- (void)_replaceKeyword:(NSString *)keyword withScript:(NSDictionary *)infoDict inString:(NSString *)inString inAttributedString:(id)toObject;
-- (NSArray *)_argumentsFromString:(NSString *)inString forScript:(NSDictionary *)scriptDict;
+- (NSString *)_executeScript:(NSMutableDictionary *)infoDict withArguments:(NSArray *)arguments;
+- (void)_replaceKeyword:(NSString *)keyword withScript:(NSMutableDictionary *)infoDict inString:(NSString *)inString inAttributedString:(id)toObject;
+- (NSArray *)_argumentsFromString:(NSString *)inString forScript:(NSMutableDictionary *)scriptDict;
 - (void)buildScriptMenu;
 - (void)registerToolbarItem;
 @end
@@ -38,6 +38,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 	//We have an array of scripts for building the menu, and a dictionary of scripts used for the actual substition
 	scriptArray = nil;
 	flatScriptArray = nil;
+	currentComponentInstance = nil;
 	
 	//Prepare our script menu item (which will have the Scripts menu as its submenu)
 	scriptMenuItem = [[NSMenuItem alloc] initWithTitle:SCRIPTS_MENU_NAME target:self action:@selector(dummyTarget:) keyEquivalent:@""];
@@ -384,7 +385,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 
 	if (stringMessage = [inAttributedString string]){
 		NSEnumerator				*enumerator;
-		NSDictionary				*infoDict;
+		NSMutableDictionary			*infoDict;
 		
 		//Replace all keywords
 		enumerator = [flatScriptArray objectEnumerator];
@@ -415,7 +416,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 }
 
 //Perform a thorough variable replacing scan
-- (void)_replaceKeyword:(NSString *)keyword withScript:(NSDictionary *)infoDict inString:(NSString *)inString inAttributedString:(NSMutableAttributedString *)attributedString
+- (void)_replaceKeyword:(NSString *)keyword withScript:(NSMutableDictionary *)infoDict inString:(NSString *)inString inAttributedString:(NSMutableAttributedString *)attributedString
 {
 	NSScanner	*scanner;
 	NSString	*arglessScriptResult = nil;
@@ -476,7 +477,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 }
 
 //Return an NSData for each argument in the string
-- (NSArray *)_argumentsFromString:(NSString *)inString forScript:(NSDictionary *)scriptDict
+- (NSArray *)_argumentsFromString:(NSString *)inString forScript:(NSMutableDictionary *)scriptDict
 {
 	NSArray			*scriptArguments = [scriptDict objectForKey:@"Arguments"];
 	NSMutableArray	*argArray = [NSMutableArray array];
@@ -519,14 +520,34 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 }
 
 //Execute the script, returning its output
-- (NSString *)_executeScript:(NSDictionary *)infoDict withArguments:(NSArray *)arguments
+- (NSString *)_executeScript:(NSMutableDictionary *)infoDict withArguments:(NSArray *)arguments
 {
-	NSAppleScript   *script;
-	NSString		*returnValue;
+	NDAppleScriptObject	*script;
+	NSString				*returnValue;
 	
-	script = [[NSAppleScript alloc] initWithContentsOfURL:[infoDict objectForKey:@"Path"]
-													error:nil];
+	//Attempt to use a cached script
+	script = [infoDict objectForKey:@"NDAppleScriptObject"];
+	
+	//If none is found, load and cache
+	if (!script){
+		
+		//Load the script
+		script = [NDAppleScriptObject appleScriptObjectWithContentsOfURL:[infoDict objectForKey:@"Path"]];
+		[infoDict setObject:script
+					 forKey:@"NDAppleScriptObject"];
+	}
 
+	//Configure the componentInstance of the script
+	[currentComponentInstance release];
+	currentComponentInstance = [[script componentInstance] retain];
+	
+	//We want to receive the sendAppleEvent calls below
+	[currentComponentInstance setAppleEventSendTarget:self];
+	
+	//Commands in no tell block should go to the Finder, not Adium
+//	[currentComponentInstance setFinderAsDefaultTarget];
+	
+	/*
 	if([[infoDict objectForKey:@"RequiresUserInteraction"] boolValue]){
 		NSAppleEventDescriptor	*eventDescriptor;
 		NSInvocation			*invocation;
@@ -549,10 +570,44 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	}else{
 		returnValue = [[[script executeFunction:@"substitute" withArguments:arguments error:nil] stringValue] retain];	
 	}
+*/
+	[script executeSubroutineNamed:@"substitute" argumentsArray:arguments];
+	
+	return([script resultAsString]);
+}
 
-	[script release];
+//Receive apple events, then have them processed as normal but on the main thread
+- (NSAppleEventDescriptor *)sendAppleEvent:(NSAppleEventDescriptor *)appleEventDescriptor 
+								  sendMode:(AESendMode)sendMode 
+							  sendPriority:(AESendPriority)sendPriority
+							timeOutInTicks:(long)timeOutInTicks
+								  idleProc:(AEIdleUPP)idleProc
+								filterProc:(AEFilterUPP)filterProc
+{
+	NSAppleEventDescriptor	*eventDescriptor;
+	NSInvocation			*invocation;
+	SEL						selector;
 		
-	return([returnValue autorelease]);
+	selector = @selector(sendAppleEvent:sendMode:sendPriority:timeOutInTicks:idleProc:filterProc:);
+	
+	invocation = [NSInvocation invocationWithMethodSignature:[currentComponentInstance methodSignatureForSelector:selector]];
+	[invocation setSelector:selector];
+	[invocation setTarget:currentComponentInstance];
+	
+	[invocation setArgument:&appleEventDescriptor atIndex:2];
+	[invocation setArgument:&sendMode atIndex:3];
+	[invocation setArgument:&sendPriority atIndex:4];
+	[invocation setArgument:&timeOutInTicks atIndex:5];
+	[invocation setArgument:&idleProc atIndex:6];
+	[invocation setArgument:&filterProc atIndex:7];
+				
+	[invocation performSelectorOnMainThread:@selector(invoke)
+								 withObject:nil
+							  waitUntilDone:YES];
+	
+	[invocation getReturnValue:&eventDescriptor];
+	
+	return(eventDescriptor);
 }
 
 #pragma mark Toolbar item
