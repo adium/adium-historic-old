@@ -118,8 +118,9 @@
 	case (NSUpArrowFunctionKey): 
 	    if ((historyArrayCount = [historyArray count])) {
 		if ( currentHistoryLocation == -1) {
-		    currentHistoryLocation = (historyArrayCount-1);
-		} else if ( currentHistoryLocation > 0 ) {
+		    currentHistoryLocation = (historyArrayCount - 1);
+                    [self setString:@""];
+		} else if (currentHistoryLocation >= 0 ) {
 		    currentHistoryLocation--;
 		    [self setAttributedString:[historyArray objectAtIndex:currentHistoryLocation]];
 		    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
