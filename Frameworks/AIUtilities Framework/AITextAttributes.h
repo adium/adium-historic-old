@@ -15,7 +15,7 @@
 
 #define AIBodyColorAttributeName	@"AIBodyColor"
 
-@interface AITextAttributes : NSObject {
+@interface AITextAttributes : NSObject<NSCopying> {
 
     NSMutableDictionary	*dictionary;
 
