@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.51 2004/04/16 16:41:33 adamiser Exp $
+$Id: ToDoList.txt,v 1.52 2004/04/16 23:43:39 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -35,6 +35,7 @@ Bugs
    - (Hanji: I've had this happen, but can't trace under what circumstances. It does seem to happen when adding myself a lot, however)
 * Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
    - (Confirmed by Hanji)
+* Contact list transparency is incorrect (the background is black/opaque) when the window is first opened.
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
