@@ -71,15 +71,33 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 + (BOOL)setActiveServiceIconsFromPath:(NSString *)inPath
 {
 	if(!serviceIconBasePath || ![serviceIconBasePath isEqualToString:inPath]){
-		NSDictionary	*serviceIconPack = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
+		NSDictionary	*serviceIconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
 		
-		if(serviceIconPack && [[serviceIconPack objectForKey:@"AdiumSetVersion"] intValue] == 1){
+		if(serviceIconDict && [[serviceIconDict objectForKey:@"AdiumSetVersion"] intValue] == 1){
+			[serviceIconBasePath release];
 			serviceIconBasePath = [inPath retain];
 			
-			serviceIconNames[AIServiceIconSmall] = [[serviceIconPack objectForKey:@"Interface-Small"] retain];
-			serviceIconNames[AIServiceIconLarge] = [[serviceIconPack objectForKey:@"Interface-Large"] retain];
-			serviceIconNames[AIServiceIconList] = [[serviceIconPack objectForKey:@"List"] retain];
+			[serviceIconNames[AIServiceIconSmall] release];
+			serviceIconNames[AIServiceIconSmall] = [[serviceIconDict objectForKey:@"Interface-Small"] retain];
 
+			[serviceIconNames[AIServiceIconLarge] release];
+			serviceIconNames[AIServiceIconLarge] = [[serviceIconDict objectForKey:@"Interface-Large"] retain];
+			
+			[serviceIconNames[AIServiceIconList] release];
+			serviceIconNames[AIServiceIconList] = [[serviceIconDict objectForKey:@"List"] retain];
+
+			//Clear out the service icon cache
+			int i, j;
+			
+			for(i = 0; i < NUMBER_OF_SERVICE_ICON_TYPES; i++){
+				for(j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++){
+					[serviceIcons[i][j] removeAllObjects];
+				}
+			}
+			
+			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:@"AIServiceIconSetDidChange"
+																			   object:nil];
+			
 			return(YES);
 		}else{
 			return(NO);
@@ -87,6 +105,61 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 	}
 }
 
-//resourcePathsForName
+#define	PREVIEW_MENU_IMAGE_SIZE		13
+#define	PREVIEW_MENU_IMAGE_MARGIN	2
+
++ (NSImage *)previewMenuImageForServiceIconsAtPath:(NSString *)inPath
+{
+	NSImage			*image;
+	NSDictionary	*iconDict;
+	
+	image = [[NSImage alloc] initWithSize:NSMakeSize((PREVIEW_MENU_IMAGE_SIZE + PREVIEW_MENU_IMAGE_MARGIN) * 4,
+													 PREVIEW_MENU_IMAGE_SIZE)];
+	
+	iconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
+	
+	if(iconDict && [[iconDict objectForKey:@"AdiumSetVersion"] intValue] == 1){
+		NSDictionary	*previewIconNames = [iconDict objectForKey:@"List"];
+		NSEnumerator	*enumerator = [[NSArray arrayWithObjects:@"AIM",@"Jabber",@"MSN",@"Yahoo!",nil] objectEnumerator];
+		NSString		*iconID;
+		int				xOrigin = 0;
+		
+		[image lockFocus];
+		while(iconID = [enumerator nextObject]){
+			NSString	*anIconPath = [inPath stringByAppendingPathComponent:[previewIconNames objectForKey:iconID]];
+			NSImage		*anIcon;
+			
+			if(anIcon = [[[NSImage alloc] initWithContentsOfFile:anIconPath] autorelease]){
+				NSSize	anIconSize = [anIcon size];
+				NSRect	targetRect = NSMakeRect(xOrigin, 0, PREVIEW_MENU_IMAGE_SIZE, PREVIEW_MENU_IMAGE_SIZE);
+				
+				if(anIconSize.width < targetRect.size.width){
+					float difference = (targetRect.size.width - anIconSize.width)/2;
+					
+					targetRect.size.width -= difference;
+					targetRect.origin.x += difference;
+				}
+				
+				if(anIconSize.height < targetRect.size.height){
+					float difference = (targetRect.size.height - anIconSize.height)/2;
+					
+					targetRect.size.height -= difference;
+					targetRect.origin.y += difference;
+				}
+				
+				[anIcon drawInRect:targetRect
+							fromRect:NSMakeRect(0,0,anIconSize.width,anIconSize.height)
+						   operation:NSCompositeCopy
+							fraction:1.0];
+				
+				//Shift right in preparation for next image
+				xOrigin += PREVIEW_MENU_IMAGE_SIZE + PREVIEW_MENU_IMAGE_MARGIN;
+			}
+		}
+		[image unlockFocus];
+	}
+	
+	return([image autorelease]);
+}
 
 @end
