@@ -16,15 +16,16 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.24 $
- * $Date: 2003/11/05 21:39:38 $
- * $Author: adamiser $
+ * $Revision: 1.25 $
+ * $Date: 2003/11/12 17:53:41 $
+ * $Author: jmelloy $
  *
  */
 
 #import "AISQLLoggerPlugin.h"
 #import "libpq-fe.h"
 #import "JMSQLLogViewerWindowController.h"
+#import "JMSQLLoggerAdvancedPreferences.h"
 
 @interface AISQLLoggerPlugin (PRIVATE)
 - (void)_addMessage:(NSAttributedString *)message dest:(NSString *)destName source:(NSString *)sourceName sendDisplay:(NSString *)sendDisp destDisplay:(NSString *)destDisp sendServe:(NSString *)s_service recServe:(NSString *)r_service;
@@ -39,15 +40,18 @@
     //Observe content sending and receiving
     [[owner notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];
 
+    //Install some prefs.
+    //advancedPreferences = [[JMSQLLoggerAdvancedPreferences preferencePaneWithOwner:owner] retain];
+    
     //Install Menu item
-    logViewerMenuItem = [[NSMenuItem alloc] initWithTitle:@"SQL Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@""];
+    logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"SQL Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@""] autorelease];
     [[owner menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
 
     conn = PQconnectdb("");
     if (PQstatus(conn) == CONNECTION_BAD)
     {
-        [[owner interfaceController] handleErrorMessage:@"Connection to database failed." withDescription:@"Check your settings and try again."];
-        NSLog(@"%s", PQerrorMessage(conn));
+        NSString *error =  [NSString stringWithCString:PQerrorMessage(conn)];
+        [[owner interfaceController] handleErrorMessage:@"Connection to database failed." withDescription:error];
     }
 }
 

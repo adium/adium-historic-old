@@ -37,15 +37,15 @@
     advancedPreferences = [[AILoggerAdvancedPreferences preferencePaneWithOwner:owner] retain];
 
     //Install the log viewer menu item
-    logViewerMenuItem = [[NSMenuItem alloc] initWithTitle:@"Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@"l"];
+    logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@"l"] autorelease];
     [[owner menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
 
     //Install the 'view logs' menu item
-    viewContactLogsMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Contact's Logs" target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@"L"];
+    viewContactLogsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"View Contact's Logs" target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@"L"] autorelease];
     [[owner menuController] addMenuItem:viewContactLogsMenuItem toLocation:LOC_Contact_Manage];
 
     //Install a 'view logs' contextual menu item
-    viewContactLogsContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Logs" target:self action:@selector(showLogViewerToSelectedContextContact:) keyEquivalent:@""];
+    viewContactLogsContextMenuItem = [[[NSMenuItem alloc] initWithTitle:@"View Logs" target:self action:@selector(showLogViewerToSelectedContextContact:) keyEquivalent:@""] autorelease];
     [[owner menuController] addContextualMenuItem:viewContactLogsContextMenuItem toLocation:Context_Contact_Manage];
     
     //Create a logs directory
@@ -191,6 +191,7 @@
 {
     [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showWindow:nil];
     [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showLogsForContact:[[owner contactController] selectedContact]];
+    NSLog(@"%@", [[owner contactController] selectedContact]);
 }
 
 //Show the log viewer, displaying the selected contact's logs
