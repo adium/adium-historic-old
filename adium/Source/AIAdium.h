@@ -638,11 +638,13 @@ typedef enum {
     IBOutlet	AIAdium		*owner;
 
     NSMutableDictionary	*soundCacheDict;
+    NSMutableArray	*soundCacheArray;
     BOOL		useCustomVolume;
     BOOL		muteSounds;
     int			customVolume;
 
     int			activeSoundThreads;
+    BOOL		soundThreadActive;
 
     NSLock		*soundLock;
 
@@ -652,6 +654,7 @@ typedef enum {
     BOOL		speaking;
     int                 defaultRate;
     int                 defaultPitch;
+    
 
 #ifdef MAC_OS_X_VERSION_10_0
     SUSpeaker		*speaker_variableVoice;
