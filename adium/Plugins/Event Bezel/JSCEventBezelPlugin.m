@@ -10,7 +10,6 @@
 #import "JSCEventBezelPreferences.h"
 #import "AIContactStatusEventsPlugin.h"
 #import "AIContactStatusColoringPlugin.h"
-#import <AddressBook/AddressBook.h>
 
 #define CONTACT_BEZEL_NIB   @"ContactEventBezel"
 
@@ -185,15 +184,16 @@
     } else {
         contact = [notification object];
     }
-    
+        
     //Check to be sure bezel for contact and for its group is enabled
     NSNumber *contactDisabledNumber = [[owner preferenceController] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:contact];
     NSNumber *groupDisabledNumber = [[owner preferenceController] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:[contact containingGroup]];
     BOOL contactEnabled = !contactDisabledNumber || (![contactDisabledNumber boolValue]);
     BOOL groupEnabled = !groupDisabledNumber || (![groupDisabledNumber boolValue]);
+    // If Adium is hidden, check if we want it to show (and unhide Adium in the process)
+    BOOL showIfHidden = ![NSApp isHidden] || ([NSApp isHidden] && [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL] objectForKey:KEY_EVENT_BEZEL_SHOW_HIDDEN] boolValue]);
     
-    
-    if (contactEnabled && groupEnabled){
+    if (contactEnabled && groupEnabled && showIfHidden){
     
         ownerArray = [contact statusArrayForKey:@"BuddyImage"];
         if(ownerArray && [ownerArray count]) {
