@@ -92,12 +92,12 @@
         }
                 
         //update their idletime
-        if(buddy->idle != -(int)([[[theHandle statusDictionary] objectForKey:@"IdleSince"] timeIntervalSinceNow])/60.0)
+        if(buddy->idle != -(int)([[[theHandle statusDictionary] objectForKey:@"IdleSince"] timeIntervalSince1970]))
         {
             if(buddy->idle != 0)
             {
                 [[theHandle statusDictionary]
-                    setObject:[NSDate dateWithTimeIntervalSinceNow:((NSTimeInterval)buddy->idle)*-60.0]
+                    setObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->idle]
                     forKey:@"IdleSince"];
             }
             else
