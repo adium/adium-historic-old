@@ -52,7 +52,7 @@
     [table_emoticonPacks setToolTip:EMOTICON_PACKS_TOOLTIP];
 	
     //Emoticons table
-    checkCell = [[[NSButtonCell alloc] init] autorelease];
+    checkCell = [[NSButtonCell alloc] init];
     [checkCell setButtonType:NSSwitchButton];
     [checkCell setControlSize:NSSmallControlSize];
     [checkCell setTitle:@""];
@@ -75,6 +75,8 @@
 
 - (void)viewWillClose
 {
+	[checkCell release]; checkCell = nil;
+	
 	[[adium notificationCenter] removeObserver:self];
 	
     //Flush all the images we loaded
