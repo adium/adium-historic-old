@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/index.jsp $-->
-<!--$Rev: 829 $ $Date: 2004/06/30 05:19:55 $ -->
+<!--$Rev: 836 $ $Date: 2004/07/11 22:30:23 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -150,6 +150,7 @@ try {
 <script lanaguage = "JavaScript">
     window.name='viewer';
 </script>
+<script language="JavaScript" src="calendar.js"></script>
 </head>
 <body>
     <div id="container">
@@ -371,23 +372,9 @@ try {
 
                 <p><a href="#"
                 onClick="window.open('simpleViewer.jsp?start=<% if(dateStart != null) out.print(dateStart); else out.print(today); %>&finish=<%= dateFinish %>&from=<%=safeSend%>&to=<%= safeRec %>&contains=<%= safeCont %>&screen_or_display=<%= screenDisplayMeta %>&meta_id=<%=meta_id%>&chat_id=<%=chat_id%>', 'Save Chat', 'width=640,height=480')">Simple Message View</a></p>
-
 <%
-    if(dateStart  == null) {
-%>
-                <p><a href="#"
-                onClick="window.open('cal.jsp', 'Calendar', 'width=150,height=175')">Calendar</a></p>
-    <%
-    }
-    else {
-%>
-                <p><a href="#"
-                onClick="window.open('cal.jsp?date=<%=dateStart%>', 'Calendar', 'width=150,height=175')">Calendar</a></p>
-<%
-    }
     out.println("</div>\n");
     out.println("<div class=\"boxThinBottom\"></div>\n");
-
 %>
             </div>
             <div id="content">
@@ -395,7 +382,7 @@ try {
 
             <div class="boxWideTop"></div>
             <div class="boxWideContent">
-            <form action="index.jsp" method="get">
+            <form action="index.jsp" method="get" name="control">
                 <table border="0" cellpadding="3" cellspacing="0">
                 <tr>
                     <td align="right">
@@ -430,7 +417,7 @@ try {
                         <select name="meta_id">
                             <option value=\"0\">Choose One</option>
 <%
-    pstmt = conn.prepareStatement("select meta_id, name from meta_container order by name");
+    pstmt = conn.prepareStatement("select meta_id, name from im.meta_container order by name");
 
     rset = pstmt.executeQuery();
 
@@ -451,9 +438,19 @@ try {
                 out.print("value=\"" + dateStart + "\""); else
                 out.print("value=\"" + today.toString() + " 00:00:00\"");%>
                 id="start_date" />
+                <a href="javascript:show_calendar('control.start');"
+                    onmouseover="window.status='Date Picker';return true;"
+                    onmouseout="window.status='';return true;">
+                <img src="calicon.jpg" border=0></a>
+
                 <label for="finish_date">&nbsp;--&nbsp;</label>
                 <input type="text" name="finish" <% if (dateFinish != null)
                 out.print("value=\"" + dateFinish + "\""); %> id="finish_date" />
+                <a href="javascript:show_calendar('control.finish');"
+                    onmouseover="window.status='Date Picker';return true;"
+                    onmouseout="window.status='';return true;">
+                    <img src="calicon.jpg" border=0></a>
+
                     </td>
                 </tr>
                 </table>

@@ -35,7 +35,7 @@
             <br /><a href="changes.txt" class="offsides">Changelog</a>
             <br /><a
               href="http://www.visualdistortion.org/sqllogger/sqllogger.tar.gz"
-              class="offsides">JSP/HTML package</a>
+              class="offsides"><b>JSP/HTML package</b></a>
 
               <br /><h4>Adium</h4>
               <a href="http://www.adiumx.com/" class="offsides">Adium</a>
