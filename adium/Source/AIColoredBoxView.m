@@ -17,7 +17,8 @@
 
 /*
     A colored box
- */
+    $Id: AIColoredBoxView.m,v 1.3 2003/12/14 04:55:21 jmelloy Exp $
+*/
 
 @implementation AIColoredBoxView
 
