@@ -81,7 +81,7 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (void)awakeFromNib
 {
-	if(popUp_encryption) [popUp_encryption setMenu:[self encryptionMenu]];
+	if(popUp_encryption) [popUp_encryption setMenu:[[adium contentController] encryptionMenuNotifyingTarget:nil]];
 }
 
 
@@ -269,55 +269,6 @@ Adium, Copyright 2001-2005, Adam Iser
 - (IBAction)changedPreference:(id)sender
 {
 	//Empty
-}
-
-/*! 
- * @brief Generate the menu fro the encryption preference popUp
- */
-- (NSMenu *)encryptionMenu
-{
-	NSMenu		*encryptionMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
-	NSMenuItem	*menuItem;
-
-	[encryptionMenu setAutoenablesItems:NO];
-
-	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Disable chat encryption",nil)
-										  target:nil
-										  action:nil
-								   keyEquivalent:@""];
-	
-	[menuItem setTag:EncryptedChat_Never];
-	[encryptionMenu addItem:menuItem];
-	[menuItem release];
-
-	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Encrypt chats as requested",nil)
-										  target:nil
-										  action:nil
-								   keyEquivalent:@""];
-	
-	[menuItem setTag:EncryptedChat_Manually];
-	[encryptionMenu addItem:menuItem];
-	[menuItem release];
-	
-	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Encrypt chats automatically",nil)
-										  target:nil
-										  action:nil
-								   keyEquivalent:@""];
-	
-	[menuItem setTag:EncryptedChat_Automatically];
-	[encryptionMenu addItem:menuItem];
-	[menuItem release];
-
-	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Force encryption and refuse plaintext",nil)
-										  target:nil
-										  action:nil
-								   keyEquivalent:@""];
-	
-	[menuItem setTag:EncryptedChat_RejectUnencryptedMessages];
-	[encryptionMenu addItem:menuItem];
-	[menuItem release];
-	
-	return([encryptionMenu autorelease]);
 }
 
 @end
