@@ -46,7 +46,7 @@
 		}else if([inObject isKindOfClass:[AIListGroup class]]){
 			int visibleCount = [(AIListGroup *)inObject visibleCount];
 			
-			[inObject setVisible:(visibleCount > 0)];
+			[inObject setVisible:/*(visibleCount > 0)*/YES];
 		}
 	}
 	
