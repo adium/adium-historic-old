@@ -31,6 +31,12 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
     [[adium contentController] registerIncomingContentFilter:self];
 }
 
+- (void)uninstallPlugin
+{
+	[[adium contentController] unregisterOutgoingContentFilter:self];
+	[[adium contentController] unregisterIncomingContentFilter:self];
+}
+
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
 {
     NSMutableAttributedString   *replacementMessage = nil;
