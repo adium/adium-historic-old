@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.32 2004/02/27 09:31:46 eevyl Exp $
+// $Id: AISoundController.m,v 1.33 2004/02/27 22:28:55 evands Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -137,14 +137,14 @@
 {
     if(!muteSounds){
         if(useCustomVolume && customVolume != 0){
-	    //If the user is specifying a custom volume, we must use quicktime to play our sounds.
-	    [self _quicktimePlaySound:inPath];
-
+			//If the user is specifying a custom volume, we must use quicktime to play our sounds.
+			[self _quicktimePlaySound:inPath];
+			
         }else if(!useCustomVolume){ 
-	    //Otherwise, we can use NSSound
-	    if(!soundThreadActive){ //Don't bother spawning another thread if one is already waiting
+			//Otherwise, we can use NSSound
+			if(!soundThreadActive){ //Don't bother spawning another thread if one is already waiting
                 [NSThread detachNewThreadSelector:@selector(_threadPlaySound:) toTarget:self withObject:inPath];
-	    }
+			}
         }
     }    
 }
@@ -209,8 +209,12 @@
     soundThreadActive = YES;
     [soundLock lock];
 
+#warning is this where the crash report below is crashing? Or perhaps in quicktime code?
+	//http://www.visualdistortion.org/crash/view.jsp?crash=6128
+	//evands - added a retain/release - necessary?
+	
     //Load the sound (The system apparently caches these)
-    sound = [[NSSound alloc] initWithContentsOfFile:inPath byReference:YES];
+    sound = [[[NSSound alloc] initWithContentsOfFile:inPath byReference:YES] retain];
     [sound setDelegate:self];
 
     //Play the sound
@@ -227,6 +231,8 @@
     //Unlock and cleanup
     [soundLock unlock];
     soundThreadActive = NO;
+	[sound release];
+	
     [pool release];
 }
 
