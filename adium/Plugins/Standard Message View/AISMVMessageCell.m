@@ -170,9 +170,9 @@
         [style setAlignment:NSRightTextAlignment];
         
         if(incoming){
-            senderColor = [[[owner preferenceController] preferenceForKey:@"message_incoming_darkPrefixColor" group:PREF_GROUP_GENERAL handle:source] representedColor];
+            senderColor = [[[owner preferenceController] preferenceForKey:@"message_incoming_darkPrefixColor" group:PREF_GROUP_GENERAL object:source] representedColor];
         }else{
-            senderColor = [[[owner preferenceController] preferenceForKey:@"message_outgoing_darkPrefixColor" group:PREF_GROUP_GENERAL handle:source] representedColor];
+            senderColor = [[[owner preferenceController] preferenceForKey:@"message_outgoing_darkPrefixColor" group:PREF_GROUP_GENERAL object:source] representedColor];
         }
     
         //Create
@@ -187,8 +187,8 @@
     AIContactHandle		*sender;
     BOOL			incoming;
 
-    NSColor	*messageRowIn = [[preferenceController preferenceForKey:@"message_incoming_backgroundColor" group:PREF_GROUP_GENERAL handle:sender] representedColor];
-    NSColor	*messageRowOut = [[preferenceController preferenceForKey:@"message_outgoing_backgroundColor" group:PREF_GROUP_GENERAL handle:sender] representedColor];
+    NSColor	*messageRowIn = [[preferenceController preferenceForKey:@"message_incoming_backgroundColor" group:PREF_GROUP_GENERAL object:sender] representedColor];
+    NSColor	*messageRowOut = [[preferenceController preferenceForKey:@"message_outgoing_backgroundColor" group:PREF_GROUP_GENERAL object:sender] representedColor];
 
 
     sender = [object source];

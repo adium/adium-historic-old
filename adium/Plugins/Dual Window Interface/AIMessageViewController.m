@@ -246,8 +246,8 @@
         [textView_messageEntry setAttributedString:[textView_outgoing attributedString]];
         [textView_messageEntry setAutoresizingMask:(NSViewWidthSizable)];
         [textView_messageEntry setDelegate:self];
-        [textView_messageEntry setSendOnEnter:[[[owner preferenceController] preferenceForKey:@"message_send_onEnter" group:PREF_GROUP_GENERAL handle:handle] boolValue]];
-        [textView_messageEntry setSendOnReturn:[[[owner preferenceController] preferenceForKey:@"message_send_onReturn" group:PREF_GROUP_GENERAL handle:handle] boolValue]];
+        [textView_messageEntry setSendOnEnter:[[[owner preferenceController] preferenceForKey:@"message_send_onEnter" group:PREF_GROUP_GENERAL object:handle] boolValue]];
+        [textView_messageEntry setSendOnReturn:[[[owner preferenceController] preferenceForKey:@"message_send_onReturn" group:PREF_GROUP_GENERAL object:handle] boolValue]];
         [textView_messageEntry setTarget:self action:@selector(sendMessage:)];
         [[textView_messageEntry window] makeFirstResponder:textView_messageEntry];
 
