@@ -18,6 +18,8 @@
 	NSMutableArray			*scriptArray;			//Ordered array for script menu
 	
 	BOOL					buildingScriptMenu;
+	
+	NSToolbarItem			*toolbarItem;
 }
 
 @end
