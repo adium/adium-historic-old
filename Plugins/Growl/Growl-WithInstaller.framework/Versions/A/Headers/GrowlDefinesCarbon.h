@@ -1,7 +1,7 @@
 //
 // GrowlDefinesCarbon.h
 //
-// Automatically generated from GrowlDefines.h on Wed 2005-02-02 by GenCarbonHeader.pl
+// Automatically generated from GrowlDefines.h on Wed 2005-02-09 by GenCarbonHeader.pl
 //
 
 #ifndef _GROWLDEFINES_H
