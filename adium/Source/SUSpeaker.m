@@ -136,7 +136,7 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
     
     if (index!=-1)
     {
-        error = GetIndVoice(index, &voice);
+        error = GetIndVoice(index+1, &voice);
         if(error == noErr) {
             SetSpeechInfo(_speechChannel, soCurrentVoice, &voice);
         }
