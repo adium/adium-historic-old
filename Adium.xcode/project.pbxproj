@@ -23215,7 +23215,8 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			path = Adium.h;
+			name = Adium.h;
+			path = "Frameworks/Adium Framework/Adium.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
