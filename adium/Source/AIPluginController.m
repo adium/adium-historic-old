@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.49 2004/04/23 01:47:07 adamiser Exp $
+//$Id: AIPluginController.m,v 1.50 2004/04/23 02:20:49 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -119,7 +119,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin;
 	[self loadPluginWithClass:[ESStatusSortPlugin class]];
 	[self loadPluginWithClass:[ESUserIconHandlingPlugin class]];
 	[self loadPluginWithClass:[GBiTunerPlugin class]];
-	[self loadPluginWithClass:[IdleMessagePlugin class]]; //Crash on launch = 1
+	[self loadPluginWithClass:[IdleMessagePlugin class]]; //Crash on launch = 2
 	[self loadPluginWithClass:[JSCEventBezelPlugin class]];
 	[self loadPluginWithClass:[LNStatusIconsPlugin class]];
 	[self loadPluginWithClass:[SAContactOnlineForPlugin class]];
