@@ -60,7 +60,8 @@
     //init
     accountViewController = nil;
     view_accountPreferences = nil;
-    
+    selectedAccount = nil;
+	
     //Configure our tableView
     cell = [[[AIImageTextCell alloc] init] autorelease];
     [cell setFont:[NSFont systemFontOfSize:12]];
