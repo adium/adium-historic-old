@@ -11,6 +11,30 @@
 
 @implementation ESImageButton
 
+//
+- (id)initWithFrame:(NSRect)frame
+{
+	[super initWithFrame:frame];
+	imageFloater = nil;
+	return(self);
+}
+
+- (id)copyWithZone:(NSZone *)zone
+{
+	ESImageButton	*newButton = [super copyWithZone:zone];
+
+	newButton->imageFloater = [imageFloater retain];
+	
+	return(newButton);
+}
+
+- (void)dealloc
+{
+	[imageFloater release]; imageFloater = nil;
+	
+	[super dealloc];
+}
+
 //Mouse Tracking -------------------------------------------------------------------------------------------------------
 #pragma mark Mouse Tracking
 //Custom mouse down tracking to display our image and highlight
@@ -27,8 +51,8 @@
 		//Move the display point down by the height of our image
 		point.y -= [bigImage size].height;
 
-		//imageFloater retains itself until it closes
-		imageFloater = [ESFloater floaterWithImage:bigImage styleMask:NSBorderlessWindowMask];
+		[imageFloater release];
+		imageFloater = [[ESFloater floaterWithImage:bigImage styleMask:NSBorderlessWindowMask] retain];
 		[imageFloater setMaxOpacity:0.90];
 		[imageFloater moveFloaterToPoint:point];
 		[imageFloater setVisible:YES animate:YES];
@@ -39,15 +63,23 @@
 - (void)mouseUp:(NSEvent *)theEvent
 {
 	[self highlight:NO];
-
-	[imageFloater setVisible:NO animate:YES];
 	
-	//Let it stay around briefly before closing so the animation fades it out
-	[imageFloater performSelector:@selector(close:)
-					 withObject:nil
-					 afterDelay:0.5];
-
+	if(imageFloater){
+		[imageFloater setVisible:NO animate:YES];
+		
+		//Let it stay around briefly before closing so the animation fades it out
+		[self performSelector:@selector(destroyImageFloater)
+				   withObject:nil
+				   afterDelay:0.5];
+	}
+	
 	[super mouseUp:theEvent];
-}	
+}
+
+- (void)destroyImageFloater
+{
+	[imageFloater close:nil];
+	[imageFloater release]; imageFloater = nil;
+}
 
 @end

@@ -2,7 +2,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface MVMenuButton : NSButton {
+@interface MVMenuButton : NSButton <NSCopying> {
 	NSImage				*bigImage;
 	NSImage				*smallImage;
 	NSToolbarItem 		*toolbarItem;
@@ -25,5 +25,7 @@
 
 - (void)setDrawsArrow:(BOOL)inDraw;
 - (BOOL)drawsArrow;
+
+- (id)copyWithZone:(NSZone *)zone;
 
 @end
