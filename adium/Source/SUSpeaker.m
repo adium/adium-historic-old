@@ -5,7 +5,7 @@
 //  Based on SpeechUtilities framework by Raphael Sebbe.
 //  Revised by Evan Schoenberg on Tue Sep 30 2003.
 //  Optimized and expanded by Evan Schoenberg.
-//  $Id: SUSpeaker.m,v 1.6 2003/12/14 05:19:24 jmelloy Exp $
+//  $Id: SUSpeaker.m,v 1.7 2004/03/10 22:49:34 evands Exp $
 
 
 #import "SUSpeaker.h"
@@ -71,13 +71,15 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
 }
 
 //---Pitch
-/*"Sets the pitch. Pitch is given in Hertz and should be comprised between 80 and 500, depending on the voice. Note that extreme value can make you app crash..."*/ 
+/* "Sets the pitch. Pitch is given in Hertz and should be comprised between 80 and 500, depending on the voice.
+Note that extreme value can make your app crash..." */
 -(void)setPitch:(float)pitch
 {
     int fixedPitch;
     
     pitch = (pitch-90.0)/(300.0-90.0)*(65.0 - 30.0) + 30.0;  //conversion from hertz
-    /* I don't know what Apple means with pitch between 30 and 65, so I convert that range to [90, 300]. I did not test frequencies correspond, though.*/
+    /* I don't know what Apple means with pitch between 30 and 65, so I convert that range to [90, 300].
+		I did not test frequencies correspond, though. */
     
     fixedPitch = (int)pitch;
     
@@ -166,8 +168,7 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
         error = GetVoiceDescription( &voiceSpec, &voiceDescription, sizeof(voiceDescription));
         if(error == noErr)
         {
-            NSString *voiceName = [[[NSString alloc] initWithCString:
-                                                              &(voiceDescription.name[1]) length:voiceDescription.name[0]] autorelease];
+            NSString *voiceName = [[[NSString alloc] initWithUTF8String:&(voiceDescription.name[1])] autorelease];
             
             [voices addObject:voiceName];
         }
@@ -184,7 +185,7 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
     
     GetIndVoice(NULL, &voiceSpec);
     GetVoiceDescription( &voiceSpec, &voiceDescription, sizeof(voiceDescription));
-    voiceName = [[NSString alloc] initWithCString:&(voiceDescription.name[1]) length:voiceDescription.name[0]];
+    voiceName = [[NSString alloc] initWithUTF8String:&(voiceDescription.name[1]) length:voiceDescription.name[0]];
     return voiceName;
 }*/
 
@@ -197,7 +198,7 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
     if(_speechChannel != NULL && text != nil) {
 	/*FUNCTION SpeakText (chan: SpeechChannel; textBuf: Ptr;
 textBytes: LongInt): OSErr;*/
-	SpeakText(_speechChannel, [text cString], [text length]);
+	SpeakText(_speechChannel, [text UTF8String], [text length]);
     }
 }
 -(void)stopSpeaking
