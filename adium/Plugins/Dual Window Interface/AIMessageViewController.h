@@ -36,7 +36,7 @@
     id				delegate;
     AIChat			*chat;
     BOOL			showUserList;
-    BOOL			availableForSending;
+	BOOL			sendMessagesToOfflineContact;
 }
 
 + (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat;
@@ -50,6 +50,8 @@
 - (AIAccount *)account;
 - (void)setDelegate:(id)inDelegate;
 - (void)addToTextEntryView:(NSAttributedString *)inString;
+- (void)setShouldSendMessagesToOfflineContacts:(BOOL)should;
+- (IBAction)sendMessageLater:(id)sender;
 
 @end
 

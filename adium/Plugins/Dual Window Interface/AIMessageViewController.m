@@ -17,6 +17,7 @@
 #import "AIMessageWindowController.h"
 //#import "AIDualWindowInterfacePlugin.h"
 #import "AIAccountSelectionView.h"
+#import "CSMessageToOfflineContactWindowController.h"
 
 #define MESSAGE_VIEW_NIB		@"MessageView"		//Filename of the message view nib
 #define MESSAGE_TAB_TOOLBAR		@"MessageTab"		//ID of the message tab toolbar
@@ -57,6 +58,7 @@
     delegate = nil;
     chat = nil;
     showUserList = NO;
+	sendMessagesToOfflineContact = NO;
 	
     //view
     [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
@@ -248,22 +250,27 @@
 			[[textView_outgoing textStorage] setAttributes:[textView_outgoing defaultTypingAttributes]
 													 range:NSMakeRange(0, [[textView_outgoing textStorage] length])];
 		}
-				
+		
 		outgoingAttributedString = [[[textView_outgoing textStorage] copy] autorelease];
 
-        //Send the message
-        [[adium notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:chat userInfo:nil];
-		
-        message = [AIContentMessage messageInChat:chat
-                                       withSource:[chat account]
-                                      destination:nil //meaningless, since we get better info from the AIChat
-                                             date:nil //created for us by AIContentMessage
-                                          message:outgoingAttributedString
-                                        autoreply:NO];
-		
-        if([[adium contentController] sendContentObject:message]){
-            [[adium notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:chat userInfo:nil];
-        }
+		if (!sendMessagesToOfflineContact && [[chat participatingListObjects] count] == 1 && ![[[[chat participatingListObjects] objectAtIndex:0] statusObjectForKey:@"Online"] boolValue]) {
+			//Contact is offline.  Ask how the user wants to handle the situation.
+			[CSMessageToOfflineContactWindowController showSheetInWindow:[view_contents window] forMessageViewController:self];
+		} else {
+			//Send the message
+			[[adium notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:chat userInfo:nil];
+			
+			message = [AIContentMessage messageInChat:chat
+										   withSource:[chat account]
+										  destination:nil //meaningless, since we get better info from the AIChat
+												 date:nil //created for us by AIContentMessage
+											  message:outgoingAttributedString
+											autoreply:NO];
+			
+			if([[adium contentController] sendContentObject:message]){
+				[[adium notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:chat userInfo:nil];
+			}
+		}
     }
 }
 
@@ -272,6 +279,40 @@
 {
     [self setAccountSelectionMenuVisible:NO];
     [self clearTextEntryView];
+}
+
+- (IBAction)sendMessageLater:(id)sender
+{
+	NSMutableDictionary *detailsDict = [NSMutableDictionary dictionary], *alertDict = [NSMutableDictionary dictionary];
+	NSString	*outgoingString;
+	
+	//Reset to the default typing attributes if an NSURL was converted to a string, to remove the blue underline
+	if ([[textView_outgoing textStorage] convertNSURLtoString]) {
+		[textView_outgoing resetToDefaultTypingAttributes];
+		[[textView_outgoing textStorage] setAttributes:[textView_outgoing defaultTypingAttributes]
+												 range:NSMakeRange(0, [[textView_outgoing textStorage] length])];
+	}
+	
+	outgoingString = [[[[textView_outgoing textStorage] copy] string] autorelease];
+	
+	[detailsDict setObject:[[chat account] uniqueObjectID] forKey:@"Account ID"];
+	[detailsDict setObject:[NSNumber numberWithInt:1] forKey:@"Allow Other"];
+	[detailsDict setObject:[[[chat participatingListObjects] objectAtIndex:0] uniqueObjectID] forKey:@"Destination ID"];
+
+	[detailsDict setObject:outgoingString forKey:@"Message"];
+	[alertDict setObject:detailsDict forKey:@"ActionDetails"];
+	[alertDict setObject:CONTACT_STATUS_ONLINE_YES forKey:@"EventID"];
+	[alertDict setObject:@"SendMessage" forKey:@"ActionID"];
+	[alertDict setObject:[NSNumber numberWithInt:1] forKey:@"OneTime"]; 
+	
+	[[adium contactAlertsController] addAlert:alertDict toListObject:[[chat participatingListObjects] objectAtIndex:0]];
+	
+	[self didSendMessage:nil];
+}
+
+- (void)setShouldSendMessagesToOfflineContacts:(BOOL)should
+{
+	sendMessagesToOfflineContact = should;
 }
 
 //Sets our text entry view as the first responder
@@ -335,12 +376,7 @@
     NSArray	*modifiedKeys = [[notification userInfo] objectForKey:@"Keys"];
 
     if(notification == nil || [modifiedKeys containsObject:@"Enabled"]){
-        //Update our available for sending
-        availableForSending = [[[chat statusDictionary] objectForKey:@"Enabled"] boolValue];
-
-        //Enable/Disable our text view sending, and send button
-        [textView_outgoing setSendingEnabled:availableForSending];
-        [button_send setEnabled:(availableForSending && [[textView_outgoing string] length] != 0)];
+        [button_send setEnabled:([[textView_outgoing string] length] != 0)];
     }
 
     if(notification == nil || [modifiedKeys containsObject:@"DisallowAccountSwitching"]){
@@ -359,7 +395,7 @@
     BOOL enabled;
 
     //Enable/Disable our sending button
-    enabled = (availableForSending && [[textView_outgoing string] length] != 0);
+    enabled = ([[textView_outgoing string] length] != 0);
     if([button_send isEnabled] != enabled){
         [button_send setEnabled:enabled];
     }

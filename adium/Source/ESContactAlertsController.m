@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.22 2004/04/23 03:40:56 adamiser Exp $
+//  $Id: ESContactAlertsController.m,v 1.23 2004/04/24 09:56:19 overmind911 Exp $
 
 
 #import "ESContactAlertsController.h"
@@ -190,7 +190,7 @@
 	NSString			*newAlertEventID = [newAlert objectForKey:KEY_EVENT_ID];
 	NSMutableDictionary	*contactAlerts;
 	NSMutableArray		*eventArray;
-	
+		
 	//Get the alerts for this list object
 	contactAlerts = [[listObject preferenceForKey:KEY_CONTACT_ALERTS group:PREF_GROUP_CONTACT_ALERTS] mutableCopy];
 	if(!contactAlerts) contactAlerts = [[NSMutableDictionary alloc] init];

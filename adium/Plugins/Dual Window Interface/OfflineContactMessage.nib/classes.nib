@@ -1,0 +1,17 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {closeWindow = id; dontSend = id; sendLater = id; sendNow = id; }; 
+            CLASS = CSMessageToOfflineContactWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
