@@ -48,8 +48,6 @@
 						
 @implementation AIDockController
  
-#define DOCK_THEMABLE_PREFS      @"Dock Themable Prefs"
-
 //init and close
 - (void)initController
 {
@@ -148,12 +146,16 @@
 			[[NSWorkspace sharedWorkspace] setIcon:image 
 										   forFile:[[NSBundle mainBundle] bundlePath]
 										   options:0];
+			
 		}else{
 			NSString		*icnsPath = [[NSBundle mainBundle] pathForResource:@"Adium" ofType:@"icns"];
 			IconFamily		*iconFamily;
 	
-			iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:image usingImageInterpolation:NSImageInterpolationLow];
+			iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:image
+											 usingImageInterpolation:NSImageInterpolationLow];
+			[iconFamily setAsCustomIconForFile:[[NSBundle mainBundle] bundlePath]];
 			[iconFamily writeToFile:icnsPath];
+
 		}
 		
 		//Finder won't update Adium's icon to match the new one until it is restarted if we don't
