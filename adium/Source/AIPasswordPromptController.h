@@ -31,4 +31,5 @@
 - (IBAction)togglePasswordSaved:(id)sender;
 - (NSString *)savedPasswordKey;
 - (void)savePassword:(NSString *)password;
+- (BOOL)windowShouldClose:(id)sender;
 @end

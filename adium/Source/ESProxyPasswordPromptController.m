@@ -15,22 +15,13 @@
 
 @implementation ESProxyPasswordPromptController
 
-static AIPasswordPromptController	*controller = nil;
-
 + (void)showPasswordPromptForProxyServer:(NSString *)inServer userName:(NSString *)inUserName notifyingTarget:(id)inTarget selector:(SEL)inSelector
 {
-    if(!controller){
-        controller = [[self alloc] initWithWindowNibName:PROXY_PASSWORD_PROMPT_NIB
-										  forProxyServer:inServer
-												userName:inUserName
-										 notifyingTarget:inTarget
-												selector:inSelector];
-    }else{
-        //Beep and return failure if a prompt is already open
-        NSBeep();        
-        [inTarget performSelector:inSelector withObject:nil];
-    }
-	
+	ESProxyPasswordPromptController  *controller = [[[self alloc] initWithWindowNibName:PROXY_PASSWORD_PROMPT_NIB
+																		 forProxyServer:inServer
+																			   userName:inUserName
+																		notifyingTarget:inTarget
+																			   selector:inSelector] autorelease];
     //bring the window front
     [controller showWindow:nil];
 }
@@ -41,6 +32,7 @@ static AIPasswordPromptController	*controller = nil;
     
     server = [inServer retain];
 	userName = [inUserName retain];
+	[self retain];
 	
     return(self);
 }
@@ -59,13 +51,6 @@ static AIPasswordPromptController	*controller = nil;
     [textField_userName setStringValue:userName];
 	
 	[super windowDidLoad];
-}
-
-- (BOOL)windowShouldClose:(id)sender
-{
-    controller = nil;
-	
-	return [super windowShouldClose:sender];
 }
 
 - (NSString *)savedPasswordKey
