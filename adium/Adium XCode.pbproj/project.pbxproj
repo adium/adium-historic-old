@@ -2836,6 +2836,7 @@
 				3419F3F105314C1200C68BA3,
 				3419F3F205314C1200C68BA3,
 				3484645205910E5F00241F68,
+				3453667C059BA7E300A83D9E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2876,6 +2877,7 @@
 				3419F3F405314C1200C68BA3,
 				3419F3F505314C1200C68BA3,
 				3484645405910E7E00241F68,
+				3453667D059BA7E300A83D9E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2901,6 +2903,7 @@
 				3419F3FA05314C1200C68BA3,
 				3419F3FB05314C1200C68BA3,
 				3484645105910E5F00241F68,
+				3453667B059BA7E300A83D9E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5970,6 +5973,69 @@
 			settings = {
 			};
 		};
+		34536678059BA7E200A83D9E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESCLViewLabelsAdvancedPrefs.m;
+			path = "Plugins/Standard Contact List View/Preferences/ESCLViewLabelsAdvancedPrefs.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34536679059BA7E200A83D9E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESCLViewLabelsAdvancedPrefs.h;
+			path = "Plugins/Standard Contact List View/Preferences/ESCLViewLabelsAdvancedPrefs.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3453667A059BA7E200A83D9E = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = CLViewLabelsAdvancedPrefs.nib;
+			path = "Plugins/Standard Contact List View/Preferences/CLViewLabelsAdvancedPrefs.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3453667B059BA7E300A83D9E = {
+			fileRef = 34536678059BA7E200A83D9E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3453667C059BA7E300A83D9E = {
+			fileRef = 34536679059BA7E200A83D9E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3453667D059BA7E300A83D9E = {
+			fileRef = 3453667A059BA7E200A83D9E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34536750059BA8ED00A83D9E = {
+			isa = PBXFileReference;
+			lastKnownFileType = "compiled.mach-o.executable";
+			path = atos;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34536751059BA8EE00A83D9E = {
+			fileRef = 34536750059BA8ED00A83D9E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34536769059BA91E00A83D9E = {
+			fileRef = 34536750059BA8ED00A83D9E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		345DFF4A05564DB200CEE7B3 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -6186,6 +6252,9 @@
 				3484645005910E5F00241F68,
 				3484644F05910E5F00241F68,
 				3484645305910E7E00241F68,
+				34536679059BA7E200A83D9E,
+				34536678059BA7E200A83D9E,
+				3453667A059BA7E200A83D9E,
 			);
 			isa = PBXGroup;
 			name = Preferences;
@@ -8384,6 +8453,7 @@
 				4BBEC8B90563E7CD0013C8F7,
 				4BBEC8BA0563E7CD0013C8F7,
 				4BCB9B5F0567FF5D001D3559,
+				34536751059BA8EE00A83D9E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8756,6 +8826,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
+				34536769059BA91E00A83D9E,
 				4BC8AAB0059A2D5500F940E1,
 			);
 			isa = PBXCopyFilesBuildPhase;
@@ -20023,7 +20094,6 @@
 			files = (
 				4B7F78C20597F5B700162728,
 				4B215DBE0598A71400305B3C,
-				4BC8AAB3059A315900F940E1,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20127,7 +20197,6 @@
 				4B7F78BD0597F44D00162728,
 				4B7F78BE0597F44D00162728,
 				4B215DBD0598A71400305B3C,
-				4BC8AAB2059A315900F940E1,
 			);
 			isa = PBXGroup;
 			name = "Adium Crash Reporter";
@@ -21249,20 +21318,6 @@
 		};
 		4BC8AAB0059A2D5500F940E1 = {
 			fileRef = 4B7F78B50597F42400162728;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BC8AAB2059A315900F940E1 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = crashDuck.png;
-			path = "Adium Crash Reporter/crashDuck.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BC8AAB3059A315900F940E1 = {
-			fileRef = 4BC8AAB2059A315900F940E1;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -25459,6 +25514,7 @@
 				F59DB6AD033EB74801A8010A,
 				6C1CC23105415D5700B64925,
 				6C1CC23205415D5700B64925,
+				34536750059BA8ED00A83D9E,
 				9EB3C52304F94DB7001D1F74,
 			);
 			isa = PBXGroup;
