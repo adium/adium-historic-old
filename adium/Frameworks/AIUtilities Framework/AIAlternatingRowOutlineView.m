@@ -145,6 +145,13 @@
 
 - (void)reloadData
 {
+    id	selectedItem;
+    int	selectedRow;
+    
+    //Remember the currently selected item
+    selectedItem = [self itemAtRow:[self selectedRow]];
+
+    //Reload
     [super reloadData];
 
     //After reloading data, we correctly expand/collaps all groups
@@ -167,6 +174,13 @@
             }
         }
     }
+
+    //Restore (if possible) the previously selected object
+    selectedRow = [self rowForItem:selectedItem];
+    if(selectedRow != NSNotFound){
+        [self selectRow:selectedRow byExtendingSelection:NO];
+    }
+    
 }
 
 
