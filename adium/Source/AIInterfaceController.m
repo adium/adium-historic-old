@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.58 2004/03/06 19:14:56 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.59 2004/03/21 20:55:29 evands Exp $
 
 #import "AIInterfaceController.h"
 
@@ -498,7 +498,7 @@
         
         //adjust foreground colors for the tooltip background
         [entryString adjustColorsToShowOnBackground:[NSColor colorWithCalibratedRed:1.000 green:1.000 blue:0.800 alpha:1.0]];
-        
+#warning should copy get info window behavior instead?
         //headIndent doesn't apply to the first line of a paragraph... so when new lines are in the entry, we need to tab over to the proper location
         if ([entryString replaceOccurrencesOfString:@"\r" withString:@"\r\t\t" options:NSLiteralSearch range:fullLength])
             fullLength = NSMakeRange(0, [entryString length]);
