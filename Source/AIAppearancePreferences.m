@@ -29,7 +29,8 @@
 #import <Adium/AIIconState.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
-
+#import <Adium/ESPresetManagementController.h>
+#import <Adium/ESPresetNameSheetController.h>
 
 #warning crosslink
 #import "AISCLViewPlugin.h"
@@ -47,10 +48,12 @@ typedef enum {
 - (NSMenu *)_serviceIconsMenu;
 - (NSMenu *)_listLayoutMenu;
 - (NSMenu *)_colorThemeMenu;
+- (void)_rebuildEmoticonMenuAndSelectActivePack;
 - (NSMenu *)_iconPackMenuForPacks:(NSArray *)packs class:(Class)iconClass;
 - (NSArray *)_allPacksWithExtension:(NSString *)extension inFolder:(NSString *)inFolder;
 - (void)_addWindowStyleOption:(NSString *)option withTag:(int)tag toMenu:(NSMenu *)menu;
 - (void)_updateSliderValues;
+- (void)xtrasChanged:(NSNotification *)notification;
 @end
 
 @implementation AIAppearancePreferences
@@ -75,13 +78,6 @@ typedef enum {
 {
     NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_APPEARANCE];
 	
-	//Build our menus
-	[popUp_statusIcons setMenu:[self _statusIconsMenu]];
-	[popUp_serviceIcons setMenu:[self _serviceIconsMenu]];
-	[popUp_dockIcon setMenu:[self _dockIconMenu]];
-	[popUp_listLayout setMenu:[self _listLayoutMenu]];
-	[popUp_colorTheme setMenu:[self _colorThemeMenu]];
-	
 	//Other list options
 	[popUp_windowStyle setMenu:[self _windowStyleMenu]];
 	[popUp_windowStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]];	
@@ -99,6 +95,13 @@ typedef enum {
 	//Observe preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
+
+	//Observe xtras changes
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(xtrasChanged:)
+									   name:Adium_Xtras_Changed
+									 object:nil];	
+	[self xtrasChanged:nil];
 }
 
 /*!
@@ -111,6 +114,44 @@ typedef enum {
 }
 
 /*!
+ * @brief Xtras changed, update our menus to reflect the new Xtras
+ */
+- (void)xtrasChanged:(NSNotification *)notification
+{
+	NSString		*type = [[notification object] lowercaseString];
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_APPEARANCE];
+
+	if(!type || [type isEqualToString:@"adiumemoticonset"]){
+		[self _rebuildEmoticonMenuAndSelectActivePack];
+	}
+	
+	if(!type || [type isEqualToString:@"adiumicon"]){
+		[popUp_dockIcon setMenu:[self _dockIconMenu]];
+		[popUp_dockIcon selectItemWithTitle:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
+	}
+	
+	if(!type || [type isEqualToString:@"adiumserviceicons"]){
+		[popUp_serviceIcons setMenu:[self _serviceIconsMenu]];
+		[popUp_serviceIcons selectItemWithTitle:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]];
+	}
+	
+	if(!type || [type isEqualToString:@"adiumstatusicons"]){
+		[popUp_statusIcons setMenu:[self _statusIconsMenu]];
+		[popUp_statusIcons selectItemWithTitle:[prefDict objectForKey:KEY_STATUS_ICON_PACK]];		
+	}
+	
+	if(!type || [type isEqualToString:@"listtheme"]){
+		[popUp_colorTheme setMenu:[self _colorThemeMenu]];
+		[popUp_colorTheme selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_THEME_NAME]];	
+	}
+
+	if(!type || [type isEqualToString:@"listlayout"]){
+		[popUp_listLayout setMenu:[self _listLayoutMenu]];
+		[popUp_listLayout selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_LAYOUT_NAME]];
+	}
+}
+
+/*!
  * @brief Preferences changed
  *
  * Update controls in our view to reflect the changed preferences
@@ -120,20 +161,7 @@ typedef enum {
 {
 	//Emoticons
 	if([group isEqualToString:PREF_GROUP_EMOTICONS]){
-		//Rebuild the emoticon menu
-		[popUp_emoticons setMenu:[self _emoticonPackMenu]];
-
-		//Update the selected pack
-		NSArray	*activeEmoticonPacks = [[adium emoticonController] activeEmoticonPacks];
-		int		numActivePacks = [activeEmoticonPacks count];
-		
-		if(numActivePacks == 0){
-			[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuNone];
-		}else if(numActivePacks > 1){
-			[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuMultiple];
-		}else{
-			[popUp_emoticons selectItemWithRepresentedObject:[activeEmoticonPacks objectAtIndex:0]];
-		}
+		[self _rebuildEmoticonMenuAndSelectActivePack];
 	}
 	
 	//Appearance
@@ -181,6 +209,26 @@ typedef enum {
 		if(firstTime || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]){
 			[popUp_dockIcon selectItemWithTitle:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
 		}		
+	}
+}
+
+/*!
+ * @brief Rebuild the emoticon menu
+ */
+- (void)_rebuildEmoticonMenuAndSelectActivePack
+{
+	[popUp_emoticons setMenu:[self _emoticonPackMenu]];
+	
+	//Update the selected pack
+	NSArray	*activeEmoticonPacks = [[adium emoticonController] activeEmoticonPacks];
+	int		numActivePacks = [activeEmoticonPacks count];
+	
+	if(numActivePacks == 0){
+		[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuNone];
+	}else if(numActivePacks > 1){
+		[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuMultiple];
+	}else{
+		[popUp_emoticons selectItemWithRepresentedObject:[activeEmoticonPacks objectAtIndex:0]];
 	}
 }
 
@@ -376,24 +424,302 @@ typedef enum {
 }
 
 
-//Contact list layout and theme ----------------------------------------------------------------------------------------
-#pragma mark Contact list layout and theme
+//Contact list layout & theme ----------------------------------------------------------------------------------------
+#pragma mark Contact list layout & theme
 /*!
- *
+ * @brief Create a new theme
  */
-- (IBAction)customizeListLayout:(id)sender
+- (IBAction)createListTheme:(id)sender
 {
-	[AIListLayoutWindowController listLayoutOnWindow:[[self view] window]
-											withName:[NSString stringWithFormat:@"%@ Copy",[popUp_listLayout titleOfSelectedItem]]];
+	NSString *theme = [[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_APPEARANCE];	
+	
+	[ESPresetNameSheetController showPresetNameSheetWithDefaultName:[theme stringByAppendingString:@" Copy"]
+													explanatoryText:AILocalizedString(@"Enter a unique name for this new theme.",nil)
+														   onWindow:[[self view] window]
+													notifyingTarget:self
+														   userInfo:@"theme"];
 }
 
 /*!
- *
+ * @brief Customize the active theme
  */
 - (IBAction)customizeListTheme:(id)sender
 {
-	[AIListThemeWindowController listThemeOnWindow:[[self view] window]
-										  withName:[NSString stringWithFormat:@"%@ Copy",[popUp_colorTheme titleOfSelectedItem]]];
+	NSString *theme = [[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_APPEARANCE];	
+	
+	[AIListThemeWindowController editListThemeWithName:theme
+											  onWindow:[[self view] window]
+									   notifyingTarget:self];
+}
+
+/*!
+ * @brief Save (or revert) changes made when editing a theme
+ */
+- (void)listThemeEditorWillCloseWithChanges:(BOOL)saveChanges forThemeNamed:(NSString *)name
+{
+	if(saveChanges){
+		//Update the modified theme
+		if([AISCLViewPlugin createSetFromPreferenceGroup:PREF_GROUP_LIST_THEME
+												withName:name
+											   extension:LIST_THEME_EXTENSION
+												inFolder:LIST_THEME_FOLDER]){
+		
+			[[adium preferenceController] setPreference:name
+												 forKey:KEY_LIST_THEME_NAME
+												  group:PREF_GROUP_APPEARANCE];
+		}
+		
+	}else{
+		//Revert back to selected theme
+		NSString *theme = [[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_APPEARANCE];	
+
+		[AISCLViewPlugin applySetWithName:theme
+								extension:LIST_THEME_EXTENSION
+								 inFolder:LIST_THEME_FOLDER
+						toPreferenceGroup:PREF_GROUP_LIST_THEME];
+	}
+}
+
+/*
+ * @brief Manage available themes
+ */
+- (void)manageListThemes:(id)sender
+{
+	_listThemes = [AISCLViewPlugin availableThemeSets];
+	[ESPresetManagementController managePresets:_listThemes
+									 namedByKey:@"name"
+									   onWindow:[[self view] window]
+								   withDelegate:self];
+}
+
+/*
+ * @brief Create a new layout
+ */
+- (IBAction)createListLayout:(id)sender
+{
+	NSString *layout = [[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_APPEARANCE];
+	
+	[ESPresetNameSheetController showPresetNameSheetWithDefaultName:[layout stringByAppendingString:@" Copy"]
+													explanatoryText:AILocalizedString(@"Enter a unique name for this new layout.",nil)
+														   onWindow:[[self view] window]
+													notifyingTarget:self
+														   userInfo:@"layout"];
+}
+
+/*!
+ * @brief Customize the active layout
+ */
+- (IBAction)customizeListLayout:(id)sender
+{
+	NSString *theme = [[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_APPEARANCE];	
+	
+	[AIListLayoutWindowController editListLayoutWithName:theme
+											  onWindow:[[self view] window]
+									   notifyingTarget:self];
+}
+
+/*!
+ * @brief Save (or revert) changes made when editing a layout
+ */
+- (void)listLayoutEditorWillCloseWithChanges:(BOOL)saveChanges forLayoutNamed:(NSString *)name
+{
+	if(saveChanges){
+		//Update the modified layout
+		if([AISCLViewPlugin createSetFromPreferenceGroup:PREF_GROUP_LIST_LAYOUT
+												withName:name
+											   extension:LIST_LAYOUT_EXTENSION
+												inFolder:LIST_LAYOUT_FOLDER]){
+			
+			[[adium preferenceController] setPreference:name
+												 forKey:KEY_LIST_LAYOUT_NAME
+												  group:PREF_GROUP_APPEARANCE];
+		}
+		
+	}else{
+		//Revert back to selected layout
+		NSString *layout = [[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_APPEARANCE];	
+		
+		[AISCLViewPlugin applySetWithName:layout
+								extension:LIST_LAYOUT_EXTENSION
+								 inFolder:LIST_LAYOUT_FOLDER
+						toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
+	}
+}
+
+/*
+ * @brief Manage available layouts
+ */
+- (void)manageListLayouts:(id)sender
+{
+	_listLayouts = [AISCLViewPlugin availableLayoutSets];
+	[ESPresetManagementController managePresets:_listLayouts
+									 namedByKey:@"name"
+									   onWindow:[[self view] window]
+								   withDelegate:self];
+	
+#warning	//Get our menu back to its proper selection
+//	[popUp_listLayout selectItemWithTitle:[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME
+//																				   group:PREF_GROUP_APPEARANCE]];		
+}
+
+/*!
+ * @brief Validate a layout or theme name to ensure it is unique
+ */
+- (BOOL)presetNameSheetController:(ESPresetNameSheetController *)controller
+			  shouldAcceptNewName:(NSString *)newName
+						 userInfo:(id)userInfo
+{
+	NSEnumerator	*enumerator;
+	NSDictionary	*presetDict;
+
+	//Scan the correct presets to ensure this name doesn't already exist
+	if([userInfo isEqualToString:@"theme"]){
+		enumerator = [[AISCLViewPlugin availableThemeSets] objectEnumerator];
+	}else{
+		enumerator = [[AISCLViewPlugin availableLayoutSets] objectEnumerator];
+	}
+	
+	while(presetDict = [enumerator nextObject]){
+		if([newName isEqualToString:[presetDict objectForKey:@"name"]]) return(NO);
+	}
+	
+	return(YES);
+}
+
+/*!
+ * @brief Create a new theme with the user supplied name, activate and edit it
+ */
+- (void)presetNameSheetControllerDidEnd:(ESPresetNameSheetController *)controller 
+							 returnCode:(ESPresetNameSheetReturnCode)returnCode
+								newName:(NSString *)newName
+							   userInfo:(id)userInfo
+{
+	switch(returnCode){
+		case ESPresetNameSheetOkayReturn:
+			if([userInfo isEqualToString:@"theme"]){
+				[self performSelector:@selector(_editListThemeWithName:) withObject:newName afterDelay:0.00001];
+			}else{
+				[self performSelector:@selector(_editListLayoutWithName:) withObject:newName afterDelay:0.00001];
+			}
+		break;
+			
+		case ESPresetNameSheetCancelReturn:
+			//Do nothing
+		break;
+	}
+}
+- (void)_editListThemeWithName:(NSString *)name{
+	[AIListThemeWindowController editListThemeWithName:name
+											  onWindow:[[self view] window]
+									   notifyingTarget:self];
+}
+- (void)_editListLayoutWithName:(NSString *)name{
+	[AIListLayoutWindowController editListLayoutWithName:name
+												onWindow:[[self view] window]
+										 notifyingTarget:self];
+}
+
+/*!
+ * 
+ */
+- (NSArray *)renamePreset:(NSDictionary *)preset toName:(NSString *)name inPresets:(NSArray *)presets
+{
+	if(presets == _listLayouts){
+		[AISCLViewPlugin renameSetWithName:[preset objectForKey:@"name"]
+								 extension:LIST_LAYOUT_EXTENSION
+								  inFolder:LIST_LAYOUT_FOLDER
+									toName:name];		
+		
+		return([AISCLViewPlugin availableLayoutSets]);
+		
+	}else if(presets == _listThemes){
+		[AISCLViewPlugin renameSetWithName:[preset objectForKey:@"name"]
+								 extension:LIST_THEME_EXTENSION
+								  inFolder:LIST_THEME_FOLDER
+									toName:name];		
+		
+		return([AISCLViewPlugin availableThemeSets]);
+	}else{
+		return(nil);
+	}
+}
+
+/*!
+ * 
+ */
+- (NSArray *)duplicatePreset:(NSDictionary *)preset inPresets:(NSArray *)presets createdDuplicate:(id *)duplicatePreset
+{
+	NSString			*newName = [NSString stringWithFormat:@"%@ (%@)", [preset objectForKey:@"name"], AILocalizedString(@"Copy",nil)];
+	
+	if(presets == _listLayouts){
+		[AISCLViewPlugin duplicateSetWithName:[preset objectForKey:@"name"]
+									extension:LIST_LAYOUT_EXTENSION
+									 inFolder:LIST_LAYOUT_FOLDER
+									  newName:newName];		
+		
+	}else if(presets == _listThemes){
+		[AISCLViewPlugin duplicateSetWithName:[preset objectForKey:@"name"]
+									extension:LIST_THEME_EXTENSION
+									 inFolder:LIST_THEME_FOLDER
+									  newName:newName];		
+	}
+	
+	//Return the new duplicate by reference for the preset controller
+	if(duplicatePreset){
+		NSEnumerator	*enumerator = [[AISCLViewPlugin availableLayoutSets] objectEnumerator];
+		NSDictionary	*layout;
+		
+		while(layout = [enumerator nextObject]){
+			if([newName isEqualToString:[layout objectForKey:@"name"]]) return(layout);
+		}
+	}
+
+	//Return the updated sets for the preset controller
+	if(presets == _listLayouts){
+		return([AISCLViewPlugin availableLayoutSets]);
+	}else if(presets == _listThemes){
+		return([AISCLViewPlugin availableThemeSets]);
+	}else{
+		return(nil);
+	}
+}
+
+/*!
+ * 
+ */
+- (NSArray *)deletePreset:(NSDictionary *)preset inPresets:(NSArray *)presets
+{
+	if(presets == _listLayouts){
+		[AISCLViewPlugin deleteSetWithName:[preset objectForKey:@"name"]
+								 extension:LIST_LAYOUT_EXTENSION
+								  inFolder:LIST_LAYOUT_FOLDER];		
+
+		return([AISCLViewPlugin availableLayoutSets]);
+	
+	}else if(presets == _listThemes){
+		[AISCLViewPlugin deleteSetWithName:[preset objectForKey:@"name"]
+								 extension:LIST_THEME_EXTENSION
+								  inFolder:LIST_THEME_FOLDER];		
+
+		return([AISCLViewPlugin availableThemeSets]);
+	}else{
+		return(nil);
+	}
+}
+
+/*!
+ * 
+ */
+- (NSArray *)movePreset:(NSDictionary *)preset toIndex:(int)index inPresets:(NSArray *)presets presetAfterMove:(id *)presetAfterMove
+{
+#warning May we request to disallow moving?
+	if(presets == _listLayouts){
+		return([AISCLViewPlugin availableLayoutSets]);
+	}else if(presets == _listThemes){
+		return([AISCLViewPlugin availableThemeSets]);
+	}else{
+		return(nil);
+	}
 }
 
 /*!
@@ -404,16 +730,35 @@ typedef enum {
 	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
 	NSEnumerator	*enumerator = [[AISCLViewPlugin availableLayoutSets] objectEnumerator];
 	NSDictionary	*set;
+	NSMenuItem		*menuItem;
+	NSString		*name;
 	
+	//Available Layouts
 	while(set = [enumerator nextObject]){
-		NSString	*name = [set objectForKey:@"name"];
-		NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
-																					  target:nil
-																					  action:nil
-																			   keyEquivalent:@""] autorelease];
+		name = [set objectForKey:@"name"];
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
+																		 target:nil
+																		 action:nil
+																  keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:name];
 		[menu addItem:menuItem];
 	}
+	
+	//Divider
+	[menu addItem:[NSMenuItem separatorItem]];
+
+	//Preset management	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Add New Layout...",nil)
+																	 target:self
+																	 action:@selector(createListLayout:)
+															  keyEquivalent:@""] autorelease];
+	[menu addItem:menuItem];
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Edit Layouts...",nil)
+																	 target:self
+																	 action:@selector(manageListLayouts:)
+															  keyEquivalent:@""] autorelease];
+	[menu addItem:menuItem];
 	
 	return(menu);	
 }
@@ -426,16 +771,35 @@ typedef enum {
 	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
 	NSEnumerator	*enumerator = [[AISCLViewPlugin availableThemeSets] objectEnumerator];
 	NSDictionary	*set;
+	NSMenuItem		*menuItem;
+	NSString		*name;
 	
+	//Available themes
 	while(set = [enumerator nextObject]){
-		NSString	*name = [set objectForKey:@"name"];
-		NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
-																					  target:nil
-																					  action:nil
-																			   keyEquivalent:@""] autorelease];
+		name = [set objectForKey:@"name"];
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
+																		 target:nil
+																		 action:nil
+																  keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:name];
 		[menu addItem:menuItem];
 	}
+
+	//Divider
+	[menu addItem:[NSMenuItem separatorItem]];
+	
+	//Preset management	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Add New Theme...",nil)
+																	 target:self
+																	 action:@selector(createListTheme:)
+															  keyEquivalent:@""] autorelease];
+	[menu addItem:menuItem];
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Edit Themes...",nil)
+																	 target:self
+																	 action:@selector(manageListThemes:)
+															  keyEquivalent:@""] autorelease];
+	[menu addItem:menuItem];
 	
 	return(menu);	
 }
