@@ -331,7 +331,8 @@
     //[scrollView_contactList setHasVerticalScroller:YES];
     //[[scrollView_contactList verticalScroller] setControlSize:NSSmallControlSize];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contactListDesiredSizeChanged:) name:AIViewDesiredSizeDidChangeNotification object:contactListView];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contactListDesiredSizeChanged:)
+												 name:AIViewDesiredSizeDidChangeNotification object:contactListView];
     
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];

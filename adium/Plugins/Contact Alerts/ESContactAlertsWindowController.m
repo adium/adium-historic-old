@@ -131,7 +131,8 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
     [button_delete setEnabled:NO];
     [button_oneTime setEnabled:NO];
-
+	[button_active setEnabled:NO];
+		
     if ([instance hasAlerts])
     {
         [tableView_actions selectRow:0 byExtendingSelection:NO];
@@ -161,15 +162,15 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     int currentRow = [instance currentRow];
     if (currentRow != -1)
     {
-	[instance deleteEventAction:nil];
-	[tableView_actions reloadData];
-	if (currentRow < [instance count]){
-	    [tableView_actions selectRow:currentRow byExtendingSelection:NO];
-	} else if ([instance count]){
-	    [tableView_actions selectRow:([instance count]-1) byExtendingSelection:NO];
-	} else {
-	    [tableView_actions deselectRow:currentRow]; }
-     
+		[instance deleteEventAction:nil];
+		[tableView_actions reloadData];
+		if (currentRow < [instance count]){
+			[tableView_actions selectRow:currentRow byExtendingSelection:NO];
+		} else if ([instance count]){
+			[tableView_actions selectRow:([instance count]-1) byExtendingSelection:NO];
+		} else {
+			[tableView_actions deselectRow:currentRow]; }
+		
         [[adium notificationCenter] postNotificationName:Window_Changed_Alerts
                                                   object:activeContactObject
                                                 userInfo:nil];

@@ -98,6 +98,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     if ([popUp_contactList numberOfItems]) {
         [popUp_contactList selectItemAtIndex:0];
         activeContactObject = [[popUp_contactList selectedItem] representedObject];
+		NSLog(@"should be configuring for %@",[activeContactObject displayName]);
     }
     
     instance = [[ESContactAlerts alloc] initWithDetailsView:view_main withTable:tableView_actions withPrefView:view_prefView];
@@ -119,7 +120,8 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
     [button_delete setEnabled:NO];
     [button_oneTime setEnabled:NO];
-
+	[button_active setEnabled:NO];
+		
     //Update the outline view
     [tableView_actions reloadData];
 
@@ -192,7 +194,8 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         [instance configForObject:contact];
         thisInstanceCount = [instance count];
         if (thisInstanceCount) {
-            [offsetDictionary setObject:[NSNumber numberWithInt:offset] forKey:[contact UID]];
+			NSLog(@"setting %i for %@",offset,[contact UIDAndServiceID]);
+            [offsetDictionary setObject:[NSNumber numberWithInt:offset] forKey:[contact UIDAndServiceID]];
             for (arrayCounter=0 ; arrayCounter < thisInstanceCount ; arrayCounter++) {
                 [prefAlertsArray addObject:contact];
             }
@@ -220,21 +223,24 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 -(IBAction)deleteEventAction:(id)sender
 {    
-    AIListObject *tempObject = activeContactObject; //store it now so we'll be okay if deletion releases the instance
-    int row = [tableView_actions selectedRow];
-    
-    [instance deleteEventAction:nil]; //delete the event from the instance
-    [self rebuildPrefAlertsArray];
-    [tableView_actions reloadData]; //necessary?
-    
-    if ( row < ([tableView_actions numberOfRows]-1) ) {
-        [tableView_actions scrollRowToVisible:row];
-        [tableView_actions selectRow:row byExtendingSelection:NO];   
-        [self tableViewSelectionDidChange:nil]; //force it to realize the change
-    }
-    [[adium notificationCenter] postNotificationName:Pref_Changed_Alerts
-                                              object:tempObject
-                                            userInfo:nil]; //notify that the change occured    
+	int currentRow = [instance currentRow];
+    if (currentRow != -1)
+    {
+		int row = [tableView_actions selectedRow];
+		
+		[instance deleteEventAction:nil]; //delete the event from the instance
+		[self rebuildPrefAlertsArray];
+		[tableView_actions reloadData]; //necessary?
+		
+		if ( row < ([tableView_actions numberOfRows]-1) ) {
+			[tableView_actions scrollRowToVisible:row];
+			[tableView_actions selectRow:row byExtendingSelection:NO];   
+			[self tableViewSelectionDidChange:nil]; //force it to realize the change
+		}
+		[[adium notificationCenter] postNotificationName:Pref_Changed_Alerts
+												  object:activeContactObject
+												userInfo:nil]; //notify that the change occured    
+	}
 }
 
 //doesn't work for group yet because of contactInGroup
@@ -295,7 +301,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     NSString	*identifier = [tableColumn identifier];
     AIListObject *object = [prefAlertsArray objectAtIndex:row];
     [instance configForObject:object];
-    row -= [[offsetDictionary objectForKey:[object UID]] intValue]; //acount for offset from here on out
+    row -= [[offsetDictionary objectForKey:[object UIDAndServiceID]] intValue]; //acount for offset from here on out
 
     if([identifier compare:TABLE_COLUMN_EVENT] == 0){
         NSDictionary	*actionDict;
@@ -334,7 +340,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     if([identifier compare:TABLE_COLUMN_ACTION] == 0){
         AIListObject *object = [prefAlertsArray objectAtIndex:row];
         [instance configForObject:object];
-        row -= [[offsetDictionary objectForKey:[object UID]] intValue];
+        row -= [[offsetDictionary objectForKey:[object UIDAndServiceID]] intValue];
 
         [cell selectItemWithRepresentedObject:[[instance dictAtIndex:row] objectForKey:KEY_EVENT_ACTION]];
 
@@ -356,7 +362,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
         selectedMenuItem = (NSMenuItem *)[[[tableColumn dataCellForRow:row] menu] itemAtIndex:[object intValue]];
 
-        row -= [[offsetDictionary objectForKey:[listObject UID]] intValue]; //change row to account for offset
+        row -= [[offsetDictionary objectForKey:[listObject UIDAndServiceID]] intValue]; //change row to account for offset
         selectedActionDict = [[instance dictAtIndex:row] mutableCopy];
         newAction = [selectedMenuItem representedObject];
 
@@ -379,20 +385,22 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     int row = [tableView_actions selectedRow];
     if (row != -1) //a row is selected
     {
+		NSLog(@"row is %i",row);
         AIListObject * object = [prefAlertsArray objectAtIndex:row];
         activeContactObject = object;
-        row -= [[offsetDictionary objectForKey:[object UID]] intValue];
+        row -= [[offsetDictionary objectForKey:[object UIDAndServiceID]] intValue];
+		NSLog(@"row becomes %i",row);
         [popUp_contactList selectItemWithRepresentedObject:activeContactObject];
         [instance configForObject:activeContactObject];
-
+		NSLog(@"telling instance");
         [instance currentRowIs:row]; //tell the instance which row is selected
 
         //rebuild the event menu to apply to this instance
         [popUp_addEvent setMenu:[instance eventMenu]];
-
+		NSLog(@"instance dictAtIndex %i",row);
         NSDictionary * selectedActionDict = [[[instance dictAtIndex:row] copy] autorelease];
         NSString *action = [selectedActionDict objectForKey:KEY_EVENT_ACTION];
-
+		NSLog(@"%@ : %@",selectedActionDict,action);
         [[[actionColumn dataCellForRow:row] menu] performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
         [button_oneTime setState:[[selectedActionDict objectForKey:KEY_EVENT_DELETE] intValue]];
         [button_active setState:[[selectedActionDict objectForKey:KEY_EVENT_ACTIVE] intValue]];
@@ -400,6 +408,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         [button_delete setEnabled:YES];
         [button_oneTime setEnabled:YES];
         [button_active setEnabled:YES];
+		NSLog(@"done.");
     }
     else //no selection
     {
