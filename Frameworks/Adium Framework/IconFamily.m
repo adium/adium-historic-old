@@ -311,7 +311,7 @@
     OSErr result;
     unsigned long* pRawBitmapData;
     unsigned long* pRawBitmapDataEnd;
-    unsigned char* pRawMaskData;
+    char* pRawMaskData;
     unsigned char* pBitmapImageRepBitmapData;
 
     // Make sure elementType is a valid type that we know how to handle, and
@@ -962,10 +962,10 @@
 + (Handle) get32BitDataFromBitmapImageRep:(NSBitmapImageRep*)bitmapImageRep requiredPixelSize:(int)requiredPixelSize
 {
     Handle hRawData;
-    unsigned char* pRawData;
+    char* pRawData;
     Size rawDataSize;
     unsigned char* pSrc;
-    unsigned char* pDest;
+    char* pDest;
     int x, y;
     unsigned char alphaByte;
     float oneOverAlpha;
@@ -1059,10 +1059,10 @@
 + (Handle) get8BitDataFromBitmapImageRep:(NSBitmapImageRep*)bitmapImageRep requiredPixelSize:(int)requiredPixelSize
 {
     Handle hRawData;
-    unsigned char* pRawData;
+    char* pRawData;
     Size rawDataSize;
     unsigned char* pSrc;
-    unsigned char* pDest;
+    char* pDest;
     int x, y;
 	
     // Get information about the bitmapImageRep.
@@ -1149,10 +1149,10 @@
 + (Handle) get8BitMaskFromBitmapImageRep:(NSBitmapImageRep*)bitmapImageRep requiredPixelSize:(int)requiredPixelSize
 {
     Handle hRawData;
-    unsigned char* pRawData;
+	char* pRawData;
     Size rawDataSize;
     unsigned char* pSrc;
-    unsigned char* pDest;
+    char* pDest;
     int x, y;
     
     // Get information about the bitmapImageRep.
@@ -1229,10 +1229,10 @@
 + (Handle) get1BitMaskFromBitmapImageRep:(NSBitmapImageRep*)bitmapImageRep requiredPixelSize:(int)requiredPixelSize
 {
     Handle hRawData;
-    unsigned char* pRawData;
+    char* pRawData;
     Size rawDataSize;
     unsigned char* pSrc;
-    unsigned char* pDest;
+    char* pDest;
     int x, y;
     unsigned char maskByte;
     
