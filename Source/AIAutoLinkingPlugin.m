@@ -18,8 +18,17 @@
 #import "AIContentController.h"
 #import <AIHyperlinks/AIHyperlinks.h>
  
+/*
+ * @class AIAutoLinkingPlugin
+ * @brief Filter component to automatically create links within attributed strings as appropriate
+ *
+ * The bulk of this component's work is accomplished by SHHyperlinkScanner
+ */
 @implementation AIAutoLinkingPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	hyperlinkScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
@@ -33,18 +42,19 @@
 	[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterOutgoing];
 }
 
-- (void)uninstallPlugin
-{
-
-}
-
+/*
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
 	[hyperlinkScanner release];
 	
 	[super dealloc];
 }
-	
+
+/*
+ * @brief Filter an attributed string to add links as appropriate
+ */
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
 	NSMutableAttributedString	*replacementMessage = nil;
@@ -75,7 +85,11 @@
     return (replacementMessage);
 }
 
-//Auto linking overrides other potential filters; do it first
+/*
+ * @brief Filter priority
+ *
+ * Auto linking overrides other potential filters; do it first
+ */
 - (float)filterPriority
 {
 	return HIGHEST_FILTER_PRIORITY;

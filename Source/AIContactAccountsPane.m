@@ -32,17 +32,32 @@
 - (void)updateGroupList;
 @end
 
+/*
+ * @class AIContactAccountsPane
+ * @brief Accounts pane in the contact info window
+ *
+ * Provides a list of what accounts list a contact and in what group.
+ */
 @implementation AIContactAccountsPane
 
 //Preference pane properties
+/*
+ * @brief Category
+ */
 - (CONTACT_INFO_CATEGORY)contactInfoCategory{
     return(AIInfo_Accounts);
 }
+
+/*
+ * @brief Nib name
+ */
 - (NSString *)nibName{
     return(@"ContactAccounts");
 }
 
-//Configure the preference view
+/*
+ * @brief Configure the preference view
+ */
 - (void)viewDidLoad
 {
 	[label_listedOnTheFollowingOfYourAccounts setLocalizedString:AILocalizedString(@"Listed on the following of your accounts:",nil)];
@@ -68,7 +83,9 @@
 	[self updateAccountList];
 }
 
-//Preference view is closing
+/*
+ * @brief Preference view is closing
+ */
 - (void)viewWillClose
 {
 	[accounts release]; accounts = nil;
@@ -76,7 +93,9 @@
 	[[adium notificationCenter] removeObserver:self]; 
 }
 
-//Configure the pane for a list object
+/*
+ * @brief Configure the pane for a list object
+ */
 - (void)configureForListObject:(AIListObject *)inObject
 {
 	//New list object
@@ -87,7 +106,9 @@
 	[self updateAccountList];
 }
 
-//Update our list of accounts
+/*
+ * @brief Update our list of accounts
+ */
 - (void)updateAccountList
 {
 	//Get the new accounts
@@ -111,7 +132,9 @@
 	[tableView_accounts reloadData];
 }
 
-//Update our list of groups
+/*
+ * @brief Update our list of groups
+ */
 - (void)updateGroupList
 {
 	//Get the new groups
@@ -132,11 +155,17 @@
 
 //Table View Data Sources ----------------------------------------------------------------------------------------------
 #pragma mark TableView Data Sources
+/*
+ * @brief Number of table view rows
+ */
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	return([accounts count]);
 }
 
+/*
+ * @brief Table view object value
+ */
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	NSString		*identifier = [tableColumn identifier];
@@ -160,6 +189,9 @@
 	return(@"");
 }
 
+/*
+ * @brief Table view will display a cell
+ */
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	NSString		*identifier = [tableColumn identifier];
@@ -201,11 +233,14 @@
 	
 }
 
-- (void)selectGroup:(id)sender
-{
-	//Empty.  This method is the target of our menus, and needed for menu validation.
-}
+/*
+ * @brief Empty.  This method is the target of our menus, and needed for menu validation.
+ */
+- (void)selectGroup:(id)sender {};
 
+/*
+ * @brief Table view set object value
+ */
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	NSString		*identifier = [tableColumn identifier];

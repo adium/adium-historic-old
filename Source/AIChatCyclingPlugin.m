@@ -28,8 +28,17 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
+/*!
+ * @class AIChatCyclingPlugin
+ * @brief Component to manage the chat cycling menu items
+ *
+ * Adium supports several different key combinations for switching tabs, configuring via the General Preferences.
+ */
 @implementation AIChatCyclingPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	//Cycling menu items
@@ -49,7 +58,11 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CHAT_CYCLING];
 }
 
-//
+/*
+ * @brief Preferences changed
+ *
+ * Update the key equivalents for our previous and next chat menu items
+ */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {	
@@ -85,19 +98,25 @@
 	[[previousChatMenuItem menu] setMenuChangedMessagesEnabled:YES];
 }
 
-//Menu item validation
+/*
+ * @brief Menu item validation
+ */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	return([[[adium interfaceController] openChats] count] != 0);
 }
 
-//Select the next chat
+/*
+ * @brief Select the next chat
+ */
 - (IBAction)nextChat:(id)sender
 {
 	[[adium interfaceController] nextMessage:nil];
 }
 
-//Select the previous chat
+/*
+ * @brief Select the previous chat
+ */
 - (IBAction)previousChat:(id)sender
 {
 	[[adium interfaceController] previousMessage:nil];
