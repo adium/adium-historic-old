@@ -22,7 +22,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	IBOutlet	AIAutoScrollView	*scrollView_stateList;
 
 	NSArray				*stateArray;
-	NSDictionary		*tempDragState;
+	AIStatus		*tempDragState;
 }
 
 + (AIPresetStatusWindowController *)presetStatusWindowController;

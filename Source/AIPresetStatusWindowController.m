@@ -65,7 +65,7 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
 	//Register as an observer of state array changes, we'll need to refresh our list in response to these
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(stateArrayChanged:)
-									   name:AIStateArrayChangedNotification
+									   name:AIStatusStateArrayChangedNotification
 									 object:nil];
 	[self stateArrayChanged:nil];
 }
@@ -178,12 +178,12 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
  *
  * Invoked when the user successfully edits a state.  This method adds the new or updated state to Adium's state array.
  */
-- (void)customStatusState:(NSDictionary *)originalState changedTo:(NSDictionary *)newState
+- (void)customStatusState:(AIStatus *)originalState changedTo:(AIStatus *)newState
 {
 	if(originalState){
-		[[adium statusController] replaceExistingState:originalState withState:newState];
+		[[adium statusController] replaceExistingStatusState:originalState withStatusState:newState];
 	}else{
-		[[adium statusController] addState:newState];
+		[[adium statusController] addStatusState:newState];
 	}
 }
 
@@ -197,7 +197,7 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
 	int		selectedIndex = [tableView_stateList selectedRow];
 	
 	if(selectedIndex >= 0 && selectedIndex < [stateArray count]){
-		[[adium statusController] removeState:[stateArray objectAtIndex:selectedIndex]];
+		[[adium statusController] removeStatusState:[stateArray objectAtIndex:selectedIndex]];
 	}
 }
 
@@ -228,13 +228,13 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	NSString 		*identifier = [tableColumn identifier];
-	NSDictionary	*state = [stateArray objectAtIndex:row];
+	AIStatus		*statusState = [stateArray objectAtIndex:row];
 	
 	if([identifier isEqualToString:@"icon"]){
-		return([[adium statusController] iconForState:state]);
+		return([statusState icon]);
 
 	}else if([identifier isEqualToString:@"name"]){
-		return([[adium statusController] titleForState:state]); 
+		return([statusState title]); 
 
 	}
 	
@@ -277,7 +277,7 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
         int	newIndex;
 		
         //Move the state and select it in the new location
-        newIndex = [[adium statusController] moveState:tempDragState toIndex:row];
+        newIndex = [[adium statusController] moveStatusState:tempDragState toIndex:row];
         [tableView_stateList selectRow:newIndex byExtendingSelection:NO];
 		
         return(YES);
