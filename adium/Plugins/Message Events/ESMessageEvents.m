@@ -99,15 +99,18 @@
 	
 	if ([[notification name] isEqualToString:Content_DidSendContent]){
 		[[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_SENT
-										 forListObject:listObject];
+										 forListObject:listObject
+											  userInfo:chat];
 
 	}else if ([[notification name] isEqualToString:Content_DidReceiveContent]){
 		[[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED
-										 forListObject:listObject];
+										 forListObject:listObject
+											  userInfo:chat];
 		
 	}else if ([[notification name] isEqualToString:Content_FirstContentRecieved]){
 		[[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED_FIRST
-										 forListObject:listObject];
+										 forListObject:listObject
+											  userInfo:chat];
 
 	}
 }
