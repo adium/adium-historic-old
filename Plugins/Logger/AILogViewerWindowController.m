@@ -318,7 +318,7 @@ static NSString                             *filterForContactName = nil;	//Conta
     [resultsLock lock];
     if(row >= 0 && row < [selectedLogArray count]){
         theLog = [selectedLogArray objectAtIndex:row];
-        sameSelection = row--;
+        sameSelection = (row - 1);
     }
 	[resultsLock unlock];
 	
@@ -1399,6 +1399,11 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 {    
     [self sortSelectedLogArrayForTableColumn:tableColumn
                                    direction:(selectedColumn == tableColumn ? !sortDirection : sortDirection)];
+}
+
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
+{
+    [self deleteSelectedLogs:nil];
 }
 
 - (IBAction)toggleDrawer:(id)sender
