@@ -4242,36 +4242,6 @@
 			settings = {
 			};
 		};
-		34A8DF3706C1682600669887 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libexpat.a;
-			refType = 3;
-			remoteRef = 34A8E04706C1689A00669887;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		34A8DF3806C1682A00669887 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 34A8E04806C1689A00669887;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		34A8E04706C1689A00669887 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
-			remoteInfo = expat;
-		};
-		34A8E04806C1689A00669887 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
-		};
 		34A8E07206C169A000669887 = {
 			children = (
 				34A8E0AE06C16C7700669887,
@@ -5293,6 +5263,8 @@
 				4B25362706BECC3E003498D4,
 				4B25362D06BECC8F003498D4,
 				4B64894306C15E58004C40F0,
+				6EC1684C06C170A000F9FAD3,
+				6EC1684E06C170A000F9FAD3,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5619,6 +5591,7 @@
 				344C0EE006B6DE3A00DA7200,
 				4B25362F06BECC8F003498D4,
 				4B25363006BECC8F003498D4,
+				6EC1685006C170A000F9FAD3,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5947,6 +5920,8 @@
 				4B25362806BECC3E003498D4,
 				4B25362E06BECC8F003498D4,
 				4B64894406C15E58004C40F0,
+				6EC1684D06C170A000F9FAD3,
+				6EC1684F06C170A000F9FAD3,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9832,8 +9807,8 @@
 		4947F5EA0655E90C00B791E5 = {
 			children = (
 				4B57CCA106848F05003FF229,
-				34A8DF3706C1682600669887,
-				34A8DF3806C1682A00669887,
+				6EF273A806C1D8CA00F426C3,
+				6EF273A906C1D8CA00F426C3,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -12130,6 +12105,7 @@
 		};
 		4B4F5B23042D636700A8010A = {
 			children = (
+				6EC1684406C1707800F9FAD3,
 				6E4D961006B73991005235E9,
 				4B60991906A447D400EC8D78,
 				4B2E560406A33D85008866CF,
@@ -21514,6 +21490,93 @@
 			settings = {
 			};
 		};
+		6EC1684406C1707800F9FAD3 = {
+			children = (
+				6EC1684706C170A000F9FAD3,
+				6EC1684806C170A000F9FAD3,
+				6EC1684906C170A000F9FAD3,
+				6EC1684A06C170A000F9FAD3,
+				6EC1684B06C170A000F9FAD3,
+			);
+			isa = PBXGroup;
+			name = "Invite to Chat";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EC1684706C170A000F9FAD3 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCInviteToChatPlugin.h;
+			path = "Plugins/Invite to Chat Plugin/DCInviteToChatPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EC1684806C170A000F9FAD3 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCInviteToChatPlugin.m;
+			path = "Plugins/Invite to Chat Plugin/DCInviteToChatPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EC1684906C170A000F9FAD3 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCInviteToChatWindowController.h;
+			path = "Plugins/Invite to Chat Plugin/DCInviteToChatWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EC1684A06C170A000F9FAD3 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCInviteToChatWindowController.m;
+			path = "Plugins/Invite to Chat Plugin/DCInviteToChatWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EC1684B06C170A000F9FAD3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = InviteToChatWindow.nib;
+			path = "Plugins/Invite to Chat Plugin/InviteToChatWindow.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EC1684C06C170A000F9FAD3 = {
+			fileRef = 6EC1684706C170A000F9FAD3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EC1684D06C170A000F9FAD3 = {
+			fileRef = 6EC1684806C170A000F9FAD3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EC1684E06C170A000F9FAD3 = {
+			fileRef = 6EC1684906C170A000F9FAD3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EC1684F06C170A000F9FAD3 = {
+			fileRef = 6EC1684A06C170A000F9FAD3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EC1685006C170A000F9FAD3 = {
+			fileRef = 6EC1684B06C170A000F9FAD3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		6ECE6C2004749C9600CAEAD0 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -21584,6 +21647,36 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		6EF273A806C1D8CA00F426C3 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libexpat.a;
+			refType = 3;
+			remoteRef = 6EF273AA06C1D8D500F426C3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6EF273A906C1D8CA00F426C3 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 6EF273AB06C1D8D600F426C3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6EF273AA06C1D8D500F426C3 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
+			remoteInfo = expat;
+		};
+		6EF273AB06C1D8D600F426C3 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
 		};
 		6EF3F85F05EF179B0037D3CC = {
 			fileEncoding = 30;
