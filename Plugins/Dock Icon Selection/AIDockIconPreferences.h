@@ -14,24 +14,17 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AIDockIconPreferences : AIPreferencePane {
-    IBOutlet	NSTableView		*tableView_icons;
-    IBOutlet	NSTextField		*textField_creator;
-
-    IBOutlet	NSMatrix		*matrix_iconPreview;
-    
-    NSTimer						*animationTimer;
-    NSTimer						*stateChangeTimer;
-    int							cycle;
+	IBOutlet	AIImageGridView	*imageGridView_icons;
     NSMutableArray				*iconArray;
 	
-    NSDictionary				*selectedIcon;
-    int							selectedIconIndex;
-    NSImage						*activeFrameImage;
-	
-    NSMutableArray				*previewStateArray;
-	
-    AIIconState					*stateToAnimate;
-    NSEnumerator				*previewToAnimateEnumerator;
+	//Currently animated icon state and its index
+    NSTimer						*animationTimer;
+    AIIconState					*animatedIconState;
+	int 						animatedIndex;
 }
+
+//Animation
+- (void)setAnimatedDockIconAtIndex:(int)index;
+- (AIIconState *)animatedStateForDockIconAtPath:(NSString *)path;
 
 @end
