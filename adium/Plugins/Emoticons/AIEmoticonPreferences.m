@@ -185,8 +185,16 @@
             else return([self _dimString:[emoticon name] center:NO]);
             
         }else{// if([identifier compare:@"String"] == 0){
-            if([selectedEmoticonPack isEnabled] && [emoticon isEnabled]) return([[emoticon textEquivalents] objectAtIndex:0]);
-            else return([self _dimString:[[emoticon textEquivalents] objectAtIndex:0] center:YES]);
+			NSArray *textEquivalents = [emoticon textEquivalents];
+			if ([textEquivalents count]){
+				if([selectedEmoticonPack isEnabled] && [emoticon isEnabled]){
+					return([textEquivalents objectAtIndex:0]);
+				}else{
+					return([self _dimString:[textEquivalents objectAtIndex:0] center:YES]);
+				}
+			}else{
+				return @"";
+			}
         }
 
     }
