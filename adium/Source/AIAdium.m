@@ -149,11 +149,14 @@
     notificationCenter = nil;
     eventNotifications = [[NSMutableDictionary alloc] init];
     completedApplicationLoad = NO;
+
+/*
 }
 
 //Adium has finished launching
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
+	*/
 	//Display the license agreement
 //	NSNumber	*viewedLicense = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_USER_VIEWED_LICENSE];
 //	if(!viewedLicense || [viewedLicense intValue] < 1){
