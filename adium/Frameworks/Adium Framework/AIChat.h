@@ -9,8 +9,11 @@
 @interface AIChat : AIObject {
     AIAccount			*account;
     NSMutableDictionary *statusDictionary;
+	NSDate				*dateOpened;
+	
     NSMutableArray		*contentObjectArray;
     NSMutableArray		*participatingListObjects;
+
 	NSString			*name;
 }
 
@@ -18,6 +21,9 @@
 - (NSMutableDictionary *)statusDictionary;
 - (AIAccount *)account;
 - (void)setAccount:(AIAccount *)inAccount;
+
+- (NSDate *)dateOpened;
+- (void)setDateOpened:(NSDate *)inDate;
 
 - (NSArray *)participatingListObjects;
 - (void)addParticipatingListObject:(AIListObject *)inObject;
