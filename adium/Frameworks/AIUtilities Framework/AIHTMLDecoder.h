@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
-
+#import "AIStringAdditions.h"
 
 @interface AIHTMLDecoder : NSObject {
 
