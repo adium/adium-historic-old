@@ -8911,7 +8911,7 @@
 			children = (
 				4B149D4B0678FB5300D74D43,
 				4BF2DCC7067C919300743318,
-				4B46522F067D4BB200FC96C8,
+				4B96156A067DB227001EE198,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -10897,21 +10897,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4B46522F067D4BB200FC96C8 = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 4B465319067D4BCB00FC96C8;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4B465319067D4BCB00FC96C8 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
 		};
 		4B494B44063AB63000E2EF06 = {
 			isa = PBXFileReference;
@@ -12908,6 +12893,21 @@
 			path = "Frameworks/AIUtilities Framework/AIBrushedPopUpButton.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B96156A067DB227001EE198 = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 4B961657067DB24B001EE198;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B961657067DB24B001EE198 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
 		};
 		4B970BE00535B6AC002F28F9 = {
 			fileEncoding = 30;

@@ -1875,7 +1875,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (oneway void)jabberRosterRequestForAccount:(id)adiumAccount
 {
 	[runLoopMessenger target:self
-			 performSelector:@selector(gaimThreadJabberRosterRequestForAccoun:)
+			 performSelector:@selector(gaimThreadJabberRosterRequestForAccount:)
 				  withObject:adiumAccount];
 }
 - (oneway void)gaimThreadJabberRosterRequestForAccount:(id)adiumAccount
