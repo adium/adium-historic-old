@@ -35,9 +35,7 @@
 
 	[popUp_nameFormat selectItemWithTag:[[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue]];
 	[checkBox_customNameFormatting setState:[[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue]];
-
 	[checkBox_combineConsecutive setState:[[prefDict objectForKey:KEY_WEBKIT_COMBINE_CONSECUTIVE] boolValue]];
-	[checkBox_combineConsecutive setToolTip:AILocalizedString(@"Not all styles will display properly if this is disabled. Also, it looks silly.","Advanced webkit preferences: combine consecutive messages warning")];
 	
 	[self configureControlDimming];
 }
