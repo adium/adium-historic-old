@@ -255,7 +255,11 @@
 	
 	//Add the details view
 	if(detailsView) [view_auxiliary addSubview:detailsView];
-		
+
+	//Pull any default values the pane set in configureForActionDetails
+	[self saveDetailsPaneChanges];
+	
+	//And use them to update our header view
 	[self updateHeaderView];
 }
 
