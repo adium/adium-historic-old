@@ -132,7 +132,7 @@
 - (int)flashState;
 
 //Tooltips
-- (void)showTooltipForListObject:(AIListObject *)object atPoint:(NSPoint)point;
+- (void)showTooltipForListObject:(AIListObject *)object atScreenPoint:(NSPoint)point onWindow:(NSWindow *)inWindow;
 - (void)registerContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry secondaryEntry:(BOOL)isSecondary;
 
 //Custom pasting

@@ -692,22 +692,24 @@
         if( ((allowTooltipsInBackground && [NSApp isActive]) || 
             ([[contactListView window] isKeyWindow])) &&
 			!inDrag ){
-            NSPoint		viewPoint;
+			
+            NSPoint			viewPoint;
             AIListObject	*hoveredObject;
-            int			hoveredRow;
+			NSWindow		*theWindow = [contactListView window];
+            int				hoveredRow;
 
             //Extract data from the event
-            viewPoint = [contactListView convertPoint:[[contactListView window] convertScreenToBase:screenPoint] fromView:nil];
+            viewPoint = [contactListView convertPoint:[theWindow convertScreenToBase:screenPoint] fromView:nil];
 
             //Get the hovered contact
             hoveredRow = [contactListView rowAtPoint:viewPoint];
             hoveredObject = [contactListView itemAtRow:hoveredRow];
 
             //Show tooltip for it
-            [[adium interfaceController] showTooltipForListObject:hoveredObject atPoint:screenPoint];
+            [[adium interfaceController] showTooltipForListObject:hoveredObject atScreenPoint:screenPoint onWindow:theWindow];
         }
     }else{
-        [[adium interfaceController] showTooltipForListObject:nil atPoint:NSMakePoint(0,0)];
+        [[adium interfaceController] showTooltipForListObject:nil atScreenPoint:NSMakePoint(0,0) onWindow:[contactListView window]];
     }
 }
 
