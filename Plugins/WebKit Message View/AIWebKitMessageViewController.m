@@ -81,6 +81,7 @@ DeclareString(AppendNextMessage);
 	setStylesheetTimer = nil;
 	objectsWithUserIconsArray = nil;
 	imageMask = nil;
+	shouldRefreshContent = NO;
 	
 	//HTML Templates
 	contentInHTML = nil;
@@ -181,8 +182,21 @@ DeclareString(AppendNextMessage);
 
 - (void)_refreshContent
 {
+	//Just in case we are in the middle of adding content, clean out the  newContent array.
+	//The chat's contentObjectArray will have the new object; we won't lose anything.
 	[newContent removeAllObjects];
-	[newContent addObjectsFromArray:[chat contentObjectArray]];
+
+	//The first object in the chat's contentObjectArray is the most recent; we want to add chronologically, so reverse the array.
+	NSEnumerator	*enumerator = [[chat contentObjectArray] reverseObjectEnumerator];
+	AIContentObject	*object;
+	while (object = [enumerator nextObject]){
+		[newContent addObject:object];
+	}
+
+	//We're still holding onto the previousContent from before, which is no longer accurate. Release it.
+	[previousContent release]; previousContent = nil;
+
+	//Start processing the "new" content.
 	[self processNewContent];	
 }
 
@@ -483,8 +497,8 @@ DeclareString(AppendNextMessage);
 //This may be very slow for a large conversation.
 - (void)forceReload
 {
+	shouldRefreshContent = YES;
 	[self refreshView];
-	[self _refreshContent];
 }
 
 - (void)loadStyle:(NSBundle *)style withCSS:(NSString *)CSS
@@ -721,7 +735,7 @@ DeclareString(AppendNextMessage);
 	newHTML = [[templateFile mutableCopy] autorelease];
 	newHTML = [self fillKeywords:newHTML forContent:content];
 	newHTML = [self escapeString:newHTML];
-	
+
 	//Append the message to our webkit view
 	if(styleVersion >= 1){
 		format = (contentIsSimilar ? AppendNextMessage : AppendMessage);
@@ -880,6 +894,25 @@ DeclareString(AppendNextMessage);
 				[inString replaceCharactersInRange:range withString:[[contentSource service] shortDescription]];
 			}
 		} while(range.location != NSNotFound);	
+		
+		
+		//Message (must do last)
+		range = [inString rangeOfString:@"%message%"];
+		if(range.location != NSNotFound){
+			[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
+																				  headers:NO 
+																				 fontTags:YES
+																	   includingColorTags:allowColors
+																			closeFontTags:YES
+																				styleTags:YES
+															   closeStyleTagsOnFontChange:YES
+																		   encodeNonASCII:YES
+																			 encodeSpaces:YES
+																			   imagesPath:@"/tmp"
+																		attachmentsAsText:NO
+														   attachmentImagesOnlyForSending:NO
+																		   simpleTagsOnly:NO]];
+		}
 
 	}else if ([content isKindOfClass:[AIContentStatus class]]) {
 		do{
@@ -888,26 +921,27 @@ DeclareString(AppendNextMessage);
 				[inString replaceCharactersInRange:range withString:[[(AIContentStatus *)content status] stringByEscapingForHTML]];
 			}
 		} while(range.location != NSNotFound);
+		
+		
+		//Message (must do last)
+		range = [inString rangeOfString:@"%message%"];
+		if(range.location != NSNotFound){
+			[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
+																				  headers:NO 
+																				 fontTags:NO
+																	   includingColorTags:allowColors
+																			closeFontTags:YES
+																				styleTags:NO
+															   closeStyleTagsOnFontChange:YES
+																		   encodeNonASCII:YES
+																			 encodeSpaces:YES
+																			   imagesPath:@"/tmp"
+																		attachmentsAsText:NO
+														   attachmentImagesOnlyForSending:NO
+																		   simpleTagsOnly:NO]];
+		}
 	}
 
-	//Message (must do last)
-	range = [inString rangeOfString:@"%message%"];
-	if(range.location != NSNotFound){
-		[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
-																			  headers:NO 
-																			 fontTags:YES
-																   includingColorTags:allowColors
-																		closeFontTags:YES
-																			styleTags:YES
-														   closeStyleTagsOnFontChange:YES
-																	   encodeNonASCII:YES
-																		 encodeSpaces:YES
-																		   imagesPath:@"/tmp"
-																	attachmentsAsText:NO
-													   attachmentImagesOnlyForSending:NO
-																	   simpleTagsOnly:NO]];
-	}
-	
 	return(inString);
 }
 
@@ -1051,6 +1085,11 @@ DeclareString(AppendNextMessage);
 }
 - (void)webViewIsReady{
 	webViewIsReady = YES;
+	
+	if (shouldRefreshContent){
+		shouldRefreshContent = NO;
+		[self _refreshContent];
+	}
 }
 
 //Prevent the webview from following external links.  We direct these to the users web browser.

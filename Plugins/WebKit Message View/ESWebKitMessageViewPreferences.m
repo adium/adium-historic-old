@@ -38,7 +38,7 @@
 - (void)_fillContentOfChat:(AIChat *)inChat withDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath;
 - (NSMutableDictionary *)_addParticipants:(NSDictionary *)participants toChat:(AIChat *)inChat fromPath:(NSString *)previewPath;
 - (void)_applySettings:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
-- (void)_addContent:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
+- (void)_addContent:(NSArray *)chatArray toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
 
 
 
@@ -133,7 +133,6 @@
 	previewDict = [[[NSDictionary alloc] initWithContentsOfFile:previewFilePath] autorelease];
 	previewPath = [previewFilePath stringByDeletingLastPathComponent];
 	//	}
-	[self _fillContentOfChat:previewChat withDictionary:previewDict fromPath:previewPath];
 	
 	//Place the preview chat in our view
 	preview = [[previewController messageView] retain];
@@ -145,6 +144,8 @@
 		
 	[preview setFrame:[view_previewLocation frame]];
 	[[view_previewLocation superview] replaceSubview:view_previewLocation with:preview];
+	
+	[self _fillContentOfChat:previewChat withDictionary:previewDict fromPath:previewPath];
 }
 
 //Close the preference view
@@ -604,15 +605,18 @@
 	}else{
 		if(name = [chatDict objectForKey:@"Name"]) [inChat setName:name];
 	}
+	
+	//We don't want the interface controller to try to open this fake chat
+	[inChat setIsOpen:YES];
 }
 
 //Chat content
-- (void)_addContent:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants
+- (void)_addContent:(NSArray *)chatArray toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants
 {
 	NSEnumerator		*enumerator;
 	NSDictionary		*messageDict;
 	
-	enumerator = [chatDict objectEnumerator];
+	enumerator = [chatArray objectEnumerator];
 	while(messageDict = [enumerator nextObject]){
 		NSString 		*msgType = [messageDict objectForKey:@"Type"];
 		AIContentObject	*content = nil;
@@ -629,12 +633,13 @@
 			//The other person is always the one we're chatting with right now
 			dest = [participants objectForKey:to];
 			source =  [participants objectForKey:from];
-			content = [AIContentMessage messageInChat:nil
+			content = [AIContentMessage messageInChat:inChat
 										   withSource:source
 										  destination:dest
 												 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
 											  message:message
 											autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
+			[content setTrackContent:NO];
 			
 			//AIContentMessage won't know whether the message is outgoing unless we tell it since neither our source
 			//nor our destination are AIAccount objects.
@@ -649,16 +654,17 @@
 			AIListObject		*source = (from ? [participants objectForKey:from] : nil);
 			
 			//Create our content object
-			content = [AIContentStatus statusInChat:nil
+			content = [AIContentStatus statusInChat:inChat
 										 withSource:source
 										destination:nil
 											   date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
 											message:message
 										   withType:statusMessageType];
+			[content setTrackContent:NO];
 			
 		}
-		
-		if(content) [inChat addContentObject:content];
+
+		if(content) [[adium contentController] displayContentObject:content];
 	}
 }
 
