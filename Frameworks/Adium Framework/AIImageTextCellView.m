@@ -39,6 +39,12 @@
 	[cell setIgnoresFocus:YES];
 }
 
+- (void)dealloc
+{
+	[cell release]; cell = nil;
+	[super dealloc];
+}
+
 //NSCell expects to draw into a flipped view
 - (BOOL)isFlipped
 {
