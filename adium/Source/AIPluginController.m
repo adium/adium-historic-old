@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.58 2004/05/08 20:27:55 adamiser Exp $
+//$Id: AIPluginController.m,v 1.59 2004/05/20 13:56:05 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -48,7 +48,7 @@ ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendM
 ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin,
 JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin,
 AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
-SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin;
+SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin;
 
 @implementation AIPluginController
 //init
@@ -99,8 +99,9 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
 	[self loadPluginWithClass:[AITextToolbarItemsPlugin class]];
 	[self loadPluginWithClass:[AITypingNotificationPlugin class]];
 	[self loadPluginWithClass:[AIVolumeControlPlugin class]];
-	[self loadPluginWithClass:[BGThemesPlugin class]];
+	[self loadPluginWithClass:[BGContactNotesPlugin class]];
 	[self loadPluginWithClass:[BGEmoticonMenuPlugin class]];
+	[self loadPluginWithClass:[BGThemesPlugin class]];
 	[self loadPluginWithClass:[CBActionSupportPlugin class]];
 	[self loadPluginWithClass:[CBContactCountingDisplayPlugin class]];
     [self loadPluginWithClass:[CBURLHandlingPlugin class]];
