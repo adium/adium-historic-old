@@ -306,6 +306,7 @@ typedef enum {
 */
 
 - (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(AIServiceType *)service UID:(NSString *)UID;
+- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(AIServiceType *)service UID:(NSString *)UID serverGroup:(NSString *)serverGroup;
 
     //Account code calls these methods after modifying its available handles
 //- (void)handleWasAdded:(AIHandle *)inHandle;

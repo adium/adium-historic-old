@@ -129,7 +129,6 @@
 
     //Redisplay
     while((SCLView = [enumerator nextObject])){
-        NSLog(@"Reload contactListChanged");
         [SCLView reloadData];
         [self expandCollapseGroup:contactList subgroups:YES supergroups:NO outlineView:SCLView]; //Correctly expand/collapse groups
     }
@@ -145,7 +144,6 @@
         
         //Redisplay
         while((SCLView = [enumerator nextObject])){
-            NSLog(@"Reload contactOrderChanged");
             [SCLView reloadData];
 
             //Correctly expand/collapse the groups
@@ -170,15 +168,7 @@
     NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
     AISCLOutlineView	*SCLView;
 
-/*    if([[[notification userInfo] objectForKey:@"Keys"] containsObject:@"Hidden"]){
-        //Update the entire list (since the visibility of contacts has changed)
-        while((SCLView = [enumerator nextObject])){
-#warning            NSLog(@"Reload contactAttributesChanged");
-#warning            [SCLView reloadData];
-#warning            [self expandCollapseGroup:[contact containingGroup] subgroups:NO supergroups:YES outlineView:SCLView]; //Correctly expand/collapse the groups
-        }
-
-    }else{*/
+    if(contact){
         //Simply redraw the modified contact
         while((SCLView = [enumerator nextObject])){
             int row = [SCLView rowForItem:contact];
@@ -187,7 +177,7 @@
                 [SCLView setNeedsDisplayInRect:[SCLView rectOfRow:row]];
             }
         }
-//    }    
+    }
 }
 
 //A contact list preference has changed

@@ -196,8 +196,6 @@
 
     [groupDict release];
     groupDict = [[NSMutableDictionary alloc] init];
-
-    NSLog(@"HandlesChanged");
         
     //Go through each account, grabbing its handles
     accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
@@ -226,14 +224,14 @@
     
     //We first check if a contact for this handle alredy exists on our new contact list.
     //If it does, we'll simply add this handle to the existing contact.
-    contact = [self contactInGroup:contactList withService:serviceType UID:handleUID];
-    if(!contact || [[[contact containingGroup] UID] compare:serverGroup] != 0){
+    contact = [self contactInGroup:contactList withService:serviceType UID:handleUID serverGroup:serverGroup];
+    if(!contact){
         //If the contact does not exist
         //Check for it in the abandoned contact dict
         contact = [abandonedContacts objectForKey:handleUID];
         if(contact){
             [[contact retain] autorelease]; //We need to temporarily hold onto the contact, since removing it from the abandoned contacts array will cause it to be released immediately.
-            [abandonedContacts removeObjectForKey:handleUID]; //remove it from abandoned 
+            [abandonedContacts removeObjectForKey:handleUID]; //remove it from abandoned
         } 
 
         //If it wasn't in the abandoned dict, we create
@@ -497,22 +495,30 @@
 //Returns the handle with the specified Service and UID in the group (or any subgroups)
 - (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(AIServiceType *)service UID:(NSString *)UID
 {
+    return([self contactInGroup:inGroup withService:service UID:UID serverGroup:nil]);
+}
+
+//Returns the handle with the specified Service and UID in the group (or any subgroups)
+- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(AIServiceType *)service UID:(NSString *)UID serverGroup:(NSString *)serverGroup
+{
     NSEnumerator	*enumerator;
     AIListObject 	*object;
     AIListContact	*subGroupObject;
-
+    
     if(!inGroup) inGroup = contactList;
     
     enumerator = [inGroup objectEnumerator];
     while((object = [enumerator nextObject])){
         if([object isKindOfClass:[AIListGroup class]]){
-            if((subGroupObject = [self contactInGroup:(AIListGroup *)object withService:service UID:UID])){
+            if((subGroupObject = [self contactInGroup:(AIListGroup *)object withService:service UID:UID serverGroup:serverGroup])){
                 return(subGroupObject); //Match in a subgroup
             }
         }else if([object isKindOfClass:[AIListContact class]]){
             if([service compareUID:UID to:[object UID]] == 0){
-                if([[service identifier] compare:[(AIListContact *)object serviceID]] == 0){ //double check to ensure the services match
-                    return((AIListContact *)object); //Match
+                if(!serverGroup || [serverGroup compare:[inGroup UID]] == 0){ //ensure the groups match
+                    if([[service identifier] compare:[(AIListContact *)object serviceID]] == 0){ //ensure the services match
+                        return((AIListContact *)object); //Match
+                    }
                 }
             }
         }
