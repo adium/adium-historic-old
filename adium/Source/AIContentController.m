@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.83 2004/06/13 18:55:56 evands Exp $
+// $Id: AIContentController.m,v 1.84 2004/06/13 19:01:26 evands Exp $
 
 #import "AIContentController.h"
 
@@ -450,21 +450,36 @@
 	return(chat);
 }
 
-- (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account initialStatus:(NSDictionary *)initialStatus
+- (AIChat *)existingChatWithContact:(AIListContact *)inContact
 {
 	NSEnumerator	*enumerator;
 	AIChat			*chat = nil;
-	NSString		*uniqueChatID;
+	
+	//If we're dealing with a meta contact, open a chat with the preferred contact for this meta contact
+	//It's a good idea for the caller to pick the preferred contact for us, since they know the content type
+	//being sent and more information - but we'll do it here as well just to be safe.
+	if ([inContact isKindOfClass:[AIMetaContact class]]){
+		inContact = [[owner contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
+															   forListContact:inContact];
+	}
+	
+	//Search for an existing chat we can switch instead of replacing
+	enumerator = [chatArray objectEnumerator];
+	while(chat = [enumerator nextObject]){
+		//If a chat for this object already exists
+		if([chat listObject] == inContact) break;
+	}
+	
+	return chat;
+}
+
+- (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account initialStatus:(NSDictionary *)initialStatus
+{
+	AIChat			*chat = nil;
 	
 	//Search for an existing chat we can use instead of creating a new one
-	enumerator = [chatArray objectEnumerator];
-	uniqueChatID = [AIChat uniqueChatIDForChatWithName:inName onAccount:account];
-	while(chat = [enumerator nextObject]){
-		
-		//If the chat we want already exists
-		if([[chat uniqueChatID] isEqualToString:uniqueChatID]) break;
-	}
-
+	chat = [self existingChatWithName:inName onAccount:account];
+	
 	if (!chat){
 		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
 			//Create a new chat
@@ -482,6 +497,23 @@
 		}
 	}
 	return(chat);
+}
+
+- (AIChat *)existingChatWithName:(NSString *)inName onAccount:(AIAccount *)account
+{
+	NSEnumerator	*enumerator;
+	AIChat			*chat = nil;
+	NSString		*uniqueChatID;
+	
+	enumerator = [chatArray objectEnumerator];
+	uniqueChatID = [AIChat uniqueChatIDForChatWithName:inName onAccount:account];
+	while(chat = [enumerator nextObject]){
+		
+		//If the chat we want already exists
+		if([[chat uniqueChatID] isEqualToString:uniqueChatID]) break;
+	}	
+	
+	return chat;
 }
 
 //Close a chat
