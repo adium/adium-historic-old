@@ -7356,6 +7356,36 @@
 			settings = {
 			};
 		};
+		34A7DA5E05E34C3B00FFAC63 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESURLAdditions.m;
+			path = "Frameworks/AIUtilities Framework/ESURLAdditions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A7DA5F05E34C3B00FFAC63 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESURLAdditions.h;
+			path = "Frameworks/AIUtilities Framework/ESURLAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A7DA6005E34C3B00FFAC63 = {
+			fileRef = 34A7DA5E05E34C3B00FFAC63;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A7DA6105E34C3B00FFAC63 = {
+			fileRef = 34A7DA5F05E34C3B00FFAC63;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34ADDFFF05158D4B003B2F21 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -10248,6 +10278,7 @@
 				4B7BB54205B1906700598C55,
 				BF818D7B05C7AD460067008D,
 				4BA7F23905E2E8D200ABF4FC,
+				34A7DA6105E34C3B00FFAC63,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10976,6 +11007,7 @@
 				4B7BB54005B1905800598C55,
 				BF818D7C05C7AD460067008D,
 				4BA7F23A05E2E8D200ABF4FC,
+				34A7DA6005E34C3B00FFAC63,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14851,7 +14883,6 @@
 			files = (
 				34BDA0BA053147EF000AB133,
 				34BDA0BB053147EF000AB133,
-				4B791A5E0535002A0000969C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14873,7 +14904,6 @@
 			files = (
 				34BDA0BD053147EF000AB133,
 				34BDA0BE053147EF000AB133,
-				4B791A65053500580000969C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14895,7 +14925,6 @@
 			files = (
 				34BDA0C0053147EF000AB133,
 				34BDA0C1053147EF000AB133,
-				4B791A5F0535002A0000969C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18027,9 +18056,6 @@
 				4B9267C304A7583D00A8010A,
 				4B9267C404A7583D00A8010A,
 				4B9267C104A7541200A8010A,
-				4B791A5C0535002A0000969C,
-				4B791A5D0535002A0000969C,
-				4B791A64053500580000969C,
 				4BB826B504C8876C00A8010A,
 			);
 			isa = PBXGroup;
@@ -20116,50 +20142,6 @@
 		};
 		4B791A280534C4290000969C = {
 			fileRef = 4B791A270534C4290000969C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B791A5C0535002A0000969C = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIStatusOverlayAdvancedPreferences.h;
-			path = "Plugins/Contact Status Dock Overlays/AIStatusOverlayAdvancedPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B791A5D0535002A0000969C = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIStatusOverlayAdvancedPreferences.m;
-			path = "Plugins/Contact Status Dock Overlays/AIStatusOverlayAdvancedPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B791A5E0535002A0000969C = {
-			fileRef = 4B791A5C0535002A0000969C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B791A5F0535002A0000969C = {
-			fileRef = 4B791A5D0535002A0000969C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B791A64053500580000969C = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = DockOverlayAdvancedPrefs.nib;
-			path = "Plugins/Contact Status Dock Overlays/DockOverlayAdvancedPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B791A65053500580000969C = {
-			fileRef = 4B791A64053500580000969C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -31460,6 +31442,8 @@
 				F55B415603AB8B0901A8010A,
 				F570A61303704F4201A8010A,
 				F570A61403704F4201A8010A,
+				34A7DA5F05E34C3B00FFAC63,
+				34A7DA5E05E34C3B00FFAC63,
 				F5793955033E74E401A8010A,
 				F5793956033E74E401A8010A,
 				4B37AEEA058A8D0500E266A7,
