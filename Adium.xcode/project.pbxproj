@@ -140,7 +140,6 @@
 				4B7F78B50597F42400162728,
 				34BD9DE105314751000AB133,
 				7E6642C20653363A0050E8C8,
-				520FE3A105BE1FC5002D063D,
 				34BD9EB405314758000AB133,
 				4B7F278305440C0800CDFC90,
 				B72537BC058C4577004BA969,
@@ -205,7 +204,6 @@
 				BFEBDBFE0669029800CBF845,
 				34BD9DAF05314751000AB133,
 				7E6642C10653363A0050E8C8,
-				520FE3A005BE1FC5002D063D,
 				34BD9E9405314758000AB133,
 				4B7F278205440C0800CDFC90,
 				34BD9EB50531475B000AB133,
@@ -1409,7 +1407,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OTHER_CFLAGS = "-DCRASH_REPORTER -DADIUM_COMPONENTS -DDEBUG_BUILD";
+				OTHER_CFLAGS = "-DCRASH_REPORTER -DDEBUG_BUILD";
 				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;
@@ -2585,30 +2583,6 @@
 			name = "AIUtilities (from AIUtilities.framework.xcode)";
 			targetProxy = 3448745506D1E6B000DA778C;
 		};
-		3448745706D1E6BF00DA778C = {
-			containerPortal = 3448717006D1E57700DA778C;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIUtilities;
-		};
-		3448745806D1E6BF00DA778C = {
-			isa = PBXTargetDependency;
-			name = "AIUtilities (from AIUtilities.framework.xcode)";
-			targetProxy = 3448745706D1E6BF00DA778C;
-		};
-		3448745906D1E6C400DA778C = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DAF05314751000AB133;
-			remoteInfo = Adium.Framework;
-		};
-		3448745A06D1E6C400DA778C = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 3448745906D1E6C400DA778C;
-		};
 		3448745B06D1E6D300DA778C = {
 			containerPortal = 3448717006D1E57700DA778C;
 			isa = PBXContainerItemProxy;
@@ -2636,12 +2610,6 @@
 			};
 		};
 		3448761406D1EC0C00DA778C = {
-			fileRef = 3448758D06D1EBDF00DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3448761506D1EC1800DA778C = {
 			fileRef = 3448758D06D1EBDF00DA778C;
 			isa = PBXBuildFile;
 			settings = {
@@ -7038,7 +7006,6 @@
 				34FF934106DE3F1D00C1D683,
 				7E6642F7065336BA0050E8C8,
 				3419FE230531586A00C68BA3,
-				520FE46305BE20EB002D063D,
 				34E9F1F20790BF5500662E8E,
 			);
 			isa = PBXCopyFilesBuildPhase;
@@ -10448,12 +10415,6 @@
 			settings = {
 			};
 		};
-		34FF934606DE3F3300C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34FF934706DE3F3600C1D683 = {
 			fileRef = 34FF8DA906DE3D1F00C1D683;
 			isa = PBXBuildFile;
@@ -11623,11 +11584,12 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_MISSING_PARENTHESES = NO;
 				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "-DADIUM_COMPONENTS -DDEBUG_BUILD";
+				OTHER_CFLAGS = "-DDEBUG_BUILD";
 				PRECOMP_DESTINATION_DIR = "";
 				ZERO_LINK = YES;
 			};
@@ -11646,7 +11608,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OTHER_CFLAGS = "-DCRASH_REPORTER -DADIUM_COMPONENTS";
+				OTHER_CFLAGS = "-DCRASH_REPORTER";
 				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;
@@ -18396,119 +18358,6 @@
 //522
 //523
 //524
-		520FE39C05BE1FC5002D063D = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		520FE39D05BE1FC5002D063D = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		520FE39E05BE1FC5002D063D = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		520FE39F05BE1FC5002D063D = {
-			buildActionMask = 2147483647;
-			files = (
-				34FF934606DE3F3300C1D683,
-				3448761506D1EC1800DA778C,
-				520FE46C05BE22B8002D063D,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		520FE3A005BE1FC5002D063D = {
-			buildPhases = (
-				520FE39C05BE1FC5002D063D,
-				520FE39D05BE1FC5002D063D,
-				520FE39E05BE1FC5002D063D,
-				520FE39F05BE1FC5002D063D,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INFOPLIST_FILE = "plists/AdiumGames-Info.plist";
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-seg1addr 0x10700000";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = AdiumGames;
-				SECTORDER_FLAGS = "";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = "-Wmost";
-			};
-			dependencies = (
-				3448745806D1E6BF00DA778C,
-				3448745A06D1E6C400DA778C,
-			);
-			isa = PBXNativeTarget;
-			name = AdiumGames.framework;
-			productName = AdiumGames;
-			productReference = 520FE3A105BE1FC5002D063D;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>AdiumGames</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.AdiumGames</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>FMWK</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-</dict>
-</plist>
-";
-			productType = "com.apple.product-type.framework";
-		};
-		520FE3A105BE1FC5002D063D = {
-			explicitFileType = wrapper.framework;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = AdiumGames.framework;
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		520FE46305BE20EB002D063D = {
-			fileRef = 520FE3A105BE1FC5002D063D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		520FE46C05BE22B8002D063D = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		520FE46F05BE2494002D063D = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -18518,7 +18367,6 @@
 		};
 		520FE47005BE2494002D063D = {
 			isa = PBXTargetDependency;
-			target = 520FE3A005BE1FC5002D063D;
 			targetProxy = 520FE46F05BE2494002D063D;
 		};
 		52C623DE06697AFA0006C387 = {
