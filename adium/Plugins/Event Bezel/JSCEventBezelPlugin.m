@@ -135,7 +135,6 @@
     NSImage                     *tempBuddyIcon = nil;
     NSString                    *statusMessage = nil;
     NSDictionary                *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
-#warning growl!
     NSDictionary                *colorPreferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
     
     if([notificationName isEqualToString:Content_FirstContentRecieved]) {

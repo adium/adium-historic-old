@@ -11,4 +11,6 @@
 	NSDictionary	*themeDict;
 }
 
+- (void)setThemeDict:(NSDictionary *)inDict;
+
 @end

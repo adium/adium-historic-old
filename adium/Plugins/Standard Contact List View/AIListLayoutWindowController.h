@@ -53,8 +53,4 @@
 - (IBAction)okay:(id)sender;
 - (void)preferenceChanged:(id)sender;
 
-- (NSArray *)availableSetsWithExtension:(NSString *)extension fromFolder:(NSString *)folder;
-- (void)applySet:(NSDictionary *)setDictionary toPreferenceGroup:(NSString *)preferenceGroup;
-- (void)createSetFromPreferenceGroup:(NSString *)preferenceGroup withName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
-
 @end
