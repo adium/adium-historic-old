@@ -18,9 +18,10 @@
 #import <AIUtilities/AIUtilities.h>
 
 #define 	PASSWORD_PROMPT_NIB 		@"PasswordPrompt"
+#define		KEY_PASSWORD_WINDOW_FRAME	@"Password Prompt Frame"
 
 @interface AIPasswordPromptController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector;
+- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector owner:(id)inOwner;
 - (void)windowDidLoad;
 - (BOOL)shouldCascadeWindows;
 - (BOOL)windowShouldClose:(id)sender;
@@ -29,12 +30,10 @@
 @implementation AIPasswordPromptController
 
 AIPasswordPromptController	*controller = nil;
-+ (void)showPasswordPromptForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector
++ (void)showPasswordPromptForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector owner:(id)inOwner
 {
     if(!controller){
-        controller = [[self alloc] initWithWindowNibName:PASSWORD_PROMPT_NIB forAccount:inAccount notifyingTarget:inTarget selector:inSelector];
-
-        [[controller window] center];
+        controller = [[self alloc] initWithWindowNibName:PASSWORD_PROMPT_NIB forAccount:inAccount notifyingTarget:inTarget selector:inSelector owner:inOwner];
     }else{
         //Beep and return failure if a prompt is already open
         NSBeep();        
@@ -45,13 +44,14 @@ AIPasswordPromptController	*controller = nil;
     [controller showWindow:nil];
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector
+- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector owner:(id)inOwner
 {
     [super initWithWindowNibName:windowNibName];
     
     account = [inAccount retain];
     target = [inTarget retain];
     selector = inSelector;
+    owner = [inOwner retain];
 
     return(self);
 }
@@ -66,6 +66,17 @@ AIPasswordPromptController	*controller = nil;
 
 - (void)windowDidLoad
 {
+    NSString	*savedFrame;
+    
+    //Restore the window position
+    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PASSWORD_WINDOW_FRAME];
+    if(savedFrame){
+        [[self window] setFrameFromString:savedFrame];
+    }else{
+        [[self window] center];
+    }
+
+    //    
     [textField_account setStringValue:[account accountDescription]];
     [checkBox_savePassword setState:[[[account properties] objectForKey:@"SavedPassword"] boolValue]];
 }
@@ -118,6 +129,12 @@ AIPasswordPromptController	*controller = nil;
 // called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
+    //Save the window position
+    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+                                         forKey:KEY_PASSWORD_WINDOW_FRAME
+                                          group:PREF_GROUP_WINDOW_POSITIONS];
+
+    //
     [self autorelease];
     controller = nil;
 

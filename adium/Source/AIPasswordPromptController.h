@@ -15,20 +15,20 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAccount;
+@class AIAccount, AIAdium;
 
 @interface AIPasswordPromptController : NSWindowController {
-
     IBOutlet	NSTextField	*textField_account;
     IBOutlet	NSTextField	*textField_password;
     IBOutlet	NSButton	*checkBox_savePassword;
 
+    AIAdium		*owner;
     SEL 		selector;
     id			target;
     AIAccount		*account;
 }
 
-+ (void)showPasswordPromptForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector;
++ (void)showPasswordPromptForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector owner:(id)inOwner;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
 - (IBAction)closeWindow:(id)sender;

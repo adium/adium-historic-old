@@ -181,7 +181,7 @@
         [inTarget performSelector:inSelector withObject:password afterDelay:0.0001];    
     }else{
         //Prompt the user for their password
-        [AIPasswordPromptController showPasswordPromptForAccount:inAccount notifyingTarget:inTarget selector:inSelector];
+        [AIPasswordPromptController showPasswordPromptForAccount:inAccount notifyingTarget:inTarget selector:inSelector owner:owner];
     }
 }
 
