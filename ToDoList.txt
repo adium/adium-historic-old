@@ -1,6 +1,6 @@
-//-------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
 // Adium 0.8 beta bugs
-//-------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
 - Contact list isn't defaulting right at all
 - First launch, need setup assistant or need to open account prefs
 - Account add button needs a triangle to indicate that it's a popup
@@ -26,7 +26,6 @@
 - List editing "Too many buddies" error is frequent and random
 - Contact list, file transfers, and MANY other windows not remembering their positions (did the switch from windowShouldClose to windowWillClose in AIWindowController break this?)
 - Adding an invisible state makes a third section in the state menu (including another custom... item)
-- Log viewer drawer defaults to about 2 pixels wide
 - Contact menu is inconsistent with menu item naming, item grouping
 - View menu is inconsistent with menu item grouping
 - Wrapped messages in minimal are indenting into the margin
