@@ -6483,6 +6483,7 @@
 				4BD6744906001D460049CAF7,
 				4BD6745506001D4E0049CAF7,
 				4BD6745606001D4E0049CAF7,
+				34F2FCB007C4ECE7007EAAAB,
 				4BD6747606001D840049CAF7,
 				4BD6747C06001D890049CAF7,
 				4BD6755206001E1E0049CAF7,
@@ -6586,23 +6587,8 @@
 				344F4A4C078DDC9500226DFC,
 				3433667507948C1400C84B15,
 				3433673307949E2200C84B15,
-				34DFF53607A62EB100B92233,
-				34DFF53707A62EB200B92233,
-				34DFF53807A62EB200B92233,
 				34DFF53907A62EB200B92233,
-				34DFF53A07A62EB200B92233,
-				34DFF53C07A62EB200B92233,
-				34DFF53D07A62EB200B92233,
-				34DFF53E07A62EB200B92233,
-				34DFF53F07A62EB200B92233,
-				34DFF54007A62EB200B92233,
-				34DFF54107A62EB200B92233,
-				34DFF54207A62EB200B92233,
 				34DFF54307A62EB200B92233,
-				34DFF54507A62EB200B92233,
-				34DFF54607A62EB200B92233,
-				34DFF54707A62EB300B92233,
-				34DFF54807A62EB300B92233,
 				34C14D5107A8BA00003CC138,
 				4BE6174907AC67D50049C87D,
 				4BCAB5F107B59967006641B9,
@@ -8793,49 +8779,10 @@
 				34DFF46007A5EABF00B92233,
 				34DFF46107A5EABF00B92233,
 				34DFF53007A62EB100B92233,
-				34DFF52F07A62EB100B92233,
-				34DFF52507A62EB000B92233,
-				34DFF52707A62EB000B92233,
-				34DFF52307A62EAF00B92233,
-				34DFF53507A62EB100B92233,
-				34DFF52D07A62EB000B92233,
-				34DFF53307A62EB100B92233,
-				34DFF53207A62EB100B92233,
-				34DFF53407A62EB100B92233,
-				34DFF52407A62EB000B92233,
-				34DFF52B07A62EB000B92233,
-				34DFF52C07A62EB000B92233,
-				34DFF52A07A62EB000B92233,
-				34DFF52E07A62EB100B92233,
-				34DFF52907A62EB000B92233,
 				34DFF52607A62EB000B92233,
 			);
 			isa = PBXGroup;
 			name = "Secure Messaging";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFF52307A62EAF00B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 04.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 04.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFF52407A62EB000B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 10.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 10.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFF52507A62EB000B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 02.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 02.png";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -8847,70 +8794,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34DFF52707A62EB000B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 03.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 03.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFF52907A62EB000B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 15.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 15.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFF52A07A62EB000B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 13.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 13.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFF52B07A62EB000B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 11.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 11.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFF52C07A62EB000B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 12.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 12.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFF52D07A62EB000B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 06.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 06.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFF52E07A62EB100B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 14.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 14.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFF52F07A62EB100B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 01.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 01.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34DFF53007A62EB100B92233 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -8919,136 +8802,14 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34DFF53207A62EB100B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 08.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 08.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFF53307A62EB100B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 07.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 07.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFF53407A62EB100B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 09.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 09.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFF53507A62EB100B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "Lock_Open Anim 05.png";
-			path = "Plugins/Secure Messaging/Lock_Open Anim 05.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFF53607A62EB100B92233 = {
-			fileRef = 34DFF52307A62EAF00B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DFF53707A62EB200B92233 = {
-			fileRef = 34DFF52407A62EB000B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DFF53807A62EB200B92233 = {
-			fileRef = 34DFF52507A62EB000B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34DFF53907A62EB200B92233 = {
 			fileRef = 34DFF52607A62EB000B92233;
 			isa = PBXBuildFile;
 			settings = {
 			};
 		};
-		34DFF53A07A62EB200B92233 = {
-			fileRef = 34DFF52707A62EB000B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DFF53C07A62EB200B92233 = {
-			fileRef = 34DFF52907A62EB000B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DFF53D07A62EB200B92233 = {
-			fileRef = 34DFF52A07A62EB000B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DFF53E07A62EB200B92233 = {
-			fileRef = 34DFF52B07A62EB000B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DFF53F07A62EB200B92233 = {
-			fileRef = 34DFF52C07A62EB000B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DFF54007A62EB200B92233 = {
-			fileRef = 34DFF52D07A62EB000B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DFF54107A62EB200B92233 = {
-			fileRef = 34DFF52E07A62EB100B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DFF54207A62EB200B92233 = {
-			fileRef = 34DFF52F07A62EB100B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34DFF54307A62EB200B92233 = {
 			fileRef = 34DFF53007A62EB100B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DFF54507A62EB200B92233 = {
-			fileRef = 34DFF53207A62EB100B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DFF54607A62EB200B92233 = {
-			fileRef = 34DFF53307A62EB100B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DFF54707A62EB300B92233 = {
-			fileRef = 34DFF53407A62EB100B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DFF54807A62EB300B92233 = {
-			fileRef = 34DFF53507A62EB100B92233;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -10386,6 +10147,12 @@
 			sourceTree = "<group>";
 		};
 		34F2F80C07C41445007EAAAB = {
+			fileRef = 34F2F80B07C41445007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2FCB007C4ECE7007EAAAB = {
 			fileRef = 34F2F80B07C41445007EAAAB;
 			isa = PBXBuildFile;
 			settings = {
