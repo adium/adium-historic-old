@@ -23,7 +23,6 @@
     NSString			*hoveredString;	
     BOOL			mouseOverLink;			//Yes if the cursor is over one of our links
     BOOL			showTooltip;			//Yes if we want to display the tooltip over a hovered link
-//    id				oldFirstResponder;
 
     //The text system of the view we're tracking links for
     NSTextStorage 		*textStorage;
@@ -35,5 +34,6 @@
 + (id)linkTrackingControllerForTextView:(NSTextView *)inTextView;
 - (void)trackLinksInRect:(NSRect)visibleRect withOffset:(NSPoint)offset;
 - (BOOL)handleMouseDown:(NSEvent *)theEvent withOffset:(NSPoint)offset;
+- (void)setShowTooltip:(BOOL)inShowTooltip;
 
 @end
