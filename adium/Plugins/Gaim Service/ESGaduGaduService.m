@@ -19,7 +19,7 @@
                                                       description:@"Gadu-Gadu c/o Libgaim"
                                                             image:nil
                                                     caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
+                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._"]] retain];
     
     //Register this service
     [[adium accountController] registerService:self];
