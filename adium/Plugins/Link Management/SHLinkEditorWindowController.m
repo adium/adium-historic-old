@@ -27,7 +27,15 @@
         newLinkEditor = [self initWithWindowNibName:LINK_EDITOR_NIB_NAME];
         editLink = NO; //this is for a new link to be inserted
         favoriteWindow = NO;
-        [newLinkEditor showWindow:nil];
+        //[newLinkEditor showWindow:nil];
+        [NSApp beginSheet:[newLinkEditor window]
+            modalForWindow:[(NSTextView *)editableView window]
+            modalDelegate:nil
+            didEndSelector:nil
+            contextInfo:nil];
+        [NSApp runModalForWindow:[newLinkEditor window]];
+        [NSApp endSheet:[newLinkEditor window]];
+        [[newLinkEditor window] orderOut:self];
     }
 }
 
@@ -38,17 +46,33 @@
         linkEditor = [self initWithWindowNibName:LINK_EDITOR_NIB_NAME];
         editLink = YES; //this is to edit an existing link
         favoriteWindow = NO;
-        [linkEditor showWindow:nil];
+        //[linkEditor showWindow:nil];
+        [NSApp beginSheet:[linkEditor window]
+            modalForWindow:[(NSTextView *)editableView window]
+            modalDelegate:nil
+            didEndSelector:nil
+            contextInfo:nil];
+        [NSApp runModalForWindow:[linkEditor window]];
+        [NSApp endSheet:[linkEditor window]];
+        [[linkEditor window] orderOut:self];
     }
 }
 
-- (void)initAddLinkFavoritesWindowController
+- (void)initAddLinkFavoritesWindowControllerWithView:(NSView *)view
 {
     SHLinkEditorWindowController    *favsEditor;
     favsEditor = [self initWithWindowNibName:LINK_EDITOR_NIB_NAME];
     editLink = NO;
     favoriteWindow = YES;
-    [favsEditor showWindow:nil];
+    //[favsEditor showWindow:nil];
+    [NSApp beginSheet:[favsEditor window]
+            modalForWindow:[view window]
+            modalDelegate:nil
+            didEndSelector:nil
+            contextInfo:nil];
+    [NSApp runModalForWindow:[favsEditor window]];
+    [NSApp endSheet:[favsEditor window]];
+    [[favsEditor window] orderOut:self];
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName
@@ -142,12 +166,14 @@
 - (IBAction)closeWindow:(id)sender;
 {
     if([self windowShouldClose:nil]) {
-        [[self window] close];
+        //[[self window] close];
+        [NSApp stopModal];
     }
 }
 
 - (IBAction)cancel:(id)sender;
 {
+    //[NSApp stopModal];
     [self closeWindow:sender];
 }
 
@@ -183,6 +209,7 @@
     }
              
     [self closeWindow:nil];
+    //[NSApp stopModal];
 }
 
 - (void)insertLinkTo:(NSString *)urlString withText:(NSString *)linkString inView:(NSResponder *)inView withRange:(NSRange)linkRange

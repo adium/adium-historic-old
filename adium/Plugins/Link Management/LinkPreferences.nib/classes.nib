@@ -39,6 +39,7 @@
             SUPERCLASS = NSView; 
         }, 
         {
+            ACTIONS = {addLink = id; }; 
             CLASS = SHLinkFavoritesPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {

@@ -32,7 +32,7 @@
 
 - (void)initAddLinkWindowControllerWithResponder:(NSResponder *)responder;
 - (void)initEditLinkWindowControllerWithResponder:(NSResponder *)responder;
-- (void)initAddLinkFavoritesWindowController;
+- (void)initAddLinkFavoritesWindowControllerWithView:(NSView *)view;
 
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)cancel:(id)sender;

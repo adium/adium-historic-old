@@ -44,4 +44,9 @@
     [favoritesList release];
 }
 
+- (IBAction)addLink:(id)sender
+{
+    [[SHLinkEditorWindowController alloc] initAddLinkFavoritesWindowControllerWithView:view];
+}
+
 @end
