@@ -6,9 +6,11 @@
 //
 
 #import <AppKit/AppKit.h>
-#import <AIUtilities/BZProgressTracker.h>
+#import "BZProgressTracker.h"
 
 #define TABLE_VIEW_ONLY_COLUMN @"TASK"
+
+@protocol BZProgressTracker;
 
 @interface BZActivityWindowController: NSWindowController {
 	NSMutableArray          *progressViews;
