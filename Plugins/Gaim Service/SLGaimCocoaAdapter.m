@@ -2211,7 +2211,10 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		NSLog(@"*** FATAL ***: Failed to initialize gaim core");
 		GaimDebug (@"*** FATAL ***: Failed to initialize gaim core");
 	}
-	
+
+	//Load the Adium-specific accounts list (see #define in accounts.c)
+	gaim_accounts_load();
+
 	//Setup the buddy list; then load the Adium-specific blist (see #define in blist.c)
     gaim_set_blist(gaim_blist_new());
 	gaim_blist_load();
