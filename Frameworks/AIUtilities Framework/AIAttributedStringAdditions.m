@@ -95,8 +95,8 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 //adjust the colors in the string so they're visible on the background
 - (void)adjustColorsToShowOnBackground:(NSColor *)backgroundColor
 {
-    int 	index = 0;
-    int         stringLength = [self length];
+    int		index = 0;
+    int		stringLength = [self length];
     float	backgroundBrightness, backgroundSum;
     
     //--get the brightness of our background--
