@@ -14291,6 +14291,7 @@
 				34BDA043053147BF000AB133,
 				34BDA044053147BF000AB133,
 				34BDA045053147BF000AB133,
+				4BBDE39505B2E34F00EA51E7,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22427,6 +22428,20 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4BBDE39405B2E34F00EA51E7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = importContacts.tif;
+			path = "Plugins/Contact List Editor/importContacts.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BBDE39505B2E34F00EA51E7 = {
+			fileRef = 4BBDE39405B2E34F00EA51E7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BBEC8B70563E7CC0013C8F7 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -29121,6 +29136,7 @@
 				F55B411403AB88D601A8010A,
 				F55B410E03AB88D601A8010A,
 				F55B410F03AB88D601A8010A,
+				4BBDE39405B2E34F00EA51E7,
 				F55B411A03AB88D601A8010A,
 				F55B412203AB88D601A8010A,
 				4B4C779B0474861F00A8010A,
