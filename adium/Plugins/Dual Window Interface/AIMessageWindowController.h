@@ -32,6 +32,7 @@
 
     NSMutableDictionary		*toolbarItems;
 
+    BOOL                        supressHiding;
     BOOL			tabIsShowing;
     BOOL                        tabBarResizing;
     BOOL			autohide_tabBar;
@@ -54,6 +55,6 @@
 - (void)selectFirstTabViewItemContainer;
 - (void)selectLastTabViewItemContainer;
 - (NSTabViewItem <AIInterfaceContainer> *)containerForChat:(AIChat *)inChat;
-
+- (void)supressTabBarHiding:(BOOL)supress;
 - (void)draggingExited:(id <NSDraggingInfo>)sender;
 @end
