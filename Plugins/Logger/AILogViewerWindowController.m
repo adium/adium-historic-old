@@ -323,9 +323,12 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 	
 	if (theLog){
 		//We utilize the logIndexAccessLock so we have exclusive access to the logs
-		NSLock		*logAccessLock = [plugin logAccessLock];
-		SKIndexRef	logSearchIndex = [plugin logContentIndex];
-
+		NSLock			*logAccessLock = [plugin logAccessLock];
+		
+		//Remember that this locks and unlocks the logAccessLock
+		SKIndexRef		logSearchIndex = [plugin logContentIndex];
+		SKDocumentRef	document;
+		
 		[theLog retain];
 
 		[resultsLock lock];
@@ -336,7 +339,7 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 
 		//Update the log index
 		[logAccessLock lock];
-		SKDocumentRef document = SKDocumentCreate((CFStringRef)@"file", NULL, (CFStringRef)[theLog path]);
+		document = SKDocumentCreate((CFStringRef)@"file", NULL, (CFStringRef)[theLog path]);
 		SKIndexRemoveDocument(logSearchIndex, document);
 		CFRelease(document);
 		SKIndexFlush(logSearchIndex);
