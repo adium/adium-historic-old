@@ -74,6 +74,9 @@
 
 - (IBAction)showAboutBox:(id)sender;
 - (IBAction)showHelp:(id)sender;
+- (IBAction)reportABug:(id)sender;
+- (IBAction)sendFeedback:(id)sender;
+- (IBAction)showForums:(id)sender;
 - (IBAction)confirmQuit:(id)sender;
 
 //return zero or more pathnames to objects in the Application Support folders.

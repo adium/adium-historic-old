@@ -13,13 +13,12 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//$Id: LNAboutBoxController.m,v 1.30 2004/03/11 04:33:28 adamiser Exp $
+//$Id: LNAboutBoxController.m,v 1.31 2004/03/24 14:06:18 adamiser Exp $
 
 #import "LNAboutBoxController.h"
 
 #define ABOUT_BOX_NIB			@"AboutBox"
-#define	ADIUM_SITE_LINK			@"http://adium.sourceforge.net/"
-#define ADIUM_LINK_TEXT			@"adium.sourceforge.net"
+#define	ADIUM_SITE_LINK			@"http://www.adiumx.com/"
 #define DIRECTORY_INTERNAL_RESOURCES    @"/Contents/Resources/Avatars"
 
 @interface LNAboutBoxController (PRIVATE)
