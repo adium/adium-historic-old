@@ -1,21 +1,28 @@
-5 - Contact list layout defaults
 5 - Contact list toolbar icons for toggle groups, add group, toggle offline
-4 - Implement status window when away preference
-4 - Verify all defaults are correct (Color backgrounds in the contact list coloring prefs for example?)
-4 - Preference importing wherever possible for .7x -> 0.80
+5 - Implement status window when away preference
+5 - Preference importing wherever possible for .7x -> 0.80
+4 - Short message between +/- and edit in the events pane
+4 - Icons for .AdiumStatusIcons and .AdiumServiceIcons file types
+4 - www.adiumxtras.com category for Status/Service Icons (perhaps make it a Miscellaneous catch-all category?)
+4 - Implement jabber account registration from the account prefs
+4 - Check idle time defaults; add formatters for the time fields for Custom Status and Status preferences to force them to whole numbers
+
+Defaults:
+4 - Message style defaults
 4 - Create better default event sets
-3 - Short message between +/- and edit in the events pane
+4 - Contact list layout defaults
+4 - Verify all defaults are correct (Color backgrounds in the contact list coloring prefs for example?)
+
+----
+
 3 - Scroll behavior in events needs to be fixed - follow the current selection
 3 - Reconsider double click behavior for events
 3 - %_statusmessage script is broken
-3 - Icons for .AdiumStatusIcons and .AdiumServiceIcons file types
 3 - Add movement threshold to the borderless window
 3 - Figure out what to do with bubble list specific preferences
 3 - Fix group spacing to be fixed depending on mode
 3 - Get updated plastics view for bundling
-3 - Implement jabber account registration from the account prefs
 3 - Message views are ignoring variant specific info.plist keys
-3 - Check idle time defaults; add formatters for the time fields for Custom Status and Status preferences to force them to whole numbers
 2 - Account online checkboxes have incorrect state after canceling a password prompt
 2 - Change sound sets so that events use key sounds rather then specifing directly
 2 - Sound action should remember last sound selected as default
