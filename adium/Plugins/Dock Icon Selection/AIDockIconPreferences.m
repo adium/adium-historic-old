@@ -254,8 +254,7 @@
 		[[iconArray objectAtIndex:selectedIconIndex] setObject:stateToAnimate
 														forKey:@"State"];
 	}
-	
-	NSLog(@"flipped? %i animated=%i",[[stateToAnimate image] isFlipped],[stateToAnimate animated]);
+
 	//Set the image to the new state
 	[[matrix_iconPreview selectedCell] setImage:[stateToAnimate image]];
 	

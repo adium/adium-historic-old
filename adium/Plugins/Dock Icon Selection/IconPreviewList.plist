@@ -6,11 +6,14 @@
 	<array>
 				<array>
                         <string>Base</string>
-                        <string>Online</string>
                 </array>
-                <array>
+				<array>
                         <string>Base</string>
                         <string>Connecting</string>
+                </array>
+				<array>
+                        <string>Base</string>
+                        <string>Online</string>
                 </array>
                 <array>
                         <string>Base</string>
@@ -27,9 +30,7 @@
                         <string>Online</string>
                         <string>Idle</string>
                 </array>
-				<array>
-                        <string>Base</string>
-                </array>
+
         </array>
 </dict>
 </plist>
