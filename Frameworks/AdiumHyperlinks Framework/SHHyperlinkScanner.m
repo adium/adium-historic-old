@@ -189,18 +189,18 @@ static NSMutableCharacterSet *endSet = nil;
 -(NSArray *)allURLsFromString:(NSString *)inString
 {
     SHStringOffset = 0; //set the offset to 0.
-    NSMutableArray		*rangeArray = [[[NSMutableArray alloc] init] autorelease];
-    SHMarkedHyperlink	*markedLink = nil;
+    NSMutableArray		*rangeArray = nil;
+    SHMarkedHyperlink	*markedLink;
     
     //build an array of marked links.
     while([inString length] > SHStringOffset){
         if(markedLink = [self nextURLFromString:inString]){
+			if(!rangeArray) rangeArray = [NSMutableArray array];
             [rangeArray addObject:markedLink];
         }
     }
     
-    //return the array if it has elements, otherwise nil.
-	return(([rangeArray count] > 0) ? rangeArray : nil);
+	return(rangeArray);
 }
 
 // fetch all the URL's form a text view
@@ -215,22 +215,33 @@ static NSMutableCharacterSet *endSet = nil;
 -(NSAttributedString *)linkifyString:(NSAttributedString *)inString
 {
     //build an array from the input string and get its obj. enumerator
-    NSArray *rangeArray = [self allURLsFromString:[inString string]];
-    NSEnumerator *enumerator = [rangeArray objectEnumerator];
-    SHMarkedHyperlink *markedLink;
-    
-    //create a new mutable string
-    NSMutableAttributedString *newString = [[[NSMutableAttributedString alloc] initWithAttributedString:inString] autorelease];
-    
-    //for each SHMarkedHyperlink, add the proper URL to the proper range in the string.
-    while(markedLink = [enumerator nextObject]){
-        NSRange linkRange = [markedLink range];
-        if([markedLink URL]){
-            [newString addAttribute:NSLinkAttributeName value:[markedLink URL] range:linkRange];
-        }
-    }
-    
-    return(newString);
+    NSArray				*rangeArray = [self allURLsFromString:[inString string]];
+
+	if([rangeArray count]){
+		NSMutableAttributedString	*linkifiedString;
+		NSEnumerator				*enumerator;
+		SHMarkedHyperlink			*markedLink;
+		
+		linkifiedString = [[inString mutableCopy] autorelease];
+
+		//for each SHMarkedHyperlink, add the proper URL to the proper range in the string.
+		enumerator = [rangeArray objectEnumerator];
+		while(markedLink = [enumerator nextObject]){
+			NSURL *markedLinkURL;
+			
+			if(markedLinkURL = [markedLink URL]){
+				[linkifiedString addAttribute:NSLinkAttributeName
+										value:markedLinkURL 
+										range:[markedLink range]];
+			}
+		}
+		
+		return(linkifiedString);
+
+    }else{
+		//If no links were found, just return the string we were passed
+		return(inString);
+	}
 }
 
 // scan a textView for URL's, as above
