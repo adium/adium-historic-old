@@ -1779,6 +1779,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		if ([group isKindOfClass:[AIListGroup class]]){
 			if([listContact isKindOfClass:[AIMetaContact class]]){
 				//This is a meta contact, move the objects within it.  listContacts will give us a flat array of AIListContacts.
+				
+				/*
 				NSEnumerator	*metaEnumerator;
 				AIListContact	*aContainedContact;
 				
@@ -1794,6 +1796,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 						[self _moveObjectServerside:specificContact toGroup:(AIListGroup *)group];
 					}
 				}
+				*/
 				
 				[self _moveContactLocally:listContact toGroup:(AIListGroup *)group];
 				
