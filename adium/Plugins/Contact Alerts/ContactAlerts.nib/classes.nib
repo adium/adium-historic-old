@@ -11,10 +11,30 @@
             SUPERCLASS = NSTableView; 
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {CLASS = AIContactInfoPane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {addAlert = id; deleteAlert = id; editAlert = id; }; 
+            CLASS = ESContactAlertsPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_delete" = NSButton; 
+                "button_edit" = NSButton; 
+                "tableView_actions" = AIAlternatingRowTableView; 
+            }; 
+            SUPERCLASS = AIContactInfoPane; 
         }, 
         {
             ACTIONS = {addAlert = id; closeWindow = id; deleteAlert = id; editAlert = id; }; 

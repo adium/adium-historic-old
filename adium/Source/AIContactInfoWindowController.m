@@ -15,8 +15,9 @@
 
 #import "AIContactInfoWindowController.h"
 
-#define	CONTACT_INFO_NIB		@"ContactInfoWindow"			//Filename of the contact info nib
-#define KEY_INFO_WINDOW_FRAME	@"Contact Info Window Frame"	//
+#define	CONTACT_INFO_NIB				@"ContactInfoWindow"			//Filename of the contact info nib
+#define KEY_INFO_WINDOW_FRAME			@"Contact Info Window Frame"	//
+#define KEY_INFO_SELECTED_CATEGORY		@"Selected Info Category"		//
 
 @interface AIContactInfoWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
@@ -67,13 +68,24 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {    
-	NSString	*savedFrame;
+	int             selectedTab;
+    NSTabViewItem   *tabViewItem;
+	NSString		*savedFrame;
 
     //
 	loadedPanes = [[NSMutableArray alloc] init];
 	
-	//Initial selection
-    [[adium notificationCenter] addObserver:self selector:@selector(selectionChanged:) name:Interface_ContactSelectionChanged object:nil];
+    //Select the previously selected category
+    selectedTab = [[[adium preferenceController] preferenceForKey:KEY_INFO_SELECTED_CATEGORY
+															group:PREF_GROUP_WINDOW_POSITIONS] intValue];
+    if(selectedTab < 0 || selectedTab >= [tabView_category numberOfTabViewItems]) selectedTab = 0;
+	
+    tabViewItem = [tabView_category tabViewItemAtIndex:selectedTab];
+    [self tabView:tabView_category willSelectTabViewItem:tabViewItem];
+    [tabView_category selectTabViewItem:tabViewItem];    
+	
+	//Monitor the selected contact
+//    [[adium notificationCenter] addObserver:self selector:@selector(selectionChanged:) name:Interface_ContactSelectionChanged object:nil];
 	[self selectionChanged:nil];
     
 	//Restore the window position
@@ -95,15 +107,32 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
-{
-	[[adium notificationCenter] removeObserver:self];
+{	
+	NSEnumerator 		*enumerator;
+    AIContactInfoPane	*pane;
+	
+	//Take focus away from any controls to ensure that they register changes and save
+    [[self window] makeFirstResponder:tabView_category];
+	
+    //Close all open panes
+    enumerator = [loadedPanes objectEnumerator];
+    while(pane = [enumerator nextObject]){
+        [pane closeView];
+    }
+    
+    //Save the selected category
+    [[adium preferenceController] setPreference:[NSNumber numberWithInt:[tabView_category indexOfSelectedTabViewItem]]
+										 forKey:KEY_INFO_SELECTED_CATEGORY
+										  group:PREF_GROUP_WINDOW_POSITIONS];
+	
 	
     //Save the window position
     [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_INFO_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 	
-	//Close down our shared instance
+	//Close down
+	[[adium notificationCenter] removeObserver:self];
     [sharedContactInfoInstance autorelease]; sharedContactInfoInstance = nil;
 	
     return(YES);
@@ -122,7 +151,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 - (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	return([NSImage imageNamed:[NSString stringWithFormat:@"pref%@",[tabViewItem identifier]] forClass:[self class]]);
+	return([NSImage imageNamed:[NSString stringWithFormat:@"info%@",[tabViewItem identifier]] forClass:[self class]]);
 }
 
 
@@ -166,7 +195,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 {
     NSMutableArray		*paneArray = [NSMutableArray array];
     NSEnumerator		*enumerator = [[[adium contactController] contactInfoPanes] objectEnumerator];
-    AIPreferencePane	*pane;
+    AIContactInfoPane	*pane;
     
     //Get the panes for this category
     while(pane = [enumerator nextObject]){
@@ -175,10 +204,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
             [loadedPanes addObject:pane];
         }
     }
-    
+	
     //Alphabetize them
     [paneArray sortUsingSelector:@selector(compare:)];
-    
+
     return(paneArray);
 }
 
@@ -199,10 +228,18 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		[displayedObject release];
 		displayedObject = [inObject retain];
 		
+		//Update our window title
 		if(inObject){
 			[[self window] setTitle:[NSString stringWithFormat:@"%@'s Info",[inObject displayName]]];
 		}else{
 			[[self window] setTitle:@"Contact Info"];
+		}
+		
+		//Configure our panes
+		NSEnumerator		*enumerator = [loadedPanes objectEnumerator];
+		AIContactInfoPane	*pane;
+		while(pane = [enumerator nextObject]){
+			[pane configureForListObject:displayedObject];
 		}
 		
 	}

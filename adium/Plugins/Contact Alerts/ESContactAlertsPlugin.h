@@ -6,8 +6,6 @@
 //
 
 @interface ESContactAlertsPlugin : AIPlugin {
-    NSMenuItem				*editContactAlertsMenuItem;
-    NSMenuItem				*contactAlertsContextMenuItem;
 }
 
 @end

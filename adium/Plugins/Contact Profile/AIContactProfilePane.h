@@ -6,9 +6,13 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
-@interface AIContactProfilePane : AIContactInfoPane {
+@interface AIContactProfilePane : AIContactInfoPane <AIListObjectObserver> {
 	IBOutlet		NSImageView			*imageView_userIcon;
 	IBOutlet		NSTextField			*textField_accountName;
+	IBOutlet		NSTextField			*textField_status;
+	IBOutlet		NSTextView			*textView_profile;
+
+	AIListObject				*listObject;
 }
 
 @end

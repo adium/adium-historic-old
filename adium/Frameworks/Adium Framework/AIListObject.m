@@ -181,6 +181,7 @@ DeclareString(FormattedUID);
 //Quickly set a status key for this object
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
 {
+	NSLog(@"(%@) %@ = %@",[self displayName],key,value);
 	if(key){
 		if(value){
 			[statusDictionary setObject:value forKey:key];
