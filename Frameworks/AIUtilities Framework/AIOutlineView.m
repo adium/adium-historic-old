@@ -131,7 +131,7 @@
 //		selectedItems = [self arrayOfSelectedItems];
 		[super reloadData];
 	
-		//After reloading data, we correctly expand/collaps all groups
+		//After reloading data, we correctly expand/collapse all groups
 		if([[self delegate] respondsToSelector:@selector(outlineView:expandStateOfItem:)]){
 			id		delegate = [self delegate];
 			int 	numberOfRows = [delegate outlineView:self numberOfChildrenOfItem:nil];
