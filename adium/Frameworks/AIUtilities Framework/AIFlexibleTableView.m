@@ -166,20 +166,15 @@
 //Return the contextual menu for an event
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
-    //Pass this on to our delegate
-    if([delegate respondsToSelector:@selector(contextualMenuForFlexibleTableView:fromEvent:)]){
-        return([(id<AIFlexibleTableViewDeleagte>)delegate contextualMenuForFlexibleTableView:self fromEvent:theEvent]);
-    }
-    return(nil);   
-}
-
-//Menu items applicable 
-- (NSArray *)arrayOfMenuItemsFromEvent:(NSEvent *)theEvent
-{
     AIFlexibleTableRow	*clickedRow;
     NSPoint		clickLocation, rowClickLocation;
     NSPoint		rowOrigin;
-    NSMutableArray      *returnArray = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray      *tableViewItemArray = [[[NSMutableArray alloc] init] autorelease];
+
+    NSMenu              *menu = nil;
+    NSArray             *menuItemArray;
+    NSEnumerator        *enumerator;
+    NSMenuItem          *menuItem;
     
     //Determine clicked row
     clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -188,20 +183,41 @@
     
     NSArray *rowContextArray = [clickedRow menuItemsForEvent:theEvent atPoint:rowClickLocation offset:rowOrigin];
     if (rowContextArray && [rowContextArray count]) {
-        [returnArray addObjectsFromArray:rowContextArray];
+        [tableViewItemArray addObjectsFromArray:rowContextArray];
     }
-
+    
     //[returnArray addObject:[NSMenuItem separatorItem]];
     
     //Copy
     if ([clickedRow pointIsSelected:rowClickLocation offset:rowOrigin]) {
-        [returnArray addObject:[[[NSMenuItem alloc] initWithTitle:COPY_MENU_ITEM
-                                                           target:self
-                                                           action:@selector(copy:)
-                                                    keyEquivalent:@""] autorelease]];
+        [tableViewItemArray addObject:[[[NSMenuItem alloc] initWithTitle:COPY_MENU_ITEM
+                                                                  target:self
+                                                                  action:@selector(copy:)
+                                                           keyEquivalent:@""] autorelease]];
     }
-
-    return ([returnArray count] ? returnArray : nil);
+    
+    //Pass this on to our delegate
+    if([delegate respondsToSelector:@selector(contextualMenuForFlexibleTableView:)]){
+        menu = ([(id<AIFlexibleTableViewDeleagte>)delegate contextualMenuForFlexibleTableView:self]);
+    }
+    
+    //Add any table-specific menu items to the front of the menu
+    if (menuItemArray && [menuItemArray count]) {
+    
+        //If the delegate didn't respond or responded nil, initialize a menu
+        //Otherwise, prepend a separator
+        if (!menu) {
+            menu = [[[NSMenu alloc] init] autorelease];
+        } else {
+            [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
+        }
+        enumerator = [menuItemArray reverseObjectEnumerator];
+        while (menuItem = [enumerator nextObject]) {
+            [menu insertItem:menuItem atIndex:0];
+        }
+    }
+    
+    return(menu);   
 }
 
 
