@@ -16,7 +16,7 @@ int idleAwayManualSort(id objectA, id objectB, void *context);
 @implementation AIIdleAwayManualSort
 
 - (NSString *)description{
-    return(@"Sorts idle and away to bottom. Groups are not sorted. Manual ordering is respected");
+    return(@"Sorts idle and away to bottom. Groups are not sorted. Manual ordering is respected.");
 }
 - (NSString *)identifier{
     return(@"IdleAway_Manual");
