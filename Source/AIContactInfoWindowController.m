@@ -406,6 +406,27 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	}
 }
 
+- (IBAction)addContact:(id)sender
+{
+
+}
+
+- (IBAction)removeContact:(id)sender
+{
+	NSEnumerator	*enumerator;
+	AIListObject	*aListObject;
+	AIMetaContact	*contactListRoot = (AIMetaContact *)[contactListController contactListRoot];
+	
+	enumerator = [[contactListView arrayOfSelectedItems] objectEnumerator];
+	while (aListObject = [enumerator nextObject]){
+		[[adium contactController] removeAllListObjectsMatching:aListObject
+												fromMetaContact:contactListRoot];
+	}
+	
+	//The contents of the metaContact have now changed; reload
+	[contactListView reloadData];
+}
+
 - (float)drawerTrailingOffset
 {
 	return([drawer_metaContact trailingOffset]);

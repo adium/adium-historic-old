@@ -230,5 +230,5 @@
 - (BOOL)shouldUseContactTextColors{
 	return NO;
 }
-
+	
 @end
