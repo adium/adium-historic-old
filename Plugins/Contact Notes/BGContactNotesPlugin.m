@@ -15,88 +15,45 @@
  */
 
 #import "AIContactController.h"
-#import "AIContactInfoWindowController.h"
-#import "AIContactListEditorPlugin.h"
+//#import "AIContactInfoWindowController.h"
+//#import "AIContactListEditorPlugin.h"
 #import "AIInterfaceController.h"
 #import "BGContactNotesPlugin.h"
-#import <AddressBook/AddressBook.h>
+//#import <AddressBook/AddressBook.h>
 #import <Adium/AIListObject.h>
 
-#define	CONTACT_NOTES_NIB			@"ContactNotes"		 //Filename of the notes info view
+#define KEY_AB_NOTE_SYNC			@"AB Note Sync"
 
-#define KEY_AB_NOTE_SYNC                        @"AB Note Sync"
-
-//@interface BGContactNotesPlugin (PRIVATE) // should call an internal method to add to the list object :)
-//- (NSArray *)_addNotes:(NSString *)inNotes toObject:(AIListObject *)inObject notify:(BOOL)notify;
-//@end
-
+/*
+ * @class BGContactNotesPlugin
+ * @brief Component to show contact notes in tooltips
+ */
 @implementation BGContactNotesPlugin
-// here follows a shameless hack of the alias support and idle time into a notes monstrosity
-// with another hacked on limb attaching it to the address book
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {    
-//    //Register ourself as a handle observer
-//    [[adium contactController] registerListObjectObserver:self];
-//    
-//    //Install the contact info view
-//    [NSBundle loadNibNamed:CONTACT_NOTES_NIB owner:self];
-//	//    contactView = [[AIPreferenceViewController controllerWithName:@"Notes" 
-//	//                                                     categoryName:@"None" 
-//	//                                                             view:view_contactNotesInfoView 
-//	//                                                         delegate:self] retain];
-//#warning    [[adium contactController] addContactInfoView:contactView];
-//    [textField_notes setDelegate:self];
-    
     //Install our tooltip entry
     [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
-    
-//    //Observe preferences changes
-//    [[adium notificationCenter] addObserver:self 
-//                                   selector:@selector(preferencesChanged:) 
-//                                       name:Preference_GroupChanged 
-//                                     object:nil];
-//    
-//    //Observe external address book changes
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(addressBookChanged:)
-//                                                 name:kABDatabaseChangedExternallyNotification
-//                                               object:nil];    
-//    
-//    activeListObject = nil;
 }
 
-//- (void)uninstallPlugin
-//{
-//    [[adium contactController] unregisterListObjectObserver:self];
-//}
-//
-//- (void)preferencesChanged:(NSNotification *)notification
-//{
-//    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_ADDRESSBOOK] == 0){
-//        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
-//        noteSync = [[prefDict objectForKey:KEY_AB_NOTE_SYNC] boolValue];        
-//        [self updateAllContacts];
-//    }
-//}
-//
-//- (void)addressBookChanged:(NSNotification *)notification
-//{
-//    [self updateAllContacts];
-//}
-//
-////Update all existing contacts
-//- (void)updateAllContacts
-//{
-//    [[adium contactController] updateAllListObjectsForObserver:self];
-//}
-
-//Tooltip entry ---------------------------------------------------------------------------------------
+/*!
+ * @brief Tooltip label
+ *
+ * @result A label, or nil if no tooltip entry should be shown
+ */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(@"Notes");
+    return(AILocalizedString(@"Notes", "Short identifier for the 'notes' which can be entered for contacts. This will be shown in the contact list tooltips.");
 }
 
+/*!
+ * @brief Tooltip entry
+ *
+ * @result The tooltip entry, or nil if no tooltip should be shown
+ */
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
     NSAttributedString  *entry = nil;
@@ -109,59 +66,5 @@
     
     return([entry autorelease]);
 }
-// end tooltip ----------------------------------
-
-//- (IBAction)setNotes:(id)sender
-//{
-//    if (activeListObject) {
-//        NSString *notes = [textField_notes stringValue];
-//        
-//        //A 0 length note is no note at all.
-//        if ([notes length] == 0)
-//            notes = nil; 
-//        
-//        //Apply
-//        [self _addNotes:notes toObject:activeListObject notify:YES];
-//        
-//        //Save the note
-//        [activeListObject setPreference:notes forKey:@"Notes" group:PREF_GROUP_NOTES];
-//    }
-//}
-//
-//- (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
-//{
-//    //Be sure we've set the last changes
-//	[textField_notes fireImmediately];
-//	
-//    NSString	*note;
-//    
-//    //Hold onto the object
-//    [activeListObject release]; activeListObject = nil;
-//    activeListObject = [inObject retain];
-//    
-//    //Fill in the current note
-//    if(note = [inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES]){
-//        [textField_notes setStringValue:note];
-//    }else{
-//        [textField_notes setStringValue:@""];
-//    }
-//}
-//
-////Called as contacts are created, load their notes
-//- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-//{    
-//    return(nil);
-//}
-//
-////Private ---------------------------------------------------------------------------------------
-//- (NSArray *)_addNotes:(NSString *)inNotes toObject:(AIListObject *)inObject notify:(BOOL)notify;
-//{    
-//    return(nil);
-//}
-//
-//- (void)_delayedSetNotes:(NSTimer *)inTimer
-//{
-//    [self setNotes:nil];
-//}
 
 @end

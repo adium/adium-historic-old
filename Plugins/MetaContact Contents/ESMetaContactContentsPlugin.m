@@ -24,29 +24,40 @@
 
 #define META_TOOLTIP_ICON_SIZE NSMakeSize(10,10)
 
+/*
+ * @class ESMetaContactContentsPlugin
+ * @brief Tooltip component: Show the contacts contained by metaContacts, with service and status state.
+ */
 @implementation ESMetaContactContentsPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //Install our tooltip entry
     [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];	
 }
 
-- (void)uninstallPlugin
-{
-	
-}
-
-//Tooltip entry ---------------------------------------------------------------------------------------
+/*!
+ * @brief Tooltip label
+ *
+ * @result A label, or nil if no tooltip entry should be shown
+ */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
 	if ([inObject isKindOfClass:[AIMetaContact class]]){
-		return(@"Contacts");
+		return(AILocalizedString(@"Contacts",nil));
 	}
 	
 	return nil;
 }
 
+/*!
+ * @brief Tooltip entry
+ *
+ * @result The tooltip entry, or nil if no tooltip should be shown
+ */
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
     NSMutableAttributedString	*entry = nil;

@@ -28,30 +28,40 @@
     [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:NO];
 }
 
-//Tooltip entry ---------------------------------------------------------------------------------------
+/*!
+ * @brief Tooltip label
+ *
+ * @result A label, or nil if no tooltip entry should be shown
+ */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(@"Online Since");
+    return(AILocalizedString(@"Online Since", "This tooltip identifier will followd by a date"));
 }
 
+/*!
+ * @brief Tooltip entry
+ *
+ * @result The tooltip entry, or nil if no tooltip should be shown
+ */
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
     NSAttributedString * entry = nil;
     if([inObject integerStatusObjectForKey:@"Online"]){
-        NSDate	*signonDate, *currentDate;
-        currentDate = [NSDate date];
-        signonDate = [(AIListContact *)inObject statusObjectForKey:@"Signon Date"];
-        
-        if(signonDate){
+
+        NSDate	*signonDate;
+	
+        if(signonDate = [inObject statusObjectForKey:@"Signon Date"]){
             NSString		*currentDay, *signonDay, *signonTime;
             NSDateFormatter	*dayFormatter, *timeFormatter;
             
             //Create the formatters
             dayFormatter = [NSDateFormatter localizedShortDateFormatter];
-            timeFormatter = [[NSDateFormatter alloc] initWithDateFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES] allowNaturalLanguage:YES];
+            timeFormatter = [[NSDateFormatter alloc] initWithDateFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO 
+																												   showingAMorPM:YES] 
+												   allowNaturalLanguage:YES];
             
             //Get day & time strings
-            currentDay = [dayFormatter stringForObjectValue:currentDate];
+            currentDay = [dayFormatter stringForObjectValue:[NSDate date]];
             signonDay = [dayFormatter stringForObjectValue:signonDate];
             signonTime = [timeFormatter stringForObjectValue:signonDate];
             

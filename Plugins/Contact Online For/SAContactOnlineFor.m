@@ -19,30 +19,44 @@
 #import <AIUtilities/ESDateFormatterAdditions.h>
 #import <Adium/AIListObject.h>
 
+/*
+ * @class SAContactOnlineForPlugin
+ * @brief Tooltip component: Online for
+ */
 @implementation SAContactOnlineForPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //Install our tooltip entry
     [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:NO];
 }
 
-//Tooltip entry ---------------------------------------------------------------------------------------
+/*!
+ * @brief Tooltip label
+ *
+ * @result A label, or nil if no tooltip entry should be shown
+ */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(@"Online For");
+    return(AILocalizedString(@"Online For", "A time interval such as '3 days' will be shown after this identifier");
 }
 
+/*!
+ * @brief Tooltip entry
+ *
+ * @result The tooltip entry, or nil if no tooltip should be shown
+ */
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    NSAttributedString * entry = nil;
+    NSAttributedString	*entry = nil;
+	
     if([inObject integerStatusObjectForKey:@"Online"]){
-        NSDate	*signonDate, *currentDate;
+        NSDate	*signonDate;
 
-        currentDate = [NSDate date];
-        signonDate = [inObject statusObjectForKey:@"Signon Date"];
-        
-        if(signonDate){
+        if(signonDate = [inObject statusObjectForKey:@"Signon Date"]){
             entry = [[NSAttributedString alloc] initWithString:[NSDateFormatter stringForTimeIntervalSinceDate:signonDate 
 																								showingSeconds:NO 
 																								   abbreviated:NO]];

@@ -24,15 +24,26 @@
 
 #define AWAY_YES			AILocalizedString(@"Yes",nil)
 
+/*
+ * @class AIContactAwayPlugin
+ * @brief Tooltip component: Away messages and states
+ */
 @implementation AIContactAwayPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //Install our tooltip entry
     [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
 }
 
-//Tooltip entry ---------------------------------------------------------------------------------------
+/*!
+ * @brief Tooltip label
+ *
+ * @result A label, or nil if no tooltip entry should be shown
+ */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
     NSString			*entry = nil;
@@ -69,6 +80,11 @@
     return(entry);
 }
 
+/*!
+ * @brief Tooltip entry
+ *
+ * @result The tooltip entry, or nil if no tooltip should be shown
+ */
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
     NSAttributedString	*entry = nil;
@@ -103,6 +119,5 @@
 	
     return(entry);
 }
-
 
 @end

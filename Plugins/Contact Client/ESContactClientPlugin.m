@@ -18,20 +18,36 @@
 #import "AIInterfaceController.h"
 #import <Adium/AIListObject.h>
 
+/*
+ * @class ESContactClientPlugin
+ * @brief Tooltip component: Client
+ */
 @implementation ESContactClientPlugin
 
+/*!
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //Install our tooltip entry
     [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
 }
 
-//Tooltip entry ---------------------------------------------------------------------------------------
+/*!
+* @brief Tooltip label
+ *
+ * @result A label, or nil if no tooltip entry should be shown
+ */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(@"Client");
+    return(AILocalizedString(@"Client",nil));
 }
 
+/*!
+ * @brief Tooltip entry
+ *
+ * @result The tooltip entry, or nil if no tooltip should be shown
+ */
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
     NSString			*client;

@@ -18,31 +18,46 @@
 #import "AIInterfaceController.h"
 #import <Adium/AIListObject.h>
 
+/*
+ * @class AIContactWarningLevelPlugin
+ * @brief Tooltip component: Warning level
+ *
+ * This is only relevant for AIM contacts.
+ */
 @implementation AIContactWarningLevelPlugin
 
+/*!
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //Install our tooltip entry
     [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
 }
 
-//Tooltip entry ---------------------------------------------------------------------------------------
+/*!
+ * @brief Tooltip label
+ *
+ * @result A label, or nil if no tooltip entry should be shown
+ */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(@"Warning Level");
+    return(AILocalizedString(@"Warning Level",nil));
 }
 
+/*!
+ * @brief Tooltip entry
+ *
+ * @result The tooltip entry, or nil if no tooltip should be shown
+ */
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    int 		warningLevel;
     NSAttributedString	*entry = nil;
+    int					warningLevel;
 
-    //Get the away state
-    warningLevel = [inObject integerStatusObjectForKey:@"Warning"];
-    
     //Return the correct string
-    if(warningLevel != 0){
-	entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d%%", warningLevel]];
+    if(warningLevel = [inObject integerStatusObjectForKey:@"Warning"]){
+		entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d%%", warningLevel]];
     }
 
     return([entry autorelease]);

@@ -28,8 +28,15 @@
 - (void)update:(NSNotification *)notification;
 @end
 
+/*
+ * @class CBContactLastSeenPlugin
+ * @brief Component to track and display as a tooltip the last time contacts were seen online
+ */
 @implementation CBContactLastSeenPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //Install our tooltip entry
@@ -37,17 +44,17 @@
 	
 	//Install our observers
 	[[adium notificationCenter] addObserver:self
-								   selector:@selector(update:)
+								   selector:@selector(statusUpdate:)
 									   name:CONTACT_SEEN_ONLINE_YES
 									 object:nil];
 									 
 	[[adium notificationCenter] addObserver:self
-								   selector:@selector(update:)
+								   selector:@selector(statusUpdate:)
 									   name:CONTACT_STATUS_ONLINE_NO
 									 object:nil];
 
 	[[adium notificationCenter] addObserver:self
-								   selector:@selector(update:)
+								   selector:@selector(statusUpdate:)
 									   name:CONTACT_SEEN_ONLINE_NO
 									 object:nil];
 
@@ -55,14 +62,19 @@
 									 
 }
 
-- (void)update:(NSNotification *)notification
+/*
+ * @brief Contact status change notification
+ *
+ * @param notification A notificaiton with an AIListObject object and an eventID name
+ */
+- (void)statusUpdate:(NSNotification *)notification
 {
 	AIListObject	*inObject = [notification object];
 	
-	//Either their online, or we've come online. Either way, update both their status and the time
+	//Either they are online, or we've come online. Either way, update both their status and the time
 	if([[notification name] isEqualToString:CONTACT_SEEN_ONLINE_YES]){
 	
-		[[adium preferenceController] setPreference:@"Online"
+		[[adium preferenceController] setPreference:AILocalizedString(@"Online",nil)
 											 forKey:KEY_LAST_SEEN_STATUS
 											  group:PREF_GROUP_LAST_SEEN
 											 object:inObject];
@@ -75,7 +87,7 @@
 	//They've signed off, update their status and the time		
 	}else if([[notification name] isEqualToString:CONTACT_STATUS_ONLINE_NO]){
 
-		[[adium preferenceController] setPreference:@"Signing off"
+		[[adium preferenceController] setPreference:AILocalizedString(@"Signing off",nil)
 											 forKey:KEY_LAST_SEEN_STATUS
 											  group:PREF_GROUP_LAST_SEEN
 											 object:inObject];
@@ -98,11 +110,22 @@
 
 #pragma mark Tooltip entry
 //Tooltip entry ---------------------------------------------------------------------------------------
+
+/*!
+ * @brief Tooltip label
+ *
+ * @result A label, or nil if no tooltip entry should be shown
+ */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(@"Last Seen");
+    return(AILocalizedString(@"Last Seen","A time interval such as '4 days ago' will be shown after this tooltip identifier"));
 }
 
+/*!
+ * @brief Tooltip entry
+ *
+ * @result The tooltip entry, or nil if no tooltip should be shown
+ */
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
 	NSString			*lastSeenStatus;
@@ -126,12 +149,13 @@
 																				[[NSDateFormatter localizedShortDateFormatter] dateFormat],
 																				[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES]]
 														 allowNaturalLanguage:YES] autorelease];
-									
+			
 			entry = [[NSAttributedString alloc] 
 						initWithString:[NSString stringWithFormat:
-							@"%@\n%@ ago\n%@", 
+							@"%@\n%@ %@\n%@", 
 							lastSeenStatus,
 							[NSDateFormatter stringForTimeIntervalSinceDate:lastSeenDate],
+							[[[NSUserDefaults standardUserDefault] objectForKey:NSEarlierTimeDesignations] objectAtIndex:3],
 							[sinceDateFormatter stringForObjectValue:lastSeenDate]]]; 
 		}
 	}
