@@ -136,20 +136,14 @@ typedef enum {
 - (void)contentsChangedInTextEntryView:(NSView<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
 @end
 
-@protocol AIServiceController
-- (id)retain;
-- (oneway void)release;
-- (id)autorelease;
+@protocol AIServiceController <NSObject>
 - (NSString *)identifier;
 - (NSString *)description;
 - (AIServiceType *)handleServiceType;
 - (id)accountWithProperties:(NSDictionary *)inProperties owner:(id)inOwner;
 @end
 
-@protocol AIAccountViewController
-- (id)retain;
-- (oneway void)release;
-- (id)autorelease;
+@protocol AIAccountViewController <NSObject>
 - (NSView *)view;
 - (void)saveChanges;
 @end
