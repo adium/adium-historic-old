@@ -29,6 +29,8 @@
     AIMessageViewController		*selectedMessageView;
 
     NSMenuItem				*menuItem_closeTab;
+    NSMenuItem				*menuItem_nextMessage;
+    NSMenuItem				*menuItem_previousMessage;
 }
 
 + (id)newInstanceOfInterfaceWithOwner:(id)inOwner;

@@ -54,6 +54,48 @@
     }
 }
 
+//Selects the next message view.  If the current selection is last, NO is returned, and the selected tab is not changed.  Otherwise returns YES
+- (BOOL)selectNextController
+{
+    int		selectedIndex = [tabView_messages indexOfTabViewItem:[tabView_messages selectedTabViewItem]];
+    BOOL	selectionChanged;
+    
+    if(selectedIndex < ([tabView_messages numberOfTabViewItems] - 1)){ //Select the next tab
+        [tabView_messages selectNextTabViewItem:nil];
+        selectionChanged = YES;
+    }else{ //were at the last tab, return NO
+        selectionChanged = NO;        
+    }
+
+    return(selectionChanged);
+}
+
+//Selects the previous message view.  If the current selection is first, NO is returned, and the selected tab is not changed.  Otherwise returns YES
+- (BOOL)selectPreviousController
+{
+    int		selectedIndex = [tabView_messages indexOfTabViewItem:[tabView_messages selectedTabViewItem]];
+    BOOL	selectionChanged;
+
+    if(selectedIndex > 0){ //Select the previous tab
+        [tabView_messages selectPreviousTabViewItem:nil];
+        selectionChanged = YES;
+    }else{ //were at the first tab, return NO
+        selectionChanged = NO;
+    }
+
+    return(selectionChanged);
+}
+
+- (void)selectFirstController
+{
+    [tabView_messages selectTabViewItemAtIndex:0];
+}
+
+- (void)selectLastController
+{
+    [tabView_messages selectTabViewItemAtIndex:[tabView_messages numberOfTabViewItems]-1 ];
+}
+
 //add a message
 - (void)addMessageViewController:(id <AIMessageView>)inController
 {

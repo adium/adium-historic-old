@@ -45,5 +45,9 @@
 - (NSArray *)messageViewArray;
 - (IBAction)closeWindow:(id)sender;
 - (id <AIMessageView>)selectedMessageView;
+- (BOOL)selectNextController;
+- (BOOL)selectPreviousController;
+- (void)selectFirstController;
+- (void)selectLastController;
 
 @end

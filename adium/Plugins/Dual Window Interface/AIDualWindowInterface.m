@@ -24,6 +24,8 @@
 #define CONTACT_LIST_WINDOW_MENU_TITLE		@"Contact List"		//Title for the contact list menu item
 #define MESSAGES_WINDOW_MENU_TITLE		@"Messages"		//Title for the messages window menu item
 #define CLOSE_TAB_MENU_TITLE			@"Close Tab"		//Title for the close tab menu item
+#define PREVIOUS_MESSAGE_MENU_TITLE		@"Previous Message"
+#define NEXT_MESSAGE_MENU_TITLE			@"Next Message"
 
 @interface AIDualWindowInterface (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
@@ -170,6 +172,35 @@
 
 }
 
+//Select the next message
+- (IBAction)nextMessage:(id)sender
+{    
+    if(messageWindow && [[messageWindow window] isKeyWindow]){
+        if(![messageWindow selectNextController]){
+            //Move: message window -> contact list
+            [contactListWindowController showWindow:nil];
+        }
+    }else{
+        //Move:  contact list -> message window
+        [messageWindow selectFirstController];
+        [messageWindow showWindow:nil];
+    }
+}
+
+- (IBAction)previousMessage:(id)sender
+{
+    if(messageWindow && [[messageWindow window] isKeyWindow]){
+        if(![messageWindow selectPreviousController]){
+            //Move:  contact list <- message window
+            [contactListWindowController showWindow:nil];
+        }
+    }else{
+        //Move:  message window <- contact list
+        [messageWindow selectLastController];
+        [messageWindow showWindow:nil];
+    }
+}
+
 
 
 //Private ------------------------------------------------------------------------------
@@ -201,9 +232,12 @@
     [[owner menuController] addMenuItem:menuItem_closeTab toLocation:LOC_File_Close];
 
     //Add our other menu items
-//   menuItem_nextMessage = [[NSMenuItem alloc] initWithTitle:CLOSE_TAB_MENU_TITLE target:self action:@selector(closeTab:) keyEquivalent:@"r"];
-//    [[owner menuController] addMenuItem:menuItem_closeTab toLocation:LOC_File_Close];
-    
+    menuItem_previousMessage = [[NSMenuItem alloc] initWithTitle:PREVIOUS_MESSAGE_MENU_TITLE target:self action:@selector(previousMessage:) keyEquivalent:@"["];
+    [[owner menuController] addMenuItem:menuItem_previousMessage toLocation:LOC_Window_Commands];
+
+    menuItem_nextMessage = [[NSMenuItem alloc] initWithTitle:NEXT_MESSAGE_MENU_TITLE target:self action:@selector(nextMessage:) keyEquivalent:@"]"];
+    [[owner menuController] addMenuItem:menuItem_nextMessage toLocation:LOC_Window_Commands];
+
 
     return(self);
 }
@@ -221,6 +255,21 @@
     [owner release];
 
     [super dealloc];
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+    BOOL enabled = YES;
+    
+    if(menuItem == menuItem_closeTab){
+        if(![[messageWindow window] isKeyWindow]) enabled = NO;
+    }else if(menuItem == menuItem_nextMessage){
+        if(!messageWindow) enabled = NO;
+    }else if(menuItem == menuItem_previousMessage){
+        if(!messageWindow) enabled = NO;
+    }
+
+    return(enabled);
 }
 
 //Build the contents of the 'window' menu
@@ -330,7 +379,7 @@
                                                              selector:@selector(messageWindowSelectedControllerChanged:)
                                                                  name:AIMessageWindow_SelectedControllerChanged
                                                                object:messageWindow];
-        
+
         //Rebuild the window menu
         [self buildWindowMenu];
     }
