@@ -1543,6 +1543,11 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}	
 }
 
+- (oneway void)openChat:(AIChat *)chat
+{
+	GaimConversation *conv = convLookupFromChat(chat,nil);	
+}
+
 - (oneway void)closeChat:(AIChat *)chat
 {
 	GaimConversation *conv = convLookupFromChat(chat,nil);
