@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.71 2004/04/26 02:27:49 evands Exp $
+// $Id: AIContentController.m,v 1.72 2004/05/18 16:52:23 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -313,10 +313,10 @@
 		
     } else if ([[inObject type] isEqualToString:CONTENT_STATUS_TYPE]){
 		//AIContentStatus have a string for a message
-        [(AIContentStatus *)inObject setMessage:[self _filterString:[(AIContentStatus *)inObject message]
+        [(AIContentStatus *)inObject setMessage:[NSAttributedString stringWithString:[self _filterString:[[(AIContentStatus *)inObject message] string]
 												   forContentObject:inObject
 												  listObjectContext:nil
-												   /*usingFilterArray:inArray*/]];
+												   /*usingFilterArray:inArray*/]]];
 	} else {
 		//Other content objects just get sent through filters without an attributed string hint
         [self _filterAttributedString:nil

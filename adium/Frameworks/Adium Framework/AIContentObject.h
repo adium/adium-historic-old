@@ -10,20 +10,27 @@
 @class AIChat;
 
 @interface AIContentObject : AIObject {
-    AIChat	*chat;
-    id		source;
-    id		destination;
-    BOOL	outgoing;
+    AIChat				*chat;
+    id					source;
+    id					destination;
+    BOOL				outgoing;
     
-    NSDate  *date;
+	NSAttributedString	*message;
+    NSDate  			*date;
 
-	BOOL	filterContent;
-	BOOL	trackContent;
-	BOOL	displayContent;	
+	BOOL				filterContent;
+	BOOL				trackContent;
+	BOOL				displayContent;	
 }
 
 - (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate*)inDate;
+- (id)initWithChat:(AIChat *)inChat
+			source:(id)inSource
+	   destination:(id)inDest
+			  date:(NSDate*)inDate
+		   message:(NSAttributedString *)inMessage;
 - (NSString *)type;
+
 - (id)source;
 - (id)destination;
 - (NSDate *)date;
@@ -31,10 +38,14 @@
 - (void)_setIsOutgoing:(BOOL)inOutgoing;
 - (AIChat *)chat;
 - (void)setChat:(AIChat *)inChat;
+- (void)setMessage:(NSAttributedString *)inMessage;
+- (NSAttributedString *)message;
+
 - (BOOL)filterContent;
 - (BOOL)trackContent;
 - (BOOL)displayContent;
 - (void)setTrackContent:(BOOL)inTrackContent;
 - (void)setDisplayContent:(BOOL)inDisplayContent;
+- (BOOL)setFilterContent:(BOOL)inFilterContent;
 
 @end

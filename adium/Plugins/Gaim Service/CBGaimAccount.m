@@ -748,7 +748,7 @@ static id<GaimThread> gaimThread = nil;
 			//Grab the list object (which may be null if this isn't a chat with a particular listObject)
 			AIListObject		*listObject = [chat listObject];
 			//Use GaimConvImFlags for now; multiuser chats will end up ignoring this
-			GaimConvImFlags		flags = ([contentMessage autoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
+			GaimConvImFlags		flags = ([contentMessage isAutoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
 			
 			//If this connection doesn't support new lines, send all lines before newlines as separate messages
 			if (gc && (gc->flags & GAIM_CONNECTION_NO_NEWLINES)) {

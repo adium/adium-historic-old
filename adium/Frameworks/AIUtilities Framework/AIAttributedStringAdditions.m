@@ -311,6 +311,11 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 
 @implementation NSAttributedString (AIAttributedStringAdditions)
 
++ (NSAttributedString *)stringWithString:(NSString *)inString
+{
+	return([[[NSAttributedString alloc] initWithString:inString] autorelease]);
+}
+
 - (float)heightWithWidth:(float)width
 {
     NSTextStorage 	*textStorage;

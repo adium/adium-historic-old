@@ -33,6 +33,7 @@
 + (NSAttributedString *)stringWithData:(NSData *)inData;
 - (NSAttributedString *)safeString;
 - (NSAttributedString *)stringByAddingFormattingForLinks;
++ (NSAttributedString *)stringWithString:(NSString *)inString;
 
 @end
 

@@ -105,7 +105,7 @@
                                      withSource:object
                                     destination:[chat account]
                                            date:[NSDate date]
-                                        message:message
+                                        message:[NSAttributedString stringWithString:message]
 									 withType:type];
 		
         //Add the object
