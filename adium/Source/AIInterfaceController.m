@@ -448,9 +448,9 @@
         
         //headIndent doesn't apply to the first line of a paragraph... so when new lines are in the entry, we need to tab over to the proper location
         if ([entryString replaceOccurrencesOfString:@"\r" withString:@"\r\t\t" options:NSLiteralSearch range:fullLength])
-            NSRange fullLength = NSMakeRange(0, [entryString length]);
+            fullLength = NSMakeRange(0, [entryString length]);
         if ([entryString replaceOccurrencesOfString:@"\n" withString:@"\n\t\t" options:NSLiteralSearch range:fullLength])
-            NSRange fullLength = NSMakeRange(0, [entryString length]);
+            fullLength = NSMakeRange(0, [entryString length]);
                 
         //Run the entry through the filters and add it to tipString
         [tipString appendAttributedString:
