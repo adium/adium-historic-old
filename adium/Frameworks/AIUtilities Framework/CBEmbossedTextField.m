@@ -18,6 +18,10 @@
     NSDictionary		*attributes;
     NSColor			*textColor;
 
+    //Disable sub-pixel rendering.  It looks horrible with embossed text
+    CGContextSetShouldSmoothFonts([[NSGraphicsContext currentContext] graphicsPort], 0);
+
+    //
     textColor = [NSColor colorWithCalibratedWhite:1.0 alpha:0.4];
     attributes = [NSDictionary dictionaryWithObjectsAndKeys:
             textColor, NSForegroundColorAttributeName,
