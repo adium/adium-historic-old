@@ -891,6 +891,26 @@
                                     withDescription:errorDesc];
 }
 
+/*********************/
+/* AIAccount_Privacy */
+/*********************/
+
+-(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type
+{
+    if (type == PRIVACY_PERMIT)
+        return (gaim_privacy_permit_add(account,[inObject UID],FALSE));
+    else
+        return (gaim_privacy_deny_add(account,[inObject UID],FALSE));
+}
+-(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type
+{
+    if (type == PRIVACY_PERMIT)
+        return (gaim_privacy_permit_remove(account,[inObject UID],FALSE));
+    else
+        return (gaim_privacy_deny_remove(account,[inObject UID],FALSE));
+}
+
+
 /***************************/
 /* Account private methods */
 /***************************/
