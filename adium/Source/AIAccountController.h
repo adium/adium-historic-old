@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.25 $
- * $Date: 2004/07/15 11:03:08 $
- * $Author: ramoth4 $
+ * $Revision: 1.26 $
+ * $Date: 2004/07/15 18:29:27 $
+ * $Author: evands $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
@@ -57,6 +57,8 @@
 	
 	NSMutableArray			*accountMenuPluginsArray;
 	NSMutableDictionary		*accountMenuItemArraysDict;
+	
+	NSArray					*_cachedActiveServiceTypes;
 }
 
 //Services
