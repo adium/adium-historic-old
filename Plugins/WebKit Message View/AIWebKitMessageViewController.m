@@ -107,7 +107,6 @@ DeclareString(AppendNextMessage);
 									 frameName:nil
 									 groupName:nil];
 	[webView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
-	[webView setFrameLoadDelegate:self];
 	[webView setPolicyDelegate:self];
 	[webView setUIDelegate:self];
 	[webView setDraggingDelegate:self];
@@ -548,6 +547,7 @@ DeclareString(AppendNextMessage);
 	
 	//Feed it to the webview
 	webViewIsReady = NO;
+	[webView setFrameLoadDelegate:self];
 	[[webView mainFrame] loadHTMLString:templateHTML baseURL:nil];
 }
 
@@ -1120,6 +1120,9 @@ DeclareString(AppendNextMessage);
 {
 	//Flag the view as ready (as soon as the current methods exit) so we know it's now safe to add content
 	[self performSelector:@selector(webViewIsReady) withObject:nil afterDelay:0.0001];
+	
+	//We don't care about any further didFinishLoad notifications
+	[webView setFrameLoadDelegate:nil];
 }
 - (void)webViewIsReady{
 	webViewIsReady = YES;
