@@ -26,7 +26,6 @@
 @class 	
 AIAccountListPreferencesPlugin,
 AIAccountMenuAccessPlugin,
-AIAccountSetupPlugin,
 AIAliasSupportPlugin,
 AIAlphabeticalSortPlugin,
 AIAutoLinkingPlugin,
@@ -123,7 +122,6 @@ NEHGrowlPlugin;
 	
 	[self _loadComponentClass:[AIAccountListPreferencesPlugin class]];
 	[self _loadComponentClass:[AIAccountMenuAccessPlugin class]];
-	[self _loadComponentClass:[AIAccountSetupPlugin class]];
 	[self _loadComponentClass:[AIAliasSupportPlugin class]];
 	[self _loadComponentClass:[AIAlphabeticalSortPlugin class]];
 	[self _loadComponentClass:[AIAutoLinkingPlugin class]];
