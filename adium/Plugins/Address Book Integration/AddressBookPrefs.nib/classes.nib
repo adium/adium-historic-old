@@ -20,7 +20,7 @@
             OUTLETS = {
                 "checkBox_enableImport" = NSButton; 
                 "checkBox_enableNoteSync" = NSButton; 
-                "checkBox_preferABImages" = NSButtonCell; 
+                "checkBox_preferABImages" = NSButton; 
                 "checkBox_syncAutomatic" = NSButton; 
                 "checkBox_useABImages" = NSButton; 
                 "checkBox_useNickName" = NSButton; 
