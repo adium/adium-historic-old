@@ -6153,6 +6153,7 @@
 				342E2B1B072976060054D77A,
 				347797E40729A86100A8CE8C,
 				347797ED0729A89500A8CE8C,
+				34FC6D7107318F6600801C83,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8522,6 +8523,21 @@
 			path = "Plugins/Status Sort/StatusSortDefaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		34FC6D7007318F6600801C83 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = ContactPrefs.plist;
+			path = Source/ContactPrefs.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FC6D7107318F6600801C83 = {
+			fileRef = 34FC6D7007318F6600801C83;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34FDD6E305632BFD00F5B30F = {
 			fileEncoding = 4;
@@ -23244,6 +23260,7 @@
 				4B0118080679168700FCB992,
 				34A273AA0721E58F004F3455,
 				4B29093F05F944BF0087D16F,
+				34FC6D7007318F6600801C83,
 				348E556A053A188C0021E541,
 				4BDF17240450CBDE00A8010A,
 				C497518C05BBB0C5009958A6,
