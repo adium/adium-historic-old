@@ -48,6 +48,10 @@
 {
     AIContentMessage	*message;
 
+	// message length is 0, don't send
+	if([[textView_messageEntry attributedString] length] == 0)
+		return;
+	
     //Lock this view to the specified handle (if it wasn't already locked to one)
     if(!handle){ 
         AIServiceType 	*serviceType = [[account service] handleServiceType];
