@@ -1,5 +1,12 @@
 #!/usr/bin/perl
 
+# This script converts Proteus logs to Adium ones.
+#
+# It will create a folder with your username that you can drop into Adium's
+# log folder or copy the contents.
+#
+# Run it by doing "./proteus2adium.pl --aim AIM_USER_NAME"
+
 use warnings;
 use strict;
 
