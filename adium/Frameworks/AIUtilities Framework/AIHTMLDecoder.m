@@ -76,10 +76,12 @@ DeclareString(GreaterThanHTML);
 DeclareString(Semicolon);
 DeclareString(SpaceGreaterThan);
 DeclareString(TagCharStartString);
-DeclareString(Space);
-DeclareString(SpaceHTML);
 DeclareString(Tab);
 DeclareString(TabHTML);
+DeclareString(LeadSpace);
+DeclareString(LeadSpaceHTML);
+DeclareString(Space);
+DeclareString(SpaceHTML);
 
 + (void)load
 {
@@ -132,11 +134,14 @@ DeclareString(TabHTML);
 	InitString(SpaceGreaterThan,@" >");
 	InitString(TagCharStartString,@"<&");
 
-	InitString(Space,@"  ");
-	InitString(SpaceHTML,@"&nbsp;&nbsp;");
-	
 	InitString(Tab,[NSString stringWithCString:"\t"]);
-	InitString(TabHTML,@"&nbsp;&nbsp;&nbsp;&nbsp;");
+	InitString(TabHTML,@" &nbsp;&nbsp;&nbsp;");
+	
+	InitString(LeadSpace,@" ");
+	InitString(LeadSpaceHTML,@"&nbsp;");
+	
+	InitString(Space,@"  ");
+	InitString(SpaceHTML,@" &nbsp;");
 }
 
 //For compatability
@@ -462,9 +467,18 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
 			[chunk replaceOccurrencesOfString:GreaterThan withString:GreaterThanHTML
 									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-			[chunk replaceOccurrencesOfString:Space withString:SpaceHTML
-									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+			// Replace the tabs first, if they exist, so that it creates a leading " " when the tab is the initial character, and 
+			// so subsequent tab formatting is preserved.
 			[chunk replaceOccurrencesOfString:Tab withString:TabHTML
+									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+			// Check to make sure chunk exists before checking the characterAtIndex and then replace the leading ' ' with "&nbsp;" to preserve formatting.
+			if([chunk length] > 0 && [chunk characterAtIndex:0] == ' '){
+				[chunk replaceOccurrencesOfString:LeadSpace withString:LeadSpaceHTML
+										  options:NSLiteralSearch range:NSMakeRange(0, 1)];
+			}
+			// Replace all remaining blocks of "  " (<space><space>) with " &nbsp;" (<space><&nbsp;>) so that formatting of large blocks of spaces
+			// in the middle of a line is preserved, and so WebKit properly line-wraps.
+			[chunk replaceOccurrencesOfString:Space withString:SpaceHTML
 									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
 			
 			//If we need to encode non-ASCII to HTML, append string character by character, replacing any non-ascii characters with the designated unicode
