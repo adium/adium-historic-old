@@ -11,6 +11,7 @@
 
 @implementation NSHTTPCookieDiskStorageFix
 
+#if 0
 + (void)load
 {
     //Anything you can do, I can do better...
@@ -45,6 +46,6 @@
  * 19  dyld                                0x8fe1a558 _dyld_start + 0x64
  */
 - (void)_saveCookies { NSLog(@"Save them cookies!"); };
-	
+#endif
 
 @end
