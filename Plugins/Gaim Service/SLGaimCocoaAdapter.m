@@ -247,7 +247,7 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 		//No chat is associated with the IM conversation
 		AIListContact   *sourceContact;
 		GaimBuddy		*buddy;
-		GaimGroup		*group;
+//		GaimGroup		*group;
 		GaimAccount		*account;
 		char			*name;
 		
@@ -1320,7 +1320,7 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)requestSecureMessaging:(BOOL)inSecureMessaging
 							   inChat:(AIChat *)inChat
 {
-	NSLog(@"Requesting %i in %@",inSecureMessaging,inChat);
+	NSLog(@"Requesting %i in %@ on %x",inSecureMessaging,inChat,[NSRunLoop currentRunLoop]);
 	[gaimThreadProxy gaimThreadRequestSecureMessaging:inSecureMessaging
 											   inChat:inChat];
 }
@@ -1369,19 +1369,21 @@ NSMutableDictionary* get_chatDict(void)
 
 - (void)refreshedSecurityOfGaimConversation:(GaimConversation *)conv
 {
-	NSLog(@"*** Refreshed security...");
 	GaimDebug (@"*** Refreshed security...");
 }
 
-- (NSString *)localizedOTRMessage:(const char *)msg withUsername:(const char *)username
+- (NSString *)localizedOTRMessage:(NSString *)message withUsername:(const char *)username
 {
 	NSString	*localizedOTRMessage = nil;
-	NSString	*message = [NSString stringWithUTF8String:msg];
 
 	if(([message rangeOfString:@"You sent unencrypted data to"].location != NSNotFound) &&
 	   ([message rangeOfString:@"who was expecting encrypted messages"].location != NSNotFound)){
 		localizedOTRMessage = [NSString stringWithFormat:
 			AILocalizedString(@"You sent an unencrypted message, but %s was expecting encryption.", "Message when sending unencrypted messages to a contact expecting encrypted ones. %s will be a name."),
+			username];
+	}else if([message rangeOfString:@"has closed his private connection to you"].location != NSNotFound){
+		localizedOTRMessage = [NSString stringWithFormat:
+			AILocalizedString(@"%s is no longer using encryption; you should cancel encryption on your side.", "Message when the remote contact cancels his half of an encrypted conversation. %s will be a name."),
 			username];
 	}
 
