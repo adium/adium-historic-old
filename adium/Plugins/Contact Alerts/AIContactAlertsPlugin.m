@@ -69,7 +69,7 @@
     while(actionDict = [actionsEnumerator nextObject])
     {
         event = [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
-        NSLog(@"modified keys are %@; the event is %@; the statusArrayForKey is %@; giv is %i and looking for %i",inModifiedKeys, event, [inObject statusArrayForKey:event], [[inObject statusArrayForKey:event] greatestIntegerValue],  [[actionDict objectForKey:KEY_EVENT_STATUS] intValue]);
+ //       NSLog(@"modified keys are %@; the event is %@; the statusArrayForKey is %@; giv is %i and looking for %i",inModifiedKeys, event, [inObject statusArrayForKey:event], [[inObject statusArrayForKey:event] greatestIntegerValue],  [[actionDict objectForKey:KEY_EVENT_STATUS] intValue]);
 
         status = [[inObject statusArrayForKey:event] greatestIntegerValue];
         event_status = [[actionDict objectForKey:KEY_EVENT_STATUS] intValue];
