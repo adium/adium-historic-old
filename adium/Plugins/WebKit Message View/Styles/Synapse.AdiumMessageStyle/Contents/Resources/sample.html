@@ -92,12 +92,14 @@
 					contentElement.style.position = 'static';
 				}
 			}
+			scrollToBottom();
 		}
 		window.onresize = alignChat;
 
 	</script>
 </head>
-<body onload="scrollToBottom();alignChat();">
+<body onload="alignChat()">
+<div id="Chat">
 	<div class="msg1 context">
 		<div class="name_time">
 			Scott Meinzer
@@ -154,5 +156,6 @@
 		hahah
 	</div>
 	<div class="shadow">&nbsp;</div>
+</div>
 </body>
 </html>
