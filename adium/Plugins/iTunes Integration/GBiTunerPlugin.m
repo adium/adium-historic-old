@@ -6,7 +6,6 @@
 //
 
 #import "GBiTunerPlugin.h"
-#import "GBiTunerPreferences.h"
 
 #define PATH_INTERNAL_SCRIPTS	@"/Contents/Resources/Scripts/"
 #define SCRIPT_PATH_EXTENSION	@"scpt"
