@@ -49,8 +49,8 @@
 		}
 
 		function setStylesheet( id, url ) {
-			code = "<style id=\"" + id + "\" type=\"text/css\" media=\"screen,print\">";
-			if( url.length ) code += "@import url( \"" + url + "\" );";
+			code = "<style id=€"" + id + "€" type=€"text/css€" media=€"screen,print€">";
+			if( url.length ) code += "@import url( €"" + url + "€" );";
 			code += "</style>";
 			range = document.createRange();
 			head = document.getElementsByTagName( "head" ).item(0);
