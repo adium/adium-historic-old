@@ -169,8 +169,7 @@
     if (inData) {
         //Check if we retrieved data from the 'me' address book card
         if (tag == meTag) {
-            NSLog(@"ABIntegration: myImageData found.");
-			[[adium preferenceController] setPreference:inData forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
+	    [[adium preferenceController] setPreference:inData forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
             meTag = -1;
         }else{
             //Apply the image to the appropriate listObject
@@ -180,10 +179,8 @@
             //Get the object from our tracking dictionary
             AIListObject            *listObject = [trackingDict objectForKey:tagNumber];
             AIMutableOwnerArray     *statusArray = [listObject statusArrayForKey:@"UserIcon"];
-            NSLog(@"%@: %@",[listObject displayName],statusArray);
             //apply the image
             if([statusArray count] == 0) {
-                NSLog(@"so setting image...");
                 [statusArray setObject:image withOwner:self];
                 [[adium contactController] listObjectStatusChanged:listObject
                                                 modifiedStatusKeys:[NSArray arrayWithObject:@"UserIcon"]
