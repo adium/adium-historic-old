@@ -147,6 +147,7 @@ typedef enum {
 - (BOOL)disconnectOnFastUserSwitch;
 - (BOOL)shouldSendAutoresponsesWhileAway;
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
+- (NSImage *)serviceImage;
 
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID;
 - (void)updateContactStatus:(AIListContact *)inContact;

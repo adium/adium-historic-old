@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.65 2004/07/07 23:15:28 evands Exp $
+// $Id: AIAccount.m,v 1.66 2004/07/09 22:14:18 evands Exp $
 
 #import "AIAccount.h"
 
@@ -113,6 +113,12 @@
 		uniqueObjectID = [[NSString stringWithFormat:@"%i",objectID] retain];
 	}
 	return(uniqueObjectID);
+}
+
+//By default, just return the image associated with our handleServiceType
+- (NSImage *)serviceImage
+{
+	return [[[self service] handleServiceType] image];
 }
 
 //Preferences ----------------------------------------------------------------------------------------------------------
