@@ -15,8 +15,6 @@
 
 @class AIListObject, AISCLOutlineView;
 
-#define FONT_HEIGHT_STRING		@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()"
-
 @interface AIListCell : NSCell {
 	AIListOutlineView	*controlView;
     AIListObject		*listObject;

@@ -92,18 +92,13 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 //Font used to display label
 - (void)setFont:(NSFont *)inFont
 {
-	NSDictionary		*attributes;
-	NSAttributedString 	*labelString;
-	
 	if(inFont && inFont != font){
 		[font release];
 		font = [inFont retain];
 	}
 
 	//Calculate and cache the height of this font
-	attributes = [NSDictionary dictionaryWithObject:[self font] forKey:NSFontAttributeName];
-	labelString = [[[NSAttributedString alloc] initWithString:FONT_HEIGHT_STRING attributes:attributes] autorelease];
-	labelFontHeight = [labelString heightWithWidth:1e7];
+	labelFontHeight = [NSAttributedString stringHeightForAttributes:[NSDictionary dictionaryWithObject:[self font] forKey:NSFontAttributeName]]; 
 }
 - (NSFont *)font{
 	return(font);
