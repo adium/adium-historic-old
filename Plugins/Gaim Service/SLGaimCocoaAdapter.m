@@ -198,7 +198,6 @@ static AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 		account = buddy->account;
 		normalized = gaim_normalize(account, buddy->name);
 		name  = [NSString stringWithUTF8String:normalized];
-		GaimDebug (@"contactLookupFromBuddy: buddy->name %s ; normalizes to %s",buddy->name,normalized);
 
 		theContact = [accountLookup(buddy->account) mainThreadContactWithUID:name];
 		
@@ -1565,6 +1564,7 @@ static void *adiumGaimRequestFile(const char *title, const char *filename, gbool
 	if (xfer) {
 	    if (xferType == GAIM_XFER_RECEIVE) {
 			NSLog(@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
+			GaimDebug (@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
 			
 			ESFileTransfer  *fileTransfer;
 			NSString		*destinationUID = [NSString stringWithUTF8String:(xfer->who)];
@@ -1616,7 +1616,7 @@ static GaimRequestUiOps adiumGaimRequestOps = {
 
 static void adiumGaimNewXfer(GaimXfer *xfer)
 {
-	NSLog(@"adiumGaimNewXfer");
+	//NSLog(@"adiumGaimNewXfer");
 }
 
 static void adiumGaimDestroy(GaimXfer *xfer)
@@ -1638,12 +1638,14 @@ static void adiumGaimDestroy(GaimXfer *xfer)
 
 static void adiumGaimAddXfer(GaimXfer *xfer)
 {
-	NSLog(@"adiumGaimAddXfer");
+	//NSLog(@"adiumGaimAddXfer");
 }
 
 static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 {
-	NSLog(@"transfer update: %s is now %f%% done",xfer->filename,(percent*100));
+	NSLog(@"Transfer update: %s is now %f%% done",xfer->filename,(percent*100));
+	GaimDebug (@"Transfer update: %s is now %f%% done",xfer->filename,(percent*100));
+	
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
 	
 	if (fileTransfer){
@@ -1657,11 +1659,13 @@ static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 static void adiumGaimCancelLocal(GaimXfer *xfer)
 {
 	NSLog(@"adiumGaimCancelLocal");
+	GaimDebug (@"adiumGaimCancelLocal");
 }
 
 static void adiumGaimCancelRemote(GaimXfer *xfer)
 {
 	NSLog(@"adiumGaimCancelRemote");
+	GaimDebug (@"adiumGaimCancelRemote");
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
     [accountLookup(xfer->account) mainPerformSelector:@selector(fileTransferCanceledRemotely:)
 										   withObject:fileTransfer];
@@ -1969,6 +1973,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	gaim_core_set_ui_ops(&adiumGaimCoreOps);
 	if(!gaim_core_init("Adium")) {
 		NSLog(@"*** FATAL ***: Failed to initialize gaim core");
+		GaimDebug (@"*** FATAL ***: Failed to initialize gaim core");
 	}
 	
 	//Setup the buddy list
