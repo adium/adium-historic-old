@@ -10,8 +10,8 @@ body
 
 p
 {
-	margin: 0 0 0 0;
-	padding: 0 0 0 0;
+	margin: 0;
+	padding: 0;
 }
 
 a { text-decoration: none; }
@@ -24,7 +24,7 @@ a { text-decoration: none; }
 
 .container
 {
-	padding-top: 2px;
+	padding-top: 4px;
 	border-top: 1px dotted #E9E9E9;
 }
 
@@ -39,16 +39,10 @@ a { text-decoration: none; }
 	margin-bottom: 5px;
 }
 
-.sender
-{
-	text-align: left;
-}
-
 .fromstatus
 {
 	float: left;
 	padding-right: 7px;
-
 	position: relative;
 	top: 2px;
 }
@@ -58,22 +52,25 @@ a { text-decoration: none; }
 	font-size: 16px;
 	font-family: Helvetica;
 	font-weight: normal;
-
 	position: relative;
-	top: 1px;
-	left: -2px;
-
+	top: 0px;
+	left: -1px;
 	text-align: right;
 	width: 10px;
 	float: left;
-
 	margin-right: 2px;
 }
 
-.sender, .next_label
+.sender { text-align: left; }
+
+.sender, .fromstatus
 {
-	overflow: hidden;
+	font-size: 11px;
+	font-family: Helvetica;
+	font-weight: bold;
 }
+
+.sender, .next_label { overflow: hidden; }
 
 .time_initial
 {
@@ -81,15 +78,8 @@ a { text-decoration: none; }
 	float: right;
 	text-align: right;
 	padding-left: 6px;
-	font-size: 10px;
+	font-size: 9px;
 	font-family: Helvetica;
-}
-
-.sender
-{
-	font-size: 11px;
-	font-family: Helvetica;
-	font-weight: bold;
 }
 
 .message { }
@@ -102,18 +92,20 @@ a { text-decoration: none; }
 }
 
 .indent { text-indent: 12px; }
-
 .clear { clear: both; }
 
-.buddyicon img {
+.buddyicon img
+{
 	float: left;
 	margin-top: 2px;
-	margin-right: 8px;
+	margin-right: 6px;
+	width: 24px;
+	height: 24px;
+	border-color: #CCCCCC;
+	border-width: 1px;
 }
 
-.buddyicon img[src="Incoming/buddy_icon.png"], .buddyicon img[src="Outgoing/buddy_icon.png"] {
-	display:  none;
-}
+.buddyicon img[src="Incoming/buddy_icon.png"], .buddyicon img[src="Outgoing/buddy_icon.png"] { display: none; }
 
 img
 {
@@ -121,6 +113,4 @@ img
 	top: -3px;
 }
 
-#Chat {
-	overflow: hidden;
-}
+#Chat { overflow: hidden; }
