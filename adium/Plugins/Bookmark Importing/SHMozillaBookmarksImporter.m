@@ -86,17 +86,20 @@ static NSMenu   *mozillaTopMenu;
 
 - (void)parseBookmarksFile:(NSString *)inString
 {
-    NSLog(inString);
     NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
     NSString    *titleString, *urlString;
-//    [linkScanner scanUpToString:@"<DL>" intoString:nil];
-//    [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
-//    [linkScanner scanUpToString:@"<DT>" intoString:nil];
     
-    if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],3)] compare:@"H3 "]){
+    while(![linkScanner isAtEnd]){
+    
+    if([[inString substringFromIndex:[linkScanner scanLocation]] length] < 4){
+        [linkScanner setScanLocation:[inString length]];
+    }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],3)] compare:@"H3 "]){
         [linkScanner setScanLocation:[linkScanner scanLocation] + 3];
         [linkScanner scanUpToString:@">" intoString:nil];
+        [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
         [linkScanner scanUpToString:@"</H" intoString:&titleString];
+        
+        NSLog(titleString);
         
         mozillaBookmarksSupermenu = mozillaBookmarksMenu;
         mozillaBookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString] autorelease];
@@ -108,16 +111,28 @@ static NSMenu   *mozillaTopMenu;
         [mozillaBookmarksSupermenu addItem:mozillaSubmenuItem];
         [mozillaBookmarksSupermenu setSubmenu:mozillaBookmarksMenu forItem:mozillaSubmenuItem];
         
-        [self parseBookmarksFile:[inString substringFromIndex:[linkScanner scanLocation]]];
+//        [self parseBookmarksFile:[inString substringFromIndex:[linkScanner scanLocation]]];
     }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:@"A "]){
-        [linkScanner setScanLocation:[linkScanner scanLocation] + 3];
+//        NSLog([[linkScanner string] substringFromIndex:[linkScanner scanLocation]]);
+//        NSLog(@"scan location: %u/%u",[linkScanner scanLocation],[inString length]);
+        //[linkScanner setScanLocation:[linkScanner scanLocation] + 3];
+//        NSLog(@"scan location: %u/%u",[linkScanner scanLocation],[inString length]);
         [linkScanner scanUpToString:@"HREF=\"" intoString:nil];
+//        NSLog(@"scan location: %u/%u",[linkScanner scanLocation],[inString length]);
         [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
+//        NSLog(@"scan location: %u/%u",[linkScanner scanLocation],[inString length]);
         [linkScanner scanUpToString:@"\"" intoString:&urlString];
         
+        NSLog(urlString);
+        
         [linkScanner scanUpToString:@"\">" intoString:nil];
+//        NSLog(@"scan location: %u/%u",[linkScanner scanLocation],[inString length]);
         [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
+//        NSLog(@"scan location: %u/%u",[linkScanner scanLocation],[inString length]);
         [linkScanner scanUpToString:@"</A" intoString:&titleString];
+//        NSLog(@"scan location: %u/%u",[linkScanner scanLocation],[inString length]);
+        
+        NSLog(titleString);
         
         SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
                                                               withValidationStatus:SH_URL_VALID
@@ -130,7 +145,7 @@ static NSMenu   *mozillaTopMenu;
                                  keyEquivalent:@""
                              representedObject:markedLink];
         
-        [self parseBookmarksFile:[inString substringFromIndex:[linkScanner scanLocation]]];
+//        [self parseBookmarksFile:[inString substringFromIndex:[linkScanner scanLocation]]];
     }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] compare:@"/DL>"]){
         [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
         if([mozillaBookmarksMenu isNotEqualTo:mozillaTopMenu]){
@@ -140,8 +155,10 @@ static NSMenu   *mozillaTopMenu;
     }else{
         [linkScanner scanUpToString:@"<" intoString:nil];
         [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-        if(![linkScanner isAtEnd])
-            [self parseBookmarksFile:[inString substringFromIndex:[linkScanner scanLocation]]];
+        NSLog([[linkScanner string] substringFromIndex:[linkScanner scanLocation]]);
+//        if(![linkScanner isAtEnd])
+//            [self parseBookmarksFile:[inString substringFromIndex:[linkScanner scanLocation]]];
+    }
     }
 }
 

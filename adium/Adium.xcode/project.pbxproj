@@ -4681,6 +4681,7 @@
 				7E64084706629E10006A5552,
 				7E64084B06629E10006A5552,
 				7E64084E06629E31006A5552,
+				7E901610066ABD92005E1FD7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5299,6 +5300,7 @@
 				7E64084806629E10006A5552,
 				7E64084C06629E10006A5552,
 				7E64084D06629E2E006A5552,
+				7E901611066ABD92005E1FD7,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8896,7 +8898,7 @@
 			children = (
 				6CED9083065B686A00A9C196,
 				4BDC4CC4066227DB00C28445,
-				4BAD1634066A7F870002008E,
+				7E90137D066ABD20005E1FD7,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -13381,21 +13383,6 @@
 			path = "Plugins/Dual Window Interface/AIMessageTabViewItem.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BAD1634066A7F870002008E = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 4BAD1888066A7FA60002008E;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4BAD1888066A7FA60002008E = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
 		};
 		4BAD188C066A83550002008E = {
 			fileEncoding = 30;
@@ -18795,6 +18782,8 @@
 		};
 		7E64083E06629DEE006A5552 = {
 			children = (
+				7E90160E066ABD92005E1FD7,
+				7E90160F066ABD92005E1FD7,
 				7E64084306629E10006A5552,
 				7E64084406629E10006A5552,
 				7E64084506629E10006A5552,
@@ -19246,6 +19235,51 @@
 		};
 		7E824CEB06387FAF00813072 = {
 			fileRef = 7E824CDC06387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E90137D066ABD20005E1FD7 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 7E901609066ABD5B005E1FD7;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		7E901609066ABD5B005E1FD7 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
+		};
+		7E90160E066ABD92005E1FD7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHMozillaBookmarksImporter.h;
+			path = "Plugins/Bookmark Importing/SHMozillaBookmarksImporter.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E90160F066ABD92005E1FD7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHMozillaBookmarksImporter.m;
+			path = "Plugins/Bookmark Importing/SHMozillaBookmarksImporter.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E901610066ABD92005E1FD7 = {
+			fileRef = 7E90160E066ABD92005E1FD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E901611066ABD92005E1FD7 = {
+			fileRef = 7E90160F066ABD92005E1FD7;
 			isa = PBXBuildFile;
 			settings = {
 			};
