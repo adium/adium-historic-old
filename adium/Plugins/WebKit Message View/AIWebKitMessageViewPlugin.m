@@ -321,6 +321,9 @@ DeclareString(AppendNextMessage);
 	NSString		*templateFile;
 	BOOL			isContext = [[content type] isEqualToString:CONTENT_CONTEXT_TYPE];
 
+	//Disable color for context
+	if(isContext) allowColors = NO;
+	
 	//
 	currentStylePath = [stylePath stringByAppendingPathComponent:([content isOutgoing] ? @"Outgoing" : @"Incoming")];
 	

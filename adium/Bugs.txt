@@ -5,10 +5,6 @@
 	For instance, :) prevents :)) from working.  A solution to this would be shorting all the text
 	equivelants from longest to shortest, but the way we store emoticons makes this impossible.
 
-- Message history is being colored
-	History messages should be stripped of color before being passed to the message view, so they
-	use the view's default text color (which is usually dimmed or special in some way)
-
 - Escapes aren't processed in links
 	The escapes are filtered using the plain text version of the message, so any escapes within the
 	link attributes of the attributed message are not filtered.  This prevents subprofile links from
