@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2002, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -20,25 +20,11 @@
     BOOL	drawsAlternatingRows;
     NSColor	*alternatingRowColor;
 
-    BOOL	drawsAlternatingColumns;
-    NSRange	alternatingColumnRange;
-    NSColor	*alternatingColumnColor;
-    NSColor	*secondaryAlternatingColumnColor;
-    BOOL	firstColumnColored;
-
     BOOL	_dataSourceDeleteRow;
 }
 
+- (void)_init;
 - (void)setDrawsAlternatingRows:(BOOL)flag;
 - (void)setAlternatingRowColor:(NSColor *)color;
-- (void)setDrawsAlternatingColumns:(BOOL)flag;
-- (void)setAlternatingColumnRange:(NSRange)range;
-- (void)setAlternatingColumnColor:(NSColor *)color;
-- (void)setSecondaryAlternatingColumnColor:(NSColor *)color;
-- (void)setFirstColumnColored:(BOOL)colored;
-- (NSColor *)alternatingColumnColor;
-- (NSColor *)secondaryAlternatingColumnColor;
-- (BOOL)firstColumnColored;
-
 
 @end

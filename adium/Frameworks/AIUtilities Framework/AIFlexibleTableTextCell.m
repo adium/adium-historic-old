@@ -1,10 +1,17 @@
-//
-//  AIFlexibleTableTextCell.m
-//  Adium
-//
-//  Created by Adam Iser on Thu Jan 16 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
-//
+/*-------------------------------------------------------------------------------------------------------*\
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+\---------------------------------------------------------------------------------------------------------/
+ | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ | General Public License as published by the Free Software Foundation; either version 2 of the License,
+ | or (at your option) any later version.
+ |
+ | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ | Public License for more details.
+ |
+ | You should have received a copy of the GNU General Public License along with this program; if not,
+ | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ \------------------------------------------------------------------------------------------------------ */
 
 #import "AIFlexibleTableTextCell.h"
 #import "AIFlexibleTableView.h"
@@ -115,26 +122,19 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Dynamically resizes this cell for the desired width
 - (void)sizeCellForWidth:(float)inWidth
 {
-    if(editor){ //If we are currently editing, size our cell to fit the editor content
-        float textHeight = [[editor layoutManager] usedRectForTextContainer:[editor textContainer]].size.height;
+    //Reformat the text
+    [textContainer setContainerSize:NSMakeSize(inWidth - (leftPadding + rightPadding), 1e7)];
+    glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
 
-        cellSize = NSMakeSize(inWidth, textHeight); //Given width, editor height
-
-    }else{
-        //Reformat the text
-        [textContainer setContainerSize:NSMakeSize(inWidth - (leftPadding + rightPadding), 1e7)];
-        glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
-
-        //Save the new cell dimensions
-        cellSize = [layoutManager usedRectForTextContainer:textContainer].size;
-    }
+    //Save the new cell dimensions
+    cellSize = [layoutManager usedRectForTextContainer:textContainer].size;
 }
 
 //Draw our custom content
 - (void)drawContentsWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
     //Draw our string contents
-    if(drawContents){
+    if(drawContents && glyphRange.length != 0){
         //Draw
         if(!selected || ![[tableView window] isKeyWindow] || [[tableView window] firstResponder] != tableView){
             [layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:cellFrame.origin];
@@ -154,67 +154,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     }
 }
 
-
-//Editing ---------------------------------------------------------------------------------
-//Edit this cell
-- (void)editAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn inView:(NSView *)controlView
-{
-    NSRect	editorRect;
-    
-    //Create the editor
-    editor = [[NSTextView alloc] init];
-    [editor setDelegate:self];
-    [editor setEditable:YES];
-    [editor setSelectable:YES];
-    [editor setFrame:NSMakeRect(0, 0, [self frame].size.width, [self frame].size.height)];
-    [[editor textStorage] setAttributedString:string];
-    [editor setSelectedRange:NSMakeRange(0,[[editor string] length])];
-    
-    editorScroll = [[NSScrollView alloc] init];
-    [editorScroll setDocumentView:editor];
-    [editorScroll setBorderType:NSBezelBorder];
-    [editorScroll setHasVerticalScroller:NO];
-    [editorScroll setHasHorizontalScroller:NO];
-
-    editorRect = NSInsetRect([self frame], EDITOR_X_INSET, EDITOR_Y_INSET);
-    editorRect.origin.x += leftPadding;
-    editorRect.size.width -= leftPadding + rightPadding;
-    editorRect.origin.y += topPadding;
-    editorRect.size.height -= topPadding + bottomPadding;
-    
-    [editorScroll setFrame:editorRect];
-
-    editedColumn = inColumn;
-    editedRow = inRow;
-    
-    //Make it visible and key
-    [controlView addSubview:editorScroll];
-    [[controlView window] makeFirstResponder:editor];
-}
-
-//End editing
-- (id <NSCopying>)endEditing
-{
-    NSAttributedString	*newValue = [[editor textStorage] retain]; //We retain this string to make sure it's not released by the editor when it closes.
-
-    //Close the editor
-    [editorScroll removeFromSuperview];
-    [editorScroll release]; editorScroll = nil;
-    [editor release]; editor = nil;
-
-    return([newValue autorelease]);
-}
-
-//Resize our cell (as necessary) when our required frame changes
-- (void)textDidChange:(NSNotification *)notification
-{
-    float textHeight = [[editor layoutManager] usedRectForTextContainer:[editor textContainer]].size.height;
-
-    if(cellSize.height != textHeight){
-        [tableView resizeCellHeight:self];
-        [editorScroll setFrameSize:NSMakeSize([editorScroll frame].size.width, textHeight - (EDITOR_Y_INSET * 2))]; //We need to offset for the frame
-    }
-}
 
 //Selection ---------------------------------------------------------------------------------
 //Return the character index under the specified point

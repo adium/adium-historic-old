@@ -1,22 +1,21 @@
 {
     IBClasses = (
         {
-            ACTIONS = {
-                deleteAwayMessage = id; 
-                newAwayMessage = id; 
-                toggleFloatAway = id; 
-                toggleHideInBackground = id; 
-                toggleShowAway = id; 
-            }; 
+            CLASS = AIAlternatingRowOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSOutlineView; 
+        }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {
+            ACTIONS = {deleteAwayMessage = id; newAwayMessage = id; }; 
             CLASS = AIAwayMessagePreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_delete" = NSButton; 
-                "checkBox_floatAway" = NSButton; 
-                "checkBox_hideInBackground" = NSButton; 
-                "checkBox_showAway" = NSButton; 
-                "tableView_aways" = AIFlexibleTableView; 
-                "view_awayWindowPrefView" = NSView; 
+                "outlineView_aways" = AIVariableRowHeightOutlineView; 
+                "scrollView_awayList" = AIAutoScrollView; 
+                "scrollView_awayText" = AIAutoScrollView; 
+                "textView_message" = NSTextView; 
                 "view_prefView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
@@ -26,6 +25,11 @@
             LANGUAGE = ObjC; 
             OUTLETS = {delegate = id; }; 
             SUPERCLASS = NSControl; 
+        }, 
+        {
+            CLASS = AIVariableRowHeightOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIAlternatingRowOutlineView; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 

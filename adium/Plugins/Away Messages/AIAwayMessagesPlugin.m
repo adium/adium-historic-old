@@ -1,10 +1,17 @@
-//
-//  AIAwayMessagesPlugin.m
-//  Adium
-//
-//  Created by Adam Iser on Sun Jan 12 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
-//
+/*-------------------------------------------------------------------------------------------------------*\
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+\---------------------------------------------------------------------------------------------------------/
+ | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ | General Public License as published by the Free Software Foundation; either version 2 of the License,
+ | or (at your option) any later version.
+ |
+ | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ | Public License for more details.
+ |
+ | You should have received a copy of the GNU General Public License along with this program; if not,
+ | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAdium.h"
 #import <AIUtilities/AIUtilities.h>
@@ -27,6 +34,7 @@
 - (void)updateAwayMenu;
 - (void)rebuildSavedAways;
 - (BOOL)shouldConfigureForAway;
+- (void)_rebuildSavedAwayArray:(NSArray *)awayArray;
 @end
 
 @implementation AIAwayMessagesPlugin
@@ -60,7 +68,8 @@
 //Called by the away menu, sets the selected away (sender)
 - (IBAction)setAwayMessage:(id)sender
 {
-    NSAttributedString	*awayMessage = [sender representedObject];
+    NSDictionary	*awayDict = [sender representedObject];
+    NSAttributedString	*awayMessage = [awayDict objectForKey:@"Message"];
 
     [[owner accountController] setStatusObject:awayMessage forKey:@"AwayMessage" account:nil];
 }
@@ -221,8 +230,6 @@
 - (void)rebuildSavedAways
 {
     NSArray		*awayArray;
-    NSEnumerator	*enumerator;
-    NSData		*awayData;
 
     //Remove the existing away menu items
     while([menu_awaySubmenu numberOfItems] > 2){
@@ -233,20 +240,38 @@
     awayArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
 
     //Build the menu items
-    enumerator = [awayArray objectEnumerator];
-    while((awayData = [enumerator nextObject])){
-        NSString		*away = [[NSAttributedString stringWithData:awayData] string];
-        NSMenuItem		*menuItem;
+    [self _rebuildSavedAwayArray:awayArray];
+}
 
-        //Cap the away menu title (so they're not incredibly long)
-        if([away length] > MENU_AWAY_DISPLAY_LENGTH){
-            away = [[away substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"É"];
+- (void)_rebuildSavedAwayArray:(NSArray *)awayArray
+{
+    NSEnumerator	*enumerator;
+    NSDictionary	*awayDict;
+
+    enumerator = [awayArray objectEnumerator];
+    while((awayDict = [enumerator nextObject])){
+        NSString *type = [awayDict objectForKey:@"Type"];
+
+        if([type compare:@"Group"] == 0){
+            //NSString		*group = [awayDict objectForKey:@"Name"];
+
+            //Create & process submenu            
+            
+        }else if([type compare:@"Away"] == 0){
+            NSString		*away = [[NSAttributedString stringWithData:[awayDict objectForKey:@"Message"]] string];
+            NSMenuItem		*menuItem;
+
+            //Cap the away menu title (so they're not incredibly long)
+            if([away length] > MENU_AWAY_DISPLAY_LENGTH){
+                away = [[away substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"É"];
+            }
+
+            menuItem = [[NSMenuItem alloc] initWithTitle:away target:self action:@selector(setAwayMessage:) keyEquivalent:@""];
+            [menuItem setRepresentedObject:awayDict];
+            [menu_awaySubmenu addItem:menuItem];
         }
-        
-        menuItem = [[NSMenuItem alloc] initWithTitle:away  target:self action:@selector(setAwayMessage:) keyEquivalent:@""];
-        [menuItem setRepresentedObject:awayData];        
-        [menu_awaySubmenu addItem:menuItem];
     }
+    
 }
 
 //Update our menu if the away list changes

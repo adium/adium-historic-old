@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2002, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -72,12 +72,8 @@
     columnArray = [[NSMutableArray alloc] init];
     delegate = nil;
     contentsHeight = 0;
-    selectedRow = -1;
-    editor = nil;
-    editorScroll = nil;
-    editedColumn = nil;
-    editedRow = -1;
     oldWidth = 0;
+    forwardsKeyEvents = NO;
     
     contentBottomAligned = YES;
 
@@ -102,6 +98,12 @@
 - (void)setContentBottomAligned:(BOOL)inValue{
     contentBottomAligned = inValue;
 }
+
+//Pass all keypresses to the next responder
+- (void)setForwardsKeyEvents:(BOOL)inValue{
+    forwardsKeyEvents = inValue;
+}
+
 
 
 //Drawing -------------------------------------------------------------------------------
@@ -150,36 +152,9 @@
     clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     cell = [self cellAtPoint:clickLocation row:&row column:&column];
 
-    //Give the cell a chance to process the mouse down.  If it returns YES, we ignore the event.
-    if(![cell handleMouseDown:theEvent]){
-        //Select the row
-        if(![self selectRow:row]){
-            //Text selection within the cell
-            NSPoint	localPoint;
-    
-            //Deselect all text
-            [self deselectAll];
-    
-            //Set the new selection start and end
-            localPoint = NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y);
-            selection_startRow = row;
-            selection_startColumn = column;
-            selection_startIndex = [cell characterIndexAtPoint:localPoint];
-            selection_endRow = selection_startRow;
-            selection_endColumn = selection_startColumn;
-            selection_endIndex = selection_startIndex;
-            
-            //Redisplay
-            [self setNeedsDisplay:YES];
-        }
-    
-        //Open the selected cell for editing (If this was a double click)
-        if([theEvent clickCount] >= 2){
-            [self editRow:row column:[self columnAtIndex:column]];
-        }
-    }
+    //Give the cell a chance to process the mouse down
+    [cell handleMouseDown:theEvent];
 }
-
 
 
 //Selecting --------------------------------------------------------------------------------
@@ -274,46 +249,44 @@
     clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     cell = [self cellAtPoint:clickLocation row:&row column:&column];
 
-    if(![self selectRow:row]){    
-        //Remove all current selections
-        [self deselectAll];
+    //Remove all current selections
+    [self deselectAll];
+    
+    //Save the new selection end information
+    selection_endIndex = [cell characterIndexAtPoint:NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y)];
+    selection_endRow = row;
+    selection_endColumn = column;
+
+    //Select partial text in the start and end cells
+    startCell = [[self columnAtIndex:selection_startColumn] cellAtIndex:selection_startRow];
+    endCell = [[self columnAtIndex:selection_endColumn] cellAtIndex:selection_endRow];    
+    
+    if(selection_startRow == selection_endRow && selection_startColumn == selection_endColumn){ //The selection exists completely within one cell
+        [startCell selectFrom:selection_startIndex to:selection_endIndex];
+
+    }else if(selection_startRow < selection_endRow || selection_startColumn < selection_endColumn){ //The start cell is above or left of the end cell
+        [startCell selectFrom:selection_startIndex to:10000]; //insert generic big number here
+        [endCell selectFrom:0 to:selection_endIndex];
         
-        //Save the new selection end information
-        selection_endIndex = [cell characterIndexAtPoint:NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y)];
-        selection_endRow = row;
-        selection_endColumn = column;
-    
-        //Select partial text in the start and end cells
-        startCell = [[self columnAtIndex:selection_startColumn] cellAtIndex:selection_startRow];
-        endCell = [[self columnAtIndex:selection_endColumn] cellAtIndex:selection_endRow];    
+    }else if(selection_startRow > selection_endRow || selection_startColumn > selection_endColumn){ //The start cell is below or right of the end cell
+        [startCell selectFrom:selection_startIndex to:0];
+        [endCell selectFrom:10000 to:selection_endIndex]; //insert generic big number here
         
-        if(selection_startRow == selection_endRow && selection_startColumn == selection_endColumn){ //The selection exists completely within one cell
-            [startCell selectFrom:selection_startIndex to:selection_endIndex];
-    
-        }else if(selection_startRow < selection_endRow || selection_startColumn < selection_endColumn){ //The start cell is above or left of the end cell
-            [startCell selectFrom:selection_startIndex to:10000]; //insert generic big number here
-            [endCell selectFrom:0 to:selection_endIndex];
-            
-        }else if(selection_startRow > selection_endRow || selection_startColumn > selection_endColumn){ //The start cell is below or right of the end cell
-            [startCell selectFrom:selection_startIndex to:0];
-            [endCell selectFrom:10000 to:selection_endIndex]; //insert generic big number here
-            
-        }
-    
-        //Select all text in every cell between start and end
-        //These loops are conditioned so that they always run top to bottom, left to right (Allowing selection to occur in any direction)
-        //We want to run through every cell within the selection block except the first and last cell (which have already been processed)
-        for(column = ((selection_startColumn < selection_endColumn) ? selection_startColumn : selection_endColumn);
-            column <= ((selection_startColumn < selection_endColumn) ? selection_endColumn : selection_startColumn);
-            column++){
-            for(row = ((selection_startRow < selection_endRow) ? selection_startRow : selection_endRow);
-                row <= ((selection_startRow < selection_endRow) ? selection_endRow : selection_startRow);
-                row++){
-    
-                if(!(row == selection_startRow && column == selection_startColumn) && !(row == selection_endRow && column == selection_endColumn)){ //Skip the first and last cells in the selection block
-                    AIFlexibleTableCell	*cell = [[self columnAtIndex:column] cellAtIndex:row]; 
-                    [cell selectFrom:0 to:10000]; //insert generic big number here
-                }
+    }
+
+    //Select all text in every cell between start and end
+    //These loops are conditioned so that they always run top to bottom, left to right (Allowing selection to occur in any direction)
+    //We want to run through every cell within the selection block except the first and last cell (which have already been processed)
+    for(column = ((selection_startColumn < selection_endColumn) ? selection_startColumn : selection_endColumn);
+        column <= ((selection_startColumn < selection_endColumn) ? selection_endColumn : selection_startColumn);
+        column++){
+        for(row = ((selection_startRow < selection_endRow) ? selection_startRow : selection_endRow);
+            row <= ((selection_startRow < selection_endRow) ? selection_endRow : selection_startRow);
+            row++){
+
+            if(!(row == selection_startRow && column == selection_startColumn) && !(row == selection_endRow && column == selection_endColumn)){ //Skip the first and last cells in the selection block
+                AIFlexibleTableCell	*cell = [[self columnAtIndex:column] cellAtIndex:row]; 
+                [cell selectFrom:0 to:10000]; //insert generic big number here
             }
         }
     }
@@ -335,21 +308,6 @@
     return(YES);
 }
 
-//Redisplay when we become first responder
-- (BOOL)becomeFirstResponder
-{
-    [self setNeedsDisplay:YES];
-    return(YES);
-}
-
-//Redisplay and end editing when we lose first responder
-- (BOOL)resignFirstResponder
-{
-    [self setNeedsDisplay:YES];
-    [self _endEditing];
-    return(YES);
-}
-
 //Return yes so our view's origin is in the top left
 - (BOOL)isFlipped{
     return(YES);
@@ -357,11 +315,11 @@
 
 - (void)viewDidMoveToSuperview
 {
-    //Remove existing
+    //Remove existing observers
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
 
     if([self enclosingScrollView] != nil){
-        //Observe new
+        //Observe scroll view frame changes
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollViewFrameChanged:) name:NSViewFrameDidChangeNotification object:[self enclosingScrollView]];
 
         //fit our new view
@@ -387,8 +345,8 @@
 
 //called when a live resize ends, perform a full resize
 - (void)viewDidEndLiveResize
-{ //Resize our cells, our view vertically, and redisplay
-    [self resizeContents:YES];
+{
+    [self resizeContents:YES]; //Resize our cells, our view vertically, and redisplay
 }
 
 
@@ -399,10 +357,6 @@
     if(inDelegate != delegate){
         [delegate release]; delegate = nil;
         delegate = [inDelegate retain];
-
-        respondsTo_shouldEditTableColumn = [delegate respondsToSelector:@selector(shouldEditTableColumn:row:)];
-        respondsTo_setObjectValue = [delegate respondsToSelector:@selector(setObjectValue:forTableColumn:row:)];
-        respondsTo_shouldSelectRow = [delegate respondsToSelector:@selector(shouldSelectRow:)];
     }
 }
 
@@ -443,9 +397,6 @@
     int				numberOfRows = [delegate numberOfRows];
     int				row;
 
-    //End editing
-    [self _endEditing];
-
     //Reset all cursor tracking
     enumerator = [cursorTrackingCellArray objectEnumerator];
     while((cell = [enumerator nextObject])){
@@ -483,8 +434,8 @@
 
 //Resize the specified cell's row to the correct height
 - (void)resizeCellHeight:(AIFlexibleTableCell *)inCell
-{ //For now just resize everything
-    [self resizeContents:YES];
+{
+    [self resizeContents:YES]; //For now just resize everything
 }
 
 
@@ -508,124 +459,21 @@
 //When the user attempts to type into the table view, we push the keystroke to the next responder, and make it key.  This isn't required, but convienent behavior since one will never want to type into this view.
 - (void)keyDown:(NSEvent *)theEvent
 {
-    id	responder = [self nextResponder];
+    if(forwardsKeyEvents){
+        id	responder = [self nextResponder];
 
-    //Make the next responder key (When walking the responder chain, we want to skip ScrollViews and ClipViews).
-    while(responder && ([responder isKindOfClass:[NSClipView class]] || [responder isKindOfClass:[NSScrollView class]])){
-        responder = [responder nextResponder];
-    }
+        //Make the next responder key (When walking the responder chain, we want to skip ScrollViews and ClipViews).
+        while(responder && ([responder isKindOfClass:[NSClipView class]] || [responder isKindOfClass:[NSScrollView class]])){
+            responder = [responder nextResponder];
+        }
 
-    if(responder){
-        [[self window] makeFirstResponder:responder]; //Make it first responder
-        [[self nextResponder] tryToPerform:@selector(keyDown:) with:theEvent]; //Pass it this key event
-    }
-}
+        if(responder){
+            [[self window] makeFirstResponder:responder]; //Make it first responder
+            [[self nextResponder] tryToPerform:@selector(keyDown:) with:theEvent]; //Pass it this key event
+        }
 
-
-//Row Selection ---------------------------------------------------------------------------------
-//Selects the specified row.  Returns YES if the row was selected, NO if it could not be.
-- (BOOL)selectRow:(int)inRow
-{
-    if(inRow < 0 || inRow >= [delegate numberOfRows]){
-        inRow = -1; //No selection
-    }
-
-    if(respondsTo_shouldSelectRow && [(id <AIFlexibleTableViewDelegate_shouldSelectRow>)delegate shouldSelectRow:inRow]){
-        //Close any existing editor
-        [self _endEditing];
-
-        //Deselect the existing selection
-        if(selectedRow != -1) [self _setSelected:NO row:selectedRow];
-
-        //Select the new row
-        if(inRow != -1) [self _setSelected:YES row:inRow];
-        selectedRow = inRow;
-
-        return(YES);
     }else{
-        return(NO);
-    }
-
-}
-
-//Move selection up
-- (void)moveUp:(id)sender
-{
-    if(selectedRow > 0){
-        [self selectRow:selectedRow - 1];
-    }
-}
-
-//Move selection down
-- (void)moveDown:(id)sender
-{
-    if(selectedRow < [rowHeightArray count] - 1){
-        [self selectRow:selectedRow + 1];
-    }
-}
-
-//Returns the selected row
-- (int)selectedRow
-{
-    return(selectedRow);
-}
-
-//Toggle the selection of a row
-- (void)_setSelected:(BOOL)selected row:(int)inRow
-{
-    NSEnumerator		*enumerator;
-    AIFlexibleTableColumn	*column;
-
-    enumerator = [columnArray objectEnumerator];
-    while((column = [enumerator nextObject])){
-        NSArray			*cellArray = [column cellArray];
-
-        if(inRow >= 0 && inRow < [cellArray count]){
-            AIFlexibleTableCell	*cell = [cellArray objectAtIndex:inRow];
-
-            [cell setSelected:selected];
-            [self setNeedsDisplayInRect:[cell frame]];
-        }
-    }
-}
-
-
-//Cell Editing --------------------------------------------------------------------
-//Open a specified row/column for editing
-- (void)editRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn
-{
-    if(inRow >= 0 && inRow < [delegate numberOfRows]){
-        if(respondsTo_shouldEditTableColumn && [(id <AIFlexibleTableViewDelegate_shouldEditTableColumn>)delegate shouldEditTableColumn:inColumn row:inRow]){
-            AIFlexibleTableCell	*cell;
-
-            //Get the cell targeted for editing
-            cell = [[inColumn cellArray] objectAtIndex:inRow];
-
-            //Close any existing editor
-            [self _endEditing];
-
-            [cell editAtRow:inRow column:inColumn inView:self];
-            editedCell = cell;
-            editedColumn = inColumn;
-            editedRow = inRow;
-        }
-    }
-}
-
-//Cancel any existing editing
-- (void)_endEditing
-{
-    if(editedCell){
-        //Close & Save
-        if(respondsTo_setObjectValue){
-            [(id <AIFlexibleTableViewDelegate_setObjectValue>)delegate setObjectValue:[editedCell endEditing] forTableColumn:editedColumn row:editedRow];
-        }
-
-        //Reload
-        [self reloadRow:editedRow];
-        editedCell = nil;
-        editedRow = 0;
-        editedColumn = nil;
+        [super keyDown:theEvent];
     }
 }
 

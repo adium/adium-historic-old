@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2002, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -14,15 +14,12 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*
-    A subclass of outline view that adds an alternating grid, and forces scrolling to intervals of the lineScroll
+ A subclass of outline view that adds:
 
-    Use setDrawsGrid and setGridColor to configure the drawing of a faint grid
-    
-    Use setDrawsAlternatingRows and setAlternatingRowColor to configure the horizontal stripes
-    
-    Use setDrawsAlternatingColumns, setAlternatingColumnColor, and setSecondaryAlternatingColumnColor to configure the vertical stripes
-    
-*/
+ - Alternating row
+ - Delete key filtering
+ - Expand / Collapse state control
+ */
 
 #import "AIAlternatingRowOutlineView.h"
 
@@ -55,8 +52,6 @@
 - (void)dealloc
 {
     [alternatingRowColor release];
-    [alternatingColumnColor release];
-    [secondaryAlternatingColumnColor release];
     
     [super dealloc];
 }
@@ -65,15 +60,7 @@
 {
     drawsAlternatingRows = NO;
     alternatingRowColor = nil;
-
-    drawsAlternatingColumns = NO;
-    alternatingColumnColor = nil;
-    secondaryAlternatingColumnColor = nil;
     
-    firstColumnColored = NO;
-    
-    alternatingColumnRange = NSMakeRange(0,0);
-
     //Group expand/collapse notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:self];
@@ -96,52 +83,12 @@
     }
 }
 
-- (void)setDrawsAlternatingColumns:(BOOL)flag
-{
-    drawsAlternatingColumns = flag;
-    [self setNeedsDisplay:YES];
-}
-
-- (void)setAlternatingColumnColor:(NSColor *)color{
-    if(color != alternatingColumnColor){
-        [alternatingColumnColor release];
-        alternatingColumnColor = [color retain];
-        [self setNeedsDisplay:YES];
-    }
-}
-- (NSColor *)alternatingColumnColor{
-    return(alternatingColumnColor);
-}
-
-- (void)setAlternatingColumnRange:(NSRange)range{
-    alternatingColumnRange = range;
-    [self setNeedsDisplay:YES];
-}
-
-- (void)setFirstColumnColored:(BOOL)colored{
-    firstColumnColored = colored;
-    [self setNeedsDisplay:YES];
-}
-- (BOOL)firstColumnColored{
-    return(firstColumnColored);
-}
-
-- (void)setSecondaryAlternatingColumnColor:(NSColor *)color{
-    if(color != secondaryAlternatingColumnColor){
-        [secondaryAlternatingColumnColor release];
-        secondaryAlternatingColumnColor = [color retain];
-        [self setNeedsDisplay:YES];
-    }
-}
-- (NSColor *)secondaryAlternatingColumnColor{
-    return(secondaryAlternatingColumnColor);
-}
-
 
 // Scrolling ----------------------------------------------------------------------
 - (void)tile
 {
     [super tile];
+
     [[self enclosingScrollView] setVerticalLineScroll: ([self rowHeight] + [self intercellSpacing].height) ];
 }
 
@@ -269,50 +216,16 @@
 //Draw a row
 - (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected
 {
-    if(drawsAlternatingColumns){ //Draw alternating columns (and rows) in the outline view
-        int		column;
-        int		numberOfColumns = [self numberOfColumns];
-        NSRange		range;
-        
-        //Get the range of columns to color
-        range = alternatingColumnRange;
-        if(alternatingColumnRange.length == 0){
-            range = NSMakeRange(0,numberOfColumns);
-        }
+    if(drawsAlternatingRows){ //Draw alternating rows in the outline view
+        NSRect	segmentRect = rect;
 
-        //Move across the columns one at a time, drawing their background color
-        for(column = 0; column < numberOfColumns; column++){
-            NSRect	segmentRect = NSIntersectionRect( rect, [self rectOfColumn:column]);
-
-            //Draw the row background
-            if(!selected){
-                if( (NSLocationInRange(column,range)) && ((firstColumnColored && !(column % 2)) || (!firstColumnColored && (column % 2))) ){
-                    if(!colored){
-                        [alternatingColumnColor set];
-                        [NSBezierPath fillRect:segmentRect];
-                    }else{
-                        [secondaryAlternatingColumnColor set];
-                        [NSBezierPath fillRect:segmentRect];
-                    }
-                }else if(drawsAlternatingRows && colored){
-                    [alternatingRowColor set];
-                    [NSBezierPath fillRect:segmentRect];
-                }
-            }
-        }
-        
-    }else if(drawsAlternatingRows){ //Draw alternating rows in the outline view
-        //Draw the row background
         if(colored && !selected){
-            NSRect	segmentRect = rect;
-
             segmentRect.origin.x = 0;
             segmentRect.size.width = [self frame].size.width;
 
             [alternatingRowColor set];
             [NSBezierPath fillRect:segmentRect];
         }
-
     }
 }
 
