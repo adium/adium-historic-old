@@ -30,6 +30,8 @@
 	
 	IBOutlet		AIAutoScrollView				*scrollView_contactList;
     IBOutlet		AIListOutlineView				*contactListView;
+	IBOutlet		NSButton						*button_addContact;
+	IBOutlet		NSButton						*button_removeContact;
 	
 	AIListObject									*displayedObject;
 	NSMutableArray									*loadedPanes;
@@ -42,6 +44,9 @@
 - (void)configureForListObject:(AIListObject *)inObject;
 - (IBAction)closeWindow:(id)sender;
 - (void)configurePanes;
+
+- (IBAction)addContact:(id)sender;
+- (IBAction)removeContact:(id)sender;
 
 //Internal use
 - (float)drawerTrailingOffset;

@@ -22,13 +22,16 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            ACTIONS = {closeWindow = id; }; 
+            ACTIONS = {addContact = id; closeWindow = id; removeContact = id; }; 
             CLASS = AIContactInfoWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_addContact" = NSButton; 
+                "button_removeContact" = NSButton; 
+                contactListView = AIListOutlineView; 
                 "drawer_metaContact" = NSDrawer; 
                 "imageView_userIcon" = ESImageViewWithImagePicker; 
-                "outlineView_contacts" = AIMultiCellOutlineView; 
+                "scrollView_contactList" = AIAutoScrollView; 
                 "tabView_category" = NSTabView; 
                 "textField_accountName" = NSTextField; 
                 "textField_service" = NSTextField; 
@@ -37,7 +40,7 @@
                 "view_Profile" = AIModularPaneCategoryView; 
                 "view_Settings" = AIModularPaneCategoryView; 
             }; 
-            SUPERCLASS = AIAbstractListWindowController; 
+            SUPERCLASS = AIWindowController; 
         }, 
         {
             CLASS = AIListOutlineView; 
