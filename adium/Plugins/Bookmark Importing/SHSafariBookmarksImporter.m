@@ -4,7 +4,6 @@
 //
 //  Created by Stephen Holt on Sun May 16 2004.
 
-#import "SHBookmarksImporterPlugin.h"
 #import "SHSafariBookmarksImporter.h"
 
 #define SAFARI_BOOKMARKS_PATH   @"~/Library/Safari/Bookmarks.plist"
@@ -27,17 +26,25 @@
 
 @implementation SHSafariBookmarksImporter
 
-
 -(NSMenu *)parseBookmarksForOwner:(id)inObject
 {
     owner = inObject;
     NSDictionary    *bookmarkDict = [NSDictionary dictionaryWithContentsOfFile:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath]];
     
-    safariBookmarksMenu = [[[NSMenu alloc] initWithTitle:SAFARI_ROOT_MENU_TITLE] autorelease];
-    safariBookmarksSupermenu = safariBookmarksMenu;
-    [self drillPropertyList:bookmarkDict];
+    if(bookmarksMenu){
+        [bookmarksMenu removeAllItems];
+        [bookmarksMenu release];
+    }
     
-    return safariBookmarksMenu;
+    if (lastModDate) [lastModDate release];
+    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
+    lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
+    
+    bookmarksMenu = [[[NSMenu alloc] initWithTitle:SAFARI_ROOT_MENU_TITLE] autorelease];
+    bookmarksSupermenu = bookmarksMenu;
+    [self drillPropertyList:bookmarkDict];
+        
+    return bookmarksMenu;
 }
 
 -(BOOL)bookmarksExist
@@ -47,7 +54,15 @@
 
 -(NSString *)menuTitle
 {
-    return [safariBookmarksMenu title];
+    return SAFARI_ROOT_MENU_TITLE;
+}
+
+-(BOOL)bookmarksUpdated
+{
+    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
+    NSDate *modDate = [fileProps objectForKey:NSFileModificationDate];
+    
+    return ![modDate isEqualToDate:lastModDate];
 }
 
 -(void)drillPropertyList:(id)inObject
@@ -67,23 +82,23 @@
                 [self menuItemFromDict:outObject];
             }else if([[(NSDictionary *)outObject objectForKey:SAFARI_DICT_TYPE_KEY] isEqualToString:SAFARI_DICT_TYPE_LIST]){
                 // if outObject is a list, then get the array it contains, then push the menu down.
-                safariBookmarksSupermenu = safariBookmarksMenu;
-                safariBookmarksMenu = [[[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:SAFARI_DICT_TITLE]] autorelease];
+                bookmarksSupermenu = bookmarksMenu;
+                bookmarksMenu = [[[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:SAFARI_DICT_TITLE]] autorelease];
                 
-                NSMenuItem *safariSubMenuItem = [[[NSMenuItem alloc] initWithTitle:[safariBookmarksMenu title]
+                NSMenuItem *safariSubMenuItem = [[[NSMenuItem alloc] initWithTitle:[bookmarksMenu title]
                                                                             target:owner
                                                                             action:nil
                                                                      keyEquivalent:@""] autorelease];
-                [safariBookmarksSupermenu addItem:[safariSubMenuItem retain]];
-                [safariBookmarksSupermenu setSubmenu:[safariBookmarksMenu retain] forItem:safariSubMenuItem];
+                [bookmarksSupermenu addItem:[safariSubMenuItem retain]];
+                [bookmarksSupermenu setSubmenu:[bookmarksMenu retain] forItem:safariSubMenuItem];
                 [self drillPropertyList:outObject];
             }
         }
         
-        if(nil != [safariBookmarksMenu supermenu]){
+        if([bookmarksSupermenu isKindOfClass:[NSMenu class]]){
             //so long as the supermenu exists, pop it up.
-            safariBookmarksMenu = safariBookmarksSupermenu;
-            safariBookmarksSupermenu = [safariBookmarksSupermenu supermenu];
+            bookmarksMenu = bookmarksSupermenu;
+            bookmarksSupermenu = [bookmarksSupermenu supermenu];
         }
     }
 }
@@ -92,17 +107,17 @@
 {
     // for convienence, refer to the URIDictionary by it's own variable
     NSDictionary *URIDict = [inDict objectForKey:SAFARI_DICT_URIDICT];
-            
-    NSDictionary *linkDict = [[NSDictionary dictionaryWithObjectsAndKeys:
-        [[URIDict objectForKey:SAFARI_DICT_URI_TITLE] retain], KEY_LINK_TITLE,
-        [[inDict objectForKey:SAFARI_DICT_URLSTRING] retain], KEY_LINK_URL,
-        nil] autorelease];
+
+    SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[[inDict objectForKey:SAFARI_DICT_URLSTRING] retain]
+                                                          withValidationStatus:SH_URL_VALID
+                                                                  parentString:[URIDict objectForKey:SAFARI_DICT_URI_TITLE]
+                                                                      andRange:NSMakeRange(0,[(NSString *)[URIDict objectForKey:SAFARI_DICT_URI_TITLE] length])] autorelease];
     
-    [safariBookmarksMenu addItemWithTitle:[URIDict objectForKey:SAFARI_DICT_URI_TITLE]
-                                  target:owner
-                                  action:@selector(selectFavoriteURL:)
+    [bookmarksMenu addItemWithTitle:[URIDict objectForKey:SAFARI_DICT_URI_TITLE]
+                                  target:[owner retain]
+                                  action:@selector(injectBookmarkFrom:)
                            keyEquivalent:@""
-                       representedObject:[linkDict retain]];
+                       representedObject:[markedLink retain]];
 }
 
 @end

@@ -3,16 +3,16 @@
 //  Adium
 //
 //  Created by Stephen Holt on Thu May 20 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
-//
 
-#import <Foundation/Foundation.h>
+#import "SHBookmarksImporterPlugin.h"
 
+@protocol SHBookmarksImporter;
 
 @interface SHCaminoBookmarksImporter : NSObject <SHBookmarkImporter> {
     id       owner;
     NSMenu  *bookmarksMenu;
     NSMenu  *bookmarksSupermenu;
+    NSDate  *lastModDate;
 }
 
 -(NSMenu *)parseBookmarksForOwner:(id)inObject;

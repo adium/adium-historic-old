@@ -11,6 +11,7 @@
 -(NSMenu *)parseBookmarksForOwner:(id)owner;
 -(NSString *)menuTitle;
 -(BOOL)bookmarksExist;
+-(BOOL)bookmarksUpdated;
 @end
 
 @interface SHBookmarksImporterPlugin : AIPlugin {

@@ -4,7 +4,6 @@
 //
 //  Created by Stephen Holt on Thu May 20 2004.
 
-#import "SHBookmarksImporterPlugin.h"
 #import "SHCaminoBookmarksImporter.h"
 
 #define CAMINO_BOOKMARKS_PATH   @"~/Library/Application Support/Camino/bookmarks.plist"
@@ -15,7 +14,7 @@
 
 #define CAMINO_ROOT_MENU_TITLE  AILocalizedString(@"Camino",nil)
 
-@interface SHSafariBookmarksImporter(PRIVATE)
+@interface SHCaminoBookmarksImporter(PRIVATE)
 -(void)drillPropertyList:(id)inObject;
 -(void)menuItemFromDict:(NSDictionary *)inDict;
 @end
@@ -27,11 +26,20 @@
     owner = inObject;
     NSDictionary    *bookmarkDict = [NSDictionary dictionaryWithContentsOfFile:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath]];
     
-    safariBookmarksMenu = [[[NSMenu alloc] initWithTitle:CAMINO_ROOT_MENU_TITLE] autorelease];
-    safariBookmarksSupermenu = safariBookmarksMenu;
+    if(bookmarksMenu){
+        [bookmarksMenu removeAllItems];
+        [bookmarksMenu release];
+    }
+    
+    if (lastModDate) [lastModDate release];
+    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
+    lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
+    
+    bookmarksMenu = [[[NSMenu alloc] initWithTitle:CAMINO_ROOT_MENU_TITLE] autorelease];
+    bookmarksSupermenu = bookmarksMenu;
     [self drillPropertyList:bookmarkDict];
     
-    return safariBookmarksMenu;
+    return [bookmarksMenu retain];
 }
 
 -(BOOL)bookmarksExist
@@ -41,9 +49,16 @@
 
 -(NSString *)menuTitle
 {
-    return [bookmarksMenu title];
+    return CAMINO_ROOT_MENU_TITLE;
 }
 
+-(BOOL)bookmarksUpdated
+{
+    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
+    NSDate *modDate = [fileProps objectForKey:NSFileModificationDate];
+    
+    return ![modDate isEqualToDate:lastModDate];
+}
 
 -(void)drillPropertyList:(id)inObject
 {
@@ -63,19 +78,19 @@
             }else{
                 // if outObject is a list, then get the array it contains, then push the menu down.
                 bookmarksSupermenu = bookmarksMenu;
-                bookmarksMenu = [[[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:SAFARI_DICT_TITLE]] autorelease];
+                bookmarksMenu = [[[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:CAMINO_DICT_FOLDER_KEY]] autorelease];
                 
-                NSMenuItem *subMenuItem = [[[NSMenuItem alloc] initWithTitle:[bookmarksMenu title]
+                NSMenuItem *caminoSubMenuItem = [[[NSMenuItem alloc] initWithTitle:[bookmarksMenu title]
                                                                             target:owner
                                                                             action:nil
                                                                      keyEquivalent:@""] autorelease];
-                [bookmarksSupermenu addItem:[subMenuItem retain]];
-                [bookmarksSupermenu setSubmenu:[bookmarksMenu retain] forItem:subMenuItem];
+                [bookmarksSupermenu addItem:[caminoSubMenuItem retain]];
+                [bookmarksSupermenu setSubmenu:[bookmarksMenu retain] forItem:caminoSubMenuItem];
                 [self drillPropertyList:outObject];
             }
         }
         
-        if(nil != [bookmarksMenu supermenu]){
+        if([bookmarksSupermenu isKindOfClass:[NSMenu class]]){
             //so long as the supermenu exists, pop it up.
             bookmarksMenu = bookmarksSupermenu;
             bookmarksSupermenu = [bookmarksSupermenu supermenu];
@@ -85,19 +100,16 @@
 
 -(void)menuItemFromDict:(NSDictionary *)inDict
 {
-    // for convienence, refer to the URIDictionary by it's own variable
-    //NSDictionary *URIDict = [inDict objectForKey:SAFARI_DICT_URIDICT];
-            
-    NSDictionary *linkDict = [[NSDictionary dictionaryWithObjectsAndKeys:
-        [[inDict objectForKey:CAMINO_DICT_TITLE_KEY] retain], KEY_LINK_TITLE,
-        [[inDict objectForKey:CAMINO_DICT_URL_KEY] retain], KEY_LINK_URL,
-        nil] autorelease];
+    SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[[inDict objectForKey:CAMINO_DICT_URL_KEY] retain]
+                                                          withValidationStatus:SH_URL_VALID
+                                                                  parentString:[inDict objectForKey:CAMINO_DICT_TITLE_KEY]
+                                                                      andRange:NSMakeRange(0,[(NSString *)[inDict objectForKey:CAMINO_DICT_TITLE_KEY] length])] autorelease];
     
     [bookmarksMenu addItemWithTitle:[inDict objectForKey:CAMINO_DICT_TITLE_KEY]
                                   target:owner
-                                  action:@selector(selectFavoriteURL:)
+                                  action:@selector(injectBookmarkFrom:)
                            keyEquivalent:@""
-                       representedObject:[linkDict retain]];
+                       representedObject:[markedLink retain]];
 }
 
 @end
