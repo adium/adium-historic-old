@@ -14,10 +14,10 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {resetVolume = id; selectVolume = id; }; 
+            ACTIONS = {selectVolume = id; }; 
             CLASS = AIVolumeControlPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"button_Reset" = NSButton; "slider_volume" = NSSlider; }; 
+            OUTLETS = {"checkbox_useCustomVolume" = NSButton; "slider_volume" = NSSlider; }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 

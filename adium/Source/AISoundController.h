@@ -29,7 +29,7 @@
     NSMutableArray		*soundCacheArray;
     BOOL				useCustomVolume;
     BOOL				muteSounds;
-    BOOL                                soundsAsAlerts;
+//    BOOL                                soundsAsAlerts;
     int					customVolume;
 	
     int					activeSoundThreads;
