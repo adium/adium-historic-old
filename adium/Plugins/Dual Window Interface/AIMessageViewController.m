@@ -122,8 +122,11 @@
 	[tableView_userList setDoubleAction:@selector(cellWasDoubleClicked:)];
 	[tableView_userList setNextResponder:controllerView_messages];
 	
-//	NSTableColumn *leftCol = [[tableView_userList tableColumns] objectAtIndex:0];
-//	[leftCol setDataCell:[[[NSImageCell alloc] init] autorelease]];
+	/*
+	 //The image column does not currently exist
+	NSTableColumn *leftCol = [[tableView_userList tableColumns] objectAtIndex:0];
+	[leftCol setDataCell:[[[NSImageCell alloc] init] autorelease]];
+	*/
 	
 	// Set up the split view
 	[splitView_messages setDelegate:self];
@@ -509,6 +512,8 @@
 //	} else {
 		return([listObject displayName]);
 //	}
+	
+	return nil;
 }
 
 // Allow selection of a contact, prepare info on them
