@@ -213,7 +213,7 @@
 //    [activityWindowController initController];
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 
-	NSNumber	*versionUpgradeDict = [self versionUpgradeDict];
+	NSDictionary	*versionUpgradeDict = [self versionUpgradeDict];
 	
 	if (versionUpgradeDict){
 		[[self notificationCenter] postNotificationName:Adium_VersionWillBeUpgraded
