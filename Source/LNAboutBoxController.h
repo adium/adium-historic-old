@@ -19,6 +19,8 @@
 	
     IBOutlet	NSButton	*button_duckIcon;
     IBOutlet	NSButton	*button_buildButton;
+	IBOutlet	NSButton	*button_homepage;
+	IBOutlet	NSButton	*button_license;
     IBOutlet	NSTextField	*textField_version;
     IBOutlet	NSTextView	*textView_credits;
 
