@@ -29,7 +29,7 @@
 #define AIM_PACKET_MAX_LENGTH	2048
 
 #define SIGN_ON_MAX_WAIT	10.0		//Max amount of time to wait for first sign on packet
-#define SIGN_ON_UPKEEP_INTERVAL	0.4		//Max wait before sign up updates
+#define SIGN_ON_UPKEEP_INTERVAL	0.8		//Max wait before sign up updates
 
 #define AUTO_RECONNECT_DELAY_PING_FAILURE	2.0	//Delay in seconds
 #define AUTO_RECONNECT_DELAY_SOCKET_DROP	2.0	//Delay in seconds

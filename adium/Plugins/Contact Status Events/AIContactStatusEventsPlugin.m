@@ -59,10 +59,11 @@
             NSNumber	*online = [[inHandle statusDictionary] objectForKey:@"Online"];
 
             if(online){ //We only send out events if the handle has a value (nil values mean the flag is being cleared)
-                BOOL	oldStatus = [[onlineDict objectForKey:[inHandle UIDAndServiceID]] boolValue]; //UID is not unique enough
-                BOOL	newStatus = [online boolValue];
+                NSNumber	*oldStatusNumber = [onlineDict objectForKey:[inHandle UIDAndServiceID]];
+                BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
+                BOOL		newStatus = [online boolValue];
 
-                if(newStatus != oldStatus){
+                if(oldStatusNumber == nil || newStatus != oldStatus){
                     //Post an online/offline notification
                     [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO)
                                                               object:inHandle
@@ -86,10 +87,11 @@
             NSNumber	*away = [[inHandle statusDictionary] objectForKey:@"Away"];
 
             if(away){ //We only send out events if the handle has a value (nil values mean the flag is being cleared)
-                BOOL	oldStatus = [[awayDict objectForKey:[inHandle UIDAndServiceID]] boolValue]; //UID is not unique enough
-                BOOL	newStatus = [away boolValue];
+                NSNumber	*oldStatusNumber = [awayDict objectForKey:[inHandle UIDAndServiceID]];
+                BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
+                BOOL		newStatus = [away boolValue];
 
-                if(newStatus != oldStatus){
+                if(oldStatusNumber == nil || newStatus != oldStatus){
                     [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO)
                                                               object:inHandle
                                                             userInfo:nil];
@@ -98,11 +100,12 @@
             }
 
         }else if([inModifiedKeys containsObject:@"IdleSince"]){ //Idle / UnIdle
-            NSDate	*idleSince = [[inHandle statusDictionary] objectForKey:@"IdleSince"];            
-            BOOL	oldStatus = [[idleDict objectForKey:[inHandle UIDAndServiceID]] boolValue]; //UID is not unique enough
+            NSDate	*idleSince = [[inHandle statusDictionary] objectForKey:@"IdleSince"];
+            NSNumber	*oldStatusNumber = [idleDict objectForKey:[inHandle UIDAndServiceID]];
+            BOOL	oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
             BOOL	newStatus = (idleSince != nil);
 
-            if(newStatus != oldStatus){
+            if(oldStatusNumber == nil || newStatus != oldStatus){
                 [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO)
                                                           object:inHandle
                                                         userInfo:nil];
