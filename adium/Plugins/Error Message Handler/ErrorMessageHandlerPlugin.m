@@ -85,7 +85,7 @@
 	return([ESPanelAlertDetailPane actionDetailsPane]);
 }
 
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID
 {
     NSString    *dateString = [[NSCalendarDate calendarDate] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES]];
 	NSString	*alertText = [[details objectForKey:KEY_ALERT_TEXT] lastPathComponent];

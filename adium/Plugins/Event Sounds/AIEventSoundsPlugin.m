@@ -213,7 +213,7 @@
 	return([ESEventSoundAlertDetailPane actionDetailsPane]);
 }
 
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID
 {
 	NSString	*soundPath = [[details objectForKey:KEY_ALERT_SOUND_PATH] stringByExpandingBundlePath];
 	[[adium soundController] playSoundAtPath:soundPath];

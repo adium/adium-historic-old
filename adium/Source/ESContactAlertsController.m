@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.23 2004/04/24 09:56:19 overmind911 Exp $
+//  $Id: ESContactAlertsController.m,v 1.24 2004/05/12 22:04:06 evands Exp $
 
 
 #import "ESContactAlertsController.h"
@@ -87,7 +87,10 @@
 			NSDictionary			*actionDetails = [alert objectForKey:KEY_ACTION_DETAILS];
 			id <AIActionHandler>	actionHandler = [actionHandlers objectForKey:actionID];		
 
-			[actionHandler performActionID:actionID forListObject:listObject withDetails:actionDetails];
+			[actionHandler performActionID:actionID
+							 forListObject:listObject
+							   withDetails:actionDetails 
+						 triggeringEventID:eventID];
 			
 			//If this alert was a single-fire alert, we can delete it now
 			if([[alert objectForKey:KEY_ONE_TIME_ALERT] intValue]){

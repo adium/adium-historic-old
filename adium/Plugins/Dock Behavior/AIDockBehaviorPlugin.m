@@ -244,7 +244,7 @@ Methods for custom behvaior and contact alert classes
 	return([ESDockAlertDetailPane actionDetailsPane]);
 }
 
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID
 {
 	[[adium dockController] performBehavior:[[details objectForKey:KEY_DOCK_BEHAVIOR_TYPE] intValue]];
 }
