@@ -312,7 +312,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
         //Image Attachments
 		if([attributes objectForKey:NSAttachmentAttributeName]){
 			int i;
-			for(i = 0; ((i < searchRange.length) && (chunk)); i++){ //Each attachment takes a character.. they are grouped by the attribute scan
+			for(i = 0; (i < searchRange.length); i++){ //Each attachment takes a character.. they are grouped by the attribute scan
 				AITextAttachmentExtension *attachment = [[inMessage attributesAtIndex:searchRange.location+i effectiveRange:nil] objectForKey:NSAttachmentAttributeName];
 				
 				if (attachment){
