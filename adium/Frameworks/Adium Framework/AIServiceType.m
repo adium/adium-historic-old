@@ -23,15 +23,25 @@
 // scaling image to 16x16, the size a menu item image should be.  Accordingly, if menuImage -is- passed,
 // it should be a 16x16 image.  Failure to do so will make a big mess of the menu (assuming you want the
 // menu items to look normal.
+// If it is nil and no image is passed, default images will be used to keep menus looking consistent.
+
+// AIServiceType also provides online, connecting, and offline menu images, 
+// which are 100%, 75%, and 50% opaque versions of menuImage.
 
 @interface AIServiceType (PRIVATE)
 - (id)initWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
 			   menuImage:(NSImage *)inMenuImage
 		   caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
 	   ignoredCharacters:(NSCharacterSet *)inIgnoredCharacters allowedLength:(int)inAllowedLength;
+
+- (void)buildImagesFromImage:(NSImage *)inImage menuImage:(NSImage *)inMenuImage;
 @end
 
 @implementation AIServiceType
+
+static NSImage *genericOnlineMenuImage = nil;
+static NSImage *genericConnectingMenuImage = nil;
+static NSImage *genericOfflineMenuImage = nil;
 
 //Create a new service type
 + (id)serviceTypeWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
@@ -63,6 +73,18 @@
 
 - (NSImage *)menuImage{
 	return(menuImage);
+}
+
+- (NSImage *)onlineMenuImage{
+	return(onlineMenuImage);
+}
+
+- (NSImage *)connectingMenuImage{
+	return(connectingMenuImage);
+}
+
+- (NSImage *)offlineMenuImage{
+	return(offlineMenuImage);
 }
 
 - (NSCharacterSet *)allowedCharacters
@@ -127,7 +149,24 @@
 
     identifier = [inIdentifier retain];
     description = [inDescription retain];
+	
+	[self buildImagesFromImage:inImage menuImage:inMenuImage];
+
+    caseSensitive = inCaseSensitive;
+    allowedCharacters = [inAllowedCharacters retain];
+    ignoredCharacters = [inIgnoredCharacters retain];
+	allowedLength = inAllowedLength;
+
+    return(self);
+}
+
+- (void)buildImagesFromImage:(NSImage *)inImage menuImage:(NSImage *)inMenuImage
+{
     image = [inImage retain];
+
+	onlineMenuImage = nil;
+	connectingMenuImage = nil;
+	offlineMenuImage = nil;
 	
 	//Use the menu image if we are passed one
 	if (inMenuImage){
@@ -137,23 +176,41 @@
 		if (inImage){
 			menuImage = [[image imageByScalingToSize:NSMakeSize(16,16)] retain];
 		}else{
-			//No menuImage called for.
-			menuImage = nil;
+			if (!genericOnlineMenuImage){
+				genericOnlineMenuImage = [[NSImage imageNamed:@"Account_Online" forClass:[self class]] retain];
+				genericConnectingMenuImage = [[NSImage imageNamed:@"Account_Connecting" forClass:[self class]] retain];
+				genericOfflineMenuImage = [[NSImage imageNamed:@"Account_Offline" forClass:[self class]] retain];
+			}
+			
+			//No menuImage called for.  Use the generic images.
+			menuImage = [genericOnlineMenuImage retain];
+			onlineMenuImage = [genericOnlineMenuImage retain];
+			connectingMenuImage = [genericConnectingMenuImage retain];
+			offlineMenuImage = [genericOfflineMenuImage retain];
 		}
 	}
-    caseSensitive = inCaseSensitive;
-    allowedCharacters = [inAllowedCharacters retain];
-    ignoredCharacters = [inIgnoredCharacters retain];
-	allowedLength = inAllowedLength;
-
-    return(self);
+	
+	//If we didn't use the generic menu images, we won't have an online menu image yet.
+	if (!onlineMenuImage){
+		//Online is the same as the menuImage
+		onlineMenuImage = [menuImage retain];
+		connectingMenuImage = [[menuImage imageByFadingToFraction:CONNECTING_MENU_IMAGE_FRACTION] retain];
+		offlineMenuImage = [[menuImage imageByFadingToFraction:OFFLINE_MENU_IMAGE_FRACTION] retain];
+	}
 }
+
 
 - (void)dealloc
 {
     [identifier release];
     [description release];
-    [image release];
+    
+	[image release];
+	[menuImage release];
+	[onlineMenuImage release];
+	[connectingMenuImage release];
+	[offlineMenuImage release];
+	
     [allowedCharacters release];
     [ignoredCharacters release];
 
