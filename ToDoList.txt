@@ -6,7 +6,6 @@
 - Move opacity preference from layout to main pane or advanced
 - Move maximum width slider from layout to main pane
 - Status window when away preference is not implemented
-- Status set state after inactivity is not implemented [Evan]
 - Implement 'edit menu' sheets for deleting list layouts and themes
 - Improve behavior when customizing existing layouts and themes
 - Improve behavior when canceling changes to layouts and themes
@@ -17,8 +16,6 @@
 - Update included layouts, themes, and message views
 - Jabber account registration
 - The crash reporter shouldn't force people to reopen Adium after a crash.
-- Custom Status should remember the last status state used for that type of custom status rather than populating
-	with the current status
 - Message views are ignoring variant specific info.plist keys
 - %_statusmessage script is broken
 - Status controller needs to return an offline state from activeState when we are offline
