@@ -46,7 +46,7 @@ static SLGaimCocoaAdapter *myself;
 static guint adium_timeout_add(guint, GSourceFunc, gpointer);
 static guint adium_timeout_remove(guint);
 static guint adium_input_add(int, GaimInputCondition, GaimInputFunction, gpointer);
-static void adium_source_remove(guint);
+static guint adium_source_remove(guint);
 
 static GaimEventLoopUiOps adiumEventLoopUiOps = {
     adium_timeout_add,
@@ -72,26 +72,22 @@ struct SourceInfo {
     gpointer user_data;
 };
 
-- (id)init
-{
-    sourceInfoDict = [[NSMutableDictionary alloc] init];
-    NSAssert(myself == nil, @"SLGaimCocoaAdapter is a singleton");
-    myself = self;
-    gaim_eventloop_set_ui_ops(&adiumEventLoopUiOps);
-    return self;
-}
+#pragma mark Add
 
 static guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 {
-    //NSLog(@"New %u-ms timer (tag %u)", interval, sourceId);
+    NSLog(@"New %u-ms timer (tag %u)", interval, sourceId);
 
     struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
 
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:(NSTimeInterval)interval/1e3
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:(NSTimeInterval)interval/1000
                                                       target:myself
                                                     selector:@selector(callTimerFunc:)
                                                     userInfo:[NSValue valueWithPointer:info]
                                                      repeats:YES];
+	
+	sourceId++;
+	
     info->tag = sourceId;
     info->sourceFunction = function;
     info->timer = [timer retain];
@@ -101,7 +97,7 @@ static guint adium_timeout_add(guint interval, GSourceFunc function, gpointer da
     NSCAssert1([sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:sourceId]] == nil, @"Key %u in use", sourceId);
     [sourceInfoDict setObject:[NSValue valueWithPointer:info]
 					   forKey:[NSNumber numberWithUnsignedInt:sourceId]];
-    return sourceId++;
+    return sourceId;
 }
 
 - (void) callTimerFunc:(NSTimer*)timer
@@ -141,8 +137,10 @@ static guint adium_input_add(int fd, GaimInputCondition condition,
     // Add it to our run loop
     CFRunLoopSourceRef rls = CFSocketCreateRunLoopSource(NULL, socket, 0);
     CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
-    info->rls = rls;
 
+    sourceId++;
+	
+	info->rls = rls;
     info->timer = NULL;
     info->tag = sourceId;
     info->ioFunction = func;
@@ -152,35 +150,17 @@ static guint adium_input_add(int fd, GaimInputCondition condition,
     [sourceInfoDict setObject:[NSValue valueWithPointer:info]
 					   forKey:[NSNumber numberWithUnsignedInt:sourceId]];
 
-    return sourceId++;
+    return sourceId;
 }
 
-static void socketCallback(CFSocketRef s,
-                           CFSocketCallBackType callbackType,
-                           CFDataRef address,
-                           const void *data,
-                           void *infoVoid)
-{
-    struct SourceInfo *info = (struct SourceInfo*) infoVoid;
+#pragma mark Remove
 
-    GaimInputCondition c = 0;
-    if ((callbackType & kCFSocketReadCallBack) != 0)  c |= GAIM_INPUT_READ;
-    if ((callbackType & kCFSocketWriteCallBack) != 0) c |= GAIM_INPUT_WRITE;
-
-	info->ioFunction(info->user_data, info->fd, c);
-}
-
+//Like g_source_remove, return TRUE if successful, FALSE if not
 static guint adium_timeout_remove(guint tag) {
-    adium_source_remove(tag);
-    /*
-     * XXX: why was this return value added? The CVS log says
-     * "This should be less wrong. Or more wrong. Either one."
-     * and the doc comment says "Something" for the return value. Hmm.
-     */
-    return 0;
+    return (adium_source_remove(tag));
 }
 
-static void adium_source_remove(guint tag) {
+static guint adium_source_remove(guint tag) {
     struct SourceInfo *sourceInfo = (struct SourceInfo*)
 									[[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
 	
@@ -198,7 +178,39 @@ static void adium_source_remove(guint tag) {
 		
 		[sourceInfoDict removeObjectForKey:[NSNumber numberWithUnsignedInt:tag]];
 		free(sourceInfo);
+		
+		return TRUE;
 	}
+	
+	return FALSE;
+}
+
+#pragma mark Socket Callback
+static void socketCallback(CFSocketRef s,
+                           CFSocketCallBackType callbackType,
+                           CFDataRef address,
+                           const void *data,
+                           void *infoVoid)
+{
+    struct SourceInfo *info = (struct SourceInfo*) infoVoid;
+	
+    GaimInputCondition c = 0;
+    if ((callbackType & kCFSocketReadCallBack) != 0)  c |= GAIM_INPUT_READ;
+    if ((callbackType & kCFSocketWriteCallBack) != 0) c |= GAIM_INPUT_WRITE;
+	
+	info->ioFunction(info->user_data, info->fd, c);
+}
+
+
+
+#pragma mark Init
+- (id)init
+{
+    sourceInfoDict = [[NSMutableDictionary alloc] init];
+    NSAssert(myself == nil, @"SLGaimCocoaAdapter is a singleton");
+    myself = self;
+    gaim_eventloop_set_ui_ops(&adiumEventLoopUiOps);
+    return self;
 }
 
 @end

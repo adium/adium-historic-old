@@ -16,6 +16,4 @@
 @interface SLGaimCocoaAdapter : NSObject {
 }
 
-- (id)init;
-
 @end
