@@ -1004,6 +1004,7 @@
 				4BD7D0E104620E7200A8010A,
 				4BAE85AB0498195800A8010A,
 				F50CD62903603C7201A8010A,
+				34878FA005182CC8003B2F21,
 				4B6688FF04A60CD800A8010A,
 				4B9E73DE03F7085300A8010A,
 				F5BD46CF02D0789901A8010A,
@@ -1045,6 +1046,7 @@
 				F5F8471404C70B8A01A80106,
 				4B55411C044DF01600A8010A,
 				F16B1A4805163AEB0000000E,
+				34878F6D05182855003B2F21,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1091,6 +1093,7 @@
 				4BD7D0E004620E7200A8010A,
 				4BAE85AA0498195800A8010A,
 				F50CD62803603C7201A8010A,
+				34878F6C05182855003B2F21,
 				4B6688FE04A60CD800A8010A,
 				4B9E73DD03F7085300A8010A,
 				F5BD46CE02D0789901A8010A,
@@ -1107,6 +1110,7 @@
 				11C157C404A88D33008E0C76,
 				40AC0EE603B5BEAF00A80202,
 				F5AAD08F039BA10901A8010A,
+				F16B1A4705163AEB0000000E,
 				112F56AD050A4371005FD3EF,
 				F53B4A6A04991CB601803884,
 				4B4FA11404125F3F00A8010A,
@@ -1129,7 +1133,6 @@
 				F5D2FB7C03B6643B01A8010A,
 				4B5B15280493BFB100A8010A,
 				4B55411B044DF01600A8010A,
-				F16B1A4705163AEB0000000E,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -1212,6 +1215,7 @@
 				4BD7D0E204620E7300A8010A,
 				4BAE85AC0498195800A8010A,
 				4B64792E03DB613700A8010A,
+				34878F8005182AF9003B2F21,
 				4B66890004A60CD900A8010A,
 				4B9E73DF03F7085300A8010A,
 				4B64792703DB613700A8010A,
@@ -1366,6 +1370,7 @@
 				4BC8AFEF04FD4BF000A8010A,
 				4BAC8C8E05012AD900A8010A,
 				34ADE00C05159261003B2F21,
+				34878FA105182CC8003B2F21,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1602,6 +1607,252 @@
 		};
 		346E641905157B96003B2F21 = {
 			fileRef = 346E640D051533C0003B2F21;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34878F6705182855003B2F21 = {
+			buildActionMask = 2147483647;
+			files = (
+				34878F7B05182ACD003B2F21,
+				34878F7C05182ACD003B2F21,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34878F6805182855003B2F21 = {
+			buildActionMask = 2147483647;
+			files = (
+				34878F7805182ACD003B2F21,
+				34878F7A05182ACD003B2F21,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34878F6905182855003B2F21 = {
+			buildActionMask = 2147483647;
+			files = (
+				34878F7905182ACD003B2F21,
+				34878F7D05182ACD003B2F21,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34878F6A05182855003B2F21 = {
+			buildActionMask = 2147483647;
+			files = (
+				34878F6E05182880003B2F21,
+				34878F6F05182880003B2F21,
+				34878F7005182880003B2F21,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34878F6B05182855003B2F21 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34878F6C05182855003B2F21 = {
+			buildPhases = (
+				34878F6705182855003B2F21,
+				34878F6805182855003B2F21,
+				34878F6905182855003B2F21,
+				34878F6A05182855003B2F21,
+				34878F6B05182855003B2F21,
+			);
+			buildSettings = {
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Contact List Window Handling";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				34878F7E05182AF7003B2F21,
+				34878F7F05182AF7003B2F21,
+			);
+			isa = PBXBundleTarget;
+			name = "Contact List Window Handling";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Contact List Window Handling";
+			productReference = 34878F6D05182855003B2F21;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>ESContactListWindowHandlingPlugin</string>
+</dict>
+</plist>
+";
+		};
+		34878F6D05182855003B2F21 = {
+			isa = PBXBundleReference;
+			path = "Contact List Window Handling.bundle";
+			refType = 3;
+		};
+		34878F6E05182880003B2F21 = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34878F6F05182880003B2F21 = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34878F7005182880003B2F21 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34878F710518289B003B2F21 = {
+			children = (
+				34878F7505182ACD003B2F21,
+				34878F7705182ACD003B2F21,
+				34878F7605182ACD003B2F21,
+				34878F7305182ACD003B2F21,
+				34878F7405182ACD003B2F21,
+				34878F7205182ACD003B2F21,
+			);
+			isa = PBXGroup;
+			name = "Contact List Window Handling";
+			path = "";
+			refType = 4;
+		};
+		34878F7205182ACD003B2F21 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ContactListWindowHandlingDefaults.plist;
+			path = "Plugins/Contact List Window Handling/ContactListWindowHandlingDefaults.plist";
+			refType = 4;
+		};
+		34878F7305182ACD003B2F21 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESContactListWindowHandlingPreferences.m;
+			path = "Plugins/Contact List Window Handling/ESContactListWindowHandlingPreferences.m";
+			refType = 4;
+		};
+		34878F7405182ACD003B2F21 = {
+			isa = PBXFileReference;
+			name = ContactListWindowHandlingPrefs.nib;
+			path = "Plugins/Contact List Window Handling/ContactListWindowHandlingPrefs.nib";
+			refType = 4;
+		};
+		34878F7505182ACD003B2F21 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESContactListWindowHandlingPlugin.h;
+			path = "Plugins/Contact List Window Handling/ESContactListWindowHandlingPlugin.h";
+			refType = 4;
+		};
+		34878F7605182ACD003B2F21 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESContactListWindowHandlingPreferences.h;
+			path = "Plugins/Contact List Window Handling/ESContactListWindowHandlingPreferences.h";
+			refType = 4;
+		};
+		34878F7705182ACD003B2F21 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESContactListWindowHandlingPlugin.m;
+			path = "Plugins/Contact List Window Handling/ESContactListWindowHandlingPlugin.m";
+			refType = 4;
+		};
+		34878F7805182ACD003B2F21 = {
+			fileRef = 34878F7205182ACD003B2F21;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34878F7905182ACD003B2F21 = {
+			fileRef = 34878F7305182ACD003B2F21;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34878F7A05182ACD003B2F21 = {
+			fileRef = 34878F7405182ACD003B2F21;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34878F7B05182ACD003B2F21 = {
+			fileRef = 34878F7505182ACD003B2F21;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34878F7C05182ACD003B2F21 = {
+			fileRef = 34878F7605182ACD003B2F21;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34878F7D05182ACD003B2F21 = {
+			fileRef = 34878F7705182ACD003B2F21;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34878F7E05182AF7003B2F21 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		34878F7F05182AF7003B2F21 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		34878F8005182AF9003B2F21 = {
+			isa = PBXTargetDependency;
+			target = 34878F6C05182855003B2F21;
+		};
+		34878FA005182CC8003B2F21 = {
+			isa = PBXBundleReference;
+			path = "Contact List Window Handling.AdiumPlugin";
+			refType = 3;
+		};
+		34878FA105182CC8003B2F21 = {
+			fileRef = 34878FA005182CC8003B2F21;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34878FBA05182CE0003B2F21 = {
+			fileRef = 34878FA005182CC8003B2F21;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2640,6 +2891,7 @@
 				4B28907503C1D14200A8010A,
 				F5148D9404C8B3BF018B6CC7,
 				4BD7D0CA04620D7C00A8010A,
+				34878F710518289B003B2F21,
 				4BAE85A40498194200A8010A,
 				4BD7D0CB04620D8800A8010A,
 				4B6688F804A60CC300A8010A,
@@ -4398,6 +4650,7 @@
 				4BD7D0E304620E7300A8010A,
 				4BAE85AD0498195800A8010A,
 				4B40E1D403DB5B9600A8010A,
+				34878FBA05182CE0003B2F21,
 				4B66890104A60CD900A8010A,
 				4B9E73E003F7085300A8010A,
 				4B52A57F03EDB96E00A8010A,
