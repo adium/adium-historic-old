@@ -18,7 +18,14 @@
         {
             CLASS = JMSQLLoggerAdvancedPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkbox_enableSQLLogging" = NSButton; }; 
+            OUTLETS = {
+                "checkbox_enableSQLLogging" = NSButton; 
+                "text_Password" = NSSecureTextField; 
+                "text_Port" = NSTextField; 
+                "text_URL" = NSTextField; 
+                "text_Username" = NSTextField; 
+                "text_database" = NSTextField; 
+            }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {ACTIONS = {changePreference = id; }; CLASS = NSObject; LANGUAGE = ObjC; }
