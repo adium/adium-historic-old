@@ -17,8 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#import <Foundation/Foundation.h>
-
 typedef enum { PLAYER_NONE, PLAYER_X, PLAYER_O, PLAYER_DRAW } Player;
 
 enum {
