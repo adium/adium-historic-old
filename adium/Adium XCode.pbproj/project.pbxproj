@@ -10744,12 +10744,9 @@
 		34BD9E2605314755000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BD9E2705314755000AB133,
-				34BD9E2805314755000AB133,
 				34BD9E2905314755000AB133,
 				34BD9E2A05314755000AB133,
 				34BD9E2B05314755000AB133,
-				34BD9E2C05314755000AB133,
 				34BD9E2D05314755000AB133,
 				34BD9E2E05314755000AB133,
 				34BD9E2F05314755000AB133,
@@ -10793,18 +10790,6 @@
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		34BD9E2705314755000AB133 = {
-			fileRef = F570A5E503704DEA01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E2805314755000AB133 = {
-			fileRef = F570A5E803704DEA01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34BD9E2905314755000AB133 = {
 			fileRef = F570A5ED03704E0101A8010A;
 			isa = PBXBuildFile;
@@ -10819,12 +10804,6 @@
 		};
 		34BD9E2B05314755000AB133 = {
 			fileRef = F5CC42450386D8F901A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E2C05314755000AB133 = {
-			fileRef = 4BFAB3D00446600C00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -23657,14 +23636,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BFAB3D00446600C00A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = HandPointCursor.tiff;
-			path = "Frameworks/AIUtilities Framework/Images/HandPointCursor.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BFB1570043497E700A8010A = {
 			children = (
 				4B8ABA170488ECE100A8010A,
@@ -30600,9 +30571,6 @@
 				4B4FC53B04C8D23900A8010A,
 				4B4FC54004C8E22B00A8010A,
 				4B4FC54104C8E22B00A8010A,
-				4BFAB3D00446600C00A8010A,
-				F570A5E803704DEA01A8010A,
-				F570A5E503704DEA01A8010A,
 				F570A5ED03704E0101A8010A,
 				4B6660A604ADF2F200A8010A,
 				4B6660A704ADF2F200A8010A,
@@ -31381,22 +31349,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIMessageViewController.m;
 			path = "Plugins/Dual Window Interface/AIMessageViewController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F570A5E503704DEA01A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = ClosedGrabHandCursor.tiff;
-			path = "Frameworks/AIUtilities Framework/Images/ClosedGrabHandCursor.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F570A5E803704DEA01A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = OpenGrabHandCursor.tiff;
-			path = "Frameworks/AIUtilities Framework/Images/OpenGrabHandCursor.tiff";
 			refType = 4;
 			sourceTree = "<group>";
 		};
