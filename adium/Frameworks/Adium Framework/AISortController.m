@@ -106,8 +106,8 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 //Sort
 int basicVisibilitySort(id objectA, id objectB, void *context)
 {
-    BOOL	visibleA = [objectA isVisible];
-    BOOL	visibleB = [objectB isVisible];
+    BOOL	visibleA = [objectA visible];
+    BOOL	visibleB = [objectB visible];
 	
     if(!visibleA && visibleB){
         return(NSOrderedDescending);
@@ -123,8 +123,8 @@ int basicVisibilitySort(id objectA, id objectB, void *context)
 //Sort, groups always at the top
 int basicGroupVisibilitySort(id objectA, id objectB, void *context)
 {
-    BOOL	visibleA = [objectA isVisible];
-    BOOL	visibleB = [objectB isVisible];
+    BOOL	visibleA = [objectA visible];
+    BOOL	visibleB = [objectB visible];
 	
     if(!visibleA && visibleB){
         return(NSOrderedDescending);
