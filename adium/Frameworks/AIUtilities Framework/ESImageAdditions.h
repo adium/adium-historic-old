@@ -24,3 +24,12 @@ typedef enum {
 + (NSImage *)systemCheckmark;
 
 @end
+
+//Defined in AppKit.framework
+@interface NSImageCell(NSPrivateAnimationSupport)
+- (BOOL)_animates;
+- (void)_setAnimates:(BOOL)fp8;
+- (void)_startAnimation;
+- (void)_stopAnimation;
+- (void)_animationTimerCallback:fp8;
+@end
