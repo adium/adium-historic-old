@@ -65,40 +65,41 @@ DeclareString(bookmarkDictContent)
 
 - (NSArray *)availableBookmarks
 {
-    NSString    *bookmarkPath = useOW5? [OW5_BOOKMARKS_PATH stringByExpandingTildeInPath] : [OW45_BOOKMARKS_PATH stringByExpandingTildeInPath];
+    NSString    *bookmarkPath = [(useOW5 ? OW5_BOOKMARKS_PATH : OW45_BOOKMARKS_PATH) stringByExpandingTildeInPath];
     NSString    *bookmarkString = [NSString stringWithContentsOfFile:bookmarkPath];
     
     NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarkPath traverseLink:YES];
     [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
-    return [self parseBookmarksFile:bookmarkString];
+    return([self parseBookmarksFile:bookmarkString]);
 }
 
 
 -(BOOL)bookmarksExist
 {
-    return (useOW5 || [[NSFileManager defaultManager] fileExistsAtPath:[OW45_BOOKMARKS_PATH stringByExpandingTildeInPath]]);
+    return(useOW5 || [[NSFileManager defaultManager] fileExistsAtPath:[OW45_BOOKMARKS_PATH stringByExpandingTildeInPath]]);
 }
 
 
 -(BOOL)bookmarksUpdated
 {
-    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:useOW5? [OW5_BOOKMARKS_PATH stringByExpandingTildeInPath] : [OW45_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
+    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[(useOW5 ? OW5_BOOKMARKS_PATH : OW45_BOOKMARKS_PATH) stringByExpandingTildeInPath]
+																	  traverseLink:YES];
     NSDate *modDate = [fileProps objectForKey:NSFileModificationDate];
     
-    return ![modDate isEqualToDate:lastModDate];
+    return(![modDate isEqualToDate:lastModDate]);
 }
 
 #pragma mark private methods
 - (NSArray *)parseBookmarksFile:(NSString *)inString
 {
-    NSMutableArray      *bookmarksArray = [NSMutableArray array];
-    NSMutableArray      *arrayStack = [NSMutableArray array];
-    NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
-    NSString    *omniTitleString = nil;
-    NSString    *urlString = nil;
-    
-    unsigned int stringLength = [inString length];
+    NSMutableArray	*bookmarksArray = [NSMutableArray array];
+    NSMutableArray	*arrayStack = [NSMutableArray array];
+    NSScanner		*linkScanner = [NSScanner scannerWithString:inString];
+    NSString		*omniTitleString = nil;
+    NSString		*urlString = nil;
+	
+    unsigned int	stringLength = [inString length];
     
     NSCharacterSet  *quotesSet = [NSCharacterSet characterSetWithCharactersInString:@"'\""];
     
@@ -117,54 +118,77 @@ DeclareString(bookmarkDictContent)
     while(![linkScanner isAtEnd]){
         if((stringLength - [linkScanner scanLocation]) < 4){
             [linkScanner setScanLocation:[inString length]];
+			
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:Hopen]){
-            if((stringLength - [linkScanner scanLocation]) > 2) [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
+            
+			if((stringLength - [linkScanner scanLocation]) > 2){
+				[linkScanner setScanLocation:[linkScanner scanLocation] + 2];
+			}
+			
             [linkScanner scanUpToString:Aopen intoString:nil];
-            if((stringLength - [linkScanner scanLocation]) > 2) [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
+			
+            if((stringLength - [linkScanner scanLocation]) > 2){
+				[linkScanner setScanLocation:[linkScanner scanLocation] + 2];
+			}
+			
             [linkScanner scanUpToString:gtSign intoString:nil];
-            if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+			
+            if((stringLength - [linkScanner scanLocation]) > 1){
+				[linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+			}
             
             if([linkScanner scanUpToString:Aclose intoString:&omniTitleString]){
                 // decode html stuff
                 omniTitleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:omniTitleString];
             }else{
-                [omniTitleString release];
+				// invalid; reset to nil
                 omniTitleString = nil;
             }
             
             [arrayStack addObject:bookmarksArray];
             bookmarksArray = [NSMutableArray array];
             [(NSMutableArray *)[arrayStack lastObject] addObject:[self menuDictWithTitle:omniTitleString
-                                                             menuItems:bookmarksArray]];
+																			   menuItems:bookmarksArray]];
                                                              
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:Aopen]){
             [linkScanner scanUpToString:hrefStr intoString:nil];
-            if((stringLength - [linkScanner scanLocation]) > 6) [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
+			
+            if((stringLength - [linkScanner scanLocation]) > 6){
+				[linkScanner setScanLocation:[linkScanner scanLocation] + 6];
+			}
+			
             if([linkScanner scanUpToCharactersFromSet:quotesSet intoString:&urlString]){
                 [linkScanner scanUpToString:gtSign intoString:nil];
-                if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+                if((stringLength - [linkScanner scanLocation]) > 1){
+					[linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+				}
             
                 if([linkScanner scanUpToString:Aclose intoString:&omniTitleString]){
                     // decode html stuff
                     omniTitleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:omniTitleString];
                 }else{
-                    [omniTitleString release];
+					// invalid; reset to nil
                     omniTitleString = nil;
                 }
 
                 [bookmarksArray addObject:[self hyperlinkForTitle:omniTitleString URL:urlString]];
-
             }
+
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] isEqualToString:DLclose]){
-            if((stringLength - [linkScanner scanLocation]) > 4) [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
+            if((stringLength - [linkScanner scanLocation]) > 4){
+				[linkScanner setScanLocation:[linkScanner scanLocation] + 4];
+			}
+			
             if([arrayStack count]){
                 bookmarksArray = [arrayStack lastObject];
                 [arrayStack removeLastObject];
             }
+
         }else{
             [linkScanner scanUpToString:ltSign intoString:nil];
-            if(![linkScanner isAtEnd])
+            if(![linkScanner isAtEnd]){
                 [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+			}
         }
     }
     return bookmarksArray;
@@ -172,7 +196,7 @@ DeclareString(bookmarkDictContent)
 
 -(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
 {
-    NSString    *title = inString? inString : @"untitled";
+    NSString    *title = (inString ? inString : @"untitled");
     return [[[SHMarkedHyperlink alloc] initWithString:inURLString
                                  withValidationStatus:SH_URL_VALID
                                          parentString:title
@@ -181,8 +205,8 @@ DeclareString(bookmarkDictContent)
 
 -(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
-    NSString    *titleString = inTitle? inTitle : @"untitled";
-    return [NSDictionary dictionaryWithObjectsAndKeys:titleString, bookmarkDictTitle, inMenuItems, bookmarkDictTitle, nil];
+    NSString    *titleString = (inTitle ? inTitle : @"untitled");
+    return([NSDictionary dictionaryWithObjectsAndKeys:titleString, bookmarkDictTitle, inMenuItems, bookmarkDictTitle, nil]);
 }
 
 @end

@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Stephen Holt on Sat Jun 05 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "SHBookmarksImporterPlugin.h"
@@ -185,7 +184,7 @@ DeclareString(bookmarkDictContent)
     tagCharStart = [NSCharacterSet characterSetWithCharactersInString:bTagCharStartString];
     charEnd = [NSCharacterSet characterSetWithCharactersInString:bSemicolon];
     scanner = [NSScanner scannerWithString:inString];
-    newString = [[NSMutableString alloc] init];
+    newString = [NSMutableString string];
     [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
     
     while(![scanner isAtEnd]){
@@ -221,7 +220,8 @@ DeclareString(bookmarkDictContent)
             }
         }
     }
-    return [newString autorelease];
+	
+    return(newString);
 }
 
 @end
