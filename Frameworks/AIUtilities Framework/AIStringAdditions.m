@@ -92,8 +92,8 @@
 
 - (int)intValueFromHex
 {
-    NSScanner		*scanner = [NSScanner scannerWithString:self];
-    int			value;
+    NSScanner	*scanner = [NSScanner scannerWithString:self];
+    unsigned	value;
 
     [scanner scanHexInt:&value];
 
@@ -140,7 +140,7 @@
 	
 	if (length < [self length]) {
 		//Truncate and append the ellipsis
-		returnString = [[self substringToIndex:length] stringByAppendingString:@"É"];
+		returnString = [[self substringToIndex:length] stringByAppendingString:[NSString stringWithUTF8String:"â€¦"]];
 	} else {
 		//We don't need to truncate, so don't append an ellipsis
 		returnString = self;
@@ -479,7 +479,7 @@
 					//decimal: "#..."
 //					NSLog(@"characterAtIndex:1 == '%C'", [entity characterAtIndex:1]);
 					[numScanner setScanLocation:1];
-					appendIt = [numScanner scanUnsignedInt:(int *)&number];
+					appendIt = [numScanner scanUnsignedInt:&number];
 				}
 //				NSLog(@"appendIt: %u", appendIt);
 				if(appendIt) {
