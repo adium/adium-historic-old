@@ -8,6 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 
+#define CL_PREFERENCE_GROUP		@"Contact List Preferences"
+#define CL_DEFAULT_FONT			@"Default Font"
+#define CL_ENABLE_GRID			@"Enable Grid"
+#define CL_ALTERNATING_GRID		@"Alternating Grid"
+#define CL_BACKGROUND_COLOR		@"Background Color"
+#define CL_GRID_COLOR			@"Grid Color"
+#define CL_OPACITY				@"Opacity"
 
 @interface AICLPreferences : AIPlugin {
     id	prefView;
@@ -18,11 +25,20 @@
 
     id	enableGridSwitch;
     id	alternatingGridSwitch;
+
+    
     id	opacitySlider;
+    id	opacityPercentLabel;
 
     id	backgroundColorWell;
-    id	alternatingColorWell;
+    id	gridColorWell;
+    id	gridColorLabel;
+
+    AIPreferenceController*     preferenceController;
 }
 - (void) initialize: (id) foo;
 
+- (void) fontPopUps: (id) sender;
+- (void) gridOptions: (id) sender;
+- (void) colorAndOpacity: (id) sender;
 @end

@@ -8,8 +8,10 @@
 
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
-#import "AIAccountListPreferencesPlugin.h"
+
 #import "AIAdium.h"
+
+#import "AIPreferenceController.h"
 
 #import "AICLPreferences.h"
 
@@ -23,8 +25,9 @@
 @end
 #pragma mark -
 @implementation AICLPreferences
-- (void) initialize: (id) preferenceController
+- (void) initialize: (id) _preferenceController
 {
+    preferenceController = [_preferenceController retain];
     [preferenceController addPreferenceView:[[AIPreferenceViewController controllerWithName:CL_PREF_TITLE
                                                                                categoryName:PREFERENCE_CATEGORY_INTERFACE
                                                                                        view:prefView] retain]];
@@ -35,7 +38,91 @@
 
 - (void) fontPopUps: (id) sender
 {
+    if (sender == fontPopUp)
+    {
+        [self _buildFontFaceMenuFor: facePopUp
+                              using: fontPopUp];
+    }
+    else if (sender == facePopUp)
+    {
 
+    }
+    else if (sender == sizePopUp)
+    {
+
+    }
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+        [[fontPopUp selectedItem] title], @"FONT",
+        [[facePopUp selectedItem] title], @"FACE",
+        [[sizePopUp selectedItem] title], @"SIZE",
+        nil];
+
+    [preferenceController setPreference: dict
+                                 forKey: CL_DEFAULT_FONT
+                                  group: CL_PREFERENCE_GROUP];
+}
+
+- (void) gridOptions: (id) sender
+{
+    if (sender == enableGridSwitch)
+    {
+        [preferenceController setPreference: [NSNumber numberWithBool:[sender state]]
+                                     forKey: CL_ENABLE_GRID
+                                      group: CL_PREFERENCE_GROUP];
+
+        [alternatingGridSwitch setEnabled:[sender state]];
+        [gridColorWell setEnabled:[sender state]];
+        [gridColorLabel setEnabled:[sender state]];
+    }
+    else if (sender == alternatingGridSwitch)
+    {
+        [preferenceController setPreference: [NSNumber numberWithBool:[sender state]]
+                                     forKey: CL_ALTERNATING_GRID
+                                      group: CL_PREFERENCE_GROUP];        
+    }
+}
+
+- (void) colorAndOpacity: (id) sender
+{
+    if (sender == backgroundColorWell)
+    {
+        float red, green, blue, alpha;
+        [[sender color] getRed:&red green:&green blue:&blue alpha:&alpha];
+
+        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+            [NSNumber numberWithFloat: red], @"RED",
+            [NSNumber numberWithFloat: green], @"GREEN",
+            [NSNumber numberWithFloat: blue], @"BLUE",
+            [NSNumber numberWithFloat: alpha], @"ALPHA",
+            nil];
+
+        [preferenceController setPreference: dict
+                                     forKey: CL_BACKGROUND_COLOR
+                                      group: CL_PREFERENCE_GROUP];
+    }
+    else if (sender == gridColorWell)
+    {
+        float red, green, blue, alpha;
+        [[sender color] getRed:&red green:&green blue:&blue alpha:&alpha];
+
+        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+            [NSNumber numberWithFloat: red], @"RED",
+            [NSNumber numberWithFloat: green], @"GREEN",
+            [NSNumber numberWithFloat: blue], @"BLUE",
+            [NSNumber numberWithFloat: alpha], @"ALPHA",
+            nil];
+
+        [preferenceController setPreference: dict
+                                     forKey: CL_GRID_COLOR
+                                      group: CL_PREFERENCE_GROUP];        
+    }
+    else if (sender == opacitySlider)
+    {
+        [opacityPercentLabel setStringValue:[NSString stringWithFormat:@"%d", [sender intValue]]];
+        [preferenceController setPreference: [NSNumber numberWithInt:[sender intValue]]
+                                     forKey: CL_OPACITY
+                                      group: CL_PREFERENCE_GROUP];
+    }
 }
 @end
 #pragma mark -
