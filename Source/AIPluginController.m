@@ -244,7 +244,7 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
 													@"External plugins may cause crashes and odd behavior after updating Adium.  Disable this plugin if you experience any issues.",
 													@"Disable", 
 													@"Cancel",
-													nil) == NSAlertAlternateReturn){
+													nil) == NSAlertDefaultReturn){
 						
 						//Disable the plugin
 						NSString	*disabledPath = [[pluginPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Plugins (Disabled)"];
