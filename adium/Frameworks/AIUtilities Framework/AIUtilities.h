@@ -47,3 +47,6 @@
 #import "AITabViewAdditions.h"
 #import "AIFontAdditions.h"
 #import "AIStringAdditions.h"
+#import "AIFlexibleTableView.h"
+#import "AIFlexibleTableCell.h"
+#import "AIFlexibleTableColumn.h"

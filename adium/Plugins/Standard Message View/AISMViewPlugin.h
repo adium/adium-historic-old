@@ -19,7 +19,7 @@
 @protocol AIMessageViewController;
 
 @interface AISMViewPlugin : AIPlugin <AIMessageViewController> {
-
+    NSMutableArray		*controllerArray;
 }
 
 @end
