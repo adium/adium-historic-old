@@ -18,6 +18,8 @@
 #define	CONTACT_LIST_EMPTY_MESSAGE      AILocalizedString(@"No Available Contacts","Message to display when the contact list is empty")
 #define TOOL_TIP_CHECK_INTERVAL			45.0	//Check for mouse X times a second
 #define TOOL_TIP_DELAY					25.0	//Number of check intervals of no movement before a tip is displayed
+#define EMPTY_HEIGHT					48
+#define EMPTY_WIDTH						140
 
 @implementation AIListOutlineView
 
@@ -61,50 +63,7 @@
 }
 
 
-
-//Frame and superview tracking -----------------------------------------------------------------------------------------
-#pragma mark Frame and superview tracking
-//We're going to move to a new superview
-//- (void)viewWillMoveToSuperview:(NSView *)newSuperview
-//{
-//	[super viewWillMoveToSuperview:newSuperview];
-//
-//	//Stop tracking our scrollview's frame
-//	if([self enclosingScrollView]){
-//		[[NSNotificationCenter defaultCenter] removeObserver:self
-//														name:NSViewFrameDidChangeNotification
-//													  object:[self enclosingScrollView]];
-//	}
-//	
-//	//Configure various things for the new superview
-//	[self configureSelectionHidingForNewSuperview:newSuperview];
-//	[self configureTooltipsForNewSuperview:newSuperview];
-//}
-//
-////We've moved to a new superview
-//- (void)viewDidMoveToSuperview
-//{	
-//	[super viewDidMoveToSuperview];
-//	
-//	//Start tracking our new scrollview's frame
-//	if([self enclosingScrollView]){
-//        [[NSNotificationCenter defaultCenter] addObserver:self
-//												 selector:@selector(frameDidChange:)
-//													 name:NSViewFrameDidChangeNotification 
-//												   object:[self enclosingScrollView]];
-//		[self performSelector:@selector(frameDidChange:) withObject:nil afterDelay:0.0001];
-//	}
-//}
-//
-////Our enclosing scrollview has changed size
-//- (void)frameDidChange:(NSNotification *)notification
-//{
-//	[self configureTooltipsForNewScrollViewFrame];
-//}
-
-
 //Selection Hiding -----------------------------------------------------------------------------------------------------
-#warning do this at the cell level so as not to lose actual selection
 //When our view is inserted into a window, observe that window so we can hide selection when it's not main
 - (void)configureSelectionHidingForNewSuperview:(NSView *)newSuperview
 {
@@ -116,23 +75,18 @@
     }
 }
 
-//Restore the selection
-- (void)windowBecameMain:(NSNotification *)notification
-{
+//Redraw our cells so they can select or de-select
+- (void)windowBecameMain:(NSNotification *)notification{
 	[self setNeedsDisplay:YES];
 }
-
-//Hide the selection
-- (void)windowResignedMain:(NSNotification *)notification
-{
+- (void)windowResignedMain:(NSNotification *)notification{
 	[self setNeedsDisplay:YES];
 }
 
     
 
+//Sizing -----------------------------------------------------------------------------------------------------
 // Returns our desired size
-#define EMPTY_HEIGHT				48
-#define EMPTY_WIDTH					140
 - (int)desiredHeight
 {
 	int desiredHeight = [self totalHeight]+2;
