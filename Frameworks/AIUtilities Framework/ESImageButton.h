@@ -12,9 +12,9 @@
 
 /*!
  * @class ESImageButton
- * @brief Button which displays an image when clicked for use with an NSToolbarItem (<tt>MVMenuButton</tt> subclass)
+ * @brief Button which displays an image when clicked for use as the custom view of an NSToolbarItem.
  *
- * Button which displays an image when clicked for use as the custom view of an NSToolbarItem.  The image remains as long as the mouse button is held down; if it is an animating image, it will animate.  See <tt>MVMenuButton</tt> for the API.
+ * The image remains as long as the mouse button is held down; if it is an animating image, it will animate.  See <tt>MVMenuButton</tt> for the API.
  */
 @interface ESImageButton : MVMenuButton {
 	ESFloater	*imageFloater;
