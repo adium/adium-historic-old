@@ -132,7 +132,6 @@
         [self setCorrectScrollbarVisibility];
     }
     if (updateShadowsWhileScrolling){
-        [self display];
         [[self window] compatibleInvalidateShadow];
     }
 }
