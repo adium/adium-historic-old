@@ -45,6 +45,7 @@
     
     // Set the values of the checkboxes
     [checkBox_showContext setState:[[preferenceDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue]];
+	[textField_linesToDisplay setIntValue:[[preferenceDict objectForKey:KEY_DISPLAY_LINES] intValue]];
 
 }
 
@@ -55,6 +56,11 @@
 											 forKey:KEY_DISPLAY_CONTEXT
 											  group:PREF_GROUP_CONTEXT_DISPLAY];
 		
+	} else if( sender == textField_linesToDisplay ) {
+		
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+											 forKey:KEY_DISPLAY_LINES
+											  group:PREF_GROUP_CONTEXT_DISPLAY];
 	}
 	
 }

@@ -53,18 +53,19 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 		linesToDisplay = [[preferenceDict objectForKey:KEY_DISPLAY_LINES] intValue];
 
 		if( shouldDisplay && linesToDisplay > 0 && !isObserving ) {
-			//Observe new message windows
+			
+			//Observe new message windows only if we aren't already observing them
 			isObserving = YES;
 			[[adium notificationCenter] addObserver:self selector:@selector(addContextDisplayToWindow:) name:Chat_DidOpen object:nil];
-			[[adium notificationCenter] addObserver:self selector:@selector(addContextDisplayToWindow:) name:Content_FirstContentRecieved object:nil];			
-		} else {
-			//Remove observers
+		} else if ( isObserving && (!shouldDisplay || linesToDisplay <= 0) ) {
+			
+			//Remove observer
 			isObserving = NO;
 			[[adium notificationCenter] removeObserver:self name:Chat_DidOpen object:nil];
-			[[adium notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
+		
 		}
 		
-    }
+	}
 }
 
 // Save the last few lines of a conversation when it closes
@@ -81,10 +82,10 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 	dict = [NSMutableDictionary dictionary];
 	enumerator = [[chat contentObjectArray] objectEnumerator];
 	cnt = 1;
-		
+	
 	// Only save if we need to save more AND there is still unsaved content available
 	while( (cnt <= linesToDisplay) && (content = [enumerator nextObject]) ) {
-		
+				
 		// Only record actual messages, no context or status
 		if( [content isKindOfClass:[AIContentMessage class]] && ![content isKindOfClass:[AIContentContext class]]) {
 			contentDict = [self savableContentObject:content];
@@ -147,21 +148,23 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 	AIContentContext	*responseContent;
 	id					source;
 	id					dest;
-	
+		
 	chat = (AIChat *)[notification object];
 
 	NSDictionary	*chatDict = [[chat listObject] preferenceForKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
 	NSDictionary	*messageDict;
 	
-	if( chatDict ) {
+	if( chatDict && shouldDisplay && linesToDisplay > 0 ) {
 		
-		//How many messages have we added already?
-		cnt = 0;
+		//Max number of lines to display
+		cnt = ([chatDict count] >= linesToDisplay ? linesToDisplay : [chatDict count]);
 		
 		//Add messages until: we add our max (linesToDisplay) OR we run out of saved messages
-		while( (messageDict = [chatDict objectForKey:[[NSNumber numberWithInt:[chatDict count]-cnt] stringValue]]) && cnt < linesToDisplay ) {
+		while( (messageDict = [chatDict objectForKey:[[NSNumber numberWithInt:cnt] stringValue]]) && cnt > 0 ) {
 			
-			cnt++;
+			//NSLog(@"#### Adding number %d: %@",[chatDict count]-cnt,[[NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]] string]);
+			
+			cnt--;
 			
 			type = [messageDict objectForKey:@"Type"];
 			

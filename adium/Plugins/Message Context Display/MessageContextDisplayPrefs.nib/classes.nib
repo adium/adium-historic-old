@@ -14,10 +14,9 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {}; 
             CLASS = DCMessageContextDisplayPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkBox_showContext" = NSButton; }; 
+            OUTLETS = {"checkBox_showContext" = NSButton; "textField_linesToDisplay" = NSTextField; }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
