@@ -5,10 +5,11 @@ Adam Atlas
 Colin Barrett
 Erik J. Barzeski
 Adam Betts
-Mac-arena the Bored Zo
 Jorge Salvador Caffarena
+David Clark
 Nelson Elhage
 Ken Ferry
+Christopher Forsythe
 Brian Ganninger
 Arno Hautala
 Asher Haig
@@ -17,8 +18,8 @@ Stephen Holt
 Adam Iser
 Ian Krieg
 Scott Lamb
+Mac-arena the Bored Zo
 Chris Serino
-David Clark
 Jeffrey Melloy
 Laura Natcher
 Stephen Poprocki
