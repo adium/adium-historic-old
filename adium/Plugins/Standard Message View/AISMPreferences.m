@@ -88,16 +88,12 @@
 		[popUp_prefixFormat selectItemWithRepresentedObject:[preferenceDict objectForKey:KEY_SMV_PREFIX_INCOMING]];	
 
 		// Custom message style
-		[popUp_messageColoring selectItemWithTitle:[preferenceDict objectForKey:KEY_SMV_MESSAGE_STYLE_NAME]];
-				
-		[colorWell_incomingBackground setColor:[[preferenceDict objectForKey:KEY_SMV_CUSTOM_INCOMING_PREFIX_LIGHT_COLOR] representedColor]];
-		[colorWell_incomingHeader setColor:[[preferenceDict objectForKey:KEY_SMV_CUSTOM_INCOMING_PREFIX_COLOR] representedColor]];
-		[colorWell_outgoingBackground setColor:[[preferenceDict objectForKey:KEY_SMV_CUSTOM_OUTGOING_PREFIX_LIGHT_COLOR] representedColor]];
-		[colorWell_outgoingHeader setColor:[[preferenceDict objectForKey:KEY_SMV_CUSTOM_OUTGOING_PREFIX_COLOR] representedColor]];
-
+		NSString *currentStyleName = [preferenceDict objectForKey:KEY_SMV_MESSAGE_STYLE_NAME];
+		[popUp_messageColoring selectItemWithTitle:currentStyleName];
+		
 		// Prefix Font
 		NSFont		*selectedFont = [[preferenceDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont];
-		[textField_desiredFont setFont:selectedFont];		
+		[textField_desiredFont setFont:selectedFont];
 	}
 }
     
@@ -171,6 +167,13 @@
 
 - (IBAction)createCustomColors:(id)sender
 {
+	
+	NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+	[colorWell_incomingBackground setColor:[[preferenceDict objectForKey:KEY_SMV_CUSTOM_INCOMING_PREFIX_LIGHT_COLOR] representedColor]];
+	[colorWell_incomingHeader setColor:[[preferenceDict objectForKey:KEY_SMV_CUSTOM_INCOMING_PREFIX_COLOR] representedColor]];
+	[colorWell_outgoingBackground setColor:[[preferenceDict objectForKey:KEY_SMV_CUSTOM_OUTGOING_PREFIX_LIGHT_COLOR] representedColor]];
+	[colorWell_outgoingHeader setColor:[[preferenceDict objectForKey:KEY_SMV_CUSTOM_OUTGOING_PREFIX_COLOR] representedColor]];
+	
 	[NSApp beginSheet:window_customStyle
 	   modalForWindow:[view window]
 		modalDelegate:nil
@@ -184,40 +187,42 @@
 
 - (IBAction)saveCustomColors:(id)sender
 {
-	if( sender == button_cancelCustom) {
-		[NSApp stopModal];
-    } else if( sender == button_saveCustom ) {
-     
-		NSMutableDictionary *colorDict = [NSMutableDictionary dictionary];
-		[colorDict setObject:[[colorWell_incomingBackground color] stringRepresentation] forKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR];
-		[colorDict setObject:[[colorWell_incomingHeader color] stringRepresentation] forKey:KEY_SMV_INCOMING_PREFIX_COLOR];
-		[colorDict setObject:[[colorWell_outgoingBackground color] stringRepresentation] forKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR];
-		[colorDict setObject:[[colorWell_outgoingHeader color] stringRepresentation] forKey:KEY_SMV_OUTGOING_PREFIX_COLOR];
-		
-		[[popUp_messageColoring selectedItem] setRepresentedObject:colorDict];
-		
-		[self changePreference:popUp_messageColoring];
-
-		// Set the appropriate prefs
-		[[adium preferenceController] setPreference:[colorDict objectForKey:KEY_SMV_INCOMING_PREFIX_COLOR]
-                                             forKey:KEY_SMV_CUSTOM_INCOMING_PREFIX_COLOR
-                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-		[[adium preferenceController] setPreference:[colorDict objectForKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR]
-                                             forKey:KEY_SMV_CUSTOM_INCOMING_PREFIX_LIGHT_COLOR
-                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-		[[adium preferenceController] setPreference:[colorDict objectForKey:KEY_SMV_OUTGOING_PREFIX_COLOR]
-                                             forKey:KEY_SMV_CUSTOM_OUTGOING_PREFIX_COLOR
-                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-		[[adium preferenceController] setPreference:[colorDict objectForKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR]
-                                             forKey:KEY_SMV_CUSTOM_OUTGOING_PREFIX_LIGHT_COLOR
-                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-		
-        [NSApp stopModal];
-				
-    }
 	
+	NSMutableDictionary *colorDict = [NSMutableDictionary dictionary];
+	[colorDict setObject:[[colorWell_incomingBackground color] stringRepresentation] forKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR];
+	[colorDict setObject:[[colorWell_incomingHeader color] stringRepresentation] forKey:KEY_SMV_INCOMING_PREFIX_COLOR];
+	[colorDict setObject:[[colorWell_outgoingBackground color] stringRepresentation] forKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR];
+	[colorDict setObject:[[colorWell_outgoingHeader color] stringRepresentation] forKey:KEY_SMV_OUTGOING_PREFIX_COLOR];
+	
+	[[popUp_messageColoring selectedItem] setRepresentedObject:colorDict];
+		
+	// Set the appropriate prefs
+	
+	[self changePreference:popUp_messageColoring];
+
+	[[adium preferenceController] setPreference:[[colorWell_incomingHeader color] stringRepresentation]
+										 forKey:KEY_SMV_CUSTOM_INCOMING_PREFIX_COLOR
+										  group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+	[[adium preferenceController] setPreference:[[colorWell_incomingBackground color] stringRepresentation]
+										 forKey:KEY_SMV_CUSTOM_INCOMING_PREFIX_LIGHT_COLOR
+										  group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+	[[adium preferenceController] setPreference:[[colorWell_outgoingHeader color] stringRepresentation]
+										 forKey:KEY_SMV_CUSTOM_OUTGOING_PREFIX_COLOR
+										  group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+	[[adium preferenceController] setPreference:[[colorWell_outgoingBackground color] stringRepresentation]	
+										 forKey:KEY_SMV_CUSTOM_OUTGOING_PREFIX_LIGHT_COLOR
+										  group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+	
+	[NSApp stopModal];
 }
 
+- (IBAction)cancelCustomColors:(id)sender
+{
+	NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+	[popUp_messageColoring selectItemWithTitle:[preferenceDict objectForKey:KEY_SMV_MESSAGE_STYLE_NAME]];
+		
+	[NSApp stopModal];
+}
 
 //Build the time stamp selection menu
 - (void)_buildTimeStampMenu
