@@ -901,8 +901,6 @@ static BOOL didInitSSL = NO;
 			
 			//***NOTE: listObject is probably the wrong thing to use here - won't that mess up multiuser chats?
 			AIListObject		*listObject = [chat listObject];
-			
-			NSString			*body = [self encodedAttributedString:[contentMessage message] forListObject:listObject];
 			GaimConversation	*conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
 			
 			//create a new conv if necessary - this happens, for example, if an existing chat is suddenly our responsibility
@@ -919,25 +917,81 @@ static BOOL didInitSSL = NO;
 				
 				[chatDict setObject:chat forKey:[listObject uniqueObjectID]];                
 			}
+
+			NSAttributedString  *message = [contentMessage message];
+			NSString			*encodedMessage;
 			
-			switch (gaim_conversation_get_type(conv)) {
+			switch (gaim_conversation_get_type(conv)) {				
 				case GAIM_CONV_IM:
 				{
-					const char			*destination = [[listObject UID] UTF8String];
+					GaimConvIm			*im = gaim_conversation_get_im_data(conv);
+					GaimConvImFlags		flags = ([contentMessage autoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
 					
-					/*[controller sendIMWithGC:gc
-								 destination:destination 
-										body:[body UTF8String] 
-									   flags:([contentMessage autoreply] ? GAIM_CONV_IM_AUTO_RESP : 0)];*/
+					//If this connection doesn't support new lines, send all lines before newlines as separate messages
+					if (gc && (gc->flags & GAIM_CONNECTION_NO_NEWLINES)) {
+						NSRange		endlineRange;
+						NSRange		returnRange;
+						
+						while (((endlineRange = [[message string] rangeOfString:@"\n"]).location) != NSNotFound ||
+							   ((returnRange = [[message string] rangeOfString:@"\r"]).location) != NSNotFound){
+							
+							//Use whichever endline character is found first
+							NSRange				operativeRange = (endlineRange.location < returnRange.location) ? endlineRange : returnRange;
+							
+							if (operativeRange.location > 0){
+								NSAttributedString  *thisPart;
+
+								thisPart = [message attributedSubstringFromRange:NSMakeRange(0,operativeRange.location-1)];
+								encodedMessage = [self encodedAttributedString:thisPart forListObject:listObject];								
+								gaim_conv_im_send_with_flags(im,[encodedMessage UTF8String],flags);
+							}
+							
+							message = [message attributedSubstringFromRange:NSMakeRange(operativeRange.location+operativeRange.length,[[message string] length]-operativeRange.location)];
+						}
+						
+					}
 					
-					serv_send_im(gc, destination, [body UTF8String],[contentMessage autoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
-					//gaim_conv_im_send(im, [body UTF8String]);
+					if ([message length]){
+						encodedMessage = [self encodedAttributedString:message forListObject:listObject];								
+						gaim_conv_im_send_with_flags(im,[encodedMessage UTF8String],flags);
+					}
+
 					sent = YES;
 					break;
 				}
 				case GAIM_CONV_CHAT:
 				{
-					gaim_conv_chat_send(gaim_conversation_get_chat_data(conv),[body UTF8String]);
+					GaimConvChat	*gaimChat = gaim_conversation_get_chat_data(conv);
+					
+					//If this connection doesn't support new lines, send all lines before newlines as separate messages
+					if (gc && (gc->flags & GAIM_CONNECTION_NO_NEWLINES)) {
+						NSRange				endlineRange;
+						NSRange				returnRange;
+						NSString			*encodedMessage;
+						
+						while (((endlineRange = [[message string] rangeOfString:@"\n"]).location) != NSNotFound ||
+							   ((returnRange = [[message string] rangeOfString:@"\r"]).location) != NSNotFound){
+
+							//Use whichever endline character is found first
+							NSRange				operativeRange = (endlineRange.location < returnRange.location) ? endlineRange : returnRange;
+
+							if (operativeRange.location > 0){
+								NSAttributedString  *thisPart;
+								
+								thisPart = [message attributedSubstringFromRange:NSMakeRange(0,operativeRange.location-1)];
+								encodedMessage = [self encodedAttributedString:thisPart forListObject:listObject];								
+								gaim_conv_chat_send(gaimChat,[encodedMessage UTF8String]);
+							}
+							
+							message = [message attributedSubstringFromRange:NSMakeRange(operativeRange.location+operativeRange.length,[[message string] length]-operativeRange.location)];
+						}
+					}
+					
+					if ([message length]){
+						encodedMessage = [self encodedAttributedString:message forListObject:listObject];								
+						gaim_conv_chat_send(gaimChat,[encodedMessage UTF8String]);	
+					}
+					
 					sent = YES;
 					break;
 				}
@@ -1713,16 +1767,21 @@ static BOOL didInitSSL = NO;
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-	return([AIHTMLDecoder encodeHTML:inAttributedString
-							 headers:YES
-							fontTags:YES
-				  includingColorTags:YES
-					   closeFontTags:YES
-						   styleTags:YES
-		  closeStyleTagsOnFontChange:YES
-					  encodeNonASCII:NO
-						  imagesPath:nil
-				   attachmentsAsText:YES]);
+	if (gc->flags & GAIM_CONNECTION_HTML){
+		return([AIHTMLDecoder encodeHTML:inAttributedString
+								 headers:YES
+								fontTags:YES
+					  includingColorTags:YES
+						   closeFontTags:YES
+							   styleTags:YES
+			  closeStyleTagsOnFontChange:YES
+						  encodeNonASCII:NO
+							  imagesPath:nil
+					   attachmentsAsText:YES
+							  simpleTagsOnly:NO]);
+	}else{
+		return [inAttributedString string];
+	}
 }
 
 /***************************/
