@@ -204,6 +204,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
                 //textEnumerator = nil; emoticonEnumerator = nil;
             }
         }
+		[possibleReplacements release];
 
         
         //Move to the next possible location of an emoticon
