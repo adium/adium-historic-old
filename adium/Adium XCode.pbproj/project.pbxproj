@@ -9883,7 +9883,6 @@
 				34BD9DB705314751000AB133,
 				34BD9DB805314751000AB133,
 				34BD9DB905314751000AB133,
-				34BD9DBA05314751000AB133,
 				34BD9DBB05314751000AB133,
 				34BD9DBC05314751000AB133,
 				34BD9DBD05314751000AB133,
@@ -9955,12 +9954,6 @@
 		};
 		34BD9DB905314751000AB133 = {
 			fileRef = F570A61703704F6601A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9DBA05314751000AB133 = {
-			fileRef = 4BF5BA0E042F3CB200A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -10056,7 +10049,6 @@
 				34BD9DCD05314751000AB133,
 				34BD9DCE05314751000AB133,
 				34BD9DCF05314751000AB133,
-				34BD9DD005314751000AB133,
 				34BD9DD105314751000AB133,
 				34BD9DD205314751000AB133,
 				34BD9DD305314751000AB133,
@@ -10117,12 +10109,6 @@
 		};
 		34BD9DCF05314751000AB133 = {
 			fileRef = F570A61803704F6601A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9DD005314751000AB133 = {
-			fileRef = 4BF5BA0F042F3CB200A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -23291,24 +23277,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BF5BA0E042F3CB200A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIHandle.h;
-			path = "Frameworks/Adium Framework/AIHandle.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BF5BA0F042F3CB200A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIHandle.m;
-			path = "Frameworks/Adium Framework/AIHandle.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BF5BA10042F3CB200A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -28777,8 +28745,6 @@
 			children = (
 				4B82138E049CA6CC00A8010A,
 				4B82138F049CA6CC00A8010A,
-				4BF5BA0E042F3CB200A8010A,
-				4BF5BA0F042F3CB200A8010A,
 				4BF5BA14042F3CB200A8010A,
 				4BF5BA15042F3CB200A8010A,
 				4BF5BA12042F3CB200A8010A,
