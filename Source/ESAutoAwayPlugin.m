@@ -95,20 +95,22 @@
 			
 			targetStatusState = [[adium statusController] statusStateWithUniqueStatusID:autoAwayID];
 			
-			enumerator = [[[adium accountController] accountArray] objectEnumerator];
-			while(account = [enumerator nextObject]){
-				AIStatus	*currentStatusState = [account statusState];
-				if([currentStatusState statusType] == AIAvailableStatusType){
-					//Store the state the account is in at present
-					[previousStatusStateDict setObject:currentStatusState
-												forKey:[NSNumber numberWithUnsignedInt:[account hash]]];
-					
-					if([account online]){
-						//If online, set the state
-						[account setStatusState:targetStatusState];
-					}else{
-						//If offline, set the state without coming online
-						[account setStatusStateAndRemainOffline:targetStatusState];
+			if(targetStatusState){
+				enumerator = [[[adium accountController] accountArray] objectEnumerator];
+				while(account = [enumerator nextObject]){
+					AIStatus	*currentStatusState = [account statusState];
+					if([currentStatusState statusType] == AIAvailableStatusType){
+						//Store the state the account is in at present
+						[previousStatusStateDict setObject:currentStatusState
+													forKey:[NSNumber numberWithUnsignedInt:[account hash]]];
+						
+						if([account online]){
+							//If online, set the state
+							[account setStatusState:targetStatusState];
+						}else{
+							//If offline, set the state without coming online
+							[account setStatusStateAndRemainOffline:targetStatusState];
+						}
 					}
 				}
 			}
