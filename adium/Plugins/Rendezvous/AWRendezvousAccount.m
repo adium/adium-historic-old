@@ -307,10 +307,10 @@
         NSData  *data;
         if([key compare:@"IdleSince"] == NSOrderedSame){
             NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
-	    
-	    [self setStatus:AWEzvIdle withMessage:[self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]];
+			
+			[libezv setStatus:AWEzvIdle withMessage:[self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]];
             [self setAccountIdleTo:idleSince];
-	    
+			
         } else if ( ([key compare:@"AwayMessage"] == NSOrderedSame)){
             NSAttributedString	*attributedString = nil;
             
