@@ -22,6 +22,7 @@
 #import "AIListGroupMockieCell.h"
 #import "AIListContactMockieCell.h"
 #import "AIListContactBrickCell.h"
+#import "AIListContactBubbleToFitCell.h"
 
 #import "AIListLayoutWindowController.h"
 
@@ -247,6 +248,35 @@
 	//Layout ------------
     if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_LAYOUT])){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
+		BOOL			windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+		
+		//Cells
+		[groupCell release];
+		[contentCell release];
+		if(windowStyle == WINDOW_STYLE_MOCKIE){
+			groupCell = [[AIListGroupMockieCell alloc] init];	
+			contentCell = [[AIListContactMockieCell alloc] init];
+		}else{
+			Class	cellClass;
+			
+			switch([[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_CELL_STYLE] intValue]){
+				case CELL_STYLE_STANDARD: 	cellClass = [AIListGroupCell class]; break;
+				case CELL_STYLE_BRICK: 		cellClass = [AIListGroupGradientCell class]; break;
+				case CELL_STYLE_BUBBLE: 	cellClass = [AIListGroupGradientCell class]; break;
+				default: /*case CELL_STYLE_BUBBLE_FIT:*/ cellClass = [AIListGroupGradientCell class]; break;
+			}
+			groupCell = [[cellClass alloc] init];	
+			
+			switch([[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE] intValue]){
+				case CELL_STYLE_STANDARD: 	cellClass = [AIListContactCell class]; break;
+				case CELL_STYLE_BRICK: 		cellClass = [AIListContactBrickCell class]; break;
+				case CELL_STYLE_BUBBLE: 	cellClass = [AIListContactBubbleCell class]; break;
+				default: /*case CELL_STYLE_BUBBLE_FIT:*/ cellClass = [AIListContactBubbleToFitCell class]; break;
+			}
+			contentCell = [[cellClass alloc] init];
+		}
+		[contactListView setGroupCell:groupCell];
+		[contactListView setContentCell:contentCell];
 		
 		//Alignment
 		[contentCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue]];
@@ -261,7 +291,7 @@
 		[contentCell setUserIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue]];
 		[contentCell setStatusIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
 		[contentCell setServiceIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];
-		
+
 		//Redisplay
 		[contactListView setGroupCell:groupCell];
 		[contactListView setContentCell:contentCell];
@@ -273,33 +303,16 @@
 
 - (void)configureListView
 {
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 	float	backgroundAlpha	= BACKGROUND_ALPHA;
 	
 	
-	BOOL	windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
-																	group:PREF_GROUP_LIST_LAYOUT] intValue];
+	BOOL	windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 
-	//Cleanup first
-	[groupCell release];
-	[contentCell release];
-	
-	
-	
 	//Targeting
     [contactListView setTarget:self];
 	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
 
-	//Cells
-	if(windowStyle == WINDOW_STYLE_MOCKIE){
-		groupCell = [[AIListGroupMockieCell alloc] init];	
-		contentCell = [[AIListContactMockieCell alloc] init];
-	}else{
-		groupCell = (GROUPS_USE_GRADIENT_CELL ? [[AIListGroupGradientCell alloc] init] : [[AIListGroupCell alloc] init]);	
-		contentCell = [[AIListContactBrickCell alloc] init];//(CONTACTS_USE_BUBBLE_CELL ? [[AIListContactBubbleCell alloc] init] : [[AIListContactCell alloc] init]);
-	}
-	[contactListView setGroupCell:groupCell];
-	[contactListView setContentCell:contentCell];
-	
 	//Background Coloring
 	if(windowStyle == WINDOW_STYLE_MOCKIE) backgroundAlpha = 0.0;
 	[contactListView setDrawsAlternatingRows:(backgroundAlpha != 0.0 ? DRAW_ALTERNATING_GRID : NO)];

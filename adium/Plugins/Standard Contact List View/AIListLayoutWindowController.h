@@ -20,6 +20,9 @@
 #define KEY_LIST_LAYOUT_STATUS_ICON_POSITION	@"Status Icon Position"
 #define KEY_LIST_LAYOUT_SERVICE_ICON_POSITION	@"Service Icon Position"
 
+#define KEY_LIST_LAYOUT_CONTACT_CELL_STYLE		@"Contact Cell Style"
+#define KEY_LIST_LAYOUT_GROUP_CELL_STYLE		@"Group Cell Style"
+
 typedef enum {
 	WINDOW_STYLE_STANDARD = 0,
     WINDOW_STYLE_MOCKIE,
@@ -36,15 +39,22 @@ typedef enum {
 	LIST_POSITION_BADGE_RIGHT,
 } LIST_POSITION;
 
+typedef enum {
+	CELL_STYLE_STANDARD = 0,
+    CELL_STYLE_BRICK,
+    CELL_STYLE_BUBBLE,
+    CELL_STYLE_BUBBLE_FIT
+} LIST_CELL_STYLE;
+
 @interface AIListLayoutWindowController : AIWindowController {
 	IBOutlet		NSPopUpButton		*popUp_contactTextAlignment;
 	IBOutlet		NSPopUpButton		*popUp_groupTextAlignment;
 	IBOutlet		NSPopUpButton		*popUp_windowStyle;
-	IBOutlet		NSPopUpButton		*popUp_groupStyle;
-	IBOutlet		NSPopUpButton		*popUp_contactStyle;
 	IBOutlet		NSPopUpButton		*popUp_userIconPosition;
 	IBOutlet		NSPopUpButton		*popUp_statusIconPosition;
 	IBOutlet		NSPopUpButton		*popUp_serviceIconPosition;
+	IBOutlet		NSPopUpButton		*popUp_contactCellStyle;
+	IBOutlet		NSPopUpButton		*popUp_groupCellStyle;
 
 	IBOutlet		NSButton			*checkBox_userIconVisible;
 	IBOutlet		NSButton			*checkBox_extendedStatusVisible;

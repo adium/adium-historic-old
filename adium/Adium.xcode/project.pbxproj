@@ -5221,6 +5221,7 @@
 				4BF28D6006BA9AA600B3FE6F,
 				4B25362706BECC3E003498D4,
 				4B25362D06BECC8F003498D4,
+				4B64894306C15E58004C40F0,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5874,6 +5875,7 @@
 				4BF28D6106BA9AA600B3FE6F,
 				4B25362806BECC3E003498D4,
 				4B25362E06BECC8F003498D4,
+				4B64894406C15E58004C40F0,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12960,6 +12962,36 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B64894106C15E57004C40F0 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIListContactBubbleToFitCell.h;
+			path = "Plugins/Standard Contact List View/AIListContactBubbleToFitCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B64894206C15E58004C40F0 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIListContactBubbleToFitCell.m;
+			path = "Plugins/Standard Contact List View/AIListContactBubbleToFitCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B64894306C15E58004C40F0 = {
+			fileRef = 4B64894106C15E57004C40F0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B64894406C15E58004C40F0 = {
+			fileRef = 4B64894206C15E58004C40F0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B6660A204ADF2DD00A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -16075,6 +16107,8 @@
 				4BF28D5F06BA9AA600B3FE6F,
 				4B12D41806B9C93600186CDD,
 				4B12D41906B9C93600186CDD,
+				4B64894106C15E57004C40F0,
+				4B64894206C15E58004C40F0,
 				4B25362506BECC3E003498D4,
 				4B25362606BECC3E003498D4,
 				4B1EE91F06B7E22900A919E9,

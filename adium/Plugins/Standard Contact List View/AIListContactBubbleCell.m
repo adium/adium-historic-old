@@ -9,7 +9,7 @@
 #import "AIListContactBubbleCell.h"
 
 #define BUBBLE_TOP_PADDING		0
-#define BUBBLE_BOTTOM_PADDING	1
+#define BUBBLE_BOTTOM_PADDING	0
 #define EDGE_INDENT 			4
 #define BUBBLE_NAME_ONLY		YES
 
@@ -32,6 +32,7 @@
 - (int)bottomPadding{
 	return([super bottomPadding] + BUBBLE_BOTTOM_PADDING);
 }
+#warning need a real fix...
 - (int)leftPadding{
 	return([super leftPadding] + EDGE_INDENT);
 }
@@ -46,13 +47,8 @@
 	
 	//Draw our label
 	if(labelColor){
-		NSRect		labelRect = rect;//cellFrame;
+		NSRect		labelRect = [self bubbleRectForFrame:rect];
 		
-		//Restict our label to the object name if desired
-		if(BUBBLE_NAME_ONLY){				
-			labelRect.size.width = [[self displayNameStringWithAttributes:NO color:nil] size].width + (EDGE_INDENT * 2);
-		}
-
 		//Retrieve the label and shift it into position
 		NSBezierPath *pillPath = [NSBezierPath bezierPathWithRoundedRect:labelRect];
 		
@@ -69,7 +65,10 @@
 	}
 }
 
-
-
+//
+- (NSRect)bubbleRectForFrame:(NSRect)rect
+{
+	return(rect);
+}
 
 @end
