@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.18 2004/02/08 03:59:55 adamiser Exp $
+//$Id: AIPluginController.m,v 1.19 2004/02/28 02:25:57 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -70,8 +70,21 @@
 				//Load the plugin
 				pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
 				if(pluginBundle != nil){
+					
+#ifdef 1
 					//Create an instance of the plugin
+					plugin = [[pluginBundle principalClass] newInstanceOfPlugin];					
+#else
+					
+					NSString	*compactedName = [pluginName compactedString];
+					double		timeInterval;
+					NSDate		*startTime = [NSDate date];
+					
 					plugin = [[pluginBundle principalClass] newInstanceOfPlugin];
+					
+					timeInterval = [[NSDate date] timeIntervalSinceDate:startTime];
+					NSLog(@"%@ %f",compactedName, timeInterval);
+#endif
 					
 					if(plugin != nil){
 						//Add the instance to our list
@@ -101,6 +114,7 @@
 			NS_ENDHANDLER
 	    }
 	}
+		NSLog(@"Done with plugins!!!");
 }
 
 //Unload all the plugins
