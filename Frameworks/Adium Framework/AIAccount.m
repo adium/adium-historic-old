@@ -612,4 +612,10 @@
 
 - (void)performRegisterWithPassword:(NSString *)inPassword{}
 
+#pragma mark Debugging
+- (NSString *)description
+{
+	return([NSString stringWithFormat:@"%@:%@",[super description],[self UID]]);
+}
+
 @end
