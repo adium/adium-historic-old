@@ -200,7 +200,7 @@
             }
         } else {
             if (isGroup) {
-                backgroundColor = [(AISCLOutlineView *)controlView labelGroupColor];
+                backgroundColor = [[(AISCLOutlineView *)controlView labelGroupColor] colorWithAlphaComponent:[(AISCLOutlineView *)controlView labelOpacity]];
             } else {
                 backgroundColor = [[[listObject displayArrayForKey:@"Label Color"] averageColor] colorWithAlphaComponent:[(AISCLOutlineView *)controlView labelOpacity]];
             }
@@ -292,7 +292,7 @@
         //Fill the label background now if it would overwrite left views if done later
         if (!labelAroundContactOnly) {
 			if ([(AISCLOutlineView *)controlView useGradient])
-				[[AIGradient gradientWithFirstColor:backgroundColor secondColor:[backgroundColor darkenAndAdjustSaturationBy:0.2] direction:AIVertical] drawInBezierPath:pillPath];
+				[[AIGradient gradientWithFirstColor:backgroundColor secondColor:[backgroundColor darkenAndAdjustSaturationBy:0.2] direction:AIVertical] drawInBezierPath:pillPath fraction:[(AISCLOutlineView *)controlView labelOpacity]];
 			else {
 				[backgroundColor set];
 				[pillPath fill];
@@ -367,7 +367,7 @@
             [pillPath transformUsingAffineTransform:leftViewCompensation];
 		
         if ([(AISCLOutlineView *)controlView useGradient])
-			[[AIGradient gradientWithFirstColor:backgroundColor secondColor:[backgroundColor darkenAndAdjustSaturationBy:0.2] direction:AIVertical] drawInBezierPath:pillPath];
+			[[AIGradient gradientWithFirstColor:backgroundColor secondColor:[backgroundColor darkenAndAdjustSaturationBy:0.2] direction:AIVertical] drawInBezierPath:pillPath fraction:[(AISCLOutlineView *)controlView labelOpacity]];
 		else {
 			[backgroundColor set];
 			[pillPath fill];

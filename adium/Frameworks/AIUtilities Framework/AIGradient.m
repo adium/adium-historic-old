@@ -136,7 +136,7 @@
 	[self _drawInRect:rect useTransparency:YES];
 }
 
-- (void)drawInBezierPath:(NSBezierPath *)inPath
+- (void)drawInBezierPath:(NSBezierPath *)inPath fraction:(float)inFration
 {
 	NSImage *image = [[[NSImage alloc] initWithSize:[inPath bounds].size] autorelease];
 	NSAffineTransform *trans = [NSAffineTransform transform];
@@ -150,7 +150,7 @@
 	[image unlockFocus];
 	
 	[image setFlipped:NO];
-	[image drawAtPoint:keepPoint fromRect:NSMakeRect(0, 0, [image size].width, [image size].height) operation:NSCompositeSourceOver fraction:1.0];	
+	[image drawAtPoint:keepPoint fromRect:NSMakeRect(0, 0, [image size].width, [image size].height) operation:NSCompositeSourceOver fraction:inFration];	
 }
 
 @end
