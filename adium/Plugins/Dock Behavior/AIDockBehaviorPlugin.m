@@ -25,6 +25,7 @@
 @interface AIDockBehaviorPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)eventNotification:(NSNotification *)notification;
+- (BOOL)_upgradeCustomDockBehavior;
 @end
 
 @implementation AIDockBehaviorPlugin
@@ -64,7 +65,11 @@
 
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
-    [self preferencesChanged:nil];
+	//If no upgrade occurred, call preferences manually
+	if (![self _upgradeCustomDockBehavior]){
+		[self preferencesChanged:nil];
+	}
+	
 	[[adium notificationCenter] removeObserver:self
 										  name:Adium_PluginsDidFinishLoading
 										object:nil];		
@@ -174,6 +179,57 @@
 {
     return([[adium preferenceController] preferenceForKey:KEY_DOCK_CUSTOM_BEHAVIOR
 													group:PREF_GROUP_DOCK_BEHAVIOR]);
+}
+
+- (BOOL)_upgradeCustomDockBehavior
+{
+	NSArray			*customBehaviorArray = [[adium preferenceController] preferenceForKey:KEY_DOCK_CUSTOM_BEHAVIOR
+																				group:PREF_GROUP_DOCK_BEHAVIOR]; //Load the user's custom set
+	NSMutableArray  *upgradedArray = [NSMutableArray array];
+	NSDictionary	*eventDict;
+	NSEnumerator	*enumerator;
+	BOOL			madeChanges = NO;
+	//        
+
+	enumerator = [customBehaviorArray objectEnumerator];
+	while((eventDict = [enumerator nextObject])){
+		
+		NSMutableDictionary *upgradedEventDict = nil;
+		NSString			*eventID = [eventDict objectForKey:KEY_EVENT_DOCK_EVENT_ID];
+		if ([eventID isEqualToString:@"Contact_StatusOnlineNO"]){
+			upgradedEventDict = 		[[eventDict mutableCopy] autorelease];
+			[upgradedEventDict setObject:CONTACT_STATUS_ONLINE_NO forKey:KEY_EVENT_DOCK_EVENT_ID];
+			
+		}else if ([eventID isEqualToString:@"Content_FirstContentRecieved"]){
+			upgradedEventDict = 		[[eventDict mutableCopy] autorelease];
+			[upgradedEventDict setObject:CONTENT_MESSAGE_RECEIVED_FIRST forKey:KEY_EVENT_DOCK_EVENT_ID];
+			
+		}else if ([eventID isEqualToString:@"Content_DidReceiveContent"]){
+			upgradedEventDict = 		[[eventDict mutableCopy] autorelease];
+			[upgradedEventDict setObject:CONTENT_MESSAGE_RECEIVED forKey:KEY_EVENT_DOCK_EVENT_ID];
+			
+		}else if ([eventID isEqualToString:@"Content_DidSendContent"]){
+			upgradedEventDict = 		[[eventDict mutableCopy] autorelease];
+			[upgradedEventDict setObject:CONTENT_MESSAGE_SENT forKey:KEY_EVENT_DOCK_EVENT_ID];
+			
+		}
+		
+		if (upgradedEventDict){
+			madeChanges = YES;
+			[upgradedArray addObject:upgradedEventDict];
+		}else{
+			[upgradedArray addObject:eventDict];	
+		}
+	}
+	
+	if (madeChanges){
+		[[adium preferenceController] setPreference:upgradedArray
+											 forKey:KEY_DOCK_CUSTOM_BEHAVIOR
+											  group:PREF_GROUP_DOCK_BEHAVIOR];
+		return YES;
+	}
+	
+	return NO;
 }
 
 
