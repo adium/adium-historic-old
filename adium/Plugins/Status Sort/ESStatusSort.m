@@ -211,10 +211,18 @@ int statusSort(id objectA, id objectB, BOOL groups)
 		if (resolveAlphabetically){
 			if (resolveAlphabeticallyByLastName){
 				NSString	*space = @" ";
-				NSArray		*componentsA = [[objectA displayName] componentsSeparatedByString:space];
-				NSArray		*componentsB = [[objectB displayName] componentsSeparatedByString:space];
+				NSString	*displayNameA = [objectA displayName];
+				NSString	*displayNameB = [objectB displayName];
+				NSArray		*componentsA = [displayNameA componentsSeparatedByString:space];
+				NSArray		*componentsB = [displayNameB componentsSeparatedByString:space];
 				
-				return ([[componentsA lastObject] caseInsensitiveCompare:[componentsB lastObject]]);
+				NSComparisonResult returnValue = [[componentsA lastObject] caseInsensitiveCompare:[componentsB lastObject]];
+				//If the last names are the same, compare the whole object, which will amount to sorting these objects by first name
+				if (returnValue == NSOrderedSame){
+					returnValue = [displayNameA caseInsensitiveCompare:displayNameB];
+				}
+				
+				return (returnValue);
 				
 			}else{
 				return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
