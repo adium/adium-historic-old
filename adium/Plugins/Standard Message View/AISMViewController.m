@@ -30,9 +30,10 @@
 - (AIFlexibleTableCell *)_statusCellForContent:(AIContentStatus *)content;
 - (AIFlexibleTableCell *)_userIconCellForContent:(AIContentMessage *)content span:(BOOL)span;
 - (AIFlexibleTableCell *)_emptyImageSpanCellForPreviousRow:(AIFlexibleTableRow *)previousRow;
+- (AIFlexibleTableCell *)_emptyHeadIndentCellForPreviousRow:(AIFlexibleTableRow *)previousRow content:(AIContentMessage *)content;
 - (AIFlexibleTableCell *)_prefixCellForContent:(AIContentMessage *)content;
 - (AIFlexibleTableCell *)_timeStampCellForContent:(AIContentMessage *)content;
-- (AIFlexibleTableCell *)_messageCellForContent:(AIContentMessage *)content;
+- (AIFlexibleTableCell *)_messageCellForContent:(AIContentMessage *)content includingPrefixes:(BOOL)includePrefixes;
 - (NSAttributedString *)_prefixStringForContent:(AIContentMessage *)content;
 - (NSAttributedString *)_prefixWithFormat:(NSString *)format forContent:(AIContentMessage *)content;
 - (NSString *)_prefixStringByExpandingFormat:(NSString *)format forContent:(AIContentMessage *)content;
@@ -270,39 +271,48 @@
 //Returns a message prefix row for a content object
 - (AIFlexibleTableRow *)_prefixRowForContent:(AIContentMessage *)content
 {
-    NSArray     *cellArray;
-
+    NSArray             *cellArray;
+    AIFlexibleTableRow  *row;
+    
     if(showUserIcons){
 	cellArray = [NSArray arrayWithObjects:[self _userIconCellForContent:content span:YES], [self _prefixCellForContent:content], [self _timeStampCellForContent:content], nil];
     }else{
 	cellArray = [NSArray arrayWithObjects:[self _prefixCellForContent:content], [self _timeStampCellForContent:content], nil];
     }
 
-    return([AIFlexibleTableRow rowWithCells:cellArray representedObject:nil]);
+    row = [AIFlexibleTableRow rowWithCells:cellArray representedObject:nil];
+    [row setHeadIndent:headIndent];
+    return(row);
 }
 
 //Create a bubbled message row for a content object
 - (AIFlexibleTableRow *)_messageRowForContent:(AIContentMessage *)content previousRow:(AIFlexibleTableRow *)previousRow header:(BOOL)isHeader
 {
-    AIFlexibleTableCell     *imageCell = nil;
+    AIFlexibleTableCell     *leftmostCell = nil;
     NSArray		    *cellArray;
-    
+    AIFlexibleTableRow      *row;
     //Empty icon span cell
     if(showUserIcons){
 	if(isHeader){
-	    imageCell = [self _userIconCellForContent:content span:NO];
+	    leftmostCell = [self _userIconCellForContent:content span:NO];
 	}else if(previousRow){
-	    imageCell = [self _emptyImageSpanCellForPreviousRow:previousRow];
-	}
+	    leftmostCell = [self _emptyImageSpanCellForPreviousRow:previousRow];
+	}        
     }
-
+    //Empty spacing cell
+    if(!isHeader && !inlinePrefixes && combineMessages) {
+        leftmostCell = [self _emptyHeadIndentCellForPreviousRow:previousRow content:content];
+    }
     //
-    if(imageCell){
-	cellArray = [NSArray arrayWithObjects:imageCell, [self _messageCellForContent:content], nil];
+    if(leftmostCell){
+        cellArray = [NSArray arrayWithObjects:leftmostCell, [self _messageCellForContent:content includingPrefixes:NO], nil];
     }else{
-	cellArray = [NSArray arrayWithObjects:[self _messageCellForContent:content], nil];
+	cellArray = [NSArray arrayWithObjects:[self _messageCellForContent:content includingPrefixes:!inlinePrefixes], nil];
     }
-    return([AIFlexibleTableRow rowWithCells:cellArray representedObject:content]);
+    row = [AIFlexibleTableRow rowWithCells:cellArray representedObject:content];
+    //set the headIndent
+    [row setHeadIndent:headIndent];
+    return(row);
 }
 
 
@@ -363,6 +373,21 @@
     return(nil);
 }
 
+- (AIFlexibleTableCell *)_emptyHeadIndentCellForPreviousRow:(AIFlexibleTableRow *)previousRow content:(AIContentMessage *)content
+{
+    AIFlexibleTableCell * cell = [[AIFlexibleTableCell alloc] init];
+    //size the cell for the previousRow headIndent value
+    [cell sizeCellForWidth:[previousRow headIndent]];
+    //set the background color appropriately
+    if([content isOutgoing]){
+        [cell setBackgroundColor:colorOutgoing];
+    }else{
+        [cell setBackgroundColor:colorIncoming];
+    }
+    
+    return ([cell autorelease]);
+}
+
 //Prefix cell
 //Uses the current prefix style and format, and varies padding based on user icon visibility
 - (AIFlexibleTableCell *)_prefixCellForContent:(AIContentMessage *)content
@@ -396,11 +421,11 @@
 //Message cell (As prefix to filter message to include prefix information)
 //Cell content depends on the state of inlinePrefixes, and possibly prefix style and format
 //Also depends on current color preferences and user icon visibility.
-- (AIFlexibleTableCell *)_messageCellForContent:(AIContentMessage *)content
+- (AIFlexibleTableCell *)_messageCellForContent:(AIContentMessage *)content includingPrefixes:(BOOL)includePrefixes
 {
     AIFlexibleTableFramedTextCell     *messageCell;
     
-    messageCell = [AIFlexibleTableFramedTextCell cellWithAttributedString:(inlinePrefixes ? [content message] : [self _prefixStringForContent:content])];
+    messageCell = [AIFlexibleTableFramedTextCell cellWithAttributedString:(includePrefixes ? [self _prefixStringForContent:content] : [content message])];
     [messageCell setPaddingLeft:0 top:0 right:(showUserIcons ? 4 : 0) bottom:0];
 
     if(inlinePrefixes){
@@ -438,15 +463,18 @@
 
         //If the prefix contains a message, we build it in pieces
         [prefixString appendAttributedString:[self _prefixWithFormat:[prefixFormat substringToIndex:messageRange.location] forContent:content]];
+        //set the headIndent, the amount subsequent lines will need to indent
+        headIndent = [prefixString size].width;
         [prefixString appendAttributedString:[content message]];
         [prefixString appendAttributedString:[self _prefixWithFormat:[prefixFormat substringFromIndex:messageRange.location] forContent:content]];
         
         return(prefixString);
         
     }else{
-        //Doesn't contain the message
+        //Doesn't contain the message. There is no headIndent.
+        headIndent = 0;
         return([self _prefixWithFormat:prefixFormat forContent:content]);
-	
+
     }    
 }
 

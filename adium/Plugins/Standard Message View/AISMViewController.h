@@ -48,6 +48,7 @@
     BOOL			combineMessages;
     BOOL			inlinePrefixes;
     BOOL                        showUserIcons;
+    float                       headIndent;
 
 }
 
