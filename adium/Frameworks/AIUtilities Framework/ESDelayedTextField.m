@@ -78,6 +78,19 @@
 														   repeats:NO] retain];
 }
 
+- (void)textDidEndEditing:(NSNotification *)notification
+{
+	//Don't trigger our delayed changes timer after the field ends editing.
+	if(delayedChangesTimer){
+        if([delayedChangesTimer isValid]){
+            [delayedChangesTimer invalidate]; 
+        }
+        [delayedChangesTimer release]; delayedChangesTimer = nil;
+    }
+	
+	[super textDidEndEditing:notification];
+}
+
 - (void)_delayedAction:(NSTimer *)timer
 {
 	[[self target] performSelector:[self action] withObject:self];
