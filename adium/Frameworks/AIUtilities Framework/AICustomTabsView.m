@@ -169,6 +169,12 @@ static  NSImage			*tabDivider = nil;
     }
 }
 
+//Returns an array of all the tab cells
+- (NSArray *)tabCells
+{
+	return tabCellArray; //Should be immutable?
+}
+
 //Reposition a tab
 - (void)moveTab:(AICustomTabCell *)tabCell toIndex:(int)index selectTab:(BOOL)shouldSelect
 {
