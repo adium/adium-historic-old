@@ -28,8 +28,8 @@
 #define MESSAGES_WINDOW_MENU_TITLE		AILocalizedString(@"Messages","Title for the messages window menu item")
 #define CLOSE_TAB_MENU_TITLE			AILocalizedString(@"Close Tab","Title for the close tab menu item")
 #define CLOSE_MENU_TITLE				AILocalizedString(@"Close","Title for the close menu item")
-#define PREVIOUS_MESSAGE_MENU_TITLE		AILocalizedString(@"Previous Message",nil)
-#define NEXT_MESSAGE_MENU_TITLE			AILocalizedString(@"Next Message",nil)
+#define PREVIOUS_MESSAGE_MENU_TITLE		AILocalizedString(@"Previous Chat",nil)
+#define NEXT_MESSAGE_MENU_TITLE			AILocalizedString(@"Next Chat",nil)
 
 #define CHAT_IN_NEW_WINDOW				AILocalizedString(@"Chat in New Window",nil)
 #define CHAT_IN_PRIMARY_WINDOW			AILocalizedString(@"Chat in Primary Window",nil)
