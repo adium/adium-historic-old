@@ -88,9 +88,9 @@
 
 -(SHMarkedHyperlink *)nextURLFromString:(NSString *)inString
 {
-    NSString    *scanString = [[NSString alloc] init];
+    NSString    *scanString = nil;
     int location = SHStringOffset; //get our location from SHStringOffset, so we can pick up where we left off.
-    NSMutableCharacterSet *skipSet = [[NSMutableCharacterSet alloc] init];
+    NSMutableCharacterSet *skipSet = [[[NSMutableCharacterSet alloc] init] autorelease];
     [skipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     [skipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
     [skipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];

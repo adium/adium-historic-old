@@ -120,7 +120,7 @@ DeclareString(bMdashHTML)
                 titleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:titleString];
             }
             
-            SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
+            SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:urlString
                                                                   withValidationStatus:SH_URL_VALID
                                                                           parentString:titleString? titleString : urlString
                                                                               andRange:NSMakeRange(0,titleString? [titleString length] : [urlString length])] autorelease];

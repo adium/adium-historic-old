@@ -94,7 +94,7 @@ static NSMenu       *bookmarkSets;
     // create a new menu
     bookmarkSets = [[[NSMenu alloc] initWithTitle:@""] autorelease];
     
-    NSMutableArray *activeImporters = [[NSMutableArray alloc] init];
+    NSMutableArray *activeImporters = [NSMutableArray array];
     while(importer = [enumerator nextObject]){
         if([importer bookmarksExist]){
             [activeImporters addObject:importer];
