@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/simpleViewer.jsp $-->
-<!--$Rev: 843 $ $Date$ -->
+<!--$Rev: 899 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -146,6 +146,14 @@ a:hover {
     color: #333;
     margin-bottom: 5px;
     padding: 2px;
+}
+
+.even {
+    background: #dddddd;
+}
+
+.odd {
+    background: #ffffff;
 }
 
 </style>
@@ -325,7 +333,9 @@ a:hover {
         message = message.replaceAll("\r|\n", "<br />");
         message = message.replaceAll("   ", " &nbsp; ");
 
-        out.println("<p>(" + rset.getTime("message_date") + ")&nbsp;");
+        out.println("<p" +
+                (rset.getRow() % 2 == 0 ? " class=\"even\"" : " class=\"odd\"") +
+                 ">(" + rset.getTime("message_date") + ")&nbsp;");
 
         out.print("<a href=\"#\"");
 
