@@ -39,6 +39,10 @@ Adium, Copyright 2001-2005, Adam Iser
 - (void)_startAttributedRefreshTimer;
 - (void)_stopAttributedRefreshTimer;
 
+//Contacts
+- (NSArray *)contacts;
+- (AIListContact *)contactWithUID:(NSString *)sourceUID;
+
 //Connectivity
 - (void)connectScriptCommand:(NSScriptCommand *)command;
 - (void)disconnectScriptCommand:(NSScriptCommand *)command;
