@@ -49,9 +49,9 @@ static NSImage *pushIndicatorImage = nil;
     [super initWithFrame:frameRect];
 
     //
+    adium = [AIObject sharedAdiumInstance];
     target = nil;
     selector = nil;
-    owner = nil;
     chat = nil;
     indicator = nil;
     sendOnReturn = YES;
@@ -72,15 +72,6 @@ static NSImage *pushIndicatorImage = nil;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:self];
 
     return(self);
-}
-
-//
-- (void)setOwner:(id)inOwner
-{
-    if(owner != inOwner){
-        [owner release];
-        owner = [inOwner retain];
-    }
 }
 
 //If true we will invoke selector on target when a send key is pressed
@@ -179,7 +170,7 @@ static NSImage *pushIndicatorImage = nil;
     }
 
     //Let Adium know we've adding content
-    [[owner contentController] stringAdded:theString toTextEntryView:self];
+    [[adium contentController] stringAdded:theString toTextEntryView:self];
 }
 
 //Catch returns and enters as they're pressed
@@ -253,7 +244,7 @@ static NSImage *pushIndicatorImage = nil;
 
     //Notify everyone that our text changed
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
-    [[owner contentController] contentsChangedInTextEntryView:self];
+    [[adium contentController] contentsChangedInTextEntryView:self];
 }
 
 //
@@ -263,7 +254,7 @@ static NSImage *pushIndicatorImage = nil;
 
     //Notify everyone that our text changed
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
-    [[owner contentController] contentsChangedInTextEntryView:self];
+    [[adium contentController] contentsChangedInTextEntryView:self];
 }
 
 //
@@ -443,7 +434,7 @@ static NSImage *pushIndicatorImage = nil;
 {
     //Let observers know our text changed (unless it was changed by text insertion, which they'll already have known about)
     if(!insertingText){ 
-        [[owner contentController] contentsChangedInTextEntryView:self];
+        [[adium contentController] contentsChangedInTextEntryView:self];
     }
 
     

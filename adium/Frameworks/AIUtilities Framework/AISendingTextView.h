@@ -13,11 +13,11 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIListObject, AIAccount, AIChat;
+@class AIListObject, AIAdium, AIAccount, AIChat;
 @protocol AITextEntryView;
 
 @interface AISendingTextView : NSTextView <AITextEntryView> {
-    AIAdium		*owner;
+    AIAdium		*adium;
     AIChat		*chat;
     
     BOOL		sendOnEnter;
@@ -43,7 +43,6 @@
 }
 
 - (id)initWithFrame:(NSRect)frameRect;
-- (void)setOwner:(id)inOwner;
 - (void)setSendOnReturn:(BOOL)inBool;
 - (void)setSendOnEnter:(BOOL)inBool;
 - (void)setTarget:(id)inTarget action:(SEL)inSelector;
