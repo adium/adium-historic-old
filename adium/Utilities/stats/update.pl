@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# $Id: update.pl,v 1.4 2003/12/22 20:57:22 jmelloy Exp $
+# $Id: update.pl,v 1.5 2003/12/22 21:05:18 jmelloy Exp $
 
 use warnings;
 use strict;
@@ -40,7 +40,7 @@ foreach my $key (keys %directories) {
 
     close STDOUT;
 
-    chdir("/Users/jmelloy/clean-adium");
+    chdir("/home/jmelloy/adium");
 }
 
 if(@files > 0) {
