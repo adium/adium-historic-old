@@ -134,7 +134,7 @@
         int idle = (int)[[(AIListContact *)inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
 
         if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
-            entry = @"Yes";
+            entry = [[NSAttributedString alloc] initWithString:@"Yes"];
             
         }else if(idle != 0){
             int	hours = (int)(idle / 60);
