@@ -7,6 +7,7 @@
 
 #import "AIWebKitMessageViewController.h"
 #import "ESWebFrameViewAdditions.h"
+#import "ESWebView.h"
 
 #define NEW_CONTENT_RETRY_DELAY 0.01
 
@@ -38,7 +39,10 @@
 	newContent = [[NSMutableArray alloc] init];
 	
 	//Observe content
-	[[adium notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:inChat];
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(contentObjectAdded:)
+									   name:Content_ContentObjectAdded 
+									 object:inChat];
 
 	//Create our webview
 	webView = [[WebView alloc] initWithFrame:NSMakeRect(0,0,100,100) //Arbitrary frame
@@ -47,10 +51,13 @@
 	[webView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 	[webView setFrameLoadDelegate:self];
 	[webView setPolicyDelegate:self];
-	[[[webView mainFrame] frameView] setAllowsHorizontalScrolling:YES];
+	[webView setUIDelegate:self];
+	[webView setMaintainsBackForwardList:NO];
+//	[[[webView mainFrame] frameView] setAllowsHorizontalScrolling:YES];
 
 	//We'd load this information from a file or plist or something
-	NSString	*stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" ofType:@"html"] stringByDeletingLastPathComponent];
+	NSString	*stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" 
+																			   ofType:@"html"] stringByDeletingLastPathComponent];
 	NSString	*basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];
 	NSString	*mainCSS = @"test.css";
 	NSString	*variantCSS = @"testlayout.css";
@@ -84,9 +91,16 @@
 	[super dealloc];
 }
 
+//Return the view which should be inserted into the message window
 - (NSView *)messageView
 {
-	return(webView);
+	return webView;
+}
+
+//Return our scroll view
+- (NSScrollView *)messageScrollView
+{
+	return([[[webView mainFrame] frameView] frameScrollView]);
 }
 
 - (void)contentObjectAdded:(NSNotification *)notification
@@ -274,6 +288,7 @@
 }
 
 
+#pragma mark WebFrameLoadDelegate
 //----WebFrameLoadDelegate
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
 {
@@ -281,7 +296,8 @@
 	//NSLog(@"Ready");
 }
 
-// WebPolicyDelegate
+#pragma mark WebPolicyDelegate
+//----WebPolicyDelegate
 - (void)webView:(WebView *)sender
     decidePolicyForNavigationAction:(NSDictionary *)actionInformation
     request:(NSURLRequest *)request
@@ -296,4 +312,5 @@
     }
 }
 
+#pragma mark Web
 @end
