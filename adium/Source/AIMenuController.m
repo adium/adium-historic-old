@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIMenuController.m,v 1.34 2004/05/28 16:37:24 earthmkii Exp $
+// $Id: AIMenuController.m,v 1.35 2004/06/01 20:42:58 evands Exp $
 
 #import "AIMenuController.h"
 
@@ -252,7 +252,6 @@
     return(contextualMenu);
 }
 
-// disabled until post .53
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject
 {
     NSEnumerator    *enumerator;
@@ -299,7 +298,6 @@
     return(contactualMenuContact);
 }
 
-// disabled until post .53
 - (NSTextView *)contextualMenuTextView
 {
     return(contextualMenu_TextView);
