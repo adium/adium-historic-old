@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.36 2004/03/13 01:21:12 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.37 2004/03/13 17:03:10 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -331,16 +331,15 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
             break;
                 
         }
+
+		//Update the selected toolbar item (10.3 or higher)
+		if([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]){
+			[[[self window] toolbar] setSelectedItemIdentifier:[tabViewItem identifier]];
+		}
     }
 
     //Update the window title
-    [[self window] setTitle:[NSString stringWithFormat:@"%@ : %@",PREFERENCE_WINDOW_TITLE,[tabViewItem label]]];    
-
-	//Update the selected toolbar item (10.3 or higher)
-    if([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]){
-        [[[self window] toolbar] setSelectedItemIdentifier:[tabViewItem identifier]];
-    }
-	
+    [[self window] setTitle:[NSString stringWithFormat:@"%@ : %@",PREFERENCE_WINDOW_TITLE,[tabViewItem label]]];    	
 }
 
 //Insert all the preference panes for the category into the passed view
