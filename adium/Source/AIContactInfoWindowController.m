@@ -115,7 +115,15 @@ static AIContactInfoWindowController *sharedInstance = nil;
         [self configureForNoContact];
     }
     
-    [[self window] center];
+    NSString	*savedFrame;
+    
+    //Restore the window position
+    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_CONTACT_INSPECTOR_WINDOW_FRAME];
+    if(savedFrame){
+        [[self window] setFrameFromString:savedFrame];
+    }else{
+        [[self window] center];
+    }
 }
 
 //prevent the system from moving our window around
@@ -127,6 +135,10 @@ static AIContactInfoWindowController *sharedInstance = nil;
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
+    //Save the window position
+    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+                                         forKey:KEY_CONTACT_INSPECTOR_WINDOW_FRAME
+                                          group:PREF_GROUP_WINDOW_POSITIONS];
     return(YES);
 }
 

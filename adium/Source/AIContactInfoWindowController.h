@@ -15,6 +15,8 @@
 
 @class AIAdium, AIContactHandle;
 
+#define KEY_CONTACT_INSPECTOR_WINDOW_FRAME  @"Contact Inspector Window Frame"
+
 @interface AIContactInfoWindowController : NSWindowController {
     IBOutlet	NSScrollView	*scrollView_contents;
     IBOutlet	NSView		*view_noContact;
