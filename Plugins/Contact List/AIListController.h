@@ -14,7 +14,7 @@
 	int									maxWindowWidth;
 	int									forcedWindowWidth;
 
-	BOOL 								dockToBottomOfScreen;
+	int 								dockToBottomOfScreen;
 	
 	BOOL								needsAutoResize;
 }
