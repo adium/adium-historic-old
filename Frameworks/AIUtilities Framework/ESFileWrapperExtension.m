@@ -11,15 +11,20 @@
 
 - (id)initWithPath:(NSString *)path
 {
-	originalPath = [path retain];
+	if((self = [super initWithPath:path])) {
+		originalPath = [path copy];
+	}
 	
-	return ([super initWithPath:path]);
+	return self;
 }
 
 - (BOOL)updateFromPath:(NSString *)path
 {
-	if (originalPath != path){
-		[originalPath release]; originalPath = [path retain];
+	if (originalPath != path) {
+		/*immutable flavours of NSString only retain when we call -copy, so
+		 *	originPath may still == path even though we used -copy above.
+		 */
+		[originalPath release]; originalPath = [path copy];
 	}
 	
 	return ([super updateFromPath:path]);
@@ -27,9 +32,12 @@
 
 - (BOOL)writeToFile:(NSString *)path atomically:(BOOL)atomicFlag updateFilenames:(BOOL)updateNamesFlag
 {
-	if (updateNamesFlag){
-		if (originalPath != path){
-			[originalPath release]; originalPath = [path retain];
+	if (updateNamesFlag) {
+		if (originalPath != path) {
+			/*immutable flavours of NSString only retain when we call -copy, so
+			 *	originPath may still == path even though we used -copy above.
+			 */
+			[originalPath release]; originalPath = [path copy];
 		}
 	}
 	
