@@ -5895,6 +5895,8 @@
 				4B554123044DF05700A8010A,
 				4B554124044DF05700A8010A,
 				4B554127044DF5A200A8010A,
+				D35F83960534B86C00A8010B,
+				D35F83950534B86C00A8010B,
 			);
 			isa = PBXGroup;
 			name = "Volume Control";
@@ -5914,6 +5916,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B554128044DF5A200A8010A,
+				D35F83970534B86C00A8010B,
+				D35F83980534B86C00A8010B,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15102,6 +15106,30 @@
 		};
 		D35BB1A50533AD1C00A8010B = {
 			fileRef = D35BB1A40533AD1C00A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D35F83950534B86C00A8010B = {
+			isa = PBXFileReference;
+			name = SoundHigh.tiff;
+			path = "Plugins/Volume Control/SoundHigh.tiff";
+			refType = 4;
+		};
+		D35F83960534B86C00A8010B = {
+			isa = PBXFileReference;
+			name = SoundLow.tiff;
+			path = "Plugins/Volume Control/SoundLow.tiff";
+			refType = 4;
+		};
+		D35F83970534B86C00A8010B = {
+			fileRef = D35F83950534B86C00A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D35F83980534B86C00A8010B = {
+			fileRef = D35F83960534B86C00A8010B;
 			isa = PBXBuildFile;
 			settings = {
 			};

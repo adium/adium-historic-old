@@ -14,16 +14,12 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
-
-@interface AIVolumeControlPreferences : NSObject {
-    AIAdium				*owner;
-
-    IBOutlet	NSView			*view_prefView;
+@interface AIVolumeControlPreferences : AIPreferencePane {
     IBOutlet	NSSlider		*slider_volume;
 }
 
-+ (AIVolumeControlPreferences *)volumeControlPreferencesWithOwner:(id)inOwner;
 - (IBAction)selectVolume:(id)sender;
 
 @end
