@@ -125,6 +125,7 @@
     NSMutableString 	*displayString = [NSMutableString stringWithString:@""];
     AIMutableOwnerArray *leftTextArray = [listObject displayArrayForKey:@"Left Text"];
     AIMutableOwnerArray *rightTextArray = [listObject displayArrayForKey:@"Right Text"];
+    #warning Colin: Why are we only taking the first one...
     NSString *leftText = [leftTextArray count] > 0 ? [leftTextArray objectAtIndex:0] : nil;
     NSString *rightText = [rightTextArray count] > 0 ? [rightTextArray objectAtIndex:0] : nil;
     
