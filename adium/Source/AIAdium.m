@@ -170,8 +170,6 @@
     //Ignore SIGPIPE, which is a harmless error signal
     //sent when write() or similar function calls fail due to a broken pipe in the network connection
     signal(SIGPIPE, SIG_IGN);
-
-    completedApplicationLoad = YES;
 }
 
 //Adium has finished launching
@@ -216,6 +214,8 @@
 	
 	//Open the preferences if we were unable to because application:openFile: was called before we got here
 	[self openAppropriatePreferencesIfNeeded];
+	
+    completedApplicationLoad = YES;
 }
 
 //Give all the controllers a chance to close down
