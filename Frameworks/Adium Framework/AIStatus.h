@@ -17,10 +17,10 @@
 #import "AIObject.h"
 
 //Keys used for storage and retrieval
-#define	STATUS_STATUS_MESSAGE				@"Status Message"
+#define	STATUS_STATUS_MESSAGE				@"Status Message NSAttributedString"
 #define	STATUS_HAS_AUTO_REPLY				@"Has AutoReply"
 #define	STATUS_AUTO_REPLY_IS_STATUS_MESSAGE	@"AutoReply is Status Message"
-#define	STATUS_AUTO_REPLY_MESSAGE			@"AutoReply Message"
+#define	STATUS_AUTO_REPLY_MESSAGE			@"AutoReply Message NSAttributedString"
 #define	STATUS_TITLE						@"Title"
 #define	STATUS_STATUS_TYPE					@"Status Type"
 #define	STATUS_STATUS_NAME					@"Status Name"
@@ -39,6 +39,7 @@ typedef enum {
 typedef enum {
 	AIAvailableStatusType = 0, /* Must be first in the enum */
 	AIAwayStatusType,
+	AIInvisibleStatusType,
 	AIOfflineStatusType
 } AIStatusType;
 #define STATUS_TYPES_COUNT 3
@@ -55,11 +56,9 @@ typedef enum {
 
 - (NSAttributedString *)statusMessage;
 - (void)setStatusMessage:(NSAttributedString *)statusMessage;
-- (void)setStatusMessageData:(NSData *)statusMessageData;
 
 - (NSAttributedString *)autoReply;
 - (void)setAutoReply:(NSAttributedString *)autoReply;
-- (void)setAutoReplyData:(NSData *)autoReplyData;
 
 - (BOOL)hasAutoReply;
 - (void)setHasAutoReply:(BOOL)hasAutoReply;
@@ -80,12 +79,7 @@ typedef enum {
 - (double)forcedInitialIdleTime;
 - (void)setForcedInitialIdleTime:(double)forcedInitialIdleTime;
 
-- (BOOL)invisible;
-- (void)setInvisible:(BOOL)invisible;
-
 - (AIStatusMutabilityType)mutabilityType;
 - (void)setMutabilityType:(AIStatusMutabilityType)mutabilityType;
-
-+ (NSImage *)statusIconForStatusType:(AIStatusType)inStatusType;
 
 @end
