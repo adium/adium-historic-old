@@ -4664,7 +4664,6 @@
 				4BFF665C063693FB00308A3B,
 				7E824CE006387FAF00813072,
 				7E824CE206387FAF00813072,
-				7E824CE606387FAF00813072,
 				7E824CEA06387FAF00813072,
 				BF000238063A4D2E0019910B,
 				4B909C87064D72EE0074C9A8,
@@ -4952,8 +4951,6 @@
 				4BAA1B610632EFE700D8B92C,
 				4BAA1B630632F00000D8B92C,
 				7E824CDD06387FAF00813072,
-				7E824CDE06387FAF00813072,
-				7E824CDF06387FAF00813072,
 				BF00023B063A4FFE0019910B,
 				4B494B45063AB63000E2EF06,
 				4B6C3557063BF4B600D3819D,
@@ -4983,7 +4980,6 @@
 				349DDD420640687D00542726,
 				349DDD6A06406CBD00542726,
 				3401925D06406D9200192BC4,
-				7EF2D63506476C3E00C829FF,
 				4B091037065CE9D700FF0528,
 				4BBF41E70661194A001D31E1,
 				4BBF41E80661194A001D31E1,
@@ -5287,7 +5283,6 @@
 				4BFF665B063693FA00308A3B,
 				7E824CE106387FAF00813072,
 				7E824CE306387FAF00813072,
-				7E824CE706387FAF00813072,
 				7E824CEB06387FAF00813072,
 				BF000239063A4D2E0019910B,
 				4B909C88064D72EE0074C9A8,
@@ -8840,7 +8835,7 @@
 			children = (
 				6CED9083065B686A00A9C196,
 				4BDC4CC4066227DB00C28445,
-				7E6405AC06629CF7006A5552,
+				7EF8E7DE066311D70044E80C,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -18521,21 +18516,6 @@
 			settings = {
 			};
 		};
-		7E6405AC06629CF7006A5552 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 7E64083606629D12006A5552;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		7E64083606629D12006A5552 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
-		};
 		7E64083B06629DD7006A5552 = {
 			children = (
 				7E64084106629E10006A5552,
@@ -18899,7 +18879,6 @@
 				7E824CD306387FAF00813072,
 				7E824CD406387FAF00813072,
 				7E824CCE06387FAF00813072,
-				7EF2D63406476C3D00C829FF,
 				7EF2D62F06476BFA00C829FF,
 			);
 			isa = PBXGroup;
@@ -18912,21 +18891,6 @@
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
 			path = LinkEditor.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E824CCF06387FAF00813072 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
-			path = LinkManagementDefaults.plist;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E824CD006387FAF00813072 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			path = LinkPreferences.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -18962,22 +18926,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		7E824CD706387FAF00813072 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = SHLinkFavoritesPreferences.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E824CD806387FAF00813072 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = SHLinkFavoritesPreferences.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		7E824CDB06387FAF00813072 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -18996,18 +18944,6 @@
 		};
 		7E824CDD06387FAF00813072 = {
 			fileRef = 7E824CCE06387FAF00813072;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E824CDE06387FAF00813072 = {
-			fileRef = 7E824CCF06387FAF00813072;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E824CDF06387FAF00813072 = {
-			fileRef = 7E824CD006387FAF00813072;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -19036,18 +18972,6 @@
 			settings = {
 			};
 		};
-		7E824CE606387FAF00813072 = {
-			fileRef = 7E824CD706387FAF00813072;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E824CE706387FAF00813072 = {
-			fileRef = 7E824CD806387FAF00813072;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		7E824CEA06387FAF00813072 = {
 			fileRef = 7E824CDB06387FAF00813072;
 			isa = PBXBuildFile;
@@ -19062,28 +18986,26 @@
 		};
 		7EF2D62F06476BFA00C829FF = {
 			children = (
-				7E824CD706387FAF00813072,
-				7E824CD806387FAF00813072,
-				7E824CD006387FAF00813072,
-				7E824CCF06387FAF00813072,
 			);
 			isa = PBXGroup;
 			name = Prefs;
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		7EF2D63406476C3D00C829FF = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			path = FavsEditor.nib;
-			refType = 4;
-			sourceTree = "<group>";
+		7EF8E7DE066311D70044E80C = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 7EF8EA68066311F70044E80C;
+			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		7EF2D63506476C3E00C829FF = {
-			fileRef = 7EF2D63406476C3D00C829FF;
-			isa = PBXBuildFile;
-			settings = {
-			};
+		7EF8EA68066311F70044E80C = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
 		};
 //7E0
 //7E1
