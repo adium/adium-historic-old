@@ -9,6 +9,8 @@
 
 @implementation AIMetaContact
 
+#pragma mark Creation
+
 - (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID
 {
 	[super initWithUID:inUID serviceID:inServiceID];
@@ -26,6 +28,7 @@
 	[super dealloc];
 }
 
+#pragma mark Object Storage
 //
 - (void)addObject:(AIListContact *)inObject
 {
@@ -66,6 +69,8 @@
 {
 	return([objectArray count]);
 }
+
+#pragma mark Status Object Handling
 
 //Called when the visibility of an object in this group changes
 - (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible
@@ -117,13 +122,14 @@
     return([array autorelease]);
 }
 
-
 //
 //- (NSString *)displayName
 //{
 //    return([[super displayName] stringByAppendingFormat:@" [%i]",[objectArray count]]);
 //}
 
+#pragma mark Sorting
+	
 - (void)sortListObject:(AIListObject *)inObject sortController:(AISortController *)sortController
 {
 	NSLog(@"sortListObject:%@ sent to meta contact %@",[inObject displayName],[self displayName]); 
@@ -145,6 +151,8 @@
 		[object setOrderIndex:inIndex];
 	}
 }
+
+#pragma mark Private
 
 //Update the status array, creating it if necessary
 - (void)_updateStatusArrayDictionaryWithObject:(id)inObject andOwner:(id)inOwner forKey:(NSString *)key
