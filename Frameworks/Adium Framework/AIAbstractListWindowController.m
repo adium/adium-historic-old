@@ -119,19 +119,18 @@
 	   (contactCellStyle == CELL_STYLE_STANDARD || contactCellStyle == CELL_STYLE_BRICK)){
 		contactCellStyle = CELL_STYLE_BUBBLE;
 	}
-	//Disallow bubble and bubble to fit for mockie
-	if(windowStyle == WINDOW_STYLE_MOCKIE &&
-	   (contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT)){
-		contactCellStyle = CELL_STYLE_STANDARD;
-	}
+	//Special cell for mockie
 	[contentCell release];
-	switch(contactCellStyle){
-		case CELL_STYLE_STANDARD: 	cellClass = [AIListContactCell class]; break;
-			//			case CELL_STYLE_BRICK: 		cellClass = [AIListContactBrickCell class]; break;
-		case CELL_STYLE_BUBBLE: 	cellClass = [AIListContactBubbleCell class]; break;
-		default: /*case CELL_STYLE_BUBBLE_FIT:*/ cellClass = [AIListContactBubbleToFitCell class]; break;
+	if(windowStyle == WINDOW_STYLE_MOCKIE){
+		contentCell = [[AIListContactMockieCell alloc] init];
+	}else{
+		switch(contactCellStyle){
+			case CELL_STYLE_STANDARD: 	cellClass = [AIListContactCell class]; break;
+			case CELL_STYLE_BUBBLE: 	cellClass = [AIListContactBubbleCell class]; break;
+			default:/*case CELL_STYLE_BUBBLE_FIT*/ cellClass = [AIListContactBubbleToFitCell class]; break;
+		}
+		contentCell = [[cellClass alloc] init];
 	}
-	contentCell = [[cellClass alloc] init];
 	[contactListView setContentCell:contentCell];
 	[contentCell setUseAliasesAsRequested:[self useAliasesInContactListAsRequested]];
 	
@@ -155,7 +154,8 @@
 	[groupCell setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont]];
 	
 	//Bubbles special cases
-	if(contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT){
+	if(windowStyle != WINDOW_STYLE_MOCKIE &&
+	   (contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT)){
 		[contentCell setSplitVerticalSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
 		[contentCell setLeftSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
 		[contentCell setRightSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
