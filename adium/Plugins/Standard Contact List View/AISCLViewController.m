@@ -171,7 +171,7 @@
 {
 	id		object = [notification object];
 	
-	if(!object || (object == contactList)){ //Treat a nil object as equivelant to the contact list
+	if(!object || (object == contactList)){ //Treat a nil object as equivalent to the contact list
 		[contactListView reloadData];
 		[contactListView _performFullRecalculation];
 	}else{
