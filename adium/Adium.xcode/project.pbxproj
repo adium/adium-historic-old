@@ -1164,6 +1164,36 @@
 			settings = {
 			};
 		};
+		3426FD090699D3D100751059 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m;
+			path = "Frameworks/Adium Framework/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3426FD0A0699D3D100751059 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h;
+			path = "Frameworks/Adium Framework/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3426FD0B0699D3D100751059 = {
+			fileRef = 3426FD090699D3D100751059;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3426FD0C0699D3D100751059 = {
+			fileRef = 3426FD0A0699D3D100751059;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3429200806288D9B00BB9217 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -5699,6 +5729,7 @@
 				4BAA1B3B0632ED8B00D8B92C,
 				7E1E8178063A3EEC00EB00F7,
 				4BAD188E066A83550002008E,
+				3426FD0C0699D3D100751059,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5825,6 +5856,7 @@
 				7E1E8179063A3EEC00EB00F7,
 				4BBF41F506611A23001D31E1,
 				4BAD188F066A83550002008E,
+				3426FD0B0699D3D100751059,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11385,6 +11417,8 @@
 				7E1E8177063A3EEC00EB00F7,
 				4B5827E80613CE9D0004BD25,
 				4B5827E90613CE9D0004BD25,
+				3426FD0A0699D3D100751059,
+				3426FD090699D3D100751059,
 				349DDD5206406A7D00542726,
 			);
 			isa = PBXGroup;
