@@ -50,6 +50,7 @@
 + (void)closeSharedInstance;
 - (IBAction)closeWindow:(id)sender;
 - (void)showCategory:(PREFERENCE_CATEGORY)inCategory;
+- (void)showAdvancedPane:(NSString *)paneName inCategory:(PREFERENCE_CATEGORY)inCategory;
 
 - (NSArray *)advancedCategoryArray;
 - (void)configureAdvancedPreferencesForPane:(AIPreferencePane *)preferencePane;

@@ -327,6 +327,7 @@ void Adium_HandleSignal(int i){
     NSString    *fileDescription = nil;
 	NSString	*prefsButton = nil;
 	PREFERENCE_CATEGORY prefsCategory;
+	NSString	*advancedPrefsName;
     BOOL        requiresRestart = NO;
 	int			buttonPressed;
     
@@ -341,8 +342,9 @@ void Adium_HandleSignal(int i){
         destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Themes"];
         requiresRestart = NO;
         fileDescription = AILocalizedString(@"Adium theme",nil);
-		//prefsButton = AILocalizedString(@"Open Theme Prefs",nil);
-		//prefsCategory = AIPref_Advanced_Other;
+		prefsButton = AILocalizedString(@"Open Theme Prefs",nil);
+		prefsCategory = AIPref_Advanced_Other;
+		advancedPrefsName = @"Themes";
 		
     } else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Dock Icons"];
@@ -417,7 +419,16 @@ void Adium_HandleSignal(int i){
 		
 		// User clicked the "open prefs" button
 		if( buttonPressed == NSAlertAlternateReturn ) {
-			[preferenceController openPreferencesToCategory:prefsCategory];
+			switch( prefsCategory ) {
+				case AIPref_Advanced_Messages:
+				case AIPref_Advanced_ContactList:
+				case AIPref_Advanced_Status:
+				case AIPref_Advanced_Other:
+					[preferenceController openPreferencesToAdvancedPane:advancedPrefsName inCategory:prefsCategory];
+					break;
+				default:
+					[preferenceController openPreferencesToCategory:prefsCategory];
+			}
 		}
     }
 

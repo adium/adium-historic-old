@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.49 2004/05/25 03:54:26 dchoby98 Exp $
+// $Id: AIPreferenceWindowController.m,v 1.50 2004/05/27 15:52:17 dchoby98 Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -99,7 +99,45 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	tabViewItem = [tabView_category tabViewItemWithIdentifier:[NSString stringWithFormat:@"%i",tabIdentifier]];
 	[self tabView:tabView_category willSelectTabViewItem:tabViewItem];
 	[tabView_category selectTabViewItem:tabViewItem];
+
 }
+
+- (void)showAdvancedPane:(NSString *)paneName inCategory:(PREFERENCE_CATEGORY)category
+{
+	NSArray				*advancedPrefArray;
+	NSEnumerator		*enumerator;
+	AIPreferencePane	*pane;
+	NSTabViewItem		*tabViewItem;
+	BOOL				shouldContinue = YES;
+	int					row;
+	
+	advancedPrefArray = [self _prefsInCategory:category];
+	enumerator = [advancedPrefArray objectEnumerator];
+	
+	[self window];
+	
+	while( shouldContinue && (pane = [enumerator nextObject]) ) {
+		if( [paneName caseInsensitiveCompare:[pane label]] == 0 ) {
+			shouldContinue = NO;
+		}
+	}
+	
+	if( shouldContinue == NO ) {
+		
+		// Open the Advanced Prefs category
+		tabViewItem = [tabView_category tabViewItemWithIdentifier:[NSString stringWithFormat:@"8"]];
+		[self tabView:tabView_category willSelectTabViewItem:tabViewItem];
+		[tabView_category selectTabViewItem:tabViewItem];
+		
+		// Open the pane
+		[self configureAdvancedPreferencesForPane:pane];
+		
+		// Select the correct row in the outline view
+		row = [outlineView_advanced rowForItem:pane];
+		[outlineView_advanced selectRow:row byExtendingSelection:NO];
+	}
+}
+
 
 //Close the window
 - (IBAction)closeWindow:(id)sender
