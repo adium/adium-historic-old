@@ -7,8 +7,6 @@
 
 #import "AIMultiCellOutlineView.h"
 
-#warning Evan: Should be further subclassed to separate out a class which adds the drawing methods?
-
 @interface AIMultiCellOutlineView (PRIVATE)
 - (void)resetRowHeightCache;
 - (void)updateRowHeightCache;

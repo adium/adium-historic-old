@@ -136,12 +136,13 @@
 	   (![[inObject containingObject] isKindOfClass:[AIMetaContact class]])){	
 		
 		if([modifiedKeys containsObject:@"Online"]){
+			id newValue = [inObject numberStatusObjectForKey:@"Online" fromAnyContainedObject:NO];
 			if([self updateCache:onlineCache
 						  forKey:@"Online"
-						  ofType:@selector(numberStatusObjectForKey:) 
+						newValue:newValue
 					  listObject:inObject
 				  performCompare:YES] && !silent){
-				NSString	*event = ([[inObject numberStatusObjectForKey:@"Online"] boolValue] ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO);
+				NSString	*event = ([newValue boolValue] ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO);
 				[[adium contactAlertsController] generateEvent:event
 												 forListObject:inObject
 													  userInfo:nil];
@@ -152,36 +153,41 @@
 		//e.g. an away contact signs off, we clear the away flag, but they didn't actually come back from away.
 		if ([[inObject numberStatusObjectForKey:@"Online"] boolValue]){
 			if([modifiedKeys containsObject:@"Away"]){
+				id newValue = [inObject numberStatusObjectForKey:@"Away" fromAnyContainedObject:NO];
 				if([self updateCache:awayCache
 							  forKey:@"Away"
-							  ofType:@selector(numberStatusObjectForKey:) 
+							newValue:newValue
 						  listObject:inObject
 					  performCompare:YES] && !silent){
-					NSString	*event = ([[inObject numberStatusObjectForKey:@"Away"] boolValue] ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO);
+					NSString	*event = ([newValue boolValue] ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO);
 					[[adium contactAlertsController] generateEvent:event
 													 forListObject:inObject
 														  userInfo:nil];
 				}
 			}
 			if([modifiedKeys containsObject:@"IdleSince"]){
+				id newValue = [inObject earliestDateStatusObjectForKey:@"IdleSince"
+												fromAnyContainedObject:NO];
 				if([self updateCache:idleCache
 							  forKey:@"IdleSince"
-							  ofType:@selector(earliestDateStatusObjectForKey:) 
+							newValue:newValue
 						  listObject:inObject
 					  performCompare:NO] && !silent){
-					NSString	*event = (([inObject earliestDateStatusObjectForKey:@"IdleSince"] != nil) ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO);
+					NSString	*event = ((newValue != nil) ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO);
 					[[adium contactAlertsController] generateEvent:event
 													 forListObject:inObject
 														  userInfo:nil];
 				}
 			}
 			if([modifiedKeys containsObject:@"StatusMessage"]){
+				id	newValue = [inObject stringFromAttributedStringStatusObjectForKey:@"StatusMessage"
+															   fromAnyContainedObject:YES];
 				if([self updateCache:statusMessageCache 
 							  forKey:@"StatusMessage"
-							  ofType:@selector(stringFromAttributedStringStatusObjectForKey:)
+							newValue:newValue
 						  listObject:inObject
 					  performCompare:YES] && !silent){
-					if ([inObject statusObjectForKey:@"StatusMessage"] != nil){
+					if (newValue != nil){
 						//Evan: Not yet a contact alert, but we use the notification - how could/should we use this?
 						[[adium contactAlertsController] generateEvent:CONTACT_STATUS_MESSAGE
 														 forListObject:inObject
@@ -198,9 +204,8 @@
 //Caches status changes, returning YES if it was a true change and NO if the change already happened for this listObject via another account
 //If performCompare is NO, we are only concerned about the existance of the statusObject.  
 //If it is YES, a change from one value to another is considered worthy of an update.
-- (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key ofType:(SEL)selector listObject:(AIListObject *)inObject performCompare:(BOOL)performCompare
+- (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key newValue:(id)newStatus listObject:(AIListObject *)inObject performCompare:(BOOL)performCompare
 {
-	id		newStatus = [inObject performSelector:selector withObject:key];
 	id		oldStatus = [cache objectForKey:[inObject uniqueObjectID]];
 	if((newStatus && !oldStatus) ||
 	   (oldStatus && !newStatus) ||
