@@ -203,10 +203,10 @@
 			<string>interface controllers</string>
 			<key>Attributes</key>
 			<dict>
-				<key>activeChat</key>
+				<key>mostRecentActiveChat</key>
 				<dict>
 					<key>Description</key>
-					<string>The activeChat - that is, the one which is foremost and has focus.</string>
+					<string>The chat which most recently had focus.</string>
 					<key>Name</key>
 					<string>active chat</string>
 				</dict>
