@@ -74,19 +74,29 @@ Adium, Copyright 2001-2005, Adam Iser
 //Current version state ID string
 #define STATE_SAVED_STATE			@"State"
 
+//Protocol for state menu display
+@protocol StateMenuPlugin <NSObject>
+- (void)addStateMenuItems:(NSArray *)menuItemArray;
+- (void)removeStateMenuItems:(NSArray *)menuItemArray;
+@end
+
 @interface AIStatusController : NSObject {
     IBOutlet	AIAdium		*adium;
 
 	//Status states
-	NSMutableArray		*stateArray;
-	AIStatus			*activeStatusState;
-	
+	NSMutableArray			*stateArray;
+	AIStatus				*activeStatusState;
+	NSMutableDictionary		*statusDictsByServiceCodeUniqueID[STATUS_TYPES_COUNT];
+
 	//Machine idle tracking
-	BOOL				machineIsIdle;
-	double				lastSeenIdle;
-	NSTimer				*idleTimer;
-	
-	NSMutableDictionary	*statusDictsByServiceCodeUniqueID[STATUS_TYPES_COUNT];
+	BOOL					machineIsIdle;
+	double					lastSeenIdle;
+	NSTimer					*idleTimer;
+
+	//State menu support
+	NSMutableArray			*stateMenuPluginsArray;
+	NSMutableDictionary		*stateMenuItemArraysDict;
+
 }
 
 - (void)initController;
@@ -113,4 +123,10 @@ Adium, Copyright 2001-2005, Adam Iser
 //Machine Idle
 - (double)currentMachineIdle;
 
+//State menu support
+- (void)registerStateMenuPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
+- (void)unregisterStateMenuPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
+- (void)rebuildAllStateMenus;
+- (void)updateAllStateMenuSelections;
+	
 @end
