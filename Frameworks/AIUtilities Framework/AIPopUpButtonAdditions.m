@@ -21,16 +21,12 @@
 - (void)selectItemWithRepresentedObject:(id)object
 {
     int	index = [self indexOfItemWithRepresentedObject:object];
-	if (index != -1){
-		[self selectItemAtIndex:index];
-	}
+    [self selectItemAtIndex:index];
 }
 - (void)compatibleSelectItemWithTag:(int)tag
 {
     int	index = [self indexOfItemWithTag:tag];
-	if (index != -1){
-		[self selectItemAtIndex:index];
-	}
+    [self selectItemAtIndex:index];
 }
 - (void)autosizeAndCenterHorizontally
 {
