@@ -23,7 +23,7 @@
 #define RIGHT_MARGIN		8
 #define GROUP_PADDING		3
 #define LEFT_VIEW_PADDING	3
-#define RIGHT_VIEW_PADDING	16
+#define RIGHT_VIEW_PADDING	3
 #define INDENTATION_OFFSET	-7
 #define CELL_SIZE_ADJUST_X	20	//Adjustment for the flippy triangles, and add some padding
 #define BACK_CELL_INDENT	2
