@@ -11,6 +11,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "panel_privacySheet" = NSPanel; 
+                "progress_sending" = NSProgressIndicator; 
                 "textField_accountIM" = NSTextField; 
                 "textField_description" = NSTextField; 
                 "textField_emailAddress" = NSTextField; 
