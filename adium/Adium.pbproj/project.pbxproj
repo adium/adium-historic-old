@@ -1272,6 +1272,70 @@
 			settings = {
 			};
 		};
+		4B30ADFA044228BA00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AICursorAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AICursorAdditions.h";
+			refType = 4;
+		};
+		4B30ADFB044228BA00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AICursorAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AICursorAdditions.m";
+			refType = 4;
+		};
+		4B30ADFC044228BA00A8010A = {
+			fileRef = 4B30ADFA044228BA00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B30ADFD044228BA00A8010A = {
+			fileRef = 4B30ADFB044228BA00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B30ADFE0442290600A8010A = {
+			isa = PBXFileReference;
+			name = HandPointCursor.tiff;
+			path = "/Users/adamiser/Code/Released/Adium/Version 1.6.2c/Adium/Images/HandPointCursor.tiff";
+			refType = 0;
+		};
+		4B30ADFF0442290600A8010A = {
+			fileRef = 4B30ADFE0442290600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B30AE080442680000A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIFlexibleLink.h;
+			path = "Frameworks/AIUtilities Framework/AIFlexibleLink.h";
+			refType = 4;
+		};
+		4B30AE090442680000A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIFlexibleLink.m;
+			path = "Frameworks/AIUtilities Framework/AIFlexibleLink.m";
+			refType = 4;
+		};
+		4B30AE0A0442680000A8010A = {
+			fileRef = 4B30AE080442680000A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B30AE0B0442680000A8010A = {
+			fileRef = 4B30AE090442680000A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B3E502203EC538D00A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -3753,6 +3817,8 @@
 				4BF1F04C03D7B9F000A8010A,
 				4BF1F04703D7B99700A8010A,
 				4BF1F04803D7B99700A8010A,
+				4B30AE080442680000A8010A,
+				4B30AE090442680000A8010A,
 			);
 			isa = PBXGroup;
 			name = "Flexible Table View";
@@ -6636,7 +6702,6 @@
 				F570A58C03704A8F01A8010A,
 				F570A58E03704A8F01A8010A,
 				F570A59203704AB901A8010A,
-				F570A5A303704BCE01A8010A,
 				F570A5A903704BED01A8010A,
 				F570A5AB03704BED01A8010A,
 				F570A5AF03704C1101A8010A,
@@ -6664,6 +6729,8 @@
 				4B254C4703F6E09600A8010A,
 				4BF5BA20042F3CD500A8010A,
 				4BF5BA24042F3CE200A8010A,
+				4B30ADFC044228BA00A8010A,
+				4B30AE0A0442680000A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6688,6 +6755,7 @@
 				F5CC42460386D8F901A8010A,
 				F5CC42470386D8F901A8010A,
 				F5A70E7F0392657D01A8010A,
+				4B30ADFF0442290600A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6715,7 +6783,6 @@
 				F570A58D03704A8F01A8010A,
 				F570A58F03704A8F01A8010A,
 				F570A59303704AB901A8010A,
-				F570A5A403704BCE01A8010A,
 				F570A5AA03704BED01A8010A,
 				F570A5AC03704BED01A8010A,
 				F570A5B003704C1101A8010A,
@@ -6743,6 +6810,8 @@
 				4B4C45A2040AC65800A8010A,
 				4BF5BA21042F3CD500A8010A,
 				4BF5BA25042F3CE200A8010A,
+				4B30ADFD044228BA00A8010A,
+				4B30AE0B0442680000A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7462,8 +7531,6 @@
 		};
 		F549EF14036B104401A8010A = {
 			children = (
-				F570A5A103704BCE01A8010A,
-				F570A5A203704BCE01A8010A,
 				F5793950033E74E401A8010A,
 				F5793951033E74E401A8010A,
 			);
@@ -7474,6 +7541,7 @@
 		};
 		F549EF15036B10F701A8010A = {
 			children = (
+				4B30ADFE0442290600A8010A,
 				F570A5E803704DEA01A8010A,
 				F570A5E503704DEA01A8010A,
 				F570A5EF03704E4C01A8010A,
@@ -8496,32 +8564,6 @@
 			name = AIContactListEditorPlugin.m;
 			path = "Plugins/Contact List Editor/AIContactListEditorPlugin.m";
 			refType = 4;
-		};
-		F570A5A103704BCE01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AICursorUtilities.h;
-			path = "Frameworks/AIUtilities Framework/AICursorUtilities.h";
-			refType = 4;
-		};
-		F570A5A203704BCE01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AICursorUtilities.m;
-			path = "Frameworks/AIUtilities Framework/AICursorUtilities.m";
-			refType = 4;
-		};
-		F570A5A303704BCE01A8010A = {
-			fileRef = F570A5A103704BCE01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F570A5A403704BCE01A8010A = {
-			fileRef = F570A5A203704BCE01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F570A5A503704BED01A8010A = {
 			fileEncoding = 30;
@@ -10210,6 +10252,8 @@
 				F5793939033E74E401A8010A,
 				F579393A033E74E401A8010A,
 				F579393B033E74E401A8010A,
+				4B30ADFA044228BA00A8010A,
+				4B30ADFB044228BA00A8010A,
 				F579393E033E74E401A8010A,
 				F579393F033E74E401A8010A,
 				4B187A0303D59CCC00A8010A,

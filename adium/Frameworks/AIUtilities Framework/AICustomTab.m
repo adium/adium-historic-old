@@ -16,7 +16,7 @@
 #import "AICustomTab.h"
 #import "AICustomTabsView.h"
 #import "AIImageUtilities.h"
-#import "AICursorUtilities.h"
+#import "AICursorAdditions.h"
 #import "AISystemTabRendering.h"
 
 @interface AICustomTab (PRIVATE)
@@ -181,7 +181,7 @@
     [self discardCursorRects];
 
     if(dragging){
-        cursor = [AICursorUtilities closedGrabHandCursor];
+        cursor = [NSCursor closedGrabHandCursor];
         //The closed grab cursor needs to stay on throughout the drag
         //For some reason I was having trouble making it stick with a set
         //command...This gets the job done good enough to excuse the nastiness

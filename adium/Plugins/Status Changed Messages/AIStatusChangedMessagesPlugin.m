@@ -21,6 +21,7 @@
 {
     [[owner contactController] registerContactObserver:self];
 
+    //Observe contact status changes
     [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusAwayYes:) name:@"Contact_StatusAwayYes" object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusAwayNo:) name:@"Contact_StatusAwayNo" object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusOnlineYes:) name:@"Contact_StatusOnlineYes" object:nil];
@@ -29,6 +30,7 @@
     [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusIdleNo:) name:@"Contact_StatusIdleNo" object:nil];
 }
 
+//Catch away message changes and display them
 - (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
 {
     if([inModifiedKeys containsObject:@"StatusMessage"]){

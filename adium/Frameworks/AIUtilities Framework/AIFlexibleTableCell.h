@@ -52,12 +52,16 @@
 - (BOOL)selectFrom:(int)sourceIndex to:(int)destIndex;
 - (NSAttributedString *)stringFromIndex:(int)sourceIndex to:(int)destIndex;
 
+//Cursor Tracking
+- (BOOL)resetCursorRectsInView:(NSView *)controlView visibleRect:(NSRect)visibleRect;
+
 //Sizing
 - (NSSize)cellSize;
 - (void)sizeCellForWidth:(float)inWidth;
 
 //Drawing
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
+- (void)setFrame:(NSRect)inFrame;
 - (NSRect)frame;
 
 @end

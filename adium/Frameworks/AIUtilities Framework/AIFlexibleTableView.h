@@ -39,6 +39,7 @@
     int					oldWidth;		//Used to avoid unnecessary cell resizes calculations
     float				contentsHeight;		//Total height of our content
     NSMutableArray			*rowHeightArray; 	//Height of every row
+    AIFlexibleTableColumn		*flexibleColumn;	//Our variable-width column
 
     //Delegate
     id <AIFlexibleTableViewDelegate>	delegate;		//Our delegate
@@ -51,6 +52,9 @@
     BOOL				contentBottomAligned;	//YES for bottom-aligned content
     BOOL				scrollsOnNewContent;	//YES to enable autoscroll
 
+    //Cursor tracking
+    NSMutableArray			*cursorTrackingCellArray;
+    
     //Selecting
     int					selectedRow;		//The currently selected row
     int					selection_startIndex;

@@ -120,6 +120,12 @@
     return(nil);
 }
 
+//Cursor Tracking ---
+- (BOOL)resetCursorRectsInView:(NSView *)controlView visibleRect:(NSRect)visibleRect
+{
+    return(NO);
+}
+
 //Selecting ----------------------------------------------------------------------------
 //Returns a character index within this cell for the specified point
 - (int)characterIndexAtPoint:(NSPoint)point
@@ -157,9 +163,7 @@
 // Drawing -------------------------------------------------------------------------------
 //Draws this cell in the requested view and rect
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
-{
-    frame = cellFrame;
-    
+{    
     //Draw the background
     if(!selected){
         if(!gradientColor){ //Plain background
@@ -201,9 +205,12 @@
 
 }
 
-//Returns the last frame where this cell was drawn
-- (NSRect)frame
+//Set and retrieve our frame
+- (void)setFrame:(NSRect)inFrame
 {
+    frame = inFrame;
+}
+- (NSRect)frame{
     return(frame);
 }
 

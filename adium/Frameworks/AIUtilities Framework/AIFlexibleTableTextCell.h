@@ -20,6 +20,9 @@
 
     NSAttributedString		*string;
 
+    NSMutableArray		*linkArray;
+    
+
     //Text rendering cache
     NSTextStorage 		*textStorage;
     NSTextContainer 		*textContainer;
@@ -35,5 +38,6 @@
 - (void)drawContentsWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
 - (void)editAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn inView:(NSView *)controlView;
 - (id <NSCopying>)endEditing;
+- (BOOL)resetCursorRectsInView:(NSView *)controlView visibleRect:(NSRect)visibleRect;
 
 @end

@@ -140,7 +140,7 @@
     //Create the message view
     view_messages = [[owner interfaceController] messageViewForContact:contact];
     [scrollView_messages setAndSizeDocumentView:view_messages];
-    [view_messages setNextResponder:textView_outgoing];
+    [scrollView_messages setNextResponder:textView_outgoing];
 
     //Config the outgoing text view
     [textView_outgoing setOwner:owner];
