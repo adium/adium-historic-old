@@ -11,8 +11,10 @@
 @class AIServiceType;
 
 @interface CBGaimServicePlugin : AIPlugin{
-    id  OscarService;
-    id  GaduGaduService;
+    id  AIMService;
+    id  ICQService;
+    id  DotMacService;
+	id  GaduGaduService;
     id  JabberService;
 	id  MeanwhileService;
 	id  MSNService;
