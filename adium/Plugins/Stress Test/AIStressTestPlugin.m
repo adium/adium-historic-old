@@ -27,6 +27,8 @@
 #endif
 }
 
+#ifdef DEVELOPMENT_BUILD
+
 //Return a new account with the specified properties
 - (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
 {
@@ -54,4 +56,7 @@
     return(handleServiceType);
 }
 
+#endif
+
 @end
+
