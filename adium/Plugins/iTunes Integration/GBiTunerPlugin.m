@@ -67,13 +67,12 @@
     }
 }
 
-- (void)filterContentObject:(AIContentObject *)inObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
 {
-    if([[inObject type] isEqual:CONTENT_MESSAGE_TYPE])
+    NSMutableAttributedString   *mesg = nil;
+    if (inAttributedString)
     {
-	NSMutableAttributedString   *mesg = nil;
-        NSAttributedString          *originalMessage = [(AIContentMessage *)inObject message];
-        NSString                    *originalMessageString = [originalMessage string];
+        NSString                    *originalAttributedString = [inAttributedString string];
         
 	NSEnumerator                *enumerator = [scriptDict keyEnumerator];
         NSString                    *pattern;	
@@ -82,9 +81,9 @@
 	while (pattern = [enumerator nextObject])
 	{
             //if the original string contained this pattern
-            if ([originalMessageString rangeOfString:pattern].location != NSNotFound){
+            if ([originalAttributedString rangeOfString:pattern].location != NSNotFound){
                 if (!mesg){
-                    mesg = [[originalMessage mutableCopyWithZone:nil] autorelease];
+                    mesg = [[inAttributedString mutableCopyWithZone:nil] autorelease];
                 }
                 
                 [mesg replaceOccurrencesOfString:pattern 
@@ -93,15 +92,13 @@
                                            range:NSMakeRange(0,[mesg length])];
             }
         }
-        if (mesg){
-            [(AIContentMessage *)inObject setMessage:mesg]; 
-        }
+        
     }
+    return (mesg ? mesg : inAttributedString);
 }
 
 - (NSString*)hashLookup:(NSString*)pattern
 {
-    
     NSString        *returnString = nil;
     
     NSString *scriptString = [scriptDict objectForKey:pattern];
@@ -110,6 +107,12 @@
         returnString = [[script executeAndReturnError:nil] stringValue];
         [script release];
     }
+ 
+    //@"" as the return string causes all sorts of problems because we can end up with a content message with no text
+    //instead, turn a non-nil but zero-length returnString into a single space - this way, the pattern is still removed
+    //but problems are avoided.
+    if (returnString && ([returnString length]==0))
+        returnString = @" ";
     
     return (returnString ? returnString : pattern);	
 }
