@@ -16,7 +16,7 @@
 @protocol AIListObjectObserver;
 
 @interface AIOfflineContactHidingPlugin : AIPlugin <AIListObjectObserver> {
-
+	NSMenuItem		*showOfflineMenuItem;
 }
 
 @end
