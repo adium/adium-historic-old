@@ -709,7 +709,7 @@ DeclareString(AppendNextMessage);
 //Content was added
 - (void)contentObjectAdded:(NSNotification *)notification
 {
-	[newContent addObject:[[notification userInfo] objectForKey:@"Object"]];
+	[newContent addObject:[[notification userInfo] objectForKey:@"AIContentObject"]];
 	[self processNewContent];	
 }
 
