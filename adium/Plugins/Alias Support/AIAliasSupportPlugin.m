@@ -17,13 +17,13 @@
 #import "AIContactListEditorPlugin.h"
 #import "AIContactInfoWindowController.h"
 
-#define	CONTACT_ALIAS_NIB		@"ContactAlias"		//Filename of the alias info view
-#define	PREF_GROUP_ALIASES		@"Aliases"		//Preference group to store aliases in
+#define	CONTACT_ALIAS_NIB			@"ContactAlias"		//Filename of the alias info view
+#define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 #define ALIASES_DEFAULT_PREFS		@"Alias Defaults"
 #define DISPLAYFORMAT_DEFAULT_PREFS	@"Display Format Defaults"
 
 @interface AIAliasSupportPlugin (PRIVATE)
-- (void)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject delayed:(BOOL)delayed;
+- (NSArray *)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject notify:(BOOL)notify;
 @end
 
 @implementation AIAliasSupportPlugin
@@ -39,7 +39,6 @@
 
     //Observe preferences changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(listObjectStatusChanged:) name:ListObject_StatusChanged object:nil];
 
     prefs = [[AIAliasSupportPreferences displayFormatPreferences] retain];
 
@@ -62,7 +61,7 @@
 - (void)uninstallPlugin
 {
     [delayedChangesTimer release]; delayedChangesTimer = nil;
-    //[[adium contactController] unregisterHandleObserver:self];
+    [[adium contactController] unregisterListObjectObserver:self];
 }
 
 - (IBAction)setAlias:(id)sender
@@ -85,7 +84,7 @@
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
 {
     //Be sure we've set the last changes and invalidated the timer
-    if (delayedChangesTimer) {
+    if(delayedChangesTimer) {
         [self setAlias:nil];
         if ([delayedChangesTimer isValid]) {
             [delayedChangesTimer invalidate]; 
@@ -109,15 +108,15 @@
 
 
 //Called as contacts are created, load their alias
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     if(inModifiedKeys == nil){ //Only set an alias on contact creation
-        [self _applyAlias:[inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES]
-                 toObject:inObject
-                  delayed:delayed];
-    }
-    
-    return(nil);
+        return([self _applyAlias:[inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES]
+						toObject:inObject
+						  notify:NO]);
+    }else{
+		return(nil);
+	}
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
@@ -125,33 +124,17 @@
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DISPLAYFORMAT] == 0){
         //load new displayFormat
         displayFormat = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_DISPLAYFORMAT] objectForKey:@"Long Display Format"] intValue]; 
-
+		
         //Update all existing contacts
-        NSEnumerator * contactEnumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-        AIListObject * inObject;
-        while (inObject = [contactEnumerator nextObject]){
+        NSEnumerator *contactEnumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+        AIListObject *inObject;
+        while(inObject = [contactEnumerator nextObject]){
             [self _applyAlias:[[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self]
                      toObject:inObject
-                      delayed:YES]; 
+					   notify:YES]; 
         }
     }
 }
-
-- (void)listObjectStatusChanged:(NSNotification *)notification
-{
-    NSArray		*keys = [[notification userInfo] objectForKey:@"Keys"];
-
-    //Update the alias for this list object
-    if([keys containsObject:@"Display Name"]){
-        AIListObject 	*inObject = [notification object];
-        
-        [self _applyAlias:[inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES]
-                 toObject:inObject
-                  delayed:YES];
-    }
-}
-
-
 
 
 //Contact Editor Column ----------------------------------------------------------------------
@@ -203,89 +186,72 @@
 }
 
 
-- ( NSString* )stringWithoutWhitespace:( NSString* )sourceString
-{
-    NSMutableString* newString = [ [ NSMutableString alloc ] init ];
-    uint lengthOfSourceString;
-    uint currentCharInSourceStringIndex;
-
-    lengthOfSourceString = [ sourceString length ];
-
-    for ( currentCharInSourceStringIndex = 0;
-          currentCharInSourceStringIndex < lengthOfSourceString;
-          currentCharInSourceStringIndex++ )
-    {
-        if ( [ sourceString compare:@" "
-                            options:NSCaseInsensitiveSearch
-                              range:NSMakeRange( currentCharInSourceStringIndex, 1 ) ] != NSOrderedSame )
-        {
-            [ newString appendString:[ sourceString substringWithRange:NSMakeRange( currentCharInSourceStringIndex, 1 ) ] ];
-        }
-    }
-
-    return [ newString autorelease ];
-}
-
-
 //Private ---------------------------------------------------------------------------------------
 //Apply an alias to an object (Does not save the alias!)
-- (void)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject delayed:(BOOL)delayed
+- (NSArray *)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject notify:(BOOL)notify
 {
+	NSArray			*modifiedAttributes;
     NSString		*displayName = nil;
     NSString		*longDisplayName = nil;
     NSString            *serverDisplayName = nil;
     
-   
+	
     //Setup the display names
     if ( inAlias != nil && [ inAlias length ] != 0 ) {
         displayName = inAlias;
     }
     
     //Long Display Name
-    switch ( displayFormat )
+    switch(displayFormat)
     {
         case DISPLAY_NAME:
             longDisplayName = displayName;
-
-            break;
+		break;
             
         case DISPLAY_NAME_SCREEN_NAME:
             serverDisplayName = [inObject serverDisplayName];
-            if (!displayName || [displayName compare:serverDisplayName] == 0) {
+            if(!displayName || [displayName compare:serverDisplayName] == 0){
                 longDisplayName = displayName;
-            } else {
+            }else{
                 longDisplayName = [NSString stringWithFormat:@"%@ (%@)",displayName,serverDisplayName];
             }
-            break;
+		break;
             
         case SCREEN_NAME_DISPLAY_NAME:
             serverDisplayName = [inObject serverDisplayName];
-            if (!displayName || [displayName compare:serverDisplayName] == 0) {
+            if(!displayName || [displayName compare:serverDisplayName] == 0){
                 longDisplayName = displayName;
-            } else {
+            }else{
                 longDisplayName = [NSString stringWithFormat:@"%@ (%@)",serverDisplayName,displayName];
             }
-            break;
+		break;
             
         case SCREEN_NAME:
             longDisplayName = [inObject serverDisplayName];
-            break;
-
-        default: longDisplayName = nil; break;
+		break;
+			
+        default:
+			longDisplayName = nil;
+		break;
     }
-
+	
     //Apply the values
     [[inObject displayArrayForKey:@"Adium Alias"] setObject:inAlias withOwner:self];
     [[inObject displayArrayForKey:@"Display Name"] setPrimaryObject:displayName withOwner:self];
     [[inObject displayArrayForKey:@"Long Display Name"] setObject:longDisplayName withOwner:self];
-    [[adium contactController] listObjectAttributesChanged:inObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];
+	
+	//notify
+	modifiedAttributes = [NSArray arrayWithObjects:@"Display Name", @"Long Display Name", @"Adium Alias", nil];
+	if(notify) [[adium contactController] listObjectAttributesChanged:inObject modifiedKeys:modifiedAttributes];
+	
+	return(modifiedAttributes);
 }
 
 //need to watch it as it changes as we can't catch the window closing
--(void) controlTextDidChange:(NSNotification *)theNotification
+- (void)controlTextDidChange:(NSNotification *)theNotification
 {
-    if (delayedChangesTimer) {
-        if ([delayedChangesTimer isValid]) {
+    if(delayedChangesTimer){
+        if([delayedChangesTimer isValid]){
             [delayedChangesTimer invalidate]; 
         }
         [delayedChangesTimer release]; delayedChangesTimer = nil;
@@ -303,4 +269,5 @@
     [self setAlias:nil];
     [(AIContactInfoWindowController *)[[[contactView view] window] windowController] ignoreSelectionChanges:NO];
 }
+
 @end
