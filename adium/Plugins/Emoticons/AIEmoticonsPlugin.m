@@ -21,6 +21,7 @@
 #define EMOTICON_DEFAULT_PREFS				@"EmoticonDefaults"
 #define PATH_EMOTICONS						@"/Emoticons"
 #define PATH_INTERNAL_EMOTICONS				@"/Contents/Resources/Emoticons/"
+#define EMOTICONS_PATH_NAME					@"Emoticons"
 #define EMOTICON_PACK_PATH_EXTENSION		@"emoticonPack"
 #define ADIUM_EMOTICON_SET_PATH_EXTENSION   @"AdiumEmoticonset"
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
@@ -344,10 +345,18 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 - (NSArray *)availableEmoticonPacks
 {
     if(!_availableEmoticonPacks){
-        NSString	*path;
+		NSEnumerator	*enumerator;
+        NSString		*path;
 		
         _availableEmoticonPacks = [[NSMutableArray alloc] init];
         
+		//Load emoticon packs
+		enumerator = [[adium resourcePathsForName:EMOTICONS_PATH_NAME] objectEnumerator];
+		
+		while(path = [enumerator nextObject]) {
+			[_availableEmoticonPacks addObjectsFromArray:[self _emoticonsPacksAvailableAtPath:path]];
+		}
+/*		
         //Load internal packs
         path = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_EMOTICONS] stringByExpandingTildeInPath];
         [_availableEmoticonPacks addObjectsFromArray:[self _emoticonsPacksAvailableAtPath:path]];
@@ -355,6 +364,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
         //Load user packs
         path = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:PATH_EMOTICONS] stringByExpandingTildeInPath];
         [_availableEmoticonPacks addObjectsFromArray:[self _emoticonsPacksAvailableAtPath:path]];
+*/		
 		
 		//Sort as per the saved ordering
 		[self _sortArrayOfEmoticonPacks:_availableEmoticonPacks];

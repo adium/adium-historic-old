@@ -343,19 +343,14 @@
     NSDirectoryEnumerator	*fileEnumerator;
     NSString			*iconPath;
     NSString			*filePath;
-    int					curPath;
+	NSEnumerator		*enumerator;
 
     //Create a fresh icon array
     [iconArray release]; iconArray = [[NSMutableArray alloc] init];
-
-    for (curPath = 0; curPath < 2; curPath ++)
-    {
-        //
-        if (curPath == 0)
-            iconPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS];
-        else
-            iconPath = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS];
-            
+	
+	enumerator = [[adium resourcePathsForName:FOLDER_DOCK_ICONS] objectEnumerator];
+	
+    while(iconPath = [enumerator nextObject]) {            
         fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconPath];
         
         //Find all the .AdiumIcon's
