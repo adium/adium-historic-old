@@ -30,9 +30,6 @@
 
 - (void)installPlugin
 {
-    //
-    soundPathDict = nil;
-
     //Install our contact alert
 	[[adium contactAlertsController] registerActionID:SOUND_ALERT_IDENTIFIER withHandler:self];
     
