@@ -15,6 +15,8 @@
 @end
 
 @implementation XtrasInstaller
+
+//XtrasInstaller does not autorelease because it will release itself when closed
 + (XtrasInstaller *)installer
 {
 	return([[XtrasInstaller alloc] init]);
@@ -25,6 +27,10 @@
 	if(self = [super init]){
 		download = nil;
 		window = nil;
+		
+		if(![NSApp isURLLoadingAvailable]){
+			self = nil; 
+		}
 	}
 
 	return(self);
@@ -72,7 +78,10 @@
 		urlToDownload = [[NSURL alloc] initWithScheme:@"http" host:[url host] path:[url path]];
 		dest = [NSTemporaryDirectory() stringByAppendingPathComponent:[[urlToDownload path] lastPathComponent]];
 
-		download = [[NSURLDownload alloc] initWithRequest:[NSURLRequest requestWithURL:urlToDownload] delegate:self];
+		Class NSURLDownloadClass = NSClassFromString(@"NSURLDownload");
+		Class NSURLRequestClass = NSClassFromString(@"NSURLRequest");
+
+		download = [[NSURLDownloadClass alloc] initWithRequest:[NSURLRequestClass requestWithURL:urlToDownload] delegate:self];
 		[download setDestination:dest allowOverwrite:YES];
 
 		[urlToDownload release];
