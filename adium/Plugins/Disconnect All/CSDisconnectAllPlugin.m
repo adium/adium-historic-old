@@ -51,21 +51,23 @@
 {
     NSEnumerator *accountEnumerator = [[[adium accountController] accountArray] objectEnumerator];
     AIAccount	 *account;
-
+	
     if(menuItem == disconnectItem) {
         while(account = [accountEnumerator nextObject]) {
-            if([[account supportedPropertyKeys] containsObject:@"Online"]){
-		return([[account statusObjectForKey:@"Online"] boolValue]);
+			
+			//Enable it as soon as we find an account which is online
+            if([[account supportedPropertyKeys] containsObject:@"Online"] && [[account statusObjectForKey:@"Online"] boolValue]){
+				return YES;
             }
         }
-        return NO;
     }else if(menuItem == connectItem) {
         while(account = [accountEnumerator nextObject]) {
-            if([[account supportedPropertyKeys] containsObject:@"Online"]){
-		return(![[account statusObjectForKey:@"Online"] boolValue]);
+			
+			//Enable it as soon as we find an account which is offline
+            if([[account supportedPropertyKeys] containsObject:@"Online"] && ![[account statusObjectForKey:@"Online"] boolValue]){
+				return YES;
             }
         }
-        return NO;
     }
     return NO;
 }
