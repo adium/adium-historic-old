@@ -17,7 +17,6 @@
 #define Dock_IconDidChange			@"Dock_IconDidChange"
 
 #define KEY_ACTIVE_DOCK_ICON		@"Dock Icon"
-#define KEY_LAST_VERSION_LAUNCHED	@"Last Version Launched"
 #define FOLDER_DOCK_ICONS			@"Dock Icons"
 
 @protocol AITextEntryView;

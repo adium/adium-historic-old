@@ -106,11 +106,6 @@ typedef enum {
     NSMutableDictionary		*reverseListOrderDict;
     float					largestOrder;
     float					smallestOrder;
-	
-	// AIContactStatusEvents stuff
-	NSMutableDictionary		*onlineDict;
-    NSMutableDictionary		*awayDict;
-    NSMutableDictionary		*idleDict;
 
     int		signedOffLength;
     int		signedOnLength;

@@ -48,12 +48,15 @@
 #define ADIUM_XTRAS_PAGE					@"http://www.adiumxtras.com/"
 #define ADIUM_BUG_PAGE						@"mailto:bugs@adiumx.com"
 #define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
+
 #define KEY_USER_VIEWED_LICENSE				@"AdiumUserLicenseViewed"
+#define KEY_LAST_VERSION_LAUNCHED			@"Last Version Launched"
 
 @interface AIAdium (PRIVATE)
 - (void)configureCrashReporter;
 - (void)completeLogin;
 - (void)openAppropriatePreferencesIfNeeded;
+- (void)checkForVersionUpdate;
 @end
 
 @implementation AIAdium
@@ -210,6 +213,14 @@
 //    [activityWindowController initController];
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 
+	NSNumber	*newVersionNumber = [self newVersionNumber];
+	
+	if (versionUpgradeDict){
+		[[self notificationCenter] postNotificationName:Adium_VersionWillBeUpgraded
+												 object:nil
+											   userInfo:versionUpgradeDict];
+	}
+	
 	/*
 	 Account controller should finish initing before the contact controller so accounts and services are available
 	 for contact creation
@@ -219,10 +230,17 @@
     [interfaceController finishIniting];
     [preferenceController finishIniting];
 	
+	if (versionUpgradeDict){
+		[[self notificationCenter] postNotificationName:Adium_VersionUpgraded
+												 object:nil
+											   userInfo:versionUpgradeDict];
+	}
+	
 	//Open the preferences if we were unable to because application:openFile: was called before we got here
 	[self openAppropriatePreferencesIfNeeded];
 	
     completedApplicationLoad = YES;
+	
 	
 	[[self notificationCenter] postNotificationName:Adium_CompletedApplicationLoad object:nil];
 }
@@ -554,6 +572,42 @@ void Adium_HandleSignal(int i){
 	}
     
 	return pathArray;
+}
+
+//If this is the first time running a version, post Adium_versionUpgraded with information about the old and new versions.
+- (NSDictionary *)versionUpgradeDict
+{
+	NSString	*currentVersionString = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+	float	    version = [currentVersionString floatValue];
+	NSString	*lastLaunchedVersion = [[self preferenceController] preferenceForKey:KEY_LAST_VERSION_LAUNCHED
+																				group:PREF_GROUP_GENERAL];
+	NSNumber	*versionNumber = [NSNumber numberWithFloat:version];
+	
+	NSDictionary	*versionUpgradeDict = nil;
+	
+	if (!lastLaunchedVersion || !version || version > [lastLaunchedVersion floatValue]){
+		
+		if (lastLaunchedVersion){
+			
+			NSNumber		*lastLaunchedVersionNumber = [NSNumber numberWithFloat:[lastLaunchedVersion floatValue]];
+			
+			versionUpgradeDict = [NSDictionary dictionaryWithObjectsAndKeys:lastLaunchedVersionNumber, @"lastLaunchedVersion",
+				versionNumber,@"currentVersion",
+				nil];
+		}else{
+			versionUpgradeDict = [NSDictionary dictionaryWithObject:versionNumber
+															 forKey:@"currentVersion"];			
+		}
+	}
+	
+	//Remember that we have now run in this version.
+	if(versionUpgradeDict){
+		[[self preferenceController] setPreference:currentVersionString
+											forKey:KEY_LAST_VERSION_LAUNCHED
+											 group:PREF_GROUP_GENERAL];
+	 }
+	
+	return(versionUpgradeDict);
 }
 
 #pragma mark Scripting
