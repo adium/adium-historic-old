@@ -124,23 +124,23 @@
             [self echo:[NSString stringWithFormat:@"Created %i handles",count]];
             
         }else if([type compare:@"online"] == 0){
-            int 	count = [[commands objectAtIndex:1] intValue];
-            BOOL 	silent = NO;
-            int 	i;
+            NSMutableArray	*handleArray = [NSMutableArray array];
+            int 		count = [[commands objectAtIndex:1] intValue];
+            BOOL 		silent = NO;
+            int 		i;
 
             if([commands count] > 2) silent = ([(NSString *)@"silent" compare:[commands objectAtIndex:2]] == 0);
-
             for(i=0;i < count;i++){
                 AIHandle	*handle;
                 NSString	*UID = [NSString stringWithFormat:@"Buddy%i",i];
 
                 if(handle = [handleDict objectForKey:UID]){
-                    [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
-                    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:silent silent:silent];
+                    [handleArray addObject:handle];
                 }
             }
 
-            [self echo:[NSString stringWithFormat:@"%i handles signed on %@",count,(silent?@"(Silently)":@"")]];
+            [NSTimer scheduledTimerWithTimeInterval:0.00001 target:self selector:@selector(timer_online:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:handleArray,@"handles",[NSNumber numberWithBool:silent],@"silent",nil] repeats:YES];
+            [self echo:[NSString stringWithFormat:@"%i handles signing on %@",count,(silent?@"(Silently)":@"")]];
 
         }else if([type compare:@"offline"] == 0){
             int 	count = [[commands objectAtIndex:1] intValue];
@@ -165,26 +165,8 @@
             int 	count = [[commands objectAtIndex:1] intValue];
             int 	spread = [[commands objectAtIndex:2] intValue];
             NSString	*message = [commands objectAtIndex:3];
-            int 	i;
 
-            for(i=0;i < count;i++){
-                AIHandle	*handle;
-                NSString	*UID = [NSString stringWithFormat:@"Buddy%i",i%spread];
-
-                if(handle = [handleDict objectForKey:UID]){
-                    AIContentMessage *messageObject;
-                    messageObject = [AIContentMessage messageInChat:[self chatForHandle:handle]
-                                                         withSource:[commandHandle containingContact]
-                                                        destination:self
-                                                               date:nil
-                                                            message:[[[NSAttributedString alloc] initWithString:message attributes:[NSDictionary dictionary]] autorelease]
-                                                          autoreply:NO];
-                    [[owner contentController] addIncomingContentObject:messageObject];
-
-                }
-            }
-
-            [self echo:[NSString stringWithFormat:@"%i messages received",count]];
+            [NSTimer scheduledTimerWithTimeInterval:0.00001 target:self selector:@selector(timer_msgin:) userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",[NSNumber numberWithInt:count],@"count",[NSNumber numberWithInt:spread],@"spread",message,@"message",nil] repeats:YES];
             
         }else{
             [self echo:[NSString stringWithFormat:@"Unknown command %@",type]];
@@ -193,6 +175,53 @@
 
     return(YES);
 }
+
+
+- (void)timer_online:(NSTimer *)inTimer
+{
+    NSMutableDictionary	*userInfo = [inTimer userInfo];
+    NSMutableArray	*array = [userInfo objectForKey:@"handles"];
+    AIHandle		*handle = [array lastObject];
+    BOOL		silent = [[[inTimer userInfo] objectForKey:@"silent"] boolValue];
+    
+    [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
+    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:silent silent:silent];
+
+    [array removeLastObject];
+    if([array count] == 0) [inTimer invalidate];
+}
+
+- (void)timer_msgin:(NSTimer *)inTimer
+{
+    NSMutableDictionary *userInfo = [inTimer userInfo];
+    NSString		*message = [userInfo objectForKey:@"message"];
+    int			i = [[userInfo objectForKey:@"i"] intValue];
+    int			count = [[userInfo objectForKey:@"count"] intValue];
+    int			spread = [[userInfo objectForKey:@"spread"] intValue];
+
+    AIHandle	*handle;
+    NSString	*UID = [NSString stringWithFormat:@"Buddy%i",i%spread];
+
+    if(handle = [handleDict objectForKey:UID]){
+        AIContentMessage *messageObject;
+        messageObject = [AIContentMessage messageInChat:[self chatForHandle:handle]
+                                                withSource:[commandHandle containingContact]
+                                            destination:self
+                                                    date:nil
+                                                message:[[[NSAttributedString alloc] initWithString:message attributes:[NSDictionary dictionary]] autorelease]
+                                                autoreply:NO];
+        [[owner contentController] addIncomingContentObject:messageObject];
+
+    }
+
+    i++;
+    [userInfo setObject:[NSNumber numberWithInt:i] forKey:@"i"];
+    if(i == count) [inTimer invalidate];
+}
+
+
+
+
 
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
@@ -225,7 +254,7 @@
 
 - (void)echo:(NSString *)string
 {
-    [self performSelector:@selector(_echo:) withObject:string afterDelay:0.0001];
+    [self performSelector:@selector(_echo:) withObject:string afterDelay:0.00001];
 }
 
 - (void)_echo:(NSString *)string
