@@ -80,12 +80,13 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     //   [[owner notificationCenter] removeObserver:self name:One_Time_Event_Fired object:activeContactObject];
 
     [self reload:activeContactObject usingCache:YES];
+
 }
 
 - (void)dealloc
 {
     //remove observer
-    [[owner notificationCenter] removeObserver:self name:One_Time_Event_Fired object:activeContactObject];
+//    [[owner notificationCenter] removeObserver:self];
 
     [owner release];
     [activeContactObject release];
@@ -141,7 +142,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 {
     if (object) //nil objects can't be loaded, clearly
     {
-        NSMutableArray * newActionArray =  [[[NSMutableArray alloc] init] autorelease];
+        NSMutableArray * newActionArray =  nil;
         NSString * UID = [object UID];
 
         if (useCache)
@@ -285,7 +286,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 {
     NSString *details = [[[NSString alloc] init]autorelease];
     NSMutableDictionary * detailsDict;
-
     details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
 
     if ([[selectedActionDict objectForKey:KEY_EVENT_DETAILS_UNIQUE] intValue])
@@ -308,8 +308,9 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     {
         [button_anotherAccount setState:NSOnState]; //default: use another account if needed
         [button_displayAlert setState:NSOffState]; //default: don't display an alert
-        [popUp_message_actionDetails_two selectItemAtIndex:[popUp_message_actionDetails_two indexOfItemWithRepresentedObject:activeContactObject]]; //default: send to the current contact
-
+        if ([activeContactObject isKindOfClass:[AIListContact class]]){
+            [popUp_message_actionDetails_two selectItemAtIndex:[popUp_message_actionDetails_two indexOfItemWithRepresentedObject:activeContactObject]]; //default: send to the current contact
+        }
         NSEnumerator * accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
         AIAccount * account;
         while( (account = [accountEnumerator nextObject]) && ([[account propertyForKey:@"Status"] intValue] == STATUS_OFFLINE) );
@@ -331,7 +332,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         [button_anotherAccount setState:[[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]];
         [button_displayAlert setState:[[detailsDict objectForKey:KEY_MESSAGE_ERROR] intValue]];
     }
-
     [self configureWithSubview:view_details_message];
 
     [[view_details_message window] makeFirstResponder:textField_message_actionDetails];
@@ -365,15 +365,19 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 -(IBAction)saveMessageDetails:(id)sender
 {
     NSMutableDictionary *detailsDict = [[NSMutableDictionary alloc] init];
-
-    AIAccount * account = [[popUp_message_actionDetails_one selectedItem] representedObject];
-    [detailsDict setObject:[account accountID] forKey:KEY_MESSAGE_SENDFROM];
-    AIListContact * contact = [[popUp_message_actionDetails_two selectedItem] representedObject];
-    NSString * uid = [contact UID];
-    NSString * service = [contact serviceID];
-    [detailsDict setObject:uid forKey:KEY_MESSAGE_SENDTO_UID];
-    [detailsDict setObject:service forKey:KEY_MESSAGE_SENDTO_SERVICE];
-
+    AIListContact * contact;
+    AIAccount * account;
+    
+    if (account = [[popUp_message_actionDetails_one selectedItem] representedObject])
+        [detailsDict setObject:[account accountID] forKey:KEY_MESSAGE_SENDFROM];
+    
+    if (contact = [[popUp_message_actionDetails_two selectedItem] representedObject]) {
+        NSString * uid = [contact UID];
+        NSString * service = [contact serviceID];
+        [detailsDict setObject:uid forKey:KEY_MESSAGE_SENDTO_UID];
+        [detailsDict setObject:service forKey:KEY_MESSAGE_SENDTO_SERVICE];
+    }
+    
     [detailsDict setObject:[NSNumber numberWithInt:[button_anotherAccount state]] forKey:KEY_MESSAGE_OTHERACCOUNT];
     [detailsDict setObject:[NSNumber numberWithInt:[button_displayAlert state]] forKey:KEY_MESSAGE_ERROR];
 
