@@ -5642,10 +5642,9 @@
 		344AB6ED0579231800384CEE = {
 			expectedFileType = folder;
 			isa = PBXFileReference;
-			name = "Open Message Window Contact Alert.AdiumPlugin";
-			path = "build/Open Message Window Contact Alert.AdiumPlugin";
-			refType = 4;
-			sourceTree = "<group>";
+			path = "Open Message Window Contact Alert.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		344AB6F80579231800384CEE = {
 			fileRef = 344AB6ED0579231800384CEE;
