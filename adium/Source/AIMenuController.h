@@ -16,7 +16,7 @@
 #define Menu_didChange  @"Menu_didChange"
 
 typedef enum {
-    LOC_Adium_About, LOC_Adium_Preferences,
+    LOC_Adium_About = 0, LOC_Adium_Preferences,
     LOC_File_New, LOC_File_Close, LOC_File_Save, LOC_File_Accounts, LOC_File_Additions, LOC_File_Status,
     LOC_Edit_Bottom, LOC_Edit_Additions,
     LOC_Format_Styles, LOC_Format_Palettes, LOC_Format_Additions, 
@@ -28,7 +28,7 @@ typedef enum {
 } MENU_LOCATION;
 
 typedef enum {
-    Context_Contact_Manage, Context_Contact_Action, Context_Contact_NegativeAction, Context_Contact_Additions    
+    Context_Group_Manage,Context_Contact_Manage, Context_Contact_Action, Context_Contact_NegativeAction, Context_Contact_Additions    
 } CONTEXT_MENU_LOCATION;
 
 @interface AIMenuController : NSObject {
