@@ -14,5 +14,7 @@
 		<key>Speak Sender</key>
 		<true/>
 	</dict>
+	<key>Active Speech Preset</key>
+	<string>None</string>
 </dict>
 </plist>
