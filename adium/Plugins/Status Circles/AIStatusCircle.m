@@ -26,7 +26,7 @@
 - (NSSize)attributedStringSizeForHeight:(float)height;
 - (float)maxWidthForHeight:(float)height;
 - (void)_flushDrawingCache;
-- (float)_circleWidthForRadius:(float)circleRadius;
+- (int)_circleWidthForRadius:(float)circleRadius;
 @end
 
 @implementation AIStatusCircle
@@ -113,12 +113,14 @@
 - (void)drawInRect:(NSRect)inRect
 {
     NSBezierPath 		*pillPath;
-    float			stringHeight, circleRadius, circleWidth, lineWidth;
+    int				stringHeight;
+    float			circleRadius, circleWidth, lineWidth;
     float 			innerLeft, innerRight, innerTop, innerBottom, centerY;
-    
+
     //Calculate Circle Dimensions
     stringHeight = (inRect.size.height + CIRCLE_SIZE_OFFSET);
     circleRadius = stringHeight / 2.0;
+
     circleWidth = [self _circleWidthForRadius:circleRadius];
     lineWidth = (circleRadius * (2.0/15.0));
 
@@ -207,7 +209,7 @@
 
 }
 
-- (float)_circleWidthForRadius:(float)circleRadius
+- (int)_circleWidthForRadius:(float)circleRadius
 {
     float	insideWidth;
 

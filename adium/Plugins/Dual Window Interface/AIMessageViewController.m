@@ -284,7 +284,7 @@
 
         //Manually determine the font's height
         attrString = [[[NSAttributedString alloc] initWithString:@" AbcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[textView_outgoing typingAttributes]] autorelease];
-        textHeight = [attrString heightWithWidth:[textView_outgoing frame].size.width] + ENTRY_TEXTVIEW_PADDING;
+        textHeight = [attrString heightWithWidth:10000] + ENTRY_TEXTVIEW_PADDING; //Arbitrarily large number
         
     }else{
         //Let the container tell us its height
