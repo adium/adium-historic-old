@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.75 2004/05/24 06:04:03 evands Exp $
+// $Id: AIContentController.m,v 1.76 2004/06/01 18:34:22 evands Exp $
 
 #import "AIContentController.h"
 
@@ -288,7 +288,7 @@
 												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
 
-    //Run the object through our outgoign content filters
+    //Run the object through our outgoing content filters
     if([inObject filterContent]){
 		[inObject setMessage:[self filterAttributedString:[inObject message]
 										  usingFilterType:AIFilterContent
@@ -314,6 +314,21 @@
     }
 
     return(sent);
+}
+
+//Display a content object
+//Add content to the message view.  Doesn't do any sending or receiving, just adds the content.
+- (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters
+{
+	if (useContentFilters){
+		[inObject setMessage:[self filterAttributedString:[inObject message]
+										  usingFilterType:AIFilterContent
+												direction:([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming)
+												  context:inObject]];
+	}
+	
+	//Add the object
+	[self displayContentObject:inObject];
 }
 
 //Display a content object
