@@ -233,17 +233,20 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS
 											  group:PREF_GROUP_LIST_LAYOUT];
-		
+		[self configureControlDimming];
+
 	}else if(sender == checkBox_statusIconsVisible){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS
 											  group:PREF_GROUP_LIST_LAYOUT];
-		
+		[self configureControlDimming];
+
 	}else if(sender == checkBox_serviceIconsVisible){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS
 											  group:PREF_GROUP_LIST_LAYOUT];
-		
+		[self configureControlDimming];
+
 	}else if(sender == checkBox_windowHasShadow){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED
@@ -339,10 +342,22 @@
 	int				windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 	BOOL			horizontalAutosize = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
 	
-	//
-	[slider_userIconSize setEnabled:[checkBox_userIconVisible state]];
-	[textField_userIconSize setEnabled:[checkBox_userIconVisible state]];
-	[popUp_userIconPosition setEnabled:[checkBox_userIconVisible state]];
+	//Bubble to fit limitations
+	BOOL nonFitted = (windowStyle != WINDOW_STYLE_PILLOWS_FITTED);
+	[checkBox_userIconVisible setEnabled:nonFitted];
+	[checkBox_extendedStatusVisible setEnabled:nonFitted];
+	[checkBox_statusIconsVisible setEnabled:nonFitted];
+	[checkBox_serviceIconsVisible setEnabled:nonFitted];
+	
+	//User icon controls
+	[slider_userIconSize setEnabled:([checkBox_userIconVisible state] && [checkBox_userIconVisible isEnabled])];
+	[textField_userIconSize setEnabled:([checkBox_userIconVisible state] && [checkBox_userIconVisible isEnabled])];
+	[popUp_userIconPosition setEnabled:([checkBox_userIconVisible state] && [checkBox_userIconVisible isEnabled])];
+	
+	//Other controls
+	[popUp_extendedStatusPosition setEnabled:([checkBox_extendedStatusVisible state] && [checkBox_extendedStatusVisible isEnabled])];
+	[popUp_statusIconPosition setEnabled:([checkBox_statusIconsVisible state] && [checkBox_statusIconsVisible isEnabled])];
+	[popUp_serviceIconPosition setEnabled:([checkBox_serviceIconsVisible state] && [checkBox_serviceIconsVisible isEnabled])];
 	
 	//Disable group spacing when not using mockie
 	[slider_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
@@ -363,7 +378,10 @@
 		}
 		[slider_horizontalWidth setEnabled:YES];
 	}
+	
+
 }
+
 
 
 @end
