@@ -51,7 +51,7 @@
 	owner = nil;
 	[fileTransfer setDelegate:nil];
 	[fileTransfer release];
-		
+	[view release]; view = nil;
 	[super dealloc];
 }
 
