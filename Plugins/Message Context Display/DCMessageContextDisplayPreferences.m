@@ -19,7 +19,8 @@
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 
-@class AIPreferenceWindowController;
+#warning crosslink
+#import "AIPreferenceWindowController.h"
 
 @implementation DCMessageContextDisplayPreferences
 
