@@ -98,7 +98,8 @@
 - (NSDictionary *)additionalLabelAttributes
 {
 	if([NSApp isOnPantherOrBetter]){
-		NSShadow	*shadow = [[[NSShadow alloc] init] autorelease];
+		Class 	shadowClass = NSClassFromString(@"NSShadow"); //Weak Linking for 10.2 compatability
+		id		shadow = [[[shadowClass alloc] init] autorelease];
 		
 		[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
 		[shadow setShadowBlurRadius:2.0];
