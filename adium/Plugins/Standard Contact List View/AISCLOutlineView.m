@@ -41,7 +41,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    id	tableColumn;
+    NSTableColumn	*tableColumn;
 
     [super initWithFrame:frameRect];
 
