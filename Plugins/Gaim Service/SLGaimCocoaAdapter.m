@@ -274,7 +274,7 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					 */
 					NSDictionary	*chatCreationInfo = [chat statusObjectForKey:@"ChatCreationInfo"];
 					
-					NSLog(@"gotta create a chat");
+					GaimDebug (@"Creating a chat.");
 #warning Not all prpls support the below method for chat creation.  Need prpl-specific possibilites.
 					GHashTable				*components;
 					
@@ -308,7 +308,7 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						if (!(pce->is_int)){
 							NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
 							if (value){
-								NSLog(@"$$$$ not int: added %s:%@ to chat info",identifier,value);
+								GaimDebug (@"$$$$ not int: added %s:%@ to chat info",identifier,value);
 								valueUTF8String = g_strdup([value UTF8String]);
 							}else{
 								NSLog(@"String: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
@@ -317,7 +317,7 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						}else{
 							NSNumber	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
 							if (value){
-								NSLog(@"$$$$  is int: added %s:%@ to chat info",identifier,value);
+								GaimDebug (@"$$$$  is int: added %s:%@ to chat info",identifier,value);
 								valueUTF8String = g_strdup_printf("%d",[value intValue]);
 							}else{
 								NSLog(@"Int: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
@@ -352,7 +352,7 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					if( shouldTryToJoin ) {
 					//Join the chat serverside - the GHsahTable components, couple with the originating GaimConnect,
 					//now contains all the information the prpl will need to process our request.
-						NSLog(@"In the event of an emergency, your GHashTable may be used as a flotation device...");
+						GaimDebug (@"In the event of an emergency, your GHashTable may be used as a flotation device...");
 						serv_join_chat(gc, components);
 					} else {
 						NSLog(@"#### Bailing out of group chat");
@@ -535,12 +535,12 @@ static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
 static void adiumGaimBlistDestroy(GaimBuddyList *list)
 {
     //Here we're responsible for destroying what we placed in list's ui_data earlier
-    NSLog(@"adiumGaimBlistDestroy");
+    GaimDebug (@"adiumGaimBlistDestroy");
 }
 
 static void adiumGaimBlistSetVisible(GaimBuddyList *list, gboolean show)
 {
-    NSLog(@"adiumGaimBlistSetVisible: %i",show);
+    GaimDebug (@"adiumGaimBlistSetVisible: %i",show);
 }
 
 static void adiumGaimBlistRequestAddBuddy(GaimAccount *account, const char *username, const char *group, const char *alias)
@@ -551,12 +551,12 @@ static void adiumGaimBlistRequestAddBuddy(GaimAccount *account, const char *user
 
 static void adiumGaimBlistRequestAddChat(GaimAccount *account, GaimGroup *group, const char *alias, const char *name)
 {
-    NSLog(@"adiumGaimBlistRequestAddChat");
+    GaimDebug (@"adiumGaimBlistRequestAddChat");
 }
 
 static void adiumGaimBlistRequestAddGroup(void)
 {
-    NSLog(@"adiumGaimBlistRequestAddGroup");
+    GaimDebug (@"adiumGaimBlistRequestAddGroup");
 }
 
 static GaimBlistUiOps adiumGaimBlistOps = {
@@ -824,12 +824,12 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user, gboolean new_arrival)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
-			NSLog(@"adiumGaimConvChatAddUser: CHAT: add %s",user);
+		GaimDebug (@"adiumGaimConvChatAddUser: CHAT: add %s",user);
 		[accountLookup(conv->account) mainPerformSelector:@selector(addUser:toChat:)
 											   withObject:[NSString stringWithUTF8String:user]
 											   withObject:chatLookupFromConv(conv)];
 	}else{
-		NSLog(@"adiumGaimConvChatAddUser: IM: add %s",user);
+		GaimDebug (@"adiumGaimConvChatAddUser: IM: add %s",user);
 	}
 
 }
@@ -847,13 +847,13 @@ static void adiumGaimConvChatRenameUser(GaimConversation *conv, const char *oldN
 static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user)
 {
  	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
-		NSLog(@"adiumGaimConvChatRemoveUser: CHAT: remove %s",user);
+		GaimDebug (@"adiumGaimConvChatRemoveUser: CHAT: remove %s",user);
 
 		[accountLookup(conv->account) mainPerformSelector:@selector(removeUser:fromChat:)
 											   withObject:[NSString stringWithUTF8String:user]
 											   withObject:chatLookupFromConv(conv)];
 	}else{
-		NSLog(@"adiumGaimConvChatRemoveUser: IM: remove %s",user);
+		GaimDebug (@"adiumGaimConvChatRemoveUser: IM: remove %s",user);
 	}
 	
 }
@@ -870,12 +870,12 @@ static void adiumGaimConvSetTitle(GaimConversation *conv, const char *title)
 
 static void adiumGaimConvUpdateUser(GaimConversation *conv, const char *user)
 {
-	NSLog(@"adiumGaimConvUpdateUser: %s",user);
+	GaimDebug (@"adiumGaimConvUpdateUser: %s",user);
 }
 
 static void adiumGaimConvUpdateProgress(GaimConversation *conv, float percent)
 {
-    NSLog(@"adiumGaimConvUpdateProgress %f",percent);
+    GaimDebug (@"adiumGaimConvUpdateProgress %f",percent);
 }
 
 //This isn't a function we want Gaim doing anything with, I don't think
@@ -1036,14 +1036,14 @@ static void adiumGaimRoomlistDialogShowWithAccount(GaimAccount *account)
 }
 static void adiumGaimRoomlistNew(GaimRoomlist *list)
 {
- if (GAIM_DEBUG)	NSLog(@"adiumGaimRoomlistNew");
+	GaimDebug (@"adiumGaimRoomlistNew");
 }
 static void adiumGaimRoomlistSetFields(GaimRoomlist *list, GList *fields)
 {
 }
 static void adiumGaimRoomlistAddRoom(GaimRoomlist *list, GaimRoomlistRoom *room)
 {
-	 if (GAIM_DEBUG)	NSLog(@"adiumGaimRoomlistAddRoom");
+	GaimDebug (@"adiumGaimRoomlistAddRoom");
 }
 static void adiumGaimRoomlistInProgress(GaimRoomlist *list, gboolean flag)
 {
@@ -1066,7 +1066,7 @@ static GaimRoomlistUiOps adiumGaimRoomlistOps = {
 static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, const char *primary, const char *secondary, GCallback cb,void *userData)
 {
     //Values passed can be null
-    NSLog(@"adiumGaimNotifyMessage: %@: %s: %s, %s", myself, title, primary, secondary);
+    GaimDebug (@"adiumGaimNotifyMessage: %@: %s: %s, %s", myself, title, primary, secondary);
 	return ([myself handleNotifyMessageOfType:type withTitle:title primary:primary secondary:secondary]);
 }
 
@@ -1204,7 +1204,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 		
 		errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ granted authorization.",nil),targetUserName];
 	}	
-	NSLog(@"sending %@ %@ %@ %@",[adium interfaceController],([errorMessage length] ? errorMessage : primaryString),([description length] ? description : ([secondaryString length] ? secondaryString : @"") ),titleString);
+	GaimDebug (@"sending %@ %@ %@ %@",[adium interfaceController],([errorMessage length] ? errorMessage : primaryString),([description length] ? description : ([secondaryString length] ? secondaryString : @"") ),titleString);
 	//If we didn't grab a translated version using AILocalizedString, at least display the English version Gaim supplied
 	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
 										  withObject:([errorMessage length] ? errorMessage : primaryString)
@@ -1343,7 +1343,7 @@ static void *adiumGaimRequestInput(const char *title, const char *primary, const
 
 static void *adiumGaimRequestChoice(const char *title, const char *primary, const char *secondary, unsigned int defaultValue, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData, size_t choiceCount, va_list choices)
 {
-    NSLog(@"adiumGaimRequestChoice");
+    GaimDebug (@"adiumGaimRequestChoice");
     return(nil);
 }
 
@@ -1812,14 +1812,15 @@ static void adiumGaimPrefsInit(void)
 static void adiumGaimCoreDebugInit(void)
 {
 #if (GAIM_DEBUG)
-		NSLog(@"%x: Registering debug functions",[NSRunLoop currentRunLoop]);
+	GaimDebug (@"%x: Registering debug functions",[NSRunLoop currentRunLoop]);
     gaim_debug_set_ui_ops(&adiumGaimDebugOps);
 #endif
 }
 
 static void adiumGaimCoreUiInit(void)
 {
-if (GAIM_DEBUG)	NSLog(@"%x: Registering core functions",[NSRunLoop currentRunLoop]);
+	GaimDebug (@"%x: Registering core functions",[NSRunLoop currentRunLoop]);
+	
 	gaim_eventloop_set_ui_ops(&adiumEventLoopUiOps);
     gaim_blist_set_ui_ops(&adiumGaimBlistOps);
     gaim_connections_set_ui_ops(&adiumGaimConnectionOps);
@@ -1833,7 +1834,7 @@ if (GAIM_DEBUG)	NSLog(@"%x: Registering core functions",[NSRunLoop currentRunLoo
 
 static void adiumGaimCoreQuit(void)
 {
-    NSLog(@"Core quit");
+    GaimDebug (@"Core quit");
     exit(0);
 }
 
@@ -1849,7 +1850,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	//Register ourself as libgaim's UI handler
 	gaim_core_set_ui_ops(&adiumGaimCoreOps);
 	if(!gaim_core_init("Adium")) {
-		NSLog(@"Failed to initialize gaim core");
+		NSLog(@"*** FATAL ***: Failed to initialize gaim core");
 	}
 	
 	//Setup the buddy list
@@ -2166,7 +2167,9 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 {
 	GaimGroup *group = gaim_find_group([groupName UTF8String]);
 	
-	gaim_blist_remove_group(group);
+	if (group){
+		gaim_blist_remove_group(group);
+	}
 }
 
 #pragma mark Alias
@@ -2237,27 +2240,23 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)gaimThreadInviteContact:(AIListContact *)listContact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage
 {
-	GaimConversation *conv = convLookupFromChat(chat,[chat account]);
+	GaimConversation	*conv;
+	GaimAccount			*account;
+	GaimConvChat		*gaimChat;
 
-	NSLog(@"#### gaimThreadInviteContact:%@ toChat:%@",[listContact UID],[chat name]);
+	GaimDebug (@"#### gaimThreadInviteContact:%@ toChat:%@",[listContact UID],[chat name]);
 	// dchoby98
-	if(conv) {
-		NSLog(@"#### gaimThreadAddChatUser found conv");
-		GaimAccount *account = accountLookupFromAdiumAccount([chat account]);
+	if((conv = convLookupFromChat(chat,[chat account])) &&
+	   (account = accountLookupFromAdiumAccount([chat account])) &&
+	   (gaimChat = gaim_conversation_get_chat_data(conv))){
 
-		if( account ) {
-			NSLog(@"#### gaimThreadAddChatUser found account");
-			//GaimBuddy		*buddy = gaim_find_buddy(account, [[listObject UID] UTF8String]);
-			GaimConvChat	*gaimChat = gaim_conversation_get_chat_data(conv);
-			//const char *temp = [[NSString stringWithString:@"Hello"] UTF8String];
-			NSLog(@"#### gaimThreadAddChatUser chat: %d buddy: %@",chat==nil,[listContact UID]);
-			serv_chat_invite(gaim_conversation_get_gc(conv),
-							 gaim_conv_chat_get_id(gaimChat),
-							 (inviteMessage ? [inviteMessage UTF8String] : ""),
-							 [[listContact UID] UTF8String]);
-			
-			//gaim_conv_chat_add_user(gaimChat,[[listObject UID] UTF8String],[[NSString stringWithString:@"Hello"] UTF8String]);
-		}
+		//GaimBuddy		*buddy = gaim_find_buddy(account, [[listObject UID] UTF8String]);
+		GaimDebug (@"#### gaimThreadAddChatUser chat: %d buddy: %@",chat==nil,[listContact UID]);
+		serv_chat_invite(gaim_conversation_get_gc(conv),
+						 gaim_conv_chat_get_id(gaimChat),
+						 (inviteMessage ? [inviteMessage UTF8String] : ""),
+						 [[listContact UID] UTF8String]);
+		
 	}
 }
 
