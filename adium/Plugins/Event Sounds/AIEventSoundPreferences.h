@@ -18,10 +18,9 @@
 @interface AIEventSoundPreferences : AIPreferencePane {
     IBOutlet	NSPopUpButton		*popUp_soundSet;
 
-    AIEventSoundCustom			*eventSoundCustomPanel;
+    AIEventSoundCustom				*eventSoundCustomPanel;
 }
 
 - (IBAction)selectSoundSet:(id)sender;
-- (IBAction)toggleMuteWhileAway:(id)sender;
 
 @end
