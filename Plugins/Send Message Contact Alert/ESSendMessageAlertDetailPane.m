@@ -9,7 +9,7 @@
 #import "ESSendMessageContactAlertPlugin.h"
 
 @interface ESSendMessageAlertDetailPane (PRIVATE)
-- (void)setDestinationContact:(AIListObject *)inObject;
+- (void)setDestinationContact:(AIListContact *)inContact;
 @end
 
 @implementation ESSendMessageAlertDetailPane
@@ -88,7 +88,7 @@
 		
 		//Update 'from' menu
 		[popUp_messageFrom setMenu:[[adium accountController] menuOfAccountsForSendingContentType:CONTENT_MESSAGE_TYPE
-																						toContact:toContact
+																					 toListObject:toContact
 																					   withTarget:self
 																				   includeOffline:YES]];
 
