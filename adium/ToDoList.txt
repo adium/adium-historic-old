@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.73 2004/04/28 03:54:40 dchoby98 Exp $
+$Id: ToDoList.txt,v 1.74 2004/04/29 05:13:54 the_tick Exp $
 
 Legend
 + Change or Addition
@@ -183,7 +183,16 @@ Contact Inspector:
     	+ Update existing inspector views to use big controls, and place them in the inspector categories
     	+ Move contact info into a category in the inspector
 
+Documentation
+	Documentation is considered one of the most important parts of a project. It is also the most tedious part. We need good documentation in order to assist users and developers. These should include screen shots if possible (visual aid). Documentation should not be moved to the done portion of this list until every other part is done, as things may change.
 
+	+ User documentation
+		
+	+ Developer Documentation
+		+ We already have some documentation. This needs to be gone through
+		+ Creating webkit themes
+		+ Address book integration
+		
 -------------------------------------------------------------------------------------------------------
 Areas that require more thought before implementing
 -------------------------------------------------------------------------------------------------------
