@@ -68,14 +68,23 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {initiateMessage = id; paste = id; pasteFormatted = id; toggleFontTrait = id; }; 
+            ACTIONS = {
+                initiateMessage = id; 
+                paste = id; 
+                pasteFormatted = id; 
+                runToolbarCustomizationPalette = id; 
+                toggleFontTrait = id; 
+                toggleToolbarShown = id; 
+            }; 
             CLASS = AIInterfaceController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "menuItem_bold" = NSMenuItem; 
+                "menuItem_customizeToolbar" = NSMenuItem; 
                 "menuItem_italic" = NSMenuItem; 
                 "menuItem_paste" = NSMenuItem; 
                 "menuItem_pasteFormatted" = NSMenuItem; 
+                "menuItem_showToolbar" = NSMenuItem; 
                 owner = AIAdium; 
             }; 
             SUPERCLASS = NSObject; 

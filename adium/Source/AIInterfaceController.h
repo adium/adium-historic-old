@@ -85,7 +85,10 @@
     
     IBOutlet    NSMenuItem      *menuItem_bold;
     IBOutlet    NSMenuItem      *menuItem_italic;
-	
+
+	IBOutlet    NSMenuItem      *menuItem_showToolbar;
+	IBOutlet    NSMenuItem      *menuItem_customizeToolbar;
+
     NSMutableArray				*contactListViewArray;
     NSMutableArray				*messageViewArray;
     NSMutableArray				*interfaceArray;
@@ -140,8 +143,10 @@
 - (IBAction)paste:(id)sender;
 - (IBAction)pasteFormatted:(id)sender;
 
-//Custom font menus
+//Custom dimming menus
 - (IBAction)toggleFontTrait:(id)sender;
+- (void)toggleToolbarShown:(id)sender;
+- (void)runToolbarCustomizationPalette:(id)sender;
 
 //Activation
 - (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows;
