@@ -20,7 +20,6 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkbox_enableSQLLogging" = NSButton; 
-                "checkbox_useSSL" = NSButton; 
                 "text_Password" = NSSecureTextField; 
                 "text_Port" = NSTextField; 
                 "text_URL" = NSTextField; 
