@@ -47,12 +47,6 @@ AIDualWindowPreferences, ESDualWindowMessageAdvancedPreferences;
 
 #define KEY_TAB_SWITCH_KEYS					@"Tab Switching Keys"
 
-typedef enum {
-	AISwitchArrows = 0,
-	AISwitchShiftArrows,
-	AIBrackets
-} AITabKeys;
-
 @protocol AIInterfaceContainer <NSObject>
 - (void)makeActive:(id)sender;	//Make the container active/front
 - (void)close:(id)sender;	//Close the container
