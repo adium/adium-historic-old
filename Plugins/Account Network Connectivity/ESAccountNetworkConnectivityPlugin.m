@@ -163,7 +163,7 @@ static NSMutableSet							*accountsToConnect = nil;
 	//becomes available.
 	if ([accountsToConnect count]){	
 		
-		[AINetworkConnectivity refreshReachabilityAndNotify];
+		[self networkConnectivityChanged:nil];
 		/*
 		[NSTimer scheduledTimerWithTimeInterval:2.0
 										 target:[AINetworkConnectivity class]
@@ -226,17 +226,24 @@ static NSMutableSet							*accountsToConnect = nil;
 	}
 	
 	if ([accountsToConnect count]){
+		//XXX
 		/* If the network is configured via DHCP, this won't connect, but we will get notified
 		   when the IP is grabbed from the DHCP server.  If it is configured manually, we won't
 		   get an IP changed notification but this will be succesful so long as we delay long enough
 		   for the network to be up. We don't always receive the 10.3 callbacks upon waking, so we just use
 		   the check 'em all 10.2 method just in case - it can't hurt. */
 		
+		//It is not certain what order the networkConnectivityDidChange and systemDidWake calls will be made.
+		//Ensure that we reconnect accounts as needed after adding them to the accountsToConnect array.
+		[self networkConnectivityChanged:nil];
+
+		/*
 		[NSTimer scheduledTimerWithTimeInterval:2.0
 										 target:[AINetworkConnectivity class]
 									   selector:@selector(refreshReachabilityAndNotify)
 									   userInfo:nil
 										repeats:NO];
+		 */
 	}
 }
 
