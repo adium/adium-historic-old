@@ -43,6 +43,7 @@
     //init
     quickScanList = [[NSMutableArray alloc] init];
     emoticons = [[NSMutableArray alloc] init];
+	cachedPacks = [[NSMutableArray alloc] init];
 
 	//Preferences
 	 //Defaults
@@ -75,6 +76,23 @@
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_EMOTICONS] == 0){
 	
 		replaceEmoticons = [[[owner preferenceController] preferenceForKey:@"Enable" group:PREF_GROUP_EMOTICONS object:nil] intValue] == NSOnState;
+		
+		// Update pack prefs in cached list
+		NSEnumerator	*numer = [cachedPacks objectEnumerator];
+		NSMutableDictionary	*packDict = nil;
+		NSString	*changedKey = [[notification userInfo] objectForKey:@"Key"];
+
+		while (packDict = [numer nextObject])
+		{
+			NSString*		packKey = [NSString stringWithFormat:@"%@_pack_%@", [packDict objectForKey:KEY_EMOTICON_PACK_SOURCE], [packDict objectForKey:KEY_EMOTICON_PACK_TITLE]];
+			
+			if ([packKey compare:changedKey] == 0)
+			{
+				NSMutableDictionary	*prefDict =	[[owner preferenceController] preferenceForKey:packKey group:PREF_GROUP_EMOTICONS object:nil];
+				
+				[packDict	setObject:prefDict forKey:KEY_EMOTICON_PACK_PREFS];
+			}
+		}
     }
 }
 
@@ -196,20 +214,46 @@
 
 - (void)allEmoticonPacks:(NSMutableArray *)emoticonPackArray
 {
+	[self allEmoticonPacks:emoticonPackArray	forceReload:FALSE];
+}
+
+- (void)allEmoticonPacks:(NSMutableArray *)emoticonPackArray forceReload:(BOOL)reload
+{
 	NSString			*path;
 	
 	// Empty input array
 	[emoticonPackArray	removeAllObjects];
 	
-    //Scan internal packs
-    path = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_EMOTICONS] stringByExpandingTildeInPath];
-    [self _scanEmoticonPacksFromPath:path intoArray:emoticonPackArray tagKey:@"bundle"];
+	if ([cachedPacks count] == 0 || reload)
+	{
+		[cachedPacks removeAllObjects];
+	
+		//Scan internal packs
+		path = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_EMOTICONS] stringByExpandingTildeInPath];
+		[self _scanEmoticonPacksFromPath:path intoArray:cachedPacks tagKey:@"bundle"];
+	
+		//Scan user packs
+			// Note: we should call AIAdium..., but that doesn't work, so I'm getting the info
+			// "directly" FIX
+		path = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath]/*[AIAdium applicationSupportDirectory]*/ stringByAppendingPathComponent:PATH_EMOTICONS];
+		[self _scanEmoticonPacksFromPath:path intoArray:cachedPacks tagKey:@"addons"];
+	}
+	else
+	{
+		// Make sure prefs are up-to-date
+		/*NSEnumerator	*numer = [cachedPacks objectEnumerator];
+		NSMutableDictionary	*packDict = nil;
 
-    //Scan user packs
-		// Note: we should call AIAdium..., but that doesn't work, so I'm getting the info
-		// "directly" FIX
-    path = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath]/*[AIAdium applicationSupportDirectory]*/ stringByAppendingPathComponent:PATH_EMOTICONS];
-    [self _scanEmoticonPacksFromPath:path intoArray:emoticonPackArray tagKey:@"addons"];
+		while (packDict = [numer nextObject])
+		{
+			NSString*		packKey = [NSString stringWithFormat:@"%@_pack_%@", [packDict objectForKey:KEY_EMOTICON_PACK_SOURCE], [packDict objectForKey:KEY_EMOTICON_PACK_TITLE]];
+			NSMutableDictionary	*prefDict =	[[owner preferenceController] preferenceForKey:packKey group:PREF_GROUP_EMOTICONS object:nil];
+			
+			[packDict	setObject:prefDict forKey:KEY_EMOTICON_PACK_PREFS];
+		}*/
+	}
+	
+	[emoticonPackArray addObjectsFromArray:cachedPacks];
 }
 
 - (BOOL)loadEmoticonsFromPacks
@@ -324,7 +368,7 @@
 					[[owner preferenceController] setPreference:prefDict forKey:packKey group:PREF_GROUP_EMOTICONS];
 				}
 
-				[emoticonPackArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:title,  KEY_EMOTICON_PACK_TITLE, fullPath, KEY_EMOTICON_PACK_PATH, [NSArray arrayWithArray:heldEmoticons], KEY_EMOTICON_PACK_CONTENTS, source, KEY_EMOTICON_PACK_SOURCE, prefDict, KEY_EMOTICON_PACK_PREFS, nil]];
+				[emoticonPackArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:title,  KEY_EMOTICON_PACK_TITLE, fullPath, KEY_EMOTICON_PACK_PATH, [NSArray arrayWithArray:heldEmoticons], KEY_EMOTICON_PACK_CONTENTS, source, KEY_EMOTICON_PACK_SOURCE, prefDict, KEY_EMOTICON_PACK_PREFS, nil]];
 				
 				if ([heldEmoticons count] > 0)	foundGoodPack = TRUE;
 				

@@ -34,10 +34,12 @@
     NSMutableArray	*quickScanList;
 	
 	AIEmoticonPreferences	*prefs;
+	NSMutableArray	*cachedPacks;
 }
 
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)allEmoticonPacks:(NSMutableArray *)emoticonPackArray;
+- (void)allEmoticonPacks:(NSMutableArray *)emoticonPackArray forceReload:(BOOL)reload;
 - (BOOL)loadEmoticonsFromPacks;
 
 @end
