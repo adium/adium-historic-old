@@ -734,7 +734,7 @@ DeclareString(AppendNextMessage);
 	}
 	
 	//Perform substitutions, then escape the HTML to get it past the evil javascript guards
-	newHTML = [[templateFile mutableCopy] autorelease];
+	newHTML = [templateFile mutableCopy];
 	newHTML = [self fillKeywords:newHTML forContent:content];
 	newHTML = [self escapeString:newHTML];
 
@@ -744,13 +744,15 @@ DeclareString(AppendNextMessage);
 	}else{
 		format = (contentIsSimilar ? AppendNextMessageWithScroll : AppendMessageWithScroll);
 	}
-	[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:format, newHTML]];	
+	[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:format, newHTML]];
+	
+	[newHTML release];
 }
 
 //Append a content status
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar
 {
-	NSMutableString	*newHTML = [[statusHTML mutableCopy] autorelease];
+	NSMutableString	*newHTML = [statusHTML mutableCopy];
 	NSString 		*format;
 	
 	//Perform substitutions, then escape the HTML to get it past the evil javascript guards
@@ -764,6 +766,8 @@ DeclareString(AppendNextMessage);
 		format = AppendMessageWithScroll;
 	}
 	[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:AppendMessage, newHTML]];
+	
+	[newHTML release];
 }
 
 //
