@@ -73,7 +73,7 @@
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
     //init
-    [super init];
+    self = [super init];
 	[self _initWebView];
 
 	chat = [inChat retain];
@@ -131,6 +131,9 @@
 	[webView setUIDelegate:nil];
 	[webView setDraggingDelegate:nil];
 	
+	//Release the web view
+	[webView release];
+
 	//Clean up style/variant info
 	[messageStyle release]; messageStyle = nil;
 	[activeStyle release]; activeStyle = nil;
@@ -139,6 +142,7 @@
 	//Cleanup content processing
 	[contentQueue release]; contentQueue = nil;
 	[previousContent release]; previousContent = nil;
+	NSLog(@"%@: Releasing (chat will become %i)",self,[chat retainCount]-1);
 	[chat release]; chat = nil;
 
 	[super dealloc];
