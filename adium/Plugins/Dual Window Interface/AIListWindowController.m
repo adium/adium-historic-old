@@ -25,6 +25,7 @@
 #import "AIListContactBubbleToFitCell.h"
 
 #import "AIListLayoutWindowController.h"
+#import "AIListThemeWindowController.h"
 
 
 #define CONTACT_LIST_WINDOW_NIB				@"ContactListWindow"		//Filename of the contact list window nib
@@ -311,6 +312,22 @@
 		[contactListView setContentCell:contentCell];
 		[contactListView setNeedsDisplay:YES];
 	}
+	
+	//Theme
+    if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_THEME])){
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
+		NSString		*imagePath = [prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH];
+		
+		//Background Image
+		if(imagePath && [imagePath length] && [[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]){
+			[contactListView setBackgroundImage:[[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease]];
+		}else{
+			[contactListView setBackgroundImage:nil];
+		}
+			
+	}
+		
+		
 	
 	
 }

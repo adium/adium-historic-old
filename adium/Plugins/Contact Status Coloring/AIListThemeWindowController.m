@@ -88,6 +88,7 @@
 {
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
 	
+	//Colors
     [colorWell_away setColor:[[preferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
     [colorWell_idle setColor:[[preferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
     [colorWell_signedOff setColor:[[preferenceDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor]];
@@ -118,11 +119,17 @@
     [checkBox_idleAndAway setState:[[preferenceDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue]];
     [checkBox_offline setState:[[preferenceDict objectForKey:KEY_OFFLINE_ENABLED] boolValue]];
 	
+	//Background Image
+	[checkBox_useBackgroundImage setState:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]];
+	NSString *backgroundImagePath = [[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH] lastPathComponent];
+	if(backgroundImagePath) [textField_backgroundImagePath setStringValue:backgroundImagePath];
+	
 	[self configureControlDimming];
 }
 
 - (void)preferenceChanged:(id)sender
 {
+#warning LOOK AT THIS GLUE CODE... KILL ME NOW! ... 10.2 USERS BETTER SUCK UP FOR THIS ONE! :D
     if(sender == colorWell_away){
         [[adium preferenceController] setPreference:[[colorWell_away color] stringRepresentation]
                                              forKey:KEY_AWAY_COLOR
@@ -258,7 +265,29 @@
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_OFFLINE_ENABLED
                                               group:PREF_GROUP_LIST_THEME];
-    }
+		
+	}else if(sender == checkBox_useBackgroundImage){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED
+											  group:PREF_GROUP_LIST_THEME];
+		
+	}
+	
+	[self configureControlDimming];
+}
+
+//Prompt for an image to use
+- (IBAction)selectBackgroundImage:(id)sender
+{
+	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+	[openPanel setTitle:@"Background Image"];
+	
+	if([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton){
+		[[adium preferenceController] setPreference:[openPanel filename]
+											 forKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH
+											  group:PREF_GROUP_LIST_THEME];
+		if([openPanel filename]) [textField_backgroundImagePath setStringValue:[openPanel filename]];
+	}
 }
 
 //
@@ -275,32 +304,30 @@
 //Configure control dimming
 - (void)configureControlDimming
 {
+	//Enable/Disable color wells
     [colorWell_signedOff setEnabled:[checkBox_signedOff state]];
-    [colorWell_signedOffLabel setEnabled:[checkBox_signedOff state]];
-	
+    [colorWell_signedOffLabel setEnabled:[checkBox_signedOff state]];	
     [colorWell_signedOn setEnabled:[checkBox_signedOn state]];
     [colorWell_signedOnLabel setEnabled:[checkBox_signedOn state]];
-	
     [colorWell_away setEnabled:[checkBox_away state]];
     [colorWell_awayLabel setEnabled:[checkBox_away state]];
-	
     [colorWell_idle setEnabled:[checkBox_idle state]];
     [colorWell_idleLabel setEnabled:[checkBox_idle state]];
-	
     [colorWell_typing setEnabled:[checkBox_typing state]];
     [colorWell_typingLabel setEnabled:[checkBox_typing state]];
-	
     [colorWell_unviewedContent setEnabled:[checkBox_unviewedContent state]];
     [colorWell_unviewedContentLabel setEnabled:[checkBox_unviewedContent state]];
-	
     [colorWell_online setEnabled:[checkBox_online state]];
     [colorWell_onlineLabel setEnabled:[checkBox_online state]];
-	
     [colorWell_idleAndAway setEnabled:[checkBox_idleAndAway state]];
     [colorWell_idleAndAwayLabel setEnabled:[checkBox_idleAndAway state]];
-	
 	[colorWell_offline setEnabled:[checkBox_offline state]];
     [colorWell_offlineLabel setEnabled:[checkBox_offline state]];
+	
+	//Background image
+	[button_setBackgroundImage setEnabled:[checkBox_useBackgroundImage state]];
+	[textField_backgroundImagePath setEnabled:[checkBox_useBackgroundImage state]];
+	
 }
 
 @end

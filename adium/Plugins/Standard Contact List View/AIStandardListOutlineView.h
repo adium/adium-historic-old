@@ -9,7 +9,9 @@
 #import "AIListOutlineView.h"
 
 @interface AIStandardListOutlineView : AIListOutlineView {
-
+	NSImage	*backgroundImage;
 }
+
+- (void)setBackgroundImage:(NSImage *)inImage;
 
 @end

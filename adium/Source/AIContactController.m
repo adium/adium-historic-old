@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.167 2004/08/05 03:37:27 dchoby98 Exp $
+// $Id: AIContactController.m,v 1.168 2004/08/05 23:50:16 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -1094,6 +1094,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
 	[NSMenu updateAlternateMenuItem:menuItem_getInfoAlternate];
 }
+
 
 //Selected contact ------------------------------------------------
 #pragma mark Selected contact
