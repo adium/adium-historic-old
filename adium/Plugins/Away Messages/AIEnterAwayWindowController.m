@@ -102,47 +102,59 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 
 - (void)saveSheetClosed:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void  *)contextInfo
 {
-    if(returnCode == 1)
-    {
-        NSMutableArray * tempArray;
-        NSEnumerator * enumerator;
-        NSDictionary * dict;
-        BOOL found = NO;
-
-	NSString * theTitle = [textField_title stringValue];
-
-	
+    if(returnCode == 1){
+        NSArray			*savedAways;
+		NSMutableArray  *newSavedAways;
+		NSString		*theTitle = [textField_title stringValue];
+		NSData			*awayMessageText = [[textView_awayMessage textStorage] dataRepresentation];
+		
+		if (!theTitle) theTitle = @"";
+		
         //Load the saved away messages
-        tempArray = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
-
-        // Or create a blank list if we've never saved one before
-        if (tempArray == nil)
-            tempArray = [NSMutableArray array];
-
+        savedAways = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
+		newSavedAways = [[savedAways mutableCopy] autorelease];
+		
+        //Or create a blank list if we've never saved one before
+        if (!newSavedAways){
+            newSavedAways = [NSMutableArray array];
+		}
+		
         //Test for replacement of an existing away
-        enumerator = [tempArray objectEnumerator];
-        while( (dict = [enumerator nextObject]) && !found)
-        {
-            NSString * storedTitle = [dict objectForKey:@"Title"];
-            if ( storedTitle && ([storedTitle isEqualToString:theTitle]) )
-            {
-                int index = [tempArray indexOfObject:dict];
-                NSMutableDictionary * newdict = [[dict mutableCopy] autorelease];
-                [newdict setObject:[[textView_awayMessage textStorage] dataRepresentation] forKey:@"Message"];
-                [tempArray replaceObjectAtIndex:index withObject:newdict];
-                found = YES;
-            }
+		unsigned savedAwaysIndex;
+		unsigned savedAwaysCount = [savedAways count];
+		
+		for (savedAwaysIndex = 0; savedAwaysIndex < savedAwaysCount; savedAwaysIndex++){
+			NSDictionary	*dict = [savedAways objectAtIndex:savedAwaysIndex];
+			
+			//If the titles match, use the new message in place of the old
+            if ([theTitle isEqualToString:[dict objectForKey:@"Title"]]){
+				
+				NSMutableDictionary *newdict = [[dict mutableCopy] autorelease];
+				
+				[newdict setObject:awayMessageText
+							forKey:@"Message"];
+				
+				[newSavedAways replaceObjectAtIndex:savedAwaysIndex
+										 withObject:newdict];
+				
+				break;
+			}
         }
-
-        if (!found) { //never found one to replace then add it
-            [tempArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Away", @"Type", [[textView_awayMessage textStorage] dataRepresentation], @"Message", theTitle, @"Title", nil]];
-        }
-
-	//Save the away message array
-        [[adium preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
-
-	[popUp_title setMenu:[self savedAwaysMenu]];
-	[popUp_title selectItemWithTitle:theTitle];
+		
+		if (savedAwaysIndex == savedAwaysCount) { //never found one to replace then add it
+			[newSavedAways addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Away", @"Type", 
+																				awayMessageText, @"Message",
+																				theTitle, @"Title", nil]];
+		}
+		
+		//Save the away message array
+		[[adium preferenceController] setPreference:newSavedAways
+											 forKey:KEY_SAVED_AWAYS
+											  group:PREF_GROUP_AWAY_MESSAGES];
+		
+		//Update our menus
+		[popUp_title setMenu:[self savedAwaysMenu]];
+		[popUp_title selectItemWithTitle:theTitle];
     }
 }
 
@@ -207,7 +219,9 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 - (BOOL)windowShouldClose:(id)sender
 {
     //Save spellcheck state
-    [[adium preferenceController] setPreference:[NSNumber numberWithBool:[textView_awayMessage isContinuousSpellCheckingEnabled]] forKey:KEY_AWAY_SPELL_CHECKING group:PREF_GROUP_SPELLING];
+    [[adium preferenceController] setPreference:[NSNumber numberWithBool:[textView_awayMessage isContinuousSpellCheckingEnabled]]
+										 forKey:KEY_AWAY_SPELL_CHECKING 
+										  group:PREF_GROUP_SPELLING];
 
     //Save the window position
     [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
@@ -264,7 +278,8 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
         }else if([type isEqualToString:@"Away"]){
             [mutableArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
                 @"Away", @"Type",
-                [NSAttributedString stringWithData:[dict objectForKey:@"Message"]], @"Message",[dict objectForKey:@"Title"], @"Title",
+                [NSAttributedString stringWithData:[dict objectForKey:@"Message"]], @"Message",
+				[dict objectForKey:@"Title"], @"Title",
                 nil]];
 
         }
@@ -294,7 +309,8 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
         }else if([type isEqualToString:@"Away"]){
             [saveArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                 @"Away", @"Type",
-                [[dict objectForKey:@"Message"] dataRepresentation], @"Message", [dict objectForKey:@"Title"], @"Title",
+                [[dict objectForKey:@"Message"] dataRepresentation], @"Message",
+				[dict objectForKey:@"Title"], @"Title",
                 nil]];
 
         }
