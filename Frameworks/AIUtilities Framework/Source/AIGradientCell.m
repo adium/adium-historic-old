@@ -53,28 +53,21 @@
 //Draw with the selected-control colours.
 - (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-	NSRect goodRect = cellFrame;
-
-	goodRect.size.height += 2;
-	goodRect.size.width += 4;
-	goodRect.origin.x -= 2;
-	goodRect.origin.y -= 1;
-
 	if([self drawsGradientHighlight]){
 		//Draw the gradient
 		AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
-		[gradient drawInRect:goodRect];
+		[gradient drawInRect:cellFrame];
 	
 		//Draw a line at the light side, to make it look a lot cleaner
-		goodRect.size.height = 1;
+		cellFrame.size.height = 1;
 		[[NSColor alternateSelectedControlColor] set];
-		NSRectFillUsingOperation(goodRect,NSCompositeSourceOver);
+		NSRectFillUsingOperation(cellFrame,NSCompositeSourceOver);
 		
 	}else{
 		//Draw the regular selection, ignoring focus if desired
 		if(ignoresFocus){
 			[[NSColor alternateSelectedControlColor] set];
-			NSRectFillUsingOperation(goodRect,NSCompositeSourceOver);
+			NSRectFillUsingOperation(cellFrame,NSCompositeSourceOver);
 		}else{
 			[(id)super _drawHighlightWithFrame:cellFrame inView:controlView]; 
 		}
