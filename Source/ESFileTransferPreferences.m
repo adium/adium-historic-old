@@ -109,7 +109,7 @@
 	[checkBox_autoAcceptFiles setTitle:AILocalizedString(@"Automatically accept files...","FT Preferences")];
 	[checkBox_autoAcceptOnlyFromCLList setTitle:AILocalizedString(@"only from contacts on my Contact List","FT Preferences")];
 	[checkBox_autoOpenFiles setTitle:AILocalizedString(@"Open \"Safe\" files after receiving","FT Preferences")];
-	[checkBox_autoClearCompleted setTitle:AILocalizedString(@"Show the progress window automatically","FT Preferences")];
+	[checkBox_autoClearCompleted setTitle:AILocalizedString(@"Show the File Transfers window automatically","FT Preferences")];
 	[checkBox_showProgress setTitle:AILocalizedString(@"Clear completed transfers automatically","FT Preferences")];
 }
 

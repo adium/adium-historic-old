@@ -355,7 +355,7 @@ static ESFileTransferPreferences *preferences;
 - (void)configureFileTransferProgressWindow
 {
 	//Add the File Transfer Progress window menuItem
-	menuItem_showFileTransferProgress = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Show File Transfer Progress",nil)
+	menuItem_showFileTransferProgress = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"File Transfers",nil)
 																   target:self 
 																   action:@selector(showProgressWindow:)
 															keyEquivalent:@"l"];
