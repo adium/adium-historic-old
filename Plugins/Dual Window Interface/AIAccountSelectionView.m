@@ -28,7 +28,7 @@
 
 @implementation AIAccountSelectionView
 
-- (id)initWithFrame:(NSRect)frameRect delegate:(id <AIAccountSelectionViewDelegate>)inDelegate
+- (id)initWithFrame:(NSRect)frameRect delegate:(id)inDelegate
 {
     [super initWithFrame:frameRect];
 
@@ -49,11 +49,18 @@
     return(self);
 }
 
-- (void)setDelegate:(id <AIAccountSelectionViewDelegate>)inDelegate
+- (void)setDelegate:(id)inDelegate
 {
+	if(inDelegate){
+		NSParameterAssert([inDelegate respondsToSelector:@selector(setAccount:)]);
+		NSParameterAssert([inDelegate respondsToSelector:@selector(setListObject:)]);
+		NSParameterAssert([inDelegate respondsToSelector:@selector(account)]);
+		NSParameterAssert([inDelegate respondsToSelector:@selector(listObject)]);
+	}
+	
     delegate = inDelegate;
 }
-- (id <AIAccountSelectionViewDelegate>)delegate
+- (id)delegate
 {
     return delegate;
 }
@@ -78,9 +85,10 @@
     //Load our contents
     [NSBundle loadNibNamed:ACCOUNT_SELECTION_NIB owner:self];
 
-    //Set our height correctly (width is flexible)
+    //Set our height and resizing correctly (width is flexible)
     [self setFrameSize:NSMakeSize([self frame].size.width, [view_contents frame].size.height)];
-
+	[self setAutoresizingMask:[view_contents autoresizingMask]];
+	
     //Transfer the contents to our view
     viewArray = [[[view_contents subviews] copy] autorelease];
     enumerator = [viewArray objectEnumerator];

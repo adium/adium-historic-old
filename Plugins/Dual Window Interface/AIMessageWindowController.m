@@ -591,12 +591,10 @@
 //Send the print message to our view
 - (void)adiumPrint:(id)sender
 {
-	NSObject<AIMessageViewController> *theMessageViewController;
+	id	controller = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] messageViewController];
 	
-	theMessageViewController = [[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] messageViewController] messageViewController];
-	
-	if([theMessageViewController respondsToSelector:@selector(adiumPrint:)]){
-		[theMessageViewController adiumPrint:sender];
+	if([controller respondsToSelector:@selector(adiumPrint:)]){
+		[controller adiumPrint:sender];
 	}
 }
 

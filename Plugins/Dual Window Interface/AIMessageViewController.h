@@ -1,83 +1,86 @@
-/*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2005, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-\---------------------------------------------------------------------------------------------------------/
- | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
- | General Public License as published by the Free Software Foundation; either version 2 of the License,
- | or (at your option) any later version.
- |
- | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
- | Public License for more details.
- |
- | You should have received a copy of the GNU General Public License along with this program; if not,
- | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- \------------------------------------------------------------------------------------------------------ */
+/* 
+Adium, Copyright 2001-2005, Adam Iser
+ 
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ General Public License as published by the Free Software Foundation; either version 2 of the License,
+ or (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License along with this program; if not,
+ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 #import "ESChatUserListController.h"
 
-@class AIMiniToolbar, AIListObject, AIAccount, AISendingTextView, AIAutoScrollView, AIChat;
-@class AIPlasticButton, AIAccountSelectionView, AITabStatusIconsPlugin;
+@class AIAccountSelectionView;
+@protocol AIMessageViewController;
 
-@protocol AIAccountSelectionViewDelegate, AIMessageViewController;
-
-@interface AIMessageViewController : AIObject <AIAccountSelectionViewDelegate, AIListControllerDelegate> {
+@interface AIMessageViewController : AIObject <AIListControllerDelegate> {
     IBOutlet	NSView					*view_contents;
-
-    IBOutlet	NSScrollView			*scrollView_outgoing;
-    IBOutlet	AIMessageEntryTextView	*textView_outgoing;
-	float								entryMinHeight;
-		
-				NSView					*controllerView_messages;
-	IBOutlet	NSView					*scrollView_messages;
-	IBOutlet	NSView					*customView_messages;
-
-	IBOutlet	NSSplitView				*splitView_messages;
-	IBOutlet	NSSplitView				*splitView_textEntryHorizontal;
-
-	IBOutlet	NSButton				*button_inviteUser;
 	
-    IBOutlet	AIMiniToolbar			*toolbar_bottom;
+	//Split views
+	IBOutlet	NSSplitView				*splitView_textEntryHorizontal;
+	IBOutlet	NSSplitView				*splitView_messages;
 
+	//Message Display
+	NSView								*controllerView_messages;
+	IBOutlet	NSScrollView			*scrollView_messages;
+	IBOutlet	NSView					*customView_messages;
+	
+	//User List
 	IBOutlet	AIAutoScrollView		*scrollView_userList;
     IBOutlet	AIListOutlineView		*userListView;
 	ESChatUserListController			*userListController;
 
-    IBOutlet	AIPlasticButton			*button_send;
-
+	//Text entry
+	IBOutlet	NSScrollView			*scrollView_outgoing;
+	IBOutlet	AIMessageEntryTextView	*textView_outgoing;
+	
+	//
     NSObject<AIMessageViewController>	*messageViewController;
 	AIAccountSelectionView				*view_accountSelection;
 
-    //Variables
-    id				delegate;
-    AIChat			*chat;
-    BOOL			showUserList;
-	BOOL			sendMessagesToOfflineContact;
-	
-	BOOL inSizeAndArrange;
+    AIChat					*chat;
+	BOOL					sendMessagesToOfflineContact;
+	int						entryMinHeight;
+	int						userListMinWidth;
 }
 
 + (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat;
-
-- (void)setDelegate:(id)inDelegate;
-
-- (NSView *)view;
+- (void)tabViewItemWillClose;
 - (AIChat *)chat;
-- (AIListContact *)listObject;
+- (void)setAccount:(AIAccount *)inAccount;
 - (AIAccount *)account;
-- (NSObject<AIMessageViewController> *)messageViewController;
+- (void)setListObject:(AIListContact *)listContact;
+- (AIListContact *)listObject;
+- (AIListObject *)preferredListObject;
 
-- (void)setAccountSelectionMenuVisible:(BOOL)visible;
+//Message Display
+- (NSView *)view;
+- (void)adiumPrint:(id)sender;
+
+//Message Entry
+- (IBAction)sendMessage:(id)sender;
+- (IBAction)didSendMessage:(id)sender;
+- (IBAction)sendMessageLater:(id)sender;
 - (void)setShouldSendMessagesToOfflineContacts:(BOOL)should;
 
-- (void)setAccount:(AIAccount *)inAccount;
+//Account Selection
+- (void)redisplaySourceAndDestinationSelector:(NSNotification *)notification;
+- (void)setAccountSelectionMenuVisibleIfNeeded:(BOOL)makeVisible;
+
+//Text Entry
 - (void)makeTextEntryViewFirstResponder;
+- (void)clearTextEntryView;
 - (void)addToTextEntryView:(NSAttributedString *)inString;
 
-- (IBAction)sendMessageLater:(id)sender;
-- (IBAction)sendMessage:(id)sender;
-- (IBAction)inviteUser:(id)sender;
-
+//User List
+- (void)setUserListVisible:(BOOL)inVisible;
 - (BOOL)userListVisible;
-- (void)tabViewItemWillClose;
+
 
 @end
+
