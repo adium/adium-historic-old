@@ -53,14 +53,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     return([contents count]);
 }
 
-- (void)setExpanded:(BOOL)inExpanded
-{
-    expanded = inExpanded;
-}
-- (BOOL)isExpanded{
-    return(expanded);
-}
-
 - (void)sort
 {
     [contents sortUsingFunction:alphabeticalSort context:nil];

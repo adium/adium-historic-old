@@ -72,6 +72,12 @@
     firstColumnColored = NO;
     
     alternatingColumnRange = NSMakeRange(0,0);
+
+    //Group expand/collapse notifications
+    NSLog(@"addObserver");
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:self];
+
 }
 
 // Configuring ----------------------------------------------------------------------
@@ -139,34 +145,57 @@
     [[self enclosingScrollView] setVerticalLineScroll: ([self rowHeight] + [self intercellSpacing].height) ];
 }
 
-//#warning scroll restriction code.. disabled for now... ? 
-/*- (NSRect)adjustScroll:(NSRect)proposedVisibleRect
+
+// Collapsing/expanding ----------------------------------------------------------------------
+@protocol AICollapseExpand
+- (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item;
+- (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item;
+@end
+
+- (void)itemDidExpand:(NSNotification *)notification
 {
-    int		lineScroll = [[self enclosingScrollView] verticalLineScroll];
-    float	desiredLocation = proposedVisibleRect.origin.y;
-    int 	trueVal = desiredLocation;
-    float	ratio;
-    int		height;
-    
-    height = ([self frame].size.height - [[self enclosingScrollView] documentVisibleRect].size.height);
-    
-    if(height != 0){
-        ratio = (float)height / (float)(height + ( height % lineScroll) );
-
-        desiredLocation += (desiredLocation * (1.0 - ratio));
-//        NSLog(@"%0.2f  (%i/%i)  (%i -> %i)",ratio,(int)height,(int)(height + ( height % lineScroll)), (int)trueVal, (int)desiredLocation);
-    
-        //Offset by 1/2 the line scroll (To avoid cutting off the bottom line)
-        desiredLocation += (lineScroll / 2);
-    
-        //Move the location to an interval of the line scroll
-        proposedVisibleRect.origin.y = (int)(desiredLocation - ((int)desiredLocation % lineScroll));
-
-        NSLog(@"%0.2f  (%i/%i) %i -> %i -> %i",ratio,(int)height,(int)(height + ( height % lineScroll)), (int)trueVal, (int)(trueVal * (1.0 - ratio)), (int)proposedVisibleRect.origin.y);
-    
+    if([[self delegate] respondsToSelector:@selector(outlineView:setExpandState:ofItem:)]){
+        [(id <AICollapseExpand>)[self delegate] outlineView:self
+                                             setExpandState:YES
+                                                     ofItem:[[notification userInfo] objectForKey:@"NSObject"]];
+    }
 }
-    return(proposedVisibleRect);
-}*/
+
+- (void)itemDidCollapse:(NSNotification *)notification
+{
+    if([[self delegate] respondsToSelector:@selector(outlineView:setExpandState:ofItem:)]){
+        [(id <AICollapseExpand>)[self delegate] outlineView:self
+                                             setExpandState:NO
+                                                     ofItem:[[notification userInfo] objectForKey:@"NSObject"]];
+    }
+}
+
+- (void)reloadData
+{
+    [super reloadData];
+
+    //After reloading data, we correctly expand/collaps all groups
+    if([[self delegate] respondsToSelector:@selector(outlineView:expandStateOfItem:)]){
+        NSObject <AICollapseExpand> 	*delegate = [self delegate];
+        int 	numberOfRows = [delegate outlineView:self numberOfChildrenOfItem:nil];
+        int 	row;
+
+        //go through all items
+        for(row = 0; row < numberOfRows; row++){
+            id item = [delegate outlineView:self child:row ofItem:nil];
+
+            //If the item is expandable, correctly expand/collapse it
+            if([delegate outlineView:self isItemExpandable:item]){
+                if([delegate outlineView:self expandStateOfItem:item]){
+                    [self expandItem:item];
+                }else{
+                    [self collapseItem:item];
+                }
+            }
+        }
+    }
+}
+
 
 // Drawing ----------------------------------------------------------------------
 //Draw the alternating colors and grid below the "bottom" of the outlineview

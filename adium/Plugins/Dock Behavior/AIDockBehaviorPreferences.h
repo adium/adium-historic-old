@@ -8,18 +8,19 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium;
+@class AIAdium, AIAlternatingRowTableView;
 
 @interface AIDockBehaviorPreferences : NSObject {
     AIAdium			*owner;
 
-    IBOutlet	NSTableView	*tableView_events;
-    IBOutlet	NSButton	*button_delete;
-    IBOutlet	NSPopUpButton	*popUp_addEvent;
+    IBOutlet	AIAlternatingRowTableView	*tableView_events;
+    IBOutlet	NSButton			*button_delete;
+    IBOutlet	NSPopUpButton			*popUp_addEvent;
+    IBOutlet	NSPopUpButton			*popUp_behaviorSet;
     
-    IBOutlet	NSView		*view_prefView;
+    IBOutlet	NSView				*view_prefView;
 
-    NSMutableArray		*dockEventArray;
+    NSMutableArray				*dockEventArray;
     /*    IBOutlet 	NSTextField	*bounceField;
     IBOutlet	NSTextField	*delayField;
     IBOutlet	NSButton	*enableBouncingCheckBox;
@@ -31,7 +32,6 @@
 
 + (id)dockBehaviorPreferencesWithOwner:(id)inOwner;
 
-- (IBAction)changePreference:(id)sender;
 
 - (IBAction)selectBehaviorSet:(id)sender;
 - (IBAction)deleteEvent:(id)sender;

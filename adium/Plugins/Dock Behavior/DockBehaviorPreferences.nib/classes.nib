@@ -12,6 +12,7 @@
             OUTLETS = {
                 "button_delete" = NSButton; 
                 "popUp_addEvent" = NSPopUpButton; 
+                "popUp_behaviorSet" = NSPopUpButton; 
                 "tableView_events" = NSTableView; 
                 "view_prefView" = NSView; 
             }; 

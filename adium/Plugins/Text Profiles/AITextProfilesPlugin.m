@@ -17,12 +17,7 @@
 - (void)installPlugin
 {
     //Register our defaults and install the preference view
-//    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_TIME_DEFAULT_PREFERENCES forClass:[self class]] forGroup:PREF_GROUP_IDLE_TIME]; //Register our default preferences
     preferences = [[AITextProfilePreferences textProfilePreferencesWithOwner:owner] retain];
-
-    //Observe preference changed notifications, and setup our initial values
-//    [[[owner preferenceController] preferenceNotificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-//    [self preferencesChanged:nil];
 
     //Register ourself as a handle observer
     [[owner contactController] registerContactObserver:self];
@@ -84,7 +79,6 @@
 
     return(nil); //We've modified no display attributes, return nil
 }
-
 
 @end
 

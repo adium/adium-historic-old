@@ -26,10 +26,12 @@
 #import "AIEditorAccountCollection.h"
 #import "AIContactListEditorPlugin.h"
 
+#define	PREF_GROUP_CONTACT_LIST			@"Contact List"
 #define CONTACT_LIST_EDITOR_NIB			@"ContactListEditorWindow"
 #define	HANDLE_DELETE_KEY			@"Handles"
 #define	GROUP_DELETE_KEY			@"Groups"
 #define KEY_CONTACT_LIST_EDITOR_WINDOW_FRAME	@"Contact List Editor Frame"
+#define KEY_CONTACT_EDITOR_GROUP_STATE		@"Contact Editor Group State"	//Expand/Collapse state of groups
 
 @interface AIContactListEditorWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner plugin:(AIContactListEditorPlugin *)inPlugin;
@@ -59,7 +61,6 @@
 - (void)concludeDeleteSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (AIEditorListGroup *)editorListGroupForAccount:(AIAccount *)inAccount;
 - (void)generateCollectionsArray;
-- (void)expandCollapseGroup:(AIEditorListGroup *)inGroup subgroups:(BOOL)subgroups outlineView:(NSOutlineView *)inView;
 - (void)refreshContentOutlineView;
 @end
 
@@ -139,10 +140,6 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [outlineView_contactList setDrawsAlternatingRows:YES];
     [outlineView_contactList setAlternatingRowColor:[NSColor colorWithCalibratedRed:(231.0/255.0) green:(243.0/255.0) blue:(255.0/255.0) alpha:1.0]];
     [outlineView_contactList setNeedsDisplay:YES];
-
-    //Group expand/collapse notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:outlineView_contactList];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:outlineView_contactList];
 
     //Other settings
     [outlineView_contactList registerForDraggedTypes:[NSArray arrayWithObject:@"AIContactObjects"]];
@@ -273,54 +270,11 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 
 
-// Handles & Groups outline view
-// --------------------------------------------------
-//Correctly sets the contact groups as expanded or collapsed, depending on their saved state
-- (void)expandCollapseGroup:(AIEditorListGroup *)inGroup subgroups:(BOOL)subgroups outlineView:(NSOutlineView *)inView
-{
-    NSEnumerator	*enumerator = [inGroup objectEnumerator];
-    AIEditorListObject	*object;
-
-    if(inGroup){
-        //Group
-        ([inGroup isExpanded] ? [inView expandItem:inGroup] : [inView collapseItem:inGroup]);
-        
-        //Subgroups
-        while((object = [enumerator nextObject])){
-            if([object isKindOfClass:[AIEditorListGroup class]]){
-                //Correctly expand/collapse the group
-                ([(AIEditorListGroup *)object isExpanded] ? [inView expandItem:object] : [inView collapseItem:object]);
-
-                //Expand/collapse any subgroups
-                if(subgroups){
-                    [self expandCollapseGroup:(AIEditorListGroup *)object subgroups:YES outlineView:inView];
-                }
-            }
-        }
-    }
-}
-
-//Called as groups are expended and collapsed, updates their expanded state
-- (void)itemDidExpand:(NSNotification *)notification
-{
-    [[[notification userInfo] objectForKey:@"NSObject"] setExpanded:YES];
-}
-- (void)itemDidCollapse:(NSNotification *)notification
-{
-    [[[notification userInfo] objectForKey:@"NSObject"] setExpanded:NO];
-}
-
 //Refresh the outline view and update it's group state
 - (void)refreshContentOutlineView
 {
     [outlineView_contactList reloadData]; //Reload the view
-    [self expandCollapseGroup:[selectedCollection list]
-                    subgroups:YES
-                  outlineView:outlineView_contactList]; //Correctly expand/collapse its groups
 }
-
-
-
 
 
 
@@ -417,16 +371,31 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 - (BOOL)outlineView:(NSOutlineView *)olv writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
 {
-    [pboard declareTypes:[NSArray arrayWithObjects:@"AIContactObjects",nil] owner:self];
+    NSEnumerator	*enumerator;
+    AIEditorListObject	*object;
+    BOOL		handles = NO, groups = NO;
 
-    //Build a list of all the highlighted objects
-    if(dragItems) [dragItems release];
-    dragItems = [items copy];
+    //We either drag all handles, or all groups.  A mix of the two is not allowed
+    enumerator = [items objectEnumerator];
+    while((object = [enumerator nextObject]) && !(handles && groups)){
+        if([object isKindOfClass:[AIEditorListGroup class]]) groups = YES;
+        if([object isKindOfClass:[AIEditorListHandle class]]) handles = YES;
+    }
 
-    //put it on the pasteboard
-    [pboard setString:@"Private" forType:@"AIContactObjects"];
+    if(!(handles && groups)){
+        [pboard declareTypes:[NSArray arrayWithObjects:@"AIContactObjects",nil] owner:self];
 
-    return(YES);
+        //Build a list of all the highlighted objects
+        if(dragItems) [dragItems release];
+        dragItems = [items copy];
+
+        //put it on the pasteboard
+        [pboard setString:@"Private" forType:@"AIContactObjects"];
+
+        return(YES);
+    }else{
+        return(NO);
+    }
 }
 
 - (NSDragOperation)outlineView:(NSOutlineView*)olv validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
@@ -434,22 +403,23 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIContactObjects"]];
 
     if([avaliableType compare:@"AIContactObjects"] == 0){
-        if((item == nil ||					//(handles can be dragged to the root level
-            index != -1 ||					// to anywhere in a group
-            [item isKindOfClass:[AIEditorListGroup class]])	// or onto a group)
-           && ([dragItems indexOfObject:item] == NSNotFound)){	//(But they cannot be dragged into themselves)
-
+        if([[dragItems objectAtIndex:0] isKindOfClass:[AIEditorListGroup class]] &&	//Dragging a group
+           (item == nil)){								//Into the root level
             return(NSDragOperationPrivate);
 
+        }else if([[dragItems objectAtIndex:0] isKindOfClass:[AIEditorListHandle class]] &&	//Dragging a handle
+                 (item != nil) &&								//Inside a group
+                 (index != -1 || [item isKindOfClass:[AIEditorListGroup class]]) &&		//Valid position, or onto a group
+                 ([dragItems indexOfObject:item] == NSNotFound)){				//Not dragged into itself
+            return(NSDragOperationPrivate);
+            
         }else{
             return(NSDragOperationNone);
 
         }
-
-    }else{
-        return(NSDragOperationMove);
-
     }
+
+    return(NSDragOperationNone);
 }
 
 - (BOOL)outlineView:(NSOutlineView*)olv acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
@@ -503,6 +473,37 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     return(YES);
 }
 
+- (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
+{
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    NSMutableDictionary	*groupStateDict = [[preferenceDict objectForKey:KEY_CONTACT_EDITOR_GROUP_STATE] mutableCopy];
+
+    if(!groupStateDict) groupStateDict = [[NSMutableDictionary alloc] init];
+
+    //Save the group new state
+    [groupStateDict setObject:[NSNumber numberWithBool:state]
+                       forKey:[NSString stringWithFormat:@"%@.%@", [selectedCollection UID], [item UID]]];
+
+    [[owner preferenceController] setPreference:groupStateDict forKey:KEY_CONTACT_EDITOR_GROUP_STATE group:PREF_GROUP_CONTACT_LIST];
+    [groupStateDict release];
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
+{
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    NSMutableDictionary	*groupStateDict = [preferenceDict objectForKey:KEY_CONTACT_EDITOR_GROUP_STATE];
+    NSNumber		*expandedNum;
+
+    //Lookup the group's saved state
+    expandedNum = [groupStateDict objectForKey:[NSString stringWithFormat:@"%@.%@", [selectedCollection UID], [item UID]]];
+
+    //Correctly expand/collapse the group
+    if(!expandedNum || [expandedNum boolValue] == YES){ //Default to expanded
+        return(YES);
+    }else{
+        return(NO);
+    }
+}
 
 
 
@@ -788,194 +789,3 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 @end
 
-
-
-
-
-/*- (BOOL)outlineView:(NSOutlineView *)outlineView shouldEditTableColumn:(NSTableColumn *)tableColumn item:(id)item
-{
-    int		row, column;
-    NSRect	cellFrame;
-    NSWindow	*window;
-
-    if(![[tableColumn identifier] isKindOfClass:[AIAccount class]]){ //Double click on checkboxes is ignored
-        window = [outlineView window];
-
-        //Get the cell's dimensions
-        row = [outlineView rowForItem:item];
-        column = [[outlineView tableColumns] indexOfObject:tableColumn];
-        cellFrame = [outlineView frameOfCellAtColumn:column row:row];
-
-        cellFrame.origin.x += 14;
-        cellFrame.size.width -= 14;
-
-        cellFrame.origin.y -= 2;
-        cellFrame.size.height += 4;
-
-        //Close an existing editor
-        [self removeEditor:nil];
-
-        //Position and display the editor
-        if(editor == nil){
-            //Create it for the first time
-            editor = [[NSTextField alloc] init];
-            [editor setDelegate:self];
-            [editor setTarget:self];
-            [editor setAction:@selector(removeEditor:)];
-            [editor setBezeled:YES];
-            [editor setEditable:YES];
-            [editor setFont:[NSFont labelFontOfSize:11]];
-            [editor setSelectable:YES];
-        }
-        [editor setFrame:cellFrame];
-        [editor setStringValue:[self outlineView:outlineView objectValueForTableColumn:tableColumn byItem:item]];
-        [editor selectText:nil];
-        [outlineView addSubview:editor];
-        [window makeFirstResponder:editor];
-        editedObject = item;
-        editedColumn = tableColumn;
-    }
-
-    return(NO);
-}
-
-//Removes the field editor from view
-- (void)removeEditor:(id)sender
-{
-    if(editedObject != nil){
-        [self outlineView:outlineView_contactList setObjectValue:[editor stringValue] forTableColumn:editedColumn byItem:editedObject];
-
-        [editor removeFromSuperview];
-        editedObject = nil;
-    }
-}
-
-- (void)outlineViewSelectionDidChange:(NSNotification *)notification
-{
-    [self removeEditor:nil];
-}
-
-- (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
-{
-    AIAccount		*account = [tableColumn identifier];
-
-    if([item isKindOfClass:[AIContactGroup class]]){ //GROUP
-        if([account isKindOfClass:[AIAccount class]]){ //ACCOUNT
-            if([object boolValue]){ //Add every handle in the group
-                int	loop;
-
-                for(loop = 0;loop < [item count];loop++){
-                    AIContactHandle	*handle = [item objectAtIndex:loop];
-
-                    if(![handle belongsToAccount:account]){
-                        [[owner contactController] addAccount:account toObject:handle];
-                    }
-                }
-
-            }else{ //Remove every handle in the group
-                int	loop;
-
-                for(loop = 0;loop < [item count];loop++){
-                    AIContactHandle	*handle = [item objectAtIndex:loop];
-
-                    if([handle belongsToAccount:account]){
-                        [[owner contactController] removeAccount:account fromObject:handle];
-                    }
-                }
-
-            }
-        }else{ //NAME
-            [[owner contactController] renameObject:item to:object];
-
-            //        }
-
-    }else{ //HANDLE
-        if([account isKindOfClass:[AIAccount class]]){ //ACCOUNT
-            if([object boolValue]){ //Adding to list
-                [[owner contactController] addAccount:account toObject:item];
-
-            }else{ //Removing from list
-                [[owner contactController] removeAccount:account fromObject:item];
-
-            }
-        }else{ //NAME
-               //ikrieg start
-            NSArray	*columns;
-            columns = [outlineView_contactList tableColumns];
-            if ([columns objectAtIndex:([columns count] - 1)] == tableColumn)
-            {	// Set Alias
-              // No way yet
-            }
-            else
-            {//ikrieg end
-                [[owner contactController] renameObject:item to:object];
-            }//ikrieg's brace
-        }
-    }
-}
-
-- (BOOL)outlineView:(NSOutlineView *)olv writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
-{
-    [pboard declareTypes:[NSArray arrayWithObjects:@"AIContactObjects",nil] owner:self];
-
-    //Build a list of all the highlighted objects
-    if(dragItems) [dragItems release];
-    dragItems = [items copy];
-
-    //put it on the pasteboard
-    [pboard setString:@"Private" forType:@"AIContactObjects"];
-
-    return(YES);
-}
-
-- (NSDragOperation)outlineView:(NSOutlineView*)olv validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
-{
-    NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIContactObjects"]];
-
-    if([avaliableType compare:@"AIContactObjects"] == 0){
-        if((item == nil ||					//(handles can be dragged to the root level
-            index != -1 ||					// to anywhere in a group
-            [item isKindOfClass:[AIContactGroup class]])	// or onto a group)
-           && ([dragItems indexOfObject:item] == NSNotFound)){	//(But they cannot be dragged into themselves)
-
-            return(NSDragOperationPrivate);
-
-        }else{
-            return(NSDragOperationNone);
-
-        }
-    }else{
-        return(NSDragOperationMove);
-
-    }
-}
-
-- (BOOL)outlineView:(NSOutlineView*)olv acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
-{
-    NSString 	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIContactObjects"]];
-
-    if([availableType compare:@"AIContactObjects"] == 0){
-        NSEnumerator	*enumerator;
-        AIContactObject	*object;
-
-        //Move the groups first
-        enumerator = [dragItems objectEnumerator];
-        while((object = [enumerator nextObject])){
-            if([object isKindOfClass:[AIContactGroup class]]){
-                [[owner contactController] moveObject:object toGroup:item index:index];
-            }
-        }
-
-        //Then move the handles
-        enumerator = [dragItems objectEnumerator];
-        while((object = [enumerator nextObject])){
-            if([object isKindOfClass:[AIContactHandle class]]){
-                [[owner contactController] moveObject:object toGroup:item index:index];
-            }
-        }
-    }
-
-    [dragItems release]; dragItems = nil;
-    return(YES);
-}
-*/

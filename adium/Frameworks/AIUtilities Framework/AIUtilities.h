@@ -61,3 +61,4 @@
 #import "AITooltipUtilities.h"
 #import "AILinkTrackingController.h"
 #import "AILinkTextView.h"
+#import "AIAutoScrollView.h"

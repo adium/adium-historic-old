@@ -23,6 +23,8 @@
 - (void)configureView;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (NSMenu *)behaviorListMenu;
+- (NSMenu *)behaviorSetMenu;
+- (NSMenu *)eventMenu;
 @end
 
 @implementation AIDockBehaviorPreferences
@@ -119,27 +121,27 @@
 //configure our view
 - (void)configureView
 {
-//    NSPopUpButtonCell			*dataCell;
+    NSPopUpButtonCell			*dataCell;
 
     //Build the event menu
     [popUp_addEvent setMenu:[self eventMenu]];
 
-    //Build the soundset menu
-/*    [popUp_soundSet setMenu:[self soundSetMenu]];
+    //Build the behavior set menu
+    [popUp_behaviorSet setMenu:[self behaviorSetMenu]];
 
-    //Configure the 'Sound' table column
+    //Configure the 'Behavior' table column
     dataCell = [[AITableViewPopUpButtonCell alloc] init];
-    [dataCell setMenu:[self soundListMenu]];
+    [dataCell setMenu:[self behaviorListMenu]];
     [dataCell setControlSize:NSSmallControlSize];
     [dataCell setFont:[NSFont menuFontOfSize:11]];
     [dataCell setBordered:NO];
-    [[tableView_sounds tableColumnWithIdentifier:TABLE_COLUMN_SOUND] setDataCell:dataCell];
+    [[tableView_events tableColumnWithIdentifier:TABLE_COLUMN_BEHAVIOR] setDataCell:dataCell];
 
     //Configure the table view
-    [tableView_sounds setDrawsAlternatingRows:YES];
-    [tableView_sounds setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
-    [tableView_sounds setTarget:self];
-    [tableView_sounds setDoubleAction:@selector(playSelectedSound:)];*/
+    [tableView_events setDrawsAlternatingRows:YES];
+    [tableView_events setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
+    [tableView_events setTarget:self];
+//    [tableView_sounds setDoubleAction:@selector(playSelectedSound:)];
 
 }
 
@@ -210,7 +212,7 @@
 
         menuItem = [[[NSMenuItem alloc] initWithTitle:[eventDict objectForKey:KEY_EVENT_DISPLAY_NAME]
                                                target:self
-                                               action:@selector(newEventSound:)
+                                               action:@selector(newEvent:)
                                         keyEquivalent:@""] autorelease];
         [menuItem setRepresentedObject:[eventDict objectForKey:KEY_EVENT_NOTIFICATION]];
 
@@ -220,17 +222,17 @@
     return(eventMenu);
 }
 
-//Builds and returns a sound set menu
-- (NSMenu *)soundSetMenu
+//Builds and returns a behavior set menu
+- (NSMenu *)behaviorSetMenu
 {
-    NSEnumerator	*enumerator;
-    NSDictionary	*soundSetDict;
-    NSMenu		*soundSetMenu = [[NSMenu alloc] init];
+//    NSEnumerator	*enumerator;
+//    NSDictionary	*soundSetDict;
+    NSMenu		*behaviorSetMenu = [[NSMenu alloc] init];
 
-    [soundSetMenu addItemWithTitle:@"Custom…" target:self action:@selector(selectSoundSet:) keyEquivalent:@""]; //'Custom'
-    [soundSetMenu addItem:[NSMenuItem separatorItem]]; //Divider
+    [behaviorSetMenu addItemWithTitle:@"Custom…" target:self action:@selector(selectBehaviorSet:) keyEquivalent:@""]; //'Custom'
+    [behaviorSetMenu addItem:[NSMenuItem separatorItem]]; //Divider
 
-    enumerator = [[[owner soundController] soundSetArray] objectEnumerator];
+/*    enumerator = [[[owner soundController] soundSetArray] objectEnumerator];
     while((soundSetDict = [enumerator nextObject])){
         NSString	*setTitle = [[soundSetDict objectForKey:KEY_SOUND_SET] lastPathComponent];
         NSMenuItem	*menuItem;
@@ -241,18 +243,39 @@
                                         keyEquivalent:@""] autorelease];
         [menuItem setRepresentedObject:[soundSetDict objectForKey:KEY_SOUND_SET]];
         [soundSetMenu addItem:menuItem];
-    }
+    }*/
 
-    return(soundSetMenu);
+    return(behaviorSetMenu);
 }
 
 //Builds and returns a dock behavior list menu
 - (NSMenu *)behaviorListMenu
 {
+    NSMenuItem	*menuItem;
 //    NSEnumerator	*enumerator;
 //    NSDictionary	*soundSetDict;
     NSMenu		*behaviorMenu = [[NSMenu alloc] init];
-/*
+
+
+
+    //Build the menu item
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Bounce Once"
+                                           target:self
+                                           action:@selector(selectBehavior:)
+                                    keyEquivalent:@""] autorelease];
+    [behaviorMenu addItem:menuItem];
+
+    
+    //Build the menu item
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Bounce Repeatedly"
+                                           target:self
+                                           action:@selector(selectBehavior:)
+                                    keyEquivalent:@""] autorelease];
+    [behaviorMenu addItem:menuItem];
+    
+
+
+    /*
     enumerator = [[[owner soundController] soundSetArray] objectEnumerator];
     while((soundSetDict = [enumerator nextObject])){
         NSEnumerator	*soundEnumerator;

@@ -42,6 +42,11 @@
     return([account accountDescription]);
 }
 
+//Return a unique identifier
+- (NSString *)UID{
+    return([account UID]);
+}
+
 //Return our icon description
 - (NSImage *)icon{
     return([AIImageUtilities imageNamed:@"AllContacts" forClass:[self class]]);
@@ -149,7 +154,7 @@
         if(![handle temporary]){
             //Make sure a group exists for this handle
             editorGroup = [groupDict objectForKey:serverGroup];
-            if(!editorGroup){
+            if(!editorGroup){ //Create and add the group
                 editorGroup = [[[AIEditorListGroup alloc] initWithUID:serverGroup temporary:NO] autorelease];
                 [listGroup addObject:editorGroup];
                 [groupDict setObject:editorGroup forKey:serverGroup];

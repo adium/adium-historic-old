@@ -5,6 +5,7 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSOutlineView; 
         }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {CLASS = AIBubbleView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AIBubbleWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
         {CLASS = AIContactListCell; LANGUAGE = ObjC; SUPERCLASS = NSCell; }, 

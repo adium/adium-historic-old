@@ -27,10 +27,7 @@
 - (void)configureView;
 - (void)frameChanged:(NSNotification *)notification;
 - (void)configureTransparency;
-- (void)configureScrollbarHiding;
-- (void)cleanUpScrollbarHiding;
 - (void)configureTransparencyForWindow:(NSWindow *)inWindow;
-- (void)setCorrectScrollbarVisibility;
 - (void)frameChanged:(NSNotification *)notification;
 @end
 
@@ -54,8 +51,6 @@
     [self setHeaderView:nil];
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
     [self setIndentationPerLevel:10];
-
-    [self configureScrollbarHiding];
     
     return(self);
 }
@@ -63,7 +58,6 @@
 - (void)dealloc
 {
     [font release];
-    [self cleanUpScrollbarHiding];
     
     [super dealloc];
 }
@@ -82,7 +76,6 @@
 //Called when our frame changes
 - (void)frameChanged:(NSNotification *)notification
 {
-    [self setCorrectScrollbarVisibility]; //Correct the scrollbar
     [self sizeLastColumnToFit]; //Keep the table column at full width
 }
 
@@ -158,63 +151,6 @@
     }else{
         return(nil);
     }
-}
-
-
-//Automatic scrollbar hiding ---------------------------------------------------------------
-- (void)configureScrollbarHiding
-{
-    //Listen to our own notification for expanding and collapsing items
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:self];
-}
-
-- (void)cleanUpScrollbarHiding
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)viewDidMoveToSuperview
-{
-    [self frameChanged:nil]; //Force a frame changed event for our new superview
-
-    //Inform our delegate that we moved to another superview
-    if([[self delegate] respondsToSelector:@selector(view:didMoveToSuperview:)]){
-        [[self delegate] view:self didMoveToSuperview:[self superview]];        
-    }
-}
-- (void)itemDidExpand:(NSNotification *)notification
-{
-    [self setCorrectScrollbarVisibility];
-}
-- (void)itemDidCollapse:(NSNotification *)notification
-{
-    [self setCorrectScrollbarVisibility];
-}
-
-//Hides or shows the scrollbar as necessary
-- (void)setCorrectScrollbarVisibility
-{
-    int 		visibleHeight;
-    int 		totalHeight;
-    NSScrollView	*scrollView = [self enclosingScrollView];
-
-    //Hide or show scrollbar
-    visibleHeight = [scrollView documentVisibleRect].size.height;
-    totalHeight = [self numberOfRows] * ([self rowHeight] + [self intercellSpacing].height);
-    if(totalHeight > visibleHeight){
-        [scrollView setHasVerticalScroller:YES];
-    }else{
-        [scrollView setHasVerticalScroller:NO];
-    }
-}
-
-//When the data changes we need to update our scrollbar as well
-- (void)reloadData
-{
-    [super reloadData];
-    
-    [self setCorrectScrollbarVisibility];
 }
 
 
