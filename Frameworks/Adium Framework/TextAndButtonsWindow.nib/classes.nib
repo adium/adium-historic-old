@@ -1,0 +1,39 @@
+{
+    IBClasses = (
+        {
+            CLASS = AILocalizationButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {pressedButton = id; }; 
+            CLASS = ESTextAndButtonsWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_alternate" = NSButton; 
+                "button_default" = NSButton; 
+                "button_other" = NSButton; 
+                "scrollView_message" = NSScrollView; 
+                target = id; 
+                "textField_messageHeader" = NSTextField; 
+                "textView_message" = NSTextView; 
+                userInfo = id; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}
