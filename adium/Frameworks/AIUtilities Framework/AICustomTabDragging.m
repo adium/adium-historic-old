@@ -79,11 +79,13 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
     NSPoint			startPoint;
     BOOL			sourceWindowWillHide;
     
-    //Setup
-	[destTabBar release]; destTabBar = nil;
-	sourceTabBar = [sourceView retain];
-	dragTabCell = [inTabCell retain];
-	selectTabAfterDrag = shouldSelect;
+	if( [sourceView allowsTabDragging] ) {
+		
+		//Setup
+		[destTabBar release]; destTabBar = nil;
+		sourceTabBar = [sourceView retain];
+		dragTabCell = [inTabCell retain];
+		selectTabAfterDrag = shouldSelect;
 		
 		//Determine if the source window will hide as a result of this drag
 		sourceWindowWillHide = ([sourceTabBar removingLastTabHidesWindow] && [sourceTabBar numberOfTabViewItems] < 1);
@@ -135,7 +137,8 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 			[_destinationOfLastDrag release]; _destinationOfLastDrag= nil;
 		}
 		
-	//}
+		//}
+	}
 }
 
 //End a drag
@@ -150,14 +153,14 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 			[sourceTabBar moveTab:dragTabCell toIndex:oldIndex selectTab:selectTabAfterDrag];
 
 	}else{
-		//Moving tabs between bars is handled by the tab view delegate.  It probably shouldn't be done this way.
-        if([[sourceTabBar delegate] respondsToSelector:@selector(customTabView:didMoveTabViewItem:toCustomTabView:index:screenPoint:)]){
-            [[sourceTabBar delegate] customTabView:sourceTabBar
-								didMoveTabViewItem:[dragTabCell tabViewItem]
-								   toCustomTabView:destTabView
-											 index:destIndex
-									   screenPoint:NSMakePoint(-1,-1)];
-        }
+			//Moving tabs between bars is handled by the tab view delegate.  It probably shouldn't be done this way.
+			if([[sourceTabBar delegate] respondsToSelector:@selector(customTabView:didMoveTabViewItem:toCustomTabView:index:screenPoint:)]){
+				[[sourceTabBar delegate] customTabView:sourceTabBar
+									didMoveTabViewItem:[dragTabCell tabViewItem]
+									   toCustomTabView:destTabView
+												 index:destIndex
+										   screenPoint:NSMakePoint(-1,-1)];
+			}
 		
 	}
 	
