@@ -73,4 +73,46 @@
 - (NSString *)userNameLabel{
     return(AILocalizedString(@"MSN Passport",""));    //Sign-in name
 }
+
+- (void)registerStatuses{
+	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
+							 withDescription:STATUS_DESCRIPTION_AVAILABLE
+									  ofType:AIAvailableStatusType
+								  forService:self];
+	
+	[[adium statusController] registerStatus:STATUS_NAME_AWAY
+							 withDescription:STATUS_DESCRIPTION_AWAY
+									  ofType:AIAwayStatusType
+								  forService:self];
+	
+	[[adium statusController] registerStatus:STATUS_NAME_BRB
+							 withDescription:STATUS_DESCRIPTION_BRB
+									  ofType:AIAwayStatusType
+								  forService:self];
+	
+	[[adium statusController] registerStatus:STATUS_NAME_BUSY
+							 withDescription:STATUS_DESCRIPTION_BUSY
+									  ofType:AIAwayStatusType
+								  forService:self];
+	
+	[[adium statusController] registerStatus:STATUS_NAME_PHONE
+							 withDescription:STATUS_DESCRIPTION_PHONE
+									  ofType:AIAwayStatusType
+								  forService:self];
+	
+	[[adium statusController] registerStatus:STATUS_NAME_LUNCH
+							 withDescription:STATUS_DESCRIPTION_LUNCH
+									  ofType:AIAwayStatusType
+								  forService:self];
+	/*
+	m = g_list_append(m, _("Available"));
+	m = g_list_append(m, _("Away From Computer"));
+	m = g_list_append(m, _("Be Right Back"));
+	m = g_list_append(m, _("Busy"));
+	m = g_list_append(m, _("On The Phone"));
+	m = g_list_append(m, _("Out To Lunch"));
+	m = g_list_append(m, _("Hidden"));
+	 */
+}
+
 @end

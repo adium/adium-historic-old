@@ -58,4 +58,41 @@
 	return(AIServiceSecondary);
 }
 
+- (void)registerStatuses{
+	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
+							 withDescription:STATUS_DESCRIPTION_AVAILABLE
+									  ofType:AIAvailableStatusType
+								  forService:self];
+	
+	[[adium statusController] registerStatus:STATUS_NAME_AWAY
+							 withDescription:STATUS_DESCRIPTION_AWAY
+									  ofType:AIAwayStatusType
+								  forService:self];
+	
+	/*
+#define AGG_STATUS_AVAIL              _("Available")
+#define AGG_STATUS_AVAIL_FRIENDS      _("Available for friends only")
+#define AGG_STATUS_BUSY               _("Away")
+#define AGG_STATUS_BUSY_FRIENDS       _("Away for friends only")
+#define AGG_STATUS_INVISIBLE          _("Invisible")
+#define AGG_STATUS_INVISIBLE_FRIENDS  _("Invisible for friends only")
+#define AGG_STATUS_NOT_AVAIL          _("Unavailable")
+	*/
+
+	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE_FRIENDS_ONLY
+							 withDescription:STATUS_DESCRIPTION_AVAILABLE_FRIENDS_ONLY
+									  ofType:AIAvailableStatusType
+								  forService:self];
+	
+	[[adium statusController] registerStatus:STATUS_NAME_AWAY_FRIENDS_ONLY
+							 withDescription:STATUS_DESCRIPTION_AWAY_FRIENDS_ONLY
+									  ofType:AIAwayStatusType
+								  forService:self];
+	
+	[[adium statusController] registerStatus:STATUS_NAME_NOT_AVAILABLE
+							 withDescription:STATUS_DESCRIPTION_NOT_AVAILABLE
+									  ofType:AIAwayStatusType
+								  forService:self];
+}
+
 @end

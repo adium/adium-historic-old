@@ -108,7 +108,7 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 		NSString		*messageString;
 		
 		messageString = [NSString stringWithUTF8String:message];
-		
+		AILog(@"Source: %s \t Name: %s \t Nick: %s", who, gaim_conversation_get_name(conv), gaim_conv_chat_get_nick(GAIM_CONV_CHAT(conv)));
 		messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[AIHTMLDecoder decodeHTML:messageString],@"AttributedMessage",
 			[NSString stringWithUTF8String:who],@"Source",
 			[NSNumber numberWithInt:flags],@"GaimMessageFlags",

@@ -63,4 +63,21 @@
 	return(YES);
 }
 
+#warning Zephyr invisible = "Hidden"
+- (void)registerStatuses{
+	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
+							 withDescription:STATUS_DESCRIPTION_AVAILABLE
+									  ofType:AIAvailableStatusType
+								  forService:self];
+	
+	[[adium statusController] registerStatus:STATUS_NAME_AWAY
+							 withDescription:STATUS_DESCRIPTION_AWAY
+									  ofType:AIAwayStatusType
+								  forService:self];
+	/*
+		 m = g_list_append(m, _("Online"));
+		 m = g_list_append(m, GAIM_AWAY_CUSTOM);
+		 m = g_list_append(m, _("Hidden"));
+	 */
+}
 @end
