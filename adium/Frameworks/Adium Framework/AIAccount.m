@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.71 2004/07/28 02:34:41 dchoby98 Exp $
+// $Id: AIAccount.m,v 1.72 2004/07/29 17:02:45 evands Exp $
 
 #import "AIAccount.h"
 
@@ -495,11 +495,11 @@
 }
 
 #pragma mark Key-Value Pairing
-- (NSData *)userIcon
+- (NSData *)userIconData
 {
 	return([self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]);	
 }
-- (void)setUserIcon:(NSData *)inData
+- (void)setUserIconData:(NSData *)inData
 {
 	[self setPreference:inData
 				 forKey:KEY_USER_ICON
