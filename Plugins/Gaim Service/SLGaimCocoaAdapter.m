@@ -98,10 +98,8 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 }
 
 //Register the account gaimside in the gaim thread to avoid a conflict on the g_hash_table containing accounts
-- (void)gaimThreadAddAdiumAccount:(CBGaimAccount *)adiumAccount
+- (void)gaimThreadAddGaimAccount:(GaimAccount *)account
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-
     gaim_accounts_add(account);	
 }
 - (void)addAdiumAccount:(CBGaimAccount *)adiumAccount
@@ -109,7 +107,22 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	account->ui_data = [adiumAccount retain];
 	
-	[gaimThreadProxy gaimThreadAddAdiumAccount:adiumAccount];
+	[gaimThreadProxy gaimThreadAddGaimAccount:account];
+}
+
+//Remove an account gaimside
+- (void)gaimThreadRemoveGaimAccount:(GaimAccount *)account
+{
+    gaim_accounts_remove(account);	
+}
+- (void)removeAdiumAccount:(CBGaimAccount *)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+
+	[(CBGaimAccount *)account->ui_data release];
+	account->ui_data = nil;
+	
+	[gaimThreadProxy gaimThreadRemoveGaimAccount:account];
 }
 
 #pragma mark Initialization
