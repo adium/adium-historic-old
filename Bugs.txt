@@ -17,9 +17,6 @@
 - Preferences are changing when contact list prefs are opened
 - Status labels are ignoring window transparency
 - Status labels are covering selected cells
-- Log viewer is crashing when you play in its drawer
-- Log viewer is missing an icon for toggle emoticons
-- Log viewer toggle emoticons does not update immediately
 - Team decision on contact list bottom bar (Remove and restore the regular sized scroller?)
 - Auto-resizing isn't restricting itself to the screen frame
 - File transfer is broken
