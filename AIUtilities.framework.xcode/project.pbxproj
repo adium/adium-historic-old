@@ -4878,6 +4878,7 @@
 		};
 		4BD1EFA506D264AC00B3975E = {
 			children = (
+				6E03C8D007C68A2000EAA71E,
 				4BD1EFB106D2653E00B3975E,
 				34D1838D075FC20E0075A380,
 				4BD1EF3306D2631E00B3975E,
@@ -5397,6 +5398,59 @@
 //4B2
 //4B3
 //4B4
+//6E0
+//6E1
+//6E2
+//6E3
+//6E4
+		6E03C8D007C68A2000EAA71E = {
+			children = (
+				6E03C8D107C68A5800EAA71E,
+				6E03C8D207C68A5800EAA71E,
+			);
+			isa = PBXGroup;
+			name = "Text Field with dragging delegate";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E03C8D107C68A5800EAA71E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AITextFieldWithDraggingDelegate.h;
+			path = "Frameworks/AIUtilities Framework/AITextFieldWithDraggingDelegate.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E03C8D207C68A5800EAA71E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AITextFieldWithDraggingDelegate.m;
+			path = "Frameworks/AIUtilities Framework/AITextFieldWithDraggingDelegate.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E03C8D307C68A5800EAA71E = {
+			fileRef = 6E03C8D107C68A5800EAA71E;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		6E03C8D407C68A5800EAA71E = {
+			fileRef = 6E03C8D207C68A5800EAA71E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//6E0
+//6E1
+//6E2
+//6E3
+//6E4
 //8D0
 //8D1
 //8D2
@@ -5494,6 +5548,7 @@
 				34486CB406D1DF0400DA778C,
 				34486CB906D1DF0400DA778C,
 				34486CBF06D1DF0400DA778C,
+				6E03C8D307C68A5800EAA71E,
 				34486CC106D1DF0400DA778C,
 				34486CC306D1DF0400DA778C,
 				34486CC506D1DF0400DA778C,
@@ -5713,6 +5768,7 @@
 				34F2EA4B07C304C0007EAAAB,
 				07BB5A0D07C4833E008996A0,
 				07BB5A0E07C48340008996A0,
+				6E03C8D407C68A5800EAA71E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
