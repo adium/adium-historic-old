@@ -19,12 +19,16 @@
  */
  
 #import "AINetworkConnectivity.h"
+#import "AISleepNotification.h"
+
 #import <SystemConfiguration/SystemConfiguration.h>
 
 #define	GENERIC_REACHABILITY_CHECK	"www.google.com"
 #define	AGGREGATE_INTERVAL			3.0
 
 #define	USE_10_3_METHODS_CHECK		[NSApplication isOnPantherOrBetter]
+
+#define	CONNECTIVITY_DEBUG			FALSE
 
 @interface AINetworkConnectivity (PRIVATE)
 + (void)handleConnectivityUsingCheckGenericReachability;
@@ -41,6 +45,7 @@ static OSStatus CreateIPAddressListChangeCallbackSCF(SCDynamicStoreCallBack call
 													 CFRunLoopSourceRef *sourceRef);
 static void localIPsChangedCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info);
 static void networkReachabilityChangedCallback(SCNetworkReachabilityRef target, SCNetworkConnectionFlags flags, void *info);
+static BOOL checkGenericReachability();
 
 static AINetworkConnectivity				*myself = nil;
 //static NSMutableArray						*customReachabilityRefArray = nil;
@@ -53,7 +58,7 @@ static BOOL									networkIsReachable = NO;
 	myself = self;
 	if (USE_10_3_METHODS_CHECK){
 		//Schedule our generic reachability check which will be used for most accounts
-		//This is triggered as soon as it is added to the run loop, which is why we do it after doing [self autoConnectAccounts]
+		//This is triggered as soon as it is added to the run loop, which means our networkIsReachable flag will be set.
 		[[AINetworkConnectivity class] scheduleReachabilityCheckFor:GENERIC_REACHABILITY_CHECK context:nil];
 
 	}else{
@@ -72,13 +77,31 @@ static BOOL									networkIsReachable = NO;
 		CFRunLoopAddSource(CFRunLoopGetCurrent(),
 						   sourceRef,
 						   kCFRunLoopDefaultMode);
+		
+		//Determine our initial network reachability
+		networkIsReachable = checkGenericReachability();
 	}
+	
+	//Monitor system sleep so we can clear our networkIsReachableFlag
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(systemWillSleep:)
+                                                 name:AISystemWillSleep_Notification
+                                               object:nil];
+}
+
++ (void)systemWillSleep:(NSNotification *)inNotification
+{
+	networkIsReachable = NO;
 }
 
 //Here's where the magic happens.  The timer is called after a clump of network updates culminating in a valid
 //network state.  Handle connectivity and post a notification for all the other kids who want to play.
 + (void)aggregatedNetworkReachabilityChanged:(NSTimer *)inTimer
 {
+#if CONNECTIVITY_DEBUG
+	NSLog(@"aggregatedNetworkReachabilityChanged: %i",networkIsReachable);
+#endif
+	
 	[[NSNotificationCenter defaultCenter] postNotificationName:AINetwork_ConnectivityChanged
 														object:[NSNumber numberWithInt:networkIsReachable]];
 	
@@ -101,15 +124,22 @@ static void gotNetworkChangedToReachable(BOOL reachable)
 {
 	networkIsReachable = reachable;
 
+	//We want to group a set of network changed calls, as we get quite a few 
+	//and only the last in the group is at all reliable.
 	if (aggregatedChangesTimer){
-		[aggregatedChangesTimer invalidate]; [aggregatedChangesTimer release]; aggregatedChangesTimer = nil;
+		[aggregatedChangesTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:AGGREGATE_INTERVAL]];
+		
+	}else{
+		aggregatedChangesTimer = [[NSTimer scheduledTimerWithTimeInterval:AGGREGATE_INTERVAL
+																   target:[AINetworkConnectivity class]
+																 selector:@selector(aggregatedNetworkReachabilityChanged:)
+																 userInfo:nil
+																  repeats:NO] retain];
 	}
 
-	aggregatedChangesTimer = [[NSTimer scheduledTimerWithTimeInterval:AGGREGATE_INTERVAL
-															   target:[AINetworkConnectivity class]
-															 selector:@selector(aggregatedNetworkReachabilityChanged:)
-															 userInfo:nil
-															  repeats:NO] retain];
+#if CONNECTIVITY_DEBUG
+	NSLog(@"gotNetworkChangedToReachable %i",reachable);
+#endif
 }
 
 
@@ -119,7 +149,19 @@ static void gotNetworkChangedToReachable(BOOL reachable)
 //The last call is accurate, so aggregate changes until we hit AGGREGATE_INTERVAL without a change
 static void networkReachabilityChangedCallback(SCNetworkReachabilityRef target, SCNetworkConnectionFlags flags, void *info)
 {
-	BOOL reachable = (flags & kSCNetworkFlagsReachable);
+	BOOL reachable = ((flags & kSCNetworkFlagsReachable) != 0);
+	
+#if CONNECTIVITY_DEBUG
+	NSLog(@"*** networkReachabilityChangedCallback is: %i : %i %i %i %i %i %i %i = %i",flags,
+		  flags & kSCNetworkFlagsTransientConnection,
+		  flags & kSCNetworkFlagsReachable,
+		  flags & kSCNetworkFlagsConnectionRequired,
+		  flags & kSCNetworkFlagsConnectionAutomatic,
+		  flags & kSCNetworkFlagsInterventionRequired,
+		  flags & kSCNetworkFlagsIsLocalAddress,
+		  flags & kSCNetworkFlagsIsDirect,
+		  reachable);
+#endif
 	
 	gotNetworkChangedToReachable(reachable);
 }
@@ -147,22 +189,44 @@ static void networkReachabilityChangedCallback(SCNetworkReachabilityRef target, 
 #pragma mark 10.2 Reachability Checking
 static BOOL checkReachabilityForHost(const char *host)
 {
-	SCNetworkConnectionFlags	status;
+	SCNetworkConnectionFlags	flags;
 	BOOL						reachable;
 	
-	if (SCNetworkCheckReachabilityByName(host, &status)){
-		reachable = (status & kSCNetworkFlagsReachable);
+	if (SCNetworkCheckReachabilityByName(host, &flags)){
 		
 		/*
-		 NSLog(@"*** %s is %i : %i %i %i %i %i %i",host,status,
-			   status & kSCNetworkFlagsTransientConnection,
-			   status & kSCNetworkFlagsReachable,
-			   status & kSCNetworkFlagsConnectionRequired,
-			   status & kSCNetworkFlagsConnectionAutomatic,
-			   status & kSCNetworkFlagsInterventionRequired,
-			   status & kSCNetworkFlagsIsLocalAddress,
-			   status & kSCNetworkFlagsIsDirect);
-		 */
+		 //The below block of code attempts to be mroe intelligent with reachability reporting.
+		 //It is untested.
+		BOOL						connectionRequired;
+		BOOL						connectionAutomatic;
+		
+		connectionRequired = ((flags & kSCNetworkFlagsConnectionRequired) != 0);
+		connectionAutomatic = ((flags & kSCNetworkFlagsConnectionAutomatic) != 0);
+
+		 //A connection is not required, or one is required but we can establish it automagically
+		reachable = (((flags & kSCNetworkFlagsReachable) != 0) && ((connectionRequired && connectionAutomatic) ||
+																   (!connectionRequired)));
+		 
+		 #if CONNECTIVITY_DEBUG
+			NSLog(@"kSCNetworkFlagsConnectionRequired: %i",connectionRequired);
+			NSLog(@"kSCNetworkFlagsConnectionAutomatic: %i",connectionAutomatic);
+		 #endif
+		*/
+
+		reachable = ((flags & kSCNetworkFlagsReachable) != 0);
+
+#if CONNECTIVITY_DEBUG
+		 NSLog(@"*** checkReachabilityForHost(%s) is %i : %i %i %i %i %i %i %i = %i",host,flags,
+			   flags & kSCNetworkFlagsTransientConnection,
+			   flags & kSCNetworkFlagsReachable,
+			   flags & kSCNetworkFlagsConnectionRequired,
+			   flags & kSCNetworkFlagsConnectionAutomatic,
+			   flags & kSCNetworkFlagsInterventionRequired,
+			   flags & kSCNetworkFlagsIsLocalAddress,
+			   flags & kSCNetworkFlagsIsDirect,
+			   reachable);
+#endif
+		 
 	}else{
 		reachable = NO;
 	}
@@ -175,7 +239,7 @@ static BOOL checkGenericReachability()
 	return checkReachabilityForHost(GENERIC_REACHABILITY_CHECK);
 }
 
-//Using the 10.2 compatible checkGenericReachability(), update all accounts
+//Using the 10.2 compatible checkGenericReachability() (which is not always accurate), update all accounts
 + (void)handleConnectivityUsingCheckGenericReachability
 {
 	BOOL			reachable = checkGenericReachability();
