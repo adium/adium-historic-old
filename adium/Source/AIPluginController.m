@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.19 2004/02/28 02:25:57 evands Exp $
+//$Id: AIPluginController.m,v 1.20 2004/02/28 03:26:39 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -71,7 +71,7 @@
 				pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
 				if(pluginBundle != nil){
 					
-#ifdef 1
+#if 1
 					//Create an instance of the plugin
 					plugin = [[pluginBundle principalClass] newInstanceOfPlugin];					
 #else
