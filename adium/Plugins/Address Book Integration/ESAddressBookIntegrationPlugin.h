@@ -11,6 +11,8 @@
 
 #define PREF_GROUP_ADDRESSBOOK  @"Address Book"
 #define KEY_AB_DISPLAYFORMAT    @"AB Display Format"
+#define KEY_AB_IMAGE_SYNC       @"AB Image Sync"
+#define KEY_AB_ENABLE_IMAGES    @"AB Enable Images"
 
 typedef enum {
     None = 0,
@@ -19,7 +21,6 @@ typedef enum {
     LastFirst
 } NameStyle;
 
-#define KEY_AB_IMAGE_SYNC       @"AB Image Sync"
 
 @interface ESAddressBookIntegrationPlugin : AIPlugin <AIListObjectObserver, ABImageClient> {
 
@@ -30,6 +31,7 @@ typedef enum {
     NSMutableDictionary *trackingDict;
     
     int                 displayFormat;
+    bool                enableImages;
     bool                automaticSync;
 }
 

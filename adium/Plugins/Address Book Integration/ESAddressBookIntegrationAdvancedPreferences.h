@@ -11,6 +11,7 @@
 @interface ESAddressBookIntegrationAdvancedPreferences : AIPreferencePane {
     IBOutlet    NSTextField             *format_textField;
     IBOutlet	NSPopUpButton		*format_menu;
+    IBOutlet    NSButton                *checkBox_enableImages;
     IBOutlet    NSButton                *checkBox_syncAutomatic;
 }
 

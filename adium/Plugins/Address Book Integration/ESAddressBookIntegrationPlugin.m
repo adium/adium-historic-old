@@ -64,8 +64,10 @@
             
             if (person) {
                 //Begin the image load if appropriate
-                int tag = [person beginLoadingImageDataForClient:self];
-                [trackingDict setObject:inObject forKey:[NSNumber numberWithInt:tag]];
+                if (enableImages) {
+                    int tag = [person beginLoadingImageDataForClient:self];
+                    [trackingDict setObject:inObject forKey:[NSNumber numberWithInt:tag]];
+                }
                 
                 //Load the name if appropriate
                 if (displayFormat != None) {
@@ -83,7 +85,7 @@
                             displayName = [NSString stringWithFormat:@"%@, %@",lastName,firstName]; 
                         }
                     }
-                    NSLog(@"applying for %@ %@",firstName,lastName);
+                    
                     //Apply the values 
                     NSString *oldValue = [[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self];
                     if (!oldValue || ![oldValue isEqualToString:displayName]) {
@@ -126,15 +128,14 @@
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
         //load new displayFormat
         displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
+        enableImages = [[prefDict objectForKey:KEY_AB_ENABLE_IMAGES] boolValue];
         automaticSync = [[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue];
-        NSLog(@"prefs call it");
         [self updateAllContacts];
     }
 }
 
 - (void)addressBookChanged:(NSNotification *)notification
 {
-            NSLog(@"addressBookChanged call it");
     [self updateAllContacts];
 }
 
