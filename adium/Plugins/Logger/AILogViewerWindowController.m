@@ -825,23 +825,30 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     if(row < 0 || row >= [selectedLogArray count]){
 		value = @"";
     }else{
-		AILog   *theLog = [selectedLogArray objectAtIndex:row];
-                NSArray *broken = [[theLog from] componentsSeparatedByString:@"."];
+		AILog       *theLog = [selectedLogArray objectAtIndex:row];
+                NSArray     *broken = [[theLog from] componentsSeparatedByString:@"."];
+                NSString    *service;
+                NSString    *from;
         
+                // error checking in case of old, malformed or otherwise odd folders & whatnot sitting in log base
+                if([broken count] >= 2){
+                    service = [broken objectAtIndex:0];
+                    from = [[theLog from] substringFromIndex:([service length] + 1)]; //one off for the seperator
+                }
+                else{
+                    service = nil;
+                    from = [theLog from];
+                }
+                
 		if([identifier isEqualToString:@"To"]){
                     value = [theLog to]; 
 		}else if([identifier isEqualToString:@"From"]){
-                    value = [broken objectAtIndex:1];
+                    value = from;
 		}else if([identifier isEqualToString:@"Date"]){
                     value = [dateFormatter stringForObjectValue:[theLog date]];
 		}
                 else if([identifier isEqualToString:@"Service"]){
-                    if([[broken objectAtIndex:0] isEqual:@"AIM"]){
-                        value = [[[[adium accountController] serviceControllerWithIdentifier:[[broken objectAtIndex:0] stringByAppendingString:@"-LIBGAIM"]] handleServiceType] menuImage];
-                    }
-                    else{
-                        value = [[[[adium accountController] serviceControllerWithIdentifier:[broken objectAtIndex:0]] handleServiceType] menuImage];
-                    }
+                        value = [[[adium accountController] firstServiceTypeWithServiceID:service] menuImage];
                 }
     }
     [resultsLock unlock];
