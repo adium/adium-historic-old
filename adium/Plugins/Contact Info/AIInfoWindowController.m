@@ -33,7 +33,7 @@ static AIListObject				*activeListObject = nil;
     NSTextAttachmentCell 		*imageAttatchment;
     NSTextAttachment 			*attatchment;
     NSImage 					*buddyImage;
-    BOOL                        online = [activeListObject integerStatusObjectForKey:@"Online"];
+    BOOL                        online = [[activeListObject numberStatusObjectForKey:@"Online"] boolValue];
     
 	//
     [timer invalidate]; [timer release];
@@ -154,7 +154,7 @@ static AIListObject				*activeListObject = nil;
     [infoString appendString:(online ? @"Yes" : @"No") withAttributes:valueAttributes];*/
     
     //Away & Status
-    int away = [activeListObject integerStatusObjectForKey:@"Away"];
+    BOOL away = [[activeListObject numberStatusObjectForKey:@"Away"] boolValue];
 	NSAttributedString *status = [activeListObject statusObjectForKey:@"StatusMessage"];
     
     if(status || away){ //If away or w/ status message
@@ -163,10 +163,11 @@ static AIListObject				*activeListObject = nil;
         }else{
             [infoString appendString:@"\r\r\tStatus:\t" withAttributes:labelAttributes];
         }
-        
+        NSLog(@"%@",status);
         if (status) {
             NSMutableAttributedString   *statusString = [[[adium contentController] fullyFilteredAttributedString:status 
 																								listObjectContext:activeListObject] mutableCopy];
+			NSLog(@"became %@\n\n%@",statusString,[statusString string]);
             NSMutableParagraphStyle     *indentStyle;
             
             NSRange                     firstLineRange = [[statusString string] lineRangeForRange:NSMakeRange(0,0)];
@@ -217,7 +218,7 @@ static AIListObject				*activeListObject = nil;
     }
 
     //Warning
-    int warning = [activeListObject integerStatusObjectForKey:@"Warning"];
+    int warning = [[activeListObject numberStatusObjectForKey:@"Warning"] intValue];
     if(warning > 0){
         [infoString appendString:@"\r\r\tWarning:\t" withAttributes:labelAttributes];
         [infoString appendString:[NSString stringWithFormat:@"%i%%",warning] withAttributes:valueAttributes];
