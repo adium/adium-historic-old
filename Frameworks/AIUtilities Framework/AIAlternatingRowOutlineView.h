@@ -17,9 +17,9 @@
 
 /*!
  * @class AIAlternatingRowOutlineView
- * @brief An AIOutlineView subclass supporting alternating rows.
+ * @brief An <tt>AIOutlineView</tt> subclass supporting alternating rows.
  *
- * An <tt>AIOutlineView</tt> subclass supporting alternating rows. This functionality was added, with less control to the programmer, in OS X 10.3.  <tt>AIAlternatingRowOutlineView</tt> also supports disabling it from drawing its background (useful if cells wish to draw their own backgrounds and potentially be transparent).
+ * This functionality was added, with less control to the programmer, in OS X 10.3.  <tt>AIAlternatingRowOutlineView</tt> also supports disabling it from drawing its background (useful if cells wish to draw their own backgrounds and potentially be transparent).
  */
 @interface AIAlternatingRowOutlineView : AIOutlineView {
     NSColor		*alternatingRowColor;
@@ -29,9 +29,9 @@
 }
 
 /*!
- * @brief Set if the outline view draws a grid, alternating by rows
+ * @brief Set if the outline view draws a grid, alternating by rows.
  *
- * Set if the outline view draws a grid, alternating by rows. The grid will be drawn alternating between the background color and the color specified by setAlternatingRowColor:, which has a sane, light blue default.
+ * The grid will be drawn alternating between the background color and the color specified by setAlternatingRowColor:, which has a sane, light blue default.
  * @param flag YES if the alternating rows should be drawn
  */
 - (void)setDrawsAlternatingRows:(BOOL)flag;
@@ -46,7 +46,7 @@
 /*!
  * @brief Set the color used for drawing alternating row backgrounds.
  *
- * Set the color used for drawing alternating row backgrounds. Ignored if drawsAlternatingRows is NO.
+ * Ignored if drawsAlternatingRows is NO.
  * @param color The <tt>NSColor</tt> to use for drawing alternating row backgrounds.
  */
 - (void)setAlternatingRowColor:(NSColor *)color;
@@ -54,16 +54,15 @@
 /*!
  * @brief Returns the color used for drawing alternating row backgrounds.
  *
- * Returns the color used for drawing alternating row backgrounds if drawsAlternatingRows is YES.
+ * This is only applicable if drawsAlternatingRows is YES.
  * @return color The <tt>NSColor</tt> used for drawing alternating row backgrounds.
  */
 - (NSColor *)alternatingRowColor;
 
 /*!
- setDrawsBackground:
  * @brief Set if the outlineView should draw its background
  *
- * Set if the outlineView should draw its background. If this is NO, no background will be drawn (this means that the alternating rows will not be drawn, either).  This is useful if cells wish to draw their own backgrounds.
+ * If this is NO, no background will be drawn (this means that the alternating rows will not be drawn, either).  This is useful if cells wish to draw their own backgrounds.
  * @param inDraw YES if the background should be drawn; NO if it should not.  The default is YES.
  */
 - (void)setDrawsBackground:(BOOL)inDraw;
@@ -71,15 +70,13 @@
 /*!
  * @brief Returns if the outlineView draws its background
  *
- * Returns if the outlineView draws its background
  * @return YES if the background is drawn; NO if it is not.
  */
 - (BOOL)drawsBackground;
 
 /*!
- * @brief Returns the color for drawing the background of a row
+ * @brief Returns the <tt>NSColor</tt> which should be used to draw the background of the specified row
  *
- * Returns the <tt>NSColor</tt> which should be used to draw the background of the specified row
  * @param row An integer row
  * @return An <tt>NSColor</tt> used to draw the background for <b>row</b>
  */
