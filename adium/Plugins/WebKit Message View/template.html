@@ -20,6 +20,7 @@
 			range.selectNode(chat);
 			documentFragment = range.createContextualFragment(html);
 			chat.appendChild(documentFragment);
+			alignChat();
 		}
 		
 		function appendNextMessage(html){
@@ -33,6 +34,7 @@
 
 			//swap
 			insert.parentNode.replaceChild(newNode,insert);
+			alignChat();
 		}
 		
 		function scrollToBottom() {
@@ -77,6 +79,22 @@
 			img.setAttribute('alt', node.firstChild.nodeValue);
 			node.parentNode.replaceChild(img, node);
 		}
+		function alignChat() {
+			var windowHeight = window.innerHeight;
+			if (windowHeight > 0) {
+				var contentElement = document.getElementById('Chat');
+				var contentHeight = contentElement.offsetHeight;
+				if (windowHeight - contentHeight > 0) {
+					contentElement.style.position = 'relative';
+					contentElement.style.top = (windowHeight - contentHeight) + 'px';
+				}
+				else {
+					contentElement.style.position = 'static';
+				}
+			}
+		}
+		window.onresize = alignChat;
+
 	</script>
 	<style id="mainStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
 	<style id="variantStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
