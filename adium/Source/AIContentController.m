@@ -296,12 +296,15 @@
 //Close a chat
 - (BOOL)closeChat:(AIChat *)inChat
 {
-    NSString	*key = [NSString stringWithFormat:@"(%@)%@",[[inChat account] accountID],[[inChat object] UIDAndServiceID]];
+    AIListObject	*chatObject = [inChat object];
+    NSString		*key = [NSString stringWithFormat:@"(%@)%@",[[inChat account] accountID],[[inChat object] UIDAndServiceID]];
 
-    //Notify account that it will be removed
+    //Set 'UnrespondedContent' to NO  (This could be done by a seperate plugin, but I'm not sure that's necessary)
+    [[chatObject statusArrayForKey:@"UnrespondedContent"] setObject:[NSNumber numberWithBool:NO] withOwner:chatObject];
+    [[owner contactController] listObjectStatusChanged:chatObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
+
+    //Notify the account, and remove the chat
     [(AIAccount<AIAccount_Content> *)[inChat account] closeChat:inChat];
-
-    //
     [chatDict removeObjectForKey:key];
 
     return(YES);

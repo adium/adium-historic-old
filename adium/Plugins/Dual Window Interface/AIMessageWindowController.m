@@ -85,6 +85,11 @@
 - (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
 {
     if([(AIMessageTabViewItem *)inTabViewItem tabShouldClose:nil]){
+        //If the tab is selected, select the tab to it's right.
+        if(inTabViewItem == [tabView_messages selectedTabViewItem]){
+            [tabView_messages selectNextTabViewItem:nil];
+        }
+
         [tabView_messages removeTabViewItem:inTabViewItem];
         [interface containerDidClose:inTabViewItem];
     }
