@@ -73,14 +73,17 @@
                     NSString *lastName = [person valueForProperty:kABLastNameProperty];
                     NSString *displayName = nil;
                     
-                    if (displayFormat == ADDRESS_BOOK_FIRST_LAST) {
-                        displayName = [NSString stringWithFormat:@"%@ %@",firstName,lastName];
-                    } else if (displayFormat == ADDRESS_BOOK_FIRST) {
+                    if (!lastName || displayFormat == ADDRESS_BOOK_FIRST) { //If no last name is available, use the first name
                         displayName = firstName;
-                    } else if (displayFormat == ADDRESS_BOOK_LAST_FIRST) {
-                        displayName = [NSString stringWithFormat:@"%@, %@",lastName,firstName]; 
+                    } else if (!firstName) {        //If no first name is available, use the last name
+                        displayName = lastName;
+                    } else {                        //Look to the preference setting
+                        if (displayFormat == ADDRESS_BOOK_FIRST_LAST) {
+                            displayName = [NSString stringWithFormat:@"%@ %@",firstName,lastName];
+                        } else if (displayFormat == ADDRESS_BOOK_LAST_FIRST) {
+                            displayName = [NSString stringWithFormat:@"%@, %@",lastName,firstName]; 
+                        }
                     }
-                    
                     
                     //Apply the values 
                     AIMutableOwnerArray *displayArray = [inObject displayArrayForKey:@"Display Name"];
