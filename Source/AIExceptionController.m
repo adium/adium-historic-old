@@ -104,8 +104,10 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			
 			//Check the stack trace for a third set of known offenders
 			if(!backtrace ||
-			   [backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound){
-				
+			   [backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound ||
+			   [backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound)
+			{
+
 				[super raise];
 				
 			}else{
