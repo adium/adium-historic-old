@@ -466,6 +466,14 @@ DeclareString(AppendNextMessage);
 	return(noVariantName ? noVariantName : AILocalizedString(@"Normal","Normal style variant menu item"));
 }
 
+/*!
+ * @brief Default variant for styles version 3 and later
+ */
+- (NSString *)defaultVariant
+{
+	return([styleBundle objectForInfoDictionaryKey:@"DefaultVariant"]);
+}
+
 
 //Keyword Replacement --------------------------------------------------------------------------------------------------
 #pragma mark Keyword replacement

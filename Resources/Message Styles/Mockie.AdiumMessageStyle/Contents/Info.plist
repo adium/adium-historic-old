@@ -20,7 +20,7 @@
 	<string>Lucida Grande</string>
 	<key>DefaultFontSize</key>
 	<integer>11</integer>
-	<key>DisplayNameForNoVariant</key>
+	<key>DefaultVariant</key>
 	<string>Brown - Icon Left</string>
     <key>ShowsUserIcons:Brown - Icon Hidden</key>
     <false/>

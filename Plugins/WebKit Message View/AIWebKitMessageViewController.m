@@ -292,10 +292,10 @@
 			//Ignore changes related to our background image cache.  These keys are used for storage only and aren't
 			//something we need to update in response to.  All other display changes we update our view for.
 			if(![key isEqualToString:@"BackgroundCacheUniqueID"] &&
-			   ![key isEqualToString:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]] &&
-			   !([group isEqualToString:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES] && firstTime)){ //XXX - Not clean, atleast comment it
+			   ![key isEqualToString:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]]){
 				[self _updateWebViewForCurrentPreferences];
 			}
+			
 		}
 	}
 	
@@ -334,19 +334,21 @@
 - (void)_updateWebViewForCurrentPreferences
 {
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-
+	NSBundle		*styleBundle;
+	
 	//Cleanup first
 	[messageStyle release];
 	[activeStyle release];
 	[activeVariant release];
 	
-	//New style and variant
-	activeStyle = [[prefDict objectForKey:KEY_WEBKIT_STYLE] retain];
-	activeVariant = [[prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]] retain];
-	
 	//Load the message style
-	NSBundle	*bundle = [plugin messageStyleBundleWithName:activeStyle];
-	messageStyle = [[AIWebkitMessageViewStyle messageViewStyleFromBundle:bundle] retain];
+	activeStyle = [[prefDict objectForKey:KEY_WEBKIT_STYLE] retain];
+	styleBundle = [plugin messageStyleBundleWithName:activeStyle];
+	messageStyle = [[AIWebkitMessageViewStyle messageViewStyleFromBundle:styleBundle] retain];
+
+	//Get the prefered variant (or the default if a prefered is not available)
+	activeVariant = [[prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]] retain];
+	if(!activeVariant) activeVariant = [[messageStyle defaultVariant] retain];
 	
 	//Update message style behavior
 	[messageStyle setShowUserIcons:[[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue]];
