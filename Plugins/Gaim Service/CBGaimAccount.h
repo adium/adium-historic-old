@@ -86,7 +86,7 @@
 //Account status
 - (NSSet *)supportedPropertyKeys;
 - (void)updateStatusForKey:(NSString *)key;
-- (void)setAccountUserImage:(NSImage *)image;
+- (void)setAccountUserImageData:(NSData *)originalData;
 - (void)setAccountIdleSinceTo:(NSDate *)idleSince;
 
 - (char *)gaimStatusTypeForStatus:(AIStatus *)statusState

@@ -298,8 +298,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
 {
-	NSLog(@"!!! %@ : %i",theContact,newAway);
-	
 	AIStatusType oldStatusType = [[theContact statusState] statusType];
 	AIStatusType newStatusType = (newAway ? AIAwayStatusType : AIAvailableStatusType);
 	
@@ -1799,9 +1797,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountProfileTo:)];
 			
 		}else if([key isEqualToString:KEY_USER_ICON]){
-			NSData  *data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
+			NSData  *data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];			
 
-			[self setAccountUserImage:(data ? [[[NSImage alloc] initWithData:data] autorelease] : nil)];
+			[self setAccountUserImageData:data];
 
 		}else if([key isEqualToString:KEY_ACCOUNT_CHECK_MAIL]){
 			//Update the mail checking setting if the account is already made (if it isn't, we'll set it when it is made)
@@ -1944,8 +1942,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  * After setting it with gaim, it sets it within Adium; if this is not called, the image will
  * show up neither locally nor remotely.
  */
-- (void)setAccountUserImage:(NSImage *)image
+- (void)setAccountUserImageData:(NSData *)originalData
 {
+	NSImage	*image =  (originalData ? [[[NSImage alloc] initWithData:originalData] autorelease] : nil);
+
 	if (account) {
 		//Clear the existing icon first
 		[gaimThread setBuddyIcon:nil onAccount:self];
@@ -1955,6 +1955,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		if(image){
 			GaimPluginProtocolInfo  *prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(gaim_find_prpl(account->protocol_id));
 			GaimDebug (@"Original image of size %f %f",[image size].width,[image size].height);
+			
 			if (prpl_info && (prpl_info->icon_spec.format)){
 				char					**prpl_formats =  g_strsplit (prpl_info->icon_spec.format,",",0);
 				int						i;
@@ -1964,10 +1965,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				NSSize					imageSize = [image size];
 				BOOL					bigEnough, smallEnough, prplScales;
 				
-				/* 
-					We need to scale it down if:
-				 1) The prpl needs to scale before it sends (?) AND
-				 2) The image is larger than the maximum size allowed by the protocol
+				/*  We need to scale it down if:
+				 *    1) The prpl needs to scale before it sends (?) AND
+				 *    2) The image is larger than the maximum size allowed by the protocol
 				 */
 				bigEnough = (prpl_info->icon_spec.min_width <= imageSize.width &&
 							 prpl_info->icon_spec.min_height <= imageSize.height);
@@ -1989,29 +1989,57 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 																	   prpl_info->icon_spec.min_height)];
 					}
 
+					/* Our original data is no longer valid, since we had to scale to a different size */
+					originalData = nil;
 					GaimDebug (@"Scaled image to size %@",NSStringFromSize([image size]));
 				}
 
-				for (i = 0; prpl_formats[i]; i++) {
-					if (strcmp(prpl_formats[i],"png") == 0){
-						buddyIconData = [image PNGRepresentation];
-						if (buddyIconData)
-							break;
-						
-					}else if ((strcmp(prpl_formats[i],"jpeg") == 0) || (strcmp(prpl_formats[i],"jpg") == 0)){
-						buddyIconData = [image JPEGRepresentation];
-						if (buddyIconData)
-							break;
-						
-					}else if ((strcmp(prpl_formats[i],"tiff") == 0) || (strcmp(prpl_formats[i],"tif") == 0)){
-						buddyIconData = [image TIFFRepresentation];
-						if (buddyIconData)
-							break;
-						
-					}else if (strcmp(prpl_formats[i],"bmp") == 0){
-						buddyIconData = [image BMPRepresentation];
-						if (buddyIconData)
-							break;
+				
+				//Look for gif first if the image is animated
+				NSImageRep	*imageRep = [image bestRepresentationForDevice:nil] ;
+				if([imageRep isKindOfClass:[NSBitmapImageRep class]] &&
+				   [[(NSBitmapImageRep *)imageRep valueForProperty:NSImageFrameCount] intValue] > 1){
+					
+					for (i = 0; prpl_formats[i]; i++) {
+						if (strcmp(prpl_formats[i],"gif") == 0){
+							/* Try to use our original data.  If we had to scale, originalData will have been set
+							 * to nil and we'll continue below to convert the image. */
+							GaimDebug (@"l33t script kiddie animated GIF!!111");
+
+							buddyIconData = originalData;
+							if(buddyIconData)
+								break;
+						}
+					}
+				}
+				
+				if(!buddyIconData){
+					for (i = 0; prpl_formats[i]; i++) {
+						if (strcmp(prpl_formats[i],"png") == 0){
+							buddyIconData = [image PNGRepresentation];
+							if (buddyIconData)
+								break;
+							
+						}else if ((strcmp(prpl_formats[i],"jpeg") == 0) || (strcmp(prpl_formats[i],"jpg") == 0)){
+							buddyIconData = [image JPEGRepresentation];
+							if (buddyIconData)
+								break;
+							
+						}else if ((strcmp(prpl_formats[i],"tiff") == 0) || (strcmp(prpl_formats[i],"tif") == 0)){
+							buddyIconData = [image TIFFRepresentation];
+							if (buddyIconData)
+								break;
+							
+						}else if (strcmp(prpl_formats[i],"gif") == 0){
+							buddyIconData = [image GIFRepresentation];
+							if(buddyIconData)
+								break;
+						}else if (strcmp(prpl_formats[i],"bmp") == 0){
+							buddyIconData = [image BMPRepresentation];
+							if (buddyIconData)
+								break;
+							
+						}						
 					}
 				}
 				
