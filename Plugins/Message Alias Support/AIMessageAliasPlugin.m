@@ -10,10 +10,6 @@
 
 @interface AIMessageAliasPlugin (PRIVATE)
 - (NSMutableAttributedString *)replaceKeywordsInString:(NSAttributedString *)original context:(id)context;
-- (NSMutableAttributedString *)replaceOccurencesOfString:(NSString *)keyword
-									  inAttributedString:(NSAttributedString *)original
-											  withString:(NSString *)replacement
-							  usingExistingMutableOutput:(NSMutableAttributedString *)mutableOutput;
 @end
 
 @implementation AIMessageAliasPlugin
