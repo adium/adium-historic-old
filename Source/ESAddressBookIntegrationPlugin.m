@@ -184,7 +184,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 					oldValue = [phoneticNameArray objectWithOwner:self];
 					if (!oldValue || ![oldValue isEqualToString:phoneticName]) {
 						[phoneticNameArray setObject:phoneticName withOwner:self];
-						modifiedAttributes = [NSSet setWithObjects:@"Display Name", @"Phonetic Name"];
+						modifiedAttributes = [NSSet setWithObjects:@"Display Name", @"Phonetic Name", nil];
 					}
 				}else{
 					phoneticNameArray = [inObject displayArrayForKey:@"Phonetic Name"
@@ -192,7 +192,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 					//Clear any stored value
 					if ([phoneticNameArray objectWithOwner:self]) {
 						[displayNameArray setObject:nil withOwner:self];
-						modifiedAttributes = [NSSet setWithObjects:@"Display Name", @"Phonetic Name"];
+						modifiedAttributes = [NSSet setWithObjects:@"Display Name", @"Phonetic Name", nil];
 					}					
 				}
 
@@ -213,7 +213,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 				//Clear any stored value
 				if ([phoneticNameArray objectWithOwner:self]) {
 					[displayNameArray setObject:nil withOwner:self];
-					modifiedAttributes = [NSSet setWithObjects:@"Display Name", @"Phonetic Name"];
+					modifiedAttributes = [NSSet setWithObjects:@"Display Name", @"Phonetic Name", nil];
 				}					
 				
 			}
