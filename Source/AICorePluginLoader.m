@@ -151,8 +151,8 @@ Adium, Copyright 2001-2004, Adam Iser
 {
 	BOOL	loadPlugin = YES;
 	NSArray	*confirmed = [[NSUserDefaults standardUserDefaults] objectForKey:CONFIRMED_PLUGINS];
-	
-	if(![confirmed containsObject:pluginName]){
+
+	if(!confirmed || ![confirmed containsObject:pluginName]){
 		if(NSRunInformationalAlertPanel([NSString stringWithFormat:@"Disable %@?",[pluginName stringByDeletingPathExtension]],
 										@"External plugins may cause crashes and odd behavior after updating Adium.  Disable this plugin if you experience any issues.",
 										@"Disable", 
@@ -164,8 +164,8 @@ Adium, Copyright 2001-2004, Adam Iser
 			
 		}else{
 			//Add this plugin to our confirmed list
-			[[NSUserDefaults standardUserDefaults] setObject:[confirmed arrayByAddingObject:pluginName]
-													  forKey:CONFIRMED_PLUGINS];
+			confirmed = (confirmed ? [confirmed arrayByAddingObject:pluginName] : [NSArray arrayWithObject:pluginName]);
+			[[NSUserDefaults standardUserDefaults] setObject:confirmed forKey:CONFIRMED_PLUGINS];
 		}
 	}
 	
