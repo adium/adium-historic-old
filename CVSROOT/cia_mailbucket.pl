@@ -24,7 +24,7 @@
 # Note that the last three parameters are optional, you can alternatively change
 # the defaults below in the configuration section.
 #
-# $Id: cia_mailbucket.pl,v 1.1 2003/12/08 03:52:09 jmelloy Exp $
+# $Id: cia_mailbucket.pl,v 1.2 2003/12/08 04:14:46 jmelloy Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $sendmail $max_lines $max_files
@@ -48,11 +48,11 @@ $dest_email = 'adium@mailbucket.org';
 $sendmail = '/usr/lib/sendmail';
 
 # The maximal number of lines the log message should have.
-$max_lines = 12;
+$max_lines = 5000;
 
 # Number of files to show at once before an abbreviation (m files in n dirs) is
 # used.
-$max_files = 3;
+$max_files = 15;
 
 # Number of seconds to wait for possible concurrent instances. CVS calls up
 # this script for each involved directory separately and this is the sync
@@ -76,7 +76,7 @@ $xml = 0;
 #  %trimmed%- a notice about the log message being trimmed, if it is
 #             ($trimmed_template)
 #  %logmsg% - the log message
-$commit_template = '{green}%user%{normal}%tag% * {light blue}%module%{normal}/%path% (%file%): %trimmed%%logmsg%';
+$commit_template = '%user% %tag% \n\n %module% \n\n%path% (%file%): \n\n%logmsg%';
 
 # The template string describing how the branch tag name should look like.
 # Expansions:
@@ -140,6 +140,9 @@ while (<STDIN>) {
   $logmsg_lines++;
   last if ($logmsg_lines > $max_lines);
   $logmsg .= $_;
+  if($logmsg_lines == 1) {
+      $trimmed_template = $_;
+  }
 }
 
 
@@ -208,7 +211,7 @@ if (-f $syncfile) {
 # The mail header
 
 my $subject;
-$subject = "Announce $project";
+$subject = "$user: $trimmed_template";
 my $ctype;
 $ctype = 'text/' . ($xml ? 'xml' : 'plain');
 
