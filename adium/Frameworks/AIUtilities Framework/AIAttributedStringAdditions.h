@@ -21,6 +21,7 @@
 - (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString*)replacement options:(unsigned)opts range:(NSRange)searchRange;
 - (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString*)replacement attributes:(NSDictionary*)attributes options:(unsigned)opts range:(NSRange)searchRange;
 - (void)adjustColorsToShowOnBackground:(NSColor *)backgroundColor;
+- (void)adjustColorsToShowOnBackgroundRelativeToOriginalBackground:(NSColor *)backgroundColor;
 @end
 
 @interface NSAttributedString (AIAttributedStringAdditions)
