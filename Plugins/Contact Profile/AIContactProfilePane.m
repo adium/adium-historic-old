@@ -37,8 +37,8 @@
 {
 	viewIsOpen = YES;
 	
-	[label_status setStringValue:AILocalizedString(@"Status",nil)];
-	[label_profileIfAvailable setStringValue:AILocalizedString(@"Profile (if available):",nil)];
+	[label_status setLocalizedString:AILocalizedString(@"Status",nil)];
+	[label_profileIfAvailable setLocalizedString:AILocalizedString(@"Profile (if available):",nil)];
 
     [[adium contactController] registerListObjectObserver:self];
 }

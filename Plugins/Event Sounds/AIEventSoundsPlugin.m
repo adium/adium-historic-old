@@ -31,6 +31,9 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
+/*
+ * @class AIEventSoundsPlugin
+ */
 @implementation AIEventSoundsPlugin
 
 - (void)installPlugin

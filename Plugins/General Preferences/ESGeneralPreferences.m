@@ -86,27 +86,25 @@
 
 
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STATUS_MENU_ITEM];
-		
 	[checkBox_enableMenuItem setState:[[prefDict objectForKey:KEY_STATUS_MENU_ITEM_ENABLED] boolValue]];
 		
     [self configureControlDimming];
 
-	[checkBox_messagesInTabs setTitle:AILocalizedString(@"Create new messages in tabs",nil)];
-    [checkBox_arrangeTabs setTitle:AILocalizedString(@"Sort tabs with the current sort options",nil)];
-    [checkBox_arrangeByGroup setTitle:AILocalizedString(@"Organize tabs into new windows by group",nil)];
-	[checkBox_enableLogging setTitle:AILocalizedString(@"Log messages",nil)];
-	[checkBox_sendOnReturn setTitle:AILocalizedString(@"Send on Return",nil)];
-	[checkBox_sendOnEnter setTitle:AILocalizedString(@"Send on Enter",nil)];
-	[checkBox_enableMenuItem setTitle:AILocalizedString(@"Show Adium status in menu bar",nil)];
+	[checkBox_messagesInTabs setLocalizedString:AILocalizedString(@"Create new messages in tabs",nil)];
+    [checkBox_arrangeTabs setLocalizedString:AILocalizedString(@"Sort tabs with the current sort options",nil)];
+    [checkBox_arrangeByGroup setLocalizedString:AILocalizedString(@"Organize tabs into new windows by group",nil)];
+	[checkBox_enableLogging setLocalizedString:AILocalizedString(@"Log messages",nil)];
+	[checkBox_sendOnReturn setLocalizedString:AILocalizedString(@"Send on Return",nil)];
+	[checkBox_sendOnEnter setLocalizedString:AILocalizedString(@"Send on Enter",nil)];
+	[checkBox_enableMenuItem setLocalizedString:AILocalizedString(@"Show Adium status in menu bar",nil)];
 	
-	[label_logging setStringValue:AILocalizedString(@"Messages:",nil)];
-	[label_messagesSendOn setStringValue:AILocalizedString(@"Messages send on:",nil)];
-	[label_messagesTabs setStringValue:AILocalizedString(@"Message tabs:",nil)];
-	[label_menuItem setStringValue:AILocalizedString(@"Menu item:","The option '[ ] Show Adium status in menu bar' follows")];
-	[label_switchTabsWith setStringValue:AILocalizedString(@"Switch tabs with:","Selections for what keys to use to switch message tabs will follow")];
-	[label_sound setStringValue:AILocalizedString(@"Sound:",nil)];
+	[label_logging setLocalizedString:AILocalizedString(@"Messages:",nil)];
+	[label_messagesSendOn setLocalizedString:AILocalizedString(@"Messages send on:",nil)];
+	[label_messagesTabs setLocalizedString:AILocalizedString(@"Message tabs:",nil)];
+	[label_menuItem setLocalizedString:AILocalizedString(@"Menu item:","The option '[ ] Show Adium status in menu bar' follows")];
+	[label_switchTabsWith setLocalizedString:AILocalizedString(@"Switch tabs with:","Selections for what keys to use to switch message tabs will follow")];
+	[label_sound setLocalizedString:AILocalizedString(@"Sound:",nil)];
 }
-
 
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
