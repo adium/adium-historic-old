@@ -20,7 +20,6 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 board = NEHTicTacToeBoard; 
-                endGame = NSButton; 
                 "imageView_acceptPlayAs" = NSImageView; 
                 "imageView_sentPlayAs" = NSImageView; 
                 squares = NSMatrix; 

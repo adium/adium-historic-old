@@ -26,7 +26,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 {
     IBOutlet NSMatrix		* squares;
 	IBOutlet NSTextField	* status;
-	IBOutlet NSButton		* endGame;
 	
 	IBOutlet NSTextField	* textField_remoteContact;
 	IBOutlet NSImageView	* imageView_acceptPlayAs;

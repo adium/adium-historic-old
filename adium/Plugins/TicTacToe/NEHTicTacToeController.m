@@ -26,7 +26,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define PLAY_FIRST			AILocalizedString(@"(You will play first)","")
 #define PLAY_SECOND			AILocalizedString(@"(You will play second)","")
-#define GAME_OVER			AILocalizedString(@"Game Over","Title for game end pane")
 #define YOU_WIN				AILocalizedString(@"You win!","")
 #define YOU_LOSE			AILocalizedString(@"You lost...","")
 #define TIE					AILocalizedString(@"It's a Tie!","Message when the game ends in a tie")
@@ -70,7 +69,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 	[board newGame];
 	[self clearBoard];
 	[squares setEnabled:YES];
-	[endGame setEnabled:YES];
 	[self updateStatus];
 }
 
@@ -178,7 +176,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 	[board endGame];
 	[self clearBoard];
 	[squares setEnabled:NO];
-	[endGame setEnabled:NO];
 	[self updateStatus];
 }
 
@@ -215,13 +212,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 			winner = [board winner];
 			if(winner != PLAYER_NONE)
 			{
-				NSBeginAlertSheet(GAME_OVER,BUTTON_OK,nil,nil,[self window],self,NULL,@selector(end:returnCode:contextInfo:),NULL,(winner == player)?YOU_WIN:YOU_LOSE);
+				[self gameDidComplete:(winner == player)?End_UserWon:End_UserLost displaySheet:YES];
 				[status setStringValue: (winner == player)?YOU_WIN:YOU_LOSE];
 				[squares setEnabled:NO];
 			}
 			else				//Tie
 			{
-				NSBeginAlertSheet(GAME_OVER,BUTTON_OK,nil,nil,[self window],self,NULL,@selector(end:returnCode:contextInfo:),NULL,TIE);
+				[self gameDidComplete:End_GameTied displaySheet:YES];
 				[status setStringValue: TIE];
 				[squares setEnabled:NO];
 			}
