@@ -27,7 +27,7 @@
     [[owner menuController] addMenuItem:editContactAlertsMenuItem toLocation:LOC_Contact_Action];
 
     //Add our 'contact alerts' contextual menu item
-    contactAlertsContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"Edit Contact's Alerts" target:self action:@selector(editContextContactInfo:) keyEquivalent:@""];
+    contactAlertsContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"Edit Alerts" target:self action:@selector(editContextContactInfo:) keyEquivalent:@""];
     [[owner menuController] addContextualMenuItem:contactAlertsContextMenuItem toLocation:Context_Contact_Manage];
 
     //Add our 'contact alerts' toolbar item
@@ -56,18 +56,23 @@
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
     NSMutableArray * eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
-    int num_actions = [eventActionArray count];
     NSEnumerator * actionsEnumerator;
     NSDictionary * actionDict;
     NSString * action;
     NSString * event;
-
+    int status, event_status;
+    BOOL status_matches;
     actionsEnumerator = [eventActionArray objectEnumerator];
     while(actionDict = [actionsEnumerator nextObject])
     {
         event = [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
-        if ([inModifiedKeys containsObject:event] && [[inObject statusArrayForKey:event] greatestIntegerValue])
-        { //actions to take when an event is matched go here
+//        NSLog(@"modified keys are %@; the event is %@; the statusArrayForKey is %@; giv is %i and looking for %i",inModifiedKeys, event, [inObject statusArrayForKey:event], [[inObject statusArrayForKey:event] greatestIntegerValue],  [[actionDict objectForKey:KEY_EVENT_STATUS] intValue]);
+
+        status = [[inObject statusArrayForKey:event] greatestIntegerValue];
+        event_status = [[actionDict objectForKey:KEY_EVENT_STATUS] intValue];
+        status_matches = (status && event_status) || (!status && !event_status); //XOR
+        if ( status_matches && [inModifiedKeys containsObject:event])
+             { //actions to take when an event is matched go here
 
             action = [actionDict objectForKey:KEY_EVENT_ACTION];
 
@@ -96,7 +101,6 @@
                 account = [onlineAccounts objectAtIndex:0];
 
                 NSAttributedString  *message = [[NSAttributedString alloc] initWithString:[actionDict objectForKey:KEY_EVENT_DETAILS]];
-//                NSLog(@"sending with %@",[account accountDescription]);
                  responseContent = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:inObject onAccount:account]
                                                        withSource:account
                                                       destination:inObject
@@ -126,7 +130,6 @@
         NSLog(@"checking context...");
         return([[owner menuController] contactualMenuContact] != nil);
     }
-    NSLog(@"%@",menuItem);
     return(valid);
 }
 
@@ -146,7 +149,6 @@
 {
     NSDictionary		*objects = [inToolbarItem configurationObjects];
     AIListContact		*object = [objects objectForKey:@"ContactObject"];
-    NSLog(@"configuring toolbar item");
     BOOL			enabled = (object && [object isKindOfClass:[AIListContact class]]);
 
     [inToolbarItem setEnabled:enabled];
