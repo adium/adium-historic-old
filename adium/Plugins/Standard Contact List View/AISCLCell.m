@@ -240,16 +240,6 @@
 
     //Get the name string
     name = [listObject formattedDisplayName];
-  /*  AIMutableOwnerArray * formattedNameArray = [listObject displayArrayForKey:@"Formatted Display Name"];
-    if (formattedNameArray && [formattedNameArray count])
-    {
-        name = [formattedNameArray objectAtIndex:0];
-    }
-    else
-    {
-        name = [listObject displayName];
-    }
-    */
     displayName = [[NSAttributedString alloc] initWithString:name attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor, NSForegroundColorAttributeName, font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil]];
 
     //Draw the name
