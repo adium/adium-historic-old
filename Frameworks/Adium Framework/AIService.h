@@ -36,8 +36,11 @@ typedef enum {
 - (int)allowedLength;
 - (BOOL)caseSensitive;
 - (AIServiceImportance)serviceImportance;
-		
+
 //Utilities
 - (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored;
+
+//Attributes
+- (BOOL)canCreateGroupChats;
 
 @end

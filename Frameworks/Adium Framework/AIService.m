@@ -161,4 +161,10 @@
 	return(filteredString);
 }
 
+//Attributes
+- (BOOL)canCreateGroupChats
+{
+	return NO;
+}
+
 @end
