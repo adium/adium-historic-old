@@ -68,11 +68,17 @@
             </div>
             <div id="content">
 
-                <h1>Upgrading From Adium 1.x</h1>
+                <h1>Common Questions</h1>
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
+
                 <p><span class="faqQuestion">How do I import my contacts, aliases, and logs from Adium 1.x?</span><br />
                 Download and run the <a href="downloads/adium_1x_importer.tar.gz">Adium 1.x importer</a>.</p>
+                
+                <p><span class="faqQuestion">Where can I download an older release?</span><br />
+                All previous Adium releases are available from our <a href="http://sourceforge.net/project/showfiles.php?group_id=67507">Project File Page</a>.</p>
+
+                
                 </div>
                 <div class="boxWideBottom"></div>
 
