@@ -40,7 +40,7 @@
 @end
 
 #define CUSTOM_TABS_FPS		30.0		//Animation speed
-#define CUSTOM_TABS_OVERLAP	7		//Overlapped pixels between tabs
+#define CUSTOM_TABS_OVERLAP	6		//Overlapped pixels between tabs
 
 @implementation AICustomTabsView
 

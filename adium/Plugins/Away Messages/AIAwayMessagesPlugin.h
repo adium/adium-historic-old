@@ -13,8 +13,9 @@
 #define KEY_SAVED_AWAYS			@"Saved Aways"
 
 @class AIAwayMessagePreferences;
+@protocol AIContactListTooltipEntry;
 
-@interface AIAwayMessagesPlugin : AIPlugin {
+@interface AIAwayMessagesPlugin : AIPlugin <AIContactListTooltipEntry> {
 
     AIAwayMessagePreferences	*preferences;
 

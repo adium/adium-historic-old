@@ -379,7 +379,7 @@ extern void* objc_getClass(const char *name);
     NSEnumerator	*buddyEnumerator;
     NSDictionary	*buddyPropertiesDict;
     
-//    NSLog(@"Update %i %@",(int)[inProperties count],inProperties);
+    NSLog(@"Update %i %@",(int)[inProperties count],inProperties);
     
     buddyEnumerator = [inProperties objectEnumerator];
     while((buddyPropertiesDict = [buddyEnumerator nextObject])){

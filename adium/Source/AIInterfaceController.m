@@ -32,7 +32,10 @@
     contactListViewArray = [[NSMutableArray alloc] init];
     messageViewArray = [[NSMutableArray alloc] init];
     interfaceArray = [[NSMutableArray alloc] init];
+    contactListTooltipEntryArray = [[NSMutableArray alloc] init];
 
+    tooltipListObject = nil;
+    tooltipString = nil;
     flashObserverArray = nil;
     flashTimer = nil;
     flashState = 0;
@@ -156,13 +159,41 @@
     return(flashState);
 }
 
+
+
+// Registers code to display tooltip info about a contact
+- (void)registerContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry
+{
+    [contactListTooltipEntryArray addObject:inEntry];
+}
+
 //list object tooltips
 - (void)showTooltipForListObject:(AIListObject *)object atPoint:(NSPoint)point
 {
     if(object){
-        [AITooltipUtilities showTooltipWithString:[NSString stringWithFormat:@"%@ (%@)",[object displayName],[object UID]] onWindow:nil atPoint:point];
+        if(object == tooltipListObject){ //If we already have this tooltip open
+            //Move the existing tooltip
+            [AITooltipUtilities showTooltipWithString:tooltipString onWindow:nil atPoint:point];
+
+        }else{ //This is a new tooltip
+            //Hold onto the new object
+            [tooltipListObject release];
+            tooltipListObject = [object retain];
+
+            //Build a tooltip string for the new object
+            [tooltipString release]; tooltipString = nil;
+            tooltipString = [[NSString stringWithFormat:@"%@ (%@)",[object displayName],[object UID]] retain];
+            
+            //Display the new tooltip
+            [AITooltipUtilities showTooltipWithString:tooltipString onWindow:nil atPoint:point];
+        }
+
     }else{
-        [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:point];
+        //Hide the existing tooltip
+        if(tooltipListObject){
+            [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:point];
+            [tooltipListObject release]; tooltipListObject = nil;
+        }
     }
 }
 

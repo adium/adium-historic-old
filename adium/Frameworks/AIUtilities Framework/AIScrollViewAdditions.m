@@ -30,9 +30,9 @@
     //Set the view
     [self setDocumentView:inView];
 
-    //Size it appropriately
+    //Size the width appropriately
     contentSize = [NSScrollView contentSizeForFrameSize:[self frame].size hasHorizontalScroller:NO hasVerticalScroller:YES borderType:[self borderType]];
-    [inView setFrameSize:contentSize];
+    [inView setFrameSize:NSMakeSize(contentSize.width,[inView frame].size.height)];
     
     //Redisplay
     [self setNeedsDisplay:YES];
