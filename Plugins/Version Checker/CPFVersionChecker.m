@@ -15,7 +15,6 @@
 #define VERSION_CHECKER_DEFAULTS	@"VersionChecker Defaults"
 
 @interface CPFVersionChecker (PRIVATE)
-- (void)preferencesChanged:(NSNotification *)notification;
 - (void)_requestVersionThread;
 - (void)_versionReceived:(NSDate *)dateOfLatestBuild;
 - (NSDate *)dateOfThisBuild;
@@ -27,148 +26,98 @@
 //Install
 - (void)installPlugin
 {
-	observingListUpdates = NO;
-	timerActive = NO;
-	
-	//Register our defaults
-	//Setup Preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:VERSION_CHECKER_DEFAULTS 
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:VERSION_CHECKER_DEFAULTS 
 																		forClass:[self class]]
 																		forGroup:PREF_GROUP_UPDATING];
-	
+
 	//Menu item for checking manually
     versionCheckerMenuItem = [[[NSMenuItem alloc] initWithTitle:VERSION_CHECKER_TITLE 
 														 target:self 
-														 action:@selector(checkForNewVersion:)
+														 action:@selector(manualCheckForNewVersion:)
 												  keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:versionCheckerMenuItem toLocation:LOC_Adium_About];
 	
-    //Observe preference changes
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:nil];
-	[self preferencesChanged:nil];
+	//Observe connectivity changes
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(networkConnectivityChanged:)
+												 name:AINetwork_ConnectivityChanged
+											   object:nil];
+	
+	//Check for an update now
+	[self automaticCheckForNewVersion:nil];
+	
+	//Check for updates again every 24 hours (60 seconds * 60 minutes * 24 hours)
+	timer = [[NSTimer scheduledTimerWithTimeInterval:(60 * 60 * 24)
+											  target:self
+											selector:@selector(automaticCheckForNewVersion:)
+											userInfo:nil
+											 repeats:YES] retain];
 }
 
 - (void)uninstallPlugin
 {
-	if(observingListUpdates) [[adium contactController] unregisterListObjectObserver:self];
-	[self endTimerChecking];
+	[timer invalidate]; [timer release];
 }
-
-- (void)preferencesChanged:(NSNotification *)notification
-{
-	if( notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_UPDATING] ){
-		BOOL updateAutomatically = [[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
-																			 group:PREF_GROUP_UPDATING] boolValue];
-        if(updateAutomatically){
-						
-			if(!observingListUpdates){
-				// If we're already online, set up automatic checking		
-				if( [[adium accountController] oneOrMoreConnectedAccounts] )
-					[self startTimerChecking];
-				
-				//Listen to accounts for automatic update checking
-				[[adium contactController] registerListObjectObserver:self];
-				observingListUpdates = YES;
-			}
-		}else{
-			if(observingListUpdates){
-				[[adium contactController] unregisterListObjectObserver:self];				
-				observingListUpdates = NO;
-			}
-			[self endTimerChecking];
-			
-		}
-	}
-}
-
-//
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
-{
-	if([inObject isKindOfClass:[AIAccount class]]){
-		if([inModifiedKeys containsObject:@"Online"] && [[inObject statusObjectForKey:@"Online"] boolValue] == YES){
-			//Check for updates
-			[self performSelector:@selector(checkForNewVersion:) withObject:nil afterDelay:10.0];
-
-			// Start checking every 24 hours (if we weren't already)
-			[self startTimerChecking];
-			
-			//Don't check again during this session
-			if(observingListUpdates){
-				[[adium contactController] unregisterListObjectObserver:self];
-				observingListUpdates = NO;
-			}
-		}
-	}
-	
-	return(nil);
-}	
 
 
 //New version checking -------------------------------------------------------------------------------------------------
 #pragma mark New version checking
-//Check for a new release of Adium
-//The URL load (dateOfLatestBuild) can block, so we do it in a separate thread.  Once the URL load is finished we pass
-//control back to the main thread and display the appropriate panel
-- (void)checkForNewVersion:(id)sender{
-	checkingManually = (sender != nil);
-	[NSThread detachNewThreadSelector:@selector(_requestVersionThread) toTarget:self withObject:nil];
-}
-
-//Called by the every-24-hours timer
-- (void)timerCheckForNewVersion:(NSTimer *)timer{
-	checkingManually = NO;
-	[NSThread detachNewThreadSelector:@selector(_requestVersionThread) toTarget:self withObject:nil];
-}
-
-//Add a timer to check every 24 hours that Adium is open
-- (void)startTimerChecking
+//Check for a new release of Adium.
+- (void)manualCheckForNewVersion:(id)sender
 {
-	BOOL theNetLives = [[adium accountController] oneOrMoreConnectedAccounts];
-	
-	if( theNetLives ) {
-		
-		// We have a net connection, so start checking
-		if( !timerActive ) {
-			
-			// Note: there are 86400 seconds in a day
-			// Note: NSTimer takes seconds as an argument
-			// Note: It's late and I'm writing a lot of notes
-			timer = [NSTimer scheduledTimerWithTimeInterval:86400
-													 target:self
-												   selector:@selector(timerCheckForNewVersion:)
-												   userInfo:nil
-													repeats:YES];
-			timerActive = YES;		
-		}
+	NSLog(@"manualCheckForNewVersion");
+	checkingManually = YES;
+	checkWhenConnectionBecomesAvailable = NO;
+	[NSThread detachNewThreadSelector:@selector(_requestVersionThread) toTarget:self withObject:nil];
+}
 
-	} else {
-		// We aren't sure of a net connection, so don't check
-		[self endTimerChecking];
+//Check for a new release of Adium without notifying the user on a false result.
+//Call this method when the user has not explicitely requested the version check.
+- (void)automaticCheckForNewVersion:(id)sender
+{
+	NSLog(@"automaticCheckForNewVersion");
+	BOOL updateAutomatically = [[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
+																		 group:PREF_GROUP_UPDATING] boolValue];
+
+	if(updateAutomatically){
+		if([AINetworkConnectivity networkIsReachable]){
+			//If the network is available, check for updates now
+			checkingManually = NO;
+			checkWhenConnectionBecomesAvailable = NO;
+			[NSThread detachNewThreadSelector:@selector(_requestVersionThread) toTarget:self withObject:nil];
+		}else{
+			//If the network is not available, check when it becomes available
+			checkWhenConnectionBecomesAvailable = YES;
+		}
 	}
 }
 
-- (void)endTimerChecking
+//When a network connection becomes available, check for an update if we haven't already
+- (void)networkConnectivityChanged:(NSNotification *)notification
 {
-	if( timer )
-		[timer invalidate];
-	
-	timerActive = NO;
+	NSLog(@"networkConnectivityChanged:%i",[[notification object] intValue]);
+	if(checkWhenConnectionBecomesAvailable && [[notification object] intValue]){
+		[self automaticCheckForNewVersion:nil];
+	}
 }
 
+//Thread: Request a version
+//The URL load (dateOfLatestBuild) can block, so we do it in a separate thread.  Once the URL load is finished we pass
+//control back to the main thread and display the appropriate panel
 - (void)_requestVersionThread
 {
 	NSAutoreleasePool	*pool = [[NSAutoreleasePool alloc] init];
+	NSLog(@"## Requesting Version ##");
 	[self performSelectorOnMainThread:@selector(_versionReceived:)
 						   withObject:[self dateOfLatestBuild]
 						waitUntilDone:YES];
 	[pool release];
 }
 
+//Thread: Version received
 - (void)_versionReceived:(NSDate *)newestDate
 {
+	NSLog(@"## Version Received ##");
 	//Load relevant dates which we weren't passed
 	NSDate	*thisDate = [self dateOfThisBuild];
 	NSDate	*lastDateDisplayedToUser = [[adium preferenceController] preferenceForKey:KEY_LAST_UPDATE_ASKED
