@@ -1027,7 +1027,6 @@
 				4B31E8DE04C4711100A8010A,
 				9C8C7F9D03CBA08400267226,
 				4B7BD8640412584500A8010A,
-				F5A3237004A7A9EC01888466,
 				F5A3238104A7C61201888466,
 				F53B9ACC02CD12CB01A8010A,
 				4BDDCA08041104ED00A8010A,
@@ -1041,7 +1040,6 @@
 				4BBAEE9E03DD7DAB00A8010A,
 				F5D2FB7D03B6643B01A8010A,
 				4B5B15290493BFB100A8010A,
-				F5F846F704C7020601A80106,
 				F5F8471404C70B8A01A80106,
 				4B55411C044DF01600A8010A,
 				4B5D67D0050CF54700A8010A,
@@ -1115,7 +1113,6 @@
 				4B31E8DD04C4711100A8010A,
 				9C8C7F9C03CBA08400267226,
 				4B7BD8630412584500A8010A,
-				F5A3236F04A7A9EC01888466,
 				F53B9ACB02CD12CB01A8010A,
 				4BDDCA07041104ED00A8010A,
 				4BC8AFDC04FD3C2800A8010A,
@@ -1128,7 +1125,6 @@
 				4BBAEE9D03DD7DAB00A8010A,
 				F5D2FB7C03B6643B01A8010A,
 				4B5B15280493BFB100A8010A,
-				F5F846F604C7020601A80106,
 				4B55411B044DF01600A8010A,
 			);
 		};
@@ -1235,7 +1231,6 @@
 				4B31E8DF04C4711100A8010A,
 				4B64793603DB613700A8010A,
 				4B7BD8650412584500A8010A,
-				F5A3237404A7AA6401888466,
 				4B64792803DB613700A8010A,
 				4BDDCA09041104ED00A8010A,
 				4BC8AFDE04FD3C2800A8010A,
@@ -1247,7 +1242,6 @@
 				4BBAEE9F03DD7DAB00A8010A,
 				4B64793303DB613700A8010A,
 				4B5B152A0493BFB100A8010A,
-				F5F8478D04C7135801A80106,
 				4B55411D044DF01600A8010A,
 				4B5D67D1050CF54700A8010A,
 			);
@@ -2485,7 +2479,6 @@
 				4BF4813B049A802E00A8010A,
 				4B6D0E43047D490700A8010A,
 				11C157D504A88DE0008E0C76,
-				F5A3236904A7A9A501888466,
 				4BC8AFD604FD3C1000A8010A,
 				4BBAEE9703DD7D8900A8010A,
 				F5D2FB8403B6649F01A8010A,
@@ -3941,6 +3934,19 @@
 			settings = {
 			};
 		};
+		4B3717000510D19400A8010A = {
+			children = (
+				4BCFC91104E930BA00A8010A,
+				F5A01D85037980F201A8010A,
+				9E2E3073046CAA5F00415B22,
+				F5A3236904A7A9A501888466,
+				F5F846FE04C702DB01A80106,
+			);
+			isa = PBXGroup;
+			name = "(Disabled)";
+			path = "";
+			refType = 4;
+		};
 		4B3B3FF004CB958F00A8010A = {
 			fileRef = F57938BA033E739101A8010A;
 			isa = PBXBuildFile;
@@ -4089,7 +4095,6 @@
 				4B31E8E004C4711100A8010A,
 				4B40E1DD03DB5B9600A8010A,
 				4B7BD8660412584500A8010A,
-				F5A3238B04A7C61801888466,
 				4B40E1CD03DB5B9600A8010A,
 				4BDDCA0A041104ED00A8010A,
 				4B40E1D003DB5B9600A8010A,
@@ -4100,7 +4105,6 @@
 				4BBAEEA003DD7DAB00A8010A,
 				4B40E1DA03DB5B9600A8010A,
 				4B5B152B0493BFB100A8010A,
-				F5F8471A04C70B8A01A80106,
 				4B55411E044DF01600A8010A,
 			);
 			isa = PBXCopyFilesBuildPhase;
@@ -4344,7 +4348,6 @@
 				4B30490B047FBD6A00A8010A,
 				40AC0EEA03B5BEDB00A80202,
 				F501BB0D03882A0201A8010A,
-				F5F846FE04C702DB01A80106,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -4398,8 +4401,6 @@
 			children = (
 				F5793924033E74C301A8010A,
 				F5793912033E748F01A8010A,
-				9E95316303C8E08800415B22,
-				9E95316503C8E08F00415B22,
 				4B82AB770457178E00A8010A,
 				4B82AB780457178E00A8010A,
 			);
@@ -4410,10 +4411,7 @@
 		};
 		4B4F5B30042D64A100A8010A = {
 			children = (
-				4BCFC91104E930BA00A8010A,
 				F53EA2B502C8020E01A8010A,
-				F5A01D85037980F201A8010A,
-				9E2E3073046CAA5F00415B22,
 				6576A001050269A6000EB664,
 			);
 			isa = PBXGroup;
@@ -8906,6 +8904,7 @@
 			);
 			isa = PBXGroup;
 			name = "AIM (OSCAR)";
+			path = "";
 			refType = 4;
 		};
 		4BCFC91904E9376F00A8010A = {
@@ -12559,32 +12558,6 @@
 			settings = {
 			};
 		};
-		9E95316303C8E08800415B22 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AIIconFamily.h;
-			path = "Frameworks/Adium Framework/AIIconFamily.h";
-			refType = 4;
-		};
-		9E95316403C8E08800415B22 = {
-			fileRef = 9E95316303C8E08800415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E95316503C8E08F00415B22 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AIIconFamily.m;
-			path = "Frameworks/Adium Framework/AIIconFamily.m";
-			refType = 4;
-		};
-		9E95316603C8E08F00415B22 = {
-			fileRef = 9E95316503C8E08F00415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		9E95316703C8E0BE00415B22 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -15085,7 +15058,6 @@
 				F5793935033E74C401A8010A,
 				F59DB3E8033EB4B601A8010A,
 				4BED5A2D03C32CA500A8010A,
-				9E95316403C8E08800415B22,
 				4B8748D203DC812A00A8010A,
 				4BF5BA16042F3CB200A8010A,
 				4BF5BA18042F3CB200A8010A,
@@ -15119,7 +15091,6 @@
 				F579391E033E748F01A8010A,
 				F579391F033E748F01A8010A,
 				4BED5A2E03C32CA600A8010A,
-				9E95316603C8E08F00415B22,
 				4B8748D103DC812900A8010A,
 				4BF5BA17042F3CB200A8010A,
 				4BF5BA19042F3CB200A8010A,
@@ -18719,124 +18690,8 @@
 			);
 			isa = PBXGroup;
 			name = "MX LaTeX Plugin";
+			path = "";
 			refType = 4;
-		};
-		F5A3236A04A7A9EC01888466 = {
-			buildActionMask = 2147483647;
-			files = (
-				F5A3237904A7AAA001888466,
-				F5A3237B04A7AAA001888466,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F5A3236B04A7A9EC01888466 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F5A3236C04A7A9EC01888466 = {
-			buildActionMask = 2147483647;
-			files = (
-				F5A3237A04A7AAA001888466,
-				F5A3237C04A7AAA001888466,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F5A3236D04A7A9EC01888466 = {
-			buildActionMask = 2147483647;
-			files = (
-				F5A3237D04A7AAC301888466,
-				F5A3237E04A7AAC401888466,
-				F5A3237F04A7AAC701888466,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F5A3236E04A7A9EC01888466 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F5A3236F04A7A9EC01888466 = {
-			buildPhases = (
-				F5A3236A04A7A9EC01888466,
-				F5A3236B04A7A9EC01888466,
-				F5A3236C04A7A9EC01888466,
-				F5A3236D04A7A9EC01888466,
-				F5A3236E04A7A9EC01888466,
-			);
-			buildSettings = {
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "MX LaTeX Plugin";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				F5A3237204A7AA4801888466,
-				F5A3237304A7AA4801888466,
-			);
-			isa = PBXBundleTarget;
-			name = "MX LaTeX Plugin";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
-			productName = "MX LaTeX Plugin";
-			productReference = F5A3237004A7A9EC01888466;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string></string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string></string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string></string>
-	<key>CFBundlePackageType</key>
-	<string>BNDL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>0.0.1d1</string>
-	<key>NSPrincipalClass</key>
-	<string>MXLaTeXPlugin</string>
-</dict>
-</plist>
-";
-		};
-		F5A3237004A7A9EC01888466 = {
-			isa = PBXBundleReference;
-			path = "MX LaTeX Plugin.AdiumPlugin";
-			refType = 3;
-		};
-		F5A3237204A7AA4801888466 = {
-			isa = PBXTargetDependency;
-			target = F53B9A0E02CCED8B01A8010A;
-		};
-		F5A3237304A7AA4801888466 = {
-			isa = PBXTargetDependency;
-			target = F53B9A0602CCED6401A8010A;
-		};
-		F5A3237404A7AA6401888466 = {
-			isa = PBXTargetDependency;
-			target = F5A3236F04A7A9EC01888466;
 		};
 		F5A3237504A7AAA001888466 = {
 			fileEncoding = 30;
@@ -18866,58 +18721,10 @@
 			path = "Plugins/MX LaTeX Plugin/MXLaTeXPlugin.m";
 			refType = 4;
 		};
-		F5A3237904A7AAA001888466 = {
-			fileRef = F5A3237504A7AAA001888466;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5A3237A04A7AAA001888466 = {
-			fileRef = F5A3237604A7AAA001888466;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5A3237B04A7AAA001888466 = {
-			fileRef = F5A3237704A7AAA001888466;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5A3237C04A7AAA001888466 = {
-			fileRef = F5A3237804A7AAA001888466;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5A3237D04A7AAC301888466 = {
-			fileRef = F53B9A0F02CCED8B01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5A3237E04A7AAC401888466 = {
-			fileRef = F53B9A0702CCED6401A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5A3237F04A7AAC701888466 = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5A3238104A7C61201888466 = {
 			isa = PBXBundleReference;
 			path = "MX LaTeX Plugin.AdiumPlugin";
 			refType = 3;
-		};
-		F5A3238B04A7C61801888466 = {
-			fileRef = F5A3238104A7C61201888466;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F5A3C2DD039A516E01A8010A = {
 			children = (
@@ -19067,6 +18874,7 @@
 				4B4F5B23042D636700A8010A,
 				4B13323A0459BD3300A8010A,
 				4B4F5B29042D63DC00A8010A,
+				4B3717000510D19400A8010A,
 			);
 			isa = PBXGroup;
 			name = Plugins;
@@ -19812,122 +19620,6 @@
 			settings = {
 			};
 		};
-		F5F846F104C7020601A80106 = {
-			buildActionMask = 2147483647;
-			files = (
-				F5F8470104C7035601A80106,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F5F846F204C7020601A80106 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F5F846F304C7020601A80106 = {
-			buildActionMask = 2147483647;
-			files = (
-				F5F8471C04C70C4601A80106,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F5F846F404C7020601A80106 = {
-			buildActionMask = 2147483647;
-			files = (
-				F5F846FA04C7029E01A80106,
-				F5F846FD04C702A101A80106,
-				F5F8470404C703C801A80106,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F5F846F504C7020601A80106 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F5F846F604C7020601A80106 = {
-			buildPhases = (
-				F5F846F104C7020601A80106,
-				F5F846F204C7020601A80106,
-				F5F846F304C7020601A80106,
-				F5F846F404C7020601A80106,
-				F5F846F504C7020601A80106,
-			);
-			buildSettings = {
-				JAVA_COMPILER_DEBUGGING_SYMBOLS = NO;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "User Switching Menuitem";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				F5F8478E04C7136B01A80106,
-				F5F8478F04C7136B01A80106,
-			);
-			isa = PBXBundleTarget;
-			name = "User Switching Menuitem";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
-			productName = "User Switching Menuitem";
-			productReference = F5F846F704C7020601A80106;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string></string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string></string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string></string>
-	<key>CFBundlePackageType</key>
-	<string>BNDL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>0.0.1d1</string>
-	<key>NSPrincipalClass</key>
-	<string>AIUserSwitchingMenuitemPlugin</string>
-</dict>
-</plist>
-";
-		};
-		F5F846F704C7020601A80106 = {
-			isa = PBXBundleReference;
-			path = "User Switching Menuitem.AdiumPlugin";
-			refType = 3;
-		};
-		F5F846FA04C7029E01A80106 = {
-			fileRef = F53B9A0702CCED6401A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5F846FD04C702A101A80106 = {
-			fileRef = F53B9A0F02CCED8B01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5F846FE04C702DB01A80106 = {
 			children = (
 				F5F8470004C7035601A80106,
@@ -19950,46 +19642,10 @@
 			path = AIUserSwitchingMenuitemPlugin.h;
 			refType = 4;
 		};
-		F5F8470104C7035601A80106 = {
-			fileRef = F5F846FF04C7035601A80106;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5F8470404C703C801A80106 = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5F8471404C70B8A01A80106 = {
 			isa = PBXBundleReference;
 			path = "User Switching Menuitem.AdiumPlugin";
 			refType = 3;
-		};
-		F5F8471A04C70B8A01A80106 = {
-			fileRef = F5F8471404C70B8A01A80106;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5F8471C04C70C4601A80106 = {
-			fileRef = F5F846FF04C7035601A80106;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5F8478D04C7135801A80106 = {
-			isa = PBXTargetDependency;
-			target = F5F846F604C7020601A80106;
-		};
-		F5F8478E04C7136B01A80106 = {
-			isa = PBXTargetDependency;
-			target = F53B9A0E02CCED8B01A8010A;
-		};
-		F5F8478F04C7136B01A80106 = {
-			isa = PBXTargetDependency;
-			target = F53B9A0602CCED6401A8010A;
 		};
 	};
 	rootObject = 29B97313FDCFA39411CA2CEA;

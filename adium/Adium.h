@@ -21,7 +21,6 @@
 #import "AIContentMessage.h"
 #import "AIPreferenceCategory.h"
 #import "AISendingTextView.h"
-#import "AIIconFamily.h"
 #import "AIIconState.h"
 #import "AIHandle.h"
 #import "AIListContact.h"
