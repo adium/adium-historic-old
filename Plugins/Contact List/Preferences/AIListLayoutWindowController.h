@@ -33,8 +33,6 @@
 	IBOutlet		NSTextField			*textField_contactSpacing;
 	IBOutlet		NSSlider			*slider_groupTopSpacing;
 	IBOutlet		NSTextField			*textField_groupTopSpacing;
-	IBOutlet		NSSlider			*slider_groupBottomSpacing;
-	IBOutlet		NSTextField			*textField_groupBottomSpacing;
 	IBOutlet		NSSlider			*slider_windowTransparency;
 	IBOutlet		NSTextField			*textField_windowTransparency;
 	IBOutlet		NSSlider			*slider_contactLeftIndent;
