@@ -180,8 +180,7 @@ static GaimBlistUiOps adiumGaimBlistOps = {
 // Conversation ------------------------------------------------------------------------------------------------------
 static void adiumGaimConvDestroy(GaimConversation *conv)
 {
-    //Place anything we want in ui_ops
-    NSLog(@"adiumGaimConvDestroy");
+    [accountLookup(conv->account) accountConvDestroy:conv];
 }
 
 static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)

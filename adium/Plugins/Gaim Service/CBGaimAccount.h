@@ -53,6 +53,7 @@
 - (void)accountRemoveBuddy:(GaimBuddy*)buddy;
 
 //accountConv methods
+- (void)accountConvDestroy:(GaimConversation*)conv;
 - (void)accountConvUpdated:(GaimConversation*)conv type:(GaimConvUpdateType)type;
 - (void)accountConvReceivedIM:(const char*)message inConversation:(GaimConversation*)conv withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
 
