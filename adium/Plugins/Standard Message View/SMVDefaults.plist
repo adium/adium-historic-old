@@ -4,8 +4,6 @@
 <dict>
 	<key>Prefix Font</key>
 	<string>LucidaGrande-Bold,11</string>
-	<key>Prefix Format</key>
-	<string>%a %r</string>
 	<key>Show Time Stamps</key>
 	<true/>
         <key>Show AM-PM</key>
@@ -47,9 +45,9 @@
 	<key>Sender Gradient Darkness</key>
 	<real>0.15</real>
         <key>Prefix Incoming</key>
-        <string>%a</string>
+        <string>%a %r</string>
         <key>Prefix Outgoing</key>
-        <string>%a</string>
+        <string>%a %r</string>
         <key>Combine Messeages HeadIndent</key>
         <real>25.0</real>
  </dict>
