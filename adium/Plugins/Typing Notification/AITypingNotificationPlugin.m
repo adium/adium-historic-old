@@ -28,6 +28,7 @@
     //messagedDict = [[NSMutableDictionary alloc] init];
 
     [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
 }
 
 //Watch incoming content.  Once we are messaged by a contact, that contact may receive typing notifications

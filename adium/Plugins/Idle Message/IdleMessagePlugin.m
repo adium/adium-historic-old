@@ -54,9 +54,11 @@
 
                 //Remove existing content sent/received observer, and install new (if away)
                 [[owner notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
+                [[owner notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
                 [[owner notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
                 if([[owner accountController] propertyForKey:@"IdleSince" account:nil] != nil){
                     [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
+                    [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
                     [[owner notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
                 }
 

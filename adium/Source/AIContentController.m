@@ -38,6 +38,7 @@
 
     //Register our event notifications for message sending and receiving
     [owner registerEventNotification:Content_DidReceiveContent displayName:@"Message Received"];
+    [owner registerEventNotification:Content_FirstContentRecieved displayName:@"Message Received (New)"]; 
     [owner registerEventNotification:Content_DidSendContent displayName:@"Message Sent"];
 }
 
@@ -223,7 +224,12 @@
 
         if(trackContent){
             //Did receive content
-            [[owner notificationCenter] postNotificationName:Content_DidReceiveContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
+            if ([[chat contentObjectArray] count] > 1) {
+                [[owner notificationCenter] postNotificationName:Content_DidReceiveContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
+            }else{
+                //The content was the first recieved
+                [[owner notificationCenter] postNotificationName:Content_FirstContentRecieved object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+            }
         }
     }
 }
