@@ -5609,14 +5609,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34A48A2B06F643CA002C7C5F = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = AICLPrefView.nib;
-			path = "Plugins/Contact List/Preferences/AICLPrefView.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34A48A2C06F643CA002C7C5F = {
 			fileRef = 34A48A2706F643CA002C7C5F;
 			isa = PBXBuildFile;
@@ -5625,12 +5617,6 @@
 		};
 		34A48A2D06F643CA002C7C5F = {
 			fileRef = 34A48A2806F643CA002C7C5F;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34A48A3006F643CA002C7C5F = {
-			fileRef = 34A48A2B06F643CA002C7C5F;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7156,7 +7142,6 @@
 				6EC1685006C170A000F9FAD3,
 				34A48A0C06F64376002C7C5F,
 				34A48A1006F64382002C7C5F,
-				34A48A3006F643CA002C7C5F,
 				34A48A4806F64680002C7C5F,
 				34A48A4A06F64685002C7C5F,
 				34F1022F0734499700890D3B,
@@ -18826,7 +18811,6 @@
 			children = (
 				34A48A2706F643CA002C7C5F,
 				34A48A2806F643CA002C7C5F,
-				34A48A2B06F643CA002C7C5F,
 				34A48A4D06F6468D002C7C5F,
 				34A48A4F06F64692002C7C5F,
 				34A48A5806F646BD002C7C5F,
