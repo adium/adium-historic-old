@@ -175,7 +175,8 @@
 	if (useNSImagePickerController)
 	{
 		if (!pickerController){
-			pickerController = [[NSImagePickerController sharedImagePickerControllerCreate:YES] retain];
+			Class imagePickerClass = NSClassFromString(@"NSImagePickerController"); //HACK so we don't crash on launch in 10.2
+			pickerController = [[imagePickerClass sharedImagePickerControllerCreate:YES] retain];
 			[pickerController setDelegate:self];
 			[pickerController initAtPoint:[NSEvent mouseLocation] inWindow: nil];
 			[pickerController setHasChanged: NO];

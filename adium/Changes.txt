@@ -2,44 +2,30 @@
 				-----------------------
 
 Version 0.59 (6/11/2004)
-- Added support for setting contacts' user icons manually via the Get Info window
-- Contact name selectable in the get info window
-- Restored cmd-I for opening info window
-- Fixed crash on launch w/ bookmark importer
-- bookmark importer optimizations
-- fixed crash in 10.2 in message display preferences
-- fixed issue with dragging tabs, and tabs not displaying, new messages not opening!!!!
-- improvements to announcer preferences
-- fixed issue with text colors bleeding in profiles/messages
-- fixed issues with safari scripts for users who've uninstalled safari.
-- fixed events triggered by 'first message received'
-- fixed bug with tictactoe menu not enabling
-- fixed crash on quit
-- fixed crash closing message window, preferences
-- restored info toolbar icon
-- added preference for tab switching keys
-- Fixed bug with consecutive emoticons not appearing
-- Fixed crashes when deleting emoticons/dock icons/
-- Fixed crash when denying a file transfer
-- improvements to link detection (detection of localhost)
-- improvements to HTML decoding
-- improvements to user icon caching
-- improvements to server-side alias/note storage
-- fixed broken webkit 'name format' option
-- fixed away messages sending in chat rooms
-- improvements to tooltips
-- fixed an issue with saving away messages
-- fixed potential crash on launch wne switching from cvs to binary
-- fixed issue with tab coloring
-- improvements to disconnect on quitting
-- Fixed gaim crash 
+- Added support for changing user icons via the Get Info window
+- Added preferences for tab switching hotkeys
+- Restored Cmd-I shortcut for Get Info window
+- Restored Get Info toolbar icon
+- Improved link detection
+- Improved HTML support
+- Improved user icon caching
+- Improved server-side alias and notes storage
+- Fixed several crashes/freezes on launch
+- Fixed several bugs with tabs disappearing, message windows not opening
+- Fixed an issue with saving away messages
+- Fixed an issue with consecutive emoticons not appearing
+- Fixed issue with tab text coloring
+- Fixed issue with text colors bleeding in profiles/messages
 - Fixed issue with crash reporter (on systems with GNU fileutils installed)
-
-
-
-
-
-
+- Fixed issue with safari scripts for users who've uninstalled safari.
+- Fixed issue with away messages sending in chat rooms
+- Fixed issue with the webkit 'name format' preference
+- Fixed crash when deleting emoticons, dock icons
+- Fixed crash on quit
+- Fixed crash closing message window, preferences
+- Fixed crash when denying a file transfer
+- Fixed crash in 10.2 message display preferences
+- Many other small fixes and improvements
 
 Version 0.58 (6/04/2004)
 - Added support for server-side AIM buddy comments
