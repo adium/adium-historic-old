@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPasswordPromptController.m,v 1.9 2003/12/22 17:54:38 adamiser Exp $
+// $Id: AIPasswordPromptController.m,v 1.10 2004/03/24 14:43:30 evands Exp $
 
 #import "AIPasswordPromptController.h"
 
@@ -21,34 +21,16 @@
 #define		KEY_PASSWORD_WINDOW_FRAME	@"Password Prompt Frame"
 
 @interface AIPasswordPromptController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector;
-- (void)windowDidLoad;
 - (BOOL)shouldCascadeWindows;
 - (BOOL)windowShouldClose:(id)sender;
 @end
 
 @implementation AIPasswordPromptController
 
-AIPasswordPromptController	*controller = nil;
-+ (void)showPasswordPromptForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector
-{
-    if(!controller){
-        controller = [[self alloc] initWithWindowNibName:PASSWORD_PROMPT_NIB forAccount:inAccount notifyingTarget:inTarget selector:inSelector];
-    }else{
-        //Beep and return failure if a prompt is already open
-        NSBeep();        
-        [inTarget performSelector:inSelector withObject:nil];
-    }
-
-    //bring the window front
-    [controller showWindow:nil];
-}
-
-- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector
+- (id)initWithWindowNibName:(NSString *)windowNibName notifyingTarget:(id)inTarget selector:(SEL)inSelector
 {
     [super initWithWindowNibName:windowNibName];
     
-    account = [inAccount retain];
     target = [inTarget retain];
     selector = inSelector;
 
@@ -57,7 +39,6 @@ AIPasswordPromptController	*controller = nil;
 
 - (void)dealloc
 {
-    [account release];
     [target release];
 
     [super dealloc];
@@ -74,10 +55,11 @@ AIPasswordPromptController	*controller = nil;
     }else{
         [[self window] center];
     }
+}
 
-    //    
-    [textField_account setStringValue:[account displayName]];
-    [checkBox_savePassword setState:[[account preferenceForKey:@"SavedPassword" group:GROUP_ACCOUNT_STATUS] boolValue]];
+- (NSString *)savedPasswordKey
+{
+	return nil;
 }
 
 - (IBAction)cancel:(id)sender
@@ -94,7 +76,7 @@ AIPasswordPromptController	*controller = nil;
 
     //save password?
     if(savePassword && password && [password length]){
-        [[adium accountController] setPassword:password forAccount:account];
+		[self savePassword:password];
     }
 
     //close up and notify our caller
@@ -106,9 +88,11 @@ AIPasswordPromptController	*controller = nil;
 {
     if([sender state] == NSOffState){
         //Forget any saved passwords
-        [[adium accountController] forgetPasswordForAccount:account];
+		[self savePassword:nil];
     }
 }
+
+- (void)savePassword:(NSString *)password{ };
 
 - (void)textDidChange:(NSNotification *)notification
 {
@@ -143,7 +127,6 @@ AIPasswordPromptController	*controller = nil;
 
     //
     [self autorelease];
-    controller = nil;
 
     return(YES);
 }

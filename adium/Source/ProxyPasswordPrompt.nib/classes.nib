@@ -17,9 +17,9 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
-            CLASS = ESAccountPasswordPromptController; 
+            CLASS = ESProxyPasswordPromptController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"textField_account" = NSTextField; }; 
+            OUTLETS = {"textField_server" = NSTextField; "textField_userName" = NSTextField; }; 
             SUPERCLASS = AIPasswordPromptController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
