@@ -16,7 +16,7 @@
 
 #import "AIAutoLinkingPlugin.h"
 #import "AIContentController.h"
-#import <AdiumHyperlinks/AdiumHyperlinks.h>
+#import <AIHyperlinks/AIHyperlinks.h>
  
 @implementation AIAutoLinkingPlugin
 
