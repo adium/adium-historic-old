@@ -19,27 +19,26 @@
 
 @implementation AIAccountSelectionView
 
-- (id)initWithFrame:(NSRect)frameRect delegate:(id <AIAccountSelectionViewDelegate>)inDelegate owner:(id)inOwner
+- (id)initWithFrame:(NSRect)frameRect delegate:(id <AIAccountSelectionViewDelegate>)inDelegate
 {
     [super initWithFrame:frameRect];
 
     delegate = inDelegate;
-    owner = [inOwner retain];
+    adium = [AIObject sharedAdiumInstance];
 
     [self configureView];
     [self configureAccountMenu];
 
     //register for notifications
-    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_PropertiesChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_PropertiesChanged object:nil];
 
     return(self);
 }
 
 - (void)dealloc
 {
-    [[owner notificationCenter] removeObserver:self];
-    [owner release];
+    [[adium notificationCenter] removeObserver:self];
     
     [super dealloc];
 }
@@ -86,7 +85,7 @@
     [[popUp_accounts menu] removeAllItems];
 
     //insert a menu for each account
-    enumerator = [[[owner accountController] accountArray] objectEnumerator];
+    enumerator = [[[adium accountController] accountArray] objectEnumerator];
     while((anAccount = [enumerator nextObject])){
 
         //Accounts only show up in the menu if they're the correct handle type.
@@ -97,7 +96,7 @@
             [menuItem setRepresentedObject:anAccount];
 
             //They are disabled if the account is offline
-            if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:anAccount]){
+            if(![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:anAccount]){
                 [menuItem setEnabled:NO];
             }
 

@@ -27,15 +27,15 @@
 - (void)installPlugin
 {
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_SORTING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_SORTING];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_SORTING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_SORTING];
 
     //Our preference view
-    preferences = [[AIContactSortPreferences contactSortPreferencesWithOwner:owner] retain];
+    preferences = [[AIContactSortPreferences contactSortPreferences] retain];
     [self preferencesChanged:nil];
     
     //Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Contact_SortSelectorListChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Contact_SortSelectorListChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
 
 - (void)uninstallPlugin
@@ -51,13 +51,13 @@
         NSString			*identifier;
 
         //
-        identifier = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING] objectForKey:KEY_CURRENT_SORT_MODE_IDENTIFIER];
+        identifier = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING] objectForKey:KEY_CURRENT_SORT_MODE_IDENTIFIER];
         
         //
-        enumerator = [[[owner contactController] sortControllerArray] objectEnumerator];
+        enumerator = [[[adium contactController] sortControllerArray] objectEnumerator];
         while((controller = [enumerator nextObject])){
             if([identifier compare:[controller identifier]] == 0){
-                [[owner contactController] setActiveSortController:controller];
+                [[adium contactController] setActiveSortController:controller];
                 break;
             }
         }

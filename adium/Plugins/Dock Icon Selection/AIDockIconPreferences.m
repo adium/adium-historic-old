@@ -69,7 +69,7 @@
     [self _buildIconArray];
     
     //Observe preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
     
     //Start animating
@@ -86,14 +86,14 @@
     [self _stopAnimating];
     
     //
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
 }
 
 //Preferences have changed
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){
-        NSDictionary 	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+        NSDictionary 	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
         NSDictionary	*iconDict;
         NSString	*iconName;
 
@@ -137,7 +137,7 @@
     selectedIcon = iconDict;
 
     //
-    iconPackDict = [[owner dockController] iconPackAtPath:[iconDict objectForKey:@"Path"]];
+    iconPackDict = [[adium dockController] iconPackAtPath:[iconDict objectForKey:@"Path"]];
 
     //-- Display the icon pack information --
     descriptionDict = [iconPackDict objectForKey:@"Description"];
@@ -237,7 +237,7 @@
         
         //Set the new icon in preferences
         iconName = [[iconPath lastPathComponent] stringByDeletingPathExtension];
-        [[owner preferenceController] setPreference:iconName forKey:KEY_ACTIVE_DOCK_ICON group:PREF_GROUP_GENERAL];
+        [[adium preferenceController] setPreference:iconName forKey:KEY_ACTIVE_DOCK_ICON group:PREF_GROUP_GENERAL];
         
         //Set the selected icon
         [self configureForSelectedIcon:[iconArray objectAtIndex:index]];        
@@ -273,7 +273,7 @@
                 
                 //Get the icon pack's full path and preview state
                 fullPath = [iconPath stringByAppendingPathComponent:filePath];
-                previewState = [[[[owner dockController] iconPackAtPath:fullPath] objectForKey:@"State"] objectForKey:@"Preview"];
+                previewState = [[[[adium dockController] iconPackAtPath:fullPath] objectForKey:@"State"] objectForKey:@"Preview"];
     
                 //Add this icon to our icon array
                 [iconArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:fullPath, @"Path", previewState, @"State", nil]];

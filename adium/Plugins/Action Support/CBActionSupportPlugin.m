@@ -13,7 +13,7 @@
 - (void)installPlugin
 {
     //Register us as a filter
-    [[owner contentController] registerOutgoingContentFilter:self];
+    [[adium contentController] registerOutgoingContentFilter:self];
 }
 
 - (void)filterContentObject:(AIContentObject *)inObject

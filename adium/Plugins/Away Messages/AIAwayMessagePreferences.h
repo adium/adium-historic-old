@@ -13,11 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium, AIAlternatingRowOutlineView;
+@class AIAlternatingRowOutlineView;
 
-@interface AIAwayMessagePreferences : NSObject {
-    AIAdium					*owner;
-
+@interface AIAwayMessagePreferences : AIObject {
     IBOutlet	NSView				*view_prefView;
     IBOutlet	AIAlternatingRowOutlineView	*outlineView_aways;
     IBOutlet	NSButton			*button_delete;
@@ -32,7 +30,7 @@
     NSMutableDictionary				*dragItem;
 }
 
-+ (AIAwayMessagePreferences *)awayMessagePreferencesWithOwner:(id)inOwner;
++ (AIAwayMessagePreferences *)awayMessagePreferences;
 - (IBAction)deleteAwayMessage:(id)sender;
 - (IBAction)newAwayMessage:(id)sender;
 

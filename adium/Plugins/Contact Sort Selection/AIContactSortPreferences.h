@@ -13,17 +13,13 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium;
-
-@interface AIContactSortPreferences : NSObject {
-    AIAdium				*owner;
-
+@interface AIContactSortPreferences : AIObject {
     IBOutlet	NSView			*view_prefView;
     IBOutlet	NSPopUpButton		*popUp_sortMode;
     IBOutlet	NSTextField		*textField_description;
 }
 
-+ (AIContactSortPreferences *)contactSortPreferencesWithOwner:(id)inOwner;
++ (AIContactSortPreferences *)contactSortPreferences;
 - (IBAction)selectSortMode:(id)sender;
 
 @end

@@ -42,9 +42,9 @@
 
 
 //Return a new account with the specified properties
-- (id)accountWithProperties:(NSDictionary *)inProperties owner:(id)inOwner
+- (id)accountWithProperties:(NSDictionary *)inProperties
 {
-    return([[[AIMiChatAccount alloc] initWithProperties:inProperties service:self owner:owner] autorelease]);
+    return([[[AIMiChatAccount alloc] initWithProperties:inProperties service:self] autorelease]);
 }
 
 // Return a Plugin-specific ID, description, and image

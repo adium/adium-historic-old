@@ -29,7 +29,7 @@
 @end
 
 @interface AIMessageWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner interface:(id <AIContainerInterface>)inInterface;
+- (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContainerInterface>)inInterface;
 - (void)dealloc;
 - (BOOL)windowShouldClose:(id)sender;
 - (BOOL)shouldCascadeWindows;
@@ -46,9 +46,9 @@
 @implementation AIMessageWindowController
 
 //Create a new message window controller
-+ (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(id <AIContainerInterface>)inInterface
++ (AIMessageWindowController *)messageWindowControllerForInterface:(id <AIContainerInterface>)inInterface
 {
-    return([[[self alloc] initWithWindowNibName:MESSAGE_WINDOW_NIB owner:inOwner interface:inInterface] autorelease]);
+    return([[[self alloc] initWithWindowNibName:MESSAGE_WINDOW_NIB interface:inInterface] autorelease]);
 }
 
 //Close the message window
@@ -163,7 +163,7 @@
     [self window]; //Ensure our window has loaded
     if([tabView_messages numberOfTabViewItems] == 0) {
         //Restore the window position for the object about to have its chat added as the first in this window
-        savedFrame = [[owner preferenceController] preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
+        savedFrame = [[adium preferenceController] preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
                                                               group:PREF_GROUP_WINDOW_POSITIONS
                                                              object:[[[(AIMessageTabViewItem *)inTabViewItem messageViewController] chat] listObject]];
 
@@ -200,7 +200,7 @@
     //If that was our last container, save the position for its contact
     if([tabView_messages numberOfTabViewItems] == 0){
         //Save the window position
-        [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+        [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                              forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
                                             group:PREF_GROUP_WINDOW_POSITIONS
                                              object:[[[(AIMessageTabViewItem *)inTabViewItem messageViewController] chat] listObject]];
@@ -214,24 +214,23 @@
 
 //Private -----------------------------------------------------------------------------
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner interface:(AIDualWindowInterfacePlugin<AIContainerInterface> *)inInterface
+- (id)initWithWindowNibName:(NSString *)windowNibName interface:(AIDualWindowInterfacePlugin<AIContainerInterface> *)inInterface
 {
     NSParameterAssert(windowNibName != nil && [windowNibName length] != 0);
 
-    owner = [inOwner retain];
     interface = [inInterface retain];
     windowIsClosing = NO;
     tabIsShowing = YES;
     supressHiding = NO;
     
-    [[owner notificationCenter] addObserver:self selector:@selector(messageTabDragCompleteNotification:) name:AIMessageTabDragCompleteNotification object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(messageTabDragCompleteNotification:) name:AIMessageTabDragCompleteNotification object:nil];
     
     //Load our window
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
     [self window];	
 
     //Prefs
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 
     //register as a drag observer:
@@ -246,7 +245,6 @@
     //During a drag, the tabs will not get deallocated on occasion, so we must make sure that we are no longer set as their delegate
     [tabView_customTabs setDelegate:nil];
         
-    [owner release];
     [interface release];
 
     [super dealloc];
@@ -279,12 +277,12 @@
 
     //Close down
     windowIsClosing = YES; //This is used to prevent sending more close commands than needed.
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     
     //Close all our tabs
     enumerator = [viewArrayCopy objectEnumerator];
     while((tabViewItem = [enumerator nextObject])){
-        [[owner interfaceController] closeChat:[[tabViewItem messageViewController] chat]];
+        [[adium interfaceController] closeChat:[[tabViewItem messageViewController] chat]];
     }
     [interface containerDidBecomeActive:nil];
 
@@ -307,7 +305,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0) {
-        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
         autohide_tabBar = [[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 	[tabView_customTabs setAllowsInactiveTabClosing:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
@@ -333,7 +331,7 @@
     AIListObject	*selectedContact = [[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject];
     
     if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]){
-        return([[owner menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+        return([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
             [NSNumber numberWithInt:Context_Contact_Manage],
             [NSNumber numberWithInt:Context_Contact_Action],
             [NSNumber numberWithInt:Context_Contact_NegativeAction],
@@ -376,7 +374,7 @@
 
 - (void)customTabView:(AICustomTabsView *)tabView didMoveTabViewItem:(NSTabViewItem *)tabViewItem toCustomTabView:(AICustomTabsView *)destTabView index:(int)index screenPoint:(NSPoint)point
 {
-    [[owner notificationCenter] postNotificationName:AIMessageTabDragCompleteNotification object:nil];
+    [[adium notificationCenter] postNotificationName:AIMessageTabDragCompleteNotification object:nil];
 
     [interface transferMessageTabContainer:tabViewItem
                                   toWindow:[[destTabView window] windowController]
@@ -388,7 +386,7 @@
 - (void)customTabView:(AICustomTabsView *)tabView shouldCloseTabViewItem:(NSTabViewItem *)tabViewItem
 {
     //Close the message tab
-    [[owner interfaceController] closeChat:[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat]];
+    [[adium interfaceController] closeChat:[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat]];
 }
 
 //

@@ -34,7 +34,7 @@
 - (IBAction)selectedAlert:(id)sender
 {   
     //Get the current dictionary
-    NSDictionary *currentDict = [[owner contactAlertsController] currentDictForContactAlert:self];
+    NSDictionary *currentDict = [[adium contactAlertsController] currentDictForContactAlert:self];
     
     //Set the menu to its previous setting if the stored event matches
     if ([(NSString *)[currentDict objectForKey:KEY_EVENT_ACTION] isEqualToString:CONTACT_ALERT_IDENTIFIER]) {

@@ -35,19 +35,19 @@
 - (IBAction)changePreference:(id)sender
 {
     if (sender == popUp_position) {
-        [[owner preferenceController] setPreference: [NSNumber numberWithInt: [popUp_position indexOfSelectedItem]]
+        [[adium preferenceController] setPreference: [NSNumber numberWithInt: [popUp_position indexOfSelectedItem]]
                                          forKey: KEY_EVENT_BEZEL_POSITION
                                           group: PREF_GROUP_EVENT_BEZEL];
     } else if (sender == slider_duration) {
-        [[owner preferenceController] setPreference: [NSNumber numberWithInt: [slider_duration intValue]]
+        [[adium preferenceController] setPreference: [NSNumber numberWithInt: [slider_duration intValue]]
                                              forKey: KEY_EVENT_BEZEL_DURATION
                                               group:PREF_GROUP_EVENT_BEZEL];
     } else if (sender == popUp_size) {
-        [[owner preferenceController] setPreference: [NSNumber numberWithInt: [popUp_size indexOfSelectedItem]]
+        [[adium preferenceController] setPreference: [NSNumber numberWithInt: [popUp_size indexOfSelectedItem]]
                                              forKey: KEY_EVENT_BEZEL_SIZE
                                               group: PREF_GROUP_EVENT_BEZEL];
     } else if (sender == popUp_background) {
-        [[owner preferenceController] setPreference: [NSNumber numberWithInt: [popUp_background indexOfSelectedItem]]
+        [[adium preferenceController] setPreference: [NSNumber numberWithInt: [popUp_background indexOfSelectedItem]]
                                              forKey: KEY_EVENT_BEZEL_BACKGROUND
                                               group: PREF_GROUP_EVENT_BEZEL];
     } else { //handle the check boxes
@@ -88,7 +88,7 @@
         }
         
         if (key) {
-            [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+            [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                                  forKey:key
                                                   group:PREF_GROUP_EVENT_BEZEL];
         }
@@ -98,14 +98,14 @@
 - (void)viewDidLoad
 {
     //Observer preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     viewIsLoaded = YES;
     [self preferencesChanged:nil];
 }
 
 - (void)viewShouldClose
 {
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     viewIsLoaded = NO;   
 }
 
@@ -114,7 +114,7 @@
 {
     if (notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_EVENT_BEZEL] == 0) {
         if (viewIsLoaded) {
-            NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
+            NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
             
             // Set the values of the checkboxes
             [checkBox_showBezel setState:[[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue]];

@@ -34,8 +34,8 @@
 
 - (void)installPlugin
 {
-    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_PropertiesChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_PropertiesChanged object:nil];
     
     accountMenuArray = [[NSMutableArray alloc] init];
     [self buildAccountMenus];
@@ -47,13 +47,13 @@
     NSMenuItem		*menuItem;
     NSEnumerator	*enumerator = [accountMenuArray objectEnumerator];
     while((menuItem = [enumerator nextObject])){
-        [[owner menuController] removeMenuItem:menuItem];
+        [[adium menuController] removeMenuItem:menuItem];
     }
     
     [accountMenuArray release];
     
     //Stop observing/receiving notifications
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
 }
@@ -101,7 +101,7 @@
             //NSLog(@"targetMenuItem is %@ ; submenu is %@ ; itemAtIndex is %@",targetMenuItem,[targetMenuItem submenu], [[targetMenuItem submenu] itemAtIndex:0]);
             connectToggleItem = (NSMenuItem *)[[targetMenuItem submenu] itemAtIndex:0];
             //NSLog(@"connectToggleItem is %@",connectToggleItem);
-            switch([[[owner accountController] propertyForKey:@"Status" account:account] intValue]){
+            switch([[[adium accountController] propertyForKey:@"Status" account:account] intValue]){
                 case STATUS_OFFLINE:
                     [targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Offline" forClass:[self class]]];
                     [connectToggleItem setTitle:ACCOUNT_CONNECT_MENU_TITLE];
@@ -130,7 +130,7 @@
             
             //Auto-connect
             autoConnectItem = (NSMenuItem *)[[targetMenuItem submenu] itemWithTitle:ACCOUNT_AUTO_CONNECT_MENU_TITLE];
-            if([[[owner accountController] propertyForKey:@"AutoConnect" account:account] boolValue]){
+            if([[[adium accountController] propertyForKey:@"AutoConnect" account:account] boolValue]){
                 [autoConnectItem setState:NSOnState];
             }else{
                 [autoConnectItem setState:NSOffState];
@@ -146,10 +146,10 @@
     
     //Get the current auto connect status
     account = [sender representedObject];
-    autoConnect = [[[owner accountController] propertyForKey:@"AutoConnect" account:account] boolValue];
+    autoConnect = [[[adium accountController] propertyForKey:@"AutoConnect" account:account] boolValue];
 
     //Switch it
-    [[owner accountController] setProperty:[NSNumber numberWithBool:!autoConnect]
+    [[adium accountController] setProperty:[NSNumber numberWithBool:!autoConnect]
                                     forKey:@"AutoConnect"
                                    account:account];
 }
@@ -159,11 +159,11 @@
 - (IBAction)toggleConnection:(id)sender
 {
     AIAccount			*targetAccount = [sender representedObject];
-    NSNumber                    *status = [[owner accountController] propertyForKey:@"Status" account:targetAccount];
+    NSNumber                    *status = [[adium accountController] propertyForKey:@"Status" account:targetAccount];
 
     //Toggle the connection
     BOOL newOnlineProperty = !([status intValue] == STATUS_ONLINE);
-    [[owner accountController] setProperty:[NSNumber numberWithBool:newOnlineProperty] 
+    [[adium accountController] setProperty:[NSNumber numberWithBool:newOnlineProperty] 
                                     forKey:@"Online" account:targetAccount];
 }
 
@@ -177,13 +177,13 @@
     //remove the existing menu items
     enumerator = [accountMenuArray objectEnumerator];
     while((menuItem = [enumerator nextObject])){    
-        [[owner menuController] removeMenuItem:menuItem];
+        [[adium menuController] removeMenuItem:menuItem];
     }
     [accountMenuArray release];
     accountMenuArray = [[NSMutableArray alloc] init];
     
     //insert a menu for each account
-    enumerator = [[[owner accountController] accountArray] objectEnumerator];
+    enumerator = [[[adium accountController] accountArray] objectEnumerator];
     while((account = [enumerator nextObject])){
         NSMenu		*subMenu;
         NSMenuItem	*menuItem;
@@ -209,7 +209,7 @@
         [accountMenuArray addObject:menuItem];
         
         //Add and update the item
-        [[owner menuController] addMenuItem:menuItem toLocation:LOC_File_Accounts];
+        [[adium menuController] addMenuItem:menuItem toLocation:LOC_File_Accounts];
         [self updateMenuForAccount:account];
     }
 }

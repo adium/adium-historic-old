@@ -8,9 +8,8 @@
 
 @class AISocket, MSNAccount;
 
-@interface MSNSBSocket : NSObject 
+@interface MSNSBSocket : AIObject 
 {
-    AIAdium				*owner;
     AISocket 			*socket;		// The connection socket
     MSNAccount			*ourAccount;		// Us
     NSMutableDictionary	*participantsDict;	// everyone in this convo
@@ -22,7 +21,7 @@
     BOOL				receivingPayload;
 }
 
-+ (MSNSBSocket *)socketWithIP:(NSString *)ip andPort:(int)port forAccount:(MSNAccount *)account owner :(AIAdium *)setOwner;
++ (MSNSBSocket *)socketWithIP:(NSString *)ip andPort:(int)port forAccount:(MSNAccount *)account;
 
 - (BOOL)isChat; //returns true if this is a "chat" or not
 - (void)doEveryGoodThing;

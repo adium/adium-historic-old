@@ -29,10 +29,10 @@
     idleObjectArray = nil;
 
     //Install our tooltip entry
-    [[owner interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
+    [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
 
     //
-    [[owner contactController] registerListObjectObserver:self];
+    [[adium contactController] registerListObjectObserver:self];
 }
 
 - (void)uninstallPlugin
@@ -99,7 +99,7 @@
     }
 
     //Let everyone know we changed it
-    [[owner contactController] listObjectStatusChanged:inObject
+    [[adium contactController] listObjectStatusChanged:inObject
                                     modifiedStatusKeys:[NSArray arrayWithObject:@"Idle"]
                                                delayed:delayed
                                                 silent:silent];

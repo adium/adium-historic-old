@@ -22,7 +22,7 @@
 
 
 @interface AIDockCustomBehavior (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
 - (void)configureView;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (NSMenu *)behaviorSetMenu;
@@ -35,10 +35,10 @@
 
 //
 AIDockCustomBehavior	*sharedInstance = nil;
-+ (id)showDockBehaviorCustomPanelWithPlugin:(id)inPlugin owner:(id)inOwner
++ (id)showDockBehaviorCustomPanelWithPlugin:(id)inPlugin
 {
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:NIB_DOCK_BEHAVIOR_CUSTOM plugin:inPlugin owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:NIB_DOCK_BEHAVIOR_CUSTOM plugin:inPlugin];
     }
     return(sharedInstance);
 }
@@ -53,11 +53,10 @@ AIDockCustomBehavior	*sharedInstance = nil;
 }
 
 //
-- (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin
 {
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
 
-    owner = inOwner;
     plugin = inPlugin;
     [self showWindow:nil];
 
@@ -88,7 +87,7 @@ AIDockCustomBehavior	*sharedInstance = nil;
     [tableView_events setTarget:self];
 
     //Observer preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -104,7 +103,7 @@ AIDockCustomBehavior	*sharedInstance = nil;
 - (BOOL)windowShouldClose:(id)sender
 {
     //
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     [behaviorArray release]; behaviorArray = nil;
 
     //Clean up shared instance
@@ -178,7 +177,7 @@ AIDockCustomBehavior	*sharedInstance = nil;
     [eventMenu addItemWithTitle:@"Add Event…" target:nil action:nil keyEquivalent:@""];
 
     //Add a menu item for each event
-    enumerator = [[owner eventNotifications] objectEnumerator];
+    enumerator = [[adium eventNotifications] objectEnumerator];
     while((eventDict = [enumerator nextObject])){
         NSMenuItem	*menuItem;
 
@@ -228,7 +227,7 @@ AIDockCustomBehavior	*sharedInstance = nil;
         notification = [behaviorDict objectForKey:KEY_DOCK_EVENT_NOTIFICATION];
 
         //Get that notification's display name
-        eventDict = [[owner eventNotifications] objectForKey:notification];
+        eventDict = [[adium eventNotifications] objectForKey:notification];
         displayName = [eventDict objectForKey:KEY_EVENT_DISPLAY_NAME];
 
         return(displayName ? displayName : notification);

@@ -20,28 +20,27 @@
 #define STATUS_EVENTS_PREF_TITLE	@"Status Event Lengths"		//Title of the preference view
 
 @interface AIContactStatusEventsPreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
 - (void)configureView;
 - (void)configureControlDimming;
 @end
 
 @implementation AIContactStatusEventsPreferences
 //
-+ (AIContactStatusEventsPreferences *)contactStatusEventsPreferencesWithOwner:(id)inOwner
++ (AIContactStatusEventsPreferences *)contactStatusEventsPreferences
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
     if(sender == textField_signedOffLength){
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
                                              forKey:KEY_SIGNED_OFF_LENGTH
                                               group:PREF_GROUP_STATUS_EVENTS];
 
     }else if(sender == textField_signedOnLength){
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
                                              forKey:KEY_SIGNED_ON_LENGTH
                                               group:PREF_GROUP_STATUS_EVENTS];
 
@@ -52,13 +51,12 @@
 
 //Private ---------------------------------------------------------------------------
 //init
-- (id)initWithOwner:(id)inOwner
+- (id)init
 {
     [super init];
-    owner = [inOwner retain];
 
     //Register our preference pane
-//    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:PREFERENCE_CATEGORY_ CONNECTIONS withDelegate:self]];
+//    [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:PREFERENCE_CATEGORY_ CONNECTIONS withDelegate:self]];
 
     return(self);
 }
@@ -87,7 +85,7 @@
 //Configures our view for the current preferences
 - (void)configureView
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STATUS_EVENTS];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STATUS_EVENTS];
 
     [textField_signedOffLength setIntValue:[[preferenceDict objectForKey:KEY_SIGNED_OFF_LENGTH] intValue]];
     [textField_signedOnLength setIntValue:[[preferenceDict objectForKey:KEY_SIGNED_ON_LENGTH] intValue]];

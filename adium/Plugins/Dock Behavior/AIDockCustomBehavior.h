@@ -13,10 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium, AIAlternatingRowTableView, AIDockBehaviorPlugin;
+@class AIAlternatingRowTableView, AIDockBehaviorPlugin;
 
-@interface AIDockCustomBehavior : NSWindowController {
-    AIAdium					*owner;
+@interface AIDockCustomBehavior : AIWindowController {
     AIDockBehaviorPlugin			*plugin;
     
     IBOutlet	AIAlternatingRowTableView	*tableView_events;
@@ -24,7 +23,7 @@
     NSMutableArray				*behaviorArray;
 }
 
-+ (id)showDockBehaviorCustomPanelWithPlugin:(id)inPlugin owner:(id)inOwner;
++ (id)showDockBehaviorCustomPanelWithPlugin:(id)inPlugin;
 + (void)closeDockBehaviorCustomPanel;
 - (IBAction)deleteEvent:(id)sender;
 - (IBAction)closeWindow:(id)sender;

@@ -24,7 +24,7 @@
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row;
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row;
 - (BOOL)shouldSelectRow:(int)inRow;
-- (id)initWithOwner:(id)inOwner forPlugin:(id)inPlugin;
+- (id)initForPlugin:(id)inPlugin;
 @end
 
 extern int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *context);
@@ -32,10 +32,10 @@ extern int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, vo
 @implementation ESContactAlertsWindowController
 //Open a new info window
 static ESContactAlertsWindowController *sharedInstance = nil;
-+ (id)showContactAlertsWindowWithOwner:(id)inOwner forObject:(AIListObject *)inContact
++ (id)showContactAlertsWindowForObject:(AIListObject *)inContact
 {
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_ALERT_WINDOW_NIB owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_ALERT_WINDOW_NIB];
         [sharedInstance initialWindowConfig];
     }
 
@@ -59,11 +59,11 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 {
     if([self windowShouldClose:nil]){
 
-        [[owner notificationCenter] removeObserver:self]; //remove all observers
+        [[adium notificationCenter] removeObserver:self]; //remove all observers
 
         [instance removeAllSubviews:view_main];
         //Save the window position
-        [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+        [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                              forKey:KEY_CONTACT_ALERTS_WINDOW_FRAME
                                               group:PREF_GROUP_WINDOW_POSITIONS];
         [instance release]; instance = nil;
@@ -77,7 +77,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [self window];
     [popUp_contactList setMenu:[self switchContactMenu]];
     
-    instance = [[ESContactAlerts alloc] initWithDetailsView:view_main withTable:tableView_actions withPrefView:nil owner:owner];
+    instance = [[ESContactAlerts alloc] initWithDetailsView:view_main withTable:tableView_actions withPrefView:nil];
     [instance retain];
     
     dataCell = [[AITableViewPopUpButtonCell alloc] init];
@@ -99,13 +99,13 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     //Remember who we're displaying actions for
     [activeContactObject release]; activeContactObject = [inContact retain];
     //Observers
-    [[owner notificationCenter] removeObserver:self]; //remove any previous observers
+    [[adium notificationCenter] removeObserver:self]; //remove any previous observers
 
     //Observe account changes
-    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
 
-    [[owner notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:Pref_Changed_Alerts object:activeContactObject];
-    [[owner notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:One_Time_Event_Fired object:activeContactObject];
+    [[adium notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:Pref_Changed_Alerts object:activeContactObject];
+    [[adium notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:One_Time_Event_Fired object:activeContactObject];
 
 
     //Set window title
@@ -169,7 +169,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 	} else {
 	    [tableView_actions deselectRow:currentRow]; }
      
-        [[owner notificationCenter] postNotificationName:Window_Changed_Alerts
+        [[adium notificationCenter] postNotificationName:Window_Changed_Alerts
                                                   object:activeContactObject
                                                 userInfo:nil];
     }
@@ -180,7 +180,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [tableView_actions reloadData];
     [tableView_actions selectRow:([instance count]-1) byExtendingSelection:NO]; //select the new event
 
-    [[owner notificationCenter] postNotificationName:Window_Changed_Alerts
+    [[adium notificationCenter] postNotificationName:Window_Changed_Alerts
                                               object:activeContactObject
                                             userInfo:nil];
 }
@@ -300,18 +300,15 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     return(YES);
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
 
-    //init
-    owner = [inOwner retain];
     return(self);
 }
 
 - (void)dealloc
 {
-    [owner release]; owner = nil;
     [activeContactObject release]; activeContactObject = nil;
     [popUp_addEvent release]; popUp_addEvent = nil;
     [instance release]; instance = nil;
@@ -327,7 +324,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     //Restore the window position
     NSSize minimum = [[self window] minSize];
     NSRect defaultFrame = [[self window] frame];
-    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_CONTACT_ALERTS_WINDOW_FRAME];
+    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_CONTACT_ALERTS_WINDOW_FRAME];
 
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
@@ -347,7 +344,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 {
     NSMenu		*contactMenu = [[NSMenu alloc] init];
     //Build the menu items
-    NSMutableArray		*contactArray =  [[owner contactController] allContactsInGroup:nil subgroups:YES];
+    NSMutableArray		*contactArray =  [[adium contactController] allContactsInGroup:nil subgroups:YES];
     if ([contactArray count])
     {
         [contactArray sortUsingFunction:alphabeticalGroupOfflineSort_contactAlerts context:nil]; //online buddies will end up at the top, alphabetically

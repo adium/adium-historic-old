@@ -2,7 +2,7 @@
 #import "JabberAccount.h"
 
 @interface JabberAccountViewController (PRIVATE)
-- (id)initForOwner:(id)inOwner account:(id)inAccount;
+- (id)initForAccount:(id)inAccount;
 - (void)dealloc;
 - (void)accountPropertiesChanged:(NSNotification *)notification;
 - (void)initAccountView;
@@ -10,9 +10,9 @@
 
 @implementation JabberAccountViewController
 
-+ (id)accountViewForOwner:(id)inOwner account:(id)inAccount;
++ (id)accountViewForAccount:(id)inAccount;
 {
-    return [[[self alloc] initForOwner:inOwner account:inAccount] autorelease];
+    return [[[self alloc] initForAccount:inAccount] autorelease];
 }
 
 - (NSView *)view
@@ -24,11 +24,11 @@
 - (IBAction)preferenceChanged:(id)sender
 {
     if (sender == textField_username) {
-        [[owner accountController] setProperty: [sender stringValue]
+        [[adium accountController] setProperty: [sender stringValue]
                                         forKey: @"Username"
                                        account: account];
     } else if (sender == textField_host) {
-        [[owner accountController] setProperty: [sender stringValue]
+        [[adium accountController] setProperty: [sender stringValue]
                                         forKey: @"Host"
                                        account: account];
     }
@@ -49,11 +49,10 @@
 /* PRIVATE METHODS */
 /*******************/
 
-- (id)initForOwner:(id)inOwner account:(id)inAccount
+- (id)initForAccount:(id)inAccount
 {
     [super init];
     
-    owner = [inOwner retain];
     account = [inAccount retain];
     
     if([NSBundle loadNibNamed:@"JabberAccountView" owner:self]){
@@ -62,7 +61,7 @@
         NSLog(@"couldn't load account view bundle");
     }
     
-    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:account];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:account];
     [self accountPropertiesChanged:nil];
     
     [textField_username setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789+-._"] length:129 caseSensitive:NO errorMessage:@"Improper Format"]];
@@ -74,12 +73,11 @@
 
 - (void)dealloc
 {
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [view_accountView release];
     
-    [owner release];
     [account release];
     
     [super dealloc];
@@ -93,7 +91,7 @@
             return;
     }
 
-    BOOL	isOnline = [[[owner accountController] propertyForKey:@"Online" account:account] boolValue];
+    BOOL	isOnline = [[[adium accountController] propertyForKey:@"Online" account:account] boolValue];
 
     //Dim unavailable controls
     [textField_username setEnabled:!isOnline];

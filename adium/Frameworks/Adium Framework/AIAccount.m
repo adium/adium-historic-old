@@ -24,12 +24,11 @@
 //  Public Methods
 //-----------------------
 //Init the connection
-- (id)initWithProperties:(NSDictionary *)inProperties service:(id <AIServiceController>)inService owner:(id)inOwner
+- (id)initWithProperties:(NSDictionary *)inProperties service:(id <AIServiceController>)inService
 {
     [super init];
 
-    //Retain our owner
-    owner = [inOwner retain];
+    //
     service = [inService retain];
 
     //Load the account's default properties, then apply the passed properties (overwriting any defaults)
@@ -82,7 +81,6 @@
 - (void)dealloc
 {
     [propertiesDict release]; propertiesDict = nil;
-    [owner release];
     [service release];
     [userIcon release]; userIcon = nil;
     
@@ -92,7 +90,7 @@
 //Display name (Convenience)
 - (NSString *)displayName
 {
-    NSString	*name = [[owner accountController] propertyForKey:@"FullName" account:self];
+    NSString	*name = [[adium accountController] propertyForKey:@"FullName" account:self];
     if(!name || [name length] == 0) name = [self accountDescription];
     return(name);
 }
@@ -112,7 +110,7 @@
     if (userIcon)
         return userIcon;
     else
-        return [[owner accountController] defaultUserIcon];
+        return [[adium accountController] defaultUserIcon];
 }
 
 - (void)setUserIcon:(NSImage *)inUserIcon {

@@ -20,41 +20,40 @@
 #define IDLE_TIME_DISPLAY_PREF_TITLE	@"Idle Time Display"
 
 @interface AIIdleTimeDisplayPreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
 - (void)configureView;
 - (void)configureControlDimming;
 @end
 
 @implementation AIIdleTimeDisplayPreferences
 
-+ (AIIdleTimeDisplayPreferences *)idleTimeDisplayPreferencesWithOwner:(id)inOwner
++ (AIIdleTimeDisplayPreferences *)idleTimeDisplayPreferences
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_displayIdle){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_DISPLAY_IDLE_TIME
                                               group:PREF_GROUP_IDLE_TIME_DISPLAY];
 	[self configureControlDimming];
 
     }else if(sender == checkBox_displayIdleOnLeft){
-	[[owner preferenceController] setPreference:[NSNumber numberWithBool:YES]
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
 					     forKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT
 					      group:PREF_GROUP_IDLE_TIME_DISPLAY];
         [checkBox_displayIdleOnRight setState:NSOffState];
 
     }else if(sender == checkBox_displayIdleOnRight){
-	[[owner preferenceController] setPreference:[NSNumber numberWithBool:NO]
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:NO]
 					     forKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT
 					      group:PREF_GROUP_IDLE_TIME_DISPLAY];
         [checkBox_displayIdleOnLeft setState:NSOffState];
 	
     }else if(sender == colorWell_idleColor){
-        [[owner preferenceController] setPreference:[[colorWell_idleColor color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_idleColor color] stringRepresentation]
                                              forKey:KEY_IDLE_TIME_COLOR
                                               group:PREF_GROUP_IDLE_TIME_DISPLAY];
 
@@ -64,14 +63,13 @@
 
 //Private ---------------------------------------------------------------------------
 //init
-- (id)initWithOwner:(id)inOwner
+- (id)init
 {
     //Init
     [super init];
-    owner = [inOwner retain];
 
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Contacts withDelegate:self label:IDLE_TIME_DISPLAY_PREF_TITLE]];
+    [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Contacts withDelegate:self label:IDLE_TIME_DISPLAY_PREF_TITLE]];
 
     return(self);
 }
@@ -100,7 +98,7 @@
 //Configures our view for the current preferences
 - (void)configureView
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
 
     [checkBox_displayIdle setState:[[preferenceDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue]];
     [checkBox_displayIdleOnLeft setState:[[preferenceDict objectForKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT] boolValue]];

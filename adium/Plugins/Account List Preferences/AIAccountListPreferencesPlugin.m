@@ -21,7 +21,7 @@
 //Register our preference pane
 - (void)installPlugin
 {
-    preferences = [[AIAccountListPreferences preferencePaneWithPlugin:self owner:owner] retain];
+    preferences = [[AIAccountListPreferences preferencePaneForPlugin:self] retain];
 }
 
 @end

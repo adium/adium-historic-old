@@ -28,36 +28,35 @@
 @implementation AIPreferencePane
 
 //Return a new preference pane
-+ (AIPreferencePane *)preferencePaneWithOwner:(id)inOwner
++ (AIPreferencePane *)preferencePane
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
 //Return a new preference pane, passing plugin
-+ (AIPreferencePane *)preferencePaneWithPlugin:(id)inPlugin owner:(id)inOwner
++ (AIPreferencePane *)preferencePaneForPlugin:(id)inPlugin
 {
-    return([[[self alloc] initWithPlugin:inPlugin owner:inOwner] autorelease]);
+    return([[[self alloc] initForPlugin:inPlugin] autorelease]);
 }
 
 //Init, passing plugin
-- (id)initWithPlugin:(id)inPlugin owner:(id)inOwner
+- (id)initForPlugin:(id)inPlugin
 {
     plugin = inPlugin;
-    return([self initWithOwner:inOwner]);
+    return([self init]);
 }
 
 //Init
-- (id)initWithOwner:(id)inOwner
+- (id)init
 {
     [super init];
     
     //Init
-    owner = inOwner;
     view = nil;
     isUpdated = YES;
     
     //Register
-    [[owner preferenceController] addPreferencePane:self];
+    [[adium preferenceController] addPreferencePane:self];
     
     return(self);
 }

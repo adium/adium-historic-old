@@ -37,7 +37,7 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
     
     //Font
     [self showFont:[[preferenceDict objectForKey:KEY_FORMATTING_FONT] representedFont] inField:textField_desiredFont];
@@ -51,7 +51,7 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == button_setFont){
-        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
+        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
         NSFontManager	*fontManager = [NSFontManager sharedFontManager];
         NSFont		*selectedFont = [[preferenceDict objectForKey:KEY_FORMATTING_FONT] representedFont];
     
@@ -64,12 +64,12 @@
         [fontManager orderFrontFontPanel:self];
     
     }else if(sender == colorPopUp_textColor){
-        [[owner preferenceController] setPreference:[[colorPopUp_textColor color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorPopUp_textColor color] stringRepresentation]
                                              forKey:KEY_FORMATTING_TEXT_COLOR
                                               group:PREF_GROUP_FORMATTING];
         
     }else if(sender == colorPopUp_backgroundColor){
-        [[owner preferenceController] setPreference:[[colorPopUp_backgroundColor color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorPopUp_backgroundColor color] stringRepresentation]
                                              forKey:KEY_FORMATTING_BACKGROUND_COLOR
                                               group:PREF_GROUP_FORMATTING];
         
@@ -84,7 +84,7 @@
 
     //Update the displayed font string & preferences
     [self showFont:contactListFont inField:textField_desiredFont];
-    [[owner preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_FORMATTING_FONT group:PREF_GROUP_FORMATTING];
+    [[adium preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_FORMATTING_FONT group:PREF_GROUP_FORMATTING];
 }
 
 //Display the font name in our text field

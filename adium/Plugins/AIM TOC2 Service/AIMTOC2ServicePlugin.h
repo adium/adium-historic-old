@@ -34,7 +34,7 @@
     AIServiceType		*handleServiceType;
 }
 
-- (id)accountWithProperties:(NSDictionary *)inProperties owner:(id)inOwner;
+- (id)accountWithProperties:(NSDictionary *)inProperties;
 - (AIServiceType *)handleServiceType;
 
 @end

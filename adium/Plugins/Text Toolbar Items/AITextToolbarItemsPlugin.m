@@ -37,7 +37,7 @@
 						    itemContent:[AIImageUtilities imageNamed:@"Bold_Off" forClass:[self class]]
 							 action:@selector(bold:)
 							   menu:nil];
-    [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
     
     //Italic
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"Italic"
@@ -49,7 +49,7 @@
 						    itemContent:[AIImageUtilities imageNamed:@"Bold_On" forClass:[self class]]
 							 action:@selector(italic:)
 							   menu:nil];
-    [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
     
     //Italic
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"Underline"
@@ -61,7 +61,7 @@
 						    itemContent:[AIImageUtilities imageNamed:@"Bold_On" forClass:[self class]]
 							 action:@selector(underline:)
 							   menu:nil];
-    [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
 }
 
 - (void)uninstallPlugin

@@ -36,7 +36,7 @@
 //Setup preferences
 - (void)viewDidLoad
 {
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -44,7 +44,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [PREF_GROUP_LOGGING compare:[[notification userInfo] objectForKey:@"Group"]] == 0){
-        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
+        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
 
         [checkBox_enableLogging setState:[[preferenceDict objectForKey:KEY_LOGGER_ENABLE] boolValue]];
     }
@@ -54,7 +54,7 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_enableLogging) {
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LOGGER_ENABLE
                                               group:PREF_GROUP_LOGGING];
     }

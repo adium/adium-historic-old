@@ -19,7 +19,7 @@
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject;
 @end
 
-@interface AIPreferenceViewController : NSObject {
+@interface AIPreferenceViewController : AIObject {
     IBOutlet	NSView			*view_containerView;
     IBOutlet	NSView			*view_containerSubView;
     IBOutlet	NSTextField		*textField_title;

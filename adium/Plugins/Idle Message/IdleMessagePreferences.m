@@ -32,8 +32,8 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_MESSAGE];
-    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"IdleMessage" account:nil]];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_MESSAGE];
+    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[adium accountController] propertyForKey:@"IdleMessage" account:nil]];
 
     //Idle message
     [checkBox_enableIdleMessage setState:[[preferenceDict objectForKey:KEY_IDLE_MESSAGE_ENABLED] boolValue]];
@@ -44,7 +44,7 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_enableIdleMessage) {
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_IDLE_MESSAGE_ENABLED
                                               group:PREF_GROUP_IDLE_MESSAGE];
     }
@@ -53,8 +53,8 @@
 //User finished editing their idle message
 - (void)textDidEndEditing:(NSNotification *)notification;
 {
-    [[owner accountController] setProperty:[[textView_idleMessage textStorage] dataRepresentation] forKey:@"IdleMessage" account:nil];
-    [[owner preferenceController] setPreference:[[textView_idleMessage textStorage] dataRepresentation]
+    [[adium accountController] setProperty:[[textView_idleMessage textStorage] dataRepresentation] forKey:@"IdleMessage" account:nil];
+    [[adium preferenceController] setPreference:[[textView_idleMessage textStorage] dataRepresentation]
                                          forKey:KEY_IDLE_MESSAGE
                                           group:PREF_GROUP_IDLE_MESSAGE];
 }

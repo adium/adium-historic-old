@@ -26,36 +26,36 @@
                                        keyEquivalent:@"k"] autorelease];
     [connectItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
 
-    [[owner menuController] addMenuItem:connectItem toLocation:LOC_File_Accounts];
-    [[owner menuController] addMenuItem:disconnectItem toLocation:LOC_File_Accounts];
+    [[adium menuController] addMenuItem:connectItem toLocation:LOC_File_Accounts];
+    [[adium menuController] addMenuItem:disconnectItem toLocation:LOC_File_Accounts];
 }
 
 -(void)uninstallPlugin
 {
-    [[owner menuController] removeMenuItem:disconnectItem];
+    [[adium menuController] removeMenuItem:disconnectItem];
 }
 
 -(void)disconnectAll:(id)sender
 {
     //disconnects all the accounts
-    [[owner accountController] disconnectAllAccounts];
+    [[adium accountController] disconnectAllAccounts];
 }
 
 -(void)connectAll:(id)sender
 {
     //connects all the accounts
-    [[owner accountController] connectAllAccounts];
+    [[adium accountController] connectAllAccounts];
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    NSEnumerator *accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+    NSEnumerator *accountEnumerator = [[[adium accountController] accountArray] objectEnumerator];
     AIAccount	 *account;
 
     if (menuItem == disconnectItem) {
         while (account = [accountEnumerator nextObject]) {
             if([[account supportedPropertyKeys] containsObject:@"Online"]){
-                if([[[owner accountController] propertyForKey:@"Online" account:account] boolValue]) {
+                if([[[adium accountController] propertyForKey:@"Online" account:account] boolValue]) {
                     return YES;
                 }
             }
@@ -64,7 +64,7 @@
     } else if (menuItem == connectItem) {
         while (account = [accountEnumerator nextObject]) {
             if([[account supportedPropertyKeys] containsObject:@"Online"]){
-                if(![[[owner accountController] propertyForKey:@"Online" account:account] boolValue]) {
+                if(![[[adium accountController] propertyForKey:@"Online" account:account] boolValue]) {
                     return YES;
                 }
             }

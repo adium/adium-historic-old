@@ -40,7 +40,7 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self _buildTimeStampMenu];
     [self _buildPrefixFormatMenu];
     [self preferencesChanged:nil];
@@ -49,13 +49,13 @@
 //Close the preference view
 - (void)viewWillClose
 {
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
 }
 
 //Reflect new preferences in view
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
     
     //Disable and uncheck show user icons when not using an inline prefix
     if([[preferenceDict objectForKey:KEY_SMV_PREFIX_INCOMING] rangeOfString:@"%m"].location != NSNotFound){
@@ -81,39 +81,39 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_showUserIcons){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SMV_SHOW_USER_ICONS
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
     }else if(sender == checkBox_combineMessages){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SMV_COMBINE_MESSAGES
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
     }else if(sender == checkBox_ignoreTextColor){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SMV_IGNORE_TEXT_COLOR
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 	
     }else if(sender == checkBox_ignoreBackgroundColor){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SMV_IGNORE_BACKGROUND_COLOR
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         
     }else if(sender == popUp_timeStamps){
-        [[owner preferenceController] setPreference:[[popUp_timeStamps selectedItem] representedObject]
+        [[adium preferenceController] setPreference:[[popUp_timeStamps selectedItem] representedObject]
                                              forKey:KEY_SMV_TIME_STAMP_FORMAT
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         
     }else if(sender == popUp_prefixFormat){
-        [[owner preferenceController] delayPreferenceChangedNotifications:YES];
-        [[owner preferenceController] setPreference:[[popUp_prefixFormat selectedItem] representedObject]
+        [[adium preferenceController] delayPreferenceChangedNotifications:YES];
+        [[adium preferenceController] setPreference:[[popUp_prefixFormat selectedItem] representedObject]
                                              forKey:KEY_SMV_PREFIX_INCOMING
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-        [[owner preferenceController] setPreference:[[popUp_prefixFormat selectedItem] representedObject]
+        [[adium preferenceController] setPreference:[[popUp_prefixFormat selectedItem] representedObject]
                                              forKey:KEY_SMV_PREFIX_OUTGOING
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-        [[owner preferenceController] delayPreferenceChangedNotifications:NO];
+        [[adium preferenceController] delayPreferenceChangedNotifications:NO];
         
     }
 }
@@ -184,7 +184,7 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == button_setPrefixFont){
-        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         NSFontManager	*fontManager = [NSFontManager sharedFontManager];
         NSFont		*selectedFont = [[preferenceDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont];
 
@@ -197,72 +197,72 @@
         [fontManager orderFrontFontPanel:self];
 
     }else if(sender == checkBox_showTimeStamps){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SMV_SHOW_TIME_STAMPS
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
     }else if(sender == checkBox_showSeconds){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SMV_SHOW_TIME_SECONDS
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
     }else if(sender == checkBox_showAmPm){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SMV_SHOW_AMPM
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
     }else if(sender == checkBox_hideDuplicateTimeStamps){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SMV_HIDE_DUPLICATE_TIME_STAMPS
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
     }else if(sender == checkBox_hideDuplicatePrefixes){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SMV_HIDE_DUPLICATE_PREFIX
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
     }else if(sender == checkBox_displayGridlines){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SMV_DISPLAY_GRID_LINES
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
     }else if(sender == checkBox_senderGradient){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SMV_DISPLAY_SENDER_GRADIENT
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
     }else if(sender == slider_gridDarkness){
-        [[owner preferenceController] setPreference:[NSNumber numberWithFloat:[sender floatValue]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:[sender floatValue]]
                                              forKey:KEY_SMV_GRID_DARKNESS
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
     }else if(sender == slider_gradientDarkness){
-        [[owner preferenceController] setPreference:[NSNumber numberWithFloat:[sender floatValue]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:[sender floatValue]]
                                              forKey:KEY_SMV_SENDER_GRADIENT_DARKNESS
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
     }else if(sender == popUp_incomingPrefix){
         NSDictionary	*colorDict = [prefixColors objectForKey:[[sender selectedItem] representedObject]];
 
-        [[owner preferenceController] setPreference:[[sender selectedItem] representedObject]
+        [[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
                                              forKey:KEY_SMV_INCOMING_PREFIX_COLOR_NAME
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-        [[owner preferenceController] setPreference:[colorDict objectForKey:@"Light"]
+        [[adium preferenceController] setPreference:[colorDict objectForKey:@"Light"]
                                              forKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-        [[owner preferenceController] setPreference:[colorDict objectForKey:@"Dark"]
+        [[adium preferenceController] setPreference:[colorDict objectForKey:@"Dark"]
                                              forKey:KEY_SMV_INCOMING_PREFIX_COLOR
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         
     }else if(sender == popUp_outgoingPrefix){
         NSDictionary	*colorDict = [prefixColors objectForKey:[[sender selectedItem] representedObject]];
 
-        [[owner preferenceController] setPreference:[[sender selectedItem] representedObject]
+        [[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
                                              forKey:KEY_SMV_OUTGOING_PREFIX_COLOR_NAME
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-        [[owner preferenceController] setPreference:[colorDict objectForKey:@"Light"]
+        [[adium preferenceController] setPreference:[colorDict objectForKey:@"Light"]
                                              forKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-        [[owner preferenceController] setPreference:[colorDict objectForKey:@"Dark"]
+        [[adium preferenceController] setPreference:[colorDict objectForKey:@"Dark"]
                                              forKey:KEY_SMV_OUTGOING_PREFIX_COLOR
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
@@ -282,7 +282,7 @@
 
     //Update the displayed font string & preferences
     [self showFont:contactListFont inField:textField_prefixFontName];
-    [[owner preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_SMV_PREFIX_FONT group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+    [[adium preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_SMV_PREFIX_FONT group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 }
 
 //init
@@ -296,15 +296,15 @@
     //Register our preference panes
     //Prefixes
     prefixesPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:AISM_PREF_TITLE_PREFIX] retain];
-    [[owner preferenceController] addPreferencePane:prefixesPane];
+    [[adium preferenceController] addPreferencePane:prefixesPane];
 
     //TimeStamps
     timeStampsPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:AISM_PREF_TITLE_TIMES] retain];
-    [[owner preferenceController] addPreferencePane:timeStampsPane];
+    [[adium preferenceController] addPreferencePane:timeStampsPane];
 
     //Gridding
     griddingPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:AISM_PREF_TITLE_GRID] retain];
-    [[owner preferenceController] addPreferencePane:griddingPane];
+    [[adium preferenceController] addPreferencePane:griddingPane];
 
     return(self);
 }
@@ -361,7 +361,7 @@
 //Configures our view for the current preferences
 - (void)configureView
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
     //Font
     [self showFont:[[preferenceDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont] inField:textField_prefixFontName];

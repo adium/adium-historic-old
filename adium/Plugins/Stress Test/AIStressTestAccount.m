@@ -20,11 +20,11 @@
                                        serverGroup:@"nope"
                                          temporary:YES
                                         forAccount:self] retain];
-    [[owner contactController] handle:commandHandle addedToAccount:self];
+    [[adium contactController] handle:commandHandle addedToAccount:self];
     [handleDict setObject:commandHandle forKey:@"Command"];
     
     [[commandHandle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
-    [[owner contactController] handleStatusChanged:commandHandle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:NO silent:NO];
+    [[adium contactController] handleStatusChanged:commandHandle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:NO silent:NO];
     
     //
     commandChat = [[self chatForHandle:commandHandle] retain];
@@ -40,10 +40,10 @@
     if(!chat){
         AIListContact	*containingContact = [inHandle containingContact];
 
-        chat = [AIChat chatWithOwner:owner forAccount:self];
+        chat = [AIChat chatForAccount:self];
         [chat addParticipatingListObject:containingContact];
         [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
-        [[owner contentController] noteChat:chat forAccount:self];
+        [[adium contentController] noteChat:chat forAccount:self];
 
         [chatDict setObject:chat forKey:[inHandle UID]];
     }
@@ -107,7 +107,7 @@
                                                serverGroup:[NSString stringWithFormat:@"Group%i",i/20]
                                                  temporary:NO
                                                 forAccount:self];
-                    [[owner contactController] handle:handle addedToAccount:self];
+                    [[adium contactController] handle:handle addedToAccount:self];
                     [handleDict setObject:handle forKey:UID];
                 }
             }
@@ -146,7 +146,7 @@
 
                 if(handle = [handleDict objectForKey:UID]){
                     [[handle statusDictionary] setObject:[NSNumber numberWithBool:NO] forKey:@"Online"];
-                    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:silent silent:silent];
+                    [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:silent silent:silent];
                 }
             }
 
@@ -183,7 +183,7 @@
     BOOL		silent = [[[inTimer userInfo] objectForKey:@"silent"] boolValue];
     
     [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
-    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:silent silent:silent];
+    [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:silent silent:silent];
 
     [array removeLastObject];
     if([array count] == 0) [inTimer invalidate];
@@ -208,7 +208,7 @@
                                                     date:nil
                                                 message:[[[NSAttributedString alloc] initWithString:message attributes:[NSDictionary dictionary]] autorelease]
                                                 autoreply:NO];
-        [[owner contentController] addIncomingContentObject:messageObject];
+        [[adium contentController] addIncomingContentObject:messageObject];
 
     }
 
@@ -239,7 +239,7 @@
                                                        date:nil
                                                     message:[[[NSAttributedString alloc] initWithString:message attributes:[NSDictionary dictionary]] autorelease]
                                                   autoreply:YES];
-            [[owner contentController] sendContentObject:messageObject];
+            [[adium contentController] sendContentObject:messageObject];
         }else{
             messageObject = [AIContentMessage messageInChat:[self chatForHandle:handle]
                                                  withSource:[commandHandle containingContact]
@@ -247,7 +247,7 @@
                                                        date:nil
                                                     message:[[[NSAttributedString alloc] initWithString:message attributes:[NSDictionary dictionary]] autorelease]
                                                   autoreply:NO];
-            [[owner contentController] addIncomingContentObject:messageObject];
+            [[adium contentController] addIncomingContentObject:messageObject];
         }
 
         [userInfo setObject:[NSNumber numberWithBool:!msgIn] forKey:@"in"];
@@ -302,7 +302,7 @@
                                                date:nil
                                             message:[[[NSAttributedString alloc] initWithString:string attributes:[NSDictionary dictionary]] autorelease]
                                           autoreply:NO];
-    [[owner contentController] addIncomingContentObject:messageObject];
+    [[adium contentController] addIncomingContentObject:messageObject];
 }
 
 

@@ -18,17 +18,15 @@ typedef enum {
     AISortByIndex
 } AICollectionSortMode;
     
-@class AIEditorListHandle, AIEditorListGroup, AIAdium;
+@class AIEditorListHandle, AIEditorListGroup;
 
-@interface AIEditorCollection : NSObject {
-    AIAdium		*owner;
-
+@interface AIEditorCollection : AIObject {
     NSMutableArray	*list;
     int			sortMode;
     BOOL		controlledChanges;
 }
 
-- (id)initWithOwner:(id)inOwner;
+- (id)init;
 
 - (NSString *)name;			//Large black drawer label
 - (NSString *)UID;			//Used to store group collapse/expand state

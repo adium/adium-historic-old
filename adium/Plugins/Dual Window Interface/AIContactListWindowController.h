@@ -13,14 +13,14 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium, AIMiniToolbar, AIAutoScrollView;
+@class AIMiniToolbar, AIAutoScrollView;
 @protocol AIContactListViewController, AIInterfaceContainer, AIContainerInterface;
 
 @protocol AIContactListCleanup <NSObject>
 - (void)unloadContactListWindow;
 @end
 
-@interface AIContactListWindowController : NSWindowController <AIInterfaceContainer> {
+@interface AIContactListWindowController : AIWindowController <AIInterfaceContainer> {
     IBOutlet	AIAutoScrollView	*scrollView_contactList;
     IBOutlet	AIMiniToolbar		*toolbar_bottom;
 
@@ -32,14 +32,13 @@
     NSDictionary			*toolbarItems;
     
     id <AIContainerInterface>		interface;
-    AIAdium				*owner;
 
     NSSize				minWindowSize;
     BOOL				autoResizeVertically;
     BOOL				autoResizeHorizontally;
 }
 
-+ (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContainerInterface>)inInterface owner:(id)inOwner;
++ (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContainerInterface>)inInterface;
 - (void)makeActive:(id)sender;
 - (void)close:(id)sender;
 

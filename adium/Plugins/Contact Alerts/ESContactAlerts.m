@@ -37,13 +37,12 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 
 @implementation ESContactAlerts
 
-- (id)initWithDetailsView:(NSView *)inView withTable:(AIAlternatingRowTableView*)inTable withPrefView:(NSView *)inPrefView owner:(id)inOwner
+- (id)initWithDetailsView:(NSView *)inView withTable:(AIAlternatingRowTableView*)inTable withPrefView:(NSView *)inPrefView
 {
     actionListMenu_cached = nil;
     cachedAlertsDict = [[NSMutableDictionary alloc] init];
     
-    owner = inOwner;
-    [owner retain];
+    [adium retain];
     
     tableView_actions = inTable;
     [tableView_actions retain];
@@ -64,7 +63,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     row = -1;
     
     //let the controller know that we exist
-    [[owner contactAlertsController] createAlertsArrayWithOwner:self];
+    [[adium contactAlertsController] createAlertsArrayWithOwner:self];
     
     [super init];
     return self;
@@ -73,9 +72,8 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 - (void)dealloc
 {
     //let the controller know that we are done
-    [[owner contactAlertsController] destroyAlertsArrayWithOwner:self];
+    [[adium contactAlertsController] destroyAlertsArrayWithOwner:self];
     
-    [owner release]; owner = nil;
     [activeContactObject release]; activeContactObject = nil;
     [eventActionArray release]; eventActionArray = nil;
     
@@ -108,7 +106,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     if (row != -1) selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
     
     //inform the controller
-    [[owner contactAlertsController] updateOwner:self toRow:row];
+    [[adium contactAlertsController] updateOwner:self toRow:row];
 }
 - (void)replaceDictAtIndex:(int)inRow withDict:(NSDictionary *)newDict
 {
@@ -130,7 +128,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
         
         //If no cache is available (or we're not using the cache), load the array
         if(!newActionArray){
-            newActionArray = [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:object]; //load from prefs
+            newActionArray = [[adium preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:object]; //load from prefs
             
             //Update the cache
             if(newActionArray){
@@ -146,7 +144,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
             [eventActionArray release]; eventActionArray = [newActionArray retain];
             
             //inform the controller
-            [[owner contactAlertsController] updateOwner:self toArray:eventActionArray forObject:object];
+            [[adium contactAlertsController] updateOwner:self toArray:eventActionArray forObject:object];
         }
     }
 }
@@ -171,7 +169,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 - (NSMenu *)actionListMenu //menu of possible actions
 {
     if (!actionListMenu_cached) {
-        actionListMenu_cached = [[[owner contactAlertsController] actionListMenuWithOwner:self] retain];
+        actionListMenu_cached = [[[adium contactAlertsController] actionListMenuWithOwner:self] retain];
     }
     return actionListMenu_cached;
 }
@@ -180,7 +178,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 //Save the event actions (contact context sensitive)
 - (void)saveEventActionArray
 {
-    [[owner preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
+    [[adium preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
 }
 
 //--Events--
@@ -333,7 +331,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
          if ([(NSString *)[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_ACTION] compare:@"Sound"] == 0) {
              NSString * sound = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
              if (sound && [sound length] != 0) {
-                 [[owner soundController] playSoundAtPath:sound]; //Play the sound
+                 [[adium soundController] playSoundAtPath:sound]; //Play the sound
              }
          }
      }

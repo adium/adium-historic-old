@@ -8,9 +8,9 @@
 #import "ESContactAlerts.h"
 #import "ESContactAlertsActionColumn.h"
 
-@class AIAdium, AIAlternatingRowTableView, AIListContact, ESContactAlertsPlugin;
+@class AIAlternatingRowTableView, AIListContact, ESContactAlertsPlugin;
 
-@interface ESContactAlertsPreferences : NSObject {
+@interface ESContactAlertsPreferences : AIObject {
     IBOutlet	NSPopUpButton			*popUp_addEvent;
     IBOutlet	AIAlternatingRowTableView	*tableView_actions;
     IBOutlet	ESContactAlertsActionColumn	*actionColumn;
@@ -22,7 +22,6 @@
 
     NSMenu					*actionMenu;
 
-    AIAdium					*owner;
     AIListObject				*activeContactObject;
     NSMutableArray				*prefAlertsArray;
     NSMutableDictionary				*offsetDictionary;
@@ -31,7 +30,7 @@
     ESContactAlerts				*instance;
 }
 
-+ (ESContactAlertsPreferences *)contactAlertsPreferencesWithOwner:(id)inOwner;
++ (ESContactAlertsPreferences *)contactAlertsPreferences;
 
 - (IBAction)deleteEventAction:(id)sender;
 - (IBAction)addedEvent:(id)sender;

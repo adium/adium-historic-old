@@ -32,7 +32,7 @@
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
     
     [colorWell_away setColor:[[preferenceDict objectForKey:KEY_TAB_AWAY_COLOR] representedColor]];
     [colorWell_idle setColor:[[preferenceDict objectForKey:KEY_TAB_IDLE_COLOR] representedColor]];
@@ -70,85 +70,85 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == colorWell_away){
-        [[owner preferenceController] setPreference:[[colorWell_away color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_away color] stringRepresentation]
                                              forKey:KEY_TAB_AWAY_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_idle){
-        [[owner preferenceController] setPreference:[[colorWell_idle color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_idle color] stringRepresentation]
                                              forKey:KEY_TAB_IDLE_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_signedOff){
-        [[owner preferenceController] setPreference:[[colorWell_signedOff color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_signedOff color] stringRepresentation]
                                              forKey:KEY_TAB_SIGNED_OFF_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_signedOn){
-        [[owner preferenceController] setPreference:[[colorWell_signedOn color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_signedOn color] stringRepresentation]
                                              forKey:KEY_TAB_SIGNED_ON_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_typing){
-        [[owner preferenceController] setPreference:[[colorWell_typing color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_typing color] stringRepresentation]
                                              forKey:KEY_TAB_TYPING_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_unviewedContent){
-        [[owner preferenceController] setPreference:[[colorWell_unviewedContent color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_unviewedContent color] stringRepresentation]
                                              forKey:KEY_TAB_UNVIEWED_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_idleAndAway){
-        [[owner preferenceController] setPreference:[[colorWell_idleAndAway color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_idleAndAway color] stringRepresentation]
                                              forKey:KEY_TAB_IDLE_AWAY_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         
 
     }else if(sender == checkBox_signedOff){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_TAB_SIGNED_OFF_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
     }else if(sender == checkBox_signedOn){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_TAB_SIGNED_ON_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
     }else if(sender == checkBox_away){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_TAB_AWAY_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
     }else if(sender == checkBox_idle){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_TAB_IDLE_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
     }else if(sender == checkBox_typing){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_TAB_TYPING_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
     }else if(sender == checkBox_unviewedContent){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_TAB_UNVIEWED_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
     }else if(sender == checkBox_idleAndAway){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_TAB_IDLE_AWAY_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
     }else if(sender == checkBox_unviewedFlash){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_TAB_UNVIEWED_FLASH_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];

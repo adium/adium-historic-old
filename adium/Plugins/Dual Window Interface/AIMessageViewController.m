@@ -29,7 +29,7 @@
 #define fixed_padding 3
 
 @interface AIMessageViewController (PRIVATE)
-- (id)initForChat:(AIChat *)inChat owner:(id)inOwner;
+- (id)initForChat:(AIChat *)inChat;
 - (void)dealloc;
 - (void)textDidChange:(NSNotification *)notification;
 - (void)sizeAndArrangeSubviews;
@@ -42,9 +42,9 @@
 @implementation AIMessageViewController
 
 //Create a new message view controller
-+ (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner
++ (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat
 {
-    return([[[self alloc] initForChat:inChat owner:inOwner] autorelease]);
+    return([[[self alloc] initForChat:inChat] autorelease]);
 }
 
 //Return our view
@@ -69,7 +69,7 @@
             AIContentObject	*contentObject;
 
             //Close our text entry view
-            [[owner contentController] willCloseTextEntryView:textView_outgoing];
+            [[adium contentController] willCloseTextEntryView:textView_outgoing];
 
             //Extract the content from our existing chat
             savedContent = [[[chat contentObjectArray] retain] autorelease];
@@ -81,7 +81,7 @@
             }
 
             //Close our existing chat
-            [[owner contentController] closeChat:chat];
+            [[adium contentController] closeChat:chat];
             [chat release]; chat = nil;
         }
 
@@ -100,14 +100,14 @@
         [textView_outgoing setChat:chat];
 
         //Register for sending notifications
-        [[owner notificationCenter] removeObserver:self name:Interface_SendEnteredMessage object:nil];
-        [[owner notificationCenter] removeObserver:self name:Interface_DidSendEnteredMessage object:nil];
-        [[owner notificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:inChat];
-        [[owner notificationCenter] addObserver:self selector:@selector(didSendMessage:) name:Interface_DidSendEnteredMessage object:inChat];
+        [[adium notificationCenter] removeObserver:self name:Interface_SendEnteredMessage object:nil];
+        [[adium notificationCenter] removeObserver:self name:Interface_DidSendEnteredMessage object:nil];
+        [[adium notificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:inChat];
+        [[adium notificationCenter] addObserver:self selector:@selector(didSendMessage:) name:Interface_DidSendEnteredMessage object:inChat];
 
         //Create the message view
         [messageViewController release];
-        messageViewController = [[[owner interfaceController] messageViewControllerForChat:chat] retain];
+        messageViewController = [[[adium interfaceController] messageViewControllerForChat:chat] retain];
         [scrollView_messages setAndSizeDocumentView:[messageViewController messageView]];
         [scrollView_messages setNextResponder:textView_outgoing];
         [scrollView_messages setAutoScrollToBottom:YES];
@@ -115,20 +115,20 @@
         [scrollView_messages setHasVerticalScroller:YES];
 
         //Open our text entry view for the chat
-        [[owner contentController] didOpenTextEntryView:textView_outgoing];
+        [[adium contentController] didOpenTextEntryView:textView_outgoing];
 
         //
         [scrollView_userList setAutoScrollToBottom:NO];
         [scrollView_userList setAutoHideScrollBar:YES];
 
         //Observe the chat
-        [[owner notificationCenter] removeObserver:self name:Content_ChatStatusChanged object:nil];
-        [[owner notificationCenter] addObserver:self selector:@selector(chatStatusChanged:) name:Content_ChatStatusChanged object:chat];
+        [[adium notificationCenter] removeObserver:self name:Content_ChatStatusChanged object:nil];
+        [[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:) name:Content_ChatStatusChanged object:chat];
         [self chatStatusChanged:nil];
 
         //Update our participating list objects list
-        [[owner notificationCenter] removeObserver:self name:Content_ChatParticipatingListObjectsChanged object:nil];
-        [[owner notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:) name:Content_ChatParticipatingListObjectsChanged object:chat];
+        [[adium notificationCenter] removeObserver:self name:Content_ChatParticipatingListObjectsChanged object:nil];
+        [[adium notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:) name:Content_ChatParticipatingListObjectsChanged object:chat];
         [self chatParticipatingListObjectsChanged:nil];
 
         //Notify our delegate of the change
@@ -143,7 +143,7 @@
 - (void)setAccount:(AIAccount *)inAccount
 {
     //Initiate a new chat with the specified account.  The interface will automatically recycle this message view, switching it to the new account.
-    [[owner contentController] openChatOnAccount:inAccount withListObject:[chat listObject]];
+    [[adium contentController] openChatOnAccount:inAccount withListObject:[chat listObject]];
 }
 - (AIAccount *)account{
     return(account);
@@ -154,7 +154,7 @@
 {
     //
     if(visible && !view_accountSelection){ //Show the account selection view
-        view_accountSelection = [[AIAccountSelectionView alloc] initWithFrame:NSMakeRect(0,0,100,100) delegate:self owner:owner];
+        view_accountSelection = [[AIAccountSelectionView alloc] initWithFrame:NSMakeRect(0,0,100,100) delegate:self];
         [view_contents addSubview:view_accountSelection];
 
     }else if(!visible && view_accountSelection){ //Hide the account selection view
@@ -183,7 +183,7 @@
 	NSAttributedString	* outgoingAttributedString = [[[textView_outgoing attributedString] copy] autorelease];
 	
         //Send the message
-        [[owner notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:chat userInfo:nil];
+        [[adium notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:chat userInfo:nil];
 
         message = [AIContentMessage messageInChat:chat
                                        withSource:account
@@ -192,8 +192,8 @@
                                           message:outgoingAttributedString
                                         autoreply:NO];
 
-        if([[owner contentController] sendContentObject:message]){
-            [[owner notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:chat userInfo:nil];
+        if([[adium contentController] sendContentObject:message]){
+            [[adium notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:chat userInfo:nil];
         }
     }
 }
@@ -226,7 +226,7 @@
 }
 
 //Init
-- (id)initForChat:(AIChat *)inChat owner:(id)inOwner
+- (id)initForChat:(AIChat *)inChat
 {
     [super init];
 
@@ -235,14 +235,12 @@
     account = nil;
     delegate = nil;
     chat = nil;
-    owner = [inOwner retain];
     showUserList = NO;
 
     //view
     [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
 
     //Config the outgoing text view
-    [textView_outgoing setOwner:owner];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
     [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
     if([textView_outgoing respondsToSelector:@selector(setUsesFindPanel:)]){
@@ -270,16 +268,16 @@
 - (void)dealloc
 {
     //Close the message entry text view
-    [[owner contentController] willCloseTextEntryView:textView_outgoing];
+    [[adium contentController] willCloseTextEntryView:textView_outgoing];
 
     //Close chat
     if(chat){
-        [[owner contentController] closeChat:chat];
+        [[adium contentController] closeChat:chat];
         [chat release]; chat = nil;
     }
 
     //remove notifications
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     //Account selection view
@@ -293,7 +291,6 @@
     [view_contents release]; view_contents = nil;
     [view_accountSelection release];
     [messageViewController release];
-    [owner release]; owner = nil;
     [account release]; account = nil;
     [super dealloc];
 }

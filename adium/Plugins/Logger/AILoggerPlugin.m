@@ -65,28 +65,28 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     dirtyLogLock = [[NSLock alloc] init];
 
     //Setup our preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LOGGING];
-    preferences = [[AILoggerPreferences preferencePaneWithOwner:owner] retain];
-    advancedPreferences = [[AILoggerAdvancedPreferences preferencePaneWithOwner:owner] retain];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LOGGING];
+    preferences = [[AILoggerPreferences preferencePane] retain];
+    advancedPreferences = [[AILoggerAdvancedPreferences preferencePane] retain];
 
     //Install the log viewer menu item
     logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Log Viewer" target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@"l"] autorelease];
-    [[owner menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
+    [[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
 
     //Install the 'view logs' menu item
     viewContactLogsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"View Contact's Logs" target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@"L"] autorelease];
-    [[owner menuController] addMenuItem:viewContactLogsMenuItem toLocation:LOC_Contact_Manage];
+    [[adium menuController] addMenuItem:viewContactLogsMenuItem toLocation:LOC_Contact_Manage];
 
     //Install a 'view logs' contextual menu item
     viewContactLogsContextMenuItem = [[[NSMenuItem alloc] initWithTitle:@"View Logs" target:self action:@selector(showLogViewerToSelectedContextContact:) keyEquivalent:@""] autorelease];
-    [[owner menuController] addContextualMenuItem:viewContactLogsContextMenuItem toLocation:Context_Contact_Manage];
+    [[adium menuController] addContextualMenuItem:viewContactLogsContextMenuItem toLocation:Context_Contact_Manage];
     
     //Create a logs directory
-    logBasePath = [[[[[owner loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath] retain];
+    logBasePath = [[[[[adium loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath] retain];
     [AIFileUtilities createDirectory:logBasePath];
 
     //Observe preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 
     //Init index searching
@@ -97,7 +97,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_LOGGING] == 0){
-        NSDictionary    *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
+        NSDictionary    *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
         BOOL            newLogValue;
         
         //Load new values
@@ -112,10 +112,10 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
             observingContent = newLogValue;
 
             if(!observingContent){ //Stop Logging
-                [[owner notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
+                [[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
 
             }else{ //Start Logging
-                [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
+                [[adium notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
                 
             }
         }
@@ -134,7 +134,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     BOOL valid = YES;
 
     if(menuItem == viewContactLogsMenuItem){
-        AIListContact	*selectedContact = [[owner contactController] selectedContact];
+        AIListContact	*selectedContact = [[adium contactController] selectedContact];
 
         if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]){
             [viewContactLogsMenuItem setTitle:[NSString stringWithFormat:@"View %@'s Logs",[selectedContact displayName]]];
@@ -143,7 +143,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
             valid = NO;
         }
     }else if(menuItem == viewContactLogsContextMenuItem){
-        AIListContact	*selectedContact = [[owner menuController] contactualMenuContact];
+        AIListContact	*selectedContact = [[adium menuController] contactualMenuContact];
         if ( !(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]) )
               valid = NO;
     }
@@ -153,14 +153,14 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Show the log viewer, displaying the selected contact's logs
 - (void)showLogViewerToSelectedContact:(id)sender
 {
-    AIListContact   *selectedContact = [[owner contactController] selectedContact];
-    [AILogViewerWindowController openForContact:selectedContact withOwner:owner plugin:self];
+    AIListContact   *selectedContact = [[adium contactController] selectedContact];
+    [AILogViewerWindowController openForContact:selectedContact plugin:self];
 }
 
 //Show the log viewer, displaying the selected contact's logs
 - (void)showLogViewerToSelectedContextContact:(id)sender
 {
-    [AILogViewerWindowController openForContact:[[owner menuController] contactualMenuContact] withOwner:owner plugin:self];
+    [AILogViewerWindowController openForContact:[[adium menuController] contactualMenuContact] plugin:self];
 }
 
 //
@@ -347,7 +347,7 @@ this problem is along the lines of:
 	    
 	    //Flag the chat with 'LogIsDirty' for this filename.  On the next message we can quickly check this flag.
 	    [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:dirtyKey];
-	    [[owner notificationCenter] postNotificationName:Content_ChatStatusChanged object:chat userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"LogIsDirty"] forKey:@"Keys"]];
+	    [[adium notificationCenter] postNotificationName:Content_ChatStatusChanged object:chat userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"LogIsDirty"] forKey:@"Keys"]];
 	}	
     }
 }
@@ -389,14 +389,14 @@ this problem is along the lines of:
 //Path to the dirty log array file
 - (NSString *)dirtyLogArrayPath
 {
-    NSString    *dirtyLogFileName = [NSString stringWithFormat:DIRTY_LOG_ARRAY_NAME, [[owner loginController] currentUser]];
+    NSString    *dirtyLogFileName = [NSString stringWithFormat:DIRTY_LOG_ARRAY_NAME, [[adium loginController] currentUser]];
     return([[LOG_INDEX_PATH stringByAppendingPathComponent:dirtyLogFileName] stringByExpandingTildeInPath]);
 }
 
 //Path to the log index file
 - (NSString *)logIndexPath
 {
-    NSString    *logIndexFileName = [NSString stringWithFormat:LOG_INDEX_NAME,[[owner loginController] currentUser]];
+    NSString    *logIndexFileName = [NSString stringWithFormat:LOG_INDEX_NAME,[[adium loginController] currentUser]];
     return([[LOG_INDEX_PATH stringByAppendingPathComponent:logIndexFileName] stringByExpandingTildeInPath]);
 }
 

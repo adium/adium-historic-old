@@ -27,11 +27,11 @@
 - (void)installPlugin
 {
     //Setup our preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_MESSAGE_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_IDLE_MESSAGE];
-    preferences = [[IdleMessagePreferences preferencePaneWithOwner:owner] retain];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_MESSAGE_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_IDLE_MESSAGE];
+    preferences = [[IdleMessagePreferences preferencePane] retain];
 
     //Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(accountIdleStatusChanged:) name:Account_PropertiesChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountIdleStatusChanged:) name:Account_PropertiesChanged object:nil];
 }
 
 - (void)accountIdleStatusChanged:(NSNotification *)notification
@@ -42,16 +42,16 @@
         
         if([modifiedKey compare:@"IdleSince"] == 0){
 
-            if([[[[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_MESSAGE] objectForKey:KEY_IDLE_MESSAGE_ENABLED] boolValue] == TRUE) {
+            if([[[[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_MESSAGE] objectForKey:KEY_IDLE_MESSAGE_ENABLED] boolValue] == TRUE) {
 
                 //Remove existing content sent/received observer, and install new (if away)
-                [[owner notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
-                [[owner notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
-                [[owner notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
-                if([[owner accountController] propertyForKey:@"IdleSince" account:nil] != nil){
-                    [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
-                    [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
-                    [[owner notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
+                [[adium notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
+                [[adium notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
+                [[adium notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
+                if([[adium accountController] propertyForKey:@"IdleSince" account:nil] != nil){
+                    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
+                    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
+                    [[adium notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
                 }
 
                 //Flush our array of 'responded' contacts
@@ -66,13 +66,13 @@
 - (void)didReceiveContent:(NSNotification *)notification
 {
     AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
-    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"IdleMessage" account:nil]];
+    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[adium accountController] propertyForKey:@"IdleMessage" account:nil]];
 
     //If the user received a message, send our idle message to them
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         if(idleMessage && [idleMessage length] != 0){
             //Only send if there's no away message up!
-            if([[owner accountController] propertyForKey:@"AwayMessage" account:nil] == nil) {
+            if([[adium accountController] propertyForKey:@"AwayMessage" account:nil] == nil) {
                 AIListContact	*contact = [contentObject source];
 
                 //Create and send an idle bounce message (If the sender hasn't received one already)
@@ -86,7 +86,7 @@
                                                               message:idleMessage
                                                             autoreply:YES];
 
-                    [[owner contentController] sendContentObject:responseContent];
+                    [[adium contentController] sendContentObject:responseContent];
                 }	
             }	
         }	

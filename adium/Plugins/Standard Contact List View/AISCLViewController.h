@@ -13,12 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium, AIListGroup, AISCLOutlineView;
+@class AIListGroup, AISCLOutlineView;
 @protocol AIContactListViewController;
 
-@interface AISCLViewController : NSObject <AIContactListViewController> {
-    AIAdium		*owner;
-    
+@interface AISCLViewController : AIObject <AIContactListViewController> {    
     AIListGroup		*contactList;
     AISCLOutlineView	*contactListView;
 
@@ -31,7 +29,7 @@
     int 		tooltipCount;
 }
 
-+ (AISCLViewController *)contactListViewControllerWithOwner:(id)inOwner;
++ (AISCLViewController *)contactListViewController;
 - (IBAction)performDefaultActionOnSelectedContact:(id)sender;
 - (NSView *)contactListView;
 - (void)view:(NSView *)inView didMoveToSuperview:(NSView *)inSuperview;

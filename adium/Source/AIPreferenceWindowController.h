@@ -13,9 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium, AIFlippedCategoryView;
+@class AIFlippedCategoryView;
 
-@interface AIPreferenceWindowController : NSWindowController {
+@interface AIPreferenceWindowController : AIWindowController {
     IBOutlet	NSTabView			*tabView_category;
 
     IBOutlet	AIFlippedCategoryView		*view_Accounts;
@@ -49,14 +49,13 @@
     NSMutableArray		*loadedPanes;
     NSMutableArray		*loadedAdvancedPanes;
 
-    AIAdium			*owner;
     NSMutableDictionary		*toolbarItems;
     NSMutableArray		*_advancedCategoryArray;
 
     int				yPadding;    
 }
 
-+ (AIPreferenceWindowController *)preferenceWindowControllerWithOwner:(id)inOwner;
++ (AIPreferenceWindowController *)preferenceWindowController;
 + (void)closeSharedInstance;
 - (IBAction)closeWindow:(id)sender;
 - (void)showView:(AIPreferenceViewController *)inView;

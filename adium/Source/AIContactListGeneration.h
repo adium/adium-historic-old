@@ -13,11 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium, AIHandle, AIAccount, AIListGroup, AIListContact;
+@class AIHandle, AIAccount, AIListGroup, AIListContact;
 
-@interface AIContactListGeneration : NSObject {
-    AIAdium			*owner;
-
+@interface AIContactListGeneration : AIObject {
     AIListGroup 		*contactList;
     
     NSMutableDictionary		*groupDict;
@@ -26,7 +24,7 @@
     
 }
 
-- (id)initWithContactList:(AIListGroup *)inContactList owner:(id)inOwner;
+- (id)initWithContactList:(AIListGroup *)inContactList;
 - (void)handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount;
 - (void)handle:(AIHandle *)inHandle removedFromAccount:(AIAccount *)inAccount;
 - (void)handlesChangedForAccount:(AIAccount *)inAccount;

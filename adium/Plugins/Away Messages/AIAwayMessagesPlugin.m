@@ -43,17 +43,17 @@
     menuConfiguredForAway = NO;
     
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AWAY_SPELLING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SPELLING];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AWAY_SPELLING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SPELLING];
     
     //Our preference view
-    preferences = [[AIAwayMessagePreferences awayMessagePreferencesWithOwner:owner] retain];
+    preferences = [[AIAwayMessagePreferences awayMessagePreferences] retain];
     
     //Install our 'enter away message' submenu
     [self installAwayMenu];
     
     //Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     
     [self accountPropertiesChanged:nil];
 }
@@ -77,7 +77,7 @@
 //Display the enter away message window
 - (IBAction)enterAwayMessage:(id)sender
 {
-    [[AIEnterAwayWindowController enterAwayWindowControllerForOwner:owner] showWindow:nil];
+    [[AIEnterAwayWindowController enterAwayWindowController] showWindow:nil];
 }
 
 //Called by the away menu, sets the selected away (sender)
@@ -86,16 +86,16 @@
     NSDictionary	*awayDict = [sender representedObject];
     NSAttributedString	*awayMessage = [awayDict objectForKey:@"Message"];
     NSAttributedString	*awayAutoResponse = [awayDict objectForKey:@"Autoresponse"];
-    [[owner accountController] setProperty:awayMessage forKey:@"AwayMessage" account:nil];
-    [[owner accountController] setProperty:awayAutoResponse forKey:@"Autoresponse" account:nil];
+    [[adium accountController] setProperty:awayMessage forKey:@"AwayMessage" account:nil];
+    [[adium accountController] setProperty:awayAutoResponse forKey:@"Autoresponse" account:nil];
 }
 
 //Remove the active away message
 - (IBAction)removeAwayMessage:(id)sender
 {
     //Remove the away status flag	
-    [[owner accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
-    [[owner accountController] setProperty:nil forKey:@"Autoresponse" account:nil];
+    [[adium accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
+    [[adium accountController] setProperty:nil forKey:@"Autoresponse" account:nil];
 }
 
 //Update our menu when the away status changes
@@ -110,13 +110,13 @@
             [self _updateAwaySubmenus];
             
             //Remove existing content sent/received observer, and install new (if away)
-            [[owner notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
-            [[owner notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
-            [[owner notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
-            if([[owner accountController] propertyForKey:@"AwayMessage" account:nil] != nil){
-                [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
-                [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
-                [[owner notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
+            [[adium notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
+            [[adium notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
+            [[adium notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
+            if([[adium accountController] propertyForKey:@"AwayMessage" account:nil] != nil){
+                [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
+                [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
+                [[adium notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
             }
             
             //Flush our array of 'responded' contacts
@@ -133,10 +133,10 @@
     //If the user received a message, send our away message to source
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         
-        NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"Autoresponse" account:nil]];
+        NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[adium accountController] propertyForKey:@"Autoresponse" account:nil]];
         
         if (!awayMessage) {
-            awayMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AwayMessage" account:nil]];
+            awayMessage = [NSAttributedString stringWithData:[[adium accountController] propertyForKey:@"AwayMessage" account:nil]];
         }
         
         if(awayMessage && [awayMessage length] != 0){
@@ -153,7 +153,7 @@
                                                           message:awayMessage
                                                         autoreply:YES];
                 
-                [[owner contentController] sendContentObject:responseContent];
+                [[adium contentController] sendContentObject:responseContent];
             }
         }
     }
@@ -207,17 +207,17 @@
     
     //Add it to the menubar
     if([self shouldConfigureForAway]){
-        [[owner menuController] addMenuItem:menuItem_removeAway toLocation:LOC_File_Status];
+        [[adium menuController] addMenuItem:menuItem_removeAway toLocation:LOC_File_Status];
          if ([NSApp isOnPantherOrBetter]) {
-             [[owner menuController] addMenuItem:menuItem_removeAway_alternate toLocation:LOC_File_Status];
+             [[adium menuController] addMenuItem:menuItem_removeAway_alternate toLocation:LOC_File_Status];
          }
-        [[owner menuController] addMenuItem:menuItem_dockRemoveAway toLocation:LOC_Dock_Status];
+        [[adium menuController] addMenuItem:menuItem_dockRemoveAway toLocation:LOC_Dock_Status];
     }else{
-        [[owner menuController] addMenuItem:menuItem_away toLocation:LOC_File_Status];
+        [[adium menuController] addMenuItem:menuItem_away toLocation:LOC_File_Status];
         if ([NSApp isOnPantherOrBetter]) {
-            [[owner menuController] addMenuItem:menuItem_away_alternate toLocation:LOC_File_Status];
+            [[adium menuController] addMenuItem:menuItem_away_alternate toLocation:LOC_File_Status];
         }
-        [[owner menuController] addMenuItem:menuItem_dockAway toLocation:LOC_Dock_Status];
+        [[adium menuController] addMenuItem:menuItem_dockAway toLocation:LOC_Dock_Status];
     }
     
     //Update the menu content
@@ -237,7 +237,7 @@
 //Is the user currently away?
 - (BOOL)shouldConfigureForAway
 {
-    return(([[owner accountController] propertyForKey:@"AwayMessage" account:nil] != nil) && ![NSEvent optionKey]);
+    return(([[adium accountController] propertyForKey:@"AwayMessage" account:nil] != nil) && ![NSEvent optionKey]);
 }
 
 //Update our menu if the away list changes
@@ -280,7 +280,7 @@
     NSArray	*awayArray;
     
     //Load the saved aways
-    awayArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
+    awayArray = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
     
     //Update the menus
     NSMenu *mainMenuSubmenu = [self _awaySubmenuFromArray:awayArray forMainMenu:YES];

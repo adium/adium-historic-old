@@ -37,15 +37,15 @@
     overlayState = nil;
 
     //Install our preference view and register our default prefs
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_OVERLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DOCK_OVERLAYS];
-    preferences = [[AIStatusOverlayPreferences preferencePaneWithOwner:owner] retain];
-    advancedPrefs = [[AIStatusOverlayAdvancedPreferences preferencePaneWithOwner:owner] retain];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_OVERLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DOCK_OVERLAYS];
+    preferences = [[AIStatusOverlayPreferences preferencePane] retain];
+    advancedPrefs = [[AIStatusOverlayAdvancedPreferences preferencePane] retain];
 
     //Register as a contact observer (So we can catch the unviewed content status flag)
-    [[owner contactController] registerListObjectObserver:self];
+    [[adium contactController] registerListObjectObserver:self];
 
     //Prefs
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
         
     //
@@ -57,7 +57,7 @@
 {
 ///*
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:@"Contact Status Coloring"] == 0){
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:@"Contact Status Coloring"];
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:@"Contact Status Coloring"];
 	
         //Snatch colors from status coloring plugin's prefs    
         signedOffColor = [[[prefDict objectForKey:@"Signed Off Color"] representedColor] retain];
@@ -71,7 +71,7 @@
  //*/
     
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DOCK_OVERLAYS] == 0){
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS];
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS];
 
         //
         showStatus = [[prefDict objectForKey:KEY_DOCK_SHOW_STATUS] boolValue];
@@ -123,7 +123,7 @@
 {
     //Remove & release the current overlay state
     if(overlayState){
-        [[owner dockController] removeIconStateNamed:@"ContactStatusOverlay"];
+        [[adium dockController] removeIconStateNamed:@"ContactStatusOverlay"];
         [overlayState release]; overlayState = nil;
     }
 
@@ -131,7 +131,7 @@
     if([unviewedObjectsArray count] != 0){
         //Set the state
         overlayState = [[AIIconState alloc] initWithImages:[NSArray arrayWithObjects:[self overlayImageFlash:NO], [self overlayImageFlash:YES], nil] delay:0.5 looping:YES overlay:YES];
-        [[owner dockController] setIconState:overlayState named:@"ContactStatusOverlay"];
+        [[adium dockController] setIconState:overlayState named:@"ContactStatusOverlay"];
     }   
 }
 
@@ -148,7 +148,7 @@
     NSImage			*image = (flash ? image1 : image2);
 
     //Pre-calc some sizes
-    dockIconScale = 1.0 - [[owner dockController] dockIconScale];
+    dockIconScale = 1.0 - [[adium dockController] dockIconScale];
     iconHeight = (SMALLESTRADIUS + (RADIUSRANGE * dockIconScale));
     if(overlayPosition){
         top = 126;

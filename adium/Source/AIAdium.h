@@ -38,7 +38,6 @@
     NSMutableDictionary                     *eventNotifications;
 }
 
-
 + (NSString *)applicationSupportDirectory;
 - (AILoginController *)loginController;
 - (AIAccountController *)accountController;
@@ -250,7 +249,7 @@ typedef enum {
 - (NSString *)identifier;
 - (NSString *)description;
 - (AIServiceType *)handleServiceType;
-- (id)accountWithProperties:(NSDictionary *)inProperties owner:(id)inOwner;
+- (id)accountWithProperties:(NSDictionary *)inProperties;
 @end
 
 @protocol AIAccountViewController <NSObject>

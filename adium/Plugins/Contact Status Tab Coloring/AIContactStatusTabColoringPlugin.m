@@ -40,14 +40,14 @@
     idleAndAwayColor = nil;
 
     //Setup our preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TAB_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
-    preferences = [[AIContactStatusTabColoringPreferences preferencePaneWithOwner:owner] retain];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TAB_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+    preferences = [[AIContactStatusTabColoringPreferences preferencePane] retain];
 
     //Observe list object changes
-    [[owner contactController] registerListObjectObserver:self];
+    [[adium contactController] registerListObjectObserver:self];
 
     //Observe preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -96,7 +96,7 @@
 
     //Unviewed content
     if(!color && (unviewedContentEnabled && unviewedContent)){
-        if(!unviewedFlashEnabled || !([[owner interfaceController] flashState] % 2)){
+        if(!unviewedFlashEnabled || !([[adium interfaceController] flashState] % 2)){
             color = unviewedContentColor;
         }
     }
@@ -148,7 +148,7 @@
             [self _applyColorToObject:object];
             
             //Force a redraw
-            [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Tab Text Color"] forKey:@"Keys"]];
+            [[adium notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Tab Text Color"] forKey:@"Keys"]];
         }
     }
 }
@@ -158,7 +158,7 @@
 {
     //Ensure that we're observing the flashing
     if([flashingListObjectArray count] == 0){
-        [[owner interfaceController] registerFlashObserver:self];
+        [[adium interfaceController] registerFlashObserver:self];
     }
 
     //Add the contact to our flash array
@@ -173,7 +173,7 @@
 
     //If we have no more flashing contacts, stop observing the flashes
     if([flashingListObjectArray count] == 0){
-        [[owner interfaceController] unregisterFlashObserver:self];
+        [[adium interfaceController] unregisterFlashObserver:self];
     }
 }
 
@@ -181,7 +181,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_STATUS_COLORING] == 0){
-	NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
         NSEnumerator	*enumerator;
 	AIListObject	*object;
 
@@ -206,9 +206,9 @@
         unviewedFlashEnabled = [[prefDict objectForKey:KEY_TAB_UNVIEWED_FLASH_ENABLED] boolValue];
             
         //Force each contact to update (Messy)
-	enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+	enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
 	while((object = [enumerator nextObject])){
-            [[owner contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
+            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
 	}
     }
 }

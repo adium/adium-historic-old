@@ -6,17 +6,14 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-@class AIAdium;
-
 @interface AIStatusSelectionView : NSView {
-    AIAdium				*owner;
+    AIAdium				*adium;
 
     IBOutlet	NSView			*view_contents;
     IBOutlet	NSPopUpButton		*popUp_status;
-
 }
 
-- (id)initWithFrame:(NSRect)frameRect owner:(id)inOwner;
+- (id)initWithFrame:(NSRect)frameRect;
 - (IBAction)selectNewStatus:(id)sender;
 
 @end

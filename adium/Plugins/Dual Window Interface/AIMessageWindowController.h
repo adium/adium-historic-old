@@ -17,14 +17,13 @@
 #define AIMessageWindow_ControllerOrderChanged 		@"AIMessageWindow_ControllerOrderChanged"
 #define AIMessageWindow_SelectedControllerChanged 	@"AIMessageWindow_SelectedControllerChanged"
 
-@class AIAdium, AIMessageSendingTextView, AIMiniToolbar, AIMessageViewController, AICustomTabsView, AIDualWindowInterfacePlugin;
+@class AIMessageSendingTextView, AIMiniToolbar, AIMessageViewController, AICustomTabsView, AIDualWindowInterfacePlugin;
 @protocol AIContainerInterface, AIInterfaceContainer;
 
-@interface AIMessageWindowController : NSWindowController {
+@interface AIMessageWindowController : AIWindowController {
     IBOutlet	NSTabView		*tabView_messages;
     IBOutlet	AICustomTabsView	*tabView_customTabs;
 
-    AIAdium			*owner;
     BOOL			windowIsClosing;
     AIDualWindowInterfacePlugin<AIContainerInterface> 	*interface;
 
@@ -34,7 +33,7 @@
     float			tabHeight;
 }
 
-+ (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(id <AIContainerInterface>)inInterface;
++ (AIMessageWindowController *)messageWindowControllerForInterface:(id <AIContainerInterface>)inInterface;
 - (IBAction)closeWindow:(id)sender;
 - (NSArray *)messageContainerArray;
 - (NSTabViewItem <AIInterfaceContainer> *)selectedTabViewItemContainer;

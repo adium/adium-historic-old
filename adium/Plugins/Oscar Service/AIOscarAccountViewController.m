@@ -19,7 +19,7 @@
 #define OSCAR_ACCOUNT_VIEW_NIB		@"OscarAccountView"
 
 @interface AIOscarAccountViewController (PRIVATE)
-- (id)initForOwner:(id)inOwner account:(id)inAccount;
+- (id)initForAccount:(id)inAccount;
 - (void)accountStatusChanged:(NSNotification *)notification;
 - (void)initAccountView;
 @end
@@ -27,9 +27,9 @@
 @implementation AIOscarAccountViewController
 
 //
-+ (id)accountViewForOwner:(id)inOwner account:(id)inAccount
++ (id)accountViewForAccount:(id)inAccount
 {
-    return([[[self alloc] initForOwner:inOwner account:inAccount] autorelease]);
+    return([[[self alloc] initForAccount:inAccount] autorelease]);
 }
 
 //
@@ -62,12 +62,11 @@
 
 // Private ------------------------------------------------------------------------------
 //
-- (id)initForOwner:(id)inOwner account:(id)inAccount
+- (id)initForAccount:(id)inAccount
 {
     [super init];
 
     //Retain the owner and account
-    owner = [inOwner retain];
     account = [inAccount retain];
 
     //Open a new instance of the account view

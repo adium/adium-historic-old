@@ -13,18 +13,14 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium;
-
-@interface IdleTimePreferences : NSObject {
-    AIAdium				*owner;
-    
+@interface IdleTimePreferences : AIObject {    
     IBOutlet	NSView			*view_prefView;
     IBOutlet	NSButton		*checkBox_enableIdle;
     IBOutlet	NSTextField		*textField_idleMinutes;
     IBOutlet	NSStepper		*stepper_idleMinutes;
 }
 
-+ (IdleTimePreferences *)idleTimePreferencesWithOwner:(id)inOwner;
++ (IdleTimePreferences *)idleTimePreferences;
 - (IBAction)changePreference:(id)sender;
 
 @end

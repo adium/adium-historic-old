@@ -9,10 +9,9 @@
 #import "JSCEventBezelWindow.h"
 #import "JSCEventBezelView.h"
 
-@interface JSCEventBezelController : NSWindowController {
+@interface JSCEventBezelController : AIWindowController {
     IBOutlet JSCEventBezelWindow    *bezelWindow;
     IBOutlet JSCEventBezelView      *bezelView;
-    AIAdium                         *owner;
     
     int                             bezelPosition, bezelDuration;
     BOOL                            imageBadges, useBuddyIconLabel, useBuddyNameLabel;
@@ -25,7 +24,7 @@
     BOOL                            includeText;
 }
 
-+ (JSCEventBezelController *)eventBezelControllerForOwner:(id)inOwner;
++ (JSCEventBezelController *)eventBezelController;
 
 - (void)showBezelWithContact:(NSString *)contactName
 withImage:(NSImage *)buddyIcon

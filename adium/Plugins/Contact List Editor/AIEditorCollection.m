@@ -20,11 +20,10 @@
 
 @implementation AIEditorCollection
 
-- (id)initWithOwner:(id)inOwner
+- (id)init
 {
     [super init];
 
-    owner = [inOwner retain];
     list = [[NSMutableArray alloc] init];
     sortMode = AISortByName;
     controlledChanges = NO;
@@ -35,7 +34,6 @@
 
 - (void)dealloc
 {
-    [owner release];
     [list release];
     
     [super dealloc];
@@ -389,7 +387,7 @@ int _indexSort(AIEditorListHandle *objectA, AIEditorListHandle *objectB, void *c
 //For subclassers:
 - (void)_addGroup:(AIEditorListGroup *)group{
     [list addObject:group];
-    [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:self userInfo:[NSDictionary dictionaryWithObject:group forKey:@"Object"]];
+    [[adium notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:self userInfo:[NSDictionary dictionaryWithObject:group forKey:@"Object"]];
 }
 
 - (void)_moveGroup:(AIEditorListGroup *)group toIndex:(int)index{
@@ -397,25 +395,25 @@ int _indexSort(AIEditorListHandle *objectA, AIEditorListHandle *objectB, void *c
     if([list indexOfObject:group] < index) index--;
 
     [list removeObject:group];
-    [[owner notificationCenter] postNotificationName:Editor_RemovedObjectFromCollection object:self userInfo:[NSDictionary dictionaryWithObject:group forKey:@"Object"]];
+    [[adium notificationCenter] postNotificationName:Editor_RemovedObjectFromCollection object:self userInfo:[NSDictionary dictionaryWithObject:group forKey:@"Object"]];
 
     [list insertObject:group atIndex:index];
-    [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:self userInfo:[NSDictionary dictionaryWithObject:group forKey:@"Object"]];
+    [[adium notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:self userInfo:[NSDictionary dictionaryWithObject:group forKey:@"Object"]];
 }
 
 - (void)_renameGroup:(AIEditorListGroup *)group to:(NSString *)name{
     [group setUID:name];
-    [[owner notificationCenter] postNotificationName:Editor_RenamedObjectOnCollection object:self userInfo:[NSDictionary dictionaryWithObject:group forKey:@"Object"]];
+    [[adium notificationCenter] postNotificationName:Editor_RenamedObjectOnCollection object:self userInfo:[NSDictionary dictionaryWithObject:group forKey:@"Object"]];
 }
 
 - (void)_deleteGroup:(AIEditorListGroup *)group{
     [list removeObject:group];
-    [[owner notificationCenter] postNotificationName:Editor_RemovedObjectFromCollection object:self userInfo:[NSDictionary dictionaryWithObject:group forKey:@"Object"]];
+    [[adium notificationCenter] postNotificationName:Editor_RemovedObjectFromCollection object:self userInfo:[NSDictionary dictionaryWithObject:group forKey:@"Object"]];
 }
 
 - (void)_addHandle:(AIEditorListHandle *)handle toGroup:(AIEditorListGroup *)group index:(int)index{
     [group addHandle:handle toIndex:index];
-    [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:self userInfo:[NSDictionary dictionaryWithObject:handle forKey:@"Object"]];
+    [[adium notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:self userInfo:[NSDictionary dictionaryWithObject:handle forKey:@"Object"]];
 }
 
 - (void)_moveHandle:(AIEditorListHandle *)handle toGroup:(AIEditorListGroup *)group index:(int)index{
@@ -423,20 +421,20 @@ int _indexSort(AIEditorListHandle *objectA, AIEditorListHandle *objectB, void *c
     if([handle containingGroup] == group && [group indexOfHandle:handle] < index) index--;
 
     [[handle containingGroup] removeHandle:handle];
-    [[owner notificationCenter] postNotificationName:Editor_RemovedObjectFromCollection object:self userInfo:[NSDictionary dictionaryWithObject:handle forKey:@"Object"]];
+    [[adium notificationCenter] postNotificationName:Editor_RemovedObjectFromCollection object:self userInfo:[NSDictionary dictionaryWithObject:handle forKey:@"Object"]];
 
     [group addHandle:handle toIndex:index];
-    [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:self userInfo:[NSDictionary dictionaryWithObject:handle forKey:@"Object"]];
+    [[adium notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:self userInfo:[NSDictionary dictionaryWithObject:handle forKey:@"Object"]];
 }
 
 - (void)_deleteHandle:(AIEditorListHandle *)handle{
     [[handle containingGroup] removeHandle:handle];
-    [[owner notificationCenter] postNotificationName:Editor_RemovedObjectFromCollection object:self userInfo:[NSDictionary dictionaryWithObject:handle forKey:@"Object"]];
+    [[adium notificationCenter] postNotificationName:Editor_RemovedObjectFromCollection object:self userInfo:[NSDictionary dictionaryWithObject:handle forKey:@"Object"]];
 }
 
 - (void)_renameHandle:(AIEditorListHandle *)handle to:(NSString *)name{
     [handle setUID:name];
-    [[owner notificationCenter] postNotificationName:Editor_RenamedObjectOnCollection object:self userInfo:[NSDictionary dictionaryWithObject:handle forKey:@"Object"]];
+    [[adium notificationCenter] postNotificationName:Editor_RenamedObjectOnCollection object:self userInfo:[NSDictionary dictionaryWithObject:handle forKey:@"Object"]];
 }
 
 @end

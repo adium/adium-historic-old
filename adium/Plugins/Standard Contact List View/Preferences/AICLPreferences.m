@@ -25,7 +25,6 @@
 //The outline view plugin is responsible for reading & setting the preferences, as well as observing changes in them
 
 @interface AICLPreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
 - (void)configureView;
 - (void)changeFont:(id)sender;
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;
@@ -35,9 +34,9 @@
 
 @implementation AICLPreferences
 //
-+ (AICLPreferences *)contactListPreferencesWithOwner:(id)inOwner
++ (AICLPreferences *)contactListPreferences
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
 //Called in response to all preference controls, applies new settings
@@ -45,7 +44,7 @@
 {
 
     if(sender == button_setFont){
-        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
         NSFontManager	*fontManager = [NSFontManager sharedFontManager];
         NSFont		*contactListFont = [[preferenceDict objectForKey:KEY_SCL_FONT] representedFont];
 
@@ -58,32 +57,32 @@
         [fontManager orderFrontFontPanel:self];
         
     }else if(sender == checkBox_alternatingGrid){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SCL_ALTERNATING_GRID
                                               group:PREF_GROUP_CONTACT_LIST];
 
     }else if(sender == checkBox_showLabels){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SCL_SHOW_LABELS
                                               group:PREF_GROUP_CONTACT_LIST];
 
     }else if(sender == colorWell_group){
-        [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_GROUP_COLOR
                                               group:PREF_GROUP_CONTACT_LIST];        
 
     }else if(sender == colorWell_contact){
-        [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_CONTACT_COLOR
                                               group:PREF_GROUP_CONTACT_LIST];
 
     }else if(sender == colorWell_grid){
-        [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_GRID_COLOR
                                               group:PREF_GROUP_CONTACT_LIST];
         
     }else if(sender == colorWell_background){
-        [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_BACKGROUND_COLOR
                                               group:PREF_GROUP_CONTACT_LIST];    
 
@@ -91,23 +90,23 @@
         float	opacity = (100.0 - [sender floatValue]) * 0.01;
         
         [self showOpacityPercent];
-        [[owner preferenceController] setPreference:[NSNumber numberWithFloat:opacity]
+        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:opacity]
                                              forKey:KEY_SCL_OPACITY
                                               group:PREF_GROUP_CONTACT_LIST];
         */
     }else if(sender == checkBox_boldGroups){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SCL_BOLD_GROUPS
                                               group:PREF_GROUP_CONTACT_LIST];
 
     }else if(sender == checkBox_customGroupColor){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SCL_CUSTOM_GROUP_COLOR
                                               group:PREF_GROUP_CONTACT_LIST];
         [self configureControlDimming];
         
     }else if(sender == colorWell_group){
-        [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_GROUP_COLOR
                                               group:PREF_GROUP_CONTACT_LIST];
     }
@@ -124,22 +123,21 @@
 
     //Update the displayed font string & preferences
     [self showFont:contactListFont inField:textField_fontName];
-    [[owner preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_SCL_FONT group:PREF_GROUP_CONTACT_LIST];
+    [[adium preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_SCL_FONT group:PREF_GROUP_CONTACT_LIST];
 }
 
 //init
-- (id)initWithOwner:(id)inOwner
+- (id)init
 {
     //Init
     [super init];
-    owner = [inOwner retain];
 
     //Register our preference panes
     generalPane = [AIPreferencePane preferencePaneInCategory:AIPref_ContactList_General withDelegate:self label:CL_PREF_GENERAL_TITLE];
-    [[owner preferenceController] addPreferencePane:generalPane];
+    [[adium preferenceController] addPreferencePane:generalPane];
 
     groupsPane = [AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Groups withDelegate:self label:CL_PREF_GROUPS_TITLE];
-    [[owner preferenceController] addPreferencePane:groupsPane];
+    [[adium preferenceController] addPreferencePane:groupsPane];
 
     
     return(self);    
@@ -191,7 +189,7 @@
 //Configure our view for the current preferences
 - (void)configureView
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
 
     //Display
     [self showFont:[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont] inField:textField_fontName];

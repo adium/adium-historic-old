@@ -17,7 +17,7 @@
 
 @class AIPreferenceViewController;
 
-@interface AIPreferenceCategory : NSObject {
+@interface AIPreferenceCategory : AIObject {
     NSString		*name;
     NSImage		*image;
     NSMutableArray	*viewArray;

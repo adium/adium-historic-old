@@ -41,8 +41,8 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 -(IBAction)selectedAlert:(id)sender
 {  
     //Get the current dictionary
-    NSDictionary *currentDict = [[[owner contactAlertsController] currentDictForContactAlert:self] retain];
-    AIListObject *activeContactObject = [[[owner contactAlertsController] currentObjectForContactAlert:self] retain];
+    NSDictionary *currentDict = [[[adium contactAlertsController] currentDictForContactAlert:self] retain];
+    AIListObject *activeContactObject = [[[adium contactAlertsController] currentObjectForContactAlert:self] retain];
     
     NSString            *details = [currentDict objectForKey:KEY_EVENT_DETAILS];
     NSMutableDictionary *detailsDict;
@@ -71,7 +71,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         }
         
         //Configure the Send From: menu
-        NSEnumerator * accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+        NSEnumerator * accountEnumerator = [[[adium accountController] accountArray] objectEnumerator];
 
         //enumerate the accounts, stopping as soon as one is not offline (and is therefore online)
         while( (account = [accountEnumerator nextObject]) && ([[account propertyForKey:@"Status"] intValue] == STATUS_OFFLINE) );
@@ -88,11 +88,11 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         //Send message to:
         NSString *uid = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_UID];
         NSString *service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
-        AIListContact *contact = [[owner contactController] contactInGroup:nil withService:service UID:uid];
+        AIListContact *contact = [[adium contactController] contactInGroup:nil withService:service UID:uid];
         [popUp_message_actionDetails_two selectItemAtIndex:[popUp_message_actionDetails_two indexOfItemWithRepresentedObject:contact]];
         
         //Send from account:
-        account = [[owner accountController] accountWithID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
+        account = [[adium accountController] accountWithID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
         [popUp_message_actionDetails_one selectItemAtIndex:[popUp_message_actionDetails_one indexOfItemWithRepresentedObject:account]];
     }
     [self configureWithSubview:view_details_message];
@@ -134,7 +134,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     
     NSEnumerator    *accountEnumerator;
     AIAccount       *account;    
-    accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+    accountEnumerator = [[[adium accountController] accountArray] objectEnumerator];
     
     while(account = [accountEnumerator nextObject]){
         NSMenuItem 	*menuItem;
@@ -158,7 +158,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 {
     NSMenu		*contactMenu = [[NSMenu alloc] init];
     //Build the menu items
-    NSMutableArray		*contactArray =  [[owner contactController] allContactsInGroup:nil subgroups:YES];
+    NSMutableArray		*contactArray =  [[adium contactController] allContactsInGroup:nil subgroups:YES];
     if ([contactArray count])
     {
         [contactArray sortUsingFunction:alphabeticalGroupOfflineSort context:nil]; //online buddies will end up at the top, alphabetically

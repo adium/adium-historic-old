@@ -185,7 +185,7 @@
         AIListContact	*containingContact;
 
         //The account code is now responsible for creating the AIChat instance for communicating with this list object.  You need to create it:
-        chat = [AIChat chatWithOwner:owner forAccount:self];
+        chat = [AIChat chatForAccount:self];
 
         //Then, you need to set the chat participants...  (You can add and remove participants later on and it will all work as expected :) )
         containingContact = [handle containingContact];
@@ -325,7 +325,7 @@
 
 - (id <AIAccountViewController>)accountView
 {
-    return([MSNAccountViewController accountViewForOwner:owner account:self]);
+    return([MSNAccountViewController accountViewForAccount:self]);
 }
 
 - (NSString *)accountID //unique throught the whole app

@@ -41,13 +41,12 @@
 
 @implementation AIContactListGeneration
 
-- (id)initWithContactList:(AIListGroup *)inContactList owner:(id)inOwner
+- (id)initWithContactList:(AIListGroup *)inContactList
 {
     [super init];
 
     //
     contactList = [inContactList retain];
-    owner = [inOwner retain];
     groupDict = [[NSMutableDictionary alloc] init];
     abandonedContacts = [[NSMutableDictionary alloc] init];
     abandonedGroups = [[NSMutableDictionary alloc] init];
@@ -60,7 +59,7 @@
 {
     if([self _addHandle:inHandle generatingList:NO]){ //Add the handle
         //Let everyone know the contact list changed
-        [[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
+        [[adium notificationCenter] postNotificationName:Contact_ListChanged object:nil];
     }
 }
 
@@ -74,7 +73,7 @@
     //Remove ALL status flags from the handle, and give observers a chance to remove their attributes
     statusKeyArray = [[inHandle statusDictionary] allKeys];
     [[inHandle statusDictionary] removeAllObjects];
-    [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:statusKeyArray delayed:NO silent:YES];
+    [[adium contactController] handleStatusChanged:inHandle modifiedStatusKeys:statusKeyArray delayed:NO silent:YES];
 
     //Remove the handle
     [containingContact removeHandle:inHandle];
@@ -88,7 +87,7 @@
     }
         
     //Let everyone know the contact list changed
-    [[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
+    [[adium notificationCenter] postNotificationName:Contact_ListChanged object:nil];
 }
 
 //Handles have changed and the contact list must be rebuild
@@ -102,7 +101,7 @@
     [groupDict release]; groupDict = [[NSMutableDictionary alloc] init];
     
     //Process every handle of every account
-    accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+    accountEnumerator = [[[adium accountController] accountArray] objectEnumerator];
     while((account = [accountEnumerator nextObject])){
         if([account conformsToProtocol:@protocol(AIAccount_Handles)]){
             NSEnumerator	*handleEnumerator;
@@ -116,8 +115,8 @@
     }
     
     //Resort the contact list, and let everyone know it changed
-    [[owner contactController] sortListGroup:contactList mode:AISortGroupAndSubGroups];
-    [[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
+    [[adium contactController] sortListGroup:contactList mode:AISortGroupAndSubGroups];
+    [[adium notificationCenter] postNotificationName:Contact_ListChanged object:nil];
 }
 
 //Saves the expand/collapse state of groups
@@ -129,7 +128,7 @@
     AIListGroup		*group;
     
     //Get the group state dict
-    preferences = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    preferences = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
     groupStateDict = [[preferences objectForKey:KEY_CONTACT_LIST_GROUP_STATE] mutableCopy];
     if(!groupStateDict){
         groupStateDict = [[NSMutableDictionary alloc] init];
@@ -150,7 +149,7 @@
     }
 
     //Save
-    [[owner preferenceController] setPreference:groupStateDict
+    [[adium preferenceController] setPreference:groupStateDict
                                          forKey:KEY_CONTACT_LIST_GROUP_STATE
                                           group:PREF_GROUP_CONTACT_LIST];
 
@@ -168,7 +167,7 @@
 
         //Create the contact
         contact = [[AIListContact alloc] initWithUID:inUID serviceID:inServiceID];
-        [contact setOrderIndex:[[owner contactController] orderIndexOfContact:contact]];
+        [contact setOrderIndex:[[adium contactController] orderIndexOfContact:contact]];
 
         //Shove it right into our abandoned contact cache (It belongs there because it is empty)
         [abandonedContacts setObject:contact forKey:inUID];
@@ -194,7 +193,7 @@
     }
 
     //Does a contact for this handle already exist on our list?
-    contact = [[owner contactController] contactInGroup:contactList withService:[handle serviceID] UID:handleUID serverGroup:nil];
+    contact = [[adium contactController] contactInGroup:contactList withService:[handle serviceID] UID:handleUID serverGroup:nil];
     if(contact){ //If it does
         NSString	*groupName;
 
@@ -225,7 +224,7 @@
         }else{ //If it doesn't
             //create a new contact
             contact = [[AIListContact alloc] initWithUID:handleUID serviceID:[handle serviceID]];
-            [contact setOrderIndex:[[owner contactController] orderIndexOfContact:contact]];
+            [contact setOrderIndex:[[adium contactController] orderIndexOfContact:contact]];
 
             [[self _getGroupNamed:serverGroup] addObject:contact];
 
@@ -235,7 +234,7 @@
     }
 
     //Give observers a chance to add attributes for the new handle
-    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:nil delayed:YES silent:YES];
+    [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:nil delayed:YES silent:YES];
 
     return(updateList);
 }
@@ -259,7 +258,7 @@
         }else{ //If it doesn't
             //Create the group
             group = [[[AIListGroup alloc] initWithUID:serverGroup] autorelease];
-            [group setOrderIndex:[[owner contactController] orderIndexOfGroup:group]];
+            [group setOrderIndex:[[adium contactController] orderIndexOfGroup:group]];
 
             [self _correctlyExpandCollapseGroup:group];		//Correctly set the group as expanded or collapsed
             [contactList addObject:group];			//Add the group to our contact list
@@ -274,7 +273,7 @@
 //Sets the specified group to the correct expanded/collapsed state
 - (void)_correctlyExpandCollapseGroup:(AIListGroup *)group
 {
-    NSNumber	*expandedNum = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST] objectForKey:KEY_CONTACT_LIST_GROUP_STATE] objectForKey:[group UID]];
+    NSNumber	*expandedNum = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST] objectForKey:KEY_CONTACT_LIST_GROUP_STATE] objectForKey:[group UID]];
     BOOL	expanded;
 
     //Default to expanded
@@ -295,7 +294,7 @@
     AIAccount		*account;
 
     //Walk our way down the account list, looking for the first account with a handle in this contact
-    accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+    accountEnumerator = [[[adium accountController] accountArray] objectEnumerator];
     while((account = [accountEnumerator nextObject])){
         AIHandle		*contactHandle;
 
@@ -322,12 +321,12 @@
     //Remove the contact from its current group, and resort
     containingGroup = [contact containingGroup];
     [containingGroup removeObject:contact];	
-    [[owner contactController] sortListGroup:containingGroup mode:AISortGroupAndSuperGroups];
+    [[adium contactController] sortListGroup:containingGroup mode:AISortGroupAndSuperGroups];
 
     //Add the contact from its new group, and resort
     containingGroup = [self _getGroupNamed:groupName];
     [containingGroup addObject:contact];
-    [[owner contactController] sortListGroup:containingGroup mode:AISortGroupAndSuperGroups];
+    [[adium contactController] sortListGroup:containingGroup mode:AISortGroupAndSuperGroups];
 
     [contact release];
 }

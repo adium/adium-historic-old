@@ -23,15 +23,15 @@
 
 - (void)installPlugin
 {
-    [[owner contactController] registerListObjectObserver:self];
+    [[adium contactController] registerListObjectObserver:self];
 
     //Observe contact status changes
-    [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusAwayYes:) name:@"Contact_StatusAwayYes" object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusAwayNo:) name:@"Contact_StatusAwayNo" object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusOnlineYes:) name:@"Contact_StatusOnlineYes" object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusOnlineNO:) name:@"Contact_StatusOnlineNO" object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusIdleYes:) name:@"Contact_StatusIdleYes" object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusIdleNo:) name:@"Contact_StatusIdleNo" object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusAwayYes:) name:@"Contact_StatusAwayYes" object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusAwayNo:) name:@"Contact_StatusAwayNo" object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusOnlineYes:) name:@"Contact_StatusOnlineYes" object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusOnlineNO:) name:@"Contact_StatusOnlineNO" object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusIdleYes:) name:@"Contact_StatusIdleYes" object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusIdleNo:) name:@"Contact_StatusIdleNo" object:nil];
 }
 
 //Catch away message changes and display them
@@ -86,7 +86,7 @@
     NSEnumerator	*enumerator;
     AIChat		*chat;
 
-    enumerator = [[[owner contentController] allChatsWithListObject:object] objectEnumerator];
+    enumerator = [[[adium contentController] allChatsWithListObject:object] objectEnumerator];
     while((chat = [enumerator nextObject])){
         AIContentStatus	*content;
         
@@ -98,7 +98,7 @@
                                         message:[NSString stringWithFormat:message,[object displayName]]];
 
         //Add the object
-        [[owner contentController] addIncomingContentObject:content];
+        [[adium contentController] addIncomingContentObject:content];
     }
 }
 

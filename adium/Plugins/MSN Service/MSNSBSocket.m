@@ -10,7 +10,7 @@
 #import "MSNAccount.h"
 
 @interface MSNSBSocket(PRIVATE)
-- (MSNSBSocket *)initWithIP:(NSString *)ip andPort:(int)port forAccount:(MSNAccount *)account owner:(AIAdium *)setOwner;
+- (MSNSBSocket *)initWithIP:(NSString *)ip andPort:(int)port forAccount:(MSNAccount *)account;
 - (void)_myLifeIsEnded;
 - (void)_handleJoin:(NSString *)handle withFriendlyName:(NSString *)fName;
 - (void)_handleLeave:(NSString *) handle;
@@ -22,14 +22,14 @@
 /* PUBLIC METHODS */
 /******************/
 
-+ (MSNSBSocket *)socketWithIP:(NSString *)ip andPort:(int)port forAccount:(MSNAccount *)account owner:(AIAdium *)setOwner
++ (MSNSBSocket *)socketWithIP:(NSString *)ip andPort:(int)port forAccount:(MSNAccount *)account
 {
-    return ([[[self alloc] initWithIP:ip andPort:port forAccount:account owner:setOwner] autorelease]);
+    return ([[[self alloc] initWithIP:ip andPort:port forAccount:account] autorelease]);
 }
 
-+ (MSNSBSocket *)socketWithIP:(NSString *)ip andPort:(int)port forAccount:(MSNAccount *)account  owner:(AIAdium *)setOwner authenticationString:(NSString *)authStr sessionID:(NSString *)sesID
++ (MSNSBSocket *)socketWithIP:(NSString *)ip andPort:(int)port forAccount:(MSNAccount *)account authenticationString:(NSString *)authStr sessionID:(NSString *)sesID
 {
-    MSNSBSocket	*sock = [MSNSBSocket socketWithIP:ip andPort:port forAccount:account owner:setOwner];
+    MSNSBSocket	*sock = [MSNSBSocket socketWithIP:ip andPort:port forAccount:account];
     [sock sendPacket:[NSString stringWithFormat:@"ANS 1 %@ %@ %@\r\n",
         [account UID], authStr, sesID]];
     return (sock);
@@ -136,19 +136,19 @@
                         // Not typing anymore, they sent!
                         [[handle statusDictionary]
                             setObject:[NSNumber numberWithInt:NO] forKey:@"Typing"];
-                        [[owner contactController] handleStatusChanged:handle
+                        [[adium contactController] handleStatusChanged:handle
                                                     modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]
                                                                delayed:NO
                                                                 silent:NO];
                         
                         //Add a content object for the message
-                        messageObject = [AIContentMessage messageInChat:[[owner contentController]  openChatOnAccount:ourAccount withListObject:contact]
+                        messageObject = [AIContentMessage messageInChat:[[adium contentController]  openChatOnAccount:ourAccount withListObject:contact]
                                                              withSource:contact
                                                             destination:ourAccount
                                                                    date:nil
                                                                 message:[[[NSAttributedString alloc] initWithString:[messageLoad objectForKey:@"MSG Body"]] autorelease]
                                                               autoreply:NO];
-                        [[owner contentController] addIncomingContentObject:messageObject];
+                        [[adium contentController] addIncomingContentObject:messageObject];
                     }
                     else if([messageLoad objectForKey:@"TypingUser"] != nil)
                     {
@@ -158,7 +158,7 @@
 
                         [[handle statusDictionary]
                             setObject:[NSNumber numberWithInt:YES] forKey:@"Typing"];
-                        [[owner contactController] handleStatusChanged:handle
+                        [[adium contactController] handleStatusChanged:handle
                                                     modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]
                                                                delayed:NO
                                                                 silent:NO];
@@ -266,9 +266,8 @@
 /* PRIVATE METHODS */
 /*******************/
 
-- (MSNSBSocket *)initWithIP:(NSString *)ip andPort:(int)port forAccount:(MSNAccount *)account owner:setOwner
+- (MSNSBSocket *)initWithIP:(NSString *)ip andPort:(int)port forAccount:(MSNAccount *)account
 {
-    owner = setOwner;
     socket = [[AISocket socketWithHost:ip port:port] retain];
     ourAccount = [account retain];
     participantsDict = [[NSMutableDictionary alloc] init];

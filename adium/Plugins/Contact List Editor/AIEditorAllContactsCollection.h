@@ -15,12 +15,12 @@
 
 #import "AIEditorCollection.h"
 
-@class AIAdium, AIEditorListGroup, AIEditorAccountCollection, AIContactListEditorPlugin;
+@class AIEditorListGroup, AIEditorAccountCollection, AIContactListEditorPlugin;
 
 @interface AIEditorAllContactsCollection : AIEditorCollection {
     AIContactListEditorPlugin		*plugin;
 }
 
-+ (AIEditorAllContactsCollection *)allContactsCollectionWithOwner:(id)inOwner plugin:(id)inPlugin;
++ (AIEditorAllContactsCollection *)allContactsCollectionForPlugin:(id)inPlugin;
 
 @end

@@ -28,16 +28,16 @@
 - (void)installPlugin
 {
     //Register as an entry filter
-    [[owner contentController] registerTextEntryFilter:self];
+    [[adium contentController] registerTextEntryFilter:self];
 
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DEFAULT_FORMATTING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_FORMATTING];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DEFAULT_FORMATTING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_FORMATTING];
 
     //Our preference view
-    preferences = [[AIDefaultFormattingPreferences preferencePaneWithOwner:owner] retain];
+    preferences = [[AIDefaultFormattingPreferences preferencePane] retain];
 
     //Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -54,7 +54,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
 /*    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DOCK_BEHAVIOR] == 0){
-        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
+        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
 
     }*/
 }
@@ -74,7 +74,7 @@
     NSFont			*font;
 
     //Get the prefs
-    prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
+    prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
     font = [[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont];
     textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
     backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];

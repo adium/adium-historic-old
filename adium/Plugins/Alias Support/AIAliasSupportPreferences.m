@@ -12,27 +12,25 @@
 #define DISPLAYFORMAT_PREF_NIB		@"DisplayFormatPreferences"
 
 @interface AIAliasSupportPreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
 - (void)configureView;
 - (NSMutableAttributedString *)colorKeyWords:(NSString *)theString;
 @end
 
 @implementation AIAliasSupportPreferences
-+ (AIAliasSupportPreferences *)displayFormatPreferencesWithOwner:(id)inOwner
++ (AIAliasSupportPreferences *)displayFormatPreferences
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
 //private
 //init
-- (id)initWithOwner:(id)inOwner
+- (id)init
 {
     //Init
     [super init];
-    owner = [inOwner retain];
 
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Contacts withDelegate:self label:DISPLAYFORMAT_PREF_TITLE]];
+    [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Contacts withDelegate:self label:DISPLAYFORMAT_PREF_TITLE]];
 
     return(self);
 }
@@ -93,18 +91,17 @@
 
     [format_menu setMenu:choicesMenu];
 
-    [format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[[owner preferenceController] preferenceForKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT object:nil] intValue]]];
+    [format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[[adium preferenceController] preferenceForKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT object:nil] intValue]]];
 
 }
 
 -(IBAction)changeFormat:(id) sender
 {
-    [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]] forKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT object:nil];
+    [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]] forKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT object:nil];
 }
 
 - (void)dealloc
 {
-    [owner release];
     [super dealloc];
 }
 

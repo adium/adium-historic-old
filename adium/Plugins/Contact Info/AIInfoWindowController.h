@@ -6,21 +6,17 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-@class AIAdium, AIListContact;
+@class AIListContact;
 @protocol AIListObjectObserver;
 
-@interface AIInfoWindowController : NSWindowController <AIListObjectObserver> {
+@interface AIInfoWindowController : AIWindowController <AIListObjectObserver> {
     IBOutlet	NSTextView	*textView_contactProfile;
 
-    AIAdium		*owner;
-
     AIListContact	*activeContactObject;
-    
     NSTimer             *timer;
-    
 }
 
-+ (id)showInfoWindowWithOwner:(id)inOwner forContact:(AIListContact *)inContact;
++ (id)showInfoWindowForContact:(AIListContact *)inContact;
 + (void)closeTextProfileWindow;
 - (void)configureWindowForContact:(AIListContact *)inContact;
 - (void)displayInfo:(NSAttributedString *)infoString;

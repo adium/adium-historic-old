@@ -29,15 +29,15 @@
 - (void)installPlugin
 {
     //Setup our preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
-    preferences = [[AISendingKeyPreferences preferencePaneWithOwner:owner] retain];
-    preferencesAdvanced = [[AISendingKeyPreferencesAdvanced preferencePaneWithOwner:owner] retain];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
+    preferences = [[AISendingKeyPreferences preferencePane] retain];
+    preferencesAdvanced = [[AISendingKeyPreferencesAdvanced preferencePane] retain];
     
     //Register as a text entry filter
-    [[owner contentController] registerTextEntryFilter:self];
+    [[adium contentController] registerTextEntryFilter:self];
 
     //Observe preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 
 }
@@ -62,7 +62,7 @@
         id		entryView;
 
         //Set sending keys of all open views
-        enumerator = [[[owner contentController] openTextEntryViews] objectEnumerator];
+        enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
         while(entryView = [enumerator nextObject]){
             [self _configureSendingKeysForObject:entryView];
         }
@@ -73,8 +73,8 @@
 - (void)_configureSendingKeysForObject:(id)inObject
 {
     if([inObject isKindOfClass:[AISendingTextView class]]){
-        [(AISendingTextView *)inObject setSendOnEnter:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Enter"] boolValue]];
-        [(AISendingTextView *)inObject setSendOnReturn:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Return"] boolValue]];
+        [(AISendingTextView *)inObject setSendOnEnter:[[[[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Enter"] boolValue]];
+        [(AISendingTextView *)inObject setSendOnReturn:[[[[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Return"] boolValue]];
     }
 }
 

@@ -94,7 +94,7 @@ const int STARTUP_TIME = 20;
         BOOL            handleIsOnline;
 
         //Create the chat
-        chat = [AIChat chatWithOwner:owner forAccount:self];
+        chat = [AIChat chatForAccount:self];
 
         //NSLog(@"adding list object %@ containingContact %@",[handle UID],[handle containingContact]);
         //Set the chat participants
@@ -213,7 +213,7 @@ const int STARTUP_TIME = 20;
 
 - (id <AIAccountViewController>)accountView
 {
-    return([JabberAccountViewController accountViewForOwner:owner account:self]);
+    return([JabberAccountViewController accountViewForAccount:self]);
 }
 
 - (NSString *)accountID //unique throught the whole app

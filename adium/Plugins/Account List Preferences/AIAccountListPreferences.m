@@ -73,7 +73,7 @@
     [button_deleteAccount setImage:[AIImageUtilities imageNamed:@"minus" forClass:[self class]]];
     
     //Configure the service list
-    enumerator = [[[owner accountController] availableServiceArray] objectEnumerator];
+    enumerator = [[[adium accountController] availableServiceArray] objectEnumerator];
     [popupMenu_serviceList removeAllItems];
     while((service = [enumerator nextObject])){
         NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service description] target:self action:@selector(selectServiceType:) keyEquivalent:@""] autorelease];
@@ -83,9 +83,9 @@
     }
     
     //Install our observers
-    [[owner notificationCenter] addObserver:self selector:@selector(refreshAccountList) name:Account_PropertiesChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(refreshAccountList) name:Account_PropertiesChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
     
     //Refresh our view
     [self updateAccountList];
@@ -97,7 +97,7 @@
 {
     [view_accountPreferences release]; view_accountPreferences = nil;
     [accountViewController release]; accountViewController = nil;
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
 }
     
 //The properties of our account changed
@@ -111,7 +111,7 @@
     if(notification == nil || ([key compare:@"Online"] == 0 && account == selectedAccount)){
         if(notification == nil) account = selectedAccount;
 	
-        isOnline = [[[owner accountController] propertyForKey:@"Online" account:account] boolValue];
+        isOnline = [[[adium accountController] propertyForKey:@"Online" account:account] boolValue];
         [popupMenu_serviceList setEnabled:!isOnline];
     }
 }
@@ -142,7 +142,7 @@
     [popupMenu_serviceList selectItemAtIndex:[popupMenu_serviceList indexOfItemWithRepresentedObject:[selectedAccount service]]];
 
     //Configure the auto-connect button
-    autoConnect = [[[owner accountController] propertyForKey:@"AutoConnect" account:selectedAccount] boolValue];
+    autoConnect = [[[adium accountController] propertyForKey:@"AutoConnect" account:selectedAccount] boolValue];
     [button_autoConnect setState:autoConnect];
     
     //Correctly size the sheet for the account details view
@@ -194,7 +194,7 @@
 
     //Switch it
     [selectedAccount autorelease];
-    selectedAccount = [[[owner accountController] switchAccount:selectedAccount toService:service] retain];
+    selectedAccount = [[[adium accountController] switchAccount:selectedAccount toService:service] retain];
 
     //reconfigure
     [self configureAccountOptionsView];
@@ -206,7 +206,7 @@
     BOOL	autoConnect = [sender state];
     
     //Apply the new value
-    [[owner accountController] setProperty:[NSNumber numberWithBool:autoConnect] forKey:@"AutoConnect" account:selectedAccount];
+    [[adium accountController] setProperty:[NSNumber numberWithBool:autoConnect] forKey:@"AutoConnect" account:selectedAccount];
 }
 
 //Create a new account
@@ -216,7 +216,7 @@
     AIAccount	*newAccount;
 
     //Add the new account
-    newAccount = [[owner accountController] newAccountAtIndex:index];
+    newAccount = [[adium accountController] newAccountAtIndex:index];
     [self refreshAccountList];
 
     //Select the new account
@@ -254,7 +254,7 @@
     if(returnCode == NSAlertDefaultReturn){
         //Delete it
         index = [accountArray indexOfObject:targetAccount];
-        [[owner accountController] deleteAccount:targetAccount];
+        [[adium accountController] deleteAccount:targetAccount];
     
         //If it was the last row, select the new last row (by default the selection will jump to the top, which is bad)
         if(index >= [accountArray count]){
@@ -273,7 +273,7 @@
     //Update the reference
     selectedAccount = nil;
     [accountArray release]; accountArray = nil;
-    accountArray = [[[owner accountController] accountArray] retain];
+    accountArray = [[[adium accountController] accountArray] retain];
 
     //Refresh the table (if the window is loaded)
     [self refreshAccountList];
@@ -293,12 +293,12 @@
     [self updateAccountList];
 
     //if there are no accounts, open the prefs and create one
-    if([[[owner accountController] accountArray] count] == 0){
+    if([[[adium accountController] accountArray] count] == 0){
         //open
-        //[[owner preferenceController] openPreferencesToView:preferenceView];
+        //[[adium preferenceController] openPreferencesToView:preferenceView];
 
         //create
-        [[owner accountController] newAccountAtIndex:0];
+        [[adium accountController] newAccountAtIndex:0];
     
         //edit
         [tableView_accountList selectRow:0 byExtendingSelection:NO];
@@ -332,7 +332,7 @@
 
     //Get the account's status
     if([[account supportedPropertyKeys] containsObject:@"Online"]){
-        status = [[[owner accountController] propertyForKey:@"Status" account:account] intValue];
+        status = [[[adium accountController] propertyForKey:@"Status" account:account] intValue];
     }
 
     image = [AIImageUtilities imageNamed:@"DefaultIcon" forClass:[self class]];
@@ -390,7 +390,7 @@
         int	newIndex;
         
         //Select the moved account
-        newIndex = [[owner accountController] moveAccount:tempDragAccount toIndex:row];
+        newIndex = [[adium accountController] moveAccount:tempDragAccount toIndex:row];
         [tableView_accountList selectRow:newIndex byExtendingSelection:NO];
    
         return(YES);

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium, AIAlternatingRowOutlineView, AIListContact, AILoggerPlugin, AILog;
+@class AIAlternatingRowOutlineView, AIListContact, AILoggerPlugin, AILog;
 
 typedef enum {
     LOG_SEARCH_FROM = 0,
@@ -22,8 +22,7 @@ typedef enum {
     LOG_SEARCH_CONTENT
 } LogSearchMode;
 
-@interface AILogViewerWindowController : NSWindowController {
-    AIAdium					*owner;
+@interface AILogViewerWindowController : AIWindowController {
     AILoggerPlugin				*plugin;
 
     IBOutlet	NSTableView			*tableView_results;
@@ -55,8 +54,8 @@ typedef enum {
 
 }
 
-+ (id)openWithOwner:(id)inOwner plugin:(id)inPlugin;
-+ (id)openForContact:(AIListContact *)inContact withOwner:(id)inOwner plugin:(id)inPlugin;
++ (id)openForPlugin:(id)inPlugin;
++ (id)openForContact:(AIListContact *)inContact plugin:(id)inPlugin;
 + (id)existingWindowController;
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)updateSearch:(id)sender;

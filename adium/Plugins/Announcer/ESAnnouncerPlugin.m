@@ -21,29 +21,29 @@
 - (void)installPlugin
 {
     //Install our contact alert
-    [[owner contactAlertsController] registerContactAlertProvider:self];
+    [[adium contactAlertsController] registerContactAlertProvider:self];
     
     //Setup our preferences
-    preferences = [[ESAnnouncerPreferences preferencePaneWithOwner:owner] retain];
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ANNOUNCER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_ANNOUNCER];
+    preferences = [[ESAnnouncerPreferences preferencePane] retain];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ANNOUNCER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_ANNOUNCER];
 
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_ANNOUNCER_NIB owner:self];
     contactView = [[AIPreferenceViewController controllerWithName:@"Announcer" categoryName:@"None" view:view_contactAnnouncerInfoView delegate:self] retain];
-    [[owner contactController] addContactInfoView:contactView];
-    [popUp_voice addItemsWithTitles:[[owner soundController] voices]];
+    [[adium contactController] addContactInfoView:contactView];
+    [popUp_voice addItemsWithTitles:[[adium soundController] voices]];
     
     observingContent = NO;
     lastSenderString = nil;
     //Observer preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 }
 
 - (void)uninstallPlugin
 {
     //Uninstall our contact alert
-    [[owner contactAlertsController] unregisterContactAlertProvider:self];
+    [[adium contactAlertsController] unregisterContactAlertProvider:self];
     
 }
 
@@ -51,7 +51,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_ANNOUNCER] == 0){
-	NSDictionary * dict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_ANNOUNCER];
+	NSDictionary * dict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ANNOUNCER];
 	speakOutgoing = [[dict objectForKey:KEY_ANNOUNCER_OUTGOING] boolValue];
 	speakIncoming = [[dict objectForKey:KEY_ANNOUNCER_INCOMING] boolValue];
 	speakMessages = speakOutgoing || speakIncoming;
@@ -68,9 +68,9 @@
             observingContent = newValue;
 
             if(!observingContent){ //Stop Observing
-                [[owner notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
+                [[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
             }else{ //Start Observing
-                [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
+                [[adium notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
 	    }
         }
     }
@@ -112,7 +112,7 @@
 		    NSString * senderString;
 		    //Get the sender string
 		  /*  if(isOutgoing){ //speak outgoing message sender names
-			senderString = [[owner accountController] propertyForKey:@"FullName" account:(AIAccount *)source];
+			senderString = [[adium accountController] propertyForKey:@"FullName" account:(AIAccount *)source];
 			if(!senderString || [senderString length] == 0) senderString = [(AIAccount *)source accountDescription];
 		    }else{ */ //incoming message sender name
 			senderString = [(AIListContact *)source displayName];
@@ -167,19 +167,19 @@
 	    NSString	*voice = nil;
 	    NSNumber	*pitchNumber = nil;	float pitch = 0;
 	    NSNumber	*rateNumber = nil;	int rate = 0;
-	    voice = [[owner preferenceController] preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER object:otherPerson];
+	    voice = [[adium preferenceController] preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER object:otherPerson];
 	    
-	    pitchNumber = [[owner preferenceController] preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER object:otherPerson];
+	    pitchNumber = [[adium preferenceController] preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER object:otherPerson];
 	    if(pitchNumber)
 		pitch = [pitchNumber floatValue];
 
-	    rateNumber = [[owner preferenceController] preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER object:otherPerson];
+	    rateNumber = [[adium preferenceController] preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER object:otherPerson];
 	    if(rateNumber)
 		rate = [rateNumber intValue];
 
-	    [[owner soundController] speakText:theMessage withVoice:voice andPitch:pitch andRate:rate];
+	    [[adium soundController] speakText:theMessage withVoice:voice andPitch:pitch andRate:rate];
 	} else { //must be in a chat room - just speak the message
-	[[owner soundController] speakText:theMessage];
+	[[adium soundController] speakText:theMessage];
 	}
     }
 }
@@ -193,25 +193,25 @@
     //Hold onto the object
     [activeListObject release]; activeListObject = nil;
     activeListObject = [inObject retain];
-    voice = [[owner preferenceController] preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER object:activeListObject];
+    voice = [[adium preferenceController] preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER object:activeListObject];
     if(voice) {
         [popUp_voice selectItemWithTitle:voice];
     } else {
         [popUp_voice selectItemAtIndex:0]; //"Default"
     }
 
-    pitchNumber = [[owner preferenceController] preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER object:activeListObject];
+    pitchNumber = [[adium preferenceController] preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER object:activeListObject];
     if(pitchNumber) {
 	[slider_pitch setFloatValue:[pitchNumber floatValue]];
     } else {
-	[slider_pitch setFloatValue:[[owner soundController] defaultPitch]];
+	[slider_pitch setFloatValue:[[adium soundController] defaultPitch]];
     }
 
-    rateNumber = [[owner preferenceController] preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER object:activeListObject];
+    rateNumber = [[adium preferenceController] preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER object:activeListObject];
     if(rateNumber) {
 	[slider_rate setIntValue:[rateNumber intValue]];
     } else {
-	[slider_rate setIntValue:[[owner soundController] defaultRate]];
+	[slider_rate setIntValue:[[adium soundController] defaultRate]];
     }
 }
 
@@ -221,11 +221,11 @@
 	NSString * voice = [popUp_voice titleOfSelectedItem];
 	if ([voice compare:@"Default"] == 0)
 	    voice = nil;
-	[[owner preferenceController] setPreference:voice forKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER object:activeListObject];
+	[[adium preferenceController] setPreference:voice forKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER object:activeListObject];
     } else if (sender == slider_pitch) {
-        [[owner preferenceController] setPreference:[NSNumber numberWithFloat:[slider_pitch floatValue]] forKey:PITCH group:PREF_GROUP_ANNOUNCER object:activeListObject];
+        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:[slider_pitch floatValue]] forKey:PITCH group:PREF_GROUP_ANNOUNCER object:activeListObject];
     } else if (sender == slider_rate) {
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[slider_rate intValue]] forKey:RATE group:PREF_GROUP_ANNOUNCER object:activeListObject];
+        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[slider_rate intValue]] forKey:RATE group:PREF_GROUP_ANNOUNCER object:activeListObject];
     }
 }
 
@@ -240,13 +240,13 @@
 
 - (ESContactAlert *)contactAlert
 {
-    return [ESAnnouncerContactAlert contactAlertWithOwner:owner];   
+    return [ESAnnouncerContactAlert contactAlert];   
 }
 
 //performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
 - (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
 {
-    [[owner soundController] speakText:details];
+    [[adium soundController] speakText:details];
     return YES;
 }
 

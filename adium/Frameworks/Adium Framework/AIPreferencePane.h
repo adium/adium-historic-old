@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIPreferencePane, AIAdium;
+@class AIPreferencePane;
 
 @interface NSObject(AIPreferencePaneDelegate)   //Will be removed, transition only
 - (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane;
@@ -21,8 +21,7 @@
 - (void)restoreDefaultsForPreferencePane:(AIPreferencePane *)preferencePane;
 @end
 
-@interface AIPreferencePane : NSObject {
-    AIAdium                             *owner;
+@interface AIPreferencePane : AIObject {
     id                                  plugin;
     
     IBOutlet	NSView			*view_containerView;    //Will be removed, transition only
@@ -38,8 +37,8 @@
     IBOutlet    NSView                  *view;
 }
 
-+ (AIPreferencePane *)preferencePaneWithOwner:(id)inOwner;
-+ (AIPreferencePane *)preferencePaneWithPlugin:(id)inPlugin owner:(id)inOwner;
++ (AIPreferencePane *)preferencePane;
++ (AIPreferencePane *)preferencePaneForPlugin:(id)inPlugin;
 - (NSComparisonResult)compare:(AIPreferencePane *)inPane;
 - (NSView *)view;
 - (void)closeView;
@@ -47,8 +46,8 @@
 - (NSString *)label;
 - (IBAction)changePreference:(id)sender;
 - (void)configureControlDimming;
-- (id)initWithOwner:(id)inOwner;
-- (id)initWithPlugin:(id)inPlugin owner:(id)inOwner;
+- (id)init;
+- (id)initForPlugin:(id)inPlugin;
 
 
 //Will be removed, transition only

@@ -35,22 +35,22 @@
     idleStringColor		= nil;
 
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_CIRCLES_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STATUS_CIRCLES];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_CIRCLES_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STATUS_CIRCLES];
     [self preferencesChanged:nil];
 
     //Our preference view
-    preferences = [[AIStatusCirclesPreferences statusCirclesPreferencesWithOwner:owner] retain];
-    [[owner contactController] registerListObjectObserver:self];
+    preferences = [[AIStatusCirclesPreferences statusCirclesPreferences] retain];
+    [[adium contactController] registerListObjectObserver:self];
 
     //Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
     //flashingListObjectArray = [[NSMutableArray alloc] init];
 }
 
 - (void)uninstallPlugin
 {
-    //[[owner contactController] unregisterHandleObserver:self];
+    //[[adium contactController] unregisterHandleObserver:self];
 }
 
 - (void)dealloc
@@ -146,7 +146,7 @@
 	[statusCircle setState:((value % 2) ? AICircleFlashA: AICircleFlashB)];
 
 	//Force a redraw
-	[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Left View"] forKey:@"Keys"]];
+	[[adium notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Left View"] forKey:@"Keys"]];
     }
 }
 
@@ -155,12 +155,12 @@
 {
     //Ensure that we're observing the flashing
     if([flashingListObjectArray count] == 0){
-	[[owner interfaceController] registerFlashObserver:self];
+	[[adium interfaceController] registerFlashObserver:self];
     }
 
     //Add the contact to our flash array
     [flashingListObjectArray addObject:inObject];
-    [self flash:[[owner interfaceController] flashState]];
+    [self flash:[[adium interfaceController] flashState]];
 }
 
 //Remove a handle from the flash array
@@ -171,7 +171,7 @@
 
     //If we have no more flashing contacts, stop observing the flashes
     if([flashingListObjectArray count] == 0){
-	[[owner interfaceController] unregisterFlashObserver:self];
+	[[adium interfaceController] unregisterFlashObserver:self];
     }
 }
 */
@@ -203,7 +203,7 @@
     //Optimize this...
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STATUS_CIRCLES] == 0/* ||
        [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:@"Contact Status Coloring"] == 0 */){
-	NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STATUS_CIRCLES];
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STATUS_CIRCLES];
 
 	//Release the old values..
 	//Cache the preference values
@@ -219,10 +219,10 @@
         [AIStatusCircle shouldDisplayIdleTime:displayIdleTime];
         [AIStatusCircle setIsOnLeft:displayStatusCircleOnLeft];
         
-	enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+	enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
 
 	while(object = [enumerator nextObject]){
-            [[owner contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
+            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
         }
     }
 }

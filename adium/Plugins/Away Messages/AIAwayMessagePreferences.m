@@ -22,7 +22,6 @@
 #define AWAY_LIST_IMAGE			@"AwayIcon"		//Away list image filename
 
 @interface AIAwayMessagePreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
 - (void)loadAwayMessages;
 - (void)saveAwayMessages;
 - (int)numberOfRows;
@@ -39,9 +38,9 @@
 
 @implementation AIAwayMessagePreferences
 //
-+ (AIAwayMessagePreferences *)awayMessagePreferencesWithOwner:(id)inOwner
++ (AIAwayMessagePreferences *)awayMessagePreferences
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
 //Create a new away message
@@ -121,17 +120,16 @@
 
 //Private ---------------------------------------------------------------------------
 //init
-- (id)initWithOwner:(id)inOwner
+- (id)init
 {
     //Init
     [super init];
-    owner = [inOwner retain];
     awayMessageArray = nil;
     displayedMessage = nil;
     dragItem = nil;
     
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Status_Away withDelegate:self label:AWAY_MESSAGES_PREF_TITLE]];
+    [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Status_Away withDelegate:self label:AWAY_MESSAGES_PREF_TITLE]];
 
     return(self);
 }
@@ -188,7 +186,7 @@
     [awayMessageArray release];
 
     //Load the saved away messages
-    tempArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
+    tempArray = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
     if(tempArray){
         //Load the aways
         awayMessageArray = [[self _loadAwaysFromArray:tempArray] retain];
@@ -213,7 +211,7 @@
     tempArray = [self _saveArrayFromArray:awayMessageArray];
     
     //Save the away message array
-    [[owner preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
+    [[adium preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
 }
 
 //Private ----------------------------------------------------

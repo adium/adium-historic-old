@@ -16,23 +16,21 @@
 #import "AIPlugin.h"
 
 @interface AIPlugin (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
 - (void)installPlugin;
 @end
 
 @implementation AIPlugin
 
 //Return a new instance of the plugin
-+ (id)newInstanceOfPluginWithOwner:(id)inOwner
++ (id)newInstanceOfPlugin
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
 //Init the plugin
-- (id)initWithOwner:(id)inOwner
+- (id)init
 {
     [super init];
-    owner = [inOwner retain]; //Retain the owner
 
     //Install the plugin
     [self installPlugin];
@@ -43,11 +41,9 @@
 - (void)dealloc
 {
     //Remove observers (general)
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    [owner release];
-
     [super dealloc];
 }
 

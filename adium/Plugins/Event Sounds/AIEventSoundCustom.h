@@ -6,11 +6,9 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-@class AIAdium, AIAlternatingRowTableView;
+@class AIAlternatingRowTableView;
 
-@interface AIEventSoundCustom : NSWindowController {
-    AIAdium		*owner;
-
+@interface AIEventSoundCustom : AIWindowController {
     IBOutlet	AIAlternatingRowTableView	*tableView_sounds;
     IBOutlet	NSPopUpButton			*popUp_addEvent;
 
@@ -20,7 +18,7 @@
     int                                 setRow;
 }
 
-+ (id)showEventSoundCustomPanelWithOwner:(id)inOwner;
++ (id)showEventSoundCustomPanel;
 + (void)closeEventSoundCustomPanel;
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)newEventSound:(id)sender;

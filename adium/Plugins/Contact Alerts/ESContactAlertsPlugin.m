@@ -22,11 +22,11 @@
 
     //Install the 'contact alerts' menu item
     editContactAlertsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit Contact's Alerts" target:self action:@selector(editContactAlerts:) keyEquivalent:@""] autorelease];
-    [[owner menuController] addMenuItem:editContactAlertsMenuItem toLocation:LOC_Contact_Action];
+    [[adium menuController] addMenuItem:editContactAlertsMenuItem toLocation:LOC_Contact_Action];
 
     //Add our 'contact alerts' contextual menu item
     contactAlertsContextMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit Alerts" target:self action:@selector(editContextContactAlerts:) keyEquivalent:@""] autorelease];
-    [[owner menuController] addContextualMenuItem:contactAlertsContextMenuItem toLocation:Context_Contact_Action];
+    [[adium menuController] addContextualMenuItem:contactAlertsContextMenuItem toLocation:Context_Contact_Action];
 
     //Add our 'contact alerts' toolbar item
     toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"ContactAlerts"];
@@ -40,7 +40,7 @@
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
 
     //Install the preference pane
-    prefs = [[ESContactAlertsPreferences contactAlertsPreferencesWithOwner:owner] retain];
+    prefs = [[ESContactAlertsPreferences contactAlertsPreferences] retain];
 }
 
 - (void)uninstallPlugin
@@ -53,7 +53,7 @@
     BOOL valid = YES;
     if(menuItem == editContactAlertsMenuItem) {
 
-        AIListContact	*selectedContact = [[owner contactController] selectedContact];
+        AIListContact	*selectedContact = [[adium contactController] selectedContact];
 
         if(selectedContact){
             [editContactAlertsMenuItem setTitle:[NSString stringWithFormat:@"Edit %@'s Alerts",[selectedContact displayName]]];
@@ -62,21 +62,19 @@
             valid = NO;
         }
     }else if(menuItem == contactAlertsContextMenuItem) {
-        return([[owner menuController] contactualMenuContact] != nil);
+        return([[adium menuController] contactualMenuContact] != nil);
     }
     return(valid);
 }
 
 - (IBAction)editContactAlerts:(id)sender
 {
-    [ESContactAlertsWindowController showContactAlertsWindowWithOwner:owner
-                                                            forObject:[[owner contactController] selectedContact]];
+    [ESContactAlertsWindowController showContactAlertsWindowForObject:[[adium contactController] selectedContact]];
 }
 
 - (IBAction)editContextContactAlerts:(id)sender
 {
-    [ESContactAlertsWindowController showContactAlertsWindowWithOwner:owner
-                                                            forObject:[[owner menuController] contactualMenuContact]];
+    [ESContactAlertsWindowController showContactAlertsWindowForObject:[[adium menuController] contactualMenuContact]];
 }
 
 - (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
@@ -94,7 +92,7 @@
     NSDictionary		*objects = [toolbarItem configurationObjects];
     AIListObject		*object = [objects objectForKey:@"ContactObject"];
     
-    [ESContactAlertsWindowController showContactAlertsWindowWithOwner:owner forObject:object];
+    [ESContactAlertsWindowController showContactAlertsWindowForObject:object];
 }
 
 @end

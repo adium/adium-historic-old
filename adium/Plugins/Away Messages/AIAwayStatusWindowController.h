@@ -13,12 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class	AIAdium, AISendingTextView;
+@class	AISendingTextView;
 
-@interface AIAwayStatusWindowController : NSWindowController
+@interface AIAwayStatusWindowController : AIWindowController
 {
-    AIAdium *owner;
-    
     IBOutlet NSButton 		*button_comeBack;
     IBOutlet NSTextView 	*textView_awayMessage;
     IBOutlet NSTextField	*textField_awayTime;
@@ -30,7 +28,7 @@
     NSString 	*timeStampFormat;
 }
 
-+ (AIAwayStatusWindowController *)awayStatusWindowControllerForOwner:(id)inOwner;
++ (AIAwayStatusWindowController *)awayStatusWindowController;
 + (void)updateAwayStatusWindow;
 + (void)setWindowVisible:(bool)visible;
 - (IBAction)comeBack:(id)sender;

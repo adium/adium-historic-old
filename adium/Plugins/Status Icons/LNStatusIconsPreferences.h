@@ -1,15 +1,10 @@
 
-@interface LNStatusIconsPreferences : NSObject {
-
-    AIAdium			*owner;
-
+@interface LNStatusIconsPreferences : AIObject {
     IBOutlet	NSView		*view_prefView;
     IBOutlet	NSButton	*checkBox_displayStatusIcons;
-
-
 }
 
-+ (LNStatusIconsPreferences *)statusIconsPreferencesWithOwner:(id)inOwner;
++ (LNStatusIconsPreferences *)statusIconsPreferences;
 - (IBAction)changePreference:(id)sender;
 
 @end

@@ -40,7 +40,7 @@
 
     toolbar = [inToolbar retain];
     
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
 
     return(self);
 }

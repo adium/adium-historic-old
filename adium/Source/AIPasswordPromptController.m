@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPasswordPromptController.m,v 1.7 2003/12/08 05:39:59 jmelloy Exp $
+// $Id: AIPasswordPromptController.m,v 1.8 2003/12/15 03:25:00 adamiser Exp $
 
 #import "AIPasswordPromptController.h"
 
@@ -21,7 +21,7 @@
 #define		KEY_PASSWORD_WINDOW_FRAME	@"Password Prompt Frame"
 
 @interface AIPasswordPromptController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector;
 - (void)windowDidLoad;
 - (BOOL)shouldCascadeWindows;
 - (BOOL)windowShouldClose:(id)sender;
@@ -30,10 +30,10 @@
 @implementation AIPasswordPromptController
 
 AIPasswordPromptController	*controller = nil;
-+ (void)showPasswordPromptForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector owner:(id)inOwner
++ (void)showPasswordPromptForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector
 {
     if(!controller){
-        controller = [[self alloc] initWithWindowNibName:PASSWORD_PROMPT_NIB forAccount:inAccount notifyingTarget:inTarget selector:inSelector owner:inOwner];
+        controller = [[self alloc] initWithWindowNibName:PASSWORD_PROMPT_NIB forAccount:inAccount notifyingTarget:inTarget selector:inSelector];
     }else{
         //Beep and return failure if a prompt is already open
         NSBeep();        
@@ -44,14 +44,13 @@ AIPasswordPromptController	*controller = nil;
     [controller showWindow:nil];
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector
 {
     [super initWithWindowNibName:windowNibName];
     
     account = [inAccount retain];
     target = [inTarget retain];
     selector = inSelector;
-    owner = [inOwner retain];
 
     return(self);
 }
@@ -69,7 +68,7 @@ AIPasswordPromptController	*controller = nil;
     NSString	*savedFrame;
     
     //Restore the window position
-    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PASSWORD_WINDOW_FRAME];
+    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PASSWORD_WINDOW_FRAME];
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
     }else{
@@ -78,7 +77,7 @@ AIPasswordPromptController	*controller = nil;
 
     //    
     [textField_account setStringValue:[account accountDescription]];
-    [checkBox_savePassword setState:[[[owner accountController] propertyForKey:@"SavedPassword" account:account] boolValue]];
+    [checkBox_savePassword setState:[[[adium accountController] propertyForKey:@"SavedPassword" account:account] boolValue]];
 }
 
 - (IBAction)cancel:(id)sender
@@ -95,7 +94,7 @@ AIPasswordPromptController	*controller = nil;
 
     //save password?
     if(savePassword && password && [password length]){
-        [[owner accountController] setPassword:password forAccount:account];
+        [[adium accountController] setPassword:password forAccount:account];
     }
 
     //close up and notify our caller
@@ -107,7 +106,7 @@ AIPasswordPromptController	*controller = nil;
 {
     if([sender state] == NSOffState){
         //Forget any saved passwords
-        [[owner accountController] forgetPasswordForAccount:account];
+        [[adium accountController] forgetPasswordForAccount:account];
     }
 }
 
@@ -138,7 +137,7 @@ AIPasswordPromptController	*controller = nil;
 - (BOOL)windowShouldClose:(id)sender
 {
     //Save the window position
-    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_PASSWORD_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 

@@ -37,7 +37,7 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_TEXT_FORCING];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_TEXT_FORCING];
     
     //Font
     [self showFont:[[preferenceDict objectForKey:KEY_FORCE_DESIRED_FONT] representedFont] inField:textField_desiredFont];
@@ -58,7 +58,7 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == button_setFont){
-        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_TEXT_FORCING];
+        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_TEXT_FORCING];
         NSFontManager	*fontManager = [NSFontManager sharedFontManager];
         NSFont		*selectedFont = [[preferenceDict objectForKey:KEY_FORCE_DESIRED_FONT] representedFont];
 
@@ -71,29 +71,29 @@
         [fontManager orderFrontFontPanel:self];
 
     }else if(sender == colorPopUp_textColor){
-        [[owner preferenceController] setPreference:[[colorPopUp_textColor color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorPopUp_textColor color] stringRepresentation]
                                              forKey:KEY_FORCE_DESIRED_TEXT_COLOR
                                               group:PREF_GROUP_TEXT_FORCING];
 
     }else if(sender == colorPopUp_backgroundColor){
-        [[owner preferenceController] setPreference:[[colorPopUp_backgroundColor color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorPopUp_backgroundColor color] stringRepresentation]
                                              forKey:KEY_FORCE_DESIRED_BACKGROUND_COLOR
                                               group:PREF_GROUP_TEXT_FORCING];
 
     }else if(sender == checkBox_forceFont){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_FORCE_FONT
                                               group:PREF_GROUP_TEXT_FORCING];
         [self configureControlDimming];
         
     }else if(sender == checkBox_forceTextColor){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_FORCE_TEXT_COLOR
                                               group:PREF_GROUP_TEXT_FORCING];
         [self configureControlDimming];
         
     }else if(sender == checkBox_forceBackgroundColor){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_FORCE_BACKGROUND_COLOR
                                               group:PREF_GROUP_TEXT_FORCING];
         [self configureControlDimming];
@@ -123,7 +123,7 @@
 
     //Update the displayed font string & preferences
     [self showFont:contactListFont inField:textField_desiredFont];
-    [[owner preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_FORCE_DESIRED_FONT group:PREF_GROUP_TEXT_FORCING];
+    [[adium preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_FORCE_DESIRED_FONT group:PREF_GROUP_TEXT_FORCING];
 }
 
 //Display a font name in our text field

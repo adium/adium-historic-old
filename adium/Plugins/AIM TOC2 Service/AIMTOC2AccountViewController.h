@@ -13,10 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium, AIMTOC2Account;
+@class AIMTOC2Account;
 
-@interface AIMTOC2AccountViewController : NSObject <AIAccountViewController> {
-    AIAdium		*owner;
+@interface AIMTOC2AccountViewController : AIObject <AIAccountViewController> {
     AIMTOC2Account	*account;
 
     NSArray		*auxilaryTabs;
@@ -31,7 +30,7 @@
     IBOutlet		NSTextView		*textView_textProfile;
 }
 
-+ (id)accountViewForOwner:(id)inOwner account:(id)inAccount;
++ (id)accountViewForAccount:(id)inAccount;
 - (NSView *)view;
 - (void)configureViewAfterLoad;
 - (IBAction)userNameChanged:(id)sender;

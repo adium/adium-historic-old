@@ -46,9 +46,9 @@
 }
 
 //Return a new account with the specified properties
-- (id)accountWithProperties:(NSDictionary *)inProperties owner:(id)inOwner
+- (id)accountWithProperties:(NSDictionary *)inProperties
 {
-    return([[[AIOscarAccount alloc] initWithProperties:inProperties service:self owner:inOwner] autorelease]);
+    return([[[AIOscarAccount alloc] initWithProperties:inProperties service:self] autorelease]);
 }
 
 // Return a Plugin-specific ID and description

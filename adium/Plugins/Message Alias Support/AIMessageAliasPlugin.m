@@ -13,7 +13,7 @@
 - (void)installPlugin
 {
     //Register us as a filter
-    [[owner contentController] registerOutgoingContentFilter:self];
+    [[adium contentController] registerOutgoingContentFilter:self];
   
     //Build the dictionary
     //	Eventually This Dictionary will become mutable and be updated from a preference pane 

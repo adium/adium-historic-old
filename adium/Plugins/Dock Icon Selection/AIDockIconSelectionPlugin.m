@@ -26,13 +26,13 @@
     [AIFileUtilities createDirectory:[[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS]];
     
     //Install our preference view
-    preferences = [[AIDockIconPreferences preferencePaneWithOwner:owner] retain];
+    preferences = [[AIDockIconPreferences preferencePane] retain];
 }
 
 //
 - (void)uninstallPlugin
 {
-    [[owner notificationCenter] removeObserver:preferences];
+    [[adium notificationCenter] removeObserver:preferences];
     [[NSNotificationCenter defaultCenter] removeObserver:preferences];
 }
 

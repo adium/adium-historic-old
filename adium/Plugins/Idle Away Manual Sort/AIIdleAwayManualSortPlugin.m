@@ -11,13 +11,13 @@
 @implementation AIIdleAwayManualSortPlugin
 - (void)installPlugin
 {
-    [[owner contactController] registerListSortController:[[[AIIdleAwayManualSort alloc] init] autorelease]];
+    [[adium contactController] registerListSortController:[[[AIIdleAwayManualSort alloc] init] autorelease]];
 }
 
 
 - (void)uninstallPlugin
 {
-    //[[owner contactController] unregisterContactSortController:self];
+    //[[adium contactController] unregisterContactSortController:self];
 }
 
 

@@ -19,22 +19,22 @@
 #import "AIEditorListGroup.h"
 
 @interface AIEditorAccountCollection (PRIVATE)
-- (id)initForAccount:(AIAccount *)inAccount withOwner:(id)inOwner;
+- (id)initForAccount:(AIAccount *)inAccount;
 - (void)generateEditorListArray;
 @end
 
 @implementation AIEditorAccountCollection
 
 //Return a collection for the specified account
-+ (AIEditorAccountCollection *)editorCollectionForAccount:(AIAccount *)inAccount withOwner:(id)inOwner
++ (AIEditorAccountCollection *)editorCollectionForAccount:(AIAccount *)inAccount
 {
-    return([[[self alloc] initForAccount:inAccount withOwner:inOwner] autorelease]);    
+    return([[[self alloc] initForAccount:inAccount] autorelease]);    
 }
 
 //init
-- (id)initForAccount:(AIAccount *)inAccount withOwner:(id)inOwner
+- (id)initForAccount:(AIAccount *)inAccount
 {
-    [super initWithOwner:inOwner];
+    [super init];
 
     //init
     account = [inAccount retain];
@@ -44,8 +44,8 @@
     [self generateEditorListArray];
 
     //Observe our account's changes
-    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:account];
-    [[owner notificationCenter] addObserver:self selector:@selector(accountHandlesChanged:) name:Account_HandlesChanged object:account];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:account];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountHandlesChanged:) name:Account_HandlesChanged object:account];
     
     return(self);    
 }
@@ -54,7 +54,7 @@
 - (void)dealloc
 {
     //Stop observing
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
 
     //Cleanup
     [account release];
@@ -198,7 +198,7 @@
             editorGroup = [tempGroupDict objectForKey:serverGroup];
             if(!editorGroup){ //Create and add the group
                 editorGroup = [[[AIEditorListGroup alloc] initWithUID:serverGroup temporary:NO] autorelease];
-                [editorGroup setOrderIndex:[[owner contactController] orderIndexOfKey:serverGroup]];
+                [editorGroup setOrderIndex:[[adium contactController] orderIndexOfKey:serverGroup]];
                 [list addObject:editorGroup];
                 [tempGroupDict setObject:editorGroup forKey:serverGroup];
             }
@@ -216,7 +216,7 @@
 - (void)accountStatusChanged:(NSNotification *)notification
 {
     //Let the contact list know our enabled state changed
-    [[owner notificationCenter] postNotificationName:Editor_CollectionStatusChanged object:self];
+    [[adium notificationCenter] postNotificationName:Editor_CollectionStatusChanged object:self];
 }
 
 //Our account's handles changed
@@ -227,7 +227,7 @@
         [self generateEditorListArray];
 
         //Let the contact list know our handles changed
-        [[owner notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
+        [[adium notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
     }
 }
 
@@ -235,7 +235,7 @@
 - (void)accountPropertiesChanged:(NSNotification *)notification
 {
     //Let the contact list know our name changed
-    [[owner notificationCenter] postNotificationName:Editor_CollectionStatusChanged object:self];
+    [[adium notificationCenter] postNotificationName:Editor_CollectionStatusChanged object:self];
 }
 
 @end

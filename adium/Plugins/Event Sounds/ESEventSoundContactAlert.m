@@ -18,10 +18,11 @@
 
 @implementation ESEventSoundContactAlert
 
--(id)initWithOwner:(id)inOwner{
+-(id)init
+{
     soundMenu_cached = nil;
 
-    return ([super initWithOwner:inOwner]);
+    return ([super init]);
 }
 
 -(void)dealloc{
@@ -48,7 +49,7 @@
 - (IBAction)selectedAlert:(id)sender
 {   
     //Get the current dictionary
-    NSDictionary *currentDict = [[owner contactAlertsController] currentDictForContactAlert:self];
+    NSDictionary *currentDict = [[adium contactAlertsController] currentDictForContactAlert:self];
         
     [popUp_actionDetails setMenu:[self soundListMenu]];
     
@@ -73,7 +74,7 @@
         NSMenu		*soundMenu = [[NSMenu alloc] init];
         NSMenuItem	*menuItem;
         
-        enumerator = [[[owner soundController] soundSetArray] objectEnumerator];
+        enumerator = [[[adium soundController] soundSetArray] objectEnumerator];
         while((soundSetDict = [enumerator nextObject])){
             NSEnumerator    *soundEnumerator;
             NSString        *soundSetPath;
@@ -128,7 +129,7 @@
     
     //Add custom sounds to the menu as needed
     //Get the current dictionary
-    NSDictionary *currentDict = [[owner contactAlertsController] currentDictForContactAlert:self];
+    NSDictionary *currentDict = [[adium contactAlertsController] currentDictForContactAlert:self];
     if (currentDict && ([(NSString *)[currentDict objectForKey:KEY_EVENT_ACTION] compare:CONTACT_ALERT_IDENTIFIER] == 0)) {
         //add it if it's not already in the menu
         NSString *soundPath = [currentDict objectForKey:KEY_EVENT_DETAILS];
@@ -174,7 +175,7 @@
     [popUp_actionDetails autosizeAndCenterHorizontally];
     
     if(soundPath != nil && [soundPath length] != 0){
-        [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
+        [[adium soundController] playSoundAtPath:soundPath]; //Play the sound
       
         [self setObject:soundPath forKey:KEY_EVENT_DETAILS];
         
@@ -187,7 +188,7 @@
             beginSheetForDirectory:nil
                               file:nil
                              types:[NSSound soundUnfilteredFileTypes] //allow all the sounds NSSound understands
-                    modalForWindow:[[owner contactAlertsController] currentWindowForContactAlert:self]
+                    modalForWindow:[[adium contactAlertsController] currentWindowForContactAlert:self]
                      modalDelegate:self
                     didEndSelector:@selector(concludeOtherPanel:returnCode:contextInfo:)
                        contextInfo:nil];  
@@ -200,7 +201,7 @@
     if(returnCode == NSOKButton){
         NSString *soundPath = [[panel filenames] objectAtIndex:0];
         
-        [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
+        [[adium soundController] playSoundAtPath:soundPath]; //Play the sound
         
         [self setObject:soundPath forKey:KEY_EVENT_DETAILS];
         

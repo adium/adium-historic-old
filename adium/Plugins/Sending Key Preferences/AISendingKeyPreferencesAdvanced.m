@@ -31,7 +31,7 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
     
     [checkBox_sendOnReturn setState:[[preferenceDict objectForKey:@"Send On Return"] intValue]];
     [checkBox_sendOnEnter setState:[[preferenceDict objectForKey:@"Send On Enter"] intValue]];
@@ -41,12 +41,12 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_sendOnReturn){
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
                                              forKey:@"Send On Return"
                                               group:PREF_GROUP_GENERAL];
         
     } else if(sender == checkBox_sendOnEnter){
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
                                              forKey:@"Send On Enter"
                                               group:PREF_GROUP_GENERAL];
         

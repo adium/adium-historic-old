@@ -17,10 +17,11 @@
 
 @implementation ESDockBehaviorContactAlert
 
--(id)initWithOwner:(id)inOwner{
+-(id)init
+{
     behaviorListMenu_cached = nil;
 
-    return ([super initWithOwner:inOwner]);
+    return([super init]);
 }
 
 -(void)dealloc{
@@ -47,7 +48,7 @@
 - (IBAction)selectedAlert:(id)sender
 {   
     //Get the current dictionary
-    NSDictionary *currentDict = [[owner contactAlertsController] currentDictForContactAlert:self];
+    NSDictionary *currentDict = [[adium contactAlertsController] currentDictForContactAlert:self];
         
     [popUp_actionDetails setMenu:[self behaviorListMenu]];
     //Set the menu to its previous setting if the stored event matches

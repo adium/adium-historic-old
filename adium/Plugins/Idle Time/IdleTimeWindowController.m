@@ -20,10 +20,10 @@
 
 //Create and return a contact list editor window controller
 static IdleTimeWindowController *sharedInstance = nil;
-+ (id)idleTimeWindowControllerWithOwner:(id)inOwner
++ (id)idleTimeWindowControllerForPlugin:(AIIdleTimePlugin *)inPlugin
 {
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:@"SetIdleTime" owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:@"SetIdleTime" forPlugin:inPlugin];
     }
 
     return(sharedInstance);
@@ -36,11 +36,11 @@ static IdleTimeWindowController *sharedInstance = nil;
     }
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName forPlugin:(AIIdleTimePlugin *)inPlugin
 {
-    owner = [inOwner retain];
+    plugin = inPlugin;
 
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
 
     return(self);
 }
@@ -70,10 +70,7 @@ static IdleTimeWindowController *sharedInstance = nil;
 }
 
 - (void)dealloc
-{
-    [owner release];
-    [AIIdleTimePlugin release];
-    
+{    
     [super dealloc];
 }
 
@@ -83,7 +80,7 @@ static IdleTimeWindowController *sharedInstance = nil;
 
 - (IBAction)apply:(id)sender
 {
-    [owner setManualIdleTime:([textField_IdleHours intValue] * 3600) + ([textField_IdleMinutes intValue] * 60)];
+    [plugin setManualIdleTime:([textField_IdleHours intValue] * 3600) + ([textField_IdleMinutes intValue] * 60)];
 
     [self closeWindow:nil];
 }

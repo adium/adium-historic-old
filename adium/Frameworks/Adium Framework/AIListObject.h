@@ -15,7 +15,7 @@
 
 @class AIMutableOwnerArray, AIListGroup;
 
-@interface AIListObject : NSObject {
+@interface AIListObject : AIObject {
     NSMutableDictionary	*displayDictionary;	//A dictionary of values affecting this object's display
     AIListGroup 	*containingGroup;	//The group this object is in
     NSString		*UID;

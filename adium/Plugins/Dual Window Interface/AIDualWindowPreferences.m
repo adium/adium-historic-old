@@ -30,10 +30,10 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_autoResize){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_DUAL_RESIZE_VERTICAL
                                               group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_DUAL_RESIZE_HORIZONTAL
                                               group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
     }
@@ -46,7 +46,7 @@
     
     [self preferencesChanged:nil];
     
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
 
 //Keep the preferences current
@@ -57,7 +57,7 @@
 
         //If the Behavior set changed
         if(notification == nil || ([key compare:KEY_DUAL_RESIZE_VERTICAL] == 0) || ([key compare:KEY_DUAL_RESIZE_HORIZONTAL] == 0) ){
-            NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+            NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
             
             BOOL vertical = [[preferenceDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue];
             BOOL horizontal = [[preferenceDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];

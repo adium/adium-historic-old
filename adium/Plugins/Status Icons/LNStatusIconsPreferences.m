@@ -14,15 +14,14 @@
 #define STATUS_ICONS_PREF_TITLE		@"Status Icons Display"
 
 @interface LNStatusIconsPreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
 - (void)configureView;
 @end
 
 @implementation LNStatusIconsPreferences
 
-+ (LNStatusIconsPreferences *)statusIconsPreferencesWithOwner:(id)inOwner
++ (LNStatusIconsPreferences *)statusIconsPreferences
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
 
@@ -32,7 +31,7 @@
 
     if(sender == checkBox_displayStatusIcons){
     
-    	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+    	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 					     forKey:KEY_DISPLAY_STATUS_ICONS
 					      group:PREF_GROUP_STATUS_ICONS];
     }
@@ -40,14 +39,13 @@
 }
 
 
-- (id)initWithOwner:(id)inOwner
+- (id)init
 {
     //Init
     [super init];
-    owner = [inOwner retain];
 
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Contacts withDelegate:self label:STATUS_ICONS_PREF_TITLE]];
+    [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Contacts withDelegate:self label:STATUS_ICONS_PREF_TITLE]];
 
     return(self);
 }
@@ -75,7 +73,7 @@
 
 - (void)configureView
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STATUS_ICONS];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STATUS_ICONS];
 
     [checkBox_displayStatusIcons setState:[[preferenceDict objectForKey:KEY_DISPLAY_STATUS_ICONS] boolValue]];
 

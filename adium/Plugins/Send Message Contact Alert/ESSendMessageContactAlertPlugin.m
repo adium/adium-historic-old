@@ -17,19 +17,19 @@
 - (void)installPlugin
 {
     //Install our contact alert
-    [[owner contactAlertsController] registerContactAlertProvider:self];
+    [[adium contactAlertsController] registerContactAlertProvider:self];
     
     attributes = nil;
     
     //Observe preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 }
 
 - (void)uninstallPlugin
 {
     //Uninstall our contact alert
-    [[owner contactAlertsController] unregisterContactAlertProvider:self];
+    [[adium contactAlertsController] unregisterContactAlertProvider:self];
     
     [attributes release];
 }
@@ -50,7 +50,7 @@
         NSFont			*font;
         
         //Get the prefs
-        prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
+        prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
         font = [[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont];
         textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
         backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
@@ -76,7 +76,7 @@
 
 - (ESContactAlert *)contactAlert
 {
-    return [ESSendMessageContactAlert contactAlertWithOwner:owner];   
+    return [ESSendMessageContactAlert contactAlert];   
 }
 
 //performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
@@ -96,23 +96,23 @@
     BOOL                success;
 
     //Source account
-    account = [[owner accountController] accountWithID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
+    account = [[adium accountController] accountWithID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
     
     message = [[NSAttributedString alloc] initWithString:details attributes:attributes];
 
     //intended recipient
     uid = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_UID];
     service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
-    contact = [[owner contactController] contactInGroup:nil withService:service UID:uid];
+    contact = [[adium contactController] contactInGroup:nil withService:service UID:uid];
     
     //error message
     displayError = [[detailsDict objectForKey:KEY_MESSAGE_ERROR] intValue];
 
-    if ([[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:contact onAccount:account]) { //desired account is available to send to contact
+    if ([[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:contact onAccount:account]) { //desired account is available to send to contact
         success = YES;
     } else {
         if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
-            account = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:contact];
+            account = [[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:contact];
             
             if (!account) {//no appropriate accounts found
                 errorReason = @"failed because no appropriate accounts are online.";
@@ -127,16 +127,16 @@
     }
     if (success) { //we're good so far...
             if ([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) {
-                AIChat	*chat = [[owner contentController] openChatOnAccount:account withListObject:contact];
+                AIChat	*chat = [[adium contentController] openChatOnAccount:account withListObject:contact];
                 
-                [[owner interfaceController] setActiveChat:chat];
+                [[adium interfaceController] setActiveChat:chat];
                 responseContent = [AIContentMessage messageInChat:chat
                                                        withSource:account
                                                       destination:contact
                                                              date:nil
                                                           message:message
                                                         autoreply:NO];
-                success = [[owner contentController] sendContentObject:responseContent];
+                success = [[adium contentController] sendContentObject:responseContent];
                 
                 if (!success)
                     errorReason = @"failed while sending the message.";
@@ -150,7 +150,7 @@
     if (!success && displayError) { //Would have had it if it weren't for those pesky account and contact kids...
         NSString *alertMessage = [NSString stringWithFormat:@"The attempt to send \"%@\" to %@ %@",[message string],[contact displayName],errorReason];
         NSString *title = [NSString stringWithFormat:@"%@ %@", [inObject displayName], actionName];
-        [[owner interfaceController] handleMessage:title withDescription:alertMessage withWindowTitle:@"Error Sending Message"];
+        [[adium interfaceController] handleMessage:title withDescription:alertMessage withWindowTitle:@"Error Sending Message"];
     }
     
 //    [message release];

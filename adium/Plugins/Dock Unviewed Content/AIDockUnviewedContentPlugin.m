@@ -25,7 +25,7 @@
     unviewedState = NO;
 
     //Register as a contact observer (So we can catch the unviewed content status flag)
-    [[owner contactController] registerListObjectObserver:self];
+    [[adium contactController] registerListObjectObserver:self];
 
 }
 
@@ -41,7 +41,7 @@
         if([[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){
             //If this is the first contact with unviewed content, animate the dock
             if(!unviewedState){
-                [[owner dockController] setIconStateNamed:@"Alert"];
+                [[adium dockController] setIconStateNamed:@"Alert"];
                 unviewedState = YES;
             }
 
@@ -53,7 +53,7 @@
 
                 //If there are no more contacts with unviewed content, stop animating the dock
                 if([unviewedObjectsArray count] == 0 && unviewedState){
-                    [[owner dockController] removeIconStateNamed:@"Alert"];
+                    [[adium dockController] removeIconStateNamed:@"Alert"];
                     unviewedState = NO;
                 }
             }

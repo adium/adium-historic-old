@@ -13,11 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium;
-
-@interface AIStatusCirclesPreferences : NSObject {
-    AIAdium				*owner;
-
+@interface AIStatusCirclesPreferences : AIObject {
     IBOutlet	NSView			*view_prefView;
 
     IBOutlet	NSButton		*checkBox_displayStatusCircle;
@@ -27,7 +23,7 @@
     IBOutlet	NSColorWell		*colorWell_idleColor;
 }
 
-+ (AIStatusCirclesPreferences *)statusCirclesPreferencesWithOwner:(id)inOwner;
++ (AIStatusCirclesPreferences *)statusCirclesPreferences;
 - (IBAction)changePreference:(id)sender;
 
 @end

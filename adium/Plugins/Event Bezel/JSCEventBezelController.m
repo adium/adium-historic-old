@@ -11,7 +11,7 @@
 #define EVENT_BEZEL_NIB         @"EventBezel"
 
 @interface JSCEventBezelController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName;
 - (BOOL)windowShouldClose:(id)sender;
 @end
 
@@ -19,20 +19,18 @@
 
 JSCEventBezelController *sharedInstance = nil;
 
-+ (JSCEventBezelController *)eventBezelControllerForOwner:(id)inOwner
++ (JSCEventBezelController *)eventBezelController
 {
     if(!sharedInstance) {
-        sharedInstance = [[self alloc] initWithWindowNibName:EVENT_BEZEL_NIB owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:EVENT_BEZEL_NIB];
     }
     return(sharedInstance);
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    [super initWithWindowNibName:windowNibName owner:self];
-    
-    owner = [inOwner retain];
-        
+    [super initWithWindowNibName:windowNibName];
+
     bezelPosition = -1;
             
     return(self);
@@ -40,7 +38,6 @@ JSCEventBezelController *sharedInstance = nil;
 
 - (void)dealloc
 {
-    [owner release];
     [buddyIconLabelColor release];
     [buddyNameLabelColor release];
     [super dealloc];

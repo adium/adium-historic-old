@@ -9,22 +9,21 @@
 #import "AIChat.h"
 
 @interface AIChat (PRIVATE)
-- (id)initWithOwner:(id)inOwner forAccount:(AIAccount *)inAccount;
+- (id)initForAccount:(AIAccount *)inAccount;
 @end
 
 @implementation AIChat
 
-+ (id)chatWithOwner:(id)inOwner forAccount:(AIAccount *)inAccount
++ (id)chatForAccount:(AIAccount *)inAccount
 {
-    return([[[self alloc] initWithOwner:inOwner forAccount:inAccount] autorelease]);
+    return([[[self alloc] initForAccount:inAccount] autorelease]);
 }
 
-- (id)initWithOwner:(id)inOwner forAccount:(AIAccount *)inAccount
+- (id)initForAccount:(AIAccount *)inAccount
 {
     [super init];
 
     account = [inAccount retain];
-    owner = [inOwner retain];
     statusDictionary = [[NSMutableDictionary alloc] init];
     contentObjectArray = [[NSMutableArray alloc] init];
     participatingListObjects = [[NSMutableArray alloc] init];
@@ -35,7 +34,6 @@
 - (void)dealloc
 {
     [account release];
-    [owner release];
     [statusDictionary release];
     [contentObjectArray release];
     [participatingListObjects release];
@@ -65,14 +63,14 @@
 - (void)addParticipatingListObject:(AIListObject *)inObject
 {
     [participatingListObjects addObject:inObject]; //Add
-    [[owner notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:self]; //Notify
+    [[adium notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:self]; //Notify
 }
 
 //
 - (void)removeParticipatingListObject:(AIListObject *)inObject
 {
     [participatingListObjects removeObject:inObject]; //Remove
-    [[owner notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:self]; //Notify
+    [[adium notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:self]; //Notify
 }
 
 //If this chat only has one participating list object, it is returned.  Otherwise, nil is returned

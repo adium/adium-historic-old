@@ -55,10 +55,10 @@
     [AIFileUtilities createDirectory:[[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:PATH_EMOTICONS]];
     
     //Setup Preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"EmoticonDefaults" forClass:[self class]] forGroup:PREF_GROUP_EMOTICONS];
-    prefs = [[AIEmoticonPreferences preferencePaneWithPlugin:self owner:owner] retain];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"EmoticonDefaults" forClass:[self class]] forGroup:PREF_GROUP_EMOTICONS];
+    prefs = [[AIEmoticonPreferences preferencePaneForPlugin:self] retain];
 
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -73,9 +73,9 @@
         BOOL    emoticonsEnabled = ([[self activeEmoticons] count] != 0);
         if(observingContent != emoticonsEnabled){
             if(emoticonsEnabled){
-                [[owner contentController] registerDisplayingContentFilter:self];
+                [[adium contentController] registerDisplayingContentFilter:self];
             }else{
-                [[owner contentController] unregisterDisplayingContentFilter:self];
+                [[adium contentController] unregisterDisplayingContentFilter:self];
             }
             observingContent = emoticonsEnabled;
         }
@@ -366,13 +366,13 @@
         [nameArray addObject:[pack name]];
     }
     
-    [[owner preferenceController] setPreference:nameArray forKey:KEY_EMOTICON_ACTIVE_PACKS group:PREF_GROUP_EMOTICONS];
+    [[adium preferenceController] setPreference:nameArray forKey:KEY_EMOTICON_ACTIVE_PACKS group:PREF_GROUP_EMOTICONS];
 }
 
 //Enabled or disable a specific emoticon
 - (void)setEmoticon:(AIEmoticon *)inEmoticon inPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled
 {
-    NSDictionary            *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS];
+    NSDictionary            *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS];
     NSString                *packKey = [NSString stringWithFormat:@"Pack:%@",[inPack name]];
     NSMutableDictionary     *packDict = [[[preferenceDict objectForKey:packKey] mutableCopy] autorelease];
     NSMutableArray          *disabledArray = [[[packDict objectForKey:KEY_EMOTICON_DISABLED] mutableCopy] autorelease];
@@ -392,13 +392,13 @@
     
     //Save changes
     [packDict setObject:disabledArray forKey:KEY_EMOTICON_DISABLED];
-    [[owner preferenceController] setPreference:packDict forKey:packKey group:PREF_GROUP_EMOTICONS];
+    [[adium preferenceController] setPreference:packDict forKey:packKey group:PREF_GROUP_EMOTICONS];
 }
 
 //Returns the disabled emoticons in a pack
 - (NSArray *)disabledEmoticonsInPack:(AIEmoticonPack *)inPack
 {
-    NSDictionary    *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS];
+    NSDictionary    *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS];
     NSDictionary    *packDict = [preferenceDict objectForKey:[NSString stringWithFormat:@"Pack:%@",[inPack name]]];
     
     return([packDict objectForKey:KEY_EMOTICON_DISABLED]);
@@ -416,7 +416,7 @@
         _activeEmoticonPacks = [[NSMutableArray alloc] init];
         
         //Get the names of our active packs
-        activePackNames = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS] objectForKey:KEY_EMOTICON_ACTIVE_PACKS];
+        activePackNames = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS] objectForKey:KEY_EMOTICON_ACTIVE_PACKS];
         
         //Use the names to build an array of the desired emoticon packs
         enumerator = [activePackNames objectEnumerator];

@@ -20,29 +20,28 @@
 #define IDLE_TIME_PREF_TITLE		@"Idle"			//Title of the preference view
 
 @interface IdleTimePreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
 - (void)configureView;
 - (void)configureControlDimming;
 @end
 
 @implementation IdleTimePreferences
 //
-+ (IdleTimePreferences *)idleTimePreferencesWithOwner:(id)inOwner
++ (IdleTimePreferences *)idleTimePreferences
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_enableIdle){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_IDLE_TIME_ENABLED
                                               group:PREF_GROUP_IDLE_TIME];
         [self configureControlDimming];
 
     }else if(sender == textField_idleMinutes){
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
                                              forKey:KEY_IDLE_TIME_IDLE_MINUTES
                                               group:PREF_GROUP_IDLE_TIME];
 
@@ -52,14 +51,13 @@
 
 //Private ---------------------------------------------------------------------------
 //init
-- (id)initWithOwner:(id)inOwner
+- (id)init
 {
     //Init
     [super init];
-    owner = [inOwner retain];
 
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Status_Idle withDelegate:self label:IDLE_TIME_PREF_TITLE]];
+    [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Status_Idle withDelegate:self label:IDLE_TIME_PREF_TITLE]];
 
     return(self);
 }
@@ -87,7 +85,7 @@
 //Configures our view for the current preferences
 - (void)configureView
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME];
 
     //Idle
     [checkBox_enableIdle setState:[[preferenceDict objectForKey:KEY_IDLE_TIME_ENABLED] boolValue]];

@@ -22,13 +22,13 @@
 - (void)installPlugin
 {
     //Register as an entry filter
-    [[owner contentController] registerTextEntryFilter:self];
+    [[adium contentController] registerTextEntryFilter:self];
 
     //typingDict = [[NSMutableDictionary alloc] init];
     //messagedDict = [[NSMutableDictionary alloc] init];
 
-    [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
 }
 
 //Watch incoming content.  Once we are messaged by a contact, that contact may receive typing notifications
@@ -77,7 +77,7 @@
                                               withSource:account
                                              destination:nil
                                                   typing:typing];
-    [[owner contentController] sendContentObject:contentObject];
+    [[adium contentController] sendContentObject:contentObject];
     
     //Remember the state
     if(typing){ //Add 'typing' for this contact

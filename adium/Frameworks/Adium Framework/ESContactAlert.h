@@ -17,14 +17,13 @@
 #define KEY_EVENT_DETAILS_DICT		@"Details Dictionary"	//additional options storage
 
 //An ESContactAlert object is responsible for its details view in the UI, both visually and in terms of storing its action preferences
-@class AIAdium;
 
-@interface ESContactAlert : NSObject {
-    AIAdium 		*owner;		//The owner of this plugin (AIAdium)
+@interface ESContactAlert : AIObject {
+
 }
 
-+ (id)contactAlertWithOwner:(id)inOwner;
-- (id)initWithOwner:(id)inOwner;
++ (id)contactAlert;
+- (id)init;
 - (NSMenuItem *)alertMenuItem;
 - (NSString *)nibName;
 //PRIVATE

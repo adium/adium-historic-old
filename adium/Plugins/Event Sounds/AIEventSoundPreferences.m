@@ -42,7 +42,7 @@
     [popUp_soundSet setMenu:[self _soundSetMenu]];
 
     //Observer preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -50,7 +50,7 @@
 - (void)viewWillClose
 {
     [AIEventSoundCustom closeEventSoundCustomPanel];
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
 }
 
 //The user selected a sound set
@@ -58,22 +58,22 @@
 {
     if(sender && [sender representedObject]){
         [AIEventSoundCustom closeEventSoundCustomPanel];
-        [[owner preferenceController] setPreference:[[sender representedObject] stringByCollapsingBundlePath] forKey:KEY_EVENT_SOUND_SET group:PREF_GROUP_SOUNDS];
+        [[adium preferenceController] setPreference:[[sender representedObject] stringByCollapsingBundlePath] forKey:KEY_EVENT_SOUND_SET group:PREF_GROUP_SOUNDS];
         
     }else{
-        NSString *soundSetPath = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_SOUND_SET];
+        NSString *soundSetPath = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_SOUND_SET];
 
         //When the user moves from a preset to custom, we copy the preset sounds into custom.
         if(soundSetPath && [soundSetPath length] != 0){
             NSArray	*soundSet;
 
             if([plugin loadSoundSetAtPath:[soundSetPath stringByExpandingBundlePath] creator:nil description:nil sounds:&soundSet]){
-                [[owner preferenceController] setPreference:soundSet forKey:KEY_EVENT_CUSTOM_SOUNDSET group:PREF_GROUP_SOUNDS];
+                [[adium preferenceController] setPreference:soundSet forKey:KEY_EVENT_CUSTOM_SOUNDSET group:PREF_GROUP_SOUNDS];
             }
         }
 
         //
-        [AIEventSoundCustom showEventSoundCustomPanelWithOwner:owner];
+        [AIEventSoundCustom showEventSoundCustomPanel];
 
     }
 }
@@ -81,7 +81,7 @@
 //The user toggled the mute when away checkbox
 - (IBAction)toggleMuteWhileAway:(id)sender
 {
-    [[owner preferenceController] setPreference: [NSNumber numberWithBool:[button_muteWhileAway state]]
+    [[adium preferenceController] setPreference: [NSNumber numberWithBool:[button_muteWhileAway state]]
                                          forKey:KEY_EVENT_MUTE_WHILE_AWAY
                                           group:PREF_GROUP_SOUNDS];
 }
@@ -92,7 +92,7 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_SOUNDS] == 0){
         NSString	*key = [[notification userInfo] objectForKey:@"Key"];
-        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
+        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
         //If the 'Soundset' changed
         if(notification == nil || ([key compare:KEY_EVENT_SOUND_SET] == 0)){
             NSString		*soundSetPath = [preferenceDict objectForKey:KEY_EVENT_SOUND_SET];
@@ -115,7 +115,7 @@
     NSDictionary	*soundSetDict;
     NSMenu		*soundSetMenu = [[NSMenu alloc] init];
     
-    enumerator = [[[owner soundController] soundSetArray] objectEnumerator];
+    enumerator = [[[adium soundController] soundSetArray] objectEnumerator];
     while((soundSetDict = [enumerator nextObject])){
         NSString	*setPath = [soundSetDict objectForKey:KEY_SOUND_SET];
         NSMenuItem	*menuItem;

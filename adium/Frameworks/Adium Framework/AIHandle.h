@@ -21,7 +21,7 @@
  * @class AIHandle
  * A unique handle to talk to on any IM protocol
  */
-@interface AIHandle : NSObject {
+@interface AIHandle : AIObject {
     NSString		*UID;
     NSString		*serviceID;
     NSString		*UIDAndServiceID;

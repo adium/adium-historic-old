@@ -27,8 +27,8 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
 - (void)installPlugin
 {
     //Register our content filter
-    [[owner contentController] registerOutgoingContentFilter:self];
-    [[owner contentController] registerIncomingContentFilter:self];
+    [[adium contentController] registerOutgoingContentFilter:self];
+    [[adium contentController] registerIncomingContentFilter:self];
 }
 
 - (void)filterContentObject:(AIContentObject *)inObject

@@ -14,21 +14,19 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*
- * $Revision: 1.3 $
- * $Date: 2003/11/09 02:32:09 $
+ * $Revision: 1.4 $
+ * $Date: 2003/12/15 03:24:57 $
  * $Author: adamiser $
  */
 
 #import "libpq-fe.h"
 
-@class AIAdium, AIAlternatingRowOutlineView, AIListContact;
+@class AIAlternatingRowOutlineView, AIListContact;
 
-@interface JMSQLLogViewerWindowController : NSWindowController {
+@interface JMSQLLogViewerWindowController : AIWindowController {
     IBOutlet	AIAlternatingRowOutlineView	*outlineView_contacts;
     IBOutlet	NSTableView			*tableView_results;
     IBOutlet	NSTextView			*textView_content;
-
-    AIAdium		*owner;
 
     NSMutableArray	*availableLogArray;
     NSMutableArray	*selectedLogArray;
@@ -39,7 +37,7 @@
     PGconn		*conn;
 }
 
-+ (id)logViewerWindowControllerWithOwner:(id)inOwner;
++ (id)logViewerWindowController;
 - (IBAction)closeWindow:(id)sender;
 - (void)showLogsForContact:(AIListContact *)contact;
 

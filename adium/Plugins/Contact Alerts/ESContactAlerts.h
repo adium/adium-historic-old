@@ -5,7 +5,7 @@
 //  Created by Evan Schoenberg on Sun Aug 03 2003.
 //
 
-@interface ESContactAlerts : NSObject <ESContactAlerts> {
+@interface ESContactAlerts : AIObject <ESContactAlerts> {
     NSView				*view_main;
     AIAlternatingRowTableView		*tableView_actions;
     NSView				*view_blank;
@@ -27,11 +27,9 @@
     NSString				*oldIdentifier;
 
     NSMutableDictionary			*cachedAlertsDict;
-    
-    AIAdium				*owner;
 }
 
-- (id)initWithDetailsView:(NSView *)inView withTable:(AIAlternatingRowTableView*)inTable withPrefView:(NSView *)inPrefView owner:(id)inOwner;
+- (id)initWithDetailsView:(NSView *)inView withTable:(AIAlternatingRowTableView*)inTable withPrefView:(NSView *)inPrefView;
 - (void)configForObject:(AIListObject *)inObject;
 - (void)configureWithSubview:(NSView *)view_inView;
 - (void)removeAllSubviews:(NSView *)view;

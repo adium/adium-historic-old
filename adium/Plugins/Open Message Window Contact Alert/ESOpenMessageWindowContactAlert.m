@@ -37,7 +37,7 @@
 //setup display for opening message window
 -(IBAction)selectedAlert:(id)sender
 {  
-    NSDictionary *currentDict = [[[owner contactAlertsController] currentDictForContactAlert:self] retain];
+    NSDictionary *currentDict = [[[adium contactAlertsController] currentDictForContactAlert:self] retain];
     
     NSMutableDictionary * detailsDict = [currentDict objectForKey:KEY_EVENT_DETAILS_DICT];
     
@@ -45,7 +45,7 @@
     
     if (!detailsDict) //new message
     {
-        NSEnumerator    *accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+        NSEnumerator    *accountEnumerator = [[[adium accountController] accountArray] objectEnumerator];
         AIAccount       *account;
         
         //enumerate until we find an online account
@@ -67,7 +67,7 @@
     else //restore the old settings
     {
         //Restore the account
-        AIAccount * account = [[owner accountController] accountWithID:[currentDict objectForKey:KEY_EVENT_DETAILS]];
+        AIAccount * account = [[adium accountController] accountWithID:[currentDict objectForKey:KEY_EVENT_DETAILS]];
         [popUp_actionDetails_open_message selectItemAtIndex:[popUp_actionDetails_open_message indexOfItemWithRepresentedObject:account]];
         [button_anotherAccount_open_message setState:[[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]];
     }
@@ -97,7 +97,7 @@
     AIAccount * account;
     NSMenu * accountMenu = [[NSMenu alloc] init];
     
-    accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+    accountEnumerator = [[[adium accountController] accountArray] objectEnumerator];
     while(account = [accountEnumerator nextObject]){
         NSMenuItem 	*menuItem;
         NSString	*accountDescription;

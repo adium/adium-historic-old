@@ -26,18 +26,18 @@
 - (void)installPlugin
 {
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AWAY_STATUS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_AWAY_STATUS_WINDOW];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AWAY_STATUS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_AWAY_STATUS_WINDOW];
 
     //Our preference view
-    preferences = [[AIAwayStatusWindowPreferences preferencePaneWithOwner:owner] retain];
+    preferences = [[AIAwayStatusWindowPreferences preferencePane] retain];
 
     //Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
 
     //Open an away status window if we woke up away
-    if([[owner accountController] propertyForKey:@"AwayMessage" account:nil]) {
+    if([[adium accountController] propertyForKey:@"AwayMessage" account:nil]) {
         // Get an away status window
-        [AIAwayStatusWindowController awayStatusWindowControllerForOwner:owner];
+        [AIAwayStatusWindowController awayStatusWindowController];
         // Tell it to update in case we were already away
         [AIAwayStatusWindowController updateAwayStatusWindow];
     }    
@@ -53,7 +53,7 @@
 
         if([modifiedKey compare:@"AwayMessage"] == 0){
             // Get an away status window
-            [AIAwayStatusWindowController awayStatusWindowControllerForOwner:owner];
+            [AIAwayStatusWindowController awayStatusWindowController];
             // Tell it to update
             [AIAwayStatusWindowController updateAwayStatusWindow];
         }
@@ -65,7 +65,7 @@
 {
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_AWAY_STATUS_WINDOW] == 0){
         // Get an away status window
-        [AIAwayStatusWindowController awayStatusWindowControllerForOwner:owner];
+        [AIAwayStatusWindowController awayStatusWindowController];
         // Tell it to update in case we were already away
         [AIAwayStatusWindowController updateAwayStatusWindow];
 

@@ -13,11 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium;
-
-@interface AIIdleTimeDisplayPreferences : NSObject {
-    AIAdium			*owner;
-
+@interface AIIdleTimeDisplayPreferences : AIObject {
     IBOutlet	NSView			*view_prefView;
     IBOutlet	NSButton		*checkBox_displayIdle;
     IBOutlet	NSButton		*checkBox_displayIdleOnLeft;
@@ -25,7 +21,7 @@
     IBOutlet	NSColorWell		*colorWell_idleColor;
 }
 
-+ (AIIdleTimeDisplayPreferences *)idleTimeDisplayPreferencesWithOwner:(id)inOwner;
++ (AIIdleTimeDisplayPreferences *)idleTimeDisplayPreferences;
 - (IBAction)changePreference:(id)sender;
 
 @end

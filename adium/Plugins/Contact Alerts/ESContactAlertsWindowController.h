@@ -8,11 +8,11 @@
 
 #import "ESContactAlerts.h"
 
-@class AIAdium, AIAlternatingRowTableView, AIListContact;
+@class AIAlternatingRowTableView, AIListContact;
 
 #define KEY_CONTACT_ALERTS_WINDOW_FRAME		@"Contact Alerts Window"
 
-@interface ESContactAlertsWindowController : NSWindowController {
+@interface ESContactAlertsWindowController : AIWindowController {
 
     IBOutlet	NSPopUpButton			*popUp_addEvent;
     IBOutlet	AIAlternatingRowTableView	*tableView_actions;
@@ -22,17 +22,13 @@
     IBOutlet	NSPopUpButton			*popUp_contactList;
     IBOutlet	NSView				*view_main;
     
-    NSPopUpButtonCell			*dataCell;
-    
+    NSPopUpButtonCell				*dataCell;
     NSMenu					*actionMenu;
-
-    AIAdium					*owner;
     AIListObject				*activeContactObject;
-
     ESContactAlerts				*instance;
 }
 
-+ (id)showContactAlertsWindowWithOwner:(id)inOwner forObject:(AIListObject *)inContact;
++ (id)showContactAlertsWindowForObject:(AIListObject *)inContact;
 + (void)closeContactAlertsWindow;
 
 - (IBAction)deleteEventAction:(id)sender;

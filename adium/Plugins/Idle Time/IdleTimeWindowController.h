@@ -19,7 +19,7 @@
 
 @interface IdleTimeWindowController : NSWindowController
 {
-    AIIdleTimePlugin	*owner;
+    AIIdleTimePlugin		*plugin;
 
     IBOutlet 	NSPopUpButton 	*popUp_Accounts;
     IBOutlet	NSButton	*checkBox_SetManually;
@@ -32,8 +32,8 @@
     IBOutlet	NSButton	*button_Apply;
 }
 
-+ (id)idleTimeWindowControllerWithOwner:(id)inOwner;
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
++ (id)idleTimeWindowControllerForPlugin:(AIIdleTimePlugin *)inPlugin;
+- (id)initWithWindowNibName:(NSString *)windowNibName forPlugin:(AIIdleTimePlugin *)inPlugin;
 - (IBAction)apply:(id)sender;
 - (IBAction)configureControls:(id)sender;
 + (void)closeSharedInstance;
