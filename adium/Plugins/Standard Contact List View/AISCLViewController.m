@@ -22,6 +22,8 @@
 #define TOOL_TIP_CHECK_INTERVAL		5.0		//Check for mouse movement 5 times a second
 #define TOOL_TIP_DELAY 				3		//Number of check intervals of no movement before a tip is displayed
 
+#define MAX_DISCLOSURE_HEIGHT		13		//Max height/width for our disclosure triangles
+
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
 #define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
 
@@ -212,7 +214,12 @@
         [contactListView setIntercellSpacing:NSMakeSize(3.0,[[prefDict objectForKey:KEY_SCL_SPACING] floatValue])];      
 		
 		
-		
+		/////////////////////////
+		{
+			float capHeight = [[contactListView groupFont] capHeight];
+			[contactListView setIndentationPerLevel:(capHeight > MAX_DISCLOSURE_HEIGHT ? MAX_DISCLOSURE_HEIGHT : capHeight)];
+		}
+		///////////////
 		
 		
 		
@@ -370,16 +377,8 @@
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
     //Before one of our cells gets told to draw, we need to make sure it knows what contact it's drawing for.
-    if([cell isKindOfClass:[AISCLCell class]]){
-        [(AISCLCell *)cell setContact:item];
-    }
+	[(AISCLCell *)cell setListObject:item];
 }
-
-/*
-- (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
-{
-}
-*/
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
@@ -456,46 +455,27 @@
 
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-    //there's a pretty ugly issue whwne we scale upwards. we don't get more space for the triangle.
-    //so, if the triangle is supposed to get bigger, we now don't change.    
-    
-    if([[contactListView groupFont] capHeight] < 13) //only operate if we're scaling down. hardcoding, bad, yeah, but I don't see a better way at the moment.
-    {
-        NSImage *newImage, *newAlternateImage;
-        NSSize newSize/*, newAlternateSize*/;
-        float newButtonWidth;
-        NSRect newBounds;
+	float	capHeight = [[contactListView groupFont] capHeight];
+	NSImage	*image, *altImage;
+	
+	//The triangle can only get so big before it starts to get clipped, so we restrict it's size as necessary
+	if(capHeight > MAX_DISCLOSURE_HEIGHT) capHeight = MAX_DISCLOSURE_HEIGHT;
 
-        newImage = [cell image];
-        newAlternateImage = [cell alternateImage];
-        newSize = [newImage size];
-        newSize.width = newSize.width - (newSize.height - [[contactListView groupFont] capHeight]);
-        newSize.height = [[contactListView groupFont] capHeight];
-        
-        //Apparently, controlView is the the tableColumn, not an NSButton. Seems to be no way to make the space for the triangle wider.
-        /*newBounds = [[cell controlView] bounds];
-        newButtonWidth = (newBounds.size.width - [[cell image] size].width) + newSize.width;
-        NSLog(@"%f", newButtonWidth);
-        newBounds.size.width = newButtonWidth;
-        [[cell controlView] setBounds:newBounds]; */
-        
-        //this isn't needed, I don't think. can themes change the flippy triangle image?
-        /*newAlternateSize = [newAlternateImage size];
-        newAlternateSize.width = newAlternateSize.width - (newAlternateSize.height - [[contactListView groupFont] capHeight]);
-        newAlternateSize.height = [[contactListView groupFont] capHeight];*/
+	//Apply this new size to the images
+	image = [cell image];
+	altImage = [cell alternateImage];
+	
+	//Resize the iamges
+	[image setScalesWhenResized:YES];
+	[image setSize:NSMakeSize(capHeight, capHeight)];
+	[altImage setScalesWhenResized:YES];
+	[altImage setSize:NSMakeSize(capHeight, capHeight)];
 
-        [newImage setScalesWhenResized:YES];
-        [newImage setSize:newSize];
-            
-        [newAlternateImage setScalesWhenResized:YES];
-        [newAlternateImage setSize:newSize];
-
-        [cell setAlternateImage:newAlternateImage];
-        [cell setImage:newImage];
-        
-        [cell setImagePosition:NSImageOnly];
-        [cell setHighlightsBy:NSChangeBackgroundCellMask];
-    }
+	//Set them back and center
+	[cell setAlternateImage:altImage];
+	[cell setImage:image];
+	[cell setImagePosition:NSImageOnly];
+	[cell setHighlightsBy:NSChangeBackgroundCellMask];
 } 
 
 

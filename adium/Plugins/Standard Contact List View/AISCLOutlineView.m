@@ -64,7 +64,7 @@
     
     //Set up the table view
     tableColumn = [[[NSTableColumn alloc] init] autorelease];
-    [tableColumn setDataCell:[[[AISCLCell alloc] init] autorelease]];
+    [tableColumn setDataCell:/*[*/[[AISCLCell alloc] init]/* autorelease]*/];
     [tableColumn setEditable:NO];
     [tableColumn setResizable:NO];
     [self setDrawsGrid:NO];
@@ -73,7 +73,6 @@
     [self setOutlineTableColumn:tableColumn];
     [self setHeaderView:nil];
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
-    [self setIndentationPerLevel:10];
 
     return(self);
 }
@@ -185,7 +184,7 @@
 {
     NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
     AISCLCell 		*cell = [column dataCell];
-    NSSize			cellSize;
+    float			cellWidth;
     NSArray			*cellSizeArray;
     BOOL			changed = NO;
     int				j;
@@ -201,12 +200,12 @@
 		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:inObject];        
 		for(j=0 ; j < 3; j++){  //check left, middle, and right
 			cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
-			cellSize = NSSizeFromString([cellSizeArray objectAtIndex:j]);
-			if(cellSize.width > desiredWidth[j]) {
-				desiredWidth[j] = cellSize.width;
+			cellWidth = [[cellSizeArray objectAtIndex:j] floatValue];
+			if(cellWidth > desiredWidth[j]) {
+				desiredWidth[j] = cellWidth;
 				hadMax[j] = inObject;
 				changed = YES;
-			} else if ((hadMax[j] == inObject) && (cellSize.width != desiredWidth[j]) ) {   //if this object was the largest in terms of j before but is not now, then we need to search for the now-largest
+			} else if ((hadMax[j] == inObject) && (cellWidth != desiredWidth[j]) ) {   //if this object was the largest in terms of j before but is not now, then we need to search for the now-largest
 				[self performFullRecalculationFor:j];
 				changed = YES;
 			}
@@ -232,7 +231,7 @@
     NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
     AISCLCell		*cell = [column dataCell];
     AIListObject	*object;
-    NSSize			cellSize;
+    float			cellWidth;
     NSArray			*cellSizeArray;
     int				i;
     
@@ -245,9 +244,9 @@
         
         cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
 		
-        cellSize = NSSizeFromString([cellSizeArray objectAtIndex:j]);
-        if(cellSize.width > desiredWidth[j]){
-            desiredWidth[j] = cellSize.width;
+        cellWidth = [[cellSizeArray objectAtIndex:j] floatValue];
+        if(cellWidth > desiredWidth[j]){
+            desiredWidth[j] = cellWidth;
             hadMax[j] = object;
         }
     } 
@@ -356,6 +355,7 @@
 - (NSFont *)groupFont{
     return(groupFont);
 }
+
 
 //Custom color settings -----------------------------------------------------------------
 //Contact color
