@@ -151,8 +151,12 @@
 			AIListContact	*contact = [[adium contactController] contactWithService:currentServiceID
 																		   accountID:[account uniqueObjectID]
 																				 UID:UID];
+			AIListGroup		*group = ([popUp_targetGroup numberOfItems] ?
+									  [[popUp_targetGroup selectedItem] representedObject] : 
+									  nil);
+
 			[[adium contactController] addContacts:[NSArray arrayWithObject:contact]
-										   toGroup:[[popUp_targetGroup selectedItem] representedObject]];
+										   toGroup:group];
 			
 			// Add the alias, if it exists
 			NSString	*alias = [textField_contactAlias stringValue];
