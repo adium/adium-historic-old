@@ -307,7 +307,7 @@
     if(leftmostCell){
         cellArray = [NSArray arrayWithObjects:leftmostCell, [self _messageCellForContent:content includingPrefixes:NO shouldPerformHeadIndent:NO], nil];
     }else{
-        cellArray = [NSArray arrayWithObjects:[self _messageCellForContent:content includingPrefixes:!inlinePrefixes shouldPerformHeadIndent:isHeader], nil];
+        cellArray = [NSArray arrayWithObjects:[self _messageCellForContent:content includingPrefixes:!inlinePrefixes shouldPerformHeadIndent:(isHeader && !inlinePrefixes && combineMessages)], nil];
     }
     row = [AIFlexibleTableRow rowWithCells:cellArray representedObject:content];
     //set the headIndent
