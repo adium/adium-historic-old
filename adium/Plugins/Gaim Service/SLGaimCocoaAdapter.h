@@ -37,6 +37,7 @@
 
 - (oneway void)MSNRequestBuddyIconFor:(NSString *)inUID onAccount:(id)adiumAccount;
 - (oneway void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount;
+
 @end
 
 /*!
@@ -53,7 +54,7 @@
 + (SLGaimCocoaAdapter *)sharedInstance;
 - (void)addAdiumAccount:(id)adiumAccount;
 - (oneway void)sendMessage:(NSString *)encodedMessage fromAccount:(id)sourceAccount inChat:(AIChat *)chat withFlags:(int)flags;
-- (oneway void)sendTyping:(BOOL)typing inChat:(AIChat *)chat;
+- (oneway void)sendTyping:(AITypingState)typingState inChat:(AIChat *)chat;
 - (oneway void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName;
 - (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:groupName;
 - (oneway void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName;
@@ -79,6 +80,9 @@
 
 - (oneway void)MSNRequestBuddyIconFor:(NSString *)inUID onAccount:(id)adiumAccount;
 - (oneway void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount;
+
+- (oneway void)doRequestInputCbValue:(NSValue *)callBackValue withUserDataValue:(NSValue *)userDataValue inputString:(NSString *)string;
+- (oneway void)doRequestActionCbValue:(NSValue *)callBackValue withUserDataValue:(NSValue *)userDataValue callBackIndex:(NSNumber *)callBackIndexNumber;
 
 - (void)displayFileSendError;
 - (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;

@@ -30,7 +30,7 @@
 
 //- (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy;
 - (void)removeAllStatusFlagsFromContact:(AIListContact *)contact silently:(BOOL)silent;
-- (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing;
+- (void)setTypingFlagOfContact:(AIListContact *)contact to:(NSNumber *)typingState;
 - (void)_updateAway:(AIListContact *)theContact toAway:(BOOL)newAway;
 
 - (AIChat*)_openChatWithContact:(AIListContact *)contact andConversation:(GaimConversation*)conv;
@@ -489,7 +489,7 @@ static id<GaimThread> gaimThread = nil;
 	//Be sure any remaining typing flag is cleared as the chat closes
 	AIListObject	*listObject = [chat listObject];
 	if (listObject){
-		[self setTypingFlagOfContact:(AIListContact *)listObject to:NO];
+		[self setTypingFlagOfContact:(AIListContact *)listObject to:nil];
 	}		
 	
 	[chatDict removeObjectForKey:[chat uniqueChatID]];
@@ -531,10 +531,10 @@ static id<GaimThread> gaimThread = nil;
 }
 
 //Typing update in an IM
-- (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(NSNumber *)typing
+- (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(NSNumber *)typingState
 {
 	[self setTypingFlagOfContact:(AIListContact*)[chat listObject]
-							  to:[typing boolValue]];
+							  to:typingState];
 }
 
 //Multiuser chat update
@@ -557,7 +557,7 @@ static id<GaimThread> gaimThread = nil;
 	sourceContact = (AIListContact*) [chat listObject];
 	
 	//Clear the typing flag of the listContact
-	[self setTypingFlagOfContact:sourceContact to:NO];
+	[self setTypingFlagOfContact:sourceContact to:nil];
 	
 	GaimDebug (@"receivedIMChatMessage: Received %@ from %@",[messageDict objectForKey:@"Message"],[sourceContact UID]);
 
@@ -716,7 +716,7 @@ static id<GaimThread> gaimThread = nil;
 			AIContentTyping *contentTyping = (AIContentTyping*)object;
 			AIChat *chat = [contentTyping chat];
 			
-			[gaimThread sendTyping:[contentTyping typing] inChat:chat];
+			[gaimThread sendTyping:[contentTyping typingState] inChat:chat];
 			
 			sent = YES;
 		}
@@ -1683,15 +1683,19 @@ static id<GaimThread> gaimThread = nil;
 	return contactStatusFlagsArray;
 }
 
-- (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing
+- (void)setTypingFlagOfContact:(AIListContact *)contact to:(NSNumber *)typingStateNumber
 {
-    BOOL currentValue = [[contact statusObjectForKey:@"Typing"] boolValue];
-	
-    if(typing != currentValue){
-		[contact setStatusObject:[NSNumber numberWithBool:typing]
+    NSNumber *currentValue = [contact statusObjectForKey:@"Typing"];
+
+    if((typingStateNumber && !currentValue) ||
+	   (!typingStateNumber && currentValue) ||
+	   (!([typingStateNumber compare:currentValue] == 0))){
+		[contact setStatusObject:typingStateNumber
 						  forKey:@"Typing"
 						  notify:NO];
-		[contact notifyOfChangedStatusSilently:NO];
+		
+		//Apply any changes
+		[contact notifyOfChangedStatusSilently:silentAndDelayed];
     }
 }
 
