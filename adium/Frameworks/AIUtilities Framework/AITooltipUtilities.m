@@ -94,38 +94,32 @@ static	AITooltipOrientation	tooltipOrientation;
 			![inTitle isEqualToAttributedString:tooltipTitle] || 
 			!(inImage==tooltipImage)) { //we don't exist or something changed
             
-			if (tooltipTitle) [tooltipTitle release];
+			[tooltipTitle release]; tooltipTitle = [inTitle retain];
             
 			if (inTitle) {
-                tooltipTitle = [inTitle retain];
                 [[textView_tooltipTitle textStorage] replaceCharactersInRange:NSMakeRange(0,[[textView_tooltipTitle textStorage] length])
 														 withAttributedString:tooltipTitle];
             } else {
-                tooltipTitle = nil;
                 [[textView_tooltipTitle textStorage] deleteCharactersInRange:NSMakeRange(0,[[textView_tooltipTitle textStorage] length])];            
             }
             
-            if (tooltipBody) [tooltipBody release]; 
+            [tooltipBody release]; tooltipBody = [inBody retain];
             if (inBody) {
-                tooltipBody = [inBody retain];
                 [[textView_tooltipBody textStorage] replaceCharactersInRange:NSMakeRange(0,[[textView_tooltipBody textStorage] length])
 														withAttributedString:tooltipBody];
             } else {
-                tooltipBody = [inBody retain];
                 [[textView_tooltipBody textStorage] deleteCharactersInRange:NSMakeRange(0,[[textView_tooltipBody textStorage] length])];
             }
             
-            if (tooltipImage) [tooltipImage release];
-            tooltipImage = [inImage retain];
+            [tooltipImage release]; tooltipImage = [inImage retain];
+				
             imageOnRight = inImageOnRight;
             [view_tooltipImage setImage:tooltipImage];
-            if (tooltipImage) {
-                imageSize = NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION);
-            } else {
-                imageSize = NSMakeSize(0,0);
-            }
+
+			imageSize = (tooltipImage ? NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION) : NSMakeSize(0,0));
             
             [self _sizeTooltip];
+				
         } else if(newLocation){
                 [tooltipWindow setFrameOrigin:[self _tooltipFrameOriginForSize:[[tooltipWindow contentView] frame].size]];
         }

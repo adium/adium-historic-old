@@ -336,7 +336,6 @@
     return([contentArray count]);
 }
 
-
 //Array creation / Destruction -----------------------------------------------------------------------------------------
 #pragma mark Array creation / Destruction
 //We don't actually create our arrays until needed.  There are many places where a mutable owner array

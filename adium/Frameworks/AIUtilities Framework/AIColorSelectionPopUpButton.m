@@ -42,7 +42,10 @@
     customColor = nil;
     
     //Create the custom menu item
-    customMenuItem = [[NSMenuItem alloc] initWithTitle:COLOR_CUSTOM_TITLE target:self action:@selector(openColorPanel:) keyEquivalent:@""];
+    customMenuItem = [[NSMenuItem alloc] initWithTitle:COLOR_CUSTOM_TITLE
+												target:self
+												action:@selector(openColorPanel:) 
+										 keyEquivalent:@""];
 
     //Setup our default colors
     customColor = [[NSColor blackColor] retain];
