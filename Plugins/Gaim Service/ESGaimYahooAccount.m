@@ -182,11 +182,8 @@
 			 int		idle = f->idle;
 			 NSDate	*idleSince;
 			 
-			 NSLog(@"%@ YAHOO_STATUS_IDLE %i (%d)",[theContact UID],idle,idle);
-			 
 			 if(idle != -1){
 				 idleSince = [NSDate dateWithTimeIntervalSinceNow:-idle];
-				 NSLog(@"So that's %i minutes ago",([[NSDate date] timeIntervalSinceDate:idleSince]/60));
 			 }else{
 				 idleSince = [NSDate date];
 			 }
