@@ -22,7 +22,7 @@
 #import "ESWebFrameViewAdditions.h"
 #import "ESWebKitMessageViewPreferences.h"
 #import <AIUtilities/AIColorAdditions.h>
-#import <AIUtilities/AIHTMLDecoder.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/BZArrayAdditions.h>
 #import <AIUtilities/ESDateFormatterAdditions.h>
 #import <AIUtilities/NEHMutableStringAdditions.h>
@@ -31,6 +31,7 @@
 #import <Adium/AIContentContext.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIContentStatus.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIService.h>
