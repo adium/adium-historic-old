@@ -245,7 +245,10 @@
     [textView_outgoing setOwner:owner];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
     [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
-
+    if([textView_outgoing respondsToSelector:@selector(setUsesFindPanel:)]){
+	[textView_outgoing setUsesFindPanel:YES];
+    }
+    
     //Send button
     [button_send setTitle:@"Send"];
     [button_send setButtonType:NSMomentaryPushInButton];
