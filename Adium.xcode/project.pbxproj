@@ -3172,6 +3172,14 @@
 				346C9CC706004608000F5A8A,
 				346C9CCC0600460A000F5A8A,
 				346C9CCF0600460B000F5A8A,
+				34F2E8E407C2D0C4007EAAAB,
+				34F2E8E607C2D0C4007EAAAB,
+				34F2E8E807C2D0C4007EAAAB,
+				34F2E8EA07C2D0C4007EAAAB,
+				34F2E8EC07C2D0C4007EAAAB,
+				34F2E8EE07C2D0C4007EAAAB,
+				34F2E8F007C2D0C4007EAAAB,
+				34F2E8F207C2D0C4007EAAAB,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3195,6 +3203,14 @@
 				346C9CC806004609000F5A8A,
 				346C9CD30600460D000F5A8A,
 				346C9CD50600460E000F5A8A,
+				34F2E8E307C2D0C4007EAAAB,
+				34F2E8E507C2D0C4007EAAAB,
+				34F2E8E707C2D0C4007EAAAB,
+				34F2E8E907C2D0C4007EAAAB,
+				34F2E8EB07C2D0C4007EAAAB,
+				34F2E8ED07C2D0C4007EAAAB,
+				34F2E8EF07C2D0C4007EAAAB,
+				34F2E8F107C2D0C4007EAAAB,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10158,6 +10174,270 @@
 		};
 		34F2E83B07C2CDBE007EAAAB = {
 			fileRef = 34F2E83907C2CDBD007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8C907C2D08F007EAAAB = {
+			children = (
+				34F2E8E207C2D0C4007EAAAB,
+				34F2E8E107C2D0C4007EAAAB,
+				34F2E8E007C2D0C4007EAAAB,
+				34F2E8DF07C2D0C4007EAAAB,
+				34F2E8DE07C2D0C4007EAAAB,
+				34F2E8DD07C2D0C4007EAAAB,
+				34F2E8DC07C2D0C3007EAAAB,
+				34F2E8DB07C2D0C3007EAAAB,
+				34F2E8DA07C2D0C3007EAAAB,
+				34F2E8D907C2D0C3007EAAAB,
+				34F2E8D807C2D0C3007EAAAB,
+				34F2E8D707C2D0C3007EAAAB,
+				34F2E8D607C2D0C3007EAAAB,
+				34F2E8D507C2D0C3007EAAAB,
+				34F2E8D407C2D0C3007EAAAB,
+				34F2E8D307C2D0C3007EAAAB,
+			);
+			isa = PBXGroup;
+			name = "Flexible Table View";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8D307C2D0C3007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIFlexibleTableView.m;
+			path = "Plugins/Standard Message View/AIFlexibleTableView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8D407C2D0C3007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIFlexibleTableView.h;
+			path = "Plugins/Standard Message View/AIFlexibleTableView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8D507C2D0C3007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIFlexibleTableTextCell.m;
+			path = "Plugins/Standard Message View/AIFlexibleTableTextCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8D607C2D0C3007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIFlexibleTableTextCell.h;
+			path = "Plugins/Standard Message View/AIFlexibleTableTextCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8D707C2D0C3007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIFlexibleTableStringCell.m;
+			path = "Plugins/Standard Message View/AIFlexibleTableStringCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8D807C2D0C3007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIFlexibleTableStringCell.h;
+			path = "Plugins/Standard Message View/AIFlexibleTableStringCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8D907C2D0C3007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIFlexibleTableSpanCell.m;
+			path = "Plugins/Standard Message View/AIFlexibleTableSpanCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8DA07C2D0C3007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIFlexibleTableSpanCell.h;
+			path = "Plugins/Standard Message View/AIFlexibleTableSpanCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8DB07C2D0C3007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIFlexibleTableRow.m;
+			path = "Plugins/Standard Message View/AIFlexibleTableRow.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8DC07C2D0C3007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIFlexibleTableRow.h;
+			path = "Plugins/Standard Message View/AIFlexibleTableRow.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8DD07C2D0C4007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIFlexibleTableImageCell.m;
+			path = "Plugins/Standard Message View/AIFlexibleTableImageCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8DE07C2D0C4007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIFlexibleTableImageCell.h;
+			path = "Plugins/Standard Message View/AIFlexibleTableImageCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8DF07C2D0C4007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIFlexibleTableFramedTextCell.m;
+			path = "Plugins/Standard Message View/AIFlexibleTableFramedTextCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8E007C2D0C4007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIFlexibleTableFramedTextCell.h;
+			path = "Plugins/Standard Message View/AIFlexibleTableFramedTextCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8E107C2D0C4007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIFlexibleTableCell.m;
+			path = "Plugins/Standard Message View/AIFlexibleTableCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8E207C2D0C4007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIFlexibleTableCell.h;
+			path = "Plugins/Standard Message View/AIFlexibleTableCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E8E307C2D0C4007EAAAB = {
+			fileRef = 34F2E8D307C2D0C3007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8E407C2D0C4007EAAAB = {
+			fileRef = 34F2E8D407C2D0C3007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8E507C2D0C4007EAAAB = {
+			fileRef = 34F2E8D507C2D0C3007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8E607C2D0C4007EAAAB = {
+			fileRef = 34F2E8D607C2D0C3007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8E707C2D0C4007EAAAB = {
+			fileRef = 34F2E8D707C2D0C3007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8E807C2D0C4007EAAAB = {
+			fileRef = 34F2E8D807C2D0C3007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8E907C2D0C4007EAAAB = {
+			fileRef = 34F2E8D907C2D0C3007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8EA07C2D0C4007EAAAB = {
+			fileRef = 34F2E8DA07C2D0C3007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8EB07C2D0C4007EAAAB = {
+			fileRef = 34F2E8DB07C2D0C3007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8EC07C2D0C4007EAAAB = {
+			fileRef = 34F2E8DC07C2D0C3007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8ED07C2D0C4007EAAAB = {
+			fileRef = 34F2E8DD07C2D0C4007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8EE07C2D0C4007EAAAB = {
+			fileRef = 34F2E8DE07C2D0C4007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8EF07C2D0C4007EAAAB = {
+			fileRef = 34F2E8DF07C2D0C4007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8F007C2D0C4007EAAAB = {
+			fileRef = 34F2E8E007C2D0C4007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8F107C2D0C4007EAAAB = {
+			fileRef = 34F2E8E107C2D0C4007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E8F207C2D0C4007EAAAB = {
+			fileRef = 34F2E8E207C2D0C4007EAAAB;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -23408,6 +23688,7 @@
 		};
 		F59F9A7F032BE67901A8010A = {
 			children = (
+				34F2E8C907C2D08F007EAAAB,
 				F5793995033E75B001A8010A,
 				F5793996033E75B001A8010A,
 				4BCDEB4203D4DC9700A8010A,
