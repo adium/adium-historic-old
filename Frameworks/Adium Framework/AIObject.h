@@ -5,8 +5,6 @@
 //  Created by Adam Iser on Sun Dec 14 2003.
 //
 
-#import "AIAdium.h"
-
 @class AIAdium;
 
 @interface AIObject : NSObject {
