@@ -582,7 +582,7 @@
 		340F47EA06DA41DB0072E2FA = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "Contact Info List Theme.plist";
 			path = "Source/Contact Info List Theme.plist";
 			refType = 4;
@@ -591,7 +591,7 @@
 		340F47EB06DA41DB0072E2FA = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "Contact Info List Layout.plist";
 			path = "Source/Contact Info List Layout.plist";
 			refType = 4;
@@ -2555,7 +2555,7 @@
 		344C0D4806B6D61B00DA7200 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = AdiumSuite.scriptSuite;
 			path = Source/AdiumSuite.scriptSuite;
 			refType = 4;
@@ -2564,7 +2564,7 @@
 		344C0D4906B6D61B00DA7200 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = English;
 			path = Source/English.lproj/AdiumSuite.scriptTerminology;
 			refType = 4;
@@ -2679,7 +2679,7 @@
 		344ECBAB0620F323007256C6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "VersionChecker Defaults.plist";
 			path = "Plugins/Version Checker/VersionChecker Defaults.plist";
 			refType = 4;
@@ -4494,7 +4494,7 @@
 		};
 		34A65D6D06A5ABC500898470 = {
 			isa = PBXFileReference;
-			lastKnownFileType = file;
+			lastKnownFileType = sourcecode.scpt;
 			name = Safari.scpt;
 			path = "Plugins/Safari Link Toolbar Item/Safari.scpt";
 			refType = 4;
@@ -6813,7 +6813,7 @@
 		34C1CA8705B15B170055C2E3 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "Labels Themable Prefs.plist";
 			path = "Plugins/Standard Contact List View/Labels Themable Prefs.plist";
 			refType = 4;
@@ -6822,7 +6822,7 @@
 		34C1CA8D05B15B3D0055C2E3 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "Idle Time Themable Prefs.plist";
 			path = "Plugins/Idle Time Display/Idle Time Themable Prefs.plist";
 			refType = 4;
@@ -9851,7 +9851,7 @@
 		4B29093F05F944BF0087D16F = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = AccountPrefs.plist;
 			path = Source/AccountPrefs.plist;
 			refType = 4;
@@ -12528,7 +12528,7 @@
 		4BA1300304C0A4E300A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = DualWindowDefaults.plist;
 			path = "Plugins/Dual Window Interface/DualWindowDefaults.plist";
 			refType = 4;
@@ -16983,7 +16983,7 @@
 		};
 		52AEBD6205ABA95800B19C56 = {
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "TicTacToe-Info.plist";
 			path = "Plists/TicTacToe-Info.plist";
 			refType = 4;
@@ -17287,7 +17287,7 @@
 		52C623DF06697B1D0006C387 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "Growl-Info.plist";
 			path = "Plists/Growl-Info.plist";
 			refType = 4;
@@ -18209,7 +18209,7 @@
 		6E4F2B1605CA013000C11243 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = AwayStatusPrefs.plist;
 			path = "Plugins/Away Status Window/AwayStatusPrefs.plist";
 			refType = 4;
@@ -18262,7 +18262,7 @@
 		6E6EA018066F9C2600FA0D91 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = MessageStyles.plist;
 			path = "Plugins/Standard Message View/MessageStyles.plist";
 			refType = 4;
@@ -18722,7 +18722,7 @@
 		6ECFABC40622370D001C7E93 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = MessageContextDisplayDefaults.plist;
 			path = "Plugins/Message Context Display/MessageContextDisplayDefaults.plist";
 			refType = 4;
@@ -18767,7 +18767,7 @@
 		6EF3F85F05EF179B0037D3CC = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "Adium Default.AdiumTheme";
 			path = "Plugins/Themes/Adium Default.AdiumTheme";
 			refType = 4;
@@ -19540,7 +19540,7 @@
 		};
 		7ECB106806A4D1AD00812D5F = {
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "AOLamerKiller-Info.plist";
 			path = "Plists/AOLamerKiller-Info.plist";
 			refType = 4;
@@ -19828,7 +19828,7 @@
 		9E1BE1C605B248F0009B1A21 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = ContactCountingDisplayDefaults.plist;
 			path = "Plugins/Contact Counting Display/ContactCountingDisplayDefaults.plist";
 			refType = 4;
@@ -19891,7 +19891,7 @@
 		9E217B7706A74CA7002A3F27 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = StatusMenuItemDefaultPrefs.plist;
 			path = "Plugins/Status Menu Item/StatusMenuItemDefaultPrefs.plist";
 			refType = 4;
@@ -20632,7 +20632,7 @@
 		B7FD6C160596550F000C4D9D = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			path = SQLLogging.plist;
 			refType = 4;
 			sourceTree = "<group>";
@@ -20989,7 +20989,7 @@
 		};
 		BFEBDC010669029900CBF845 = {
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "WebAdium-Info.plist";
 			path = "WebAdium/WebAdium-Info.plist";
 			refType = 2;
@@ -21390,7 +21390,7 @@
 		C4947AFF05BD177E00780FE2 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "Contact Status Coloring Themable Prefs.plist";
 			path = "Plugins/Contact Status Coloring/Contact Status Coloring Themable Prefs.plist";
 			refType = 4;
@@ -21399,7 +21399,7 @@
 		C497514605BB99DC009958A6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "Tab Coloring Themable Prefs.plist";
 			path = "Plugins/Contact Status Tab Coloring/Tab Coloring Themable Prefs.plist";
 			refType = 4;
@@ -21408,7 +21408,7 @@
 		C497514805BBAA38009958A6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "SCL Themable Prefs.plist";
 			path = "Plugins/Standard Contact List View/SCL Themable Prefs.plist";
 			refType = 4;
@@ -21417,7 +21417,7 @@
 		C497514905BBAC25009958A6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "Emoticon Themable Prefs.plist";
 			path = "Plugins/Emoticons/Emoticon Themable Prefs.plist";
 			refType = 4;
@@ -21426,7 +21426,7 @@
 		C497516205BBAEB1009958A6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "SMV Themable Prefs.plist";
 			path = "Plugins/Standard Message View/SMV Themable Prefs.plist";
 			refType = 4;
@@ -21435,7 +21435,7 @@
 		C497516305BBAFE4009958A6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "Dual Window Themable Prefs.plist";
 			path = "Plugins/Dual Window Interface/Dual Window Themable Prefs.plist";
 			refType = 4;
@@ -21444,7 +21444,7 @@
 		C497518C05BBB0C5009958A6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = "Dock Themable Prefs.plist";
 			path = "Source/Dock Themable Prefs.plist";
 			refType = 4;
@@ -23190,7 +23190,7 @@
 		F5F0FEA204B133AB01A80106 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = EmoticonDefaults.plist;
 			path = Plugins/Emoticons/EmoticonDefaults.plist;
 			refType = 4;
