@@ -73,8 +73,8 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 		NSString   		*newestDateString = [dateFormatter stringForObjectValue:newestDate];
 		
 		//Time since last update (contains a trailing space)
-		NSString *interval = [NSDateFormatter stringForApproximateTimeIntervalBetweenDate:currentDate
-																				  andDate:newestDate];
+		NSString *interval = [NSDateFormatter stringForApproximateTimeIntervalBetweenDate:newestDate
+																				  andDate:currentDate];
 		[textField_updateAvailable setStringValue:[NSString stringWithFormat:UPDATE_PROMPT, newestDateString, interval]];
 	}
 	
