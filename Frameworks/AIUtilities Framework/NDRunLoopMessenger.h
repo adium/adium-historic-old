@@ -87,6 +87,8 @@ extern NSString		* kConnectionDoesNotExistsException;
 - (void)target:(id)aTarget performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject withObject:(id)aThirdObject;
 
 - (void)target:(id)aTarget performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject withObject:(id)aThirdObject withObject:(id)aFourthObject;
+
+- (void)target:(id)aTarget performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject withObject:(id)aThirdObject withObject:(id)aFourthObject withObject:(id)aFifthObject;
 	/*!
 	@method target:performSelector:withResult:
 	@abstract Perform a selector.
@@ -126,6 +128,8 @@ extern NSString		* kConnectionDoesNotExistsException;
 - (id)target:(id)aTarget performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject withObject:(id)aThirdObject withResult:(BOOL)aFlag;
 
 - (id)target:(id)aTarget performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject withObject:(id)aThirdObject withObject:(id)aFourthObject withResult:(BOOL)aFlag;
+
+- (id)target:(id)aTarget performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject withObject:(id)aThirdObject withObject:(id)aFourthObject withObject:(id)aFifthObject withResult:(BOOL)aFlag;
 	
 /*!
 	@method postNotification:
