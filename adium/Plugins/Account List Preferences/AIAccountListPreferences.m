@@ -369,10 +369,6 @@
     [tableView_accountList registerForDraggedTypes:[NSArray arrayWithObjects:ACCOUNT_DRAG_TYPE,nil]];
     [scrollView_accountList setAutoHideScrollBar:YES];
     
-    //Configure our buttons
-    [button_newAccount setImage:[NSImage imageNamed:@"plus" forClass:[self class]]];
-    [button_deleteAccount setImage:[NSImage imageNamed:@"minus" forClass:[self class]]];
-	
 	//Keep an eye on list changes so we can update as necessary
     [[adium notificationCenter] addObserver:self
 								   selector:@selector(accountListChanged:) 

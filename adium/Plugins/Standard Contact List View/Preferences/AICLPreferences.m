@@ -47,7 +47,12 @@
 {
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 	
-    //Display
+	currentLayoutName = [@"Default" retain];
+	currentThemeName = [@"Default" retain];
+	[self updateLayouts];
+	[self updateThemes];
+	
+	//Display
     [self showFont:[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont] inField:textField_fontName];
     [colorWell_contact setColor:[[preferenceDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor]];
     [colorWell_background setColor:[[preferenceDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColor]];
@@ -130,14 +135,179 @@
     }
 }
 
+#warning newLayout
 - (IBAction)spawnLayout:(id)sender
 {
-	[AIListLayoutWindowController listLayoutOnWindow:[[self view] window]];
+	[AIListLayoutWindowController listLayoutOnWindow:[[self view] window]
+											withName:[NSString stringWithFormat:@"%@ Copy",currentLayoutName]];
 }
 
 - (IBAction)spawnTheme:(id)sender
 {
-	[AIListThemeWindowController listThemeOnWindow:[[self view] window]];
+	[AIListThemeWindowController listThemeOnWindow:[[self view] window]
+										  withName:[NSString stringWithFormat:@"%@ Copy",currentThemeName]];
 }
+
+
+
+
+
+
+
+
+
+- (void)updateLayouts
+{
+	[layoutArray release];
+	layoutArray = [[self availableSetsWithExtension:LIST_LAYOUT_EXTENSION fromFolder:LIST_LAYOUT_FOLDER] retain];
+	NSLog(@"%@",layoutArray);
+	[tableView_layout reloadData];
+}
+
+- (void)updateThemes
+{
+	[themeArray release];
+	themeArray = [[self availableSetsWithExtension:LIST_THEME_EXTENSION fromFolder:LIST_THEME_FOLDER] retain];
+	NSLog(@"%@",themeArray);
+	[tableView_theme reloadData];
+}
+
+
+
+
+
+
+
+- (int)numberOfRowsInTableView:(NSTableView *)tableView
+{
+	if(tableView == tableView_layout){
+		return([layoutArray count]);
+	}else{
+		return([themeArray count]);
+	}
+}
+
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+	NSString	*column = [tableColumn identifier];
+	
+	if(tableView == tableView_layout){
+		NSDictionary	*layoutDict = [layoutArray objectAtIndex:row];
+		
+		if([column isEqualToString:@"type"]){
+			return(@"-");
+		}else if([column isEqualToString:@"name"]){
+			return([layoutDict objectForKey:@"name"]);
+		}else if([column isEqualToString:@"preview"]){
+			return(@"-");
+		}
+	}else if(tableView == tableView_theme){
+		NSDictionary	*themeDict = [themeArray objectAtIndex:row];
+		
+		if([column isEqualToString:@"type"]){
+			return(@"-");
+		}else if([column isEqualToString:@"name"]){
+			return([themeDict objectForKey:@"name"]);
+		}else if([column isEqualToString:@"preview"]){
+			return(@"-");
+		}
+	}
+
+	return(@"-");
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)notification
+{
+	NSTableView	*tableView = [notification object];
+
+	if(tableView == tableView_layout){
+		NSDictionary	*layoutDict = [layoutArray objectAtIndex:[tableView selectedRow]];
+		[self applySet:[layoutDict objectForKey:@"preferences"] toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
+		
+	}else if(tableView == tableView_theme){
+		NSDictionary	*themeDict = [themeArray objectAtIndex:[tableView selectedRow]];
+		[self applySet:[themeDict objectForKey:@"preferences"] toPreferenceGroup:PREF_GROUP_LIST_THEME];
+		
+	}
+}
+
+
+
+
+
+
+
+//Sets ----------------------------
+- (NSArray *)availableSetsWithExtension:(NSString *)extension fromFolder:(NSString *)folder
+{
+	NSMutableArray	*setArray = [NSMutableArray array];
+	NSEnumerator	*enumerator = [[adium resourcePathsForName:folder] objectEnumerator];
+	NSString		*resourcePath;
+	
+    while(resourcePath = [enumerator nextObject]) {
+        NSEnumerator 	*fileEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:resourcePath] objectEnumerator];
+        NSString		*filePath;
+		
+        //Find all the message styles
+        while((filePath = [fileEnumerator nextObject])){
+            if([[filePath pathExtension] caseInsensitiveCompare:extension] == NSOrderedSame){					
+				NSString		*themePath = [resourcePath stringByAppendingPathComponent:filePath];
+				NSDictionary 	*themeDict = [NSDictionary dictionaryWithContentsOfFile:themePath];
+				
+				if(themeDict){
+					[setArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+						[filePath stringByDeletingPathExtension], @"name",
+						themePath, @"path",
+						themeDict, @"preferences",
+						nil]];
+				}
+			}
+		}
+	}
+	
+	return(setArray);
+}
+
+- (void)applySet:(NSDictionary *)setDictionary toPreferenceGroup:(NSString *)preferenceGroup
+{
+	NSEnumerator	*enumerator = [setDictionary keyEnumerator];
+	NSString		*key;
+	
+	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
+	while(key = [enumerator nextObject]){
+		[[adium preferenceController] setPreference:[setDictionary objectForKey:key]
+											 forKey:key
+											  group:preferenceGroup];
+	}
+	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
+}
+
+#warning bah
++ (BOOL)createSetFromPreferenceGroup:(NSString *)preferenceGroup withName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder
+{
+	NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
+	NSString	*fileName = [setName stringByAppendingPathExtension:extension];
+	NSString	*path = [destFolder stringByAppendingPathComponent:fileName];
+	
+	if([[[[AIObject sharedAdiumInstance] preferenceController] preferencesForGroup:preferenceGroup] writeToFile:path atomically:NO]){
+#warning	[self buildThemesList];
+		return(YES);
+	}else{
+		NSRunAlertPanel(@"Error Saving Theme",
+						@"Unable to write file %@ to %@",
+						@"Okay",
+						nil,
+						nil,
+						fileName,
+						path);
+		return(NO);
+	}
+}
+
+
+
+
+
+
 
 @end

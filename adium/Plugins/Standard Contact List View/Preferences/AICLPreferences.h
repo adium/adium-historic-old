@@ -13,6 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+
 @interface AICLPreferences : AIPreferencePane {
     IBOutlet	NSView			*view_prefViewGeneral;
     IBOutlet	NSButton		*button_setFont;
@@ -23,6 +24,18 @@
     IBOutlet	NSColorWell		*colorWell_contact;
     IBOutlet	NSColorWell		*colorWell_background;
     IBOutlet	NSColorWell		*colorWell_grid;
+	
+	NSString	*currentLayoutName;
+	NSString	*currentThemeName;
+	
+	IBOutlet	NSTableView		*tableView_layout;
+	IBOutlet	NSTableView		*tableView_theme;
+	
+	IBOutlet	NSButton		*button_layoutDelete;
+	IBOutlet	NSButton		*button_themeDelete;
+	
+	NSArray		*layoutArray;
+	NSArray		*themeArray;
 }
 
 - (IBAction)spawnLayout:(id)sender;

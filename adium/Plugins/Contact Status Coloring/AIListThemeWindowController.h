@@ -6,6 +6,8 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
+#define LIST_THEME_FOLDER			@"Contact List"
+#define LIST_THEME_EXTENSION		@"ListTheme"
 #define PREF_GROUP_LIST_THEME		@"List Theme"
 
 // Contact List Colors Enabled
@@ -100,9 +102,12 @@
 	IBOutlet	NSColorWell	*colorWell_groupBackground;
 	IBOutlet	NSColorWell	*colorWell_groupBackgroundGradient;
 
+	IBOutlet	NSTextField	*textField_themeName;
+	
+	NSString				*themeName;
 }
 
-+ (id)listThemeOnWindow:(NSWindow *)parentWindow;
++ (id)listThemeOnWindow:(NSWindow *)parentWindow withName:(NSString *)inName;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
 - (void)preferenceChanged:(id)sender;

@@ -7,13 +7,14 @@
 //
 
 #import "AIListThemeWindowController.h"
-
+#import "AICLPreferences.h"
 
 @implementation AIListThemeWindowController
 
-+ (id)listThemeOnWindow:(NSWindow *)parentWindow
++ (id)listThemeOnWindow:(NSWindow *)parentWindow withName:(NSString *)inName
 {
-	AIListThemeWindowController	*listThemeWindow = [[self alloc] initWithWindowNibName:@"ListThemeSheet"];
+	AIListThemeWindowController	*listThemeWindow = [[self alloc] initWithWindowNibName:@"ListThemeSheet"
+																			  withName:inName];
 	
 	if(parentWindow){
 		[NSApp beginSheet:[listThemeWindow window]
@@ -28,15 +29,16 @@
 	return(listThemeWindow);
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName
+- (id)initWithWindowNibName:(NSString *)windowNibName withName:(NSString *)inName
 {
     [super initWithWindowNibName:windowNibName];	
-	
+	themeName = [inName retain];
 	return(self);
 }
 
 - (void)dealloc
 {
+	[themeName release];
     [super dealloc];
 }
 
@@ -46,6 +48,8 @@
 - (void)windowDidLoad
 {
 	[self configureControls];
+
+	[textField_themeName setStringValue:themeName];
 }
 
 //Window is closing
@@ -79,7 +83,13 @@
 //
 - (IBAction)okay:(id)sender
 {
-    [self closeWindow:sender];
+#warning save here!?  or in the main prefs file?
+	if([AICLPreferences createSetFromPreferenceGroup:PREF_GROUP_LIST_THEME
+											withName:[textField_themeName stringValue]
+										   extension:LIST_THEME_EXTENSION
+											inFolder:LIST_THEME_FOLDER]){
+		[self closeWindow:sender];
+	}
 }
 
 

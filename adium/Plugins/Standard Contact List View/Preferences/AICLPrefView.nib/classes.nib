@@ -11,13 +11,17 @@
             CLASS = AICLPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_layoutDelete" = NSButton; 
                 "button_setFont" = NSButton; 
+                "button_themeDelete" = NSButton; 
                 "checkBox_alternatingGrid" = NSButton; 
                 "checkBox_showLabels" = NSButton; 
                 "checkBox_tooltips" = NSButton; 
                 "colorWell_background" = NSColorWell; 
                 "colorWell_contact" = NSColorWell; 
                 "colorWell_grid" = NSColorWell; 
+                "tableView_layout" = NSTableView; 
+                "tableView_theme" = NSTableView; 
                 "textField_fontName" = NSTextField; 
                 "view_prefViewGeneral" = NSView; 
             }; 
@@ -38,6 +42,8 @@
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {CLASS = AIPlugin; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {CLASS = AIService; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
