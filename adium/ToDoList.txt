@@ -1,21 +1,26 @@
-$Id: ToDoList.txt,v 1.135 2004/05/16 18:33:38 adamiser Exp $
-
+$Id: ToDoList.txt,v 1.136 2004/05/16 18:53:33 adamiser Exp $
 
 Legend
 + Change or Addition
 - Removal
 * Bug Fix
 # Debatable (ASK and debate before doing!)
-= Done (Move to the bottom)
 
 If you are working on something big and it may take a while, please tag it with your [name].
 
+
 -------------------------------------------------------------------------------------------------------
-Bugs
+Bugs - LibGaim
+-------------------------------------------------------------------------------------------------------
+* [ICQ] Displaying raw HTML (Messages sent from iChat)
+	Libgaim is escaping all incoming HTML characters over ICQ.
+
+
+-------------------------------------------------------------------------------------------------------
+Bugs - Adium
 -------------------------------------------------------------------------------------------------------
 * "Custom..." sound option is not working.
 * We are not processing HTML that arrives over an ICQ connection.  Some clients (such as iChat) send HTML over ICQ.
-* If you uncheck the "play user interface feedback sounds" in System preferences, and disable the "Use Custom Volume" checkbox in Adium, no sounds are played
 * Don't spawn new windows when we're hidden, doing so will unhide us (Show the windows next time we're unhidden)
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * User icons are still getting flipped (Icons from AIM, apparently)
@@ -306,120 +311,5 @@ http://www.mirrors.wiretapped.net/security/steganography/stegdetect/stegdetect-0
 
 * WebKit caching is meaning that buddy icons don't update until Adium restarts.
 
+* If you uncheck the "play user interface feedback sounds" in System preferences, and disable the "Use Custom Volume" checkbox in Adium, no sounds are played
 
--------------------------------------------------------------------------------------------------------
-Waiting On
--------------------------------------------------------------------------------------------------------
-
--------------------------------------------------------------------------------------------------------
-Done
--------------------------------------------------------------------------------------------------------
-Bug Fixes:
-= Account name not displaying correctly after service switch
-= accountXferDestroy in CBGaimAccount appears to be doing.. something.. wrong, causing a lot of file transfer crashes.
-= 'Auto-Away' controls do not dim when there are no away messages (configureControlDimming overrides savedAwaysMenu)
-= 'Auto-Away' menu dimming does not refresh when away messages are changed
-= 'Auto-Away' menu does not refresh when away messages are changed
-= Auto-Idle does not remove when 'Auto-Away' is turned on (Set them both to 1 minute, wait, click 'return', idle stays)
-= Contact alerts window is still registering for a notification when the account changed, but not implementing an action method.
-= Contact list display format preference not applying correctly on launch
-= Deleting a "new account" doesn't display <New Account> as the name in  the resulting confirmation dialogue
-= Deleting the default theme makes the prefs crash on subsequent loads.
-= If preferences are selected to advanced on close, the window will be vertically small on re-open.
-= In certain fonts, the tails of letters will stain in the text entry field after it clears.  This is visible with HoeflerText(size 12) - type a few j's and then press esc to clear the field. (hehe)
-= Libgaim disconnect errors are being displayed, and not ignored (since they are handled internally)
-= Message tabs are not refreshing correctly when status changes (Fixed?)
-= Mousekeys to move tabs causes a crash: http://www.visualdistortion.org/crash/view.jsp?crash=5930
-= Preference window crashes if you have a color picker open, close the window, and then click inside the picker.  The colorwell just needs to be told activate:NO in viewWillClose.  Fixing this requires verifying that viewWillClose is being called on advan
-= Prevent cmd-delete from working in the message window
-= Pushing escape clears the text field, instead of allowing you to convert from kanji to roman. This can be considered a bug, but some people like the escape key to be used to clear the text field too, so maybe this could be a preference or something.
-	Evan: I say we just take this nonstandard 'feature' out.
-	Colin: It's not nonstandard and it's a good feature.
-	Evan: Okay, okay, popular response has been that they love it.  We'll think about a revised Keybaord preferences, perhaps in the Sending tab, to encapsulate this and maybe other preferences?
-= Spaces in the address book STILL don't work properly, and they really should be better now. Grr.
-= Stray tab divider is displaying when dragging tabs
-= Version checker reports 'up to date' when there is no net connection (and when the server cannot be reached?)
-= We have a 10.2.8 crash in contact list resize code, somehow: http://www.visualdistortion.org/crash/view.jsp?crash=8008 (There are a couple like this)
-= When dragging a tab off quickly, it is possible for the tab bar to not finish moving to the correct position or to crash.
-= Window content is drawing 2 pixels to the left when dragging tabs
-ced preference panes.
-= Fix the Output Device Control plugin so it doesn't crash on Jaguar (unfixable?) Alternatively, figure out a way to have it be on by default in Panther, but off in Jaguar.
-= We aren't processing <code> tags in our HTML decoder (Jabber uses them)
-	- (Tick: I thought jabber sent xml...???)
-= Getting other strange 'code' in incoming jabber messages (xmlns=, ...)
-= Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
-= Changing an alias in the inspector does not correctly update the contact list
-= Some URLs in profiles aren't allowing clicks properly (Ones that include %n ?)
-= Away messages with special characters (such as opt-n-n) show up as "Away:YES' in Adium (even when set by an Adium client)
-= Jabber behaves incorrectly when you connect from another location (on, off, on, off, ...) (I've heard that yahoo does this as well)
-= We have issues with not notifying the user when a message fails to send
-= Users are still reporting issues with the contact list display format pref not being correct on launch.
-= Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
-= Tooltip code does not like the multiple-desktop apps, or users who press cmd-H with the cursor over the contact list
-= Tooltip code can crash if the listobject disappears out from under it, somehow. http://www.visualdistortion.org/crash/view.jsp?crash=8128
-= Message history 'date' timestamps are not using localized time strings
-= GROUP DRAGGING IS BROKEN.  Try it :)
-= MSN freezes in glib (g_ascii_strncasecmp) when sending a &
-= Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
-= Add some indication of service to the 'enter password' window.  Multiple accounts with the same name are indistinguishable
-= Interact with libgaim via a thread to improve responsiveness during connect/disconnect/poor connectivity
-= Adding a contact that already exists on the list seems to cause problems
-= Can "add" a contact with no accounts (the button should dim with no accounts checked)
-= Only one password request dialog is allowed at a time.  This limitation causes issues for users with multiple accounts who don't save passwords.
-= When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
-= Connection failures due to a disconnected network (at least with Airport) cause the password to be cleared and re-prompted for.
-= We are prompting for passwords on auto-reconnect like crazy.
-= Improve validateMenuItem: efficiency programwide to fix hangs when dropping down menus.
-
-Features & Changes:
-= Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
-= Add a 'None' soundset 
-= Add checkboxes in source list to enable/disable packs
-= Add dividers to view menu
-= Add Offline status coloring
-= Add support for displaying emoticon images (webkit message view)
-= Add support for the scrolling / paging keys in the WebKit View
-= Auto-complete aliases in New Message prompt
-= Change window cycling menu items to 'Previous Chat' 'Next Chat'
-= Clean up emoticon preference layout.  Move checkbox next to pack name, align icons, adjust padding, etc.
-= Create new account, tab from username->pass->account list.  Next tab should go back to username
-= Display 'New Account' in account list for accounts without a UID
-= Interact with libgaim via a thread to avoid beachballing (Wait for Scott's patch - libgaim 0.76!, should fix)
-= iTunes %_status script should display "Not Playing" when iTunes isn't open
-= iTunes script runner should load scripts from the Application Support directory
-= Make option-clicking a tab close button close all other tabs
-= Make selecting an account in the menu connect / disconnect
-= Make source list display all available emoticon packs
-= Make the "Custom Tab Status Coloring" preferences work as intended (if disabled, the contact list labels colors are used for tab text colors).
-= Move user name field out of account code and into account list preferences code
-= Remember last X lines of previous conversation, restore to new message windows [Dave]
-= Remove "per-contact" window position/size saving.  Use size/position of last window, cascade new ones 
-= Remove sorting preferences.  Consolidate these and place them in the view menu - (Evan: MINOR CHANGE?! I'm hurt.)
-= Remove submenus from accounts in the File menu
-= Revamp emoticons preferences
-= Tab scrubbing.  If control is held when mousing over a tab, select that tab
-= We probably need a default priority preference.
-= Webkit: Add keypress forwarding
-= WebKit: Add support for displaying buddy icons using the UserIconPath status object
-= Tabbing through account pref fields (yahoo) is no longer working [regression]
-= Changes to the password field (Account prefs) aren't applied when connect is clicked.
-= Allow user to cancel connecting of accounts
-= Standardize on the service description for Oscar accounts - do something like "AIM, ICQ, and .Mac" in the services dropdown, in the new message prompt, etc.
-= Insert/Edit link menu item, accompanying link entry panel.
-= Edit link context menu
-= WebKit Message View: Add preference to switch active style, preview styles
-= WebKit Message View: Add preference to switch variants for the active style
-= AIM accounts should show AIM as their service type, while ICQ should show ICQ, .Mac show .Mac, etc.
-= Add to buddy list menu item, contextual menu item (for strangers)
-= Add account specific proxy fields (Type, host, port) for all libgaim connections
-= Adium will unhide if hidden (via cmd-H) while a tooltip is visible
-= GROUP DRAGGING IS BROKEN
-= Contact list transparency is incorrect (the background is black/opaque) when the window is first opened.
-= Apple scripts will prompt for the location of itunes multiple times on launch if it's not installed.
-= Contact list flippy triangles are white behind them in 10.2
-= Add Contact should have more intelligent defaults, and generally be less of a pain
-= Magnetic Windows:  Use Fire's 'solution' of sliding them to screen edges after a drag.
-= Our 'new message' toolbar button is gooooone gone gone gone gone
-= For contacts with no Adium alias and a matching address book card, the contact list format preference will be ignored.  So, if it's set to "Alias (Contact Name)", it will only display the address book name at first.  If the preference is toggled, the correct formatting will be applied.
-= Offline contacts are not always displaying (Show them, disconnect, and then re-connect.  They are gone)
-= Our message view scrollbar is 1 pixel off the edge of the window
