@@ -11,11 +11,11 @@
 	working.
 
 - Applescripts are parsed in other's profiles
-	This is a potential security risk if the user has scripts that run shell commands.  We shuold
+	This is a potential security risk if the user has scripts that run shell commands.  We should
 	not be parsing script commands sent by other users (via profiles)
 
 - Spawning new windows unhides Adium
-	We don't want to spawn new windows while Adium is hudden.  Windows should be qued and shown when
+	We don't want to spawn new windows while Adium is hidden.  Windows should be qued and shown when
 	Adium is unhid.
 
 - Contact list view goes behind toolbar
