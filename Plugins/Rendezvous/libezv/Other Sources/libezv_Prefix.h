@@ -4,7 +4,6 @@
  * Prefix header for all source files of the 'libezv' target.
  *
  * Version:     1.0
- * CVS tag:     $Id$
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:

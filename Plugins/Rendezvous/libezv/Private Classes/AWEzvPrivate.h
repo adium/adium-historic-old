@@ -3,7 +3,6 @@
  * File:        AWEzvPrivate.h
  *
  * Version:     1.0
- * CVS tag:     $Id$
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
