@@ -24,6 +24,7 @@
     contact = [inContact retain];
     account = [inAccount retain];
     type = Unknown_FileTransfer;
+	status = Unknown_Status_FileTransfer;
     delegate = nil;
 	
     return(self);
@@ -45,7 +46,7 @@
     return contact;   
 }
 
-- (AIAccount *)account
+- (AIAccount<AIAccount_Files> *)account
 {
     return account;   
 }
@@ -73,14 +74,14 @@
     return localFilename;
 }
 
-- (void)setSize:(unsigned int)inSize
+- (void)setSize:(unsigned long long)inSize
 {
     size = inSize;
 	
 	if (delegate)
 		[delegate fileTransfer:self didSetSize:size];
 }
-- (unsigned int)size
+- (unsigned long long)size
 {
     return size;
 }
@@ -97,6 +98,23 @@
     return type;   
 }
 
+- (void)setStatus:(FileTransferStatus)inStatus
+{
+	if(status != inStatus){
+		status = inStatus;
+		
+		[[adium fileTransferController] fileTransfer:self didSetStatus:status];
+		
+		if (delegate)
+			[delegate fileTransfer:self didSetStatus:status];
+	}
+}
+- (FileTransferStatus)status
+{
+	return status;
+}
+
+//Progress update
 - (void)setPercentDone:(float)inPercent bytesSent:(unsigned int)inBytesSent
 {
 	float oldPercentDone = percentDone;
@@ -124,7 +142,9 @@
 		}
 		
 		if (percentDone >= 1.0){
-			[[adium fileTransferController] transferComplete:self];
+			[self setStatus:Complete_FileTransfer];
+		}else if ((percentDone != 0) && (status != In_Progress_FileTransfer)){
+			[self setStatus:In_Progress_FileTransfer];
 		}
 	}
 }
@@ -132,7 +152,7 @@
 {
     return percentDone;
 }
-- (unsigned int)bytesSent
+- (unsigned long long)bytesSent
 {
     return bytesSent;
 }
@@ -155,4 +175,51 @@
 {
 	return delegate;
 }
+
+- (AIListObject *)source
+{
+	AIListObject	*source;
+	switch(type){
+		case Incoming_FileTransfer:
+			source = contact;
+			break;
+		case Outgoing_FileTransfer:
+			source = account;
+			break;
+		default:
+			source = nil;
+			break;
+	}
+	
+	return(source);
+}
+- (AIListObject *)destination
+{
+	AIListObject	*destination;
+	switch(type){
+		case Incoming_FileTransfer:
+			destination = account;
+			break;
+		case Outgoing_FileTransfer:
+			destination = contact;
+			break;
+		default:
+			destination = nil;
+			break;
+	}
+	
+	return(destination);	
+}
+
+- (void)cancel
+{
+	[[self account] cancelFileTransfer:self];
+}
+
+- (void)reveal
+{
+	[[NSWorkspace sharedWorkspace] selectFile:localFilename
+					 inFileViewerRootedAtPath:[localFilename stringByDeletingLastPathComponent]];
+}
+
 @end

@@ -197,6 +197,11 @@ static BOOL didInitMSN = NO;
     [super rejectFileReceiveRequest:fileTransfer];    
 }
 
+- (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	[super cancelFileTransfer:fileTransfer];
+}
+
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {

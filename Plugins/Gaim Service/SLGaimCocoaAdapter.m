@@ -100,7 +100,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 - (void)addAdiumAccount:(NSObject<AdiumGaimDO> *)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	account->ui_data = adiumAccount;
+	account->ui_data = [adiumAccount retain];
 	
 	[runLoopMessenger target:self 
 			 performSelector:@selector(gaimThreadAddAdiumAccount:)
@@ -1610,15 +1610,15 @@ static void *adiumGaimRequestFile(const char *title, const char *filename, gbool
 			GaimDebug (@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
 			
 			ESFileTransfer  *fileTransfer;
-			NSString		*destinationUID = [NSString stringWithUTF8String:(xfer->who)];
+			NSString		*destinationUID = [NSString stringWithUTF8String:gaim_normalize(xfer->account,xfer->who)];
 			
 			//Ask the account for an ESFileTransfer* object
-			fileTransfer = [accountLookup(xfer->account) newFileTransferObjectWith:destinationUID];
+			fileTransfer = [accountLookup(xfer->account) newFileTransferObjectWith:destinationUID
+																			  size:gaim_xfer_get_size(xfer)];
 			
 			//Configure the new object for the transfer
 			[fileTransfer setRemoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
 			[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
-			[fileTransfer setSize: gaim_xfer_get_size(xfer)];
 			
 			xfer->ui_data = [fileTransfer retain];
 			
@@ -1686,8 +1686,8 @@ static void adiumGaimAddXfer(GaimXfer *xfer)
 
 static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 {
-	NSLog(@"Transfer update: %s is now %f%% done",(xfer->filename ? xfer->filename : ""),(percent*100));
-	GaimDebug (@"Transfer update: %s is now %f%% done",(xfer->filename ? xfer->filename : ""),(percent*100));
+//	NSLog(@"Transfer update: %s is now %f%% done",(xfer->filename ? xfer->filename : ""),(percent*100));
+//	GaimDebug (@"Transfer update: %s is now %f%% done",(xfer->filename ? xfer->filename : ""),(percent*100));
 	
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
 	
@@ -1703,6 +1703,9 @@ static void adiumGaimCancelLocal(GaimXfer *xfer)
 {
 	NSLog(@"adiumGaimCancelLocal");
 	GaimDebug (@"adiumGaimCancelLocal");
+	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
+    [accountLookup(xfer->account) mainPerformSelector:@selector(fileTransferCanceledLocally:)
+										   withObject:fileTransfer];	
 }
 
 static void adiumGaimCancelRemote(GaimXfer *xfer)
@@ -2036,10 +2039,13 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     //Typing preference
     gaim_prefs_set_bool("/core/conversations/im/send_typing", TRUE);
 	
+	//Use server alias where possible
+	gaim_prefs_set_bool("/core/buddies/use_server_alias", TRUE);
+
 	//MSN preferences
 	gaim_prefs_set_bool("/plugins/prpl/msn/conv_close_notice", TRUE);
 	gaim_prefs_set_bool("/plugins/prpl/msn/conv_timeout_notice", TRUE);
-	
+		
 	//Configure signals for receiving gaim events
 	[self configureSignals];
 }
@@ -2696,6 +2702,16 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 {
 	GaimXfer	*xfer = [xferValue pointerValue];
 	gaim_xfer_request_denied(xfer);
+}
+- (oneway void)xferCancel:(GaimXfer *)xfer
+{
+	[runLoopMessenger target:self performSelector:@selector(gaimThreadXferCancel:)
+				  withObject:[NSValue valueWithPointer:xfer]];	
+}
+- (oneway void)gaimThreadXferCancel:(NSValue *)xferValue
+{
+	GaimXfer	*xfer = [xferValue pointerValue];
+	gaim_xfer_cancel_local(xfer);	
 }
 
 #pragma mark Account settings

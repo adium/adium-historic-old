@@ -11,7 +11,7 @@
 
 - (GaimAccount*)gaimAccount;
 
-- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID;
+- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID size:(unsigned long long)inSize;
 
 - (AIListContact *)mainThreadContactWithUID:(NSString *)inUID;
 - (AIChat *)mainThreadChatWithContact:(AIListContact *)contact;
@@ -59,13 +59,16 @@
 - (BOOL)displayConversationTimedOut;
 - (AIService *)_serviceForUID:(NSString *)contactUID;
 
-	//AIAccount_Files
+/* CBGaimAccount odes not implement AIAccount_Files; however, all subclasses which do use the same code.
+	The superclass therefore has the code and declares the methods here. */
 	//Instructs the account to accept a file transfer request
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer;
 	//Instructs the account to reject a file receive request
 - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer;
+	//Instructs the account to cancel a file transfer in progress
+- (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer;
 
-//Private (for subclasses only) file transfer methods
+	//Private (for subclasses only) file transfer methods
 - (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer;
 - (void)_beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer;
 
@@ -130,11 +133,12 @@
 - (oneway void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID;
 - (oneway void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID;
 
-- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID;
+- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID size:(unsigned long long)inSize;
 - (oneway void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
 - (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(NSNumber *)percent bytesSent:(NSNumber *)bytesSent;
 - (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
 - (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
+
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject;
 
 - (AIListContact *)_contactWithUID:(NSString *)inUID;
