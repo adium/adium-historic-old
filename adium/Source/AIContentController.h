@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #define Chat_WillClose								@"Chat_WillClose"
+#define	Chat_Created								@"Chat_Created"
 #define Chat_DidOpen								@"Chat_DidOpen"
 #define Chat_AttributesChanged						@"Chat_AttributesChanged"
 #define Chat_StatusChanged							@"Chat_StatusChagned"
@@ -113,7 +114,7 @@ typedef enum {
 - (AIChat *)existingChatWithContact:(AIListContact *)inContact;
 - (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo;
 - (AIChat *)existingChatWithName:(NSString *)inName onAccount:(AIAccount *)account;
-- (AIChat *)openChat:(AIChat *)chat;
+- (void)openChat:(AIChat *)chat;
 - (BOOL)closeChat:(AIChat *)inChat;
 - (NSArray *)chatArray;
 - (BOOL)switchToMostRecentUnviewedContent;

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.99 2004/08/09 18:08:48 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.100 2004/08/16 07:30:19 evands Exp $
 
 #import "AIInterfaceController.h"
 #import "AIStandardListWindowController.h"
@@ -271,6 +271,8 @@
 	}
 	
 	[interfacePlugin openChat:inChat inContainerWithID:containerID atIndex:index];
+	
+	[[owner notificationCenter] postNotificationName:Chat_DidOpen object:inChat userInfo:nil];
 }
 
 //Close the window for a chat

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.97 2004/08/11 23:22:47 evands Exp $
+// $Id: AIAccountController.m,v 1.98 2004/08/16 07:30:19 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -534,7 +534,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Returns a menu of all accounts.  Accounts not available for sending content are disabled.
 //- Selector called on account selection is selectAccount:
 //- The menu item's represented objects are the AIAccounts they represent
-- (NSMenu *)menuOfAccountsWithTarget:(id)target
+- (NSMenu *)menuOfAccountsWithTarget:(id)target includeOffline:(BOOL)includeOffline
 {
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
@@ -551,25 +551,26 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     while(account = [enumerator nextObject]){
         NSMenuItem	*menuItem;
         
-        //Create
-        menuItem = [[[NSMenuItem alloc] initWithTitle:(multipleServices ?
-													   [NSString stringWithFormat:@"%@ (%@)",[account formattedUID],[account serviceID]] :
-													   [account formattedUID])
-											   target:target
-											   action:@selector(selectAccount:)
-										keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:account];
-		[menuItem setImage:[account menuImage]];
-		
-        //Disabled if the account is offline
-        if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]){
-            [menuItem setEnabled:NO];
-        }else{
-            [menuItem setEnabled:YES];
-        }
-		
-        //Add
-        [menu addItem:menuItem];
+		BOOL available = [[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
+																	  toListObject:nil 
+																		 onAccount:account];
+		if (available || includeOffline){
+			//Create
+			menuItem = [[[NSMenuItem alloc] initWithTitle:(multipleServices ?
+														   [NSString stringWithFormat:@"%@ (%@)",[account formattedUID],[account serviceID]] :
+														   [account formattedUID])
+												   target:target
+												   action:@selector(selectAccount:)
+											keyEquivalent:@""] autorelease];
+			[menuItem setRepresentedObject:account];
+			[menuItem setImage:[account menuImage]];
+			
+			//Disabled if the account is offline
+			[menuItem setEnabled:available];
+			
+			//Add
+			[menu addItem:menuItem];
+		}
     }
 	
 	return([menu autorelease]);
