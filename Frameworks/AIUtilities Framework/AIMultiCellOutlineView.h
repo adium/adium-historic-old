@@ -22,7 +22,6 @@
 	
 	NSImage		*backgroundImage;
 	float 		backgroundFade;
-	BOOL		drawsBackground;
 	
 	NSColor		*backgroundColor;
 	
@@ -38,7 +37,6 @@
 	
 - (void)setBackgroundImage:(NSImage *)inImage;
 - (void)setBackgroundFade:(float)fade;
-- (void)setDrawsBackground:(BOOL)inDraw;
 
 - (void)setDrawHighlightOnlyWhenMain:(BOOL)inFlag;
 - (BOOL)drawHighlightOnlyWhenMain;
