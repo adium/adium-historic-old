@@ -35,7 +35,7 @@ Contact List:
 Accounts:
 	+ Allow user to cancel connecting of accounts
 	- Remove account
-	+ Auto-complete aliases and address book entries in New message prompt, log viewer
+	+ Auto-complete aliases in log viewer
 
 Emoticons:
 	+ Clean up emoticon preference layout.  Move checkbox next to pack name, [align icons - Evan:done], adjust padding, etc.
@@ -240,3 +240,4 @@ Features & Changes:
 = Tab scrubbing.  If control is held when mousing over a tab, select that tab
 = Make option-clicking a tab close button close all other tabs
 = WebKit: Add support for displaying buddy icons using the UserIconPath status object
+= Auto-complete aliases in New Message prompt
