@@ -43,7 +43,7 @@
     [self setAutoresizesAllColumnsToFit:YES];
     [self setOutlineTableColumn:tableColumn];
     [self setHeaderView:nil];
-    [self setAutoresizingMask:(NSViewWidthSizable/* | NSViewHeightSizable*/)];
+    [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 
     //Appearance
     [self setFont:font];
@@ -118,6 +118,13 @@
     }
 }    
 
+//Override set frame size to force our rect to always be the correct height.  Without this the scrollview will stretch too tall vertically when resized beyond the bottom of our contact list.
+- (void)setFrame:(NSRect)frameRect
+{
+    frameRect.size.height = [self numberOfRows] * ([self rowHeight] + [self intercellSpacing].height);
+    [super setFrame:frameRect];
+}
+    
 //Automatically hide/show the scrollbar
 - (void)frameChanged:(NSNotification *)notification
 {
