@@ -17,38 +17,13 @@
 #import "AILog.h"
 #import "AILogViewerWindowController.h"
 
-#define OLD_SUFFIX  @".adiumLog.html"
+void scandate(const char *sample, unsigned long *outyear, unsigned long *outmonth, unsigned long *outdate);
 
 @implementation AILog
 
 - (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo date:(NSCalendarDate *)inDate
 {
     [super init];
-
-    //Temprary Code.  This can be removed once everyone who ran the alpha has opened their log viewer :)
-    //
-    //Rename Adium 2.0 alpha logs.  Logs saved after the format change and before this viewer use
-    //the filename format: adam_(2003|11|16).adiumLog.html
-    //
-    //We want to convert these to: adam (2003|11|16).html
-    //
-    if([inPath hasSuffix:OLD_SUFFIX]){
-	NSString    *newPath;
-	NSString    *fileName = [inPath lastPathComponent];
-	NSString    *filePath = [inPath stringByDeletingLastPathComponent];
-	NSRange     underRange = [fileName rangeOfString:@"_"];
-		
-	//Remove the .adiumLog and the '_'
-	fileName = [NSString stringWithFormat:@"%@.html",[fileName substringToIndex:([fileName length] - [OLD_SUFFIX length])]];
-	fileName = [NSString stringWithFormat:@"%@ %@",[fileName substringToIndex:underRange.location], [fileName substringFromIndex:underRange.location+1]];
-	
-	//Rename
-	newPath = [filePath stringByAppendingPathComponent:fileName];
-	[[NSFileManager defaultManager] movePath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:inPath]
-					  toPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:newPath]
-					 handler:nil];
-	inPath = newPath;
-    }
     
     path = [inPath retain];
     from = [inFrom retain];
@@ -124,15 +99,38 @@
 //Returns the date specified by a filename
 + (NSCalendarDate *)dateFromFileName:(NSString *)fileName
 {
-    int     year = 0;
-    int     month = 0;
-    int     day = 0;
-    
-    //
-    if(sscanf([fileName cString],"%*s (%i|%i|%i)%*s", &year, &month, &day)){
+    unsigned long   year = 0;
+    unsigned long   month = 0;
+    unsigned long   day = 0;
+        
+    scandate([fileName cString], &year, &month, &day);
+    if(year && month && day){
         return([NSCalendarDate dateWithYear:year month:month day:day hour:0 minute:0 second:0 timeZone:[NSTimeZone defaultTimeZone]]);
     }else{
         return(nil);
+    }
+}
+
+//Scan an Adium date string, supahfast C style
+//Submitted by Mac-arena the Bored Zo
+void scandate(const char *sample, unsigned long *outyear, unsigned long *outmonth, unsigned long *outdate) {
+    //read three numbers, starting after a space.
+    while(*sample != ' ') ++sample;
+    sample += 2; //skip over the ' ('
+    
+    /*get the year*/ {
+	while(*sample < '0' || *sample > '9') ++sample;
+	*outyear = strtoul(sample, (char **)&sample, 10);
+    }
+    
+    /*get the month*/ {
+	while(*sample < '0' || *sample > '9') ++sample;
+	*outmonth = strtoul(sample, (char **)&sample, 10);
+    }
+    
+    /*get the date*/ {
+	while(*sample < '0' || *sample > '9') ++sample;
+	*outdate = strtoul(sample, (char **)&sample, 10);
     }
 }
 
