@@ -103,6 +103,17 @@
 	if(frameString){
 		NSRect		windowFrame = NSRectFromString(frameString);
 		
+		
+		if(windowFrame.size.width < [[self window] minSize].width){
+			windowFrame.size.width = [[self window] minSize].width;
+		}
+		if(windowFrame.size.height < [[self window] minSize].height){
+			windowFrame.size.height = [[self window] minSize].height;
+		}
+		
+		
+		
+		NSLog(@"%i,%i  %ix%i",(int)windowFrame.origin.x, (int)windowFrame.origin.y, (int)windowFrame.size.width, (int)windowFrame.size.height);
 		//Don't allow the window to shrink smaller than its toolbar
 		
 		NSRect 		contentFrame = [NSWindow contentRectForFrameRect:windowFrame
