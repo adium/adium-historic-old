@@ -1,5 +1,5 @@
 //
-//  AIAbstractListWindowController.h
+//  AIAbstractListController.h
 //  Adium
 //
 //  Created by Evan Schoenberg on 8/21/04.
@@ -131,9 +131,13 @@ typedef enum {
 
 #define KEY_LIST_THEME_FADE_OFFLINE_IMAGES			@"Fade Offline Images"
 
-@interface AIAbstractListWindowController : AIWindowController {
-    IBOutlet	AIAutoScrollView		*scrollView_contactList;
-    IBOutlet	AIListOutlineView		*contactListView;
+@protocol AIListControllerDelegate
+- (void)performDefaultActionOnSelectedObject:(AIListObject *)listObject sender:(id)sender;
+@end
+
+@interface AIAbstractListController : AIObject {	
+	AIAutoScrollView					*scrollView_contactList;
+    AIListOutlineView					*contactListView;
 	
 	AISmoothTooltipTracker				*tooltipTracker;
 	
@@ -147,7 +151,11 @@ typedef enum {
 	NSArray								*dragItems;
 	
 	BOOL								alreadyDidDealloc;	
+	
+	id									delegate;
 }
+
+- (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate;
 
 - (void)setContactListRoot:(AIListObject *)newContactListRoot;
 - (void)setHideRoot:(BOOL)inHideRoot;
@@ -159,9 +167,7 @@ typedef enum {
 
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification;
 - (void)updateTransparency;
-- (IBAction)performDefaultActionOnSelectedContact:(AIListObject *)selectedObject withSender:(id)sender;
 - (BOOL)useAliasesInContactListAsRequested;
-	
 
 //Tooltip
 - (void)showTooltipAtPoint:(NSPoint)screenPoint;

@@ -1,11 +1,11 @@
 //
-//  AIAbstractListWindowController.m
+//  AIAbstractListController.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 8/21/04.
 //
 
-#import "AIAbstractListWindowController.h"
+#import "AIAbstractListController.h"
 
 #import "AIListCell.h"
 #import "AIListOutlineView.h"
@@ -22,14 +22,25 @@
 #define STATUS_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 #define GROUP_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 
-@implementation AIAbstractListWindowController
+@interface AIAbstractListController (PRIVATE)
+- (void)configureViewsAndTooltips;
+- (BOOL)shouldShowTooltips;
+@end
 
-- (id)initWithWindowNibName:(NSString *)windowNibName
+@implementation AIAbstractListController
+
+- (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate
 {
-	[super initWithWindowNibName:windowNibName];
+	[super init];
+	
+	contactListView = [inContactListView retain];
+	scrollView_contactList = [inScrollView_contactList retain];
+	delegate = inDelegate;
 	
 	hideRoot = YES;
 	dragItems = nil;
+	
+	[self configureViewsAndTooltips];
 	
 	return(self);
 }
@@ -38,6 +49,10 @@
 - (void)dealloc
 {
 	[contactListView setDelegate:nil];
+	
+	[contactListView release]; contactListView = nil;
+	[scrollView_contactList release]; scrollView_contactList = nil;
+	
 	if (tooltipTracker){
 		[tooltipTracker setDelegate:nil];
 		[tooltipTracker release]; tooltipTracker = nil;
@@ -50,33 +65,29 @@
 }
 
 //Setup the window after it has loaded
-- (void)windowDidLoad
+- (void)configureViewsAndTooltips
 {
-	[super windowDidLoad];
+	//Configure the contact list view
+	if ([self shouldShowTooltips]){
+		tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
+	}else{
+		tooltipTracker = nil;
+	}
 	
-    //Configure the contact list view
-	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
 	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[AIListContactCell alloc] init]];
 	
 	//Targeting
     [contactListView setTarget:self];
+    [contactListView setDelegate:self];	
+	[contactListView setDataSource:self];	
 	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedItem:)];
+	
 	[scrollView_contactList setDrawsBackground:NO];
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutoHideScrollBar:YES];
 
 	//Dragging
-	[contactListView registerForDraggedTypes:[NSArray arrayWithObject:@"AIListObject"]];
-}
-
-- (BOOL)windowShouldClose:(id)sender
-{
-	[super windowShouldClose:sender];
-	
-	[tooltipTracker setDelegate:nil];
-	[tooltipTracker release]; tooltipTracker = nil;
-	
-	return YES;
+	[contactListView registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs",nil]];
 }
 
 - (void)setContactListRoot:(AIListObject <AIContainingObject> *)newContactListRoot
@@ -95,7 +106,7 @@
 - (IBAction)performDefaultActionOnSelectedItem:(id)sender
 {
     AIListObject	*selectedObject = [sender itemAtRow:[sender selectedRow]];
-	[self performDefaultActionOnSelectedContact:selectedObject withSender:sender];
+	[delegate performDefaultActionOnSelectedObject:selectedObject sender:sender];
 }
 
 //Preferences ---------------------------------------------
@@ -208,7 +219,7 @@
 	}
 	
 	//Shadow
-	[[self window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
+	[[contactListView window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
 	
 	//Theme related cell preferences
 	//We must re-apply these because we've created new cells
@@ -218,6 +229,7 @@
 	[contactListView setGroupCell:groupCell];
 	[contactListView setContentCell:contentCell];
 	[contactListView setNeedsDisplay:YES];
+	
 	[self contactListDesiredSizeChanged:nil];
 }
 
@@ -239,7 +251,7 @@
 	}
 	
 	//Transparency.  Bye bye CPU cycles, I'll miss you!
-	[[self window] setOpaque:(backgroundAlpha == 1.0)];
+	[[contactListView window] setOpaque:(backgroundAlpha == 1.0)];
 	if ([contactListView respondsToSelector:@selector(setUpdateShadowsWhileDrawing:)]){
 		[contactListView setUpdateShadowsWhileDrawing:(backgroundAlpha < 0.8)];
 	}
@@ -306,7 +318,7 @@
 //Before one of our cells gets told to draw, we need to make sure it knows what contact it's drawing for.
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-	if (outlineView == contactListView){
+	if ([outlineView isKindOfClass:[AIListOutlineView class]]){
 		[(AIListCell *)cell setListObject:item];
 		[(AIListCell *)cell setControlView:(AIListOutlineView *)outlineView];
 		
@@ -376,7 +388,7 @@
     [self hideTooltip];
 	
     //Return the context menu
-	AIListObject	*listObject = (AIListObject *)[contactListView firstSelectedItem];
+	AIListObject	*listObject = (AIListObject *)[outlineView firstSelectedItem];
 	BOOL			isGroup = [listObject isKindOfClass:[AIListGroup class]];
 	NSArray			*locationsArray = [NSArray arrayWithObjects:
 		[NSNumber numberWithInt:(isGroup ? Context_Group_Manage : Context_Contact_Manage)],
@@ -440,7 +452,7 @@
 	if([hoveredObject isKindOfClass:[AIListContact class]]){
 		[[adium interfaceController] showTooltipForListObject:hoveredObject
 												atScreenPoint:screenPoint
-													 onWindow:[self window]];
+													 onWindow:[contactListView window]];
 	}else{
 		[self hideTooltip];
 	}
@@ -448,7 +460,7 @@
 
 - (AIListObject *)contactListItemAtScreenPoint:(NSPoint)screenPoint
 {
-	NSPoint			viewPoint = [contactListView convertPoint:[[self window] convertScreenToBase:screenPoint] fromView:nil];
+	NSPoint			viewPoint = [contactListView convertPoint:[[contactListView window] convertScreenToBase:screenPoint] fromView:nil];
 	AIListObject	*hoveredObject = [contactListView itemAtRow:[contactListView rowAtPoint:viewPoint]];
 	
 	return(hoveredObject);
@@ -465,9 +477,10 @@
 //For Subclasses
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification {};
 - (void)updateTransparency {};
-- (IBAction)performDefaultActionOnSelectedContact:(AIListObject *)selectedObject withSender:(id)sender {};
 - (BOOL)useAliasesInContactListAsRequested{
 	return YES;
 }
-
+- (BOOL)shouldShowTooltips{
+	return YES;
+}
 @end
