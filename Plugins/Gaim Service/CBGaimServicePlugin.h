@@ -8,8 +8,6 @@
 #import "GaimCommon.h"
 #import "SLGaimCocoaAdapter.h"
 
-@class AIServiceType;
-
 @interface CBGaimServicePlugin : AIPlugin{
     id  AIMService;
     id  ICQService;
