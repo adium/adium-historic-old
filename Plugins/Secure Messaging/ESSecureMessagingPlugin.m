@@ -16,6 +16,9 @@
 
 #define TITLE_ENCRYPTION		AILocalizedString(@"Encryption",nil)
 
+#define CHAT_NOW_SECURE			AILocalizedString(@"This line secured, sir.", nil)
+#define CHAT_NO_LONGER_SECURE	AILocalizedString(@"Warning: Project Carnivore detected.", nil)
+
 @interface ESSecureMessagingPlugin (PRIVATE)
 - (void)registerToolbarItem;
 - (NSMenu *)_secureMessagingMenu;
@@ -141,7 +144,22 @@
 		[self _updateToolbarIconOfChat:inChat
 							  inWindow:[[adium interfaceController] windowForChat:inChat]];
 		
-		/* XXX Add a status message to the chat */
+		/* Add a status message to the chat */
+		NSNumber	*lastEncryptedNumber = [inChat statusObjectForKey:@"secureMessagingLastEncryptedState"];
+		BOOL		chatIsSecure = [chat isSecure];
+		if(!lastEncryptedNumber || (chatIsSecure != [lastEncryptedNumber boolValue])){
+			NSString	*message;
+			
+			[inChat setStatusObject:[NSNumber numberWithBool:chatIsSecure]
+							 forKey:@"secureMessagingLastEncryptedState"
+							 notify:NotifyNever];
+			
+			message = (chatIsSecure ? CHAT_NOW_SECURE ? CHAT_NO_LONGER_SECURE);
+			
+			[[adium contentController] displayStatusMessage:message
+													 ofType:@"encryption"
+													 inchat:inChat];
+		}
 	}
 	
 	return nil;
