@@ -9,11 +9,17 @@
 
 #define CONTENT_TYPING_TYPE		@"Typing"		//Type ID for this content
 
+typedef enum {
+	AINotTyping = 0,
+	AITyping,
+	AIEnteredText
+} AITypingState;
+
 @interface AIContentTyping : AIContentObject {
-    BOOL			typing;
+    AITypingState			typingState;
 }
 
-+ (id)typingContentInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest typing:(BOOL)inTyping;
-- (BOOL)typing;
++ (id)typingContentInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest typingState:(AITypingState)inTypingState;
+- (AITypingState)typingState;
 
 @end
