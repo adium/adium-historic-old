@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>Away Color</key>
-	<string>0,0,0</string>
+	<string>89,89,89</string>
 	<key>Away Enabled</key>
-	<false/>
+	<true/>
 	<key>Away Label Color</key>
 	<string>234,234,214</string>
 	<key>Background As Events</key>
@@ -16,20 +16,18 @@
 	<string>255,255,255</string>
 	<key>Background Fade</key>
 	<real>1</real>
-	<key>Background Image Path</key>
-	<string>/Users/evands/Pictures/eye2.tif</string>
 	<key>Contact Status Text Color</key>
 	<string>120,120,120</string>
 	<key>Fade Offline Images</key>
 	<true/>
 	<key>Grid Color</key>
-	<string>237,243,255</string>
+	<string>255,237,255</string>
 	<key>Grid Enabled</key>
 	<true/>
 	<key>Group Background</key>
-	<string>139,186,255</string>
+	<string>255,178,255</string>
 	<key>Group Background Gradient</key>
-	<string>106,169,255</string>
+	<string>191,95,191</string>
 	<key>Group Gradient</key>
 	<true/>
 	<key>Group Inverted Text Color</key>
@@ -47,9 +45,9 @@
 	<key>Idle And Away Label Color</key>
 	<string>233,233,214</string>
 	<key>Idle Color</key>
-	<string>0,0,0</string>
+	<string>89,89,89</string>
 	<key>Idle Enabled</key>
-	<false/>
+	<true/>
 	<key>Idle Label Color</key>
 	<string>234,234,234</string>
 	<key>Offline Color</key>
@@ -83,13 +81,13 @@
 	<key>Typing Color</key>
 	<string>255,255,255</string>
 	<key>Typing Enabled</key>
-	<true/>
+	<false/>
 	<key>Typing Label Color</key>
 	<string>245,118,0</string>
 	<key>Unviewed Content Color</key>
 	<string>255,255,255</string>
 	<key>Unviewed Content Enabled</key>
-	<true/>
+	<false/>
 	<key>Unviewed Content Label Color</key>
 	<string>0,81,212</string>
 	<key>Use Background Image</key>
