@@ -35,21 +35,12 @@ function RandomActionShot($numberOfShots)
     $thumbsDir = "images/actionthumbs";
     $picturesDir = "images/actionshots";
     $availablePics = getDirList($picturesDir);
-    $chosenPics = array();
-
-    //Try and choose $numberOfShots pictures
-    while($numberOfShots > 0){
-        $picture = $availablePics[array_rand($availablePics)];
-        if(array_search($picture, $chosenPics) === null){ //Skip if already choosen
-            $chosenPics[count($chosenPics)] = $picture;
-        }
-
-        $numberOfShots--;
-    }
+    $chosenPics = shuffle(array_rand($availablePics, $numberOfShots));
     
     //Return HTML for the choosen pictures
     $html = "";
-    foreach($chosenPics as $picture){
+    foreach($chosenPics as $index){
+        $picture = $availablePics[$index];
         $html .= "<a href=\"$picturesDir/$picture\" onclick=\"window.open('$picturesDir/$picture','popup','width=$picWidth,height=$picHeight,scrollbars=yes,toolbar=no,status=yes'); return false\"><img src=\"$thumbsDir/$picture\" width=\"$thumbWidth\" height=\"$thumbHeight\" alt=\"actionshot\" /></a><br /><br />";
     }
 
