@@ -34,8 +34,11 @@
 
 //Path to Adium's application support preferences
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
-#define ADIUM_FAQ_PAGE						@"http://adium.sourceforge.net/faq/"
 #define ADIUM_SUBFOLDER_OF_APP_SUPPORT      @"Adium 2.0"
+#define ADIUM_FAQ_PAGE						@"http://faq.adiumx.com/"
+#define ADIUM_FORUM_PAGE					@"http://forum.adiumx.com"
+#define ADIUM_BUG_PAGE						@"mailto:bugs@adiumx.com"
+#define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
 
 @interface AIAdium (PRIVATE)
 - (void)configureCrashReporter;
@@ -215,9 +218,17 @@
 }
 
 //Show our help
-- (IBAction)showHelp:(id)sender
-{
+- (IBAction)showHelp:(id)sender{
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_FAQ_PAGE]];
+}
+- (IBAction)reportABug:(id)sender{
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_BUG_PAGE]];
+}
+- (IBAction)sendFeedback:(id)sender{
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_FEEDBACK_PAGE]];
+}
+- (IBAction)showForums:(id)sender{
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_FORUM_PAGE]];
 }
 
 //A hook for guaring the quit menu item... not really necessary anymore, but it's not hurting anything being here
