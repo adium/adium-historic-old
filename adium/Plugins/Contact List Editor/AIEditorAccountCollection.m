@@ -42,14 +42,33 @@
     return([account accountDescription]);
 }
 
+- (NSString *)subLabel{
+    if([account availableHandles] != nil){
+        return([NSString stringWithFormat:@"%@ Server-Side List",[account serviceID]]);
+    }else{
+        return([NSString stringWithFormat:@"%@ (Unavailable)",[account serviceID]]);
+    }
+}
+
 //Return a unique identifier
 - (NSString *)UID{
     return([account UID]);
 }
 
+- (BOOL)showOwnershipColumns{
+    return(NO);
+}
+- (BOOL)showCustomEditorColumns{
+    return(YES);
+}
+
 //Return our icon description
 - (NSImage *)icon{
-    return([AIImageUtilities imageNamed:@"AllContacts" forClass:[self class]]);
+    return([AIImageUtilities imageNamed:@"AccountLarge" forClass:[self class]]);
+}
+
+- (NSString *)collectionDescription{
+    return([NSString stringWithFormat:@"%@'s Server-Side Contacts",[account accountDescription]]);
 }
 
 //Return YES if this collection is enabled

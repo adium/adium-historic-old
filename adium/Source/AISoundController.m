@@ -21,7 +21,9 @@
 #define PATH_INTERNAL_SOUNDS		@"/Contents/Resources/Sounds/"
 #define SOUND_SET_PATH_EXTENSION	@"txt"
 #define SOUND_DEFAULT_PREFS		@"SoundPrefs"
-
+#define MAX_THREAD_SOUNDS		3		//Max concurrent sounds
+#define SOUND_SLEEP_INTERVAL		0.5		//Seconds to sleep between sound activity checks
+#define MAX_QT_CACHED_SOUNDS		5		//Max sounds cached for QT play
 
 #define KEY_SOUND_WARNED_ABOUT_CUSTOM_VOLUME	@"Warned About Custom Volume"
 
@@ -35,8 +37,9 @@
 
 - (void)initController
 {
-//    soundCacheDict = [[NSMutableDictionary alloc] init];
-
+    soundCacheDict = [[NSMutableDictionary alloc] init];
+    activeSoundThreads = 0;
+    
     //Create a custom sounds directory ~/Library/Application Support/Adium 2.0/Sounds
     [AIFileUtilities createDirectory:[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_SOUNDS]];
     
@@ -141,22 +144,34 @@
         NSMovie	*movie; //We could get a nice performance boost by caching these NSMovies!
         
         //Search for this sound in our cache
-//        movie = [soundCacheDict objectForKey:inPath];
-//        if(!movie){ //If the sound is not cached, load it
-            movie = [[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES];
-//            [soundCacheDict setObject:movie forKey:inPath];
-//        }else{
-//            GoToBeginningOfMovie([movie QTMovie]); //Reset to the begining of the sound
-//        }
+        movie = [soundCacheDict objectForKey:inPath];
+        if(!movie){ //If the sound is not cached, load it
+            //If the cache is full, empty it
+            if([soundCacheDict count] >= MAX_QT_CACHED_SOUNDS){
+                [soundCacheDict removeAllObjects];
+                NSLog(@"Flushing QT Sound Cache");
+            }
+            
+            movie = [[[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES] autorelease];
+            [soundCacheDict setObject:movie forKey:inPath];
+        }else{
+            StopMovie([movie QTMovie]);
+            GoToBeginningOfMovie([movie QTMovie]); //Reset to the begining of the sound
+        }
 
         //Set the volume & play sound
         SetMovieVolume([movie QTMovie], customVolume);
         StartMovie([movie QTMovie]);
-              
-    }else if(!useCustomVolume){ //Otherwise, we can use NSSound
-        //Detach a thead to play the sound
-        [NSThread detachNewThreadSelector:@selector(_threadPlaySound:) toTarget:self withObject:inPath];
 
+        
+    }else if(!useCustomVolume){ //Otherwise, we can use NSSound
+        if(activeSoundThreads < MAX_THREAD_SOUNDS){
+            //Detach a thead to play the sound
+            [NSThread detachNewThreadSelector:@selector(_threadPlaySound:) toTarget:self withObject:inPath];
+            activeSoundThreads++;
+        }else{
+            NSLog(@"Too many sounds playing, skipping %@",[inPath lastPathComponent]);
+        }
     }
 
 }
@@ -178,9 +193,16 @@
         [sound play];
     }
 
+    //We keep this thread active until the sound finishes playing, so we can accurately update the activeSoundThread count when it is complete
+    while([sound isPlaying]){ //Check every second for sound completion
+        [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:SOUND_SLEEP_INTERVAL]];
+    }
+    activeSoundThreads--;    
+
     //Release the autorelease pool
     [pool release];
 }
+
 
 //
 - (void)preferencesChanged:(NSNotification *)notification

@@ -18,25 +18,29 @@
 @end
 
 @implementation AIEditorImportCollection
+
 //Return an empty collection 
 + (AIEditorImportCollection *)editorCollection
 {
     return([[[self alloc] init] autorelease]);
 }
+
 //Retun collection from a path, set the name
 + (AIEditorImportCollection *)editorCollectionWithPath:(NSString *)path
 {
     return([[[self alloc] initWithPath:path] autorelease]);
 }
+
 //empty initializer
 - (id)init
 {
     [super init];
     
-    list = [[[AIEditorListGroup alloc] initWithUID:@"Self" temporary:NO] autorelease];
+    list = [[AIEditorListGroup alloc] initWithUID:@"Self" temporary:NO];
     
     return self;
 }
+
 //path initializer
 - (id)initWithPath:(NSString *)path
 {
@@ -46,10 +50,31 @@
     
     return self;
 }
+
 //Return our text description
 - (NSString *)name
 {
     return(@"Imported Contacts");
+}
+
+//Return a unique identifier
+- (NSString *)UID{
+    return(@"ImportedContacts");
+}
+
+- (NSString *)subLabel{
+    return(@"");
+}
+
+- (NSString *)collectionDescription{
+    return(@"Imported Contacts");
+}
+
+- (BOOL)showOwnershipColumns{
+    return(NO);
+}
+- (BOOL)showCustomEditorColumns{
+    return(NO);
 }
 
 //Return our icon description
@@ -119,6 +144,7 @@
 //used in the constructor
 - (void)importFromPath:(NSString *)path
 {
+    [list release];
     list = [self importContactsFromPath:path];
 }
 
@@ -133,7 +159,7 @@
     
     if([string length] >= 1 && [string characterAtIndex:0] == '\"') //are there quotes?
     {
-        string = [string substringWithRange:NSMakeRange(1,[string length]-1)]; //strip off the quotes
+        string = [string substringWithRange:NSMakeRange(1,[string length]-2)]; //strip off the quotes
     }	
     return string;
 }

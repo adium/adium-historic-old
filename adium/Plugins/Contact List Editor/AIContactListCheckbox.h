@@ -25,7 +25,7 @@
     NSImage	*miniCheck_Mixed;
     NSImage	*miniCheck_Mixed_Press;
     
-    bool	state;
+    int	state;
 }
 
 - (void)setState:(int)inState;
