@@ -76,7 +76,9 @@ LNAboutBoxController *sharedInstance = nil;
     //Credits
     creditsString = [[[NSAttributedString alloc] initWithPath:[[NSBundle mainBundle] pathForResource:@"Credits.rtf" ofType:nil] documentAttributes:nil] autorelease];
     [[textView_credits textStorage] setAttributedString:creditsString];
-
+    [[textView_credits enclosingScrollView] setLineScroll:0.0];
+    [[textView_credits enclosingScrollView] setPageScroll:0.0];
+    
     //Start scrolling    
     scrollLocation = 0; 
     scrollRate = 1.0;
