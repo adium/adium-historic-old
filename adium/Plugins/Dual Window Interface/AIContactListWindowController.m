@@ -195,6 +195,7 @@
                 [[self window] setFrame:newFrame display:YES animate:NO];
             }
             
+        
             [[self window] setMinSize:targetMin];
             [[self window] setMaxSize:targetMax];
         }

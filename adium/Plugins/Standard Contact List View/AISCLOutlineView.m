@@ -199,6 +199,7 @@
     BOOL                changed = NO;
     BOOL                isHidden = [[inObject displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
     BOOL                isOnline = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
+    BOOL                isGroup = [inObject isKindOfClass:[AIListGroup class]];
     int                 j;
     
     if ( (isHidden) || !([[inObject containingGroup] isExpanded]) ) { //if it's hidden it shouldn't be part of our current cache
@@ -208,7 +209,7 @@
                 changed = YES;
             }
         }
-    } else if (isOnline) { //contact is in the active contact list and is 
+    } else if (isOnline || isGroup) { //object is in the active contact list
         [[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:inObject];        
         for (j=0 ; j < 3; j++) {  //check left, middle, and right
             cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];

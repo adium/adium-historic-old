@@ -85,7 +85,7 @@
 
 - (void)accountNewBuddy:(GaimBuddy*)buddy
 {
-    NSLog(@"accountNewBuddy (%s)", buddy->name);
+//    NSLog(@"accountNewBuddy (%s)", buddy->name);
     AIHandle *handle = [AIHandle
         handleWithServiceID:[self serviceID]
         UID:[[NSString stringWithUTF8String:buddy->name] compactedString]
@@ -99,7 +99,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
-    NSLog(@"accountUpdateBuddy (%s)", buddy->name);
+//    NSLog(@"accountUpdateBuddy (%s)", buddy->name);
 
     NSMutableArray *modifiedKeys = [NSMutableArray array];
     AIHandle *theHandle = (AIHandle*) buddy->node.ui_data;
@@ -617,4 +617,8 @@
                                     withDescription:errorDesc];
 }
 
+- (AIAdium *)owner
+{
+    return owner;   
+}
 @end

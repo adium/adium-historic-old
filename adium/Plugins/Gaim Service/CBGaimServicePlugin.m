@@ -19,6 +19,9 @@
  */
 NSMutableDictionary *_accountDict;
 
+
+
+
 @implementation CBGaimServicePlugin
 
 /*
@@ -421,6 +424,68 @@ static GaimRequestUiOps adiumGaimRequestOps = {
     adiumGaimRequestClose
 };
 
+// File Transfer ------------------------------------------------------------------------------------------------------
+
+static void adiumGaimNewXfer(GaimXfer *xfer)
+{
+        NSLog(@"adiumGaimNewXfer");
+}
+
+static void adiumGaimDestroy(GaimXfer *xfer)
+{
+        NSLog(@"adiumGaimDestroy");
+}
+
+static void adiumGaimRequestFile(GaimXfer *xfer)
+{
+    NSLog(@"adiumGaimRequestFile %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
+
+    CBGaimAccount * receivingAccount = accountLookup(xfer->account);
+    NSString * filename = [[[receivingAccount owner] fileTransferController] saveLocationForFileName:[[NSString stringWithUTF8String:(xfer->filename)] lastPathComponent]];
+
+    //gaim will do a g_free of xferFileName while executing gaim_xfer_request_accepted
+    //so we need to malloc to prevent errors
+    char * xferFileName = g_malloc(strlen([filename UTF8String]) * 4 + 1);
+    [filename getCString:xferFileName];
+    
+    gaim_xfer_request_accepted(xfer, xferFileName);
+}
+
+static void adiumGaimAskCancel(GaimXfer *xfer)
+{
+        NSLog(@"adiumGaimAskCancel");
+}
+
+static void adiumGaimAddXfer(GaimXfer *xfer)
+{
+        NSLog(@"adiumGaimAddXfer");
+}
+
+static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
+{
+    NSLog(@"transfer update: %s is now %f%% done",xfer->filename,(percent*100));
+}
+
+static void adiumGaimCancelLocal(GaimXfer *xfer)
+{
+        NSLog(@"adiumGaimCancelLocal");
+}
+
+static void adiumGaimCancelRemote(GaimXfer *xfer)
+{
+        NSLog(@"adiumGaimCancelRemote");
+}
+
+static GaimXferUiOps adiumGaimFileTrasnferOps = {
+    adiumGaimNewXfer,
+    adiumGaimDestroy,
+    adiumGaimRequestFile,
+    adiumGaimAskCancel,
+    adiumGaimAddXfer,
+    adiumGaimUpdateProgress,
+    adiumGaimCancelLocal,
+    adiumGaimCancelRemote
+};
 
 // Core ------------------------------------------------------------------------------------------------------
 static void adiumGaimPrefsInit(void)
@@ -444,6 +509,7 @@ static void adiumGaimCoreUiInit(void)
     gaim_conversations_set_win_ui_ops(&adiumGaimWindowOps);
     gaim_notify_set_ui_ops(&adiumGaimNotifyOps);
     gaim_request_set_ui_ops(&adiumGaimRequestOps);
+    gaim_xfers_set_ui_ops(&adiumGaimFileTrasnferOps);
 }
 
 static void adiumGaimCoreQuit(void)
@@ -458,6 +524,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     adiumGaimCoreUiInit,
     adiumGaimCoreQuit
 };
+
 
 // Beef ------------------------------------------------------------------------------------------------------
 
@@ -506,6 +573,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (void)uninstallPlugin
 {
     [_accountDict release];
+    [owner release];
     _accountDict = nil;
 }
 

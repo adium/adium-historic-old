@@ -24,6 +24,7 @@
 #import "AIPreferenceController.h"
 #import "AIMenuController.h"
 #import "AIDockController.h"
+#import "ESFileTransferController.h"
 #import "LNAboutBoxController.h"
 
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"	//Path to Adium's application support preferences
@@ -79,6 +80,10 @@
 
 - (AIDockController *)dockController{
     return(dockController);
+}
+
+- (ESFileTransferController *)fileTransferController{
+    return(fileTransferController);    
 }
 
 // Notifications --
@@ -137,6 +142,7 @@
     [contentController initController];
     [interfaceController initController];
     [dockController initController];
+    [fileTransferController initController];
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 
     //
@@ -148,6 +154,7 @@
 {
     //Close the controllers in reverse order
     [pluginController closeController]; //should always unload first.  Plugins rely on all the controllers.
+    [fileTransferController closeController];
     [dockController closeController];
     [interfaceController closeController];
     [contentController closeController];
