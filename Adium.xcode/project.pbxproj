@@ -4784,34 +4784,6 @@
 			settings = {
 			};
 		};
-		349DDD3F0640687D00542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = Bold_Off.png;
-			path = "Plugins/Text Toolbar Items/Bold_Off.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDD400640687D00542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = Bold_On.png;
-			path = "Plugins/Text Toolbar Items/Bold_On.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDD410640687D00542726 = {
-			fileRef = 349DDD3F0640687D00542726;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349DDD420640687D00542726 = {
-			fileRef = 349DDD400640687D00542726;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		349DDD5206406A7D00542726 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -6261,7 +6233,6 @@
 				4BD6743206001D1F0049CAF7,
 				4BD6743806001D2F0049CAF7,
 				4BD6743A06001D2F0049CAF7,
-				4BD6743E06001D330049CAF7,
 				4BD6744206001D390049CAF7,
 				4BD6744406001D430049CAF7,
 				4BD6744606001D440049CAF7,
@@ -6626,8 +6597,6 @@
 				349DDD200640672800542726,
 				349DDD330640680600542726,
 				349DDD340640680600542726,
-				349DDD410640687D00542726,
-				349DDD420640687D00542726,
 				349DDD6A06406CBD00542726,
 				3401925D06406D9200192BC4,
 				4BBF41E80661194A001D31E1,
@@ -6854,7 +6823,6 @@
 				4BD6743306001D200049CAF7,
 				4BD6743906001D2F0049CAF7,
 				4BD6743B06001D300049CAF7,
-				4BD6743F06001D340049CAF7,
 				4BD6744306001D390049CAF7,
 				4BD6744506001D430049CAF7,
 				4BD6744706001D450049CAF7,
@@ -11596,16 +11564,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B28909C03C1D30C00A8010A = {
-			children = (
-				349DDD3F0640687D00542726,
-				349DDD400640687D00542726,
-			);
-			isa = PBXGroup;
-			name = Images;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B28909D03C1D37700A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -12271,7 +12229,6 @@
 				4BC8AFD604FD3C1000A8010A,
 				4B0473B7043E43F200A8010A,
 				4BBAEE9703DD7D8900A8010A,
-				F5D2FB8403B6649F01A8010A,
 				4B5B15220493BF9A00A8010A,
 			);
 			isa = PBXGroup;
@@ -16462,18 +16419,6 @@
 		};
 		4BD6743D06001D310049CAF7 = {
 			fileRef = 4B72128C03DD898100A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6743E06001D330049CAF7 = {
-			fileRef = F5D2FB8003B6649C01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6743F06001D340049CAF7 = {
-			fileRef = F5D2FB8103B6649C01A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -23298,36 +23243,6 @@
 			lastKnownFileType = wrapper.nib;
 			name = ContactInfoWindow.nib;
 			path = Source/ContactInfoWindow.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5D2FB8003B6649C01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AITextToolbarItemsPlugin.h;
-			path = "Plugins/Text Toolbar Items/AITextToolbarItemsPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5D2FB8103B6649C01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AITextToolbarItemsPlugin.m;
-			path = "Plugins/Text Toolbar Items/AITextToolbarItemsPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5D2FB8403B6649F01A8010A = {
-			children = (
-				F5D2FB8003B6649C01A8010A,
-				F5D2FB8103B6649C01A8010A,
-				4B28909C03C1D30C00A8010A,
-			);
-			isa = PBXGroup;
-			name = "Text Toolbar Items";
-			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
