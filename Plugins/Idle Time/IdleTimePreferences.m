@@ -55,7 +55,8 @@
 	
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_AWAY_MESSAGES];
 	
-    [self configureControlDimming];
+	[self configureControlDimming];
+	[self configureAutoAwayPreferences];
 }
 
 //Preference view is closing
