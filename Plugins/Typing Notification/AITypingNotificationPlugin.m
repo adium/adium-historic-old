@@ -7,8 +7,6 @@
 //
 
 #import "AITypingNotificationPlugin.h"
-#import "AITypingNotificationPreferences.h"
-#import <Adium/Adium.h>
 
 @interface AITypingNotificationPlugin (PRIVATE)
 - (void)_sendTypingState:(AITypingState)typingState toChat:(AIChat *)chat;
