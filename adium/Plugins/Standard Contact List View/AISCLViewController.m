@@ -458,27 +458,45 @@
 
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-    NSImage *newImage, *newAlternateImage;
-    NSSize newSize, newAlternateSize;
+    //there's a pretty ugly issue whwne we scale upwards. we don't get more space for the triangle.
+    //so, if the triangle is supposed to get bigger, we now don't change.    
     
-    newImage = [cell image];
-    newSize = [newImage size];
-    newSize.width = newSize.width - (newSize.height - [[contactListView groupFont] capHeight]);
-    newSize.height = [[contactListView groupFont] capHeight];
-    [newImage setScalesWhenResized:YES];
-    [newImage setSize:newSize];
-        
-    newAlternateImage = [cell alternateImage];
-    newAlternateSize = [newAlternateImage size];
-    newAlternateSize.width = newAlternateSize.width - (newAlternateSize.height - [[contactListView groupFont] capHeight]);
-    newAlternateSize.height = [[contactListView groupFont] capHeight];
-    [newAlternateImage setScalesWhenResized:YES];
-    [newAlternateImage setSize:newAlternateSize];
+    if([[contactListView groupFont] capHeight] < 13) //only operate if we're scaling down. hardcoding, bad, yeah, but I don't see a better way at the moment.
+    {
+        NSImage *newImage, *newAlternateImage;
+        NSSize newSize/*, newAlternateSize*/;
+        float newButtonWidth;
+        NSRect newBounds;
 
-    [cell setAlternateImage:newAlternateImage];
-    [cell setImage:newImage];
-    
-    [cell setImagePosition:NSImageAbove];
+        newImage = [cell image];
+        newAlternateImage = [cell alternateImage];
+        newSize = [newImage size];
+        newSize.width = newSize.width - (newSize.height - [[contactListView groupFont] capHeight]);
+        newSize.height = [[contactListView groupFont] capHeight];
+        
+        //Apparently, controlView is the the tableColumn, not an NSButton. Seems to be no way to make the space for the triangle wider.
+        /*newBounds = [[cell controlView] bounds];
+        newButtonWidth = (newBounds.size.width - [[cell image] size].width) + newSize.width;
+        NSLog(@"%f", newButtonWidth);
+        newBounds.size.width = newButtonWidth;
+        [[cell controlView] setBounds:newBounds]; */
+        
+        //this isn't needed, I don't think. can themes change the flippy triangle image?
+        /*newAlternateSize = [newAlternateImage size];
+        newAlternateSize.width = newAlternateSize.width - (newAlternateSize.height - [[contactListView groupFont] capHeight]);
+        newAlternateSize.height = [[contactListView groupFont] capHeight];*/
+
+        [newImage setScalesWhenResized:YES];
+        [newImage setSize:newSize];
+            
+        [newAlternateImage setScalesWhenResized:YES];
+        [newAlternateImage setSize:newSize];
+
+        [cell setAlternateImage:newAlternateImage];
+        [cell setImage:newImage];
+
+        [cell setImagePosition:NSImageAbove];
+    }
 } 
 
 
