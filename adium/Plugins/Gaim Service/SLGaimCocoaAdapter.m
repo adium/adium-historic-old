@@ -1520,7 +1520,7 @@ static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 		[accountLookup(xfer->account) mainPerformSelector:@selector(updateProgressForFileTransfer:percent:bytesSent:)
 											   withObject:fileTransfer
 											   withObject:[NSNumber numberWithFloat:percent]
-											   withObject:[NSNumber numberWithFloat:xfer->bytes_sent]];
+											   withObject:[NSNumber numberWithUnsignedLong:xfer->bytes_sent]];
 	}
 }
 
