@@ -5,6 +5,8 @@
 //  Created by Chris Serino on Wed Mar 31 2004.
 //
 
+@class AIImageTextView;
+
 @interface CSNewContactAlertWindowController : AIWindowController {
 	IBOutlet NSView					*view_auxiliary;
 	IBOutlet NSPopUpButton			*popUp_event;
@@ -21,6 +23,8 @@
 	AIListObject					*listObject;
 	
 	BOOL							configureForGlobal;
+	
+	IBOutlet	AIImageTextView		*headerView;
 }
 
 + (void)editAlert:(NSDictionary *)inAlert

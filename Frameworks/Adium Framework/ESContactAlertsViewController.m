@@ -1,5 +1,5 @@
 //
-//  ESContactAlertsView.m
+//  ESContactAlertsViewController.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 12/14/04.
@@ -184,7 +184,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context)
 	if(oldAlert) [[adium contactAlertsController] removeAlert:oldAlert fromListObject:listObject];
 	
 	//Add the new alert
-	[[adium contactAlertsController] addAlert:newAlert toListObject:listObject];
+	[[adium contactAlertsController] addAlert:newAlert toListObject:listObject setAsNewDefaults:YES];
 	
 	if(delegate){
 		[delegate contactAlertsViewController:self

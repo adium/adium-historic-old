@@ -9,6 +9,8 @@
 #import "ESContactAlertsPane.h"
 #import "ESContactAlertsPlugin.h"
 
+#import "AIImageTextView.h"
+
 #define NEW_ALERT_NIB @"NewAlert"
 
 @interface CSNewContactAlertWindowController (PRIVATE)
@@ -22,6 +24,8 @@
 - (void)saveDetailsPaneChanges;
 - (void)configureDetailsPane;
 - (void)cleanUpDetailsPane;
+
+- (void)updateHeaderView;
 @end
 
 @implementation CSNewContactAlertWindowController
@@ -70,13 +74,20 @@
 		alert = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[[adium contactAlertsController] defaultEventID], KEY_EVENT_ID,
 																	[[adium contactAlertsController] defaultActionID], KEY_ACTION_ID, nil];
 	}
-	
+
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(alertDetailsForHeaderChanged:)
+									   name:@"ContactAlertDetailsForHeaderChanged"
+									 object:nil];
+
 	return(self);
 }
 
 //Dealloc
 - (void)dealloc
 {
+	[[adium notificationCenter] removeObserver:self];
+
 	[alert release];
 	[oldAlert release];
 	[detailsPane release];
@@ -88,6 +99,10 @@
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
+	if ([[self superclass] instancesRespondToSelector:@selector(windowDidLoad)]){
+		   [super windowDidLoad];
+	}
+	
 	//Configure window
 	[[self window] center];
 	[popUp_event setMenu:[[adium contactAlertsController] menuOfEventsWithTarget:self forGlobalMenu:configureForGlobal]];
@@ -241,6 +256,8 @@
 	
 	//Add the details view
 	if(detailsView) [view_auxiliary addSubview:detailsView];
+		
+	[self updateHeaderView];
 }
 
 //User selected an event from the popup
@@ -248,6 +265,8 @@
 {
 	if([sender representedObject]){
 		[alert setObject:[sender representedObject] forKey:KEY_EVENT_ID];
+		
+		[self updateHeaderView];
 	}
 }
 	
@@ -255,8 +274,37 @@
 - (IBAction)selectAction:(id)sender
 {
 	if([sender representedObject]){
-		[alert setObject:[sender representedObject] forKey:KEY_ACTION_ID];
-		[self configureDetailsPane];
+		NSString	*newAction = [sender representedObject];
+		NSString	*oldAction = [alert objectForKey:KEY_ACTION_ID];
+		
+		if(![newAction isEqualToString:oldAction]){
+			[alert setObject:[sender representedObject] forKey:KEY_ACTION_ID];
+			
+			[self configureDetailsPane];
+		}
+	}
+}
+
+- (void)alertDetailsForHeaderChanged:(NSNotification *)aNotification
+{
+	[self saveDetailsPaneChanges];
+	[self updateHeaderView];
+}
+
+- (void)updateHeaderView
+{
+	NSString				*actionID = [alert objectForKey:KEY_ACTION_ID];
+	NSString				*eventID = [alert objectForKey:KEY_EVENT_ID];
+	NSString				*eventDescription = [[adium contactAlertsController] longDescriptionForEventID:eventID 
+																							 forListObject:listObject];
+	id <AIActionHandler>	actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
+
+	if(actionHandler && eventDescription){
+		[headerView setStringValue:eventDescription];
+		[headerView setImage:[actionHandler imageForActionID:actionID]];
+		[headerView setSubString:[actionHandler longDescriptionForActionID:actionID
+														 withDetails:[alert objectForKey:KEY_ACTION_DETAILS]]];
+		[headerView setNeedsDisplay:YES];
 	}
 }
 
