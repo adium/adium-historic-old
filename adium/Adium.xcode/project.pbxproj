@@ -4465,7 +4465,6 @@
 				4BFF665C063693FB00308A3B,
 				7E824CE006387FAF00813072,
 				7E824CE206387FAF00813072,
-				7E824CE406387FAF00813072,
 				7E824CE606387FAF00813072,
 				7E824CEA06387FAF00813072,
 				BF000238063A4D2E0019910B,
@@ -5077,7 +5076,6 @@
 				4BFF665B063693FA00308A3B,
 				7E824CE106387FAF00813072,
 				7E824CE306387FAF00813072,
-				7E824CE506387FAF00813072,
 				7E824CE706387FAF00813072,
 				7E824CEB06387FAF00813072,
 				BF000239063A4D2E0019910B,
@@ -18368,14 +18366,15 @@
 		};
 		7E824CCD06387FAF00813072 = {
 			children = (
-				7EF2D62F06476BFA00C829FF,
-				7E824CCE06387FAF00813072,
+				7E824CDB06387FAF00813072,
+				7E824CDC06387FAF00813072,
 				7E824CD106387FAF00813072,
 				7E824CD206387FAF00813072,
 				7E824CD306387FAF00813072,
 				7E824CD406387FAF00813072,
-				7E824CDB06387FAF00813072,
-				7E824CDC06387FAF00813072,
+				7E824CCE06387FAF00813072,
+				7EF2D63406476C3D00C829FF,
+				7EF2D62F06476BFA00C829FF,
 			);
 			isa = PBXGroup;
 			name = "Link Management";
@@ -18434,22 +18433,6 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			path = SHLinkEditorWindowController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E824CD506387FAF00813072 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = SHLinkFavoritesManageView.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E824CD606387FAF00813072 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = SHLinkFavoritesManageView.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -18527,18 +18510,6 @@
 			settings = {
 			};
 		};
-		7E824CE406387FAF00813072 = {
-			fileRef = 7E824CD506387FAF00813072;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E824CE506387FAF00813072 = {
-			fileRef = 7E824CD606387FAF00813072;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		7E824CE606387FAF00813072 = {
 			fileRef = 7E824CD706387FAF00813072;
 			isa = PBXBuildFile;
@@ -18565,13 +18536,10 @@
 		};
 		7EF2D62F06476BFA00C829FF = {
 			children = (
-				7EF2D63406476C3D00C829FF,
-				7E824CCF06387FAF00813072,
-				7E824CD006387FAF00813072,
-				7E824CD506387FAF00813072,
-				7E824CD606387FAF00813072,
 				7E824CD706387FAF00813072,
 				7E824CD806387FAF00813072,
+				7E824CD006387FAF00813072,
+				7E824CCF06387FAF00813072,
 			);
 			isa = PBXGroup;
 			name = Prefs;
@@ -19827,6 +19795,7 @@
 			);
 			isa = PBXGroup;
 			name = "Emoticon Menu";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
