@@ -14,7 +14,7 @@
 - (NSMenu *)buildBookmarkMenuFor:(id <NSMenuItem>)menuItem;
 @end
 
-@class SHSafariBookmarksImporter, SHCaminoBookmarksImporter, SHMozillaBookmarksImporter;
+@class SHSafariBookmarksImporter, SHCaminoBookmarksImporter, SHMozillaBookmarksImporter, SHFireFoxBookmarksImporter;
 
 @implementation SHBookmarksImporterPlugin
 
@@ -32,6 +32,7 @@ static NSMenu       *bookmarkSets;
     [self installImporterClass:[SHSafariBookmarksImporter class]];
     [self installImporterClass:[SHCaminoBookmarksImporter class]];
     [self installImporterClass:[SHMozillaBookmarksImporter class]];
+    [self installImporterClass:[SHFireFoxBookmarksImporter class]];
     
     // initial menu configuration
     [self configureMenus];
