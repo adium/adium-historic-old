@@ -13,11 +13,30 @@
 //Copy
 - (id)copyWithZone:(NSZone *)zone
 {
-	id newCell = [super copyWithZone:zone];
+	AIListGroupMockieCell *newCell = [super copyWithZone:zone];
+	
+	int i;
+	for(i = 0; i < NUMBER_OF_GROUP_STATES; i++){
+		newCell->_mockieGradient[i] = [_mockieGradient[i] retain];
+	}
+	
 	return(newCell);
 }
 
-//
+//Init
+- (id)init
+{
+	[super init];
+	
+	int i;
+	for(i = 0; i < NUMBER_OF_GROUP_STATES; i++){
+		_mockieGradient[i] = nil;
+	}
+	
+	return(self);
+}
+
+//Dealloc
 - (void)dealloc
 {
 	[self flushGradientCache];

@@ -15,8 +15,26 @@
 //Copy
 - (id)copyWithZone:(NSZone *)zone
 {
-	id newCell = [super copyWithZone:zone];
+	AIListGroupCell *newCell = [super copyWithZone:zone];
+	
+	newCell->shadowColor = [shadowColor retain];
+	newCell->backgroundColor = [backgroundColor retain];
+	newCell->gradientColor = [gradientColor retain];
+	newCell->_gradient = [_gradient retain];
+	
 	return(newCell);
+}
+
+//Init
+- (id)init
+{
+	[super init];
+	shadowColor = nil;
+	backgroundColor = nil;
+	gradientColor = nil;
+	_gradient = nil;
+	
+	return(self);
 }
 
 //Dealloc

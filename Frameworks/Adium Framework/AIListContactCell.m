@@ -28,7 +28,13 @@
 //Copy
 - (id)copyWithZone:(NSZone *)zone
 {
-	id newCell = [super copyWithZone:zone];
+	AIListContactCell *newCell = [super copyWithZone:zone];
+	
+	newCell->statusFont = [statusFont retain];
+	newCell->statusColor = [statusColor retain];
+	newCell->_statusAttributes = [_statusAttributes retain];
+	newCell->_statusAttributesInverted = [_statusAttributesInverted retain];
+	
 	return(newCell);
 }
 
@@ -39,8 +45,11 @@
 	
 	backgroundOpacity = 1.0;
 	statusFont = [[NSFont systemFontOfSize:12] retain];
+	statusColor = nil;
+	_statusAttributes = nil;
+	_statusAttributesInverted = nil;
 	shouldUseContactTextColors = YES;
-		
+	
 	return(self);
 }
 	
@@ -445,15 +454,33 @@
 		NSString 	*string = [listObject displayArrayObjectForKey:@"ExtendedStatus"];
 		
 		if(string){
-			int	halfHeight = rect.size.height / 2;
-
+			int		halfHeight = rect.size.height / 2;
+			float	half;
+			
 			//Pad
 			if(drawUnder){
 				rect.origin.y += halfHeight;
 				rect.size.height -= halfHeight;
+
+				/*
+				 We'll adjust our drawRect (when drawing) by half the difference between its height
+				 and the status font height to properly center in the space below the name.
+				 */
+				half = (rect.size.height - statusFontHeight) / 2.0;
+
 			}else{
 				if([self textAlignment] == NSLeftTextAlignment) rect.origin.x += NAME_STATUS_PAD;
 				rect.size.width -= NAME_STATUS_PAD;
+
+				/* 
+				 The baseline of the extended status to the side of the name needs to line up with
+				 the name's baseline, so we calculate the display name's size and find half the
+				 difference between our rect and the name's height.  We'll use this value when
+				 drawing.
+				 */
+//				half = (rect.size.height - labelFontHeight) / 2.0;
+				half = 0;
+
 			}
 			
 			NSDictionary		*attributes = ([self cellIsSelected] ?
@@ -466,7 +493,7 @@
 			NSSize		nameSize = [extStatus size];
 			NSRect		drawRect = rect;
 			
-			if(nameSize.width > drawRect.size.width) nameSize = rect.size;
+			if(nameSize.width > drawRect.size.width) nameSize = drawRect.size;
 			
 			switch([self textAlignment]){
 				case NSCenterTextAlignment:
@@ -478,7 +505,6 @@
 				default:
 				break;
 			}
-			int half = (drawRect.size.height - statusFontHeight) / 2.0;
 
 			[extStatus drawInRect:NSMakeRect(drawRect.origin.x,
 											 drawRect.origin.y + half,
