@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/simpleViewer.jsp $-->
-<!--$Rev: 794 $ $Date: 2004/05/31 02:03:26 $ -->
+<!--$Rev: 795 $ $Date: 2004/06/01 00:51:09 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -346,9 +346,9 @@ a:hover {
         } else {
             out.print(rset.getString("sender_sn"));
         }
-        out.println("</span></a>\n");
 
         if(to_sn == null || from_sn == null) {
+        out.println("</span></a>\n");
             out.println("&rarr;");
 
             out.println("<a href=\"#\" title=\"" +
@@ -363,10 +363,9 @@ a:hover {
             } else {
                 out.print(rset.getString("recipient_sn"));
             }
-            out.print("</span></a>:&nbsp;");
         }
 
-        out.println(message);
+        out.println("</span></a>:&nbsp;" + message);
 
         if(rset.getBoolean("notes")) {
             pstmt = conn.prepareStatement("select title, notes " +
