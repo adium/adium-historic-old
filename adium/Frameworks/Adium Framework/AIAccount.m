@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.63 2004/06/24 14:31:49 evands Exp $
+// $Id: AIAccount.m,v 1.64 2004/06/25 02:30:58 evands Exp $
 
 #import "AIAccount.h"
 
@@ -59,6 +59,8 @@
 
 	delayedUpdateStatusTimer = nil;
 	delayedUpdateStatusTarget = nil;
+	
+	silenceAllContactUpdatesTimer = nil;
 	
 	disconnectedByFastUserSwitch = NO;
 	
@@ -428,17 +430,23 @@
 - (void)silenceAllContactUpdatesForInterval:(NSTimeInterval)interval
 {
     silentAndDelayed = YES;
+
+	if (silenceAllContactUpdatesTimer){
+		[silenceAllContactUpdatesTimer invalidate];
+		[silenceAllContactUpdatesTimer release]; silenceAllContactUpdatesTimer = nil;
+	}
 	
-    [NSTimer scheduledTimerWithTimeInterval:interval
-									 target:self
-								   selector:@selector(_endSilenceAllUpdates)
-								   userInfo:nil
-									repeats:NO];
+    silenceAllContactUpdatesTimer = [[NSTimer scheduledTimerWithTimeInterval:interval
+																	 target:self
+																   selector:@selector(_endSilenceAllUpdates)
+																   userInfo:nil
+																	repeats:NO] retain];
 }
 
 //Stop silencing 
 - (void)_endSilenceAllUpdates
 {
+	[silenceAllContactUpdatesTimer release]; silenceAllContactUpdatesTimer = nil;
     silentAndDelayed = NO;
 }
 
