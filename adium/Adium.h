@@ -13,8 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /** 
- * $Revision: 1.41 $
- *  $Date: 2004/05/30 21:17:53 $
+ * $Revision: 1.42 $
+ *  $Date: 2004/07/28 02:47:06 $
  *  $Author#
  *
  **/
@@ -35,6 +35,7 @@
 #import "AIException.h"
 #import "ESFileTransfer.h"
 #import "AIIconState.h"
+#import "DCJoinChatViewController.h"
 #import "AIListContact.h"
 #import "AIListGroup.h"
 #import "AIListObject.h"
