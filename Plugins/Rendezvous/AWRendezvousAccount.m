@@ -30,11 +30,11 @@
 #import "AWEzvDefines.h"
 #import "AWRendezvousAccount.h"
 #import "AWRendezvousPlugin.h"
-#import <AIUtilities/AIHTMLDecoder.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentTyping.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 
