@@ -20,8 +20,8 @@
 #import "AIImageTextCell.h"
 #import "AIParagraphStyleAdditions.h"
 
-#define DEFAULT_MAX_IMAGE_WIDTH 24
-#define IMAGE_TEXT_PADDING		2
+#define DEFAULT_MAX_IMAGE_WIDTH			24
+#define DEFAULT_IMAGE_TEXT_PADDING		6
 
 @interface NSCell (UndocumentedHighlightDrawing)
 - (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
@@ -36,6 +36,7 @@
 		font = nil;
 		subString = nil;
 		maxImageWidth = DEFAULT_MAX_IMAGE_WIDTH;
+		imageTextPadding = DEFAULT_IMAGE_TEXT_PADDING;
 	}
 
 	return self;
@@ -44,7 +45,7 @@
 //Dealloc
 - (void)dealloc
 {
-	[font release];
+	[font release]; font = nil;
 	[subString release];
 
 	[super dealloc];
@@ -57,25 +58,40 @@
 
 	newCell->font = nil;
 	[newCell setFont:font];
-	
+
 	newCell->subString = nil;
 	[newCell setSubString:subString];
 	
 	[newCell setMaxImageWidth:maxImageWidth];
+
 	return(newCell);
 }
 
-//Font used to display our text
-- (void)setFont:(NSFont *)obj
+/*
+ * @brief Set the string value
+ *
+ * We redirect a call to setStringValue into one to setObjectValue. 
+ * This prevents NSCell from messing up our font (normally, setStringValue: resets any font set on the cell).
+ */
+- (void)setStringValue:(NSString *)inString
 {
-	if(font != obj){
-		[font release];
-		font = [obj retain];
-	}
+	[self setObjectValue:inString];
 }
-- (NSFont *)font{
-	return(font);
+
+
+//Font used to display our text
+- (void)setFont:(NSFont *)inFont
+{
+    if(font != inFont){
+        [font release];
+        font = [inFont retain];
+    }
 }
+- (NSFont *)font
+{
+    return(font);
+}
+
 
 //Substring (Displayed in gray below our main string)
 - (void)setSubString:(NSString *)inSubString
@@ -89,6 +105,11 @@
 - (void)setMaxImageWidth:(float)inWidth
 {
 	maxImageWidth = inWidth;
+}
+
+- (void)setImageTextPadding:(float)inImageTextPadding
+{
+	imageTextPadding = inImageTextPadding;
 }
 
 - (NSSize)cellSizeForBounds:(NSRect)cellFrame
@@ -113,7 +134,7 @@
 			destSize.height = destSize.height * proportionChange;
 		}
 
-		cellSize.width += destSize.width + 5;
+		cellSize.width += destSize.width + imageTextPadding;
 		cellSize.height = destSize.height;
 	}
 	
@@ -121,17 +142,17 @@
 		NSDictionary	*attributes;
 		NSSize			titleSize;
 
-		cellSize.width += IMAGE_TEXT_PADDING*2;
+		cellSize.width += (imageTextPadding * 2);
 		
 		//Truncating paragraph style
 		NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																	 lineBreakMode:NSLineBreakByTruncatingTail];
 		
 		//
-		if(font){
+		if([self font]){
 			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				paragraphStyle, NSParagraphStyleAttributeName,
-				font, NSFontAttributeName,
+				[self font], NSFontAttributeName,
 				nil];
 		}else{
 			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -173,9 +194,9 @@
 //Draw
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-	NSString	*title = [self objectValue];
+	NSString	*title = [self stringValue];
 	NSImage		*image = [self image];
-	BOOL 	highlighted;
+	BOOL		highlighted;
 
 //	[super drawInteriorWithFrame:cellFrame inView:controlView];
 	
@@ -189,11 +210,12 @@
 		NSSize	size = [image size];
 		NSSize  destSize = size;
 		NSPoint	destPoint = cellFrame.origin;
-
+		float	imageLeftPadding, imageWidthWithPadding = 0;
+		
 		//Adjust the rects
 		destPoint.y += 1;
-		destPoint.x += 2;
-
+		destPoint.x += imageTextPadding;
+		
 		//Center image vertically, or scale as needed
 		if (destSize.height > cellFrame.size.height){
 			 float proportionChange = cellFrame.size.height / size.height;
@@ -210,10 +232,13 @@
 		if(destSize.height < cellFrame.size.height){
 			destPoint.y += (cellFrame.size.height - destSize.height) / 2.0;
 		} 
-			
-		 cellFrame.size.width -= destSize.width + 4;
-		 cellFrame.origin.x += destSize.width + 5;
-		 
+
+		//Decrease the cell width by the width of the image we drew and its left padding
+		cellFrame.size.width -= imageTextPadding + destSize.width;
+		
+		//Shift the origin over to the right edge of the image we just drew
+		cellFrame.origin.x += imageTextPadding + destSize.width;
+		
 		BOOL flippedIt = NO;
 		if (![image isFlipped]){
 			[image setFlipped:YES];
@@ -249,19 +274,21 @@
 		//Adjust if a substring is present
 		if(subString) cellFrame.size.height /= 2;
 
-		//Padding
-		cellFrame.origin.x += IMAGE_TEXT_PADDING;
-		cellFrame.size.width -= IMAGE_TEXT_PADDING*2;
-		
+		/* Padding: Origin goes right by our padding amount, and the width decreases by twice it
+		 * (for left and right padding).
+		 */
+		cellFrame.origin.x += imageTextPadding;
+		cellFrame.size.width -= imageTextPadding * 2;
+
 		//Truncating paragraph style
 		NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																	 lineBreakMode:NSLineBreakByTruncatingTail];
 		
 		//
-		if(font){
+		if([self font]){
 			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				paragraphStyle, NSParagraphStyleAttributeName,
-				font, NSFontAttributeName,
+				[self font], NSFontAttributeName,
 				textColor, NSForegroundColorAttributeName,
 				nil];
 		}else{
@@ -270,7 +297,9 @@
 				textColor, NSForegroundColorAttributeName,
 				nil];
 		}
-
+		
+		NSAttributedString	*attributedTitle = [[[NSAttributedString alloc] initWithString:title
+																				attributes:attributes] autorelease];
 		//Calculate the centered rect
 		stringHeight = [title sizeWithAttributes:attributes].height;
 		if(stringHeight < cellFrame.size.height){
@@ -278,7 +307,7 @@
 		}
 
 		//Draw the string
-		[title drawInRect:cellFrame withAttributes:attributes];
+		[attributedTitle drawInRect:cellFrame];
 
 		//Draw the substring
 		if(subString){
