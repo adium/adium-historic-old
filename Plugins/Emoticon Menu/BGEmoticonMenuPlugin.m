@@ -38,13 +38,10 @@
 	
 	//
 	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(toolbarWillAddItem:)
-												 name:NSToolbarWillAddItemNotification
-											   object:nil];
+                                                selector:@selector(toolbarWillAddItem:)
+                                                    name:NSToolbarWillAddItemNotification
+                                                  object:nil];
 
-    
-	
-	
 	//Observe prefs    
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 	[self preferencesChanged:nil];
@@ -64,7 +61,7 @@
 		//Add menu to toolbar item (for text mode)
 		NSMenuItem	*mItem = [[[NSMenuItem alloc] init] autorelease];
 		[mItem setSubmenu:menu];
-		[mItem setTitle:[menu title]];
+		[mItem setTitle:@"Emoticon"];
 		[item setMenuFormRepresentation:mItem];
 	}
 }
@@ -83,8 +80,7 @@
 }
 
 //Register our toolbar item with the most current emoticon menu
-//We cannot change the menu dynamically because there is no reliable way to keep track of all the allocated toolbar
-//items
+//We cannot change the menu dynamically because there is no reliable way to keep track of all the allocated toolbar items
 - (void)registerToolbarItem
 {
 	MVMenuButton *button;
@@ -99,16 +95,16 @@
 	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
 	[button setImage:[NSImage imageNamed:@"emoticonToolbar" forClass:[self class]]];
 	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:@"InsertEmoticon"
-														   label:@"Emoticon"
-													paletteLabel:@"Insert Emoticon"
-														 toolTip:@"Insert Emoticon"
-														  target:self
-												 settingSelector:@selector(setView:)
-													 itemContent:button
-														  action:@selector(insertEmoticon:)
-															menu:nil] retain];
+                                                               label:@"Emoticon"
+                                                        paletteLabel:@"Insert Emoticon"
+                                                             toolTip:@"Insert Emoticon"
+                                                              target:self
+                                                     settingSelector:@selector(setView:)
+                                                         itemContent:button
+                                                              action:@selector(insertEmoticon:)
+                                                                menu:nil] retain];
 	[button setToolbarItem:toolbarItem];
-    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+        [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
 }
 
 
@@ -160,9 +156,9 @@
     while(anEmoticon = [emoteEnum nextObject]){
         if([anEmoticon isEnabled] == YES){
             NSMenuItem *newItem = [[NSMenuItem alloc] initWithTitle:[anEmoticon name]
-															 target:self
-															 action:@selector(insertEmoticon:)
-													  keyEquivalent:@""];
+                                                             target:self
+                                                             action:@selector(insertEmoticon:)
+                                                      keyEquivalent:@""];
 
 			//We need to make a copy of the emoticons for our menu, otherwise the menu flips them in an unpredictable
 			//way, causing problems in the emoticon preferences
@@ -173,7 +169,7 @@
         }
     }
     
-	[packMenu setMenuChangedMessagesEnabled:YES];
+    [packMenu setMenuChangedMessagesEnabled:YES];
 	
     return([packMenu autorelease]);
 }
