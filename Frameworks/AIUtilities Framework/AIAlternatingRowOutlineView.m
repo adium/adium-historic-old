@@ -147,7 +147,7 @@
 - (void)drawRow:(int)row clipRect:(NSRect)rect
 {
     if(drawsAlternatingRows){
-		[self _drawRowInRect:[self rectOfRow:row] colored:!(row % 2) selected:(row == [self selectedRow])];
+		[self _drawRowInRect:[self rectOfRow:row] colored:!(row % 2) selected:[self isRowSelected:row]];
 	}
 	
     [super drawRow:row clipRect:rect];
