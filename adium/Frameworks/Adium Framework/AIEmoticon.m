@@ -16,7 +16,7 @@
 #import "AIEmoticon.h"
 
 @interface AIEmoticon (PRIVATE)
-- (AIEmoticon *)initFromPath:(NSString *)inPath;
+- (AIEmoticon *)initWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName;
 - (NSString *)_stringWithMacEndlines:(NSString *)inString;
 - (void)setTextEquivalents:(NSArray *)inArray;
 - (void)setCachedString:(NSAttributedString *)inString image:(NSImage *)inImage;
@@ -26,17 +26,18 @@
 @implementation AIEmoticon
 
 //Create a new emoticon
-+ (id)emoticonFromPath:(NSString *)inPath
++ (id)emoticonWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName
 {
-    return([[[self alloc] initFromPath:inPath] autorelease]);
+    return([[[self alloc] initWithIconPath:inPath equivalents:inTextEquivalents name:inName] autorelease]);
 }
 
 //Init
-- (AIEmoticon *)initFromPath:(NSString *)inPath
+- (AIEmoticon *)initWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName
 {
     [super init];
     path = [inPath retain];
-    textEquivalents = nil;
+	name = [inName retain];
+    textEquivalents = [inTextEquivalents retain];
     _cachedAttributedString = nil;
     
     return(self);
@@ -46,6 +47,7 @@
 - (void)dealloc
 {
     [path release];
+	[name release];
     [textEquivalents release];
     [_cachedAttributedString release];
     [_cachedImage release];
@@ -56,23 +58,6 @@
 //Returns an array of the text equivalents for this emoticon
 - (NSArray *)textEquivalents
 {
-    if(!textEquivalents){
-        NSString    *equivFilePath = [path stringByAppendingPathComponent:@"TextEquivalents.txt"];
-        
-        //Fetch the text equivalents
-        if([[NSFileManager defaultManager] fileExistsAtPath:equivFilePath]){
-            NSString	*equivString;
-            
-            //Convert the text file into an array of strings
-            equivString = [NSMutableString stringWithContentsOfFile:equivFilePath];
-            equivString = [self _stringWithMacEndlines:equivString];
-            textEquivalents = [[equivString componentsSeparatedByString:@"\r"] retain];
-        }
-
-        //If we didn't get any equivelants, just create an empty array
-        if(!textEquivalents) textEquivalents = [[NSMutableArray alloc] init];
-    }
-    
     return(textEquivalents);
 }
 
@@ -81,26 +66,6 @@
 {
     [_cachedAttributedString release]; _cachedAttributedString = nil;
     [_cachedImage release]; _cachedImage = nil;
-}
-    
-//Convert any unix/windows line endings to mac line endings
-- (NSString *)_stringWithMacEndlines:(NSString *)inString
-{
-    NSCharacterSet      *newlineSet = [NSCharacterSet characterSetWithCharactersInString:@"\n"];
-    NSMutableString     *newString = nil; //We avoid creating a new string if not necessary
-    NSRange             charRange;
-    
-    //Step through all the invalid endlines
-    charRange = [inString rangeOfCharacterFromSet:newlineSet];
-    while(charRange.length != 0){
-        if(!newString) newString = [[inString mutableCopy] autorelease];
-
-        //Replace endline and continue
-        [newString replaceCharactersInRange:charRange withString:@"\r"];
-        charRange = [newString rangeOfCharacterFromSet:newlineSet];
-    }
-    
-    return(newString ? newString : inString);
 }
 
 //Returns the display name of this emoticon
@@ -118,10 +83,10 @@
     return(enabled);
 }
 
-//Returns the image for this emoticon (cached)
+//Returns the image for this emoticon
 - (NSImage *)image
 {
-    return([[[NSImage alloc] initWithContentsOfFile:[self _pathToEmoticonImage]] autorelease]);
+    return([[[NSImage alloc] initWithContentsOfFile:path] autorelease]);
 }
 
 //Returns an attributed string containing this emoticon
@@ -132,10 +97,10 @@
     
     //Cache this attachment for ourself
     if(!_cachedAttributedString){
-        NSFileWrapper               *emoticonFileWrapper = [[[NSFileWrapper alloc] initWithPath:[self _pathToEmoticonImage]] autorelease];
+        NSFileWrapper               *emoticonFileWrapper = [[[NSFileWrapper alloc] initWithPath:path] autorelease];
         AITextAttachmentExtension   *emoticonAttachment = [[[AITextAttachmentExtension alloc] init] autorelease];
         
-		[emoticonAttachment setImagePath:[self _pathToEmoticonImage]];
+		[emoticonAttachment setImagePath:path];
 		[emoticonAttachment setImageSize:[[self image] size]];
         [emoticonAttachment setFileWrapper:emoticonFileWrapper];
 		[emoticonAttachment setHasAlternate:YES];
@@ -152,21 +117,6 @@
     [attachment setString:textEquivalent];
     
     return([attributedString autorelease]);
-}
-
-//Returns the path to our emoticon image
-- (NSString *)_pathToEmoticonImage
-{
-    NSDirectoryEnumerator   *enumerator;
-    NSString		    *fileName;
-    
-    //Search for the file named Emoticon in our bundle (It can be in any image format)
-    enumerator = [[NSFileManager defaultManager] enumeratorAtPath:path];
-    while(fileName = [enumerator nextObject]){
-		if([fileName hasPrefix:@"Emoticon"]) return([path stringByAppendingPathComponent:fileName]);
-    }
-    
-    return(nil);
 }
 
 //A more useful debug description

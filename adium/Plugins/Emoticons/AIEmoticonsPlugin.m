@@ -22,9 +22,14 @@
 #define PATH_EMOTICONS						@"/Emoticons"
 #define PATH_INTERNAL_EMOTICONS				@"/Contents/Resources/Emoticons/"
 #define EMOTICONS_PATH_NAME					@"Emoticons"
-#define EMOTICON_PACK_PATH_EXTENSION		@"emoticonPack"
-#define ADIUM_EMOTICON_SET_PATH_EXTENSION   @"AdiumEmoticonset"
+
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
+
+//We support loading .AdiumEmoticonset, .emoticonPack, and .emoticons
+#define ADIUM_EMOTICON_SET_PATH_EXTENSION   @"AdiumEmoticonset"
+#define EMOTICON_PACK_PATH_EXTENSION		@"emoticonPack"
+#define PROTEUS_EMOTICON_SET_PATH_EXTENSION @"emoticons"
+
 
 @interface AIEmoticonsPlugin (PRIVATE)
 - (NSDictionary *)emoticonIndex;
@@ -115,8 +120,9 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     }
 }
 
-#pragma mark Content filter
 
+//Content filter -------------------------------------------------------------------------------------------------------
+#pragma mark Content filter
 //Filter a content object before display, inserting graphical emoticons
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
@@ -236,8 +242,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     return replacement;
 }
 
+//Active emoticons -----------------------------------------------------------------------------------------------------
 #pragma mark Active emoticons
-
 //Returns an array of the currently active emoticons
 - (NSArray *)activeEmoticons
 {
@@ -270,8 +276,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 }
 
 
+//Disabled emoticons ---------------------------------------------------------------------------------------------------
 #pragma mark Disabled emoticons
-
 //Enabled or disable a specific emoticon
 - (void)setEmoticon:(AIEmoticon *)inEmoticon inPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled
 {
@@ -307,8 +313,9 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     return([packDict objectForKey:KEY_EMOTICON_DISABLED]);
 }
 
-#pragma mark Active emoticon packs
 
+//Active emoticon packs ------------------------------------------------------------------------------------------------
+#pragma mark Active emoticon packs
 //Returns an array of the currently active emoticon packs
 - (NSArray *)activeEmoticonPacks
 {
@@ -373,8 +380,9 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     [[adium preferenceController] setPreference:nameArray forKey:KEY_EMOTICON_ACTIVE_PACKS group:PREF_GROUP_EMOTICONS];
 }
 
-#pragma mark Available emoticon packs
 
+//Available emoticon packs ---------------------------------------------------------------------------------------------
+#pragma mark Available emoticon packs
 //Returns an array of the available emoticon packs
 - (NSArray *)availableEmoticonPacks
 {
@@ -390,15 +398,6 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		while(path = [enumerator nextObject]) {
 			[_availableEmoticonPacks addObjectsFromArray:[self _emoticonsPacksAvailableAtPath:path]];
 		}
-/*		
-        //Load internal packs
-        path = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_EMOTICONS] stringByExpandingTildeInPath];
-        [_availableEmoticonPacks addObjectsFromArray:[self _emoticonsPacksAvailableAtPath:path]];
-        
-        //Load user packs
-        path = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:PATH_EMOTICONS] stringByExpandingTildeInPath];
-        [_availableEmoticonPacks addObjectsFromArray:[self _emoticonsPacksAvailableAtPath:path]];
-*/		
 		
 		//Sort as per the saved ordering
 		[self _sortArrayOfEmoticonPacks:_availableEmoticonPacks];
@@ -442,7 +441,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		
         if([[file lastPathComponent] characterAtIndex:0] != '.' &&                              //Ignore invisible files
 				(([[file pathExtension] caseInsensitiveCompare:EMOTICON_PACK_PATH_EXTENSION] == 0) ||   //Only accept emoticon packs
-				 ([[file pathExtension] caseInsensitiveCompare:ADIUM_EMOTICON_SET_PATH_EXTENSION] == 0))){    
+				 ([[file pathExtension] caseInsensitiveCompare:ADIUM_EMOTICON_SET_PATH_EXTENSION] == 0) ||
+				 ([[file pathExtension] caseInsensitiveCompare:PROTEUS_EMOTICON_SET_PATH_EXTENSION] == 0))){    
 
             NSString        *fullPath = [inPath stringByAppendingPathComponent:file];
 			AIEmoticonPack  *pack = [AIEmoticonPack emoticonPackFromPath:fullPath];
@@ -457,8 +457,9 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     return(emoticonPackArray);
 }
 
-#pragma mark Pack ordering
 
+//Pack ordering --------------------------------------------------------------------------------------------------------
+#pragma mark Pack ordering
 //Re-arrange an emoticon pack
 - (void)moveEmoticonPacks:(NSArray *)inPacks toIndex:(int)index
 {    
@@ -536,8 +537,9 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
 	}
 }
 
-#pragma mark Character hints for efficiency
 
+//Character hints for efficiency ---------------------------------------------------------------------------------------
+#pragma mark Character hints for efficiency
 //Returns a characterset containing characters that hint at the presence of an emoticon
 - (NSCharacterSet *)emoticonHintCharacterSet
 {
@@ -626,8 +628,9 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
 	//After building all the subIndexes, sort them by length here
 }
 
-#pragma mark Cache flushing
 
+//Cache flushing -------------------------------------------------------------------------------------------------------
+#pragma mark Cache flushing
 //Flush any cached emoticon images (and image attachment strings)
 - (void)flushEmoticonImageCache
 {
@@ -662,8 +665,9 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
     [self resetActiveEmoticons];
 }
 
-#pragma mark Private
 
+//Private --------------------------------------------------------------------------------------------------------------
+#pragma mark Private
 - (NSString *)_keyForPack:(AIEmoticonPack *)inPack
 {
 	return [NSString stringWithFormat:@"Pack:%@",[inPack name]];
