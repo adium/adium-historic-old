@@ -104,6 +104,20 @@
     [AIInfoWindowController showInfoWindowForListObject:[[adium menuController] contactualMenuContact]];
 }
 
+/*
+- (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
+{
+    NSDictionary		*objects = [inToolbarItem configurationObjects];
+    AIListContact		*object = [objects objectForKey:@"ContactObject"];
+
+    BOOL			enabled = (object && [object isKindOfClass:[AIListContact class]]);
+
+    [inToolbarItem setEnabled:enabled];
+//    return(enabled);
+    return(YES);
+}
+*/
+
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     BOOL valid = YES;
