@@ -47,6 +47,7 @@ Minor Changes
 - Remove "per-contact" window position/size saving. Instead, use the size/position of the last window, and cascade new ones
 + Add area for typing contact notes to inspector, display notes in tooltip
 + Allow specifying an image for a contact in the inspector (Independent of address book) - this should go with the inspector/Get Info merger...
+# Animate Buddy Icons once when clicked
 
 + Change main auto-resizing preference to only toggle vertical resizing - this goes with the big contact list changes and should wait to see how they pan out.
 
@@ -69,16 +70,17 @@ Minor Changes
 + Remember last X lines of previous conversation, restore to new message windows
 + Display 'New Account' in account list for accounts without a UID
 = Add a 'None' soundset  
-+ iTunes %_status script should display "Not Playing" when iTunes isn't open
+= iTunes %_status script should display "Not Playing" when iTunes isn't open
 = Change window cycling menu items to 'Previous Chat' 'Next Chat'
 + Allow cmd-shift-left/right to cycle tabs in addition to cmd left/right
 + Add customizable hotkey to bring Adium to the foreground
-How is this possible? - we can set global hotkeys, no?
+How is this possible? - we can set global hotkeys, no? - Is this necessary in Adium? Can't Key Xing or iKey can do it if you want it?.
 + Insert emoticon menu item, contextual menu item
 # Tab creation preference: Last created window, new window, group by group, group by account
 + Tab-complete usernames in messages and chat
 + Auto-complete aliases and address book entries in New message prompt, log viewer
 + Open new windows behind the frontmost window (When not opening in tabs)
++ iTunes script runner should load scripts from the Application Support directory
 
 ---------
 Big Stuff
@@ -179,6 +181,7 @@ Account / Connect panel: <<<INCOMPLETE>>>
 + Show protocol icon
 + Show Service Icon/Address book icon
 + A check box or something to easily connect an account
+  Hanji: I find gaim's use of a checkbox to connect/disconnect an account extremely unintuitive, I would vote against that.
 
 Contact Inspector: <<<INCOMPLETE>>>
 + Buddy Icon: Serverside/Address Book/Set from within Adium - we have the NSImagePicker.h in AIUtilities to potentially help with this
