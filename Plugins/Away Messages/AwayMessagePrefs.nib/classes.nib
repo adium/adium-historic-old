@@ -7,14 +7,13 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            ACTIONS = {deleteAwayMessage = id; newAwayMessage = id; }; 
+            ACTIONS = {deleteAwayMessage = id; importiChatAways = id; newAwayMessage = id; }; 
             CLASS = AIAwayMessagePreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_delete" = NSButton; 
-                "button_import" = NSButton; 
                 "outlineView_aways" = AIAlternatingRowOutlineView; 
-                "popup_Clients" = NSPopUpButton; 
+                "scrollView_autoresponseText" = AIAutoScrollView; 
                 "scrollView_awayList" = AIAutoScrollView; 
                 "scrollView_awayText" = AIAutoScrollView; 
                 "textView_autoresponse" = NSTextView; 

@@ -59,8 +59,14 @@
     [outlineView_aways registerForDraggedTypes:[NSArray arrayWithObject:@"AIAwayMessage"]];
     [scrollView_awayList setAutoHideScrollBar:YES];
     [scrollView_awayList setAutoScrollToBottom:NO];
+
     [scrollView_awayText setAutoHideScrollBar:YES];
     [scrollView_awayText setAutoScrollToBottom:NO];
+	[scrollView_awayText setAlwaysDrawFocusRingIfFocused:YES];
+
+	[scrollView_autoresponseText setAutoHideScrollBar:YES];
+    [scrollView_autoresponseText setAutoScrollToBottom:NO];
+	[scrollView_autoresponseText setAlwaysDrawFocusRingIfFocused:YES];
 
     //Load our aways
     [self loadAwayMessages];
