@@ -24,6 +24,7 @@
 	tabAvailable = [[NSImage imageNamed:@"tab-available" forClass:[self class]] retain];
 	tabContent = [[NSImage imageNamed:@"tab-content" forClass:[self class]] retain];
 	tabTyping = [[NSImage imageNamed:@"tab-typing" forClass:[self class]] retain];
+	tabEnteredText = [[NSImage imageNamed:@"tab-entered-text" forClass:[self class]] retain];
 	
 	//Observe list object changes
 	[[adium contactController] registerListObjectObserver:self];
@@ -54,19 +55,32 @@
 {
 	if([listObject integerStatusObjectForKey:@"UnviewedContent"]){
 		return(tabContent);
-	}else if([listObject integerStatusObjectForKey:@"Typing"]){
-		return(tabTyping);
-	}else if([[listObject numberStatusObjectForKey:@"Away"] boolValue]){
-		return(tabAway);
-	}else if([listObject statusObjectForKey:@"IdleSince"]){
-		return(tabIdle);
-	}else if([[listObject numberStatusObjectForKey:@"Online"] boolValue]){
-		return(tabAvailable);
-	}else if([listObject integerStatusObjectForKey:@"Stranger"]){
-		return(tabStranger);
+		
 	}else{
-		return(tabOffline);
+		AITypingState typingState = [listObject integerStatusObjectForKey:@"Typing"];
+		NSLog(@"%i",typingState);
+		if(typingState == AITyping){
+			return(tabTyping);
+			
+		}else if (typingState == AIEnteredText){
+			return(tabEnteredText);
+			
+		}else if([[listObject numberStatusObjectForKey:@"Away"] boolValue]){
+			return(tabAway);
+			
+		}else if([listObject statusObjectForKey:@"IdleSince"]){
+			return(tabIdle);
+			
+		}else if([[listObject numberStatusObjectForKey:@"Online"] boolValue]){
+			return(tabAvailable);
+			
+		}else if([listObject integerStatusObjectForKey:@"Stranger"]){
+			return(tabStranger);
+			
+		}else{
+			return(tabOffline);
+			
+		}
 	}
 }
-
 @end
