@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface NSWindow (AIWindowAdditions)
+- (void)setContentSize:(NSSize)aSize display:(BOOL)displayFlag animate:(BOOL)animateFlag;
 - (BOOL)isTextured;
 - (void)compatibleInvalidateShadow;
 -(void)setIgnoresExpose:(BOOL)flag;
