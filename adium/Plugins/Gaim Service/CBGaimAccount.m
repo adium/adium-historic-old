@@ -381,6 +381,9 @@
     
     if (chat == nil) {
         if (listContact == nil) {
+			NSAssert(account != nil, @"account was nil");
+			NSAssert(conv->name != nil, @"conv->name was nil");
+			NSAssert([[NSString stringWithUTF8String:(conv->name)] length] == 0, @"conv->name length was 0");
             GaimBuddy 	*buddy = gaim_find_buddy(account, conv->name);
             if (buddy == NULL) {
                 buddy = gaim_buddy_new(account, conv->name, NULL);  //create a GaimBuddy
@@ -397,7 +400,9 @@
 				//Add it to Adium's list
 				//[object setRemoteGroupName:[inGroup UID]]; //Use the non-mapped group name locally
             }
+			NSAssert(buddy != nil, @"buddy was nil");
             listContact = [self contactAssociatedWithBuddy:buddy];
+			NSAssert(listContact != nil, @"listContact was nil immediately after contactAssociatedWithBuddy");
         }
 		
 #warning this assertion is firing almost randomly.  I had two instances of Adium connect on the same account name, and
