@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.43 2004/04/17 17:55:29 jmelloy Exp $
+//$Id: AIPluginController.m,v 1.44 2004/04/18 17:24:50 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -46,7 +46,8 @@ ESAnnouncerPlugin, ESContactAlertsPlugin, ESContactClientPlugin, ESContactListWi
 ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendMessageContactAlertPlugin,
 ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin,
 JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin,
-AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, SHOutputDeviceControlPlugin;
+AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
+SHOutputDeviceControlPlugin;
 
 @implementation AIPluginController
 //init
@@ -121,8 +122,8 @@ AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersi
 	[self loadPluginWithClass:[JSCEventBezelPlugin class]];
 	[self loadPluginWithClass:[LNStatusIconsPlugin class]];
 	[self loadPluginWithClass:[SAContactOnlineForPlugin class]];
-        
-        [self loadPluginWithClass:[SHOutputDeviceControlPlugin class]];
+	[self loadPluginWithClass:[AIContactStatusEventsPlugin class]];
+	[self loadPluginWithClass:[SHOutputDeviceControlPlugin class]];
 
 //	[self loadPluginWithClass:[AISMViewPlugin class]];
 //	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];

@@ -1,21 +1,25 @@
 {
     IBClasses = (
-        {CLASS = ESContactAlert; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIActionDetailsPane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = ESDockAlertDetailPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"popUp_actionDetails" = NSPopUpButton; }; 
+            SUPERCLASS = AIActionDetailsPane; 
+        }, 
         {
             CLASS = ESDockBehaviorContactAlert; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"popUp_actionDetails" = NSPopUpButton; "view_details_menu" = NSView; }; 
-            SUPERCLASS = ESContactAlert; 
-        }, 
-        {
-            CLASS = ESEventSoundContactAlert; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                "popUp_actionDetails" = NSPopUpButton; 
-                "textField_description_popUp" = NSTextField; 
-                "view_details_menu" = NSView; 
-            }; 
-            SUPERCLASS = ESContactAlert; 
+            OUTLETS = {"popUp_actionDetails" = NSPopUpButton; }; 
+            SUPERCLASS = AIActionDetailsPane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 

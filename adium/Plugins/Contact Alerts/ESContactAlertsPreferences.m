@@ -165,7 +165,7 @@ int contactAlerts_alphabeticalSort(id objectA, id objectB, void *context);
     int offset = 0;
     int arrayCounter;
     int thisInstanceCount;
-    NSMutableArray *contactArray =  [[adium contactController] allContactsInGroup:nil subgroups:YES];
+    NSMutableArray *contactArray =  [[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil];
     [contactArray sortUsingFunction:alphabeticalGroupOfflineSort_contactAlerts context:nil];
     
     NSEnumerator    *enumerator = [contactArray objectEnumerator];
@@ -453,7 +453,7 @@ int contactAlerts_alphabeticalSort(id objectA, id objectB, void *context);
 {
     NSMenu		*contactMenu = [[NSMenu alloc] init];
     //Build the menu items
-    NSMutableArray		*contactArray =  [[adium contactController] allContactsInGroup:nil subgroups:YES];
+    NSMutableArray		*contactArray =  [[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil];
     if ([contactArray count])
     {
         [contactArray sortUsingFunction:alphabeticalGroupOfflineSort_contactAlerts context:nil]; //online buddies will end up at the top, alphabetically

@@ -12,10 +12,20 @@
 #define KEY_ANNOUNCER_ENABLED   @"Speech Enabled"
 #define KEY_ANNOUNCER_OUTGOING	@"Speak Outgoing"
 #define KEY_ANNOUNCER_INCOMING 	@"Speak Incoming"
-#define KEY_ANNOUNCER_MESSAGETEXT @"Speak Message Text"
 #define KEY_ANNOUNCER_STATUS	@"Speak Status"
 #define KEY_ANNOUNCER_TIME	@"Speak Time"
 #define KEY_ANNOUNCER_SENDER	@"Speak Sender"
+#define KEY_ANNOUNCER_MESSAGETEXT @"Speak Message Text"
+
+
+
+#define KEY_ANNOUNCER_TEXT_TO_SPEAK 	@"TextToSpeak"
+
+
+
+
+
+
 
 #define VOICE_STRING			@"Voice"
 #define PITCH				@"Pitch"
@@ -23,7 +33,7 @@
 
 #define CONTACT_ALERT_IDENTIFIER        @"Speak"
 
-@interface ESAnnouncerPlugin : AIPlugin <AIPreferenceViewControllerDelegate,ESContactAlertProvider>{
+@interface ESAnnouncerPlugin : AIPlugin <AIPreferenceViewControllerDelegate, AIActionHandler> {
     ESAnnouncerPreferences	*preferences;
 
     NSString 			*lastSenderString;

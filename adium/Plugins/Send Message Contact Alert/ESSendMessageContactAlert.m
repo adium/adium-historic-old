@@ -161,7 +161,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 {
     NSMenu		*contactMenu = [[NSMenu alloc] init];
     //Build the menu items
-    NSMutableArray		*contactArray =  [[adium contactController] allContactsInGroup:nil subgroups:YES];
+    NSMutableArray		*contactArray =  [[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil];
     if ([contactArray count])
     {
         [contactArray sortUsingFunction:alphabeticalGroupOfflineSort context:nil]; //online buddies will end up at the top, alphabetically

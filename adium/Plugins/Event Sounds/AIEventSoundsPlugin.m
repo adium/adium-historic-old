@@ -15,9 +15,11 @@
 
 #import "AIEventSoundsPlugin.h"
 #import "AIEventSoundPreferences.h"
-#import "ESEventSoundContactAlert.h"
+#import "ESEventSoundAlertDetailPane.h"
 
 #define EVENT_SOUNDS_DEFAULT_PREFS	@"EventSoundDefaults"
+#define EVENT_SOUNDS_ALERT_SHORT	@"Play a sound"
+#define EVENT_SOUNDS_ALERT_LONG		@"Play a sound"
 
 @interface AIEventSoundsPlugin (PRIVATE)
 - (void)eventNotification:(NSNotification *)notification;
@@ -32,7 +34,7 @@
     soundPathDict = nil;
 
     //Install our contact alert
-    [[adium contactAlertsController] registerContactAlertProvider:self];
+	[[adium contactAlertsController] registerActionID:@"PlaySound" withHandler:self];
     
     //Setup our preferences
     preferences = [[AIEventSoundPreferences preferencePaneForPlugin:self] retain];
@@ -49,7 +51,7 @@
     //remove observers
     
     //Uninstall our contact alert
-    [[adium contactAlertsController] unregisterContactAlertProvider:self];
+//    [[adium contactAlertsController] unregisterContactAlertProvider:self];
     [[adium notificationCenter] removeObserver:preferences];
     [[NSNotificationCenter defaultCenter] removeObserver:preferences];
 }
@@ -182,44 +184,40 @@
     return(success);
 }
 
-//*****
-//ESContactAlertProvider
-//*****
 
-- (NSString *)identifier
+//Play Sound Alert -----------------------------------------------------------------------------------------------------
+#pragma mark Play Sound Alert
+- (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-    return SOUND_ALERT_IDENTIFIER;
+	return(EVENT_SOUNDS_ALERT_SHORT);
 }
 
-- (ESContactAlert *)contactAlert
+- (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-    return [ESEventSoundContactAlert contactAlert];   
+	NSString	*fileName = [[details objectForKey:KEY_ALERT_SOUND_PATH] lastPathComponent];
+	
+	if(fileName && [fileName length]){
+		return([NSString stringWithFormat:@"%@: %@",EVENT_SOUNDS_ALERT_LONG, fileName]);
+	}else{
+		return(EVENT_SOUNDS_ALERT_LONG);
+	}
 }
 
-//performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
-- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
+- (NSImage *)imageForActionID:(NSString *)actionID
 {
-    if (inObject){
-        if (details != nil && [details length] != 0) {
-                [[adium soundController] playSoundAtPath:details]; //Play the sound
-            return YES;
-        } else {
-            return NO;
-        }
-    }else{
-        NSDictionary    *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
-        if (!([[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue] && [[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
-            [[adium soundController] playSoundAtPath:details];
-            return YES;
-        } else {
-            return NO;
-        }
-    }
+	return([NSImage imageNamed:@"SoundAlert" forClass:[self class]]);
 }
 
-//continue processing after a successful action
-- (BOOL)shouldKeepProcessing
+- (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-    return NO;   
+	return([ESEventSoundAlertDetailPane actionDetailsPane]);
 }
+
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
+{
+	NSString	*soundPath = [[details objectForKey:KEY_ALERT_SOUND_PATH] stringByExpandingBundlePath];
+	[[adium soundController] playSoundAtPath:soundPath];
+}
+
 @end
+

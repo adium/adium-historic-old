@@ -91,10 +91,12 @@ typedef enum {
 //Contact list access
 - (AIListGroup *)contactList;
 - (AIListContact *)contactWithService:(NSString *)serviceID accountID:(NSString *)accountID UID:(NSString *)UID;
-- (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup onAccount:(AIAccount *)inAccount;
+- (AIListContact *)existingContactWithService:(NSString *)serviceID accountUID:(NSString *)accountUID UID:(NSString *)UID;
+- (AIListObject *)existingListObjectWithUniqueID:(NSString *)uniqueID;
 - (AIListContact *)existingContactWithService:(NSString *)serviceID accountID:(NSString *)accountUID UID:(NSString *)UID;
 - (AIListGroup *)groupWithUID:(NSString *)groupUID;
-- (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups;
+- (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups onAccount:(AIAccount *)inAccount;
+- (NSMenu *)menuOfAllContactsInGroup:(AIListGroup *)inGroup withTarget:(id)target;
 
 //Contact status & Attributes
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver;

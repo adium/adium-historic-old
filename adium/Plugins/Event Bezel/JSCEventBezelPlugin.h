@@ -45,7 +45,7 @@
 
 @class JSCEventBezelPreferences;
 
-@interface JSCEventBezelPlugin : AIPlugin <AIPreferenceViewControllerDelegate,ESContactAlertProvider> {
+@interface JSCEventBezelPlugin : AIPlugin <AIPreferenceViewControllerDelegate, AIActionHandler> {
     JSCEventBezelController     *ebc;
     JSCEventBezelPreferences    *preferences;
     

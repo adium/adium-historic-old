@@ -7,252 +7,214 @@
 
 #import "CSNewContactAlertWindowController.h"
 #import "ESContactAlertsWindowController.h"
-#import "ESContactAlerts.h"
 #import "ESContactAlertsPlugin.h"
 
 #define NEW_ALERT_NIB @"NewAlert"
-#define KEY_NEW_ALERT_FRAME @"New Alert Frame"
-#define OFFLINE AILocalizedString(@"Offline",nil)
 
 @interface CSNewContactAlertWindowController (PRIVATE)
-
-- (NSMenu *)switchContactMenu;
-
+- (id)initWithWindowNibName:(NSString *)windowNibName alert:(NSDictionary *)inAlert notifyingTarget:(id)inTarget userInfo:(id)inUserInfo;
+- (void)configureForEvent;
+- (void)saveDetailsPaneChanges;
+- (void)configureDetailsPane;
 @end
-
-extern int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *context);
 
 @implementation CSNewContactAlertWindowController
 
-#pragma mark Initialization
-
-- (id)initWithInstance:(ESContactAlerts *)inInstance editing:(BOOL)inEditing
+//Prompt for a new alert.  Pass nil for a panel prompt.
++ (void)editAlert:(NSDictionary *)inAlert onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget userInfo:(id)inUserInfo
 {
-	if (self = [super initWithWindowNibName:NEW_ALERT_NIB])
-	{
-		[self setContactAlertsInstance:inInstance];
-		editing = inEditing;
+	CSNewContactAlertWindowController	*newAlertwindow = [[self alloc] initWithWindowNibName:NEW_ALERT_NIB alert:inAlert notifyingTarget:inTarget userInfo:inUserInfo];
+	
+	if(parentWindow){
+		[NSApp beginSheet:[newAlertwindow window]
+		   modalForWindow:parentWindow
+			modalDelegate:newAlertwindow
+		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
+			  contextInfo:nil];
+	}else{
+		[newAlertwindow showWindow:nil];
 	}
-	return self;
+}
+	
+//Init
+- (id)initWithWindowNibName:(NSString *)windowNibName alert:(NSDictionary *)inAlert notifyingTarget:(id)inTarget userInfo:(id)inUserInfo
+{
+	[super initWithWindowNibName:windowNibName];
+	
+	//
+	userInfo = [inUserInfo retain];
+	target = inTarget;
+	detailsPane = nil;
+	
+	//Create a mutable copy of the alert dictionary we're passed.  If we're passed nil, create the default alert.
+	alert = [inAlert mutableCopy];
+	if(!alert){
+		NSString	*defaultEvent = [[[[adium contactAlertsController] eventHandlers] allKeys] objectAtIndex:0];
+		NSString	*defaultAction = [[[[adium contactAlertsController] actionHandlers] allKeys] objectAtIndex:0];
+		
+		alert = [[NSMutableDictionary alloc] initWithObjectsAndKeys:defaultEvent, @"EventID", defaultAction, @"ActionID", nil];
+	}
+	
+	return(self);
 }
 
+//Dealloc
 - (void)dealloc
 {
-	[instance release];
+	[alert release];
+	[userInfo release];
+	[detailsPane release];
+	
 	[super dealloc];
 }
 
-#pragma mark Window Management
-
+//Setup the window before it is displayed
 - (void)windowDidLoad
 {
-	NSString	*savedFrame;
-	NSDictionary *actionDict;
-	
-	[self window];
-	
-	//Restore the window position
-    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_NEW_ALERT_FRAME];
-    if(savedFrame){
-        [[self window] setFrame:NSRectFromString(savedFrame) display:YES];            
-    }
-	[popUp_contact setMenu:[self switchContactMenu]];
-	
-	if (!editing)
-	{
-		[instance newEvent:self]; //create the new event we'll be working with
-	}
-	
-    [[self window] setDelegate:self];
-	
-	[instance setMainView:view_auxilary];
-	
-	[popUp_event setMenu:[instance eventMenu]];
-	[popUp_action setMenu:[instance actionListMenu]];
-	
-	actionDict = [instance dictAtIndex:[instance currentRow]];
-	
-	[popUp_event selectItemWithTitle:[actionDict objectForKey:KEY_EVENT_DISPLAYNAME]];
-	
-	//Selects the current action
-	NSEnumerator *actionEnumerator = [[popUp_action itemArray] objectEnumerator];
-	NSMenuItem *currentItem;
-	
-	while (currentItem = [actionEnumerator nextObject]) {
-		if ([(NSString *)[actionDict objectForKey:KEY_EVENT_ACTION] compare:(NSString *)[currentItem representedObject]] == 0) {
-			[popUp_action selectItem:currentItem];
-			break;
-		}
-	}
-	
-	//Selects the current contact
-	NSEnumerator *enumerator = [[popUp_contact itemArray] objectEnumerator];
-	AIListObject *alertObject;
-	
-	alertObject = [instance activeObject];
-	while (currentItem = [enumerator nextObject]) {
-		AIListObject *currentObject = [currentItem representedObject];
-		if ([[currentObject uniqueObjectID] compare:[alertObject uniqueObjectID]] == 0) {
-			[popUp_contact selectItem:currentItem];
-			break;
-		}
-	}
+	//Configure window
+	[[self window] center];
+	[popUp_event setMenu:[[adium contactAlertsController] menuOfEventsWithTarget:self]];
+	[popUp_action setMenu:[[adium contactAlertsController] menuOfActionsWithTarget:self]];
+
+	//Set things up for the current event
+	[self configureForEvent];
 }
 
-
+//Window is closing
 - (BOOL)windowShouldClose:(id)sender
-{    
-	[[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
-                                         forKey:KEY_NEW_ALERT_FRAME
-                                          group:PREF_GROUP_WINDOW_POSITIONS];
-	
-	if ([(NSObject *)delegate respondsToSelector:@selector(contactAlertWindowFinished:)])
-		[(id <NewContactAlertDelegate>)delegate contactAlertWindowFinished:self didCreate:NO];
-	
-	return YES;
-}
- 
-#pragma mark Interface
-
-- (IBAction)add:(id)sender
 {
-	[instance saveEventActionArray];
-	if (delegate && [(NSObject *)delegate respondsToSelector:@selector(contactAlertWindowFinished:didCreate:)])
-		[(id <NewContactAlertDelegate>)delegate contactAlertWindowFinished:self didCreate:YES];
-	
-	[[self window] performClose:self];
+    return(YES);
 }
 
+//Stop automatic window positioning
+- (BOOL)shouldCascadeWindows
+{
+    return(NO);
+}
+
+//Close this window
+- (IBAction)closeWindow:(id)sender
+{
+    if([self windowShouldClose:nil]){
+		if([[self window] isSheet]) [NSApp endSheet:[self window]];
+        [[self window] close];
+    }
+}
+
+//Called as the user list edit sheet closes, dismisses the sheet
+- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    [sheet orderOut:nil];
+}
+
+
+//Buttons --------------------------------------------------------------------------------------------------------------
+#pragma mark Buttons
+//Cancel changes
 - (IBAction)cancel:(id)sender
 {
-	if (!editing)
-		[instance deleteEventAction:self]; //get rid of it
-	if ([(NSObject *)delegate respondsToSelector:@selector(contactAlertWindowFinished:didCreate:)])
-		[(id <NewContactAlertDelegate>)delegate contactAlertWindowFinished:self didCreate:NO];
-
-	[[self window] performClose:self];
+	[self closeWindow:nil];
 }
 
-#pragma mark Accessors
-
-- (void)setContactAlertsInstance:(ESContactAlerts *)inInstance
+//Save changes
+- (IBAction)save:(id)sender
 {
-	if (instance) {
-		[instance release];
-		instance = nil;
+	//Save changes in our detail pane
+	[self saveDetailsPaneChanges];
+
+	//Pass the modified alert to our target
+	[target performSelector:@selector(alertUpdated:userInfo:) withObject:alert withObject:userInfo];
+	[self closeWindow:nil];
+}
+
+
+//Controls -------------------------------------------------------------------------------------------------------------
+#pragma mark Controls
+//Configure window for our current event dict
+- (void)configureForEvent
+{
+	NSEnumerator 	*enumerator;
+	NSMenuItem 		*menuItem;
+
+	//Select the correct event
+	NSString	*eventID = [alert objectForKey:KEY_EVENT_ID];
+	enumerator = [[popUp_event itemArray] objectEnumerator];
+	while(menuItem = [enumerator nextObject]){
+		if([eventID compare:[menuItem representedObject]] == 0){
+			[popUp_event selectItem:menuItem];
+			break;
+		}
 	}
-	instance = [inInstance retain];
+	
+	//Select the correct action
+	NSString	*actionID = [alert objectForKey:KEY_ACTION_ID];
+	enumerator = [[popUp_action itemArray] objectEnumerator];
+	while(menuItem = [enumerator nextObject]){
+		if([actionID compare:[menuItem representedObject]] == 0){
+			[popUp_action selectItem:menuItem];
+			break;
+		}
+	}
+	
+	//Configure the action details pane
+	[self configureDetailsPane];
 }
 
-- (ESContactAlerts *)contactAlertsInstance
+#warning DetailsView -> DetailView
+//Save changes made in the details pane
+- (void)saveDetailsPaneChanges
 {
-	return instance;
+	NSDictionary	*actionDetails = [detailsPane actionDetails];
+	if(actionDetails){
+		[alert setObject:actionDetails forKey:KEY_ACTION_DETAILS];
+	}
 }
 
-- (void)setDelegate:(id)inDelegate
+//Configure the details pane for our current alert
+- (void)configureDetailsPane
 {
-	delegate = inDelegate;
+	NSString				*actionID = [alert objectForKey:KEY_ACTION_ID];
+	id <AIActionHandler>	actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];		
+
+	//Save changes and close down the old pane
+	if(detailsPane) [self saveDetailsPaneChanges];
+	[detailsView removeFromSuperview];
+	[detailsPane closeView];
+	[detailsPane release];
+	
+	//Get a new pane for the current action type, and configure it for our alert
+	detailsPane = [[actionHandler detailsPaneForActionID:actionID] retain];
+	detailsView = [detailsPane view];
+	[detailsPane configureForActionDetails:[alert objectForKey:KEY_ACTION_DETAILS]];
+
+	//Resize our window for best fit
+	int		currentDetailHeight = [view_auxiliary frame].size.height;
+	int	 	desiredDetailHeight = [detailsView frame].size.height;
+	int		difference = (currentDetailHeight - desiredDetailHeight);
+	NSRect	frame = [[self window] frame];
+	[[self window] setFrame:NSMakeRect(frame.origin.x, frame.origin.y + difference, frame.size.width, frame.size.height - difference)
+					display:[[self window] isVisible]
+					animate:[[self window] isVisible]];
+	
+	//Add the details view
+	[view_auxiliary addSubview:detailsView];
 }
 
-- (id)delegate
+//User selected an event from the popup
+- (IBAction)selectEvent:(id)sender
 {
-	return delegate;
+	if([sender representedObject]){
+		[alert setObject:[sender representedObject] forKey:KEY_EVENT_ID];
+	}
 }
-
-#pragma mark Alert Management
-
-- (IBAction)contactChange:(id)sender
+	
+//User selected an action from the popup
+- (IBAction)selectAction:(id)sender
 {
-	NSMutableDictionary *oldDict = [instance dictAtIndex:[instance currentRow]];
-	[oldDict retain];
-	[instance deleteEventAction:nil];
-	[instance configForObject:[sender representedObject]];
-	[instance newEvent:nil];
-	[instance replaceDictAtIndex:[instance currentRow] withDict:oldDict];
-	[oldDict release];
-}
-
-
-#pragma mark Private
-//builds an alphabetical menu of contacts for all online accounts; online contacts are sorted to the top and seperated
-//from offline ones by a seperator reading "Offline"
-//uses alphabeticalGroupOfflineSort and calls switchToContact: when a selection is made
-- (NSMenu *)switchContactMenu
-{
-    NSMenu              *contactMenu = [[NSMenu alloc] init];
-    //Build the menu items
-    NSMutableArray              *contactArray =  [[adium contactController] allContactsInGroup:nil subgroups:YES];
-    if ([contactArray count])
-    {
-        [contactArray sortUsingFunction:alphabeticalGroupOfflineSort_contactAlerts context:nil]; //online buddies will end up at the top, alphabetically
-		
-        NSEnumerator    *enumerator =   [contactArray objectEnumerator];
-        AIListObject    *contact;
-		//        NSString      *groupName = [[[NSString alloc] init] autorelease];
-        BOOL            firstOfflineSearch = NO;
-		
-        while (contact = [enumerator nextObject])
-        {
-            NSMenuItem          *menuItem;
-            NSString            *itemDisplay;
-            NSString            *itemUID = [contact UID];
-            itemDisplay = [contact displayName];
-            if ( !([itemDisplay compare:itemUID] == 0) ) //display name and screen name aren't the same
-                itemDisplay = [NSString stringWithFormat:@"%@ (%@)",itemDisplay,itemUID]; //show the UID along with the display name
-            menuItem = [[[NSMenuItem alloc] initWithTitle:itemDisplay
-                                                   target:self
-                                                   action:@selector(contactChange:)
-                                            keyEquivalent:@""] autorelease];
-            [menuItem setRepresentedObject:contact];
-			
-#ifdef MAC_OS_X_VERSION_10_3
-            if ([menuItem respondsToSelector:@selector(setIndentationLevel:)])
-                [menuItem setIndentationLevel:1];
-#endif
-			
-			
-#warning Groups can not go into the menu this way anymore...
-            /*
-			 if ([groupName compare:[[contact containingGroup] displayName]] != 0)
-			 {
-				 NSMenuItem      *groupItem;
-				 if ([contactMenu numberOfItems] > 0) [contactMenu addItem:[NSMenuItem separatorItem]];
-				 groupItem = [[[NSMenuItem alloc] initWithTitle:[[contact containingGroup] displayName]
-														 target:self
-														 action:@selector(switchToContact:)
-												  keyEquivalent:@""] autorelease];
-				 [groupItem setRepresentedObject:[contact containingGroup]];
-#ifdef MAC_OS_X_VERSION_10_3
-				 if ([menuItem respondsToSelector:@selector(setIndentationLevel:)])
-					 [groupItem setIndentationLevel:0];
-#endif
-				 [contactMenu addItem:groupItem];
-				 firstOfflineSearch = YES; //start searching for an offline contact
-			 }
-			 */
-            if (firstOfflineSearch)
-            {
-                if ( !([contact integerStatusObjectForKey:@"Online"]) ) //look for the first offline contact
-                {
-                    NSMenuItem  *separatorItem;
-                    separatorItem = [[[NSMenuItem alloc] initWithTitle:OFFLINE
-                                                                target:nil
-                                                                action:nil
-                                                         keyEquivalent:@""] autorelease];
-                    [separatorItem setEnabled:NO];
-                    [contactMenu addItem:separatorItem];
-                    firstOfflineSearch = NO;
-                }
-            }
-			
-            [contactMenu addItem:menuItem];
-			
-            //XXX EDS
-			//            groupName = [[contact containingGroup] displayName];
-        }
-        [contactMenu setAutoenablesItems:NO];
-    }
-    return contactMenu;
+	if([sender representedObject]){
+		[alert setObject:[sender representedObject] forKey:KEY_ACTION_ID];
+		[self configureDetailsPane];
+	}
 }
 
 @end

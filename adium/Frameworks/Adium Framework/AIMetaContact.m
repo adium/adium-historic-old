@@ -113,11 +113,13 @@
 {
 	return ([[statusCacheDict objectForKey:key] objectValue]);
 }
+#warning Adam: Legacy.  Use 'numberStatusObjectForKey'
 - (int)integerStatusObjectForKey:(NSString *)key
 {
 	AIMutableOwnerArray *array = [statusCacheDict objectForKey:key];
     return(array ? [array intValue] : 0);
 }
+#warning Adam: Legacy.  Use 'numberStatusObjectForKey'
 - (double)doubleStatusObjectForKey:(NSString *)key
 {
 	AIMutableOwnerArray *array = [statusCacheDict objectForKey:key];
@@ -125,7 +127,11 @@
 }
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key
 {
-	return ([[statusCacheDict objectForKey:key] date]);	
+	return([[statusCacheDict objectForKey:key] date]);	
+}
+- (NSNumber *)numberStatusObjectForKey:(NSString *)key
+{
+	return([[statusCacheDict objectForKey:key] numberValue]);
 }
 
 

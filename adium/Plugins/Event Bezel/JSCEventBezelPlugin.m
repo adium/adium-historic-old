@@ -9,7 +9,7 @@
 #import "JSCEventBezelPlugin.h"
 #import "JSCEventBezelPreferences.h"
 #import "AIContactStatusColoringPlugin.h"
-#import "ESEventBezelContactAlert.h"
+//#import "ESEventBezelContactAlert.h"
 
 #define CONTACT_BEZEL_NIB   @"ContactEventBezel"
 
@@ -69,8 +69,8 @@
     
     
     //Install our contact alert
-    [[adium contactAlertsController] registerContactAlertProvider:self];
-    
+//	[[adium contactAlertsController] registerActionID:@"EventBezel" withHandler:self];
+	
     //watch preference changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     //set up preferences initially
@@ -80,7 +80,7 @@
 - (void)uninstallPlugin
 {
     //Uninstall our contact alert
-    [[adium contactAlertsController] unregisterContactAlertProvider:self];
+//    [[adium contactAlertsController] unregisterContactAlertProvider:self];
 }
 
 - (void)dealloc
@@ -296,52 +296,76 @@
 //ESContactAlertProvider
 //*****
 
-- (NSString *)identifier
+- (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-    return BEZEL_CONTACT_ALERT_IDENTIFIER;
+	return(@"Display event bezel");
 }
 
-- (ESContactAlert *)contactAlert
+- (NSString *)longDescriptionForActionID:(NSString *)actionID
 {
-    return [ESEventBezelContactAlert contactAlert];   
+	return(@"Display event bezel");
 }
 
-//performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
-- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
+- (NSImage *)imageForActionID:(NSString *)actionID
 {
-        NSString * ContactStatusString = nil;
-        if ([event isEqualToString:@"Signed On"]) {
-            ContactStatusString = CONTACT_STATUS_ONLINE_YES;
-        } else  if ([event isEqualToString:@"Signed Off"]) {
-            ContactStatusString = CONTACT_STATUS_ONLINE_NO;
-        } else {
-            if (event_status) { //positive
-                if ([event isEqualToString:@"Away"]) {
-                    ContactStatusString = CONTACT_STATUS_AWAY_YES;
-                } else if ([event isEqualToString:@"Idle"]) {
-                    ContactStatusString = CONTACT_STATUS_IDLE_YES;
-                }
-            } else {
-                if ([event isEqualToString:@"Away"]) {
-                    ContactStatusString = CONTACT_STATUS_AWAY_NO;
-                } else if ([event isEqualToString:@"Idle"]) {
-                    ContactStatusString = CONTACT_STATUS_IDLE_NO;
-                }
-            }
-        }
-        
-        if (ContactStatusString) {
-            if (!showEventBezel || (![eventArray containsObject:ContactStatusString])) {
-                [self processBezelForNotification:[NSNotification notificationWithName:ContactStatusString object:inObject]];
-                return YES;
-            }
-        }
-        return NO;
+	return([NSImage imageNamed:@"BezelAlert" forClass:[self class]]);
 }
 
-//continue processing after a successful action
-- (BOOL)shouldKeepProcessing
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
 {
-    return NO;   
+
 }
+
+
+
+
+
+//- (NSString *)identifier
+//{
+//    return BEZEL_CONTACT_ALERT_IDENTIFIER;
+//}
+//
+//- (ESContactAlert *)contactAlert
+//{
+//    return [ESEventBezelContactAlert contactAlert];   
+//}
+//
+////performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
+//- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
+//{
+//        NSString * ContactStatusString = nil;
+//        if ([event isEqualToString:@"Signed On"]) {
+//            ContactStatusString = CONTACT_STATUS_ONLINE_YES;
+//        } else  if ([event isEqualToString:@"Signed Off"]) {
+//            ContactStatusString = CONTACT_STATUS_ONLINE_NO;
+//        } else {
+//            if (event_status) { //positive
+//                if ([event isEqualToString:@"Away"]) {
+//                    ContactStatusString = CONTACT_STATUS_AWAY_YES;
+//                } else if ([event isEqualToString:@"Idle"]) {
+//                    ContactStatusString = CONTACT_STATUS_IDLE_YES;
+//                }
+//            } else {
+//                if ([event isEqualToString:@"Away"]) {
+//                    ContactStatusString = CONTACT_STATUS_AWAY_NO;
+//                } else if ([event isEqualToString:@"Idle"]) {
+//                    ContactStatusString = CONTACT_STATUS_IDLE_NO;
+//                }
+//            }
+//        }
+//        
+//        if (ContactStatusString) {
+//            if (!showEventBezel || (![eventArray containsObject:ContactStatusString])) {
+//                [self processBezelForNotification:[NSNotification notificationWithName:ContactStatusString object:inObject]];
+//                return YES;
+//            }
+//        }
+//        return NO;
+//}
+//
+////continue processing after a successful action
+//- (BOOL)shouldKeepProcessing
+//{
+//    return NO;   
+//}
 @end

@@ -411,7 +411,7 @@
 
 - (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
 {
-    NSMutableArray      *contactArray = [[adium contactController] allContactsInGroup:item subgroups:YES];
+    NSMutableArray      *contactArray = [[adium contactController] allContactsInGroup:item subgroups:YES onAccount:nil];
 
     [item setExpanded:state];
 	[contactListView updateHorizontalSizeForObjects:contactArray]; 

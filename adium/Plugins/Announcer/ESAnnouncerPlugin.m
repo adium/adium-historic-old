@@ -6,9 +6,11 @@
 //
 
 #import "ESAnnouncerPlugin.h"
-#import "ESAnnouncerContactAlert.h"
+#import "ESAnnouncerAlertDetailPane.h"
 
 #define	CONTACT_ANNOUNCER_NIB		@"ContactAnnouncer"		//Filename of the announcer info view
+#define ANNOUNCER_ALERT_SHORT		@"Speak Text"
+#define ANNOUNCER_ALERT_LONG		@"Speak Text"
 
 @interface ESAnnouncerPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -19,7 +21,7 @@
 - (void)installPlugin
 {
     //Install our contact alert
-    [[adium contactAlertsController] registerContactAlertProvider:self];
+	[[adium contactAlertsController] registerActionID:@"SpeakText" withHandler:self];
     
     //Setup our preferences
     preferences = [[ESAnnouncerPreferences preferencePane] retain];
@@ -41,7 +43,7 @@
 - (void)uninstallPlugin
 {
     //Uninstall our contact alert
-    [[adium contactAlertsController] unregisterContactAlertProvider:self];
+//    [[adium contactAlertsController] unregisterContactAlertProvider:self];
     
 }
 
@@ -231,31 +233,41 @@
     }
 }
 
-//*****
-//ESContactAlertProvider
-//*****
 
-- (NSString *)identifier
+//Speak Text Alert -----------------------------------------------------------------------------------------------------
+#pragma mark Speak Text Alert
+- (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-    return CONTACT_ALERT_IDENTIFIER;
+	return(ANNOUNCER_ALERT_SHORT);
 }
 
-- (ESContactAlert *)contactAlert
+- (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-    return [ESAnnouncerContactAlert contactAlert];   
+	NSString *textToSpeak = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
+
+	if(textToSpeak && [textToSpeak length]){
+		return([NSString stringWithFormat:@"%@: %@",ANNOUNCER_ALERT_LONG, textToSpeak]);
+	}else{
+		return(ANNOUNCER_ALERT_LONG);
+	}
 }
 
-//performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
-- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
+- (NSImage *)imageForActionID:(NSString *)actionID
 {
-    [[adium soundController] speakText:details];
-    return YES;
+	return([NSImage imageNamed:@"AnnouncerAlert" forClass:[self class]]);
 }
 
-//continue processing after a successful action
-- (BOOL)shouldKeepProcessing
+- (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-    return YES;   
+	return([ESAnnouncerAlertDetailPane actionDetailsPane]);
+}
+
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
+{
+	NSString *textToSpeak = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
+	if(textToSpeak){
+		[[adium soundController] speakText:textToSpeak];
+	}
 }
 
 @end

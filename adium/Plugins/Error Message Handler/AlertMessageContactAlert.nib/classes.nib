@@ -1,37 +1,20 @@
 {
     IBClasses = (
+        {CLASS = AIActionDetailsPane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            CLASS = ESAlertMessageContactAlert; 
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"textField_actionDetails" = NSTextField; "view_details_text" = NSView; }; 
-            SUPERCLASS = ESContactAlert; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
         }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            CLASS = ESAnnouncerContactAlert; 
+            CLASS = ESPanelAlertDetailPane; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                "textField_actionDetails" = NSTextField; 
-                "textField_description_textField" = NSTextField; 
-                "view_details_text" = NSView; 
-            }; 
-            SUPERCLASS = ESContactAlert; 
-        }, 
-        {CLASS = ESContactAlert; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            CLASS = ESDockBehaviorContactAlert; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {"popUp_actionDetails" = NSPopUpButton; "view_details_menu" = NSView; }; 
-            SUPERCLASS = ESContactAlert; 
-        }, 
-        {
-            CLASS = ESEventSoundContactAlert; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                "popUp_actionDetails" = NSPopUpButton; 
-                "textField_description_popUp" = NSTextField; 
-                "view_details_menu" = NSView; 
-            }; 
-            SUPERCLASS = ESContactAlert; 
+            OUTLETS = {"view_alertText" = NSTextView; }; 
+            SUPERCLASS = AIActionDetailsPane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 

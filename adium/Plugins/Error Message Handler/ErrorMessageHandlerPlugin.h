@@ -17,7 +17,11 @@
 
 #define CONTACT_ALERT_IDENTIFIER            @"Alert"
 
-@interface ErrorMessageHandlerPlugin : AIPlugin <ESContactAlertProvider> {
+
+#define	KEY_ALERT_TEXT						@"AlertText"
+
+
+@interface ErrorMessageHandlerPlugin : AIPlugin <AIActionHandler> {
 
 }
 

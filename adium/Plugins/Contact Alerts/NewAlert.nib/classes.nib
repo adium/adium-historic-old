@@ -6,14 +6,15 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
-            ACTIONS = {add = id; cancel = id; }; 
+            ACTIONS = {cancel = id; save = id; }; 
             CLASS = CSNewContactAlertWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "popUp_action" = NSPopUpButton; 
-                "popUp_contact" = NSPopUpButton; 
                 "popUp_event" = NSPopUpButton; 
-                "view_auxilary" = NSView; 
+                target = id; 
+                userInfo = id; 
+                "view_auxiliary" = NSView; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 

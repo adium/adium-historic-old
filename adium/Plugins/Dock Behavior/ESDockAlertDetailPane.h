@@ -7,12 +7,8 @@
 
 #import "AIDockBehaviorPlugin.h"
 
-
-@interface ESDockBehaviorContactAlert : ESContactAlert {
-    IBOutlet	NSView			*view_details_menu;
+@interface ESDockAlertDetailPane : AIActionDetailsPane {
     IBOutlet	NSPopUpButton		*popUp_actionDetails;
-    
-    NSMenu      *behaviorListMenu_cached;
 }
 
 @end

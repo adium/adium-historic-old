@@ -96,7 +96,7 @@ static AINewMessagePrompt *sharedNewMessageInstance = nil;
 	[textField_handle setCompletingStrings:nil];
 	
 	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
-    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
     while((contact = [enumerator nextObject])){
 		
 		if ([[contact serviceID] isEqualToString:[account serviceID]]){

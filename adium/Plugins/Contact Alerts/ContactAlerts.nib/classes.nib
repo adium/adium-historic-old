@@ -12,16 +12,14 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
-            ACTIONS = {
-                addedEvent = id; 
-                closeWindow = id; 
-                deleteEventAction = id; 
-                oneTimeEvent = id; 
-                onlyWhileActive = id; 
-            }; 
+            ACTIONS = {addAlert = id; closeWindow = id; deleteAlert = id; editAlert = id; }; 
             CLASS = ESContactAlertsWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"tableView_actions" = NSTableView; "tableView_source" = NSTableView; }; 
+            OUTLETS = {
+                "button_delete" = NSButton; 
+                "button_edit" = NSButton; 
+                "tableView_actions" = AIAlternatingRowTableView; 
+            }; 
             SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }

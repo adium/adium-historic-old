@@ -4,58 +4,53 @@
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
 
-@class AIHandle, AIAccount, AIListGroup, AIListContact, ESContactAlert;
-@protocol AIListObjectObserver;
-
-#define One_Time_Event_Fired 		@"One Time Event Fired"
-
-//A contact alert provider performs contact alert actions and provides ESContactAlert instances as required for the contact alert UI
-@protocol ESContactAlertProvider <NSObject>
-- (NSString *)identifier;
-- (ESContactAlert *)contactAlert;
-//performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
-- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName;
-- (BOOL)shouldKeepProcessing;
+@protocol AIEventHandler <NSObject>
+- (NSString *)shortDescriptionForEventID:(NSString *)eventID;
+- (NSString *)longDescriptionForEventID:(NSString *)eventID;
 @end
 
-@protocol ESContactAlerts <NSObject>
-- (void)configureWithSubview:(NSView *)view_inView;
+@protocol AIActionHandler <NSObject>
+- (NSString *)shortDescriptionForActionID:(NSString *)actionID;
+- (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details;
+- (NSImage *)imageForActionID:(NSString *)actionID;
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details;
+- (AIModularPane *)detailsPaneForActionID:(NSString *)actionID;
 @end
 
-@interface ESContactAlertsController : NSObject <AIListObjectObserver> {
+//Event preferences
+#define PREF_GROUP_CONTACT_ALERTS	@"Contact Alerts"
+#define KEY_CONTACT_ALERTS			@"Contact Alerts"
+
+//Event Dictionary keys
+#define	KEY_EVENT_ID				@"EventID"
+#define	KEY_ACTION_ID				@"ActionID"
+#define	KEY_ACTION_DETAILS			@"ActionDetails"
+
+@interface ESContactAlertsController : NSObject {
     IBOutlet	AIAdium			*owner;
-    NSMutableDictionary			*contactAlertProviderDictionary;
-    AIMutableOwnerArray			*arrayOfStateDictionaries;
-    AIMutableOwnerArray			*arrayOfAlertsArrays;
-    
-    NSMutableArray				*completedActionTypes;
+	
+	NSMutableDictionary			*eventHandlers;
+	NSMutableDictionary			*actionHandlers;
 }
 
 //
-- (void)registerContactAlertProvider:(id <ESContactAlertProvider>)contactAlertProvider;
-- (void)unregisterContactAlertProvider:(id <ESContactAlertProvider>)contactAlertProvider;
-//
-- (void)createAlertsArrayWithOwner:(id <ESContactAlerts>)inOwner;
-- (void)destroyAlertsArrayWithOwner:(id <ESContactAlerts>)inOwner;
-//
-- (void)configureWithSubview:(NSView *)inView forContactAlert:(ESContactAlert *)contactAlert;
-- (NSMutableArray *)eventActionArrayForContactAlert:(ESContactAlert *)contactAlert;
-- (NSDictionary *)currentDictForContactAlert:(ESContactAlert *)contactAlert;
-- (AIListObject *)currentObjectForContactAlert:(ESContactAlert *)contactAlert;
-- (NSWindow *)currentWindowForContactAlert:(ESContactAlert *)contactAlert;
-- (int)rowForContactAlert:(ESContactAlert *)contactAlert;
-- (void)saveEventActionArrayForContactAlert:(ESContactAlert *)contactAlert;
-- (void)actionChangedTo:(NSString *)inAction forContactAlert:(ESContactAlert *)contactAlert;
-//
-- (NSMenu *)actionListMenuWithOwner:(id <ESContactAlerts>)owner;
-- (NSImage *)iconForAction:(NSString *)action;
-- (void)updateOwner:(id <ESContactAlerts>)inOwner toArray:(NSArray *)eventActionArray forObject:(AIListObject *)inObject;
-- (void)updateOwner:(id <ESContactAlerts>)inOwner toRow:(int)row;
-//list object observer
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
-
-//Private
 - (void)initController;
 - (void)closeController;
+
+//Events
+- (void)registerEventID:(NSString *)eventID withHandler:(id <AIEventHandler>)handler;
+- (NSDictionary *)eventHandlers;
+- (NSMenu *)menuOfEventsWithTarget:(id)target;
+- (void)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject;
+
+//Actions
+- (void)registerActionID:(NSString *)actionID withHandler:(id <AIActionHandler>)handler;
+- (NSDictionary *)actionHandlers;
+- (NSMenu *)menuOfActionsWithTarget:(id)target;
+
+//Alerts
+- (NSArray *)alertsForListObject:(AIListObject *)listObject;
+- (void)addAlert:(NSDictionary *)alert toListObject:(AIListObject *)listObject;
+- (void)removeAlert:(NSDictionary *)victimAlert fromListObject:(AIListObject *)listObject;
 
 @end

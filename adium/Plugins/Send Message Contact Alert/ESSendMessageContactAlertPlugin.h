@@ -18,7 +18,7 @@
 
 #define CONTACT_ALERT_IDENTIFIER            @"Message"
 
-@interface ESSendMessageContactAlertPlugin : AIPlugin <ESContactAlertProvider>{
+@interface ESSendMessageContactAlertPlugin : AIPlugin <AIActionHandler> {
     NSDictionary *attributes;
 }
 

@@ -21,10 +21,19 @@
 #define KEY_DOCK_EVENT_BEHAVIOR				@"Behavior"
 #define	KEY_DOCK_EVENT_NOTIFICATION			@"Notification"
 
+
+
+
+#define KEY_DOCK_BEHAVIOR_TYPE				@"BehaviorType"
+
+
+
+
+
 #define CONTACT_ALERT_IDENTIFIER                        @"Bounce"
 @class AIDockBehaviorPreferences;
 
-@interface AIDockBehaviorPlugin : AIPlugin <ESContactAlertProvider>{
+@interface AIDockBehaviorPlugin : AIPlugin <AIActionHandler> {
     AIDockBehaviorPreferences 	*preferences;
 
     NSMutableDictionary		*behaviorDict;

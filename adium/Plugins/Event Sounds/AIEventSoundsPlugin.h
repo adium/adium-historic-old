@@ -19,6 +19,8 @@
 #define SOUND_EVENT_QUOTE		@"\""			//Character before and after event name
 #define SOUND_NEWLINE			@"\n"			//Newline character
 
+#define KEY_ALERT_SOUND_PATH		@"SoundPath"
+
 #define KEY_EVENT_CUSTOM_SOUNDSET	@"Event Custom Sounds"
 #define KEY_EVENT_SOUND_SET		@"Event Sound Set"
 #define	KEY_EVENT_SOUND_PATH		@"Path"
@@ -34,7 +36,7 @@
 
 @class AIEventSoundPreferences;
 
-@interface AIEventSoundsPlugin : AIPlugin <ESContactAlertProvider> {
+@interface AIEventSoundsPlugin : AIPlugin <AIActionHandler> {
     AIEventSoundPreferences	*preferences;
 
     NSArray			*eventSoundArray;
