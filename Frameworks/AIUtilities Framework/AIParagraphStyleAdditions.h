@@ -14,6 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface NSParagraphStyle (AIParagraphStyleAdditions)
-+ (NSParagraphStyle *)styleWithAlignment:(NSTextAlignment)alignment;
-+ (NSParagraphStyle *)styleWithAlignment:(NSTextAlignment)alignment lineBreakMode:(NSLineBreakMode)mode;
++ (NSMutableParagraphStyle *)styleWithAlignment:(NSTextAlignment)alignment;
++ (NSMutableParagraphStyle *)styleWithAlignment:(NSTextAlignment)alignment lineBreakMode:(NSLineBreakMode)mode;
 @end

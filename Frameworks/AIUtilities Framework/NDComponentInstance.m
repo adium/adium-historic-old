@@ -64,9 +64,11 @@ static NDComponentInstance		* sharedComponentInstance = nil;
 	do
 	{
 		theLastComponent = FindNextComponent( theLastComponent, &theComponentDesc );
+		NSLog(@"findNextComponent: %x",theLastComponent);
  	}
 	while( GetComponentInfo( theLastComponent, &theReturnCompDesc, NULL, NULL, NULL ) == noErr && theComponentDesc.componentSubType == kOSAGenericScriptingComponentSubtype );
 
+	NSLog(@"findNextComponent: returning %x",theLastComponent);
 	return theLastComponent;
 }
 
@@ -110,6 +112,8 @@ static NDComponentInstance		* sharedComponentInstance = nil;
 				self = nil;
 				NSLog(@"Could not open connection with default AppleScript component");
 			}
+			
+			NSLog(@"Opened default %x",scriptingComponent);
 		}
 		else if( (scriptingComponent = OpenComponent( aComponent )) == NULL )
 		{
