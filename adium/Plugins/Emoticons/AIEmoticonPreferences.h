@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import "AICheckboxList.h"
 
 @class AIAdium;
 
@@ -23,8 +24,10 @@
 	
 	NSDictionary	*preferenceDict;
 	
-	IBOutlet NSView		*view_prefView;
-    IBOutlet NSButton	*checkBox_enable;
+	IBOutlet NSView         *view_prefView;
+    IBOutlet NSButton       *checkBox_enable;
+    //IBOutlet NSTableView    *table_packList;
+    IBOutlet AICheckboxList    *checkList_packList;
 }
 
 + (AIEmoticonPreferences *)emoticonPreferencesWithOwner:(id)inOwner;

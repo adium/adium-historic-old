@@ -63,6 +63,8 @@
     //Load our preferences and configure the view
     preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS] retain];
     [self configureView];
+	[checkList_packList addItemName:@"Test1" state:NSOnState];
+	[checkList_packList addItemName:@"Test2" state:NSOffState];
 
     return(self);
 }
