@@ -21,7 +21,6 @@
 - (void)reloadAllData;
 
 - (void)_removeFileTransfer:(ESFileTransfer *)inFileTransfer;
-- (void)_removeFileTransferRow:(ESFileTransferProgressRow *)progressRow;
 @end
 
 @interface ESFileTransferController (PRIVATE)
@@ -95,7 +94,10 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	
 	//Set the localized title
 	[[self window] setTitle:AILocalizedString(@"File Transfer Progress",nil)];
-	   
+	
+	//There's already a menu item in the Window menu; no reason to duplicate it
+	[[self window] setExcludedFromWindowsMenu:YES];
+
 	//Configure the scroll view
 	[scrollView setHasVerticalScroller:YES];
 	[scrollView setHasHorizontalScroller:NO];

@@ -103,9 +103,15 @@ static ESFileTransferPreferences *preferences;
 												forAccount:inAccount];
 	[fileTransferArray addObject:fileTransfer];
 	[fileTransfer setStatus:Not_Started_FileTransfer];
-	
-	[[adium notificationCenter] postNotificationName:FileTransfer_NewFileTransfer object:fileTransfer];
-	
+
+	//Wait until the next run loop to inform observers of the new file transfer object;
+	//this way the code which requested a new ESFileTransfer has time to configure it before we
+	//dispaly information to the user
+	[[adium notificationCenter] performSelector:@selector(postNotificationName:object:)
+									 withObject:FileTransfer_NewFileTransfer 
+									 withObject:fileTransfer
+									 afterDelay:0.0001];
+
 	return(fileTransfer);
 }
 

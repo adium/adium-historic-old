@@ -39,4 +39,6 @@
 - (FileTransferType)type;
 - (BOOL)isStopped;
 
+- (NSMenu *)menuForEvent:(NSEvent *)theEvent;
+
 @end
