@@ -24,7 +24,7 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Advanced_ContactList);
+    return(AIPref_Advanced);
 }
 - (NSString *)label{
     return(AILocalizedString(@"Address Book",nil));
