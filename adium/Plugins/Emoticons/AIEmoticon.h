@@ -14,22 +14,23 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import "AIAdium.h"
 
+@interface AIEmoticon : NSObject {
+    NSString			*path;
+    NSMutableArray		*representedText;
+    NSAttributedString		*attributedEmoticon;
+}
 
-@interface NSMutableAttributedString (AIAttributedStringAdditions)
++ (id)emoticon;
+- (id)initWithPath:(NSString *)inPath andText:(NSString *)inText;
 
-- (void)appendString:(NSString *)aString withAttributes:(NSDictionary *)attrs;
-- (NSData *)dataRepresentation;
+- (NSString *)path;
+- (NSEnumerator *)representedTextEnumerator;
+- (NSAttributedString *)attributedEmoticon;
+- (NSString *)string;
+
+- (void)setRepresentedText:(NSString *)commaDelimitedString;
+- (void)setPath:(NSString *)inPath;
 
 @end
-
-@interface NSAttributedString (AIAttributedStringAdditions)
-
-- (float)heightWithWidth:(float)width;
-- (NSData *)dataRepresentation;
-+ (NSAttributedString *)stringWithData:(NSData *)inData;
-- (NSString *)safeString;
-
-@end
-
-

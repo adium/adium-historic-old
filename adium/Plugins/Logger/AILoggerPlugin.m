@@ -168,7 +168,7 @@
 
 	}
 	
-	message = (NSString *)[[content message] string];
+	message = (NSString *)[[content message] safeString];
 	
         if(account && contact){
 	    logMessage = [NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [contact UID], message];

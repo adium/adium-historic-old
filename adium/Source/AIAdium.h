@@ -289,6 +289,7 @@ typedef enum {
 
     NSMutableArray		*outgoingContentFilterArray;
     NSMutableArray		*incomingContentFilterArray;
+    NSMutableArray		*displayingContentFilterArray;
 
     NSMutableDictionary		*chatDict;
 }
@@ -300,6 +301,7 @@ typedef enum {
 //Chats
 - (void)addIncomingContentObject:(AIContentObject *)inObject;
 - (BOOL)sendContentObject:(AIContentObject *)inObject;
+- (void)displayContentObject:(AIContentObject *)inObject;
 
 - (BOOL)closeChat:(AIChat *)inChat;
 - (AIChat *)chatWithListObject:(AIListObject *)inObject onAccount:(AIAccount *)inAccount;
@@ -325,6 +327,7 @@ typedef enum {
 //Filtering content
 - (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter;
 - (void)registerIncomingContentFilter:(id <AIContentFilter>)inFilter;
+- (void)registerDisplayingContentFilter:(id <AIContentFilter>)inFilter;
 
 @end
 
