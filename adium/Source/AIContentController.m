@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.101 2004/08/05 03:37:28 dchoby98 Exp $
+// $Id: AIContentController.m,v 1.102 2004/08/05 09:18:08 evands Exp $
 
 #import "AIContentController.h"
 
@@ -224,13 +224,13 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 									   context:(id)filterContext
 {
 	//Perform the filter in our filter thread to avoid threading conflicts, waiting for a result and then returning it
-	attributedString = [filterRunLoopMessenger target:self 
-									  performSelector:@selector(thread_filterAttributedString:contentFilter:filterContext:invocation:) 
-										   withObject:attributedString
-										   withObject:contentFilter[type][direction]
-										   withObject:filterContext
-										   withObject:nil
-										   withResult:YES];
+	attributedString = [[self filterRunLoopMessenger] target:self 
+											 performSelector:@selector(thread_filterAttributedString:contentFilter:filterContext:invocation:) 
+												  withObject:attributedString
+												  withObject:contentFilter[type][direction]
+												  withObject:filterContext
+												  withObject:nil
+												  withResult:YES];
 	return (attributedString);
 }
 
@@ -256,22 +256,22 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 	[invocation setArgument:&context atIndex:3]; //context, the second argument after the two hidden arguments of every NSInvocation
 	[invocation retainArguments];
 	
+	[[self filterRunLoopMessenger] target:self 
+						  performSelector:@selector(thread_filterAttributedString:contentFilter:filterContext:invocation:) 
+							   withObject:attributedString
+							   withObject:contentFilter[type][direction]
+							   withObject:filterContext
+							   withObject:invocation];
+}
+
+- (NDRunLoopMessenger *)filterRunLoopMessenger
+{
 	if (!filterRunLoopMessenger){
 		[NSThread detachNewThreadSelector:@selector(thread_createFilterRunLoopMessenger) toTarget:self withObject:nil];
 		
 		while (!filterRunLoopMessenger);
 	}
 	
-	[filterRunLoopMessenger target:self 
-				   performSelector:@selector(thread_filterAttributedString:contentFilter:filterContext:invocation:) 
-						withObject:attributedString
-						withObject:contentFilter[type][direction]
-						withObject:filterContext
-						withObject:invocation];
-}
-
-- (NDRunLoopMessenger *)filterRunLoopMessenger
-{
 	return (filterRunLoopMessenger);
 }
 
@@ -283,7 +283,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 	if (attributedString){
 		NSEnumerator		*enumerator = [inContentFilterArray objectEnumerator];
 		id<AIContentFilter>	filter;
-		
+
 		while((filter = [enumerator nextObject])){
 			attributedString = [filter filterAttributedString:attributedString context:filterContext];
 		}
