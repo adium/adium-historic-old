@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.71 2004/03/25 06:06:55 evands Exp $
+// $Id: AIAccountController.m,v 1.72 2004/03/27 04:47:49 ramoth4 Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -444,8 +444,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
             }
         }
 		
-		//If this is not a meta contact, return the account the object is on
-		if(![inObject isKindOfClass:[AIMetaContact class]]){
+		//If inObject is an AIListContact return the account the object is on
+		if([inObject isKindOfClass:[AIListContact class]]){ 
 			if(account = [self accountWithObjectID:[(AIListContact *)inObject accountID]]){
 				if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
 					return(account);

@@ -22,36 +22,57 @@
                                                         andEventID:kAEGetURL];
 }
 
+/*
+TODO: 
+    o generalize the sending stuff into a single private method
+    o add suppport for "stuffing" the inputline with a particluar message 
+*/
 - (void)handleURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
 {
-    NSString *longPrefix, *shortPrefix, *newString, *recipient = nil, *message = nil;
     NSString *string = [[event descriptorAtIndex:1] stringValue];
     NSURL *url = [NSURL URLWithString:string];
     
-    if(url){
-        shortPrefix = [NSString stringWithFormat:@"%@:", [url scheme]];
-        longPrefix = [NSString stringWithFormat:@"%@//", shortPrefix];
-        
-        if(![string hasPrefix:longPrefix] && [string hasPrefix:shortPrefix]){
-            newString = [string substringFromIndex:[shortPrefix length]];
-            newString = [NSString stringWithFormat:@"%@%@", longPrefix, newString];
-            url = [NSURL URLWithString:newString];
+    if(url){        
+        if(![[url resourceSpecifier] hasPrefix:@"//"]){
+            string = [NSString stringWithFormat:@"%@://%@", [url scheme], [url resourceSpecifier]];
+            url = [NSURL URLWithString:string];
         }
         
         if([[url scheme] isEqualToString:@"aim"]){
-            if([[url host] compare:@"goim" options:NSCaseInsensitiveSearch] == 0){
-                recipient = [url propertyForKey:@"screenname"];
-                message = [url propertyForKey:@"message"];
+            if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){                
+                NSString *screenname = [url queryArgumentForKey:@"screenname"]; 
+                NSString *service = @"AIM";
                 
-                //figure this out later
+                AIAccount *account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE 
+                                                                                         toListObject:[[[AIListObject alloc] initWithUID:screenname 
+                                                                                                                               serviceID:service] 
+                                                                                                                            autorelease]];
+                AIListContact *contact = [[[AIListContact alloc] initWithUID:screenname 
+                                                                    accountID:[account uniqueObjectID]
+                                                                    serviceID:service]
+                                                                autorelease];
+                
+                [[adium contentController] openChatWithContact:contact];
             }
-        }
-        /*}else if([[url scheme] isEqualToString:@"ymsgr"]){
-            if([[url host] compare:@"sendim" options:NSCaseInsensitiveSearch] == 0){
-                recipient = [url query];
+            
+        // DO NOT OPEN UNTIL XMAS...err...0.76
+        }/*else if([[url scheme] isEqualToString:@"ymsgr"]){
+            if([[url host] caseInsensitiveCompare:@"sendim"] == NSOrderedSame){
+                NSString *screenname = [url query]; 
+                NSString *service = @"Yahoo!";
                 
-                //figure this out later
-            }*/
+                AIAccount *account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE 
+                                                                                         toListObject:[[[AIListObject alloc] initWithUID:screenname 
+                                                                                                                               serviceID:service] 
+                                                                                                                            autorelease]];
+                AIListContact *contact = [[[AIListContact alloc] initWithUID:screenname 
+                                                                    accountID:[account uniqueObjectID]
+                                                                    serviceID:service]
+                                                                autorelease];
+                
+                [[adium contentController] openChatWithContact:contact];
+            }
+        }*/
     }else{
         NSLog(@"invalid URL");
     }
