@@ -32,23 +32,22 @@
 
 #define GROWL_EVENT_ALERT_IDENTIFIER			@"Growl"
 
+#define PREF_GROUP_EVENT_PRESETS				@"Event Presets"
+
 @class ESGlobalEventsPreferences;
 
 @interface ESGlobalEventsPreferencesPlugin : AIPlugin {
 	ESGlobalEventsPreferences	*preferences;
-	
-	NSArray		*dockBehaviorPresetsArray;
-	NSArray		*speechPresetsArray;
-	NSArray		*growlPresetsArray;
+
+	NSDictionary		*builtInEventPresets;
+	NSMutableDictionary	*storedEventPresets;
 }
 
-- (NSArray *)availableDockBehaviorPresets;
-- (void)updateActiveDockBehaviorSet;
+- (void)setEventPreset:(NSDictionary *)preset;
+- (void)saveEventPreset:(NSDictionary *)eventPreset;
+- (NSDictionary *)builtInEventPresets;
+- (NSDictionary *)storedEventPresets;
 
-- (NSArray *)availableSpeechPresets;
-- (void)updateActiveSpeechPreset;
-
-- (NSArray *)availableGrowlPresets;
-- (void)updateActiveGrowlPreset;
+- (void)applySoundSetWithPath:(NSString *)soundSetPath;
 
 @end
