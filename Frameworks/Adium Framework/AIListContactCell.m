@@ -330,7 +330,7 @@
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
 	NSColor	*labelColor = [self labelColor];
-	if(labelColor){
+	if(labelColor && ![self isSelectionInverted]){
 		[labelColor set];
 		[NSBezierPath fillRect:rect];
 	}
