@@ -10163,7 +10163,6 @@
 		4B3717000510D19400A8010A = {
 			children = (
 				6C1CC23105415D5700B64925,
-				6C1CC23205415D5700B64925,
 				BF0F5BD805A2B1590034AD18,
 				4B5D67D3050CF56700A8010A,
 				4BF42E7806AC36640091DE5D,
@@ -17537,8 +17536,8 @@
 			lastKnownFileType = sourcecode.c.c;
 			name = buildnum.c;
 			path = Other/buildnum.c;
-			refType = 4;
-			sourceTree = "<group>";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		6C24112705849D7900CECFC3 = {
 			children = (
@@ -20250,6 +20249,7 @@
 		};
 		9EB3C52304F94DB7001D1F74 = {
 			children = (
+				6C1CC23205415D5700B64925,
 				9EB3C52E04F94F24001D1F74,
 				9EB3C53304F94FAE001D1F74,
 				9EB3C53404F94FAE001D1F74,
