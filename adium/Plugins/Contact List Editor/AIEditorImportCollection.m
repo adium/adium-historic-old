@@ -77,6 +77,16 @@
     return(NO);
 }
 
+- (BOOL)includeInOwnershipColumn
+{
+    return(NO);
+}
+
+- (BOOL)containsHandleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
+{
+    return(NO);
+}
+
 //Return our icon description
 - (NSImage *)icon
 {

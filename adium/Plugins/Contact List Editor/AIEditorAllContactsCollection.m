@@ -46,6 +46,11 @@
     return(@"Adium Contact List");
 }
 
+- (BOOL)containsHandleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
+{
+    return(NO);
+}
+
 - (NSString *)subLabel{
     return(@"All Avaliable Contacts");
 }
@@ -59,6 +64,11 @@
 }
 - (BOOL)showCustomEditorColumns{
     return(YES);
+}
+
+- (BOOL)includeInOwnershipColumn
+{
+    return(NO);
 }
 
 //Return a unique identifier
@@ -130,21 +140,11 @@
             [self _processListGroup:(AIListGroup *)object intoEditorGroup:newGroup];
 
         }else if([object isKindOfClass:[AIListContact class]]){
-            NSEnumerator	*handleEnumerator;
-            AIHandle		*handle;
-            NSMutableArray	*ownerAccountArray;
             AIEditorListHandle	*newHandle;
 
             //Create the handle and add it to the group
             newHandle = [[[AIEditorListHandle alloc] initWithServiceID:[(AIListContact *)object serviceID] UID:[object UID] temporary:NO] autorelease];
             [editorGroup addObject:newHandle];
-
-            //Set the correct ownership of this handle
-            ownerAccountArray = [newHandle ownerAccountArray];
-            handleEnumerator = [(AIListContact *)object handleEnumerator];
-            while((handle = [handleEnumerator nextObject])){
-                [ownerAccountArray addObject:[handle account]];
-            }
         }
     }    
 }
