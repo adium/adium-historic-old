@@ -4,8 +4,6 @@ create table adium.users (
 user_id serial primary key,
 username varchar(50) not null,
 service varchar(30) not null default 'AIM',
-num_sent int default 0,
-num_received int default 0,
 unique(username,service)
 );
 
@@ -21,6 +19,14 @@ create table adium.user_display_name (
 user_id         int references adium.users(user_id) not null,
 display_name    varchar(300),
 effdate         timestamp default now()
+);
+
+create table adium.user_statistics (
+sender_id       int references adium.users(user_id) not null,
+recipient_id    int references adium.users(user_id) not null,
+num_messages    int default 1,
+last_message    timestamp default now(),
+primary key (sender_id, recipient_id)
 );
 
 create index adium_sender_recipient on adium.messages(sender_id, recipient_id);
@@ -63,6 +69,7 @@ where  m.sender_id = s.user_id
 create or replace rule insert_message_v as
 on insert to adium.message_v
 do instead  (
+    
     insert into adium.users (username,service)
     select new.sender_sn, coalesce(new.sender_service, 'AIM')
     where not exists (
@@ -117,14 +124,27 @@ do instead  (
     coalesce(new.message_date, now() )
     );
 
-    update adium.users
-    set num_sent = num_sent + 1
-    where user_id = (select user_id from users where username= new.sender_sn
-      and service = new.sender_service);
+    update adium.user_statistics
+    set num_messages = num_messages + 1,
+    last_message = CURRENT_TIMESTAMP
+    where sender_id = (select user_id from users where username =
+    new.sender_sn and service = new.sender_service) 
+    and recipient_id = (select user_id from users where username =
+    new.recipient_sn and service = new.recipient_service);
 
-    update adium.users
-    set num_received = num_received + 1
-    where user_id = (select user_id from users where username =
-    new.recipient_sn
-     and service = new.recipient_service);
+    insert into adium.user_statistics
+    (sender_id, recipient_id, num_messages)
+    select
+    (select user_id from users 
+    where username = new.sender_sn and service = new.sender_service),
+    (select user_id from users
+    where username = new.recipient_sn and service = new.recipient_service),
+    1
+    where not exists 
+        (select 'x' from user_statistics
+        where sender_id = (select user_id from users where username =
+        new.sender_sn and service = new.sender_service) 
+        and recipient_id = 
+        (select user_id from users where username = 
+        new.recipient_sn and service = new.recipient_service))
 );

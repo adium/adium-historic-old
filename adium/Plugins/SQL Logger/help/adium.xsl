@@ -38,7 +38,9 @@
               <br /><a href="resin.html" class="sidebar">Resin Installation</a>
               <br /><a href="technical.html" class="sidebar">Technical
               Details</a>
-              
+              <br /><a href="performance.html"
+              class="sidebar">Performance/Maintenance</a>
+
               <br /><br /><h4>Other links</h4>
               <a href="http://www.adiumx.com/" class="offsides">Adium</a>
               <br /><a href="http://adium.sourceforge.net" class="offsides">Adium
