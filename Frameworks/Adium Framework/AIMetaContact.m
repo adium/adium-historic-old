@@ -158,10 +158,21 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 - (void)removeObject:(AIListObject *)inObject
 {
 	if([containedObjects containsObject:inObject]){
+		
+		[inObject retain];
+		
 		[self _removeCachedStatusOfObject:inObject];
-		[inObject setContainingObject:[self containingObject]];
+		
 		[containedObjects removeObject:inObject];
 
+		if ([inObject remoteGroupName]){
+			//Reset it to its remote group
+			[inObject setContainingObject:nil];
+			[[adium contactController] listObjectRemoteGroupingChanged:inObject];
+		}else{
+			[inObject setContainingObject:[self containingObject]];
+		}
+		
 		[_listContacts release]; _listContacts = nil;
 		
 		//Only need to check if we are now unique if we weren't unique before, since we've either become
@@ -169,6 +180,8 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 		if (!containsOnlyOneUniqueContact){
 			[self _determineIfWeShouldAppearToContainOnlyOneContact];
 		}
+		
+		[inObject release];
 	}
 }
 
