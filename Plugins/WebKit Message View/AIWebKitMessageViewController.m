@@ -142,7 +142,8 @@
 	//Cleanup content processing
 	[contentQueue release]; contentQueue = nil;
 	[previousContent release]; previousContent = nil;
-	NSLog(@"%@: Releasing (chat will become %i)",self,[chat retainCount]-1);
+
+	//Release the chat
 	[chat release]; chat = nil;
 
 	[super dealloc];
