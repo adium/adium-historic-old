@@ -18,9 +18,18 @@
 
 @implementation SHOmniWebBookmarksImporter
 
-static NSMenu   *omniBookmarksMenu;
-static NSMenu   *omniBookmarksSupermenu;
-static NSMenu   *omniTopMenu;
+static NSMenu   *omniBookmarksMenu = nil;
+static NSMenu   *omniBookmarksSupermenu = nil;
+static NSMenu   *omniTopMenu = nil;
+
+DeclareString(gtSign)
+DeclareString(Hopen)
+DeclareString(Aopen)
+DeclareString(hrefStr)
+DeclareString(closeQuote)
+DeclareString(Aclose)
+DeclareString(DLclose)
+DeclareString(ltSign)
 
 #pragma mark protocol methods
 + (id)newInstanceOfImporter
@@ -89,14 +98,14 @@ static NSMenu   *omniTopMenu;
     
     [linkScanner setCaseSensitive:NO];
     
-    static NSString    *gtSign = @">";
-    static NSString    *Hopen = @"h3";
-    static NSString    *Aopen = @"a ";
-    static NSString    *hrefStr = @"href=\"";
-    static NSString    *closeQuote = @"\"";
-    static NSString    *Aclose = @"</a";
-    static NSString    *DLclose = @"/dl>";
-    static NSString    *ltSign = @"<";
+    InitString(gtSign,@">")
+    InitString(Hopen,@"h3")
+    InitString(Aopen,@"a ")
+    InitString(hrefStr,@"href=\"")
+    InitString(closeQuote,@"\"")
+    InitString(Aclose,@"</a")
+    InitString(DLclose,@"/dl>")
+    InitString(ltSign,@"<")
     
     while(![linkScanner isAtEnd]){
         if((stringLength - [linkScanner scanLocation]) < 4){

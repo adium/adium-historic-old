@@ -11,6 +11,17 @@
 
 @implementation SHMozillaCommonParser
 
+DeclareString(gtSign)
+DeclareString(Hclose)
+DeclareString(Hopen)
+DeclareString(Aopen)
+DeclareString(hrefStr)
+DeclareString(closeQuote)
+DeclareString(closeLink)
+DeclareString(Aclose)
+DeclareString(DLclose)
+DeclareString(ltSign)
+
 + (void)parseBookmarksfromString:(NSString *)inString forOwner:(id)owner andMenu:(NSMenu *)bookmarksMenu
 {
     NSMenu      *bookmarksSupermenu = bookmarksMenu;
@@ -21,16 +32,16 @@
     
     unsigned int stringLength = [inString length];
     
-    NSString    *gtSign = @">";
-    NSString    *Hclose = @"</H";
-    NSString    *Hopen = @"H3 ";
-    NSString    *Aopen = @"A ";
-    NSString    *hrefStr = @"HREF=\"";
-    NSString    *closeQuote = @"\"";
-    NSString    *closeLink = @"\">";
-    NSString    *Aclose = @"</A";
-    NSString    *DLclose = @"/DL>";
-    NSString    *ltSign = @"<";
+    InitString(gtSign,@">")
+    InitString(Hclose,@"</H")
+    InitString(Hopen,@"H3 ")
+    InitString(Aopen,@"A ")
+    InitString(hrefStr,@"HREF=\"")
+    InitString(closeQuote,@"\"")
+    InitString(closeLink,@"\">")
+    InitString(Aclose,@"</A")
+    InitString(DLclose,@"/DL>")
+    InitString(ltSign,@"<")
     
     while(![linkScanner isAtEnd]){
         if((stringLength - [linkScanner scanLocation]) < 4){
