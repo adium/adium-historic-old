@@ -139,36 +139,38 @@ static AILogViewerWindowController *sharedInstance = nil;
 
         //Get the account UID and ServiceID
         periodRange = [accountFolderName rangeOfString:@"."];
-        serviceID = [accountFolderName substringToIndex:periodRange.location];
-        accountUID = [accountFolderName substringFromIndex:periodRange.location + 1];
+        if(periodRange.location != NSNotFound){
+            serviceID = [accountFolderName substringToIndex:periodRange.location];
+            accountUID = [accountFolderName substringFromIndex:periodRange.location + 1];
 
-        //Process each user folder (/Logs/SERVICE.ACCOUNT_NAME/CONTACT_NAME/)
-        accountFolderPath = [[logFolderPath stringByAppendingPathComponent:accountFolderName] stringByExpandingTildeInPath];
-	userEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:accountFolderPath] objectEnumerator];
-        while((folderName = [userEnumerator nextObject])){
-            NSString		*serverGroup = nil;
-            AIServiceType	*serviceType;
-            NSString		*contactKey;
-            
-            //Find the group this contact is in on our contact list
-            serviceType = [[owner accountController] serviceTypeWithID:serviceID];
-            if(serviceType){
-                AIListContact	*contact = [[owner contactController] contactInGroup:nil withService:serviceType UID:folderName];
-                if(contact){
-                    serverGroup = [[contact containingGroup] UID];
+            //Process each user folder (/Logs/SERVICE.ACCOUNT_NAME/CONTACT_NAME/)
+            accountFolderPath = [[logFolderPath stringByAppendingPathComponent:accountFolderName] stringByExpandingTildeInPath];
+            userEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:accountFolderPath] objectEnumerator];
+            while((folderName = [userEnumerator nextObject])){
+                NSString		*serverGroup = nil;
+                AIServiceType	*serviceType;
+                NSString		*contactKey;
+
+                //Find the group this contact is in on our contact list
+                serviceType = [[owner accountController] serviceTypeWithID:serviceID];
+                if(serviceType){
+                    AIListContact	*contact = [[owner contactController] contactInGroup:nil withService:serviceType UID:folderName];
+                    if(contact){
+                        serverGroup = [[contact containingGroup] UID];
+                    }
                 }
-            }
-            if(!serverGroup) serverGroup = @"Strangers"; //Default group
-            
-            //Make sure this groups is in our available group dict
-            if(![groupDict objectForKey:serverGroup]){
-                [groupDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:serverGroup, @"UID", [NSMutableArray array], @"Contents", nil] forKey:serverGroup];
-            }
+                if(!serverGroup) serverGroup = @"Strangers"; //Default group
 
-            //Make sure the handle is in our available handle array
-            contactKey = [NSString stringWithFormat:@"%@.%@", serviceID, folderName];
-            if(![contactDict objectForKey:contactKey]){
-                [contactDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:folderName, @"UID", serviceID, @"ServiceID", serverGroup, @"Group", nil] forKey:contactKey];
+                //Make sure this groups is in our available group dict
+                if(![groupDict objectForKey:serverGroup]){
+                    [groupDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:serverGroup, @"UID", [NSMutableArray array], @"Contents", nil] forKey:serverGroup];
+                }
+
+                //Make sure the handle is in our available handle array
+                contactKey = [NSString stringWithFormat:@"%@.%@", serviceID, folderName];
+                if(![contactDict objectForKey:contactKey]){
+                    [contactDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:folderName, @"UID", serviceID, @"ServiceID", serverGroup, @"Group", nil] forKey:contactKey];
+                }
             }
         }
     }
