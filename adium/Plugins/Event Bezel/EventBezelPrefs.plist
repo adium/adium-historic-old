@@ -26,5 +26,7 @@
         <true/>
         <key>Duration</key>
         <integer>3</integer>
+        <key>Show Name Labels</key>
+        <false/>
 </dict>
 </plist>

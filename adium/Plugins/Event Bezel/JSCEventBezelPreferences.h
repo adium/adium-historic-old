@@ -18,6 +18,7 @@
     IBOutlet NSButton       *checkBox_firstMessage;
     IBOutlet NSButton       *checkBox_imageBadges;
     IBOutlet NSButton       *checkBox_colorLabels;
+    IBOutlet NSButton       *checkBox_nameLabels;
     IBOutlet NSSlider       *slider_duration;
 }
 
@@ -32,6 +33,7 @@
 - (IBAction)toggleFirstMessage:(id)sender;
 - (IBAction)toggleImageBadges:(id)sender;
 - (IBAction)toggleColorLabels:(id)sender;
+- (IBAction)toggleNameLabels:(id)sender;
 - (IBAction)changeDuration:(id)sender;
 
 @end

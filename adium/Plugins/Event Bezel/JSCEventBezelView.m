@@ -41,7 +41,7 @@ BOOL pantherOrLater;
     }
     
     // Set the attributes for the main buddy name and the other strings
-    mainAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [[NSFontManager sharedFontManager] 
+    mainAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys: [[NSFontManager sharedFontManager] 
         convertFont:[NSFont systemFontOfSize:24.0] toHaveTrait: NSBoldFontMask], NSFontAttributeName, 
                     [NSColor whiteColor], NSForegroundColorAttributeName,
                     textShadow, NSShadowAttributeName,
@@ -114,9 +114,9 @@ BOOL pantherOrLater;
         buddyIconPoint = NSMakePoint(82.0,120.0);
         buddyIconLabelRect = NSMakeRect(80.0,118.0,52.0,52.0);
         // Main buddy name
-        buddyNameRect = NSMakeRect(12.0,86.0,187.0,30.0);
+        buddyNameRect = NSMakeRect(12.0,80.0,187.0,30.0);
         // Main buddy Status
-        buddyStatusRect = NSMakeRect(12.0,43.0,187.0,44.0);
+        buddyStatusRect = NSMakeRect(12.0,37.0,187.0,44.0);
         // Queue stack empty, no rect
         queueRect = NSMakeRect(0.0,0.0,0.0,0.0);
     }
@@ -137,7 +137,7 @@ BOOL pantherOrLater;
     }
 
     // Paint the buddy icon or placeholder
-    if (buddyIconLabelColor) {
+    if (useBuddyIconLabel && buddyIconLabelColor) {
         [buddyIconLabelColor set];
         [NSBezierPath fillRect:buddyIconLabelRect];
 	
@@ -157,8 +157,29 @@ BOOL pantherOrLater;
     if (buddyIconBadge) {
         [buddyIconBadge compositeToPoint: NSMakePoint(buddyIconPoint.x -6.0, buddyIconPoint.y - 6-0) operation:NSCompositeSourceOver];
     }
-            
-    // Set the color of text to white and paint all the strings,
+
+    // Paint the main name label if selected, and the strings
+    if (useBuddyNameLabel && buddyIconLabelColor) {
+        NSSize  labelSize = [mainBuddyName sizeWithAttributes: mainAttributes];
+        NSRect  labelRect;
+        int     borderWidth = (labelSize.height / 2.0);
+        int     maxWidth = (187.0 - labelSize.height);
+        if (labelSize.width > maxWidth) {
+            labelRect = NSMakeRect(12.0 + borderWidth,buddyNameRect.origin.y,maxWidth,labelSize.height);
+        } else {
+            labelRect = NSMakeRect(106.0 - (labelSize.width / 2.0),buddyNameRect.origin.y,labelSize.width,labelSize.height);
+        }
+        [buddyIconLabelColor set];
+        [NSBezierPath fillRect: labelRect];
+        [[NSBezierPath bezierPathWithOvalInRect: NSMakeRect(labelRect.origin.x - (labelRect.size.height / 2.0),labelRect.origin.y,labelRect.size.height,labelRect.size.height)] fill];
+        [[NSBezierPath bezierPathWithOvalInRect: NSMakeRect(labelRect.origin.x + labelRect.size.width - (labelRect.size.height / 2.0),labelRect.origin.y,labelRect.size.height,labelRect.size.height)] fill];
+    }
+    if (useBuddyNameLabel && buddyNameLabelColor) {
+        [mainAttributes setObject: buddyNameLabelColor forKey:NSForegroundColorAttributeName];
+    } else {
+        [mainAttributes setObject: [NSColor whiteColor] forKey:NSForegroundColorAttributeName];
+    }
+    
     tempString = [NSString stringWithString: mainBuddyName];
     [tempString drawInRect: NSMakeRect(buddyNameRect.origin.x + 1.0, buddyNameRect.origin.y - 1.0, buddyNameRect.size.width, buddyNameRect.size.height) withAttributes: mainAttributesMask];
     [mainBuddyName drawInRect: buddyNameRect withAttributes: mainAttributes];
@@ -267,6 +288,38 @@ BOOL pantherOrLater;
     [newColor retain];
     [buddyIconLabelColor release];
     buddyIconLabelColor = newColor;
+}
+
+- (NSColor *)buddyNameLabelColor
+{
+    return buddyNameLabelColor;
+}
+
+- (void)setBuddyNameLabelColor:(NSColor *)newColor
+{
+    [newColor retain];
+    [buddyNameLabelColor release];
+    buddyNameLabelColor = newColor;
+}
+
+- (BOOL)useBuddyIconLabel
+{
+    return useBuddyIconLabel;
+}
+
+- (void)setUseBuddyIconLabel:(BOOL)b
+{
+    useBuddyIconLabel = b;
+}
+
+- (BOOL)useBuddyNameLabel
+{
+    return useBuddyNameLabel;
+}
+
+- (void)setUseBuddyNameLabel:(BOOL)b
+{
+    useBuddyNameLabel = b;
 }
 
 @end

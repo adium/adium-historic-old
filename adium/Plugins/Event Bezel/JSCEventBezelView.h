@@ -17,7 +17,7 @@
     NSString *mainBuddyStatus;
     NSString *queueField;
     
-    NSDictionary    *mainAttributes;
+    NSMutableDictionary    *mainAttributes;
     NSDictionary    *mainAttributesMask;
     NSDictionary    *secondaryAttributes;
     NSDictionary    *secondaryAttributesMask;
@@ -25,6 +25,8 @@
     NSDictionary    *mainStatusAttributesMask;
     
     NSColor         *buddyIconLabelColor;
+    NSColor         *buddyNameLabelColor;
+    BOOL            useBuddyIconLabel, useBuddyNameLabel;
 }
 
 - (NSImage *)buddyIconImage;
@@ -41,4 +43,12 @@
 
 - (NSColor *)buddyIconLabelColor;
 - (void)setBuddyIconLabelColor:(NSColor *)newColor;
+- (NSColor *)buddyNameLabelColor;
+- (void)setBuddyNameLabelColor:(NSColor *)newColor;
+
+- (BOOL)useBuddyIconLabel;
+- (void)setUseBuddyIconLabel:(BOOL)b;
+- (BOOL)useBuddyNameLabel;
+- (void)setUseBuddyNameLabel:(BOOL)b;
+
 @end

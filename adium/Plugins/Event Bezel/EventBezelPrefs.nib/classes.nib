@@ -30,6 +30,7 @@
                 toggleFirstMessage = id; 
                 toggleIdle = id; 
                 toggleImageBadges = id; 
+                toggleNameLabels = id; 
                 toggleNoIdle = id; 
                 toggleOffline = id; 
                 toggleOnline = id; 
@@ -44,6 +45,7 @@
                 "checkBox_firstMessage" = NSButton; 
                 "checkBox_idle" = NSButton; 
                 "checkBox_imageBadges" = NSButton; 
+                "checkBox_nameLabels" = NSButton; 
                 "checkBox_noIdle" = NSButton; 
                 "checkBox_offline" = NSButton; 
                 "checkBox_online" = NSButton; 
