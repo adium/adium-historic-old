@@ -734,11 +734,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 		id		theKey = [[self descriptorAtIndex:theIndex] objectValue],
 		theValue = [self descriptorAtIndex:theIndex+1];
 		
-		if( [theKey isKindOfClass:[NDFourCharCodeValue class]] && [theKey fourCharCode] == keyASUserRecordFields )
-		{
-			[theDictionary addEntriesFromDictionary:[theValue dictionaryValue]];
-		}
-		else if( [theKey isKindOfClass:[NSNumber class]] && [theKey unsignedLongValue] == keyASUserRecordFields )
+		if( [theKey isKindOfClass:[NSNumber class]] && [theKey unsignedLongValue] == keyASUserRecordFields )
 		{
 			[theDictionary addEntriesFromDictionary:[theValue dictionaryValue]];
 		}
