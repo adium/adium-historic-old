@@ -42,9 +42,15 @@
 - (void)promptForNewContactOnWindow:(NSWindow *)inWindow strangerListContact:(AIListContact *)inListContact;
 @end
 
+/*
+ * @class AIContactListEditorPlugin
+ * @brief Component for managing adding and deleting contacts and groups
+ */
 @implementation AIContactListEditorPlugin
 
-//Install
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
     NSMenuItem		*menuItem;
@@ -131,13 +137,17 @@
 	
 }
 
-//Uninstall
+/*
+ * @brief Uninstall
+ */
 - (void)uninstallPlugin
 {
     [[adium notificationCenter] removeObserver:self];
 }
 
-//Validate our menu items
+/*
+ * @brief Validate our menu items
+ */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	//Disable 'delete selection' if nothing is selected or the contact list isn't in front
@@ -151,13 +161,15 @@
                 return NO;
             }
 	}else if(menuItem == menuItem_tabAddContact){
-		return([[adium menuController] contactualMenuObject] != nil);
+		return([[adium menuController] currentContextMenuObject] != nil);
 	}
 	
 	return(YES);
 }
 
-//Prompt for a new contact
+/*
+ * @brief Prompt for a new contact
+ */
 - (IBAction)addContact:(id)sender
 {
 	//Get the "selected" list object (contact list or message window)
@@ -176,16 +188,24 @@
 				  strangerListContact:stranger];
 }
 
-//Prompt for a new contact with the current tab's name
+/*
+ * @brief Prompt for a new contact with the current tab's name
+ */
 - (IBAction)addContactFromTab:(id)sender
 {
-	AIListObject *object = [[adium menuController] contactualMenuObject];
+	AIListObject *object = [[adium menuController] currentContextMenuObject];
 	if([object isKindOfClass:[AIListContact class]]){
 		[self promptForNewContactOnWindow:nil
 					  strangerListContact:(AIListContact *)object];
 	}
 }
 
+/*
+ * @brief Prompt for a new contact
+ *
+ * @param inWindow If non-nil, display the new contact prompt as a sheet on inWindow
+ * @param inListContact If non-nil, autofill the new contact prompt with information from inListContact
+ */
 - (void)promptForNewContactOnWindow:(NSWindow *)inWindow strangerListContact:(AIListContact *)inListContact
 {
 	[AINewContactWindowController promptForNewContactOnWindow:inWindow
@@ -193,6 +213,12 @@
 													  service:(inListContact ? [inListContact service] : nil)];
 }
 
+/*
+ * @brief Add contact request notification
+ *
+ * Display the add contact window.  Triggered by an incoming Contact_AddNewContact notification 
+ * @param notification Notification with a userInfo containing @"UID" and @"Service" keys
+ */
 - (void)addContactRequest:(NSNotification *)notification
 {
 	NSDictionary *userInfo = [notification userInfo];
@@ -203,43 +229,58 @@
 	}
 }
 
-//Prompt for a new group
+/*
+ * @brief Prompt for a new group
+ */
 - (IBAction)addGroup:(id)sender
 {
 	[AINewGroupWindowController promptForNewGroupOnWindow:nil];
 }
 
-//Delete the selection
+/*
+ * @brief Delete the list objects selected in the contact list
+ */
 - (IBAction)deleteSelection:(id)sender
 {	
 	NSArray			*array = [[adium contactController] arrayOfSelectedListObjectsInContactList];
 	[self deleteFromArray:array];
 }
 
+/*
+ * @brief Delete the list object associated with the current context menu
+ */
 - (IBAction)deleteSelectionFromTab:(id)sender
 {
-	AIListObject   *object = [[adium menuController] contactualMenuObject];
-	if (object){
-		NSArray		*array = [NSArray arrayWithObject:object];
+	AIListObject   *currentContextMenuObject;
+	if (currentContextMenuObject = [[adium menuController] currentContextMenuObject]){
 		[NSApp activateIgnoringOtherApps:YES];
-		[self deleteFromArray:array];
+		[self deleteFromArray:[NSArray arrayWithObject:currentContextMenuObject]];
 	}
 }
 
+/*
+ * @brief Delete an array of <tt>AIListObject</tt>s
+ *
+ * After a modal confirmation prompt, the objects in the array are deleted.
+ *
+ * @param array An <tt>NSArray</tt> of <tt>AIListObject</tt>s.
+ */
 - (void)deleteFromArray:(NSArray *)array
 {
 	if(array){
 		int count = [array count];
 		
-		NSString	*name = ((count == 1) ? [[array objectAtIndex:0] displayName] : [NSString stringWithFormat:@"%i contacts",count]);
+		NSString	*name = ((count == 1) ?
+							 [[array objectAtIndex:0] displayName] : 
+							 [NSString stringWithFormat:AILocalizedString(@"%i contacts",nil),count]);
 		
 		//Guard deletion with a warning prompt
-		int result = NSRunAlertPanel([NSString stringWithFormat:@"Remove %@ from your list?",name],
-									 @"Be careful, you cannot undo this action.",
-									 @"OK",
-									 @"Cancel",
+		int result = NSRunAlertPanel([NSString stringWithFormat:AILocalizedString(@"Remove %@ from your list?",nil),name],
+									 AILocalizedString(@"Be careful. You cannot undo this action.",nil),
+									 AILocalizedString(@"OK",nil),
+									 AILocalizedString(@"Cancel",nil),
 									 nil);
-		
+
 		if(result == NSAlertDefaultReturn){
 			[[adium contactController] removeListObjects:array];
 		}
@@ -250,7 +291,7 @@
 //Called by a context menu
 - (IBAction)renameGroup:(id)sender
 {
-//	AIListObject	*object = [[adium menuController] contactualMenuObject];
+//	AIListObject	*object = [[adium menuController] currentContextMenuObject];
 	
 }
 

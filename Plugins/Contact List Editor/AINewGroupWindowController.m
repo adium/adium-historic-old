@@ -19,9 +19,17 @@
 
 #define ADD_GROUP_PROMPT_NIB	@"AddGroup"
 
+/*
+ * @class AINewGroupWindowController
+ * @brief Window controller for adding groups
+ */
 @implementation AINewGroupWindowController
 
-//Prompt for a new group.  Pass nil for a panel prompt.
+/*
+ * @brief Prompt for a new group.
+ *
+ * @param parentWindow Window on which to show as a sheet. Pass nil for a panel prompt.
+ */
 + (void)promptForNewGroupOnWindow:(NSWindow *)parentWindow
 {
 	AINewGroupWindowController	*newGroupWindow;
@@ -40,31 +48,25 @@
 	
 }
 
-//Setup the window before it is displayed
-- (void)windowDidLoad
-{
-	[[self window] center];
-}
-
-//Window is closing
-- (BOOL)windowShouldClose:(id)sender
-{
-    return(YES);
-}
-
-//Stop automatic window positioning
+/*
+ * @brief Stop automatic window positioning
+ */
 - (BOOL)shouldCascadeWindows
 {
     return(NO);
 }
 
-//Called as the user list edit sheet closes, dismisses the sheet
+/*
+ * @brief Called as the user list edit sheet closes, dismisses the sheet
+ */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     [sheet orderOut:nil];
 }
 
-//Cancel
+/*
+ * @brief Cancel
+ */
 - (IBAction)cancel:(id)sender
 {
 	if([[self window] isSheet]){
@@ -74,7 +76,9 @@
 	}
 }
 
-//Add the contact
+/*
+ * @brief Add the group
+ */
 - (IBAction)addGroup:(id)sender
 {
 	[[adium contactController] groupWithUID:[textField_groupName stringValue]];
