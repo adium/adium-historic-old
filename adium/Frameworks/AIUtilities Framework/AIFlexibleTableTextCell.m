@@ -465,7 +465,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                                                                   effectiveRange:&replaceRange];
             
             NSAttributedString *formattedText = [textStorage attributedSubstringFromRange:replaceRange];
-            menuItem = [[[NSMenuItem alloc] initWithTitle:COPY__TEXT
+            menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_TEXT
                                                    target:self
                                                    action:@selector(copyText:)
                                             keyEquivalent:@""] autorelease];
