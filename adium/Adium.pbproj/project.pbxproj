@@ -3281,6 +3281,14 @@
 //9E2
 //9E3
 //9E4
+		9E1C294A03DE4E6F00415B22 = {
+			children = (
+				9EB7C05803D52BA200415B22,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
 		9E95316303C8E08800415B22 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -3335,7 +3343,7 @@
 		};
 		9EB7C05703D52AFA00415B22 = {
 			children = (
-				9EB7C05803D52BA200415B22,
+				9E1C294A03DE4E6F00415B22,
 				9EB7C05903D52BA200415B22,
 			);
 			isa = PBXGroup;

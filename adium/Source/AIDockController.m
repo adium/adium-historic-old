@@ -50,14 +50,13 @@
     [self privBounce];
 }
 
-- (void)bounceWithInterval:(double)delay forever:(BOOL)booly
+- (void)bounceWithInterval:(double)delay times:(int)num
 {       
     if(!currentTimer)
     {
-        NSLog(@"5");
         [self privBounce]; // do one right away
     
-        currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector: @selector(bounceWithTimer:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:delay],@"delay",[NSNumber numberWithInt:4],@"num",nil] repeats:NO];
+        currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay+1 target:self selector: @selector(bounceWithTimer:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:delay],@"delay",[NSNumber numberWithInt:num-1],@"num",nil] repeats:NO]; // delay+1 so we take into account the time it takes to bounce. num-1 to because we did one already.
     }
 }
 
@@ -80,19 +79,12 @@
 {
     if([NSApp respondsToSelector:@selector(requestUserAttention:)])
     {
-        int temp = [NSApp requestUserAttention:NSCriticalRequest];
-        sleep(1);
-        if([NSApp respondsToSelector:@selector(cancelUserAttentionRequest:)])
-        {
-            [NSApp cancelUserAttentionRequest:temp];
-        }
+        [NSApp requestUserAttention:NSInformationalRequest];
     }
 }
 
 - (void)bounceWithTimer:(NSTimer *)timer
 {
-    NSLog(@"%d", [[[timer userInfo] objectForKey:@"num"] intValue]);
-    
     [self privBounce];
     
     if([[[timer userInfo] objectForKey:@"num"] intValue] > 1)
