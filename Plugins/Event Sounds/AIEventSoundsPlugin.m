@@ -78,5 +78,12 @@
 	return(NO);
 }
 
+//Play the sound when the alert is selected
+- (void)didSelectAlert:(NSDictionary *)alert
+{
+	NSString	*soundPath = [[[alert objectForKey:KEY_ACTION_DETAILS] objectForKey:KEY_ALERT_SOUND_PATH] stringByExpandingBundlePath];
+	[[adium soundController] playSoundAtPath:soundPath];
+}
+
 @end
 
