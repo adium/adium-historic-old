@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.36 2003/12/15 06:16:10 evands Exp $
+// $Id: AIContentController.m,v 1.37 2003/12/16 19:22:36 evands Exp $
 
 #import "AIContentController.h"
 
@@ -430,10 +430,10 @@
     }
 }
 
-//emoticonsArray is an array of all AIEmoticon objects in the active emoticon set, grouped in order by their first character
+//emoticonsArray is an array of all AIEmoticon objects in the active emoticon set, maintained by the Emoticons plugin
 - (void)setEmoticonsArray:(NSArray *)inEmoticonsArray
 {
-    emoticonsArray = inEmoticonsArray;   
+    emoticonsArray = inEmoticonsArray;
 }
 - (NSArray *)emoticonsArray
 {
