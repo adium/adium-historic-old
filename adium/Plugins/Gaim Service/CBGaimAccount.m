@@ -382,17 +382,19 @@
 	
 	while(object = [enumerator nextObject]){
 		NSString	*groupName = [self _mapOutgoingGroupName:[object remoteGroupName]];
-		GaimBuddy 	*buddy = gaim_find_buddy(account,[[object UID] UTF8String]);
+		const char  *buddyUID = [[object UID] UTF8String];
 		
-		//Remove this contact from the server-side and gaim-side lists
-		serv_remove_buddy(gc, [[object UID] UTF8String], [groupName UTF8String]);
-		if (buddy)
-			gaim_blist_remove_buddy(buddy);
+		GaimBuddy 	*buddy = gaim_find_buddy(account, buddyUID);
 		
 		[object setStatusObject:nil forKey:@"GaimBuddy" notify:NO];
 		
 		//Remove it from Adium's list
 		[object setRemoteGroupName:nil];
+		
+		//Remove this contact from the server-side and gaim-side lists
+		serv_remove_buddy(gc, buddyUID, [groupName UTF8String]);
+		if (buddy)
+			gaim_blist_remove_buddy(buddy);		
 	}
 }
 

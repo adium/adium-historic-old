@@ -10,4 +10,8 @@
 
 @implementation ESGaimGaduGaduAccountViewController
 
+- (NSString *)nibName{
+    return(@"ESGaimGaduGaduAccountView");
+}
+
 @end

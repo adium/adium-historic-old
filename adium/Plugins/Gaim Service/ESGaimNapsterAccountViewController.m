@@ -7,7 +7,10 @@
 
 #import "ESGaimNapsterAccountViewController.h"
 
-
 @implementation ESGaimNapsterAccountViewController
+
+- (NSString *)nibName{
+    return(@"ESGaimNapsterAccountView");
+}
 
 @end
