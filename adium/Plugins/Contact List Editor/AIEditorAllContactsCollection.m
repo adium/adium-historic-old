@@ -28,6 +28,7 @@
 - (void)_positionHandle:(AIEditorListHandle *)handle atIndex:(int)index inGroup:(AIEditorListGroup *)group;
 - (void)_positionGroup:(AIEditorListGroup *)group atIndex:(int)index;
 - (void)allCollectionsPerformSelector:(SEL)selector onObject:(id)listObject withObject:(id)object;
+- (void)collectionArrayChanged:(NSNotification *)notification;
 @end
 
 
@@ -52,6 +53,7 @@
     [[owner notificationCenter] addObserver:self selector:@selector(collectionRenamedObject:) name:Editor_RenamedObjectOnCollection object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(collectionContentChanged:) name:Editor_CollectionContentChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(collectionArrayChanged:) name:Editor_CollectionArrayChanged object:nil];
+    [self collectionArrayChanged:nil];
     
     return(self);
 }
@@ -305,7 +307,7 @@
     //Process all the ownership enabled collections
     enumerator = [[plugin collectionsArray] objectEnumerator];
     while((collection = [enumerator nextObject])){
-        if([collection includeInOwnershipColumn] && [collection enabled]){
+        if([collection includeInOwnershipColumn]/* && [collection enabled]*/){
             //Process all groups
             groupEnumerator = [[collection list] objectEnumerator];
             while((group = [groupEnumerator nextObject])){
@@ -425,14 +427,6 @@
 
 
 @end
-
-
-
-
-
-
-
-
 
 
 
