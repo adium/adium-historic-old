@@ -2264,7 +2264,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3B305314BE000C68BA3 = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = folder;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "SQL Logger.AdiumPlugin";
@@ -5098,6 +5098,36 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34BD83DA054E530700EB2652 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESQuicklyResizingPanel.m;
+			path = "Frameworks/AIUtilities Framework/ESQuicklyResizingPanel.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BD83DB054E530700EB2652 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESQuicklyResizingPanel.h;
+			path = "Frameworks/AIUtilities Framework/ESQuicklyResizingPanel.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BD83DC054E530800EB2652 = {
+			fileRef = 34BD83DA054E530700EB2652;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BD83DD054E530800EB2652 = {
+			fileRef = 34BD83DB054E530700EB2652;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34BD98890531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -6940,6 +6970,7 @@
 				34BD9D41053146CC000AB133,
 				4B03DDF40533AC59002B2CA3,
 				348E556B053A188C0021E541,
+				34E8FA34054D9CE8008BB262,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7944,6 +7975,7 @@
 				348E4EDF053667A40021E541,
 				348E4EE0053667A40021E541,
 				34E0F18B053AE56F00031341,
+				34BD83DD054E530800EB2652,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8671,6 +8703,7 @@
 				348E4EDD053667A40021E541,
 				348E4EDE053667A40021E541,
 				34E0F18A053AE56F00031341,
+				34BD83DC054E530800EB2652,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15072,6 +15105,20 @@
 		};
 		34E0F18B053AE56F00031341 = {
 			fileRef = 34E0F189053AE56F00031341;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E8FA33054D9CE7008BB262 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = DefaultIcon.tiff;
+			path = Source/DefaultIcon.tiff;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E8FA34054D9CE8008BB262 = {
+			fileRef = 34E8FA33054D9CE7008BB262;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -23345,9 +23392,9 @@
 				4BCDEB2E03D4CACA00A8010A,
 				F5793936033E74E401A8010A,
 				F5793937033E74E401A8010A,
+				4BC0304B0453388C00A8010A,
 				4B3E502203EC538D00A8010A,
 				4B3E502303EC538D00A8010A,
-				4BC0304B0453388C00A8010A,
 				4BC0304C0453388C00A8010A,
 				4B910DBF053588A900846781,
 				4B910DC0053588A900846781,
@@ -23397,6 +23444,8 @@
 				F5793951033E74E401A8010A,
 				4BB2C23A044605CE00A8010A,
 				4BB2C23B044605CE00A8010A,
+				34BD83DA054E530700EB2652,
+				34BD83DB054E530700EB2652,
 			);
 			isa = PBXGroup;
 			name = Interface;
@@ -25599,6 +25648,7 @@
 				F570A60703704E9701A8010A,
 				F570A60803704E9701A8010A,
 				F55B416003AB8BE301A8010A,
+				34E8FA33054D9CE7008BB262,
 				348E556A053A188C0021E541,
 				4BDF17240450CBDE00A8010A,
 				4B333F73048144D900A8010A,
