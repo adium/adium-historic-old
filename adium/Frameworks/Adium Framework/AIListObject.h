@@ -35,6 +35,9 @@ typedef enum {
 	float					orderIndex;				//Placement of this contact within a group
 	
 	NSMutableArray			*containedObjects;			//Manually ordered array of contents
+
+	NSImage					*_listUserIcon;
+	NSSize					_listUserIconSize;
 }
 
 //
@@ -83,6 +86,7 @@ typedef enum {
 - (NSString *)notes;
 - (void)setNotes:(NSString *)notes;
 
+- (NSImage *)cachedListUserIconOfSize:(NSSize)inSize;
 - (NSImage *)userIcon;
 - (NSData *)userIconData;
 - (void)setUserIconData:(NSData *)inData;

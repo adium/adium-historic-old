@@ -92,10 +92,15 @@
 
 - (NSImage *)imageByFadingToFraction:(float)delta
 {
-	return ([self imageByScalingToSize:[self size] fraction:delta]);
+	return([self imageByScalingToSize:[self size] fraction:delta flipImage:NO]);
 }
 
 - (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta
+{
+	return([self imageByScalingToSize:size fraction:delta flipImage:NO]);
+}
+
+- (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta flipImage:(BOOL)flipImage
 {
 	NSSize  originalSize = [self size];
 	
@@ -105,6 +110,8 @@
 		
 	}else{
 		NSImage *newImage = [[NSImage alloc] initWithSize:size];
+
+		if(flipImage) [newImage setFlipped:YES];
 		
 		[newImage lockFocus];
 		//Highest quality interpolation

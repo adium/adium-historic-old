@@ -50,6 +50,9 @@ DeclareString(FormattedUID);
 	orderIndex = -1;
 	delayedStatusTimers = nil;
 	
+	_listUserIcon = nil;
+	_listUserIconSize = NSMakeSize(0,0);
+
 	//Unless a subclass does otherwise, containedObjects is nil for a list object
 	containedObjects = nil;
 	
@@ -76,6 +79,7 @@ DeclareString(FormattedUID);
 	[UID release];
 	[uniqueObjectID release];
 	[containedObjects release];
+	[_listUserIcon release];
 
     [super dealloc];
 }
@@ -362,6 +366,19 @@ DeclareString(FormattedUID);
 {
 	return([[self displayArrayForKey:KEY_USER_ICON create:NO] objectValue]);
 }
+
+- (NSImage *)cachedListUserIconOfSize:(NSSize)inSize
+{
+	if(!_listUserIcon || !NSEqualSizes(inSize,_listUserIconSize)){
+		[_listUserIcon release];
+
+		_listUserIcon = [[[self userIcon] imageByScalingToSize:inSize fraction:1.0 flipImage:YES] retain];
+		_listUserIconSize = inSize;
+	}
+	
+	return(_listUserIcon);
+}
+
 
 - (NSData *)userIconData
 {

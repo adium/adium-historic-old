@@ -30,6 +30,7 @@ typedef enum {
 - (NSImage *)imageByScalingToSize:(NSSize)size;
 - (NSImage *)imageByFadingToFraction:(float)delta;
 - (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta;
+- (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta flipImage:(BOOL)flipImage;
 + (NSImage *)imageFromGWorld:(GWorldPtr)gWorldPtr;
 + (NSImage *)systemCloseButtonImageForState:(AICloseButtonState)state controlTint:(NSControlTint)inTint;
 + (NSImage *)systemCheckmark;
