@@ -25,18 +25,18 @@
 	return(size);
 }
 
-//Padding
+//Give ourselves more padding
 - (int)topPadding{
-	return(BUBBLE_TOP_PADDING);
+	return([super topPadding] + BUBBLE_TOP_PADDING);
 }
 - (int)bottomPadding{
-	return(BUBBLE_BOTTOM_PADDING);
+	return([super bottomPadding] + BUBBLE_BOTTOM_PADDING);
 }
 - (int)leftPadding{
-	return(EDGE_INDENT);
+	return([super leftPadding] + EDGE_INDENT);
 }
 - (int)rightPadding{
-	return(EDGE_INDENT);
+	return([super rightPadding] + EDGE_INDENT);
 }
 
 //Draw the background of our cell

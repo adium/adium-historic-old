@@ -70,18 +70,7 @@
 	controlView = inControlView;
 }
 
-
-//Sizing and Display ---------------------------------------------------------------------------------------------------
-- (NSSize)cellSize
-{
-	return(NSMakeSize(0, 30));
-}
-
-- (NSFont *)font
-{
-	return([controlView font]);
-}
-
+//Text alignment
 - (void)setTextAlignment:(NSTextAlignment)inAlignment
 {
 	textAlignment = inAlignment; 
@@ -90,6 +79,31 @@
 	return(textAlignment);
 }
 
+//Font
+- (NSFont *)font
+{
+	return([controlView font]);
+}
+
+
+//Sizing and Display ---------------------------------------------------------------------------------------------------
+//
+- (NSSize)cellSize
+{
+	return(NSMakeSize(0, [self topSpacing] + [self topPadding] + [self bottomPadding] + [self bottomSpacing]));
+}
+
+//User-defined spacing offsets.  A cell may adjust these values to to obtain a more desirable default. 
+//These are offsets, they may be negative!  Spacing is the distance between cells (Spacing gaps are not filled).
+- (int)topSpacing{
+	return(0);
+}
+- (int)bottomSpacing{
+	return(0);
+}
+
+//User-defined padding offsets.  A cell may adjust these values to to obtain a more desirable default.
+//These are offsets, they may be negative!  Padding is the distance between cell edges and their content.
 - (int)topPadding{
 	return(0);
 }
@@ -112,14 +126,19 @@
 }
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {	
-	//Padding
-	cellFrame.origin.y += [self topPadding];
-	cellFrame.size.height -= [self bottomPadding] + [self topPadding];
-	cellFrame.origin.x += [self leftPadding];
-	cellFrame.size.width -= [self rightPadding] + [self leftPadding];
-	
 	if(listObject){
+		//Cell spacing
+		cellFrame.origin.y += [self topSpacing];
+		cellFrame.size.height -= [self bottomSpacing] + [self topSpacing];
+		
 		[self drawBackgroundWithFrame:cellFrame];
+
+		//Padding
+		cellFrame.origin.y += [self topPadding];
+		cellFrame.size.height -= [self bottomPadding] + [self topPadding];
+		cellFrame.origin.x += [self leftPadding];
+		cellFrame.size.width -= [self rightPadding] + [self leftPadding];
+
 		[self drawContentWithFrame:cellFrame];
 	}
 }

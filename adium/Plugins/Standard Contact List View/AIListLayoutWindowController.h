@@ -26,6 +26,8 @@ typedef enum {
 	IBOutlet		NSPopUpButton		*popUp_contactTextAlignment;
 	IBOutlet		NSPopUpButton		*popUp_groupTextAlignment;
 	IBOutlet		NSPopUpButton		*popUp_windowStyle;
+	IBOutlet		NSPopUpButton		*popUp_groupStyle;
+	IBOutlet		NSPopUpButton		*popUp_contactStyle;
 
 	IBOutlet		NSButton			*checkBox_userIconVisible;
 	IBOutlet		NSButton			*checkBox_extendedStatusVisible;

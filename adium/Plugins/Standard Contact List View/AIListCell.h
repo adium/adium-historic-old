@@ -37,4 +37,14 @@
 - (NSTextAlignment)textAlignment;
 
 
+
+//Sizing and Display
+- (NSSize)cellSize;
+- (int)topSpacing;
+- (int)bottomSpacing;
+- (int)topPadding;
+- (int)bottomPadding;
+- (int)leftPadding;
+- (int)rightPadding;
+
 @end

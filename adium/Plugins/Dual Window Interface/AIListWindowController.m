@@ -20,6 +20,7 @@
 #import "AIListContactCell.h"
 #import "AIListContactBubbleCell.h"
 #import "AIListGroupMockieCell.h"
+#import "AIListContactMockieCell.h"
 #import "AIListContactBrickCell.h"
 
 #import "AIListLayoutWindowController.h"
@@ -39,6 +40,7 @@
 #define KEY_CLWH_WINDOW_POSITION	@"Contact Window Position"
 #define KEY_CLWH_HIDE				@"Hide While in Background"
 
+#define BACKGROUND_COLOR		[NSColor colorWithCalibratedRed:1.0 green:1.0 blue:1.0 alpha:1.0]
 
 #define TOOL_TIP_CHECK_INTERVAL				45.0	//Check for mouse X times a second
 #define TOOL_TIP_DELAY						25.0	//Number of check intervals of no movement before a tip is displayed
@@ -50,7 +52,7 @@
 
 #define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
 
-
+#define BACKGROUND_ALPHA	0.5
 
 
 #define CONTACTS_USE_MOCKIE_CELL NO
@@ -60,9 +62,6 @@
 #define GROUPS_USE_GRADIENT_CELL	YES
 #define DRAW_ALTERNATING_GRID	YES
 #define ALTERNATING_GRID_COLOR	[NSColor colorWithCalibratedRed:0.926 green:0.949 blue:0.992 alpha:1.0]
-
-#define BACKGROUND_ALPHA		1.0
-#define BACKGROUND_COLOR		[NSColor colorWithCalibratedRed:1.0 green:1.0 blue:1.0 alpha:BACKGROUND_ALPHA]
 
 
 @interface AIListWindowController (PRIVATE)
@@ -97,6 +96,9 @@
 //Dealloc
 - (void)dealloc
 {
+	[groupCell release];
+	[contentCell release];
+
 	NSLog(@"%@ dealloc",self);
     [super dealloc];
 }
@@ -267,42 +269,44 @@
 
 - (void)configureListView
 {
+	float	backgroundAlpha	= BACKGROUND_ALPHA;
+	
+	
+	BOOL	windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
+																	group:PREF_GROUP_LIST_LAYOUT] intValue];
+
 	//Cleanup first
 	[groupCell release];
 	[contentCell release];
 	
-	//Cells
-	if(GROUPS_USE_MOCKIE_CELL){
-		groupCell = [[AIListGroupMockieCell alloc] init];	
-	}else{
-		groupCell = (GROUPS_USE_GRADIENT_CELL ? [[AIListGroupGradientCell alloc] init] : [[AIListGroupCell alloc] init]);	
-	}
-	[contactListView setGroupCell:groupCell];
-
-	if(CONTACTS_USE_MOCKIE_CELL){
-		contentCell = [[AIListContactBrickCell alloc] init];
-	}else{
-		contentCell = (CONTACTS_USE_BUBBLE_CELL ? [[AIListContactBubbleCell alloc] init] : [[AIListContactCell alloc] init]);
-	}
-	[contactListView setContentCell:contentCell];
 	
-	//
+	
+	//Targeting
     [contactListView setTarget:self];
 	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
+
+	//Cells
+	if(windowStyle == WINDOW_STYLE_MOCKIE){
+		groupCell = [[AIListGroupMockieCell alloc] init];	
+		contentCell = [[AIListContactMockieCell alloc] init];
+	}else{
+		groupCell = (GROUPS_USE_GRADIENT_CELL ? [[AIListGroupGradientCell alloc] init] : [[AIListGroupCell alloc] init]);	
+		contentCell = (CONTACTS_USE_BUBBLE_CELL ? [[AIListContactBubbleCell alloc] init] : [[AIListContactCell alloc] init]);
+	}
+	[contactListView setGroupCell:groupCell];
+	[contactListView setContentCell:contentCell];
 	
-	[contactListView setDrawsAlternatingRows:DRAW_ALTERNATING_GRID];
+	//Background Coloring
+	if(windowStyle == WINDOW_STYLE_MOCKIE) backgroundAlpha = 0.0;
+	[contactListView setDrawsAlternatingRows:(backgroundAlpha != 0.0 ? DRAW_ALTERNATING_GRID : NO)];
 	[contactListView setAlternatingRowColor:ALTERNATING_GRID_COLOR];
+	[contactListView setBackgroundColor:[BACKGROUND_COLOR colorWithAlphaComponent:backgroundAlpha]];
 	
-	[contactListView setBackgroundColor:BACKGROUND_COLOR];
-	
-	
-	//Bye bye CPU cycles, I'll miss you!
-	[[self window] setOpaque:(BACKGROUND_ALPHA == 1.0)];
-	[contactListView setUpdateShadowsWhileDrawing:(BACKGROUND_ALPHA < 0.8)];
+	//Transparency.  Bye bye CPU cycles, I'll miss you!
+	[[self window] setOpaque:(backgroundAlpha == 1.0)];
+	[contactListView setUpdateShadowsWhileDrawing:(backgroundAlpha < 0.8)];
 	//--
-	
-	
-	
+		
 }
 
 

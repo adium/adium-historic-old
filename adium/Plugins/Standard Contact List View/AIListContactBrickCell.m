@@ -11,8 +11,7 @@
 
 @implementation AIListContactBrickCell
 
-//
-#warning hmm
+//Default to more edge padding
 - (int)topPadding{
 	return([super topPadding] + 2);
 }

@@ -83,6 +83,7 @@
 #pragma mark Variable row heights
 - (NSRect)frameOfCellAtColumn:(int)column row:(int)row
 {
+	NSLog(@"%i",(int)[self frame].size.width);
 	[self updateRowHeightCache];
 	return(NSMakeRect(0, rowOriginCache[row], [self frame].size.width, rowHeightCache[row]));
 }

@@ -23,13 +23,13 @@
 
 - (id)initWithFrame:(NSRect)frame
 {
-	NSLog(@"%@ initWithFrame",self);
-	return([super initWithFrame:frame]);
+	[super initWithFrame:frame];
+	[self sizeLastColumnToFit];
+	return(self);
 }
 
 - (void)dealloc
 {
-	NSLog(@"%@ dealloc",self);
 	[super dealloc];
 }
 
@@ -43,6 +43,13 @@
 - (void)setDelegate:(id)delegate
 {
 	[super setDelegate:delegate];
+}
+
+//Keep our column full width
+- (void)setFrameSize:(NSSize)newSize
+{
+	[super setFrameSize:newSize];
+	[self sizeLastColumnToFit];
 }
 
 
@@ -93,11 +100,9 @@
 //When our view is inserted into a window, observe that window so we can hide selection when it's not main
 - (void)configureSelectionHidingForNewSuperview:(NSView *)newSuperview
 {
-	NSLog(@"off");
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeMainNotification object:[self window]];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignMainNotification object:[self window]];
     if([newSuperview window]){
-		NSLog(@"on");
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecameMain:) name:NSWindowDidBecomeMainNotification object:[newSuperview window]];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowResignedMain:) name:NSWindowDidResignMainNotification object:[newSuperview window]];
     }

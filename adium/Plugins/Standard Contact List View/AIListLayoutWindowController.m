@@ -93,6 +93,7 @@
 
 	[popUp_contactTextAlignment compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue]];
 	[popUp_groupTextAlignment compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
+	[popUp_windowStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]];
 	
 	[slider_userIconSize setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue]];
 	[self updateDisplayedUserIconSize];
@@ -101,6 +102,8 @@
 	[checkBox_extendedStatusVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
 	[checkBox_statusIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
 	[checkBox_serviceIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue]];
+
+	[self configureControlDimming];
 }
 
 - (void)preferenceChanged:(id)sender
@@ -119,6 +122,7 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_WINDOW_STYLE
 											  group:PREF_GROUP_LIST_LAYOUT];
+		[self configureControlDimming];
 
 	}else if(sender == slider_userIconSize){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
@@ -154,6 +158,17 @@
 {
 	int	iconSize = [slider_userIconSize intValue];
 	[textField_userIconSize setStringValue:[NSString stringWithFormat:@"%ix%i",iconSize,iconSize]];
+}
+
+//Configure control dimming
+- (void)configureControlDimming
+{
+	BOOL	windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
+																	group:PREF_GROUP_LIST_LAYOUT] intValue];
+	
+	//Disable the style selectors when in mockie mode
+	[popUp_groupStyle setEnabled:(windowStyle != WINDOW_STYLE_MOCKIE)];
+	[popUp_contactStyle setEnabled:(windowStyle != WINDOW_STYLE_MOCKIE)];
 }
 
 
