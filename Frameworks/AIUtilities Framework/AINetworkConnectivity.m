@@ -24,7 +24,7 @@
 #define	GENERIC_REACHABILITY_CHECK	"www.google.com"
 #define	AGGREGATE_INTERVAL			3.0
 
-#define	USE_10_3_METHODS_CHECK		[NSApplication isOnPantherOrBetter]
+#define	USE_10_3_METHODS_CHECK		(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2)
 
 #define	CONNECTIVITY_DEBUG			FALSE
 
@@ -59,19 +59,22 @@ static BOOL									networkIsReachable = NO;
 		//10.2 method - the 10.3 method above is much more reliable.
 		SCDynamicStoreRef	storeRef = nil;
 		CFRunLoopSourceRef	sourceRef = nil;
+		OSStatus			status;
 		
 		//Create the CFRunLoopSourceRef we will want to add to our run loop to have
 		//localIPsChangedCallback() called when the IP list changes
-		CreateIPAddressListChangeCallbackSCF(localIPsChangedCallback, 
-											 nil,
-											 &storeRef,
-											 &sourceRef);
+		status = CreateIPAddressListChangeCallbackSCF(localIPsChangedCallback, 
+													  nil,
+													  &storeRef,
+													  &sourceRef);
 		
 		//Add it to the run loop so we will receive the notifications
-		CFRunLoopAddSource(CFRunLoopGetCurrent(),
-						   sourceRef,
-						   kCFRunLoopDefaultMode);
-		
+		if((status = noErr) && sourceRef){
+			CFRunLoopAddSource(CFRunLoopGetCurrent(),
+							   sourceRef,
+							   kCFRunLoopDefaultMode);
+		}
+
 		//Determine our initial network reachability
 		networkIsReachable = checkGenericReachability();
 	}
