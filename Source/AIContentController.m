@@ -18,6 +18,7 @@
 
 #import "AIAccountController.h"
 #import "AIContactController.h"
+#import "ESContactAlertsController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
@@ -465,9 +466,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 {
 	if(inObject){
 		AIChat			*chat = [inObject chat];
-		AIListObject 	*object = [inObject source];
-		
-		
+
         //Notify: Will Receive Content
         if([inObject trackContent]){
             [[adium notificationCenter] postNotificationName:Content_WillReceiveContent
