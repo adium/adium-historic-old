@@ -18,12 +18,21 @@
 @interface AIDockAccountStatusPlugin (PRIVATE)
 - (BOOL)_accountsWithBoolKey:(NSString *)inKey;
 - (BOOL)_accountsWithKey:(NSString *)inKey;
-- (void)preferencesChanged:(NSNotification *)notification;
 - (void)_updateIconForKey:(NSString *)key;
 @end
 
+/*
+ * @class AIDockAccountStatusPlugin
+ * @brief Maintain the dock icon state in relation to global account status
+ *
+ * This class manages the dock icon state via the dockController.  It specifies the icon which should be shown based
+ * on an aggregated, global account status.
+ */
 @implementation AIDockAccountStatusPlugin
 
+/*
+ * @brief Install plugin
+ */
 - (void)installPlugin
 {
 	//Observe account status changes
@@ -33,6 +42,9 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
 }
 
+/*
+ * @brief Uninstall plugin
+ */
 - (void)uninstallPlugin
 {
     //Remove observers (general)
@@ -40,6 +52,11 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+/*
+ * @brief Handle preference changes
+ *
+ * When the active dock icon changes, call updateListObject:keys:silent: to update its state to the global account state
+ */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
@@ -48,6 +65,12 @@
 	}
 }
 
+/*
+ * @brief Update the dock icon state in response to an account changing status
+ *
+ * If one ore more accounts are online, set the Online icon state.  Similarly, handle the Connecting, Away, and Idle
+ * dock icon states.
+ */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if(inObject == nil || [inObject isKindOfClass:[AIAccount class]]){
@@ -88,27 +111,38 @@
 	return(nil);
 }
 
+/*
+ * @brief Return if any accounts have a TRUE value for the specified key
+ *
+ * @param inKey The status key to search on
+ * @result YES if any account returns TRUE for the boolean status object for inKey
+ */
 - (BOOL)_accountsWithBoolKey:(NSString *)inKey
 {
     NSEnumerator    *enumerator = [[[adium accountController] accountArray] objectEnumerator];
     AIAccount       *account;
-	
+
     while((account = [enumerator nextObject])){
-		if([[account statusObjectForKey:inKey] boolValue]) return(YES);
+		if([account integerStatusObjectForKey:inKey]) return(YES);
     }
-    
+
     return(NO);
 }
 
+/*
+ * @brief Return if any accounts have a non-nil value for the specified key
+ *
+ * @param inKey The status key to search on
+ * @result YES if any account returns a non-nil value for the status object for inKey
 - (BOOL)_accountsWithKey:(NSString *)inKey
 {
     NSEnumerator    *enumerator = [[[adium accountController] accountArray] objectEnumerator];
     AIAccount       *account;
-	
+
     while((account = [enumerator nextObject])){
 		if([account statusObjectForKey:inKey]) return(YES);
     }
-    
+
     return(NO);
 }
 
