@@ -27,7 +27,7 @@
 - (NSString *)globalShortDescriptionForEventID:(NSString *)eventID;
 - (NSString *)englishGlobalShortDescriptionForEventID:(NSString *)eventID;
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject;
-
+- (NSImage *)imageForEventID:(NSString *)eventID;
 - (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
 										listObject:(AIListObject *)listObject
 										  userInfo:(id)userInfo
@@ -134,6 +134,7 @@ typedef enum {
 - (void)registerEventID:(NSString *)eventID withHandler:(id <AIEventHandler>)handler inGroup:(AIEventHandlerGroupType)inGroup globalOnly:(BOOL)global;
 - (NSArray *)allEventIDs;
 - (NSMenu *)menuOfEventsWithTarget:(id)target forGlobalMenu:(BOOL)global;
+- (NSArray *)arrayOfMenuItemsForEventsWithTarget:(id)target forGlobalMenu:(BOOL)global;
 - (NSSet *)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject userInfo:(id)userInfo previouslyPerformedActionIDs:(NSSet *)previouslyPerformedActionIDs;
 - (NSString *)defaultEventID;
 - (NSString *)eventIDForEnglishDisplayName:(NSString *)displayName;
@@ -143,6 +144,7 @@ typedef enum {
 										listObject:(AIListObject *)listObject
 										  userInfo:(id)userInfo
 									includeSubject:(BOOL)includeSubject;
+- (NSImage *)imageForEventID:(NSString *)eventID;
 - (BOOL)isMessageEvent:(NSString *)eventID;
 
 //Actions
@@ -153,7 +155,7 @@ typedef enum {
 
 //Alerts
 - (NSArray *)alertsForListObject:(AIListObject *)listObject;
-- (NSArray *)alertsForListObject:(AIListObject *)listObject withActionID:(NSString *)actionID;
+- (NSArray *)alertsForListObject:(AIListObject *)listObject withEventID:(NSString *)eventID actionID:(NSString *)actionID;
 - (void)addAlert:(NSDictionary *)alert toListObject:(AIListObject *)listObject setAsNewDefaults:(BOOL)setAsNewDefaults;
 - (void)addGlobalAlert:(NSDictionary *)newAlert;
 - (void)removeAlert:(NSDictionary *)victimAlert fromListObject:(AIListObject *)listObject;

@@ -111,13 +111,25 @@ DeclareString(KeyOneTimeAlert);
 	NSEnumerator		*enumerator;
 	NSMenuItem			*item;
 	NSMenu				*menu;
+
+	//Prepare our menu
+	menu = [[NSMenu allocWithZone:[NSMenu zone]] init];
+	[menu setAutoenablesItems:NO];
+	
+	enumerator = [[self arrayOfMenuItemsForEventsWithTarget:target forGlobalMenu:global] objectEnumerator];
+	while(item = [enumerator nextObject]){
+		[menu addItem:item];
+	}
+	
+	return [menu autorelease];
+}
+
+- (NSArray *)arrayOfMenuItemsForEventsWithTarget:(id)target forGlobalMenu:(BOOL)global
+{
+	NSMutableArray		*menuItemArray = [NSMutableArray array];
 	BOOL				addedItems = NO;
 	int					i;
 	
-	//Prepare our menu
-	menu = [[NSMenu alloc] init];
-	[menu setAutoenablesItems:NO];
-
 	for(i = 0; i < EVENT_HANDLER_GROUP_COUNT; i++){
 		NSMutableArray		*groupMenuItemArray;
 
@@ -138,7 +150,7 @@ DeclareString(KeyOneTimeAlert);
 		if([groupMenuItemArray count]){
 			//Add a separator if we are adding a group and we have added before
 			if(addedItems){
-				[menu addItem:[NSMenuItem separatorItem]];
+				[menuItemArray addObject:[NSMenuItem separatorItem]];
 			}else{
 				addedItems = YES;
 			}
@@ -146,15 +158,11 @@ DeclareString(KeyOneTimeAlert);
 			//Sort the array of menuItems alphabetically by title within this group
 			[groupMenuItemArray sortUsingFunction:eventMenuItemSort context:nil];
 			
-			enumerator = [groupMenuItemArray objectEnumerator];
-			while((item = [enumerator nextObject])){
-				//Insert a menu item for each available event in this group
-				[menu addItem:item];
-			}
+			[menuItemArray addObjectsFromArray:groupMenuItemArray];
 		}
 	}
 	
-	return([menu autorelease]);
+	return(menuItemArray);
 }	
 
 - (void)addMenuItemsForEventHandlers:(NSDictionary *)inEventHandlers toArray:(NSMutableArray *)menuItemArray withTarget:(id)target forGlobalMenu:(BOOL)global
@@ -174,6 +182,16 @@ DeclareString(KeyOneTimeAlert);
         [item setRepresentedObject:eventID];
 		[menuItemArray addObject:item];
     }
+}
+
+- (NSImage *)imageForEventID:(NSString *)eventID
+{
+	id <AIEventHandler>	eventHandler;
+	
+	eventHandler = [eventHandlers objectForKey:eventID];		
+	if(!eventHandler) eventHandler = [globalOnlyEventHandlers objectForKey:eventID];
+
+	return([eventHandler imageForEventID:eventID]);
 }
 
 /*
@@ -416,31 +434,50 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 //Returns an array of all the alerts of a given list object
 - (NSArray *)alertsForListObject:(AIListObject *)listObject
 {
-	return([self alertsForListObject:listObject withActionID:nil]);
+	return([self alertsForListObject:listObject withEventID:nil actionID:nil]);
 }
 
-- (NSArray *)alertsForListObject:(AIListObject *)listObject withActionID:(NSString *)actionID
+- (NSArray *)alertsForListObject:(AIListObject *)listObject withEventID:(NSString *)eventID actionID:(NSString *)actionID
 {
 	NSDictionary	*contactAlerts = [[adium preferenceController] preferenceForKey:KEY_CONTACT_ALERTS
 																			  group:PREF_GROUP_CONTACT_ALERTS
 														  objectIgnoringInheritance:listObject];
 	NSMutableArray	*alertArray = [NSMutableArray array];
-	NSEnumerator	*groupEnumerator;
-	NSString		*eventID;
-	
-	//Flatten the alert dict into an array
-	groupEnumerator = [contactAlerts keyEnumerator];
-	while(eventID = [groupEnumerator nextObject]){
+
+	if(eventID){
+		/* If we have an eventID, just look at the alerts for this eventID */
 		NSEnumerator	*alertEnumerator;
 		NSDictionary	*alert;
 		
 		alertEnumerator = [[contactAlerts objectForKey:eventID] objectEnumerator];
+		
 		while(alert = [alertEnumerator nextObject]){
+			//If we don't have a specific actionID, or this one is right, add it
 			if(!actionID || [actionID isEqualToString:[alert objectForKey:KeyActionID]]){
 				[alertArray addObject:alert];
 			}
 		}
-	}	
+		
+	}else{
+		/* If we don't have an eventID, look at all alerts */
+		NSEnumerator	*groupEnumerator;
+		NSString		*anEventID;
+		
+		//Flatten the alert dict into an array
+		groupEnumerator = [contactAlerts keyEnumerator];
+		while(anEventID = [groupEnumerator nextObject]){
+			NSEnumerator	*alertEnumerator;
+			NSDictionary	*alert;
+			
+			alertEnumerator = [[contactAlerts objectForKey:anEventID] objectEnumerator];
+			while(alert = [alertEnumerator nextObject]){
+				//If we don't have a specific actionID, or this one is right, add it
+				if(!actionID || [actionID isEqualToString:[alert objectForKey:KeyActionID]]){
+					[alertArray addObject:alert];
+				}
+			}
+		}	
+	}
 	
 	return(alertArray);	
 }
@@ -578,6 +615,47 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 										 forKey:KEY_CONTACT_ALERTS
 										  group:PREF_GROUP_CONTACT_ALERTS];
 	[newContactAlerts release];
+}
+
+/*
+ * @brief Remove all current global alerts and replace them with the alerts in allGlobalAlerts
+ *
+ * Used for setting a preset of events
+ */
+- (void)setAllGlobalAlerts:(NSArray *)allGlobalAlerts
+{
+	NSMutableDictionary	*contactAlerts = [[NSMutableDictionary alloc] init];;
+	NSDictionary		*eventDict;
+	NSEnumerator		*enumerator;
+	
+	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
+	
+	enumerator = [allGlobalAlerts objectEnumerator];
+	while(eventDict = [enumerator nextObject]){
+		NSMutableArray		*eventArray;
+		NSString			*eventID = [eventDict objectForKey:KeyEventID];
+
+		/* Get the event array for this alert. Since we are creating the entire dictionary, we can be sure we are working
+		 * with an NSMutableArray.
+		 */
+		eventArray = [contactAlerts objectForKey:eventID];
+		if(!eventArray) eventArray = [[[NSMutableArray alloc] init] autorelease];		
+		
+		//Add the new alert
+		[eventArray addObject:eventDict];
+		
+		//Put the modified event array back into the contact alert dict
+		[contactAlerts setObject:eventArray forKey:eventID];		
+	}
+	
+	[[adium preferenceController] setPreference:contactAlerts
+										 forKey:KEY_CONTACT_ALERTS
+										  group:PREF_GROUP_CONTACT_ALERTS
+										 object:nil];
+	[contactAlerts release];
+
+	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
+	
 }
 
 - (void)mergeAndMoveContactAlertsFromListObject:(AIListObject *)oldObject intoListObject:(AIListObject *)newObject
