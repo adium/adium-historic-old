@@ -179,7 +179,6 @@ typedef enum {
 					  selector:(SEL)selector
 					   context:(id)context;
 - (NDRunLoopMessenger *)filterRunLoopMessenger;
-- (void)setAllowFilterThreadAutoreleasePoolRefresh:(BOOL)flag;
 
 //Content Source & Destination
 - (NSArray *)sourceAccountsForSendingContentType:(NSString *)inType
