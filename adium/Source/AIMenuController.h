@@ -28,7 +28,7 @@ typedef enum {
 } MENU_LOCATION;
 
 typedef enum {
-    Context_Group_Manage,Context_Contact_Manage, Context_Contact_Action, Context_Contact_NegativeAction, Context_Contact_Additions    
+    Context_Group_Manage,Context_Contact_Manage, Context_Contact_Action, Context_Contact_NegativeAction, Context_Contact_Additions, Context_Contact_TabAction,Context_Contact_ListAction    
 } CONTEXT_MENU_LOCATION;
 
 @interface AIMenuController : NSObject {
