@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
-//  $Id: ESFileTransferController.m,v 1.9 2004/04/02 22:56:50 evands Exp $
+//  $Id: ESFileTransferController.m,v 1.10 2004/04/03 00:35:18 evands Exp $
 
 #import "ESFileTransferController.h"
 
@@ -95,7 +95,7 @@
 	//Get the "selected" list object (that is, the first responder which returns a listObject)
 	AIListObject	*selectedObject = [[owner contactController] selectedListObject];	
 	
-	AIListContact   *listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+	AIListContact   *listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																			  forListContact:(AIListContact *)selectedObject];
 
 	
@@ -124,17 +124,17 @@
         AIListObject	*selectedObject = [[owner contactController] selectedListObject];
 
 		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
-			listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+			listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																	 forListContact:(AIListContact *)selectedObject];
 		}
 		
-		[menuItem setTitle:[NSString stringWithFormat:SEND_FILE_TO_CONTACT,(listContact ? [selectedObject displayName] : CONTACT]];
+		[menuItem setTitle:[NSString stringWithFormat:SEND_FILE_TO_CONTACT,(listContact ? [selectedObject displayName] : CONTACT)]];
 
 	}else if(menuItem == sendFileContextMenuItem){
 		AIListObject	*selectedObject = [[owner menuController] contactualMenuContact];
 
 		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
-			listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+			listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																	 forListContact:(AIListContact *)selectedObject];
 		}
     }
