@@ -13,19 +13,28 @@ typedef enum {
     Unknown_FileTransfer
 } FileTransferType;
 
+@protocol FileTransferDelegate
+-(void)fileTransfer:(ESFileTransfer *)fileTransfer didSetType:(FileTransferType)type;
+-(void)fileTransfer:(ESFileTransfer *)fileTransfer didSetSize:(unsigned int)size;
+-(void)fileTransfer:(ESFileTransfer *)fileTransfer didSetLocalFilename:(NSString *)inLocalFilename;
+-(void)gotUpdateForFileTransfer:(ESFileTransfer *)fileTransfer;
+@end
+
 @class AIAccount;
 
 @interface ESFileTransfer : AIObject {
-    AIListContact		*contact;
+    AIListContact				*contact;
     AIAccount<AIAccount_Files> 	*account;
-    NSString			*localFilename;
-    NSString			*remoteFilename;
-    id					accountData;
+    NSString					*localFilename;
+    NSString					*remoteFilename;
+    id							accountData;
     
-    float				percentDone;
-    unsigned int		size;
-    unsigned int		bytesSent;
-    FileTransferType 	type;
+    float						percentDone;
+    unsigned int				size;
+    unsigned int				bytesSent;
+    FileTransferType			type;
+	
+	id <FileTransferDelegate>   delegate;
 }
 
 + (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount;
@@ -52,5 +61,8 @@ typedef enum {
 
 - (void)setAccountData:(id)inAccountData;
 - (id)accountData;
+
+- (void)setDelegate:(id <FileTransferDelegate>)inDelegate;
+- (id <FileTransferDelegate>)delegate;
 
 @end
