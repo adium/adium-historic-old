@@ -34,9 +34,8 @@
 - (void)windowDidLoad;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
-- (IBAction)closeWindow:(id)sender;
 - (IBAction)togglePasswordSaved:(id)sender;
 - (NSString *)savedPasswordKey;
 - (void)savePassword:(NSString *)password;
-- (BOOL)windowShouldClose:(id)sender;
+
 @end

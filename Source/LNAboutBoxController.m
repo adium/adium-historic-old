@@ -31,7 +31,6 @@
 
 @interface LNAboutBoxController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
-- (BOOL)windowShouldClose:(id)sender;
 - (NSString *)_applicationVersion;
 - (void)_loadBuildInformation;
 @end
@@ -109,22 +108,14 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
     [[self window] betterCenter];
 }
 
-//Close the about box
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
-
 //Cleanup as the window is closing
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
+	[super windowWillClose:sender];
+	
     [sharedAboutBoxInstance autorelease]; sharedAboutBoxInstance = nil;
     [scrollTimer invalidate]; [scrollTimer release]; scrollTimer = nil;
 	[eventLoopScrollTimer invalidate]; [eventLoopScrollTimer release]; eventLoopScrollTimer = nil;
-	
-    return(YES);
 }
 
 //Visit the Adium homepage

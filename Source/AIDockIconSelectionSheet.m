@@ -94,14 +94,14 @@
 }
 
 //Preference view is closing
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
+	[super windowWillClose:sender];
+
     [[adium notificationCenter] removeObserver:self];
     [self setAnimatedDockIconAtIndex:-1];
 
 	[iconArray release]; iconArray = nil;
-	
-	return(YES);
 }
 
 //When the xtras are changed, update our icons

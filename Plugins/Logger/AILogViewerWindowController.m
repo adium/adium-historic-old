@@ -423,8 +423,10 @@ static NSString                             *filterForContactName = nil;	//Conta
 }
 
 //Called as the window closes
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
+	[super windowWillClose:sender];
+	
 	//Determine and save the current state of the drawer
 	int		drawerState = [drawer_contacts state];
 	NSNumber	*drawerIsOpen = nil;
@@ -482,17 +484,8 @@ static NSString                             *filterForContactName = nil;	//Conta
 	
 	[sharedLogViewerInstance autorelease]; sharedLogViewerInstance = nil;
 	[toolbarItems autorelease];
-	
-	[super windowShouldClose:sender];
-
-    return(YES);
 }
 
-//Prevent the system from moving our window around
-- (BOOL)shouldCascadeWindows
-{
-    return(NO);
-}
 
 #pragma mark Array access
 //Array access ----------------------------------------

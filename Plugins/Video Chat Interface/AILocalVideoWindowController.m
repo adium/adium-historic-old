@@ -59,12 +59,12 @@ AILocalVideoWindowController	*sharedLocalVideoWindowInstance = nil;
 }
 
 //Close our shared instance
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
+	[super windowWillClose:sender];
+	
 	[sharedLocalVideoWindowInstance autorelease];
 	sharedLocalVideoWindowInstance = nil;
-	
-	return(YES);
 }
 
 //Update video frame

@@ -29,7 +29,6 @@
 
 @interface AIEnterAwayWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
-- (BOOL)windowShouldClose:(id)sender;
 - (void)loadAwayMessages;
 - (NSMutableArray *)_loadAwaysFromArray:(NSArray *)array;
 - (NSMenu *)savedAwaysMenu;
@@ -216,9 +215,9 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 }
 
 //Close the contact list window
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
-	[super windowShouldClose:sender];
+	[super windowWillClose:sender];
 	
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 
@@ -229,8 +228,6 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 
     //Release the shared instance
     [sharedEnterAwayInstance autorelease]; sharedEnterAwayInstance = nil;
-
-    return(YES);
 }
 
 - (BOOL)shouldCascadeWindows

@@ -21,10 +21,7 @@
 }
 
 - (IBAction)closeWindow:(id)sender;
-
 - (NSString *)adiumFrameAutosaveName;
-
 - (void)windowDidLoad;
-- (BOOL)windowShouldClose:(id)sender;
 
 @end

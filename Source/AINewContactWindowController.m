@@ -136,22 +136,11 @@
 /*!
  * @brief Window is closing
  */
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
+	[super windowWillClose:sender];
 	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium notificationCenter] removeObserver:self];
-	
-    return(YES);
-}
-
-/*!
- * @brief Should cascade windows?
- *
- * Stop automatic window positioning
- */
-- (BOOL)shouldCascadeWindows
-{
-    return(NO);
 }
 
 /*!

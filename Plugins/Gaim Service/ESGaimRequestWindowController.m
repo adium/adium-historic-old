@@ -183,8 +183,10 @@
 	[super dealloc];
 }
 
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
+	[super windowWillClose:sender];
+	
 	if (cancelCallbackValue){
 		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
 										 performSelector:@selector(gaimThreadDoRequestInputCbValue:withUserDataValue:inputString:)
@@ -192,8 +194,6 @@
 											  withObject:userDataValue
 											  withObject:[[[textField_input stringValue] copy] autorelease]];
 	}
-	
-	return YES;
 }
 
 @end

@@ -40,8 +40,6 @@
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row;
 - (IBAction)deleteUser:(id)sender;
 - (void)windowDidLoad;
-- (BOOL)shouldCascadeWindows;
-- (BOOL)windowShouldClose:(id)sender;
 - (void)disableLoginTimeout;
 @end
 
@@ -52,13 +50,6 @@
     return([[[self alloc] initWithOwner:inOwner windowNibName:LOGIN_WINDOW_NIB] autorelease]);
 }
 
-// closes this window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
 
 // Internal --------------------------------------------------------------------------------
 // init the login controller
@@ -266,17 +257,11 @@
 	
 }
 
-// prevent the system from moving our window around
-- (BOOL)shouldCascadeWindows
-{
-    return(NO);
-}
-
 // called as the window closes
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
+	[super windowWillClose:sender];
 	[loginTimer invalidate]; [loginTimer release]; loginTimer = nil;
-    return(YES);
 }
 
 - (void)disableLoginTimeout

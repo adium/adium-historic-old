@@ -97,17 +97,15 @@ AIAwayStatusWindowController	*sharedAwayStatusInstance = nil;
 }
 
 //Do some housekeeping before closing the away status window
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
-	[super windowShouldClose:sender];
+	[super windowWillClose:sender];
 	
     //Clean up and release the shared instance
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[awayTimer invalidate];
 	[awayTimer release];
     [sharedAwayStatusInstance autorelease]; sharedAwayStatusInstance = nil;
-	
-    return(YES);
 }
 
 - (BOOL)shouldCascadeWindows

@@ -286,15 +286,15 @@
 
 #pragma mark Closing behavior
 //Save some of the information for next time on quit
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
+	[super windowWillClose:sender];
+
     //Remember the user's email address, account name
     [[NSUserDefaults standardUserDefaults] setObject:[textField_emailAddress stringValue]
                                               forKey:KEY_CRASH_EMAIL_ADDRESS];	
     [[NSUserDefaults standardUserDefaults] setObject:[textField_accountIM stringValue]
                                               forKey:KEY_CRASH_AIM_ACCOUNT];	
-    
-    return(YES);
 }
 
 //Terminate if our window is closed

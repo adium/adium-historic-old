@@ -128,20 +128,10 @@
 /*!
  * @brief Window is closing
  */
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
+	[super windowWillClose:sender];
 	[self autorelease];
-    return(YES);
-}
-
-/*!
- * @brief Stop automatic window positioning
- *
- * We don't want the system moving our window around
- */
-- (BOOL)shouldCascadeWindows
-{
-    return(NO);
 }
 
 /*!

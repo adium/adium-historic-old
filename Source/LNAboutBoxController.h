@@ -40,7 +40,6 @@
 }
 
 + (LNAboutBoxController *)aboutBoxController;
-- (IBAction)closeWindow:(id)sender;
 - (IBAction)adiumDuckClicked:(id)sender;
 - (IBAction)buildFieldClicked:(id)sender;
 - (IBAction)visitHomepage:(id)sender;

@@ -30,8 +30,6 @@
 @interface DCInviteToChatWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)windowDidLoad;
-- (BOOL)windowShouldClose:(id)sender;
-- (BOOL)shouldCascadeWindows;
 - (void)setChat:(AIChat *)inChat contact:(AIListContact *)inContact;
 - (void)setContact:(AIListContact *)inContact;
 @end
@@ -150,17 +148,12 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 
 //Window behavior and closing
 #pragma mark Window behavior and closing
-- (BOOL)shouldCascadeWindows
+- (void)windowWillClose:(id)sender
 {
-    return(NO);
-}
-
-- (BOOL)windowShouldClose:(id)sender
-{
+	[super windowWillClose:sender];
+	
 	sharedInviteToChatInstance = nil;
     [self autorelease]; //Close the shared instance
-	
-    return(YES);
 }
 
 //Close this window

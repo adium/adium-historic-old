@@ -137,8 +137,10 @@
  *
  * As our window is closing, we auto-release this window controller instance.
  */
-- (BOOL)windowShouldClose:(id)sender
-{	
+- (void)windowWillClose:(id)sender
+{
+	[super windowWillClose:sender];
+	
 	if(!userClickedButton){
 		if(allowsCloseWithoutResponse){
 			//Notify the target that the window closed with no response
@@ -151,11 +153,8 @@
 			return(NO);
 		}
 	}
-	
-	[super windowShouldClose:sender];
-	
+
 	[self autorelease];
-	return(YES);
 }
 
 

@@ -47,7 +47,6 @@
 + (id)showInfoWindowForListObject:(AIListObject *)listObject;
 + (void)closeInfoWindow;
 - (void)configureForListObject:(AIListObject *)inObject;
-- (IBAction)closeWindow:(id)sender;
 - (void)configurePanes;
 
 - (IBAction)addContact:(id)sender;

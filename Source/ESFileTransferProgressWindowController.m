@@ -26,12 +26,10 @@
 
 @interface ESFileTransferProgressWindowController (PRIVATE)
 - (void)addFileTransfer:(ESFileTransfer *)fileTransfer;
-- (IBAction)closeWindow:(id)sender;
 - (ESFileTransferProgressRow *)previousRow;
 - (ESFileTransferProgressRow *)nextRow;
 - (void)updateStatusBar;
 - (void)reloadAllData;
-
 - (void)_removeFileTransfer:(ESFileTransfer *)inFileTransfer;
 - (ESFileTransferProgressRow *)existingRowForFileTransfer:(ESFileTransfer *)inFileTransfer;
 @end
@@ -152,24 +150,14 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	[self reloadAllData];
 }
 
-//Close the window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
-
 //called as the window closes
-- (BOOL)windowShouldClose:(id)sender
-{	
-	[super windowShouldClose:sender];
-
+- (void)windowWillClose:(id)sender
+{
+	[super windowWillClose:sender];
+		
 	//release the window controller (ourself)
     sharedTransferProgressInstance = nil;
     [self autorelease];
-
-	return(YES);
 }
 
 //Called when a progress row has loaded its view and is ready to be added to our window
