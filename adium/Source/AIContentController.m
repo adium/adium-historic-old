@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.38 2004/01/08 07:19:09 evands Exp $
+// $Id: AIContentController.m,v 1.39 2004/01/12 20:23:00 evands Exp $
 
 #import "AIContentController.h"
 
@@ -345,11 +345,20 @@
         [self filterObject:inObject isOutgoing:NO];
     }
     
-    //Add the object
-    [chat addContentObject:inObject];
-
-    //Content object added
-    [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+    //Check if the object should display
+    if ([inObject displayContent]) {
+	//If the chat doesn't have content yet, open it
+	if (![chat hasContent]) {
+	    //Have the interface open this chat
+	    [[owner interfaceController] openChat:inChat]; 
+	}
+	
+	//Add the object
+	[chat addContentObject:inObject];
+	
+	//Content object added
+	[[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+    }
 }
 
 //Returns YES if the account/chat is available for sending content
@@ -400,10 +409,7 @@
 - (void)noteChat:(AIChat *)inChat forAccount:(AIAccount *)inAccount
 {
     //Track the chat
-    [chatArray addObject:inChat];    
-
-    //Have the interface open this chat
-    [[owner interfaceController] openChat:inChat];    
+    [chatArray addObject:inChat];
 }
 
 //Close a chat
