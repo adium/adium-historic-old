@@ -245,16 +245,16 @@
 
 - (void)trashConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-    if(returnCode == NSOKButton)
-    {
+    if(returnCode == NSOKButton) {
         NSEnumerator *selectedEnum = [table_emoticonPacks selectedRowEnumerator];
         int object;
-        while(object = [[selectedEnum nextObject] intValue])
-        {
+        while(object = [[selectedEnum nextObject] intValue]) {
             NSString *currentEPPath = [[[plugin availableEmoticonPacks] objectAtIndex:object] path];
             // the plugin should then update and auto-propigate :)
             [[NSFileManager defaultManager] trashFileAtPath:currentEPPath];
-    }
+		}
+		
+		[table_emoticonPacks deselectAll:nil];
         [plugin publicReset];
         [table_emoticonPacks reloadData];            
     }
