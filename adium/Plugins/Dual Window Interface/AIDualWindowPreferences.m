@@ -20,7 +20,7 @@
     return(AIPref_ContactList_General);
 }
 - (NSString *)label{
-    return(@"General Appearance");
+    return(AILocalizedString(@"General Appearance","Miscellaneous configuration of the interface appearance"));
 }
 - (NSString *)nibName{
     return(@"DualWindowPrefs");
