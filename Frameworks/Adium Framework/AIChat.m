@@ -19,6 +19,8 @@
 
 @implementation AIChat
 
+static int nextChatNumber = 0;
+
 + (id)chatForAccount:(AIAccount *)inAccount
 {
     return([[[self alloc] initForAccount:inAccount] autorelease]);
@@ -248,8 +250,7 @@
 		if (listObject = [self listObject]){
 			uniqueChatID = [listObject internalObjectID];
 		}else{
-			uniqueChatID = [AIChat uniqueChatIDForChatWithName:name
-													 onAccount:account];
+			uniqueChatID = [NSString stringWithFormat:@"%@.%i",name,nextChatNumber++];
 		}
 		
 		NSAssert(uniqueChatID != nil, @"nil uniqueChatID");
@@ -263,11 +264,6 @@
 - (void)clearUniqueChatID
 {
 	[uniqueChatID release]; uniqueChatID = nil;
-}
-
-+ (NSString *)uniqueChatIDForChatWithName:(NSString *)inName onAccount:(AIAccount *)inAccount
-{
-	return [NSString stringWithFormat:@"%@.%@", inName, [inAccount internalObjectID]];
 }
 
 //Content --------------------------------------------------------------------------------------------------------------
