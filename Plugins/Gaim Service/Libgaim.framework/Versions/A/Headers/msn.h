@@ -24,6 +24,14 @@
 #ifndef _MSN_H_
 #define _MSN_H_
 
+/* #define MSN_DEBUG_MSG 1 */
+/* #define MSN_DEBUG_SLPMSG 1 */
+/* #define MSN_DEBUG_HTTP 1 */
+
+/* #define MSN_DEBUG_SLP 1 */
+/* #define MSN_DEBUG_SLP_VERBOSE 1 */
+/* #define MSN_DEBUG_SLP_FILES 1 */
+
 #include "internal.h"
 
 #include "account.h"
@@ -45,9 +53,6 @@
 
 #include "ft.h"
 
-/* XXX */
-#include "gaim.h"
-
 #define MSN_BUF_LEN 8192
 
 #define USEROPT_MSNSERVER 3
@@ -64,10 +69,9 @@
 
 #define USEROPT_HOTMAIL 0
 
+#define BUDDY_ALIAS_MAXLEN 387
 
 #define MSN_FT_GUID "{5D3E02AB-6190-11d3-BBBB-00C04F795683}"
-
-#define MSN_CONNECT_STEPS 8
 
 #define MSN_CLIENTINFO \
 	"Client-Name: Gaim/" VERSION "\r\n" \
@@ -110,7 +114,7 @@ typedef enum
 #define MSN_CLIENT_ID_VERSION      MSN_CLIENT_VER_6_0
 #define MSN_CLIENT_ID_RESERVED_1   0x00
 #define MSN_CLIENT_ID_RESERVED_2   0x00
-#define MSN_CLIENT_ID_CAPABILITIES (MSN_CLIENT_CAP_BASE | MSN_CLIENT_CAP_VIEW_INK)
+#define MSN_CLIENT_ID_CAPABILITIES MSN_CLIENT_CAP_BASE
 
 #define MSN_CLIENT_ID \
 	((MSN_CLIENT_ID_VERSION    << 24) | \
@@ -118,9 +122,7 @@ typedef enum
 	 (MSN_CLIENT_ID_RESERVED_2 <<  8) | \
 	 (MSN_CLIENT_ID_CAPABILITIES))
 
-//**Adium
-GaimXfer *msn_xfer_new(GaimConnection *gc, char *who);
-void msn_set_friendly_name(GaimConnection *gc, const char *entry);
-
+//Adium
+#include "msn-adium.h"
 
 #endif /* _MSN_H_ */

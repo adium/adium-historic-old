@@ -33,33 +33,49 @@ typedef struct _MsnSwitchBoard MsnSwitchBoard;
 
 #include "servconn.h"
 
+#include "slplink.h"
+
+/**
+ * A switchboard error.
+ */
 typedef enum
 {
-	MSN_SB_ERROR_NONE,
-	MSN_SB_ERROR_CAL, /* The user could not join (answer the call) */
-	MSN_SB_ERROR_OFFLINE, /* The account is offline */
-	MSN_SB_ERROR_USER_OFFLINE, /* The user to call is offline */
-	MSN_SB_ERROR_CONNECTION, /* There was a connection error */
-	MSN_SB_ERROR_UNKNOWN
+	MSN_SB_ERROR_NONE, /**< No error. */
+	MSN_SB_ERROR_CAL, /**< The user could not join (answer the call). */
+	MSN_SB_ERROR_OFFLINE, /**< The account is offline. */
+	MSN_SB_ERROR_USER_OFFLINE, /**< The user to call is offline. */
+	MSN_SB_ERROR_CONNECTION, /**< There was a connection error. */
+	MSN_SB_ERROR_UNKNOWN /**< An unknown error occurred. */
 
 } MsnSBErrorType;
 
+/**
+ * A switchboard.
+ *
+ * A place where a bunch of users send messages to the rest of the users.
+ */
 struct _MsnSwitchBoard
 {
 	MsnSession *session;
 	MsnServConn *servconn;
+	MsnCmdProc *cmdproc;
 	char *im_user;
 
 	char *auth_key;
 	char *session_id;
 
-	gboolean invited;
-	gboolean destroying;
+	GaimConversation *conv; /**< The conversation that displays the
+							  messages of this switchboard, or @c NULL if
+							  this is a helper switchboard. */
 
-	GaimConversation *conv;
-
-	gboolean ready; /* When it's actually usable */
-	/* gboolean in_use; */
+	gboolean empty;			/**< A flag that states if the swithcboard has no
+							  users in it. */
+	gboolean invited;		/**< A flag that states if we were invited to the
+							  switchboard. */
+	gboolean ready;			/**< A flag that states if this switchboard is
+							  ready to be used. */
+	gboolean closed;		/**< A flag that states if the switchboard has
+							  been closed by the user. */
 
 	int current_users;
 	int total_users;
@@ -67,12 +83,12 @@ struct _MsnSwitchBoard
 
 	int chat_id;
 
-	gboolean hidden;
+	GQueue *msg_queue; /**< Queue of messages to send. */
+	GList *ack_list; /**< List of messages waiting for an ack. */
 
-	gboolean user_joined;
-	GQueue *im_queue;
-
-	int error;
+	MsnSBErrorType error; /**< The error that occurred in this switchboard
+							(if applicable). */
+	MsnSlpLink *slplink; /**< The slplink that is using this switchboard. */
 };
 
 /**
@@ -100,25 +116,6 @@ MsnSwitchBoard *msn_switchboard_new(MsnSession *session);
  * @param swboard The switchboard to destroy.
  */
 void msn_switchboard_destroy(MsnSwitchBoard *swboard);
-
-#if 0
-/**
- * Sets the user the switchboard is supposed to connect to.
- *
- * @param swboard The switchboard.
- * @param user    The user.
- */
-void msn_switchboard_set_user(MsnSwitchBoard *swboard, const char *user);
-
-/**
- * Returns the user the switchboard is supposed to connect to.
- *
- * @param swboard The switchboard.
- *
- * @return The user.
- */
-const char *msn_switchboard_get_user(MsnSwitchBoard *swboard);
-#endif
 
 /**
  * Sets the auth key the switchboard must use when connecting.
@@ -155,7 +152,7 @@ void msn_switchboard_set_session_id(MsnSwitchBoard *swboard, const char *id);
 const char *msn_switchboard_get_session_id(MsnSwitchBoard *swboard);
 
 /**
- * Sets whether or not the user was invited to this switchboard.
+ * Sets whether or not we were invited to this switchboard.
  *
  * @param swboard The switchboard.
  * @param invite  @c TRUE if invited, @c FALSE otherwise.
@@ -163,7 +160,7 @@ const char *msn_switchboard_get_session_id(MsnSwitchBoard *swboard);
 void msn_switchboard_set_invited(MsnSwitchBoard *swboard, gboolean invited);
 
 /**
- * Returns whether or not the user was invited to this switchboard.
+ * Returns whether or not we were invited to this switchboard.
  *
  * @param swboard The switchboard.
  *
@@ -182,25 +179,74 @@ gboolean msn_switchboard_is_invited(MsnSwitchBoard *swboard);
  */
 gboolean msn_switchboard_connect(MsnSwitchBoard *swboard,
 								 const char *host, int port);
+
+/**
+ * Disconnects from a switchboard.
+ *
+ * @param swboard The switchboard to disconnect from.
+ */
 void msn_switchboard_disconnect(MsnSwitchBoard *swboard);
-void msn_switchboard_send_msg(MsnSwitchBoard *swboard, MsnMessage *msg);
+
+/**
+ * Closes the switchboard.
+ *
+ * Called when a conversation is closed.
+ *
+ * @param swboard The switchboard to close.
+ */
+void msn_switchboard_close(MsnSwitchBoard *swboard);
+
+/**
+ * Returns whether or not we currently can send a message through this
+ * switchboard.
+ *
+ * @param swboard The switchboard.
+ *
+ * @return @c TRUE if a message can be sent, @c FALSE otherwise.
+ */
+gboolean msn_switchboard_can_send(MsnSwitchBoard *swboard);
+
+/**
+ * Sends a message through this switchboard.
+ *
+ * @param swboard The switchboard.
+ * @param msg The message.
+ * @param queue A flag that states if we want this message to be queued (in
+ * the case it cannot currently be sent).
+ *
+ * @return @c TRUE if a message can be sent, @c FALSE otherwise.
+ */
+void msn_switchboard_send_msg(MsnSwitchBoard *swboard, MsnMessage *msg,
+							  gboolean queue);
 
 gboolean msn_switchboard_chat_leave(MsnSwitchBoard *swboard);
 gboolean msn_switchboard_chat_invite(MsnSwitchBoard *swboard, const char *who);
 
 void msn_switchboard_request(MsnSwitchBoard *swboard);
 void msn_switchboard_request_add_user(MsnSwitchBoard *swboard, const char *user);
-void msn_switchboard_queue_msg(MsnSwitchBoard *swboard, MsnMessage *msg);
-void msn_switchboard_process_queue(MsnSwitchBoard *swboard);
 
 /**
- * Processes application/x-msnmsgrp2p messages.
+ * Processes peer to peer messages.
  *
  * @param cmdproc The command processor.
  * @param msg     The message.
  */
 void msn_p2p_msg(MsnCmdProc *cmdproc, MsnMessage *msg);
+
+/**
+ * Processes emoticon messages.
+ *
+ * @param cmdproc The command processor.
+ * @param msg     The message.
+ */
 void msn_emoticon_msg(MsnCmdProc *cmdproc, MsnMessage *msg);
+
+/**
+ * Processes INVITE messages.
+ *
+ * @param cmdproc The command processor.
+ * @param msg     The message.
+ */
 void msn_invite_msg(MsnCmdProc *cmdproc, MsnMessage *msg);
 
 #endif /* _MSN_SWITCHBOARD_H_ */

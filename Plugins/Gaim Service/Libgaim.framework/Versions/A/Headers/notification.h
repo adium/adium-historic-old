@@ -56,6 +56,15 @@ gboolean msn_notification_connect(MsnNotification *notification,
 							  const char *host, int port);
 void msn_notification_disconnect(MsnNotification *notification);
 
+/**
+ * Closes a notification.
+ *
+ * It's first closed, and then disconnected.
+ * 
+ * @param notification The notification object to close.
+ */
+void msn_notification_close(MsnNotification *notification);
+
 void msn_got_login_params(MsnSession *session, const char *login_params);
 
 #endif /* _MSN_NOTIFICATION_H_ */

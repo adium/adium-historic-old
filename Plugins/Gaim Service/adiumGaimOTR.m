@@ -20,6 +20,7 @@ static void otrg_adium_dialog_notify_message(GaimNotifyMsgType type,
 										   const char *title, const char *primary, const char *secondary)
 {
 	GaimDebug (@"otrg_adium_dialog_notify_message: type %i ; title %s ; primary %s ; secondary %s", type, title, primary, secondary);
+	gaim_notify_message(adium_gaim_get_handle(), type, title, primary, secondary, NULL, NULL);
 }
 
 /* blargh? */
@@ -57,6 +58,8 @@ static OtrgDialogWaitHandle otrg_adium_dialog_private_key_wait_start(const char 
     handle->dialog = dialog;
     handle->label = label;
 */
+	gaim_notify_message(adium_gaim_get_handle(), GAIM_NOTIFY_MESSAGE, title, primary, secondary, NULL, NULL);
+		
 	g_free(secondary);
 	
     return handle;
@@ -66,6 +69,9 @@ static OtrgDialogWaitHandle otrg_adium_dialog_private_key_wait_start(const char 
 static void otrg_adium_dialog_private_key_wait_done(OtrgDialogWaitHandle handle)
 {
 	GaimDebug (@"otrg_adium_dialog_private_key_wait_done");
+
+	gaim_notify_message(adium_gaim_get_handle(), GAIM_NOTIFY_MESSAGE, "Done", "Private key generation...", "complete.", NULL, NULL);
+
 	/*
     const char *oldmarkup;
     char *newmarkup;
@@ -98,36 +104,25 @@ static void otrg_adium_dialog_unknown_fingerprint(const char *who,
 {
 	GaimDebug (@"otrg_adium_dialog_unknown_fingerprint: who: %s protocol: %s",who,protocol);
     char hash[45];
-    char *label_text;
+    NSString *label_text;
 //    struct ufcbdata *cbd = malloc(sizeof(struct ufcbdata));
     GaimPlugin *p = gaim_find_prpl(protocol);
     
     otrl_privkey_hash_to_human(hash, kem->key_fingerprint);
-    label_text = g_strdup_printf("<span weight=\"bold\" size=\"larger\">%s "
-								 "(%s) "
-								 "has presented us with an unknown fingerprint:</span>\n\n%s\n\n"
+    label_text = [NSString stringWithFormat:"%s (%s) "
+								 "has presented us with an unknown fingerprint:\n\n%s\n\n"
 								 "Do you want to accept this fingerprint as valid?", who,
-								 (p && p->info->name) ? p->info->name : "Unknown", hash);
+								 (p && p->info->name) ? p->info->name : "Unknown", hash];
 	
 //    label = adium_label_new(NULL);
 
-	GaimDebug(@"otrg_adium_dialog_unknown_fingerprint label_text is %s",label_text);
-
-	/* Use label_text */
-    g_free(label_text);
+	GaimDebug(@"otrg_adium_dialog_unknown_fingerprint label_text is %@",label_text);
 	
-	/*
-    cbd->dialog = GTK_DIALOG(dialog);
-    cbd->response_cb = response_cb;
-    cbd->ops = ops;
-    cbd->opdata = opdata;
-    cbd->response_data = response_data;
-    cbd->response = -1;
-    g_signal_connect(G_OBJECT(dialog), "destroy",
-					 G_CALLBACK(unknown_fingerprint_destroy), cbd);
-    g_signal_connect(G_OBJECT(dialog), "response",
-					 G_CALLBACK(unknown_fingerprint_response), cbd);
-	*/
+	if ((NSRunAlertPanel(@"Unknown OTR fingerprint",label_text,@"Yes",@"No",nil)) == NSAlertDefaultReturn){
+		response_cb(ops, opdata, response_data, 1);
+	}else{
+		response_cb(ops, opdata, response_data, 0);		
+	}
 }
 
 
@@ -227,6 +222,9 @@ static void otrg_adium_dialog_new_conv(GaimConversation *conv)
 	/* Add a clickable button, or set one up, or something, which when clicked ends up calling
 		otrg_dialog_clicked_connect(conv); */
 #endif
+	
+	/* XXX DEBUG: Immediately attempt to connect */
+	otrg_plugin_send_default_query_conv(conv);
 }
 
 /* Remove the per-conversation information display */
@@ -332,16 +330,9 @@ static void otrg_adium_ui_update_keylist(void)
 #endif
 }
 
-/* Get the currently selected fingerprint */
-Fingerprint *otrg_adium_ui_selected_fingerprint()
-{
-	return nil;
-}
-
 static OtrgUiUiOps otrg_adium_ui_ui_ops = {
     otrg_adium_ui_update_fingerprint,
-    otrg_adium_ui_update_keylist,
-	otrg_adium_ui_selected_fingerprint
+    otrg_adium_ui_update_keylist
 };
 
 /* Get the Adium UI ops */
@@ -353,14 +344,11 @@ OtrgUiUiOps *otrg_adium_ui_get_ui_ops(void)
 #pragma mark Initial setup
 void initGaimOTRSupprt(void)
 {
-	NSLog(@"initGaimOTRSupprt: gaim_init_otr_plugin()");
 	//Init the plugin
 	gaim_init_otr_plugin();
 	
 	//Set the UI Ops
-	NSLog(@"otrg_ui_set_ui_ops");
 	otrg_ui_set_ui_ops(otrg_adium_ui_get_ui_ops());
 
-	NSLog(@"otrg_dialog_set_ui_ops");
     otrg_dialog_set_ui_ops(otrg_adium_dialog_get_ui_ops());
 }
