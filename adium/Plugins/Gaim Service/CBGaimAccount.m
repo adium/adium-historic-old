@@ -938,7 +938,7 @@
 // Removes all the possible status flags from the passed contact
 - (void)removeAllStatusFlagsFromContact:(AIListContact *)contact
 {
-    NSArray			*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",@"TextProfile",nil];
+    NSArray			*keyArray = [self contactStatusFlags];
 	NSEnumerator	*enumerator = [keyArray objectEnumerator];
 	NSString		*key;
 	
@@ -946,6 +946,16 @@
 		[contact setStatusObject:nil withOwner:self forKey:key notify:NO];
 	}
 	[contact notifyOfChangedStatusSilently:YES];
+}
+
+- (NSArray *)contactStatusFlags
+{
+	static NSArray *contactStatusFlagsArray = nil;
+	
+	if (!contactStatusFlagsArray)
+		contactStatusFlagsArray = [[NSArray alloc] initWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",nil];
+	
+	return contactStatusFlagsArray;
 }
 
 - (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing
@@ -1140,7 +1150,10 @@
 //Status keys this account supports
 - (NSArray *)supportedPropertyKeys
 {
-    return([NSArray arrayWithObjects:
+	static NSArray *supportedPropertyKeys = nil;
+	
+	if (!supportedPropertyKeys)
+		supportedPropertyKeys = [[NSArray alloc] initWithObjects:
         @"Display Name",
         @"Online",
         @"Offline",
@@ -1152,7 +1165,9 @@
         @"TextProfile",
         @"UserIcon",
         @"DefaultUserIconFilename",
-        nil]);
+        nil];
+	
+	return supportedPropertyKeys;
 }
 
 //Update all our status keys

@@ -48,6 +48,7 @@
 - (NSDictionary *)defaultProperties;
 - (NSString *)unknownGroupName;
 - (id <AIAccountViewController>)accountView;
+- (NSArray *)contactStatusFlags;
 
 //AIAccount_Handles
 // Returns a dictionary of AIHandles available on this account
