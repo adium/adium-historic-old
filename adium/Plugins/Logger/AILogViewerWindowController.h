@@ -33,6 +33,8 @@ typedef enum {
     IBOutlet    NSTextField			*textField_progress;
     IBOutlet    NSButton                        *button_deleteLogs;
     IBOutlet    NSView                          *view_SearchField;
+    IBOutlet    NSView                          *view_emoteToggle;
+    IBOutlet    NSButton                        *button_emoticonToggle;
     IBOutlet    NSDrawer                        *drawer_contacts;
 
     //Misc
@@ -47,6 +49,7 @@ typedef enum {
     NSToolbar           *toolbar;               //Shiny new toolbar of fun
     BOOL		automaticSearch;	//YES if this search was performed automatically for the user (view ___'s logs...)
     BOOL		ignoreSelectionChange;  //Hack to prevent automatic table selectin changes from clearing the automaticSearch flag
+    BOOL                filterEmoticons;        //Flag for whether or not to filter into graphics
 
     //Search information
     int			activeSearchID;		//ID of the active search thread, all other threads should quit
@@ -68,6 +71,7 @@ typedef enum {
 - (IBAction)updateSearch:(id)sender;
 - (IBAction)selectSearchType:(id)sender;
 - (IBAction)deleteSelectedLogs:(id)sender;
+- (IBAction)toggleEmoticonFiltering:(id)sender;
 - (void)setSearchString:(NSString *)inString mode:(LogSearchMode)inMode;
 - (void)resetSearch;
 - (NSMutableArray *)fromArray;
