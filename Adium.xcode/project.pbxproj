@@ -3233,6 +3233,7 @@
 				346C9D1206004645000F5A8A,
 				346C9D3006004650000F5A8A,
 				34C2D70506338E2E0018E5D2,
+				4BD62D8007CE8F240099EBA2,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3259,6 +3260,7 @@
 				346C9D1006004644000F5A8A,
 				346C9D1606004646000F5A8A,
 				34C2D70606338E2E0018E5D2,
+				4BD62D8107CE8F240099EBA2,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17489,6 +17491,36 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4BD62D7E07CE8F240099EBA2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIWebkitMessageViewStyle.h;
+			path = "Plugins/WebKit Message View/AIWebkitMessageViewStyle.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BD62D7F07CE8F240099EBA2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIWebkitMessageViewStyle.m;
+			path = "Plugins/WebKit Message View/AIWebkitMessageViewStyle.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BD62D8007CE8F240099EBA2 = {
+			fileRef = 4BD62D7E07CE8F240099EBA2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BD62D8107CE8F240099EBA2 = {
+			fileRef = 4BD62D7F07CE8F240099EBA2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BD6720906001B2C0049CAF7 = {
 			children = (
 				4B935E670733E4EC00C23FC6,
@@ -20907,6 +20939,8 @@
 				4B539C4C05EFD6CD00E5921A,
 				4B539C5105EFD6FA00E5921A,
 				4B539C5205EFD6FB00E5921A,
+				4BD62D7E07CE8F240099EBA2,
+				4BD62D7F07CE8F240099EBA2,
 				34C2D70306338E2E0018E5D2,
 				34C2D70406338E2E0018E5D2,
 				34C2D8C00633BBA80018E5D2,
