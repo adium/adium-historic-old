@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 487 $ $Date: 2004/05/15 17:56:46 $ -->
+<!--$Rev: 487 $ $Date: 2004/05/22 20:08:07 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -27,7 +27,7 @@ loginUsers = Boolean.valueOf(request.getParameter("login")).booleanValue();
         <title>Adium Statistics</title>
     </head>
     <body>
-    <% 
+    <%
     if (sender == 0) {
         out.print("<div align=\"center\">");
         out.print("<h3>Please choose a user:</h3>");
@@ -48,7 +48,7 @@ ResultSet totals = null;
 
 try {
     stmt = conn.createStatement();
-    
+
     if(sender != 0) {
         out.println("<table width=\"750\" cellspacing=\"0\" cellpadding=\"0\">");
         out.println("<tr>");
@@ -66,12 +66,12 @@ try {
         rset = pstmt.executeQuery();
 
         int red, green, blue;
-        
+
         while(rset.next() ) {
             red = (0 + (rset.getInt("sender_id") * 3) % 255);
             green = (128 + (rset.getInt("sender_id") * 2) % 255);
             blue = (66 + (rset.getInt("sender_id") * 7 + 5) % 255);
-         
+
             if(rset.getInt("sender_id") == 12) {
                 red = 0;
                 green = 0;
@@ -110,7 +110,7 @@ try {
     }
 
     int peopleCnt = 1;
-    
+
     if(sender != 0) {
         out.println("<tr><td colspan=\"5\">");
         if (loginUsers) {
@@ -120,31 +120,31 @@ try {
         }
         out.println("</td>");
     }
-    
+
     while (rset.next())  {
         if ((rset.getRow() -1) % 4 == 0) {
             out.println("</tr><tr>");
         }
-        
+
         int red, green, blue;
 
         red = (0 + (rset.getInt("user_id") * 3) % 255);
         green = (128 + (rset.getInt("user_id") * 2) % 255);
         blue = (66 + (rset.getInt("user_id") * 7 + 5) % 255);
-        
+
         if(rset.getInt("user_id") == 12) {
             red = 0;
             green = 0;
             blue = 0;
         }
-        
+
         out.println("<td bgcolor=\"#" +
                 Integer.toHexString(red) +
                 Integer.toHexString(green) +
                 Integer.toHexString(blue) + "\">");
         if (rset.getInt("user_id") != sender) {
-            out.print("<a href=\"defrag.jsp?sender=" + 
-            rset.getString("user_id") + "&login=" + 
+            out.print("<a href=\"defrag.jsp?sender=" +
+            rset.getString("user_id") + "&login=" +
             Boolean.toString(loginUsers) +
             "\">" + rset.getString("username") +
             "</a>");

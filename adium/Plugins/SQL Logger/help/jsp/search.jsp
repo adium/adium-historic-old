@@ -65,7 +65,7 @@ searchKey = searchString;
 try {
     if(search_id != 0) {
         pstmt = conn.prepareStatement("select title, notes, sender, recipient, searchstring, orderby from adium.saved_searches where search_id = ?");
-        
+
         pstmt.setInt(1, search_id);
 
         rset = pstmt.executeQuery();
@@ -77,7 +77,7 @@ try {
             recipient = rset.getString("recipient");
             searchString = rset.getString("searchstring");
             orderBy = rset.getString("orderby");
-        } 
+        }
     } else {
         title = "Search";
     }
@@ -127,11 +127,11 @@ try {
                 <div class="boxThinContent">
 <%
     pstmt = conn.prepareStatement("select search_id, title from adium.saved_searches");
-    
+
     rset = pstmt.executeQuery();
-    
+
     while(rset.next()) {
-        out.println("<p><a href=\"search.jsp?search_id=" + 
+        out.println("<p><a href=\"search.jsp?search_id=" +
             rset.getString("search_id") + "\">" + rset.getString("title") +
             "</a></p>");
     }
@@ -154,13 +154,13 @@ try {
                                 <label for="sender">Sender: </label>
                             </td>
                             <td><input type="text" name="sender"
-                        <% if (sender != null) 
+                        <% if (sender != null)
                             out.print("value=\"" + sender + "\""); %> id="sender" />
                             </td>
                             <td rowspan="3">
                             <label for="orderBy">Order By</label><br />
                             <select name="order_by" id="orderBy">
-                                <option value="" 
+                                <option value=""
                                 <% if (orderBy == null) %> selected="selected" <% ; %>
                                 >Choose One</option>
                                 <option value="message_date"
@@ -173,11 +173,11 @@ try {
                                 <option value="recipient_sn"
                                 <% if (orderBy != null &&
                                 orderBy.startsWith("recipient_sn")) %> selected="selected" <% ; %> >Recipient</option>
-                                <option value="message" 
+                                <option value="message"
                                 <% if (orderBy != null && orderBy.startsWith("message")
                                 && !orderBy.startsWith("message_date"))
                                 %> selected="selected" <% ; %> >Message</option>
-            
+
                                 <option value="rank(idxfti, q)"
                                 <% if (orderBy != null && orderBy.startsWith("rank"))
                                 %> selected="selected" <% ; %> >Rank</option>
@@ -185,7 +185,7 @@ try {
                             <input type="radio" name="asc_desc" value=" asc"
                         <% if (orderBy == null || orderBy.endsWith("asc")) %> checked="checked"
                         <%;%> />Ascending<br />
-                        
+
                             <input type="radio" name="asc_desc" value=" desc"
                             <% if (orderBy != null && orderBy.endsWith("desc")) %> checked="checked"
                             <%;%> />Descending
@@ -206,10 +206,10 @@ try {
                                 <label for="searchstring">Search String: </label>
                             </td>
                             <td>
-                                <input type="text" name="search" 
+                                <input type="text" name="search"
                         <%
-                        if (searchString != null) 
-                            out.print("value=\"" + 
+                        if (searchString != null)
+                            out.print("value=\"" +
                                 searchString.replaceAll("\"","&quot;") +
                                 "\"");%> id="searchstring" />
                             </td>
@@ -259,7 +259,7 @@ try {
             out.print("<i>This query is case sensitive for speed.<br>");
             out.print("For a non-case-sensitive, faster query, "+
             "install the tsearch module.</i></div>");
-            
+
             String shortQuery = new String("select scramble(sender_sn) "+
             "as sender_sn, scramble(recipient_sn) as recipient_sn, " +
             "message, message_date, message_id from message_v where " +
@@ -268,7 +268,7 @@ try {
             if (sender != null) {
                 shortQuery += "and sender_sn like ? ";
             }
-            
+
             if (recipient != null) {
                 shortQuery += "and recipient_sn like ? ";
             }
@@ -304,12 +304,12 @@ try {
                     searchKey = searchKey.replaceFirst("\"", ")");
                 }
             }
-            
+
             while(searchKey.indexOf("  ") >= 0) {
                 searchKey = searchKey.replaceAll("  ", " ");
             }
-            
-            if(searchKey.indexOf("AND") > 0 || 
+
+            if(searchKey.indexOf("AND") > 0 ||
                 searchKey.indexOf("OR") > 0 ||
                 searchKey.indexOf("NOT") > 0) {
                 searchKey = searchKey.replaceAll(" AND ", "&");
@@ -322,13 +322,13 @@ try {
             } else {
                 searchKey = searchKey.replaceAll(" ", "&");
             }
-            
-            String cmdAry[] = new String[10]; 
+
+            String cmdAry[] = new String[10];
             int cmdCntr = 0;
             String queryString = new String();
-            
+
             if(searchType.equals("tsearch1")) {
-            
+
                 queryString = "select scramble(s.username) as sender_sn, "+
                     " scramble(r.username) as recipient_sn," +
                     " message, message_date, message_id " +
@@ -386,7 +386,7 @@ try {
 
         queryTime = System.currentTimeMillis() - beginTime;
 
-    
+
         if(rset != null && rset.isBeforeFirst()) {
 %>
 <div align="center"><i>Query executed in <%=queryTime%> milliseconds</i></div>
@@ -400,7 +400,7 @@ try {
                     out.print("<br>" + warning.getMessage());
                 }
             }
-            
+
             warning = rset.getWarnings();
             if(warning != null) {
                 out.print("<br />" + warning.getMessage());
@@ -427,66 +427,66 @@ try {
                     out.print("<br />" + warning.getMessage());
                 }
             }
-            
+
             String messageContent = rset.getString("message");
             messageContent = messageContent.replaceAll("\n", "<br>");
             messageContent = messageContent.replaceAll("   ", " &nbsp; ");
-            
-            out.print(rset.getString("sender_sn") + 
+
+            out.print(rset.getString("sender_sn") +
             ":&#8203;" + rset.getString("recipient_sn"));
-            out.print("<p style=\"text-indent: 30px\">" + 
+            out.print("<p style=\"text-indent: 30px\">" +
                 messageContent + "<br />");
-            
+
             Timestamp dateTime = rset.getTimestamp("message_date");
             long time = dateTime.getTime();
             long finishTime = time + 15*60*1000;
             long startTime = time - 15*60*1000;
             long finishThirty = time + 30*60*1000;
             long startThirty = time - 30*60*1000;
-    
+
             Timestamp finish = new Timestamp(finishTime);
             Timestamp start = new Timestamp(startTime);
-    
+
             Timestamp thirtyFinish = new Timestamp(finishThirty);
             Timestamp thirtyStart = new Timestamp(startThirty);
-    
+
             String cleanString = searchKey;
             cleanString = cleanString.replaceAll("&", " ");
             cleanString = cleanString.replaceAll("!", " ");
             cleanString = cleanString.replaceAll("\\|", " ");
-    
+
             out.print("<a href=\"index.jsp?from=" +
             rset.getString("sender_sn") +
             "&amp;to=" + rset.getString("recipient_sn") +
             "&amp;finish=" + finish.toString() +
-            "&amp;start=" + start.toString() + 
+            "&amp;start=" + start.toString() +
             "&amp;hl=" + cleanString +
             "#" + rset.getInt("message_id") + "\">");
             out.print("&#177;15&nbsp;");
             out.print("</a>");
-    
+
             out.print("<a href=\"index.jsp?from=" +
             rset.getString("sender_sn") +
             "&amp;to=" + rset.getString("recipient_sn") +
             "&amp;finish=" + thirtyFinish.toString() +
-            "&amp;start=" + thirtyStart.toString() + 
+            "&amp;start=" + thirtyStart.toString() +
             "&amp;hl=" + cleanString +
             "#" + rset.getInt("message_id") + "\">");
             out.print("&#177;30&nbsp;");
             out.print("</a>");
-            
-            out.print("<span style=\"float:right\">" + 
-                rset.getDate("message_date") + 
+
+            out.print("<span style=\"float:right\">" +
+                rset.getDate("message_date") +
                 "&nbsp;" + rset.getTime("message_date") +
                 "</span></p>\n");
-            
+
         }
 %>
             </div>
             <div class="boxWideBottom"></div>
 <%
     }
-    
+
 } catch (SQLException e) {
     out.print("<br />" + e.getMessage() + "<br>");
 } finally {

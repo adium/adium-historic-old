@@ -20,9 +20,9 @@ ResultSet rset = null;
 
 try {
     pstmt = conn.prepareStatement("select username, key_id, key_name, coalesce(value, '') as value from adium.users natural left join adium.information_keys natural left join adium.contact_information where user_id = ? and delete = false order by key_name");
-    
+
     pstmt.setInt(1, user_id);
-    
+
     rset = pstmt.executeQuery();
     rset.next();
 %>
@@ -42,8 +42,8 @@ try {
             rset.getString("key_name") + "</label>");
 
         out.println("</td><td>");
-        
-        out.println("<input type=\"text\" name=\"" + 
+
+        out.println("<input type=\"text\" name=\"" +
             rset.getString("key_id") + "\" size=\"20\" value=\"" +
             rset.getString("value") + "\">");
 

@@ -19,7 +19,7 @@ try {
     pstmt = conn.prepareStatement("select key_id from information_keys where delete = false");
 
     rset = pstmt.executeQuery();
-    
+
     while(rset.next()) {
         String requestText = request.getParameter(rset.getString("key_id"));
         int returnVal;
@@ -35,7 +35,7 @@ try {
     }
 
     pstmt = conn.prepareStatement("insert into adium.information_keys (key_name) values (?)");
-    
+
     for(int i = 1; i <= 3; i++) {
         String req = request.getParameter("new" + i);
 

@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 765 $ $Date: 2004/05/21 03:47:18 $ -->
+<!--$Rev: 776 $ $Date: 2004/05/22 20:08:07 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -22,6 +22,7 @@ boolean showMeta = false;
 
 Date today = new Date(System.currentTimeMillis());
 int chat_id = 0;
+int meta_id = 0;
 
 String formURL = new String("saveForm.jsp?action=saveChat.jsp");
 
@@ -93,6 +94,15 @@ if(screenDisplayMeta != null && screenDisplayMeta.equals("screen")) {
     showDisplay = false;
 }
 
+try {
+    meta_id = Integer.parseInt(request.getParameter("meta_id"));
+    showMeta = true;
+    showDisplay = false;
+    formURL += "&amp;meta_id=" + meta_id;
+} catch (NumberFormatException e) {
+    meta_id = 0;
+}
+
 String hlColor[] = {"#ff6","#a0ffff", "#9f9", "#f99", "#f69"};
 
 PreparedStatement pstmt = null;
@@ -104,12 +114,12 @@ String queryText = new String();
 try {
 
     if(chat_id != 0) {
-        pstmt = conn.prepareStatement("select title, notes, sent_sn, received_sn, single_sn, date_start, date_finish from adium.saved_chats where chat_id = ?");
+        pstmt = conn.prepareStatement("select title, notes, sent_sn, received_sn, single_sn, date_start, date_finish, meta_id from adium.saved_chats where chat_id = ?");
 
         pstmt.setInt(1, chat_id);
 
         rset = pstmt.executeQuery();
-        
+
         if(rset != null && rset.next()) {
             from_sn = rset.getString("sent_sn");
             to_sn = rset.getString("received_sn");
@@ -118,6 +128,11 @@ try {
             dateStart = rset.getString("date_start");
             title = rset.getString("title");
             notes = rset.getString("notes");
+            meta_id = rset.getInt("meta_id");
+            if(meta_id != 0) {
+                showMeta = true;
+                showDisplay = false;
+            }
         }
     } else {
         title = "SQL Logger";
@@ -158,29 +173,29 @@ try {
     <%
     if (hl != null) {
         out.print("<h1>Search Words</h1>");
-        out.println("<div class=\"boxThinTop\"></div>");
+        out.println("<div class=\"boxThinTop\"></div>\n");
         out.println("<div class=\"boxThinContent\">");
         for (int i = 0; i < hlWords.size(); i++) {
             out.print("<p><b style=\"color:black;" +
                 "background-color:" + hlColor[i % hlColor.length] +
                 "\">" + hlWords.get(i).toString() + "</b></p>\n");
         }
-        out.println("</div>");
-        out.println("<div class=\"boxThinBottom\"></div>");
+        out.println("</div>\n");
+        out.println("<div class=\"boxThinBottom\"></div>\n");
     }
     String commandArray[] = new String[20];
     int aryCount = 0;
     boolean unconstrained = false;
 
     queryText = "select scramble(sender_sn) as sender_sn, "+
-    " scramble(recipient_sn) as recipient_sn, " + 
+    " scramble(recipient_sn) as recipient_sn, " +
     " message, message_date, message_id, " +
     " to_char(message_date, 'fmDay, fmMonth DD, YYYY') as fancy_date, " +
     " exists (select 'x' from adium.message_notes " +
     " where message_id = view.message_id) as notes";
     if(showDisplay) {
        queryText += ", scramble(sender_display) as sender_display, "+
-           " scramble(recipient_display) as recipient_display " + 
+           " scramble(recipient_display) as recipient_display " +
            " from adium.message_v as view ";
     } else if (showMeta) {
         queryText += ", coalesce(send.name, scramble(sender_sn)) as sender_meta, " +
@@ -202,7 +217,7 @@ try {
         queryText += "where message_date > 'now'::date ";
         concurrentWhereClause += " message_date > 'now'::date ";
     } else {
-        queryText += "where  message_date > ?::timestamp ";
+        queryText += "where message_date > ?::timestamp ";
         concurrentWhereClause += " message_date > ?::timestamp ";
         commandArray[aryCount++] = new String(dateStart);
         if(dateFinish == null) {
@@ -217,7 +232,7 @@ try {
     }
 
     if (from_sn != null && to_sn != null) {
-        queryText += " and (((sender_sn like ? " + 
+        queryText += " and (((sender_sn like ? " +
         " and recipient_sn like ?) or " +
         "(sender_sn like ? and recipient_sn like ?)) or " +
         "((scramble(sender_sn) like ? and scramble(recipient_sn) like ?) or " +
@@ -230,16 +245,16 @@ try {
         commandArray[aryCount++] = new String(from_sn);
         commandArray[aryCount++] = new String(to_sn);
         commandArray[aryCount++] = new String(from_sn);
-    
+
     } else if (from_sn != null && to_sn == null) {
         queryText += " and (sender_sn like ? or scramble(sender_sn) like ?)";
-        
+
         commandArray[aryCount++] = new String(from_sn);
         commandArray[aryCount++] = new String(from_sn);
 
     } else if (from_sn == null && to_sn != null) {
         queryText += " and (recipient_sn like ? or scramble(recipient_sn) like ?)";
-        
+
         commandArray[aryCount++] = new String(to_sn);
         commandArray[aryCount++] = new String(to_sn);
     }
@@ -252,14 +267,18 @@ try {
         commandArray[aryCount++] = new String(contains_sn);
     }
 
+    if (meta_id != 0) {
+        queryText += " and (send.meta_id = ? or rec.meta_id = ?)";
+    }
+
     queryText += " order by message_date, message_id";
-    
+
     if(unconstrained) {
         queryText += " limit 250";
         out.print("<div align=\"center\"><i>Limited to 250 " +
-        "messages.</i><br><br></div>");
+        "messages.</i><br><br></div>\n");
     }
-    
+
     String query = "select scramble(username) as username " +
     "from adium.users natural join "+
     "(select distinct sender_id as user_id from adium.messages "+
@@ -283,7 +302,7 @@ try {
     }
 
     out.println("<h1>Users</h1>");
-    out.println("<div class=\"boxThinTop\"></div>");
+    out.println("<div class=\"boxThinTop\"></div>\n");
     out.println("<div class=\"boxThinContent\">");
 
     try {
@@ -291,8 +310,8 @@ try {
         rset = pstmt.executeQuery();
 
         while(rset.next()) {
-            out.print("<p><a href=\"index.jsp?start=" + dateStart + 
-            "&finish=" + dateFinish + "&contains=" + 
+            out.print("<p><a href=\"index.jsp?start=" + dateStart +
+            "&finish=" + dateFinish + "&contains=" +
             rset.getString("username") + "\">"+
             rset.getString("username") + "</a></p>\n");
         }
@@ -303,17 +322,17 @@ try {
         out.print("<span style=\"color: red\">" + e.getMessage() + "</span>");
     }
 
-    out.println("</div>");
-    out.println("<div class=\"boxThinBottom\"></div>");
-    
+    out.println("</div>\n");
+    out.println("<div class=\"boxThinBottom\"></div>\n");
+
     out.println("<h1>Saved Chats</h1>");
-    out.println("<div class=\"boxThinTop\"></div>");
+    out.println("<div class=\"boxThinTop\"></div>\n");
     out.println("<div class=\"boxThinContent\">");
-    
+
     pstmt = conn.prepareStatement("select chat_id, title from adium.saved_chats");
-    
+
     rset = pstmt.executeQuery();
-    
+
     while(rset.next()) {
         out.println("<p><a href=\"index.jsp?chat_id=" + rset.getInt("chat_id") +
             "\">" + rset.getString("title") + "</a></p>");
@@ -325,15 +344,14 @@ try {
                 Save Chat ...
             </a></p>
     <%
-    out.println("</div>");
-    out.println("<div class=\"boxThinBottom\"></div>");
-    
-    
+    out.println("</div>\n");
+    out.println("<div class=\"boxThinBottom\"></div>\n");
+
 %>
             </div>
             <div id="content">
             <h1>View Messages by Date</h1>
-            
+
             <div class="boxWideTop"></div>
             <div class="boxWideContent">
             <form action="index.jsp" method="get">
@@ -359,8 +377,31 @@ try {
                     </td>
                     <td>
                         <input type="text" name="contains" <% if (contains_sn != null)
-                        out.print("value=\"" + contains_sn + "\""); %> 
+                        out.print("value=\"" + contains_sn + "\""); %>
                         id = "contains" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        <label for="meta">Meta Contact:</label>
+                    </td>
+                    <td>
+                        <select name="meta_id">
+                            <option value=\"0\">Choose One</option>
+<%
+    pstmt = conn.prepareStatement("select meta_id, name from meta_container order by name");
+
+    rset = pstmt.executeQuery();
+
+    while(rset.next()) {
+        out.print("<option value=\"" + rset.getInt("meta_id") + "\"");
+        if(rset.getInt("meta_id") == meta_id) {
+            out.print(" selected=\"selected\"");
+        }
+        out.print(" >" + rset.getString("name") + "</option>\n");
+    }
+%>
+                        </select>
                     </td>
                 </tr>
                 <tr>
@@ -385,7 +426,7 @@ try {
                 value="display" id="disp" <% if (showDisplay)
                 out.print("checked=\"true\""); %> />
                 <label for="disp">Show Alias/Display Name</label>
-               <br /> 
+               <br />
                 <input type="radio" name="screen_or_display" value="meta" id="meta" <% if (showMeta) out.print("checked=\"true\""); %> />
                     <label for="meta">Show Meta Contact</label>
 
@@ -403,17 +444,19 @@ try {
 
     pstmt = conn.prepareStatement(queryText);
 
-    //out.print(queryText + "<br />");
-
     for(int i = 0; i < aryCount; i++) {
-      //  out.print(commandArray[i] + "<br />");
         pstmt.setString(i + 1, commandArray[i]);
+    }
+
+    if(meta_id != 0) {
+        pstmt.setInt(aryCount + 1, meta_id);
+        pstmt.setInt(aryCount + 2, meta_id);
     }
 
     rset = pstmt.executeQuery();
 
     if (!rset.isBeforeFirst()) {
-        out.print("<div align=\"center\"><i>No records found.</i></div>");
+        out.print("<div align=\"center\"><i>No records found.</i></div>\n");
     }
 
     ArrayList userArray = new java.util.ArrayList();
@@ -437,8 +480,8 @@ try {
 
             out.println("<div class=\"weblogDateHeader\">");
             out.println(rset.getString("fancy_date"));
-            out.println("</div>");
-        } else if (rset.getTimestamp("message_date").getTime() - 
+            out.println("</div>\n");
+        } else if (rset.getTimestamp("message_date").getTime() -
             currentTime.getTime() > 60*10*1000) {
             out.println("<hr width=\"75%\">");
         }
@@ -450,10 +493,10 @@ try {
         String message = rset.getString("message");
 
         for(int i = 0; i < userArray.size(); i++) {
-            if (!showMeta && 
+            if (!showMeta &&
                     userArray.get(i).equals(rset.getString("sender_sn"))) {
                 sent_color = colorArray[i % colorArray.length];
-            } else if (showMeta && 
+            } else if (showMeta &&
                     userArray.get(i).equals(rset.getString("sender_meta"))) {
                 sent_color = colorArray[i % colorArray.length];
             }
@@ -472,7 +515,7 @@ try {
             if (!showMeta &&
                     userArray.get(i).equals(rset.getString("recipient_sn"))) {
                 received_color = colorArray[i % colorArray.length];
-            } else if (showMeta && 
+            } else if (showMeta &&
                     userArray.get(i).equals(rset.getString("recipient_meta"))) {
                 received_color = colorArray[i % colorArray.length];
             }
@@ -492,14 +535,14 @@ try {
 
         for (int i = 0; i < hlWords.size(); i++) {
 
-            Pattern p = Pattern.compile("(?i)(.*?)(" + 
+            Pattern p = Pattern.compile("(?i)(.*?)(" +
             hlWords.get(i).toString() + ")(.*?)");
             Matcher m = p.matcher(message);
             StringBuffer sb = new StringBuffer();
             int oldIndex = 0;
             while(m.find()) {
                 sb.append(message.substring(oldIndex,m.start()));
-                if(sb.toString().lastIndexOf('<') <= 
+                if(sb.toString().lastIndexOf('<') <=
                   sb.toString().lastIndexOf('>')) {
                     sb.append(m.group(1) + "<b style=\"color:black;background-color:" +
                     hlColor[i % hlColor.length] + "\">");
@@ -515,24 +558,19 @@ try {
         }
 
 
-        if(!rset.getString("sender_sn").equals(prevSender) || 
+        if(!rset.getString("sender_sn").equals(prevSender) ||
             !rset.getString("recipient_sn").equals(prevRecipient)) {
 
             out.print("<div class=\"message_container\">");
 
             out.println("<div class=\"sender\">");
             out.print("<a href=\"index.jsp?from=" +
-            rset.getString("sender_sn") + 
-            "&to=" + rset.getString("recipient_sn") + 
+            rset.getString("sender_sn") +
+            "&to=" + rset.getString("recipient_sn") +
             "&start=" + dateStart +
             "&finish=" + dateFinish + "#" + rset.getInt("message_id") + "\" ");
 
-            if(!showDisplay) {
-                out.print("title=\"" + rset.getString("sender_sn"));
-            } else {
-                out.print("title=\"" + rset.getString("sender_display"));
-            }
-            out.print("\">");
+            out.print("title=\"" + rset.getString("sender_sn") + "\">");
 
             out.print("<span style=\"color: " + sent_color + "\">");
             if(showDisplay) {
@@ -545,7 +583,17 @@ try {
             out.print("</span></a>\n");
 
             if(to_sn == null || from_sn == null) {
-                out.print("&rarr; <span style=\"color: " +
+                out.println("&rarr;");
+
+                out.println("<a href=\"index.jsp?from=" +
+                rset.getString("sender_sn") +
+                    "&to=" + rset.getString("recipient_sn") +
+                    "&start=" + dateStart +
+                    "&finish=" + dateFinish +
+                    "#" + rset.getInt("message_id") +
+                    "\" title=\"" + rset.getString("recipient_sn") + "\">");
+
+                out.print("<span style=\"color: " +
                 received_color + "\">");
                 if(showDisplay) {
                     out.print(rset.getString("recipient_display"));
@@ -554,11 +602,11 @@ try {
                 } else {
                     out.print(rset.getString("recipient_sn"));
                 }
-                out.print("</span>");
+                out.print("</span></a>");
             }
-            out.println("</div>");
+            out.println("</div>\n\n");
         } else {
-            out.println("<div class=\"msg_container_next\">");
+            out.println("<div class=\"msg_container_next\">\n");
         }
 
         prevSender = rset.getString("sender_sn");
@@ -569,19 +617,19 @@ try {
             pstmt = conn.prepareStatement("select title, notes " +
             " from adium.message_notes where message_id = ? " +
             " order by date_added ");
-            
+
             pstmt.setInt(1, rset.getInt("message_id"));
             noteSet = pstmt.executeQuery();
-            
+
             out.print("<a class=\"info\" href=\"#\">");
             out.print("<img src=\"images/note.png\"><span>");
-            
+
             while(noteSet.next()) {
                 out.print("<p><b>" + noteSet.getString("title") + "</b><br />" +
                     noteSet.getString("notes") + "</p>");
             }
             out.print("</span></a>");
-            
+
         }
         out.println("<a href=\"#\" title=\"Add Note ...\" " +
             "onClick=\"window.open('saveForm.jsp?action=saveNote.jsp&message_id=" +
@@ -589,15 +637,15 @@ try {
             "'width=275,height=225')\">");
 
         out.print("<img src=\"images/note_add.png\" alt=\"Add Note\"></a>");
-        
+
         out.print(rset.getTime("message_date"));
-        out.println("</div>");
-        
+        out.println("</div>\n");
+
         out.println("<div class=\"message\"><p>");
         out.println(message);
-        out.println("</p></div>");
-        
-        out.println("</div>");
+        out.println("</p></div>\n");
+
+        out.println("</div>\n");
     }
 
 }catch(SQLException e) {

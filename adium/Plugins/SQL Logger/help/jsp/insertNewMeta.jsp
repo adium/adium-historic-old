@@ -34,7 +34,7 @@ try {
         rset.next();
 
         meta_id = rset.getInt("currval");
-        
+
         pstmt = conn.prepareStatement("select key_id from information_keys");
 
         rset = pstmt.executeQuery();
