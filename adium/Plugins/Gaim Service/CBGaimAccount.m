@@ -437,6 +437,14 @@ static BOOL didInitSSL = NO;
 
 - (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group
 {
+	[gaimThread makeAccount:self 
+			performSelector:@selector(performMoveListObjects:toGroup:)
+				 withObject:objects
+				 withObject:group]
+}
+
+- (void)performMoveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group
+{
 	NSString		*groupName = [self _mapOutgoingGroupName:[group UID]];
 	NSEnumerator	*enumerator;
 	AIListContact	*listObject;
