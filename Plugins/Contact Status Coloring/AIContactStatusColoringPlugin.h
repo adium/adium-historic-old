@@ -16,12 +16,9 @@
 
 #import <Adium/AIPlugin.h>
 
-@class AIContactStatusColoringPreferences;
 @protocol AIListObjectObserver, AIFlashObserver;
 
 @interface AIContactStatusColoringPlugin : AIPlugin <AIListObjectObserver, AIFlashObserver> {
-    AIContactStatusColoringPreferences *preferences;
-
     NSMutableArray	*flashingListObjectArray;
 
     BOOL		awayEnabled;
@@ -34,6 +31,9 @@
     BOOL		idleAndAwayEnabled;
 	BOOL		offlineEnabled;
     
+	BOOL		transitionsEnabled;
+	BOOL		flashUnviewedContentEnabled;
+
     NSColor		*awayColor;
     NSColor		*idleColor;
     NSColor		*signedOffColor;

@@ -17,8 +17,8 @@
 #import "AIAbstractListController.h"
 #import "AIContactController.h"
 #import "AIContactStatusColoringPlugin.h"
-#import "AIContactStatusColoringPreferences.h"
 #import "AIInterfaceController.h"
+#import "AIPreferenceController.h"
 #import "AIListThemeWindowController.h"
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
@@ -44,7 +44,6 @@
 #define FULL_IMAGE_OPACITY		1.0
 #define	OPACITY_REFRESH			0.2
 
-#define CONTACT_STATUS_THEMABLE_PREFS   		@"Contact Status Coloring Themable Prefs"
 #define CONTACT_STATUS_COLORING_DEFAULT_PREFS	@"ContactStatusColoringDefaults"
 
 - (void)installPlugin
@@ -86,10 +85,13 @@
 	opacityUpdateDict = [[NSMutableDictionary alloc] init];
 	
     //Setup our preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LIST_THEME];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS
+																		forClass:[self class]]
+										  forGroup:PREF_GROUP_LIST_THEME];
     
     //Observe preferences and list objects
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
 	[[adium contactController] registerListObjectObserver:self];
 }
 
@@ -132,7 +134,8 @@
 		}
 		
 		//Update our flash array
-		if(inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
+		if((inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) && 
+		   flashUnviewedContentEnabled){
 			int unviewedContent = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
 			
 			if(unviewedContent && ![flashingListObjectArray containsObject:inObject]){ //Start flashing
@@ -160,7 +163,10 @@
 
     //Unviewed content
     if(!color && (unviewedContentEnabled && unviewedContent)){
-        if(/*!unviewedFlashEnabled || */!([[adium interfaceController] flashState] % 2)){
+		/* Use the unviewed content settings if:
+		 *	- we aren't flashing or
+		 *  - every other flash. */
+        if(!flashUnviewedContentEnabled || !([[adium interfaceController] flashState] % 2)){
             color = unviewedContentColor;
             invertedColor = unviewedContentInvertedColor;
             labelColor = unviewedContentLabelColor;
@@ -168,8 +174,8 @@
         }
     }
 
-    //Offline, Signed off, signed on, or typing (These do not show if there is unviewed content)
-    if(!color && (!unviewedContentEnabled || !unviewedContent)){
+    //Offline, Signed off, signed on, or typing
+    if(!color/* && (!unviewedContentEnabled || !unviewedContent)*/){
 		if(offlineEnabled && (![inContact online] &&
 							  ![inContact integerStatusObjectForKey:@"Signed Off"])){
 			color = offlineColor;
@@ -177,7 +183,9 @@
 			labelColor = offlineLabelColor;
 			if(offlineImageFading) opacity = OFFLINE_IMAGE_OPACITY;
 			
-			[self stopFadeOfContact:inContact];
+			if(transitionsEnabled){
+				[self stopFadeOfContact:inContact];
+			}
 			
 		}else if(signedOffEnabled && ([inContact integerStatusObjectForKey:@"Signed Off"])){
 
@@ -187,8 +195,10 @@
             labelColor = signedOffLabelColor;
 			isEvent = YES;
 
-			[self fadeContact:inContact fromOpacity:1.0 toOpacity:0.8];
-
+			if(transitionsEnabled){
+				[self fadeContact:inContact fromOpacity:1.0 toOpacity:0.8];
+			}
+			
         }else if(signedOnEnabled && [inContact integerStatusObjectForKey:@"Signed On"]){
             
 			color = signedOnColor;
@@ -196,8 +206,10 @@
             labelColor = signedOnLabelColor;
 			isEvent = YES;
 
-			[self fadeContact:inContact fromOpacity:OFFLINE_IMAGE_OPACITY toOpacity:1.0];
-
+			if(transitionsEnabled){
+				[self fadeContact:inContact fromOpacity:OFFLINE_IMAGE_OPACITY toOpacity:1.0];
+			}
+			
         }else if(typingEnabled && ([inContact integerStatusObjectForKey:KEY_TYPING] == AITyping)){
             color = typingColor;
             invertedColor = typingInvertedColor;
@@ -264,7 +276,9 @@
     }
 }
 
-//Add a handle to the flash array
+/*
+ * @brief Add a handle to the flash array
+ */
 - (void)addToFlashArray:(AIListObject *)inObject
 {
     //Ensure that we're observing the flashing
@@ -277,7 +291,9 @@
     [self flash:[[adium interfaceController] flashState]];
 }
 
-//Remove a handle from the flash array
+/*
+ * @brief Remove a contact from the flash array
+ */
 - (void)removeFromFlashArray:(AIListObject *)inObject
 {
     //Remove the contact from our flash array
@@ -415,86 +431,102 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	//Release the old values..
-	[signedOffColor release];
-	[signedOnColor release];
-	[awayColor release];
-	[idleColor release];
-	[typingColor release];
-	[unviewedContentColor release];
-	[onlineColor release];
-	[idleAndAwayColor release];
-	[offlineColor release];
-	
-	[signedOffInvertedColor release];
-	[signedOnInvertedColor release];
-	[awayInvertedColor release];
-	[idleInvertedColor release];
-	[typingInvertedColor release];
-	[unviewedContentInvertedColor release];
-	[onlineInvertedColor release];
-	[idleAndAwayInvertedColor release];
-	[offlineInvertedColor release];
-	
-	[awayLabelColor release];
-	[idleLabelColor release];
-	[signedOffLabelColor release];
-	[signedOnLabelColor release];
-	[typingLabelColor release];
-	[unviewedContentLabelColor release];
-	[onlineLabelColor release];
-	[idleAndAwayLabelColor release];
-	[offlineLabelColor release];
-	
-	//
-	alpha = 1.0;
-	offlineImageFading = [[prefDict objectForKey:KEY_LIST_THEME_FADE_OFFLINE_IMAGES] boolValue];
-	
-	//Cache the preference values
-	signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
-	signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
-	awayColor = [[[prefDict objectForKey:KEY_AWAY_COLOR] representedColor] retain];
-	idleColor = [[[prefDict objectForKey:KEY_IDLE_COLOR] representedColor] retain];
-	typingColor = [[[prefDict objectForKey:KEY_TYPING_COLOR] representedColor] retain];
-	unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
-	onlineColor = [[[prefDict objectForKey:KEY_ONLINE_COLOR] representedColor] retain];
-	idleAndAwayColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
-	offlineColor = [[[prefDict objectForKey:KEY_OFFLINE_COLOR] representedColor] retain];
-	
-	signedOffInvertedColor = [[signedOffColor colorWithInvertedLuminance] retain];
-	signedOnInvertedColor = [[signedOnColor colorWithInvertedLuminance] retain];
-	awayInvertedColor = [[awayColor colorWithInvertedLuminance] retain];
-	idleInvertedColor = [[idleColor colorWithInvertedLuminance] retain];
-	typingInvertedColor = [[typingColor colorWithInvertedLuminance] retain];
-	unviewedContentInvertedColor = [[unviewedContentColor colorWithInvertedLuminance] retain];
-	onlineInvertedColor = [[onlineColor colorWithInvertedLuminance] retain];
-	idleAndAwayInvertedColor = [[idleAndAwayColor colorWithInvertedLuminance] retain];
-	offlineInvertedColor = [[offlineColor colorWithInvertedLuminance] retain];
-	
-	awayLabelColor = [[[prefDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColorWithAlpha:alpha] retain];
-	idleLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColorWithAlpha:alpha] retain];
-	signedOffLabelColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColorWithAlpha:alpha] retain];
-	signedOnLabelColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColorWithAlpha:alpha] retain];
-	typingLabelColor = [[[prefDict objectForKey:KEY_LABEL_TYPING_COLOR] representedColorWithAlpha:alpha] retain];
-	unviewedContentLabelColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColorWithAlpha:alpha] retain];
-	onlineLabelColor = [[[prefDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColorWithAlpha:alpha] retain];
-	idleAndAwayLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColorWithAlpha:alpha] retain];
-	offlineLabelColor = [[[prefDict objectForKey:KEY_LABEL_OFFLINE_COLOR] representedColorWithAlpha:alpha] retain];
-	
-	//
-	awayEnabled = [[prefDict objectForKey:KEY_AWAY_ENABLED] boolValue];
-	idleEnabled = [[prefDict objectForKey:KEY_IDLE_ENABLED] boolValue];
-	signedOffEnabled = [[prefDict objectForKey:KEY_SIGNED_OFF_ENABLED] boolValue];
-	signedOnEnabled = [[prefDict objectForKey:KEY_SIGNED_ON_ENABLED] boolValue];
-	typingEnabled = [[prefDict objectForKey:KEY_TYPING_ENABLED] boolValue];
-	unviewedContentEnabled = [[prefDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue];
-	onlineEnabled = [[prefDict objectForKey:KEY_ONLINE_ENABLED] boolValue];
-	idleAndAwayEnabled = [[prefDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue];
-	offlineEnabled = [[prefDict objectForKey:KEY_OFFLINE_ENABLED] boolValue];
-	
-	//Update all objects
-	if(!firstTime){
-		[[adium contactController] updateAllListObjectsForObserver:self];
+	if([group isEqualToString:PREF_GROUP_LIST_THEME]){
+		//Release the old values..
+		[signedOffColor release];
+		[signedOnColor release];
+		[awayColor release];
+		[idleColor release];
+		[typingColor release];
+		[unviewedContentColor release];
+		[onlineColor release];
+		[idleAndAwayColor release];
+		[offlineColor release];
+		
+		[signedOffInvertedColor release];
+		[signedOnInvertedColor release];
+		[awayInvertedColor release];
+		[idleInvertedColor release];
+		[typingInvertedColor release];
+		[unviewedContentInvertedColor release];
+		[onlineInvertedColor release];
+		[idleAndAwayInvertedColor release];
+		[offlineInvertedColor release];
+		
+		[awayLabelColor release];
+		[idleLabelColor release];
+		[signedOffLabelColor release];
+		[signedOnLabelColor release];
+		[typingLabelColor release];
+		[unviewedContentLabelColor release];
+		[onlineLabelColor release];
+		[idleAndAwayLabelColor release];
+		[offlineLabelColor release];
+		
+		//
+		alpha = 1.0;
+		offlineImageFading = [[prefDict objectForKey:KEY_LIST_THEME_FADE_OFFLINE_IMAGES] boolValue];
+		
+		//Cache the preference values
+		signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
+		signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
+		awayColor = [[[prefDict objectForKey:KEY_AWAY_COLOR] representedColor] retain];
+		idleColor = [[[prefDict objectForKey:KEY_IDLE_COLOR] representedColor] retain];
+		typingColor = [[[prefDict objectForKey:KEY_TYPING_COLOR] representedColor] retain];
+		unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
+		onlineColor = [[[prefDict objectForKey:KEY_ONLINE_COLOR] representedColor] retain];
+		idleAndAwayColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
+		offlineColor = [[[prefDict objectForKey:KEY_OFFLINE_COLOR] representedColor] retain];
+		
+		signedOffInvertedColor = [[signedOffColor colorWithInvertedLuminance] retain];
+		signedOnInvertedColor = [[signedOnColor colorWithInvertedLuminance] retain];
+		awayInvertedColor = [[awayColor colorWithInvertedLuminance] retain];
+		idleInvertedColor = [[idleColor colorWithInvertedLuminance] retain];
+		typingInvertedColor = [[typingColor colorWithInvertedLuminance] retain];
+		unviewedContentInvertedColor = [[unviewedContentColor colorWithInvertedLuminance] retain];
+		onlineInvertedColor = [[onlineColor colorWithInvertedLuminance] retain];
+		idleAndAwayInvertedColor = [[idleAndAwayColor colorWithInvertedLuminance] retain];
+		offlineInvertedColor = [[offlineColor colorWithInvertedLuminance] retain];
+		
+		awayLabelColor = [[[prefDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColorWithAlpha:alpha] retain];
+		idleLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColorWithAlpha:alpha] retain];
+		signedOffLabelColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColorWithAlpha:alpha] retain];
+		signedOnLabelColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColorWithAlpha:alpha] retain];
+		typingLabelColor = [[[prefDict objectForKey:KEY_LABEL_TYPING_COLOR] representedColorWithAlpha:alpha] retain];
+		unviewedContentLabelColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColorWithAlpha:alpha] retain];
+		onlineLabelColor = [[[prefDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColorWithAlpha:alpha] retain];
+		idleAndAwayLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColorWithAlpha:alpha] retain];
+		offlineLabelColor = [[[prefDict objectForKey:KEY_LABEL_OFFLINE_COLOR] representedColorWithAlpha:alpha] retain];
+		
+		//
+		awayEnabled = [[prefDict objectForKey:KEY_AWAY_ENABLED] boolValue];
+		idleEnabled = [[prefDict objectForKey:KEY_IDLE_ENABLED] boolValue];
+		signedOffEnabled = [[prefDict objectForKey:KEY_SIGNED_OFF_ENABLED] boolValue];
+		signedOnEnabled = [[prefDict objectForKey:KEY_SIGNED_ON_ENABLED] boolValue];
+		typingEnabled = [[prefDict objectForKey:KEY_TYPING_ENABLED] boolValue];
+		unviewedContentEnabled = [[prefDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue];
+		onlineEnabled = [[prefDict objectForKey:KEY_ONLINE_ENABLED] boolValue];
+		idleAndAwayEnabled = [[prefDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue];
+		offlineEnabled = [[prefDict objectForKey:KEY_OFFLINE_ENABLED] boolValue];
+		
+		//Update all objects
+		if(!firstTime){
+			[[adium contactController] updateAllListObjectsForObserver:self];
+		}
+
+	}else if([group isEqualToString:PREF_GROUP_CONTACT_LIST]){
+		transitionsEnabled = [[prefDict objectForKey:KEY_CL_SHOW_TRANSITIONS] boolValue];
+		flashUnviewedContentEnabled = [[prefDict objectForKey:KEY_CL_FLASH_UNVIEWED_CONTENT] boolValue];
+		
+		//Clear our flash array if we aren't flashing for unviewed content now
+		if(!flashUnviewedContentEnabled){
+			NSEnumerator	*enumerator = [[[flashingListObjectArray copy] autorelease] objectEnumerator];
+			AIListContact	*listContact;
+
+			while(listContact = [enumerator nextObject]){
+				[self removeFromFlashArray:listContact];
+			}
+		}
 	}
 }
 
