@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.79 2004/06/08 19:54:45 dchoby98 Exp $
+// $Id: AIContentController.m,v 1.80 2004/06/09 16:55:39 evands Exp $
 
 #import "AIContentController.h"
 
@@ -231,6 +231,8 @@
 {
     AIChat			*chat = [inObject chat];
     AIListObject 	*object = [inObject source];
+	NSArray			*contentObjectArray = [chat contentObjectArray];
+	
 	BOOL			shouldBeFirstMessage = NO;
 	
     if(object){
@@ -250,17 +252,13 @@
         }
 		
 		if([inObject trackContent]) {
+			int		contentLength = [contentObjectArray count];
 			
-			int		contentLength = [[chat contentObjectArray] count];
-			BOOL	isFirstAfterContext = NO;
+			if(contentLength <= 1 || 
+			   ![[(AIContentObject *)[contentObjectArray objectAtIndex:0] type] isEqualToString:[inObject type]]){
 			
-			if( contentLength > 1 ) {
-				isFirstAfterContext = ![[(AIContentObject *)[[chat contentObjectArray] objectAtIndex:0] type] isEqualToString:[inObject type]];
-			}
-			
-			if( contentLength <= 1 || ( (contentLength > 1) && isFirstAfterContext ) )
 				shouldBeFirstMessage = YES;
-				
+			}
 		}
 
 		//Display the content
@@ -268,7 +266,7 @@
 
 		//Notify: Did Receive Content
         if([inObject trackContent]){
-            if([[chat contentObjectArray] count] > 1 && !shouldBeFirstMessage){
+            if([contentObjectArray count] > 1 && !shouldBeFirstMessage){
                 [[owner notificationCenter] postNotificationName:Content_DidReceiveContent
 														  object:chat
 														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
