@@ -57,7 +57,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
-	//    NSLog(@"accountUpdateBuddy (%s)", buddy->name);
+	NSLog(@"accountUpdateBuddy (%s)", buddy->name);
     int                     online;
     NSMutableDictionary     *statusDict;
     NSMutableArray          *modifiedKeys = [NSMutableArray array];
@@ -191,14 +191,19 @@
 
 - (void)accountRemoveBuddy:(GaimBuddy*)buddy
 {
+	NSLog(@"accountRemoveBuddy (%s)", buddy->name);
+
     //stored the key as a compactedString originally
     [handleDict removeObjectForKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
 	
     if (buddy->node.ui_data != NULL) {
         [(AIHandle *)buddy->node.ui_data release];
         buddy->node.ui_data = NULL;
-#warning      if (!silentAndDelayed)
+		
+		//Ignore these while disconnecting
+		if(![[self statusObjectForKey:@"Disconnecting"] boolValue]){
             [[adium contactController] handlesChangedForAccount:self];
+		}
     }
 }
 
@@ -907,17 +912,38 @@
 //Disconnect this account
 - (void)disconnect
 {
+    //We are disconnecting
+    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
+    
+	//Tell libgaim to disconnect
+    if(gaim_account_is_connected(account)){
+        gaim_account_disconnect(account); 
+	}
+}
+
+//Our account was disconnected, report the error
+- (void)accountConnectionReportDisconnect:(const char*)text
+{
+    [self displayError:[NSString stringWithUTF8String:text]];
+}
+
+//Our account has disconnected (called automatically by gaimServicePlugin)
+- (void)accountConnectionDisconnected
+{
     NSEnumerator    *enumerator;
     AIHandle        *handle;
     
-    //We are disconnecting
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
-	
+	//We are now offline
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
+
     //Flush all our handle status flags
     enumerator = [[handleDict allValues] objectEnumerator];
     while((handle = [enumerator nextObject])){
         [self removeAllStatusFlagsFromHandle:handle];
     }
+	
     //Clear out the GaimConv pointers in the chat statusDictionaries, as they no longer have meaning
     AIChat *chat;
     enumerator = [chatDict objectEnumerator];
@@ -931,50 +957,14 @@
     
     //Remove our chat dictionary
     [chatDict release]; chatDict = [[NSMutableDictionary alloc] init];
-    
-    //Disconnect if gaim still considers us connected
-    if (gaim_account_is_connected(account))
-        gaim_account_disconnect(account); 
-    
-    //We don't want gaim keeping tracking of our buddies between sessions - we do that.
-    //This will remove any gaimBuddies that belong to this account, and will also destroy account
-    //Remove the service's accountDict entry first
-    [(CBGaimServicePlugin *)service removeAccount:account];
-    gaim_accounts_delete(account); account = NULL;
-    gc = NULL;
+	
+	//Reset the gaim account (We don't want it tracking anything between sessions)
+	[self resetLibGaimAccount];
 
-    //create a new account for next time
-    account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
-    gaim_accounts_add(account);
-    [(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
-    
-	//We are now offline
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
-}
-
-//Our account was disconnected, report the error
-- (void)accountConnectionReportDisconnect:(const char*)text
-{
-    [self displayError:[NSString stringWithUTF8String:text]];
-}
-
-//Our account has disconnected (called automatically by gaimServicePlugin)
-- (void)accountConnectionDisconnected
-{
-	//We are now offline
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
-
-	//
-    //If a gc object still exists, we were disconnected unexpectedly
-    if(gc != NULL) {
-		//clean up
-        [self disconnect];
-        //reconnect
-        [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
-    }
+	//If we were disconnected unexpectedly, attempt a reconnect
+	if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
+		[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
+	}
 }
 
 //Our account has connected (called automatically by gaimServicePlugin)
@@ -991,6 +981,21 @@
     [self performSelector:@selector(updateAllStatusKeys) withObject:nil afterDelay:1];
 }
 
+//Reset the libgaim account, causing it to forget all saved information
+//We don't want libgaim keeping track of anything between sessions... we handle all that on our own
+- (void)resetLibGaimAccount
+{
+	//Destroy the account
+	//This will remove any gaimBuddies, account information, etc.
+    [(CBGaimServicePlugin *)service removeAccount:account];
+    gaim_accounts_delete(account); account = NULL;
+    gc = NULL;
+
+	//Recreate a fresh version of the account
+    account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
+    gaim_accounts_add(account);
+    [(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
+}
 
 
 //Account Status ------------------------------------------------------------------------------------------------------
@@ -1142,6 +1147,5 @@
 	//We now have an icon
 	[self setStatusObject:image forKey:@"UserIcon" notify:YES];
 }
-
 
 @end
