@@ -1,0 +1,25 @@
+{
+    IBClasses = (
+        {CLASS = AIPlugin; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {cancel = id; invite = id; }; 
+            CLASS = DCInviteToChatPlugin; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"menu_contacts" = NSPopUpButton; "textField_message" = NSTextField; }; 
+            SUPERCLASS = AIPlugin; 
+        }, 
+        {
+            ACTIONS = {cancel = id; invite = id; }; 
+            CLASS = DCInviteToChatWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "menu_contacts" = NSPopUpButton; 
+                "textField_chatName" = NSTextField; 
+                "textField_message" = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
