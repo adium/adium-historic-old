@@ -17,13 +17,14 @@
 
 typedef enum {
     LOC_Adium_About = 0, LOC_Adium_Preferences,
-    LOC_File_New, LOC_File_Close, LOC_File_Save, LOC_File_Accounts, LOC_File_Additions, LOC_File_Status,
+    LOC_File_New, LOC_File_Close, LOC_File_Save, LOC_File_Additions,
     LOC_Edit_Bottom, LOC_Edit_Additions,
+	LOC_View_General, LOC_View_Unnamed_A, LOC_View_Unnamed_B, LOC_View_Unnamed_C, 
+    LOC_Contact_Editing, LOC_Contact_Manage, LOC_Contact_Action, LOC_Contact_NegativeAction, LOC_Contact_Additions,
+	LOC_Status_State, LOC_Status_Accounts, LOC_Status_Additions,
     LOC_Format_Styles, LOC_Format_Palettes, LOC_Format_Additions, 
     LOC_Window_Top, LOC_Window_Commands, LOC_Window_Auxiliary, LOC_Window_Fixed,
     LOC_Help_Local, LOC_Help_Web, LOC_Help_Additions,
-    LOC_Contact_Editing, LOC_Contact_Manage, LOC_Contact_Action, LOC_Contact_NegativeAction, LOC_Contact_Additions,
-	LOC_View_General, LOC_View_Unnamed_A, LOC_View_Unnamed_B, LOC_View_Unnamed_C, 
     LOC_Dock_Status
 } MENU_LOCATION;
 
@@ -36,38 +37,39 @@ typedef enum {
 @interface AIMenuController : NSObject {
     IBOutlet	AIAdium		*adium;
 	
-    IBOutlet	NSMenuItem	*nilMenuItem;
-    IBOutlet	NSMenuItem	*menu_Adium_About;
-    IBOutlet	NSMenuItem	*menu_Adium_Preferences;
-    IBOutlet	id			menu_File_New;
-    IBOutlet	NSMenuItem	*menu_File_Close;
-    IBOutlet	NSMenuItem	*menu_File_Save;
-    IBOutlet	NSMenuItem	*menu_File_Accounts;
-    IBOutlet	NSMenuItem	*menu_File_Additions;
-    IBOutlet	NSMenuItem	*menu_File_Status;
-    IBOutlet	NSMenuItem	*menu_Edit_Bottom;
-    IBOutlet	NSMenuItem	*menu_Edit_Additions;
-    IBOutlet	NSMenuItem	*menu_Format_Styles;
-    IBOutlet	NSMenuItem	*menu_Format_Palettes;
-    IBOutlet	NSMenuItem	*menu_Format_Additions;
-    IBOutlet	NSMenuItem	*menu_Window_Top;
-    IBOutlet	NSMenuItem	*menu_Window_Commands;
-    IBOutlet	NSMenuItem	*menu_Window_Auxiliary;
-    IBOutlet	NSMenuItem	*menu_Window_Fixed;
-    IBOutlet	NSMenuItem	*menu_Help_Local;
-    IBOutlet	NSMenuItem	*menu_Help_Web;
-    IBOutlet	NSMenuItem	*menu_Help_Additions;
-    IBOutlet	NSMenuItem	*menu_Contact_Editing;
-    IBOutlet	NSMenuItem	*menu_Contact_Manage;
-    IBOutlet	NSMenuItem	*menu_Contact_Action;
-    IBOutlet	NSMenuItem	*menu_Contact_NegativeAction;
-    IBOutlet	NSMenuItem	*menu_Contact_Additions;
-    IBOutlet	NSMenuItem	*menu_View_General;
-    IBOutlet	NSMenuItem	*menu_View_Unnamed_A;
-    IBOutlet	NSMenuItem	*menu_View_Unnamed_B;
-    IBOutlet	NSMenuItem	*menu_View_Unnamed_C;
-    IBOutlet	id			menu_Dock_Status;
-    IBOutlet    NSMenuItem  *menuItem_Format_Italics;
+    IBOutlet	id		nilMenuItem;
+    IBOutlet	id		menu_Adium_About;
+    IBOutlet	id		menu_Adium_Preferences;
+    IBOutlet	id		menu_File_New;
+    IBOutlet	id		menu_File_Close;
+    IBOutlet	id		menu_File_Save;
+    IBOutlet	id		menu_File_Additions;
+    IBOutlet	id		menu_Edit_Bottom;
+    IBOutlet	id		menu_Edit_Additions;
+    IBOutlet	id		menu_View_General;
+    IBOutlet	id		menu_View_Unnamed_A;
+    IBOutlet	id		menu_View_Unnamed_B;
+    IBOutlet	id		menu_View_Unnamed_C;
+	IBOutlet	id		menu_Status_State;
+    IBOutlet	id		menu_Status_Accounts;
+    IBOutlet	id		menu_Status_Additions;
+    IBOutlet	id		menu_Format_Styles;
+    IBOutlet	id		menu_Format_Palettes;
+    IBOutlet	id		menu_Format_Additions;
+    IBOutlet	id		menu_Window_Top;
+    IBOutlet	id		menu_Window_Commands;
+    IBOutlet	id		menu_Window_Auxiliary;
+    IBOutlet	id		menu_Window_Fixed;
+    IBOutlet	id		menu_Help_Local;
+    IBOutlet	id		menu_Help_Web;
+    IBOutlet	id		menu_Help_Additions;
+    IBOutlet	id		menu_Contact_Editing;
+    IBOutlet	id		menu_Contact_Manage;
+    IBOutlet	id		menu_Contact_Action;
+    IBOutlet	id		menu_Contact_NegativeAction;
+    IBOutlet	id		menu_Contact_Additions;
+    IBOutlet	id		menu_Dock_Status;
+    IBOutlet    id  	menuItem_Format_Italics;
     
     NSMenu                              *contextualMenu;
     NSMutableDictionary					*contextualMenuItemDict;
