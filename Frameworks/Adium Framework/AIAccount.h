@@ -35,6 +35,14 @@ typedef enum {
     PRIVACY_DENY
 }  PRIVACY_TYPE;
 
+typedef enum {
+    PRIVACY_ALLOW_ALL = 1,      //Anyone can conctact you
+	PRIVACY_DENY_ALL,           //Nobody can contact you
+	PRIVACY_ALLOW_USERS,        //Only those on your allow list can contact you
+	PRIVACY_DENY_USERS,         //Those on your deny list can't contact you
+	PRIVACY_ALLOW_CONTACTLIST   //Only those on your contact list can contact you
+} PRIVACY_OPTION;
+
 //Support for file transfer
 @protocol AIAccount_Files
     //Instructs the account to accept a file transfer request
@@ -53,9 +61,11 @@ typedef enum {
     -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type;
     //Remove a list object from the privacy list (either PRIVACY_PERMIT or PRIVACY_DENY). Return value indicates success
     -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type;
-
 	//Return an array of AIListContacts on the specified privacy list.  Returns an empty array if no contacts are on the list.
 	-(NSArray *)listObjectsOnPrivacyList:(PRIVACY_TYPE)type;
+    //Set the privacy options
+    -(void)setPrivacyOptions:(PRIVACY_OPTION)option;
+
 @end
 
 

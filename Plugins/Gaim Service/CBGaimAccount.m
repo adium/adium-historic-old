@@ -986,6 +986,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
+-(void)setPrivacyOptions:(PRIVACY_OPTION)option
+{
+    account->perm_deny = option;
+    serv_set_permit_deny(gaim_account_get_connection(account));
+}
 
 /*****************************************************/
 /* File transfer / AIAccount_Files inherited methods */
