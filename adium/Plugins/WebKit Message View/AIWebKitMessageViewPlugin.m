@@ -33,6 +33,8 @@ DeclareString(AppendNextMessage);
 											  forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		preferences = [[ESWebKitMessageViewPreferences preferencePaneForPlugin:self] retain];
 		
+		advancedPreferences = [[ESWKMVAdvancedPreferences preferencePaneForPlugin:self] retain];
+		
 		styleDictionary = nil;
 		[self _loadAvailableWebkitStyles];
 			
@@ -85,6 +87,8 @@ DeclareString(AppendNextMessage);
 		timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO];
 		
 		showUserIcons = [[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue];
+		nameFormat = [[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue];
+		combineConsecutive = [[prefDict objectForKey:KEY_WEBKIT_COMBINE_CONSECUTIVE] boolValue];
 	}
 }
 
@@ -320,7 +324,7 @@ DeclareString(AppendNextMessage);
 	currentStylePath = [stylePath stringByAppendingPathComponent:([content isOutgoing] ? @"Outgoing" : @"Incoming")];
 	
 	//Load context templates if appropriate
-	if (contentIsSimilar){
+	if (contentIsSimilar && combineConsecutive){
 		templateFile = (isContext ? @"NextContext.html" : @"NextContent.html");
 	}else{
 		templateFile = (isContext ? @"Context.html" : @"Content.html");
@@ -330,7 +334,7 @@ DeclareString(AppendNextMessage);
 	
 	//Fall back on the content files if context files were desired and not present
 	if (!newHTML){
-		if (contentIsSimilar){
+		if (contentIsSimilar && combineConsecutive){
 			templateFile = @"NextContent.html";
 		}else{
 			templateFile = @"Content.html";
@@ -396,12 +400,36 @@ DeclareString(AppendNextMessage);
 		do{
 			range = [inString rangeOfString:@"%sender%"];
 			if(range.location != NSNotFound){
-				NSString	*senderDisplay = [[content source] displayName];
+				NSString		*senderDisplay = nil;
+				AIListObject	*source = [content source];
+				NSString		*displayName = [source displayName];
+				NSString		*formattedUID = [source formattedUID];
+				
+				if (![displayName isEqualToString:formattedUID]){
+					switch (nameFormat) {
+						case Display_Name_Screen_Name: {
+							senderDisplay = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
+							break;	
+						}
+						case Screen_Name_Display_Name: {
+							senderDisplay = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
+							break;	
+						}
+						case Screen_Name: {
+							senderDisplay = formattedUID;
+							break;	
+						}
+					}
+				}
+				if (!senderDisplay){
+					senderDisplay = displayName;
+				}
+				
 				if ([(AIContentMessage *)content autoreply]){
 					senderDisplay = [NSString stringWithFormat:@"%@ %@",senderDisplay,AILocalizedString(@"(Autoreply)","Short word inserted after the sender's name when displaying a message which was an autoresponse")];
 				}
-				[inString replaceCharactersInRange:range
-											withString:senderDisplay];
+				
+				[inString replaceCharactersInRange:range withString:senderDisplay];
 			}
 		} while(range.location != NSNotFound);
         
