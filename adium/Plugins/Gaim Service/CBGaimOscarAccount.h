@@ -76,7 +76,8 @@ struct buddyinfo {
 
 @interface CBGaimOscarAccount : CBGaimAccount <AIAccount_Files>
 {
-
+	NSTimer			*delayedSignonUpdateTimer;
+	NSMutableArray  *arrayOfContactsForDelayedUpdates;
 }
 
 @end

@@ -137,5 +137,5 @@
 - (oneway void)requestAddContactWithUID:(NSString *)contactUID;
 
 - (void)gotGroupForContact:(AIListContact *)contact;
-
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
