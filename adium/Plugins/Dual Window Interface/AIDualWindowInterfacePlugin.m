@@ -197,7 +197,7 @@
 - (void)containerDidClose:(id <AIInterfaceContainer>)inContainer
 {
     if(inContainer == contactListWindowController){
-        contactListWindowController = nil; [contactListWindowController release];
+        [contactListWindowController release]; contactListWindowController = nil;
     }
     
     [self buildWindowMenu]; //Rebuild our window menu

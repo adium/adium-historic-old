@@ -13,6 +13,13 @@
 @implementation AIAutoScrollView
 
 //Auto Scrolling ---------------------------------------------------------------
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
+
+    [super dealloc];
+}
+
 - (void)setAutoScrollToBottom:(BOOL)inValue
 {
     autoScrollToBottom = inValue;
@@ -60,7 +67,6 @@
 //When our document resizes
 - (void)documentFrameDidChange:(NSNotification *)notification
 {
-//    NSLog(@"documentFrameDidChange");
     if(autoScrollToBottom){
         NSRect	documentVisibleRect = [self documentVisibleRect];
         NSRect	newDocumentFrame = [[self documentView] frame];

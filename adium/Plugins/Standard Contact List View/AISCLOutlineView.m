@@ -57,8 +57,11 @@
 
 - (void)dealloc
 {
-    [font release];
-    
+    //Stop observing frame changes!
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:[self enclosingScrollView]];
+
+    //Cleanup
+    [font release];    
     [super dealloc];
 }
 
