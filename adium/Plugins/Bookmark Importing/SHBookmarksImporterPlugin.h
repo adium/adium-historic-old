@@ -16,6 +16,7 @@
 
 @interface SHBookmarksImporterPlugin : AIPlugin {
     NSMutableArray  *importerArray;
+    NSLock          *bookmarksLock;
 }
 
 @end
