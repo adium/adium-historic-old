@@ -17,6 +17,7 @@
                 "fontField_status" = JVFontPreviewField; 
                 "popUp_contactCellStyle" = NSPopUpButton; 
                 "popUp_contactTextAlignment" = NSPopUpButton; 
+                "popUp_extendedStatusPosition" = NSPopUpButton; 
                 "popUp_groupCellStyle" = NSPopUpButton; 
                 "popUp_groupTextAlignment" = NSPopUpButton; 
                 "popUp_serviceIconPosition" = NSPopUpButton; 

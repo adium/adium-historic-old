@@ -10,6 +10,7 @@
 	IBOutlet		NSPopUpButton		*popUp_contactTextAlignment;
 	IBOutlet		NSPopUpButton		*popUp_groupTextAlignment;
 	IBOutlet		NSPopUpButton		*popUp_windowStyle;
+	IBOutlet		NSPopUpButton		*popUp_extendedStatusPosition;
 	IBOutlet		NSPopUpButton		*popUp_userIconPosition;
 	IBOutlet		NSPopUpButton		*popUp_statusIconPosition;
 	IBOutlet		NSPopUpButton		*popUp_serviceIconPosition;
@@ -44,7 +45,7 @@
 	IBOutlet		JVFontPreviewField	*fontField_group;	
 	
 	IBOutlet		NSTextField			*textField_layoutName;
-	
+
 	NSString				*layoutName;
 }
 

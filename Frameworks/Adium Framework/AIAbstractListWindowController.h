@@ -24,6 +24,7 @@
 #define KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS		@"Show Service Icons"
 #define KEY_LIST_LAYOUT_WINDOW_STYLE			@"Window Style"
 
+#define KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION @"Extended Status Position"
 #define KEY_LIST_LAYOUT_USER_ICON_POSITION		@"User Icon Position"
 #define KEY_LIST_LAYOUT_STATUS_ICON_POSITION	@"Status Icon Position"
 #define KEY_LIST_LAYOUT_SERVICE_ICON_POSITION	@"Service Icon Position"

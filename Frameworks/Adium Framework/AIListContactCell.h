@@ -22,6 +22,7 @@
 	LIST_POSITION		userIconPosition;
 	LIST_POSITION		statusIconPosition;
 	LIST_POSITION		serviceIconPosition;
+	BOOL				extendedStatusIsBelowName;
 	
 	float				backgroundOpacity;
 
@@ -52,6 +53,7 @@
 - (BOOL)statusIconsVisible;
 - (void)setServiceIconsVisible:(BOOL)inShowService;
 - (BOOL)serviceIconsVisible;
+- (void)setExtendedStatusIsBelowName:(BOOL)inBelowName;
 - (void)setUserIconPosition:(LIST_POSITION)inPosition;
 - (void)setStatusIconPosition:(LIST_POSITION)inPosition;
 - (void)setServiceIconPosition:(LIST_POSITION)inPosition;
