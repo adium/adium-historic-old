@@ -12,6 +12,9 @@
 #define ADIUM_UPDATE_URL		@"http://download.adiumx.com/"
 #define VERSION_PLIST_KEY		@"adium-version"
 
+#define PREF_GROUP_UPDATING		@"Updating"
+#define KEY_LAST_UPDATE_ASKED	@"LastUpdateAsked"
+
 @interface CPFVersionChecker (PRIVATE)
 - (void)_requestVersionThread;
 - (void)_versionReceived:(NSDate *)newestDate;
@@ -22,6 +25,11 @@
 //Install
 - (void)installPlugin
 {
+	//Listen to accounts for automatic update checking
+	[[adium contactController] registerListObjectObserver:self];
+	observingListUpdates = YES;
+				
+	//Manual update checking menu item
     versionCheckerMenuItem = [[[NSMenuItem alloc] initWithTitle:VERSION_CHECKER_TITLE 
 														 target:self 
 														 action:@selector(checkForNewVersion:)
@@ -29,13 +37,38 @@
     [[adium menuController] addMenuItem:versionCheckerMenuItem toLocation:LOC_Adium_About];
 }
 
+- (void)uninstallPlugin
+{
+	if(observingListUpdates) [[adium contactController] unregisterListObjectObserver:self];
+}
+
+//
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{
+	if([inObject isKindOfClass:[AIAccount class]]){
+		if([inModifiedKeys containsObject:@"Online"] && [[inObject statusObjectForKey:@"Online"] boolValue] == YES){
+			//Check for updates
+			[self performSelector:@selector(checkForNewVersion:) withObject:nil afterDelay:10.0];
+
+			//Don't check again during this session
+			if(observingListUpdates){
+				[[adium contactController] unregisterListObjectObserver:self];
+				observingListUpdates = NO;
+			}
+		}
+	}
+	
+	return(nil);
+}	
+
 
 //New version checking -------------------------------------------------------------------------------------------------
 #pragma mark New version checking
 //Check for a new release of Adium
 //The URL load (dateOfLatestBuild) can block, so we do it in a separate thread.  Once the URL load is finished we pass
 //control back to the main thread and display the appropriate panel
-- (void)checkForNewVersion:(id)sender{   
+- (void)checkForNewVersion:(id)sender{
+	checkingManually = (sender != nil);
 	[NSThread detachNewThreadSelector:@selector(_requestVersionThread) toTarget:self withObject:nil];
 }
 - (void)_requestVersionThread
@@ -49,30 +82,39 @@
 - (void)_versionReceived:(NSDate *)newestDate
 {
 	NSDate	*thisDate = [self dateOfThisBuild]; //Date of this build
+	NSDate	*lastDateDisplayedToUser = [[adium preferenceController] preferenceForKey:KEY_LAST_UPDATE_ASKED group:PREF_GROUP_UPDATING];
 	
-    if([thisDate isEqualToDate:newestDate]){
-		NSRunAlertPanel(AILocalizedString(@"Up to Date",nil),
-						AILocalizedString(@"You have the most recent version of Adium.",nil),
-						@"Okay", nil, nil);
-		
-    }else{
-		//Formatted version of the newest release's date
-		NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%B %e, %Y" allowNaturalLanguage:NO] autorelease];
-		NSString   		*newestDateString = [dateFormatter stringForObjectValue:newestDate];
-		
-		//Time since last update
-		NSString *interval = [self intervalBetweenDate:thisDate andDate:newestDate];
-		
-        int button = NSRunAlertPanel(AILocalizedString(@"Update Available",nil),
-									 [NSString stringWithFormat:AILocalizedString(@"A new Adium was released on %@. Your current copy is %@ old.  Would you like to update?", nil), newestDateString, interval],
-									 AILocalizedString(@"Update",nil),
-									 AILocalizedString(@"Cancel",nil),
-									 nil);
-		
-		if(button == NSAlertDefaultReturn){
-			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_UPDATE_URL]];
+	//If the user has already been informed of this update previously, don't bother them
+	if(checkingManually || !lastDateDisplayedToUser || ![lastDateDisplayedToUser isEqualToDate:newestDate]){
+		if([thisDate isEqualToDate:newestDate]){
+			//Display an 'up to date' message if the user checked for updates manually
+			if(checkingManually){
+				NSRunAlertPanel(AILocalizedString(@"Up to Date",nil),
+								AILocalizedString(@"You have the most recent version of Adium.",nil),
+								@"Okay", nil, nil);
+			}
+			
+		}else{
+			//Formatted version of the newest release's date
+			NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%B %e, %Y" allowNaturalLanguage:NO] autorelease];
+			NSString   		*newestDateString = [dateFormatter stringForObjectValue:newestDate];
+			
+			//Time since last update
+			NSString *interval = [self intervalBetweenDate:thisDate andDate:newestDate];
+			
+			int button = NSRunAlertPanel(AILocalizedString(@"Update Available",nil),
+										 [NSString stringWithFormat:AILocalizedString(@"A new Adium was released on %@. Your current copy is %@ old.  Would you like to update?", nil), newestDateString, interval],
+										 AILocalizedString(@"Update",nil),
+										 AILocalizedString(@"Ignore",nil),
+										 nil);
+			
+			if(button == NSAlertDefaultReturn){
+				[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_UPDATE_URL]];
+			}
+			
+			//Remember that the user has been prompted for this version, so we don't bug them again
+			[[adium preferenceController] setPreference:newestDate forKey:KEY_LAST_UPDATE_ASKED group:PREF_GROUP_UPDATING];
 		}
-		
 	}
 }
 
