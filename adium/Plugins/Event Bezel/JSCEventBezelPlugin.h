@@ -40,7 +40,7 @@
 #define BACKGROUND_NORMAL                   0
 #define BACKGROUND_DARK                     1
 
-#define CONTACT_ALERT_IDENTIFIER            @"Bezel"
+#define BEZEL_CONTACT_ALERT_IDENTIFIER            @"Bezel"
 
 @class JSCEventBezelPreferences;
 
