@@ -57,10 +57,11 @@ typedef enum {
 	BOOL				windowIsClosing;		//YES only if windowShouldClose: has been called, to prevent actions after that point
 	
     //Search information
-    int					activeSearchID;			//ID of the active search thread, all other threads should quit
-    NSLock				*searchingLock;			//Locked when a search is in progress
-    BOOL				searching;				//YES if a search is in progress
-    NSString			*activeSearchString;	//Current search string
+    int					activeSearchID;				//ID of the active search thread, all other threads should quit
+    NSLock				*searchingLock;				//Locked when a search is in progress
+    BOOL				searching;					//YES if a search is in progress
+    NSString			*activeSearchString;		//Current search string
+	NSString			*activeSearchStringEncoded; //Current search string encoded into HTML
 	
 	NSTimer				*aggregateLogIndexProgressTimer; //Used to update a content search as the index updates
 	
