@@ -16,15 +16,6 @@
 
 #import <Adium/AISortController.h>
 
-typedef enum {
-	Available = 0,
-	Away = 1,
-	Idle = 2,
-	Away_And_Idle = 3,
-	Unavailable = 4,
-	Online = 5
-} Status_Sort_Type;
-
 @class AILocalizationTextField;
 
 @interface ESStatusSort : AISortController {
