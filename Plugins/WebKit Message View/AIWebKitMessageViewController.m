@@ -497,6 +497,7 @@ DeclareString(AppendNextMessage);
 	showUserIcons = [[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue];
 	useCustomNameFormat = [[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue];
 	nameFormat = [[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue];
+	allowTextBackgrounds = [[prefDict objectForKey:KEY_WEBKIT_USE_BACKGROUND] intValue];
 	combineConsecutive = [[prefDict objectForKey:KEY_WEBKIT_COMBINE_CONSECUTIVE] boolValue];
 }
 
@@ -535,7 +536,7 @@ DeclareString(AppendNextMessage);
 
 	//Create a new tracking array for objects who have had their icons handled
 	objectsWithUserIconsArray = [[NSMutableArray alloc] init];
-
+	
 	NSString	*maskPath = [plugin valueForKey:@"ImageMask" style:style variant:loadedVariantID];
 	if (maskPath){
 		//Load the image mask if one is specified (it will be nil otherwise due to _flushPreferenceCache)
@@ -987,15 +988,79 @@ DeclareString(AppendNextMessage);
 				[inString replaceCharactersInRange:range withString:[[contentSource service] shortDescription]];
 			}
 		} while(range.location != NSNotFound);	
-		
-		
+
+//Blatantly stealing the date code for the background color script.
+do{
+		range = [inString rangeOfString:@"%textbackgroundcolor{"];
+		if(range.location != NSNotFound) {
+			NSRange endRange;
+			endRange = [inString rangeOfString:@"}%"];
+			if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
+			NSString *transparency = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
+			
+			if(allowTextBackgrounds){
+			NSString *thisIsATemporaryString;
+			unsigned int rgb = 0, red, green, blue;
+			NSScanner *hexcode;
+			thisIsATemporaryString = [AIHTMLDecoder encodeHTML:[content message] headers:NO 
+																				 fontTags:NO
+																	   includingColorTags:NO
+																			closeFontTags:NO
+																				styleTags:NO
+															   closeStyleTagsOnFontChange:NO
+																		   encodeNonASCII:NO
+																			 encodeSpaces:NO
+																			   imagesPath:@"/tmp"
+																		attachmentsAsText:NO
+														   attachmentImagesOnlyForSending:NO
+																		   simpleTagsOnly:NO
+																		   bodyBackground:YES];
+			hexcode = [NSScanner scannerWithString:thisIsATemporaryString];
+			[hexcode  scanHexInt:&rgb];
+			if(![thisIsATemporaryString length] && rgb == 0){
+			[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
+			}else{
+			red = (rgb & 0xff0000) >> 16;
+			green = (rgb & 0x00ff00) >> 8;
+			blue = rgb & 0x0000ff;
+			[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:[NSString stringWithFormat:@"rgba(%d, %d, %d, %@)", red, green, blue, transparency]];
+			}
+			}else{
+			[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
+		}
+			}else if(endRange.location == NSMaxRange(range)){
+			if(allowTextBackgrounds){
+	NSString *thisIsATemporaryString;
+	
+	thisIsATemporaryString = [AIHTMLDecoder encodeHTML:[content message] headers:NO 
+																				 fontTags:NO
+																	   includingColorTags:NO
+																			closeFontTags:NO
+																				styleTags:NO
+															   closeStyleTagsOnFontChange:NO
+																		   encodeNonASCII:NO
+																			 encodeSpaces:NO
+																			   imagesPath:@"/tmp"
+																		attachmentsAsText:NO
+														   attachmentImagesOnlyForSending:NO
+																		   simpleTagsOnly:NO
+																		   bodyBackground:YES];
+	[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:[NSString stringWithFormat:@"#%@", thisIsATemporaryString]];
+			}else{
+			[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
+				}	
+			}
+		}
+	} while(range.location != NSNotFound);
+
 		//Message (must do last)
 		range = [inString rangeOfString:@"%message%"];
 		if(range.location != NSNotFound){
+		if(allowTextBackgrounds){
 			[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
 																				  headers:NO 
 																				 fontTags:YES
-																	   includingColorTags:allowColors
+																	   includingColorTags:YES
 																			closeFontTags:YES
 																				styleTags:YES
 															   closeStyleTagsOnFontChange:YES
@@ -1004,7 +1069,24 @@ DeclareString(AppendNextMessage);
 																			   imagesPath:@"/tmp"
 																		attachmentsAsText:NO
 														   attachmentImagesOnlyForSending:NO
-																		   simpleTagsOnly:NO]];
+																		   simpleTagsOnly:NO
+																		   bodyBackground:NO]];
+																		   }else{
+																		   [inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
+																				  headers:NO 
+																				 fontTags:NO
+																	   includingColorTags:YES
+																			closeFontTags:YES
+																				styleTags:YES
+															   closeStyleTagsOnFontChange:YES
+																		   encodeNonASCII:YES
+																			 encodeSpaces:YES
+																			   imagesPath:@"/tmp"
+																		attachmentsAsText:NO
+														   attachmentImagesOnlyForSending:NO
+																		   simpleTagsOnly:NO
+																		   bodyBackground:NO]];
+																		   }
 		}
 
 	}else if ([content isKindOfClass:[AIContentStatus class]]) {
@@ -1019,10 +1101,11 @@ DeclareString(AppendNextMessage);
 		//Message (must do last)
 		range = [inString rangeOfString:@"%message%"];
 		if(range.location != NSNotFound){
+		if(allowTextBackgrounds){
 			[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
-																				  headers:NO 
+																				headers:NO 
 																				 fontTags:NO
-																	   includingColorTags:allowColors
+																	   includingColorTags:YES
 																			closeFontTags:YES
 																				styleTags:NO
 															   closeStyleTagsOnFontChange:YES
@@ -1031,7 +1114,24 @@ DeclareString(AppendNextMessage);
 																			   imagesPath:@"/tmp"
 																		attachmentsAsText:NO
 														   attachmentImagesOnlyForSending:NO
-																		   simpleTagsOnly:NO]];
+																		   simpleTagsOnly:NO
+																		   bodyBackground:NO]];
+																		   }else{
+			[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
+																				  headers:NO 
+																				 fontTags:NO
+																	   includingColorTags:YES
+																			closeFontTags:YES
+																				styleTags:NO
+															   closeStyleTagsOnFontChange:YES
+																		   encodeNonASCII:YES
+																			 encodeSpaces:YES
+																			   imagesPath:@"/tmp"
+																		attachmentsAsText:NO
+														   attachmentImagesOnlyForSending:NO
+																		   simpleTagsOnly:NO
+																		   bodyBackground:NO]];
+																			}
 		}
 	}
 

@@ -291,7 +291,8 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 							   imagesPath:nil
 						attachmentsAsText:YES 
 		   attachmentImagesOnlyForSending:NO 
-						   simpleTagsOnly:NO]];
+						   simpleTagsOnly:NO
+						   bodyBackground:NO]];
 		}else{
 			logString = [NSString stringWithFormat:@"(%@) %@%@: %@\n",
 				date,

@@ -114,7 +114,8 @@ static BOOL didInitMSN = NO;
 						  imagesPath:nil
 				   attachmentsAsText:YES
 	  attachmentImagesOnlyForSending:NO
-					  simpleTagsOnly:YES]);
+					  simpleTagsOnly:YES
+					  bodyBackground:NO]);
 }
 
 //MSN (as of libgaim 1.1.0) tells us a buddy is away when they are merely idle.  Avoid passing that information on.

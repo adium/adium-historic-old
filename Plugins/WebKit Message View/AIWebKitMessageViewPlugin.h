@@ -25,6 +25,7 @@
 #define KEY_WEBKIT_COMBINE_CONSECUTIVE		@"Combine Consecutive Messages"
 #define KEY_WEBKIT_DEFAULT_FONT_FAMILY		@"DefaultFontFamily"
 #define KEY_WEBKIT_DEFAULT_FONT_SIZE		@"DefaultFontSize"
+#define KEY_WEBKIT_USE_BACKGROUND			@"Use Background Color"
 
 #define NEW_CONTENT_RETRY_DELAY				0.01
 

@@ -285,7 +285,8 @@
 														  imagesPath:nil
 												   attachmentsAsText:YES
 									  attachmentImagesOnlyForSending:NO
-													  simpleTagsOnly:NO];
+													  simpleTagsOnly:NO
+													  bodyBackground:NO];
 		
 		AIChat			*chat = [(AIContentMessage *)object chat];
 		AIListObject    *listObject = [chat listObject];

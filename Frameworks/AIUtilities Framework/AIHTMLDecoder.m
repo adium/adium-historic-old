@@ -168,6 +168,7 @@ DeclareString(SpaceHTML);
 	attachmentsAsText:(BOOL)attachmentsAsText
 attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	   simpleTagsOnly:(BOOL)simpleOnly
+	   bodyBackground:(BOOL)bodyBackground
 {
 	self = [self init];
 	thingsToInclude.headers                        = includeHeaders;
@@ -180,6 +181,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	thingsToInclude.attachmentTextEquivalents      = attachmentsAsText;
 	thingsToInclude.attachmentImagesOnlyForSending = attachmentImagesOnlyForSending;
 	thingsToInclude.simpleTagsOnly                 = simpleOnly;
+	thingsToInclude.bodyBackground                 = bodyBackground;
 	return self;
 }
 
@@ -193,6 +195,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					attachmentsAsText:(BOOL)attachmentsAsText
 	   attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					   simpleTagsOnly:(BOOL)simpleOnly
+					   bodyBackground:(BOOL)bodyBackground
 {
 	return [[[self alloc] initWithHeaders:includeHeaders
 								 fontTags:includeFontTags
@@ -203,7 +206,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 							 encodeSpaces:encodeSpaces
 						attachmentsAsText:attachmentsAsText
 		   attachmentImagesOnlyForSending:attachmentImagesOnlyForSending
-						   simpleTagsOnly:simpleOnly] autorelease];
+						   simpleTagsOnly:simpleOnly
+						   bodyBackground:bodyBackground] autorelease];
 }
 
 #pragma mark Work methods
@@ -286,7 +290,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		[string appendString:[pageColor hexString]];
 		[string appendString:@"\">"];
 	}
-
+	
 	//Loop through the entire string
 	searchRange = NSMakeRange(0,0);
 	while(searchRange.location < messageLength){
@@ -618,7 +622,15 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	if(thingsToInclude.fontTags && thingsToInclude.closingFontTags && openFontTag) [string appendString:CloseFontTag]; //Close any open font tag
 	if(thingsToInclude.headers && pageColor) [string appendString:@"</BODY>"]; //Close the body tag
 	if(thingsToInclude.headers) [string appendString:@"</HTML>"]; //Close the HTML
-
+	
+	//KBOTC's odd hackish body background thingy for WMV since no one else will add it
+	if(thingsToInclude.bodyBackground){
+		[string setString:@""];
+		if(pageColor = [inMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil]){
+		[string setString:[pageColor hexString]];
+		[string replaceOccurrencesOfString:@"\"" withString:@"" options:NSLiteralSearch range:NSMakeRange(0, [string length])];
+		}
+	}
 /*	NSLog(@"encoded %@", inMessage);
 	NSLog(@"to HTML %@", string);
 */
@@ -1148,6 +1160,14 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	thingsToInclude.simpleTagsOnly = newValue;
 }
 
+- (BOOL)bodyBackground
+{
+	return thingsToInclude.bodyBackground;
+}
+- (void)bodyBackground:(BOOL)newValue
+{
+	thingsToInclude.bodyBackground = newValue;
+}
 @end
 
 static AIHTMLDecoder *classMethodInstance = nil;
@@ -1177,7 +1197,9 @@ static AIHTMLDecoder *classMethodInstance = nil;
 		YES;
 	classMethodInstance->thingsToInclude.attachmentImagesOnlyForSending = 
 	classMethodInstance->thingsToInclude.simpleTagsOnly = 
+	classMethodInstance->thingsToInclude.bodyBackground =
 		NO;
+	
 	return [classMethodInstance encodeHTML:inMessage imagesPath:nil];
 }
 
@@ -1205,6 +1227,7 @@ static AIHTMLDecoder *classMethodInstance = nil;
 	   attachmentsAsText:(BOOL)attachmentsAsText
 attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		  simpleTagsOnly:(BOOL)simpleOnly
+		  bodyBackground:(BOOL)bodyBackground
 {
 #pragma unused(closeStyleTagsOnFontChange)
 	[self classMethodInstance];
@@ -1218,6 +1241,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	classMethodInstance->thingsToInclude.attachmentTextEquivalents = attachmentsAsText;
 	classMethodInstance->thingsToInclude.attachmentImagesOnlyForSending = attachmentImagesOnlyForSending;
 	classMethodInstance->thingsToInclude.simpleTagsOnly = simpleOnly;
+	classMethodInstance->thingsToInclude.bodyBackground = bodyBackground;
 	return [classMethodInstance encodeHTML:inMessage imagesPath:imagesPath];
 }
 
