@@ -76,8 +76,9 @@
     //Setup our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LIST_THEME];
     
-    //Observe preference changes
+    //Observe preferences and list objects
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
+	[[adium contactController] registerListObjectObserver:self];
 }
 
 //
@@ -440,12 +441,9 @@
 	idleAndAwayEnabled = [[prefDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue];
 	offlineEnabled = [[prefDict objectForKey:KEY_OFFLINE_ENABLED] boolValue];
 	
-	if(group){
-		//Update all objects
+	//Update all objects
+	if(key){
 		[[adium contactController] updateAllListObjectsForObserver:self];
-	}else{
-		//Observe list object changes
-		[[adium contactController] registerListObjectObserver:self];
 	}
 }
 
