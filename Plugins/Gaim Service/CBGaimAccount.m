@@ -2082,9 +2082,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     return([[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
 }
 
-- (AIListContact *)_contactWithUID:(NSString *)inUID
+- (AIListContact *)contactWithUID:(NSString *)inUID
 {
-	return [super _contactWithUID:inUID];
+	return [super contactWithUID:inUID];
 }
 
 - (AIListContact *)mainThreadContactWithUID:(NSString *)inUID
