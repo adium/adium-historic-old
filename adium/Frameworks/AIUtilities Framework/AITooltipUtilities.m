@@ -145,7 +145,7 @@ static	AITooltipOrientation	tooltipOrientation;
 												   defer:NO];
     [tooltipWindow setHidesOnDeactivate:NO];
     [tooltipWindow setIgnoresMouseEvents:YES];
-	[tooltipWindow setBackgroundColor:[NSColor colorWithCalibratedRed:1.000 green:1.000 blue:0.800 alpha:1.0]];
+	[tooltipWindow setBackgroundColor:[NSColor colorWithCalibratedRed:1.000 green:1.000 blue:1.000 alpha:1.0]];
     [tooltipWindow setAlphaValue:0.9];
     [tooltipWindow setHasShadow:YES];
 	
