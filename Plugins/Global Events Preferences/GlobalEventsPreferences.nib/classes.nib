@@ -36,6 +36,11 @@
         {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
+            CLASS = AIVariableHeightFlexibleColumnsOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIVariableHeightOutlineView; 
+        }, 
+        {
             CLASS = AIVariableHeightOutlineView; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AIAlternatingRowOutlineView; 
@@ -49,8 +54,7 @@
                 "button_delete" = NSButton; 
                 "button_edit" = NSButton; 
                 delegate = id; 
-                "scrollView_actions" = AIAutoScrollView; 
-                "tableView_actions" = AIAlternatingRowTableView; 
+                "outlineView_summary" = AIVariableHeightFlexibleColumnsOutlineView; 
                 view = NSView; 
             }; 
             SUPERCLASS = AIObject; 
@@ -64,18 +68,12 @@
             CLASS = ESGlobalEventsPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_configure" = NSButton; 
                 contactAlertsViewController = ESContactAlertsViewController; 
                 "label_eventPreset" = NSTextField; 
-                "label_show" = NSTextField; 
                 "label_soundSet" = NSTextField; 
                 "outlineView_summary" = AIVariableHeightOutlineView; 
-                "panel_editingAdiumPreset" = NSPanel; 
                 "popUp_eventPreset" = NSPopUpButton; 
-                "popUp_show" = NSPopUpButton; 
                 "popUp_soundSet" = NSPopUpButton; 
-                "tabView_summaryAndConfig" = NSTabView; 
-                "textField_name" = NSTextField; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
