@@ -581,6 +581,7 @@
 - (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group{}
 - (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group{}
 - (void)renameGroup:(AIListGroup *)group to:(NSString *)newName{}
+- (void)deleteGroup:(AIListGroup *)group{}
 - (BOOL)contactListEditable{
 	return(NO);
 }
