@@ -2374,14 +2374,12 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	GaimConversation *conv = [convValue pointerValue];
 	
 	if(conv){
-		[chatDict removeObjectForKey:chatUniqueUD];
+		AIChat	*chat = conv->ui_data;
 
-		if(conv->ui_data){
-			[(AIChat *)conv->ui_data release];
-			conv->ui_data = nil;
-		}
-		
+		[chatDict removeObjectForKey:chatUniqueUD];
 		gaim_conversation_destroy(conv);
+
+		if(chat) [chat release];		
 	}
 }
 
