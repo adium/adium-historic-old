@@ -14,6 +14,10 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIFunctions.h"
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <stdlib.h>
+#include <c.h>
 
 BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow)
 {
@@ -57,5 +61,40 @@ void AIWipeMemory(void *buf, size_t len)
 			buf_char[i] = 0x00;
 			buf_char[i] = 0xff;
 		}
+	}
+}
+
+void *AIReallocWired(void *oldBuf, size_t newLen)
+{
+	void *newBuf = malloc(newLen);
+	if(!newBuf) {
+		NSLog(@"in AIReallocWired: could not allocate %lu bytes", (unsigned long)newLen);
+	} else {
+		int mlock_retval = mlock(newBuf, newLen);
+		if(mlock_retval < 0) {
+			NSLog(@"in AIReallocWired: could not wire %lu bytes", (unsigned long)newLen);
+			free(newBuf);
+			newBuf = NULL;
+		} else if(oldBuf) {
+			size_t  oldLen = malloc_size(oldBuf);
+			size_t copyLen = MIN(newLen, oldLen);
+
+			memcpy(newBuf, oldBuf, copyLen);
+
+			AIWipeMemory(oldBuf, oldLen);
+			munlock(oldBuf, oldLen);
+			free(oldBuf);
+		}
+	}
+	return newBuf;
+}
+
+void AISetRangeInMemory(void *buf, NSRange range, int ch)
+{
+	unsigned i     = range.location;
+	unsigned i_max = range.location + range.length;
+	char *buf_ch = buf;
+	while(i < i_max) {
+		buf_ch[i++] = ch;
 	}
 }
