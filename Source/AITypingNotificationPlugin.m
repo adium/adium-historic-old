@@ -26,8 +26,8 @@
 - (void)_sendTypingState:(AITypingState)typingState toChat:(AIChat *)chat;
 - (void)_processTypingInView:(NSText<AITextEntryView> *)inTextEntryView;
 - (void)_addTypingTimerForChat:(AIChat *)chat;
-- (void)_resetTypingTimerForChat:(AIChat *)chat;
-- (void)_removeTypingTimerForChat:(AIChat *)chat;
+- (void)_resetTypingTimer:(NSTimer *)enteredTextTimer forChat:(AIChat *)chat;
+- (void)_removeTypingTimer:(NSTimer *)enteredTextTimer forChat:(AIChat *)chat;
 @end
 
 #define WE_ARE_TYPING			@"WeAreTyping"
@@ -90,7 +90,6 @@
  */
 - (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
-	NSLog(@"string added");
     [self _processTypingInView:inTextEntryView];
 }
 
@@ -99,7 +98,6 @@
  */
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
-	NSLog(@"contents changed");
     [self _processTypingInView:inTextEntryView];
 }
 
@@ -116,24 +114,27 @@
     AIChat		*chat = [inTextEntryView chat];
 	
     if(chat){
-		NSTimer			*enteredTextTimer = [chat statusObjectForKey:ENTERED_TEXT_TIMER];
+		NSTimer			*enteredTextTimer;
 		NSNumber		*previousTypingNumber = [chat statusObjectForKey:WE_ARE_TYPING];
 		AITypingState   previousTypingState = (previousTypingNumber ? [previousTypingNumber intValue] : AINotTyping);
 		AITypingState   currentTypingState;
 
+		enteredTextTimer = [chat statusObjectForKey:ENTERED_TEXT_TIMER];
+		
 		//Determine if this change indicated the user was typing or indicated the user had no longer entered text
 		if([[inTextEntryView attributedString] length] != 0){ //User is typing
+
 			currentTypingState = AITyping;
 
 			if(enteredTextTimer){
-				[self _resetTypingTimerForChat:chat];
+				[self _resetTypingTimer:enteredTextTimer forChat:chat];
 			}else{
 				[self _addTypingTimerForChat:chat];
 			}
 
 		}else{ //User is not typing
 			currentTypingState = AINotTyping;
-			[self _removeTypingTimerForChat:chat];
+			[self _removeTypingTimer:enteredTextTimer forChat:chat];
 		}
 		
 		//We don't want to send the same typing value more than once
@@ -234,24 +235,18 @@
  *
  * This is done because it is cheaper than removing the old timer and adding a new one
  */
-- (void)_resetTypingTimerForChat:(AIChat *)chat
+- (void)_resetTypingTimer:(NSTimer *)enteredTextTimer forChat:(AIChat *)chat
 {
-	NSTimer	*enteredTextTimer = [chat statusObjectForKey:ENTERED_TEXT_TIMER];
-	if(enteredTextTimer){
-		[enteredTextTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:ENTERED_TEXT_INTERVAL]];
-	}
+	[enteredTextTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:ENTERED_TEXT_INTERVAL]];
 }
 
 /*
  * @brief Remove the timer responsible for detecting when the user stops typing
  */
-- (void)_removeTypingTimerForChat:(AIChat *)chat
+- (void)_removeTypingTimer:(NSTimer *)enteredTextTimer forChat:(AIChat *)chat
 {
-	NSTimer	*enteredTextTimer = [chat statusObjectForKey:ENTERED_TEXT_TIMER];
-	if(enteredTextTimer){
-		[enteredTextTimer invalidate];
-		[chat setStatusObject:nil forKey:ENTERED_TEXT_TIMER notify:NotifyNever];
-	}
+	[enteredTextTimer invalidate];
+	[chat setStatusObject:nil forKey:ENTERED_TEXT_TIMER notify:NotifyNever];
 }
 
 @end
