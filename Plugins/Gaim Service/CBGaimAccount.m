@@ -1659,30 +1659,18 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-//Our account was disconnected, report the error
+/*
+ * @brief Our account was unexpectedly disconnected with an error message
+ */
 - (oneway void)accountConnectionReportDisconnect:(NSString *)text
 {
-	//We receive retained data
-	[lastDisconnectionError release]; lastDisconnectionError = [text retain];
-	GaimDebug (@"%@ disconnected: %@",[self UID],lastDisconnectionError);
+	//Retain the error message locally for use in -[CBGaimAccount accountConnectionDisconnected]
+	[lastDisconnectionError autorelease]; lastDisconnectionError = [text retain];
+
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
-	[[adium contactController] delayListObjectNotifications];
 	
-	//Clear status flags on all contacts
-	NSEnumerator    *enumerator = [[[adium contactController] allContactsInGroup:nil
-																	   subgroups:YES 
-																	   onAccount:self] objectEnumerator];
-	AIListContact	*contact;
-	
-	while (contact = [enumerator nextObject]){
-		
-		[contact setRemoteGroupName:nil];
-		[self removeAllStatusFlagsFromContact:contact silently:YES];
-	}
-	
-	[[adium contactController] endListObjectNotificationsDelay];
-	
+	GaimDebug (@"%@ reported disconnecting: %@",[self UID],lastDisconnectionError);
 }
 
 - (oneway void)accountConnectionNotice:(NSString *)connectionNotice
@@ -1691,10 +1679,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
                                     withDescription:connectionNotice];
 }
 
-//Our account has disconnected
+/*
+ * @brief Our account has disconnected
+ *
+ * This is called after the accoutn disconnects for any reason
+ */
 - (oneway void)accountConnectionDisconnected
 {
 	BOOL			connectionIsSuicidal = (account->gc ? account->gc->wants_to_die : NO);
+	NSEnumerator    *enumerator;
+	AIListContact	*contact;
 
     //We are now offline
 	[self setStatusObject:nil forKey:@"Disconnecting" notify:NO];
@@ -1703,6 +1697,20 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	//Clear status objects which don't make sense for a disconnected account
 	[self setStatusObject:nil forKey:@"TextProfile" notify:NO];
+	
+	[[adium contactController] delayListObjectNotifications];
+	
+	//Clear status flags on all contacts for this account, and set their remote group to nil
+	enumerator = [[[adium contactController] allContactsInGroup:nil
+													  subgroups:YES 
+													  onAccount:self] objectEnumerator];
+	while (contact = [enumerator nextObject]){
+		
+		[contact setRemoteGroupName:nil];
+		[self removeAllStatusFlagsFromContact:contact silently:YES];
+	}
+	
+	[[adium contactController] endListObjectNotificationsDelay];
 	
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
