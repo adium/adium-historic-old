@@ -26,6 +26,7 @@
 #import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
+#import <Adium/AIContentObject.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIServiceIcons.h>
 #import <Growl-WithInstaller/Growl.h>
@@ -190,16 +191,25 @@
 	NSString			*title, *description;
 	NSDictionary		*clickContext = nil;
 	NSData				*iconData = nil;
-	
-	BOOL isMessageEvent = [[adium contactAlertsController] isMessageEvent:eventID];
-	
+	AIChat				*chat = nil;
+	BOOL				isMessageEvent = [[adium contactAlertsController] isMessageEvent:eventID];
+
+	//For a message event, listObject should become whomever sent the message
+	if(isMessageEvent){
+		AIContentObject	*contentObject = [userInfo objectForKey:@"AIContentObject"];
+		AIListObject	*source = [contentObject source];
+		chat = [userInfo objectForKey:@"AIChat"];
+
+		if(source) listObject = source;
+	}
+
 	if(listObject){
 		if([listObject isKindOfClass:[AIListContact class]]){
 			//Use the parent
 			listObject = [[adium contactController] parentContactForListObject:listObject];
 			title = [listObject longDisplayName];
 		}else{
-			title = [listObject formattedUID];
+			title = [listObject displayName];
 		}
 		
 		iconData = [listObject userIconData];
@@ -210,11 +220,9 @@
 												   direction:AIIconNormal] TIFFRepresentation];
 		}
 		
-		//If it is a message event for a list object, we can just use the list object's internalObjectID
-		//as the uniqueChatID for quick look up if the bubble is clicked.
-		if(isMessageEvent){
+		if(chat){
 			clickContext = [NSDictionary dictionaryWithObjectsAndKeys:
-				[listObject internalObjectID], @"uniqueChatID",
+				[chat uniqueChatID], @"uniqueChatID",
 				eventID, @"eventID",
 				nil];
 			
@@ -226,8 +234,7 @@
 		}
 
 	}else{
-		if(isMessageEvent){
-			AIChat	*chat = [userInfo objectForKey:@"AIChat"];
+		if(chat){
 			title = [chat name];
 
 			clickContext = [NSDictionary dictionaryWithObjectsAndKeys:
