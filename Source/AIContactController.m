@@ -1550,7 +1550,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver
 {
 	//Add the observer
-    [contactObserverArray addObject:inObserver];
+    [contactObserverArray addObject:[NSValue valueWithNonretainedObject:inObserver]];
 
     //Let the new observer process all existing objects
 	[self updateAllListObjectsForObserver:inObserver];
@@ -1558,7 +1558,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 - (void)unregisterListObjectObserver:(id)inObserver
 {
-    [contactObserverArray removeObject:inObserver];
+    [contactObserverArray removeObject:[NSValue valueWithNonretainedObject:inObserver]];
 	[self sortContactList];
 }
 
@@ -1601,15 +1601,17 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Notify observers of a status change.  Returns the modified attribute keys
 - (NSSet *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSSet *)modifiedKeys silent:(BOOL)silent
 {
-	NSMutableSet				*attrChange = nil;
-	NSEnumerator				*enumerator;
-    id <AIListObjectObserver>	observer;
-
+	NSMutableSet	*attrChange = nil;
+	NSEnumerator	*enumerator;
+	NSValue			*observerValue;
+	
 	//Let our observers know
 	enumerator = [contactObserverArray objectEnumerator];
-	while((observer = [enumerator nextObject])) {
-		NSSet	*newKeys;
+	while((observerValue = [enumerator nextObject])) {
+		id <AIListObjectObserver>	observer;
+		NSSet						*newKeys;
 
+		observer = [observerValue nonretainedObjectValue];
 		if((newKeys = [observer updateListObject:inObject keys:modifiedKeys silent:silent])) {
 			if (!attrChange) attrChange = [NSMutableSet set];
 			[attrChange unionSet:newKeys];
@@ -1628,10 +1630,13 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Command all observers to apply their attributes to an object
 - (void)_updateAllAttributesOfObject:(AIListObject *)inObject
 {
-	NSEnumerator				*enumerator = [contactObserverArray objectEnumerator];
-    id <AIListObjectObserver>	observer;
+	NSEnumerator	*enumerator = [contactObserverArray objectEnumerator];
+	NSValue			*observerValue;
 
-	while((observer = [enumerator nextObject])) {
+	while((observerValue = [enumerator nextObject])) {
+		id <AIListObjectObserver>	observer;
+		
+		observer = [observerValue nonretainedObjectValue];
 		[observer updateListObject:inObject keys:nil silent:YES];
 	}
 }
