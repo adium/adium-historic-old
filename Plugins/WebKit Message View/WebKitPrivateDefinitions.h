@@ -186,3 +186,12 @@
 
 @end
 
+@interface NSPasteboard(NSTypeConversion)
++ _cocoaTypeNameFromIdentifier:(struct __CFString *)fp8;
++ (struct __CFString *)_typeIdentifierFromCocoaName:fp8;
++ (struct __CFString *)_typeIdentifierFromCarbonCode:(unsigned long)fp8;
++ _typesIncludingConversionsFromTypes:fp8;
++ (void)_setConversionFromData:fp8 type:fp12 inPasteboard:(struct __CFPasteboard *)fp16 generation:(long)fp20 item:(void *)fp24;
+- _dataWithConversionForType:fp8;
+- (void)_addConversionsFromTypes:fp8;
+@end

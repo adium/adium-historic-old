@@ -85,7 +85,7 @@
 		
 		[progressBar setDoubleValue:0];
 		[percentText setStringValue:@"0%"];
-		[cancelButton setStringValue:AILocalizedString(@"Cancel",nil)];
+		[cancelButton setLocalizedString:AILocalizedString(@"Cancel",nil)];
 		[window setTitle:AILocalizedString(@"Xtra Download",nil)];
 		[window makeKeyAndOrderFront:self];
 

@@ -470,16 +470,16 @@
 	//Contact style
 	if(windowStyle == WINDOW_STYLE_STANDARD){
 		//In standard mode, disable the horizontal autosizing slider if horiztonal autosizing is off
-		[textField_horizontalWidthText setStringValue:AILocalizedString(@"Maximum width:",nil)];
+		[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Maximum width:",nil)];
 		[slider_horizontalWidth setEnabled:horizontalAutosize];
 		
 	}else{
 		//In all the borderless transparent modes, the horizontal autosizing slider becomes the
 		//horizontal sizing slider when autosizing is off
 		if (horizontalAutosize){
-			[textField_horizontalWidthText setStringValue:AILocalizedString(@"Maximum width:",nil)];
+			[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Maximum width:",nil)];
 		}else{
-			[textField_horizontalWidthText setStringValue:AILocalizedString(@"Width:",nil)];			
+			[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Width:",nil)];			
 		}
 		[slider_horizontalWidth setEnabled:YES];
 	}
