@@ -201,7 +201,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //Remove an object from this meta contact (PRIVATE: For contact controller only)
 - (void)removeObject:(AIListObject *)inObject
 {
-	if([containedObjects containsObject:inObject]){
+	if([containedObjects containsObjectIdenticalTo:inObject]){
 		
 		[inObject retain];
 		
