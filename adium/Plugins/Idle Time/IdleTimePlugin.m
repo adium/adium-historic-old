@@ -33,6 +33,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 - (void)_openIdleState:(AIIdleState)inState;
 - (void)_closeIdleState:(AIIdleState)inState;
 - (void)_setAllAccountsIdleTo:(double)inSeconds;
+- (void)setAutoAway:(BOOL)autoAway;
 
 - (void)installIdleMenu;
 - (void)updateIdleMenu;
@@ -44,6 +45,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 - (void)installPlugin
 {
     isIdle = NO;
+	didAutoAway = NO;
     idleTimer = nil;
 
     //Start up new state
@@ -170,7 +172,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     [self _closeIdleState:idleState]; //Close down current state
     [self _openIdleState:inState]; //Start up new state
     idleState = inState;
-    if ([NSApp isOnPantherOrBetter] && (idleState != AIAutoAway)) {
+    if ([NSApp isOnPantherOrBetter]) {
         [self updateIdleMenu];
     }
 }
@@ -190,6 +192,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
                                                             selector:@selector(notIdleTimer:)
                                                             userInfo:nil
                                                              repeats:YES] retain];
+				if (autoAwayEnabled){
+					[self setAutoAway:NO];
+				}
             }
                 
         break;
@@ -222,8 +227,47 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
                                                         userInfo:nil
                                                          repeats:YES] retain];
         break;
-		case AIAutoAway:
-		{
+	}    
+}
+
+- (void)_closeIdleState:(AIIdleState)inState
+{
+    switch(inState){
+        case AINotIdle:
+        case AIAutoIdle:
+        case AIDelayedManualIdle:
+            //Remove our timer
+            [idleTimer invalidate]; [idleTimer release]; idleTimer = nil;
+        break;
+        case AIManualIdle:
+            //Nothing needs to be done
+        break;
+    }
+}
+
+//Make sure the user hasn't gone idle
+- (void)notIdleTimer:(NSTimer *)inTimer
+{
+	double currentIdleTime = [self currentIdleTime];
+	
+	if((currentIdleTime > idleThreshold) && idleEnabled){
+		 //The user has gone idle
+        [self setIdleState:AIAutoIdle];
+    }
+	
+    if(autoAwayEnabled &&
+	   (currentIdleTime > autoAwayThreshold) &&
+	   !(didAutoAway)){
+		//The user has exceeded the autoAwayThreshold (time to set auto away)
+		[self setAutoAway:YES];
+    }
+}
+
+- (void)setAutoAway:(BOOL)autoAway
+{
+	if (autoAway){
+		if ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil){
+			
 			//Load the array of away messages
 			NSArray				*awaysArray = [[adium preferenceController] preferenceForKey:KEY_SAVED_AWAYS
 																					   group:PREF_GROUP_AWAY_MESSAGES];
@@ -241,67 +285,38 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 													  group:GROUP_ACCOUNT_STATUS];
 			}
 			
-			//Timer gets killed when we set Auto Away.  If we're already idle, set autoIdleTimer, otherwise set notIdleTimer
-			[idleTimer invalidate]; [idleTimer release];
-			NSDate	*currentIdle = [[adium preferenceController] preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
-			if (currentIdle != nil){
-				idleTimer = [[NSTimer scheduledTimerWithTimeInterval:(IDLE_INACTIVE_INTERVAL)
-															  target:self
-															selector:@selector(autoIdleTimer:)
-															userInfo:nil
-															 repeats:YES] retain];
-			}else{
-				idleTimer = [[NSTimer scheduledTimerWithTimeInterval:(IDLE_ACTIVE_INTERVAL)
-											  target:self
-											selector:@selector(notIdleTimer:)
-											userInfo:nil
-											 repeats:YES] retain];
-            }
-				
+			didAutoAway = YES;
 		}
-		break;
-    }    
-}
-
-- (void)_closeIdleState:(AIIdleState)inState
-{
-    switch(inState){
-        case AINotIdle:
-        case AIAutoIdle:
-        case AIDelayedManualIdle:
-            //Remove our timer
-            [idleTimer invalidate]; [idleTimer release]; idleTimer = nil;
-        break;
-        case AIManualIdle:
-            //Nothing needs to be done
-        break;
-		case AIAutoAway:
-			//Nothing needs to be done
-		break;
-    }
-}
-
-//Make sure the user hasn't gone idle
-- (void)notIdleTimer:(NSTimer *)inTimer
-{
-	if(([self currentIdleTime] > idleThreshold) && idleEnabled){ //The user has gone idle
-        [self setIdleState:AIAutoIdle];
-    }
-	
-    if(([self currentIdleTime] > autoAwayThreshold) && autoAwayEnabled && ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil)){ //The user has gone idle (time to set auto away)
-		[self setIdleState:AIAutoAway];
-    }
+	}else{
+		//If we did an autoaway before, clear it now.
+		if (didAutoAway){
+			[[adium preferenceController] setPreference:nil
+												 forKey:@"AwayMessage"
+												  group:GROUP_ACCOUNT_STATUS];
+			[[adium preferenceController] setPreference:nil
+												 forKey:@"Autoresponse" 
+												  group:GROUP_ACCOUNT_STATUS];
+			didAutoAway = NO;
+		}
+	}
 }
 
 //Make sure the user is still idle
 - (void)autoIdleTimer:(NSTimer *)inTimer
 {
-    if([self currentIdleTime] < idleThreshold){ //The user is no longer idle
+	double currentIdleTime = [self currentIdleTime];
+
+    if(currentIdleTime < idleThreshold){ //The user is no longer idle
 		[self setIdleState:AINotIdle];
     }
-   
-	 if(([self currentIdleTime] > autoAwayThreshold) && autoAwayEnabled && ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil)){ //Check just incase the user wants to go away automatically AFTER being set idle
-		[self setIdleState:AIAutoAway];
+
+	//Check just in case the user wants to go away automatically after an amount of time greater than the idle timer
+	//which would mean that they were now idle but the notIdleTimer was no longer firing
+	if(autoAwayEnabled &&
+		(currentIdleTime > autoAwayThreshold) &&
+		!(didAutoAway)){
+	   //The user has exceeded the autoAwayThreshold (time to set auto away)
+	   [self setAutoAway:YES];
     }
 }
 
