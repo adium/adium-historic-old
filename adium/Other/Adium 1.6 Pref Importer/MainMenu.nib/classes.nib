@@ -9,6 +9,8 @@
                 "button_OK" = NSButton; 
                 "button_import" = NSButton; 
                 "checkBox_aliases" = NSButton; 
+                "checkBox_contacts" = NSButton; 
+                currentTask = NSTextField; 
                 "popUpButton_account" = NSPopUpButton; 
                 "popUpButton_user" = NSPopUpButton; 
                 progressIndicator = NSProgressIndicator; 

@@ -13,7 +13,9 @@
     IBOutlet	NSWindow		*window_main;
     IBOutlet	NSPopUpButton		*popUpButton_account;
     IBOutlet	NSButton		*checkBox_aliases;
+    IBOutlet	NSButton		*checkBox_contacts;
     IBOutlet	NSProgressIndicator	*progressIndicator;
+    IBOutlet	NSTextField		*currentTask;
     IBOutlet	NSButton		*button_import;
     
     IBOutlet	NSWindow		*theSheet;

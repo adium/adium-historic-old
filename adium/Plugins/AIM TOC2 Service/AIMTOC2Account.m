@@ -889,7 +889,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.91 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.92 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1387,6 +1387,7 @@
     NSString		*type;
     NSString		*value = nil;
     NSString		*currentGroup = @"New Group";
+    NSMutableArray	*addedArray = [NSMutableArray array];
     int			index = 0;
     
     //Create a scanner
@@ -1423,13 +1424,14 @@
 
                 }else if([type compare:@"b"] == 0){ //BUDDY
                     //Create the handle
-                    [handleDict setObject:[AIHandle handleWithServiceID:[[service handleServiceType] identifier]
+                    AIHandle *daHandle = [AIHandle handleWithServiceID:[[service handleServiceType] identifier]
                                                                     UID:[value compactedString]
                                                             serverGroup:currentGroup
                                                               temporary:NO
-                                                             forAccount:self]
-                                   forKey:[value compactedString]];
-
+                                                             forAccount:self];
+                                                             
+                    [handleDict setObject:daHandle forKey:[value compactedString]];
+                    [addedArray addObject:daHandle];
                     index++;
 
                 }else if([type compare:@"p"] == 0){
@@ -1448,7 +1450,15 @@
             }
         }
     }
-
+    
+    //I made this change because I didn't feel like breaking everyone else's code :) You can have fun with that, adam :P
+    NSEnumerator *walker = [addedArray objectEnumerator];
+    AIHandle *obj;
+    while(obj = [walker nextObject])
+    {
+        [[owner contactController] handle:obj addedToAccount:self];
+    }
+    
     [[owner contactController] handlesChangedForAccount:self];
 }
 
