@@ -222,6 +222,9 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)configureForListObject:(AIListObject *)inObject
 {
 	if(inObject == nil || displayedObject != inObject){
+		NSImage				*userImage;
+
+		//Update our displayed object
 		[displayedObject release];
 		displayedObject = [inObject retain];
 		
@@ -232,6 +235,27 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 			[[self window] setTitle:@"Contact Info"];
 		}
 		
+		//Account name
+		[textField_accountName setStringValue:(inObject ? [inObject formattedUID] : @"")];	
+			
+		//Service
+		if([inObject isKindOfClass:[AIListContact class]]){
+			[textField_service setStringValue:[inObject displayServiceID]];
+		}
+		
+		//User Icon
+		if(userImage = [[displayedObject displayArrayForKey:@"UserIcon"] objectValue]){
+			//MUST make a copy, since resizing and flipping the original image here breaks it everywhere else
+			userImage = [[userImage copy] autorelease];		
+			//Resize to a fixed size for consistency
+			[userImage setScalesWhenResized:YES];
+			[userImage setSize:NSMakeSize(48,48)];
+		}else{
+			userImage = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
+		}
+		[imageView_userIcon setImage:userImage];
+		
+		//Configure our subpanes
 		[self configurePanes];
 	}
 }
@@ -239,11 +263,13 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //Configure our views
 - (void)configurePanes
 {
-	NSEnumerator		*enumerator = [loadedPanes objectEnumerator];
-	AIContactInfoPane	*pane;
-	
-	while(pane = [enumerator nextObject]){
-		[pane configureForListObject:displayedObject];
+	if(displayedObject){
+		NSEnumerator		*enumerator = [loadedPanes objectEnumerator];
+		AIContactInfoPane	*pane;
+		
+		while(pane = [enumerator nextObject]){
+			[pane configureForListObject:displayedObject];
+		}
 	}
 }
 

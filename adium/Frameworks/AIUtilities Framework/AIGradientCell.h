@@ -8,10 +8,12 @@
 
 @interface AIGradientCell : NSCell {
 	BOOL			drawsGradient;
+	BOOL			ignoresFocus;
 }
 
 - (void)setDrawsGradientHighlight:(BOOL)inDrawsGradient;
 - (BOOL)drawsGradientHighlight;
-- (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView; //stops warnings.
-
+- (void)setIgnoresFocus:(BOOL)inIgnoresFocus;
+- (BOOL)ignoresFocus;
+	
 @end
