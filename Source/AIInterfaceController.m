@@ -979,12 +979,6 @@
 		NSString	*displayServiceID;
 		if ([object isKindOfClass:[AIMetaContact class]]){
 			if ([(AIMetaContact *)object containsOnlyOneUniqueContact]){
-				NSLog(@"preferred %@ ; listContacts %@ ; contained %@ ; service %@ ; shortDescription %@",
-					  [(AIMetaContact *)object preferredContact],
-					  [(AIMetaContact *)object listContacts],
-					  [(AIMetaContact *)object containedObjects],
-					  [[(AIMetaContact *)object preferredContact] service],
-					  [[[(AIMetaContact *)object preferredContact] service] shortDescription]);
 				displayServiceID = [[[(AIMetaContact *)object preferredContact] service] shortDescription];
 			}else{
 				displayServiceID = META_SERVICE_STRING;
