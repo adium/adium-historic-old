@@ -16,6 +16,7 @@
 	BOOL		serviceIconsVisible;
 	int			userIconSize;
 	int			statusFontHeight;
+	int			labelFontHeight;
 
 	BOOL		userIconPosition;
 	BOOL		statusIconPosition;

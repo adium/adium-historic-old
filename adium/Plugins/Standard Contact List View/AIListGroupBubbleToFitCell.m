@@ -1,15 +1,14 @@
 //
-//  AIListContactBubbleToFitCell.m
+//  AIListGroupBubbleToFitCell.m
 //  Adium
 //
-//  Created by Adam Iser on Wed Aug 04 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
+//  Created by Adam Iser on 8/12/04.
+//  Copyright 2004 __MyCompanyName__. All rights reserved.
 //
 
-#import "AIListContactBubbleToFitCell.h"
+#import "AIListGroupBubbleToFitCell.h"
 
-
-@implementation AIListContactBubbleToFitCell
+@implementation AIListGroupBubbleToFitCell
 
 //Copy
 - (id)copyWithZone:(NSZone *)zone
@@ -23,8 +22,8 @@
 {
 	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
 																	   attributes:[self labelAttributes]];
-
-	rect.size.width = [displayName size].width + [self leftPadding] + [self rightPadding];
+	
+	rect.size.width = [displayName size].width + [self leftPadding] + [self rightPadding] + [self flippyIndent];
 	return(rect);
 }
 
