@@ -107,6 +107,8 @@
 		NSImage *newImage = [[NSImage alloc] initWithSize:size];
 		
 		[newImage lockFocus];
+		//Highest quality interpolation
+		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
 		[self drawInRect:NSMakeRect(0,0,size.width,size.height)
 				fromRect:NSMakeRect(0,0,originalSize.width,originalSize.height)
 			   operation:NSCompositeCopy
