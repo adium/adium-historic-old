@@ -120,14 +120,18 @@ static id<GaimThread> gaimThread = nil;
 
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
 {
-	if ((![theContact statusObjectForKey:@"FormattedUID"]) &&
-		(![theContact statusObjectForKey:@"Server Display Name"])){
-		
-		if ([[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]) {
+	
+	if ([[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]) {
+		if (![gaimAlias isEqualToString:[theContact formattedUID]]){
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"FormattedUID"
 								 notify:NO];
-		} else {
+			
+			//Apply any changes
+			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+		}
+	} else {
+		if (![gaimAlias isEqualToString:[theContact statusObjectForKey:@"Server Display Name"]]){
 			//Set the server display name status object as the full display name
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"Server Display Name"
@@ -137,19 +141,19 @@ static id<GaimThread> gaimThread = nil;
 			[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:25]
 															 withOwner:self
 														 priorityLevel:Lowest_Priority];
-			//notify
+			//Notify
 			[[adium contactController] listObjectAttributesChanged:theContact
 													  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+			
+			//Apply any changes
+			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 		}
 	}
-
-	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
 - (oneway void)updateContact:(AIListContact *)theContact forEvent:(GaimBuddyEvent)event
 {
-
+	
 }		
 
 
@@ -664,8 +668,7 @@ static id<GaimThread> gaimThread = nil;
 	}else{
 		//If we opened a chat (rather than having it opened for us via accepting an invitation), we need to create
 		//the gaim structures for that chat
-		if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
-			
+#warning Wrong.
 			const char *name = [[chat name] UTF8String];
 			
 			//Look for an existing gaimChat (for now, it had better exist already!)
@@ -710,22 +713,22 @@ static id<GaimThread> gaimThread = nil;
 				GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
 				NSAssert(conv != nil, @"openChat: GAIM_CONV_CHAT: gaim_conversation_new returned nil");
 				
-//				[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
+				//				[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
 				conv->ui_data = [chat retain];
 			}
-		}
-		//Track
-		[chatDict setObject:chat forKey:[chat name]];
-	}
-	
+			
+			//Track
+			[chatDict setObject:chat forKey:[chat name]];
+	}	
 	//Created the chat successfully
 	return(YES);
+	
 }
 
 - (BOOL)closeChat:(AIChat*)chat
 {
 	[gaimThread closeChat:chat];
-		
+	
 #warning Wrong. perhaps use a chat identifier of sorts
 	AIListObject	*listObject = [chat listObject];
 	if (listObject){
