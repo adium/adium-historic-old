@@ -170,12 +170,13 @@ int HTMLEquivalentForFontSize(int fontSize);
         //escape sequence.
         int i;
         for(i = 0; i < [chunk length]; i++) {
-            if([chunk characterAtIndex:i] > 127) {
-                [string appendFormat:@"&#%d;", [chunk characterAtIndex:i]];
-            } else if ([chunk characterAtIndex:i] == 13) {
-                [string appendString:@"\n"];
+            char currentChar = [chunk characterAtIndex:i];
+            if(currentChar > 127) {
+                [string appendFormat:@"&#%d;", currentChar];
+            } else if(currentChar == '\r' || currentChar == '\n'){
+                [string appendString:@"<BR>"];
             } else {
-                [string appendFormat:@"%c", [chunk characterAtIndex:i]];
+                [string appendFormat:@"%c", currentChar];
             }
         }
 
