@@ -44,7 +44,6 @@
 	
 	backgroundImage = nil;
 	backgroundFade = 1.0;
-	drawsBackground = YES;
 }
 
 - (void)dealloc
@@ -266,11 +265,6 @@
 	[self setNeedsDisplay:YES];
 }
 
-- (void)setDrawsBackground:(BOOL)inDraw
-{
-	drawsBackground = inDraw;
-}
-
 - (void)setBackgroundFade:(float)fade
 {
 	backgroundFade = fade;
@@ -299,10 +293,9 @@
 {
 	NSRect visRect = [[self enclosingScrollView] documentVisibleRect];
 	
-#warning --
 	[super drawBackgroundInClipRect:clipRect];
 	
-	if(drawsBackground){
+	if([self drawsBackground]){
 		//BG Color
 		[backgroundColor set];
 		NSRectFill(clipRect);
