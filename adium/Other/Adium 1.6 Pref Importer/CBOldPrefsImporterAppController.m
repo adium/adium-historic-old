@@ -90,7 +90,7 @@
 	if([manager fileExistsAtPath:settingsPath]){
 		
 		[popUpButton_Clients addItemWithTitle:@"iChat"];
-		item = [popUpButton_Clients lastItem];
+		item = (NSMenuItem *)[popUpButton_Clients lastItem];
 		icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
 		[icon setSize:NSMakeSize(16,16)];
 		[item setImage:icon];
