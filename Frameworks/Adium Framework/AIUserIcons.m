@@ -35,7 +35,10 @@ static NSSize				menuIconCacheSize;
 
 	//Render the icon if it's not cached
 	if(!userIcon){
-		userIcon = [[inContact userIcon] imageByScalingToSize:size fraction:1.0 flipImage:YES];
+		userIcon = [[inContact userIcon] imageByScalingToSize:size 
+													 fraction:1.0
+													flipImage:YES
+											   proportionally:YES];
 		if(userIcon && cache) [iconCache setObject:userIcon forKey:[inContact internalObjectID]];
 	}
 	
@@ -55,7 +58,8 @@ static NSSize				menuIconCacheSize;
 		if(!userIcon){
 			userIcon = [[(AIListContact *)inObject userIcon] imageByScalingToSize:menuIconCacheSize
 																		 fraction:1.0
-																		flipImage:NO];
+																		flipImage:NO
+																   proportionally:YES];
 			if(userIcon) [menuIconCache setObject:userIcon
 										   forKey:[(AIListContact *)inObject internalObjectID]];
 		}
