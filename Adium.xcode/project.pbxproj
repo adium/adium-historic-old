@@ -400,6 +400,7 @@
 			children = (
 				3402E03F07CB0E400044F818,
 				34A6E9AB07D635B100972830,
+				34BFDDB607E7A43D00AD984D,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -8702,6 +8703,14 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		34BFDDB607E7A43D00AD984D = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Japanese;
+			path = Resources/Japanese.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		34C14CD007A8B1AB003CC138 = {
 			fileEncoding = 4;
