@@ -350,6 +350,16 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight)
     return(height);
 }
 
+//set the amount that rows which follow this one should indent
+- (void)setHeadIndent:(float)inHeadIndent
+{
+    headIndent = inHeadIndent;
+}
+//returns the amount that rows which follow this one should indent
+- (float)headIndent
+{
+    return (headIndent);   
+}
 @end
 
 

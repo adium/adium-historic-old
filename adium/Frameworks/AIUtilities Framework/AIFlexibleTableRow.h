@@ -14,6 +14,7 @@
     int			height;
     BOOL		spansRows;
     id                  representedObject;
+    float               headIndent;
 }
 
 + (id)rowWithCells:(NSArray *)inCells representedObject:(id)inRepresentedObject;
@@ -32,6 +33,8 @@
 
 - (int)sizeRowForWidth:(int)inWidth;
 - (int)height;
+- (void)setHeadIndent:(float)inHeadIndent;
+- (float)headIndent;
 
 - (void)setTableView:(AIFlexibleTableView *)inView;
 - (AIFlexibleTableView *)tableView;
