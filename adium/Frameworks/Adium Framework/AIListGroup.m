@@ -30,9 +30,9 @@
     expanded = YES;
 	
 	//Default invisible
-    visibleCount = 0;
+//    visibleCount = 0;
 	visible = NO;
-	[self setStatusObject:[NSNumber numberWithInt:visibleCount] forKey:@"VisibleObjectCount" notify:YES];
+//	[self setStatusObject:[NSNumber numberWithInt:visibleCount] forKey:@"VisibleObjectCount" notify:YES];
     
     return(self);
 }
