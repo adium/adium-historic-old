@@ -129,9 +129,9 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
 	//If the contact's unviewed content state has changed
-    if([inModifiedKeys containsObject:@"UnviewedContent"]){
+    if([inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
         //If there is new unviewed content
-        if([inObject integerStatusObjectForKey:@"UnviewedContent"]){
+        if([inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
             //Add it, we're watching it
             [unviewedObjectsArray addObject:inObject];
             //We need to update our menu
