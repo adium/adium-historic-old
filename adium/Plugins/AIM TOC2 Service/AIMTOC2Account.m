@@ -318,20 +318,7 @@ static char *hash_password(const char * const password);
 	    
         }
 	
-    }else if([[object type] compare:CONTENT_WARNING_TYPE] == 0){
-        BOOL	anonymous;
-
-        //Get the handle for receiving this content
-        handle = [[owner contactController] handleOfContact:[object destination] forReceivingContentType:CONTENT_WARNING_TYPE fromAccount:self];
-        anonymous = [(AIContentWarning *)object anonymous];
-
-        //Send the typing client event
-        if(handle){
-            [self AIM_SendWarningToHandle:[handle UID] anonymous:anonymous];
-            sent = YES;
-        }
-    }
-    
+    }    
     return(sent);
 }
 
@@ -572,7 +559,7 @@ static char *hash_password(const char * const password);
                 o = d - a + b + 71665152;
 
 //                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
-                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.69 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
+                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.70 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
 
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 
