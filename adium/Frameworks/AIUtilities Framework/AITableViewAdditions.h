@@ -19,3 +19,41 @@
 - (int)indexOfTableColumnWithIdentifier:(id)inIdentifier;
 
 @end
+
+#ifndef MAC_OS_X_VERSION_10_4
+@interface NSTableView (TigerCompatibility)
+/* The column auto resizing style controls resizing in response to a table view frame change.
+Compatability Note: This method replaces -setAutoresizesAllColumnsToFit:.
+*/
+typedef enum {
+    /* Turn off column autoresizing
+    */
+    NSTableViewNoColumnAutoresizing = 0,
+	
+    /* Autoresize all columns by distributing equal shares of space simultaeously
+    */
+    NSTableViewUniformColumnAutoresizingStyle,
+	
+    /* Autoresize each table column one at a time.  Proceed to the next column when 
+	the current column can no longer be autoresized (when it reaches maximum/minimum size).
+    */
+    NSTableViewSequentialColumnAutoresizingStyle,        // Start with the last autoresizable column, proceed to the first.
+    NSTableViewReverseSequentialColumnAutoresizingStyle, // Start with the first autoresizable column, proceed to the last.
+	
+    /* Autoresize only one table column one at a time.  When that table column can no longer be
+	resized, stop autoresizing.  Normally you should use one of the Sequential autoresizing
+	modes instead.
+    */
+    NSTableViewLastColumnOnlyAutoresizingStyle,
+    NSTableViewFirstColumnOnlyAutoresizingStyle
+} NSTableViewColumnAutoresizingStyle;
+@end
+
+@interface NSTableColumn (TigerCompatibility)
+	enum {
+    NSTableColumnNoResizing = 0, // Disallow any kind of resizing.
+    NSTableColumnAutoresizingMask = ( 1 << 0 ),     // This column can be resized as the table is resized.
+    NSTableColumnUserResizingMask = ( 1 << 1 ),     // The user can resize this column manually.
+};
+@end
+#endif
