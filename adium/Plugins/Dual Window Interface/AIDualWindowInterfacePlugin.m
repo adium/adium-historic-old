@@ -37,6 +37,8 @@
 - (void)buildWindowMenu;
 - (AIMessageTabViewItem *)messageTabWithHandle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent create:(BOOL)create;
 - (void)updateActiveWindowMenuItem;
+- (void)increaseUnviewedContentOfHandle:(AIContactHandle *)inHandle;
+- (void)clearUnviewedContentOfHandle:(AIContactHandle *)inHandle;
 @end
 
 @implementation AIDualWindowInterfacePlugin
@@ -180,7 +182,6 @@
     }
 }
 
-
 //Container Interface --------------------------------------------------------------
 //A container was closed
 - (void)containerDidClose:(id <AIInterfaceContainer>)inContainer
@@ -197,6 +198,13 @@
 {
     activeContainer = inContainer;
 
+    //Set the container's handle's content as viewed
+    if([inContainer isKindOfClass:[AIMessageTabViewItem class]]){
+        AIContactHandle		*handle = [[(AIMessageTabViewItem *)inContainer messageViewController] handle];
+
+        [self clearUnviewedContentOfHandle:handle];
+    }
+    
     [self updateActiveWindowMenuItem];
 }
 
@@ -251,6 +259,9 @@
             [[container messageViewController] setAccount:[object destination]];
             [[container messageViewController] setAccountSelectionMenuVisible:YES];            
         }
+
+        //Increase the handle's unviewed count
+        [self increaseUnviewedContentOfHandle:[notification object]];        
     }
 }
 
@@ -438,6 +449,35 @@
     }
 
     return(container);
+}
+
+
+//
+- (void)increaseUnviewedContentOfHandle:(AIContactHandle *)inHandle
+{
+    AIMutableOwnerArray		*ownerArray = [inHandle statusArrayForKey:@"UnviewedContent"];
+    int				currentUnviewed;
+
+    //'UnviewedContent'++
+    currentUnviewed = [[ownerArray objectWithOwner:self] intValue];
+    [ownerArray removeObjectsWithOwner:self];
+    [ownerArray addObject:[NSNumber numberWithInt:(currentUnviewed+1)] withOwner:self];
+
+    //
+    [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
+}
+
+//
+- (void)clearUnviewedContentOfHandle:(AIContactHandle *)inHandle
+{
+    AIMutableOwnerArray		*ownerArray = [inHandle statusArrayForKey:@"UnviewedContent"];
+
+    //Set 'UnviewedContent' to 0
+    [ownerArray removeObjectsWithOwner:self];
+    [ownerArray addObject:[NSNumber numberWithInt:0] withOwner:self];
+
+    //
+    [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
 }
 
 @end

@@ -19,7 +19,7 @@
 @class AIAdium, AIContactListWindowController, AIMessageWindowController, AIMessageViewController;
 @protocol AIMessageView, AIInterfaceController, AITabHoldingInterface, AIContactListCleanup;
 
-@protocol AIInterfaceContainer
+@protocol AIInterfaceContainer <NSObject>
 - (void)makeActive:(id)sender;	//Make the container active/front
 - (void)close:(id)sender;	//Close the container
 @end

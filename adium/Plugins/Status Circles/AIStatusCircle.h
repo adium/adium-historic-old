@@ -19,11 +19,12 @@
 
 @interface AIStatusCircle : NSObject <AIHandleLeftView> {
     NSColor	*color;
+    BOOL	dot;
 }
 
-+ (id)statusCircleWithColor:(NSColor *)inColor;
++ (id)statusCircleWithColor:(NSColor *)inColor dot:(BOOL)inDot;
+- (id)initWithColor:(NSColor *)inColor dot:(BOOL)inDot;
 - (void)drawInRect:(NSRect)inRect;
 - (int)widthForHeight:(int)inHeight;
-- (id)initWithColor:(NSColor *)inColor;
 
 @end

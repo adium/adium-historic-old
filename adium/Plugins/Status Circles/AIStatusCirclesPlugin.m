@@ -23,13 +23,6 @@
 
 - (void)installPlugin
 {
-    //Create the status circles
-    circleAway = [[AIStatusCircle statusCircleWithColor:[NSColor colorWithCalibratedRed:(229.0/255.0) green:(229.0/255.0) blue:(102.0/255.0) alpha:1.0]] retain];
-    circleIdle = [[AIStatusCircle statusCircleWithColor:[NSColor colorWithCalibratedRed:(204.0/255.0) green:(204.0/255.0) blue:(204.0/255.0) alpha:1.0]] retain];
-    circleIdleAway = [[AIStatusCircle statusCircleWithColor:[NSColor colorWithCalibratedRed:(229.0/255.0) green:(229.0/255.0) blue:(153.0/255.0) alpha:1.0]] retain];
-    circleOffline = [[AIStatusCircle statusCircleWithColor:[NSColor colorWithCalibratedRed:(178.0/255.0) green:(0.0/255.0) blue:(0.0/255.0) alpha:1.0]] retain];
-    circleEmpty = [[AIStatusCircle statusCircleWithColor:[NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0]] retain];
-
     [[owner contactController] registerHandleObserver:self];
 }
 
@@ -40,12 +33,6 @@
 
 - (void)dealloc
 {
-    [circleAway release];
-    [circleIdle release];
-    [circleIdleAway release];
-    [circleOffline release];
-    [circleEmpty release];
-
     [super dealloc];
 }
 
@@ -57,32 +44,46 @@
         [inModifiedKeys containsObject:@"Away"] || 
         [inModifiedKeys containsObject:@"Idle"] || 
         [inModifiedKeys containsObject:@"Warning"] ||
-        [inModifiedKeys containsObject:@"Online"]){
+        [inModifiedKeys containsObject:@"Online"] ||
+        [inModifiedKeys containsObject:@"UnviewedContent"] ||
+        [inModifiedKeys containsObject:@"UnrespondedContent"]){
 
+        AIStatusCircle		*statusCircle;
+        NSColor			*circleColor;
         AIMutableOwnerArray	*iconArray = [inHandle displayArrayForKey:@"Left View"];
         int			away, idle, warning, online;
+        int			unviewedContent, unrespondedContent;
 
         //Get all the values
         away = [[inHandle statusArrayForKey:@"Away"] greatestIntegerValue];
         idle = [[inHandle statusArrayForKey:@"Idle"] greatestIntegerValue];
         warning = [[inHandle statusArrayForKey:@"Warning"] greatestIntegerValue];
         online = [[inHandle statusArrayForKey:@"Online"] greatestIntegerValue];
-
+        unviewedContent = [[inHandle statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
+        unrespondedContent = [[inHandle statusArrayForKey:@"UnrespondedContent"] greatestIntegerValue];
+        
         //Remove our current ailments
         [iconArray removeObjectsWithOwner:self];
 
-        if(!online){
-            [iconArray addObject:circleOffline withOwner:self];
+        //Get the circle color
+        if(unviewedContent){
+            circleColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(178.0/255.0) blue:(0.0/255.0) alpha:1.0];
+        }else if(!online){
+            circleColor = [NSColor colorWithCalibratedRed:(178.0/255.0) green:(0.0/255.0) blue:(0.0/255.0) alpha:1.0];
         }else if(idle && away){
-            [iconArray addObject:circleIdleAway withOwner:self];
+            circleColor = [NSColor colorWithCalibratedRed:(229.0/255.0) green:(229.0/255.0) blue:(153.0/255.0) alpha:1.0];
         }else if(idle){
-            [iconArray addObject:circleIdle withOwner:self];
+            circleColor = [NSColor colorWithCalibratedRed:(204.0/255.0) green:(204.0/255.0) blue:(204.0/255.0) alpha:1.0];
         }else if(away){
-            [iconArray addObject:circleAway withOwner:self];
+            circleColor = [NSColor colorWithCalibratedRed:(229.0/255.0) green:(229.0/255.0) blue:(102.0/255.0) alpha:1.0];
         }else{
-            [iconArray addObject:circleEmpty withOwner:self];
+            circleColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0];
         }
-
+        
+        //Create and set the circle
+        statusCircle = [AIStatusCircle statusCircleWithColor:circleColor
+                                                         dot:(BOOL)unrespondedContent];
+        [iconArray addObject:statusCircle withOwner:self];
         modifiedAttributes = [NSArray arrayWithObject:@"Left View"];
     }
 

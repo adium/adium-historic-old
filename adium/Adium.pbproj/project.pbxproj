@@ -389,6 +389,7 @@
 				9C82689E03D9B26500F1D4AF,
 				9C82689F03D9B26500F1D4AF,
 				9CDF248A03EB394B000001C9,
+				4BF290CB03F9FE8D00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3839,6 +3840,12 @@
 		};
 		4BF1F0E903D888EB00A8010A = {
 			fileRef = 4BF1F0E803D888EB00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF290CB03F9FE8D00A8010A = {
+			fileRef = F5741745033E731F01A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
