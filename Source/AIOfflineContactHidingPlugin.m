@@ -60,7 +60,7 @@
 													 target:self
 													 action:@selector(toggleOfflineContactsMenu:)
 											  keyEquivalent:@"H"];
-	[[adium menuController] addMenuItem:showOfflineMenuItem toLocation:LOC_View_Unnamed_B];		
+	[[adium menuController] addMenuItem:showOfflineMenuItem toLocation:LOC_View_Content];		
 
 	//Toolbar
 	NSToolbarItem	*toolbarItem;

@@ -22,7 +22,7 @@ typedef enum {
     LOC_Adium_About = 0, LOC_Adium_Preferences,
     LOC_File_New, LOC_File_Close, LOC_File_Save, LOC_File_Additions,
     LOC_Edit_Bottom, LOC_Edit_Additions,
-	LOC_View_General, LOC_View_Unnamed_A, LOC_View_Unnamed_B, LOC_View_Unnamed_C, 
+	LOC_View_General, LOC_View_Sorting, LOC_View_Content, LOC_View_Display, 
     LOC_Contact_Editing, LOC_Contact_Manage, LOC_Contact_Action, LOC_Contact_NegativeAction, LOC_Contact_Additions,
 	LOC_Status_State, LOC_Status_Accounts, LOC_Status_Additions,
     LOC_Format_Styles, LOC_Format_Palettes, LOC_Format_Additions, 

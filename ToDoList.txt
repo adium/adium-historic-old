@@ -16,7 +16,6 @@
 - Add a warning sheet about window moving/performance for non-standard styles
 - Not fetching buddy icons as well as we could be [God]
 - Contact menu is inconsistent with menu item naming, item grouping
-- View menu is inconsistent with menu item grouping
 - Update included layouts, themes, and message views
 - OTR Private key generation should be cleaner [Evan]
 - Jabber account registration
