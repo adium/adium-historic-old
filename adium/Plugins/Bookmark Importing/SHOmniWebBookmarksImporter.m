@@ -7,11 +7,12 @@
 #import "SHOmniWebBookmarksImporter.h"
 #import "SHMozillaCommonParser.h"
 
-#define OW45_BOOKMARKS_PATH  @"~/Library/Application Support/OmniWeb/Bookmarks.html"
-#define OW5_BOOKMARKS_PATH  @"~/Library/Application Support/OmniWeb 5/Favorites.html"
+#define OW45_BOOKMARKS_PATH     @"~/Library/Application Support/OmniWeb/Bookmarks.html"
+#define OW5_BOOKMARKS_PATH      @"~/Library/Application Support/OmniWeb 5/Favorites.html"
 
-#define OW45_ROOT_MENU_TITLE AILocalizedString(@"OmniWeb 4.5",nil)
-#define OW5_ROOT_MENU_TITLE AILocalizedString(@"OmniWeb 5",nil)
+#define OW45_ROOT_MENU_TITLE    AILocalizedString(@"OmniWeb 4.5",nil)
+#define OW5_ROOT_MENU_TITLE     AILocalizedString(@"OmniWeb 5",nil)
+#define OW_TITLE                AILocalizedString(@"OmniWeb",nil);
 
 @class SHMozillaCommonParser;
 
@@ -38,6 +39,11 @@ DeclareString(ltSign)
 + (id)newInstanceOfImporter
 {
     return [[[self alloc] init] autorelease];
+}
+
++(NSString *)importerTitle
+{
+    return OW_TITLE;
 }
 
 - (id)init
