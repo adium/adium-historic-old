@@ -527,6 +527,7 @@
 				4BD1EEF006D2608000B3975E,
 				4BD1EEE106D25F4A00B3975E,
 				4BD1EEDE06D25F0300B3975E,
+				34D835C807CBECEB006466F2,
 				4BD1EEDB06D25EE900B3975E,
 				3402D32707CB03960044F818,
 				32C88DFF0371C24200C91783,
@@ -3793,6 +3794,50 @@
 			settings = {
 			};
 		};
+		34D835C807CBECEB006466F2 = {
+			children = (
+				34D835CD07CBED06006466F2,
+				34D835CE07CBED06006466F2,
+			);
+			isa = PBXGroup;
+			name = "External Sources";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D835CD07CBED06006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = pxmLib.m;
+			path = Source/pxmLib.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D835CE07CBED06006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = pxmLib.h;
+			path = Source/pxmLib.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D835CF07CBED06006466F2 = {
+			fileRef = 34D835CD07CBED06006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D835D007CBED06006466F2 = {
+			fileRef = 34D835CE07CBED06006466F2;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
 		34E46928075681AE004C3A42 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -5039,6 +5084,7 @@
 				34F2E94107C2D264007EAAAB,
 				34F2EA4A07C304C0007EAAAB,
 				3402D33107CB043F0044F818,
+				34D835D007CBED06006466F2,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5179,6 +5225,7 @@
 				07BB5A0D07C4833E008996A0,
 				07BB5A0E07C48340008996A0,
 				6E03C8D407C68A5800EAA71E,
+				34D835CF07CBED06006466F2,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
