@@ -30,6 +30,7 @@
     NSColor			*groupColor;
     NSColor			*invertedGroupColor;
     NSColor                     *outlineGroupColor;
+    NSColor                     *labelGroupColor;
     
     float                       spacing;
     BOOL                        isBorderless;
@@ -56,6 +57,9 @@
 
 - (void)setOutlineGroupColor:(NSColor *)inOutlineGroupColor;
 - (NSColor *)outlineGroupColor;
+
+- (void)setLabelGroupColor:(NSColor *)inLabelGroupColor;
+- (NSColor *)labelGroupColor;
 
 - (void)setIsBorderless:(BOOL)inIsBorderless;
 

@@ -11,15 +11,12 @@
     IBOutlet    NSButton        *checkbox_outlineGroups;
     IBOutlet    NSColorWell     *colorWell_outlineGroupsColor;
     IBOutlet    NSButton        *checkbox_tooltipsInBackground;
-
-    //Labels
-    IBOutlet    NSSlider        *slider_labelOpacity;
-    IBOutlet    NSButton        *checkbox_outlineLabels;
-    IBOutlet    NSButton        *checkbox_labelAroundContact;
+    IBOutlet    NSButton        *checkbox_tooltipsInBackgroundOtherApps;
     
     //Window
     IBOutlet    NSSlider        *slider_opacity;
     IBOutlet	NSButton	*checkbox_borderless;
+    IBOutlet    NSButton        *checkbox_shadows;
 }
 
 @end

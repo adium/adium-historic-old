@@ -30,8 +30,9 @@
     NSTimer 		*tooltipTimer;
     int 		tooltipCount;
     BOOL                allowTooltipsInBackground;
+    BOOL                allowTooltipsWhileInOtherApps;
     
-    BOOL                fixedShadows;
+    BOOL                shadows;
 }
 
 + (AISCLViewController *)contactListViewController;

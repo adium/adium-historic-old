@@ -38,12 +38,11 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkbox_borderless" = NSButton; 
-                "checkbox_labelAroundContact" = NSButton; 
                 "checkbox_outlineGroups" = NSButton; 
-                "checkbox_outlineLabels" = NSButton; 
+                "checkbox_shadows" = NSButton; 
                 "checkbox_tooltipsInBackground" = NSButton; 
+                "checkbox_tooltipsInBackgroundOtherApps" = NSButton; 
                 "colorWell_outlineGroupsColor" = NSColorWell; 
-                "slider_labelOpacity" = NSSlider; 
                 "slider_opacity" = NSSlider; 
                 "slider_rowSpacing" = NSSlider; 
             }; 
