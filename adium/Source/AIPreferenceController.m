@@ -116,7 +116,7 @@
 
 - (void)openPreferencesToView:(AIPreferenceViewController *)inView
 {
-    AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowControllerWithOwner:self];
+    AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowControllerWithOwner:owner];
 
     [preferenceWindow showView:inView];
     [preferenceWindow showWindow:nil];
