@@ -325,15 +325,14 @@
 	[checkBox_showUserIcons setEnabled:showsUserIcons];
 	
 	//Setup the Custom Background dropdown (enable/disable as needed, default to "Default")
-	BOOL allowsCustomBackground = [plugin boolForKey:@"DisableCustomBackground" style:style variant:variant boolDefault:YES];
-
+	BOOL disableCustomBackground = [plugin boolForKey:@"DisableCustomBackground" style:style variant:variant boolDefault:NO];
 	
 	NSString	*customBackground;
 	int			tag;
-	customBackground = (allowsCustomBackground
-						? [[adium preferenceController] preferenceForKey:[plugin backgroundKeyForStyle:[style name]]
-																   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]
-						: nil);
+	customBackground = (disableCustomBackground 
+						? nil
+						: [[adium preferenceController] preferenceForKey:[plugin backgroundKeyForStyle:[style name]]
+																   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]);
 	
 	if (customBackground) {
 		tag = (([customBackground length] > 1) ? CustomBackground : NoBackground);
@@ -341,7 +340,7 @@
 		tag = DefaultBackground;
 	}
 	[popUp_customBackground selectItemAtIndex:[popUp_customBackground indexOfItemWithTag:tag]];
-	[popUp_customBackground setEnabled:allowsCustomBackground];
+	[popUp_customBackground setEnabled:!disableCustomBackground];
 	
 	//Setup the Background Color colorwell (enabled/disable as needed, default to the color specified by the styl/variant or to white
 	NSColor *backgroundColor;
@@ -354,8 +353,8 @@
 		}
 	}
 	[colorWell_customBackgroundColor setColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])] ;
-	[colorWell_customBackgroundColor setEnabled:allowsCustomBackground];
-	[button_restoreDefaultBackgroundColor setEnabled:allowsCustomBackground];
+	[colorWell_customBackgroundColor setEnabled:!disableCustomBackground];
+	[button_restoreDefaultBackgroundColor setEnabled:!disableCustomBackground];
 }
 
 //Take the fake conversation contained in chatDict and send it to our webView

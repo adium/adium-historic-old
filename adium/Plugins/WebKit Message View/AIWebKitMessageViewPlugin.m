@@ -192,13 +192,16 @@ DeclareString(AppendNextMessage);
 	[self _loadPreferencesForWebView:webView withStyleNamed:styleName];
 	
 	basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
-	headerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
-	footerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];
-	templateHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
-	
+
+	//We can't use NSString's initWithContentsOfFile here.  HTML files are interpreted in the defaultCEncoding
+	//(which varies by system) when read that way.  We want to always interpret the files as ASCII.
+	headerHTML = [NSString stringWithContentsOfASCIIFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
+	footerHTML = [NSString stringWithContentsOfASCIIFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];
+	templateHTML = [NSMutableString stringWithContentsOfASCIIFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
+
 	templateHTML = [NSMutableString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
 	templateHTML = [self fillKeywords:templateHTML forStyle:style forChat:chat];
-	
+
 	//Feed it to the webview
 	[[webView mainFrame] loadHTMLString:templateHTML baseURL:nil];
 }
@@ -343,7 +346,7 @@ DeclareString(AppendNextMessage);
 	//Perform substitutions, then escape the HTML to get it past the evil javascript guards
 	newHTML = [self fillKeywords:newHTML forContent:content allowingColors:YES];
 	newHTML = [self escapeString:newHTML];
-	
+
 	[webView stringByEvaluatingJavaScriptFromString:
 		[NSString stringWithFormat:AppendMessage, newHTML]];
 }
