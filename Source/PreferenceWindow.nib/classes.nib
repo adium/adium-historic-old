@@ -5,6 +5,7 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSOutlineView; 
         }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AIModularPaneCategoryView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
@@ -15,9 +16,10 @@
             OUTLETS = {
                 "button_restoreDefaults" = NSButton; 
                 "coloredBox_advancedTitle" = AIColoredBoxView; 
-                "outlineView_advanced" = NSOutlineView; 
+                "scrollView_advanced" = NSScrollView; 
                 "tabView_category" = NSTabView; 
                 "tabView_status" = NSTabView; 
+                "tableView_advanced" = NSTableView; 
                 "textField_advancedTitle" = NSTextField; 
                 "view_Advanced" = AIModularPaneCategoryView; 
                 "view_ContactList" = AIModularPaneCategoryView; 

@@ -41,6 +41,8 @@
 - (IBAction)restoreDefaults:(id)sender;
 - (NSDictionary *)_createGroupNamed:(NSString *)inName forCategory:(PREFERENCE_CATEGORY)category;
 - (NSArray *)_panesInCategory:(PREFERENCE_CATEGORY)inCategory;
+
+- (void)configureAdvancedPreferencesTable;
 @end
 
 @implementation AIPreferenceWindowController
@@ -111,7 +113,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[self window];
 	
 	while( shouldContinue && (pane = [enumerator nextObject]) ) {
-		if( [paneName caseInsensitiveCompare:[pane label]] == 0 ) {
+		if( [paneName caseInsensitiveCompare:[pane label]] == NSOrderedSame ) {
 			shouldContinue = NO;
 		}
 	}
@@ -127,8 +129,8 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		[self configureAdvancedPreferencesForPane:pane];
 		
 		// Select the correct row in the outline view
-		row = [outlineView_advanced rowForItem:pane];
-		[outlineView_advanced selectRow:row byExtendingSelection:NO];
+		row = [[self advancedCategoryArray] indexOfObject:pane];
+		[tableView_advanced selectRow:row byExtendingSelection:NO];
 	}
 }
 
@@ -174,7 +176,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[super windowDidLoad];
 
 	//
-    [outlineView_advanced setIndentationPerLevel:10];
     [coloredBox_advancedTitle setColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.15]];
  
     //Select the previously selected category
@@ -192,6 +193,8 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSMakeRect(0,0,0,0)];
 
 	[[self window] setTitle:AILocalizedString(@"Preferences",nil)];
+
+	[self configureAdvancedPreferencesTable];
 
     //Center the window
 	[[self window] betterCenter];
@@ -217,7 +220,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 										  group:PREF_GROUP_GENERAL];
 	
 	//Save selection
-	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[outlineView_advanced selectedRow]]
+	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[tableView_advanced selectedRow]]
 										 forKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW
 										  group:PREF_GROUP_WINDOW_POSITIONS];
 	
@@ -287,16 +290,14 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 				[view_FileTransfer setPanes:[self _panesInCategory:AIPref_FileTransfer]];
 				break;
             case 9:
-                [outlineView_advanced reloadData];
+                [tableView_advanced reloadData];
 				
                 //Select the previously selected row
 				int row = [[[adium preferenceController] preferenceForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW
 																	group:PREF_GROUP_WINDOW_POSITIONS] intValue];
-				if(row < 0 || row >= [outlineView_advanced numberOfRows]) row = 1;
+				if(row < 0 || row >= [tableView_advanced numberOfRows]) row = 1;
 					
-				if([self outlineView:outlineView_advanced shouldSelectItem:[outlineView_advanced itemAtRow:row]]){
-					[outlineView_advanced selectRow:row byExtendingSelection:NO];
-				}
+				[tableView_advanced selectRow:row byExtendingSelection:NO];
 				break;
         }
 
@@ -337,8 +338,8 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 //Restore everything the AIPreferencePane wants restored
 - (IBAction)restoreDefaults:(id)sender
 {
-	int	selectedRow = [outlineView_advanced selectedRow];
-	[[adium preferenceController] resetPreferencesInPane:[outlineView_advanced itemAtRow:selectedRow]];
+	int	selectedRow = [tableView_advanced selectedRow];
+	[[adium preferenceController] resetPreferencesInPane:[[self advancedCategoryArray] objectAtIndex:selectedRow]];
 }
 
 //Set the displayed advanced pane
@@ -373,16 +374,27 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
         _advancedCategoryArray = [[NSMutableArray alloc] init];
         
         //Load our advanced categories
+		/*
         [_advancedCategoryArray addObject:[self _createGroupNamed:@"Contact List" forCategory:AIPref_Advanced_ContactList]];
-        [_advancedCategoryArray addObject:[self _createGroupNamed:@"Messages" forCategory:AIPref_Advanced_Messages]];
-        [_advancedCategoryArray addObject:[self _createGroupNamed:@"Status" forCategory:AIPref_Advanced_Status]];
-        [_advancedCategoryArray addObject:[self _createGroupNamed:@"Service" forCategory:AIPref_Advanced_Service]];
-        [_advancedCategoryArray addObject:[self _createGroupNamed:@"Other" forCategory:AIPref_Advanced_Other]];
+		 [_advancedCategoryArray addObject:[self _createGroupNamed:@"Messages" forCategory:AIPref_Advanced_Messages]];
+		 [_advancedCategoryArray addObject:[self _createGroupNamed:@"Status" forCategory:AIPref_Advanced_Status]];
+		 [_advancedCategoryArray addObject:[self _createGroupNamed:@"Service" forCategory:AIPref_Advanced_Service]];
+		 [_advancedCategoryArray addObject:[self _createGroupNamed:@"Other" forCategory:AIPref_Advanced_Other]];
+		 */
+		[_advancedCategoryArray addObjectsFromArray:[self _panesInCategory:AIPref_Advanced_ContactList]];
+		[_advancedCategoryArray addObjectsFromArray:[self _panesInCategory:AIPref_Advanced_Messages]];
+		[_advancedCategoryArray addObjectsFromArray:[self _panesInCategory:AIPref_Advanced_Status]];
+		[_advancedCategoryArray addObjectsFromArray:[self _panesInCategory:AIPref_Advanced_Service]];
+		[_advancedCategoryArray addObjectsFromArray:[self _panesInCategory:AIPref_Advanced_Other]];
+		
+		//Alphabetize them
+		[_advancedCategoryArray sortUsingSelector:@selector(compare:)];
     }
     
     return(_advancedCategoryArray);
 }
 
+/*
 //
 - (NSDictionary *)_createGroupNamed:(NSString *)inName forCategory:(PREFERENCE_CATEGORY)category
 {
@@ -391,6 +403,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		[self _panesInCategory:category], PREFERENCE_PANE_ARRAY,
 		nil]);
 }
+*/
 
 //Loads, alphabetizes, and caches prefs for the speficied category
 - (NSArray *)_panesInCategory:(PREFERENCE_CATEGORY)inCategory
@@ -416,62 +429,48 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 
 //Advanced Preferences (Outline View) ----------------------------------------------------------------------------------
 #pragma mark Advanced Preferences (Outline View)
-- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+- (void)configureAdvancedPreferencesTable
 {
-    if(item == nil){ //Root
-        return([[self advancedCategoryArray] objectAtIndex:index]);
-    }else{
-        return([[item objectForKey:PREFERENCE_PANE_ARRAY] objectAtIndex:index]);
-    }
-}
-
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
-{
-    if([item isKindOfClass:[NSDictionary class]]){ //Only groups are expandable
-        return(YES);
-    }else{
-        return(NO);
-    }
-}
-
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
-{
-    if(item == nil){ //Root
-        return([[self advancedCategoryArray] count]);
-    }else{
-        return([[item objectForKey:PREFERENCE_PANE_ARRAY] count]);
-    }
-}
-
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
-{
-    if([item isKindOfClass:[NSDictionary class]]){
-        return([[[NSAttributedString alloc] initWithString:[item objectForKey:PREFERENCE_GROUP_NAME]
-                                                attributes:[NSDictionary dictionaryWithObject:[NSFont boldSystemFontOfSize:11]
-																					   forKey:NSFontAttributeName]] autorelease]);
-        
-    }else if([item isKindOfClass:[AIPreferencePane class]]){
-        float	cellWidth = [outlineView frameOfCellAtColumn:[outlineView indexOfTableColumn:tableColumn]
-														 row:[outlineView rowForItem:item]].size.width - 4;
-        return([[(AIPreferencePane *)item label] stringByTruncatingTailToWidth:cellWidth]);
-    }
+    AIImageTextCell			*cell;
+	
+    //Configure our tableView
+    cell = [[AIImageTextCell alloc] init];
+    [cell setFont:[NSFont systemFontOfSize:12]];
+    [[tableView_advanced tableColumnWithIdentifier:@"description"] setDataCell:cell];
+	[cell release];
+	
+    [scrollView_advanced setAutoHideScrollBar:YES];
     
-    return(nil);
+	[tableView_advanced reloadData];
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView shouldSelectItem:(id)item
+//Return the number of accounts
+- (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    if([item isKindOfClass:[AIPreferencePane class]]){
-		[self configureAdvancedPreferencesForPane:item];
-        return(YES);
-    }else{
-        return(NO);
+	return([[self advancedCategoryArray] count]);
+}
+
+//Return the account description or image
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+	return([(AIPreferencePane *)[[self advancedCategoryArray] objectAtIndex:row] label]);
+}
+
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+	AIPreferencePane	*pane = [[self advancedCategoryArray] objectAtIndex:row];
+	[cell setImage:[pane image]];
+	[cell setSubString:nil];
+	[cell setDrawsGradientHighlight:YES];
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)notification
+{
+    int	selectedRow = [tableView_advanced selectedRow];
+
+	if(selectedRow >= 0 && selectedRow < [[self advancedCategoryArray] count]){		
+		[self configureAdvancedPreferencesForPane:[[self advancedCategoryArray]  objectAtIndex:selectedRow]];
     }
-}
-
-- (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
-{
-    return(YES);
 }
 
 @end
