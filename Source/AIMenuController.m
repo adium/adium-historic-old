@@ -19,6 +19,7 @@
 
 @interface AIMenuController (PRIVATE)
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray usingMenu:(NSMenu *)inMenu;
+- (void)addMenuItemsForContact:(AIListContact *)inContact toMenu:(NSMenu *)workingMenu separatorItem:(BOOL *)separatorItem;
 @end
 
 @implementation AIMenuController
