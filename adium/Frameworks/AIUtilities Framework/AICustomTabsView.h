@@ -27,6 +27,7 @@
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem;
 - (BOOL)customTabView:(AICustomTabsView *)tabView didAcceptDragPasteboard:(NSPasteboard *)pasteboard onTabViewItem:(NSTabViewItem *)tabViewItem;
 - (NSArray *)customTabViewAcceptableDragTypes:(AICustomTabsView *)tabView;
+- (int)customTabView:(AICustomTabsView *)tabView indexForInsertingTabViewItem:(NSTabViewItem *)tabViewItem;
 @end
 
 @interface AICustomTabsView : NSView {
@@ -35,7 +36,6 @@
     id					delegate;
     BOOL				allowsInactiveTabClosing;	//Allow closing of inactive tabs
 	BOOL				allowsTabRearranging;		//Allow tabs to be rearranged in the window
-	BOOL				allowsTabDragging;			//Allow tabs to be dragged out of the window
 	BOOL				trackingCursor;				//Tracking rects are installed
 	BOOL				ignoreTabNumberChange;		//Ignore tab count changes, used for re-arranging
 	
@@ -49,6 +49,9 @@
 	//Guarded.  Access these using the internal accessors
     NSMutableArray		*tabCellArray;
     AICustomTabCell		*selectedCustomTabCell;
+	
+	//
+	AICustomTabCell     *dragCell;
 }
 
 //Delegate
@@ -67,24 +70,20 @@
 - (void)setAllowsTabRearranging:(BOOL)inValue;
 - (BOOL)allowsTabRearranging;
 
-//Permit tab dragging out of the window
-- (void)setAllowsTabDragging:(BOOL)inValue;
-- (BOOL)allowsTabDragging;
-
-//
-- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index selectTab:(BOOL)shouldSelect;
+//Misc
 - (void)redisplayTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
 - (void)resizeTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
+- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index;
+- (int)numberOfTabViewItems;
 
-//
+//Private
 - (void)rebuildTabCells;
 - (AICustomTabCell *)tabAtPoint:(NSPoint)clickLocation;
 - (int)totalWidthOfTabs;
+- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index selectTab:(BOOL)shouldSelect animate:(BOOL)animate;
 - (int)numberOfTabViewItems;
 - (void)closeTab:(AICustomTabCell *)tabCell;
 - (void)closeAllTabsExceptFor:(AICustomTabCell *)targetCell;
-- (NSArray *)tabCells;
-- (NSTabView *)tabView;
 - (void)drawBackgroundInRect:(NSRect)rect withFrame:(NSRect)viewFrame selectedTabRect:(NSRect)tabFrame;
 - (void)resetCursorTracking;
 - (AICustomTabCell *)tabCellForTabViewItem:(NSTabViewItem *)tabViewItem;

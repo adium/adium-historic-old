@@ -163,6 +163,9 @@
 - (AIChat *)activeChat;
 - (NSArray *)openChats;
 - (NSArray *)openChatsInContainerNamed:(NSString *)containerName;
+- (BOOL)allowChatOrdering;
+- (BOOL)allowChatGrouping;
+- (int)indexForInsertingChat:(AIChat *)chat intoContainerNamed:(NSString *)containerName;
 
 //Interface plugin callbacks
 - (void)chatDidOpen:(AIChat *)inChat;

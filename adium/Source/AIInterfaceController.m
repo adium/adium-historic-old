@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.81 2004/07/14 16:22:16 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.82 2004/07/18 17:29:26 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -37,7 +37,6 @@
 - (void)_resetOpenChatsCache;
 - (void)_resortChat:(AIChat *)chat;
 - (void)_resortAllChats;
-- (int)_indexForInsertingChat:(AIChat *)chat intoContainerNamed:(NSString *)containerName;
 - (NSArray *)_listObjectsForChatsInContainerNamed:(NSString *)containerName;
 - (void)_addItemToMainMenuAndDock:(NSMenuItem *)item;
 - (NSAttributedString *)_tooltipTitleForObject:(AIListObject *)object;
@@ -105,6 +104,7 @@ arrangeChats = YES;
 								   selector:@selector(contactOrderChanged:)
 									   name:Contact_OrderChanged 
 									 object:nil];
+	
 	
 }
 
@@ -231,7 +231,7 @@ arrangeChats = YES;
 
 	//Determine the correct placement for this chat withing the container
 	if(arrangeChats){
-		index = [self _indexForInsertingChat:inChat intoContainerNamed:containerName];
+		index = [self indexForInsertingChat:inChat intoContainerNamed:containerName];
 	}
 	
 	[interface openChat:inChat inContainerNamed:containerName atIndex:index];
@@ -275,6 +275,12 @@ arrangeChats = YES;
 - (void)_resetOpenChatsCache
 {
 	[_cachedOpenChats release]; _cachedOpenChats = nil;
+}
+
+//Allow the user to change chat order?
+- (BOOL)allowChatOrdering
+{
+	return(!arrangeChats);
 }
 
 
@@ -344,24 +350,26 @@ arrangeChats = YES;
 //Dynamically ordering / grouping tabs ---------------------------------------------------------------------------------
 - (void)contactOrderChanged:(NSNotification *)notification
 {
-	AIListObject				*changedObject = [notification object];
-	
 	NSLog(@"contactOrderChanged: %@",[notification object]);
-
-	if(changedObject){
-		NSEnumerator	*enumerator = [[self openChats] objectEnumerator];
-		AIChat			*chat;
-
-		//Check if we have a chat window open with this contact.  If we do, re-sort that chat
-		//Unfortunately we need to enumerate all our chats to determine this :(  Stupid group chats screwing everything up
-		while(chat = [enumerator nextObject]){
-			if([chat listObject] == changedObject) break;
+	
+	if(arrangeChats){
+		AIListObject		*changedObject = [notification object];
+		
+		if(changedObject){
+			NSEnumerator	*enumerator = [[self openChats] objectEnumerator];
+			AIChat			*chat;
+			
+			//Check if we have a chat window open with this contact.  If we do, re-sort that chat
+			//Unfortunately we need to enumerate all our chats to determine this - Stupid group chats screwing everything up
+			while(chat = [enumerator nextObject]){
+				if([chat listObject] == changedObject) break;
+			}
+			if(chat) [self _resortChat:chat];
+			
+		}else{
+			//Entire list was resorted, resort all our chats
+			[self _resortAllChats];
 		}
-		if(chat) [self _resortChat:chat];
-
-	}else{
-		//Entire list was resorted, resort all our chats
-		[self _resortAllChats];
 	}
 	
 }
@@ -370,11 +378,9 @@ arrangeChats = YES;
 - (void)_resortChat:(AIChat *)chat
 {
 	NSString	*containerName = [interface containerNameForChat:chat];
-	
-	NSLog(@"Move chat %@ to index:%i among: %@",chat,[self _indexForInsertingChat:chat intoContainerNamed:containerName],[self _listObjectsForChatsInContainerNamed:containerName]);
-	
+		
 	[interface moveChat:chat toContainerNamed:containerName
-				  index:[self _indexForInsertingChat:chat intoContainerNamed:containerName]];
+				  index:[self indexForInsertingChat:chat intoContainerNamed:containerName]];
 	
 }
 
@@ -409,7 +415,7 @@ arrangeChats = YES;
 }
 
 
-- (int)_indexForInsertingChat:(AIChat *)chat intoContainerNamed:(NSString *)containerName
+- (int)indexForInsertingChat:(AIChat *)chat intoContainerNamed:(NSString *)containerName
 {
 	AISortController	*sortController = [[owner contactController] activeSortController];
 
