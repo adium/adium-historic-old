@@ -10,6 +10,11 @@
 
 #define	GENERIC_REACHABILITY_CHECK	"www.google.com"
 
+@interface ESAccountNetworkConnectivityPlugin (PRIVATE)
+- (void)autoConnectAccounts;
+- (void)handleConnectivity;
+@end
+
 @implementation ESAccountNetworkConnectivityPlugin
 
 static OSStatus CreateIPAddressListChangeCallbackSCF(SCDynamicStoreCallBack callback,
@@ -18,10 +23,13 @@ static OSStatus CreateIPAddressListChangeCallbackSCF(SCDynamicStoreCallBack call
 													 CFRunLoopSourceRef *sourceRef);
 static void localIPsChangedCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info);
 
-static NSMutableSet	*accountsToConnect;
+static NSMutableSet	*accountsToConnect = nil;
+static ESAccountNetworkConnectivityPlugin *myself = nil;
 
 - (void)installPlugin
 {
+	myself = self;
+	
 	SCDynamicStoreRef	storeRef = nil;
 	CFRunLoopSourceRef	sourceRef = nil;
 	
@@ -41,24 +49,55 @@ static NSMutableSet	*accountsToConnect;
 	
 	//Register our observers
     [[adium contactController] registerListObjectObserver:self];
+	
+	//Wait for Adium to finish launching to handle autoconnecting accounts
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(adiumFinishedLaunching:)
+									   name:Adium_CompletedApplicationLoad
+									 object:nil];
+	
+	//Monitor system sleep so we can cleanly disconnect / reconnect our accounts
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(systemWillSleep:)
+                                                 name:AISystemWillSleep_Notification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(systemDidWake:)
+                                                 name:AISystemDidWake_Notification
+                                               object:nil];	
 }
 
 - (void)uninstallPlugin
 {
 	[accountsToConnect release]; accountsToConnect = nil;
+	
+	[[adium contactController] unregisterListObjectObserver:self];
+	[[adium notificationCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 static BOOL checkReachabilityForHost(const char *host)
 {
 	
 	SCNetworkConnectionFlags	status;
-	BOOL						genericReachability = NO;
+	BOOL						reachable = NO;
 	
 	if (SCNetworkCheckReachabilityByName(host, &status)){
-		genericReachability = (status & kSCNetworkFlagsReachable);
+		reachable = (status & kSCNetworkFlagsReachable);
+		
+		/*
+		NSLog(@"*** %s is %i : %i %i %i %i %i %i",host,status,
+			  status & kSCNetworkFlagsTransientConnection,
+			  status & kSCNetworkFlagsReachable,
+			  status & kSCNetworkFlagsConnectionRequired,
+			  status & kSCNetworkFlagsConnectionAutomatic,
+			  status & kSCNetworkFlagsInterventionRequired,
+			  status & kSCNetworkFlagsIsLocalAddress,
+			  status & kSCNetworkFlagsIsDirect);
+		 */
 	}
 	
-	return genericReachability;
+	return reachable;
 }
 
 static BOOL checkGenericReachability()
@@ -66,7 +105,7 @@ static BOOL checkGenericReachability()
 	return checkReachabilityForHost(GENERIC_REACHABILITY_CHECK);
 }
 
-static void localIPsChangedCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
+- (void)handleConnectivity
 {
 	BOOL			genericReachability = checkGenericReachability();
 	NSEnumerator	*enumerator = [[[[AIObject sharedAdiumInstance] accountController] accountArray] objectEnumerator];
@@ -78,20 +117,21 @@ static void localIPsChangedCallback(SCDynamicStoreRef store, CFArrayRef changedK
 									checkReachabilityForHost(customServerToCheckForReachability) :
 									genericReachability);
 		
-		//If we are now online and are waiting to connect this account, do it if the account hasn't already
-		//been taken care of.
 		if (reachability){
+			//If we are now online and are waiting to connect this account, do it if the account hasn't already
+			//been taken care of.
 			if ([accountsToConnect containsObject:account] &&
 				![account integerStatusObjectForKey:@"Online"] &&
 				![account integerStatusObjectForKey:@"Connecting"]){
-				
+
 				[account setPreference:[NSNumber numberWithBool:YES] 
 								forKey:@"Online"
 								 group:GROUP_ACCOUNT_STATUS];	
 			}
 		}else{
+			//If we are no longer online and this account is connected, disconnect it.
 			if (([account integerStatusObjectForKey:@"Online"] ||
-				[account integerStatusObjectForKey:@"Connecting"]) &&
+				 [account integerStatusObjectForKey:@"Connecting"]) &&
 				![account integerStatusObjectForKey:@"Disconnecting"]){
 				
 				[account setPreference:[NSNumber numberWithBool:NO] 
@@ -101,6 +141,15 @@ static void localIPsChangedCallback(SCDynamicStoreRef store, CFArrayRef changedK
 			}			
 		}
 	}
+}
+
+static void localIPsChangedCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
+{
+	//The IPs changed, but DNS may not be up yet.  Delay 1 second to give the check a higher
+	//degree of accuracy.
+	[myself performSelector:@selector(handleConnectivity)
+				 withObject:nil
+				 afterDelay:1.0];
 }
 
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
@@ -117,6 +166,81 @@ static void localIPsChangedCallback(SCDynamicStoreRef store, CFArrayRef changedK
 	
 	return nil;
 }
+
+//Autoconnect
+#pragma mark Autoconnect
+- (void)adiumFinishedLaunching:(NSNotification *)notification
+{
+	//Holding shift skips autoconnection.
+	if(![NSEvent shiftKey]){
+		[self autoConnectAccounts];
+	}	
+}
+
+//Automatically connect to accounts flagged with an auto connect property as soon as a network connection is available
+- (void)autoConnectAccounts
+{
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
+	
+	//Determine the accounts which want to be autoconnected
+	enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	while((account = [enumerator nextObject])){
+		if([[account supportedPropertyKeys] containsObject:@"Online"] &&
+		   [[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]){
+
+			[accountsToConnect addObject:account];
+		}
+	}
+	
+	//Attempt to connect them immediately; if this fails, they will be connected when the network
+	//becomes available.
+	if ([accountsToConnect count]){
+		//I don't claim to understand why this delay should be needed, but it is.
+		[myself performSelector:@selector(handleConnectivity)
+					 withObject:nil
+					 afterDelay:0.5];
+
+	}
+}
+
+//Disconnect / Reconnect on sleep --------------------------------------------------------------------------------------
+#pragma mark Disconnect/Reconnect On Sleep
+//System is sleeping
+- (void)systemWillSleep:(NSNotification *)notification
+{
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
+
+    //Process each account, looking for any that are online
+    enumerator = [[[adium accountController] accountArray] objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([[account supportedPropertyKeys] containsObject:@"Online"] &&
+           [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
+
+			//Disconnect the account and add it to our list to reconnect
+			[account setPreference:[NSNumber numberWithBool:NO] 
+							forKey:@"Online"
+							 group:GROUP_ACCOUNT_STATUS];
+			[accountsToConnect addObject:account];
+        }
+    }
+}
+
+//System is waking
+- (void)systemDidWake:(NSNotification *)notification
+{
+	if ([accountsToConnect count]){
+		/* If the network is configured via DHCP, this won't connect, but we will get notified
+		   when the IP is grabbed from the DHCP server.  If it is configured manually, we won't
+		   get an IP changed notification but this will be succesful so long as we delay long enough
+		   for the network to be up. */
+		[myself performSelector:@selector(handleConnectivity)
+					 withObject:nil
+					 afterDelay:1.0];
+	}
+}
+
 
 /* CreateIPAddressListChangeCallbackSCF() is from Apple's
 "Living in a Dynamic TCP/IP Environment, available at
