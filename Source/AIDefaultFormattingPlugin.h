@@ -16,10 +16,10 @@
 
 #import <Adium/AIPlugin.h>
 
-#define PREF_GROUP_FORMATTING			@"Formatting"
+#define PREF_GROUP_FORMATTING				@"Formatting"
 
-#define KEY_FORMATTING_FONT			@"Default Font"
-#define KEY_FORMATTING_TEXT_COLOR		@"Default Text Color"
+#define KEY_FORMATTING_FONT					@"Default Font"
+#define KEY_FORMATTING_TEXT_COLOR			@"Default Text Color"
 #define KEY_FORMATTING_BACKGROUND_COLOR		@"Default Background Color"
 #define KEY_FORMATTING_SUBBACKGROUND_COLOR	@"Default SubBackground Color"
 
@@ -27,8 +27,6 @@
 	NSFont	*font;
 	NSColor	*textColor;
 	NSColor	*backgroundColor;
-	
-	
 }
 
 @end
