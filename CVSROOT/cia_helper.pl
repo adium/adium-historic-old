@@ -2,16 +2,8 @@
 
 use strict;
 
-my $input;
-my $args;
-
-while(<STDIN>) {
-    $input .= $_;
-}
-
-for(my $i = 0; $i < @ARGV; $i++) {
-    $args .= $ARGV[$i] . " ";
-}
+my $input = join("", <STDIN>);
+my $args = join(" ", @ARGV);
 
 open(CIA,  "| /usr/bin/perl /cvsroot/adium/CVSROOT/ciabot.pl $args") or die "shit: $!";
 print CIA $input;
