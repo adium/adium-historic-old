@@ -74,30 +74,32 @@
 {
     NSArray		*modifiedAttributes = nil;
 
-    if(	inModifiedKeys == nil ||
-        [inModifiedKeys containsObject:@"Typing"] ||
-        [inModifiedKeys containsObject:@"UnviewedContent"] || 
-        [inModifiedKeys containsObject:@"Away"] ||
-        [inModifiedKeys containsObject:@"Idle"] ||
-        [inModifiedKeys containsObject:@"Online"] ||
-        [inModifiedKeys containsObject:@"Signed On"] || 
-        [inModifiedKeys containsObject:@"Signed Off"]){
-
-        //Update the handle's text color
-        [self _applyColorToObject:inObject];
-        modifiedAttributes = [NSArray arrayWithObjects:@"Text Color", @"Inverted Text Color", @"Label Color", nil];
-    }
-
-    //Update our flash array
-    if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"UnviewedContent"]){
-        int unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
-
-        if(unviewedContent && ![flashingListObjectArray containsObject:inObject]){ //Start flashing
-            [self addToFlashArray:inObject];
-        }else if(!unviewedContent && [flashingListObjectArray containsObject:inObject]){ //Stop flashing
-            [self removeFromFlashArray:inObject];
-        }
-    }
+	if([inObject isKindOfClass:[AIListContact class]]){
+		if(	inModifiedKeys == nil ||
+			[inModifiedKeys containsObject:@"Typing"] ||
+			[inModifiedKeys containsObject:@"UnviewedContent"] || 
+			[inModifiedKeys containsObject:@"Away"] ||
+			[inModifiedKeys containsObject:@"Idle"] ||
+			[inModifiedKeys containsObject:@"Online"] ||
+			[inModifiedKeys containsObject:@"Signed On"] || 
+			[inModifiedKeys containsObject:@"Signed Off"]){
+			
+			//Update the handle's text color
+			[self _applyColorToObject:inObject];
+			modifiedAttributes = [NSArray arrayWithObjects:@"Text Color", @"Inverted Text Color", @"Label Color", nil];
+		}
+		
+		//Update our flash array
+		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"UnviewedContent"]){
+			int unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
+			
+			if(unviewedContent && ![flashingListObjectArray containsObject:inObject]){ //Start flashing
+				[self addToFlashArray:inObject];
+			}else if(!unviewedContent && [flashingListObjectArray containsObject:inObject]){ //Stop flashing
+				[self removeFromFlashArray:inObject];
+			}
+		}
+	}
 
     return(modifiedAttributes);
 }
