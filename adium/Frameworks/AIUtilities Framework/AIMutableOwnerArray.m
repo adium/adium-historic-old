@@ -17,13 +17,19 @@
     An array that keeps track of who owns each of its objects.
     
     Every object in the array has an associated owner.  The best use for this class is when multiple pieces of code may be trying to control the same thing.  For instance, if there are several events that can cause something to change colors, by using an owner-array it is possible to prevent conflicts and determine an average color based on all the values.  It's also easy for a specific owner to remove the value they contributed, or replace it with another.
+ 
+	Priority levels can be used to dictate the ordering of objects in the array.  0 is the highest priority; 10 is the lowest.
 */
 
 #import "AIMutableOwnerArray.h"
 
 @interface AIMutableOwnerArray (PRIVATE)
 - (void)_createArrays;
+- (void)_createSubArraysForPriority:(int)priority;
 - (void)_destroyArrays;
+- (void)_destroySubArraysForPriority:(int)priority;
+- (void)_buildOwnerAndContentArrays;
+- (void)_removeObjectFromSubArraysWithOwner:(id)inOwner;
 @end
 
 @implementation AIMutableOwnerArray
@@ -33,6 +39,12 @@
 {
     [super init];
 
+	int i;
+	for (i=0; i<11; i++) {
+		contentSubArray[i] = nil;
+		ownerSubArray[i] = nil;
+	}
+	
     contentArray = nil;
     ownerArray = nil;
     
@@ -46,57 +58,50 @@
     [super dealloc];
 }
 
-//Adds an object with a specified owner (Pass nil to remove the object)
+//Adds an object with a specified owner at medium priority (Pass nil to remove the object)
 - (void)setObject:(id)anObject withOwner:(id)inOwner
 {
-    int	ownerIndex;
-
-    if(!contentArray || !ownerArray) [self _createArrays];
-    
-    //Remove any existing objects
-    ownerIndex = [ownerArray indexOfObject:inOwner];
-    if(ownerIndex != NSNotFound){
-        [ownerArray removeObjectAtIndex:ownerIndex];
-        [contentArray removeObjectAtIndex:ownerIndex];
-    }
-
-    //Add the new object
-    if(anObject != nil){
-        [contentArray addObject:anObject];
-        [ownerArray addObject:inOwner];
-    }else{
-        if([contentArray count] == 0) [self _destroyArrays];
-    }
+	[self setObject:anObject withOwner:inOwner priorityLevel:Medium_Priority];
 }
 
-//Adds an object with a specified owner (Pass nil to remove the object) - the object at index 0 is considered primary and is used by default
-- (void)setPrimaryObject:(id)anObject withOwner:(id)inOwner
+
+//Adds an object with a specified owner (Pass nil to remove the object)
+- (void)setObject:(id)anObject withOwner:(id)inOwner priorityLevel:(int)priority
 {
+	//Keep priority in bounds
+	if (priority < 0) priority = 0;
+	if (priority > 10) priority = 10;
+	
     int	ownerIndex;
-    
-    if(!contentArray || !ownerArray) [self _createArrays];
-    
+	
+	if(!ownerArray) [self _createArrays];
+    if(!ownerSubArray[priority]) [self _createSubArraysForPriority:priority];
+	
     //Remove any existing objects
-    ownerIndex = [ownerArray indexOfObject:inOwner];
-    if(ownerIndex != NSNotFound){
-        [ownerArray removeObjectAtIndex:ownerIndex];
-        [contentArray removeObjectAtIndex:ownerIndex];
-    }
-    
+	ownerIndex = [ownerArray indexOfObject:inOwner];
+	if(ownerIndex != NSNotFound){
+		//Remove object and owner from the main arrays
+		[ownerArray removeObjectAtIndex:ownerIndex];
+		[contentArray removeObjectAtIndex:ownerIndex];
+		
+		//Remove object and owner from their current subArrays
+		[self _removeObjectFromSubArraysWithOwner:inOwner];
+	}
+	
     //Add the new object
     if(anObject != nil){
-        if ([contentArray count]) {
-            [contentArray insertObject:anObject atIndex:0];
-            [ownerArray insertObject:inOwner atIndex:0];
-        } else {
-            [contentArray addObject:anObject];
-            [ownerArray addObject:inOwner];
-        }
+        [contentSubArray[priority] addObject:anObject];
+        [ownerSubArray[priority] addObject:inOwner];
+		
+		[self _buildOwnerAndContentArrays];
+		
     }else{
-        if([contentArray count] == 0) [self _destroyArrays];
+		//Destory the main arrays if necessary
+        if(ownerArray && ([ownerArray count] == 0)) [self _destroyArrays];
+		//Destroy this subarray if necessary
+		if([ownerSubArray[priority] count] == 0) [self _destroySubArraysForPriority:priority];
     }
 }
-
 
 //Returns an object with the specified owner
 - (id)objectWithOwner:(id)inOwner
@@ -255,8 +260,34 @@
 
 - (void)_createArrays
 {
-    if(!contentArray) contentArray = [[NSMutableArray alloc] init];
-    if(!ownerArray) ownerArray = [[NSMutableArray alloc] init];
+    contentArray = [[NSMutableArray alloc] init];
+    ownerArray = [[NSMutableArray alloc] init];
+}
+- (void)_createSubArraysForPriority:(int)priority
+{
+    contentSubArray[priority] = [[NSMutableArray alloc] init];
+    ownerSubArray[priority] = [[NSMutableArray alloc] init];
+}
+- (void)_buildOwnerAndContentArrays
+{
+	int i, index;
+	
+	//Remove all the owners and content objects from the main arrays
+	[ownerArray removeAllObjects];
+	[contentArray removeAllObjects];
+	
+	//Check each subArray, adding from priority 0 to priority 10
+	for (i=0; i<11; i++) {
+		NSArray *thisOwnerArray = ownerSubArray[i];
+		
+		//If arrays exist at this priority level, add them to the main arrays
+		if (thisOwnerArray) {
+			NSArray *thisContentArray = contentSubArray[i];
+			
+			[ownerArray addObjectsFromArray:thisOwnerArray];
+			[contentArray addObjectsFromArray:thisContentArray];
+		}
+	}
 }
 
 - (void)_destroyArrays
@@ -264,5 +295,24 @@
     [contentArray release]; contentArray = nil;
     [ownerArray release]; ownerArray = nil;
 }
+- (void)_destroySubArraysForPriority:(int)priority
+{
+	[ownerSubArray[priority] release]; ownerSubArray[priority] = nil;
+	[contentSubArray[priority] release]; contentSubArray[priority] = nil;
+}
 
+- (void)_removeObjectFromSubArraysWithOwner:(id)inOwner
+{
+	int i, index;
+	
+	//Check each subArray
+	for (i=0; i<11; i++) {
+		if ((index = [ownerSubArray[i] indexOfObject:inOwner]) != NSNotFound) {
+			//Remove the object and owner
+			[ownerSubArray[i] removeObjectAtIndex:index];
+			[contentSubArray[i] removeObjectAtIndex:index];
+			break;
+		}
+	}
+}
 @end
