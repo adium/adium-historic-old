@@ -67,6 +67,8 @@
 //Adium is ready to receive our glory.
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {	
+    [self preferencesChanged:nil];
+
     //Observe preferences changes
     [[adium notificationCenter] addObserver:self 
 								   selector:@selector(preferencesChanged:) 
@@ -87,7 +89,6 @@
 									   name:Account_ListChanged
 									 object:nil];	
 	
-    [self preferencesChanged:nil];
 }
 
 //Called as contacts are created, load their address book information
@@ -176,10 +177,10 @@
 {
 	NSString *firstName = [person valueForProperty:kABFirstNameProperty];
 	NSString *lastName = [person valueForProperty:kABLastNameProperty];
-	NSString *nickName;
+	NSString *nickName = [person valueForProperty:kABNicknameProperty];
 	NSString *displayName = nil;
 	
-	if (useNickName && (nickName = [person valueForProperty:kABNicknameProperty])) {
+	if (useNickName && nickName) {
 		displayName = nickName;
 	} else if (!lastName || (displayFormat == First)) {  //If no last name is available, use the first name
 		displayName = firstName;
@@ -433,7 +434,7 @@
 			AIMutableOwnerArray *displayNameArray = [metaContact displayArrayForKey:@"Display Name"];
 			
 			NSString			*displayName = [self nameForPerson:person];
-				
+
 			//Apply the values 
 			NSString *oldValue = [displayNameArray objectWithOwner:self];
 			if (!oldValue || ![oldValue isEqualToString:displayName]) {
