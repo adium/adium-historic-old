@@ -459,7 +459,11 @@
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
 {
-    return([toolbarItems allKeys]);
+    return([[toolbarItems allKeys] arrayByAddingObjectsFromArray:
+	[NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier,
+	    NSToolbarSpaceItemIdentifier,
+	    NSToolbarFlexibleSpaceItemIdentifier,
+	    NSToolbarCustomizeToolbarItemIdentifier, nil]]);
 }
 
 @end
