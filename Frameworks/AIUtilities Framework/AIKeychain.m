@@ -51,83 +51,70 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void *passw
 {
 	NSString			*passwordString = nil;
 	OSStatus			ret;
-	SecKeychainStatus	status;
 	
-	ret = SecKeychainGetStatus(NULL, &status);
+	//These will be filled in by GetPasswordKeychain
+	char				*passwordBytes = nil;
+	UInt32				passwordLength = nil;
 	
-	if((ret == noErr) && (status & kSecReadPermStatus)){
-		//These will be filled in by GetPasswordKeychain
-		char				*passwordBytes = nil;
-		UInt32				passwordLength = nil;
-		
-		NSAssert((service && [service length] > 0),@"getPasswordFromKeychainForService: service wasn't acceptable!");
-		NSAssert((account && [account length] > 0),@"getPasswordFromKeychainForService: account wasn't acceptable!");
-		
-		ret = GetPasswordKeychain([service UTF8String],[account UTF8String],&passwordBytes,&passwordLength,NULL);
-		
-		if (ret == noErr){
-			NSData	*passwordData = [NSData dataWithBytes:passwordBytes length:passwordLength];
-			passwordString = [[[NSString alloc] initWithData:passwordData
-													encoding:NSUTF8StringEncoding] autorelease];			
-		}
+	NSAssert((service && [service length] > 0),@"getPasswordFromKeychainForService: service wasn't acceptable!");
+	NSAssert((account && [account length] > 0),@"getPasswordFromKeychainForService: account wasn't acceptable!");
+	
+	ret = GetPasswordKeychain([service UTF8String],[account UTF8String],&passwordBytes,&passwordLength,NULL);
+	
+	if (ret == noErr){
+		NSData	*passwordData = [NSData dataWithBytes:passwordBytes length:passwordLength];
+		passwordString = [[[NSString alloc] initWithData:passwordData
+												encoding:NSUTF8StringEncoding] autorelease];			
 	}
-	
+
     return passwordString;
 }
 
 // Puts a password on the keychain for the specified service and account
 + (BOOL)putPasswordInKeychainForService:(NSString *)service account:(NSString *)account password:(NSString *)password
 {
+	NSData				*passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
     OSStatus			ret;
-	SecKeychainStatus	status;
+	SecKeychainItemRef  itemRef = nil;	
+	const char			*serviceUTF8String = [service UTF8String];
+	const char			*accountUTF8String = [account UTF8String];
 	BOOL				success = NO;
+
+	ret = GetPasswordKeychain(serviceUTF8String,accountUTF8String,NULL,NULL,&itemRef);
 	
-	ret = SecKeychainGetStatus(NULL, &status);
-	
-	if((ret == noErr) && (status & kSecWritePermStatus)){
-		SecKeychainItemRef  itemRef = nil;
+	if (ret == errSecItemNotFound){
+		//No item in the keychain, so add a new password
 		
-		const char			*serviceUTF8String = [service UTF8String];
-		const char			*accountUTF8String = [account UTF8String];
+		ret = SecKeychainAddInternetPassword (NULL,		// default keychain
+											  strlen(serviceUTF8String), serviceUTF8String,
+											  0, NULL, // securityDomain
+											  strlen(accountUTF8String), accountUTF8String,
+											  0, NULL, //path
+											  0,		//port,
+											  'AdIM',
+											  kSecAuthenticationTypeDefault,
+											  [passwordData length],	// length of password - NULL if unneedeed, along with passwordData
+											  [passwordData bytes],		// pointer to password data - NULL if unneedeed, along with passwordLength
+											  NULL						// the item reference - NULL if unneedeed
+											  );
 		
-		NSData				*passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
-			
-		ret = GetPasswordKeychain(serviceUTF8String,accountUTF8String,NULL,NULL,&itemRef);
+		if(ret == noErr) success = YES;
 		
-		if (ret == errSecItemNotFound){
-			//No item in the keychain, so add a new password
-			
-			ret = SecKeychainAddInternetPassword (NULL,		// default keychain
-												  strlen(serviceUTF8String), serviceUTF8String,
-												  0, NULL, // securityDomain
-												  strlen(accountUTF8String), accountUTF8String,
-												  0, NULL, //path
-												  0,		//port,
-												  'AdIM',
-												  kSecAuthenticationTypeDefault,
-												  [passwordData length],	// length of password - NULL if unneedeed, along with passwordData
-												  [passwordData bytes],		// pointer to password data - NULL if unneedeed, along with passwordLength
-												  NULL						// the item reference - NULL if unneedeed
-												  );
-			
-			if(ret == noErr) success = YES;
-			
-		}else if (ret == noErr){
-			//Item already present, so change it to the new password
-			ret = SecKeychainItemModifyAttributesAndData (itemRef,					// the item reference
-														  NULL,						// no change to attributes
-														  [passwordData length],	// length of password
-														  [passwordData bytes]		// pointer to password data
-														  );
-			
-			if(ret == noErr) success = YES;
-		}
+	}else if (ret == noErr){
+		//Item already present, so change it to the new password
+		ret = SecKeychainItemModifyAttributesAndData (itemRef,					// the item reference
+													  NULL,						// no change to attributes
+													  [passwordData length],	// length of password
+													  [passwordData bytes]		// pointer to password data
+													  );
 		
-		//Cleanup
-		if(itemRef) CFRelease(itemRef);
+		if(ret == noErr) success = YES;
 	}
+
+	//Cleanup
+	if(itemRef) CFRelease(itemRef);
 	
-	NSLog(@"putPassword of length %i forSerivce: %@ account: %@ -- Successful? %@",
+	NSLog(@"putPassword of length %i forService: %@ account: %@ -- Successful? %@",
 		  [password length],
 		  service,
 		  account,
