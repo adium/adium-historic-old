@@ -76,11 +76,11 @@
 - (void)viewWillClose
 {
     [[adium notificationCenter] removeObserver:self];
-	[previewListObjectsDict release];
-	[previousContent release];
-	[newContent release];
-	[newContentTimer invalidate]; [newContentTimer release];
-	[stylePath release];
+	[previewListObjectsDict release]; previewListObjectsDict = nil;
+	[previousContent release]; previousContent = nil;
+	[newContent release]; newContent = nil;
+	[newContentTimer invalidate]; [newContentTimer release]; newContentTimer =nil;
+	[stylePath release]; stylePath = nil;
 }
 
 
@@ -287,7 +287,7 @@
 	return menu;
 }
 
-- (void)_updatePopupMenuSelectionsForStyle:(NSString *)styleName
+- (void)_updateViewForStyle:(NSBundle *)style
 {
 	NSMenu		*submenu;
 	
@@ -305,7 +305,7 @@
 	
 	submenu = [[popUp_styles selectedItem] submenu];
 	if (submenu){
-		NSString	*variant = [[adium preferenceController] preferenceForKey:[plugin keyForDesiredVariantOfStyle:styleName]
+		NSString	*variant = [[adium preferenceController] preferenceForKey:[plugin keyForDesiredVariantOfStyle:[style name]]
 																   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		if ([variant length]){
 			[[submenu itemWithTitle:variant] setState:NSOnState];
@@ -313,6 +313,14 @@
 			[[submenu itemAtIndex:0] setState:NSOnState];
 		}
 	}
+	
+	//Disable the Show User Icons checkbox as requested
+	NSNumber	*showsUserIconsNumber = [style objectForInfoDictionaryKey:@"ShowsUserIcons"];
+	BOOL		showsUserIcons = (showsUserIconsNumber ? [showsUserIconsNumber boolValue] : YES);
+	[checkBox_showUserIcons setEnabled:showsUserIcons];
+	[checkBox_showUserIcons setState:(showsUserIcons ? 
+									  [[[adium preferenceController] preferenceForKey:KEY_WEBKIT_SHOW_USER_ICONS
+																				group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue] : NSOffState)];
 }
 
 #pragma mark Preview WebView
@@ -343,7 +351,6 @@
 		
 		//Load preferences for the style and update the popup menus
 		[plugin loadPreferencesForWebView:preview withStyleNamed:styleName];
-		[self _updatePopupMenuSelectionsForStyle:styleName];
 
 		//Retain the stylePath
 		stylePath = [[style resourcePath] retain];
@@ -365,6 +372,11 @@
 		}
 		//Create the AIListObjects we will need, putting them into previewListObjectsDict 
 		[self _createListObjectsFromDict:previewDict withLoadedPreviewDirectory:loadedPreviewDirectory];
+	}
+	
+	//Set up the preferences for the style
+	{
+		[self _updateViewForStyle:style];	
 	}
 	
 	//Load the variant
