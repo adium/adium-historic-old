@@ -18,7 +18,6 @@
 */
 
 #import "AIDictionaryAdditions.h"
-#import "AIColorAdditions.h"
 #import "AIFileManagerAdditions.h"
 
 @implementation NSDictionary (AIDictionaryAdditions)
