@@ -913,7 +913,8 @@ NSMutableDictionary* get_chatDict(void)
 		gaim_blist_add_group(group, NULL);
 	}
 
-	buddy = gaim_find_buddy(account, [objectUID UTF8String]);
+	buddyUTF8String = [objectUID UTF8String];
+	buddy = gaim_find_buddy(account, buddyUTF8String);
 	if(!buddy){
 		/* If we can't find a buddy, something's gone wrong... we shouldn't be moving a buddy we don't have.
  		 * As with the group, we'll just silently turn this into an add operation. */
