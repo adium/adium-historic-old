@@ -146,9 +146,8 @@ static AIListObject				*activeListObject = nil;
     [infoString appendString:(online ? @"Yes" : @"No") withAttributes:valueAttributes];*/
     
     //Away & Status
-    NSAttributedString *status = nil;
     int away = [activeListObject integerStatusObjectForKey:@"Away"];
-	status = [activeListObject statusObjectForKey:@"StatusMessage"];
+	NSAttributedString *status = [activeListObject statusObjectForKey:@"StatusMessage"];
     
     if(status || away){ //If away or w/ status message
         if(away){
