@@ -185,10 +185,9 @@
 	enumerator = [[[adium accountController] activeServiceTypes] objectEnumerator];
 	while(serviceType = [enumerator nextObject]){
 		NSMenuItem  *menuItem = [[[NSMenuItem alloc] initWithTitle:[serviceType description]
-											target:self
-											action:@selector(selectServiceType:)
-									 keyEquivalent:@""] autorelease];
-		
+															target:self
+															action:@selector(selectServiceType:)
+													 keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:serviceType];
 		[menuItem setImage:[serviceType menuImage]];
 		[menu addItem:menuItem];
