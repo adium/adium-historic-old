@@ -48,8 +48,8 @@
         NSString			*identifier;
 
         //
-        identifier = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING] objectForKey:KEY_CURRENT_SORT_MODE_IDENTIFIER];        
-
+        identifier = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING] objectForKey:KEY_CURRENT_SORT_MODE_IDENTIFIER];
+        
         //
         enumerator = [[[owner contactController] sortControllerArray] objectEnumerator];
         while((controller = [enumerator nextObject])){

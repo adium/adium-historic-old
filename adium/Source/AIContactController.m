@@ -427,7 +427,11 @@
 //Sets and get the active sort controller
 - (void)setActiveSortController:(id <AIContactSortController>)inController
 {
-    activeSortController = inController;    
+    activeSortController = inController;
+
+    //Resort the list
+    [self sortContactGroup:contactList mode:AISortGroupAndSubGroups];
+    [[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
 }
 - (id <AIContactSortController>)activeSortController{
     return(activeSortController);
