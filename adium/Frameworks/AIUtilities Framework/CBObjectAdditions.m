@@ -28,15 +28,27 @@
 
 - (void)mainPerformSelector:(SEL)aSelector
 {
-	[self performSelectorOnMainThread:aSelector withObject:nil waitUntilDone:NO];
+	[self mainPerformSelector:aSelector waitUntilDone:NO];
+}
+- (void)mainPerformSelector:(SEL)aSelector waitUntilDone:(BOOL)flag
+{
+	[self performSelectorOnMainThread:aSelector withObject:nil waitUntilDone:flag];
 }
 
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1
 {
-	[self performSelectorOnMainThread:aSelector withObject:argument1 waitUntilDone:NO];
+	[self mainPerformSelector:aSelector withObject:argument1 waitUntilDone:NO];
+}
+- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 waitUntilDone:(BOOL)flag
+{
+	[self performSelectorOnMainThread:aSelector withObject:argument1 waitUntilDone:flag];
 }
 
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2
+{
+	[self mainPerformSelector:aSelector withObject:argument1 withObject:argument2 waitUntilDone:NO];
+}
+- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 waitUntilDone:(BOOL)flag
 {
 	NSInvocation *invocation;
 	invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
@@ -46,10 +58,14 @@
 	[invocation setArgument:&argument2 atIndex:3];
 	[invocation retainArguments];
 	
-	[self performSelectorOnMainThread:@selector(handleInvocation:) withObject:invocation waitUntilDone:NO];
+	[self performSelectorOnMainThread:@selector(handleInvocation:) withObject:invocation waitUntilDone:flag];
 }
 
-- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 withObject:(id)argument3
+- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 withObject:(id)argument3 
+{
+	[self mainPerformSelector:aSelector withObject:argument1 withObject:argument2 withObject:argument3 waitUntilDone:NO];
+}
+- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 withObject:(id)argument3 waitUntilDone:(BOOL)flag
 {
 	NSInvocation *invocation;
 	invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
@@ -60,7 +76,7 @@
 	[invocation setArgument:&argument3 atIndex:4];
 	[invocation retainArguments];
 	
-	[self performSelectorOnMainThread:@selector(handleInvocation:) withObject:invocation waitUntilDone:NO];
+	[self performSelectorOnMainThread:@selector(handleInvocation:) withObject:invocation waitUntilDone:flag];
 }
 
 - (void)handleInvocation:(NSInvocation *)anInvocation
