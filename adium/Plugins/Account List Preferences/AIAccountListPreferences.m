@@ -212,6 +212,11 @@ int alphabeticalServiceSort(id service1, id service2, void *context)
     return(nil);
 }
 
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	[[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
+}
+
 
 //Editing ------------------------------------------------------------------------
 //User selected a service type from the menu
