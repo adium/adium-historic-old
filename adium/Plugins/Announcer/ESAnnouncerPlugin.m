@@ -42,7 +42,9 @@
 
 - (void)uninstallPlugin
 {
-
+    //Uninstall our contact alert
+    [[owner contactAlertsController] unregisterContactAlertProvider:self];
+    
 }
 
 //Called when the preferences change, reregister for the notifications

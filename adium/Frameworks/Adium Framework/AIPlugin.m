@@ -46,8 +46,6 @@
     [[owner notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    
-    
     [owner release];
 
     [super dealloc];

@@ -15,7 +15,9 @@
 
 @class ErrorMessageWindowController;
 
-@interface ErrorMessageHandlerPlugin : AIPlugin {
+#define CONTACT_ALERT_IDENTIFIER            @"Alert"
+
+@interface ErrorMessageHandlerPlugin : AIPlugin <ESContactAlertProvider> {
 
 }
 
