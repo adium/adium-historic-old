@@ -24,10 +24,13 @@
     return(AIPref_Advanced_Messages);
 }
 - (NSString *)label{
-    return(@"Message History");
+    return(AILocalizedString(@"Message History",nil));
 }
 - (NSString *)nibName{
     return(@"MessageContextDisplayPrefs");
+}
+- (NSImage *)image{
+	return([NSImage imageNamed:@"pref-messages" forClass:[AIPreferenceWindowController class]]);
 }
 
 - (NSDictionary *)restorablePreferences
