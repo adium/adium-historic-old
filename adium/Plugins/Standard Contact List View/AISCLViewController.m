@@ -115,7 +115,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     //Hide any open tooltips
-    [self _endTrackingMouse];
+	[self _removeCursorRect];
 	
     //Close down and release the view
     [contactListView setTarget:nil];
