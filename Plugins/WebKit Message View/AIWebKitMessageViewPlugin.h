@@ -26,7 +26,6 @@
 #define KEY_WEBKIT_DEFAULT_FONT_FAMILY		@"DefaultFontFamily"
 #define KEY_WEBKIT_DEFAULT_FONT_SIZE		@"DefaultFontSize"
 #define KEY_WEBKIT_USE_BACKGROUND			@"Use Background Color"
-#define KEY_WEBKIT_TEMP_LOCATION			@"Current Background Temp Path"
 
 #define NEW_CONTENT_RETRY_DELAY				0.01
 
@@ -34,7 +33,6 @@
 
 #import <WebKit/WebKit.h>
 #import "ESWebKitMessageViewPreferences.h"
-#import "ESWKMVAdvancedPreferences.h"
 
 typedef enum {
 	Display_Name = 1,
@@ -52,9 +50,7 @@ typedef enum {
 
 @interface AIWebKitMessageViewPlugin : AIPlugin <AIMessageViewPlugin> {
 	ESWebKitMessageViewPreferences  *preferences;
-	ESWKMVAdvancedPreferences		*advancedPreferences;
-	
-	
+
 	NSMutableDictionary				*styleDictionary;
 }
 
