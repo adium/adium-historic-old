@@ -3,6 +3,14 @@
  *  Adium
  */
 
+enum {
+    kMessageNoFlags		= 0L,
+//    kUnknown		= (1L << 0),
+//    kUnknown		= (1L << 1),
+    kMessageOutgoingFlag	= (1L << 2),
+    kMessageTypingFlag		= (1L << 3),
+};    
+
 @protocol FZDaemon <NSObject>
 - (void)addOpenNoteProperties:fp12 fromListener:fp16;	//?
 - (void)removeOpenNoteID:fp12;				//?

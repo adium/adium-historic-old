@@ -232,17 +232,24 @@ extern void* objc_getClass(const char *name);
     AIContactHandle	*handle;
     NSAttributedString	*messageText;
     AIContentMessage	*messageObject;
+    int			flags = [inMessage flags];
     
-    NSLog(@"(%i)%@:%@ [%i,%@]", [inMessage bodyFormat], [inMessage sender], [inMessage body], [inMessage flags], [inMessage time]);
+//    NSLog(@"(%i)%@:%@ [%i,%@]", [inMessage bodyFormat], [inMessage sender], [inMessage body], [inMessage flags], [inMessage time]);
 
-    if([[inMessage sender] compare:screenName] != 0){ //Ignore echoed messages (anything from ourself)
-        //Get the handle and message
-        handle = [[owner contactController] handleWithService:[service handleServiceType] UID:[inMessage sender] forAccount:self];
-        messageText = [AIHTMLDecoder decodeHTML:[inMessage body]];
-    
-        //Add the message
-        messageObject = [AIContentMessage messageWithSource:handle destination:self date:nil message:messageText];
-        [[owner contentController] addIncomingContentObject:messageObject toHandle:handle];
+    if(flags & kMessageTypingFlag){
+        if(!(flags & kMessageOutgoingFlag)){
+            NSLog(@"(iChat) %@ is typing",[inMessage sender]);
+        }
+    }else{
+        if(!([inMessage flags] & kMessageOutgoingFlag)){//Ignore echoed messages (anything outgoing)
+                                                        //Get the handle and message
+            handle = [[owner contactController] handleWithService:[service handleServiceType] UID:[inMessage sender] forAccount:self];
+            messageText = [AIHTMLDecoder decodeHTML:[inMessage body]];
+
+            //Add the message
+            messageObject = [AIContentMessage messageWithSource:handle destination:self date:nil message:messageText];
+            [[owner contentController] addIncomingContentObject:messageObject toHandle:handle];
+        }
     }
 }
 
