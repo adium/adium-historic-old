@@ -49,11 +49,17 @@ static CBGaimServicePlugin  *servicePluginInstance;
 	NapsterService		= [[ESNapsterService alloc] init];
 	NovellService		= [[ESNovellService alloc] init];
 	JabberService		= [[ESJabberService alloc] init];
-//	TrepiaService		= [[ESTrepiaService alloc] init];
 	YahooService		= [[ESYahooService alloc] init];
-	YahooJapanService	= [[ESYahooJapanService alloc] init];
-	MeanwhileService	= [[ESMeanwhileService alloc] init];
+	YahooJapanService	= [[ESYahooJapanService alloc] init];	
 	ZephyrService		= [[ESZephyrService alloc] init];
+
+#ifndef TREPIA_NOT_AVAILABLE
+	TrepiaService		= [[ESTrepiaService alloc] init];
+#endif
+	
+#ifndef MEANWHILE_NOT_AVAILABLE
+	MeanwhileService	= [[ESMeanwhileService alloc] init];
+#endif
 }
 
 - (void)uninstallPlugin
@@ -65,12 +71,18 @@ static CBGaimServicePlugin  *servicePluginInstance;
 	[JabberService release]; JabberService = nil;
 	[NapsterService release]; NapsterService = nil;
 	[MSNService release]; MSNService = nil;
-//	[TrepiaService release]; TrepiaService = nil;
 	[YahooService release]; YahooService = nil;
 	[YahooJapanService release]; YahooJapanService = nil;
 	[NovellService release]; NovellService = nil;
-	[MeanwhileService release]; MeanwhileService = nil;
 	[ZephyrService release]; ZephyrService = nil;
+
+#ifndef TREPIA_NOT_AVAILABLE
+	[TrepiaService release]; TrepiaService = nil;
+#endif
+	
+#ifndef MEANWHILE_NOT_AVAILABLE
+	[MeanwhileService release]; MeanwhileService = nil;
+#endif
 }
 
 @end
