@@ -87,7 +87,9 @@
 																action:nil
 														 keyEquivalent:@""] autorelease];
 			[menuItem setRepresentedObject:object];
-			[menuItem setIndentationLevel:level];
+			if([menuItem respondsToSelector:@selector(setIndentationLevel:)]){
+				[menuItem setIndentationLevel:level];
+			}
 			[menu addItem:menuItem];
 			
 			[self _buildGroupMenu:menu forGroup:(AIListGroup *)object level:level+1];
