@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.40 2003/12/22 19:31:24 adamiser Exp $
+// $Id: AIAccountController.m,v 1.41 2003/12/25 15:52:51 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -63,13 +63,13 @@
     
     //Monitor sleep
     [[NSNotificationCenter defaultCenter] addObserver:self
-					     selector:@selector(systemWillSleep:)
-						 name:AISystemWillSleep_Notification
-					       object:nil];
+											 selector:@selector(systemWillSleep:)
+												 name:AISystemWillSleep_Notification
+											   object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
-					     selector:@selector(systemDidWake:)
-						 name:AISystemDidWake_Notification
-					       object:nil];
+											 selector:@selector(systemDidWake:)
+												 name:AISystemDidWake_Notification
+											   object:nil];
 }
 
 //
@@ -78,36 +78,36 @@
     //### TEMPORARY (OLD ACCOUNT PREFERENCE IMPORT CODE) #######
     NSArray     *oldAccountArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_ACCOUNTS] objectForKey:@"Account List"];
     if(oldAccountArray && [oldAccountArray count]){
-	NSMutableArray     *importedAccounts = [NSMutableArray array];
-	NSLog(@"Importing old accounts");
-	
-	NSEnumerator	*accountEnumerator = [oldAccountArray objectEnumerator];
-	NSDictionary	*accountDict;
-	
-	while(accountDict = [accountEnumerator nextObject]){
-	    NSDictionary	*propertyDict = [accountDict objectForKey:@"Properties"];
-	    NSString		*serviceType = [accountDict objectForKey:@"Type"];
-	    NSString		*accountUID = [[propertyDict objectForKey:@"Handle"] compactedString];
-	    AIAccount		*tempAccount;
-	    NSEnumerator	*propertyEnumerator;
-	    NSString		*key;
-	    
-	    NSLog(@"  Importing %@ account '%@' ", serviceType, accountUID);
-	    
-	    if(serviceType && accountUID){
-		tempAccount = [self accountOfType:serviceType withUID:accountUID];
-		propertyEnumerator = [[propertyDict allKeys] objectEnumerator];
-		while(key = [propertyEnumerator nextObject]){
-		    NSLog(@"    - %@",key);
-		    [tempAccount setPreference:[propertyDict objectForKey:key] forKey:key group:GROUP_ACCOUNT_STATUS];
+		NSMutableArray     *importedAccounts = [NSMutableArray array];
+		NSLog(@"Importing old accounts");
+		
+		NSEnumerator	*accountEnumerator = [oldAccountArray objectEnumerator];
+		NSDictionary	*accountDict;
+		
+		while(accountDict = [accountEnumerator nextObject]){
+			NSDictionary	*propertyDict = [accountDict objectForKey:@"Properties"];
+			NSString		*serviceType = [accountDict objectForKey:@"Type"];
+			NSString		*accountUID = [[propertyDict objectForKey:@"Handle"] compactedString];
+			AIAccount		*tempAccount;
+			NSEnumerator	*propertyEnumerator;
+			NSString		*key;
+			
+			NSLog(@"  Importing %@ account '%@' ", serviceType, accountUID);
+			
+			if(serviceType && accountUID && [serviceType length] && [accountUID length]){
+				tempAccount = [self accountOfType:serviceType withUID:accountUID];
+				propertyEnumerator = [[propertyDict allKeys] objectEnumerator];
+				while(key = [propertyEnumerator nextObject]){
+					NSLog(@"    - %@",key);
+					[tempAccount setPreference:[propertyDict objectForKey:key] forKey:key group:GROUP_ACCOUNT_STATUS];
+				}
+				
+				[importedAccounts addObject:tempAccount];
+			}
 		}
 		
-		[importedAccounts addObject:tempAccount];
-	    }
-	}
-	
-	[self saveAccounts:importedAccounts];
-	[[owner preferenceController] setPreference:nil forKey:@"Account List" group:PREF_GROUP_ACCOUNTS];
+		[self saveAccounts:importedAccounts];
+		[[owner preferenceController] setPreference:nil forKey:@"Account List" group:PREF_GROUP_ACCOUNTS];
     }
     //#########################################################
     
@@ -117,9 +117,9 @@
     
     //Observe content (for accountForSendingContentToHandle)
     [[owner notificationCenter] addObserver:self
-				   selector:@selector(didSendContent:)
-				       name:Content_DidSendContent
-				     object:nil];
+								   selector:@selector(didSendContent:)
+									   name:Content_DidSendContent
+									 object:nil];
     
     //Autoconnect
     [self autoConnectAccounts];
@@ -166,21 +166,21 @@
         NSString	*accountUID;
         NSString	*serviceType;
         AIAccount	*newAccount;
-	
+		
         //Fetch the service
         serviceDict = [savedAccountArray objectAtIndex:loop];
-	
+		
         //Get the accounts information
         serviceType = [serviceDict objectForKey:ACCOUNT_TYPE];		//Unique plugin ID
         accountUID = [serviceDict objectForKey:ACCOUNT_UID];
-	
+		
         //Create the connection and add it to our array
-	if(serviceType && accountUID){
-	    newAccount = [self accountOfType:serviceType withUID:accountUID];
-	    if(newAccount){
-		[tempArray addObject:newAccount];
-	    }
-	}
+		if(serviceType && [serviceType length] && accountUID && [accountUID length]){
+			newAccount = [self accountOfType:serviceType withUID:accountUID];
+			if(newAccount){
+				[tempArray addObject:newAccount];
+			}
+		}
     }
     
     if(accountArray) [accountArray release];
@@ -191,29 +191,29 @@
 - (void)saveAccounts:(NSArray *)inAccounts
 {
     if(inAccounts){
-	NSMutableArray	*accountDictArray = [[NSMutableArray alloc] init];
-	NSString	*userDirectory;
-	int		loop;
-	
-	//Get the user preference directory
-	userDirectory = [[owner loginController] userDirectory];
-	
-	//Create a dictionary for every open connection
-	for(loop = 0;loop < [inAccounts count];loop++){
-	    NSMutableDictionary	*accountDict = [[NSMutableDictionary alloc] init];
-	    AIAccount		*account = [inAccounts objectAtIndex:loop];
-
-	    [accountDict setObject:[[account service] identifier] forKey:ACCOUNT_TYPE]; //Unique plugin ID
-	    [accountDict setObject:[account serviceID] forKey:ACCOUNT_SERVICE];	    //Shared service ID
-	    [accountDict setObject:[account UID] forKey:ACCOUNT_UID];		    //Account UID
-	    [accountDictArray addObject:accountDict];
-	    
-	    [accountDict release];
-	}
-	
-	//save
-	[[owner preferenceController] setPreference:accountDictArray forKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
-	[accountDictArray release];
+		NSMutableArray	*accountDictArray = [[NSMutableArray alloc] init];
+		NSString	*userDirectory;
+		int		loop;
+		
+		//Get the user preference directory
+		userDirectory = [[owner loginController] userDirectory];
+		
+		//Create a dictionary for every open connection
+		for(loop = 0;loop < [inAccounts count];loop++){
+			NSMutableDictionary	*accountDict = [[NSMutableDictionary alloc] init];
+			AIAccount		*account = [inAccounts objectAtIndex:loop];
+			
+			[accountDict setObject:[[account service] identifier] forKey:ACCOUNT_TYPE]; //Unique plugin ID
+			[accountDict setObject:[account serviceID] forKey:ACCOUNT_SERVICE];	    //Shared service ID
+			[accountDict setObject:[account UID] forKey:ACCOUNT_UID];		    //Account UID
+			[accountDictArray addObject:accountDict];
+			
+			[accountDict release];
+		}
+		
+		//save
+		[[owner preferenceController] setPreference:accountDictArray forKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
+		[accountDictArray release];
     }
 }
 
@@ -233,9 +233,9 @@
     
     //Load the account
     if(serviceController = [self serviceControllerWithIdentifier:inType]){
-	return([serviceController accountWithUID:inUID]);
+		return([serviceController accountWithUID:inUID]);
     }else{
-	return(nil);
+		return(nil);
     }
 }
 
@@ -322,7 +322,7 @@
 {
     NSParameterAssert(accountArray != nil);
     NSParameterAssert(index >= 0 && index <= [accountArray count]);
-
+	
     AIAccount	*newAccount = [self defaultAccount];
     
     [self insertAccount:newAccount atIndex:index];
@@ -346,18 +346,22 @@
 //Change the UID of an existing account
 - (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID
 {
-    AIAccount   *newAccount;
-    NSString    *serviceIdentifier = [[[[inAccount service] identifier] copy] autorelease]; //Deleting the account will release the serviceID
-    int		index = [accountArray indexOfObject:inAccount];
-    
-    //Delete the existing account
-    [self deleteAccount:inAccount];
-    
-    //Add an account with the new UID
-    newAccount = [self accountOfType:serviceIdentifier withUID:inUID];
-    [self insertAccount:newAccount atIndex:index];
-    
-    return(newAccount);
+	if(inUID && [inUID length] != 0){
+		AIAccount   *newAccount;
+		NSString    *serviceIdentifier = [[[[inAccount service] identifier] copy] autorelease]; //Deleting the account will release the serviceID
+		int		index = [accountArray indexOfObject:inAccount];
+		
+		//Delete the existing account
+		[self deleteAccount:inAccount];
+		
+		//Add an account with the new UID
+		newAccount = [self accountOfType:serviceIdentifier withUID:inUID];
+		[self insertAccount:newAccount atIndex:index];
+		
+		return(newAccount);
+	}else{
+		return(inAccount);
+	}
 }
 
 //Switches the service of the specified account
@@ -366,7 +370,7 @@
     AIAccount	*newAccount;
     NSString    *accountUID = [[[inAccount UID] copy] autorelease]; //Deleting the account will release the UID
     int		index = [accountArray indexOfObject:inAccount];
-
+	
     //Delete the existing account
     [self deleteAccount:inAccount];
     
@@ -409,7 +413,7 @@
 //        [account statusForKey:@"UserIcon" willChangeTo:inImage];
 //    }*/
 //}
-
+	
 //- (void)setDefaultUserIcon:(NSImage *)inImage
 //{
 ///*    //keep track of the image
@@ -455,7 +459,7 @@
 //{
 //    return([[DEFAULT_ICON_CACHE_PATH stringByAppendingPathComponent:@"UserIcon_Default"] stringByExpandingTildeInPath]);
 //}
-
+	
 
 //Preferred source account memory --------------------------------------------------------------------------------------
 //Returns the desired source account for messaging the specified contact.  The account is the first one found online
@@ -472,7 +476,7 @@
     // The preferred account always has priority, as long as it is available for sending content
     if(inObject){
         NSString    *accountID = [inObject preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT group:PREF_GROUP_PREFERRED_ACCOUNTS];
-	
+		
         if(accountID && (account = [self accountWithID:accountID])){
             if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
                 return(account);
@@ -506,7 +510,7 @@
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
         AIHandle	*handle = [(AIListContact *)inObject handleForAccount:account];
-	
+		
         if((!handle || [[handle serviceID] compare:[[[account service] handleServiceType] identifier]] == 0) &&
            [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
             return(account);
@@ -527,11 +531,11 @@
     if(chat && destObject){
         AIContentObject		*contentObject = [[notification userInfo] objectForKey:@"Object"];
         AIAccount		*sourceAccount = (AIAccount *)[contentObject source];
-	
+		
         [destObject setPreference:[sourceAccount UIDAndServiceID]
-			   forKey:KEY_PREFERRED_SOURCE_ACCOUNT
-			    group:PREF_GROUP_PREFERRED_ACCOUNTS];
-	
+						   forKey:KEY_PREFERRED_SOURCE_ACCOUNT
+							group:PREF_GROUP_PREFERRED_ACCOUNTS];
+		
         [lastAccountIDToSendContent setObject:[sourceAccount UIDAndServiceID] forKey:[destObject serviceID]];
     }
 }
@@ -547,7 +551,7 @@
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
         if([[account supportedPropertyKeys] containsObject:@"Online"] &&
-	   [[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]){
+		   [[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]){
             [account setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
         }
     }
@@ -596,7 +600,7 @@
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
         if([[account supportedPropertyKeys] containsObject:@"Online"] &&
-	   [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
+		   [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
             //Remember that this account was online
             [sleepingOnlineAccounts addObject:account];
             
@@ -630,7 +634,7 @@
 {
     if(inPassword){
         [AIKeychain putPasswordInKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount UIDAndServiceID]]
-					    account:[inAccount UIDAndServiceID] password:inPassword];
+											account:[inAccount UIDAndServiceID] password:inPassword];
     }
 }
 
@@ -638,7 +642,7 @@
 - (NSString *)passwordForAccount:(AIAccount *)inAccount
 {
     NSString	*password = [AIKeychain getPasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount UIDAndServiceID]]
-								  account:[inAccount UIDAndServiceID]];
+																  account:[inAccount UIDAndServiceID]];
     
     return(password);
 }
@@ -650,7 +654,7 @@
     
     //check the keychain for this password
     password = [AIKeychain getPasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount UIDAndServiceID]]
-						     account:[inAccount UIDAndServiceID]];
+													 account:[inAccount UIDAndServiceID]];
     
     if(password && [password length] != 0){
         //Invoke the target right away
@@ -665,7 +669,7 @@
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount
 {
     [AIKeychain removePasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount UIDAndServiceID]]
-					     account:[inAccount UIDAndServiceID]];
+											 account:[inAccount UIDAndServiceID]];
 }
 
 
