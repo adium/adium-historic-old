@@ -4,6 +4,7 @@
     xmlns:xalan="http://xml.apache.org/xslt">
 
   <xsl:output method="html"
+              encoding="ascii"
               indent="yes"
               xalan:indent-amount="2"
               doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"

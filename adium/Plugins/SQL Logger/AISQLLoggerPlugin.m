@@ -22,7 +22,7 @@
 #import "libpq-fe.h"
 
 @interface AISQLLoggerPlugin (PRIVATE)
-- (void)_addMessage:(NSAttributedString *)message dest:(NSString *)destName source:(NSString *)sourceName sendServe:(NSString *)s_service recServe:(NSString *)r_service;
+- (void)_addMessage:(NSAttributedString *)message dest:(NSString *)destName source:(NSString *)sourceName sendDisplay:(NSString *)sendDisp destDisplay:(NSString *)destDisp sendServe:(NSString *)s_service recServe:(NSString *)r_service;
 
 @end
 
@@ -65,16 +65,20 @@
         AIAccount	*source = [content source];
         NSString	*destUID;
         NSString	*destService;
+        NSString	*destDisplay;
 
         destUID = [[chat listObject] UID];
         destService = [[chat listObject] serviceID];
-
+        //destDisplay = [[chat statusDictionary] objectForKey:@"DisplayName"];
+        destDisplay = [[chat listObject] displayName];
+        
         if([chat account] && [content source]){
             //Log the message
-            //NSLog(@"Doing stuff in receivedContent: %@, %@, %@, %@, %@", [content message], destUID, [source UID], [source serviceID], destService);
             [self _addMessage:[[content message] safeString]
                          dest:destUID
                        source:[source UID]
+                  sendDisplay:nil
+                  destDisplay:destDisplay
                     sendServe:[source serviceID]
                      recServe:destService];
         }
@@ -92,17 +96,20 @@
         AIAccount	*destination = [content destination];
         NSString	*srcUID;
         NSString	*srcService;
-
+        NSString	*srcDisplay;
+        
         srcUID = [[chat listObject] UID];
         srcService = [[chat listObject] serviceID];
+        srcDisplay = [[chat listObject] displayName];
         
         //Destination are valid (handle)
         if([chat account] && [content source]){
             //Log the message
-            //NSLog(@"Doing stuff in receivedContent: %@, %@, %@, %@, %@", [content message], [destination UID], srcUID, srcService, [destination serviceID]);
             [self _addMessage:[[content message] safeString]
                          dest:[destination UID]
                        source:srcUID
+                  sendDisplay:srcDisplay
+                  destDisplay:nil
                     sendServe:srcService
                      recServe:[destination serviceID]];
         }
@@ -116,12 +123,14 @@
 }
 
 //Insert a message
-- (void)_addMessage:
-(NSAttributedString *)message 
-dest:(NSString *)destName 
-source:(NSString *)sourceName
-sendServe:(NSString *)s_service
-recServe:(NSString *)r_service
+- (void)_addMessage:(NSAttributedString *)message
+               dest:(NSString *)destName
+             source:(NSString *)sourceName
+        sendDisplay:(NSString *)sendDisp
+        destDisplay:(NSString *)destDisp
+          sendServe:(NSString *)s_service
+           recServe:(NSString *)r_service
+
 {
     NSString	*sqlStatement;
     NSMutableString 	*escapeHTMLMessage;
@@ -130,15 +139,19 @@ recServe:(NSString *)r_service
     char	escapeMessage[[escapeHTMLMessage length] * 2 + 1];
     char	escapeSender[[sourceName length] * 2 + 1];
     char	escapeRecip[[destName length] * 2 + 1];
+    char	escapeSendDisplay[[sendDisp length] * 2 + 1];
+    char	escapeRecDisplay[[destDisp length] * 2 + 1];
     
     PGresult *res;
         
     PQescapeString(escapeMessage, [escapeHTMLMessage UTF8String], [escapeHTMLMessage length]);
     PQescapeString(escapeSender, [sourceName UTF8String], [sourceName length]);
     PQescapeString(escapeRecip, [destName UTF8String], [destName length]);
+    PQescapeString(escapeSendDisplay, [sendDisp UTF8String], [sendDisp length]);
+    PQescapeString(escapeRecDisplay, [destDisp UTF8String], [destDisp length]);
     
-    sqlStatement = [NSString stringWithFormat:@"insert into adium.message_v (sender_sn, recipient_sn, message, sender_service, recipient_service) values (\'%s\',\'%s\',\'%s\', \'%@\', \'%@\')", 
-    escapeSender, escapeRecip, escapeMessage, s_service, r_service];
+    sqlStatement = [NSString stringWithFormat:@"insert into adium.message_v (sender_sn, recipient_sn, message, sender_service, recipient_service, sender_display, recipient_display) values (\'%s\',\'%s\',\'%s\', \'%@\', \'%@\', \'%s\', \'%s\')", 
+    escapeSender, escapeRecip, escapeMessage, s_service, r_service, escapeSendDisplay, escapeRecDisplay];
     
     res = PQexec(conn, [sqlStatement UTF8String]);
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {

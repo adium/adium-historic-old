@@ -5,14 +5,14 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 386 $ $Date: 2003/08/19 06:36:52 $ -->
+<!--$Rev: 394 $ $Date: 2003/08/21 08:12:50 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 String afterDate, beforeDate, from_sn, to_sn, contains_sn;
-boolean showForm = false, showConcurrentUsers = false;
+boolean showDisplay = true, showForm = false, showConcurrentUsers = false;
 
 Date today = new Date(System.currentTimeMillis());
 
@@ -21,6 +21,7 @@ afterDate = request.getParameter("after");
 from_sn = request.getParameter("from");
 to_sn = request.getParameter("to");
 contains_sn = request.getParameter("contains");
+String screennameDisplay = request.getParameter("screen_or_display");
 
 showForm = Boolean.valueOf(request.getParameter("form")).booleanValue();
 
@@ -30,7 +31,7 @@ showConcurrentUsers =
 if (beforeDate != null && (beforeDate.equals("") || beforeDate.equals("null"))) {
     beforeDate = null;
 }
-if (afterDate != null && (afterDate.equals("") || afterDate.equals("null"))) {
+if (afterDate != null && (afterDate.equals("") || afterDate.startsWith("null"))) {
     afterDate = null;
 }
 if (from_sn != null && from_sn.equals("")) {
@@ -43,7 +44,13 @@ if (contains_sn != null && contains_sn.equals("")) {
     contains_sn = null;
 }
 
+if (screennameDisplay == null || screennameDisplay.equals("display")) {
+    showDisplay = true;
+} else {
+    showDisplay = false;
+}
 %>
+
 <html>
     <head>
         <title>
@@ -54,7 +61,8 @@ if (contains_sn != null && contains_sn.equals("")) {
         </style>
     </head>
     <body bgcolor="#ffffff">
-        <% if (!showForm) { %>
+<% if (!showForm) { 
+%>
         <form action="index.jsp" method="GET">
             <fieldset>
                 <legend>View by Date</legend>
@@ -78,16 +86,34 @@ if (contains_sn != null && contains_sn.equals("")) {
                 <input type="text" name="before" <% if (beforeDate != null)
                 out.print("value=\"" + beforeDate + "\""); %> id="before_date" />
                 &nbsp;(YYYY-MM-DD hh:mm:ss)<br />
-                <input type="checkbox" name="users" id="user"
-                value="true" <% if (showConcurrentUsers)
-                out.print(" checked=\"true\""); %>/>
-                <label for="user">Do Not Show Multiple Users</label><br />
-                <input type="checkbox" name="form" id="form" value="true" />
-                <label for="form">Do Not Show Form</label><br />
-                <input type="reset" />
-                <input type="submit" />
-            
             </fieldset>
+            <fieldset>
+                <legend>Format Options</legend>
+                <table>
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="users" id="user"
+                            value="true" <% if (showConcurrentUsers)
+                            out.print(" checked=\"true\""); %>/>
+                                <label for="user">Do Not Show Multiple Users</label><br />
+                            <input type="checkbox" name="form" id="form" value="true" />
+                                <label for="form">Do Not Show Form</label>
+                        </td>
+                        <td>
+                            <input type="radio" name="screen_or_display" value
+                            = "screenname" id = "sn" <% if (!showDisplay)
+                            out.print("checked=\"true\""); %> />
+                                <label for="sn">Show Screename</label><br />
+                            <input type="radio" name="screen_or_display"
+                            value="display" id="disp" <% if (showDisplay)
+                            out.print("checked=\"true\""); %> />
+                                <label for="disp">Show Alias/Display Name</label>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            <input type="reset">
+            <input type="submit">
         </form>
         <a href="search.jsp">[Search Logs]</a>&nbsp;&nbsp;
         <a href="statistics.jsp">[Statistics]</a><br /><br />
@@ -101,7 +127,8 @@ try {
     int aryCount = 0;
     boolean unconstrained = false;
     
-    String queryText = "select sender_sn, recipient_sn, message, " +
+    String queryText = "select sender_sn, recipient_sn, sender_display, " + 
+    " recipient_display, message, " +
     " message_date, message_id from adium.message_v ";
     
     String concurrentWhereClause = " where ";
@@ -266,9 +293,13 @@ try {
         "&to=" + rset.getString("recipient_sn") + 
         "&after=" + afterDate +
         "&before=" + beforeDate + "#" + rset.getInt("message_id") + "\">");
-        out.print("<font color=\"" + sent_color + "\">" + 
-        rset.getString("sender_sn") + "</font>:" + 
-        "</a></font></td>\n");
+        out.print("<font color=\"" + sent_color + "\">");
+        if(showDisplay) {
+            out.print(rset.getString("sender_display"));
+        } else {
+            out.print(rset.getString("sender_sn"));
+        }
+        out.print("</font>:</a></font></td>\n");
 
 
         out.print("<td bgcolor=\"" + cellColor + "\">" + message + "</td>\n");
@@ -278,9 +309,13 @@ try {
 
         if(to_sn == null || from_sn == null) {
             out.print("<font color=\"" +
-            received_color + "\">&nbsp;(" +
-            rset.getString("recipient_sn") +
-            ")</font>");
+            received_color + "\">&nbsp;(");
+            if(showDisplay) {
+                out.print(rset.getString("recipient_display"));
+            } else {
+                out.println(rset.getString("recipient_sn"));
+            }
+            out.print(")</font>");
         }
         out.print("</td>\n");
         out.print("</tr>\n");
