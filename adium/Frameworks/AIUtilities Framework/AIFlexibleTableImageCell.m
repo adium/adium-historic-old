@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIFlexibleTableImageCell.h"
-#import "CSBezierPathAdditions.h"
+#import "AIBezierPathAdditions.h"
 
 #define ALIAS_SHIFT_X		0.5
 #define ALIAS_SHIFT_Y		0.5
