@@ -107,7 +107,7 @@ DeclareString(UID);
 	InitString(UID,@"UID");
 	
 	//Default account preferences
-	[[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_DEFAULT_PREFS 
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_DEFAULT_PREFS 
 																		forClass:[self class]]
 										  forGroup:PREF_GROUP_CONTACT_LIST];
     //
@@ -137,13 +137,13 @@ DeclareString(UID);
 	//Show Groups menu item
 	[self prepareShowHideGroups];
 	
-	[[owner notificationCenter] addObserver:self 
+	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(adiumVersionWillBeUpgraded:) 
 									   name:Adium_VersionWillBeUpgraded
 									 object:nil];
 
 	//Observe content (for preferredContactForContentType:forListContact:)
-    [[owner notificationCenter] addObserver:self
+    [[adium notificationCenter] addObserver:self
                                    selector:@selector(didSendContent:)
                                        name:Content_DidSendContent
                                      object:nil];	
@@ -178,7 +178,7 @@ DeclareString(UID);
 		[self clearAllMetaContactData];
 	}
 	
-	[[owner notificationCenter] removeObserver:self
+	[[adium notificationCenter] removeObserver:self
 										  name:Adium_VersionWillBeUpgraded
 										object:nil];
 }
@@ -206,15 +206,15 @@ DeclareString(UID);
 	[contactToMetaContactLookupDict release]; contactToMetaContactLookupDict = [[NSMutableDictionary alloc] init];
 	
 	//Clear the preferences for good measure
-	[[owner preferenceController] setPreference:nil
+	[[adium preferenceController] setPreference:nil
 										 forKey:KEY_FLAT_METACONTACTS
 										  group:PREF_GROUP_CONTACT_LIST];
-	[[owner preferenceController] setPreference:nil
+	[[adium preferenceController] setPreference:nil
 										 forKey:KEY_METACONTACT_OWNERSHIP
 										  group:PREF_GROUP_CONTACT_LIST];
 	
 	//Clear out old metacontact files
-	path = [[[owner loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH];
+	path = [[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH];
 	[[NSFileManager defaultManager] removeFilesInDirectory:path
 												withPrefix:@"MetaContact"
 											 movingToTrash:NO];
@@ -229,16 +229,16 @@ DeclareString(UID);
 - (void)loadContactList
 {	
 	//We must load all the groups before loading contacts for the ordering system to work correctly.
-	[self _loadGroupsFromArray:[[owner preferenceController] preferenceForKey:KEY_FLAT_GROUPS
+	[self _loadGroupsFromArray:[[adium preferenceController] preferenceForKey:KEY_FLAT_GROUPS
 																		group:PREF_GROUP_CONTACT_LIST]];
-	[self _loadMetaContactsFromArray:[[owner preferenceController] preferenceForKey:KEY_FLAT_METACONTACTS
+	[self _loadMetaContactsFromArray:[[adium preferenceController] preferenceForKey:KEY_FLAT_METACONTACTS
 																			  group:PREF_GROUP_CONTACT_LIST]];
 }
 
 //Save the contact list
 - (void)saveContactList
 {
-	[[owner preferenceController] setPreference:[self _arrayRepresentationOfListObjects:[groupDict allValues]]
+	[[adium preferenceController] setPreference:[self _arrayRepresentationOfListObjects:[groupDict allValues]]
 										 forKey:KEY_FLAT_GROUPS
 										  group:PREF_GROUP_CONTACT_LIST];	
 }
@@ -396,7 +396,7 @@ DeclareString(UID);
         }
 		
         //Post an attributes changed message
-		[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged
+		[[adium notificationCenter] postNotificationName:ListObject_AttributesChanged
 												  object:inObject
 												userInfo:(inModifiedKeys ?
 														  [NSDictionary dictionaryWithObject:inModifiedKeys
@@ -416,7 +416,7 @@ DeclareString(UID);
 		
 		//Inform observers of any changes
 		if(delayedContactChanges){
-			[[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
+			[[adium notificationCenter] postNotificationName:Contact_ListChanged object:nil];
 			delayedContactChanges = 0;
 			shouldSort = YES;
 		}
@@ -431,7 +431,7 @@ DeclareString(UID);
 			if([[self activeSortController] shouldSortForModifiedAttributeKeys:delayedModifiedAttributeKeys]){
 				shouldSort = YES;
 			}			
-			[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged
+			[[adium notificationCenter] postNotificationName:ListObject_AttributesChanged
 													  object:nil
 													userInfo:(delayedModifiedAttributeKeys ?
 															  [NSDictionary dictionaryWithObject:delayedModifiedAttributeKeys
@@ -588,7 +588,7 @@ DeclareString(UID);
 	if(updatesAreDelayed){
 		delayedContactChanges++;
 	}else{
-		[[owner notificationCenter] postNotificationName:Contact_ListChanged 
+		[[adium notificationCenter] postNotificationName:Contact_ListChanged 
 												  object:object
 												userInfo:(group ? [NSDictionary dictionaryWithObject:group forKey:@"containingObject"] : nil)];
 	}
@@ -617,7 +617,7 @@ DeclareString(UID);
 	[self delayListObjectNotifications];
 	
 	//Store the preference
-	[[owner preferenceController] setPreference:[NSNumber numberWithBool:useContactListGroups]
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:useContactListGroups]
 										 forKey:KEY_USE_CONTACT_LIST_GROUPS
 										  group:PREF_GROUP_CONTACT_LIST];		
 	
@@ -662,7 +662,7 @@ DeclareString(UID);
 - (void)prepareShowHideGroups
 {
 	//Load the preference
-	useContactListGroups = [[[owner preferenceController] preferenceForKey:KEY_USE_CONTACT_LIST_GROUPS
+	useContactListGroups = [[[adium preferenceController] preferenceForKey:KEY_USE_CONTACT_LIST_GROUPS
 																	 group:PREF_GROUP_CONTACT_LIST] boolValue];
 	
 	//Show offline contacts menu item
@@ -672,7 +672,7 @@ DeclareString(UID);
 													 target:self
 													 action:@selector(toggleShowGroups:)
 											  keyEquivalent:@""];
-	[[owner menuController] addMenuItem:showGroupsMenuItem toLocation:LOC_View_Unnamed_B];		
+	[[adium menuController] addMenuItem:showGroupsMenuItem toLocation:LOC_View_Unnamed_B];		
 	
 	//Toolbar
 	NSToolbarItem	*toolbarItem;
@@ -685,7 +685,7 @@ DeclareString(UID);
 													itemContent:[NSImage imageNamed:@"showGroups" forClass:[self class]]
 														 action:@selector(toggleShowGroups:)
 														   menu:nil];
-    [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];
 }
 
 - (IBAction)toggleShowGroups:(id)sender
@@ -715,10 +715,10 @@ DeclareString(UID);
 	//If no object ID is provided, use the next available object ID
 	//(MetaContacts should always have an individually unique object id)
 	if(!inObjectID){
-		int topID = [[[owner preferenceController] preferenceForKey:TOP_METACONTACT_ID
+		int topID = [[[adium preferenceController] preferenceForKey:TOP_METACONTACT_ID
 															  group:PREF_GROUP_CONTACT_LIST] intValue];
 		inObjectID = [NSNumber numberWithInt:topID];
-		[[owner preferenceController] setPreference:[NSNumber numberWithInt:([inObjectID intValue] + 1)]
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:([inObjectID intValue] + 1)]
 											 forKey:TOP_METACONTACT_ID
 											  group:PREF_GROUP_CONTACT_LIST];
 		
@@ -752,7 +752,7 @@ DeclareString(UID);
 
 - (void)_restoreContactsToMetaContact:(AIMetaContact *)metaContact updatingPreferences:(BOOL)updatePreferences
 {
-	NSDictionary	*allMetaContactsDict = [[owner preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
+	NSDictionary	*allMetaContactsDict = [[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
 																					group:PREF_GROUP_CONTACT_LIST];
 	NSArray			*containedContactsArray = [allMetaContactsDict objectForKey:[metaContact internalObjectID]];
 
@@ -781,7 +781,7 @@ DeclareString(UID);
 			NSString		*objectID;
 			
 			if(!allMetaContactsDict){
-				allMetaContactsDict = [[[[owner preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
+				allMetaContactsDict = [[[[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
 																				 group:PREF_GROUP_CONTACT_LIST] mutableCopy] autorelease];
 			}
 
@@ -868,7 +868,7 @@ DeclareString(UID);
 	NSString			*metaContactInternalObjectID = [metaContact internalObjectID];
 				
 	//Get the dictionary of all metaContacts
-	allMetaContactsDict = [[[owner preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
+	allMetaContactsDict = [[[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
 																	group:PREF_GROUP_CONTACT_LIST] mutableCopy];
 	if (!allMetaContactsDict){
 		allMetaContactsDict = [[NSMutableDictionary alloc] init];
@@ -899,7 +899,7 @@ DeclareString(UID);
 		//Save
 		[self _saveMetaContacts:allMetaContactsDict];
 
-		[[owner contactAlertsController] mergeAndMoveContactAlertsFromListObject:listObject 
+		[[adium contactAlertsController] mergeAndMoveContactAlertsFromListObject:listObject 
 																  intoListObject:metaContact];				
 	}
 
@@ -969,7 +969,7 @@ DeclareString(UID);
 	NSString			*metaContactInternalObjectID = [metaContact internalObjectID];
 
 	//Get the dictionary of all metaContacts
-	allMetaContactsDict = [[owner preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
+	allMetaContactsDict = [[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
 																	 group:PREF_GROUP_CONTACT_LIST];
 	
 	
@@ -1089,7 +1089,7 @@ DeclareString(UID);
 	AIListObject<AIContainingObject>	*containingObject = [metaContact containingObject];
 	AIListObject						*object;
 	
-	NSMutableDictionary *allMetaContactsDict = [[[owner preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
+	NSMutableDictionary *allMetaContactsDict = [[[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
 																						 group:PREF_GROUP_CONTACT_LIST] mutableCopy];
 	
 	while (object = [metaEnumerator nextObject]){
@@ -1132,14 +1132,14 @@ DeclareString(UID);
 
 - (void)_saveMetaContacts:(NSDictionary *)allMetaContactsDict
 {
-//	[[owner preferenceController] delayPreferenceChangedNotifications:YES];
-	[[owner preferenceController] setPreference:allMetaContactsDict
+//	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
+	[[adium preferenceController] setPreference:allMetaContactsDict
 										 forKey:KEY_METACONTACT_OWNERSHIP
 										  group:PREF_GROUP_CONTACT_LIST];
-	[[owner preferenceController] setPreference:[allMetaContactsDict allKeys]
+	[[adium preferenceController] setPreference:[allMetaContactsDict allKeys]
 										 forKey:KEY_FLAT_METACONTACTS
 										  group:PREF_GROUP_CONTACT_LIST];
-//	[[owner preferenceController] delayPreferenceChangedNotifications:NO];
+//	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
 }
 
 //Sort list objects alphabetically by their display name
@@ -1209,7 +1209,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		if ((contactIsOnline && !offlineContacts) ||
 			(!contactIsOnline && 
 			 offlineContacts && 
-			 ([[owner accountController] firstAccountAvailableForSendingContentType:CONTENT_MESSAGE_TYPE
+			 ([[adium accountController] firstAccountAvailableForSendingContentType:CONTENT_MESSAGE_TYPE
 																		  toContact:contact
 																	 includeOffline:NO] != nil))){
 			NSImage			*menuServiceImage;
@@ -1257,7 +1257,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	AIListObject *listObject = nil;
 	
 	if ((sender == menuItem_getInfoContextualContact) || (sender == menuItem_getInfoContextualGroup)){
-		listObject = [[owner menuController] contactualMenuContact];
+		listObject = [[adium menuController] contactualMenuContact];
 	}else{
 		listObject = [self selectedListObject];
 	}
@@ -1285,21 +1285,21 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //												  action:@selector(showContactInfo:)
 //										   keyEquivalent:@"i"];
 //	[menuItem_getInfo setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
-//	[[owner menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Manage];
+//	[[adium menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Manage];
 	
 	//Add our get info contextual menu item
 	menuItem_getInfoContextualContact = [[NSMenuItem alloc] initWithTitle:VIEW_INFO
 															target:self
 															action:@selector(showContactInfo:) 
 													 keyEquivalent:@""];
-	[[owner menuController] addContextualMenuItem:menuItem_getInfoContextualContact
+	[[adium menuController] addContextualMenuItem:menuItem_getInfoContextualContact
 									   toLocation:Context_Contact_Manage];
 	
 	menuItem_getInfoContextualGroup = [[NSMenuItem alloc] initWithTitle:VIEW_INFO
 																   target:self
 																   action:@selector(showContactInfo:) 
 															keyEquivalent:@""];
-	[[owner menuController] addContextualMenuItem:menuItem_getInfoContextualGroup
+	[[adium menuController] addContextualMenuItem:menuItem_getInfoContextualGroup
 									   toLocation:Context_Group_Manage];
 	
 	if([NSApp isOnPantherOrBetter]) {
@@ -1310,19 +1310,19 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 														keyEquivalent:@"i"];
         [menuItem_getInfoAlternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
         [menuItem_getInfoAlternate setAlternate:YES];
-        [[owner menuController] addMenuItem:menuItem_getInfoAlternate toLocation:LOC_Contact_Editing];      
+        [[adium menuController] addMenuItem:menuItem_getInfoAlternate toLocation:LOC_Contact_Editing];      
         
         //Register for the contact list notifications
-        [[owner notificationCenter] addObserver:self selector:@selector(contactListDidBecomeMain:) 
+        [[adium notificationCenter] addObserver:self selector:@selector(contactListDidBecomeMain:) 
 										   name:Interface_ContactListDidBecomeMain 
 										 object:nil];
-        [[owner notificationCenter] addObserver:self selector:@selector(contactListDidResignMain:)
+        [[adium notificationCenter] addObserver:self selector:@selector(contactListDidResignMain:)
 										   name:Interface_ContactListDidResignMain 
 										 object:nil];
 		
 		//Watch changes in viewContactInfoMenuItem_alternate's menu so we can maintain its alternate status
 		//(it will expand into showing both the normal and the alternate items when the menu changes)
-		[[owner notificationCenter] addObserver:self selector:@selector(menuChanged:)
+		[[adium notificationCenter] addObserver:self selector:@selector(menuChanged:)
 										   name:Menu_didChange 
 										 object:[menuItem_getInfoAlternate menu]];
 		
@@ -1338,7 +1338,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 																	 itemContent:[NSImage imageNamed:@"info" forClass:[self class]]
 																		  action:@selector(showContactInfo:)
 																			menu:nil];
-	[[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
+	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 }
 
 //Always be able to show the inspector
@@ -1348,7 +1348,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		return([self selectedListObject] != nil);
 	}else if ((menuItem == menuItem_getInfoContextualContact) || 
 			  (menuItem == menuItem_getInfoContextualGroup)){
-		return([[owner menuController] contactualMenuContact] != nil);
+		return([[adium menuController] contactualMenuContact] != nil);
 	}
 	
 	return YES;
@@ -1362,7 +1362,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 - (void)contactListDidBecomeMain:(NSNotification *)notification
 {
-    [[owner menuController] removeItalicsKeyEquivalent];
+    [[adium menuController] removeItalicsKeyEquivalent];
     [menuItem_getInfoAlternate setKeyEquivalentModifierMask:(NSCommandKeyMask)];
 	[menuItem_getInfoAlternate setAlternate:YES];
 }
@@ -1374,7 +1374,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
     [menuItem_getInfoAlternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
     [menuItem_getInfoAlternate setAlternate:YES];
     //Now give the italics its combination back
-    [[owner menuController] restoreItalicsKeyEquivalent];
+    [[adium menuController] restoreItalicsKeyEquivalent];
 }
 
 - (void)menuChanged:(NSNotification *)notification
@@ -1479,7 +1479,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (void)sortContactList
 {
     [contactList sortGroupAndSubGroups:YES sortController:activeSortController];
-	[[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
+	[[adium notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
 }
 
 //Sort an individual object
@@ -1493,7 +1493,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		if([group isKindOfClass:[AIListGroup class]]){
 			//Sort the groups containing this object
 			[(AIListGroup *)group sortListObject:inObject sortController:activeSortController];
-			[[owner notificationCenter] postNotificationName:Contact_OrderChanged object:inObject];
+			[[adium notificationCenter] postNotificationName:Contact_OrderChanged object:inObject];
 		}
 	}
 }
@@ -1571,7 +1571,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 	
 	//Send out the notification for other observers
-	[[owner notificationCenter] postNotificationName:ListObject_StatusChanged
+	[[adium notificationCenter] postNotificationName:ListObject_StatusChanged
 											  object:inObject
 											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys 
 																								 forKey:@"Keys"] : nil)];
@@ -1790,7 +1790,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 - (NSArray *)allContactsWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID
 {	
-	return([self allContactsWithService:[[owner accountController] firstServiceWithServiceID:inServiceID]
+	return([self allContactsWithService:[[adium accountController] firstServiceWithServiceID:inServiceID]
 									UID:inUID]);
 }
 
@@ -1800,7 +1800,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	AIAccount		*account;
 	NSMutableArray  *returnContactArray = [NSMutableArray array];
 
-	enumerator = [[[owner accountController] accountsWithServiceClassOfService:service] objectEnumerator];
+	enumerator = [[[adium accountController] accountsWithServiceClassOfService:service] objectEnumerator];
 	
 	while(account = [enumerator nextObject]){
 		[returnContactArray addObject:[self contactWithService:service
@@ -1871,7 +1871,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		
 		//We have a flat contact; find the best account for talking to this contact,
 		//and return an AIListContact on that account
-		account = [[owner accountController] preferredAccountForSendingContentType:inType
+		account = [[adium accountController] preferredAccountForSendingContentType:inType
 																		 toContact:inContact];
 		if (account) {
 			if ([inContact account] == account){
@@ -1901,10 +1901,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 #warning This is ridiculous.
 - (AIListContact *)preferredContactWithUID:(NSString *)inUID andServiceID:(NSString *)inService forSendingContentType:(NSString *)inType
 {
-	AIService		*theService = [[owner accountController] firstServiceWithServiceID:inService];
+	AIService		*theService = [[adium accountController] firstServiceWithServiceID:inService];
 	AIListContact	*tempListContact = [[AIListContact alloc] initWithUID:inUID 
 																service:theService];
-	AIAccount		*account = [[owner accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE 
+	AIAccount		*account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE 
 																					  toContact:tempListContact
 																				 includeOffline:YES];
 	[tempListContact release];
@@ -1999,7 +1999,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			[self removeListObjects:[(AIListGroup *)listObject containedObjects]];
 			
 			//Delete the list off of all active accounts
-			enumerator = [[[owner accountController] accountArray] objectEnumerator];
+			enumerator = [[[adium accountController] accountArray] objectEnumerator];
 			while (account = [enumerator nextObject]){
 				if ([account online]){
 					[account deleteGroup:(AIListGroup *)listObject];
@@ -2033,7 +2033,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (void)requestAddContactWithUID:(NSString *)contactUID service:(AIService *)inService
 {
 	NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:contactUID, UID, inService, @"service",nil];
-	[[owner notificationCenter] postNotificationName:Contact_AddNewContact
+	[[adium notificationCenter] postNotificationName:Contact_AddNewContact
 											  object:nil
 											userInfo:userInfo];
 }
@@ -2108,7 +2108,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Rename a group
 - (void)_renameGroup:(AIListGroup *)listGroup to:(NSString *)newName
 {
-	NSEnumerator	*enumerator = [[[owner accountController] accountArray] objectEnumerator];
+	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	AIAccount		*account;
 	
 	//Since Adium has no memory of what accounts a group is on, we have to send this message to all available accounts
