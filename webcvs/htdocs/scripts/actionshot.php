@@ -39,8 +39,8 @@ function RandomActionShot($numberOfShots)
     
     //Return HTML for the choosen pictures
     $html = "";
-    foreach($chosenPics as $index){
-        $picture = $availablePics[$index];
+    foreach($chosenPics as $picture){
+        //$picture = $availablePics[$index];
         $html .= "<a href=\"$picturesDir/$picture\" onclick=\"window.open('$picturesDir/$picture','popup','width=$picWidth,height=$picHeight,scrollbars=yes,toolbar=no,status=yes'); return false\"><img src=\"$thumbsDir/$picture\" width=\"$thumbWidth\" height=\"$thumbHeight\" alt=\"actionshot\" /></a><br /><br />";
     }
 
