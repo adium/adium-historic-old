@@ -15,23 +15,28 @@ else
 	lastbuild=$today
 fi
 
-cd adium
+cd ~/adium
+
+#This gaim stuff has more conflicts and angst than the WB
+rm -f "Plugins/Gaim Service/LIBS/liboscar.a"
+rm -f "Plugins/Gaim Service/CBGaimAIMAccount.m"
+
 cvs update -Pd
 
-#Delete the Project Builder Project
-rm -r "Adium.pbproj"
+#ranlib the static library
+ranlib "Plugins/Gaim Service/LIBS/liboscar.a"
 
 #Delete the prefix header from before, just in case
 rm -r "build/PrefixHeaders"
 
 #Log everything
-../cvs2cl.pl --no-times --day-of-week --prune --hide-filenames --file CompleteChanges
-../cvs2cl.pl --no-times --day-of-week -l "-d'>=$lastbuild'" --prune --hide-filenames --file ChangeLog
+Utilities/Build/cvs2cl.pl --no-times --day-of-week --prune --hide-filenames --file CompleteChanges
+Utilities/Build//cvs2cl.pl --no-times --day-of-week -l "-d'>=$lastbuild'" --prune --hide-filenames --file ChangeLog
 cp ChangeLog ChangeLog_$prettydate
 #build it
 xcodebuild -target Adium GENERATE_DEBUGGING_SYMBOLS=NO COPY_PHASE_STRIP=YES DEBUGGING_SYMBOLS=NO MACOSX_DEPLOYMENT_TARGET=10.2 ZERO_LINK=NO OPTIMIZATION_CFLAGS=-Os FIX_AND_CONTINUE=NO OTHER_CFLAGS=-DDEPLOYMENT_BUILD
 #Package it
-../buildDMG.pl -buildDir . -compressionLevel 9 -dmgName "Adium_$prettydate" -volName "Adium_$prettydate" build/Adium.app ChangeLog
+Utilities/Build/buildDMG.pl -buildDir . -compressionLevel 9 -dmgName "Adium_$prettydate" -volName "Adium_$prettydate" build/Adium.app ChangeLog
 
 mkdir ~/AdiumBuilds
 
@@ -46,6 +51,10 @@ ssh shell.sf.net chmod 664 /home/groups/a/ad/adium/htdocs/downloads/CompleteChan
 
 scp ChangeLog_$prettydate $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/downloads/ChangeLogs
 ssh shell.sf.net chmod 664 /home/groups/a/ad/adium/htdocs/downloads/ChangeLogs/ChangeLog_$prettydate
+
+ssh shell.sf.net ln -fs \
+    /home/groups/a/ad/adium/htdocs/downloads/Adium_$prettydate \
+    /home/groups/a/ad/adium/htdocs/downloads/Adium2.dmg
 
 #cleanup
 rm CompleteChanges ChangeLog ChangeLog_$prettydate
