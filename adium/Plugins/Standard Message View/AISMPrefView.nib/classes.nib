@@ -16,9 +16,7 @@
                 "popUp_outgoingPrefix" = NSPopUpButton; 
                 "slider_gradientDarkness" = NSSlider; 
                 "slider_gridDarkness" = NSSlider; 
-                "textField_alias" = NSTextField; 
                 "textField_prefixFontName" = NSTextField; 
-                "view_alias" = NSView; 
                 "view_gridding" = NSView; 
                 "view_prefixes" = NSView; 
                 "view_timeStamps" = NSView; 

@@ -25,6 +25,7 @@
 #import "AIMTOC2ChatInviteWindowController.h"
 
 #define	AIM_ERRORS_FILE		@"AIMErrors"	//Filename of the AIM Errors plist
+#define TOC2_DEFAULTS_FILE	@"TOC2Defaults" //Filename of the account property defaults
 #define MESSAGE_QUE_DELAY	2.0		//Delay before sending contact list changes to the server
 
 #define AIM_PACKET_MAX_LENGTH	2048
@@ -104,8 +105,6 @@
 // Init anything relating to the account
 - (void)initAccount
 {
-    AIPreferenceController	*preferenceController = [owner preferenceController];
-
     //Init
     outQue = [[NSMutableArray alloc] init];
     handleDict = [[NSMutableDictionary alloc] init];
@@ -128,17 +127,18 @@
     //
     [[owner notificationCenter] addObserver:self selector:@selector(updateContactStatus:) name:Contact_UpdateStatus object:nil];
     
-    //Load our preferences
-    preferencesDict = [[preferenceController preferencesForGroup:AIM_TOC2_PREFS] retain];
-
-    //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
-    [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
-
     //Traffic watch debug window
     if([NSEvent controlKey]){
         [NSBundle loadNibNamed:@"TrafficWatch" owner:self];
     }
+}
+
+//Return the default properties for this account
+- (NSDictionary *)defaultProperties
+{
+    NSString 	*path = [[NSBundle bundleForClass:[self class]] pathForResource:TOC2_DEFAULTS_FILE ofType:@"plist"];
+
+    return([NSDictionary dictionaryWithContentsOfFile:path]);
 }
 
 // Return a view for the connection window
@@ -280,13 +280,13 @@
 // Return YES if the contact list is editable
 - (BOOL)contactListEditable
 {
-    return([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+    return([[[owner accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 }
 
 // Return a dictionary of our handles
 - (NSDictionary *)availableHandles
 {
-    int	status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+    int	status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
     
     if(status == STATUS_ONLINE || status == STATUS_CONNECTING){
         return(handleDict);
@@ -364,7 +364,7 @@
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
     BOOL 	available = NO;
-    BOOL	weAreOnline = ([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+    BOOL	weAreOnline = ([[[owner accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
         if(weAreOnline){
@@ -476,7 +476,7 @@
 
 // AIAccount_Status --------------------------------------------------------------------------------
 // Returns an array of the status keys we support
-- (NSArray *)supportedStatusKeys
+- (NSArray *)supportedPropertyKeys
 {
     return([NSArray arrayWithObjects:@"Online", @"IdleSince", @"IdleManuallySet", @"TextProfile", @"AwayMessage", nil]);
 }
@@ -484,7 +484,7 @@
 // Respond to account status changes
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    ACCOUNT_STATUS	status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+    ACCOUNT_STATUS	status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
     
     if([key compare:@"Online"] == 0){
         if([inValue boolValue]){ //Connect
@@ -501,7 +501,7 @@
     //Ignore the following keys unless we're online
     if(status == STATUS_ONLINE){
        if([key compare:@"IdleSince"] == 0){
-        NSDate		*oldIdle = [[owner accountController] statusObjectForKey:@"IdleSince" account:self];
+        NSDate		*oldIdle = [[owner accountController] propertyForKey:@"IdleSince" account:self];
         NSDate		*newIdle = inValue;
 
         if(oldIdle != nil && newIdle != nil){
@@ -558,11 +558,11 @@
 - (void)finishConnect:(NSString *)inPassword
 {
     if(inPassword && [inPassword length] != 0){
-        NSString	*host = [preferencesDict objectForKey:AIM_TOC2_KEY_HOST];
-        int		port = [[preferencesDict objectForKey:AIM_TOC2_KEY_PORT] intValue];
+        NSString	*host = [[owner accountController] propertyForKey:AIM_TOC2_KEY_HOST account:self];
+        int		port = [[[owner accountController] propertyForKey:AIM_TOC2_KEY_PORT account:self] intValue];
 
         //Set our status as connecting
-        [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
+        [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
 
         //Remember the account name and password
         if(screenName != [propertiesDict objectForKey:@"Handle"]){
@@ -600,7 +600,7 @@
     AIHandle		*handle;
 
     //Set our status as disconnecting
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
+    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
 
     //Flush all our handle status flags
     enumerator = [[handleDict allValues] objectEnumerator];
@@ -621,8 +621,8 @@
     [updateTimer release]; updateTimer = nil;
 
     //Set our status as offline
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
-    [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
+    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
+    [[owner accountController] setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
 }
 
 
@@ -645,7 +645,7 @@
 - (void)autoReconnectTimer:(NSTimer *)inTimer
 {
     //If we're still offline, continue with the reconnect
-    if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_OFFLINE){
+    if([[[owner accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_OFFLINE){
 
         NSLog(@"Attempting Auto-Reconnect");
 
@@ -740,14 +740,14 @@
                     [self silenceAllHandleUpdatesForInterval:SIGN_ON_EVENT_DURATION];
 
                     //Flag ourself as online
-                    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
-                    [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
+                    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
+                    [[owner accountController] setProperty:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
 
                     //Set our correct status
                     {
-                        NSDate 		*idle = [[owner accountController] statusObjectForKey:@"IdleSince" account:self];
-                        NSData	 	*profile = [[owner accountController] statusObjectForKey:@"TextProfile" account:self];
-                        NSData	 	*away = [[owner accountController] statusObjectForKey:@"AwayMessage" account:self];
+                        NSDate 		*idle = [[owner accountController] propertyForKey:@"IdleSince" account:self];
+                        NSData	 	*profile = [[owner accountController] propertyForKey:@"TextProfile" account:self];
+                        NSData	 	*away = [[owner accountController] propertyForKey:@"AwayMessage" account:self];
 
                         if(idle) [self statusForKey:@"IdleSince" willChangeTo:idle];
                         if(profile) [self statusForKey:@"TextProfile" willChangeTo:profile];
@@ -873,7 +873,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.87 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.88 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1440,7 +1440,7 @@
 
     //Set up the address
     host = [socket hostIP]; //We must request our profile from the same server that we connected to.
-    port = [preferencesDict objectForKey:AIM_TOC2_KEY_PORT];
+    port = [[owner accountController] propertyForKey:AIM_TOC2_KEY_PORT account:self];
     path = [message nonBreakingTOCStringArgumentAtIndex:2];
     urlString = [NSString stringWithFormat:@"http://%@:%@/%@", host, port, path];
 
@@ -1839,7 +1839,6 @@
     [password release];
     [addDict release];
     [deleteDict release];
-    [preferencesDict release];
     [socket release];
     [messageDelayTimer release];
     [chatDict release];

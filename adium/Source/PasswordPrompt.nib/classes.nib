@@ -1,7 +1,7 @@
 {
     IBClasses = (
         {
-            ACTIONS = {cancel = id; closeWindow = id; okay = id; }; 
+            ACTIONS = {cancel = id; closeWindow = id; okay = id; togglePasswordSaved = id; }; 
             CLASS = AIPasswordPromptController; 
             LANGUAGE = ObjC; 
             OUTLETS = {

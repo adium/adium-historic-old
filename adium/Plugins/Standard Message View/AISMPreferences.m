@@ -127,11 +127,6 @@
                                              forKey:KEY_SMV_OUTGOING_PREFIX_COLOR
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
-    }else if(sender == textField_alias){
-        [[owner preferenceController] setPreference:[sender stringValue]
-                                             forKey:KEY_SMV_OUTGOING_ALIAS
-                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];        
-
     }
 
     
@@ -172,10 +167,6 @@
     griddingPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:AISM_PREF_TITLE_GRID] retain];
     [[owner preferenceController] addPreferencePane:griddingPane];
 
-    //Aliases
-    aliasPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Accounts_Profile withDelegate:self label:AISM_PREF_TITLE_ALIAS] retain];
-    [[owner preferenceController] addPreferencePane:aliasPane];
-
     return(self);
 }
 
@@ -185,7 +176,6 @@
     [prefixesPane release];
     [timeStampsPane release];
     [griddingPane release];
-    [aliasPane release];
 
     [super dealloc];
 }
@@ -206,10 +196,8 @@
         return(view_prefixes);
     }else if(preferencePane == timeStampsPane){
         return(view_timeStamps);
-    }else if(preferencePane == griddingPane){
+    }else{ //if(preferencePane == griddingPane){
         return(view_gridding);
-    }else{// if(preferencePane == aliasPane){
-        return(view_alias);
     }
 }
 
@@ -219,7 +207,6 @@
     [view_prefixes release]; view_prefixes = nil;
     [view_timeStamps release]; view_timeStamps = nil;
     [view_gridding release]; view_gridding = nil;
-    [view_alias release]; view_alias = nil;
 }
 
 //Display the font name in our text field
@@ -257,9 +244,6 @@
     //Sliders
     [slider_gridDarkness setFloatValue:[[preferenceDict objectForKey:KEY_SMV_GRID_DARKNESS] floatValue]];
     [slider_gradientDarkness setFloatValue:[[preferenceDict objectForKey:KEY_SMV_SENDER_GRADIENT_DARKNESS] floatValue]];
-
-    //Text fields
-    [textField_alias setStringValue:[preferenceDict objectForKey:KEY_SMV_OUTGOING_ALIAS]];
     
     [self configureControlDimming];
 }

@@ -30,16 +30,22 @@
     return view_accountView;
 }
 
-//Save the changed properties
-- (void)saveChanges
+//
+- (NSArray *)auxilaryTabs
 {
-    [[account properties] setObject:[textField_email stringValue] forKey:@"Email"];
-    [[account properties] setObject:[textField_friendlyName stringValue] forKey:@"FriendlyName"];
+    return(nil);
+}
 
-    //Broadcast a properties changed message
-    [[owner notificationCenter] postNotificationName:Account_PropertiesChanged
-                                                                         object:self
-                                                                       userInfo:nil];
+
+//Save the changed properties
+- (IBAction)saveChanges:(id)sender
+{
+    [[owner accountController] setProperty:[textField_email stringValue]
+                                    forKey:@"Email"
+                                   account:account];
+    [[owner accountController] setProperty:[textField_friendlyName stringValue]
+                                    forKey:@"FriendlyName"
+                                   account:account];
 }
 
 - (void)configureViewAfterLoad
@@ -65,7 +71,7 @@
         NSLog(@"couldn't load account view bundle");
     }
     
-    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:account];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_PropertiesChanged object:account];
     
     [textField_email setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789+-._@"] length:129 caseSensitive:NO errorMessage:@"Improper Format"]];
     
@@ -76,7 +82,7 @@
 
 - (void)dealloc
 {
-    [[owner notificationCenter] removeObserver:self name:Account_StatusChanged object:account];
+    [[owner notificationCenter] removeObserver:self name:Account_PropertiesChanged object:account];
     
     [view_accountView release];
     
@@ -88,7 +94,7 @@
 
 - (void)accountStatusChanged:(NSNotification *)notification
 {
-    BOOL	isOnline = [[[owner accountController] statusObjectForKey:@"Online" account:account] boolValue];
+    BOOL	isOnline = [[[owner accountController] propertyForKey:@"Online" account:account] boolValue];
 
     //Dim unavailable controls
     [textField_email setEnabled:isOnline];
@@ -100,7 +106,7 @@
     NSString *savedFriendlyName;
     
     //Email
-    savedEmail = [[account properties] objectForKey:@"Email"];
+    savedEmail = [[owner accountController] propertyForKey:@"Email" account:account];
     if(savedEmail != nil && [savedEmail length] != 0){
         [textField_email setStringValue:savedEmail];
     }else{
@@ -108,7 +114,7 @@
     }
     
     //FriendlyName
-    savedFriendlyName = [[account properties] objectForKey:@"FriendlyName"];
+    savedFriendlyName = [[owner accountController] propertyForKey:@"FriendlyName" account:account];
     if(savedFriendlyName != nil && [savedFriendlyName length] != 0){
         [textField_friendlyName setStringValue:savedFriendlyName];
     }else{

@@ -58,7 +58,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
 // Called when "Come Back" button is clicked
 - (IBAction)comeBack:(id)sender
 {
-    [[owner accountController] setStatusObject:nil forKey:@"AwayMessage" account:nil];
+    [[owner accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
     [mySharedInstance updateWindow];
 }
 
@@ -76,7 +76,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     bool shouldHide = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_HIDE_IN_BACKGROUND_AWAY_STATUS_WINDOW] boolValue];
     
     // Get the away message. Returns null string if none.
-    NSAttributedString *awayMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"AwayMessage" account:nil]];
+    NSAttributedString *awayMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AwayMessage" account:nil]];
 
     // Is an away message still up?
     if(awayMessage) {
@@ -146,7 +146,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     }
     
     // Put the current away message in the text field
-    [[textView_awayMessage textStorage] setAttributedString:[NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"AwayMessage" account:nil]]];
+    [[textView_awayMessage textStorage] setAttributedString:[NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AwayMessage" account:nil]]];
 
     // Still to Add:
     // Put the time we went away in the text field

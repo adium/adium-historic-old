@@ -78,7 +78,7 @@
 - (NSString *)UIDAndServiceID; 		//ServiceID.UID
 - (NSString *)accountDescription;	//Return a readable description of this account's username
 
-- (NSArray *)supportedStatusKeys;		//Return an array of supported status keys
+- (NSArray *)supportedPropertyKeys;		//Return an array of supported status keys
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue;	//The account's status should change
 
 //Special shiny methods

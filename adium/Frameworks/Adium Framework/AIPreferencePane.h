@@ -38,7 +38,7 @@
 + (AIPreferencePane *)preferencePaneInCategory:(PREFERENCE_CATEGORY)inCategory withDelegate:(id)inDelegate label:(NSString *)inLabel;
 - (PREFERENCE_CATEGORY)category;
 - (NSString *)label;
-- (NSView *)view;
+- (NSView *)viewWithContainer:(BOOL)includeContainer;
 - (void)closeView;
 
 @end

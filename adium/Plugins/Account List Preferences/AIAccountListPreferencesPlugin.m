@@ -19,7 +19,6 @@
 #import "AIAdium.h"
 #import "AIAccountController.h"
 #import "AIPreferenceController.h"
-#import "AIAccountListEditSheetController.h"
 
 
 #define	ACCOUNT_DRAG_TYPE			@"AIAccount"			//ID for an account drag
@@ -42,6 +41,8 @@
 - (void)deleteAccountSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)tableViewSelectionDidChange:(NSNotification *)notification;
 - (void)configureView;
+- (void)configureAccountOptionsView;
+- (void)accountPropertiesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIAccountListPreferencesPlugin
@@ -51,9 +52,18 @@
 {
     //init
     accountArray = [[[owner accountController] accountArray] retain];
+    accountViewController = nil;
+    view_accountPreferences = nil;
 
     //Register our preference pane
     [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Accounts_Connections withDelegate:self label:ACCOUNT_PREFERENCE_TITLE]];
+}
+
+- (void)dealloc
+{
+    [accountArray release];
+
+    [super dealloc];
 }
 
 //Return the view for our preference pane
@@ -74,15 +84,37 @@
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
     [view_accountPreferences release]; view_accountPreferences = nil;
+    [accountViewController release]; accountViewController = nil;
     [[owner notificationCenter] removeObserver:self];
 }
 
 //Configure our preference view
 - (void)configureView
 {
+    NSEnumerator		*enumerator;
+    id <AIServiceController>	service;
+    AIImageTextCell		*cell;
+
     //Configure our tableView
-    [[tableView_accountList tableColumnWithIdentifier:@"icon"] setDataCell:[[[NSImageCell alloc] init] autorelease]];
+    cell = [[[AIImageTextCell alloc] init] autorelease];
+    [cell setFont:[NSFont systemFontOfSize:12]];
+    [[tableView_accountList tableColumnWithIdentifier:@"description"] setDataCell:cell];
     [tableView_accountList registerForDraggedTypes:[NSArray arrayWithObjects:ACCOUNT_DRAG_TYPE,nil]];
+    [scrollView_accountList setAutoHideScrollBar:YES];
+    
+    //Configure our buttons
+    [button_newAccount setImage:[AIImageUtilities imageNamed:@"plus" forClass:[self class]]];
+    [button_deleteAccount setImage:[AIImageUtilities imageNamed:@"minus" forClass:[self class]]];
+
+    //Configure the service list
+    enumerator = [[[owner accountController] availableServiceArray] objectEnumerator];
+    [popupMenu_serviceList removeAllItems];
+    while((service = [enumerator nextObject])){
+        NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service description] target:self action:@selector(selectServiceType:) keyEquivalent:@""] autorelease];
+
+        [item setRepresentedObject:service];
+        [[popupMenu_serviceList menu] addItem:item];
+    }
 
     //Install our observers
     [[owner notificationCenter] addObserver:self
@@ -90,28 +122,141 @@
                                        name:Account_PropertiesChanged
                                      object:nil];
     [[owner notificationCenter] addObserver:self
-                                   selector:@selector(refreshAccountList)
-                                       name:Account_StatusChanged
-                                     object:nil];
-    [[owner notificationCenter] addObserver:self
                                    selector:@selector(accountListChanged:)
                                        name:Account_ListChanged
                                      object:nil];
-
+    [[owner notificationCenter] addObserver:self
+                                   selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged
+                                     object:nil];
+    
     //Refresh our view
     [self updateAccountList];
 }
 
-- (void)uninstallPlugin
+//The properties of our account changed
+- (void)accountPropertiesChanged:(NSNotification *)notification
 {
+    NSString	*key = [[notification userInfo] objectForKey:@"Key"];
+    AIAccount	*account = [notification object];
+    BOOL	isOnline;
+    
+    //Dim unavailable controls
+    if(notification == nil || ([key compare:@"Online"] == 0 && account == selectedAccount)){
+        if(notification == nil) account = selectedAccount;
 
+        isOnline = [[[owner accountController] propertyForKey:@"Online" account:account] boolValue];
+        [popupMenu_serviceList setEnabled:!isOnline];
+    }
 }
 
-- (void)dealloc
+//configure the account specific options
+- (void)configureAccountOptionsView
 {
-    [accountArray release];
+    NSEnumerator	*enumerator;
+    NSTabViewItem	*tabViewItem;
+    NSView		*accountView;
+    BOOL		autoConnect;
+    int			selectedTabIndex;
 
-    [super dealloc];
+    //Remove any tabs
+    selectedTabIndex = [tabView_auxilary indexOfTabViewItem:[tabView_auxilary selectedTabViewItem]];
+    while([tabView_auxilary numberOfTabViewItems] > 1){
+        [tabView_auxilary removeTabViewItem:[tabView_auxilary tabViewItemAtIndex:[tabView_auxilary numberOfTabViewItems] - 1]];
+    }
+    
+    //Close any currently open controllers, saving changes(?)
+    if(accountViewController){
+        //[accountViewController saveChanges];
+        [accountViewController release]; accountViewController = nil;
+    }
+    [view_accountDetails removeAllSubviews];
+
+    //select the correct service in the service menu
+    [popupMenu_serviceList selectItemAtIndex:[popupMenu_serviceList indexOfItemWithRepresentedObject:[selectedAccount service]]];
+
+    //Configure the auto-connect button
+    autoConnect = [[[owner accountController] propertyForKey:@"AutoConnect" account:selectedAccount] boolValue];
+    [button_autoConnect setState:autoConnect];
+    
+    //Correctly size the sheet for the account details view
+    accountViewController = [[selectedAccount accountView] retain];
+    accountView = [accountViewController view];
+
+    //Swap in the account details view
+    [view_accountDetails addSubview:accountView];
+    [accountView setFrameOrigin:NSMakePoint(0,([view_accountDetails frame].size.height - [accountView frame].size.height))];
+    if([accountViewController conformsToProtocol:@protocol(AIAccountViewController)])
+    {
+        [accountViewController configureViewAfterLoad]; //allow the account subview to set itself up after the window has loaded
+    }
+
+    //Hook up the key view chain
+    [popupMenu_serviceList setNextKeyView:[accountView nextKeyView]];
+    NSView	*view = accountView;
+    while([view nextKeyView]) view = [view nextKeyView];
+    [view setNextKeyView:button_autoConnect];
+
+    //Swap in the account auxilary tabs
+    enumerator = [[accountViewController auxilaryTabs] objectEnumerator];
+    while(tabViewItem = [enumerator nextObject]){
+        [tabView_auxilary addTabViewItem:tabViewItem];
+    }
+
+    //There must be a better way to do this.  When moving tabs over, they will stay selected - resulting in multiple selected tabs.  My quick fix is to manually select each tab in the view.  Not the greatest, but it'll work for now.
+    [tabView_auxilary selectLastTabViewItem:nil];
+    int i;
+    for(i = 1;i < [tabView_auxilary numberOfTabViewItems];i++){
+        [tabView_auxilary selectPreviousTabViewItem:nil];
+    }
+
+    //Re-select same index (if possible)
+    if(selectedTabIndex > 0 && selectedTabIndex < [tabView_auxilary numberOfTabViewItems]){
+        [tabView_auxilary selectTabViewItemAtIndex:selectedTabIndex];
+    }else{
+        [tabView_auxilary selectFirstTabViewItem:nil];
+    }
+
+    //Enable/disable controls
+    [self accountPropertiesChanged:nil];
+}
+
+// User selected a service type from the menu
+- (IBAction)selectServiceType:(id)sender
+{
+    id <AIServiceController>	service = [sender representedObject];
+
+    //Switch it
+    [selectedAccount autorelease];
+    selectedAccount = [[[owner accountController] switchAccount:selectedAccount toService:service] retain];
+
+    //reconfigure
+    [self configureAccountOptionsView];
+}
+
+//User toggled the autoconnect preference
+- (IBAction)toggleAutoConnect:(id)sender
+{
+    BOOL	autoConnect = [sender state];
+    
+    //Apply the new value
+    [[owner accountController] setProperty:[NSNumber numberWithBool:autoConnect] forKey:@"AutoConnect" account:selectedAccount];
+}
+
+//Create a new account
+- (IBAction)newAccount:(id)sender
+{
+    int		index = [tableView_accountList selectedRow] + 1;
+    AIAccount	*newAccount;
+
+    //Add the new account
+    newAccount = [[owner accountController] newAccountAtIndex:index];
+    [self refreshAccountList];
+
+    //Select the new account
+    [tableView_accountList selectRow:index byExtendingSelection:NO];
+
+    //Put focus on the account fields
+    [[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
 }
 
 //Delete the selected account
@@ -130,66 +275,6 @@
     NSBeginAlertSheet(@"Delete Account",@"Delete",@"Cancel",@"",[view_accountPreferences window], self, @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, @"Delete the account %@?", [targetAccount accountDescription]);
 }
 
-//Create a new account
-- (IBAction)newAccount:(id)sender
-{
-    int		index = [tableView_accountList selectedRow] + 1;
-    AIAccount	*newAccount;
-
-    //Add the new account
-    newAccount = [[owner accountController] newAccountAtIndex:index];
-    [self refreshAccountList];
-
-    //Select and edit the new account
-    [tableView_accountList selectRow:index byExtendingSelection:NO];
-    [self editAccountCreatingNew:YES];
-}
-
-//Edit an account
-- (IBAction)editAccount:(id)sender
-{
-    [self editAccountCreatingNew:NO];
-}
-
-//Togle the connection of the selected account
-- (IBAction)toggleConnection:(id)sender
-{
-    int 			index;
-    AIAccount			*targetAccount;
-
-    NSParameterAssert(accountArray != nil); NSParameterAssert([accountArray count] > 0);
-
-    //Confirm
-    index = [tableView_accountList selectedRow];
-    NSParameterAssert(index >= 0 && index < [accountArray count]);
-    targetAccount = [accountArray objectAtIndex:index];
-    
-    //Toggle the connection
-    if([[targetAccount supportedStatusKeys] containsObject:@"Online"]){
-        if([[[owner accountController] statusObjectForKey:@"Online" account:targetAccount] boolValue]){
-            [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:targetAccount];
-        }else{
-            [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:targetAccount];
-        }
-    }
-}
-
-//Selects the account, and starts editing it. Makes sure that we don't delete it when we hit cancel if its not a new account!
--(void)editAccountCreatingNew:(BOOL)newo
-{
-    AIAccount		*selectedAccount;
-    int			selectedRow;
-
-    selectedRow = [tableView_accountList selectedRow];
-    if(selectedRow >= 0 && selectedRow < [accountArray count]){
-        selectedAccount = [accountArray objectAtIndex:selectedRow];
-        
-        [AIAccountListEditSheetController showAccountListEditSheetForAccount:selectedAccount onWindow:[view_accountPreferences window] owner:owner deleteOnCancel:newo];
-    }
-}
-
-
-// Private ---------------------------------------------------------------------------
 // Finishes the delete action when the sheet is closed
 - (void)deleteAccountSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
@@ -215,6 +300,7 @@
 - (void)updateAccountList
 {
     //Update the reference
+    selectedAccount = nil;
     [accountArray release]; accountArray = nil;
     accountArray = [[[owner accountController] accountArray] retain];
 
@@ -230,7 +316,7 @@
     }
    
     //Reconfig to the selected account
-    [self tableViewSelectionDidChange:nil];
+    //[self tableViewSelectionDidChange:nil];
 }
 
 // Called when the account list changes
@@ -248,7 +334,7 @@
     
         //edit
         [tableView_accountList selectRow:0 byExtendingSelection:NO];
-        [self editAccount:nil];
+        //[self editAccount:nil];
     }
 }
 
@@ -267,103 +353,25 @@
 //Return the account description or image
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    NSString	*identifier = [tableColumn identifier];
-    AIAccount	*account = [accountArray objectAtIndex:row];
+    return([[accountArray objectAtIndex:row] accountDescription]);
+}
 
-    if([identifier compare:@"icon"] == 0 ){
-        NSImage		*image;
-        ACCOUNT_STATUS	status = STATUS_NA;
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+    AIAccount		*account = [accountArray objectAtIndex:row];
+    NSImage		*image;
+    ACCOUNT_STATUS	status = STATUS_NA;
 
-        //Get the account's status
-        if([[account supportedStatusKeys] containsObject:@"Online"]){
-            status = [[[owner accountController] statusObjectForKey:@"Status" account:account] intValue];
-        }
-    
-        switch(status){
-            case STATUS_NA:
-                image = [AIImageUtilities imageNamed:@"Account_Online" forClass:[self class]];
-            break;
-            case STATUS_OFFLINE:
-                image = [AIImageUtilities imageNamed:@"Account_Offline" forClass:[self class]];
-            break;
-            case STATUS_CONNECTING:
-                image = [AIImageUtilities imageNamed:@"Account_Connecting" forClass:[self class]];
-            break;
-            case STATUS_ONLINE:
-                image = [AIImageUtilities imageNamed:@"Account_Online" forClass:[self class]];
-            break;
-            case STATUS_DISCONNECTING:
-                image = [AIImageUtilities imageNamed:@"Account_Connecting" forClass:[self class]];
-            break;
-            default:
-                image = nil;
-            break;
-        }
-    
-        return(image);
-
-    }else if([identifier compare:@"description"] == 0 ){
-        return([[accountArray objectAtIndex:row] accountDescription]);
-
-    }else if([identifier compare:@"status"] == 0 ){
-        NSString	*string;
-        NSColor		*color;
-        BOOL		selected;
-        ACCOUNT_STATUS	status = STATUS_NA;
-
-        //The 'white' when selected text is new in 10.2
-        selected = ([tableView selectedRow] == row && [[tableView window] firstResponder] == tableView && [[tableView window] isKeyWindow]);
-
-        //Get the account's status
-        if([[account supportedStatusKeys] containsObject:@"Online"]){
-            status = [[[owner accountController] statusObjectForKey:@"Status" account:account] intValue];
-        }
-        
-        //Return the correct string
-        switch(status){
-            case STATUS_NA:
-                string = @"n/a";
-                if(!selected) color = [NSColor blackColor];
-                else color = [NSColor whiteColor];
-            break;
-            case STATUS_OFFLINE:
-                string = @"Offline";
-                if(!selected) color = [NSColor colorWithCalibratedRed:0.15 green:0.0 blue:0.0 alpha:1.0];
-                else color = [NSColor colorWithCalibratedRed:1.0 green:0.85 blue:0.85 alpha:1.0];
-            break;
-            case STATUS_CONNECTING:
-                string = @"ConnectingÉ";
-                if(!selected) color = [NSColor colorWithCalibratedRed:0.15 green:0.15 blue:0.0 alpha:1.0];
-                else color = [NSColor colorWithCalibratedRed:1.0 green:1.0 blue:0.85 alpha:1.0];
-            break;
-            case STATUS_ONLINE:
-                string = @"Online";
-                if(!selected) color = [NSColor colorWithCalibratedRed:0.0 green:0.15 blue:0.0 alpha:1.0];
-                else color = [NSColor colorWithCalibratedRed:0.85 green:1.0 blue:0.85 alpha:1.0];
-            break;
-            case STATUS_DISCONNECTING:
-                string = @"DisconnectingÉ";
-                if(!selected) color = [NSColor colorWithCalibratedRed:0.15 green:0.15 blue:0.0 alpha:1.0];
-                else color = [NSColor colorWithCalibratedRed:1.0 green:1.0 blue:0.85 alpha:1.0];
-            break;
-            default:
-                string = @"Unknown";
-                if(!selected) color = [NSColor blackColor];
-                else color = [NSColor whiteColor];
-            break;
-        }
-        
-        return([[[NSAttributedString alloc] initWithString:string attributes:[NSDictionary dictionaryWithObjectsAndKeys:color,NSForegroundColorAttributeName,nil]] autorelease]);
-    }else if([identifier compare:@"autoconnect"] == 0){
-        if([[[account properties] objectForKey:@"AutoConnect"] boolValue]){
-            return(@"Yes");
-        }else{
-            return(@"No");
-        }
-
-    }else{
-        return(@"");
+    //Get the account's status
+    if([[account supportedPropertyKeys] containsObject:@"Online"]){
+        status = [[[owner accountController] propertyForKey:@"Status" account:account] intValue];
     }
+
+    image = [AIImageUtilities imageNamed:@"DefaultIcon" forClass:[self class]];
+
+    [cell setImage:image];
+
+    [cell setSubString:[account serviceID]];
 }
 
 - (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
@@ -390,47 +398,19 @@
     int	selectedRow = [tableView_accountList selectedRow];
 
     if(selectedRow >=0 && selectedRow < [accountArray count]){
-        AIAccount	*account = [accountArray objectAtIndex:selectedRow];
-
-        [button_editAccount setEnabled:YES];
+        //Correctly enable/disable our delete button
         if([accountArray count] > 1){
             [button_deleteAccount setEnabled:YES];
         }else{
             [button_deleteAccount setEnabled:NO];
         }
 
-        if([[account supportedStatusKeys] containsObject:@"Online"]){
-            switch([[[owner accountController] statusObjectForKey:@"Status" account:account] intValue]){
-                case STATUS_OFFLINE:
-                    [button_toggleAccount setTitle:ACCOUNT_CONNECT_BUTTON_TITLE];
-                    [button_toggleAccount setEnabled:YES];
-                break;
-                case STATUS_CONNECTING:
-                    [button_toggleAccount setTitle:ACCOUNT_CONNECTING_BUTTON_TITLE];
-                    [button_toggleAccount setEnabled:NO];
-                break;
-                case STATUS_ONLINE:
-                    [button_toggleAccount setTitle:ACCOUNT_DISCONNECT_BUTTON_TITLE];
-                    [button_toggleAccount setEnabled:YES];
-                break;
-                case STATUS_DISCONNECTING:
-                    [button_toggleAccount setTitle:ACCOUNT_DISCONNECTING_BUTTON_TITLE];
-                    [button_toggleAccount setEnabled:NO];
-                break;
-                default:
-                    [button_toggleAccount setTitle:@"n/a"];
-                    [button_toggleAccount setEnabled:NO];
-                break;
-            }
-        }else{
-            [button_toggleAccount setTitle:ACCOUNT_CONNECT_BUTTON_TITLE];
-            [button_toggleAccount setEnabled:NO];
-        }
+        //Configure for the newly selected account
+        selectedAccount = [accountArray objectAtIndex:selectedRow];
+        [self configureAccountOptionsView];
+
     }else{
-        [button_editAccount setEnabled:NO];
         [button_deleteAccount setEnabled:NO];
-        [button_toggleAccount setTitle:ACCOUNT_CONNECT_BUTTON_TITLE];
-        [button_toggleAccount setEnabled:NO];
     }
 }
 

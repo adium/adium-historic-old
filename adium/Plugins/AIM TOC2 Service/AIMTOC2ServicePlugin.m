@@ -27,8 +27,6 @@
 
 - (void)installPlugin
 {
-    AIPreferenceController	*preferenceController = [owner preferenceController];
-
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"AIM"
                           description:@"AIM, AOL, and .Mac"
@@ -36,51 +34,8 @@
                           caseSensitive:NO
                           allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
     
-    //Register our default preferences
-    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:AIM_TOC2_DEFAULT_PREFS forClass:[self class]] forGroup:AIM_TOC2_PREFS];
-
-    //Register our preference pane
-    [preferenceController addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Accounts_Hosts withDelegate:self label:AIM_TOC2_PREFERENCE_TITLE]];
-
     //Register this service
     [[owner accountController] registerService:self];
-}
-
-//Return the view for our preference pane
-- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    //Load our preference view nib
-    if(!view_preferences){
-        [NSBundle loadNibNamed:AIM_TOC2_PREFERENCE_VIEW owner:self];
-
-        //Configure our view
-        [self configureView];
-    }
-
-    return(view_preferences);
-}
-
-//Clean up our preference pane
-- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    [view_preferences release]; view_preferences = nil;
-
-}
-
-//Configure our preference view
-- (void)configureView
-{
-    NSDictionary	*preferencesDict = [[owner preferenceController] preferencesForGroup:AIM_TOC2_PREFS];
-
-    //Fill in our host & port
-    [textField_host setStringValue:[preferencesDict objectForKey:AIM_TOC2_KEY_HOST]];
-    [textField_port setStringValue:[preferencesDict objectForKey:AIM_TOC2_KEY_PORT]];
-}
-
-- (void)uninstallPlugin
-{
-    //[[owner accountController] unregisterService:self];
-    //unregister, remove, ...
 }
 
 //Return a new account with the specified properties
@@ -103,20 +58,6 @@
 - (AIServiceType *)handleServiceType
 {
     return(handleServiceType);
-}
-
-//Save changes made to a preference control
-- (IBAction)preferenceChanged:(id)sender
-{
-    AIPreferenceController	*preferenceController = [owner preferenceController];
-
-    if(sender == textField_host){
-        [preferenceController setPreference:[textField_host stringValue] forKey:AIM_TOC2_KEY_HOST group:AIM_TOC2_PREFS];
-
-    }else if(sender == textField_port){
-        [preferenceController setPreference:[textField_port stringValue] forKey:AIM_TOC2_KEY_PORT group:AIM_TOC2_PREFS];
-
-    }
 }
 
 @end

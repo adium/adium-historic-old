@@ -43,11 +43,6 @@
     IBOutlet	NSSlider	*slider_gridDarkness;
     IBOutlet	NSButton	*checkBox_senderGradient;
     IBOutlet	NSSlider	*slider_gradientDarkness;
-
-    //Alias
-    AIPreferencePane		*aliasPane;
-    IBOutlet	NSView		*view_alias;
-    IBOutlet	NSTextField	*textField_alias;
     
     NSDictionary		*prefixColors;
 }

@@ -23,11 +23,13 @@
 #define TOOLBAR_PREFERENCE_WINDOW	@"PreferenceWindow"	//Identifier for the preference toolbar
 #define	KEY_PREFERENCE_WINDOW_FRAME	@"Preference Window Frame"
 
+#define FLAT_PADDING_OFFSET 45
+
 @interface AIPreferenceWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
 - (void)configureToolbarItems;
 - (void)installToolbar;
-- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIFlippedCategoryView *)inView;
+- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIFlippedCategoryView *)inView showContainers:(BOOL)includeContainers;
 - (void)_sizeWindowToFitTabView:(NSTabView *)tabView;
 - (void)_sizeWindowToFitFlatView:(AIFlippedCategoryView *)view;
 @end
@@ -241,40 +243,38 @@ static AIPreferenceWindowController *sharedInstance = nil;
     if(tabView == tabView_category){
         switch(identifier){
             case 1:
-                [self _insertPanesForCategory:AIPref_Accounts_Connections intoView:view_Accounts_Connections];
-                [self _insertPanesForCategory:AIPref_Accounts_Profile intoView:view_Accounts_Profile];
-                [self _insertPanesForCategory:AIPref_Accounts_Hosts intoView:view_Accounts_Hosts];
-                [self _sizeWindowToFitTabView:tabView_accounts];
+                [self _insertPanesForCategory:AIPref_Accounts_Connections intoView:view_Accounts_Connections showContainers:NO];
+                [self _sizeWindowToFitFlatView:view_Accounts_Connections];
             break;
             case 2:
-                [self _insertPanesForCategory:AIPref_ContactList_General intoView:view_ContactList_General];
-                [self _insertPanesForCategory:AIPref_ContactList_Groups intoView:view_ContactList_Groups];
-                [self _insertPanesForCategory:AIPref_ContactList_Contacts intoView:view_ContactList_Contacts];
+                [self _insertPanesForCategory:AIPref_ContactList_General intoView:view_ContactList_General showContainers:YES];
+                [self _insertPanesForCategory:AIPref_ContactList_Groups intoView:view_ContactList_Groups showContainers:YES];
+                [self _insertPanesForCategory:AIPref_ContactList_Contacts intoView:view_ContactList_Contacts showContainers:YES];
                 [self _sizeWindowToFitTabView:tabView_contactList];
             break;
             case 3:
-                [self _insertPanesForCategory:AIPref_Messages_Display intoView:view_Messages_Display];
-                [self _insertPanesForCategory:AIPref_Messages_Sending intoView:view_Messages_Sending];
-                [self _insertPanesForCategory:AIPref_Messages_Receiving intoView:view_Messages_Receiving];
-                [self _insertPanesForCategory:AIPref_Emoticons intoView:view_Messages_Emoticons];
+                [self _insertPanesForCategory:AIPref_Messages_Display intoView:view_Messages_Display showContainers:YES];
+                [self _insertPanesForCategory:AIPref_Messages_Sending intoView:view_Messages_Sending showContainers:YES];
+                [self _insertPanesForCategory:AIPref_Messages_Receiving intoView:view_Messages_Receiving showContainers:YES];
+                [self _insertPanesForCategory:AIPref_Emoticons intoView:view_Messages_Emoticons showContainers:YES];
                 [self _sizeWindowToFitTabView:tabView_messages];
             break;
             case 4:
-                [self _insertPanesForCategory:AIPref_Status_Away intoView:view_Status_Away];
-                [self _insertPanesForCategory:AIPref_Status_Idle intoView:view_Status_Idle];
+                [self _insertPanesForCategory:AIPref_Status_Away intoView:view_Status_Away showContainers:YES];
+                [self _insertPanesForCategory:AIPref_Status_Idle intoView:view_Status_Idle showContainers:YES];
                 [self _sizeWindowToFitTabView:tabView_status];
             break;
             case 5:
-                [self _insertPanesForCategory:AIPref_Dock_General intoView:view_Dock_General];
-                [self _insertPanesForCategory:AIPref_Dock_Icon intoView:view_Dock_Icon];
+                [self _insertPanesForCategory:AIPref_Dock_General intoView:view_Dock_General showContainers:YES];
+                [self _insertPanesForCategory:AIPref_Dock_Icon intoView:view_Dock_Icon showContainers:YES];
                 [self _sizeWindowToFitTabView:tabView_dock];
             break;
             case 6:
-                [self _insertPanesForCategory:AIPref_Sound intoView:view_Sound];
+                [self _insertPanesForCategory:AIPref_Sound intoView:view_Sound showContainers:YES];
                 [self _sizeWindowToFitFlatView:view_Sound];
             break;
             case 7:
-                [self _insertPanesForCategory:AIPref_Alerts	intoView:view_Alerts];
+                [self _insertPanesForCategory:AIPref_Alerts intoView:view_Alerts showContainers:NO];
                 [self _sizeWindowToFitFlatView:view_Alerts];
             break;
         }
@@ -282,7 +282,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
 
 }
 
-- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIFlippedCategoryView *)inView
+- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIFlippedCategoryView *)inView showContainers:(BOOL)includeContainers
 {
     NSEnumerator	*enumerator;
     AIPreferencePane	*pane;
@@ -304,7 +304,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     //Add their views
     enumerator = [paneArray objectEnumerator];
     while(pane = [enumerator nextObject]){
-        NSView	*paneView = [pane view];
+        NSView	*paneView = [pane viewWithContainer:includeContainers];
 
         //Add the view
         if([paneView superview] != inView){
@@ -360,13 +360,14 @@ static AIPreferenceWindowController *sharedInstance = nil;
     int		height = [(AIFlippedCategoryView *)view desiredHeight];
 
     //Add in window frame padding
-    height += yPadding;
+    height += yPadding - FLAT_PADDING_OFFSET;
 
     //Adjust our window's frame
     frame.origin.y += frame.size.height - height;
     frame.size.height = height;
     [[self window] setFrame:frame display:YES animate:YES];
 }
+
 //Toolbar item methods
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
 {

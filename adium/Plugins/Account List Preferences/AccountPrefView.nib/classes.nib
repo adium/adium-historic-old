@@ -9,22 +9,21 @@
         {
             ACTIONS = {
                 deleteAccount = id; 
-                editAccount = id; 
-                finishEditingAccount = id; 
                 newAccount = id; 
                 selectServiceType = id; 
-                toggleConnection = id; 
+                toggleAutoConnect = id; 
             }; 
             CLASS = AIAccountListPreferencesPlugin; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                accountViewController = id; 
+                "button_autoConnect" = NSButton; 
                 "button_deleteAccount" = NSButton; 
-                "button_editAccount" = NSButton; 
-                "button_toggleAccount" = NSButton; 
-                "panel_editAccount" = NSPanel; 
+                "button_newAccount" = NSButton; 
                 "popupMenu_serviceList" = NSPopUpButton; 
-                "scrollView_accountList" = NSScrollView; 
-                "tableView_accountList" = NSTableView; 
+                "scrollView_accountList" = AIAutoScrollView; 
+                "tabView_auxilary" = NSTabView; 
+                "tableView_accountList" = AIAlternatingRowTableView; 
                 "view_accountDetails" = NSView; 
                 "view_accountPreferences" = NSView; 
             }; 
@@ -56,12 +55,14 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSTableView; 
         }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
             CLASS = AIMTOC2Service; 
             LANGUAGE = ObjC; 
             OUTLETS = {"view_preferences" = NSView; }; 
             SUPERCLASS = AIService; 
         }, 
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {CLASS = AIPlugin; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIService; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }

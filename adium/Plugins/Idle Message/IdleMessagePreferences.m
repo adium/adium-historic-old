@@ -73,7 +73,7 @@
 - (void)configureView
 {
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_MESSAGE];
-    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"IdleMessage" account:nil]];
+    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"IdleMessage" account:nil]];
 
     //Idle message
     [checkBox_enableIdleMessage setState:[[preferenceDict objectForKey:KEY_IDLE_MESSAGE_ENABLED] boolValue]];
@@ -96,7 +96,7 @@
 //User finished editing their idle message
 - (void)textDidEndEditing:(NSNotification *)notification;
 {
-    [[owner accountController] setStatusObject:[[textView_idleMessage textStorage] dataRepresentation] forKey:@"IdleMessage" account:nil];
+    [[owner accountController] setProperty:[[textView_idleMessage textStorage] dataRepresentation] forKey:@"IdleMessage" account:nil];
     [[owner preferenceController] setPreference:[[textView_idleMessage textStorage] dataRepresentation]
                                          forKey:KEY_IDLE_MESSAGE
                                           group:PREF_GROUP_IDLE_MESSAGE];

@@ -131,7 +131,6 @@ typedef enum {
 //Notifications
 #define Account_ListChanged 					@"Account_ListChanged"
 #define Account_PropertiesChanged				@"Account_PropertiesChanged"
-#define Account_StatusChanged					@"Account_StatusChanged"
 #define Account_HandlesChanged					@"Account_HandlesChanged"
 #define ListObject_AttributesChanged				@"ListObject_AttributesChanged"
 #define ListObject_StatusChanged				@"ListObject_StatusChanged"
@@ -196,8 +195,6 @@ typedef enum {
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
 @end
 
-
-
 @protocol AITextEntryView //Handles any attributed text entry
 - (NSAttributedString *)attributedString;
 - (void)setAttributedString:(NSAttributedString *)inAttributedString;
@@ -223,7 +220,7 @@ typedef enum {
 
 @protocol AIAccountViewController <NSObject>
 - (NSView *)view;
-- (void)saveChanges;
+- (NSArray *)auxilaryTabs;
 - (void)configureViewAfterLoad;
 @end
 
@@ -301,11 +298,13 @@ typedef enum {
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService;
 
-//Account status
-- (void)setStatusObject:(id)inValue forKey:(NSString *)key account:(AIAccount *)inAccount;
-- (id)statusObjectForKey:(NSString *)key account:(AIAccount *)inAccount;
+//Account properties
+- (void)setProperty:(id)inValue forKey:(NSString *)key account:(AIAccount *)inAccount;
+- (id)propertyForKey:(NSString *)key account:(AIAccount *)inAccount;
 
 //Account password storage
+- (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount;
+- (NSString *)passwordForAccount:(AIAccount *)inAccount;
 - (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector;
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount;
 

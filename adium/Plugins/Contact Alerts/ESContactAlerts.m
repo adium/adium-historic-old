@@ -250,7 +250,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
         NSEnumerator * accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
         AIAccount * account;
-        while( (account = [accountEnumerator nextObject]) && ([[account statusObjectForKey:@"Status"] intValue] == STATUS_OFFLINE) );
+        while( (account = [accountEnumerator nextObject]) && ([[account propertyForKey:@"Status"] intValue] == STATUS_OFFLINE) );
         if (account) //if we found an online account, set it as the default account choice
         {
             NSString * accountID = [account accountID];
@@ -306,7 +306,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
         NSEnumerator * accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
         AIAccount * account;
-        while( (account = [accountEnumerator nextObject]) && ([[account statusObjectForKey:@"Status"] intValue] == STATUS_OFFLINE) );
+        while( (account = [accountEnumerator nextObject]) && ([[account propertyForKey:@"Status"] intValue] == STATUS_OFFLINE) );
         if (account) //if we found an online account, set it as the default account choice
             [popUp_message_actionDetails_one selectItemAtIndex:[popUp_message_actionDetails_one indexOfItemWithRepresentedObject:account]];
         [self saveMessageDetails:nil];

@@ -1,6 +1,7 @@
 {
     IBClasses = (
         {
+            ACTIONS = {saveChanges = id; }; 
             CLASS = AIOscarAccountViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {"textField_handle" = NSTextField; "view_accountView" = NSView; }; 

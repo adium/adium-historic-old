@@ -20,7 +20,7 @@
 
 
 @interface AIDockAccountStatusPlugin (PRIVATE)
-- (void)accountStatusChanged:(NSNotification *)notification;
+- (void)accountPropertiesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIDockAccountStatusPlugin
@@ -35,11 +35,11 @@
 
     //Observe account status changed notification
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
 
     //Observer preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self accountStatusChanged:nil];
+    [self accountPropertiesChanged:nil];
 }
 
 - (void)uninstallPlugin
@@ -52,18 +52,18 @@
 
 - (void)accountListChanged:(NSNotification *)notification
 {
-    [self accountStatusChanged:nil];
+    [self accountPropertiesChanged:nil];
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if( ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0) && ([(NSString *)[[notification userInfo] objectForKey:@"Key"] compare:KEY_ACTIVE_DOCK_ICON] == 0) )
     {
-        [self accountStatusChanged:nil];
+        [self accountPropertiesChanged:nil];
     }
 }
 
-- (void)accountStatusChanged:(NSNotification *)notification
+- (void)accountPropertiesChanged:(NSNotification *)notification
 {
     NSString	*key = [[notification userInfo] objectForKey:@"Key"];
     AIAccount	*changedAccount = [notification object];
@@ -75,7 +75,7 @@
 
         enumerator = [[[owner accountController] accountArray] objectEnumerator];
         while((account = [enumerator nextObject])){
-            int status = [[account statusObjectForKey:@"Status"] intValue];
+            int status = [[account propertyForKey:@"Status"] intValue];
 
             if(status == STATUS_ONLINE){
                 onlineAccounts++;
@@ -100,7 +100,7 @@
 
     if(notification == nil || [key compare:@"AwayMessage"] == 0){
         if(changedAccount == nil){ //Global status change
-            BOOL away = ([[owner accountController] statusObjectForKey:@"AwayMessage" account:nil] != nil);
+            BOOL away = ([[owner accountController] propertyForKey:@"AwayMessage" account:nil] != nil);
 
             if(away && !awayState){
                 awayState = [[owner dockController] setIconStateNamed:@"Away"];
@@ -114,7 +114,7 @@
 
     if(notification == nil || [key compare:@"IdleSince"] == 0){
         if(changedAccount == nil){ //Global status change
-            BOOL idle = ([[owner accountController] statusObjectForKey:@"IdleSince" account:nil] != nil);
+            BOOL idle = ([[owner accountController] propertyForKey:@"IdleSince" account:nil] != nil);
 
             if(idle && !idleState){
                 idleState = [[owner dockController] setIconStateNamed:@"Idle"];

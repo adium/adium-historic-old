@@ -20,14 +20,18 @@
             SUPERCLASS = AIAccount; 
         }, 
         {
-            ACTIONS = {togglePasswordStorage = id; }; 
+            ACTIONS = {preferenceChanged = id; userNameChanged = id; }; 
             CLASS = AIMTOC2AccountViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_savePassword" = NSButton; 
+                "textField_fullName" = NSTextField; 
                 "textField_handle" = NSTextField; 
+                "textField_host" = NSTextField; 
                 "textField_password" = NSTextField; 
+                "textField_port" = NSTextField; 
+                "textView_textProfile" = NSTextView; 
                 "view_accountView" = NSView; 
+                "view_auxilaryTabView" = NSTabView; 
             }; 
             SUPERCLASS = NSObject; 
         }, 
