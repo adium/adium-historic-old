@@ -199,7 +199,8 @@
 	// Sort the list objects, so we know what order the tabs should have
 	[[[adium contactController] activeSortController] sortListObjects:listObjectArray];
 
-	enumerator = [[tabView_customTabs tabCells] objectEnumerator];
+	//We're going to be effectively changing the tab cell array.  Using an enumerator on it directly is therefore a potentially bad idea.
+	enumerator = [[[[tabView_customTabs tabCells] copy] autorelease] objectEnumerator];
 
 	// Run through all tab cells and move them to the right place
 	while( tabCell = [enumerator nextObject] ) {
