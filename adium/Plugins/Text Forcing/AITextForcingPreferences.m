@@ -18,7 +18,6 @@
 
 @interface AITextForcingPreferences (PRIVATE)
 - (void)changeFont:(id)sender;
-- (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;
 @end
 
 @implementation AITextForcingPreferences
@@ -48,7 +47,7 @@
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_TEXT_FORCING];
     
     //Font
-    [self showFont:[[preferenceDict objectForKey:KEY_FORCE_DESIRED_FONT] representedFont] inField:textField_desiredFont];
+    [textField_desiredFont setFont:[[preferenceDict objectForKey:KEY_FORCE_DESIRED_FONT] representedFont]];
     [checkBox_forceFont setState:[[preferenceDict objectForKey:KEY_FORCE_FONT] boolValue]];
     
     //Text
@@ -130,18 +129,8 @@
     NSFont		*contactListFont = [fontManager convertFont:[fontManager selectedFont]];
 
     //Update the displayed font string & preferences
-    [self showFont:contactListFont inField:textField_desiredFont];
+    [textField_desiredFont setFont:contactListFont];
     [[adium preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_FORCE_DESIRED_FONT group:PREF_GROUP_TEXT_FORCING];
-}
-
-//Display a font name in our text field
-- (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField
-{
-    if(inFont){
-        [inTextField setStringValue:[NSString stringWithFormat:@"%@ %g", [inFont fontName], [inFont pointSize]]];
-    }else{
-        [inTextField setStringValue:@""];
-    }
 }
 
 @end

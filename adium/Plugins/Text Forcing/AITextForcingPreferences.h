@@ -14,10 +14,11 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @class AIColorSelectionPopUpButton;
+@class JVFontPreviewField;
 
 @interface AITextForcingPreferences : AIPreferencePane {
     IBOutlet	NSButton                    *checkBox_forceFont;
-    IBOutlet	NSTextField                 *textField_desiredFont;
+    IBOutlet	JVFontPreviewField          *textField_desiredFont;
     IBOutlet	NSButton                    *button_setFont;
 
     IBOutlet	NSButton                    *checkBox_forceTextColor;
