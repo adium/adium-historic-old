@@ -11,33 +11,33 @@
 #define SINGLELINE_WINDOW_NIB   @"GaimSinglelineRequestWindow"
 
 @interface ESGaimRequestWindowController (PRIVATE)
-- (void)showWindowWithDict:(NSDictionary *)infoDict multiline:(BOOL)multiline masked:(BOOL)inMasked;
+- (void)showWindowWithDict:(NSDictionary *)infoDict multiline:(BOOL)multiline;
 @end
 
 @implementation ESGaimRequestWindowController
  
-+ (void)showInputWindowWithDict:(NSDictionary *)infoDict multiline:(BOOL)multiline masked:(BOOL)masked
++ (void)showInputWindowWithDict:(NSDictionary *)infoDict
 {
 	ESGaimRequestWindowController	*requestWindowController;
+	BOOL							multiline = [[infoDict objectForKey:@"Multiline"] boolValue];
 	
 	requestWindowController = [[self alloc] initWithWindowNibName:(multiline ? MULTILINE_WINDOW_NIB : SINGLELINE_WINDOW_NIB)
 														 withDict:infoDict
-														multiline:multiline
-														   masked:masked];
+														multiline:multiline];
 	
 	[requestWindowController showWindow:nil];
 }
 
 //Init
-- (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)infoDict multiline:(BOOL)multiline masked:(BOOL)masked
+- (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)infoDict multiline:(BOOL)multiline
 {
     [super initWithWindowNibName:windowNibName];
-	[self showWindowWithDict:infoDict multiline:multiline masked:masked];
+	[self showWindowWithDict:infoDict multiline:multiline];
 	
     return(self);
 }
 
-- (void)showWindowWithDict:(NSDictionary *)infoDict multiline:(BOOL)multiline masked:(BOOL)inMasked
+- (void)showWindowWithDict:(NSDictionary *)infoDict multiline:(BOOL)multiline
 {	
 	NSRect  oldFrame, newFrame;
 	float   changeInTextHeight = 0;

@@ -19,7 +19,7 @@
 	NSValue			*userDataValue;
 }
 
-+ (void)showInputWindowWithDict:(NSDictionary *)infoDict multiline:(BOOL)multiline masked:(BOOL)masked;
-- (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)infoDict multiline:(BOOL)multiline masked:(BOOL)masked;
++ (void)showInputWindowWithDict:(NSDictionary *)infoDict;
+- (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)infoDict multiline:(BOOL)multiline;
 - (IBAction)pressedButton:(id)sender;
 @end

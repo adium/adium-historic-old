@@ -64,12 +64,12 @@ static BOOL didInitOscar = NO;
 														   attachmentsAsText:YES]));
 }
 */
-//Override _contactWithUID to mark mobile and ICQ users as such via the displayServiceID
-- (AIListContact *)_contactWithUID:(NSString *)sourceUID
+//Override _mainThreadContactWithUID to mark mobile and ICQ users as such via the displayServiceID
+- (AIListContact *)_mainThreadContactWithUID:(NSString *)sourceUID
 {
 	AIListContact   *contact;
 	
-	contact = [super _contactWithUID:sourceUID];
+	contact = [super _mainThreadContactWithUID:sourceUID];
 	
 	if (![contact statusObjectForKey:@"DisplayServiceID"]){
 		BOOL			isICQ, isMobile;
@@ -78,11 +78,15 @@ static BOOL didInitOscar = NO;
 		if ( (isICQ = (firstCharacter >= '0' && firstCharacter <= '9')) || (isMobile = (firstCharacter == '+')) ) {
 			if (isICQ){
 				if (!ICQServiceID) ICQServiceID = @"ICQ";
-				[contact setStatusObject:ICQServiceID forKey:@"DisplayServiceID" notify:YES];
+				[contact setStatusObject:ICQServiceID forKey:@"DisplayServiceID" notify:NO];
 			}else{
 				if (!MobileServiceID) MobileServiceID = @"Mobile";
-				[contact setStatusObject:MobileServiceID forKey:@"DisplayServiceID" notify:YES];
+				[contact setStatusObject:MobileServiceID forKey:@"DisplayServiceID" notify:NO];
 			}
+			//Apply any changes
+			[contact performSelectorOnMainThread:@selector(notifyOfChangedStatusNumberSilently:)
+										 withObject:[NSNumber numberWithBool:silentAndDelayed]
+									  waitUntilDone:NO];
 		}
 	}
 	
@@ -91,7 +95,7 @@ static BOOL didInitOscar = NO;
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
 {
-	if (([disconnectionError rangeOfString:@"Incorrect nickname or password."].location != NSNotFound)) {
+	if (disconnectionError && ([disconnectionError rangeOfString:@"Incorrect nickname or password."].location != NSNotFound)) {
 		[[adium accountController] forgetPasswordForAccount:self];
 	}
 	
@@ -307,7 +311,10 @@ static BOOL didInitOscar = NO;
 			}
 		}
 		
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+		//Apply any changes
+		[theContact performSelectorOnMainThread:@selector(notifyOfChangedStatusNumberSilently:)
+									 withObject:[NSNumber numberWithBool:silentAndDelayed]
+								  waitUntilDone:NO];
 	}
 }
 
@@ -379,7 +386,9 @@ aim_srv_setavailmsg(od->sess, text);
 	gaim_xfer_request(xfer);
 
     //tell the fileTransferController to display appropriately
-    [[adium fileTransferController] beganFileTransfer:fileTransfer];
+    [[adium fileTransferController] performSelectorOnMainThread:@selector(beganFileTransfer:)
+													 withObject:fileTransfer
+												  waitUntilDone:NO];
 }
 
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer

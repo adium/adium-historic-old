@@ -10,8 +10,8 @@
 @class AIServiceType;
 
 @interface CBGaimServicePlugin : AIPlugin{
-	id  eventLoopAdapter;
-	
+	NSConnection	*kitConnection;
+
     id  OscarService;
     id  GaduGaduService;
     id  JabberService;
@@ -27,4 +27,5 @@
 - (void)removeAccount:(GaimAccount *)gaimAcct;
 - (NSDictionary *)systemSOCKSSettingsDictionary;
 - (void)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;;
+
 @end

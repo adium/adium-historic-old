@@ -6,6 +6,12 @@
 //  Created by Scott Lamb on Sun Nov 2 2003.
 //
 
+
+@protocol GaimThread
+- (void)connect:(id)account;
+- (void)disconnect:(id)account;
+@end
+
 /*!
  * @class SLGaimCocoaAdapter
  * Singleton to run libgaim from a Cocoa event loop.
@@ -13,7 +19,11 @@
  * where you initialize the gaim core and gaim will be its events
  * from Cocoa.
  **/
-@interface SLGaimCocoaAdapter : NSObject {
+@interface SLGaimCocoaAdapter : NSObject<GaimThread> {
 }
+
++ (void)createThreadedGaimCocoaAdapter:(NSArray *)portArray;
+- (void)connect:(id)account;
+- (void)disconnect:(id)account;
 
 @end
