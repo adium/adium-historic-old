@@ -31,8 +31,18 @@
 - (NSMenu *)_contactNameMenu;
 @end
 
+/*
+ * @class AIAliasSupportPlugin
+ * @brief Plugin to handle applying aliases to contacts
+ *
+ * This plugin applies aliases to contacts.  It also also responsible for generating the "long display name"
+ * which may include some combination of alias and screen name which is used in the contact list.
+ */
 @implementation AIAliasSupportPlugin
 
+/*
+ * @brief Install plugin
+ */
 - (void)installPlugin
 {
     //Register our default preferences
@@ -63,6 +73,9 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DISPLAYFORMAT];	
 }
 
+/*
+ * @brief Uninstall plugin
+ */
 - (void)uninstallPlugin
 {
     [[adium contactController] unregisterListObjectObserver:self];
@@ -72,6 +85,11 @@
 	[menu_contactSubmenu release];
 }
 
+/*
+ * @brief Change the format for the long display name used in the contact list
+ *
+ * @param sender An NSMenuItem which was clicked. Its tag should be an AIDisplayNameType.
+ */
 -(IBAction)changeFormat:(id)sender
 {
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]]
@@ -79,7 +97,11 @@
 										  group:PREF_GROUP_DISPLAYFORMAT];
 }
 
-//Called as contacts are created, load their alias
+/*
+ * @brief Update list object
+ *
+ * As contacts are created or a formattedUID is received, update their alias, display name, and long display name
+ */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
     if((inModifiedKeys == nil) || ([inModifiedKeys containsObject:@"FormattedUID"])){
@@ -93,16 +115,22 @@
 	return(nil);
 }
 
+/*
+ * @brief Preferences changed. Our only preference is for the Long Display Name format
+ *
+ * Update the checked menu item since this is not done automatically.
+ * Update all list objects so we make use of the new long display format preference.
+ */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	// Clear old checkmark
+	//Clear old checkmark
 	[[menu_contactSubmenu itemWithTag:displayFormat] setState:NSOffState];
 	
-	//load new displayFormat
+	//Load new displayFormat
 	displayFormat = [[prefDict objectForKey:@"Long Display Format"] intValue]; 
 	
-	// Set new checkmark
+	//Set new checkmark
 	[[menu_contactSubmenu itemWithTag:displayFormat] setState:NSOnState];
 	
 	if(firstTime){
@@ -115,6 +143,16 @@
 	}
 }
 
+/*
+ * @brief Notification was posted to apply a specific alias
+ *
+ * This is used from elsewhere in Adium to request the alias of the object be updated. It's a bit ugly, really.
+ * The object of the notification is an AIListObject.
+ * The userInfo is a dictionary with an NSNumber on key @"Notify" indicating if a 'changed' notification should be sent out as a result.
+ *		If this is NO, it is equivalent to a 'silent' update.
+ * The user info dictionary also has the desired NSString alias on the key @"Alias".
+ *		If this is not specified, the object's preference is reloaded.
+ */
 - (void)applyAliasRequested:(NSNotification *)notification
 {
 	AIListObject	*object = [notification object];
@@ -122,7 +160,7 @@
 	
 	NSNumber		*shouldNotifyNumber = [userInfo objectForKey:@"Notify"];
 	
-	NSString		*alias = [[notification userInfo] objectForKey:@"Alias"];
+	NSString		*alias = [userInfo objectForKey:@"Alias"];
 	if (!alias){
 		alias = [object preferenceForKey:@"Alias"
 								   group:PREF_GROUP_ALIASES 
@@ -135,7 +173,15 @@
 }
 
 //Private ---------------------------------------------------------------------------------------
-//Apply an alias to an object (Does not save the alias!)
+/*
+ * @brief Apply an alias to an object
+ *
+ * This does not save any preferences.
+ *
+ * @param inAlias The alias to apply. 
+ * @param inObject The object to which the alias should be applied
+ * @param notify YES if a notification should be sent out after the alias is applied
+ */
 - (NSSet *)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject notify:(BOOL)notify
 {
 	NSSet				*modifiedAttributes;
@@ -156,11 +202,11 @@
 	if ([inObject isKindOfClass:[AIListContact class]]){
 		switch(displayFormat)
 		{
-			case DISPLAY_NAME:
+			case AINameFormat_DisplayName:
 				longDisplayName = displayName;
 				break;
 				
-			case DISPLAY_NAME_SCREEN_NAME:
+			case AINameFormat_DisplayName_ScreenName:
 				formattedUID = [inObject formattedUID];
 				
 				if(!displayName || !formattedUID || [displayName isEqualToString:formattedUID]){
@@ -170,7 +216,7 @@
 				}
 					break;
 				
-			case SCREEN_NAME_DISPLAY_NAME:
+			case AINameFormat_ScreenName_DisplayName:
 				formattedUID = [inObject formattedUID];
 				if(!displayName || !formattedUID || [displayName isEqualToString:formattedUID]){
 					longDisplayName = displayName;
@@ -179,7 +225,7 @@
 				}
 					break;
 				
-			case SCREEN_NAME:
+			case AINameFormat_ScreenName:
 				//??? - How should this be handled for metaContacts?  What if there are no aliases set?
 				formattedUID = [inObject formattedUID];
 				longDisplayName = (formattedUID ? formattedUID : displayName);
@@ -218,28 +264,28 @@
 																	 target:self
 																	 action:@selector(changeFormat:)
 															  keyEquivalent:@""] autorelease];
-    [menuItem setTag:DISPLAY_NAME];
+    [menuItem setTag:AINameFormat_DisplayName];
     [choicesMenu addItem:menuItem];
 	
     menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ALIAS_SCREENNAME
 																	 target:self
 																	 action:@selector(changeFormat:)
 															  keyEquivalent:@""] autorelease];
-    [menuItem setTag:DISPLAY_NAME_SCREEN_NAME];
+    [menuItem setTag:AINameFormat_DisplayName_ScreenName];
     [choicesMenu addItem:menuItem];
 	
     menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:SCREENNAME_ALIAS
 																	 target:self
 																	 action:@selector(changeFormat:)
 															  keyEquivalent:@""] autorelease];
-    [menuItem setTag:SCREEN_NAME_DISPLAY_NAME];
+    [menuItem setTag:AINameFormat_ScreenName_DisplayName];
     [choicesMenu addItem:menuItem];
 	
     menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:SCREENNAME
 																	 target:self
 																	 action:@selector(changeFormat:)
 															  keyEquivalent:@""] autorelease];
-    [menuItem setTag:SCREEN_NAME];
+    [menuItem setTag:AINameFormat_ScreenName];
     [choicesMenu addItem:menuItem];
 	
 	return choicesMenu;
