@@ -40,7 +40,7 @@ aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
 yahooIMSpec	ymsgr:sendim\?.+
 
 
-%option noyywrap 8bit caseless never-interactive prefix="SH" debug
+%option noyywrap 8bit caseless never-interactive prefix="SH"
 
 %x CANONICAL
 %%

@@ -52,10 +52,9 @@ static NSMutableCharacterSet *endSet = nil;
 {
     validStatus = SH_URL_INVALID; // assume the URL is invalid
     SH_BUFFER_STATE buf;  // buffer for flex to scan from
-
+    unsigned utf8Length = strlen([inString UTF8String]); // length of the string in utf-8
     // initialize the buffer (flex automatically switches to the buffer in this function)
     buf = SH_scan_string([inString UTF8String]);
-    fprintf(stderr,"scanning string: \"%s\" in flex",[inString UTF8String]);
 
     // call flex to parse the input
     validStatus = SHlex();
@@ -67,15 +66,14 @@ static NSMutableCharacterSet *endSet = nil;
         
         // check that the whole string was matched by flex.
         // this prevents silly things like "blah...com" from being seen as links
-        NSLog(@"inString length: %u  SHleng: %u", [inString length], SHleng);
-        if(SHleng == [inString length]){
+        if(SHleng == utf8Length){
             return YES;
         }
     // condition for degenerate URL's (A.K.A. URI's sans specifiers), requres strict checking to be NO.
     }else if((validStatus == SH_URL_DEGENERATE || validStatus == SH_MAILTO_DEGENERATE) && !useStrictChecking){
         SH_delete_buffer(buf);
         buf = NULL;
-        if(SHleng == [inString length]){
+        if(SHleng == utf8Length){
             return YES;
         }
     // if it ain't vaild, and it ain't degenerate, then it's invalid.
