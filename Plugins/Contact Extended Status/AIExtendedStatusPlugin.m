@@ -17,29 +17,20 @@
 
 - (void)installPlugin
 {
-	//Set up our initial preferences
-	[self preferencesChanged:nil];
-	
-	//Observe preferences changes
-    [[adium notificationCenter] addObserver:self 
-								   selector:@selector(preferencesChanged:) 
-									   name:Preference_GroupChanged 
-									 object:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_LAYOUT]){
-		EXTENDED_STATUS_STYLE statusStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_STYLE
-																					  group:PREF_GROUP_LIST_LAYOUT] intValue];
-		showStatus = ((statusStyle == STATUS_ONLY) || (statusStyle == IDLE_AND_STATUS));
-		showIdle = ((statusStyle == IDLE_ONLY) || (statusStyle == IDLE_AND_STATUS));
-		
-		if (notification == nil){
-			[[adium contactController] registerListObjectObserver:self];
-		}else{
-			[[adium contactController] updateAllListObjectsForObserver:self];
-		}
+	EXTENDED_STATUS_STYLE statusStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_STYLE] intValue];
+	showStatus = ((statusStyle == STATUS_ONLY) || (statusStyle == IDLE_AND_STATUS));
+	showIdle = ((statusStyle == IDLE_ONLY) || (statusStyle == IDLE_AND_STATUS));
+	
+	if(!group){
+		[[adium contactController] registerListObjectObserver:self];
+	}else{
+		[[adium contactController] updateAllListObjectsForObserver:self];
 	}
 }
 

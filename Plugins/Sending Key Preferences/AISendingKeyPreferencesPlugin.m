@@ -33,9 +33,7 @@
     [[adium contentController] registerTextEntryFilter:self];
 
     //Observe preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
-
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
 }
 
 //
@@ -51,18 +49,17 @@
 }
 
 //Update all views in response to a preference change
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_GENERAL]){
-        NSEnumerator	*enumerator;
-        id		entryView;
-
-        //Set sending keys of all open views
-        enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
-        while(entryView = [enumerator nextObject]){
-            [self _configureSendingKeysForObject:entryView];
-        }
-    }
+	NSEnumerator	*enumerator;
+	id				entryView;
+	
+	//Set sending keys of all open views
+	enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
+	while(entryView = [enumerator nextObject]){
+		[self _configureSendingKeysForObject:entryView];
+	}
 }
 
 //Configure the message sending keys
