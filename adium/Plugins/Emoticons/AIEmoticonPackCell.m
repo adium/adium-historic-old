@@ -70,21 +70,21 @@ static  float   distanceBetweenEmoticons = 0;
     AIEmoticon      *emoticon;
     NSColor         *textColor;
     int             x;
-    
-	//Indent
-    cellFrame.origin.x += EMOTICON_LEFT_MARGIN;
-	
+
 	//Draw the checkbox
 	NSSize  checkSize = [packCheckCell cellSize];
 	float   checkHeight = checkSize.height;
-	NSRect  checkFrame = NSMakeRect(cellFrame.origin.x,
-									cellFrame.origin.y + cellFrame.size.height - (checkHeight-2) - EMOTICON_BOTTOM_MARGIN,
+	NSRect  checkFrame = NSMakeRect(cellFrame.origin.x+EMOTICON_LEFT_ICON_MARGIN,
+									cellFrame.origin.y,
 									checkSize.width,
 									checkHeight);
 
 	[packCheckCell setState:[pack isEnabled]];
 	[packCheckCell drawWithFrame:checkFrame inView:controlView];
     
+	//Indent
+    cellFrame.origin.x += EMOTICON_LEFT_MARGIN;
+	
     //Determine the correct text color
     if([self isHighlighted]){
         textColor = [NSColor alternateSelectedControlTextColor];
@@ -96,15 +96,14 @@ static  float   distanceBetweenEmoticons = 0;
     NSDictionary    *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
         [NSFont boldSystemFontOfSize:12], NSFontAttributeName, 
         textColor, NSForegroundColorAttributeName, nil];
-    [[pack name] drawAtPoint:NSMakePoint(cellFrame.origin.x, cellFrame.origin.y) withAttributes:attributes];
-
-	//Indent so the preview emoticons don't overlap the check
-	cellFrame.origin.x += [packCheckCell cellSize].width;
+    [[pack name] drawAtPoint:NSMakePoint(cellFrame.origin.x + [packCheckCell cellSize].width + EMOTICON_LEFT_ICON_MARGIN,
+										 cellFrame.origin.y) 
+			  withAttributes:attributes];
 		
     //Display a few preview emoticons
     x = EMOTICON_LEFT_ICON_MARGIN;
     enumerator = [[pack emoticons] objectEnumerator];
-    while((x < cellFrame.size.width) && (emoticon = [enumerator nextObject])){
+    while((x < (cellFrame.size.width-EMOTICON_LEFT_ICON_MARGIN)) && (emoticon = [enumerator nextObject])){
         NSImage *image = [emoticon image];
         NSSize  imageSize = [image size];
         NSRect  destRect;
@@ -150,8 +149,8 @@ static  float   distanceBetweenEmoticons = 0;
 	//Draw the checkbox
 	NSSize		checkSize = [packCheckCell cellSize];
 	float		checkHeight = checkSize.height;
-	NSRect		checkFrame = NSMakeRect(cellFrame.origin.x,
-										cellFrame.origin.y + cellFrame.size.height - (checkHeight-2) - EMOTICON_BOTTOM_MARGIN,
+	NSRect		checkFrame = NSMakeRect(cellFrame.origin.x+EMOTICON_LEFT_ICON_MARGIN,
+										cellFrame.origin.y,
 										checkSize.width,
 										checkHeight);
 	
