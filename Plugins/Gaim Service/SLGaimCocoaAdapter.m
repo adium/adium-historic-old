@@ -291,7 +291,12 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 
 		// Need to start a new chat, associating with the GaimConversation
 		chat = [accountLookup(account) mainThreadChatWithContact:sourceContact];
-		
+
+		NSCAssert3(chat != nil, @"Got nil chat in lookup for %@ on %@ (%x)",
+				   sourceContact,
+				   accountLookup(account),
+				   account);
+
 		//Associate the GaimConversation with the AIChat
 		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
 		conv->ui_data = [chat retain];
