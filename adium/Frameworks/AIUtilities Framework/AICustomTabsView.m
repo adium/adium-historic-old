@@ -240,7 +240,6 @@ static  NSImage			*tabDivider = nil;
 		
 		//Smoothly animate into place
 		if(animate){
-			[self resetCursorTracking];
 			[self smoothlyArrangeTabs];
 		}else{
 			[self rebuildTabCells];
@@ -501,6 +500,9 @@ static  NSImage			*tabDivider = nil;
 		index++;
 	}
     
+	//When we finish, update the cursor tracking
+	if(finished) [self resetCursorTracking];
+	
     [self setNeedsDisplay:YES];
     return(finished);
 }
@@ -794,7 +796,6 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		//Stop tracking the drag, and move our tabs back to where they belong
 		[[AICustomTabDragging sharedInstance] setDestinationTabView:nil];
 		[self smoothlyArrangeTabs];
-		[self resetCursorTracking];
 		
 		//Pass event along to the windowController
 		if([[[self window] windowController] respondsToSelector:@selector(draggingExited:)]){
