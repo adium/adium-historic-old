@@ -221,7 +221,6 @@
 - (void)setUserIconSize:(int)inSize
 {
 	userIconSize = NSMakeSize(inSize, inSize);
-	[AIUserIcons setListUserIconSize:userIconSize];
 }
 - (int)userIconSize{
 	return(userIconSize.height);
@@ -529,7 +528,7 @@
 //Contact user image - AIUserIcons should already have been informed of our desired size by setUserIconSize: above.
 - (NSImage *)userIconImage
 {
-	return([AIUserIcons listUserIconForContact:(AIListContact *)listObject]);
+	return([AIUserIcons listUserIconForContact:(AIListContact *)listObject size:userIconSize]);
 }
 
 //Contact status image
