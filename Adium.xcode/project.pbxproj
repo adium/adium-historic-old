@@ -4833,36 +4833,6 @@
 			settings = {
 			};
 		};
-		34A1A74A07863132005FA1A5 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AILocalizationButtonCell.m;
-			path = "Frameworks/Adium Framework/AILocalizationButtonCell.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A1A74B07863132005FA1A5 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AILocalizationButtonCell.h;
-			path = "Frameworks/Adium Framework/AILocalizationButtonCell.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A1A74C07863132005FA1A5 = {
-			fileRef = 34A1A74A07863132005FA1A5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34A1A74D07863132005FA1A5 = {
-			fileRef = 34A1A74B07863132005FA1A5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34A1A7960786348F005FA1A5 = {
 			children = (
 				F55B416803AB8C0501A8010A,
@@ -6484,7 +6454,6 @@
 				34C68B5A0778FC6400EB423C,
 				07836212077B0CA90032D975,
 				4B2D5FBA0781C1F500315A60,
-				34A1A74D07863132005FA1A5,
 				3452A9F807891C8A00C3C494,
 				344F4A4D078DDC9700226DFC,
 				9E399410078E82FE001E09A4,
@@ -7067,7 +7036,6 @@
 				34C68B2C0778FA5C00EB423C,
 				34C68B5B0778FC6400EB423C,
 				4B2D5FBB0781C1F500315A60,
-				34A1A74C07863132005FA1A5,
 				3452A9F907891C8A00C3C494,
 				344F4A4E078DDC9900226DFC,
 				9E399411078E82FE001E09A4,
@@ -8854,8 +8822,6 @@
 				340833EB075C3A7900703011,
 				34D1897D076114C00075A380,
 				34D1897E076114C00075A380,
-				34A1A74A07863132005FA1A5,
-				34A1A74B07863132005FA1A5,
 			);
 			isa = PBXGroup;
 			name = "Localization Assistance";
