@@ -35,8 +35,11 @@
     IBOutlet	NSButton	*checkBox_idleAndAway;
     IBOutlet	NSColorWell	*colorWell_idleAndAway;
 
+	IBOutlet	NSButton	*checkBox_offline;
+	IBOutlet	NSColorWell *colorWell_offline;
+	
     IBOutlet	NSButton	*checkBox_unviewedFlash;
-    IBOutlet    NSButton        *checkBox_useCustomColors;
+    IBOutlet    NSButton	*checkBox_useCustomColors;
 
 }
 -(void)customValidator;

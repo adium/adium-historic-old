@@ -39,6 +39,8 @@
     unviewedContentColor = nil;
     onlineColor = nil;
     idleAndAwayColor = nil;
+	offlineColor = nil;
+	
     awayInvertedColor = nil;
     idleInvertedColor = nil;
     signedOffInvertedColor = nil;
@@ -47,6 +49,8 @@
     unviewedContentInvertedColor = nil;
     onlineInvertedColor = nil;
     idleAndAwayInvertedColor = nil;
+	offlineInvertedColor = nil;
+	
     awayLabelColor = nil;
     idleLabelColor = nil;
     signedOffLabelColor = nil;
@@ -55,6 +59,7 @@
     unviewedContentLabelColor = nil;
     onlineLabelColor = nil;
     idleAndAwayLabelColor = nil;
+	offlineLabelColor = nil;
 
     alpha = 100.0;
 
@@ -129,10 +134,14 @@
         }
     }
 
-    //Signed off, signed on, or typing (These do not show if there is unviewed content)
+    //Offline, Signed off, signed on, or typing (These do not show if there is unviewed content)
     if(!color && (!unviewedContentEnabled || !unviewedContent)){
-        if(signedOffEnabled && ([inObject integerStatusObjectForKey:@"Signed Off"] ||
-                                ![inObject integerStatusObjectForKey:@"Online"])){
+		if(offlineEnabled && (![inObject integerStatusObjectForKey:@"Online"] &&
+							  ![inObject integerStatusObjectForKey:@"Signed Off"])){
+			color = offlineColor;
+			invertedColor = offlineInvertedColor;
+			labelColor = offlineLabelColor;		
+		}else if(signedOffEnabled && ([inObject integerStatusObjectForKey:@"Signed Off"])){
             color = signedOffColor;
             invertedColor = signedOffInvertedColor;
             labelColor = signedOffLabelColor;
@@ -146,7 +155,6 @@
             color = typingColor;
             invertedColor = typingInvertedColor;
             labelColor = typingLabelColor;
-            
         }
     }
 
@@ -172,12 +180,12 @@
     }
 
     //Online
-    if(!color && onlineEnabled){
+    if(!color && onlineEnabled && [inObject integerStatusObjectForKey:@"Online"]){
         color = onlineColor;
         invertedColor = onlineInvertedColor;
         labelColor = onlineLabelColor;
     }
-
+	
     //Apply the color
     [[inObject displayArrayForKey:@"Text Color"] setObject:color withOwner:self];
     [[inObject displayArrayForKey:@"Inverted Text Color"] setObject:invertedColor withOwner:self];
@@ -239,6 +247,7 @@
         [unviewedContentColor release];
         [onlineColor release];
         [idleAndAwayColor release];
+		[offlineColor release];
 		
         [signedOffInvertedColor release];
         [signedOnInvertedColor release];
@@ -248,6 +257,7 @@
         [unviewedContentInvertedColor release];
         [onlineInvertedColor release];
         [idleAndAwayInvertedColor release];
+		[offlineInvertedColor release];
 		
         [awayLabelColor release];
         [idleLabelColor release];
@@ -257,7 +267,8 @@
         [unviewedContentLabelColor release];
         [onlineLabelColor release];
         [idleAndAwayLabelColor release];
-        
+        [offlineLabelColor release];
+		
 		//Cache the preference values
         signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
         signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
@@ -267,7 +278,8 @@
         unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
         onlineColor = [[[prefDict objectForKey:KEY_ONLINE_COLOR] representedColor] retain];
         idleAndAwayColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
-		
+		offlineColor = [[[prefDict objectForKey:KEY_OFFLINE_COLOR] representedColor] retain];
+
         signedOffInvertedColor = [[signedOffColor colorWithInvertedLuminance] retain];
         signedOnInvertedColor = [[signedOnColor colorWithInvertedLuminance] retain];
         awayInvertedColor = [[awayColor colorWithInvertedLuminance] retain];
@@ -276,7 +288,8 @@
         unviewedContentInvertedColor = [[unviewedContentColor colorWithInvertedLuminance] retain];
         onlineInvertedColor = [[onlineColor colorWithInvertedLuminance] retain];
         idleAndAwayInvertedColor = [[idleAndAwayColor colorWithInvertedLuminance] retain];
-		
+		offlineInvertedColor = [[offlineColor colorWithInvertedLuminance] retain];
+
         awayLabelColor = [[[prefDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColorWithAlpha:alpha] retain];
         idleLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColorWithAlpha:alpha] retain];
         signedOffLabelColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColorWithAlpha:alpha] retain];
@@ -285,7 +298,8 @@
         unviewedContentLabelColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColorWithAlpha:alpha] retain];
         onlineLabelColor = [[[prefDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColorWithAlpha:alpha] retain];
         idleAndAwayLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColorWithAlpha:alpha] retain];
-		
+		offlineLabelColor = [[[prefDict objectForKey:KEY_LABEL_OFFLINE_COLOR] representedColorWithAlpha:alpha] retain];
+
         //
         awayEnabled = [[prefDict objectForKey:KEY_AWAY_ENABLED] boolValue];
         idleEnabled = [[prefDict objectForKey:KEY_IDLE_ENABLED] boolValue];
@@ -295,6 +309,7 @@
         unviewedContentEnabled = [[prefDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue];
         onlineEnabled = [[prefDict objectForKey:KEY_ONLINE_ENABLED] boolValue];
         idleAndAwayEnabled = [[prefDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue];
+        offlineEnabled = [[prefDict objectForKey:KEY_OFFLINE_ENABLED] boolValue];
 		
         //
         alpha = [[prefDict objectForKey:KEY_STATUS_LABEL_OPACITY] floatValue];

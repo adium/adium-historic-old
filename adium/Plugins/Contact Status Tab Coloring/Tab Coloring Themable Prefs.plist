@@ -18,6 +18,8 @@
     <string>Tab Typing Enabled</string>
     <string>Tab Unviewed Content Color</string>
     <string>Tab Unviewed Content Enabled</string>
+	<string>Tab Offline Color</string>
+	<string>Tab Offline Color Enabled</string>
     <string>Tab Unviewed Flash Enabled</string>
     <string>Tab Use Custom Colors</string>
 </array>

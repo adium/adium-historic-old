@@ -7,6 +7,7 @@
                 "checkBox_away" = NSButton; 
                 "checkBox_idle" = NSButton; 
                 "checkBox_idleAndAway" = NSButton; 
+                "checkBox_offline" = NSButton; 
                 "checkBox_signedOff" = NSButton; 
                 "checkBox_signedOn" = NSButton; 
                 "checkBox_typing" = NSButton; 
@@ -16,6 +17,7 @@
                 "colorWell_away" = NSColorWell; 
                 "colorWell_idle" = NSColorWell; 
                 "colorWell_idleAndAway" = NSColorWell; 
+                "colorWell_offline" = NSColorWell; 
                 "colorWell_signedOff" = NSColorWell; 
                 "colorWell_signedOn" = NSColorWell; 
                 "colorWell_typing" = NSColorWell; 

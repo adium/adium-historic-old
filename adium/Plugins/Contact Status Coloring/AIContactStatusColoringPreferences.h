@@ -47,6 +47,10 @@
     IBOutlet	NSButton	*checkBox_idleAndAway;
     IBOutlet	NSColorWell	*colorWell_idleAndAway;
     IBOutlet	NSColorWell	*colorWell_idleAndAwayLabel;
+	
+    IBOutlet	NSButton	*checkBox_offline;
+    IBOutlet	NSColorWell	*colorWell_offline;
+    IBOutlet	NSColorWell	*colorWell_offlineLabel;
 }
 
 + (AIContactStatusColoringPreferences *)contactStatusColoringPreferences;

@@ -11,6 +11,7 @@
     <string>Unviewed Content Enabled</string>
     <string>Online Enabled</string>
     <string>Idle And Away Enabled</string>
+	<string>Offline Enabled</string>
     <string>Away Color</string>
     <string>Idle Color</string>
     <string>Signed Off Color</string>
@@ -27,5 +28,7 @@
     <string>Unviewed Content Label Color</string>
     <string>Online Label Color</string>
     <string>Idle And Away Label Color</string>
+	<string>Offline Color</string>
+	<string>Offline Label Color</string>
 </array>
 </plist>
