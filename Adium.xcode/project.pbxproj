@@ -4884,6 +4884,7 @@
 		3496A8C107CE6B880055BBAB = {
 			children = (
 				3496A8BF07CE6B3D0055BBAB,
+				34B07A7707F297F10082D9EB,
 			);
 			isa = PBXVariantGroup;
 			name = InfoPlist.strings;
@@ -6281,6 +6282,14 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		34B07A7707F297F10082D9EB = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = French;
+			path = Resources/French.lproj/InfoPlist.strings;
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		34B4B5A10708B049002C4C6D = {
 			fileEncoding = 4;
