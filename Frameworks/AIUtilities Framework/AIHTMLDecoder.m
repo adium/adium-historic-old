@@ -24,17 +24,16 @@
 
 int HTMLEquivalentForFontSize(int fontSize);
 
-//this instance is used to do the work when class methods are called.
-static AIHTMLDecoder *classMethodInstance = nil;
-
 @interface AIHTMLDecoder (PRIVATE)
-+ (AIHTMLDecoder *)classMethodInstance;
+
 - (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
+
 - (BOOL)appendImage:(NSImage *)attachmentImage toString:(NSMutableString *)string withName:(NSString *)fileSafeChunk  altString:(NSString *)attachmentString imagesPath:(NSString *)imagesPath;
 - (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string;
+
 @end
 
 @implementation AIHTMLDecoder
@@ -151,13 +150,6 @@ DeclareString(SpaceHTML);
 + (AIHTMLDecoder *)decoder
 {
 	return [[self new] autorelease];
-}
-
-+ (AIHTMLDecoder *)classMethodInstance
-{
-	if(classMethodInstance == nil)
-		classMethodInstance = [self new];
-	return classMethodInstance;
 }
 
 - (id)initWithHeaders:(BOOL)includeHeaders
@@ -591,9 +583,10 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	if(thingsToInclude.headers && pageColor) [string appendString:@"</BODY>"]; //Close the body tag
 	if(thingsToInclude.headers) [string appendString:@"</HTML>"]; //Close the HTML
 
-	NSLog(@"encoded %@", inMessage);
+/*	NSLog(@"encoded %@", inMessage);
 	NSLog(@"to HTML %@", string);
-	return(string);
+*/
+	return string;
 }
 
 - (NSAttributedString *)decodeHTML:(NSString *)inMessage
@@ -1114,7 +1107,16 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 @end
 
+static AIHTMLDecoder *classMethodInstance = nil;
+
 @implementation AIHTMLDecoder (ClassMethodCompatibility)
+
++ (AIHTMLDecoder *)classMethodInstance
+{
+	if(classMethodInstance == nil)
+		classMethodInstance = [self new];
+	return classMethodInstance;
+}
 
 //For compatibility
 + (NSString *)encodeHTML:(NSAttributedString *)inMessage encodeFullString:(BOOL)encodeFullString
@@ -1184,42 +1186,6 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 + (NSDictionary *)parseArguments:(NSString *)arguments
 {
 	return [[self classMethodInstance] parseArguments:arguments];
-#if 0
-	NSMutableDictionary	*argDict;
-	NSScanner			*scanner;
-	NSCharacterSet		*equalsSet, *quoteSet, *spaceSet;
-	NSString			*key = nil, *value = nil;
-
-	//Setup
-	equalsSet = [NSCharacterSet characterSetWithCharactersInString:@"="];
-	quoteSet = [NSCharacterSet characterSetWithCharactersInString:@"\""];
-	spaceSet = [NSCharacterSet characterSetWithCharactersInString:@" "];
-	scanner = [NSScanner scannerWithString:arguments];
-	argDict = [[NSMutableDictionary alloc] init];
-	
-	while(![scanner isAtEnd]){
-		BOOL	validKey, validValue;
-
-		//Find a tag
-		validKey = [scanner scanUpToCharactersFromSet:equalsSet intoString:&key];
-		[scanner scanCharactersFromSet:equalsSet intoString:nil];
-
-		//check for quotes
-		if([scanner scanCharactersFromSet:quoteSet intoString:nil]){
-			validValue = [scanner scanUpToCharactersFromSet:quoteSet intoString:&value];
-			[scanner scanCharactersFromSet:quoteSet intoString:nil];
-		}else{
-			validValue = [scanner scanUpToCharactersFromSet:spaceSet intoString:&value];
-		}
-
-		//Store in dict
-		if(validValue && value != nil && [value length] != 0 && validKey && key != nil && [key length] != 0){ //Watch out for invalid & empty tags
-			[argDict setObject:value forKey:key];
-		}
-	}
-	
-	return([argDict autorelease]);
-#endif
 }
 
 @end
