@@ -21,8 +21,11 @@ static NSString *MobileServiceID = nil;
 
 @implementation CBGaimOscarAccount
 
+static BOOL didInitOscar = NO;
+
 - (const char*)protocolPlugin
 {
+	if (!didInitOscar) didInitOscar = gaim_init_oscar_plugin();
     return "prpl-oscar";
 }
 
@@ -39,6 +42,7 @@ static NSString *MobileServiceID = nil;
 	}
 }
 
+/*
 //AIM doesn't require we close our tags, so don't waste the characters
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
@@ -61,7 +65,7 @@ static NSString *MobileServiceID = nil;
 																  imagesPath:nil
 														   attachmentsAsText:YES]));
 }
-
+*/
 //Override _contactWithUID to mark mobile and ICQ users as such via the displayServiceID
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID
 {

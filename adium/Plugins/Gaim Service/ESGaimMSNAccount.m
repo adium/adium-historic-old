@@ -16,8 +16,12 @@
 
 @implementation ESGaimMSNAccount
 
+static BOOL didInitMSN = NO;
+
 - (const char*)protocolPlugin
 {
+	[super initSSL];
+	if (!didInitMSN) didInitMSN = gaim_init_msn_plugin();
     return "prpl-msn";
 }
 

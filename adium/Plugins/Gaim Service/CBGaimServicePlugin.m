@@ -834,20 +834,21 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	//Handle libgaim events with the Cocoa event loop
 	eventLoopAdapter = [[SLGaimCocoaAdapter alloc] init];
 	//Plugins
-	if (/*!gaim_init_ssl_plugin() || */ !gaim_init_ssl_gnutls_plugin()) NSLog(@"Error: No SSL Support");
-	
-    if(!gaim_init_gg_plugin()) NSLog(@"Error: No Gadu Gadu Support");
-	//    if(!gaim_init_irc_plugin()) NSLog(@"Error: No IRC Support");
-    if(!gaim_init_jabber_plugin()) NSLog(@"Error: No Jabber Support");
-	if(!gaim_init_msn_plugin()) NSLog(@"Error: No MSN Support");
-    if(!gaim_init_napster_plugin()) NSLog(@"Error: No Napster Support");
-    if(!gaim_init_oscar_plugin()) NSLog(@"Error: No Oscar Support");
-	//    if(!gaim_init_rendezvous_plugin()) NSLog(@"Error: No Rendezvous Support");
-	//    if(!gaim_init_toc_plugin()) NSLog(@"Error: No TOC Support");
-    if(!gaim_init_trepia_plugin()) NSLog(@"Error: No Trepia Support");
-    if(!gaim_init_yahoo_plugin()) NSLog(@"Error: No Yahoo Support");
-	if(!gaim_init_novell_plugin()) NSLog(@"Error: No Novell Support");
-	
+	//
+//	if (/*!gaim_init_ssl_plugin() || */ !gaim_init_ssl_gnutls_plugin()) NSLog(@"Error: No SSL Support");
+//	
+//    if(!gaim_init_gg_plugin()) NSLog(@"Error: No Gadu Gadu Support");
+//	//    if(!gaim_init_irc_plugin()) NSLog(@"Error: No IRC Support");
+//    if(!gaim_init_jabber_plugin()) NSLog(@"Error: No Jabber Support");
+//	if(!gaim_init_msn_plugin()) NSLog(@"Error: No MSN Support");
+//    if(!gaim_init_napster_plugin()) NSLog(@"Error: No Napster Support");
+//    if(!gaim_init_oscar_plugin()) NSLog(@"Error: No Oscar Support");
+//	//    if(!gaim_init_rendezvous_plugin()) NSLog(@"Error: No Rendezvous Support");
+//	//    if(!gaim_init_toc_plugin()) NSLog(@"Error: No TOC Support");
+//    if(!gaim_init_trepia_plugin()) NSLog(@"Error: No Trepia Support");
+//    if(!gaim_init_yahoo_plugin()) NSLog(@"Error: No Yahoo Support");
+//	if(!gaim_init_novell_plugin()) NSLog(@"Error: No Novell Support");
+//	
     //Setup the buddy list
     gaim_set_blist(gaim_blist_new());
 	

@@ -10,8 +10,12 @@
 
 @implementation ESGaimGaduGaduAccount
 
+
+static BOOL didInitGG = NO;
+
 - (const char*)protocolPlugin
 {
+	if (!didInitGG) didInitGG = gaim_init_gg_plugin();
     return "prpl-gg";
 }
 

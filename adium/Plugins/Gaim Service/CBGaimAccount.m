@@ -52,6 +52,8 @@
 
 @implementation CBGaimAccount
 
+static BOOL didInitSSL = NO;
+
 // The GaimAccount currently associated with this Adium account
 - (GaimAccount*)gaimAccount
 {
@@ -62,6 +64,11 @@
 	}
 	
     return account;
+}
+
+- (void)initSSL
+{
+	if (!didInitSSL) didInitSSL = gaim_init_ssl_gnutls_plugin();	
 }
 
 // Subclasses must override this
@@ -1670,6 +1677,20 @@
 }
 
 - (NSDictionary *)defaultProperties { return([NSDictionary dictionary]); }
+
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
+{
+	return([AIHTMLDecoder encodeHTML:inAttributedString
+							 headers:YES
+							fontTags:YES
+				  includingColorTags:YES
+					   closeFontTags:YES
+						   styleTags:YES
+		  closeStyleTagsOnFontChange:YES
+					  encodeNonASCII:NO
+						  imagesPath:nil
+				   attachmentsAsText:YES]);
+}
 
 /***************************/
 /* Account private methods */
