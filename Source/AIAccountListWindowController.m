@@ -258,7 +258,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     [[tableView_accountList tableColumnWithIdentifier:@"name"] setDataCell:cell];
 	[cell release];
     
-	//Observer changes to the account list
+	//Observe changes to the account list
     [[adium notificationCenter] addObserver:self
 								   selector:@selector(accountListChanged:) 
 									   name:Account_ListChanged 
