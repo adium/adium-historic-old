@@ -74,6 +74,7 @@
             OUTLETS = {target = id; }; 
             SUPERCLASS = NSTextView; 
         }, 
+        {CLASS = AISplitView; LANGUAGE = ObjC; SUPERCLASS = NSSplitView; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 

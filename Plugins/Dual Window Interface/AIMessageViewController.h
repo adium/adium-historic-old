@@ -22,8 +22,8 @@ Adium, Copyright 2001-2005, Adam Iser
     IBOutlet	NSView					*view_contents;
 	
 	//Split views
-	IBOutlet	NSSplitView				*splitView_textEntryHorizontal;
-	IBOutlet	NSSplitView				*splitView_messages;
+	IBOutlet	AISplitView				*splitView_textEntryHorizontal;
+	IBOutlet	AISplitView				*splitView_messages;
 
 	//Message Display
 	NSView								*controllerView_messages;

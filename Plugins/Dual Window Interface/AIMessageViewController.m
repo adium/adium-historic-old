@@ -104,6 +104,10 @@ Adium, Copyright 2001-2005, Adam Iser
 									   name:Chat_DestinationChanged
 									 object:chat];
 	
+	//
+	[splitView_textEntryHorizontal setDividerThickness:6]; //Default is 9
+	[splitView_textEntryHorizontal setDrawsDivider:NO];
+	
     //Configure our views
 	[self _configureMessageDisplay];
 	[self _configureTextEntryView];
@@ -500,7 +504,7 @@ Adium, Copyright 2001-2005, Adam Iser
  * @brief Configure the text entry view
  */
 - (void)_configureTextEntryView
-{
+{	
 	//Configure the text entry view
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
     [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
