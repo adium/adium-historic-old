@@ -57,6 +57,30 @@
 }
 
 
+//Comparing ------------------------------------------------------------------------------------------------------------
+#pragma mark Comparing
+//Content is similar if it's from the same source, of the same time, and sent within 5 minutes.
+- (BOOL)isSimilarToContent:(AIContentObject *)inContent
+{
+	if(source == [inContent source] && [[self type] compare:[inContent type]] == 0){
+		NSTimeInterval	timeInterval = [date timeIntervalSinceDate:[inContent date]];
+		
+		return(timeInterval > -300 && timeInterval < 300);
+	}
+	
+	return(NO);
+}
+
+//Content is from the same day
+- (BOOL)isFromSameDayAsContent:(AIContentObject *)inContent
+{
+	NSCalendarDate *ourDate = [[self date] dateWithCalendarFormat:nil timeZone:nil];
+	NSCalendarDate *inDate = [[inContent date] dateWithCalendarFormat:nil timeZone:nil];
+	
+	return([ourDate dayOfCommonEra] != [inDate dayOfCommonEra]);
+}
+
+
 //Content --------------------------------------------------------------------------------------------------------------
 #pragma mark Behavior
 //Message Source and destination
