@@ -43,7 +43,8 @@
         {
             NSAttributedString *away = [[NSAttributedString alloc] initWithString:FAST_USER_SWITCH_AWAY_STRING];
             [[adium preferenceController] setPreference:[away dataRepresentation] forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
-            [away release];
+			[[adium preferenceController] setPreference:[away dataRepresentation] forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
+			[away release];
             setAwayThroughFastUserSwitch = YES;
         }
     }
