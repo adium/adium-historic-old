@@ -32,17 +32,59 @@
     return([image autorelease]);
 }
 
+//Create and return an opaque bitmap image rep, replacing transparency with [NSColor whiteColor]
+- (NSBitmapImageRep *)opaqueBitmapImageRep
+{
+	NSImage			*tempImage;
+	NSEnumerator	*enumerator;
+	NSImageRep		*imageRep;
+	NSSize			size = [self size];
+	
+	//Work with a temporary image so we don't modify self
+	tempImage = [[[NSImage allocWithZone:[self zone]] initWithSize:size] autorelease];
+	
+	//Lock before drawing to the temporary image
+	[tempImage lockFocus];
+	
+	//Fill with a white background
+	[[NSColor whiteColor] set];
+	NSRectFill(NSMakeRect(0, 0, size.width, size.height));
+	
+	//Draw the image
+	[self compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
+	
+	//We're done drawing
+	[tempImage unlockFocus];
+	
+	//Find an NSBitmapImageRep from the temporary image
+	enumerator = [[tempImage representations] objectEnumerator];
+	while(imageRep = [enumerator nextObject]){
+		if([imageRep isKindOfClass:[NSBitmapImageRep class]])
+			break;
+	}
+	
+	//Make one if necessary
+	if(!imageRep){
+		imageRep = [NSBitmapImageRep imageRepWithData:[tempImage TIFFRepresentation]];
+    }
+	
+	return((NSBitmapImageRep *)imageRep);
+}
+
 - (NSData *)JPEGRepresentation
 {
-    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:[self TIFFRepresentation]];
-    
-    return ([imageRep representationUsingType:NSJPEGFileType 
-                                   properties:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] 
-																		  forKey:NSImageCompressionFactor]]);
+	/* JPEG does not support transparency, but NSImage does. We need to create a non-transparent NSImage
+	 * before creating our representation or transparent parts will become black.  White is preferable. */
+
+	return ([[self opaqueBitmapImageRep] representationUsingType:NSJPEGFileType 
+													  properties:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] 
+																							 forKey:NSImageCompressionFactor]]);
 }
 
 - (NSData *)PNGRepresentation
 {
+	/* PNG is easy; it supports everything TIFF does, and NSImage's PNG support is great. */
+
 	NSBitmapImageRep	*bitmapRep =  [NSBitmapImageRep imageRepWithData:[self TIFFRepresentation]];
 	
 	return ([bitmapRep representationUsingType:NSPNGFileType properties:nil]);
@@ -50,11 +92,41 @@
 
 - (NSData *)BMPRepresentation
 {
-	NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:[self TIFFRepresentation]];
-	
-	return ([bitmapRep representationUsingType:NSBMPFileType properties:nil]);
+	/* BMP does not support transparency, but NSImage does. We need to create a non-transparent NSImage
+	* before creating our representation or transparent parts will become black.  White is preferable. */
+
+	return ([[self opaqueBitmapImageRep] representationUsingType:NSBMPFileType properties:nil]);
 }
 
+- (NSData *)GIFRepresentation
+{
+	/* This produces ugly output.  Very ugly. */
+
+	NSData	*GIFRepresentation = nil;
+	
+	NSBitmapImageRep *bm = [self bitmapRep:self]; 
+	
+	if(bm){
+		NSDictionary *properties =  [NSDictionary dictionaryWithObjectsAndKeys:
+			[NSNumber numberWithBool:YES],
+			NSImageDitherTransparency, NULL];
+		
+		NSSize size = [self size];
+		
+		if (size.width > 0 && size.height > 0) {
+			
+			NS_DURING
+				GIFRepresentation = [bm representationUsingType:NSGIFFileType
+													 properties:properties];
+			NS_HANDLER
+				GIFRepresentation = nil;	// must have failed
+			NS_ENDHANDLER
+		}		
+	}
+
+	return GIFRepresentation;
+}
+	
 //Draw this image in a rect, tiling if the rect is larger than the image
 - (void)tileInRect:(NSRect)rect
 {
@@ -377,6 +449,76 @@
 	}
 	
 	return(drawRect);
+}
+
+
+/* From GimmeGIF by Stone Design Software */
+
+//
+// We must "deepen" the cache to 24 bits for GIF's to be 
+// created correctly in RDR...
+// NOTE: MACH OPENSTEP, -DOS_API, knows not of this functionality
+//
+
+- (void)prepareCache:(NSImage *)aCache
+{
+	NSRect r = { { 0.,0.} ,{ 1.,1.}}; // just one pixel is all it takes!
+	
+	[aCache lockFocus];
+	[[NSColor colorWithDeviceCyan:.32 magenta:.76 yellow:.29 black:.04 alpha:.05] set];
+	NSRectFill(r);
+	[aCache unlockFocus];
+}
+
+- (NSBitmapImageRep *)getBitmap:(NSImage *)image
+{
+	NSRect				r = NSMakeRect(0., 0., [image size].width, [image size].height);
+	NSBitmapImageRep	*bm = nil;
+	
+	[[NSColor clearColor] set];
+	NSImage				*tiffCache = [[[NSImage allocWithZone:[self zone]] initWithSize:r.size] autorelease];
+	NSCachedImageRep	*rep = [[[NSCachedImageRep alloc] initWithSize:r.size depth:520 separate:YES alpha:YES] autorelease];
+	
+	[tiffCache addRepresentation:rep];
+	[self prepareCache:tiffCache];	
+	
+	// if something should happen, NS_DURING/NS_HANDLER protects us!
+	NS_DURING
+		[tiffCache lockFocusOnRepresentation:rep];
+		[image compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
+		
+		// OK, now let's create an NSBitmapImageRep form the data.. 
+		bm =  [[[NSBitmapImageRep alloc] initWithFocusedViewRect:r] autorelease];
+		if (bm == nil)
+			bm = [NSBitmapImageRep imageRepWithData: [tiffCache TIFFRepresentation]];
+
+		[tiffCache unlockFocus];
+	NS_HANDLER
+		
+	NS_ENDHANDLER
+	
+	if (bm == nil)
+		NSLog(@"in getBitMap : no NSBitmapImageRep of the right depth found");
+
+	return bm;
+}
+
+//
+// NOTE: Black & White images fail miserably
+// So we must get their data and blast that into a deeper cache
+// Yucky, so we wrap this all up inside this object...
+//
+- (NSBitmapImageRep *)bitmapRep:(NSImage *)image
+{
+	NSArray *reps = [image representations];
+	int i = [reps count];
+	while (i--) {
+		NSBitmapImageRep *rep = (NSBitmapImageRep *)[reps objectAtIndex:i];
+		if ([rep isKindOfClass:[NSBitmapImageRep class]] &&
+			([rep bitsPerPixel] > 2))
+			return rep;
+	}
+	return [self getBitmap:image];
 }
 
 @end
