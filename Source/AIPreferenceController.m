@@ -301,10 +301,13 @@ Adium, Copyright 2001-2005, Adam Iser
 
 //Defaults -------------------------------------------------------------------------------------------------------------
 #pragma mark Defaults
-//Register a dictionary of defaults.  Defaults are only available for preferences in the advanced category.
-- (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)group
+//Register a dictionary of defaults.  Default resetting is only available for preferences in the advanced category.
+- (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)group{
+	[self registerDefaults:defaultDict forGroup:group object:nil];
+}
+- (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)group object:(AIListObject *)object
 {
-    NSMutableDictionary	*prefDict = [self cachedPreferencesForGroup:group object:nil];
+    NSMutableDictionary	*prefDict = [self cachedPreferencesForGroup:group object:object];
     NSEnumerator		*enumerator;
     NSString			*key;
 	
