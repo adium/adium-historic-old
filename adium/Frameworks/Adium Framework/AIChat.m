@@ -121,15 +121,15 @@
 
 - (NSString *)uniqueChatID
 {
-	NSString		*firstSegmentUniqueChatID;
+	NSString		*uniqueChatID;
 	AIListObject	*listObject;
 	if (listObject = [self listObject]){
-		firstSegmentUniqueChatID = [listObject UID];
+		uniqueChatID = [listObject uniqueObjectID];
 	}else{
-		firstSegmentUniqueChatID = name;
+		uniqueChatID = [NSString stringWithFormat:@"%@.%@",name,[account uniqueObjectID]];
 	}
 	
-	return ([NSString stringWithFormat:@"%@.%@",firstSegmentUniqueChatID,[account uniqueObjectID]]);
+	return (uniqueChatID);
 }
 
 //Content --------------------------------------------------------------------------------------------------------------
