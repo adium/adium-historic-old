@@ -326,6 +326,8 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 			}
 
 			[(NSTextView *)responder insertText:@"}"];
+			
+			[italicizedTypingAttributes release];
 		}
 	}
 }
