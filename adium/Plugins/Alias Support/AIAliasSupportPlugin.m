@@ -160,7 +160,7 @@
         [displayNameArray setObject:nil withOwner:self]; //Remove the alias
     }
 
-    [[owner contactController] listObjectAttributesChanged:activeListObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];
+    [[owner contactController] listObjectAttributesChanged:inObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];
 }
 
 @end
