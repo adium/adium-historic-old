@@ -17,14 +17,23 @@
 }
 
 //AIM doesn't require we close our tags, so don't waste the characters
--(NSString *)encodedStringFromAttributedString:(NSAttributedString *)inAttributedString
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-    return ([AIHTMLDecoder encodeHTML:inAttributedString
-                              headers:YES
-                             fontTags:YES   closeFontTags:NO
-                            styleTags:YES   closeStyleTagsOnFontChange:NO
-                       encodeNonASCII:NO
-                           imagesPath:nil]);
+	BOOL	isICQ = NO;
+	
+	if(inListObject){
+		char	firstCharacter = [[inListObject UID] characterAtIndex:0];
+		isICQ = (firstCharacter >= '0' && firstCharacter <= '9');
+	}
+	
+    return((isICQ ? [inAttributedString string] : [AIHTMLDecoder encodeHTML:inAttributedString
+																	headers:YES
+																   fontTags:YES
+															  closeFontTags:NO
+																  styleTags:YES
+												 closeStyleTagsOnFontChange:NO
+															 encodeNonASCII:YES
+																 imagesPath:nil]));
 }
 
 @end

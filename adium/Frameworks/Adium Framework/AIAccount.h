@@ -140,6 +140,6 @@ typedef enum {
 - (void)disconnect;
 
 //Methods that might be subclassed
--(NSString *)encodedStringFromAttributedString:(NSAttributedString *)inAttributedString;
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
 
 @end

@@ -21,7 +21,7 @@
 }
 
 //Yahoo uses 
--(NSString *)encodedStringFromAttributedString:(NSAttributedString *)inAttributedString
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
     //gaim's yahoo_html_to_codes seems to be messed up...
    return ([AIHTMLDecoder encodeHTML:inAttributedString
