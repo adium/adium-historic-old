@@ -323,7 +323,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Register service code
 - (void)registerService:(AIService *)inService
 {
-	NSLog(@"Registering %@ (%@ ; %@)",inService,[inService serviceCodeUniqueID],[inService serviceID]);
     [availableServiceDict setObject:inService forKey:[inService serviceCodeUniqueID]];
 	
 	[availableServiceTypeDict setObject:inService forKey:[inService serviceID]];
