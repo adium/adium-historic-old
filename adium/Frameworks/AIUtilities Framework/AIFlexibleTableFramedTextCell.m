@@ -218,9 +218,8 @@
             [self _drawFlatBottomInRect:NSMakeRect(cellFrame.origin.x, (cellFrame.origin.y + cellFrame.size.height) - FRAME_FLAT_HEIGHT, cellFrame.size.width, FRAME_FLAT_HEIGHT)];
             cellFrame.size.height -= FRAME_FLAT_HEIGHT;
         }
-
     }
-
+    
     //Draw the bubble middle
     [self _drawBubbleMiddleInRect:cellFrame];
     
@@ -248,10 +247,26 @@
         [NSBezierPath fillRect:NSMakeRect(frame.origin.x+frame.size.width-dividerSpace,frame.origin.y,dividerSpace,frame.size.height)];
         
     }
-    if(borderColor){
+    
+    if(borderColor && drawSides){        
+        NSBezierPath        *path = [NSBezierPath bezierPath];
+        NSAffineTransform	*aliasShift;
+        
+        //Set up a shift transformation to align our lines to a pixel (and prevent anti-aliasing)
+        aliasShift = [NSAffineTransform transform];
+        [aliasShift translateXBy:ALIAS_SHIFT_X yBy:0];
+        
+        //
+        [path setLineWidth:1.0];
+        
+        [path moveToPoint:NSMakePoint(frame.origin.x, frame.origin.y)];
+        [path lineToPoint:NSMakePoint(frame.origin.x, frame.origin.y + frame.size.height )];
+        [path moveToPoint:NSMakePoint(frame.origin.x + frame.size.width, frame.origin.y)];
+        [path lineToPoint:NSMakePoint(frame.origin.x + frame.size.width, frame.origin.y + frame.size.height)];
+        
+        [path transformUsingAffineTransform:aliasShift];
         [borderColor set];
-        [NSBezierPath fillRect:NSMakeRect(frame.origin.x, frame.origin.y, 1, frame.size.height)];
-        [NSBezierPath fillRect:NSMakeRect(frame.origin.x + frame.size.width, frame.origin.y, 1, frame.size.height)];
+        [path stroke];
     }
 }
 
@@ -319,11 +334,23 @@
     if(borderColor){
         [borderColor set];
         if(drawSides){
-            [NSBezierPath setDefaultLineWidth:1.5];
-            [NSBezierPath strokeLineFromPoint:NSMakePoint(frame.origin.x + ALIAS_SHIFT_X, frame.origin.y)
-                                      toPoint:NSMakePoint(frame.origin.x + ALIAS_SHIFT_X, frame.origin.y + frame.size.height)];
-            [NSBezierPath strokeLineFromPoint:NSMakePoint(frame.origin.x + frame.size.width + ALIAS_SHIFT_X, frame.origin.y)
-                                      toPoint:NSMakePoint(frame.origin.x + frame.size.width + ALIAS_SHIFT_X, frame.origin.y + frame.size.height)];
+            NSBezierPath        *path = [NSBezierPath bezierPath];
+            NSAffineTransform	*aliasShift;
+            
+            //Set up a shift transformation to align our lines to a pixel (and prevent anti-aliasing)
+            aliasShift = [NSAffineTransform transform];
+            [aliasShift translateXBy:ALIAS_SHIFT_X yBy:0];
+            
+            //
+            [path setLineWidth:1.0];
+            
+            [path moveToPoint:NSMakePoint(frame.origin.x, frame.origin.y)];
+            [path lineToPoint:NSMakePoint(frame.origin.x, frame.origin.y + frame.size.height)];
+            [path moveToPoint:NSMakePoint(frame.origin.x + frame.size.width, frame.origin.y)];
+            [path lineToPoint:NSMakePoint(frame.origin.x + frame.size.width, frame.origin.y + frame.size.height)];
+            
+            [path transformUsingAffineTransform:aliasShift];
+            [path stroke];
         }
     }
 }
