@@ -12,8 +12,8 @@
 @end
 
 enum {
-	defaultBitsPerComponent = 8U,
-	defaultComponentsPerPixel = 4U,
+	defaultBitsPerComponent = 8,
+	defaultComponentsPerPixel = 4,
 };
 const BOOL defaultHasAlpha = YES;
 
@@ -26,20 +26,19 @@ const BOOL defaultHasAlpha = YES;
 
 - (id)initWithSize:(NSSize)size bitsPerComponent:(unsigned)bpc componentsPerPixel:(unsigned)cpp hasAlpha:(BOOL)hasAlpha
 {
-	unsigned bytesPerRow = (sizeof(unsigned char) * ((bpc / 8U) * cpp)) * size.width;
+	unsigned bytesPerRow = (sizeof(unsigned char) * ((bpc / 8) * cpp)) * size.width;
 
 	//we use calloc because it fills the buffer with 0 - that includes the
 	//  alpha, so when calloc is done, the buffer is filled with transparent.
 	buffer = calloc(bytesPerRow * size.height, sizeof(unsigned char));
-	if(buffer == NULL)
-		return nil;
+	if(buffer == NULL) return nil;
 
 	context = CGBitmapContextCreate(buffer, size.width, size.height, bpc, bytesPerRow, CGColorSpaceCreateDeviceRGB(), hasAlpha ? kCGImageAlphaPremultipliedLast : kCGImageAlphaNone);
-	if(context == NULL)
-	{
+	if(context == NULL) {
 		free(buffer);
 		return nil;
 	}
+
 	image = nil;
 	mysize = size;
 	mybitsPerComponent = bpc;
@@ -141,10 +140,7 @@ const BOOL defaultHasAlpha = YES;
 	OSStatus err;
 
 	err = GetIconRef(kOnSystemDisk, creator, type, &icon);
-	if(err != noErr)
-		return NULL;
-	else
-		return icon;
+	return (err == noErr) ? icon : NULL;
 }
 
 - (OSStatus)plotIcon:(IconRef)icon inRect:(NSRect)bounds
@@ -160,15 +156,14 @@ const BOOL defaultHasAlpha = YES;
 
 	RGBColor  rgb;
 	RGBColor *rgbptr;
-	if(color != nil)
-	{
+	if(color != nil) {
 		rgbptr = &rgb;
 		rgb.red   = (short)[color redComponent];
 		rgb.green = (short)[color greenComponent];
 		rgb.blue  = (short)[color blueComponent];
-	}
-	else
+	} else {
 		rgbptr = NULL;
+	}
 
 	OSStatus err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelRGBColor:rgbptr flags:flags];
 
@@ -183,16 +178,16 @@ const BOOL defaultHasAlpha = YES;
 	OSStatus err;
 
 	err = GetLabel(label, &rgb, /*labelString*/ NULL);
-	if(err == noErr)
+	if(err == noErr) {
 		err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelRGBColor:&rgb flags:flags];
+	}
 
 	return err;
 }
 
 - (OSStatus)plotIcon:(IconRef)icon inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelRGBColor:(const RGBColor *)color flags:(PlotIconRefFlags)flags
 {
-	if(icon == NULL)
-		return NO;
+	if(icon == NULL) return NO;
 
 	CGRect cgbounds = CGRectMake(bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height);
 
@@ -213,9 +208,9 @@ const BOOL defaultHasAlpha = YES;
 {
 	IconRef icon = [self getIconWithType:type];
 
-	if(icon == NULL)
+	if(icon == NULL) {
 		return noSuchIconErr;
-	else {
+	} else {
 		OSStatus err = [self plotIcon:icon inRect:bounds];
 		ReleaseIconRef(icon);
 		return err;
@@ -229,9 +224,9 @@ const BOOL defaultHasAlpha = YES;
 	IconRef icon = [self getIconWithType:type];
 	OSStatus err;
 
-	if(icon == NULL)
+	if(icon == NULL) {
 		err = noSuchIconErr;
-	else {
+	} else {
 		OSStatus err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelNSColor:color flags:flags];
 		ReleaseIconRef(icon);
 	}
@@ -246,9 +241,9 @@ const BOOL defaultHasAlpha = YES;
 	IconRef icon = [self getIconWithType:type];
 	OSStatus err;
 
-	if(icon == NULL)
+	if(icon == NULL) {
 		err = noSuchIconErr;
-	else {
+	} else {
 		OSStatus err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelIndex:label flags:flags];
 		ReleaseIconRef(icon);
 	}
@@ -261,9 +256,9 @@ const BOOL defaultHasAlpha = YES;
 	IconRef icon = [self getIconWithType:type];
 	OSStatus err;
 
-	if(icon == NULL)
+	if(icon == NULL) {
 		err = noSuchIconErr;
-	else {
+	} else {
 		OSStatus err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelRGBColor:color flags:flags];
 		ReleaseIconRef(icon);
 	}
@@ -277,9 +272,9 @@ const BOOL defaultHasAlpha = YES;
 {
 	IconRef icon = [self getIconWithType:type creator:creator];
 
-	if(icon == NULL)
+	if(icon == NULL) {
 		return noSuchIconErr;
-	else {
+	} else {
 		OSStatus err = [self plotIcon:icon inRect:bounds];
 		ReleaseIconRef(icon);
 		return err;
@@ -293,9 +288,9 @@ const BOOL defaultHasAlpha = YES;
 	IconRef icon = [self getIconWithType:type creator:creator];
 	OSStatus err;
 
-	if(icon == NULL)
+	if(icon == NULL) {
 		err = noSuchIconErr;
-	else {
+	} else {
 		OSStatus err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelNSColor:color flags:flags];
 		ReleaseIconRef(icon);
 	}
@@ -310,9 +305,9 @@ const BOOL defaultHasAlpha = YES;
 	IconRef icon = [self getIconWithType:type creator:creator];
 	OSStatus err;
 
-	if(icon == NULL)
+	if(icon == NULL) {
 		err = noSuchIconErr;
-	else {
+	} else {
 		OSStatus err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelIndex:label flags:flags];
 		ReleaseIconRef(icon);
 	}
@@ -325,9 +320,9 @@ const BOOL defaultHasAlpha = YES;
 	IconRef icon = [self getIconWithType:type creator:creator];
 	OSStatus err;
 
-	if(icon == NULL)
+	if(icon == NULL) {
 		err = noSuchIconErr;
-	else {
+	} else {
 		OSStatus err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelRGBColor:color flags:flags];
 		ReleaseIconRef(icon);
 	}
