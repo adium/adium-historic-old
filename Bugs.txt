@@ -10,8 +10,6 @@
 [MEDIUM]
 Contact List
     - Extended Status to the right of names is misaligned with baseline.
-Logs
-    - View Logs searches for screename instead of using the newer filtering style.
 
 [LOW]
 
@@ -26,11 +24,15 @@ List and Tabs
   - Double clicking two names in succession causes the first name to highlight
     the second time.
   - An incoming message which opens a new tab will also unminimize the associated window
-  
+  - Tooltips appear in the contact list even when over the scroll bar
+
 Insert Link sheet
   - Multiple sheets can be invoked at the same time (needs to be modal sheet)
   - Tabs in the URL field, when deleted, still make it think it has incorrectly
     formatted URLs (just tab a few times, delete, and it'll still insert)
+
+Other
+  - Dock icon does not appear to be saved for some users while Adium is closed
 
 //------------------------------------------------------------------------------------
 // Bugs - Libgaim
