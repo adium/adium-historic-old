@@ -138,41 +138,45 @@
 - (void)_configureAutoResizing
 {
     [[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontal)];
-
-    if(!autoResizeVertically){
-        [[self window] setMaxSize:NSMakeSize(10000, 10000)];
-        [[self window] setMinSize:minWindowSize];
+    
+    if (!(autoResizeVertically || autoResizeHorizontal)) {
+        NSSize targetMin = minWindowSize;
+        NSSize targetMax = NSMakeSize(10000, 10000);
+        [[self window] setMinSize:targetMin];
+        [[self window] setMaxSize:targetMax];
     }
-
+    
     [self contactListDesiredSizeChanged:nil];
 }
 
 //Dynamically resize the contact list
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification
 {
-    if(autoResizeVertically){
+    if(autoResizeVertically || autoResizeHorizontal){
         NSRect	newFrame = [self _desiredWindowFrame];
-
-        if(!NSEqualRects([[self window] frame], newFrame)){
-            //Set this as our window's size
-            if(!autoResizeHorizontal){ //Allow horiz resizing still
-                [[self window] setMaxSize:NSMakeSize(10000, newFrame.size.height)];
-                [[self window] setMinSize:NSMakeSize(minWindowSize.width, newFrame.size.height)];
-            }else{
-                [[self window] setMaxSize:newFrame.size];
-                [[self window] setMinSize:newFrame.size];
+        if (!NSEqualRects([[self window] frame], newFrame)) {
+            NSSize targetMin = minWindowSize;
+            NSSize targetMax = NSMakeSize(10000, 10000);
+            if (autoResizeHorizontal) {    
+                targetMin.width = newFrame.size.width;
+                targetMax.width = newFrame.size.width;
             }
-
+            
+            if (autoResizeVertically) {
+                targetMin.height = newFrame.size.height;  
+                targetMax.height = newFrame.size.height;  
+            }
+            [[self window] setMinSize:targetMin];
+            [[self window] setMaxSize:targetMax];
+            
             //Resize the window (We animate only if the window is main)
             if([[self window] isMainWindow]){
                 [scrollView_contactList setAutoHideScrollBar:NO]; //Prevent scrollbar from appearing during animation
                 [scrollView_contactList setHasVerticalScroller:NO];
                 [[self window] setFrame:newFrame display:YES animate:YES];
                 [scrollView_contactList setAutoHideScrollBar:YES];
-
             }else{
                 [[self window] setFrame:newFrame display:YES animate:NO];
-
             }
         }
     }
