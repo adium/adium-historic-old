@@ -15,7 +15,7 @@
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID;
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details;
 - (NSImage *)imageForActionID:(NSString *)actionID;
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID;
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo;
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID;
 @end
 
@@ -49,7 +49,7 @@
 - (void)registerEventID:(NSString *)eventID withHandler:(id <AIEventHandler>)handler globalOnly:(BOOL)global;
 - (NSDictionary *)eventHandlers;
 - (NSMenu *)menuOfEventsWithTarget:(id)target forGlobalMenu:(BOOL)global;
-- (void)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject;
+- (void)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject userInfo:(id)userInfo;
 - (NSString *)defaultEventID;
 - (NSString *)eventIDForEnglishDisplayName:(NSString *)displayName;
 - (NSString *)globalShortDescriptionForEventID:(NSString *)eventID;
