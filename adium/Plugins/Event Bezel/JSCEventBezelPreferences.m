@@ -151,6 +151,18 @@
 		[checkBox_idle setEnabled:showBezel];
 		[checkBox_firstMessage setEnabled:showBezel];
 		[checkBox_includeText setEnabled:(showBezel && [checkBox_firstMessage state])];
+
+		[checkBox_imageBadges setEnabled:showBezel];
+		[checkBox_colorLabels setEnabled:showBezel];
+		[checkBox_nameLabels setEnabled:showBezel];
+		[popUp_size setEnabled:showBezel];
+		[popUp_background setEnabled:showBezel];
+		[popUp_position setEnabled:showBezel];
+		[slider_duration setEnabled:showBezel];
+		[checkBox_fadeIn setEnabled:showBezel];
+		[checkBox_fadeOut setEnabled:showBezel];
+		[checkBox_showHidden setEnabled:showBezel];
+		[checkBox_showAway setEnabled:showBezel];
 	}
 }
 
