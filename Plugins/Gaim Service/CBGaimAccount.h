@@ -90,7 +90,7 @@
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage;
 - (void)setAccountProfileTo:(NSAttributedString *)profile;
 
-- (id<GaimThread>)gaimThread;
+- (SLGaimCocoaAdapter *)gaimThread;
 
 #pragma mark Gaim callback handling methods
 - (oneway void)accountConnectionConnected;

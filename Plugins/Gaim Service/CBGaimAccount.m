@@ -53,7 +53,7 @@
 
 static BOOL didInitSSL = NO;
 
-static id<GaimThread> gaimThread = nil;
+static SLGaimCocoaAdapter *gaimThread = nil;
 
 // The GaimAccount currently associated with this Adium account
 - (GaimAccount*)gaimAccount
@@ -67,7 +67,7 @@ static id<GaimThread> gaimThread = nil;
     return account;
 }
 
-- (id<GaimThread>)gaimThread
+- (SLGaimCocoaAdapter *)gaimThread
 {
 	return gaimThread;
 }
@@ -746,21 +746,28 @@ static id<GaimThread> gaimThread = nil;
 					   ((returnRange = [[message string] rangeOfString:@"\r"]).location) != NSNotFound){
 					
 					//Use whichever endline character is found first
-					NSRange				operativeRange = (endlineRange.location < returnRange.location) ? endlineRange : returnRange;
+					NSRange	operativeRange = ((endlineRange.location < returnRange.location) ? endlineRange : returnRange);
 					
 					if (operativeRange.location > 0){
 						NSAttributedString  *thisPart;
 						
 						thisPart = [message attributedSubstringFromRange:NSMakeRange(0,operativeRange.location-1)];
-						encodedMessage = [self encodedAttributedString:thisPart forListObject:listObject contentMessage:contentMessage];
+						encodedMessage = [self encodedAttributedString:thisPart
+														 forListObject:listObject
+														contentMessage:contentMessage];
 						if (encodedMessage){
 							//Check for the AdiumFT tag indicating an embedded file transfer.
 							//Only deal with scanning deeper if it's found.
-							if ([encodedMessage rangeOfString:@"<AdiumFT " options:NSCaseInsensitiveSearch].location != NSNotFound){
+							if ([encodedMessage rangeOfString:@"<AdiumFT "
+													  options:NSCaseInsensitiveSearch].location != NSNotFound){
 								encodedMessage = [self _handleFileSendsWithinMessage:encodedMessage
 																		   toContact:(AIListContact *)[chat listObject]];
 							}
-							[gaimThread sendMessage:encodedMessage fromAccount:self inChat:chat withFlags:flags];
+							[gaimThread sendEncodedMessage:encodedMessage
+										   originalMessage:[thisPart string]
+											   fromAccount:self
+													inChat:chat
+												 withFlags:flags];
 							sent = YES;
 						}
 					}
@@ -771,29 +778,37 @@ static id<GaimThread> gaimThread = nil;
 			}
 			
 			if ([message length]){
-				encodedMessage = [self encodedAttributedString:message forListObject:listObject contentMessage:contentMessage];
+				encodedMessage = [self encodedAttributedString:message
+												 forListObject:listObject
+												contentMessage:contentMessage];
 				if (encodedMessage){
 					//Check for the AdiumFT tag indicating an embedded file transfer.
 					//Only deal with scanning deeper if it's found.
-					if ([encodedMessage rangeOfString:@"<AdiumFT " options:NSCaseInsensitiveSearch].location != NSNotFound){
+					if ([encodedMessage rangeOfString:@"<AdiumFT "
+											  options:NSCaseInsensitiveSearch].location != NSNotFound){
 						encodedMessage = [self _handleFileSendsWithinMessage:encodedMessage
 																   toContact:(AIListContact *)[chat listObject]];
 					}
-					[gaimThread sendMessage:encodedMessage fromAccount:self inChat:chat withFlags:flags];
+					[gaimThread sendEncodedMessage:encodedMessage
+								   originalMessage:[message string]
+									   fromAccount:self
+											inChat:chat
+										 withFlags:flags];
 					sent = YES;
 				}
 			}
-			
-		}else if([[object type] isEqualToString:CONTENT_TYPING_TYPE]){
-			AIContentTyping *contentTyping = (AIContentTyping*)object;
-			AIChat *chat = [contentTyping chat];
-			
-			[gaimThread sendTyping:[contentTyping typingState] inChat:chat];
-			
-			sent = YES;
 		}
+		
+	}else if([[object type] isEqualToString:CONTENT_TYPING_TYPE]){
+		AIContentTyping *contentTyping = (AIContentTyping*)object;
+		AIChat *chat = [contentTyping chat];
+		
+		[gaimThread sendTyping:[contentTyping typingState] inChat:chat];
+		
+		sent = YES;
 	}
-    return sent;
+	
+    return(sent);
 }
 
 //Return YES if we're available for sending the specified content.
