@@ -21,6 +21,10 @@ Adium, Copyright 2001-2005, Adam Iser
 #define STATUS_TITLE_INVISIBLE	@"Invisible"
 #define STATUS_TITLE_AVAILABLE	@"Available"
 
+//State menu
+#define ELIPSIS_STRING				[NSString stringWithUTF8String:"…"]
+#define STATE_TITLE_MENU_LENGTH		30
+
 //Private idle function
 extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
@@ -30,8 +34,11 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 - (void)_upgradeSavedAwaysToSavedStates;
 - (void)upgradeSVNSavedStatesToCurrent;
 - (void)_setMachineIsIdle:(BOOL)inIdle;
-
 - (NSArray *)menuItemsForStatusesOfType:(AIStatusType)type withTarget:(id)target;
+- (void)_addStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
+- (void)_removeStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
+- (void)_updateStateMenuSelectionForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
+- (NSString *)_titleForMenuDisplayOfState:(AIStatus *)statusState;
 @end
 									
 /*!
@@ -47,8 +54,27 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  */
 - (void)initController
 {
+	stateMenuItemArraysDict = [[NSMutableDictionary alloc] init];
+	stateMenuPluginsArray = [[NSMutableArray alloc] init];
+	
+	//Init
 	[self _setMachineIsIdle:NO];
+	
+	//Update our state menus when the state array or status icon set changes
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(rebuildAllStateMenus)
+									   name:AIStatusStateArrayChangedNotification
+									 object:nil];
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(rebuildAllStateMenus)
+									   name:AIStatusIconSetDidChangeNotification
+									 object:nil];
 
+	//Update the selections in our state menus when the active state changes
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(updateAllStateMenuSelections)
+									   name:AIActiveStatusStateChangedNotification
+									 object:nil];
 }
 
 /*!
@@ -56,6 +82,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  */
 - (void)closeController
 {
+	[[adium notificationCenter] removeObserver:self];
 	[stateArray release]; stateArray = nil;
 	[activeStatusState release]; activeStatusState = nil;
 }
@@ -474,6 +501,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 
 
 //Machine Activity -----------------------------------------------------------------------------------------------------
+#pragma mark Machine Activity
 #define MACHINE_IDLE_THRESHOLD			30 	//30 seconds of inactivity is considered idle
 #define MACHINE_ACTIVE_POLL_INTERVAL	30	//Poll every 60 seconds when the user is active
 #define MACHINE_IDLE_POLL_INTERVAL		1	//Poll every second when the user is idle
@@ -559,6 +587,233 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 												selector:@selector(_idleCheckTimer:)
 												userInfo:nil
 												 repeats:YES] retain];
+}
+
+
+//State menu support ---------------------------------------------------------------------------------------------------
+#pragma mark State menu support
+/*!
+ * @brief Register a state menu plugin
+ *
+ * A state menu plugin is the mitigator between our state menu items and a menu.  As states change the plugin
+ * is told to add and remove items from the menu.  Everything else is handled by the status controller.
+ * @param stateMenuPlugin The state menu plugin to dadam iregister
+ */
+- (void)registerStateMenuPlugin:(id <StateMenuPlugin>)stateMenuPlugin
+{
+	NSNumber	*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
+	
+	//Track this plugin
+	[stateMenuItemArraysDict setObject:[NSMutableArray array] forKey:identifier];
+	[stateMenuPluginsArray addObject:stateMenuPlugin];
+	
+	//Start it out with a fresh set of menu items
+	[self _addStateMenuItemsForPlugin:stateMenuPlugin];
+}
+
+/*!
+ * @brief Unregister a state menu plugin
+ *
+ * All state menu items will be removed from the plugin when it unregisters
+ * @param stateMenuPlugin The state menu plugin to unregister
+ */
+- (void)unregisterStateMenuPlugin:(id <StateMenuPlugin>)stateMenuPlugin
+{
+	NSNumber	*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
+
+	//Remove all the plugin's menu items
+	[self _removeStateMenuItemsForPlugin:stateMenuPlugin];	
+	
+	//Stop tracking the plugin
+	[stateMenuItemArraysDict removeObjectForKey:identifier];
+	[stateMenuPluginsArray removeObjectIdenticalTo:stateMenuPlugin];
+}
+	
+/*!
+ * @brief Add state menu items
+ *
+ * Adds all the necessary state menu items to a plugin's state menu
+ * @param stateMenuPlugin The state menu plugin we're updating
+ */
+- (void)_addStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin
+{
+	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
+	NSMutableArray  *menuItemArray = [stateMenuItemArraysDict objectForKey:identifier];
+	NSEnumerator	*enumerator;
+	NSMenuItem		*menuItem;
+	AIStatus		*statusState;
+	
+	//Create a menu item for each state
+	enumerator = [[[adium statusController] stateArray] objectEnumerator];
+	while(statusState = [enumerator nextObject]){
+		menuItem = [[NSMenuItem alloc] initWithTitle:[self _titleForMenuDisplayOfState:statusState]
+											  target:self
+											  action:@selector(selectState:)
+									   keyEquivalent:@""];
+		
+		//NSMenuItem will call setFlipped: on the image we pass it, causing flipped drawing elsewhere if we pass it the
+		//shared status icon.  So we pass it a copy of the shared icon that it's free to manipulate.
+		[menuItem setImage:[[[statusState icon] copy] autorelease]];
+		[menuItem setRepresentedObject:statusState];
+		[menuItemArray addObject:menuItem];
+		[menuItem release];
+	}
+	
+	//Add the "Custom..." state option
+	menuItem = [[NSMenuItem alloc] initWithTitle:@"Custom..."
+										  target:self
+										  action:@selector(selectCustomState:)
+								   keyEquivalent:@""];
+	//[customStateMenuItem setImage:[AIStatusIcons statusIconForStatusID:@"unknown" type:AIStatusIconList direction:AIIconNormal]];
+	[menuItemArray addObject:menuItem];
+	
+	//Update the selected menu item
+	[self _updateStateMenuSelectionForPlugin:stateMenuPlugin];
+	
+	//Now that we are done creating the menu items, tell the plugin about them
+	[stateMenuPlugin addStateMenuItems:menuItemArray];
+}
+
+/*!
+ * @brief Removes state menu items
+ *
+ * Removes all the state menu items from a plugin's state menu
+ * @param stateMenuPlugin The state menu plugin we're updating
+ */
+- (void)_removeStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin
+{
+	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
+	NSMutableArray  *menuItemArray = [stateMenuItemArraysDict objectForKey:identifier];
+
+	//Inform the plugin that we are removing the items in the this array 
+	[stateMenuPlugin removeStateMenuItems:menuItemArray];
+	
+	//Now clear the array
+	[menuItemArray removeAllObjects];
+}
+
+/*!
+ * @brief Completely rebuild all state menus
+ */
+- (void)rebuildAllStateMenus
+{
+	NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
+	id <StateMenuPlugin>	stateMenuPlugin;
+	
+	while(stateMenuPlugin = [enumerator nextObject]) {
+		[self _removeStateMenuItemsForPlugin:stateMenuPlugin];
+		[self _addStateMenuItemsForPlugin:stateMenuPlugin];
+	}
+}
+
+/*!
+ * @brief Update the selected state in all state menus
+ */
+- (void)updateAllStateMenuSelections
+{
+	NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
+	id <StateMenuPlugin>	stateMenuPlugin;
+	
+	while(stateMenuPlugin = [enumerator nextObject]){
+		[self _updateStateMenuSelectionForPlugin:stateMenuPlugin];
+	}
+}
+
+/*!
+ * @brief Update the selected state in a plugin's state menu
+ *
+ * Updates the selected state menu item to reflect the currently active state.
+ * @param stateMenuPlugin The state menu plugin we're updating
+ */
+- (void)_updateStateMenuSelectionForPlugin:(id <StateMenuPlugin>)stateMenuPlugin
+{
+	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
+	NSEnumerator	*enumerator = [[stateMenuItemArraysDict objectForKey:identifier] objectEnumerator];
+	NSMenuItem		*menuItem;
+	
+	//Update menu item selection
+	while(menuItem = [enumerator nextObject]){
+		if([menuItem representedObject] == activeStatusState){
+			if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
+		}else{
+			if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+		}
+	}
+}
+
+/*!
+ * @brief Menu validation
+ *
+ * Our state menu items should always be active, so always return YES for validation.
+ */
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	return(YES);
+}
+
+/*!
+ * @brief Select a state menu item
+ *
+ * Invoked by a state menu item, sets the state corresponding to the menu item as the active state.
+ */
+- (void)selectState:(id)sender
+{
+	[self setActiveStatusState:[sender representedObject]];
+}
+
+/*!
+ * @brief Select the custom state menu item
+ *
+ * Invoked by the custom state menu item, opens a custom state window.
+ */
+- (IBAction)selectCustomState:(id)sender
+{
+	[AIEditStateWindowController editCustomState:/*[self activeStatusState]*/nil
+										onWindow:nil
+								 notifyingTarget:self];
+}
+
+/*!
+ * @brief Apply a custom state
+ *
+ * Invoked when the custom state window is closed by the user clicking OK.  In response this method sets the custom
+ * state as the active state.
+ */
+- (void)customStatusState:(AIStatus *)originalState changedTo:(AIStatus *)newState
+{
+	[self setActiveStatusState:newState];
+}
+
+/*!
+ * @brief Determine a string to use as a menu title
+ *
+ * This method truncates a state title string for display as a menu item.  It also strips newlines which can cause odd
+ * menu item display.  Wide menus aren't pretty and may cause crashing in certain versions of OS X, so all state
+ * titles should be run through this method before being used as menu item titles.
+ *
+ * @param statusState The state for which we want a title
+ *
+ * @result An appropriate NSString title
+ */
+- (NSString *)_titleForMenuDisplayOfState:(AIStatus *)statusState
+{
+	NSRange		fullRange = NSMakeRange(0,0);
+	NSRange		trimRange;
+	NSString	*title = [statusState title];
+	
+	//Strip newlines, they'll screw up menu display
+	title = [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
+	//Truncate by length
+	trimRange = [title lineRangeForRange:fullRange];
+	if(!NSEqualRanges(trimRange, NSMakeRange(0, [title length]-1))){
+		title = [title substringWithRange:trimRange];
+	}
+	if([title length] > STATE_TITLE_MENU_LENGTH){
+		title = [[title substringToIndex:STATE_TITLE_MENU_LENGTH] stringByAppendingString:ELIPSIS_STRING];
+	}
+	
+	return(title);
 }
 
 @end
