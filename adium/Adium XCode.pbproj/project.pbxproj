@@ -272,7 +272,6 @@
 				34BD9F2B0531477A000AB133,
 				343C89A505704D8D005E0632,
 				34BD9F390531477E000AB133,
-				34BD9F4E05314783000AB133,
 				34BD9F6305314788000AB133,
 				34BD9F730531478D000AB133,
 				34BD9F8A05314791000AB133,
@@ -389,7 +388,6 @@
 				34BD9F1C0531477A000AB133,
 				343C893805704B5D005E0632,
 				34BD9F2C0531477E000AB133,
-				34BD9F3B05314782000AB133,
 				34BD9F4F05314787000AB133,
 				34BD9F640531478C000AB133,
 				34BD9F7405314791000AB133,
@@ -3899,18 +3897,6 @@
 			settings = {
 			};
 		};
-		3419F6FF05314EAC00C68BA3 = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3419F70005314EAC00C68BA3 = {
-			fileRef = 34BD9E9305314755000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3419F70105314EB200C68BA3 = {
 			fileRef = 34BD9DE105314751000AB133;
 			isa = PBXBuildFile;
@@ -6480,13 +6466,6 @@
 			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
 			remoteInfo = AIUtilities.Framework;
 		};
-		34BD98900531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
-			remoteInfo = AIUtilities.Framework;
-		};
 		34BD98910531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -7257,13 +7236,6 @@
 			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
 			remoteInfo = Adium.Framework;
 		};
-		34BD98FF0531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
-			remoteInfo = Adium.Framework;
-		};
 		34BD99000531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -7836,7 +7808,6 @@
 		};
 		34BD9CD8053146CC000AB133 = {
 			isa = PBXTargetDependency;
-			target = 34BD9F3B05314782000AB133;
 			targetProxy = 34BD99370531467C000AB133;
 		};
 		34BD9CD9053146CC000AB133 = {
@@ -8716,7 +8687,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				B7D309EA05689D3D008A5CB9,
 				4B7F27C705440DE900CDFC90,
 				3419FDE10531585600C68BA3,
 				3419FDE30531585600C68BA3,
@@ -11683,147 +11653,6 @@
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Adium 1.6 Pref Importer.app";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		34BD9F3B05314782000AB133 = {
-			buildPhases = (
-				34BD9F3E05314782000AB133,
-				34BD9F4105314782000AB133,
-				34BD9F4405314782000AB133,
-				34BD9F4705314782000AB133,
-				34BD9F4B05314782000AB133,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INFOPLIST_FILE = Plists/Adium_1x_Log_Importer.plist;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = "Adium 1x Log Importer";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost";
-				WRAPPER_EXTENSION = AdiumPlugin;
-				ZERO_LINK = YES;
-			};
-			dependencies = (
-				34BD9F3C05314782000AB133,
-				34BD9F3D05314782000AB133,
-			);
-			isa = PBXNativeTarget;
-			name = "Adium 1x Log Importer";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
-			productName = "Adium 1x Log Importer";
-			productReference = 34BD9F4E05314783000AB133;
-			productType = "com.apple.product-type.bundle";
-		};
-		34BD9F3C05314782000AB133 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 34BD98FF0531467B000AB133;
-		};
-		34BD9F3D05314782000AB133 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DE205314755000AB133;
-			targetProxy = 34BD98900531467B000AB133;
-		};
-		34BD9F3E05314782000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				34BD9F3F05314782000AB133,
-				34BD9F4005314782000AB133,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9F3F05314782000AB133 = {
-			fileRef = 4B1F0F3E04AE308200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9F4005314782000AB133 = {
-			fileRef = 4BEB416C04AE33D600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9F4105314782000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				34BD9F4205314782000AB133,
-				34BD9F4305314782000AB133,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9F4205314782000AB133 = {
-			fileRef = 4BEB416E04AE33D600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9F4305314782000AB133 = {
-			fileRef = 4BEB416F04AE33D600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9F4405314782000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				34BD9F4505314782000AB133,
-				34BD9F4605314782000AB133,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9F4505314782000AB133 = {
-			fileRef = 4B1F0F3F04AE308200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9F4605314782000AB133 = {
-			fileRef = 4BEB416D04AE33D600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9F4705314782000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-				3419F6FF05314EAC00C68BA3,
-				3419F70005314EAC00C68BA3,
-				34BD9F4905314782000AB133,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9F4905314782000AB133 = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9F4B05314782000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9F4E05314783000AB133 = {
-			expectedFileType = folder;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = "Adium 1x Log Importer.AdiumPlugin";
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -17293,7 +17122,6 @@
 			children = (
 				B782F088058BB60B00AF4BBA,
 				344AB2C90579137E00384CEE,
-				4B1F0F2E04AE300500A8010A,
 				9C8C7FA303CBA17B00267226,
 				4BDDCA01041104BB00A8010A,
 				B7AE664D0465778E0051E914,
@@ -17432,39 +17260,6 @@
 			isa = PBXFileReference;
 			name = AIContactStatusDockOverlaysPlugin.m;
 			path = "Plugins/Contact Status Dock Overlays/AIContactStatusDockOverlaysPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B1F0F2E04AE300500A8010A = {
-			children = (
-				4B1F0F3E04AE308200A8010A,
-				4B1F0F3F04AE308200A8010A,
-				4BEB416C04AE33D600A8010A,
-				4BEB416D04AE33D600A8010A,
-				4BEB416F04AE33D600A8010A,
-				4BEB416E04AE33D600A8010A,
-			);
-			isa = PBXGroup;
-			name = "Adium 1.x Log Importer";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B1F0F3E04AE308200A8010A = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			name = AIAdium1xLogImporterPlugin.h;
-			path = "Plugins/Adium 1x Log Importer/AIAdium1xLogImporterPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B1F0F3F04AE308200A8010A = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			name = AIAdium1xLogImporterPlugin.m;
-			path = "Plugins/Adium 1x Log Importer/AIAdium1xLogImporterPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -22099,41 +21894,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BEB416C04AE33D600A8010A = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AILogImporter.h;
-			path = "Plugins/Adium 1x Log Importer/AILogImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BEB416D04AE33D600A8010A = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AILogImporter.m;
-			path = "Plugins/Adium 1x Log Importer/AILogImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BEB416E04AE33D600A8010A = {
-			expectedFileType = text.plist;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = LoggerDefaults.plist;
-			path = "Plugins/Adium 1x Log Importer/LoggerDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BEB416F04AE33D600A8010A = {
-			expectedFileType = wrapper.nib;
-			isa = PBXFileReference;
-			name = LogImport.nib;
-			path = "Plugins/Adium 1x Log Importer/LogImport.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BED5A5303C34F1E00A8010A = {
 			children = (
 				4BED5A5F03C34FFE00A8010A,
@@ -26373,12 +26133,6 @@
 		};
 		B7AEFA8F054EC65200B1E4CE = {
 			fileRef = B7AEFA8E054EC65200B1E4CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		B7D309EA05689D3D008A5CB9 = {
-			fileRef = 34BD9F4E05314783000AB133;
 			isa = PBXBuildFile;
 			settings = {
 			};
