@@ -13,11 +13,12 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
  
-#define Dock_IconWillChange		@"Dock_IconWillChange"
-#define Dock_IconDidChange		@"Dock_IconDidChange"
+#define Dock_IconWillChange			@"Dock_IconWillChange"
+#define Dock_IconDidChange			@"Dock_IconDidChange"
 
-#define KEY_ACTIVE_DOCK_ICON	@"Dock Icon"
-#define FOLDER_DOCK_ICONS		@"Dock Icons"
+#define KEY_ACTIVE_DOCK_ICON		@"Dock Icon"
+#define KEY_LAST_VERSION_LAUNCHED	@"Last Version Launched"
+#define FOLDER_DOCK_ICONS			@"Dock Icons"
 
 typedef enum {
     BOUNCE_NONE = 0,

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.52 2004/04/26 11:46:46 boredzo Exp $
+// $Id: AIDockController.m,v 1.53 2004/05/17 11:37:07 adamiser Exp $
 
 #import "AIDockController.h"
 
@@ -102,18 +102,30 @@
     
 #ifdef MAC_OS_X_VERSION_10_0
             //Write the icon to the Adium application bundle so finder will see it
-//            if(notification != nil){
-#warning Evan: This is only necessary when the Adium app gets upgraded or notification != nil.  Perhaps Adium should know the version it had when last launched and be able to perform upgrade operations.
+			NSString	    *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+			NSString		*lastLaunchedVersion = [[owner preferenceController] preferenceForKey:KEY_LAST_VERSION_LAUNCHED
+																							group:PREF_GROUP_GENERAL];
+			
+			//On launch we only need to update the icon file if this is a new version of Adium.  When preferences
+			//change we always want to update it
+			if(notification != nil || !lastLaunchedVersion || !version || [lastLaunchedVersion compare:version] != 0){
                 NSString		*icnsPath = [[NSBundle mainBundle] pathForResource:@"Adium" ofType:@"icns"];
                 IconFamily		*iconFamily;
                 NSImage			*image;
-                image = [[[availableIconStateDict objectForKey:@"State"] objectForKey:@"Base"] image];
+
+				image = [[[availableIconStateDict objectForKey:@"State"] objectForKey:@"Base"] image];
                 if(image){
-                    //Create and save a new .icns file for the base icon state image
                     iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:image usingImageInterpolation:NSImageInterpolationLow];
                     [iconFamily writeToFile:icnsPath];
                 }
-//            }
+
+				//Remember the version of Adium this image was set for, so we don't need to do it again
+				if(version){
+					[[owner preferenceController] setPreference:version
+														 forKey:KEY_LAST_VERSION_LAUNCHED
+														  group:PREF_GROUP_GENERAL];
+				}
+			}
 #endif
             //Recomposite the icon
             [self _setNeedsDisplay];
