@@ -314,7 +314,7 @@ DeclareString(AppendNextMessage);
 
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject
 {
-	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@",[inObject uniqueObjectID],[NSString randomStringOfLength:5]];
+	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.tiff",[inObject uniqueObjectID],[NSString randomStringOfLength:5]];
 	return([[@"~/Library/Caches/Adium" stringByExpandingTildeInPath] stringByAppendingPathComponent:filename]);
 }	
 //WebView preferences --------------------------------------------------------------------------------------------------
