@@ -130,7 +130,7 @@
 - (void)completeLogin
 {
     //Init the controllers.
-    [preferenceController initController]; //must init after toolbar controller
+    [preferenceController initController]; //should init first to allow other controllers access to their prefs
     [toolbarController initController];
     [menuController initController];
     [soundController initController];
@@ -157,8 +157,8 @@
     [accountController closeController];
     [soundController closeController];
     [menuController closeController];
-    [preferenceController closeController];
     [toolbarController closeController];
+    [preferenceController closeController];
     
     // Clear out old event notifications
     //[eventNotifications removeAllObjects];
