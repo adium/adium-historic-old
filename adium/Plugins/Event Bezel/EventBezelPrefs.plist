@@ -11,13 +11,13 @@
         <key>Display if Offline</key>
         <true/>
         <key>Display if Available</key>
-        <true/>
+        <false/>
         <key>Display if Away</key>
-        <true/>
+        <false/>
         <key>Display if no Longer Idle</key>
-        <true/>
+        <false/>
         <key>Display if Idle</key>
-        <true/>
+        <false/>
         <key>Display if First Message</key>
         <true/>
         <key>Show Image Badges</key>
