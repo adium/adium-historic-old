@@ -234,7 +234,6 @@
         }
 		
 	} else {
-#warning Statuses should be able to know what kind of status it is, for class="away" style tags.
         range = [inString rangeOfString:@"%message%"];
         if(range.location != NSNotFound){
             [inString replaceCharactersInRange:range withString:[(AIContentStatus *)content message]];
@@ -242,8 +241,13 @@
         
         range = [inString rangeOfString:@"%time%"];
         if(range.location != NSNotFound){
-                [inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentStatus *)content date]]];
+			[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentStatus *)content date]]];
         }
+		
+		range = [inString rangeOfString:@"%status%"];
+		if(range.location != NSNotFound) {
+			[inString replaceCharactersInRange:range withString:[(AIContentStatus *)content status]];
+		}
 	}
 	
 	return(inString);

@@ -17,16 +17,16 @@
 #import "AIContentObject.h"
 
 @interface AIContentStatus (PRIVATE)
-- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage;
+- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage withType:(NSString *)inStatus;
 @end
 
 
 @implementation AIContentStatus
 
 //Create a new status content object
-+ (id)statusInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage
++ (id)statusInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage withType:(NSString *)inStatus
 {
-    return([[[self alloc] initWithChat:inChat source:inSource destination:inDest date:inDate message:inMessage] autorelease]);
+    return([[[self alloc] initWithChat:inChat source:inSource destination:inDest date:inDate message:inMessage withType:inStatus] autorelease]);
 }
 
 //Return the type ID of this content
@@ -38,6 +38,11 @@
 //Return our status message content
 - (NSString *)message{
     return(message);
+}
+
+//Return the type of status change this is
+- (NSString *)status {
+	return statusType;
 }
 
 - (void)setMessage:(NSString *)inMessage{
@@ -55,7 +60,7 @@
 
 // Private ------------------------------------------------------------------------------
 //init
-- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage
+- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage withType:(NSString *)inStatus
 {
     [super initWithChat:inChat source:inSource destination:inDest];
 
@@ -77,6 +82,7 @@
         date = [inDate retain];
     }
     message = [inMessage retain];
+	statusType = [inStatus retain];
 
     return(self);
 }
@@ -85,7 +91,8 @@
 {
     [date release];
     [message release];
-
+	[statusType release];
+	
     [super dealloc];
 }
 

@@ -19,13 +19,14 @@
 
 @interface AIContentStatus : AIContentObject {
     NSDate 			*date;
-    NSString 			*message;
-
+    NSString		*message;
+	NSString		*statusType;
 }
 
-+ (id)statusInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage;
++ (id)statusInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage withType:(NSString *)inType;
 - (NSString *)message;
 - (void)setMessage:(NSString *)inMessage;
 - (NSDate *)date;
+- (NSString *)status;
 
 @end
