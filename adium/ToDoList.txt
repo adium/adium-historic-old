@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.64 2004/04/20 13:48:35 adamiser Exp $
+$Id: ToDoList.txt,v 1.65 2004/04/20 14:11:43 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -23,7 +23,6 @@ Bugs
 * User icons are still getting flipped (Icons from AIM, apparently)
 * Tooltip code can crash if the listobject disappears out from under it, somehow. http://www.visualdistortion.org/crash/view.jsp?crash=8128
 * When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
-
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
 * Adding a contact that's already online causes them to appear signed off on the list.
 * Adding buddies, sometimes they'll show up on the list twice until a restart
@@ -52,6 +51,8 @@ Unconfirmed bugs
 * Adding a contact that already exists on the list seems to cause problems
 * Do we support ISA proxies? (ISA and NTLM authorization).  Does gaim have support for these?
 * Yahoo ignore list is being ignored?
+* Users are still reporting issues with the contact list display format pref not being correct on launch.
+* Message history and 'ignore formatting' option is doing some odd stuff (ignoring the ignore?)
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
@@ -111,6 +112,7 @@ Other:
 	+ Add export option to log viewer
 	+ Add some indication of service to the 'enter password' window.  Multiple accounts with the same name are indistinguishable
 	+ Fetch yahoo profiles from http://profiles.yahoo.com/[BUDDYNAME] for the info window (libgaim doesn't do this for us?)
+	+ Jabber links, support xmpp:user@host/resource or xmpp:user@host  
 
 -------------------------------------------------------------------------------------------------------
 Big Stuff
@@ -232,6 +234,8 @@ Deferring of initial message:
 
 Contact List import/export:
    Import/export code is not fun. 
+
+Sorting:  Allow a 'minor' sort option like iChat?  (iChat uses the last selected as the subsort).  Not sure if this would be useful.
 
 
 -------------------------------------------------------------------------------------------------------
