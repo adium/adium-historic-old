@@ -13,6 +13,11 @@ static NSMutableDictionary	*statusIcons[NUMBER_OF_STATUS_ICON_TYPES][NUMBER_OF_I
 static NSString				*statusIconBasePath = nil;
 static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 
+@interface AIStatusIcons(PRIVATE)
++ (NSString *)_stateIDForChat:(AIChat *)chat;
++ (NSString *)_statusIDForListObject:(AIListObject *)listObject;
+@end
+
 @implementation AIStatusIcons
 
 + (void)initialize
@@ -28,6 +33,24 @@ static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 		}
 	}
 }
+
+//Retrieve the correct status icon for a given list object
++ (NSImage *)statusIconForListObject:(AIListObject *)object type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection
+{
+	return [AIStatusIcons statusIconForStatusID:[AIStatusIcons _statusIDForListObject:object]
+										   type:iconType
+									  direction:iconDirection];
+}
+
+//Retrieve the correct status icon for a given chat
++ (NSImage *)statusIconForChat:(AIChat *)chat type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection
+{
+	return [AIStatusIcons statusIconForStatusID:[AIStatusIcons _stateIDForChat:chat]
+										   type:iconType
+									  direction:iconDirection];
+}
+
+
 
 //Retrieve the correct status icon for the internal status ID
 //We will probably want to remove this method and have everyone pass us list objects instead
@@ -74,6 +97,57 @@ static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 			return(NO);
 		}
 	}
+}
+
+//Returns the state icon for the passed chat (new content, tpying, ...)
++ (NSString *)_stateIDForChat:(AIChat *)inChat
+{
+	if([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
+		return(@"content");
+		
+	}else{
+		AITypingState typingState = [inChat integerStatusObjectForKey:KEY_TYPING];
+
+		if(typingState == AITyping){
+			return(@"typing");
+			
+		}else if (typingState == AIEnteredText){
+			return(@"enteredtext");
+		}
+	}
+	
+	return(nil);
+}
+
+//Returns the status icon for the passed contact (away, idle, online, stranger, ...)
++ (NSString *)_statusIDForListObject:(AIListObject *)listObject
+{
+	AIStatusSummary statusSummary = [listObject statusSummary];
+
+	switch (statusSummary){
+		case AIAwayStatus:
+		case AIAwayAndIdleStatus:
+			return(@"away");
+			break;
+
+		case AIIdleStatus:
+			return (@"idle");
+			break;
+
+		case AIAvailableStatus:
+			return (@"available");
+			break;
+
+		case AIOfflineStatus:
+			return(@"offline");
+			break;
+
+		case AIUnknownStatus:
+		default:
+			return(@"unknown");
+	}
+	
+	return nil;
 }
 
 @end
