@@ -43,7 +43,7 @@
 
 - (void)setListObject:(AIListObject *)inObject;
 - (BOOL)isGroup;
-- (void)setControlView:(NSView *)inControlView;
+- (void)setControlView:(AIListOutlineView *)inControlView;
 
 //Display options 
 - (void)setFont:(NSFont *)inFont;
