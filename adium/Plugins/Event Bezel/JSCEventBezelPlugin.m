@@ -147,6 +147,9 @@
 		}
     } else {
         contact = [notification object];
+		if([[contact containingGroup] isKindOfClass:[AIMetaContact class]]){
+			contact = nil;
+		}
     }
     
 	if(contact){
