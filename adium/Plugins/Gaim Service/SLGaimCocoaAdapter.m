@@ -15,6 +15,7 @@
 #import "SLGaimCocoaAdapter.h"
 #import <CoreFoundation/CFSocket.h>
 #import <CoreFoundation/CFRunLoop.h>
+#import "NDRunLoopMessenger.h"
 
 #import "GaimCommon.h"
 #import "CBGaimServicePlugin.h"
@@ -44,8 +45,8 @@ NSMutableDictionary *chatDict = nil;
 
 //Event loop stsatic variables
 static guint				sourceId = nil;		//The next source key; continuously incrementing
-static NSRunLoop			*runLoop = nil;
 static NSMutableDictionary  *sourceInfoDict = nil;
+static NDRunLoopMessenger   *runLoopMessenger = nil;
 
 @implementation SLGaimCocoaAdapter
 
@@ -64,51 +65,12 @@ static NSMutableDictionary  *sourceInfoDict = nil;
     return;
 }
 
-/*
-- (void)gotNewAccount:(NSNotification *)notification
-{
-	GaimAccount		*account = [[notification object] pointerValue];
-	NSArray			*portArray = [[notification userInfo] objectForKey:@"portArray"];
-	CBGaimAccount   *adiumAccount = [[notification userInfo] objectForKey:@"adiumAccount"];
-	NSConnection	*incomingConnection;
-	
-//	NSLog(@"gotNewAccount %x ; %x",runLoop, [NSRunLoop currentRunLoop]);
-//	NSLog(@"SLGAIMCOCOAADAPTER: addPortArray %x %@",account,portArray);
-  
-	//Create the connection which will be used to communicate to the CBGaimAccount instsance
-	incomingConnection = [[NSConnection connectionWithReceivePort:[portArray objectAtIndex:0]
-														 sendPort:[portArray objectAtIndex:1]] retain];
-	[incomingConnection enableMultipleThreads];
-	
-	//Store the rootProxy of that connection in the Gaim account's ui_data
-	NSDistantObject *adiumGaimAccount = [incomingConnection rootProxy];
-	[adiumGaimAccount setProtocolForProxy:@protocol(AdiumGaimDO)];
-	(account)->ui_data = [adiumGaimAccount retain];
-	
-	//Store a reference so we can get to the Gaim account given the adiumAccount
-	NSLog(@"%x %@ : %@",account,[NSValue valueWithPointer:account],[adiumAccount uniqueObjectID]);
-	[accountDict setObject:[NSValue valueWithPointer:account] forKey:[adiumAccount uniqueObjectID]];
-	NSLog(@"now %@",accountDict);
-	//NSLog(@"%x %x",incomingConnection,(account)->ui_data);
-}
-
-- (void)addPortArray:(NSArray *)portArray forAccountValue:(NSValue *)accountValue
-{
-	GaimAccount *account = [accountValue pointerValue];
-	NSConnection 	*incomingConnection;
-	NSLog(@"addPortArray %x ; %x",runLoop, [NSRunLoop currentRunLoop]);
-    incomingConnection = [[NSConnection connectionWithReceivePort:[portArray objectAtIndex:0]
-													  sendPort:[portArray objectAtIndex:1]] retain];
-	
-	account->ui_data = [[NSValue valueWithPointer:incomingConnection] retain];
-}
-*/
 + (SLGaimCocoaAdapter *)sharedInstance
 {
 	return myself;
 }
 
-- (void)addAdiumAccount:(id<AdiumGaimDO>)adiumAccount
+- (void)addAdiumAccount:(NSObject<AdiumGaimDO> *)adiumAccount
 {
 	GaimAccount *account = [adiumAccount gaimAccount];
 	account->ui_data = adiumAccount;
@@ -127,19 +89,15 @@ static NSMutableDictionary  *sourceInfoDict = nil;
 	
 	[self initLibGaim];
 	
-	NSConnection *destConnection = [[NSConnection alloc] init];    // create connection object
-	[destConnection enableMultipleThreads];
-	[destConnection registerName:@"GaimThread"];
-	[destConnection setRootObject:self];
-	runLoop = [[NSRunLoop currentRunLoop] retain];
-	
-//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(threadTest:) name:@"ThreadTest" object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNewAccount:) name:@"AddAccount" object:nil];
-//	[destConnection runInNewThread];
-	
 
-    [[NSRunLoop currentRunLoop] run];
+	NSConnection *myConnection = [NSConnection defaultConnection];
 	
+	runLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
+
+	[[NSRunLoop currentRunLoop] run];
+
+	NSLog(@"DONE!");
     return self;
 }
 
@@ -159,9 +117,9 @@ static NSConnection* accountLookup(GaimAccount *acct)
 	NSLog(@"looked up %@ %@",acct->ui_data,ret);
     return ret;
 }*/
-static id<AdiumGaimDO> accountLookup(GaimAccount *acct)
+static NSObject<AdiumGaimDO> *accountLookup(GaimAccount *acct)
 {
-	id<AdiumGaimDO> adiumGaimAccount = (id<AdiumGaimDO>)acct->ui_data;
+	NSObject<AdiumGaimDO> *adiumGaimAccount = (NSObject<AdiumGaimDO> *)acct->ui_data;
 
     return adiumGaimAccount;
 }
@@ -352,14 +310,18 @@ static GaimDebugUiOps adiumGaimDebugOps = {
 static void adiumGaimConnConnectProgress(GaimConnection *gc, const char *text, size_t step, size_t step_count)
 {
     if(GAIM_DEBUG) NSLog(@"Connecting: gc=0x%x (%s) %i / %i", gc, text, step, step_count);
-	[accountLookup(gc->account) accountConnectionProgressStep:step of:step_count];
+	
+	NSNumber	*connectionProgressPrecent = [NSNumber numberWithFloat:((float)step/(float)(step_count-1))];
+	[accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionProgressStep:percentDone:)
+										 withObject:[NSNumber numberWithInt:step]
+										 withObject:connectionProgressPrecent];
 }
 
 static void adiumGaimConnConnected(GaimConnection *gc)
 {
     if(GAIM_DEBUG) NSLog(@"Connected: gc=%x", gc);
 
-	[accountLookup(gc->account) accountConnectionConnected];
+	[accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionConnected)];
 }
 
 static void adiumGaimConnDisconnected(GaimConnection *gc)
@@ -367,20 +329,25 @@ static void adiumGaimConnDisconnected(GaimConnection *gc)
     if(GAIM_DEBUG) NSLog(@"Disconnected: gc=%x", gc);
 //    if (_accountDict == nil) // if this has been destroyed, unloadPlugin has already been called
 //        return;
-    [accountLookup(gc->account) accountConnectionDisconnected];
+    [accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionDisconnected)];
 }
 
 static void adiumGaimConnNotice(GaimConnection *gc, const char *text)
 {
     if(GAIM_DEBUG) NSLog(@"Connection Notice: gc=%x (%s)", gc, text);
-	[accountLookup(gc->account) accountConnectionNotice:text];
+	
+	NSString *connectionNotice = [NSString stringWithUTF8String:text];
+	[accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionNotice:)
+										 withObject:connectionNotice];
 }
 
 static void adiumGaimConnReportDisconnect(GaimConnection *gc, const char *text)
 {
-	NSLog(@"report disconnect %s",text);
     if(GAIM_DEBUG) NSLog(@"Connection Disconnected: gc=%x (%s)", gc, text);
-    [accountLookup(gc->account) accountConnectionReportDisconnect:[NSString stringWithUTF8String:text]];
+	
+	NSString	*disconnectError = [NSString stringWithUTF8String:text];	
+    [accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionReportDisconnect:)
+										 withObject:disconnectError];
 }
 
 static GaimConnectionUiOps adiumGaimConnectionOps = {
@@ -400,14 +367,15 @@ static void adiumGaimBlistNewList(GaimBuddyList *list)
 
 static void adiumGaimBlistNewNode(GaimBlistNode *node)
 {
-    NSCAssert(node != nil, @"BlistNewNode on null node");
+	/*
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
 		GaimBuddy *buddy = (GaimBuddy*) node;
 		
-//		contactLookupFromBuddy(buddy);
+		contactLookupFromBuddy(buddy);
 			
-//		[accountLookup(buddy->account) newContact:(contactLookupFromBuddy(buddy))];
+		[accountLookup(buddy->account) newContact:(contactLookupFromBuddy(buddy))];
     }
+	 */
 }
 
 static void adiumGaimBlistShow(GaimBuddyList *list)
@@ -417,7 +385,7 @@ static void adiumGaimBlistShow(GaimBuddyList *list)
 
 static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 {
-    NSCAssert(node != nil, @"BlistUpdate on null node");
+//    NSCAssert(node != nil, @"BlistUpdate on null node");
 //		NSLog(@"Blist update %s",((GaimBuddy*) node)->name);
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
 		GaimBuddy *buddy = (GaimBuddy*) node;
@@ -429,14 +397,19 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 			GaimGroup *g = gaim_find_buddys_group(buddy);
 			if(g && g->name){
 				NSString *groupName = [NSString stringWithUTF8String:g->name];
-				[accountLookup(buddy->account) updateContact:theContact toGroupName:groupName];
+				[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toGroupName:)
+														withObject:theContact
+														withObject:groupName];
 			}
 		}
 		
 		const char *alias = gaim_get_buddy_alias(buddy);
 		if (alias){
 			NSString *aliasString = [NSString stringWithUTF8String:alias];
-			[accountLookup(buddy->account) updateContact:theContact toAlias:aliasString];
+			
+			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
+													withObject:theContact
+													withObject:aliasString];
 		}
     }
 }
@@ -448,7 +421,8 @@ static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
 		GaimBuddy *buddy = (GaimBuddy*) node;
 
-		[accountLookup(buddy->account) removeContact:contactLookupFromBuddy(buddy)];
+		[accountLookup(buddy->account) mainPerformSelector:@selector(removeContact:)
+												withObject:contactLookupFromBuddy(buddy)];
 		
 		//Clear the ui_data
         buddy->node.ui_data = NULL;
@@ -468,7 +442,8 @@ static void adiumGaimBlistSetVisible(GaimBuddyList *list, gboolean show)
 
 static void adiumGaimBlistRequestAddBuddy(GaimAccount *account, const char *username, const char *group, const char *alias)
 {
-	[accountLookup(account) requestAddContactWithUID:[NSString stringWithUTF8String:username]];
+	[accountLookup(account) mainPerformSelector:@selector(requestAddContactWithUID:)
+									 withObject:[NSString stringWithUTF8String:username]];
 }
 
 static void adiumGaimBlistRequestAddChat(GaimAccount *account, GaimGroup *group, const char *alias)
@@ -561,12 +536,13 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 		}
 		
 		if (updateSelector){
-			[accountLookup(buddy->account) doSelector:updateSelector
-										   withObject:theContact
-										   withObject:data];
+			[accountLookup(buddy->account) mainPerformSelector:updateSelector
+													withObject:theContact
+													withObject:data];
 		}else{
-			[accountLookup(buddy->account) updateContact:theContact
-												forEvent:event];
+			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:forEvent:)
+													withObject:theContact
+													withObject:[NSNumber numberWithInt:event]];
 		}
 	}
 }
@@ -643,17 +619,20 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
 	
-	[accountLookup(conv->account) receivedMultiChatMessage:messageDict inChat:chatLookupFromConv(conv)];
+	[accountLookup(conv->account) mainPerformSelector:@selector(receivedMultiChatMessage:inChat:)
+										   withObject:messageDict
+										   withObject:chatLookupFromConv(conv)];
 }
 
 static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
 	NSDictionary *messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:message],@"Message",
-		/*[NSValue valueWithPointer:conv],@"GaimConversation",*/
 		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
 		
-	[accountLookup(conv->account) receivedIMChatMessage:messageDict inChat:imChatLookupFromConv(conv)];
+	[accountLookup(conv->account) mainPerformSelector:@selector(receivedIMChatMessage:inChat:)
+										   withObject:messageDict
+										   withObject:imChatLookupFromConv(conv)];
 }
 
 //Never actually called as of gaim 0.75
@@ -665,8 +644,9 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
-		[accountLookup(conv->account) addUser:[NSString stringWithUTF8String:user]
-													toChat:chatLookupFromConv(conv)];
+		[accountLookup(conv->account) mainPerformSelector:@selector(addUser:toChat:)
+											   withObject:[NSString stringWithUTF8String:user]
+											   withObject:chatLookupFromConv(conv)];
 	}
 	
 }
@@ -684,8 +664,9 @@ static void adiumGaimConvChatRenameUser(GaimConversation *conv, const char *oldN
 static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
-		[accountLookup(conv->account) removeUser:[NSString stringWithUTF8String:user]
-													fromChat:chatLookupFromConv(conv)];
+		[accountLookup(conv->account) mainPerformSelector:@selector(removeUser:fromChat:)
+											   withObject:[NSString stringWithUTF8String:user]
+											   withObject:chatLookupFromConv(conv)];
 	}
 }
 
@@ -707,21 +688,29 @@ static void adiumGaimConvUpdateProgress(GaimConversation *conv, float percent)
 static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
-		[accountLookup(conv->account) updateForChat:chatLookupFromConv(conv) type:type];
+		[accountLookup(conv->account) mainPerformSelector:@selector(updateForChat:type:)
+											withObject:chatLookupFromConv(conv)
+											   withObject:[NSNumber numberWithInt:type]];
+		
 	}else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM){
 		
 		GaimConvIm  *im = gaim_conversation_get_im_data(conv);
 		switch (type) {
-			case GAIM_CONV_UPDATE_TYPING:
-				[accountLookup(conv->account) typingUpdateForIMChat:imChatLookupFromConv(conv)
-																		 typing:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
+			case GAIM_CONV_UPDATE_TYPING: {
+				NSNumber	*isTyping = [NSNumber numberWithBool:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
+				
+				[accountLookup(conv->account) mainPerformSelector:@selector(typingUpdateForIMChat:typing:)
+													   withObject:imChatLookupFromConv(conv)
+													   withObject:isTyping];
 				break;
-			case GAIM_CONV_UPDATE_AWAY:
+			}
+			case GAIM_CONV_UPDATE_AWAY: {
 				//If the conversation update is UPDATE_AWAY, it seems to suppress the typing state being updated
 				//Reset gaim's typing tracking, then update to receive a GAIM_CONV_UPDATE_TYPING message
 				gaim_conv_im_set_typing_state(im, GAIM_NOT_TYPING);
 				gaim_conv_im_update_typing(im);
 				break;
+			}
 			default:
 				break;
 		}
@@ -791,7 +780,8 @@ static void adiumGaimConvWindowAddConv(GaimConvWindow *win, GaimConversation *co
 
 		AIChat *chat = chatLookupFromConv(conv);
 			
-		[accountLookup(conv->account) addChat:chat];
+		[accountLookup(conv->account) mainPerformSelector:@selector(addChat:)
+											   withObject:chat];
 	}
 }
 
@@ -974,9 +964,10 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	//If we didn't grab a translated version using AILocalizedString, at least display the English version Gaim supplied
 	//XXX Not threadsafe 
 #warning This generates really ugly output in most cases; the title should not be used as it is
-	[[adium interfaceController] handleMessage:([errorMessage length] ? errorMessage : primaryString)
-							  withDescription:([description length] ? description : ([secondaryString length] ? secondaryString : @"") )
-							  withWindowTitle:titleString];
+	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
+										  withObject:([errorMessage length] ? errorMessage : primaryString)
+										  withObject:([description length] ? description : ([secondaryString length] ? secondaryString : @"") )
+										  withObject:titleString];
 }
 
 #pragma mark Request
@@ -1109,7 +1100,9 @@ static void adiumGaimNewXfer(GaimXfer *xfer)
 
 static void adiumGaimDestroy(GaimXfer *xfer)
 {
-	[accountLookup(xfer->account) destroyFileTransfer:(ESFileTransfer *)xfer->ui_data];
+	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
+	[accountLookup(xfer->account) mainPerformSelector:@selector(destroyFileTransfer:)
+										   withObject:fileTransfer];
 	
 	xfer->ui_data = nil;
 }
@@ -1132,7 +1125,8 @@ static void adiumGaimRequestXfer(GaimXfer *xfer)
 		xfer->ui_data = [fileTransfer retain];
 		
 		//Tell the account that we are ready to request the reception
-        [accountLookup(xfer->account) requestReceiveOfFileTransfer:fileTransfer];
+        [accountLookup(xfer->account) mainPerformSelector:@selector(requestReceiveOfFileTransfer:)
+											   withObject:fileTransfer];
 		
     } else if (xferType == GAIM_XFER_SEND) {
 		NSCAssert(xfer->local_filename != nil, @"adiumGaimRequestFile: Attempted to send nil file...");
@@ -1154,9 +1148,12 @@ static void adiumGaimAddXfer(GaimXfer *xfer)
 static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 {
 	NSLog(@"transfer update: %s is now %f%% done",xfer->filename,(percent*100));
-    [accountLookup(xfer->account) updateProgressForFileTransfer:(ESFileTransfer *)xfer->ui_data
-																	percent:percent
-																  bytesSent:xfer->bytes_sent];
+	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
+	
+    [accountLookup(xfer->account) mainPerformSelector:@selector(updateProgressForFileTransfer:percent:bytesSent:)
+										   withObject:fileTransfer
+										   withObject:[NSNumber numberWithFloat:percent]
+										   withObject:[NSNumber numberWithFloat:xfer->bytes_sent]];
 }
 
 static void adiumGaimCancelLocal(GaimXfer *xfer)
@@ -1167,7 +1164,9 @@ static void adiumGaimCancelLocal(GaimXfer *xfer)
 static void adiumGaimCancelRemote(GaimXfer *xfer)
 {
 	NSLog(@"adiumGaimCancelRemote");
-    [accountLookup(xfer->account) fileTransferCanceledRemotely:(ESFileTransfer *)xfer->ui_data];
+	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
+    [accountLookup(xfer->account) mainPerformSelector:@selector(fileTransferCanceledRemotely:)
+										   withObject:fileTransfer];
 }
 
 static GaimXferUiOps adiumGaimFileTransferOps = {
@@ -1186,19 +1185,23 @@ static GaimXferUiOps adiumGaimFileTransferOps = {
 
 static void adiumGaimPermitAdded(GaimAccount *account, const char *name)
 {
-	[accountLookup(account) accountPrivacyList:PRIVACY_PERMIT added:[NSString stringWithUTF8String:name]];
+	[accountLookup(account)	mainPerformSelector:@selector(privacyPermitListAdded:)
+									 withObject:[NSString stringWithUTF8String:name]];
 }
 static void adiumGaimPermitRemoved(GaimAccount *account, const char *name)
 {
-	[accountLookup(account) accountPrivacyList:PRIVACY_PERMIT removed:[NSString stringWithUTF8String:name]];
+	[accountLookup(account)	mainPerformSelector:@selector(privacyPermitListRemoved:)
+									 withObject:[NSString stringWithUTF8String:name]];
 }
 static void adiumGaimDenyAdded(GaimAccount *account, const char *name)
 {
-	[accountLookup(account) accountPrivacyList:PRIVACY_DENY added:[NSString stringWithUTF8String:name]];
+	[accountLookup(account)	mainPerformSelector:@selector(privacyDenyListAdded:)
+									 withObject:[NSString stringWithUTF8String:name]];
 }
 static void adiumGaimDenyRemoved(GaimAccount *account, const char *name)
 {
-	[accountLookup(account) accountPrivacyList:PRIVACY_DENY removed:[NSString stringWithUTF8String:name]];
+	[accountLookup(account)	mainPerformSelector:@selector(privacyDenyListRemoved:)
+									 withObject:[NSString stringWithUTF8String:name]];
 }
 
 static GaimPrivacyUiOps adiumGaimPrivacyOps = {
@@ -1311,7 +1314,6 @@ guint adium_input_add(int fd, GaimInputCondition condition,
     CFRunLoopSourceRef rls = CFSocketCreateRunLoopSource(NULL, socket, 0);
 	
 	//    CFRunLoopAddSource([[NSRunLoop currentRunLoop] getCFRunLoop], rls, kCFRunLoopCommonModes);
-	if (GAIM_DEBUG) NSLog(@"addSource: runLoop %x ; %x",runLoop, [NSRunLoop currentRunLoop]);
 	CFRunLoopAddSource([[NSRunLoop currentRunLoop] getCFRunLoop], rls, kCFRunLoopCommonModes);
 	
 	sourceId++;
@@ -1455,22 +1457,46 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)connectAccount:(id)adiumAccount
 {
+	[runLoopMessenger target:self 
+			 performSelector:@selector(gaimThreadConnectAccount:) 
+				  withObject:adiumAccount];
+}
+- (void)gaimThreadConnectAccount:(id)adiumAccount
+{
 	gaim_account_connect(accountLookupFromAdiumAccount(adiumAccount));
 }
 
 - (void)disconnectAccount:(id)adiumAccount
+{
+	[runLoopMessenger target:self 
+			 performSelector:@selector(gaimThreadDisconnectAccount:) 
+				  withObject:adiumAccount];
+}
+- (void)gaimThreadDisconnectAccount:(id)adiumAccount
 {
 	gaim_account_disconnect(accountLookupFromAdiumAccount(adiumAccount));
 }
 
 - (oneway void)sendMessage:(NSString *)encodedMessage fromAccount:(id)sourceAccount inChat:(AIChat *)chat withFlags:(int)flags
 {
+	[runLoopMessenger target:self 
+			 performSelector:@selector(gaimThreadSendMessage:fromAccount:inChat:withFlags:) 
+				  withObject:encodedMessage
+				  withObject:sourceAccount
+				  withObject:chat
+				  withObject:[NSNumber numberWithInt:flags]];
+}
+- (oneway void)gaimThreadSendMessage:(NSString *)encodedMessage
+						 fromAccount:(id)sourceAccount
+							  inChat:(AIChat *)chat
+						   withFlags:(NSNumber *)flags
+{
 	GaimConversation *conv = convLookupFromChat(chat,sourceAccount);
 	
 	switch (gaim_conversation_get_type(conv)) {				
 		case GAIM_CONV_IM: {
 			GaimConvIm			*im = gaim_conversation_get_im_data(conv);
-			gaim_conv_im_send_with_flags(im,[encodedMessage UTF8String],flags);
+			gaim_conv_im_send_with_flags(im,[encodedMessage UTF8String],[flags intValue]);
 			break;
 		}
 			
@@ -1484,15 +1510,31 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)sendTyping:(BOOL)typing inChat:(AIChat *)chat
 {
+	[runLoopMessenger target:self 
+			 performSelector:@selector(gaimThreadSendTyping:inChat:)
+				  withObject:[NSNumber numberWithBool:typing]
+				  withObject:chat];
+}
+- (oneway void)gaimThreadSendTyping:(NSNumber *)typing inChat:(AIChat *)chat
+{
 	GaimConversation *conv = convLookupFromChat(chat,nil);
 	if (conv){
 		serv_send_typing(gaim_conversation_get_gc(conv),
 						 gaim_conversation_get_name(conv),
-						 (typing ? GAIM_TYPING : GAIM_NOT_TYPING));
-	}
+						 ([typing boolValue] ? GAIM_TYPING : GAIM_NOT_TYPING));
+	}	
 }
 
 - (oneway void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
+{
+	[runLoopMessenger target:self 
+			 performSelector:@selector(gaimThreadAddUID:onAccount:toGroup:)
+				  withObject:objectUID
+				  withObject:adiumAccount
+				  withObject:groupName];
+}
+
+- (oneway void)gaimThreadAddUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
 	const char  *buddyUID = [objectUID UTF8String];
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
@@ -1518,6 +1560,13 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
 {
+	[runLoopMessenger target:self performSelector:@selector(gaimThreadRemoveUID:onAccount:fromGroup:)
+				  withObject:objectUID
+				  withObject:adiumAccount
+				  withObject:groupName];
+}
+- (oneway void)gaimThreadRemoveUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
+{
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	const char  *buddyUID = [objectUID UTF8String];
 	const char  *groupUTF8String = (groupName ? [groupName UTF8String] : "");
@@ -1532,6 +1581,13 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 
 - (oneway void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
+{
+	[runLoopMessenger target:self performSelector:@selector(gaimThreadMoveUID:onAccount:toGroup:)
+				  withObject:objectUID
+				  withObject:adiumAccount
+				  withObject:groupName];
+}
+- (oneway void)gaimThreadMoveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
 	const char  *buddyUID = [objectUID UTF8String];
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
@@ -1556,6 +1612,13 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 
 - (oneway void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
+{	
+	[runLoopMessenger target:self performSelector:@selector(gaimThreadRenameGroup:onAccount:to:)
+				  withObject:oldGroupName
+				  withObject:adiumAccount
+				  withObject:newGroupName];
+}
+- (oneway void)gaimThreadRenameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
 {
     GaimGroup *group = gaim_find_group([oldGroupName UTF8String]);
 	
@@ -1573,10 +1636,21 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (oneway void)openChat:(AIChat *)chat onAccount:(id)adiumAccount
 {
+	[runLoopMessenger target:self performSelector:@selector(gaimThreadOpenChat:onAccount:)
+				  withObject:chat
+				  withObject:adiumAccount];
+}
+- (oneway void)gaimThreadOpenChat:(AIChat *)chat onAccount:(id)adiumAccount
+{
 	GaimConversation *conv = convLookupFromChat(chat,adiumAccount);
 }
 
 - (oneway void)closeChat:(AIChat *)chat
+{
+	[runLoopMessenger target:self performSelector:@selector(gaimThreadCloseChat:)
+				  withObject:chat];
+}
+- (oneway void)gaimThreadCloseChat:(AIChat *)chat
 {
 	GaimConversation *conv = convLookupFromChat(chat,nil);
 	

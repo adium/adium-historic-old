@@ -137,12 +137,12 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 - (void)accountConnectionConnected
 {
+	[super accountConnectionConnected];
+	
 	//Request the roster now; while gaim official manages to request before doing blist updates, libgaim does not
 	//If we don't request, all buddies will seem to be unauthorized so won't report their online status
 	JabberStream *js = gc->proto_data;
 	jabber_roster_request(js);
-	
-	[super accountConnectionConnected];
 }
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
@@ -178,13 +178,13 @@ static NSDictionary		*presetStatusesDictionary = nil;
 }
 
 #pragma mark Status Messages
-- (void)updateContact:(AIListContact *)theContact forEvent:(GaimBuddyEvent) event
+- (void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
 {
 	[super updateContact:theContact forEvent:event];
 	
 	SEL updateSelector = nil;
 	
-	switch (event){
+	switch ([event intValue]){
 		case GAIM_BUDDY_STATUS_MESSAGE: {
 			updateSelector = @selector(updateStatusMessage:);
 			break;

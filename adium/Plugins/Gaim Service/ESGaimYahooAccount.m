@@ -126,13 +126,13 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 
 #pragma mark Status Messages
-- (void)updateContact:(AIListContact *)theContact forEvent:(GaimBuddyEvent) event
+- (void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
 {
 	[super updateContact:theContact forEvent:event];
 	
 	SEL updateSelector = nil;
 	
-	switch (event){
+	switch ([event intValue]){
 		case GAIM_BUDDY_STATUS_MESSAGE: {
 			updateSelector = @selector(updateStatusMessage:);
 			break;
