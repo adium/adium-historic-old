@@ -49,7 +49,7 @@
 		LNStatusIcon			*statusIcon;
 		AIMutableOwnerArray		*iconArray;
 		NSArray					*imageArray;
-		double					idle = 0;
+		int						idle = 0;
 		int						away = 0;
 		
 		// For now, until dragging is implemented, they are right aligned.
@@ -65,7 +65,7 @@
 				[iconArray setObject:statusIcon withOwner:self];
 			}
 			
-			idle = [[inObject numberStatusObjectForKey:@"Idle"] doubleValue];
+			idle = [[inObject numberStatusObjectForKey:@"Idle"] intValue];
 			away = [inObject integerStatusObjectForKey:@"Away"];
 			
 			if((away != 0) && (idle != 0)){

@@ -101,7 +101,7 @@
 {
     NSColor	*color = nil;
     int		unviewedContent, away;
-    double	idle;
+    int		idle;
 
     //Prefetch the value for unviewed content, we need it multiple times below
     unviewedContent = [inObject integerStatusObjectForKey:@"UnviewedContent"];
@@ -137,7 +137,7 @@
     if(!color && [inObject integerStatusObjectForKey:@"Online"]){
         //Prefetch these values, we need them multiple times below
         away = [inObject integerStatusObjectForKey:@"Away"];
-        idle = [[inObject numberStatusObjectForKey:@"Idle"] doubleValue];
+        idle = [[inObject numberStatusObjectForKey:@"Idle"] intValue];
 
         //Idle And Away, Away, or Idle
         if( away && (idle != 0) && (idleAndAwayEnabled || contactListIdleAndAwayEnabled) ){

@@ -948,8 +948,8 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			name = ESSendMessageContactAlert.h;
-			path = "Plugins/Send Message Contact Alert/ESSendMessageContactAlert.h";
+			name = ESSendMessageAlertDetailPane.h;
+			path = "Plugins/Send Message Contact Alert/ESSendMessageAlertDetailPane.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -957,8 +957,8 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
-			name = ESSendMessageContactAlert.m;
-			path = "Plugins/Send Message Contact Alert/ESSendMessageContactAlert.m";
+			name = ESSendMessageAlertDetailPane.m;
+			path = "Plugins/Send Message Contact Alert/ESSendMessageAlertDetailPane.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
