@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//$Id: LNAboutBoxController.m,v 1.36 2004/06/20 23:47:27 evands Exp $
+//$Id: LNAboutBoxController.m,v 1.37 2004/06/22 02:33:00 evands Exp $
 
 #import "LNAboutBoxController.h"
 
@@ -76,8 +76,18 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
     scrollLocation = 0; 
     scrollRate = 1.0;
     maxScroll = [[textView_credits textStorage] size].height - [[textView_credits enclosingScrollView] documentVisibleRect].size.height;
-    scrollTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/20.0) target:self selector:@selector(scrollTimer:) userInfo:nil repeats:YES] retain];
-    
+    scrollTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/20.0)
+													target:self
+												  selector:@selector(scrollTimer:)
+												  userInfo:nil
+												   repeats:YES] retain];
+	eventLoopScrollTimer = [[NSTimer timerWithTimeInterval:(1.0/20.0)
+												   target:self
+												 selector:@selector(scrollTimer:)
+												 userInfo:nil
+												  repeats:YES] retain];
+    [[NSRunLoop currentRunLoop] addTimer:eventLoopScrollTimer forMode:NSEventTrackingRunLoopMode];
+	
     //Setup the build date / version
     [button_buildButton setTitle:buildDate];
     [textField_version setStringValue:[self _applicationVersion]];
@@ -98,6 +108,7 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 {
     [sharedAboutBoxInstance autorelease]; sharedAboutBoxInstance = nil;
     [scrollTimer invalidate]; [scrollTimer release]; scrollTimer = nil;
+	[eventLoopScrollTimer invalidate]; [eventLoopScrollTimer release]; eventLoopScrollTimer = nil;
 	
     return(YES);
 }
