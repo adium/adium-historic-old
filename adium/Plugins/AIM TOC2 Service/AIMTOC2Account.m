@@ -1021,7 +1021,7 @@ static char *hash_password(const char * const password);
     //Key pieces of HTML that mark the begining and end of the AIM profile (and the username)
     #define USERNAME_START	@"Username : <B>"
     #define USERNAME_END	@"</B>"
-    #define PROFILE_START	@"<hr><br>"
+    #define PROFILE_START	@"<hr><br>\n"
     #define PROFILE_END		@"<br><hr><I>Legend:</I><br><br>"
 
     //Extract the username and profile
