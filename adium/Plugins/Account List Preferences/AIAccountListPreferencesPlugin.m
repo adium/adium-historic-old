@@ -252,24 +252,19 @@
     
         switch(status){
             case STATUS_NA:
-                if(selected) image = [AIImageUtilities imageNamed:@"Account_Online_Inverted" forClass:[self class]];
-                else image = [AIImageUtilities imageNamed:@"Account_Online" forClass:[self class]];
+                image = [AIImageUtilities imageNamed:@"Account_Online" forClass:[self class]];
             break;
             case STATUS_OFFLINE:
-                if(selected) image = [AIImageUtilities imageNamed:@"Account_Offline_Inverted" forClass:[self class]];
-                else image = [AIImageUtilities imageNamed:@"Account_Offline" forClass:[self class]];
+                image = [AIImageUtilities imageNamed:@"Account_Offline" forClass:[self class]];
             break;
             case STATUS_CONNECTING:
-                if(selected) image = [AIImageUtilities imageNamed:@"Account_Connecting_Inverted" forClass:[self class]];
-                else image = [AIImageUtilities imageNamed:@"Account_Connecting" forClass:[self class]];
+                image = [AIImageUtilities imageNamed:@"Account_Connecting" forClass:[self class]];
             break;
             case STATUS_ONLINE:
-                if(selected) image = [AIImageUtilities imageNamed:@"Account_Online_Inverted" forClass:[self class]];
-                else image = [AIImageUtilities imageNamed:@"Account_Online" forClass:[self class]];
+                image = [AIImageUtilities imageNamed:@"Account_Online" forClass:[self class]];
             break;
             case STATUS_DISCONNECTING:
-                if(selected) image = [AIImageUtilities imageNamed:@"Account_Connecting_Inverted" forClass:[self class]];
-                else image = [AIImageUtilities imageNamed:@"Account_Connecting" forClass:[self class]];
+                image = [AIImageUtilities imageNamed:@"Account_Connecting" forClass:[self class]];
             break;
             default:
                 image = nil;

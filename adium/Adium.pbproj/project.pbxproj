@@ -1407,11 +1407,8 @@
 			children = (
 				F510B77A0333A0A201A8010A,
 				F570A585037049D501A8010A,
-				F55B414403AB89BB01A8010A,
 				F55B414503AB89BB01A8010A,
-				F55B414603AB89BB01A8010A,
 				F55B414703AB89BB01A8010A,
-				F55B414803AB89BB01A8010A,
 				F55B414903AB89BB01A8010A,
 			);
 			isa = PBXGroup;
@@ -1430,11 +1427,8 @@
 		F510B76F03339F1C01A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				F55B414A03AB89BB01A8010A,
 				F55B414B03AB89BB01A8010A,
-				F55B414C03AB89BB01A8010A,
 				F55B414D03AB89BB01A8010A,
-				F55B414E03AB89BB01A8010A,
 				F55B414F03AB89BB01A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
@@ -2852,32 +2846,14 @@
 			settings = {
 			};
 		};
-		F5519B2A03AC3EB601A8010A = {
-			fileRef = F55B414803AB89BB01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5519B2B03AC3EB701A8010A = {
 			fileRef = F55B414703AB89BB01A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
 		};
-		F5519B2C03AC3EB701A8010A = {
-			fileRef = F55B414603AB89BB01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5519B2D03AC3EB801A8010A = {
 			fileRef = F55B414503AB89BB01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5519B2E03AC3EB801A8010A = {
-			fileRef = F55B414403AB89BB01A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3551,22 +3527,10 @@
 			settings = {
 			};
 		};
-		F55B414403AB89BB01A8010A = {
-			isa = PBXFileReference;
-			name = Account_Connecting_Inverted.tiff;
-			path = "Plugins/Account Menu Access/Account_Connecting_Inverted.tiff";
-			refType = 4;
-		};
 		F55B414503AB89BB01A8010A = {
 			isa = PBXFileReference;
 			name = Account_Connecting.tiff;
 			path = "Plugins/Account Menu Access/Account_Connecting.tiff";
-			refType = 4;
-		};
-		F55B414603AB89BB01A8010A = {
-			isa = PBXFileReference;
-			name = Account_Offline_Inverted.tiff;
-			path = "Plugins/Account Menu Access/Account_Offline_Inverted.tiff";
 			refType = 4;
 		};
 		F55B414703AB89BB01A8010A = {
@@ -3575,23 +3539,11 @@
 			path = "Plugins/Account Menu Access/Account_Offline.tiff";
 			refType = 4;
 		};
-		F55B414803AB89BB01A8010A = {
-			isa = PBXFileReference;
-			name = Account_Online_Inverted.tiff;
-			path = "Plugins/Account Menu Access/Account_Online_Inverted.tiff";
-			refType = 4;
-		};
 		F55B414903AB89BB01A8010A = {
 			isa = PBXFileReference;
 			name = Account_Online.tiff;
 			path = "Plugins/Account Menu Access/Account_Online.tiff";
 			refType = 4;
-		};
-		F55B414A03AB89BB01A8010A = {
-			fileRef = F55B414403AB89BB01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F55B414B03AB89BB01A8010A = {
 			fileRef = F55B414503AB89BB01A8010A;
@@ -3599,20 +3551,8 @@
 			settings = {
 			};
 		};
-		F55B414C03AB89BB01A8010A = {
-			fileRef = F55B414603AB89BB01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F55B414D03AB89BB01A8010A = {
 			fileRef = F55B414703AB89BB01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F55B414E03AB89BB01A8010A = {
-			fileRef = F55B414803AB89BB01A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7114,11 +7054,8 @@
 				F55B413D03AB895501A8010A,
 				F55B414303AB897201A8010A,
 				F5519B2903AC3EB501A8010A,
-				F5519B2A03AC3EB601A8010A,
 				F5519B2B03AC3EB701A8010A,
-				F5519B2C03AC3EB701A8010A,
 				F5519B2D03AC3EB801A8010A,
-				F5519B2E03AC3EB801A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
