@@ -15,7 +15,7 @@
 
 @class AISocket, AIGroup, AIMTOC2AccountViewController;
 
-@interface AIMTOC2Account : AIAccount <AIAccount_Content, AIAccount_Handles, NSURLHandleClient> {
+@interface AIMTOC2Account : AIAccount <AIAccount_Content, NSURLHandleClient> {
     IBOutlet		NSTextView	*textView_trafficWatchDEBUG;
     IBOutlet		NSTextField	*textField_trafficSendDEBUG;
     
@@ -51,7 +51,6 @@
     
 }
 
-- (IBAction)sendDirectDebugCommand:(id)sender;
 - (void)initAccount;
 - (void)dealloc;
 - (void)acceptInvitationForChatID:(NSString *)chatID;
