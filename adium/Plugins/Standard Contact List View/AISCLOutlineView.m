@@ -40,7 +40,8 @@
     [super init];
 
     font = nil;
-
+    color = nil;
+    
     //Set up the table view
     tableColumn = [[[NSTableColumn alloc] init] autorelease];
     [tableColumn setDataCell:[[[AISCLCell alloc] init] autorelease]];
@@ -61,7 +62,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:[self enclosingScrollView]];
 
     //Cleanup
-    [font release];    
+    [font release];
+    [color release];
     [super dealloc];
 }
 
@@ -174,15 +176,43 @@
 {
     if(font != inFont){
         [font release];
-        font = [inFont retain];        
+        font = [inFont retain];
     }
 }
 - (NSFont *)font{
     return(font);
 }
 
+//Custom color settings -----------------------------------------------------------------
+- (void)setColor:(NSColor *)inColor
+{
+    [self setColor:inColor andInvertedColor:[self invertedColor]];
+}
+- (void)setInvertedColor:(NSColor *)inInvertedColor
+{
+    [self setColor:[self color] andInvertedColor:inInvertedColor];
+}
 
-//No available contacts ------------------------------------------------------------------
+- (void)setColor:(NSColor *)inColor andInvertedColor:(NSColor *)inInvertedColor
+{
+    if(color != inColor){
+        [color release];
+        color = [inColor retain];
+    }
+    
+    if(invertedColor != inInvertedColor){
+        [invertedColor release];
+        invertedColor = [inInvertedColor retain];
+    }
+}
+- (NSColor *)color{
+    return(color);
+}
+- (NSColor *)invertedColor{
+    return(invertedColor);
+}
+
+//No available contacts -----------------------------------------------------------------
 //Draw a custom 'no available contacts' message when the list is empty
 - (void)drawRect:(NSRect)rect
 {
@@ -197,7 +227,8 @@
         int			position;
 
         //Create the empty message
-        attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont systemFontOfSize:11],NSFontAttributeName,nil];
+        //attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont systemFontOfSize:11],NSFontAttributeName,nil];
+        attributes = [NSDictionary dictionaryWithObjectsAndKeys:[self color],NSForegroundColorAttributeName,[self font],NSFontAttributeName,nil];
         emptyMessage = [[NSAttributedString alloc] initWithString:CONTACT_LIST_EMPTY_MESSAGE attributes:attributes];
 
         //Center it

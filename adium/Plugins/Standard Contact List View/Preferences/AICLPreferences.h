@@ -18,6 +18,8 @@
     IBOutlet	NSButton		*button_setFont;
     IBOutlet	NSTextField		*textField_fontName;
     IBOutlet	NSButton		*checkBox_alternatingGrid;
+    IBOutlet	NSColorWell		*colorWell_group;
+    IBOutlet	NSColorWell		*colorWell_group_inverted;
     IBOutlet	NSColorWell		*colorWell_background;
     IBOutlet	NSColorWell		*colorWell_grid;
     IBOutlet	NSSlider		*slider_opacity;

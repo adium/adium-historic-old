@@ -21,6 +21,8 @@
 #define SCL_DEFAULT_PREFS		@"SCL Defaults"
 
 #define KEY_SCL_FONT			@"Font"
+#define KEY_SCL_GROUP_COLOR		@"Group Color"
+#define KEY_SCL_GROUP_COLOR_INVERTED	@"Group Inverted Color"
 #define	KEY_SCL_ALTERNATING_GRID	@"Alternating Grid"
 #define KEY_SCL_GRID_COLOR		@"Grid Color"
 #define KEY_SCL_BACKGROUND_COLOR	@"Background Color"

@@ -53,11 +53,21 @@
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SCL_ALTERNATING_GRID
                                               group:PREF_GROUP_CONTACT_LIST];
-        
+
+    }else if(sender == colorWell_group){
+        [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
+                                             forKey:KEY_SCL_GROUP_COLOR
+                                              group:PREF_GROUP_CONTACT_LIST];
+
+    }else if(sender == colorWell_group_inverted){
+        [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
+                                             forKey:KEY_SCL_GROUP_COLOR_INVERTED
+                                              group:PREF_GROUP_CONTACT_LIST];
+
     }else if(sender == colorWell_grid){
         [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_GRID_COLOR
-                                              group:PREF_GROUP_CONTACT_LIST];    
+                                              group:PREF_GROUP_CONTACT_LIST];
         
     }else if(sender == colorWell_background){
         [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
@@ -133,6 +143,8 @@
 {
     //Display
     [self showFont:[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont] inField:textField_fontName];
+    [colorWell_group setColor:[[preferenceDict objectForKey:KEY_SCL_GROUP_COLOR] representedColor]];
+    [colorWell_group_inverted setColor:[[preferenceDict objectForKey:KEY_SCL_GROUP_COLOR_INVERTED] representedColor]];
     [colorWell_background setColor:[[preferenceDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColor]];
 
     //Grid
