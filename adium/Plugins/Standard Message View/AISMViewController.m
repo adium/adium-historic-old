@@ -103,6 +103,7 @@
     [self _flushPreferenceCache];
 
     //
+	[contentQueue release];
     [messageView release];
     [chat release];
     [iconIncoming release];
