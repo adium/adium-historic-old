@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.84 2004/07/19 19:14:42 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.85 2004/07/20 16:12:29 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -105,7 +105,12 @@ arrangeChats = YES;
 									   name:Contact_OrderChanged 
 									 object:nil];
 	
-	
+	//Observe preference changes
+	[[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
+	[self preferencesChanged:nil];
+
 }
 
 - (void)closeController
@@ -154,6 +159,19 @@ arrangeChats = YES;
 	return YES;
 }
 
+//Preferences changed
+- (void)preferencesChanged:(NSNotification *)notification
+{
+	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_INTERFACE]){
+		NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_INTERFACE];
+
+		groupChatsByContactGroup = [[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue];
+		arrangeChats = [[prefDict objectForKey:KEY_SORT_CHATS] boolValue];
+
+#warning these need to work for existing windows too...
+	}
+}
+		
 
 //Contact List ---------------------------------------------------------------------------------------------------------
 #pragma mark Contact list
@@ -278,7 +296,6 @@ arrangeChats = YES;
 //A chat has become active: update our chat closing keys and flag this chat as selected in the window menu
 - (void)chatDidBecomeActive:(AIChat *)inChat
 {
-	NSLog(@"chatDidBecomeActive:%@",inChat);
 	[activeChat release]; activeChat = [inChat retain];
 	[self clearUnviewedContentOfChat:inChat];
 	[self updateCloseMenuKeys];
@@ -330,8 +347,6 @@ arrangeChats = YES;
 //Dynamically ordering / grouping tabs ---------------------------------------------------------------------------------
 - (void)contactOrderChanged:(NSNotification *)notification
 {
-	NSLog(@"contactOrderChanged: %@",[notification object]);
-	
 	if(arrangeChats){
 		AIListObject		*changedObject = [notification object];
 		

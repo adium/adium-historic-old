@@ -6,8 +6,9 @@
 //
 
 @interface ESDualWindowMessageWindowPreferences : AIPreferencePane {
-    IBOutlet	NSButton	*createMessages_inTabs;
-	IBOutlet	NSButton	*createTabs_inLastWindow;
+    IBOutlet	NSButton	*checkBox_messagesInTabs;
+    IBOutlet	NSButton	*checkBox_arrangeTabs;
+    IBOutlet	NSButton	*checkBox_arrangeByGroup;
 }
 
 @end

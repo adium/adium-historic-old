@@ -23,6 +23,12 @@
 #define Interface_ContactListDidResignMain			@"Interface_contactListDidResignMain"
 #define AIViewDesiredSizeDidChangeNotification		@"AIViewDesiredSizeDidChangeNotification"
 
+#define PREF_GROUP_INTERFACE			@"Interface"
+#define KEY_TABBED_CHATTING				@"Tabbed Chatting"
+#define KEY_SORT_CHATS					@"Sort Chats"
+#define KEY_GROUP_CHATS_BY_GROUP		@"Group Chats By Group"
+
+
 //Sends Interface_ViewDesiredSizeDidChange notifications
 @protocol AIAutoSizingView 
 - (NSSize)desiredSize;

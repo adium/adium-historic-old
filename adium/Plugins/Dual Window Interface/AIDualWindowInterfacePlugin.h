@@ -15,21 +15,22 @@
 
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
 
-//#define DUAL_INTERFACE_DEFAULT_PREFS		@"DualWindowDefaults"
-//#define DUAL_INTERFACE_WINDOW_DEFAULT_PREFS	@"DualWindowMessageDefaults"
-//
-//
-//#define KEY_ALWAYS_CREATE_NEW_WINDOWS 		@"Always Create New Windows"
-//#define KEY_USE_LAST_WINDOW					@"Use Last Window"
-//#define KEY_AUTOHIDE_TABBAR					@"Autohide Tab Bar"
-//#define KEY_ENABLE_INACTIVE_TAB_CLOSE		@"Enable Inactive Tab Close"
-//#define KEY_KEEP_TABS_ARRANGED				@"Keep Tabs Arranged"
-//#define KEY_ARRANGE_TABS_BY_GROUP			@"Arrange Tabs By Group"
+#define DUAL_INTERFACE_DEFAULT_PREFS		@"DualWindowDefaults"
+#define DUAL_INTERFACE_WINDOW_DEFAULT_PREFS	@"DualWindowMessageDefaults"
 
-@class ESDualWindowMessageAdvancedPreferences, AIMessageWindowController, AIMessageTabViewItem;
+
+#define KEY_ALWAYS_CREATE_NEW_WINDOWS 		@"Always Create New Windows"
+//#define KEY_USE_LAST_WINDOW					@"Use Last Window"
+#define KEY_AUTOHIDE_TABBAR					@"Autohide Tab Bar"
+#define KEY_ENABLE_INACTIVE_TAB_CLOSE		@"Enable Inactive Tab Close"
+#define KEY_KEEP_TABS_ARRANGED				@"Keep Tabs Arranged"
+#define KEY_ARRANGE_TABS_BY_GROUP			@"Arrange Tabs By Group"
+
+@class ESDualWindowMessageAdvancedPreferences, AIMessageWindowController, AIMessageTabViewItem, ESDualWindowMessageWindowPreferences;
 
 @interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceController> {
     ESDualWindowMessageAdvancedPreferences  *preferenceMessageAdvController;
+    ESDualWindowMessageWindowPreferences	*preferenceMessageController;
     
 	NSMutableArray			*delayedContainerShowArray;
 	NSMutableDictionary		*containers;
