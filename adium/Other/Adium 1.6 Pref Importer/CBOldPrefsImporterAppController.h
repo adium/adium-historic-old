@@ -24,6 +24,7 @@
     IBOutlet    NSTabView               *tabView_ClientTabs;
     IBOutlet    NSTabView               *tabView_optionsTab;
     IBOutlet	AIContentController     *contentController;
+    IBOutlet    NSButton                *button_importAllProteusAways;
     
     
 }

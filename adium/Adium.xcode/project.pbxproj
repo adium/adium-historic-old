@@ -6726,6 +6726,7 @@
 			buildRules = (
 			);
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/Adium_1_6_Pref_Importer.plist;
@@ -6734,6 +6735,7 @@
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
+				CABFED2506DB740B00EB2EA0,
 			);
 			isa = PBXNativeTarget;
 			name = "Adium 1.6 Pref Importer";
@@ -6760,6 +6762,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BD9F300531477E000AB133,
+				CA0C8AEF06DBBAC1004436BE,
+				CA0C8B0006DBBED8004436BE,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6794,6 +6798,7 @@
 		34BD9F340531477E000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
+				CABFED2306DB73A700EB2EA0,
 				3448769806D1EF5900DA778C,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -11070,6 +11075,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				CABFED2206DB731C00EB2EA0,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20090,9 +20096,11 @@
 		};
 		9EB3C52304F94DB7001D1F74 = {
 			children = (
+				CA0C8AEE06DBBAC1004436BE,
 				9EB3C52E04F94F24001D1F74,
 				9EB3C53304F94FAE001D1F74,
 				9EB3C53404F94FAE001D1F74,
+				CA0C8AFF06DBBED7004436BE,
 				9EB3C52C04F94E84001D1F74,
 			);
 			isa = PBXGroup;
@@ -21329,6 +21337,66 @@
 //C42
 //C43
 //C44
+//CA0
+//CA1
+//CA2
+//CA3
+//CA4
+		CA0C8AEE06DBBAC1004436BE = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			path = pref4.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA0C8AEF06DBBAC1004436BE = {
+			fileRef = CA0C8AEE06DBBAC1004436BE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA0C8AFF06DBBED7004436BE = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			path = Awake.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA0C8B0006DBBED8004436BE = {
+			fileRef = CA0C8AFF06DBBED7004436BE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CABFED2206DB731C00EB2EA0 = {
+			fileRef = 3448717206D1E57700DA778C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CABFED2306DB73A700EB2EA0 = {
+			fileRef = 3448717206D1E57700DA778C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CABFED2406DB740B00EB2EA0 = {
+			containerPortal = 3448717006D1E57700DA778C;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIUtilities;
+		};
+		CABFED2506DB740B00EB2EA0 = {
+			isa = PBXTargetDependency;
+			name = "AIUtilities (from AIUtilities.framework.xcode)";
+			targetProxy = CABFED2406DB740B00EB2EA0;
+		};
+//CA0
+//CA1
+//CA2
+//CA3
+//CA4
 //D30
 //D31
 //D32
