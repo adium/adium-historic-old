@@ -218,7 +218,7 @@
 {
 	NSString		*internalObjectID, *uniqueChatID;
 	AIListObject	*listObject;
-	AIChat			*chat;
+	AIChat			*chat = nil;
 		
 	if(internalObjectID = [clickContext objectForKey:@"internalObjectID"]){
 		
@@ -252,8 +252,6 @@
 		//And make Adium active (needed if, for example, our notification was clicked with another app active)
 		[NSApp activateIgnoringOtherApps:YES];
 	}
-	
-	NSLog(@"%@ was clicked",clickContext);
 }
 
 - (NSString *)growlInstallationWindowTitle
