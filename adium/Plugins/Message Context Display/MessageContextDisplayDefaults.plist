@@ -12,5 +12,9 @@
 	<integer>7</integer>
 	<key>Have Not Talked Days</key>
 	<integer>7</integer>
+	<key>Have Talked Units</key>
+	<integer>0</integer>
+	<key>Have Not Talked Units</key>
+	<integer>0</integer>
 </dict>
 </plist>

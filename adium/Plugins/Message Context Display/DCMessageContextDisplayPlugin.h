@@ -14,6 +14,8 @@
 #define KEY_DISPLAY_MODE			@"Display Mode"
 #define KEY_HAVE_TALKED_DAYS		@"Have Talked Days"
 #define KEY_HAVE_NOT_TALKED_DAYS	@"Have Not Talked Days"
+#define KEY_HAVE_TALKED_UNITS		@"Have Talked Units"
+#define KEY_HAVE_NOT_TALKED_UNITS   @"Have Not Talked Units"
 
 #define CONTEXT_DISPLAY_DEFAULTS	@"MessageContextDisplayDefaults"
 
@@ -22,17 +24,24 @@
 #define MODE_HAVE_TALKED			1
 #define MODE_HAVE_NOT_TALKED		2
 
+// Possible Units
+#define UNIT_DAYS					0
+#define UNIT_HOURS					1
+
 @class DCMessageContextDisplayPreferences;
 
 @interface DCMessageContextDisplayPlugin : AIPlugin {
 	
-	BOOL								isObserving;
-	BOOL								shouldDisplay;
-	int									linesToDisplay;
+	BOOL							isObserving;
+	BOOL							shouldDisplay;
+	int								linesToDisplay;
 	
-	int									displayMode;
-	int									haveTalkedDays;
-	int									haveNotTalkedDays;
+	int								displayMode;
+	int								haveTalkedDays;
+	int								haveNotTalkedDays;
+	
+	int								haveTalkedUnits;
+	int								haveNotTalkedUnits;
 	
 	DCMessageContextDisplayPreferences  *preferences;
 }

@@ -20,6 +20,8 @@
             OUTLETS = {
                 "checkBox_showContext" = NSButton; 
                 "matrix_radioButtons" = NSMatrix; 
+                "menu_haveNotTalkedUnits" = NSPopUpButton; 
+                "menu_haveTalkedUnits" = NSPopUpButton; 
                 "radioButton_always" = NSButtonCell; 
                 "radioButton_haveNotTalked" = NSButtonCell; 
                 "radioButton_haveTalked" = NSButtonCell; 
