@@ -29,6 +29,8 @@
 
     NSView				*view_statusSelection;
 
+    NSDictionary			*toolbarItems;
+    
     id <AIContainerInterface>		interface;
     AIAdium				*owner;
 

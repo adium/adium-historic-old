@@ -20,10 +20,8 @@
 
 - (void)installPlugin
 {
-    AIMiniToolbarItem	*toolbarItem;
-
     //Space
-    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Space"];
+/*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Space"];
     [toolbarItem setView:[AIFramedMiniToolbarButton framedMiniToolbarButtonWithImage:[AIImageUtilities imageNamed:@"space" forClass:[self class]] forToolbarItem:toolbarItem]];
     [toolbarItem setTarget:nil];
     [toolbarItem setAction:nil];
@@ -44,7 +42,7 @@
     [toolbarItem setFlexibleWidth:YES];
     [toolbarItem setAllowsDuplicatesInToolbar:YES];
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
-
+*/
     //Divider
 /*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Divider"];
     [toolbarItem setImage:[AIImageUtilities imageNamed:@"divider" forClass:[self class]]];
@@ -56,16 +54,19 @@
     [toolbarItem setAllowsDuplicatesInToolbar:YES];
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
 */
+
+    
     //New Message
-    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"NewMessage"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"message" forClass:[self class]]];
-    [toolbarItem setTarget:self];
-    [toolbarItem setAction:@selector(newMessage:)];
-    [toolbarItem setEnabled:YES];
-    [toolbarItem setToolTip:@"New message"];
-    [toolbarItem setPaletteLabel:@"New message"];
-    [toolbarItem setDelegate:self];
-    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
+    NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"NewMessage"
+									   label:@"Message"
+								    paletteLabel:@"Message"
+									 toolTip:@"Message"
+									  target:self
+								 settingSelector:@selector(setImage:)
+								     itemContent:[AIImageUtilities imageNamed:@"message" forClass:[self class]]
+									  action:@selector(newMessage:)
+									    menu:nil];
+    [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 
     //Close Message
 /*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"CloseMessage"];
@@ -109,8 +110,7 @@
 
 - (IBAction)newMessage:(AIMiniToolbarItem *)toolbarItem
 {
-    NSDictionary	*objects = [toolbarItem configurationObjects];
-    AIListObject	*object = [objects objectForKey:@"ContactObject"];
+    AIListContact	*object = [[owner contactController] selectedContact];
     AIChat		*chat;
 
     chat = [[owner contentController] openChatOnAccount:nil withListObject:object];
