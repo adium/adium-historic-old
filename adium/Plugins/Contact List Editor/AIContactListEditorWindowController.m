@@ -1243,25 +1243,25 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 	
 // Browser delegate ----------------------------------------------------------------------------------------------------
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+- (id)browserView:(AIBrowser *)browserView child:(int)index ofItem:(id)item
 {
 	if(!item) item = [[adium contactController] contactList];
 	return([item objectAtIndex:index]);
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+- (BOOL)browserView:(AIBrowser *)browserView isItemExpandable:(id)item
 {
 	if(!item) item = [[adium contactController] contactList];
 	return([item isKindOfClass:[AIListGroup class]]);
 }
 
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+- (int)browserView:(AIBrowser *)browserView numberOfChildrenOfItem:(id)item
 {
 	if(!item) item = [[adium contactController] contactList];
 	return([item count]);
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+- (id)browserView:(AIBrowser *)browserView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
 	if(!item) item = [[adium contactController] contactList];
 	return([item displayName]);

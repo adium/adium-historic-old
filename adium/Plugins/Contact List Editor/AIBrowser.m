@@ -7,12 +7,13 @@
 //
 
 #import "AIBrowser.h"
+#import "AIBrowserColumn.h"
 
 #define COLUMN_WIDTH 	140
 
 @interface AIBrowser (PRIVATE)
 - (void)_init;
-- (NSScrollView *)_tableView;
+- (AIBrowserColumn *)newColumnForObject:(id)object;
 @end
 
 @implementation AIBrowser
@@ -39,13 +40,11 @@
 {	
 	dataSource = nil;
 	columnArray = [[NSMutableArray alloc] init];
-	representedObjects = [[NSMutableArray alloc] init];
 	
-	//Start off w/ one column	
-	rootColumn = [self _tableView];
-	[rootColumn setFrameOrigin:NSMakePoint(0, 0)];
-	[self addSubview:rootColumn];
-	
+	//Start off w/ one column
+	rootColumn = [[self newColumnForObject:nil] retain];
+	[[rootColumn scrollView] setFrameOrigin:NSMakePoint(0, 0)];
+	[self addSubview:[rootColumn scrollView]];
 	
 	
 //	
@@ -60,7 +59,7 @@
 //	[columnArray addObject:scroll];
 }
 
-- (NSScrollView *)_tableView
+- (AIBrowserColumn *)newColumnForObject:(id)object
 {
 	NSTableView		*table;
 	NSTableColumn	*column;
@@ -73,26 +72,37 @@
 	
 	//Table view
 	table = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, [scroll contentSize].width, [scroll contentSize].height)];
+//	column = [[NSTableColumn alloc] initWithIdentifier:nil];
+//	[column setWidth:16];
+//	[table addTableColumn:column];
 	column = [[NSTableColumn alloc] initWithIdentifier:nil];
-	[column setWidth:16];
+	[column setWidth:100];
 	[table addTableColumn:column];
-	column = [[NSTableColumn alloc] initWithIdentifier:nil];
-	[column setWidth:80];
-	[table addTableColumn:column];
-	column = [[NSTableColumn alloc] initWithIdentifier:nil];
-	[column setWidth:16];
-	[table addTableColumn:column];
-
-	
-	
-	
+//	column = [[NSTableColumn alloc] initWithIdentifier:nil];
+//	[column setWidth:16];
+//	[table addTableColumn:column];
 	
 	[table setDelegate:self];
 	[table setDataSource:self];
 	[scroll setDocumentView:table];
 
-	return(scroll);
+	
+	return([[[AIBrowserColumn alloc] initWithScrollView:scroll tableView:table representedObject:object] autorelease]);
 }
+
+- (AIBrowserColumn *)columnForTableView:(NSTableView *)inView
+{
+	NSEnumerator 	*enumerator = [columnArray objectEnumerator];
+	AIBrowserColumn	*column;
+	
+	while(column = [enumerator nextObject]){
+		if([column tableView] == inView) return(column);
+	}
+	
+	return(nil);
+}
+
+
 
 - (void)setDataSource:(id)inDataSource
 {
@@ -105,9 +115,47 @@
 
 - (void)reloadData
 {
-	[[rootColumn documentView] reloadData];
+	[[rootColumn tableView] reloadData];
 	
 }
+
+
+- (void)tableViewSelectionDidChange:(NSNotification *)notification
+{
+	NSTableView		*table = [notification object];
+	int				columnIndex;
+	id 				selectedItem;
+		
+	//Get this column's index and the selected item
+	columnIndex = [columnArray indexOfObject:table];
+	if(columnIndex < 0) columnIndex = 0;
+	selectedItem = [dataSource browserView:self
+									 child:[table selectedRow]
+									ofItem:[[self columnForTableView:table] representedObject]];
+	
+	//Close down all table views after this one
+	
+	
+	
+	
+
+	
+	
+	//Add table view for the selected item
+	AIBrowserColumn *column;
+	
+	column = [self newColumnForObject:selectedItem];
+	[[column scrollView] setFrameOrigin:NSMakePoint((([columnArray count] + 1) * (COLUMN_WIDTH + 4)), 0)];
+	[self addSubview:[column scrollView]];
+	[columnArray addObject:column];
+
+	
+}
+
+
+
+
+
 
 //- (void)drawRect:(NSRect)rect
 //{
@@ -118,26 +166,25 @@
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	NSScrollView	*column = [tableView enclosingScrollView];
-	id				item = (column == rootColumn ? nil : [dataSource outlineView:self numberOfChildrenOfItem:nil]);
+	AIBrowserColumn	*column = [self columnForTableView:tableView];
+	id				item = (column == rootColumn ? nil : [column representedObject]);
 
-	return([dataSource outlineView:self numberOfChildrenOfItem:item]);
+	return([dataSource browserView:self numberOfChildrenOfItem:item]);
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	NSScrollView	*column = [tableView enclosingScrollView];
-	id				parent = (column == rootColumn ? nil : [dataSource outlineView:self numberOfChildrenOfItem:nil]);
-	id				item = [dataSource outlineView:self child:row ofItem:parent];
+	AIBrowserColumn	*column = [self columnForTableView:tableView];;
+	id				item = [dataSource browserView:self child:row ofItem:[column representedObject]];
 	
-	return([dataSource outlineView:self objectValueForTableColumn:tableColumn byItem:item]);
+	return([dataSource browserView:self objectValueForTableColumn:tableColumn byItem:item]);
 }
 
 
-//- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
-//- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
-//- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
-//- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+//- (id)browserView:(AIBrowser *)browserView child:(int)index ofItem:(id)item
+//- (BOOL)browserView:(AIBrowser *)browserView isItemExpandable:(id)item
+//- (int)browserView:(AIBrowser *)browserView numberOfChildrenOfItem:(id)item
+//- (id)browserView:(AIBrowser *)browserView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 	
 
 @end
