@@ -108,7 +108,7 @@
 //Build the sort mode popup menu
 - (void)buildSortModeMenu
 {
-    NSEnumerator			*enumerator;
+    NSEnumerator                *enumerator;
     id <AIListSortController>	controller;
 
     //Remove all menu items
@@ -119,7 +119,7 @@
     while((controller = [enumerator nextObject])){
         NSMenuItem	*menuItem;
 
-        menuItem = [[NSMenuItem alloc] initWithTitle:[controller displayName] target:self action:@selector(selectSortMode:) keyEquivalent:@""];
+        menuItem = [[[NSMenuItem alloc] initWithTitle:[controller displayName] target:self action:@selector(selectSortMode:) keyEquivalent:@""] autorelease];
         [menuItem setRepresentedObject:[controller identifier]];
         
         [[popUp_sortMode menu] addItem:menuItem];
