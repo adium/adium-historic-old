@@ -77,13 +77,14 @@
 
 
 #pragma mark Sending Messages
+//Note: html should actually be HTML; libezv in imservices assumes it is plaintext
 - (void) sendMessage:(NSString *)message withHtml:(NSString *)html {
     AWEzvXMLNode *messageNode, *bodyNode, *textNode, *htmlNode, *htmlBodyNode, *htmlMessageNode;
-    
+	
     if (_stream == nil) {
 	[self createConnection];
     }
-    
+	
     /* setup XML tree */
     messageNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"message"];
     [messageNode addAttribute:@"to" withValue:_ipAddr];
@@ -139,7 +140,7 @@
     [xNode addAttribute:@"xmlns" withValue:@"jabber:x:event"];
     [messageNode addChild:xNode];
     
-    if (composingNode != nil) {
+    if (typingStatus == AWEzvIsTyping) {
 	composingNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"composing"];
 	[xNode addChild:composingNode];
     }
@@ -152,8 +153,8 @@
     
     /* release messages */
     [idNode release];
-    if (typingStatus == AWEzvIsTyping)
-	[composingNode release];
+    if (composingNode != nil)
+		[composingNode release];
     [xNode release];
     [htmlBodyNode release];
     [htmlNode release];
