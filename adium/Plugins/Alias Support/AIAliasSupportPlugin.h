@@ -32,7 +32,7 @@
 
     AIPreferenceViewController		*contactView;
     AIListObject			*activeListObject;
-
+    NSTimer                             *delayedChangesTimer;
     int displayFormat;
     
     AIAliasSupportPreferences		*prefs;

@@ -56,30 +56,43 @@
     [[adium notificationCenter] addObserver:self selector:@selector(registerColumn:) name:CONTACT_EDITOR_REGISTER_COLUMNS object:nil];
 
     activeListObject = nil;
+    delayedChangesTimer = nil;
 }
 
 - (void)uninstallPlugin
 {
+    [delayedChangesTimer release]; delayedChangesTimer = nil;
     //[[adium contactController] unregisterHandleObserver:self];
 }
 
 - (IBAction)setAlias:(id)sender
 {
-    NSString	*alias = [textField_alias stringValue];
-    
-    //A 0 length alias is no alias at all.
-    if ([alias length] == 0)
-        alias = nil; 
-    
-    //Apply
-    [self _applyAlias:alias toObject:activeListObject delayed:NO];
-    
-    //Save the alias
-    [activeListObject setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
+    if (activeListObject) {
+        NSString	*alias = [textField_alias stringValue];
+        
+        //A 0 length alias is no alias at all.
+        if ([alias length] == 0)
+            alias = nil; 
+        
+        //Apply
+        [self _applyAlias:alias toObject:activeListObject delayed:NO];
+        
+        //Save the alias
+        [activeListObject setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
+    }
 }
 
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
 {
+    //Be sure we've set the last changes and invalidated the timer
+    if (delayedChangesTimer) {
+        [self setAlias:nil];
+        if ([delayedChangeTimer isValid]) {
+            [delayedChangesTimer invalidate]; 
+        }
+        [delayedChangesTimer release]; delayedChangesTimer = nil;
+    }
+    
     NSString	*alias;
 
     //Hold onto the object
@@ -271,10 +284,23 @@
 //need to watch it as it changes as we can't catch the window closing
 -(void) controlTextDidChange:(NSNotification *)theNotification
 {
+    if (delayedChangesTimer) {
+        if ([delayedChangesTimer isValid]) {
+            [delayedChangesTimer invalidate]; 
+        }
+        [delayedChangesTimer release]; delayedChangesTimer = nil;
+    }
+    
+    delayedChangesTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5
+                                                            target:self
+                                                          selector:@selector(_delayedSetAlias:) 
+                                                          userInfo:nil repeats:NO] retain];
+}
+
+- (void)_delayedSetAlias:(NSTimer *)inTimer
+{
     [(AIContactInfoWindowController *)[[[contactView view] window] windowController] ignoreSelectionChanges:YES];
     [self setAlias:nil];
     [(AIContactInfoWindowController *)[[[contactView view] window] windowController] ignoreSelectionChanges:NO];
 }
-//Thanks to ratmice and MrBios from #gnustep for helping me with the problems in the above problems. -Tick
-
 @end
