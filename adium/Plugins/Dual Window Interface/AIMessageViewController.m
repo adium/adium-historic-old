@@ -261,11 +261,7 @@
 
     //Register for notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sizeAndArrangeSubviews) name:NSViewFrameDidChangeNotification object:view_contents];
-
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(outgoingTextViewDesiredSizeDidChange:) name:AIViewDesiredSizeDidChangeNotification object:textView_outgoing];
-    
-
     
     return(self);
 }
@@ -432,5 +428,7 @@
     return([[[chat participatingListObjects] objectAtIndex:row] displayName]);
 }
 
+
+    
 @end
 

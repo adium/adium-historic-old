@@ -33,8 +33,9 @@
     NSMutableDictionary		*toolbarItems;
 
     BOOL			tabIsShowing;
+    BOOL                        tabBarResizing;
     BOOL			autohide_tabBar;
-
+    BOOL                        shouldHideOnDragExit;
     float			tabHeight;
 }
 
@@ -53,4 +54,6 @@
 - (void)selectFirstTabViewItemContainer;
 - (void)selectLastTabViewItemContainer;
 - (NSTabViewItem <AIInterfaceContainer> *)containerForChat:(AIChat *)inChat;
+
+- (void)draggingExited:(id <NSDraggingInfo>)sender;
 @end
