@@ -54,4 +54,6 @@
  */
 - (NSCell *)groupCell;
 
+- (id)cellForTableColumn:(NSTableColumn *)tableColumn item:(id)item;
+
 @end
