@@ -12,7 +12,6 @@
 	IBOutlet	NSTextField			*text_URL;
 	IBOutlet	NSTextField			*text_Port;
 	IBOutlet	NSTextField			*text_database;
-	IBOutlet	NSButton			*checkbox_useSSL;
 }
 
 @end
