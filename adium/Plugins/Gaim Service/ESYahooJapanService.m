@@ -21,7 +21,7 @@
                                                       description:@"Yahoo! Japan"
                                                             image:nil
                                                     caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@"]
+                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-"]
 												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
 													allowedLength:24] retain];
     
