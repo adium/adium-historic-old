@@ -111,6 +111,7 @@
 			styleName = AILocalizedString(@"Mockie","Default message style name. Make sure this matches the localized style bundle's name!");
 			style = [plugin messageStyleBundleWithName:styleName];
 		}
+		newStylePath = [style resourcePath];
 		
 		//If preferences changed but the style did not change, update the webView to the current stylesheet.
 		//If we got here from [self preferencesChanged:nil], prep the webView by loading our template.
