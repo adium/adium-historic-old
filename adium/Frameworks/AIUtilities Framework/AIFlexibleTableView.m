@@ -108,7 +108,6 @@
     
     //Get our visible rect (we don't want to draw non-visible rows)
     documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
-    NSInsetRect(documentVisibleRect,-40,-40);
 
     //Enumerate through each row
     //We draw from the bottom up, so we can avoid enumerating through rows that have scrolled out of view
@@ -117,10 +116,9 @@
         int	rowHeight = [row height];
 
         cellPoint.y -= rowHeight;
-
-        if(NSIntersectsRect(NSMakeRect(cellPoint.x, cellPoint.y, rect.size.width, rowHeight), documentVisibleRect) || [row spansRows]){ //If visible
+        if(NSIntersectsRect(NSMakeRect(cellPoint.x, cellPoint.y, rect.size.width, rowHeight), documentVisibleRect) || (foundVisible && [row spansRows])){ //If visible
             [row drawAtPoint:cellPoint visibleRect:documentVisibleRect inView:self];
-            if(!foundVisible && ![row spansRows]) foundVisible = YES;
+            if(!foundVisible) foundVisible = YES;
         }else{
             if(foundVisible) break; //Stop scanning once we hit a non-visible (after having drawn something)
         }
