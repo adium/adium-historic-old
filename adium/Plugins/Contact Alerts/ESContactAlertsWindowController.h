@@ -23,7 +23,9 @@
     IBOutlet	NSButton			*button_active;
     IBOutlet	NSPopUpButton			*popUp_contactList;
     IBOutlet	NSView				*view_main;
-
+    
+    NSPopUpButtonCell			*dataCell;
+    
     NSMenu					*actionMenu;
 
     AIAdium					*owner;

@@ -171,30 +171,42 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     int arrayCounter;
     int thisInstanceCount;
     NSMutableArray *contactArray =  [[owner contactController] allContactsInGroup:nil subgroups:YES];
-    [contactArray sortUsingFunction:alphabeticalSort context:nil];
-    NSEnumerator 	*enumerator = 	[contactArray objectEnumerator];
-
+    [contactArray sortUsingFunction:alphabeticalGroupOfflineSort context:nil];
+    
+    NSEnumerator    *enumerator = 	[contactArray objectEnumerator];
+    NSString        *groupName = [[NSString alloc] init];
+        
     [prefAlertsArray release];
     prefAlertsArray = [[NSMutableArray alloc] init];
     [prefAlertsArray retain];
 
     AIListContact * contact;
-    while (contact = [enumerator nextObject])
-    {
+    while (contact = [enumerator nextObject]) {
+        AIListGroup * theGroup = [contact containingGroup];
+        if ([groupName compare:[theGroup displayName]] != 0) {
+            [instance configForObject:theGroup];
+            thisInstanceCount = [instance count];
+            if (thisInstanceCount) {
+                [offsetDictionary setObject:[NSNumber numberWithInt:offset] forKey:[theGroup UID]];
+                for (arrayCounter=0 ; arrayCounter < thisInstanceCount ; arrayCounter++) {
+                    [prefAlertsArray addObject:theGroup];
+                }
+                offset += [instance count];
+            }
+            groupName = [theGroup displayName];
+        }
+        
         [instance configForObject:contact];
         thisInstanceCount = [instance count];
-        if (thisInstanceCount)
-        {
+        if (thisInstanceCount) {
             [offsetDictionary setObject:[NSNumber numberWithInt:offset] forKey:[contact UID]];
-            for (arrayCounter=0 ; arrayCounter < thisInstanceCount ; arrayCounter++)
-            {
+            for (arrayCounter=0 ; arrayCounter < thisInstanceCount ; arrayCounter++) {
                 [prefAlertsArray addObject:contact];
             }
             offset += [instance count];
         }
     }
 }
-
 -(IBAction)anInstanceChanged:(id)sender
 {
     //    AIListObject * object = [[instance activeObject] autorelease];
@@ -216,12 +228,12 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 -(IBAction)deleteEventAction:(id)sender
 {
-    if ([tableView_actions selectedRow] != -1)
-    {
-        [instance configForObject:activeContactObject];
-
+    if ([tableView_actions selectedRow] != -1) {
         AIListObject *activeObject = activeContactObject; //store it now so we'll be okay if deletion releases the instance
-
+        [activeObject retain];
+       
+        [instance configForObject:activeObject];
+                
         int index = [prefAlertsArray indexOfObject:activeObject];
 
         [instance deleteEventAction:nil]; //delete the event from the instance
@@ -237,8 +249,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         NSRange theRange;
 
         theRange.length = [prefAlertsArray count] - index;
-        if (theRange.length > 0) //this isn't the last one
-        {
+        if (theRange.length > 0) { //this isn't the last one
             theRange.location = index;
 
             NSMutableSet * prefAlertsSet = [[NSMutableSet alloc] init];
@@ -246,8 +257,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
             NSEnumerator * enumerator = [prefAlertsSet objectEnumerator];
             AIListObject * thisObject;
-            while (thisObject = [enumerator nextObject])
-            {
+            while (thisObject = [enumerator nextObject]) {
                 NSString * UID = [thisObject UID];
                 NSNumber * offset = [offsetDictionary objectForKey:UID];
                 [offsetDictionary setObject:[NSNumber numberWithInt:([offset intValue] - 1)] forKey:UID];
@@ -255,16 +265,17 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         }
         [self tableViewSelectionDidChange:nil];
 
-
+        [activeObject release];
     }
 }
 
 -(IBAction)addedEvent:(id)sender
 {
+    AIListObject *tempObject = activeContactObject;
     [self rebuildPrefAlertsArray];
 
-    [instance configForObject:activeContactObject];
-    int index = [prefAlertsArray indexOfObjectIdenticalTo:activeContactObject] + [instance count] - 1;
+    [instance configForObject:tempObject];
+    int index = [prefAlertsArray indexOfObjectIdenticalTo:tempObject] + [instance count] - 1;
     [tableView_actions scrollRowToVisible:index];
     [tableView_actions selectRow:index byExtendingSelection:NO];
 
@@ -507,8 +518,9 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 }
 
 
-- (IBAction) switchToContact:(id) sender
+- (IBAction)switchToContact:(id) sender
 {
+    activeContactObject = [sender representedObject];
     [self configureViewForContact:[sender representedObject]];
 }
 

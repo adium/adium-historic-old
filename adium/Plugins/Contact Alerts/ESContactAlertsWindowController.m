@@ -17,6 +17,7 @@
 #define TABLE_COLUMN_EVENT		@"event"
 
 @interface ESContactAlertsWindowController (PRIVATE)
+- (void)initialWindowConfig;
 - (void)configureWindowforObject:(AIListObject *)inContact;
 - (void)configureView;
 - (NSMenu *)switchContactMenu;
@@ -38,7 +39,9 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 {
     if(!sharedInstance){
         sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_ALERT_WINDOW_NIB owner:inOwner];
+        [sharedInstance initialWindowConfig];
     }
+
 
     [sharedInstance configureWindowforObject:inContact];
     [sharedInstance showWindow:nil];
@@ -71,15 +74,34 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     }
 }
 
-//Configure the actions window for the specified contact
-- (void)configureWindowforObject:(AIListObject *)inContact
+- (void)initialWindowConfig
 {
     //Make sure our window is loaded
     [self window];
+    [popUp_contactList setMenu:[self switchContactMenu]];
+    
+    instance = [[ESContactAlerts alloc] initWithDetailsView:view_main withTable:tableView_actions withPrefView:nil owner:owner];
+    [instance retain];
+    
+    dataCell = [[AITableViewPopUpButtonCell alloc] init];
+    [dataCell setControlSize:NSSmallControlSize];
+    [dataCell setFont:[NSFont menuFontOfSize:11]];
+    [dataCell setBordered:NO];
+    
+    //Configure the table view
+    [tableView_actions setDrawsAlternatingRows:YES];
+    [tableView_actions setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
+    [tableView_actions setTarget:self];
+    [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
+    [tableView_actions setDataSource:self];
+    [[self window] makeFirstResponder:tableView_actions];
+}
 
+//Configure the actions window for the specified contact
+- (void)configureWindowforObject:(AIListObject *)inContact
+{
     //Remember who we're displaying actions for
     [activeContactObject release]; activeContactObject = [inContact retain];
-
     //Observers
     [[owner notificationCenter] removeObserver:self]; //remove any previous observers
 
@@ -93,18 +115,10 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     //Set window title
     [[self window] setTitle:[NSString stringWithFormat:@"%@'s Alerts",[activeContactObject displayName]]];
 
-    NSPopUpButtonCell			*dataCell;
-
     //Build the contact list
-    [popUp_contactList setMenu:[self switchContactMenu]];
+
     [popUp_contactList selectItemAtIndex:[popUp_contactList indexOfItemWithRepresentedObject:activeContactObject]];
 
-    //    [instance release];
-    if (!instance)
-    {
-        instance = [[ESContactAlerts alloc] initWithDetailsView:view_main withTable:tableView_actions withPrefView:nil owner:owner];
-        [instance retain];
-    }
     [instance configForObject:activeContactObject];
 
     //Build the event menu
@@ -113,21 +127,9 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     //Build the action menu
     actionMenu = [instance actionListMenu];
 
-    //Configure the 'Action' table column
-    dataCell = [[AITableViewPopUpButtonCell alloc] init];
+    //Configure the 'Action' table column data cell
     [dataCell setMenu:actionMenu];
-    [dataCell setControlSize:NSSmallControlSize];
-    [dataCell setFont:[NSFont menuFontOfSize:11]];
-    [dataCell setBordered:NO];
     [[tableView_actions tableColumnWithIdentifier:TABLE_COLUMN_ACTION] setDataCell:dataCell];
-
-    //Configure the table view
-    [tableView_actions setDrawsAlternatingRows:YES];
-    [tableView_actions setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
-    [tableView_actions setTarget:self];
-    [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
-    [tableView_actions setDataSource:self];
-    [[self window] makeFirstResponder:tableView_actions];
 
     [button_delete setEnabled:NO];
     [button_oneTime setEnabled:NO];
@@ -135,7 +137,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     if ([instance hasAlerts])
     {
         [tableView_actions selectRow:0 byExtendingSelection:NO];
-        [self tableViewSelectionDidChange:nil];
+ //       [self tableViewSelectionDidChange:nil];
     }
 
     //Update the outline view
