@@ -172,7 +172,7 @@
         if (inside) //only update if not inside the current selection
         {
             NSEvent *newEvent;
-            [NSEvent startPeriodicEventsAfterDelay:0.5 withPeriod:0];
+            [NSEvent startPeriodicEventsAfterDelay:0.3 withPeriod:0];
             newEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask];
             switch ([newEvent type]) {
                 case NSLeftMouseUp:
