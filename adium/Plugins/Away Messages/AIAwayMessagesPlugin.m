@@ -335,8 +335,8 @@
     //Update the menus
     NSMenu *mainMenuSubmenu = [self _awaySubmenuFromArray:awayArray forMainMenu:YES];
     [menuItem_away setSubmenu:mainMenuSubmenu];
-    [menuItem_away_alternate setSubmenu:[mainMenuSubmenu copy]];
-    [menuItem_removeAway_alternate setSubmenu:[mainMenuSubmenu copy]];
+    [menuItem_away_alternate setSubmenu:[[mainMenuSubmenu copy] autorelease]];
+    [menuItem_removeAway_alternate setSubmenu:[[mainMenuSubmenu copy] autorelease]];
     
     
   //  [menuItem_removeAway_alternate setKeyEquivalent:@""];
