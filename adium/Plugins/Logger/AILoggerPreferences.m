@@ -27,7 +27,7 @@
     return(AIPref_Messages_Sending);
 }
 - (NSString *)label{
-    return(@"G");
+    return(@"L");
 }
 - (NSString *)nibName{
     return(@"LoggerPrefs");
