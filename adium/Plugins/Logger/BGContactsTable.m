@@ -37,6 +37,9 @@
     else if([[tableColumn identifier] isEqual:@"contact"]){
         return [[controller_LogViewer toArray] objectAtIndex:row];
     }
+	else{
+		return @"";
+	}
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
