@@ -188,12 +188,18 @@ DeclareString(UID);
 	NSEnumerator	*enumerator;
 	AIMetaContact	*metaContact;
 	
-	//Remove all the metaContacts to get any existing objects out of them
-	enumerator = [metaContactDictCopy objectEnumerator];
-	while (metaContact = [enumerator nextObject]){
-		[self breakdownAndRemoveMetaContact:metaContact];
+	if ([metaContactDictCopy count]){
+		[self delayListObjectNotifications];
+		
+		//Remove all the metaContacts to get any existing objects out of them
+		enumerator = [metaContactDictCopy objectEnumerator];
+		while (metaContact = [enumerator nextObject]){
+			[self breakdownAndRemoveMetaContact:metaContact];
+		}
+		
+		[self endListObjectNotificationsDelay];
 	}
-
+	
 	[metaContactDict release]; metaContactDict = [[NSMutableDictionary alloc] init];
 	[contactToMetaContactLookupDict release]; contactToMetaContactLookupDict = [[NSMutableDictionary alloc] init];
 	
@@ -747,11 +753,13 @@ DeclareString(UID);
 	enumerator = [[self allContactsWithService:[listObject service]
 										  UID:[listObject UID]] objectEnumerator];
 
+	//Remove from the contactToMetaContactLookupDict first so we don't try to reinsert into this metaContact
+	[contactToMetaContactLookupDict removeObjectForKey:[listObject internalObjectID]];
+		
 	while (theObject = [enumerator nextObject]){
 		[self removeListObject:theObject fromMetaContact:metaContact];
 	}
-	
-	[contactToMetaContactLookupDict removeObjectForKey:[listObject internalObjectID]];
+
 }
 
 - (void)removeListObject:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact
@@ -887,6 +895,10 @@ DeclareString(UID);
 																						 group:PREF_GROUP_CONTACT_LIST] mutableCopy];
 	
 	while (object = [metaEnumerator nextObject]){
+
+		//Remove from the contactToMetaContactLookupDict first so we don't try to reinsert into this metaContact
+		[contactToMetaContactLookupDict removeObjectForKey:[object internalObjectID]];
+
 		[self removeListObject:object fromMetaContact:metaContact];
 	}
 	
