@@ -174,7 +174,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	if(shouldRestorePreviousSelectedPane){
 		NSString *previouslySelectedCategory = [[adium preferenceController] preferenceForKey:KEY_PREFERENCE_SELECTED_CATEGORY
 																						group:PREF_GROUP_WINDOW_POSITIONS];
-		if(!previouslySelectedCategory) previouslySelectedCategory = @"general";
+		if(!previouslySelectedCategory) previouslySelectedCategory = @"accounts";
 		[self selectCategoryWithIdentifier:previouslySelectedCategory];
 	}
 	
