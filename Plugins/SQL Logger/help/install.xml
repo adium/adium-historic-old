@@ -70,10 +70,10 @@ postgres $] /usr/local/bin/initdb -D /usr/local/pgsql/data</pre></div>
 postgres $] /usr/local/bin/createdb <i>USERNAME</i>
 postgres $] /usr/local/bin/createuser <i>USERNAME</i>
 postgres $] su <i>username</i></pre></div>
-<h3>Configuring PostgreSQL</h3>
+<h3>Configuring Your Shell</h3>
 <p>At this point you need to determine what shell you're using.  The default
   is Bash, but some peopple use TCSH.  Don't worry about which you're using;
-  it doesn't matter.</p>
+  it doesn't matter.  As yourself:</p>
 <p>Type <code>echo $SHELL</code>.  It should return either Bash or TCSH.</p>
     <h4>For Bash users</h4>
     <p>Edit your ~/.bash_profile script using <code>pico</code> or <code>open -e</code>.  Add the following lines:</p>

@@ -20,7 +20,7 @@ insert into im.user_statistics
     from    messages
     group by sender_id,
             recipient_id,
-            date_trunc('month', message_date)::date;
+            date_trunc('month', message_date)::date);
 
 create or replace rule insert_message_v as
 on insert to im.message_v
@@ -117,31 +117,42 @@ do instead  (
     -- Updating statistics
     update im.user_statistics
     set num_messages = num_messages + 1
-    where sender_id = (select user_id from im.users
-    where username = lower(new.sender_sn)
-    and service ilike coalesce(new.sender_service, 'AIM'))
-    and recipient_id = (select user_id from im.users where username =
-    lower(new.recipient_sn)
-    and service ilike coalesce(new.recipient_service, 'AIM'))
+    where sender_id = (select user_id
+                        from im.users
+                        where username = lower(new.sender_sn)
+                         and service ilike coalesce(new.sender_service, 'AIM'))
+    and recipient_id = (select user_id
+                        from im.users
+                        where username = lower(new.recipient_sn)
+                        and service ilike coalesce(new.recipient_service, 'AIM'))
     and period = date_trunc('month', coalesce(new.message_date, now()))::date;
 
     -- Inserting statistics if none exist
     insert into im.user_statistics
     (sender_id, recipient_id, num_messages, period)
     select
-    (select user_id from im.users
-    where username = lower(new.sender_sn) and service ilike new.sender_service),
-    (select user_id from im.users
-    where username = lower(new.recipient_sn) and service ilike new.recipient_service),
+    (select user_id
+        from im.users
+        where username = lower(new.sender_sn)
+        and service ilike new.sender_service),
+    (select user_id
+        from im.users
+        where username = lower(new.recipient_sn)
+        and service ilike new.recipient_service),
     1,
     date_trunc('month', new.message_date)::date
     where not exists
-        (select 'x' from im.user_statistics
-        where sender_id = (select user_id from im.users where username =
-        lower(new.sender_sn) and service ilike new.sender_service)
+        (select 'x'
+        from im.user_statistics
+        where sender_id =
+            (select user_id
+            from im.users
+            where username = lower(new.sender_sn)
+            and service ilike new.sender_service)
         and recipient_id =
-        (select user_id from im.users where username =
-        lower(new.recipient_sn) and service ilike new.recipient_service)
+            (select user_id
+            from im.users
+            where username = lower(new.recipient_sn)
+            and service ilike new.recipient_service)
         and period = date_trunc('month', coalesce(new.message_date, now()))::date)
 );
-
