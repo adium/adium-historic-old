@@ -14,10 +14,13 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import "InstantMessageFramework.h"
 
+@class AIServiceType;
 
-@interface AIMiChatService : AIService {
-    
+@interface AIMiChatServicePlugin : AIPlugin <AIServiceController> {
+    AIServiceType		*handleServiceType;
+
 }
 
 @end

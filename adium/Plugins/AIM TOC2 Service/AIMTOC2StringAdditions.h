@@ -19,7 +19,6 @@
 
 - (NSString *)TOCStringArgumentAtIndex:(int)index;
 - (NSString *)nonBreakingTOCStringArgumentAtIndex:(int)index;
-- (NSString *)compactedString;
 - (NSMutableString *)validAIMStringCopy;
 
 @end
