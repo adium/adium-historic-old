@@ -69,6 +69,7 @@
 - (void)viewWillClose
 {
 	[self saveTimeValues];
+	[[adium notificationCenter] removeObserver:self];
 }
 
 /*
