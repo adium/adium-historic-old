@@ -63,12 +63,11 @@
 
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)inDetails
 {
-	BOOL			success = NO;
-	AIAccount 		*account;
-	NSString		*destUniqueID;
-	AIListContact	*contact = nil;
-	NSString 		*messageText;
-	BOOL			useAnotherAccount;
+	BOOL					success = NO;
+	AIAccount				*account;
+	NSString				*destUniqueID;
+	AIListContact			*contact = nill
+	BOOL					useAnotherAccount;
 		
 	//Intended source and dest
 	account = [[adium accountController] accountWithObjectID:[inDetails objectForKey:KEY_MESSAGE_SEND_FROM]];
@@ -76,7 +75,6 @@
 	if(destUniqueID) contact = (AIListContact *)[[adium contactController] existingListObjectWithUniqueID:destUniqueID];
 
 	//Message to send and other options
-	messageText = [inDetails objectForKey:KEY_MESSAGE_SEND_MESSAGE];
 	useAnotherAccount = [[inDetails objectForKey:KEY_MESSAGE_OTHER_ACCOUNT] boolValue];
 
 	//If we have a contact (and not a meta contact), we need to make sure it's the contact for account, or 
@@ -105,15 +103,20 @@
 															UID:[contact UID]];
 		if(contact){
 			//Create and open a chat with this contact
-			AIChat	*chat = [[adium contentController] openChatWithContact:contact];
+			AIChat					*chat;
+			NSAttributedString 		*message;
+			
+			chat = [[adium contentController] openChatWithContact:contact];
 			[[adium interfaceController] setActiveChat:chat];
 			
+			message = [[[NSAttributedString alloc] initWithData:[inDetails objectForKey:KEY_MESSAGE_SEND_MESSAGE]] autorelease];
+				
 			//Prepare the content object we're sending
 			AIContentMessage	*content = [AIContentMessage messageInChat:chat
 																withSource:account
 															   destination:contact
 																	  date:nil
-																   message:[[[NSAttributedString alloc] initWithString:messageText attributes:nil] autorelease]
+																   message:message
 																 autoreply:NO];
 			
 			//Send the content
