@@ -1,6 +1,6 @@
 //
 //  AICrashReporter.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Adam Iser on Mon Dec 22 2003.
 //
