@@ -131,8 +131,9 @@
 	[Dave] Since we do case-insensitive compares, and the Finder doesn't seem to care, we COULD use AdiumEmoticonSet
 	[Adam] Need to be careful.. some users are running on case-sensitive file systems
 - New mail notification does not always display?
-
-
+- Adium will remain invisible to 2nd party after a Jabber authorization confirmation (from xtapo on IRC)
+	"Well, I hit grant to his auth request, and he still won't be able to see me." -- xtapo
+	already authorized contacts work as expected.
 
 
 
