@@ -94,18 +94,17 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 				//Load this script
 				NSURL			*scriptURL = [NSURL fileURLWithPath:fullPath];
 				NSAppleScript   *script = [[[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil] autorelease];
-				NSString		*keyword = [[fullPath lastPathComponent] stringByDeletingPathExtension];
+				NSString		*keyword = [[script executeFunction:@"keyword" error:nil] stringValue];
+				NSString		*title = [[script executeFunction:@"title" error:nil] stringValue];
 				
-				//Place an entry in our scripts array, used for the script menu
-				[scripts addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-					@"Script", @"Type",
-					scriptURL, @"Path",
-					keyword, @"Keyword",
-					[[script executeFunction:@"title" error:nil] stringValue], @"Title",
-					nil]];
-				
-				//Place an entry for this script in our usage dict, used for the text substitution
-				[useDict setObject:scriptURL forKey:keyword];
+				if(keyword && [keyword length] && title && [title length]){
+					//Place an entry in our scripts array, used for the script menu
+					[scripts addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+						@"Script", @"Type", scriptURL, @"Path", keyword, @"Keyword", title, @"Title", nil]];
+					
+					//Place an entry for this script in our usage dict, used for the text substitution
+					[useDict setObject:scriptURL forKey:keyword];
+				}
 			}
 		}
 	}
