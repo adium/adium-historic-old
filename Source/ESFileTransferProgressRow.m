@@ -288,7 +288,7 @@
 - (void)setIsSelected:(BOOL)flag
 {
 	[view setIsSelected:flag];
-	[view setNeedsDisplay:YES];
+	[view display];
 }
 
 #pragma mark Localized readable values

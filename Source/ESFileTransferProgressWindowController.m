@@ -81,7 +81,8 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	
 	//Configure the scroll view
 	[scrollView setHasVerticalScroller:YES];
-	[scrollView setHasHorizontalScroller:NO];	
+	[scrollView setHasHorizontalScroller:NO];
+	[[scrollView contentView] setCopiesOnScroll:NO];
 	if([scrollView respondsToSelector:@selector(setAutohidesScrollers:)]){
 		[scrollView setAutohidesScrollers:YES];
 	}
@@ -326,10 +327,12 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 //Update the status bar at the bottom of the window
 - (void)updateStatusBar
 {
+	NSString	*statusBarString;
+	NSString	*downloadsString = nil;
+	NSString	*uploadsString = nil;
 	unsigned	downloads = 0;
 	unsigned	uploads = 0;
-	NSString	*statusBarString;
-	
+
 	NSEnumerator				*enumerator = [progressRows objectEnumerator];
 	ESFileTransferProgressRow	*aRow;
 	while(aRow = [enumerator nextObject]){
@@ -340,18 +343,31 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 			uploads++;
 		}
 	}
-	
-	if(downloads && uploads){
-		statusBarString = [NSString stringWithFormat:AILocalizedString(@"%i downloads; %i uploads","(number) downloads; (number) uploads"),
-			downloads, uploads];
-	}else if(downloads){
-		statusBarString = [NSString stringWithFormat:AILocalizedString(@"%i downloads","(number) downloads"), downloads];
-	}else if(uploads){
-		statusBarString = [NSString stringWithFormat:AILocalizedString(@"%i uploads","(number) uploads"), uploads];
+
+	if(downloads){
+		if(downloads == 1)
+			downloadsString = AILocalizedString(@"1 download",nil);
+		else
+			downloadsString = [NSString stringWithFormat:AILocalizedString(@"%i downloads","(number) downloads"), downloads];
+	}
+
+	if(uploads){
+		if(uploads == 1)
+			uploadsString = AILocalizedString(@"1 upload",nil);
+		else
+			uploadsString = [NSString stringWithFormat:AILocalizedString(@"%i uploads","(number) uploads"), downloads];		
+	}
+
+	if(downloadsString && uploadsString){
+		statusBarString = [NSString stringWithFormat:@"%@; %@",downloadsString,uploadsString];
+	}else if(downloadsString){
+		statusBarString = downloadsString;
+	}else if(uploadsString){
+		statusBarString = uploadsString;
 	}else{
 		statusBarString = @"";
 	}
-	
+
 	[textField_statusBar setStringValue:statusBarString];
 }
 @end
