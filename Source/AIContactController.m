@@ -136,9 +136,9 @@ DeclareString(UID);
     InitString(ServiceID,@"ServiceID");
 	InitString(AccountID,@"AccountID");
 	InitString(UID,@"UID");
-	
+
 	//Default account preferences
-	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_DEFAULT_PREFS 
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_DEFAULT_PREFS
 																		forClass:[self class]]
 										  forGroup:PREF_GROUP_CONTACT_LIST];
     //
@@ -153,13 +153,13 @@ DeclareString(UID);
     delayedContactChanges = 0;
 	delayedUpdateRequests = 0;
 	updatesAreDelayed = NO;
-	
+
 	//
 	contactDict = [[NSMutableDictionary alloc] init];
 	groupDict = [[NSMutableDictionary alloc] init];
 	metaContactDict = [[NSMutableDictionary alloc] init];
 	contactToMetaContactLookupDict = [[NSMutableDictionary alloc] init];
-	
+
 	contactList = [[AIListGroup alloc] initWithUID:ADIUM_ROOT_GROUP_NAME];
 
 	//Get Info window and menu items
@@ -167,12 +167,12 @@ DeclareString(UID);
 
 	//Show Groups menu item
 	[self prepareShowHideGroups];
-	
+
 	//Observe content (for preferredContactForContentType:forListContact:)
     [[adium notificationCenter] addObserver:self
                                    selector:@selector(didSendContent:)
                                        name:CONTENT_MESSAGE_SENT
-                                     object:nil];		
+                                     object:nil];
 }
 
 //finish initing
@@ -203,22 +203,22 @@ DeclareString(UID);
 	NSDictionary	*metaContactDictCopy = [[metaContactDict copy] autorelease];
 	NSEnumerator	*enumerator;
 	AIMetaContact	*metaContact;
-	
-	if ([metaContactDictCopy count]){
+
+	if ([metaContactDictCopy count]) {
 		[self delayListObjectNotifications];
-		
+
 		//Remove all the metaContacts to get any existing objects out of them
 		enumerator = [metaContactDictCopy objectEnumerator];
-		while (metaContact = [enumerator nextObject]){
+		while (metaContact = [enumerator nextObject]) {
 			[self breakdownAndRemoveMetaContact:metaContact];
 		}
-		
+
 		[self endListObjectNotificationsDelay];
 	}
-	
+
 	[metaContactDict release]; metaContactDict = [[NSMutableDictionary alloc] init];
 	[contactToMetaContactLookupDict release]; contactToMetaContactLookupDict = [[NSMutableDictionary alloc] init];
-	
+
 	//Clear the preferences for good measure
 	[[adium preferenceController] setPreference:nil
 										 forKey:KEY_FLAT_METACONTACTS
@@ -226,7 +226,7 @@ DeclareString(UID);
 	[[adium preferenceController] setPreference:nil
 										 forKey:KEY_METACONTACT_OWNERSHIP
 										  group:PREF_GROUP_CONTACT_LIST];
-	
+
 	//Clear out old metacontact files
 	path = [[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH];
 	[[NSFileManager defaultManager] removeFilesInDirectory:path
@@ -241,7 +241,7 @@ DeclareString(UID);
 #pragma mark Local Contact List Storage
 //Load the contact list
 - (void)loadContactList
-{	
+{
 	//We must load all the groups before loading contacts for the ordering system to work correctly.
 	[self _loadGroupsFromArray:[[adium preferenceController] preferenceForKey:KEY_FLAT_GROUPS
 																		group:PREF_GROUP_CONTACT_LIST]];
@@ -254,7 +254,7 @@ DeclareString(UID);
 {
 	[[adium preferenceController] setPreference:[self _arrayRepresentationOfListObjects:[groupDict allValues]]
 										 forKey:KEY_FLAT_GROUPS
-										  group:PREF_GROUP_CONTACT_LIST];	
+										  group:PREF_GROUP_CONTACT_LIST];
 }
 
 //List objects from flattened array
@@ -262,12 +262,12 @@ DeclareString(UID);
 {
 	NSEnumerator	*enumerator = [array objectEnumerator];
 	NSDictionary	*infoDict;
-	
+
 	NSString	*Expanded = @"Expanded";
-	
-	while(infoDict = [enumerator nextObject]){
+
+	while(infoDict = [enumerator nextObject]) {
 		AIListObject	*object = nil;
-		
+
 		object = [self groupWithUID:[infoDict objectForKey:UID]];
 		[(AIListGroup *)object setExpanded:[[infoDict objectForKey:Expanded] boolValue]];
 	}
@@ -277,8 +277,8 @@ DeclareString(UID);
 {
 	NSEnumerator	*enumerator = [array objectEnumerator];
 	NSString		*identifier;
-		
-	while (identifier = [enumerator nextObject]){
+
+	while (identifier = [enumerator nextObject]) {
 		NSNumber *objectID = [NSNumber numberWithInt:[[[identifier componentsSeparatedByString:@"-"] objectAtIndex:1] intValue]];
 		[self metaContactWithObjectID:objectID];
 	}
@@ -295,22 +295,22 @@ DeclareString(UID);
 	NSString	*Group = @"Group";
 	NSString	*Type = @"Type";
 	NSString	*Expanded = @"Expanded";
-	
-	while(object = [enumerator nextObject]){
+
+	while(object = [enumerator nextObject]) {
 			[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 				Group, Type,
 				[object UID], UID,
 				[NSNumber numberWithBool:[(AIListGroup *)object isExpanded]], Expanded,
 				nil]];
 	}
-	
+
 	return(array);
 }
 
 
 //Status and Display updates -------------------------------------------------------------------------------------------
 #pragma mark Status and Display updates
-//These delay Contact_ListChanged, ListObject_AttributesChanged, Contact_OrderChanged notificationsDelays, 
+//These delay Contact_ListChanged, ListObject_AttributesChanged, Contact_OrderChanged notificationsDelays,
 //sorting and redrawing to prevent redundancy when making a large number of changes
 //Explicit delay.  Call endListObjectNotificationsDelay to end
 - (void)delayListObjectNotifications
@@ -323,7 +323,7 @@ DeclareString(UID);
 - (void)endListObjectNotificationsDelay
 {
 	delayedUpdateRequests--;
-	if(delayedUpdateRequests == 0 && !delayedUpdateTimer){
+	if(delayedUpdateRequests == 0 && !delayedUpdateTimer) {
 		[self _performDelayedUpdates:nil];
 	}
 }
@@ -332,14 +332,14 @@ DeclareString(UID);
 //know when they have finished connecting but still want to mute events.
 - (void)delayListObjectNotificationsUntilInactivity
 {
-    if(!delayedUpdateTimer){
+    if(!delayedUpdateTimer) {
 		updatesAreDelayed = YES;
-		delayedUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:UPDATE_CLUMP_INTERVAL 
+		delayedUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:UPDATE_CLUMP_INTERVAL
 															   target:self
-															 selector:@selector(_performDelayedUpdates:) 
-															 userInfo:nil 
+															 selector:@selector(_performDelayedUpdates:)
+															 userInfo:nil
 															  repeats:YES] retain];
-    }else{
+    } else {
 		//Reset the timer
 		[delayedUpdateTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:UPDATE_CLUMP_INTERVAL]];
 	}
@@ -350,21 +350,21 @@ DeclareString(UID);
 - (void)updateListContactStatus:(AIListContact *)inContact
 {
 	//If we're dealing with a meta contact, update the status of the contacts contained within it
-	if([inContact isKindOfClass:[AIMetaContact class]]){
+	if([inContact isKindOfClass:[AIMetaContact class]]) {
 		NSEnumerator	*enumerator = [[(AIMetaContact *)inContact listContacts] objectEnumerator];
 		AIListContact	*contact;
-		
-		while(contact = [enumerator nextObject]){
+
+		while(contact = [enumerator nextObject]) {
 			[self updateListContactStatus:contact];
 		}
-		
-	}else{
+
+	} else {
 		AIAccount *account = [inContact account];
-		if(![account online]){
+		if(![account online]) {
 			account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																			 toContact:inContact];
 		}
-		
+
 		[account updateContactStatus:inContact];
 	}
 }
@@ -374,30 +374,30 @@ DeclareString(UID);
 - (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
     NSSet			*modifiedAttributeKeys;
-	
+
     //Let all observers know the contact's status has changed before performing any sorting or further notifications
 	modifiedAttributeKeys = [self _informObserversOfObjectStatusChange:inObject withKeys:inModifiedKeys silent:silent];
 
     //Resort the contact list
-	if(updatesAreDelayed){
+	if(updatesAreDelayed) {
 		delayedStatusChanges++;
 		[delayedModifiedStatusKeys unionSet:inModifiedKeys];
-	}else{
+	} else {
 		//We can safely skip sorting if we know the modified attributes will invoke a resort later
 		if(![[self activeSortController] shouldSortForModifiedAttributeKeys:modifiedAttributeKeys] &&
-		   [[self activeSortController] shouldSortForModifiedStatusKeys:inModifiedKeys]){
+		   [[self activeSortController] shouldSortForModifiedStatusKeys:inModifiedKeys]) {
 			[self sortListObject:inObject];
 		}
 	}
-    
+
     //Post an attributes changed message (if necessary)
-    if([modifiedAttributeKeys count]){
+    if([modifiedAttributeKeys count]) {
 		[self listObjectAttributesChanged:inObject modifiedKeys:modifiedAttributeKeys];
     }
-	
+
 	//If this object is within a meta contact, we'll process the meta contact for these status changes
     AIListObject	*containingObject = [inObject containingObject];
-    if(containingObject && [containingObject isKindOfClass:[AIMetaContact class]]){
+    if(containingObject && [containingObject isKindOfClass:[AIMetaContact class]]) {
 		[self listObjectStatusChanged:containingObject modifiedStatusKeys:inModifiedKeys silent:silent];
 	}
 }
@@ -405,22 +405,22 @@ DeclareString(UID);
 //Call after modifying an object's display attributes
 //(When modifying display attributes in response to a status change, this is not necessary)
 - (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSSet *)inModifiedKeys
-{	
-	if(updatesAreDelayed){
+{
+	if(updatesAreDelayed) {
 		delayedAttributeChanges++;
 		[delayedModifiedAttributeKeys unionSet:inModifiedKeys];
-	}else{
+	} else {
         //Resort the contact list if necessary
-        if([[self activeSortController] shouldSortForModifiedAttributeKeys:inModifiedKeys]){
+        if([[self activeSortController] shouldSortForModifiedAttributeKeys:inModifiedKeys]) {
 			[self sortListObject:inObject];
         }
-		
+
         //Post an attributes changed message
 		[[adium notificationCenter] postNotificationName:ListObject_AttributesChanged
 												  object:inObject
 												userInfo:(inModifiedKeys ?
 														  [NSDictionary dictionaryWithObject:inModifiedKeys
-																					  forKey:@"Keys"] : 
+																					  forKey:@"Keys"] :
 														  nil)];
 	}
 }
@@ -429,30 +429,30 @@ DeclareString(UID);
 - (void)_performDelayedUpdates:(NSTimer *)timer
 {
 	BOOL	updatesOccured = (delayedStatusChanges || delayedAttributeChanges || delayedContactChanges);
-	
+
 	//Send out global attribute & status changed notifications (to cover any delayed updates)
-	if(updatesOccured){
+	if(updatesOccured) {
 		BOOL shouldSort = NO;
-		
+
 		//Inform observers of any changes
-		if(delayedContactChanges){
+		if(delayedContactChanges) {
 //			[[adium notificationCenter] postNotificationName:Contact_ListChanged object:nil];
 			delayedContactChanges = 0;
 			shouldSort = YES;
 		}
-		if (delayedStatusChanges){
+		if (delayedStatusChanges) {
 			if(!shouldSort &&
-			   [[self activeSortController] shouldSortForModifiedStatusKeys:delayedModifiedStatusKeys]){
+			   [[self activeSortController] shouldSortForModifiedStatusKeys:delayedModifiedStatusKeys]) {
 				shouldSort = YES;
 			}
 			[delayedModifiedStatusKeys removeAllObjects];
 			delayedStatusChanges = 0;
 		}
-		if(delayedAttributeChanges){
-			if(!shouldSort && 
-			   [[self activeSortController] shouldSortForModifiedAttributeKeys:delayedModifiedAttributeKeys]){
+		if(delayedAttributeChanges) {
+			if(!shouldSort &&
+			   [[self activeSortController] shouldSortForModifiedAttributeKeys:delayedModifiedAttributeKeys]) {
 				shouldSort = YES;
-			}			
+			}
 			[[adium notificationCenter] postNotificationName:ListObject_AttributesChanged
 													  object:nil
 													userInfo:(delayedModifiedAttributeKeys ?
@@ -462,24 +462,24 @@ DeclareString(UID);
 			[delayedModifiedAttributeKeys removeAllObjects];
 			delayedAttributeChanges = 0;
 		}
-		
+
 		//Sort only if necessary
-		if (shouldSort){
+		if (shouldSort) {
 			[self sortContactList];
 		}
 	}
-	
+
     //If no more updates are left to process, disable the update timer
 	//If there are no delayed update requests, remove the hold
-	if(!delayedUpdateTimer || !updatesOccured){
-		if(delayedUpdateTimer){
+	if(!delayedUpdateTimer || !updatesOccured) {
+		if(delayedUpdateTimer) {
 			[delayedUpdateTimer invalidate];
 			[delayedUpdateTimer release];
 			delayedUpdateTimer = nil;
 		}
-		if(delayedUpdateRequests == 0){
+		if(delayedUpdateRequests == 0) {
 			updatesAreDelayed = NO;
-		}		
+		}
     }
 }
 
@@ -491,55 +491,55 @@ DeclareString(UID);
 {
 	NSString			*remoteGroupName = [inContact remoteGroupName];
 	AIListObject		*containingObject;
-	
+
 	[inContact retain];
-	
+
 	containingObject = [inContact containingObject];
-	
-	if ([containingObject isKindOfClass:[AIMetaContact class]]){
-		
+
+	if ([containingObject isKindOfClass:[AIMetaContact class]]) {
+
 		//Make sure we traverse metaContacts as close to the root as possible; an automatic metaContact may be within
 		//a manually created one, for example, in the most common situation.
 		containingObject = [self parentContactForListObject:containingObject];
-		
+
 		//If the object's 'group' is a metaContact, and that metaContact isn't in our list yet
 		//use the object's own remote grouping (or the contactList root) as our grouping.
-		if (![containingObject containingObject] && [remoteGroupName length]){
+		if (![containingObject containingObject] && [remoteGroupName length]) {
 
 			//If no similar objects exist, we add this contact directly to the list
 			AIListGroup *targetGroup;
-			
+
 			targetGroup = (useContactListGroups ? [self groupWithUID:remoteGroupName] : contactList);
-			
-			[targetGroup addObject:containingObject]; 
+
+			[targetGroup addObject:containingObject];
 			[self _listChangedGroup:targetGroup object:containingObject];
 		}
-		
-	}else{
+
+	} else {
 		//If we have a remoteGroupName, add the contact locally to the list
-		if(remoteGroupName){
+		if(remoteGroupName) {
 			AIListGroup *localGroup;
 
 			localGroup = (useContactListGroups ? [self groupWithUID:remoteGroupName] : contactList);
 			[self _moveContactLocally:inContact
 							  toGroup:localGroup];
 
-		}else{
+		} else {
 			//If !remoteGroupName, remove the contact from any local groups
-			if(containingObject){
+			if(containingObject) {
 				//Remove the object
 				[(AIListGroup *)containingObject removeObject:inContact];
-				
+
 				[self _listChangedGroup:(AIListGroup *)containingObject object:inContact];
 			}
 		}
 	}
-	
-	[inContact setStatusObject:(remoteGroupName ? nil : [NSNumber numberWithBool:YES]) 
+
+	[inContact setStatusObject:(remoteGroupName ? nil : [NSNumber numberWithBool:YES])
 					   forKey:@"Stranger"
 					   notify:NotifyLater];
 	[inContact notifyOfChangedStatusSilently:YES];
-	
+
 	[inContact release];
 }
 
@@ -551,34 +551,34 @@ DeclareString(UID);
 
 	//Protect with a retain while we are removing and adding the contact to our arrays
 	[listContact retain];
-	
+
 	//Remove this object from any local groups we have it in currently
-	if((containingObject = [listContact containingObject]) && 
-	   ([containingObject isKindOfClass:[AIListGroup class]])){
+	if((containingObject = [listContact containingObject]) &&
+	   ([containingObject isKindOfClass:[AIListGroup class]])) {
 		//Remove the object
 		[(AIListGroup *)containingObject removeObject:listContact];
 		[self _listChangedGroup:(AIListGroup *)containingObject object:listContact];
 	}
-	
-	if(existingObject = [localGroup objectWithService:[listContact service] UID:[listContact UID]]){
+
+	if(existingObject = [localGroup objectWithService:[listContact service] UID:[listContact UID]]) {
 		//If an object exists in this group with the same UID and serviceID, create a MetaContact
 		//for the two.
 		[self groupListContacts:[NSArray arrayWithObjects:listContact,existingObject,nil]];
 		performedGrouping = YES;
-		
-	}else{
+
+	} else {
 		AIMetaContact	*metaContact;
-		
+
 		//If no object exists in this group which matches, we should check if there is already
 		//a MetaContact holding a matching ListContact, since we should include this contact in it
 		//If we found a metaContact to which we should add, do it.
-		if (metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalObjectID]]){
+		if (metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalObjectID]]) {
 			[self addListObject:listContact toMetaContact:metaContact];
 			performedGrouping = YES;
 		}
 	}
 
-	if (!performedGrouping){
+	if (!performedGrouping) {
 		//If no similar objects exist, we add this contact directly to the list
 		[localGroup addObject:listContact];
 
@@ -593,26 +593,26 @@ DeclareString(UID);
 - (AIListGroup *)remoteGroupForContact:(AIListContact *)inContact
 {
 	AIListGroup		*group;
-	
-	if ([inContact isKindOfClass:[AIMetaContact class]]){
+
+	if ([inContact isKindOfClass:[AIMetaContact class]]) {
 		//For a metaContact, the closest we have to a remote group is the group it is within locally
 		group = [inContact parentGroup];
-		
-	}else{
+
+	} else {
 		NSString	*remoteGroup = [inContact remoteGroupName];
 		group = (remoteGroup ? [self groupWithUID:remoteGroup] : nil);
 	}
-	
+
 	return(group);
 }
 
 //Post a list grouping changed notification for the object and group
 - (void)_listChangedGroup:(AIListObject *)group object:(AIListObject *)object
 {
-	if(updatesAreDelayed){
+	if(updatesAreDelayed) {
 		delayedContactChanges++;
-	}else{
-		[[adium notificationCenter] postNotificationName:Contact_ListChanged 
+	} else {
+		[[adium notificationCenter] postNotificationName:Contact_ListChanged
 												  object:object
 												userInfo:(group ? [NSDictionary dictionaryWithObject:group forKey:@"ContainingGroup"] : nil)];
 	}
@@ -625,52 +625,52 @@ DeclareString(UID);
 
 - (void)setUseContactListGroups:(BOOL)inFlag
 {
-	if (inFlag != useContactListGroups){
-		
+	if (inFlag != useContactListGroups) {
+
 		useContactListGroups = inFlag;
-		
+
 		[self _performChangeOfUseContactListGroups];
 	}
 }
-	
+
 - (void)_performChangeOfUseContactListGroups
-{	
+{
 	NSEnumerator	*enumerator;
 	AIListObject	*listObject;
-	
+
 	[self delayListObjectNotifications];
-	
+
 	//Store the preference
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:!useContactListGroups]
 										 forKey:KEY_HIDE_CONTACT_LIST_GROUPS
-										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];	
-	
+										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];
+
 	//Configure the sort controller to force ignoring of groups as appropriate
 	[[self activeSortController] forceIgnoringOfGroups:(useContactListGroups ? NO : YES)];
-	
+
 	enumerator = [[[[contactList containedObjects] copy] autorelease] objectEnumerator];
-	
-	if (useContactListGroups){ /* We are now using contact list groups, but we weren't before. */
-		
+
+	if (useContactListGroups) { /* We are now using contact list groups, but we weren't before. */
+
 		//Restore the grouping of all root-level contacts
-		while(listObject = [enumerator nextObject]){
-			if([listObject isKindOfClass:[AIListContact class]]){
+		while(listObject = [enumerator nextObject]) {
+			if([listObject isKindOfClass:[AIListContact class]]) {
 				[(AIListContact *)listObject restoreGrouping];
 			}
 		}
-		
-	}else{ /* We are no longer using contact list groups, but we were before. */
-		
-		while(listObject = [enumerator nextObject]){
-			if([listObject isKindOfClass:[AIListGroup class]]){
+
+	} else { /* We are no longer using contact list groups, but we were before. */
+
+		while(listObject = [enumerator nextObject]) {
+			if([listObject isKindOfClass:[AIListGroup class]]) {
 				NSArray			*containedObjects;
 				NSEnumerator	*groupEnumerator;
 				AIListObject	*containedListObject;
-				
-				containedObjects = [[[(AIListGroup *)listObject containedObjects] copy] autorelease]; 
+
+				containedObjects = [[[(AIListGroup *)listObject containedObjects] copy] autorelease];
 				groupEnumerator = [containedObjects objectEnumerator];
-				while(containedListObject = [groupEnumerator nextObject]){
-					if([containedListObject isKindOfClass:[AIListContact class]]){
+				while(containedListObject = [groupEnumerator nextObject]) {
+					if([containedListObject isKindOfClass:[AIListContact class]]) {
 						[self _moveContactLocally:(AIListContact *)containedListObject
 										  toGroup:contactList];
 					}
@@ -678,7 +678,7 @@ DeclareString(UID);
 			}
 		}
 	}
-	
+
 	//Stop delaying object notifications; this will automatically resort the contact list, so we're done.
 	[self endListObjectNotificationsDelay];
 }
@@ -688,15 +688,15 @@ DeclareString(UID);
 	//Load the preference
 	useContactListGroups = ![[[adium preferenceController] preferenceForKey:KEY_HIDE_CONTACT_LIST_GROUPS
 																	  group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
-	
+
 	//Show offline contacts menu item
     showGroupsMenuItem = [[NSMenuItem alloc] initWithTitle:SHOW_GROUPS_MENU_TITLE
 													target:self
 													action:@selector(toggleShowGroups:)
 											 keyEquivalent:@""];
 	[showGroupsMenuItem setState:useContactListGroups];
-	[[adium menuController] addMenuItem:showGroupsMenuItem toLocation:LOC_View_Toggles];		
-	
+	[[adium menuController] addMenuItem:showGroupsMenuItem toLocation:LOC_View_Toggles];
+
 	//Toolbar
 	NSToolbarItem	*toolbarItem;
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:SHOW_GROUPS_IDENTIFER
@@ -716,7 +716,7 @@ DeclareString(UID);
 	//Flip-flop.
 	useContactListGroups = !useContactListGroups;
 	[showGroupsMenuItem setState:useContactListGroups];
-	
+
 	//Update the contact list.  Do it on the next run loop for better menu responsiveness, as it may be a lengthy procedure.
 	[self performSelector:@selector(_performChangeOfUseContactListGroups)
 			   withObject:nil
@@ -727,49 +727,49 @@ DeclareString(UID);
 //Meta Contacts --------------------------------------------------------------------------------------------------------
 //Returns a metaContact with the specified object ID.  Pass nil to create a new, unique metaContact
 - (AIMetaContact *)metaContactWithObjectID:(NSNumber *)inObjectID
-{	
+{
 	NSString		*metaContactDictKey;
 	AIMetaContact   *metaContact;
 	BOOL			shouldRestoreContacts = YES;
-	
+
 	//If no object ID is provided, use the next available object ID
 	//(MetaContacts should always have an individually unique object id)
-	if(!inObjectID){
+	if(!inObjectID) {
 		int topID = [[[adium preferenceController] preferenceForKey:TOP_METACONTACT_ID
 															  group:PREF_GROUP_CONTACT_LIST] intValue];
 		inObjectID = [NSNumber numberWithInt:topID];
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:([inObjectID intValue] + 1)]
 											 forKey:TOP_METACONTACT_ID
 											  group:PREF_GROUP_CONTACT_LIST];
-		
+
 		//No reason to waste time restoring contacts when none are in the meta contact yet.
 		shouldRestoreContacts = NO;
 	}
-	
+
 	//Look for a metacontact with this object ID.  If none is found, create one
 	//and add its contained contacts to it.
 	metaContactDictKey = [AIMetaContact internalObjectIDFromObjectID:inObjectID];
-	
+
 	metaContact = [metaContactDict objectForKey:metaContactDictKey];
-	if (!metaContact){
+	if (!metaContact) {
 		metaContact = [[[AIMetaContact alloc] initWithObjectID:inObjectID] autorelease];
-		
+
 		//Keep track of it in our metaContactDict for retrieval by objectID
 		[metaContactDict setObject:metaContact forKey:metaContactDictKey];
-		
+
 		//Add it to our more general contactDict, as well
 		[contactDict setObject:metaContact forKey:[metaContact internalUniqueObjectID]];
 
-		if (shouldRestoreContacts){
-			if(![self _restoreContactsToMetaContact:metaContact updatingPreferences:NO]){
-				
+		if (shouldRestoreContacts) {
+			if(![self _restoreContactsToMetaContact:metaContact updatingPreferences:NO]) {
+
 				//If restoring the metacontact did not actually add any contacts, delete it as it is invalid
 				[self breakdownAndRemoveMetaContact:metaContact];
 				metaContact = nil;
 			}
 		}
 	}
-	
+
 	return (metaContact);
 }
 
@@ -777,24 +777,24 @@ DeclareString(UID);
 {
 	NSDictionary	*allMetaContactsDict = [[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
 																					group:PREF_GROUP_CONTACT_LIST];
-	NSArray			*containedContactsArray = [allMetaContactsDict objectForKey:[metaContact internalObjectID]];	
+	NSArray			*containedContactsArray = [allMetaContactsDict objectForKey:[metaContact internalObjectID]];
 	BOOL			restoredContacts;
 
-	if([containedContactsArray count]){
+	if([containedContactsArray count]) {
 		[metaContact setDelayContainedObjectSorting:YES];
-		
+
 		[self _restoreContactsToMetaContact:metaContact
 								   fromContainedContactsArray:containedContactsArray
 										  updatingPreferences:updatePreferences];
-		
+
 		[metaContact setDelayContainedObjectSorting:NO];
-		
+
 		restoredContacts = YES;
 
-	}else{
+	} else {
 		restoredContacts = NO;
 	}
-	
+
 	return restoredContacts;
 }
 
@@ -805,14 +805,14 @@ DeclareString(UID);
 	NSDictionary		*containedContact;
 	BOOL				shouldSaveMetaContacts = NO;
 
-	while(containedContact = [enumerator nextObject]){
-		if ([[containedContact objectForKey:KEY_IS_METACONTACT] boolValue]){
+	while(containedContact = [enumerator nextObject]) {
+		if ([[containedContact objectForKey:KEY_IS_METACONTACT] boolValue]) {
 			/* As of Adium 0.80, these keys should never be created as we no longer create metaContacts within metaContacts.
 			   This check exists to import old preferences. */
 			NSArray			*newContainedContactsArray;
 			NSString		*objectID;
-			
-			if(!allMetaContactsDict){
+
+			if(!allMetaContactsDict) {
 				allMetaContactsDict = [[[[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
 																				 group:PREF_GROUP_CONTACT_LIST] mutableCopy] autorelease];
 			}
@@ -825,22 +825,22 @@ DeclareString(UID);
 			[self _restoreContactsToMetaContact:metaContact
 					 fromContainedContactsArray:newContainedContactsArray
 							updatingPreferences:YES];
-			
+
 			//We should never need this metaContact again.
 			[allMetaContactsDict removeObjectForKey:objectID];
 
 			shouldSaveMetaContacts = YES;
-			
-	 	}else{
+
+	 	} else {
 
 			//Assign this metaContact to the appropriate internalObjectID for containedContact's represented listObject.
 			//As listObjects are loaded/created/requested which match this internalObjectID, they will be inserted into the metaContact.
-			[contactToMetaContactLookupDict setObject:metaContact 
+			[contactToMetaContactLookupDict setObject:metaContact
 											   forKey:[AIListObject internalObjectIDForServiceID:[containedContact objectForKey:ServiceID]
 																							 UID:[containedContact objectForKey:UID]]];
 		}
 	}
-	
+
 	if(shouldSaveMetaContacts) {
 		AILog(@"MetaContacts: Should save for %@",containedContactsArray);
 		[self _saveMetaContacts:allMetaContactsDict];
@@ -848,36 +848,36 @@ DeclareString(UID);
 }
 
 
-//Add a list object to a meta contact, setting preferences and such 
+//Add a list object to a meta contact, setting preferences and such
 //so the association is lasting across program launches.
 - (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact
 {
-	if (listObject != metaContact){
-		
+	if (listObject != metaContact) {
+
 		//If listObject is a metaContact, perform addListObject:toMetaContact: recursively
-		if([listObject isKindOfClass:[AIMetaContact class]]){
+		if([listObject isKindOfClass:[AIMetaContact class]]) {
 			NSEnumerator	*enumerator = [[[[(AIMetaContact *)listObject containedObjects] copy] autorelease] objectEnumerator];
 			AIListObject	*someObject;
-			
-			while(someObject = [enumerator nextObject]){
+
+			while(someObject = [enumerator nextObject]) {
 
 				[self addListObject:someObject toMetaContact:metaContact];
 			}
 
-		}else{
+		} else {
 			AIMetaContact		*oldMetaContact;
-			
+
 			//Obtain any metaContact this listObject is currently within, so we can remove it later
 			oldMetaContact = [contactToMetaContactLookupDict objectForKey:[listObject internalObjectID]];
-			
-			if ([self _performAddListObject:listObject toMetaContact:metaContact]){
+
+			if ([self _performAddListObject:listObject toMetaContact:metaContact]) {
 				//If this listObject was not in this metaContact in any form before, store the change
-				if (metaContact != oldMetaContact){
+				if (metaContact != oldMetaContact) {
 					//Remove the list object from any other metaContact it is in at present
-					if (oldMetaContact){
+					if (oldMetaContact) {
 						[self removeListObject:listObject fromMetaContact:oldMetaContact];
 					}
-					
+
 					[self _storeListObject:listObject inMetaContact:metaContact];
 				}
 			}
@@ -893,33 +893,33 @@ DeclareString(UID);
 	NSMutableArray		*containedContactsArray;
 
 	NSString			*metaContactInternalObjectID = [metaContact internalObjectID];
-				
+
 	//Get the dictionary of all metaContacts
 	allMetaContactsDict = [[[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
 																	group:PREF_GROUP_CONTACT_LIST] mutableCopy];
-	if (!allMetaContactsDict){
+	if (!allMetaContactsDict) {
 		allMetaContactsDict = [[NSMutableDictionary alloc] init];
 	}
-	
+
 	//Load the array for the new metaContact
 	containedContactsArray = [[allMetaContactsDict objectForKey:metaContactInternalObjectID] mutableCopy];
 	if (!containedContactsArray) containedContactsArray = [[NSMutableArray alloc] init];
 	containedContactDict = nil;
 
 	//Create the dictionary describing this list object
-	if ([listObject isKindOfClass:[AIMetaContact class]]){
+	if ([listObject isKindOfClass:[AIMetaContact class]]) {
 		containedContactDict = [NSDictionary dictionaryWithObjectsAndKeys:
 			[NSNumber numberWithBool:YES],KEY_IS_METACONTACT,
 			[(AIMetaContact *)listObject objectID],KEY_OBJECTID,nil];
 
-	}else if ([listObject isKindOfClass:[AIListContact class]]){
+	} else if ([listObject isKindOfClass:[AIListContact class]]) {
 		containedContactDict = [NSDictionary dictionaryWithObjectsAndKeys:
 			[[listObject service] serviceID],ServiceID,
 			[listObject UID],UID,nil];
 	}
 
 	//Only add if this dict isn't already in the array
-	if (containedContactDict && ([containedContactsArray indexOfObject:containedContactDict] == NSNotFound)){
+	if (containedContactDict && ([containedContactsArray indexOfObject:containedContactDict] == NSNotFound)) {
 		[containedContactsArray addObject:containedContactDict];
 		[allMetaContactsDict setObject:containedContactsArray forKey:metaContactInternalObjectID];
 
@@ -927,8 +927,8 @@ DeclareString(UID);
 		AILog(@"MetaContacts: _storeListObject saving: %@",listObject);
 		[self _saveMetaContacts:allMetaContactsDict];
 
-		[[adium contactAlertsController] mergeAndMoveContactAlertsFromListObject:listObject 
-																  intoListObject:metaContact];				
+		[[adium contactAlertsController] mergeAndMoveContactAlertsFromListObject:listObject
+																  intoListObject:metaContact];
 	}
 
 	[allMetaContactsDict release];
@@ -941,27 +941,27 @@ DeclareString(UID);
 - (BOOL)_performAddListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact
 {
 	AIListObject<AIContainingObject>	*localGroup;
-	BOOL								success;	
+	BOOL								success;
 
 	localGroup = [listObject containingObject];
 
 	//Remove the object from its previous containing group
-	if (localGroup && (localGroup != metaContact)){
+	if (localGroup && (localGroup != metaContact)) {
 		[localGroup removeObject:listObject];
 		[self _listChangedGroup:localGroup object:listObject];
 	}
-	
+
 	//AIMetaContact will handle reassigning the list object's grouping to being itself
-	if (success = [metaContact addObject:listObject]){
+	if (success = [metaContact addObject:listObject]) {
 		[contactToMetaContactLookupDict setObject:metaContact forKey:[listObject internalObjectID]];
 
 		[self _listChangedGroup:metaContact object:listObject];
-		
+
 		//Update the meta contact's attributes
 		[self _updateAllAttributesOfObject:metaContact];
-		
+
 		//If the metaContact isn't in a group yet, use the group of the object we just added
-		if ((![metaContact containingObject]) && localGroup){ 
+		if ((![metaContact containingObject]) && localGroup) {
 			//Add the new meta contact to our list
 			[(AIMetaContact *)localGroup addObject:metaContact];
 			[self _listChangedGroup:localGroup object:metaContact];
@@ -975,18 +975,18 @@ DeclareString(UID);
 {
 	NSEnumerator	*enumerator;
 	AIListObject	*theObject;
-	
+
 	enumerator = [[self allContactsWithService:[listObject service]
 										  UID:[listObject UID]] objectEnumerator];
 
 	//Remove from the contactToMetaContactLookupDict first so we don't try to reinsert into this metaContact
 	[contactToMetaContactLookupDict removeObjectForKey:[listObject internalObjectID]];
-	
+
 	[self delayListObjectNotifications];
-	while (theObject = [enumerator nextObject]){
+	while (theObject = [enumerator nextObject]) {
 		[self removeListObject:theObject fromMetaContact:metaContact];
 	}
-	[self endListObjectNotificationsDelay];	
+	[self endListObjectNotificationsDelay];
 }
 
 - (void)removeListObject:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact
@@ -1003,35 +1003,35 @@ DeclareString(UID);
 
 	//Load the array for the metaContact
 	containedContactsArray = [allMetaContactsDict objectForKey:metaContactInternalObjectID];
-	
+
 	//Enumerate it, looking only for the appropriate type of containedContactDict
 	enumerator = [containedContactsArray objectEnumerator];
-	
-	if ([listObject isKindOfClass:[AIMetaContact class]]){
+
+	if ([listObject isKindOfClass:[AIMetaContact class]]) {
 		NSNumber	*listObjectObjectID = [(AIMetaContact *)listObject objectID];
-		
-		while (containedContactDict = [enumerator nextObject]){
+
+		while (containedContactDict = [enumerator nextObject]) {
 			if (([[containedContactDict objectForKey:KEY_IS_METACONTACT] boolValue]) &&
-				(([(NSNumber *)[containedContactDict objectForKey:KEY_OBJECTID] compare:listObjectObjectID]) == 0)){
+				(([(NSNumber *)[containedContactDict objectForKey:KEY_OBJECTID] compare:listObjectObjectID]) == 0)) {
 				break;
 			}
 		}
-		
-	}else if ([listObject isKindOfClass:[AIListContact class]]){
-		
+
+	} else if ([listObject isKindOfClass:[AIListContact class]]) {
+
 		NSString	*listObjectUID = [listObject UID];
 		NSString	*listObjectServiceID = [[listObject service] serviceID];
-		
-		while (containedContactDict = [enumerator nextObject]){
+
+		while (containedContactDict = [enumerator nextObject]) {
 			if ([[containedContactDict objectForKey:UID] isEqualToString:listObjectUID] &&
-				[[containedContactDict objectForKey:ServiceID] isEqualToString:listObjectServiceID]){
+				[[containedContactDict objectForKey:ServiceID] isEqualToString:listObjectServiceID]) {
 				break;
 			}
 		}
 	}
-	
+
 	//If we found a matching dict (referring to our contact in the old metaContact), remove it and store the result
-	if (containedContactDict){
+	if (containedContactDict) {
 		NSMutableArray		*newContainedContactsArray;
 		NSMutableDictionary	*newAllMetaContactsDict;
 
@@ -1041,13 +1041,13 @@ DeclareString(UID);
 		newAllMetaContactsDict = [allMetaContactsDict mutableCopy];
 		[newAllMetaContactsDict setObject:newContainedContactsArray
 								   forKey:metaContactInternalObjectID];
-		
+
 		[self _saveMetaContacts:newAllMetaContactsDict];
-		
+
 		[newContainedContactsArray release];
 		[newAllMetaContactsDict release];
 	}
-	
+
 	//The listObject can be within the metaContact without us finding a containedContactDict if we are removing multiple
 	//listContacts referring to the same UID & serviceID combination - that is, on multiple accounts on the same service.
 	//We therefore request removal of the object regardless of the if (containedContactDict) check above.
@@ -1065,13 +1065,13 @@ DeclareString(UID);
 - (AIMetaContact *)groupUIDs:(NSArray *)UIDsArray forServices:(NSArray *)servicesArray
 {
 	NSMutableArray  *contactsToGroupArray = [NSMutableArray array];
-	
+
 	int				count = [UIDsArray count];
 	int				i;
 
 	//Build an array of all contacts matching this description (multiple accounts on the same service listing
 	//the same UID mean that we can have multiple AIListContact objects with a UID/service combination)
-	for (i = 0; i < count; i++){
+	for (i = 0; i < count; i++) {
 		[contactsToGroupArray addObjectsFromArray:[self allContactsWithServiceID:[servicesArray objectAtIndex:i]
 																			 UID:[UIDsArray objectAtIndex:i]]];
 	}
@@ -1086,29 +1086,29 @@ DeclareString(UID);
 	NSEnumerator	*enumerator;
 	AIListContact   *listContact;
 	AIMetaContact   *metaContact = nil;
-	
+
 	//Look for an existing MetaContact we can use.  The first one we find is the lucky winner.
 	enumerator = [contactsToGroupArray objectEnumerator];
-	while ((listContact = [enumerator nextObject]) && (metaContact == nil)){
-		if ([listContact isKindOfClass:[AIMetaContact class]]){
+	while ((listContact = [enumerator nextObject]) && (metaContact == nil)) {
+		if ([listContact isKindOfClass:[AIMetaContact class]]) {
 			metaContact = (AIMetaContact *)listContact;
-		}else{
+		} else {
 			metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalObjectID]];
 		}
 	}
-	
+
 	//Create a new MetaContact is we didn't find one.
 	if (!metaContact) {
 		metaContact = [self metaContactWithObjectID:nil];
 	}
-	
+
 	//Add all these contacts to our MetaContact (some may already be present,
 	//but that's fine, as nothing will happen).
 	enumerator = [contactsToGroupArray objectEnumerator];
-	while (listContact = [enumerator nextObject]){
+	while (listContact = [enumerator nextObject]) {
 		[self addListObject:listContact toMetaContact:metaContact];
 	}
-	
+
 	return(metaContact);
 }
 
@@ -1119,45 +1119,45 @@ DeclareString(UID);
 	NSEnumerator						*metaEnumerator = [containedObjects objectEnumerator];
 	AIListObject<AIContainingObject>	*containingObject = [metaContact containingObject];
 	AIListObject						*object;
-	
+
 	NSMutableDictionary *allMetaContactsDict = [[[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
 																						 group:PREF_GROUP_CONTACT_LIST] mutableCopy];
-	
-	while (object = [metaEnumerator nextObject]){
+
+	while (object = [metaEnumerator nextObject]) {
 
 		//Remove from the contactToMetaContactLookupDict first so we don't try to reinsert into this metaContact
 		[contactToMetaContactLookupDict removeObjectForKey:[object internalObjectID]];
 
 		[self removeListObject:object fromMetaContact:metaContact];
 	}
-	
+
 	//Then, procede to remove the metaContact
-	
+
 	//Protect!
 	[metaContact retain];
-	
+
 	//Remove it from its containing group
 	[containingObject removeObject:metaContact];
-	
+
 	NSString	*metaContactInternalObjectID = [metaContact internalObjectID];
-	
+
 	//Remove our reference to it internally
 	[metaContactDict removeObjectForKey:metaContactInternalObjectID];
-	
+
 	//Remove it from the preferences dictionary
 	[allMetaContactsDict removeObjectForKey:metaContactInternalObjectID];
-	
+
 	//XXX - contactToMetaContactLookupDict
-	
+
 	//Post the list changed notification for the old containingObject
 	[self _listChangedGroup:containingObject object:metaContact];
-		
+
 	//Save the updated allMetaContactsDict which no longer lists the metaContact
 	[self _saveMetaContacts:allMetaContactsDict];
 
 	//Protection is overrated.
 	[metaContact release];
-	[containedObjects release];	
+	[containedObjects release];
 	[allMetaContactsDict release];
 }
 
@@ -1184,18 +1184,18 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
 	NSMenu		*contactMenu = [[NSMenu alloc] initWithTitle:@""];
 	NSArray		*contactArray;
-		
-	if([inContact isKindOfClass:[AIMetaContact class]]){
-		if (service){
+
+	if([inContact isKindOfClass:[AIMetaContact class]]) {
+		if (service) {
 			NSDictionary	*dict;
-			
+
 			dict = [(AIMetaContact *)inContact dictionaryOfServiceClassesAndListContacts];
 			contactArray = [dict objectForKey:[service serviceClass]];
-		}else{
+		} else {
 			//If service is nil, get ALL contained contacts
 			contactArray = [(AIMetaContact *)inContact listContacts];
 		}
-	}else{
+	} else {
 		contactArray = [NSArray arrayWithObject:inContact];
 	}
 
@@ -1206,19 +1206,19 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 						  toMenu:contactMenu
 						  target:target
 				  offlineContacts:NO];
-	
-	if (includeOffline){
+
+	if (includeOffline) {
 		//Separate the online from the offline
-		if ([contactMenu numberOfItems] > 0){
+		if ([contactMenu numberOfItems] > 0) {
 			[contactMenu addItem:[NSMenuItem separatorItem]];
 		}
-		
+
 		[self _addMenuItemsFromArray:contactArray
 							  toMenu:contactMenu
 							  target:target
-					 offlineContacts:YES];			
+					 offlineContacts:YES];
 	}
-	
+
 	return ([contactMenu autorelease]);
 }
 
@@ -1228,25 +1228,25 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
 	NSEnumerator	*enumerator;
 	AIListContact	*contact;
-	
+
 	enumerator = [contactArray objectEnumerator];
-	
-	while(contact = [enumerator nextObject]){
+
+	while(contact = [enumerator nextObject]) {
 		BOOL contactIsOnline = [contact online];
-		
+
 		//If the contact is online and we aren't doing only offline contacts, add it.
 		//If the contact is offline, and we are doing only offline contacts, add it if any account is available for sending to it.
 		if ((contactIsOnline && !offlineContacts) ||
-			(!contactIsOnline && 
-			 offlineContacts && 
+			(!contactIsOnline &&
+			 offlineContacts &&
 			 ([[adium accountController] firstAccountAvailableForSendingContentType:CONTENT_MESSAGE_TYPE
 																		  toContact:contact
-																	 includeOffline:NO] != nil))){
+																	 includeOffline:NO] != nil))) {
 			NSImage			*menuServiceImage;
 			NSMenuItem		*menuItem;
-			
+
 			menuServiceImage = [AIUserIcons menuUserIconForObject:contact];
-			
+
 			menuItem = [[NSMenuItem alloc] initWithTitle:[contact formattedUID]
 												  target:target
 												  action:@selector(selectContainedContact:)
@@ -1254,7 +1254,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			[menuItem setRepresentedObject:contact];
 			[menuItem setImage:menuServiceImage];
 			[contactMenu addItem:menuItem];
-			
+
 			[menuItem release];
 		}
 	}
@@ -1269,14 +1269,14 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //preferences should be read from/to the most generalized contact possible.
 - (AIListObject *)parentContactForListObject:(AIListObject *)listObject
 {
-	if ([listObject isKindOfClass:[AIListContact class]]){
+	if ([listObject isKindOfClass:[AIListContact class]]) {
 		//Find the highest-up metaContact
 		AIListObject	*containingObject;
-		while ([(containingObject = [listObject containingObject]) isKindOfClass:[AIMetaContact class]]){
+		while ([(containingObject = [listObject containingObject]) isKindOfClass:[AIMetaContact class]]) {
 			listObject = (AIMetaContact *)containingObject;
 		}
 	}
-	
+
 	return(listObject);
 }
 //Contact Info --------------------------------------------------------------------------------
@@ -1285,14 +1285,14 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (IBAction)showContactInfo:(id)sender
 {
 	AIListObject *listObject = nil;
-	
-	if ((sender == menuItem_getInfoContextualContact) || (sender == menuItem_getInfoContextualGroup)){
+
+	if ((sender == menuItem_getInfoContextualContact) || (sender == menuItem_getInfoContextualGroup)) {
 		listObject = [[adium menuController] currentContextMenuObject];
-	}else{
+	} else {
 		listObject = [self selectedListObject];
 	}
-	
-	if (listObject){
+
+	if (listObject) {
 		[NSApp activateIgnoringOtherApps:YES];
 		[[[AIContactInfoWindowController showInfoWindowForListObject:listObject] window] makeKeyAndOrderFront:nil];
 	}
@@ -1315,22 +1315,22 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (void)prepareContactInfo
 {
 	contactInfoPanes = [[NSMutableArray alloc] init];
-		
+
 	//Add our get info contextual menu item
 	menuItem_getInfoContextualContact = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO
 																							 target:self
-																							 action:@selector(showContactInfo:) 
+																							 action:@selector(showContactInfo:)
 																					  keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:menuItem_getInfoContextualContact
 									   toLocation:Context_Contact_Manage];
-	
+
 	menuItem_getInfoContextualGroup = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO
 																						   target:self
-																						   action:@selector(showContactInfo:) 
+																						   action:@selector(showContactInfo:)
 																					keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:menuItem_getInfoContextualGroup
 									   toLocation:Context_Group_Manage];
-	
+
 	//Install the Get Info menu item
 //	menuItem_getInfo = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO
 //																			target:self
@@ -1338,32 +1338,32 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //																	 keyEquivalent:@"i"];
 //	[menuItem_getInfo setKeyEquivalentModifierMask:GET_INFO_MASK];
 //	[[adium menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Info];
-	
+
 	if([NSApp isOnPantherOrBetter]) {
 		//Install the alternate Get Info menu item which will let us mangle the shortcut as desired
-		menuItem_getInfoAlternate = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO															   target:self 
+		menuItem_getInfoAlternate = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO															   target:self
 																						 action:@selector(showContactInfo:)
 																				  keyEquivalent:@"i"];
         [menuItem_getInfoAlternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
         [menuItem_getInfoAlternate setAlternate:YES];
-        [[adium menuController] addMenuItem:menuItem_getInfoAlternate toLocation:LOC_Contact_Info];      
-        
+        [[adium menuController] addMenuItem:menuItem_getInfoAlternate toLocation:LOC_Contact_Info];
+
         //Register for the contact list notifications
-        [[adium notificationCenter] addObserver:self selector:@selector(contactListDidBecomeMain:) 
-										   name:Interface_ContactListDidBecomeMain 
+        [[adium notificationCenter] addObserver:self selector:@selector(contactListDidBecomeMain:)
+										   name:Interface_ContactListDidBecomeMain
 										 object:nil];
         [[adium notificationCenter] addObserver:self selector:@selector(contactListDidResignMain:)
-										   name:Interface_ContactListDidResignMain 
+										   name:Interface_ContactListDidResignMain
 										 object:nil];
-		
+
 		//Watch changes in viewContactInfoMenuItem_alternate's menu so we can maintain its alternate status
 		//(it will expand into showing both the normal and the alternate items when the menu changes)
 		[[adium notificationCenter] addObserver:self selector:@selector(menuChanged:)
-										   name:Menu_didChange 
+										   name:Menu_didChange
 										 object:[menuItem_getInfoAlternate menu]];
-		
+
     }
-	
+
 #ifdef CONTACTS_INFO_WITH_PROMPT
 	//Install the Get Info (prompting for a contact name) menu item
 	menuItem_getInfo = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO_WITH_PROMPT
@@ -1372,7 +1372,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 																	 keyEquivalent:@""];
 	[[adium menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Info];
 #endif
-	
+
 	//Add our get info toolbar item
 	NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"ShowInfo"
 																		   label:@"Info"
@@ -1389,14 +1389,14 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Always be able to show the inspector
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if((menuItem == menuItem_getInfo) || (menuItem == menuItem_getInfoAlternate)){
+	if((menuItem == menuItem_getInfo) || (menuItem == menuItem_getInfoAlternate)) {
 		return([self selectedListObject] != nil);
 
-	}else if((menuItem == menuItem_getInfoContextualContact) || (menuItem == menuItem_getInfoContextualGroup)){
+	} else if((menuItem == menuItem_getInfoContextualContact) || (menuItem == menuItem_getInfoContextualGroup)) {
 		return([[adium menuController] currentContextMenuObject] != nil);
 
 	}
-	
+
 	return YES;
 }
 
@@ -1447,26 +1447,26 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 }
 - (NSArray *)arrayOfSelectedListObjectsInContactList
 {
-	return([self _performSelectorOnFirstAvailableResponder:@selector(arrayOfListObjects) conformingToProtocol:@protocol(ContactListOutlineView)]);	
+	return([self _performSelectorOnFirstAvailableResponder:@selector(arrayOfListObjects) conformingToProtocol:@protocol(ContactListOutlineView)]);
 }
 
 - (id)_performSelectorOnFirstAvailableResponder:(SEL)selector
 {
     NSResponder	*responder = [[[NSApplication sharedApplication] mainWindow] firstResponder];
     //Check the first responder
-    if([responder respondsToSelector:selector]){
+    if([responder respondsToSelector:selector]) {
         return([responder performSelector:selector]);
     }
-	
+
     //Search the responder chain
     do{
         responder = [responder nextResponder];
-        if([responder respondsToSelector:selector]){
+        if([responder respondsToSelector:selector]) {
             return([responder performSelector:selector]);
         }
-        
+
     } while(responder != nil);
-	
+
     //None found, return nil
     return(nil);
 }
@@ -1474,19 +1474,19 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
 	NSResponder *responder = [[[NSApplication sharedApplication] mainWindow] firstResponder];
 	//Check the first responder
-	if([responder conformsToProtocol:protocol] && [responder respondsToSelector:selector]){
+	if([responder conformsToProtocol:protocol] && [responder respondsToSelector:selector]) {
 		return([responder performSelector:selector]);
 	}
-	
+
     //Search the responder chain
     do{
         responder = [responder nextResponder];
-        if([responder conformsToProtocol:protocol] && [responder respondsToSelector:selector]){
+        if([responder conformsToProtocol:protocol] && [responder respondsToSelector:selector]) {
             return([responder performSelector:selector]);
         }
-        
+
     } while(responder != nil);
-	
+
     //None found, return nil
     return(nil);
 }
@@ -1507,12 +1507,12 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (void)setActiveSortController:(AISortController *)inController
 {
     activeSortController = inController;
-	
+
 	[activeSortController didBecomeActive];
 
 	//The newly-active sort controller needs to know whether it should be forced to ignore groups
 	[[self activeSortController] forceIgnoringOfGroups:(useContactListGroups ? NO : YES)];
-	
+
     //Resort the list
     [self sortContactList];
 }
@@ -1531,12 +1531,12 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Sort an individual object
 - (void)sortListObject:(AIListObject *)inObject
 {
-	if(updatesAreDelayed){
+	if(updatesAreDelayed) {
 		delayedContactChanges++;
-	}else{
+	} else {
 		AIListObject		*group = [inObject containingObject];
-		
-		if([group isKindOfClass:[AIListGroup class]]){
+
+		if([group isKindOfClass:[AIListGroup class]]) {
 			//Sort the groups containing this object
 			[(AIListGroup *)group sortListObject:inObject sortController:activeSortController];
 			[[adium notificationCenter] postNotificationName:Contact_OrderChanged object:inObject];
@@ -1551,7 +1551,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
 	//Add the observer
     [contactObserverArray addObject:inObserver];
-	
+
     //Let the new observer process all existing objects
 	[self updateAllListObjectsForObserver:inObserver];
 }
@@ -1567,18 +1567,18 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
 	NSEnumerator	*enumerator;
 	AIListObject	*listObject;
-	
+
 	[self delayListObjectNotifications];
-		
+
     //Reset all contacts
 	enumerator = [contactDict objectEnumerator];
-	while(listObject = [enumerator nextObject]){
+	while(listObject = [enumerator nextObject]) {
 		NSSet	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
 		if(attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
 
 		//If this contact is within a meta contact, update the meta contact too
 		AIListObject	*containingObject = [listObject containingObject];
-		if(containingObject && [containingObject isKindOfClass:[AIMetaContact class]]){
+		if(containingObject && [containingObject isKindOfClass:[AIMetaContact class]]) {
 			NSSet	*attributes = [inObserver updateListObject:containingObject
 														  keys:nil
 														silent:YES];
@@ -1589,11 +1589,11 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
     //Reset all groups
 	enumerator = [groupDict objectEnumerator];
-	while(listObject = [enumerator nextObject]){
+	while(listObject = [enumerator nextObject]) {
 		NSSet	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
 		if(attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
 	}
-	
+
 	//
 	[self endListObjectNotificationsDelay];
 }
@@ -1604,24 +1604,24 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	NSMutableSet				*attrChange = nil;
 	NSEnumerator				*enumerator;
     id <AIListObjectObserver>	observer;
-	
+
 	//Let our observers know
 	enumerator = [contactObserverArray objectEnumerator];
-	while((observer = [enumerator nextObject])){
+	while((observer = [enumerator nextObject])) {
 		NSSet	*newKeys;
-		
-		if((newKeys = [observer updateListObject:inObject keys:modifiedKeys silent:silent])){
+
+		if((newKeys = [observer updateListObject:inObject keys:modifiedKeys silent:silent])) {
 			if (!attrChange) attrChange = [NSMutableSet set];
 			[attrChange unionSet:newKeys];
 		}
 	}
-	
+
 	//Send out the notification for other observers
 	[[adium notificationCenter] postNotificationName:ListObject_StatusChanged
 											  object:inObject
-											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys 
+											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys
 																								 forKey:@"Keys"] : nil)];
-	
+
 	return(attrChange);
 }
 
@@ -1630,8 +1630,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
 	NSEnumerator				*enumerator = [contactObserverArray objectEnumerator];
     id <AIListObjectObserver>	observer;
-	
-	while((observer = [enumerator nextObject])){
+
+	while((observer = [enumerator nextObject])) {
 		[observer updateListObject:inObject keys:nil silent:YES];
 	}
 }
@@ -1652,25 +1652,25 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	NSMutableArray	*contactArray = [NSMutableArray array];
 	NSEnumerator	*enumerator;
     AIListObject	*object;
-	
+
 	if(inGroup == nil) inGroup = contactList;  //Passing nil scans the entire contact list
-	
+
 	enumerator = [inGroup objectEnumerator];
-    while((object = [enumerator nextObject])){
-        if([object isMemberOfClass:[AIMetaContact class]] || [object isMemberOfClass:[AIListGroup class]]){
-            if(subGroups){
+    while((object = [enumerator nextObject])) {
+        if([object isMemberOfClass:[AIMetaContact class]] || [object isMemberOfClass:[AIListGroup class]]) {
+            if(subGroups) {
 				[contactArray addObjectsFromArray:[self allContactsInGroup:(AIListGroup *)object
 																 subgroups:subGroups
 																 onAccount:inAccount]];
 			}
-		}else if([object isMemberOfClass:[AIListContact class]]){
-			if(!inAccount || 
-			   ([(AIListContact *)object account] == inAccount)){
+		} else if([object isMemberOfClass:[AIListContact class]]) {
+			if(!inAccount ||
+			   ([(AIListContact *)object account] == inAccount)) {
 				[contactArray addObject:object];
 			}
 		}
 	}
-	
+
 	return(contactArray);
 }
 
@@ -1691,24 +1691,24 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
 	NSEnumerator	*enumerator;
 	AIListObject	*object;
-	
+
 	//Passing nil scans the entire contact list
 	if(group == nil) group = contactList;
-	
+
 	//Enumerate this group and process all groups we find within it
 	enumerator = [group objectEnumerator];
-	while(object = [enumerator nextObject]){
-		if([object isKindOfClass:[AIListGroup class]]){
+	while(object = [enumerator nextObject]) {
+		if([object isKindOfClass:[AIListGroup class]]) {
 			NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[object displayName]
 																						  target:target
 																						  action:@selector(selectGroup:)
 																				   keyEquivalent:@""] autorelease];
 			[menuItem setRepresentedObject:object];
-			if([menuItem respondsToSelector:@selector(setIndentationLevel:)]){
+			if([menuItem respondsToSelector:@selector(setIndentationLevel:)]) {
 				[menuItem setIndentationLevel:level];
 			}
 			[menu addItem:menuItem];
-			
+
 			[self _menuOfAllGroups:menu forGroup:(AIListGroup *)object withTarget:target level:level+1];
 		}
 	}
@@ -1725,7 +1725,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
     NSEnumerator				*enumerator;
     AIListObject				*object;
-	
+
 	//Prepare our menu
 	NSMenu *menu = [[NSMenu alloc] init];
 	[menu setAutoenablesItems:NO];
@@ -1738,34 +1738,34 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 	//All menu items for all contained objects
 	enumerator = [inObject listContactsEnumerator];
-    while((object = [enumerator nextObject])){
+    while((object = [enumerator nextObject])) {
 		NSImage		*menuServiceImage;
 		NSMenuItem	*menuItem;
 		BOOL		needToCreateSubmenu;
 		BOOL		isGroup = [object isKindOfClass:[AIListGroup class]];
 		BOOL		isValidGroup = (isGroup &&
 									[[(AIListGroup *)object containedObjects] count]);
-		
+
 		//We don't want to include empty groups
-		if (!isGroup || isValidGroup){
-			
+		if (!isGroup || isValidGroup) {
+
 			needToCreateSubmenu = (isValidGroup ||
 								   ([object isKindOfClass:[AIMetaContact class]] && ([[(AIMetaContact *)object listContacts] count] > 1)));
-			
-			
+
+
 			menuServiceImage = [AIUserIcons menuUserIconForObject:object];
-			
-			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:(needToCreateSubmenu ? 
+
+			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:(needToCreateSubmenu ?
 																					 [object displayName] :
 																					 [object formattedUID])
-																			 target:target 
+																			 target:target
 																			 action:@selector(selectContact:)
 																	  keyEquivalent:@""] autorelease];
-			
-			if(needToCreateSubmenu){
+
+			if(needToCreateSubmenu) {
 				[menuItem setSubmenu:[self menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)object withTarget:target firstLevel:NO]];
 			}
-			
+
 			[menuItem setRepresentedObject:object];
 			[menuItem setImage:menuServiceImage];
 			[menu addItem:menuItem];
@@ -1783,13 +1783,13 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
 	AIListContact	*contact = nil;
 
-	if(inUID && [inUID length] && inService){ //Ignore invalid requests
+	if(inUID && [inUID length] && inService) { //Ignore invalid requests
 		NSString		*key = [AIListContact internalUniqueObjectIDForService:inService
 																	   account:inAccount
 																		   UID:inUID];
-		
+
 		contact = [contactDict objectForKey:key];
-		if(!contact){
+		if(!contact) {
 			//Create
 			contact = [[AIListContact alloc] initWithUID:inUID account:inAccount service:inService];
 
@@ -1805,49 +1805,49 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 			//Check to see if we should add to a metaContact
 			AIMetaContact *metaContact = [contactToMetaContactLookupDict objectForKey:[contact internalObjectID]];
-			if (metaContact){
-				/* We already know to add this object to the metaContact, since we did it before with another object, 
+			if (metaContact) {
+				/* We already know to add this object to the metaContact, since we did it before with another object,
 				   but this particular listContact is new and needs to be added directly to the metaContact
 				   (on future launches, the metaContact will obtain it automatically since all contacts matching this UID
 				   and serviceID should be included). */
 				[self _performAddListObject:contact toMetaContact:metaContact];
 			}
-			
+
 			//Add
 			[contactDict setObject:contact forKey:key];
 			[contact release];
 		}
 	}
-	
+
 	return(contact);
 }
 
 - (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID
-{	
-	if(inService && [inUID length]){
+{
+	if(inService && [inUID length]) {
 		return([contactDict objectForKey:[AIListContact internalUniqueObjectIDForService:inService
 																				 account:inAccount
 																					 UID:inUID]]);
-	}else{
+	} else {
 		return(nil);
 	}
 }
 
 - (NSArray *)allContactsWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID
-{	
+{
 	return([self allContactsWithService:[[adium accountController] firstServiceWithServiceID:inServiceID]
 									UID:inUID]);
 }
 
 - (NSArray *)allContactsWithService:(AIService *)service UID:(NSString *)inUID
-{	
+{
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
 	NSMutableArray  *returnContactArray = [NSMutableArray array];
 
 	enumerator = [[[adium accountController] accountsWithServiceClassOfService:service] objectEnumerator];
-	
-	while(account = [enumerator nextObject]){
+
+	while(account = [enumerator nextObject]) {
 		[returnContactArray addObject:[self contactWithService:service
 													   account:account
 														   UID:inUID]];
@@ -1863,22 +1863,22 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 	//Contact
 	enumerator = [contactDict objectEnumerator];
-	while(listObject = [enumerator nextObject]){
+	while(listObject = [enumerator nextObject]) {
 		if([[listObject internalObjectID] isEqualToString:uniqueID]) return(listObject);
 	}
 
 	//Group
 	enumerator = [groupDict objectEnumerator];
-	while(listObject = [enumerator nextObject]){
+	while(listObject = [enumerator nextObject]) {
 		if([[listObject internalObjectID] isEqualToString:uniqueID]) return(listObject);
 	}
 
 	//Metacontact
 	enumerator = [metaContactDict objectEnumerator];
-	while(listObject = [enumerator nextObject]){
+	while(listObject = [enumerator nextObject]) {
 		if([[listObject internalObjectID] isEqualToString:uniqueID]) return(listObject);
 	}
-	
+
 	return(nil);
 }
 
@@ -1886,49 +1886,49 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
 	AIListContact   *returnContact = nil;
 	AIAccount		*account;
-	
-	if ([inContact isKindOfClass:[AIMetaContact class]]){
+
+	if ([inContact isKindOfClass:[AIMetaContact class]]) {
 		AIListObject	*preferredContact;
 		NSString		*internalObjectID;
-		
-		
+
+
 		//If we've messaged this object previously, prefer the last contact we sent to if that
 		//contact is currently available
         internalObjectID = [inContact preferenceForKey:KEY_PREFERRED_DESTINATION_CONTACT
 												 group:OBJECT_STATUS_CACHE];
-		
+
         if((internalObjectID) &&
 		   (preferredContact = [self existingListObjectWithUniqueID:internalObjectID]) &&
 		   ([preferredContact isKindOfClass:[AIListContact class]]) &&
-		   ([preferredContact statusSummary] == AIAvailableStatus)){
+		   ([preferredContact statusSummary] == AIAvailableStatus)) {
 			returnContact = [self preferredContactForContentType:inType
 												  forListContact:(AIListContact *)preferredContact];
         }
-		
+
 		//If the last contact we sent to is not available, use the metaContact's preferredContact
-		if (!returnContact || ![returnContact online]){
+		if (!returnContact || ![returnContact online]) {
 			//Recurse into metacontacts if necessary
 			returnContact = [self preferredContactForContentType:inType
 												  forListContact:[(AIMetaContact *)inContact preferredContact]];
 		}
-		
-	}else{
-		
+
+	} else {
+
 		//We have a flat contact; find the best account for talking to this contact,
 		//and return an AIListContact on that account
 		account = [[adium accountController] preferredAccountForSendingContentType:inType
 																		 toContact:inContact];
 		if (account) {
-			if ([inContact account] == account){
+			if ([inContact account] == account) {
 				returnContact = inContact;
-			}else{
+			} else {
 				returnContact = [self contactWithService:[inContact service]
-												 account:account 
+												 account:account
 													 UID:[inContact UID]];
 			}
 		}
  	}
-	
+
 	return(returnContact);
 }
 
@@ -1936,9 +1936,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //In many cases this will be the same as inContact.
 - (AIListContact *)contactOnAccount:(AIAccount *)account fromListContact:(AIListContact *)inContact
 {
-	if(account && ([inContact account] != account)){
+	if(account && ([inContact account] != account)) {
 		return([self contactWithService:[inContact service] account:account UID:[inContact UID]]);
-	}else{
+	} else {
 		return(inContact);
 	}
 }
@@ -1947,13 +1947,13 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (AIListContact *)preferredContactWithUID:(NSString *)inUID andServiceID:(NSString *)inService forSendingContentType:(NSString *)inType
 {
 	AIService		*theService = [[adium accountController] firstServiceWithServiceID:inService];
-	AIListContact	*tempListContact = [[AIListContact alloc] initWithUID:inUID 
+	AIListContact	*tempListContact = [[AIListContact alloc] initWithUID:inUID
 																service:theService];
-	AIAccount		*account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE 
+	AIAccount		*account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																					  toContact:tempListContact
 																				 includeOffline:YES];
 	[tempListContact release];
-	
+
 	return([self contactWithService:theService account:account UID:inUID]);
 }
 
@@ -1964,12 +1964,12 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
     AIChat			*chat = [[notification userInfo] objectForKey:@"AIChat"];
     AIListContact	*destContact = [chat listObject];
     AIListObject	*metaContact;
-	
-	//Note: parentContactForListObject returns the passed contact if it is not in a metaContact; 
+
+	//Note: parentContactForListObject returns the passed contact if it is not in a metaContact;
 	//this is a quick and easy check.
-    if((chat) && 
-	   (destContact) && 
-	   ((metaContact = [self parentContactForListObject:destContact]) != destContact)){
+    if((chat) &&
+	   (destContact) &&
+	   ((metaContact = [self parentContactForListObject:destContact]) != destContact)) {
 
 		[metaContact setPreference:[destContact internalObjectID]
 							forKey:KEY_PREFERRED_DESTINATION_CONTACT
@@ -1984,34 +1984,34 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (AIListGroup *)groupWithUID:(NSString *)groupUID
 {
 	AIListGroup		*group;
-	
-	if(!groupUID || ![groupUID length] || [groupUID isEqualToString:ADIUM_ROOT_GROUP_NAME]){
+
+	if(!groupUID || ![groupUID length] || [groupUID isEqualToString:ADIUM_ROOT_GROUP_NAME]) {
 		//Return our root group if it is requested
 		group = contactList;
-	}else{
-		if(!(group = [groupDict objectForKey:groupUID])){
+	} else {
+		if(!(group = [groupDict objectForKey:groupUID])) {
 			//NSArray		*groupNest = [groupUID componentsSeparatedByString:@":"];
 			//NSString	*groupName = [groupNest lastObject];
-			//AIListGroup *targetGroup;	
-			
+			//AIListGroup *targetGroup;
+
 			//Create
 			group = [[AIListGroup alloc] initWithUID:groupUID];
 			//[group setStatusObject:groupName forKey:@"FormattedUID" notify:YES];
-			
+
 			//Place new groups at the bottom of our list (by giving them the largest ordering index)
 //			largestOrder += 1.0;
 //			[group setOrderIndex:largestOrder];
 			float orderIndex = [group orderIndex];
 			if (orderIndex > nextOrderIndex) nextOrderIndex = orderIndex + 1;
-			
+
 			//add
 			[self _updateAllAttributesOfObject:group];
 			[groupDict setObject:group forKey:groupUID];
-			
+
 			//Add to target group
-			//if([groupNest count] == 1){
+			//if([groupNest count] == 1) {
 			//	targetGroup = contactList;
-			//}else{
+			//} else {
 			//	targetGroup = [self groupWithUID:[groupUID substringToIndex:[groupUID length] - ([groupName length] + 1)]];
 			//}
 			[/*targetGroup*/contactList addObject:group];
@@ -2019,7 +2019,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			[group release];
 		}
 	}
-	
+
 	return(group);
 }
 
@@ -2029,48 +2029,48 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
 	NSEnumerator	*enumerator = [objectArray objectEnumerator];
 	AIListObject	*listObject;
-	
-	while(listObject = [enumerator nextObject]){
-		if([listObject isKindOfClass:[AIMetaContact class]]){
+
+	while(listObject = [enumerator nextObject]) {
+		if([listObject isKindOfClass:[AIMetaContact class]]) {
 			NSArray	*objectsToRemove = nil;
-			
+
 			//If the metaContact only has one listContact, we will remove that contact from all accounts
-			if([[(AIMetaContact *)listObject listContacts] count] == 1){
+			if([[(AIMetaContact *)listObject listContacts] count] == 1) {
 				objectsToRemove = [[[(AIMetaContact *)listObject containedObjects] copy] autorelease];
 			}
-			
+
 			//Now break the metaContact down, taking out all contacts and putting them back in the main list
 			[self breakdownAndRemoveMetaContact:(AIMetaContact *)listObject];
-			
+
 			//And actually remove the single contact if applicable
-			if(objectsToRemove){
+			if(objectsToRemove) {
 				[self removeListObjects:objectsToRemove];
 			}
 
-		}else if([listObject isKindOfClass:[AIListGroup class]]){
+		} else if([listObject isKindOfClass:[AIListGroup class]]) {
 			AIListObject	*containingObject = [listObject containingObject];
 			NSEnumerator	*enumerator;
 			AIAccount		*account;
-			
+
 			//If this is a group, delete all the objects within it
 			[self removeListObjects:[(AIListGroup *)listObject containedObjects]];
-			
+
 			//Delete the list off of all active accounts
 			enumerator = [[[adium accountController] accountArray] objectEnumerator];
-			while (account = [enumerator nextObject]){
-				if ([account online]){
+			while (account = [enumerator nextObject]) {
+				if ([account online]) {
 					[account deleteGroup:(AIListGroup *)listObject];
 				}
 			}
-			
+
 			//Then, procede to delete the group
 			[listObject retain];
 			[(AIMetaContact *)containingObject removeObject:listObject];
 			[groupDict removeObjectForKey:[listObject UID]];
 			[self _listChangedGroup:containingObject object:listObject];
 			[listObject release];
-			
-		}else{
+
+		} else {
 			[[(AIListContact *)listObject account] removeContacts:[NSArray arrayWithObject:listObject]];
 		}
 	}
@@ -2080,14 +2080,14 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
 	NSEnumerator	*enumerator;
 	AIListContact	*listObject;
-	
+
 	[self delayListObjectNotifications];
-	
+
 	enumerator = [contactArray objectEnumerator];
-	while(listObject = [enumerator nextObject]){
+	while(listObject = [enumerator nextObject]) {
 		[[listObject account] addContacts:[NSArray arrayWithObject:listObject] toGroup:group];
 	}
-	
+
 	[self endListObjectNotificationsDelay];
 }
 
@@ -2106,12 +2106,12 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 	[self delayListObjectNotifications];
 
-	if([group respondsToSelector:@selector(setDelayContainedObjectSorting:)]){
+	if([group respondsToSelector:@selector(setDelayContainedObjectSorting:)]) {
 		[(id)group setDelayContainedObjectSorting:YES];
 	}
-	
+
 	enumerator = [objectArray objectEnumerator];
-	while(listContact = [enumerator nextObject]){
+	while(listContact = [enumerator nextObject]) {
 		[self moveContact:listContact toGroup:group];
 
 		//Set the new index / position of the object
@@ -2120,15 +2120,15 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 	[self endListObjectNotificationsDelay];
 
-	if([group respondsToSelector:@selector(setDelayContainedObjectSorting:)]){
+	if([group respondsToSelector:@selector(setDelayContainedObjectSorting:)]) {
 		[(id)group setDelayContainedObjectSorting:NO];
 	}
-	
+
 	/*
 	 Resort the entire list if we are moving within or between AIListGroup objects
 	 (other containing objects such as metaContacts will handle their own sorting).
 	*/
-	if([group isKindOfClass:[AIListGroup class]]){
+	if([group isKindOfClass:[AIListGroup class]]) {
 		[self sortContactList];
 	}
 }
@@ -2136,38 +2136,38 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (void)moveContact:(AIListContact *)listContact toGroup:(AIListObject<AIContainingObject> *)group
 {
 	//Move the object to the new group if necessary
-	if(group != [listContact containingObject]){			
-		
-		if ([group isKindOfClass:[AIListGroup class]]){
-			if([listContact isKindOfClass:[AIMetaContact class]]){
+	if(group != [listContact containingObject]) {
+
+		if ([group isKindOfClass:[AIListGroup class]]) {
+			if([listContact isKindOfClass:[AIMetaContact class]]) {
 				//This is a meta contact, move the objects within it.  listContacts will give us a flat array of AIListContacts.
-				
+
 				/*
 				NSEnumerator	*metaEnumerator;
 				AIListContact	*aContainedContact;
-				
+
 				metaEnumerator = [[(AIMetaContact *)listContact listContacts] objectEnumerator];
-				while(aContainedContact = [metaEnumerator nextObject]){
+				while(aContainedContact = [metaEnumerator nextObject]) {
 					NSEnumerator	*allContactsEnumerator;
 					AIListContact	*specificContact;
-					
+
 					//Leave no contact behind.
 					allContactsEnumerator = [[self allContactsWithService:[aContainedContact service]
 																	  UID:[aContainedContact UID]] objectEnumerator];
-					while (specificContact = [allContactsEnumerator nextObject]){
+					while (specificContact = [allContactsEnumerator nextObject]) {
 						[self _moveObjectServerside:specificContact toGroup:(AIListGroup *)group];
 					}
 				}
 				*/
-				
+
 				[self _moveContactLocally:listContact toGroup:(AIListGroup *)group];
-				
-			}else if([listContact isKindOfClass:[AIListContact class]]){
-				//Move the object 
+
+			} else if([listContact isKindOfClass:[AIListContact class]]) {
+				//Move the object
 				[self _moveObjectServerside:listContact toGroup:(AIListGroup *)group];
 			}
-			
-		}else if ([group isKindOfClass:[AIMetaContact class]]){
+
+		} else if ([group isKindOfClass:[AIMetaContact class]]) {
 			//Moving a contact into a meta contact
 			[self addListObject:listContact toMetaContact:(AIMetaContact *)group];
 		}
@@ -2178,7 +2178,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (void)_moveObjectServerside:(AIListObject *)listObject toGroup:(AIListGroup *)group
 {
 	AIAccount	*account = [(AIListContact *)listObject account];
-	if ([account online]){
+	if ([account online]) {
 		[account moveListObjects:[NSArray arrayWithObject:listObject] toGroup:group];
 	}
 }
@@ -2188,15 +2188,15 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
 	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	AIAccount		*account;
-	
+
 	//Since Adium has no memory of what accounts a group is on, we have to send this message to all available accounts
 	//The accounts without this group will just ignore it
-	while(account = [enumerator nextObject]){
+	while(account = [enumerator nextObject]) {
 		[account renameGroup:listGroup to:newName];
 	}
-	
+
 	//Remove the old group if it's empty
-	if([listGroup containedObjectsCount] == 0){
+	if([listGroup containedObjectsCount] == 0) {
 		[self removeListObjects:[NSArray arrayWithObject:listGroup]];
 	}
 }
@@ -2204,21 +2204,21 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Position a list object within a group
 - (void)_positionObject:(AIListObject *)listObject atIndex:(int)index inGroup:(AIListObject<AIContainingObject> *)group
 {
-	if(index == 0){		
+	if(index == 0) {
 		//Moved to the top of a group.  New index is between 0 and the lowest current index
 		[listObject setOrderIndex:([group smallestOrder] / 2.0)];
-		
-	}else if(index >= [group visibleCount]){
+
+	} else if(index >= [group visibleCount]) {
 		//Moved to the bottom of a group.  New index is one higher than the highest current index
 		[listObject setOrderIndex:([group largestOrder] + 1.0)];
-		
-	}else{
+
+	} else {
 		//Moved somewhere in the middle.  New index is the average of the next largest and smallest index
 		AIListObject	*previousObject = [group objectAtIndex:index-1];
 		AIListObject	*nextObject = [group objectAtIndex:index];
 		float nextLowest = [previousObject orderIndex];
 		float nextHighest = [nextObject orderIndex];
-		
+
 		//
 		[listObject setOrderIndex:((nextHighest + nextLowest) / 2.0)];
 	}
