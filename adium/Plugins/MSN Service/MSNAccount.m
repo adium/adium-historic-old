@@ -421,7 +421,7 @@
                 break;
             
             case 18:
-                //now we send out our SYN, only the first time, though.
+                //now we send out our SYN
                 if ([socket readyForSending])
                 {
                     [socket sendData:[@"SYN 4 0\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
@@ -431,7 +431,6 @@
                 break;
                     
             case 19:
-        
                 if ([socket readyForReceiving])
                 {
                     [socket getDataToNewline:&inData];
@@ -483,6 +482,59 @@
                     connectionPhase ++;
                 }
                 break;
+            
+            case 21:
+                if([socket readyForSending])
+                {
+                    //send a PNG so we know when we are done (when we get the QNG)
+                    [socket sendData:[@"PNG\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+                    NSLog(@">>> %@", @"PNG");
+                    connectionPhase ++;
+                }
+                break;
+            case 22:
+                if([socket readyForReceiving])
+                {
+                    [socket getDataToNewline:&inData];
+                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]]);
+                    
+                    if([[NSString stringWithCString:[inData bytes] length:[inData length]]
+                        isEqual:@"QNG\r\n"])
+                    {
+                        connectionPhase ++;
+                    }
+                    
+                    NSArray *message = [[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]] componentsSeparatedByString:@" "];
+                    
+                    if([[message objectAtIndex:0] isEqual:@"ILN"]) //this is a person
+                    {
+                        AIHandle *theHandle = [handleDict objectForKey:[message objectAtIndex:3]];
+                        
+                        [[theHandle statusDictionary]
+                            setObject:[NSNumber numberWithInt:1]
+                            forKey:@"Online"];
+                        
+                        NSLog(@"%@",[[[message objectAtIndex:4] 
+                                stringByTrimmingCharactersInSet:
+                                    [NSCharacterSet characterSetWithCharactersInString:@"\r\n"]]
+                                        urlDecode]);
+                        
+                        [[theHandle statusDictionary]
+                            setObject:[[[message objectAtIndex:4] 
+                                stringByTrimmingCharactersInSet:
+                                    [NSCharacterSet characterSetWithCharactersInString:@"\r\n"]]
+                                        urlDecode]
+                            forKey:@"Display Name"];
+                            
+                        [[owner contactController] handleStatusChanged:theHandle
+                            modifiedStatusKeys:
+                                [NSArray arrayWithObjects:@"Online", @"Display Name"]];
+            
+                    }
+                }
+                break;
                     
             default:
                 [[owner accountController] 
@@ -514,6 +566,7 @@
                 [self connect:timer];
                 break;
             case STATUS_DISCONNECTING:
+                [self disconnect];
                 break;
 	}
 }
