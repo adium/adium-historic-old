@@ -42,7 +42,7 @@ Accounts:
 	
 WebKit Message View:
 	+ Add preference to switch active style, preview styles
-	+ Add support for displaying emoticon images
+	+ Add preference to switch variants for the active style
     
 Message Window:
 	+ Insert/Edit link menu item, accompanying link entry panel, edit link context menu
@@ -121,7 +121,8 @@ Event Info (Implement as a new plugin, to replace bezel):
 
     	Details:
 	+ Give the notification window a titlebar, and allow it to be repositioned while visible.
-	+ Stack bezels when multiple events arrive
+	# Stack bezels when multiple events arrive
+	  - I am strongly against the clutter of stacks, I vote for queue events [Jorge]
 	+ Color the entire bezel to match the event being displayed
 	+ Make the bezel smaller, clearer, easier to read, prettier
 	+ Give the event info few preferences if any.
@@ -213,6 +214,7 @@ Bug Fixes:
 	Evan:I say we just take this nonstandard 'feature' out.
 
 Features & Changes:
+= Add support for displaying emoticon images (webkit message view)
 = Add Offline status coloring
 = Remove sorting preferences.  Consolidate these and place them in the view menu - (Evan: MINOR CHANGE?! I'm hurt.)
 = Move user name field out of account code and into account list preferences code
