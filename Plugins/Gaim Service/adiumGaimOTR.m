@@ -18,6 +18,8 @@
 #import <Libgaim/dialogs.h>
 #import <Libgaim/otr-plugin.h>
 
+#define		GROUP_ENCRYPTION	@"Encryption"
+
 #pragma mark Adium convenience functions
 
 //Return the ConnContext for a GaimConversation, or NULL if none exists
