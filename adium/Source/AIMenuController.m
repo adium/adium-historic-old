@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIMenuController.m,v 1.22 2004/02/07 19:34:32 evands Exp $
+// $Id: AIMenuController.m,v 1.23 2004/02/08 20:22:36 evands Exp $
 
 #import "AIMenuController.h"
 
@@ -126,8 +126,8 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16
 //Add a menu item
 - (void)addMenuItem:(NSMenuItem *)newItem toLocation:(MENU_LOCATION)location
 {
-    NSMenuItem		*menuItem;
-    NSMenu		*targetMenu;
+    NSMenuItem  *menuItem;
+    NSMenu		*targetMenu = nil;
     int			targetIndex;
     int			destination;
     
@@ -158,6 +158,8 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16
     
     //update the location array
     [locationArray replaceObjectAtIndex:location withObject:newItem];
+	
+	[[owner notificationCenter] postNotificationName:Menu_didChange object:[newItem menu] userInfo:nil];
 }
 
 //Remove a menu item
@@ -170,22 +172,22 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16
     //Fix the pointer if this is one
     for(loop = 0; loop < [locationArray count];loop++){
         NSMenuItem	*menuItem = [locationArray objectAtIndex:loop];
-    
-        //Move to the item above it, nil if a divider
-	if(targetIndex != 0){
-	    if(menuItem == targetItem){
-		NSMenuItem	*previousItem = [targetMenu itemAtIndex:(targetIndex - 1)];
 		
-		if([previousItem isSeparatorItem]){
-		    [locationArray replaceObjectAtIndex:loop withObject:nilMenuItem];
+        //Move to the item above it, nil if a divider
+		if(targetIndex != 0){
+			if(menuItem == targetItem){
+				NSMenuItem	*previousItem = [targetMenu itemAtIndex:(targetIndex - 1)];
+				
+				if([previousItem isSeparatorItem]){
+					[locationArray replaceObjectAtIndex:loop withObject:nilMenuItem];
+				}else{
+					[locationArray replaceObjectAtIndex:loop withObject:previousItem];
+				}
+			}
 		}else{
-		    [locationArray replaceObjectAtIndex:loop withObject:previousItem];
+			//If there are no more items, attach to the menu
+			[locationArray replaceObjectAtIndex:loop withObject:targetMenu];
 		}
-	    }
-	}else{
-	    //If there are no more items, attach to the menu
-	    [locationArray replaceObjectAtIndex:loop withObject:targetMenu];
-	}
     }
     
     //Remove the item
@@ -193,11 +195,14 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16
 
     //Remove any double dividers (And dividers at the bottom)
     for(loop = 0;loop < [targetMenu numberOfItems];loop++){
-        if([[targetMenu itemAtIndex:loop] isSeparatorItem] && (loop == [targetMenu numberOfItems]-1 || [[targetMenu itemAtIndex:loop+1] isSeparatorItem])){
+        if(([[targetMenu itemAtIndex:loop] isSeparatorItem]) && 
+		   (loop == [targetMenu numberOfItems]-1 || [[targetMenu itemAtIndex:loop+1] isSeparatorItem])){
             [targetMenu removeItemAtIndex:loop];
             loop--;//re-search the location
         }
     }
+	
+	[[owner notificationCenter] postNotificationName:Menu_didChange object:targetMenu userInfo:nil];
 }
 
 - (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(CONTEXT_MENU_LOCATION)location
