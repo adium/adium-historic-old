@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
-//  $Id: ESFileTransferController.m,v 1.16 2004/07/13 07:18:38 evands Exp $
+//  $Id: ESFileTransferController.m,v 1.17 2004/08/05 09:18:35 evands Exp $
 
 #import "ESFileTransferController.h"
 
@@ -130,7 +130,7 @@
 	AIListContact   *listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																			  forListContact:(AIListContact *)selectedObject];
 	
-	
+	[NSApp activateIgnoringOtherApps:YES];
 	[self requestForSendingFileToListContact:listContact];
 }
 
