@@ -87,6 +87,7 @@
 	
 	[table setDelegate:self];
 	[table setDataSource:self];
+	[table setAllowsMultipleSelection:YES];
 	[scroll setDocumentView:table];
 
 	
@@ -224,11 +225,12 @@
 	}
 }
 
+//Returns nil if there is no selection or multiple selection
 - (id)selectedItemInColumn:(AIBrowserColumn *)column
 {
 	id	selectedItem = nil;
 	
-	if([[column tableView] numberOfSelectedRows] != 0){
+	if([[column tableView] numberOfSelectedRows] == 1){
 		selectedItem = [dataSource browserView:self
 										 child:[[column tableView] selectedRow]
 										ofItem:[column representedObject]];
