@@ -119,14 +119,16 @@ int HTMLEquivalentForFontSize(int fontSize);
 
             //Family
             if([familyName caseInsensitiveCompare:currentFamily] != 0){
-                [string appendString:[NSString stringWithFormat:@" FACE=\"%@\"",familyName]];
-                
+                int langNum = 0; 
+        
                 //( NSNonstandardCharacterSetFontMask = 0x00000008 ) is defined internally but not externally
                 //It serves us well here.  Once non-AIM HTML is coming through, this will probably need to be an option in the function call.
                 if (traits || 0x00000008) {
-                    [string appendString:@" LANG=\"11\""];   
+                    langNum = 11;
                 }
-             
+                
+                [string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"%i\"",familyName,langNum]];
+
                 [currentFamily release]; currentFamily = [familyName retain];
             }
 
