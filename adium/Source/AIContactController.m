@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.149 2004/06/22 18:33:19 evands Exp $
+// $Id: AIContactController.m,v 1.150 2004/06/25 03:58:21 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -280,7 +280,7 @@
 - (void)endListObjectNotificationDelay
 {
 	delayedUpdateRequests--;
-	if(delayedUpdateTimer == 0 && !delayedUpdateTimer){
+	if(delayedUpdateRequests == 0 && !delayedUpdateTimer){
 		[self _performDelayedUpdates:nil];
 	}
 }
@@ -498,13 +498,17 @@
 		BOOL shouldSort = NO;
 		
 		//Inform observers of any changes
+		if(delayedContactChanges){
+			[[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
+			delayedContactChanges = 0;
+			shouldSort = YES;
+		}
 		if (delayedStatusChanges){
 			if([[self activeSortController] shouldSortForModifiedStatusKeys:[delayedModifiedStatusKeys allObjects]]){
 				shouldSort = YES;
 			}
 			[delayedModifiedStatusKeys removeAllObjects];
 			delayedStatusChanges = 0;
-			
 		}
 		if(delayedAttributeChanges){
 			if([[self activeSortController] shouldSortForModifiedAttributeKeys:[delayedModifiedAttributeKeys allObjects]]){
@@ -512,19 +516,13 @@
 			}			
 			[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:nil];
 			[delayedModifiedAttributeKeys removeAllObjects];
-		}
-		if(delayedContactChanges){
-			[[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
+			delayedAttributeChanges = 0;
 		}
 		
 		//Sort only if necessary
-		if (shouldSort || delayedContactChanges){
+		if (shouldSort){
 			[self sortContactList];
 		}
-        //Reset the delayed update count back to 0
-
-		delayedAttributeChanges = 0;
-		delayedContactChanges = 0;
 	}
 	
     //If no more updates are left to process, disable the update timer
