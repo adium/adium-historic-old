@@ -116,32 +116,18 @@ NSString *AITag_ContentsKey = @"Contents";
 - (unsigned)hash
 {
 	unsigned hash = [name hash];
-	enum { numBitsPerUnsignedInt = sizeof(unsigned int) * 8 };
-	return( ((unsigned int) self >> 4) | (unsigned int) self << (numBitsPerUnsignedInt - 4));
 	NSEnumerator *objEnum = [attributeNames objectEnumerator];
 	id obj;
 	while((obj = [objEnum nextObject])) {
-		if([obj respondsToSelector:@selector(hash)]) {
-			hash ^= [obj hash];
-		} else {
-			hash ^= ( ((unsigned)obj >> 4) | (unsigned)obj << (numBitsPerUnsignedInt - 4));
-		}
+		hash ^= [obj hash];
 	}
 	objEnum = [attributeValues objectEnumerator];
 	while((obj = [objEnum nextObject])) {
-		if([obj respondsToSelector:@selector(hash)]) {
-			hash ^= [obj hash];
-		} else {
-			hash ^= ( ((unsigned)obj >> 4) | (unsigned)obj << (numBitsPerUnsignedInt - 4));
-		}
+		hash ^= [obj hash];
 	}
 	objEnum = [contents objectEnumerator];
 	while((obj = [objEnum nextObject])) {
-		if([obj respondsToSelector:@selector(hash)]) {
-			hash ^= [obj hash];
-		} else {
-			hash ^= ( ((unsigned)obj >> 4) | (unsigned)obj << (numBitsPerUnsignedInt - 4));
-		}
+		hash ^= [obj hash];
 	}
 	return hash;
 }
