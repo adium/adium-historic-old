@@ -347,14 +347,14 @@
 	
 	while(item = [enumerator nextObject]){
 		if([[item itemIdentifier] isEqualToString:@"UserIcon"]){
-			AIListObject	*listObject;
+			AIListContact	*listContact;
 			NSImage			*image;
 			
-			if((listObject = [chat listObject]) && ![chat name]){
-				image = [listObject userIcon];
+			if((listContact = [chat listObject]) && ![chat name]){
+				image = [listContact userIcon];
 				
 				//Use the serviceIcon if no image can be found
-				if(!image) image = [AIServiceIcons serviceIconForObject:listObject
+				if(!image) image = [AIServiceIcons serviceIconForObject:listContact
 																   type:AIServiceIconLarge
 															  direction:AIIconNormal];
 			}else{

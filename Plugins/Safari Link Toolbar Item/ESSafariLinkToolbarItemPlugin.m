@@ -21,6 +21,7 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/NDRunLoopMessenger.h>
+#import <AIUtilities/AIApplescriptAdditions.h>
 
 #define SAFARI_LINK_IDENTIFER   @"SafariLink"
 #define SAFARI_LINK_SCRIPT_PATH [[NSBundle bundleForClass:[self class]] pathForResource:@"Safari.scpt" ofType:nil]

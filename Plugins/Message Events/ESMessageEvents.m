@@ -18,7 +18,7 @@
 #import "ESMessageEvents.h"
 #import <Adium/AIAdium.h>
 #import <Adium/AIChat.h>
-#import <Adium/AIListObject.h>
+#import <Adium/AIListContact.h>
 
 @implementation ESMessageEvents
 
@@ -38,7 +38,7 @@
 
 		NSString		*message = nil;
 		NSString		*type = nil;
-		AIListObject	*listObject = [inChat listObject];
+		AIListContact	*listObject = [inChat listObject];
 		
 		if ([inChat statusObjectForKey:KEY_CHAT_ERROR] != nil){
 		

@@ -151,6 +151,7 @@
 				4947F5CB0655E85200B791E5,
 				BFEBDBFF0669029800CBF845,
 				7ECB106706A4D1AD00812D5F,
+				349ECD2007C1BE2A0014623E,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -4420,6 +4421,14 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		349ECD2007C1BE2A0014623E = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Latex Plugin.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		349FE287074D019700E36B3B = {
 			children = (
@@ -21029,7 +21038,7 @@
 			isa = PBXNativeTarget;
 			name = "Latex Plugin";
 			productName = "Latex Plugin";
-			productReference = B72537BC058C4577004BA969;
+			productReference = 349ECD2007C1BE2A0014623E;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
 <plist version=\"1.0\">
@@ -21060,15 +21069,6 @@
 </plist>
 ";
 			productType = "com.apple.product-type.bundle";
-		};
-		B72537BC058C4577004BA969 = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			name = "Latex Plugin.AdiumPlugin";
-			path = "/Users/adamiser/Desktop/adium/build/Latex Plugin.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B72537BD058C45CF004BA969 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;

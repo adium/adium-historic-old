@@ -25,6 +25,7 @@
 #import <AIUtilities/AIHTMLDecoder.h>
 #import <AIUtilities/BZArrayAdditions.h>
 #import <AIUtilities/ESDateFormatterAdditions.h>
+#import <AIUtilities/NEHMutableStringAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentContext.h>
