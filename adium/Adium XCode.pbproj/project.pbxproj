@@ -358,6 +358,7 @@
 				9E87CF580574909B001CB886,
 				342DC47505783AF0000E1D83,
 				B799BB0005793A6400338E54,
+				B782F098058BB6C200AF4BBA,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -469,6 +470,7 @@
 				3419F43D05314C4C00C68BA3,
 				3419F44E05314C5900C68BA3,
 				3419F46005314C6800C68BA3,
+				B782F097058BB6C200AF4BBA,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -17240,6 +17242,7 @@
 		};
 		4B13323F0459BE4500A8010A = {
 			children = (
+				B782F088058BB60B00AF4BBA,
 				344AB2C90579137E00384CEE,
 				4B1F0F2E04AE300500A8010A,
 				9C8C7FA303CBA17B00267226,
@@ -17892,7 +17895,6 @@
 				4BCFC91104E930BA00A8010A,
 				F5A01D85037980F201A8010A,
 				9E2E3073046CAA5F00415B22,
-				F5A3236904A7A9A501888466,
 				F5F846FE04C702DB01A80106,
 			);
 			isa = PBXGroup;
@@ -25916,6 +25918,200 @@
 //B72
 //B73
 //B74
+		B782F088058BB60B00AF4BBA = {
+			children = (
+				B782F08B058BB66A00AF4BBA,
+				B782F08C058BB66A00AF4BBA,
+				B782F08D058BB66A00AF4BBA,
+				B782F08E058BB66B00AF4BBA,
+			);
+			isa = PBXGroup;
+			name = "LaTeX Plugin";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B782F08B058BB66A00AF4BBA = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILaTeXAttachment.m;
+			path = "Plugins/LaTeX Plugin/AILaTeXAttachment.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B782F08C058BB66A00AF4BBA = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILaTeXPlugin.h;
+			path = "Plugins/LaTeX Plugin/AILaTeXPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B782F08D058BB66A00AF4BBA = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILaTeXAttachment.h;
+			path = "Plugins/LaTeX Plugin/AILaTeXAttachment.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B782F08E058BB66B00AF4BBA = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILaTeXPlugin.m;
+			path = "Plugins/LaTeX Plugin/AILaTeXPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B782F093058BB6C200AF4BBA = {
+			buildActionMask = 2147483647;
+			files = (
+				B782F0A0058BB7C400AF4BBA,
+				B782F0A1058BB7C400AF4BBA,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B782F094058BB6C200AF4BBA = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B782F095058BB6C200AF4BBA = {
+			buildActionMask = 2147483647;
+			files = (
+				B782F09E058BB7B600AF4BBA,
+				B782F09F058BB7B600AF4BBA,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B782F096058BB6C200AF4BBA = {
+			buildActionMask = 2147483647;
+			files = (
+				B782F0AC058BB8A300AF4BBA,
+				B782F0AD058BB8A300AF4BBA,
+				B782F0AE058BB8A300AF4BBA,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B782F097058BB6C200AF4BBA = {
+			buildPhases = (
+				B782F093058BB6C200AF4BBA,
+				B782F094058BB6C200AF4BBA,
+				B782F095058BB6C200AF4BBA,
+				B782F096058BB6C200AF4BBA,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Plists/LaTeX Plugin.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_REZFLAGS = "";
+				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
+				PRODUCT_NAME = "LaTeX Plugin";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = adiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "LaTeX Plugin";
+			productName = "LaTeX Plugin";
+			productReference = B782F098058BB6C200AF4BBA;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>LaTeX Plugin</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.LaTeX_Plugin</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		B782F098058BB6C200AF4BBA = {
+			expectedFileType = folder;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "LaTeX Plugin.adiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B782F09E058BB7B600AF4BBA = {
+			fileRef = B782F08B058BB66A00AF4BBA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B782F09F058BB7B600AF4BBA = {
+			fileRef = B782F08E058BB66B00AF4BBA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B782F0A0058BB7C400AF4BBA = {
+			fileRef = B782F08C058BB66A00AF4BBA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B782F0A1058BB7C400AF4BBA = {
+			fileRef = B782F08D058BB66A00AF4BBA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B782F0AC058BB8A300AF4BBA = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B782F0AD058BB8A300AF4BBA = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B782F0AE058BB8A300AF4BBA = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		B799BB0005793A6400338E54 = {
 			expectedFileType = folder;
 			includeInIndex = 0;
@@ -29039,55 +29235,6 @@
 			isa = PBXFileReference;
 			name = notfound.png;
 			path = Source/notfound.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5A3236904A7A9A501888466 = {
-			children = (
-				F5A3237504A7AAA001888466,
-				F5A3237604A7AAA001888466,
-				F5A3237704A7AAA001888466,
-				F5A3237804A7AAA001888466,
-			);
-			isa = PBXGroup;
-			name = "MX LaTeX Plugin";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5A3237504A7AAA001888466 = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = MXImageTextAttachmentCell.h;
-			path = "Plugins/MX LaTeX Plugin/MXImageTextAttachmentCell.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5A3237604A7AAA001888466 = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = MXImageTextAttachmentCell.m;
-			path = "Plugins/MX LaTeX Plugin/MXImageTextAttachmentCell.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5A3237704A7AAA001888466 = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = MXLaTeXPlugin.h;
-			path = "Plugins/MX LaTeX Plugin/MXLaTeXPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5A3237804A7AAA001888466 = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = MXLaTeXPlugin.m;
-			path = "Plugins/MX LaTeX Plugin/MXLaTeXPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
