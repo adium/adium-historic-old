@@ -22,9 +22,11 @@
 #define	CONTACT_ALIAS_NIB		@"ContactAlias"		//Filename of the alias info view
 #define	PREF_GROUP_ALIASES		@"Aliases"		//Preference group to store aliases in
 #define ALIASES_DEFAULT_PREFS		@"Alias Defaults"
+#define DISPLAYFORMAT_DEFAULT_PREFS	@"Display Format Defaults"
 
 @interface AIAliasSupportPlugin (PRIVATE)
 - (void)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject delayed:(BOOL)delayed;
+- (void)_applyLongDisplayNameToObject:(AIListObject *)inObject delayed:(BOOL)delayed;
 @end
 
 @implementation AIAliasSupportPlugin
@@ -33,9 +35,19 @@
 {
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ALIASES_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_ALIASES];
-
+   [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DISPLAYFORMAT_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DISPLAYFORMAT];
+   
     //Register ourself as a handle observer
     [[owner contactController] registerListObjectObserver:self];
+
+    //Observe preferences changes
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:nil];
+
+    prefs = [[AIAliasSupportPreferences displayFormatPreferencesWithOwner:owner] retain];
+
+    //load the formatting pref
+    displayFormat = [[[owner preferenceController] preferenceForKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT object:nil] intValue];
     
     //Install the contact info view
 /*    [NSBundle loadNibNamed:CONTACT_ALIAS_NIB owner:self];
@@ -44,7 +56,7 @@
 
     //Wait for the contact list editor to init so we can add our column
     [[owner notificationCenter] addObserver:self selector:@selector(registerColumn:) name:CONTACT_EDITOR_REGISTER_COLUMNS object:nil];
-    
+
     activeListObject = nil;
 }
 
@@ -91,9 +103,34 @@
         if(alias != nil && [alias length] != 0){
             [self _applyAlias:alias toObject:inObject delayed:delayed];
         }
+
     }
     
     return(nil);
+}
+
+#warning How should delayed be being used here?
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DISPLAYFORMAT] == 0){
+        displayFormat = [[[owner preferenceController] preferenceForKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT object:nil] intValue]; //load new displayFormat
+
+        NSEnumerator * contactEnumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+        AIListObject * inObject;
+        while (inObject = [contactEnumerator nextObject])
+            [self _applyLongDisplayNameToObject:inObject delayed:YES]; 
+    }
+}
+
+- (void)listObjectAttributesChanged:(NSNotification *)notification
+{
+    NSArray	*keys = [[notification userInfo] objectForKey:@"Keys"];
+    AIListObject *inObject = [notification object];
+
+    //We only need to redraw if the display name has changed
+    if([keys containsObject:@"Display Name"]){
+        [self _applyLongDisplayNameToObject:inObject delayed:NO];
+    }
 }
 
 
@@ -152,17 +189,43 @@
 - (void)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject delayed:(BOOL)delayed
 {
     AIMutableOwnerArray	*displayNameArray;
-    
+
     displayNameArray = [inObject displayArrayForKey:@"Display Name"];
+
+    
     if(inAlias != nil && [inAlias length] != 0){
         [displayNameArray setObject:inAlias withOwner:self]; //Set the new alias
+ //       [self _applyLongDisplayNameToObject:inObject withAlias:inAlias]; //Set the new long display name
     }else{
         [displayNameArray setObject:nil withOwner:self]; //Remove the alias
+ //       [self _applyLongDisplayNameToObject:inObject withAlias:nil]; //Remove long display name
     }
 
     [[owner contactController] listObjectAttributesChanged:inObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];
 }
 
+- (void)_applyLongDisplayNameToObject:(AIListObject *)inObject delayed:(BOOL)delayed
+{
+    AIMutableOwnerArray	*longDisplayNameArray;
+    longDisplayNameArray = [inObject displayArrayForKey:@"Long Display Name"];
+
+    NSString * displayName = [inObject displayName];
+    if (!displayName) {
+        [longDisplayNameArray setObject:nil withOwner:self];
+    }
+    else {
+        NSString * longDisplayName;
+        switch (displayFormat)
+        {
+            case DISPLAY_NAME: longDisplayName = displayName; break;
+            case DISPLAY_NAME_SCREEN_NAME: longDisplayName = [NSString stringWithFormat:@"%@ (%@)",displayName,[inObject UID]]; break;
+            case SCREEN_NAME_DISPLAY_NAME:  longDisplayName = [NSString stringWithFormat:@"%@ (%@)",[inObject UID],displayName];  break;
+            case SCREEN_NAME: longDisplayName = [inObject UID]; break;
+        }
+        [longDisplayNameArray setObject:longDisplayName withOwner:self];
+    }
+    [[owner contactController] listObjectAttributesChanged:inObject modifiedKeys:[NSArray arrayWithObject:@"Long Display Name"] delayed:delayed];
+}
 @end
 
 
