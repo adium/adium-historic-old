@@ -21,6 +21,7 @@
     NSMutableData		*readBuffer;
 
     BOOL			isValid;
+    NSString			*hostIP;
 }
 
 + (AISocket *)socketWithHost:(NSString *)host port:(int)port;
@@ -30,5 +31,6 @@
 - (BOOL)getData:(NSData **)outData ofLength:(int)inLength;
 - (void)removeDataBytes:(int)inLength;
 - (BOOL)isValid;
+- (NSString *)hostIP;
 
 @end

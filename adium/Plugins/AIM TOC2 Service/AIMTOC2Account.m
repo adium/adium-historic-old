@@ -427,7 +427,7 @@ static char *hash_password(const char * const password);
                 //Start the sequence generators
                 remoteSequence = [packet sequence] + 1;
                 srand(time(NULL));
-                localSequence = 1+(short) (65536.0*rand()/(RAND_MAX+1.0));
+                localSequence = +(short) (65536.0*rand()/(RAND_MAX+1.0));
 
                 connectionPhase++;
             }
@@ -1025,18 +1025,23 @@ static char *hash_password(const char * const password);
 //
 - (void)AIM_HandleGotoURL:(NSString *)message
 {
-    NSString	*host, *port, *path;
+    NSString	*host, *port, *path, *urlString;
     NSString	*profileHTML, *profile;
     NSString	*userName;
-    
-    //
-    host = [preferencesDict objectForKey:AIM_TOC2_KEY_HOST];
+    NSURL	*url;
+    NSData	*data;
+
+    //Set up the address
+    host = [socket hostIP]; //We must request our profile from the same server that we connected to.
     port = [preferencesDict objectForKey:AIM_TOC2_KEY_PORT];
     path = [message nonBreakingTOCStringArgumentAtIndex:2];
-    NSLog(@"URL:http://%@:%@/%@",host, port, path);
+    urlString = [NSString stringWithFormat:@"http://%@:%@/%@", host, port, path];
 
     //Fetch the site
-    profileHTML = [AIURLLoader loadHost:host port:[port intValue] path:path];
+    //Just to note: this caused a crash when the user had a proxy in previous versions of Adium
+    url = [NSURL URLWithString:urlString];
+    data = [url resourceDataUsingCache:NO];
+    profileHTML = [[[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding] autorelease];
 
     //Key pieces of HTML that mark the begining and end of the AIM profile (and the username)
     #define USERNAME_START	@"Username : <B>"
