@@ -253,8 +253,9 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)configureForListObject:(AIListObject *)inObject
 {
 	if(inObject == nil || displayedObject != inObject){
-		NSImage				*userImage;
-
+		NSImage		*userIcon;
+		NSSize		userIconSize, imageView_userIconSize;
+			
 		//Update our displayed object
 		[displayedObject release];
 		displayedObject = [inObject retain];
@@ -285,11 +286,20 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		}
 		
 		//User Icon
-		if(!(userImage = [displayedObject userIcon])){
-			userImage = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
+		if(!(userIcon = [displayedObject userIcon])){
+			userIcon = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
 		}
-		[imageView_userIcon setImageScaling:NSScaleProportionally];
-		[imageView_userIcon setImage:userImage];
+
+		//NSScaleProportionally will lock an animated GIF into a single frame.  We therefore use NSScaleNone if
+		//we are already at the right size or smaller than the right size; otherwise we scale proportionally to
+		//fit the frame.
+		userIconSize = [userIcon size];
+		imageView_userIconSize = [imageView_userIcon frame].size;
+		
+		[imageView_userIcon setImageScaling:(((userIconSize.width <= imageView_userIconSize.width) && (userIconSize.height <= imageView_userIconSize.height)) ?
+											 NSScaleNone :
+											 NSScaleProportionally)];
+		[imageView_userIcon setImage:userIcon];
 		[imageView_userIcon setTitle:(inObject ? 
 									  [NSString stringWithFormat:AILocalizedString(@"%@'s Image",nil),[inObject displayName]] :
 									  AILocalizedString(@"Image Picker",nil))];
@@ -298,7 +308,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		
 		//Confiugre the drawer
 		[self configureDrawer];
-
 	}
 }
 
@@ -338,6 +347,15 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		}
 		[imageView_userIcon setImage:userImage];
 	}
+}
+
+/*
+ If the userIcon was bigger than our image view's frame, it will have been clipped before being passed
+ to the ESImageViewWithImagePicker.  This delegate method lets us pass the original, unmodified userIcon.
+ */
+- (NSImage *)imageForImageViewWithImagePicker:(ESImageViewWithImagePicker *)picker
+{
+	return ([displayedObject userIcon]);
 }
 
 #pragma mark Contact List (metaContact)
