@@ -362,6 +362,16 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 
 @end
 
+@implementation NSData (AIAttributedStringAdditions)
+
+- (NSAttributedString *)attributedString
+{
+	return([NSAttributedString stringWithData:self]);
+}
+
+@end
+
+
 //Separated out to avoid code duplication
 NSAttributedString *_safeString(NSAttributedString *inString)
 {
