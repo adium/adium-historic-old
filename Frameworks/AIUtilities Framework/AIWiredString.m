@@ -397,13 +397,13 @@
 
 - (unsigned)hash {
 	//this is the CFString hash of Mac OS X 10.3.5.
-	register unsigned hash = 0;
+	register unsigned hash = length;
 	if(length < 16) {
 		for(unsigned i = 0; i < length; ++i) hash = hash * 257 + backing[i];
 	} else {
 		//this version is unrolled, so it should be faster.
 		//we want to hash the first 8 bytes, and the last 8 bytes, in ascending order of index.
-		hash = backing[0];
+		hash = hash * 257 + backing[0];
 		hash = hash * 257 + backing[1];
 		hash = hash * 257 + backing[2];
 		hash = hash * 257 + backing[3];
