@@ -22,6 +22,7 @@ Version 0.58 (6/04/2004)
 - Fixed a crash while dragging emoticon packs
 - Fixed a crash when displaying error messages
 - Fixed a crash when clicking poorly formed aim://goim links
+- Many other small fixes and improvements
 
 Version 0.57 (5/21/2004)
 - Added contact notes

@@ -4771,7 +4771,6 @@
 				34BD9D3B053146CC000AB133,
 				34BD9D3F053146CC000AB133,
 				34BD9D40053146CC000AB133,
-				4B03DDF40533AC59002B2CA3,
 				348E556B053A188C0021E541,
 				4BE9FFE8055981AB00359B15,
 				4BCB9B5F0567FF5D001D3559,
@@ -4945,8 +4944,9 @@
 				4BCC20AD066B9A00007C8449,
 				4BCC20AE066B9A00007C8449,
 				4B2DC069066F6B1200AD5AAD,
-				4B6C4646066FEA160082199C,
 				4B6C4648066FEB180082199C,
+				4B0CB2160670E07E005821CC,
+				4B0CB2170670E07E005821CC,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9498,20 +9498,6 @@
 			settings = {
 			};
 		};
-		4B03DDF30533AC59002B2CA3 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = pref8.tif;
-			path = Source/icons/pref8.tif;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B03DDF40533AC59002B2CA3 = {
-			fileRef = 4B03DDF30533AC59002B2CA3;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B04137C041111F200A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -9703,6 +9689,34 @@
 			path = Source/icons/pref7.tif;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B0CB2140670E07E005821CC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = pref8.png;
+			path = Source/icons/pref8.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B0CB2150670E07E005821CC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = pref9.tif;
+			path = Source/icons/pref9.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B0CB2160670E07E005821CC = {
+			fileRef = 4B0CB2140670E07E005821CC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0CB2170670E07E005821CC = {
+			fileRef = 4B0CB2150670E07E005821CC;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B0D1C9903B8A89400A8010A = {
 			fileEncoding = 30;
@@ -11521,20 +11535,6 @@
 			path = Strings/Spanish.lproj/Localizable.strings;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B6C4645066FEA160082199C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = pref9.png;
-			path = Source/icons/pref9.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B6C4646066FEA160082199C = {
-			fileRef = 4B6C4645066FEA160082199C;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B6C4647066FEB180082199C = {
 			isa = PBXFileReference;
@@ -19620,8 +19620,8 @@
 				4B0AABAC05228F9700A8010A,
 				4B0AABAD05228F9700A8010A,
 				4B0AABAE05228F9700A8010A,
-				4B03DDF30533AC59002B2CA3,
-				4B6C4645066FEA160082199C,
+				4B0CB2140670E07E005821CC,
+				4B0CB2150670E07E005821CC,
 			);
 			isa = PBXGroup;
 			name = Icons;
