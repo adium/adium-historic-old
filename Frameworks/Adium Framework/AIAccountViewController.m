@@ -54,6 +54,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	if(!view_setup) [ourBundle loadNibFile:@"AccountSetup" externalNameTable:nameTable withZone:nil];
 	if(!view_profile) [ourBundle loadNibFile:@"AccountProfile" externalNameTable:nameTable withZone:nil];
 	if(!view_options) [ourBundle loadNibFile:@"AccountOptions" externalNameTable:nameTable withZone:nil];
+	if(!view_privacy) [ourBundle loadNibFile:@"AccountPrivacy" externalNameTable:nameTable withZone:nil];
 
     return(self);
 }
@@ -80,7 +81,7 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (void)awakeFromNib
 {
-	//Empty
+	if(popUp_encryption) [popUp_encryption setMenu:[self encryptionMenu]];
 }
 
 
@@ -112,13 +113,24 @@ Adium, Copyright 2001-2005, Adam Iser
  * @brief Options View
  *
  * Returns the account options view.  This view is for additional settings which are not common enough to be a standard
- * part of Adium.  The default view provides nothing.
+ * part of Adium.  The default view provides login server and port settings.
  */
 - (NSView *)optionsView
 {
     return(view_options);
 }
 
+/*!
+* @brief Privacy View
+ *
+ * Returns the account privacy view.  This view is for privacy options.  The default view provides options for encryption
+ * (which is supported at present by all Gaim-provided protocols) and for sending the Typing status.
+ */
+- (NSView *)privacyView
+{
+	return(view_privacy);
+}
+ 
 /*!
  * @brief Custom nib name
  *
@@ -182,7 +194,10 @@ Adium, Copyright 2001-2005, Adam Iser
 		
 		//Check for new mail
 		[checkBox_checkMail setState:[[inAccount preferenceForKey:KEY_ACCOUNT_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]];
-
+		
+		//Encryption
+		[popUp_encryption selectItemWithTag:[[account preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
+																 group:GROUP_ENCRYPTION] intValue]];
 	}
 }
 
@@ -232,6 +247,16 @@ Adium, Copyright 2001-2005, Adam Iser
 					forKey:KEY_ACCOUNT_CHECK_MAIL
 					 group:GROUP_ACCOUNT_STATUS];
 	
+	//Typing (preference is the inverse of the displayed checkbox)
+#define KEY_DISABLE_TYPING_NOTIFICATIONS		@"Disable Typing Notifications"
+	[account setPreference:[NSNumber numberWithBool:![checkBox_sendTyping state]]
+					forKey:KEY_DISABLE_TYPING_NOTIFICATIONS
+					 group:GROUP_ACCOUNT_STATUS];
+
+	//Encryption
+	[account setPreference:[NSNumber numberWithInt:[[popUp_encryption selectedItem] tag]]
+					forKey:KEY_ENCRYPTED_CHAT_PREFERENCE
+					 group:GROUP_ENCRYPTION];
 }
 
 /*!
@@ -244,6 +269,53 @@ Adium, Copyright 2001-2005, Adam Iser
 - (IBAction)changedPreference:(id)sender
 {
 	//Empty
+}
+
+/*! 
+ * @brief Generate the menu fro the encryption preference popUp
+ */
+- (NSMenu *)encryptionMenu
+{
+	NSMenu *encryptionMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
+	[encryptionMenu setAutoenablesItems:NO];
+
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Disable chat encryption",nil)
+										  target:nil
+										  action:nil
+								   keyEquivalent:@""];
+	
+	[menuItem setTag:EncryptedChat_Never];
+	[menuItemArray addObject:menuItem];
+	[menuItem release];
+
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Encrypt chats as requested",nil)
+										  target:nil
+										  action:nil
+								   keyEquivalent:@""];
+	
+	[menuItem setTag:EncryptedChat_Manually];
+	[menuItemArray addObject:menuItem];
+	[menuItem release];
+	
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Encrypt chats automatically",nil)
+										  target:nil
+										  action:nil
+								   keyEquivalent:@""];
+	
+	[menuItem setTag:EncryptedChat_Automatically];
+	[menuItemArray addObject:menuItem];
+	[menuItem release];
+
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Force encryption and refuse plaintext",nil)
+										  target:nil
+										  action:nil
+								   keyEquivalent:@""];
+	
+	[menuItem setTag:EncryptedChat_RejectUnencryptedMessages];
+	[menuItemArray addObject:menuItem];
+	[menuItem release];
+	
+	return([encryptionMenu autorelease]);
 }
 
 @end
