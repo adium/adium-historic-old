@@ -48,7 +48,7 @@
 
 - (void)dealloc
 {
-    //[[owner notificationCenter] removeObserver:self];
+    [[owner notificationCenter] removeObserver:self];
     [owner release];
 
     [super dealloc];
