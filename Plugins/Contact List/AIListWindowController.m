@@ -295,7 +295,7 @@
 //}
 //
 
-- (IBAction)performDefaultActionOnSelectedObject:(AIListObject *)selectedObject sender:(id)sender
+- (IBAction)performDefaultActionOnSelectedObject:(AIListObject *)selectedObject sender:(NSOutlineView *)sender
 {	
     if([selectedObject isKindOfClass:[AIListGroup class]]){
         //Expand or collapse the group
@@ -306,10 +306,11 @@
         }
 		
     }else if([selectedObject isKindOfClass:[AIListContact class]]){
-        //Open a new message with the contact
-		AIListContact	*contact = (AIListContact *)selectedObject;
+		//Hide any tooltip the contactListController is currently showing
+		[contactListController hideTooltip];
 
-		[[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:contact]];
+		//Open a new message with the contact
+		[[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:(AIListContact *)selectedObject]];
 		
     }
 }
