@@ -9935,6 +9935,7 @@
 				34B5875D058D801D00E7EF0D,
 				34503C81058F96C400FB7AD1,
 				4B28DDAD0599FED300343093,
+				4B422C0B05ACB248005E720B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10107,6 +10108,7 @@
 				34B5875C058D801D00E7EF0D,
 				34503C80058F96C400FB7AD1,
 				4B28DDAE0599FED300343093,
+				4B422C0C05ACB248005E720B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19470,6 +19472,36 @@
 			path = "Frameworks/AIUtilities Framework/AITableViewPopUpButtonCell.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B422C0905ACB248005E720B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AISortController.h;
+			path = "Frameworks/Adium Framework/AISortController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B422C0A05ACB248005E720B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AISortController.m;
+			path = "Frameworks/Adium Framework/AISortController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B422C0B05ACB248005E720B = {
+			fileRef = 4B422C0905ACB248005E720B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B422C0C05ACB248005E720B = {
+			fileRef = 4B422C0A05ACB248005E720B;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B435D440528AEEA00A8010A = {
 			isa = PBXFileReference;
@@ -28941,6 +28973,8 @@
 		F53B9A1302CCEDCA01A8010A = {
 			children = (
 				F59DB3E7033EB4B601A8010A,
+				4B422C0905ACB248005E720B,
+				4B422C0A05ACB248005E720B,
 				4B4F5B2D042D645F00A8010A,
 				F5300A2B032F760B01A8010A,
 				F5300A2C032F761101A8010A,

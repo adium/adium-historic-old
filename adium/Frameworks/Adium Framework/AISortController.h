@@ -12,38 +12,30 @@
  | You should have received a copy of the GNU General Public License along with this program; if not,
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
-/** 
- * $Revision: 1.31 $
- *  $Date: 2004/01/07 21:33:09 $
- *  $Author#
- *
- **/
 
-//First, as other objects are generally subclasses of AIObject
-#import "AIObject.h"
+typedef int(*sortfunc)(id, id, AIListGroup *, BOOL);
 
-#import "AIAccount.h"
-#import "AIAccountViewController.h"
-#import "AIChat.h"
-#import "ESContactAlert.h"
-#import "AIContentMessage.h"
-#import "AIContentObject.h"
-#import "AIContentStatus.h"
-#import "AIContentTyping.h"
-#import "AIEmoticon.h"
-#import "AIException.h"
-#import "ESFileTransfer.h"
-#import "AIFlippedCategoryView.h"
-#import "AIHandle.h"
-#import "AIIconState.h"
-#import "AIListContact.h"
-#import "AIListGroup.h"
-#import "AIListObject.h"
-#import "AIPlugin.h"
-#import "AIPreferenceCategory.h"
-#import "AIPreferencePane.h"
-#import "AIPreferenceViewController.h"
-#import "AISendingTextView.h"
-#import "AIServiceType.h"
-#import "AISortController.h"
-#import "AIWindowController.h"
+typedef struct {
+	AIListGroup	*group;
+	sortfunc	function;
+} sortContextInfo;
+
+@interface AISortController : NSObject {
+	NSArray					*statusKeysRequiringResort;
+	NSArray					*attributeKeysRequiringResort;
+	
+	sortfunc				sortFunction;
+}
+
+- (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys;
+- (BOOL)shouldSortForModifiedAttributeKeys:(NSArray *)inModifiedKeys;
+- (int)indexForInserting:(AIListObject *)inObject intoObjects:(NSMutableArray *)inObjects inGroup:(AIListGroup *)inGroup;
+- (void)sortListObjects:(NSMutableArray *)inObjects inGroup:(AIListGroup *)inGroup;
+- (NSString *)description;
+- (NSString *)identifier;
+- (NSString *)displayName;
+- (NSArray *)statusKeysRequiringResort;
+- (NSArray *)attributeKeysRequiringResort;
+- (sortfunc)sortFunction;
+
+@end
