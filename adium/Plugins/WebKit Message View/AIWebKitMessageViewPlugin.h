@@ -16,6 +16,7 @@
 #define PREF_GROUP_WEBKIT_MESSAGE_DISPLAY	@"WebKit Message Display"
 #define WEBKIT_DEFAULT_PREFS				@"WebKit Defaults"
 
+#define KEY_WEBKIT_VERSION					@"MessageViewVersion"
 #define	KEY_WEBKIT_TIME_STAMP_FORMAT		@"Time Stamp"
 #define KEY_WEBKIT_SHOW_USER_ICONS			@"Show User Icons"
 #define KEY_WEBKIT_NAME_FORMAT				@"Name Format"
@@ -48,6 +49,7 @@ typedef enum {
 	NameFormat						nameFormat;
 	BOOL							useCustomNameFormat;
 	BOOL							combineConsecutive;
+	int								styleVersion;
 	
 	NSMutableDictionary				*styleDictionary;
 }

@@ -18,14 +18,18 @@
 
 @implementation AIWebKitMessageViewPlugin
 
+DeclareString(AppendMessageWithScroll);
+DeclareString(AppendNextMessageWithScroll);
 DeclareString(AppendMessage);
 DeclareString(AppendNextMessage);
 
 - (void)installPlugin
 {
 	if([NSApp isOnPantherOrBetter]){
-		InitString(AppendMessage,@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();");
-		InitString(AppendNextMessage,@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();");
+		InitString(AppendMessageWithScroll,@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();");
+		InitString(AppendNextMessageWithScroll,@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();");
+		InitString(AppendMessage,@"appendMessage(\"%@\");");
+		InitString(AppendNextMessage,@"appendNextMessage(\"%@\");");
 		
 		//Register our default preferences and install our preference view
 		[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:WEBKIT_DEFAULT_PREFS
@@ -106,6 +110,7 @@ DeclareString(AppendNextMessage);
 
 	if (![[[adium preferenceController] preferenceForKey:prefIdentifier
 												   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue]){
+		
 		//Load defaults from the bundle or our defaults, as appropriate
 		NSBundle	*style = [self messageStyleBundleWithName:styleName];
 
@@ -132,7 +137,6 @@ DeclareString(AppendNextMessage);
 	
 	//This is really weird.  defaultFontSize returns the proper value, but we have to do setDefaultFontSize with it for it to be applied.
 	[[webView preferences] setDefaultFontSize:[[webView preferences] defaultFontSize]];
-	#warning ## setDefaultFontSize breaks the WebView in 10.2 ##
 }
 
 #pragma mark Available Webkit Styles
@@ -205,27 +209,44 @@ DeclareString(AppendNextMessage);
 
 - (void)loadStyle:(NSBundle *)style withName:(NSString *)styleName variant:(NSString *)variant withCSS:(NSString *)CSS forChat:(AIChat *)chat intoWebView:(ESWebView *)webView
 {
-	NSString		*basePath, *headerHTML, *footerHTML, *stylePath;
+	NSString		*headerHTML, *footerHTML;
 	NSMutableString *templateHTML;
-	
-	stylePath = [style resourcePath];
-	
-	[self _loadPreferencesForWebView:webView withStyleNamed:styleName];
-	
-	basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
+	NSString		*stylePath = [style resourcePath];
+	NSString		*basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
 
+	//Our styles are versioned so we can change how they work without breaking compatability
+	/*
+	 Version 0: Initial Webkit Version
+	 Version 1: Template.html now handles all scroll-to-bottom functionality.  It is no longer required to call the
+	 			scrollToBottom functions when inserting content.
+	 */
+	styleVersion = [[style objectForInfoDictionaryKey:KEY_WEBKIT_VERSION] intValue];
+		
+	//Load the style's templates
 	//We can't use NSString's initWithContentsOfFile here.  HTML files are interpreted in the defaultCEncoding
 	//(which varies by system) when read that way.  We want to always interpret the files as ASCII.
 	headerHTML = [NSString stringWithContentsOfASCIIFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
 	footerHTML = [NSString stringWithContentsOfASCIIFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];
 	templateHTML = [NSMutableString stringWithContentsOfASCIIFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
 
+	//Starting with version 1, styles can choose to not include template.html.  If the template is not included 
+	//Adium's default will be used.  This is preferred since any future template updates will apply to the style
+	if((!templateHTML || [templateHTML length] == 0) && styleVersion >= 1){
+		NSLog(@"%@",[NSBundle bundleForClass:[self class]]);
+		NSLog(@"%@",[[NSBundle bundleForClass:[self class]] pathForResource:@"Template" ofType:@"html"]);
+		
+		templateHTML = [NSMutableString stringWithContentsOfASCIIFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"Template" ofType:@"html"]];
+	}
 	templateHTML = [NSMutableString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
 	templateHTML = [self fillKeywords:templateHTML forStyle:style variant:variant forChat:chat];
 
+	//Load the style's preferences
+	[self _loadPreferencesForWebView:webView withStyleNamed:styleName];
+		
 	//Feed it to the webview
 	[[webView mainFrame] loadHTMLString:templateHTML baseURL:nil];
 }
+
 
 #pragma mark Content adding
 
@@ -351,21 +372,30 @@ DeclareString(AppendNextMessage);
 	newHTML = [self fillKeywords:newHTML forContent:content allowingColors:allowColors];
 	newHTML = [self escapeString:newHTML];
 
-	NSString *format = contentIsSimilar ? AppendNextMessage : AppendMessage;
-	[webView stringByEvaluatingJavaScriptFromString:
-		[NSString stringWithFormat:format, newHTML]];
+	NSString *format;
+	if(styleVersion >= 1){
+		format = contentIsSimilar ? AppendNextMessage : AppendMessage;
+	}else{
+		format = contentIsSimilar ? AppendNextMessageWithScroll : AppendMessageWithScroll;
+	}
+	[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:format, newHTML]];
 }
 	
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath
 {
     NSMutableString *newHTML = [NSMutableString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Status.html"]];
+	NSString 		*format;
 	
 	//Perform substitutions, then escape the HTML to get it past the evil javascript guards
 	newHTML = [self fillKeywords:newHTML forContent:content allowingColors:YES];
 	newHTML = [self escapeString:newHTML];
 
-	[webView stringByEvaluatingJavaScriptFromString:
-		[NSString stringWithFormat:AppendMessage, newHTML]];
+	if(styleVersion >= 1){
+		format = AppendMessage;
+	}else{
+		format = AppendMessageWithScroll;
+	}
+	[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:AppendMessage, newHTML]];
 }
 
 //

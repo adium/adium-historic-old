@@ -2285,6 +2285,7 @@
 				34C2DF03063498EF0018E5D2,
 				344804D00634EFDE00A843F6,
 				34989147064C47F20095598E,
+				4B03711606595A70008F5981,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8683,9 +8684,6 @@
 		};
 		4947F5EA0655E90C00B791E5 = {
 			children = (
-				4B8AAEA50658DAA000A997CC,
-				4B8AAEA60658DAA000A997CC,
-				4B8AAEA70658DAA000A997CC,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -9312,6 +9310,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Create symlinks to the iChat sounds\n#\ncd $SYMROOT\ncd Adium.app/Contents/Resources/Sounds/iChat.AdiumSoundset/\n\necho \"Symlinking iChat sounds...\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Logged In.aiff\" \"Connected.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Buddy Logging In.aiff\" \"Contact Signed On.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Buddy Logging Out.aiff\" \"Contact Signed Off.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Invitation.aiff\" \"Message Received (New).aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Received Message.aiff\" \"Message Received.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Sent Message.aiff\" \"Message Sent.aiff\"\necho \"Done\"";
+		};
+		4B03711506595A70008F5981 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.html;
+			name = Template.html;
+			path = "Plugins/WebKit Message View/Template.html";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B03711606595A70008F5981 = {
+			fileRef = 4B03711506595A70008F5981;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B03DDF30533AC59002B2CA3 = {
 			isa = PBXFileReference;
@@ -12325,51 +12338,6 @@
 			path = "Frameworks/Adium Framework/AIContentObject.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B8AAEA50658DAA000A997CC = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 4B8AAFE10658DAA800A997CC;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4B8AAEA60658DAA000A997CC = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libexpat.a;
-			refType = 3;
-			remoteRef = 4B8AAFE20658DAA800A997CC;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4B8AAEA70658DAA000A997CC = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 4B8AAFE30658DAA800A997CC;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4B8AAFE10658DAA800A997CC = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
-		};
-		4B8AAFE20658DAA800A997CC = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
-			remoteInfo = expat;
-		};
-		4B8AAFE30658DAA800A997CC = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
 		};
 		4B8EFC0403E18F2D00A8010A = {
 			fileEncoding = 4;
@@ -18748,6 +18716,7 @@
 				34C2DBE5063449AF0018E5D2,
 				34C2DF00063498ED0018E5D2,
 				34C2DF01063498ED0018E5D2,
+				4B03711506595A70008F5981,
 				344804CF0634EFDE00A843F6,
 				3470663806015FB6004F0D20,
 			);
