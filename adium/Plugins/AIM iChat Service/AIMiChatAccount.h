@@ -17,7 +17,7 @@
 #import <Adium/Adium.h>
 #import "InstantMessageFramework.h"
 
-@interface AIMiChatAccount : AIAccount <AIAccount_Required, AIAccount_Content, AIAccount_GroupedHandles, AIAccount_Status, FZServiceListener, FZDaemonListener> {
+@interface AIMiChatAccount : AIAccount <AIAccount_Required, AIAccount_Content, AIAccount_Contacts, AIAccount_Status, FZServiceListener, FZDaemonListener> {
 
     NSConnection	*connection;
     id <FZDaemon>	FZDaemon;

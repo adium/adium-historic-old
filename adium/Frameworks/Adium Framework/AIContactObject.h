@@ -23,10 +23,12 @@
     AIContactGroup 		*containingGroup;	//The group this object is in
 
     NSMutableArray		*ownerArray;		//An array of accounts that 'own' this group
-    
+    NSString			*UID;
+
 //    AIAccount			*activeOwner;
 }
 
+- (id)initWithUID:(NSString *)inUID;
 - (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey;
 - (NSComparisonResult)compare:(AIContactObject *)object;
 - (NSString *)displayName;
@@ -35,6 +37,8 @@
 - (void)registerOwner:(AIAccount *)inOwner;
 - (void)unregisterOwner:(AIAccount *)inOwner;
 - (BOOL)belongsToAccount:(AIAccount *)inAccount;
-
+- (NSArray *)ownerArray;
+- (NSString *)UID;
+- (void)setUID:(NSString *)inUID;
 
 @end

@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium, AIContactHandle, AIContactGroup, AIHandleIdentifier, AIServiceType, AIMessageObject;
+@class AIAdium, AIContactHandle, AIContactGroup, AIHandleIdentifier, AIServiceType, AIMessageObject, AIContactObject;
 @protocol AIContentObject, AIServiceController, AIAccountViewController;
 
 typedef enum {
@@ -46,41 +46,34 @@ typedef enum {
     - (BOOL)sendContentObject:(id <AIContentObject>)object toHandle:(AIContactHandle *)inHandle;
 @end
 
-//Support for standard UID based Handles (ungrouped)
-@protocol AIAccount_Handles
+//Support for standard UID based contacts (ungrouped)
+@protocol AIAccount_Contacts
     // Contact list is editable
     - (BOOL)contactListEditable;
 
-    // Add a handle
-    - (BOOL)addHandle:(AIContactHandle *)handle;
-    // Remove a handle
-    - (BOOL)removeHandle:(AIContactHandle *)handle;
-    // Rename a handle
-    - (BOOL)renameHandle:(AIContactHandle *)handle to:(NSString *)inName;
+    //Add an object
+    - (BOOL)addObject:(AIContactObject *)object;
+    // Remove an object
+    - (BOOL)removeObject:(AIContactObject *)object;
+    // Rename an object
+    - (BOOL)renameObject:(AIContactObject *)object to:(NSString *)inName;
 @end
 
-//Support for UID based, grouped handles
-@protocol AIAccount_GroupedHandles
+//Support for UID based, grouped contacts
+@protocol AIAccount_GroupedContacts
     // Contact list is editable
     - (BOOL)contactListEditable;
 
-    // Add a handle to the specified groups
-    - (BOOL)addHandle:(AIContactHandle *)handle toGroup:(AIContactGroup *)group;    
-    // Remove a handle from the specified groups
-    - (BOOL)removeHandle:(AIContactHandle *)handle fromGroup:(AIContactGroup *)group;
-    // Rename a handle
-    - (BOOL)renameHandle:(AIContactHandle *)handle inGroup:(AIContactGroup *)group to:(NSString *)inName;
-    // Move a Handle
-    - (BOOL)moveHandle:(AIContactHandle *)handle fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup;
-    
-    // Create a group
-    - (BOOL)addGroup:(AIContactGroup *)newGroup;
-    // Remove a group
-    - (BOOL)removeGroup:(AIContactGroup *)group;
-    // Rename a group
-    - (BOOL)renameGroup:(AIContactGroup *)group to:(NSString *)inName;
+    // Add an object to the specified groups
+    - (BOOL)addObject:(AIContactObject *)object toGroup:(AIContactGroup *)group;    
+    // Remove an object from the specified groups
+    - (BOOL)removeObject:(AIContactObject *)object fromGroup:(AIContactGroup *)group;
+    // Rename an object
+    - (BOOL)renameObject:(AIContactObject *)object inGroup:(AIContactGroup *)group to:(NSString *)inName;
+    // Move an object
+    - (BOOL)moveObject:(AIContactObject *)object fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup;
 
-    //If the service doesn't support groups within groups, group arrays can be compressed, or 'super'groups can be ignored
+//If the service doesn't support groups within groups, group arrays can be compressed, or 'super'groups can be ignored
 @end
 
 //Support for the basic status of offline, online, connecting, and disconnecting

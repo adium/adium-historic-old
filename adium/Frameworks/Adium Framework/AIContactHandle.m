@@ -36,11 +36,6 @@
     return(serviceID);
 }
 
-- (NSString *)UID
-{
-    return(UID);
-}
-
 - (NSString *)displayName
 {
     AIMutableOwnerArray	*displayName;
@@ -65,12 +60,6 @@
     return(outName);
 }
 
-- (void)setUID:(NSString *)inUID
-{
-    [UID release]; UID = nil;
-    UID = [inUID retain];
-}
-
 //Returns the requested status array for this object
 - (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey
 {
@@ -87,7 +76,8 @@
 
 //Compares our display name (and other factors) to another handle
 //If we come first, result is -1.  If object comes first, the result is 1.
-- (NSComparisonResult)compare:(AIContactObject *)object
+#warning Compares should be merged/moved into a seperate sort module
+/*- (NSComparisonResult)compare:(AIContactObject *)object
 {
     NSComparisonResult 	result;
     BOOL		weAreInvisible = NO;
@@ -109,7 +99,7 @@
     }
 
     return(result);
-}
+}*/
 
 //Return our array of content objects
 - (NSArray *)contentObjectArray
@@ -131,11 +121,10 @@
 //Init
 - (id)initWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID
 {
-    [super init];
+    [super initWithUID:inUID];
 
     //Retain our information
     serviceID = [inServiceID retain];
-    UID = [inUID retain];
    
     //init
     statusDictionary = [[NSMutableDictionary alloc] init];

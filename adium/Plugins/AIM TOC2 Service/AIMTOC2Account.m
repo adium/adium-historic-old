@@ -24,6 +24,7 @@
 #import "AIMTOC2ServicePlugin.h"
 
 #define	AIM_ERRORS_FILE		@"AIMErrors"	//Filename of the AIM Errors plist
+#define MESSAGE_QUE_DELAY	2.0		//Delay before sending contact list changes to the server
 
 static char *hash_password(const char * const password);
 
@@ -91,107 +92,117 @@ static char *hash_password(const char * const password);
 }
 
 
-// AIAccount_GroupedHandles ---------------------------------------------------------------------------
+// AIAccount_GroupedContacts ---------------------------------------------------------------------------
 - (BOOL)contactListEditable
 {
     if([self status] == STATUS_ONLINE){
         return(YES);
-        
     }else{
         return(NO);
-
     }
 }
 
-// Create a group in the specified groups
-- (BOOL)addGroup:(AIContactGroup *)newGroup
+// Add an object to the specified groups
+- (BOOL)addObject:(AIContactObject *)object toGroup:(AIContactGroup *)group
 {
-    //AIM automatically creates groups (when we attempt to add to them), so nothing needs to be done here.
-
-    return(YES);
-}
-
-// Remove a group from the specified groups
-- (BOOL)removeGroup:(AIContactGroup *)group
-{
-    [self AIM_RemoveGroup:[group displayName]];
+    NSParameterAssert(object != nil);
+    NSParameterAssert(group != nil);
     
-    return(YES);
-}
+    if([object isMemberOfClass:[AIContactGroup class]]){
+        //AIM automatically creates groups (when we attempt to add to them), so nothing needs to be done here.
 
-// Rename a group
-- (BOOL)renameGroup:(AIContactGroup *)group to:(NSString *)inName
-{
-    int	loop;
-
-    //Remove all the handles from the group
-    for(loop = 0;loop < [group count];loop++){
-        [self AIM_RemoveHandle:[[group objectAtIndex:loop] UID] fromGroup:[group displayName]];
-    }
-
-    //Re-add all the handles into a new group (with the new name)
-    for(loop = 0;loop < [group count];loop++){
-        [self AIM_AddHandle:[[group objectAtIndex:loop] UID] toGroup:inName];
+    }else if([object isMemberOfClass:[AIContactHandle class]]){
+        //AIM automatically creates the needed containing groups, so they do not need to be added here.
+        [self AIM_AddHandle:[object UID] toGroup:[group UID]];	//Place it on the server side list
+        
+    }else{
+        //Unrecognized object
     }
 
     return(YES);
 }
 
-// Add a handle to the specified groups
-- (BOOL)addHandle:(AIContactHandle *)handle toGroup:(AIContactGroup *)group
+// Remove an object from the specified groups
+- (BOOL)removeObject:(AIContactObject *)object fromGroup:(AIContactGroup *)group
 {
-    NSParameterAssert(handle != nil);
+    NSParameterAssert(object != nil);
+    NSParameterAssert(group != nil);
 
-    //Place it on the server side list
-    [self AIM_AddHandle:[handle UID] toGroup:[group displayName]];
-    
-    return(YES);
-}
+    if([object isMemberOfClass:[AIContactGroup class]]){
+        [self AIM_RemoveGroup:[object UID]];
 
-// Remove a handle from the specified groups
-- (BOOL)removeHandle:(AIContactHandle *)handle fromGroup:(AIContactGroup *)group
-{
-    NSString	*groupName;
-
-    NSParameterAssert(handle != nil);
-    
-    [self removeAllStatusFlagsFromHandle:handle];
-    
-    //Remove the handle
-    groupName = [group displayName];
-    [self AIM_RemoveHandle:[handle UID] fromGroup:groupName];
+    }else if([object isMemberOfClass:[AIContactHandle class]]){
+        //AIM automatically removes unneeded containing groups, so they do not need to be removed here.
+        [self removeAllStatusFlagsFromHandle:(AIContactHandle *)object];
+        [self AIM_RemoveHandle:[object UID] fromGroup:[group UID]]; //Remove the handle
+        
+    }else{
+        //Unrecognized object
+    }
 
     return(YES);
 }
 
-// Rename a handle
-- (BOOL)renameHandle:(AIContactHandle *)handle inGroup:(AIContactGroup *)group to:(NSString *)inName
+
+// Rename an object
+- (BOOL)renameObject:(AIContactObject *)object inGroup:(AIContactGroup *)group to:(NSString *)inName
 {
-    NSParameterAssert(handle != nil);
+    NSParameterAssert(object != nil);
     NSParameterAssert(group != nil);
     NSParameterAssert(inName != nil); NSParameterAssert([inName length] != 0);
 
-    //Remove the handle
-    [self AIM_RemoveHandle:[handle UID] fromGroup:[group displayName]];
+    if([object isMemberOfClass:[AIContactGroup class]]){
+        NSEnumerator	*enumerator;
+        AIContactObject	*target;
 
-    //Remove any status flags from this account (The AIM server will automatically send an update buddy message)
-    [self removeAllStatusFlagsFromHandle:handle];
+        enumerator = [group objectEnumerator]; //Remove all the handles from the group
+        while((target = [enumerator nextObject])){
+            if([target isKindOfClass:[AIContactHandle class]]){
+                [self AIM_RemoveHandle:[target UID] fromGroup:[object UID]];
+            }
+        }
 
-    //Re-add the handle (with the new name)
-    [self AIM_AddHandle:inName toGroup:[group displayName]];
+        enumerator = [group objectEnumerator]; //Re-add all the handles into a new group (with the new name)
+        while((target = [enumerator nextObject])){
+            if([target isKindOfClass:[AIContactHandle class]]){
+                [self AIM_AddHandle:[(AIContactHandle *)target UID] toGroup:inName];
+            }
+        }
+
+    }else if([object isMemberOfClass:[AIContactHandle class]]){
+        [self AIM_RemoveHandle:[object UID] fromGroup:[group UID]]; 	//Remove the handle
+        [self removeAllStatusFlagsFromHandle:(AIContactHandle *)object]; 				//Remove any status flags from this account (The AIM server will automatically send an update buddy message)
+        [self AIM_AddHandle:inName toGroup:[group UID]]; 		//Re-add the handle (with the new name)
+        
+    }else{
+        //Unrecognized object
+    }
 
     return(YES);
 }
 
-- (BOOL)moveHandle:(AIContactHandle *)handle fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup
+// Move an object
+- (BOOL)moveObject:(AIContactObject *)object fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup
 {
-    //AIM doesn't support moving, so we simply remove and re-add the handle.
-    [self AIM_RemoveHandle:[handle UID] fromGroup:[sourceGroup displayName]];
-    [self AIM_AddHandle:[handle UID] toGroup:[destGroup displayName]];
+    NSParameterAssert(object != nil);
+    NSParameterAssert(sourceGroup != nil);
+    NSParameterAssert(destGroup != nil);
 
-    return(YES);
+    if([object isMemberOfClass:[AIContactGroup class]]){
+        //The placement of groups is ignored
+        
+    }else if([object isMemberOfClass:[AIContactHandle class]]){
+        //AIM doesn't support moving, so we simply remove and re-add the handle.
+        [self AIM_RemoveHandle:[object UID] fromGroup:[sourceGroup UID]];
+        [self AIM_AddHandle:[object UID] toGroup:[destGroup UID]];
+        
+    }else{
+        //Unrecognized object
+    }
+
+    return(YES);    
 }
-
+        
 
 // AIAccount_Messaging ---------------------------------------------------------------------------
 - (BOOL)sendContentObject:(id <AIContentObject>)object toHandle:(AIContactHandle *)inHandle
@@ -364,7 +375,7 @@ static char *hash_password(const char * const password);
             NSString		*message = [packet string];
             NSString		*command = [message TOCStringArgumentAtIndex:0];
 
-  //          NSLog(@"<- %@",[packet string]);
+    //        NSLog(@"<- %@",[packet string]);
 
             if([command compare:@"SIGN_ON"] == 0){
                 [self AIM_HandleSignOn:message];
@@ -415,7 +426,7 @@ static char *hash_password(const char * const password);
     //Send any packets in the outQue
     while([outQue count] && [socket readyForSending]){
         [[outQue objectAtIndex:0] sendToSocket:socket];
-    //    NSLog(@"-> %@",[[outQue objectAtIndex:0] string]);
+  //      NSLog(@"-> %@",[[outQue objectAtIndex:0] string]);
         [outQue removeObjectAtIndex:0];
     }
 }
@@ -511,12 +522,12 @@ static char *hash_password(const char * const password);
         [contentsArray addObject:handleUID];
     }
 
-    //Install (or reset) the 1 second delay
+    //Install (or reset) the delay
     if(messageDelayTimer){
         [messageDelayTimer invalidate]; [messageDelayTimer release]; messageDelayTimer = nil;
     }
     
-    messageDelayTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(flushMessageDelayQue:) userInfo:nil repeats:NO] retain];
+    messageDelayTimer = [[NSTimer scheduledTimerWithTimeInterval:MESSAGE_QUE_DELAY target:self selector:@selector(flushMessageDelayQue:) userInfo:nil repeats:NO] retain];
 }
 
 - (void)AIM_RemoveHandle:(NSString *)handleUID fromGroup:(NSString *)groupName
@@ -540,12 +551,12 @@ static char *hash_password(const char * const password);
         [contentsArray addObject:handleUID];
     }
 
-    //Install (or reset) the 1 second delay
+    //Install (or reset) the delay
     if(messageDelayTimer){
         [messageDelayTimer invalidate]; [messageDelayTimer release]; messageDelayTimer = nil;
     }
     
-    messageDelayTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(flushMessageDelayQue:) userInfo:nil repeats:NO] retain];
+    messageDelayTimer = [[NSTimer scheduledTimerWithTimeInterval:MESSAGE_QUE_DELAY target:self selector:@selector(flushMessageDelayQue:) userInfo:nil repeats:NO] retain];
 }
 
 - (void)flushMessageDelayQue:(NSTimer *)inTimer

@@ -676,6 +676,42 @@
 			settings = {
 			};
 		};
+		4B79C39103C08BDE00A8010A = {
+			fileRef = F54441AC0378A36A01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B79C39203C08BDE00A8010A = {
+			fileRef = F56621A603AD02AC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B79C39303C08BDF00A8010A = {
+			fileRef = F56621A803AD02AC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B79C39403C08BE000A8010A = {
+			fileRef = F56621A703AD02AC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B79C39503C08BE100A8010A = {
+			fileRef = F56621A503AD02AC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B79C39603C08BE100A8010A = {
+			fileRef = 4BEF84D203BE41E900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BBC89A803B964B800A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -717,36 +753,6 @@
 		};
 		4BC3133503BCD2FA00A8010A = {
 			fileRef = F55B415D03AB8B5601A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BC3133A03BE28D700A8010A = {
-			fileRef = F56621A803AD02AC01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BC3133B03BE28D800A8010A = {
-			fileRef = F56621A603AD02AC01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BC3133C03BE28D800A8010A = {
-			fileRef = F54441AC0378A36A01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BC3133F03BE2CE200A8010A = {
-			fileRef = F56621A503AD02AC01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BC3134003BE2CE200A8010A = {
-			fileRef = F56621A703AD02AC01A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -795,12 +801,6 @@
 			name = InstantMessageFramework.h;
 			path = "Plugins/AIM iChat Service/InstantMessageFramework.h";
 			refType = 4;
-		};
-		4BEF84D303BE41E900A8010A = {
-			fileRef = 4BEF84D203BE41E900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 //4B0
 //4B1
@@ -6772,9 +6772,9 @@
 		F5A01D860379813301A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				4BC3133F03BE2CE200A8010A,
-				4BC3134003BE2CE200A8010A,
-				4BEF84D303BE41E900A8010A,
+				4B79C39403C08BE000A8010A,
+				4B79C39503C08BE100A8010A,
+				4B79C39603C08BE100A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6789,8 +6789,8 @@
 		F5A01D880379813301A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				4BC3133A03BE28D700A8010A,
-				4BC3133B03BE28D800A8010A,
+				4B79C39203C08BDE00A8010A,
+				4B79C39303C08BDF00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6802,7 +6802,7 @@
 				F5B97145037985BA01A8010A,
 				F5B97146037985CE01A8010A,
 				F5B97147037985CE01A8010A,
-				4BC3133C03BE28D800A8010A,
+				4B79C39103C08BDE00A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

@@ -17,7 +17,7 @@
 
 @class AISocket, AIGroup, AIMTOC2AccountViewController;
 
-@interface AIMTOC2Account : AIAccount <AIAccount_Required, AIAccount_Content, AIAccount_GroupedHandles, AIAccount_Status, AIAccount_IdleTime> {
+@interface AIMTOC2Account : AIAccount <AIAccount_Required, AIAccount_Content, AIAccount_GroupedContacts, AIAccount_Status, AIAccount_IdleTime> {
     
     AIMTOC2AccountViewController	*accountViewController;
 

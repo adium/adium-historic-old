@@ -153,8 +153,8 @@ static AIOutOfSyncWindowController	*sharedInstance = nil;
             //Remove the existing handles and re-add them into the correct groups
           //  if([radio_useCurrentGroups state]){ 
 
-            if([account conformsToProtocol:@protocol(AIAccount_GroupedHandles)]){ //Account supports groups
-                [(AIAccount<AIAccount_GroupedHandles> *)account moveHandle:[entry handle]
+            if([account conformsToProtocol:@protocol(AIAccount_GroupedContacts)]){ //Account supports groups
+                [(AIAccount<AIAccount_GroupedContacts> *)account moveObject:[entry handle]
                                                                  fromGroup:[entry serverGroup]
                                                                    toGroup:[[entry handle] containingGroup]];
             }

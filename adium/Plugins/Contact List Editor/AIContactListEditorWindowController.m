@@ -262,11 +262,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
             return([NSNumber numberWithInt:result]);
         }
     }else{
-        if([item isKindOfClass:[AIContactHandle class]]){
-            return([(AIContactHandle *)item UID]);
-        }else{    
-            return([item displayName]);
-        }
+        return([item UID]);
     }
 }
 
@@ -275,11 +271,11 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     if([[tableColumn identifier] isKindOfClass:[AIAccount class]]){
         AIAccount	*account = [tableColumn identifier];
 
-        if( [account conformsToProtocol:@protocol(AIAccount_Handles)]){
-            [cell setEnabled:[(AIAccount <AIAccount_Handles> *)account contactListEditable]];
+        if( [account conformsToProtocol:@protocol(AIAccount_Contacts)]){
+            [cell setEnabled:[(AIAccount <AIAccount_Contacts> *)account contactListEditable]];
         
-        }else if([account conformsToProtocol:@protocol(AIAccount_GroupedHandles)]){
-            [cell setEnabled:[(AIAccount <AIAccount_GroupedHandles> *)account contactListEditable]];
+        }else if([account conformsToProtocol:@protocol(AIAccount_GroupedContacts)]){
+            [cell setEnabled:[(AIAccount <AIAccount_GroupedContacts> *)account contactListEditable]];
 
         }else{
             [cell setEnabled:NO];        
@@ -389,7 +385,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
             }
         }else{ //NAME
-            [[owner contactController] renameGroup:item to:object];
+            [[owner contactController] renameObject:item to:object];
             
         }
 
@@ -412,7 +408,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 			}
 			else
 			{//ikrieg end
-				[[owner contactController] renameHandle:item to:object];
+				[[owner contactController] renameObject:item to:object];
 			}//ikrieg's brace
         }
     }
@@ -466,7 +462,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         enumerator = [dragItems objectEnumerator];
         while((object = [enumerator nextObject])){
             if([object isKindOfClass:[AIContactGroup class]]){
-                [[owner contactController] moveGroup:(AIContactGroup *)object toGroup:item index:index];
+                [[owner contactController] moveObject:object toGroup:item index:index];
             }
         }
         
@@ -474,7 +470,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         enumerator = [dragItems objectEnumerator];
         while((object = [enumerator nextObject])){
             if([object isKindOfClass:[AIContactHandle class]]){
-                [[owner contactController] moveHandle:(AIContactHandle *)object toGroup:item index:index];
+                [[owner contactController] moveObject:object toGroup:item index:index];
             }
         }
     }
@@ -548,13 +544,13 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         //delete the selected handles first
         enumerator = [handles objectEnumerator];
         while(object = [enumerator nextObject]){
-            [[owner contactController] deleteHandle:(AIContactHandle *)object];
+            [[owner contactController] deleteObject:object];
         }
         
         //then delete the selected groups
         enumerator = [groups objectEnumerator];
         while(object = [enumerator nextObject]){
-            [[owner contactController] deleteGroup:(AIContactGroup *)object];
+            [[owner contactController] deleteObject:object];
         }
     }
     
