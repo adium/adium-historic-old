@@ -12,15 +12,17 @@
 		<string>596 554 248 65 0 0 1440 878 </string>
 		<key>126</key>
 		<string>611 377 217 418 0 0 1440 878 </string>
+		<key>185</key>
+		<string>694 549 52 74 0 0 1440 878 </string>
 	</dict>
 	<key>IBFramework Version</key>
 	<string>364.0</string>
 	<key>IBOpenObjects</key>
 	<array>
 		<integer>26</integer>
-		<integer>126</integer>
+		<integer>185</integer>
 	</array>
 	<key>IBSystem Version</key>
-	<string>7H63</string>
+	<string>7M34</string>
 </dict>
 </plist>

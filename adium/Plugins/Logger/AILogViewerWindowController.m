@@ -41,7 +41,7 @@ static NSString* windowToolbarIdentifier = @"Log Viewer Toolbar Identifier";
 static NSString* contactDrawerIdentifier = @"Contact Drawer Identifier";
 static NSString* deleteLogsIdentifier = @"Delete Logs Identifier";
 static NSString* searchFieldIdentifier = @"Search Field Indentifier";
-
+static NSString* emoticonToggleIdentifier = @"Emoticon Filter Toggle Identifier";
 
 @interface AILogViewerWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
@@ -109,6 +109,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     activeSearchID = 0;
     searching = NO;
     automaticSearch = NO;
+    filterEmoticons = YES;
     activeSearchString = nil;
     displayedLog = nil;
     
@@ -400,6 +401,12 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 					
 					//Add pretty formatting to links
 					logText = [logText stringByAddingFormattingForLinks];
+                                        
+                                        if(filterEmoticons)
+                                        {
+                                            //Filter appropriately (replaces emoticons)
+                                            logText = [[adium contentController] filterAttributedString:logText usingFilterType:AIFilterMessageDisplay direction:AIFilterOutgoing context:nil];
+                                        }
 					
 					//If we are searching by content, highlight the search results
 					if(searchMode == LOG_SEARCH_CONTENT){
@@ -961,6 +968,16 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     [drawer_contacts toggle:sender];
 }
 
+-(IBAction)toggleEmoticonFiltering:(id)sender
+{
+    if([button_emoticonToggle state] == NSOnState){
+        filterEmoticons = YES;
+    }
+    else{
+        filterEmoticons = NO;
+    }
+}
+
 // ---- toolbar schtuff --------
 - (NSToolbarItem *) toolbar: (NSToolbar *)toolbar itemForItemIdentifier: (NSString *) itemIdent willBeInsertedIntoToolbar:(BOOL) willBeInserted {
     NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier: itemIdent] autorelease];
@@ -991,6 +1008,16 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
         [toolbarItem setTarget: self];
         [toolbarItem setAction: @selector(updateSearch:)]; 
     }  
+    else if([itemIdent isEqual: emoticonToggleIdentifier]){
+        [toolbarItem setLabel: @"Show/Hide Emoticons"];
+        [toolbarItem setPaletteLabel:@"Show/Hide Emoticons"];
+        [toolbarItem setToolTip:@"Show or hide emoticons in logs"];
+        [toolbarItem setView:view_emoteToggle];
+        [toolbarItem setMinSize:NSMakeSize(33, NSHeight([view_emoteToggle frame]))];
+        [toolbarItem setMaxSize:NSMakeSize(26, NSHeight([view_emoteToggle frame]))];
+        [toolbarItem setTarget: self];
+        [toolbarItem setAction: @selector(toggleEmoticonFiltering:)]; 
+    }      
     else {
         toolbarItem = nil;
     }
@@ -998,11 +1025,11 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers: (NSToolbar *) toolbar {
-    return [NSArray arrayWithObjects: deleteLogsIdentifier,NSToolbarFlexibleSpaceItemIdentifier,searchFieldIdentifier,NSToolbarSeparatorItemIdentifier,contactDrawerIdentifier,nil];
+    return [NSArray arrayWithObjects: deleteLogsIdentifier,emoticonToggleIdentifier,NSToolbarFlexibleSpaceItemIdentifier,searchFieldIdentifier,NSToolbarSeparatorItemIdentifier,contactDrawerIdentifier,nil];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar {
-    return [NSArray arrayWithObjects: deleteLogsIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, searchFieldIdentifier,contactDrawerIdentifier,nil];
+    return [NSArray arrayWithObjects: deleteLogsIdentifier, emoticonToggleIdentifier,NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, searchFieldIdentifier,contactDrawerIdentifier,nil];
 }
 
 - (BOOL) validateToolbarItem: (NSToolbarItem *) toolbarItem {

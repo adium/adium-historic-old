@@ -5009,6 +5009,8 @@
 				9E23E9E306CC506A00D3C897,
 				4BF98D5206D1484500E8781D,
 				4BF98DCD06D149EE00E8781D,
+				C4D3A0FC06D2D009006AFE25,
+				C4D3A0FD06D2D009006AFE25,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15476,6 +15478,8 @@
 		};
 		4BE666CC0577AFA0007E115C = {
 			children = (
+				C4D3A0FA06D2D008006AFE25,
+				C4D3A0FB06D2D008006AFE25,
 				C45F7F6206C75E200056B1F2,
 				C45F7F6306C75E210056B1F2,
 				C45F7F6406C75E210056B1F2,
@@ -21145,6 +21149,34 @@
 		};
 		C497518D05BBB979009958A6 = {
 			fileRef = C497518C05BBB0C5009958A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4D3A0FA06D2D008006AFE25 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = noEmoticons.tif;
+			path = Plugins/Logger/noEmoticons.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4D3A0FB06D2D008006AFE25 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = showEmoticons.tif;
+			path = Plugins/Logger/showEmoticons.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4D3A0FC06D2D009006AFE25 = {
+			fileRef = C4D3A0FA06D2D008006AFE25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4D3A0FD06D2D009006AFE25 = {
+			fileRef = C4D3A0FB06D2D008006AFE25;
 			isa = PBXBuildFile;
 			settings = {
 			};

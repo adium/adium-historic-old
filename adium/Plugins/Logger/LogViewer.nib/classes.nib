@@ -11,12 +11,14 @@
                 closeWindow = id; 
                 deleteSelectedLogs = id; 
                 selectSearchType = id; 
+                toggleEmoticonFiltering = id; 
                 updateSearch = id; 
             }; 
             CLASS = AILogViewerWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_deleteLogs" = NSButton; 
+                "button_emoticonToggle" = NSButton; 
                 "drawer_contacts" = NSDrawer; 
                 "popUp_jagSearchMode" = NSPopUpButton; 
                 progressIndicator = NSProgressIndicator; 
@@ -25,6 +27,7 @@
                 "textField_progress" = NSTextField; 
                 "textView_content" = NSTextView; 
                 "view_SearchField" = NSView; 
+                "view_emoteToggle" = NSView; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 
