@@ -16,7 +16,7 @@
 
 #import "SHBookmarksImporterPlugin.h"
 #import "SHMozillaCommonParser.h"
-#import "SHMarkedHyperlink.h"
+#import <AIHyperlinks/SHMarkedHyperlink.h>
 
 @interface SHMozillaCommonParser(PRIVATE)
 +(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString;

@@ -15,7 +15,7 @@
  */
 
 #import "SHSafariBookmarksImporter.h"
-#import "SHMarkedHyperlink.h"
+#import <AIHyperlinks/SHMarkedHyperlink.h>
 
 #define SAFARI_BOOKMARKS_PATH   @"~/Library/Safari/Bookmarks.plist"
 #define SAFARI_HISTORY_PATH     @"~/Library/Safari/History.plist"

@@ -16,7 +16,7 @@
 
 #import "SHOmniWebBookmarksImporter.h"
 #import "SHMozillaCommonParser.h"
-#import "SHMarkedHyperlink.h"
+#import <AIHyperlinks/SHMarkedHyperlink.h>
 
 #define OW45_BOOKMARKS_PATH     @"~/Library/Application Support/OmniWeb/Bookmarks.html"
 #define OW5_BOOKMARKS_PATH      @"~/Library/Application Support/OmniWeb 5/Favorites.html"

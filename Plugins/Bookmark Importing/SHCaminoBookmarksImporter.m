@@ -15,7 +15,7 @@
  */
 
 #import "SHCaminoBookmarksImporter.h"
-#import "SHMarkedHyperlink.h"
+#import <AIHyperlinks/SHMarkedHyperlink.h>
 
 #define CAMINO_BOOKMARKS_PATH   @"~/Library/Application Support/Camino/bookmarks.plist"
 #define CAMINO_DICT_CHILD_KEY   @"Children"
