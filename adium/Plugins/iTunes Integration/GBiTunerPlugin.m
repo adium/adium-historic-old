@@ -39,7 +39,8 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	
 	//Start building the script menu
 	scriptMenu = nil;
-	[NSThread detachNewThreadSelector:@selector(_buildScriptMenuThread) toTarget:self withObject:nil];
+	[self _buildScriptMenuThread];
+	//[NSThread detachNewThreadSelector:@selector(_buildScriptMenuThread) toTarget:self withObject:nil];
 	
 	//Perform substitutions on outgoing content
 	[[adium contentController] registerOutgoingContentFilter:self];
