@@ -35,7 +35,12 @@
 
 - (id)initWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode;
 - (id)initWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode keyMask:(unsigned int)keyMask;
+
+@end
+
+@interface NSMenuItem (ESMenuItemAdditions)
 - (void)setDynamic:(BOOL)dynamic;
 - (BOOL)isDynamic;
-
+- (void)setHidden:(BOOL)hidden;
+- (BOOL)isHidden;
 @end
