@@ -23,8 +23,23 @@
 {
 	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
 																	   attributes:[self labelAttributes]];
-
-	rect.size.width = [displayName size].width + [self leftPadding] + [self rightPadding];
+	NSSize				nameSize = [displayName size];
+	
+	//Alignment
+	switch([self textAlignment]){
+		case NSCenterTextAlignment:
+			rect.origin.x += ((rect.size.width - nameSize.width) / 2.0) - [self leftPadding];
+			break;
+		case NSRightTextAlignment:
+			rect.origin.x += (rect.size.width - nameSize.width) - [self leftPadding] - [self rightPadding];
+			break;
+		default:
+			break;
+	}
+	
+	//Fit the bubble to their name
+	rect.size.width = nameSize.width + [self leftPadding] + [self rightPadding];
+	
 	return(rect);
 }
 
