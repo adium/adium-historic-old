@@ -73,7 +73,7 @@ DeclareString(AppendNextMessage);
 	loadedStyleID = nil;
 	loadedVariantID = nil;
 	setStylesheetTimer = nil;
-	objectsWithMaskedUserIconsArray = nil;
+	objectsWithUserIconsArray = nil;
 	imageMask = nil;
 	
 	//HTML Templates
@@ -141,7 +141,7 @@ DeclareString(AppendNextMessage);
 	[previousContent release]; previousContent = nil;
 	[plugin release]; plugin = nil;
 	[chat release]; chat = nil;
-	[objectsWithMaskedUserIconsArray release]; objectsWithMaskedUserIconsArray = nil;
+	[objectsWithUserIconsArray release]; objectsWithUserIconsArray = nil;
 	
 	[self _flushPreferenceCache];
 	[self _releaseCachedHTML];
@@ -187,7 +187,7 @@ DeclareString(AppendNextMessage);
 	
 	while (object = [enumerator nextObject]){
 		//Update the mask for any user which just entered the chat
-		if (imageMask && [objectsWithMaskedUserIconsArray indexOfObjectIdenticalTo:object] == NSNotFound){
+		if ([objectsWithUserIconsArray indexOfObjectIdenticalTo:object] == NSNotFound){
 			[self _updateUserIconForObject:object];
 		}
 	
@@ -198,6 +198,11 @@ DeclareString(AppendNextMessage);
 										 object:object];
 	}
 	
+	//First time through we also need to cache our account in case it's planning to animate
+	if (notification == nil){
+		[self _updateUserIconForObject:[chat account]];
+	}
+	
 	//Also observe our account
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(listObjectAttributesChanged:) 
@@ -205,13 +210,8 @@ DeclareString(AppendNextMessage);
 									 object:[chat account]];
 	
 	//We've now masked every user currently in the pariticpating list objects
-	//Mask our account and add it to the list
-	if (imageMask){
-		[objectsWithMaskedUserIconsArray release]; 
-		objectsWithMaskedUserIconsArray = [participatingListObjects mutableCopy];
-		
-		[self _updateUserIconForObject:[chat account]];
-	}
+	[objectsWithUserIconsArray release]; 
+	objectsWithUserIconsArray = [participatingListObjects mutableCopy];
 }
 
 - (void)listObjectAttributesChanged:(NSNotification *)notification
@@ -258,10 +258,9 @@ DeclareString(AppendNextMessage);
 						   forKey:KEY_WEBKIT_USER_ICON
 						   notify:NO];
 		
-		if (imageMask){
-			if ([objectsWithMaskedUserIconsArray indexOfObjectIdenticalTo:inObject] == NSNotFound){
-				[objectsWithMaskedUserIconsArray addObject:inObject];
-			}
+		//Make sure it's known that this user has been handled (this will rarely be a problem, if ever)
+		if ([objectsWithUserIconsArray indexOfObjectIdenticalTo:inObject] == NSNotFound){
+			[objectsWithUserIconsArray addObject:inObject];
 		}
 	}
 }
@@ -390,10 +389,11 @@ DeclareString(AppendNextMessage);
 
 	NSString	*maskPath = [plugin valueForKey:@"ImageMask" style:style variant:loadedVariantID];
 	if (maskPath){
-		//Load the image mask if one is specified
+		//Load the image mask if one is specified (it will be nil otherwise due to _flushPreferenceCache)
 		imageMask = [[NSImage alloc] initByReferencingFile:[[style resourcePath] stringByAppendingPathComponent:maskPath]];
-		objectsWithMaskedUserIconsArray = [[NSMutableArray alloc] init];
 	}
+	//Create a new tracking array for objects who have had their icons handled
+	objectsWithUserIconsArray = [[NSMutableArray alloc] init];
 
 	//Background Preferences [Style specific]
 	if(allowBackgrounds){
@@ -416,7 +416,7 @@ DeclareString(AppendNextMessage);
 	[background release]; background = nil;
 	[backgroundColor release]; backgroundColor = nil;
 	[imageMask release]; imageMask = nil;
-	[objectsWithMaskedUserIconsArray release]; objectsWithMaskedUserIconsArray = nil;
+	[objectsWithUserIconsArray release]; objectsWithUserIconsArray = nil;
 }
 
 //Force this view to immediately switch to the current preferences and then redisplay all its content
