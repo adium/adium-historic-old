@@ -6,18 +6,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/details.jsp $-->
-<!--$Rev: 719 $ $Date: 2004/05/05 16:26:40 $ -->
+<!--$Rev: 723 $ $Date: 2004/05/07 03:03:43 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
-int sender;
+int sender, meta_id;
 try {
-	sender = Integer.parseInt(request.getParameter("sender_id"));
+    sender = Integer.parseInt(request.getParameter("sender_id"));
 } catch (NumberFormatException e) {
-	sender = 0;
+    sender = 0;
+}
+
+try {
+    meta_id = Integer.parseInt(request.getParameter("meta_id"));
+} catch (NumberFormatException e) {
+    meta_id = 0;
 }
 
 String date = request.getParameter("date");
@@ -45,38 +51,53 @@ try {
     
     stmt = conn.createStatement();
     
-    if(sender != 0) {
-        pstmt = conn.prepareStatement("select scramble(username) as username, "+
-        "scramble(display_name) as display_name, " +
+    pstmt = conn.prepareStatement("select scramble(username) as username, "+
+    "scramble(display_name) as display_name, " +
+    " date_part(\'day\', ?::timestamp + \'1 month\'::interval -"+ 
+    " \'1 day\'::interval) as last_day, "+
+    " ?::timestamp + \'1 month\'::interval as end_month, " +
+    " to_char(?::timestamp, \'Mon, YYYY\') as month " +
+    " from " +
+    " adium.users natural join adium.user_display_name udn " +
+    " where user_id = ?"+
+    " and not exists " +
+    " (select 'x' from adium.user_display_name " +
+    " where effdate > udn.effdate and user_id = users.user_id)");
+    
+    pstmt.setString(1, date);
+    pstmt.setString(2, date);
+    pstmt.setString(3, date);
+    pstmt.setInt(4, sender);
+
+    if(meta_id != 0) {
+        pstmt = conn.prepareStatement("select name as username, "+
+        " name as display_name, " +
         " date_part(\'day\', ?::timestamp + \'1 month\'::interval -"+ 
         " \'1 day\'::interval) as last_day, "+
         " ?::timestamp + \'1 month\'::interval as end_month, " +
         " to_char(?::timestamp, \'Mon, YYYY\') as month " +
         " from " +
-        " adium.users natural join adium.user_display_name udn " +
-        " where user_id = ?"+
-        " and not exists " +
-        " (select 'x' from adium.user_display_name " +
-        " where effdate > udn.effdate and user_id = users.user_id)");
+        " adium.meta_container " +
+        " where meta_id = ? ");
         
         pstmt.setString(1, date);
         pstmt.setString(2, date);
         pstmt.setString(3, date);
-        pstmt.setInt(4, sender);
-        
-        rset = pstmt.executeQuery();
-        rset.next();
-        
-        title = rset.getString("display_name");
-        
-        month = rset.getString("month");
-        
-        lastDayOfMonth = rset.getInt("last_day");
-        
-        endMonth = rset.getString("end_month");
-        
-        sender_sn = rset.getString("username");
+        pstmt.setInt(4, meta_id);
     }
+
+    rset = pstmt.executeQuery();
+    rset.next();
+    
+    title = rset.getString("display_name");
+    
+    month = rset.getString("month");
+    
+    lastDayOfMonth = rset.getInt("last_day");
+    
+    endMonth = rset.getString("end_month");
+    
+    sender_sn = rset.getString("username");
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -116,25 +137,39 @@ try {
             </div>
             <div id="sidebar-a">
 <%
-    if(sender != 0) {
+    if(sender != 0 || meta_id != 0) {
 %>
                 <h1>Detailed Statistics for <%= sender_sn %></h1>
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
 <%
-        pstmt = conn.prepareStatement("select distinct " +
-        " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
-        " as date, date_trunc('month', message_date) as full_date " +
-        " from messages where sender_id = ? order by full_date"); 
-        
-        pstmt.setInt(1, sender);
-        
+        if(sender != 0) {
+            pstmt = conn.prepareStatement("select distinct " +
+            " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
+            " as date, date_trunc('month', message_date) as full_date " +
+            " from messages where sender_id = ? order by full_date"); 
+
+            pstmt.setInt(1, sender);
+        }
+
+        if(meta_id != 0) {
+            pstmt = conn.prepareStatement("select distinct " +
+            " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
+            " as date, date_trunc('month', message_date) as full_date " +
+            " from messages, meta_contact "+ 
+            " where sender_id = user_id and meta_id = ? order by full_date"); 
+
+            pstmt.setInt(1, meta_id);
+        }
+
+
         rset = pstmt.executeQuery();
         
         while(rset.next()) {
             out.print("<p><a href=\"details.jsp?sender=" +
             sender_sn + 
             "&sender_id=" + sender +
+            "&meta_id=" + meta_id +
             "&date=" + rset.getString("full_date") + "\">");
             out.print(rset.getString("date") + "</a></p>");
         }
@@ -145,6 +180,25 @@ try {
 <%
     }
 %>
+
+                <h1>Meta Contacts</h1>
+                <div class="boxThinTop"></div>
+                <div class="boxThinContent">
+
+<%
+    pstmt = conn.prepareStatement("select name, meta_id from adium.meta_container order by name");
+
+    rset = pstmt.executeQuery();
+
+    while(rset.next()) {
+        out.println("<p><a href=\"statistics.jsp?meta_id=" + 
+            rset.getInt("meta_id") + "\">" + rset.getString("name") +
+            "</a></p>");
+    }
+%>
+                </div>
+                <div class="boxThinBottom"></div>
+
                 <h1>Users</h1>
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
@@ -221,6 +275,39 @@ try {
     pstmt.setString(5, date);
     pstmt.setString(6, endMonth);
     
+    if(meta_id != 0) {
+        pstmt = conn.prepareStatement("select " +
+        " coalesce(count(*),0) as total_sent," +
+        " coalesce(min(length(message)),0) as min_length, " +
+        " coalesce(max(length(message)),0) as max_length, " +
+        " coalesce(trunc(avg(length(message)),2),0) as avg_length, " +
+        " \'S\' as identifier " +
+        " from adium.messages, adium.meta_contact " +
+        " where sender_id = user_id and " +
+        " meta_id = ? " +
+        " and message_date >= ?::timestamp " +
+        " and message_date < ?::timestamp " + 
+        " union all " +
+        " select " + 
+        " coalesce(count(*),0) as total_sent, " + 
+        " coalesce(min(length(message)),0) as min_length, " +
+        " coalesce(max(length(message)),0) as max_length, " +
+        " coalesce(trunc(avg(length(message)), 2),0) as avg_length, " +
+        " \'R\' as identifier " +
+        " from adium.messages, adium.meta_contact " +
+        " where recipient_id = user_id " +
+        " and meta_id = ? " +
+        " and message_date >= ?::timestamp " +
+        " and message_date < ?::timestamp");
+        
+        pstmt.setInt(1, meta_id);
+        pstmt.setString(2, date);
+        pstmt.setString(3, endMonth);
+        pstmt.setInt(4, meta_id);
+        pstmt.setString(5, date);
+        pstmt.setString(6, endMonth);
+    }
+    
     rset = pstmt.executeQuery();
 
     if(rset != null && rset.next()) {
@@ -281,6 +368,23 @@ try {
     pstmt.setInt(3, sender);
     pstmt.setInt(4, sender);
 
+    if(meta_id != 0) {
+        pstmt = conn.prepareStatement("select " +
+            " date_part(\'day\', message_date) as day," +
+            " count(*) as count " +
+            " from messages, meta_contact " +
+            " where message_date >= ?::date " +
+            " and message_date < ?::date " +
+            " and (sender_id = user_id or recipient_id = user_id) " +
+            " and meta_id = ? " +
+            " group by date_part(\'day\', message_date)");
+
+        pstmt.setString(1, date);
+        pstmt.setString(2, endMonth);
+        pstmt.setInt(3, meta_id);
+    }
+
+    
     rset = pstmt.executeQuery();
     
     int[] dailyAry = new int[lastDayOfMonth + 1];
@@ -338,33 +442,49 @@ try {
                 <div class="boxWideContent">
                 
 <%
-        pstmt = conn.prepareStatement("select message, count(*) " +
-                " from messages where sender_id = ? " +
-                " and message_date >= ?::timestamp " +
-                " and message_date < ?::timestamp " +
-                " group by message " +
-                " order by count(*) desc limit 20 ");
+    pstmt = conn.prepareStatement("select message, count(*) " +
+        " from messages where sender_id = ? " +
+        " and message_date >= ?::timestamp " +
+        " and message_date < ?::timestamp " +
+        " having count(*) > 1 " +
+        " group by message " +
+        " order by count(*) desc limit 20 ");
 
-        pstmt.setInt(1, sender);
+    pstmt.setInt(1, sender);
+    pstmt.setString(2, date);
+    pstmt.setString(3, endMonth);
+
+    if(meta_id != 0) {
+        pstmt = conn.prepareStatement("select message, count(*) " +
+            " from messages, meta_contact " +
+            " where sender_id = user_id and meta_id = ? " +
+            " and message_date >= ?::timestamp " +
+            " and message_date < ?::timestamp " +
+            " group by message " +
+            " having count(*) > 1 " +
+            " order by count(*) desc limit 20 ");
+
+        pstmt.setInt(1, meta_id);
         pstmt.setString(2, date);
         pstmt.setString(3, endMonth);
+    }
 
-        rset = pstmt.executeQuery();
+    rset = pstmt.executeQuery();
 
-        out.println("<table>");
-        
-        out.println("<tr><td>#</td>"+
-            "<td>Message</td><td >"+
-            "Cnt</td></tr>");
+    out.println("<table>");
+    
+    out.println("<tr><td>#</td>"+
+        "<td>Message</td><td >"+
+        "Cnt</td></tr>");
 
-        while(rset.next()) {
-            out.println("<tr><td>" + rset.getRow() + "</td>");
-            out.println("<td>" + 
-                rset.getString("message") + "</td>");
-            out.println("<td>" + 
-                    rset.getString("count") + "</td></tr>");
-        }
-        out.println("</table>");
+    while(rset.next()) {
+        out.println("<tr><td>" + rset.getRow() + "</td>");
+        out.println("<td>" + 
+            rset.getString("message") + "</td>");
+        out.println("<td>" + 
+                rset.getString("count") + "</td></tr>");
+    }
+    out.println("</table>");
 
 %>
                 </div>
@@ -374,28 +494,51 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
+    pstmt = conn.prepareStatement("select scramble(sender_sn) as sender_sn"+
+        ", scramble(recipient_sn) as recipient_sn, "+
+        " message, count(*) "+
+        " from simple_message_v smv "+
+        " where not exists "+
+            " (select 'x' from messages "+
+            " where sender_id in (smv.sender_id, smv.recipient_id) "+
+            " and recipient_id in (smv.sender_id, smv.recipient_id) "+
+            " and message_date < smv.message_date "+
+            " and message_date > smv.message_date - '10 minutes'::interval) "+
+        " and (sender_id = ? or recipient_id = ?) "+
+        " and message_date >= ?::timestamp " +
+        " and message_date < ?::timestamp " +
+        " group by sender_sn, recipient_sn, message "+
+        " order by count(*) desc limit 20");
+    
+    pstmt.setInt(1, sender);
+    pstmt.setInt(2, sender);
+    pstmt.setString(3, date);
+    pstmt.setString(4, endMonth);
+
+    if(meta_id != 0) {
         pstmt = conn.prepareStatement("select scramble(sender_sn) as sender_sn"+
             ", scramble(recipient_sn) as recipient_sn, "+
             " message, count(*) "+
-            " from simple_message_v smv "+
+            " from simple_message_v smv, meta_contact "+
             " where not exists "+
                 " (select 'x' from messages "+
                 " where sender_id in (smv.sender_id, smv.recipient_id) "+
                 " and recipient_id in (smv.sender_id, smv.recipient_id) "+
                 " and message_date < smv.message_date "+
                 " and message_date > smv.message_date - '10 minutes'::interval) "+
-            " and (sender_id = ? or recipient_id = ?) "+
+            " and (sender_id = user_id or recipient_id = user_id) "+
+            " and meta_id = ? " +
             " and message_date >= ?::timestamp " +
             " and message_date < ?::timestamp " +
             " group by sender_sn, recipient_sn, message "+
             " order by count(*) desc limit 20");
-        
-        pstmt.setInt(1, sender);
-        pstmt.setInt(2, sender);
-        pstmt.setString(3, date);
-        pstmt.setString(4, endMonth);
+    
+        pstmt.setInt(1, meta_id);
+        pstmt.setString(2, date);
+        pstmt.setString(3, endMonth);
+    }
 
-        rset = pstmt.executeQuery();
+    rset = pstmt.executeQuery();
 %>
                 <table>
                     <tr>
@@ -427,23 +570,41 @@ try {
                 <div class="boxWideContent">
 <%
     pstmt = conn.prepareStatement("select " +
-    " date_part(\'day\', message_date) as day, " +
-    " date_part(\'hour\', message_date) as hour, " +
-    " count(*) as count" +
-    " from messages " + 
-    " where (sender_id = ? or recipient_id = ?) " +
-    " and message_date >= ?::timestamp " +
-    " and message_date < ?::timestamp " +
-    " group by date_part(\'day\', message_date), " +
-    " date_part(\'hour\', message_date)");
+        " date_part(\'day\', message_date) as day, " +
+        " date_part(\'hour\', message_date) as hour, " +
+        " count(*) as count" +
+        " from messages " + 
+        " where (sender_id = ? or recipient_id = ?) " +
+        " and message_date >= ?::timestamp " +
+        " and message_date < ?::timestamp " +
+        " group by date_part(\'day\', message_date), " +
+        " date_part(\'hour\', message_date)");
 
     pstmt.setInt(1, sender);
     pstmt.setInt(2, sender);
     pstmt.setString(3, date);
     pstmt.setString(4, endMonth);
 
+    if(meta_id != 0) {
+        pstmt = conn.prepareStatement("select " +
+            " date_part(\'day\', message_date) as day, " +
+            " date_part(\'hour\', message_date) as hour, " +
+            " count(*) as count" +
+            " from messages, meta_contact " + 
+            " where (sender_id = user_id or recipient_id = user_id) " +
+            " and meta_id = ? " +
+            " and message_date >= ?::timestamp " +
+            " and message_date < ?::timestamp " +
+            " group by date_part(\'day\', message_date), " +
+            " date_part(\'hour\', message_date)");
+
+        pstmt.setInt(1, meta_id);
+        pstmt.setString(2, date);
+        pstmt.setString(3, endMonth);
+    }
+
     rset = pstmt.executeQuery();
-    
+
     int[][] dailyHourly= new int[lastDayOfMonth + 1][24];
     int maxHourly = 0;
     for(int i = 0; i <= lastDayOfMonth; i++) {
@@ -565,6 +726,56 @@ try {
     pstmt.setString(10, date);
     pstmt.setString(11, endMonth);
 
+    if(meta_id != 0) {
+        pstmt = conn.prepareStatement("select scramble(username) as username, "+
+            " recipient_id as \"Recipient\", "+ 
+            " count(*) as \"Sent\", (select count(*)"+
+            " from messages where"+
+            " recipient_id = a.sender_id and sender_id = a.recipient_id " +
+            " and message_date >= ?::timestamp " +
+            " and message_date < ?::timestamp) as " +
+            " \"Recieved\", " +
+            " trunc(avg(length(message)), 2) as "+
+            " \"Avg Sent Length\", " + 
+            " (select coalesce(trunc(avg(length(message)),2),0)"+
+            " from "+
+            " messages " +
+            " where a.sender_id = recipient_id and sender_id = " +
+            " a.recipient_id and message_date >= ?::timestamp" +
+            " and message_date < ?::timestamp " +
+            " ) as \"Avg Recd Length\","+
+            " min(length(message)) as \"Min Sent\", max(length(message))"+
+            " as \"Max Sent\","+
+            " (select coalesce(min(length(message)),0) from messages where a.sender_id = "+
+            " recipient_id and sender_id = a.recipient_id " +
+            " and message_date >= ?::timestamp and message_date < ?::timestamp "+
+            " ) as \"Min Received\","+
+            " (select "+
+            " coalesce(max(length(message)),0) from "+
+            " messages where a.sender_id = recipient_id and a.recipient_id " +
+            " = sender_id and message_date >= ?::timestamp " +
+            " and message_date < ?::timestamp)"+
+            " as \"Max Received\" from messages a, users, meta_contact "+
+            " where sender_id = meta_contact.user_id "+
+            " and meta_id = ? " +
+            " and message_date >= ?::timestamp " +
+            " and message_date < ?::timestamp " +
+            " and users.user_id = a.recipient_id " +
+            " group by sender_id, recipient_id, username");
+
+        pstmt.setString(1, date);
+        pstmt.setString(2, endMonth);
+        pstmt.setString(3, date);
+        pstmt.setString(4, endMonth);
+        pstmt.setString(5, date);
+        pstmt.setString(6, endMonth);
+        pstmt.setString(7, date);
+        pstmt.setString(8, endMonth);
+        pstmt.setInt(9, meta_id);
+        pstmt.setString(10, date);
+        pstmt.setString(11, endMonth);
+    }
+    
     rset = pstmt.executeQuery();
 
     rsmd = rset.getMetaData();
