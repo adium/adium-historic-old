@@ -16,6 +16,8 @@
 #import "IdleMessagePreferences.h"
 #import "IdleMessagePlugin.h"
 
+@class AIPreferenceWindowController;
+
 @interface IdleMessagePreferences (PRIVATE)
 - (void)textDidEndEditing:(NSNotification *)notification;
 @end
