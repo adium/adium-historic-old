@@ -467,13 +467,13 @@ static void adiumGaimBlistNewList(GaimBuddyList *list)
 
 static void adiumGaimBlistNewNode(GaimBlistNode *node)
 {
-    if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
+	if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
 		GaimBuddy *buddy = (GaimBuddy*)node;
 		
 		[accountLookup(buddy->account) mainPerformSelector:@selector(newContact:withName:)
-												withObject:contactLookupFromBuddy(buddy) 
-												withObject:[NSString stringWithUTF8String:(buddy->name)]];
-    }
+												withObject:contactLookupFromBuddy(buddy)
+												withObject:[NSString stringWithUTF8String:buddy->name]];
+	}
 }
 
 static void adiumGaimBlistShow(GaimBuddyList *list)
@@ -498,16 +498,10 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 														withObject:groupName];
 			}
 		}
-		
-		const char *alias = gaim_buddy_get_alias(buddy);
-		
-		if (alias){
-			NSString *aliasString = [NSString stringWithUTF8String:alias];
-			
-			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
-													withObject:theContact
-													withObject:aliasString];
-		}
+
+		[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
+												withObject:theContact
+												withObject:[NSString stringWithUTF8String:gaim_buddy_get_alias(buddy)]];
 	}
 }
 
@@ -796,7 +790,6 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 			NSString			*messageString = [NSString stringWithUTF8String:message];
 			if (messageString){
 				AIChatUpdateType	updateType = -1;
-				NSRange				range;
 				
 				if([messageString rangeOfString:@"timed out"].location != NSNotFound){
 					updateType = AIChatTimedOut;
