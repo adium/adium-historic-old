@@ -88,13 +88,6 @@ static BOOL didInitMSN = NO;
 	return YES;
 }
 
-#pragma mark Encoding
-//MSN doesn't use HTML at all... there's a font setting in the MSN Messenger text box, but maybe it's ignored?
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
-{
-    return ([inAttributedString string]);
-}
-
 #pragma mark Status
 //Update our status
 - (void)updateStatusForKey:(NSString *)key
