@@ -6151,7 +6151,6 @@
 				4BD6737106001BED0049CAF7,
 				4BD6737706001BF10049CAF7,
 				4BD6738A06001C2C0049CAF7,
-				4BD6739206001C2F0049CAF7,
 				4BD6739A06001C400049CAF7,
 				4BD673AB06001C510049CAF7,
 				4BD673E806001CB50049CAF7,
@@ -11010,7 +11009,6 @@
 				4B28909E03C1D37700A8010A,
 				4B7764BB03C3E78200A8010A,
 				F555906704F0C18D01925A3C,
-				4B2890A103C1D57A00A8010A,
 			);
 			isa = PBXGroup;
 			name = "Alias Support";
@@ -11043,14 +11041,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIAliasSupportPlugin.m;
 			path = "Plugins/Alias Support/AIAliasSupportPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B2890A103C1D57A00A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ContactAlias.nib;
-			path = "Plugins/Alias Support/ContactAlias.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -15289,12 +15279,6 @@
 		};
 		4BD6739106001C2F0049CAF7 = {
 			fileRef = F555906704F0C18D01925A3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6739206001C2F0049CAF7 = {
-			fileRef = 4B2890A103C1D57A00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
