@@ -22,6 +22,7 @@
 #define KEY_EMOTICON_PACK_TITLE	@"EmoticonPackTitle"
 #define KEY_EMOTICON_PACK_SOURCE	@"EmoticonPackSource"
 #define KEY_EMOTICON_PACK_PREFS		@"EmoticonPackPrefsDict"
+#define KEY_EMOTICON_PACK_ABOUT		@"EmoticonPackAbout"
 
 @protocol AIContentFilter;
 @class AIEmoticonPreferences;
