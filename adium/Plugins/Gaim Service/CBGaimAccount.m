@@ -390,17 +390,6 @@
     }
     return sent;
 }
--(NSString *)encodedStringFromAttributedString:(NSAttributedString *)inAttributedString
-{
-    return ([AIHTMLDecoder encodeHTML:inAttributedString
-                              headers:YES
-                             fontTags:YES
-                        closeFontTags:NO
-                            styleTags:YES
-           closeStyleTagsOnFontChange:NO
-                       encodeNonASCII:NO
-                           imagesPath:nil]);
-}
 
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
