@@ -249,14 +249,8 @@
 	
     //Resize the contact list horizontally
     if(autoResizeHorizontally){
-		if (object){
-			if([keys containsObject:@"Display Name"] || [keys containsObject:@"Left View"] ||
-			   [keys containsObject:@"Right View"] || [keys containsObject:@"Right Text"] ||
-			   [keys containsObject:@"Left Text"]){
-#warning ###				[contactListView updateHorizontalSizeForObject:object];
-			}
-		}else{
-#warning ###			[contactListView _performFullRecalculation];	
+		if(object && [keys containsObject:@"Display Name"]){
+			[self contactListDesiredSizeChanged:nil];
 		}
     }
 }
