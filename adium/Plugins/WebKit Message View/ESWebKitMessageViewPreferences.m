@@ -21,6 +21,7 @@
 - (NSMenu *)_fontSizeMenu;
 - (void)_buildTimeStampMenu;
 - (void)_buildTimeStampMenu_AddFormat:(NSString *)format;
+- (void)_createPreviewConversationFromChatDict:(NSDictionary *)chatDict;
 @end
 
 @implementation ESWebKitMessageViewPreferences
@@ -280,76 +281,108 @@
 #pragma mark Preview WebView
 - (void)updatePreview
 {
-	NSString	*basePath, *headerHTML, *footerHTML, *templateHTML;
-	NSString	*styleName, *desiredVariant, *CSS;
-	NSBundle	*style;
+	NSString		*basePath, *headerHTML, *footerHTML, *templateHTML;
+	NSString		*styleName, *CSS;
+	NSBundle		*style;
+	NSString		*loadedPreviewDirectory = nil;
+	NSDictionary	*previewDict;
+	AIChat			*chat;
 	
 	//We aren't ready for that kind of commitment yet...
 	webViewIsReady = NO;
 	
 	//Load the style as per preferences
-	styleName = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
-														 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	[stylePath release];
-	style = [plugin messageStyleBundleWithName:styleName];
-	
-	//If the preferred style is unavailable, load Smooth Operator
-	if (!style){
-		styleName = AILocalizedString(@"Smooth Operator","Smooth Operator message style name. Make sure this matches the localized Smooth Operator style bundle's name!");
+	{
+		styleName = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
+															 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		[stylePath release];
 		style = [plugin messageStyleBundleWithName:styleName];
+		
+		//If the preferred style is unavailable, load Smooth Operator
+		if (!style){
+			styleName = AILocalizedString(@"Smooth Operator","Smooth Operator message style name. Make sure this matches the localized Smooth Operator style bundle's name!");
+			style = [plugin messageStyleBundleWithName:styleName];
+		}
+		
+		//Load preferences for the style and update the popup menus
+		[plugin loadPreferencesForWebView:preview withStyleNamed:styleName];
+		[self _updatePopupMenuSelections];
+
+		//Retain the stylePath
+		stylePath = [[style resourcePath] retain];
+	}
+	
+	//Load the preview from the style if possible; otherwise use the bundle's own preview.plist
+	{
+		NSString		*previewFilePath;
+		
+		previewFilePath = [[stylePath stringByAppendingPathComponent:PREVIEW_FILE] stringByAppendingPathExtension:@"plist"];
+		
+		if([[NSFileManager defaultManager] fileExistsAtPath:previewFilePath]){
+			previewDict = [NSDictionary dictionaryWithContentsOfFile:previewFilePath];
+			loadedPreviewDirectory = stylePath;
+		}else{
+			previewDict = [NSDictionary dictionaryNamed:PREVIEW_FILE forClass:[self class]];
+			loadedPreviewDirectory = [[[NSBundle bundleForClass:[self class]] pathForResource:PREVIEW_FILE 
+																					   ofType:@"plist"] stringByDeletingLastPathComponent];
+		}
+		//Create the AIListObjects we will need, putting them into previewListObjectsDict 
+		[self _createListObjectsFromDict:previewDict withLoadedPreviewDirectory:loadedPreviewDirectory];
+	}
+	
+	//Load the variant
+	{
+		NSString *desiredVariant;
+		
+		desiredVariant = [[adium preferenceController] preferenceForKey:[plugin keyForDesiredVariantOfStyle:styleName]
+																  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		CSS = (desiredVariant ? [NSString stringWithFormat:@"Variants/%@.css",desiredVariant] : @"main.css");
+	}
+	
+
+	//Create and set up our temporary chat for filling keywords in headerHTML and footerHTML
+	{
+		NSDictionary	*chatDict = [previewDict objectForKey:@"Chat"];
+		NSString		*type = [chatDict objectForKey:@"Type"];
+
+		chat = [AIChat chatForAccount:nil initialStatusDictionary:nil];
+		
+		if ([type isEqualToString:@"IM"]){
+			NSString *user;
+			if (user = [chatDict objectForKey:@"User"]){
+				[chat addParticipatingListObject:[previewListObjectsDict objectForKey:user]];
+			}
+		}else{
+			NSString *name;
+			if (name = [chatDict objectForKey:@"Name"]){
+				[chat setName:name];
+			}
+		}
 	}
 
-	[plugin loadPreferencesForWebView:preview withStyleNamed:styleName];
-	[self _updatePopupMenuSelections];
-	
-	stylePath = [[style resourcePath] retain];
-	
-	desiredVariant = [[adium preferenceController] preferenceForKey:[plugin keyForDesiredVariantOfStyle:styleName]
-																		   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];			
-	if (desiredVariant){
-		CSS = [[NSString stringWithFormat:@"Variants/%@.css",desiredVariant] retain];
-	}else{
-		CSS = [@"main.css" retain];
-	}
-	
-	basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
-	headerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
-	footerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];
-	
 	//Load the template, and fill it up
-	templateHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
-	templateHTML = [NSString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
-
+	{
+		basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
+		headerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
+		headerHTML = [plugin fillKeywords:[[headerHTML mutableCopy] autorelease] forChat:chat];
+						
+		footerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];
+		footerHTML = [plugin fillKeywords:[[footerHTML mutableCopy] autorelease] forChat:chat];
+						
+		templateHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
+		templateHTML = [NSString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
+	}
+	
 	//Feed it to the webview
 	[[preview mainFrame] loadHTMLString:templateHTML baseURL:nil];
 	
-	//Load and process the Preview file (using the style's own if possible, otherwise using Adium's)
-	[self _loadPreviewFromStylePath:stylePath];
+	//Load and display the desired content objects
+	[self _createPreviewConversationFromChatDict:[previewDict objectForKey:@"Preview Messages"]];
 }
 
-//Our job here is to take a fake conversation and display it by adding it to the WebView
-- (void) _loadPreviewFromStylePath:(NSString *)inStylePath
+//Take the fake conversation contained in chatDict and send it to our webView
+- (void)_createPreviewConversationFromChatDict:(NSDictionary *)chatDict
 {
-	NSString		*previewFilePath = [[inStylePath stringByAppendingPathComponent:PREVIEW_FILE] stringByAppendingPathExtension:@"plist"];
-	NSString		*loadedPreviewDirectory = nil;
-	NSDictionary	*previewDict;
-	
-	//Load from the style if possible; otherwise use the bundle's own preview.plist
-	if([[NSFileManager defaultManager] fileExistsAtPath:previewFilePath]){
-		previewDict = [NSDictionary dictionaryWithContentsOfFile:previewFilePath];
-		loadedPreviewDirectory = stylePath;
-	}else{
-
-		previewDict = [NSDictionary dictionaryNamed:PREVIEW_FILE forClass:[self class]];
-		loadedPreviewDirectory = [[[NSBundle bundleForClass:[self class]] pathForResource:PREVIEW_FILE 
-																				   ofType:@"plist"] stringByDeletingLastPathComponent];
-	}
-	
-	//Create the AIListObjects we will need, putting them into previewListObjectsDict 
-	[self _createListObjectsFromDict:previewDict withLoadedPreviewDirectory:loadedPreviewDirectory];
-	
-	//Load and display the desired content objects
-	NSDictionary		*chatDict = [previewDict objectForKey:@"Preview Messages"];
 	NSDictionary		*messageDict;
 	int					cnt;
 	NSString			*type;
@@ -366,7 +399,6 @@
 		if([type isEqualToString:CONTENT_MESSAGE_TYPE]) {
 			//Create message content object
 			NSAttributedString  *message =[NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
-//			NSAttributedString *message = [[[NSAttributedString alloc] initWithString:@"Hello, I love you, won't you tell me your name?"] autorelease];
 			BOOL				outgoing = [[messageDict objectForKey:@"Outgoing"] boolValue];
 			NSString			*from = [messageDict objectForKey:@"From"];
 			NSString			*to = [messageDict objectForKey:@"To"];

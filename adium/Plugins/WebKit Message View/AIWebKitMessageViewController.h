@@ -6,6 +6,7 @@
 @interface AIWebKitMessageViewController : AIObject <AIMessageViewController> {
 	ESWebView					*webView;
 	NSString					*stylePath;
+	AIChat						*chat;
 	
 	BOOL						webViewIsReady;
 

@@ -77,12 +77,12 @@
 	NSString	*prefIdentifier = [NSString stringWithFormat:@"Adium Style %@ Preferences",styleName];
 	[webView setPreferencesIdentifier:prefIdentifier];
 	[[webView preferences] setAutosaves:YES];
-		
+
 	if (![[[adium preferenceController] preferenceForKey:prefIdentifier
 												   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue]){
 		//Load defaults from the bundle or our defaults, as appropriate
 		NSBundle	*style = [self messageStyleBundleWithName:styleName];
-		
+
 		NSString	*defaultFontFamily = [style objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_FAMILY];
 		if (!defaultFontFamily){
 			defaultFontFamily = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_DEFAULT_FONT_FAMILY
@@ -98,12 +98,14 @@
 		[webView setFontFamily:defaultFontFamily];
 		[[webView preferences] setDefaultFontSize:[defaultSizeNumber intValue]];
 		
-		
 		//We have no created a webView preferences object and configured its defaults, so no need to do it again
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
 											 forKey:prefIdentifier
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	}
+	
+	//This is really weird.  defaultFontSize returns the proper value, but we have to do setDefaultFontSize with it for it to be applied.
+	[[webView preferences] setDefaultFontSize:[[webView preferences] defaultFontSize]];
 }
 
 #pragma mark Available Webkit Styles
@@ -321,7 +323,7 @@
 																			   imagesPath:@"/tmp"
 																		attachmentsAsText:NO]];
         }
-	
+		
 		do{
 			range = [inString rangeOfString:@"%time%"];
 			if(range.location != NSNotFound){
@@ -394,6 +396,40 @@
 	return(inString);
 }
 
+- (NSMutableString *)fillKeywords:(NSMutableString *)inString forChat:(AIChat *)chat
+{
+	NSRange	range;
+	
+	do{
+		range = [inString rangeOfString:@"%chat_name%"];
+		if(range.location != NSNotFound){
+			[inString replaceCharactersInRange:range
+									withString:[chat name]];
+			
+		}
+	} while(range.location != NSNotFound);
+	
+	do{
+		range = [inString rangeOfString:@"%chat_icon%"];
+		if(range.location != NSNotFound){
+			AIListObject	*listObject = [chat listObject];
+			NSString		*iconPath = nil;
+			
+			if (listObject){
+				iconPath = [listObject statusObjectForKey:@"UserIconPath"];
+			}
+			
+			if (!iconPath){
+				iconPath = @"chat_icon.png";
+			}
+			
+			[inString replaceCharactersInRange:range
+									withString:iconPath];
+		}
+	} while(range.location != NSNotFound);
+	
+	return(inString);
+}
 //
 - (NSMutableString *)escapeString:(NSMutableString *)inString
 {
