@@ -7,23 +7,19 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {changePreference = id; }; 
             CLASS = AICLPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_setFont" = NSButton; 
                 "checkBox_alternatingGrid" = NSButton; 
-                "checkBox_customGroupColor" = NSButton; 
                 "checkBox_showLabels" = NSButton; 
                 "colorWell_background" = NSColorWell; 
                 "colorWell_contact" = NSColorWell; 
                 "colorWell_grid" = NSColorWell; 
-                "colorWell_group" = NSColorWell; 
                 "textField_fontName" = NSTextField; 
                 "view_prefViewGeneral" = NSView; 
-                "view_prefViewGroups" = NSView; 
             }; 
-            SUPERCLASS = AIObject; 
+            SUPERCLASS = AIPreferencePane; 
         }, 
         {
             CLASS = AIMTOC2Service; 
@@ -31,10 +27,19 @@
             OUTLETS = {"view_preferences" = NSView; }; 
             SUPERCLASS = AIService; 
         }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIPlugin; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {CLASS = AIService; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

@@ -17,10 +17,6 @@
 #import "AISCLOutlineView.h"
 #import "AISCLViewPlugin.h"
 
-#define CL_PREF_NIB					@"AICLPrefView"		//Name of preference nib
-#define CL_PREF_GENERAL_TITLE		AILocalizedString(@"General Appearance",nil)
-#define CL_PREF_GROUPS_TITLE		AILocalizedString(@"General Appearance",nil)
-
 //Handles the interface interaction, and sets preference values
 //The outline view plugin is responsible for reading & setting the preferences, as well as observing changes in them
 
@@ -32,61 +28,20 @@
 @end
 
 @implementation AICLPreferences
-//
-+ (AICLPreferences *)contactListPreferences
-{
-    return([[[self alloc] init] autorelease]);
+
+//Preference pane properties
+- (PREFERENCE_CATEGORY)category{
+    return(AIPref_Sound);
+}
+- (NSString *)label{
+    return(@"General Appearance");
+}
+- (NSString *)nibName{
+    return(@"AICLPrefView");
 }
 
-//init
-- (id)init
-{
-    //Init
-    [super init];
-	
-    //Register our preference panes
-    generalPane = [AIPreferencePane preferencePaneInCategory:AIPref_ContactList_General withDelegate:self label:CL_PREF_GENERAL_TITLE];
-    [[adium preferenceController] addPreferencePane:generalPane];
-	
-    groupsPane = [AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Groups withDelegate:self label:CL_PREF_GROUPS_TITLE];
-    [[adium preferenceController] addPreferencePane:groupsPane];
-	
-    
-    return(self);    
-}
-
-//Return the view for our preference pane
-- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    //Load our preference view nib
-    if(!view_prefViewGeneral){
-        [NSBundle loadNibNamed:CL_PREF_NIB owner:self];
-		
-        //Configure our view
-        [self configureView];
-    }
-	
-    if(preferencePane == generalPane){
-        return(view_prefViewGeneral);
-    }else{
-        return(view_prefViewGroups);
-    }
-}
-
-//Clean up our preference pane
-- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-	[colorWell_contact deactivate];
-	[colorWell_background deactivate];
-	[colorWell_grid deactivate];
-	[colorWell_group deactivate];
-	
-    [view_prefViewGeneral release]; view_prefViewGeneral = nil;
-    [view_prefViewGroups release]; view_prefViewGroups = nil;
-}
-
-//Configure our view for the current preferences
-- (void)configureView
+//Configures our view for the current preferences
+- (void)viewDidLoad
 {
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 	
@@ -98,19 +53,15 @@
     
     //Grid
     [checkBox_alternatingGrid setState:[[preferenceDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue]];
-    [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_SCL_GRID_COLOR] representedColor]];
-	
-    //Groups
-    [checkBox_customGroupColor setState:[[preferenceDict objectForKey:KEY_SCL_CUSTOM_GROUP_COLOR] boolValue]];
-    [colorWell_group setColor:[[preferenceDict objectForKey:KEY_SCL_GROUP_COLOR] representedColor]];
-	
-    [self configureControlDimming];
+    [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_SCL_GRID_COLOR] representedColor]];	
 }
 
-//Enable/disable controls that are available/unavailable
-- (void)configureControlDimming
+//Preference view is closing
+- (void)viewWillClose
 {
-    [colorWell_group setEnabled:[checkBox_customGroupColor state]];
+	[colorWell_contact deactivate];
+	[colorWell_background deactivate];
+	[colorWell_grid deactivate];
 }
 
 //Called in response to all preference controls, applies new settings
@@ -139,11 +90,6 @@
                                              forKey:KEY_SCL_SHOW_LABELS
                                               group:PREF_GROUP_CONTACT_LIST_DISPLAY];
 
-    }else if(sender == colorWell_group){
-        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
-                                             forKey:KEY_SCL_GROUP_COLOR
-                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];        
-
     }else if(sender == colorWell_contact){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_CONTACT_COLOR
@@ -159,16 +105,6 @@
                                              forKey:KEY_SCL_BACKGROUND_COLOR
                                               group:PREF_GROUP_CONTACT_LIST_DISPLAY];    
 
-    }else if(sender == checkBox_customGroupColor){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_SCL_CUSTOM_GROUP_COLOR
-                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-        [self configureControlDimming];
-        
-    }else if(sender == colorWell_group){
-        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
-                                             forKey:KEY_SCL_GROUP_COLOR
-                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
     }
 }
 
