@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.55 2004/06/04 04:27:16 evands Exp $
+// $Id: AIDockController.m,v 1.56 2004/06/05 06:51:24 evands Exp $
 
 #import "AIDockController.h"
 
@@ -166,9 +166,13 @@
     stateNameKeyEnumerator = [[[iconPackDict objectForKey:@"State"] allKeys] objectEnumerator];
     while((stateNameKey = [stateNameKeyEnumerator nextObject])){
 		NSDictionary	*stateDict;
+		AIIconState		*iconState;
 		
 		stateDict = [[iconPackDict objectForKey:@"State"] objectForKey:stateNameKey];
-		[iconStateDict setObject:[self iconStateFromStateDict:stateDict folderPath:folderPath] forKey:stateNameKey];
+		iconState = [self iconStateFromStateDict:stateDict folderPath:folderPath];
+		if (iconState){
+			[iconStateDict setObject:[self iconStateFromStateDict:stateDict folderPath:folderPath] forKey:stateNameKey];
+		}
 	}
 	
 	return([NSMutableDictionary dictionaryWithObjectsAndKeys:[iconPackDict objectForKey:@"Description"], @"Description", iconStateDict, @"State", nil]);
