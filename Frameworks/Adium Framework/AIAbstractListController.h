@@ -32,10 +32,8 @@
 #define KEY_LIST_LAYOUT_GROUP_TOP_SPACING		@"Group Top Spacing"
 #define KEY_LIST_LAYOUT_GROUP_BOTTOM_SPACING	@"Group Bottom Spacing"
 
-#define KEY_LIST_LAYOUT_CONTACT_CELL_STYLE		@"Contact Cell Style"
-#define KEY_LIST_LAYOUT_GROUP_CELL_STYLE		@"Group Cell Style"
-
 #define KEY_LIST_LAYOUT_WINDOW_SHADOWED			@"Window Shadowed"
+#define KEY_LIST_LAYOUT_GROUP_GRADIENT			@"Group Gradient"
 
 #define KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE		@"Vertical Autosizing"
 #define KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE		@"Horizontal Autosizing"
@@ -114,8 +112,8 @@ typedef enum {
 #define KEY_LIST_THEME_GROUP_BACKGROUND				@"Group Background"
 #define KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT	@"Group Background Gradient"
 #define KEY_LIST_THEME_GROUP_TEXT_COLOR				@"Group Text Color"
+#define KEY_LIST_THEME_GROUP_TEXT_COLOR_INVERTED	@"Group Inverted Text Color"
 #define KEY_LIST_THEME_GROUP_SHADOW_COLOR			@"Group Shadow Color"
-#define KEY_LIST_THEME_GROUP_GRADIENT				@"Group Gradient"
 
 #define KEY_LIST_THEME_CONTACT_STATUS_COLOR			@"Contact Status Text Color"
 
