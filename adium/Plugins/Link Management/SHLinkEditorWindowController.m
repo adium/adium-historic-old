@@ -13,19 +13,22 @@
 #define CHOOSE_URL                  AILocalizedString(@"Select...",nil)
 
 @interface SHLinkEditorWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName forResponder:(NSResponder *)responder;
+- (id)initWithWindowNibName:(NSString *)windowNibName forTextView:(NSTextView *)inTextView notifyingTarget:(id)inTarget;
 - (void)_buildPopUpMenu;
-- (void)insertLinkTo:(NSString *)urlString withText:(NSString *)linkString inView:(NSResponder *)inView; /*withRange:(NSRange)linkRange*/
+- (void)insertLinkTo:(NSString *)urlString withText:(NSString *)linkString inView:(NSTextView *)inView;
+- (void)informTargetOfLink;
 @end
 
 @implementation SHLinkEditorWindowController
 
-#pragma mark init methods
 
-+ (void)showLinkEditorForResponder:(NSResponder *)responder onWindow:(NSWindow *)parentWindow showFavorites:(BOOL)showFavorites
+//Init methods ---------------------------------------------------------------------------------------------------------
+#pragma mark Init methods
++ (void)showLinkEditorForTextView:(NSTextView *)inTextView onWindow:(NSWindow *)parentWindow showFavorites:(BOOL)showFavorites notifyingTarget:(id)inTarget
 {
 	SHLinkEditorWindowController	*editorWindow = [[self alloc] initWithWindowNibName:(showFavorites ? LINK_EDITOR_NIB_NAME : FAVS_EDITOR_NIB_NAME)
-																		   forResponder:responder];
+																			forTextView:inTextView
+																		notifyingTarget:inTarget];
 	
 	if(parentWindow){
 		[NSApp beginSheet:[editorWindow window]
@@ -38,18 +41,21 @@
 	}
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName forResponder:(NSResponder *)responder
+- (id)initWithWindowNibName:(NSString *)windowNibName forTextView:(NSTextView *)inTextView notifyingTarget:(id)inTarget
+
 {
     [super initWithWindowNibName:windowNibName];
 
-	editableView = [responder retain];
-
+	textView = [inTextView retain];
+	target = [inTarget retain];
+	
 	return(self);
 }
 
 - (void)dealloc
 {
-	[editableView release];
+	[textView release];
+	[target release];
     [super dealloc];
 }
 
@@ -58,43 +64,38 @@
 #pragma mark Window Methods
 - (void)windowDidLoad
 {
-	if([editableView isKindOfClass:[NSTextView class]]){
-		NSRange 	selectionRange = [(NSTextView *)editableView selectedRange];
+	if(textView){
+		NSRange 	selectedRange = [textView selectedRange];
+		NSRange		rangeOfLinkAttribute;
 		NSString    *linkText;
 		id   	 	linkURL = nil;
-
-		//Get the selected link
-		if(selectionRange.location >= 0 && NSMaxRange(selectionRange) < [[(NSTextView *)editableView textStorage] length]){
-			NSRange	scanRange;
-			
-			linkURL = [[(NSTextView *)editableView textStorage] attribute:NSLinkAttributeName
-																  atIndex:selectionRange.location
-														   effectiveRange:&scanRange];
-
 		
-			//If a link exists at our cursor, expand the selection to encompass that entire link
-			if(linkURL){
-				[(NSTextView *)editableView setSelectedRange:scanRange];
-				selectionRange = scanRange;
-			}
+		//Get the selected link (We have to be careful when the selection is at the very end of our text view)
+		if(selectedRange.location >= 0 && NSMaxRange(selectedRange) < [[textView textStorage] length]){
+			linkURL = [[textView textStorage] attribute:NSLinkAttributeName
+												atIndex:selectedRange.location
+										 effectiveRange:&rangeOfLinkAttribute];
 		}
-
-
-		//Place the link title and URL in our fields
-		linkText = [[(NSTextView *)editableView attributedSubstringFromRange:selectionRange] string];
+		
+		//If a link exists at our selection, expand the selection to encompass that entire link
 		if(linkURL){
-			if([linkURL isKindOfClass:[NSString class]]){
-				[[textView_URL textStorage] setAttributedString:[[[NSAttributedString alloc]
-                                                     initWithString:[(NSString *)linkURL string]] autorelease]];
-			}else if([linkURL isKindOfClass:[NSURL class]]){
-				[[textView_URL textStorage] setAttributedString:[[[NSAttributedString alloc]
-                                                     initWithString:[(NSURL *)linkURL absoluteString]] autorelease]];                
-			}
+			[textView setSelectedRange:rangeOfLinkAttribute];
+			selectedRange = rangeOfLinkAttribute;
+		}
+		
+		//Get the selected text
+		linkText = [[textView attributedSubstringFromRange:selectedRange] string];
+		
+		//Place the link title and URL in our panel
+		if(linkURL){
+			BOOL		isString = [linkURL isKindOfClass:[NSString class]];
+			NSString	*tmpString = (isString ? [(NSString *)linkURL string] : [(NSURL *)linkURL absoluteString]);
+			
+			[[textView_URL textStorage] setAttributedString:[[[NSAttributedString alloc] initWithString:tmpString] autorelease]];                
 		}
 		if(linkText){
 			[textField_linkText setStringValue:linkText];
 		}
-		
 	}
     
     //Retrive our favorites
@@ -146,7 +147,7 @@
 //Close this window
 - (IBAction)closeWindow:(id)sender
 {
-    if([self windowShouldClose:nil]) {
+    if([self windowShouldClose:nil]){
 		if([[self window] isSheet]) [NSApp endSheet:[self window]];
         [[self window] close];
     }
@@ -169,99 +170,67 @@
 #pragma mark AttributedString Wrangleing Methods
 - (IBAction)acceptURL:(id)sender
 {
-    NSMutableString *urlString = nil;
-    NSString        *linkString = nil;
-//    NSRange          linkRange = NSMakeRange(0,0);
-    
-#warning Use a delegate or target call to clean this up
-	if([editableView isKindOfClass:[NSTextView class]]){
-        //get our infos out from the text's
-        urlString   = [[NSMutableString alloc] initWithString:[[textView_URL textStorage] string]];
-        linkString  = [textField_linkText stringValue];
-//        linkRange   = selectionRange;
-    
+	if(textView){
+		NSMutableString *urlString = [NSMutableString stringWithString:[[textView_URL textStorage] string]];
+        NSString		*linkString  = [textField_linkText stringValue];
+		
+		//Pre-fix the url if necessary
         switch([textView_URL validationStatus]){
             case SH_URL_DEGENERATE:
                 [urlString insertString:@"http://" atIndex:0];
-                break;
+			break;
             case SH_MAILTO_DEGENERATE:
                 [urlString insertString:@"mailto:" atIndex:0];
-                break;
+			break;
             default:
-                break;
+			break;
         }
-    
-        //call the insertion method
-        [self insertLinkTo:[urlString string]
-                  withText:linkString
-                    inView:editableView/*
-                 withRange:linkRange*/];
-    }else{
-        [self addURLToFavorites:nil];
-    }
-             
+		
+        //Insert it into the text view
+        [self insertLinkTo:[urlString string] withText:linkString inView:textView];
+	}
+
+	//Inform our target of the new link and close up
+	[self informTargetOfLink];
     [self closeWindow:nil];
 }
 
-- (void)insertLinkTo:(NSString *)urlString withText:(NSString *)linkString inView:(NSResponder *)inView /*withRange:(NSRange)linkRange*/
+//Inform our target of the link currently in our panel
+- (void)informTargetOfLink
 {
-    NSMutableAttributedString   *tempURLString = nil;
-    NSDictionary                *stringAttributes = nil;
-    NSRange                      subStringRange = NSMakeRange(0,0);
+	//We need to make sure we're getting copies of these, otherwise the fields will change them later, changing the
+	//copy in our dictionary
+	NSDictionary	*linkDict = [NSDictionary dictionaryWithObjectsAndKeys:
+		[[[textField_linkText stringValue] copy] autorelease], KEY_LINK_TITLE,
+		[[[[textView_URL textStorage] string] copy] autorelease], KEY_LINK_URL,
+		nil];
+	
+	if([target respondsToSelector:@selector(linkEditorLinkDidChange:)]){
+		[target performSelector:@selector(linkEditorLinkDidChange:) withObject:linkDict];
+	}
+}
+
+//Insert a link into a text view
+- (void)insertLinkTo:(NSString *)linkURL withText:(NSString *)linkTitle inView:(NSTextView *)inView
+{
+    NSDictionary				*typingAttributes = [inView typingAttributes];
+	NSMutableAttributedString	*linkString;
+
+	//Create the link string
+	linkString = [[[NSMutableAttributedString alloc] initWithString:linkTitle
+															attributes:typingAttributes] autorelease];
+    [linkString addAttribute:NSLinkAttributeName value:linkURL range:NSMakeRange(0,[linkString length])];
     
-    //get our typing attribs if they exist
-    if([inView respondsToSelector:@selector(typingAttributes)]){
-        stringAttributes = [(NSTextView *)inView typingAttributes];
-    }
-    
-    //init a temporary string
-    if(nil != stringAttributes) {
-        tempURLString = [[[NSMutableAttributedString alloc] initWithString:linkString
-                                                                attributes:stringAttributes] autorelease];
-    }else{
-        tempURLString = [[[NSMutableAttributedString alloc] initWithString:linkString] autorelease];
-    }
-    
-    
-    //make it a link
-    subStringRange = NSMakeRange(0,[tempURLString length]);
-    [tempURLString addAttribute:NSLinkAttributeName value:urlString range:subStringRange];
-    //make it look like a link
-    /*[tempURLString addAttribute:NSForegroundColorAttributeName
-                          value:[NSColor blueColor]
-                          range:subStringRange];
-    [tempURLString addAttribute:NSUnderlineStyleAttributeName
-                          value:[NSNumber numberWithInt:1]
-                          range:subStringRange];*/
-
-//    if(editLink){ //replace selected text if editing
-        [[(NSTextView *)inView textStorage] replaceCharactersInRange:[(NSTextView *)inView selectedRange] withAttributedString:tempURLString];
-//    }else{ 
+	//Insert it into the text view, replacing the current selection
+	[[inView textStorage] replaceCharactersInRange:[inView selectedRange] withAttributedString:linkString];
 		
-		
-		//make sure link attrib doesn't bleed into newly entered text
-		if(NSMaxRange([(NSTextView *)inView selectedRange]) == [[(NSTextView *)inView textStorage] length]){
-
-			//        if(nil != stringAttributes) { 
-			            [[(NSTextView *)inView textStorage] appendAttributedString:[[[NSAttributedString alloc] initWithString:@" "
-			                                                                                   attributes:stringAttributes] autorelease]];
-			 //       }else{
-			 //           [tempURLString appendAttributedString:[[[NSAttributedString alloc] initWithString:@" "] autorelease]];
-			 //       }
-		}
-		
-//        //insert link at insertion point
-////        [[(NSTextView *)inView textStorage] insertAttributedString:tempURLString atIndex:linkRange.location];
-//    }
-
-
-
-		//get our typing attribs if they exist
-		//if([inView respondsToSelector:@selector(textStorage)]){
-			[[(NSTextView *)inView textStorage] setAttributes:stringAttributes range:NSMakeRange(NSMaxRange([(NSTextView *)inView selectedRange]),0)];
-		//}
-		
-
+	//If this link was inserted at the end of our text view, add a space and set the formatting back to normal
+	//This preferents the link attribute from bleeding into newly entered text
+	if(NSMaxRange([(NSTextView *)inView selectedRange]) == [[(NSTextView *)inView textStorage] length]){
+		NSAttributedString	*tmpString = [[[NSAttributedString alloc] initWithString:@" "
+																		  attributes:typingAttributes] autorelease];
+		[[inView textStorage] appendAttributedString:tmpString];
+	}
 }
 
 
@@ -279,18 +248,18 @@
     }
 }
 
-- (IBAction)addURLToFavorites:(id)sender
-{
-    //get our info form text fields and set a new pref/key for it (We need to make sure we're getting copies of these,
-	//otherwise the fields will change them later, changing the copy in our dictionary)
-	[favoritesDict addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-		[[[textField_linkText stringValue] copy] autorelease], KEY_LINK_TITLE,
-		[[[[textView_URL textStorage] string] copy] autorelease], KEY_LINK_URL,
-		nil]];
-    [[adium preferenceController] setPreference:favoritesDict forKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES];
-    
-    [self favoritesChanged:nil];
-}
+//- (IBAction)addURLToFavorites:(id)sender
+//{
+//    //get our info form text fields and set a new pref/key for it (We need to make sure we're getting copies of these,
+//	//otherwise the fields will change them later, changing the copy in our dictionary)
+//	[favoritesDict addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+//		[[[textField_linkText stringValue] copy] autorelease], KEY_LINK_TITLE,
+//		[[[[textView_URL textStorage] string] copy] autorelease], KEY_LINK_URL,
+//		nil]];
+//    [[adium preferenceController] setPreference:favoritesDict forKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES];
+//    
+//    [self favoritesChanged:nil];
+//}
 
 - (void)favoritesChanged:(NSNotification *)notification
 {
