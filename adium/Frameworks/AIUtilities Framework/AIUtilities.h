@@ -87,6 +87,7 @@
 #import "AIVerticallyCenteredTextCell.h"
 #import "AIViewAdditions.h"
 #import "AIWindowAdditions.h"
+#import "MVMenuButton.h"
 
 #import "IconFamily.h"
 #import "SUSpeaker.h"
