@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.37 2004/04/13 04:00:16 adamiser Exp $
+$Id: ToDoList.txt,v 1.38 2004/04/13 22:17:40 hanji Exp $
 
 Legend
 + Change or Addition
@@ -20,7 +20,7 @@ Bugs
 * Contact list flippy triangles are white behind them in 10.2 [Colin]
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * We aren't processing <code> tags in our HTML decoder (Jabber uses them)
-	- (Tick: I thought jabber sent xml...??? 
+	- (Tick: I thought jabber sent xml...???)
 * Getting other strange 'code' in incoming jabber messages (xmlns=, ...)
 * Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
 	- (Tick: Yes, jabber works, but only for jabber.org.)
@@ -30,19 +30,23 @@ Bugs
 * Tooltip code can crash if the listobject disappears out from under it, somehow. http://www.visualdistortion.org/crash/view.jsp?crash=8128
 * When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
 * Away messages with special characters (such as opt-n-n) show up as "Away:YES' in Adium (even when set by an Adium client)
+* Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
+* Adding a contact that's already online causes them to appear signed off on the list.
+* Adding buddies, sometimes they'll show up on the list twice until a restart
+   - (Hanji: I've had this happen, but can't trace under what circumstances. It does seem to happen when adding myself a lot, however)
+* Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
+   - (Confirmed by Hanji)
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
 -------------------------------------------------------------------------------------------------------
 * Tooltips are flashing when the contact list auto-resizes?
 * Empty groups come back on next launch after being deleted?
-* Adding buddies, sometimes they'll show up on the list twice until a restart?
 * Unicode (German) messages not working over ICQ ?
 * away messages aren't going away
 * Yahoo giving some users a Gaim error: unknown error 29 on connect
 * We're receiving (but not processing/interpreting) HTML over ICQ
 * away messages aren't clearing when a buddy comes back from away?  Online buddies with away messages?
-* Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
@@ -52,6 +56,7 @@ Contacts:
 	+ Add to buddy list menu item, contextual menu item (for strangers)
 	+ Add area for typing contact notes to inspector, display notes in tooltip [Brian]
 	+ AIM accounts should show AIM as their service type, while ICQ should show ICQ, .Mac show .Mac, etc.
+	+ Add Contact should have more intelligent defaults, and generally be less of a pain [Nelson, but if anyone has any nice ideas for ways this should work, do tell]
 
 Alerts:
 	+ Allow user to have more control over what is spoken by the announcer plugin
