@@ -47,7 +47,7 @@
         }
     }
 
-    return(entry);
+    return([entry autorelease]);
 }
 
 @end
