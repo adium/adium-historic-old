@@ -363,8 +363,6 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	return(attributedString);
 }
 
-static UInt32 lastAutoreleaseRefresh = 0;
-
 - (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString
 								  contentFilter:(NSArray *)inContentFilterArray
 								  filterContext:(id)filterContext
