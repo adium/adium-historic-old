@@ -253,20 +253,22 @@ static AIInfoWindowController *sharedInstance = nil;
             NSMutableAttributedString   *textProfileString = [[[owner contentController] filteredAttributedString:textProfile] mutableCopy];
             NSMutableParagraphStyle     *indentStyle;
             
-            NSRange                     firstLineRange = [[textProfile string] lineRangeForRange:NSMakeRange(0,0)];
+            NSRange                     firstLineRange = [[textProfileString string] lineRangeForRange:NSMakeRange(0,0)];
 
 //            NSLog(@"%i %i %i",firstLineRange.location,firstLineRange.length,[textProfileString length]);
             
+            //Strip some attributes from info (?)
+            //[textProfileString addAttributes:valueAttributes range:NSMakeRange(0,[textProfileString length])];
+            
             //Set correct indent & tabbing on the first line of the profile
             [textProfileString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,firstLineRange.length)];
+            
             //Indent the remaining lines of profile
             indentStyle = [paragraphStyle mutableCopy];
             [indentStyle setFirstLineHeadIndent:InfoIndentB];
-           
             [textProfileString addAttribute:NSParagraphStyleAttributeName value:indentStyle range:NSMakeRange(firstLineRange.length, [textProfileString length] - firstLineRange.length)];
             [indentStyle release];
             
-            [textProfileString addAttributes:valueAttributes range:NSMakeRange(0,[textProfileString length])];
             [infoString appendAttributedString:textProfileString];
             [textProfileString release];
         }
