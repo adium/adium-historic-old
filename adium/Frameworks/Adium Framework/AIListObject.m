@@ -249,6 +249,11 @@ DeclareString(FormattedUID);
     }
 }
 
+- (void)notifyOfChangedStatusNumberSilently:(NSNumber *)silentNumber
+{
+	[self notifyOfChangedStatusSilently:[silentNumber boolValue]];
+}
+
 //Quickly retrieve a status key for this object
 - (NSEnumerator	*)statusKeyEnumerator
 {
