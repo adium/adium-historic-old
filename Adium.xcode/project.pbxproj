@@ -2969,12 +2969,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		344F4A4A078DDC9100226DFC = {
-			fileRef = 52C623DF06697B1D0006C387;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		344F4A4C078DDC9500226DFC = {
 			fileRef = 6CFB75BC06F5957D00091DC9;
 			isa = PBXBuildFile;
@@ -6728,7 +6722,6 @@
 				E03E2FF40785F02E007E75C3,
 				4BE35BFD0787271100D1130E,
 				3452AA0B07891DFC00C3C494,
-				344F4A4A078DDC9100226DFC,
 				344F4A4C078DDC9500226DFC,
 				3433667507948C1400C84B15,
 				3433673307949E2200C84B15,
@@ -17938,20 +17931,10 @@
 				52C623E206697B3B0006C387,
 				52C623E306697B3B0006C387,
 				34E9F1F10790BF5400662E8E,
-				52C623DF06697B1D0006C387,
 			);
 			isa = PBXGroup;
 			name = Growl;
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52C623DF06697B1D0006C387 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = "Growl-Info.plist";
-			path = "Plists/Growl-Info.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
