@@ -315,6 +315,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [activeContactObject release];
     [popUp_addEvent release];
     [instance release];
+    [dataCell release];
     [super dealloc];
 }
 
