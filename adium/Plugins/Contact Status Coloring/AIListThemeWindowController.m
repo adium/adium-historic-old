@@ -124,6 +124,13 @@
 	NSString *backgroundImagePath = [[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH] lastPathComponent];
 	if(backgroundImagePath) [textField_backgroundImagePath setStringValue:backgroundImagePath];
 	
+	//
+    [colorWell_background setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor]];
+    [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor]];	
+	[checkBox_drawGrid setState:[[preferenceDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
+	[slider_backgroundFade setFloatValue:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]];
+
+	[self updateSliderValues];
 	[self configureControlDimming];
 }
 
@@ -131,92 +138,92 @@
 {
 #warning LOOK AT THIS GLUE CODE... KILL ME NOW! ... 10.2 USERS BETTER SUCK UP FOR THIS ONE! :D
     if(sender == colorWell_away){
-        [[adium preferenceController] setPreference:[[colorWell_away color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_AWAY_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_idle){
-        [[adium preferenceController] setPreference:[[colorWell_idle color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_IDLE_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_signedOff){
-        [[adium preferenceController] setPreference:[[colorWell_signedOff color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SIGNED_OFF_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_signedOn){
-        [[adium preferenceController] setPreference:[[colorWell_signedOn color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SIGNED_ON_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_typing){
-        [[adium preferenceController] setPreference:[[colorWell_typing color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_TYPING_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_unviewedContent){
-        [[adium preferenceController] setPreference:[[colorWell_unviewedContent color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_UNVIEWED_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_online){
-        [[adium preferenceController] setPreference:[[colorWell_online color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_ONLINE_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_idleAndAway){
-        [[adium preferenceController] setPreference:[[colorWell_idleAndAway color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_IDLE_AWAY_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_offline){
-        [[adium preferenceController] setPreference:[[colorWell_offline color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_OFFLINE_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_signedOffLabel){
-        [[adium preferenceController] setPreference:[[colorWell_signedOffLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LABEL_SIGNED_OFF_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_signedOnLabel){
-        [[adium preferenceController] setPreference:[[colorWell_signedOnLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LABEL_SIGNED_ON_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_awayLabel){
-        [[adium preferenceController] setPreference:[[colorWell_awayLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LABEL_AWAY_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_idleLabel){
-        [[adium preferenceController] setPreference:[[colorWell_idleLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LABEL_IDLE_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_typingLabel){
-        [[adium preferenceController] setPreference:[[colorWell_typingLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LABEL_TYPING_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_unviewedContentLabel){
-        [[adium preferenceController] setPreference:[[colorWell_unviewedContentLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LABEL_UNVIEWED_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_onlineLabel){
-        [[adium preferenceController] setPreference:[[colorWell_onlineLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LABEL_ONLINE_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
     }else if(sender == colorWell_idleAndAwayLabel){
-        [[adium preferenceController] setPreference:[[colorWell_idleAndAwayLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LABEL_IDLE_AWAY_COLOR
                                               group:PREF_GROUP_LIST_THEME];
         
     }else if(sender == colorWell_offlineLabel){
-        [[adium preferenceController] setPreference:[[colorWell_offlineLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LABEL_OFFLINE_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		
@@ -271,7 +278,30 @@
 											 forKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED
 											  group:PREF_GROUP_LIST_THEME];
 		
+    }else if(sender == colorWell_background){
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
+                                             forKey:KEY_LIST_THEME_BACKGROUND_COLOR
+                                              group:PREF_GROUP_LIST_THEME];
+		
+    }else if(sender == colorWell_grid){
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
+                                             forKey:KEY_LIST_THEME_GRID_COLOR
+                                              group:PREF_GROUP_LIST_THEME];
+
+    }else if(sender == slider_backgroundFade){
+        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:[sender floatValue]]
+                                             forKey:KEY_LIST_THEME_BACKGROUND_FADE
+                                              group:PREF_GROUP_LIST_THEME];
+		[self updateSliderValues];
+		
+    }else if(sender == checkBox_drawGrid){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LIST_THEME_GRID_ENABLED
+                                              group:PREF_GROUP_LIST_THEME];
+	
 	}
+
+	
 	
 	[self configureControlDimming];
 }
@@ -293,12 +323,7 @@
 //
 - (void)updateSliderValues
 {
-//	int	iconSize = [slider_userIconSize intValue];
-//	[textField_userIconSize setStringValue:[NSString stringWithFormat:@"%ix%i",iconSize,iconSize]];
-//	
-//	[textField_contactSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_contactSpacing intValue]]];
-//	[textField_groupTopSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_groupTopSpacing intValue]]];
-//	[textField_groupBottomSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_groupBottomSpacing intValue]]];
+	[textField_backgroundFade setStringValue:[NSString stringWithFormat:@"%i%%", (int)([slider_backgroundFade floatValue] * 100.0)]];
 }
 
 //Configure control dimming
@@ -327,6 +352,9 @@
 	//Background image
 	[button_setBackgroundImage setEnabled:[checkBox_useBackgroundImage state]];
 	[textField_backgroundImagePath setEnabled:[checkBox_useBackgroundImage state]];
+	
+	//Gridding
+	[colorWell_grid setEnabled:[checkBox_drawGrid state]];
 	
 }
 

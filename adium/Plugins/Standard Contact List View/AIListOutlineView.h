@@ -46,6 +46,12 @@
 	//Selection hiding
 //	int					lastSelectedRow;
 	BOOL updateShadowsWhileDrawing;
+
+	NSImage		*backgroundImage;
+	float 		backgroundFade;
+	
+	NSColor		*backgroundColor;
+	
 	//Tooltops
 //	NSTimer				*tooltipMouseLocationTimer;
 //	NSPoint				tooltipLocation;
@@ -88,6 +94,8 @@
 - (void)_showTooltipAtPoint:(NSPoint)screenPoint;
 
 - (void)setUpdateShadowsWhileDrawing:(BOOL)update;
+- (void)setBackgroundImage:(NSImage *)inImage;
+- (void)setBackgroundFade:(float)fade;
 	
 @end
 

@@ -42,6 +42,11 @@
 #define KEY_LIST_THEME_TRANSPARENCY				@"Transparency"
 #define KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED	@"Use Background Image"
 #define KEY_LIST_THEME_BACKGROUND_IMAGE_PATH	@"Background Image Path"
+#define KEY_LIST_THEME_BACKGROUND_FADE			@"Background Fade"
+
+#define KEY_LIST_THEME_BACKGROUND_COLOR			@"Background Color"
+#define KEY_LIST_THEME_GRID_COLOR				@"Grid Color"
+#define KEY_LIST_THEME_GRID_ENABLED				@"Grid Enabled"
 
 @interface AIListThemeWindowController : AIWindowController {
     IBOutlet	NSButton	*checkBox_signedOff;
@@ -84,6 +89,12 @@
 	IBOutlet	NSButton	*button_setBackgroundImage;
 	IBOutlet	NSTextField	*textField_backgroundImagePath;
 	
+	IBOutlet	NSColorWell	*colorWell_background;
+	IBOutlet	NSColorWell	*colorWell_grid;
+	IBOutlet	NSButton	*checkBox_drawGrid;
+	
+	IBOutlet	NSSlider	*slider_backgroundFade;
+	IBOutlet	NSTextField	*textField_backgroundFade;
 }
 
 + (id)listThemeOnWindow:(NSWindow *)parentWindow;

@@ -57,13 +57,13 @@
 #define BACKGROUND_ALPHA	1.0
 
 
-#define CONTACTS_USE_MOCKIE_CELL NO
-#define CONTACTS_USE_BUBBLE_CELL NO
-
-#define GROUPS_USE_MOCKIE_CELL		YES 
-#define GROUPS_USE_GRADIENT_CELL	YES
-#define DRAW_ALTERNATING_GRID	NO
-#define ALTERNATING_GRID_COLOR	[NSColor colorWithCalibratedRed:0.926 green:0.949 blue:0.992 alpha:1.0]
+//#define CONTACTS_USE_MOCKIE_CELL NO
+//#define CONTACTS_USE_BUBBLE_CELL NO
+//
+//#define GROUPS_USE_MOCKIE_CELL		YES 
+//#define GROUPS_USE_GRADIENT_CELL	YES
+//#define DRAW_ALTERNATING_GRID	YES
+//#define ALTERNATING_GRID_COLOR	[NSColor colorWithCalibratedRed:0.926 green:0.949 blue:0.992 alpha:1.0]
 
 
 @interface AIListWindowController (PRIVATE)
@@ -147,6 +147,7 @@
 	
 #warning grr
 
+	[scrollView_contactList setDrawsBackground:NO];
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutoHideScrollBar:YES];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -307,6 +308,9 @@
 			[groupCell setTopSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
 		}
 		
+		//Shadow
+		[[self window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
+		
 		//Redisplay
 		[contactListView setGroupCell:groupCell];
 		[contactListView setContentCell:contentCell];
@@ -324,7 +328,17 @@
 		}else{
 			[contactListView setBackgroundImage:nil];
 		}
-			
+		NSLog(@"%0.2f",[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]);
+		[contactListView setBackgroundFade:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]];
+		
+		
+		//Background/Grid
+		float	backgroundAlpha	= BACKGROUND_ALPHA;
+		BOOL	drawGrid = [[prefDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue];
+		
+		[contactListView setDrawsAlternatingRows:(backgroundAlpha != 0.0 ? drawGrid : NO)];
+		[contactListView setAlternatingRowColor:[[prefDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor]];
+		[contactListView setBackgroundColor:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor]];
 	}
 		
 		
@@ -346,8 +360,6 @@
 
 	//Background Coloring
 	if(windowStyle == WINDOW_STYLE_MOCKIE) backgroundAlpha = 0.0;
-	[contactListView setDrawsAlternatingRows:(backgroundAlpha != 0.0 ? DRAW_ALTERNATING_GRID : NO)];
-	[contactListView setAlternatingRowColor:[ALTERNATING_GRID_COLOR colorWithAlphaComponent:backgroundAlpha]];
 	[contactListView setBackgroundColor:[BACKGROUND_COLOR colorWithAlphaComponent:backgroundAlpha]];
 	
 	//Transparency.  Bye bye CPU cycles, I'll miss you!
