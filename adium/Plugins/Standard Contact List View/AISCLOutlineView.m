@@ -170,6 +170,11 @@
 {
     lastSelectedRow = [self selectedRow];
     [self deselectAll:nil];
+	
+	//Pass this on to our delegate
+    if([[self delegate] respondsToSelector:@selector(window:didResignMain:)]){
+        [[self delegate] window:[self window] didResignMain:notification];
+    }
 }
 
 

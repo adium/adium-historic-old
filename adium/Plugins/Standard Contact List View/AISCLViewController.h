@@ -25,7 +25,7 @@
     
 	NSTimer				*tooltipMouseLocationTimer;
 	NSPoint				tooltipLocation;
-    NSTrackingRectTag	tooltipTrackingTag;        
+    NSTrackingRectTag	tooltipTrackingTag;
     int 				tooltipCount;
 
 	BOOL				inDrag;
@@ -37,6 +37,7 @@
 - (NSView *)contactListView;
 - (void)view:(NSView *)inView didMoveToSuperview:(NSView *)inSuperview;
 - (void)view:(NSView *)inView willMoveToSuperview:(NSView *)inSuperview;
+- (void)window:(NSWindow *)inWindow didResignMain:(NSNotification *)notification;
 - (NSMenu *)outlineView:(NSOutlineView *)outlineView menuForEvent:(NSEvent *)theEvent;
 - (void)hideTooltip;
 
