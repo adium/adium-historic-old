@@ -130,8 +130,8 @@
 - (void)completeLogin
 {
     //Init the controllers.
-    [toolbarController initController];
     [preferenceController initController]; //must init after toolbar controller
+    [toolbarController initController];
     [menuController initController];
     [soundController initController];
     [accountController initController];
