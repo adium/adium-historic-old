@@ -386,6 +386,8 @@ typedef enum {
     NSMutableArray		*textEntryViews;
 
     NSMutableArray		*chatArray;
+    
+    AIChat                      *mostRecentChat;
 }
 
 //Chats
@@ -394,6 +396,8 @@ typedef enum {
 - (void)noteChat:(AIChat *)inChat forAccount:(AIAccount *)inAccount;
 - (BOOL)closeChat:(AIChat *)inChat;
 - (NSArray *)chatArray;
+- (void)switchToMostRecentChat;
+- (void)setMostRecentChat:(AIChat *)inChat;
 
 //Sending / Receiving content
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount;
@@ -734,6 +738,8 @@ typedef enum {
 //Bouncing & behavior
 - (void)performBehavior:(DOCK_BEHAVIOR)behavior;
 
+//respond to the dock icon being clicked
+- (void)handleDockIconClick;
 @end
 
 //*** File transfer ***//

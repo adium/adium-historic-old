@@ -134,6 +134,11 @@
     [loginController requestUserNotifyingTarget:self selector:@selector(completeLogin)];
 }
 
+- (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag
+{
+    [dockController handleDockIconClick];    
+}
+
 // Called by the login controller when a user has been selected
 - (void)completeLogin
 {

@@ -227,6 +227,7 @@
                 //The content was the first recieved
                 [[owner notificationCenter] postNotificationName:Content_FirstContentRecieved object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
             }
+            mostRecentChat = chat;
         }
     }
 }
@@ -263,6 +264,8 @@
             [[owner notificationCenter] postNotificationName:Content_DidSendContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
         }
 
+        mostRecentChat = chat;
+        
         sent = YES;
     }
 
@@ -368,6 +371,9 @@
 //Close a chat
 - (BOOL)closeChat:(AIChat *)inChat
 {
+    if (mostRecentChat == inChat)
+        mostRecentChat = nil;
+    
     //Notify the account, and remove the chat
     [(AIAccount<AIAccount_Content> *)[inChat account] closeChat:inChat];
     [chatArray removeObject:inChat];
@@ -406,6 +412,16 @@
 - (NSArray *)chatArray
 {
     return chatArray;
+}
+
+- (void)switchToMostRecentChat
+{
+    [[owner interfaceController] setActiveChat:mostRecentChat];
+}
+
+- (void)setMostRecentChat:(AIChat *)inChat
+{
+    mostRecentChat = inChat;
 }
 
 @end

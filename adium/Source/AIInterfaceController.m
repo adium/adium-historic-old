@@ -94,6 +94,13 @@
 - (void)setActiveChat:(AIChat *)inChat
 {
     [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] setActiveChat:inChat];
+    [[owner contentController] setMostRecentChat:inChat];
+}
+
+- (void)showContactList
+{
+    if ([(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] respondsToSelector:@selector(showContactList:)])
+        [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] performSelector:@selector(showContactList:) withObject:nil];
 }
 
 // Registers code to handle the interface
