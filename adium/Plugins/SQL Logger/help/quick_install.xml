@@ -78,27 +78,15 @@ export PATH CLASSPATH</pre></div>
 <div class="tutorialcode"><pre>cd ~/adium/Plugins/SQL Logger/help/sql
 psql &lt; adium.sql
 psql &lt; functions.sql</pre></div>
-
-<h3>Installing Perl (DBI and DBD::Pg)</h3>
-<p>To install the Perl stuff (if CPAN asks you about manual setup, just say
-  no):</p>
-<div class="tutorialcode"><pre>su
-perl -MCPAN -e 'install DBI'
-export POSTGRES_INCLUDE=/usr/local/pgsql/include
-export POSTGRES_LIB="/usr/local/pgsql/lib -lssl -lcrypto"
-perl -MCPAN -e 'force install DBD::Pg'</pre></div><br />
-<div class="important">Since you are force installing DBD::Pg due to errors in
-  the make test process, make sure you have the environmental variables set
-  correctly.  See <a href="technical.html#parser.pl">Technical Details</a>
-  for more info.</div>
-<p>Now you can run parser/parser-2.pl.  You may need to edit the paths at the 
-  top of the scripts to be "#!/usr/bin/perl".</p>
-
+<p>At this point, you're ready to import your logs into the database.  Simply
+  use the parser-2.pl script, and it will import all of your adium 2.x
+  logfiles.  If you wish to use parser.pl (for 1.x logs) you will need to
+  install DBI and DBD::Pg</p>
 <h3>Installing tsearch and Resin</h3>
 <div class="tutorialcode"><pre>jmelloy $] cd <i>POSTGRES_SOURCE_LOCATION</i>/contrib/tsearch2
 jmelloy $] make
 jmelloy $] sudo make install
-jmelloy $] psql &lt; tsearch.sql
+jmelloy $] psql &lt; tsearch2.sql
 jmelloy $] cd ~/adium/Plugins/SQL Logger/help/sql
 jmelloy $] psql &lt; tsearch2.sql</pre></div>
 

@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 
 use warnings;
 use strict;
@@ -6,7 +6,7 @@ use strict;
 $| = 0;
 print "1.6 Logs ";
 my $path = "$ENV{HOME}/Library/Application Support/Adium/Users/";
-chdir $path or die;
+chdir $path;
 foreach my $user (glob '*') {
     chdir "$user/Logs";
     foreach my $folder (glob '*') {
@@ -26,7 +26,7 @@ print " Done.\n";
 
 print "2.0 Logs ";
 $path = "$ENV{HOME}/Library/Application Support/Adium 2.0/Users/";
-chdir "$path" or die qq{$path};
+chdir "$path";
 foreach  my $account (glob '*') {
     chdir "$account/Logs" or die;
     foreach my $user (glob '*') {
