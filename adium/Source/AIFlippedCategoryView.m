@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+//$Id: AIFlippedCategoryView.m,v 1.5 2003/12/14 04:50:57 jmelloy Exp $
+
 #import "AIFlippedCategoryView.h"
 
 @implementation AIFlippedCategoryView
