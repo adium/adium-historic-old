@@ -43,6 +43,8 @@
 #define ACCOUNT_IMAGE_CACHE_PATH		@"~/Library/Caches/Adium"
 #define MESSAGE_IMAGE_CACHE_NAME		@"Image_%@_%i"
 
+#define	ENABLE_WEBCAM	FALSE
+
 @interface SLGaimCocoaAdapter (PRIVATE)
 - (void)callTimerFunc:(NSTimer*)timer;
 - (void)initLibGaim;
@@ -1216,6 +1218,7 @@ static GaimRoomlistUiOps adiumGaimRoomlistOps = {
 
 // Webcam ----------------------------------------------------------------------------------------------------------
 #pragma mark Webcam
+#if ENABLE_WEBCAM
 static void adiumGaimWebcamNew(GaimWebcam *gwc)
 {
 	NSLog(@"adiumGaimWebcamNew");
@@ -1382,7 +1385,7 @@ static struct gaim_webcam_ui_ops adiumGaimWebcamOps =
 	adiumGaimWebcamClose,
 	adiumGaimWebcamGotInvite
 };
-
+#endif
 
 #pragma mark Notify
 // Notify ----------------------------------------------------------------------------------------------------------
@@ -2168,7 +2171,9 @@ static void adiumGaimCoreUiInit(void)
     gaim_xfers_set_ui_ops(&adiumGaimFileTransferOps);
     gaim_privacy_set_ui_ops (&adiumGaimPrivacyOps);
 	gaim_roomlist_set_ui_ops (&adiumGaimRoomlistOps);	
+#if	ENABLE_WEBCAM
 	gaim_webcam_set_ui_ops(&adiumGaimWebcamOps);
+#endif
 }
 
 static void adiumGaimCoreQuit(void)
@@ -2197,7 +2202,9 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     gaim_set_blist(gaim_blist_new());
 	
 	//Load gaim plugins
+#if ENABLE_WEBCAM
 	gaim_init_j2k_plugin();
+#endif
 	
     //Setup libgaim core preferences
     
