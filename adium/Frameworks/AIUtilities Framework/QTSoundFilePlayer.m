@@ -245,6 +245,13 @@ errorReturn:
 {
 	if (!deallocing){
 		deallocing = YES;
+		
+		if (![self stop]){
+#if DEBUG
+				NSLog(@"weren't able to stop, continuing with dealloc anyways");
+#endif
+		}
+						
 		if (outputAudioUnit)
 			[self tearDownAudioOutput];
 		
