@@ -44,12 +44,15 @@ DeclareString(FormattedUID);
 	InitString(FormattedUID,@"FormattedUID");
 	
     displayDictionary = [[NSMutableDictionary alloc] init];
-    containingGroup = nil;
+    containingObject = nil;
     UID = [inUID retain];	
     serviceID = [inServiceID retain];
 	uniqueObjectID = nil;
 	orderIndex = -1;
 	delayedStatusTimers = nil;
+	
+	//Unless a subclass does otherwise, containedObjects is nil for a list object
+	containedObjects = nil;
 	
 	visible = YES;
     statusDictionary = [[NSMutableDictionary alloc] init];
@@ -88,7 +91,8 @@ DeclareString(FormattedUID);
     [serviceID release];
 	[UID release];
 	[uniqueObjectID release];
-    
+	[containedObjects release];
+
     [super dealloc];
 }
 
@@ -107,20 +111,27 @@ DeclareString(FormattedUID);
     return(serviceID);
 }
 
-//Super unique ID string, combining both UID and service ID
+//Unique ID string shared by this object and all objects which are, to most intents and purposes, identical to this object.
 - (NSString *)uniqueObjectID
 {
 	if (!uniqueObjectID){
-		if(serviceID){
-			uniqueObjectID = [[NSString stringWithFormat:@"%@.%@",serviceID,UID] retain];
-		}else{
-			uniqueObjectID = [UID retain];
-		}
+		uniqueObjectID = [[AIListObject uniqueObjectIDForUID:UID serviceID:serviceID] retain];
 	}
 	
 	return uniqueObjectID;
 }
 
++ (NSString *)uniqueObjectIDForUID:(NSString *)inUID serviceID:(NSString *)inServiceID
+{
+	return (inServiceID ? [NSString stringWithFormat:@"%@.%@",inServiceID,inUID] : inUID);
+}
+
+//Ultra unique ID string, potentially providing information to differentiate this list object from other 'identical' ones
+//For a non-subclassed AIListObject, this is the same as the uniqueObjectID
+- (NSString *)ultraUniqueObjectID
+{
+	return [self uniqueObjectID];
+}
 
 //Visibility -----------------------------------------------------------------------------------------------------------
 #pragma mark Visibility
@@ -131,12 +142,12 @@ DeclareString(FormattedUID);
 		visible = inVisible;
 
 		//Let our containing group know about the visibility change
-		[containingGroup visibilityOfContainedObject:self changedTo:inVisible];
+		[containingObject visibilityOfContainedObject:self changedTo:inVisible];
 	}
 }
 
 //Return current visibility of this object
-- (BOOL)isVisible
+- (BOOL)visible
 {
 	return(visible);
 }
@@ -145,15 +156,15 @@ DeclareString(FormattedUID);
 //Grouping / Ownership -------------------------------------------------------------------------------------------------
 #pragma mark Grouping / Ownership
 //Return the local group this object is in (will be nil for the root object)
-- (AIListGroup *)containingGroup
+- (AIListObject *)containingObject
 {
-    return(containingGroup);
+    return(containingObject);
 }
 
 //Set the local grouping for this object (PRIVATE: These are for AIListGroup ONLY)
-- (void)setContainingGroup:(AIListGroup *)inGroup
+- (void)setContainingObject:(AIListObject *)inGroup
 {
-	containingGroup = inGroup;
+	containingObject = inGroup;
 }
 
 //Returns our desired placement within a group
@@ -219,8 +230,8 @@ DeclareString(FormattedUID);
 		
 		if (changedStatusDict){
 			//Inform our containing group and ourself (in case subclasses want to know) about the new status object value
-			if (containingGroup)
-				[containingGroup listObject:self didSetStatusObject:value forKey:key];
+			if (containingObject)
+				[containingObject listObject:self didSetStatusObject:value forKey:key];
 			[self listObject:self didSetStatusObject:value forKey:key];
 			
 			//If notify, send out the notification now; otherwise, add it to changedStatusKeys for later notification 
@@ -383,9 +394,9 @@ DeclareString(FormattedUID);
     
     //If we don't have a value
     if(!value){
-		if(containingGroup){
+		if(containingObject){
 			//return the value of the group that contains us
-			value = [containingGroup preferenceForKey:inKey group:groupName];
+			value = [containingObject preferenceForKey:inKey group:groupName];
 		}else{
 			//If we are the root group, return Adium's global preference for this key
 			value = [[adium preferenceController] preferenceForKey:inKey group:groupName];
@@ -423,9 +434,9 @@ DeclareString(FormattedUID);
 		[returnArray addObject:value];
 	}
     
-    //so long as we aren't the root group, add our containingGroups' preferences
-	if(containingGroup){
-		[returnArray addObjectsFromArray:[containingGroup _recursivePreferencesForKey:inKey group:groupName]];
+    //so long as we aren't the root group, add our containingObjects' preferences
+	if(containingObject){
+		[returnArray addObjectsFromArray:[containingObject _recursivePreferencesForKey:inKey group:groupName]];
 	}
     
     return returnArray;
@@ -460,13 +471,6 @@ DeclareString(FormattedUID);
     return(outName ? outName : UID);	
 }
 
-//Display name, influenced by plugins
-- (NSString *)displayName
-{
-    NSString	*outName = [[self displayArrayForKey:DisplayName] objectValue];
-    return(outName ? outName : [self formattedUID]);
-}
-
 //Long display name, influenced by plugins
 - (NSString *)longDisplayName
 {
@@ -481,9 +485,190 @@ DeclareString(FormattedUID);
 	return (outName ? outName : serviceID);
 }
 
-//For debugging purposes only
+#pragma mark Key-Value Pairing
+- (NSData *)userIcon
+{
+	NSImage *userIcon = [[self displayArrayForKey:KEY_USER_ICON create:NO] objectValue];
+	return ([userIcon TIFFRepresentation]);
+}
+- (void)setUserIcon:(NSData *)inData
+{
+	[self setPreference:inData
+				 forKey:KEY_USER_ICON
+				  group:PREF_GROUP_USERICONS];
+}
+
+- (NSNumber *)idleTime
+{
+	NSNumber *idleNumber = [self statusObjectForKey:@"Idle"];
+	return (idleNumber ? idleNumber : [NSNumber numberWithInt:0]);
+}
+
+- (BOOL)online
+{
+	return ([self integerStatusObjectForKey:@"Online"] ? YES : NO);
+}
+
+- (AIStatusSummary)statusSummary
+{
+	if ([[self numberStatusObjectForKey:@"Online"] boolValue]){
+		if ([[self numberStatusObjectForKey:@"Away"] boolValue]){
+			if ([self statusObjectForKey:@"IdleSince"]){
+				return AIAwayAndIdleStatus;
+			}else{
+				return AIAwayStatus;
+			}
+			
+		}else if ([self statusObjectForKey:@"IdleSince"]){
+			return AIIdleStatus;
+			
+		}else{
+			return AIAvailableStatus;
+			
+		}
+	}else{
+		//We don't know the status of an stranger who isn't showing up as online
+		if ([[self numberStatusObjectForKey:@"Stranger"] boolValue]){
+			return AIUnknownStatus;
+			
+		}else{
+			return AIOfflineStatus;
+			
+		}
+	}
+	
+}
+
+- (NSString *)statusMessage
+{
+	return [[self statusObjectForKey:@"StatusMessage"] string];
+}
+
+//Display name, influenced by plugins
+- (NSString *)displayName
+{
+    NSString	*outName = [[self displayArrayForKey:DisplayName] objectValue];
+    return(outName ? outName : [self formattedUID]);
+}
+//Apply an alias
+- (void)setDisplayName:(NSString *)alias
+{
+	if([alias length] == 0) alias = nil; 
+	
+	NSString	*oldAlias = [self preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES];
+	if ((!alias && oldAlias) ||
+		(alias && !([alias isEqualToString:oldAlias]))){
+		//Save the alias
+		[self setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
+		
+		#warning There must be a cleaner way to do this alias stuff!  This works for now :)
+		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+												  object:self
+												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+																					 forKey:@"Notify"]];
+	}
+}
+
+- (NSString *)notes
+{
+	NSString *notes;
+	
+    notes = [self preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES];
+	if (!notes) notes = [self statusObjectForKey:@"Notes"];
+	
+	return notes;
+}
+- (void)setNotes:(NSString *)notes
+{
+	if([notes length] == 0) notes = nil; 
+
+	NSString	*oldNotes = [self preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES];
+	if ((!notes && oldNotes) ||
+		(notes && (![notes isEqualToString:oldNotes]))){
+		//Save the note
+		[self setPreference:notes forKey:@"Notes" group:PREF_GROUP_NOTES];
+	}
+}
+
+- (NSComparisonResult)compare:(AIListObject *)otherObject
+{
+	return ([[self uniqueObjectID] caseInsensitiveCompare:[otherObject uniqueObjectID]]);
+}
+
+#pragma mark Debugging
 - (NSString *)description
 {
 	return [NSString stringWithFormat:@"%@:%@",[super description],[self uniqueObjectID]];
 }
+
+//Contained Contacts (should be subclassed) ----------------------------------------------------------------------------
+#pragma mark Contained Contacts (Subclassed)
+- (BOOL)addObject:(AIListObject *)inObject { return NO; };
+- (void)removeObject:(AIListObject *)inObject {};
+- (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible {};
+- (void)sortListObject:(AIListObject *)inObject sortController:(AISortController *)sortController {};
+
+//Contained Contacts (handled for subclasses) --------------------------------------------------------------------------
+//All these methods will have no effect, returning 0 or nil as appropriate, for non-subclassed AIListObject
+#pragma mark Contained Contacts (Handled for subclasses)
+
+//Return our contained objects
+- (NSArray *)containedObjects
+{
+	return(containedObjects);
+}
+
+- (unsigned)containedObjectsCount
+{
+    return([containedObjects count]);
+}
+
+//Test for the presence of an object in our group
+- (BOOL)containsObject:(AIListObject *)inObject
+{
+	return([containedObjects containsObject:inObject]);
+}
+
+//Retrieve an object by index
+- (id)objectAtIndex:(unsigned)index
+{
+    return([containedObjects objectAtIndex:index]);
+}
+
+//Retrieve the index of an object
+- (int)indexOfObject:(AIListObject *)inObject
+{
+    return([containedObjects indexOfObject:inObject]);
+}
+
+//Return an enumerator of our content
+- (NSEnumerator *)objectEnumerator
+{
+    return([containedObjects objectEnumerator]);
+}
+
+//Remove all the objects from this group (PRIVATE: For contact controller only)
+- (void)removeAllObjects
+{
+	//Remove all the objects
+	while([containedObjects count]){
+		[self removeObject:[containedObjects objectAtIndex:0]];
+	}
+}
+
+//
+- (AIListObject *)objectWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID
+{
+	NSEnumerator	*enumerator = [containedObjects objectEnumerator];
+	AIListObject	*object;
+	
+	while(object = [enumerator nextObject]){
+		if([inUID isEqualToString:[object UID]] && [inServiceID isEqualToString:[object serviceID]]){
+			return(object);
+		}
+	}
+	
+	return(nil);
+}
+
 @end

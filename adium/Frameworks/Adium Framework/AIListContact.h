@@ -20,11 +20,13 @@
 @interface AIListContact : AIListObject {
     NSString		*remoteGroupName;
 	NSString		*accountID;
+	NSString		*ultraUniqueObjectID;
 }
 
 - (id)initWithUID:(NSString *)inUID accountID:(NSString *)inAccountID serviceID:(NSString *)inServiceID;
 - (void)setRemoteGroupName:(NSString *)inName;
 - (NSString *)remoteGroupName;
 - (NSString *)accountID;
+- (AIAccount *)account;
 
 @end

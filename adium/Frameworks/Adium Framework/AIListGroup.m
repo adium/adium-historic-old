@@ -26,11 +26,11 @@
 {
     [super initWithUID:inUID serviceID:nil];
 	
-    objectArray = [[NSMutableArray alloc] init];
+    containedObjects = [[NSMutableArray alloc] init];
     expanded = YES;
 	
 	//Default invisible
-//    visibleCount = 0;
+    visibleCount = 0;
 	visible = NO;
 //	[self setStatusObject:[NSNumber numberWithInt:visibleCount] forKey:@"VisibleObjectCount" notify:YES];
     
@@ -64,18 +64,6 @@
     return(visibleCount);
 }
 
-//Called when the visibility of an object in this group changes
-- (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible
-{
-	//Update our visibility as a result of this change
-	[self _setVisibleCount:(inVisible ? visibleCount + 1 : visibleCount - 1)];
-	
-	//Sort the contained object to the bottom (invisible section) of the group
-#warning send a notification for the object, the tabs will use this to auto-arrange.  Then, we send a notification for the group, which the contact list needs to correctly update
-	[[adium contactController] sortListObject:inObject];
-	[[adium contactController] sortListObject:self];
-}
-
 //Set this group as visible if it contains anything visible
 - (void)_setVisibleCount:(int)newCount
 {
@@ -88,115 +76,74 @@
 	[self setStatusObject:[NSNumber numberWithInt:visibleCount] forKey:@"VisibleObjectCount" notify:YES];
 }
 
-
-//Contained Objects ----------------------------------------------------------------------------------------------------
-#pragma mark Contained Objects
-//Returns the number of objects in this group
-- (unsigned)count
+//Called when the visibility of an object in this group changes
+- (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible
 {
-    return([objectArray count]);
-}
-
-//Retrieve an object by index
-- (id)objectAtIndex:(unsigned)index
-{
-    NSParameterAssert(index >= 0 && index < [objectArray count]);
+	//Update our visibility as a result of this change
+	[self _setVisibleCount:(inVisible ? visibleCount + 1 : visibleCount - 1)];
 	
-    return([objectArray objectAtIndex:index]);
+	//Sort the contained object to or from the bottom (invisible section) of the group
+#warning send a notification for the object, the tabs will use this to auto-arrange.  Then, we send a notification for the group, which the contact list needs to correctly update
+	[[adium contactController] sortListObject:inObject];
+	[[adium contactController] sortListObject:self];
 }
 
-//Return an enumerator of our contents
-- (NSEnumerator *)objectEnumerator
-{
-    return([objectArray objectEnumerator]);
-}
-
-//Test for the presence of an object in our group
-- (BOOL)containsObject:(AIListObject *)inObject
-{
-	return([objectArray containsObject:inObject]);
-}
-
-- (NSArray *)containedObjects
-{
-	return(objectArray);
-}
-
-//Retrieve the index of an object
-- (int)indexOfObject:(AIListObject *)inObject
-{
-    return([objectArray indexOfObject:inObject]);
-}
-
-//
-- (AIListObject *)objectWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID
-{
-	NSEnumerator	*enumerator = [objectArray objectEnumerator];
-	AIListObject	*object;
-	
-	while(object = [enumerator nextObject]){
-		if([inUID isEqualToString:[object UID]] && [inServiceID isEqualToString:[object serviceID]]){
-			return(object);
-		}
-	}
-	
-	return(nil);
-}
-
-//Contained Object Editing ---------------------------------------------------------------------------------------------
-#pragma mark Contained Object Editing
+//Object Storage ---------------------------------------------------------------------------------------------
+#pragma mark Object Storage
 //Add an object to this group (PRIVATE: For contact controller only)
-- (void)addObject:(AIListObject *)inObject
+//Returns YES if the object was added (that is, was not already present)
+- (BOOL)addObject:(AIListObject *)inObject
 {
-	if(![objectArray containsObject:inObject]){
+	BOOL success = NO;
+	
+	if(![containedObjects containsObject:inObject]){
 		//Update our visible count
-		if([inObject isVisible]){
+		if([inObject visible]){
 			[self _setVisibleCount:visibleCount+1];
 		}
 		
 		//Add the object
-		[inObject setContainingGroup:self];
-		[objectArray addObject:inObject];
+		[inObject setContainingObject:self];
+		[containedObjects addObject:inObject];
 		
 		//Sort this object on our own.  This always comes along with a content change, so calling contact controller's
 		//sort code would invoke an extra update that we don't need.  We can skip sorting if this object is not visible,
 		//since it will add to the bottom/non-visible section of our array.
-		if([inObject isVisible]){
-			[self sortListObject:inObject sortController:[[adium contactController] activeSortController]];
+		if([inObject visible]){
+			[self sortListObject:inObject
+				  sortController:[[adium contactController] activeSortController]];
 		}
 		
 		//
-		[self setStatusObject:[NSNumber numberWithInt:[objectArray count]] forKey:@"ObjectCount" notify:YES];
+		[self setStatusObject:[NSNumber numberWithInt:[containedObjects count]] 
+					   forKey:@"ObjectCount"
+					   notify:YES];
+		
+		success = YES;
 	}
+	
+	return success;
 }
 
 //Remove an object from this group (PRIVATE: For contact controller only)
 - (void)removeObject:(AIListObject *)inObject
 {	
-	if([objectArray containsObject:inObject]){
+	if([containedObjects containsObject:inObject]){
 		//Update our visible count
-		if([inObject isVisible]){
+		if([inObject visible]){
 			[self _setVisibleCount:visibleCount-1];
 		}
 		
 		//Remove the object
-		[inObject setContainingGroup:nil];
-		[objectArray removeObject:inObject];
+		[inObject setContainingObject:nil];
+		[containedObjects removeObject:inObject];
 
 		//
-		[self setStatusObject:[NSNumber numberWithInt:[objectArray count]] forKey:@"ObjectCount" notify:YES];
+		[self setStatusObject:[NSNumber numberWithInt:[containedObjects count]]
+					   forKey:@"ObjectCount" 
+					   notify:YES];
 	}
 }
-
-//Remove all the objects from this group (PRIVATE: For contact controller only)
-- (void)removeAllObjects
-{	
-	//Remove all the objects
-	while([objectArray count]){
-		[self removeObject:[objectArray objectAtIndex:0]];
-	}
-}
-
 
 //Sorting --------------------------------------------------------------------------------------------------------------
 #pragma mark Sorting
@@ -204,8 +151,10 @@
 - (void)sortListObject:(AIListObject *)inObject sortController:(AISortController *)sortController
 {
 	[inObject retain];
-	[objectArray removeObject:inObject];
-	[objectArray insertObject:inObject atIndex:[sortController indexForInserting:inObject intoObjects:objectArray]];
+	[containedObjects removeObject:inObject];
+	[containedObjects insertObject:inObject 
+						   atIndex:[sortController indexForInserting:inObject 
+														 intoObjects:containedObjects]];
 	[inObject release];
 }
 
@@ -217,17 +166,18 @@
 		NSEnumerator		*enumerator;
 		AIListObject		*object;
 		
-        enumerator = [objectArray objectEnumerator];
+        enumerator = [containedObjects objectEnumerator];
         while((object = [enumerator nextObject])){
             if([object isMemberOfClass:[AIListGroup class]]){
-                [(AIListGroup *)object sortGroupAndSubGroups:YES sortController:sortController];
+                [(AIListGroup *)object sortGroupAndSubGroups:YES
+											  sortController:sortController];
             }
         }
     }
 	
     //Sort this group
     if(sortController){
-        [sortController sortListObjects:objectArray];
+        [sortController sortListObjects:containedObjects];
     }
 }
 

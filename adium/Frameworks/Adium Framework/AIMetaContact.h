@@ -7,16 +7,15 @@
 #import "AIListGroup.h"
 
 @interface AIMetaContact : AIListContact {
-	NSMutableArray			*objectArray;		//Objects we contain
+	NSNumber				*objectID;
+	
 	NSMutableDictionary		*statusCacheDict;	//Cache of the status of our contained objects
 }
 
-- (unsigned)count;
-- (void)addObject:(AIListContact *)inObject;
-- (NSEnumerator *)objectEnumerator;
-- (id)objectAtIndex:(unsigned)index;
-- (void)removeObject:(AIListContact *)inObject;
-- (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible;
-- (NSArray *)containedObjects;
+//The objectID is unique to a meta contact and is used as the UID for purposes of AIListContact inheritance
+- (id)initWithObjectID:(NSNumber *)objectID;
+- (NSNumber *)objectID;
+
+- (AIListContact *)preferredContact;
 
 @end

@@ -24,81 +24,109 @@
 @implementation AIMetaContact
 
 //init
-- (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID
+- (id)initWithObjectID:(NSNumber *)inObjectID
 {
-	objectArray = [[NSMutableArray alloc] init];
+	objectID = [inObjectID retain];
 	statusCacheDict = [[NSMutableDictionary alloc] init];
 
-	[super initWithUID:inUID serviceID:inServiceID];
-	
+	[super initWithUID:[objectID stringValue] serviceID:nil];
+
+	containedObjects = [[NSMutableArray alloc] init];
+
 	return(self);
 }
 
 //dealloc
 - (void)dealloc
 {
-	[objectArray release];
 	[statusCacheDict release];
 	
 	[super dealloc];
 }
 
+- (NSNumber *)objectID
+{
+	return objectID;
+}
+
+//Our unique object ID is the number associated with this account
+- (NSString *)uniqueObjectID
+{
+	if (!uniqueObjectID){
+		uniqueObjectID = [[NSString stringWithFormat:@"MetaContact-%i",[objectID intValue]] retain];
+	}
+	return(uniqueObjectID);
+}
 
 //Object Storage -------------------------------------------------------------------------------------------------------
 #pragma mark Object Storage
-//Add an object to this meta contact
-- (void)addObject:(AIListContact *)inObject
+//Add an object to this meta contact (PRIVATE: For contact controller only)
+//Returns YES if the object was added (that is, was not already present)
+- (BOOL)addObject:(AIListObject *)inObject
 {
-	if(![objectArray containsObject:inObject]){
-		[inObject setContainingGroup:(AIListGroup *)self];
-		[objectArray addObject:inObject];
+	BOOL	success = NO;
+	
+	if(![containedObjects containsObject:inObject]){
+		[inObject setContainingObject:self];
+		[containedObjects addObject:inObject];
 		[self _updateCachedStatusOfObject:inObject];
+		
+		success = YES;
 	}
+	
+	return success;
 }
 
-//Remove an object from this meta contact
-- (void)removeObject:(AIListContact *)inObject
+//Remove an object from this meta contact (PRIVATE: For contact controller only)
+- (void)removeObject:(AIListObject *)inObject
 {
-	if([objectArray containsObject:inObject]){
+	if([containedObjects containsObject:inObject]){
 		[self _removeCachedStatusOfObject:inObject];
-		[inObject setContainingGroup:nil];
-		[objectArray removeObject:inObject];
+		[inObject setContainingObject:[self containingObject]];
+		[containedObjects removeObject:inObject];
 	}
 }
 
-//Return an enumerator of our content
-- (NSEnumerator *)objectEnumerator
+//Respecting the objectArray's order, find the first available contact. Failing that,
+//find the first online contact.  Failing that,
+//find the first contact.
+- (AIListContact *)preferredContact
 {
-    return([objectArray objectEnumerator]);
+	AIListContact   *preferredContact = nil;
+	AIListContact   *thisContact;
+	unsigned		index;
+	unsigned		count = [containedObjects count];
+	
+	//Search for an available contact
+	for (index = 0; index < count; index++){
+		thisContact = [containedObjects objectAtIndex:index];
+		if ([thisContact statusSummary] == AIAvailableStatus){
+			preferredContact = thisContact;
+			break;
+		}
+	}			
+	
+	//If no available contacts, find the first online contact
+	if (!preferredContact){
+		for (index = 0; index < count; index++){
+			thisContact = [containedObjects objectAtIndex:index];
+			if ([thisContact online]){
+				preferredContact = thisContact;
+				break;
+			}
+		}
+	}
+	
+	//If no online contacts, find the first contact
+	if (!preferredContact && (count != 0)){
+		preferredContact = [containedObjects objectAtIndex:0];
+	}
+	
+	return preferredContact;
 }
-
-//Retrieve an object by index
-- (id)objectAtIndex:(unsigned)index
-{	
-    return([objectArray objectAtIndex:index]);
-}
-
-//Return our contained objects
-- (NSArray *)containedObjects
-{
-	return(objectArray);
-}
-
-//Number of objects we contain
-- (unsigned)count
-{
-	return([objectArray count]);
-}
-
 
 //Status Object Handling -----------------------------------------------------------------------------------------------
 #pragma mark Status Object Handling
-//Called when the visibility of an object in this group changes
-- (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible
-{
-
-}
-
 //Update our status cache as object we contain change status
 - (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key
 {
@@ -138,10 +166,12 @@
 	//A meta contact should never receive this method, but it doesn't hurt to implement it just in case
 }
 
+#warning Do we actually need a special order index method now?
+/*
 //Returns our desired placement within a group
 - (float)orderIndex
 {
-	return([[objectArray objectAtIndex:0] orderIndex]);
+	return([[self preferredContact] orderIndex]);
 }
 
 //Alter the placement of this object in a group (PRIVATE: These are for AIListGroup ONLY)
@@ -154,7 +184,7 @@
 		[object setOrderIndex:inIndex];
 	}
 }
-
+*/
 
 //Contained object status cache ----------------------------------------------------------------------------------------
 //We maintain a chache of the status of the objects we contain.  This cache is updated whenever one of those objects
@@ -194,5 +224,52 @@
 	[array setObject:inObject withOwner:inOwner];
 }
 
-@end
+//Preferences -------------------------------------------------------------------------------------------------
+#pragma mark Preferences
 
+//Retrieve a preference value (with the option of ignoring inherited values)
+//If we don't find a preference, query our preferredContact to take its preference as our own.
+//We could potentially query all the objects.. but that's possibly overkill.
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName ignoreInheritedValues:(BOOL)ignore
+{
+	id returnValue;
+	
+	if (!ignore){
+		returnValue = [self preferenceForKey:inKey group:groupName];
+		
+	}else{
+		returnValue = [super preferenceForKey:inKey group:groupName ignoreInheritedValues:YES];
+		
+		//Look to our first contained object
+		if (!returnValue && [containedObjects count]){
+			returnValue = [[self preferredContact] preferenceForKey:inKey group:groupName ignoreInheritedValues:YES];
+		}
+	}
+	
+	return returnValue;
+}
+
+//Retrieve a preference value
+//If we don't find a preference, query our first contained object to 'inherit' its preference before going on to the recrusive lookup.
+//We could potentially query all the objects.. but that's possibly overkill.
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName
+{
+	id returnValue;
+	
+	//First, look at ourself (no recursion)
+	returnValue = [super preferenceForKey:inKey group:groupName ignoreInheritedValues:YES];
+	
+	//Then, look at our preferredContact (no recursion)
+	if (!returnValue && [containedObjects count]){
+		returnValue = [[self preferredContact] preferenceForKey:inKey group:groupName ignoreInheritedValues:YES];
+	}
+	
+	//Finally, do the recursive lookup starting with our containing group
+	if (!returnValue){
+		returnValue = [[self containingObject] preferenceForKey:inKey group:groupName];
+	}
+
+	return returnValue;
+}
+
+@end
