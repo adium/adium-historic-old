@@ -270,7 +270,7 @@
 			if(isGroup)
 				labelColor = [outlineView labelGroupColor];
 			else
-				labelColor = [[listObject displayArrayForKey:@"Label Color"] averageColor];
+				labelColor = [[listObject displayArrayForKey:@"Label Color"] objectValue];
 		}
 	} //if([outlineView showLabels])
 
