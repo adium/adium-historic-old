@@ -23,29 +23,41 @@
 - (BOOL)trashFileAtPath:(NSString *)sourcePath
 {
     NSParameterAssert(sourcePath != nil && [sourcePath length] != 0);
-
+	
 	if([self fileExistsAtPath:sourcePath]){
-		NSString	*fileName;
 		NSString	*destPath;
-		
-		//Create the destination path for this file (a folder with the same name in the user's trash)
-		fileName = [sourcePath lastPathComponent];
-		destPath = [[PATH_TRASH stringByAppendingPathComponent:fileName] stringByExpandingTildeInPath];
-		
-		//Move it to the trash
+
+		NSString	*fileName = [sourcePath lastPathComponent];
+		NSString	*sourceVolume = [sourcePath volumePath];
+
+		if([sourceVolume isEqualToString:@"/"]) {
+			//the file is on the startup disk.
+			//use the trash in home.
+			//example: /Users/boredzo/.Trash
+			destPath = [NSHomeDirectory() stringByAppendingPathComponent:@".Trash"];
+		} else {
+			//the file is not on the startup disk.
+			//use the trash on the disk the file is on.
+			//example: /Volumes/Repository/.Trashes/501
+			NSNumber *UIDnum = [NSNumber numberWithUnsignedInt:getuid()];
+			destPath = [[sourceVolume stringByAppendingPathComponent:@".Trashes"] stringByAppendingPathComponent:[UIDnum stringValue]];
+		}
+		destPath = [destPath stringByAppendingPathComponent:fileName];
+
+		//Move it to whichever Trash
 		if(![[NSFileManager defaultManager] movePath:sourcePath toPath:destPath handler:nil]){
-			//The move operation failed.  A folder with that name probably already exists in the trash
-			//So let's try appending some random characters to the end of the file name
-			destPath = [destPath stringByAppendingString:[NSString randomStringOfLength:6]];
+			//The move operation failed.  A folder with that name probably already exists in the trash.
+			//So let's try appending some random characters to the end of the file name.
+			NSString *destPathWithRandom = [destPath stringByAppendingString:[NSString randomStringOfLength:6]];
 			
-			if(![[NSFileManager defaultManager] movePath:sourcePath toPath:destPath handler:nil]){
-				NSLog(@"Attempt to trash '%@' failed (%@).",fileName, sourcePath);
-				return(NO);
+			if(![[NSFileManager defaultManager] movePath:sourcePath toPath:destPathWithRandom handler:nil]){
+				NSLog(@"Attempt to trash '%@' failed (full path: %@; full Trash path: %@).", fileName, sourcePath, destPath);
+				return NO;
 			}
 		}
 	}		
 
-	return(YES);
+	return YES;
 }
 
 - (void)removeFilesInDirectory:(NSString *)dirPath withPrefix:(NSString *)prefix movingToTrash:(BOOL)moveToTrash
