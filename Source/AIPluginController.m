@@ -46,7 +46,7 @@ CBStatusMenuItemPlugin, CBURLHandlingPlugin, CSDisconnectAllPlugin, DCMessageCon
 ESAnnouncerPlugin, ESContactAlertsPlugin, ESContactClientPlugin, ESContactListWindowHandlingPlugin, AIExtendedStatusPlugin,
 ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendMessageContactAlertPlugin,
 ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBApplescriptFiltersPlugin, IdleMessagePlugin, AIContactProfilePlugin,
-JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin, AIContactSettingsPlugin,
+JSCEventBezelPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin, AIContactSettingsPlugin,
 AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
 SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin, SHBookmarksImporterPlugin,
 ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin, DCJoinChatPanelPlugin, DCInviteToChatPlugin,
@@ -137,7 +137,6 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
 	[self loadPluginWithClass:[GBApplescriptFiltersPlugin class]];
 	[self loadPluginWithClass:[IdleMessagePlugin class]];
 	[self loadPluginWithClass:[JSCEventBezelPlugin class]];
-	[self loadPluginWithClass:[LNStatusIconsPlugin class]];
 	[self loadPluginWithClass:[SAContactOnlineForPlugin class]];
 	[self loadPluginWithClass:[AIContactStatusEventsPlugin class]];
 //	[self loadPluginWithClass:[SHOutputDeviceControlPlugin class]];
