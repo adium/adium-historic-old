@@ -1,8 +1,19 @@
 {
     IBClasses = (
+        {
+            CLASS = AIAlternatingRowOutlineView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {lastSelectedRowIndexes = id; }; 
+            SUPERCLASS = AIOutlineView; 
+        }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AICompletingTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
+        {
+            CLASS = AIListOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIMultiCellOutlineView; 
+        }, 
         {
             ACTIONS = {pasteAsRichText = id; scrollPageDown = id; scrollPageUp = id; }; 
             CLASS = AIMessageEntryTextView; 
@@ -10,10 +21,11 @@
             SUPERCLASS = AISendingTextView; 
         }, 
         {
-            ACTIONS = {sendMessage = id; sendMessageLater = id; }; 
+            ACTIONS = {inviteUser = id; sendMessage = id; sendMessageLater = id; }; 
             CLASS = AIMessageViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_inviteUser" = NSButton; 
                 "button_send" = AIPlasticButton; 
                 delegate = id; 
                 messageViewController = id; 
@@ -21,9 +33,9 @@
                 "scrollView_outgoingView" = NSScrollView; 
                 "scrollView_userList" = AIAutoScrollView; 
                 "splitView_messages" = NSSplitView; 
-                "tableView_userList" = NSTableView; 
                 "textView_outgoing" = AIMessageEntryTextView; 
                 "toolbar_bottom" = AIMiniToolbar; 
+                userListView = AIListOutlineView; 
                 "view_contents" = NSView; 
             }; 
             SUPERCLASS = AIObject; 
@@ -45,7 +57,14 @@
             OUTLETS = {representedObject = id; }; 
             SUPERCLASS = NSView; 
         }, 
+        {
+            CLASS = AIMultiCellOutlineView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {contentCell = id; groupCell = id; }; 
+            SUPERCLASS = AIAlternatingRowOutlineView; 
+        }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {
             ACTIONS = {sendContent = id; }; 

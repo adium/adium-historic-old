@@ -28,6 +28,9 @@
 #define TEXT_ENTRY_PADDING					3
 #define USER_LIST_WIDTH						75
 
+#define	USERLIST_THEME						@"UserList Theme"
+#define	USERLIST_LAYOUT						@"UserList Layout"
+
 @interface AIMessageViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat;
 - (void)dealloc;
@@ -54,6 +57,7 @@
 
     //
     view_accountSelection = nil;
+	userListController = nil;
     delegate = nil;
     chat = nil;
     showUserList = NO;
@@ -61,6 +65,9 @@
 	
     //view
     [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
+	
+	//We'll be removing this from our view at times; retain it manually to keep it around.
+	[scrollView_userList retain];
 	
 	//Configure our chat
 	chat = [inChat retain];
@@ -115,16 +122,7 @@
 	
 	//User List
 	//[view_userPane retain];
-		
-	[scrollView_userList setAutoScrollToBottom:NO];
-	[scrollView_userList setAutoHideScrollBar:YES];
-	[scrollView_userList retain];
-	
-	[tableView_userList setDelegate:self];
-	[tableView_userList setTarget:self];
-	[tableView_userList setDoubleAction:@selector(cellWasDoubleClicked:)];
-	[tableView_userList setNextResponder:controllerView_messages];
-	
+
 	//NSTableColumn *leftCol = [[tableView_userList tableColumns] objectAtIndex:0];
 	//[leftCol setDataCell:[[[NSImageCell alloc] init] autorelease]];
 
@@ -157,11 +155,6 @@
 												 name:AIViewDesiredSizeDidChangeNotification 
 											   object:textView_outgoing];
     
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(listObjectChanged:)
-									   name:ListObject_StatusChanged
-									 object:nil];
-
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(chatParticipantsChanged:)
 									   name:Chat_ParticipatingListObjectsChanged
@@ -199,8 +192,8 @@
         [view_accountSelection release]; view_accountSelection = nil;
     }
 	
-    //nib
     [messageViewController release];
+	[scrollView_userList release];
 	
     [super dealloc];
 }
@@ -280,8 +273,8 @@
 //Selected item in the group chat view
 - (AIListObject *)preferredListObject
 {
-	if( [[splitView_messages subviews] containsObject:scrollView_userList] && ([tableView_userList selectedRow] != -1)) {
-		return [[chat participatingListObjects] objectAtIndex:[tableView_userList selectedRow]];
+	if( [[splitView_messages subviews] containsObject:scrollView_userList] && ([userListView selectedRow] != -1)) {
+		return [userListView itemAtRow:[userListView selectedRow]];
 	}
 	
 	return nil;
@@ -416,7 +409,8 @@
 
     //Update the user list
     if(showUserList){
-        [tableView_userList reloadData];
+		NSLog(@"Show user list.");
+        [userListController reloadData];
     }
 }
 
@@ -502,6 +496,22 @@
 	
     //UserList
     if(showUserList){
+		
+		if (!userListController) {
+			NSDictionary	*themeDict = [NSDictionary dictionaryNamed:USERLIST_THEME forClass:[self class]];
+			NSDictionary	*layoutDict = [NSDictionary dictionaryNamed:USERLIST_LAYOUT forClass:[self class]];
+			
+			userListController = [[ESChatUserListController alloc] initWithContactListView:userListView
+																			  inScrollView:scrollView_userList 
+																				  delegate:self];
+			
+			[userListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
+			[userListController updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];	
+			[userListController setContactListRoot:chat];
+			[userListController setHideRoot:YES];
+			
+		}
+		
 		if( ![[splitView_messages subviews] containsObject:scrollView_userList] ) {
 			[splitView_messages addSubview:scrollView_userList];
 			
@@ -568,57 +578,50 @@
 	//return nil;
 }
 
-// Allow selection of a contact, prepare info on them
-- (BOOL)tableView:(NSTableView *)aTableView shouldSelectRow:(int)rowIndex
-{	
-	return YES;
-}
-
-// Cell was single-clicked
-- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+// userList selection changed
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
-	int selectedIndex = [tableView_userList selectedRow];
-	[chat setPreferredListObject:((selectedIndex != -1) ? 
-								  [[chat participatingListObjects] objectAtIndex:selectedIndex] :
-								  nil)];
-}
-
-- (void)cellWasDoubleClicked:(id)sender
-{	
-	/*
-	int selectedIndex = [tableView_userList selectedRow];
-	
-	if( selectedIndex != -1 ) {
-		
-		AIListObject *listObject = [[chat participatingListObjects] objectAtIndex:selectedIndex];
-		if (listObject)
-			[AIContactInfoWindowController showInfoWindowForListObject:listObject];
+	if ([notification object] == userListView){
+		int selectedIndex = [userListView selectedRow];
+		[chat setPreferredListObject:((selectedIndex != -1) ? 
+									  [[chat participatingListObjects] objectAtIndex:selectedIndex] :
+									  nil)];
 	}
-	*/
-	
-}
-
-- (void)listObjectChanged:(NSNotification *)notification
-{
-	[tableView_userList reloadData];
 }
 
 - (void)chatParticipantsChanged:(NSNotification *)notification
 {
-	if( [notification object] == chat )
-		[tableView_userList reloadData];
+	if([notification object] == chat){
+		[userListController reloadData];
+	}
 }
 
 #pragma mark Split View Delegate
 
 - (BOOL)splitView:(NSSplitView *)sender canCollapseSubview:(NSView *)subview
 {
-	if( subview == tableView_userList || subview == scrollView_userList )
+	if(subview == userListView || subview == scrollView_userList){
 		return YES;
-	else
+	}else{
 		return NO;
+	}
 }
 
-    
+#pragma mark AIListControllerDelegate
+
+- (void)performDefaultActionOnSelectedObject:(AIListObject *)listObject sender:(id)sender
+{
+	/*
+	 int selectedIndex = [tableView_userList selectedRow];
+	 
+	 if( selectedIndex != -1 ) {
+		 
+		 AIListObject *listObject = [[chat participatingListObjects] objectAtIndex:selectedIndex];
+		 if (listObject)
+			 [AIContactInfoWindowController showInfoWindowForListObject:listObject];
+	 }
+	 */
+}
+
 @end
 
