@@ -7,7 +7,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 778 $ $Date: 2004/05/27 16:09:04 $ -->
+<!--$Rev: 778 $ $Date: 2004/06/13 06:16:56 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -25,7 +25,7 @@ String niceFinish = dateFinish;
 if (dateFinish != null && (dateFinish.equals("") || dateFinish.equals("null"))) {
     dateFinish = null;
     niceFinish = "";
-} 
+}
 
 if (dateStart != null && (dateStart.equals("") || dateStart.startsWith("null"))) {
     dateStart = null;
@@ -38,7 +38,7 @@ if (dateStart != null && (dateStart.equals("") || dateStart.startsWith("null")))
     <head><title>Recent URLs</title></head>
     <link rel="stylesheet" type="text/css" href="styles/default.css" />
     <body style="background: #fff">
-    
+
     <div align="right">
         <form action="urls.jsp" method="get">
             <input type="text" name="start" value="<%= niceStart %>" > -- <input type="text" name="finish" value="<%= niceFinish %>">
@@ -55,14 +55,14 @@ try {
 
     String cmdArray[] = new String[2];
     int cmdCntr = 0;
-    
+
     String queryString = new String("select sender_sn, recipient_sn, message, message_date from simple_message_v where message ~* '(.*http:\\/\\/.*)|(.*<a href.*?</a>.*)'");
-    
+
     if(dateStart != null) {
         queryString += " and message_date >= ? ";
         cmdArray[cmdCntr++] = dateStart;
     }
-    
+
     if(dateFinish != null) {
         queryString += " and message_date <= ? ";
         cmdArray[cmdCntr++] = dateFinish;
@@ -77,33 +77,33 @@ try {
     }
 
     rset = pstmt.executeQuery();
-    
+
     while(rset.next()) {
         StringBuffer sb = new StringBuffer();
         String messageContent = rset.getString("message");
 
-        Pattern p = Pattern.compile("(?i).*?(<a href.*?</a>).*?");
+        Pattern p = Pattern.compile("(?i).*?(<a href.*?)(>.*?</a>).*?");
         Matcher m = p.matcher(messageContent);
-        
+
         while(m.find()) {
-            sb.append(m.group(1) + "<br />");
+            sb.append(m.group(1) + " target=\"_blank\"" + m.group(2) + "<br />");
         }
-        
+
         messageContent = messageContent.replaceAll("<a href.*?</a>", " ");
-        
+
         p = Pattern.compile("(?i).*?(http:\\/\\/.*)\\s*?.*?");
         m = p.matcher(messageContent);
-        
+
         while(m.find()) {
-            sb.append("<a href=\"" + m.group(1) + "\">" + m.group(1) + 
+            sb.append("<a href=\"" + m.group(1) + "\">" + m.group(1) +
                 "</a><br />");
         }
-        
+
         out.print("<span style=\"float:right\">" +
             rset.getDate("message_date") +
             "&nbsp;" + rset.getTime("message_date") +
             "</span>\n");
-        
+
         out.println(rset.getString("sender_sn") +
             ":&#8203;" + rset.getString("recipient_sn"));
         out.println("<p style=\"padding-left: 30px; margin-top:5px\">" +
