@@ -101,6 +101,8 @@ typedef enum {
 - (AIChat *)openChatWithContact:(AIListContact *)inContact;
 - (AIChat *)chatWithContact:(AIListContact *)inContact initialStatus:(NSDictionary *)initialStatus;
 - (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account initialStatus:(NSDictionary *)initialStatus;
+- (AIChat *)existingChatWithContact:(AIListContact *)inContact;
+- (AIChat *)existingChatWithName:(NSString *)inName onAccount:(AIAccount *)account;
 - (BOOL)closeChat:(AIChat *)inChat;
 - (NSArray *)chatArray;
 - (BOOL)switchToMostRecentUnviewedContent;
