@@ -246,7 +246,7 @@ static NSString *statusNameForListObject(AIListObject *listObject)
 	}else if(statusSummary == AIIdleStatus){
 		/* Note: AIIdleStatus, but not AIAwayAndIdleStatus, which implies an away state */
 		return @"Idle";
-	}else if(statusName = [[listObject statusState] statusName]){
+	}else if(statusName = [listObject statusName]){
 		/* If we have a status name, use that */
 		return statusName;
 	}else{
@@ -267,7 +267,7 @@ static AIStatusType statusTypeForListObject(AIListObject *listObject)
 	if(statusSummary == AIOfflineStatus)
 		return AIOfflineStatusType;
 	else
-		return [[listObject statusState] statusType];
+		return [listObject statusType];
 }
 
 #pragma mark Preview menu images

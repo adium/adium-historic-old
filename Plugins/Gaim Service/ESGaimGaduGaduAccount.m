@@ -84,8 +84,9 @@
 {
 	[theContact setStatusWithName:nil
 					   statusType:(newAway ? AIAwayStatusType : AIAvailableStatusType)
-					statusMessage:[self statusMessageForContact:theContact]
 						   notify:NotifyLater];
+	[theContact setStatusMessage:[self statusMessageForContact:theContact]
+						  notify:NotifyLater];
 	
 	//Apply the change
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];	

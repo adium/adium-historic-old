@@ -72,7 +72,8 @@
 	
 	if(inModifiedKeys == nil ||
 	   [inModifiedKeys containsObject:@"Stranger"] ||
-	   [inModifiedKeys containsObject:@"StatusState"] ||
+	   [inModifiedKeys containsObject:@"StatusName"] ||
+	   [inModifiedKeys containsObject:@"StatusType"] ||
 	   [inModifiedKeys containsObject:@"IsIdle"] ||
 	   [inModifiedKeys containsObject:@"Online"]){
 		

@@ -122,7 +122,7 @@
 		if(	inModifiedKeys == nil ||
 			[inModifiedKeys containsObject:KEY_TYPING] ||
 			[inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT] || 
-			[inModifiedKeys containsObject:@"StatusState"] ||
+			[inModifiedKeys containsObject:@"StatusType"] ||
 			[inModifiedKeys containsObject:@"IsIdle"] ||
 			[inModifiedKeys containsObject:@"Online"] ||
 			[inModifiedKeys containsObject:@"Signed On"] || 

@@ -545,12 +545,13 @@
 			}
 		}
 		
-		//Update the status
+		
 		[theContact setStatusWithName:nil
 						   statusType:statusType
-						statusMessage:(statusMessage ? [AIHTMLDecoder decodeHTML:statusMessage] : nil)
 							   notify:NotifyLater];
-		
+		[theContact setStatusMessage:(statusMessage ? [AIHTMLDecoder decodeHTML:statusMessage] : nil)
+							  notify:NotifyLater];
+
 		//Apply the change
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}

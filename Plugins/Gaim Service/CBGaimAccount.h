@@ -44,7 +44,7 @@
 - (void)updateStatusForKey:(NSString *)key;
 - (NSDictionary *)defaultProperties;
 - (NSString *)unknownGroupName;
-- (NSArray *)contactStatusFlags;
+- (NSSet *)contactStatusFlags;
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError;
 - (BOOL)useDisplayNameAsStatusMessage;
 - (BOOL)displayConversationClosed;

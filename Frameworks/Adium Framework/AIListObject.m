@@ -506,36 +506,63 @@ DeclareString(FormattedUID);
 
 #pragma mark Status states
 
-/*!
-* @brief The current status state
- */
-- (AIStatus *)statusState
+- (NSString *)statusName
 {
-	return [self statusObjectForKey:@"StatusState"];
+	return [self statusObjectForKey:@"StatusName"];
+}
+
+- (AIStatusType)statusType
+{
+	NSNumber		*statusTypeNumber = [self statusObjectForKey:@"StatusType"];
+	AIStatusType	statusType = (statusTypeNumber ?
+								  [statusTypeNumber intValue] :
+								  AIAvailableStatusType);
+	
+	return statusType;
+}
+
+- (void)setStatusWithName:(NSString *)statusName statusType:(AIStatusType)statusType notify:(NotifyTiming)notify
+{
+	AIStatusType	currentStatusType = [self statusType];
+	NSString		*oldStatusName = [self statusName];
+	
+	if(currentStatusType != statusType){
+		[self setStatusObject:[NSNumber numberWithInt:statusType] forKey:@"StatusType" notify:NotifyLater];
+	}
+	
+	if((!statusName && oldStatusName) || (statusName && ![statusName isEqualToString:oldStatusName])){
+		[self setStatusObject:statusName forKey:@"StatusName" notify:NotifyLater];
+	}
+	
+	if(notify) [self notifyOfChangedStatusSilently:NO];
+}
+
+- (NSAttributedString *)statusMessage
+{
+	return [self statusObjectForKey:@"StatusMessage"];
 }
 
 /*!
- * @brief Set the current status state
+ * @brief Set the current status message
  *
- * @param name State name. May be nil to use the default state name for type
- * @param type The <tt>AIStatusType</tt>
  * @param statusMessage Status message. May be nil.
  * @param noitfy How to notify of the change. See -[ESObjectWithStatus setStatusObject:forKey:notify:].
  */
-- (void)setStatusWithName:(NSString *)name statusType:(AIStatusType)type statusMessage:(NSAttributedString *)statusMessage notify:(NotifyTiming)notify
+- (void)setStatusMessage:(NSAttributedString *)statusMessage notify:(NotifyTiming)notify
 {
-	AIStatus	*statusState = [AIStatus status];
-	[statusState setStatusType:type];
-
-	if(name) [statusState setStatusName:name];
-	if(statusMessage) [statusState setStatusMessage:statusMessage];
-
-	[self setStatusObject:statusState forKey:@"StatusState" notify:notify];
+	[self setStatusObject:statusMessage forKey:@"StatusMessage" notify:notify];
+	
 }
 
 - (void)setBaseAvailableStatusAndNotify:(NotifyTiming)notify
 {
-	[self setStatusObject:nil forKey:@"StatusState" notify:notify];
+	[self setStatusWithName:nil
+				 statusType:AIAvailableStatusType
+					 notify:NotifyLater];
+	[self setStatusMessage:nil
+					 notify:NotifyLater];
+
+	if(notify) [self notifyOfChangedStatusSilently:NO];
 }
 
 /*!
@@ -545,7 +572,7 @@ DeclareString(FormattedUID);
 {
 	NSAttributedString	*contactListStatusMessage = [self statusObjectForKey:@"ContactListStatusMessage"];
 	if(!contactListStatusMessage){
-		contactListStatusMessage = [[self statusState] statusMessage];
+		contactListStatusMessage = [self statusMessage];
 	}
 	
 	return contactListStatusMessage;
@@ -559,8 +586,7 @@ DeclareString(FormattedUID);
 - (AIStatusSummary)statusSummary
 {
 	if ([self integerStatusObjectForKey:@"Online"]){
-		AIStatus		*statusState = [self statusState];
-		AIStatusType	statusType = (statusState ? [statusState statusType] : AIAvailableStatusType);
+		AIStatusType	statusType = [self statusType];
 		
 		if ((statusType == AIAwayStatusType) || (statusType == AIInvisibleStatusType)){
 			if ([self integerStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO]){

@@ -46,18 +46,14 @@
  */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    NSString			*entry = nil;
+    NSString			*label = nil;
     NSAttributedString 	*statusMessage = nil;
-	AIStatus			*statusState;
     BOOL				away;
     
-    //Get the status state
-	statusState = [inObject statusState];
-
-    away = ([statusState statusType] == AIAwayStatusType);
+    away = ([inObject statusType] == AIAwayStatusType);
     
     //Get the status message
-    statusMessage = [[inObject statusState] statusMessage];
+    statusMessage = [inObject statusMessage];
     
     //Return the correct string
     if(statusMessage != nil && [statusMessage length] != 0){
@@ -68,19 +64,19 @@
 			
 			//Return the correct string
 			if ([serverDisplayName isEqualToString:[statusMessage string]]){
-				entry = AWAY_LABEL;
+				label = AWAY_LABEL;
 			}else{
-				entry = AWAY_MESSAGE_LABEL;
+				label = AWAY_MESSAGE_LABEL;
 			}
 			
 		}else{
-			entry = STATUS_LABEL;
+			label = STATUS_LABEL;
 		}
     }else if(away){
-		entry = AWAY_LABEL;
+		label = AWAY_LABEL;
     }
     
-    return(entry);
+    return(label);
 }
 
 /*!
@@ -93,16 +89,12 @@
     NSAttributedString	*entry = nil;
     NSAttributedString 	*statusMessage = nil;
 	NSString			*serverDisplayName = nil;
-	AIStatus			*statusState;
     BOOL				away;
     
-    //Get the status state
-	statusState = [inObject statusState];
-	
-    away = ([statusState statusType] == AIAwayStatusType);
+    away = ([inObject statusType] == AIAwayStatusType);
     
     //Get the status message
-    statusMessage = [[inObject statusState] statusMessage];
+    statusMessage = [inObject statusMessage];
 
 	//Check to make sure we're not duplicating server display name information
 	serverDisplayName = [inObject statusObjectForKey:@"Server Display Name"];

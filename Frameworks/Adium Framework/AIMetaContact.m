@@ -523,7 +523,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		[self _determineIfWeShouldAppearToContainOnlyOneContact];
 	}
 	
-	if([key isEqualToString:@"StatusState"] ||
+	if([key isEqualToString:@"StatusType"] ||
 	   [key isEqualToString:@"IdleSince"]){
 		_preferredContact = nil;
 	}
@@ -865,7 +865,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	while(!contactListStatusMessage && (listContact = [enumerator nextObject])){
 		contactListStatusMessage = [self statusObjectForKey:@"ContactListStatusMessage"];
 		if(!contactListStatusMessage){
-			contactListStatusMessage = [[self statusState] statusMessage];
+			contactListStatusMessage = [self statusMessage];
 		}
 	}
 	

@@ -70,9 +70,8 @@ static	NSDictionary	*statusTypeDict = nil;
 	
 	allChats = [[adium contentController] allChatsWithContact:contact];
 	if([allChats count]){	
-		AIStatus		*statusState = [contact statusState];
-		if([statusState statusType] != AIAvailableStatusType){
-			NSString		*statusMessage = [[statusState statusMessage] string];
+		if([contact statusType] != AIAvailableStatusType){
+			NSString		*statusMessage = [[contact statusMessage] string];
 			NSString		*statusType = [statusTypeDict objectForKey:CONTACT_STATUS_MESSAGE];
 			
 			if(statusMessage && [statusMessage length] != 0){

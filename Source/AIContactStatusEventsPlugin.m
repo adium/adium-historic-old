@@ -301,15 +301,14 @@
 		 * just doing bookkeeping e.g. an away contact signs off, we clear the away flag, but they didn't actually
 		 * come back from away. */
 		if ([[inObject numberStatusObjectForKey:@"Online"] boolValue]){
-			if([inModifiedKeys containsObject:@"StatusState"]){
-				AIStatus	*statusState = [inObject statusState];
+			if([inModifiedKeys containsObject:@"StatusMessage"] || [inModifiedKeys containsObject:@"StatusType"]){
 				NSNumber	*newAwayNumber;
 				NSString	*newStatusMessage;
 				BOOL		awayChanged, statusMessageChanged;
 				NSSet		*previouslyPerformedActionIDs = nil;
 
 				//Update away/not-away
-				newAwayNumber = [NSNumber numberWithBool:([statusState statusType] == AIAwayStatusType)];
+				newAwayNumber = [NSNumber numberWithBool:([inObject statusType] == AIAwayStatusType)];
 				
 				awayChanged = [self updateCache:awayCache
 										 forKey:@"Away"
@@ -318,7 +317,7 @@
 								 performCompare:YES];
 				
 				//Update status message
-				newStatusMessage = [[statusState statusMessage] string];
+				newStatusMessage = [[inObject statusMessage] string];
 				statusMessageChanged = [self updateCache:statusMessageCache 
 												  forKey:@"StatusMessage"
 												newValue:newStatusMessage

@@ -79,8 +79,9 @@
 			
 			[theContact setStatusWithName:nil
 							   statusType:statusType
-							statusMessage:[self statusMessageForContact:theContact]
 								   notify:NotifyLater];
+			[theContact setStatusMessage:[self statusMessageForContact:theContact]
+								  notify:NotifyLater];
 			
 			//Apply the change
 			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
