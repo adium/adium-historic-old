@@ -1680,8 +1680,7 @@
 				34416172059FC55A0019246B,
 				343A7F3806935DD700150CEC,
 				343A7F3706935DD700150CEC,
-				344158A9059F90FA0019246B,
-				344158AA059F90FB0019246B,
+				4B388E080719C351004DE713,
 				34416165059FC5430019246B,
 				34416166059FC5430019246B,
 				34C2EA180634DB5E0018E5D2,
@@ -10868,6 +10867,63 @@
 			settings = {
 			};
 		};
+		4B388E080719C351004DE713 = {
+			children = (
+				344158A9059F90FA0019246B,
+				344158AA059F90FB0019246B,
+				4B388E0D0719C376004DE713,
+				4B388E0E0719C376004DE713,
+				4B388E4C0719C445004DE713,
+			);
+			isa = PBXGroup;
+			name = MSN;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B388E0D0719C376004DE713 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIMSNServicePreferences.h;
+			path = "Plugins/Gaim Service/AIMSNServicePreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B388E0E0719C376004DE713 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIMSNServicePreferences.m;
+			path = "Plugins/Gaim Service/AIMSNServicePreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B388E0F0719C376004DE713 = {
+			fileRef = 4B388E0D0719C376004DE713;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B388E100719C376004DE713 = {
+			fileRef = 4B388E0E0719C376004DE713;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B388E4C0719C445004DE713 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = MSNServicePrefs.nib;
+			path = "Plugins/Gaim Service/MSNServicePrefs.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B388E4D0719C445004DE713 = {
+			fileRef = 4B388E4C0719C445004DE713;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B3DB8FD04547A8D00A8010A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -12008,6 +12064,7 @@
 				34F52BD106E2AFF700887BE2,
 				34F52BDA06E2B24200887BE2,
 				4B387EB907199FE5004DE713,
+				4B388E0F0719C376004DE713,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12052,6 +12109,7 @@
 				348D8D1306CC078D00449EBB,
 				348D8D2A06CC07BE00449EBB,
 				34F52BCC06E2AFBC00887BE2,
+				4B388E4D0719C445004DE713,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12115,6 +12173,7 @@
 				34F52BD206E2AFF700887BE2,
 				34F52BDB06E2B24200887BE2,
 				4B387EBA07199FE5004DE713,
+				4B388E100719C376004DE713,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

@@ -42,6 +42,7 @@ typedef enum {
     AIPref_Advanced_ContactList,
     AIPref_Advanced_Messages,
     AIPref_Advanced_Status,
+    AIPref_Advanced_Service,
     AIPref_Advanced_Other,
 	
 } PREFERENCE_CATEGORY;

@@ -85,6 +85,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		case AIPref_Advanced_ContactList:
 		case AIPref_Advanced_Messages:
 		case AIPref_Advanced_Status:
+		case AIPref_Advanced_Service:
 		case AIPref_Advanced_Other: tabIdentifier = 9; break;
 		default: tabIdentifier = 1; break;
 	}
@@ -364,6 +365,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
         [_advancedCategoryArray addObject:[self _createGroupNamed:@"Contact List" forCategory:AIPref_Advanced_ContactList]];
         [_advancedCategoryArray addObject:[self _createGroupNamed:@"Messages" forCategory:AIPref_Advanced_Messages]];
         [_advancedCategoryArray addObject:[self _createGroupNamed:@"Status" forCategory:AIPref_Advanced_Status]];
+        [_advancedCategoryArray addObject:[self _createGroupNamed:@"Service" forCategory:AIPref_Advanced_Service]];
         [_advancedCategoryArray addObject:[self _createGroupNamed:@"Other" forCategory:AIPref_Advanced_Other]];
     }
     
