@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.32 2004/01/13 00:24:22 adamiser Exp $
+// $Id: AIAccount.m,v 1.33 2004/01/14 15:12:30 evands Exp $
 
 #import "AIAccount.h"
 
@@ -127,6 +127,16 @@
         if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
             if(!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]){
                 NSLog(@"AIAccount: Instructing %@ to connect",[self displayName]);
+		//Start refreshing attributed status messages if needed
+		if ([refreshDict count]){
+		    if (!refreshTimer){
+			refreshTimer = [[NSTimer scheduledTimerWithTimeInterval:ATTRIBUTED_STRING_REFRESH
+									 target:self
+								       selector:@selector(_refreshAttributedStrings:) 
+								       userInfo:nil repeats:YES] retain];
+		    }
+		}
+		
                 //Retrieve the user's password and then call connect
                 [[adium accountController] passwordForAccount:self 
                                               notifyingTarget:self
@@ -135,6 +145,13 @@
         }else{
             if(areOnline && ![[self statusObjectForKey:@"Disconnecting"] boolValue]){
                 NSLog(@"AIAccount: Instructing %@ to disconnect",[self displayName]);
+		//Stop refreshing attributed status message
+		if (refreshTimer) {
+		    if ([refreshTimer isValid])
+			[refreshTimer invalidate];
+		    [refreshTimer release]; refreshTimer = nil;
+		}
+		
                 //Disconnect
                 [self disconnect];
             }
