@@ -3,4 +3,6 @@
 
 #import <Adium/Adium.h>
 #import <AdiumHyperlinks/AdiumHyperlinks.h>
+#import "AIAdium.h"
+
 #endif
