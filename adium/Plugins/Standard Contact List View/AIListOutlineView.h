@@ -49,6 +49,7 @@
 
 	NSImage		*backgroundImage;
 	float 		backgroundFade;
+//	BOOL		drawsBackground;
 	
 	NSColor		*backgroundColor;
 	
@@ -96,6 +97,7 @@
 - (void)setUpdateShadowsWhileDrawing:(BOOL)update;
 - (void)setBackgroundImage:(NSImage *)inImage;
 - (void)setBackgroundFade:(float)fade;
+- (void)setDrawsBackground:(BOOL)inDraw;
 	
 @end
 

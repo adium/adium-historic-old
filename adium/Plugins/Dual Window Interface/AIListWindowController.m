@@ -42,7 +42,7 @@
 #define KEY_CLWH_WINDOW_POSITION	@"Contact Window Position"
 #define KEY_CLWH_HIDE				@"Hide While in Background"
 
-#define BACKGROUND_COLOR		[NSColor colorWithCalibratedRed:1.0 green:1.0 blue:1.0 alpha:1.0]
+//#define BACKGROUND_COLOR		[NSColor colorWithCalibratedRed:1.0 green:1.0 blue:1.0 alpha:1.0]
 
 #define TOOL_TIP_CHECK_INTERVAL				45.0	//Check for mouse X times a second
 #define TOOL_TIP_DELAY						25.0	//Number of check intervals of no movement before a tip is displayed
@@ -54,7 +54,7 @@
 
 #define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
 
-#define BACKGROUND_ALPHA	1.0
+//#define BACKGROUND_ALPHA	1.0
 
 
 //#define CONTACTS_USE_MOCKIE_CELL NO
@@ -77,6 +77,7 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureToolbar;
 - (void)contactListChanged:(NSNotification *)notification;
+- (float)backgroundAlpha;
 @end
 
 @implementation AIListWindowController
@@ -142,7 +143,9 @@
 
 
 	
-	[self configureListView];
+	//Targeting
+    [contactListView setTarget:self];
+	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
 	
 	
 #warning grr
@@ -251,7 +254,7 @@
     if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_LAYOUT])){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 		BOOL			windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
-		
+
 		//Cells
 		[groupCell release];
 		[contentCell release];
@@ -294,7 +297,7 @@
 		[contentCell setStatusIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
 		[contentCell setServiceIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];
 
-		//Only valid with bubbles
+		//Bubbles special cases
 		LIST_CELL_STYLE	contactCellStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE] intValue];
 		if(contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT){
 			[contentCell setSplitVerticalSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
@@ -302,14 +305,22 @@
 			[contentCell setSplitVerticalPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
 		}
 
-		//Only valid with mockie
-//		BOOL windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+		//Mockie special cases
 		if(windowStyle == WINDOW_STYLE_MOCKIE){
 			[groupCell setTopSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
 		}
-		
+//		[contactListView setDrawsBackground:(windowStyle != WINDOW_STYLE_MOCKIE)];
+
 		//Shadow
 		[[self window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
+		
+		//Special mockie case
+#warning dup and GRR
+		if([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
+													 group:PREF_GROUP_LIST_LAYOUT] intValue] == WINDOW_STYLE_MOCKIE){
+			[contentCell setBackgroundOpacity:[[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_WINDOW_TRANSPARENCY
+																						group:PREF_GROUP_LIST_THEME] floatValue]];
+		}
 		
 		//Redisplay
 		[contactListView setGroupCell:groupCell];
@@ -321,52 +332,48 @@
     if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_THEME])){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
 		NSString		*imagePath = [prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH];
-		
+		float			backgroundAlpha	= [self backgroundAlpha];
+		NSLog(@"%0.2f",backgroundAlpha);
 		//Background Image
 		if(imagePath && [imagePath length] && [[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]){
 			[contactListView setBackgroundImage:[[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease]];
 		}else{
 			[contactListView setBackgroundImage:nil];
 		}
-		NSLog(@"%0.2f",[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]);
-		[contactListView setBackgroundFade:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]];
-		
+		[contactListView setBackgroundFade:([[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue] * backgroundAlpha)];
 		
 		//Background/Grid
-		float	backgroundAlpha	= BACKGROUND_ALPHA;
 		BOOL	drawGrid = [[prefDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue];
 		
 		[contactListView setDrawsAlternatingRows:(backgroundAlpha != 0.0 ? drawGrid : NO)];
 		[contactListView setAlternatingRowColor:[[prefDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor]];
-		[contactListView setBackgroundColor:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor]];
+		[contactListView setBackgroundColor:[[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
+
+		//Special mockie case
+#warning dup and GRR
+		if([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
+													 group:PREF_GROUP_LIST_LAYOUT] intValue] == WINDOW_STYLE_MOCKIE){
+			[contentCell setBackgroundOpacity:[[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_WINDOW_TRANSPARENCY
+																						group:PREF_GROUP_LIST_THEME] floatValue]];
+		}
+		
+		//Transparency.  Bye bye CPU cycles, I'll miss you!
+		[[self window] setOpaque:(backgroundAlpha == 1.0)];
+		[contactListView setUpdateShadowsWhileDrawing:(backgroundAlpha < 0.8)];
+		//--
+		
 	}
-		
-		
-	
-	
 }
 
-- (void)configureListView
+- (float)backgroundAlpha
 {
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
-	float	backgroundAlpha	= BACKGROUND_ALPHA;
-	
-	
-	BOOL	windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
-
-	//Targeting
-    [contactListView setTarget:self];
-	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
-
-	//Background Coloring
-	if(windowStyle == WINDOW_STYLE_MOCKIE) backgroundAlpha = 0.0;
-	[contactListView setBackgroundColor:[BACKGROUND_COLOR colorWithAlphaComponent:backgroundAlpha]];
-	
-	//Transparency.  Bye bye CPU cycles, I'll miss you!
-	[[self window] setOpaque:(backgroundAlpha == 1.0)];
-	[contactListView setUpdateShadowsWhileDrawing:(backgroundAlpha < 0.8)];
-	//--
-		
+	if([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
+												 group:PREF_GROUP_LIST_LAYOUT] intValue] != WINDOW_STYLE_MOCKIE){
+		return([[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_WINDOW_TRANSPARENCY
+														 group:PREF_GROUP_LIST_THEME] floatValue]);
+	}else{
+		return(0.0);
+	}
 }
 
 

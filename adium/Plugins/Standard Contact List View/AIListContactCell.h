@@ -19,13 +19,15 @@
 	BOOL		userIconPosition;
 	BOOL		statusIconPosition;
 	BOOL		serviceIconPosition;
+	
+	float		backgroundOpacity;
 }
 
 - (void)drawContentWithFrame:(NSRect)rect;
 - (NSRect)drawUserIconInRect:(NSRect)rect onLeft:(BOOL)onLeft;
 - (NSRect)drawStatusIconInRect:(NSRect)rect onLeft:(BOOL)onLeft;
 - (NSRect)drawServiceIconInRect:(NSRect)rect onLeft:(BOOL)onLeft;
-- (NSRect)drawUserExtendedStatusInRect:(NSRect)inRect;
+- (NSRect)drawUserExtendedStatusInRect:(NSRect)rect drawUnder:(BOOL)drawUnder;
 - (NSRect)drawImage:(NSImage *)image atSize:(NSSize)size inRect:(NSRect)rect onLeft:(BOOL)isOnLeft;
 
 - (NSImage *)userIconImage;
@@ -35,5 +37,7 @@
 - (void)setUserIconPosition:(LIST_POSITION)inPosition;
 - (void)setStatusIconPosition:(LIST_POSITION)inPosition;
 - (void)setServiceIconPosition:(LIST_POSITION)inPosition;
-		
+
+- (void)setBackgroundOpacity:(float)inOpacity;
+
 @end

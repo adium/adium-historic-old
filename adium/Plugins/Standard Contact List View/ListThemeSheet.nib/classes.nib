@@ -38,8 +38,10 @@
                 "colorWell_unviewedContent" = NSColorWell; 
                 "colorWell_unviewedContentLabel" = NSColorWell; 
                 "slider_backgroundFade" = NSSlider; 
+                "slider_windowTransparency" = NSSlider; 
                 "textField_backgroundFade" = NSTextField; 
                 "textField_backgroundImagePath" = NSTextField; 
+                "textField_windowTransparency" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 

@@ -28,6 +28,7 @@
 	backgroundImage = nil;
 	backgroundFade = 1.0;
 	updateShadowsWhileDrawing = NO;
+//	drawsBackground = YES;
 
 	[self sizeLastColumnToFit];
 	
@@ -345,6 +346,11 @@
 	[self setNeedsDisplay:YES];
 }
 
+//- (void)setDrawsBackground:(BOOL)inDraw
+//{
+//	drawsBackground = inDraw;
+//}
+
 - (void)setBackgroundFade:(float)fade
 {
 	backgroundFade = fade;
@@ -356,6 +362,10 @@
 	backgroundColor = [inColor retain];
 }
 
+- (NSColor *)backgroundColor
+{
+	return(backgroundColor);
+}
 
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview
 {
@@ -367,36 +377,28 @@
 - (void)drawBackgroundInClipRect:(NSRect)clipRect
 {
 	NSRect visRect = [[self enclosingScrollView] documentVisibleRect];
-	
+
 	[super drawBackgroundInClipRect:clipRect];
 	
-	[backgroundColor set];
-	[NSBezierPath fillRect:clipRect];
-	
-//	[super draw
-	//Color
-//	[
-	
-	//Image
-	if(backgroundImage){
-		NSSize	imageSize = [backgroundImage size];
+//	if(drawsBackground){
+		//Color
+		[backgroundColor set];
+		NSRectFill(clipRect);
+#warning		[NSBezierPath fillRect:clipRect];
 		
-		[backgroundImage drawInRect:NSMakeRect(visRect.origin.x, visRect.origin.y, imageSize.width, imageSize.height)
-						   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
-						  operation:NSCompositeSourceOver
-						   fraction:backgroundFade];
-	}	
+		//Image
+		if(backgroundImage){
+			NSSize	imageSize = [backgroundImage size];
+			
+			[backgroundImage drawInRect:NSMakeRect(visRect.origin.x, visRect.origin.y, imageSize.width, imageSize.height)
+							   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
+							  operation:NSCompositeSourceOver
+							   fraction:backgroundFade];
+		}	
+//	}
 }
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 //Parent window transparency -----------------------------------------------------------------
 //This is a hack and a complete performance disaster, but required because of bugs with transparency in 10.3 :(
 - (void)setUpdateShadowsWhileDrawing:(BOOL)update

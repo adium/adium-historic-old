@@ -39,7 +39,7 @@
 #define KEY_IDLE_AWAY_COLOR			@"Idle And Away Color"
 #define KEY_OFFLINE_COLOR			@"Offline Color"
 
-#define KEY_LIST_THEME_TRANSPARENCY				@"Transparency"
+#define KEY_LIST_THEME_WINDOW_TRANSPARENCY		@"Window Transparency"
 #define KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED	@"Use Background Image"
 #define KEY_LIST_THEME_BACKGROUND_IMAGE_PATH	@"Background Image Path"
 #define KEY_LIST_THEME_BACKGROUND_FADE			@"Background Fade"
@@ -47,6 +47,7 @@
 #define KEY_LIST_THEME_BACKGROUND_COLOR			@"Background Color"
 #define KEY_LIST_THEME_GRID_COLOR				@"Grid Color"
 #define KEY_LIST_THEME_GRID_ENABLED				@"Grid Enabled"
+
 
 @interface AIListThemeWindowController : AIWindowController {
     IBOutlet	NSButton	*checkBox_signedOff;
@@ -95,6 +96,9 @@
 	
 	IBOutlet	NSSlider	*slider_backgroundFade;
 	IBOutlet	NSTextField	*textField_backgroundFade;
+
+	IBOutlet	NSSlider	*slider_windowTransparency;
+	IBOutlet	NSTextField	*textField_windowTransparency;
 }
 
 + (id)listThemeOnWindow:(NSWindow *)parentWindow;

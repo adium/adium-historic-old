@@ -58,6 +58,9 @@
 - (int)rightPadding;
 
 //
+- (NSRect)drawDisplayNameWithFrame:(NSRect)rect;
+
+//
 - (void)setSplitVerticalSpacing:(int)inSpacing;
 - (void)setTopSpacing:(int)inSpacing;
 - (void)setBottomSpacing:(int)inSpacing;

@@ -14,17 +14,14 @@
 
 
 
-#define USER_ICON_ON_LEFT		YES
 #define ICON_TEXT_PADDING		3
-#define STATUS_ICON_ON_LEFT		NO
 #define CONTACT_FONT 			[NSFont systemFontOfSize:11]
 
 #define EXTENDED_STATUS_FONT	[NSFont systemFontOfSize:9]
 #define EXTENDED_STATUS_COLOR	[NSColor grayColor]
 
-#define CONTACT_TEXT_ALIGN		NSLeftTextAlignment
+#define NAME_STATUS_PAD			6
 
-#define BACKGROUND_ALPHA		0.5
 
 //Copy
 - (id)copyWithZone:(NSZone *)zone
@@ -34,13 +31,32 @@
 	return(newCell);
 }
 
+- (id)init
+{
+    [super init];
+	
+	backgroundOpacity = 1.0;
+	
+	return(self);
+}
+	
+
+
+
+
+
+	
 //Label color
 - (NSColor *)labelColor
 {
 	NSColor *labelColor = [[listObject displayArrayForKey:@"Label Color"] objectValue];
-	return([labelColor colorWithAlphaComponent:BACKGROUND_ALPHA]);
+	return([labelColor colorWithAlphaComponent:backgroundOpacity]);
 }
 
+- (void)setBackgroundOpacity:(float)inOpacity
+{
+	backgroundOpacity = inOpacity;
+}
 
 - (NSFont *)font
 {
@@ -180,8 +196,35 @@
 }
 
 
+
+
+
+
 //Drawing --------------------------------------------------------------------------------------------------------------
 #pragma mark Drawing
+
+
+#define HULK_CRUSH_FACTOR 1
+
+//Draw left or not?
+#warning cache me pleaaaase
+- (BOOL)weFitInRect:(NSRect)rect
+{
+	//Username
+	NSAttributedString *attrString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:[self font] forKey:NSFontAttributeName]] autorelease];
+	int		nameHeight = [attrString heightWithWidth:1e7];
+	
+	//status
+	NSAttributedString *statusString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:EXTENDED_STATUS_FONT forKey:NSFontAttributeName]] autorelease];
+	int		statusHeight = [statusString heightWithWidth:1e7];
+	
+	NSLog(@"%i %i",nameHeight,statusHeight);
+	return(nameHeight + statusHeight - HULK_CRUSH_FACTOR <= rect.size.height);
+}
+
+
+
+
 //Draw content of our cell
 - (void)drawContentWithFrame:(NSRect)rect
 {
@@ -210,11 +253,30 @@
 	if(statusIconPosition == LIST_POSITION_RIGHT) rect = [self drawStatusIconInRect:rect onLeft:NO];
 	if(serviceIconPosition == LIST_POSITION_RIGHT) rect = [self drawServiceIconInRect:rect onLeft:NO];
 	
-	//Extended Status
-	rect = [self drawUserExtendedStatusInRect:rect];
+	BOOL	weFit = [self weFitInRect:rect];
 	
-	[self drawDisplayNameWithFrame:rect];
+	//Extended Status
+	if(weFit) rect = [self drawUserExtendedStatusInRect:rect drawUnder:YES];
+	
+	rect = [self drawDisplayNameWithFrame:rect];
+	
+	if(!weFit) rect = [self drawUserExtendedStatusInRect:rect drawUnder:NO];
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //User Icon
 - (NSRect)drawUserIconInRect:(NSRect)rect onLeft:(BOOL)onLeft
@@ -254,7 +316,7 @@
 }
 
 //User Extended Status
-- (NSRect)drawUserExtendedStatusInRect:(NSRect)rect
+- (NSRect)drawUserExtendedStatusInRect:(NSRect)rect drawUnder:(BOOL)drawUnder
 {
 	if(extendedStatusVisible){
 		NSString 	*string = [[listObject statusObjectForKey:@"StatusMessage"] string];
@@ -262,10 +324,16 @@
 		
 		//if(!string) string = @"Online";
 		if(string){
-			//Pad
 			int	halfHeight = rect.size.height / 2;
-			rect.origin.y += halfHeight;
-			rect.size.height -= halfHeight;
+
+			//Pad
+			if(drawUnder){
+				rect.origin.y += halfHeight;
+				rect.size.height -= halfHeight;
+			}else{
+				rect.origin.x += NAME_STATUS_PAD;
+				rect.size.width -= NAME_STATUS_PAD;
+			}
 			
 			//Format string
 
@@ -289,8 +357,21 @@
 				
 				NSString *extStatus = [[[NSAttributedString alloc] initWithString:string attributes:attributes] autorelease];
 				
+//				[[NSColor orangeColor] set];
+//				[NSBezierPath fillRect:rect];
 				
-				[extStatus drawInRect:rect];
+#warning gaaaaaah
+				NSAttributedString *statusString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:EXTENDED_STATUS_FONT forKey:NSFontAttributeName]] autorelease];
+				int		statusHeight = [statusString heightWithWidth:1e7];
+
+				
+				
+				
+				int half = (rect.size.height - statusHeight) / 2.0;
+				[extStatus drawInRect:NSMakeRect(rect.origin.x,
+												 rect.origin.y + half,
+												 rect.size.width,
+												 rect.size.height - half)];
 	
 //				[textStorage setAttributedString:extStatus];
 //				glyphRange = [layoutManager glyphRangeForBoundingRect:NSMakeRect(0,0,rect.size.width,10) inTextContainer:textContainer];
@@ -298,7 +379,9 @@
 //											   atPoint:NSMakePoint(rect.origin.x, rect.origin.y)];
 			}
 			
-			rect.origin.y -= halfHeight;
+			if(drawUnder){
+				rect.origin.y -= halfHeight;
+			}
 		}
 	}
 	return(rect);
