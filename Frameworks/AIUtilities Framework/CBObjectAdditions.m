@@ -89,7 +89,7 @@
 	[invocation setArgument:&argument2 atIndex:3];
 	[invocation retainArguments];
 	
-	[self performSelectorOnMainThread:@selector(handleInvocation:) withObject:invocation afterDelay:delay];	
+	[self performSelector:@selector(handleInvocation:) withObject:invocation afterDelay:delay];	
 }
 
 - (void)handleInvocation:(NSInvocation *)anInvocation
