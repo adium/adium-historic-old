@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.121 2004/05/12 20:31:38 jmelloy Exp $
+$Id: ToDoList.txt,v 1.122 2004/05/12 20:38:16 jmelloy Exp $
 
 
 Legend
@@ -27,7 +27,7 @@ Bugs
 * Message formatting is reset after each message sent (was this an intentional change? - it resets things such as right-to-left typing as well)
 * Links with %n's in them beep when clicked (Set a %n link in your profile using AOLIM)
 * Linking plugin auto-links some characters it shouldn't.. such as *'s and >'s (When placed at the end of an address)
-* Smooth operator and Elisha webkit styles incorrectly display multi-line status messages.
+* Smooth operator incorrectly displays multi-line status messages.
 * Emoticon packs flip upside down when you select them.  (The emoticon menu is causing them to flip, so only enabled packs will be flipped.  No amount of flipping and unflipping within the emoticon pack cell seems to make things correct)
 * AIM chats are logging with both loggers as having a title of (null)
 
