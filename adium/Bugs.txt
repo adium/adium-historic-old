@@ -23,6 +23,9 @@
 - Double clicking two names in succession causes the first name to highlight
   the second time.
 
+- New IM Received sound (event notification) is triggered on the first message received
+	even if you have already sent a message, if there is no message history showing
+	in the window.
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
