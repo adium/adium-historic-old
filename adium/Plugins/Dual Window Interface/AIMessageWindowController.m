@@ -438,7 +438,7 @@
         BOOL    shouldShowTabs = (supressHiding || !autohide_tabBar || ([tabView_customTabs numberOfTabViewItems] > 1) );
 		
 		if (force_tabBar_visible != -1) {
-			shouldShowTabs = (force_tabBar_visible);
+			shouldShowTabs = (force_tabBar_visible || supressHiding);
 		}
 		
         if(shouldShowTabs != tabIsShowing){
