@@ -135,6 +135,7 @@
     if(soundPath != nil && [soundPath length] != 0){
         [[adium soundController] playSoundAtPath:[soundPath stringByExpandingBundlePath]]; //Play the sound
 		
+		[self detailsForHeaderChanged];
     }else{ //selected "Other..."
         NSOpenPanel *openPanel = [NSOpenPanel openPanel];
         
@@ -161,6 +162,8 @@
         //Update the menu and and the selection
 		[self addSound:soundPath toMenu:[popUp_actionDetails menu]];
         [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:soundPath]];
+		
+		[self detailsForHeaderChanged];
     }
 }
 
