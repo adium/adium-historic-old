@@ -109,8 +109,9 @@ typedef enum {
  */
 - (void)viewWillClose
 {
-	//This will set up the emoticon pack menu
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+	
+	[[adium notificationCenter] removeObserver:self];
 }
 
 /*!
