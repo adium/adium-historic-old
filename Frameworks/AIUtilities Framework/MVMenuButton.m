@@ -27,9 +27,9 @@
 }
 
 //
-- (id)copyWithZone:(NSZone*)zone
+- (id)copyWithZone:(NSZone *)zone
 {
-	MVMenuButton	*newButton = [[[self class] alloc] initWithFrame:[self frame]];
+	MVMenuButton	*newButton = [[[self class] allocWithZone:zone] initWithFrame:[self frame]];
 
 	//Copy our config
 	[newButton setControlSize:controlSize];
