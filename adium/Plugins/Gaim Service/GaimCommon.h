@@ -1,26 +1,9 @@
 
 //Extensive debug logging
-#define GAIM_DEBUG  FALSE
+#define GAIM_DEBUG  TRUE
 
 //Gaim includes
-#include "internal.h"
-#include "connection.h"
-#include "conversation.h"
-#include "core.h"
-#include "debug.h"
-#include "ft.h"
-#include "imgstore.h"
-#include "notify.h"
-#include "plugin.h"
-#include "pounce.h"
-#include "prefs.h"
-#include "privacy.h"
-#include "proxy.h"
-#include "request.h"
-#include "signals.h"
-#include "sslconn.h"
-#include "sound.h"
-#include "util.h"
+#include <libgaim/libgaim.h>
 
 #define KEY_ACCOUNT_GAIM_PROXY_TYPE			@"Proxy Type"
 #define KEY_ACCOUNT_GAIM_PROXY_HOST			@"Proxy Host"

@@ -29,18 +29,16 @@ G_BEGIN_DECLS
 #define G_MAXLONG	LONG_MAX
 #define G_MAXULONG	ULONG_MAX
 
-#define G_MININT64	G_GINT64_CONSTANT(0x8000000000000000)
-#define G_MAXINT64	G_GINT64_CONSTANT(0x7fffffffffffffff)
-#define G_MAXUINT64	G_GINT64_CONSTANT(0xffffffffffffffffU)
-
 typedef signed char gint8;
 typedef unsigned char guint8;
 typedef signed short gint16;
 typedef unsigned short guint16;
+#define G_GINT16_MODIFIER "h"
 #define G_GINT16_FORMAT "hi"
 #define G_GUINT16_FORMAT "hu"
 typedef signed int gint32;
 typedef unsigned int guint32;
+#define G_GINT32_MODIFIER ""
 #define G_GINT32_FORMAT "i"
 #define G_GUINT32_FORMAT "u"
 #define G_HAVE_GINT64 1          /* deprecated, always true */
@@ -49,6 +47,7 @@ G_GNUC_EXTENSION typedef signed long long gint64;
 G_GNUC_EXTENSION typedef unsigned long long guint64;
 
 #define G_GINT64_CONSTANT(val)	(G_GNUC_EXTENSION (val##LL))
+#define G_GINT64_MODIFIER "ll"
 #define G_GINT64_FORMAT "lli"
 #define G_GUINT64_FORMAT "llu"
 
@@ -58,6 +57,11 @@ G_GNUC_EXTENSION typedef unsigned long long guint64;
 
 typedef signed long gssize;
 typedef unsigned long gsize;
+#define G_GSIZE_MODIFIER "l"
+#define G_GSSIZE_FORMAT "li"
+#define G_GSIZE_FORMAT "lu"
+
+#define G_MAXSIZE	G_MAXULONG
 
 #define GPOINTER_TO_INT(p)	((gint)   (p))
 #define GPOINTER_TO_UINT(p)	((guint)  (p))
@@ -74,8 +78,8 @@ typedef unsigned long gsize;
 #define g_memmove(d,s,n) G_STMT_START { memmove ((d), (s), (n)); } G_STMT_END
 
 #define GLIB_MAJOR_VERSION 2
-#define GLIB_MINOR_VERSION 2
-#define GLIB_MICRO_VERSION 3
+#define GLIB_MINOR_VERSION 4
+#define GLIB_MICRO_VERSION 0
 
 #define G_OS_UNIX
 
@@ -122,7 +126,9 @@ struct _GStaticMutex
   } static_mutex;
 };
 #define	G_STATIC_MUTEX_INIT	{ NULL, { { 50,-86,-85,-89,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} } }
-#define	g_static_mutex_get_mutex(mutex)   (g_thread_use_default_impl ? ((GMutex*) &((mutex)->static_mutex)) :    g_static_mutex_get_mutex_impl (&((mutex)->runtime_mutex)))
+#define	g_static_mutex_get_mutex(mutex) \
+  (g_thread_use_default_impl ? ((GMutex*) &((mutex)->static_mutex)) : \
+   g_static_mutex_get_mutex_impl_shortcut (&((mutex)->runtime_mutex)))
 /* This represents a system thread as used by the implementation. An
  * alien implementaion, as loaded by g_thread_init can only count on
  * "sizeof (gpointer)" bytes to store their info. We however need more
@@ -135,6 +141,8 @@ union _GSystemThread
   void  *dummy_pointer;
   long   dummy_long;
 };
+
+#define G_ATOMIC_OP_MEMORY_BARRIER_NEEDED 1
 
 #define GINT16_TO_BE(val)	((gint16) (val))
 #define GUINT16_TO_BE(val)	((guint16) (val))
@@ -166,6 +174,8 @@ union _GSystemThread
 #define GLIB_SYSDEF_POLLNVAL =32
 
 #define G_MODULE_SUFFIX "so"
+
+typedef int GPid;
 
 G_END_DECLS
 

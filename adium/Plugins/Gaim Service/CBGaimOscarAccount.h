@@ -7,7 +7,7 @@
  */
 
 #import "CBGaimAccount.h"
-#import "aim.h"
+//#import "aim.h"
 
 @interface CBGaimOscarAccount : CBGaimAccount <AIAccount_Files,AIAccount_Privacy>
 {

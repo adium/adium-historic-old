@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.36 2004/03/26 11:35:36 ramoth4 Exp $
+//$Id: AIPluginController.m,v 1.37 2004/04/02 20:25:53 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -177,8 +177,7 @@ AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersi
 	    if([[pluginName pathExtension] caseInsensitiveCompare:EXTENSION_ADIUM_PLUGIN] == 0){
 			NS_DURING
 				//Load the plugin; if the plugin is hte webkit plugin, verify webkit is available first
-				if ((![pluginName isEqualToString:WEBKIT_PLUGIN] || [NSApp isWebKitAvailable]) &&
-					(![pluginName isEqualToString:GAIM_PLUGIN] || [NSApp isOnPantherOrBetter])){		//Evan: Temporary until Gaim for Jaguar!
+				if ((![pluginName isEqualToString:WEBKIT_PLUGIN] || [NSApp isWebKitAvailable])){
 					pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
 					if(pluginBundle != nil){
 						

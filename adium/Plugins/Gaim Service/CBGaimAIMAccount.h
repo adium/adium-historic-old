@@ -6,7 +6,6 @@
 //
 
 #import "CBGaimOscarAccount.h"
-#import "aim.h"
 
 @interface CBGaimAIMAccount : CBGaimOscarAccount {
 

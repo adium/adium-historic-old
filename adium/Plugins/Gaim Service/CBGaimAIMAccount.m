@@ -7,7 +7,6 @@
 
 #import "CBGaimOscarAccount.h"
 #import "CBGaimAIMAccount.h"
-#import "aim.h"
 
 @implementation CBGaimAIMAccount
 

@@ -682,7 +682,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)installPlugin
 {
-	char *plugin_search_paths[2];
+//	char *plugin_search_paths[2];
 
 	//Register our defaults
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS forClass:[self class]]
@@ -696,14 +696,32 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     
 	//Handle libgaim events with the Cocoa event loop
 	eventLoopAdapter = [[SLGaimCocoaAdapter alloc] init];
-	
     //Tell libgaim to load its plugins
-    NSString *bundlePath = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByExpandingTildeInPath];
-    plugin_search_paths[0] = (char *)[[bundlePath stringByAppendingPathComponent:@"/Contents/Frameworks/Protocols/"] UTF8String];
-    plugin_search_paths[1] = (char *)[[bundlePath stringByAppendingPathComponent:@"/Contents/Frameworks/Plugins/"] UTF8String];
-    gaim_plugins_set_search_paths(sizeof(plugin_search_paths) / sizeof(*plugin_search_paths), plugin_search_paths);
-    gaim_plugins_probe(NULL);
+//    NSString *bundlePath = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByExpandingTildeInPath];
+//    plugin_search_paths[0] = (char *)[[bundlePath stringByAppendingPathComponent:@"/Contents/Frameworks/Protocols/"] UTF8String];
+//    plugin_search_paths[1] = (char *)[[bundlePath stringByAppendingPathComponent:@"/Contents/Frameworks/Plugins/"] UTF8String];
+//    gaim_plugins_set_search_paths(sizeof(plugin_search_paths) / sizeof(*plugin_search_paths), plugin_search_paths);
+//    gaim_plugins_probe(NULL);
+	
+	//Plugins
+    if(!gaim_init_gg_plugin()) NSLog(@"Error: No Gadu Gadu Support");
+//    if(!gaim_init_irc_plugin()) NSLog(@"Error: No IRC Support");
+    if(!gaim_init_jabber_plugin()) NSLog(@"Error: No Jabber Support");
+    if(!gaim_init_napster_plugin()) NSLog(@"Error: No Napster Support");
+    if(!gaim_init_oscar_plugin()) NSLog(@"Error: No Oscar Support");
+//    if(!gaim_init_rendezvous_plugin()) NSLog(@"Error: No Rendezvous Support");
+//    if(!gaim_init_toc_plugin()) NSLog(@"Error: No TOC Support");
+    if(!gaim_init_trepia_plugin()) NSLog(@"Error: No Trepia Support");
+    if(!gaim_init_yahoo_plugin()) NSLog(@"Error: No Yahoo Support");
+
     
+
+	if(/*!gaim_init_ssl_plugin() || */!gaim_init_ssl_gnutls_plugin() || !gaim_init_msn_plugin()){
+		NSLog(@"Error: No MSN/SSL Support");
+	}
+	
+	
+	
     //Setup the buddy list
     gaim_set_blist(gaim_blist_new());
             
