@@ -89,6 +89,8 @@
 	if ((listObject = [sender representedObject]) &&
 		[listObject isKindOfClass:[AIListContact class]]){
 		[self setDestinationContact:(AIListContact *)listObject];
+		
+		[self detailsForHeaderChanged];
 	}
 }
 
