@@ -15,6 +15,7 @@
 
 #import "AIMiniToolbarCenter.h"
 #import "AIMiniToolbarItem.h"
+#import "AIMiniToolbar.h"
 #import "AIVerticallyCenteredTextCell.h"
 
 #define MINI_TOOLBAR_CUSTOMIZE_NIB	@"MiniToolbarCustomize"	//Filename of the minitoolbar nib
@@ -147,6 +148,7 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 - (void)dealloc
 {
     [itemImageArray release];
+    [itemArray release];
     [toolbarDict release];
     [itemDict release];
 
@@ -183,7 +185,7 @@ static AIMiniToolbarCenter *defaultCenter = nil;
     AIMiniToolbarItem	*dragItem;
     NSSize		imageSize;
     
-    dragItem = [[itemDict allValues] objectAtIndex:dragRow];
+    dragItem = [itemArray objectAtIndex:dragRow];
     image = [itemImageArray objectAtIndex:dragRow];
 
     //Put information on the pasteboard
