@@ -24,7 +24,8 @@
 + (AIMessageTabViewItem *)messageTabWithView:(AIMessageViewController *)inMessageView;
 - (void)makeActive:(id)sender;
 - (void)close:(id)sender;
-- (NSString *)labelString;
+- (NSString *)label;
+- (NSImage *)icon;
 - (AIMessageViewController *)messageViewController;
 - (void)tabViewItemWasSelected;
 

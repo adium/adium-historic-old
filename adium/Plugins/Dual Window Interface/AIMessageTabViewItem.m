@@ -106,7 +106,6 @@
 //
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
-    //AIListObject	*listObject = [notification object];
     NSArray		*keys = [[notification userInfo] objectForKey:@"Keys"];
 
 	//Redraw if the icon has changed
