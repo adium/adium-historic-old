@@ -80,6 +80,25 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //    selectedCollection = nil;
 //    selectedColumn = nil;
     [super initWithWindowNibName:windowNibName];
+	
+	
+	NSEnumerator				*enumerator;
+	id <AIServiceController>	service;
+	
+	//get our service images
+	serviceImageDict = [[NSMutableDictionary alloc] init];
+	enumerator = [[[adium accountController] availableServices] objectEnumerator];
+	while(service = [enumerator nextObject]){
+		AIServiceType	*serviceType = [service handleServiceType];
+		NSImage			*image = [serviceType image];
+		
+		if(image){
+			[serviceImageDict setObject:image forKey:[serviceType identifier]];
+		}
+	}
+	
+	groupImage = [[AIImageUtilities imageNamed:@"Folder" forClass:[self class]] retain];
+	
     
     return(self);
 }
@@ -1249,6 +1268,14 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 	
 	[cell setStringValue:[object displayName]];
 	[cell setLeaf:![object isKindOfClass:[AIListGroup class]]];
+	
+	if([object isKindOfClass:[AIListGroup class]]){
+		[cell setLeaf:NO];
+		[cell setImage:groupImage];
+	}else{
+		[cell setLeaf:YES];
+		[cell setImage:[serviceImageDict objectForKey:[object serviceID]]];
+	}
 }
 	
 @end
