@@ -106,7 +106,7 @@
 	{
 		NSString *secondary = [infoDict objectForKey:@"Secondary Text"];
 		
-		oldFrame = [textField_primary frame];
+		oldFrame = [textField_secondary frame];
 		if ([secondary length]){
 			[textField_secondary setStringValue:secondary];
 			[textField_secondary sizeToFit];
@@ -119,7 +119,7 @@
 		
 		changeInTextHeight += (newFrame.size.height - oldFrame.size.height);
 
-		newFrame.origin.y = [textField_secondary frame].origin.y - newFrame.size.height - 8;
+		newFrame.origin.y = oldFrame.origin.y - changeInTextHeight;
 		[textField_secondary setFrame:newFrame];
 	}
 	

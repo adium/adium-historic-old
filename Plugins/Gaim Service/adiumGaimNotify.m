@@ -62,7 +62,11 @@ static void *adiumGaimNotifyFormatted(const char *title, const char *primary, co
 			   (secondary ? secondary : ""),
 			   (text ? text : ""));
 	
-    return(adium_gaim_get_handle());
+	
+	return ([[SLGaimCocoaAdapter sharedInstance] handleNotifyFormattedWithTitle:title
+																		primary:primary
+																	  secondary:secondary
+																		   text:text]);	
 }
 
 static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who, const char *title, const char *primary, const char *secondary, const char *text, GCallback cb,void *userData)
