@@ -105,7 +105,7 @@ static id<GaimThread> gaimThread = nil;
 	//Insert the new display name
 	if([[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]){
 		//Remove any display name we'd previously placed
-		[[theContact displayArrayForKey:@"Display Name"] setObject:nil withOwner:self];
+		[[theContact displayArrayForKey:@"Display Name" create:NO] setObject:nil withOwner:self];
 
 		if(![gaimAlias isEqualToString:[theContact formattedUID]]){
 			[theContact setStatusObject:gaimAlias
@@ -290,7 +290,7 @@ static id<GaimThread> gaimThread = nil;
 
 	//Set the User Icon as an NSImage
 	NSImage *userIcon = [[NSImage alloc] initWithData:userIconData];
-	[theContact setStatusObject:userIcon forKey:@"UserIcon" notify:NO];
+	[theContact setStatusObject:userIcon forKey:KEY_USER_ICON notify:NO];
 	[userIcon release];
 	
 	//Apply any changes
@@ -1204,9 +1204,7 @@ static id<GaimThread> gaimThread = nil;
 //Our account has disconnected
 - (oneway void)accountConnectionDisconnected
 {
-	NSLog(@"Disconnected (last error was %@)",lastDisconnectionError);
-	NSEnumerator    *enumerator;
-	BOOL			connectionIsSuicidal = (account->gc ? account->gc->wants_to_die : NO);
+//	BOOL			connectionIsSuicidal = (account->gc ? account->gc->wants_to_die : NO);
 	
     //We are now offline
 	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:NO];
@@ -1262,11 +1260,11 @@ static id<GaimThread> gaimThread = nil;
         @"Offline",
         @"IdleSince",
         @"IdleManuallySet",
-        @"UserIcon",
+        KEY_USER_ICON,
         @"Away",
         @"AwayMessage",
         @"TextProfile",
-        @"UserIcon",
+        KEY_USER_ICON,
         @"DefaultUserIconFilename",
         nil];
 	
@@ -1278,7 +1276,7 @@ static id<GaimThread> gaimThread = nil;
 {
     [self updateStatusForKey:@"TextProfile"];
     [self updateStatusForKey:@"AwayMessage"];
-    [self updateStatusForKey:@"UserIcon"];
+    [self updateStatusForKey:KEY_USER_ICON];
 	
 	//We use updateAllStatusKeys when we first connect; AIM won't accept an idle time immediately upon connecting, so delay a bit before setting it
 	[self performSelector:@selector(updateStatusForKey:)
@@ -1305,8 +1303,8 @@ static id<GaimThread> gaimThread = nil;
 		}else if([key compare:@"TextProfile"] == 0){
 			[self setAccountProfileTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
 			
-		}else if([key compare:@"UserIcon"] == 0){
-			if(data = [self preferenceForKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS]){
+		}else if([key compare:KEY_USER_ICON] == 0){
+			if(data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
 				[self setAccountUserImage:[[[NSImage alloc] initWithData:data] autorelease]];
 			}
 			
@@ -1395,7 +1393,7 @@ static id<GaimThread> gaimThread = nil;
 	}
 	
 	//We now have an icon
-	[self setStatusObject:image forKey:@"UserIcon" notify:YES];
+	[self setStatusObject:image forKey:KEY_USER_ICON notify:YES];
 }
 
 /********************************/

@@ -43,8 +43,6 @@
 
 - (void)showWindowWithMessage:(NSAttributedString *)msg
 {
-	NSRect  newFrame, oldFrame, zeroFrame = NSMakeRect(0,0,0,0);
-	
 	//Ensure the window is loaded
 	[self window];
 	

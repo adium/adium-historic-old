@@ -10,8 +10,6 @@
 #define KEY_OSCAR_HOST  @"Oscar:Host"
 #define KEY_OSCAR_PORT  @"Oscar:Port"
 
-#define	PREF_GROUP_NOTES			@"Notes"		//Preference group to store notes in
-
 #define DELAYED_UPDATE_INTERVAL		1.0
 
 static NSString *ICQServiceID = nil;
@@ -130,7 +128,6 @@ static BOOL didInitOscar = NO;
 					
 					//Check for a oscar_direct_im (dim) currently open
 					struct oscar_direct_im  *dim;
-					OscarData				*od;
 					const char				*who = [[inListObject UID] UTF8String];
 					
 					dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
@@ -300,7 +297,6 @@ static BOOL didInitOscar = NO;
 	OscarData			*od;
 	aim_userinfo_t		*userinfo;
 	struct buddyinfo	*bi;
-	GaimBuddy			*buddy;
 	
 	const char			*buddyName = [[theContact UID] UTF8String];
 	
@@ -357,7 +353,6 @@ static BOOL didInitOscar = NO;
 {
 	OscarData			*od;
 	aim_userinfo_t		*userinfo;
-	GaimBuddy			*buddy;
 
 	if (gaim_account_is_connected(account) &&
 		(od = account->gc->proto_data) &&
@@ -399,8 +394,7 @@ static BOOL didInitOscar = NO;
 {
 	OscarData			*od;
 	aim_userinfo_t		*userinfo;
-	GaimBuddy			*buddy;
-	
+
 	if ((gaim_account_is_connected(account)) &&
 		(od = account->gc->proto_data) && 
 		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))){
@@ -500,7 +494,6 @@ static BOOL didInitOscar = NO;
 
 - (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString
 {
-	NSDictionary		*imgArguments;
 	NSScanner			*scanner;
     NSCharacterSet		*tagCharStart, *tagEnd, *absoluteTagEnd;
     NSString			*chunkString;
@@ -655,8 +648,7 @@ aim_srv_setavailmsg(od->sess, text);
 {
 	OscarData			*od;
 	aim_userinfo_t		*userinfo;
-	GaimBuddy			*buddy;
-	
+
 	if ((gaim_account_is_connected(account)) &&
 		(od = account->gc->proto_data) &&
 		(userinfo = aim_locate_finduserinfo(od->sess, [[inListObject UID] UTF8String]))){
