@@ -27,6 +27,8 @@
 #define EMOTICON_BOTTOM_MARGIN      4
 #define EMOTICON_TOP_MARGIN         0
 
+static  float   distanceBetweenEmoticons = 0;
+
 - (id)initWithPlugin:(id)inPlugin
 {
 	if (self = [super init]) {
@@ -136,7 +138,10 @@
         }
 
         //Move over for the next emoticon, leaving some space
-        x += imageSize.width + EMOTICON_SPACING;
+		float desiredIncrease = imageSize.width + EMOTICON_SPACING;
+		if (distanceBetweenEmoticons < desiredIncrease)
+			distanceBetweenEmoticons = desiredIncrease;
+        x += distanceBetweenEmoticons;
     }
 }
 
