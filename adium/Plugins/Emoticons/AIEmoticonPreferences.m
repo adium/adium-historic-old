@@ -136,8 +136,8 @@
     }
     
     //Update the table
-    [table_emoticons setRowHeight:rowHeight];
     [table_emoticons reloadData];
+    [table_emoticons setRowHeight:rowHeight];
 
     //Update header
     if(selectedEmoticonPack){
