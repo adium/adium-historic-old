@@ -74,16 +74,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 										  forGroup:PREF_GROUP_EMOTICONS];
     prefs = [[AIEmoticonPreferences preferencePaneForPlugin:self] retain];
     
-    //Register themable preferences
-    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:EMOTICONS_THEMABLE_PREFS
-																  forClass:[self class]] 
-											  forGroup:PREF_GROUP_EMOTICONS];
-
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(preferencesChanged:) 
-									   name:Preference_GroupChanged 
-									 object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
 	
 	//Observe for installation of new emoticon sets
 	[[adium notificationCenter] addObserver:self
@@ -98,32 +89,25 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 }
 
 //
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_EMOTICONS]){
-		
-		//If all that changed was the active pack list, there's no reason to flush our cache
-		//if (![[[notification userInfo] objectForKey:@"Key"] isEqualToString:KEY_EMOTICON_ACTIVE_PACKS]) 
-	{
-			
-			//Flush our cached active emoticons
-			[self resetActiveEmoticons];
-			
-			//Enable/Disable logging
-			BOOL    emoticonsEnabled = ([[self activeEmoticons] count] != 0);
-			if(observingContent != emoticonsEnabled){
-				if(emoticonsEnabled){
-					[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterIncoming];
-					[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterOutgoing];
-					[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterIncoming];
-					[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterOutgoing];
-				}else{
-					[[adium contentController] unregisterContentFilter:self];
-				}
-				observingContent = emoticonsEnabled;
-			}
+	//Flush our cached active emoticons
+	[self resetActiveEmoticons];
+	
+	//Enable/Disable logging
+	BOOL    emoticonsEnabled = ([[self activeEmoticons] count] != 0);
+	if(observingContent != emoticonsEnabled){
+		if(emoticonsEnabled){
+			[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterIncoming];
+			[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterOutgoing];
+			[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterIncoming];
+			[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterOutgoing];
+		}else{
+			[[adium contentController] unregisterContentFilter:self];
 		}
-    }
+		observingContent = emoticonsEnabled;
+	}
 }
 
 
