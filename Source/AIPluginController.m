@@ -267,8 +267,10 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
 			
 			
 			NS_DURING
-				//Load the plugin; if the plugin is hte webkit plugin, verify webkit is available first
+				//Load the plugin if the user didn't tell us to disable it
 				if( !confirmLoading || [[[NSUserDefaults standardUserDefaults] objectForKey:CONFIRMED_PLUGINS] containsObject:pluginName] ) {
+
+					//...unless it's the WebKit plugin, in which case we test for WebKit first
 					if ((![pluginName isEqualToString:WEBKIT_PLUGIN] || [NSApp isWebKitAvailable])){
 						pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
 						if(pluginBundle != nil){						
@@ -305,9 +307,8 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
 					} else {
 						NSLog(AILocalizedString(@"The WebKit Message View plugin failed to load because WebKit is not available.  Please install Safari to enable the WebKit plugin.",nil));
 					}
-				} else {
-					NSLog(@"We shouldn't be loading the plugin %@",pluginName);
 				}
+				
 				NS_HANDLER	// Handle a raised exception
 					NSLog(@"The plugin \"%@\" suffered a fatal assertion!",pluginName);
 					if (plugin != nil) {
