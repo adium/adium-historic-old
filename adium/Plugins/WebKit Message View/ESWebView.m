@@ -13,9 +13,9 @@
 
 @implementation ESWebView
 
-- (id)initWithView:(NSRect)frameRect frameName:(NSString *)frameName groupName:(NSString *)groupName
+- (id)initWithFrame:(NSRect)frameRect frameName:(NSString *)frameName groupName:(NSString *)groupName
 {
-	[super initWithView:frameRect frameName:frameName groupName:groupName];
+	[super initWithFrame:frameRect frameName:frameName groupName:groupName];
 
 	draggingDelegate = nil;
 	
