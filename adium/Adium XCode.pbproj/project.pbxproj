@@ -2317,7 +2317,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3B305314BE000C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "SQL Logger.AdiumPlugin";
@@ -4970,7 +4970,6 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = "Plists/Send Message Contact Alert.plist";
 				INSTALL_PATH = "";
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
 				OTHER_REZFLAGS = "";
@@ -5019,7 +5018,7 @@
 			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
-			path = "Send Message Contact Alert.bundle";
+			path = "Send Message Contact Alert.AdiumPlugin";
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -8861,6 +8860,7 @@
 				34E0F18B053AE56F00031341,
 				34BD83DD054E530800EB2652,
 				4BCB9ACA0567E7A9001D3559,
+				9E9739DB05784EFA00CF3AEE,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9591,6 +9591,7 @@
 				34E0F18A053AE56F00031341,
 				34BD83DC054E530800EB2652,
 				4BCB9ACB0567E7A9001D3559,
+				9E9739DA05784EFA00CF3AEE,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -24764,6 +24765,36 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		9E9739D805784EF900CF3AEE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = CBApplicationAdditions.m;
+			path = "Frameworks/AIUtilities Framework/CBApplicationAdditions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E9739D905784EFA00CF3AEE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = CBApplicationAdditions.h;
+			path = "Frameworks/AIUtilities Framework/CBApplicationAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E9739DA05784EFA00CF3AEE = {
+			fileRef = 9E9739D805784EF900CF3AEE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E9739DB05784EFA00CF3AEE = {
+			fileRef = 9E9739D905784EFA00CF3AEE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		9EA125E8055B630900ECF349 = {
 			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
@@ -27935,6 +27966,8 @@
 		};
 		F59C470D033E544E01A8010A = {
 			children = (
+				9E9739D905784EFA00CF3AEE,
+				9E9739D805784EF900CF3AEE,
 				F5793938033E74E401A8010A,
 				F5793939033E74E401A8010A,
 				34E0F189053AE56F00031341,

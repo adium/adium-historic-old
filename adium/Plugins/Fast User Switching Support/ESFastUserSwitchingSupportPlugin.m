@@ -12,11 +12,10 @@
 @implementation ESFastUserSwitchingSupportPlugin
 - (void)installPlugin
 {
-    if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2) //only install on Panther
+    if([NSApp isOnPantherOrBetter]) //only install on Panther
     {
         setAwayThroughFastUserSwitch = NO;
-        setMuteThroughFastUserSwitch = NO;
-
+        
         [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
                                                             selector:@selector(switchHandler:) 
                                                                 name:NSWorkspaceSessionDidBecomeActiveNotification 
@@ -49,16 +48,6 @@
             [away release];
             setAwayThroughFastUserSwitch = YES;
         }
-        
-        //Mute if we aren't already muted
-        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
-        if([[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue] == NO){
-            [[owner preferenceController] setPreference:[NSNumber numberWithBool:YES]
-                                                 forKey:KEY_SOUND_TEMPORARY_MUTE
-                                                  group:PREF_GROUP_GENERAL];   
-            setMuteThroughFastUserSwitch = YES;
-        }
-        
     }
     else    //Activation
     {
@@ -69,14 +58,6 @@
             [[owner accountController] setProperty:nil forKey:@"Autoresponse" account:nil];
             setAwayThroughFastUserSwitch = NO;
         }
-        if (setMuteThroughFastUserSwitch) {
-         //Turn off the temporary mute   
-            [[owner preferenceController] setPreference:[NSNumber numberWithBool:NO]
-                                                 forKey:KEY_SOUND_TEMPORARY_MUTE
-                                                  group:PREF_GROUP_GENERAL];   
-            setMuteThroughFastUserSwitch = NO;
-        }
-        
     }    
 }
 

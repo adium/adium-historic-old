@@ -8,8 +8,6 @@
 
 #import "CBStatusMenuItemController.h"
 
-//BOOL isPanther = (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
-
 @interface CBStatusMenuItemController (PRIVATE)
 - (id)initWithOwner:(AIAdium *)inOwner;
 @end
@@ -31,12 +29,23 @@ CBStatusMenuItemController *sharedInstance = nil;
     if(self = [super init])
     {
         owner = [inOwner retain];
+
+        /*id obj;        
+        NSEnumerator *numer = [[[owner accountController] accountArray] objectEnumerator];
+        while(obj = [numer nextObject])
+        {
+            
+        }*/
         
         statusItem = [[[NSStatusBar systemStatusBar]
             statusItemWithLength:NSSquareStatusItemLength] retain];
     
         [statusItem setHighlightMode:YES];
         [statusItem setImage:[AIImageUtilities imageNamed:@"adium.png" forClass:[self class]]];
+        if(kRunningUnderPanther)
+        {
+            [statusItem setAlternateImage:[AIUtilities imageNamed:@"adiumHighlight.png" forClass:[self class]]];
+        }
         //[statusItem setMenu:itemMenu];
         [statusItem setEnabled:YES];
     }
@@ -50,6 +59,11 @@ CBStatusMenuItemController *sharedInstance = nil;
     [statusItem release];
     //[itemMenu release];
     [super dealloc];
+}
+
+- (void)accountsChanged:(NSNotification *)notification
+{
+
 }
 
 @end
