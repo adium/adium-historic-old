@@ -27,24 +27,22 @@
 //Init
 - (id)init
 {
-	BOOL result;
+	NSBundle		*ourBundle = [NSBundle bundleForClass:[AIAccountViewController class]];
+	NSDictionary	*nameTable = [NSDictionary dictionaryWithObject:self forKey:@"NSOwner"];
 	
     [super init];
     account = nil;
     
-	//Load our default views (We must use the instanced nib load because this will be subclassed and we want to load
-	//the nib from our framework, not the bundle of the subclass)
-	result = [[NSBundle bundleForClass:[AIAccountViewController class]] loadNibFile:@"AccountViews"
-																  externalNameTable:[NSDictionary dictionaryWithObject:self forKey:@"NSOwner"]
-																		   withZone:nil];
-	
-	
-	//Load custom views and tabs for our subclass (If it specified a nib name)
+	//Load custom views for our subclass (If our subclass specifies a nib name)
 	if([self nibName]){
 		[NSBundle loadNibNamed:[self nibName] owner:self];
-		auxiliaryTabs = [[self loadAuxiliaryTabsFromTabView:view_auxiliaryTabView] retain];
 	}
 	
+	//Load our default views if necessary
+	if(!view_setup) [ourBundle loadNibFile:@"AccountSetup" externalNameTable:nameTable withZone:nil];
+	if(!view_profile) [ourBundle loadNibFile:@"AccountProfile" externalNameTable:nameTable withZone:nil];
+	if(!view_options) [ourBundle loadNibFile:@"AccountOptions" externalNameTable:nameTable withZone:nil];
+
     return(self);
 }
 
@@ -53,9 +51,6 @@
 {    
     [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
-//    [view_accountView release];
-//	[view_auxiliaryTabView release];
-	[auxiliaryTabs release];
     
     [super dealloc];
 }
@@ -75,16 +70,16 @@
     return(view_setup);
 }
 
-//Connection view
-- (NSView *)connectionView
+//Profile view
+- (NSView *)profileView
 {
-    return(view_connection);
+    return(view_profile);
 }
 
-//Auxilliary tabs
-- (NSArray *)auxiliaryTabs
+//Options view
+- (NSView *)optionsView
 {
-	return(auxiliaryTabs);
+    return(view_options);
 }
 
 //Nib containing custom views or tabs (Optional, for subclasses)
@@ -93,49 +88,22 @@
     return(@"");    
 }
 
-//Extract auxiliary tabs from an NSTabView inside an NSWindow
-- (NSArray *)loadAuxiliaryTabsFromTabView:(NSTabView *)inTabView
-{
-	NSMutableArray *auxTabs = [NSMutableArray array];
-	
-	if(inTabView){
-        //Get the array of tabs
-        NSArray *tabViewItems = [inTabView tabViewItems];
-		[auxTabs addObjectsFromArray:tabViewItems];
-        
-        //Now release the tabs and the window they came from
-        NSEnumerator    *enumerator = [tabViewItems objectEnumerator];
-        NSTabViewItem   *tabViewItem;
-        
-        while(tabViewItem = [enumerator nextObject]){
-            [inTabView removeTabViewItem:tabViewItem];
-        }
-        
-        [[inTabView window] release];
-    }
-	
-	return(auxTabs);
-}
-
 
 //Preferences ----------------------------------------------------------------------------------------------------------
 #pragma mark Preferences
 //Configure the account view
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-	
 	if(account != inAccount){		
 		account = inAccount;
 		
 		//UID Label
-		NSString *userNameLabel = [[account service] userNameLabel];
+		NSString 	*userNameLabel = [[account service] userNameLabel];
 		[textField_accountUIDLabel setStringValue:[(userNameLabel ? userNameLabel : @"User Name") stringByAppendingString:@":"]];
 		
 		//UID
 		NSString	*formattedUID = [account preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS];
 		[textField_accountUID setStringValue:(formattedUID && [formattedUID length] ? formattedUID : [account UID])];
-
-		//Restrict UID field to valid characters and length
 		[textField_accountUID setFormatter:
 			[AIStringFormatter stringFormatterAllowingCharacters:[[account service] allowedCharactersForAccountName]
 														  length:[[account service] allowedLengthForAccountName]
@@ -145,74 +113,91 @@
 		//Password
 		[self updatePasswordField];
 		
+		//User alias (display name)
+		NSString *alias = [[[account preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
+		[textField_alias setStringValue:(alias ? alias : @"")];
 		
-		//Host
-//		hostName = [theAccount host];
-//		[textField_hostName setStringValue:(hostName ? hostName : @"")];
+		//Server Host
+		NSString	*host = [account preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS];
+		[textField_connectHost setStringValue:([host length] ? host : @"")];
+		
+		//Server Port
+		NSNumber	*port = [account preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
+		if(port){
+			[textField_connectPort setIntValue:[port intValue]];
+		}else{
+			[textField_connectPort setStringValue:@""];
+		}
+		
+		//Check for new mail
+		[checkBox_checkMail setState:[[inAccount preferenceForKey:KEY_ACCOUNT_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]];
 
-		
-		
-//		- (NSString *)host{
-//			NSString *hostKey = [self hostKey];
-//			return (hostKey ? [self preferenceForKey:hostKey group:GROUP_ACCOUNT_STATUS] : nil); 
-//		}
-//		- (int)port{ 
-//			NSString *portKey = [self portKey];
-//			return (portKey ? [[self preferenceForKey:portKey group:GROUP_ACCOUNT_STATUS] intValue] : nil); 
-//		}
-		
-		
-		
-		
-		
-		//Port number
-//		port = [theAccount port];
-//		if (port){
-//			[textField_portNumber setIntValue:port];
-//		}else{
-//			[textField_portNumber setStringValue:@""];	
-//		}
-		
-		
-		
-		//Port
-		
-		
 	}
 }
 
-//Save preference changes as they are made
+#warning XXX - PortKey, HostKey, find it, replace it -ai
+//Save all control values
+- (void)saveConfiguration
+{
+	//UID
+	if(![[account UID] isEqualToString:[textField_accountUID stringValue]]){
+		[[adium accountController] changeUIDOfAccount:account to:[textField_accountUID stringValue]];			
+	}
+	
+	//Password
+	NSString		*password = [textField_password stringValue];
+	NSString		*oldPassword;
+	
+	if(password && [password length] != 0){
+		oldPassword = [[adium accountController] passwordForAccount:account];
+		if (![password isEqualToString:oldPassword]){
+			[[adium accountController] setPassword:password forAccount:account];
+		}
+	}else{
+		[[adium accountController] forgetPasswordForAccount:account];
+	}
+	
+	//Connect Host
+	[account setPreference:([[textField_connectHost stringValue] length] ? [textField_connectHost stringValue] : nil)
+					forKey:KEY_CONNECT_HOST
+					 group:GROUP_ACCOUNT_STATUS];	
+	
+	//Connect Port
+	[account setPreference:([textField_connectPort intValue] ? [NSNumber numberWithInt:[textField_connectPort intValue]] : nil)
+					forKey:KEY_CONNECT_PORT
+					 group:GROUP_ACCOUNT_STATUS];
+
+	//Alias
+	[account setPreference:[[NSAttributedString stringWithString:[textField_alias stringValue]] dataRepresentation]
+					forKey:@"FullNameAttr"
+					 group:GROUP_ACCOUNT_STATUS];
+	
+	//Check mail	
+	[account setPreference:[NSNumber numberWithBool:[checkBox_checkMail state]]
+					forKey:KEY_ACCOUNT_CHECK_MAIL
+					 group:GROUP_ACCOUNT_STATUS];
+	
+}
+
+
+//Update password field as UID changes
 - (IBAction)changedPreference:(id)sender
 {
 	if(sender == textField_accountUID){
-		NSString *newUID = [textField_accountUID stringValue];
-		
-		if(![[account UID] isEqualToString:newUID]){
-			[[adium accountController] changeUIDOfAccount:account to:newUID];			
+		if(![[account UID] isEqualToString:[sender stringValue]]){
 			[self updatePasswordField];
 		}
-		
-	}else if(sender == textField_password){
-        NSString		*password = [sender stringValue];
-        NSString		*oldPassword;
-		
-        if(password && [password length] != 0){
-			oldPassword = [[adium accountController] passwordForAccount:account];
-			if (![password isEqualToString:oldPassword]){
-				[[adium accountController] setPassword:password forAccount:account];
-			}
-        }else{
-            [[adium accountController] forgetPasswordForAccount:account];
-        }
-    }
+	}
 }
 
 //Update password field
 - (void)updatePasswordField
 {
     NSString		*savedPassword = nil;
-
-	if([account UID] && [[account UID] length]){
+	NSString		*accountUID = [textField_accountUID stringValue];
+	
+#warning XXX - This isnt right, we need to passwordForUID-Service, because we dont have an account instance matching the UID that is entered here -ai
+	if(accountUID && [accountUID length]){
 		savedPassword = [[adium accountController] passwordForAccount:account];
 	}
 	if(savedPassword && [savedPassword length] != 0){
@@ -220,12 +205,6 @@
 	}else{
 		[textField_password setStringValue:@""];
 	}
-}
-
-//Save changes made in delayed controls
-- (void)saveFieldsImmediately
-{
-	[self changedPreference:textField_password];
 }
 
 @end
