@@ -688,7 +688,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	//Register our defaults
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS forClass:[self class]]
 										  forGroup:GROUP_ACCOUNT_STATUS];
-	
     char *plugin_search_paths[2];
 
     //Register ourself as libgaim's UI handler

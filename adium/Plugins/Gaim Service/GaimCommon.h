@@ -1,6 +1,6 @@
 
 //Extensive debug logging
-#define GAIM_DEBUG  FALSE
+#define GAIM_DEBUG  TRUE
 
 //Gaim includes
 #include "internal.h"
@@ -22,6 +22,12 @@
 #include "sound.h"
 #include "util.h"
 
+#define KEY_ACCOUNT_GAIM_PROXY_TYPE			@"Proxy Type"
+#define KEY_ACCOUNT_GAIM_PROXY_HOST			@"Proxy Host"
+#define KEY_ACCOUNT_GAIM_PROXY_PORT			@"Proxy Port"
+#define KEY_ACCOUNT_GAIM_PROXY_AUTHENTICATE @"Proxy Needs Authentication"
+#define KEY_ACCOUNT_GAIM_PROXY_USERNAME		@"Proxy Username"
+
 //Events we care about explicitly via signals
 typedef enum
 {
@@ -40,3 +46,14 @@ typedef enum
 	GAIM_BUDDY_EVIL				= 0x18  /**< The buddy's warning level changed.     */
 	
 } GaimBuddyEvent;
+
+//Proxy types
+typedef enum
+{
+	Gaim_Proxy_None = 0,
+	Gaim_Proxy_Default,
+	Gaim_Proxy_HTTP,
+	Gaim_Proxy_SOCKS4,
+	Gaim_Proxy_SOCKS5
+} AdiumGaimProxyType;
+	

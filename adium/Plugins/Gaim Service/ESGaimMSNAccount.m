@@ -7,6 +7,9 @@
 
 #import "ESGaimMSNAccount.h"
 
+#define KEY_MSN_HOST	@"MSN:Host"
+#define KEY_MSN_PORT	@"MSN:Port"
+
 @interface ESGaimMSNAccount (PRIVATE)
 -(void)_setFriendlyNameTo:(NSString *)inAlias;
 @end
@@ -49,6 +52,15 @@
 			
 	}
 	return nil;
+}
+
+- (NSString *)hostKey
+{
+	return KEY_MSN_HOST;
+}
+- (NSString *)portKey
+{
+	return KEY_MSN_PORT;
 }
 
 //MSN doesn't use HTML at all... there's a font setting in the MSN Messenger text box, but maybe it's ignored?

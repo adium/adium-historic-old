@@ -59,7 +59,6 @@
 -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type;
 -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type;
 
-
 //Connectivity
 - (void)connect;
 - (void)configureAccountProxy;
@@ -71,6 +70,11 @@
 - (void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text;
 - (NSString *)connectionStringForStep:(int)step;
 - (void)resetLibGaimAccount;
+- (NSString *)host;
+- (int)port;
+- (NSString *)hostKey;
+- (NSString *)portKey;
+
 
 //Account status
 - (NSArray *)supportedPropertyKeys;

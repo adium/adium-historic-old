@@ -7,6 +7,9 @@
 #import "ESGaimJabberAccountViewController.h"
 #import "ESGaimJabberAccount.h"
 
+#define KEY_JABBER_HOST @"Jabber:Host"
+#define KEY_JABBER_PORT @"Jabber:Port"
+
 @implementation ESGaimJabberAccount
 
 - (const char*)protocolPlugin
@@ -43,4 +46,15 @@
 	}
 	return nil;
 }
+
+- (NSString *)hostKey
+{
+	return KEY_JABBER_HOST;
+}
+
+- (NSString *)portKey
+{
+	return KEY_JABBER_PORT;
+}
+
 @end

@@ -41,9 +41,15 @@
 
 @implementation CBGaimAccount
 
-// The GaimAccount associated with this Adium account
+// The GaimAccount currently associated with this Adium account
 - (GaimAccount*)gaimAccount
 {
+	//Create a gaim account if one does not already exist
+	if (!account) {
+		[self createNewGaimAccount];
+		if (GAIM_DEBUG) NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
+	}
+	
     return account;
 }
 
@@ -633,13 +639,13 @@
 	
 	if (gc && account && gaim_account_is_connected(account)) {
 		if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0) {
-			AIContentMessage	*cm = (AIContentMessage*)object;
-			AIChat				*chat = [cm chat];
+			AIContentMessage	*contentMessage = (AIContentMessage*)object;
+			AIChat				*chat = [contentMessage chat];
 			
 			//***NOTE: listObject is probably the wrong thing to use here - won't that mess up multiuser chats?
 			AIListObject		*listObject = [chat listObject];
 			
-			NSString			*body = [self encodedAttributedString:[cm message] forListObject:listObject];
+			NSString			*body = [self encodedAttributedString:[contentMessage message] forListObject:listObject];
 			GaimConversation	*conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
 			
 			//create a new conv if necessary - this happens, for example, if an existing chat is suddenly our responsibility
@@ -662,7 +668,7 @@
 				{
 					const char			*destination = [[listObject UID] UTF8String];
 					
-					serv_send_im(gc, destination, [body UTF8String], [cm autoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
+					serv_send_im(gc, destination, [body UTF8String], [contentMessage autoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
 					//gaim_conv_im_send(im, [body UTF8String]);
 					sent = YES;
 					break;
@@ -1359,7 +1365,7 @@
 	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
 	
 	//Configure libgaim's proxy settings
-	[self configureAccountProxy];
+//	[self configureAccountProxy];
 	
 	//Set password and connect
 	gaim_account_set_password(account, [password UTF8String]);
@@ -1369,40 +1375,72 @@
 //Configure libgaim's proxy settings using the current system values
 - (void)configureAccountProxy
 {
-	GaimProxyInfo *proxy_info = gaim_proxy_info_new();
+	GaimProxyInfo		*proxy_info = gaim_proxy_info_new();
+	GaimProxyType		gaimAccountProxyType;
 	
-	if([(CBGaimServicePlugin *)service configureGaimProxySettings]) {
-		char *type = (char *)gaim_prefs_get_string("/core/proxy/type");
-		int proxytype;
+	NSNumber			*proxyPref = [self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
+	NSString			*host = nil;
+	NSString			*proxyUsername = nil;
+	NSString			*proxyPassword = nil;
+	AdiumGaimProxyType  proxyType;
+	int					port = 0;
+	
+	proxyType = (proxyPref ? [proxyPref intValue] : Gaim_Proxy_Default);
+	
+	if (proxyType == Gaim_Proxy_None){
+		gaimAccountProxyType = GAIM_PROXY_NONE;
+	}else if (proxyType == Gaim_Proxy_Default) {
 		
-		if (!strcmp(type, "none"))
-			proxytype = GAIM_PROXY_NONE;
-		else if (!strcmp(type, "http"))
-			proxytype = GAIM_PROXY_HTTP;
-		else if (!strcmp(type, "socks4"))
-			proxytype = GAIM_PROXY_SOCKS4;
-		else if (!strcmp(type, "socks5"))
-			proxytype = GAIM_PROXY_SOCKS5;
-		else if (!strcmp(type, "envvar"))
-			proxytype = GAIM_PROXY_USE_ENVVAR;
-		else
-			proxytype = -1;
+		NSDictionary *systemSOCKSSettingsDictionary;
 		
-		proxy_info->type = proxytype;
+		if((systemSOCKSSettingsDictionary = [(CBGaimServicePlugin *)service systemSOCKSSettingsDictionary])) {
+			gaimAccountProxyType = GAIM_PROXY_SOCKS5;
+			
+			host = [systemSOCKSSettingsDictionary objectForKey:@"Host"];
+			port = [[systemSOCKSSettingsDictionary objectForKey:@"Port"] intValue];
+			
+			proxyUsername = [systemSOCKSSettingsDictionary objectForKey:@"Username"];
+			proxyPassword = [systemSOCKSSettingsDictionary objectForKey:@"Password"];
+			
+		}else{
+			//Using system wide defaults, and no SOCKS proxy is set in the system preferences
+			gaimAccountProxyType = GAIM_PROXY_NONE;
+		}
+	}else{
+		switch (proxyType){
+			case Gaim_Proxy_HTTP:
+				gaimAccountProxyType = GAIM_PROXY_HTTP;
+				break;
+			case Gaim_Proxy_SOCKS4:
+				gaimAccountProxyType = GAIM_PROXY_SOCKS4;
+				break;
+			case Gaim_Proxy_SOCKS5:
+				gaimAccountProxyType = GAIM_PROXY_SOCKS5;
+				break;
+			default:
+				gaimAccountProxyType = GAIM_PROXY_NONE;
+				break;
+		}
 		
-		proxy_info->host = (char *)gaim_prefs_get_string("/core/proxy/host");
-		proxy_info->port = (int)gaim_prefs_get_int("/core/proxy/port");
+		host = [self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
+		port = [[self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
 		
-		proxy_info->username = (char *)gaim_prefs_get_string("/core/proxy/username"),
-		proxy_info->password = (char *)gaim_prefs_get_string("/core/proxy/password");
-		
-		NSLog(@"Proxy settings: %i %s:%i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
-		
-	} else {
-		proxy_info->type = GAIM_PROXY_NONE;
-		NSLog(@"No proxy settings.");
+		if ([[self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_AUTHENTICATE group:GROUP_ACCOUNT_STATUS] boolValue]){
+			proxyUsername = [self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
+#warning Need to load proxyPassword from the keychain
+		}
 	}
 	
+	proxy_info->type = gaimAccountProxyType;
+	
+	proxy_info->host = (char *)[host UTF8String];
+	proxy_info->port = port;
+	
+	proxy_info->username = (char *)[proxyUsername UTF8String];
+	proxy_info->password = (char *)[proxyPassword UTF8String];
+	
+	NSLog(@"Proxy settings: %i %s:%i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
+				
 	gaim_account_set_proxy_info(account,proxy_info);
 }
 
@@ -1418,6 +1456,19 @@
         gaim_account_disconnect(account); 
     }
 }
+
+- (NSString *)host{
+	NSString *hostKey = [self hostKey];
+	NSLog(@"HostKey %@ gives %@",hostKey,[self preferenceForKey:hostKey group:GROUP_ACCOUNT_STATUS]);
+	return (hostKey ? [self preferenceForKey:hostKey group:GROUP_ACCOUNT_STATUS] : nil); 
+}
+- (int)port{ 
+	NSString *portKey = [self portKey];
+	return (portKey ? [[self preferenceForKey:portKey group:GROUP_ACCOUNT_STATUS] intValue] : nil); 
+}
+
+- (NSString *)hostKey { return nil; };
+- (NSString *)portKey { return nil; };
 
 /*****************************/
 /* accountConnection methods */
@@ -1524,6 +1575,19 @@
 	
     //Create a fresh version of the account
     account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
+	
+	//Host (server)
+	NSString		*hostName = [self host];
+	if (hostName && [hostName length]){
+		gaim_account_set_string(account, "server", [hostName UTF8String]);
+	}
+	
+	//Port
+	int				portNumber = [self port];
+	if (portNumber){
+		gaim_account_set_int(account, "port", portNumber);
+	}
+	
     gaim_accounts_add(account);
     
 	[(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
@@ -1675,6 +1739,8 @@
 	//We now have an icon
 	[self setStatusObject:image forKey:@"UserIcon" notify:YES];
 }
+
+
 
 
 @end
