@@ -301,7 +301,7 @@
 		JabberBuddy	*jb;
 		
 		if(jb = jabber_buddy_find(account->gc->proto_data, normalized, FALSE)){
-			NSString	*statusMessageString;
+			NSString	*statusMessageString = nil;
 			const char	*msg = jabber_buddy_get_status_msg(jb);
 			
 			if(msg){
