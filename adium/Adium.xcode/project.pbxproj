@@ -18225,7 +18225,7 @@
 				4B970BE40535B6BE002F28F9,
 			);
 			isa = PBXGroup;
-			name = "Contact List (Tied to DWI)";
+			name = "Contact List";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";

@@ -1,7 +1,7 @@
 {
     IBClasses = (
         {
-            CLASS = AIDualWindowAdvancedPrefs; 
+            CLASS = AIContactListAdvancedPrefs; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_horizontalResize" = NSButton; 
