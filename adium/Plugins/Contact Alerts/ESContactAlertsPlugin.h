@@ -13,33 +13,25 @@
 #import "SUSpeaker.h"
 
 #define PREF_GROUP_ALERTS		@"Alerts"
-#define	KEY_EVENT_NOTIFICATION		@"Notification"
-#define KEY_EVENT_ACTION		@"Action"
-#define KEY_EVENT_ACTIONSET		@"Contact Actions"
-#define KEY_EVENT_DETAILS		@"Details"
-#define KEY_EVENT_PATH			@"Path"
-#define KEY_EVENT_STATUS		@"Status"
-#define KEY_EVENT_DISPLAYNAME		@"Display Name"
-#define KEY_EVENT_DELETE		@"Delete"
-#define KEY_EVENT_DETAILS_UNIQUE	@"Unique Details"
+#define KEY_EVENT_ACTIONSET		@"Contact Actions"	//storage of a set of events and associated actions
 
+#define	KEY_EVENT_NOTIFICATION		@"Notification"  	//event, actually
+#define KEY_EVENT_ACTION		@"Action"		//actions to take
+#define KEY_EVENT_DETAILS		@"Details"		//details (text, path, etc.)
+#define KEY_EVENT_STATUS		@"Status"		//allows for inverse events (came back from away, etc.)
+#define KEY_EVENT_DISPLAYNAME		@"Display Name"		//display name of the event
+#define KEY_EVENT_DELETE		@"Delete"		//delete after execution?
+#define KEY_EVENT_ACTIVE		@"Only While Active"
 
-#define KEY_EVENT_DETAILS_DICT		@"Details Dictionary"
+#define KEY_EVENT_DETAILS_UNIQUE	@"Unique Details"	//just used for UI purposes
+
+#define KEY_EVENT_DETAILS_DICT		@"Details Dictionary"	//additional options' storage
 #define KEY_MESSAGE_SENDTO_UID		@"Destination UID"
 #define KEY_MESSAGE_SENDTO_SERVICE	@"Destination Service"
 #define KEY_MESSAGE_SENDFROM		@"Account ID"
-#define KEY_MESSAGE_OTHERACCOUNT	@"Allow Other"
+#define KEY_MESSAGE_OTHERACCOUNT	@"Allow Other"		//allow other account
 #define KEY_MESSAGE_ERROR		@"Display Error"
 
-#define PREF_GROUP_SOUNDS		@"Sounds"
-
-#define SOUND_EVENT_START		@"\nSoundset:\n"	//String marking start of event list
-#define SOUND_EVENT_QUOTE		@"\""			//Character before and after event name
-#define SOUND_NEWLINE			@"\n"			//Newline character
-
-#define KEY_EVENT_SOUND_SET		@"Event Sound Set"
-#define	KEY_EVENT_SOUND_PATH		@"Path"
-#define	KEY_EVENT_SOUND_NOTIFICATION	@"Notification"
 
 #define Pref_Changed_Alerts		@"Alerts Changed in Pref Pane"
 #define Window_Changed_Alerts		@"Alerts Changed in Window"

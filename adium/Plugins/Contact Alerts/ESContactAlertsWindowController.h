@@ -20,6 +20,7 @@
     IBOutlet	AIAlternatingRowTableView	*tableView_actions;
     IBOutlet	NSButton			*button_delete;
     IBOutlet	NSButton			*button_oneTime;
+    IBOutlet	NSButton			*button_active;
     IBOutlet	NSPopUpButton			*popUp_contactList;
     IBOutlet	NSView				*view_main;
 
@@ -38,5 +39,6 @@
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)oneTimeEvent:(id)sender;
 - (IBAction)addedEvent:(id)sender;
+- (IBAction)onlyWhileActive:(id)sender;
 
 @end
