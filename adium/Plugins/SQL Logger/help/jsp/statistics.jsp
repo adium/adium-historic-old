@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 418 $ $Date: 2003/09/09 01:18:57 $ -->
+<!--$Rev: 437 $ $Date: 2003/09/25 15:02:59 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -243,8 +243,11 @@ try {
         out.print("</td></tr></table>");
         out.print("</td></tr></table>");
 
-        pstmt = conn.prepareStatement(" select username, recipient_id as \"Recipient\", "+ 
-        " count(*) as \"Sent\", (select sum(num_messages)"+
+        pstmt = conn.prepareStatement("select username, recipient_id as \"Recipient\", "+ 
+        " (select num_messages "+
+        " from adium.user_statistics where " +
+        " sender_id = a.sender_id and recipient_id = a.recipient_id) " +
+        " as \"Sent\", (select num_messages "+
         " from adium.user_statistics where"+
         " recipient_id = a.sender_id and sender_id = a.recipient_id) as " +
         " \"Recieved\", " +
