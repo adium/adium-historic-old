@@ -1,19 +1,19 @@
 #!/usr/bin/perl -I/home/jmelloy/lib/perl5/site_perl/5.6.1/
 
-# $Id: make_logfile.pl,v 1.9 2003/12/22 22:01:05 jmelloy Exp $
+# $Id: make_logfile.pl,v 1.10 2004/01/05 15:37:42 jmelloy Exp $
 
 use warnings;
 use strict;
 
 use File::List;
 
-my $search = new File::List("/Users/jmelloy/clean-adium");
+my $search = new File::List("/home/jmelloy/adium");
 my @filelist = @{ $search->find(".") };
 my %directories;
 
 foreach my $file (@filelist) {
     
-    $file =~ s/\/Users\/jmelloy\/clean-adium\/(.*\/).*/$1/;
+    $file =~ s/\/home\/jmelloy\/adium\/(.*\/).*/$1/;
 
     print $file . "\n";
 
