@@ -23,7 +23,7 @@
 //Initiate a chat
 - (IBAction)newMessage:(id)sender
 {
-	[AINewMessagePromptController newPrompt];
+	[AINewMessagePromptController showPrompt];
 }
 
 @end
