@@ -84,15 +84,18 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 // Contacts ------------------------------------------------------------------------------------------------
 #pragma mark Contacts
-- (oneway void)newContact:(AIListContact *)theContact withName:(NSString *)inName
+- (oneway void)newContact:(AIListContact *)theContact
 {
-	//If the name we were passed differs from the UID of the contact, it's a formatted UID
-	if(![inName isEqualToString:[theContact formattedUID]]){
-		[theContact setStatusObject:inName
-							 forKey:@"FormattedUID"
-							 notify:NO];
-		
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+
+}
+
+//When a new contact is created, if we aren't already silent and delayed, set it for half a second to cover our initial
+//status updates
+- (oneway void)gotNewContact
+{
+	if (!silentAndDelayed){
+		NSLog(@"&&&& Now delaying");
+		[self silenceAllContactUpdatesForInterval:1.0];
 	}
 }
 
@@ -109,12 +112,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[self gotGroupForContact:theContact];
 }
 
-- (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
+- (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias name:(NSString *)inName
 {
 	BOOL changes = NO;
 	BOOL displayNameChanges = NO;
 
-	//Store this alias so long as it isn't identical to the UID
+	//Store this alias as the serverside display name so long as it isn't identical when unformatted to the UID
 	if(![[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]){
 
 		//This is the server display name.  Set it as such.
@@ -149,10 +152,21 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 								 forKey:@"FormattedUID"
 								 notify:NO];
 			
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+			changes = YES;
 		}
 	}
 
+	//If the name we were passed differs from the current formatted UID of the contact, it's a formatted UID
+	//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
+	if(![inName isEqualToString:[theContact formattedUID]]){
+		[theContact setStatusObject:inName
+							 forKey:@"FormattedUID"
+							 notify:NO];
+		
+		changes = YES;
+	}
+	
+	
 	if(changes){
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
@@ -1090,15 +1104,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	float percentDone = [percent floatValue];
     [fileTransfer setPercentDone:percentDone bytesSent:[bytesSent unsignedLongValue]];
-	if (percentDone == 1.0){
-		[[adium fileTransferController] transferComplete:fileTransfer];
-	}
 }
 
 //The remote side canceled the transfer, the fool.  Tell the fileTransferController
 - (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer
 {
-    [[adium fileTransferController] transferCanceled:fileTransfer];
+    [[adium fileTransferController] transferCanceledRemotely:fileTransfer];
 }
 
 - (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer
@@ -1365,6 +1376,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[self updateStatusForKey:@"IdleSince"];
 	
     //Silence updates
+	NSLog(@"%@: Silencing for 18",self);
     [self silenceAllContactUpdatesForInterval:18.0];
 	[[adium contactController] delayListObjectNotificationsUntilInactivity];
 	
@@ -1915,19 +1927,17 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (AIListContact *)mainThreadContactWithUID:(NSString *)inUID
 {
+	AIListContact	*contact;
+
 	if (!namesAreCaseSensitive){
 		inUID = [inUID compactedString];
 	}
-	
-	[self performSelectorOnMainThread:@selector(_contactWithUID:)
-						   withObject:inUID
-						waitUntilDone:YES];
-	
-	AIListContact *contact = [[adium contactController] existingContactWithService:service
-																		   account:self
-																			   UID:inUID];
-	
-	return contact;
+
+	contact = [self mainPerformSelector:@selector(_contactWithUID:)
+							 withObject:inUID
+							returnValue:YES];
+
+	return(contact);
 }
 
 - (NSString *)host{
