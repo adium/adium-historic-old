@@ -151,7 +151,7 @@
                     <div class="teamMember">
                         <h2>David Clark</h2>
                         <img class="teamAvatar" width="64" height="64" border="0" src="images/avatars/avatar_David Clark.png" alt="avatar" />
-                        <span class="teamData">Email:</span><a href="mailto:dchoby98@users.sourceforge.net">dchoby98@users.sourceforge.net</a><br />
+                        <span class="teamData">Email:</span>>dchoby98[at]users[dot]sourceforge[dot]net</a><br />
                         <span class="teamData">AIM:</span>wlc98clark<br />
                         <span class="teamData">MSN:</span>dchoby98@hotmail.com
                     </div>
