@@ -29,12 +29,11 @@
             OUTLETS = {
                 "autohide_tabBar" = NSButton; 
                 "checkBox_allowInactiveClosing" = NSButton; 
-                "checkBox_backgroundColorFormatting" = NSButton; 
-                "checkBox_combineConsecutive" = NSButton; 
                 "checkBox_customNameFormatting" = NSButton; 
                 "popUp_minimumFontSize" = NSPopUpButton; 
                 "popUp_nameFormat" = NSPopUpButton; 
                 "popUp_timeStampFormat" = NSPopUpButton; 
+                "popUp_windowPosition" = NSPopUpButton; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
