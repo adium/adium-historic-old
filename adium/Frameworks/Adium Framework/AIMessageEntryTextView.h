@@ -76,4 +76,7 @@
 - (void)popContent;
 - (void)swapContent;
 
+//context menu
+- (NSMenu *)contextualMenuForAISendingTextView:(AISendingTextView *)textView  mergeWithMenu:(NSMenu *)mergeMenu;
+
 @end
