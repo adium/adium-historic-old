@@ -13,13 +13,6 @@ Adium, Copyright 2001-2005, Adam Iser
  write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/*
- Core - Preference Controller
- 
- Handles loading and saving preferences and preference changed notifications
- 
- */
-
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
 
@@ -28,21 +21,38 @@ Adium, Copyright 2001-2005, Adam Iser
 @interface AIPreferenceController (PRIVATE)
 - (NSMutableDictionary *)loadPreferenceGroup:(NSString *)groupName;
 - (void)savePreferences:(NSMutableDictionary *)prefDict forGroup:(NSString *)groupName;
+- (NSDictionary *)cachedDefaultsForGroup:(NSString *)group object:(AIListObject *)object;
+- (NSDictionary *)cachedPreferencesWithDefaultsForGroup:(NSString *)group object:(AIListObject *)object;
 @end
 
+/*
+ * @class AIPreferenceController
+ * @brief Preference Controller
+ *
+ * Handles loading and saving preferences, default preferences, and preference changed notifications
+ */
 @implementation AIPreferenceController
 
-//init
+/*
+ * @brief Initialize
+ */
 - (void)initController
 {
     //
     paneArray = [[NSMutableArray alloc] init];
-    prefCache = [[NSMutableDictionary alloc] init];
+
+    defaults = [[NSMutableDictionary alloc] init];
+	prefCache = [[NSMutableDictionary alloc] init];
+    prefWithDefaultsCache = [[NSMutableDictionary alloc] init];
+
+	objectDefaults = [[NSMutableDictionary alloc] init];
 	objectPrefCache = [[NSMutableDictionary alloc] init];
+	objectPrefWithDefaultsCache = [[NSMutableDictionary alloc] init];
+
 	observers = [[NSMutableDictionary alloc] init];
     delayedNotificationGroups = [[NSMutableSet alloc] init];
     preferenceChangeDelays = 0;
-	
+
 	//
 	userDirectory = [[[adium loginController] userDirectory] retain];
 	
@@ -54,7 +64,12 @@ Adium, Copyright 2001-2005, Adam Iser
     [self registerDefaults:[NSDictionary dictionaryNamed:PREFS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
 }
 
-//We can't do these in initing, since the toolbar controller hasn't loaded yet
+/*
+ * @brief Finish initialization
+ *
+ * Sets up the toolbar items.
+ * We can't do these in initing, since the toolbar controller hasn't loaded yet at that point.
+ */
 - (void)willFinishIniting
 {
     NSToolbarItem	*toolbarItem;
@@ -72,19 +87,27 @@ Adium, Copyright 2001-2005, Adam Iser
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"General"];
 }
 
-//We must close the preference window before plugins and the other controllers are unloaded.
+/*
+ * @brief Begin closing
+ * 
+ * We must close the preference window before plugins and the other controllers are unloaded.
+ */
 - (void)beginClosing
 {
     [AIPreferenceWindowController closeSharedInstance];
 }
 
-//close
+/*
+ * @brief Close
+ */
 - (void)closeController
 {
     //Preferences are (always) saved as they're modified, so there's no need to save them here.
 } 
 
-//dealloc
+/*
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
     [delayedNotificationGroups release]; delayedNotificationGroups = nil;
@@ -94,7 +117,12 @@ Adium, Copyright 2001-2005, Adam Iser
     [super dealloc];
 }
 
-//This code will move the preferences from "../Adium 2.0" to "../Adium X", if we ever want to do that
+/*
+ * @brief Adium 2 to Adium X preference migration
+ *
+ * This code will move the preferences from "../Adium 2.0" to "../Adium X", if we ever want to do that.
+ * Not currently used.
+ */
 - (void)movePreferenceFolderFromAdium2ToAdium
 {
     NSFileManager *manager = [NSFileManager defaultManager];
@@ -117,13 +145,21 @@ Adium, Copyright 2001-2005, Adam Iser
 
 //Preference Window ----------------------------------------------------------------------------------------------------
 #pragma mark Preference Window
-//Show the preference window
+/*
+ * @brief Show the preference window
+ */
 - (IBAction)showPreferenceWindow:(id)sender
 {
     [[AIPreferenceWindowController preferenceWindowController] showWindow:nil];
 }
 
-//Show a specific category of the preference window
+/*
+ * @brief Show a specific category of the preference window
+ *
+ * Opens the preference window if necessary
+ *
+ * @param category The category to show
+ */
 - (void)openPreferencesToCategory:(PREFERENCE_CATEGORY)category
 {
 	AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowController];
@@ -131,6 +167,13 @@ Adium, Copyright 2001-2005, Adam Iser
     [preferenceWindow showWindow:nil];
 }
 
+/*
+ * @brief Show a specific category within the advanced pane of the preference window
+ *
+ * Opens the preference window if necessary
+ *
+ */
+// Does this still work? -eds
 - (void)openPreferencesToAdvancedPane:(NSString *)paneName inCategory:(PREFERENCE_CATEGORY)category
 {
 	AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowController];
@@ -138,13 +181,17 @@ Adium, Copyright 2001-2005, Adam Iser
 	[preferenceWindow showWindow:nil];
 }
 
-//Add a view to the preferences
+/*
+ * @brief Add a view to the preferences
+ */
 - (void)addPreferencePane:(AIPreferencePane *)inPane
 {
     [paneArray addObject:inPane];
 }
 
-//Returns all currently available preference panes
+/*
+ * @brief Returns all currently available preference panes
+ */
 - (NSArray *)paneArray
 {
     return(paneArray);
@@ -153,7 +200,14 @@ Adium, Copyright 2001-2005, Adam Iser
 
 //Observing ------------------------------------------------------------------------------------------------------------
 #pragma mark Observing
-//Register a preference observer
+/*
+ * @brief Register a preference observer
+ *
+ * The preference observer will be notified when preferences in group change and passed the preference dictionary for that group
+ * The observer must implement:
+ *		- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+ *
+ */
 - (void)registerPreferenceObserver:(id)observer forGroup:(NSString *)group
 {
 	NSMutableArray	*groupObservers;
@@ -174,11 +228,13 @@ Adium, Copyright 2001-2005, Adam Iser
 	[observer preferencesChangedForGroup:group
 									 key:nil
 								  object:nil
-						  preferenceDict:[self cachedPreferencesForGroup:group object:nil]
+						  preferenceDict:[self cachedPreferencesWithDefaultsForGroup:group object:nil]
 							   firstTime:YES];
 }
 
-//Unregister a preference observer
+/*
+ * @brief Unregister a preference observer
+ */
 - (void)unregisterPreferenceObserver:(id)observer
 {
 	NSEnumerator	*enumerator = [observers objectEnumerator];
@@ -189,16 +245,25 @@ Adium, Copyright 2001-2005, Adam Iser
 	}
 }
 
-//Broadcast a key changed notification.  If notifications are delayed, remember the group that changed and broadcast
-//this notification when the delay is lifted instead of immediately.
-//Currently, our delayed notification system isn't setup to handle object-specific preferences, so always
-//notify if there is an object present for now.
+/*
+ * @brief Broadcast a key changed notification.  
+ *
+ * Broadcasts a group changed notification if key is nil.
+ *
+ * If notifications are delayed, remember the group that changed and broadcast this notification when the delay is
+ * lifted instead of immediately. Currently, our delayed notification system isn't setup to handle object-specific 
+ * preferences, so always notify if there is an object present for now.
+ *
+ * @param key The key
+ * @param group The group
+ * @param object The object, or nil if global
+ */
 - (void)informObserversOfChangedKey:(NSString *)key inGroup:(NSString *)group object:(AIListObject *)object
 {
 	if(!object && preferenceChangeDelays > 0){
         [delayedNotificationGroups addObject:group];
     }else{
-		NSDictionary	*preferenceDict = [self cachedPreferencesForGroup:group object:object];
+		NSDictionary	*preferenceDict = [self cachedPreferencesWithDefaultsForGroup:group object:object];
 		NSEnumerator	*enumerator = [[observers objectForKey:group] objectEnumerator];
 		id				observer;
 
@@ -212,8 +277,12 @@ Adium, Copyright 2001-2005, Adam Iser
     }
 }
 
-//Changing large amounts of preferences at once causes a lot of notification overhead
-//This should be used like [lockFocus] / [unlockFocus] around groups of preference changes to improve performance
+/*
+ * @brief Set if preference changed notifications should be delayed
+ *
+ * Changing large amounts of preferences at once causes a lot of notification overhead. This should be used like
+ * [lockFocus] / [unlockFocus] around groups of preference changes to improve performance.
+ */
 - (void)delayPreferenceChangedNotifications:(BOOL)inDelay
 {
 	if(inDelay){
@@ -242,9 +311,25 @@ Adium, Copyright 2001-2005, Adam Iser
     
 //Setting Preferences -------------------------------------------------------------------
 #pragma mark Setting Preferences
+/*
+ * @brief Set a global preference
+ *
+ * Set and save a preference at the global level.
+ *
+ * @param value The preference, which must be plist-encodable
+ * @param key An arbitrary NSString key
+ * @param group An arbitrary NSString group
+ */
 - (void)setPreference:(id)value forKey:(NSString *)key group:(NSString *)group{
 	[self setPreference:value forKey:key group:group object:nil];
 }
+
+/*
+ * @brief Set a global or object-specific preference
+ *
+ * Set and save a preference.  This should not be called directly from plugins or components.  To set an object-specific
+ * preference, use the appropriate method on the object. To set a global preference, use setPreference:forKey:group:
+ */
 - (void)setPreference:(id)value
 			   forKey:(NSString *)key
 				group:(NSString *)group
@@ -267,62 +352,141 @@ Adium, Copyright 2001-2005, Adam Iser
 
 //Retrieving Preferences ----------------------------------------------------------------
 #pragma mark Retrieving Preferences
-//Retrieve a preference
+/*
+ * @brief Retrieve a preference
+ */
 - (id)preferenceForKey:(NSString *)key group:(NSString *)group
 {
-	return([[self cachedPreferencesForGroup:group object:nil] objectForKey:key]);
+	return([self preferenceForKey:key group:group objectIgnoringInheritance:nil]);
 }
 
-//Retrieve an object specific preference (With inheritance)
-- (id)preferenceForKey:(NSString *)key group:(NSString *)group object:(AIListObject *)object
+/*
+ * @brief Retrieve an object specific preference with inheritance, ignoring defaults
+ *
+ * Should only be used within AIPreferenceController. See preferenceForKey:group:object: for details.
+ */
+- (id)_noDefaultsPreferenceForKey:(NSString *)key group:(NSString *)group object:(AIListObject *)object
 {
 	id	result = [[self cachedPreferencesForGroup:group object:object] objectForKey:key];
 	
 	//If there is no object specific preference, inherit the value from the object containing this one
 	if(!result && object){
-		return([self preferenceForKey:key group:group object:[object containingObject]]);
+		return([self _noDefaultsPreferenceForKey:key group:group object:[object containingObject]]);
 	}else{
+		//If we have no object (either were passed no object initially or got here recursively) use defaults if necessary
 		return(result);
 	}
 }
 
-//Retrieve an object specific preference (Ignoring inheritance)
-- (id)preferenceForKey:(NSString *)key group:(NSString *)group objectIgnoringInheritance:(AIListObject *)object
+/*
+ * @brief Retrieve an object specific default preference with inheritance
+ */
+- (id)defaultPreferenceForKey:(NSString *)key group:(NSString *)group object:(AIListObject *)object
 {
-	return([[self cachedPreferencesForGroup:group object:object] objectForKey:key]);
+	//Don't use the defaults initially
+	id	result = [[self cachedDefaultsForGroup:group object:object] objectForKey:key];
+	
+	//If there is no object specific preference, inherit the value from the object containing this one
+	if(!result && object){
+		return([self defaultPreferenceForKey:key group:group object:[object containingObject]]);
+	}else{
+		//If we have no object (either were passed no object initially or got here recursively) use defaults if necessary
+		return(result);
+	}	
 }
 
-//Retrieve all the preferences in a group
+/*
+ * @brief Retrieve an object specific preference with inheritance.
+ *
+ * Objects inherit from their containing objects, up to the global preference.  If this entire tree has no preference
+ * defaults are searched starting with the object and continuing up to global.
+ */
+- (id)preferenceForKey:(NSString *)key group:(NSString *)group object:(AIListObject *)object
+{
+	//Don't use the defaults initially
+	id result = [self _noDefaultsPreferenceForKey:key group:group object:object];
+	
+	//If no result, try defaults
+	if(!result) result = [self defaultPreferenceForKey:key group:group object:object];
+	
+	return(result);
+}
+
+/*
+ * @brief Retrieve an object specific preference ignoring inheritance.
+ *
+ * If object is nil, this returns the global preference.  Uses defaults only for the specified preference level,
+ * not inherited defaults, as expected.
+ */
+- (id)preferenceForKey:(NSString *)key group:(NSString *)group objectIgnoringInheritance:(AIListObject *)object
+{
+	//We are ignoring inheritance, so we can ignore inherited defaults, too, and use the cachedPreferencesWithDefaultsForGroup:object: dict
+	id result = [[self cachedPreferencesWithDefaultsForGroup:group object:object] objectForKey:key];
+	
+	return(result);
+}
+
+/*
+ * @brief Retrieve all the preferences in a group
+ *
+ * @result A dictionary of preferenced for the group, including default values as appropriate
+ */
 - (NSDictionary *)preferencesForGroup:(NSString *)group
 {
-    return([self cachedPreferencesForGroup:group object:nil]);    
+    return([self cachedPreferencesWithDefaultsForGroup:group object:nil]);    
 }
 
 
 //Defaults -------------------------------------------------------------------------------------------------------------
 #pragma mark Defaults
-//Register a dictionary of defaults.  Default resetting is only available for preferences in the advanced category.
+/*
+ * @brief Register a dictionary of defaults.
+ */
 - (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)group{
 	[self registerDefaults:defaultDict forGroup:group object:nil];
 }
+
+/*
+ * @brief Register a dictionary of object-specific defaults.
+ */
 - (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)group object:(AIListObject *)object
 {
-    NSMutableDictionary	*prefDict = [self cachedPreferencesForGroup:group object:object];
-    NSEnumerator		*enumerator;
-    NSString			*key;
+	NSMutableDictionary	*targetDefaultsDict;
+	NSMutableDictionary	*activeDefaultsCache;
+	NSMutableDictionary *actualDefaultsDict;
+	NSString			*cacheKey;	
 	
-	//This is a poor way to handle defaults, since it means the defaults will be written as the users preferences
-	//if they ever change any key in this group.
-    enumerator = [[defaultDict allKeys] objectEnumerator];
-    while((key = [enumerator nextObject])){
-        if(![prefDict objectForKey:key]){
-            [prefDict setObject:[defaultDict objectForKey:key] forKey:key];
-        }
-    }
+	//Object specific preferences are stored by path and objectID, while regular preferences are stored by group.
+	if(object){
+		NSString	*path = [object pathToPreferences];
+		NSString	*uniqueID = [object internalObjectID];
+		cacheKey = [NSString stringWithFormat:@"%@:%@", path, uniqueID];
+		activeDefaultsCache = objectPrefWithDefaultsCache;
+		targetDefaultsDict = objectDefaults;
+		
+	}else{
+		cacheKey = group;
+		activeDefaultsCache = prefWithDefaultsCache;
+		targetDefaultsDict = defaults;
+		
+	}
+	
+	actualDefaultsDict = [targetDefaultsDict objectForKey:cacheKey];
+	if(!actualDefaultsDict) actualDefaultsDict = [NSMutableDictionary dictionary];
+	
+	[actualDefaultsDict addEntriesFromDictionary:defaultDict];
+	[targetDefaultsDict setObject:actualDefaultsDict
+						   forKey:cacheKey];
+
+	//Now clear our current prefWithDefaults cache so it will be regenerated with these entries included on next call
+	[activeDefaultsCache removeObjectForKey:cacheKey];
 }
 
-//Reset the preferences of a pane to their default values.  This only works for preference panes, and only panes
-//in the advanced preferences have a reset defaults button
+/*
+ * @brief Reset an advanced preference pane to default values
+ *
+ * This only works for preference panes, and only panes in the advanced preferences have a reset defaults button.
+ */
 - (void)resetPreferencesInPane:(AIPreferencePane *)preferencePane
 {
 	NSDictionary	*allDefaults, *groupDefaults;
@@ -355,7 +519,12 @@ Adium, Copyright 2001-2005, Adam Iser
 //Preference Cache -----------------------------------------------------------------------------------------------------
 //We cache the preferences locally to avoid loading them each time we need a value
 #pragma mark Preference Cache
-//Fetch cached preferences
+/*
+ * @brief Fetch cached preferences
+ *
+ * @param group The group
+ * @param object The object, or nil for global
+ */
 - (NSMutableDictionary *)cachedPreferencesForGroup:(NSString *)group object:(AIListObject *)object
 {
 	NSMutableDictionary	*prefDict;
@@ -385,7 +554,88 @@ Adium, Copyright 2001-2005, Adam Iser
 	return(prefDict);
 }
 
-//Write preference changes back to the cache (The cache will be written to disk at a later time)
+/*
+ * @brief Return just the defaults for a specified group and object
+ *
+ * @param group The group
+ * @param object The object, or nil for global defaults
+ */
+- (NSDictionary *)cachedDefaultsForGroup:(NSString *)group object:(AIListObject *)object
+{
+	NSDictionary		*sourceDefaultsDict;
+	NSString			*cacheKey;
+
+	//Object specific preferences are stored by path and objectID, while regular preferences are stored by group.
+	if(object){
+		NSString	*path = [object pathToPreferences];
+		NSString	*uniqueID = [object internalObjectID];
+		cacheKey = [NSString stringWithFormat:@"%@:%@", path, uniqueID];
+		sourceDefaultsDict = objectDefaults;
+		
+	}else{
+		cacheKey = group;
+		sourceDefaultsDict = defaults;
+	}
+	
+	return([sourceDefaultsDict objectForKey:cacheKey]);
+}
+
+/*
+ * @brief Return the result of taking the defaults and superceding them with any set preferences
+ *
+ * @param group The group
+ * @param object The object, or nil for global
+ */
+- (NSDictionary *)cachedPreferencesWithDefaultsForGroup:(NSString *)group object:(AIListObject *)object
+{
+	NSDictionary		*prefWithDefaultsDict;
+	NSMutableDictionary	*activeDefaultsCache;
+	NSDictionary		*sourceDefaultsDict;
+	NSString			*cacheKey;
+	
+	//Object specific preferences are stored by path and objectID, while regular preferences are stored by group.
+	if(object){
+		NSString	*path = [object pathToPreferences];
+		NSString	*uniqueID = [object internalObjectID];
+		cacheKey = [NSString stringWithFormat:@"%@:%@", path, uniqueID];
+		activeDefaultsCache = objectPrefWithDefaultsCache;
+		sourceDefaultsDict = objectDefaults;
+
+	}else{
+		cacheKey = group;
+		activeDefaultsCache = prefWithDefaultsCache;
+		sourceDefaultsDict = defaults;
+
+	}
+	
+	if(!(prefWithDefaultsDict = [activeDefaultsCache objectForKey:cacheKey])){
+		NSDictionary	*userPrefs = [self cachedPreferencesForGroup:group object:object];
+		NSDictionary	*defaultPrefs = [sourceDefaultsDict objectForKey:cacheKey];
+
+		if(defaultPrefs){
+			//Add the object's own preferences to the defaults dictionary to get a dict with the object's keys
+			//overriding the default keys
+			prefWithDefaultsDict = [[defaultPrefs mutableCopy] autorelease];
+			[(NSMutableDictionary *)prefWithDefaultsDict addEntriesFromDictionary:userPrefs];
+		}else{
+			//With no defaults, just use the userPrefs
+			prefWithDefaultsDict = userPrefs;
+		}
+		
+		//And cache the result; the cache should be updated or cleared when the dictionary changes
+		[activeDefaultsCache setObject:prefWithDefaultsDict forKey:cacheKey];
+	}
+	
+	return(prefWithDefaultsDict);
+}
+
+/*
+ * @brief Write preference changes back to the cache and to disk
+ *
+ * @param prefDict The user-specified preferences (not including defaults)
+ * @param group The group
+ * @param object The object, or nil for global
+ */
 - (void)updateCachedPreferences:(NSMutableDictionary *)prefDict forGroup:(NSString *)group object:(AIListObject *)object
 {
 	if(object){
@@ -395,11 +645,17 @@ Adium, Copyright 2001-2005, Adam Iser
 
 		[objectPrefCache setObject:prefDict forKey:cacheKey];
 		
+		//Clear the cache so the union of defaults and preferences will be recalculated on next call
+		[objectPrefWithDefaultsCache removeObjectForKey:cacheKey];
+		
 		//Save the preference change immediately (Probably not the best idea?)
 		[prefDict writeToPath:[userDirectory stringByAppendingPathComponent:path]
 					 withName:[uniqueID safeFilenameString]];
-		
+
 	}else{
+		//Clear the cache so the union of defaults and preferences will be recalculated on next call
+		[prefWithDefaultsCache removeObjectForKey:group];
+		
 		//Save the preference change immediately (Probably not the best idea?)
 		[prefDict writeToPath:userDirectory withName:group];
 		
@@ -408,6 +664,13 @@ Adium, Copyright 2001-2005, Adam Iser
 
 //Default download locaiton --------------------------------------------------------------------------------------------
 #pragma mark Default download location
+/*
+ * @brief Get the default download location
+ *
+ * This will use an Adium-specific preference if set, or the systemwide download location if not
+ *
+ * @result A full path to the download location
+ */
 - (NSString *) userPreferredDownloadFolder
 {
 	OSStatus		err = noErr;
@@ -438,6 +701,11 @@ finish:
 	return [NSString stringWithUTF8String:path];
 }
 
+/*
+ * @brief Set the location Adium should use for saving files
+ *
+ * @param A full path to an existing folder
+ */
 - (void)setUserPreferredDownloadFolder:(NSString *)path {
 	OSStatus		err = noErr;
 	ICInstance		inst = NULL;
