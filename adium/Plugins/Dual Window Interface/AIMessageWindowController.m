@@ -122,7 +122,9 @@
 
     //Remember the initial tab height
     tabBarHeight = [tabView_customTabs frame].size.height;
-	[[self window] addDocumentIconButton];
+	if([[self window] respondsToSelector:@selector(addDocumentIconButton)]){
+		[[self window] addDocumentIconButton];
+	}
 
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
@@ -347,7 +349,7 @@
 	[[self window] setTitle:title];
 	
 	//Window Icon (We display state in the window title if tabs are not visible)
-	NSButton	*button = [[self window]standardWindowButton:NSWindowDocumentIconButton];
+	NSButton	*button = [[self window] standardWindowButton:NSWindowDocumentIconButton];
 	if(!tabBarIsVisible){
 		[button setImage:[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] stateIcon]];
 	}else{
