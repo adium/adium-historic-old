@@ -3,7 +3,7 @@
 //  Adium XCode
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.12 2003/12/26 09:29:08 evands Exp $
+//  $Id: ESContactAlertsController.m,v 1.13 2004/01/08 07:31:28 evands Exp $
 
 
 /*
@@ -20,7 +20,6 @@
 
 @interface ESContactAlertsController (PRIVATE)
 -(id <ESContactAlerts>)_ownerOfContactAlert:(ESContactAlert *)contactAlert;
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent;
 - (void)processEventActionArray:(NSMutableArray *)eventActionArray forObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys;
 @end
 
@@ -207,7 +206,7 @@ Methods used by ESContactAlerts
 /********
 Alert Execution
 ********/
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     if (!silent) //We do things.  If silent, don't do them.
     {
