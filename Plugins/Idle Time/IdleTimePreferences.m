@@ -88,6 +88,9 @@
         [self configureControlDimming];
 
     }else if(sender == textField_idleMinutes){
+		double seconds = [[NSNumber numberWithInt:[sender intValue]] intValue];
+		AILog(@"Set to %f",seconds * 60);
+		
         [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
                                              forKey:KEY_IDLE_TIME_IDLE_MINUTES
                                               group:PREF_GROUP_IDLE_TIME];

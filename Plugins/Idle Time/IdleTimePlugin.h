@@ -13,7 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-
 #define IDLE_TIME_DEFAULT_PREFERENCES	@"IdleDefaultPrefs"
 
 #define PREF_GROUP_IDLE_TIME		@"Idle"
@@ -26,7 +25,7 @@
 #define PREF_GROUP_AWAY_MESSAGES    @"Away Messages"
 #define KEY_SAVED_AWAYS				@"Saved Away Messages"
 
-#define MENU_AWAY_DISPLAY_LENGTH		30
+#define MENU_AWAY_DISPLAY_LENGTH	30
 
 typedef enum {
     AINotIdle = 0,
@@ -49,7 +48,8 @@ typedef enum {
 
     BOOL		isIdle;
     NSTimer		*idleTimer;
-
+	NSTimer		*autoAwayTimer;	//Will only be used as necessary
+	
     BOOL		idleEnabled;
     double		idleThreshold;
 	
