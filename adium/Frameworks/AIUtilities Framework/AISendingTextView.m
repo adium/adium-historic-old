@@ -153,14 +153,16 @@ static NSImage *pushIndicatorImage = nil;
 
     //Catch newlines as they're inserted
     if([theString length] && [theString characterAtIndex:0] == 10){
-        NSParameterAssert([returnArray count] != 0);
-
-        if([[returnArray objectAtIndex:0] boolValue]){ //if the return should send
-            if(availableForSending) [self _sendContent]; //Send the content
-            insertText = NO;
+//        NSParameterAssert([returnArray count] != 0);
+        if ([returnArray count]){
+            
+            if([[returnArray objectAtIndex:0] boolValue]){ //if the return should send
+                if(availableForSending) [self _sendContent]; //Send the content
+                insertText = NO;
+            }
+            
+            [returnArray removeObjectAtIndex:0]; //remove the return
         }
-
-        [returnArray removeObjectAtIndex:0]; //remove the return
     }
 
     if(insertText){
