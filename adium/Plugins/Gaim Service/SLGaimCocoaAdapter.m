@@ -2170,8 +2170,14 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	if (gaim_account_is_connected(account)){
 		NSTimeInterval idle = (idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil);
 		
-		serv_set_idle(account->gc, 0);
-		if(idle) serv_set_idle(account->gc, idle);
+		if(idle) {
+			//Go to a 0 idle on the server first to ensure other clients see our change (to support arbitrary Set Custom Idle time changes)
+			serv_set_idle(account->gc, 0);
+			serv_set_idle(account->gc, idle);
+			account->gc->is_idle = TRUE;
+		} else {
+			serv_touch_idle(account->gc);	
+		}
 	}
 }
 
@@ -2227,6 +2233,21 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 
 #pragma mark Protocol specific accessors
+- (oneway void)MSNRequestBuddyIconFor:(NSString *)inUID onAccount:(id)adiumAccount
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimMSNRequestBuddyIconFor:onAccount:)
+				  withObject:inUID
+				  withObject:adiumAccount];
+}
+- (oneway void)gaimMSNRequestBuddyIconFor:(NSString *)inUID onAccount:(id)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (gaim_account_is_connected(account)){
+		
+		msn_request_buddy_icon(account->gc, [inUID UTF8String]);
+	}
+}
 
 #pragma mark Gaim Images
 - (NSString *)_processGaimImagesInString:(NSString *)inString forAdiumAccount:(NSObject<AdiumGaimDO> *)adiumAccount

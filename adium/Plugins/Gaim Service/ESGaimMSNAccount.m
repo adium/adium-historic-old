@@ -150,6 +150,15 @@ static BOOL didInitMSN = NO;
 	[self updateStatusForKey:@"FullNameAttr"];
 }
 
+- (void)delayedUpdateContactStatus:(AIListContact *)inContact
+{
+	[super delayedUpdateContactStatus:inContact];
+	
+	if ([[inContact numberStatusObjectForKey:@"Online"] boolValue]){
+		[[super gaimThread] MSNRequestBuddyIconFor:[inContact UID] onAccount:self];
+	}
+}
+
 #pragma mark File transfer
 - (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
