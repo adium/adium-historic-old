@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.h,v 1.18 2004/05/24 03:46:52 adamiser Exp $ 
+// $Id: AIPreferenceController.h,v 1.19 2004/05/24 06:04:19 evands Exp $ 
 
 //Preference groups
 #define PREF_GROUP_GENERAL              @"General"

@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -13,9 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /*
- * $Revision: 1.13 $
- * $Date: 2004/03/11 04:33:27 $
- * $Author: adamiser $
+ * $Revision: 1.14 $
+ * $Date: 2004/05/24 06:03:44 $
+ * $Author: evands $
  */
 
 #import "JMSQLLogViewerWindowController.h"

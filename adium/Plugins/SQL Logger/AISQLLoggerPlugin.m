@@ -2,7 +2,7 @@
 | AISQLLoggerPlugin 1.0 for Adium                                                                         |
 | AILoggerPlugin: Copyright (C) 2002 Jeffrey Melloy.                                                      |
 | <jmelloy@visualdistortion.org> <http://www.visualdistortion.org/adium/>                                 |
-| Adium: Copyright (C) 2001-2003 Adam Iser. <adamiser@mac.com> <http://www.adiumx.com>                    |---\
+| Adium: Copyright (C) 2001-2004 Adam Iser. <adamiser@mac.com> <http://www.adiumx.com>                    |---\
 \---------------------------------------------------------------------------------------------------------/   |
   | This program is free software; you can redistribute it and/or modify it under the terms of the GNU        |
   | General Public License as published by the Free Software Foundation; either version 2 of the License,     |
@@ -16,8 +16,8 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.42 $
- * $Date: 2004/05/06 08:17:28 $
+ * $Revision: 1.43 $
+ * $Date: 2004/05/24 06:03:43 $
  * $Author: evands $
  *
  */

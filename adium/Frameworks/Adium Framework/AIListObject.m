@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -437,6 +437,7 @@ DeclareString(FormattedUID);
 {
     NSString	*outName = [[self displayArrayForKey:LongDisplayName] objectValue];
     return(outName ? outName : [self displayName]);
+//	return(outName ? [NSString stringWithFormat:@"%@ (%f)",outName,[self orderIndex]] : [self displayName]);
 }
 
 - (NSString *)displayServiceID

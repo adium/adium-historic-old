@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.82 2004/05/06 08:20:11 evands Exp $
+// $Id: AIAccountController.m,v 1.83 2004/05/24 06:04:02 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
