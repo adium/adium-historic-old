@@ -19,64 +19,9 @@
     return(@"AnnouncerSpeakEventContactAlert");    
 }
 
-- (void)viewDidLoad
+- (NSString *)defaultDetailsKey
 {
-	[super viewDidLoad];
-	
-	[checkBox_speakEventTime setTitle:SPEAK_EVENT_TIME];
-	[checkBox_speakContactName setTitle:AILocalizedString(@"Speak Name",nil)];
-}
-
-//Configure for the action
-- (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
-{
-	BOOL	speakTime, speakContactName;
-
-	if(inDetails){
-		speakTime = [[inDetails objectForKey:KEY_ANNOUNCER_TIME] boolValue];
-		speakContactName = [[inDetails objectForKey:KEY_ANNOUNCER_SENDER] boolValue];
-	}else{
-		NSDictionary	*defaults = [[adium preferenceController] preferenceForKey:@"DefaultSpeakEventDetails"
-																			  group:PREF_GROUP_ANNOUNCER];
-		speakTime = [[defaults objectForKey:KEY_ANNOUNCER_TIME] boolValue];
-		speakContactName = [[defaults objectForKey:KEY_ANNOUNCER_SENDER] boolValue];
-	}
-
-	[checkBox_speakEventTime setState:speakTime];
-	[checkBox_speakContactName setState:speakContactName];
-}
-
-- (void)configureForEventID:(NSString *)eventID listObject:(AIListObject *)inObject
-{
-	if([[adium contactAlertsController] isMessageEvent:eventID]){
-		[checkBox_speakContactName setEnabled:YES];
-	}else{
-		[checkBox_speakContactName setEnabled:NO];
-		[checkBox_speakContactName setState:NSOnState];
-	}
-}
-
-//Return our current configuration
-- (NSDictionary *)actionDetails
-{
-	NSNumber			*speakTime, *speakContactName;
-	
-	NSMutableDictionary	*actionDetails = [NSMutableDictionary dictionary];
-	
-	speakTime = [NSNumber numberWithBool:([checkBox_speakEventTime state] == NSOnState)];
-	speakContactName = [NSNumber numberWithBool:([checkBox_speakContactName state] == NSOnState)];
-	
-	[actionDetails setObject:speakTime
-					  forKey:KEY_ANNOUNCER_TIME];
-	[actionDetails setObject:speakContactName
-					  forKey:KEY_ANNOUNCER_SENDER];
-	
-	//Save the speak time preference for future use
-	[[adium preferenceController] setPreference:actionDetails
-										 forKey:@"DefaultSpeakEventDetails"
-										  group:PREF_GROUP_ANNOUNCER];
-
-	return(actionDetails);
+	return @"DefaultSpeakEventDetails";
 }
 
 @end

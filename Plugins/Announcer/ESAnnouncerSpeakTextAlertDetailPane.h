@@ -6,13 +6,12 @@
 //  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
-@class AIActionDetailsPane;
+#import "ESAnnouncerAbstractDetailPane.h"
 
-@interface ESAnnouncerSpeakTextAlertDetailPane : AIActionDetailsPane {    
+@interface ESAnnouncerSpeakTextAlertDetailPane : ESAnnouncerAbstractDetailPane {    
 	IBOutlet	NSTextView				*textView_textToSpeak;
 	
 	IBOutlet	AILocalizationTextField	*textView_textToSpeakLabel;
-	IBOutlet	AILocalizationButton	*checkBox_speakEventTime;
 }
 
 @end

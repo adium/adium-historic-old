@@ -23,7 +23,6 @@
 {
 	[super viewDidLoad];
 	
-	[checkBox_speakEventTime setTitle:SPEAK_EVENT_TIME];
 	[textView_textToSpeakLabel setStringValue:AILocalizedString(@"Text To Speak:",nil)];
 }
 
@@ -33,42 +32,28 @@
 	NSString *textToSpeak = [inDetails objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
 	[textView_textToSpeak setString:(textToSpeak ? textToSpeak : @"")];
 
-	BOOL	speakTime;
-	
-	if(inDetails){
-		speakTime = [[inDetails objectForKey:KEY_ANNOUNCER_TIME] boolValue];
-	}else{
-		speakTime = [[[[adium preferenceController] preferenceForKey:@"DefaultSpeakTextDetails"
-															   group:PREF_GROUP_ANNOUNCER] objectForKey:KEY_ANNOUNCER_TIME] boolValue];
-	}
-	
-	[checkBox_speakEventTime setState:speakTime];
+	[super configureForActionDetails:inDetails listObject:inObject];
 }
 
 //Return our current configuration
 - (NSDictionary *)actionDetails
 {
 	NSString			*textToSpeak;
-	NSNumber			*speakTime;
 	NSMutableDictionary	*actionDetails = [NSMutableDictionary dictionary];
 	
 	textToSpeak  = [[[textView_textToSpeak string] copy] autorelease];
-	speakTime = [NSNumber numberWithBool:([checkBox_speakEventTime state] == NSOnState)];
 	
 	if(textToSpeak){
 		[actionDetails setObject:textToSpeak
 						  forKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
 	}
-	
-	[actionDetails setObject:speakTime
-					 forKey:KEY_ANNOUNCER_TIME];
 
-	//Save the speak time preference for future use
-	[[adium preferenceController] setPreference:actionDetails
-										 forKey:@"DefaultSpeakTextDetails"
-										  group:PREF_GROUP_ANNOUNCER];
-
-	return(actionDetails);
+	return([self actionDetailsFromDict:actionDetails]);
 }
 	
+- (NSString *)defaultDetailsKey
+{
+	return @"DefaultSpeakTextDetails";
+}
+
 @end

@@ -23,14 +23,6 @@
 
 @interface ESAnnouncerPlugin : AIPlugin <AIActionHandler> {
     NSString					*lastSenderString;
-    
-    //Contact Editor view
-    IBOutlet	NSView			*view_contactAnnouncerInfoView;
-    IBOutlet	NSPopUpButton	*popUp_voice;
-    IBOutlet	NSSlider		*slider_pitch;
-    IBOutlet	NSSlider		*slider_rate;
-    AIPreferenceViewController	*contactView;
-    AIListObject                *activeListObject;
 }
 
 - (IBAction)changedSetting:(id)sender;
