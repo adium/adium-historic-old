@@ -96,8 +96,8 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	[super windowDidLoad];
 	
 	//Set the localized title
-	[[self window] setTitle:AILocalizedString(@"File Transfer Progress",nil)];
-	
+	[[self window] setTitle:AILocalizedString(@"File Transfers",nil)];
+
 	//There's already a menu item in the Window menu; no reason to duplicate it
 	[[self window] setExcludedFromWindowsMenu:YES];
 
