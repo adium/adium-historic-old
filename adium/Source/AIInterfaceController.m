@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.102 2004/08/16 22:29:47 evands Exp $
+// $Id: AIInterfaceController.m,v 1.103 2004/08/16 23:48:37 evands Exp $
 
 #import "AIInterfaceController.h"
 #import "AIStandardListWindowController.h"
@@ -273,10 +273,12 @@
 	}
 	
 	[interfacePlugin openChat:inChat inContainerWithID:containerID atIndex:index];
-	[inChat setIsOpen:YES];
-	
-	//Post the notification last, so observers receive a chat whose isOpen flag is yes.
-	[[owner notificationCenter] postNotificationName:Chat_DidOpen object:inChat userInfo:nil];
+	if (![inChat isOpen]){
+		[inChat setIsOpen:YES];
+		
+		//Post the notification last, so observers receive a chat whose isOpen flag is yes.
+		[[owner notificationCenter] postNotificationName:Chat_DidOpen object:inChat userInfo:nil];
+	}
 }
 
 //Close the window for a chat
