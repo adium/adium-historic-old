@@ -71,7 +71,9 @@
             key = KEY_EVENT_BEZEL_SHOW_AWAY;
         } else if (sender == checkBox_includeText) {
             key = KEY_EVENT_BEZEL_INCLUDE_TEXT;
-        }
+        } else if (sender == checkBox_ignoreClicks) {
+			key = KEY_EVENT_BEZEL_IGNORE_CLICKS;
+		}
         
         if (key) {
             [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
@@ -115,6 +117,7 @@
 				
 		[checkBox_showHidden setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_HIDDEN] boolValue]];
 		[checkBox_showAway setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
+		[checkBox_ignoreClicks setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IGNORE_CLICKS] boolValue]];
 		
 		// Enable or disable checkboxes based on the "show bezel" checkbox
 		BOOL showBezel = [checkBox_showBezel state];

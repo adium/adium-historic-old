@@ -19,6 +19,7 @@
 - (void)awakeFromNib
 {
 	float   innerSize;
+	NSBezierPath	*tempPath;
     NSParagraphStyle    *parrafo = [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment];
 	
 	// Set the attributes for the main buddy name and the other strings
@@ -28,10 +29,13 @@
 	mainStatusAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys: [NSColor whiteColor], NSForegroundColorAttributeName,
 				parrafo, NSParagraphStyleAttributeName,
 				[NSFont systemFontOfSize:14.0], NSFontAttributeName, nil] retain];
-	
-	backgroundBorder = [[NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0.0,0.0,BEZEL_SIZE,BEZEL_SIZE) radius:BORDER_RADIUS] retain];
-	innerSize = BEZEL_SIZE - (OUTER_BORDER*2.0);
+
+	innerSize = BEZEL_SIZE - (OUTER_BORDER*2.0);	
 	backgroundContent = [[NSBezierPath bezierPathWithRoundedRect:NSMakeRect(OUTER_BORDER,OUTER_BORDER,innerSize,innerSize) radius:(BORDER_RADIUS - OUTER_BORDER)] retain];
+	tempPath = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0.0,0.0,BEZEL_SIZE,BEZEL_SIZE) radius:BORDER_RADIUS];
+	backgroundBorder = [[NSBezierPath bezierPath] retain];
+	[backgroundBorder appendBezierPath: [backgroundContent bezierPathByReversingPath]];
+	[backgroundBorder appendBezierPath: tempPath];
 }
 
 - (void)dealloc
@@ -60,11 +64,20 @@
     // Clear the view
     [[NSColor clearColor] set];
     NSRectFill([self frame]);
-	// Paint the white border
-	[[NSColor whiteColor] set];
-	[backgroundBorder fill];
 	// Paint the colored background
-	[buddyIconLabelColor set];
+	if (ignoringClicks) {
+		// Paint the transparent colored background
+		[[NSColor colorWithCalibratedRed: [buddyIconLabelColor redComponent]
+			green: [buddyIconLabelColor greenComponent]
+			blue: [buddyIconLabelColor blueComponent]
+			alpha: 0.8] set];
+	} else {
+		// Paint the white border
+		[[NSColor whiteColor] set];
+		[backgroundBorder fill];
+		// Paint the opaque colored background
+		[buddyIconLabelColor set];
+	}
 	[backgroundContent fill];
     // Resize the buddy icon if needed
 	buddyIconSize = NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION);
@@ -176,5 +189,16 @@
     [buddyNameLabelColor release];
     buddyNameLabelColor = newColor;
 }
+
+- (BOOL)ignoringClicks
+{
+	return ignoringClicks;
+}
+
+- (void)setIgnoringClicks:(BOOL)ignoreClicks
+{
+	ignoringClicks = ignoreClicks;
+}
+
 
 @end

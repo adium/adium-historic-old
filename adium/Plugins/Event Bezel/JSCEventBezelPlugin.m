@@ -99,7 +99,8 @@
         showEventBezel = [[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue];
         
         [ebc setBezelDuration: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_DURATION] intValue]];
-        
+        ignoreClicks = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IGNORE_CLICKS] boolValue];
+		
         [eventArray removeAllObjects];
         if ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue])
             [eventArray addObject:Content_FirstContentRecieved];                
@@ -217,7 +218,8 @@
 			}
 			[ebc showBezelWithContact: [contact longDisplayName]
 							withImage: tempBuddyIcon
-							 forEvent: tempEvent];
+							 forEvent: tempEvent
+					   ignoringClicks: ignoreClicks];
 			[tempBuddyIcon release];
 		}
 	}

@@ -26,6 +26,7 @@
 #define KEY_EVENT_BEZEL_SHOW_HIDDEN         @"Show Hidden"
 #define KEY_EVENT_BEZEL_SHOW_AWAY           @"Show While Away"
 #define KEY_EVENT_BEZEL_INCLUDE_TEXT        @"Include Text"
+#define KEY_EVENT_BEZEL_IGNORE_CLICKS		@"Ignore Clicks"
 
 #define BEZEL_CONTACT_ALERT_IDENTIFIER            @"Bezel"
 
@@ -36,7 +37,7 @@
     JSCEventBezelPreferences    *preferences;
     
     NSMutableArray              *eventArray;
-    BOOL                        showEventBezel;
+    BOOL                        showEventBezel, ignoreClicks;
     int                         prefsPosition;
     
     IBOutlet    NSView          *view_contactBezelInfoView;

@@ -29,6 +29,7 @@
                 "checkBox_away" = NSButton; 
                 "checkBox_firstMessage" = NSButton; 
                 "checkBox_idle" = NSButton; 
+                "checkBox_ignoreClicks" = NSButton; 
                 "checkBox_includeText" = NSButton; 
                 "checkBox_noIdle" = NSButton; 
                 "checkBox_offline" = NSButton; 
