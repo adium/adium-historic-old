@@ -664,10 +664,9 @@
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	BOOL	success = NO;
+	BOOL			success = NO;
 	
-	if (![pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]] &&
-		[pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]]){
+	if ([self shouldHandleDragWithPasteboard:pasteboard]){
 		
 		//Not an image but it is a file - send it immediately as a file transfer
 		NSArray			*files = [pasteboard propertyListForType:NSFilenamesPboardType];
@@ -730,8 +729,11 @@
  */
 - (BOOL)shouldHandleDragWithPasteboard:(NSPasteboard *)pasteboard
 {
+	/*
 	return (![pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]] &&
 			[pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]]);
+	 */
+	return NO;
 }
 
 
