@@ -118,7 +118,7 @@
 	NSString		*previewPath;
 	
 	//Create our fake chat and message controller for the live preview
-	previewChat = [[AIChat chatForAccount:nil initialStatusDictionary:nil] retain];
+	previewChat = [[AIChat chatForAccount:nil] retain];
 	[previewChat setName:@"Sample Conversation"];
 	previewController = [[AIWebKitMessageViewController messageViewControllerForChat:previewChat
 																		  withPlugin:plugin] retain];

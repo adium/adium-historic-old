@@ -205,7 +205,7 @@ DeclareString(AppendNextMessage);
 	
 	while (object = [enumerator nextObject]){
 		//Update the mask for any user which just entered the chat
-		if ([objectsWithUserIconsArray indexOfObjectIdenticalTo:object] == NSNotFound){
+		if (![objectsWithUserIconsArray containsObjectIdenticalTo:object]){
 			[self _updateUserIconForObject:object];
 		}
 	
@@ -304,7 +304,7 @@ DeclareString(AppendNextMessage);
 							   notify:NO];
 			
 			//Make sure it's known that this user has been handled (this will rarely be a problem, if ever)
-			if ([objectsWithUserIconsArray indexOfObjectIdenticalTo:inObject] == NSNotFound){
+			if (![objectsWithUserIconsArray containsObjectIdenticalTo:inObject]){
 				[objectsWithUserIconsArray addObject:inObject];
 			}
 		}
@@ -1000,7 +1000,7 @@ DeclareString(AppendNextMessage);
 		range = [inString rangeOfString:@"%chatName%"];
 		if(range.location != NSNotFound){
 			[inString replaceCharactersInRange:range
-									withString:[[chat name] stringByEscapingForHTML]];
+									withString:[[chat displayName] stringByEscapingForHTML]];
 			
 		}
 	} while(range.location != NSNotFound);
