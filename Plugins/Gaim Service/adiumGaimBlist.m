@@ -18,6 +18,9 @@
 #import <AIUtilities/CBObjectAdditions.h>
 #import <Adium/AIListContact.h>
 
+static NSMutableDictionary	*groupDict = nil;
+static NSMutableDictionary	*aliasDict = nil;
+
 static void adiumGaimBlistNewList(GaimBuddyList *list)
 {
 
@@ -37,30 +40,68 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 {
 	if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
 		GaimBuddy *buddy = (GaimBuddy*)node;
-		
+
+		//Take no action if the relevant account isn't online.
+		if(!buddy->account || !gaim_account_is_connected(buddy->account))
+			return;
+		   
 		AIListContact	*theContact = contactLookupFromBuddy(buddy);
-		NSString		*remoteGroupName = [theContact remoteGroupName];
+
 		GaimGroup		*g = gaim_find_buddys_group(buddy);
 		NSString		*groupName = ((g && g->name) ? [NSString stringWithUTF8String:g->name] : nil);
+		NSString		*oldGroupName;
+		NSValue			*buddyValue = [NSValue valueWithPointer:buddy];
 
 		//Group changes, including the initial notification of the group
 		//We also use this opportunity to check the contact's name against its formattedUID
-		if(!remoteGroupName || ![remoteGroupName isEqualToString:groupName]){
-			NSString	*contactName;
+		if(!groupDict) groupDict = [[NSMutableDictionary alloc] init];
 
+		/* If there is no old group name, or there is and there is no current group name, or the two don't match,
+		 * update our group information. */
+		if(!(oldGroupName = [groupDict objectForKey:buddyValue]) ||
+		   !(groupName) ||
+		   !([oldGroupName isEqualToString:groupName])){
+
+			NSString	*contactName;
 			contactName = [NSString stringWithUTF8String:buddy->name];
 
+			//Store the new string in our aliasDict
+			if(groupName){
+				[groupDict setObject:groupName forKey:buddyValue];
+			}else{
+				[groupDict removeObjectForKey:buddyValue];
+			}
+			NSLog(@"%@ to groupName %@ contactName %@",theContact,groupName,contactName);
 			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toGroupName:contactName:)
 													withObject:theContact
 													withObject:groupName
 													withObject:contactName];
 		}
 		
+		/* We have no way of differentiating when the buddy's alias changes versus when we get an update
+		 * for a different status event.  We don't want to send to the main thread a used alias every time
+		 * we get any update, but we do want to pass on a changed alias.  We therefore use the static
+		 * aliasDict NSMutableDictionary to track what alias was last used for each buddy.  The first invocation,
+		 * and subsequent invocations for the same alias, are passed back to the main thread for processing. */
 		const char	*alias = gaim_buddy_get_alias(buddy);
 		if (alias){
-			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
-													withObject:theContact
-													withObject:[NSString stringWithUTF8String:alias]];
+			NSString	*aliasString = [NSString stringWithUTF8String:alias];
+			NSString	*oldAliasString;
+			
+			if(!aliasDict) aliasDict = [[NSMutableDictionary alloc] init];
+
+			if(!(oldAliasString = [aliasDict objectForKey:buddyValue]) ||
+			   (![oldAliasString isEqualToString:aliasString])){
+
+				//Store the new string in our aliasDict
+				[aliasDict setObject:aliasString forKey:buddyValue];
+				
+				NSLog(@"%@ to alias %@",theContact,aliasString);
+				//Send it to the main thread
+				[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
+														withObject:theContact
+														withObject:aliasString];
+			}
 		}
 	}
 }
@@ -70,12 +111,17 @@ static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
 {
     NSCAssert(node != nil, @"BlistRemove on null node");
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
-		GaimBuddy *buddy = (GaimBuddy*) node;
-		
+		GaimBuddy	*buddy = (GaimBuddy*) node;
+		NSValue		*buddyValue = [NSValue valueWithPointer:buddy];
+
 //		GaimDebug (@"adiumGaimBlistRemove %s",buddy->name);
 		[accountLookup(buddy->account) mainPerformSelector:@selector(removeContact:)
 												withObject:contactLookupFromBuddy(buddy)];
-		
+
+		//Clear our dictionaries
+		[groupDict removeObjectForKey:buddyValue];
+		[aliasDict removeObjectForKey:buddyValue];
+
 		//Clear the ui_data
 		[(id)buddy->node.ui_data release]; buddy->node.ui_data = NULL;
     }
