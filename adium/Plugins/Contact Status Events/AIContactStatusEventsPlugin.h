@@ -8,9 +8,10 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
-#import "AIAdium.h"
 
-@interface AIContactStatusEventsPlugin : AIPlugin <AIHandleObserver> {
+@protocol AIContactObserver;
+
+@interface AIContactStatusEventsPlugin : AIPlugin <AIContactObserver> {
     NSMutableDictionary		*onlineDict;
     NSMutableDictionary		*awayDict;
     NSMutableDictionary		*idleDict;

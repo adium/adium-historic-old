@@ -16,7 +16,7 @@
 #define ALIASES_DEFAULT_PREFS		@"Alias Defaults"
 
 @interface AIAliasSupportPlugin (PRIVATE)
-- (void)applyAlias:(NSString *)inAlias toObject:(AIContactObject *)inObject;
+- (void)applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject;
 @end
 
 @implementation AIAliasSupportPlugin
@@ -27,7 +27,7 @@
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ALIASES_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_ALIASES];
 
     //Register ourself as a handle observer
-    [[owner contactController] registerHandleObserver:self];
+    [[owner contactController] registerContactObserver:self];
     
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_ALIAS_NIB owner:self];
@@ -59,7 +59,7 @@
     
     //Hold onto the object
     [activeContactObject release]; activeContactObject = nil;
-    if([inObject isKindOfClass:[AIContactObject class]]){
+    if([inObject isKindOfClass:[AIListObject class]]){
         activeContactObject = [inObject retain];
 
         //Fill in the current alias
@@ -73,14 +73,14 @@
 
 }
 
-//Called as handles are created, load their alias
-- (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys;
+//Called as contacts are created, load their alias
+- (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
 {
-    if(inModifiedKeys == nil){ //Only set an alias on handle creation
-        NSString	*alias = [[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inHandle];
+    if(inModifiedKeys == nil){ //Only set an alias on contact creation
+        NSString	*alias = [[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inContact];
 
         if(alias != nil && [alias length] != 0){
-            [self applyAlias:alias toObject:inHandle];
+            [self applyAlias:alias toObject:inContact];
         }
     }
     
@@ -89,14 +89,15 @@
 
 //Private ---------------------------------------------------------------------------------------
 //Apply an alias to an object
-- (void)applyAlias:(NSString *)inAlias toObject:(AIContactObject *)inObject
+- (void)applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject
 {
     AIMutableOwnerArray	*displayNameArray;
     
     displayNameArray = [inObject displayArrayForKey:@"Display Name"];
-    [displayNameArray removeObjectsWithOwner:self];
     if(inAlias != nil && [inAlias length] != 0){
-        [displayNameArray addObject:inAlias withOwner:self];
+        [displayNameArray setObject:inAlias withOwner:self]; //Set the new alias
+    }else{
+        [displayNameArray setObject:nil withOwner:self]; //Remove the alias
     }
     
     [[owner contactController] objectAttributesChanged:activeContactObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];

@@ -15,8 +15,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIContactHandle;
-
 @interface AIServiceType : NSObject {
 
     NSString		*identifier;
@@ -35,6 +33,6 @@
 - (BOOL)caseSensitive;
 //- (NSComparisonResult)compare:(AIServiceType *)inService;
 - (NSString *)filterUID:(NSString *)inUID;
-- (NSComparisonResult)compareUID:(NSString *)inUID toHandle:(AIContactHandle *)inHandle;
+- (NSComparisonResult)compareUID:(NSString *)UIDA to:(NSString *)UIDB;
 
 @end

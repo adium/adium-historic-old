@@ -17,8 +17,8 @@
 
 - (void)installPlugin
 {
-    [[owner contactController] registerContactSortController:[[[AIAlphabeticalSort alloc] init] autorelease]];
-    [[owner contactController] registerContactSortController:[[[AIAlphabeticalSortNoGroups alloc] init] autorelease]];
+    [[owner contactController] registerListSortController:[[[AIAlphabeticalSort alloc] init] autorelease]];
+    [[owner contactController] registerListSortController:[[[AIAlphabeticalSortNoGroups alloc] init] autorelease]];
 }
 
 - (void)uninstallPlugin

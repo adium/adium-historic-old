@@ -40,7 +40,7 @@
 
     target = nil;
     selector = nil;
-    handle = nil;
+//    handle = nil;
     owner = nil;
     sendOnReturn = YES;
     sendOnEnter = YES;
@@ -169,7 +169,7 @@
     }
 }
 
-- (void)setHandle:(AIContactHandle *)inHandle
+/*- (void)setHandle:(AIContactHandle *)inHandle
 {
     if(handle != inHandle){
         [handle release];
@@ -180,7 +180,7 @@
 - (AIContactHandle *)handle
 {
     return(handle);
-}
+}*/
 
 //Handled automatically by our superclasses:
 - (void)setSelectedRange:(NSRange)inRange{

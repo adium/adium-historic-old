@@ -142,7 +142,7 @@
 
 //Using Handle/Group Specific Preferences --------------------------------------------------------------
 //Return an object specific preference.
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIContactObject *)object
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
 {
     NSMutableDictionary	*prefDict, *objectPrefDict;
     id			value = nil;
@@ -161,7 +161,7 @@
 }
 
 //Set an object specific preference
-- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName object:(AIContactObject *)object
+- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
 {
     NSMutableDictionary	*prefDict, *objectPrefDict;
     NSString		*prefDictKey = [NSString stringWithFormat:@"(%@)",[object UID]];

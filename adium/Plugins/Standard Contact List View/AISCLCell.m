@@ -25,16 +25,16 @@
 
 @implementation AISCLCell
 
-- (void)setContact:(AIContactObject *)inObject
+- (void)setContact:(AIListObject *)inObject
 {
-    contactObject = inObject;
+    listObject = inObject;
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
     NSFont	*font = [(AISCLOutlineView *)controlView font];
 
-    if([contactObject isKindOfClass:[AIContactHandle class]]){
+    if([listObject isKindOfClass:[AIListContact class]]){
         NSString		*name;
         NSAttributedString	*displayName;
         NSColor			*textColor;
@@ -48,9 +48,9 @@
         // Icons can be 14 pixels wide, as they grow larger, they stop pushing the text right and instead push left.  Once the left margin is full (14?), they continue to push right again.
 
         //Left aligned icon
-        leftViewArray = [contactObject displayArrayForKey:@"Left View"];
+        leftViewArray = [listObject displayArrayForKey:@"Left View"];
         for(loop = 0;loop < [leftViewArray count];loop++){
-            id <AIHandleLeftView>	handler = [leftViewArray objectAtIndex:loop];
+            id <AIContactLeftView>	handler = [leftViewArray objectAtIndex:loop];
             NSRect			drawRect = cellFrame;
             float			width = [handler widthForHeight:drawRect.size.height];
             float			push;
@@ -81,13 +81,13 @@
         }
 
         //Color
-        textColor = [[contactObject displayArrayForKey:@"Text Color"] averageColor];
+        textColor = [[listObject displayArrayForKey:@"Text Color"] averageColor];
         if(!textColor){
             textColor = [NSColor blackColor];
         }
         
         //Name
-        name = [contactObject displayName];
+        name = [listObject displayName];
         displayName = [[NSAttributedString alloc] initWithString:name attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,font,NSFontAttributeName,nil]];
 
         //Display
@@ -100,7 +100,7 @@
         NSAttributedString	*displayName;
         NSString		*name;
 
-        name = [contactObject displayName];
+        name = [listObject displayName];
         displayName = [[NSAttributedString alloc] initWithString:name attributes:[NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName,nil]];
 
         cellFrame.origin.x += 2;

@@ -8,9 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
-@protocol AIContactSortController;
+@protocol AIListSortController;
 
-@interface AIAlphabeticalSort : NSObject <AIContactSortController> {
+@interface AIAlphabeticalSort : NSObject <AIListSortController> {
 
 }
 

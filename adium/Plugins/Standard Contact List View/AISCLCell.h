@@ -15,10 +15,12 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class AIListObject;
+
 @interface AISCLCell : NSCell {
-    AIContactObject	*contactObject;
+    AIListObject	*listObject;
 }
 
-- (void)setContact:(AIContactObject *)inObject;
+- (void)setContact:(AIListObject *)inObject;
 
 @end

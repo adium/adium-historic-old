@@ -107,69 +107,74 @@
 
 // Messaging --------------------------------------------------------------------------------
 //Add a message object to a handle
-- (void)addIncomingContentObject:(id <AIContentObject>)inObject toHandle:(AIContactHandle *)inHandle
+- (void)addIncomingContentObject:(id <AIContentObject>)inObject
 {
-    AIMutableOwnerArray	*ownerArray;
-    NSEnumerator	*enumerator;
-    id<AIContentFilter>	filter;
-    
-    //Will receive content
-    [[owner notificationCenter] postNotificationName:Content_WillReceiveContent object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+    AIHandle		*handle = [inObject source];
+    AIListContact 	*contact = [handle containingContact];
 
-    //Filter the object
-    enumerator = [incomingContentFilterArray objectEnumerator];
-    while((filter = [enumerator nextObject])){
-        [filter filterContentObject:inObject];
+    if(contact){
+        NSEnumerator		*enumerator;
+        id<AIContentFilter>	filter;
+
+        //Will receive content
+        [[owner notificationCenter] postNotificationName:Content_WillReceiveContent object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+
+        //Filter the object
+        enumerator = [incomingContentFilterArray objectEnumerator];
+        while((filter = [enumerator nextObject])){
+            [filter filterContentObject:inObject];
+        }
+
+        //Add the object
+        [contact addContentObject:inObject];
+
+        //Set 'UnrespondedContent' to YES  (This could be done by a seperate plugin, but I'm not sure that's necessary)
+        [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"UnrespondedContent"];
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
+
+        //content object addeed
+        [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",[NSNumber numberWithBool:YES],@"Incoming",nil]];
+
+        //Did receive content
+        [[owner notificationCenter] postNotificationName:Content_DidReceiveContent object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
-
-    //Add the object
-    [inHandle addContentObject:inObject];
-
-    //Set 'UnrespondedContent' to YES  (This could be done by a seperate plugin, but I'm not sure that's necessary)
-    ownerArray = [inHandle statusArrayForKey:@"UnrespondedContent"];
-    [ownerArray removeObjectsWithOwner:self];
-    [ownerArray addObject:[NSNumber numberWithBool:YES] withOwner:self];
-    [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];    
-    
-    //content object addeed
-    [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",[NSNumber numberWithBool:YES],@"Incoming",nil]];
-
-    //Did receive content
-    [[owner notificationCenter] postNotificationName:Content_DidReceiveContent object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 }
 
-- (void)sendContentObject:(id <AIContentObject>)inObject toHandle:(AIContactHandle *)inHandle
+//Send a message object to a handle
+- (void)sendContentObject:(id <AIContentObject>)inObject
 {
-    AIMutableOwnerArray	*ownerArray;
-    NSEnumerator	*enumerator;
-    id<AIContentFilter>	filter;
+    AIHandle		*handle = [inObject destination];
+    AIListContact 	*contact = [handle containingContact];
 
-    //Will send content
-    [[owner notificationCenter] postNotificationName:Content_WillSendContent object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
-
-    //Filter the object
-    enumerator = [outgoingContentFilterArray objectEnumerator];
-    while((filter = [enumerator nextObject])){
-        [filter filterContentObject:inObject];
+    if(contact){
+        NSEnumerator		*enumerator;
+        id<AIContentFilter>	filter;
+        
+        //Will send content
+        [[owner notificationCenter] postNotificationName:Content_WillSendContent object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+    
+        //Filter the object
+        enumerator = [outgoingContentFilterArray objectEnumerator];
+        while((filter = [enumerator nextObject])){
+            [filter filterContentObject:inObject];
+        }
+    
+        //Send the object
+        [(AIAccount <AIAccount_Content> *)[inObject source] sendContentObject:inObject];
+        
+        //Add the object
+        [contact addContentObject:inObject];
+    
+        //Set 'UnrespondedContent' to NO  (This could be done by a seperate plugin, but I'm not sure that's necessary)
+        [[handle statusDictionary] setObject:[NSNumber numberWithBool:NO] forKey:@"UnrespondedContent"];
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
+    
+        //Content object added
+        [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",[NSNumber numberWithBool:NO],@"Incoming",nil]];
+    
+        //Did send content
+        [[owner notificationCenter] postNotificationName:Content_DidSendContent object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
-    
-    //Send the object
-    [(AIAccount <AIAccount_Content> *)[inObject source] sendContentObject:inObject toHandle:inHandle];
-    
-    //Add the object
-    [inHandle addContentObject:inObject];
-
-    //Set 'UnrespondedContent' to NO  (This could be done by a seperate plugin, but I'm not sure that's necessary)
-    ownerArray = [inHandle statusArrayForKey:@"UnrespondedContent"];
-    [ownerArray removeObjectsWithOwner:self];
-    [ownerArray addObject:[NSNumber numberWithBool:NO] withOwner:self];
-    [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
-
-    //Content object added
-    [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",[NSNumber numberWithBool:NO],@"Incoming",nil]];
-
-    //Did send content
-    [[owner notificationCenter] postNotificationName:Content_DidSendContent object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 }
 
 @end

@@ -28,14 +28,14 @@
 
 
 
-@class AIContactGroup, AICLPreferences;
+@class AIListGroup, AICLPreferences;
 @protocol AIContactListViewController;
 
 @interface AISCLViewPlugin : AIPlugin <AIContactListViewController> {
 
     AICLPreferences	*preferences;
 
-    AIContactGroup	*contactList;
+    AIListGroup		*contactList;
     NSMutableArray	*SCLViewArray;
     
 }

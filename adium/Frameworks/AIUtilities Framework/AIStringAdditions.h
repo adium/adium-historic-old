@@ -11,4 +11,5 @@
 
 @interface NSString (AIStringAdditions)
 - (NSString *)compactedString;
+- (int)intValueFromHex;
 @end

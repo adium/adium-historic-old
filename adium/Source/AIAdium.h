@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferenceView, AIMenuController, AILoginWindowController, AIAccountWindowController, AIContactHandle, AIAccount, AIContactGroup, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactObject, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIIconFamily, AIDockController;
+@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferenceView, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIIconFamily, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject;
 @protocol AIContentObject;
 
 @interface AIAdium : NSObject {
@@ -97,7 +97,7 @@ typedef enum {
 #define Account_StatusChanged					@"Account_StatusChanged"
 #define Contact_AttributesChanged				@"Contact_AttributesChanged"
 #define Contact_StatusChanged					@"Contact_StatusChanged"
-#define Contact_ObjectChanged					@"Contact_ObjectChanged"
+#define Contact_OrderChanged					@"Contact_OrderChanged"
 #define Contact_ListChanged					@"Contact_ListChanged"
 #define Contact_SortSelectorListChanged				@"Contact_SortSelectorListChanged"
 
@@ -121,16 +121,16 @@ typedef enum {
 #define Dock_IconDidChange					@"Dock_IconDidChange"
 
 // Public core controller protocols ------------------------------------------------------------
-@protocol AIHandleObserver //notified of changes
-    - (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys;
+@protocol AIContactObserver //notified of changes
+    - (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys;
 @end
 
-@protocol AIHandleLeftView //Draws to the left of a handle
+@protocol AIContactLeftView //Draws to the left of a handle
     - (void)drawInRect:(NSRect)inRect;
     - (float)widthForHeight:(int)inHeight;
 @end
 
-@protocol AIHandleRightView //Draws to the right of a handle
+@protocol AIContactRightView //Draws to the right of a handle
 
 @end
 
@@ -140,7 +140,7 @@ typedef enum {
 @end
 
 @protocol AIMessageViewController <NSObject>
-- (NSView *)messageViewForHandle:(AIContactHandle *)inHandle;
+- (NSView *)messageViewForContact:(AIListContact *)inContact;
 - (void)closeMessageView:(NSView *)inView;
 @end
 
@@ -183,11 +183,11 @@ typedef enum {
 - (void)configureViewAfterLoad;
 @end
 
-@protocol AIContactSortController <NSObject>
+@protocol AIListSortController <NSObject>
 - (NSString *)identifier;
 - (NSString *)description;
 - (NSString *)displayName;
-- (void)sortContactObjects:(NSMutableArray *)inObjects;
+- (void)sortListObjects:(NSMutableArray *)inObjects;
 - (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys;
 - (BOOL)shouldSortForModifiedAttributeKeys:(NSArray *)inModifiedKeys;
 @end
@@ -238,9 +238,10 @@ typedef enum {
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount;
 - (NSArray *)availableServiceArray;
 - (void)registerService:(id <AIServiceController>)inService;
-- (AIAccount *)accountForSendingContentType:(NSString *)inType toHandle:(AIContactHandle *)inHandle;
+- (AIAccount *)accountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
 - (void)setStatusObject:(id)inValue forKey:(NSString *)key account:(AIAccount *)inAccount;
 - (id)statusObjectForKey:(NSString *)key account:(AIAccount *)inAccount;
+- (AIServiceType *)serviceTypeWithID:(NSString *)inServiceID;
 
 @end
 
@@ -255,8 +256,10 @@ typedef enum {
 
 - (void)registerDefaultHandler:(id <AIContentHandler>)inHandler forContentType:(NSString *)inType;
 - (void)invokeDefaultHandlerForObject:(id <AIContentObject>)inObject;
-- (void)addIncomingContentObject:(id <AIContentObject>)inObject toHandle:(AIContactHandle *)inHandle;
-- (void)sendContentObject:(id <AIContentObject>)inObject toHandle:(AIContactHandle *)inHandle;
+
+- (void)addIncomingContentObject:(id <AIContentObject>)inObject;
+- (void)sendContentObject:(id <AIContentObject>)inObject;
+
 - (void)registerTextEntryFilter:(id <AITextEntryFilter>)inFilter;
 //- (NSArray *)textEntryFilters;
 - (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter;
@@ -269,17 +272,26 @@ typedef enum {
 @interface AIContactController : NSObject {
     IBOutlet	AIAdium		*owner;
 
-    AIContactGroup		*contactList;
-    AIContactGroup		*strangerGroup;
-    NSMutableArray		*handleObserverArray;
-    int				delayedUpdating;
+    AIListGroup			*contactList;
+    AIListGroup			*strangerGroup;
+    NSMutableArray		*contactObserverArray;
+    BOOL			holdUpdates;
 
     NSMutableArray		*sortControllerArray;
-    id<AIContactSortController> activeSortController;
+    id<AIListSortController> 	activeSortController;
 
     AIPreferenceCategory	*contactInfoCategory;
-}
 
+    NSMutableDictionary		*groupDict;
+    NSMutableDictionary		*abandonedContacts;
+    NSMutableDictionary		*abandonedGroups;
+}
+- (void)handlesChangedForAccount:(AIAccount *)inAccount;
+- (void)handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount;
+- (void)handle:(AIHandle *)inHandle removedFromAccount:(AIAccount *)inAccount;
+
+
+    /*
 - (void)addAccount:(AIAccount *)inAccount toObject:(AIContactObject *)inObject;
 - (void)removeAccount:(AIAccount *)inAccount fromObject:(AIContactObject *)inObject;
 
@@ -290,27 +302,44 @@ typedef enum {
 - (void)renameObject:(AIContactObject *)object to:(NSString *)newName;
 - (void)moveObject:(AIContactObject *)object toGroup:(AIContactGroup *)destGroup index:(int)inIndex;
 
-- (AIContactGroup *)contactList;
+*/
+
+- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(AIServiceType *)service UID:(NSString *)UID;
+
+    //Account code calls these methods after modifying its available handles
+//- (void)handleWasAdded:(AIHandle *)inHandle;
+//- (void)handleWasRemoved:(AIHandle *)inHandle;
+//- (void)refreshContactList;
+
+
+- (AIListGroup *)contactList;
+/*
 - (AIContactGroup *)groupWithName:(NSString *)inName;
 - (AIContactHandle *)handleWithService:(AIServiceType *)inService UID:(NSString *)inUID forAccount:(AIAccount *)inAccount;
 - (NSMutableArray *)allContactsInGroup:(AIContactGroup *)inGroup subgroups:(BOOL)subGroups ownedBy:(AIAccount *)inAccount;
+*/
+- (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups;
 
-- (void)objectAttributesChanged:(AIContactObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
-- (void)handleStatusChanged:(AIContactHandle *)inHandle modifiedStatusKeys:(NSArray *)InModifiedKeys;
-- (void)registerHandleObserver:(id)inObserver;
+- (AIHandle *)handleOfContact:(AIListContact *)inContact forReceivingContentType:(NSString *)inType fromAccount:(AIAccount *)inAccount create:(BOOL)create;
 
-- (void)registerContactSortController:(id <AIContactSortController>)inController;
+
+- (void)objectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
+
+- (void)handleStatusChanged:(AIHandle *)inHandle modifiedStatusKeys:(NSArray *)inModifiedKeys;
+- (void)registerContactObserver:(id)inObserver;
+
+- (void)registerListSortController:(id <AIListSortController>)inController;
 - (NSArray *)sortControllerArray;
-- (void)setActiveSortController:(id <AIContactSortController>)inController;
-- (id <AIContactSortController>)activeSortController;
-- (void)sortContactGroup:(AIContactGroup *)inGroup mode:(AISortMode)sortMode;
-        
 
-- (void)showInfoForContact:(AIContactHandle *)inContact;
+- (void)setActiveSortController:(id <AIListSortController>)inController;
+- (id <AIListSortController>)activeSortController;
+- (void)sortListGroup:(AIListGroup *)inGroup mode:(AISortMode)sortMode;
+
+- (void)showInfoForContact:(AIListContact *)inContact;
 - (void)addContactInfoView:(AIPreferenceViewController *)inView;
 
-- (void)delayContactListUpdatesFor:(int)seconds;
-- (BOOL)contactListUpdatesDelayed;
+- (void)setHoldContactListUpdates:(BOOL)inHoldUpdates;
+- (BOOL)holdContactListUpdates;
 
 @end
 
@@ -332,7 +361,7 @@ typedef enum {
 - (void)registerContactListViewController:(id <AIContactListViewController>)inController;
 - (id <AIContactListViewController>)contactListViewController;
 - (void)registerMessageViewController:(id <AIMessageViewController>)inController;
-- (NSView *)messageViewForHandle:(AIContactHandle *)inHandle;
+- (NSView *)messageViewForContact:(AIListContact *)inContact;
 - (IBAction)initiateMessage:(id)sender;
 - (void)registerInterfaceController:(id <AIInterfaceController>)inController;
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;
@@ -361,8 +390,8 @@ typedef enum {
 - (IBAction)showPreferenceWindow:(id)sender;
 - (void)openPreferencesToView:(AIPreferenceViewController *)inView;
 
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIContactObject *)object;
-- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName object:(AIContactObject *)object;
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;
+- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;
 - (NSDictionary *)preferencesForGroup:(NSString *)groupName;
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
 

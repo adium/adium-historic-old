@@ -39,7 +39,7 @@ int manualSort(id objectA, id objectB, void *context);
     }
 }
 
-- (void)sortContactObjects:(NSMutableArray *)inObjects
+- (void)sortListObjects:(NSMutableArray *)inObjects
 {
     [inObjects sortUsingFunction:manualSort context:nil];
 }
@@ -54,14 +54,14 @@ int manualSort(id objectA, id objectB, void *context)
     }else if(!invisibleA && invisibleB){
         return(NSOrderedAscending);
     }else{
-        AIContactGroup	*group = [objectA containingGroup];
+//        AIListGroup	*group = [objectA containingGroup];
 
         //Keep everything in manual order
-        if([group indexOfObject:objectA] > [group indexOfObject:objectB]){
+//        if([(AIListContact *)objectA index] > [(AIListContact *)objectB index]){
             return(NSOrderedDescending);
-        }else{
-            return(NSOrderedAscending);
-        }
+//        }else{
+//            return(NSOrderedAscending);
+//        }
     }
 }
 

@@ -94,9 +94,9 @@
 {
     [messageViewArray addObject:inController];
 }
-- (NSView *)messageViewForHandle:(AIContactHandle *)inHandle
+- (NSView *)messageViewForContact:(AIListContact *)inContact
 {
-    return([[messageViewArray objectAtIndex:0] messageViewForHandle:inHandle]);
+    return([[messageViewArray objectAtIndex:0] messageViewForContact:inContact]);
 }
 
 

@@ -43,7 +43,7 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_SORTING] == 0){
         NSEnumerator			*enumerator;
-        id <AIContactSortController>	controller;
+        id <AIListSortController>	controller;
         NSString			*identifier;
 
         //

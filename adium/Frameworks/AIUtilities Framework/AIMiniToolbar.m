@@ -304,18 +304,23 @@
 
         if(!existingItem){
             //Request a new item
-            existingItem = [toolbarCenter itemWithIdentifier:itemIdentifier];  
-            //Add this to our list of newly created items
-            [newItemArray addObject:existingItem];
-            [createdItemArray addObject:existingItem];
+            existingItem = [toolbarCenter itemWithIdentifier:itemIdentifier];
+
+            if(existingItem){ //It is possible for the item to no longer exist
+                //Add this to our list of newly created items
+                [newItemArray addObject:existingItem];
+                [createdItemArray addObject:existingItem];
+            }
         }else{
             //remove it do we don't try and move it again
             [newItemArray addObject:existingItem];
             [itemArray removeObject:existingItem];  
         }
-        
-        //Add the item to our array and as a subview
-        [self addSubview:[existingItem view]];
+
+        if(existingItem){
+            //Add the item to our array and as a subview
+            [self addSubview:[existingItem view]];
+        }
     }
 
     //Save the new array and clean up

@@ -50,20 +50,37 @@ static AINewMessagePrompt *sharedInstance = nil;
 //New Mesasge
 - (IBAction)newMessage:(id)sender
 {
-    AIContactHandle	*handle;
+    AIListContact	*contact;
+    AIServiceType	*serviceType;
+    NSString		*UID;
 
-    //Find the handle
-    handle = [[owner contactController] handleWithService:[[popUp_service selectedItem] representedObject]
-                                                      UID:[textField_handle stringValue]
-                                               forAccount:[[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:nil]];
+    //Get the service type and UID
+    serviceType = [[popUp_service selectedItem] representedObject];
+    UID = [serviceType filterUID:[textField_handle stringValue]];
+        
+    //Find the contact
+    contact = [[owner contactController] contactInGroup:nil withService:serviceType UID:UID];
 
-    //Close the prompt
-    [AINewMessagePrompt closeSharedInstance];
+    //If one does not exist, we need to create it as a temporary handle
+    if(!contact){
+        AIAccount	*account;
+        AIHandle	*handle;
+        
+        //Find the first available account, and create a temporary handle on it for the new contact
+        account = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toContact:nil];
+        handle = [(AIAccount<AIAccount_Handles> *)account addHandleWithUID:UID serverGroup:nil temporary:YES];
+        contact = [handle containingContact];
+    }
 
-    //Initiate the message
-    [[owner notificationCenter] postNotificationName:Interface_InitiateMessage
-                                              object:nil
-                                            userInfo:[NSDictionary dictionaryWithObjectsAndKeys:handle, @"To", nil]];
+    if(contact){
+        //Close the prompt
+        [AINewMessagePrompt closeSharedInstance];
+
+        //Initiate the message
+        [[owner notificationCenter] postNotificationName:Interface_InitiateMessage
+                                                  object:nil
+                                                userInfo:[NSDictionary dictionaryWithObjectsAndKeys:contact, @"To", nil]];
+    }
 }
 
 - (IBAction)selectService:(id)sender
@@ -95,13 +112,13 @@ static AINewMessagePrompt *sharedInstance = nil;
 - (void)windowDidLoad
 {
     NSEnumerator		*enumerator;
-    AIContactObject		*object;
+    AIListContact		*contact;
     id <AIServiceController>	service;
     
     //Configure the auto-complete view
-    enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES ownedBy:nil] objectEnumerator];
-    while((object = [enumerator nextObject])){
-        [textField_handle addCompletionString:[object UID]];
+    enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+    while((contact = [enumerator nextObject])){
+        [textField_handle addCompletionString:[contact UID]];
     }
 
     //Configure the handle type menu

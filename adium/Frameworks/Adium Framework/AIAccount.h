@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium, AIContactHandle, AIContactGroup, AIHandleIdentifier, AIServiceType, AIMessageObject, AIContactObject;
+@class AIAdium, AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle;
 @protocol AIContentObject, AIServiceController, AIAccountViewController;
 
 typedef enum {
@@ -31,26 +31,46 @@ typedef enum {
 //Support for sending content to contacts
 @protocol AIAccount_Content
     // Send a message object to its destination
-    - (BOOL)sendContentObject:(id <AIContentObject>)object toHandle:(AIContactHandle *)inHandle;
-    //Returns YES if the contact is available for receiving content of the specified type
-    - (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIContactHandle *)inHandle;
+    - (BOOL)sendContentObject:(id <AIContentObject>)object;
+    // Returns YES if the contact is available for receiving content of the specified type
+    - (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIHandle *)inHandle;
 @end
 
-//Support for standard UID based contacts (ungrouped)
-@protocol AIAccount_Contacts
-    // Contact list is editable
+//Support for standard UID based contacts
+@protocol AIAccount_Handles
+    // Returns a dictionary of AIHandles available on this account
+    - (NSDictionary *)availableHandles; //return nil if no contacts/list available
+
+    // Returns YES if the list is editable
     - (BOOL)contactListEditable;
+
+    // Add a handle to this account
+    - (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary;
+    // Remove a handle from this account
+    - (BOOL)removeHandleWithUID:(NSString *)inUID;
+
+@end
+
+//Additional group management methods
+@protocol AIAccount_Groups
+    // Add a group to this account
+    - (BOOL)addGroup:(NSString *)inGroup;
+    // Remove a group from this account
+    - (BOOL)removeGroup:(NSString *)inGroup;
+@end
+
+    // Contact list is editable
+/*    - (BOOL)contactListEditable;
 
     //Add an object
     - (BOOL)addObject:(AIContactObject *)object;
     // Remove an object
     - (BOOL)removeObject:(AIContactObject *)object;
     // Rename an object
-    - (BOOL)renameObject:(AIContactObject *)object to:(NSString *)inName;
-@end
+    - (BOOL)renameObject:(AIContactObject *)object to:(NSString *)inName;*/
 
 //Support for UID based, grouped contacts
-@protocol AIAccount_GroupedContacts
+/*@protocol AIAccount_GroupedContacts
     // Contact list is editable
     - (BOOL)contactListEditable;
 
@@ -64,7 +84,7 @@ typedef enum {
     - (BOOL)moveObject:(AIContactObject *)object fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup;
 
 //If the service doesn't support groups within groups, group arrays can be compressed, or 'super'groups can be ignored
-@end
+@end*/
 
 @interface AIAccount : NSObject {
     AIAdium			*owner;

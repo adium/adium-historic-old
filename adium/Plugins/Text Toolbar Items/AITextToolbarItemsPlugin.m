@@ -83,10 +83,10 @@
     BOOL	enabled = YES;
 
     if([identifier compare:@"Bold"] == 0){
-        AIContactObject		*handle = [inObjects objectForKey:@"ContactObject"];
+        AIListObject		*object = [inObjects objectForKey:@"ContactObject"];
         NSView<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
 
-        enabled = (handle && [handle isKindOfClass:[AIContactHandle class]] && text);
+        enabled = (object && [object isKindOfClass:[AIListContact class]] && text);
     }
 
     [inToolbarItem setEnabled:enabled];

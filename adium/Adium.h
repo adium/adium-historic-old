@@ -11,10 +11,13 @@
 #import "AIPreferenceViewController.h"
 #import "AIPlugin.h"
 #import "AIServiceType.h"
-#import "AIContactHandle.h"
-#import "AIContactGroup.h"
-#import "AIContactObject.h"
 #import "AIContentMessage.h"
 #import "AIPreferenceCategory.h"
 #import "AISendingTextView.h"
 #import "AIIconFamily.h"
+#import "AIHandle.h"
+#import "AIListContact.h"
+#import "AIListGroup.h"
+#import "AIListObject.h"
+
+

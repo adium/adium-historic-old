@@ -113,10 +113,10 @@
             [(AISCLViewPlugin *)[self delegate] performDefaultActionOnSelectedContact:self];
 
         }else if([theEvent keyCode] == 123){ //left
-            AIContactObject 	*object = [self itemAtRow:[self selectedRow]];
+            AIListObject 	*object = [self itemAtRow:[self selectedRow]];
             
             if(object != nil){
-                if([object isKindOfClass:[AIContactGroup class]]){
+                if([object isKindOfClass:[AIListGroup class]]){
                     //Collapse
                     if([self isItemExpanded:object]){
                         [self collapseItem:object];
@@ -125,10 +125,10 @@
             }
 
         }else if([theEvent keyCode] == 124){ //right
-            AIContactObject 	*object = [self itemAtRow:[self selectedRow]];
+            AIListObject 	*object = [self itemAtRow:[self selectedRow]];
             
             if(object != nil){
-                if([object isKindOfClass:[AIContactGroup class]]){
+                if([object isKindOfClass:[AIListGroup class]]){
                     //Expand
                     if(![self isItemExpanded:object]){
                         [self expandItem:object];

@@ -16,6 +16,10 @@
 #import "AIMiniToolbarItem.h"
 #import "AIMiniToolbarButton.h"
 
+@protocol NSVIEW_SETENABLED //Used to prevent a warning below
+- (void)setEnabled:(BOOL)flag;
+@end
+
 @implementation AIMiniToolbarItem
 
 //Init
@@ -129,7 +133,7 @@
 - (void)setEnabled:(BOOL)inEnabled{
     enabled = inEnabled;
     if(view && [view respondsToSelector:@selector(setEnabled:)]){
-        [view setEnabled:enabled];
+        [(NSView<NSVIEW_SETENABLED> *)view setEnabled:enabled];
     }
 }
 - (BOOL)isEnabled{

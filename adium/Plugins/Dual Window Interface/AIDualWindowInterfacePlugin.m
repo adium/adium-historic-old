@@ -35,10 +35,10 @@
 - (void)addMenuItems;
 - (void)removeMenuItems;
 - (void)buildWindowMenu;
-- (AIMessageTabViewItem *)messageTabWithHandle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent create:(BOOL)create;
+- (AIMessageTabViewItem *)messageTabWithContact:(AIListContact *)inContact account:(AIAccount *)inAccount content:(NSAttributedString *)inContent create:(BOOL)create;
 - (void)updateActiveWindowMenuItem;
-- (void)increaseUnviewedContentOfHandle:(AIContactHandle *)inHandle;
-- (void)clearUnviewedContentOfHandle:(AIContactHandle *)inHandle;
+- (void)increaseUnviewedContentOfHandle:(AIHandle *)inHandle;
+- (void)clearUnviewedContentOfHandle:(AIHandle *)inHandle;
 @end
 
 @implementation AIDualWindowInterfacePlugin
@@ -120,9 +120,10 @@
 {
     if(messageWindowController){
         AIMessageTabViewItem	*container = (AIMessageTabViewItem *)[messageWindowController selectedTabViewItemContainer];
-        AIContactHandle		*handle = [[container messageViewController] handle];
 
-        [[owner notificationCenter] postNotificationName:Interface_CloseMessage object:handle userInfo:nil];
+        [[owner notificationCenter] postNotificationName:Interface_CloseMessage
+                                                  object:[[container messageViewController] contact]
+                                                userInfo:nil];
     }
 }
 
@@ -200,9 +201,15 @@
 
     //Set the container's handle's content as viewed
     if([inContainer isKindOfClass:[AIMessageTabViewItem class]]){
-        AIContactHandle		*handle = [[(AIMessageTabViewItem *)inContainer messageViewController] handle];
+        NSEnumerator		*enumerator;
+        AIHandle		*handle;
 
-        [self clearUnviewedContentOfHandle:handle];
+        //We clear the unviewed flag of all handles within this contact
+        enumerator = [[[(AIMessageTabViewItem *)inContainer messageViewController] contact] handleEnumerator];
+        while((handle = [enumerator nextObject])){
+            [self clearUnviewedContentOfHandle:handle];
+        }
+
     }
     
     [self updateActiveWindowMenuItem];
@@ -224,10 +231,10 @@
 
     //Get the information from the notification
     if([userInfo objectForKey:@"To"]){
-        container = [self messageTabWithHandle:[userInfo objectForKey:@"To"]
-                                       account:[userInfo objectForKey:@"From"]
-                                       content:[userInfo objectForKey:@"Content"]
-                                        create:YES];
+        container = [self messageTabWithContact:[userInfo objectForKey:@"To"]
+                                        account:[userInfo objectForKey:@"From"]
+                                        content:[userInfo objectForKey:@"Content"]
+                                         create:YES];
         [[container messageViewController] setAccountSelectionMenuVisible:YES]; //Show the message view's account selection menu
         [container makeActive:nil];			//Select the tab
         
@@ -248,11 +255,11 @@
         id <AIContentObject>	object = [userInfo objectForKey:@"Object"];
 
         //Ensure a message window/view is open for this contact
-        container = [self messageTabWithHandle:[notification object]
-                                       account:[object destination]
-                                       content:nil
-                                        create:YES];
-
+        container = [self messageTabWithContact:[notification object]
+                                        account:[object destination]
+                                        content:nil
+                                         create:YES];
+        
         //Make sure the account that was messaged is the active account
         if([object destination] != [[container messageViewController] account]){
             //Select the correct account, and re-show the account menu
@@ -262,7 +269,7 @@
 
         //Increase the handle's unviewed count (If it's not the active container)
         if(container != activeContainer){
-            [self increaseUnviewedContentOfHandle:[notification object]];        
+            [self increaseUnviewedContentOfHandle:[object source]];        
         }
     }
 }
@@ -274,11 +281,11 @@
 
     if(messageWindowController){
         //Find the message controller for this handle, and close it
-        container = [self messageTabWithHandle:[notification object]
-                                       account:nil
-                                       content:nil
-                                        create:NO];
-
+        container = [self messageTabWithContact:[notification object]
+                                        account:nil
+                                        content:nil
+                                         create:NO];
+        
         if(container && [messageWindowController removeTabViewItemContainer:container]){
             [messageWindowController closeWindow:nil];
             [messageWindowController release]; messageWindowController = nil;
@@ -417,21 +424,21 @@
 
 
 //Messages ---------------------------------------------------------------------------
-//Returns (creating if necessary & desired) a message view controller for the specified handle
-- (AIMessageTabViewItem *)messageTabWithHandle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent create:(BOOL)create
+//Returns (creating if necessary & desired) a message view controller for the specified contact
+- (AIMessageTabViewItem *)messageTabWithContact:(AIListContact *)inContact account:(AIAccount *)inAccount content:(NSAttributedString *)inContent create:(BOOL)create
 {
     id <AIInterfaceContainer>	container = nil;
 
     if(!messageWindowController){ //If the message window isn't loaded, create it
         messageWindowController = [[AIMessageWindowController messageWindowControllerWithOwner:owner interface:self] retain];
 
-    }else{ //Otherwise, search it for and existing tab for this handle
+    }else{ //Otherwise, search it for and existing tab for this contact
         NSEnumerator		*enumerator;
         AIMessageTabViewItem	*tabViewItem;
 
         enumerator = [[messageWindowController messageContainerArray] objectEnumerator];
         while((tabViewItem = [enumerator nextObject])){
-            if([tabViewItem identifier] == inHandle){
+            if([tabViewItem identifier] == inContact){
                 container = tabViewItem;
             }
         }
@@ -442,8 +449,8 @@
         AIMessageViewController	*controller;
 
         //Create the message view & tab
-        controller = [AIMessageViewController messageViewControllerWithHandle:inHandle account:inAccount content:inContent owner:owner interface:self];
-        container = [AIMessageTabViewItem messageTabViewItemWithIdentifier:inHandle messageView:controller owner:owner];
+        controller = [AIMessageViewController messageViewControllerForContact:inContact account:inAccount content:inContent owner:owner interface:self];
+        container = [AIMessageTabViewItem messageTabViewItemWithIdentifier:inContact messageView:controller owner:owner];
 
         //Add it to the message window & Rebuild the window menu
         [messageWindowController addTabViewItemContainer:container];
@@ -455,28 +462,24 @@
 
 
 //
-- (void)increaseUnviewedContentOfHandle:(AIContactHandle *)inHandle
+- (void)increaseUnviewedContentOfHandle:(AIHandle *)inHandle
 {
-    AIMutableOwnerArray		*ownerArray = [inHandle statusArrayForKey:@"UnviewedContent"];
-    int				currentUnviewed;
+    NSMutableDictionary	*statusDict = [inHandle statusDictionary];
+    int			currentUnviewed;
 
     //'UnviewedContent'++
-    currentUnviewed = [[ownerArray objectWithOwner:self] intValue];
-    [ownerArray removeObjectsWithOwner:self];
-    [ownerArray addObject:[NSNumber numberWithInt:(currentUnviewed+1)] withOwner:self];
+    currentUnviewed = [[statusDict objectForKey:@"UnviewedContent"] intValue];
+    [statusDict setObject:[NSNumber numberWithInt:(currentUnviewed+1)] forKey:@"UnviewedContent"];
 
     //
     [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
 }
 
 //
-- (void)clearUnviewedContentOfHandle:(AIContactHandle *)inHandle
+- (void)clearUnviewedContentOfHandle:(AIHandle *)inHandle
 {
-    AIMutableOwnerArray		*ownerArray = [inHandle statusArrayForKey:@"UnviewedContent"];
-
     //Set 'UnviewedContent' to 0
-    [ownerArray removeObjectsWithOwner:self];
-    [ownerArray addObject:[NSNumber numberWithInt:0] withOwner:self];
+    [[inHandle statusDictionary] setObject:[NSNumber numberWithInt:0] forKey:@"UnviewedContent"];
 
     //
     [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];

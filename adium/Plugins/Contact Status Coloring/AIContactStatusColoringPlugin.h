@@ -16,9 +16,9 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@protocol AIHandleObserver;
+@protocol AIContactObserver;
 
-@interface AIContactStatusColoringPlugin : AIPlugin <AIHandleObserver, AIFlashObserver> {
+@interface AIContactStatusColoringPlugin : AIPlugin <AIContactObserver, AIFlashObserver> {
     NSMutableArray	*flashingContactArray;
 }
 

@@ -25,7 +25,7 @@
 //    [self preferencesChanged:nil];
 
     //Register ourself as a handle observer
-    [[owner contactController] registerHandleObserver:self];
+    [[owner contactController] registerContactObserver:self];
 
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_PROFILE_NIB owner:self];
@@ -44,7 +44,7 @@
 
     //Hold onto the object
     [activeContactObject release]; activeContactObject = nil;
-    if([inObject isKindOfClass:[AIContactObject class]]){
+    if([inObject isKindOfClass:[AIListContact class]]){
         AIMutableOwnerArray	*ownerArray;
         
         activeContactObject = [inObject retain];
@@ -63,10 +63,10 @@
 }
 
 //Called as profiles are set on a handle, update our display
-- (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys;
+- (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
 {
     //If we're currently displaying this handle, and it's profile changed...
-    if(inHandle == activeContactObject && [inModifiedKeys containsObject:@"TextProfile"]){
+    if(inContact == activeContactObject && [inModifiedKeys containsObject:@"TextProfile"]){
         AIMutableOwnerArray	*ownerArray;
         NSAttributedString	*profile;
 

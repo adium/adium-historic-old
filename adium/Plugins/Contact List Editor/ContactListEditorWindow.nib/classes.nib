@@ -6,12 +6,14 @@
             SUPERCLASS = NSOutlineView; 
         }, 
         {
+            ACTIONS = {closeWindow = id; }; 
             CLASS = AIContactListEditorWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "customView_tableHeader" = AISCLEditHeaderView; 
                 "outlineView_contactList" = AIAlternatingRowOutlineView; 
                 "scrollView_contactList" = NSScrollView; 
+                "tableView_sourceList" = NSTableView; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 

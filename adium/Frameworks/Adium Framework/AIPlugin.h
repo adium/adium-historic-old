@@ -14,7 +14,13 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
-#import "AIPluginInfo.h"
+
+@protocol AIPluginInfo
+- (NSString *)pluginAuthor;
+- (NSString *)pluginVersion;
+- (NSString *)pluginDescription;
+- (NSString *)pluginURL;
+@end
 
 @class AIAdium;
 

@@ -9,9 +9,9 @@
 #import <Cocoa/Cocoa.h>
 
 
-@protocol AIContactSortController;
+@protocol AIListSortController;
 
-@interface AIIdleAwaySortNoGroups : NSObject <AIContactSortController> {
+@interface AIIdleAwaySortNoGroups : NSObject <AIListSortController> {
 
 }
 

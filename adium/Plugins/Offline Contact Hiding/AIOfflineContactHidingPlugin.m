@@ -22,7 +22,7 @@
 
 - (void)installPlugin
 {
-    [[owner contactController] registerHandleObserver:self];
+    [[owner contactController] registerContactObserver:self];
 }
 
 - (void)uninstallPlugin
@@ -30,21 +30,20 @@
     //[[owner contactController] unregisterHandleObserver:self];
 }
 
-- (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
 {
     NSArray		*modifiedAttributes = nil;
-
+    
     if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"] || [inModifiedKeys containsObject:@"Signed Off"]){
-        AIMutableOwnerArray	*hiddenArray = [inHandle displayArrayForKey:@"Hidden"];
-        int			online = [[inHandle statusArrayForKey:@"Online"] greatestIntegerValue];
-        int			justSignedOff = [[inHandle statusArrayForKey:@"Signed Off"] containsAnyIntegerValueOf:1];
-        
-        //Remove any 'hidden' value we've previously inserted
-        [hiddenArray removeObjectsWithOwner:self];
+        AIMutableOwnerArray	*hiddenArray = [inContact displayArrayForKey:@"Hidden"];
+        int			online = [[inContact statusArrayForKey:@"Online"] greatestIntegerValue];
+        int			justSignedOff = [[inContact statusArrayForKey:@"Signed Off"] containsAnyIntegerValueOf:1];
         
         //Insert an updated value
         if(!online && !justSignedOff){
-            [hiddenArray addObject:[NSNumber numberWithInt:YES] withOwner:self]; //Hidden
+            [hiddenArray setObject:[NSNumber numberWithInt:YES] withOwner:self]; //Hidden
+        }else{
+            [hiddenArray setObject:nil withOwner:self]; //Remove any 'hidden' value we've previously inserted
         }
 
         modifiedAttributes = [NSArray arrayWithObject:@"Hidden"];

@@ -42,25 +42,23 @@
     [super dealloc];
 }
 
-// removes all the objects owned by the specified owner
-- (void)removeObjectsWithOwner:(id)inOwner
+//Adds an object with a specified owner (Pass nil to remove the object)
+- (void)setObject:(id)anObject withOwner:(id)inOwner
 {
-    int	loop;
-
-    for(loop = 0;loop < [ownerArray count];loop++){
-        if([ownerArray objectAtIndex:loop] == inOwner){
-            [ownerArray removeObjectAtIndex:loop];
-            [contentArray removeObjectAtIndex:loop];
-            loop--;
-        }
+    int	ownerIndex;
+    
+    //Remove any existing objects
+    ownerIndex = [ownerArray indexOfObject:inOwner];
+    if(ownerIndex != NSNotFound){
+        [ownerArray removeObjectAtIndex:ownerIndex];
+        [contentArray removeObjectAtIndex:ownerIndex];
     }
-}
 
-//Adds an object with a specified owner
-- (void)addObject:(id)anObject withOwner:(id)inOwner
-{
-    [contentArray addObject:anObject];
-    [ownerArray addObject:inOwner];
+    //Add the new object
+    if(anObject != nil){
+        [contentArray addObject:anObject];
+        [ownerArray addObject:inOwner];
+    }
 }
 
 //Returns an object with the specified owner

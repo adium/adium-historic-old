@@ -67,10 +67,14 @@
             
         }else{
             //Draw the text regular
-            if(ourFont){
-                [title drawInRect:cellFrame withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[self font],NSFontAttributeName,nil]];
+            if([self isEnabled]){
+                if(ourFont){
+                    [title drawInRect:cellFrame withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[self font],NSFontAttributeName,nil]];
+                }else{
+                    [title drawInRect:cellFrame withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:nil]];
+                }
             }else{
-                [title drawInRect:cellFrame withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:nil]];
+                [title drawInRect:cellFrame withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor grayColor],NSForegroundColorAttributeName,[self font],NSFontAttributeName,nil]];
             }
         }
     }

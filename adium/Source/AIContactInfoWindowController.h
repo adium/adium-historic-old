@@ -23,6 +23,6 @@
     AIPreferenceCategory	*mainCategory;
 }
 
-+ (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory forContact:(AIContactHandle *)inContact;
++ (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory forContact:(AIListContact *)inContact;
 
 @end
