@@ -47,6 +47,7 @@
                 "colorWell_typingLabel" = NSColorWell; 
                 "colorWell_unviewedContent" = NSColorWell; 
                 "colorWell_unviewedContentLabel" = NSColorWell; 
+                "popUp_displayImageStyle" = NSPopUpButton; 
                 "preview_away" = AITextColorPreviewView; 
                 "preview_background" = AITextColorPreviewView; 
                 "preview_grid" = AITextColorPreviewView; 

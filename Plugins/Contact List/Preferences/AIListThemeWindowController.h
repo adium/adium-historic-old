@@ -60,6 +60,7 @@
 	IBOutlet	NSTextField				*textField_backgroundImagePath;
 	IBOutlet	NSSlider				*slider_backgroundFade;
 	IBOutlet	NSTextField				*textField_backgroundFade;
+	IBOutlet	NSPopUpButton			*popUp_displayImageStyle;
 	
 	IBOutlet	NSColorWell				*colorWell_background;
 	IBOutlet	AITextColorPreviewView	*preview_background;

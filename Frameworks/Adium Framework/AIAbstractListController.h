@@ -119,6 +119,7 @@ typedef enum {
 #define KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED		@"Use Background Image"
 #define KEY_LIST_THEME_BACKGROUND_IMAGE_PATH		@"Background Image Path"
 #define KEY_LIST_THEME_BACKGROUND_FADE				@"Background Fade"
+#define KEY_LIST_THEME_BACKGROUND_IMAGE_STYLE		@"Background Image Style"
 
 #define KEY_LIST_THEME_BACKGROUND_COLOR				@"Background Color"
 #define KEY_LIST_THEME_GRID_COLOR					@"Grid Color"

@@ -16,6 +16,7 @@
 - (void)configureControlDimming;
 - (void)updateSliderValues;
 - (void)configureBackgroundColoring;
+- (NSMenu *)displayImageStyleMenu;
 @end
 
 @implementation AIListThemeWindowController
@@ -123,63 +124,66 @@
 //Window Methods -------------------------------------------------------------------------------------------------------
 - (void)configureControls
 {
-    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
+    NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
 	
 	//Colors
-    [colorWell_away setColor:[[preferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
-    [colorWell_idle setColor:[[preferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
-    [colorWell_signedOff setColor:[[preferenceDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor]];
-    [colorWell_signedOn setColor:[[preferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
-    [colorWell_typing setColor:[[preferenceDict objectForKey:KEY_TYPING_COLOR] representedColor]];
-    [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
-    [colorWell_online setColor:[[preferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
-    [colorWell_idleAndAway setColor:[[preferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
-    [colorWell_offline setColor:[[preferenceDict objectForKey:KEY_OFFLINE_COLOR] representedColor]];
+    [colorWell_away setColor:[[prefDict objectForKey:KEY_AWAY_COLOR] representedColor]];
+    [colorWell_idle setColor:[[prefDict objectForKey:KEY_IDLE_COLOR] representedColor]];
+    [colorWell_signedOff setColor:[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor]];
+    [colorWell_signedOn setColor:[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
+    [colorWell_typing setColor:[[prefDict objectForKey:KEY_TYPING_COLOR] representedColor]];
+    [colorWell_unviewedContent setColor:[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
+    [colorWell_online setColor:[[prefDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
+    [colorWell_idleAndAway setColor:[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
+    [colorWell_offline setColor:[[prefDict objectForKey:KEY_OFFLINE_COLOR] representedColor]];
 	
-    [colorWell_awayLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
-    [colorWell_idleLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
-    [colorWell_signedOffLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor]];
-    [colorWell_signedOnLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor]];
-    [colorWell_typingLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_TYPING_COLOR] representedColor]];
-    [colorWell_unviewedContentLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
-    [colorWell_onlineLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
-    [colorWell_idleAndAwayLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor]];
-    [colorWell_offlineLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_OFFLINE_COLOR] representedColor]];
+    [colorWell_awayLabel setColor:[[prefDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
+    [colorWell_idleLabel setColor:[[prefDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
+    [colorWell_signedOffLabel setColor:[[prefDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor]];
+    [colorWell_signedOnLabel setColor:[[prefDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor]];
+    [colorWell_typingLabel setColor:[[prefDict objectForKey:KEY_LABEL_TYPING_COLOR] representedColor]];
+    [colorWell_unviewedContentLabel setColor:[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
+    [colorWell_onlineLabel setColor:[[prefDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
+    [colorWell_idleAndAwayLabel setColor:[[prefDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor]];
+    [colorWell_offlineLabel setColor:[[prefDict objectForKey:KEY_LABEL_OFFLINE_COLOR] representedColor]];
 	
-    [checkBox_signedOff setState:[[preferenceDict objectForKey:KEY_SIGNED_OFF_ENABLED] boolValue]];
-    [checkBox_signedOn setState:[[preferenceDict objectForKey:KEY_SIGNED_ON_ENABLED] boolValue]];
-    [checkBox_away setState:[[preferenceDict objectForKey:KEY_AWAY_ENABLED] boolValue]];
-    [checkBox_idle setState:[[preferenceDict objectForKey:KEY_IDLE_ENABLED] boolValue]];
-    [checkBox_typing setState:[[preferenceDict objectForKey:KEY_TYPING_ENABLED] boolValue]];
-    [checkBox_unviewedContent setState:[[preferenceDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue]];
-    [checkBox_online setState:[[preferenceDict objectForKey:KEY_ONLINE_ENABLED] boolValue]];
-    [checkBox_idleAndAway setState:[[preferenceDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue]];
-    [checkBox_offline setState:[[preferenceDict objectForKey:KEY_OFFLINE_ENABLED] boolValue]];
+    [checkBox_signedOff setState:[[prefDict objectForKey:KEY_SIGNED_OFF_ENABLED] boolValue]];
+    [checkBox_signedOn setState:[[prefDict objectForKey:KEY_SIGNED_ON_ENABLED] boolValue]];
+    [checkBox_away setState:[[prefDict objectForKey:KEY_AWAY_ENABLED] boolValue]];
+    [checkBox_idle setState:[[prefDict objectForKey:KEY_IDLE_ENABLED] boolValue]];
+    [checkBox_typing setState:[[prefDict objectForKey:KEY_TYPING_ENABLED] boolValue]];
+    [checkBox_unviewedContent setState:[[prefDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue]];
+    [checkBox_online setState:[[prefDict objectForKey:KEY_ONLINE_ENABLED] boolValue]];
+    [checkBox_idleAndAway setState:[[prefDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue]];
+    [checkBox_offline setState:[[prefDict objectForKey:KEY_OFFLINE_ENABLED] boolValue]];
 	
 	//Groups
-	[colorWell_groupText setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR] representedColor]];
-	[colorWell_groupBackground setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]];
-	[colorWell_groupBackgroundGradient setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
-	[colorWell_groupShadow setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
-	[checkBox_groupGradient setState:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_GRADIENT] boolValue]];
-	[checkBox_groupShadow setState:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW] boolValue]];
+	[colorWell_groupText setColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR] representedColor]];
+	[colorWell_groupBackground setColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]];
+	[colorWell_groupBackgroundGradient setColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
+	[colorWell_groupShadow setColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
+	[checkBox_groupGradient setState:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_GRADIENT] boolValue]];
+	[checkBox_groupShadow setState:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW] boolValue]];
 		
 	//
-    [colorWell_statusText setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_CONTACT_STATUS_COLOR] representedColor]];
+    [colorWell_statusText setColor:[[prefDict objectForKey:KEY_LIST_THEME_CONTACT_STATUS_COLOR] representedColor]];
 	
 	//Background Image
-	[checkBox_useBackgroundImage setState:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]];
-	NSString *backgroundImagePath = [[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH] lastPathComponent];
+	[checkBox_useBackgroundImage setState:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]];
+	NSString *backgroundImagePath = [[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH] lastPathComponent];
 	if(backgroundImagePath) [textField_backgroundImagePath setStringValue:backgroundImagePath];
 	
 	//
-    [colorWell_background setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor]];
-    [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor]];	
-	[slider_backgroundFade setFloatValue:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]];
-	[checkBox_drawGrid setState:[[preferenceDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
-	[checkBox_backgroundAsStatus setState:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_AS_STATUS] boolValue]];
-	[checkBox_backgroundAsEvents setState:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_AS_EVENTS] boolValue]];
-    [checkBox_fadeOfflineImages setState:[[preferenceDict objectForKey:KEY_LIST_THEME_FADE_OFFLINE_IMAGES] boolValue]];
+    [colorWell_background setColor:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor]];
+    [colorWell_grid setColor:[[prefDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor]];	
+	[slider_backgroundFade setFloatValue:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]];
+	[checkBox_drawGrid setState:[[prefDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
+	[checkBox_backgroundAsStatus setState:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_AS_STATUS] boolValue]];
+	[checkBox_backgroundAsEvents setState:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_AS_EVENTS] boolValue]];
+    [checkBox_fadeOfflineImages setState:[[prefDict objectForKey:KEY_LIST_THEME_FADE_OFFLINE_IMAGES] boolValue]];
+	
+	[popUp_displayImageStyle setMenu:[self displayImageStyleMenu]];
+	[popUp_displayImageStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_STYLE] intValue]];
 	
 	[self updateSliderValues];
 	[self configureControlDimming];
@@ -427,6 +431,10 @@
                                              forKey:KEY_LIST_THEME_GROUP_SHADOW
                                               group:PREF_GROUP_LIST_THEME];
 		
+	}else if(sender = popUp_displayImageStyle){
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
+											 forKey:KEY_LIST_THEME_BACKGROUND_IMAGE_STYLE
+											  group:PREF_GROUP_LIST_THEME];	
 	}
 
 	[self configureControlDimming];
@@ -483,6 +491,7 @@
 	//Background image
 	[button_setBackgroundImage setEnabled:[checkBox_useBackgroundImage state]];
 	[textField_backgroundImagePath setEnabled:[checkBox_useBackgroundImage state]];
+	[popUp_displayImageStyle setEnabled:[checkBox_useBackgroundImage state]];
 }
 
 //Update the previews for our background coloring toggles
@@ -515,6 +524,42 @@
 	[preview_signedOn setNeedsDisplay:YES];
 	[preview_typing setNeedsDisplay:YES];
 	[preview_unviewedContent setNeedsDisplay:YES];
+}
+
+- (NSMenu *)displayImageStyleMenu
+{
+	NSMenu		*displayImageStyleMenu = [[[NSMenu alloc] init] autorelease];
+    NSMenuItem	*menuItem;
+	
+	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Normal",nil)
+										   target:nil
+										   action:nil
+									keyEquivalent:@""] autorelease];
+	[menuItem setTag:AINormalBackground];
+	[displayImageStyleMenu addItem:menuItem];
+	
+	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Tile",nil)
+										   target:nil
+										   action:nil
+									keyEquivalent:@""] autorelease];
+	[menuItem setTag:AITileBackground];
+	[displayImageStyleMenu addItem:menuItem];
+	
+	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Fill",nil)
+										   target:nil
+										   action:nil
+									keyEquivalent:@""] autorelease];
+	[menuItem setTag:AIFillProportionatelyBackground];
+	[displayImageStyleMenu addItem:menuItem];
+	
+	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Stretch to fill",nil)
+										   target:nil
+										   action:nil
+									keyEquivalent:@""] autorelease];
+	[menuItem setTag:AIFillStretchBackground];
+	[displayImageStyleMenu addItem:menuItem];
+	
+	return(displayImageStyleMenu);
 }
 
 @end
