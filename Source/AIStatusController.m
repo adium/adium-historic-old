@@ -489,15 +489,14 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 - (void)setInitialStatusState
 {
 	AIStatus	*statusState = [self defaultInitialStatusState];
-
+	NSAssert(statusState != nil, @"Got nil initial status state");
+	
 	//Apply the state to our accounts without notifying
 	[[adium contactController] delayListObjectNotifications];
 	[[[adium accountController] accountArray] makeObjectsPerformSelector:@selector(setInitialStatusStateIfNeeded:)
 															  withObject:statusState];
 	[[adium contactController] endListObjectNotificationsDelay];
 }
-
-
 
 /*!
  * @brief Apply a state to all accounts
@@ -686,7 +685,10 @@ int _statusArraySort(id objectA, id objectB, void *context)
 
 			while((account = [enumerator nextObject])) {
 				if([account online]){
-					[statusCounts addObject:[account statusState]];
+					AIStatus *accountStatusState = [account statusState];
+					[statusCounts addObject:(accountStatusState ?
+											 accountStatusState :
+											 [self defaultInitialStatusState])];
 				}
 			}
 
