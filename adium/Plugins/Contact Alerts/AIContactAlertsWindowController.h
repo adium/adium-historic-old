@@ -24,6 +24,15 @@
     IBOutlet	NSPopUpButton			*popUp_actionDetails;
     IBOutlet	NSButton			*button_oneTime;
     NSMenu					*actionMenu;
+
+    IBOutlet	NSView				*view_main;
+    IBOutlet	NSView				*view_top;
+    IBOutlet	NSView				*view_details_text;
+    IBOutlet	NSView				*view_details_menu;
+    IBOutlet	NSView				*view_blank;
+    
+    NSView					*view_details;
+    
     
     AIAdium					*owner;
     AIListObject				*activeContactObject;

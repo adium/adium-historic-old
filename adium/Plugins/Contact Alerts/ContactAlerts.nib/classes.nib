@@ -27,6 +27,11 @@
                 "textField_actionDetails" = NSTextField; 
                 "textField_description_popUp" = NSTextField; 
                 "textField_description_textField" = NSTextField; 
+                "view_blank" = NSView; 
+                "view_details_menu" = NSView; 
+                "view_details_text" = NSView; 
+                "view_main" = NSView; 
+                "view_top" = NSView; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 

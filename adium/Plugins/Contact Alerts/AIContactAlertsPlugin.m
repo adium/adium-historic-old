@@ -167,7 +167,6 @@
             valid = NO;
         }
     }else if(menuItem == contactAlertsContextMenuItem){
-        NSLog(@"checking context...");
         return([[owner menuController] contactualMenuContact] != nil);
     }
     return(valid);
