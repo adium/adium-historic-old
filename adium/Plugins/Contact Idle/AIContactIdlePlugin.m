@@ -148,7 +148,7 @@
         }
     }
 
-    return(entry);
+    return([entry autorelease]);
 }
 
 
