@@ -16,7 +16,6 @@
 //------------------------------------------------------------------------------------
 [Contact List]
 - Bubble-to-fit cells don't work with any new list additions (disable when bubble is selected)
-- Canceling a list edit sheet needs to re-apply the currently selected prefs
 - Create default layouts & styles for the contact list preferences
 - Status labels are ignoring window transparency
 - Status labels are covering selected cells
