@@ -19,13 +19,13 @@
 #define PREF_GROUP_STANDARD_MESSAGE_DISPLAY	@"Message Display"
 #define SMV_DEFAULT_PREFS					@"SMVDefaults"
 
-#define KEY_SMV_SHOW_USER_ICONS                 @"Show icons"
-#define	KEY_SMV_TIME_STAMP_FORMAT		@"Time Stamp"
-#define	KEY_SMV_PREFIX_INCOMING			@"Prefix Incoming"
-#define	KEY_SMV_PREFIX_OUTGOING			@"Prefix Outgoing"
-#define	KEY_SMV_COMBINE_MESSAGES		@"Combine Messages"
-#define KEY_SMV_COMBINE_MESSAGES_INDENT         @"Combine Messeages HeadIndent"
-#define	KEY_SMV_IGNORE_TEXT_STYLES		@"Ignore Text Styles"
+#define KEY_SMV_SHOW_USER_ICONS				@"Show icons"
+#define	KEY_SMV_TIME_STAMP_FORMAT			@"Time Stamp"
+#define	KEY_SMV_PREFIX_INCOMING				@"Prefix Incoming"
+#define	KEY_SMV_PREFIX_OUTGOING				@"Prefix Outgoing"
+#define	KEY_SMV_COMBINE_MESSAGES			@"Combine Messages"
+#define KEY_SMV_COMBINE_MESSAGES_INDENT		@"Combine Messeages HeadIndent"
+#define	KEY_SMV_IGNORE_TEXT_STYLES			@"Ignore Text Styles"
 
 
 //Old?
