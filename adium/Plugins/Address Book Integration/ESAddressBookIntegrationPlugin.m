@@ -129,7 +129,7 @@
 				
 				//Apply the values 
 				NSString *oldValue = [displayNameArray objectWithOwner:self];
-				if (!oldValue || [oldValue isEqualToString:displayName]) {
+				if (!oldValue || ![oldValue isEqualToString:displayName]) {
 					[displayNameArray setObject:displayName withOwner:self];
 					modifiedAttributes = [NSArray arrayWithObject:@"Display Name"];
 				}
@@ -427,8 +427,23 @@
 		
 		if ([UIDsArray count] > 1){
 			//Got a record with multiple names
-			[[adium contactController] groupUIDs:UIDsArray forServices:servicesArray];
+			AIMetaContact	*metaContact = [[adium contactController] groupUIDs:UIDsArray forServices:servicesArray];
 			
+			//Load the name if appropriate
+			AIMutableOwnerArray *displayNameArray = [metaContact displayArrayForKey:@"Display Name"];
+			
+			NSString			*displayName = [self nameForPerson:person];
+				
+			//Apply the values 
+			NSString *oldValue = [displayNameArray objectWithOwner:self];
+			if (!oldValue || ![oldValue isEqualToString:displayName]) {
+				[displayNameArray setObject:displayName withOwner:self];
+				
+				[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+														  object:inObject
+														userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
+																							 forKey:@"Notify"]];				
+			}
 		}
 	}
 	
