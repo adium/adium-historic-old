@@ -67,7 +67,6 @@
                 [[owner notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
             }else{ //Start Observing
                 [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
-
 	    }
         }
     }
@@ -84,7 +83,7 @@
     AIListObject	*source = nil;
     NSCalendarDate	*date = nil;
     NSString		*dateString = nil;
-    NSMutableString	*theMessage = [[NSMutableString alloc] init];
+    NSMutableString	*theMessage = nil;
 
 
     //Message Content
@@ -99,7 +98,7 @@
 
 
         if(account && source) { //valid message
-
+            theMessage = [[NSMutableString alloc] init];
 	    //Determine some basic info about the content
 	    BOOL isOutgoing = ([source isKindOfClass:[AIAccount class]]);
 	    BOOL newParagraph = NO;
@@ -108,16 +107,16 @@
 		if (speakSender && !isOutgoing) {
 		    NSString * senderString;
 		    //Get the sender string
-		  /*  if(isOutgoing){
+		  /*  if(isOutgoing){ //speak outgoing message sender names
 			senderString = [[owner accountController] propertyForKey:@"FullName" account:(AIAccount *)source];
 			if(!senderString || [senderString length] == 0) senderString = [(AIAccount *)source accountDescription];
-		    }else{ */
+		    }else{ */ //incoming message sender name
 			senderString = [(AIListContact *)source displayName];
 //		    }
 
 		    if ([senderString compare:lastSenderString] != 0) {
 		    [theMessage replaceOccurrencesOfString:@" " withString:@" [[emph -]] " options:NSCaseInsensitiveSearch range:NSMakeRange(0, [theMessage length])]; //deemphasize all words after first in sender's name
-		[theMessage appendFormat:@"[[slnc 50; emph +]] %@...",senderString]; //emphasize first word in sender's name
+		[theMessage appendFormat:@"[[emph +]] %@...",senderString]; //emphasize first word in sender's name
 		[lastSenderString release]; lastSenderString = [senderString retain];
 		newParagraph = YES;
 		    }
@@ -146,6 +145,7 @@
         message = (NSString *)[content message];
 
         if(account && source){
+            theMessage = [[NSMutableString alloc] init];
 	    if (speakTime) {
 		dateString = [NSString stringWithFormat:@"%i %i and %i seconds",[date hourOfDay],[date minuteOfHour],[date secondOfMinute]];
 		[theMessage appendFormat:@" %@...",dateString];
@@ -162,7 +162,6 @@
 	    NSNumber	*pitchNumber = nil;	float pitch = 0;
 	    NSNumber	*rateNumber = nil;	int rate = 0;
 	    voice = [[owner preferenceController] preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER object:otherPerson];
-	    NSLog(@"voice is %@",voice);
 	    
 	    pitchNumber = [[owner preferenceController] preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER object:otherPerson];
 	    if(pitchNumber)

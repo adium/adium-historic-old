@@ -92,6 +92,11 @@
     [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] setActiveChat:inChat];
 }
 
+- (void)transferMessageTabContainer:(id)tabViewItem toWindow:(id)newMessageWindow atIndex:(int)index withTabBarAtPoint:(NSPoint)screenPoint
+{
+    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] transferMessageTabContainer:tabViewItem toWindow:newMessageWindow atIndex:index withTabBarAtPoint:(NSPoint)screenPoint];
+}
+
 // Registers code to handle the interface
 - (void)registerInterfaceController:(id <AIInterfaceController>)inController
 {

@@ -134,14 +134,12 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
     VoiceSpec voice;
     OSErr error = noErr;
     
-    if (index!=-1)
+    if (index>=0)
     {
         error = GetIndVoice(index+1, &voice);
         if(error == noErr) {
             SetSpeechInfo(_speechChannel, soCurrentVoice, &voice);
         }
-    } else {
-        SetSpeechInfo(_speechChannel, soCurrentVoice, NULL);
     }
 }
 /*"Returns the voice names in the same order as expected by setVoice:."*/

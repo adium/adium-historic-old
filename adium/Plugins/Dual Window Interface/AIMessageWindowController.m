@@ -22,7 +22,7 @@
 #import "AIAdium.h"
 
 #define	MESSAGE_WINDOW_NIB		@"MessageWindow"		//Filename of the message window nib
-#define KEY_DUAL_MESSAGE_WINDOW_FRAME	@"Dual Message Window Frame"
+
 
 #define AUTOHIDE_TABBAR		NO
 //The tabbed window that contains messages
@@ -151,21 +151,32 @@
 //Add a tab view item container (without changing the current selection)
 - (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
 {    
-    NSString	*savedFrame;
+    [self addTabViewItemContainer:inTabViewItem atIndex:-1];
+}
 
+//Add a tab view item container (without changing the current selection)
+- (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem atIndex:(int)index
+{    
+    NSString	*savedFrame;
+    
     [self window]; //Ensure our window has loaded
     if ([tabView_messages numberOfTabViewItems] == 0) {
         //Restore the window position for the object about to have its chat added as the first in this window
         savedFrame = [[owner preferenceController] preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME 
-                                                               group:PREF_GROUP_WINDOW_POSITIONS 
-                                                              object:[[[(AIMessageTabViewItem *)inTabViewItem messageViewController] chat] listObject]];
-            if(savedFrame){
-                [[self window] setFrameFromString:savedFrame];
-            }   
+                                                              group:PREF_GROUP_WINDOW_POSITIONS 
+                                                             object:[[[(AIMessageTabViewItem *)inTabViewItem messageViewController] chat] listObject]];
+        if(savedFrame){
+            [[self window] setFrameFromString:savedFrame];
+        }   
     }
-    [tabView_messages addTabViewItem:inTabViewItem]; //Add the tab
+    if (index == -1) {
+        [tabView_messages addTabViewItem:inTabViewItem];    //Add the tab
+    } else {
+        [tabView_messages insertTabViewItem:inTabViewItem atIndex:index]; //Add the tab at the specified index
+    }
+    
     [interface containerDidOpen:inTabViewItem]; //Let the interface know it opened
-
+    
     [self showWindow:nil]; //Show the window
 }
 
@@ -215,7 +226,9 @@
     
     [super initWithWindowNibName:windowNibName owner:self];
     [self window];	//Load our window
-        
+  
+    [tabView_customTabs setOwner:owner]; //must be done after the nib loads
+    
     return(self);
 }
 
@@ -367,12 +380,12 @@
 
     if(autohide_tabBar && ([tabView_messages numberOfTabViewItems] == 1) && tabIsShowing){
         //Remember the correct tab height
-        tabSize = [tabsView_customTabs frame].size;
+        tabSize = [tabView_customTabs frame].size;
         tabHeight = tabSize.height;
 
         //Resize tabs so they're not visible
         tabSize.height = 0;
-        [tabsView_customTabs setFrameSize:tabSize];
+        [tabView_customTabs setFrameSize:tabSize];
         tabIsShowing = NO;
 
         //Adjust other views
@@ -386,9 +399,9 @@
 
     }else if((([tabView_messages numberOfTabViewItems] == 2) || !autohide_tabBar) && !tabIsShowing) {
         //Restore tabs to the correct height
-        tabSize = [tabsView_customTabs frame].size;
+        tabSize = [tabView_customTabs frame].size;
         tabSize.height = tabHeight;
-        [tabsView_customTabs setFrameSize:tabSize];
+        [tabView_customTabs setFrameSize:tabSize];
         tabIsShowing = YES;
 
         //Adjust other views

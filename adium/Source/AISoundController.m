@@ -354,23 +354,30 @@
 
 	if (voiceNumber) {
 	    if (!speaker_variableVoice) { //initVariableVoiceifNecessary
+		NSLog(@"had to init variable voice");
 		speaker_variableVoice = [[SUSpeaker alloc] init];
 		[speaker_variableVoice setDelegate:self];
 	    }
 	    theSpeaker = speaker_variableVoice;
+	    NSLog(@"setVoice");
 	    [theSpeaker setVoice:[voiceNumber intValue]];
+	    NSLog(@"done");
 	} else {
 	    [self initDefaultVoiceIfNecessary];
 	    theSpeaker = speaker_defaultVoice;
 	}
 	
 	if (pitchNumber) {
+	    NSLog(@"setPitch");
 	    [theSpeaker setPitch:[pitchNumber floatValue]];
+	    NSLog(@"done");
 	} else {
 	    [theSpeaker setPitch:defaultPitch];
 	}
 	if (rateNumber) {
+	    NSLog(@"setRate");
 	    [theSpeaker setRate:[rateNumber intValue]];
+	    NSLog(@"done");
 	} else {
 	    [theSpeaker setRate:defaultRate];
 	}

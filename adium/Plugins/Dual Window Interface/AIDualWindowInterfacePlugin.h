@@ -19,12 +19,14 @@
 
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
 
-#define KEY_DUAL_RESIZE_VERTICAL	@"Autoresize Vertical"
-#define KEY_DUAL_RESIZE_HORIZONTAL	@"Autoresize Horizontal"
+#define KEY_DUAL_RESIZE_VERTICAL                @"Autoresize Vertical"
+#define KEY_DUAL_RESIZE_HORIZONTAL              @"Autoresize Horizontal"
 
 #define KEY_ALWAYS_CREATE_NEW_WINDOWS 		@"Always Create New Windows"
 #define KEY_USE_LAST_WINDOW			@"Use Last Window"
 #define KEY_AUTOHIDE_TABBAR			@"Autohide Tab Bar"
+#define KEY_DUAL_MESSAGE_WINDOW_FRAME           @"Dual Message Window Frame"
+
 @class AIAdium, AIContactListWindowController, AIMessageWindowController, AIMessageViewController, AIDualWindowPreferences, ESDualWindowMessageWindowPreferences;
 @protocol AIMessageView, AIInterfaceController, AITabHoldingInterface, AIContactListCleanup;
 

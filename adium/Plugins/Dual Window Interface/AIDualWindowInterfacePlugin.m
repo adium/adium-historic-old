@@ -738,14 +738,14 @@
 //pass nil to create a new window for this tab; otherwise, put a tab containing inChat into the window controller by messageWindowController
 - (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat inMessageWindowController:(AIMessageWindowController *)messageWindowController
 {
-    AIMessageTabViewItem	*messageTabContainer;
+    AIMessageTabViewItem	*messageTabContainer = nil;
     AIMessageViewController	*messageViewController;
 
     //Create the message window, view, and tab
     if(!messageWindowController) messageWindowController = [self _createMessageWindow];
     messageViewController = [AIMessageViewController messageViewControllerForChat:inChat owner:owner];
     messageTabContainer = [AIMessageTabViewItem messageTabWithView:messageViewController owner:owner];
-
+    
     //Add it to the message window & rebuild the window menu
     [messageWindowController addTabViewItemContainer:messageTabContainer];
 
@@ -755,17 +755,43 @@
 //Transfers an existing chat to the specified message window
 - (void)_transferMessageTabContainer:(AIMessageTabViewItem *)tabViewItem toWindow:(AIMessageWindowController *)newMessageWindow
 {
-    AIMessageWindowController 	*oldMesssageWindow;
+    [self transferMessageTabContainer:tabViewItem toWindow:newMessageWindow atIndex:-1 withTabBarAtPoint:NSMakePoint(0,0)];
+}
 
+//Transfers an existing chat to the specified message window at a specified index (-1 for a simple addition)
+- (void)transferMessageTabContainer:(id)tabViewItem toWindow:(id)newMessageWindow atIndex:(int)index withTabBarAtPoint:(NSPoint)screenPoint
+{
+    AIMessageWindowController 	*oldMessageWindow;
+    
     //Create a new window if nil was passed
-    if(!newMessageWindow) newMessageWindow = [self _createMessageWindow];
-
+    if(!newMessageWindow) {
+        newMessageWindow = [self _createMessageWindow];
+        if ( !(screenPoint.x == 0 && screenPoint.y == 0) ) {
+            NSString	*savedFrame;
+            
+            //Restore the window position for the object about to have its chat added as the first in this window
+            savedFrame = [[owner preferenceController] preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME 
+                                                                  group:PREF_GROUP_WINDOW_POSITIONS 
+                                                                 object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];
+            if(savedFrame){
+                [[newMessageWindow window] setFrameFromString:savedFrame];
+                NSRect theFrame = [[newMessageWindow window] frame];
+                theFrame.origin = screenPoint;
+                [[newMessageWindow window] setFrame:theFrame display:NO];
+                [[owner preferenceController] setPreference:[[newMessageWindow window] stringWithSavedFrame]
+                                                     forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
+                                                      group:PREF_GROUP_WINDOW_POSITIONS
+                                                     object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];                
+            }   
+        }
+    }   
+    
     //Transfer container from one one window to another
-    oldMesssageWindow = [self _messageWindowForContainer:tabViewItem];
-    if(oldMesssageWindow != newMessageWindow){
+    oldMessageWindow = [self _messageWindowForContainer:(AIMessageTabViewItem *)tabViewItem];
+    if(oldMessageWindow != newMessageWindow){
         [tabViewItem retain];
-        [oldMesssageWindow removeTabViewItemContainer:tabViewItem];
-        [newMessageWindow addTabViewItemContainer:tabViewItem];
+        [oldMessageWindow removeTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem];
+        [(AIMessageWindowController *)newMessageWindow addTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem atIndex:index];
         [tabViewItem release];
     }
 }
@@ -774,7 +800,7 @@
 - (AIMessageWindowController *)_messageWindowForContainer:(AIMessageTabViewItem *)container
 {
     NSEnumerator 		*windowEnumerator = [messageWindowControllerArray objectEnumerator];
-    AIMessageWindowController 	*messageWindowController;
+    AIMessageWindowController 	*messageWindowController = nil;
 
     while(messageWindowController = [windowEnumerator nextObject]){
         if([messageWindowController containsMessageContainer:container]) break;
@@ -795,15 +821,15 @@
 
 //Create a new message window
 - (AIMessageWindowController *)_createMessageWindow
-{
+{    
     AIMessageWindowController	*messageWindowController = [AIMessageWindowController messageWindowControllerWithOwner:owner interface:self];
-
+    
     //Register to be notified when this message window closes
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageWindowWillClose:) name:NSWindowWillCloseNotification object:[messageWindowController window]];
-
+    
     //Add the messageWindowController to our array
     [messageWindowControllerArray addObject:messageWindowController];
-
+    
     return(messageWindowController);
 }
 
