@@ -20,20 +20,29 @@
 
 - (BOOL)isWebKitAvailable
 {
-    static BOOL _webkitAvailable=NO;
-    static BOOL _initialized=NO;
+    static BOOL _webkitAvailable = NO;
+    static BOOL _initialized = NO;
     NSBundle	*webKitBundle;
 	
     if (_initialized)
         return _webkitAvailable;
 	
-    webKitBundle = [NSBundle bundleWithPath:@"/System/Library/Frameworks/WebKit.framework"];
+/*
+ webKitBundle = [NSBundle bundleWithPath:@"/System/Library/Frameworks/WebKit.framework"];
 
     if (webKitBundle){		
         _webkitAvailable = [webKitBundle load];
     }
+*/
+	NSFileManager   *manager = [NSFileManager defaultManager];
+	NSString		*fontPath = @"/System/Library/Frameworks/WebKit.framework";
+	BOOL			isDir;
 	
-    _initialized=YES;
+	if ([manager fileExistsAtPath:fontPath isDirectory:&isDir] && isDir){
+		_webkitAvailable = YES;
+	}
+		
+    _initialized = YES;
 
     return _webkitAvailable;	
 }
