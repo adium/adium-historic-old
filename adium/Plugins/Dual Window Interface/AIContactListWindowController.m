@@ -151,18 +151,24 @@
 {
     if(autoResizeVertically || autoResizeHorizontal){
         NSRect	newFrame = [self _desiredWindowFrame];
-        if (!NSEqualRects([[self window] frame], newFrame)) {
+        NSRect  oldFrame = [[self window] frame];
+        if (!NSEqualRects(oldFrame, newFrame)) {
             NSSize targetMin = minWindowSize;
             NSSize targetMax = NSMakeSize(10000, 10000);
             if (autoResizeHorizontal) {    
                 targetMin.width = newFrame.size.width;
                 targetMax.width = newFrame.size.width;
+            } else {
+                newFrame.width = oldFrame.width; //no horizontal resize so use old width
             }
             
             if (autoResizeVertically) {
                 targetMin.height = newFrame.size.height;  
                 targetMax.height = newFrame.size.height;  
+            } else {
+                newFrame.height = oldFrame.height; //no vertical resize so use old height
             }
+            
             [[self window] setMinSize:targetMin];
             [[self window] setMaxSize:targetMax];
             
