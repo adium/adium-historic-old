@@ -109,10 +109,8 @@ static void otrg_adium_dialog_unknown_fingerprint(const char *who,
     GaimPlugin *p = gaim_find_prpl(protocol);
     
     otrl_privkey_hash_to_human(hash, kem->key_fingerprint);
-    label_text = [NSString stringWithFormat:"%s (%s) "
-								 "has presented us with an unknown fingerprint:\n\n%s\n\n"
-								 "Do you want to accept this fingerprint as valid?", who,
-								 (p && p->info->name) ? p->info->name : "Unknown", hash];
+    label_text = [NSString stringWithFormat:@"%s (%s) has presented us with an unknown fingerprint:\n\n%s\n\nDo you want to accept this fingerprint as valid?", 
+		who, (p && p->info->name) ? p->info->name : "Unknown", hash];
 	
 //    label = adium_label_new(NULL);
 
