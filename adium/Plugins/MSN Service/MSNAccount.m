@@ -22,7 +22,10 @@
 - (void)update:(NSTimer *)timer;
 - (void)disconnect;
 - (NSDictionary *)parseMessage:(NSData *)payload;
-- (BOOL)sendMessage:(NSString *)message onSocket:(AISocket *)socket;
+- (BOOL)sendMessage:(NSString *)message onSocket:(AISocket *)Socket;
+- (void)sendMessageHelper:(NSTimer *)timer;
+- (void)startSBSessionHelper:(NSTimer *)timer;
+- (unsigned long)getTrid;
 @end
 
 @implementation MSNAccount
@@ -42,21 +45,29 @@
         message = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message] encodeFullString:YES];
         handle = [[object destination] handleForAccount:self];
         sbSocket = [switchBoardDict objectForKey:handle];
+
+        //create the payload
+        NSString *payload = [NSString stringWithFormat:
+            @"MIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\n%@",
+            message];
         
         if(sbSocket)//there's already an SB session
         {
-            //create the payload, then the whole packet
-            NSString *payload = [NSString stringWithFormat:
-                @"MIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\n%@",
-                message];
-            NSString *packet = [NSString stringWithFormat:@"MSG 4 N %d\r\n%@",
-                [payload length], payload];
-                
-            return([self sendMessage:packet onSocket:sbSocket]);
+            return([self sendMessage:payload onSocket:sbSocket]);
+        
         }
         else // create a session
         {
-            return NO;
+            [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
+                target:self
+                selector:@selector(startSBSessionHelper:)
+                userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+                    payload, @"Payload",
+                    handle, @"Handle",
+                    [NSNumber numberWithInt:0], @"Phase"]
+                repeats:YES];
+            
+            return YES;
         }
     }
     return NO;
@@ -149,12 +160,14 @@
     
     handleDict = [[NSMutableDictionary alloc] init];
 	switchBoardDict = [[NSMutableDictionary alloc] init];
+    messageArray = [[NSMutableArray alloc] init];
 }
 
 - (void)dealloc
 {
     [handleDict release];
 	[switchBoardDict release];
+    [messageArray release];
     
     [super dealloc];
 }
@@ -587,7 +600,7 @@
         switch([[[timer userInfo] objectForKey:@"Number"] intValue])
         {
             case 0: //read
-                if([socket getDataToNewline:&inData remove:YES])
+                if([socket getDataToNewline:&inData remove:NO])
                 {
                     //get the data, put it into message.
                     NSLog(@"<<<< %@",[NSString stringWithCString:[inData bytes] 
@@ -599,90 +612,109 @@
                     //just convenience
                     NSString *command = [message objectAtIndex:0];
                     
-                    if([command isEqual:@"CHL"])
+                    //Should we be reading this? If yes, remove it from the socket's buffer.
+                    if(![command isEqual:@"XFR"])
                     {
-                        //create the data
-                        NSData *tempData = [[NSString stringWithFormat:@"%@Q1P7W2E4J9R8U3S5",
-                                [message objectAtIndex:2]]
-                            dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+                        //remove the bytes
+                        [socket removeDataBytes:[inData length]];                    
                         
-                        //md5 it
-                        NSData *mdData = [NSData dataWithBytes:(const int *)MD5([tempData bytes],
-                                        [tempData length], NULL) length:16];
-                        
-                        //do stuff to get the number right
-                        NSString *temp = [mdData description];
-                        temp = [temp substringWithRange:NSMakeRange(1,[temp length]-2)];
-                        temp = [temp stringByTrimmingCharactersInSet:
-                            [NSCharacterSet whitespaceCharacterSet]];
-                        temp = [[temp componentsSeparatedByString:@" "]
-                            componentsJoinedByString:@""];
-                        
-                        //format the stuff in the right format.
-                        temp = [NSString stringWithFormat:@"QRY %d msmsgs@msnmsgr.com 32\r\n%@", 231, temp];
-                        
-                        //set it in userInfo
-                        [[timer userInfo] setObject:temp forKey:@"String"];
-                        
-                        //go to sending stage
-                        [[timer userInfo] setObject:[NSNumber numberWithInt:1] forKey:@"Number"];
-                    }
-                    else if([command isEqual:@"MSG"])
-                    {
-						//Set payload length
-						[[timer userInfo] setObject:[message objectAtIndex:([message count] - 1)] forKey:@"String"];
-						
-						//go to Message payload stage
-						[[timer userInfo] setObject:[NSNumber numberWithInt:2] forKey:@"Number"];
-					}
-                    else if([command isEqual:@"NOT"])
-                    {
-						//Set payload length
-						[[timer userInfo] setObject:[message objectAtIndex:([message count] - 1)] forKey:@"String"];
-						
-						//go to Message payload stage
-						[[timer userInfo] setObject:[NSNumber numberWithInt:3] forKey:@"Number"];
-					}
-                    else if([command isEqual:@"NLN"])
-                    {
-
-                        AIHandle *theHandle = [handleDict objectForKey:
-                            [message objectAtIndex:2]];
-                        
-                        [[theHandle statusDictionary]
-                            setObject:[NSNumber numberWithInt:1]
-                            forKey:@"Online"];
-                        
-                        NSLog(@"%@",[[message objectAtIndex:3] 
-                                        urlDecode]);
-                        
-                        [[theHandle statusDictionary]
-                            setObject:[[message objectAtIndex:3]
-                                        urlDecode]
-                            forKey:@"Display Name"];
+                        //now since we know we should read it, process the packet
+                        if([command isEqual:@"CHL"])
+                        {
+                            //create the data
+                            NSData *tempData = [[NSString stringWithFormat:@"%@Q1P7W2E4J9R8U3S5",
+                                    [message objectAtIndex:2]]
+                                dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
                             
-                        [[owner contactController] handleStatusChanged:theHandle
-                            modifiedStatusKeys:
-                                [NSArray arrayWithObjects:@"Online", @"Display Name"]];
-                    }
-                    else if([command isEqual:@"FLN"])
-                    { // offline
-                        AIHandle *theHandle = [handleDict objectForKey:
-                                [message objectAtIndex:1]];
-                        
-                        [[theHandle statusDictionary]
-                            setObject:[NSNumber numberWithInt:0]
-                            forKey:@"Online"];
+                            //md5 it
+                            NSData *mdData = [NSData dataWithBytes:(const int *)MD5([tempData bytes],
+                                            [tempData length], NULL) length:16];
                             
-                        [[owner contactController] handleStatusChanged:theHandle
-                            modifiedStatusKeys:
-                                [NSArray arrayWithObject:@"Online"]];
+                            //do stuff to get the number right
+                            NSString *temp = [mdData description];
+                            temp = [temp substringWithRange:NSMakeRange(1,[temp length]-2)];
+                            temp = [temp stringByTrimmingCharactersInSet:
+                                [NSCharacterSet whitespaceCharacterSet]];
+                            temp = [[temp componentsSeparatedByString:@" "]
+                                componentsJoinedByString:@""];
+                            
+                            //format the stuff in the right format.
+                            temp = [NSString stringWithFormat:@"QRY %d msmsgs@msnmsgr.com 32\r\n%@", 231, temp];
+                            
+                            //set it in userInfo
+                            [[timer userInfo] setObject:temp forKey:@"String"];
+                            
+                            //go to sending stage
+                            [[timer userInfo] setObject:[NSNumber numberWithInt:1] forKey:@"Number"];
+                        }
+                        else if([command isEqual:@"MSG"])
+                        {
+                            //Set payload length
+                            [[timer userInfo] setObject:[message objectAtIndex:([message count] - 1)] forKey:@"String"];
+                            
+                            //go to Message payload stage
+                            [[timer userInfo] setObject:[NSNumber numberWithInt:2] forKey:@"Number"];
+                        }
+                        else if([command isEqual:@"NOT"])
+                        {
+                            //Set payload length
+                            [[timer userInfo] setObject:[message objectAtIndex:([message count] - 1)] forKey:@"String"];
+                            
+                            //go to Message payload stage
+                            [[timer userInfo] setObject:[NSNumber numberWithInt:3] forKey:@"Number"];
+                        }
+                        else if([command isEqual:@"NLN"])
+                        {
+    
+                            AIHandle *theHandle = [handleDict objectForKey:
+                                [message objectAtIndex:2]];
+                            
+                            [[theHandle statusDictionary]
+                                setObject:[NSNumber numberWithInt:1]
+                                forKey:@"Online"];
+                            
+                            NSLog(@"%@",[[message objectAtIndex:3] 
+                                            urlDecode]);
+                            
+                            [[theHandle statusDictionary]
+                                setObject:[[message objectAtIndex:3]
+                                            urlDecode]
+                                forKey:@"Display Name"];
+                                
+                            [[owner contactController] handleStatusChanged:theHandle
+                                modifiedStatusKeys:
+                                    [NSArray arrayWithObjects:@"Online", @"Display Name"]];
+                        }
+                        else if([command isEqual:@"FLN"])
+                        { // offline
+                            AIHandle *theHandle = [handleDict objectForKey:
+                                    [message objectAtIndex:1]];
+                            
+                            [[theHandle statusDictionary]
+                                setObject:[NSNumber numberWithInt:0]
+                                forKey:@"Online"];
+                                
+                            [[owner contactController] handleStatusChanged:theHandle
+                                modifiedStatusKeys:
+                                    [NSArray arrayWithObject:@"Online"]];
+                        }
+                        else if([command isEqual:@"ACK"])
+                        {
+                            [messageArray removeObjectAtIndex:[[message objectAtIndex:1] intValue]];
+                        }
+                        else if([command isEqual:@"NAK"])
+                        {
+                            //Shout at the user somehow, NSLog for now. Should be a dialog later.
+                            NSLog(@"Faiure to send message %@", 
+                                [messageArray objectAtIndex:[[message objectAtIndex:1] intValue]]);
+                            
+                            [messageArray removeObjectAtIndex:[[message objectAtIndex:1] intValue]];
+                        }
+                        else if([command isEqual:@""])
+                        {
+                            //do stuff...
+                        }
                     }
-                    else if([command isEqual:@""])
-                    {
-                        //do stuff...
-                    }
-                    
                 }
                 break;
                 
@@ -977,9 +1009,78 @@
 	return (returnDict);
 }
 
-- (BOOL)sendMessage:(NSString *)message onSocket:(AISocket *)socket
+- (BOOL)sendMessage:(NSString *)message onSocket:(AISocket *)Socket
 {
+    NSString *packet;
+    
+    if([messageArray lastObject])
+    {
+        packet = [NSString stringWithFormat:@"MSG %d A %d\r\n%@",
+                [messageArray indexOfObject:[messageArray lastObject]], 
+                [message length],
+                message];
+    }
+    else
+    {
+        packet = [NSString stringWithFormat:@"MSG 0 A %d\r\n%@",
+                [message length],
+                message];
+    }
+    
+    [messageArray addObject:packet];
+    
+    [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
+        target:self
+        selector:@selector(sendMessageHelper:)
+        userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+            [packet dataUsingEncoding:NSUTF8StringEncoding], @"Packet",
+            Socket, @"Socket"]
+        repeats:YES];
+
     return YES;
+}
+
+- (void)sendMessageHelper:(NSTimer *)timer
+{
+    AISocket *Socket = [[timer userInfo] objectForKey:@"Socket"];
+    NSData *data = [[timer userInfo] objectForKey:@"Packet"];
+    
+    if([Socket sendData:data])
+    {
+        [timer invalidate];
+    }
+}
+
+- (void)startSBSessionHelper:(NSTimer *)timer
+{
+    NSString *temp;
+    
+    switch([[[timer userInfo] objectForKey:@"Phase"] intValue])
+    {
+        case 0:
+            temp = [NSString stringWithFormat:@"XFR %U", [self getTrid]];
+            
+            if ([socket sendData:[[NSString stringWithFormat:@"%@\r\n", temp]
+                        dataUsingEncoding:NSUTF8StringEncoding]])
+                {
+                    NSLog(@">>> %@", temp);
+                    [[timer userInfo] setObject:[NSNumber numberWithInt:1] forKey:@"Phase"];
+                }
+            break;
+            
+        case 1:
+            break;
+    }
+}
+
+- (unsigned long)getTrid
+{
+    static unsigned long lastTrid = 1;
+    
+    if (lastTrid >= 4294967295UL)
+        lastTrid = 1;
+        
+    return lastTrid++;
 }
 
 @end
