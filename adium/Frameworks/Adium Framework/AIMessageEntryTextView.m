@@ -529,12 +529,12 @@ static NSImage *pushIndicatorImage = nil;
 		contextualMenu = [[super defaultMenu] copy];
 		
 		//Retrieve the items which should be added to the bottom of the default menu
-		NSMenu  *adiumMenu = [[[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+		NSMenu  *adiumMenu = [[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
 			[NSNumber numberWithInt:Context_TextView_LinkAction],
 			[NSNumber numberWithInt:Context_TextView_General],
 			[NSNumber numberWithInt:Context_TextView_EmoticonAction], nil]
-                                                                                        forTextView:self] copy];
-		itemsArray = [adiumMenu itemArray];
+                                                                                        forTextView:self];
+		itemsArray = [[adiumMenu itemArray] copy];
 		
 		if([itemsArray count] > 0) {
 			[contextualMenu addItem:[NSMenuItem separatorItem]];
