@@ -18647,23 +18647,6 @@
 			shellPath = /bin/sh;
 			shellScript = "find \"$BUILD_ROOT/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' ';'\n";
 		};
-		6C1CC23105415D5700B64925 = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.executable";
-			name = buildnum;
-			path = Other/buildnum;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		6C1CC23205415D5700B64925 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.c;
-			name = buildnum.c;
-			path = Other/buildnum.c;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
 		6C24112705849D7900CECFC3 = {
 			children = (
 				6C60B14905605A3500CAD137,
@@ -22819,8 +22802,6 @@
 				34F6A92E0710E20000F485C4,
 				34F6A92F0710E20000F485C4,
 				34F6A9300710E20000F485C4,
-				6C1CC23205415D5700B64925,
-				6C1CC23105415D5700B64925,
 			);
 			isa = PBXGroup;
 			name = Resources;
