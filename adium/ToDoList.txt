@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.49 2004/04/16 09:54:07 ramoth4 Exp $
+$Id: ToDoList.txt,v 1.50 2004/04/16 15:54:59 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -13,6 +13,7 @@ If you are working on something big and it may take a while, please tag it with 
 -------------------------------------------------------------------------------------------------------
 Bugs
 -------------------------------------------------------------------------------------------------------
+** GROUP DRAGGING IS BROKEN.  Try it :)
 * Don't spawn new windows when we're hidden, doing so will unhide us (Show the windows next time we're unhidden)
 * Adium will unhide if hidden (via cmd-H) while a tooltip is visible
 * Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
