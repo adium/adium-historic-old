@@ -263,9 +263,10 @@
 			//Adjust labels slightly when displaying for a group (to avoid overlapping the flippy triangle)
 			if(isGroup){
 				labelRect.origin.x += GROUP_LABEL_OFFSET;
-				labelRect.size.width -= 2.0f * GROUP_LABEL_OFFSET;
+				labelRect.size.width -= GROUP_LABEL_OFFSET;
 			}
-			
+			labelRect.size.width -= GROUP_LABEL_OFFSET;
+                        
 			//Retrieve the label and shift it into position
 			pillPath = [self bezierPathLabelWithRect:labelRect];
 			
