@@ -8,9 +8,8 @@
 
 #import "ESDockBehaviorContactAlert.h"
 
-
-#define CONTACT_ALERT_ACTION_NIB @"DockBehaviorContactAlert"
-#define BOUNCE_THE_DOCK AILocalizedString(@"Bounce the dock","Contact Alert: Boucne the dock icon")
+#define CONTACT_ALERT_ACTION_NIB @  "DockBehaviorContactAlert"
+#define BOUNCE_THE_DOCK				AILocalizedString(@"Bounce the dock","Contact Alert: Boucne the dock icon")
 
 @interface ESDockBehaviorContactAlert (PRIVATE)
 - (NSMenu *)behaviorListMenu;

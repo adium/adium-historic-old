@@ -17,7 +17,7 @@
 #import "AIDockBehaviorPlugin.h"
 
 #define TABLE_COLUMN_BEHAVIOR		@"behavior"
-#define TABLE_COLUMN_EVENT		@"event"
+#define TABLE_COLUMN_EVENT			@"event"
 #define NIB_DOCK_BEHAVIOR_CUSTOM	@"DockBehaviorCustom"
 
 
@@ -87,7 +87,10 @@ AIDockCustomBehavior	*sharedInstance = nil;
     [tableView_events setTarget:self];
 
     //Observer preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self 
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged 
+									 object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -253,7 +256,7 @@ AIDockCustomBehavior	*sharedInstance = nil;
 			int		index = [object intValue];
 			NSMenu  *menu = [[tableColumn dataCell] menu];
 			
-			if ((index > 0) && (index < [menu numberOfItems])) {
+			if ((index >= 0) && (index < [menu numberOfItems])) {
 				selectedMenuItem = (NSMenuItem *)[menu itemAtIndex:index];
 				selectedEventDict = [[[behaviorArray objectAtIndex:row] mutableCopy] autorelease];
 				newBehavior = [selectedMenuItem representedObject];

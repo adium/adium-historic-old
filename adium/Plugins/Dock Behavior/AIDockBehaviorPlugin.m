@@ -40,13 +40,18 @@
     presetBehavior = [[NSArray arrayWithContentsOfFile:path] retain];
     
     //Register default preferences and pre-set behavior
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_BEHAVIOR_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DOCK_BEHAVIOR];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_BEHAVIOR_DEFAULT_PREFS
+																		forClass:[self class]]
+										  forGroup:PREF_GROUP_DOCK_BEHAVIOR];
 
     //Install our preference view
     preferences = [[AIDockBehaviorPreferences preferencePaneForPlugin:self] retain];
 
     //Observer preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
     [self preferencesChanged:nil];
     
 }
@@ -71,7 +76,10 @@
         
         //Reset our observations
         [[adium notificationCenter] removeObserver:self];
-        [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+        [[adium notificationCenter] addObserver:self
+									   selector:@selector(preferencesChanged:)
+										   name:Preference_GroupChanged 
+										 object:nil];
 
         //Load the behaviorSet
         activeBehaviorSet = [preferenceDict objectForKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET];
@@ -168,9 +176,8 @@
 }
 - (NSArray *)customBehavior
 {
-    NSDictionary 	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
-    
-    return([preferenceDict objectForKey:KEY_DOCK_CUSTOM_BEHAVIOR]);
+    return([[adium preferenceController] preferenceForKey:KEY_DOCK_CUSTOM_BEHAVIOR
+													group:PREF_GROUP_DOCK_BEHAVIOR]);
 }
 
 //*****
@@ -215,14 +222,28 @@ Methods for custom behvaior and contact alert classes
     NSMenu		*behaviorMenu = [[[NSMenu alloc] init] autorelease];
     
     //Build the menu items
-    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_ONCE withName:@"Once" target:target]];
+    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_ONCE 
+														   withName:AILocalizedString(@"Once",nil) target:target]];
+	
     [behaviorMenu addItem:[NSMenuItem separatorItem]];
-    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_REPEAT withName:@"Repeatedly" target:target]];
-    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY5 withName:@"Every 5 Seconds" target:target]];
-    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY10 withName:@"Every 10 Seconds" target:target]];
-    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY15 withName:@"Every 15 Seconds" target:target]];
-    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY30 withName:@"Every 30 Seconds" target:target]];
-    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY60 withName:@"Every Minute" target:target]];
+	
+    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_REPEAT
+														   withName:AILocalizedString(@"Repeatedly",nil) target:target]];
+	
+    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY5 
+														   withName:AILocalizedString(@"Every 5 Seconds",nil) target:target]];
+	
+    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY10 
+														   withName:AILocalizedString(@"Every 10 Seconds",nil) target:target]];
+	
+    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY15 
+														   withName:AILocalizedString(@"Every 15 Seconds",nil) target:target]];
+	
+    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY30
+														   withName:AILocalizedString(@"Every 30 Seconds",nil) target:target]];
+	
+    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY60
+														   withName:AILocalizedString(@"Every Minute",nil) target:target]];
     
     [behaviorMenu setAutoenablesItems:NO];
     
@@ -233,7 +254,6 @@ Methods for custom behvaior and contact alert classes
 + (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name target:(id)target
 {
     NSMenuItem		*menuItem;
-    
     menuItem = [[[NSMenuItem alloc] initWithTitle:name
                                            target:target
                                            action:@selector(selectBehavior:)

@@ -17,7 +17,7 @@
 #import "AIDockBehaviorPlugin.h"
 #import "AIDockCustomBehavior.h"
 
-#define TABLE_COLUMN_BEHAVIOR		@"behavior"
+#define TABLE_COLUMN_BEHAVIOR   @"behavior"
 #define TABLE_COLUMN_EVENT		@"event"
 
 @interface AIDockBehaviorPreferences (PRIVATE)
@@ -33,7 +33,7 @@
     return(AIPref_Dock);
 }
 - (NSString *)label{
-    return(@"Dock Bouncing");
+    return(AILocalizedString(@"Dock Bouncing","Dock bouncing preferences label"));
 }
 - (NSString *)nibName{
     return(@"DockBehaviorPreferences");
@@ -46,7 +46,10 @@
     [popUp_behaviorSet setMenu:[self behaviorSetMenu]];
 
     //Observer preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self 
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -87,7 +90,7 @@
     [plugin setActivePreset:newPreset];
 
     //If the user moves from a preset to custom, we copy that preset's behavior into custom.
-    if([plugin activePreset]){
+    if([plugin activePreset] && [[plugin activePreset] length]){
         [plugin setCustomBehavior:[plugin behaviorForPreset:[plugin activePreset]]];
     }
     
@@ -127,7 +130,10 @@
 
     //Add the custom option
     [behaviorSetMenu addItem:[NSMenuItem separatorItem]];
-    [behaviorSetMenu addItemWithTitle:AILocalizedString(@"Custom…",nil) target:self action:@selector(selectBehaviorSet:) keyEquivalent:@""];
+    [behaviorSetMenu addItemWithTitle:AILocalizedString(@"Custom…",nil) 
+							   target:self
+							   action:@selector(selectBehaviorSet:)
+						keyEquivalent:@""];
 
     return(behaviorSetMenu);
 }
