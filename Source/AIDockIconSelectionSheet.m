@@ -17,6 +17,7 @@
 #import "AIDockController.h"
 #import "AIDockIconSelectionSheet.h"
 #import "AIAppearancePreferencesPlugin.h"
+#import "AIPreferenceController.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIImageGridView.h>
 #import <Adium/AIIconState.h>
@@ -25,6 +26,8 @@
 #define DEFAULT_DOCK_ICON_NAME		@"Adiumy Green"
 
 @interface AIDockIconSelectionSheet (PRIVATE)
+- (void)selectIconWithName:(NSString *)selectName;
+- (void)xtrasChanged:(NSNotification *)notification;
 - (void)selectIconWithName:(NSString *)selectName;
 @end
 
@@ -279,7 +282,7 @@
 						  AILocalizedString(@"Delete",nil),
 						  AILocalizedString(@"Cancel",nil),
 						  @"",
-						  [[self view] window], 
+						  [self window], 
 						  self, 
 						  @selector(trashConfirmSheetDidEnd:returnCode:contextInfo:),
 						  nil,
