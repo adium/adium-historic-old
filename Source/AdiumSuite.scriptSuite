@@ -190,7 +190,7 @@
 			<string>NSCoreSuite.AbstractObject</string>
 			<key>Attributes</key>
 			<dict>
-				<key>uniqueObjectID</key>
+				<key>internalObjectID</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>ID  </string>
