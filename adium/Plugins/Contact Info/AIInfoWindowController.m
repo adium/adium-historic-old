@@ -82,16 +82,14 @@ static AIInfoWindowController *sharedInstance = nil;
     //Remember who we're displaying info for
     [activeContactObject release]; activeContactObject = [inContact retain];
 
-    if (timer) 
-        [timer invalidate];
-    timer = [NSTimer scheduledTimerWithTimeInterval:REFRESH_RATE target:self selector:@selector(refresh:) userInfo:nil repeats:NO];
-    
+    [timer invalidate]; [timer release];
+    timer = [[NSTimer scheduledTimerWithTimeInterval:REFRESH_RATE target:self selector:@selector(refresh:) userInfo:nil repeats:NO] retain];
     
     //Set window title
     [[self window] setTitle:[NSString stringWithFormat:@"%@'s Info",[activeContactObject displayName]]];
     
     //Build the info text
-    infoString = [[NSMutableAttributedString alloc] init];
+    infoString = [[[NSMutableAttributedString alloc] init] autorelease];
 
     //Create an paragraph style with the correct tabbing and indents
     paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
@@ -317,6 +315,7 @@ static AIInfoWindowController *sharedInstance = nil;
 //
 - (void)dealloc
 {
+    [timer invalidate]; [timer release];
     [owner release];
     [activeContactObject release];
 
