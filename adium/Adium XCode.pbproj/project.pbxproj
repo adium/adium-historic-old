@@ -403,7 +403,6 @@
 				4BED6DB305D5F49200ACFD49,
 				34E839050583207E00F2AADB,
 				34E83B0A05832B4300F2AADB,
-				6576A01305026B4F000EB664,
 				9C103FAE057127A500F3C158,
 			);
 			isa = PBXGroup;
@@ -6195,6 +6194,51 @@
 			settings = {
 			};
 		};
+		346C9A2305FFE3DE000F5A8A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESWebView.h;
+			path = "Plugins/WebKit Message View/ESWebView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		346C9A2405FFE3DF000F5A8A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESWebView.m;
+			path = "Plugins/WebKit Message View/ESWebView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		346C9A2505FFE3DF000F5A8A = {
+			fileRef = 346C9A2305FFE3DE000F5A8A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		346C9A2605FFE3DF000F5A8A = {
+			fileRef = 346C9A2405FFE3DF000F5A8A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		346C9A4005FFE418000F5A8A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = WebKitPrivateDefinitions.h;
+			path = "Plugins/WebKit Message View/WebKitPrivateDefinitions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		346C9A4105FFE418000F5A8A = {
+			fileRef = 346C9A4005FFE418000F5A8A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		346E640C05153395003B2F21 = {
 			children = (
 				346E640D051533C0003B2F21,
@@ -11189,17 +11233,10 @@
 			files = (
 				3419F6F205314E8200C68BA3,
 				3419F6F105314E7F00C68BA3,
-				34BD9EC30531475B000AB133,
 				34BD9EC60531475B000AB133,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9EC30531475B000AB133 = {
-			fileRef = 6576A01305026B4F000EB664;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BD9EC60531475B000AB133 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
@@ -18533,6 +18570,8 @@
 				4B539C4D05EFD6CD00E5921A,
 				4B539C5305EFD6FB00E5921A,
 				34FB54E005FEC73B00F0D7D7,
+				346C9A2505FFE3DF000F5A8A,
+				346C9A4105FFE418000F5A8A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18560,6 +18599,7 @@
 				4B539C4E05EFD6CD00E5921A,
 				4B539C5405EFD6FB00E5921A,
 				34FB54DF05FEC73B00F0D7D7,
+				346C9A2605FFE3DF000F5A8A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -23390,15 +23430,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		6576A01305026B4F000EB664 = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
-			lastKnownFileType = file;
-			name = acid.framework;
-			path = ../acid/build/acid.framework;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
 		6576A02C05026BF9000EB664 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -24837,8 +24868,11 @@
 				4B539C4C05EFD6CD00E5921A,
 				4B539C5105EFD6FA00E5921A,
 				4B539C5205EFD6FB00E5921A,
-				34FB54DD05FEC73A00F0D7D7,
 				34FB54DE05FEC73A00F0D7D7,
+				34FB54DD05FEC73A00F0D7D7,
+				346C9A2305FFE3DE000F5A8A,
+				346C9A2405FFE3DF000F5A8A,
+				346C9A4005FFE418000F5A8A,
 				4B539F3705EFE51500E5921A,
 				4BDEC39C05F1A47D00416138,
 				4BDEC39D05F1A47D00416138,
