@@ -177,31 +177,39 @@
 //User wants to send the report
 - (IBAction)send:(id)sender
 {
-    NSString	*shortDescription = [textField_description stringValue];
-    
-    //Truncate description field to 300 characters
-    if([shortDescription length] > 300){
-        shortDescription = [shortDescription substringToIndex:300];
+    if([[textField_emailAddress stringValue] isEqualToString:@""] 
+        || [[textField_description stringValue] isEqualToString:@""])
+    {
+        NSBeginCriticalAlertSheet(@"You must fill in the required fields", @"OK", nil, nil, window_MainWindow, nil, nil, nil, NULL, @"You must fill your email address and give a brief description of the crash.");
     }
-    
-    //Load the build information
-    [self _loadBuildInformation];
-    
-    //Build the report
-    NSDictionary	*crashReport = [NSDictionary dictionaryWithObjectsAndKeys:
-        [NSString stringWithFormat:@"%@	(%@)",buildDate,(buildUser ? buildUser : buildNumber)], @"build",
-        [textField_emailAddress stringValue], @"email",
-        [textField_accountIM stringValue], @"uid",
-        shortDescription, @"short_desc",
-        [textView_details string], @"desc",
-        crashLog, @"log",
-        nil];
-    
-    //Send
-    [self sendReport:crashReport];
-    
-    //Close our window to terminate
-    [window_MainWindow performClose:nil];
+    else
+    {
+        NSString	*shortDescription = [textField_description stringValue];
+        
+        //Truncate description field to 300 characters
+        if([shortDescription length] > 300){
+            shortDescription = [shortDescription substringToIndex:300];
+        }
+        
+        //Load the build information
+        [self _loadBuildInformation];
+        
+        //Build the report
+        NSDictionary	*crashReport = [NSDictionary dictionaryWithObjectsAndKeys:
+            [NSString stringWithFormat:@"%@	(%@)",buildDate,(buildUser ? buildUser : buildNumber)], @"build",
+            [textField_emailAddress stringValue], @"email",
+            [textField_accountIM stringValue], @"uid",
+            shortDescription, @"short_desc",
+            [textView_details string], @"desc",
+            crashLog, @"log",
+            nil];
+        
+        //Send
+        [self sendReport:crashReport];
+        
+        //Close our window to terminate
+        [window_MainWindow performClose:nil];
+    }
 }
 
 - (void)sendReport:(NSDictionary *)crashReport
