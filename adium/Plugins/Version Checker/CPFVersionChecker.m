@@ -103,7 +103,7 @@
 			NSString *interval = [self intervalBetweenDate:thisDate andDate:newestDate];
 			
 			int button = NSRunAlertPanel(AILocalizedString(@"Update Available",nil),
-										 [NSString stringWithFormat:AILocalizedString(@"A new Adium was released on %@. Your current copy is %@ old.  Would you like to update?", nil), newestDateString, interval],
+										 [NSString stringWithFormat:AILocalizedString(@"A new Adium was released on %@. Your current copy is %@old.  Would you like to update?", nil), newestDateString, interval],
 										 AILocalizedString(@"Update",nil),
 										 AILocalizedString(@"Ignore",nil),
 										 nil);
@@ -156,11 +156,13 @@
 	int		weeks = days / 7.0;
 	
 	if(days >= 1){
-		return([NSString stringWithFormat:AILocalizedString(days == 1 ? @"%i day" : @"%i days", nil), days]);
+		return([NSString stringWithFormat:AILocalizedString(days == 1 ? @"%i day " : @"%i days ", nil), days]);
 	}else if(weeks >= 1){
-		return([NSString stringWithFormat:AILocalizedString(weeks == 1 ? @"%i week" : @"%i weeks", nil), weeks]);
+		return([NSString stringWithFormat:AILocalizedString(weeks == 1 ? @"%i week " : @"%i weeks ", nil), weeks]);
+	}else if(hours >= 1){
+		return([NSString stringWithFormat:AILocalizedString(days == 1 ? @"%i hour " : @"%i hours ", nil), hours]);
 	}else{
-		return([NSString stringWithFormat:AILocalizedString(days == 1 ? @"%i hour" : @"%i hours", nil), hours]);
+		return(@"");
 	}
 }
 
