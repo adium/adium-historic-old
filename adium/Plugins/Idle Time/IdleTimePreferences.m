@@ -16,12 +16,13 @@
 #import "IdleTimePreferences.h"
 #import "IdleTimePlugin.h"
 
-#define IDLE_TIME_PREF_NIB		@"IdleTimePrefs"		//Name of preference nib
+#define IDLE_TIME_PREF_NIB          @"IdleTimePrefs"		//Name of preference nib
 #define IDLE_TIME_PREF_TITLE		AILocalizedString(@"Idle",nil)  //Title of the preference view
 #define AUTO_AWAY_NO_AWAYS_TITLE	@"No saved aways"   //What to display in popUp_title if no messages are saved
 
 @interface IdleTimePreferences (PRIVATE)
 - (void)configureView;
+- (void)configureAutoAwayPreferences;
 - (void)configureControlDimming;
 - (void)loadAwayMessages;
 - (NSMutableArray *)_loadAwaysFromArray:(NSArray *)array;
@@ -114,14 +115,24 @@
     [checkBox_enableAutoAway setState:[[preferenceDict objectForKey:KEY_AUTO_AWAY_ENABLED] boolValue]];
     [textField_autoAwayMinutes setIntValue:[[preferenceDict objectForKey:KEY_AUTO_AWAY_IDLE_MINUTES] intValue]];
 	
-    //Auto-away
+	[self configureAutoAwayPreferences];
+	
+    [self configureControlDimming];
+}
+
+- (IBAction)refreshAutoAwayPreferences:(id)sender
+{
+    [self configureAutoAwayPreferences];
+}
+
+- (void)configureAutoAwayPreferences
+{
+	NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME];
 	[popUp_title setMenu:[self savedAwaysMenu]];
 	int awayMessageIndex = [[preferenceDict objectForKey:KEY_AUTO_AWAY_MESSAGE_INDEX] intValue];
 	if ((awayMessageIndex >= 0) && (awayMessageIndex < [popUp_title numberOfItems])){
 		[popUp_title selectItemAtIndex:awayMessageIndex];
 	}
-	
-    [self configureControlDimming];
 }
 
 //Enable/disable controls that are available/unavailable
@@ -178,12 +189,7 @@
     if(tempArray){
         //Load the aways
         awayMessageArray = [self _loadAwaysFromArray:tempArray];
-
-    }else{
-        //If no aways exist, create an empty array
-        awayMessageArray = [[NSMutableArray alloc] init];
     }
-
 }
 
 - (NSMenu *)savedAwaysMenu
@@ -227,6 +233,7 @@
                                                 keyEquivalent:@""] autorelease];
             [menuItem setEnabled:NO];
             [savedAwaysMenu addItem:menuItem];
+			[checkBox_enableAutoAway setState:NO];
             [checkBox_enableAutoAway setEnabled:NO];
             [textField_autoAwayMinutes setEnabled:NO];
 	}            

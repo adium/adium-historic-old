@@ -31,5 +31,6 @@
 + (IdleTimePreferences *)idleTimePreferences;
 - (IBAction)changePreference:(id)sender;
 - (IBAction)changeAwayPreference:(id)sender;
+- (IBAction)refreshAutoAwayPreferences:(id)sender;
 
 @end
