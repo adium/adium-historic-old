@@ -81,7 +81,6 @@
 //Configures the account menu (dimming invalid accounts if applicable)
 - (void)configureAccountMenu
 {
-    NSLog(@"configureAccountMenu");
     AIListObject	*listObject = [delegate listObject];
     NSEnumerator	*enumerator;
     AIAccount		*anAccount;
