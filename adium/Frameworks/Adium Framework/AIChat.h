@@ -33,11 +33,12 @@
 - (void)setDateOpened:(NSDate *)inDate;
 
 - (NSArray *)participatingListObjects;
-- (void)addParticipatingListObject:(AIListObject *)inObject;
-- (void)removeParticipatingListObject:(AIListObject *)inObject;
-- (AIListObject *)listObject;
-- (AIListObject *)preferredListObject;
-- (void)setPreferredListObject:(AIListObject *)inObject;
+- (void)addParticipatingListObject:(AIListContact *)inObject;
+- (void)removeParticipatingListObject:(AIListContact *)inObject;
+- (AIListContact *)listObject;
+- (void)setListObject:(AIListContact *)inObject;
+- (AIListContact *)preferredListObject;
+- (void)setPreferredListObject:(AIListContact *)inObject;
 - (BOOL)inviteListContact:(AIListContact *)inObject withMessage:(NSString *)inviteMessage;
 
 - (NSArray *)contentObjectArray;

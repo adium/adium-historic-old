@@ -204,7 +204,7 @@
 }
 
 //If this chat only has one participating list object, it is returned.  Otherwise, nil is returned
-- (AIListObject *)listObject
+- (AIListContact *)listObject
 {
     if([participatingListObjects count] == 1){
         return([participatingListObjects objectAtIndex:0]);
@@ -212,7 +212,7 @@
         return(nil);
     }
 }
-- (void)setListObject:(AIListObject *)inListObject
+- (void)setListObject:(AIListContact *)inListObject
 {
 	if([participatingListObjects count] == 1){
 		[participatingListObjects removeObjectAtIndex:0];
