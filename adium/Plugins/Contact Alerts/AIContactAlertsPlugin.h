@@ -34,7 +34,6 @@
 @protocol AIListObjectObserver;
 
 @interface AIContactAlertsPlugin : AIPlugin <AIMiniToolbarItemDelegate,AIListObjectObserver> {
-//@interface AIContactAlertsPlugin : AIPlugin <AIListObjectObserver> {
     NSMenuItem				*editContactAlertsMenuItem;
     NSMenuItem				*contactAlertsContextMenuItem;
 
