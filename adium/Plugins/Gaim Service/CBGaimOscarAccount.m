@@ -36,11 +36,14 @@ static BOOL didInitOscar = NO;
 {
 	[super initAccount];
 	
+	accountIsICQ = NO;
+	
 	if ([UID length]){
 		char firstCharacter = [UID characterAtIndex:0];
 		if (firstCharacter >= '0' && firstCharacter <= '9') {
 			if (!ICQServiceID) ICQServiceID = @"ICQ";
 			[self setStatusObject:ICQServiceID forKey:@"DisplayServiceID" notify:YES];
+			accountIsICQ = YES;
 		}
 	}
 	
@@ -54,18 +57,21 @@ static BOOL didInitOscar = NO;
 	[super dealloc];
 }
 
-/*
+
 //AIM doesn't require we close our tags, so don't waste the characters
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-	BOOL	noHTML = NO;
+	BOOL	nonHTMLUser = NO;
+	BOOL	noHTML;
 	
 	//We don't want to send HTML to ICQ users, or mobile phone users
 	if(inListObject){
 		char	firstCharacter = [[inListObject UID] characterAtIndex:0];
-	    noHTML = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
+	    nonHTMLUser = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
 	}
 	
+	noHTML = (nonHTMLUser || accountIsICQ);
+
 	return((noHTML ? [inAttributedString string] : [AIHTMLDecoder encodeHTML:inAttributedString
 																	 headers:YES
 																	fontTags:YES
@@ -75,9 +81,10 @@ static BOOL didInitOscar = NO;
 												  closeStyleTagsOnFontChange:NO
 															  encodeNonASCII:NO
 																  imagesPath:nil
-														   attachmentsAsText:YES]));
+														   attachmentsAsText:YES
+															  simpleTagsOnly:NO]));
 }
-*/
+
 //Override _contactWithUID to mark mobile and ICQ users as such via the displayServiceID
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID
 {
