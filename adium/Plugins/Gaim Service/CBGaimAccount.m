@@ -20,6 +20,8 @@
 #define AUTO_RECONNECT_DELAY		2.0	//Delay in seconds
 #define RECONNECTION_ATTEMPTS		4
 
+#define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
+
 @interface CBGaimAccount (PRIVATE)
 - (void)connect;
 - (void)disconnect;
@@ -1409,6 +1411,13 @@ static id<GaimThread> gaimThread = nil;
 	[[NSFileManager defaultManager] createDirectoriesForPath:[ACCOUNT_IMAGE_CACHE_PATH stringByExpandingTildeInPath]];
 	
 	insideDealloc = NO;
+	
+	
+	//Observe preferences changes
+    [[adium notificationCenter] addObserver:self 
+								   selector:@selector(preferencesChanged:) 
+									   name:Preference_GroupChanged 
+									 object:nil];
 }
 
 - (void)dealloc
@@ -1454,6 +1463,39 @@ static id<GaimThread> gaimThread = nil;
 							  simpleTagsOnly:NO]);
 	}else{
 		return [inAttributedString string];
+	}
+}
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+	NSDictionary	*userInfo = [notification userInfo];
+	NSString		*prefGroup = [userInfo objectForKey:@"Group"];
+	
+	if([prefGroup isEqualToString:PREF_GROUP_ALIASES]){
+		AIListObject *listObject = [notification object];
+		
+		//If the notification object is a listContact belonging to this account, update the serverside information
+		if ([listObject isKindOfClass:[AIListContact class]] && 
+			[[(AIListContact *)listObject accountID] isEqualToString:[self uniqueObjectID]]){
+			
+			if (gc){
+				const char  *uidUTF8String = [[listObject UID] UTF8String];
+				GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
+				
+				NSString	*key = [userInfo objectForKey:@"Key"];
+				
+				if ([key isEqualToString:@"Alias"]){
+					const char *alias;
+					
+					alias = [[listObject preferenceForKey:@"Alias"
+													group:PREF_GROUP_ALIASES 
+									ignoreInheritedValues:YES] UTF8String];
+					
+					gaim_blist_server_alias_buddy(buddy,alias);
+					serv_alias_buddy(buddy);
+				}
+			}
+		}
 	}
 }
 

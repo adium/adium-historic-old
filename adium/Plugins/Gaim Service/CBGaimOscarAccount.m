@@ -10,7 +10,9 @@
 #define KEY_OSCAR_HOST  @"Oscar:Host"
 #define KEY_OSCAR_PORT  @"Oscar:Port"
 
-#define	PREF_GROUP_NOTES			@"Notes"                //Preference group to store notes in
+#define	PREF_GROUP_NOTES			@"Notes"		//Preference group to store notes in
+
+#define DELAYED_UPDATE_INTERVAL		0.5
 
 static NSString *ICQServiceID = nil;
 static NSString *MobileServiceID = nil;
@@ -42,11 +44,8 @@ static BOOL didInitOscar = NO;
 		}
 	}
 	
-	//Observe preferences changes
-    [[adium notificationCenter] addObserver:self 
-								   selector:@selector(preferencesChanged:) 
-									   name:Preference_GroupChanged 
-									 object:nil];	
+	arrayOfContactsForDelayedUpdates = nil;
+	delayedSignonUpdateTimer = nil;
 }
 
 - (void)dealloc
@@ -384,9 +383,33 @@ static BOOL didInitOscar = NO;
 
 - (void)gotGroupForContact:(AIListContact *)theContact
 {
-	[theContact setStatusObject:[self serversideCommentForContact:theContact]
-						 forKey:@"Notes"
-						 notify:YES];
+	if (!arrayOfContactsForDelayedUpdates) arrayOfContactsForDelayedUpdates = [[NSMutableArray array] retain];
+	[arrayOfContactsForDelayedUpdates addObject:theContact];
+	
+	if (!delayedSignonUpdateTimer){
+		delayedSignonUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:DELAYED_UPDATE_INTERVAL 
+															   target:self
+															 selector:@selector(_performDelayedUpdates:) 
+															 userInfo:nil 
+															  repeats:YES] retain];
+	}
+}
+
+- (void)_performDelayedUpdates:(NSTimer *)timer
+{
+	if ([arrayOfContactsForDelayedUpdates count]){
+		AIListContact *theContact = [arrayOfContactsForDelayedUpdates objectAtIndex:0];
+		
+		[theContact setStatusObject:[self serversideCommentForContact:theContact]
+							 forKey:@"Notes"
+							 notify:YES];
+		
+		[arrayOfContactsForDelayedUpdates removeObjectAtIndex:0];
+		
+	}else{
+		[arrayOfContactsForDelayedUpdates release]; arrayOfContactsForDelayedUpdates = nil;
+		[delayedSignonUpdateTimer invalidate]; [delayedSignonUpdateTimer release]; delayedSignonUpdateTimer = nil;
+	}
 }
 
 - (NSArray *)contactStatusFlags
@@ -505,26 +528,39 @@ aim_srv_setavailmsg(od->sess, text);
 }
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_NOTES]){
+	[super preferencesChanged:notification];
+	
+	NSDictionary	*userInfo = [notification userInfo];
+	NSString		*prefGroup = [userInfo objectForKey:@"Group"];
+	
+    if([prefGroup isEqualToString:PREF_GROUP_NOTES]){
 		AIListObject *listObject = [notification object];
 		
-		//If the notification object is a listContact belonging to this account, update the serverside notes
+		//If the notification object is a listContact belonging to this account, update the serverside information
 		if ([listObject isKindOfClass:[AIListContact class]] && 
 			[[(AIListContact *)listObject accountID] isEqualToString:[self uniqueObjectID]]){
 			
 			if (gc){
 				const char  *uidUTF8String = [[listObject UID] UTF8String];
 				GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
-				GaimGroup   *g;
-				OscarData   *od;
-				const char  *comment;
 				
-				if ((g = gaim_find_buddys_group(buddy)) && (od = gc->proto_data)){
-					comment = [[listObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES] UTF8String];
+				NSString	*key = [userInfo objectForKey:@"Key"];
+				
+				if ([key isEqualToString:@"Notes"]){
 					
-					aim_ssi_editcomment(od->sess, g->name, uidUTF8String, comment);	
+					GaimGroup   *g;
+					OscarData   *od;
+					const char  *comment;
+					
+					if ((g = gaim_find_buddys_group(buddy)) && (od = gc->proto_data)){
+						comment = [[listObject preferenceForKey:@"Notes" 
+														  group:PREF_GROUP_NOTES
+										  ignoreInheritedValues:YES] UTF8String];
+						
+						aim_ssi_editcomment(od->sess, g->name, uidUTF8String, comment);	
+					}
+					
 				}
-				
 			}
 		}
 	}
