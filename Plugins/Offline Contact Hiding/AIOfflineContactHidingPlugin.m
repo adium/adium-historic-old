@@ -95,19 +95,16 @@
 	   [inModifiedKeys containsObject:@"Signed Off"] ||
 	   [inModifiedKeys containsObject:@"VisibleObjectCount"]){
 
-		BOOL	showOffline = [[inObject preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
-													group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
-		
 		if([inObject isKindOfClass:[AIListContact class]]){
-			int		online = [inObject integerStatusObjectForKey:@"Online"];
+			int		online = [inObject online];
 			int		justSignedOff = [inObject integerStatusObjectForKey:@"Signed Off"];
-			
-			[inObject setVisible:(showOffline || online || justSignedOff)];
+//			NSLog(@"%@ Visible? %i || %i || %i == %i",inObject,showOfflineContacts,online,justSignedOff,(showOfflineContacts || online || justSignedOff));
+			[inObject setVisible:(showOfflineContacts || online || justSignedOff)];
 			
 		}else if([inObject isKindOfClass:[AIListGroup class]]){
 			int visibleCount = [(AIListGroup *)inObject visibleCount];
 			
-			[inObject setVisible:(showOffline || visibleCount > 0)];
+			[inObject setVisible:(showOfflineContacts || visibleCount > 0)];
 			
 		}
 	}
