@@ -401,7 +401,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	return(nil);
 }
 
-#pragma mark Scure messsaging
+#pragma mark Secure messsaging
 
 /*!
  * @brief Allow secure messaging toggling on a chat?
