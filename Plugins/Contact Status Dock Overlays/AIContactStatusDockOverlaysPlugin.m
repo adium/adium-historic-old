@@ -101,29 +101,48 @@
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	//Skip this entirely if overlays are off or this contact is within a metaContact
-    if(showStatus && ![[inObject containingObject] isKindOfClass:[AIMetaContact class]]){ 
-		
-		BOOL containsSignedOn = [inModifiedKeys containsObject:@"Signed On"];
-		BOOL containsSignedOff = [inModifiedKeys containsObject:@"Signed Off"];
-		
-		if (containsSignedOn || containsSignedOff){
-			if((containsSignedOn && [inObject integerStatusObjectForKey:@"Signed On"]) ||
-			   (containsSignedOff && [inObject integerStatusObjectForKey:@"Signed Off"])){
+    if(showStatus){
+		if([inObject isKindOfClass:[AIAccount class]]){
+			//When an account signs on or off, force an overlay update as it may have silently changed
+			//contacts' statuses
+			if([inModifiedKeys containsObject:@"Online"]){
+				NSEnumerator	*enumerator = [[[unviewedObjectsArray copy] autorelease] objectEnumerator];
+				AIListObject	*listObject;
+				while(listObject = [enumerator nextObject]){
+					if(([listObject respondsToSelector:@selector(account)]) &&
+					   ([listObject account] == inObject)){
+						   [unviewedObjectsArray removeObject:listObject];
+					   }
+				}
 				
-				if(![unviewedObjectsArray containsObject:inObject]){
-					[unviewedObjectsArray addObject:inObject];
-				}
-
-			}else{
-				if([unviewedObjectsArray containsObject:inObject]){
-					[unviewedObjectsArray removeObject:inObject];
-				}
+				[self _setOverlay];
 			}
 			
-			[self _setOverlay];
+		}else if(![[inObject containingObject] isKindOfClass:[AIMetaContact class]]){ 
+			BOOL containsSignedOn = [inModifiedKeys containsObject:@"Signed On"];
+			BOOL containsSignedOff = [inModifiedKeys containsObject:@"Signed Off"];
+			
+			if (containsSignedOn || containsSignedOff){
+				if((containsSignedOn && [inObject integerStatusObjectForKey:@"Signed On"]) ||
+				   (containsSignedOff && [inObject integerStatusObjectForKey:@"Signed Off"])){
+					
+					if(![unviewedObjectsArray containsObject:inObject]){
+						[unviewedObjectsArray addObject:inObject];
+					}
+					
+				}else{
+					if([unviewedObjectsArray containsObject:inObject]){
+						[unviewedObjectsArray removeObject:inObject];
+					}
+				}
+				
+				if(!silent){
+					[self _setOverlay];
+				}
+			}
 		}
 	}
-	
+
 	return(nil);
 }
 
@@ -159,11 +178,14 @@
         [[adium dockController] removeIconStateNamed:@"ContactStatusOverlay"];
         [overlayState release]; overlayState = nil;
     }
-	
+
     //Create & set the new overlay state
     if([unviewedObjectsArray count] != 0){
         //Set the state
-        overlayState = [[AIIconState alloc] initWithImages:[NSArray arrayWithObjects:[self overlayImageFlash:NO], [self overlayImageFlash:YES], nil] delay:0.5 looping:YES overlay:YES];
+        overlayState = [[AIIconState alloc] initWithImages:[NSArray arrayWithObjects:[self overlayImageFlash:NO], [self overlayImageFlash:YES], nil]
+													 delay:0.5
+												   looping:YES 
+												   overlay:YES];
         [[adium dockController] setIconState:overlayState named:@"ContactStatusOverlay"];
     }   
 }
@@ -202,19 +224,19 @@
 	
     //Draw overlays for each contact
     enumerator = [unviewedObjectsArray reverseObjectEnumerator];
-    while((object = [enumerator nextObject]) && top >= 0 && bottom < 128){
+    while((object = [enumerator nextObject]) && !(top < 0) && bottom < 128){
         float			left, right, arcRadius, stringInset;
         NSBezierPath	*path;
         NSColor			*backColor = nil, *textColor = nil, *borderColor = nil;
 		
         //Create the pill frame
-        arcRadius = (iconHeight/2.0);
-        stringInset = (iconHeight/4.0);
+        arcRadius = (iconHeight / 2.0f);
+        stringInset = (iconHeight / 4.0f);
         left = 1 + arcRadius;
         right = 127 - arcRadius;
 		
         path = [NSBezierPath bezierPath];
-        [path setLineWidth:((iconHeight/2.0) * 0.13333)];
+        [path setLineWidth:((iconHeight/2.0) * 0.13333f)];
         //Top
         [path moveToPoint: NSMakePoint(left, top)];
         [path lineToPoint: NSMakePoint(right, top)];
