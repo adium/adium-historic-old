@@ -731,6 +731,16 @@ static id<GaimThread> gaimThread = nil;
 	return YES;
 }
 
+//AIM and ICQ support autoresponse messages
+- (BOOL)shouldSendAutoresponsesWhileAway
+{
+	if (account){
+		return (account->gc->flags & GAIM_CONNECTION_AUTO_RESP);
+	}
+	
+	return NO;
+}
+
 /*********************/
 /* AIAccount_Privacy */
 /*********************/
@@ -1323,6 +1333,7 @@ static id<GaimThread> gaimThread = nil;
 //Set our idle (Pass nil for no idle)
 - (void)setAccountIdleSinceTo:(NSDate *)idleSince
 {
+	NSLog(@"setting account idle to %f",[idleSince timeIntervalSinceNow]);
 	[gaimThread setIdleSinceTo:idleSince onAccount:self];
 	
 	//We now should update our idle status object
