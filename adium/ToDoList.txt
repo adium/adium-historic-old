@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.35 2004/04/11 21:23:10 evands Exp $
+$Id: ToDoList.txt,v 1.36 2004/04/13 03:17:07 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -16,6 +16,7 @@ Bugs
 * Don't spawn new windows when we're hidden, doing so will unhide us (Show the windows next time we're unhidden)
 * Adium will unhide if hidden (via cmd-H) while a tooltip is visible
 * Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
+* Tooltip code does not like the multiple-desktop apps, or users who press cmd-H with the cursor over the contact list
 * Contact list flippy triangles are white behind them in 10.2 [Colin]
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * We aren't processing <code> tags in our HTML decoder (Jabber uses them)
@@ -28,6 +29,16 @@ Bugs
 * Some URLs in profiles aren't allowing clicks properly.
 * Tooltip code can crash if the listobject disappears out from under it, somehow. http://www.visualdistortion.org/crash/view.jsp?crash=8128
 * When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
+
+-------------------------------------------------------------------------------------------------------
+Unconfirmed bugs
+-------------------------------------------------------------------------------------------------------
+* Tooltips are flashing when the contact list auto-resizes?
+* Empty groups come back on next launch after being deleted?
+* Adding buddies, sometimes they'll show up on the list twice until a restart?
+
+
+
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
