@@ -56,6 +56,8 @@
     accountArray = [[NSMutableArray alloc] init];
     lastAccountIDToSendContent = nil;
 
+    [owner registerEventNotification:Account_StatusChanged displayName:@"Account Status Changed"];
+    
     //Register our default preferences
     accountStatusDict = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_ACCOUNTS] objectForKey:KEY_ACCOUNT_STATUS] mutableCopy];
     if(!accountStatusDict) accountStatusDict = [[NSMutableDictionary alloc] init];

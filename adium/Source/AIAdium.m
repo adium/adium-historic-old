@@ -83,7 +83,7 @@
     return(dockController);
 }
 
-// Notifications
+// Notifications --
 - (NSNotificationCenter *)notificationCenter
 {
     if(notificationCenter == nil){
@@ -93,6 +93,17 @@
     return(notificationCenter);
 }
 
+// Specific notifications can be given a human-readable name and registered as events - which can be used to trigger various actions
+- (void)registerEventNotification:(NSString *)inNotification displayName:(NSString *)displayName
+{
+    [eventNotifications setObject:[NSDictionary dictionaryWithObjectsAndKeys:inNotification, KEY_EVENT_NOTIFICATION, displayName, KEY_EVENT_DISPLAY_NAME, nil] forKey:inNotification];
+}
+
+- (NSDictionary *)eventNotifications
+{
+    return(eventNotifications);
+}
+
 
 // Internal --------------------------------------------------------------------------------
 
@@ -100,6 +111,7 @@
 {
     //init
     notificationCenter = nil;
+    eventNotifications = [[NSMutableDictionary alloc] init];
     
     //play a sound to prevent a delay later when quicktime loads
 //    [AISoundController playSoundNamed:@"Beep"];

@@ -30,6 +30,9 @@
     contactListViewArray = [[NSMutableArray alloc] init];
     messageViewArray = [[NSMutableArray alloc] init];
     interfaceArray = [[NSMutableArray alloc] init];
+
+    [owner registerEventNotification:Interface_ErrorMessageReceived displayName:@"Error"];
+    [owner registerEventNotification:Interface_InitiateMessage displayName:@"Initiate Message"];
 }
 
 - (void)closeController
@@ -99,7 +102,7 @@
 
     //Post a notification that an error was recieved
     errorDict = [NSDictionary dictionaryWithObjectsAndKeys:inTitle,@"Title",inDesc,@"Description",nil];    
-    [[owner notificationCenter] postNotificationName:Interface_ErrorMessageRecieved object:nil userInfo:errorDict];
+    [[owner notificationCenter] postNotificationName:Interface_ErrorMessageReceived object:nil userInfo:errorDict];
 }
 
 

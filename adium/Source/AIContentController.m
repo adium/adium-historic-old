@@ -24,6 +24,9 @@
 {
     outgoingContentFilterArray = [[NSMutableArray alloc] init];
     incomingContentFilterArray = [[NSMutableArray alloc] init];
+
+    [owner registerEventNotification:Content_DidReceiveContent displayName:@"Message Received"];
+    [owner registerEventNotification:Content_DidSendContent displayName:@"Message Sent"];
 }
 
 - (void)closeController

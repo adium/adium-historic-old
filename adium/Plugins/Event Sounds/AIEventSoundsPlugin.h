@@ -17,8 +17,27 @@
 #import <Adium/Adium.h>
 #import "AIAdium.h"
 
-@interface AIEventSoundsPlugin : AIPlugin <AIHandleObserver> {
-    NSMutableDictionary		*onlineDict;
+#define PREF_GROUP_SOUNDS		@"Sounds"
+
+#define SOUND_EVENT_START		@"\nSoundset:\n"	//String marking start of event list
+#define SOUND_EVENT_QUOTE		@"\""			//Character before and after event name
+#define SOUND_NEWLINE			@"\n"			//Newline character
+
+#define KEY_EVENT_CUSTOM_SOUNDSET	@"Event Custom Sounds"
+#define KEY_EVENT_SOUND_SET		@"Event Sound Set"
+#define	KEY_EVENT_SOUND_PATH		@"Path"
+#define	KEY_EVENT_SOUND_NOTIFICATION	@"Notification"
+
+
+@class AIEventSoundPreferences;
+
+@interface AIEventSoundsPlugin : AIPlugin {
+    AIEventSoundPreferences	*preferences;
+
+    NSArray			*eventSoundArray;
+    NSMutableDictionary		*soundPathDict;
 }
+
+- (void)loadSoundSetAtPath:(NSString *)inPath creator:(NSString **)outCreator description:(NSString **)outDesc sounds:(NSArray **)outArray;
 
 @end

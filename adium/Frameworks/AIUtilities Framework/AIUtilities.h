@@ -21,6 +21,7 @@
 #import "AIVerticallyCenteredTextCell.h"
 #import "AIImageTextCell.h"
 #import "AIAlternatingRowOutlineView.h"
+#import "AIAlternatingRowTableView.h"
 #import "AIMutableOwnerArray.h"
 #import "AIImageUtilities.h"
 #import "AIKeychain.h"
@@ -53,3 +54,4 @@
 #import "AIFlexibleTableColumn.h"
 #import "AIEventAdditions.h"
 #import "AIPopUpButtonAdditions.h"
+#import "AITableViewPopUpButtonCell.h"

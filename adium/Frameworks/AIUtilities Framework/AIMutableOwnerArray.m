@@ -132,4 +132,21 @@
     return(greatest);
 }
 
+//Returns the greatest double value
+- (double)greatestDoubleValue
+{
+    int		loop;
+    double	greatest = 0;
+
+    for(loop = 0;loop < [ownerArray count];loop++){
+        double	current = [[contentArray objectAtIndex:loop] doubleValue];
+
+        if(current > greatest){
+            greatest = current;
+        }
+    }
+
+    return(greatest);
+}
+
 @end

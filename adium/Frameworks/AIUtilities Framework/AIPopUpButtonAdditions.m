@@ -17,5 +17,14 @@
     [self selectItemAtIndex:index];
 }
 
+@end
+
+@implementation NSPopUpButtonCell (AIPopUpButtonAdditions)
+
+- (void)selectItemWithRepresentedObject:(id)object
+{
+    int	index = [self indexOfItemWithRepresentedObject:object];
+    [self selectItemAtIndex:index];
+}
 
 @end
