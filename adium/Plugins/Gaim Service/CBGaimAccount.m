@@ -1160,7 +1160,7 @@ static id<GaimThread> gaimThread = nil;
 {
 	//Create a fresh version of the account
     account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
-	
+	NSLog(@"creating gaim account");
 	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
 	
     gaim_accounts_add(account);
@@ -1293,21 +1293,12 @@ static id<GaimThread> gaimThread = nil;
 - (void)updateStatusForKey:(NSString *)key
 {    
 	[super updateStatusForKey:key];
-
-	if(GAIM_DEBUG) NSLog(@"Updating status for key: %@",key);
 	
-    //Now look at keys which only make sense while online
-#warning Need to think about this....
-	/*
-	 Currently update status key is called before the account is connected to pass status information to libgaim,
-	 which libgaim will automatically set as it's connecting at the correct time.  This means that we need to have
-	 some of these keys change while not online.  However, it does not make sense to change these keys while
-	 an account isn't even going to connect.
-	*/
-	
-	//	if([[self statusObjectForKey:@"Online"] boolValue]){
+    //Now look at keys which only make sense if we have an account
+	if(account){
 		NSData  *data;
 		
+		if(GAIM_DEBUG) NSLog(@"Updating status for key: %@",key);
 		if([key isEqualToString:@"IdleSince"]){
 			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			[self setAccountIdleSinceTo:idleSince];
@@ -1324,7 +1315,7 @@ static id<GaimThread> gaimThread = nil;
 			}
 			
 		}
-//	}
+	}
 }
 
 //Set our idle (Pass nil for no idle)
