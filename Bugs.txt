@@ -25,7 +25,6 @@
 - Bubble-to-fit cells don't work with any new list additions (disable when
     bubble is selected)
 - Create default layouts & styles for the contact list preferences
-- Status labels are covering selected cells
 - Extended status doesn't update on the list when it changes
 - Extended status sometimes draws outside the cell (and is therefore cropped)
     instead of increasing cell height
@@ -39,6 +38,7 @@
     contact list, and you select a cell that's the alternate color and then
     focus on another window, the selected cell is redrawn with the normal
     background color instead of the alternate background color.
+- Deleting groups doesn't seem to do anything
 
 [Other]
 - Metacontact drawer in get info crashes upon dragging
