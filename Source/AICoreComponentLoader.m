@@ -106,11 +106,11 @@ ESUserIconHandlingPlugin,
 ErrorMessageHandlerPlugin,
 GBApplescriptFiltersPlugin,
 IdleMessagePlugin,
-JSCEventBezelPlugin,
 SAContactOnlineForPlugin,
 SHBookmarksImporterPlugin,
 SHLinkManagementPlugin,
-ESGlobalEventsPreferencesPlugin;
+ESGlobalEventsPreferencesPlugin/*,
+JSCEventBezelPlugin*/;
 
 @interface AICoreComponentLoader (PRIVATE)
 - (void)_loadComponentClass:(Class)inClass;
@@ -205,7 +205,7 @@ ESGlobalEventsPreferencesPlugin;
 	[self _loadComponentClass:[ErrorMessageHandlerPlugin class]];
 	[self _loadComponentClass:[GBApplescriptFiltersPlugin class]];
 	[self _loadComponentClass:[IdleMessagePlugin class]];
-	[self _loadComponentClass:[JSCEventBezelPlugin class]];
+//	[self _loadComponentClass:[JSCEventBezelPlugin class]];
 	[self _loadComponentClass:[SAContactOnlineForPlugin class]];
 	[self _loadComponentClass:[SHBookmarksImporterPlugin class]];
 	[self _loadComponentClass:[SHLinkManagementPlugin class]];
