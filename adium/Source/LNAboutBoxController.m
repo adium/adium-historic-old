@@ -15,31 +15,23 @@
 
 @implementation LNAboutBoxController
 
-
+//
 LNAboutBoxController *sharedInstance = nil;
-
-
 + (LNAboutBoxController *)aboutBoxControllerForOwner:(id)inOwner
 {
-
     if(!sharedInstance){
         sharedInstance = [[self alloc] initWithWindowNibName:ABOUT_BOX_NIB owner:inOwner];
     }
     return(sharedInstance);
 }
 
-
-
+//
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
 {
-
-    numberOfDuckClicks = -1;
-
     [super initWithWindowNibName:windowNibName owner:self];
 
+    numberOfDuckClicks = -1;
     owner = [inOwner retain];
-
-    avatarArray = [[NSMutableArray alloc] init];
     
     buildDate = @"-1";
     buildNumber = @"-1";
@@ -58,7 +50,7 @@ LNAboutBoxController *sharedInstance = nil;
     return(self);
 }
 
-
+//
 - (void)dealloc
 {
     [owner release];
@@ -70,7 +62,7 @@ LNAboutBoxController *sharedInstance = nil;
     [super dealloc];
 }
 
-
+//
 - (void)windowDidLoad
 {
     //Get the directory listing of avatars and put in the avatarArray
@@ -96,17 +88,17 @@ LNAboutBoxController *sharedInstance = nil;
     paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
     [paragraphStyle setAlignment:NSCenterTextAlignment]; 
 
-    attributes = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:ADIUM_SITE_LINK], NSLinkAttributeName,
-        [NSFont cachedFontWithName:@"Lucida Grande" size:14], NSFontAttributeName,
+    attributes = [NSDictionary dictionaryWithObjectsAndKeys:ADIUM_SITE_LINK, NSLinkAttributeName,
+        [NSFont /*cachedF*/fontWithName:@"Lucida Grande" size:14], NSFontAttributeName,
         paragraphStyle, NSParagraphStyleAttributeName,
         [NSNumber numberWithInt:1], NSUnderlineStyleAttributeName, nil];
 
-    siteLink = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:ADIUM_LINK_TEXT] attributes: attributes];
+    siteLink = [[NSAttributedString alloc] initWithString:ADIUM_LINK_TEXT attributes:attributes];
 
     [[linkTextView_siteLink enclosingScrollView] setDrawsBackground:NO];
     [linkTextView_siteLink setDrawsBackground:NO];
     [linkTextView_siteLink setEditable:NO];
-    [[linkTextView_siteLink textStorage] setAttributedString:siteLink];
+    //[[linkTextView_siteLink textStorage] setAttributedString:siteLink];
     [linkTextView_siteLink resetCursorRects];
 
     [siteLink release];
@@ -127,9 +119,7 @@ LNAboutBoxController *sharedInstance = nil;
 
 - (BOOL)windowShouldClose:(id)sender
 {
- 
-    [sharedInstance autorelease];
-    sharedInstance = nil;
+    [sharedInstance autorelease]; sharedInstance = nil;
 
     return(YES);
 }
@@ -169,20 +159,19 @@ LNAboutBoxController *sharedInstance = nil;
 
 - (void)_adiumDuckOptionClicked
 {
-    
     previousKeyWasOption = YES;
     [button_duckIcon setAlternateImage:nil];
-
     
-    if (numberOfDuckClicks == [avatarArray count]) {
+    if(numberOfDuckClicks == [avatarArray count]){
         numberOfDuckClicks = -1;
         [button_duckIcon setImage:[AIImageUtilities imageNamed:@"Awake" forClass:[self class]]];
         [button_duckIcon setAlternateImage:nil];
         
         [[owner soundController] playSoundNamed:@"/Adium/Feather Ruffle.aif"];
+        
     }else{
 
-        [button_duckIcon setImage:[[NSImage alloc] initWithContentsOfFile:[avatarArray objectAtIndex:numberOfDuckClicks]]];
+        [button_duckIcon setImage:[[[NSImage alloc] initWithContentsOfFile:[avatarArray objectAtIndex:numberOfDuckClicks]] autorelease]];
 
         [[owner soundController] playSoundNamed:@"/Aquatech/Ghost Hiss.aiff"];  
     }

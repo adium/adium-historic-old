@@ -27,7 +27,6 @@
 
 @implementation AILinkTextView
 
-
 - (id)initWithFrame:(NSRect)frame
 {
     [super initWithFrame:frame];
@@ -35,7 +34,6 @@
 
     return(self);
 }
-
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
@@ -45,23 +43,19 @@
     return(self);
 }
 
-
 - (void)_init
 {
-
     linkTrackingController = [[AILinkTrackingController linkTrackingControllerForTextView:self] retain];
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSViewFrameDidChangeNotification object:self];
-    
     [[self window] resetCursorRects];
-
 }
-
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [linkTrackingController release];
+    
+    [super dealloc];
 }
 
 - (void)mouseDown:(NSEvent*)theEvent

@@ -17,7 +17,6 @@
 
 @interface AILinkTextView : NSTextView {
     AILinkTrackingController		*linkTrackingController;
-
 }
 
 @end
