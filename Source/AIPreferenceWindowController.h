@@ -24,6 +24,7 @@
 
     IBOutlet	AIModularPaneCategoryView	*view_ContactList;
     IBOutlet	AIModularPaneCategoryView	*view_Messages;
+	IBOutlet	AIModularPaneCategoryView	*view_Events;
     IBOutlet	AIModularPaneCategoryView	*view_Dock;
     IBOutlet	AIModularPaneCategoryView	*view_Sound;
     IBOutlet 	AIModularPaneCategoryView	*view_Emoticons;
