@@ -19,29 +19,24 @@
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 
-#define LOG_VIEWER_NIB					@"LogViewer"
-#define LOG_VIEWER_JAG_NIB				@"LogViewerJag"
-#define KEY_LOG_VIEWER_WINDOW_FRAME                     @"Log Viewer Frame"
-#define	PREF_GROUP_CONTACT_LIST                         @"Contact List"
-#define KEY_LOG_VIEWER_GROUP_STATE                      @"Log Viewer Group State"	//Expand/Collapse state of groups
+#define LOG_VIEWER_NIB						@"LogViewer"
+#define LOG_VIEWER_JAG_NIB					@"LogViewerJag"
+#define KEY_LOG_VIEWER_WINDOW_FRAME			@"Log Viewer Frame"
+#define	PREF_GROUP_CONTACT_LIST				@"Contact List"
+#define KEY_LOG_VIEWER_GROUP_STATE			@"Log Viewer Group State"	//Expand/Collapse state of groups
+#define TOOLBAR_LOG_VIEWER					@"Log Viewer Toolbar"
 
-#define MAX_LOGS_TO_SORT_WHILE_SEARCHING                1000	//Max number of logs we will live sort while searching
-#define LOG_SEARCH_STATUS_INTERVAL			20      //1/60ths of a second to wait before refreshing search status
+#define MAX_LOGS_TO_SORT_WHILE_SEARCHING	1000	//Max number of logs we will live sort while searching
+#define LOG_SEARCH_STATUS_INTERVAL			20		//1/60ths of a second to wait before refreshing search status
 
-#define LOG_CONTENT_SEARCH_MAX_RESULTS                  10000   //Max results allowed from a search
-#define LOG_RESULT_CLUMP_SIZE				10      //Number of logs to fetch at a time
+#define LOG_CONTENT_SEARCH_MAX_RESULTS		10000	//Max results allowed from a search
+#define LOG_RESULT_CLUMP_SIZE				10		//Number of logs to fetch at a time
 
-#define SEARCH_MENU             AILocalizedString(@"Search Menu",nil)
-#define FROM			AILocalizedString(@"From",nil)
-#define TO                      AILocalizedString(@"To",nil)
-#define DATE			AILocalizedString(@"Date",nil)
-#define CONTENT			AILocalizedString(@"Content",nil)
-
-static NSString* windowToolbarIdentifier = @"Log Viewer Toolbar Identifier";
-static NSString* contactDrawerIdentifier = @"Contact Drawer Identifier";
-static NSString* deleteLogsIdentifier = @"Delete Logs Identifier";
-static NSString* searchFieldIdentifier = @"Search Field Indentifier";
-static NSString* emoticonToggleIdentifier = @"Emoticon Filter Toggle Identifier";
+#define SEARCH_MENU			AILocalizedString(@"Search Menu",nil)
+#define FROM				AILocalizedString(@"From",nil)
+#define TO					AILocalizedString(@"To",nil)
+#define DATE				AILocalizedString(@"Date",nil)
+#define CONTENT				AILocalizedString(@"Content",nil)
 
 @interface AILogViewerWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
@@ -207,13 +202,8 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
         [[self window] center];
     }
     
-    //Prepare the toolbar
-    toolbar = [[[NSToolbar alloc] initWithIdentifier: windowToolbarIdentifier] autorelease];
-    [toolbar setAllowsUserCustomization:YES];
-    [toolbar setAutosavesConfiguration: YES];
-    [toolbar setDisplayMode: NSToolbarDisplayModeIconAndLabel];
-    [toolbar setDelegate: self];
-    [[self window] setToolbar:toolbar];         
+	//Toolbar
+	[self installToolbar];
     	
     //Prepare the search controls
     [self buildSearchMenu];
@@ -287,6 +277,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 	
     //Clean up
     [sharedLogViewerInstance autorelease]; sharedLogViewerInstance = nil;
+	[toolbarItems release];
     
     return(YES);
 }
@@ -313,7 +304,8 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 }
 
 
-//Display ----------------------------------------------------------------------------------------------------
+//Display --------------------------------------------------------------------------------------------------------------
+#pragma mark Display
 //Update log viewer progress string to reflect current status
 - (void)updateProgressDisplay
 {
@@ -518,7 +510,8 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 }
 
 
-//Sorting ----------------------------------------------------------------------------------------------------
+//Sorting --------------------------------------------------------------------------------------------------------------
+#pragma mark Sorting
 //Sorts the selected log array and adjusts the selected column
 - (void)sortSelectedLogArrayForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction
 {
@@ -586,7 +579,8 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 }
 
 
-//Searching ----------------------------------------------------------------------------------------------------
+//Searching ------------------------------------------------------------------------------------------------------------
+#pragma mark Searching
 //(Jag)Change search string
 - (void)controlTextDidChange:(NSNotification *)notification
 {
@@ -702,7 +696,8 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 }
 
 
-//Threaded filter/search methods ------------------------------------------------------------------------------------------
+//Threaded filter/search methods ---------------------------------------------------------------------------------------
+#pragma mark Threaded filter/search methods
 //Search the logs, filtering out any matching logs into the selectedLogArray
 - (void)filterLogsWithSearch:(NSDictionary *)searchInfoDict
 {
@@ -880,7 +875,8 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 }
 
 
-//Search results table view --------------------------------------------------------------------------------------
+//Search results table view --------------------------------------------------------------------------------------------
+#pragma mark Search results table view
 //Since this table view's source data will be accessed from within other threads, we need to lock before
 //accessing it.  We also must be very sure that an incorrect row request is handled silently, since this
 //can occur if the array size is changed during the reload.
@@ -979,63 +975,90 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     }
 }
 
-// ---- toolbar schtuff --------
-- (NSToolbarItem *) toolbar: (NSToolbar *)toolbar itemForItemIdentifier: (NSString *) itemIdent willBeInsertedIntoToolbar:(BOOL) willBeInserted {
-    NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier: itemIdent] autorelease];
-    
-    if([itemIdent isEqual: contactDrawerIdentifier]){
-        [toolbarItem setLabel: @"Contacts"];
-        [toolbarItem setPaletteLabel:@"Contacts Drawer"];
-        [toolbarItem setToolTip:@"Show/Hide the Contacts Drawer"];
-        [toolbarItem setImage:[NSImage imageNamed:@"showdrawer"]];
-        [toolbarItem setTarget: self];
-        [toolbarItem setAction: @selector(toggleDrawer:)];
-    }  
-    else if([itemIdent isEqual: deleteLogsIdentifier]){
-        [toolbarItem setLabel: @"Delete"];
-        [toolbarItem setPaletteLabel:@"Delete"];
-        [toolbarItem setToolTip:@"Delete selected log"];
-        [toolbarItem setImage:[NSImage imageNamed:@"remove"]];
-        [toolbarItem setTarget: self];
-        [toolbarItem setAction: @selector(deleteSelectedLogs:)];
-    }      
-    else if([itemIdent isEqual: searchFieldIdentifier]){
-        [toolbarItem setLabel: @"Search"];
-        [toolbarItem setPaletteLabel:@"Search"];
-        [toolbarItem setToolTip:@"Search or filter logs"];
-        [toolbarItem setView:view_SearchField];
-        [toolbarItem setMinSize:NSMakeSize(150, NSHeight([view_SearchField frame]))];
-        [toolbarItem setMaxSize:NSMakeSize(230, NSHeight([view_SearchField frame]))];
-        [toolbarItem setTarget: self];
-        [toolbarItem setAction: @selector(updateSearch:)]; 
-    }  
-    else if([itemIdent isEqual: emoticonToggleIdentifier]){
-        [toolbarItem setLabel: @"Show/Hide Emoticons"];
-        [toolbarItem setPaletteLabel:@"Show/Hide Emoticons"];
-        [toolbarItem setToolTip:@"Show or hide emoticons in logs"];
-        [toolbarItem setView:view_emoteToggle];
-        [toolbarItem setMinSize:NSMakeSize(33, NSHeight([view_emoteToggle frame]))];
-        [toolbarItem setMaxSize:NSMakeSize(26, NSHeight([view_emoteToggle frame]))];
-        [toolbarItem setTarget: self];
-        [toolbarItem setAction: @selector(toggleEmoticonFiltering:)]; 
-    }      
-    else {
-        toolbarItem = nil;
-    }
-    return toolbarItem;
+
+//Window Toolbar -------------------------------------------------------------------------------------------------------
+#pragma mark Window Toolbar
+- (void)installToolbar
+{	
+    NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_LOG_VIEWER] autorelease];
+	
+    [toolbar setDelegate:self];
+    [toolbar setDisplayMode:NSToolbarDisplayModeIconAndLabel];
+    [toolbar setSizeMode:NSToolbarSizeModeRegular];
+    [toolbar setVisible:YES];
+    [toolbar setAllowsUserCustomization:YES];
+    [toolbar setAutosavesConfiguration:YES];
+	toolbarItems = [[NSMutableDictionary alloc] init];
+
+	//Toggle Drawer
+	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+									withIdentifier:@"toggledrawer"
+											 label:@"Contacts"
+									  paletteLabel:@"Contacts Drawer"
+										   toolTip:@"Show/Hide the Contacts Drawer"
+											target:self
+								   settingSelector:@selector(setImage:)
+									   itemContent:[NSImage imageNamed:@"showdrawer" forClass:[self class]]
+											action:@selector(toggleDrawer:)
+											  menu:nil];
+	//Delete Logs
+	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+									withIdentifier:@"delete"
+											 label:@"Delete"
+									  paletteLabel:@"Delete"
+										   toolTip:@"Delete selected log"
+											target:self
+								   settingSelector:@selector(setImage:)
+									   itemContent:[NSImage imageNamed:@"remove" forClass:[self class]]
+											action:@selector(deleteSelectedLogs:)
+											  menu:nil];
+	//Search
+//	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+//									withIdentifier:@"search"
+//											 label:@"Search"
+//									  paletteLabel:@"Search"
+//										   toolTip:@"Search or filter logs"
+//											target:self
+//								   settingSelector:@selector(setView:)
+//									   itemContent:view_SearchField
+//											action:@selector(updateSearch:)
+//											  menu:nil];
+	//[toolbarItem setMinSize:NSMakeSize(150, NSHeight([view_SearchField frame]))];
+	//[toolbarItem setMaxSize:NSMakeSize(230, NSHeight([view_SearchField frame]))];
+
+	//Toggle Emoticons
+	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+									withIdentifier:@"toggleemoticons"
+											 label:@"Show Emoticons"
+									  paletteLabel:@"Show/Hide Emoticons"
+										   toolTip:@"Show or hide emoticons in logs"
+											target:self
+								   settingSelector:@selector(setImage:)
+									   itemContent:[NSImage imageNamed:@"archer" forClass:[self class]]
+											action:@selector(toggleEmoticonFiltering:)
+											  menu:nil];
+	
+
+	[[self window] setToolbar:toolbar];
 }
 
-- (NSArray *) toolbarDefaultItemIdentifiers: (NSToolbar *) toolbar {
-    return [NSArray arrayWithObjects: deleteLogsIdentifier,emoticonToggleIdentifier,NSToolbarFlexibleSpaceItemIdentifier,searchFieldIdentifier,NSToolbarSeparatorItemIdentifier,contactDrawerIdentifier,nil];
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
+{
+    return([AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier]);
 }
 
-- (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar {
-    return [NSArray arrayWithObjects: deleteLogsIdentifier, emoticonToggleIdentifier,NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, searchFieldIdentifier,contactDrawerIdentifier,nil];
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
+{
+    return([NSArray arrayWithObjects:@"delete", @"toggleemoticons", NSToolbarFlexibleSpaceItemIdentifier, @"search", NSToolbarSeparatorItemIdentifier, @"toggledrawer", nil]);
 }
 
-- (BOOL) validateToolbarItem: (NSToolbarItem *) toolbarItem {
-    BOOL enable = YES;
-    return enable;
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
+{
+    return([[toolbarItems allKeys] arrayByAddingObjectsFromArray:
+		[NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier,
+			NSToolbarSpaceItemIdentifier,
+			NSToolbarFlexibleSpaceItemIdentifier,
+			NSToolbarCustomizeToolbarItemIdentifier, nil]]);
 }
 
 @end
