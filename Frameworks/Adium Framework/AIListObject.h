@@ -13,9 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIListObject, AIService, AIMutableOwnerArray, AIListGroup, AISortController, ESObjectWithStatus;
-
 #import "ESObjectWithStatus.h"
+
+@class AIListObject, AIService, AIMutableOwnerArray, AIListGroup;
 
 #define	KEY_ORDER_INDEX	@"Order Index"
 
