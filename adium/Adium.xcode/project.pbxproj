@@ -927,20 +927,6 @@
 			settings = {
 			};
 		};
-		342928340628BBE300BB9217 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ESGaimYahooAuxiliaryAccountView.nib;
-			path = "Plugins/Gaim Service/ESGaimYahooAuxiliaryAccountView.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		342928350628BBE300BB9217 = {
-			fileRef = 342928340628BBE300BB9217;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		342DC48A05783B8D000E1D83 = {
 			children = (
 				342DC5C005783DE7000E1D83,
@@ -1357,7 +1343,7 @@
 				34415BCF059FA9CD0019246B,
 				342928080628BB4200BB9217,
 				342928090628BB4200BB9217,
-				342928340628BBE300BB9217,
+				348A901A062A13AB00FC6E03,
 			);
 			isa = PBXGroup;
 			name = "Yahoo!";
@@ -3056,6 +3042,20 @@
 		};
 		348A8A1A0629A68C00FC6E03 = {
 			fileRef = 348A8A190629A68C00FC6E03;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348A901A062A13AB00FC6E03 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ESGaimYahooAccountView.nib;
+			path = "Plugins/Gaim Service/ESGaimYahooAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348A901B062A13AB00FC6E03 = {
+			fileRef = 348A901A062A13AB00FC6E03;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -10046,8 +10046,8 @@
 				34415F91059FB85F0019246B,
 				34F1529605E9FDF200B32FD7,
 				34327CA9060D40A1003D7AD9,
-				342928350628BBE300BB9217,
 				348A8A1A0629A68C00FC6E03,
+				348A901B062A13AB00FC6E03,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
