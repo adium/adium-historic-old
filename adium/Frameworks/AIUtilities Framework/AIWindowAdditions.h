@@ -19,6 +19,7 @@
 -(void)setIgnoresExpose:(BOOL)flag;
 - (BOOL)isBorderless;
 - (void)betterCenter;
+- (float)toolbarHeight;
 @end
 
 // The following code is Copyright (C) 2003, 2004 Richard J Wareham <richwareham@users.sourceforge.net>,
