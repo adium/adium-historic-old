@@ -63,9 +63,11 @@
         {CLASS = BZGenericViewCell; LANGUAGE = ObjC; SUPERCLASS = NSCell; }, 
         {CLASS = BZGenericViewCell1; LANGUAGE = ObjC; SUPERCLASS = NSTableColumn; }, 
         {
+            ACTIONS = {clearAllCompleteTransfers = id; }; 
             CLASS = ESFileTransferProgressWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_clear" = NSButton; 
                 outlineView = AIVariableHeightOutlineView; 
                 scrollView = NSScrollView; 
                 "textField_statusBar" = NSTextField; 
