@@ -270,7 +270,6 @@
 	}
 }
 
-
 //- (float)backgroundAlpha
 //{
 //#warning hmm, need?
