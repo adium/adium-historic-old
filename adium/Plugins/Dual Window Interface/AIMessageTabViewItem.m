@@ -26,7 +26,7 @@
 - (id)initWithMessageView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect;
 - (NSSize)sizeOfLabel:(BOOL)computeMin;
-- (NSAttributedString *)attributedLabelString:(BOOL)white;
+- (NSAttributedString *)attributedLabelStringWithColor:(NSColor *)textColor;
 @end
 
 @implementation AIMessageTabViewItem
@@ -126,22 +126,119 @@
     [[self tabView] removeTabViewItem:self];
 }
 
+#define BACK_CELL_LEFT_INDENT	-1 //6
+#define BACK_CELL_RIGHT_INDENT	3 //10
+
+#define LABEL_SIDE_PAD		0 //5
+
 //Drawing
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect
 {
+/*    AIListObject		*listObject = [messageView listObject];
+    NSColor			*backgroundColor = nil;
+    BOOL 			selected;
+
+    //
+    selected = ([[self tabView] selectedTabViewItem] == self);
+    backgroundColor = [[listObject displayArrayForKey:@"Background Color"] averageColor];
+
+    if(selected){
+        labelRect.origin.y += 1;
+    }
+
+    NSRect textRect = labelRect;
+
+    textRect.size.width -= LABEL_SIDE_PAD*2;
+    textRect.origin.x += LABEL_SIDE_PAD;
+    
+    //Background
+    if(backgroundColor && !selected){
+        backgroundColor = [backgroundColor colorUsingColorSpaceName:NSDeviceRGBColorSpace];
+        backgroundColor = [NSColor colorWithCalibratedHue:[backgroundColor hueComponent]
+                             saturation:[backgroundColor saturationComponent]
+                             brightness:([backgroundColor brightnessComponent] - 0.2)
+                                                    alpha:0.8];
+            
+        int 		innerLeft, innerRight, innerTop, innerBottom;
+        float 		centerY, circleRadius;
+        NSBezierPath	*pillPath;
+
+        //Calculate some points
+        innerLeft = labelRect.origin.x + BACK_CELL_LEFT_INDENT;
+        innerRight = labelRect.origin.x + labelRect.size.width - BACK_CELL_RIGHT_INDENT;
+        innerTop = labelRect.origin.y;
+        innerBottom = labelRect.origin.y + labelRect.size.height;
+        circleRadius = -(innerTop - innerBottom) / 2.0;
+        centerY = (innerTop + innerBottom) / 2.0;
+
+        //Create the circle path
+        pillPath = [NSBezierPath bezierPath];
+        [pillPath moveToPoint: NSMakePoint(innerLeft, innerTop)];
+        [pillPath lineToPoint: NSMakePoint(innerRight, innerTop)];
+        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:270 endAngle:90 clockwise:NO];
+        [pillPath lineToPoint: NSMakePoint(innerLeft, innerBottom)];
+        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius startAngle:90 endAngle:270 clockwise:NO];
+
+        //Draw
+        [backgroundColor set];
+        [pillPath fill];
+
+        NSColor *textColor = [[listObject displayArrayForKey:@"Text Color"] averageColor];
+
+        if([textColor colorIsDark]){
+            [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
+                                  drawInRect:NSOffsetRect(textRect, 0, -1)];
+        }else{
+            [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.4]]
+                                  drawInRect:NSOffsetRect(textRect, 0, -1)];
+        }
+        [[self attributedLabelStringWithColor:[textColor darkenBy:0.1]]
+                                  drawInRect:textRect];
+
+    }else{
+        NSRect textRect = labelRect;
+
+        textRect.size.width -= LABEL_SIDE_PAD*2;
+        textRect.origin.x += LABEL_SIDE_PAD;
+
+            //Draw name
+            [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
+                                  drawInRect:NSOffsetRect(textRect, 0, -1)];
+            [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.16 alpha:1.0]]
+                                  drawInRect:textRect];
+      //  }
+        
+    }
+
     //Draw name
-    [[self attributedLabelString:YES] drawInRect:NSOffsetRect(labelRect, 0, -1)];
-    [[self attributedLabelString:NO] drawInRect:labelRect];
+    [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
+                            drawInRect:NSOffsetRect(labelRect, 0, -1)];
+    [[self attributedLabelStringWithColor:[[[listObject displayArrayForKey:@"Text Color"] averageColor] darkenBy:0.6]]
+                            drawInRect:labelRect];
+*/
+
+    
+
+    //Draw name
+    [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
+                                    drawInRect:NSOffsetRect(labelRect, 0, -1)];
+    [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.16 alpha:1.0]]
+                                    drawInRect:labelRect];
+
 }
 
 - (NSSize)sizeOfLabel:(BOOL)computeMin
 {
-    NSSize		size = [[self attributedLabelString:NO] size]; //Name width
+    NSSize		size = [[self attributedLabelStringWithColor:[NSColor blackColor]] size]; //Name width
+
+    //Padding
+    size.width += LABEL_SIDE_PAD * 2;
 
     //Make sure we return an even integer width
     if(size.width != (int)size.width){
         size.width = (int)size.width + 1;
     }
+
 
     return(size);
 }
@@ -153,27 +250,19 @@
 }
 
 //
-- (NSAttributedString *)attributedLabelString:(BOOL)white
+- (NSAttributedString *)attributedLabelStringWithColor:(NSColor *)textColor
 {
     AIListObject		*object = [messageView listObject];
     NSFont			*font = [NSFont boldSystemFontOfSize:11];
     NSAttributedString		*displayName;
-    NSColor			*textColor;
     NSMutableParagraphStyle	*paragraphStyle;
     
-    //Color
-    if(!white){
-        textColor = [NSColor colorWithCalibratedWhite:0.16 alpha:1.0];
-    }else{
-        textColor = [NSColor colorWithCalibratedWhite:1.0 alpha:0.4];
-    }
-
     //Paragraph Style (Turn off clipping by word)
     paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
     [paragraphStyle setLineBreakMode:NSLineBreakByClipping];
 
     //Name
-    displayName = [[NSAttributedString alloc] initWithString:[object displayName] attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor, NSForegroundColorAttributeName, font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil]];
+    displayName = [[NSAttributedString alloc] initWithString:[object displayName] attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, nil]];
 
     return([displayName autorelease]);
 }

@@ -24,8 +24,8 @@
 
 #define TAB_LABEL_INSET		-4	//Pixels the tab's label is inset into it's endcap
 #define TAB_CLOSE_LEFTPAD	0
-#define TAB_CLOSE_RIGHTPAD	2
-#define TAB_CLOSE_Y_OFFSET	4
+#define TAB_CLOSE_RIGHTPAD	3
+#define TAB_CLOSE_Y_OFFSET	4 // 5
 
 @implementation AICustomTabCell
 
@@ -193,7 +193,14 @@
         [[NSColor colorWithCalibratedWhite:0.0 alpha:0.08] set];
         [NSBezierPath fillRect:NSMakeRect(rect.origin.x + 2, rect.origin.y, rect.size.width - 3, rect.size.height)];
     }
-    
+
+    //Draw the title
+    destRect = NSMakeRect(rect.origin.x + leftCapWidth + TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD,
+                          rect.origin.y + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
+                          middleWidth - tabCloseWidth - TAB_CLOSE_LEFTPAD - tabBadgeWidth - TAB_CLOSE_RIGHTPAD,
+                          labelSize.height);
+    [tabViewItem drawLabel:YES inRect:destRect];
+
     //Draw the close widget
     if(selected){
         destPoint = NSMakePoint(rect.origin.x + leftCapWidth + TAB_CLOSE_LEFTPAD, rect.origin.y + TAB_CLOSE_Y_OFFSET);
@@ -205,12 +212,6 @@
         }
     }
 
-    //Draw the title
-    destRect = NSMakeRect(rect.origin.x + leftCapWidth + TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD,
-                          rect.origin.y + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
-                          middleWidth - tabCloseWidth - TAB_CLOSE_LEFTPAD - tabBadgeWidth - TAB_CLOSE_RIGHTPAD,
-                          labelSize.height);
-    [tabViewItem drawLabel:YES inRect:destRect];
 }
 
 //Mouse tracking / Clicking -------------------------------------------
