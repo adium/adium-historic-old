@@ -53,7 +53,7 @@
 //The user selected a behavior
 - (IBAction)selectBehavior:(id)sender
 {
-	//Empty
+	[self detailsForHeaderChanged];
 }
 
 //Builds and returns a dock behavior list menu
