@@ -116,7 +116,7 @@
     [attachment setString:textEquivalent];
     [attachment setShouldSaveImageForLogging:YES];
 	[attachment setHasAlternate:YES];
-    attachString = [NSMutableAttributedString attributedStringWithAttachment:attachment];
+    attachString = [[[NSAttributedString attributedStringWithAttachment:attachment] mutableCopy] autorelease];
     
     [img release];
     [cell release];
