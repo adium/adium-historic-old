@@ -49,6 +49,8 @@
 
 - (void)windowDidLoad
 {
+	[[self window] setTitle:PASSWORD_REQUIRED];
+
 	[[self window] center];
 }
 
