@@ -9,12 +9,22 @@
 #import "AIFlexibleTableFramedTextCell.h"
 
 #define FRAME_PAD_LEFT 		7
+#define FRAME_FLAT_PAD_LEFT     10
 #define FRAME_PAD_RIGHT 	5
 #define FRAME_PAD_TOP 		2
 #define FRAME_PAD_BOTTOM 	1
 #define FRAME_RADIUS		8
+#define FRAME_FLAT_HEIGHT	1
 #define ALIAS_SHIFT_X		0.5
 #define ALIAS_SHIFT_Y		0.5
+
+@interface AIFlexibleTableFramedTextCell (PRIVATE)
+- (void)_drawBubbleTopInRect:(NSRect)frame;
+- (void)_drawBubbleMiddleInRect:(NSRect)frame;
+- (void)_drawBubbleBottomInRect:(NSRect)frame;
+- (void)_drawFlatTopInRect:(NSRect)frame;
+- (void)_drawFlatBottomInRect:(NSRect)frame;
+@end
 
 @implementation AIFlexibleTableFramedTextCell
 
@@ -36,9 +46,7 @@
 
 - (id)initWithAttributedString:(NSAttributedString *)inString
 {
-    drawLeft = YES;
-    drawRight = YES;
-    
+    drawSides = YES;    
     suppressTopLeftCorner = NO;
     suppressTopRightCorner = NO;
     suppressBottomRightCorner = NO;
@@ -60,13 +68,6 @@
 }
 
 //
-- (void)drawSides:(BOOL)inDrawSides
-{
-    drawSides = inDrawSides;
-}
-
-
-//
 - (void)setDrawTop:(BOOL)inDrawTop
 {
     drawTop = inDrawTop;
@@ -78,14 +79,9 @@
     drawBottom = inDrawBottom;
 }
 
-- (void)setDrawLeft:(BOOL)inDrawLeft
+- (void)setDrawSides:(BOOL)inDrawSides
 {
-    drawLeft = inDrawLeft;
-}   
-
-- (void)setDrawRight:(BOOL)inDrawRight
-{
-    drawRight = inDrawRight;
+    drawSides = inDrawSides;
 }   
 
 - (void)setSuppressTopRightCorner:(BOOL)inSuppressTopRightCorner
@@ -188,104 +184,163 @@
 }
     
 //Draw our contents
-- (void)drawContentsWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+- (void)drawContentsWithFrame:(NSRect)inFrame inView:(NSView *)controlView
 {
     NSAffineTransform	*aliasShift;
-    NSPoint 		topLeft, topRight, bottomLeft, bottomRight;
-    NSBezierPath	*path;
-    
-    int frameRadius = FRAME_RADIUS;
-    
+    NSRect              cellFrame = inFrame;
+
     //Set up a shift transformation to align our lines to a pixel (and prevent anti-aliasing)
     aliasShift = [NSAffineTransform transform];
     [aliasShift translateXBy:ALIAS_SHIFT_X yBy:ALIAS_SHIFT_Y];
 
-    //Precalculate the basic 4 corners
-    topLeft = NSMakePoint(cellFrame.origin.x, cellFrame.origin.y);
-    topRight = NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y);
-    bottomLeft = NSMakePoint(cellFrame.origin.x, cellFrame.origin.y + cellFrame.size.height);
-    bottomRight = NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y + cellFrame.size.height);
-    
-    path = [NSBezierPath bezierPath];
-    if (drawTop && !suppressTopLeftCorner){
-        [path appendBezierPathWithArcWithCenter:NSMakePoint(topLeft.x + frameRadius, topLeft.y + frameRadius)
-                                         radius:frameRadius
-                                     startAngle:180
-                                       endAngle:270
-                                      clockwise:NO];
-    }
-    if (drawTop && !suppressTopBorder) {
-        [path lineToPoint:NSMakePoint(topRight.x - frameRadius, topRight.y)];
-    }
-    if (drawTop && !suppressTopRightCorner) {
-        [path appendBezierPathWithArcWithCenter:NSMakePoint(topRight.x - frameRadius, topRight.y + frameRadius)
-                                         radius:frameRadius
-                                     startAngle:270
-                                       endAngle:0
-                                      clockwise:NO];
-    }
-    if (drawTop) {
-        [bubbleColor set];
-        [path fill];
-        [path transformUsingAffineTransform:aliasShift];
-        if(borderColor){
-            [borderColor set];
-            [path stroke];
+    //Draw the bubble top and bottom
+    if(drawSides){
+        if(drawTop){
+            [self _drawBubbleTopInRect:NSMakeRect(cellFrame.origin.x, cellFrame.origin.y, cellFrame.size.width, FRAME_RADIUS)];
+            cellFrame.origin.y += FRAME_RADIUS;
+            cellFrame.size.height -= FRAME_RADIUS;
         }
+        
+        if(drawBottom){
+            [self _drawBubbleBottomInRect:NSMakeRect(cellFrame.origin.x, (cellFrame.origin.y + cellFrame.size.height) - FRAME_RADIUS - 1, cellFrame.size.width, FRAME_RADIUS)];
+            cellFrame.size.height -= FRAME_RADIUS;
+        }
+        
+    }else{
+        if(drawTop){
+            [self _drawFlatTopInRect:NSMakeRect(cellFrame.origin.x, cellFrame.origin.y, cellFrame.size.width, FRAME_FLAT_HEIGHT)];
+            cellFrame.origin.y += FRAME_FLAT_HEIGHT;
+            cellFrame.size.height -= FRAME_FLAT_HEIGHT;
+        }
+        
+        if(drawBottom){
+            [self _drawFlatBottomInRect:NSMakeRect(cellFrame.origin.x, (cellFrame.origin.y + cellFrame.size.height) - FRAME_FLAT_HEIGHT, cellFrame.size.width, FRAME_FLAT_HEIGHT)];
+            cellFrame.size.height -= FRAME_FLAT_HEIGHT;
+        }
+
     }
 
-    [bubbleColor set];
-    [NSBezierPath fillRect:NSMakeRect(topLeft.x,
-                                      (drawTop ? topLeft.y + frameRadius : topLeft.y),
-                                      bottomRight.x - topLeft.x,
-                                      bottomRight.y - topLeft.y - (drawTop ? frameRadius : 0) - (drawBottom ? frameRadius : 0))];
+    //Draw the bubble middle
+    [self _drawBubbleMiddleInRect:cellFrame];
+    
+    //Draw our text content
+    inFrame.origin.x += (drawSides ? FRAME_FLAT_PAD_LEFT : FRAME_PAD_LEFT);
+    inFrame.size.width -= (drawSides ? FRAME_FLAT_PAD_LEFT : FRAME_PAD_LEFT) + FRAME_PAD_RIGHT;
+    if(drawTop) inFrame.origin.y += FRAME_PAD_TOP;
+    inFrame.size.height -= ((drawTop ? FRAME_PAD_TOP : 0) + (drawBottom ? FRAME_PAD_BOTTOM : 0));
 
+    [super drawContentsWithFrame:inFrame inView:controlView];
+}
+
+//Draw the top border of a flat frame
+- (void)_drawFlatTopInRect:(NSRect)frame
+{
     if(borderColor){
         [borderColor set];
-        if (drawLeft)
-            [NSBezierPath strokeLineFromPoint:NSMakePoint(topLeft.x + ALIAS_SHIFT_X, (drawTop ? topLeft.y + frameRadius : topLeft.y) + ALIAS_SHIFT_Y)
-                                toPoint:NSMakePoint(bottomLeft.x + ALIAS_SHIFT_X, (drawBottom ? bottomLeft.y - frameRadius : bottomLeft.y) + ALIAS_SHIFT_Y)];
-        if (drawRight)
-            [NSBezierPath strokeLineFromPoint:NSMakePoint(topRight.x + ALIAS_SHIFT_X, (drawTop ? topRight.y + frameRadius : topRight.y) + ALIAS_SHIFT_Y)
-                                toPoint:NSMakePoint(bottomRight.x + ALIAS_SHIFT_X, (drawBottom ? bottomRight.y - frameRadius : bottomRight.y) + ALIAS_SHIFT_Y)];
+        [NSBezierPath fillRect:frame];
     }
-    
-    path = [NSBezierPath bezierPath];
-    if(drawBottom && !suppressBottomLeftCorner){
-        [path appendBezierPathWithArcWithCenter:NSMakePoint(bottomLeft.x + frameRadius, bottomLeft.y - frameRadius)
-                                         radius:frameRadius
-                                     startAngle:180
-                                       endAngle:90
-                                      clockwise:YES];
-    }
-    if(drawBottom && !suppressBottomBorder){
-        [path lineToPoint:NSMakePoint(bottomRight.x - frameRadius, bottomRight.y)];
-    }
-    if((drawBottom && !suppressBottomRightCorner)){
-        [path appendBezierPathWithArcWithCenter:NSMakePoint(bottomRight.x - frameRadius, bottomRight.y - frameRadius)
-                                         radius:frameRadius
-                                     startAngle:90
-                                       endAngle:0
-                                      clockwise:YES];
-    }
+}
 
-    if(drawBottom){
-        [bubbleColor set];
-        [path fill];
-        [path transformUsingAffineTransform:aliasShift];
-        if(borderColor){
-            [borderColor set];
-            [path stroke];
+//Draw the bottom border of a flat frame
+- (void)_drawFlatBottomInRect:(NSRect)frame
+{
+    if(borderColor){
+        [borderColor set];
+        [NSBezierPath fillRect:frame];
+    }
+}
+
+//Draw the top border of a rounded frame
+- (void)_drawBubbleTopInRect:(NSRect)frame
+{
+    NSBezierPath        *path = [NSBezierPath bezierPath];
+    NSAffineTransform	*aliasShift;
+    int                 frameRadius = frame.size.height;
+        
+    //Set up a shift transformation to align our lines to a pixel (and prevent anti-aliasing)
+    aliasShift = [NSAffineTransform transform];
+    [aliasShift translateXBy:ALIAS_SHIFT_X yBy:ALIAS_SHIFT_Y];
+    
+    //
+    [path setLineWidth:1.0];
+    [path appendBezierPathWithArcWithCenter:NSMakePoint(frame.origin.x + frameRadius, frame.origin.y + frameRadius)
+                                     radius:frameRadius
+                                 startAngle:180
+                                   endAngle:270
+                                  clockwise:NO];
+    [path lineToPoint:NSMakePoint((frame.origin.x + frame.size.width) - frameRadius, frame.origin.y)];
+    [path appendBezierPathWithArcWithCenter:NSMakePoint((frame.origin.x + frame.size.width) - frameRadius, frame.origin.y + frameRadius)
+                                     radius:frameRadius
+                                 startAngle:270
+                                   endAngle:0
+                                  clockwise:NO];
+    
+    //
+    [bubbleColor set];
+    [path fill];
+    [path transformUsingAffineTransform:aliasShift];
+    if(borderColor){
+        [borderColor set];
+        [path stroke];
+    }
+}
+
+//Draw the middle of a flat/rounded frame
+- (void)_drawBubbleMiddleInRect:(NSRect)frame
+{
+    //Draw the middle of the bubble
+    [bubbleColor set];
+    [NSBezierPath fillRect:frame];
+
+    //Draw the side borders along the middle
+    if(borderColor){
+        [borderColor set];
+        if(drawSides){
+            [NSBezierPath strokeLineFromPoint:NSMakePoint(frame.origin.x + ALIAS_SHIFT_X, frame.origin.y + ALIAS_SHIFT_Y)
+                                      toPoint:NSMakePoint(frame.origin.x + ALIAS_SHIFT_X, frame.origin.y + frame.size.height + ALIAS_SHIFT_Y)];
+            [NSBezierPath strokeLineFromPoint:NSMakePoint(frame.origin.x + frame.size.width + ALIAS_SHIFT_X, frame.origin.y + ALIAS_SHIFT_Y)
+                                      toPoint:NSMakePoint(frame.origin.x + frame.size.width + ALIAS_SHIFT_X, frame.origin.y + frame.size.height + ALIAS_SHIFT_Y)];
         }
     }
-
-    cellFrame.origin.x += FRAME_PAD_LEFT;
-    cellFrame.size.width -= FRAME_PAD_LEFT + FRAME_PAD_RIGHT;
-    if(drawTop) cellFrame.origin.y += FRAME_PAD_TOP;
-    cellFrame.size.height -= ((drawTop ? FRAME_PAD_TOP : 0) + (drawBottom ? FRAME_PAD_BOTTOM : 0));
-
-    [super drawContentsWithFrame:cellFrame inView:controlView];
 }
+
+//Draw the bottom border of a rounded frame
+- (void)_drawBubbleBottomInRect:(NSRect)frame
+{
+    NSBezierPath        *path = [NSBezierPath bezierPath];
+    NSAffineTransform	*aliasShift;
+    int                 frameRadius = frame.size.height;    
+    
+    //Set up a shift transformation to align our lines to a pixel (and prevent anti-aliasing)
+    aliasShift = [NSAffineTransform transform];
+    [aliasShift translateXBy:ALIAS_SHIFT_X yBy:ALIAS_SHIFT_Y];
+    
+    //
+    [path setLineWidth:1.0];
+    [path appendBezierPathWithArcWithCenter:NSMakePoint(frame.origin.x + frameRadius, frame.origin.y)
+                                     radius:frameRadius
+                                 startAngle:180
+                                   endAngle:90
+                                  clockwise:YES];
+    [path lineToPoint:NSMakePoint((frame.origin.x + frame.size.width) - frameRadius, frame.origin.y + frameRadius)];
+    [path appendBezierPathWithArcWithCenter:NSMakePoint((frame.origin.x + frame.size.width) - frameRadius, frame.origin.y)
+                                     radius:frameRadius
+                                 startAngle:90
+                                   endAngle:0
+                                  clockwise:YES];
+
+    //
+    [bubbleColor set];
+    [path fill];
+    [path transformUsingAffineTransform:aliasShift];
+    if(borderColor){
+        [borderColor set];
+        [path stroke];
+    }
+}
+
+
+
 
 @end
 

@@ -11,8 +11,6 @@
 @interface AIFlexibleTableFramedTextCell : AIFlexibleTableTextCell {
     BOOL	drawTop;
     BOOL	drawBottom;
-    BOOL        drawLeft;
-    BOOL        drawRight;
     BOOL        drawSides;
 
     BOOL    suppressTopLeftCorner;
@@ -31,8 +29,7 @@
 
 - (void)setDrawTop:(BOOL)inDrawTop;
 - (void)setDrawBottom:(BOOL)inDrawBottom;
-- (void)setDrawLeft:(BOOL)inDrawLeft;
-- (void)setDrawRight:(BOOL)inDrawRight;
+- (void)setDrawSides:(BOOL)inDrawSides;
 
 - (void)setSuppressTopRightCorner:(BOOL)inSuppressTopRightCorner;
 - (void)setSuppressTopLeftCorner:(BOOL)inSuppressTopLeftCorner;

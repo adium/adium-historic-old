@@ -300,7 +300,7 @@
                                                      color:(outgoing ? outgoingSourceColor : incomingSourceColor)
                                                       font:prefixFont
                                                  alignment:NSLeftTextAlignment];
-    [senderCell setPaddingLeft:1 top:3 right:1 bottom:0];
+    [senderCell setPaddingLeft:(showUserIcons ? 1 : 4) top:3 right:1 bottom:0];
     [senderCell setVariableWidth:YES];
 
     //Time Stamp
@@ -347,13 +347,22 @@
         color = [NSColor colorWithCalibratedRed:(230.0/255.0) green:(255.0/255.0) blue:(234.0/255.0) alpha:1.0];
     }
     
+    
+    float hue, sat, brit, alpha;
+    [color getHue:&hue saturation:&sat brightness:&brit alpha:&alpha];
+    sat += 0.3; if(sat > 1.0) sat = 1.0;
+    brit -= 0.3; if(brit < 0.0) sat = 0.0;
+    NSColor *borderColor = [NSColor colorWithCalibratedHue:hue saturation:sat brightness:brit alpha:alpha];
+
+    
     //Message cell
     messageCell = [AIFlexibleTableFramedTextCell cellWithAttributedString:[content message]];
-    [messageCell setPaddingLeft:0 top:0 right:4 bottom:0];
+    [messageCell setPaddingLeft:0 top:0 right:(showUserIcons ? 4 : 0) bottom:0];
     [messageCell setVariableWidth:YES];
-    [messageCell setFrameBackgroundColor:color borderColor:[color darkenBy:0.4]];
+    [messageCell setFrameBackgroundColor:color borderColor:/*[color darkenBy:0.2]*/borderColor];
     [messageCell setDrawTop:YES];
     [messageCell setDrawBottom:YES];
+    [messageCell setDrawSides:showUserIcons];
     
     //
     if(emptyCell){
