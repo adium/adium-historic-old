@@ -35,11 +35,16 @@
 @end
 
 
-int alphabeticalSort(id objectA, id objectB, void *context);
+int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
 @implementation ESContactAlerts
 
-- (id)initForObject:(AIListObject *)inObject withDetailsView:(NSView *)inView withTable:(AIAlternatingRowTableView*)inTable owner:(id)inOwner
+- (id)init
+{
+    [super init];
+    return self;
+}
+- (id)initForObject:(AIListObject *)inObject withDetailsView:(NSView *)inView withTable:(AIAlternatingRowTableView*)inTable withPrefView:(NSView *)inPrefView owner:(id)inOwner
 {
     [super init];
 
@@ -58,28 +63,44 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     view_main = inView;
     [view_main retain];
 
+    view_pref = inPrefView;
+    [view_pref retain];
+
     [eventActionArray release];
     eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
     if (!eventActionArray)
         eventActionArray = [[NSMutableArray alloc] init];
     [eventActionArray retain];
-    [self removeAllSubviews:view_main];
+ //   [self removeAllSubviews:view_main];
+
+  //  view_blank = [[NSView alloc] init];
+  //  [view_details release];    view_details = view_blank; [view_details retain];
+
+    [view_blank release];
     view_blank = [[NSView alloc] init];
-    [view_details release];    view_details = view_blank; [view_details retain];
-    [view_main addSubview:view_details];
-    [view_main setAutoresizingMask:NSViewMaxYMargin];
+    [view_blank retain];
+    if ( [[view_main subviews] count] == 0 ) //there are no subviews yet
+        [view_main addSubview:view_blank];
+    
+   // [view_main setAutoresizingMask:NSViewMaxYMargin];
 
     //nothing's selected, obviously, so row = -1
     row = -1;
+
+    offset = 0;
 
     return self;
 }
 
 - (void)currentRowIs:(int)currentRow
 {
-    row = currentRow;
+    row = (currentRow - offset);
 }
 
+- (int)currentRow
+{
+    return row;
+}
 - (NSMutableArray *)eventActionArray
 {
     return eventActionArray;
@@ -87,7 +108,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 - (NSMutableDictionary *)dictAtIndex:(int)inRow
 {
-    return ([eventActionArray objectAtIndex:inRow]);
+    return ([eventActionArray objectAtIndex:(inRow-offset)]);
 }
 
 -(BOOL)hasAlerts
@@ -105,13 +126,28 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 -(void)replaceDictAtIndex:(int)inRow withDict:(NSDictionary *)selectedActionDict
 {
-    [eventActionArray replaceObjectAtIndex:inRow withObject:selectedActionDict];
+    [eventActionArray replaceObjectAtIndex:(inRow-offset) withObject:selectedActionDict];
     [self saveEventActionArray];
 }
 
 -(void)executeAppropriateAction:(NSString *)action inMenu:(NSMenu *)actionMenu
 {
     [actionMenu performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
+}
+
+-(void)setOffset:(int)inOffset
+{
+    offset = inOffset;
+}
+
+-(void)changeOffsetBy:(int)changeOffset
+{
+    offset -= changeOffset;
+}
+
+- (AIListObject *)activeObject
+{
+    return activeContactObject;
 }
 //Actions!
 - (NSMenu *)actionListMenu //menu of possible actions
@@ -187,7 +223,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[[owner accountController] accountWithID:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]]]];
 }
 
-    //setup display for sending a message
+//setup display for sending a message
 - (IBAction)actionSendMessage:(id)sender
 {
     NSString *details = [[NSString alloc] autorelease];
@@ -228,8 +264,8 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         [button_anotherAccount setState:[[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]];
         [button_displayAlert setState:[[detailsDict objectForKey:KEY_MESSAGE_ERROR] intValue]];
     }
-    if (view_details != view_details_message)
-        [self configureWithSubview:view_details_message];
+
+    [self configureWithSubview:view_details_message];
 }
 
 //Builds and returns an event menu
@@ -403,7 +439,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     AIAccount * account = [sender representedObject];
     NSString * accountID = [account accountID];
     NSMutableDictionary	*selectedActionDict;
-    
+
     selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
     [selectedActionDict setObject:accountID forKey:KEY_EVENT_DETAILS];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
@@ -411,18 +447,18 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 //builds an alphabetical menu of contacts for all online accounts; online contacts are sorted to the top and seperated
 //from offline ones by a seperator reading "Offline"
-//uses alphabeticalSort and calls saveMessageDetails: when a selection is made
+//uses alphabeticalGroupOfflineSort and calls saveMessageDetails: when a selection is made
 - (NSMenu *)sendToContactMenu
 {
     NSMenu		*contactMenu = [[NSMenu alloc] init];
     //Build the menu items
     NSMutableArray		*contactArray =  [[owner contactController] allContactsInGroup:nil subgroups:YES];
-    [contactArray sortUsingFunction:alphabeticalSort context:nil]; //online buddies will end up at the top, alphabetically
+    [contactArray sortUsingFunction:alphabeticalGroupOfflineSort context:nil]; //online buddies will end up at the top, alphabetically
 
     NSEnumerator 	*enumerator = 	[contactArray objectEnumerator];
     AIListObject	*contact;
     BOOL		firstOfflineSearch = NO;
-    
+
     contact = [contactArray objectAtIndex:0];
     if ( !([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //the first contact is offline
     {
@@ -485,14 +521,14 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 }
 
 
-int alphabeticalSort(id objectA, id objectB, void *context)
+int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 {
     BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
     BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
     BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
     BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
 
-    
+
     NSString  	*groupNameA = [[objectA containingGroup] displayName];
     NSString  	*groupNameB = [[objectB containingGroup] displayName];
     if(groupA && !groupB){
@@ -588,11 +624,15 @@ int alphabeticalSort(id objectA, id objectB, void *context)
     [actionDict setObject:@"Sound" forKey:KEY_EVENT_ACTION]; //Sound is default action
     [actionDict setObject:[NSNumber numberWithInt:NSOffState] forKey:KEY_EVENT_DELETE]; //default to recurring events
     [eventActionArray addObject:actionDict];
-    //Save event preferences
+    //Save event preferences?
+    //NSLog(@"not saving when adding new event ... ");
     [self saveEventActionArray];
 
-    [tableView_actions selectRow:([eventActionArray count]-1) byExtendingSelection:NO]; //select the new event
+    [tableView_actions selectRow:(([eventActionArray count]-1)+offset) byExtendingSelection:NO]; //select the new event
 
+    if ([[tableView_actions dataSource] respondsToSelector:@selector(addedEvent:)])
+        [[tableView_actions dataSource] addedEvent:nil];
+    
     //Update the outline view
     [tableView_actions reloadData];
 
@@ -600,7 +640,6 @@ int alphabeticalSort(id objectA, id objectB, void *context)
 
 - (void)configureForTextDetails:(NSString *)instructions
 {
-
     NSString *details;
 
     details = [NSString alloc];
@@ -610,43 +649,59 @@ int alphabeticalSort(id objectA, id objectB, void *context)
     [textField_description_textField setStringValue:instructions];
     [textField_actionDetails setStringValue:(details ? details : @"")];
 
-    if (view_details != view_details_text)
-        [self configureWithSubview:view_details_text];
+    [self configureWithSubview:view_details_text];
 }
 
 - (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu
 {
+
     [textField_description_popUp setStringValue:instructions];
     [popUp_actionDetails setMenu:detailsMenu];
-    //    if (row != -1)
     [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]]];
 
-    if (view_details != view_details_menu)
-        [self configureWithSubview:view_details_menu];
+    [self configureWithSubview:view_details_menu];
 }
 
 - (void)configureWithSubview:(NSView *)view_inView
 {
     if (!view_inView) view_inView = view_blank; //pass nil to signify the blank subview
 
-    [view_main replaceSubview:view_details with:view_blank];
+    int 	heightChange = [view_inView frame].size.height - [[[view_main subviews] objectAtIndex:0] frame].size.height;
+    NSView * oldView = [[view_main subviews] objectAtIndex:0];
+    [view_main replaceSubview:oldView with:view_blank];
 
     NSRect	containerFrame = [[view_main window] frame];
+    
     NSSize	minimumSize = [[view_main window] minSize];
-    int 	heightChange = [view_inView frame].size.height - [view_details frame].size.height;
     containerFrame.size.height += heightChange;
     containerFrame.origin.y -= heightChange;
     minimumSize.height += heightChange;
-    [[view_main window] setFrame:containerFrame display:YES animate:YES];
+
+    [[view_main window] setFrame:containerFrame display:YES animate:NO/*YES*/];
     [[view_main window] setMinSize:minimumSize];
 
+    if (view_pref != nil)
+    {
+        containerFrame = [view_pref frame];
+        containerFrame.size.height += heightChange;
+        containerFrame.origin.y -= heightChange;
+        [view_pref setFrame:containerFrame];
+        [view_pref display];
+    }
+    
     [view_main replaceSubview:view_blank with:view_inView];
+    NSRect viewFrame = [view_main frame];
+    viewFrame.size = [view_inView frame].size;
     [view_main setFrame:[view_inView frame]];
 
+    //   [view_main setFrameOrigin:NSMakePoint(0,0)];
+    
     [view_details release];
     view_details = view_inView;
     [view_details retain];
     [view_main display];
+  //   [[view_main superview] display];
+    
 }
 
 - (void)removeAllSubviews:(NSView *)view
@@ -727,4 +782,15 @@ int alphabeticalSort(id objectA, id objectB, void *context)
     [self saveEventActionArray];
 }
 
+//determine if two instances of ESContactAlerts refer to the same contact
+- (BOOL)isEqual:(id)inInstance
+{
+    BOOL contactTest = ( [[activeContactObject UIDAndServiceID] compare:[[inInstance activeObject] UIDAndServiceID]] == 0 );
+    return contactTest;
+}
+
+- (unsigned) hash
+{
+    return ( [[activeContactObject UIDAndServiceID] hash] );
+}
 @end

@@ -21,7 +21,7 @@
 
 - (void)installPlugin
 {
-      AIMiniToolbarItem *toolbarItem;
+    AIMiniToolbarItem *toolbarItem;
 
     //Install the 'contact alerts' menu item
     editContactAlertsMenuItem = [[NSMenuItem alloc] initWithTitle:@"Edit Contact's Alerts" target:self action:@selector(editContactAlerts:) keyEquivalent:@""];
@@ -40,7 +40,7 @@
     [toolbarItem setToolTip:@"Edit Contact Alerts"];
     [toolbarItem setPaletteLabel:@"Edit Contact Alerts"];
     [toolbarItem setDelegate:self];
-    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];    
+    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
 
     //Register as a contact observer
     [[owner contactController] registerListObjectObserver:self];
@@ -48,11 +48,11 @@
     //Initialize our text-to-speech object
     speaker = [[SUSpeaker alloc] init];
 
-  /*  //Install the preference pane
+    //Install the preference pane
     prefs = [[ESContactAlertsPreferences contactAlertsPreferencesWithOwner:owner] retain];
-    [self preferencesChanged:nil]; //act like prefs changed to initialize the view
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil]; //observe
-*/
+    //  [self preferencesChanged:nil]; //act like prefs changed to initialize the view
+    //  [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil]; //observe
+
 }
 
 - (void)uninstallPlugin
@@ -73,7 +73,7 @@
 - (void)processEventActionArrayForObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
     NSMutableArray * eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
-    
+
     NSEnumerator * actionsEnumerator;
     NSDictionary * actionDict;
     NSString * event;
@@ -95,7 +95,7 @@
             NSString * details = [actionDict objectForKey:KEY_EVENT_DETAILS];
             int delete = [[actionDict objectForKey:KEY_EVENT_DELETE] intValue];
             BOOL success = YES;
-            
+
             if ([action compare:@"Sound"] == 0) {
                 NSString	*soundPath = details;
                 if(soundPath != nil && [soundPath length] != 0) {
@@ -117,7 +117,7 @@
                 NSString * uid = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_UID];
                 NSString * service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
                 AIListContact * contact = [[owner contactController] contactInGroup:nil withService:service UID:uid];
-                
+
                 if ([[account statusObjectForKey:@"Status"] intValue] == STATUS_OFFLINE) //desired account not available
                 {
                     if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) //use another account if necessary pref
@@ -139,7 +139,7 @@
                             success = NO;
                             errorReason = [[NSString alloc] initWithString:@"failed because no appropriate accounts are online."];
                         }
-                        else 
+                        else
                         {
                             account = [onlineAccounts objectAtIndex:0]; //pick first account in our array of possibilities
                         }
@@ -242,7 +242,7 @@
 - (IBAction)editContextContactAlerts:(id)sender
 {
     [ESContactAlertsWindowController showContactAlertsWindowWithOwner:owner
-                                                           forObject:[[owner menuController] contactualMenuContact]];
+                                                            forObject:[[owner menuController] contactualMenuContact]];
 }
 
 - (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
@@ -266,6 +266,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_ALERTS] == 0){
+        NSLog(@"prefs changed.");
     }
 }
 

@@ -28,7 +28,7 @@
     AIAdium					*owner;
     AIListObject				*activeContactObject;
 
-    ESContactAlerts				*plugin;
+    ESContactAlerts				*instance;
 }
 
 + (id)showContactAlertsWindowWithOwner:(id)inOwner forObject:(AIListObject *)inContact;
