@@ -334,10 +334,8 @@
 //Double click in outline view
 - (IBAction)performDefaultActionOnSelectedContact:(id)sender
 {
-    AIListObject	*selectedObject;
+    AIListObject	*selectedObject = [sender itemAtRow:[sender selectedRow]];
 
-    selectedObject = [sender itemAtRow:[sender selectedRow]];
-	NSLog(@"performDefaultActionOnSelectedContact");
     if([selectedObject isKindOfClass:[AIListGroup class]]){
         //Expand or collapse the group
         if([sender isItemExpanded:selectedObject]){

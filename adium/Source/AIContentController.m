@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.44 2004/01/14 01:24:32 adamiser Exp $
+// $Id: AIContentController.m,v 1.45 2004/01/18 17:51:19 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -409,16 +409,41 @@
 //Note a chat (Called by account code only, after creating a chat)
 - (void)noteChat:(AIChat *)inChat forAccount:(AIAccount *)inAccount
 {
+	AIListObject	*listObject;
+
     //Track the chat
     [chatArray addObject:inChat];
+	
+	//Up the chat count for this contact
+	if(listObject = [inChat listObject]){
+        int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
+        [listObject setStatusObject:[NSNumber numberWithInt:(currentCount + 1)]
+                          withOwner:listObject
+                             forKey:@"ChatsCount"
+                             notify:YES];
+	}
+
 }
 
 //Close a chat
 - (BOOL)closeChat:(AIChat *)inChat
 {
+	AIListObject	*listObject;
+
     if (mostRecentChat == inChat)
         mostRecentChat = nil;
     
+	//Lower the chat count for this contact
+	if(listObject = [inChat listObject]){
+        int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
+        if(currentCount > 0) {
+			[listObject setStatusObject:[NSNumber numberWithInt:(currentCount - 1)]
+							  withOwner:listObject
+								 forKey:@"ChatsCount"
+								 notify:YES];
+		}
+	}
+	
     //Notify the account and send out the Chat_WillClose notification
     [(AIAccount<AIAccount_Content> *)[inChat account] closeChat:inChat];
     [[owner notificationCenter] postNotificationName:Chat_WillClose object:inChat userInfo:nil];
