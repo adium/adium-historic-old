@@ -11,10 +11,8 @@
 @class GBiTunerPreferences;
 
 @interface GBiTunerPlugin : AIPlugin <AIContentFilter> {    
-    //dictionary of scripts
-    NSDictionary            *scriptDict;
-    
-    GBiTunerPreferences     *preferences;
+    NSMutableDictionary		*scriptDict;		//Lookup dict for script usage
+	NSMutableArray			*scriptArray;		//Ordered array for script menu
 }
 
 @end

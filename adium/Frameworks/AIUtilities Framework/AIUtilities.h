@@ -17,6 +17,7 @@
 #import "AIAlternatingRowTableView.h"
 #import "AIAnimatedFloater.h"
 #import "AIAnimatedView.h"
+#import "AIAppleScriptAdditions.h"
 #import "AIAttributedStringAdditions.h"
 #import "AIAutoScrollView.h"
 #import "AIBrushedPopUpButton.h"
