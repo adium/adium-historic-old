@@ -53,10 +53,20 @@
                 [[adium notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
                 [[adium notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
                 [[adium notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
+		[[adium notificationCenter] removeObserver:self name:Chat_WillClose object:nil];
                 if([[adium preferenceController] preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] != nil){
-                    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
-                    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
-                    [[adium notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
+                    [[adium notificationCenter] addObserver:self 
+						   selector:@selector(didReceiveContent:) 
+						       name:Content_DidReceiveContent object:nil];
+                    [[adium notificationCenter] addObserver:self
+						   selector:@selector(didReceiveContent:)
+						       name:Content_FirstContentRecieved object:nil];
+                    [[adium notificationCenter] addObserver:self
+						   selector:@selector(didSendContent:) 
+						       name:Content_DidSendContent object:nil];
+		    [[adium notificationCenter] addObserver:self
+						   selector:@selector(chatWillClose:)
+						       name:Chat_WillClose object:nil];
                 }
 
                 //Flush our array of 'responded' contacts
@@ -110,6 +120,13 @@
     }
 }
 
-//evands: need to check into removing chats form our array when they are destroyed
+- (void)chatWillClose:(NSNotification *)notification
+{
+    AIChat *chat = [notification object];
+    int chatIndex = [receivedIdleMessage indexOfObjectIdenticalTo:chat];
+    
+    if (chatIndex != NSNotFound)
+	[receivedIdleMessage removeObjectAtIndex:chatIndex];
+}
 
 @end
