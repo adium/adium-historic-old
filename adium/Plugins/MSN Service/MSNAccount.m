@@ -12,6 +12,7 @@
 #import "AIAdium.h"
 #import "MSNStringAdditions.h"
 #include <openssl/md5.h>
+#include <unistd.h>
 
 #define TIMES_PER_SECOND 20.0
 #define MAX_CONNECTION_PHASE	23
@@ -219,7 +220,7 @@
 {
     screenName = @"adium2testing@hotmail.com";
     password = @"panther";
-    friendlyName = @"The Adium Tester";
+    friendlyName = [NSString stringWithFormat:@"%s - %@", getlogin(), @"The Adium Tester"];
     
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
@@ -270,7 +271,7 @@
 
 - (NSArray *)supportedStatusKeys
 {
-    return([NSArray arrayWithObjects:@"Online", @"Offline", @"Hidden", @"Busy", @"Idle", @"Be Right Back", @"Away", @"On The Phone", @"Out to Lunch", nil]);
+    return([NSArray arrayWithObjects:@"Online", @"Offline", @"Hidden", @"Busy", @"Idle", @"Be Right Back", @"Away", @"On The Phone", @"Out to Lunch", @"Typing", nil]);
 }
 
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
@@ -580,8 +581,10 @@
                 }
                 break;
             case 20:
-                if([socket sendData:[@"REA 4 adium2testing@hotmail.com The%20Adium%20Tester\r\n"
-                    dataUsingEncoding:NSUTF8StringEncoding]])
+                if([socket sendData:
+                        [[NSString stringWithFormat:@"REA 4 %@ %@\r\n",
+                            screenName, [friendlyName urlEncode]]
+                        dataUsingEncoding:NSUTF8StringEncoding]])
                 {
                     //NSLog(@">>> %@", @"CHG 5 NLN");			
                     connectionPhase ++;
@@ -800,6 +803,28 @@
                             [[owner contactController] handleStatusChanged:theHandle
                                 modifiedStatusKeys:
                                     [NSArray arrayWithObject:@"Online"]];
+                        }
+                        else if([command isEqual:@"RNG"])
+                        {
+                            //connect to the switchboard
+                            NSArray *hostAndPort = [[message objectAtIndex:2]
+                                componentsSeparatedByString:@":"];
+                            AISocket *sbSocket = [AISocket 
+                                socketWithHost:[hostAndPort objectAtIndex:0]
+                                port:[[hostAndPort objectAtIndex:1] intValue]];
+                            NSMutableDictionary *socketDict = nil;
+                            
+                            [self sendMessage:[NSString stringWithFormat:@"ANS 1 %@ %@ %@\r\n",
+                                    screenName, [message objectAtIndex:4], [message objectAtIndex:1]]
+                                onSocket:sbSocket];
+                            
+                            if (socketDict = [switchBoardDict 
+                                    objectForKey:[message objectAtIndex:5]])
+                            {	
+                                [self manageSBSocket:socketDict 
+                                    withHandle:[message objectAtIndex:5]];
+                            }
+                            
                         }
                         else if([command isEqual:@""])
                         {
@@ -1127,27 +1152,31 @@
 
 - (BOOL)sendMessage:(NSString *)message onSocket:(AISocket *)Socket
 {
-    NSString *packet;
-    unsigned long	 thisTrid = [self getTrid:YES];
+    if([message length] > 0)
+    {
+        NSString *packet;
+        unsigned long	 thisTrid = [self getTrid:YES];
+        
     
-
-    packet = [NSString stringWithFormat:@"MSG %d A %d\r\n%@",
-             thisTrid, [message length],
-              message];
+        packet = [NSString stringWithFormat:@"MSG %d A %d\r\n%@",
+                thisTrid, [message length],
+                message];
+        
+        NSLog (@"Sending packet:\n%@", packet);
     
-    NSLog (@"Sending packet:\n%@", packet);
-
-    [messageDict setObject:packet forKey:[NSString stringWithFormat:@"%d", thisTrid]];
+        [messageDict setObject:packet forKey:[NSString stringWithFormat:@"%d", thisTrid]];
+        
+        [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
+            target:self
+            selector:@selector(sendMessageHelper:)
+            userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+                [packet dataUsingEncoding:NSUTF8StringEncoding], @"Packet",
+                Socket, @"Socket", nil]
+            repeats:YES];
     
-    [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
-        target:self
-        selector:@selector(sendMessageHelper:)
-        userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-            [packet dataUsingEncoding:NSUTF8StringEncoding], @"Packet",
-            Socket, @"Socket", nil]
-        repeats:YES];
-
-    return YES;
+        return YES;
+    }
+    return NO;
 }
 
 - (void)sendMessageHelper:(NSTimer *)timer
@@ -1454,6 +1483,13 @@
                         // (Do cool formatting stuff here)
                         NSLog (@"MSN Got message, sending to interface"); 
                         
+                        // Not typing anymore, they sent!
+                        AIHandle *handle = [handleDict objectForKey:handle];
+                        [[handle statusDictionary] 
+                            setObject:[NSNumber numberWithInt:NO] forKey:@"Typing"];
+                        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:
+                            [NSArray arrayWithObject:@"Typing"]];
+                        
                         //Add a content object for the message
                         messageObject = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:contact onAccount:self]
                                          withSource:contact
@@ -1461,6 +1497,17 @@
                                                date:nil
                                             message:[[[NSAttributedString alloc] initWithString:[messageLoad objectForKey:@"MSG Body"]] autorelease]];
                         [[owner contentController] addIncomingContentObject:messageObject];
+                    }
+                    else if([contentType isEqual:@"text/x-msmsgscontrol\r\n"])
+                    {
+                        NSLog(@"typing");
+                        //w00t. typing. ph33r.
+                        AIHandle *handle = [handleDict objectForKey:handle];
+                        
+                        [[handle statusDictionary] 
+                            setObject:[NSNumber numberWithInt:YES] forKey:@"Typing"];
+                        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:
+                            [NSArray arrayWithObject:@"Typing"]];
                     }
                 }
                 else
