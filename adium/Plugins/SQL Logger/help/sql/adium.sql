@@ -198,10 +198,9 @@ searchString    text,
 orderBy         text,
 date_added      timestamp default now()
 );
-*/
 
 create table adium.saved_chats (
-chat_id     serial primary key,
+chat_id         serial primary key,
 title           text,
 notes           text,
 sent_sn         text,
@@ -233,9 +232,9 @@ notes           text not null,
 date_added      timestamp default now()
 );
 
-create table preferences (
+create table adium.preferences (
 rule text,
 value varchar(30)
 );
 
-insert into preferences values ('scramble', 'false');
+insert into adium.preferences values ('scramble', 'false');
