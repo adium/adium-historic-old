@@ -28,7 +28,6 @@
     IBOutlet	NSTabView			*tabView_messages;
     IBOutlet	AIFlippedCategoryView		*view_Messages_Display;
     IBOutlet	AIFlippedCategoryView		*view_Messages_Sending;
-    IBOutlet	AIFlippedCategoryView		*view_Messages_Receiving;
 
     IBOutlet	NSTabView			*tabView_status;
     IBOutlet	AIFlippedCategoryView		*view_Status_Away;
