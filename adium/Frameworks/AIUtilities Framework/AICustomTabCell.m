@@ -22,6 +22,17 @@
 - (id)initForTabViewItem:(NSTabViewItem *)inTabViewItem;
 @end
 
+//Images (Shared between instances)
+static NSImage		*tabBackLeft = nil;
+static NSImage		*tabBackMiddle = nil;
+static NSImage		*tabBackRight = nil;
+static NSImage		*tabFrontLeft = nil;
+static NSImage		*tabFrontMiddle = nil;
+static NSImage		*tabFrontRight = nil;
+static NSImage		*tabCloseFront = nil;
+static NSImage		*tabCloseBack = nil;
+static NSImage		*tabCloseFrontPressed = nil;
+
 #define TAB_CLOSE_LEFTPAD	2	//Padding left of close button
 #define TAB_CLOSE_RIGHTPAD	4	//Padding right of close button
 #define TAB_CLOSE_Y_OFFSET	4 // 5
@@ -94,20 +105,27 @@
 //init
 - (id)initForTabViewItem:(NSTabViewItem *)inTabViewItem
 {
+    static BOOL haveLoadedImages = NO;
+    
     [super init];
 
-    tabFrontLeft = [[AIImageUtilities imageNamed:@"Tab_Left" forClass:[self class]] retain];
-    tabFrontMiddle = [[AIImageUtilities imageNamed:@"Tab_Middle" forClass:[self class]] retain];
-    tabFrontRight = [[AIImageUtilities imageNamed:@"Tab_Right" forClass:[self class]] retain];
+    //Share these images between all AICustomTabCell instances
+    if(!haveLoadedImages){
+        tabFrontLeft = [[AIImageUtilities imageNamed:@"Tab_Left" forClass:[self class]] retain];
+        tabFrontMiddle = [[AIImageUtilities imageNamed:@"Tab_Middle" forClass:[self class]] retain];
+        tabFrontRight = [[AIImageUtilities imageNamed:@"Tab_Right" forClass:[self class]] retain];
 
-    tabBackLeft = [[AIImageUtilities imageNamed:@"TabMask_Left" forClass:[self class]] retain];
-    tabBackRight = [[AIImageUtilities imageNamed:@"TabMask_Right" forClass:[self class]] retain];
-    tabBackMiddle = [[AIImageUtilities imageNamed:@"TabMask_Middle" forClass:[self class]] retain];
+        tabBackLeft = [[AIImageUtilities imageNamed:@"TabMask_Left" forClass:[self class]] retain];
+        tabBackRight = [[AIImageUtilities imageNamed:@"TabMask_Right" forClass:[self class]] retain];
+        tabBackMiddle = [[AIImageUtilities imageNamed:@"TabMask_Middle" forClass:[self class]] retain];
 
-    tabCloseFront = [[AIImageUtilities imageNamed:@"TabClose_Front" forClass:[self class]] retain];
-    tabCloseBack = [[AIImageUtilities imageNamed:@"TabClose_Back" forClass:[self class]] retain];
-    tabCloseFrontPressed = [[AIImageUtilities imageNamed:@"TabClose_Front_Pressed" forClass:[self class]] retain];
-    
+        tabCloseFront = [[AIImageUtilities imageNamed:@"TabClose_Front" forClass:[self class]] retain];
+        tabCloseBack = [[AIImageUtilities imageNamed:@"TabClose_Back" forClass:[self class]] retain];
+        tabCloseFrontPressed = [[AIImageUtilities imageNamed:@"TabClose_Front_Pressed" forClass:[self class]] retain];
+
+        haveLoadedImages = YES;
+    }
+
     tabViewItem = [inTabViewItem retain];
     selected = NO;
     dragging = NO;
@@ -126,16 +144,6 @@
 {
     [tabViewItem release];
 
-    [tabBackLeft release];
-    [tabBackMiddle release];
-    [tabBackRight release];
-    [tabFrontLeft release];
-    [tabFrontMiddle release];
-    [tabFrontRight release];
-    
-    [tabCloseFront release];
-    [tabCloseBack release];
-    [tabCloseFrontPressed release];
 
     [super dealloc];
 }
@@ -249,8 +257,10 @@
 
 - (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView
 {
+    NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, [self frame].origin.x, [self frame].origin.y);
+
     hoveringClose = YES;
-    [controlView setNeedsDisplay:YES];
+    [controlView setNeedsDisplayInRect:offsetCloseButtonRect];
 
     return(YES);
 }
@@ -262,7 +272,7 @@
 
     if(hoveringClose != hovering){
         hoveringClose = hovering;
-        [controlView setNeedsDisplay:YES];
+        [controlView setNeedsDisplayInRect:offsetCloseButtonRect];
     }
     
     return(YES);
@@ -278,7 +288,7 @@
     }
     
     hoveringClose = NO;
-    [controlView setNeedsDisplay:YES];
+    [controlView setNeedsDisplayInRect:offsetCloseButtonRect];
 }
 
 @end
