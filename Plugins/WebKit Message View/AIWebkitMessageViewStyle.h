@@ -56,14 +56,14 @@ typedef enum {
 
 	//Style settings
 	BOOL				allowsCustomBackground;
-	
+	BOOL				allowsUserIcons;
+
 	//Behavior
 	NSDateFormatter		*timeStampFormatter;
 	NameFormat			nameFormat;
 	BOOL				useCustomNameFormat;
 	BOOL				showUserIcons;
 	BOOL				showHeader;
-	BOOL				allowBackgrounds;
 	BOOL				combineConsecutive;
 	BOOL				allowTextBackgrounds;
 	BOOL				showIncomingFonts;
@@ -87,6 +87,7 @@ typedef enum {
 - (NSString *)defaultFontFamily;
 - (NSNumber *)defaultFontSize;
 - (BOOL)hasHeader;
+- (BOOL)allowsUserIcons;
 
 //Behavior
 - (void)setDateFormat:(NSString *)format;

@@ -98,6 +98,9 @@ DeclareString(AppendNextMessage);
 	combineConsecutive = ![[styleBundle objectForInfoDictionaryKey:@"DisableCombineConsecutive"] boolValue];
 	//allowsTextColors = ![[styleBundle objectForInfoDictionaryKey:@"AllowTextColors"] boolValue];		
 
+	NSNumber *tmpNum = [styleBundle objectForInfoDictionaryKey:@"ShowsUserIcons"];
+	allowsUserIcons = (tmpNum ? [tmpNum boolValue] : YES);
+
 	return(self);
 }
 
@@ -140,6 +143,14 @@ DeclareString(AppendNextMessage);
 - (BOOL)allowsCustomBackground
 {
 	return(allowsCustomBackground);
+}
+
+/*!
+ * @brief Style supports user icons
+ */
+- (BOOL)allowsUserIcons
+{
+	return(allowsUserIcons);
 }
 
 /*!
