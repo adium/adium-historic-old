@@ -87,10 +87,11 @@
 
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
 {
+    NSString    *dateString = [[NSCalendarDate calendarDate] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES]];
 	NSString	*alertText = [[details objectForKey:KEY_ALERT_TEXT] lastPathComponent];
 
     [[adium interfaceController] handleMessage:[listObject displayName]
-							   withDescription:(alertText ? alertText : @"")
+							   withDescription:(alertText ? [NSString stringWithFormat:@"%@: %@", dateString, alertText] : @"")
 							   withWindowTitle:@"Contact Alert"];
 }
 
