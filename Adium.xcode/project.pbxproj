@@ -1453,6 +1453,22 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34306FE3076F53F60025102A = {
+			children = (
+				34E38235068F7F0300303451,
+				4BAA1B3F0632EDDE00D8B92C,
+				34E385FF068FAA5100303451,
+				F5148D9404C8B3BF018B6CC7,
+				344AB2B4057912C500384CEE,
+				342DC48A05783B8D000E1D83,
+				F5AAD085039BA0D301A8010A,
+				343EAB8306EF857F001CDAFF,
+			);
+			isa = PBXGroup;
+			name = "Events and Contact Alerts";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		34327BD6060D2FE6003D7AD9 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1634,6 +1650,7 @@
 			);
 			isa = PBXGroup;
 			name = "Applescript Contact Alert";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -2721,17 +2738,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = ESOpenMessageWindowContactAlertPlugin.m;
 			path = "Plugins/Open Message Window Contact Alert/ESOpenMessageWindowContactAlertPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344AB2C90579137E00384CEE = {
-			children = (
-				344AB2B4057912C500384CEE,
-				342DC48A05783B8D000E1D83,
-			);
-			isa = PBXGroup;
-			name = "Messaging Contact Alerts";
-			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -8384,6 +8390,7 @@
 			);
 			isa = PBXGroup;
 			name = "Message Events";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -8424,6 +8431,7 @@
 			);
 			isa = PBXGroup;
 			name = "Account Events";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -10985,7 +10993,6 @@
 		};
 		4B1332390459BCFA00A8010A = {
 			children = (
-				34E385FF068FAA5100303451,
 				F5B53FBF0333ABA701A8010A,
 				F510B76D03339ED501A8010A,
 				34C188A006CAB36400FF5FF9,
@@ -11007,7 +11014,6 @@
 		4B13323A0459BD3300A8010A = {
 			children = (
 				346E640C05153395003B2F21,
-				F5AAD085039BA0D301A8010A,
 				4B554115044DEFEF00A8010A,
 			);
 			isa = PBXGroup;
@@ -11890,14 +11896,12 @@
 				4B28907503C1D14200A8010A,
 				34C2D31006334A460018E5D2,
 				4B052C9B067E399300A43B4A,
-				F5148D9404C8B3BF018B6CC7,
 				4BD7D0CB04620D8800A8010A,
 				4BB5CBB006EDF04D009B4517,
 				C4382545062E795000F5A31D,
 				4B2DC055066F687100AD5AAD,
 				4BBF41DC06611949001D31E1,
 				4B18A51F0459F89300A8010A,
-				4BAA1B3F0632EDDE00D8B92C,
 				34C18C6106CAE78000FF5FF9,
 				34086A1005E5E17B00ABB759,
 			);
@@ -11909,7 +11913,6 @@
 		};
 		4B4F5B29042D63DC00A8010A = {
 			children = (
-				343EAB8306EF857F001CDAFF,
 				9E6417090613C564006AF387,
 				83DB8F21061145C400A5C28C,
 			);
@@ -11933,9 +11936,7 @@
 				7E824CCD06387FAF00813072,
 				9C8C7FA303CBA17B00267226,
 				F1D0C631051AC2380000000E,
-				344AB2C90579137E00384CEE,
 				6E5A43DC0611604B0078C342,
-				34E38235068F7F0300303451,
 				4BA88A320524A95F00A8010A,
 				34A65AF606A5A0C400898470,
 				4BC8AFD604FD3C1000A8010A,
@@ -22350,7 +22351,7 @@
 				F5148D9604C8B4AA018B6CC7,
 			);
 			isa = PBXGroup;
-			name = "Contact Alerts";
+			name = "Contact Alerts (Get Info window)";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
@@ -23219,6 +23220,7 @@
 				4B1332390459BCFA00A8010A,
 				4B4F5B25042D637700A8010A,
 				3470638906010161004F0D20,
+				34306FE3076F53F60025102A,
 				4B4F5B2A042D63E200A8010A,
 				4B4F5B23042D636700A8010A,
 				4B13323A0459BD3300A8010A,
