@@ -1,7 +1,8 @@
 				Adium X Version History
 				-----------------------
 				
-Version 0.53 (4/27/2004)				
+Version 0.53 (4/30/2004)				
+- Added Webkit Message View (6 Distinct styles, or build your own!  Customizable fonts, backgrounds!) [10.3 only]
 - Added "Novell GroupWise" protocol support
 - Added "Yahoo! Japan" protocol support
 - Added support for custom link titles (Edit->Add Link)
@@ -15,15 +16,6 @@ Version 0.53 (4/27/2004)
 - Added custom hyperlink insertion and editing
 - Added the ability to add messages sent to offline contacts as alerts
 - Added proxy and server connection preferences for "GroupWise," "Trepia," "Gadu-Gadu," and "Napster" protocols
-- Added the new WebKit Message View along with preferences. There are eight built-in styles to choose from, including two resembling the old message view (Retro and Simple). Custom text and background colors (both incoming and outgoing) are not supported yet but will be. If you are interested in designing styles, please read this forum thread by Evan: http://www.funmac.com/showthread.php?t=6519. The current built-in styles are:
-	Elisha by Jeffrey Melloy
-    Minimal by pss from #adium
-    Mockie by Jorge Salvador Caffarena (aka eevyl)
-    Retro by Synotic
-    Sharp by Jorge Salvador Caffarena
-    Simple by Jorge Salvador Caffarena
-    Smooth Operator by Brad Smith
-    Synapse by Scott Meizner
 - Updated /music script to work with Internet streams
 - Improved the 'Add Contact' window
 - Improved appearance of source list gradients
