@@ -18,12 +18,6 @@
 
 @implementation AIContactAlertsPlugin
 
-//basic actions
-- (void) registerBuiltInActions
-{
-
-}
-
 - (void)installPlugin
 {
       AIMiniToolbarItem *toolbarItem;
@@ -38,7 +32,7 @@
 
     //Add our 'contact alerts' toolbar item
     toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"ContactAlerts"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"info" forClass:[self class]]];
+    [toolbarItem setImage:[AIImageUtilities imageNamed:@"alerts" forClass:[self class]]];
     [toolbarItem setTarget:self];
     [toolbarItem setAction:@selector(toolbarContactAlerts:)];
     [toolbarItem setEnabled:YES];
@@ -47,10 +41,6 @@
     [toolbarItem setDelegate:self];
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];    
 
-
-    //Register the 'built-in' actions (the ones within this plugin)
-    [self registerBuiltInActions];
-    
     //Register as a contact observer
     [[owner contactController] registerListObjectObserver:self];
 }
@@ -65,45 +55,92 @@
 
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
-    eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
-    int				away, online, unviewedContent, signedOn, signedOff, typing;
-    double			idle;
+    NSMutableArray * eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
+    int num_actions = [eventActionArray count];
+    NSEnumerator * actionsEnumerator;
+    NSDictionary * actionDict;
+    NSString * action;
+    NSString * event;
 
-    //Get all the values
-    away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
-    idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
-    online = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
-    signedOn = [[inObject statusArrayForKey:@"Signed On"] greatestIntegerValue];
-    signedOff = [[inObject statusArrayForKey:@"Signed Off"] greatestIntegerValue];
-    typing = [[inObject statusArrayForKey:@"Typing"] greatestIntegerValue];
-    unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
-    
-   // [[owner soundController] playSoundAtPath:[soundPathDict objectForKey:[notification name]]];
-    return nil;
+    actionsEnumerator = [eventActionArray objectEnumerator];
+    while(actionDict = [actionsEnumerator nextObject])
+    {
+        event = [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
+        if ([inModifiedKeys containsObject:event] && [[inObject statusArrayForKey:event] greatestIntegerValue])
+        { //actions to take when an event is matched go here
+
+            action = [actionDict objectForKey:KEY_EVENT_ACTION];
+
+            if ([action compare:@"Sound"] == 0)
+            {
+                NSString	*soundPath = [actionDict objectForKey:KEY_EVENT_DETAILS];
+                if(soundPath != nil && [soundPath length] != 0) {
+                    [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
+                }
+            }
+
+            else if ([action compare:@"Message"] == 0)
+            { //message
+                NSMutableArray * onlineAccounts = [NSMutableArray array];
+                NSEnumerator * accountEnumerator;
+                AIAccount * account;
+                AIContentMessage * responseContent;
+                
+                accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+                while(account = [accountEnumerator nextObject]){
+                    if ([[account statusObjectForKey:@"Status"] intValue] == STATUS_ONLINE)
+                    {
+                        [onlineAccounts addObject:account];
+                    }
+                }
+                account = [onlineAccounts objectAtIndex:0];
+
+                NSAttributedString  *message = [[NSAttributedString alloc] initWithString:[actionDict objectForKey:KEY_EVENT_DETAILS]];
+//                NSLog(@"sending with %@",[account accountDescription]);
+                 responseContent = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:inObject onAccount:account]
+                                                       withSource:account
+                                                      destination:inObject
+                                                             date:nil
+                                                          message:message];
+                [[owner contentController] sendContentObject:responseContent];
+            }
+        }
+    }
+    return nil; //we don't change any attributes
 }
 
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+    BOOL valid = YES;
+    if(menuItem == editContactAlertsMenuItem){
 
+        AIListContact	*selectedContact = [[owner contactController] selectedContact];
 
-
+        if(selectedContact){
+            [editContactAlertsMenuItem setTitle:[NSString stringWithFormat:@"Edit %@'s Alerts",[selectedContact displayName]]];
+        }else{
+            [editContactAlertsMenuItem setTitle:@"Edit Contact's Alerts"];
+            valid = NO;
+        }
+    }else if(menuItem == contactAlertsContextMenuItem){
+        NSLog(@"checking context...");
+        return([[owner menuController] contactualMenuContact] != nil);
+    }
+    NSLog(@"%@",menuItem);
+    return(valid);
+}
 
 - (IBAction)editContactAlerts:(id)sender
 {
     [AIContactAlertsWindowController showContactAlertsWindowWithOwner:owner
-                                         forContact:[[owner contactController] selectedContact]];
+                                                           forContact:[[owner contactController] selectedContact]];
 }
 
 - (IBAction)editContextContactAlerts:(id)sender
 {
     [AIContactAlertsWindowController showContactAlertsWindowWithOwner:owner
-                                         forContact:[[owner menuController] contactualMenuContact]];
+                                                           forContact:[[owner menuController] contactualMenuContact]];
 }
-
-// Specific actions can be given a human-readable name and registered
-- (void)registerAction:(NSString *)inNotification displayName:(NSString *)displayName
-{
-    [eventActionsDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:inNotification, KEY_EVENT_NOTIFICATION, displayName, KEY_EVENT_DISPLAY_NAME, nil] forKey:inNotification];
-}
-
 
 - (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
 {
@@ -122,8 +159,10 @@
     AIListContact		*object = [objects objectForKey:@"ContactObject"];
 
     if([object isKindOfClass:[AIListContact class]]){
-        //Show the profile window
+        //Show the window
         [AIContactAlertsWindowController showContactAlertsWindowWithOwner:owner forContact:object];
     }
 }
+
+
 @end
