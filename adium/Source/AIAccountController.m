@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.83 2004/05/24 06:04:02 evands Exp $
+// $Id: AIAccountController.m,v 1.84 2004/06/04 06:58:22 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -52,7 +52,8 @@
     accountArray = nil;
     lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
     sleepingOnlineAccounts = nil;
-    
+    enableAccountSaving = YES;
+	
 	//Default account preferences
 	[[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
 										  forGroup:PREF_GROUP_ACCOUNTS];
@@ -115,14 +116,17 @@
 //Loads the saved accounts
 - (void)loadAccounts
 {
+    NSArray			*accountList;
 	NSEnumerator	*enumerator;
 	NSDictionary	*accountDict;
-    
+
 	//Close down any existing accounts
 	[accountArray release]; accountArray = [[NSMutableArray alloc] init];
 		
+	accountList = [[owner preferenceController] preferenceForKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
+	
     //Create an instance of every saved account
-	enumerator = [[[owner preferenceController] preferenceForKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS] objectEnumerator];
+	enumerator = [accountList objectEnumerator];
 	while(accountDict = [enumerator nextObject]){
         AIAccount		*newAccount;
         NSString		*serviceType;
@@ -142,6 +146,12 @@
         }
     }
 	
+	//If we ran into some sort of error, don't save accounts (for dev builds) and throw an assertion
+	if ([accountList count] != [accountArray count]){
+		enableAccountSaving = NO;
+		NSAssert(([accountList count] == [accountArray count]), @"Error loading accounts. If you add an account plugin, be sure to remove associated accounts before removing the plugin.  If you are building from CVS, please try a clean build.");
+	}
+	
 	//Broadcast an account list changed notification
     [[owner notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
 }
@@ -149,28 +159,30 @@
 //Save the accounts
 - (void)saveAccounts
 {
-	NSMutableArray	*flatAccounts = [NSMutableArray array];
-	NSEnumerator	*enumerator;
-	AIAccount		*account;
-	
-	//Build a flattened array of the accounts
-	enumerator = [accountArray objectEnumerator];
-	while(account = [enumerator nextObject]){
-		NSMutableDictionary		*flatAccount = [NSMutableDictionary dictionary];
+	if (enableAccountSaving){
+		NSMutableArray	*flatAccounts = [NSMutableArray array];
+		NSEnumerator	*enumerator;
+		AIAccount		*account;
 		
-		[flatAccount setObject:[[account service] identifier] forKey:ACCOUNT_TYPE]; //Unique plugin ID
-		[flatAccount setObject:[account serviceID] forKey:ACCOUNT_SERVICE];	    	//Shared service ID
-		[flatAccount setObject:[account UID] forKey:ACCOUNT_UID];		    		//Account UID
-		[flatAccount setObject:[account uniqueObjectID] forKey:ACCOUNT_OBJECT_ID];  //Account Object ID
+		//Build a flattened array of the accounts
+		enumerator = [accountArray objectEnumerator];
+		while(account = [enumerator nextObject]){
+			NSMutableDictionary		*flatAccount = [NSMutableDictionary dictionary];
+			
+			[flatAccount setObject:[[account service] identifier] forKey:ACCOUNT_TYPE]; //Unique plugin ID
+			[flatAccount setObject:[account serviceID] forKey:ACCOUNT_SERVICE];	    	//Shared service ID
+			[flatAccount setObject:[account UID] forKey:ACCOUNT_UID];		    		//Account UID
+			[flatAccount setObject:[account uniqueObjectID] forKey:ACCOUNT_OBJECT_ID];  //Account Object ID
+			
+			[flatAccounts addObject:flatAccount];
+		}
 		
-		[flatAccounts addObject:flatAccount];
+		//Save
+		[[owner preferenceController] setPreference:flatAccounts forKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
+		
+		//Broadcast an account list changed notification
+		[[owner notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
 	}
-	
-	//Save
-	[[owner preferenceController] setPreference:flatAccounts forKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
-
-	//Broadcast an account list changed notification
-    [[owner notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
 }
 
 //Returns a new account of the specified type (Unique service plugin ID)
