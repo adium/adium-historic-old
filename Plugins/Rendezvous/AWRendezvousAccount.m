@@ -298,8 +298,11 @@
 		[libezv sendMessage:message 
 						 to:to 
 				   withHtml:htmlMessage];
+
+		[[adium contentController] didSendContentObject:object];
+
 		sent = YES;
-		
+
     } else if([[object type] isEqualToString:CONTENT_TYPING_TYPE]) {
 		AIContentTyping *contentTyping = (AIContentTyping*)object;
 		AIChat			*chat = [contentTyping chat];
