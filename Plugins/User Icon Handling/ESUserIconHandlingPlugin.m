@@ -57,10 +57,11 @@
 				NSImage				*cachedImage = [[[NSImage alloc] initByReferencingFile:cachedImagePath] autorelease];
 				
 				if (cachedImage) {
+					
 					//A cache image is used at lowest priority, since it is outdated data
-					[[inObject displayArrayForKey:KEY_USER_ICON] setObject:cachedImage
-																 withOwner:self
-															 priorityLevel:Lowest_Priority];
+					[inObject setDisplayUserIcon:cachedImage
+									   withOwner:self
+								   priorityLevel:Lowest_Priority];
 					[inObject setStatusObject:cachedImagePath
 									   forKey:@"UserIconPath"
 									   notify:YES];
@@ -70,16 +71,16 @@
 		
 	}else if([inModifiedKeys containsObject:KEY_USER_ICON]){
 		//The status UserIcon object is set by account code; apply this to the display array and cache it if necesssary
-		AIMutableOwnerArray *userIconDisplayArray = [inObject displayArrayForKey:KEY_USER_ICON];
+		NSImage				*userIcon;
 		NSImage				*statusUserIcon = [inObject statusObjectForKey:KEY_USER_ICON];
 		
 		//Apply the image at medium priority
-		[userIconDisplayArray setObject:statusUserIcon 
-							  withOwner:self
-						  priorityLevel:Medium_Priority];
+		[inObject setDisplayUserIcon:statusUserIcon
+						   withOwner:self
+					   priorityLevel:Medium_Priority];
 		
 		//If the new objectValue is what we just set, notify and cache
-		NSImage				*userIcon = [userIconDisplayArray objectValue];
+		userIcon = [inObject displayUserIcon];
 
 		if (userIcon == statusUserIcon){
 			//Cache using the raw data if possible, otherwise create a TIFF representation to cache
@@ -132,29 +133,19 @@
 	NSData  *imageData = [inObject preferenceForKey:KEY_USER_ICON 
 											  group:PREF_GROUP_USERICONS
 							  ignoreInheritedValues:YES];
-	if (imageData){
-		//Cache the image to disk for use elsewhere
-		[self _cacheUserIconData:imageData forObject:inObject];
-		
-		//A preference is used at highest priority
-		[[inObject displayArrayForKey:KEY_USER_ICON] setObject:[[[NSImage alloc] initWithData:imageData] autorelease]
-													 withOwner:self
-												 priorityLevel:Highest_Priority];
-	}else{
-		//A preference is used at highest priority
-		AIMutableOwnerArray *userIconDisplayArray = [inObject displayArrayForKey:KEY_USER_ICON create:NO];
-		if (userIconDisplayArray){
-			[userIconDisplayArray setObject:nil
-								  withOwner:self];
-			
-			//This will trigger a call to - (void)listObjectAttributesChanged:(NSNotification *)notification
-			//leading to an update of our icon cache
-			[[adium contactController] listObjectAttributesChanged:inObject
-													  modifiedKeys:[NSArray arrayWithObject:KEY_USER_ICON]];
-		}
-	}
 	
-	return (imageData != nil);
+	//A preference is used at highest priority
+	if (imageData){
+		[inObject setDisplayUserIcon:[[[NSImage alloc] initWithData:imageData] autorelease]
+						   withOwner:self
+					   priorityLevel:Highest_Priority];
+		return YES;
+	}else{
+		[inObject setDisplayUserIcon:nil
+						   withOwner:self
+					   priorityLevel:Highest_Priority];
+		return NO;
+	}
 }
 
 /*
