@@ -35,6 +35,7 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 - (NSArray *)_emoticonsPacksAvailableAtPath:(NSString *)inPath;
 - (NSMutableAttributedString *)_convertEmoticonsInMessage:(NSAttributedString *)inMessage;
+- (NSString *)_logestReplacement:(NSDictionary *)inDict;
 - (void)_buildCharacterSetsAndIndexEmoticons;
 - (void)_saveActiveEmoticonPacks;
 - (void)_saveEmoticonPackOrdering;
@@ -144,14 +145,11 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     while(currentLocation != NSNotFound && currentLocation < [messageString length]){
         //Find the next occurence of a suspected emoticon
         currentLocation = [messageString rangeOfCharacterFromSet:emoticonStartCharacterSet
-														 options:0 
-														   range:NSMakeRange(currentLocation, [messageString length] - currentLocation)].location;
-        NSScanner   *tokenScanner = [NSScanner scannerWithString:[messageString string]];
-        [tokenScanner setScanLocation:currentLocation];
-        [tokenScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:nil];
+                                                         options:0 
+                                                           range:NSMakeRange(currentLocation, [messageString length] - currentLocation)].location;
+
         
-        int emoticonLength = [tokenScanner scanLocation] - currentLocation;
-        
+        NSMutableDictionary  *possibleReplacements = [[NSMutableDictionary alloc] init];
         if(currentLocation != NSNotFound){
             unichar         currentCharacter = [messageString characterAtIndex:currentLocation];
             NSString        *currentCharacterString = [NSString stringWithFormat:@"%C", currentCharacter];
@@ -167,48 +165,64 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
                 textEnumerator = [[emoticon textEquivalents] objectEnumerator];
                 while(text = [textEnumerator nextObject]){
                     int     textLength = [text length];
-                    
-                    NSLog(text);
 
                     if(textLength != 0){ //Invalid emoticon files may let empty text equivalents sneak in
                         //If there is not enough room in the string for this text, we can skip it
-                        if(currentLocation + [text length] <= [messageString length] && [text length] == emoticonLength){
+                        if(currentLocation + [text length] <= [messageString length]){
                             if([messageString compare:text options:0 range:NSMakeRange(currentLocation, textLength)] == 0){
                                 //Ignore emoticons within links
                                 if([inMessage attribute:NSLinkAttributeName atIndex:currentLocation effectiveRange:nil] == nil){
-                                    NSMutableAttributedString   *replacement = [emoticon attributedStringWithTextEquivalent:text];
-                                    
-                                    //grab the original attributes, to ensure that the background is not lost in a message consisting only of an emoticon
-                                    [replacement addAttributes:[inMessage attributesAtIndex:currentLocation 
-																			 effectiveRange:nil] 
-														 range:NSMakeRange(0,1)];
-                                    
-                                    //insert the emoticon
-                                    if(!newMessage) newMessage = [[inMessage mutableCopy] autorelease];
-                                    [newMessage replaceCharactersInRange:NSMakeRange(currentLocation - replacementCount, textLength)
-													withAttributedString:replacement];
-                                    
-                                    //Update where we are in the original and replacement messages
-                                    replacementCount += textLength-1;
-                                    currentLocation += textLength-1;
-        
-                                    //Invalidate the enumerators to stop scanning prematurely
-                                    textEnumerator = nil; emoticonEnumerator = nil;
+                                    if(![possibleReplacements objectForKey:text])
+                                        [possibleReplacements setObject:emoticon forKey:text];
                                 }
                             }
                         }
                     }
-                    
                 }
             }
-            
+            if([possibleReplacements count]){
+                NSString    *replacementString = [self _logestReplacement:possibleReplacements];
+                int textLength = [replacementString length];
+                AIEmoticon  *emoticon = [possibleReplacements objectForKey:replacementString];
+                NSMutableAttributedString   *replacement = [emoticon attributedStringWithTextEquivalent:replacementString];
+                                    
+                //grab the original attributes, to ensure that the background is not lost in a message consisting only of an emoticon
+                [replacement addAttributes:[inMessage attributesAtIndex:currentLocation 
+                                                         effectiveRange:nil] 
+                                                                  range:NSMakeRange(0,1)];
+                                    
+                //insert the emoticon
+                if(!newMessage) newMessage = [[inMessage mutableCopy] autorelease];
+                [newMessage replaceCharactersInRange:NSMakeRange(currentLocation - replacementCount, textLength)
+                                withAttributedString:replacement];
+                                    
+                //Update where we are in the original and replacement messages
+                replacementCount += textLength-1;
+                currentLocation += textLength-1;
+        
+                //Invalidate the enumerators to stop scanning prematurely
+                //textEnumerator = nil; emoticonEnumerator = nil;
+            }
         }
+
         
         //Move to the next possible location of an emoticon
         currentLocation++;
     }
     
     return(newMessage ? newMessage : inMessage);
+}
+
+- (NSString *)_logestReplacement:(NSDictionary *)inDict
+{
+    NSString *replacement = nil, *temp = nil;
+    NSEnumerator    *enumerator = [inDict keyEnumerator];
+    while(temp = [enumerator nextObject]){
+        if(nil == replacement || [temp length] > [replacement length]){
+            replacement = temp;
+        }
+    }
+    return replacement;
 }
 
 #pragma mark Active emoticons
