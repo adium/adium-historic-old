@@ -21,6 +21,8 @@
 {
     [super init];
 
+	chat = nil;
+	
 	NSString	*nibName = [self nibName];
 	if (nibName){
 		[NSBundle loadNibNamed:nibName owner:self];
