@@ -87,7 +87,6 @@ typedef enum {
 - (void)setUseCustomNameFormat:(BOOL)inValue;
 - (void)setNameFormat:(int)inValue;
 - (void)setAllowTextBackgrounds:(BOOL)inValue;
-- (void)setCombineConsecutive:(BOOL)inValue;					
 - (void)setCustomBackgroundPath:(NSString *)inPath;
 - (void)setCustomBackgroundColor:(NSColor *)inColor;
 - (void)setShowIncomingMessageColors:(BOOL)inValue;
