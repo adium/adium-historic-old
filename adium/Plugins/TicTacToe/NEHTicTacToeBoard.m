@@ -74,10 +74,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //initialise the board and game state.
 - (void)newGame
 {
+	unsigned int i, j;
 	currentPlayer = PLAYER_X;
 
-	for(unsigned i = 0; i < boardSize; i++) {
-		for(unsigned j = 0; j < boardSize; j++) {
+	for(i = 0; i < boardSize; i++) {
+		for(j = 0; j < boardSize; j++) {
 			board[i][j] = PLAYER_NONE;
 		}
 	}

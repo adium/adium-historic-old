@@ -159,8 +159,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 - (void)clearBoard
 {
-	for(int i = 0; i < 3; i++) {
-		for(int j = 0; j < 3; j++) {
+	int i, j;
+	
+	for(i = 0; i < 3; i++) {
+		for(j = 0; j < 3; j++) {
 			[[squares cellAtRow:i column:j] setImage:nil];
 		}
 	}
