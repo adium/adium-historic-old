@@ -600,7 +600,6 @@
 
 - (void)chatParticipantsChanged:(NSNotification *)notification
 {
-	NSLog(@"#### chatParticipantsChanged: chat = %@, notification object = %@",chat,[notification object]);
 	if( [notification object] == chat )
 		[tableView_userList reloadData];
 }
