@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.45 2004/04/20 06:26:32 evands Exp $
+//$Id: AIPluginController.m,v 1.46 2004/04/20 15:58:22 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -21,10 +21,11 @@
 #define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"			//File extension of a plugin
 
 #define WEBKIT_PLUGIN					@"Webkit Message View.AdiumPlugin"
+#define CONFIRMED_PLUGINS				@"Confirmed Plugins"
 
 @interface AIPluginController (PRIVATE)
 - (void)unloadPlugins;
-- (void)loadPluginsFromPath:(NSString *)pluginPath;
+- (void)loadPluginsFromPath:(NSString *)pluginPath confirmLoading:(BOOL)confirmLoading;
 - (void)loadPluginWithClass:(Class)inClass;
 @end
 
@@ -129,8 +130,8 @@ SHOutputDeviceControlPlugin;
 //	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
 #endif
 	
-	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath]];
-	[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath]];
+	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath] confirmLoading:NO];
+	[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath] confirmLoading:YES];
 }
 
 //close
@@ -160,7 +161,7 @@ SHOutputDeviceControlPlugin;
 }
 
 //Load all the plugins
-- (void)loadPluginsFromPath:(NSString *)pluginPath
+- (void)loadPluginsFromPath:(NSString *)pluginPath confirmLoading:(BOOL)confirmLoading
 {
     NSArray		*pluginList;
     int			loop;
@@ -177,6 +178,39 @@ SHOutputDeviceControlPlugin;
 	    pluginName = [pluginList objectAtIndex:loop];
 	    //NSLog (@"Loading plugin: \"%@\"", pluginName);
 	    if([[pluginName pathExtension] caseInsensitiveCompare:EXTENSION_ADIUM_PLUGIN] == 0){
+
+			//
+			if(confirmLoading){
+				NSArray	*confirmed = [[NSUserDefaults standardUserDefaults] objectForKey:CONFIRMED_PLUGINS];
+				
+				if(![confirmed containsObject:pluginName]){
+					//If we haven't prompted for this plugin yet
+					if(NSRunInformationalAlertPanel(@"Custom Plugin Detected",
+													[NSString stringWithFormat:@"You have a custom plugin (%@) installed in ~/Library/Application Support/Adium 2.0/Plugins\r\rIf you experience any crashes or odd behavior, please disable or remove this plugin.", pluginName],
+													@"Okay", 
+													@"Disable",
+													nil) == NSAlertAlternateReturn){
+						
+						//Disable the plugin
+						NSString	*disabledPath = [[pluginPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Plugins (Disabled)"];
+						NSString	*sourcePath = [pluginPath stringByAppendingPathComponent:pluginName];
+						NSString	*destPath = [disabledPath stringByAppendingPathComponent:pluginName];
+						
+						[AIFileUtilities createDirectory:disabledPath];
+						[[NSFileManager defaultManager] movePath:sourcePath toPath:destPath handler:nil];
+
+					}else{
+						//Add this plugin to our confirmed list
+						NSMutableArray	*newConfirmed = [[confirmed mutableCopy] autorelease];
+						if(!newConfirmed) newConfirmed = [NSMutableArray array];
+						[newConfirmed addObject:pluginName];
+						[[NSUserDefaults standardUserDefaults] setObject:newConfirmed forKey:CONFIRMED_PLUGINS];	
+
+					}
+				}
+			}
+
+			
 			NS_DURING
 				//Load the plugin; if the plugin is hte webkit plugin, verify webkit is available first
 				if ((![pluginName isEqualToString:WEBKIT_PLUGIN] || [NSApp isWebKitAvailable])){
