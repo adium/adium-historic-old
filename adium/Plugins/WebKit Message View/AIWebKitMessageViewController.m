@@ -16,7 +16,7 @@
 @implementation AIWebKitMessageViewController
 
 //Create a new message view
-+ (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat
++ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat
 {
     return([[[self alloc] initForChat:inChat] autorelease]);
 }
