@@ -1159,19 +1159,10 @@ static id<GaimThread> gaimThread = nil;
 	[self notifyOfChangedStatusSilently:NO];
 }
 
-//Account is finishing login
-- (oneway void)accountFinishLogin
-{
-	NSLog(@"finish login!");
-	[self updateStatusForKey:@"AwayMessage"];
-	[self updateStatusForKey:@"IdleSince"];
-}
-
 - (void)createNewGaimAccount
 {
 	//Create a fresh version of the account
     account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
-	NSLog(@"creating gaim account");
 	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
 	
     gaim_accounts_add(account);

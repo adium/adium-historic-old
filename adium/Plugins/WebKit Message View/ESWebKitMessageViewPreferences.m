@@ -131,11 +131,6 @@
 {
     [[adium notificationCenter] removeObserver:self];
 	
-	//Stop being the webView's baby's daddy; the webView may attempt callbacks shortly after we close
-	[preview setFrameLoadDelegate:nil];
-	[preview setPolicyDelegate:nil];
-	[preview setUIDelegate:nil];
-	
 	[previewListObjectsDict release]; previewListObjectsDict = nil;
 	[previousContent release]; previousContent = nil;
 	[newContent release]; newContent = nil;
