@@ -169,18 +169,33 @@ DeclareString(FormattedUID);
 
 //Dynamic Status and Display -------------------------------------------------------------------------------------------
 #pragma mark Dynamic Status and Display
-//Access to the display arrays for this object
+//Access to the display arrays for this object.  Will alloc and init an array if none exists.
 - (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey
 {
     AIMutableOwnerArray	*array = [displayDictionary objectForKey:inKey];
-
+	
     if(!array){
         array = [[AIMutableOwnerArray alloc] init];
         [displayDictionary setObject:array forKey:inKey];
         [array release];
     }
-
+	
     return(array);
+}
+
+//With create:YES, this is identical to displayArrayForKey:
+//With create:NO, just perform the lookup and return either a mutableOwnerArray or nil
+- (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey create:(BOOL)create
+{
+	AIMutableOwnerArray	*array;
+	
+	if (create){
+		array = [self displayArrayForKey:inKey];
+	}else{
+		array = [displayDictionary objectForKey:inKey];
+	}
+	
+	return array;
 }
 
 //Quickly set a status key for this object

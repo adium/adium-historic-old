@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.60 2004/06/06 09:26:02 evands Exp $
+// $Id: AIAccount.m,v 1.61 2004/06/07 05:56:03 evands Exp $
 
 #import "AIAccount.h"
 
@@ -264,8 +264,6 @@
 {
 	NSAttributedString	*originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS] attributedString];
 	NSAttributedString  *filteredValue = nil;
-    BOOL 				refreshPeriodically;
-	NSData				*data;
 	
 	//Filter the content
 	filteredValue = [[adium contentController] filterAttributedString:originalValue
