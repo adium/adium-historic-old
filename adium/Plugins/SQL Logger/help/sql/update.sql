@@ -6,39 +6,11 @@
  *
  */
  
-create or replace view adium.message_v as
-select message_id,
-       message_date,
-       message,
-       s.username as sender_sn,
-       s.service as sender_service,
-       s_disp.display_name as sender_display,
-       r.username as recipient_sn,
-       r.service as recipient_service,
-       r_disp.display_name as recipient_display
-from   adium.messages m,
-       adium.users s natural join adium.user_display_name s_disp,
-       adium.users r natural join adium.user_display_name r_disp
-where  m.sender_id = s.user_id
-  and  m.recipient_id = r.user_id
-  and  s_disp.effdate <= message_date
-  and  not exists (
-       select 'x'
-       from   adium.user_display_name udn
-       where  udn.effdate > s_disp.effdate
-       and    udn.user_id = s.user_id
-       and    udn.effdate <= message_date)
-  and  r_disp.effdate <= message_date
-  and  not exists (
-       select 'x'
-       from   adium.user_display_name udn
-       where  udn.effdate > r_disp.effdate
-       and    udn.user_id = r.user_id
-       and    udn.effdate <= message_date);
-
 create or replace rule insert_message_v as
 on insert to adium.message_v
 do instead  (
+    
+    -- Usernames
     
     insert into adium.users (username,service)
     select new.sender_sn, coalesce(new.sender_service, 'AIM')
@@ -56,6 +28,7 @@ do instead  (
         where username = new.recipient_sn
         and service = coalesce(new.recipient_service, 'AIM'));
 
+    -- Display Names
     insert into adium.user_display_name
     (user_id, display_name)
     select user_id, new.sender_display
@@ -65,10 +38,15 @@ do instead  (
     and new.sender_display <> ''
     and not exists (
         select 'x'
-        from   user_display_name
+        from   user_display_name udn
         where  user_id = 
                (select user_id from users where username = new.sender_sn)
-        and    display_name = new.sender_display);
+        and    display_name = new.sender_display
+        and not exists (
+            select 'x'
+            from adium.user_display_name
+            where effdate > udn.effdate
+            and user_id = udn.user_id));
 
     insert into adium.user_display_name
     (user_id, display_name)
@@ -79,11 +57,17 @@ do instead  (
     and new.recipient_display <> ''
     and not exists (
         select 'x'
-        from   user_display_name
+        from   user_display_name udn
         where  user_id = 
                (select user_id from users where username = new.recipient_sn)
-        and    display_name = new.recipient_display);
+        and    display_name = new.recipient_display
+        and not exists (
+            select 'x'
+            from   user_display_name
+            where  effdate > udn.effdate
+             and   user_id = udn.user_id));
 
+    -- The mesage
     insert into adium.messages
         (message,sender_id,recipient_id, message_date)
     values (new.message,
@@ -94,6 +78,7 @@ do instead  (
     coalesce(new.message_date, now() )
     );
 
+    -- Updating statistics
     update adium.user_statistics
     set num_messages = num_messages + 1,
     last_message = CURRENT_TIMESTAMP
@@ -102,6 +87,7 @@ do instead  (
     and recipient_id = (select user_id from users where username =
     new.recipient_sn and service = new.recipient_service);
 
+    -- Inserting statistics if none exist
     insert into adium.user_statistics
     (sender_id, recipient_id, num_messages)
     select

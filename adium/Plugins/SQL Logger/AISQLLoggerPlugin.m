@@ -153,7 +153,7 @@
         if (res) {
             PQclear(res);
         }
-        /*
+        
         if (PQresultStatus(res) == PGRES_NONFATAL_ERROR) {
             PQfinish(conn);
             conn = PQconnectdb("");
@@ -165,7 +165,6 @@
                 NSLog(@"Connection to PostgreSQL successfully made.");
             }
         }
-        */
     }
     if(res) {
         PQclear(res);
