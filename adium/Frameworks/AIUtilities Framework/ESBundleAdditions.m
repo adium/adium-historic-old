@@ -7,7 +7,6 @@
 
 #import "ESBundleAdditions.h"
 
-
 @implementation NSBundle (ESBundleAdditions)
 
 - (NSString *)name
@@ -16,11 +15,11 @@
 	NSString		*label = [info objectForKey:@"CFBundleName"];
 	
 	if (!label){
-		label = [bundle objectForInfoDictionaryKey:@"CFBundleName"];
+		label = [self objectForInfoDictionaryKey:@"CFBundleName"];
 	}
 	
 	if (!label){
-		label = [bundle bundleIdentifier];
+		label = [self bundleIdentifier];
 	}
 	
 	return label;
