@@ -7,7 +7,7 @@
 
 #import "ESFastUserSwitchingSupportPlugin.h"
 
-#define FAST_USER_SWITCH_AWAY_STRING @"I have switched logged in users. Someone else may be using the computer."
+#define FAST_USER_SWITCH_AWAY_STRING AILocalizedString(@"I have switched logged in users. Someone else may be using the computer.","Fast user switching away message")
 
 @implementation ESFastUserSwitchingSupportPlugin
 - (void)installPlugin
@@ -15,7 +15,8 @@
     if([NSApp isOnPantherOrBetter]) //only install on Panther
     {
         setAwayThroughFastUserSwitch = NO;
-        
+        setMuteThroughFastUserSwitch = NO;
+		
         [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
                                                             selector:@selector(switchHandler:) 
                                                                 name:NSWorkspaceSessionDidBecomeActiveNotification 
@@ -30,7 +31,7 @@
 
 -(void)uninstallPlugin
 {
-
+	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 }
 
 -(void)switchHandler:(NSNotification*) notification
@@ -42,11 +43,23 @@
         if ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil)
         {
             NSAttributedString *away = [[NSAttributedString alloc] initWithString:FAST_USER_SWITCH_AWAY_STRING];
+            [[adium preferenceController] setPreference:[away dataRepresentation] 
+												 forKey:@"AwayMessage"
+												  group:GROUP_ACCOUNT_STATUS];
             [[adium preferenceController] setPreference:[away dataRepresentation] forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
-			[[adium preferenceController] setPreference:[away dataRepresentation] forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
+//			[[adium preferenceController] setPreference:[away dataRepresentation] forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
 			[away release];
             setAwayThroughFastUserSwitch = YES;
         }
+		
+		//Set a temporary mute if none already exists
+		NSNumber *oldTempMute = [[adium preferenceController] preferenceForKey:KEY_SOUND_TEMPORARY_MUTE group:GROUP_GENERAL];
+		if (!oldTempMute || ![oldTempMute boolValue]) {
+			[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES] 
+												 forKey:KEY_SOUND_TEMPORARY_MUTE
+												  group:GROUP_GENERAL];
+			setMuteThroughFastUserSwitch = YES;
+		}
     }
     else    //Activation
     {
@@ -57,6 +70,13 @@
             [[adium preferenceController] setPreference:nil forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
             setAwayThroughFastUserSwitch = NO;
         }
+		
+		//Clear the temporary mute if necessary
+		if (setMuteThroughFastUserSwitch) {
+			[[adium preferenceController] setPreference:nil
+												 forKey:KEY_SOUND_TEMPORARY_MUTE
+												  group:GROUP_GENERAL];
+		}
     }    
 }
 
