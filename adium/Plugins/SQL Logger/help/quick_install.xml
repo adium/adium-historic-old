@@ -62,7 +62,9 @@ postgres $] /usr/local/bin/initdb -D /usr/local/pgsql/data</pre></div>
   be edited.  Type <code>pico /usr/local/pgsql/data/postgresql.conf</code> (as
   postgres or root) and change the line that says <code>tcpip_socket</code> to
   true.  If the line starts with #, remove the hash.</p>
-<p>Now Postgres is ready to be started.</p>
+<p>Now Postgres is ready to be started.  URERNAME refers to your unix
+  username, which is also known as your short name.  The prompt should say
+  your unix username.</p>
 <div class="tutorialcode"><pre>postgres $] /usr/local/bin/pg_ctl -D /usr/local/pgsql/data \
     -l /usr/local/pgsql/logfile start
 postgres $] createlang plpgsql template1
