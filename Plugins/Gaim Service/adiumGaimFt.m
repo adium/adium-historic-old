@@ -37,9 +37,7 @@ static void adiumGaimAddXfer(GaimXfer *xfer)
 }
 
 static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
-{
-	//	GaimDebug (@"Transfer update: %s is now %f%% done",(xfer->filename ? xfer->filename : ""),(percent*100));
-	
+{	
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
 	
 	if (fileTransfer){

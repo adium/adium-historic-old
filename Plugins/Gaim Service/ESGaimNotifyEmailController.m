@@ -151,7 +151,7 @@
 /*!
  * @brief Window was closed, either by a button being clicked or the user closing it
  */
-+ (void)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
++ (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
 {
 	switch(returnCode){
 		case AITextAndButtonsAlternateReturn:
@@ -163,7 +163,9 @@
 		case AITextAndButtonsClosedWithoutResponse:
 			//No action needed
 			break;
-	}	
+	}
+	
+	return YES;
 }
 
 /*!

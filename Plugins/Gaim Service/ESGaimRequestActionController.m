@@ -66,7 +66,7 @@
 	[controller setAllowsCloseWithoutResponse:NO];
 }
 
-+ (void)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
++ (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
 {
 	GCallback		*theCallBacks;
 	unsigned int	actionCount;
@@ -79,22 +79,18 @@
 		
 	switch(returnCode){
 		case AITextAndButtonsDefaultReturn:
-			NSLog(@"Default");
 			callBackIndex = (actionCount - 1);
 			break;
 			
 		case AITextAndButtonsAlternateReturn:
-			NSLog(@"Alternate");
 			callBackIndex = (actionCount - 2);
 			break;
 
 		case AITextAndButtonsOtherReturn:
-			NSLog(@"Other");
 			callBackIndex = (actionCount - 3);
 			break;
 			
 		case AITextAndButtonsClosedWithoutResponse:
-			NSLog(@"Should not have gotten here!");
 			break;
 	}
 
@@ -107,6 +103,8 @@
 	}else{
 		NSLog(@"Failure.");
 	}
+	
+	return YES;
 }
 
 + (oneway void)gaimThreadDoRequestActionCbValue:(NSValue *)callBackValue
