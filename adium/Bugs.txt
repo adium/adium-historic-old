@@ -1,9 +1,6 @@
 //-------------------------------------------------------------------------------------------------------
 // Bugs - Adium
 //-------------------------------------------------------------------------------------------------------
-- "Custom..." sound option is not working.
-	The user is prompted for a custom sound, but it doesn't appear in the menu and doesn't save.
-
 - Short emoticons mask longer ones
 	For instance, :) prevents :)) from working.  A solution to this would be shorting all the text
 	equivelants from longest to shortest, but the way we store emoticons makes this impossible.
