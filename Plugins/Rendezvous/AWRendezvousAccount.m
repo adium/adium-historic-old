@@ -154,9 +154,11 @@
 		//Only set the new date object if the time interval has changed
 		if ([[listContact statusObjectForKey:@"IdleSince"] timeIntervalSinceDate:idleSinceDate] != 0){
 			[listContact setStatusObject:idleSinceDate forKey:@"IdleSince" notify:NO];
+			[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"IsIdle" notify:NO];
 		}
 	}else{
 		[listContact setStatusObject:nil forKey:@"IdleSince" notify:NO];
+		[listContact setStatusObject:nil forKey:@"IsIdle" notify:NO];
 	}
 	
     if (statusMessage = [contact statusMessage]){
