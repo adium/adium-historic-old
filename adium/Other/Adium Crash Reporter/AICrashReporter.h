@@ -24,7 +24,6 @@
 }
 
 - (void)sendReport:(NSDictionary *)crashReport;
-- (BOOL)tryToSendReport:(NSString *)bugReport;
 - (IBAction)send:(id)sender;
 - (void)awakeFromNib;
 - (IBAction)reportCrashForLogAtPath:(NSString *)inPath;
