@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.50 2004/05/24 06:04:19 evands Exp $
+// $Id: AIPreferenceController.m,v 1.51 2004/05/27 15:52:17 dchoby98 Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -110,6 +110,15 @@
     [preferenceWindow showCategory:category];
     [preferenceWindow showWindow:nil];
 }
+
+- (void)openPreferencesToAdvancedPane:(NSString *)paneName inCategory:(PREFERENCE_CATEGORY)category
+{
+	AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowController];
+	[preferenceWindow showAdvancedPane:paneName inCategory:category];
+	[preferenceWindow showWindow:nil];
+}
+
+
 
 //Return the array of preference panes
 - (NSArray *)paneArray
