@@ -4,17 +4,23 @@
 Version 0.58 (6/04/2004)
 - Added support for server-side AIM buddy comments
 - Added support for server-side AIM and Novell buddy aliases
-- Added automatic use of Safari, Camino, FireFox, and OmniWeb bookmarks
+- Added automatic use of Safari, Internet Explorer, Mozilla, Camino, FireFox, and OmniWeb bookmarks
 - Added "new mail" notification support for Yahoo! and MSN
 - Added ability to group chat tabs by contact list groups
+- Added ability to delete emoticon and dock X(tras) from their preference panes
+- Added "Connect All" and "Disconnect All" items to the Dock menu
+- Added %_safari script substitution to return the currently active webpage
 - Combined the Alerts, Info, and Inspector into a single 'Get Info' window.
 - Improved AIM DirectIM (IM Image) support
 - Improved Gadu-Gadu support
 - Improved event notifications
 - Improved installation of X(tras)
-- Improved preference windows
-- Improved the Standard Message View for Jaguar users
+- Improved preference panes
+- Improved the Standard Message View (Jaguar only)
 - Improved the Mockie message style, including fixing issues in very wide windows
+- Improved the Simple message style
+- Improved support for animated buddy icons (Panther only)
+- Improved handling of aim://goim links
 - Fixed many MSN bugs, including a crash when dragging contacts between groups and a problem using HTTP Connect Method
 - Fixed a crash when joining a multiuser chat
 - Fixed several issues with messages sent from or to ICQ users
@@ -22,6 +28,12 @@ Version 0.58 (6/04/2004)
 - Fixed a crash while dragging emoticon packs
 - Fixed a crash when displaying error messages
 - Fixed a crash when clicking poorly formed aim://goim links
+- Fixed an occasional crash when opening a contextual menu in a message window
+- Fixed a bug with keeping chat tabs sorted and improved sorting performance when sorting by status
+- Fixed a bug with fetching AIM profiles
+- Fixed several issues related to reconnection
+- Fixed pasting into message windows when the text entry field was inactive
+- Fixed multiple memory leaks
 - Many other small fixes and improvements
 
 Version 0.57 (5/21/2004)
