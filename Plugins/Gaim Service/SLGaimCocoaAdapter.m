@@ -311,7 +311,7 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 								GaimDebug (@"$$$$ not int: added %s:%@ to chat info",identifier,value);
 								valueUTF8String = g_strdup([value UTF8String]);
 							}else{
-								NSLog(@"String: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+								//NSLog(@"String: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
 								shouldTryToJoin = NO;
 							}
 						}else{
@@ -320,7 +320,7 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 								GaimDebug (@"$$$$  is int: added %s:%@ to chat info",identifier,value);
 								valueUTF8String = g_strdup_printf("%d",[value intValue]);
 							}else{
-								NSLog(@"Int: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+								//NSLog(@"Int: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
 								shouldTryToJoin = NO;
 							}							
 						}
@@ -355,7 +355,7 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						GaimDebug (@"In the event of an emergency, your GHashTable may be used as a flotation device...");
 						serv_join_chat(gc, components);
 					} else {
-						NSLog(@"#### Bailing out of group chat");
+						//NSLog(@"#### Bailing out of group chat");
 					}
 					//Evan: I think we'll return a nil conv here.. and then Gaim will call us back with a conv...
 					//and then we'll associate it with a chat later.  That's quite possibly wrong though...

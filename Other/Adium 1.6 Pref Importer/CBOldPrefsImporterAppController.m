@@ -527,12 +527,10 @@
         
     if([finalDict writeToFile:[awayMessagePath stringByExpandingTildeInPath] atomically:YES])
     {
-        NSLog(@"Success");
         NSBeginAlertSheet(@"iChat messages imported successfully.", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"Your iChat away messages have been imported and are now available in Adium.");
     }
     else
     {
-        NSLog(@"Fail");
         NSBeginAlertSheet(@"Import failed", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"The import process has encountered an error. Please make sure your permissions are set correctly and try again. If you continue to have problems, please contact an Adium developer.");
     }
         
@@ -541,7 +539,6 @@
 
 - (void)importProteusAways
 {
-    NSLog(@"Proteus");
     [spinner_importProgress setHidden:NO];
     [spinner_importProgress startAnimation:nil];
     [spinner_importProgress display];
@@ -641,12 +638,10 @@
     
     if([finalDict writeToFile:[awayMessagePath stringByExpandingTildeInPath] atomically:YES])
     {
-        NSLog(@"Success");
         NSBeginAlertSheet(@"Proteus messages imported successfully.", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"Your Proteus away messages have been imported and are now available in Adium.");
     }
     else
     {
-        NSLog(@"Fail");
         NSBeginAlertSheet(@"Import failed", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"The import process has encountered an error. Please make sure your permissions are set correctly and try again. If you continue to have problems, please contact an Adium developer.");
     }
     
@@ -656,7 +651,6 @@
 
 - (void)importFireAways
 {
-    NSLog(@"Fire");
     [spinner_importProgress setHidden:NO];
     [spinner_importProgress startAnimation:nil];
     [spinner_importProgress display];
@@ -743,12 +737,10 @@
     
     if([finalDict writeToFile:[awayMessagePath stringByExpandingTildeInPath] atomically:YES])
     {
-        NSLog(@"Success");
         NSBeginAlertSheet(@"Fire messages imported successfully.", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"Your Fire away messages have been imported and are now available in Adium.");
     }
     else
     {
-        NSLog(@"Fail");
         NSBeginAlertSheet(@"Import failed", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"The import process has encountered an error. Please make sure your permissions are set correctly and try again. If you continue to have problems, please contact an Adium developer.");
     }
   }

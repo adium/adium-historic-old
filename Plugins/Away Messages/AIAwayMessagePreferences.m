@@ -197,9 +197,7 @@
 {
     NSAttributedString *newAwayString;
     NSMutableDictionary	*newAwayDict;
-    
-    NSLog(@"Importing away messages from iChat...");
-    
+        
     // Create array of iChat away messages
     NSString *iChatPath = [NSString stringWithString:[@"~/Library/Preferences/com.apple.iChat.plist" stringByExpandingTildeInPath]];
     NSDictionary *iChatDict = [NSDictionary dictionaryWithContentsOfFile:iChatPath];

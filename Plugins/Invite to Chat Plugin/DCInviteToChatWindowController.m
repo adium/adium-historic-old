@@ -98,7 +98,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 		if( [chat name]) {
 			[chat inviteListContact:(AIListContact *)contact withMessage:[textField_message stringValue]];
 		} else {
-			NSLog(@"#### Inviting %@ to a one-on-one chat?",contact);
+			//NSLog(@"#### Inviting %@ to a one-on-one chat?",contact);
 		}
 		
 	}	

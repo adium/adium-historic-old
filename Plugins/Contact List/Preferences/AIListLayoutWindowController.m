@@ -312,7 +312,6 @@
                                               group:PREF_GROUP_LIST_LAYOUT];
 		
 	}else if(field == fontField_group){
-		NSLog(@"%@",[font stringRepresentation]);
         [[adium preferenceController] setPreference:[font stringRepresentation]
                                              forKey:KEY_LIST_LAYOUT_GROUP_FONT
                                               group:PREF_GROUP_LIST_LAYOUT];

@@ -53,11 +53,11 @@
         if([(AIAccount <AIAccount_Privacy> *)account addListObject:contact toPrivacyList:PRIVACY_DENY]){
             
         }else{
-                NSLog(@"Not blocked");
+                //NSLog(@"Not blocked");
         }
     }else{
-        NSLog(@"No privacy protcol");
-        NSLog(@"%@",[account class]);
+        //NSLog(@"No privacy protcol");
+        //NSLog(@"%@",[account class]);
     }
 }
 

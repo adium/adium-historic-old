@@ -48,7 +48,7 @@
 	if (room && [room length]){
 		exchange = 4;
 		
-		NSLog(@"#### OSCAR joinChatWithAccount: %@ joining %@ on exchange %i",inAccount,room,exchange);
+		//NSLog(@"#### OSCAR joinChatWithAccount: %@ joining %@ on exchange %i",inAccount,room,exchange);
 		
 		//The chatCreationInfo has keys corresponding to the GHashTable keys and values to match them.
 		

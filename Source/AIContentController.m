@@ -388,7 +388,6 @@ static NSLock				*filterCreationLock = nil;
 	[pool release];
 	
 	filterRunLoopMessenger = nil;
-	NSLog(@"thread_createFilterRunLoopMessenger: destroyed it");
 }
 
 //Messaging ------------------------------------------------------------------------------------------------------------
