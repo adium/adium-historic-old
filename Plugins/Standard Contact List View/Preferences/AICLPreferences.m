@@ -34,7 +34,7 @@
 - (void)updateSelectedLayoutAndTheme;
 
 - (void)applySet:(NSDictionary *)setDictionary toPreferenceGroup:(NSString *)preferenceGroup;
-
+- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row;
 @end
 
 @implementation AICLPreferences
@@ -234,6 +234,7 @@
 		if(path){
 			[[NSFileManager defaultManager] trashFileAtPath:path];
 			[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:LIST_LAYOUT_EXTENSION];
+			[self tableView:tableView_layout shouldSelectRow:[tableView_layout selectedRow]];
 		}
 	}
 }
@@ -262,6 +263,7 @@
 		if(path){
 			[[NSFileManager defaultManager] trashFileAtPath:path];
 			[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:LIST_THEME_EXTENSION];
+			[self tableView:tableView_theme shouldSelectRow:[tableView_theme selectedRow]];
 		}
 	}
 }
