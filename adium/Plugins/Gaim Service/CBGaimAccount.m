@@ -494,7 +494,7 @@
                             closeStyleTagsOnFontChange:NO
                                         encodeNonASCII:NO] UTF8String]);
 */
-        newValue = [[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
+        newValue = (char *)[[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
                                                headers:YES
                                               fontTags:YES
                                          closeFontTags:YES
