@@ -6,9 +6,9 @@
 //  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
-#include "ESGaimAccountViewController.h"
+#include "AIAccountViewController.h"
 
-@interface ESGaimMeanwhileAccountViewController : ESGaimAccountViewController {
+@interface ESGaimMeanwhileAccountViewController : AIAccountViewController {
 	IBOutlet	NSPopUpButton	*popUp_contactList;
 	IBOutlet	NSTextField		*textField_contactListWarning;
 }
