@@ -78,3 +78,4 @@
 #import "IKTableImageCell.h"
 #import "NSString+CarbonFSSpecCreation.h"
 #import "SUSpeaker.h"
+#import "ESQuicklyResizingPanel.h"
