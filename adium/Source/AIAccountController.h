@@ -14,8 +14,8 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.16 $
- * $Date: 2004/03/24 14:44:19 $
+ * $Revision: 1.17 $
+ * $Date: 2004/03/25 00:38:21 $
  * $Author: evands $
  **/
 
@@ -81,8 +81,9 @@
 - (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector;
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount;
 
-- (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector;
 - (void)setPassword:(NSString *)inPassword forProxyServer:(NSString *)server userName:(NSString *)userName;
+- (NSString *)passwordForProxyServer:(NSString *)server userName:(NSString *)userName;
+- (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector;
 
 //Private
 - (void)initController;
