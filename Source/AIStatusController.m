@@ -455,8 +455,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 }
 
 /*!
-<<<<<<< .mine
-* @brief Return the <tt>AIStatus</tt> to be used by accounts as they are created
+ * @brief Return the <tt>AIStatus</tt> to be used by accounts as they are created
  */
 - (AIStatus *)defaultInitialStatusState
 {
@@ -464,7 +463,6 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 }
 
 /*!
-=======
  * @brief Reset the active status state
  *
  * All active status states cache will also reset.  Posts an active status changed notification.  The active state
@@ -1434,8 +1432,19 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	}else{
 		baseStatusState = [self activeStatusState];
 	}
+
+	/* If we are going to a custom state of a different type, we don't want to prefill with baseStatusState as it stands.
+	 * Instead, we load the last used status of that type. */
+	if(([baseStatusState statusType] != statusType)){
+		NSDictionary *lastStatusStates = [[adium preferenceController] preferenceForKey:@"LastStatusStates"
+																				  group:PREF_GROUP_STATUS_PREFERENCES];
+		
+		NSData		*lastStatusStateData = [lastStatusStates objectForKey:[NSNumber numberWithInt:statusType]];
+		AIStatus	*lastStatusStateOfThisType = [NSKeyedUnarchiver unarchiveObjectWithData:lastStatusStateData];
+
+		baseStatusState = lastStatusStateOfThisType;
+	}
 	
-	//If we are going to a custom state different from the current custom state,
 	//don't use the current status state as a base.  Going from Away to Available, don't autofill the Available
 	//status message with the old away message.
 	if([baseStatusState statusType] != statusType){
@@ -1492,6 +1501,19 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	if([newState mutabilityType] != AITemporaryEditableStatusState){
 		[[adium statusController] addStatusState:newState];
 	}
+	
+	NSMutableDictionary *lastStatusStates;
+	
+	lastStatusStates = [[[adium preferenceController] preferenceForKey:@"LastStatusStates"
+																 group:PREF_GROUP_STATUS_PREFERENCES] mutableCopy];
+	if(!lastStatusStates) lastStatusStates = [NSMutableDictionary dictionary];
+	
+	[lastStatusStates setObject:[NSKeyedArchiver archivedDataWithRootObject:newState]
+						 forKey:[NSNumber numberWithInt:[newState statusType]]];
+
+	[[adium preferenceController] setPreference:lastStatusStates
+										 forKey:@"LastStatusStates"
+										  group:PREF_GROUP_STATUS_PREFERENCES];
 }
 
 /*!
