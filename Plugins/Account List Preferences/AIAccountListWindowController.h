@@ -51,7 +51,6 @@
 + (AIAccountListWindowController *)accountListWindowController;
 
 - (IBAction)deleteAccount:(id)sender;
-- (IBAction)newAccount:(id)sender;
 - (IBAction)selectServiceType:(id)sender;
 - (IBAction)toggleAutoConnect:(id)sender;
 - (IBAction)changeUIDField:(id)sender;
