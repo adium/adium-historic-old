@@ -1,0 +1,42 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = AISmartStepper; LANGUAGE = ObjC; SUPERCLASS = NSStepper; }, 
+        {
+            CLASS = DCMessageContextDisplayPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_doNotDim" = NSButton; 
+                "checkBox_showContext" = NSButton; 
+                "matrix_radioButtons" = NSMatrix; 
+                "menu_haveNotTalkedUnits" = NSPopUpButton; 
+                "menu_haveTalkedUnits" = NSPopUpButton; 
+                "radioButton_always" = NSButtonCell; 
+                "radioButton_haveNotTalked" = NSButtonCell; 
+                "radioButton_haveTalked" = NSButtonCell; 
+                "stepper_haveNotTalkedDays" = AISmartStepper; 
+                "stepper_haveTalkedDays" = AISmartStepper; 
+                "stepper_linesToDisplay" = AISmartStepper; 
+                "textField_haveNotTalkedDays" = NSTextField; 
+                "textField_haveTalkedDays" = NSTextField; 
+                "textField_linesToDisplay" = NSTextField; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}
