@@ -10,16 +10,6 @@
 		<string>343 357 386 44 0 0 1024 746 </string>
 		<key>6600</key>
 		<string>121 690 386 44 0 0 1024 746 </string>
-		<key>6737</key>
-		<string>407 531 320 187 0 0 1024 746 </string>
-		<key>6750</key>
-		<string>352 478 320 63 0 0 1024 746 </string>
-		<key>6762</key>
-		<string>352 442 320 136 0 0 1024 746 </string>
-		<key>6776</key>
-		<string>390 312 320 142 0 0 1024 746 </string>
-		<key>6791</key>
-		<string>352 389 320 241 0 0 1024 746 </string>
 	</dict>
 	<key>IBFramework Version</key>
 	<string>291.0</string>

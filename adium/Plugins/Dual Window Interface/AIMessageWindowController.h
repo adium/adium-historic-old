@@ -26,6 +26,7 @@
     IBOutlet	NSTabView	*tabView_messages;
 
     AIAdium			*owner;
+    BOOL			windowIsClosing;
     id <AIContainerInterface> 	interface;
 }
 
@@ -35,6 +36,6 @@
 - (NSTabViewItem <AIInterfaceContainer> *)selectedTabViewItemContainer;
 - (void)selectTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
 - (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
-- (BOOL)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
+- (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
 
 @end

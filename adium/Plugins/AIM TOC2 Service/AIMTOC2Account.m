@@ -1176,12 +1176,18 @@ static char *hash_password(const char * const password);
 
 - (void)AIM_SetProfile:(NSString *)profile
 {
-    NSString	*message;
+    //Profile length must be 1024 charactes or less (not including backslashed characters)
+    if([profile length] > 1024){
+        [[owner interfaceController] handleErrorMessage:@"Info Size Error"
+                                        withDescription:[NSString stringWithFormat:@"Your info is too large, and could not be set.\r\rThis service limits info to 1024 characters (Your current info is %i characters)",[profile length]]];
 
-    message = [NSString stringWithFormat:@"toc_set_info \"%@\"",[self validCopyOfString:profile]];
+    }else{
+        NSString	*message = [NSString stringWithFormat:@"toc_set_info \"%@\"",[self validCopyOfString:profile]];
 
-    //Send the message
-    [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
+        //Send the message
+        [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
+    }
+
 }
 
 - (void)AIM_SetAway:(NSString *)away

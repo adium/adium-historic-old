@@ -34,9 +34,9 @@
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys: 
         [NSNumber numberWithInt:5], PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM, nil]
     forGroup:PREF_GROUP_DOCK_BEHAVIOR];
-
+ */
     preferences = [[AIDockBehaviorPreferences dockBehaviorPreferencesWithOwner:owner] retain];
-    */
+   
 }
 
 

@@ -28,6 +28,7 @@
 #define CONTACT_LIST_WINDOW_MENU_TITLE		@"Contact List"		//Title for the contact list menu item
 #define MESSAGES_WINDOW_MENU_TITLE		@"Messages"		//Title for the messages window menu item
 #define CLOSE_TAB_MENU_TITLE			@"Close Tab"		//Title for the close tab menu item
+#define CLOSE_MENU_TITLE			@"Close"		//Title for the close menu item
 #define PREVIOUS_MESSAGE_MENU_TITLE		@"Previous Message"
 #define NEXT_MESSAGE_MENU_TITLE			@"Next Message"
 
@@ -39,6 +40,7 @@
 - (void)updateActiveWindowMenuItem;
 - (void)increaseUnviewedContentOfHandle:(AIHandle *)inHandle;
 - (void)clearUnviewedContentOfHandle:(AIHandle *)inHandle;
+- (void)clearUnviewedContentOfContact:(AIListContact *)inContact;
 @end
 
 @implementation AIDualWindowInterfacePlugin
@@ -115,6 +117,13 @@
 
 
 //Messages -------------------------------------------------------------------------
+//Close the active window
+- (IBAction)close:(id)sender
+{
+    //Close the main window
+    [[[NSApplication sharedApplication] keyWindow] performClose:nil];
+}
+
 //Close the active tab
 - (IBAction)closeTab:(id)sender
 {
@@ -201,14 +210,34 @@
 
     //Set the container's handle's content as viewed
     if([inContainer isKindOfClass:[AIMessageTabViewItem class]]){
-        NSEnumerator		*enumerator;
-        AIHandle		*handle;
+        [self clearUnviewedContentOfContact:[[(AIMessageTabViewItem *)inContainer messageViewController] contact]];
+    }
 
-        //We clear the unviewed flag of all handles within this contact
-        enumerator = [[[(AIMessageTabViewItem *)inContainer messageViewController] contact] handleEnumerator];
-        while((handle = [enumerator nextObject])){
-            [self clearUnviewedContentOfHandle:handle];
+    //Update the close window/close tab menu item keys
+    if([inContainer isKindOfClass:[AIMessageTabViewItem class]]){
+        [menuItem_close setKeyEquivalent:@"W"];
+        [menuItem_closeTab setKeyEquivalent:@"w"];
+    }else{
+        [menuItem_close setKeyEquivalent:@"w"];
+
+        //Removing the key equivalant from our "Close Tab" menu item
+        //-----
+        //Because of a bug with NSMenuItem (Yay), we can't just do this:
+        // [menuItem_closeTab setKeyEquivalent:@""];
+        //
+        //Instead, we have to remove the menu item, remove its key
+        //equivalant, and then re-add it to the menu
+        [menuItem_closeTab retain];
+        {
+            NSMenu*	menu = [menuItem_closeTab menu];
+            int		index = [menu indexOfItem:menuItem_closeTab];
+
+            [menu removeItemAtIndex:index];
+            [menuItem_closeTab setKeyEquivalent:@""];
+            [menu insertItem:menuItem_closeTab atIndex:index];
         }
+        [menuItem_closeTab release];
+
     }
 
     [self updateActiveWindowMenuItem];
@@ -276,16 +305,16 @@
     AIMessageTabViewItem	*container;
 
     if(messageWindowController){
+        //Remove unviewed content for this contact
+        [self clearUnviewedContentOfContact:[notification object]];
+
         //Find the message controller for this handle, and close it
         container = [self messageTabWithContact:[notification object]
                                         account:nil
                                         content:nil
                                          create:NO];
-        
-        if(container && [messageWindowController removeTabViewItemContainer:container]){
-            [messageWindowController closeWindow:nil];
-            [messageWindowController release]; messageWindowController = nil;
-        }
+
+        if(container) [messageWindowController removeTabViewItemContainer:container];
     }
 }
 
@@ -294,8 +323,12 @@
 //Add our menu items
 - (void)addMenuItems
 {
+    //Add the close menu item
+    menuItem_close = [[NSMenuItem alloc] initWithTitle:CLOSE_MENU_TITLE target:self action:@selector(close:) keyEquivalent:@"w"];
+    [[owner menuController] addMenuItem:menuItem_close toLocation:LOC_File_Close];
+
     //Add our close tab menu item
-    menuItem_closeTab = [[NSMenuItem alloc] initWithTitle:CLOSE_TAB_MENU_TITLE target:self action:@selector(closeTab:) keyEquivalent:@"r"];
+    menuItem_closeTab = [[NSMenuItem alloc] initWithTitle:CLOSE_TAB_MENU_TITLE target:self action:@selector(closeTab:) keyEquivalent:@""];
     [[owner menuController] addMenuItem:menuItem_closeTab toLocation:LOC_File_Close];
 
     //Add our other menu items
@@ -428,6 +461,9 @@
     if(!messageWindowController){ //If the message window isn't loaded, create it
         messageWindowController = [[AIMessageWindowController messageWindowControllerWithOwner:owner interface:self] retain];
 
+        //Register to be notified when the message window closes
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageWindowWillClose:) name:NSWindowWillCloseNotification object:[messageWindowController window]];
+
     }else{ //Otherwise, search it for and existing tab for this contact
         NSEnumerator		*enumerator;
         AIMessageTabViewItem	*tabViewItem;
@@ -456,6 +492,15 @@
     return(container);
 }
 
+//Called as the message window closes
+- (void)messageWindowWillClose:(NSNotification *)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillCloseNotification object:[messageWindowController window]];
+    
+    //Release the window and void our reference to it
+    [messageWindowController release]; messageWindowController = nil; 
+}
+
 
 //
 - (void)increaseUnviewedContentOfHandle:(AIHandle *)inHandle
@@ -474,11 +519,24 @@
 //
 - (void)clearUnviewedContentOfHandle:(AIHandle *)inHandle
 {
-    //Set 'UnviewedContent' to 0
-    [[inHandle statusDictionary] setObject:[NSNumber numberWithInt:0] forKey:@"UnviewedContent"];
+    if([[[inHandle statusDictionary] objectForKey:@"UnviewedContent"] intValue]){
+        //Set 'UnviewedContent' to 0
+        [[inHandle statusDictionary] setObject:[NSNumber numberWithInt:0] forKey:@"UnviewedContent"];
 
-    //
-    [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
+        //
+        [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
+    }
+}
+
+//
+- (void)clearUnviewedContentOfContact:(AIListContact *)inContact
+{
+    NSEnumerator	*enumerator = [inContact handleEnumerator];
+    AIHandle		*handle;
+
+    while((handle = [enumerator nextObject])){
+        [self clearUnviewedContentOfHandle:handle];
+    }
 }
 
 @end

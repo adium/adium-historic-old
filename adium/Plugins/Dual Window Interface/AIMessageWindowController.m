@@ -18,6 +18,7 @@
 #import "AIMessageWindowController.h"
 #import "AIDualWindowInterfacePlugin.h"
 #import "AIMessageTabViewItem.h"
+#import "AIMessageViewController.h"
 #import "AIAdium.h"
 
 #define	MESSAGE_WINDOW_NIB		@"MessageWindow"		//Filename of the message window nib
@@ -41,12 +42,14 @@
     return([[[self alloc] initWithWindowNibName:MESSAGE_WINDOW_NIB owner:inOwner interface:inInterface] autorelease]);
 }
 
-//Close the message window (closing the window does not unload it, it is just hidden)
+//Close the message window
 - (IBAction)closeWindow:(id)sender
 {
+    [[self window] performClose:nil];
+/*    NSLog(@"closeWindow:");
     if([self windowShouldClose:nil]){
         [[self window] orderOut:nil]; //Order out (as opposed to close)
-    }
+    }*/
 }
 
 //Return the contained message tabs
@@ -80,12 +83,15 @@
 }
 
 //Remove a tab view item container
-- (BOOL)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
+- (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
 {
     [tabView_messages removeTabViewItem:inTabViewItem];
     [interface containerDidClose:inTabViewItem];
 
-    return([tabView_messages numberOfTabViewItems] == 0); //Return YES if our window is empty
+    //If that was our last container, close the window (unless we're already closing)
+    if(!windowIsClosing && [tabView_messages numberOfTabViewItems] == 0){
+        [self closeWindow:nil];
+    }
 }
 
 
@@ -97,6 +103,7 @@
 
     owner = [inOwner retain];
     interface = [inInterface retain];
+    windowIsClosing = NO;
 
     [super initWithWindowNibName:windowNibName owner:self];
     [self window];	//Load our window
@@ -140,12 +147,25 @@
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
-    if([tabView_messages numberOfTabViewItems] == 0){ //Only close the window for real if it's empty
-        //Save the window position
-        [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
-                                             forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
-                                              group:PREF_GROUP_WINDOW_POSITIONS];
+    NSArray				*viewArrayCopy = [[[tabView_messages tabViewItems] copy] autorelease]; //the array will change as we remove views, so we must work with a copy
+    NSEnumerator			*enumerator;
+    AIMessageTabViewItem		*tabViewItem;
+
+    //We are closing
+    windowIsClosing = YES;
+
+    //Close all our tabs
+    enumerator = [viewArrayCopy objectEnumerator];
+    while((tabViewItem = [enumerator nextObject])){
+        [[owner notificationCenter] postNotificationName:Interface_CloseMessage
+                                                  object:[[tabViewItem messageViewController] contact]
+                                                userInfo:nil];
     }
+
+    //Save the window position
+    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+                                         forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
+                                          group:PREF_GROUP_WINDOW_POSITIONS];
     
     return(YES);
 }

@@ -33,6 +33,7 @@
 @interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceController, AIContainerInterface> {
     //Menus
     NSMutableArray			*windowMenuArray;
+    NSMenuItem				*menuItem_close;
     NSMenuItem				*menuItem_closeTab;
     NSMenuItem				*menuItem_nextMessage;
     NSMenuItem				*menuItem_previousMessage;

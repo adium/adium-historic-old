@@ -1,15 +1,18 @@
 {
     IBClasses = (
         {
-            ACTIONS = {changePreference = id; }; 
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; deleteEvent = id; selectBehaviorSet = id; }; 
             CLASS = AIDockBehaviorPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                bounceField = NSTextField; 
-                bounceMatrix = NSMatrix; 
-                delayField = NSTextField; 
-                enableAnimationCheckBox = NSButton; 
-                enableBouncingCheckBox = NSButton; 
+                "button_delete" = NSButton; 
+                "popUp_addEvent" = NSPopUpButton; 
+                "tableView_events" = NSTableView; 
                 "view_prefView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
