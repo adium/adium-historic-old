@@ -212,6 +212,13 @@
         return(nil);
     }
 }
+- (void)setListObject:(AIListObject *)inListObject
+{
+	if([participatingListObjects count] == 1){
+		[participatingListObjects removeObjectAtIndex:0];
+		[self addParticipatingListObject:inListObject];
+	}
+}
 
 - (NSString *)uniqueChatID
 {

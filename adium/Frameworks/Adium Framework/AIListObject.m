@@ -467,9 +467,10 @@ DeclareString(FormattedUID);
 	}
 }
 
-- (NSComparisonResult)compare:(AIListObject *)otherObject
+- (NSComparisonResult)compare:(id)otherObject
 {
-	return ([[self uniqueObjectID] caseInsensitiveCompare:[otherObject uniqueObjectID]]);
+	return ([otherObject isKindOfClass:[self class]] &&
+			[[self uniqueObjectID] caseInsensitiveCompare:[otherObject uniqueObjectID]]);
 }
 
 #pragma mark Debugging
@@ -525,10 +526,10 @@ DeclareString(FormattedUID);
 		// Is there already an entry for this service?
 		if( contactList = [contacts objectForKey:service] ) {
 			[contactList addObject:current];
-			[contacts setObject:contactList forKey:service];
+			
 		} else {
-			NSMutableArray *tempList = [NSMutableArray arrayWithObject:current];
-			[contacts setObject:tempList forKey:service];
+			contactList = [NSMutableArray arrayWithObject:current];
+			[contacts setObject:contactList forKey:service];
 		}
 	}
 	

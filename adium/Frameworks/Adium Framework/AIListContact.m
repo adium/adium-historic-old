@@ -56,7 +56,7 @@
 
 - (AIAccount *)account
 {
-	return([[adium accountController] accountWithObjectID:accountID]);
+	return([[adium accountController] accountWithObjectID:[self accountID]]);
 }
 
 - (NSString *)ultraUniqueObjectID
