@@ -49,6 +49,10 @@
 - (void)setUpdateShadowsWhileScrolling:(BOOL)update;
 @end
 
+NSImage *cachedImage = nil;
+NSImage *cachedAltImage = nil;
+float cachedCapHeight = 13;
+
 @implementation AISCLViewController
 
 + (AISCLViewController *)contactListViewController
@@ -458,18 +462,40 @@
 	//Apply this new size to the images
 	image = [cell image];
 	altImage = [cell alternateImage];
-	
+        
+        NSSize  newSize = NSMakeSize(capHeight, capHeight);
+        
 	//Resize the iamges
 	[image setScalesWhenResized:YES];
-	[image setSize:NSMakeSize(capHeight, capHeight)];
+	[image setSize:newSize];
 	[altImage setScalesWhenResized:YES];
-	[altImage setSize:NSMakeSize(capHeight, capHeight)];
+	[altImage setSize:newSize];
 
+  /*      //cache
+        [cachedImage release];
+        cachedImage = image;
+        [cachedAltImage release];
+        cachedAltImage = altImage; */
+        
 	//Set them back and center
 	[cell setAlternateImage:altImage];
 	[cell setImage:image];
-	[cell setImagePosition:NSImageOnly];
-	[cell setHighlightsBy:NSChangeBackgroundCellMask];
+        
+       /* [cell setHighlightsBy:NSNoCellMask];
+        [cell setShowsStateBy:NSNoCellMask];
+        [cell setAlignment:NSCenterTextAlignment];
+        [cell setImagePosition:NSImageOverlaps];
+        [cell setAllowsMixedState:NO];*/
+        
+       /* //they're cached now, yay.
+        cachedCapHeight = capHeight;
+        }
+        else
+        {
+            [cell setAlternateImage:cachedAltImage];
+            [cell setImage:cachedImage];
+
+        }*/
 } 
 
 

@@ -12,4 +12,4 @@ I can commit the test file too!
 oopsie
 this'll be cool
 
-Test files are sweet
+Test files are sweet, but not as sweet as killing sourceforge dead.
