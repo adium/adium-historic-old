@@ -38,6 +38,8 @@
         <false/>
         <key>Outline Labels</key>
         <false/>
+		<key>Use Gradient</key>
+        <false/>
         <key>Label Opacity</key>
         <real>1.0</real>
         <key>Label Groups</key>

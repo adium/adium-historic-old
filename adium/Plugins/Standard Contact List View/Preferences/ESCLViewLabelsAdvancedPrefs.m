@@ -33,8 +33,12 @@
     }else if(sender == checkbox_outlineLabels){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SCL_OUTLINE_LABELS
-                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];       
-    }else if(sender == slider_labelOpacity){
+                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
+    }else if(sender == checkbox_useGradient){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SCL_USE_GRADIENT
+                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
+	}else if(sender == slider_labelOpacity){
         [[adium preferenceController] setPreference:[NSNumber numberWithFloat:[sender floatValue]]
                                              forKey:KEY_SCL_LABEL_OPACITY
                                               group:PREF_GROUP_CONTACT_LIST_DISPLAY];   
@@ -61,7 +65,8 @@
     [slider_labelOpacity setFloatValue:[[preferenceDict objectForKey:KEY_SCL_LABEL_OPACITY] floatValue]];
     [checkbox_labelGroups setState:[[preferenceDict objectForKey:KEY_SCL_LABEL_GROUPS] boolValue]];
     [colorWell_labelGroupsColor setColor:[[preferenceDict objectForKey:KEY_SCL_LABEL_GROUPS_COLOR] representedColor]];
-
+	[checkbox_useGradient setState:[[preferenceDict objectForKey:KEY_SCL_USE_GRADIENT] boolValue]];
+	
     [self configureControlDimming];
 }
 

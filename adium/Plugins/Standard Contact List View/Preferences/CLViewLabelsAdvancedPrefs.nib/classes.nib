@@ -56,6 +56,7 @@
                 "checkbox_labelAroundContact" = NSButton; 
                 "checkbox_labelGroups" = NSButton; 
                 "checkbox_outlineLabels" = NSButton; 
+                "checkbox_useGradient" = NSButton; 
                 "colorWell_labelGroupsColor" = NSColorWell; 
                 "slider_labelOpacity" = NSSlider; 
             }; 

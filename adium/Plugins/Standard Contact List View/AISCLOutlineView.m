@@ -454,6 +454,12 @@
     return outlineLabels;   
 }
 
+- (void)setUseGradient:(BOOL)inValue{
+	useGradient = inValue;
+}
+- (BOOL)useGradient{
+	return useGradient;
+}
 
 - (void)setIsBorderless:(BOOL)inIsBorderless{
     isBorderless = inIsBorderless;

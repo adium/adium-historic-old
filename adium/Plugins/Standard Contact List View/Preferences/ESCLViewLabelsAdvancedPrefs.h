@@ -10,6 +10,7 @@
     IBOutlet    NSSlider        *slider_labelOpacity;
     IBOutlet    NSButton        *checkbox_outlineLabels;
     IBOutlet    NSButton        *checkbox_labelAroundContact;
+	IBOutlet	NSButton		*checkbox_useGradient;
     
     //Groups
     IBOutlet    NSButton        *checkbox_labelGroups;

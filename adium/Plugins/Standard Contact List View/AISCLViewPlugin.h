@@ -40,6 +40,7 @@
 #define KEY_SCL_LABEL_OPACITY           @"Label Opacity"
 #define KEY_SCL_LABEL_GROUPS            @"Label Groups"
 #define KEY_SCL_LABEL_GROUPS_COLOR      @"Label Groups Color"
+#define KEY_SCL_USE_GRADIENT			@"Use Gradient"
 
 @class AIListGroup, AICLPreferences, ESCLViewAdvancedPreferences, ESCLViewLabelsAdvancedPrefs, AISCLOutlineView;
 @protocol AIContactListViewController;
