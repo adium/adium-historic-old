@@ -55,7 +55,7 @@
     NSString *savePath = [THEME_PATH stringByAppendingPathComponent:[[saveTheme objectForKey:@"themeName"] stringByAppendingString:@".AdiumTheme"]];
     [saveTheme writeToFile:savePath atomically:YES];
     [themePane createDone];
-    [[NSNotificationCenter defaultCenter] postNotificationName:Themes_Changed object:nil];
+    [[adium notificationCenter] postNotificationName:Themes_Changed object:nil];
 }
 
 // ======= efficiency by evands =========

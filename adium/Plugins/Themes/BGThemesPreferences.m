@@ -56,7 +56,6 @@
 -(void)applyStart // in theory this should be kind enough to start the UI when applying
 {
     [manageStatus setObjectValue:@"Applying theme... one moment please"];
-    wait(2); // pause for station identification
 }
 
 -(void)applyDone // in theory this should be kind enough to refresh the UI when done applying

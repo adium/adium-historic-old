@@ -138,7 +138,7 @@ static ErrorMessageWindowController *sharedInstance = nil;
     if([errorTitleArray count] == 1){
         [tabView_multipleErrors selectTabViewItemAtIndex:0]; //hide the 'okay all' button and error count
         [[self window] setTitle:[errorWindowTitleArray objectAtIndex:0]];
-        [button_okay setTitle:@"Okay"];
+        [button_okay setTitle:@"OK"];
 
     }else{
         [tabView_multipleErrors selectTabViewItemAtIndex:1]; //show the 'okay all' button and error count
