@@ -15,10 +15,10 @@
 
 #import "AITooltipUtilities.h"
 
-#define TOOLTIP_MAX_WIDTH           300
-#define TOOLTIP_INSET               4.0
-#define TOOLTIP_TITLE_BODY_MARGIN   10.0
-#define IMAGE_DIMENSION             50.0
+#define TOOLTIP_MAX_WIDTH			300
+#define TOOLTIP_INSET				4.0
+#define TOOLTIP_TITLE_BODY_MARGIN	10.0
+#define MAX_IMAGE_DIMENSION			96.0
 
 @interface AITooltipUtilities (PRIVATE)
 + (void)_createTooltip;
@@ -129,7 +129,23 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 			imageOnRight = inImageOnRight;
 			[view_tooltipImage setImage:tooltipImage];
 
-			imageSize = (tooltipImage ? /*NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION)*/[tooltipImage size] : NSZeroSize);
+			if(tooltipImage){
+				imageSize = [tooltipImage size];
+				
+				//Constrain our image proportionally
+				if(imageSize.height > MAX_IMAGE_DIMENSION){
+					imageSize.width = round(imageSize.width * (MAX_IMAGE_DIMENSION / imageSize.height));
+					imageSize.height = MAX_IMAGE_DIMENSION;
+				}
+				
+				if (imageSize.width > MAX_IMAGE_DIMENSION){
+					imageSize.height = round(imageSize.height * (MAX_IMAGE_DIMENSION / imageSize.width));
+					imageSize.width = MAX_IMAGE_DIMENSION;
+				}
+				
+			}else{
+				imageSize = NSZeroSize;	
+			}
 
             [self _sizeTooltip];
 				
