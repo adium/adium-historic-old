@@ -545,6 +545,13 @@ static BOOL didInitOscar = NO;
 	}
 }
 
+#pragma mark Group Chat
+
+- (BOOL)joinGroupChatNamed:(NSString *)name
+{
+	
+}
+
 #pragma mark DirectIM (IM Image)
 //We are now connected via DirectIM to theContact
 - (void)directIMConnected:(AIListContact *)theContact

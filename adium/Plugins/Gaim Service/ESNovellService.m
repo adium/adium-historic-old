@@ -8,7 +8,7 @@
 #import "ESNovellService.h"
 #import "ESGaimNovellAccount.h"
 #import "ESGaimNovellAccountViewController.h"
-#import "DCGaimNapsterJoinChatViewController.h"
+#import "DCGaimNovellJoinChatViewController.h"
 
 @implementation ESNovellService
 
@@ -57,7 +57,7 @@
 
 - (DCJoinChatViewController *)joinChatView
 {
-	return([DCGaimNapsterJoinChatViewController joinChatView]);
+	return([DCGaimNovellJoinChatViewController joinChatView]);
 }
 
 
