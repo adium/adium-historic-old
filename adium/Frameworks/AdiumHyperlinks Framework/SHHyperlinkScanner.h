@@ -4,7 +4,7 @@
 //
 //  Created by Stephen Holt on Sun May 09 2004.
 
-#import <Foundation/Foundation.h>
+#import "SHLinkLexer.h"
 
 extern char* SHtext;
 extern int SHleng;
@@ -19,7 +19,8 @@ extern unsigned int SHStringOffset;
 @class SHMarkedHyperlink;
 @interface SHHyperlinkScanner : NSObject {
 
-    BOOL     useStrictChecking;
+    BOOL                        useStrictChecking;
+    URI_VERIFICATION_STATUS     validStatus;
 
 }
 
@@ -28,6 +29,7 @@ extern unsigned int SHStringOffset;
 
 -(void)setStrictChecking:(BOOL)flag;
 -(BOOL)isStrictCheckingEnabled;
+-(URI_VERIFICATION_STATUS)validationStatus;
 
 -(BOOL)isStringValidURL:(NSString *)inString;
 -(SHMarkedHyperlink *)nextURLFromString:(NSString *)inString;

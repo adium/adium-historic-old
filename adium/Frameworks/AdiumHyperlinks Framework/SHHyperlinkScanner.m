@@ -39,10 +39,16 @@
     return useStrictChecking;
 }
 
+-(URI_VERIFICATION_STATUS)validationStatus
+{
+    return validStatus;
+}
 #pragma mark primative methods
+
+// method to determine the validity of a given string, only place where flex is called
 -(BOOL)isStringValidURL:(NSString *)inString
 {
-    URI_VERIFICATION_STATUS validStatus = SH_URL_INVALID;
+    validStatus = SH_URL_INVALID;
     SH_BUFFER_STATE buf;
     
     buf = SH_scan_string([inString UTF8String]);
@@ -59,26 +65,42 @@
     }else{
         SH_delete_buffer(buf);
         buf = NULL;
-        //SHStringOffset += [inString length];
         return NO;
     }
 }
 
 -(SHMarkedHyperlink *)nextURLFromString:(NSString *)inString
 {
-    NSString    *scanString = [[[NSString alloc] init] autorelease];
+    NSString    *scanString = [[NSString alloc] init];
     int location = SHStringOffset;
     
+    //scan upto the next whitespace char so that we don't unnecessarity confuse flex
+    // otherwise we end up validating urls that look like this "http://www.adiumx.com/ <--cool"
     NSScanner *preScanner = [[NSScanner alloc] initWithString:inString];
     [preScanner setScanLocation:location];
     while([preScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&scanString]){
         SHStringOffset = [preScanner scanLocation] - [scanString length];
-        //NSRange sRange = [inString rangeOfString:scanString options:nil range:NSMakeRange(location,[inString length]-location)];
         
         if([self isStringValidURL:scanString]){
             NSRange urlRange = NSMakeRange([preScanner scanLocation] - [scanString length],[scanString length]);
             
-            SHMarkedHyperlink *markedLink = [[SHMarkedHyperlink alloc] initWithString:scanString
+            NSMutableString    *newURL = [NSMutableString stringWithString:scanString];
+            
+            //insert typical specifiers if the URL is degenerate
+            switch(validStatus){
+                case SH_URL_DEGENERATE:
+                    [newURL insertString:@"http://" atIndex:0];
+                    break;
+                case SH_MAILTO_DEGENERATE:
+                    [newURL insertString:@"mailto:" atIndex:0];
+                    break;
+                default:
+                    break;
+            }
+            
+            //make a marked link
+            SHMarkedHyperlink *markedLink = [[SHMarkedHyperlink alloc] initWithString:newURL
+                                                                 withValidationStatus:validStatus
                                                                          parentString:inString
                                                                              andRange:urlRange];
             return markedLink;
@@ -86,17 +108,22 @@
         
         location = SHStringOffset;
     }
+    //if we're here, then NSScanner hit the end of the string
+    //- set it to the string length here so we avoid potentail infinite looping with many trailing spaces.
     SHStringOffset = [inString length];
     return nil;
 }
 
-#pragma mark blah
+#pragma mark string and textview handleing
+
+//fetch all the URL's from a string
 -(NSArray *)allURLsFromString:(NSString *)inString
 {
     SHStringOffset = 0;
     NSMutableArray *rangeArray = [[[NSMutableArray alloc] init] autorelease];
     SHMarkedHyperlink *markedLink = nil;
     
+    //build an array of marked links.
     while([inString length] > SHStringOffset){
         if(markedLink = [self nextURLFromString:inString]){
             [rangeArray addObject:markedLink];
@@ -115,6 +142,7 @@
     return [self allURLsFromString:[inView string]];
 }
 
+//scan an attributed string for URL's, then give them the proper link attribs.
 -(NSAttributedString *)linkifyString:(NSAttributedString *)inString
 {
     NSArray *rangeArray = [self allURLsFromString:[inString string]];
@@ -132,6 +160,7 @@
     return newString;
 }
 
+// scan a textView for URL's, as above
 -(void)linkifyTextView:(NSTextView *)inView
 {
     NSMutableAttributedString *newView;

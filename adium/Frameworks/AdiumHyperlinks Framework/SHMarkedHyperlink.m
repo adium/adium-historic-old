@@ -3,19 +3,19 @@
 //  Adium
 //
 //  Created by Stephen Holt on Tue May 11 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
-//
+
 
 #import "SHMarkedHyperlink.h"
 
 
 @implementation SHMarkedHyperlink
 
--(id)initWithString:(NSString *)inString parentString:(NSString *)pInString andRange:(NSRange)inRange
+-(id)initWithString:(NSString *)inString withValidationStatus:(URI_VERIFICATION_STATUS)status parentString:(NSString *)pInString andRange:(NSRange)inRange
 {
     linkRange = inRange;
     pString = [pInString retain];
     linkURL = [[NSURL URLWithString:inString] autorelease];
+    urlStatus = status;
     [super init];
     
     return self;
@@ -30,9 +30,15 @@
 {
     return pString;
 }
+
 -(NSURL *)URL
 {
     return linkURL;
+}
+
+-(URI_VERIFICATION_STATUS)validationStatus
+{
+    return urlStatus;
 }
 
 -(void)setRange:(NSRange)inRange
@@ -50,6 +56,11 @@
 {
     if(linkURL) [linkURL release];
     linkURL = [[NSURL URLWithString:inString] autorelease];
+}
+
+-(void)setValidationStatus:(URI_VERIFICATION_STATUS)status;
+{
+    urlStatus = status;
 }
 
 -(void)setParentString:(NSString *)pInString
