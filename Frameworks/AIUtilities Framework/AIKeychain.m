@@ -19,6 +19,7 @@
 
 #import "AIKeychain.h"
 #import "AIWiredData.h"
+#import "AIWiredString.h"
 #include <CoreServices/CoreServices.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <Security/Security.h>
@@ -26,7 +27,7 @@
 @implementation AIKeychain
 
 //Convenience accessor for SecKeychainFindGenericPassword
-OSStatus GetPasswordKeychain(const char *service,const char *account,void *passwordData,UInt32 *passwordLength,SecKeychainItemRef *itemRef)
+OSStatus GetPasswordKeychain(const char *service,const char *account,void **passwordData,UInt32 *passwordLength,SecKeychainItemRef *itemRef)
 {
 	OSStatus	ret;
 	
@@ -60,12 +61,12 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void *passw
 	NSAssert((service && [service length] > 0),@"getPasswordFromKeychainForService: service wasn't acceptable!");
 	NSAssert((account && [account length] > 0),@"getPasswordFromKeychainForService: account wasn't acceptable!");
 	
-	ret = GetPasswordKeychain([service UTF8String],[account UTF8String],&passwordBytes,&passwordLength,NULL);
+	ret = GetPasswordKeychain([service UTF8String],[account UTF8String],(void **)&passwordBytes,&passwordLength,NULL);
 	
 	if (ret == noErr){
 		NSData	*passwordData = [AIWiredData dataWithBytes:passwordBytes length:passwordLength];
-		passwordString = [[[NSString alloc] initWithData:passwordData
-												encoding:NSUTF8StringEncoding] autorelease];			
+		passwordString = [[[AIWiredString alloc] initWithData:passwordData
+													 encoding:NSUTF8StringEncoding] autorelease];			
 	}
 	if(passwordBytes)
 		SecKeychainItemFreeContent(/*attrList*/ NULL, passwordBytes);
