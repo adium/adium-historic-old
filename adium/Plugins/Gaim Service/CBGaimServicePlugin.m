@@ -51,7 +51,7 @@ static CBGaimServicePlugin  *servicePluginInstance;
 	YahooService		= [[ESYahooService alloc] initWithService:self];
 	YahooJapanService	= [[ESYahooJapanService alloc] initWithService:self];
 	MeanwhileService	= [[ESMeanwhileService alloc] initWithService:self];
-#warning	ZephyrService		= [[ESZephyrService alloc] initWithService:self];
+	ZephyrService		= [[ESZephyrService alloc] initWithService:self];
 }
 
 - (void)uninstallPlugin
