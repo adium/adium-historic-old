@@ -34,11 +34,6 @@
 
 	preferences = [[AIAppearancePreferences preferencePaneForPlugin:self] retain];	
 
-	//Observe installed xtras changes
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(xtrasChanged:)
-									   name:Adium_Xtras_Changed
-									 object:nil];
 	
 	
 	
@@ -54,11 +49,6 @@
 	//Install our preference view
 }	
 
-- (void)xtrasChanged:(NSNotification *)notification
-{
-	
-	
-}
 
 /*!
  * @brief Apply changed preferences
