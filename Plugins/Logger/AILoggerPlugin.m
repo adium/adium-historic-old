@@ -28,8 +28,8 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
-#import <AIUtilities/AIHTMLDecoder.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/ESDateFormatterAdditions.h>
@@ -38,6 +38,7 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentStatus.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 

@@ -21,9 +21,9 @@
 #import "AIPreferenceController.h"
 #import "ESApplescriptabilityController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AIHTMLDecoder.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIContentMessage.h>
+#import <Adium/AIHTMLDecoder.h>
 
 @implementation ESApplescriptabilityController
 
