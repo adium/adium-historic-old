@@ -91,6 +91,14 @@
         force_desiredFont = [[[prefDict objectForKey:KEY_FORCE_DESIRED_FONT] representedFont] retain];
         force_desiredTextColor = [[[prefDict objectForKey:KEY_FORCE_DESIRED_TEXT_COLOR] representedColor] retain];
         force_desiredBackgroundColor = [[[prefDict objectForKey:KEY_FORCE_DESIRED_BACKGROUND_COLOR] representedColor] retain];
+		
+		//If a preference load fails for some reason, don't try to make that formatting substitution
+		if (!force_desiredFont)
+			forceFont = nil;
+		if (!force_desiredTextColor)
+			forceText = nil;
+		if (!force_desiredBackgroundColor)
+			forceBackground = nil;
     }
 }
 
