@@ -15,6 +15,7 @@
 {
 	NSDictionary		*attributes;
 	NSAttributedString	*sample;
+	NSShadow			*shadow = nil;
 		
 	//Background
 	if(backgroundGradientColor){
@@ -26,11 +27,20 @@
 		[NSBezierPath fillRect:rect];
 	}
 
+	//Shadow
+	if([textShadowColor color]){
+		shadow = [[[NSShadow alloc] init] autorelease];
+		[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
+		[shadow setShadowBlurRadius:2.0];
+		[shadow setShadowColor:[textShadowColor color]];
+	}
+
 	//Text
 	attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSFont systemFontOfSize:12], NSFontAttributeName,
 		[NSParagraphStyle styleWithAlignment:NSCenterTextAlignment], NSParagraphStyleAttributeName,
 		[textColor color], NSForegroundColorAttributeName,
+		shadow, NSShadowAttributeName,
 		nil];
 	sample = [[[NSAttributedString alloc] initWithString:@"Sample Text" attributes:attributes] autorelease];
 	int	sampleHeight = [sample size].height;

@@ -146,10 +146,11 @@
 	
 	//Groups
 	[colorWell_groupText setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR] representedColor]];
+	[colorWell_groupTextInverted setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR_INVERTED] representedColor]];
 	[colorWell_groupBackground setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]];
 	[colorWell_groupBackgroundGradient setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
 	[colorWell_groupShadow setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
-	
+		
 	//Background Image
 	[checkBox_useBackgroundImage setState:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]];
 	NSString *backgroundImagePath = [[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH] lastPathComponent];
@@ -159,6 +160,7 @@
     [colorWell_background setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor]];
     [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor]];	
 	[slider_backgroundFade setFloatValue:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]];
+	[checkBox_drawGrid setState:[[preferenceDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
 	
 	[self updateSliderValues];
 	[self configureControlDimming];
@@ -326,11 +328,17 @@
 											 forKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED
 											  group:PREF_GROUP_LIST_THEME];
 		
+    }else if(sender == checkBox_drawGrid){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LIST_THEME_GRID_ENABLED
+                                              group:PREF_GROUP_LIST_THEME];
+		
     }else if(sender == colorWell_background){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LIST_THEME_BACKGROUND_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		[preview_background setNeedsDisplay:YES];
+		[preview_group setNeedsDisplay:YES];
 		
     }else if(sender == colorWell_grid){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
@@ -344,29 +352,35 @@
                                               group:PREF_GROUP_LIST_THEME];
 		[self updateSliderValues];
 		
+    }else if(sender == colorWell_groupText){
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
+                                             forKey:KEY_LIST_THEME_GROUP_TEXT_COLOR
+                                              group:PREF_GROUP_LIST_THEME];
+		[preview_group setNeedsDisplay:YES];
+		
     }else if(sender == colorWell_groupBackground){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LIST_THEME_GROUP_BACKGROUND
                                               group:PREF_GROUP_LIST_THEME];
-		[preview_groupBackground setNeedsDisplay:YES];
+		[preview_groupInverted setNeedsDisplay:YES];
 		
     }else if(sender == colorWell_groupBackgroundGradient){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT
                                               group:PREF_GROUP_LIST_THEME];
-		[preview_groupBackground setNeedsDisplay:YES];
+		[preview_groupInverted setNeedsDisplay:YES];
 		
-    }else if(sender == colorWell_groupText){
+    }else if(sender == colorWell_groupTextInverted){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
-                                             forKey:KEY_LIST_THEME_GROUP_TEXT_COLOR
+                                             forKey:KEY_LIST_THEME_GROUP_TEXT_COLOR_INVERTED
                                               group:PREF_GROUP_LIST_THEME];
-		[preview_groupBackground setNeedsDisplay:YES];
-
+		[preview_groupInverted setNeedsDisplay:YES];
+		
     }else if(sender == colorWell_groupShadow){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR
                                               group:PREF_GROUP_LIST_THEME];
-		[preview_groupBackground setNeedsDisplay:YES];
+		[preview_groupInverted setNeedsDisplay:YES];
 		
 	}
 		

@@ -41,19 +41,20 @@
 #define KEY_IDLE_AWAY_COLOR			@"Idle And Away Color"
 #define KEY_OFFLINE_COLOR			@"Offline Color"
 
-#define KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED	@"Use Background Image"
-#define KEY_LIST_THEME_BACKGROUND_IMAGE_PATH	@"Background Image Path"
-#define KEY_LIST_THEME_BACKGROUND_FADE			@"Background Fade"
+#define KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED		@"Use Background Image"
+#define KEY_LIST_THEME_BACKGROUND_IMAGE_PATH		@"Background Image Path"
+#define KEY_LIST_THEME_BACKGROUND_FADE				@"Background Fade"
 
-#define KEY_LIST_THEME_BACKGROUND_COLOR			@"Background Color"
-#define KEY_LIST_THEME_GRID_COLOR				@"Grid Color"
+#define KEY_LIST_THEME_BACKGROUND_COLOR				@"Background Color"
+#define KEY_LIST_THEME_GRID_COLOR					@"Grid Color"
 
 #define KEY_LIST_THEME_GROUP_BACKGROUND				@"Group Background"
 #define KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT	@"Group Background Gradient"
 #define KEY_LIST_THEME_GROUP_TEXT_COLOR				@"Group Text Color"
+#define KEY_LIST_THEME_GROUP_TEXT_COLOR_INVERTED	@"Group Inverted Text Color"
 #define KEY_LIST_THEME_GROUP_SHADOW_COLOR			@"Group Shadow Color"
 
-//#define KEY_LIST_THEME_
+#define KEY_LIST_THEME_GRID_ENABLED					@"Grid Enabled"
 
 @class AITextColorPreviewView;
 
@@ -106,20 +107,22 @@
 	IBOutlet	NSButton				*checkBox_useBackgroundImage;
 	IBOutlet	NSButton				*button_setBackgroundImage;
 	IBOutlet	NSTextField				*textField_backgroundImagePath;
+	IBOutlet	NSSlider				*slider_backgroundFade;
+	IBOutlet	NSTextField				*textField_backgroundFade;
 	
 	IBOutlet	NSColorWell				*colorWell_background;
 	IBOutlet	AITextColorPreviewView	*preview_background;
 	IBOutlet	NSColorWell				*colorWell_grid;
 	IBOutlet	AITextColorPreviewView	*preview_grid;
-	
-	IBOutlet	NSSlider				*slider_backgroundFade;
-	IBOutlet	NSTextField				*textField_backgroundFade;
-	
+	IBOutlet	NSButton				*checkBox_drawGrid;
+
 	IBOutlet	NSColorWell				*colorWell_groupText;
+	IBOutlet	NSColorWell				*colorWell_groupTextInverted;
+	IBOutlet	NSColorWell				*colorWell_groupShadow;
 	IBOutlet	NSColorWell				*colorWell_groupBackground;
 	IBOutlet	NSColorWell				*colorWell_groupBackgroundGradient;
-	IBOutlet	NSColorWell				*colorWell_groupShadow;
-	IBOutlet	AITextColorPreviewView	*preview_groupBackground;
+	IBOutlet	AITextColorPreviewView	*preview_group;
+	IBOutlet	AITextColorPreviewView	*preview_groupInverted;
 
 	IBOutlet	NSTextField				*textField_themeName;
 	

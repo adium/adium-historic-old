@@ -70,5 +70,7 @@
 	<string>0,0,0</string> 
 	<key>Group Shadow Color</key>
 	<string>128,128,128</string> 
+	<key>Group Inverted Text Color</key>
+	<string>255,255,255</string> 
 </dict>
 </plist>

@@ -386,7 +386,7 @@
 		backgroundAlpha = 0.0;
 		[contactListView setDrawsAlternatingRows:NO];
 	}else{
-		[contactListView setDrawsAlternatingRows:(backgroundAlpha == 0.0 ? NO : [[layoutDict objectForKey:KEY_LIST_LAYOUT_GRID_ENABLED] boolValue])];
+		[contactListView setDrawsAlternatingRows:(backgroundAlpha == 0.0 ? NO : [[themeDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue])];
 	}
 	
 	//Transparency.  Bye bye CPU cycles, I'll miss you!
@@ -408,7 +408,12 @@
 		[groupCell setShadowColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
 	}
 	
-	[groupCell setTextColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR] representedColor]];
+	if([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_GROUP_CELL_STYLE
+												 group:PREF_GROUP_LIST_LAYOUT] intValue] == CELL_STYLE_STANDARD){
+		[groupCell setTextColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR] representedColor]];
+	}else{
+		[groupCell setTextColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR_INVERTED] representedColor]];
+	}
 }
 
 

@@ -32,7 +32,6 @@
 #define KEY_LIST_LAYOUT_GROUP_CELL_STYLE		@"Group Cell Style"
 
 #define KEY_LIST_LAYOUT_WINDOW_SHADOWED			@"Window Shadowed"
-#define KEY_LIST_LAYOUT_GRID_ENABLED			@"Grid Enabled"
 
 #define KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE		@"Vertical Autosizing"
 #define KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY		@"Window Transparency"
@@ -84,7 +83,6 @@ typedef enum {
 	IBOutlet		NSButton			*checkBox_statusIconsVisible;
 	IBOutlet		NSButton			*checkBox_serviceIconsVisible;
 	IBOutlet		NSButton			*checkBox_windowHasShadow;
-	IBOutlet		NSButton			*checkBox_drawGrid;
 	IBOutlet		NSButton			*checkBox_verticalAutosizing;
 
 	IBOutlet		NSSlider			*slider_userIconSize;
