@@ -49,7 +49,9 @@
 	[textField_haveTalkedDays setIntValue:[[preferenceDict objectForKey:KEY_HAVE_TALKED_DAYS] intValue]];
 	[textField_haveNotTalkedDays setIntValue:[[preferenceDict objectForKey:KEY_HAVE_NOT_TALKED_DAYS] intValue]];
 	[matrix_radioButtons selectCellAtRow:[[preferenceDict objectForKey:KEY_DISPLAY_MODE] intValue] column:0];
-
+	[menu_haveTalkedUnits selectItemAtIndex:[[preferenceDict objectForKey:KEY_HAVE_TALKED_UNITS] intValue]];
+	[menu_haveNotTalkedUnits selectItemAtIndex:[[preferenceDict objectForKey:KEY_HAVE_NOT_TALKED_UNITS] intValue]];
+		
 	[self configureControlDimming];
 }
 
@@ -79,6 +81,14 @@
 											 forKey:KEY_DISPLAY_MODE
 											  group:PREF_GROUP_CONTEXT_DISPLAY];
 		[self configureControlDimming];
+	} else if( sender == menu_haveTalkedUnits ) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender indexOfSelectedItem]]
+											 forKey:KEY_HAVE_TALKED_UNITS
+											  group:PREF_GROUP_CONTEXT_DISPLAY];
+	} else if( sender == menu_haveNotTalkedUnits ) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender indexOfSelectedItem]]
+											 forKey:KEY_HAVE_NOT_TALKED_UNITS
+											  group:PREF_GROUP_CONTEXT_DISPLAY];
 	}
 	
 }
@@ -97,6 +107,9 @@
 		[textField_haveNotTalkedDays setEnabled:YES];
 		[stepper_haveNotTalkedDays setEnabled:YES];
 		
+		[menu_haveTalkedUnits setEnabled:YES];
+		[menu_haveNotTalkedUnits setEnabled:YES];
+		
 		[matrix_radioButtons setEnabled:YES];
 	}else{
 		[textField_linesToDisplay setEnabled:NO];
@@ -106,6 +119,9 @@
 		[stepper_haveTalkedDays setEnabled:NO];
 		[textField_haveNotTalkedDays setEnabled:NO];
 		[stepper_haveNotTalkedDays setEnabled:NO];
+		
+		[menu_haveTalkedUnits setEnabled:NO];
+		[menu_haveNotTalkedUnits setEnabled:NO];
 		
 		[matrix_radioButtons setEnabled:NO];
 	}
@@ -117,18 +133,24 @@
 				[stepper_haveTalkedDays setEnabled:NO];
 				[textField_haveNotTalkedDays setEnabled:NO];
 				[stepper_haveNotTalkedDays setEnabled:NO];
+				[menu_haveTalkedUnits setEnabled:NO];
+				[menu_haveNotTalkedUnits setEnabled:NO];
 				break;
 			case 1:
 				[textField_haveTalkedDays setEnabled:YES];
 				[stepper_haveTalkedDays setEnabled:YES];
 				[textField_haveNotTalkedDays setEnabled:NO];
 				[stepper_haveNotTalkedDays setEnabled:NO];
+				[menu_haveTalkedUnits setEnabled:YES];
+				[menu_haveNotTalkedUnits setEnabled:NO];
 				break;
 			case 2:
 				[textField_haveTalkedDays setEnabled:NO];
 				[stepper_haveTalkedDays setEnabled:NO];
 				[textField_haveNotTalkedDays setEnabled:YES];
 				[stepper_haveNotTalkedDays setEnabled:YES];
+				[menu_haveTalkedUnits setEnabled:NO];
+				[menu_haveNotTalkedUnits setEnabled:YES];
 		}
 	}
 }

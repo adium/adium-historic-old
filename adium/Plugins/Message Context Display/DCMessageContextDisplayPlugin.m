@@ -9,6 +9,7 @@
 
 @interface DCMessageContextDisplayPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
+- (BOOL)contextShouldBeDisplayed:(NSCalendarDate *)inDate;
 @end
 
 @implementation DCMessageContextDisplayPlugin
@@ -45,6 +46,9 @@
 		haveTalkedDays = [[preferenceDict objectForKey:KEY_HAVE_TALKED_DAYS] intValue];
 		haveNotTalkedDays = [[preferenceDict objectForKey:KEY_HAVE_NOT_TALKED_DAYS] intValue];
 		displayMode = [[preferenceDict objectForKey:KEY_DISPLAY_MODE] intValue];
+		
+		haveTalkedUnits = [[preferenceDict objectForKey:KEY_HAVE_TALKED_UNITS] intValue];
+		haveNotTalkedUnits = [[preferenceDict objectForKey:KEY_HAVE_NOT_TALKED_UNITS] intValue];
 		
 		shouldDisplay = [[preferenceDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue];
 		linesToDisplay = [[preferenceDict objectForKey:KEY_DISPLAY_LINES] intValue];
@@ -178,9 +182,12 @@
 		
 		NSCalendarDate *mostRecentMessage = [NSDate dateWithNaturalLanguageString:[[chatDict objectForKey:@"1"] objectForKey:@"Date"]];
 		
-		if( displayMode == MODE_ALWAYS ||
-			 (displayMode == MODE_HAVE_TALKED && ([[NSCalendarDate calendarDate] dayOfCommonEra]-[mostRecentMessage dayOfCommonEra]) <= haveTalkedDays ) ||
-			 (displayMode == MODE_HAVE_NOT_TALKED && ([[NSCalendarDate calendarDate] dayOfCommonEra]-[mostRecentMessage dayOfCommonEra]) > haveNotTalkedDays) ) {
+		if( [self contextShouldBeDisplayed:mostRecentMessage] ) {
+			
+			
+		//if( displayMode == MODE_ALWAYS ||
+		//	 (displayMode == MODE_HAVE_TALKED && ([[NSCalendarDate calendarDate] dayOfCommonEra]-[mostRecentMessage dayOfCommonEra]) <= haveTalkedDays ) ||
+		//	 (displayMode == MODE_HAVE_NOT_TALKED && ([[NSCalendarDate calendarDate] dayOfCommonEra]-[mostRecentMessage dayOfCommonEra]) > haveNotTalkedDays) ) {
 			
 			//Max number of lines to display
 			cnt = ([chatDict count] >= linesToDisplay ? linesToDisplay : [chatDict count]);
@@ -230,4 +237,39 @@
 	
 }
 
+- (BOOL)contextShouldBeDisplayed:(NSCalendarDate *)inDate
+{
+	BOOL dateIsGood = YES;
+	int thresholdDays = 0;
+	int thresholdHours = 0;
+	
+	if( displayMode != MODE_ALWAYS ) {
+		
+		if( displayMode == MODE_HAVE_TALKED ) {
+			if( haveTalkedUnits == UNIT_DAYS )
+				thresholdDays = haveTalkedDays;
+			else if( haveTalkedUnits == UNIT_HOURS )
+				thresholdHours = haveTalkedDays;
+			
+		} else if( displayMode == MODE_HAVE_NOT_TALKED ) {
+			if( haveTalkedUnits == UNIT_DAYS )
+				thresholdDays = haveNotTalkedDays;
+			else if( haveTalkedUnits == UNIT_HOURS )
+				thresholdHours = haveNotTalkedDays;
+		}
+		
+		// Take the most recent message's date, add our limits to it
+		// See if the new date is earlier or later than today's date
+		NSCalendarDate *newDate = [inDate dateByAddingYears:0 months:0 days:thresholdDays hours:thresholdHours minutes:0 seconds:0];
+
+		NSComparisonResult comparison = [newDate compare:[NSDate date]];
+		
+		if( ((displayMode == MODE_HAVE_TALKED) && (comparison == NSOrderedAscending)) ||
+			((displayMode == MODE_HAVE_NOT_TALKED) && (comparison == NSOrderedDescending)) ) {
+			dateIsGood = NO;
+		}
+	}
+	
+	return( dateIsGood );
+}
 @end

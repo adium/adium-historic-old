@@ -25,6 +25,9 @@
 	IBOutlet	NSTextField		*textField_haveTalkedDays;
 	IBOutlet	NSTextField		*textField_haveNotTalkedDays;
 	
+	IBOutlet	NSPopUpButton   *menu_haveTalkedUnits;
+	IBOutlet	NSPopUpButton   *menu_haveNotTalkedUnits;
+	
 	IBOutlet	NSStepper		*stepper_linesToDisplay;
 	IBOutlet	NSStepper		*stepper_haveTalkedDays;
 	IBOutlet	NSStepper		*stepper_haveNotTalkedDays;
