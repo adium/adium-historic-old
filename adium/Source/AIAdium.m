@@ -30,7 +30,9 @@
 
 #import <ExceptionHandling/NSExceptionHandler.h>
 
-#define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"	//Path to Adium's application support preferences
+//Path to Adium's application support preferences
+#define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
+
 #define ADIUM_FAQ_PAGE                          @"http://adium.sourceforge.net/faq/"
 
 @interface AIAdium (PRIVATE)
@@ -38,8 +40,12 @@
 - (void)completeLogin;
 @end
 
-/*" simple uncaught exception handler for testing "*/
-
+void Adium_HandleSignal(int i){
+    NSLog(@"Launching the Adium Crash Reporter because Adium went *boom* (Signal %i)",i);
+    [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_CRASH_REPORTER];
+    //Move along, citizen, nothing more to see here.
+    exit(-1);
+}
 
 @implementation AIAdium
 
@@ -211,26 +217,20 @@
     //init
     notificationCenter = nil;
     eventNotifications = [[NSMutableDictionary alloc] init];
+    completedApplicationLoad = NO;
     //play a sound to prevent a delay later when quicktime loads
     //    [AISoundController playSoundNamed:@"Beep"];
 }
 
-void Adium_HandleSignal(int i){
-    NSLog(@"Launching the Adium Crash Reporter because Adium went *boom* (Signal %i)",i);
-    [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_CRASH_REPORTER];
-    //Move along, citizen, nothing more to see here.
-    exit(-1);
-}
-
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
-	//Remove any existing crash logs
-	[[NSFileManager defaultManager] trashFileAtPath:EXCEPTIONS_PATH];
-	[[NSFileManager defaultManager] trashFileAtPath:CRASHES_PATH];
-	
-	//Log and Handle all exceptions
+    //Remove any existing crash logs
+    [[NSFileManager defaultManager] trashFileAtPath:EXCEPTIONS_PATH];
+    [[NSFileManager defaultManager] trashFileAtPath:CRASHES_PATH];
+    
+    //Log and Handle all exceptions
     [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
-
+    
     //NSExceptionHandler messes up crash signals - install a custom handler which properly terminates Adium if one is received
     signal(4, Adium_HandleSignal);      /* illegal instruction (not reset when caught) */
     signal(5, Adium_HandleSignal);      /* trace trap (not reset when caught) */
@@ -247,6 +247,52 @@ void Adium_HandleSignal(int i){
     
     //Begin Login
     [loginController requestUserNotifyingTarget:self selector:@selector(completeLogin)];
+    
+    completedApplicationLoad = YES;
+}
+
+//If Adium was launched by double-clicking an associated file, we get this call after willFinishLaunching but before didFinishLaunching
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
+{
+    NSString    *extension = [filename pathExtension];
+    NSString    *destination = nil;
+    BOOL        success = NO;
+    
+    NSString    *fileDescription = nil;
+    BOOL        requiresRestart = NO;
+    
+    //Specify a file extension and a human-readable description of what the files of this type do
+    if ([extension caseInsensitiveCompare:@"AdiumPlugin"] == NSOrderedSame){
+        destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Plugins"];
+        //Plugins haven't been loaded yet if the application isn't done loading, so only request a restart if it has finished loading already 
+        requiresRestart = completedApplicationLoad;
+        fileDescription = AILocalizedString(@"Adium plugin",nil);
+    }
+    
+    //If the file has a valid destination, copy it there and display an alert
+    if (destination){
+        NSString *alertTitle = nil;
+        
+        //For example: "Installation of the Adium plugin MakeToast"
+        NSString *alertMsg = [NSString stringWithFormat:@"%@ %@ %@",AILocalizedString(@"Installation of the","Beginning of installation sentence"),fileDescription,[[filename lastPathComponent] stringByDeletingPathExtension]];
+        
+        if ([[NSFileManager defaultManager] copyPath:filename toPath:[destination stringByAppendingPathComponent:[filename lastPathComponent]] handler:nil]){
+            
+            alertTitle = AILocalizedString(@"Installation Successful","Title of installation successful window");
+            alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" was successful.","End of installation succesful sentence")];
+            if (requiresRestart){
+                alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" Please restart Adium.",nil)];
+            }
+            
+            success = YES;
+        }else{
+            alertTitle = AILocalizedString(@"Installation Failed","Title of installation failed window");
+            alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" was unsuccessful.","End of installation failed sentence")];
+        }
+        NSRunInformationalAlertPanel(alertTitle,alertMsg,nil,nil,nil);
+    }
+
+    return success;
 }
 
 @end
