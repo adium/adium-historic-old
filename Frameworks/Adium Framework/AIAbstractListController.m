@@ -520,10 +520,15 @@
 
 - (AIListObject *)contactListItemAtScreenPoint:(NSPoint)screenPoint
 {
-	NSPoint			viewPoint = [contactListView convertPoint:[[contactListView window] convertScreenToBase:screenPoint] fromView:nil];
-	AIListObject	*hoveredObject = [contactListView itemAtRow:[contactListView rowAtPoint:viewPoint]];
+	NSRect		contactListFrame = [contactListView frame];
+	NSPoint		viewPoint = [contactListView convertPoint:[[contactListView window] convertScreenToBase:screenPoint] fromView:nil];
 	
-	return(hoveredObject);
+	//Be sure that screen points outside our view return nil, since no contact is being hovered.
+	if(viewPoint.x > NSMinX(contactListFrame) && viewPoint.x < NSMaxX(contactListFrame)){
+		return([contactListView itemAtRow:[contactListView rowAtPoint:viewPoint]]);
+	}else{
+		return(nil);
+	}
 }
 
 //Hide tooltip
