@@ -17,19 +17,25 @@
     It can be installed from source, via fink, or by a package.</p>
   <p>I would recommend a package by Mark Liyanage.<br />
     You can find information and installation instructions at <a
-      href="http://www.entropy.ch/software/macosx/postgresql/" class="offsite">http://www.entropy.ch/software/macosx/postgresql/</a>.</p>
+      href="http://www.entropy.ch/software/macosx/postgresql/"
+      class="offsite">http://www.entropy.ch/software/macosx/postgresql/</a>.
+  This tutorial has an OS X-style installer, and has a package for starting
+  PostgreSQL up at startup.</p>
     <p>There is also a set of installation instructions for installing
-    PostgreSQL at <a
+    PostgreSQL from source at <a
       href="http://developer.apple.com/internet/macosx/postgres.html" class="offsite">http://developer.apple.com/internet/macosx/postgres.html</a>.
     That tutorial is very good.  It covers installing PostgreSQL from source, shows
   how to use PostgreSQL with Perl (necessary for parser.pl or parser-2.pl to
   work), Java (necessary for the JSP viewers to work), and PHP (not necessary
   for this).  It also covers how to administer the database using phpPgAdmin, an
   administration program with a web interface.</p>
-    <p>After you have PostgreSQL set up, create a user with your username.</p>
+    <p>After you have PostgreSQL set up, create a user with your username.
+      This needs to be done as the postgres user.
+      (<code>su&#160;-&#160;postgres</code>)</p>
     <div class="tutorialcode">
       <pre>createuser <i>username</i></pre></div>
-    <p>Then create a database with your username:</p>
+    <p>Then create a database with your username, as yourself 
+      (<code>su&#160;-&#160;<i>username</i></code>):</p>
     <div class="tutorialcode">
       <pre>createdb <i>username</i></pre></div>
     <p>After a database is created, you should be able to connect to it by

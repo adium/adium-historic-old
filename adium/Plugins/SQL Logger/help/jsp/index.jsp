@@ -5,13 +5,14 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 346 $ $Date: 2003/08/05 04:25:49 $ -->
+<!--$Rev: 386 $ $Date: 2003/08/19 06:36:52 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
-String afterDate, beforeDate, from_sn, to_sn;
+String afterDate, beforeDate, from_sn, to_sn, contains_sn;
+boolean showForm = false, showConcurrentUsers = false;
 
 Date today = new Date(System.currentTimeMillis());
 
@@ -19,6 +20,12 @@ beforeDate = request.getParameter("before");
 afterDate = request.getParameter("after");
 from_sn = request.getParameter("from");
 to_sn = request.getParameter("to");
+contains_sn = request.getParameter("contains");
+
+showForm = Boolean.valueOf(request.getParameter("form")).booleanValue();
+
+showConcurrentUsers =
+    Boolean.valueOf(request.getParameter("users")).booleanValue();
 
 if (beforeDate != null && (beforeDate.equals("") || beforeDate.equals("null"))) {
     beforeDate = null;
@@ -32,6 +39,10 @@ if (from_sn != null && from_sn.equals("")) {
 if (to_sn != null && to_sn.equals("")) {
     to_sn = null;
 }
+if (contains_sn != null && contains_sn.equals("")) {
+    contains_sn = null;
+}
+
 %>
 <html>
     <head>
@@ -43,6 +54,7 @@ if (to_sn != null && to_sn.equals("")) {
         </style>
     </head>
     <body bgcolor="#ffffff">
+        <% if (!showForm) { %>
         <form action="index.jsp" method="GET">
             <fieldset>
                 <legend>View by Date</legend>
@@ -53,6 +65,10 @@ if (to_sn != null && to_sn.equals("")) {
                 <input type="text" name="to" <% if (to_sn != null)
                 out.print("value=\"" + to_sn + "\""); %> id="to" />
                 <br />
+                <label for="contains">Single SN:</label>
+                <input type="text" name="contains" <% if (contains_sn != null)
+                out.print("value=\"" + contains_sn + "\""); %> id = "contains"
+                /><br />
                 <label for="after_date">Date Range: </label>
                 <input type="text" name="after" <% if (afterDate != null)
                 out.print("value=\"" + afterDate + "\""); else
@@ -62,6 +78,12 @@ if (to_sn != null && to_sn.equals("")) {
                 <input type="text" name="before" <% if (beforeDate != null)
                 out.print("value=\"" + beforeDate + "\""); %> id="before_date" />
                 &nbsp;(YYYY-MM-DD hh:mm:ss)<br />
+                <input type="checkbox" name="users" id="user"
+                value="true" <% if (showConcurrentUsers)
+                out.print(" checked=\"true\""); %>/>
+                <label for="user">Do Not Show Multiple Users</label><br />
+                <input type="checkbox" name="form" id="form" value="true" />
+                <label for="form">Do Not Show Form</label><br />
                 <input type="reset" />
                 <input type="submit" />
             
@@ -70,6 +92,7 @@ if (to_sn != null && to_sn.equals("")) {
         <a href="search.jsp">[Search Logs]</a>&nbsp;&nbsp;
         <a href="statistics.jsp">[Statistics]</a><br /><br />
 <%
+    }
 PreparedStatement pstmt = null;
 ResultSet rset = null;
 
@@ -77,19 +100,27 @@ try {
     String commandArray[] = new String[10];
     int aryCount = 0;
     boolean unconstrained = false;
+    
     String queryText = "select sender_sn, recipient_sn, message, " +
     " message_date, message_id from adium.message_v ";
     
+    String concurrentWhereClause = " where ";
+    
     if (afterDate == null) {
         queryText += "where message_date > 'now'::date ";
-        unconstrained = true;
+        concurrentWhereClause += " message_date > 'now'::date ";
     } else {
-        queryText += "where message_date > ?";
+        queryText += "where message_date > ?::timestamp ";
+        concurrentWhereClause += " message_date > ?::timestamp ";
         commandArray[aryCount++] = new String(afterDate);
+        if(beforeDate == null) {
+            unconstrained = true;
+        }
     }
     
     if (beforeDate != null) {
-        queryText += " and message_date < ?";
+        queryText += " and message_date < ?::timestamp";
+        concurrentWhereClause += "and message_date < ?::timestamp ";
         commandArray[aryCount++] = new String(beforeDate);
     }
 
@@ -109,15 +140,59 @@ try {
         commandArray[aryCount++] = new String(to_sn);
     }
 
+    if (contains_sn != null) {
+        queryText += " and (recipient_sn = ? or sender_sn = ?) ";
+        commandArray[aryCount++] = new String(contains_sn);
+        commandArray[aryCount++] = new String(contains_sn);
+    }
+
     queryText += " order by message_date, message_id";
     
-    if((afterDate != null && beforeDate == null) ||
-        (beforeDate != null && afterDate == null) && !unconstrained) {
+    if(unconstrained) {
         queryText += " limit 250";
         out.print("<div align=\"center\"><i>Limited to 250 " +
         "messages.</i><br><br></div>");
     }
     
+    if(!showConcurrentUsers) {
+        String query = "select username from adium.users natural join "+
+        "(select distinct sender_id as user_id from adium.messages "+
+        concurrentWhereClause + " union " +
+        "select distinct recipient_id as user_id from adium.messages " +
+        concurrentWhereClause + ") messages";
+
+        pstmt = conn.prepareStatement(query);
+        
+        if(afterDate != null && beforeDate != null) {
+            pstmt.setString(1, afterDate);
+            pstmt.setString(2, beforeDate);
+            pstmt.setString(3, afterDate);
+            pstmt.setString(4, beforeDate);
+        } else if(afterDate == null && beforeDate != null) {
+            pstmt.setString(1, beforeDate);
+            pstmt.setString(2, beforeDate);
+        } else if(unconstrained) {
+            pstmt.setString(1, afterDate);
+            pstmt.setString(2, afterDate);
+        }
+
+        rset = pstmt.executeQuery();
+        out.print("<div align=\"center\">");
+        out.println("<b>Users:</b><br />");
+        while(rset.next()) {
+            if (rset.getRow() % 5 == 0) {
+                out.print("<br />");
+            }
+            else if (rset.getRow() != 1) {
+                out.print(" | ");
+            }
+            out.print("<a href=\"index.jsp?&after=" + afterDate + 
+            " + &before=" + beforeDate + "&contains=" + 
+            rset.getString("username") + "\">"+
+            rset.getString("username") + "</a>");
+        }
+        out.println("</div><br />");
+    }
     pstmt = conn.prepareStatement(queryText);
     for(int i = 0; i < aryCount; i++) {
         pstmt.setString(i + 1, commandArray[i]);
