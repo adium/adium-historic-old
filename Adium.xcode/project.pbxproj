@@ -464,12 +464,6 @@
 			settings = {
 			};
 		};
-		340F2E4806D6AFE10072E2FA = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		340F30E206D6FD700072E2FA = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -588,7 +582,7 @@
 		340F47EA06DA41DB0072E2FA = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "Contact Info List Theme.plist";
 			path = "Source/Contact Info List Theme.plist";
 			refType = 4;
@@ -597,7 +591,7 @@
 		340F47EB06DA41DB0072E2FA = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "Contact Info List Layout.plist";
 			path = "Source/Contact Info List Layout.plist";
 			refType = 4;
@@ -1083,8 +1077,8 @@
 		3419F3AE05314BE000C68BA3 = {
 			buildActionMask = 2147483647;
 			files = (
+				34FF934A06DE3F4300C1D683,
 				3448769A06D1EF7300DA778C,
-				3448769B06D1EF7800DA778C,
 				3419F75C05314FED00C68BA3,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -2321,27 +2315,12 @@
 		};
 		3448717106D1E57700DA778C = {
 			children = (
-				3448717206D1E57700DA778C,
+				34FF8DA906DE3D1F00C1D683,
 			);
 			isa = PBXGroup;
 			name = Products;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		3448717206D1E57700DA778C = {
-			fileType = wrapper.framework;
-			isa = PBXReferenceProxy;
-			path = AIUtilities.framework;
-			refType = 3;
-			remoteRef = 3448741206D1E5A100DA778C;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3448741206D1E5A100DA778C = {
-			containerPortal = 3448717006D1E57700DA778C;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
-			remoteInfo = AIUtilities;
 		};
 		3448745306D1E64C00DA778C = {
 			containerPortal = 3448717006D1E57700DA778C;
@@ -2441,56 +2420,14 @@
 			settings = {
 			};
 		};
-		3448761806D1ECE100DA778C = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3448761906D1ECFC00DA778C = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3448761A06D1ED5900DA778C = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3448761B06D1ED7700DA778C = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3448761C06D1ED8400DA778C = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3448761D06D1ED8E00DA778C = {
 			fileRef = 3448758D06D1EBDF00DA778C;
 			isa = PBXBuildFile;
 			settings = {
 			};
 		};
-		3448761E06D1ED9800DA778C = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3448761F06D1ED9E00DA778C = {
 			fileRef = 3448758D06D1EBDF00DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3448762006D1EDA800DA778C = {
-			fileRef = 3448717206D1E57700DA778C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2507,20 +2444,8 @@
 			settings = {
 			};
 		};
-		3448763C06D1EF1700DA778C = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3448763D06D1EF3C00DA778C = {
 			fileRef = 3448758D06D1EBDF00DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3448769706D1EF4600DA778C = {
-			fileRef = 3448717206D1E57700DA778C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2543,12 +2468,6 @@
 			settings = {
 			};
 		};
-		3448769B06D1EF7800DA778C = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3448769C06D1EF8300DA778C = {
 			fileRef = 3448758D06D1EBDF00DA778C;
 			isa = PBXBuildFile;
@@ -2561,26 +2480,8 @@
 			settings = {
 			};
 		};
-		3448769E06D1EF9600DA778C = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3448769F06D1EFA000DA778C = {
 			fileRef = 3448758D06D1EBDF00DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344876A006D1EFA500DA778C = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344876C006D1F2BF00DA778C = {
-			fileRef = 3448717206D1E57700DA778C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2654,7 +2555,7 @@
 		344C0D4806B6D61B00DA7200 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = AdiumSuite.scriptSuite;
 			path = Source/AdiumSuite.scriptSuite;
 			refType = 4;
@@ -2663,7 +2564,7 @@
 		344C0D4906B6D61B00DA7200 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = English;
 			path = Source/English.lproj/AdiumSuite.scriptTerminology;
 			refType = 4;
@@ -2778,7 +2679,7 @@
 		344ECBAB0620F323007256C6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "VersionChecker Defaults.plist";
 			path = "Plugins/Version Checker/VersionChecker Defaults.plist";
 			refType = 4;
@@ -3183,8 +3084,8 @@
 		346C9C4706004517000F5A8A = {
 			buildActionMask = 2147483647;
 			files = (
+				34FF934D06DE3F4E00C1D683,
 				3448761F06D1ED9E00DA778C,
-				3448761E06D1ED9800DA778C,
 				346C9C6906004536000F5A8A,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -3286,9 +3187,9 @@
 		346C9C5206004525000F5A8A = {
 			buildActionMask = 2147483647;
 			files = (
+				34FF934E06DE3F5100C1D683,
 				3448761D06D1ED8E00DA778C,
 				346C9C7C06004560000F5A8A,
-				3448761C06D1ED8400DA778C,
 				346C9C700600453C000F5A8A,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -4593,7 +4494,7 @@
 		};
 		34A65D6D06A5ABC500898470 = {
 			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.scpt;
+			lastKnownFileType = file;
 			name = Safari.scpt;
 			path = "Plugins/Safari Link Toolbar Item/Safari.scpt";
 			refType = 4;
@@ -5893,6 +5794,7 @@
 		34BD9D57053146CC000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
+				34FF933E06DE3EDD00C1D683,
 				3448758E06D1EBDF00DA778C,
 				7E4694830653403600E4F390,
 				3419F7760531512200C68BA3,
@@ -5900,7 +5802,6 @@
 				34B588A1058D833A00E7EF0D,
 				34C18B0D06CAC95400FF5FF9,
 				348E5ACB06D2A74C004C051C,
-				340F2E4806D6AFE10072E2FA,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5923,9 +5824,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				34FF934106DE3F1D00C1D683,
 				7E6642F7065336BA0050E8C8,
 				3419FE230531586A00C68BA3,
-				3448761806D1ECE100DA778C,
 				520FE46305BE20EB002D063D,
 			);
 			isa = PBXCopyFilesBuildPhase;
@@ -6280,9 +6181,9 @@
 		34BD9DDB05314751000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
+				34FF934406DE3F2A00C1D683,
 				3448761406D1EC0C00DA778C,
 				34B588A4058D83D300E7EF0D,
-				3448761906D1ECFC00DA778C,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6700,8 +6601,8 @@
 		34BD9EEA0531476D000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
+				34FF934B06DE3F4700C1D683,
 				3448762106D1EDB300DA778C,
-				3448762006D1EDA800DA778C,
 				3419F6F505314E9C00C68BA3,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -6802,7 +6703,7 @@
 		34BD9F340531477E000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				CABFED2306DB73A700EB2EA0,
+				34FF934306DE3F2700C1D683,
 				3448769806D1EF5900DA778C,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -6912,7 +6813,7 @@
 		34C1CA8705B15B170055C2E3 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "Labels Themable Prefs.plist";
 			path = "Plugins/Standard Contact List View/Labels Themable Prefs.plist";
 			refType = 4;
@@ -6921,7 +6822,7 @@
 		34C1CA8D05B15B3D0055C2E3 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "Idle Time Themable Prefs.plist";
 			path = "Plugins/Idle Time Display/Idle Time Themable Prefs.plist";
 			refType = 4;
@@ -7843,6 +7744,159 @@
 			settings = {
 			};
 		};
+		34FF8DA106DE3D1E00C1D683 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libexpat.a;
+			refType = 3;
+			remoteRef = 34FF932C06DE3D2800C1D683;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34FF8DA206DE3D1E00C1D683 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 34FF932D06DE3D2800C1D683;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34FF8DA906DE3D1F00C1D683 = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = AIUtilities.framework;
+			refType = 3;
+			remoteRef = 34FF932E06DE3D2800C1D683;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34FF932C06DE3D2800C1D683 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
+			remoteInfo = expat;
+		};
+		34FF932D06DE3D2800C1D683 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
+		};
+		34FF932E06DE3D2800C1D683 = {
+			containerPortal = 3448717006D1E57700DA778C;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = AIUtilities;
+		};
+		34FF933E06DE3EDD00C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934106DE3F1D00C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934206DE3F2400C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934306DE3F2700C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934406DE3F2A00C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934506DE3F2C00C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934606DE3F3300C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934706DE3F3600C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934806DE3F3B00C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934906DE3F4000C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934A06DE3F4300C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934B06DE3F4700C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934C06DE3F4B00C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934D06DE3F4E00C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934E06DE3F5100C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF934F06DE3F5400C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF935006DE3F5B00C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FF935106DE3F5F00C1D683 = {
+			fileRef = 34FF8DA906DE3D1F00C1D683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //340
 //341
 //342
@@ -8090,10 +8144,10 @@
 		4947F5C60655E85200B791E5 = {
 			buildActionMask = 2147483647;
 			files = (
+				34FF934F06DE3F5400C1D683,
 				4947F5C70655E85200B791E5,
 				49778165067F558700401CC7,
 				3448761606D1EC3000DA778C,
-				3448761B06D1ED7700DA778C,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8389,8 +8443,8 @@
 		4947F5EA0655E90C00B791E5 = {
 			children = (
 				4B57CCA106848F05003FF229,
-				9E23E8DE06CC4F6900D3C897,
-				9E23E8DF06CC4F6A00D3C897,
+				34FF8DA106DE3D1E00C1D683,
+				34FF8DA206DE3D1E00C1D683,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -9797,7 +9851,7 @@
 		4B29093F05F944BF0087D16F = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = AccountPrefs.plist;
 			path = Source/AccountPrefs.plist;
 			refType = 4;
@@ -11654,8 +11708,8 @@
 		4B7F278105440C0800CDFC90 = {
 			buildActionMask = 2147483647;
 			files = (
+				34FF934806DE3F3B00C1D683,
 				3448763B06D1EF0500DA778C,
-				3448763C06D1EF1700DA778C,
 				6C3E0730054471CD00A4AE2E,
 				4BDF2C92061E376C00EA75C5,
 			);
@@ -11845,7 +11899,7 @@
 		4B7F78B30597F42400162728 = {
 			buildActionMask = 2147483647;
 			files = (
-				CA0C977906DBFDB8004436BE,
+				34FF934206DE3F2400C1D683,
 				3448769906D1EF6100DA778C,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -12474,7 +12528,7 @@
 		4BA1300304C0A4E300A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = DualWindowDefaults.plist;
 			path = "Plugins/Dual Window Interface/DualWindowDefaults.plist";
 			refType = 4;
@@ -16582,9 +16636,9 @@
 		520FE39F05BE1FC5002D063D = {
 			buildActionMask = 2147483647;
 			files = (
+				34FF934606DE3F3300C1D683,
 				3448761506D1EC1800DA778C,
 				520FE46C05BE22B8002D063D,
-				3448761A06D1ED5900DA778C,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16857,7 +16911,7 @@
 		52AEBD5F05ABA95700B19C56 = {
 			buildActionMask = 2147483647;
 			files = (
-				344876C006D1F2BF00DA778C,
+				34FF934C06DE3F4B00C1D683,
 				520FE46605BE20F8002D063D,
 				3448769C06D1EF8300DA778C,
 				52AEBDD005ABAD0F00B19C56,
@@ -16929,7 +16983,7 @@
 		};
 		52AEBD6205ABA95800B19C56 = {
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "TicTacToe-Info.plist";
 			path = "Plists/TicTacToe-Info.plist";
 			refType = 4;
@@ -17149,7 +17203,7 @@
 		52C623D806697AC00006C387 = {
 			buildActionMask = 2147483647;
 			files = (
-				3448769E06D1EF9600DA778C,
+				34FF935106DE3F5F00C1D683,
 				3448769D06D1EF9100DA778C,
 				52C623EC066A558E0006C387,
 			);
@@ -17233,7 +17287,7 @@
 		52C623DF06697B1D0006C387 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "Growl-Info.plist";
 			path = "Plists/Growl-Info.plist";
 			refType = 4;
@@ -18155,7 +18209,7 @@
 		6E4F2B1605CA013000C11243 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = AwayStatusPrefs.plist;
 			path = "Plugins/Away Status Window/AwayStatusPrefs.plist";
 			refType = 4;
@@ -18208,7 +18262,7 @@
 		6E6EA018066F9C2600FA0D91 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = MessageStyles.plist;
 			path = "Plugins/Standard Message View/MessageStyles.plist";
 			refType = 4;
@@ -18668,7 +18722,7 @@
 		6ECFABC40622370D001C7E93 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = MessageContextDisplayDefaults.plist;
 			path = "Plugins/Message Context Display/MessageContextDisplayDefaults.plist";
 			refType = 4;
@@ -18713,7 +18767,7 @@
 		6EF3F85F05EF179B0037D3CC = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "Adium Default.AdiumTheme";
 			path = "Plugins/Themes/Adium Default.AdiumTheme";
 			refType = 4;
@@ -18952,6 +19006,7 @@
 		7E6642C00653363A0050E8C8 = {
 			buildActionMask = 2147483647;
 			files = (
+				34FF934706DE3F3600C1D683,
 				3448761706D1EC6300DA778C,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -19409,8 +19464,8 @@
 		7ECB106506A4D1AD00812D5F = {
 			buildActionMask = 2147483647;
 			files = (
+				34FF935006DE3F5B00C1D683,
 				3448769F06D1EFA000DA778C,
-				344876A006D1EFA500DA778C,
 				7ECB108C06A4D32B00812D5F,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -19485,7 +19540,7 @@
 		};
 		7ECB106806A4D1AD00812D5F = {
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "AOLamerKiller-Info.plist";
 			path = "Plists/AOLamerKiller-Info.plist";
 			refType = 4;
@@ -19773,7 +19828,7 @@
 		9E1BE1C605B248F0009B1A21 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = ContactCountingDisplayDefaults.plist;
 			path = "Plugins/Contact Counting Display/ContactCountingDisplayDefaults.plist";
 			refType = 4;
@@ -19836,7 +19891,7 @@
 		9E217B7706A74CA7002A3F27 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = StatusMenuItemDefaultPrefs.plist;
 			path = "Plugins/Status Menu Item/StatusMenuItemDefaultPrefs.plist";
 			refType = 4;
@@ -19873,36 +19928,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		9E23E8DE06CC4F6900D3C897 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libexpat.a;
-			refType = 3;
-			remoteRef = 9E23E8E006CC4F6D00D3C897;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9E23E8DF06CC4F6A00D3C897 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 9E23E8E106CC4F6D00D3C897;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9E23E8E006CC4F6D00D3C897 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
-			remoteInfo = expat;
-		};
-		9E23E8E106CC4F6D00D3C897 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
 		};
 		9E23E9E206CC506A00D3C897 = {
 			isa = PBXFileReference;
@@ -20370,7 +20395,7 @@
 		B72537BA058C4577004BA969 = {
 			buildActionMask = 2147483647;
 			files = (
-				3448769706D1EF4600DA778C,
+				34FF934906DE3F4000C1D683,
 				3448763D06D1EF3C00DA778C,
 				B72537C4058C45EF004BA969,
 			);
@@ -20607,7 +20632,7 @@
 		B7FD6C160596550F000C4D9D = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			path = SQLLogging.plist;
 			refType = 4;
 			sourceTree = "<group>";
@@ -20885,6 +20910,7 @@
 		BFEBDBFD0669029800CBF845 = {
 			buildActionMask = 2147483647;
 			files = (
+				34FF934506DE3F2C00C1D683,
 				BFEBDC2C066908F700CBF845,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -20963,7 +20989,7 @@
 		};
 		BFEBDC010669029900CBF845 = {
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "WebAdium-Info.plist";
 			path = "WebAdium/WebAdium-Info.plist";
 			refType = 2;
@@ -21364,7 +21390,7 @@
 		C4947AFF05BD177E00780FE2 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "Contact Status Coloring Themable Prefs.plist";
 			path = "Plugins/Contact Status Coloring/Contact Status Coloring Themable Prefs.plist";
 			refType = 4;
@@ -21373,7 +21399,7 @@
 		C497514605BB99DC009958A6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "Tab Coloring Themable Prefs.plist";
 			path = "Plugins/Contact Status Tab Coloring/Tab Coloring Themable Prefs.plist";
 			refType = 4;
@@ -21382,7 +21408,7 @@
 		C497514805BBAA38009958A6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "SCL Themable Prefs.plist";
 			path = "Plugins/Standard Contact List View/SCL Themable Prefs.plist";
 			refType = 4;
@@ -21391,7 +21417,7 @@
 		C497514905BBAC25009958A6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "Emoticon Themable Prefs.plist";
 			path = "Plugins/Emoticons/Emoticon Themable Prefs.plist";
 			refType = 4;
@@ -21400,7 +21426,7 @@
 		C497516205BBAEB1009958A6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "SMV Themable Prefs.plist";
 			path = "Plugins/Standard Message View/SMV Themable Prefs.plist";
 			refType = 4;
@@ -21409,7 +21435,7 @@
 		C497516305BBAFE4009958A6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "Dual Window Themable Prefs.plist";
 			path = "Plugins/Dual Window Interface/Dual Window Themable Prefs.plist";
 			refType = 4;
@@ -21418,7 +21444,7 @@
 		C497518C05BBB0C5009958A6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = "Dock Themable Prefs.plist";
 			path = "Source/Dock Themable Prefs.plist";
 			refType = 4;
@@ -21457,18 +21483,6 @@
 			isa = PBXTargetDependency;
 			name = "AIUtilities (from AIUtilities.framework.xcode)";
 			targetProxy = CA0C977706DBFDA1004436BE;
-		};
-		CA0C977906DBFDB8004436BE = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CABFED2306DB73A700EB2EA0 = {
-			fileRef = 3448717206D1E57700DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 //CA0
 //CA1
@@ -23176,7 +23190,7 @@
 		F5F0FEA204B133AB01A80106 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
+			lastKnownFileType = text.plist.xml;
 			name = EmoticonDefaults.plist;
 			path = Plugins/Emoticons/EmoticonDefaults.plist;
 			refType = 4;
