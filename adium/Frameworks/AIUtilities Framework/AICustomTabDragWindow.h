@@ -16,7 +16,7 @@
 	BOOL				useFancyAnimations;
 }
 
-+ (AICustomTabDragWindow *)dragWindowForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell;
++ (AICustomTabDragWindow *)dragWindowForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent;
 - (void)setDisplayingFullWindow:(BOOL)fullWindow animate:(BOOL)animate;
 - (void)moveToPoint:(NSPoint)inPoint;
 - (NSImage *)dragTabImageForTabCell:(AICustomTabCell *)tabCell inCustomTabsView:(AICustomTabsView *)customTabsView;

@@ -5,8 +5,6 @@
 //  Created by Evan Schoenberg on Wed Jun 16 2004.
 //
 
-#import <Foundation/Foundation.h>
-
 #define GROWL_PREFPANE_BUNDLE_IDENTIFIER	@"com.growl.prefpanel"
 
 @interface GrowlApplicationBridge : NSObject {
