@@ -21,6 +21,8 @@
 #import "AIListThemeWindowController.h"
 #import "AISCLViewPlugin.h"
 #import "AIStandardListWindowController.h"
+#import "ESContactListAdvancedPreferences.h"
+#import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
 #define DEFAULT_LIST_THEME_NAME		@"Aqua (Tiger)"
@@ -44,17 +46,18 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 	[adium createResourcePathForName:LIST_LAYOUT_FOLDER];
 	[adium createResourcePathForName:LIST_THEME_FOLDER];
 
-    //Register our default preferences and install our preference views
-//    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+    //Install our preference views
     preferences = [[AICLPreferences preferencePane] retain];
-	
+	advancedPreferences = [[ESContactListAdvancedPreferences preferencePane] retain];
+	   
 	//Observe list closing
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(contactListDidClose)
 									   name:Interface_ContactListDidClose
 									 object:nil];
-	
-	//Apply the default contact list layout and style (If no style is currently active)
+
+	/* Apply the default contact list layout and style (If no style is currently active)
+	 * We don't just do this via the defaults system because setting a theme or layout in turn sets many other prefs. */
 	if(![[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_CONTACT_LIST]){
 		[[adium preferenceController] setPreference:DEFAULT_LIST_THEME_NAME
 											 forKey:KEY_LIST_THEME_NAME
@@ -65,6 +68,11 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 											 forKey:KEY_LIST_LAYOUT_NAME
 											  group:PREF_GROUP_CONTACT_LIST];
 	}
+
+	//Now register our other defaults, which are 
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_LIST_DEFAULTS
+																		forClass:[self class]]
+										  forGroup:PREF_GROUP_CONTACT_LIST];
 	
 	//Observe window style changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];

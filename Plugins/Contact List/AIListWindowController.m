@@ -140,34 +140,22 @@
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
     if([group isEqualToString:PREF_GROUP_CONTACT_LIST]){
-		int				windowPosition = [[prefDict objectForKey:KEY_CLWH_WINDOW_POSITION] intValue];
+		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_CL_WINDOW_LEVEL] intValue];
 		int				level;
 		
-		switch(windowPosition){
-			case 1: level = NSFloatingWindowLevel; break;
-			case 2: level = kCGDesktopWindowLevel; break;
-			default: level = NSNormalWindowLevel; break;
+		switch(windowLevel){
+			case AINormalWindowLevel: level = NSNormalWindowLevel; break;
+			case AIFloatingWindowLevel: level = NSFloatingWindowLevel; break;
+			case AIDesktopWindowLevel: level = kCGDesktopWindowLevel; break;
 		}
 		[[self window] setLevel:level];
-		[[self window] setIgnoresExpose:(windowPosition == 2)]; //Ignore expose while on the desktop
+		[[self window] setIgnoresExpose:(windowLevel == AIDesktopWindowLevel)]; //Ignore expose while on the desktop
 
-		[[self window] setHidesOnDeactivate:[[prefDict objectForKey:KEY_CLWH_HIDE] boolValue]];
+		[[self window] setHidesOnDeactivate:[[prefDict objectForKey:KEY_CL_HIDE] boolValue]];
+
+		[contactListController setShowTooltips:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS] boolValue]];
+		[contactListController setShowTooltipsInBackground:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND] boolValue]];
     }
-	
-//    if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY])){
-//        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-//		
-//		//Force auto-resizing on for borderless lists
-//		if(!borderless){
-//			autoResizeVertically = [[prefDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue];
-//			autoResizeHorizontally = [[prefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
-//		}else{
-//			autoResizeVertically = YES;
-//			autoResizeHorizontally = YES;
-//		}
-//		
-//        [self _configureAutoResizing];
-//    }
 
     if([group isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]){
 		if([key isEqualToString:KEY_SCL_BORDERLESS]){
