@@ -28,7 +28,9 @@ AIAccountListPreferencesPlugin,
 AIAccountMenuAccessPlugin,
 AIAliasSupportPlugin,
 AIAlphabeticalSortPlugin,
+AIAutoIdlePlugin,
 AIAutoLinkingPlugin,
+AIAutoReplyPlugin,
 AIAwayMessagesPlugin,
 AIAwayStatusWindowPlugin,
 AIChatConsolidationPlugin,
@@ -63,6 +65,8 @@ AIOfflineContactHidingPlugin,
 AISCLViewPlugin,
 AISpellCheckingPlugin,
 AIStandardToolbarItemsPlugin,
+AIStateEditorPlugin,
+AIStateMenuPlugin,
 AIStatusChangedMessagesPlugin,
 AITabStatusIconsPlugin,
 AITextForcingPlugin,
@@ -125,9 +129,9 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[AIAccountMenuAccessPlugin class]];
 	[self _loadComponentClass:[AIAliasSupportPlugin class]];
 	[self _loadComponentClass:[AIAlphabeticalSortPlugin class]];
+	[self _loadComponentClass:[AIAutoIdlePlugin class]];
 	[self _loadComponentClass:[AIAutoLinkingPlugin class]];
-	[self _loadComponentClass:[AIAwayMessagesPlugin class]];
-	[self _loadComponentClass:[AIAwayStatusWindowPlugin class]];
+	[self _loadComponentClass:[AIAutoReplyPlugin class]];
 	[self _loadComponentClass:[AIChatConsolidationPlugin class]];
 	[self _loadComponentClass:[AIChatCyclingPlugin class]];
 	[self _loadComponentClass:[AIContactAccountsPlugin class]];
@@ -151,7 +155,6 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[AIEmoticonsPlugin class]];
 	[self _loadComponentClass:[AIEventSoundsPlugin class]];
 	[self _loadComponentClass:[AIExtendedStatusPlugin class]];
-	[self _loadComponentClass:[AIIdleTimePlugin class]];
 	[self _loadComponentClass:[AILoggerPlugin class]];	
 	[self _loadComponentClass:[AIManualSortPlugin class]];
 	[self _loadComponentClass:[AIMessageAliasPlugin class]];
@@ -160,6 +163,8 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[AISCLViewPlugin class]];
 	[self _loadComponentClass:[AISpellCheckingPlugin class]];
 	[self _loadComponentClass:[AIStandardToolbarItemsPlugin class]];
+	[self _loadComponentClass:[AIStateEditorPlugin class]];
+	[self _loadComponentClass:[AIStateMenuPlugin class]];
 	[self _loadComponentClass:[AIStatusChangedMessagesPlugin class]];
 	[self _loadComponentClass:[AITabStatusIconsPlugin class]];
 	[self _loadComponentClass:[AITextForcingPlugin class]];
@@ -198,7 +203,6 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[ESUserIconHandlingPlugin class]];
 	[self _loadComponentClass:[ErrorMessageHandlerPlugin class]];
 	[self _loadComponentClass:[GBApplescriptFiltersPlugin class]];
-	[self _loadComponentClass:[IdleMessagePlugin class]];
 	[self _loadComponentClass:[SAContactOnlineForPlugin class]];
 	[self _loadComponentClass:[SHBookmarksImporterPlugin class]];
 	[self _loadComponentClass:[SHLinkManagementPlugin class]];
