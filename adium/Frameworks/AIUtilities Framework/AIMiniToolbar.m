@@ -277,8 +277,8 @@
     // - Leave all similar items in place
     
     //Set up
-    newItemArray = [[NSMutableArray alloc] init];
-    createdItemArray = [[[NSMutableArray alloc] init] autorelease];
+    newItemArray = [NSMutableArray array];
+    createdItemArray = [NSMutableArray array];
     [self removeAllSubviews];				//Flush out existing views
 
     //Get the new list of identifiers
@@ -312,7 +312,7 @@
                 [createdItemArray addObject:existingItem];
             }
         }else{
-            //remove it do we don't try and move it again
+            //remove it so we don't try and move it again
             [newItemArray addObject:existingItem];
             [itemArray removeObject:existingItem];  
         }
@@ -324,8 +324,7 @@
     }
 
     //Save the new array and clean up
-    [itemArray release];
-    itemArray = newItemArray;
+    [itemArray release]; itemArray = [newItemArray retain];
     
     return(createdItemArray);
 }

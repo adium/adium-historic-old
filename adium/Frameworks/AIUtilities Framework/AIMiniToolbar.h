@@ -22,7 +22,7 @@
     NSString		*identifier;		//The string identifier of this toolbar
     NSDictionary	*representedObjects;	//The objects we're configured for
     NSArray		*itemIdentifierArray;	//Array of item identifiers (NSString)
-    NSMutableArray	*itemArray;		//Array ot items (AIMiniToolbarItem)
+    NSMutableArray	*itemArray;		//Array of items (AIMiniToolbarItem)
     BOOL		itemsRearranging;	//YES if our views are currently animating/rearranging
     NSImage		*toolbarBackground;
     
