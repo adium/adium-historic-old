@@ -22,6 +22,8 @@
 	<string>0,32,127</string>   
 	<key>Incoming Prefix Light Color</key>
 	<string>64,112,255</string>   
+        <key>Outgoing Alias</key>
+        <string></string>
 	<key>Outgoing Prefix Color Name</key>
 	<string>Green</string>   
 	<key>Outgoing Prefix Color</key>
@@ -40,6 +42,5 @@
         <string>%1I:%M</string>
         <key>Time Stamp Seconds</key>
         <string>%1I:%M:%S</string>
-        
  </dict>
 </plist>

@@ -33,6 +33,7 @@
 #define	KEY_SMV_OUTGOING_PREFIX_COLOR		@"Outgoing Prefix Color"
 #define	KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR	@"Outgoing Prefix Light Color"
 #define	KEY_SMV_OUTGOING_PREFIX_COLOR_NAME	@"Outgoing Prefix Color Name"
+#define	KEY_SMV_OUTGOING_ALIAS			@"Outgoing Alias"
 #define	KEY_SMV_DISPLAY_GRID_LINES		@"Show GridLines"
 #define	KEY_SMV_GRID_DARKNESS			@"GridLine Darkness"
 #define	KEY_SMV_DISPLAY_SENDER_GRADIENT		@"Show Sender Gradient"

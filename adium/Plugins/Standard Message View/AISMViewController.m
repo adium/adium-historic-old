@@ -42,6 +42,7 @@
     [super init];
     owner = [inOwner retain];
     chat = [inChat retain];
+    outgoingAlias = nil;
 
     //observe
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -71,6 +72,28 @@
     return(self);
 }
 
+- (void)dealloc
+{
+    //Release the old preference cache
+    [outgoingSourceColor release];
+    [outgoingLightSourceColor release];
+    [incomingSourceColor release];
+    [incomingLightSourceColor release];
+    [prefixFont release];
+    [timeStampFormat release];
+    [prefixIncoming release];
+    [prefixOutgoing release];
+    [outgoingAlias release];
+
+    //
+    [senderCol release];
+    [messageCol release];
+    [timeCol release];
+    [messageView release];
+    
+    [super dealloc];
+}
+
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] == 0){
@@ -85,6 +108,7 @@
         [timeStampFormat release];
         [prefixIncoming release];
         [prefixOutgoing release];
+        [outgoingAlias release];
         
         //Cache the new preferences
         outgoingSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_COLOR] representedColor] retain];
@@ -113,6 +137,8 @@
         gridDarkness = [[prefDict objectForKey:KEY_SMV_GRID_DARKNESS] floatValue];
         senderGradientDarkness = [[prefDict objectForKey:KEY_SMV_SENDER_GRADIENT_DARKNESS] floatValue];
 //        senderGradientLightness = [[prefDict objectForKey:KEY_SMV_SENDER_GRADIENT_LIGHTNESS] floatValue];
+
+        outgoingAlias = [[prefDict objectForKey:KEY_SMV_OUTGOING_ALIAS] retain];
         
         [messageView reloadData];
     }
@@ -244,6 +270,7 @@
 {
     id			messageSource = [content source];
     NSColor		*gradientColor, *prefixColor, *backgroundColor;
+    NSString		*senderString = nil;
     AIFlexibleTableCell	*cell;
     BOOL		outgoing, duplicateSource, backgroundIsDark;
     
@@ -269,8 +296,20 @@
         gradientColor = nil;
     }
 
+    //Get the sender string
+    if(outgoing && outgoingAlias != nil && [outgoingAlias length] != 0){
+        senderString = outgoingAlias;
+    }
+    if(!senderString){
+        if(outgoing){
+            senderString = [(AIAccount *)messageSource accountDescription];
+        }else{
+            senderString = [(AIListContact *)messageSource displayName];
+        }
+    }
+    
     //Create the cell
-    cell = [AIFlexibleTableTextCell cellWithString:[NSString stringWithFormat:(outgoing ? prefixOutgoing : prefixIncoming),(outgoing ? [(AIAccount *)messageSource accountDescription] : [(AIListContact *)messageSource displayName])]
+    cell = [AIFlexibleTableTextCell cellWithString:[NSString stringWithFormat:(outgoing ? prefixOutgoing : prefixIncoming), senderString]
                                              color:prefixColor
                                               font:prefixFont
                                          alignment:NSRightTextAlignment

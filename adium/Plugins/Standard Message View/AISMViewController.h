@@ -59,6 +59,8 @@
     NSString			*timeStampFormat;
     NSString			*prefixIncoming;
     NSString			*prefixOutgoing;
+
+    NSString			*outgoingAlias;
 }
 
 + (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner;
