@@ -47,7 +47,9 @@
         [inModifiedKeys containsObject:@"Idle"] || 
         [inModifiedKeys containsObject:@"Warning"] ||
         [inModifiedKeys containsObject:@"Online"] ||
-        [inModifiedKeys containsObject:@"UnviewedContent"]){
+        [inModifiedKeys containsObject:@"UnviewedContent"] ||
+        [inModifiedKeys containsObject:@"Signed On"] ||
+        [inModifiedKeys containsObject:@"Signed Off"]){
 
         //Update the handle's text color
         [self applyColorToHandle:inHandle];
@@ -72,7 +74,7 @@
 - (void)applyColorToHandle:(AIContactHandle *)inHandle
 {
     AIMutableOwnerArray		*colorArray = [inHandle displayArrayForKey:@"Text Color"];
-    int				away, idle, warning, online, unviewedContent;
+    int				away, idle, warning, online, unviewedContent, signedOn, signedOff;
     NSColor			*color = nil;
 
     //Get all the values
@@ -81,6 +83,8 @@
     warning = [[inHandle statusArrayForKey:@"Warning"] greatestIntegerValue];
     online = [[inHandle statusArrayForKey:@"Online"] greatestIntegerValue];
     unviewedContent = [[inHandle statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
+    signedOn = [[inHandle statusArrayForKey:@"Signed On"] greatestIntegerValue];
+    signedOff = [[inHandle statusArrayForKey:@"Signed Off"] greatestIntegerValue];
 
     //Remove the existing color
     [colorArray removeObjectsWithOwner:self];
@@ -88,8 +92,12 @@
     //Determine the correct color
     if(unviewedContent && ([[owner interfaceController] flashState] % 2)){
         color = [NSColor orangeColor];
+    }else if(signedOff){
+        color = [NSColor colorWithCalibratedRed:(102.0/255.0) green:(0.0/255.0) blue:(0.0/255.0) alpha:1.0];
     }else if(!online){
         color = [NSColor colorWithCalibratedRed:(68.0/255.0) green:(0.0/255.0) blue:(1.0/255.0) alpha:1.0];
+    }else if(signedOn){
+        color = [NSColor colorWithCalibratedRed:(0.0/255.0) green:(0.0/255.0) blue:(102.0/255.0) alpha:1.0];
     }else if(idle && away){
         color = [NSColor colorWithCalibratedRed:(89.0/255.0) green:(89.0/255.0) blue:(59.0/255.0) alpha:1.0];
     }else if(idle){
