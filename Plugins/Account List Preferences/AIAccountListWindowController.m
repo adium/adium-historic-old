@@ -165,7 +165,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	
 	//Insert the custom controls for this service
 	[self _removeCustomViewAndTabs];
-	[self _addCustomViewAndTabsForController:[inService accountView]];
+	[self _addCustomViewAndTabsForController:[inService connectionView]];
 	
 	//Custom username string
 	NSString *userNameLabel = [inService userNameLabel];
@@ -196,7 +196,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	
 	//Get account view
 	accountViewController = [inControler retain];
-	accountView = [accountViewController view];
+	accountView = [accountViewController connectionView];
 	
     //Swap in the account details view
     [view_accountDetails addSubview:accountView];
