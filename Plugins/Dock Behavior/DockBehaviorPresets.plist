@@ -23,7 +23,7 @@
                 <key>Behavior</key>
                 <integer>2</integer>
                 <key>Notification</key>
-                <string>Interface_ErrorMessageRecieved</string>
+                <string>Interface_ErrorMessageReceived</string>
             </dict>
         </array>
     </dict>
@@ -36,7 +36,7 @@
                 <key>Behavior</key>
                 <integer>2</integer>
                 <key>Notification</key>
-                <string>Interface_ErrorMessageRecieved</string>
+                <string>Interface_ErrorMessageReceived</string>
             </dict>
         </array>
     </dict>
