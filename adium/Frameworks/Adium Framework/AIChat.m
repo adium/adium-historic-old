@@ -28,6 +28,7 @@
     contentObjectArray = [[NSMutableArray alloc] init];
     participatingListObjects = [[NSMutableArray alloc] init];
     dateOpened = [[NSDate date] retain];
+	uniqueChatID = nil;
 	
     return(self);
 }
@@ -39,7 +40,8 @@
     [contentObjectArray release];
     [participatingListObjects release];
   	[dateOpened release]; 
-  
+	[uniqueChatID release]; uniqueChatID = nil;
+	
     [super dealloc];
 }
 
@@ -121,12 +123,20 @@
 
 - (NSString *)uniqueChatID
 {
-	NSString		*uniqueChatID;
-	AIListObject	*listObject;
-	if (listObject = [self listObject]){
-		uniqueChatID = [listObject uniqueObjectID];
-	}else{
-		uniqueChatID = [NSString stringWithFormat:@"%@.%@",name,[account uniqueObjectID]];
+	if (!uniqueChatID) {
+		AIListObject	*listObject;
+		if (listObject = [self listObject]){
+			uniqueChatID = [listObject uniqueObjectID];
+		}else{
+			uniqueChatID = [NSString stringWithFormat:@"%@.%@",name,[account uniqueObjectID]];
+		}
+		
+		//If things go horribly awry, we can end up with no uniqueChatID here.  Simple guard so code elsewhere can work.
+		if (!uniqueChatID){
+			uniqueChatID = [NSString stringWithFormat:@"%@.%@",[NSString randomStringOfLength:4],[account uniqueObjectID]];
+		}
+		
+		[uniqueChatID retain];
 	}
 	
 	return (uniqueChatID);
