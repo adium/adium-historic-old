@@ -1,6 +1,55 @@
 				Adium X Version History
 				-----------------------
 
+Version 0.63 (7/23/2004)
+- Added support for the Sametime protocol
+- Adium will no longer unhide when new messages are received
+- New message windows now appear behind existing windows
+- Improved window position saving when not using tabs
+- Added emoticon, edit link, bookmarks, and safari link toolbar items
+- Improvements to tab auto-grouping and auto-arranging, including performance and visual improvements.
+- Improvements to status display when not using tabs.  Typing and new content are now displayed in the window titlebar.
+- User icons no longer animate in the message window, improved user icon updating
+- Improved sound code.  Better performance, wider support for formats, finer volume control, and output device selection.
+- Improved typing support.  We now correctly support the 'entered text' state that occures when a user stops typing.
+- Improved support for installing xtras.  Preferences now update when new xtras are installed.
+- Cleaned up contextual menus, window menu, 
+- Added a preference to turn off contact list tooltips
+- Aliases can now be set from the add contact window
+- Improvemed and simplified the theme preferences
+- The close buttons on tabs now only display when hovered
+- Added contact icons to the window menu
+- Added service icons to the account preferences, file menu
+- Added an Xtras site menu item to Adium menu
+- Added an Adium status menu to the menubar (Off by default, check the advanced preferences)
+
+Technical:
+- Added support for styles to specify an image mask for user icons
+- Optimized emoticon preferences
+- Added importer for old custom soundsets
+- Added importer for old custom dock behavior
+- We now display the status of strangers if it becomes available
+- Auto-replies now only send over AIM
+
+Fixes:
+- Fixed option-return to correctly insert newlines
+- Fixed issue with idle clearing when sending messages
+- Fixed issue with sounds not playing if system-wide alerts were disabled
+- Fixed an issue with dock bouncing and rapid single bounces
+- Fixed an issue with the custom colors sheet in 10.2
+- Fixed several link parsing errors
+- Fixed an issue with systemwide proxy settings
+- Fixed issues with < and > in display names for webkit
+- Fixed issues with %n,%d not processing in auto-replied away messages
+- Fixed bug with sort options window resizing
+- Fixed issues with the contact list forgetting multiple selections
+- Fixed file transfer global contact alerts
+- Fixed crash with protocol request dialogs
+- Fixed crash loading invalid soundets
+- Fixed crash on file transfer error
+- Fixed several theme preference crashes
+
+
 Version 0.62 (7/06/2004)
 - Added many additional options for custom status sorting
 - Added global events for file transfer (request, began, complete, canceled)
@@ -35,6 +84,7 @@ Version 0.62 (7/06/2004)
 - Fixed an applescript encoding issue
 - Updated Yahoo emoticons
 - Performance improvements
+
 
 Version 0.61 (6/25/2004)
 - Added support for MSN Buddy Icons
@@ -75,6 +125,7 @@ Version 0.61 (6/25/2004)
 - Performance improvements
 - Launch time improvements
 
+
 Version 0.60 (6/16/2004)
 - Added script for inserting an iTunes link for the playing song
 - Info window now shows to which accounts a contact has been added
@@ -98,6 +149,7 @@ Version 0.60 (6/16/2004)
 - Fixed jabber crash when connecting
 - Fixed additional crashes on launch
 - Several other crash fixes and improvements
+
 
 Version 0.59 (6/11/2004)
 - Added support for changing user icons via the Get Info window
@@ -124,6 +176,7 @@ Version 0.59 (6/11/2004)
 - Fixed crash when denying a file transfer
 - Fixed crash in 10.2 message display preferences
 - Many other small fixes and improvements
+
 
 Version 0.58 (6/04/2004)
 - Added support for server-side AIM buddy comments
@@ -161,6 +214,7 @@ Version 0.58 (6/04/2004)
 - Fixed date stamps in message windows to properly respect systemwide international preferences
 - Fixed multiple memory leaks
 - Many other small fixes and improvements
+
 
 Version 0.57 (5/21/2004)
 - Added contact notes
@@ -203,6 +257,7 @@ Version 0.57 (5/21/2004)
 - Fixed an issue with the version checker falsely reporting new releases
 - Fixed several memory leaks
 
+
 Version 0.56 (5/14/2004)
 - Added 'Insert Emoticon' to the Edit menu, contextual menus
 - Added support for viewing the correct status of yahoo contacts
@@ -220,6 +275,7 @@ Version 0.56 (5/14/2004)
 - Fixed a beach-balling issue
 - Fixed several memory leaks
 
+
 Version 0.55 (5/8/2004)
 - Fixed a crash when connecting to a Yahoo account with privacy settings enabled
 - Fixed formatting when sending messages to oneself via MSN
@@ -231,6 +287,7 @@ Version 0.55 (5/8/2004)
 - Disabled dragging web links into the message view
 - Added advanced Webkit Message View preferences, which currently allow the customization of the contact name display in the message view.
 - Improved menu performance
+
 
 Version 0.54 (5/7/2004)
 - Added support for displaying strikethrough, subscript, and superscript text
@@ -256,6 +313,7 @@ Version 0.54 (5/7/2004)
 - Improved the password prompt window
 - Improved Novell GroupWise protocol support
 - Significant performance improvements, particularly during sign on
+
 
 Version 0.53 (4/30/2004)				
 - Added Webkit Message View (6 distinct styles, or create your own!  Customizable fonts and backgrounds!) [10.3 only]
@@ -304,6 +362,7 @@ Version 0.53 (4/30/2004)
 - Performance and launch time improvements
 - Decreased binary size
 
+
 Version 0.52 (4/16/2004)
 - Message windows now display a customizable number of lines from the previous conversation when opened
 - Added proxy connect options to Yahoo! accounts
@@ -332,6 +391,7 @@ Version 0.52 (4/16/2004)
 - Speed improvements: launch time, creation of new accounts
 - Cosmetic improvements to the account preferences
 
+
 Version 0.51 (4/08/2004)
 - Adium now works in 10.2 (Fixed crash on launch in 10.2)
 - Fixed a crash when opening preference window
@@ -340,6 +400,7 @@ Version 0.51 (4/08/2004)
 - Fixed a crash in the contact alert window
 - Fixed a crash when completing file transfers
 - Cleaned up the 'auto-away' preferences
+
 
 Version 0.50 (4/06/2004)
 - Initial Release

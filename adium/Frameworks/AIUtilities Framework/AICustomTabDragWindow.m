@@ -13,17 +13,18 @@
 
 
 @interface AICustomTabDragWindow (PRIVATE)
-- (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell;
+- (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent;
 @end
 
 @implementation AICustomTabDragWindow
-+ (AICustomTabDragWindow *)dragWindowForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell
++ (AICustomTabDragWindow *)dragWindowForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent
 {
-	return([[[self alloc] initForCustomTabView:inTabView cell:inTabCell] autorelease]);
+	return([[[self alloc] initForCustomTabView:inTabView cell:inTabCell transparent:transparent] autorelease]);
 }
 
 //init
-- (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell
+- (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent
+
 {
 	[super init];
 	
@@ -38,7 +39,7 @@
 		
 		//Create a floating window for the stand-alone window our tab would produce
 		dragWindowFloater = [ESFloater floaterWithImage:floaterWindowImage styleMask:NSTitledWindowMask];
-		[dragWindowFloater setMaxOpacity:0.75];
+		[dragWindowFloater setMaxOpacity:(transparent ? 0.75 : 1.00)];
 	}
 		
 	return(self);

@@ -111,7 +111,9 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	if(dragOffset.height < -height) dragOffset.height = -height;
 	
 	//Create the drag window for our custom drag tracking
-	tabDragWindow = [AICustomTabDragWindow dragWindowForCustomTabView:sourceView cell:inTabCell];
+	tabDragWindow = [AICustomTabDragWindow dragWindowForCustomTabView:sourceView
+																 cell:inTabCell
+														  transparent:!([sourceTabBar removingLastTabHidesWindow])];
 	[tabDragWindow setDisplayingFullWindow:sourceWindowWillHide animate:NO];
 	
 	//Position the drag window
