@@ -61,6 +61,11 @@
 	return(nil);
 }
 
+//Return an image for these preferences (advanced only)
+- (NSImage *)image
+{
+	return(nil);
+}
 
 @end
 
