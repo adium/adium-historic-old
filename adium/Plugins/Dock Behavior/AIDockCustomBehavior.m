@@ -169,40 +169,6 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
     [plugin setCustomBehavior:behaviorArray];
 }
 
-//Builds and returns an event menu
-/*
-- (NSMenu *)eventMenu
-{
-    NSEnumerator	*enumerator;
-    NSDictionary	*eventDict;
-    NSMenu		*eventMenu = [[NSMenu alloc] init];
-
-    //Add the static/display menu item
-    [eventMenu addItemWithTitle:AILocalizedString(@"Add Event...",nil) target:nil action:nil keyEquivalent:@""];
-
-    //Add a menu item for each event
-    enumerator = [[adium eventNotifications] objectEnumerator];
-    while((eventDict = [enumerator nextObject])){
-        NSMenuItem	*menuItem;
-
-        menuItem = [[[NSMenuItem alloc] initWithTitle:[eventDict objectForKey:KEY_EVENT_DISPLAY_NAME]
-                                               target:self
-                                               action:@selector(newEvent:)
-                                        keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:[eventDict objectForKey:KEY_EVENT_NOTIFICATION]];
-
-        [eventMenu addItem:menuItem];
-    }
-
-    return(eventMenu);
-}
-*/
-
-
-
-
-
-
 //TableView datasource --------------------------------------------------------
 //
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
