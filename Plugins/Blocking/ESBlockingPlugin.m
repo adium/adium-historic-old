@@ -38,14 +38,14 @@
     //We don't want to block groups
     if([object isKindOfClass:[AIListContact class]]){
         AIListContact *contact = (AIListContact *)object;
-        [self blockContact:contact forAccount:[[adium accountController] accountWithObjectID:[contact accountID]]];
+        [self blockContact:contact forAccount:[contact account]];
     }
 }
 
 - (IBAction)blockContextContact:(id)sender
 {
     AIListContact *contact = [[adium menuController] contactualMenuContact];
-    [self blockContact:contact forAccount:[[adium accountController] accountWithObjectID:[contact accountID]]];
+    [self blockContact:contact forAccount:[contact account]];
 }
 
 - (void)blockContact:(AIListContact *)contact forAccount:(AIAccount *)account
