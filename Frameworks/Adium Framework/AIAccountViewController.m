@@ -56,6 +56,7 @@
     [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
     [view_accountView release];
+	[view_auxiliaryTabView release];
 	[auxiliaryTabs release];
     
     [super dealloc];
