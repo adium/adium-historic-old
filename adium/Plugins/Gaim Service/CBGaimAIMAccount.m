@@ -14,7 +14,6 @@
 
 - (void)initAccount
 {
-    NSLog(@"CBGaimAIMAccount initAccount");
     screenName = [NSString stringWithUTF8String:SCREEN_NAME];
     [super initAccount];
 }

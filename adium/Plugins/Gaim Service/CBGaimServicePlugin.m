@@ -59,6 +59,7 @@ static GaimDebugUiOps adiumGaimDebugOps = {
 static void adiumGaimConnConnectProgress(GaimConnection *gc, const char *text, size_t step, size_t step_count)
 {
     NSLog(@"Connecting: gc=0x%x (%s) %i / %i", gc, text, step, step_count);
+    
 }
 
 static void adiumGaimConnConnected(GaimConnection *gc)
@@ -573,6 +574,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     gaim_plugins_probe(NULL);
 
     //Tell libgaim to load its other pieces
+    gaim_prefs_init();
     gaim_prefs_load();
     //gaim_accounts_load();
     gaim_pounces_load();
@@ -586,7 +588,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     
     /* Proxy */
     gaim_proxy_init();
-//    [self configureGaimProxySettings];
+    //[self configureGaimProxySettings];
         
     //Setup libgaim core preferences
     
@@ -643,9 +645,14 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     
     GaimAccount *gaimAcct = [anAccount gaimAccount];
     NSLog(@"Adding GaimAccount 0x%x to account dict", gaimAcct);
-    [_accountDict setObject:anAccount forKey:[NSValue valueWithPointer:gaimAcct]];
+    [self addAccount:anAccount forGaimAccountPointer:gaimAcct];
     
     return anAccount;
+}
+
+- (void)addAccount:(id)anAccount forGaimAccountPointer:(GaimAccount *)gaimAcct 
+{
+    [_accountDict setObject:anAccount forKey:[NSValue valueWithPointer:gaimAcct]];
 }
 
 - (void)removeAccount:(GaimAccount *)gaimAcct
@@ -675,7 +682,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
  "SOCKS 5", "socks5",
  "HTTP", "http",
  */
-- (void)configureGaimProxySettings
+- (BOOL)configureGaimProxySettings
 {
     Boolean             result;
     CFDictionaryRef     proxyDict;
@@ -758,6 +765,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     if (proxyDict != NULL) {
         CFRelease(proxyDict);
     }
+    return result;
 }    
 
 //Next two functions are from the http-mail project.  We'll write our own if their license doesn't allow this... but it'll be okay for now.
