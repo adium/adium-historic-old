@@ -163,14 +163,14 @@ extern void* objc_getClass(const char *name);
     NSLog(@"(%@) \"%@\" changing to [%@]", [self accountDescription], key, inValue);
 
     if([key compare:@"Online"] == 0){
-        ACCOUNT_STATUS		status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+        ACCOUNT_STATUS status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
 
         if([inValue boolValue]){ //Connect
-            if(status == STATUS_OFFLINE){
+            if((status != STATUS_ONLINE)||(status != STATUS_CONNECTING)){
                 [AIMService login];
             }
         }else{ //Disconnect
-            if(status == STATUS_ONLINE){
+            if((status != STATUS_OFFLINE)||(status != STATUS_DISCONNECTING)){
                 [AIMService logout];
             }
         }
