@@ -40,6 +40,10 @@ typedef struct _JabberBuddy {
 		JABBER_SUB_BOTH    = (JABBER_SUB_TO | JABBER_SUB_FROM),
 		JABBER_SUB_REMOVE  = 1 << 4
 	} subscription;
+	
+	//Adium
+	GaimAccount *account;
+	char		*name;
 } JabberBuddy;
 
 typedef struct _JabberBuddyResource {
@@ -66,9 +70,9 @@ void jabber_buddy_get_info(GaimConnection *gc, const char *who);
 void jabber_buddy_get_info_chat(GaimConnection *gc, int id,
 		const char *resource);
 
-GList *jabber_buddy_menu(GaimConnection *gc, const char *name);
+GList *jabber_blist_node_menu(GaimBlistNode *node);
 
 void jabber_set_info(GaimConnection *gc, const char *info);
-void jabber_setup_set_info(GaimConnection *gc);
+void jabber_setup_set_info(GaimPluginAction *action);
 
 #endif /* _GAIM_JABBER_BUDDY_H_ */

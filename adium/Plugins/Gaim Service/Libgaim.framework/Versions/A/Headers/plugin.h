@@ -25,6 +25,7 @@
 #ifndef _GAIM_PLUGIN_H_
 #define _GAIM_PLUGIN_H_
 
+#include <glib/glist.h>
 #include <gmodule.h>
 #include "signals.h"
 #include "value.h"
@@ -33,6 +34,8 @@ typedef struct _GaimPlugin           GaimPlugin;
 typedef struct _GaimPluginInfo       GaimPluginInfo;
 typedef struct _GaimPluginUiInfo     GaimPluginUiInfo;
 typedef struct _GaimPluginLoaderInfo GaimPluginLoaderInfo;
+
+typedef struct _GaimPluginAction     GaimPluginAction;
 
 typedef int GaimPluginPriority; /**< Plugin priority. */
 
@@ -56,7 +59,7 @@ typedef enum
 
 #define GAIM_PLUGIN_FLAG_INVISIBLE 0x01
 
-#define GAIM_PLUGIN_API_VERSION 3
+#define GAIM_PLUGIN_API_VERSION 4
 #define GAIM_LOADER_API_VERSION 2
 
 /**
@@ -88,6 +91,7 @@ struct _GaimPluginInfo
 	void *ui_info;
 	void *extra_info;
 	GaimPluginUiInfo *prefs_info;
+	GList *(*actions)(GaimPlugin *plugin, gpointer context);
 };
 
 /**
@@ -136,6 +140,30 @@ struct _GaimPluginUiInfo {
 #define GAIM_PLUGIN_UI_INFO(plugin) \
 	((GaimPluginUiInfo*)(plugin)->info->prefs_info)
 
+
+/**
+ * The structure used in the actions member of GaimPluginInfo
+ */
+struct _GaimPluginAction {
+	char *label;
+	void (*callback)(GaimPluginAction *);
+
+	/** set to the owning plugin */
+	GaimPlugin *plugin;
+
+	/** NULL for plugin actions menu, set to the GaimConnection for
+	    account actions menu */
+	gpointer context;
+};
+
+#define GAIM_PLUGIN_HAS_ACTIONS(plugin) \
+	((plugin)->info != NULL && (plugin)->info->actions != NULL)
+
+#define GAIM_PLUGIN_ACTIONS(plugin, context) \
+	(GAIM_PLUGIN_HAS_ACTIONS(plugin)? \
+	(plugin)->info->actions(plugin, context): NULL)
+
+
 /**
  * Handles the initialization of modules.
  */
@@ -156,9 +184,14 @@ struct _GaimPluginUiInfo {
 	}
 #endif
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+void *gaim_plugins_get_handle(void);
+
 
 /**************************************************************************/
 /** @name Plugin API                                                      */
@@ -474,6 +507,12 @@ GList *gaim_plugins_get_protocols(void);
 GList *gaim_plugins_get_all(void);
 
 /*@}*/
+
+
+/**
+ * Allocates and returns a new GaimPluginAction.
+ */
+GaimPluginAction *gaim_plugin_action_new(char* label, void (*callback)(GaimPluginAction *));
 
 #ifdef __cplusplus
 }

@@ -238,20 +238,11 @@ struct _GaimPluginProtocolInfo
 	char *(*tooltip_text)(GaimBuddy *buddy);
 
 	GList *(*away_states)(GaimConnection *gc);
-	GList *(*actions)(GaimConnection *gc);
 
-	GList *(*buddy_menu)(GaimConnection *, const char *);
+	GList *(*blist_node_menu)(GaimBlistNode *node);
 	GList *(*chat_info)(GaimConnection *);
 
 	/* All the server-related functions */
-
-	/*
-	 * A lot of these (like get_dir) are protocol-dependent and should
-	 * be removed. ones like set_dir (which is also protocol-dependent)
-	 * can stay though because there's a dialog (i.e. the prpl says you
-	 * can set your dir info, the ui shows a dialog and needs to call
-	 * set_dir in order to set it)
-	 */
 	void (*login)(GaimAccount *);
 	void (*close)(GaimConnection *);
 	int  (*send_im)(GaimConnection *, const char *who,
@@ -261,16 +252,6 @@ struct _GaimPluginProtocolInfo
 	int  (*send_typing)(GaimConnection *, const char *name, int typing);
 	void (*get_info)(GaimConnection *, const char *who);
 	void (*set_away)(GaimConnection *, const char *state, const char *message);
-	void (*set_dir)(GaimConnection *, const char *first,
-					const char *middle, const char *last,
-					const char *maiden, const char *city,
-					const char *state, const char *country, int web);
-	void (*get_dir)(GaimConnection *, const char *who);
-	void (*dir_search)(GaimConnection *, const char *first,
-					   const char *middle, const char *last,
-					   const char *maiden, const char *city,
-					   const char *state, const char *country,
-					   const char *email);
 	void (*set_idle)(GaimConnection *, int idletime);
 	void (*change_passwd)(GaimConnection *, const char *old_pass,
 						  const char *new_pass);
@@ -335,9 +316,6 @@ struct _GaimPluginProtocolInfo
 	struct _GaimRoomlist *(*roomlist_get_list)(GaimConnection *gc);
 	void (*roomlist_cancel)(struct _GaimRoomlist *list);
 	void (*roomlist_expand_category)(struct _GaimRoomlist *list, struct _GaimRoomlistRoom *category);
-
-	/* Chat specific menu in the buddy list */
-	GList *(*chat_menu)(GaimConnection *, GHashTable *);
 };
 
 #define GAIM_IS_PROTOCOL_PLUGIN(plugin) \
@@ -346,7 +324,10 @@ struct _GaimPluginProtocolInfo
 #define GAIM_PLUGIN_PROTOCOL_INFO(plugin) \
 	((GaimPluginProtocolInfo *)(plugin)->info->extra_info)
 
-#define GAIM_PRPL_API_VERSION 2
+/* It's not like we're going to run out of integers for this version
+   number, but we only want to really change it once per release. */
+/* GAIM_PRPL_API_VERSION last changed for version: 0.78 */
+#define GAIM_PRPL_API_VERSION 4
 
 #ifdef __cplusplus
 extern "C" {
@@ -373,7 +354,7 @@ GaimProtocol gaim_prpl_id_to_num(const char *id);
 /**
  * Finds a protocol plugin structure of the specified type.
  *
- * @param type The protocol plugin;
+ * @param id The protocol plugin;
  */
 GaimPlugin *gaim_find_prpl(const char *id);
 

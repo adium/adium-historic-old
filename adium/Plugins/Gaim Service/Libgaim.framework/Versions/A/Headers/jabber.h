@@ -30,6 +30,9 @@
 #include "jutil.h"
 #include <libgaim/xmlnode.h>
 
+//Adium
+#include <libgaim/account.h>
+
 typedef enum {
 	JABBER_CAP_NONE           = 0,
 	JABBER_CAP_XHTML          = 1 << 0,
