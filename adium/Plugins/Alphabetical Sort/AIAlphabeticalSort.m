@@ -15,7 +15,7 @@
 
 #import "AIAlphabeticalSort.h"
 
-int alphabeticalSort(id objectA, id objectB, void *context);
+int alphabeticalSort(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups);
 
 @implementation AIAlphabeticalSort
 
@@ -28,47 +28,19 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 - (NSString *)displayName{
     return(@"Alphabetical");
 }
-
-- (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys
-{
-    return(NO); //Ignore
+- (NSArray *)statusKeysRequiringResort{
+	return(nil);
+}
+- (NSArray *)attributeKeysRequiringResort{
+	return([NSArray arrayWithObject:@"Display Name"]);
+}
+- (sortfunc)sortFunction{
+	return(&alphabeticalSort);
 }
 
-- (BOOL)shouldSortForModifiedAttributeKeys:(NSArray *)inModifiedKeys
+int alphabeticalSort(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups)
 {
-    if([inModifiedKeys containsObject:@"Hidden"] || [inModifiedKeys containsObject:@"Display Name"]){
-        return(YES);
-    }else{
-        return(NO);
-    }
-}
-
-- (void)sortListObjects:(NSMutableArray *)inObjects
-{
-    [inObjects sortUsingFunction:alphabeticalSort context:nil];
-}
-
-int alphabeticalSort(id objectA, id objectB, void *context)
-{
-    BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-    BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-
-    if(invisibleA && !invisibleB){
-        return(NSOrderedDescending);
-    }else if(!invisibleA && invisibleB){
-        return(NSOrderedAscending);
-    }else{
-        BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
-        BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
-
-        if(groupA && !groupB){
-            return(NSOrderedAscending);
-        }else if(!groupA && groupB){
-            return(NSOrderedDescending);
-        }else{
-            return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
-        }
-    }
+	return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
 }
 
 @end
