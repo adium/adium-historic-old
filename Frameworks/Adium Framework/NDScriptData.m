@@ -10,7 +10,7 @@
 #import "NDResourceFork.h"
 #import "NDComponentInstance.h"
 #import "NSAppleEventDescriptor+NDAppleScriptObject.h"
-//#import "NSArray+NDUtilities.h"
+#import "NSArray+NDUtilities.h"
 #import "NDProgrammerUtilities.h"
 
 //static NSString		* kScriptResourceName = @"script";
