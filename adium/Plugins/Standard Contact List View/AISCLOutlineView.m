@@ -33,6 +33,8 @@
 - (void)_sizeColumnToFit;
 - (void)_performFullRecalculation;
 - (void)_performFullRecalculationFor:(int)j;
+- (void)_saveCurrentSelection;
+- (void)_restoreSelectionFromSavedSelection;
 @end
 
 @implementation AISCLOutlineView
@@ -44,6 +46,7 @@
     [super initWithFrame:frameRect];
 
 	lastSelectedRow = -1;
+	lastSelectedRowIndexes = nil;
     showLabels = YES;
     font = nil;
     groupFont = nil;
@@ -92,6 +95,8 @@
     [invertedColor release];
     [groupColor release];
     [invertedGroupColor release];
+	[lastSelectedRowIndexes release]; lastSelectedRowIndexes = nil;
+	
     [super dealloc];
 }
 
@@ -168,34 +173,6 @@
     return(NSFocusRingTypeNone);
 }
 #endif
-
-
-
-// Selection Hiding --------------------------------------------------------------------
-//Restore the selection
-- (void)windowBecameMain:(NSNotification *)notification
-{
-    if(lastSelectedRow >= 0 && lastSelectedRow < [self numberOfRows] && [self selectedRow] == -1){
-        [self selectRow:lastSelectedRow byExtendingSelection:NO];
-    }
-	
-	//Pass this on to our delegate
-    if([[self delegate] respondsToSelector:@selector(window:didBecomeMain:)]){
-        [[self delegate] window:[self window] didBecomeMain:notification];
-    }
-}
-
-//Hide the selection
-- (void)windowResignedMain:(NSNotification *)notification
-{
-    lastSelectedRow = [self selectedRow];
-    [self deselectAll:nil];
-	
-	//Pass this on to our delegate
-    if([[self delegate] respondsToSelector:@selector(window:didResignMain:)]){
-        [[self delegate] window:[self window] didResignMain:notification];
-    }
-}
 
 // Context menu ------------------------------------------------------------------------
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
@@ -371,50 +348,6 @@
         [super keyDown:theEvent]; //pass it on
     }
 }    
-
-
-//Contact menu ---------------------------------------------------------------
-//Return the selected object (to auto-configure the contact menu)
-- (AIListObject *)listObject
-{
-    int selectedRow = [self selectedRow];
-
-    if(selectedRow >= 0 && selectedRow < [self numberOfRows]){
-        return([self itemAtRow:selectedRow]);
-    }else{
-        return(nil);
-    }
-}
-- (NSArray *)arrayOfListObjects
-{
-	NSMutableArray *listObjectArray = [NSMutableArray array];
-	
-	//selectedRowIndexes is recommended in 10.3 or better; selectedRowEnumerator is deprecated as of 10.3
-	if ([NSApp isOnPantherOrBetter]){
-		NSIndexSet *indices = [self selectedRowIndexes];
-		unsigned int bufSize = [indices count];
-		unsigned int *buf = malloc(bufSize + 1);
-		unsigned int i;
-		NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
-		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
-		
-		for(i = 0; i != bufSize; i++) {
-			unsigned int index = buf[i];
-			[listObjectArray addObject:[self itemAtRow:index]];
-		}
-		
-		free(buf);
-		
-	}else{
-		NSNumber *row;
-		NSEnumerator *enumerator = [self selectedRowEnumerator]; 
-		while (row = [enumerator nextObject]){
-			[listObjectArray addObject:[self itemAtRow:[row intValue]]]; 
-		} 
-	}
-	
-	return (listObjectArray);
-}
 
 //Custom font settings ------------------------------------------------------------------
 //We have to handle setting our font manually.  Outline view responds to set font, but it does nothing.
@@ -673,6 +606,5 @@
 	
 	return([image autorelease]);
 }
-
 
 @end
