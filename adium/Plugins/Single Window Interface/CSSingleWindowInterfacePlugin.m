@@ -116,7 +116,6 @@
 	
     //
     [[adium contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] delayed:NO silent:NO];
-	
 }
 
 - (void)_clearUnviewedContentOfChat:(AIChat *)inChat

@@ -11,6 +11,12 @@
 
 #define CURRENT_CHATS_NIB @"Current Chats List"
 
+@interface CSCurrentChatsListViewController (PRIVATE)
+
+- (void)_tableClicked;
+
+@end
+
 @implementation CSCurrentChatsListViewController
 
 #pragma mark Initiation
@@ -21,6 +27,7 @@
 		messageViewControllerArray = [[NSMutableArray array] retain];
 		
 		[NSBundle loadNibNamed:CURRENT_CHATS_NIB owner:self];
+		[[adium notificationCenter] addObserver:view selector:@selector(reloadData) name:ListObject_AttributesChanged object:nil];
 	}
 	
 	return self;
@@ -29,11 +36,18 @@
 -(void)dealloc
 {
 	[messageViewControllerArray release];
+	[[adium notificationCenter] removeObserver:view];
 	
 	[super dealloc];
 }
 
 #pragma mark NIB Handling
+
+- (void)awakeFromNib
+{
+	[view setTarget:self];
+	[view setAction:@selector(_tableClicked)];
+}
 
 #pragma mark Message View Controller Handlers
 - (BOOL)messageViewControllerHasBeenCreatedForChat:(AIChat*)inChat
@@ -91,13 +105,14 @@
 	[messageViewControllerArray removeObject:[self messageViewControllerForChat:inChat]];
 	
 	[view reloadData];
+	[self _tableClicked];
 }
 
 - (AIChat*)activeChat
 {
 	int selectedRow = [view selectedRow];
 	if (selectedRow >=0 && selectedRow < [messageViewControllerArray count])
-		return ([[messageViewControllerArray objectAtIndex:[view selectedRow]] chat]);
+		return ([[messageViewControllerArray objectAtIndex:selectedRow] chat]);
 	return nil;
 }
 
@@ -113,9 +128,9 @@
 - (void)_tableClicked
 {
 	int	selectedRow = [view selectedRow];
-	
+	NSLog(@"Table Clicked: %d", selectedRow);
     if(selectedRow >=0 && selectedRow < [messageViewControllerArray count]){
-        [[adium interfaceController] setActiveChat:[[messageViewControllerArray objectAtIndex:selectedRow] chat]];
+        [[adium interfaceController] setActiveChat:[self activeChat]];
     }
 }
 
@@ -147,7 +162,12 @@
 //Return the account description or image
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    return([[[[[messageViewControllerArray objectAtIndex:row] chat] participatingListObjects] objectAtIndex:0] displayName]);
+	AIListObject *inObject = [[[[messageViewControllerArray objectAtIndex:row] chat] participatingListObjects] objectAtIndex:0];
+	NSString *displayName = [inObject displayName];
+	AIMutableOwnerArray	*ownerArray = [inObject statusArrayForKey:@"UnviewedContent"];
+    int currentUnviewed = [[ownerArray objectWithOwner:inObject] intValue];
+	
+    return((currentUnviewed > 0) ? [NSString stringWithFormat:@"%@ (%d)",displayName,currentUnviewed] : displayName);
 }
 
 /*
