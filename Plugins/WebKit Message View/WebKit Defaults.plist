@@ -16,5 +16,7 @@
 	<true/>
 	<key>Use Custom Name Format</key>
 	<false/>
+	<key>Use Background Color</key>
+	<false/>
 </dict>
 </plist>

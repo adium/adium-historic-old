@@ -31,6 +31,7 @@
 		unsigned allSpaces: 1;
 		unsigned attachmentTextEquivalents: 1;
 		unsigned attachmentImagesOnlyForSending: 1;
+		unsigned bodyBackground: 1;
 
 		unsigned simpleTagsOnly: 1;
 	} thingsToInclude;
@@ -53,7 +54,8 @@
 		 encodeSpaces:(BOOL)encodeSpaces
 	attachmentsAsText:(BOOL)attachmentsAsText
 attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
-	   simpleTagsOnly:(BOOL)simpleOnly;
+	   simpleTagsOnly:(BOOL)simpleOnly
+	   bodyBackground:(BOOL)bodyBackground;
 
 + (AIHTMLDecoder *)decoderWithHeaders:(BOOL)includeHeaders
 							 fontTags:(BOOL)includeFontTags
@@ -64,7 +66,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						 encodeSpaces:(BOOL)encodeSpaces
 					attachmentsAsText:(BOOL)attachmentsAsText
 	   attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
-					   simpleTagsOnly:(BOOL)simpleOnly;
+					   simpleTagsOnly:(BOOL)simpleOnly
+					   bodyBackground:(BOOL)bodyBackground;
 
 #pragma mark Work methods
 
@@ -117,6 +120,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 - (BOOL)onlyUsesSimpleTags;
 - (void)setOnlyUsesSimpleTags:(BOOL)newValue;
 
+- (BOOL)bodyBackground;
+- (void)bodyBackground:(BOOL)bodyBackground;
+
 @end
 
 @interface AIHTMLDecoder (ClassMethodCompatibility)
@@ -141,7 +147,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			  imagesPath:(NSString *)imagesPath
 	   attachmentsAsText:(BOOL)attachmentsAsText
 attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
-		  simpleTagsOnly:(BOOL)simpleOnly;
+		  simpleTagsOnly:(BOOL)simpleOnly
+		  bodyBackground:(BOOL)bodyBackground;
 
 + (NSAttributedString *)decodeHTML:(NSString *)inMessage;
 

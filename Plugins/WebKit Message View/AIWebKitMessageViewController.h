@@ -40,6 +40,7 @@
 	BOOL						allowBackgrounds;
 	BOOL						useCustomNameFormat;
 	BOOL						combineConsecutive;
+	BOOL						allowTextBackgrounds;
 	int							styleVersion;	
 	NSImage						*imageMask;
 	NSMutableArray				*objectsWithUserIconsArray;

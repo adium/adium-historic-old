@@ -24,6 +24,7 @@
             CLASS = ESWKMVAdvancedPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkBox_backgroundColorFormatting" = NSButton; 
                 "checkBox_combineConsecutive" = NSButton; 
                 "checkBox_customNameFormatting" = NSButton; 
                 "popUp_nameFormat" = NSPopUpButton; 

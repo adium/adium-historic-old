@@ -1028,7 +1028,8 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
                                                              imagesPath:nil 
                                                       attachmentsAsText:YES 
                                          attachmentImagesOnlyForSending:NO 
-                                                         simpleTagsOnly:NO] retain];
+                                                         simpleTagsOnly:NO
+                                                         bodyBackground:NO] retain];
 		AILog(@"Search will be on %@",activeSearchStringEncoded);
 	}else{
 		[activeSearchStringEncoded release]; activeSearchStringEncoded = nil;

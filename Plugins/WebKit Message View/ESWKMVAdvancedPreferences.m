@@ -36,6 +36,7 @@
 	[popUp_nameFormat compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue]];
 	[checkBox_customNameFormatting setState:[[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue]];
 	[checkBox_combineConsecutive setState:[[prefDict objectForKey:KEY_WEBKIT_COMBINE_CONSECUTIVE] boolValue]];
+	[checkBox_backgroundColorFormatting setState:[[prefDict objectForKey:KEY_WEBKIT_USE_BACKGROUND] boolValue]];
 	
 	[self configureControlDimming];
 }
@@ -54,8 +55,11 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_WEBKIT_NAME_FORMAT
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	}
-	
+	}else if(sender == checkBox_backgroundColorFormatting){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_WEBKIT_USE_BACKGROUND
+											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+											  }
 	[self configureControlDimming];
 }
 

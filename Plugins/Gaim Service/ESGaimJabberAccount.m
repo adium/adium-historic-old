@@ -108,7 +108,8 @@ static NSDictionary		*presetStatusesDictionary = nil;
 						  imagesPath:nil
 				   attachmentsAsText:YES
 	  attachmentImagesOnlyForSending:YES
-					  simpleTagsOnly:NO]);
+					  simpleTagsOnly:NO
+					  bodyBackground:NO]);
 }
 
 //Make sure the server is appended if something attempts to access the formattedUID

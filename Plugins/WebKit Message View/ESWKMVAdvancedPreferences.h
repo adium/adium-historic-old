@@ -10,6 +10,7 @@
 	IBOutlet	NSButton		*checkBox_customNameFormatting;
 	IBOutlet	NSPopUpButton   *popUp_nameFormat;
 	IBOutlet	NSButton		*checkBox_combineConsecutive;
+	IBOutlet	NSButton		*checkBox_backgroundColorFormatting;
 }
 
 @end
