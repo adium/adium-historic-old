@@ -61,7 +61,7 @@
 //#define KEY_USER_VIEWED_LICENSE			@"AdiumUserLicenseViewed"
 //#define KEY_LAST_VERSION_LAUNCHED			@"Last Version Launched"
 
-static PREFERENCE_CATEGORY						prefsCategory;
+static NSString	*prefsCategory;
 
 
 @interface AIAdium (PRIVATE)
@@ -180,7 +180,7 @@ static PREFERENCE_CATEGORY						prefsCategory;
     notificationCenter = nil;
     completedApplicationLoad = NO;
 	advancedPrefsName = nil;
-	prefsCategory = -1;
+	prefsCategory = nil;
 
 #ifdef NEW_APPLICATION_SUPPORT_DIRECTORY
 	[self upgradePreferenceFolderFromAdium2ToAdium];
@@ -340,7 +340,7 @@ static PREFERENCE_CATEGORY						prefsCategory;
 	BOOL				success = NO, requiresRestart = NO;
 	int					buttonPressed;
 	
-	prefsCategory = -1;
+	[prefsCategory release]; prefsCategory = nil;
     [advancedPrefsName release]; advancedPrefsName = nil;
 	
     //Specify a file extension and a human-readable description of what the files of this type do
@@ -354,26 +354,26 @@ static PREFERENCE_CATEGORY						prefsCategory;
         destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Themes"];
         fileDescription = AILocalizedString(@"Adium theme",nil);
 		prefsButton = AILocalizedString(@"Open Theme Prefs",nil);
-		prefsCategory = AIPref_Advanced;
+		prefsCategory = @"advanced";
 		advancedPrefsName = [@"Themes" retain];
 		
     } else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Dock Icons"];
         fileDescription = AILocalizedString(@"dock icon set",nil);
 		prefsButton = AILocalizedString(@"Open Dock Prefs",nil);
-		prefsCategory = AIPref_Dock;
+		prefsCategory = @"dock";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumSoundset"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Sounds"];
 		fileDescription = AILocalizedString(@"sound set",nil);
 		prefsButton = AILocalizedString(@"Open Sound Prefs",nil);
-		prefsCategory = AIPref_Events;
+		prefsCategory = @"events";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumEmoticonset"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Emoticons"];
 		fileDescription = AILocalizedString(@"emoticon set",nil);
 		prefsButton = AILocalizedString(@"Open Emoticon Prefs",nil);
-		prefsCategory = AIPref_Emoticons;
+		prefsCategory = @"emoticons";
 		
 	} else if ([extension caseInsensitiveCompare:@"AdiumScripts"] == NSOrderedSame) {
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Scripts"];
@@ -384,7 +384,7 @@ static PREFERENCE_CATEGORY						prefsCategory;
 			destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Message Styles"];
 			fileDescription = AILocalizedString(@"message style",nil);
 			prefsButton = AILocalizedString(@"Open Message Prefs",nil);
-			prefsCategory = AIPref_Messages;
+			prefsCategory = @"messages";
 		}else{
 			errorMessage = AILocalizedString(@"Sorry, but Adium Message Styles are not supported in OS X 10.2 (Jaguar).",nil);
 		}
@@ -392,12 +392,12 @@ static PREFERENCE_CATEGORY						prefsCategory;
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Contact List"];
 		fileDescription = AILocalizedString(@"contact list layout",nil);
 		prefsButton = AILocalizedString(@"Open Contact List Prefs",nil);
-		prefsCategory = AIPref_ContactList;
+		prefsCategory = @"contactlist";
 	} else if ([extension caseInsensitiveCompare:@"ListTheme"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Contact List"];
 		fileDescription = AILocalizedString(@"contact list theme",nil);
 		prefsButton = AILocalizedString(@"Open Contact List Prefs",nil);
-		prefsCategory = AIPref_ContactList;
+		prefsCategory = @"contactlist";
 	}
 
     if (destination){
@@ -464,7 +464,7 @@ static PREFERENCE_CATEGORY						prefsCategory;
 			}
 		}else{
 			//If the user didn't press the "open prefs" button, clear the pref opening information
-			prefsCategory = -1;
+			[prefsCategory release]; prefsCategory = nil;
 			[advancedPrefsName release]; advancedPrefsName = nil;
 		}
 		
@@ -493,17 +493,14 @@ static PREFERENCE_CATEGORY						prefsCategory;
 
 - (void)openAppropriatePreferencesIfNeeded
 {
-	if (prefsCategory != -1){
-		switch( prefsCategory ) {
- 			case AIPref_Advanced:
-				[preferenceController openPreferencesToAdvancedPane:advancedPrefsName];
-				[advancedPrefsName release]; advancedPrefsName = nil;
-				break;
-			default:
-				[preferenceController openPreferencesToCategory:prefsCategory];
+	if (prefsCategory){
+		if([prefsCategory isEqualToString:@"advanced"]){
+			[preferenceController openPreferencesToAdvancedPane:advancedPrefsName];
+		}else{
+			[preferenceController openPreferencesToCategoryWithIdentifier:prefsCategory];
 		}
 		
-		prefsCategory = -1;
+		[prefsCategory release]; prefsCategory = nil;
 	}
 }
 

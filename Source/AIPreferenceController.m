@@ -172,9 +172,9 @@
  *
  * @param category The category to show
  */
-- (void)openPreferencesToCategory:(PREFERENCE_CATEGORY)category
+- (void)openPreferencesToCategoryWithIdentifier:(NSString *)identifier
 {
-	[AIPreferenceWindowController openPreferenceWindowToCategory:category];
+	[AIPreferenceWindowController openPreferenceWindowToCategoryWithIdentifier:identifier];
 }
 
 /*
