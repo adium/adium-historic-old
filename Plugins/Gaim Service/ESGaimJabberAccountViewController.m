@@ -13,7 +13,7 @@
     return(@"ESGaimJabberAccountView");
 }
 - (NSString *)userNameLabel{
-    return(@"Jabber ID"); //Jabber ID
+    return(AILocalizedString(@"Jabber ID",nil)); //Jabber ID
 }
 
 //Configure our controls

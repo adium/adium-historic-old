@@ -34,16 +34,16 @@ static BOOL didInitGG = NO;
 			return AILocalizedString(@"Looking up server",nil);
 			break;
 		case 2:
-			return AILocalizedString(@"Reading data",nil);
+			return AILocalizedString(@"Reading data","Connection step");
 			break;			
 		case 3:
-			return AILocalizedString(@"Balancer handshake",nil);
+			return AILocalizedString(@"Balancer handshake","Connection step");
 			break;
 		case 4:
-			return AILocalizedString(@"Reading server key",nil);
+			return AILocalizedString(@"Reading server key","Connection step");
 			break;
 		case 5:
-			return AILocalizedString(@"Exchanging key hash",nil);
+			return AILocalizedString(@"Exchanging key hash","Connection step");
 			break;
 	}
 	return nil;

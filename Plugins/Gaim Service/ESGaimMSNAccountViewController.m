@@ -13,7 +13,7 @@
     return(@"ESGaimMSNAccountView");
 }
 - (NSString *)userNameLabel{
-    return(@"Passport");    //Sign-in name
+    return(AILocalizedString(@"MSN Passport",""));    //Sign-in name
 }
 
 //Configure our controls

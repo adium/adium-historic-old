@@ -22,7 +22,7 @@
     return(@"ESGaimOscarAccountView");
 }
 - (NSString *)userNameLabel{
-    return(@"Screen Name"); //ScreenName
+    return(AILocalizedString(@"AIM Screen Name",nil)); //ScreenName
 }
 
 //Configure our controls
