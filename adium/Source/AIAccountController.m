@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.57 2004/03/02 04:10:48 adamiser Exp $
+// $Id: AIAccountController.m,v 1.58 2004/03/05 03:07:00 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -34,7 +34,6 @@
 
 @interface AIAccountController (PRIVATE)
 - (void)loadAccounts;
-- (void)saveAccounts;
 - (void)_saveAccountArray:(NSArray *)inAccounts;
 - (void)_addMenuItemsToMenu:(NSMenu *)menu withTarget:(id)target forAccounts:(NSArray *)accounts;
 - (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred;
