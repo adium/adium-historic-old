@@ -26,6 +26,7 @@
 - (NSMenu *)soundListMenu;
 - (NSMenu *)behaviorListMenu;
 - (NSMenu *)actionListMenu;
+- (NSMenu *)switchContactMenu;
 - (int)numberOfRowsInTableView:(NSTableView *)tableView;
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row;
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row;
@@ -42,6 +43,8 @@
 - (void) removeAllSubviews:(NSView *)view;
 - (void) configureWithSubview:(NSView *)view_inView;
 @end
+
+int alphabeticalSort(id objectA, id objectB, void *context);
 
 @implementation AIContactAlertsWindowController
 //Open a new info window
@@ -95,6 +98,10 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
     NSPopUpButtonCell			*dataCell;
 
+    //Build the contact list
+    [popUp_contactList setMenu:[self switchContactMenu]];
+    [popUp_contactList selectItemAtIndex:[popUp_contactList indexOfItemWithRepresentedObject:activeContactObject]];
+    
     //Build the event menu
     [popUp_addEvent setMenu:[self eventMenu]];
 
@@ -124,6 +131,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     eventActionArray =  [[[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject] retain];
 
     [self removeAllSubviews:view_main];
+    view_blank = [[NSView alloc] init];
     [view_details release];    view_details = view_blank; [view_details retain];
     [view_main addSubview:view_details];
     [view_main setAutoresizingMask:NSViewMaxYMargin];
@@ -295,7 +303,6 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     NSRect	containerFrame = [[self window] frame];
     NSSize	minimumSize = [[self window] minSize];
     int 	heightChange = [view_inView frame].size.height - [view_details frame].size.height;
-
     containerFrame.size.height += heightChange;
     containerFrame.origin.y -= heightChange;
     minimumSize.height += heightChange;
@@ -313,16 +320,23 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
 - (void) removeAllSubviews:(NSView *)view
 {
-    NSArray * subviewsArray = [view subviews];
+    NSArray 	* subviewsArray = [view subviews];
     NSEnumerator * enumerator = [subviewsArray objectEnumerator];
-    NSView * theSubview;
+    NSView 	* theSubview;
     NSRect	containerFrame = [[self window] frame];
+    NSSize	minimumSize = [[self window] minSize];
+    int	 	heightChange;
+    
     while (theSubview = [enumerator nextObject])
     {
-        containerFrame.size.height -= [theSubview frame].size.height;
+        heightChange = -[theSubview frame].size.height;
+        containerFrame.size.height += heightChange;
+        containerFrame.origin.y -= heightChange;
+        minimumSize.height += heightChange;
         [theSubview removeFromSuperviewWithoutNeedingDisplay];
     }
-    [[self window] setFrame:containerFrame display:NO animate:NO];
+    //[[self window] setFrame:containerFrame display:NO animate:NO];
+   // [[self window] setMinSize:minimumSize];
 }
 
 //used for each item of the eventMenu
@@ -664,9 +678,11 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     NSSize minimum = [[self window] minSize];
     NSRect defaultFrame = [[self window] frame];
     savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_CONTACT_ALERTS_WINDOW_FRAME];
+
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
         NSRect newFrame = [[self window] frame];
+        //NSLog(@"1: %d  2: %d",newFrame.size.height,defaultFrame.size.height);
         newFrame.size.height = defaultFrame.size.height;
         [[self window] setFrame:newFrame display:YES];
         [[self window] setMinSize:minimum];
@@ -674,4 +690,80 @@ static AIContactAlertsWindowController *sharedInstance = nil;
         [[self window] center];
     }
 }
+
+//builds an alphabetical menu of contacts for all online accounts; online contacts are sorted to the top and seperated
+//from offline ones by a seperator reading "Offline"
+//uses alphabeticalSort and calls switchToContact: when a selection is made
+- (NSMenu *)switchContactMenu
+{
+    NSMenu		*contactMenu = [[NSMenu alloc] init];
+    //Build the menu items
+    NSMutableArray		*contactArray =  [[owner contactController] allContactsInGroup:nil subgroups:YES];
+    [contactArray sortUsingFunction:alphabeticalSort context:nil]; //online buddies will end up at the top, alphabetically
+
+    NSEnumerator 	*enumerator = 	[contactArray objectEnumerator];
+    AIListObject	*contact;
+    BOOL		firstOfflineSearch = YES;
+    while (contact = [enumerator nextObject])
+    {
+        NSMenuItem		*menuItem;
+        NSString	 	*itemDisplay;
+        NSString		*itemUID = [contact UID];
+        itemDisplay = [contact displayName];
+        if ( !([itemDisplay compare:itemUID] == 0) ) //display name and screen name aren't the same
+            itemDisplay = [NSString stringWithFormat:@"%@ (%@)",itemDisplay,itemUID]; //show the UID along with the display name
+        menuItem = [[[NSMenuItem alloc] initWithTitle:itemDisplay
+                                               target:self
+                                               action:@selector(switchToContact:)
+                                        keyEquivalent:@""] autorelease];
+        [menuItem setRepresentedObject:contact];
+        if (firstOfflineSearch)
+        {
+            if ( !([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //look for the first offline contact
+            {
+                NSMenuItem	*separatorItem;
+                separatorItem = [[[NSMenuItem alloc] initWithTitle:@"Offline"
+                                                       target:nil
+                                                       action:nil
+                                                keyEquivalent:@""] autorelease];
+                [separatorItem setEnabled:NO];
+                [contactMenu addItem:separatorItem];
+                firstOfflineSearch = NO; //stop searching
+            }
+        }
+        [contactMenu addItem:menuItem];
+    }
+    [contactMenu setAutoenablesItems:NO];
+    
+    return contactMenu;
+}
+
+- (IBAction) switchToContact:(id) sender
+{
+    [sharedInstance configureWindowforObject:[sender representedObject]];
+}
+
+int alphabeticalSort(id objectA, id objectB, void *context)
+{
+    BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
+    BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
+
+    if(invisibleA && !invisibleB){
+        return(NSOrderedDescending);
+    }else if(!invisibleA && invisibleB){
+        return(NSOrderedAscending);
+    }else{
+        BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
+        BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
+
+        if(groupA && !groupB){
+            return(NSOrderedAscending);
+        }else if(!groupA && groupB){
+            return(NSOrderedDescending);
+        }else{
+            return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
+        }
+    }
+}
+
 @end
