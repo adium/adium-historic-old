@@ -9,6 +9,8 @@
 #import "AICustomTabDragWindow.h"
 
 #define CUSTOM_TABS_INDENT		3					//Indent on left and right of tabbar
+#define CONTENT_OFFSET_X		1					//Offset of content view relative to tabs
+
 
 @interface AICustomTabDragWindow (PRIVATE)
 - (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell;
@@ -130,7 +132,8 @@
         [tabImage compositeToPoint:insertPoint operation:NSCompositeCopy];
         
         //Draw the content
-        [contentImage compositeToPoint:[[[tabCell tabViewItem] tabView] frame].origin operation:NSCompositeCopy];
+		NSPoint	frameOrigin = [[[tabCell tabViewItem] tabView] frame].origin;
+        [contentImage compositeToPoint:NSMakePoint(frameOrigin.x + CONTENT_OFFSET_X, frameOrigin.y) operation:NSCompositeCopy];
         
         [dragWindowImage unlockFocus];
     }

@@ -13,7 +13,6 @@ Bugs
 -------------------------------------------------------------------------------------------------------
 * Create new account, tab from username->pass->account list.  Next tab should go back to username
 * Don't spawn new windows when we're hidden, doing so will unhide us
-* Window content is drawing 2 pixels to the left when dragging tabs
 * Prevent cmd-delete from working in the message window
 * Link tracking doesn't work if the link is the entire body of the first message received UNTIL you send a message, at which point it starts working
 * Libgaim disconnect errors are being displayed, and not ignored (since they are handled internally)
@@ -221,6 +220,7 @@ Bug Fixes:
 = When dragging a tab off quickly, it is possible for the tab bar to not finish moving to the correct position or to crash.
 = Mousekeys to move tabs causes a crash: http://www.visualdistortion.org/crash/view.jsp?crash=5930
 = Contact list display format preference not applying correctly on launch
+= Window content is drawing 2 pixels to the left when dragging tabs
 
 Features & Changes:
 = Add Offline status coloring
