@@ -2,7 +2,7 @@
 
 #import "ESBorderlessWindow.h"
 
-#define BORDERLESS_WINDOW_DOCKING_DISTANCE 	20	//Distance in pixels before the window is snapped to an edge
+#define BORDERLESS_WINDOW_DOCKING_DISTANCE 	8	//Distance in pixels before the window is snapped to an edge
 
 @interface ESBorderlessWindow (PRIVATE)
 - (BOOL)dockWindowFrame:(NSRect *)inFrame toScreenFrame:(NSRect)screenFrame movementX:(float)movementX movementY:(float)movementY;

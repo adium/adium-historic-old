@@ -32,7 +32,7 @@
 //Borderless nib
 - (NSString *)nibName
 {
-    return(@"ContactListWindowTransparent");    
+    return(@"ContactListWindowBorderless");    
 }
 
 //Ensure we're on the main screen on load
