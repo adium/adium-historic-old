@@ -222,9 +222,7 @@
         [oldMessageWindow removeTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem];
         
         if(!newMessageWindow) {
-			AIListObject    *listObject = [[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject];
-			
-            NSRect          newFrame;
+			NSRect          newFrame;
             
             //Default to the width of the source message window, and the drop point
             if(!(screenPoint.x == -1 || screenPoint.y == -1)){
