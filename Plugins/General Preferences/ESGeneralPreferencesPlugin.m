@@ -39,7 +39,6 @@
 #import <Adium/AIStatusIcons.h>
 
 #define	TAB_DEFAULT_PREFS			@"TabDefaults"
-#define	ICON_PACK_DEFAULT_PREFS		@"IconPackDefaults"
 
 #define	SENDING_KEY_DEFAULT_PREFS	@"SendingKeyDefaults"
 
@@ -53,9 +52,6 @@
 {
 	//Defaults
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TAB_DEFAULT_PREFS
-																		forClass:[self class]] 
-										  forGroup:PREF_GROUP_INTERFACE];
-	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ICON_PACK_DEFAULT_PREFS
 																		forClass:[self class]] 
 										  forGroup:PREF_GROUP_INTERFACE];
 	
