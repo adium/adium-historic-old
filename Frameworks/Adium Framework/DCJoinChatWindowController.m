@@ -109,7 +109,13 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 		AIAccount *account = [[popUp_service selectedItem] representedObject];
 		[self configureForAccount:account];
 	}
-	
+
+	[[self window] setTitle:AILocalizedString(@"Join Chat",nil)];
+	[textField_accountLabel setStringValue:AILocalizedString(@"Account:",nil)];
+
+	[button_joinChat setTitle:AILocalizedString(@"Join",nil)];
+	[button_cancel setTitle:AILocalizedString(@"Cancel",nil)];
+
     //Center the window
     [[self window] center];
 }
