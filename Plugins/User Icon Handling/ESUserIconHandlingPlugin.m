@@ -256,6 +256,7 @@
 	[toolbarItem setMinSize:NSMakeSize(32,32)];
 	[toolbarItem setMaxSize:NSMakeSize(32,32)];
 	[button setToolbarItem:toolbarItem];
+	[button setImage:[NSImage imageNamed:@"userIconToolbar" forClass:[self class]]];
 
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"MessageWindow"];
 }
