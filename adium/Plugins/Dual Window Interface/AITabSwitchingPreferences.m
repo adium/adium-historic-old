@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Thu Jun 10 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AITabSwitchingPreferences.h"
@@ -28,7 +27,7 @@
 {
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
-	[popUp_tabKeys selectItemWithTag:[[preferenceDict objectForKey:KEY_TAB_SWITCH_KEYS] intValue]];
+	[popUp_tabKeys compatibleSelectItemWithTag:[[preferenceDict objectForKey:KEY_TAB_SWITCH_KEYS] intValue]];
 }
 
 //User changed a preference
