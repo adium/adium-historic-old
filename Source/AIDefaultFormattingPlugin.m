@@ -75,14 +75,19 @@
 	//Update our local preference cache for the new values
 	[font release];
 	[textColor release];
+	[backgroundColor release];
 	font = [[[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont] retain];
 	textColor = [[[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor] retain];
+	backgroundColor = [[[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor] retain];
 	
 	//Apply the new preferences as Adium's default formatting attributes
 	attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
 	if(textColor && ![textColor equalToRGBColor:[NSColor textColor]]){
 		[attributes setObject:textColor forKey:NSForegroundColorAttributeName];	
 	}	
+	if (backgroundColor && ![backgroundColor equalToRGBColor:[NSColor textBackgroundColor]]){
+		[attributes setObject:backgroundColor forKey:AIBodyColorAttributeName];	
+	}
 	[[adium contentController] setDefaultFormattingAttributes:attributes];
 }
 
@@ -116,12 +121,16 @@
 			NSDictionary	*attributes = [message attributesAtIndex:[message length]-1 effectiveRange:nil];
 			NSString		*newFont = [(NSFont *)[attributes objectForKey:NSFontAttributeName] stringRepresentation];
 			NSString		*newTextColor = [(NSColor *)[attributes objectForKey:NSForegroundColorAttributeName] stringRepresentation];
+			NSString		*newBodyColor = [(NSColor *)[attributes objectForKey:AIBodyColorAttributeName] stringRepresentation];
 			
 			//If the attribute is nil for these values, substitute our defaults
 			if(!newFont) newFont = [[adium preferenceController] defaultPreferenceForKey:KEY_FORMATTING_FONT
 																				   group:PREF_GROUP_FORMATTING
 																				  object:nil];
 			if(!newTextColor) newTextColor = [[adium preferenceController] defaultPreferenceForKey:KEY_FORMATTING_TEXT_COLOR 
+																							 group:PREF_GROUP_FORMATTING
+																							object:nil];
+			if(!newBodyColor) newBodyColor = [[adium preferenceController] defaultPreferenceForKey:KEY_FORMATTING_BACKGROUND_COLOR 
 																							 group:PREF_GROUP_FORMATTING
 																							object:nil];
 			
@@ -135,6 +144,12 @@
 			if(![[textColor stringRepresentation] isEqualToString:newTextColor]){
 				NSLog(@"newcolor:%@ (was %@)",newTextColor,[textColor stringRepresentation]);
 				[[adium preferenceController] setPreference:newTextColor
+													 forKey:KEY_FORMATTING_TEXT_COLOR
+													  group:PREF_GROUP_FORMATTING];
+			}
+			if(![[backgroundColor stringRepresentation] isEqualToString:newBodyColor]){
+				NSLog(@"newbackgroundcolor:%@ (was %@)",newBodyColor,[backgroundColor stringRepresentation]);
+				[[adium preferenceController] setPreference:newBodyColor
 													 forKey:KEY_FORMATTING_TEXT_COLOR
 													  group:PREF_GROUP_FORMATTING];
 			}
@@ -154,6 +169,9 @@
 										  group:PREF_GROUP_FORMATTING];
 	[[adium preferenceController] setPreference:nil
 										 forKey:KEY_FORMATTING_TEXT_COLOR
+										  group:PREF_GROUP_FORMATTING];
+	[[adium preferenceController] setPreference:nil
+										 forKey:KEY_FORMATTING_BACKGROUND_COLOR
 										  group:PREF_GROUP_FORMATTING];
 	
 	//Update all open message windows to our default formatting

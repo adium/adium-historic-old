@@ -14,18 +14,21 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIObject.h"
 #import "AIChat.h"
 #import "AIMenuController.h"
 #import "AIMessageEntryTextView.h"
-#import "AIObject.h"
+#import "AIPreferenceController.h"
 #import "ESFileWrapperExtension.h"
 #import "AITextAttachmentExtension.h"
 
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
+#import "AIDefaultFormattingPlugin.h"
 
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
+#import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 
 #define MAX_HISTORY					25		//Number of messages to remember in history
@@ -176,15 +179,13 @@ static NSImage *pushIndicatorImage = nil;
 				//If !homeToStartOfLine, pass the keypress to our associated view.
 				[associatedView keyDown:inEvent];
 			}
-		}
-                else if([charactersIgnoringModifiers isEqual:@"\r"] == YES || inChar == NSEnterCharacter){
-                    if(flags & NSShiftKeyMask){
-                        [self insertText:@"\n"];
-                    }
-                    else{
-                        [super keyDown:inEvent];
-                    }
-                } else{
+		} else if([charactersIgnoringModifiers isEqualToString:@"\r"] == YES || inChar == NSEnterCharacter){
+			if(flags & NSShiftKeyMask){
+				[self insertText:@"\n"];
+			} else {
+				[super keyDown:inEvent];
+			}
+		} else {
 			[super keyDown:inEvent];
 		}
 	}else{
@@ -645,6 +646,8 @@ static NSImage *pushIndicatorImage = nil;
     return [contextualMenu autorelease];
 }
 
+#pragma mark Drag and drop
+
 /*An NSTextView which has setImportsGraphics:YES as of 10.3 gets the following drag types by default:
 "NSColor pasteboard type"
 "NSFilenamesPboardType"
@@ -760,4 +763,44 @@ static NSImage *pushIndicatorImage = nil;
 
 	return success;
 }
+
+#pragma mark Font Panel color-selection (10.3 and later only)
+
+//Apple Supported Background Color Change from NSFontPanel in Panther and later!
+- (void)changeDocumentBackgroundColor:(id)sender
+{
+	//XXX - move this part to a category on NSText
+	NSColor					*newColor = [sender color];
+	NSEnumerator			*enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
+	NSText<AITextEntryView>	*textEntryView;
+	AIChat					*activeChat = [[adium interfaceController] activeChat];
+
+	while((textEntryView = [enumerator nextObject]) && ([textEntryView chat] != activeChat));
+
+	[textEntryView setBackgroundColor:newColor];
+
+	//XXX - not this part
+	[[adium preferenceController] setPreference:[newColor stringRepresentation]
+										 forKey:KEY_FORMATTING_BACKGROUND_COLOR
+										  group:PREF_GROUP_FORMATTING];
+}
+//Apple Supported Font Color Change from NSFontPanel in Panther and later!
+- (void)changeColor:(id)sender
+{
+	//XXX - move this part to a category on NSText
+	NSColor					*newColor = [sender color];
+	NSEnumerator			*enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
+	NSText<AITextEntryView>	*textEntryView;
+	AIChat					*activeChat = [[adium interfaceController] activeChat];
+
+	while((textEntryView = [enumerator nextObject]) && ([textEntryView chat] != activeChat));
+
+	[textEntryView setTextColor:newColor range:[textEntryView selectedRange]];
+
+	//XXX - not this part
+	[[adium preferenceController] setPreference:[newColor stringRepresentation]
+										 forKey:KEY_FORMATTING_TEXT_COLOR
+										  group:PREF_GROUP_FORMATTING];
+}
+
 @end
