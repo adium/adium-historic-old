@@ -48,13 +48,17 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 }
 
 //Preference view is closing
+- (void)viewWillClose
+{
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+}
+
 - (void)dealloc
 {
-	[adium release]; adium = nil;
-	
 	[alertArray release]; alertArray = nil;
     [listObject release]; listObject = nil;
-	[[adium preferenceController] unregisterPreferenceObserver:self];
+	
+	[super dealloc];
 }
 
 - (void)setDelegate:(id)inDelegate

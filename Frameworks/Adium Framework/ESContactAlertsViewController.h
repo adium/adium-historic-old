@@ -37,6 +37,8 @@
 
 - (void)setConfigureForGlobal:(BOOL)inConfigureForGlobal;
 
+- (void)viewWillClose;
+
 @end
 
 @interface NSObject (ESContactAlertsViewControllerDelegate)
