@@ -374,10 +374,10 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	}else{
 		NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 		if(responder && [responder isKindOfClass:[NSText class]]){
-                    return [(NSText *)responder isEditable];
-                }else{
-                    return NO;
-                }
+			return [(NSText *)responder isEditable];
+		}else{
+			return NO;
+		}
 	}
 }
 
