@@ -16,6 +16,8 @@
 @interface NSFont (AIFontAdditions)
 + (NSFont *)cachedFontWithName:(NSString *)fontName size:(float)fontSize;
 - (NSAttributedString *)stringRepresentation;
+- (BOOL)supportsBold;
+- (BOOL)supportsItalics;
 @end
 
 @interface NSString (AIFontAdditions)
