@@ -2258,6 +2258,58 @@
 			settings = {
 			};
 		};
+		4B7BD56204123BEB00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAlphabeticalSort.h;
+			path = "Plugins/Alphabetical Sort/AIAlphabeticalSort.h";
+			refType = 4;
+		};
+		4B7BD56304123BEB00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAlphabeticalSort.m;
+			path = "Plugins/Alphabetical Sort/AIAlphabeticalSort.m";
+			refType = 4;
+		};
+		4B7BD56404123BEB00A8010A = {
+			fileRef = 4B7BD56204123BEB00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7BD56504123BEB00A8010A = {
+			fileRef = 4B7BD56304123BEB00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7BD56604123BF500A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAlphabeticalSortNoGroups.h;
+			path = "Plugins/Alphabetical Sort/AIAlphabeticalSortNoGroups.h";
+			refType = 4;
+		};
+		4B7BD56704123BF500A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAlphabeticalSortNoGroups.m;
+			path = "Plugins/Alphabetical Sort/AIAlphabeticalSortNoGroups.m";
+			refType = 4;
+		};
+		4B7BD56804123BF500A8010A = {
+			fileRef = 4B7BD56604123BF500A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7BD56904123BF500A8010A = {
+			fileRef = 4B7BD56704123BF500A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B81631203D1C24E00A8010A = {
 			children = (
 				4B81632203D1C2A900A8010A,
@@ -3547,6 +3599,10 @@
 			children = (
 				4BED5A6303C3500100A8010A,
 				4BED5A6003C34FFE00A8010A,
+				4B7BD56204123BEB00A8010A,
+				4B7BD56304123BEB00A8010A,
+				4B7BD56604123BF500A8010A,
+				4B7BD56704123BF500A8010A,
 			);
 			isa = PBXGroup;
 			name = "Alphabetical Sort";
@@ -3557,6 +3613,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BED5A6103C34FFE00A8010A,
+				4B7BD56404123BEB00A8010A,
+				4B7BD56804123BF500A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3572,6 +3630,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BED5A6203C34FFE00A8010A,
+				4B7BD56504123BEB00A8010A,
+				4B7BD56904123BF500A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

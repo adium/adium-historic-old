@@ -10,6 +10,8 @@
 #import "AIAdium.h"
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
+#import "AIAlphabeticalSort.h"
+#import "AIAlphabeticalSortNoGroups.h"
 
 int alphabeticalSort(id objectA, id objectB, void *context);
 
@@ -17,55 +19,13 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 - (void)installPlugin
 {
-    [[owner contactController] registerContactSortController:self];
+    [[owner contactController] registerContactSortController:[[[AIAlphabeticalSort alloc] init] autorelease]];
+    [[owner contactController] registerContactSortController:[[[AIAlphabeticalSortNoGroups alloc] init] autorelease]];
 }
 
 - (void)uninstallPlugin
 {
     //[[owner contactController] unregisterContactSortController:self];
-}
-
-- (NSString *)description{
-    return(@"Sort contacts and groups alphabetically.");
-}
-- (NSString *)identifier{
-    return(@"Alphabetical");
-}
-- (NSString *)displayName{
-    return(@"Alphabetical");
-}
-
-- (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys
-{
-    return(NO); //Ignore
-}
-
-- (BOOL)shouldSortForModifiedAttributeKeys:(NSArray *)inModifiedKeys
-{
-    if([inModifiedKeys containsObject:@"Hidden"] || [inModifiedKeys containsObject:@"Display Name"]){
-        return(YES);
-    }else{
-        return(NO);
-    }
-}
-
-- (void)sortContactObjects:(NSMutableArray *)inObjects
-{
-    [inObjects sortUsingFunction:alphabeticalSort context:nil];
-}
-
-int alphabeticalSort(id objectA, id objectB, void *context)
-{
-    BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-    BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-
-    if(invisibleA && !invisibleB){
-        return(NSOrderedDescending);
-    }else if(!invisibleA && invisibleB){
-        return(NSOrderedAscending);
-    }else{
-        return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
-    }
 }
 
 @end

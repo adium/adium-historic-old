@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <Adium/Adium.h>
 
-@interface AIAlphabeticalSortPlugin : AIPlugin <AIContactSortController> {
+@interface AIAlphabeticalSortPlugin : AIPlugin {
 
 }
 

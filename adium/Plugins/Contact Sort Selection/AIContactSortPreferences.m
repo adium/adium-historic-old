@@ -31,7 +31,9 @@
 {
     NSString	*identifier = [sender representedObject];
 
-    [[owner preferenceController] setPreference:identifier forKey:KEY_CURRENT_SORT_MODE_IDENTIFIER group:CONTACT_SORT_PREF_TITLE];
+    [[owner preferenceController] setPreference:identifier forKey:KEY_CURRENT_SORT_MODE_IDENTIFIER group:PREF_GROUP_CONTACT_SORTING];
+    
+    [self configureView]; //Update the sort description
 }
 
 
