@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.95 2004/05/05 04:58:03 adamiser Exp $
+$Id: ToDoList.txt,v 1.96 2004/05/05 06:33:47 eevyl Exp $
 
 
 Legend
@@ -29,6 +29,7 @@ Bugs
 * Connection failures due to a disconnected network (at least with Airport) cause the password to be cleared and re-prompted for.
 
 * Simple webkit style has some bottom redraw/margin issues and is not displaying some of the dividing lines above a status change.
+    (Jorge: not entirely sure this is a real bug with Simple style, in fact I hihgly doubt it)
 * We are prompting for passwords on auto-reconnect like crazy.
 
 Applescripts:
