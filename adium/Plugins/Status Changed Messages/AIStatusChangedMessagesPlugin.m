@@ -45,10 +45,10 @@
         AIMutableOwnerArray	*statusMessageArray = [inContact statusArrayForKey:@"StatusMessage"];
 
         if([statusMessageArray count] != 0){
-            NSString		*statusMessage = [statusMessageArray objectAtIndex:0];
+            NSString		*statusMessage = [[statusMessageArray objectAtIndex:0] string];
 
             if([statusMessage length] != 0){
-                [self statusMessage:[NSString stringWithFormat:@"Away Message: \"%@\"",[statusMessageArray objectAtIndex:0]] forContact:inContact];
+                [self statusMessage:[NSString stringWithFormat:@"Away Message: \"%@\"",statusMessage] forContact:inContact];
             }
             
         }

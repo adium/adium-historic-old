@@ -51,7 +51,9 @@
     [self setDrawsBackground:YES];
 
     //
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:self];
+
+    [[owner contentController] initTextEntryView:self];
 
     return(self);
 }
@@ -114,7 +116,7 @@
 
     //working...
 //    NSLog(@"Insert:\"%@\"",aString);
-//    [[owner contentController] stringAdded:aString toTextEntryView:self];
+    [[owner contentController] stringAdded:aString toTextEntryView:self];
 
     if([aString length] && [aString characterAtIndex:0] == 10){
         NSParameterAssert([returnArray count] != 0);
@@ -160,6 +162,11 @@
     [super interpretKeyEvents:eventArray];
 }
 
+- (void)textDidChange:(NSNotification *)notification
+{
+    [[owner contentController] contentsChangedInTextEntryView:self];
+}
+
 
 // Required protocol methods ---
 - (NSAttributedString *)attributedString
@@ -183,6 +190,9 @@
             [self setSelectedRange:NSMakeRange(oldRange.location, length - oldRange.location)];       
         }
     }
+
+    //
+    [self textDidChange:nil];
 }
 
 - (void)setTypingAttributes:(NSDictionary *)attrs
@@ -215,19 +225,6 @@
 {
     return(contact);
 }
-
-
-
-
-
-- (void)textDidChange:(NSNotification *)notification
-{
-//working...
-//    NSLog(@"did change");
-//    [[owner contentController] contentsChangedInTextEntryView:self];
-}
-
-
 
 
 //Private ------------------------------------------------------------------------------------

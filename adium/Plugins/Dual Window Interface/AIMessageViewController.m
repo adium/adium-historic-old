@@ -73,7 +73,7 @@
 
     //Clear the message entry text view
     [textView_outgoing setString:@""];
-    [self textDidChange:nil]; //force the view to resize
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing]; //Force a textDidChange: notification
 }
     
 
