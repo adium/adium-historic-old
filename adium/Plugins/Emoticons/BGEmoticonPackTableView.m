@@ -30,7 +30,9 @@
         //Check if 'delete' was pressed (and should also check for the cmmd key)
         // BRACKET WITH A WARNING DIALOG!
         if(pressedChar == NSDeleteFunctionKey || pressedChar == 127){ //Delete
-                [[self dataSource] moveSelectedPacksToTrash]; // Tell preferences to move the actual packs to the trash
+            // Tell preferences to move the actual packs to the trash
+            AIEmoticonPreferences *emoticonPrefs = [self dataSource];
+            [emoticonPrefs moveSelectedPacksToTrash]; 
         }
         else{
             [super keyDown:theEvent]; //Pass the key event on
