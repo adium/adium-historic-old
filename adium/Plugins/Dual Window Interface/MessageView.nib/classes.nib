@@ -4,7 +4,8 @@
         {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AICompletingTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {
-            CLASS = AIMessageSendingTextView; 
+            ACTIONS = {pasteAsRichText = id; scrollPageDown = id; scrollPageUp = id; }; 
+            CLASS = AIMessageEntryTextView; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AISendingTextView; 
         }, 
@@ -14,16 +15,17 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_send" = AIPlasticButton; 
-                interface = id; 
-                "scrollView_messages" = AIAutoScrollView; 
+                delegate = id; 
+                messageViewController = id; 
+                "scrollView_messages" = NSView; 
                 "scrollView_outgoingView" = NSScrollView; 
                 "scrollView_userList" = AIAutoScrollView; 
                 "tableView_userList" = NSTableView; 
-                "textView_outgoing" = AISendingTextView; 
+                "textView_outgoing" = AIMessageEntryTextView; 
                 "toolbar_bottom" = AIMiniToolbar; 
                 "view_contents" = NSView; 
             }; 
-            SUPERCLASS = NSObject; 
+            SUPERCLASS = AIObject; 
         }, 
         {
             ACTIONS = {sendMessage = id; }; 
@@ -42,11 +44,13 @@
             OUTLETS = {representedObject = id; }; 
             SUPERCLASS = NSView; 
         }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {
+            ACTIONS = {sendContent = id; }; 
             CLASS = AISendingTextView; 
             LANGUAGE = ObjC; 
-            OUTLETS = {messageScrollView = NSScrollView; target = id; }; 
+            OUTLETS = {target = id; }; 
             SUPERCLASS = NSTextView; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }

@@ -16,20 +16,12 @@
 @class AIListObject, AIAdium, AIAccount, AIChat;
 @protocol AITextEntryView;
 
-@interface AISendingTextView : NSTextView <AITextEntryView> {
+@interface AIMessageEntryTextView : AISendingTextView <AITextEntryView> {
     AIAdium			*adium;
     AIChat			*chat;
     
-    BOOL			sendOnEnter;
-    BOOL			sendOnReturn;
 	BOOL			clearOnEscape;
-	BOOL			pushPop;
-    NSMutableArray	*returnArray;
-    BOOL			insertingText;
-    
-    id				target;
-    SEL				selector;
-    BOOL			availableForSending;
+	BOOL			pushPopEnabled;
 
     NSMutableArray	*historyArray;
     int				currentHistoryLocation;
@@ -47,32 +39,41 @@
 }
 
 - (id)initWithFrame:(NSRect)frameRect;
-- (NSSize)desiredSize;
 
+//Configure
+- (void)setClearOnEscape:(BOOL)inBool;
 - (void)setAssociatedView:(NSView *)inView;
 - (NSView *)associatedView;
-
-- (void)setSendOnReturn:(BOOL)inBool;
-- (void)setSendOnEnter:(BOOL)inBool;
-- (void)setClearOnEscape:(BOOL)inBool;
-- (void)setPushPop:(BOOL)inBool;
-
-- (void)setTarget:(id)inTarget action:(SEL)inSelector;
-
 - (void)setDefaultTypingAttributes:(NSDictionary *)dict;
 - (NSDictionary *)defaultTypingAttributes;
 - (void)resetToDefaultTypingAttributes;
 
+//Adium Text Entry
+- (NSAttributedString *)attributedString;
+- (void)setAttributedString:(NSAttributedString *)inAttributedString;
+- (void)setString:(NSString *)string;
+- (void)setTypingAttributes:(NSDictionary *)attrs;
+- (void)pasteAsRichText:(id)sender;
 - (void)insertText:(id)aString;
+- (NSSize)desiredSize;
 
-- (void)interpretKeyEvents:(NSArray *)eventArray;
-- (BOOL)performKeyEquivalent:(NSEvent *)theEvent;
-
-- (void)setAvailableForSending:(BOOL)inBool;
-- (BOOL)availableForSending;
-
+//Context
 - (void)setChat:(AIChat *)inChat;
 - (AIChat *)chat;
+- (AIListObject *)listObject;
 
-- (void)pasteAsRichText:(id)sender;
+//Paging
+- (void)scrollPageUp:(id)sender;
+- (void)scrollPageDown:(id)sender;
+
+//History
+- (void)historyUp;
+- (void)historyDown;
+
+//Push and Pop
+- (void)setPushPopEnabled:(BOOL)inBool;
+- (void)pushContent;
+- (void)popContent;
+- (void)swapContent;
+
 @end

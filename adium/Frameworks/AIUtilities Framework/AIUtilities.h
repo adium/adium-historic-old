@@ -72,6 +72,7 @@
 #import "AIPopUpButtonAdditions.h"
 #import "ESQuicklyResizingPanel.h"
 #import "AIScrollViewAdditions.h"
+#import "AISendingTextView.h"
 #import "AISleepNotification.h"
 #import "AISmartStepper.h"
 #import "AISocket.h"

@@ -339,7 +339,7 @@
         availableForSending = [[[chat statusDictionary] objectForKey:@"Enabled"] boolValue];
 
         //Enable/Disable our text view sending, and send button
-        [textView_outgoing setAvailableForSending:availableForSending];
+        [textView_outgoing setSendingEnabled:availableForSending];
         [button_send setEnabled:(availableForSending && [[textView_outgoing string] length] != 0)];
     }
 
