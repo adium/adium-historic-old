@@ -26,6 +26,8 @@
 	IBOutlet AIVariableHeightOutlineView	*outlineView;
 	
 	IBOutlet NSTextField		*textField_statusBar;
+
+	BOOL						shouldScrollToNewFileTransfer;
 }
 
 + (id)showFileTransferProgressWindow;
