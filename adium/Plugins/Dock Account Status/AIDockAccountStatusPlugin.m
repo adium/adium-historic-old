@@ -53,12 +53,12 @@
 		NSString    *key = [[notification userInfo] objectForKey:@"Key"];
 
 		if(notification == nil || [key compare:KEY_ACTIVE_DOCK_ICON] == 0){
-			[self updateListObject:nil keys:nil delayed:NO silent:NO];
+			[self updateListObject:nil keys:nil silent:NO];
 		}
     }
 }
 
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
 	if(inObject == nil || [inObject isKindOfClass:[AIAccount class]]){
 		if(inObject == nil || [inModifiedKeys containsObject:@"Online"]){

@@ -34,8 +34,7 @@
 
 }
 
-
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     if([inModifiedKeys containsObject:@"UnviewedContent"]){
         if([[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){
@@ -58,7 +57,6 @@
                 }
             }
         }
-
     }
 
     return(nil);

@@ -121,10 +121,10 @@
 }
 
 //An account's status changed
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent;
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
 {
     if([inObject isKindOfClass:[AIAccount class]]){
-	[self configureAccountMenu]; //rebuild the account menu
+		[self configureAccountMenu]; //rebuild the account menu
     }
     
     return(nil);
