@@ -7,7 +7,7 @@
         }, 
         {
             ACTIONS = {closeWindow = id; deleteEventAction = id; oneTimeEvent = id; }; 
-            CLASS = AIContactAlertsWindowController; 
+            CLASS = ESContactAlertsWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_delete" = NSButton; 
