@@ -2,7 +2,7 @@
 
 # Jeffrey Melloy <jmelloy@visualdistortion.org>
 # $URL: http://svn.visualdistortion.org/repos/projects/adium/parser.pl $
-# $Rev: 348 $ $Date: 2003/07/19 00:03:29 $
+# $Rev: 355 $ $Date: 2003/08/05 04:25:49 $
 #
 # Script will parse Adium logs <= 1.6.x and put them in postgresql table.
 # Table is created with "adium.sql"
@@ -44,7 +44,7 @@ chdir "$path" or die qq{Path does not exist.};
 my $dbh = DBI->connect("DBI:Pg:dbname=$username", '', '', {RaiseError=>1})
     or die qq{Cannot connect to server: $DBI::errstr\n};
 
-my $sth = $dbh->prepare("insert into adium.messages 
+my $sth = $dbh->prepare("insert into adium.message_v 
     (sender_sn, recipient_sn, message, message_date) 
     values (?,?,?,?)");
 
@@ -74,22 +74,22 @@ foreach my $user (glob '*') {
                 open (FILE, $file) or die qq{Unable to open file "$file": $!};
                 my $content = <FILE>;
                 close(FILE);
-                
+
                 $content = escapeHTML($content);
                 $content =~ s/\n((?!\(\d\d\:\d\d\:\d\d\)\w*|(\&lt\;\w*\s.*\d\d\:\d\d\:\d\d.*\&gt\;)))/<br>$1/g or die $!;
-    
+
                 $dbh->begin_work;
-    
+
                 my @filecontents = split(/\n/, $content);
-    
+
                 for (my $i = 1; $i < @filecontents; $i++) {
-    
+
                     $_ = $filecontents[$i];
-    
+
                     ($time, $sender) = /^\((\d\d\:\d\d\:\d\d)\)(\w*)\:/
                        or ($time) = /^\&lt\;.*(\d\d\:\d\d\:\d\d)/
                        or die "$file:$_\n$!";
-    
+
                     if (/^\&lt\;.*\&gt\;/) {
                         $sender = $recdName;
                     }

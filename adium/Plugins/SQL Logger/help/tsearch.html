@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
                       "http://www.w3.org/TR/html4/strict.dtd">
 <!-- $URL: http://svn.visualdistortion.org/repos/projects/adium/tsearch.html $ -->
-<!-- $Rev: 348 $ $Date: 2003/07/19 00:03:29 $ -->
+<!-- $Rev: 359 $ $Date: 2003/08/05 04:25:49 $ -->
 <html>
   <head>
     <title>Installing the PostgreSQL tsearch contrib module</title>
@@ -87,7 +87,7 @@ select * from messages where message_idx ## 'search|string';
   --search OR string
 select * from messages where message_idx ## 'search&amp;!string'; 
   -- search AND NOT string
-  select * from messages where message_idx ## 'search&amp;string&(carnival&amp;clowns)'
+  select * from messages where message_idx ## 'search&amp;string&(carnival&amp;clowns)';
   -- search AND string AND BOTH carnival AND clowns</pre>
     </div>
     <p>search.jsp will check to see if the tsearch module is properly

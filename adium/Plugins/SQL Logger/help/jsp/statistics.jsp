@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 348 $ $Date: 2003/07/19 00:03:29 $ -->
+<!--$Rev: 354 $ $Date: 2003/08/05 04:25:49 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -244,7 +244,7 @@ try {
         " a.recipient_id) as \"Avg Recd Length\","+
         " min(length(message)) as \"Min Sent\", max(length(message))"+
         " as \"Max Sent\","+
-        " (select coalesce(min(length(message)),0) from message_v where "+
+        " (select coalesce(min(length(message)),0) from messages where "+
         " a.sender_id = "+
         " recipient_id and sender_id = a.recipient_id) as \"Min Received\","+
         " (select "+

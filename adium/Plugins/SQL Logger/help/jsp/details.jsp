@@ -4,7 +4,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/details.jsp $-->
-<!--$Rev: 348 $ $Date: 2003/07/19 00:03:29 $ -->
+<!--$Rev: 356 $ $Date: 2003/08/05 04:25:49 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -46,9 +46,9 @@ try {
     " max(length(message)) as max_length, " +
     " trunc(avg(length(message)),2) as avg_length, " +
     " null as last_day " +
-    " from adium.message_v " +
-    " where sender_sn = ? and date_trunc(\'month\', " +
-    " message_date) = ?::timestamp group by sender_sn " + 
+    " from adium.messages " +
+    " where sender_id = ? and date_trunc(\'month\', " +
+    " message_date) = ?::timestamp group by sender_id " + 
     " union all " +
     " select " + 
     " null as month, " +
@@ -58,18 +58,19 @@ try {
     " trunc(avg(length(message)), 2) as avg_length, " +
     " date_part(\'day\', ?::timestamp + \'1 month\'::interval -"+ 
     " \'1 day\'::interval) as last_day"+
-    " from adium.message_v " +
-    " where recipient_sn = ? " +
+    " from adium.messages " +
+    " where recipient_id = ? " +
     " and date_trunc(\'month\', message_date) = ? " +
-    " group by recipient_sn ");
+    " group by recipient_id ");
     
     pstmt.setString(1, date);
-    pstmt.setString(2, sender);
+    pstmt.setInt(2, sender_id);
     pstmt.setString(3, date);
     pstmt.setString(4, date);
-    pstmt.setString(5, sender);
+    pstmt.setInt(5, sender_id);
     pstmt.setString(6, date);
     rset = pstmt.executeQuery();
+    
     out.print("<div align=\"center\"><h3>");
     out.print(sender + "<br />");
     
@@ -99,18 +100,18 @@ try {
     <%
     lastDayOfMonth = rset.getInt("last_day");
     }
-
+    
     pstmt = conn.prepareStatement("select " +
     " date_part(\'day\', message_date) as day," +
     " count(*) as count " +
-    " from message_v " +
-    " where date_trunc(\'month\', message_date) = ?::timestamp " +
-    " and (sender_sn = ? or recipient_sn = ?) " +
+    " from messages " +
+    " where date_trunc(\'month\', message_date) = ?::date " +
+    " and (sender_id = ? or recipient_id = ?) " +
     " group by date_part(\'day\', message_date)");
 
     pstmt.setString(1, date);
-    pstmt.setString(2, sender);
-    pstmt.setString(3, sender);
+    pstmt.setInt(2, sender_id);
+    pstmt.setInt(3, sender_id);
 
     rset = pstmt.executeQuery();
     
@@ -168,19 +169,20 @@ try {
     " date_part(\'day\', message_date) as day, " +
     " date_part(\'hour\', message_date) as hour, " +
     " count(*) as count" +
-    " from message_v " + 
-    " where (sender_sn = ? or recipient_sn = ?) " +
+    " from messages " + 
+    " where (sender_id = ? or recipient_id = ?) " +
     " and date_trunc(\'month\', message_date) = ?::timestamp " +
     " group by date_part(\'day\', message_date), " +
     " date_part(\'hour\', message_date)");
 
-    pstmt.setString(1, sender);
-    pstmt.setString(2, sender);
+    pstmt.setInt(1, sender_id);
+    pstmt.setInt(2, sender_id);
     pstmt.setString(3, date);
 
     rset = pstmt.executeQuery();
-
+    
     int[][] dailyHourly= new int[lastDayOfMonth + 1][24];
+    int maxHourly = 0;
     for(int i = 0; i <= lastDayOfMonth; i++) {
         for(int j = 0; j < 24; j++) {
             dailyHourly[i][j] = 0;
@@ -190,28 +192,32 @@ try {
     while(rset.next()) {
         dailyHourly[rset.getInt("day")][rset.getInt("hour")] = 
         rset.getInt("count");
+        if (rset.getInt("count") > maxHourly) {
+            maxHourly = rset.getInt("count");
+        }
     }
-    out.print("<br /><table border=\"0\">");
-    out.print("<tr><td colspan=\"26\" align=\"center\" bgcolor=\"navy\">");
+
+    out.println("<br /><table border=\"0\">");
+    out.println("<tr><td colspan=\"26\" align=\"center\" bgcolor=\"navy\">");
     out.println("<b><font color=\"white\">");
-    out.print("Instant Messages by Hour of Day</font></b>");
-    out.print("</td></tr>");
-    out.print("<tr><td bgcolor=\"teal\"></td>");
+    out.println("Instant Messages by Hour of Day</font></b>");
+    out.println("</td></tr>");
+    out.println("<tr><td bgcolor=\"teal\"></td>");
     for(int i = 0; i < 24; i++) {
-        out.print("<td bgcolor=\"teal\" align=\"center\">" + 
+        out.println("<td bgcolor=\"teal\" align=\"center\">" + 
         " <font color=\"white\">" + i + 
         "</font></td>");
     }
-    out.print("<td bgcolor=\"teal\"><font color=\"white\"> "+
+    out.println("<td bgcolor=\"teal\"><font color=\"white\"> "+
     "<b>Total</b></font></td></tr>");
-    
+
     for(int i = 1; i <= lastDayOfMonth; i++) {
-        out.print("<tr><td align=\"right\"");
-        out.print(" bgcolor=\"#99CCFF\">" + i + "</td>");
+        out.println("<tr><td align=\"right\"");
+        out.println(" bgcolor=\"#99CCFF\">" + i + "</td>");
         for(int j = 0; j < 24; j++) {
             String after = new String(date);
             String before = new String(date);
-            
+
             after = after.replaceFirst("01 ", i + " ");
             after = after.replaceFirst("00:", j + ":");
 
@@ -219,17 +225,22 @@ try {
             before = before.replaceFirst("00:", j + 1 + ":");
 
             out.print("<td align=\"center\"");
+            
             if(i % 2 == 0) {
                 out.print(" bgcolor=\"#cccccc\" ");
             }
-
-            if (dailyHourly[i][j] != 0) 
+            
+            // double shade = ((double) dailyHourly[i][j] / maxHourly) * 255;
+            if (dailyHourly[i][j] != 0) {
+                // out.print(" bgcolor=\"#" + Integer.toHexString((int)shade) +
+                // Integer.toHexString((int)shade) +
+                // Integer.toHexString((int)shade) + "\" ");
                 out.print("><a href=\"index.jsp?after=" + after +
                 "&before=" + before + "\">" + dailyHourly[i][j] + 
                 "</a>");
-            else
+            } else
                 out.print(">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-            
+
             out.print("</td>");
         }
         out.print("<td ");
@@ -262,7 +273,7 @@ try {
     " = sender_id and date_trunc('month', message_date) = ?::timestamp)"+
     " as \"Max Received\" from messages a, users "+
     " where sender_id = ? and date_trunc('month', message_date) = ?::timestamp " +
- 	" and users.user_id = a.recipient_id " +
+    " and users.user_id = a.recipient_id " +
     " group by sender_id, recipient_id, username");
 
     pstmt.setString(1, date);
@@ -290,12 +301,12 @@ try {
         out.print("<tr>");
         if (cntr % 2 == 0) {
             out.print("<td><a href=\"statistics.jsp?sender=" + 
-            rset.getString(1) + "\">" + rset.getString(1) +
+            rset.getString("Recipient") + "\">" + rset.getString("username") +
             "</a></td>");
         } else {
             out.print("<td bgcolor=\"#cccccc\"><a href=\"statistics.jsp"+
-            "?sender=" + rset.getString(1) + "\">" + 
-            rset.getString(1) + "</a></td>");
+            "?sender=" + rset.getString("Recipient") + "\">" + 
+            rset.getString("username") + "</a></td>");
         }
         
         for(int i = 3; i <= rsmd.getColumnCount(); i++) {

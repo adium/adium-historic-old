@@ -1,7 +1,7 @@
 -- Jeffrey Melloy <jmelloy@visualdistortion.org>
 
 -- $URL: http://svn.visualdistortion.org/repos/projects/adium/sql/tsearch.sql $
--- $Rev: 348 $ $Date: 2003/07/19 00:03:30 $
+-- $Rev: 310 $ $Date: 2003/08/05 04:25:49 $
 
 -- This script adds full-text index searching (fast).
 -- It needs to be run after the "tsearch" module is installed.
