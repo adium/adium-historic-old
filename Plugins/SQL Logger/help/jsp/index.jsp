@@ -10,7 +10,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/index.jsp $-->
-<!--$Rev: 859 $ $Date$ -->
+<!--$Rev: 895 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -722,7 +722,8 @@ try {
         if(!rset.getString("sender_sn").equals(prevSender) ||
             !rset.getString("recipient_sn").equals(prevRecipient)) {
 
-            out.print("<div class=\"message_container\">");
+            out.print("<div class=\"message_container\" id=\""
+                + rset.getString("message_id") + "\">");
 
             out.println("<div class=\"sender\">");
             out.print("<a href=\"index.jsp?from=" +

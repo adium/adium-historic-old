@@ -114,25 +114,13 @@ try {
                     <div class="boxWideContent">
 
                     <form action="query.jsp" method="post">
-                        <table>
-                            <tr>
-                                <td rowspan="2" align="right">
-                                    <textarea name="query"
-                                        cols="50" rows="20"><%= safeQuery %></textarea>
-                                    <br />
-                                    <input type="reset">
-                                    <input type="submit" />
-                                </td>
-                                <td>
-                                    <h3><%= title %></h3>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p><%= notes %></p>
-                                </td>
-                            </tr>
-                        </table>
+                        <h3><%= title %></h3>
+                        <p><%= notes %></p>
+                        <textarea name="query"
+                            cols="68" rows="20"><%= safeQuery %></textarea>
+                        <br />
+                        <input type="reset">
+                        <input type="submit" />
                     </form>
 
                     </div>
@@ -165,7 +153,13 @@ try {
             isNumber[i] = true;
         }
 
-
+        if(rsmd.getColumnName(1).equals("QUERY PLAN")
+                && rsmd.getColumnCount() == 1) {
+            out.println("<pre>");
+            while(rset.next()) {
+                out.println(rset.getString(1));
+            }
+        }
 
         while(rset.next()) {
             if((rset.getRow() - 1) % 25 == 0) {
@@ -188,7 +182,8 @@ try {
                 } else {
                     if(rsmd.getColumnName(i).equals("message_id")) {
                         out.println("<td><a href=\"index.jsp?message_id=" +
-                            rset.getString(i) + "\">" + rset.getString(i) +
+                            rset.getString(i) + "#" + rset.getString(i) +
+                            "\">" + rset.getString(i) +
                             "</a></td>");
                         isNumber[i - 1] = false;
                     } else {

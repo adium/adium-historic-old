@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/statistics.jsp $-->
-<!--$Rev: 864 $ $Date$ -->
+<!--$Rev: 897 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -326,131 +326,99 @@ try {
                 </div>
                 <div class="boxWideBottom"></div>
 
-                <h1>Messages Sent/Received by Year</h1>
-                <div class="boxWideTop"></div>
-                <div class="boxWideContent">
-<%
 
-    pstmt = conn.prepareStatement("select date_part('year', message_date) " +
-    " as year, " +
-    "count(*) as count from im.messages where sender_id = ? or recipient_id = ? " +
-    " group by date_part('year', message_date) " +
-    " order by date_part('year', message_date)");
-
-    pstmt.setInt(1, sender);
-    pstmt.setInt(2, sender);
-
-    if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select date_part('year', message_date) " +
-        " as year, " +
-        " count(*) as count from im.messages, im.meta_contact " +
-        " where (sender_id = user_id or recipient_id = user_id) " +
-        " and meta_id = ? " +
-        " group by date_part('year', message_date) " +
-        " order by date_part('year', message_date)");
-
-        pstmt.setInt(1, meta_id);
-    }
-
-    year = pstmt.executeQuery();
-
-    ArrayList yearAry = new java.util.ArrayList();
-    ArrayList countAry = new java.util.ArrayList();
-
-    int max = 0;
-    double maxDistance;
-
-    while (year.next()) {
-        yearAry.add(year.getString("year"));
-        countAry.add(year.getString("count"));
-
-        if (year.getInt("count") > max) {
-            max = year.getInt("count");
-        }
-    }
-
-    maxDistance = max * 1.25;
-
-    out.print("<table width=\"350\" border=\"0\">");
-    for(int i = 0; i < yearAry.size(); i++) {
-        double distance = (Integer.parseInt(countAry.get(i).toString()) / maxDistance) * 225;
-        if (distance < 1) distance = 1;
-        out.print("<tr>");
-        out.print("<td width=\"50\" align=\"right\">");
-        out.print(yearAry.get(i));
-        out.print("</td><td align=\"left\" width=\"225\">");
-        out.print("<img src=\"images/bar.gif\" height = \"15\" width=\"" +
-        (int)distance + "\">");
-        out.print("</td>\n");
-        out.print("<td width=\"75\">(" + countAry.get(i) + ")</td>");
-    }
-    out.print("</table>");
-%>
-                </div>
-                <div class="boxWideBottom"></div>
-
-                <h1>Messages Sent/Received by Month</h1>
+                <h1>Messages Sent/Received by Month and Year</h1>
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
     pstmt = conn.prepareStatement("select date_part('month', message_date) " +
-    "as month, count(*) as count from messages where sender_id = ? or " +
-    "recipient_id = ? group by date_part('month', message_date)");
+    " as month, date_part('year', message_date) as year, count(*) as count " +
+    " from messages where sender_id = ? or " +
+    " recipient_id = ? group by date_part('month', message_date), " +
+    " date_part('year', message_date) order by year");
 
     pstmt.setInt(1, sender);
     pstmt.setInt(2, sender);
 
     if(meta_id != 0) {
         pstmt = conn.prepareStatement("select date_part('month', message_date) " +
-        " as month, count(*) as count from im.messages, im.meta_contact " +
+        " as month, date_part('year', message_date) as year, " +
+        " count(*) as count " +
+        " from im.messages, im.meta_contact " +
         " where (sender_id = user_id or " +
         " recipient_id = user_id) and meta_id = ? " +
-        " group by date_part('month', message_date)");
+        " group by date_part('month', message_date), " +
+        " date_part('year', message_date) order by year");
 
         pstmt.setInt(1, meta_id);
     }
 
     year = pstmt.executeQuery();
 
-    int monthArray[] = new int[13];
+    int monthArray[][] = new int[10][14];
 
-    for(int i = 0; i < 13; i++) {
-        monthArray[i] = 0;
+    for(int i = 0; i < 10; i++) {
+        for(int j = 0; j < 14; j++) {
+            monthArray[i][j] = 0;
+        }
     }
 
-    max = 0;
+    int max = 0;
+    int years = 0;
+    boolean found = false;
     while(year.next()) {
-        monthArray[year.getInt("month")] = year.getInt("count");
+        found = false;
         if(year.getInt("count") > max) max = year.getInt("count");
+
+        for(int i = 0; i < years && !found; i++) {
+            if(monthArray[i][0] == year.getInt("year")) {
+                found = true;
+                monthArray[i][year.getInt("month")] = year.getInt("count");
+                monthArray[i][13] += year.getInt("count");
+            }
+        }
+
+        if(!found) {
+            monthArray[years][0] = year.getInt("year");
+            monthArray[years][year.getInt("month")] = year.getInt("count");
+            monthArray[years++][13] += year.getInt("count");
+        }
     }
 
-    maxDistance = max * 1.25;
+    double maxDistance = max * 1.25;
 
-    out.print("<br />\n<table height=\"250\" width=\"350\"" +
-    " cellspacing=\"0\"><tr>");
+    for(int yrCnt = 0; yrCnt < years; yrCnt++) {
+        out.print("<br />\n");
+        out.println("<b>" + monthArray[yrCnt][0] + "</b> (" +
+            monthArray[yrCnt][13] + ")<br />");
+        out.println("<table height=\"250\" width=\"350\"" +
+            " cellspacing=\"0\"><tr>");
 
-    for(int i = 1; i < 13; i++) {
-        double height = monthArray[i] / maxDistance * 225;
-        if (height < 1 && height != 0) height = 1;
-        out.print("<td valign=\"bottom\" rowspan=\"13\"" +
-        " background=\"images/gridline2.gif\">"+
-        "<img src=\"images/bar2.gif\" width = \"15\" height=\"" +
-        (int)height + "\"></td>");
+        for(int i = 1; i < 13; i++) {
+            double height = monthArray[yrCnt][i] / maxDistance * 225;
+            if (height < 1 && height != 0) height = 1;
+            out.println("<td valign=\"bottom\" rowspan=\"13\"" +
+                    " background=\"images/gridline2.gif\">"+
+                    "<img src=\"images/bar2.gif\" width = \"15\" height=\"" +
+                    (int)height + "\"></td>");
+        }
+
+        out.println("</tr>");
+
+        String months[] = {"", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
+            "Aug", "Sep", "Oct", "Nov", "Dec"};
+        for(int i = 1; i < 13; i++) {
+            out.println("<tr><td align=\"right\">" + months[i] + ":</td><td "+
+                " align=\"left\"> " + monthArray[yrCnt][i] +
+                "</td></tr>");
+        }
+
+        out.println("<tr>");
+        for(int i = 1; i < 13; i++) {
+            out.println("<td align=\"center\">" + i + "</td>");
+        }
+        out.println("</tr></table>");
     }
-
-    out.print("</tr>");
-    String months[] = {"", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
-        "Aug", "Sep", "Oct", "Nov", "Dec"};
-    for(int i = 1; i < 13; i++) {
-        out.print("<tr><td align=\"right\">" + months[i] + ":</td><td "+
-        " align=\"left\"> " + monthArray[i] + "</td></tr>");
-    }
-
-    out.print("<tr>");
-    for(int i = 1; i < 13; i++) {
-        out.print("<td align=\"center\">" + i + "</td>");
-    }
-    out.print("</tr></table>");
 %>
                 </div>
                 <div class="boxWideBottom"></div>
