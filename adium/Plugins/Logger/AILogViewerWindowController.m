@@ -124,6 +124,7 @@ static AILogViewerWindowController *sharedInstance = nil;
     [sharedInstance autorelease]; sharedInstance = nil;
     [selectedLogArray release]; selectedLogArray = nil;
     [availableLogArray release]; availableLogArray = nil;
+    [selectedColumn release]; selectedColumn = nil;
     
     return(YES);
 }

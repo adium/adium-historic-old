@@ -44,9 +44,9 @@
     return(self);
 }
 
-- (id)init
+- (id)initWithFrame:(NSRect)frameRect
 {
-    [super init];
+    [super initWithFrame:frameRect];
 
     [self _init];
 
