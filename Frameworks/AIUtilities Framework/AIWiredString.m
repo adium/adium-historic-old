@@ -256,7 +256,6 @@
 - (void)getCharacters:(out unichar *)outBuf range:(NSRange)range
 {
 	NSParameterAssert(outBuf != NULL);
-	NSParameterAssert(range.location < length);
 	NSParameterAssert(((range.location + range.length) - 1) <= length);
 
 	unsigned i = range.location;
