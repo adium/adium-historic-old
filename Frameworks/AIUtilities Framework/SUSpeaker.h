@@ -12,8 +12,6 @@
 /*!
  * @class SUSpeaker
  * @brief Cocoa wrapper for the Carbon Speech Synthesis Manager
- *
- * Cocoa wrapper for the Carbon Speech Synthesis Manager
  */
 @interface SUSpeaker : NSObject 
 {
