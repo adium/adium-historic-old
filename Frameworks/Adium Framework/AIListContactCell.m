@@ -14,8 +14,6 @@
 
 #define ICON_TEXT_PADDING		3
 
-#define EXTENDED_STATUS_COLOR	[NSColor grayColor]
-
 #define NAME_STATUS_PAD			6
 
 #define STATUS_ICON_LEFT_PAD			2
@@ -120,6 +118,21 @@
 	return(statusFont);
 }
 
+//Color of status text
+- (void)setStatusColor:(NSColor *)inColor
+{
+	if(statusColor != inColor){
+		[statusColor release];
+		statusColor = [inColor retain];
+
+		//Flush the status attributes cache
+		[_statusAttributes release]; _statusAttributes = nil;
+	}
+}
+- (NSColor *)statusColor{
+	return(statusColor);
+}
+
 //Attributes for displaying the status string (Cached)
 //Cache is flushed when alignment, color, or font is changed
 - (NSDictionary *)statusAttributes
@@ -130,7 +143,7 @@
 		
 		_statusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:
 			paragraphStyle, NSParagraphStyleAttributeName,
-			EXTENDED_STATUS_COLOR, NSForegroundColorAttributeName,
+			[self statusColor], NSForegroundColorAttributeName,
 			[self statusFont], NSFontAttributeName,nil] retain];
 	}
 	

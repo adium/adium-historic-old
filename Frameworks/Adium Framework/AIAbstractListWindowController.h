@@ -122,6 +122,8 @@ typedef enum {
 #define KEY_LIST_THEME_GROUP_TEXT_COLOR_INVERTED	@"Group Inverted Text Color"
 #define KEY_LIST_THEME_GROUP_SHADOW_COLOR			@"Group Shadow Color"
 
+#define KEY_LIST_THEME_CONTACT_STATUS_COLOR			@"Contact Status Text Color"
+
 #define KEY_LIST_THEME_GRID_ENABLED					@"Grid Enabled"
 #define KEY_LIST_THEME_BACKGROUND_AS_STATUS			@"Background As Status"
 

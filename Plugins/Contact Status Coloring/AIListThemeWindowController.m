@@ -160,6 +160,9 @@
 	[colorWell_groupBackgroundGradient setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
 	[colorWell_groupShadow setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
 		
+	//
+    [colorWell_statusText setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_CONTACT_STATUS_COLOR] representedColor]];
+	
 	//Background Image
 	[checkBox_useBackgroundImage setState:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]];
 	NSString *backgroundImagePath = [[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH] lastPathComponent];
@@ -397,8 +400,14 @@
                                               group:PREF_GROUP_LIST_THEME];
 		[preview_groupInverted setNeedsDisplay:YES];
 		
-	}
+    }else if(sender == colorWell_statusText){
+        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
+                                             forKey:KEY_LIST_THEME_CONTACT_STATUS_COLOR
+                                              group:PREF_GROUP_LIST_THEME];
+		[preview_groupInverted setNeedsDisplay:YES];
 		
+	}
+
 	[self configureControlDimming];
 }
 
