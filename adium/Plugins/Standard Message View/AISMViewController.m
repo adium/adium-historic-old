@@ -826,7 +826,7 @@
 					case 'a': [string appendString:[[content source] displayName]]; break;
 					case 'n': [string appendString:[[content source] formattedUID]]; break;
 					case 't': [string appendString:[timeStampFormatter stringForObjectValue:[content date]]]; break;
-					case 'r': if([content autoreply])[string appendString:@"(Autoreply)"]; break;
+					case 'r': if([content autoreply])[string appendString:@" (Autoreply)"]; break;
 					default: break;
 				}
 				
