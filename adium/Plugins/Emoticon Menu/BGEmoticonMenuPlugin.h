@@ -23,6 +23,7 @@
 }
 -(NSMenu *)eMenu;
 -(void)buildMenu;
+-(void)buildContextualMenu;
 -(NSToolbarItem *)toolbarItem;
 -(void)buildToolbarItem;
 @end

@@ -197,6 +197,7 @@
 				6C5C3C2605F6532600490341,
 				3499F45006309AC80035B468,
 				3499F45106309AC80035B468,
+				C4243CAD0638EEFA007AD2D9,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -248,6 +249,7 @@
 				52AEBD6005ABA95700B19C56,
 				346C9C4806004517000F5A8A,
 				346C9C5306004525000F5A8A,
+				C4243CA00638EEFA007AD2D9,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -18366,6 +18368,152 @@
 			path = "Plugins/Emoticon Menu/BGEmoticonMenuPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		C4243CA00638EEFA007AD2D9 = {
+			buildPhases = (
+				C4243CA30638EEFA007AD2D9,
+				C4243CA50638EEFA007AD2D9,
+				C4243CA60638EEFA007AD2D9,
+				C4243CA90638EEFA007AD2D9,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Plists/Emoticon Menu.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
+				PRODUCT_NAME = "Emoticon Menu";
+				REZ_EXECUTABLE = NO;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				C4243CA10638EEFA007AD2D9,
+				C4243CA20638EEFA007AD2D9,
+			);
+			isa = PBXNativeTarget;
+			name = "Emoticon Menu";
+			productName = "Latex Plugin";
+			productReference = C4243CAD0638EEFA007AD2D9;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Latex Plugin</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Latex_Plugin</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+	<key>CSResourcesFileMapped</key>
+	<string>yes</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		C4243CA10638EEFA007AD2D9 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = B72537BD058C45CF004BA969;
+		};
+		C4243CA20638EEFA007AD2D9 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = B72537BF058C45D3004BA969;
+		};
+		C4243CA30638EEFA007AD2D9 = {
+			buildActionMask = 2147483647;
+			files = (
+				C4243CAE0638F006007AD2D9,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4243CA50638EEFA007AD2D9 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4243CA60638EEFA007AD2D9 = {
+			buildActionMask = 2147483647;
+			files = (
+				C4243CB10638F00E007AD2D9,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4243CA90638EEFA007AD2D9 = {
+			buildActionMask = 2147483647;
+			files = (
+				C4243CAA0638EEFA007AD2D9,
+				C4243CAB0638EEFA007AD2D9,
+				C4243CAC0638EEFA007AD2D9,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4243CAA0638EEFA007AD2D9 = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4243CAB0638EEFA007AD2D9 = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4243CAC0638EEFA007AD2D9 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4243CAD0638EEFA007AD2D9 = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Emoticon Menu.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C4243CAE0638F006007AD2D9 = {
+			fileRef = C4243C920638E4EA007AD2D9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4243CB10638F00E007AD2D9 = {
+			fileRef = C4243C930638E4EA007AD2D9;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		C42C170005BA687800135D3C = {
 			children = (
