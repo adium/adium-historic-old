@@ -55,6 +55,49 @@
 //072
 //073
 //074
+		070959840798F1ED00B140BD = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AITag.h;
+			path = "Frameworks/AIUtilities Framework/AITag.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		070959850798F1ED00B140BD = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AITag.m;
+			path = "Frameworks/AIUtilities Framework/AITag.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		070959860798F1ED00B140BD = {
+			fileRef = 070959840798F1ED00B140BD;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		070959870798F1ED00B140BD = {
+			fileRef = 070959850798F1ED00B140BD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		0709598A0798F1F300B140BD = {
+			children = (
+				070959840798F1ED00B140BD,
+				070959850798F1ED00B140BD,
+			);
+			isa = PBXGroup;
+			name = "Tag for markup languages";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		0750FF1A073A04E9000D8A1F = {
 			children = (
 				0750FF1F073A051A000D8A1F,
@@ -5106,6 +5149,7 @@
 				4BD1EEE706D25FFF00B3975E,
 				4BD1F33306D26D4400B3975E,
 				4BD1EF7D06D2638A00B3975E,
+				0709598A0798F1F300B140BD,
 				4BD1F3F106D2800900B3975E,
 				4BD1EF7A06D2637800B3975E,
 				0750FF2F073A0562000D8A1F,
@@ -5750,6 +5794,7 @@
 				076CAD6F0785B64000250504,
 				3433564E0793699400C84B15,
 				07B7AF9F0797A952003B71E1,
+				070959860798F1ED00B140BD,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5911,6 +5956,7 @@
 				34D18393075FC2390075A380,
 				4BC5A5C40764F6ED0080ECF7,
 				3433564D0793699400C84B15,
+				070959870798F1ED00B140BD,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
