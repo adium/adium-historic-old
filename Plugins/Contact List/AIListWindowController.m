@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIListWindowController.h"
-#import "AIStatusSelectionView.h"
 
 #import "AIListOutlineView.h"
 
