@@ -9,5 +9,8 @@
 
 
 @implementation ESGaimYahooAccountViewController
+- (NSString *)nibName{
+    return(@"ESGaimYahooAuxiliaryAccountView");
+}
 
 @end

@@ -64,6 +64,9 @@
 	char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
 	
 	GaimXfer *xfer = jabber_outgoing_xfer_new(gc,destsn);
+
+	//gaim will free filename when necessary
+	char *filename = g_strdup([[fileTransfer localFilename] UTF8String]);
 	
 	//Associate the fileTransfer and the xfer with each other
 	[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
@@ -75,7 +78,7 @@
     //request that the transfer begins
 	gaim_xfer_request(xfer);
     
-    //tell the fileTransferController to display appropriately
+	//tell the fileTransferController to display appropriately
     [[adium fileTransferController] beganFileTransfer:fileTransfer];
 }
 
