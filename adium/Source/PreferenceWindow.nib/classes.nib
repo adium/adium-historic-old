@@ -28,6 +28,7 @@
                 "view_ContactList_Groups" = AIPreferenceCategoryView; 
                 "view_Dock" = AIPreferenceCategoryView; 
                 "view_Emoticons" = AIPreferenceCategoryView; 
+                "view_Keys" = AIPreferenceCategoryView; 
                 "view_Messages" = AIPreferenceCategoryView; 
                 "view_Sound" = AIPreferenceCategoryView; 
                 "view_Status_Away" = AIPreferenceCategoryView; 

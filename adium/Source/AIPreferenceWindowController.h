@@ -18,26 +18,22 @@
 @interface AIPreferenceWindowController : AIWindowController {
     IBOutlet	NSTabView					*tabView_category;
 
-    IBOutlet	AIPreferenceCategoryView	*view_Accounts;
-
     IBOutlet	NSTabView					*tabView_contactList;
     IBOutlet	AIPreferenceCategoryView	*view_ContactList_General;
     IBOutlet	AIPreferenceCategoryView	*view_ContactList_Groups;
     IBOutlet	AIPreferenceCategoryView	*view_ContactList_Contacts;
 
-    IBOutlet	AIPreferenceCategoryView	*view_Messages;
-
     IBOutlet	NSTabView					*tabView_status;
     IBOutlet	AIPreferenceCategoryView	*view_Status_Away;
     IBOutlet	AIPreferenceCategoryView	*view_Status_Idle;
 
+    IBOutlet	AIPreferenceCategoryView	*view_Accounts;
+    IBOutlet	AIPreferenceCategoryView	*view_Messages;
     IBOutlet	AIPreferenceCategoryView	*view_Dock;
-    
     IBOutlet	AIPreferenceCategoryView	*view_Sound;
-
     IBOutlet 	AIPreferenceCategoryView	*view_Alerts;
-    
     IBOutlet 	AIPreferenceCategoryView	*view_Emoticons;
+    IBOutlet 	AIPreferenceCategoryView	*view_Keys;
 
     IBOutlet	NSOutlineView				*outlineView_advanced;
     IBOutlet	AIPreferenceCategoryView   	*view_Advanced;
@@ -47,7 +43,6 @@
     
     NSMutableArray		*loadedPanes;
     NSMutableArray		*loadedAdvancedPanes;
-
     NSMutableArray		*_advancedCategoryArray;
 }
 

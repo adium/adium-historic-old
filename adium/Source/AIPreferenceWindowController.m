@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.46 2004/05/24 06:04:19 evands Exp $
+// $Id: AIPreferenceWindowController.m,v 1.47 2004/05/24 12:15:14 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -30,7 +30,7 @@
 #define PREFERENCE_WINDOW_TITLE					@"Preferences"
 #define PREFERENCE_PANE_ARRAY					@"PaneArray"
 #define PREFERENCE_GROUP_NAME					@"GroupName"
-#define ADVANCED_PANE_HEIGHT					300
+#define ADVANCED_PANE_HEIGHT					350
 #define TAB_PADDING_OFFSET						45
 #define FRAME_PADDING_OFFSET					2
 
@@ -38,8 +38,8 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)configureToolbarItems;
 - (void)installToolbar;
-- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIPreferenceCategoryView *)inView showContainers:(BOOL)includeContainers;
-- (void)_insertPanes:(NSArray *)paneArray intoView:(AIPreferenceCategoryView *)inView showContainers:(BOOL)includeContainers;
+- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIPreferenceCategoryView *)inView;
+- (void)_insertPanes:(NSArray *)paneArray intoView:(AIPreferenceCategoryView *)inView;
 - (void)_sizeWindowToFitTabView:(NSTabView *)tabView;
 - (void)_sizeWindowToFitFlatView:(AIPreferenceCategoryView *)view;
 - (void)_sizeWindowForContentHeight:(int)height;
@@ -221,29 +221,29 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     if(tabView == tabView_category){
         switch(identifier){
             case 1:
-                [self _insertPanesForCategory:AIPref_Accounts intoView:view_Accounts showContainers:NO];
+                [self _insertPanesForCategory:AIPref_Accounts intoView:view_Accounts];
             break;
             case 2:
-                [self _insertPanesForCategory:AIPref_ContactList_General intoView:view_ContactList_General showContainers:YES];
-                [self _insertPanesForCategory:AIPref_ContactList_Groups intoView:view_ContactList_Groups showContainers:YES];
-                [self _insertPanesForCategory:AIPref_ContactList_Contacts intoView:view_ContactList_Contacts showContainers:YES];
+                [self _insertPanesForCategory:AIPref_ContactList_General intoView:view_ContactList_General];
+                [self _insertPanesForCategory:AIPref_ContactList_Groups intoView:view_ContactList_Groups];
+                [self _insertPanesForCategory:AIPref_ContactList_Contacts intoView:view_ContactList_Contacts];
             break;
             case 3:
-                [self _insertPanesForCategory:AIPref_Messages intoView:view_Messages showContainers:NO];
+                [self _insertPanesForCategory:AIPref_Messages intoView:view_Messages];
             break;
             case 4:
-                [self _insertPanesForCategory:AIPref_Status_Away intoView:view_Status_Away showContainers:YES];
-                [self _insertPanesForCategory:AIPref_Status_Idle intoView:view_Status_Idle showContainers:YES];
+                [self _insertPanesForCategory:AIPref_Status_Away intoView:view_Status_Away];
+                [self _insertPanesForCategory:AIPref_Status_Idle intoView:view_Status_Idle];
             break;
             case 5:
-                [self _insertPanesForCategory:AIPref_Dock intoView:view_Dock showContainers:YES];
+                [self _insertPanesForCategory:AIPref_Dock intoView:view_Dock];
             break;
             case 6:
-                [self _insertPanesForCategory:AIPref_Sound intoView:view_Sound showContainers:YES];
+                [self _insertPanesForCategory:AIPref_Sound intoView:view_Sound];
             break;
             case 7:
-                [self _insertPanesForCategory:AIPref_Emoticons intoView:view_Emoticons showContainers:YES];
-                break;
+                [self _insertPanesForCategory:AIPref_Emoticons intoView:view_Emoticons];
+			break;
             case 8:
                 [outlineView_advanced reloadData];
 
@@ -254,6 +254,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 					[outlineView_advanced selectRow:row byExtendingSelection:NO];
 				}
             break;
+			case 9:
+                [self _insertPanesForCategory:AIPref_Keys intoView:view_Keys];
+			break;
         }
 
 		//Update the selected toolbar item (10.3 or higher)
@@ -282,6 +285,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		case 6: return([self _heightForFlatView:view_Sound]); break;
 		case 7: return([self _heightForFlatView:view_Emoticons]); break;
 		case 8: return(ADVANCED_PANE_HEIGHT); break;
+		case 9: return([self _heightForFlatView:view_Keys]); break;
 		default: return(0); break;
 	}
 }
@@ -292,15 +296,13 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 //Insert all the preference panes for the category into the passed view
 - (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory
 					   intoView:(AIPreferenceCategoryView *)inView
-				 showContainers:(BOOL)includeContainers
 {
-    [self _insertPanes:[self _prefsInCategory:inCategory] intoView:inView showContainers:includeContainers];    
+    [self _insertPanes:[self _prefsInCategory:inCategory] intoView:inView];    
 }
 
 //Insert the passed preference panes into a view
 - (void)_insertPanes:(NSArray *)paneArray
 			intoView:(AIPreferenceCategoryView *)inView
-	  showContainers:(BOOL)includeContainers
 {
     NSEnumerator		*enumerator;
     AIPreferencePane	*pane;
@@ -383,7 +385,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	//Load new panes
 	if(preferencePane){
 		loadedAdvancedPanes = [[NSArray arrayWithObject:preferencePane] retain];
-		[self _insertPanes:loadedAdvancedPanes intoView:view_Advanced showContainers:NO];
+		[self _insertPanes:loadedAdvancedPanes intoView:view_Advanced];
 		[textField_advancedTitle setStringValue:[preferencePane label]];
 	}
 
