@@ -94,6 +94,7 @@ static char *hash_password(const char * const password);
     firstPing = nil;
     screenName = nil;
     password = nil;
+    profileURLHandle = nil;
     
     //Delayed handle modification
     deleteDict = [[NSMutableDictionary alloc] init];
@@ -399,7 +400,7 @@ static char *hash_password(const char * const password);
 {
     NSArray		*desiredKeys = [[notification userInfo] objectForKey:@"Keys"];
     AIListContact	*contact = [notification object];
-    
+
     //AIM requires a delayed load of profiles...
     if([[contact statusArrayForKey:@"Online"] greatestIntegerValue]){
         if([desiredKeys containsObject:@"TextProfile"]){
@@ -562,7 +563,7 @@ static char *hash_password(const char * const password);
                 o = d - a + b + 71665152;
 
 //                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
-                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.63 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
+                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.64 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
 
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 
@@ -1280,15 +1281,16 @@ static char *hash_password(const char * const password);
     }
 }
 
-
 //
 - (void)AIM_HandleGotoURL:(NSString *)message
 {
     NSString	*host, *port, *path, *urlString;
-    NSString	*profileHTML, *profile;
-    NSString	*userName;
     NSURL	*url;
-    NSData	*data;
+
+    //Cancle any existing profile load
+    if(profileURLHandle){
+        [profileURLHandle cancelLoadInBackground];
+    }
 
     //Set up the address
     host = [socket hostIP]; //We must request our profile from the same server that we connected to.
@@ -1299,9 +1301,18 @@ static char *hash_password(const char * const password);
     //Fetch the site
     //Just to note: this caused a crash when the user had a proxy in previous versions of Adium
     url = [NSURL URLWithString:urlString];
-    data = [url resourceDataUsingCache:NO];
-    profileHTML = [[[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding] autorelease];
+    profileURLHandle = [[url URLHandleUsingCache:NO] retain];
+    [profileURLHandle addClient:self];
+    [profileURLHandle loadInBackground];
+}
 
+- (void)URLHandleResourceDidFinishLoading:(NSURLHandle *)sender
+{
+    NSString	*profileHTML, *profile;
+    NSString	*userName;
+
+    profileHTML = [[[NSString alloc] initWithData:[sender resourceData] encoding:NSISOLatin1StringEncoding] autorelease];
+    
     //Key pieces of HTML that mark the begining and end of the AIM profile (and the username)
     #define USERNAME_START	@"Username : <B>"
     #define USERNAME_END	@"</B>"
@@ -1323,7 +1334,35 @@ static char *hash_password(const char * const password);
         [[owner interfaceController] handleErrorMessage:@"Invalid Server Response" withDescription:@"The AIM server has returned HTML that Adium does not recognize."];
         NSLog(@"Profile:%@",profileHTML);
     }
+
+    //Cleanup
+    [profileURLHandle release]; profileURLHandle = nil;
 }
+
+- (void)URLHandle:(NSURLHandle *)sender resourceDataDidBecomeAvailable:(NSData *)newBytes
+{
+//    NSLog(@"resourceDataDidBecomeAvailable");
+}
+- (void)URLHandleResourceDidBeginLoading:(NSURLHandle *)sender
+{
+//    NSLog(@"URLHandleResourceDidBeginLoading");
+}
+- (void)URLHandleResourceDidCancelLoading:(NSURLHandle *)sender
+{
+    if(profileURLHandle){
+        [profileURLHandle release]; profileURLHandle = nil;
+    }
+//    NSLog(@"URLResourceDidCancelLoading");
+}
+- (void)URLHandle:(NSURLHandle *)sender resourceDidFailLoadingWithReason:(NSString *)reason
+{
+    if(profileURLHandle){
+        [profileURLHandle release]; profileURLHandle = nil;
+    }
+    //    NSLog(@"resourceDidFailLoadingWithReason: %@",reason);    
+}
+
+
 
 //Handle a server ping
 - (void)AIM_HandlePing

@@ -64,10 +64,6 @@
     //
     contactInfoCategory = [[AIPreferenceCategory categoryWithName:@"" image:nil] retain];
 
-    //Add our get info contextual menu item
-    getInfoContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"Get Info" target:self action:@selector(showContactInfo:) keyEquivalent:@""];
-    [[owner menuController] addContextualMenuItem:getInfoContextMenuItem toLocation:Context_Contact_Action];
-    
     
     //Load the contact ordering
     [self loadContactOrdering];
@@ -200,6 +196,16 @@
     while((contact = [enumerator nextObject])){
         [inObserver updateContact:contact keys:nil];
     }
+
+    //Resort and update the contact list (Since the observer has most likely changed attributes)
+    //This may be incorrect.  Will not posting attribute changed messages cause problems?
+    [self sortListGroup:nil mode:AISortGroupAndSubGroups];
+    [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
+}
+
+- (void)unregisterContactObserver:(id)inObserver
+{
+    [contactObserverArray removeObject:inObserver];
 
     //Resort and update the contact list (Since the observer has most likely changed attributes)
     //This may be incorrect.  Will not posting attribute changed messages cause problems?

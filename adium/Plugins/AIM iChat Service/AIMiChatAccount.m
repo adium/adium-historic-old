@@ -512,7 +512,7 @@ extern void* objc_getClass(const char *name);
     NSDate		*storedDate;
     NSMutableArray	*alteredStatusKeys = [[[NSMutableArray alloc] init] autorelease];
     NSMutableDictionary	*handleStatusDict = [inHandle statusDictionary];
-    
+
     //Away message
     if((storedString = [inProperties objectForKey:@"FZPersonStatusMessage"])){
         NSAttributedString	*statusMessage;
@@ -629,9 +629,22 @@ extern void* objc_getClass(const char *name);
 - (oneway void)service:(id)inService youAreDesignatedNotifier:(char)notifier{
     NSLog(@"(iChat)Adium is designated notifier (%i)",(int)notifier);
 }
+
 - (oneway void)service:(id)inService buddyPictureChanged:(id)buddy imageData:(id)image{
+    NSString	*compactedName = [buddy compactedString];
+    AIHandle	*handle;
+
     NSLog(@"(iChat)buddyPictureChanged (%@)",buddy);
+
+    //Get the handle
+    handle = [handleDict objectForKey:compactedName];
+    if(handle){
+        [[handle statusDictionary] setObject:[[[NSImage alloc] initWithData:image] autorelease] forKey:@"BuddyImage"];
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:@"BuddyImage"];
+    }
+    
 }
+
 - (oneway void)openNotesChanged:(id)unknown{
     NSLog(@"(iChat)openNotesChanged (%@)",unknown);
 }

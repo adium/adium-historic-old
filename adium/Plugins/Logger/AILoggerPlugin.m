@@ -48,7 +48,7 @@
 
     //Install a 'view logs' contextual menu item
     viewContactLogsContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Logs" target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@""];
-    [[owner menuController] addContextualMenuItem:viewContactLogsContextMenuItem toLocation:Context_Contact_Action];
+    [[owner menuController] addContextualMenuItem:viewContactLogsContextMenuItem toLocation:Context_Contact_Manage];
     
     //Create a logs directory
     logBasePath = [[[[[owner loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath] retain];

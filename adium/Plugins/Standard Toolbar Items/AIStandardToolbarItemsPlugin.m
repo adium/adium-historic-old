@@ -121,24 +121,16 @@
 {
     NSDictionary		*objects = [toolbarItem configurationObjects];
     AIListObject		*object = [objects objectForKey:@"ContactObject"];
-//    NSView<AITextEntryView>	*text = [objects objectForKey:@"TextEntryView"];
 
-//    if(handle && /*[handle canReceiveContent...]*/ &&
-//       text && [[text attributedString] length]){
-        [[owner notificationCenter] postNotificationName:Interface_SendEnteredMessage object:object userInfo:nil];
-//    }
+    [[owner notificationCenter] postNotificationName:Interface_SendEnteredMessage object:object userInfo:nil];
 }
 
 - (IBAction)closeMessage:(AIMiniToolbarItem *)toolbarItem
 {
     NSDictionary		*objects = [toolbarItem configurationObjects];
     AIListObject		*object = [objects objectForKey:@"ContactObject"];
-//    NSView<AITextEntryView>	*text = [objects objectForKey:@"TextEntryView"];
 
-//    if(handle && /*[handle canReceiveContent...]*/ &&
-//       text && [[text attributedString] length]){
-        [[owner notificationCenter] postNotificationName:Interface_CloseMessage object:object userInfo:nil];
-//    }
+    [[owner notificationCenter] postNotificationName:Interface_CloseMessage object:object userInfo:nil];
 }
 
 - (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects

@@ -495,6 +495,7 @@
 				4BC2C6E80480540A00A8010A,
 				4BE8E5400483B5A900A8010A,
 				4B5B15290493BFB100A8010A,
+				4BAE85AB0498195800A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -523,6 +524,7 @@
 				29B97326FDCFA39411CA2CEA,
 				F53B9A0E02CCED8B01A8010A,
 				F53B9A0602CCED6401A8010A,
+				4BAE85AA0498195800A8010A,
 				4B5B15280493BFB100A8010A,
 				F53EA2CD02C803C101A8010A,
 				F5A01D8B0379813301A8010A,
@@ -668,6 +670,7 @@
 				4BC2C6E90480540A00A8010A,
 				4BE8E5410483B5A900A8010A,
 				4B5B152A0493BFB100A8010A,
+				4BAE85AC0498195800A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -1720,6 +1723,7 @@
 		};
 		4B1332370459BCBA00A8010A = {
 			children = (
+				4BAE85A40498194200A8010A,
 				4B28907503C1D14200A8010A,
 				4BD7D0CA04620D7C00A8010A,
 				4BD7D0CB04620D8800A8010A,
@@ -2243,6 +2247,44 @@
 			path = "";
 			refType = 4;
 		};
+		4B2844A60498B0F900A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIInfoWindowController.m;
+			path = "Plugins/Contact Info/AIInfoWindowController.m";
+			refType = 4;
+		};
+		4B2844A70498B0F900A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIInfoWindowController.h;
+			path = "Plugins/Contact Info/AIInfoWindowController.h";
+			refType = 4;
+		};
+		4B2844A80498B0F900A8010A = {
+			fileRef = 4B2844A60498B0F900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B2844A90498B0F900A8010A = {
+			fileRef = 4B2844A70498B0F900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B2844AA0498B0FF00A8010A = {
+			isa = PBXFileReference;
+			name = ContactInfo.nib;
+			path = "Plugins/Contact Info/ContactInfo.nib";
+			refType = 4;
+		};
+		4B2844AB0498B0FF00A8010A = {
+			fileRef = 4B2844AA0498B0FF00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B28907503C1D14200A8010A = {
 			children = (
 				4B28909D03C1D37700A8010A,
@@ -2739,6 +2781,24 @@
 			settings = {
 			};
 		};
+		4B3C469A04981D5800A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B3C469B04981D5800A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B3C469C04981D5900A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B3CFE04044DFF1B00A8010A = {
 			isa = PBXTargetDependency;
 			target = F53B9A0E02CCED8B01A8010A;
@@ -2816,6 +2876,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				4BAE85AD0498195800A8010A,
 				4B5B152B0493BFB100A8010A,
 				4BE8E5420483B5A900A8010A,
 				4BC2C6EA0480540A00A8010A,
@@ -4191,7 +4252,6 @@
 				4B53714903CEF16D00A8010A,
 				4B53714A03CEF16D00A8010A,
 				4B53714D03CEF61200A8010A,
-				4BC5DDA803D059D200A8010A,
 			);
 			isa = PBXGroup;
 			name = "Text Profiles";
@@ -4211,7 +4271,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B53714E03CEF61200A8010A,
-				4BC5DDA903D059D200A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5436,6 +5495,182 @@
 			settings = {
 			};
 		};
+		4BAE85A40498194200A8010A = {
+			children = (
+				4BAE85B0049819A100A8010A,
+				4BAE85B1049819A100A8010A,
+				4B2844A70498B0F900A8010A,
+				4B2844A60498B0F900A8010A,
+				4B2844AA0498B0FF00A8010A,
+				4BAE85B404981A8800A8010A,
+			);
+			isa = PBXGroup;
+			name = "Contact Info";
+			refType = 4;
+		};
+		4BAE85A50498195800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BAE85B2049819A100A8010A,
+				4B2844A90498B0F900A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BAE85A60498195800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BAE85B504981A8800A8010A,
+				4B2844AB0498B0FF00A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BAE85A70498195800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BAE85B3049819A100A8010A,
+				4B2844A80498B0F900A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BAE85A80498195800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B3C469A04981D5800A8010A,
+				4B3C469B04981D5800A8010A,
+				4B3C469C04981D5900A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BAE85A90498195800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BAE85AA0498195800A8010A = {
+			buildPhases = (
+				4BAE85A50498195800A8010A,
+				4BAE85A60498195800A8010A,
+				4BAE85A70498195800A8010A,
+				4BAE85A80498195800A8010A,
+				4BAE85A90498195800A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Contact Info";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4BAE85AE0498196600A8010A,
+				4BAE85AF0498196600A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Contact Info";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Contact Info";
+			productReference = 4BAE85AB0498195800A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIContactInfoPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4BAE85AB0498195800A8010A = {
+			isa = PBXBundleReference;
+			path = "Contact Info.AdiumPlugin";
+			refType = 3;
+		};
+		4BAE85AC0498195800A8010A = {
+			isa = PBXTargetDependency;
+			target = 4BAE85AA0498195800A8010A;
+		};
+		4BAE85AD0498195800A8010A = {
+			fileRef = 4BAE85AB0498195800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAE85AE0498196600A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4BAE85AF0498196600A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4BAE85B0049819A100A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContactInfoPlugin.h;
+			path = "Plugins/Contact Info/AIContactInfoPlugin.h";
+			refType = 4;
+		};
+		4BAE85B1049819A100A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContactInfoPlugin.m;
+			path = "Plugins/Contact Info/AIContactInfoPlugin.m";
+			refType = 4;
+		};
+		4BAE85B2049819A100A8010A = {
+			fileRef = 4BAE85B0049819A100A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAE85B3049819A100A8010A = {
+			fileRef = 4BAE85B1049819A100A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAE85B404981A8800A8010A = {
+			isa = PBXFileReference;
+			name = info.tiff;
+			path = "Plugins/Contact Info/info.tiff";
+			refType = 4;
+		};
+		4BAE85B504981A8800A8010A = {
+			fileRef = 4BAE85B404981A8800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BB17E6D03E45FC900A8010A = {
 			isa = PBXFileReference;
 			name = close.tif;
@@ -6055,18 +6290,6 @@
 		};
 		4BC3133503BCD2FA00A8010A = {
 			fileRef = F55B415D03AB8B5601A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BC5DDA803D059D200A8010A = {
-			isa = PBXFileReference;
-			name = ContactProfile.nib;
-			path = "Plugins/Text Profiles/ContactProfile.nib";
-			refType = 4;
-		};
-		4BC5DDA903D059D200A8010A = {
-			fileRef = 4BC5DDA803D059D200A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
