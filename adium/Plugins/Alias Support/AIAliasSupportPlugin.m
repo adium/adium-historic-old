@@ -59,15 +59,12 @@
 															 view:view_contactAliasInfoView 
 														 delegate:self] retain];
     [[adium contactController] addContactInfoView:contactView];
-    [textField_alias setDelegate:self];
     
     activeListObject = nil;
-    delayedChangesTimer = nil;
 }
 
 - (void)uninstallPlugin
 {
-    [delayedChangesTimer release]; delayedChangesTimer = nil;
     [[adium contactController] unregisterListObjectObserver:self];
 }
 
@@ -90,17 +87,11 @@
 
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
 {
-    //Be sure we've set the last changes and invalidated the timer
-    if(delayedChangesTimer) {
-        [self setAlias:nil];
-        if ([delayedChangesTimer isValid]) {
-            [delayedChangesTimer invalidate]; 
-        }
-        [delayedChangesTimer release]; delayedChangesTimer = nil;
-    }
+	NSString	*alias;
+	
+    //Be sure we've set the last changes before changing which object we are editing
+	[textField_alias fireImmediately];
     
-    NSString	*alias;
-
     //Hold onto the object
     [activeListObject release]; activeListObject = nil;
     activeListObject = [inObject retain];
@@ -202,27 +193,6 @@
 	if(notify) [[adium contactController] listObjectAttributesChanged:inObject modifiedKeys:modifiedAttributes];
 	
 	return(modifiedAttributes);
-}
-
-//need to watch it as it changes as we can't catch the window closing
-- (void)controlTextDidChange:(NSNotification *)theNotification
-{
-    if(delayedChangesTimer){
-        if([delayedChangesTimer isValid]){
-            [delayedChangesTimer invalidate]; 
-        }
-        [delayedChangesTimer release]; delayedChangesTimer = nil;
-    }
-    
-    delayedChangesTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5
-                                                            target:self
-                                                          selector:@selector(_delayedSetAlias:) 
-                                                          userInfo:nil repeats:NO] retain];
-}
-
-- (void)_delayedSetAlias:(NSTimer *)inTimer
-{
-    [self setAlias:nil];
 }
 
 @end

@@ -28,11 +28,10 @@
 
 @interface AIAliasSupportPlugin : AIPlugin <AIListObjectObserver, AIPreferenceViewControllerDelegate> {
     IBOutlet    NSView				*view_contactAliasInfoView;
-    IBOutlet	NSTextField			*textField_alias;
+    IBOutlet	ESDelayedTextField  *textField_alias;
 
     AIPreferenceViewController		*contactView;
     AIListObject					*activeListObject;
-    NSTimer							*delayedChangesTimer;
     int displayFormat;
     
     AIAliasSupportPreferences		*prefs;
