@@ -67,7 +67,7 @@
         if(soundSetPath && [soundSetPath length] != 0){
             NSArray	*soundSet;
 
-            if([plugin loadSoundSetAtPath:[soundSetPath stringByExpandingBundlePath] creator:nil description:nil sounds:&soundSet]){
+            if(soundSet = [plugin loadSoundSetAtPath:[soundSetPath stringByExpandingBundlePath] creator:nil description:nil]){
                 [[adium preferenceController] setPreference:soundSet forKey:KEY_EVENT_CUSTOM_SOUNDSET group:PREF_GROUP_SOUNDS];
             }
         }
