@@ -155,15 +155,15 @@
 
     //Install our preference views
     //Prefixes
-    preferenceViewController = [AIPreferenceViewController controllerWithName:AISM_PREF_TITLE_PREFIX categoryName:PREFERENCE_CATEGORY_INTERFACE view:view_prefixes];
+    preferenceViewController = [AIPreferenceViewController controllerWithName:AISM_PREF_TITLE_PREFIX categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_prefixes];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
     //TimeStamps
-    preferenceViewController = [AIPreferenceViewController controllerWithName:AISM_PREF_TITLE_TIMES categoryName:PREFERENCE_CATEGORY_INTERFACE view:view_timeStamps];
+    preferenceViewController = [AIPreferenceViewController controllerWithName:AISM_PREF_TITLE_TIMES categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_timeStamps];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
     //Gridding
-    preferenceViewController = [AIPreferenceViewController controllerWithName:AISM_PREF_TITLE_GRID categoryName:PREFERENCE_CATEGORY_INTERFACE view:view_gridding];
+    preferenceViewController = [AIPreferenceViewController controllerWithName:AISM_PREF_TITLE_GRID categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_gridding];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
     

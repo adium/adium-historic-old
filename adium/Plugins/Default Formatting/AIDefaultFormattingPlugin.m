@@ -10,14 +10,9 @@
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
 #import "AIAdium.h"
+#import "AIDefaultFormattingPreferences.h"
 
 #define DEFAULT_FORMATTING_DEFAULT_PREFS	@"FormattingDefaults"
-#define PREF_GROUP_FORMATTING			@"Formatting"
-
-#define KEY_FORMATTING_FONT			@"Default Font"
-#define KEY_FORMATTING_TEXT_COLOR		@"Default Text Color"
-#define KEY_FORMATTING_BACKGROUND_COLOR		@"Default Background Color"
-#define KEY_FORMATTING_SUBBACKGROUND_COLOR	@"Default SubBackground Color"
 
 @interface AIDefaultFormattingPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -33,6 +28,9 @@
 
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DEFAULT_FORMATTING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_FORMATTING];
+
+    //Our preference view
+    preferences = [[AIDefaultFormattingPreferences defaultFormattingPreferencesWithOwner:owner] retain];
 
     //Observe
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];

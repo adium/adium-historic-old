@@ -84,7 +84,7 @@ typedef enum {
 
 //Preference Categories
 #define PREFERENCE_CATEGORY_CONNECTIONS	@"Connections"
-#define PREFERENCE_CATEGORY_INTERFACE	@"Interface"
+#define PREFERENCE_CATEGORY_MESSAGES	@"Messages"
 #define PREFERENCE_CATEGORY_STATUS	@"Status"
 #define PREFERENCE_CATEGORY_CONTACTLIST	@"Contact List"
 #define PREFERENCE_CATEGORY_OTHER	@"Other"

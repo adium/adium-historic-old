@@ -3634,6 +3634,9 @@
 			children = (
 				4B7FAEA1047D6A3400A8010A,
 				4B7FAEA2047D6A3400A8010A,
+				4BCD96A5047E40A600A8010A,
+				4BCD96A6047E40A600A8010A,
+				4BCD96A9047E40CA00A8010A,
 				4B7FAEA5047D6E2E00A8010A,
 			);
 			isa = PBXGroup;
@@ -4364,6 +4367,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B7FAEA8047D6E3600A8010A,
+				4BCD96A7047E40A600A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4372,6 +4376,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B7FAEA6047D6E2E00A8010A,
+				4BCD96AA047E40CA00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4380,6 +4385,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B7FAEA7047D6E3500A8010A,
+				4BCD96A8047E40A600A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5626,6 +5632,44 @@
 		};
 		4BC5DDA903D059D200A8010A = {
 			fileRef = 4BC5DDA803D059D200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCD96A5047E40A600A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIDefaultFormattingPreferences.h;
+			path = "Plugins/Default Formatting/AIDefaultFormattingPreferences.h";
+			refType = 4;
+		};
+		4BCD96A6047E40A600A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIDefaultFormattingPreferences.m;
+			path = "Plugins/Default Formatting/AIDefaultFormattingPreferences.m";
+			refType = 4;
+		};
+		4BCD96A7047E40A600A8010A = {
+			fileRef = 4BCD96A5047E40A600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCD96A8047E40A600A8010A = {
+			fileRef = 4BCD96A6047E40A600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCD96A9047E40CA00A8010A = {
+			isa = PBXFileReference;
+			name = DefaultFormattingPrefs.nib;
+			path = "Plugins/Default Formatting/DefaultFormattingPrefs.nib";
+			refType = 4;
+		};
+		4BCD96AA047E40CA00A8010A = {
+			fileRef = 4BCD96A9047E40CA00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};

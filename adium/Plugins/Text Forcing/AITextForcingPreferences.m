@@ -91,7 +91,7 @@
     [NSBundle loadNibNamed:TEXT_FORCING_PREF_NIB owner:self];
 
     //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:TEXT_FORCING_PREF_TITLE categoryName:PREFERENCE_CATEGORY_INTERFACE view:view_prefView];
+    preferenceViewController = [AIPreferenceViewController controllerWithName:TEXT_FORCING_PREF_TITLE categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_prefView];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
     //Load our preferences and configure the view
