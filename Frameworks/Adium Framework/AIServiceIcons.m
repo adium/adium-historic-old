@@ -31,13 +31,15 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 //Retrive the correct service icon for a contact
 + (NSImage *)serviceIconForObject:(AIListObject *)inObject type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection
 {
-	return([self serviceIconForServiceID:[[inObject service] serviceID] type:iconType direction:iconDirection]);
+	return([self serviceIconForService:[inObject service] type:iconType direction:iconDirection]);
 }
 	
 //Retrieve the correct service icon for a service
 + (NSImage *)serviceIconForService:(AIService *)service type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection
 {
-	return([self serviceIconForServiceID:[service serviceID] type:iconType direction:iconDirection]);
+	NSImage	*serviceIcon = [self serviceIconForServiceID:[service serviceID] type:iconType direction:iconDirection];
+
+	return(serviceIcon ? serviceIcon : [service defaultServiceIcon]);
 }
 
 //Retrieve the correct service icon for a service by ID
