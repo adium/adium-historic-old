@@ -18,6 +18,7 @@ Adium, Copyright 2001-2005, Adam Iser
 @interface AIEditStateWindowController : AIWindowController {
 	IBOutlet	NSTextField		*label_state;
 	IBOutlet	NSPopUpButton	*popUp_state;
+	BOOL		needToRebuildPopUpState;
 	
 	IBOutlet	NSTextField		*label_statusMessage;
 	IBOutlet	NSBox			*box_statusMessage;
