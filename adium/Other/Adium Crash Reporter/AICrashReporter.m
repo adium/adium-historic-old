@@ -9,7 +9,7 @@
 #import <AIUtilities/AIUtilities.h>
 #import "AICrashReporter.h"
 
-#define BUG_REPORT_URL		@"http://www.visualdistortion.org/crash/post.jsp"
+#define CRASH_REPORT_URL		@"http://www.visualdistortion.org/crash/post.jsp"
 #define EXCEPTIONS_PATH		[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
 #define CRASHES_PATH		[@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
 
@@ -231,7 +231,7 @@
         NSMutableURLRequest *request;
         
         //Build the URL request
-        request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:BUG_REPORT_URL]
+        request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:CRASH_REPORT_URL]
                                           cachePolicy:NSURLRequestReloadIgnoringCacheData
                                       timeoutInterval:120];
         [request addValue:@"Adium 2.0a" forHTTPHeaderField:@"X-Adium-Bug-Report"];
