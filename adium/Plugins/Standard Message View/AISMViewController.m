@@ -377,6 +377,8 @@
         userImage = [(AIAccount *)[content source] userIcon];
         //userImage = [[owner accountController] propertyForKey:@"BuddyImage" account:(AIAccount *)[content source]];
         if (!userImage)
+            userImage = [[owner accountController] defaultUserIcon];
+        if (!userImage)
             userImage = iconOutgoing;
     }else{
 	userImage = [[[chat listObject] statusArrayForKey:@"BuddyImage"] firstImage];

@@ -331,6 +331,9 @@ typedef enum {
     NSMutableDictionary		*accountStatusDict;
 
     NSMutableArray		*sleepingOnlineAccounts;
+    
+    NSImage                     *defaultUserIcon;
+    NSString                    *defaultUserIconFilename;
 }
 
 //Access to the account list
@@ -349,6 +352,10 @@ typedef enum {
 //Account properties
 - (void)setProperty:(id)inValue forKey:(NSString *)key account:(AIAccount *)inAccount;
 - (id)propertyForKey:(NSString *)key account:(AIAccount *)inAccount;
+- (void)setUserIcon:(NSImage *)inImage forAccount:(AIAccount *)account;
+- (void)setDefaultUserIcon:(NSImage *)inImage;
+- (NSImage *)defaultUserIcon;
+- (NSString *)defaultUserIconFilename;
 
 //Account password storage
 - (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount;

@@ -509,6 +509,36 @@
 //342
 //343
 //344
+		34004D86057C7DCA0022CA56 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESImageAdditions.h;
+			path = "Frameworks/AIUtilities Framework/ESImageAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34004D87057C7DCA0022CA56 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESImageAdditions.m;
+			path = "Frameworks/AIUtilities Framework/ESImageAdditions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34004D88057C7DCA0022CA56 = {
+			fileRef = 34004D86057C7DCA0022CA56;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34004D89057C7DCA0022CA56 = {
+			fileRef = 34004D87057C7DCA0022CA56;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34037AAA053664E50056088E = {
 			children = (
 				348E4EDB053667A40021E541,
@@ -2323,7 +2353,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3B305314BE000C68BA3 = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = folder;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "SQL Logger.AdiumPlugin";
@@ -9177,6 +9207,7 @@
 				34BD83DD054E530800EB2652,
 				4BCB9ACA0567E7A9001D3559,
 				9E9739DB05784EFA00CF3AEE,
+				34004D88057C7DCA0022CA56,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9908,6 +9939,7 @@
 				34BD83DC054E530800EB2652,
 				4BCB9ACB0567E7A9001D3559,
 				9E9739DA05784EFA00CF3AEE,
+				34004D89057C7DCA0022CA56,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -28443,6 +28475,8 @@
 				4B187A0403D59CCC00A8010A,
 				4BBC8E4B03BA0DB900A8010A,
 				4BBC8E4C03BA0DB900A8010A,
+				34004D86057C7DCA0022CA56,
+				34004D87057C7DCA0022CA56,
 				F570A5B103704C3701A8010A,
 				F570A5B203704C3701A8010A,
 				4BCB9AC80567E7A8001D3559,
