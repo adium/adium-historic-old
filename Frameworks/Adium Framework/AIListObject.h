@@ -42,6 +42,7 @@ typedef enum {
 - (float)smallestOrder;
 - (float)largestOrder;
 - (void)listObject:(AIListObject *)listObject didSetOrderIndex:(float)inOrderIndex;
+- (unsigned)visibleCount;
 @end
 
 @interface AIListObject : ESObjectWithStatus{

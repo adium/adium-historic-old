@@ -850,4 +850,16 @@
 	return largestOrder;
 }
 
+//Visibility -----------------------------------------------------------------------------------------------------------
+#pragma mark Visibility
+/*
+ The visible objects contained in a group are always sorted to the top.  This allows us to easily retrieve only visible
+ objects without having to physically remove invisible objects from the group.
+ */
+//Returns the number of visible objects in this group
+- (unsigned)visibleCount
+{
+    return([self containedObjectsCount]);
+}
+
 @end

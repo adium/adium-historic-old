@@ -50,7 +50,6 @@ DeclareString(FormattedUID);
     UID = [inUID retain];	
 	service = inService;
 	internalObjectID = nil;
-	delayedStatusTimers = nil;
 		
 	visible = YES;
 
