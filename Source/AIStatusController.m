@@ -72,6 +72,11 @@
 	stateMenuItemsNeedingUpdating = [[NSMutableSet alloc] init];
 	stateMenuSelectionUpdateDelays = 0;
 	_stateArrayForMenuItems = nil;
+	_activeStatusState = nil;
+	_allActiveStatusStates = nil;
+
+	accountsToConnect = [[NSMutableSet alloc] init];
+	isProcessingSelectedGlobalOffline = NO;
 
 	//Init
 	[self _setMachineIsIdle:NO];
@@ -85,8 +90,10 @@
 								   selector:@selector(rebuildAllStateMenus)
 									   name:AIStatusIconSetDidChangeNotification
 									 object:nil];
-
 	[[adium contactController] registerListObjectObserver:self];
+
+	//Watch account status preference changes for our accountsToConnect set
+ 	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
 
 	[self buildBuiltInStatusTypes];
 }
@@ -525,11 +532,13 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	AIAccount		*account;
 	
-	BOOL			noAccountsAreOnline = ![[adium accountController] oneOrMoreConnectedAccounts];
+	//We should connect all accounts if our accounts to connect array is empty and there are no connected accounts
+	BOOL			shouldConnectAllAccounts = (([accountsToConnect count] == 0) &&
+												![[adium accountController] oneOrMoreConnectedAccounts]);
 
 	[self setDelayStateMenuSelectionUpdates:YES];
 	while(account = [enumerator nextObject]){
-		if([account online] || noAccountsAreOnline){
+		if([account online] || ([accountsToConnect containsObject:account] || shouldConnectAllAccounts)){
 			//If this account is online, or no accounts are online, set the status completely
 			[account setStatusState:statusState];
 		}else{
@@ -1125,6 +1134,33 @@ int _statusArraySort(id objectA, id objectB, void *context)
     return(nil);
 }
 
+/*
+ * @brief Preferences changed; update our accountsToConnect tracking set
+ *
+ * We use the preferences changed notifications rather than the statusObject notifications because the statusObject
+ * may not change immediately upon requesting a connect or disconnect, since the account may wait to receive confirmation
+ * before reporting itself as online or offline.  With the preferences changed notification, we can distinguish a user
+ * disconnect from selecting the global Offline menu item.
+ */
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	/* Track the accounts we should connect when setting to an online state.  Our goal is to be able to reconnect
+	 * the most recently connected account if accounts are disconnected one-by-one.  If accounts are disconnected
+	 * all at once via the global Offline menu item, we want to restore all of the previously connected accounts when
+	 * reconnecting, so we check to see if we are disconnecting via that menu item with the
+	 * isProcessingSelectedGlobalOffline BOOL. */
+	if(!isProcessingSelectedGlobalOffline && [key isEqualToString:@"Online"]){
+		if([[object preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
+			[accountsToConnect addObject:object];
+		}else{
+			if([accountsToConnect count] > 1){
+			   [accountsToConnect removeObject:object];
+			}
+		}
+	}
+}	
+
 /*!
 * @brief Menu validation
  *
@@ -1289,12 +1325,25 @@ int _statusArraySort(id objectA, id objectB, void *context)
 - (void)selectOffline:(id)sender
 {
 	NSDictionary	*dict = [sender representedObject];
-	AIAccount		*account = [dict objectForKey:@"AIAccount"];
+	AIAccount		*account;
 
-	if(account){
+	if(account = [dict objectForKey:@"AIAccount"]){
 		[account setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 	}else{
+		NSEnumerator		*enumerator;
+		AIAccount			*account;
+		
+		[accountsToConnect removeAllObjects];
+		
+		//Track all accounts which are online as we select to go globally offline
+		enumerator = [[[adium accountController] accountArray] objectEnumerator];
+		while((account = [enumerator nextObject])){
+			if([account online]) [accountsToConnect addObject:account];
+		}
+		
+		isProcessingSelectedGlobalOffline = YES;
 		[[adium accountController] disconnectAllAccounts];
+		isProcessingSelectedGlobalOffline = NO;
 	}
 }
 
