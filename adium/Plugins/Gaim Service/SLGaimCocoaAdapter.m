@@ -373,13 +373,6 @@ static void adiumGaimBlistNewNode(GaimBlistNode *node)
 		contactLookupFromBuddy(buddy);
 			
 		[accountLookup(buddy->account) newContact:(contactLookupFromBuddy(buddy))];
-<<<<<<< SLGaimCocoaAdapter.m
-		 
-		NSLog(@"%s",((GaimBuddy*)node) ->name);
-=======
-		 */
-//		NSLog(@"%s",((GaimBuddy*)node) ->name);
->>>>>>> 1.54
     }
 	 */
 }
@@ -634,8 +627,17 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 // Conversation ------------------------------------------------------------------------------------------------------
 static void adiumGaimConvDestroy(GaimConversation *conv)
 {
-	//Gaim is telling us a conv was destroyed.  This should only happen when we tell it to, and that via closeChat: below
-	//so we should not need to do anything here.
+	//Gaim is telling us a conv was destroyed.  We've probably already cleaned up, but be sure in case gaim calls this
+	//when we don't ask it to (for example if we are summarily kicked from a chat room and gaim closes the 'window').
+	AIChat *chat;
+	
+	chat = (AIChat *)conv->ui_data;
+	if (chat){
+		[chatDict removeObjectForKey:[chat uniqueChatID]];
+		[chat release];
+		
+		conv->ui_data = nil;
+	}
 }
 
 static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
