@@ -12,7 +12,7 @@
 
 + (NSMenu *)defaultMenu
 {
-    NSMenu          *superClassMenu = [NSTextView defaultMenu];
+    NSMenu          *superClassMenu = [[NSTextView defaultMenu] copy];
     NSMutableArray  *topItemsArray = nil;
     NSMutableArray  *bottomItemsArray = nil;
     NSEnumerator    *enumerator;
@@ -52,7 +52,7 @@
             [superClassMenu addItem:[menuItem copy]];
         }
     }
-    return [superClassMenu copy]; //return a copy of the menu
+    return superClassMenu; //return the menu
 }
 
 - (void)dealloc
