@@ -1593,7 +1593,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 #warning This is ridiculous.
 - (AIListContact *)preferredContactWithUID:(NSString *)inUID andServiceID:(NSString *)inService forSendingContentType:(NSString *)inType
 {
-	AIListObject	*tempListObject = [[AIListObject alloc] initWithUID:inUID service:inService];
+	AIListObject	*tempListObject = [[AIListObject alloc] initWithUID:inUID 
+																service:[[owner accountController] firstServiceWithServiceID:inService]];
 	AIAccount		*account = [[owner accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE 
 																					  toContact:tempListObject];
 	[tempListObject release];
