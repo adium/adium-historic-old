@@ -69,7 +69,7 @@ DeclareString(AppendNextMessage);
 												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		}
 		
-		timeStampFormatter = [[[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO] retain];
+		timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO];
 		
 		showUserIcons = [[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue];
 	}
