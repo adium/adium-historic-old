@@ -8,8 +8,10 @@
 
 // User Info Keys For Registration
 #define GROWL_APP_NAME					@"ApplicationName"
+#define GROWL_APP_ICON					@"ApplicationIcon"
 #define GROWL_NOTIFICATIONS_DEFAULT		@"DefaultNotifications"
 #define GROWL_NOTIFICATIONS_ALL			@"AllNotifications"
+#define GROWL_NOTIFICATIONS_USER_SET	@"AllowedUserNotifications"
 
 // User Info Keys For Notifications
 #define GROWL_NOTIFICATION_TITLE		@"NotificationTitle"
@@ -18,6 +20,11 @@
 
 // Notifications
 #define GROWL_APP_REGISTRATION			@"GrowlApplicationRegistrationNotification"
+#define GROWL_APP_REGISTRATION_CONF		@"GrowlApplicationRegistrationConfirmationNotification"
+#define GROWL_PING						@"Honey, Mind Taking Out The Trash"
+#define GROWL_PONG						@"What Do You Want From Me, Woman"
+
+#define GROWL_IS_READY					@"Lend Me Some Sugar; I Am Your Neighbor!"
 
 @protocol GrowlPlugin
 - (id) loadPlugin;
