@@ -2,13 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AB Enable Import</key>
+	<integer>1</integer>
 	<key>AB Display Format</key>
 	<integer>1</integer>
-        <key>AB Image Sync</key>
-        <integer>0</integer>
-        <key>AB Enable Images</key>
-        <integer>1</integer>
-        <key>AB Use NickName</key>
-        <integer>0</integer>
+	<key>AB Image Sync</key>
+	<integer>0</integer>
+	<key>AB Enable Images</key>
+	<integer>1</integer>
+	<key>AB Use NickName</key>
+	<integer>0</integer>
 </dict>
 </plist>
