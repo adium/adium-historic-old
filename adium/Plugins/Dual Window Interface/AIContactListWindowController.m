@@ -160,6 +160,7 @@
                 targetMax.width = newFrame.size.width;
             } else {
                 newFrame.size.width = oldFrame.size.width; //no horizontal resize so use old width
+                newFrame.origin.x = oldFrame.origin.x;
             }
             
             if (autoResizeVertically) {
@@ -167,6 +168,7 @@
                 targetMax.height = newFrame.size.height;  
             } else {
                 newFrame.size.height = oldFrame.size.height; //no vertical resize so use old height
+                newFrame.origin.y = oldFrame.origin.y;
             }
             
             [[self window] setMinSize:targetMin];
