@@ -15,7 +15,6 @@
 
 #import "AILoggerPlugin.h"
 #import "AILogViewerWindowController.h"
-#import "AILoggerPreferences.h"
 #import "AILog.h"
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
@@ -76,7 +75,6 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS 
                                                                         forClass:[self class]] 
                                                                         forGroup:PREF_GROUP_LOGGING];
-    preferences = [[AILoggerPreferences preferencePane] retain];
 
     //Install the log viewer menu items
     [self configureMenuItems];
@@ -111,8 +109,8 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 {
 	BOOL            newLogValue;
 	
-	logHTML = [[prefDict objectForKey:KEY_LOGGER_HTML] boolValue];
-	
+	logHTML = /*[[prefDict objectForKey:KEY_LOGGER_HTML] boolValue]*/ YES;
+
 	//Start/Stop logging
 	newLogValue = [[prefDict objectForKey:KEY_LOGGER_ENABLE] boolValue];
 	if(newLogValue != observingContent){
