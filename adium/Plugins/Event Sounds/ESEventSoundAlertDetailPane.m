@@ -41,9 +41,8 @@
 {
 	//If the user has a custom sound selected, we need to create an entry in the menu for it
 	NSString	*selectedSound = [inDetails objectForKey:KEY_ALERT_SOUND_PATH];
-	if([[popUp_actionDetails menu] indexOfItemWithRepresentedObject:selectedSound] == NSNotFound){
+	if([[popUp_actionDetails menu] indexOfItemWithRepresentedObject:selectedSound] == -1){
 		[self addSound:selectedSound toMenu:[popUp_actionDetails menu]];
-		NSLog(@"Adding custom sound %@",selectedSound);
 	}
 	
     //Set the menu to its previous setting if the stored event matches
