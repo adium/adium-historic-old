@@ -1295,7 +1295,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 - (int)browser:(NSBrowser *)sender numberOfRowsInColumn:(int)column
 {
 	if ([[self browser:sender groupForColumn:column] respondsToSelector:@selector(count)])
-		return([[self browser:sender groupForColumn:column] count]);
+		return ([[self browser:sender groupForColumn:column] count]);
 	else return 0;
 }
 
