@@ -95,7 +95,7 @@
 		if(firstTime || [key isEqualToString:KEY_STATUS_ICON_PACK]){
 			NSString *path;
 			
-			path = [adium pathOfPackWIthName:[prefDict objectForKey:KEY_STATUS_ICON_PACK]
+			path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_STATUS_ICON_PACK]
 								   extension:@"AdiumStatusIcons"
 						  resourceFolderName:@"Status Icons"];
 			
@@ -106,7 +106,7 @@
 		if(firstTime || [key isEqualToString:KEY_SERVICE_ICON_PACK]){
 			NSString *path;
 			
-			path = [adium pathOfPackWIthName:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]
+			path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]
 								   extension:@"AdiumServiceIcons"
 						  resourceFolderName:@"Service Icons"];
 			
