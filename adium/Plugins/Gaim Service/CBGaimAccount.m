@@ -787,8 +787,10 @@
 #warning Wrong. perhaps use a chat identifier of sorts
 	AIListObject *listObject = [chat listObject];
 	if (listObject){
+		NSAssert([listObject uniqueObjectID] != nil,@"closeChat: [listObject uniqueObjectID] was nil");
 		[chatDict removeObjectForKey:[listObject uniqueObjectID]];
 	}else{
+		NSAssert([chat name] != nil,@"closeChat: [chat name] was nil");
 		[chatDict removeObjectForKey:[chat name]];	
 	}
 	
