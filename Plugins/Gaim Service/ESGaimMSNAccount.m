@@ -18,7 +18,7 @@
 #import "AIContactController.h"
 #import "AIStatusController.h"
 #import "ESGaimMSNAccount.h"
-#import "libgaim/state.h"
+#import "Libgaim/state.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIHTMLDecoder.h>
