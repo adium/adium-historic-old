@@ -31,8 +31,6 @@
 										   action:@selector(showAccountWindow:)
 									keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
-	
-    preferences = [[AIAccountListPreferences preferencePaneForPlugin:self] retain];
 }
 
 - (IBAction)showAccountWindow:(id)sender
