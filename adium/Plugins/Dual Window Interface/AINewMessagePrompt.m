@@ -121,6 +121,7 @@ static AINewMessagePrompt *sharedInstance = nil;
     NSEnumerator		*enumerator;
     AIListContact		*contact;
     id <AIServiceController>	service;
+    NSMenu			*menu = [popUp_service menu];
     
     //Configure the auto-complete view
     enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
@@ -131,18 +132,32 @@ static AINewMessagePrompt *sharedInstance = nil;
     //Configure the handle type menu
     [popUp_service removeAllItems];
 
+    //Insert a menu item for each available service type
     enumerator = [[[owner accountController] availableServiceArray] objectEnumerator];
     while((service = [enumerator nextObject])){
         AIServiceType	*serviceType = [service handleServiceType];
         NSMenuItem	*menuItem;
+        BOOL		menuExists = NO;
+        int		i;
+        
+        //Make sure a menu item for this type doesn't already exist in our menu
+        for(i = 0;i < [menu numberOfItems]; i++){
+            if([[serviceType identifier] compare:[[[menu itemAtIndex:i] representedObject] identifier]] == 0){
+                menuExists = YES;
+            }
+        }
+        
+        //Add the menu item
+        if(!menuExists){
+            menuItem = [[NSMenuItem alloc] initWithTitle:[serviceType description] target:self action:@selector(selectService:) keyEquivalent:@""];
+            [menuItem setRepresentedObject:serviceType];
 
-        menuItem = [[NSMenuItem alloc] initWithTitle:[serviceType description] target:self action:@selector(selectService:) keyEquivalent:@""];
-        [menuItem setRepresentedObject:serviceType];
-
-        [[popUp_service menu] addItem:menuItem];
+            [[popUp_service menu] addItem:menuItem];
+        }
     }
 
-    [[self window] center]; //Center the window
+    //Center the window
+    [[self window] center];
 }
 
 - (BOOL)shouldCascadeWindows

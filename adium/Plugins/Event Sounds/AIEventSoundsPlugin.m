@@ -61,7 +61,7 @@
         [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
         
         //Load the soundset
-        [eventSoundArray release];
+        [eventSoundArray release]; eventSoundArray = nil;
         soundSetPath = [preferenceDict objectForKey:KEY_EVENT_SOUND_SET];
         if(soundSetPath && [soundSetPath length] != 0){ //Soundset
             [self loadSoundSetAtPath:soundSetPath creator:nil description:nil sounds:&eventSoundArray]; //Load the soundset
@@ -97,13 +97,14 @@
 
 
 //Loads various info from a sound set file
-- (void)loadSoundSetAtPath:(NSString *)inPath creator:(NSString **)outCreator description:(NSString **)outDesc sounds:(NSArray **)outArray
+- (BOOL)loadSoundSetAtPath:(NSString *)inPath creator:(NSString **)outCreator description:(NSString **)outDesc sounds:(NSArray **)outArray
 {
     NSCharacterSet	*newlineSet = [NSCharacterSet characterSetWithCharactersInString:SOUND_NEWLINE];
     NSCharacterSet	*whitespaceSet = [NSCharacterSet whitespaceCharacterSet];
     NSString		*path;
     NSString		*soundSet;
     NSScanner		*scanner;
+    BOOL		success = NO;
 
     //Open the soundset.rtf file
     path = [NSString stringWithFormat:@"%@/%@.txt", inPath, [inPath lastPathComponent]];
@@ -155,8 +156,11 @@
             }
 
             *outArray = soundArray;
+            success = YES;
         }
     }
+
+    return(success);
 }
 
 

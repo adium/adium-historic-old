@@ -26,7 +26,8 @@
 - (NSSize)attributedStringSizeForHeight:(float)height;
 - (float)maxWidthForHeight:(float)height;
 - (void)_flushDrawingCache;
-- (int)_circleWidthForRadius:(float)circleRadius;
+- (float)_circleRadiusForHeight:(float)height;
+- (int)_circleWidthForHeight:(float)height;
 @end
 
 @implementation AIStatusCircle
@@ -44,6 +45,7 @@
     flashColor = nil;
     string = nil;
     state = AICircleNormal;
+    bezeled = NO;
 
     _attributedString = nil;
     _attributedStringSize = NSMakeSize(0,0);
@@ -77,6 +79,11 @@
     }
 }
 
+- (void)setBezeled:(BOOL)inBezeled
+{
+    bezeled = inBezeled;
+}
+
 //Set the circle color
 - (void)setColor:(NSColor *)inColor
 {
@@ -99,13 +106,13 @@
 - (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax
 {
     //If our height has changed, flush the string/rect cache
-    if(cachedHeight != inHeight) [self _flushDrawingCache];
+//    if(cachedHeight != inHeight + CIRCLE_SIZE_OFFSET) [self _flushDrawingCache];
 
     //Return the requested width
     if(computeMax){
         return([self maxWidthForHeight:inHeight]);
     }else{
-        return([self _circleWidthForRadius:(inHeight / 2.0)]);
+        return([self _circleWidthForHeight:inHeight]);
     }    
 }
 
@@ -113,18 +120,15 @@
 - (void)drawInRect:(NSRect)inRect
 {
     NSBezierPath 		*pillPath;
-    int				stringHeight;
     float			circleRadius, circleWidth, lineWidth;
     float 			innerLeft, innerRight, innerTop, innerBottom, centerY;
 
     //Calculate Circle Dimensions
-    stringHeight = (inRect.size.height + CIRCLE_SIZE_OFFSET);
-    circleRadius = stringHeight / 2.0;
-
-    circleWidth = [self _circleWidthForRadius:circleRadius];
+    circleRadius = [self _circleRadiusForHeight:inRect.size.height];
+    circleWidth = [self _circleWidthForHeight:inRect.size.height];
     lineWidth = (circleRadius * (2.0/15.0));
 
-    //Right align
+    //Right align our circle
     inRect.origin.x += inRect.size.width - circleWidth;
     inRect.size.width = circleWidth;
 
@@ -143,23 +147,27 @@
             [pillPath lineToPoint: NSMakePoint(innerRight, innerTop)];
         }
         //right cap
-        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:90 endAngle:270 clockwise:YES];
+        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:90 endAngle:0 clockwise:YES];
+        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:0 endAngle:270 clockwise:YES];
+        //right cap
         //bottom line (if our pill is not a circle)
         if((innerRight - innerLeft) != 0){
             [pillPath moveToPoint: NSMakePoint(innerRight, innerBottom)];
             [pillPath lineToPoint: NSMakePoint(innerLeft, innerBottom)];
         }
         //left cap
-        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius startAngle:270 endAngle:90 clockwise:YES];
+        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius startAngle:270 endAngle:180 clockwise:YES];
+        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius startAngle:180 endAngle:90 clockwise:YES];
 
+        
     //draw the contents
     [((state == AICircleFlashA) ? flashColor : color) set];
     [pillPath setLineWidth:lineWidth];
     [pillPath fill];
 
     if(string){
-        NSAttributedString	*attrString = [self attributedStringForHeight:stringHeight];
-        NSSize			stringSize = [self attributedStringSizeForHeight:stringHeight];
+        NSAttributedString	*attrString = [self attributedStringForHeight:inRect.size.height];
+        NSSize			stringSize = [self attributedStringSizeForHeight:inRect.size.height];
         
         //Draw the string content
         [attrString drawInRect:NSMakeRect(innerLeft - circleRadius + 1, //The string is already centered horizontally
@@ -185,7 +193,7 @@
         }
     
         //Draw the inner circle (for unviewed messages)
-        if(state == AICircleFlashA || state == AICircleFlashB){
+        if(state == AICircleFlashA || state == AICircleFlashB || state == AICirclePreFlash){
             NSBezierPath *insideCircle;
     
             //Create the circle path
@@ -203,20 +211,60 @@
         }
     }
 
-    //Draw the pill frame
-    [((state == AICircleFlashA || state == AICircleFlashB) ? [NSColor blackColor] : [NSColor grayColor]) set];
-    [pillPath stroke];
+    if(bezeled){
+        //Draw the pill frame
+        pillPath = [NSBezierPath bezierPath];
+        [pillPath moveToPoint: NSMakePoint(innerLeft - circleRadius, centerY)];
+        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius startAngle:180 endAngle:90 clockwise:YES];
+
+        //top line (if our pill is not a circle)
+        if((innerRight - innerLeft) != 0){
+            [pillPath moveToPoint: NSMakePoint(innerLeft, innerTop)];
+            [pillPath lineToPoint: NSMakePoint(innerRight, innerTop)];
+        }
+        //right cap
+        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:90 endAngle:0 clockwise:YES];
+
+        [[NSColor colorWithCalibratedWhite:0.8 alpha:0.6] set];
+        [pillPath stroke];
+
+
+        
+        pillPath = [NSBezierPath bezierPath];
+        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:0 endAngle:270 clockwise:YES];
+        //right cap
+        //bottom line (if our pill is not a circle)
+        if((innerRight - innerLeft) != 0){
+            [pillPath moveToPoint: NSMakePoint(innerRight, innerBottom)];
+            [pillPath lineToPoint: NSMakePoint(innerLeft, innerBottom)];
+        }
+        //left cap
+        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius startAngle:270 endAngle:180 clockwise:YES];
+        [[NSColor colorWithCalibratedWhite:0.2 alpha:0.6] set];
+        [pillPath stroke];
+
+    }else{
+        [[NSColor colorWithCalibratedWhite:0.6 alpha:0.8] set];
+        [pillPath stroke];
+
+    }
 
 }
 
-- (int)_circleWidthForRadius:(float)circleRadius
+- (float)_circleRadiusForHeight:(float)height
 {
+    return( (height + CIRCLE_SIZE_OFFSET) / 2.0 );
+}
+
+- (int)_circleWidthForHeight:(float)height
+{
+    float	circleRadius = [self _circleRadiusForHeight:height];
     float	insideWidth;
 
     //Calculate Circle Dimensions
     if(string){
         //The string is inset 1/4 into each endcap
-        insideWidth = ([self attributedStringSizeForHeight:(circleRadius * 2.0)].width - circleRadius) + 1.0;
+        insideWidth = ([self attributedStringSizeForHeight:height].width - circleRadius) + 1.0;
 
         //Prevent the pill from shrinking any smaller than a perfect circle
         if(insideWidth < 0) insideWidth = 0;
@@ -234,12 +282,16 @@
 //Returns our content attributed string (Cached)
 - (NSAttributedString *)attributedStringForHeight:(float)height
 {
+    //Adjust the height
+    height += CIRCLE_SIZE_OFFSET;
+    
     //If our height has changed, flush the string/rect cache
     if(cachedHeight != height) [self _flushDrawingCache];
 
     //Get our attributed string and its dimensions
     if(!_attributedString){
         _attributedString = [[self _attributedString:string forHeight:height] retain];
+        cachedHeight = height;
     }
 
     return(_attributedString);
@@ -249,7 +301,7 @@
 - (NSSize)attributedStringSizeForHeight:(float)height
 {
     //If our height has changed, flush the string/rect cache
-    if(cachedHeight != height) [self _flushDrawingCache];
+    if(cachedHeight != height + CIRCLE_SIZE_OFFSET) [self _flushDrawingCache];
 
     //
     if(!_attributedStringSize.width || !_attributedStringSize.height){
@@ -263,11 +315,12 @@
 - (float)maxWidthForHeight:(float)height
 {
     //If our height has changed, flush the string/rect cache
-    if(cachedHeight != height) [self _flushDrawingCache];
+    if(cachedHeight != height + CIRCLE_SIZE_OFFSET) [self _flushDrawingCache];
 
     //
     if(!_maxWidth){
-        _maxWidth = [[self _attributedString:@"8:88" forHeight:height] size].width;
+        _maxWidth = [[self _attributedString:@"8:88" forHeight:height + CIRCLE_SIZE_OFFSET] size].width + [self _circleRadiusForHeight:height] + 1.0;
+        cachedHeight = height + CIRCLE_SIZE_OFFSET;
     }
 
     return(_maxWidth);
@@ -301,8 +354,14 @@
         fontSize = 8;
     }else if(height <= 13){
         fontSize = 9;
-    }else{
+    }else if(height <= 15){
         fontSize = 10;
+    }else if(height <= 17){
+        fontSize = 11;
+    }else if(height <= 18){
+        fontSize = 12;
+    }else{
+        fontSize = 13;
     }
     
     //Create the attributed string

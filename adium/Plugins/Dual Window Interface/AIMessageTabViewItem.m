@@ -20,7 +20,7 @@
 
 #define LEFT_VIEW_PADDING 	2
 #define LEFT_VIEW_HEIGHT 	13
-#define LEFT_MARGIN		4
+#define LEFT_MARGIN		0
 
 @interface AIMessageTabViewItem (PRIVATE)
 - (id)initWithIdentifier:(id)identifier messageView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
@@ -59,6 +59,7 @@
 {
     [[owner notificationCenter] removeObserver:self name:Contact_AttributesChanged object:nil];
     [owner release];
+    [messageView release];
     
     [super dealloc];
 }
