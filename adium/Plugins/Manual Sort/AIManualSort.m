@@ -15,6 +15,8 @@
 
 #import "AIManualSort.h"
 
+//Perform no sorting
+
 int manualSort(id objectA, id objectB, BOOL groups);
 
 @implementation AIManualSort
@@ -26,7 +28,10 @@ int manualSort(id objectA, id objectB, BOOL groups);
     return(@"ManualSort");
 }
 - (NSString *)displayName{
-    return(@"Manually");
+    return(AILocalizedString(@"Manually","Sort Contacts... <Manually>"));
+}
+- (NSString *)configureSortMenuItemTitle{ 
+	return(nil);
 }
 - (NSArray *)statusKeysRequiringResort{
 	return(nil);
