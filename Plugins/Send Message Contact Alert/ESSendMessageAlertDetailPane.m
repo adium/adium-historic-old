@@ -86,8 +86,19 @@
 - (void)setDestinationContact:(AIListContact *)inContact
 {
 	if(inContact != toContact){
+		NSMenuItem	*firstMenuItem;
+		
 		[toContact release]; toContact = [inContact retain];
-		[popUp_messageTo setTitle:[toContact displayName]];
+		
+		//NSPopUpButton doesn't handle submenus well at all. We put a blank menu item at the top of our
+		//menu when we created it. We can now change its attributes to affect the way the unclicked button
+		//displays.
+		firstMenuItem = (NSMenuItem *)[[popUp_messageTo menu] itemAtIndex:0];
+		[firstMenuItem setTitle:([toContact isKindOfClass:[AIMetaContact class]] ?
+								 [toContact displayName] :
+								 [toContact formattedUID])];
+		[firstMenuItem setImage:[AIUserIcons menuUserIconForObject:toContact]];
+		[popUp_messageTo selectItemAtIndex:0];
 		
 		//Update 'from' menu
 		[popUp_messageFrom setMenu:[[adium accountController] menuOfAccountsForSendingContentType:CONTENT_MESSAGE_TYPE
