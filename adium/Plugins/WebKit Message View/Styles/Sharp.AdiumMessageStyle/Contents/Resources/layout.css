@@ -9,6 +9,7 @@ body {
 
 .incoming {
 	margin: 4px 4px 8px 4px;
+	clear: left;
 }
 
 .outgoing {
@@ -21,6 +22,7 @@ body {
 	height: 32px;
 	float: left;
 	padding: 2px;
+	margin-left: 1px;
 }
 
 .container {
