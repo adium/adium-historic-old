@@ -87,6 +87,7 @@
 - (IBAction)reportABug:(id)sender;
 - (IBAction)sendFeedback:(id)sender;
 - (IBAction)showForums:(id)sender;
+- (IBAction)showXtras:(id)sender;
 - (IBAction)confirmQuit:(id)sender;
 
 //create a resource folder in the Library/Application\ Support/Adium\ 2.0 folder.
