@@ -35,7 +35,7 @@ typedef enum {
 } GaimPluginPrefType;
 
 #include <glib.h>
-#include "prefs.h"
+#include <libgaim/prefs.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -30,7 +30,7 @@
 
 #include <stdio.h>
 
-#include "account.h"
+#include <libgaim/account.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -223,7 +223,7 @@ gboolean gaim_markup_find_tag(const char *needle, const char *haystack,
  * Extracts a field of data from HTML.
  *
  * This is a scary function. See protocols/msn/msn.c and
- * protocols/yahoo/yahoo.c for example usage.
+ * protocols/yahoo/yahoo_profile.c for example usage.
  *
  * @param str            The string to parse.
  * @param len            The size of str.
@@ -297,6 +297,40 @@ char *gaim_escape_html(const char *html);
  * @return the text with HTML entities literalized
  */
 char *gaim_unescape_html(const char *html);
+
+/**
+ * Returns a newly allocated substring of the HTML UTF-8 string "str".
+ * The markup is preserved such that the substring will have the same
+ * formatting as original string, even though some tags may have been
+ * opened before "x", or may close after "y". All open tags are closed
+ * at the end of the returned string, in the proper order.
+ *
+ * Note that x and y are in character offsets, not byte offsets, and
+ * are offsets into an unformatted version of str. Because of this,
+ * this function may be sensitive to changes in GtkIMHtml and may break
+ * when used with other UI's. libgaim users are encouraged to report and
+ * work out any problems encountered.
+ *
+ * @param str The input NUL terminated, HTML, UTF-8 (or ASCII) string.
+ * @param x The character offset into an unformatted version of str to
+ *          begin at.
+ * @param y The character offset (into an unformatted vesion of str) of
+ *          one past the last character to include in the slice.
+ *
+ * @return The HTML slice of string, with all formatting retained.
+ */
+char *gaim_markup_slice(const char *str, guint x, guint y);
+
+/**
+ * Returns a newly allocated string containing the name of the tag
+ * located at "tag". Tag is expected to point to a '<', and contain
+ * a '>' sometime after that. If there is no '>' and the string is
+ * not NUL terminated, this function can be expected to segfault.
+ *
+ * @param tag The string starting a HTML tag.
+ * @return A string containing the name of the tag.
+ */
+char *gaim_markup_get_tag_name(const char *tag);
 
 /*@}*/
 
@@ -476,6 +510,18 @@ gchar *gaim_strreplace(const char *string, const char *delimiter,
 					   const char *replacement);
 
 /**
+ * Given a string, this replaces any numerical character references
+ * in that string with the corresponding actual utf-8 substrings,
+ * and returns a newly allocated string.
+ *
+ * @param in The string which might contain numerical character references.
+ *
+ * @return A new string, with numerical character references
+ *         replaced with actual utf-8, free this with g_free().
+ */
+char *gaim_utf8_ncr_decode(const char *in);
+
+/**
  * Given a string, this replaces one substring with another
  * ignoring case and returns a newly allocated string.
  *
@@ -521,6 +567,20 @@ char *gaim_str_size_to_units(size_t size);
  */
 char *gaim_str_seconds_to_string(guint sec);
 
+/**
+ * Converts a binary string into a NUL terminated ascii string,
+ * replacing nonascii characters and characters below SPACE (including
+ * NUL) into \\xyy, where yy are two hex digits. Also backslashes are
+ * changed into two backslashes (\\\\). The returned, newly allocated
+ * string can be outputted to the console, and must be g_free()d.
+ *
+ * @param binary A string of random data, possibly with embedded NULs
+ *               and such.
+ * @param len The length in bytes of the input string. Must not be 0.
+ *
+ * @return A newly allocated ASCIIZ string.
+ */
+char *gaim_str_binary_to_ascii(const unsigned char *binary, guint len);
 /*@}*/
 
 
@@ -530,7 +590,7 @@ char *gaim_str_seconds_to_string(guint sec);
 /*@{*/
 
 /**
- * Parses a URL, returning its host, port, and file path.
+ * Parses a URL, returning its host, port, file path, username and password.
  *
  * The returned data must be freed.
  *
@@ -538,9 +598,11 @@ char *gaim_str_seconds_to_string(guint sec);
  * @param ret_host The returned host.
  * @param ret_port The returned port.
  * @param ret_path The returned path.
+ * @param ret_user The returned username.
+ * @param ret_passwd The returned password.
  */
 gboolean gaim_url_parse(const char *url, char **ret_host, int *ret_port,
-						char **ret_path);
+						char **ret_path, char **ret_user, char **ret_passwd);
 
 /**
  * Fetches the data from a URL, and passes it to a callback function.
@@ -548,10 +610,10 @@ gboolean gaim_url_parse(const char *url, char **ret_host, int *ret_port,
  * @param url        The URL.
  * @param full       TRUE if this is the full URL, or FALSE if it's a
  *                   partial URL.
- * @param cb         The callback function.
- * @param data       The user data to pass to the callback function.
  * @param user_agent The user agent field to use, or NULL.
  * @param http11     TRUE if HTTP/1.1 should be used to download the file.
+ * @param cb         The callback function.
+ * @param data       The user data to pass to the callback function.
  */
 void gaim_url_fetch(const char *url, gboolean full,
 					const char *user_agent, gboolean http11,

@@ -25,7 +25,7 @@
 #ifndef _GAIM_ACCOUNT_OPT_H_
 #define _GAIM_ACCOUNT_OPT_H_
 
-#include "prefs.h"
+#include <libgaim/prefs.h>
 
 /**
  * An option for an account.

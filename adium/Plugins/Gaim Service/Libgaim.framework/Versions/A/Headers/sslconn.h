@@ -25,7 +25,7 @@
 #ifndef _GAIM_SSL_H_
 #define _GAIM_SSL_H_
 
-#include "proxy.h"
+#include <libgaim/proxy.h>
 
 #define GAIM_SSL_DEFAULT_PORT 443
 

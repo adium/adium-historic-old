@@ -195,7 +195,7 @@ static AIChat* imChatLookupFromConv(GaimConversation *conv)
 			gaim_blist_add_buddy(buddy, NULL, group, NULL);     //add the buddy to the gaimside list
 			
 //#warning Must add to serverside list to get status updates.  Need to remove when the chat closes or the account disconnects. Possibly want to use some sort of hidden Adium group for this.
-//			serv_add_buddy(conv->account->gc, buddy->name, group);				//add it to the serverside list
+//			serv_add_buddy(conv->account->gc, buddy);				//add it to the serverside list
 		}
 		
 		NSCAssert(buddy != nil, @"buddy was nil");
@@ -271,7 +271,6 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					gaimChat = gaim_chat_new(account,
 											 name,
 											 components);
-					
 					if ((group = gaim_find_group(group_name)) == NULL) {
 						group = gaim_group_new(group_name);
 						gaim_blist_add_group(group, NULL);
@@ -279,7 +278,6 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					
 					if (gaimChat != NULL) {
 						gaim_blist_add_chat(gaimChat, group, NULL);
-						gaim_blist_save();
 					}
 					
 					//Associate our chat with the libgaim conversation
@@ -739,6 +737,12 @@ static void adiumGaimConvUpdateProgress(GaimConversation *conv, float percent)
     NSLog(@"adiumGaimConvUpdateProgress %f",percent);
 }
 
+//This isn't a function we want Gaim doing anything with, I don't think
+static gboolean adiumGaimConvHasFocus(GaimConversation *conv)
+{
+	return NO;
+}
+
 static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
@@ -783,6 +787,7 @@ static GaimConversationUiOps adiumGaimConversationOps = {
     adiumGaimConvChatRemoveUser,
     adiumGaimConvChatRemoveUsers,
     adiumGaimConvUpdateProgress,
+	adiumGaimConvHasFocus,
     adiumGaimConvUpdated
 };
 
@@ -1963,7 +1968,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 			buddy = gaim_buddy_new(account, buddyUID, NULL);
 		}
 		gaim_blist_add_buddy(buddy, NULL, group, NULL);
-		serv_add_buddy(account->gc, buddyUID, group);
+		serv_add_buddy(account->gc, buddy);
 	}
 }
 
@@ -1981,11 +1986,13 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	const char  *groupUTF8String = (groupName ? [groupName UTF8String] : "");
 	
 	GaimBuddy 	*buddy = gaim_find_buddy(account, buddyUID);
-	
-	//Remove this contact from the server-side and gaim-side lists
-	serv_remove_buddy(account->gc, buddyUID, groupUTF8String);
 	if (buddy){
-		gaim_blist_remove_buddy(buddy);
+		GaimGroup *group = gaim_find_group(groupUTF8String);
+		if (group){
+			//Remove this contact from the server-side and gaim-side lists
+			serv_remove_buddy(account->gc, buddy, group);
+			gaim_blist_remove_buddy(buddy);
+		}
 	}
 }
 
@@ -2003,6 +2010,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	
 	//Get the destination group (creating if necessary)
 	const char  *groupUTF8String = (groupName ? [groupName UTF8String] : "");
+
 	GaimGroup 	*destGroup = gaim_find_group(groupUTF8String);
 	if(!destGroup) destGroup = gaim_group_new(groupUTF8String);
 	
@@ -2015,7 +2023,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 			serv_move_buddy(buddy, oldGroup, destGroup);
 		} else {
 			//The buddy was not in any group before; add the buddy to the desired group
-			serv_add_buddy(account->gc, buddyUID, destGroup);
+			serv_add_buddy(account->gc, buddy);
 		}
 	}	
 }

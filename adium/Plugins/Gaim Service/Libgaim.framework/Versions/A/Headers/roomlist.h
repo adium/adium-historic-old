@@ -28,7 +28,7 @@
 
 
 #include <glib/glist.h>
-#include "account.h"
+#include <libgaim/account.h>
 
 
 /**************************************************************************/

@@ -100,9 +100,34 @@ typedef enum
 
 } GaimConvImFlags;
 
-#include "blist.h"
-#include "proxy.h"
-#include "plugin.h"
+typedef enum {
+	GAIM_ICON_SCALE_DISPLAY = 0x01,		/**< We scale the icon when we display it */
+	GAIM_ICON_SCALE_SEND = 0x02			/**< We scale the icon before we send it to the server */
+} GaimIconScaleRules;
+
+
+/**
+ * A description of a Buddy Icon specification.  This tells Gaim what kind of image file
+ * it should give this prpl, and what kind of image file it should expect back.
+ * Dimensions less than 1 should be ignored and the image not scaled.
+ */
+typedef struct {
+	char *format;                       /**< This is a comma-delimited list of image formats or NULL if icons are not supported. 
+					     * The core nor the prpl will actually check to see if the data it's given matches this, it's entirely
+					     * up to the UI to do what it wants */
+	int min_width;                          /**< The minimum width of this icon  */
+	int min_height;                         /**< The minimum height of this icon */
+	int max_width;                          /**< The maximum width of this icon  */
+	int max_height;                         /**< The maximum height of this icon */
+	GaimIconScaleRules scale_rules;		/**< How to stretch this icon */
+} GaimBuddyIconSpec;
+
+/* This #define exists just to make it easier to fill out the buddy icon field in he prpl info struct for protocols that couldn't care less. */
+#define NO_BUDDY_ICONS {NULL, 0, 0, 0, 0, 0}
+
+#include <libgaim/blist.h>
+#include <libgaim/proxy.h>
+#include <libgaim/plugin.h>
 
 /**
  * Protocol options
@@ -111,24 +136,6 @@ typedef enum
  */
 typedef enum
 {
-	/**
-	 * TOC and Oscar send HTML-encoded messages;
-	 * most other protocols don't.
-	 */
-#if 0
-	#define OPT_PROTO_HTML            0x00000001 this should be per-connection */
-#endif
-
-	/**
-	 * Synchronize the time between the local computer and the server.
-	 *
-	 * TOC and Oscar have signon time, and the server's time needs
-	 * to be adjusted to match your computer's time.
-	 *
-	 * We wouldn't need this if everyone used NTP.
-	 */
-	OPT_PROTO_CORRECT_TIME = 0x00000002,
-
 	/**
 	 * Use a unique name, not an alias, for chat rooms.
 	 *
@@ -164,8 +171,11 @@ typedef enum
 	 * Buddy icon support.
 	 *
 	 * Oscar and Jabber have buddy icons.
+	 *
+	 * *We'll do this a bit more sophisticated like, now.
+	 *
+	 * OPT_PROTO_BUDDY_ICON = 0x00000040,
 	 */
-	OPT_PROTO_BUDDY_ICON = 0x00000040,
 
 	/**
 	 * Images in IMs.
@@ -212,7 +222,9 @@ struct _GaimPluginProtocolInfo
 
 	GList *user_splits;      /* A GList of GaimAccountUserSplit */
 	GList *protocol_options; /* A GList of GaimAccountOption    */
-
+	
+	GaimBuddyIconSpec icon_spec; /* The icon spec. */
+	
 	/**
 	 * Returns the base icon name for the given buddy and account.
 	 * If buddy is NULL, it will return the name to use for the account's icon
@@ -255,12 +267,10 @@ struct _GaimPluginProtocolInfo
 	void (*set_idle)(GaimConnection *, int idletime);
 	void (*change_passwd)(GaimConnection *, const char *old_pass,
 						  const char *new_pass);
-	void (*add_buddy)(GaimConnection *, const char *name, GaimGroup *group);
-	void (*add_buddies)(GaimConnection *, GList *buddies);
-	void (*remove_buddy)(GaimConnection *, const char *name,
-						const char *group);
-	void (*remove_buddies)(GaimConnection *, GList *buddies,
-						   const char *group);
+	void (*add_buddy)(GaimConnection *, GaimBuddy *buddy, GaimGroup *group);
+	void (*add_buddies)(GaimConnection *, GList *buddies, GList *groups);
+	void (*remove_buddy)(GaimConnection *, GaimBuddy *buddy, GaimGroup *group);
+	void (*remove_buddies)(GaimConnection *, GList *buddies, GList *groups);
 	void (*add_permit)(GaimConnection *, const char *name);
 	void (*add_deny)(GaimConnection *, const char *name);
 	void (*rem_permit)(GaimConnection *, const char *name);
@@ -293,8 +303,8 @@ struct _GaimPluginProtocolInfo
 						const char *old_group, const char *new_group);
 
 	/* rename a group on a server list/roster */
-	void (*rename_group)(GaimConnection *, const char *old_group,
-						 const char *new_group, GList *members);
+	void (*rename_group)(GaimConnection *, const char *old_name,
+						 GaimGroup *group, GList *moved_buddies);
 
 	void (*buddy_free)(GaimBuddy *);
 
@@ -304,7 +314,7 @@ struct _GaimPluginProtocolInfo
 
 	void (*set_buddy_icon)(GaimConnection *, const char *filename);
 
-	void (*remove_group)(GaimConnection *gc, const char *group);
+	void (*remove_group)(GaimConnection *gc, GaimGroup *group);
 
 	char *(*get_cb_real_name)(GaimConnection *gc, int id, const char *who);
 
@@ -326,8 +336,8 @@ struct _GaimPluginProtocolInfo
 
 /* It's not like we're going to run out of integers for this version
    number, but we only want to really change it once per release. */
-/* GAIM_PRPL_API_VERSION last changed for version: 0.78 */
-#define GAIM_PRPL_API_VERSION 4
+/* GAIM_PRPL_API_VERSION last changed for version: 0.79 */
+#define GAIM_PRPL_API_VERSION 5
 
 #ifdef __cplusplus
 extern "C" {

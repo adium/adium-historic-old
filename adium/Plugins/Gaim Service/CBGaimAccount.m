@@ -1110,7 +1110,7 @@ static id<GaimThread> gaimThread = nil;
 	[self notifyOfChangedStatusSilently:NO];
 	
     //Silence updates
-    [self silenceAllHandleUpdatesForInterval:18.0];
+    [self silenceAllContactUpdatesForInterval:18.0];
 	[[adium contactController] delayListObjectNotificationsUntilInactivity];
 
     //Set our initial status

@@ -46,8 +46,8 @@ typedef enum {
 	GAIM_LOG_READ_NO_NEWLINE = 1,
 } GaimLogReadFlags;
 
-#include "account.h"
-#include "conversation.h"
+#include <libgaim/account.h>
+#include <libgaim/conversation.h>
 
 /**
  * A log logger.

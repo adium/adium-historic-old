@@ -26,7 +26,7 @@
 #define _GAIM_SIGNAL_H_
 
 #include <glib.h>
-#include "value.h"
+#include <libgaim/value.h>
 
 #define GAIM_CALLBACK(func) ((GaimCallback)func)
 

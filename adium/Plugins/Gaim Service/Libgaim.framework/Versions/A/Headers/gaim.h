@@ -26,7 +26,7 @@
 
 #define XPATCH BAD /* Because Kalla Said So */
 
-#include "connection.h"
+#include <libgaim/connection.h>
 
 /* Globals in main.c */
 extern int opt_away;

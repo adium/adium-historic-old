@@ -30,11 +30,25 @@
 #define YAHOO_PAGER_HOST "scs.msg.yahoo.com"
 #define YAHOO_PAGER_PORT 5050
 #define YAHOO_PROFILE_URL "http://profiles.yahoo.com/"
+#define YAHOO_MAIL_URL "http://mail.yahoo.com/"
 #define YAHOO_XFER_HOST "filetransfer.msg.yahoo.com"
 #define YAHOO_XFER_PORT 80
 #define YAHOO_ROOMLIST_URL "http://insider.msg.yahoo.com/ycontent/"
 
+/* really we should get the list of servers from
+ http://update.messenger.yahoo.co.jp/servers.html */
+#define YAHOOJP_PAGER_HOST "cs.yahoo.co.jp"
+#define YAHOOJP_PROFILE_URL "http://profiles.yahoo.co.jp/"
+#define YAHOOJP_MAIL_URL "http://mail.yahoo.co.jp/"
+#define YAHOOJP_XFER_HOST "filetransfer.msg.yahoo.co.jp"
+#define YAHOOJP_WEBCAM_HOST "wc.yahoo.co.jp"
+
 #define WEBMESSENGER_URL "http://login.yahoo.com/config/login?.src=pg"
+
+#define YAHOO_ICON_CHECKSUM_KEY "icon_checksum"
+#define YAHOO_PICURL_SETTING "picture_url"
+#define YAHOO_PICCKSUM_SETTING "picture_checksum"
+#define YAHOO_PICEXPIRE_SETTING "picture_expire"
 
 enum yahoo_service { /* these are easier to see in hex */
 	YAHOO_SERVICE_LOGON = 1,
@@ -57,6 +71,7 @@ enum yahoo_service { /* these are easier to see in hex */
 	YAHOO_SERVICE_PING,
 	YAHOO_SERVICE_GOTGROUPRENAME,
 	YAHOO_SERVICE_SYSMESSAGE = 0x14,
+	YAHOO_SERVICE_SKINNAME = 0x15,
 	YAHOO_SERVICE_PASSTHROUGH2 = 0x16,
 	YAHOO_SERVICE_CONFINVITE = 0x18,
 	YAHOO_SERVICE_CONFLOGON,
@@ -95,7 +110,14 @@ enum yahoo_service { /* these are easier to see in hex */
 	YAHOO_SERVICE_CHATLOGOUT = 0xa0,
 	YAHOO_SERVICE_CHATPING,
 	YAHOO_SERVICE_COMMENT = 0xa8,
-	YAHOO_SERVICE_WEBLOGIN = 0x0226
+	YAHOO_SERVICE_AVATAR = 0xbc,
+	YAHOO_SERVICE_PICTURE_CHECKSUM = 0xbd,
+	YAHOO_SERVICE_PICTURE = 0xbe,
+	YAHOO_SERVICE_PICTURE_UPDATE = 0xc1,
+	YAHOO_SERVICE_PICTURE_UPLOAD = 0xc2,
+	YAHOO_SERVICE_AVATAR_UPDATE = 0xc7,
+	YAHOO_SERVICE_WEBLOGIN = 0x0226,
+	YAHOO_SERVICE_SMS_MSG = 0x02ea
 };
 
 enum yahoo_status {
@@ -117,6 +139,15 @@ enum yahoo_status {
 	YAHOO_STATUS_TYPING = 0x16
 };
 
+struct yahoo_buddy_icon_upload_data {
+	GaimConnection *gc;
+	GString *str;
+	char *filename;
+	int pos;
+	int fd;
+	guint watcher;
+};
+
 struct yahoo_data {
 	int fd;
 	guchar *rxqueue;
@@ -134,6 +165,14 @@ struct yahoo_data {
 	char *cookie_y;
 	char *cookie_t;
 	int session_id;
+	gboolean jp;
+	/* picture aka buddy icon stuff */
+	char *picture_url;
+	int picture_checksum;
+
+	/* ew. we have to check the icon before we connect,
+	 * but can't upload it til we're connected. */
+	struct yahoo_buddy_icon_upload_data *picture_upload_todo;
 };
 
 struct yahoo_pair {
@@ -148,14 +187,6 @@ struct yahoo_packet {
 	GSList *hash;
 };
 
-struct yahoo_friend { /* we'll call them friends, so we don't confuse them with GaimBuddy */
-	enum yahoo_status status;
-	char *msg;
-	char *game;
-	int idle;
-	int away;
-	gboolean sms;
-};
 
 #define YAHOO_MAX_STATUS_MESSAGE_LENGTH (48)
 
@@ -189,6 +220,7 @@ struct yahoo_friend { /* we'll call them friends, so we don't confuse them with 
 struct yahoo_packet *yahoo_packet_new(enum yahoo_service service, enum yahoo_status status, int id);
 void yahoo_packet_hash(struct yahoo_packet *pkt, int key, const char *value);
 int yahoo_send_packet(struct yahoo_data *yd, struct yahoo_packet *pkt);
+int yahoo_send_packet_special(int fd, struct yahoo_packet *pkt, int pad);
 void yahoo_packet_write(struct yahoo_packet *pkt, guchar *data);
 int yahoo_packet_length(struct yahoo_packet *pkt);
 void yahoo_packet_free(struct yahoo_packet *pkt);
@@ -222,5 +254,11 @@ char *yahoo_string_encode(GaimConnection *gc, const char *str, gboolean *utf8);
  * @return The decoded, utf-8 string, which must be g_free()'d.
  */
 char *yahoo_string_decode(GaimConnection *gc, const char *str, gboolean utf8);
+
+/* previously-static functions, now needed for yahoo_profile.c */
+char *yahoo_tooltip_text(GaimBuddy *b);
+
+/* yahoo_profile.c */
+void yahoo_get_info(GaimConnection *gc, const char *name);
 
 #endif /* _YAHOO_H_ */

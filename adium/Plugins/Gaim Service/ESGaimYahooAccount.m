@@ -9,6 +9,7 @@
 #import "ESGaimYahooAccount.h"
 
 #include <Libgaim/yahoo_filexfer.h>
+#include <Libgaim/yahoo_friend.h>
 #include <Libgaim/yahoo.h>
 
 #define KEY_YAHOO_HOST  @"Yahoo:Host"
@@ -153,7 +154,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 - (void)updateStatusMessage:(AIListContact *)theContact
 {
 	struct yahoo_data   *od;
-	struct yahoo_friend *userInfo;
+	YahooFriend *userInfo;
 
 	const char				*buddyName = [[theContact UID] UTF8String];
 	
