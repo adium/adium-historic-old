@@ -1,0 +1,16 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = JabberAccountViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "textField_host" = NSTextField; 
+                "textField_username" = NSTextField; 
+                "view_accountView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
