@@ -54,11 +54,7 @@ JSCEventBezelController *sharedInstance = nil;
     [[self window] setIgnoresMouseEvents:YES];
     [[self window] setAlphaValue:1.0];
     [[self window] setOpaque:NO];
-    if (pantherOrLater) {
-        [[self window] setHasShadow:NO];
-    } else {
-        [[self window] setHasShadow:YES];
-    }
+    [[self window] setHasShadow:!pantherOrLater];
 }
 
 - (BOOL)windowShouldClose:(id)sender
