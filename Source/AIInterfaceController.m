@@ -79,9 +79,7 @@
 	
     //Observe content so we can open chats as necessary
     [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
-									   name:Content_DidReceiveContent object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:)
-									   name:Content_FirstContentRecieved object:nil];
+									   name:CONTENT_MESSAGE_RECEIVED object:nil];
 }
 
 #if 0
@@ -443,7 +441,7 @@
 //Content was received, increase the unviewed content count of the chat (if it's not currently active)
 - (void)didReceiveContent:(NSNotification *)notification
 {
-	AIChat		*chat = [notification object];
+	AIChat		*chat = [[notification userInfo] objectForKey:@"AIChat"];
 	
 	if(chat != activeChat){
 		[[adium contentController] increaseUnviewedContentOfChat:chat];
