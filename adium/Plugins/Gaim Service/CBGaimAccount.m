@@ -110,6 +110,7 @@ static id<GaimThread> gaimThread = nil;
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
 {
 	BOOL changes = NO;
+	BOOL displayNameChanges = NO;
 
 	//Insert the new display name
 	if([[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]){
@@ -120,7 +121,7 @@ static id<GaimThread> gaimThread = nil;
 								 notify:NO];
 			
 			[[theContact displayArrayForKey:@"Display Name" create:NO] setObject:nil withOwner:self];
-			changes = YES;
+			displayNameChanges = YES;
 		}
 		if(![gaimAlias isEqualToString:[theContact formattedUID]]){
 			[theContact setStatusObject:gaimAlias
@@ -130,38 +131,58 @@ static id<GaimThread> gaimThread = nil;
 		}
 		
 	}else{
+
+		//This is the server display name.  Set it as such.
 		if(![gaimAlias isEqualToString:[theContact displayName]] &&
 		   ![gaimAlias isEqualToString:[theContact statusObjectForKey:@"Server Display Name"]]){
 			//Set the server display name status object as the full display name
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"Server Display Name"
 								 notify:NO];
-
-			//Set a 25-characters-or-less version as the lowest priority display name
-			[theContact setStatusObject:gaimAlias forKey:@"StatusMessage" notify:NO];
 			
-//			[[theContact displayArrayForKey:@"Display Name"] setObject:/*[*/gaimAlias/* stringWithEllipsisByTruncatingToLength:25]*/
-//															 withOwner:self
-//														 priorityLevel:Lowest_Priority];
 			changes = YES;
+		}
+		
+		//Use it either as the status message or the display name.
+		if ([self useAliasAsStatusMessage]){
+			if (![[theContact stringFromAttributedStringStatusObjectForKey:@"StatusMessageString"] isEqualToString:gaimAlias]){
+				[theContact setStatusObject:[[[NSAttributedString alloc] initWithString:gaimAlias] autorelease]
+									 forKey:@"StatusMessage" 
+									 notify:NO];
+				
+				changes = YES;
+			}
+			
+		}else{
+			[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:25]
+															 withOwner:self
+														 priorityLevel:Lowest_Priority];
+			displayNameChanges = YES;
 		}
 	}
 
-	if(changes){
+	if(changes || displayNameChanges){
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 
-		//Notify of display name changes
-		[[adium contactController] listObjectAttributesChanged:theContact
-												  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
-		
+		if (displayNameChanges){
+			//Notify of display name changes
+			[[adium contactController] listObjectAttributesChanged:theContact
+													  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+			
 #warning There must be a cleaner way to do this alias stuff!  This works for now
-		//Request an alias change
-		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
-												  object:theContact
-												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-																					 forKey:@"Notify"]];
+			//Request an alias change
+			[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+													  object:theContact
+													userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+																						 forKey:@"Notify"]];
+		}
 	}
+}
+
+- (BOOL)useAliasAsStatusMessage
+{
+	return NO;
 }
 
 - (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
@@ -479,11 +500,18 @@ static id<GaimThread> gaimThread = nil;
 #pragma mark Chats
 
 //Add a new chat - this will ultimately call -(BOOL)openChat:(AIChat *)chat below.
-//We use the interfaceController's openChat as we don't have a listContact to pass the contentController.
 - (oneway void)addChat:(AIChat *)chat
 {
+	//Correctly enable/disable the chat
+	[chat setStatusObject:[NSNumber numberWithBool:YES]
+				   forKey:@"Enabled" 
+				   notify:YES];
+	
+	//Track
+	[chatDict setObject:chat forKey:[chat uniqueChatID]];
+	
 	//Open the chat
-	[[adium interfaceController] openChat:chat];
+	[[adium contentController] openChat:chat];
 }
 
 //Open a chat for Adium
@@ -502,7 +530,6 @@ static id<GaimThread> gaimThread = nil;
 	
 	//Created the chat successfully
 	return(YES);
-	
 }
 
 - (BOOL)closeChat:(AIChat*)chat

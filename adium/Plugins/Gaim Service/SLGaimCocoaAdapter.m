@@ -1015,7 +1015,7 @@ static GaimRoomlistUiOps adiumGaimRoomlistOps = {
 static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, const char *primary, const char *secondary, GCallback cb,void *userData)
 {
     //Values passed can be null
-    NSLog(@"adiumGaimNotifyMessage: %s: %s, %s", title, primary, secondary);
+    NSLog(@"adiumGaimNotifyMessage: %@: %s: %s, %s", myself, title, primary, secondary);
 	return ([myself handleNotifyMessageOfType:type withTitle:title primary:primary secondary:secondary]);
 }
 
@@ -1153,7 +1153,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 		
 		errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ granted authorization.",nil),targetUserName];
 	}	
-		
+	NSLog(@"sending %@ %@ %@ %@",[adium interfaceController],([errorMessage length] ? errorMessage : primaryString),([description length] ? description : ([secondaryString length] ? secondaryString : @"") ),titleString);
 	//If we didn't grab a translated version using AILocalizedString, at least display the English version Gaim supplied
 	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
 										  withObject:([errorMessage length] ? errorMessage : primaryString)

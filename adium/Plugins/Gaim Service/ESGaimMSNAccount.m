@@ -160,6 +160,12 @@ static BOOL didInitMSN = NO;
 	}
 }
 
+- (BOOL)useAliasAsStatusMessage
+{
+	return YES;
+}
+
+
 #pragma mark File transfer
 - (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
