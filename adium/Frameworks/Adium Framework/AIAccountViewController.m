@@ -85,7 +85,7 @@
     }
     
     //Enable/Disable controls
-    [self updateListObject:nil keys:nil delayed:NO silent:NO];
+	[self updateListObject:nil keys:nil silent:NO];
     
 }
 
@@ -123,7 +123,7 @@
 
 
 //Update display for account status change
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
 	if(inObject == nil || inObject == account){
 		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){

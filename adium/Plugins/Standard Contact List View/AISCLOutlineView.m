@@ -204,24 +204,23 @@
 {
     NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
     AISCLCell 		*cell = [column dataCell];
-    NSSize		cellSize;
-    NSArray             *cellSizeArray;
-    BOOL                changed = NO;
-    BOOL                isHidden = [[inObject displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-    BOOL                isOnline = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
-    BOOL                isGroup = [inObject isKindOfClass:[AIListGroup class]];
-    int                 j;
+    NSSize			cellSize;
+    NSArray			*cellSizeArray;
+    BOOL			changed = NO;
+    BOOL			isVisible = [inObject isVisible] && ([self rowForItem:inObject] != NSNotFound);
+    int				j;
     
-    if ( (isHidden) || !([[inObject containingGroup] isExpanded]) ) { //if it's hidden it shouldn't be part of our current cache
-        for (j=0 ; j < 3; j++) {  //check left, middle, and right
-            if (hadMax[j] == inObject) {   //if this object was the largest in terms of j before but is now hidden, then we need to search for the now-largest
+	//
+    if(!isVisible){ //We don't cache hidden objects
+        for(j=0; j < 3; j++){ //check left, middle, and right
+            if(hadMax[j] == inObject){ //if this object was the largest in terms of j before but is now hidden, then we need to search for the now-largest
                 [self performFullRecalculationFor:j];
                 changed = YES;
             }
         }
-    } else if (isOnline || isGroup) { //object is in the active contact list
+    }else{ //object is in the active contact list
         [[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:inObject];        
-        for (j=0 ; j < 3; j++) {  //check left, middle, and right
+        for(j=0 ; j < 3; j++){  //check left, middle, and right
             cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
             cellSize = NSSizeFromString([cellSizeArray objectAtIndex:j]);
             if(cellSize.width > desiredWidth[j]) {
@@ -249,8 +248,8 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self];
 }
 
-- (void)performFullRecalculationFor:(int)j {
-    
+- (void)performFullRecalculationFor:(int)j
+{
     NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
     AISCLCell           *cell = [column dataCell];
     AIListObject	*object;
@@ -264,9 +263,9 @@
         [[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:object];
         
         cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
-    
+		
         cellSize = NSSizeFromString([cellSizeArray objectAtIndex:j]);
-        if(cellSize.width > desiredWidth[j] && ([[object containingGroup] isExpanded] || [object isKindOfClass:[AIListGroup class]])){
+        if(cellSize.width > desiredWidth[j]){
             desiredWidth[j] = cellSize.width;
             hadMax[j] = object;
         }
