@@ -61,6 +61,31 @@
 	}
 }
 
+//Dragged things
+- (unsigned int)draggingEntered:(id <NSDraggingInfo>)sender
+{
+	return NSDragOperationCopy;
+}
+
+- (void)draggingExited:(id <NSDraggingInfo>)sender
+{
+}
+
+- (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
+{
+	return YES;
+}
+
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
+{
+	#warning Jorge: we should do magic things here, catch the text, images, files or URLs being dragged and act accordingly.
+	return YES;
+}
+
+- (void)concludeDragOperation:(id <NSDraggingInfo>)sender
+{
+}
+
 @end
 /*
 @implementation ESWebHTMLView

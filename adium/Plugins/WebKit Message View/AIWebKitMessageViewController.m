@@ -58,6 +58,8 @@
 	[webView setPolicyDelegate:self];
 	[webView setUIDelegate:self];
 	[webView setMaintainsBackForwardList:NO];
+	#warning Jorge: delete this to revert to webkit default dragged types, or use our own with registerForDraggedTypes
+	[webView unregisterDraggedTypes]; 
 
 //	[[[[[webView mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
 	
@@ -210,10 +212,10 @@
 	
     int actionKey = [[actionInformation objectForKey: WebActionNavigationTypeKey] intValue];
     if (actionKey == WebNavigationTypeOther) {
-        [listener use];
+		[listener use];
     } else {
 		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
-		[[NSWorkspace sharedWorkspace] openURL:url];	
+		[[NSWorkspace sharedWorkspace] openURL:url];
 		[listener ignore];
     }
 }
