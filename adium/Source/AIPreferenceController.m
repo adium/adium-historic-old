@@ -157,7 +157,11 @@
     if(!objectPrefDict) objectPrefDict = [[[NSMutableDictionary alloc] init] autorelease];
     
     //Set and save the new value
-    [objectPrefDict setObject:value forKey:inKey];
+    if(value != nil){
+        [objectPrefDict setObject:value forKey:inKey];
+    }else{
+        [objectPrefDict removeObjectForKey:inKey];
+    }
     [prefDict setObject:objectPrefDict forKey:prefDictKey];
     [self savePreferences:prefDict forGroup:groupName];
     
@@ -181,7 +185,11 @@
     prefDict = [self loadPreferenceGroup:groupName];
 
     //Set and save the new value
-    [prefDict setObject:value forKey:inKey];
+    if(value != nil){
+        [prefDict setObject:value forKey:inKey];
+    }else{
+        [prefDict removeObjectForKey:inKey];
+    }
     [self savePreferences:prefDict forGroup:groupName];
 
     //Broadcast a group changed notification

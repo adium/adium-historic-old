@@ -176,12 +176,12 @@
                                             withService:inServiceID
                                                     UID:inUID];
 
-    if(contact && ![value isEqual:@""]){
+    if(contact){        
         //Apply the alias
         [self _applyAlias:value toObject:contact delayed:NO];
 
         //Save the alias
-        [[owner preferenceController] setPreference:value
+        [[owner preferenceController] setPreference:([value length] > 0 ? value : nil)
                                              forKey:@"Alias"
                                               group:PREF_GROUP_ALIASES
                                           objectKey:[NSString stringWithFormat:@"(%@.%@)", inServiceID, inUID]];
