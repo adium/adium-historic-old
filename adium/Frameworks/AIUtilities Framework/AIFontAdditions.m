@@ -23,9 +23,9 @@
 + (NSFont *)cachedFontWithName:(NSString *)fontName size:(float)fontSize
 {
     static NSMutableDictionary	*fontDict = nil;
-    NSString			*sizeString = [NSString stringWithFormat:@"%0.2f",fontSize];
-    NSMutableDictionary		*sizeDict = nil;
-    NSFont			*font = nil;
+    NSString					*sizeString = [NSString stringWithFormat:@"%0.2f",fontSize];
+    NSMutableDictionary			*sizeDict = nil;
+    NSFont						*font = nil;
 
     if(!fontDict){
         fontDict = [[NSMutableDictionary alloc] init];
@@ -41,6 +41,11 @@
     if(!font){
         font = [NSFont fontWithName:fontName size:fontSize];
 
+		//If the font doesn't exist on the system, use the controlContentFont
+		if (!font){
+			font = [controlContentFontOfSize:fontSize];
+		}
+		
         [sizeDict setObject:font
                      forKey:[NSString stringWithFormat:@"%0.2f",fontSize]];
         [fontDict setObject:sizeDict forKey:fontName];
