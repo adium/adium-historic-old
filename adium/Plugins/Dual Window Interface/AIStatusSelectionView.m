@@ -138,8 +138,11 @@
     NSString		*title = [sender title];
     
     if(representedObject){ //Away
-        NSAttributedString	*awayMessage = [representedObject objectForKey:@"Message"];
-        [[owner accountController] setProperty:awayMessage forKey:@"AwayMessage" account:nil];
+	NSAttributedString	*awayMessage = [representedObject objectForKey:@"Message"];
+	NSAttributedString	*awayAutoResponse = [representedObject objectForKey:@"Autoresponse"];
+	[[owner accountController] setProperty:awayMessage forKey:@"AwayMessage" account:nil];
+	if (awayAutoResponse)
+	    [[owner accountController] setProperty:awayAutoResponse forKey:@"AutoResponse" account:nil];
 
     }else if([title compare:STATUS_NAME_AVAILABLE] == 0){ //Available
         [[owner accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
