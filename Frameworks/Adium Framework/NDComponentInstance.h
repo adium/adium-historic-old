@@ -22,6 +22,9 @@ extern const NSString	* NDAppleScriptOffendingObject,
  */
 @interface NDComponentInstance : NSObject <NDScriptDataSendEvent, NDScriptDataActive, NDScriptDataAppleEventResumeHandler, NSCopying>
 {
+@public
+	OSAActiveProcPtr									defaultActiveProcPtr;
+	long int												defaultActiveProcRefCon;
 @private
 	ComponentInstance									instanceRecord;
 	struct
@@ -34,8 +37,6 @@ extern const NSString	* NDAppleScriptOffendingObject,
 //	id<NDScriptDataAppleEventSpecialHandler>	appleEventSpecialHandler;
 	OSASendUPP											defaultSendProcPtr;
 	long int												defaultSendProcRefCon;
-	OSAActiveProcPtr									defaultActiveProcPtr;
-	long int												defaultActiveProcRefCon;
 	AEEventHandlerUPP									defaultResumeProcPtr;
 	long int												defaultResumeProcRefCon;
 }
