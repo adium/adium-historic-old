@@ -401,9 +401,9 @@
 	[checkbox_customAutoReply setState:![statusState autoReplyIsStatusMessage]];
 	
 	//Strings
-	NSString	*statusMessage = [statusState statusMessage];
-	NSString	*autoReply = [statusState autoReply];
-	NSString	*blankString;
+	NSAttributedString	*statusMessage = [statusState statusMessage];
+	NSAttributedString	*autoReply = [statusState autoReply];
+	NSAttributedString	*blankString;
 	
 	if(!statusMessage || !autoReply) blankString = [NSAttributedString stringWithString:@""];
 	
