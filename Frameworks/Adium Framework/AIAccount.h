@@ -148,6 +148,9 @@ typedef enum {
 //Contact-specific menu items
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact;
 
+//Account-specific menu items
+- (NSArray *)accountActionMenuItems;
+
 //Secure messaging
 - (BOOL)allowSecureMessagingTogglingForChat:(AIChat *)inChat;
 - (NSString *)aboutEncryption;
