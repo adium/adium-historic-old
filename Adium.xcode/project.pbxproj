@@ -5146,34 +5146,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		349DDD310640680600542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = SoundLow.png;
-			path = "Plugins/General Preferences/SoundLow.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDD320640680600542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = SoundHigh.png;
-			path = "Plugins/General Preferences/SoundHigh.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDD330640680600542726 = {
-			fileRef = 349DDD310640680600542726;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349DDD340640680600542726 = {
-			fileRef = 349DDD320640680600542726;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		349DDD5206406A7D00542726 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -7436,8 +7408,6 @@
 				4BD6744906001D460049CAF7,
 				4BD6745506001D4E0049CAF7,
 				4BD6747606001D840049CAF7,
-				4BD6747C06001D890049CAF7,
-				4BD6755206001E1E0049CAF7,
 				4BD6755406001E1E0049CAF7,
 				4BD6756B06001E320049CAF7,
 				4B191D8A0611C10800E8A4E7,
@@ -7446,8 +7416,6 @@
 				4BAA1B530632EF0000D8B92C,
 				4BAA1B610632EFE700D8B92C,
 				4BAA1B630632F00000D8B92C,
-				349DDD330640680600542726,
-				349DDD340640680600542726,
 				4BC7BA3E069C8BD4001F2DD8,
 				7EBC6E5F069DE5BC00020736,
 				34A65D6E06A5ABC500898470,
@@ -7524,6 +7492,10 @@
 				4BFC2E7907E357F00063D70C,
 				34C899AC07E51B18009357F6,
 				34BFD7FD07E6A50C00AD984D,
+				34BFDF1807E8977D00AD984D,
+				34BFDF1907E8977D00AD984D,
+				34BFDF2007E8978900AD984D,
+				34BFDF2107E8978900AD984D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8712,6 +8684,64 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34BFDF1607E8977D00AD984D = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = SoundHigh.png;
+			path = Resources/SoundHigh.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFDF1707E8977D00AD984D = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = SoundLow.png;
+			path = Resources/SoundLow.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFDF1807E8977D00AD984D = {
+			fileRef = 34BFDF1607E8977D00AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFDF1907E8977D00AD984D = {
+			fileRef = 34BFDF1707E8977D00AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFDF1E07E8978900AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = SendingKeyDefaults.plist;
+			path = Resources/SendingKeyDefaults.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFDF1F07E8978900AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = TabDefaults.plist;
+			path = Resources/TabDefaults.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFDF2007E8978900AD984D = {
+			fileRef = 34BFDF1E07E8978900AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFDF2107E8978900AD984D = {
+			fileRef = 34BFDF1F07E8978900AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34C14CD007A8B1AB003CC138 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -9066,10 +9096,10 @@
 				34C68B290778FA5C00EB423C,
 				34C68B2A0778FA5C00EB423C,
 				34A6F68407D65D6200972830,
-				349DDD310640680600542726,
-				349DDD320640680600542726,
-				4B04137C041111F200A8010A,
-				4BA1300304C0A4E300A8010A,
+				34BFDF1607E8977D00AD984D,
+				34BFDF1707E8977D00AD984D,
+				34BFDF1E07E8978900AD984D,
+				34BFDF1F07E8978900AD984D,
 			);
 			isa = PBXGroup;
 			name = "General Preferences";
@@ -9174,7 +9204,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = text.xml;
 			name = AppearanceDefaults.plist;
-			path = "Plugins/General Preferences/AppearanceDefaults.plist";
+			path = Resources/AppearanceDefaults.plist;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -13738,15 +13768,6 @@
 			settings = {
 			};
 		};
-		4B04137C041111F200A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = SendingKeyDefaults.plist;
-			path = "Plugins/General Preferences/SendingKeyDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B0473B7043E43F200A8010A = {
 			children = (
 				4BAE6C8907CF94BA007E2820,
@@ -16256,15 +16277,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BA1300304C0A4E300A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = TabDefaults.plist;
-			path = "Plugins/General Preferences/TabDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BA3DADA0520CD4000A8010A = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -18306,12 +18318,6 @@
 			settings = {
 			};
 		};
-		4BD6747C06001D890049CAF7 = {
-			fileRef = 4B04137C041111F200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6752F06001E0C0049CAF7 = {
 			fileRef = F579397F033E756E01A8010A;
 			isa = PBXBuildFile;
@@ -18398,12 +18404,6 @@
 		};
 		4BD6755106001E1D0049CAF7 = {
 			fileRef = 4B970BFC0535B879002F28F9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6755206001E1E0049CAF7 = {
-			fileRef = 4BA1300304C0A4E300A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
