@@ -26,16 +26,11 @@
 	
 	//Register our observers
     [[adium contactController] registerListObjectObserver:self];
-	
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_USERICONS];
 	[[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) 
 									   name:ListObject_AttributesChanged
 									 object:nil];
-	
-	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) 
-									   name:Preference_GroupChanged 
-									 object:nil];	
-	
-	
+
 	//Toolbar item registration
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(toolbarWillAddItem:)
@@ -130,14 +125,12 @@
 }
 
 //The user icon preference was changed
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_USERICONS]){
-		AIListObject	*listObject = [notification object];
-		if (listObject){
-			if (![self cacheAndSetUserIconFromPreferenceForListObject:listObject]){
-				[self destroyCacheForListObject:listObject];
-			}
+	if(object){
+		if(![self cacheAndSetUserIconFromPreferenceForListObject:object]){
+			[self destroyCacheForListObject:object];
 		}
 	}
 }

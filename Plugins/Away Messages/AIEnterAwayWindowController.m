@@ -165,12 +165,6 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
     [super initWithWindowNibName:windowNibName];
-
-	//Observe account status changes
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:nil];
     return(self);
 }
 
@@ -197,6 +191,8 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 
 	[super windowDidLoad];
 	
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_AWAY_MESSAGES];
+
     //Restore the last used custom away
     lastAway = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_QUICK_AWAY_MESSAGE];
     if(lastAway){
@@ -230,6 +226,8 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 {
 	[super windowShouldClose:sender];
 	
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+
     //Save spellcheck state
     [[adium preferenceController] setPreference:[NSNumber numberWithBool:[textView_awayMessage isContinuousSpellCheckingEnabled]]
 										 forKey:KEY_AWAY_SPELL_CHECKING 
@@ -421,13 +419,12 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 }
 
 //Update our menu if the away list changes
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	if([[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_AWAY_MESSAGES]){
-		//Rebuild the away menu
-		if([[[notification userInfo] objectForKey:@"Key"] isEqualToString:KEY_SAVED_AWAYS]){
-			[popUp_title setMenu:[self savedAwaysMenu]];
-		}
+	//Rebuild the away menu
+	if([key isEqualToString:KEY_SAVED_AWAYS]){
+		[popUp_title setMenu:[self savedAwaysMenu]];
 	}
 }
 
