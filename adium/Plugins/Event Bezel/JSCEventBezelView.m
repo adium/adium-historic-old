@@ -44,6 +44,7 @@ BOOL pantherOrLater;
 {
     [backdropImage release];
     [buddyIconImage release];
+    [buddyIconBadge release];
     [textShadow release];
     [mainBuddyName release];
     [mainBuddyStatus release];
@@ -66,6 +67,9 @@ BOOL pantherOrLater;
     tempPoint.x = 12.0;
     tempPoint.y = 146.0;
     [buddyIconImage compositeToPoint: tempPoint operation:NSCompositeSourceOver];
+    if (buddyIconBadge) {
+        [buddyIconBadge compositeToPoint: tempPoint operation:NSCompositeSourceOver];
+    }
     
     // Set the shadow for better readability
     if (pantherOrLater) {
@@ -120,6 +124,23 @@ BOOL pantherOrLater;
         buddyIconImage = [NSImage imageNamed: @"DefaultIcon"];
         // set the flag so we don't load the default icon innecesary
         defaultBuddyImage = YES;
+    }
+}
+
+- (NSImage *)buddyIconBadge
+{
+    return buddyIconBadge;
+}
+
+- (void)setBuddyIconBadgeType:(NSString *)badgeName
+{
+    [buddyIconBadge release];
+    if (![badgeName isEqualToString:@""]) {
+        buddyIconBadge = [[NSImage alloc] initWithContentsOfFile:
+            [[NSBundle bundleForClass:[self class]] pathForResource:badgeName ofType:@"png"]];
+        [buddyIconBadge retain];
+    } else {
+        buddyIconBadge = nil;
     }
 }
 
