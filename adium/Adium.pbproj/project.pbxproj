@@ -1175,6 +1175,7 @@
 				29B9732DFDCFA39411CA2CEA,
 				043355C9FE30361CC02AAC07,
 				F53B9A2002CCEEA101A8010A,
+				348B18350530CB8800FF26A8,
 				4BF715A70503ABB300A8010A,
 				F50A326B03B579BD01A8010A,
 				4B40E1CA03DB5B7E00A8010A,
@@ -1379,6 +1380,7 @@
 				D3D3D474052E5B6F00A8010B,
 				D3DA2E3B052E657600A8010B,
 				D3DA2E3D052E657C00A8010B,
+				348B18340530CB7D00FF26A8,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1912,6 +1914,35 @@
 		};
 		3487901705194D00003B2F21 = {
 			fileRef = 4B33F8DF0511F45000A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348B18120530CB7B00FF26A8 = {
+			includeInIndex = 1;
+			isa = PBXFolderReference;
+			name = Avatars;
+			path = Source/Avatars;
+			refType = 4;
+		};
+		348B18340530CB7D00FF26A8 = {
+			fileRef = 348B18120530CB7B00FF26A8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348B18350530CB8800FF26A8 = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				348B18360530CB9000FF26A8,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		348B18360530CB9000FF26A8 = {
+			fileRef = 348B18120530CB7B00FF26A8;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -15700,6 +15731,7 @@
 		};
 		F50A325A03B5798301A8010A = {
 			children = (
+				348B18120530CB7B00FF26A8,
 				4B24A2330482B34B00A8010A,
 				4BB5809603E86BF600A8010A,
 				4BB5809E03E86BF600A8010A,
