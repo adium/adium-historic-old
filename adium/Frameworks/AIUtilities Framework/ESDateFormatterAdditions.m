@@ -22,6 +22,11 @@ typedef enum
 	return([[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] 
 								   allowNaturalLanguage:NO] autorelease]);
 }
++ (NSDateFormatter *)localizedShortDateFormatter
+{
+	return([[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString] 
+								   allowNaturalLanguage:NO] autorelease]);
+}
 
 + (NSString *)localizedDateFormatStringShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm
 {
