@@ -77,7 +77,8 @@
 	_sortedFullStateArray = nil;
 	_activeStatusState = nil;
 	_allActiveStatusStates = nil;
-
+	temporaryStateArray = [[NSMutableSet alloc] init];
+	
 	accountsToConnect = [[NSMutableSet alloc] init];
 	isProcessingGlobalChange = NO;
 
@@ -134,6 +135,7 @@
 	}
 	
 	//Put each account into the status it was in last time we quit.
+	BOOL		needToRebuildMenus = NO;
 	enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	while(account = [enumerator nextObject]){
 		NSData		*lastStatusData = [account preferenceForKey:@"LastStatus"
@@ -152,10 +154,24 @@
 			 */
 			existingStatus = [self statusStateWithUniqueStatusID:[lastStatus uniqueStatusID]];
 			
-			if(existingStatus) lastStatus = existingStatus;
+			if(existingStatus){
+				lastStatus = existingStatus;
+			}else{
+				//Add to our temporary status array
+				[temporaryStateArray addObject:lastStatus];
+				needToRebuildMenus = YES;
+			}
 		}
 		
 		[account setStatusStateAndRemainOffline:lastStatus];
+	}
+	
+	if(needToRebuildMenus){
+		//Clear the sorted menu items array since our state array changed.
+		[_sortedFullStateArray release]; _sortedFullStateArray = nil;
+		
+		//Now rebuild our menus to include this temporary item
+		[self rebuildAllStateMenus];
 	}
 }
 
@@ -529,15 +545,18 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  */
 - (void)_applyStateToAllAccounts:(AIStatus *)statusState
 {
-	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	NSEnumerator	*enumerator;
 	AIAccount		*account;
-
+	AIStatus		*aStatusState;
+	
 	//We should connect all accounts if our accounts to connect array is empty and there are no connected accounts
 	BOOL			shouldConnectAllAccounts = (([accountsToConnect count] == 0) &&
 												![[adium accountController] oneOrMoreConnectedAccounts]);
 
 	isProcessingGlobalChange = YES;
 	[self setDelayStateMenuUpdates:YES];
+	
+	enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	while(account = [enumerator nextObject]){
 		if([account online] || ([accountsToConnect containsObject:account] || shouldConnectAllAccounts)){
 			//If this account is online, or no accounts are online, set the status completely
@@ -548,8 +567,17 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 			[account setStatusStateAndRemainOffline:statusState];
 		}
 	}
+	
+	//Any objects in the temporary state array which aren't the state we just set should now be removed.
+	enumerator = [[[temporaryStateArray copy] autorelease] objectEnumerator];
+	while(aStatusState = [enumerator nextObject]){
+		if(aStatusState != statusState){
+			[temporaryStateArray removeObject:aStatusState];
+		}
+	}
+
 	[self setDelayStateMenuUpdates:NO];
-	isProcessingGlobalChange = YES;
+	isProcessingGlobalChange = NO;
 }
 
 #pragma mark Retrieving Status States
@@ -668,8 +696,12 @@ int _statusArraySort(id objectA, id objectB, void *context)
 - (NSArray *)sortedFullStateArray
 {
 	if(!_sortedFullStateArray){
-		NSArray	*tempArray = [[self stateArray] arrayByAddingObjectsFromArray:[self builtInStateArray]];
-		_sortedFullStateArray = [[tempArray sortedArrayUsingFunction:_statusArraySort context:tempArray] retain];
+		NSMutableArray	*tempArray = [[self stateArray] mutableCopy];
+		[tempArray addObjectsFromArray:[self builtInStateArray]];
+		[tempArray addObjectsFromArray:[temporaryStateArray allObjects]];
+		[tempArray sortUsingFunction:_statusArraySort context:tempArray];
+		 
+		_sortedFullStateArray = tempArray;
 	}
 
 	return _sortedFullStateArray;
@@ -1187,6 +1219,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  */
 - (void)rebuildAllStateMenus
 {
+	//Clear the sorted menu items array since our state array changed.
+	[_sortedFullStateArray release]; _sortedFullStateArray = nil;
+
 	[self _resetActiveStatusState];
 
 	NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
@@ -1434,7 +1469,18 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	AIAccount		*account = [dict objectForKey:@"AIAccount"];
 
 	if(account){
+		BOOL shouldRebuild;
+		
+		shouldRebuild = [self removeIfNecessaryTemporaryStatusState:[account statusState]];
+		NSLog(@"Should rebuild %i",shouldRebuild);
 		[account setStatusState:statusState];
+
+		//Rebuild our menusif there was a change
+		if(shouldRebuild){
+			//Now rebuild our menus to include this temporary item
+			[self rebuildAllStateMenus];
+		}
+		
 	}else{
 		[self setActiveStatusState:statusState];
 	}
@@ -1489,6 +1535,42 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 }
 
 /*!
+ * @brief Called when a state could potentially need to removed from the temporary (non-saved) list
+ *
+ * If originalState is in the temporary status array, and it is being used on one or zero accounts, it 
+ * is removed from the temporary status array. This method should be used when one or more accounts have stopped
+ * using a single status state to determine if that status state is both non-saved and unused.
+ *
+ * @result YES if the state was removed
+ */
+- (BOOL)removeIfNecessaryTemporaryStatusState:(AIStatus *)originalState
+{
+	BOOL didRemove = NO;
+	
+	/* If the original (old) status state is in our temporary array and is not being used in more than 1 account
+	* we should remove it */
+	if([temporaryStateArray containsObject:originalState]){
+		NSEnumerator	*enumerator;
+		AIAccount		*account;
+		int				count = 0;
+		
+		enumerator = [[[adium accountController] accountArray] objectEnumerator];
+		while(account = [enumerator nextObject]){
+			if([account statusState] == originalState){
+				count++;
+				if(count > 1) break;
+			}
+		}
+		NSLog(@"%i are using %@",count,originalState);
+		if(count <= 1){
+			[temporaryStateArray removeObject:originalState];
+			didRemove = YES;
+		}
+	}
+	
+	return didRemove;
+}
+/*!
  * @brief Apply a custom state
  *
  * Invoked when the custom state window is closed by the user clicking OK.  In response this method sets the custom
@@ -1496,9 +1578,16 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  */
 - (void)customStatusState:(AIStatus *)originalState changedTo:(AIStatus *)newState forAccount:(AIAccount *)account
 {
+	BOOL shouldRebuild = NO;
+	
 	if(account){
+		shouldRebuild = [self removeIfNecessaryTemporaryStatusState:originalState];
+
+		//Now set the newState for the account
 		[account setStatusState:newState];
+		
 	}else{
+		//Set the state for all accounts.  This will clear out the temporaryStatusArray as necessary.
 		[self setActiveStatusState:newState];
 	}
 
@@ -1518,6 +1607,14 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	[[adium preferenceController] setPreference:lastStatusStates
 										 forKey:@"LastStatusStates"
 										  group:PREF_GROUP_STATUS_PREFERENCES];
+
+	//Add to our temporary status array if it's not in our state array
+	if(shouldRebuild || (![[self stateArray] containsObjectIdenticalTo:newState])){
+		[temporaryStateArray addObject:newState];
+
+		//Now rebuild our menus to include this temporary item
+		[self rebuildAllStateMenus];
+	}
 }
 
 /*!
