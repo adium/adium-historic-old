@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.159 2004/07/28 14:21:27 adamiser Exp $
+// $Id: AIContactController.m,v 1.160 2004/07/29 14:54:17 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -371,6 +371,7 @@ DeclareString(UID);
 		if (![containingObject containingObject] && [remoteGroup length]){
 			//If no similar objects exist, we add this contact directly to the list
 			AIListGroup *targetGroup = [self groupWithUID:remoteGroup];
+			NSLog(@"****Putting %@ into %@",containingObject,targetGroup);
 			[targetGroup addObject:containingObject]; 
 			[self _listChangedGroup:targetGroup object:containingObject];
 		}
@@ -601,22 +602,26 @@ DeclareString(UID);
 																					group:PREF_GROUP_CONTACT_LIST];
 	NSArray			*containedContactsArray = [allMetaContactsDict objectForKey:[metaContact uniqueObjectID]];
 	NSDictionary	*containedContact;
-	AIListObject	*listObject = nil;
+	AIListContact	*listContact = nil;
 	NSEnumerator	*enumerator = [containedContactsArray objectEnumerator];
 	
 	while (containedContact = [enumerator nextObject]){
 		if ([[containedContact objectForKey:KEY_IS_METACONTACT] boolValue]){
 			//This contained contact is a meta contact, so it'll just have an objectID
-			listObject = [self metaContactWithObjectID:[containedContact objectForKey:KEY_OBJECTID]];
+			listContact = [self metaContactWithObjectID:[containedContact objectForKey:KEY_OBJECTID]];
+			[self _performAddListObject:listContact toMetaContact:metaContact];
 
 	 	}else{
-			//This contained contact is a regular AIListContact
-			listObject = [self contactWithService:[containedContact objectForKey:ServiceID]
-										accountID:[containedContact objectForKey:AccountID]
-											  UID:[containedContact objectForKey:UID]];
+			//This contained contact is a regular AIListContact uniqueObjectID.  Get all matching contacts on all accounts.
+			
+			NSEnumerator	*contactEnumerator;
+			contactEnumerator = [[self allContactsWithService:[containedContact objectForKey:ServiceID]
+														  UID:[containedContact objectForKey:UID]] objectEnumerator];
+			
+			while (listContact = [contactEnumerator nextObject]){
+				[self _performAddListObject:listContact toMetaContact:metaContact];
+			}
 		}
-		
-		[self _performAddListObject:listObject toMetaContact:metaContact];
 	}
 }
 
@@ -667,21 +672,20 @@ DeclareString(UID);
 			}else if ([listObject isKindOfClass:[AIListContact class]]){
 				containedContactDict = [NSDictionary dictionaryWithObjectsAndKeys:
 					[listObject serviceID],ServiceID,
-					[(AIListContact *)listObject accountID],AccountID,
 					[listObject UID],UID,nil];
 			}
 			
-			//
-			if (containedContactDict){
+			//Only add if this dict isn't already in the array
+			if (containedContactDict && ([containedContactsArray indexOfObject:containedContactDict] == NSNotFound)){
 				[containedContactsArray addObject:containedContactDict];
 				[allMetaContactsDict setObject:containedContactsArray forKey:metaContactUniqueObjectID];
-			}
-			
-			//Save
-			[self _saveMetaContacts:allMetaContactsDict];
-			
-			[[owner contactAlertsController] mergeAndMoveContactAlertsFromListObject:listObject 
-																	  intoListObject:metaContact];
+				
+				//Save
+				[self _saveMetaContacts:allMetaContactsDict];
+				
+				[[owner contactAlertsController] mergeAndMoveContactAlertsFromListObject:listObject 
+																		  intoListObject:metaContact];				
+			}			
 		}
 	}
 }
@@ -752,12 +756,10 @@ DeclareString(UID);
 	}else if ([listObject isKindOfClass:[AIListContact class]]){
 		
 		NSString	*listObjectUID = [listObject UID];
-		NSString	*listObjectAccountID = [(AIListContact *)listObject accountID];
 		NSString	*listObjectServiceID = [listObject serviceID];
 		
 		while (containedContactDict = [enumerator nextObject]){
 			if ([[containedContactDict objectForKey:UID] isEqualToString:listObjectUID] &&
-				[[containedContactDict objectForKey:AccountID] isEqualToString:listObjectAccountID] &&
 				[[containedContactDict objectForKey:ServiceID] isEqualToString:listObjectServiceID]){
 				break;
 			}
@@ -777,6 +779,9 @@ DeclareString(UID);
 		[self _saveMetaContacts:allMetaContactsDict];
 	}
 	
+	//The listObject can be within the metaContact without us finding a containedContactDict if we are removing multiple
+	//listContacts referring to the same UID & serviceID combination - that is, on multiple accounts on the same service.
+	//We therefore request removal of the object regardless of the if (containedContactDict) check above.
 	[metaContact removeObject:listObject];
 }
 
@@ -816,6 +821,11 @@ DeclareString(UID);
 	AIMetaContact   *metaContact = nil;
 	
 	//Look for an existing MetaContact we can use.  The first one we find is the lucky winner.
+	//
+	//It is possible for one listContact to be currently within the metaContact while its twin sister on another
+	//account is not, in the case that the latter account just signed on for the first time.  This is why we look
+	//at the ultraUniqueObjectID, which is account-specific, causing a relatively cheap increase in computational
+	//demands in terms of the search but a better behavior overall.
 	enumerator = [contactsToGroupArray objectEnumerator];
 	while ((listContact = [enumerator nextObject]) && (metaContact == nil)){
 		metaContact = [contactToMetaContactLookupDict objectForKey:[listContact ultraUniqueObjectID]];

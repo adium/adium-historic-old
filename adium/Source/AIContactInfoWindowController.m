@@ -246,7 +246,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		}
 		
 		//User Icon
-		if(userImage = [[displayedObject displayArrayForKey:KEY_USER_ICON] objectValue]){
+		if(userImage = [displayedObject userIcon]){
 			/*
 			//MUST make a copy, since resizing and flipping the original image here breaks it everywhere else
 			userImage = [[userImage copy] autorelease];		
@@ -302,12 +302,14 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 								 group:PREF_GROUP_USERICONS];
 	
 		//User Icon
-		if(userImage = [[displayedObject displayArrayForKey:KEY_USER_ICON] objectValue]){
+		if(userImage = [displayedObject userIcon]){
+			/*
 			//MUST make a copy, since resizing and flipping the original image here breaks it everywhere else
 			userImage = [[userImage copy] autorelease];		
 			//Resize to a fixed size for consistency
 			[userImage setScalesWhenResized:YES];
 			[userImage setSize:NSMakeSize(48,48)];
+			 */
 		}else{
 			userImage = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
 		}

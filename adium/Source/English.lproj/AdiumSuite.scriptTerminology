@@ -305,7 +305,7 @@
 					<key>Name</key>
 					<string>ID</string>
 				</dict>
-				<key>userIcon</key>
+				<key>userIconData</key>
 				<dict>
 					<key>Description</key>
 					<string>An image for this contact or account.</string>

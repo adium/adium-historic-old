@@ -239,7 +239,7 @@
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
-				<key>userIcon</key>
+				<key>userIconData</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>AusI</string>
