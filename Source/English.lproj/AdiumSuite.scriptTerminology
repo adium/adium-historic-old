@@ -355,7 +355,7 @@
 				<key>myStatus</key>
 				<dict>
 					<key>Description</key>
-					<string>My status on all accounts.</string>
+					<string>My status on all accounts. (NOTE: Status is incomplete; the only status which can currently be set through this property is Available.  For now, away and away message are set via "my status message" and idle it set via "my idle."</string>
 					<key>Name</key>
 					<string>my status</string>
 				</dict>
