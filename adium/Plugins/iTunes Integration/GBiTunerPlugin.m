@@ -42,14 +42,18 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 
 	//Start building the script menu
 	scriptMenu = nil;
-	buildingScriptMenu = YES;
 	[self buildScriptMenu]; //this also sets the submenu for the menu item.
-    //[NSThread detachNewThreadSelector:@selector(_buildScriptMenuThread) toTarget:self withObject:nil];
 
 	[[adium menuController] addMenuItem:scriptMenuItem toLocation:LOC_Edit_Additions];
 	
 	//Perform substitutions on outgoing content
 	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterOutgoing];
+	
+	//Observe for installation of new scripts
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(xtrasChanged:)
+									   name:Adium_Xtras_Changed
+									 object:nil];
 }
 
 //Uninstall
@@ -57,9 +61,16 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 {
 //	[[adium contentController] unregisterOutgoingContentFilter:self];
 //	[[adium contentController] unregisterStringFilter:self];
-	[scriptArray release];
-    [flatScriptArray release];
-	[scriptMenuItem release];
+	[scriptArray release]; scriptArray = nil;
+    [flatScriptArray release]; flatScriptArray = nil;
+	[scriptMenuItem release]; scriptMenuItem = nil;
+}
+
+- (void)xtrasChanged:(NSNotification *)notification
+{
+	if ([[notification object] caseInsensitiveCompare:@"AdiumScripts"] == 0){
+		[self buildScriptMenu]; 
+	}
 }
 
 
@@ -68,7 +79,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 //Load our scripts
 - (void)loadScripts
 {
-//	NSString		*internalPath = [[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_SCRIPTS] stringByExpandingTildeInPath];
 	NSEnumerator	*enumerator;
 	NSString 		*path;
 	
@@ -162,21 +172,9 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 
 //Script Menu ----------------------------------------------------------------------------------------------------------
 #pragma mark Script Menu
-//Build the script menu
-- (void)_buildScriptMenuThread
-{	
-	[NSThread setThreadPriority:0.0];
-	
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
-	[self buildScriptMenu];
-	
-	[pool release];
-}
-
 - (void)buildScriptMenu
 {
-	if(!scriptArray) [self loadScripts];
+	[self loadScripts];
 	
 	//Sort the scripts
 	[scriptArray sortUsingFunction:_scriptTitleSort context:nil];
@@ -186,8 +184,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 	[scriptMenu release]; scriptMenu = [[NSMenu alloc] initWithTitle:SCRIPTS_MENU_NAME];
 	[self _appendScripts:scriptArray toMenu:scriptMenu];
 	[scriptMenuItem setSubmenu:scriptMenu];
-	
-	buildingScriptMenu = NO;
 }
 
 //Sort first by set, then by title within sets
@@ -313,14 +309,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 //Disable the insertion if a text field is not active
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if(!scriptMenu){
-		if (buildingScriptMenu){
-			while(buildingScriptMenu);
-		}else{
-			[self buildScriptMenu];
-		}
-	}
-
 	if(menuItem == scriptMenuItem){
 		return(YES); //Always keep the submenu enabled so users can see the available scripts
 	}else{
@@ -344,15 +332,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	NSEnumerator				*enumerator;
 	NSDictionary				*infoDict;
 
-	//Ensure scripts have loaded
-	if(!scriptMenu){
-		if(buildingScriptMenu){
-			while(buildingScriptMenu);
-		}else{
-			[self buildScriptMenu];
-		}
-	}
-	
 	//Replace all keywords
 	enumerator = [flatScriptArray objectEnumerator];
 	while(infoDict = [enumerator nextObject]){
