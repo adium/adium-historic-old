@@ -24,6 +24,7 @@ Adium, Copyright 2001-2005, Adam Iser
     IBOutlet	NSView			*view_setup;              		//Account setup (UID, password, etc)
     IBOutlet	NSView			*view_profile;              	//Account profile (Alias, profile)
     IBOutlet	NSView			*view_options;              	//Account options (Host, port, mail, protocol, etc)
+    IBOutlet	NSView			*view_privacy;              	//Account privacy (Encryption, typing, etc)
     IBOutlet	NSTabView		*view_auxiliaryTabView;			//Tab view containing auxiliary tabs
 	
 	//These common controls are used by most protocols, so we place them here as a convenience to protocol code.
@@ -36,6 +37,9 @@ Adium, Copyright 2001-2005, Adam Iser
 	IBOutlet	NSTextField		*textField_alias;				//User alias (or display name)
 	IBOutlet	NSButton		*checkBox_checkMail;			//Check for new mail
 	
+	IBOutlet	NSButton		*checkBox_sendTyping;			//Send the user's typing state
+	IBOutlet	NSPopUpButton	*popUp_encryption;				//Encryption preference
+	
 	//Instance variables
     AIAccount			*account;
 }
@@ -45,6 +49,7 @@ Adium, Copyright 2001-2005, Adam Iser
 - (NSView *)setupView;
 - (NSView *)profileView;
 - (NSView *)optionsView;
+- (NSView *)privacyView;
 - (void)configureForAccount:(AIAccount *)inAccount;
 - (IBAction)changedPreference:(id)sender;
 - (NSString *)nibName;
