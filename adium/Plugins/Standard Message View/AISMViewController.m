@@ -47,9 +47,6 @@
 - (NSAttributedString *)_prefixStringForContent:(AIContentMessage *)content performHeadIndent:(BOOL)performHeadIndent;
 - (NSAttributedString *)_prefixWithFormat:(NSString *)format forContent:(AIContentMessage *)content;
 - (NSString *)_prefixStringByExpandingFormat:(NSString *)format forContent:(AIContentMessage *)content;
-- (NSAttributedString *)_stringByRemovingTextColor:(NSAttributedString *)inString;
-- (NSAttributedString *)_stringByRemovingBackgroundColor:(NSAttributedString *)inString;
-- (NSAttributedString *)_stringByRemovingAllColors:(NSAttributedString *)inString;
 - (NSAttributedString *)_stringByRemovingAllStyles:(NSAttributedString *)inString;
 - (NSAttributedString *)_stringByFixingTextColor:(NSAttributedString *)inString forColor:(NSColor *)inColor;
 @end
@@ -338,9 +335,7 @@
         [self _addContentMessage:(AIContentMessage *)content];
     }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
         [self _addContentStatus:(AIContentStatus *)content];
-    }/*else if([[content type] compare:CONTENT_QUEUED_MESSAGE_TYPE] == 0){
-        [self _addQueuedContentMessage:(AIContentMessage *)content];
-    }*/
+    }
 }
 
 - (NSArray *)_rowsForAddingContentObject:(AIContentObject *)content
@@ -411,8 +406,8 @@
     
     //Add our message
     messageRow = [self _messageRowForContent:content
-				 previousRow:(prefixRow ? prefixRow : previousRow)
-				      header:(!inlinePrefixes && !contentIsSimilar)];
+								 previousRow:(prefixRow ? prefixRow : previousRow)
+									  header:(!inlinePrefixes && !contentIsSimilar)];
     
     //Merge our new message with the previous one
     if(contentIsSimilar){  
@@ -423,7 +418,7 @@
         while (cell = [enumerator nextObject]) {
             [cell setDrawBottom:NO];
         }
-
+		
         enumerator = [[messageRow cellsWithClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
         while (cell = [enumerator nextObject]) {
             [cell setDrawTop:NO];
@@ -467,7 +462,10 @@
     
     return(row);
 }
-//Rows --------------------------------------------------------------------------------------------------
+
+
+//Rows -----------------------------------------------------------------------------------------------------------------
+#pragma mark Rows
 //Returns a status row for a content object
 - (AIFlexibleTableRow *)_statusRowForContent:(AIContentStatus *)content
 {
@@ -484,11 +482,11 @@
     AIFlexibleTableRow  *row;
     
     if(showUserIcons){
-	cellArray = [NSArray arrayWithObjects:[self _userIconCellForContent:content span:YES], [self _prefixCellForContent:content], [self _timeStampCellForContent:content], nil];
+		cellArray = [NSArray arrayWithObjects:[self _userIconCellForContent:content span:YES], [self _prefixCellForContent:content], [self _timeStampCellForContent:content], nil];
     }else{
-	cellArray = [NSArray arrayWithObjects:[self _prefixCellForContent:content], [self _timeStampCellForContent:content], nil];
+		cellArray = [NSArray arrayWithObjects:[self _prefixCellForContent:content], [self _timeStampCellForContent:content], nil];
     }
-
+	
     row = [AIFlexibleTableRow rowWithCells:cellArray representedObject:nil];
     [row setHeadIndent:headIndent];
     return(row);
@@ -546,7 +544,8 @@
 }
 
 
-//Cells --------------------------------------------------------------------------------------------------
+//Cells ----------------------------------------------------------------------------------------------------------------
+#pragma mark Cells
 //Status cell
 //Uses the current time stamp format
 - (AIFlexibleTableCell *)_statusCellForContent:(AIContentStatus *)content
@@ -556,12 +555,12 @@
     
     //Create the status text cell
     statusCell = [AIFlexibleTableTextCell cellWithString:[NSString stringWithFormat:@"%@ (%@)", [content message], dateString]
-						   color:[NSColor grayColor]
-						    font:[NSFont cachedFontWithName:@"Helvetica" size:11]
-					       alignment:NSCenterTextAlignment];
+												   color:[NSColor grayColor]
+													font:[NSFont cachedFontWithName:@"Helvetica" size:11]
+											   alignment:NSCenterTextAlignment];
     [statusCell setPaddingLeft:1 top:0 right:1 bottom:0];
     [statusCell setVariableWidth:YES];
-
+	
     return(statusCell);
 }
 
@@ -580,8 +579,7 @@
     [imageCell setPaddingLeft:3 top:6 right:3 bottom:1];
     [imageCell setBackgroundColor:[NSColor whiteColor]];
     [imageCell setDesiredFrameSize:NSMakeSize(ICON_SIZE,ICON_SIZE)];
-//  if(span) [imageCell setRowSpan:2];
-
+	
     return(imageCell);
 }
 
@@ -595,30 +593,30 @@
     if(!masterCell) masterCell = [[thePreviousRow cellWithClass:[AIFlexibleTableSpanCell class]] masterCell];
     
     if(masterCell){	
-	//Increase it's span height
-	[masterCell setRowSpan:[masterCell rowSpan] + 1];
-
-	//Create our span cell as one of it's children
-	return([AIFlexibleTableSpanCell spanCellFor:masterCell spannedIndex:[masterCell rowSpan]-1]);
-
+		//Increase it's span height
+		[masterCell setRowSpan:[masterCell rowSpan] + 1];
+		
+		//Create our span cell as one of it's children
+		return([AIFlexibleTableSpanCell spanCellFor:masterCell spannedIndex:[masterCell rowSpan]-1]);
+		
     }else{
-	return(nil);	
+		return(nil);	
     }    
 }
 
 - (AIFlexibleTableCell *)_emptyHeadIndentCellForPreviousRow:(AIFlexibleTableRow *)thePreviousRow content:(AIContentMessage *)content
 {
     AIFlexibleTableFramedTextCell * cell = [[AIFlexibleTableFramedTextCell alloc] init];
-
+	
     //size the cell for the previousRow headIndent value
     [cell sizeCellForWidth:[thePreviousRow headIndent]];
-
+	
     if([content isOutgoing]){
         [cell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
     }else{
         [cell setFrameBackgroundColor:colorIncoming borderColor:colorIncomingBorder dividerColor:colorIncomingDivider];
     }
-        
+	
     return ([cell autorelease]);
 }
 
@@ -641,7 +639,7 @@
 - (AIFlexibleTableCell *)_timeStampCellForContent:(AIContentMessage *)content
 {
     AIFlexibleTableCell     *timeCell;
-
+	
     //Time
     timeCell = [AIFlexibleTableStringCell cellWithString:[timeStampFormatter stringForObjectValue:[(AIContentMessage *)content date]]
                                                    color:[NSColor grayColor]
@@ -660,7 +658,7 @@
     AIFlexibleTableFramedTextCell   *messageCell;
     NSAttributedString		    	*messageString;
  	NSColor 						*bodyColor = nil;
-   
+	
     //Get the message string
     if(includePrefixes){
 		messageString = [self _prefixStringForContent:content performHeadIndent:performHeadIndent];
@@ -707,7 +705,8 @@
 }
 
 
-//Prefix Creation --------------------------------------------------------------------------------------------------
+//Prefix Creation ------------------------------------------------------------------------------------------------------
+#pragma mark Prefix Creation
 //Message without a prefix
 - (NSAttributedString *)_messageStringForContent:(AIContentMessage *)content
 {
@@ -715,20 +714,8 @@
     if([content isOutgoing] || !ignoreTextStyles) {
         return([content message]);
     }else{
-        return([self _stringByRemovingAllColors:[content message]]);
+        return([self _stringByRemovingAllStyles:[content message]]);
     }    
-        
-    //} else if (!ignoreTextColor && !ignoreBackgroundColor){ //just fix the colors
-    //    return([self _stringByFixingTextColor:[content message] forColor:nil]);
-    //    
-    //}else if (!ignoreTextColor && ignoreBackgroundColor){ //should fix the text color for the colorIncoming, taking into account its background colors as sent, then remove the background colors
-    //    NSAttributedString *messageString = [self _stringByFixingTextColor:[content message] forColor:colorIncoming];
-    //    return([self _stringByRemovingBackgroundColor:messageString]);
-    //    
-    //} else if (!ignoreBackgroundColor && ignoreTextColor) { //remove the text color, then fix the resulting string to match its background
-    //    NSAttributedString *messageString = [self _stringByRemovingTextColor:[content message]];
-    //    return([self _stringByFixingTextColor:messageString forColor:nil]);
-	//
 }
 
 //Build and return an attributed string for the content using the current prefix preference
@@ -741,12 +728,12 @@
     messageRange = [prefixFormat rangeOfString:@"%m"];
     if(messageRange.location != NSNotFound){
         NSMutableAttributedString   *prefixString = [[[NSMutableAttributedString alloc] init] autorelease];
-
+		
         //If the prefix contains a message, we build it in pieces
         [prefixString appendAttributedString:[self _prefixWithFormat:[prefixFormat substringToIndex:messageRange.location] forContent:content]];
         
         [prefixString appendAttributedString:[self _messageStringForContent:content]];
-
+		
         [prefixString appendAttributedString:[self _prefixWithFormat:[prefixFormat substringFromIndex:messageRange.location] forContent:content]];
         
         if(performHeadIndent) {
@@ -769,7 +756,7 @@
         //Doesn't contain the message. There is no headIndent.
         headIndent = 0;
         return([self _prefixWithFormat:prefixFormat forContent:content]);
-
+		
     }    
 }
 
@@ -777,7 +764,7 @@
 - (NSAttributedString *)_prefixWithFormat:(NSString *)format forContent:(AIContentMessage *)content
 {
     NSString    *string = [self _prefixStringByExpandingFormat:format forContent:content];
-
+	
     //Create an attributed string from it with the prefix font and colors
     NSDictionary    *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
         ([content isOutgoing] ? outgoingSourceColor : incomingSourceColor), NSForegroundColorAttributeName,
@@ -796,100 +783,75 @@
     int             formatLength = [format length];
     
     while(scanLocation != NSNotFound && scanLocation < formatLength){
-	int     flagLocation;
-	
-	//Find the next flag in our prefix
+		int     flagLocation;
+		
+		//Find the next flag in our prefix
         flagLocation = [format rangeOfCharacterFromSet:flagSet options:0 range:NSMakeRange(scanLocation, formatLength - scanLocation)].location;
-	if(flagLocation == NSNotFound) flagLocation = formatLength;
-	
-	//Add the string we scanned over
-	if(flagLocation - scanLocation){
-	    [string appendString:[format substringWithRange:NSMakeRange(scanLocation, flagLocation - scanLocation)]];
-	}
-	
-	//Process the flag
-	scanLocation = flagLocation;
-	if(scanLocation < formatLength){
-	    unichar flagChar = [format characterAtIndex:scanLocation];
-	    
-	    if(flagChar == '%'){ //Expandable Keyword
-		unichar nextChar = [format characterAtIndex:scanLocation + 1];
+		if(flagLocation == NSNotFound) flagLocation = formatLength;
 		
-		//Expand the keyword
-		switch(nextChar){
-		    case '%': [string appendString:@"%"]; break;
-		    case 'a': [string appendString:[[content source] displayName]]; break;
-		    case 'n': [string appendString:[[content source] serverDisplayName]]; break;
-		    case 't': [string appendString:[timeStampFormatter stringForObjectValue:[content date]]]; break;
-		    default: break;
+		//Add the string we scanned over
+		if(flagLocation - scanLocation){
+			[string appendString:[format substringWithRange:NSMakeRange(scanLocation, flagLocation - scanLocation)]];
 		}
 		
-		scanLocation += 2; //Skip over the flag and value
-		
-	    }else if(flagChar == '?'){ //Conditional text
-		unichar nextChar = [format characterAtIndex:scanLocation + 1];
-		
-		if(nextChar == '?'){
-		    [string appendString:@"?"];
-		    
-		}else{
-		    int     endFlagLocation;
-		    BOOL    present;
-		    
-		    //Find the next occurence of '?X'
-		    endFlagLocation = [format rangeOfString:[NSString stringWithFormat:@"?%c",nextChar] options:0 range:NSMakeRange(scanLocation+2, formatLength - (scanLocation+2))].location;
-		    
-		    //Is this value present?
-		    switch(nextChar){
-			case 'a': present = ([[[content source] displayName] compare:[[content source] serverDisplayName]] != 0); break;
-			case 'n': present = YES; break;
-			case 't': present = YES; break;
-			default: present = NO; break;
-		    }
-		    
-		    //Scan and insert the conditional text
-		    if(present){
-			[string appendString:[self _prefixStringByExpandingFormat:[format substringWithRange:NSMakeRange(scanLocation+2, endFlagLocation - (scanLocation + 2))] forContent:content]];
-		    }
-		    
-		    scanLocation = endFlagLocation + 2; //Skip over the conditionals and content
+		//Process the flag
+		scanLocation = flagLocation;
+		if(scanLocation < formatLength){
+			unichar flagChar = [format characterAtIndex:scanLocation];
+			
+			if(flagChar == '%'){ //Expandable Keyword
+				unichar nextChar = [format characterAtIndex:scanLocation + 1];
+				
+				//Expand the keyword
+				switch(nextChar){
+					case '%': [string appendString:@"%"]; break;
+					case 'a': [string appendString:[[content source] displayName]]; break;
+					case 'n': [string appendString:[[content source] serverDisplayName]]; break;
+					case 't': [string appendString:[timeStampFormatter stringForObjectValue:[content date]]]; break;
+					default: break;
+				}
+				
+				scanLocation += 2; //Skip over the flag and value
+				
+			}else if(flagChar == '?'){ //Conditional text
+				unichar nextChar = [format characterAtIndex:scanLocation + 1];
+				
+				if(nextChar == '?'){
+					[string appendString:@"?"];
+					
+				}else{
+					int     endFlagLocation;
+					BOOL    present;
+					
+					//Find the next occurence of '?X'
+					endFlagLocation = [format rangeOfString:[NSString stringWithFormat:@"?%c",nextChar] options:0 range:NSMakeRange(scanLocation+2, formatLength - (scanLocation+2))].location;
+					
+					//Is this value present?
+					switch(nextChar){
+						case 'a': present = ([[[content source] displayName] compare:[[content source] serverDisplayName]] != 0); break;
+						case 'n': present = YES; break;
+						case 't': present = YES; break;
+						default: present = NO; break;
+					}
+					
+					//Scan and insert the conditional text
+					if(present){
+						[string appendString:[self _prefixStringByExpandingFormat:[format substringWithRange:NSMakeRange(scanLocation+2, endFlagLocation - (scanLocation + 2))] forContent:content]];
+					}
+					
+					scanLocation = endFlagLocation + 2; //Skip over the conditionals and content
+				}
+			}
 		}
-	    }
-	}
     }
     
     return(string);
 }
 
 
-//Misc --------------------------------------------------------------------------------------------------
-//Remove text color from an attributed string
-- (NSAttributedString *)_stringByRemovingTextColor:(NSAttributedString *)inString
-{
-    NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
-    [mutableTemp removeAttribute:NSForegroundColorAttributeName range:NSMakeRange(0,[mutableTemp length])];
-    return(mutableTemp);
-}
-
-//Remove background color from an attributed string
-- (NSAttributedString *)_stringByRemovingBackgroundColor:(NSAttributedString *)inString
-{
-    NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
-    [mutableTemp removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(0,[mutableTemp length])];
-    return(mutableTemp);
-}
-
-//Remove text and background color from an attributed string
-- (NSAttributedString *)_stringByRemovingAllColors:(NSAttributedString *)inString
-{
-    NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
-    NSRange range = NSMakeRange(0,[mutableTemp length]);
-    [mutableTemp removeAttribute:NSForegroundColorAttributeName range:range];
-    [mutableTemp removeAttribute:NSBackgroundColorAttributeName range:range];
-    return(mutableTemp);
-}
-
-//Remove text and background color from an attributed string
+//Misc -----------------------------------------------------------------------------------------------------------------
+#pragma mark Misc
+//Remove font, text and background color from an attributed string
 - (NSAttributedString *)_stringByRemovingAllStyles:(NSAttributedString *)inString
 {
     NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
@@ -911,7 +873,6 @@
     return(mutableTemp);
 }
 
-
 //Context menu
 -(NSMenu *)contextualMenuForFlexibleTableView:(AIFlexibleTableView *)tableView
 {
@@ -923,7 +884,7 @@
             [NSNumber numberWithInt:Context_Contact_Action],
             [NSNumber numberWithInt:Context_Contact_NegativeAction],
             [NSNumber numberWithInt:Context_Contact_Additions], nil]
-													  forListObject:selectedObject]);
+													 forListObject:selectedObject]);
     }else{
 		return(nil);
 	}
