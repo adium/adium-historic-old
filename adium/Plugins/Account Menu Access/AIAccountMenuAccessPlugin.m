@@ -128,8 +128,6 @@
 
 - (void)updateMenuForAccount:(AIAccount *)account
 {
-    NSEnumerator	*enumerator;
-    NSMenuItem		*menuItem;
     NSMenuItem		*connectToggleItem;
     NSMenuItem		*autoConnectItem;
 	
