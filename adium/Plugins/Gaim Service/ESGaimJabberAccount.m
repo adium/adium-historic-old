@@ -42,8 +42,8 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 - (void)createNewGaimAccount
 {
-	NSString	*connectServer, *resource, *server, *userNameWithHost = nil, *completeUserName = nil;
-	BOOL		forceOldSSL, useTLS, allowPlaintext, serverAppendedToUID, resourceAppended;
+	NSString	*connectServer, *resource, *userNameWithHost = nil, *completeUserName = nil;
+	BOOL		forceOldSSL, useTLS, allowPlaintext, serverAppendedToUID;
 	
 	[super createNewGaimAccount];
 	

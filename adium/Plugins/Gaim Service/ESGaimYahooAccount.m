@@ -154,7 +154,6 @@ static NSDictionary		*presetStatusesDictionary = nil;
 {
 	struct yahoo_data   *od;
 	struct yahoo_friend *userInfo;
-	GaimBuddy			*buddy;
 
 	const char				*buddyName = [[theContact UID] UTF8String];
 	
