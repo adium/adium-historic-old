@@ -201,12 +201,25 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 					   ofType:(AIFilterType)type
 					direction:(AIFilterDirection)direction
 {
+	[self registerContentFilter:inFilter
+						 ofType:type
+					  direction:direction
+					   threaded:NO];
+}
+
+- (void)registerContentFilter:(id <AIContentFilter>)inFilter
+					   ofType:(AIFilterType)type
+					direction:(AIFilterDirection)direction
+					 threaded:(BOOL)threaded
+{
 	NSParameterAssert(inFilter != nil);
 	NSParameterAssert(type >= 0 && type < FILTER_TYPE_COUNT);
 	NSParameterAssert(direction >= 0 && direction < FILTER_DIRECTION_COUNT);
 
-	if(!contentFilter[type][direction]) contentFilter[type][direction] = [[NSMutableArray alloc] init];
-	[contentFilter[type][direction] addObject:inFilter];
+	if(!(threaded ? threadedContentFilter : contentFilter)[type][direction]){
+		(threaded ? threadedContentFilter : contentFilter)[type][direction] = [[NSMutableArray alloc] init];
+	}
+	[(threaded ? threadedContentFilter : contentFilter)[type][direction] addObject:inFilter];
 }
 
 //Unregister all instances of filter.
@@ -218,6 +231,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	for(i = 0; i < FILTER_TYPE_COUNT; i++){
 		for(j = 0; j < FILTER_DIRECTION_COUNT; j++){
 			[contentFilter[i][j] removeObject:inFilter];
+			[threadedContentFilter[i][j] removeObject:inFilter];
 		}
 	}
 }
@@ -225,25 +239,37 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 #define THREADED_FILTERING TRUE
 
 //Filters an attributed string.  If the string is associated with a contact or list object, pass that object as context.
-//This does not filter in the filtering thread; instead it waits until the thread is not processing (to avoid threading
-//conflicts) and then filters, returning its result immediately.
+//This only performs main thread filters.
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)attributedString
 							   usingFilterType:(AIFilterType)type
 									 direction:(AIFilterDirection)direction
 									   context:(id)filterContext
 {
-	//Wait until the filter thread is not filtering; don't let filtering in that thread occur while we are filtering
-	[threadedFilterLock lock];
-	
 	//Perform the filter (in the main thread)
 	attributedString = [self _filterAttributedString:attributedString
 									   contentFilter:contentFilter[type][direction]
 									   filterContext:filterContext];
-
-	//Unlock so the filtering thread can resume its work where it left off
-	[threadedFilterLock unlock];
 	
 	return (attributedString);
+}
+
+
+//Perform the filtering of an attributedString on the specified content filter. Pass filterContext while filtering.
+//Either thread may use this function, but no two threads should be using filters from the same content array at once.
+//The main thread should only call this method with main thread filters (from the contentFilter NSArray[][]).
+//The threaded-filtering thread should only call this method with threaded-filters (from the threadedContentFilter NSArray[][]).
+- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString
+								  contentFilter:(NSArray *)inContentFilterArray
+								  filterContext:(id)filterContext
+{
+	NSEnumerator		*enumerator = [inContentFilterArray objectEnumerator];
+	id<AIContentFilter>	filter;
+	
+	while((filter = [enumerator nextObject])){
+		attributedString = [filter filterAttributedString:attributedString context:filterContext];
+	}
+	
+	return(attributedString);
 }
 
 //Filters an attributed string.  If the string is associated with a contact or list object, pass that object as context.
@@ -260,7 +286,6 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	NSParameterAssert(type >= 0 && type < FILTER_TYPE_COUNT);
 	NSParameterAssert(direction >= 0 && direction < FILTER_DIRECTION_COUNT);
 	
-#if THREADED_FILTERING
 	NSInvocation *invocation;
 	invocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
 	
@@ -268,22 +293,19 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	[invocation setTarget:target];
 	[invocation setArgument:&context atIndex:3]; //context, the second argument after the two hidden arguments of every NSInvocation
 	[invocation retainArguments];
-	
-	
-	[[self filterRunLoopMessenger] target:self 
-						  performSelector:@selector(thread_filterAttributedString:contentFilter:filterContext:invocation:) 
-							   withObject:attributedString
-							   withObject:contentFilter[type][direction]
-							   withObject:filterContext
-							   withObject:invocation];
-#else
+
+	//Perform main thread filters
 	attributedString = [self thread_filterAttributedString:attributedString
 											 contentFilter:contentFilter[type][direction]
 											 filterContext:filterContext
 												invocation:nil];
-	
-	[target performSelector:selector withObject:attributedString withObject:context];
-#endif
+	//Now request the asynchronous filtering
+	[[self filterRunLoopMessenger] target:self 
+						  performSelector:@selector(thread_filterAttributedString:contentFilter:filterContext:invocation:) 
+							   withObject:attributedString
+							   withObject:threadedContentFilter[type][direction]
+							   withObject:filterContext
+							   withObject:invocation];
 }
 
 - (NDRunLoopMessenger *)filterRunLoopMessenger
@@ -307,13 +329,11 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 										   invocation:(NSInvocation *)invocation
 {
 	/*
-	 Obtain the lock; we must ensure we don't filter while the main thread does.
-	 
-	 This lock also serves as a way to know if a filtering operation is currently in progress.
+	 Serves as a way to know if a filtering operation is currently in progress.
 	 Running a filter may take multiple run loops (e.g. applescript execution).
 	 It is not acceptable for our autorelease pool to be released between these loops
-	 as we have autoreleased objects upon which we are depending; we can check against the lock to know
-	 if it is safe.
+	 as we have autoreleased objects upon which we are depending; we can check against the lock
+	 using tryLock (non-blocking) to know if it is safe.
 	 */
 	[threadedFilterLock lock];
 	attributedString = [self _filterAttributedString:attributedString
@@ -326,25 +346,10 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 		[invocation setArgument:&attributedString atIndex:2];
 		[invocation retainArguments]; //redundant?
 		
+		//Send the filtered attributedString back via invocation, on the main thread
 		[invocation performSelectorOnMainThread:@selector(invoke) withObject:nil waitUntilDone:NO];
 	}
 	
-	return(attributedString);
-}
-
-//Perform the filtering of an attributedString on the specified content filter. Pass filterContext while filtering.
-//This may be called by either thread but never by both at once (guards or locks should be protecting against that).
-- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString
-								  contentFilter:(NSArray *)inContentFilterArray
-								  filterContext:(id)filterContext
-{
-	NSEnumerator		*enumerator = [inContentFilterArray objectEnumerator];
-	id<AIContentFilter>	filter;
-
-	while((filter = [enumerator nextObject])){
-		attributedString = [filter filterAttributedString:attributedString context:filterContext];
-	}
-
 	return(attributedString);
 }
 
