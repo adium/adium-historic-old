@@ -30,11 +30,7 @@ Bugs
 * Mousekeys to move tabs causes a crash: http://www.visualdistortion.org/crash/view.jsp?crash=5930
 * Contact list display format preference not applying correctly on launch
 
-# Give address book icons higher priority than server-side icons
-	This is not a bug. It's desired behavior by a lot of people :P
-	We probably need a default priority preference.
-	We definitely need per-user preferences, including in-Adium setting of the icon.
-	We need a way for user specified icons in the address book to not be overridden/overwritten by adium when export is turned on. 
+
 -------------
 Minor Changes
 -------------
@@ -87,145 +83,188 @@ Big Stuff
 ---------
 Contact alerts:
 (http://homepage.mac.com/adamiser/sortathis6.png)
-- Remove alerts preference pane
-- Remove contact menu from alert window
-- Remove event popup from alert window
-- Disallow editing of events
-- Remove event view insertion (on selection)
-- Rework context menus.. change to "Edit Alerts"
-+ Add icons (16x16) to event types, and display them in the event list
-+ Add toolbar to window, add, edit, delete
-+ Add sheet for 'add', 'edit'.  Must be independant from alert window.
-+ Sheet has event, action, and contact (submenued by group) popups.
-+ Add source list on left of all objects with alerts
-+ Clicking in source list changes displayed alerts
-+ Menu has "all contacts in ___" items, and "all contacts" item
-+ Dynamically load view into sheet depending on selected alert
-+ Redesign views, simplify, use big controls
-+ Add "Add alert' context menu - that opens the sheet as a panel and allows easy adding
-+ Add "Contact Alerts" menu item to window menu.. to open alert window
-+ Auto-fill sheet for new alert based on selection in window on clicking add
+	- Remove alerts preference pane
+	- Remove contact menu from alert window
+	- Remove event popup from alert window
+	- Disallow editing of events
+	- Remove event view insertion (on selection)
+	- Rework context menus.. change to "Edit Alerts"
+	+ Add icons (16x16) to event types, and display them in the event list
+	+ Add toolbar to window, add, edit, delete
+	+ Add sheet for 'add', 'edit'.  Must be independant from alert window.
+	+ Sheet has event, action, and contact (submenued by group) popups.
+	+ Add source list on left of all objects with alerts
+	+ Clicking in source list changes displayed alerts
+	+ Menu has "all contacts in ___" items, and "all contacts" item
+	+ Dynamically load view into sheet depending on selected alert
+	+ Redesign views, simplify, use big controls
+	+ Add "Add alert' context menu - that opens the sheet as a panel and allows easy adding
+	+ Add "Contact Alerts" menu item to window menu.. to open alert window
+	+ Auto-fill sheet for new alert based on selection in window on clicking add
 
+Sounds
+	- Remove mute while away.  This will be included in the state system window.
 
 Contact list display:
-+ Four components to the contact list:
-  + User Name - (Text) Name / Alias
-  + User Icon - (Image) AIM Buddy Icon / MSN Avatar / Address book icon
-  + Status Badge - (Image) Icon representing status, specified by user
-  + Extended Status - (Text) iChat status, away message, MSN state name, MSN user name/status
-+ User can toggle each component (Except user name) on/off with view menu items
-+ User can choose whether icons are on left or right.  Status Badge always goes on opposite side
-+ If icons are visible, extended status is displayed below user name, otherwise displayed next to user name
-# Extend labels to the full width of the list
-# Remove the rounded caps <<< PILLOWS!!!
+	+ Four components to the contact list:
+	  + User Name - (Text) Name / Alias
+	  + User Icon - (Image) AIM Buddy Icon / MSN Avatar / Address book icon
+	  + Status Badge - (Image) Icon representing status, specified by user
+	  + Extended Status - (Text) iChat status, away message, MSN state name, MSN user name/status
+	+ User can toggle each component (Except user name) on/off with view menu items
+	+ User can choose whether icons are on left or right.  Status Badge always goes on opposite side
+	+ If icons are visible, extended status is displayed below user name, otherwise displayed next to user name
+	# Extend labels to the full width of the list
+	# Remove the rounded caps <<< PILLOWS!!!
 
-= Emoticon Preferences:
-= Remove +/- buttons
-= Make source list display all available emoticon packs
-= Add checkboxes in source list to enable/disable packs
-#Show a warning icon when 2 icons would overlap. This would be when you have 2 or more packs. State which would be used visually.
+------From the old list:
+Contact List
+	- Remove text color preference.  All contacts will have a status color, and groups have their own color preference.
+	- Remove show contact labels preference
+	- Remove the contact count display preferences, these are in the view menu
+	- Remove preference for idle time color.  It should be the color of the text.
+	- Remove 'Idle & Away' status coloring.  There is no need for an additional color here.
+	- Remove the label colors for online, offline, idle, away
+	- Remove the text colors for signed on, signed off, typing, and unviewed content
+
+
+Address Book Integration:
+	# Give address book icons higher priority than server-side icons (This is not a bug. It's desired behavior by a lot of people.)
+	We probably need a default priority preference.
+	We definitely need per-user preferences, including in-Adium setting of the icon.
+	We need a way for user specified icons in the address book to not be overridden/overwritten by adium when export is turned on. 
+
+Emoticon Preferences:
+	= Remove +/- buttons
+	= Make source list display all available emoticon packs
+	= Add checkboxes in source list to enable/disable packs
+	#Show a warning icon when 2 icons would overlap. This would be when you have 2 or more packs. State which would be used visually.
 
 Event Info (Implement as a new plugin, to replace bezel):
-+ Give the notification window a titlebar, and allow it to be repositioned while visible.  Evan: I disagree.  It should not have a titlebar.  Contact me for discussion :)
-+ Stack bezels when multiple events arrive eevyl note: hell not make this, queue them, with the posibility to dismish the more recent one with a widget to see next (or close the thing if it is the last one)
-+ Color the entire bezel to match the event being displayed
-+ Make the bezel smaller, clearer, easier to read, prettier
-+ Give the event info few preferences if any.
-- Don't use the Event Info to notify of new message notifications, use other plugin, different layout and all window clickable (like iChat)
+	+ Give the notification window a titlebar, and allow it to be repositioned while visible.  Evan: I disagree.  It should not have a 	titlebar.  Contact me for discussion :)
+	+ Stack bezels when multiple events arrive eevyl note: hell not make this, queue them, with the posibility to dismish the more recent 	one with a widget to see next (or close the thing if it is the last one)
+	+ Color the entire bezel to match the event being displayed
+	+ Make the bezel smaller, clearer, easier to read, prettier
+	+ Give the event info few preferences if any.
+	- Don't use the Event Info to notify of new message notifications, use other plugin, different layout and all window clickable (like 	iChat)
 
 Status images:
-- Remove status icons plugin
-+ Add images based status badges to the contact list
-+ Allow user to select icon sets (packaged in a bundle) in preferences
+	- Remove status icons plugin
+	+ Add images based status badges to the contact list
+	+ Allow user to select icon sets (packaged in a bundle) in preferences
 
 
 Contact Blocking:
-+ Add block and unblock menu items which prompt for the service and name
-+ Add block / unblock contextual menu items
-+ Add "Show Blocked Contacts" menu item to view, blocked contact list group
-+ Add "Block contacts not on my list" to AIM account preferences.
-- Ignore AIM's "Allow these" and "Block all" modes (for now, atleast)
-Evan: libgaim does not have support for accessing the privacy settings... we can add/remove from the list, but we have no way of knowing what's on it.
+	+ Add block and unblock menu items which prompt for the service and name
+	+ Add block / unblock contextual menu items
+	+ Add "Show Blocked Contacts" menu item to view, blocked contact list group
+	+ Add "Block contacts not on my list" to AIM account preferences.
+	- Ignore AIM's "Allow these" and "Block all" modes (for now, atleast)
+	Evan: libgaim does not have support for accessing the privacy settings... we can add/remove from the list, but we have no way of 	knowing what's on it.
 
 
 Multi-user chat: <<<INCOMPLETE>>>
-+ Show a users list
-+ Show status in users list
-# Ability to hide users list
-+ Ability to invite
-+ If available, ability to remove a user
-+ If available, ability to set a topic. IRC and JABBER do this afaik
+	+ Show a users list
+	+ Show status in users list
+	# Ability to hide users list
+	+ Ability to invite
+	+ If available, ability to remove a user
+	+ If available, ability to set a topic. IRC and JABBER do this afaik
+
+From the old list: Messages
+	- Add a message style preference (we will place inline and side prefix in separate views)
+	- Remove font, text, background preferences.  These should be set with cmd-T and remembered.
+	- Move show user icons to the view menu
+
+
+
 
 WebKit Message View: <<<INCOMPLETE>>>
-* Redrawing problems
-* Scroll keys
-* Keypress forwarding
-* Status messages
-+ Buddy icon (caching, display and scaling)
-+ Bundled templates
-+ Template choosing preferences
-+ View refreshing on preference changes (alias, timestamp)
-+ Make default template, should be fast and nice.
-+ Background coloring
-+ Emoticons
+	* Redrawing problems
+	* Scroll keys
+	* Keypress forwarding
+	* Status messages
+	+ Buddy icon (caching, display and scaling)
+	+ Bundled templates
+	+ Template choosing preferences
+	+ View refreshing on preference changes (alias, timestamp)
+	+ Make default template, should be fast and nice.
+	+ Background coloring
+	+ Emoticons
 
 New State System: <<<INCOMPLETE>>>
-+ Events should have "flags", so that we could have a "message" event, which also has a "first message" flag, so that plugins can listen for "message" events using only one notification registration.
+	+ Events should have "flags", so that we could have a "message" event, which also has a "first message" flag, so that plugins can listen for "message" events using only one notification registration.
 
 
 Account / Connect panel: <<<INCOMPLETE>>>
-+ Show account name
-+ Show address book name, if available
-+ Show status
-+ Show status icon
-+ Show protocol icon
-+ Show Service Icon/Address book icon
-+ A check box or something to easily connect an account
-  Hanji: I find gaim's use of a checkbox to connect/disconnect an account extremely unintuitive, I would vote against that.
+
+	+ Show account name
+	+ Show address book name, if available
+	+ Show status
+	+ Show status icon
+	+ Show protocol icon
+	+ Show Service Icon/Address book icon
+	+ A check box or something to easily connect an account
+		Hanji: I find gaim's use of a checkbox to connect/disconnect an account extremely unintuitive, I would vote against that.
+
 
 Contact Inspector: <<<INCOMPLETE>>>
-+ Buddy Icon: Serverside/Address Book/Set from within Adium - we have the NSImagePicker.h in AIUtilities to potentially help with this
+	+ Buddy Icon: Serverside/Address Book/Set from within Adium - we have the NSImagePicker.h in AIUtilities to potentially help with this
 
 Contact status coloring: <<<INCOMPLETE>>>
 
+Meta Contacts
+	Automatic Meta Contacts: <<<INCOMPLETE>>>
+		= Same contact on the same service for different accounts
 
-User defined meta contacts: <<<INCOMPLETE>>>
-+ Automatic creation with address book integration
-# Specify a the order of contacts, for status updates on the contact list
+	User defined meta contacts: <<<INCOMPLETE>>>
+		+ Automatic creation with address book integration
+		# Specify a the order of contacts, for status updates on the contact list
 
 
 Protocol Specific Functions: <<<INCOMPLETE>>>
-+ Account returns array of menu items, inserted into middle of account submenu
-+ Add menu items for all the protocol specific functions supported by libgaim (I don't know them offhand)
---- AIM
-# Buddy Search
---- ICQ
-# Create a 'libgaim icq' in the drop down menu for protocols.
-+ Offline messaging
-+ Offline message recieving
---- Y!
-+ Offline messaging
-+ Offline message recieving
---- MSN
---- TREPIA
-* Stop showing multiple disconnect notifications/resolve problem with connections disconnecting in libgaim. This also happens in gaim.
---- GADU-GADU
---- JABBER
---- IRC
---- RENDEZVOUS
+	+ Account returns array of menu items, inserted into middle of account submenu
+	+ Add menu items for all the protocol specific functions supported by libgaim (I don't know them offhand)
+
+	--- AIM
+	# Buddy Search
+
+	--- ICQ
+		# Create a 'libgaim icq' in the drop down menu for protocols.
+		+ Offline messaging
+		+ Offline message recieving
+	
+	--- Y!
+		+ Offline messaging
+		+ Offline message recieving
+
+	--- MSN
+
+	--- TREPIA
+		* Stop showing multiple disconnect notifications/resolve problem with connections disconnecting in libgaim. This also happens in gaim.
+
+	--- GADU-GADU
+	
+	--- JABBER
+
+	--- IRC
+
+	--- RENDEZVOUS
+
+
 
 Downloads Pane
-+ Allow for resume
-+ Show from
-+ Show to
-+ Show speed
-+ Show time left
-+ Show percentage
-+ Show preview if the file allows for it
-+ Show location
-+ Show progress in message window and in the downloads pane, ala msn
-+ If the file is an image, show a preview if possible in the message window
-+ Accept/decline that is not intrusive
+	+ Allow for resume
+	+ Show from
+	+ Show to
+	+ Show speed
+	+ Show time left
+	+ Show percentage
+	+ Show preview if the file allows for it
+	+ Show location
+	+ Show progress in message window and in the downloads pane, ala msn
+	+ If the file is an image, show a preview if possible in the message window
+	+ Accept/decline that is not intrusive
 
 
 -----------------------------------------------------------------------------
@@ -255,20 +294,8 @@ Nested groups are causing issues.  We need to think about keeping them around or
 
 
 // Old Crap, clean up later ------------------------------------------
-Contact List
-- Remove text color preference.  All contacts will have a status color, and groups have their own color preference.
-- Remove show contact labels preference
-- Remove the contact count display preferences, these are in the view menu
-- Remove preference for idle time color.  It should be the color of the text.
-- Remove 'Idle & Away' status coloring.  There is no need for an additional color here.
-- Remove the label colors for online, offline, idle, away
-- Remove the text colors for signed on, signed off, typing, and unviewed content
-Messages
-- Add a message style preference (we will place inline and side prefix in separate views)
-- Remove font, text, background preferences.  These should be set with cmd-T and remembered.
-- Move show user icons to the view menu
-Sounds
-- Remove mute while away.  This will be included in the state system window.
+
+
 Display Preferences:
 - Remove outline group names with color.  This is a cute feature, but I've yet to see a place where it is used and actually looks good.
 - Give background opacity a realistic lower value.  Anything below 75/80% is very difficult to read without misusing labels.
