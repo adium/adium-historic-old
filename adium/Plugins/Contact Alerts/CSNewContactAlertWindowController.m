@@ -51,10 +51,8 @@
 	//Create a mutable copy of the alert dictionary we're passed.  If we're passed nil, create the default alert.
 	alert = [inAlert mutableCopy];
 	if(!alert){
-		NSString	*defaultEvent = [[[[adium contactAlertsController] eventHandlers] allKeys] objectAtIndex:0];
-		NSString	*defaultAction = [[[[adium contactAlertsController] actionHandlers] allKeys] objectAtIndex:0];
-		
-		alert = [[NSMutableDictionary alloc] initWithObjectsAndKeys:defaultEvent, @"EventID", defaultAction, @"ActionID", nil];
+		alert = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[[adium contactAlertsController] defaultEventID], @"EventID",
+																	[[adium contactAlertsController] defaultActionID], @"ActionID", nil];
 	}
 	
 	return(self);
