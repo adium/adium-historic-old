@@ -344,7 +344,7 @@
 //Add a new content object
 - (void)contentObjectAdded:(NSNotification *)notification
 {
-    AIContentObject	*content = [[notification userInfo] objectForKey:@"Object"];
+    AIContentObject	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
     
     //If we are not currently rebuilding, add it immediately; if we are, add it to our queue
     if (!rebuilding)
