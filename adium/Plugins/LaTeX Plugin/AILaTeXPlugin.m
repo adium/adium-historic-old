@@ -3,7 +3,6 @@
 //  Adium XCode
 //
 //  Created by Stephen Poprocki on Sat Dec 13 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 // User must have a working LaTeX and Equation Service installation for anything to happen.
@@ -17,49 +16,52 @@
     [[adium contentController] registerDisplayingContentFilter:self];
 }
 
-- (void)filterContentObject:(AIContentObject *)inObject
+
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
 {
-    if([[inObject type] isEqual:CONTENT_MESSAGE_TYPE])
-    {
-        AIContentMessage *contMsg = (AIContentMessage *)inObject;
-        NSMutableAttributedString *newMessage = [[contMsg message] mutableCopy];
-        NSScanner *stringScanner = [[NSScanner alloc] initWithString: [newMessage string]];
-        NSArray *returnTypes = [NSArray arrayWithObjects:NSPDFPboardType, NSStringPboardType, nil];
-        NSPasteboard *pb = [NSPasteboard pasteboardWithName:@"latexPboard"];
-        NSString *innerLaTeX;
-        int i, removedChars = 0; 
-        
-        [stringScanner setCharactersToBeSkipped:[[[NSCharacterSet alloc] init] autorelease]];
-        while ([stringScanner isAtEnd] == NO)
-        {
-            [stringScanner scanUpToString:@"$$" intoString:nil];
-            [stringScanner scanString:@"$$" intoString:nil];
+    NSMutableAttributedString       *newMessage = nil;
+    if (inAttributedString) {
+            NSScanner       *stringScanner = [[NSScanner alloc] initWithString:[inAttributedString string]];
+            NSArray         *returnTypes = [NSArray arrayWithObjects:NSPDFPboardType, NSStringPboardType, nil];
+            NSPasteboard    *pb = [NSPasteboard pasteboardWithName:@"latexPboard"];
+            NSString        *innerLaTeX;
+            int i, removedChars = 0; 
             
-            i = [stringScanner scanLocation];
-            if([stringScanner scanUpToString:@"$$" intoString:&innerLaTeX] && ([stringScanner isAtEnd] == NO))
+            [stringScanner setCharactersToBeSkipped:[[[NSCharacterSet alloc] init] autorelease]];
+            while ([stringScanner isAtEnd] == NO)
             {
-                [stringScanner setScanLocation:([stringScanner scanLocation]+2)];
+                [stringScanner scanUpToString:@"$$" intoString:nil];
+                [stringScanner scanString:@"$$" intoString:nil];
                 
-                [pb declareTypes:returnTypes owner:self];
-                [pb setString:innerLaTeX forType:NSStringPboardType];
-                if(NSPerformService(@"Equation Service/Typeset Equation", pb))
+                i = [stringScanner scanLocation];
+                if([stringScanner scanUpToString:@"$$" intoString:&innerLaTeX] && ([stringScanner isAtEnd] == NO))
                 {
-                    NSString *fullLaTeX = [NSString stringWithFormat:@"$$%@$$", innerLaTeX];
-                    NSMutableAttributedString *replacement = [self attributedStringWithPasteboard:pb textEquivalent:fullLaTeX];
+                    [stringScanner setScanLocation:([stringScanner scanLocation]+2)];
                     
-                    //grab the original attributes, to ensure that the background is not lost in a message consisting only of LaTeX
-                    [replacement addAttributes:[[contMsg message] attributesAtIndex:i effectiveRange:nil] range:NSMakeRange(0,1)];
-                    //insert the image
-                    [newMessage replaceCharactersInRange:NSMakeRange(i-2-removedChars, [fullLaTeX length]) withAttributedString:replacement];
-                    removedChars += [fullLaTeX length]-1;
+                    [pb declareTypes:returnTypes owner:self];
+                    [pb setString:innerLaTeX forType:NSStringPboardType];
+                    if(NSPerformService(@"Equation Service/Typeset Equation", pb))
+                    {
+                        if(newMessage == nil) // only create the copy if needed
+                            newMessage = [[inAttributedString mutableCopy] autorelease];
+                        
+                        NSString                    *fullLaTeX = [NSString stringWithFormat:@"$$%@$$", innerLaTeX];
+                        NSMutableAttributedString   *replacement = [self attributedStringWithPasteboard:pb 
+                                                                                         textEquivalent:fullLaTeX];
+                        
+                        // grab the original attributes, to ensure that the background is not lost in a message consisting only of LaTeX
+                        [replacement addAttributes:[inAttributedString attributesAtIndex:i effectiveRange:nil]
+                                             range:NSMakeRange(0,1)];
+                        // insert the image
+                        [newMessage replaceCharactersInRange:NSMakeRange(i-2-removedChars, [fullLaTeX length]) 
+                                        withAttributedString:replacement];
+                        removedChars += [fullLaTeX length]-1;
+                    }
                 }
             }
-        }
-        
-        [contMsg setMessage:newMessage];
-        [newMessage release];
-        [stringScanner release];
+            [stringScanner release];
     }
+    return (newMessage ? newMessage : inAttributedString);
 }
 
 //Returns an attributed string containing the LaTeX image
