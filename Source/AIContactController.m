@@ -137,11 +137,6 @@ DeclareString(UID);
 	//Show Groups menu item
 	[self prepareShowHideGroups];
 	
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(adiumVersionWillBeUpgraded:) 
-									   name:Adium_VersionWillBeUpgraded
-									 object:nil];
-
 	//Observe content (for preferredContactForContentType:forListContact:)
     [[adium notificationCenter] addObserver:self
                                    selector:@selector(didSendContent:)
@@ -169,18 +164,6 @@ DeclareString(UID);
     [contactObserverArray release]; contactObserverArray = nil;
 
     [super dealloc];
-}
-
-- (void)adiumVersionWillBeUpgraded:(NSNotification *)notification
-{
-	//After 0.63 - metaContacts dictionary changed; old dictionary is very large and quite useless.
-	if ([[[notification userInfo] objectForKey:@"lastLaunchedVersion"] floatValue] < 0.682){
-		[self clearAllMetaContactData];
-	}
-	
-	[[adium notificationCenter] removeObserver:self
-										  name:Adium_VersionWillBeUpgraded
-										object:nil];
 }
 
 - (void)clearAllMetaContactData

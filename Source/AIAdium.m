@@ -51,8 +51,8 @@
 #define ADIUM_BUG_PAGE						@"mailto:bugs@adiumx.com"
 #define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
 
-#define KEY_USER_VIEWED_LICENSE				@"AdiumUserLicenseViewed"
-#define KEY_LAST_VERSION_LAUNCHED			@"Last Version Launched"
+//#define KEY_USER_VIEWED_LICENSE				@"AdiumUserLicenseViewed"
+//#define KEY_LAST_VERSION_LAUNCHED			@"Last Version Launched"
 
 @interface AIAdium (PRIVATE)
 - (void)configureCrashReporter;
@@ -215,13 +215,6 @@
 //    [activityWindowController initController];
 	[componentLoader initController];
 
-	NSDictionary	*versionUpgradeDict = [self versionUpgradeDict];
-	
-	if (versionUpgradeDict){
-		[[self notificationCenter] postNotificationName:Adium_VersionWillBeUpgraded
-												 object:nil
-											   userInfo:versionUpgradeDict];
-	}
 	
 	[preferenceController willFinishIniting];
 	
@@ -240,11 +233,6 @@
 	[contactController finishIniting];
     [interfaceController finishIniting];
 	
-	if (versionUpgradeDict){
-		[[self notificationCenter] postNotificationName:Adium_VersionUpgraded
-												 object:nil
-											   userInfo:versionUpgradeDict];
-	}
 	
 	//Open the preferences if we were unable to because application:openFile: was called before we got here
 	[self openAppropriatePreferencesIfNeeded];
@@ -606,7 +594,7 @@
 }
 
 //If this is the first time running a version, post Adium_versionUpgraded with information about the old and new versions.
-- (NSDictionary *)versionUpgradeDict
+/*- (NSDictionary *)versionUpgradeDict
 {
 	NSString	*currentVersionString, *lastLaunchedVersionString;
 	float	    currentVersion, lastLaunchedVersion;
@@ -698,7 +686,7 @@
 	}
 	
 	return(returnString ? returnString : inString);
-}
+}*/
 
 #pragma mark Scripting
 - (BOOL)application:(NSApplication *)sender delegateHandlesKey:(NSString *)key {
