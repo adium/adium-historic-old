@@ -64,7 +64,7 @@
 								   priorityLevel:Lowest_Priority];
 					[inObject setStatusObject:cachedImagePath
 									   forKey:@"UserIconPath"
-									   notify:YES];
+									   notify:NotifyNever];
 				}
 			}
 		}
@@ -141,11 +141,16 @@
 					   priorityLevel:Highest_Priority];
 		return YES;
 	}else{
-		[inObject setDisplayUserIcon:nil
-						   withOwner:self
-					   priorityLevel:Highest_Priority];
-		return NO;
+		//If we had a preference set before (that is, there's an object set at Highest_Priority), clear it
+		if ([[inObject displayArrayForKey:KEY_USER_ICON create:NO] priorityOfObjectWithOwner:self] == Highest_Priority){
+			
+			[inObject setDisplayUserIcon:nil
+							   withOwner:self
+						   priorityLevel:Highest_Priority];
+		}
 	}
+	
+	return NO;
 }
 
 /*
