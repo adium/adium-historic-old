@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.32 2004/02/06 08:25:24 dchoby98 Exp $
+// $Id: AIPreferenceWindowController.m,v 1.33 2004/02/07 20:11:58 evands Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -420,9 +420,11 @@ static AIPreferenceWindowController *sharedInstance = nil;
 	NSString			*key;
 	
 	//Get the previously selected row
-	int previousRow = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW] intValue];
+	int previousRow = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] 
+							objectForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW] intValue];
+	
 	// Get the restorable prefs dictionary of the pref pane at the active row
-	allDefaults = [[outlineView_advanced itemAtRow:previousRow] restorablePreferences];
+	allDefaults = [(AIPreferencePane *)[outlineView_advanced itemAtRow:previousRow] restorablePreferences];
 	
 	if( allDefaults ) {
 		
@@ -431,9 +433,11 @@ static AIPreferenceWindowController *sharedInstance = nil;
 		// They keys are preference groups, run through all of them
 		while( group = (NSString *)[enumerator nextObject] ) {
 			
+			NSEnumerator	*keyEnum;
+			
 			// Get the pref dictionary for each pref goup
 			defaultsDict = [allDefaults objectForKey:group];
-			NSEnumerator	*keyEnum = [defaultsDict keyEnumerator];
+			keyEnum = [defaultsDict keyEnumerator];
 			
 			while( key = (NSString *)[keyEnum nextObject] ) {
 				//NSLog(@"----Key: %@, Value: %@, Group: %@",key,[defaultsDict objectForKey:key],group);
