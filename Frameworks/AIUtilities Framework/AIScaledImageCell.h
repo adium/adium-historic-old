@@ -5,8 +5,6 @@
 //  Created by Adam Iser on 8/17/04.
 //
 
-#import <Cocoa/Cocoa.h>
-
 /*!
  * @class AIScaledImageCell
  * @brief An <tt>NSImageCell</tt> subclass which scales its image to fit.

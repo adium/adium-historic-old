@@ -6,8 +6,6 @@
 //  Copyright 2005 The Adium Team. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-
 //for encoding an AITag as a dictionary.
 extern NSString *AITag_TagNameKey;
 extern NSString *AITag_AttributeNamesKey;

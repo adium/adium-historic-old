@@ -6,6 +6,8 @@
 //
 
 #import "ESDateFormatterAdditions.h"
+#import "CBApplicationAdditions.h"
+#import "AIStringUtilities.h"
 
 typedef enum
 {

@@ -18,6 +18,7 @@
  */
  
 #import "AINetworkConnectivity.h"
+#import "CBApplicationAdditions.h"
 
 #import <SystemConfiguration/SystemConfiguration.h>
 

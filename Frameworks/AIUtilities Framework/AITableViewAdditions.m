@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AITableViewAdditions.h"
-
+#import "CBApplicationAdditions.h"
 
 @implementation NSTableView (AITableViewAdditions)
 

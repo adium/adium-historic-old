@@ -6,6 +6,7 @@
 //
 
 #import "AIScaledImageCell.h"
+#import "AIBezierPathAdditions.h"
 
 /*
  Used for displaying a potentially large image

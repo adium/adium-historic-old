@@ -25,6 +25,7 @@
 */
 
 #import "AIToolbarTabView.h"
+#import "AIToolbarUtilities.h"
 
 @interface AIToolbarTabView (PRIVATE)
 - (void)installToolbarItems;

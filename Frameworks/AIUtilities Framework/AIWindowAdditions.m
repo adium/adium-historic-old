@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIWindowAdditions.h"
+#import "CBApplicationAdditions.h"
 
 @implementation NSWindow (AIWindowAdditions)
 

@@ -13,8 +13,6 @@ Adium, Copyright 2001-2005, Adam Iser
  write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
-#import <Cocoa/Cocoa.h>
 #import <QuickTime/QuickTime.h>
 
 @interface AIVideoCapture : NSObject

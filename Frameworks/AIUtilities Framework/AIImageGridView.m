@@ -14,6 +14,7 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 
 #import "AIImageGridView.h"
+#import "AIScaledImageCell.h"
 
 #define MIN_PADDING			1			//The minimum padding between images
 

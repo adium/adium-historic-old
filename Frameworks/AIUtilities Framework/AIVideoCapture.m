@@ -16,6 +16,7 @@ Adium, Copyright 2001-2005, Adam Iser
 #import <QuickTime/QuickTime.h>
 #import <Carbon/Carbon.h>
 #import "AIVideoCapture.h"
+#import "ESImageAdditions.h"
 
 static NSMutableDictionary	*videoCaptureInstances = nil;
 pascal OSErr videoCaptureDataCallback(SGChannel c, Ptr p, long len, long *offset, long chRefCon, TimeValue time,

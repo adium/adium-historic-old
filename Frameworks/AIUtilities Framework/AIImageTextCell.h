@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#import "AIGradientCell.h"
+
 /*!
  * @class AIImageTextCell
  * @brief A cell which displays an image and one or two lines of text

@@ -16,6 +16,8 @@
 #import "AIStringAdditions.h"
 #import <Carbon/Carbon.h>
 #import "AIColorAdditions.h"
+#import "AIScannerAdditions.h"
+#import "AIFunctions.h"
 #include <unistd.h>
 #include <limits.h>
 

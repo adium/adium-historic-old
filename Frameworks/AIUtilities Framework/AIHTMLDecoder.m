@@ -21,6 +21,11 @@
 #import "AITextAttributes.h"
 #import "AIAttributedStringAdditions.h"
 #import "AIColorAdditions.h"
+#import "CBApplicationAdditions.h"
+#import "AIStringUtilities.h"
+#import "AITextAttachmentExtension.h"
+#import "ESFileWrapperExtension.h"
+#import "AIFileManagerAdditions.h"
 
 int HTMLEquivalentForFontSize(int fontSize);
 

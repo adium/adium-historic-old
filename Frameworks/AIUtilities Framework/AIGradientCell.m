@@ -6,6 +6,7 @@
 //
 
 #import "AIGradientCell.h"
+#import "AIGradient.h"
 
 @interface AIGradientCell (PRIVATE)
 - (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;

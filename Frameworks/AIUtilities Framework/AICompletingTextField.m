@@ -16,6 +16,7 @@
 #import "AICompletingTextField.h"
 #import "AIAttributedStringAdditions.h"
 #import "AITextFieldAdditions.h"
+#import "AIStringAdditions.h"
 
 /*
     A text field that auto-completes known strings

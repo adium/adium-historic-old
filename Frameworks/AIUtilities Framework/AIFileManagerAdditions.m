@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIFileManagerAdditions.h"
+#import "AIStringAdditions.h"
 #include <sys/types.h>
 #include <unistd.h>
 

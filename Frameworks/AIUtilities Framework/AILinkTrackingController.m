@@ -25,6 +25,8 @@
 #import "AIFlexibleLink.h"
 #import "AICursorAdditions.h"
 #import "AITooltipUtilities.h"
+#import "AIStringUtilities.h"
+#import "AIMenuAdditions.h"
 
 #define COPY_LINK   AILocalizedString(@"Copy Link","Copy the link to the clipboard")
 

@@ -1,6 +1,7 @@
 //ESBorderlessWindow.m based largely off sample code in CustomWindow.m from Apple's "RoundTransparentWindow" sample project.
 
 #import "ESBorderlessWindow.h"
+#import "AIEventAdditions.h"
 
 #define BORDERLESS_WINDOW_DOCKING_DISTANCE 	12	//Distance in pixels before the window is snapped to an edge
 

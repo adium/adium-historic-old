@@ -6,8 +6,6 @@
 //  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-
 @class ESFlexibleToolbarItem;
 
 /*!

@@ -18,6 +18,9 @@
 */
 
 #import "AITextAttributes.h"
+#import "CBApplicationAdditions.h"
+#import "BZFontManagerAdditions.h"
+
 #define FONT_DEFAULT_NAME	@"Helvetica"
 
 @interface AITextAttributes (PRIVATE)
