@@ -46,10 +46,9 @@
 //Show the contact list window
 - (IBAction)showContactList:(id)sender
 {
-#warning Spawning multiple contact lists to help test the toolbar code
-    //if(!contactListWindowController){
+    if(!contactListWindowController){
         contactListWindowController = [[AIContactListWindowController contactListWindowControllerWithOwner:owner] retain];
-    //}
+    }
     [contactListWindowController showWindow:nil];
 }
 
