@@ -74,9 +74,12 @@
     if(![window isKeyWindow]){
         [window makeKeyAndOrderFront:nil]; //Bring our window to the front        
     }
+}
 
+//Called when our tab is selected
+- (void)tabViewItemWasSelected
+{
     [messageView makeTextEntryViewFirstResponder]; //Ensure our entry view is first responder
-
 }
 
 //

@@ -17,6 +17,7 @@
 #import <Adium/Adium.h>
 #import "AIMessageWindowController.h"
 #import "AIDualWindowInterfacePlugin.h"
+#import "AIMessageTabViewItem.h"
 #import "AIAdium.h"
 
 #define	MESSAGE_WINDOW_NIB		@"MessageWindow"		//Filename of the message window nib
@@ -177,6 +178,7 @@
     id <AIInterfaceContainer>	container = [[notification userInfo] objectForKey:@"TabViewItem"];
 
     if(container != nil){
+        [(AIMessageTabViewItem *)container tabViewItemWasSelected]; //Let the tab know it was selected
         [interface containerDidBecomeActive:container];
     }
 }

@@ -104,8 +104,8 @@
         [view_contents addSubview:view_accountSelection];
 
     }else if(!visible && view_accountSelection){ //Hide the account selection view
-        [view_accountSelection release]; view_accountSelection = nil;
         [view_accountSelection removeFromSuperview];
+        [view_accountSelection release]; view_accountSelection = nil;
     }
 
     //
@@ -144,9 +144,6 @@
     //Config the outgoing text view
     [textView_outgoing setOwner:owner];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
-    [[textView_outgoing window] makeFirstResponder:textView_outgoing];
-
-    NSLog(@"%@ make first responder: %@",[textView_outgoing window],textView_outgoing);
     
     //Config the toolbar
     [toolbar_bottom setIdentifier:MESSAGE_TAB_TOOLBAR];
