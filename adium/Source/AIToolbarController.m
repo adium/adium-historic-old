@@ -16,6 +16,7 @@
 #import "AIToolbarController.h"
 #import <AIUtilities/AIUtilities.h>
 
+#define TOOLBAR_DEFAULT_PREFS                   @"ToolbarPrefs"
 #define TOOLBAR_ITEMS_PREFIX			@"ToolbarItems_"
 
 @interface AIToolbarController (PRIVATE)
@@ -28,12 +29,16 @@
 //init
 - (void)initController
 {
+    //Register Defaults - Doesn't work for some reason.
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TOOLBAR_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_TOOLBARS];
+    
     NSEnumerator	*enumerator;
     NSString		*key;
     NSDictionary	*toolbarDict;
 
     //Load the toolbars and register them
     toolbarDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_TOOLBARS];
+//    NSLog(@"toolbarDict is %@",toolbarDict);
     enumerator = [[toolbarDict allKeys] objectEnumerator];
     while((key = [enumerator nextObject])){
         if([key hasPrefix:TOOLBAR_ITEMS_PREFIX]){
