@@ -18,7 +18,7 @@
 	joinChatMenuItem = [[NSMenuItem alloc] initWithTitle:JOIN_CHAT_MENU_ITEM
 													target:self 
 													action:@selector(joinChat:)
-											 keyEquivalent:@""];
+											 keyEquivalent:@"J"];
 	[[adium menuController] addMenuItem:joinChatMenuItem toLocation:LOC_File_New];
 }	
 
