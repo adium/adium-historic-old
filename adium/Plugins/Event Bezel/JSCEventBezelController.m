@@ -50,7 +50,7 @@ JSCEventBezelController *sharedInstance = nil;
     [[self window] setIgnoresMouseEvents:YES];
     [[self window] setAlphaValue:1.0];
     [[self window] setOpaque:NO];
-    [[self window] setHasShadow: NO];
+    [[self window] setHasShadow:YES];
 }
 
 - (BOOL)windowShouldClose:(id)sender
@@ -113,8 +113,10 @@ JSCEventBezelController *sharedInstance = nil;
         
         // To do: correct bezel position and more options using preferences
         [[self window] center];
-        [self showWindow: nil];
+        [self showWindow:nil];
+        [[self window] invalidateShadow];
         [[self window] orderFront:nil];
+        
     }
 }
 
