@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+# $Id: find_logs.pl,v 1.2 2003/12/08 03:53:26 jmelloy Exp $
+
 use warnings;
 use strict;
 
