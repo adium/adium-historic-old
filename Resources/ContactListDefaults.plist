@@ -14,5 +14,7 @@
 	<true/>
 	<key>Show Tooltips in Background</key>
 	<true/>
+	<key>Window Has Shadow</key>
+	<true/>
 </dict>
 </plist>
