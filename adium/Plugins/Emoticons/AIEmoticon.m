@@ -58,36 +58,48 @@
 {
     return path;
 }
-
+/*
 - (NSEnumerator *)representedTextEnumerator
 {
     return [representedText objectEnumerator];
-}
+}*/
 - (NSAttributedString *)attributedEmoticon
 {
     return attributedEmoticon;
 }
 
+- (NSString *)representedText
+{
+    return representedText;
+}
 - (NSString *)string
 {
+    return representedText;
+    /*
     if([representedText count] != 0){
 	return [representedText objectAtIndex:0];
     }else{
 	return nil;
-    }
+    }*/
 }
 
-- (void)setRepresentedText:(NSString *)returnDelimitedString
+- (void)setRepresentedText:(NSString *)inString
 {
+    if(representedText != inString){
+        [representedText release];
+        representedText = [inString retain];
+    }
+    /*
     NSArray		*textStrings = [returnDelimitedString componentsSeparatedByString:@"\r"];
     NSEnumerator	*enumerator = [textStrings objectEnumerator];
     NSString		*currentString = nil;
-
+    
     [representedText release]; representedText = [[NSMutableArray alloc] init];
-
+    
     while(currentString = [enumerator nextObject]){
 	[representedText addObject:[currentString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
     }
+    */
 }
 
 - (void)setPath:(NSString *)inPath
