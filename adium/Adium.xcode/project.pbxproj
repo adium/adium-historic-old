@@ -2435,8 +2435,8 @@
 		34503BFE058F8CFD00FB7AD1 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = ContactListWindowTransparent.nib;
-			path = "Plugins/Dual Window Interface/ContactListWindowTransparent.nib";
+			name = ContactListWindowBorderless.nib;
+			path = "Plugins/Dual Window Interface/ContactListWindowBorderless.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5188,6 +5188,7 @@
 				4B1EE92306B7E22A00A919E9,
 				4B1EE92506B7E22A00A919E9,
 				4B1EE92706B7E22A00A919E9,
+				4BD6F0B906B988AC002AB122,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5833,6 +5834,7 @@
 				4B1EE92406B7E22A00A919E9,
 				4B1EE92606B7E22A00A919E9,
 				4B1EE92806B7E22A00A919E9,
+				4BD6F0BA06B988AC002AB122,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15889,6 +15891,8 @@
 				F579397E033E756E01A8010A,
 				4BF000CC06B5513400C32219,
 				4BF000CD06B5513400C32219,
+				4BF0028406B55A5700C32219,
+				4BF0028506B55A5700C32219,
 				4BF002CC06B55FCF00C32219,
 				4BF002CD06B55FCF00C32219,
 				4B1EE91D06B7E22900A919E9,
@@ -15923,6 +15927,8 @@
 				4BA0E3DE06B6BBDF001750FC,
 				4BA0E3DF06B6BBDF001750FC,
 				34503BFE058F8CFD00FB7AD1,
+				4BD6F0B706B988AC002AB122,
+				4BD6F0B806B988AC002AB122,
 			);
 			isa = PBXGroup;
 			name = "Borderless Contact List";
@@ -17974,6 +17980,36 @@
 			path = Plugins/Logger/AILogViewerWindowController.m;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BD6F0B706B988AC002AB122 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIBorderlessListOutlineView.h;
+			path = "Plugins/Standard Contact List View/AIBorderlessListOutlineView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BD6F0B806B988AC002AB122 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIBorderlessListOutlineView.m;
+			path = "Plugins/Standard Contact List View/AIBorderlessListOutlineView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BD6F0B906B988AC002AB122 = {
+			fileRef = 4BD6F0B706B988AC002AB122;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BD6F0BA06B988AC002AB122 = {
+			fileRef = 4BD6F0B806B988AC002AB122;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BD7D0CA04620D7C00A8010A = {
 			children = (
@@ -24487,8 +24523,6 @@
 				F5793983033E756E01A8010A,
 				F57939A1033E75CB01A8010A,
 				F57939A2033E75CB01A8010A,
-				4BF0028406B55A5700C32219,
-				4BF0028506B55A5700C32219,
 				34C1CA8705B15B170055C2E3,
 				C497514805BBAA38009958A6,
 				4BBC89A803B964B800A8010A,

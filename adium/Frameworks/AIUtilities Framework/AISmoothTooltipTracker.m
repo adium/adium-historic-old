@@ -30,6 +30,7 @@
 	
 	view = inView;
 	delegate = inDelegate;
+	tooltipTrackingTag = -1;
 
 	//Reset cursor tracking when the view's frame changes
 	[[NSNotificationCenter defaultCenter] addObserver:self

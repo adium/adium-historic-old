@@ -2,11 +2,15 @@
     IBClasses = (
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
+            CLASS = AIBorderlessListOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIStandardListOutlineView; 
+        }, 
+        {
             CLASS = AIBorderlessListWindowController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AIListWindowController; 
         }, 
-        {CLASS = AIDockingWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
         {
             CLASS = AIListOutlineView; 
             LANGUAGE = ObjC; 
@@ -34,8 +38,8 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = NSObject; LANGUAGE = ObjC; }
+        {CLASS = ESBorderlessWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 
 }

@@ -2,7 +2,7 @@
 
 #import "AIDockingWindow.h"
 
-@interface ESBorderlessWindow : NSWindow
+@interface ESBorderlessWindow : AIDockingWindow
 {
 	BOOL	docked;
     //This point is used in dragging to mark the initial click location
