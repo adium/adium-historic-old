@@ -53,11 +53,6 @@
 	return([self retain]);
 }
 
-- (NSMenu *)menuForEvent:(NSEvent *)theEvent
-{
-	return([owner menuForEvent:theEvent]);
-}
-
 #pragma mark Source and destination
 - (void)setSourceName:(NSString *)inSourceName
 {

@@ -343,6 +343,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	[cell setEmbeddedView:[(ESFileTransferProgressRow *)item view]];
 }
 
+#pragma mark Outline view delegate
 - (void)outlineViewDeleteSelectedRows:(NSOutlineView *)inOutlineView
 {
 	unsigned	row = [inOutlineView selectedRow];
@@ -358,6 +359,25 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	//If they tried to delete a row that isn't finished, or we got here with no valid selection, sound the system beep
 	if(!didDelete)
 		NSBeep();
+}
+
+- (NSMenu *)outlineView:(NSOutlineView *)inOutlineView menuForEvent:(NSEvent *)inEvent
+{
+	NSMenu	*menu = nil;
+    NSPoint	location;
+    int		row;
+	
+    //Get the clicked item
+    location = [inOutlineView convertPoint:[inEvent locationInWindow] 
+								  fromView:[[inOutlineView window] contentView]];
+    row = [inOutlineView rowAtPoint:location];
+
+	if(row != -1){
+		ESFileTransferProgressRow	*progressRow = [inOutlineView itemAtRow:row];
+		menu = [progressRow menuForEvent:inEvent];
+	}
+	
+	return(menu);
 }
 
 - (void)reloadAllData
