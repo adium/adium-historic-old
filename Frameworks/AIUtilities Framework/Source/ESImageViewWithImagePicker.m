@@ -9,13 +9,16 @@
 #import "ESImageViewWithImagePicker.h"
 #import "NSImagePicker.h"
 #import "CBApplicationAdditions.h"
+#import "ESImageAdditions.h"
 #import "AIStringUtilities.h"
 
 /*
  An NSImageView subclass which supports:
 	- Address book-style image picker on double-click or enter, with delegate notification
+		- Or, alternately, an Open Panel on double-click or enter, with delegate notification
 	- Copying and pasting, with delegate notification
-	- Drag and drop into and out of the image well, with delegate notification
+	- Drag and drop into and out of the image well, with delegate notification, 
+		with support for animated GIFs and transparency
  	- Notifcation to the delegate of user's attempt to delete the image
 
  Note: ESImageViewWithImagePicker requires Panther or better for the Address book-style image picker to work.
@@ -56,8 +59,9 @@
 	lastResp = nil;
 	shouldDrawFocusRing = NO;
 	
-	useNSImagePickerController = [NSApp isOnPantherOrBetter];
-//	[self setImageFrameStyle:NSImageFramePhoto];
+	useNSImagePickerController = YES;
+	imagePickerClassIsAvailable = ([NSApp isOnPantherOrBetter] &&
+								   (NSClassFromString(@"NSImagePickerController") != nil));
 }
 
 - (void)dealloc
@@ -104,6 +108,12 @@
 	return title;
 }
 
+
+- (void)setUseNSImagePickerController:(BOOL)inUseNSImagePickerController
+{
+	useNSImagePickerController = inUseNSImagePickerController;
+}
+
 // Monitoring user interaction --------------------------------------------------------
 #pragma mark Monitoring user interaction
 
@@ -132,14 +142,38 @@
 //A new image was dragged into our view, changing [self image] to match it (NSImageView handles that)
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
+	BOOL notified = NO;
+	
 	[super concludeDragOperation:sender];
 	
 	if (pickerController){
 		[pickerController selectionChanged];
 	}
 	
-	//Inform the delegate
-	if (delegate && [delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]){
+	//Use the file's data if possible
+	if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]){
+		NSPasteboard	*pboard = [sender draggingPasteboard];
+
+		if([[pboard types] containsObject:NSFilenamesPboardType]){
+			NSArray *files = [pboard propertyListForType:NSFilenamesPboardType];
+		
+			if([files count]){
+				NSString	*imageFile = [files objectAtIndex:0];
+				NSData		*imageData = [NSData dataWithContentsOfFile:imageFile];
+
+				if(imageData){
+					[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
+								   withObject:self
+								   withObject:[NSData dataWithContentsOfFile:imageFile]];
+					
+					notified = YES;
+				}
+			}
+		}
+	}
+
+	//Inform the delegate if we haven't informed it yet
+	if (!notified && [delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]){
 		[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
 					   withObject:self
 					   withObject:[self image]];
@@ -175,10 +209,16 @@
 			}
 			
 			//Inform the delegate
-			if (delegate && [delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]){
-				[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
-							   withObject:self
-							   withObject:image];
+			if(delegate){
+				if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]){
+					[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
+								   withObject:self
+								   withObject:imageData];
+				}else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]){
+					[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
+								   withObject:self
+								   withObject:image];
+				}
 			}
 			
 			success = YES;
@@ -213,13 +253,12 @@
 
 - (void)showPickerController
 {
-	if (useNSImagePickerController)
-	{
+	if (imagePickerClassIsAvailable && useNSImagePickerController){
 		if (!pickerController){
 			Class	imagePickerClass;
 			NSPoint	pickerPoint;
 			
-			imagePickerClass = NSClassFromString(@"NSImagePickerController"); //HACK so we don't crash on launch in 10.2
+			imagePickerClass = NSClassFromString(@"NSImagePickerController"); //10.2 doesn't have NSImagePickerController
 			pickerController = [[imagePickerClass sharedImagePickerControllerCreate:YES] retain];
 			[pickerController setDelegate:self];
 			
@@ -232,6 +271,39 @@
 		
 		[pickerController selectionChanged];
 		[[pickerController window] makeKeyAndOrderFront: nil];
+
+	}else{
+		/* If we aren't using or can't use the image picker, use an open panel  */
+		
+		NSOpenPanel *openPanel;
+		
+		openPanel = [NSOpenPanel openPanel];
+		[openPanel setTitle:[NSString stringWithFormat:AILocalizedString(@"Select Image",nil)]];
+		
+		if ([openPanel runModalForDirectory:nil file:nil types:[NSImage imageFileTypes]] == NSOKButton) {
+			NSData	*imageData;
+			NSImage *image;
+			
+			imageData = [NSData dataWithContentsOfFile:[openPanel filename]];
+			image = (imageData ? [[[NSImage alloc] initWithData:imageData] autorelease] : nil);
+
+			//Update the image view
+			[self setImage:image];
+			
+			//Inform the delegate
+			if(delegate){
+				if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]){
+					[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
+								   withObject:self
+								   withObject:imageData];
+					
+				}else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]){
+					[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
+								   withObject:self
+								   withObject:image];
+				}
+			}
+		}
 	}
 }
 
@@ -241,17 +313,23 @@
 	//Update the NSImageView
 	[self setImage:image];
 	
-	if (useNSImagePickerController)
-	{
+	if (imagePickerClassIsAvailable){
 		//Inform the delegate
-		if (delegate && [delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]){
-			[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
-						   withObject:self
-						   withObject:image];
+		if(delegate){
+			if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]){
+				[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
+							   withObject:self
+							   withObject:[image PNGRepresentation]];
+				
+			}else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]){
+				[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
+							   withObject:self
+							   withObject:image];
+			}
 		}
 		
 		//Add the image to the list of recent images
-		Class ipRecentPictureClass = NSClassFromString(@"NSIPRecentPicture"); //HACK so we don't crash on launch in 10.2
+		Class ipRecentPictureClass = NSClassFromString(@"NSIPRecentPicture"); //10.2 doesn't have NSIPRecentPicture 
 		id recentPicture = [[[ipRecentPictureClass alloc] initWithOriginalImage:image] autorelease];
 		[recentPicture setCurrent];
 		[ipRecentPictureClass _saveChanges]; //Saves to ~/Library/Images/iChat Recent Pictures... but whatever, it works.
@@ -291,6 +369,7 @@
 {
 	return (title ? title : AILocalizedString(@"Image Picker",nil));
 }
+
 
 // Drawing ------------------------------------------------------------------------
 #pragma mark Drawing
