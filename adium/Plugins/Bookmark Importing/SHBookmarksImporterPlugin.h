@@ -4,7 +4,7 @@
 //
 //  Created by Stephen Holt on Wed May 19 2004.
 
-
+#define rebuildBookmarkMenu
 // protocol bookmark importer classes must impliment
 @protocol SHBookmarkImporter
 +(id)newInstanceOfImporter;
@@ -17,6 +17,7 @@
 @interface SHBookmarksImporterPlugin : AIPlugin {
     NSMutableArray  *importerArray;
     NSLock          *bookmarksLock;
+    BOOL             singularMenu;
 }
 
 @end
