@@ -105,84 +105,87 @@ struct oscar_data {
     
     if(node)
     {
-        //extract the GaimBuddy from whatever we were passed
+        //extract the GaimBuddy from whatever we were passed - we should always get buddies, not contacts, in curent code
+        //but it pays to be safe
         GaimBuddy *buddy = nil;
-        if(GAIM_BLIST_NODE_IS_BUDDY(node))
+        if(GAIM_BLIST_NODE_IS_BUDDY(node)) {
             buddy = (GaimBuddy *)node;
-        else if(GAIM_BLIST_NODE_IS_CONTACT(node))
+        } else if(GAIM_BLIST_NODE_IS_CONTACT(node)) {
             buddy = ((GaimContact *)node)->priority;
-        
-        int online = (GAIM_BUDDY_IS_ONLINE(buddy) ? 1 : 0);
-        
-        NSMutableArray *modifiedKeys = [NSMutableArray array];
-        AIHandle *theHandle = (AIHandle *)node->ui_data;
-        NSMutableDictionary * statusDict = [theHandle statusDictionary];
-        //        NSLog(@"delayed for %@",[statusDict objectForKey:@"Display Name"]);
-        if (online) {
-            struct oscar_data *od = gc->proto_data;
-            //            struct buddyinfo *bi = g_hash_table_lookup(od->buddyinfo, gaim_normalize(buddy->name));
-            aim_userinfo_t *userinfo = aim_locate_finduserinfo(od->sess, buddy->name);
-            
-            if (userinfo != NULL) {
-                //Update the away message and status if the contact is away (userinfo->flags & AIM_FLAG_AWAY)
-                //EDS - optimize by keeping track of the string forms separately and comparing them rather than encoding/decoding html
-                if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away_len > 0) && (userinfo->away != NULL) && (userinfo->away_encoding != NULL)) {
-                    //                    NSLog(@"%s",userinfo->away);
-                    gchar *away_utf8 = oscar_encoding_to_utf8(userinfo->away_encoding, userinfo->away, userinfo->away_len);
-                    if (away_utf8 != NULL) {
-                        NSString * awayMessageString = [NSString stringWithUTF8String:away_utf8];
-                        NSAttributedString * statusMsgDecoded = [AIHTMLDecoder decodeHTML:awayMessageString];
-                        if (![statusMsgDecoded isEqualToAttributedString:[statusDict objectForKey:@"StatusMessage"]]) {
-                            [statusDict setObject:statusMsgDecoded forKey:@"StatusMessage"];
-                            [modifiedKeys addObject:@"StatusMessage"];
-                            [statusDict setObject:[NSNumber numberWithBool:YES] forKey:@"Away"];
-                            [modifiedKeys addObject:@"Away"];
-                        }
-                        g_free(away_utf8);
-                    }
-                }else{ //remove any away message
-                    if ([statusDict objectForKey:@"StatusMessage"]) {
-                        [statusDict removeObjectForKey:@"StatusMessage"];
-                        [modifiedKeys addObject:@"StatusMessage"];
-                        [statusDict setObject:[NSNumber numberWithBool:NO] forKey:@"Away"];
-                        [modifiedKeys addObject:@"Away"];
-                    }
-                }
-                
-                //Update the profile if necessary
-                //EDS - optimize by keeping track of the string forms separately and comparing them rather than encoding/decoding html
-                if ((userinfo->info_len > 0) && (userinfo->info != NULL) && (userinfo->info_encoding != NULL)) {
-                    gchar *info_utf8 = oscar_encoding_to_utf8(userinfo->info_encoding, userinfo->info, userinfo->info_len);
-                    if (info_utf8 != NULL) {
-                        NSAttributedString * profileDecoded = [AIHTMLDecoder decodeHTML:[NSString stringWithUTF8String:info_utf8]];
-                        if (![profileDecoded isEqualToAttributedString:[statusDict objectForKey:@"TextProfile"]]) {
-                            [statusDict setObject:profileDecoded forKey:@"TextProfile"];
-                            [modifiedKeys addObject:@"TextProfile"];
-                        }
-                        g_free(info_utf8);
-                    }
-                }
-                
-                //Set the signon date if one hasn't already been set
-                if ( (![statusDict objectForKey:@"Signon Date"]) && ((userinfo->onlinesince) != 0) ) {
-                    [statusDict setObject:[NSDate dateWithTimeIntervalSince1970:(userinfo->onlinesince)] forKey:@"Signon Date"];
-                    [modifiedKeys addObject:@"Signon Date"];
-                }
-            }
         }
         
-        //if anything changed
-        if([modifiedKeys count] > 0)
-        {
-            //tell the contact controller, silencing if necessary
-            [[owner contactController] handleStatusChanged:theHandle
-                                        modifiedStatusKeys:modifiedKeys
-                                                   delayed:silentAndDelayed
-                                                    silent:silentAndDelayed];
+        if (buddy != nil) {
+            int online = (GAIM_BUDDY_IS_ONLINE(buddy) ? 1 : 0);
+            
+            NSMutableArray *modifiedKeys = [NSMutableArray array];
+            AIHandle *theHandle = (AIHandle *)node->ui_data;
+            NSMutableDictionary * statusDict = [theHandle statusDictionary];
+            
+            if (online) {
+                struct oscar_data *od = gc->proto_data;
+                //            struct buddyinfo *bi = g_hash_table_lookup(od->buddyinfo, gaim_normalize(buddy->name));
+                aim_userinfo_t *userinfo = aim_locate_finduserinfo(od->sess, buddy->name);
+                
+                if (userinfo != NULL) {
+                    //Update the away message and status if the contact is away (userinfo->flags & AIM_FLAG_AWAY)
+                    //EDS - optimize by keeping track of the string forms separately and comparing them rather than encoding/decoding html
+                    if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away_len > 0) && (userinfo->away != NULL) && (userinfo->away_encoding != NULL)) {
+                        //                    NSLog(@"%s",userinfo->away);
+                        gchar *away_utf8 = oscar_encoding_to_utf8(userinfo->away_encoding, userinfo->away, userinfo->away_len);
+                        if (away_utf8 != NULL) {
+                            NSString * awayMessageString = [NSString stringWithUTF8String:away_utf8];
+                            NSAttributedString * statusMsgDecoded = [AIHTMLDecoder decodeHTML:awayMessageString];
+                            if (![statusMsgDecoded isEqualToAttributedString:[statusDict objectForKey:@"StatusMessage"]]) {
+                                [statusDict setObject:statusMsgDecoded forKey:@"StatusMessage"];
+                                [modifiedKeys addObject:@"StatusMessage"];
+                                [statusDict setObject:[NSNumber numberWithBool:YES] forKey:@"Away"];
+                                [modifiedKeys addObject:@"Away"];
+                            }
+                            g_free(away_utf8);
+                        }
+                    }else{ //remove any away message
+                        if ([statusDict objectForKey:@"StatusMessage"]) {
+                            [statusDict removeObjectForKey:@"StatusMessage"];
+                            [modifiedKeys addObject:@"StatusMessage"];
+                            [statusDict setObject:[NSNumber numberWithBool:NO] forKey:@"Away"];
+                            [modifiedKeys addObject:@"Away"];
+                        }
+                    }
+                    
+                    //Update the profile if necessary
+                    //EDS - optimize by keeping track of the string forms separately and comparing them rather than encoding/decoding html
+                    if ((userinfo->info_len > 0) && (userinfo->info != NULL) && (userinfo->info_encoding != NULL)) {
+                        gchar *info_utf8 = oscar_encoding_to_utf8(userinfo->info_encoding, userinfo->info, userinfo->info_len);
+                        if (info_utf8 != NULL) {
+                            NSAttributedString * profileDecoded = [AIHTMLDecoder decodeHTML:[NSString stringWithUTF8String:info_utf8]];
+                            if (![profileDecoded isEqualToAttributedString:[statusDict objectForKey:@"TextProfile"]]) {
+                                [statusDict setObject:profileDecoded forKey:@"TextProfile"];
+                                [modifiedKeys addObject:@"TextProfile"];
+                            }
+                            g_free(info_utf8);
+                        }
+                    }
+                    
+                    //Set the signon date if one hasn't already been set
+                    if ( (![statusDict objectForKey:@"Signon Date"]) && ((userinfo->onlinesince) != 0) ) {
+                        [statusDict setObject:[NSDate dateWithTimeIntervalSince1970:(userinfo->onlinesince)] forKey:@"Signon Date"];
+                        [modifiedKeys addObject:@"Signon Date"];
+                    }
+                }
+            }
+            
+            //if anything changed
+            if([modifiedKeys count] > 0)
+            {
+                //tell the contact controller, silencing if necessary
+                [[owner contactController] handleStatusChanged:theHandle
+                                            modifiedStatusKeys:modifiedKeys
+                                                       delayed:silentAndDelayed
+                                                        silent:silentAndDelayed];
+            }
         }
     }
 }
-
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
     [super acceptFileTransferRequest:fileTransfer];    
