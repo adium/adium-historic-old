@@ -158,6 +158,10 @@
 	    [user setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
     }
     
+    if ([contact idleSinceDate])
+	[user setStatusObject:[contact idleSinceDate] forKey:@"IdleSince" notify:NO];
+
+    
     [[adium contactController] listObjectAttributesChanged:user 
 			       modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
 			

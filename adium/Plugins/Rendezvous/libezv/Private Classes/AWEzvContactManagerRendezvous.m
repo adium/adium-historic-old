@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.1 2004/05/15 18:47:09 evands Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.2 2004/05/16 15:06:53 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -598,6 +598,7 @@ NSData *decode_dns(char* buffer, int len )
     NSString		*dnsname;			/* DNS name to lookup NULL */
     int			len;				/* record length */
     u_char		buf[PACKETSZ*10];		/* NULL record return */
+    NSNumber		*idleTime = nil;		    /* idle time */
     
     
     /* check that contact exists in dictionary */
@@ -649,7 +650,13 @@ NSData *decode_dns(char* buffer, int len )
 	else
 	    [contact setStatus: AWEzvOnline];
     }
-    
+
+    /* Set idle time */
+    if ([rendezvousData getField:@"away"])
+	idleTime = [NSNumber numberWithLong:strtol([[rendezvousData getField:@"away"] UTF8String], NULL, 0)];
+    if (idleTime)
+	[contact setIdleSinceDate: [NSDate dateWithTimeIntervalSinceReferenceDate:[idleTime doubleValue]]];
+
     /* Don't do this in Adium -- blocking call will freeze UI */
     #if 0
     dnsname = [NSString stringWithFormat:@"%@%s", [contact uniqueID], "._ichat._tcp.local."];

@@ -3,7 +3,7 @@
  * File:        AWEzvContact.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContact.m,v 1.2 2004/05/16 07:10:35 proton Exp $
+ * CVS tag:     $Id: AWEzvContact.m,v 1.3 2004/05/16 15:06:52 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -53,6 +53,10 @@
 
 - (NSString *) statusMessage {
     return [_rendezvous getField:@"msg"];
+}
+
+- (NSDate *) idleSinceDate {
+    return _idleSinceDate;
 }
 
 - (void) setUniqueID:(NSString *)uniqueID {
