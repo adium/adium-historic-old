@@ -37,7 +37,7 @@ static BOOL didInitYahoo = NO;
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
 {
-	if (([disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound)) {
+	if (disconnectionError && ([disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound)) {
 		[[adium accountController] forgetPasswordForAccount:self];
 	}
 		
