@@ -204,11 +204,11 @@
 
 - (IBAction)editTheme:(id)sender
 {
-	[AIListLayoutWindowController listLayoutOnWindow:[[self view] window] withName:currentLayoutName];
+	[AIListThemeWindowController listThemeOnWindow:[[self view] window] withName:currentThemeName];
 }
 - (IBAction)editLayout:(id)sender
 {
-	[AIListThemeWindowController listThemeOnWindow:[[self view] window] withName:currentThemeName];
+	[AIListLayoutWindowController listLayoutOnWindow:[[self view] window] withName:currentLayoutName];
 }
 
 
@@ -234,54 +234,63 @@
 }
 
 
-
-
-
-
-
+//Delete
 - (IBAction)deleteLayout:(id)sender
 {
 	NSDictionary	*selected = [layoutArray objectAtIndex:[tableView_layout selectedRow]];
-
-	if(selected){
-		int returnCode = NSRunAlertPanel(AILocalizedString(@"Delete Layout",nil), 
-										 AILocalizedString(@"Delete the layout \"%@\" from %@?",nil), 
-										 AILocalizedString(@"Delete",nil), 
-										 AILocalizedString(@"Cancel",nil),
-										 nil,
-										 [selected objectForKey:@"name"],
-										 [selected objectForKey:@"path"]);
-		if(returnCode == 1){
-			NSString *path = [selected objectForKey:@"path"];
-			if(path){
-				[[NSFileManager defaultManager] trashFileAtPath:path];
-				[self updateLayouts];
-			}
+	NSBeginAlertSheet(AILocalizedString(@"Delete Layout",nil), 
+					  AILocalizedString(@"Delete",nil), 
+					  AILocalizedString(@"Cancel",nil),
+					  @"",
+					  [[self view] window],
+					  self,
+					  @selector(deleteLayoutSheetDidEnd:returnCode:contextInfo:),
+					  nil,
+					  selected,
+					  AILocalizedString(@"Delete the layout \"%@\" from %@?",nil), 
+					  [selected objectForKey:@"name"],
+					  [selected objectForKey:@"path"]);
+}
+- (void)deleteLayoutSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(NSDictionary *)contextInfo
+{
+    if(returnCode == NSAlertDefaultReturn && contextInfo){
+		NSString *path = [contextInfo objectForKey:@"path"];
+		if(path){
+			[[NSFileManager defaultManager] trashFileAtPath:path];
+			[self updateLayouts];
 		}
 	}
 }
 
+
+//Delete
 - (IBAction)deleteTheme:(id)sender
 {
-	NSDictionary	*selected = [themeArray objectAtIndex:[tableView_layout selectedRow]];
-	
-	if(selected){
-		int returnCode = NSRunAlertPanel(AILocalizedString(@"Delete Theme",nil), 
-										 AILocalizedString(@"Delete the theme \"%@\" from %@?",nil), 
-										 AILocalizedString(@"Delete",nil), 
-										 AILocalizedString(@"Cancel",nil),
-										 nil,
-										 [selected objectForKey:@"name"],
-										 [selected objectForKey:@"path"]);
-		if(returnCode == 1){
-			NSString *path = [selected objectForKey:@"path"];
-			if(path){
-				[[NSFileManager defaultManager] trashFileAtPath:path];
-				[self updateThemes];
-			}
+	NSDictionary	*selected = [layoutArray objectAtIndex:[tableView_layout selectedRow]];
+	NSBeginAlertSheet(AILocalizedString(@"Delete Theme",nil), 
+					  AILocalizedString(@"Delete",nil), 
+					  AILocalizedString(@"Cancel",nil),
+					  @"",
+					  [[self view] window],
+					  self,
+					  @selector(deleteThemeSheetDidEnd:returnCode:contextInfo:),
+					  nil,
+					  selected,
+					  AILocalizedString(@"Delete the theme \"%@\" from %@?",nil), 
+					  [selected objectForKey:@"name"],
+					  [selected objectForKey:@"path"]);
+}
+- (void)deleteThemeSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(NSDictionary *)contextInfo
+{
+    if(returnCode == NSAlertDefaultReturn && contextInfo){
+		NSString *path = [contextInfo objectForKey:@"path"];
+		if(path){
+			[[NSFileManager defaultManager] trashFileAtPath:path];
+			[self updateThemes];
 		}
 	}
 }
+
 
 
 

@@ -247,7 +247,7 @@
 	NSSize				nameSize = [displayName size];
 	NSRect				rect = inRect;
 	
-	if(nameSize.width > rect.size.width) nameSize = rect.size;
+	if(nameSize.width > rect.size.width) nameSize.width = rect.size.width;
 
 	//Alignment
 	switch([self textAlignment]){
@@ -263,10 +263,11 @@
 
 	//Draw (centered vertical)
 	int half = (rect.size.height - nameSize.height) / 2.0;
+
 	[displayName drawInRect:NSMakeRect(rect.origin.x,
 									   rect.origin.y + half,
 									   rect.size.width,
-									   rect.size.height - half)];
+									   nameSize.height/*rect.size.height - half*/)];
 	
 	
 	switch([self textAlignment]){
