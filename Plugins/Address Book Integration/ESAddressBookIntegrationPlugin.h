@@ -38,6 +38,9 @@ typedef enum {
 	NSMutableArray		*personArrayForImageData;
 	NSTimer				*imageLookupTimer;
     NSMutableDictionary *trackingDict;
+	NSMutableDictionary *trackingDictPersonToTagNumber;
+	NSMutableDictionary *trackingDictTagNumberToPerson;
+
     int                 meTag;
     
     int                 displayFormat;

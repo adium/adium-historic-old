@@ -7,7 +7,7 @@
 
 #import "ESAddressBookIntegrationPlugin.h"
 
-#define IMAGE_LOOKUP_INTERVAL   0.1
+#define IMAGE_LOOKUP_INTERVAL   0.01
 
 @interface ESAddressBookIntegrationPlugin(PRIVATE)
 - (void)updateAllContacts;
@@ -17,6 +17,7 @@
 - (ABPerson *)searchForObject:(AIListObject *)inObject;
 - (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID;
 - (void)rebuildAddressBookDict;
+- (void)queueDelayedFetchOfImageForPerson:(ABPerson *)person object:(AIListObject *)inObject;
 @end
 
 @implementation ESAddressBookIntegrationPlugin
@@ -30,6 +31,11 @@
 	imageLookupTimer = nil;
 	createMetaContacts = NO;
 	
+	//Tracking dictionary for asynchronous image loads
+    trackingDict = [[NSMutableDictionary alloc] init];
+    trackingDictPersonToTagNumber = [[NSMutableDictionary alloc] init];
+    trackingDictTagNumberToPerson = [[NSMutableDictionary alloc] init];
+	
     //Configure our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AB_DISPLAYFORMAT_DEFAULT_PREFS 
 																		forClass:[self class]]  
@@ -42,11 +48,6 @@
 								kABMSNInstantProperty,@"MSN",
 								kABYahooInstantProperty,@"Yahoo!",
 								kABICQInstantProperty,@"ICQ",nil] retain];
-	
-    //Tracking dictionary for asynchronous image loads
-    trackingDict = [[NSMutableDictionary alloc] init];
-    
-    //sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
 	
 	//Wait for Adium to finish launching before we build the address book so the contact list will be ready
 	[[adium notificationCenter] addObserver:self
@@ -62,7 +63,8 @@
     
     [serviceDict release]; serviceDict = nil;
     [trackingDict release]; trackingDict = nil;
-	//    [sharedAddressBook release];
+	[trackingDictPersonToTagNumber release]; trackingDictPersonToTagNumber = nil;
+	[trackingDictTagNumberToPerson release]; trackingDictTagNumberToPerson = nil;
 }
 
 //Adium is ready to receive our glory.
@@ -104,22 +106,9 @@
         ABPerson *person = [self searchForObject:inObject];
 		
 		if (person) {
-			//Delayed lookup of image data
-			if (!listObjectArrayForImageData){
-				listObjectArrayForImageData = [[NSMutableArray alloc] init];
-				personArrayForImageData = [[NSMutableArray alloc] init];
-			}
-			
-			[listObjectArrayForImageData addObject:inObject];
-			[personArrayForImageData addObject:person];
-			if (!imageLookupTimer){
-				imageLookupTimer = [[NSTimer scheduledTimerWithTimeInterval:IMAGE_LOOKUP_INTERVAL
-																	 target:self 
-																   selector:@selector(imageFetchTimer:) 
-																   userInfo:nil
-																	repeats:YES] retain];				
-			}
-			
+
+			[self queueDelayedFetchOfImageForPerson:person object:inObject];
+
 			//Load the name if appropriate
 			AIMutableOwnerArray *displayNameArray = [inObject displayArrayForKey:@"Display Name"];
 		
@@ -139,7 +128,7 @@
 					modifiedAttributes = [NSArray arrayWithObject:@"Display Name"];
 				}
 			}
-			
+
 			//If we changed anything, request an update of the alias / long display name
 			if (modifiedAttributes){
 				[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
@@ -274,23 +263,87 @@
 		meTag = -1;
 		
 	}else if(useABImages){
-		NSNumber                *tagNumber = [NSNumber numberWithInt:tag];
+		NSNumber		*tagNumber;
+		NSImage			*image;
+		AIListObject	*listObject;
+		id				setOrObject;
+		
+		tagNumber = [NSNumber numberWithInt:tag];
 		
 		//Apply the image to the appropriate listObject
-		NSImage                 *image= (inData ? [[[NSImage alloc] initWithData:inData] autorelease] : nil);
+		image = (inData ? [[[NSImage alloc] initWithData:inData] autorelease] : nil);
 		
 		//Get the object from our tracking dictionary
-		AIListObject            *listObject = [trackingDict objectForKey:tagNumber];
+		setOrObject = [trackingDict objectForKey:tagNumber];
 		
-		if (listObject){
-			//Apply the image at lowest priority
+		if ([setOrObject isKindOfClass:[AIListObject class]]){
+			listObject = (AIListObject *)setOrObject;
+			
+			//Apply the image at the appropriate priority
 			[listObject setDisplayUserIcon:image
 								 withOwner:self
 							 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
+
+		}else /*if ([setOrObject isKindOfClass:[NSSet class]])*/{
+			NSEnumerator	*enumerator;
+
+			//Apply the image to each listObject at the appropriate priority
+			enumerator = [(NSSet *)setOrObject objectEnumerator];
+			while(listObject = [enumerator nextObject]){
+				[listObject setDisplayUserIcon:image
+									 withOwner:self
+								 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
+			}
 		}
 		
-		//No further need for the dictionary entry
+		//No further need for the dictionary entries
 		[trackingDict removeObjectForKey:tagNumber];
+		
+		[trackingDictPersonToTagNumber removeObjectForKey:[trackingDictTagNumberToPerson objectForKey:tagNumber]];
+		[trackingDictTagNumberToPerson removeObjectForKey:tagNumber];
+	}
+}
+
+- (void)queueDelayedFetchOfImageForPerson:(ABPerson *)person object:(AIListObject *)inObject
+{
+	int				tag;
+	NSNumber		*tagNumber;
+	NSString		*uniqueId;
+	
+	uniqueId = [person uniqueId];
+	
+	//Check if we already have a tag for the loading of another object with the same
+	//internalObjectID
+	if (tagNumber = [trackingDictPersonToTagNumber objectForKey:uniqueId]){
+		id				previousValue;
+		NSMutableSet	*objectSet;
+		
+		previousValue = [trackingDict objectForKey:tagNumber];
+		
+		if ([previousValue isKindOfClass:[AIListObject class]]){
+			//If the old value is just a listObject, create an array with the old object
+			//and the new object
+			objectSet = [NSMutableSet setWithObjects:previousValue,inObject,nil];
+			
+			//Store the array in the tracking dict
+			[trackingDict setObject:objectSet forKey:tagNumber];
+			
+		}else /*if ([previousValue isKindOfClass:[NSMutableArray class]])*/{
+			//Add the new object to the previously-created array
+			[(NSMutableSet *)previousValue addObject:inObject];
+		}
+		
+	}else{
+		//Begin the image load
+		tag = [person beginLoadingImageDataForClient:self];
+		tagNumber = [NSNumber numberWithInt:tag];
+		
+		//We need to be able to take a tagNumber and retrieve the object
+		[trackingDict setObject:inObject forKey:tagNumber];
+		
+		//We also want to take a person's uniqueID and potentially find an existing tag number
+		[trackingDictPersonToTagNumber setObject:tagNumber forKey:uniqueId];
+		[trackingDictTagNumberToPerson setObject:uniqueId forKey:tagNumber];
 	}
 }
 
@@ -490,29 +543,6 @@
 			/* Got a record with multiple names */
 			[[adium contactController] groupUIDs:UIDsArray forServices:servicesArray];
 		}
-	}
-}
-
-- (void)imageFetchTimer:(NSTimer *)inTimer
-{
-	if ([listObjectArrayForImageData count]){
-		AIListObject	*inObject;
-		ABPerson		*person;
-		int				tag;
-		
-		inObject = [listObjectArrayForImageData objectAtIndex:0];
-		person = [personArrayForImageData objectAtIndex:0];
-		
-		//Begin the image load
-		tag = [person beginLoadingImageDataForClient:self];
-		[trackingDict setObject:inObject forKey:[NSNumber numberWithInt:tag]];
-		
-		[listObjectArrayForImageData removeObjectAtIndex:0];
-		[personArrayForImageData removeObjectAtIndex:0];
-	}else{
-		[listObjectArrayForImageData release]; listObjectArrayForImageData = nil;
-		[personArrayForImageData release]; personArrayForImageData = nil;
-		[imageLookupTimer invalidate]; [imageLookupTimer release]; imageLookupTimer = nil;
 	}
 }
 
