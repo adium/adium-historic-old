@@ -7,7 +7,6 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {CLASS = AIBubbleView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
-        {CLASS = AIBubbleWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
         {CLASS = AIContactListCell; LANGUAGE = ObjC; SUPERCLASS = NSCell; }, 
         {
             CLASS = AIContactListOutlineView; 
@@ -43,6 +42,7 @@
         {CLASS = AIMiniToolbarButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {CLASS = AISendingTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
+        {CLASS = CBEmbossedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 

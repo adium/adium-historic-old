@@ -58,7 +58,7 @@
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
     NSArray		*modifiedAttributes = nil;
-    
+
     if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Idle"]){
         AIMutableOwnerArray	*rightViewArray = [inObject displayArrayForKey:@"Right View"];
         AIIdleView		*idleView = [rightViewArray objectWithOwner:self];
@@ -74,8 +74,8 @@
                 idleView = [AIIdleView idleView];
                 [rightViewArray setObject:idleView withOwner:self];
             }
-            
-            //Set the correct time            
+
+            //Set the correct time
             [idleView setStringContent:[self idleStringForSeconds:idle]];
             attributesChanged = YES;
 
@@ -95,6 +95,44 @@
 
     return(modifiedAttributes);
 }
+/*{
+NSArray		*modifiedAttributes = nil;
+
+    if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Idle"]){
+        AIMutableOwnerArray	*rightViewArray = [inObject displayArrayForKey:@"Right View"];
+        AIIdleView		*idleView = [rightViewArray objectWithOwner:self];
+        double			idle;
+
+        //Set the correct idle time
+        idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
+
+        if(displayIdleTime){
+            //Add an idle view if one doesn't exist
+            if(!idleView){
+                idleView = [AIIdleView idleView];
+                [rightViewArray setObject:idleView withOwner:self];
+            }
+
+            //Set the correct time
+            if(idle != 0){
+                [idleView setStringContent:[self idleStringForSeconds:idle]];
+            }else{
+                [idleView setStringContent:@""];
+            }
+
+        }else{
+            //Remove the idle view if one exists
+            if(idleView){
+                [rightViewArray setObject:nil withOwner:self];
+            }
+
+        }
+
+        modifiedAttributes = [NSArray arrayWithObjects:@"Right View", nil];
+    }
+
+    return(modifiedAttributes);
+}*/
 
 //
 - (NSString *)idleStringForSeconds:(int)seconds

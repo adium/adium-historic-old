@@ -119,15 +119,15 @@
 
 
 // Selection Hiding --------------------------------------------------------------------
-//Hide the selection
+//Restore the selection
 - (void)windowBecameMain:(NSNotification *)notification
 {
-    if(lastSelectedRow >= 0 && lastSelectedRow < [self numberOfRows]){
+    if(lastSelectedRow >= 0 && lastSelectedRow < [self numberOfRows] && [self selectedRow] == -1){
         [self selectRow:lastSelectedRow byExtendingSelection:NO];
     }
 }
 
-//Restore the selection
+//Hide the selection
 - (void)windowResignedMain:(NSNotification *)notification
 {
     lastSelectedRow = [self selectedRow];
@@ -176,14 +176,14 @@
 
         for(i = 0; i < [self numberOfRows]; i++){
             NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
-            NSCell 		*cell = [column dataCell];
+            AISCLCell 		*cell = [column dataCell];
             NSSize		cellSize;
 
             [[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:[self itemAtRow:i]];
 
-            cellSize = [cell cellSizeForBounds:NSMakeRect(0,0,0,[self rowHeight])];
+            cellSize = [cell cellSizeForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
             cellSize.width += [self intercellSpacing].width;
-            cellSize.width += [self levelForRow:i] * [self indentationPerLevel];
+            //cellSize.width += [self levelForRow:i] * [self indentationPerLevel];
 
             if(cellSize.width > desiredWidth){
                 desiredWidth = cellSize.width;

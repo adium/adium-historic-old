@@ -13,8 +13,8 @@
 
 #define KEY_TEXT_PROFILE_WINDOW_FRAME	@"Text Profile Window"
 #define INFO_WINDOW_NIB			@"ContactInfo"
-#define InfoIndentA	75
-#define InfoIndentB	80
+#define InfoIndentA			75
+#define InfoIndentB			80
 
 
 @implementation AIInfoWindowController
@@ -62,10 +62,13 @@ static AIInfoWindowController *sharedInstance = nil;
 - (void)configureWindowForContact:(AIListContact *)inContact
 {
     NSMutableAttributedString	*infoString;
-    NSDictionary		*labelAttributes, *valueAttributes;
+    NSDictionary		*labelAttributes, *valueAttributes, *bigValueAttributes;
     NSMutableParagraphStyle	*paragraphStyle;
     AIMutableOwnerArray		*ownerArray;
-
+    NSTextAttachmentCell 	*imageAttatchment;
+    NSTextAttachment 		*attatchment;
+    NSImage 			*buddyImage;
+    
     //Make sure our window is loaded
     [self window];
 
@@ -87,48 +90,53 @@ static AIInfoWindowController *sharedInstance = nil;
     [paragraphStyle setHeadIndent:InfoIndentB];
 
     //Prepare the text attributes we will use
-        labelAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+    labelAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
         [NSFont boldSystemFontOfSize:11], NSFontAttributeName,
+        [NSColor colorWithCalibratedWhite:0.5 alpha:1.0], NSForegroundColorAttributeName,
         paragraphStyle, NSParagraphStyleAttributeName, 
         nil];
     valueAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
         [NSFont systemFontOfSize:11], NSFontAttributeName,
         paragraphStyle, NSParagraphStyleAttributeName,
         nil];
-
+    bigValueAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+        [NSFont boldSystemFontOfSize:16], NSFontAttributeName,
+        paragraphStyle, NSParagraphStyleAttributeName,
+        nil];
+    
     //Buddy Icon
     ownerArray = [inContact statusArrayForKey:@"BuddyImage"];
     if(ownerArray && [ownerArray count]){
-        NSImage 		*buddyImage = [ownerArray objectAtIndex:0];
-        NSTextAttachmentCell 	*imageAttatchment;
-        NSTextAttachment 	*attatchment;
-
-        imageAttatchment = [[[NSTextAttachmentCell alloc] initImageCell:buddyImage] autorelease];
-        attatchment = [[[NSTextAttachment alloc] init] autorelease];
-        [attatchment setAttachmentCell:imageAttatchment];
-
-        [infoString appendString:@"\r\tBuddy Icon:\t" withAttributes:labelAttributes];
-        [infoString appendAttributedString:[NSAttributedString attributedStringWithAttachment:attatchment]];
+        buddyImage = [ownerArray objectAtIndex:0];
+    }else{
+        buddyImage = [AIImageUtilities imageNamed:@"DefaultIcon" forClass:[self class]];
     }
+    
+    imageAttatchment = [[[NSTextAttachmentCell alloc] initImageCell:buddyImage] autorelease];
+    attatchment = [[[NSTextAttachment alloc] init] autorelease];
+    [attatchment setAttachmentCell:imageAttatchment];
 
+    [infoString appendString:@"\r\t" withAttributes:labelAttributes];
+    [infoString appendAttributedString:[NSAttributedString attributedStringWithAttachment:attatchment]];
+    
     //Display Name
-    ownerArray = [inContact statusArrayForKey:@"Display Name"];
-    if(ownerArray && [ownerArray count]){
-        [infoString appendString:@"\r\tUser Name:\t" withAttributes:labelAttributes];
-        [infoString appendString:[ownerArray objectAtIndex:0] withAttributes:valueAttributes];
-    }
+//    ownerArray = [inContact statusArrayForKey:@"Display Name"];
+//    if(ownerArray && [ownerArray count]){
+        [infoString appendString:@"\t" withAttributes:labelAttributes];
+        [infoString appendString:/*[ownerArray objectAtIndex:0]*/[inContact displayName] withAttributes:bigValueAttributes];
+//    }
 
     //Client
     ownerArray = [inContact statusArrayForKey:@"Client"];
     if(ownerArray && [ownerArray count]){
-        [infoString appendString:@"\r\tClient:\t" withAttributes:labelAttributes];
+        [infoString appendString:@"\r\r\tClient:\t" withAttributes:labelAttributes];
         [infoString appendString:[ownerArray objectAtIndex:0] withAttributes:valueAttributes];
     }
 
     //Signon Date
     NSDate *signonDate = [[inContact statusArrayForKey:@"Signon Date"] earliestDate];
     if(signonDate){
-        [infoString appendString:@"\r\tOnline Since:\t" withAttributes:labelAttributes];
+        [infoString appendString:@"\r\r\tOnline Since:\t" withAttributes:labelAttributes];
         [infoString appendString:[signonDate description] withAttributes:valueAttributes];
     }
     
@@ -148,9 +156,9 @@ static AIInfoWindowController *sharedInstance = nil;
 
     if(status || away){ //If away or w/ status message
         if(away){
-            [infoString appendString:@"\r\tAway:\t" withAttributes:labelAttributes];
+            [infoString appendString:@"\r\r\tAway:\t" withAttributes:labelAttributes];
         }else{
-            [infoString appendString:@"\r\tStatus:\t" withAttributes:labelAttributes];
+            [infoString appendString:@"\r\r\tStatus:\t" withAttributes:labelAttributes];
         }
 
         [infoString appendString:(status != nil ? [status string] : @"Yes") withAttributes:valueAttributes];
@@ -162,7 +170,7 @@ static AIInfoWindowController *sharedInstance = nil;
         int	hours = (int)(idle / 60);
         int	minutes = (int)(idle % 60);
 
-        [infoString appendString:@"\r\tIdle:\t" withAttributes:labelAttributes];
+        [infoString appendString:@"\r\r\tIdle:\t" withAttributes:labelAttributes];
         if(hours){
             [infoString appendString:[NSString stringWithFormat:@"%i hour%@, %i minute%@", hours, (hours == 1 ? @"": @"s"), minutes, (minutes == 1 ? @"": @"s")]
                       withAttributes:valueAttributes];
@@ -175,7 +183,7 @@ static AIInfoWindowController *sharedInstance = nil;
     //Warning
     int warning = [[inContact statusArrayForKey:@"Warning"] greatestIntegerValue];
     if(warning > 0){
-        [infoString appendString:@"\r\tWarning:\t" withAttributes:labelAttributes];
+        [infoString appendString:@"\r\r\tWarning:\t" withAttributes:labelAttributes];
         [infoString appendString:[NSString stringWithFormat:@"%i%%",warning] withAttributes:valueAttributes];
     }
 
@@ -195,7 +203,7 @@ static AIInfoWindowController *sharedInstance = nil;
         [textProfile addAttribute:NSParagraphStyleAttributeName value:indentStyle range:NSMakeRange(firstLineRange.length, [textProfile length] - firstLineRange.length)];
 
         //
-        [infoString appendString:@"\r\tProfile:\t" withAttributes:labelAttributes];
+        [infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
         [infoString appendAttributedString:textProfile];
     }
 

@@ -87,7 +87,7 @@
     int			selectedIndex;
 
     //remove any existing menu items
-    [popUp_accounts removeAllItems];
+    [[popUp_accounts menu] removeAllItemsButFirst];
 
     //insert a menu for each account
     enumerator = [[[owner accountController] accountArray] objectEnumerator];
