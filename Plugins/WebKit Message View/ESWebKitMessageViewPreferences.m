@@ -75,7 +75,7 @@
 	
 	[popUp_customBackground setMenu:[self _customBackgroundMenu]];
 	[popUp_styles setMenu:[self _stylesMenu]];
-		
+
 	{
 		NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
@@ -241,6 +241,10 @@
 										 forKey:KEY_WEBKIT_STYLE
 										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	
+	
+	[popUp_variants setMenu:[self _variantsMenuForStyle:newStyleName]];
+
+	
 	//If we were passed a variant as well, we want to change the variant preference for this style.
 	//A variant of @"" indicates the user selected the normal view.
 	//A variant of nil means that the user selected the menu item (rather than a submenu item); we should therefore
@@ -253,10 +257,21 @@
 	
 	//Clicking a variant won't automatically change the popup's selected item, so manually ensure it is selected.
 	[popUp_styles selectItemWithTitle:newStyleName];
+	[popUp_variants selectItemWithTitle:variant];
 	[self updateBackgroundImageCache];
 	[self updatePreview];
 
+
+
+
+	
+	
 	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
+}
+
+- (IBAction)changeVariant:(id)sender
+{
+	
 }
 
 - (IBAction)changeBackground:(id)sender
@@ -537,55 +552,50 @@
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:styleName target:self action:@selector(changeStyle:) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:styleName, @"styleName", nil]];
 		[menu addItem:menuItem];
-		
-		//If variants exist, we need to create and set a submenu
-		NSBundle		*style = [plugin messageStyleBundleWithName:styleName];			
-		NSArray			*variantsArray = [style pathsForResourcesOfType:@"css" inDirectory:@"Variants"];
-		
-		if([variantsArray count]) {
-			NSEnumerator	*variantsEnumerator;
-			NSString		*variant;
-			NSMenu			*subMenu = nil;
-			NSMenuItem		*subMenuItem;
-			
-			variantsEnumerator = [variantsArray objectEnumerator];
-			while (variant = [variantsEnumerator nextObject]){
-				
-				//Generate the subMenu if it does not yet exist
-				if (!subMenu){
-					subMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
-					
-					//Add the No Variant menu item
-					NSString		*noVariantName = [style objectForInfoDictionaryKey:@"DisplayNameForNoVariant"];
-					if (!noVariantName){
-						noVariantName = AILocalizedString(@"Normal","Normal style variant menu item");
-					}
-					subMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:noVariantName 
-																						target:self
-																						action:@selector(changeStyle:)
-																				 keyEquivalent:@""] autorelease];
-					[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:styleName, @"styleName", @"", @"variant",nil]];
-					[subMenu addItem:subMenuItem];
-				}
-				
-				variant = [[variant lastPathComponent] stringByDeletingPathExtension];
-				subMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:variant
-																					target:self
-																					action:@selector(changeStyle:) 
-																			 keyEquivalent:@""] autorelease];
-				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:styleName, @"styleName", variant, @"variant", nil]];
-				[subMenu addItem:subMenuItem];
-			}
-			
-			//If we generated a subMenu, set it and then clear the variable for the next pass through the loop
-			if (subMenu){
-				[menuItem setSubmenu:subMenu];
-				subMenu = nil;
-			}
-		}
 	}
 	
 	return menu;
+}
+
+- (NSMenu *)_variantsMenuForStyle:(NSString *)styleName
+{
+	NSBundle		*style = [plugin messageStyleBundleWithName:styleName];			
+	NSArray			*variantsArray = [style pathsForResourcesOfType:@"css" inDirectory:@"Variants"];
+	NSMenu			*variantsMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
+	NSMenuItem		*menuItem;
+
+	//Add the No Variant menu item
+	//XXX - Why is this a special case?
+	NSString	*noVariantName = [style objectForInfoDictionaryKey:@"DisplayNameForNoVariant"];
+	if(!noVariantName) noVariantName = AILocalizedString(@"Normal","Normal style variant menu item");
+
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:noVariantName 
+																	 target:self
+																	 action:@selector(changeStyle:)
+															  keyEquivalent:@""] autorelease];
+	[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:styleName, @"styleName", @"", @"variant",nil]];
+	[variantsMenu addItem:menuItem];
+
+	//Add a menu item for each variant
+	if([variantsArray count]) {
+		NSEnumerator	*variantsEnumerator;
+		NSString		*variant;
+		
+		variantsEnumerator = [variantsArray objectEnumerator];
+		while(variant = [variantsEnumerator nextObject]){
+			
+			variant = [[variant lastPathComponent] stringByDeletingPathExtension];
+			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:variant
+																				target:self
+																				action:@selector(changeStyle:) 
+																		 keyEquivalent:@""] autorelease];
+			[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:styleName, @"styleName", variant, @"variant", nil]];
+			[variantsMenu addItem:menuItem];
+		}
+
+	}
+	
+	return(variantsMenu);
 }
 
 - (NSMenu *)backgroundImageTypeMenu
