@@ -400,7 +400,7 @@
     //If this item is the one we're editing, make it look as if the changes are applying live by pulling the text right from our text view
     if(item == displayedMessage){
         NSString * title = [displayedMessage objectForKey:@"Title"];
-        if ([title compare:[[displayedMessage objectForKey:@"Message"] string]] == 0){
+        if (!title || [title compare:[[displayedMessage objectForKey:@"Message"] string]] == 0){
             return([[textView_message textStorage] string]);
         }else{
             return(title);
