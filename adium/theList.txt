@@ -9,13 +9,33 @@ Legend
 # Debatable (ASK and debate before doing!)
 = Done
 
+This list is for what needs to happen for 2.0
+
+Don't delete things from this list. Just use `=' to indicate it's done. We'll cull things all at once :)
+
+---------------------------------------
+Stuff for Adam to do right this instant
+---------------------------------------
+- MAKE [Evan] A SAMMICH, WOMAN.
+- Move user name field out of account code and into account list preferences code
+- MAKE ME ANOTHER SANDWICH.
+- This gets my vote.  I would love a sandwhich.
+- Magically make display names work however the user intends, using notifications to change if they change their mind.  Note: Distributed notification center probably best for this task.
+- Similarly, implement PSI-UI (Copyright The Adium Team) for all preferences, removing the preference window entirely.
+
+- Evan, look into that assertion you put into the code that's crashing on new messages randomly :)
+- I have to stop bitching and be productive? :P
+- You can bitch while you're being productive !:D  *grumbles about preferences and starts at the account views*
+- *boggles at evalU8rs*
 
 ----
 Bugs
 ----
 * Account name not displaying correctly after service switch
 * Create new account, tab from username->pass->account list.  Next tab should go back to username
-* Stop contact list from auto-resizing under the dock
+
+* Stop contact list from auto-resizing under the dock - this is a tough area.  It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how wide the dock is; only how tall it is.
+
 * Message tabs are not refreshing correctly when status changes
 * Stray tab divider is displaying when dragging tabs
 * When dragging a tab off quickly, it is possible for the tab bar to not finish moving to the correct position or to crash.
@@ -24,12 +44,11 @@ Bugs
 * Prevent cmd-delete from working in the message window
 * Mousekeys to move tabs causes a crash: http://www.visualdistortion.org/crash/view.jsp?crash=5930
 
-
 # Give address book icons higher priority than server-side icons
 	This is not a bug. It's desired behavior by a lot of people :P
 	We probably need a default priority preference.
 	We definitely need per-user preferences, including in-Adium setting of the icon.
-	We need a way for user specified icons in the address book to not be overridden/overwritten by adium when export is turned on.
+	We need a way for user specified icons in the address book to not be overridden/overwritten by adium when export is turned on. 
 -------------
 Minor Changes
 -------------
@@ -40,8 +59,10 @@ Minor Changes
 + Create a plugin to hide the AIM "Your screen name is now signed in 2 locations" messages
 - Remove "per-contact" window position/size saving. Instead, use the size/position of the last window, and cascade new ones
 + Add area for typing contact notes to inspector, display notes in tooltip
-+ Allow specifying an image for a contact in the inspector (Independent of address book)
-+ Change main auto-resizing preference to only toggle vertical resizing
++ Allow specifying an image for a contact in the inspector (Independent of address book) - this should go with the inspector/Get Info merger...
+
++ Change main auto-resizing preference to only toggle vertical resizing - this goes with the big contact list changes and should wait to see how they pan out.
+
 - Remove the advanced option for vertical resizing, this is already covered in the main preferences.
 + Allow user to have more control over what is spoken by the announcer plugin
 + Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
@@ -116,7 +137,7 @@ Contact list display:
 #Show a warning icon when 2 icons would overlap. This would be when you have 2 or more packs. State which would be used visually.
 
 Event Info (Implement as a new plugin, to replace bezel):
-+ Give the notification window a titlebar, and allow it to be repositioned while visible
++ Give the notification window a titlebar, and allow it to be repositioned while visible.  Evan: I disagree.  It should not have a titlebar.  Contact me for discussion :)
 + Stack bezels when multiple events arrive eevyl note: hell not make this, queue them, with the posibility to dismish the more recent one with a widget to see next (or close the thing if it is the last one)
 + Color the entire bezel to match the event being displayed
 + Make the bezel smaller, clearer, easier to read, prettier
@@ -135,6 +156,8 @@ Contact Blocking:
 + Add "Show Blocked Contacts" menu item to view, blocked contact list group
 + Add "Block contacts not on my list" to AIM account preferences.
 - Ignore AIM's "Allow these" and "Block all" modes (for now, atleast)
+Evan: libgaim does not have support for accessing the privacy settings... we can add/remove from the list, but we have no way of knowing what's on it.
+
 
 Multi-user chat: <<<INCOMPLETE>>>
 + Show a users list
