@@ -110,6 +110,22 @@
 			<key>LSTypeIsPackage</key>
 			<true/>
 		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>AdiumScripts</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>Adium Scripts</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AdIM</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSTypeIsPackage</key>
+			<true/>
+		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>Adium</string>
