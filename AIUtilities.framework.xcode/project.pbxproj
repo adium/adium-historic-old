@@ -331,6 +331,82 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		076CAD6C0785B62900250504 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIFunctions.m;
+			path = "Frameworks/AIUtilities Framework/AIFunctions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		076CAD6D0785B62900250504 = {
+			fileRef = 076CAD6C0785B62900250504;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		076CAD6E0785B64000250504 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIFunctions.h;
+			path = "Frameworks/AIUtilities Framework/AIFunctions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		076CAD6F0785B64000250504 = {
+			fileRef = 076CAD6E0785B64000250504;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		076CAD720785B64600250504 = {
+			children = (
+				076CAD6E0785B64000250504,
+				076CAD6C0785B62900250504,
+			);
+			isa = PBXGroup;
+			name = Functions;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		079C11390782FB500048E350 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIScannerAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIScannerAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		079C113A0782FB500048E350 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIScannerAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIScannerAdditions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		079C113B0782FB500048E350 = {
+			fileRef = 079C11390782FB500048E350;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		079C113C0782FB500048E350 = {
+			fileRef = 079C113A0782FB500048E350;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //070
 //071
 //072
@@ -360,6 +436,7 @@
 		0867D691FE84028FC02AAC07 = {
 			children = (
 				34486BC906D1DF0400DA778C,
+				076CAD720785B64600250504,
 				4BD1EFBC06D2661200B3975E,
 				4BD1EFA506D264AC00B3975E,
 				4BD1EED506D25ED400B3975E,
@@ -4671,6 +4748,8 @@
 				34486B9B06D1DF0300DA778C,
 				34486BA206D1DF0300DA778C,
 				34486BA306D1DF0300DA778C,
+				079C11390782FB500048E350,
+				079C113A0782FB500048E350,
 				34486BA406D1DF0300DA778C,
 				34486BA506D1DF0300DA778C,
 				34486BB006D1DF0300DA778C,
@@ -5629,6 +5708,8 @@
 				4B6DDA4F075A8879002E0BF4,
 				34D18392075FC2390075A380,
 				4BC5A5C30764F6ED0080ECF7,
+				079C113B0782FB500048E350,
+				076CAD6F0785B64000250504,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5704,6 +5785,7 @@
 				34486C7306D1DF0400DA778C,
 				34486C7506D1DF0400DA778C,
 				34486C7706D1DF0400DA778C,
+				076CAD6D0785B62900250504,
 				34486C7906D1DF0400DA778C,
 				34486C7B06D1DF0400DA778C,
 				34486C7D06D1DF0400DA778C,
@@ -5720,6 +5802,7 @@
 				34486C9F06D1DF0400DA778C,
 				34486CA106D1DF0400DA778C,
 				34486CA306D1DF0400DA778C,
+				079C113C0782FB500048E350,
 				34486CA506D1DF0400DA778C,
 				34486CA706D1DF0400DA778C,
 				34486CA906D1DF0400DA778C,
