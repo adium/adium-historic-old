@@ -13271,6 +13271,7 @@
 			files = (
 				34BD9FC3053147A0000AB133,
 				34BD9FC4053147A0000AB133,
+				6E4F2B1705CA013200C11243,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22701,6 +22702,7 @@
 		};
 		4BE8E5390483B59800A8010A = {
 			children = (
+				6E4F2B1605CA013000C11243,
 				4BE8E54D0483B62800A8010A,
 				4BE8E54E0483B62800A8010A,
 				6ECE6C220474BB1700CAEAD0,
@@ -22709,7 +22711,6 @@
 				4BE8E5450483B5EE00A8010A,
 				4BE8E5460483B5EE00A8010A,
 				4BF45A970483C6CD00A8010A,
-				6EE26787047EEBAB00637E34,
 			);
 			isa = PBXGroup;
 			name = "Away Status Window";
@@ -25276,6 +25277,21 @@
 //6E2
 //6E3
 //6E4
+		6E4F2B1605CA013000C11243 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = AwayStatusPrefs.plist;
+			path = "Plugins/Away Status Window/AwayStatusPrefs.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E4F2B1705CA013200C11243 = {
+			fileRef = 6E4F2B1605CA013000C11243;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		6E97F12F04A94C0100472FFF = {
 			children = (
 				6E97F13D04A94C5400472FFF,
@@ -25603,15 +25619,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIAwayStatusWindowController.m;
 			path = "Plugins/Away Messages/AIAwayStatusWindowController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6EE26787047EEBAB00637E34 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = AwayStatusPrefs.plist;
-			path = "Plugins/Away Messages/AwayStatusPrefs.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
