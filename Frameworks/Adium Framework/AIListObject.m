@@ -16,6 +16,10 @@
 #import "AIListObject.h"
 #import "AIListGroup.h"
 
+@interface AIListObject (PRIVATE)
+- (void)determineOrderIndex;
+@end
+
 @implementation AIListObject
 
 DeclareString(ObjectStatusCache);
@@ -38,33 +42,14 @@ DeclareString(FormattedUID);
 	InitString(Group,@"Group");
 	InitString(DisplayServiceID,@"DisplayServiceID");
 	InitString(FormattedUID,@"FormattedUID");
-	
+
     containingObject = nil;
     UID = [inUID retain];	
 	service = inService;
-		
+
 	visible = YES;
+	orderIndex = 0;
 
-	//Load the order index for this object (which will be appropriate for the last group it was in)
-	NSNumber	*orderIndexNumber = [self preferenceForKey:KEY_ORDER_INDEX
-													 group:ObjectStatusCache 
-									 ignoreInheritedValues:YES];
-	if (orderIndexNumber){
-		float storedOrderIndex;
-
-		storedOrderIndex = [orderIndexNumber floatValue];
-
-		//Evan: I don't know how we got up to infinity.. perhaps pref corruption in a previous version?
-		//In any case, check against it; if we stored it, reset to a reasonable number.
-		if(storedOrderIndex < INFINITY){
-			orderIndex = storedOrderIndex;
-		}else{
-			[self setOrderIndex:[[adium contactController] nextOrderIndex]];
-		}
-	}else{
-		[self setOrderIndex:[[adium contactController] nextOrderIndex]];
-	}
-	
     return(self);
 }
 
@@ -187,10 +172,35 @@ DeclareString(FormattedUID);
 	}
 }
 	
-	//Returns our desired placement within a group
+//Returns our desired placement within a group
 - (float)orderIndex
 {
+	if(!orderIndex) [self determineOrderIndex];
+	
 	return(orderIndex);
+}
+
+- (void)determineOrderIndex
+{	
+	//Load the order index for this object (which will be appropriate for the last group it was in)
+	NSNumber	*orderIndexNumber = [self preferenceForKey:KEY_ORDER_INDEX
+													 group:ObjectStatusCache 
+									 ignoreInheritedValues:YES];
+	if (orderIndexNumber){
+		float storedOrderIndex;
+		
+		storedOrderIndex = [orderIndexNumber floatValue];
+		
+		//Evan: I don't know how we got up to infinity.. perhaps pref corruption in a previous version?
+		//In any case, check against it; if we stored it, reset to a reasonable number.
+		if(storedOrderIndex < INFINITY){
+			orderIndex = storedOrderIndex;
+		}else{
+			[self setOrderIndex:[[adium contactController] nextOrderIndex]];
+		}
+	}else{
+		[self setOrderIndex:[[adium contactController] nextOrderIndex]];
+	}
 }
 
 //Alter the placement of this object in a group (PRIVATE: These are for AIListGroup ONLY)
@@ -354,8 +364,6 @@ DeclareString(FormattedUID);
 		[[adium contactController] listObjectAttributesChanged:self
 												  modifiedKeys:[NSSet setWithObject:KEY_USER_ICON]];
 	}
-				
-				
 }
 
 
