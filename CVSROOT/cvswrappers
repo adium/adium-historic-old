@@ -23,4 +23,4 @@
 #*.gif -k 'b'
 
 # Project Builder files
-*.pbproj -k 'b'
+*.pbxproj -k 'b'
