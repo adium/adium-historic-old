@@ -46,6 +46,7 @@
     tableColumn = [[[NSTableColumn alloc] init] autorelease];
     [tableColumn setDataCell:[[[AISCLCell alloc] init] autorelease]];
     [tableColumn setEditable:NO];
+    [self setDrawsGrid:NO];
     [self addTableColumn:tableColumn];
     [self setAutoresizesAllColumnsToFit:YES];
     [self setOutlineTableColumn:tableColumn];

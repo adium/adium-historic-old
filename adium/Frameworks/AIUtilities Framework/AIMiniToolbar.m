@@ -16,6 +16,7 @@
 #import "AIMiniToolbar.h"
 #import <AIUtilities/AIUtilities.h>
 #import "AIMiniToolbarItem.h"
+#import "AISystemTabRendering.h"
 
 #define MINI_TOOLBAR_POOF		@"poof"			//Filename of the poof animation
 #define MINI_TOOLBAR_MENU_NIB		@"MiniToolbarMenu"	//Filename of the minitoolbar nib

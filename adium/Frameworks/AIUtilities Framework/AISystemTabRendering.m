@@ -168,6 +168,7 @@ static int		labelSize;
 }
 
 
+
 // Private --------------------------------------------------------------------------------
 //Returns the left tab cap from a scratch image
 + (NSImage *)leftCapFromScratchImage:(NSImage *)inScratchImage

@@ -131,10 +131,8 @@ int _indexSort(AIEditorListHandle *objectA, AIEditorListHandle *objectB, void *c
 - (void)sortGroupArray
 {
     if(sortMode == AISortByName){
-        NSLog(@"name SortList");
         [list sortUsingFunction:_nameSort context:nil];
     }else if(sortMode == AISortByIndex){
-        NSLog(@"index SortList");
         [list sortUsingFunction:_indexSort context:nil];
     }
 }

@@ -142,7 +142,7 @@
             outName = [[handleArray objectAtIndex:0] UID];
 
         }else{
-            outName = @"##INVALID!";
+            outName = UID;
 
         }
     }

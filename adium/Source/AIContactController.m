@@ -358,7 +358,6 @@
         NSString	*key;
         
         key = [reverseListOrderDict objectForKey:orderIndex]; //Find the key for this index
-        NSLog(@"%i: %@",index,key);
         [spreadDict setObject:[NSNumber numberWithInt:index++]  forKey:key]; //Re-assign it to the new index
     }
 

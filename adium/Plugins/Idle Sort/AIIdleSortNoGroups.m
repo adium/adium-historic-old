@@ -100,8 +100,6 @@ int idleSortNoGroups(id objectA, id objectB, void *context)
 		}
             }
         }else{
-            AIListGroup	*group = [objectA containingGroup];
-
             //Keep groups in manual order
             if([objectA orderIndex] > [objectB orderIndex]){
                 return(NSOrderedDescending);
