@@ -63,7 +63,7 @@
 		if(!image){
 			//If that is not available, use the contact's service image (cached, since it's a lot of work to look up)
 			if(!_serviceImage){
-				_serviceImage = [[[[adium accountController] accountWithObjectID:[(AIListContact *)listObject accountID]] serviceMenuImage] retain];
+				_serviceImage = [[[[adium accountController] accountWithObjectID:[(AIListContact *)listObject accountID]] menuImage] retain];
 			}
 			image = _serviceImage;
 		}
