@@ -5015,7 +5015,7 @@
 			productType = "com.apple.product-type.bundle";
 		};
 		342DC47505783AF0000E1D83 = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = folder;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Send Message Contact Alert.AdiumPlugin";
