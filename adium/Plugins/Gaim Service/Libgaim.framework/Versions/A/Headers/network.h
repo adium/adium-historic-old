@@ -30,31 +30,48 @@ extern "C" {
 #endif
 
 /**************************************************************************/
-/** @name Network API                                     */
+/** @name Network API                                                     */
 /**************************************************************************/
 /*@{*/
 
 /**
- * Sets the IP address of the local system in preferences.
+ * Converts a dot-decimal IP address to an array of unsigned
+ * chars.  For example, converts 192.168.0.1 to a 4 byte
+ * array containing 192, 168, 0 and 1.
+ *
+ * @param ip An IP address in dot-decimal notiation.
+ * @return An array of 4 bytes containing an IP addresses
+ *         equivalent to the given parameter, or NULL if
+ *         the given IP address is invalid.  This value
+ *         is statically allocated and should not be
+ *         freed.
+ */
+const unsigned char *gaim_network_ip_atoi(const char *ip);
+
+/**
+ * Sets the IP address of the local system in preferences.  This
+ * is the IP address that should be used for incoming connections
+ * (file transfer, direct IM, etc.) and should therefore be
+ * publicly accessible.
  *
  * @param ip The local IP address.
  */
-void gaim_network_set_local_ip(const char *ip);
+void gaim_network_set_public_ip(const char *ip);
 
 /**
  * Returns the IP address of the local system set in preferences.
  *
- * This returns the value set via gaim_network_set_local_ip().
- * You probably want to use gaim_network_get_ip_for_account() instead.
+ * This returns the value set via gaim_network_set_public_ip().
+ * You probably want to use gaim_network_get_my_ip() instead.
  *
  * @return The local IP address set in preferences.
  */
-const char *gaim_network_get_local_ip(void);
+const char *gaim_network_get_public_ip(void);
 
 /**
  * Returns the IP address of the local system.
  *
- * You probably want to use gaim_network_get_ip_for_account() instead.
+ * You probably want to use gaim_network_get_my_ip() instead.
  *
  * @note The returned string is a pointer to a static buffer. If this
  *       function is called twice, it may be important to make a copy
@@ -66,15 +83,14 @@ const char *gaim_network_get_local_ip(void);
 const char *gaim_network_get_local_system_ip(int fd);
 
 /**
- * Returns the IP address that should be used for the specified account.
+ * Returns the IP address that should be used anywhere a
+ * public IP addresses is needed (listening for an incoming
+ * file transfer, etc).
  *
- * First, if @a account is not @c NULL, the IP associated with @a account
- * is tried, via a call to gaim_account_get_local_ip().
- *
- * If that IP is not set, the IP set in preferences is tried.
- *
- * If that IP is not set, the system's local IP is tried, via a call to
- * gaim_network_get_local_ip().
+ * If the user has manually specified an IP address via
+ * preferences, then this IP is returned.  Otherwise the
+ * IP address returned by gaim_network_get_local_system_ip()
+ * is returned.
  *
  * @note The returned string is a pointer to a static buffer. If this
  *       function is called twice, it may be important to make a copy
@@ -85,7 +101,7 @@ const char *gaim_network_get_local_system_ip(int fd);
  * @param fd The fd to use to help figure out the IP, or -1.
  * @return The local IP address to be used.
  */
-const char *gaim_network_get_ip_for_account(const GaimAccount *account, int fd);
+const char *gaim_network_get_my_ip(int fd);
 
 /**
  * Attempts to open a listening port ONLY on the specified port number.
@@ -140,7 +156,7 @@ int gaim_network_listen_range(unsigned short start, unsigned short end);
  *           possible bug will inspire new and valuable contributors to Gaim.
  * @return The port number, in host byte order.
  */
-short gaim_network_get_port_from_fd(int fd);
+unsigned short gaim_network_get_port_from_fd(int fd);
 
 /**
  * Initializes the network subsystem.
