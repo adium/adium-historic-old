@@ -1,7 +1,9 @@
 
+#import <WebKit/WebKit.h>
 
-@interface AIWebKitMessageViewController : NSObject <AIMessageViewController> {
 
+@interface AIWebKitMessageViewController : AIObject <AIMessageViewController> {
+	WebView		*webView;
 }
 
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat;
