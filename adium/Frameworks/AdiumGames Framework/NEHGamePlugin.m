@@ -77,6 +77,8 @@ static NSMenu			*menu_Games;
 	AIListObject   *selectedContact = [[adium contactController] selectedListObject];
 	if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]])
 		[textField_handle setStringValue:[selectedContact UID]];
+	else
+		selectedContact = nil;
 	
 	[windowController showWindow:nil];
 	    
@@ -90,7 +92,7 @@ static NSMenu			*menu_Games;
     [popUp_account setMenu:[[adium accountController] menuOfAccountsWithTarget:self]];
 
     //Select the last used account / Available online account
-	int index = [popUp_account indexOfItemWithRepresentedObject:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]];
+    int index = [popUp_account indexOfItemWithRepresentedObject:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:selectedContact]];
     if(index < [popUp_account numberOfItems] && index >= 0){
 		[popUp_account selectItemAtIndex:index];
 	}
