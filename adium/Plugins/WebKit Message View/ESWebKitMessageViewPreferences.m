@@ -65,6 +65,8 @@
 		if (![popUp_timeStamps selectedItem]){
 			[popUp_timeStamps selectItem:[popUp_timeStamps lastItem]];
 		}
+		
+		[popUp_styles selectItemWithTitle:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
 	}
 
 	[self updatePreview];
@@ -107,6 +109,8 @@
 
 - (IBAction)changeStyle:(id)sender
 {
+	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
+	
 	NSDictionary *newStyleDict = [sender representedObject];
 	
 	NSString	*newStyleName = [newStyleDict objectForKey:@"styleName"];
@@ -127,6 +131,8 @@
 	}
 
 	[self updatePreview];
+
+	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
 }
 
 #pragma mark Menus
