@@ -84,7 +84,7 @@
     [incomingSourceColor release];
     [incomingLightSourceColor release];
     [prefixFont release];
-  //  [timeStampFormat release];
+    [timeStampFormatter release];
     [prefixIncoming release];
     [prefixOutgoing release];
     
@@ -125,7 +125,7 @@
         
         
         timeStampFormat = [[NSDateFormatter localizedDateFormatStringShowingSeconds:[[prefDict objectForKey:KEY_SMV_SHOW_TIME_SECONDS] boolValue]
-                                                                                                         showingAMorPM:[[prefDict objectForKey:KEY_SMV_SHOW_AMPM] boolValue]] retain];
+                                                                      showingAMorPM:[[prefDict objectForKey:KEY_SMV_SHOW_AMPM] boolValue]] retain];
         timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO];
 
         
