@@ -523,15 +523,14 @@
 	while(containerID = [containerEnumerator nextObject]){
 		NSArray			*chatsInContainer = [self openChatsInContainerWithID:containerID];
 		NSArray  		*listObjects;
-		NSMutableArray  *sortedListObjects;
+		NSArray			*sortedListObjects;
 		NSEnumerator	*objectEnumerator;
 		AIListObject	*object;
 		int				index = 0;
 		
 		//Sort the chats in this container
 		listObjects = [self _listObjectsForChatsInContainerWithID:containerID];
-		sortedListObjects = [listObjects mutableCopy];
-		[sortController sortListObjects:sortedListObjects];
+		sortedListObjects = [sortController sortListObjects:listObjects];
 		
 		//Sync the container with the sorted chats
 		objectEnumerator = [sortedListObjects objectEnumerator];

@@ -110,10 +110,11 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	return(index);
 }
 
-- (void)sortListObjects:(NSMutableArray *)inObjects
+- (NSArray *)sortListObjects:(NSArray *)inObjects sortedArrayHint:(NSData *)sortedArrayHint
 {
-    [inObjects sortUsingFunction:(alwaysSortGroupsToTop ? basicGroupVisibilitySort : basicVisibilitySort)
-						 context:sortFunction];
+	return [inObjects sortedArrayUsingFunction:(alwaysSortGroupsToTop ? basicGroupVisibilitySort : basicVisibilitySort)
+									   context:sortFunction
+										  hint:[inObjects sortedArrayHint]];
 }
 
 //Sort

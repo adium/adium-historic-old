@@ -38,7 +38,7 @@ typedef int(*sortfunc)(id, id, BOOL);
 - (BOOL)shouldSortForModifiedAttributeKeys:(NSSet *)inModifiedKeys;
 - (BOOL)alwaysSortGroupsToTopByDefault;
 - (int)indexForInserting:(AIListObject *)inObject intoObjects:(NSArray *)inObjects;
-- (void)sortListObjects:(NSMutableArray *)inObjects;
+- (NSArray *)sortListObjects:(NSArray *)inObjects;
 - (NSView *)configureView;
 - (void)forceIgnoringOfGroups:(BOOL)shouldForce;
 
