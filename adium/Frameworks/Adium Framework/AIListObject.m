@@ -31,7 +31,7 @@
     statusDictionary = [[NSMutableDictionary alloc] init];
 
     //
-    prefDict = [[NSDictionary dictionaryAtPath:[[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH] withName:[self UIDAndServiceID] create:NO] mutableCopy];
+    prefDict = [[NSDictionary dictionaryAtPath:[self pathToPreferences] withName:[self UIDAndServiceID] create:NO] mutableCopy];
 	
     return(self);
 }
@@ -143,7 +143,7 @@
     }
     
     //Save
-    [prefDict writeToPath:[[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]
+    [prefDict writeToPath:[self pathToPreferences]
 		 withName:[self UIDAndServiceID]];
     
     //Broadcast a preference changed notification
@@ -169,10 +169,10 @@
     //Get our value for the preference
     if(prefDict) value = [prefDict objectForKey:inKey];
     
-    //### TEMPORARY (OLD OBJECT PREFERENCE IMPORT CODE) #######
+    //### TEMPORARY (OLD LIST OBJECT PREFERENCE IMPORT CODE) #######
     if(!value && [[adium preferenceController] tempImportOldPreferenceForKey:inKey group:groupName object:self]){
 	[prefDict release];
-	prefDict = [[NSDictionary dictionaryAtPath:[[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH] withName:[self UIDAndServiceID] create:NO] mutableCopy];
+	prefDict = [[NSDictionary dictionaryAtPath:[self pathToPreferences] withName:[self UIDAndServiceID] create:NO] mutableCopy];
 	if(prefDict) value = [prefDict objectForKey:inKey];
     }
     //#########################################################
@@ -190,6 +190,12 @@
     }
     
     return(value);
+}
+
+//Path for storing our reference file
+- (NSString *)pathToPreferences
+{
+    return([[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]);
 }
 
 

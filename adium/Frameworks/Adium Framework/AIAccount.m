@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.17 2003/12/20 03:58:28 jmelloy Exp $
+// $Id: AIAccount.m,v 1.18 2003/12/22 17:54:28 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -26,28 +26,37 @@
 //  Public Methods
 //-----------------------
 //Init the connection
-- (id)initWithProperties:(NSDictionary *)inProperties service:(id <AIServiceController>)inService
+- (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService
 {
-    [super init];
-    //[super initWithUID: serviceID:[inService identifier]];
+    [super initWithUID:inUID serviceID:[[inService handleServiceType] identifier]];
 
-    //
+    //Get our service
     service = [inService retain];
+    changedStatusKeys = [[NSMutableArray alloc] init];
 
-    //Load the account's default properties, then apply the passed properties (overwriting any defaults)
-    if(!(propertiesDict = [[self defaultProperties] mutableCopy])){
-        propertiesDict = [[NSMutableDictionary alloc] init];
-    }
-    [propertiesDict addEntriesFromDictionary:inProperties];
+    //Handle the preference changed monitoring (for account status) for our subclass
+    [[adium notificationCenter] addObserver:self
+				   selector:@selector(_accountPreferencesChanged:)
+				       name:Preference_GroupChanged
+				     object:nil];
     
     //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
-    [propertiesDict setObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status"];
-    [propertiesDict setObject:[NSNumber numberWithBool:NO] forKey:@"Online"];
+    [self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 
     //Init the account
     [self initAccount];
 
     return(self);
+}
+
+//Dealloc
+- (void)dealloc
+{
+    [[adium notificationCenter] removeObserver:self];
+    [service release];
+    [userIcon release]; userIcon = nil;
+    
+    [super dealloc];
 }
 
 //Return the service that spawned this account
@@ -56,79 +65,59 @@
     return(service);
 }
 
-//Return the properties dictionary for this connection
-- (NSDictionary *)properties
+//Store our account prefs in a separate folder to keep things clean
+- (NSString *)pathToPreferences
 {
-    return(propertiesDict);
+    return([[[adium loginController] userDirectory] stringByAppendingPathComponent:ACCOUNT_PREFS_PATH]);
 }
 
-//Return the default properties for this account
-- (NSDictionary *)defaultProperties
+//Monitor preferences changed for account status keys, and pass these to our subclass
+- (void)_accountPreferencesChanged:(NSNotification *)notification
 {
-    return(nil);
-}
-
-//Set a status value
-- (void)setProperty:(id)inValue forKey:(NSString *)key
-{
-    [propertiesDict setObject:inValue forKey:key];
-}
-
-//Retrieve a status value
-- (id)propertyForKey:(NSString *)key
-{
-    return([propertiesDict objectForKey:key]);
-}
-
-//Dealloc
-- (void)dealloc
-{
-    [propertiesDict release]; propertiesDict = nil;
-    [service release];
-    [userIcon release]; userIcon = nil;
+    NSString    *group = [[notification userInfo] objectForKey:@"Group"];
     
-    [super dealloc];
+    if([group compare:GROUP_ACCOUNT_STATUS] == 0){
+	NSString	*key = [[notification userInfo] objectForKey:@"Key"];
+
+	[self updateStatusForKey:key];
+    }
 }
 
-//Display name (Convenience)
-- (NSString *)displayName
+//Quickly set a status key for this account
+- (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
 {
-    NSString	*name = [[adium accountController] propertyForKey:@"FullName" account:self];
-    if(!name || [name length] == 0) name = [self accountDescription];
-    return(name);
+    [[self statusArrayForKey:key] setObject:value withOwner:self];
+    [changedStatusKeys addObject:key];
+    
+    if(notify){
+	[[adium contactController] listObjectStatusChanged:self modifiedStatusKeys:changedStatusKeys delayed:NO silent:NO];
+	[changedStatusKeys release]; changedStatusKeys = [[NSMutableArray alloc] init];
+    }
 }
 
-//Server Display name (Convenience)
-- (NSString *)serverDisplayName
+//Quickly retrieve a status key for this account
+- (id)statusObjectForKey:(NSString *)key
 {
-    return([self displayName]);
-}
-
-- (NSString *)UIDAndServiceID {
-    return [NSString stringWithFormat:@"%@.%@", [self serviceID], [self UID]];
+    return([[self statusArrayForKey:key] objectWithOwner:self]);
 }
 
 //Return the account-specific user icon, or the default user icon from the account controlelr if none exists (thee default user icon returns nil if none is set)
-- (NSImage *)userIcon {
-    if (userIcon)
-        return userIcon;
-    else
-        return [[adium accountController] defaultUserIcon];
-}
-
-- (void)setUserIcon:(NSImage *)inUserIcon {
-    [userIcon release];
-    userIcon = [inUserIcon retain];
-}
+//- (NSImage *)userIcon {
+//    if (userIcon)
+//        return userIcon;
+//    else
+//        return [[adium accountController] defaultUserIcon];
+//}
+//
+//- (void)setUserIcon:(NSImage *)inUserIcon {
+//    [userIcon release];
+//    userIcon = [inUserIcon retain];
+//}
 
 //Functions for subclasses to override
 - (void)initAccount{};
 - (NSView *)accountView{return(nil);};
-- (NSString *)accountID{return(nil);}; 		//Specific to THIS account plugin, and the user's account name
-- (NSString *)UID{return(nil);};		//The user's account name
-- (NSString *)serviceID{return(nil);};		//The service ID (shared by any account code accessing this service)
-- (NSString *)accountDescription{return(nil);};
-- (void)statusForKey:(NSString *)key willChangeTo:(id)inValue{};
+- (void)updateStatusForKey:(NSString *)key{};
 - (NSArray *)supportedPropertyKeys{return([NSArray array]);}
 
 @end

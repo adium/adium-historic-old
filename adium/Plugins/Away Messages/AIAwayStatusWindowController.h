@@ -36,4 +36,5 @@
 - (void)setVisible:(bool)visible;
 - (IBAction)toggleMute:(id)sender;
 - (IBAction)toggleShowBezel:(id)sender;
+
 @end

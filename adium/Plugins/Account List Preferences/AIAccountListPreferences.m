@@ -73,7 +73,7 @@
     [button_deleteAccount setImage:[AIImageUtilities imageNamed:@"minus" forClass:[self class]]];
     
     //Configure the service list
-    enumerator = [[[adium accountController] availableServiceArray] objectEnumerator];
+    enumerator = [[[[adium accountController] availableServices] allValues] objectEnumerator];
     [popupMenu_serviceList removeAllItems];
     while((service = [enumerator nextObject])){
         NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service description] target:self action:@selector(selectServiceType:) keyEquivalent:@""] autorelease];
@@ -81,15 +81,13 @@
         [item setRepresentedObject:service];
         [[popupMenu_serviceList menu] addItem:item];
     }
-    
+
     //Install our observers
-    [[adium notificationCenter] addObserver:self selector:@selector(refreshAccountList) name:Account_PropertiesChanged object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
+    [[adium contactController] registerListObjectObserver:self];
     
     //Refresh our view
-    [self updateAccountList];
-    [self tableViewSelectionDidChange:nil];
+    [self accountListChanged:nil];
 }
 
 //Preference view is closing
@@ -100,23 +98,7 @@
     [[adium notificationCenter] removeObserver:self];
 }
     
-//The properties of our account changed
-- (void)accountPropertiesChanged:(NSNotification *)notification
-{
-    NSString	*key = [[notification userInfo] objectForKey:@"Key"];
-    AIAccount	*account = [notification object];
-    BOOL	isOnline;
-    
-    //Dim unavailable controls
-    if(notification == nil || ([key compare:@"Online"] == 0 && account == selectedAccount)){
-        if(notification == nil) account = selectedAccount;
-	
-        isOnline = [[[adium accountController] propertyForKey:@"Online" account:account] boolValue];
-        [popupMenu_serviceList setEnabled:!isOnline];
-    }
-}
-
-//configure the account specific options
+//Configure the account specific options
 - (void)configureAccountOptionsView
 {
     NSEnumerator	*enumerator;
@@ -126,23 +108,24 @@
     int			selectedTabIndex;
 
     //Remove any tabs
-    selectedTabIndex = [tabView_auxilary indexOfTabViewItem:[tabView_auxilary selectedTabViewItem]];
+    if([tabView_auxilary selectedTabViewItem]){
+	selectedTabIndex = [tabView_auxilary indexOfTabViewItem:[tabView_auxilary selectedTabViewItem]];
+    }
     while([tabView_auxilary numberOfTabViewItems] > 1){
         [tabView_auxilary removeTabViewItem:[tabView_auxilary tabViewItemAtIndex:[tabView_auxilary numberOfTabViewItems] - 1]];
     }
     
-    //Close any currently open controllers, saving changes(?)
+    //Close any currently open controllers
+    [view_accountDetails removeAllSubviews];
     if(accountViewController){
-        //[accountViewController saveChanges];
         [accountViewController release]; accountViewController = nil;
     }
-    [view_accountDetails removeAllSubviews];
 
     //select the correct service in the service menu
     [popupMenu_serviceList selectItemAtIndex:[popupMenu_serviceList indexOfItemWithRepresentedObject:[selectedAccount service]]];
 
     //Configure the auto-connect button
-    autoConnect = [[[adium accountController] propertyForKey:@"AutoConnect" account:selectedAccount] boolValue];
+    autoConnect = [[selectedAccount preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue];
     [button_autoConnect setState:autoConnect];
     
     //Correctly size the sheet for the account details view
@@ -152,8 +135,7 @@
     //Swap in the account details view
     [view_accountDetails addSubview:accountView];
     [accountView setFrameOrigin:NSMakePoint(0,([view_accountDetails frame].size.height - [accountView frame].size.height))];
-    if([accountViewController conformsToProtocol:@protocol(AIAccountViewController)])
-    {
+    if([accountViewController conformsToProtocol:@protocol(AIAccountViewController)]){
         [accountViewController configureViewAfterLoad]; //allow the account subview to set itself up after the window has loaded
     }
 
@@ -182,22 +164,44 @@
     }else{
         [tabView_auxilary selectFirstTabViewItem:nil];
     }
-
-    //Enable/disable controls
-    [self accountPropertiesChanged:nil];
 }
 
-// User selected a service type from the menu
+//Account list changed
+- (void)accountListChanged:(NSNotification *)notification
+{
+    //Update our reference to the accounts
+    selectedAccount = nil;
+    [accountArray release]; accountArray = [[[adium accountController] accountArray] retain];
+    
+    //Refresh the table (if the window is loaded)
+    if(tableView_accountList != nil){
+	[tableView_accountList reloadData];
+	[self tableViewSelectionDidChange:nil];
+    }
+}
+
+//Account status changed
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+{
+    if([inObject isKindOfClass:[AIAccount class]]){
+	if([inModifiedKeys containsObject:@"Online"]){
+	    [popupMenu_serviceList setEnabled:![[(AIAccount *)inObject statusObjectForKey:@"Online"] boolValue]];
+	}
+    }
+    
+    return(nil);
+}
+
+
+//Editing ------------------------------------------------------------------------
+//User selected a service type from the menu
 - (IBAction)selectServiceType:(id)sender
 {
     id <AIServiceController>	service = [sender representedObject];
-
+    
     //Switch it
     [selectedAccount autorelease];
     selectedAccount = [[[adium accountController] switchAccount:selectedAccount toService:service] retain];
-
-    //reconfigure
-    [self configureAccountOptionsView];
 }
 
 //User toggled the autoconnect preference
@@ -206,7 +210,7 @@
     BOOL	autoConnect = [sender state];
     
     //Apply the new value
-    [[adium accountController] setProperty:[NSNumber numberWithBool:autoConnect] forKey:@"AutoConnect" account:selectedAccount];
+    [selectedAccount setPreference:[NSNumber numberWithBool:autoConnect] forKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS];
 }
 
 //Create a new account
@@ -214,14 +218,13 @@
 {
     int		index = [tableView_accountList selectedRow] + 1;
     AIAccount	*newAccount;
-
+    
     //Add the new account
     newAccount = [[adium accountController] newAccountAtIndex:index];
-    [self refreshAccountList];
-
+    
     //Select the new account
     [tableView_accountList selectRow:index byExtendingSelection:NO];
-
+    
     //Select the 'Account' tab and put focus on the account fields
     [tabView_auxilary selectTabViewItemAtIndex:0];
     [[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
@@ -232,30 +235,30 @@
 {
     int 	index;
     AIAccount	*targetAccount;
-
+    
     NSParameterAssert(accountArray != nil); NSParameterAssert([accountArray count] > 1);
-
+    
     //Confirm
     index = [tableView_accountList selectedRow];
     NSParameterAssert(index >= 0 && index < [accountArray count]);
     targetAccount = [accountArray objectAtIndex:index];
-
-    NSBeginAlertSheet(@"Delete Account",@"Delete",@"Cancel",@"",[view_accountPreferences window], self, @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, @"Delete the account %@?", [targetAccount accountDescription]);
+    
+    NSBeginAlertSheet(@"Delete Account",@"Delete",@"Cancel",@"",[view_accountPreferences window], self, @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, @"Delete the account %@?", [targetAccount displayName]);
 }
 
-// Finishes the delete action when the sheet is closed
+//Finishes the delete action when the sheet is closed
 - (void)deleteAccountSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     AIAccount 	*targetAccount = contextInfo;
     int		index;
     
     NSParameterAssert(targetAccount != nil); NSParameterAssert([targetAccount isKindOfClass:[AIAccount class]]);
-
+    
     if(returnCode == NSAlertDefaultReturn){
         //Delete it
         index = [accountArray indexOfObject:targetAccount];
         [[adium accountController] deleteAccount:targetAccount];
-    
+	
         //If it was the last row, select the new last row (by default the selection will jump to the top, which is bad)
         if(index >= [accountArray count]){
             index = [accountArray count]-1;
@@ -267,45 +270,8 @@
     }
 }
 
-//Update/Refresh our account list and table views
-- (void)updateAccountList
-{
-    //Update the reference
-    selectedAccount = nil;
-    [accountArray release]; accountArray = nil;
-    accountArray = [[[adium accountController] accountArray] retain];
 
-    //Refresh the table (if the window is loaded)
-    [self refreshAccountList];
-}
-
-//Refresh the table (if the window is loaded)
-- (void)refreshAccountList
-{
-    if(tableView_accountList != nil){
-        [tableView_accountList reloadData];
-    }
-}
-
-// Called when the account list changes
-- (void)accountListChanged:(NSNotification *)notification
-{
-    [self updateAccountList];
-
-    //if there are no accounts, open the prefs and create one
-    if([[[adium accountController] accountArray] count] == 0){
-        //open
-        //[[adium preferenceController] openPreferencesToView:preferenceView];
-
-        //create
-        [[adium accountController] newAccountAtIndex:0];
-    
-        //edit
-        [tableView_accountList selectRow:0 byExtendingSelection:NO];
-        //[self editAccount:nil];
-    }
-}
-
+//Account list table view delegate ------------------------------------------------------------------------
 //Delete the selected row
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
@@ -321,24 +287,15 @@
 //Return the account description or image
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    return([[accountArray objectAtIndex:row] accountDescription]);
+    return([[accountArray objectAtIndex:row] displayName]);
 }
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     AIAccount		*account = [accountArray objectAtIndex:row];
-    NSImage		*image;
-    ACCOUNT_STATUS	status = STATUS_NA;
-
-    //Get the account's status
-    if([[account supportedPropertyKeys] containsObject:@"Online"]){
-        status = [[[adium accountController] propertyForKey:@"Status" account:account] intValue];
-    }
-
-    image = [AIImageUtilities imageNamed:@"DefaultIcon" forClass:[self class]];
+    NSImage		*image = [AIImageUtilities imageNamed:@"DefaultIcon" forClass:[self class]];
 
     [cell setImage:image];
-
     [cell setSubString:[account serviceID]];
 }
 

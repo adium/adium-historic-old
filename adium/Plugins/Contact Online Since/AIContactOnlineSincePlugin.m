@@ -32,7 +32,7 @@
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
     NSAttributedString * entry = nil;
-    if([inObject isKindOfClass:[AIListContact class]] && [[(AIListContact *)inObject statusArrayForKey:@"Online"] greatestIntegerValue]){
+    if([[inObject statusArrayForKey:@"Online"] greatestIntegerValue]){
         NSDate	*signonDate, *currentDate;
         currentDate = [NSDate date];
         signonDate = [[(AIListContact *)inObject statusArrayForKey:@"Signon Date"] earliestDate];

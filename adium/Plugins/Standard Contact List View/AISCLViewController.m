@@ -292,7 +292,7 @@
             [sender expandItem:selectedObject];
         }
     
-    }else{
+    }else if([selectedObject isKindOfClass:[AIListContact class]]){
         //Open a new message with the contact
         AIChat	*chat = [[adium contentController] openChatOnAccount:nil withListObject:selectedObject];
         [[adium interfaceController] setActiveChat:chat];

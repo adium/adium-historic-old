@@ -20,7 +20,7 @@
             SUPERCLASS = AIAccount; 
         }, 
         {
-            ACTIONS = {preferenceChanged = id; userNameChanged = id; }; 
+            ACTIONS = {changedPreference = id; userNameChanged = id; }; 
             CLASS = AIMTOC2AccountViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -33,8 +33,9 @@
                 "view_accountView" = NSView; 
                 "view_auxilaryTabView" = NSTabView; 
             }; 
-            SUPERCLASS = NSObject; 
+            SUPERCLASS = AIObject; 
         }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 

@@ -22,7 +22,7 @@
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
 
     //Register this service
-    [[adium accountController] registerService:self];
+#warning [[adium accountController] registerService:self];
 }
 
 //Return a new account with the specified properties

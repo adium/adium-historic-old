@@ -45,6 +45,7 @@
 // Subclasses must override this
 - (const char*)protocolPlugin { return NULL; }
 
+
 /************************/
 /* accountBlist methods */
 /************************/
@@ -161,10 +162,10 @@
             
             //set the buddy image
             NSImage *image = [[[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len)) length:buddyIcon->len]] autorelease];
-            [statusDict setObject:image forKey:@"BuddyImage"];
+            [statusDict setObject:image forKey:@"UserIcon"];
             
             //BuddyImagePointer is just for us, shh, keep it secret ;)
-            [modifiedKeys addObject:@"BuddyImage"];
+            [modifiedKeys addObject:@"UserIcon"];
         }
     }     
     
@@ -316,6 +317,7 @@
     filesToSendArray = [[NSMutableArray alloc] init];
 
     //create an initial gaim account
+    NSLog(@"Creating %@",[self UID]);
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
     gc = NULL;
@@ -334,7 +336,7 @@
 #define KEY_FORMATTING_BACKGROUND_COLOR		@"Default Background Color"
 #define KEY_FORMATTING_SUBBACKGROUND_COLOR	@"Default SubBackground Color"
         
-        NSDictionary		*prefDict;
+        NSDictionary		*prefs;
         NSColor			*textColor;
         NSColor			*backgroundColor;
         NSColor			*subBackgroundColor;
@@ -342,11 +344,11 @@
         NSDictionary            *attributes;
         
         //Get the prefs
-        prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
-        font = [[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont];
-        textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
-        backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
-        subBackgroundColor = [[prefDict objectForKey:KEY_FORMATTING_SUBBACKGROUND_COLOR] representedColor];
+        prefs = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
+        font = [[prefs objectForKey:KEY_FORMATTING_FONT] representedFont];
+        textColor = [[prefs objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
+        backgroundColor = [[prefs objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
+        subBackgroundColor = [[prefs objectForKey:KEY_FORMATTING_SUBBACKGROUND_COLOR] representedColor];
         
         //Setup the attributes
         if(!subBackgroundColor){
@@ -355,7 +357,8 @@
             attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, subBackgroundColor, NSBackgroundColorAttributeName, nil];
         }
         NSAttributedString *profile = [[[NSAttributedString alloc] initWithString:PROFILE_STRING attributes:attributes] autorelease];
-        [[adium accountController] setProperty:[profile dataRepresentation] forKey:@"TextProfile" account:self];
+
+        [self setPreference:[profile dataRepresentation] forKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
     }
 }
 
@@ -389,7 +392,7 @@
         @"Offline",
         @"IdleSince",
         @"IdleManuallySet",
-        @"BuddyImage",
+        @"UserIcon",
         @"Away",
         @"AwayMessage",
         @"TextProfile",
@@ -398,68 +401,63 @@
         nil]);
 }
 
-- (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
+- (void)updateStatusForKey:(NSString *)key
 {
-    ACCOUNT_STATUS status = [[[adium accountController] propertyForKey:@"Status" account:self] intValue];
+    BOOL    areOnline = [[self statusObjectForKey:@"Online"] boolValue];
     
     //Online status changed
     if([key compare:@"Online"] == 0){
-        if([inValue boolValue]){
-            if(status == STATUS_OFFLINE){ 
-                [self connect];
-            }
-        } else{ //Disconnect
-            if(status == STATUS_ONLINE){
-                [self disconnect];
-            }
+        if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
+            if(!areOnline) [self connect];
+        }else{
+            if(areOnline) [self disconnect];
         }
     } 
     
     //Now look at keys which only make sense while online
-    else if (status == STATUS_ONLINE){
+    else if(areOnline){
         if ([key compare:@"IdleSince"] == 0){
+	    NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
             // Even if we're setting a non-zero idle time, set it to zero first.
             // Some clients ignore idle time changes unless it moves to/from 0.
             serv_set_idle(gc, 0);
-            if (inValue != nil) {
-                int newIdle = -[inValue timeIntervalSinceNow];
+            if (idleSince != nil) {
+                int newIdle = -[idleSince timeIntervalSinceNow];
                 serv_set_idle(gc, newIdle);
             }
+	    [self setStatusObject:idleSince forKey:@"IdleSince" notify:YES];
         }
         else if ([key compare:@"AwayMessage"] == 0) {
-            [self setAwayMessage:inValue];
+	    NSString	*awayMessage = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+            [self setAwayMessage:awayMessage];
+	    [self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
         }
         else if([key compare:@"TextProfile"] == 0){
-            [self setProfile:inValue];
+            NSString	*profile = [self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
+	    [self setProfile:profile];
+	    [self setStatusObject:profile forKey:@"TextProfile" notify:YES];
         }
     }
     
     //User Icon can be set regardless of ONLINE state
-    if ([key compare:@"UserIcon"] == 0) {
-        //set the NSImage in AIAccount
-        [self setUserIcon:inValue];
+    if([key compare:@"UserIcon"] == 0) {
+	NSData	*newIconData = [self preferenceForKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
+	NSImage	*newIcon = [[[NSImage alloc] initWithData:newIconData] autorelease];
+	
+	[self setStatusObject:newIcon forKey:@"UserIcon" notify:YES];
         
-        //gaim requires a file to be used as the userIcon.  Give it its file.
-        if (inValue){          
-            NSData      *data = [[(NSImage *)inValue JPEGRepresentation] retain];
+	//gaim requires a file to be used as the userIcon.  Give it its file.
+        if(newIcon) {          
+            NSData 	*data = [[newIcon JPEGRepresentation] retain];
             NSString    *buddyImageFilename = [[self _userIconCachePath] retain];
-            if ([data writeToFile:buddyImageFilename atomically:YES]){
+            if([data writeToFile:buddyImageFilename atomically:YES]){
                 [self setBuddyImageFromFilename:(char *)[buddyImageFilename UTF8String]];
             }else{
                 NSLog(@"Error writing file %@",buddyImageFilename);   
             }
             [buddyImageFilename release];
-        } else {
+        }else{
             [self setBuddyImageFromFilename:nil];   
-        }
-    }
-    else if ([key compare:@"DefaultUserIconFilename"] == 0){
-        if (!userIcon){
-            if (inValue){
-                [self setBuddyImageFromFilename:(char *)[inValue UTF8String]];
-            }else{
-                [self setBuddyImageFromFilename:nil];
-            }
         }
     }
 }
@@ -475,10 +473,6 @@
 - (NSDictionary *)defaultProperties { return([NSDictionary dictionary]); }
 - (id <AIAccountViewController>)accountView{ return(nil); }
 
-//subclasses must override these
-
-- (NSString *)UID { return nil; }
-- (NSString *)serviceID { return nil; }
 
 /*********************/
 /* AIAccount_Content */
@@ -524,7 +518,7 @@
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
     BOOL 	available = NO;
-    BOOL	weAreOnline = ([[[adium accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+    BOOL	weAreOnline = ([inType compare:CONTENT_MESSAGE_TYPE] == 0 && [[self statusObjectForKey:@"Online"] boolValue]);
     
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
         if(weAreOnline){
@@ -611,9 +605,7 @@
 // Returns a dictionary of AIHandles available on this account
 - (NSDictionary *)availableHandles //return nil if no contacts/list available
 {
-    int	status = [[[adium accountController] propertyForKey:@"Status" account:self] intValue];
-    
-    if(status == STATUS_ONLINE || status == STATUS_CONNECTING){
+    if([[self statusObjectForKey:@"Online"] boolValue] || [[self statusObjectForKey:@"Connecting"] boolValue]){
         return(handleDict);
     }else{
         return(nil);
@@ -790,9 +782,8 @@
 
 - (void)accountConnectionConnected
 {
-    [[adium accountController]
-        setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
-             forKey:@"Status" account:self];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
+    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
     
     NSLog(@"Setting handle updates to silent and delayed (connected)");
     silentAndDelayed = YES;
@@ -808,30 +799,17 @@
 - (void)delayedInitialSettings:(id)object
 {
     //Set our correct status
-    {
-        NSDate 		*idle = [[adium accountController] propertyForKey:@"IdleSince" account:self];
-        NSData	 	*profile = [[adium accountController] propertyForKey:@"TextProfile" account:self];
-        NSData	 	*away = [[adium accountController] propertyForKey:@"AwayMessage" account:self];
-        
-        
-        if(idle) [self statusForKey:@"IdleSince" willChangeTo:idle];
-        if(profile) [self statusForKey:@"TextProfile" willChangeTo:profile];
-        if(away) [self statusForKey:@"AwayMessage" willChangeTo:away];
-    }
+    [self updateStatusForKey:@"IdleSince"];
+    [self updateStatusForKey:@"TextProfile"];
+    [self updateStatusForKey:@"AwayMessage"];
+    [self updateStatusForKey:@"UserIcon"];
     
-    //set the image file name, which is saved in the account preferences and generally easy to access
-    [[adium accountController] setProperty:OWN_BUDDY_IMAGE forKey:@"BuddyImageFileName" account:self];
-    
+    //Load our buddy icon from a file
     NSImage *buddyImage = [[NSImage alloc] initWithContentsOfFile:OWN_BUDDY_IMAGE];
-    if (buddyImage && [buddyImage isValid]) {
-        [[adium accountController] setUserIcon:buddyImage 
-                                    forAccount:self];
+    if(buddyImage && [buddyImage isValid]){
+	[self setPreference:[buddyImage TIFFRepresentation] forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
     }
     [buddyImage release];
-    
-    //let the accountController tell us about the default user icon filename
-    [self statusForKey:@"DefaultUserIconFilename" 
-          willChangeTo:[[adium accountController] defaultUserIconFilename]];
 }
 
 
@@ -863,9 +841,7 @@
         }
         
         //now we start to connect
-        [[adium accountController] 
-            setProperty:[NSNumber numberWithInt:STATUS_CONNECTING]
-                 forKey:@"Status" account:self];
+	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
         
         //setup the account, get things ready
         gaim_account_set_password(account, [password UTF8String]);
@@ -914,10 +890,8 @@
     AIHandle        *handle;
     
     //signing off
-    [[adium accountController] 
-                    setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING]
-                         forKey:@"Status" account:self];
-
+    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
+    
     //tell gaim to disconnect    
     silentAndDelayed = YES;
     NSLog(@"Setting handle updates to silent and delayed (disconnecting)");
@@ -958,20 +932,17 @@
 //Called automatically by gaimServicePlugin whenever we disconnected for any reason
 - (void)accountConnectionDisconnected
 {
-    ACCOUNT_STATUS status = [[[adium accountController] propertyForKey:@"Status" account:self] intValue];
-    
-    [[adium accountController] 
-        setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
-             forKey:@"Status" account:self];
-    
-    if (signonTimer != nil) {
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
+
+    if(signonTimer != nil) {
         [signonTimer invalidate];
         [signonTimer release];
         signonTimer = nil;
     }
     
     //If adium's status for the account was Online, we were disconnected unexpectedly
-    if (status == STATUS_ONLINE) {
+    if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]) {
         //clean up
         [self disconnect];
         //reconnect
@@ -997,8 +968,7 @@
 - (void)autoReconnectTimer:(NSTimer *)inTimer
 {
     //If we're still offline, continue with the reconnect
-    if([[[adium accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_OFFLINE){
-        
+    if([[self statusObjectForKey:@"Online"] boolValue] && ![[self statusObjectForKey:@"Connecting"] boolValue]){
         NSLog(@"Attempting Auto-Reconnect");
         
         //Instead of calling connect, we directly call the second phase of connecting, passing it the user's password.  This prevents users who don't keychain passwords from having to enter them for a reconnect.

@@ -631,9 +631,9 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 
 /* super gigantic hack! this should be fixed. do we have to subclass AGAIN? or do we scan inProperties */
-- (id)accountWithProperties:(NSDictionary *)inProperties
+- (id)accountWithUID:(NSString *)inUID
 {
-    CBGaimAIMAccount *anAccount = [[[CBGaimAIMAccount alloc] initWithProperties:inProperties service:self] autorelease];
+    CBGaimAIMAccount *anAccount = [[[CBGaimAIMAccount alloc] initWithUID:inUID service:self] autorelease];
     
     GaimAccount *gaimAcct = [anAccount gaimAccount];
     NSLog(@"Adding GaimAccount 0x%x to account dict", gaimAcct);

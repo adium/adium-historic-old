@@ -110,17 +110,13 @@
 //Tooltip entry ---------------------------------------------------------------------------------
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
+    int 	idle = (int)[[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
     NSString	*entry = nil;
-    
-    if([inObject isKindOfClass:[AIListContact class]]){
-        int idle = (int)[[(AIListContact *)inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
         
-        if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
-            entry = @"Idle";
-            
-        }else if(idle != 0){
-            entry = @"Idle Time";
-        }
+    if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
+	entry = @"Idle";
+    }else if(idle != 0){
+	entry = @"Idle Time";
     }
     
     return(entry);
@@ -128,28 +124,24 @@
 
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
+    int 		idle = (int)[[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
     NSAttributedString	*entry = nil;
 
-    if([inObject isKindOfClass:[AIListContact class]]){
-        int idle = (int)[[(AIListContact *)inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
+    if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
+	entry = [[NSAttributedString alloc] initWithString:@"Yes"];
+	
+    }else if(idle != 0){
+	int	hours = (int)(idle / 60);
+	int	minutes = (int)(idle % 60);
 
-        if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
-            entry = [[NSAttributedString alloc] initWithString:@"Yes"];
-            
-        }else if(idle != 0){
-            int	hours = (int)(idle / 60);
-            int	minutes = (int)(idle % 60);
-
-            if(hours){
-                entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%i hour%@, %i minute%@", hours, (hours == 1 ? @"": @"s"), minutes, (minutes == 1 ? @"": @"s")]];
-            }else{
-                entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%i minute%@", minutes, (minutes == 1 ? @"": @"s")]];
-            }
-        }
+	if(hours){
+	    entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%i hour%@, %i minute%@", hours, (hours == 1 ? @"": @"s"), minutes, (minutes == 1 ? @"": @"s")]];
+	}else{
+	    entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%i minute%@", minutes, (minutes == 1 ? @"": @"s")]];
+	}
     }
 
     return([entry autorelease]);
 }
-
 
 @end

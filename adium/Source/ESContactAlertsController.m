@@ -3,7 +3,7 @@
 //  Adium XCode
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.10 2003/12/16 15:43:17 adamiser Exp $
+//  $Id: ESContactAlertsController.m,v 1.11 2003/12/22 17:54:38 adamiser Exp $
 
 
 /*
@@ -254,8 +254,8 @@ Alert Execution
                 
                 //Only proceed if the action should proceed regardless of our active status -OR- we are active
                 if (! [[actionDict objectForKey:KEY_EVENT_ACTIVE] intValue] || 
-                    (![[owner accountController] propertyForKey:@"IdleSince" account:nil] 
-                     && ![[owner accountController] propertyForKey:@"AwayMessage" account:nil])) {
+                    (![[owner preferenceController] preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] 
+                     && ![[owner preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])) {
                     
                     BOOL success = NO;
                     

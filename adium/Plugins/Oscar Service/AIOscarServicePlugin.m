@@ -36,7 +36,7 @@
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
 
     //Register this service
-    [[owner accountController] registerService:self];
+    //[[owner accountController] registerService:self];
 }
 
 //Uninstall

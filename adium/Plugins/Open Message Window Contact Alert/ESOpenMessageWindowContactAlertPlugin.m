@@ -44,7 +44,7 @@
 {
     BOOL success = YES;
     AIAccount * account = [[adium accountController] accountWithID:details];
-    if ([[account propertyForKey:@"Status"] intValue] == STATUS_OFFLINE) { //desired account not available
+    if (![[account statusObjectForKey:@"Online"] boolValue]) { //desired account not available
         if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
             account = [[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inObject];
         }

@@ -26,24 +26,21 @@
 //Tooltip entry ---------------------------------------------------------------------------------------
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    if([inObject isKindOfClass:[AIListContact class]]){
-        return(@"Online For");
-    }
-
-    return(nil);
+    return(@"Online For");
 }
 
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
     NSAttributedString * entry = nil;
-    if([inObject isKindOfClass:[AIListContact class]] && [[(AIListContact *)inObject statusArrayForKey:@"Online"] greatestIntegerValue]){
+    if([[inObject statusArrayForKey:@"Online"] greatestIntegerValue]){
         NSDate	*signonDate, *currentDate;
 
         currentDate = [NSDate date];
-        signonDate = [[(AIListContact *)inObject statusArrayForKey:@"Signon Date"] earliestDate];
+        signonDate = [[inObject statusArrayForKey:@"Signon Date"] earliestDate];
         
         if(signonDate){
-            entry = [[NSAttributedString alloc] initWithString:[NSDateFormatter stringForTimeIntervalSinceDate:signonDate showingSeconds:NO abbreviated:NO]];
+            entry = [[NSAttributedString alloc] initWithString:
+		[NSDateFormatter stringForTimeIntervalSinceDate:signonDate showingSeconds:NO abbreviated:NO]];
         }
     }
 

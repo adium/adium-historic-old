@@ -31,7 +31,7 @@
     [[NSTask launchedTaskWithLaunchPath:@"/System/Library/PrivateFrameworks/InstantMessage.framework/iChatAgent.app/Contents/MacOS/iChatAgent" arguments:[NSArray array]] retain];
     
     //Register this service
-    [[owner accountController] registerService:self];
+    //[[owner accountController] registerService:self];
 }
 
 - (void)uninstallPlugin

@@ -34,6 +34,6 @@
 - (NSView *)view;
 - (void)configureViewAfterLoad;
 - (IBAction)userNameChanged:(id)sender;
-- (IBAction)preferenceChanged:(id)sender;
+- (IBAction)changedPreference:(id)sender;
 
 @end

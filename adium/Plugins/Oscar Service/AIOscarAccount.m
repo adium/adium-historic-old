@@ -269,8 +269,8 @@
 
     //Apply the icon
     if(handle = [handleDict objectForKey:[name compactedString]]){
-        [[handle statusDictionary] setObject:image forKey:@"BuddyImage"];
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"BuddyImage"] delayed:(silenceAndDelayBuddyUpdates) silent:(silenceAndDelayBuddyUpdates)];
+        [[handle statusDictionary] setObject:image forKey:@"UserIcon"];
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"UserIcon"] delayed:(silenceAndDelayBuddyUpdates) silent:(silenceAndDelayBuddyUpdates)];
     }
 }
 

@@ -249,18 +249,18 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //Set the idle time of all accounts
 - (void)_setAllAccountsIdleTo:(double)inSeconds
 {
-    NSDate	*currentIdle = [[adium accountController] propertyForKey:@"IdleSince" account:nil];
+    NSDate	*currentIdle = [[adium preferenceController] preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
         
     if(inSeconds){
         NSDate	*newIdle = [NSDate dateWithTimeIntervalSinceNow:(-inSeconds)];
 
         if(![currentIdle isEqualToDate:newIdle]){
-            [[adium accountController] setProperty:newIdle forKey:@"IdleSince" account:nil];
+            [[adium preferenceController] setPreference:newIdle forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
         }
         
     }else{
         if(currentIdle != nil){
-            [[adium accountController] setProperty:nil forKey:@"IdleSince" account:nil];
+            [[adium preferenceController] setPreference:nil forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
         }
 
     }

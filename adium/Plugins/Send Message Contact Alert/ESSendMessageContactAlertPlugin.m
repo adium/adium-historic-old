@@ -121,7 +121,7 @@
                 success = YES;
         }
         else {
-            errorReason = [NSString stringWithFormat:@"with %@ failed because the account %@ is currently offline.",[account accountDescription],[account accountDescription]];
+            errorReason = [NSString stringWithFormat:@"with %@ failed because the account %@ is currently offline.",[account displayName],[account displayName]];
             success = NO;
         }
     }

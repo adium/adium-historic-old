@@ -74,7 +74,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         NSEnumerator * accountEnumerator = [[[adium accountController] accountArray] objectEnumerator];
 
         //enumerate the accounts, stopping as soon as one is not offline (and is therefore online)
-        while( (account = [accountEnumerator nextObject]) && ([[account propertyForKey:@"Status"] intValue] == STATUS_OFFLINE) );
+        while( (account = [accountEnumerator nextObject]) && (![[account statusObjectForKey:@"Online"] boolValue]) );
         
         if (account) { //if we found an online account, set it as the default account choice
             [popUp_message_actionDetails_one selectItemAtIndex:[popUp_message_actionDetails_one indexOfItemWithRepresentedObject:account]];
@@ -110,7 +110,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     
     //set the sendFrom account if necessary
     if (account = [[popUp_message_actionDetails_one selectedItem] representedObject])
-        [detailsDict setObject:[account accountID] forKey:KEY_MESSAGE_SENDFROM];
+        [detailsDict setObject:[account UIDAndServiceID] forKey:KEY_MESSAGE_SENDFROM];
     
     //set the sendTo contact if necessary, saving the UID and Service
     if (contact = [[popUp_message_actionDetails_two selectedItem] representedObject]) {
@@ -139,7 +139,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     while(account = [accountEnumerator nextObject]){
         NSMenuItem 	*menuItem;
         NSString	*accountDescription;
-        accountDescription = [account accountDescription];
+        accountDescription = [account displayName];
         menuItem = [[[NSMenuItem alloc] initWithTitle:accountDescription
                                                target:self
                                                action:@selector(saveMessageDetails:)

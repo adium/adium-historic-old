@@ -31,18 +31,15 @@
 
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
+    int 		warningLevel;
     NSAttributedString	*entry = nil;
 
-    if([inObject isKindOfClass:[AIListContact class]]){
-        int 	warningLevel;
-
-        //Get the away state
-        warningLevel = [[(AIListContact *)inObject statusArrayForKey:@"Warning"] greatestIntegerValue];
-
-        //Return the correct string
-	if(warningLevel != 0){
-            entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d%%", warningLevel]];
-	}
+    //Get the away state
+    warningLevel = [[inObject statusArrayForKey:@"Warning"] greatestIntegerValue];
+    
+    //Return the correct string
+    if(warningLevel != 0){
+	entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d%%", warningLevel]];
     }
 
     return([entry autorelease]);

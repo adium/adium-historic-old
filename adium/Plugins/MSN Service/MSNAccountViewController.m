@@ -68,7 +68,7 @@
         NSLog(@"couldn't load account view bundle");
     }
     
-    [[adium notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_PropertiesChanged object:account];
+#warning    [[adium notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_PropertiesChanged object:account];
     
     [textField_email setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789+-._@"] length:129 caseSensitive:NO errorMessage:@"Improper Format"]];
     
@@ -79,7 +79,7 @@
 
 - (void)dealloc
 {
-    [[adium notificationCenter] removeObserver:self name:Account_PropertiesChanged object:account];
+#warning    [[adium notificationCenter] removeObserver:self name:Account_PropertiesChanged object:account];
     
     [view_accountView release];
     

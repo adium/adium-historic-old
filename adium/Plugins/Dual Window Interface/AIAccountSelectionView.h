@@ -21,7 +21,7 @@
 - (AIListObject *)listObject;
 @end
 
-@interface AIAccountSelectionView : NSView {
+@interface AIAccountSelectionView : NSView <AIListObjectObserver> {
     AIAdium				*adium;
     
     IBOutlet	NSView			*view_contents;

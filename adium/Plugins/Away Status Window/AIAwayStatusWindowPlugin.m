@@ -19,6 +19,7 @@
 
 @interface AIAwayStatusWindowPlugin (PRIVATE)
 - (void)accountPropertiesChanged:(NSNotification *)notification;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIAwayStatusWindowPlugin
@@ -32,26 +33,19 @@
     preferences = [[AIAwayStatusWindowPreferences preferencePane] retain];
 
     //Observe
-    [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
-
-    //Open an away status window if we woke up away
-    if([[adium accountController] propertyForKey:@"AwayMessage" account:nil]) {
-        // Get an away status window
-        [AIAwayStatusWindowController awayStatusWindowController];
-        // Tell it to update in case we were already away
-        [AIAwayStatusWindowController updateAwayStatusWindow];
-    }    
-
-    [self accountPropertiesChanged:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
 }
 
 //Update our away window when the away status changes
-- (void)accountPropertiesChanged:(NSNotification *)notification
+- (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [notification object] == nil){ //We ignore account-specific status changes
+    NSString    *group = [[notification userInfo] objectForKey:@"Group"];
+
+    if(notification == nil || ([group compare:GROUP_ACCOUNT_STATUS] == 0 && [notification object] == nil)){ //We ignore account-specific status changes
         NSString	*modifiedKey = [[notification userInfo] objectForKey:@"Key"];
 
-        if([modifiedKey compare:@"AwayMessage"] == 0){
+        if(notification == nil || [modifiedKey compare:@"AwayMessage"] == 0){
             // Get an away status window
             [AIAwayStatusWindowController awayStatusWindowController];
             // Tell it to update

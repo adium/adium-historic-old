@@ -36,16 +36,17 @@
 }
 
 //Return a new account with the specified properties
-- (id)accountWithProperties:(NSDictionary *)inProperties
+- (id)accountWithUID:(NSString *)inUID
 {
-    return([[[AIMTOC2Account alloc] initWithProperties:inProperties service:self] autorelease]);
+    return([[[AIMTOC2Account alloc] initWithUID:inUID service:self] autorelease]);
 }
 
-// Return a Plugin-specific ID and description
+//Returns a unique identifier for this plugin (Used by this plugin only)
 - (NSString *)identifier
 {
     return(@"AIM (TOC2)");
 }
+//Returns a description for this service (User readable)
 - (NSString *)description
 {
     return(@"AIM / ICQ - TOC2");

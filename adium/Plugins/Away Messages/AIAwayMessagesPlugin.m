@@ -34,6 +34,7 @@
 - (void)_updateAwaySubmenus;
 - (NSMenu *)_awaySubmenuFromArray:(NSArray *)awayArray forMainMenu:(BOOL)mainMenu;
 - (void)_appendAwaysFromArray:(NSArray *)awayArray toMenu:(NSMenu *)awayMenu;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIAwayMessagesPlugin
@@ -43,7 +44,8 @@
     menuConfiguredForAway = NO;
     
     //Register our default preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AWAY_SPELLING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SPELLING];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AWAY_SPELLING_DEFAULT_PREFS forClass:[self class]]
+					  forGroup:PREF_GROUP_SPELLING];
     
     //Our preference view
     preferences = [[AIAwayMessagePreferences awayMessagePreferences] retain];
@@ -51,14 +53,15 @@
     //Install our 'enter away message' submenu
     [self installAwayMenu];
     
-    //Observe
-    [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    
-    [self accountPropertiesChanged:nil];
+    //Observe account status changes
+    [[adium notificationCenter] addObserver:self
+				   selector:@selector(preferencesChanged:)
+				       name:Preference_GroupChanged
+				     object:nil];
+    [self preferencesChanged:nil];
 }
 
-
+//
 - (void)dealloc
 {
     [menuItem_away release]; menuItem_away = nil;
@@ -86,43 +89,16 @@
     NSDictionary	*awayDict = [sender representedObject];
     NSAttributedString	*awayMessage = [awayDict objectForKey:@"Message"];
     NSAttributedString	*awayAutoResponse = [awayDict objectForKey:@"Autoresponse"];
-    [[adium accountController] setProperty:awayMessage forKey:@"AwayMessage" account:nil];
-    [[adium accountController] setProperty:awayAutoResponse forKey:@"Autoresponse" account:nil];
+    [[adium preferenceController] setPreference:awayMessage forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+    [[adium preferenceController] setPreference:awayAutoResponse forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
 }
 
 //Remove the active away message
 - (IBAction)removeAwayMessage:(id)sender
 {
     //Remove the away status flag	
-    [[adium accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
-    [[adium accountController] setProperty:nil forKey:@"Autoresponse" account:nil];
-}
-
-//Update our menu when the away status changes
-- (void)accountPropertiesChanged:(NSNotification *)notification
-{
-    if(notification == nil || [notification object] == nil){ //We ignore account-specific status changes
-        NSString	*modifiedKey = [[notification userInfo] objectForKey:@"Key"];
-        
-        if([modifiedKey compare:@"AwayMessage"] == 0){
-            //Update our away menus
-            [self _updateMenusToReflectAwayState:[self shouldConfigureForAway]];
-            [self _updateAwaySubmenus];
-            
-            //Remove existing content sent/received observer, and install new (if away)
-            [[adium notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
-            [[adium notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
-            [[adium notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
-            if([[adium accountController] propertyForKey:@"AwayMessage" account:nil] != nil){
-                [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
-                [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
-                [[adium notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
-            }
-            
-            //Flush our array of 'responded' contacts
-            [receivedAwayMessage release]; receivedAwayMessage = [[NSMutableArray alloc] init];
-        }
-    }
+    [[adium preferenceController] setPreference:nil forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+    [[adium preferenceController] setPreference:nil forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
 }
 
 //Called when Adium receives content
@@ -133,10 +109,10 @@
     //If the user received a message, send our away message to source
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         
-        NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[adium accountController] propertyForKey:@"Autoresponse" account:nil]];
+        NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]];
         
-        if (!awayMessage) {
-            awayMessage = [NSAttributedString stringWithData:[[adium accountController] propertyForKey:@"AwayMessage" account:nil]];
+        if(!awayMessage){
+            awayMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]];
         }
         
         if(awayMessage && [awayMessage length] != 0){
@@ -182,28 +158,53 @@
 - (void)installAwayMenu
 {
     /*
-     JAGUAR: It would be easier (and safer) to use a single menu item, and dynamically set it to behave as both menu items ("Set Away ->" and "Remove Away"), dynamically adding and removing the submenu and hotkey.  However, NSMenuItem appears to dislike it when a menu that has previously contained a submenu is assigned a hotkey.  setKeyEquivalent is ignored for any menu that has previuosly contained a submenu, resulting in a hotkey that will stick and persist even when the submenu is present, and that cannot be removed.  To work around this we must use two seperate menu items, and sneak them into Adium's menu.  Using the menu controller with two seperate dynamic items would result in them jumping position in the menu if other items were present in the same category, and is not a good solution.
+     JAGUAR: It would be easier (and safer) to use a single menu item, and dynamically set it to behave as both menu
+     items ("Set Away ->" and "Remove Away"), dynamically adding and removing the submenu and hotkey.  However,
+     NSMenuItem appears to dislike it when a menu that has previously contained a submenu is assigned a hotkey. 
+     setKeyEquivalent is ignored for any menu that has previuosly contained a submenu, resulting in a hotkey that will
+     stick and persist even when the submenu is present, and that cannot be removed.  To work around this we must use
+     two seperate menu items, and sneak them into Adium's menu.  Using the menu controller with two seperate dynamic
+     items would result in them jumping position in the menu if other items were present in the same category, and is
+     not a good solution.
      */
     
     //Set up the menubar away selector
-    menuItem_away = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""];
+    menuItem_away = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE
+					       target:self
+					       action:@selector(enterAwayMessage:)
+					keyEquivalent:@""];
     
-    menuItem_removeAway = [[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(removeAwayMessage:) keyEquivalent:AWAY_MENU_HOTKEY];
+    menuItem_removeAway = [[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE
+						     target:self
+						     action:@selector(removeAwayMessage:)
+					      keyEquivalent:AWAY_MENU_HOTKEY];
     
     //Set up 
     if ([NSApp isOnPantherOrBetter]) {
-        menuItem_away_alternate = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""];
+        menuItem_away_alternate = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE
+							     target:self
+							     action:@selector(enterAwayMessage:)
+						      keyEquivalent:@""];
         [menuItem_away_alternate setAlternate:YES];
         [menuItem_away_alternate setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
         
-        menuItem_removeAway_alternate = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE_SHORT target:self action:@selector(enterAwayMessage:) keyEquivalent:AWAY_MENU_HOTKEY];
+        menuItem_removeAway_alternate = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE_SHORT
+								   target:self
+								   action:@selector(enterAwayMessage:)
+							    keyEquivalent:AWAY_MENU_HOTKEY];
         [menuItem_removeAway_alternate setAlternate:YES];
         [menuItem_removeAway_alternate setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
        }
     
     //Setup the dock menu away selector
-    menuItem_dockAway = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""];
-    menuItem_dockRemoveAway = [[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(removeAwayMessage:) keyEquivalent:@""];
+    menuItem_dockAway = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE
+						   target:self
+						   action:@selector(enterAwayMessage:)
+					    keyEquivalent:@""];
+    menuItem_dockRemoveAway = [[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE
+							 target:self
+							 action:@selector(removeAwayMessage:)
+						  keyEquivalent:@""];
     
     //Add it to the menubar
     if([self shouldConfigureForAway]){
@@ -228,7 +229,8 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     if (![NSApp isOnPantherOrBetter]) {
-        //JAGUAR: It would be much better to update the menu in response to option being pressed, but I do not know of an easy way to do this :(
+        //JAGUAR: It would be much better to update the menu in response to option being pressed, but I do not know
+	//of an easy way to do this :(
         [self _updateMenusToReflectAwayState:[self shouldConfigureForAway]]; //Update the away message menu
     }
     return(YES);
@@ -237,16 +239,40 @@
 //Is the user currently away?
 - (BOOL)shouldConfigureForAway
 {
-    return(([[adium accountController] propertyForKey:@"AwayMessage" account:nil] != nil) && ![NSEvent optionKey]);
+    return(([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] != nil) && ![NSEvent optionKey]);
 }
 
 //Update our menu if the away list changes
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_AWAY_MESSAGES] == 0 &&
-       [(NSString *)[[notification userInfo] objectForKey:@"Key"] compare:KEY_SAVED_AWAYS] == 0){
-        
-        [self _updateAwaySubmenus]; //Rebuild the away menu
+    NSString    *group = [[notification userInfo] objectForKey:@"Group"];
+    NSString    *key = [[notification userInfo] objectForKey:@"Key"];
+    
+    if(notification == nil || [group compare:PREF_GROUP_AWAY_MESSAGES] == 0){
+	//Rebuild the away menu
+	if([key compare:KEY_SAVED_AWAYS] == 0){
+	    [self _updateAwaySubmenus];
+	}
+	
+    }else if(notification == nil ||([group compare:GROUP_ACCOUNT_STATUS] == 0 && [notification object] == nil)){
+	if([key compare:@"AwayMessage"] == 0){
+	    //Update our away menus
+	    [self _updateMenusToReflectAwayState:[self shouldConfigureForAway]];
+	    [self _updateAwaySubmenus];
+	    
+	    //Remove existing content sent/received observer, and install new (if away)
+	    [[adium notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
+	    [[adium notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
+	    [[adium notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
+	    if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] != nil){
+		[[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
+		[[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
+		[[adium notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
+	    }
+	    
+	    //Flush our array of 'responded' contacts
+	    [receivedAwayMessage release]; receivedAwayMessage = [[NSMutableArray alloc] init];
+	}
     }
 }
 
@@ -306,7 +332,10 @@
     awayMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
     
     //Add the 'Custom away' menu item and divider
-    menuItem = [[[NSMenuItem alloc] initWithTitle:CUSTOM_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:(mainMenu ? AWAY_MENU_HOTKEY : @"")] autorelease];
+    menuItem = [[[NSMenuItem alloc] initWithTitle:CUSTOM_AWAY_MESSAGE_MENU_TITLE
+					   target:self
+					   action:@selector(enterAwayMessage:)
+				    keyEquivalent:(mainMenu ? AWAY_MENU_HOTKEY : @"")] autorelease];
     [awayMenu addItem:menuItem];
     [awayMenu addItem:[NSMenuItem separatorItem]];
     
@@ -342,7 +371,10 @@
                 away = [[away substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"É"];
             }
             
-            menuItem = [[[NSMenuItem alloc] initWithTitle:away target:self action:@selector(setAwayMessage:) keyEquivalent:@""] autorelease];
+            menuItem = [[[NSMenuItem alloc] initWithTitle:away
+						   target:self
+						   action:@selector(setAwayMessage:)
+					    keyEquivalent:@""] autorelease];
             [menuItem setRepresentedObject:awayDict];
             [awayMenu addItem:menuItem];
         }

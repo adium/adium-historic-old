@@ -25,6 +25,8 @@
 #define TOC2_DEFAULTS_FILE	@"TOC2Defaults" //Filename of the account property defaults
 #define MESSAGE_QUE_DELAY	2.0		//Delay before sending contact list changes to the server
 
+#define GROUP_AIM_ACCOUNT       @"AIM"		//Group for AIM prefs
+
 #define AIM_PACKET_MAX_LENGTH	2048
 
 #define UPDATE_INTERVAL		(1.0 / 10.0)	//Rate to check for socket updates
@@ -109,10 +111,10 @@
     chatRoomDict = [[NSMutableDictionary alloc] init];
     silenceUpdateArray = [[NSMutableArray alloc] init];
     
+    //
     pingTimer = nil;
     pingInterval = nil;
     firstPing = nil;
-    screenName = nil;
     password = nil;
     profileURLHandle = nil;
     
@@ -121,6 +123,10 @@
     addDict = [[NSMutableDictionary alloc] init];
     messageDelayTimer = nil;
 
+    //Defaults
+    NSString 	*path = [[NSBundle bundleForClass:[self class]] pathForResource:TOC2_DEFAULTS_FILE ofType:@"plist"];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:path] forGroup:GROUP_ACCOUNT_STATUS];
+    
     //
     [[adium notificationCenter] addObserver:self selector:@selector(updateContactStatus:) name:Contact_UpdateStatus object:nil];
     
@@ -128,42 +134,14 @@
     if([NSEvent controlKey]){
         [NSBundle loadNibNamed:@"TrafficWatch" owner:self];
     }
-}
-
-//Return the default properties for this account
-- (NSDictionary *)defaultProperties
-{
-    NSString 	*path = [[NSBundle bundleForClass:[self class]] pathForResource:TOC2_DEFAULTS_FILE ofType:@"plist"];
-
-    return([NSDictionary dictionaryWithContentsOfFile:path]);
+    
+    //
+    [self updateStatusForKey:@"Handle"];
 }
 
 // Return a view for the connection window
 - (id <AIAccountViewController>)accountView{
     return([AIMTOC2AccountViewController accountViewForAccount:self]);
-}
-
-// Return a unique ID specific to THIS account plugin, and the user's account name
-- (NSString *)accountID{
-    return([NSString stringWithFormat:@"TOC2.%@",[[propertiesDict objectForKey:@"Handle"] compactedString]]);
-}
-
-//The user's account name
-- (NSString *)UID{
-    return([[propertiesDict objectForKey:@"Handle"] compactedString]);
-}
-
-//The service ID (shared by any account code accessing this service)
-- (NSString *)serviceID{
-    return(@"AIM");
-}
-
-// Return a readable description of this account's username
-- (NSString *)accountDescription
-{
-    NSString	*description = [propertiesDict objectForKey:@"Handle"];
-
-    return(description ? description : @"");
 }
 
 
@@ -272,15 +250,13 @@
 // Return YES if the contact list is editable
 - (BOOL)contactListEditable
 {
-    return([[[adium accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+    return([[self statusObjectForKey:@"Online"] boolValue]);
 }
 
 // Return a dictionary of our handles
 - (NSDictionary *)availableHandles
 {
-    int	status = [[[adium accountController] propertyForKey:@"Status" account:self] intValue];
-    
-    if(status == STATUS_ONLINE || status == STATUS_CONNECTING){
+    if([[self statusObjectForKey:@"Online"] boolValue] || [[self statusObjectForKey:@"Connecting"] boolValue]){
         return(handleDict);
     }else{
         return(nil);
@@ -363,7 +339,7 @@
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
     BOOL 	available = NO;
-    BOOL	weAreOnline = ([[[adium accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+    BOOL	weAreOnline = [[self statusObjectForKey:@"Online"] boolValue];
 
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
         if(weAreOnline){
@@ -431,10 +407,6 @@
     return(chat);
 }
 
-
-
-
-
 //Close a chat instance
 - (BOOL)closeChat:(AIChat *)inChat
 {
@@ -472,7 +444,6 @@
 }
 
 
-
 // AIAccount_Status --------------------------------------------------------------------------------
 // Returns an array of the status keys we support
 - (NSArray *)supportedPropertyKeys
@@ -480,69 +451,84 @@
     return([NSArray arrayWithObjects:@"Online", @"IdleSince", @"IdleManuallySet", @"TextProfile", @"AwayMessage", nil]);
 }
 
-// Respond to account status changes
-- (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
+//Respond to account status changes
+- (void)updateStatusForKey:(NSString *)key
 {
-    ACCOUNT_STATUS	status = [[[adium accountController] propertyForKey:@"Status" account:self] intValue];
+    BOOL    areOnline = [[self statusObjectForKey:@"Online"] boolValue];
     
-    if([key compare:@"Online"] == 0){
-        if([inValue boolValue]){ //Connect
-            if(status == STATUS_OFFLINE){
-                [self connect];
-            }            
-        }else{ //Disconnect
-            if(status == STATUS_ONLINE){
-                [self disconnect];
-            }
-        }
+    //Handle (Formatting)
+    if(key == nil || [key compare:@"Handle"] == 0){
+	[self setStatusObject:[self preferenceForKey:@"Handle" group:GROUP_ACCOUNT_STATUS]
+		       forKey:@"Display Name"
+		       notify:YES];
+    }
+    
+    //Connect / Disconnect
+    if(key == nil || [key compare:@"Online"] == 0){
+	if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
+	    if(!areOnline) [self connect];
+	}else{ 
+	    if(areOnline) [self disconnect];
+	}
     }
 
     //Ignore the following keys unless we're online
-    if(status == STATUS_ONLINE){
-       if([key compare:@"IdleSince"] == 0){
-        NSDate		*oldIdle = [[adium accountController] propertyForKey:@"IdleSince" account:self];
-        NSDate		*newIdle = inValue;
+    if(areOnline){
+	if(key == nil || [key compare:@"IdleSince"] == 0){
+	    NSDate      *oldIdle = [self statusObjectForKey:@"IdleSince"];
+	    NSDate      *newIdle = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+	    
+	    if(oldIdle != nil && newIdle != nil){
+		//Most AIM clients will ignore 2 consecutive idles,
+		//so we unidle, then re-idle to the new value
+		[self AIM_SetIdle:0];
+	    }
 
-        if(oldIdle != nil && newIdle != nil){
-            [self AIM_SetIdle:0]; //Most AIM cliens will ignore 2 consecutive idles, so we unidle, then re-idle to the new value
-        }
+	    [self AIM_SetIdle:(newIdle ? -[newIdle timeIntervalSinceNow] : 0)];
+	    [self setStatusObject:newIdle forKey:@"IdleSince" notify:YES];
 
-        [self AIM_SetIdle:(-[newIdle timeIntervalSinceNow])];
-
-        }else if([key compare:@"TextProfile"] == 0){
-            NSString	*profile = [AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]
-                                                  headers:YES
-                                                 fontTags:YES
-                                            closeFontTags:NO
-                                                styleTags:YES
-                               closeStyleTagsOnFontChange:NO
-                                           encodeNonASCII:YES
-                                               imagesPath:nil];
-            
-            if([profile length] > 1024){
-                [[adium interfaceController] handleErrorMessage:@"Info Size Error"
-                                                withDescription:[NSString stringWithFormat:@"Your info is too large, and could not be set.\r\rThis service limits info to 1024 characters (Your current info is %i characters)",[profile length]]];
-            }else{
-                [self AIM_SetProfile:profile];
-            }
-
-        }else if([key compare:@"AwayMessage"] == 0){
-            if(inValue){
-                [self AIM_SetAway:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]
-                                                    headers:YES
-                                                   fontTags:YES
-                                              closeFontTags:NO
-                                                  styleTags:YES
-                                 closeStyleTagsOnFontChange:NO
-                                             encodeNonASCII:YES
+	}else if(key == nil || [key compare:@"TextProfile"] == 0){
+	    NSData      *profileData = [self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
+	    NSString	*profile = [AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:profileData]
+						     headers:YES
+						    fontTags:YES
+					       closeFontTags:NO
+						   styleTags:YES
+				  closeStyleTagsOnFontChange:NO
+					      encodeNonASCII:YES
+						  imagesPath:nil];
+	    
+	    if([profile length] > 1024){
+		[[adium interfaceController] handleErrorMessage:@"Info Size Error"
+						withDescription:[NSString stringWithFormat:@"Your info is too large, and could not be set.\r\rThis service limits info to 1024 characters (Your current info is %i characters)",[profile length]]];
+	    }else{
+		[self AIM_SetProfile:profile];
+		[self setStatusObject:profileData forKey:@"TextProfile" notify:YES];
+	    }
+	    
+	}else if(key == nil || [key compare:@"AwayMessage"] == 0){
+	    NSData  *awayData = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+	    if(awayData){
+		NSAttributedString *statusMessageHTML = [NSAttributedString stringWithData:awayData];
+		[self AIM_SetAway:[AIHTMLDecoder encodeHTML:statusMessageHTML
+						    headers:YES
+						   fontTags:YES
+					      closeFontTags:NO
+						  styleTags:YES
+				 closeStyleTagsOnFontChange:NO
+					     encodeNonASCII:YES
                                                  imagesPath:nil]];
-
-            }else{
-                [self AIM_SetAway:nil];
-            }
-        }
+		
+		[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
+		[self setStatusObject:statusMessageHTML forKey:@"StatusMessage" notify:YES];
+		
+	    }else{
+		[self AIM_SetAway:nil];
+		[self setStatusObject:nil forKey:@"Away" notify:NO];
+		[self setStatusObject:nil forKey:@"StatusMessage" notify:YES];
+	    }
+	}
     }
-
 }
 
 // Update the status of a handle
@@ -572,27 +558,23 @@
 - (void)finishConnect:(NSString *)inPassword
 {
     if(inPassword && [inPassword length] != 0){
-        NSString	*host = [[adium accountController] propertyForKey:AIM_TOC2_KEY_HOST account:self];
-        int		port = [[[adium accountController] propertyForKey:AIM_TOC2_KEY_PORT account:self] intValue];
+        NSString	*host = [self preferenceForKey:AIM_TOC2_KEY_HOST group:GROUP_ACCOUNT_STATUS];
+        int		port = [[self preferenceForKey:AIM_TOC2_KEY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
 
         //Set our status as connecting
-        [[adium accountController] setProperty:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
+	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
 
-        //Remember the account name and password
-        if(screenName != [propertiesDict objectForKey:@"Handle"]){
-            [screenName release]; screenName = [[propertiesDict objectForKey:@"Handle"] copy];
+	//Determine if this is an ICQ account
+	connectedWithICQ = ([[[self UID] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"0123456789"]] length] == 0);
 
-            //Determine if this is an ICQ account
-            connectedWithICQ = ([[screenName stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"0123456789"]] length] == 0);
-
-        }
+        //Remember the password
         if(password != inPassword){
             [password release]; password = [inPassword copy];
         }
 
         //Debug window
         if(textView_trafficWatchDEBUG){
-            [[textView_trafficWatchDEBUG window] setTitle:screenName];
+            [[textView_trafficWatchDEBUG window] setTitle:[self displayName]];
             [[textView_trafficWatchDEBUG window] makeKeyAndOrderFront:nil];
         }
 
@@ -614,7 +596,7 @@
     AIHandle		*handle;
 
     //Set our status as disconnecting
-    [[adium accountController] setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
+    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 
     //Flush all our handle status flags
     enumerator = [[handleDict allValues] objectEnumerator];
@@ -635,8 +617,8 @@
     [updateTimer release]; updateTimer = nil;
 
     //Set our status as offline
-    [[adium accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
-    [[adium accountController] setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:NO];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
 }
 
 
@@ -659,11 +641,11 @@
 - (void)autoReconnectTimer:(NSTimer *)inTimer
 {
     //If we're still offline, continue with the reconnect
-    if([[[adium accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_OFFLINE){
-
+    if([[self statusObjectForKey:@"Online"] boolValue]){
         NSLog(@"Attempting Auto-Reconnect");
-
-        //Instead of calling connect, we directly call the second phase of connecting, passing it the user's password.  This prevents users who don't keychain passwords from having to enter them for a reconnect.
+	
+        //Instead of calling connect, we directly call the second phase of connecting, passing it the user's password.
+	//This prevents users who don't keychain passwords from having to enter them for a reconnect.
         [self finishConnect:password];
     }
 }
@@ -700,10 +682,10 @@
         break;
         case 3: //Send the sign on packets
             //Send the first sign on packet
-            if([[AIMTOC2Packet signOnPacketForScreenName:[screenName compactedString] sequence:&localSequence] sendToSocket:socket]){
+            if([[AIMTOC2Packet signOnPacketForScreenName:[self UID] sequence:&localSequence] sendToSocket:socket]){
 
                 //Send the login string
-                [self sendCommand:[self loginStringForName:screenName password:password]];
+                [self sendCommand:[self loginStringForName:[self UID] password:password]];
 
                 connectionPhase = 0;
                 
@@ -754,24 +736,18 @@
                     [self silenceAllHandleUpdatesForInterval:SIGN_ON_EVENT_DURATION];
 
                     //Flag ourself as online
-                    [[adium accountController] setProperty:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
-                    [[adium accountController] setProperty:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
+		    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
+		    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
 
                     //Set our correct status
-                    {
-                        NSDate 		*idle = [[adium accountController] propertyForKey:@"IdleSince" account:self];
-                        NSData	 	*profile = [[adium accountController] propertyForKey:@"TextProfile" account:self];
-                        NSData	 	*away = [[adium accountController] propertyForKey:@"AwayMessage" account:self];
-
-                        if(idle) [self statusForKey:@"IdleSince" willChangeTo:idle];
-                        if(profile) [self statusForKey:@"TextProfile" willChangeTo:profile];
-                        if(away) [self statusForKey:@"AwayMessage" willChangeTo:away];
-
-                        //Format our nickname as it was entered for the account
-                        if(!connectedWithICQ){
-                            [self AIM_SetNick:screenName];
-                        }
-                    }
+		    [self updateStatusForKey:@"IdleSince"];
+		    [self updateStatusForKey:@"TextProfile"];
+		    [self updateStatusForKey:@"AwayMessage"];
+		    
+		    //Format our nickname as it was entered for the account
+		    if(!connectedWithICQ){
+			[self AIM_SetNick:[self preferenceForKey:@"Handle" group:GROUP_AIM_ACCOUNT]];
+		    }
                     
                     //Send AIM the init done message (at this point we become visible to other buddies)
                     [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_init_done" sequence:&localSequence]];
@@ -881,13 +857,13 @@
     unsigned long 	a,b,d,o;
 
     //Generate the correct login number
-    a = ([[screenName compactedString] cString][0] - 96) * 7696 + 738816; 	//first SN letter
-    b = ([[screenName compactedString] cString][0] - 96) * 746512; 		//first SN letter
+    a = ([name cString][0] - 96) * 7696 + 738816; 	//first SN letter
+    b = ([name cString][0] - 96) * 746512; 		//first SN letter
     d = ([password cString][0] - 96) * a; 					//pass first letter
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.97 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.98 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1075,7 +1051,7 @@
     AIHandle		*senderHandle;
     AIChat 		*chat;
     
-    if([[screenName compactedString] compare:[senderName compactedString]] != 0){ //Ignore echoed messages
+    if([[self UID] compare:[senderName compactedString]] != 0){ //Ignore echoed messages
         //Get the sending handle (creating a stranger if necessary)
         senderHandle = [handleDict objectForKey:[senderName compactedString]];
         if(!senderHandle){
@@ -1368,7 +1344,7 @@
         disconnect = [[[errorDict objectForKey:@"ErrorDisc"] objectForKey:[message TOCStringArgumentAtIndex:1]] boolValue];
     
         //Display the error
-        [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"AIM Error %i (%@)", errorNumber, screenName] withDescription:errorMessage];
+        [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"AIM Error %i (%@)", errorNumber, [self displayName]] withDescription:errorMessage];
     
         //Disconnecting Errors
         if(disconnect){
@@ -1437,7 +1413,7 @@
                 }else if([type compare:@"m"] == 0){
                 }else if([type compare:@"pref"] == 0){
                     if([value compare:@"0"] == 0){
-                        NSLog(@"Idle is disabled server-side for %@",screenName);
+                        NSLog(@"Idle is disabled server-side for %@",[self displayName]);
                     }
 
                 }else if([type compare:@"20"] == 0){
@@ -1466,7 +1442,7 @@
 
     //Set up the address
     host = [socket hostIP]; //We must request our profile from the same server that we connected to.
-    port = [[adium accountController] propertyForKey:AIM_TOC2_KEY_PORT account:self];
+    port = [self preferenceForKey:AIM_TOC2_KEY_PORT group:GROUP_ACCOUNT_STATUS];
     path = [message nonBreakingTOCStringArgumentAtIndex:2];
     urlString = [NSString stringWithFormat:@"http://%@:%@/%@", host, port, path];
 
@@ -1857,11 +1833,7 @@
     //Stop observing
     [[adium notificationCenter] removeObserver:self name:Contact_UpdateStatus object:nil];
     
-    [screenName release];
-    [password release];
-
     [outQue release];
-    [screenName release];
     [password release];
     [addDict release];
     [deleteDict release];

@@ -16,7 +16,9 @@
 @class AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject, AIListObject, ESFileTransfer;
 @protocol AIServiceController, AIAccountViewController;
 
-//#import "AIListObject.h"
+#import "AIListObject.h"
+
+#define GROUP_ACCOUNT_STATUS    @"Account Status"
 
 typedef enum {
     STATUS_NA = -1,
@@ -24,7 +26,6 @@ typedef enum {
     STATUS_CONNECTING,
     STATUS_ONLINE,
     STATUS_DISCONNECTING
-
 } ACCOUNT_STATUS;
 
 typedef enum {
@@ -95,17 +96,14 @@ typedef enum {
  * almost never need to talk directly with an AIAccount.  For information on
  * accounts, check out 'working with accounts' and 'creating service code'.
  */
-@interface AIAccount : AIObject {
+@interface AIAccount : AIListObject {
     id <AIServiceController>	service;
 
-    NSMutableDictionary		*propertiesDict;
+    NSMutableArray		*changedStatusKeys;
     NSImage                     *userIcon;
 }
 
-- (id)initWithProperties:(NSDictionary *)inProperties service:(id <AIServiceController>)inService;
-- (void)setProperty:(id)inValue forKey:(NSString *)key;
-- (id)propertyForKey:(NSString *)key;
-- (NSDictionary *)defaultProperties;
+- (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService;
 
 /*
  * @method properties
@@ -121,23 +119,14 @@ typedef enum {
  * StatusMessage   NSAttributedString
  * Away            boolean
  */
-- (NSDictionary *)properties;
 - (id <AIServiceController>)service;
-- (NSString *)displayName;
-- (NSString *)serverDisplayName;
 
 //Methods that should be subclassed
 - (void)initAccount; 				//Init anything relating to the account
 - (id <AIAccountViewController>)accountView;	//Return a view controller for the connection window
-
-- (NSString *)accountID; 			//Specific to THIS account plugin, and the user's account name
-- (NSString *)UID;				//The user's account name
-- (NSString *)serviceID;			//The service ID (shared by any account code accessing this service)
-- (NSString *)UIDAndServiceID; 			//ServiceID.UID
-- (NSString *)accountDescription;		//Return a readable description of this account's username
-- (NSImage *)userIcon;                          //Return an image associated with this account (this image is also sent to the server or chat recipients by the account when using supported protocols)
-- (void)setUserIcon:(NSImage *)inUserIcon;
 - (NSArray *)supportedPropertyKeys;		//Return an array of supported status keys
-- (void)statusForKey:(NSString *)key willChangeTo:(id)inValue;	//The account's status should change
+- (void)updateStatusForKey:(NSString *)key; //The account's status did change
+- (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify;
+- (id)statusObjectForKey:(NSString *)key;
 
 @end

@@ -138,6 +138,7 @@ typedef enum {
 #define PREF_GROUP_WINDOW_POSITIONS 	@"Window Positions"
 #define PREF_GROUP_SPELLING 		@"Spelling"
 #define OBJECT_PREFS_PATH		@"ByObject"		//Path to object specific preference folder
+#define ACCOUNT_PREFS_PATH		@"Accounts"		//Path to account specific preference folder
 
 //Adium events
 #define KEY_EVENT_DISPLAY_NAME		@"DisplayName"
@@ -160,7 +161,7 @@ typedef enum {
 
 //Adium Notifications
 #define Account_ListChanged 					@"Account_ListChanged"
-#define Account_PropertiesChanged				@"Account_PropertiesChanged"
+//#define Account_PropertiesChanged				@"Account_PropertiesChanged"
 #define Account_HandlesChanged					@"Account_HandlesChanged"
 #define ListObject_AttributesChanged				@"ListObject_AttributesChanged"
 #define ListObject_StatusChanged				@"ListObject_StatusChanged"
@@ -249,7 +250,7 @@ typedef enum {
 - (NSString *)identifier;
 - (NSString *)description;
 - (AIServiceType *)handleServiceType;
-- (id)accountWithProperties:(NSDictionary *)inProperties;
+- (id)accountWithUID:(NSString *)inUID;
 @end
 
 @protocol AIAccountViewController <NSObject>
@@ -331,7 +332,7 @@ typedef enum {
     IBOutlet	AIAdium		*owner;	
 
     NSMutableArray		*accountArray;			//Array of active accounts
-    NSMutableArray		*availableServiceArray;
+    NSMutableDictionary		*availableServiceDict;
     NSMutableDictionary		*lastAccountIDToSendContent;
     NSMutableDictionary		*accountStatusDict;
 
@@ -351,17 +352,18 @@ typedef enum {
 - (AIAccount *)newAccountAtIndex:(int)index;
 - (void)deleteAccount:(AIAccount *)inAccount;
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
+- (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID;
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService;
 - (void)connectAllAccounts;
 - (void)disconnectAllAccounts;
 
 //Account properties
-- (void)setProperty:(id)inValue forKey:(NSString *)key account:(AIAccount *)inAccount;
-- (id)propertyForKey:(NSString *)key account:(AIAccount *)inAccount;
-- (void)setUserIcon:(NSImage *)inImage forAccount:(AIAccount *)account;
-- (void)setDefaultUserIcon:(NSImage *)inImage;
-- (NSImage *)defaultUserIcon;
-- (NSString *)defaultUserIconFilename;
+//- (void)setProperty:(id)inValue forKey:(NSString *)key account:(AIAccount *)inAccount;
+//- (id)propertyForKey:(NSString *)key account:(AIAccount *)inAccount;
+//- (void)setUserIcon:(NSImage *)inImage forAccount:(AIAccount *)account;
+//- (void)setDefaultUserIcon:(NSImage *)inImage;
+//- (NSImage *)defaultUserIcon;
+//- (NSString *)defaultUserIconFilename;
 
 //Account password storage
 - (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount;
@@ -371,7 +373,8 @@ typedef enum {
 
 //Access to services
 - (void)registerService:(id <AIServiceController>)inService;
-- (NSArray *)availableServiceArray;
+- (id <AIServiceController>)serviceControllerWithIdentifier:(NSString *)inType;
+- (NSDictionary *)availableServices;
 
 @end
 

@@ -34,18 +34,20 @@
     [super initWithFrame:frameRect];
 
     //init
-    adium = [AIObject sharedAdiumInstance];
-    [self configureView];
-    [self configureStatusMenu];
+    //adium = [AIObject sharedAdiumInstance];
+    //[self configureView];
+    //[self configureStatusMenu];
 
-    //Observe account status changed notification
-    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
-    [self accountPropertiesChanged:nil];
+    //We're not using this class, and the state system will change in the near future, so
+    //this can stay broken for now
+    
+    //[[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+    //[[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
+    //[self accountPropertiesChanged:nil];
     
     return(self);
 }
-
+/*
 - (void)dealloc
 {
     [[adium notificationCenter] removeObserver:self];
@@ -136,11 +138,11 @@
     if(representedObject){ //Away
 	NSAttributedString	*awayMessage = [representedObject objectForKey:@"Message"];
 	NSAttributedString	*awayAutoResponse = [representedObject objectForKey:@"Autoresponse"];
-	[[adium accountController] setProperty:awayMessage forKey:@"AwayMessage" account:nil];
-        [[adium accountController] setProperty:awayAutoResponse forKey:@"Autoresponse" account:nil];
+	[[adium preferenceController] setPreference:awayMessage forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+        [[adium preferenceController] setPreference:awayAutoResponse forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
 
     }else if([title compare:STATUS_NAME_AVAILABLE] == 0){ //Available
-        [[adium accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
+        [[adium preferenceController] setPreference:nil forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
         NSLog(@"available");
         
     }else if([title compare:STATUS_NAME_OFFLINE] == 0){ //Offline
@@ -191,7 +193,7 @@
     //Get the number of accounts that are online, or connecting
     enumerator = [[[adium accountController] accountArray] objectEnumerator];
     while((account = [enumerator nextObject])){
-        int status = [[account propertyForKey:@"Status"] intValue];
+        int status = [[account preferenceForKey:@"Status" group:GROUP_ACCOUNT_STATUS] intValue];
 
         if(status == STATUS_ONLINE){
             onlineAccounts++;
@@ -201,7 +203,7 @@
     }
 
     //Get the current away message
-    awayMessageData = [[adium accountController] propertyForKey:@"AwayMessage" account:nil];
+    awayMessageData = [[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
     if(awayMessageData){
         //Determine the selected away message's menu item index
         enumerator = [[[popUp_status menu] itemArray] objectEnumerator];
@@ -284,7 +286,7 @@
 {
     [self updateMenu];
 }
-
+*/
 @end
 
 

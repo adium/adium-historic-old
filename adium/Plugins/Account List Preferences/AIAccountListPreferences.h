@@ -15,7 +15,7 @@
 
 @class AIAccountController, AIAccount, AIAutoScrollView;
 
-@interface AIAccountListPreferences : AIPreferencePane {
+@interface AIAccountListPreferences : AIPreferencePane <AIListObjectObserver> {
     IBOutlet		NSView				*view_accountPreferences;
     IBOutlet		AIAlternatingRowTableView	*tableView_accountList;
     IBOutlet		AIAutoScrollView		*scrollView_accountList;

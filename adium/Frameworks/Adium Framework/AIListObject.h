@@ -42,6 +42,7 @@
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName ignoreInheritedValues:(BOOL)ignore;
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName;
+- (NSString *)pathToPreferences;
 
 //Nesting
 - (void)setContainingGroup:(AIListGroup *)inGroup;
