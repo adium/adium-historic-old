@@ -79,6 +79,7 @@
 - (void)removeListObject:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact;
 - (void)_loadMetaContactsFromArray:(NSArray *)array;
 - (void)_saveMetaContacts:(NSDictionary *)allMetaContactsDict;
+- (void)breakdownAndRemoveMetaContact:(AIMetaContact *)metaContact;
 
 - (NSArray *)allContactsWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
 
@@ -174,8 +175,21 @@ DeclareString(UID);
 
 - (void)clearAllMetaContactData
 {
-	NSString	*path;
+	NSString		*path;
+	NSDictionary	*metaContactDictCopy = [[metaContactDict copy] autorelease];
+	NSEnumerator	*enumerator;
+	AIMetaContact	*metaContact;
 	
+	//Remove all the metaContacts to get any existing objects out of them
+	enumerator = [metaContactDictCopy objectEnumerator];
+	while (metaContact = [enumerator nextObject]){
+		[self breakdownAndRemoveMetaContact:metaContact];
+	}
+
+	[metaContactDict release]; metaContactDict = [[NSMutableDictionary alloc] init];
+	[contactToMetaContactLookupDict release]; contactToMetaContactLookupDict = [[NSMutableDictionary alloc] init];
+	
+	//Clear the preferences for good measure
 	[[owner preferenceController] setPreference:nil
 										 forKey:KEY_FLAT_METACONTACTS
 										  group:PREF_GROUP_CONTACT_LIST];
@@ -372,7 +386,7 @@ DeclareString(UID);
 			
 			localGroup = [self groupWithUID:remoteGroup];
 			existingObject = [localGroup objectWithService:inObjectService UID:inObjectUID];
-
+			NSLog(@"%@ ; %@",localGroup,existingObject);
 			if(existingObject){
 				//If an object exists in this group with the same UID and serviceID, create a MetaContact
 				//for the two.
@@ -392,10 +406,11 @@ DeclareString(UID);
 				
 			}
 			
+			NSLog(@"Performed grouping? %i",performedGrouping);
 			if (!performedGrouping){
 				//If no similar objects exist, we add this contact directly to the list
 				[localGroup addObject:inObject];
-				
+				NSLog(@"Added %@ to %@",inObject,localGroup);
 				//Add
 				[self _listChangedGroup:localGroup object:inObject];
 
@@ -726,6 +741,8 @@ DeclareString(UID);
 	while (theObject = [enumerator nextObject]){
 		[self removeListObject:theObject fromMetaContact:metaContact];
 	}
+	
+	[contactToMetaContactLookupDict removeObjectForKey:[listObject internalObjectID]];
 }
 
 - (void)removeListObject:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact
@@ -877,6 +894,8 @@ DeclareString(UID);
 	
 	//Remove it from the preferences dictionary
 	[allMetaContactsDict removeObjectForKey:metaContactInternalObjectID];
+	
+	//XXX - contactToMetaContactLookupDict
 	
 	//Post the list changed notification for the old containingObject
 	[self _listChangedGroup:containingObject object:metaContact];
