@@ -155,7 +155,7 @@ static	BOOL alreadyMoving = NO;
 	[super toggleToolbarShown:sender];
 	
 	if([self delegate] && [[self delegate] respondsToSelector:@selector(windowDidToggleToolbarShown:)]){
-		[[self delegate] performSelector:@selector(windowDidToogleToolbarShown:)
+		[[self delegate] performSelector:@selector(windowDidToggleToolbarShown:)
 							  withObject:self];
 	}
 }
@@ -165,7 +165,7 @@ static	BOOL alreadyMoving = NO;
 	[super _toolbarPillButtonClicked:sender];
 	
 	if([self delegate] && [[self delegate] respondsToSelector:@selector(windowDidToggleToolbarShown:)]){
-		[[self delegate] performSelector:@selector(windowDidToogleToolbarShown:)
+		[[self delegate] performSelector:@selector(windowDidToggleToolbarShown:)
 							  withObject:self];
 	}
 }
