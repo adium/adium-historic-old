@@ -18,6 +18,8 @@
 
     AIListContact	*activeContactObject;
     
+    NSTimer             *timer;
+    
 }
 
 + (id)showInfoWindowWithOwner:(id)inOwner forContact:(AIListContact *)inContact;

@@ -15,7 +15,7 @@
 #define INFO_WINDOW_NIB			@"ContactInfo"
 #define InfoIndentA			75
 #define InfoIndentB			80
-
+#define REFRESH_RATE                    300
 
 @implementation AIInfoWindowController
 
@@ -33,6 +33,7 @@ static AIInfoWindowController *sharedInstance = nil;
     
         //Show the window and configure it for the contact
         [sharedInstance configureWindowForContact:inContact];
+        
         [sharedInstance showWindow:nil];
     }
         
@@ -45,6 +46,12 @@ static AIInfoWindowController *sharedInstance = nil;
     if(sharedInstance){
         [sharedInstance closeWindow:nil];
     }
+}
+
+- (void)refresh:(NSTimer *)timer
+{
+    //Show the window and configure it for the contact
+    [sharedInstance configureWindowForContact:activeContactObject];
 }
 
 //Called as profiles are set on a handle, update our display
@@ -75,6 +82,11 @@ static AIInfoWindowController *sharedInstance = nil;
     //Remember who we're displaying info for
     [activeContactObject release]; activeContactObject = [inContact retain];
 
+    if (timer) 
+        [timer invalidate];
+    timer = [NSTimer scheduledTimerWithTimeInterval:REFRESH_RATE target:self selector:@selector(refresh:) userInfo:nil repeats:NO];
+    
+    
     //Set window title
     [[self window] setTitle:[NSString stringWithFormat:@"%@'s Info",[activeContactObject displayName]]];
     
@@ -120,50 +132,71 @@ static AIInfoWindowController *sharedInstance = nil;
     [infoString appendAttributedString:[NSAttributedString attributedStringWithAttachment:attatchment]];
     
     //Display Name
-//    ownerArray = [inContact statusArrayForKey:@"Display Name"];
-//    if(ownerArray && [ownerArray count]){
-        [infoString appendString:@"\t" withAttributes:labelAttributes];
-        [infoString appendString:/*[ownerArray objectAtIndex:0]*/[inContact displayName] withAttributes:bigValueAttributes];
-//    }
-
+    //    ownerArray = [inContact statusArrayForKey:@"Display Name"];
+    //    if(ownerArray && [ownerArray count]){
+    [infoString appendString:@"\t" withAttributes:labelAttributes];
+    [infoString appendString:/*[ownerArray objectAtIndex:0]*/[inContact displayName] withAttributes:bigValueAttributes];
+    //    }
+    
     //Client
     ownerArray = [inContact statusArrayForKey:@"Client"];
     if(ownerArray && [ownerArray count]){
         [infoString appendString:@"\r\r\tClient:\t" withAttributes:labelAttributes];
         [infoString appendString:[ownerArray objectAtIndex:0] withAttributes:valueAttributes];
     }
-
+    
     //Signon Date
     NSDate *signonDate = [[inContact statusArrayForKey:@"Signon Date"] earliestDate];
     if(signonDate){
-        [infoString appendString:@"\r\r\tOnline Since:\t" withAttributes:labelAttributes];
-        [infoString appendString:[signonDate description] withAttributes:valueAttributes];
+        //        [infoString appendString:@"\r\r\tOnline Since:\t" withAttributes:labelAttributes];
+        //        [infoString appendString:[signonDate description] withAttributes:valueAttributes];
+        [infoString appendString:@"\r\r\tOnline For:\t" withAttributes:labelAttributes];
+        double seconds = [[NSDate date] timeIntervalSinceDate:signonDate];
+        int days = 0, hours = 0, minutes = 0; 
+        days = (int)(seconds / 86400);
+        seconds -= days * 86400;
+        if (seconds) {
+            hours = (int)(seconds / 3600);
+            seconds -= hours * 3600;
+        }
+        if (seconds) {
+            minutes = (int)(seconds / 60);
+            seconds -= minutes * 60;
+        }
+        if (days)
+            [infoString appendString:[NSString stringWithFormat:@"%i day%@ ",days,days==1 ? @"":@"s"]  withAttributes:valueAttributes];
+        if (hours)
+            [infoString appendString:[NSString stringWithFormat:@"%i hour%@ ",hours,hours==1 ? @"":@"s"]  withAttributes:valueAttributes];
+        if (minutes)
+            [infoString appendString:[NSString stringWithFormat:@"%i minute%@ ",minutes,minutes==1 ? @"":@"s"]  withAttributes:valueAttributes];
+        if (seconds)
+            [infoString appendString:[NSString stringWithFormat:@"%i second%@ ",(int)seconds,seconds==1 ? @"":@"s"]  withAttributes:valueAttributes];
     }
     
     //Online
-/*    int online = [[inContact statusArrayForKey:@"Online"] greatestIntegerValue];
+    /*    int online = [[inContact statusArrayForKey:@"Online"] greatestIntegerValue];
     [infoString appendString:@"\r\tOnline:\t" withAttributes:labelAttributes];
     [infoString appendString:(online ? @"Yes" : @"No") withAttributes:valueAttributes];*/
-
+    
     //Away & Status
     NSAttributedString *status = nil;
     int away = [[inContact statusArrayForKey:@"Away"] greatestIntegerValue];
     ownerArray = [inContact statusArrayForKey:@"StatusMessage"];
-
+    
     if(ownerArray && [ownerArray count]){
         status = [ownerArray objectAtIndex:0];
     }
-
+    
     if(status || away){ //If away or w/ status message
         if(away){
             [infoString appendString:@"\r\r\tAway:\t" withAttributes:labelAttributes];
         }else{
             [infoString appendString:@"\r\r\tStatus:\t" withAttributes:labelAttributes];
         }
-
+        
         [infoString appendString:(status != nil ? [status string] : @"Yes") withAttributes:valueAttributes];
     }
-
+    
     //Idle Since
     int idle = (int)[[inContact statusArrayForKey:@"Idle"] greatestDoubleValue];
     if(idle != 0){
@@ -215,6 +248,7 @@ static AIInfoWindowController *sharedInstance = nil;
 
     //
     [self displayInfo:infoString];
+    
 }
 
 //Displays the attributed string in the profile view.  Pass nil for no profile
@@ -245,7 +279,8 @@ static AIInfoWindowController *sharedInstance = nil;
 
     //init
     owner = [inOwner retain];
-
+    timer = nil;
+    
     //Register ourself as a handle observer
     [[owner contactController] registerListObjectObserver:self];
 
@@ -296,8 +331,13 @@ static AIInfoWindowController *sharedInstance = nil;
 
     //Stop observine, and release the shared instance
     [[owner contactController] unregisterListObjectObserver:self];
-    [sharedInstance autorelease]; sharedInstance = nil;
+    if (timer) {
+        [timer invalidate];
+        timer = nil;
+    }
 
+    [sharedInstance autorelease]; sharedInstance = nil;
+    
     return(YES);
 }
 
