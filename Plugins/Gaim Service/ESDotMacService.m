@@ -1,0 +1,40 @@
+//
+//  ESDotMacService.m
+//  Adium
+//
+//  Created by Adam Iser on 8/26/04.
+//  Copyright 2004 __MyCompanyName__. All rights reserved.
+//
+
+#import "ESDotMacService.h"
+
+
+@implementation ESDotMacService
+
+//Service Description
+- (NSString *)serviceCodeUniqueID{
+	return(@"libgaim-oscar-Mac");
+}
+- (NSString *)serviceID{
+	return(@"Mac");
+}
+- (NSString *)shortDescription{
+	return(@".Mac");
+}
+- (NSString *)longDescription{
+	return(@".Mac");
+}
+- (NSCharacterSet *)allowedCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._- "]);
+}
+- (NSCharacterSet *)ignoredCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@" "]);
+}
+- (int)allowedLength{
+	return(24);
+}
+- (BOOL)caseSensitive{
+	return(NO);
+}
+
+@end
