@@ -53,4 +53,5 @@
 
 - (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
 - (void *)handleNotifyEmails:(size_t)count detailed:(BOOL)detailed subjects:(const char **)subjects froms:(const char **)froms tos:(const char **)tos urls:(const char **)urls;
+- (NSString *)_processGaimImagesInString:(NSString *)inString forAdiumAccount:(id)adiumAccount;
 @end

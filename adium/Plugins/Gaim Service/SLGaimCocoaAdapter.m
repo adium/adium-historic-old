@@ -25,9 +25,13 @@
 #import "ESGaimRequestActionWindowController.h"
 #import "ESGaimNotifyEmailWindowController.h"
 
+#define ACCOUNT_IMAGE_CACHE_PATH		@"~/Library/Caches/Adium"
+#define MESSAGE_IMAGE_CACHE_NAME		@"Image_%@_%i"
+
 @interface SLGaimCocoaAdapter (PRIVATE)
 - (void)callTimerFunc:(NSTimer*)timer;
 - (void)initLibGaim;
+- (NSString *)_messageImageCachePathForID:(int)imageID forAdiumAccount:(id<AdiumGaimDO>)adiumAccount;
 @end
 
 /*
@@ -627,27 +631,41 @@ static void adiumGaimConvDestroy(GaimConversation *conv)
 
 static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-	NSDictionary *messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:message],@"Message",
+	NSDictionary	*messageDict;
+	NSString		*messageString;
+	
+	messageString = [NSString stringWithUTF8String:message];
+	
+	messageDict = [NSDictionary dictionaryWithObjectsAndKeys:messageString,@"Message",
 		[NSString stringWithUTF8String:who],@"Source",
 		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
 	
 	[accountLookup(conv->account) mainPerformSelector:@selector(receivedMultiChatMessage:inChat:)
 										   withObject:messageDict
-										   withObject:chatLookupFromConv(conv)
-										waitUntilDone:YES];
+										   withObject:chatLookupFromConv(conv)];
 }
 
 static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-	NSDictionary *messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:message],@"Message",
+	NSDictionary	*messageDict;
+	id<AdiumGaimDO> *adiumAccount = accountLookup(conv->account);
+	NSString		*messageString;
+	
+	messageString = [NSString stringWithUTF8String:message];
+	
+	//Process any gaim imgstore references into real HTML tags pointing to real images
+	if ([messageString rangeOfString:@"<IMG ID=\"" options:NSCaseInsensitiveSearch].location != NSNotFound) {
+		messageString = [myself _processGaimImagesInString:messageString forAdiumAccount:adiumAccount];
+	}
+	
+	messageDict = [NSDictionary dictionaryWithObjectsAndKeys:messageString,@"Message",
 		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
-		
-	[accountLookup(conv->account) mainPerformSelector:@selector(receivedIMChatMessage:inChat:)
+	
+	[adiumAccount mainPerformSelector:@selector(receivedIMChatMessage:inChat:)
 										   withObject:messageDict
-										   withObject:imChatLookupFromConv(conv)
-										waitUntilDone:YES];
+										   withObject:imChatLookupFromConv(conv)];
 }
 
 //Never actually called as of gaim 0.75
@@ -1796,6 +1814,24 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}
 }
 
+#pragma mark Get Info
+- (oneway void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadGetInfoFor:onAccount:)
+				  withObject:inUID
+				  withObject:adiumAccount];
+}
+- (oneway void)gaimThreadGetInfoFor:(NSString *)inUID onAccount:(id)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (gaim_account_is_connected(account)){
+		
+		serv_get_info(account->gc, [inUID UTF8String]);
+	}
+}
+
+#pragma mark Xfer
 - (oneway void)xferRequest:(GaimXfer *)xfer
 {
 	[runLoopMessenger target:self performSelector:@selector(gaimThreadXferRequest:)
@@ -1828,6 +1864,74 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	GaimXfer	*xfer = [xferValue pointerValue];
 	gaim_xfer_request_denied(xfer);
 }
+
+
+#pragma mark Gaim Images
+- (NSString *)_processGaimImagesInString:(NSString *)inString forAdiumAccount:(id<AdiumGaimDO>)adiumAccount
+{
+	NSScanner			*scanner;
+    NSString			*chunkString = nil;
+    NSMutableString		*newString;
+	NSString			*targetString = @"<IMG ID=\"";
+    int imageID;
+	
+    //set up
+	newString = [[NSMutableString alloc] init];
+	
+    scanner = [NSScanner scannerWithString:inString];
+    [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
+	
+	//A gaim image tag takes the form <IMG ID="12"></IMG> where 12 is the reference for use in GaimStoredImage* gaim_imgstore_get(int)	 
+    
+	//Parse the incoming HTML
+    while(![scanner isAtEnd]){
+		
+		//Find the beginning of a gaim IMG ID tag
+		if ([scanner scanUpToString:targetString intoString:&chunkString]) {
+			[newString appendString:chunkString];
+		}
+		
+		if ([scanner scanString:targetString intoString:&chunkString]) {
+			
+			//Get the image ID from the tag
+			[scanner scanInt:&imageID];
+			
+			//Scan up to ">
+			[scanner scanString:@"\">" intoString:nil];
+			
+			//Get the image, then write it out as a png
+			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
+			if (gaimImage){
+				NSString			*imagePath = [self _messageImageCachePathForID:imageID forAdiumAccount:adiumAccount];
+				
+				//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
+				//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
+				NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_imgstore_get_data(gaimImage) 
+																						  length:gaim_imgstore_get_size(gaimImage)]];
+				NSData				*imageTIFFData = [image TIFFRepresentation];
+				NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
+				
+				//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string
+				if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]){
+					[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
+				}
+				
+				[image release];
+			}else{
+				//If we didn't get a gaimImage, just leave the tag for now.. maybe it was important?
+				[newString appendString:chunkString];
+			}
+		}
+	}
+	
+	return ([newString autorelease]);
+}
+- (NSString *)_messageImageCachePathForID:(int)imageID forAdiumAccount:(id<AdiumGaimDO>)adiumAccount
+{
+    NSString    *messageImageCacheFilename = [NSString stringWithFormat:MESSAGE_IMAGE_CACHE_NAME, [adiumAccount uniqueObjectID], imageID];
+    return([[[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"] stringByExpandingTildeInPath]);	
+}
+
 
 
 - (void)dealloc

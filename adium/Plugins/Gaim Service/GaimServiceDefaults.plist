@@ -42,6 +42,11 @@
 	<key>Novell:Port</key>
 	<integer>8300</integer>
 	
+	<key>Trepia:Host</key>
+	<string>trepia.com</string>
+	<key>Trepia:Port</key>
+	<integer>8201</integer>
+	
 	<key>Proxy Type</key>
 	<integer>1</integer>
 	<key>Proxy Needs Authentication</key>
