@@ -1,13 +1,6 @@
 {
     IBClasses = (
         {CLASS = AICompletingTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
-        {
-            ACTIONS = {closeWindow = id; newMessage = id; }; 
-            CLASS = AINewMessagePrompt; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {"popUp_service" = NSPopUpButton; "textField_handle" = AICompletingTextField; }; 
-            SUPERCLASS = NSWindowController; 
-        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 

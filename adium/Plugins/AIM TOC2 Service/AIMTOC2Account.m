@@ -52,6 +52,7 @@ static char *hash_password(const char * const password);
 - (void)AIM_HandleConfig:(NSString *)message;
 - (void)AIM_HandleMessageIn:(NSString *)inCommand;
 - (void)AIM_HandleGotoURL:(NSString *)message;
+- (void)AIM_HandleEviled:(NSString *)message;
 - (void)AIM_HandlePing;
 - (void)AIM_HandleClientEvent:(NSString *)inCommand;
 - (void)AIM_HandleEncMessageIn:(NSString *)inCommand;
@@ -564,7 +565,7 @@ static char *hash_password(const char * const password);
                 o = d - a + b + 71665152;
 
 //                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
-                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.65 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
+                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.66 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
 
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 
@@ -644,6 +645,8 @@ static char *hash_password(const char * const password);
                     [self AIM_HandleGotoURL:message];
 
                 }else if([command compare:@"EVILED"] == 0){
+		    [self AIM_HandleEviled:message];
+		    
                 }else if([command compare:@"CHAT_JOIN"] == 0){
                 }else if([command compare:@"CHAT_LEFT"] == 0){
                 }else if([command compare:@"CHAT_IN"] == 0){
@@ -1361,6 +1364,19 @@ static char *hash_password(const char * const password);
         [profileURLHandle release]; profileURLHandle = nil;
     }
     //    NSLog(@"resourceDidFailLoadingWithReason: %@",reason);    
+}
+
+- (void)AIM_HandleEviled:(NSString *)message
+{
+    NSString *level = [message TOCStringArgumentAtIndex:1];
+    NSString *enemy = [message TOCStringArgumentAtIndex:2];
+
+    if(enemy == nil){
+	[[owner interfaceController] handleErrorMessage:@"Warning Level (Cooldown or Anonymous)" withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
+	
+    }else{
+	[[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"Warning Level (%@)",enemy] withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
+    }
 }
 
 

@@ -13,14 +13,20 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Adium/Adium.h>
+#import <Cocoa/Cocoa.h>
 
-@protocol AIContactObserver;
+@class AICompletingTextField, AIAdium;
 
-@interface AIContactStatusOpenTabPlugin : AIPlugin {
+@interface AIWarningPrompt : NSWindowController {
+    AIAdium	*owner;
+    
+    IBOutlet	AICompletingTextField	*textField_handle;
+    IBOutlet	NSPopUpButton		*popUp_service;
 }
 
-- (void)applyOpenTabStatusOnContact:(AIListContact *)inContact;
-- (void)clearOpenTabStatusOnContact:(AIListContact *)inContact;
++ (void)warningPromptWithOwner:(id)inOwner;
++ (void)closeSharedInstance;
+- (IBAction)closeWindow:(id)sender;
+- (IBAction)warning:(id)sender;
 
 @end
