@@ -1,0 +1,92 @@
+body {
+    padding: 0px;
+    background: #FFFFFF url(hubble.jpg) no-repeat fixed;
+}
+
+.statushead { /* Time */
+    position: relative;
+    border-bottom: 1px solid #000;
+    font-family: "Georgia";
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.status { /* Text of status message */
+    position: relative;
+    padding-left: 3px;
+    padding-right: 3px;
+    font-size: 11px;
+    font-family: "Lucida Grande";
+    padding-bottom: 1px;
+    padding-top: 1px;
+    margin-bottom: 5px;
+    background: rgba(223, 223, 223, .6);
+}
+
+.messagehead { /* Name & Time */
+    position: relative;
+    border-bottom: 1px solid #000;
+    font-family: "Georgia";
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.message { /* Text of message */
+    position: relative;
+    padding-left: 3px;
+    padding-right: 3px;
+    font-size: 11px;
+    font-family: "Lucida Grande";
+    padding-bottom: 1px;
+    padding-top: 1px;
+    margin-bottom: 5px;
+    background: url(whitesquare.png) repeat-xy;
+}
+
+.messagemore {
+    padding-left: 3px;
+    padding-right: 3px;
+    font-size: 11px;
+    padding-bottom: 1px;
+    padding-top: 1px;
+    font-family: "Lucida Grande";
+}
+
+h1 { /* Recipient's Name */
+    font-size: 12px;
+    text-align: left;
+    margin: 0px;
+    color: #000;
+}
+
+h2 { /* Time */
+    font-size: 12px;
+    text-align: right;
+    margin-top: -14px;
+    padding-right: 2px;
+    float: right;
+    font-decoration: strikethrough;
+}
+
+h3 { /* Your Name */
+    font-size: 12px;
+    text-align: left;
+    margin: 0px;
+    color: #00376A;
+}
+
+h4 {
+    padding-left: 12px;
+    font-size: 11px;
+    text-align: left;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: -13px;
+    font-weight: normal;
+}
+
+#Chat {
+    overflow: hidden;
+    margin-bottom: -10px;
+}
