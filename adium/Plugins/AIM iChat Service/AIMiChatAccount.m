@@ -204,17 +204,18 @@ extern void* objc_getClass(const char *name);
             
         case 3: //Connecting
             [self setStatus:STATUS_CONNECTING];
+
+            //Squelch sounds and updates while we sign on
+            [[owner contactController] delayContactListUpdatesFor:10];
         break;
 
         case 4: //Online
             [self setStatus:STATUS_ONLINE];
 
             //
-            screenName = [[AIMService loginID] copy];
+            if(screenName) [screenName release];
+                screenName = [[AIMService loginID] copy];
 
-            //Squelch sounds and updates while we sign on
-            [[owner contactController] delayContactListUpdatesFor:10];
-            
             //Give iChatAgent 2 seconds to flood us with update events
             queEvents = YES;
             [NSTimer scheduledTimerWithTimeInterval:(2.0) target:self selector:@selector(finishSignOn:) userInfo:nil repeats:NO];
@@ -234,7 +235,7 @@ extern void* objc_getClass(const char *name);
     
     NSLog(@"(%i)%@:%@ [%i,%@]", [inMessage bodyFormat], [inMessage sender], [inMessage body], [inMessage flags], [inMessage time]);
 
-    if([[inMessage sender] compare:screenName] != 0){ //Ingore echoed messages (anything from ourself)
+    if([[inMessage sender] compare:screenName] != 0){ //Ignore echoed messages (anything from ourself)
         //Get the handle and message
         handle = [[owner contactController] handleWithService:[service handleServiceType] UID:[inMessage sender] forAccount:self];
         messageText = [AIHTMLDecoder decodeHTML:[inMessage body]];
@@ -278,9 +279,13 @@ extern void* objc_getClass(const char *name);
         //Get the handle
         compactedName = [dict objectForKey:@"FZPersonID"];
 
-        //(check the 'ISBuddy' key, and if it's NO, use the 'handleWithService' method.)
-        handle = [[owner contactController] createHandleWithService:[service handleServiceType] UID:compactedName inGroup:nil forAccount:self];
-
+        //(we should check the 'ISBuddy' key, and if it's NO, use the 'handleWithService' method.)
+        if([[dict objectForKey:@"ISBuddy"] boolValue]){ //Create them as a buddy
+            handle = [[owner contactController] createHandleWithService:[service handleServiceType] UID:compactedName inGroup:nil forAccount:self];
+        }else{ //Create them as a stranger
+            handle = [[owner contactController] handleWithService:[service handleServiceType] UID:compactedName forAccount:self];
+        }
+        
         if(handle){
             NSNumber		*storedValue;
             NSMutableArray	*alteredStatusKeys;
@@ -308,7 +313,7 @@ extern void* objc_getClass(const char *name);
 
                         if(awayMessage){
                             away = YES;
-                            NSLog(@"%@ Away Message: \"%@\"",compactedName,awayMessage);
+                            NSLog(@"(IDLE & AWAY) %@ Away Message: \"%@\"",compactedName,awayMessage);
                         }else{
                             away = NO;
                         }
@@ -319,7 +324,7 @@ extern void* objc_getClass(const char *name);
                         away = YES;
                         idleTime = 0;
 
-                        NSLog(@"%@ Away Message: \"%@\"",compactedName,awayMessage);
+                        NSLog(@"(AWAY) %@ Away Message: \"%@\"",compactedName,awayMessage);
 
                     break;
                     case 4: //Online, signed ON (no ailments)

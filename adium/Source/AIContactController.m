@@ -437,10 +437,10 @@
     for(loop = 0;loop < [handleObserverArray count];loop++){
         handleAltered += [[handleObserverArray objectAtIndex:loop] updateHandle:inHandle keys:InModifiedKeys];
     }
-
+    
     if(handleAltered){ //If the handle was modified
         [self updateListForObject:inHandle saveChanges:NO];
-    }        
+    }
 }
 
 
