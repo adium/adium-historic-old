@@ -140,7 +140,6 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[AIDefaultFormattingPlugin class]];
 	[self _loadComponentClass:[AIDockAccountStatusPlugin class]];
 	[self _loadComponentClass:[AIDockBehaviorPlugin class]];
-	[self _loadComponentClass:[AIDockIconSelectionPlugin class]];
 	[self _loadComponentClass:[AIDockUnviewedContentPlugin class]];
 	[self _loadComponentClass:[AIDualWindowInterfacePlugin class]];
 	[self _loadComponentClass:[AIEmoticonsPlugin class]];
