@@ -50,9 +50,9 @@ static int  sizeOfSortOrder;
 - (void)pruneAndSetSortOrderFromArray:(NSArray *)sortOrderArray;
 @end
 
-DeclareString(Away)
-DeclareString(Idle)
-DeclareString(Online)
+DeclareString(sAway)
+DeclareString(sIdle)
+DeclareString(sOnline)
 
 @implementation ESStatusSort
 
@@ -60,9 +60,9 @@ DeclareString(Online)
 
 - (void)didBecomeActiveFirstTime
 {
-	InitString(Away,@"Away");
-	InitString(Idle,@"Idle");
-	InitString(Online,@"Online");
+	InitString(sAway,@"Away");
+	InitString(sIdle,@"Idle");
+	InitString(sOnline,@"Online");
 	
 	//Register our default preferences
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_SORT_DEFAULT_PREFS 
@@ -150,7 +150,7 @@ DeclareString(Online)
     return(AILocalizedString(@"by Status","Sort Contacts... <by Status>"));
 }
 - (NSArray *)statusKeysRequiringResort{
-	return([NSArray arrayWithObjects:Online,Idle,Away,nil]);
+	return([NSArray arrayWithObjects:sOnline,sIdle,sAway,nil]);
 }
 - (NSArray *)attributeKeysRequiringResort{
 	return([NSArray arrayWithObject:@"Display Name"]);
@@ -421,8 +421,8 @@ int statusSort(id objectA, id objectB, BOOL groups)
 		
 	}else{
 		//Always sort offline contacts to the bottom
-		BOOL onlineA = ([[objectA numberStatusObjectForKey:Online] boolValue]);
-		BOOL onlineB = ([[objectB numberStatusObjectForKey:Online] boolValue]);
+		BOOL onlineA = ([[objectA numberStatusObjectForKey:sOnline] boolValue]);
+		BOOL onlineB = ([[objectB numberStatusObjectForKey:sOnline] boolValue]);
 		if (!onlineB && onlineA){
 			return NSOrderedAscending;
 		}else if (!onlineA && onlineB){
@@ -440,11 +440,11 @@ int statusSort(id objectA, id objectB, BOOL groups)
 			int				objectCounter;
 			
 			//Get the away state and idle times now rather than potentially doing each twice below
-			away[0] = [objectA integerStatusObjectForKey:Away];
-			away[1] = [objectB integerStatusObjectForKey:Away];
+			away[0] = [objectA integerStatusObjectForKey:sAway];
+			away[1] = [objectB integerStatusObjectForKey:sAway];
 			
-			idle[0] = [objectA integerStatusObjectForKey:Idle];
-			idle[1] = [objectB integerStatusObjectForKey:Idle];
+			idle[0] = [objectA integerStatusObjectForKey:sIdle];
+			idle[1] = [objectB integerStatusObjectForKey:sIdle];
 
 			for (objectCounter = 0; objectCounter < 2; objectCounter++){
 				sortIndex[objectCounter] = 999;
