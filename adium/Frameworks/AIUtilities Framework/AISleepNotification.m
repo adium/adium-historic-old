@@ -26,8 +26,6 @@ long unsigned int	waitingSleepArgument;
     IONotificationPortRef	notify;
     io_object_t 		anIterator;
 
-    [super load];
-
     //Observe system power events
     root_port = IORegisterForSystemPower(0, &notify, callback, &anIterator);
     if(root_port){
