@@ -158,15 +158,17 @@ static NSMutableCharacterSet *endSet = nil;
                                                                  withValidationStatus:validStatus
                                                                          parentString:inString
                                                                              andRange:urlRange];
-            return [markedLink autorelease];
+            return([markedLink autorelease]);
         }
+		
         //step location after scanning a string
         location = SHStringOffset;
     }
+	
     // if we're here, then NSScanner hit the end of the string
     // set SHStringOffset to the string length here so we avoid potential infinite looping with many trailing spaces.
     SHStringOffset = [inString length];
-    return nil;
+    return(nil);
 }
 
 #pragma mark string and textview handleing
@@ -175,8 +177,8 @@ static NSMutableCharacterSet *endSet = nil;
 -(NSArray *)allURLsFromString:(NSString *)inString
 {
     SHStringOffset = 0; //set the offset to 0.
-    NSMutableArray *rangeArray = [[[NSMutableArray alloc] init] autorelease];
-    SHMarkedHyperlink *markedLink = nil;
+    NSMutableArray		*rangeArray = [[[NSMutableArray alloc] init] autorelease];
+    SHMarkedHyperlink	*markedLink = nil;
     
     //build an array of marked links.
     while([inString length] > SHStringOffset){
@@ -186,11 +188,7 @@ static NSMutableCharacterSet *endSet = nil;
     }
     
     //return the array if it has elements, otherwise nil.
-    if([rangeArray count] > 0){
-        return rangeArray;
-    }else{
-        return nil;
-    }
+	return(([rangeArray count] > 0) ? rangeArray : nil);
 }
 
 // fetch all the URL's form a text view
@@ -220,21 +218,18 @@ static NSMutableCharacterSet *endSet = nil;
         }
     }
     
-    return newString;
+    return(newString);
 }
 
 // scan a textView for URL's, as above
 -(void)linkifyTextView:(NSTextView *)inView
 {
-    NSMutableAttributedString *newView;
+    NSAttributedString *newAttributedString;
 
     // like allURLsFromTextView before it, we can just call the linkifyString: method here
     // then replace the NSTextView's contents with it.
-    newView = [[[NSMutableAttributedString alloc] initWithAttributedString:
-                                                [self linkifyString:
-                                                [inView attributedSubstringFromRange:
-                                                NSMakeRange(0,[[inView string] length])]]] autorelease];
-                                                
-    [[inView textStorage] setAttributedString:newView];
+    newAttributedString = [self linkifyString:[inView attributedSubstringFromRange:NSMakeRange(0,[[inView string] length])]];
+
+	[[inView textStorage] setAttributedString:newAttributedString];
 }
 @end
