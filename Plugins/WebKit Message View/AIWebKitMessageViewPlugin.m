@@ -98,7 +98,7 @@
 			}
 		}
 
-		NSParameterAssert([styleDictionary count]); //Abort if we have no message styles
+		NSAssert([styleDictionary count] > 0, @"No message styles available"); //Abort if we have no message styles
 	}
 	
 	return(styleDictionary);
