@@ -6623,6 +6623,7 @@
 				ZERO_LINK = YES;
 			};
 			dependencies = (
+				34D8353907CBEA21006466F2,
 				7E6642F9065336C70050E8C8,
 				34BD9CD2053146CC000AB133,
 				4B7845EC059B50820048A8BA,
@@ -10238,6 +10239,18 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		34D8353807CBEA21006466F2 = {
+			containerPortal = 3448717006D1E57700DA778C;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIUtilities;
+		};
+		34D8353907CBEA21006466F2 = {
+			isa = PBXTargetDependency;
+			name = "AIUtilities (from AIUtilities.framework.xcode)";
+			targetProxy = 34D8353807CBEA21006466F2;
 		};
 		34DF006707A788AC00B92233 = {
 			fileEncoding = 4;
