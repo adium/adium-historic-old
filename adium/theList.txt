@@ -35,9 +35,6 @@ Accounts:
 	+ Allow user to cancel connecting of accounts
 	- Remove account
 	+ Auto-complete aliases in log viewer
-
-Emoticons:
-	+ Clean up emoticon preference layout.  Move checkbox next to pack name, [align icons - Evan:done], adjust padding, etc.
 	
 WebKit Message View:
 	+ Add preference to switch active style, preview styles
@@ -240,3 +237,5 @@ Features & Changes:
 = Auto-complete aliases in New Message prompt
 = Create new account, tab from username->pass->account list.  Next tab should go back to username
 = Remove "per-contact" window position/size saving.  Use size/position of last window, cascade new ones 
+= Clean up emoticon preference layout.  Move checkbox next to pack name, align icons, adjust padding, etc.
+
