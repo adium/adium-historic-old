@@ -7,6 +7,7 @@
 //
 
 #import "AIAccountSetupView.h"
+#import "AIAccountSetupWindowController.h"
 
 @interface AIAccountSetupView (PRIVATE)
 - (void)_initAccountSetupView;
@@ -33,7 +34,6 @@
 {
 	adium = [[AIObject sharedAdiumInstance] retain];
 }
-
 
 //Dealloc
 - (void)dealloc

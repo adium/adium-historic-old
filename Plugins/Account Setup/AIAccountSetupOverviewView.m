@@ -8,6 +8,7 @@
 
 #import "AIAccountSetupOverviewView.h"
 #import "AIAccountSetupServiceView.h"
+#import "AIAccountSetupWindowController.h"
 #import "AIViewGridView.h"
 
 @implementation AIAccountSetupOverviewView
@@ -31,8 +32,8 @@
 	//Build views for active services
 	enumerator = [activeServices objectEnumerator];
 	while(service = [enumerator nextObject]){
-		NSView	*serviceView = [[AIAccountSetupServiceView alloc] initWithService:service];
-		[serviceView setFrame:NSMakeRect(0, 0, 240, 110/*32*/)];
+		AIAccountSetupServiceView	*serviceView = [[AIAccountSetupServiceView alloc] initWithService:service];
+		[serviceView setFrame:NSMakeRect(0, 0, 240, 110)];
 		[serviceView addAccounts:[[adium accountController] accountsWithService:service]];
 		[serviceView setServiceIconSize:NSMakeSize(48,48)];
 		[grid_activeServices addView:serviceView];		
@@ -46,10 +47,10 @@
 	//Build views for inactive services
 	enumerator = [inactiveServices objectEnumerator];
 	while(service = [enumerator nextObject]){
-		NSView	*serviceView = [[AIAccountSetupServiceView alloc] initWithService:service];
+		AIAccountSetupServiceView	*serviceView = [[AIAccountSetupServiceView alloc] initWithService:service];
 		[serviceView setFrame:NSMakeRect(0, 0, 164, 34)];
 		[serviceView addAccounts:[[adium accountController] accountsWithService:service]];
-		//		[serviceView setServiceIconSize:NSMakeSize(32,32)];
+		//[serviceView setServiceIconSize:NSMakeSize(32,32)];
 		[grid_inactiveServices addView:serviceView];
 		[serviceView release];
 	}
@@ -103,7 +104,6 @@
 {
 	BOOL	visible = [button_inactiveServicesToggle state];
 	
-	/*Additional services*/
 	[textField_inactiveServicesToggle setStringValue:(visible ? @"Hide additional services" : @"Show additional services")];
 	[grid_inactiveServices setHidden:!visible];
 	[controller sizeWindowForContent];

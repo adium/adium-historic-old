@@ -29,5 +29,6 @@
 - (id)initWithService:(AIService *)inService;
 - (void)setServiceIconSize:(NSSize)inSize;
 - (void)addAccounts:(NSArray *)array;
+- (NSDictionary *)accountNameAttributes;
 
 @end

@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAccountSetupWindowController.h"
+#import "AIAccountSetupView.h"
 
 #define ACCOUNT_SETUP_WINDOW_NIB			@"AccountSetupWindow"
 
@@ -84,15 +85,13 @@ AIAccountSetupWindowController *sharedAccountSetupWindowInstance = nil;
 	//Remove the current view
 	if(activeView){
 		[activeView viewWillClose];
-		[activeView removeFromSuperview];
-		[activeView release];
 		activeView = nil;
 	}
 
 	//Insert the new view
 	if(inView){
-		activeView = [inView retain];
-		[[[self window] contentView] addSubview:activeView];
+		activeView = inView;//[inView retain];
+		[[self window] setContentView:activeView];
 		[activeView viewDidLoad];
 	}
 
@@ -103,12 +102,9 @@ AIAccountSetupWindowController *sharedAccountSetupWindowInstance = nil;
 //Resize the window for the displayed content view
 - (void)sizeWindowForContent
 {
-	if(activeView){
-		NSSize	desiredSize = [activeView desiredSize];
-		
-		[[self window] setContentSize:desiredSize display:YES animate:[[self window] isVisible]];
-		[activeView setFrame:NSMakeRect(0,0,desiredSize.width,desiredSize.height)];
-	}
+	NSSize size = [activeView desiredSize];
+	NSLog(@"sizewindow to %i %i",(int)size.width,(int)size.height);
+	[[self window] setContentSize:[activeView desiredSize] display:YES animate:[[self window] isVisible]];
 }
 
 @end

@@ -10,9 +10,11 @@
 
 
 @interface AIViewGridView : NSView {
-	int columns;
+	int 	columns;
 	NSSize	padding;
 	NSSize	largest;
 }
+
+- (void)addView:(NSView *)inView;
 
 @end
