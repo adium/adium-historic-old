@@ -22,5 +22,7 @@
 	<string>Alias</string>
 	<key>ShowsUserIcons</key>
 	<false/>
+    <key>DisableCustomBackground</key>
+	<true/>
 </dict>
 </plist>

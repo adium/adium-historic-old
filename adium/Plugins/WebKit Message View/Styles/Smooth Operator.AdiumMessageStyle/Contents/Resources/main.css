@@ -2,7 +2,13 @@ body {
     background: white url(images/background.png) center top repeat-x fixed;
 	font-weight: normal;
 }
-				
+	                
+.incoming { color: #a6002c; }
+.context .incoming { color:#A65369; }
+
+.outgoing { color: #001190; }
+.context .outgoing { color: #47508F; }
+
 .container {
     position: relative;
     background: url("images/bottom_right.png") bottom right no-repeat;
@@ -30,12 +36,6 @@ body {
 .context .sender {
 	background: url("images/context_top_left.png") top left no-repeat; 
 }
-                
-.incoming { color: #a6002c; }
-.context .incoming { color:#A65369; }
-
-.outgoing { color: #001190; }
-.context .outgoing { color: #47508F; }
     
 .time_initial {
     position: absolute;

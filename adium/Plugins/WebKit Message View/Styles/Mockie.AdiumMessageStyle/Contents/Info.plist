@@ -20,5 +20,13 @@
 	<integer>11</integer>
 	<key>DisplayNameForNoVariant</key>
 	<string>Brown - Icon Left</string>
+    <key>ShowsUserIcons:Brown - Icon Hidden</key>
+    <false/>
+    <key>ShowsUserIcons:Indigo - Icon Hidden</key>
+    <false/>
+    <key>ShowsUserIcons:Orange - Icon Hidden</key>
+    <false/>
+    <key>ShowsUserIcons:Red - Icon Hidden</key>
+    <false/>
 </dict>
 </plist>

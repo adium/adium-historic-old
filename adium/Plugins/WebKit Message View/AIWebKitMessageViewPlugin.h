@@ -38,8 +38,10 @@
 - (NSDictionary *)availableStyleDictionary;
 - (NSBundle *)messageStyleBundleWithName:(NSString *)name;
 - (NSString *)keyForDesiredVariantOfStyle:(NSString *)desiredStyle;
+- (NSString *)keyForDesiredBackgroundOfStyle:(NSString *)desiredStyle;
+- (NSString *)keyForDesiredBackgroundColorOfStyle:(NSString *)desiredStyle;
 - (void)processContent:(AIContentObject *)content withPreviousContent:(AIContentObject *)previousContent forWebView:(WebView *)webView fromStylePath:(NSString *)stylePath;
 - (void)loadPreferencesForWebView:(ESWebView *)webView withStyleNamed:(NSString *)styleName;
-- (NSMutableString *)fillKeywords:(NSMutableString *)inString forChat:(AIChat *)chat;
+- (NSMutableString *)fillKeywords:(NSMutableString *)inString forStyle:(NSBundle *)style forChat:(AIChat *)chat;
 
 @end

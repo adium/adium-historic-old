@@ -22,5 +22,21 @@
 	<string>Pale Blue</string>
 	<key>ShowsUserIcons</key>
 	<false/>
+	<key>DefaultBackgroundColor:Bright Blue</key>
+	<string>002CFF</string>
+	<key>DefaultBackgroundColor:Bright Green</key>
+	<string>66CC32</string>
+	<key>DefaultBackgroundColor:Bright Orange</key>
+	<string>FF7C00</string>
+	<key>DefaultBackgroundColor:Bright Red</key>
+	<string>FF0001</string>
+	<key>DefaultBackgroundColor:Pale Green</key>
+	<string>468c46</string>
+	<key>DefaultBackgroundColor:Pale Orange</key>
+	<string>da7f33</string>
+	<key>DefaultBackgroundColor:Pale Red</key>
+	<string>7f4747</string>
+	<key>DefaultBackgroundColor</key>
+	<string>344c7c</string>	
 </dict>
 </plist>

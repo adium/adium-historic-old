@@ -18,5 +18,11 @@
 	<string>Lucida Grande</string>
 	<key>DefaultFontSize</key>
 	<integer>10</integer>
+    <key>ShowsUserIcons</key>
+	<true/>
+	<key>DisableCustomBackground</key>
+	<false/>
+	<key>DefaultBackgroundColor</key>
+	<string>FFFFFF</string>
 </dict>
 </plist>
