@@ -157,13 +157,13 @@
 	}
 }
 
-- (oneway void)gaimThreadDoRequestInputCbValue:(NSValue *)callBackValue
-							 withUserDataValue:(NSValue *)userDataValue 
-								   inputString:(NSString *)string
+- (oneway void)gaimThreadDoRequestInputCbValue:(NSValue *)inCallBackValue
+							 withUserDataValue:(NSValue *)inUserDataValue 
+								   inputString:(NSString *)inString
 {
-	GaimRequestInputCb callBack = [callBackValue pointerValue];
+	GaimRequestInputCb callBack = [inCallBackValue pointerValue];
 	if (callBack){
-		callBack([userDataValue pointerValue],[string UTF8String]);
+		callBack([inUserDataValue pointerValue],[inString UTF8String]);
 	}	
 }
 
