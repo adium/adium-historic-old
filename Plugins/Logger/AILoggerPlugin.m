@@ -138,7 +138,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Returns the RELATIVE path to the folder where the log should be written
 + (NSString *)relativePathForLogWithObject:(NSString *)object onAccount:(AIAccount *)account
 {	
-	return [NSString stringWithFormat:@"%@.%@/%@", [[account service] serviceID], UIDForFilename, object];
+	return [NSString stringWithFormat:@"%@.%@/%@",[[account service] serviceID], [[account UID] safeFilenameString], object];
 }
 
 //Returns the file name for the log
