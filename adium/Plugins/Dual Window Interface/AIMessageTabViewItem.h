@@ -28,6 +28,8 @@
 - (void)close:(id)sender;
 - (NSString *)label;
 - (NSImage *)icon;
+- (NSImage *)statusIcon;
+- (NSImage *)stateIcon;
 - (AIChat *)chat;
 - (NSImage *)image;
 - (AIMessageViewController *)messageViewController;
