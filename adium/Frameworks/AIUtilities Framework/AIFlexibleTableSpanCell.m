@@ -30,6 +30,14 @@
     return(self);
 }
 
+//
+- (void)dealloc
+{
+    [masterCell release];
+
+    [super dealloc];
+}
+
 //Assert if someone tries to span a span cell
 - (void)setRowSpan:(int)inRowSpan
 {
