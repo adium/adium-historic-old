@@ -18,6 +18,7 @@
 	NSMutableDictionary		*impliedCompletionDictionary;
 	
     int						minLength;
+	BOOL					completeAfterSeparator;
     int						oldUserLength;
 }
 
@@ -25,9 +26,11 @@
 - (id)initWithFrame:(NSRect)frameRect;
 
 - (void)setMinStringLength:(int)length;
+- (void)setCompletesOnlyAfterSeparator:(BOOL)split;
 - (void)setCompletingStrings:(NSArray *)strings;
 - (void)addCompletionString:(NSString *)string;
 - (void)addCompletionString:(NSString *)string withImpliedCompletion:(NSString *)impliedCompletion;
 
+- (NSString *)impliedStringValueForString:(NSString *)aString;
 - (NSString *)impliedStringValue;
 @end
