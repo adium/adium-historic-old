@@ -81,11 +81,11 @@
             return YES;
         }
     }    
-    if([[object type] isEqual:CONTENT_MESSAGE_TYPE] && [(AIContentTyping *)object typing])
+    if([[object type] isEqual:CONTENT_TYPING_TYPE] && [(AIContentTyping *)object typing])
     {
         AIHandle	*handle;
         AISocket	*sbSocket;
-        NSLog(@"STUFF");
+
         handle = [[object destination] handleForAccount:self];
         sbSocket = [[switchBoardDict objectForKey:[handle UID]] objectForKey:@"Socket"];
 
@@ -863,7 +863,17 @@
                                 [self manageSBSocket:socketDict 
                                     withHandle:[message objectAtIndex:5]];
                             }
-                            
+                            else //there's no socket already
+                            {
+                                [switchBoardDict setObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:sbSocket, @"Socket", [NSNumber numberWithInt:0], @"Phase",  nil] 
+                        forKey:[message objectAtIndex:5]];
+                                
+                                socketDict = [switchBoardDict 
+                                    objectForKey:[message objectAtIndex:5]];
+                                    
+                                [self manageSBSocket:socketDict 
+                                    withHandle:[message objectAtIndex:5]];
+                            }
                         }
                         else if([command isEqual:@""])
                         {
