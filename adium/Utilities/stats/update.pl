@@ -1,22 +1,46 @@
 #!/usr/bin/perl
 
-# $Id: update.pl,v 1.3 2003/12/09 17:50:55 jmelloy Exp $
+# $Id: update.pl,v 1.4 2003/12/22 20:57:22 jmelloy Exp $
 
 use warnings;
 use strict;
 
 open(STDERR, ">errors.txt");
 
-my @files = `cvs -z3 -nq up | fgrep -v ?`;
+my @files = `cvs -z3 -q up -d | fgrep -v ?`;
 
-for (my $i = 0; $i < @files; $i++) {
-    my $filename = $files[$i];
-    
-    chomp($filename);
-    $filename =~ s/^. *//;
-    $filename = $filename . ".log";
+my %directories;
+
+foreach my $filename (@files) {
+
+    $filename =~ s/. (.*\/).*?$/$1/g;
+
+    if($filename =~ m/\//) {
+        $directories{$filename} = 1;
+    } else {
+        $directories{"."} = 1;
+    }
+
+}
+
+foreach my $key (keys %directories) {
+    warn $key;
+
+    chomp ($key);
+
+    chdir("$key");
+
+    my $filename = "directory.log";
 
     unlink $filename;
+
+    open(STDOUT, ">$filename");
+
+    system('cvs', '-z3', 'log', '-l');
+
+    close STDOUT;
+
+    chdir("/Users/jmelloy/clean-adium");
 }
 
 if(@files > 0) {
