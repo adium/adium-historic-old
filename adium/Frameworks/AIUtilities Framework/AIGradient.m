@@ -53,7 +53,7 @@
 			 secondColor:(NSColor*)inColor2
 			   direction:(AIDirection)inDirection
 {
-	if (self = [self init]) {
+	if (self = [self init]) {		
 		[self setFirstColor:inColor1];
 		[self setSecondColor:inColor2];
 		[self setDirection:inDirection];
@@ -66,8 +66,9 @@
 	NSColor *currentColor;
 	NSColor *newColor1;
 	NSColor *newColor2;
-	float fraction;
-	int x;
+	float   fraction;
+	int		x;
+	
 	if (useTransparency) {
 		newColor1 = color1;
 		newColor2 = color2;
@@ -104,8 +105,7 @@
 - (void)setFirstColor:(NSColor*)inColor
 {
 	if (color1) {
-		[color1 release];
-		color1 = nil;
+		[color1 release]; color1 = nil;
 	}
 	color1 = [inColor retain];
 }
@@ -117,8 +117,7 @@
 - (void)setSecondColor:(NSColor*)inColor
 {
 	if (color2) {
-		[color2 release];
-		color2 = nil;
+		[color2 release]; color2 = nil;
 	}
 	color2 = [inColor retain];
 }
@@ -145,19 +144,32 @@
 
 - (void)drawInBezierPath:(NSBezierPath *)inPath fraction:(float)inFraction
 {
-	NSImage *image = [[[NSImage alloc] initWithSize:[inPath bounds].size] autorelease];
-	NSAffineTransform *trans = [NSAffineTransform transform];
-	NSPoint keepPoint = [inPath bounds].origin;
-	NSBezierPath *tempPath = [inPath copy];
-	[trans translateXBy:(-1.0f * [tempPath bounds].origin.x) yBy:(-1.0f * [tempPath bounds].origin.y)];
-	[tempPath transformUsingAffineTransform:trans];
-	[image lockFocus];
-	[tempPath fill];
-	[self _drawInRect:[tempPath bounds] useTransparency:NO];
-	[image unlockFocus];
+	NSRect				inPathBounds = [inPath bounds];
+	NSSize				inPathBoundsSize = inPathBounds.size;
 	
-	[image setFlipped:NO];
-	[image drawAtPoint:keepPoint fromRect:NSMakeRect(0, 0, [image size].width, [image size].height) operation:NSCompositeSourceOver fraction:inFraction];	
+	if ( (inPathBoundsSize.width > 0) && (inPathBoundsSize.height > 0) ) {
+		
+		NSImage				*image = [[NSImage alloc] initWithSize:inPathBounds.size];
+		NSAffineTransform   *trans = [NSAffineTransform transform];
+		NSBezierPath		*tempPath = [inPath copy];
+		NSPoint				keepPoint = inPathBounds.origin;
+		
+		[trans translateXBy:(-1.0f * keepPoint.x) yBy:(-1.0f * keepPoint.y)];
+		[tempPath transformUsingAffineTransform:trans];
+		
+		[image lockFocus];
+		[tempPath fill];
+		[self _drawInRect:[tempPath bounds] useTransparency:NO];
+		[image unlockFocus];
+		
+		[image setFlipped:NO];
+		[image drawAtPoint:keepPoint 
+				  fromRect:NSMakeRect(0, 0, [image size].width, [image size].height)
+				 operation:NSCompositeSourceOver
+				  fraction:inFraction];
+		
+		[image release];	
+	}
 }
 
 @end
