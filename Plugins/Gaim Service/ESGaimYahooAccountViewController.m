@@ -11,8 +11,6 @@
 - (NSString *)nibName{
     return(@"ESGaimYahooAccountView");
 }
-- (NSString *)userNameLabel{
-    return(@"Yahoo ID");    //Yahoo! ID
-}
+
 
 @end

@@ -8,12 +8,16 @@
 
 #import "ESAntepoService.h"
 #import "ESGaimAntepoAccount.h"
+#import "ESGaimAntepoAccountViewController.h"
 
 @implementation ESAntepoService
 
 //Account Creation
 - (Class)accountClass{
 	return([ESGaimAntepoAccount class]);
+}
+- (AIAccountViewController *)accountView{
+    return([ESGaimAntepoAccountViewController accountView]);
 }
 
 //Service Description
@@ -40,5 +44,8 @@
 	return(NO);
 }
 
+- (NSString *)userNameLabel{
+    return(AILocalizedString(@"Username",nil)); //Antepo Username
+}
 
 @end

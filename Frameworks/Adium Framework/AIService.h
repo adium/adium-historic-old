@@ -41,6 +41,7 @@ typedef enum {
 - (int)allowedLengthForAccountName;
 - (BOOL)caseSensitive;
 - (AIServiceImportance)serviceImportance;
+- (NSString *)userNameLabel;
 
 //Utilities
 - (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored;

@@ -64,5 +64,8 @@
 - (BOOL)canCreateGroupChats{
 	return(YES);
 }
+- (NSString *)userNameLabel{
+    return(AILocalizedString(@"AIM Screen Name",nil)); //ScreenName
+}
 
 @end

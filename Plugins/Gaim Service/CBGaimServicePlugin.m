@@ -37,7 +37,7 @@
 	
     //Install the services
 	AIMService			= [[ESAIMService alloc] init];
-//	AntepoService		= [[ESAntepoService alloc] init];
+	AntepoService		= [[ESAntepoService alloc] init];
 	ICQService			= [[ESICQService alloc] init];
 	DotMacService		= [[ESDotMacService alloc] init];
 	GaduGaduService		= [[ESGaduGaduService alloc] init];
@@ -62,7 +62,7 @@
 - (void)uninstallPlugin
 {
 	[AIMService release]; AIMService = nil;
-//	[AntepoService release]; AntepoService = nil;
+	[AntepoService release]; AntepoService = nil;
 	[ICQService release]; ICQService = nil;
 	[DotMacService release]; DotMacService = nil;
 	[GaduGaduService release]; GaduGaduService = nil;

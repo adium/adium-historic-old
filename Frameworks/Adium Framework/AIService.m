@@ -143,6 +143,11 @@
 	return(AIServiceUnsupported);
 }
 
+//String to use for describing the UID/username of this service
+- (NSString *)userNameLabel
+{
+    return(nil);    
+}
 
 //Utilities ------------------------------------------------------------------------------------------------------------
 #pragma mark Utilities

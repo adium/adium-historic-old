@@ -48,5 +48,7 @@
 - (AIServiceImportance)serviceImportance{
 	return(AIServiceSecondary);
 }
-
+- (NSString *)userNameLabel{
+    return(AILocalizedString(@"ICQ Number",nil));    //ICQ#
+}
 @end

@@ -59,5 +59,7 @@
 - (AIServiceImportance)serviceImportance{
 	return(AIServicePrimary);
 }
-
+- (NSString *)userNameLabel{
+    return(@"Yahoo ID");    //Yahoo! ID
+}
 @end

@@ -16,9 +16,7 @@
 - (NSString *)nibName{
     return(@"ESGaimICQAccountView");
 }
-- (NSString *)userNameLabel{
-    return(AILocalizedString(@"ICQ Number",nil));    //ICQ#
-}
+
 
 - (void)awakeFromNib
 {
