@@ -10,6 +10,9 @@
 - Mockie message style rendering incorrectly in very wide windows
 - HTML <BR/> tags appearing in certain received messages
 - Short emoticons mask longer ones
+- Links with ampersands don't display properly
+- Away messages don't go back up after a reconnect
+- Auto-reconnect too aggressive / inconsistent in behavior
 //------------------------------------------------------------------------------------
 // Bugs - Adium
 //------------------------------------------------------------------------------------
@@ -26,11 +29,6 @@
 	Adding an existing contact causes issues.  It may result in duplicate contacts on
 	the user's list, and will make the contact appear offline.  Sometimes they will
 	appear on the list twice until Adium is restarted.
-
-- Auto-reconnect too aggressive
-	If an AIM account fails to connect due to signing on and off too quickly, Adium
-	will continue to try and reconnect, displaying the error message over and over
-	and trying its best to get that name blocked for as long as possible.
 
 - User icons occasionally display upside-down
 	We cannot find a pattern to when or why this happens
@@ -115,8 +113,6 @@
 	actually be able to send (invisible AIM users, after we get disconnected?)
 - If one tries to change one's idle time to a lower amount, (for example, from 2:32
 	to :36), an update will not occur, and your idle time will stay at 2:32.
-- away messages aren't going away (if we disconnect, then they come back, then we
-	re-connect?)
 - Yahoo ignore list is being ignored?
 - Apple scripts can stall Adium when iTunes 4.5's Print dialogue is open
 - Changing timezone doesn't update time stamps immediately (I'm not surprised, but
@@ -132,8 +128,6 @@
 	[Adam] Need to be careful.. some users are running on case-sensitive file systems
 - Crash reporter doesn't appear for some users (snu on IRC in particular)
 - Message view time stamps not 100% localized? "den 29 May 2004" - [swedish] [29] [english] [2004]
-- Links with ampersands are not sending properly
-	The ampersand is being HTML escaped to &amp;
 
 
 
