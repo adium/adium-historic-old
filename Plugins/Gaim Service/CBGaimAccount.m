@@ -72,7 +72,7 @@
 - (void)_receivedMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date;
 - (void)_sentMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat toDestinationListContact:(AIListContact *)destinationContact flags:(GaimMessageFlags)flags date:(NSDate *)date;
 - (NSString *)_processGaimImagesInString:(NSString *)inString;
-- (NSString *)_handleFileSendsWithinMessage:(NSString *)encodedMessage toContact:(AIListContact *)listContact;
+- (NSString *)_handleFileSendsWithinMessage:(NSString *)inString toContact:(AIListContact *)listContact contentMessage:(AIContentMessage *)contentMessage;
 - (NSString *)_messageImageCachePathForID:(int)imageID;
 
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
@@ -840,7 +840,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			NSString			*encodedMessage;
 			
 			//Grab the list object (which may be null if this isn't a chat with a particular listObject)
-			AIListObject		*listObject = [chat listObject];
+			AIListContact		*listObject = [chat listObject];
+			
 			//Use GaimConvImFlags for now; multiuser chats will end up ignoring this
 			GaimConvImFlags		flags = ([contentMessage isAutoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
 			
@@ -871,7 +872,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 							if ([encodedMessage rangeOfString:@"<AdiumFT "
 													  options:NSCaseInsensitiveSearch].location != NSNotFound){
 								encodedMessage = [self _handleFileSendsWithinMessage:encodedMessage
-																		   toContact:(AIListContact *)[chat listObject]];
+																		   toContact:listObject
+																	  contentMessage:contentMessage];
 							}
 							
 							sent = [gaimThread sendEncodedMessage:encodedMessage
@@ -899,7 +901,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					if ([encodedMessage rangeOfString:@"<AdiumFT "
 											  options:NSCaseInsensitiveSearch].location != NSNotFound){
 						encodedMessage = [self _handleFileSendsWithinMessage:encodedMessage
-																   toContact:(AIListContact *)[chat listObject]];
+																   toContact:listObject
+															  contentMessage:contentMessage];
 					}
 					
 					messageString = [message string];
@@ -955,7 +958,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return YES;
 }
 
-- (NSString *)_handleFileSendsWithinMessage:(NSString *)inString toContact:(AIListContact *)listContact
+- (NSString *)_handleFileSendsWithinMessage:(NSString *)inString toContact:(AIListContact *)listContact contentMessage:(AIContentMessage *)contentMessage
 {
 	if (listContact){
 		NSScanner			*scanner;
@@ -1006,7 +1009,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			}
 		}
 		
-		return ([processedString autorelease]);
+		/* We've removed AdiumFT tags from an arbitrarily encoded HTML string.  This could leave us with no actual
+		 * text to send.  If that's the case, we don't want to return something like <HTML></HTML>. Instead, we want
+		 * to return nil. We therefore decode and reencode our new string. */
+
+		return ([self encodedAttributedString:[AIHTMLDecoder decodeHTML:processedString]
+								forListObject:listContact
+							   contentMessage:contentMessage]);
 	}else{
 		GaimDebug(@"Sending a file to a chat.  Are you insane?");
 		return (inString);
