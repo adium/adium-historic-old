@@ -63,8 +63,10 @@
 	//Observe account list objects so we can enable/disable our controls for connected accounts
     [[adium contactController] registerListObjectObserver:self];
 	
+	//If no account are available, create one.  Called on a delay so it doesn't happen until our view
+	//is visible in the preference window (And the first-responder stuff works correctly)
 	if([[[adium accountController] accountArray] count] == 0){
-		[self newAccount:nil];
+		[self performSelector:@selector(newAccount:) withObject:nil afterDelay:0.0001];
 	}
 }
 
@@ -328,7 +330,7 @@
     
     //Select the 'Account' tab and put focus on the account fields
     [tabView_auxiliary selectTabViewItemAtIndex:0];
-    [[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
+    [[popupMenu_serviceList window] makeFirstResponder:textField_accountName];
 }
 
 //Delete the selected account
