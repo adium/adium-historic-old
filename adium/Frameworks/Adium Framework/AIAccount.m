@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+// $Id: AIAccount.m,v 1.17 2003/12/20 03:58:28 jmelloy Exp $
+
 #import "AIAccount.h"
 
 @interface AIAccount (PRIVATE)
