@@ -89,11 +89,23 @@
 	}
 
 	if ((callBackIndex != -1) && (theCallBacks[callBackIndex] != NULL)){
-		[[SLGaimCocoaAdapter sharedInstance] doRequestActionCbValue:[NSValue valueWithPointer:theCallBacks[callBackIndex]]
-												  withUserDataValue:[userInfo objectForKey:@"userData"]
-													  callBackIndex:[NSNumber numberWithInt:callBackIndex]];
+		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
+										 performSelector:@selector(gaimThreadDoRequestActionCbValue:withUserDataValue:inputString:)
+											  withObject:[NSValue valueWithPointer:theCallBacks[callBackIndex]]
+											  withObject:[userInfo objectForKey:@"userData"]
+											  withObject:[NSNumber numberWithInt:callBackIndex]];
 	}else{
 		NSLog(@"Failure.");
+	}
+}
+
++ (oneway void)gaimThreadDoRequestActionCbValue:(NSValue *)callBackValue
+							  withUserDataValue:(NSValue *)userDataValue 
+								  callBackIndex:(NSNumber *)callBackIndexNumber
+{
+	GaimRequestActionCb callBack = [callBackValue pointerValue];
+	if (callBack){
+		callBack([userDataValue pointerValue],[callBackIndexNumber intValue]);
 	}
 }
 

@@ -143,16 +143,28 @@
 - (IBAction)pressedButton:(id)sender
 {
 	if (sender == button_okay){
-		[[SLGaimCocoaAdapter sharedInstance] doRequestInputCbValue:okayCallbackValue
-												 withUserDataValue:userDataValue 
-													   inputString:[textField_input stringValue]];
+		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
+										 performSelector:@selector(gaimThreadDoRequestInputCbValue:withUserDataValue:inputString:)
+											  withObject:okayCallbackValue
+											  withObject:userDataValue
+											  withObject:[[[textField_input stringValue] copy] autorelease]];
+
 		[cancelCallbackValue release]; cancelCallbackValue = nil;
-		
 		[[self window] close];
 		
 	}else if (sender == button_cancel){
 		[[self window] performClose:nil];
 	}
+}
+
+- (oneway void)gaimThreadDoRequestInputCbValue:(NSValue *)callBackValue
+							 withUserDataValue:(NSValue *)userDataValue 
+								   inputString:(NSString *)string
+{
+	GaimRequestInputCb callBack = [callBackValue pointerValue];
+	if (callBack){
+		callBack([userDataValue pointerValue],[string UTF8String]);
+	}	
 }
 
 - (void)dealloc
@@ -167,10 +179,11 @@
 - (BOOL)windowShouldClose:(id)sender
 {
 	if (cancelCallbackValue){
-		[[SLGaimCocoaAdapter sharedInstance] doRequestInputCbValue:cancelCallbackValue
-												 withUserDataValue:userDataValue 
-													   inputString:[textField_input stringValue]];
-		
+		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
+										 performSelector:@selector(gaimThreadDoRequestInputCbValue:withUserDataValue:inputString:)
+											  withObject:cancelCallbackValue
+											  withObject:userDataValue
+											  withObject:[[[textField_input stringValue] copy] autorelease]];
 	}
 	
 	return YES;

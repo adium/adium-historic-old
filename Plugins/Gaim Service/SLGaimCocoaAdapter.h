@@ -24,6 +24,8 @@
 }
 
 + (SLGaimCocoaAdapter *)sharedInstance;
++ (NDRunLoopMessenger *)gaimThreadMessenger;
+
 - (void)addAdiumAccount:(id)adiumAccount;
 - (BOOL)sendEncodedMessage:(NSString *)encodedMessage
 		   originalMessage:(NSString *)originalMessage 
@@ -66,12 +68,8 @@
 - (oneway void)OSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount;
 - (oneway void)OSCARSetAvailableMessageTo:(NSString *)availablePlaintext onAccount:(id)adiumAccount;
 
-- (oneway void)doRequestInputCbValue:(NSValue *)callBackValue withUserDataValue:(NSValue *)userDataValue inputString:(NSString *)string;
-- (oneway void)doRequestActionCbValue:(NSValue *)callBackValue withUserDataValue:(NSValue *)userDataValue callBackIndex:(NSNumber *)callBackIndexNumber;
-
 - (void)displayFileSendError;
 - (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
-- (void *)handleNotifyEmails:(size_t)count detailed:(BOOL)detailed subjects:(const char **)subjects froms:(const char **)froms tos:(const char **)tos urls:(const char **)urls;
 
 - (oneway void)performContactMenuActionFromDict:(NSDictionary *)dict;
 
@@ -79,8 +77,8 @@
 							   inChat:(AIChat *)inChat;
 - (void)gaimConversation:(GaimConversation *)conv setSecurityDetails:(NSDictionary *)securityDetailsDict;
 - (void)refreshedSecurityOfGaimConversation:(GaimConversation *)conv;
+- (NSString *)localizedOTRMessage:(const char *)msg withUsername:(const char *)username;
 
-- (void)setMainThreadMessenger:(NDRunLoopMessenger *)inMainThreadMessenger;
 @end
 
 //Lookup functions
