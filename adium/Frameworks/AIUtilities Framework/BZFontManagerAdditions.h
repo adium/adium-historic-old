@@ -15,6 +15,7 @@
 
 @interface NSFontManager (BZFontManagerAdditions)
 
+//find a font by family name, using case-insensitive matching.
 - (NSFont *)fontWithFamilyInsensitively:(NSString *)name traits:(NSFontTraitMask)fontTraitMask weight:(int)weight size:(float)size;
 
 @end

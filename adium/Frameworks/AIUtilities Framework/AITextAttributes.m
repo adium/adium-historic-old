@@ -148,7 +148,7 @@
 
     //Create the font
     if(fontFamilyName){
-        font = [[NSFontManager sharedFontManager] fontWithFamily:fontFamilyName traits:fontTraitsMask weight:5 size:fontSize];
+		font = [[NSFontManager sharedFontManager] fontWithFamilyInsensitively:fontFamilyName traits:fontTraitsMask weight:5 size:fontSize];
     }
     
     //If no name was specified or the font is not available, use the default font
