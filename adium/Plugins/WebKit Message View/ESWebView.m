@@ -13,6 +13,8 @@
 
 @implementation ESWebView
 
+//Font Family ----------------------------------------------------------------------------------------------------------
+#pragma mark Font Family
 - (void)setFontFamily:(NSString *)familyName
 {
 	[[self preferences] setStandardFontFamily:familyName];
@@ -26,11 +28,12 @@
 	return [[self preferences] standardFontFamily];
 }
 
+
 //Key/Paste Forwarding ---------------------------------------------------------------------------------
+#pragma mark Key/Paste Forwarding
 //When the user attempts to type into the table view, we push the keystroke to the next responder,
 //and make it key.  This isn't required, but convienent behavior since one will never want to type
 //into this view.
-
 - (void)keyDown:(NSEvent *)theEvent
 {
     [self forwardSelector:@selector(keyDown:) withObject:theEvent];
@@ -61,7 +64,9 @@
 	}
 }
 
-//Dragged things
+
+//Accepting Drags ------------------------------------------------------------------------------------------------------
+#pragma mark Accepting Drags
 - (unsigned int)draggingEntered:(id <NSDraggingInfo>)sender
 {
 	return NSDragOperationCopy;
@@ -69,6 +74,7 @@
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
+	
 }
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
@@ -78,27 +84,13 @@
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
-	#warning Jorge: we should do magic things here, catch the text, images, files or URLs being dragged and act accordingly.
+	//we should do magic things here, catch the text, images, files or URLs being dragged and act accordingly.
 	return YES;
 }
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
+	
 }
 
 @end
-/*
-@implementation ESWebHTMLView
-
-+ (void)initialize
-{
-	[self poseAsClass:[WebHTMLView class]];
-}
-
-- (void)mouseMoved:(NSEvent *)event
-{
-	NSLog(@"Html view; mouse moved %@",event);
-}
-
-@end
-*/

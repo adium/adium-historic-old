@@ -23,6 +23,11 @@
     int	index = [self indexOfItemWithRepresentedObject:object];
     [self selectItemAtIndex:index];
 }
+- (void)selectItemWithTag:(int)tag
+{
+    int	index = [self indexOfItemWithTag:tag];
+    [self selectItemAtIndex:index];
+}
 - (void)autosizeAndCenterHorizontally
 {
     NSString *buttonTitle = [self titleOfSelectedItem];
