@@ -228,9 +228,23 @@
         if(lastMessageCell){
             lastMessageCell = nil;
         }
+    
+        NSString *theMessage;
+        if(displayTimeStamps)
+        {
+            NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] 
+                initWithDateFormat:timeStampFormat allowNaturalLanguage:NO] autorelease];
+            NSString *dateString = [dateFormatter stringForObjectValue:
+                [(AIContentMessage *)content date]];
+                
+            theMessage = [NSString stringWithFormat:@"%@ (%@)", 
+                [(AIContentStatus *)content message], dateString];
 
+        }
+        else
+            theMessage = [(AIContentStatus *)content message];
         //
-        statusCell = [AIFlexibleTableStringCell cellWithString:[(AIContentStatus *)content message] color:[NSColor lightGrayColor] font:[NSFont cachedFontWithName:@"Helvetica" size:11] alignment:NSCenterTextAlignment];
+        statusCell = [AIFlexibleTableStringCell cellWithString:theMessage color:[NSColor lightGrayColor] font:[NSFont cachedFontWithName:@"Helvetica" size:11] alignment:NSCenterTextAlignment];
         [statusCell setPaddingLeft:1 top:0 right:1 bottom:0];
         [statusCell setVariableWidth:YES];
 
