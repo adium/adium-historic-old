@@ -43,7 +43,6 @@
 #define SHOW_GROUPS_IDENTIFER		@"ShowGroups"
 
 #define	KEY_USE_CONTACT_LIST_GROUPS			@"Use Contact List Groups"
-#define	PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
 
 @interface AIContactController (PRIVATE)
 - (AIListGroup *)processGetGroupNamed:(NSString *)serverGroup;
@@ -65,6 +64,7 @@
 
 - (void)_listChangedGroup:(AIListObject *)group object:(AIListObject *)object;
 - (void)prepareShowHideGroups;
+- (void)_performChangeOfUseContactListGroups;
 
 - (void)_positionObject:(AIListObject *)listObject atIndex:(int)index inGroup:(AIListObject<AIContainingObject> *)group;
 - (void)_moveObjectServerside:(AIListObject *)listObject toGroup:(AIListGroup *)group;
@@ -611,7 +611,7 @@ DeclareString(UID);
 	//Store the preference
 	[[owner preferenceController] setPreference:[NSNumber numberWithBool:useContactListGroups]
 										 forKey:KEY_USE_CONTACT_LIST_GROUPS
-										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];		
+										  group:PREF_GROUP_CONTACT_LIST];		
 	
 	//Configure the sort controller to force ignoring of groups as appropriate
 	[[self activeSortController] forceIgnoringOfGroups:(useContactListGroups ? NO : YES)];
@@ -655,7 +655,7 @@ DeclareString(UID);
 {
 	//Load the preference
 	useContactListGroups = [[[owner preferenceController] preferenceForKey:KEY_USE_CONTACT_LIST_GROUPS
-																	 group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
+																	 group:PREF_GROUP_CONTACT_LIST] boolValue];
 	
 	//Show offline contacts menu item
     showGroupsMenuItem = [[NSMenuItem alloc] initWithTitle:(useContactListGroups ? 
