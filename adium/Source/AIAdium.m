@@ -216,62 +216,17 @@
     //    [AISoundController playSoundNamed:@"Beep"];
 }
 
-void exceptionHandler(NSException *exception)
-{
-    NSLog(@"You will never see this message, as NSExceptionHandler is stupid.");   
-    exit(-1);
+void Adium_HandleSignal(int i){
+    [[NSApplication sharedApplication] terminate:nil];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
-    //*****BEGIN
+    //Log and Handle all exceptions
+    [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
+    //NSExceptionHandler messes up crash signals (signal 11) - install a custom handler which properly terminates Adium if one is received
+    signal(11, Adium_HandleSignal);
     
-    //Set the function which should be called to handle uncaught exceptions
-    //            NSSetUncaughtExceptionHandler((NSUncaughtExceptionHandler *)exceptionHandler);
-    
-    //Get the default settings if you're so inclined
-    //   NSExceptionHandler *handler = [NSExceptionHandler defaultExceptionHandler];
-    //defaultExceptionHandlingMask = [handler exceptionHandlingMask];
-    //defaultExceptionHangingMask = [handler exceptionHangingMask];
-    
-    //Handle all exceptions
-//    [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:( NSHandleUncaughtExceptionMask | NSHandleUncaughtSystemExceptionMask | NSHandleUncaughtRuntimeErrorMask | NSHandleTopLevelExceptionMask | NSHandleOtherExceptionMask )];
-
-    //Log all exceptions
- /*   [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:
-        NSLogUncaughtExceptionMask|
-        NSLogUncaughtSystemExceptionMask|
-        NSLogUncaughtRuntimeErrorMask|
-        NSLogTopLevelExceptionMask|
-        NSLogOtherExceptionMask];*/
-
-    //Log and Handle all exceptions (this is a #define in NSExceptionHandler.h which combines all of the above masks)
-    //  [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
-
-    //Set up a delegate - this is not useful for our purposes
-  //     [[NSExceptionHandler defaultExceptionHandler] setDelegate:self];
-
-    
-  /*  NSArray *a = [[NSArray alloc] initWithObjects:@"test array to be release too many times", nil];
-    [a release];
-    [a release];
-    */
-
-    // NSDictionary tests
-    /* 
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-     //gets caught properly if exceptions are being handled
-     [dict setObject:nil forKey:@"evands"];
-     
-     //crashes nastily if exceptions are being handled
-     //crashes gracefully if they are not
-     [dict release];
-     [dict setObject:@"this is a test" forKey:@"evands"];
-     */
-     //*****END
-     
-     
-     
     //Load and init the components
     [loginController initController];
     
@@ -279,11 +234,5 @@ void exceptionHandler(NSException *exception)
     [loginController requestUserNotifyingTarget:self selector:@selector(completeLogin)];
 }
 
-//Delegate method for logging.  Unnecessary.
-- (BOOL)exceptionHandler:(NSExceptionHandler *)sender shouldLogException:(NSException *)exception
-{
-    NSLog(@"log %@",exception);
-    return NO;
-}
 @end
 
