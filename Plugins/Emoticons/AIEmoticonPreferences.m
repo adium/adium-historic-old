@@ -361,7 +361,7 @@
 - (void)trashConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     if(returnCode == NSOKButton) {
-        NSEnumerator *enumerator = [table_emoticonPacks arrayOfSelectedItemsUsingSourceArray:emoticonPackPreviewControllers];
+        NSEnumerator *enumerator = [[table_emoticonPacks arrayOfSelectedItemsUsingSourceArray:emoticonPackPreviewControllers] objectEnumerator];
         
 		AIEmoticonPackPreviewController		*previewController;
         while(previewController = [enumerator nextObject]) {
