@@ -89,11 +89,11 @@ typedef enum
 //Accounts
 - (NSArray *)accountArray;
 - (NSArray *)activeServicesIncludingCompatibleServices:(BOOL)includeCompatible;
-- (AIAccount *)accountWithAccountNumber:(int)accountNumber;
+- (AIAccount *)accountWithInternalObjectID:(NSString *)objectID;
 - (NSArray *)accountsWithService:(AIService *)service;
 - (NSArray *)accountsWithServiceClass:(NSString *)serviceClass;
 - (AIAccount *)defaultAccount;
-- (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID accountNumber:(int)inAccountNumber;
+- (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID internalObjectID:(NSString *)internalObjectID;
 - (NSArray *)accountsWithServiceClassOfService:(AIService *)service;
 - (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType
 								   toListObject:(AIListObject *)inObject
