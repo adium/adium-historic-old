@@ -88,7 +88,7 @@
 - (int)integerStatusObjectForKey:(NSString *)key
 {
 	AIMutableOwnerArray *array = [statusArrayDictionary objectForKey:key];
-    return(array ? [array doubleValue] : 0);
+    return(array ? [array intValue] : 0);
 }
 - (double)doubleStatusObjectForKey:(NSString *)key
 {
