@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.70 2004/07/27 18:49:46 evands Exp $
+// $Id: AIAccount.m,v 1.71 2004/07/28 02:34:41 dchoby98 Exp $
 
 #import "AIAccount.h"
 
@@ -363,6 +363,19 @@
 {
     return([inAttributedString string]);
 }
+
+- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat
+{
+	return NO;
+}
+
+- (BOOL)createNewGroupChatWithListObject:(AIListObject *)contact
+{
+	return NO;
+}
+
+- (NSImage *)serviceImage {}
+- (NSImage *)serviceMenuImage {}
 
 
 //Contact Status -------------------------------------------------------------------------------------------------------

@@ -1,0 +1,30 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {closeWindow = id; joinChat = id; }; 
+            CLASS = DCJoinChatWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_cancel" = NSButton; 
+                "button_joinChat" = NSButton; 
+                "popUp_service" = NSPopUpButton; 
+                "textField_accountLabel" = NSTextField; 
+                "view_customView" = NSView; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {joinChat = id; }; 
+            CLASS = DCNothing; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "popUp_service" = NSPopUpButton; 
+                "view_customView" = NSView; 
+                "window_main" = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

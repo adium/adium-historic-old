@@ -152,13 +152,22 @@
 {
     [participatingListObjects addObject:inObject]; //Add
     [[adium notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:self]; //Notify
+
+}
+
+// Invite a list object to join the chat. Returns YES if the chat joins, NO otherwise
+- (BOOL)inviteListObject:(AIListObject *)inObject
+{
+	[self addParticipatingListObject:inObject];
+	return [[self account] inviteContact:inObject toChat:self];
 }
 
 //
 - (void)removeParticipatingListObject:(AIListObject *)inObject
 {
-    [participatingListObjects removeObject:inObject]; //Remove
-    [[adium notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:self]; //Notify
+    [participatingListObjects removeObject:inObject]; //Remove	
+	[[adium notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:self]; //Notify
+
 }
 
 - (void)setPreferredListObject:(AIListObject *)inObject

@@ -32,6 +32,7 @@
 
 - (NSArray *)participatingListObjects;
 - (void)addParticipatingListObject:(AIListObject *)inObject;
+- (BOOL)inviteListObject:(AIListObject *)inObject;
 - (void)removeParticipatingListObject:(AIListObject *)inObject;
 - (AIListObject *)listObject;
 - (AIListObject *)preferredListObject;
