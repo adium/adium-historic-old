@@ -47,6 +47,8 @@
     AIAccount						*tempDragAccount;
 }
 
++ (AIAccountListWindowController *)accountListWindowController;
+
 - (IBAction)deleteAccount:(id)sender;
 - (IBAction)newAccount:(id)sender;
 - (IBAction)selectServiceType:(id)sender;
