@@ -18,7 +18,7 @@
 
 @interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer, AICustomTabViewItem> {
 	AIMessageWindowController	*container;
-    AIMessageViewController 	*messageView;
+    AIMessageViewController 	*messageViewController;
     AIAdium						*adium;
 	NSImage						*tabViewItemImage;
 }

@@ -179,9 +179,6 @@
 //
 - (void)dealloc
 {    
-	//Release the userListController to let it invalidate its tracking views before closing the window 
-	[userListController release];
-
     //Close the message entry text view
     [[adium contentController] willCloseTextEntryView:textView_outgoing];
 
@@ -202,12 +199,20 @@
         [view_accountSelection release]; view_accountSelection = nil;
     }
 	
+	//This is the controller for the actual view (not self, despite the naming oddness)
     [messageViewController release];
+
 	[scrollView_userList release];
 	[controllerView_messages release];
 	[view_contents release];
 	
     [super dealloc];
+}
+
+- (void)tabViewItemWillClose
+{
+	//Release the userListController to let it invalidate its tracking views before closing the window
+	[userListController release]; userListController = nil;
 }
 
 //Return our view
@@ -609,29 +614,7 @@
 
 }
 
-#pragma mark Table View
-//User List
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
-{
-    return([[chat participatingListObjects] count]);
-}
-
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
-{
-	
-	AIListObject *listObject = [[chat participatingListObjects] objectAtIndex:row];
-	
-	// Identifier 0: status image column. 1: name
-	if( [(NSNumber *)[tableColumn identifier] intValue] == 0 ) {
-		return [[listObject displayArrayForKey:@"Tab Icon"] objectValue];
-	} else {
-		return([listObject displayName]);
-	}
-	
-	//return nil;
-}
-
-// userList selection changed
+#pragma mark ESChatUserListController delegate
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
 	if ([notification object] == userListView){

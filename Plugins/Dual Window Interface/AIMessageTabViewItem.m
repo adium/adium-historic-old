@@ -40,31 +40,31 @@
 }
 
 //init
-- (id)initWithMessageView:(AIMessageViewController *)inMessageView
+- (id)initWithMessageView:(AIMessageViewController *)inMessageViewController
 {
     [super initWithIdentifier:nil];
 
-    messageView = [inMessageView retain];
+    messageViewController = [inMessageViewController retain];
     adium = [AIObject sharedAdiumInstance];
 	container = nil;
 
     //Configure ourself for the message view
-    [messageView setDelegate:self];
+    [messageViewController setDelegate:self];
     [[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:)
 									   name:Chat_StatusChanged
-									 object:[messageView chat]];
+									 object:[messageViewController chat]];
     [[adium notificationCenter] addObserver:self selector:@selector(chatAttributesChanged:)
 									   name:Chat_AttributesChanged
-									 object:[messageView chat]];	
+									 object:[messageViewController chat]];	
     [[adium notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:)
 									   name:Chat_ParticipatingListObjectsChanged
-									 object:[messageView chat]];
+									 object:[messageViewController chat]];
     [self chatStatusChanged:nil];
     [self chatParticipatingListObjectsChanged:nil];
 	[self updateTabViewItemImage];
 	
     //Set our contents
-    [self setView:[messageView view]];
+    [self setView:[messageViewController view]];
     
     return(self);
 }
@@ -73,7 +73,7 @@
 - (void)dealloc
 {
 	[tabViewItemImage release]; tabViewItemImage = nil;
-    [messageView release];
+    [messageViewController release];
     [[adium notificationCenter] removeObserver:self];
 
     [super dealloc];
@@ -82,13 +82,13 @@
 //Access to our message view controller
 - (AIMessageViewController *)messageViewController
 {
-    return(messageView);
+    return(messageViewController);
 }
 
 //Our chat
 - (AIChat *)chat
 {
-	return([messageView chat]);
+	return([messageViewController chat]);
 }
 
 //Our containing window
@@ -107,10 +107,10 @@
 {
     //Observe it's primary list object's status
     [[adium notificationCenter] removeObserver:self name:ListObject_AttributesChanged object:nil];
-	if([messageView listObject]){
+	if([messageViewController listObject]){
 		[[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:)
 										   name:ListObject_AttributesChanged
-										 object:[messageView listObject]];
+										 object:[messageViewController listObject]];
 		
 	}
 }
@@ -163,7 +163,7 @@
 
 - (void)updateTabViewItemImage
 {
-//	AIListObject	*listObject = [messageView listObject];
+//	AIListObject	*listObject = [messageViewController listObject];
 //
 //	NSImage *image = [self userIconImageOfSize:NSMakeSize(userIconSize, userIconSize)];
 //	
@@ -187,7 +187,7 @@
 //			}
 //		}
 //	}else{
-//		tabViewItemImage = [[[[messageView chat] account] menuImage] retain];
+//		tabViewItemImage = [[[[messageViewController chat] account] menuImage] retain];
 //	}
 }
 
@@ -220,13 +220,13 @@
 - (void)tabViewItemWasSelected
 {
     //Ensure our entry view is first responder
-    [messageView makeTextEntryViewFirstResponder];
+    [messageViewController makeTextEntryViewFirstResponder];
 }
 
 //
 - (NSString *)label
 {
-	return ([[messageView chat] displayName]);
+	return ([[messageViewController chat] displayName]);
 }
 
 //Return the icon to be used for our tabs.  State gets first priority, then status.
@@ -235,7 +235,7 @@
 	NSImage *image = [self stateIcon];
 	
 	//Multi-user chats won't have status icons
-	if(!image && ![messageView userListVisible]) image = [self statusIcon];
+	if(!image && ![messageViewController userListVisible]) image = [self statusIcon];
 	if(!image) image = [AIStatusIcons statusIconForStatusID:@"unknown" type:AIStatusIconTab direction:AIIconNormal];
 
 	return(image);
@@ -244,13 +244,13 @@
 //Status icon is the status of this contact (away, idle, online, stranger)
 - (NSImage *)statusIcon
 {
-	return([[[messageView chat] listObject] displayArrayObjectForKey:@"Tab Status Icon"]);
+	return([[[messageViewController chat] listObject] displayArrayObjectForKey:@"Tab Status Icon"]);
 }
 
 //State icon is the state of the contact (Typing, unviewed content)
 - (NSImage *)stateIcon
 {
-	return([[messageView chat] displayArrayObjectForKey:@"Tab State Icon"]);
+	return([[messageViewController chat] displayArrayObjectForKey:@"Tab State Icon"]);
 }
 
 - (NSImage *)image

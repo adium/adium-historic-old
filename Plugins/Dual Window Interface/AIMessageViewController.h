@@ -63,6 +63,7 @@
 - (void)setShouldSendMessagesToOfflineContacts:(BOOL)should;
 - (IBAction)sendMessageLater:(id)sender;
 - (BOOL)userListVisible;
+- (void)tabViewItemWillClose;
 
 @end
 

@@ -21,14 +21,4 @@
 	return(NO);
 }
 
-#warning Evan: Tooltips currently crash after the tab is closed. Disabling in the userlist for now.
-/*
-	Somehow the mouseEntered: and mouseExited: calls are being sent to the tracking rect of the
-	user list even after AISmoothTooltipTracker deallocs and removes its tracking rect.  This shows up in
-	a stack trace as NSWindow doing a sendEvent: and hitting a released object (which of course the
-	AISmoothTooltipTracker object is after it is released).
- */
-- (BOOL)shouldShowTooltips{
-	return(NO);
-}
 @end
