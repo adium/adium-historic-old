@@ -79,14 +79,14 @@
 	//shamlessly ripped from the event bezel :)
 	if([notificationName isEqualToString:Content_FirstContentRecieved] ||
 		[notificationName isEqualToString:Content_DidReceiveContent]) {
-		NSArray *participatingListObjects = [[notification object] participatingListObjects];
-		if([participatingListObjects count]){
-			contact = [participatingListObjects objectAtIndex:0];
-		}else{
-			contact = nil;
-		}
+
+		contact = [[notification object] listObject];
+
     } else {
         contact = [notification object];
+		
+		//Don't show the bezel for a status change of a metaContact-contained object, 
+		//as the metaContact will provide a better status notification
 		if([[contact containingObject] isKindOfClass:[AIMetaContact class]]){
 			contact = nil;
 		}
