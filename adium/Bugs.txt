@@ -11,10 +11,6 @@
 	escapes within the link attributes of the attributed message are not filtered.
 	This prevents subprofile links from working.
 
-- [ADAM] Applescripts are parsed in other's profiles
-	This is a potential security risk if the user has scripts that run shell commands.
-	We should not be parsing script commands sent by other users (via profiles)
-
 - Spawning new windows unhides Adium
 	We don't want to spawn new windows while Adium is hidden.  Windows should be queued
 	and shown when Adium is unhid.
@@ -75,6 +71,10 @@
 	The simple message style has a bottom alignment issue.  Send a few messages, but
 	not enough to make the scrollbar visible, then type a two line message into the
 	entry field.  The message view will incorrectly render extra bottom margin.
+
+- MSN Emoticon key equivalents 
+	The key equivelants for MSN's blush emoticon do not include :$.  Other emoticons
+	may be incorrect.
 
 
 //------------------------------------------------------------------------------------
