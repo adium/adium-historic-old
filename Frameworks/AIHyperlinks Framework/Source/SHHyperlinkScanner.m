@@ -247,11 +247,11 @@ static NSMutableCharacterSet *endSet = nil;
 			}
 		}
 		
-		return(linkifiedString);
+		return linkifiedString;
 
     }else{
 		//If no links were found, just return the string we were passed
-		return(inString);
+		return [[inString retain] autorelease];
 	}
 }
 
