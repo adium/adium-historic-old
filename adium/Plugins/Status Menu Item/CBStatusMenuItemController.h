@@ -10,8 +10,11 @@
     NSStatusItem    *statusItem;
     NSMenu          *theMenu;
     
+    NSMutableArray  *accountMenuItemsArray;
     NSMutableArray  *unviewedObjectsArray;
     BOOL			unviewedState;
+    
+    BOOL            needsUpdate;
 
 }
 

@@ -16,29 +16,35 @@
 
 - (void)installPlugin
 {
-    //Just in case
-    itemController = nil;
+    //We're Panther only
+    if([NSApp isOnPantherOrBetter]){
     
-    //Register our defaults
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_MENU_ITEM_DEFAULT_PREFS 
-                                          forClass:[self class]]
-                                          forGroup:PREF_GROUP_STATUS_MENU_ITEM];
-    //Create the preferences
-    preferences = [[CBStatusMenuItemPreferences preferencePane] retain];
+        //Just in case
+        itemController = nil;
+        
+        //Register our defaults
+        [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_MENU_ITEM_DEFAULT_PREFS 
+                                              forClass:[self class]]
+                                              forGroup:PREF_GROUP_STATUS_MENU_ITEM];
+        //Create the preferences
+        preferences = [[CBStatusMenuItemPreferences preferencePane] retain];
 
-    //Observe
-    [[adium notificationCenter] addObserver:self
-                                   selector:@selector(preferencesChanged:)
-                                       name:Preference_GroupChanged
-                                     object:nil];
-    [self preferencesChanged:nil];
+        //Observe
+        [[adium notificationCenter] addObserver:self
+                                       selector:@selector(preferencesChanged:)
+                                           name:Preference_GroupChanged
+                                         object:nil];
+        [self preferencesChanged:nil];
+    }
 }
 
 - (void)uninstallPlugin
 {
-	[[adium notificationCenter] removeObserver:self];
-    [itemController release]; itemController = nil;
-	[preferences release];
+    if([NSApp isOnPantherOrBetter]){
+        [[adium notificationCenter] removeObserver:self];
+        [itemController release]; itemController = nil;
+        [preferences release];
+    }
 }
 
 - (void)preferencesChanged:(NSNotification *)notification

@@ -9,6 +9,7 @@
 
 @interface CBStatusMenuItemController (PRIVATE)
 - (void)activateAdium:(id)sender;
+- (void)menuNeedsUpdate:(NSMenu *)menu;
 @end
 
 @implementation CBStatusMenuItemController
@@ -19,7 +20,7 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
 + (CBStatusMenuItemController *)statusMenuItemController
 {
     //Standard singelton stuff.
-    if (!sharedStatusMenuInstance) {
+    if (!sharedStatusMenuInstance){
 		sharedStatusMenuInstance = [[self alloc] init];
     }
     return (sharedStatusMenuInstance);
@@ -40,20 +41,18 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
         theMenu = [[NSMenu alloc] init];
         [theMenu setAutoenablesItems:YES];
         [statusItem setMenu:theMenu];
-        
-        //Initial items
-        [theMenu addItem:[NSMenuItem separatorItem]];
-        [theMenu addItemWithTitle:@"Bring Adium to Front" 
-                           target:self
-                           action:@selector(activateAdium:)
-                           keyEquivalent:@""];
-        
+        if([NSApp isOnPantherOrBetter]){
+            [theMenu setDelegate:self];
+        }
+
         //Register ourself
         [[adium accountController] registerAccountMenuPlugin:self];
         
         //Setup for unviewed content catching
+        accountMenuItemsArray = [[NSMutableArray alloc] init];
         unviewedObjectsArray = [[NSMutableArray alloc] init];
         unviewedState = NO;
+        needsUpdate = YES;
 
         //Register as a contact observer (So we can catch the unviewed content status flag)
         [[adium contactController] registerListObjectObserver:self];
@@ -95,31 +94,20 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
 
 - (void)addAccountMenuItems:(NSArray *)menuItemArray
 {
-    NSEnumerator    *enumerator;
-    NSMenuItem      *menuItem;
+    //Stick 'em in!
+    [accountMenuItemsArray addObjectsFromArray:menuItemArray];
     
-    //Reverse it, so we can keep on inserting at the top.
-    enumerator = [menuItemArray reverseObjectEnumerator];
-    menuItem = nil;
-    
-    //Add each one at the top (see above)
-    while(menuItem = [enumerator nextObject]){
-        [theMenu insertItem:menuItem atIndex:0];
-    }
+    //We need to update next time we're clicked
+    needsUpdate = YES;
 }
 
 - (void)removeAccountMenuItems:(NSArray *)menuItemArray
 {
-    NSEnumerator    *enumerator;
-    NSMenuItem      *menuItem;
+    //Pull 'em out!
+    [accountMenuItemsArray removeObjectsInArray:menuItemArray];
     
-    enumerator = [menuItemArray objectEnumerator];
-    menuItem = nil;
-    
-    //Remove the suckers
-    while(menuItem = [enumerator nextObject]){
-        [theMenu removeItem:menuItem];
-    }
+    //We need to update next time we're clicked
+    needsUpdate = YES;
 }
 
 //Twiddle visibility --------------------------------------------------------
@@ -144,7 +132,10 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
     if([inModifiedKeys containsObject:@"UnviewedContent"]){
         //If there is new unviewed content
         if([inObject integerStatusObjectForKey:@"UnviewedContent"]){
+            //Add it, we're watching it
             [unviewedObjectsArray addObject:inObject];
+            //We need to update our menu
+            needsUpdate = YES;
             //If this is the first contact with unviewed content, set our icon to unviewed content
             if(!unviewedState){
                 //Set the image, with the highlight for 10.3 peoples.
@@ -161,6 +152,8 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
             if([unviewedObjectsArray containsObject:inObject]){
                 //Remove it, it's not unviewed anymore
                 [unviewedObjectsArray removeObject:inObject];
+                //We need to update our menu
+                needsUpdate = YES;
                 //If there are no more contacts with unviewed content, set our icon to normal
                 if([unviewedObjectsArray count] == 0 && unviewedState){
                     //Set the image, with the highlight for 10.3 peoples.
@@ -176,6 +169,62 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
     }
 	//We didn't modify contacts, so return nil 
     return(nil);
+}
+
+//Menu Delegate --------------------------------------------------------
+#pragma mark Menu Delegate
+- (void)menuNeedsUpdate:(NSMenu *)menu
+{
+    if(needsUpdate){
+        NSEnumerator    *enumerator;
+        NSMenuItem      *menuItem;
+        AIListObject    *listObject;
+        
+        //Clear out all the items, start from scratch
+        [menu removeAllItems];
+        
+        //Add the account menu items
+        enumerator = [accountMenuItemsArray objectEnumerator];
+        menuItem = nil;
+        while(menuItem = [enumerator nextObject]){
+            [menu addItem:menuItem];
+        }
+        
+        //Prepare to add any unviewed objects
+        enumerator = [unviewedObjectsArray objectEnumerator];
+        listObject = nil;
+        
+        /*
+        //If there exist any of unviewed objects, prepare to add them
+        if([unviewedObjectsArray count] > 0){
+            //Add a seperator
+            [menu addItem:[NSMenuItem separatorItem]];
+            //Create and add the menu items
+            while(listObject = [enumerator nextObject]){
+                NSLog(@"adding menu item for: %@", [listObject displayName]);
+                //Create a menu item from the list object
+                menuItem = [[[NSMenuItem alloc] initWithTitle:[listObject displayName] 
+                                                      action:NULL 
+                                               keyEquivalent:@""] autorelease];
+                //Set the image
+                //[menuItem setImage:[NSImage imageNamed:@"unviewedContent.png" forClass:[self class]]];
+                NSLog(@"menu item: %@", menuItem);
+                //Add it to the menu
+                [menu addItem:menuItem];
+            }
+        }
+        */
+        
+        //Add our last two items
+        [menu addItem:[NSMenuItem separatorItem]];
+        [menu addItemWithTitle:@"Bring Adium to Front"
+                        target:self
+                        action:@selector(activateAdium:)
+                 keyEquivalent:@""];
+        
+        //Only update next time if we need to
+        needsUpdate = NO;
+    }
 }
 
 @end
