@@ -492,8 +492,9 @@
 
         [cell setAlternateImage:newAlternateImage];
         [cell setImage:newImage];
-
+        
         [cell setImagePosition:NSImageOnly];
+        [cell setHighlightsBy:NSChangeBackgroundCellMask];
     }
 } 
 
