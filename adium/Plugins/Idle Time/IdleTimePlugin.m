@@ -238,7 +238,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //Set the idle time of all accounts
 - (void)_setAllAccountsIdleTo:(double)inSeconds
 {
-    [[owner accountController] setStatusObject:[NSNumber numberWithDouble:inSeconds] forKey:@"IdleTime" account:nil];
+    [[owner accountController] setStatusObject:[NSDate dateWithTimeIntervalSinceNow:(-inSeconds)] forKey:@"IdleSince" account:nil];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"IdleSetManually" account:nil];
 }
 
@@ -276,7 +276,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     if([notification object] == nil){ //We ignore account-specific status changes
         NSString	*modifiedKey = [[notification userInfo] objectForKey:@"Key"];
 
-        if([modifiedKey compare:@"IdleTime"] == 0){
+        if([modifiedKey compare:@"IdleSince"] == 0){
             [self updateIdleMenu]; //Update our away menu
         }
     }
