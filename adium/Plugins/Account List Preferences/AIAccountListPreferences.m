@@ -68,6 +68,9 @@
 //Preference view is closing
 - (void)viewWillClose
 {
+	//Get any final changes to the UID field
+	[textField_accountName fireImmediately];
+	
     [[adium contactController] unregisterListObjectObserver:self];
     [view_accountPreferences release]; view_accountPreferences = nil;
     [accountViewController release]; accountViewController = nil;
@@ -201,10 +204,11 @@
 	[[adium accountController] switchAccount:configuredForAccount toService:service];
 }
 
-//User changed the name of our account
-- (void)controlTextDidChange:(NSNotification *)obj
+- (IBAction)changeUIDField:(id)sender
 {
-	[[adium accountController] changeUIDOfAccount:configuredForAccount to:[textField_accountName stringValue]];
+	NSString *newUID = [textField_accountName stringValue];
+	if (![[configuredForAccount UID] isEqualToString:newUID])
+		[[adium accountController] changeUIDOfAccount:configuredForAccount to:newUID];	
 }
 
 //User toggled the autoconnect preference
@@ -397,6 +401,12 @@
     }else{
         return(NSDragOperationNone);
     }
+}
+
+- (void)tableViewSelectionWillChange:(NSNotification *)notification
+{
+	//Make sure we get any final changes to the account name (this would require typing and then switching within half a second, but better safe than sorry.)
+	[textField_accountName fireImmediately];
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
