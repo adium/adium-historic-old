@@ -1889,6 +1889,130 @@
 			settings = {
 			};
 		};
+		344092CC07D8FF8F00321BB3 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimOTRPrivateKeyGenerationWindowController.h;
+			path = "Plugins/Gaim Service/ESGaimOTRPrivateKeyGenerationWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344092CD07D8FF8F00321BB3 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimOTRPrivateKeyGenerationWindowController.m;
+			path = "Plugins/Gaim Service/ESGaimOTRPrivateKeyGenerationWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344092CE07D8FF8F00321BB3 = {
+			fileRef = 344092CC07D8FF8F00321BB3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344092CF07D8FF8F00321BB3 = {
+			fileRef = 344092CD07D8FF8F00321BB3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3440931D07D914F400321BB3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = GaimOTRPrivateKeyGenerationWindow.nib;
+			path = "Plugins/Gaim Service/GaimOTRPrivateKeyGenerationWindow.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3440931E07D914F500321BB3 = {
+			fileRef = 3440931D07D914F400321BB3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3440938407D9151F00321BB3 = {
+			children = (
+				34E0110C07B9E30B000DF265,
+				34E0110D07B9E30B000DF265,
+				344092CC07D8FF8F00321BB3,
+				344092CD07D8FF8F00321BB3,
+				3440931D07D914F400321BB3,
+				34BBE55407A342AF00663CC9,
+				34BBE55507A342AF00663CC9,
+			);
+			isa = PBXGroup;
+			name = OTR;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3440938707D915D300321BB3 = {
+			children = (
+				344093A807D9161B00321BB3,
+				344093A907D9161B00321BB3,
+			);
+			isa = PBXGroup;
+			name = "Auto-Away";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344093A807D9161B00321BB3 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESAutoAwayPlugin.h;
+			path = Source/ESAutoAwayPlugin.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		344093A907D9161B00321BB3 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESAutoAwayPlugin.m;
+			path = Source/ESAutoAwayPlugin.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		344093AA07D9161B00321BB3 = {
+			fileRef = 344093A807D9161B00321BB3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344093AB07D9161B00321BB3 = {
+			fileRef = 344093A907D9161B00321BB3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3440974207DA06FE00321BB3 = {
+			children = (
+				34D832BD07CBD641006466F2,
+				3440974407DA070700321BB3,
+			);
+			isa = PBXVariantGroup;
+			name = MessageContextDisplayPrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3440974307DA06FE00321BB3 = {
+			fileRef = 3440974207DA06FE00321BB3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3440974407DA070700321BB3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/MessageContextDisplayPrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		34415880059F8F050019246B = {
 			children = (
 				344161C4059FC72E0019246B,
@@ -7163,6 +7287,7 @@
 				34A6FAD807D6F3A700972830,
 				34A6FADA07D6F3AA00972830,
 				34A6FB7807D6FDBA00972830,
+				344093AA07D9161B00321BB3,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7333,7 +7458,7 @@
 				34D832B407CBD62C006466F2,
 				34D832B507CBD62C006466F2,
 				34D832B607CBD62C006466F2,
-				34D832BE07CBD641006466F2,
+				3440974307DA06FE00321BB3,
 				34D8332B07CBD72A006466F2,
 				34D8333207CBD741006466F2,
 				34D8333307CBD741006466F2,
@@ -7657,6 +7782,7 @@
 				34A6FAD907D6F3AA00972830,
 				34A6FADB07D6F3AA00972830,
 				34A6FB7707D6FDBA00972830,
+				344093AB07D9161B00321BB3,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8590,8 +8716,8 @@
 		};
 		34C2CFE6063340780018E5D2 = {
 			children = (
-				34E0110C07B9E30B000DF265,
-				34E0110D07B9E30B000DF265,
+				34048AC50617CB4C004D0B7E,
+				34048AC60617CB4C004D0B7E,
 				34BBE10907A2EE3700663CC9,
 				34BBE10A07A2EE3700663CC9,
 				34BBE0E907A2ECCF00663CC9,
@@ -8606,8 +8732,6 @@
 				34BBE11107A2EED600663CC9,
 				34BBE12207A2EFF800663CC9,
 				34BBE12307A2EFF800663CC9,
-				34BBE55407A342AF00663CC9,
-				34BBE55507A342AF00663CC9,
 				34BBE11607A2EF2B00663CC9,
 				34BBE11707A2EF2B00663CC9,
 				34BBE11C07A2EF7F00663CC9,
@@ -8618,8 +8742,7 @@
 				34BBE1B907A2F4C500663CC9,
 				34BBE18407A2F20E00663CC9,
 				34BBE18507A2F20E00663CC9,
-				34048AC50617CB4C004D0B7E,
-				34048AC60617CB4C004D0B7E,
+				3440938407D9151F00321BB3,
 				4BDF2C91061E376C00EA75C5,
 			);
 			isa = PBXGroup;
@@ -9686,16 +9809,10 @@
 		34D832BD07CBD641006466F2 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = MessageContextDisplayPrefs.nib;
-			path = Resources/MessageContextDisplayPrefs.nib;
+			name = English;
+			path = Resources/English.lproj/MessageContextDisplayPrefs.nib;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34D832BE07CBD641006466F2 = {
-			fileRef = 34D832BD07CBD641006466F2;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34D8332A07CBD72A006466F2 = {
 			fileEncoding = 30;
@@ -9951,10 +10068,10 @@
 				34D834CD07CBE7A3006466F2,
 				34A6FE8007D7E07300972830,
 				34D8346E07CBE6F5006466F2,
-				34D8344007CBE6E1006466F2,
-				34D8346C07CBE6F4006466F2,
 				34D8346D07CBE6F5006466F2,
+				34D8344007CBE6E1006466F2,
 				34D8343F07CBE6E1006466F2,
+				34D8346C07CBE6F4006466F2,
 				34D8346B07CBE6F4006466F2,
 			);
 			isa = PBXGroup;
@@ -14626,6 +14743,7 @@
 		4B587C3707ABFCA8001832A9 = {
 			children = (
 				3428328307D263F0004F01C9,
+				3440938707D915D300321BB3,
 				4BC32F7107AABC3500DDED66,
 				4B292D4707A9C92D00C5F882,
 				4B587C6C07ABFD2E001832A9,
@@ -15241,6 +15359,7 @@
 				34E0103507B956F6000DF265,
 				34E0110E07B9E30B000DF265,
 				34E0EB8F07CD349200A82198,
+				344092CE07D8FF8F00321BB3,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15284,6 +15403,7 @@
 				4B7A565B07A1742900BDC540,
 				349448C307BB29B2000F2A03,
 				3402E04E07CB0EB00044F818,
+				3440931E07D914F500321BB3,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15362,6 +15482,7 @@
 				34E0103407B956F6000DF265,
 				34E0110F07B9E30C000DF265,
 				34E0EB9007CD349200A82198,
+				344092CF07D8FF8F00321BB3,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19580,7 +19701,7 @@
 				6E7C19B90623BF7F008A1C99,
 				6E7C19BA0623BF7F008A1C99,
 				6ECFABC40622370D001C7E93,
-				34D832BD07CBD641006466F2,
+				3440974207DA06FE00321BB3,
 				07AF3C5907D4897200409BC8,
 			);
 			isa = PBXGroup;
