@@ -22,7 +22,9 @@
 #import <AIUtilities/ESDateFormatterAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 
-@class AIPreferenceWindowController;
+#warning crosslink
+#import "AIInterfaceController.h"
+#import "AIPreferenceWindowController.h"
 
 @interface ESDualWindowMessageAdvancedPreferences (PRIVATE)
 - (NSMenu *)_fontSizeMenu;
