@@ -359,7 +359,7 @@
 	NSNumber		*addTo;
 	
 	[accounts release];
-	accounts = [[[adium accountController] accountsWithService:service] retain];
+	accounts = [[[adium accountController] accountsWithServiceClassOfService:service] retain];
 	
 	//Select accounts by default
 	enumerator = [accounts objectEnumerator];
@@ -456,19 +456,16 @@
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-//	if([[menuItem representedObject] isKindOfClass:[AIServiceType class]]) {
-		NSEnumerator	*enumerator;
-		AIAccount		*account;
-		
-		enumerator = [[[adium accountController] accountsWithService:[menuItem representedObject]] objectEnumerator];
-		while(account = [enumerator nextObject]){
-			if([account contactListEditable]){
-				return YES;
-			}
+	NSEnumerator	*enumerator;
+	AIAccount		*account;
+	
+	enumerator = [[[adium accountController] accountsWithServiceClassOfService:[menuItem representedObject]] objectEnumerator];
+	while(account = [enumerator nextObject]){
+		if([account contactListEditable]){
+			return YES;
 		}
-		return NO;
-//	}
-//	return YES;
+	}
+	return NO;
 }
 
 - (void)selectGroup:(id)sender
