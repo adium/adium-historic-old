@@ -22,13 +22,14 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS 
 																		forClass:[self class]] 
 										  forGroup:PREF_GROUP_CONTACT_LIST];
-    
+
     //init our menu items
     visibleCountingMenuItem = [[NSMenuItem alloc] initWithTitle:VISIBLE_COUNTING_MENU_ITEM_TITLE 
 														 target:self 
 														 action:@selector(toggleMenuItem:)
 												  keyEquivalent:@""];
-	[[adium menuController] addMenuItem:visibleCountingMenuItem toLocation:LOC_View_General];		
+    [[adium menuController] addMenuItem:[NSMenuItem separatorItem] toLocation:LOC_View_General];		
+    [[adium menuController] addMenuItem:visibleCountingMenuItem toLocation:LOC_View_General];		
 
     allCountingMenuItem     = [[NSMenuItem alloc] initWithTitle:ALL_COUNTING_MENU_ITEM_TITLE
 														 target:self 
