@@ -66,8 +66,12 @@
 	//
 	fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:path];
 	enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:fullPath] objectEnumerator];
-	while((fileName = [enumerator nextObject])){
+	while(fileName = [enumerator nextObject]){
 	    
+		if([[fileName substringToIndex:1] isEqualToString:@"."] ||
+		   ![[[[NSFileManager defaultManager] fileAttributesAtPath:[fullPath stringByAppendingPathComponent:fileName] traverseLink:YES] fileType] isEqualToString:NSFileTypeRegular])
+			continue;
+		
 	    //Temprary Code.  This can be removed once everyone who ran the alpha has opened their log viewer :)
 	    //
 	    //Rename Adium 2.0 alpha logs.  Logs saved after the format change and before this viewer use
