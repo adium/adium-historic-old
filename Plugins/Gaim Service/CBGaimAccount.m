@@ -1679,25 +1679,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
                                     withDescription:connectionNotice];
 }
 
-/*
- * @brief Our account has disconnected
- *
- * This is called after the accoutn disconnects for any reason
+/*!
+ * @brief Remove all contacts owned by this account and clear their status objects set by this account
  */
-- (oneway void)accountConnectionDisconnected
+- (void)removeAllContacts
 {
-	BOOL			connectionIsSuicidal = (account->gc ? account->gc->wants_to_die : NO);
 	NSEnumerator    *enumerator;
 	AIListContact	*contact;
 
-    //We are now offline
-	[self setStatusObject:nil forKey:@"Disconnecting" notify:NO];
-	[self setStatusObject:nil forKey:@"Connecting" notify:NO];
-	[self setStatusObject:nil forKey:@"Online" notify:NO];
-	
-	//Clear status objects which don't make sense for a disconnected account
-	[self setStatusObject:nil forKey:@"TextProfile" notify:NO];
-	
 	[[adium contactController] delayListObjectNotifications];
 	
 	//Clear status flags on all contacts for this account, and set their remote group to nil
@@ -1711,6 +1700,27 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 	
 	[[adium contactController] endListObjectNotificationsDelay];
+}
+
+/*
+ * @brief Our account has disconnected
+ *
+ * This is called after the accoutn disconnects for any reason
+ */
+- (oneway void)accountConnectionDisconnected
+{
+	BOOL			connectionIsSuicidal = (account->gc ? account->gc->wants_to_die : NO);
+
+    //We are now offline
+	[self setStatusObject:nil forKey:@"Disconnecting" notify:NO];
+	[self setStatusObject:nil forKey:@"Connecting" notify:NO];
+	[self setStatusObject:nil forKey:@"Online" notify:NO];
+	
+	//Clear status objects which don't make sense for a disconnected account
+	[self setStatusObject:nil forKey:@"TextProfile" notify:NO];
+	
+	//Remove all our contacts
+	[self removeAllContacts];
 	
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
@@ -2299,6 +2309,21 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ALIASES];
 }
 
+/*!
+* @brief The account's UID changed
+ */
+- (void)didChangeUID
+{
+	//Only need to take action if we have a created GaimAccount already
+	if(account != NULL){
+		//Remove our current account
+		[gaimThread removeAdiumAccount:self];
+		
+		//Clear the reference to the GaimAccount... it'll be created when needed
+		account = NULL;
+	}
+}
+
 - (void)dealloc
 {	
 	[[adium preferenceController] unregisterPreferenceObserver:self];
@@ -2310,6 +2335,20 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[deniedContactsArray release];
 	
     [super dealloc];
+}
+
+/*!
+ * @brief The account will be deleted
+ *
+ * The default implemented disconnects the account.  Subclasses should call super's implementation.
+ */
+- (void)willBeDeleted
+{
+	//Call super to disconnect us.
+	[super willBeDeleted];
+	
+	//Remove our contacts immediately.
+	[self removeAllContacts];
 }
 
 - (NSString *)unknownGroupName {
