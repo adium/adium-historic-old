@@ -38,13 +38,13 @@
 	   [inModifiedKeys containsObject:@"Online"]){
 		
 		//Tab
-		NSImage	*icon = [AIStatusIcons statusIconForStatusID:[self _statusIDForListObject:inObject]
+		NSImage	*icon = [AIStatusIcons statusIconForListObject:inObject
 														type:AIStatusIconTab
 												   direction:AIIconNormal];
 		[[inObject displayArrayForKey:@"Tab Status Icon"] setObject:icon withOwner:self];
 
 		//List
-		icon = [AIStatusIcons statusIconForStatusID:[self _statusIDForListObject:inObject]
+		icon = [AIStatusIcons statusIconForListObject:inObject
 											   type:AIStatusIconList
 										  direction:AIIconNormal];
 		[[inObject displayArrayForKey:@"List Status Icon"] setObject:icon withOwner:self];
@@ -64,7 +64,7 @@
 		[inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
 		
 
-		NSImage	*icon = [AIStatusIcons statusIconForStatusID:[self _stateIDForChat:inChat]
+		NSImage	*icon = [AIStatusIcons statusIconForChat:inChat
 														type:AIStatusIconTab
 												   direction:AIIconNormal];
 		[[inChat displayArrayForKey:@"Tab State Icon"] setObject:icon withOwner:self];
@@ -73,57 +73,6 @@
 	}
 	
 	return(modifiedAttributes);
-}
-
-//Returns the state icon for the passed chat (new content, tpying, ...)
-- (NSString *)_stateIDForChat:(AIChat *)inChat
-{
-	if([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
-		return(@"content");
-		
-	}else{
-		AITypingState typingState = [inChat integerStatusObjectForKey:KEY_TYPING];
-
-		if(typingState == AITyping){
-			return(@"typing");
-			
-		}else if (typingState == AIEnteredText){
-			return(@"enteredtext");
-		}
-	}
-	
-	return(nil);
-}
-
-//Returns the status icon for the passed contact (away, idle, online, stranger, ...)
-- (NSString *)_statusIDForListObject:(AIListObject *)listObject
-{
-	AIStatusSummary statusSummary = [listObject statusSummary];
-
-	switch (statusSummary){
-		case AIAwayStatus:
-		case AIAwayAndIdleStatus:
-			return(@"away");
-			break;
-
-		case AIIdleStatus:
-			return (@"idle");
-			break;
-
-		case AIAvailableStatus:
-			return (@"available");
-			break;
-
-		case AIOfflineStatus:
-			return(@"offline");
-			break;
-
-		case AIUnknownStatus:
-		default:
-			return(@"unknown");
-	}
-	
-	return nil;
 }
 
 @end

@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on 8/23/04.
-//  Copyright 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
@@ -18,7 +17,8 @@ typedef enum {
 @interface AIStatusIcons : NSObject {
 
 }
-
++ (NSImage *)statusIconForListObject:(AIListObject *)object type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection;
++ (NSImage *)statusIconForChat:(AIChat *)chat type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection;
 + (NSImage *)statusIconForStatusID:(NSString *)statusID type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection;
 + (BOOL)setActiveStatusIconsFromPath:(NSString *)inPath;
 

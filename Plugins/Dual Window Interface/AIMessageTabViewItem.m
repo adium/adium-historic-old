@@ -241,6 +241,7 @@
 	
 	//Multi-user chats won't have status icons
 	if(!image && ![messageViewController userListVisible]) image = [self statusIcon];
+	#warning This needs to change if AIStatusIcons ever completely gets rid of magic strings
 	if(!image) image = [AIStatusIcons statusIconForStatusID:@"unknown" type:AIStatusIconTab direction:AIIconNormal];
 
 	return(image);
