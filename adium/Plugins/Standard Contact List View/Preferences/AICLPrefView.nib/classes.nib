@@ -21,6 +21,7 @@
                 "colorWell_grid" = NSColorWell; 
                 "colorWell_group" = NSColorWell; 
                 "textField_fontName" = NSTextField; 
+                "textField_noBoldWarning" = NSTextField; 
                 "view_prefViewGeneral" = NSView; 
                 "view_prefViewGroups" = NSView; 
             }; 
