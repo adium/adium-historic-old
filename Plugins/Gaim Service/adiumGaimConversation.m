@@ -203,6 +203,9 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 					   ([messageString rangeOfString:@"is not online"].location != NSNotFound)){
 						errorType = AIChatUserNotAvailable;
 
+					}else if([messageString rangeOfString:@"In local permit/deny"].location != NSNotFound){
+						errorType = AIChatUserIsBlocked;
+
 					}else if(([messageString rangeOfString:@"Refused by client"].location != NSNotFound) ||
 							 ([messageString rangeOfString:@"message is too large"].location != NSNotFound)){
 						//XXX - there may be other conditions, but this seems the most common so that's how we'll classify it
