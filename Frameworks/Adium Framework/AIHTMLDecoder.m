@@ -576,9 +576,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 											range:NSMakeRange(0, [chunk length])];
 			}
 
-			//If we need to encode non-ASCII to HTML, append string character by
-			//  character, replacing any non-ascii characters with the
-			//  designated SGML escape sequence.
+			/* If we need to encode non-ASCII to HTML, append string character by
+			 * character, replacing any non-ascii characters with the designated SGML escape sequence.
+			 */
 			if (thingsToInclude.nonASCII) {
 				unsigned i;
 				unsigned length = [chunk length];
@@ -586,8 +586,18 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					unichar currentChar = [chunk characterAtIndex:i];
 					if(currentChar > 127){
 						[string appendFormat:@"&#%d;", currentChar];
-					}else if(currentChar == '\r' || currentChar == '\n'){
+					}else if(currentChar == '\r'){
+						/* \r\n is a single line break, so encode it as such. If we have an \r followed by a \n,
+						 * skip the \n
+						 */
+						if((i + 1 < length) && ([chunk characterAtIndex:(i+1)] == '\n')){
+							i++;
+						}
 						[string appendString:BRTag];
+						
+					}else if(currentChar == '\n'){
+						[string appendString:BRTag];
+						
 					}else{
 						//unichar characters may have a length of up to 3; be careful to get the whole character
 						NSRange composedCharRange = [chunk rangeOfComposedCharacterSequenceAtIndex:i];
@@ -596,8 +606,18 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					}
 				}
 			} else {
-				[chunk replaceOccurrencesOfString:Return withString:BRTag options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-				[chunk replaceOccurrencesOfString:Newline withString:BRTag options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+				[chunk replaceOccurrencesOfString:@"\r\n"
+									   withString:BRTag
+										  options:NSLiteralSearch 
+											range:NSMakeRange(0, [chunk length])];
+				[chunk replaceOccurrencesOfString:Return
+									   withString:BRTag
+										  options:NSLiteralSearch 
+											range:NSMakeRange(0, [chunk length])];
+				[chunk replaceOccurrencesOfString:Newline
+									   withString:BRTag
+										  options:NSLiteralSearch
+											range:NSMakeRange(0, [chunk length])];
 				[string appendString:chunk];
 			}
 
