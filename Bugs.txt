@@ -37,6 +37,8 @@ List and Tabs
 
 Other
   - Links without protocol specifiers do not open when clicked.
+  - Deleting all contact list themes or styles results in a crash.  Don't allow the last to be
+    deleted
 
 //------------------------------------------------------------------------------------
 // Bugs - Libgaim
