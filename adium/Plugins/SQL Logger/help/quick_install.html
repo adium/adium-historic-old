@@ -50,8 +50,8 @@ make
 sudo make install</pre>
 </div>
 <p>If you are using darwin ports, you need to change the --with-includes and
-  --with-libs flag to <code>--with-includes=/opt/include</code>
-  and <code>--with-libs=/opt/lib</code> (I think).</p>
+  --with-libs flag to <code>--with-includes=/opt/local/include</code>
+  and <code>--with-libs=/opt/local/lib</code> .</p>
 <h3>Configuring PostgreSQL</h3>
 <p>That's all it takes to compile and install PostgreSQL.  To set it up, you
   need to create a new user for Postgres to run as.  I used NetInfo Manager to
@@ -97,7 +97,8 @@ psql &lt; functions.sql</pre></div>
 <p>At this point, you're ready to import your logs into the database.  Simply
   use the parser-2.pl script, and it will import all of your adium 2.x
   logfiles.  If you wish to use parser.pl (for 1.x logs) you will need to
-  install DBI and DBD::Pg</p>
+  install DBI and DBD::Pg.</p>
+<div class="tutorialcode"><pre>jmelloy $] ./parser-2.pl</pre></div>
 <h3>Installing tsearch and Resin</h3>
 <div class="tutorialcode"><pre>jmelloy $] cd <i>POSTGRES_SOURCE_LOCATION</i>/contrib/tsearch2
 jmelloy $] make
