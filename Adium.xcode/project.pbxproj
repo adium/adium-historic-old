@@ -7615,6 +7615,7 @@
 				34A6FB2E07D6F98600972830,
 				34A6FB8107D6FDCC00972830,
 				34A250B607E0F822009854E1,
+				4BFC2E7907E357F00063D70C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16859,6 +16860,7 @@
 				F5F0FE9D04B12CAC01A80106,
 				F5F0FEA004B1336C01A80106,
 				34C6A3BB077A8CB500EB423C,
+				4BFC2E7807E357F00063D70C,
 			);
 			isa = PBXGroup;
 			name = "Appearance Preferences";
@@ -19094,6 +19096,20 @@
 		};
 		4BF98DCD06D149EE00E8781D = {
 			fileRef = 4B31E8C404C46A9100A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BFC2E7807E357F00063D70C = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = emoticonBlank.png;
+			path = Resources/emoticonBlank.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BFC2E7907E357F00063D70C = {
+			fileRef = 4BFC2E7807E357F00063D70C;
 			isa = PBXBuildFile;
 			settings = {
 			};
