@@ -74,6 +74,7 @@
 #import <AIUtilities/AITag.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AITextFieldAdditions.h>
+#import <AIUtilities/AITextFieldWithDraggingDelegate.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AITooltipUtilities.h>
 #import <AIUtilities/AITree.h>

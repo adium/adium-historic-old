@@ -15,13 +15,16 @@
  */
 
 #import "AIObject.h"
+#import "AIListContact.h"
+#import "AIMetaContact.h"
 
-@class AIChat, AIAccount;
+@class AIChat, AIAccount, AIMetaContact, AIListContact, AIService;
 
 @interface DCJoinChatViewController : AIObject {
 	IBOutlet		NSView			*view;			// Custom view
 	AIChat							*chat;			// The newly created chat
-	
+	AIAccount						*account;		// The account we're being configured for
+
 	id								delegate;		// Our delegate
 }
 
@@ -35,6 +38,9 @@
 - (void)joinChatWithAccount:(AIAccount *)inAccount;
 
 - (NSString *)impliedCompletion:(NSString *)aString;
+- (AIListContact *)validContact:(NSString *)uniqueID withService:(AIService *)service;
+- (NSDragOperation)doDraggingEntered:(id <NSDraggingInfo>)sender;
+- (BOOL)doPerformDragOperation:(id <NSDraggingInfo>)sender toField:(NSTextField *)theField;
 
 - (void)doJoinChatWithName:(NSString *)inName
 				 onAccount:(AIAccount *)inAccount
