@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------------
 - Crash when re-arranging emoticon packs
 - Crash when displaying/dismissing certain error messages
-
+- Status messages have '{}' appended to them in Jaguar.
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
