@@ -80,7 +80,7 @@ Meta Contacts
 //------------------------------------------------------------------------------------
 // Bugs - Unavoidable
 //------------------------------------------------------------------------------------
-- Apple scripts stall Adium when iTunes 4.5's Print dialogue is open (the same bug exists in Script Editor)
+- AppleScripts stall Adium when iTunes 4.5's Print dialogue is open (the same bug exists in Script Editor)
 
     [Chris] - We could use a seperate app/daemon that is polling itunes.
     blacktree.com has something for that, and GrowlTunes could also be made to
