@@ -73,7 +73,7 @@
         
         if([[url scheme] isEqualToString:@"aim"]){
             if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){
-				NSString *name = [url queryArgumentForKey:@"screenname"];
+				NSString *name = [[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes];;
 				if (name){
 					[self _openChatToContactWithName:name
 										   onService:@"AIM" 
@@ -87,7 +87,7 @@
             
         }else if([[url scheme] isEqualToString:@"ymsgr"]){
             if([[url host] caseInsensitiveCompare:@"sendim"] == NSOrderedSame){
-                [self _openChatToContactWithName:[url query] onService:@"Yahoo!" withMessage:nil];
+                [self _openChatToContactWithName:[[url query] stringByDecodingURLEscapes] onService:@"Yahoo!" withMessage:nil];
             }
         }
     }else{
