@@ -99,10 +99,10 @@
 {
 	NSMenuItem		*menuItem;
     
-    menuItem = [[NSMenuItem alloc] initWithTitle:title
-                                           target:self
-                                           action:@selector(changeProxyType:)
-                                    keyEquivalent:@""];
+    menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
+																	target:self
+																	action:@selector(changeProxyType:)
+															 keyEquivalent:@""];
     [menuItem setTag:tag];
 	
 	return [menuItem autorelease];

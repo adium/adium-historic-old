@@ -196,10 +196,10 @@
 	NSMenuItem		*menuItem;
     BOOL			canIndent;
 	
-    menuItem = [[NSMenuItem alloc] initWithTitle:inTitle
-										  target:nil
-										  action:nil
-								   keyEquivalent:@""];
+    menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:inTitle
+																	target:nil
+																	action:nil
+															 keyEquivalent:@""];
 	[menuItem setEnabled:NO];
 	[menu addItem:menuItem];
 	
@@ -207,13 +207,13 @@
 	
 	enumerator = [inArray objectEnumerator];
 	while(name = [enumerator nextObject]){
-		menuItem = [[NSMenuItem alloc] initWithTitle:name
-											  target:self
-											  action:@selector(selectEncoding:)
-									   keyEquivalent:@""];
+		menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
+																		target:self
+																		action:@selector(selectEncoding:)
+																 keyEquivalent:@""];
 		[menuItem setRepresentedObject:name];
 		if(canIndent) [menuItem setIndentationLevel:1];
-
+		
 		[menu addItem:menuItem];
 	}
 }

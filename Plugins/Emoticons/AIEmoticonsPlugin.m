@@ -90,7 +90,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 
 //
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//Flush our cached active emoticons
 	[self resetActiveEmoticons];

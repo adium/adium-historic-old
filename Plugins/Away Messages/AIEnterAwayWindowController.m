@@ -381,10 +381,10 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
     NSMenu		*savedAwaysMenu = [[NSMenu alloc] init];
     NSMenuItem		*menuItem;
     
-    menuItem = [[[NSMenuItem alloc] initWithTitle:NO_PRESET_AWAY
-										   target:self
-										   action:@selector(loadSavedAway:)
-									keyEquivalent:@"N"] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:NO_PRESET_AWAY
+																	 target:self
+																	 action:@selector(loadSavedAway:)
+															  keyEquivalent:@"N"] autorelease];
     [menuItem setRepresentedObject:nil];
     [savedAwaysMenu addItem:menuItem];
 	
@@ -396,10 +396,10 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
     {
         NSString * title = [dict objectForKey:@"Title"];
         if (title) {
-			menuItem = [[[NSMenuItem alloc] initWithTitle:title
-												   target:self
-												   action:@selector(loadSavedAway:)
-											keyEquivalent:@""] autorelease];
+			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
+																			 target:self
+																			 action:@selector(loadSavedAway:)
+																	  keyEquivalent:@""] autorelease];
 		} else {
 			NSString * message = [[dict objectForKey:@"Message"] string];
 			
@@ -407,10 +407,10 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 			if([message length] > MENU_AWAY_DISPLAY_LENGTH){
 				message = [[message substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:ELIPSIS_STRING];
 			}
-			menuItem = [[[NSMenuItem alloc] initWithTitle:message
-												   target:self
-												   action:@selector(loadSavedAway:)
-											keyEquivalent:@""] autorelease];
+			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:message
+																			 target:self
+																			 action:@selector(loadSavedAway:)
+																	  keyEquivalent:@""] autorelease];
 		}
 		[menuItem setRepresentedObject:dict];
 		[savedAwaysMenu addItem:menuItem];
@@ -420,7 +420,7 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 
 //Update our menu if the away list changes
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//Rebuild the away menu
 	if([key isEqualToString:KEY_SAVED_AWAYS]){

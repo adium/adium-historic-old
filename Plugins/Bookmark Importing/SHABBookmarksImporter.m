@@ -40,7 +40,7 @@ static NSMenu   *abTopMenu;
 //    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
 //    lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
-    abBookmarksMenu = [[[NSMenu alloc] initWithTitle:AB_ROOT_MENU_TITLE] autorelease];
+    abBookmarksMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:AB_ROOT_MENU_TITLE] autorelease];
     abBookmarksSupermenu = abBookmarksMenu;
     abTopMenu = abBookmarksMenu;
     [self getUrlsFromAB];

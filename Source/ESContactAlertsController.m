@@ -109,10 +109,10 @@ DeclareString(KeyOneTimeAlert);
 	while((eventID = [enumerator nextObject])){
 		id <AIEventHandler>	eventHandler = [inEventHandlers objectForKey:eventID];		
 		
-        item = [[[NSMenuItem alloc] initWithTitle:(global ? [eventHandler globalShortDescriptionForEventID:eventID] : [eventHandler shortDescriptionForEventID:eventID])
-										   target:target 
-										   action:@selector(selectEvent:) 
-									keyEquivalent:@""] autorelease];
+        item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:(global ? [eventHandler globalShortDescriptionForEventID:eventID] : [eventHandler shortDescriptionForEventID:eventID])
+																	 target:target 
+																	 action:@selector(selectEvent:) 
+															  keyEquivalent:@""] autorelease];
         [item setRepresentedObject:eventID];
 		[menuItemArray addObject:item];
     }
@@ -286,10 +286,10 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 	while((actionID = [enumerator nextObject])){
 		id <AIActionHandler> actionHandler = [actionHandlers objectForKey:actionID];		
 		
-        NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[actionHandler shortDescriptionForActionID:actionID]
-														target:target 
-														action:@selector(selectAction:) 
-												 keyEquivalent:@""] autorelease];
+        NSMenuItem	*item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[actionHandler shortDescriptionForActionID:actionID]
+																				  target:target 
+																				  action:@selector(selectAction:) 
+																		   keyEquivalent:@""] autorelease];
         [item setRepresentedObject:actionID];
         [menu addItem:item];
     }

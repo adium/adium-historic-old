@@ -23,7 +23,6 @@
 
 @interface AIAwayStatusWindowPlugin : AIPlugin {
     AIAwayStatusWindowPreferences	*preferences;
-
 }
 
 - (void)installPlugin;

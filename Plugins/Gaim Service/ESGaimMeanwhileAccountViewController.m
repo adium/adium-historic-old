@@ -56,10 +56,10 @@
 {
 	NSMenuItem		*menuItem;
     
-    menuItem = [[NSMenuItem alloc] initWithTitle:title
-										  target:self
-										  action:@selector(changeCLType:)
-								   keyEquivalent:@""];
+    menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
+																	target:self
+																	action:@selector(changeCLType:)
+															 keyEquivalent:@""];
     [menuItem setTag:tag];
 	
 	return [menuItem autorelease];

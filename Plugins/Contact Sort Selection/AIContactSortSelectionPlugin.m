@@ -93,26 +93,26 @@
 	AISortController	*controller;
 	
     //Create the menu
-    sortSelectionMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+    sortSelectionMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
 	
 	//Add each sort controller
 	enumerator = [[[adium contactController] sortControllerArray] objectEnumerator];
 	while((controller = [enumerator nextObject])){
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[controller displayName]
-											   target:self
-											   action:@selector(changedSortSelection:)
-										keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[controller displayName]
+																		 target:self
+																		 action:@selector(changedSortSelection:)
+																  keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:controller];
-
+		
 		//Add the menu item
 		[[adium menuController] addMenuItem:menuItem toLocation:LOC_View_Unnamed_A];		
 	}
-
+	
 	//Add the menu item for configuring the sort
-	menuItem_configureSort = [[NSMenuItem alloc] initWithTitle:CONFIGURE_SORT_MENU_TITLE
-														 target:self
-														 action:@selector(configureSort:)
-												  keyEquivalent:@""];
+	menuItem_configureSort = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CONFIGURE_SORT_MENU_TITLE
+																				  target:self
+																				  action:@selector(configureSort:)
+																		   keyEquivalent:@""];
 	[[adium menuController] addMenuItem:menuItem_configureSort toLocation:LOC_View_Unnamed_A];
 	
 	AISortController	*activeSortController;

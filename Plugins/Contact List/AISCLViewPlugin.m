@@ -113,7 +113,7 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 #pragma mark Contact List Controller
 //Apply any theme/layout changes
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 
 	if([group isEqualToString:PREF_GROUP_CONTACT_LIST]){

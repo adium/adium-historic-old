@@ -16,34 +16,34 @@
 
 - (void)installPlugin
 {
-    disconnectItem = [[[NSMenuItem alloc] initWithTitle:DISCONNECT_MENU_TITLE
-												 target:self
-												 action:@selector(disconnectAll:)
-										  keyEquivalent:@"K"] autorelease];
+    disconnectItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DISCONNECT_MENU_TITLE
+																		   target:self
+																		   action:@selector(disconnectAll:)
+																	keyEquivalent:@"K"] autorelease];
     
     disconnectDockItem = [[NSMenuItem alloc] initWithTitle:DISCONNECT_MENU_TITLE
-												 target:self
-												 action:@selector(disconnectAll:)
-										  keyEquivalent:@""];
+													target:self
+													action:@selector(disconnectAll:)
+											 keyEquivalent:@""];
     
     connectDockItem = [[NSMenuItem alloc] initWithTitle:CONNECT_MENU_TITLE
-                                              target:self
-                                              action:@selector(connectAll:)
-                                       keyEquivalent:@""];
+												 target:self
+												 action:@selector(connectAll:)
+										  keyEquivalent:@""];
 	
-    connectItem = [[[NSMenuItem alloc] initWithTitle:CONNECT_MENU_TITLE
-                                              target:self
-                                              action:@selector(connectAll:)
-                                       keyEquivalent:@"k"] autorelease];
+    connectItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CONNECT_MENU_TITLE
+																		target:self
+																		action:@selector(connectAll:)
+																 keyEquivalent:@"k"] autorelease];
     [connectItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
-
+	
 	[[adium menuController] addMenuItem:connectDockItem toLocation:LOC_Dock_Status];
 	[[adium menuController] addMenuItem:disconnectDockItem toLocation:LOC_Dock_Status];
     
-    cancelConnectItem = [[[NSMenuItem alloc] initWithTitle:CANCEL_MENU_TITLE
-                                                    target:self
-                                                    action:@selector(cancelAll:)
-                                             keyEquivalent:@"."] autorelease];
+    cancelConnectItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CANCEL_MENU_TITLE
+																			  target:self
+																			  action:@selector(cancelAll:)
+																	   keyEquivalent:@"."] autorelease];
 	[[adium menuController] removeMenuItem:connectDockItem];
 	[[adium menuController] removeMenuItem:disconnectDockItem];
     [cancelConnectItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
@@ -51,7 +51,7 @@
     [[adium menuController] addMenuItem:connectItem toLocation:LOC_File_Accounts];
     [[adium menuController] addMenuItem:disconnectItem toLocation:LOC_File_Accounts];
     [[adium menuController] addMenuItem:cancelConnectItem toLocation:LOC_File_Accounts];
-
+	
 	[[adium menuController] addMenuItem:connectDockItem toLocation:LOC_Dock_Status];
 	[[adium menuController] addMenuItem:disconnectDockItem toLocation:LOC_Dock_Status];
 }

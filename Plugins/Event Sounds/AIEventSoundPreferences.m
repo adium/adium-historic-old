@@ -96,7 +96,7 @@
 
 //Called when the preferences change, update our preference display
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//If the 'Soundset' changed
 	if(!key || ([key isEqualToString:KEY_EVENT_SOUND_SET])){
@@ -127,18 +127,18 @@
         //Ensure this folder contains a soundset file (Otherwise, we ignore it)
         soundSetFile = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.txt", setPath, [[setPath stringByDeletingPathExtension] lastPathComponent]]];
         if(soundSetFile && [soundSetFile length] != 0){
-
+			
             //Add a menu item for the set
-            menuItem = [[[NSMenuItem alloc] initWithTitle:[[setPath stringByDeletingPathExtension] lastPathComponent]
-                                                   target:self
-                                                   action:@selector(selectSoundSet:)
-                                            keyEquivalent:@""] autorelease];
+            menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[[setPath stringByDeletingPathExtension] lastPathComponent]
+																			 target:self
+																			 action:@selector(selectSoundSet:)
+																	  keyEquivalent:@""] autorelease];
             [menuItem setRepresentedObject:[soundSetDict objectForKey:KEY_SOUND_SET]];
             [soundSetMenu addItem:menuItem];
-
+			
         }
     }
-
+	
     //Custom option
     [soundSetMenu addItem:[NSMenuItem separatorItem]];
     [soundSetMenu addItemWithTitle:AILocalizedString(@"Custom...",nil) target:self action:@selector(selectSoundSet:) keyEquivalent:@""];

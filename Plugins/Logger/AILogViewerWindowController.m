@@ -1010,7 +1010,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 //Build the search mode menu
 - (void)buildSearchMenu
 {
-    NSMenu  *cellMenu = [[[NSMenu alloc] initWithTitle:SEARCH_MENU] autorelease];
+    NSMenu  *cellMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:SEARCH_MENU] autorelease];
     [cellMenu addItem:[self _menuItemWithTitle:FROM forSearchMode:LOG_SEARCH_FROM]];
     [cellMenu addItem:[self _menuItemWithTitle:TO forSearchMode:LOG_SEARCH_TO]];
     [cellMenu addItem:[self _menuItemWithTitle:DATE forSearchMode:LOG_SEARCH_DATE]];
@@ -1028,7 +1028,9 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 //Returns a menu item for the search mode menu
 - (NSMenuItem *)_menuItemWithTitle:(NSString *)title forSearchMode:(LogSearchMode)mode
 {
-    NSMenuItem  *menuItem = [[NSMenuItem alloc] initWithTitle:title action:@selector(selectSearchType:) keyEquivalent:@""];
+    NSMenuItem  *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title 
+																				 action:@selector(selectSearchType:) 
+																		  keyEquivalent:@""];
     [menuItem setTag:mode];
     [menuItem setState:(mode == searchMode ? NSOnState : NSOffState)];
     

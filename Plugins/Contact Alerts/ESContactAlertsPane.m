@@ -69,12 +69,12 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
 	listObject = [[[adium contactController] parentContactForListObject:inObject] retain];
 	
 	//
-	[self preferencesChangedForGroup:nil key:nil object:nil preferenceDict:nil];
+	[self preferencesChangedForGroup:nil key:nil object:nil preferenceDict:nil firstTime:NO];
 }
 
 //Alerts have changed
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	if(!object || object == listObject){
 		//Update our list of alerts

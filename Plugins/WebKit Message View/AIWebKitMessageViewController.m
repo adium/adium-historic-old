@@ -335,13 +335,13 @@ DeclareString(AppendNextMessage);
 //The controller observes for preferences which are applied to the WebView
 //Variant changes are applied immediately, but all other changes (except those handlded by setViewIndependentPrefsFromDict:) must wait
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	NSString		*loadedStyleKey = [plugin variantKeyForStyle:loadedStyleID];
 	
 	[self setViewIndependentPrefsFromDict:prefDict];
 	
-	if(group == nil || key == nil || [key isEqualToString:loadedStyleKey]){
+	if(firstTime || !key || [key isEqualToString:loadedStyleKey]){
 		NSString	*styleID = [prefDict objectForKey:KEY_WEBKIT_STYLE];
 		
 		if([loadedStyleID isEqualToString:styleID]){

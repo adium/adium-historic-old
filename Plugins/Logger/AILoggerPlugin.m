@@ -107,7 +107,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 
 //Update for the new preferences
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-                            object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	BOOL            newLogValue;
 	
@@ -164,13 +164,22 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Configure the log viewer menu items
 - (void)configureMenuItems
 {
-    logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:LOG_VIEWER target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@"l"] autorelease];
+    logViewerMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:LOG_VIEWER 
+																			  target:self
+																			  action:@selector(showLogViewerToSelectedContact:)
+																	   keyEquivalent:@"l"] autorelease];
     [[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxiliary];
 
-    viewContactLogsMenuItem = [[[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_LOGS target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@"L"] autorelease];
+    viewContactLogsMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_LOGS 
+																					target:self
+																					action:@selector(showLogViewerToSelectedContact:) 
+																			 keyEquivalent:@"L"] autorelease];
     [[adium menuController] addMenuItem:viewContactLogsMenuItem toLocation:LOC_Contact_Manage];
 
-    viewContactLogsContextMenuItem = [[[NSMenuItem alloc] initWithTitle:VIEW_LOGS target:self action:@selector(showLogViewerToSelectedContextContact:) keyEquivalent:@""] autorelease];
+    viewContactLogsContextMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_LOGS
+																						   target:self
+																						   action:@selector(showLogViewerToSelectedContextContact:) 
+																					keyEquivalent:@""] autorelease];
     [[adium menuController] addContextualMenuItem:viewContactLogsContextMenuItem toLocation:Context_Contact_Manage];
 }
 

@@ -114,7 +114,7 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 
 //Called when the preferences change, update our preference display
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//Load the custom behavior
 	[behaviorArray release];

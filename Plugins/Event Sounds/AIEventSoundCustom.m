@@ -9,9 +9,9 @@
 #import "AIEventSoundsPlugin.h"
 
 #define NIB_EVENT_SOUND_CUSTOM		@"EventSoundCustomPanel"
-#define	TABLE_COLUMN_SOUND		@"sound"
-#define	TABLE_COLUMN_EVENT		@"event"
-#define ADD_EVENT_MENU_ITEM		AILocalizedString(@"Add Event...",nil)
+#define	TABLE_COLUMN_SOUND			@"sound"
+#define	TABLE_COLUMN_EVENT			@"event"
+#define ADD_EVENT_MENU_ITEM			AILocalizedString(@"Add Event...",nil)
 
 
 @interface AIEventSoundCustom (PRIVATE)
@@ -47,7 +47,7 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
     [super initWithWindowNibName:windowNibName];
-
+	
     firstSound = nil;
     soundMenu_cached = nil;
     [self showWindow:nil];
@@ -68,18 +68,18 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 - (void)windowDidLoad
 {
     NSPopUpButtonCell		*dataCell;
-
+	
     //Center
     [[self window] center];
-
+	
     //
     [popUp_addEvent setMenu:[[adium contactAlertsController] menuOfEventsWithTarget:self forGlobalMenu:YES]];
-
+	
     //Configure the table view
     [tableView_sounds setDrawsAlternatingRows:YES];
     [tableView_sounds setTarget:self];
     [tableView_sounds setDoubleAction:@selector(playSelectedSound:)];
-
+	
     //Observer preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
     
@@ -107,11 +107,11 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 {
     //
 	[[adium preferenceController] unregisterPreferenceObserver:self];
-
+	
     //Clean up shared instance
     [self autorelease];
     sharedEventSoundInstance = nil;
-
+	
     return(YES);
 }
 
@@ -135,10 +135,10 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 - (IBAction)playSelectedSound:(id)sender
 {
     int		selectedRow = [tableView_sounds selectedRow];
-
+	
     if(selectedRow >= 0 && selectedRow < [eventSoundArray count]){
         NSString	*soundPath = [[eventSoundArray objectAtIndex:selectedRow] objectForKey:KEY_EVENT_SOUND_PATH];
-
+		
         if(soundPath != nil && [soundPath length] != 0){
             [[adium soundController] playSoundAtPath:[soundPath stringByExpandingBundlePath]]; //Play the sound
         }
@@ -149,20 +149,20 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 - (IBAction)selectEvent:(id)sender
 {
     NSMutableDictionary	*soundDict;
-
+	
     //Add the new event
     soundDict = [[NSMutableDictionary alloc] init];
     [soundDict setObject:[sender representedObject] forKey:KEY_EVENT_SOUND_EVENT_ID];
     [soundDict setObject:[firstSound stringByCollapsingBundlePath] forKey:KEY_EVENT_SOUND_PATH];
     [eventSoundArray addObject:soundDict];
-
+	
     //Save event sound preferences
     [self saveEventSoundArray];
 }
 
 //Called when the preferences change, update our preference display
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//Load the user's custom set
 	[eventSoundArray release];
@@ -206,10 +206,10 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
                     [soundMenu addItem:[NSMenuItem separatorItem]]; //Divider
                 }
                 soundSetPath = [soundSetDict objectForKey:KEY_SOUND_SET];
-                menuItem = [[[NSMenuItem alloc] initWithTitle:[soundSetPath lastPathComponent]
-                                                       target:nil
-                                                       action:nil
-                                                keyEquivalent:@""] autorelease];
+                menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[soundSetPath lastPathComponent]
+																				 target:nil
+																				 action:nil
+																		  keyEquivalent:@""] autorelease];
                 [menuItem setEnabled:NO];
                 [soundMenu addItem:menuItem];
                 
@@ -227,10 +227,10 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
                     [soundImage setSize:NSMakeSize(SOUND_MENU_ICON_SIZE,SOUND_MENU_ICON_SIZE)];
                     
                     //Build the menu item
-                    menuItem = [[[NSMenuItem alloc] initWithTitle:soundTitle
-                                                           target:self
-                                                           action:@selector(selectSound:)
-                                                    keyEquivalent:@""] autorelease];
+                    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:soundTitle
+																					 target:self
+																					 action:@selector(selectSound:)
+																			  keyEquivalent:@""] autorelease];
                     [menuItem setRepresentedObject:[soundPath stringByCollapsingBundlePath]];
                     [menuItem setImage:soundImage];
                     
@@ -239,10 +239,10 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
             }
         }
         //Add the Other... item
-        menuItem = [[[NSMenuItem alloc] initWithTitle:OTHER_ELLIPSIS
-                                               target:self
-                                               action:@selector(selectSound:)
-                                        keyEquivalent:@""] autorelease];            
+        menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:OTHER_ELLIPSIS
+																		 target:self
+																		 action:@selector(selectSound:)
+																  keyEquivalent:@""] autorelease];            
         [soundMenu addItem:menuItem];
         
         [soundMenu setAutoenablesItems:NO];
@@ -263,10 +263,10 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
             //Add an "Other" header if necessary
             if([soundMenu_cached indexOfItemWithTitle:OTHER] == -1) {
                 [soundMenu_cached insertItem:[NSMenuItem separatorItem] atIndex:([soundMenu_cached numberOfItems]-1)]; //Divider
-                menuItem = [[[NSMenuItem alloc] initWithTitle:OTHER
-                                                       target:nil
-                                                       action:nil
-                                                keyEquivalent:@""] autorelease];
+                menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:OTHER
+																				 target:nil
+																				 action:nil
+																		  keyEquivalent:@""] autorelease];
                 [menuItem setEnabled:NO];
                 [soundMenu_cached insertItem:menuItem atIndex:([soundMenu_cached numberOfItems]-1)];
             }
@@ -277,10 +277,10 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
             [soundImage setSize:NSMakeSize(SOUND_MENU_ICON_SIZE,SOUND_MENU_ICON_SIZE)];
             
             //Build the menu item
-            menuItem = [[[NSMenuItem alloc] initWithTitle:soundTitle
-                                                   target:self
-                                                   action:@selector(selectSound:)
-                                            keyEquivalent:@""] autorelease];
+            menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:soundTitle
+																			 target:self
+																			 action:@selector(selectSound:)
+																	  keyEquivalent:@""] autorelease];
             [menuItem setRepresentedObject:soundPath];
             [menuItem setImage:soundImage];
             
@@ -324,7 +324,7 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
         //Set the new sound path
         selectedSoundDict = [[eventSoundArray objectAtIndex:setRow] mutableCopy];
         [selectedSoundDict setObject:[soundPath stringByCollapsingBundlePath] forKey:KEY_EVENT_SOUND_PATH];
-
+		
         [eventSoundArray replaceObjectAtIndex:setRow withObject:selectedSoundDict];
         
 		[selectedSoundDict release];
@@ -354,21 +354,21 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     NSString	*identifier = [tableColumn identifier];
-
+	
     if([identifier isEqualToString:TABLE_COLUMN_EVENT]){
         NSDictionary	*soundDict;
         NSString		*eventID;
-
+		
         //Get the notification string
         soundDict = [eventSoundArray objectAtIndex:row];
         eventID = [soundDict objectForKey:KEY_EVENT_SOUND_EVENT_ID];
-
+		
         //Get that notification's display name
         return([[adium contactAlertsController] globalShortDescriptionForEventID:eventID]);
-
+		
     }else{
         return(nil);
-
+		
     }
 }
 
@@ -376,25 +376,25 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     NSString	*identifier = [tableColumn identifier];
-
+	
     if([identifier isEqualToString:TABLE_COLUMN_SOUND]){
         NSMenuItem			*selectedMenuItem;
         NSMutableDictionary	*selectedSoundDict;
         NSString			*newSoundPath;
-
+		
         //
         selectedMenuItem = (NSMenuItem *)[[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
         selectedSoundDict = [[eventSoundArray objectAtIndex:row] mutableCopy];
         newSoundPath = [selectedMenuItem representedObject];
         setRow = row;
         if(newSoundPath && ![newSoundPath isEqualToString:[selectedSoundDict objectForKey:KEY_EVENT_SOUND_PATH]]){ //Ignore a duplicate selection
-            //If the user just modified a premade sound set, save it as their custom set, and switch them to 'custom'.
-            //[self saveEventSoundArray];
-
+																												   //If the user just modified a premade sound set, save it as their custom set, and switch them to 'custom'.
+																												   //[self saveEventSoundArray];
+			
             //Set the new sound path
             [selectedSoundDict setObject:newSoundPath forKey:KEY_EVENT_SOUND_PATH];
             [eventSoundArray replaceObjectAtIndex:row withObject:selectedSoundDict];
-
+			
             //Save event sound preferences
             [self saveEventSoundArray];
         }
@@ -407,7 +407,7 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     NSString	*identifier = [tableColumn identifier];
-
+	
     if([identifier isEqualToString:TABLE_COLUMN_SOUND]){
         [cell selectItemWithRepresentedObject:[[eventSoundArray objectAtIndex:row] objectForKey:KEY_EVENT_SOUND_PATH]];
     }

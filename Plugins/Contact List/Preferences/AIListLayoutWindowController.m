@@ -32,7 +32,7 @@
 {
 	AIListLayoutWindowController	*listLayoutWindow = [[self alloc] initWithWindowNibName:@"ListLayoutSheet"
 																				   withName:inName];
-
+	
 	if(parentWindow){
 		[NSApp beginSheet:[listLayoutWindow window]
 		   modalForWindow:parentWindow
@@ -66,7 +66,7 @@
 {
 	//We'll be adding/removing this from our view
 	[tabViewItem_advancedContactBubbles retain];
-
+	
 	//Setup
 	[fontField_contact setShowPointSize:YES];
 	[fontField_contact setShowFontFace:YES];
@@ -149,7 +149,7 @@
 	textAlignmentChoices[1] = NSCenterTextAlignment;
 	textAlignmentChoices[2] = NSRightTextAlignment;
 	textAlignmentChoices[3] = -1;
-
+	
 	[self updateDisplayedTabsFromPrefDict:prefDict];
 	
 	[self updateStatusAndServiceIconMenusFromPrefDict:prefDict];
@@ -163,7 +163,7 @@
 	//Group text alignment
 	[popUp_groupTextAlignment setMenu:[self alignmentMenuWithChoices:textAlignmentChoices]];
 	[popUp_groupTextAlignment compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
-
+	
 	//Extended Status position
 	[popUp_extendedStatusPosition setMenu:[self extendedStatusPositionMenu]];
 	[popUp_extendedStatusPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION] intValue]];
@@ -171,7 +171,7 @@
 	//Window style
 	[popUp_windowStyle setMenu:[self windowStyleMenu]];
 	[popUp_windowStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]];
-
+	
 	[popUp_extendedStatusStyle setMenu:[self extendedStatusStyleMenu]];
 	[popUp_extendedStatusStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_STYLE] intValue]];
 	
@@ -204,12 +204,12 @@
 		
 		NSDictionary	*prefDict;
 		prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
-
+		
 		[self updateStatusAndServiceIconMenusFromPrefDict:prefDict];
 		[self updateUserIconMenuFromPrefDict:prefDict];
 		
 		[self configureControlDimming];
-
+		
 	}else if(sender == popUp_groupTextAlignment){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT
@@ -221,15 +221,15 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_WINDOW_STYLE
 											  group:PREF_GROUP_LIST_LAYOUT];
-
+		
 		prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
-
+		
 		[self updateDisplayedTabsFromPrefDict:prefDict];
 		[self updateStatusAndServiceIconMenusFromPrefDict:prefDict];
 		[self updateUserIconMenuFromPrefDict:prefDict];
-
+		
 		[self configureControlDimming];
-
+		
 	}else if(sender == popUp_extendedStatusPosition){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION
@@ -290,19 +290,19 @@
 											 forKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS
 											  group:PREF_GROUP_LIST_LAYOUT];
 		[self configureControlDimming];
-
+		
 	}else if(sender == checkBox_statusIconsVisible){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS
 											  group:PREF_GROUP_LIST_LAYOUT];
 		[self configureControlDimming];
-
+		
 	}else if(sender == checkBox_serviceIconsVisible){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS
 											  group:PREF_GROUP_LIST_LAYOUT];
 		[self configureControlDimming];
-
+		
 	}else if(sender == checkBox_windowHasShadow){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED
@@ -318,7 +318,7 @@
                                              forKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE
                                               group:PREF_GROUP_LIST_LAYOUT];
 		[self configureControlDimming];
-			
+		
     }else if (sender == checkBox_outlineBubbles){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE
@@ -343,7 +343,7 @@
                                              forKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY
                                               group:PREF_GROUP_LIST_LAYOUT];
 		[self updateSliderValues];
-
+		
     }else if(sender == slider_contactLeftIndent){
         [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
                                              forKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT
@@ -359,7 +359,7 @@
 	}else if(sender == slider_horizontalWidth){
 		int newValue = [sender intValue];
 		int oldValue = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH
-																group:PREF_GROUP_LIST_LAYOUT] intValue];
+																 group:PREF_GROUP_LIST_LAYOUT] intValue];
 		if (newValue != oldValue){ 
 			[[adium preferenceController] setPreference:[NSNumber numberWithInt:newValue]
 												 forKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH
@@ -411,7 +411,7 @@
 {
 	int	iconSize = [slider_userIconSize intValue];
 	[textField_userIconSize setStringValue:[NSString stringWithFormat:@"%ix%i",iconSize,iconSize]];
-
+	
 	[textField_contactSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_contactSpacing intValue]]];
 	[textField_groupTopSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_groupTopSpacing intValue]]];
 	[textField_windowTransparency setStringValue:[NSString stringWithFormat:@"%i%%", (int)[slider_windowTransparency floatValue]]];
@@ -444,13 +444,13 @@
 		//For non-fitted or non-centered fitted, enable and set the appropriate value
 		[checkBox_userIconVisible setEnabled:YES];
 		[checkBox_userIconVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
-
+		
 		[checkBox_statusIconsVisible setEnabled:YES];
 		[checkBox_statusIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
-
+		
 		[checkBox_serviceIconsVisible setEnabled:YES];
 		[checkBox_serviceIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue]];	
-
+		
 	}else{
 		//For fitted and centered, disable and set to NO
 		[checkBox_userIconVisible setEnabled:NO];
@@ -462,9 +462,9 @@
 		[checkBox_serviceIconsVisible setEnabled:NO];
 		[checkBox_serviceIconsVisible setState:NO];
 	}
-
-
-
+	
+	
+	
 	
 	//User icon controls
 	[slider_userIconSize setEnabled:([checkBox_userIconVisible state] && [checkBox_userIconVisible isEnabled])];
@@ -474,7 +474,7 @@
 	//Other controls
 	BOOL extendedStatusEnabled = ([checkBox_extendedStatusVisible state] && [checkBox_extendedStatusVisible isEnabled]);
 	
-
+	
 	[popUp_extendedStatusStyle setEnabled:extendedStatusEnabled];
 	[popUp_extendedStatusPosition setEnabled:extendedStatusEnabled];
 	[popUp_statusIconPosition setEnabled:([checkBox_statusIconsVisible state] && 
@@ -486,7 +486,7 @@
 	[popUp_userIconPosition setEnabled:([checkBox_userIconVisible state] &&
 										[checkBox_userIconVisible isEnabled] &&
 										([popUp_userIconPosition numberOfItems] > 0))];
-
+	
 	//Disable group spacing when not using mockie
 	[slider_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
 	[textField_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
@@ -496,7 +496,7 @@
 		//In standard mode, disable the horizontal autosizing slider if horiztonal autosizing is off
 		[textField_horizontalWidthText setStringValue:AILocalizedString(@"Maximum width:",nil)];
 		[slider_horizontalWidth setEnabled:horizontalAutosize];
-
+		
 	}else{
 		//In all the borderless transparent modes, the horizontal autosizing slider becomes the
 		//horizontal sizing slider when autosizing is off
@@ -554,12 +554,12 @@
 		statusAndServicePositionChoices[indexForFinishingChoices] = LIST_POSITION_BADGE_LEFT;
 		statusAndServicePositionChoices[indexForFinishingChoices + 1] = LIST_POSITION_BADGE_RIGHT;
 		statusAndServicePositionChoices[indexForFinishingChoices + 2] = -1;
-
+		
 	}else{
 		statusAndServicePositionChoices[indexForFinishingChoices] = -1;
-
+		
 	}
-
+	
 	[popUp_statusIconPosition setMenu:[self positionMenuWithChoices:statusAndServicePositionChoices]];
 	[popUp_statusIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
 	
@@ -592,7 +592,7 @@
 				break;
 		}	
 	}
-
+	
 	
 	//User icon position
 	[popUp_userIconPosition setMenu:[self positionMenuWithChoices:userIconPositionChoices]];
@@ -603,7 +603,7 @@
 
 - (NSMenu *)alignmentMenuWithChoices:(int [])alignmentChoices
 {
-    NSMenu		*alignmentMenu = [[[NSMenu alloc] init] autorelease];
+    NSMenu		*alignmentMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
 	NSMenuItem	*menuItem;
     
 	unsigned	i = 0;
@@ -619,10 +619,10 @@
 			case NSRightTextAlignment:	menuTitle = AILocalizedString(@"Right",nil);
 				break;
 		}
-		menuItem = [[[NSMenuItem alloc] initWithTitle:menuTitle
-											   target:nil
-											   action:nil
-										keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:menuTitle
+																		 target:nil
+																		 action:nil
+																  keyEquivalent:@""] autorelease];
 		[menuItem setTag:alignmentChoices[i]];
 		[alignmentMenu addItem:menuItem];
 		
@@ -635,7 +635,7 @@
 
 - (NSMenu *)positionMenuWithChoices:(int [])positionChoices
 {
-    NSMenu		*positionMenu = [[[NSMenu alloc] init] autorelease];
+    NSMenu		*positionMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
     NSMenuItem	*menuItem;
     
 	unsigned	i = 0;
@@ -659,35 +659,35 @@
 			case LIST_POSITION_BADGE_RIGHT: menuTitle = AILocalizedString(@"Badge (Lower Right)",nil);
 				break;
 		}
-		menuItem = [[[NSMenuItem alloc] initWithTitle:menuTitle
-											   target:nil
-											   action:nil
-										keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:menuTitle
+																		 target:nil
+																		 action:nil
+																  keyEquivalent:@""] autorelease];
 		[menuItem setTag:positionChoices[i]];
 		[positionMenu addItem:menuItem];
 		
 		i++;
 	}
-
+	
 	return(positionMenu);
 }
 
 - (NSMenu *)extendedStatusPositionMenu
 {
-	NSMenu		*extendedStatusPositionMenu = [[[NSMenu alloc] init] autorelease];
+	NSMenu		*extendedStatusPositionMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
     NSMenuItem	*menuItem;
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Below Name",nil)
-										   target:nil
-										   action:nil
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Below Name",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:EXTENDED_STATUS_POSITION_BELOW_NAME];
 	[extendedStatusPositionMenu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Beside Name",nil)
-										   target:nil
-										   action:nil
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Beside Name",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:EXTENDED_STATUS_POSITION_BESIDE_NAME];
 	[extendedStatusPositionMenu addItem:menuItem];
 	
@@ -696,27 +696,27 @@
 
 - (NSMenu *)extendedStatusStyleMenu
 {
-    NSMenu		*extendedStatusStyleMenu = [[[NSMenu alloc] init] autorelease];
+    NSMenu		*extendedStatusStyleMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
     NSMenuItem	*menuItem;
-
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Status",nil)
-										   target:nil
-										   action:nil
-									keyEquivalent:@""] autorelease];
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Status",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:STATUS_ONLY];
 	[extendedStatusStyleMenu addItem:menuItem];
-
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Idle Time",nil)
-										   target:nil
-										   action:nil
-									keyEquivalent:@""] autorelease];
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Idle Time",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:IDLE_ONLY];
 	[extendedStatusStyleMenu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"(Idle) Status",nil)
-										   target:nil
-										   action:nil
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"(Idle) Status",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:IDLE_AND_STATUS];
 	[extendedStatusStyleMenu addItem:menuItem];
 	
@@ -725,41 +725,41 @@
 
 - (NSMenu *)windowStyleMenu
 {
-	NSMenu		*windowStyleMenu = [[[NSMenu alloc] init] autorelease];
+	NSMenu		*windowStyleMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
     NSMenuItem	*menuItem;
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Regular Window",nil)
-										   target:nil
-										   action:nil
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Regular Window",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:WINDOW_STYLE_STANDARD];
 	[windowStyleMenu addItem:menuItem];
-
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Borderless Window",nil)
-										   target:nil
-										   action:nil
-									keyEquivalent:@""] autorelease];
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Borderless Window",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:WINDOW_STYLE_BORDERLESS];
 	[windowStyleMenu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Group Bubbles",nil)
-										   target:nil
-										   action:nil
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Group Bubbles",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:WINDOW_STYLE_MOCKIE];
 	[windowStyleMenu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Contact Bubbles",nil)
-										   target:nil
-										   action:nil
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contact Bubbles",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:WINDOW_STYLE_PILLOWS];
 	[windowStyleMenu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Contact Bubbles (To Fit)",nil)
-										   target:nil
-										   action:nil
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contact Bubbles (To Fit)",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:WINDOW_STYLE_PILLOWS_FITTED];
 	[windowStyleMenu addItem:menuItem];
 	
@@ -778,18 +778,18 @@
 	
 	if ((windowStyle == WINDOW_STYLE_PILLOWS_FITTED) ||
 		(windowStyle == WINDOW_STYLE_PILLOWS)){
-
+		
 		if (!tabViewCurrentHasAdvancedContactBubbles){
 			[tabView_preferences addTabViewItem:tabViewItem_advancedContactBubbles];
 		}
-
+		
 		//Configure the controls whose state we only care about if we are showing this tab view item
 		BOOL showGroupBubbles = ![[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_HIDE_BUBBLE] boolValue];
 		[checkBox_showGroupBubbles setState:showGroupBubbles];
 		
 		[checkBox_outlineBubbles setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE] boolValue]];
 		[checkBox_drawContactBubblesWithGraadient setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_BUBBLE_GRADIENT] boolValue]];
-
+		
 		[slider_outlineWidth setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE_WIDTH] intValue]];
 		
 	}else{

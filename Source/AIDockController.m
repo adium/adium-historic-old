@@ -106,7 +106,7 @@
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	if(!key || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]){
 		NSMutableDictionary	*newAvailableIconStateDict;
@@ -123,7 +123,7 @@
 		//Write the icon to the Adium application bundle so finder will see it
 		//On launch we only need to update the icon file if this is a new version of Adium.  When preferences
 		//change we always want to update it
-		if(!group){
+		if(!firstTime){
 			[self updateAppBundleIcon];
 		}
 

@@ -96,13 +96,13 @@
 {
 	//Get the new groups
 	NSMenu		*groupMenu = [[adium contactController] menuOfAllGroupsInGroup:nil withTarget:self];
-	NSMenuItem	*unlistedItem = [[[NSMenuItem alloc] initWithTitle:@"(Not Listed)"
-															target:self
-															action:@selector(selectGroup:)
-													 keyEquivalent:@""] autorelease];
+	NSMenuItem	*unlistedItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"(Not Listed)"
+																					  target:self
+																					  action:@selector(selectGroup:)
+																			   keyEquivalent:@""] autorelease];
 	[groupMenu insertItem:[NSMenuItem separatorItem] atIndex:0];
 	[groupMenu insertItem:unlistedItem atIndex:0];
-			
+	
 	[[[tableView_accounts tableColumnWithIdentifier:@"group"] dataCell] setMenu:groupMenu];
 	
 	//Refresh our table

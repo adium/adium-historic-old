@@ -110,7 +110,7 @@
 
 //Preferences have changed
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
     if(!key || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]){
         NSDictionary	*iconDict;

@@ -49,7 +49,7 @@
 
 //Called when the preferences change, reregister for the notifications
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	speechEnabled = [[prefDict objectForKey:KEY_ANNOUNCER_ENABLED] boolValue];
 	speakOutgoing = [[prefDict objectForKey:KEY_ANNOUNCER_OUTGOING] boolValue];

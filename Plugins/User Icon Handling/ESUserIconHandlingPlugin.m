@@ -126,7 +126,7 @@
 
 //The user icon preference was changed
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	if(object){
 		if(![self cacheAndSetUserIconFromPreferenceForListObject:object]){

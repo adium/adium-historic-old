@@ -26,10 +26,10 @@
 	NSMenuItem	*menuItem;
 	
     //Add/Edit Link... menu item (edit menu)
-    menuItem = [[[NSMenuItem alloc] initWithTitle:ACCOUNT_MENU_TITLE
-										   target:self
-										   action:@selector(showAccountWindow:)
-										   keyEquivalent:@"a"] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ACCOUNT_MENU_TITLE
+																	 target:self
+																	 action:@selector(showAccountWindow:)
+															  keyEquivalent:@"a"] autorelease];
 	[menuItem setKeyEquivalentModifierMask:NSCommandKeyMask | NSShiftKeyMask];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
 }

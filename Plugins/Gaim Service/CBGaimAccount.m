@@ -1863,13 +1863,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				//If titleForContactMenuLabel:forContact: returns nil, we don't add the menuItem
 				if(title = [self titleForContactMenuLabel:act->label
 											   forContact:inContact]){
-					menuItem = [[[NSMenuItem alloc] initWithTitle:title
-														   target:self
-														   action:@selector(performContactMenuAction:)
-													keyEquivalent:@""] autorelease];
+					menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
+																					 target:self
+																					 action:@selector(performContactMenuAction:)
+																			  keyEquivalent:@""] autorelease];
 					[menuItem setImage:[AIServiceIcons serviceIconForService:[self service]
-																	type:AIServiceIconSmall
-															   direction:AIIconNormal]];
+																		type:AIServiceIconSmall
+																   direction:AIIconNormal]];
 					dict = [NSDictionary dictionaryWithObjectsAndKeys:
 						[NSValue valueWithPointer:act],@"GaimBlistNodeAction",
 						[NSValue valueWithPointer:buddy],@"GaimBuddy",
@@ -1951,9 +1951,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict];
+	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict firstTime:firstTime];
 
 	if([group isEqualToString:PREF_GROUP_ALIASES]){
 		//If the notification object is a listContact belonging to this account, update the serverside information

@@ -369,12 +369,12 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 											[service longDescription] :
 											[service shortDescription]);
 				
-				NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:(format ? 
-																		[NSString stringWithFormat:format,description] :
-																		description)
-																target:target 
-																action:@selector(selectServiceType:) 
-														 keyEquivalent:@""] autorelease];
+				NSMenuItem	*item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:(format ? 
+																								  [NSString stringWithFormat:format,description] :
+																								  description)
+																						  target:target 
+																						  action:@selector(selectServiceType:) 
+																				   keyEquivalent:@""] autorelease];
 				[item setRepresentedObject:service];
 				[item setImage:[AIServiceIcons serviceIconForService:service
 																type:AIServiceIconSmall
@@ -781,12 +781,12 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 																		 onAccount:account];
 		
 		if(available || includeOffline){
-			NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:(multipleServices ?
-																		[NSString stringWithFormat:@"%@ (%@)", [account formattedUID], [[account service] shortDescription]] :
-																		[account formattedUID])
-																target:target
-																action:@selector(selectAccount:)
-														 keyEquivalent:@""] autorelease];
+			NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:(multipleServices ?
+																								  [NSString stringWithFormat:@"%@ (%@)", [account formattedUID], [[account service] shortDescription]] :
+																								  [account formattedUID])
+																						  target:target
+																						  action:@selector(selectAccount:)
+																				   keyEquivalent:@""] autorelease];
 			[menuItem setRepresentedObject:account];
 			[menuItem setImage:[AIServiceIcons serviceIconForObject:account
 															   type:AIServiceIconSmall
@@ -838,10 +838,10 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	AIAccount		*account;
 	
 	while(account = [enumerator nextObject]){
-		NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:[account formattedUID]
-															target:target
-															action:@selector(selectAccount:)
-													 keyEquivalent:@""] autorelease];
+		NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[account formattedUID]
+																					  target:target
+																					  action:@selector(selectAccount:)
+																			   keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:account];
 		[menuItem setImage:[AIServiceIcons serviceIconForObject:account
 														   type:AIServiceIconSmall
@@ -1146,10 +1146,10 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		
 		if([[account supportedPropertyKeys] containsObject:@"Online"]){
 			//Create the account's menu item (the title will be set by_updateMenuItem:forAccount:
-			menuItem = [[[NSMenuItem alloc] initWithTitle:@""
-												   target:self
-												   action:@selector(toggleConnection:)
-											keyEquivalent:@""] autorelease];
+			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
+																			 target:self
+																			 action:@selector(toggleConnection:)
+																	  keyEquivalent:@""] autorelease];
 			[menuItem setRepresentedObject:account];
 			[menuItemArray addObject:menuItem];
 			

@@ -98,10 +98,10 @@
     [self showContactList:nil];
 
 	//Contact list menu tem
-    NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE
-												   target:self
-												   action:@selector(toggleContactList:)
-											keyEquivalent:@"/"] autorelease];
+    NSMenuItem *item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE
+																			 target:self
+																			 action:@selector(toggleContactList:)
+																	  keyEquivalent:@"/"] autorelease];
 	[menuController addMenuItem:item toLocation:LOC_Window_Fixed];
 	[menuController addMenuItem:[[item copy] autorelease] toLocation:LOC_Dock_Status];
 
@@ -144,7 +144,7 @@
 
 //Preferences changed
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//
 	[[adium notificationCenter] removeObserver:self name:Contact_OrderChanged object:nil];
@@ -605,10 +605,10 @@
 		
 		//Add a menu item for the container
 		if([contentArray count] > 1){
-			item = [[[NSMenuItem alloc] initWithTitle:containerName
-											   target:nil
-											   action:nil
-										keyEquivalent:@""] autorelease];
+			item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:containerName
+																		 target:nil
+																		 action:nil
+																  keyEquivalent:@""] autorelease];
 			[self _addItemToMainMenuAndDock:item];
 		}
 		
@@ -625,10 +625,10 @@
 				windowKeyString = [NSString stringWithString:@""];
 			}
 			
-			item = [[[NSMenuItem alloc] initWithTitle:[chat displayName]
-											   target:self
-											   action:@selector(showChatWindow:)
-										keyEquivalent:windowKeyString] autorelease];
+			item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[chat displayName]
+																		 target:self
+																		 action:@selector(showChatWindow:)
+																  keyEquivalent:windowKeyString] autorelease];
 			if([contentArray count] > 1 && respondsToSetIndentationLevel) [item setIndentationLevel:1];
 			[item setRepresentedObject:chat];
 			[item setImage:[chat chatMenuImage]];

@@ -82,39 +82,39 @@
 
 - (void)configureFormatMenu
 {
-    NSMenu		*choicesMenu = [[[NSMenu alloc] init] autorelease];
+    NSMenu		*choicesMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
     NSMenuItem		*menuItem;
     
-    menuItem = [[[NSMenuItem alloc] initWithTitle:ADDRESS_BOOK_FIRST_LAST_OPTION
-                                           target:self
-                                           action:@selector(changeFormat:)
-                                    keyEquivalent:@""] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADDRESS_BOOK_FIRST_LAST_OPTION
+																	 target:self
+																	 action:@selector(changeFormat:)
+															  keyEquivalent:@""] autorelease];
     [menuItem setTag:FirstLast];
     [choicesMenu addItem:menuItem];
     
-    menuItem = [[[NSMenuItem alloc] initWithTitle:ADDRESS_BOOK_FIRST_OPTION
-                                           target:self
-                                           action:@selector(changeFormat:)
-                                    keyEquivalent:@""] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADDRESS_BOOK_FIRST_OPTION
+																	 target:self
+																	 action:@selector(changeFormat:)
+															  keyEquivalent:@""] autorelease];
     [menuItem setTag:First];
     [choicesMenu addItem:menuItem];
     
-    menuItem = [[[NSMenuItem alloc] initWithTitle:ADDRESS_BOOK_LAST_FIRST_OPTION
-                                           target:self
-                                           action:@selector(changeFormat:)
-                                    keyEquivalent:@""] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADDRESS_BOOK_LAST_FIRST_OPTION
+																	 target:self
+																	 action:@selector(changeFormat:)
+															  keyEquivalent:@""] autorelease];
     [menuItem setTag:LastFirst];
     [choicesMenu addItem:menuItem];
-
-	menuItem = [[[NSMenuItem alloc] initWithTitle:ADDRESS_BOOK_LAST_FIRST_NO_COMMA_OPTION
-                                           target:self
-                                           action:@selector(changeFormat:)
-                                    keyEquivalent:@""] autorelease];
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADDRESS_BOOK_LAST_FIRST_NO_COMMA_OPTION
+																	 target:self
+																	 action:@selector(changeFormat:)
+															  keyEquivalent:@""] autorelease];
     [menuItem setTag:LastFirstNoComma];
     [choicesMenu addItem:menuItem];
 	
     [format_menu setMenu:choicesMenu];
-
+	
     NSRect oldFrame = [format_menu frame];
     [format_menu sizeToFit];
     [format_menu setFrameOrigin:oldFrame.origin];

@@ -19,21 +19,21 @@
 
 - (void)installPlugin
 {
-
+	
 	shouldRebuildChatList = YES;
 	
 	//Invite to Chat menu item
-	menuItem_inviteToChat = [[[NSMenuItem alloc] initWithTitle:INVITE_CONTACT
-														target:self
-														action:@selector(dummyTarget:)
-												 keyEquivalent:@""] autorelease];
+	menuItem_inviteToChat = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:INVITE_CONTACT
+																				  target:self
+																				  action:@selector(dummyTarget:)
+																		   keyEquivalent:@""] autorelease];
 	[[adium menuController] addMenuItem:menuItem_inviteToChat toLocation:LOC_Contact_Action];
 	
 	//Invite to Chat context menu item
-	menuItem_inviteToChatContext = [[[NSMenuItem alloc] initWithTitle:INVITE_CONTACT
-															   target:self
-															   action:@selector(dummyTarget:)
-														keyEquivalent:@""] autorelease];
+	menuItem_inviteToChatContext = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:INVITE_CONTACT
+																						 target:self
+																						 action:@selector(dummyTarget:)
+																				  keyEquivalent:@""] autorelease];
 	[[adium menuController] addContextualMenuItem:menuItem_inviteToChatContext toLocation:Context_Contact_Action];	
 	
 }
@@ -121,15 +121,15 @@
 					// Is this a group chat?
 					if( [chat name] ) {
 						if (!menu_chatMenu){
-							menu_chatMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+							menu_chatMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
 						}
 						
 						if( [menu_chatMenu indexOfItemWithTitle:[chat name]] == -1 ) {
 							NSMenuItem *menuItem;
-							menuItem = [[NSMenuItem alloc] initWithTitle:[chat name]
-																  target:self
-																  action:@selector(inviteToChat:)
-														   keyEquivalent:@""];
+							menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[chat name]
+																							target:self
+																							action:@selector(inviteToChat:)
+																					 keyEquivalent:@""];
 							[menuItem setRepresentedObject:[NSArray arrayWithObjects:chat,contact,nil]];
 							[menu_chatMenu addItem:menuItem];
 							[menuItem release];

@@ -158,7 +158,7 @@ Adium, Copyright 2001-2004, Adam Iser
 {
 	NSMutableArray	*groupObservers;
 	
-	NSParameterAssert([observer respondsToSelector:@selector(preferencesChangedForGroup:key:object:preferenceDict:)]);
+	NSParameterAssert([observer respondsToSelector:@selector(preferencesChangedForGroup:key:object:preferenceDict:firstTime:)]);
 	
 	//Fetch the observers for this group
 	if(!(groupObservers = [observers objectForKey:group])){
@@ -174,7 +174,8 @@ Adium, Copyright 2001-2004, Adam Iser
 	[observer preferencesChangedForGroup:group
 									 key:nil
 								  object:nil
-						  preferenceDict:[self cachedPreferencesForGroup:group object:nil]];
+						  preferenceDict:[self cachedPreferencesForGroup:group object:nil]
+							   firstTime:YES];
 }
 
 //Unregister a preference observer
@@ -202,7 +203,11 @@ Adium, Copyright 2001-2004, Adam Iser
 		id				observer;
 
 		while(observer = [enumerator nextObject]){
-			[observer preferencesChangedForGroup:group key:key object:object preferenceDict:preferenceDict];
+			[observer preferencesChangedForGroup:group
+											 key:key
+										  object:object
+								  preferenceDict:preferenceDict
+									   firstTime:NO];
 		}
     }
 }

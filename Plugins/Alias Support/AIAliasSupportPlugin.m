@@ -43,25 +43,25 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DISPLAYFORMAT_DEFAULT_PREFS
 																		forClass:[self class]]
 										  forGroup:PREF_GROUP_DISPLAYFORMAT];
-
-    //Observe preferences changes
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(applyAliasRequested:)
-									   name:Contact_ApplyDisplayName
-									 object:nil];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DISPLAYFORMAT];
 	
 	//Create the menu item
-	menuItem_contactName = [[[NSMenuItem alloc] initWithTitle:CONTACT_NAME_MENU_TITLE
-												target:nil
-												action:nil
-										 keyEquivalent:@""] autorelease];
+	menuItem_contactName = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CONTACT_NAME_MENU_TITLE
+																				 target:nil
+																				 action:nil
+																		  keyEquivalent:@""] autorelease];
 	
 	//Add the menu item (which will have _contactNameMenu as its submenu)
 	[[adium menuController] addMenuItem:menuItem_contactName toLocation:LOC_View_Unnamed_A];
 	
 	menu_contactSubmenu = [[self _contactNameMenu] retain];
 	[menuItem_contactName setSubmenu:menu_contactSubmenu];
+
+    //Observe preferences changes
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(applyAliasRequested:)
+									   name:Contact_ApplyDisplayName
+									 object:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DISPLAYFORMAT];	
 }
 
 - (void)uninstallPlugin
@@ -74,7 +74,9 @@
 
 -(IBAction)changeFormat:(id)sender
 {
-	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]] forKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT];
+	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]]
+										 forKey:@"Long Display Format"
+										  group:PREF_GROUP_DISPLAYFORMAT];
 }
 
 //Called as contacts are created, load their alias
@@ -92,7 +94,7 @@
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	// Clear old checkmark
 	[[menu_contactSubmenu itemWithTag:displayFormat] setState:NSOffState];
@@ -103,12 +105,13 @@
 	// Set new checkmark
 	[[menu_contactSubmenu itemWithTag:displayFormat] setState:NSOnState];
 	
-	if(group){
-		//Update all existing contacts
-		[[adium contactController] updateAllListObjectsForObserver:self];
-	}else{
+	if(firstTime){
 		//Register ourself as a handle observer
 		[[adium contactController] registerListObjectObserver:self];
+	}else{
+		//Update all existing contacts
+		[[adium contactController] updateAllListObjectsForObserver:self];
+
 	}
 }
 
@@ -139,7 +142,7 @@
     NSString			*displayName = nil;
     NSString			*longDisplayName = nil;
     NSString			*formattedUID = nil;
-
+	
 	AIMutableOwnerArray *displayNameArray = [inObject displayArrayForKey:@"Display Name"];
 	
 	//Apply the alias
@@ -159,7 +162,7 @@
 				
 			case DISPLAY_NAME_SCREEN_NAME:
 				formattedUID = [inObject formattedUID];
-
+				
 				if(!displayName || !formattedUID || [displayName isEqualToString:formattedUID]){
 					longDisplayName = displayName;
 				}else{
@@ -186,7 +189,7 @@
 				longDisplayName = nil;
 				break;
 		}
-
+		
 		//Apply the Long Display Name
 		[[inObject displayArrayForKey:@"Long Display Name"] setObject:longDisplayName withOwner:self];
 	}
@@ -194,7 +197,7 @@
 	//Notify
 	modifiedAttributes = [NSSet setWithObjects:@"Display Name", @"Long Display Name", @"Adium Alias", nil];
 	
-	#warning Is this needed? I think it is redundant
+#warning Is this needed? I think it is redundant
 	if(notify) [[adium contactController] listObjectAttributesChanged:inObject modifiedKeys:modifiedAttributes];
 	
 	return(modifiedAttributes);
@@ -206,33 +209,33 @@
 	NSMenu		*choicesMenu;
 	NSMenuItem  *menuItem;
 	
-	choicesMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	choicesMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
 	
-    menuItem = [[[NSMenuItem alloc] initWithTitle:ALIAS
-                                           target:self
-                                           action:@selector(changeFormat:)
-                                    keyEquivalent:@""] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ALIAS
+																	 target:self
+																	 action:@selector(changeFormat:)
+															  keyEquivalent:@""] autorelease];
     [menuItem setTag:DISPLAY_NAME];
     [choicesMenu addItem:menuItem];
 	
-    menuItem = [[[NSMenuItem alloc] initWithTitle:ALIAS_SCREENNAME
-                                           target:self
-                                           action:@selector(changeFormat:)
-                                    keyEquivalent:@""] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ALIAS_SCREENNAME
+																	 target:self
+																	 action:@selector(changeFormat:)
+															  keyEquivalent:@""] autorelease];
     [menuItem setTag:DISPLAY_NAME_SCREEN_NAME];
     [choicesMenu addItem:menuItem];
 	
-    menuItem = [[[NSMenuItem alloc] initWithTitle:SCREENNAME_ALIAS
-                                           target:self
-                                           action:@selector(changeFormat:)
-                                    keyEquivalent:@""] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:SCREENNAME_ALIAS
+																	 target:self
+																	 action:@selector(changeFormat:)
+															  keyEquivalent:@""] autorelease];
     [menuItem setTag:SCREEN_NAME_DISPLAY_NAME];
     [choicesMenu addItem:menuItem];
 	
-    menuItem = [[[NSMenuItem alloc] initWithTitle:SCREENNAME
-                                           target:self
-                                           action:@selector(changeFormat:)
-                                    keyEquivalent:@""] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:SCREENNAME
+																	 target:self
+																	 action:@selector(changeFormat:)
+															  keyEquivalent:@""] autorelease];
     [menuItem setTag:SCREEN_NAME];
     [choicesMenu addItem:menuItem];
 	
