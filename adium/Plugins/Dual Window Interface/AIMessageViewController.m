@@ -356,7 +356,7 @@
 
             //They are disabled if the account is offline
             if([(AIAccount <AIAccount_Status> *)anAccount status] != STATUS_ONLINE){
-                #warning need an 'available for sending content' here
+                //An 'available for sending content' would be more appropriate here
                 [menuItem setEnabled:NO];
             }            
         

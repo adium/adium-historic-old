@@ -32,8 +32,8 @@
                           image:[AIImageUtilities imageNamed:@"LilYellowDuck" forClass:[self class]]
                           caseSensitive:NO
                           allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789"]] retain];
-    #warning the character sets are different because this code can't see @mac.com names... will there be any problem with doing this?
-
+    //the character sets are different because this code can't see @mac.com names...
+    
     //Load and retain our preferences
     [preferenceController registerDefaults:[NSDictionary dictionaryNamed:AIM_TOC2_DEFAULT_PREFS forClass:[self class]] forGroup:AIM_TOC2_PREFS];
     preferencesDict = [preferenceController preferencesForGroup:AIM_TOC2_PREFS];

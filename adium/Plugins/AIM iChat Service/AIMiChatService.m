@@ -40,12 +40,6 @@
 {
     return(@"AOL Instant Messenger (iChat)");
 }
-/*- (AIServiceType *)accountServiceType
-{
-    return([AIServiceType serviceTypeWithIdentifier:@"AIM (iChat)"
-                          description:@"AOL Instant Messenger (iChat)"
-                          image:nil/[AIImageUtilities imageNamed:@"AIM_Online" forClass:[self class]]]);
-}*/
 
 // Return an ID, description, and image for handles owned by accounts of this type
 - (AIServiceType *)handleServiceType

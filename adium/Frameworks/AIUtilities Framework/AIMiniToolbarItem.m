@@ -64,7 +64,7 @@
     //View
     [newItem setView:[[[self view] copy] autorelease]];
     if([[newItem view] respondsToSelector:@selector(setToolbarItem:)]){
-        [[newItem view] setToolbarItem:newItem]; //make sure it's setup to the new toolbar item
+        [[newItem view] performSelector:@selector(setToolbarItem:) withObject:newItem]; //make sure it's setup to the new toolbar item
     }
     
     [newItem configureForObjects:[self configurationObjects]];
@@ -144,7 +144,7 @@
         image = [inImage retain];
 
         if(view && [view respondsToSelector:@selector(setImage:)]){
-            [view setImage:image];
+            [view performSelector:@selector(setImage:) withObject:image];
         }
     }
 }

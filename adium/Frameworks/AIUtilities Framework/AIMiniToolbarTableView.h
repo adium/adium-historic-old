@@ -15,8 +15,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class AIMiniToolbarCustomizeController;
 
 @interface AIMiniToolbarTableView : NSTableView {
+    IBOutlet	AIMiniToolbarCustomizeController	*controller;
 
 }
 

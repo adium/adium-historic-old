@@ -16,6 +16,7 @@
 #import "AIMiniToolbarTableView.h"
 #import	"AIMiniToolbarItem.h"
 #import "AIMiniToolbarCenter.h"
+#import "AIMiniToolbarCustomizeController.h"
 
 @implementation AIMiniToolbarTableView
 
@@ -30,7 +31,7 @@
     //Get the clicked item
     dragRow = [self rowAtPoint:clickLocation];
     if(dragRow != -1){
-        [[self delegate] dragItemAtRow:dragRow fromPoint:clickLocation withEvent:theEvent];
+        [controller dragItemAtRow:dragRow fromPoint:clickLocation withEvent:theEvent];
     }
 }
 

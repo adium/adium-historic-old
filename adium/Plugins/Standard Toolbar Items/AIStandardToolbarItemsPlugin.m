@@ -58,7 +58,7 @@
     [toolbarItem setAllowsDuplicatesInToolbar:YES];
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
 
-    //Send Message
+    //New Message
     toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"NewMessage"];
     [toolbarItem setImage:[AIImageUtilities imageNamed:@"mail" forClass:[self class]]];
     [toolbarItem setTarget:self];

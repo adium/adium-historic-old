@@ -185,6 +185,8 @@ static char *hash_password(const char * const password);
 - (BOOL)moveHandle:(AIContactHandle *)handle fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup
 {
     NSLog(@"Move '%@' from '%@' to '%@'",[handle UID],[sourceGroup displayName],[destGroup displayName]);
+
+    return(YES);
 }
 
 
@@ -200,7 +202,6 @@ static char *hash_password(const char * const password);
 
     }else{
         NSLog(@"Unknown message object subclass");
-        #warning accounts should respond to a 'SendingOfContentTypeAvailable:', or something like that... and 'SendContentObjectTo:...' can return an error if it's not available with that contact at the moment.... I'll also need a 'sendingOfContentTypeAvailableWithHandle:' type deal... figure this out later...
     }
     
     return(YES);
