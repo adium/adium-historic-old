@@ -33,7 +33,6 @@
 - Horizontal sizing doesn't work properly - if window is on right edge, resize
     leftward.  Add slider for max width and
     allow sizing based on status.
-- Selected cells need to draw with inverted text
 - Manual ordering is most likely screwed up, because I've turned off loading
     of old contacts on launch :)
 - Metacontacts display no service icon
