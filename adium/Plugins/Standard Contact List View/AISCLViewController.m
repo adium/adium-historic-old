@@ -337,17 +337,19 @@
     //Remove the existing tracking rect
     [windowContentView removeTrackingRect:tooltipTrackingTag];
 
+
     //Add a new tracking rect
     trackingRect = [scrollView frame];
     trackingRect.size.width = [scrollView contentSize].width; //Adjust to not include the scrollbar
+    localPoint = [[contactListView window] convertScreenToBase:[NSEvent mouseLocation]];
+    mouseInside = NSPointInRect(localPoint, trackingRect);
+
     tooltipTrackingTag = [windowContentView addTrackingRect:trackingRect
                                                       owner:self
                                                    userData:scrollView
                                                assumeInside:mouseInside];
 
     //If the mouse is already inside, start tracking
-    localPoint = [[contactListView window] convertScreenToBase:[NSEvent mouseLocation]];
-    mouseInside = NSPointInRect(localPoint, [scrollView frame]);
     if(mouseInside){
         [self mouseEntered:nil];
     }
