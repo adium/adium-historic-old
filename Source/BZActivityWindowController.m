@@ -481,20 +481,19 @@ ADD_TOOLBAR_ITEMS_HERE
 
 - (id)initWithActivityWindowController:(BZActivityWindowController *)controller autostart:(BOOL)autostart autostop:(BOOL)autostop autodelete:(BOOL)autodelete
 {
-	[super init];
+	if((self = [super init])) {
+		[self setActivityWindowController:controller];
 
-	[self setActivityWindowController:controller];
+		current = 0.0;
+		progressState = ProgressState_Stopped;
 
-	current = 0.0;
-	progressState = ProgressState_Stopped;
+		flags.reserved   = 0;
+		flags.autostart  = autostart;
+		flags.autostop   = autostop;
+		flags.autodelete = autodelete;
 
-	flags.reserved   = 0;
-	flags.autostart  = autostart;
-	flags.autostop   = autostop;
-	flags.autodelete = autodelete;
-
-	if(flags.autostart) [self start];
-
+		if(flags.autostart) [self start];
+	}
 	return self;
 }
 - (void)setActivityWindowController:controller

@@ -38,15 +38,15 @@
  */
 - (id)init
 {
-	[super init];
-	
-	//Load our view
-	[NSBundle loadNibNamed:@"AccountProxy" owner:self];
-	
-	//Setup our menu
-	[popUpButton_proxy setMenu:[self _proxyMenu]];
-	
-	return(self);
+	if((self = [super init])) {
+		//Load our view
+		[NSBundle loadNibNamed:@"AccountProxy" owner:self];
+
+		//Setup our menu
+		[popUpButton_proxy setMenu:[self _proxyMenu]];
+	}
+
+	return self;
 }
 
 /*!

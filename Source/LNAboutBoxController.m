@@ -50,11 +50,11 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 //Init
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    [super initWithWindowNibName:windowNibName];
+    if((self = [super initWithWindowNibName:windowNibName])) {
+		numberOfDuckClicks = -1;
+	}
 
-    numberOfDuckClicks = -1;
-    
-    return(self);
+	return self;
 }
 
 //Dealloc

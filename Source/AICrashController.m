@@ -38,26 +38,26 @@ AICrashController *sharedCrashController = nil;
 //Init
 - (id)init
 {
-	[super init];
-	
-	//Remove any existing crash logs
-	[[NSFileManager defaultManager] trashFileAtPath:CRASHES_PATH];
+	if((self = [super init]) {
+		//Remove any existing crash logs
+		[[NSFileManager defaultManager] trashFileAtPath:CRASHES_PATH];
     
-	//Install custom handlers which properly terminate this application if one is received
-	signal(SIGILL, CrashHandler_Signal);	/* 4:   illegal instruction (not reset when caught) */
-	signal(SIGTRAP, CrashHandler_Signal);	/* 5:   trace trap (not reset when caught) */
-	signal(SIGEMT, CrashHandler_Signal);	/* 7:   EMT instruction */
-	signal(SIGFPE, CrashHandler_Signal);	/* 8:   floating point exception */
-	signal(SIGBUS, CrashHandler_Signal);	/* 10:  bus error */
-	signal(SIGSEGV, CrashHandler_Signal);	/* 11:  segmentation violation */
-	signal(SIGSYS, CrashHandler_Signal);	/* 12:  bad argument to system call */
-	signal(SIGXCPU, CrashHandler_Signal);	/* 24:  exceeded CPU time limit */
-	signal(SIGXFSZ, CrashHandler_Signal);	/* 25:  exceeded file size limit */    
+		//Install custom handlers which properly terminate this application if one is received
+		signal(SIGILL, CrashHandler_Signal);	/* 4:   illegal instruction (not reset when caught) */
+		signal(SIGTRAP, CrashHandler_Signal);	/* 5:   trace trap (not reset when caught) */
+		signal(SIGEMT, CrashHandler_Signal);	/* 7:   EMT instruction */
+		signal(SIGFPE, CrashHandler_Signal);	/* 8:   floating point exception */
+		signal(SIGBUS, CrashHandler_Signal);	/* 10:  bus error */
+		signal(SIGSEGV, CrashHandler_Signal);	/* 11:  segmentation violation */
+		signal(SIGSYS, CrashHandler_Signal);	/* 12:  bad argument to system call */
+		signal(SIGXCPU, CrashHandler_Signal);	/* 24:  exceeded CPU time limit */
+		signal(SIGXFSZ, CrashHandler_Signal);	/* 25:  exceeded file size limit */    
 	
-	//I think SIGABRT is an exception... we should ignore it.
-	signal(SIGABRT, SIG_IGN);
-	
-	return(self);
+		//I think SIGABRT is an exception... we should ignore it.
+		signal(SIGABRT, SIG_IGN);
+	}
+
+	return self;
 }
 
 //When a signal occurs, load the crash reporter and close this application

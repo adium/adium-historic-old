@@ -54,13 +54,14 @@
 			notifyingTarget:(id)inTarget
 				   selector:(SEL)inSelector
 {	
-	fileTransfer = [inFileTransfer retain];
-	target = [inTarget retain];
-	selector = inSelector;
 	
-	[super initWithWindowNibName:windowNibName];
-	
-    return(self);
+	if((self = [super initWithWindowNibName:windowNibName]) {
+		fileTransfer = [inFileTransfer retain];
+		target       = [inTarget       retain];
+		selector     =  inSelector;
+	}
+
+	return self;
 }
 
 - (void)dealloc

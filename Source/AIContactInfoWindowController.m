@@ -102,10 +102,9 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //init
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {    
-    [super initWithWindowNibName:windowNibName];
-	displayedObject = nil;
-	
-    return(self);    
+    self = [super initWithWindowNibName:windowNibName];
+
+    return self;    
 }
 
 - (void)dealloc
