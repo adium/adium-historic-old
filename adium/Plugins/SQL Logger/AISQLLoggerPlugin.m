@@ -16,14 +16,12 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.23 $
- * $Date: 2003/10/28 15:59:17 $
- * $Author: jmelloy $
+ * $Revision: 1.24 $
+ * $Date: 2003/11/05 21:39:38 $
+ * $Author: adamiser $
  *
  */
 
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 #import "AISQLLoggerPlugin.h"
 #import "libpq-fe.h"
 #import "JMSQLLogViewerWindowController.h"

@@ -7,10 +7,6 @@
 //
 
 #import "AIStressTestAccount.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
-#import "AIAdium.h"
-
 
 @implementation AIStressTestAccount
 //

@@ -22,7 +22,6 @@
  -------------------------------------------------------------------------------------------------------*/
 
 #import "AIOscarConnection.h"
-#import <AIUtilities/AIUtilities.h>
 #import "AIOscarAccount.h"
 
 @interface AIOscarConnection (PRIVATE)

@@ -13,8 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
-
 @class AISocket, AIGroup, AIMTOC2AccountViewController;
 
 @interface AIMTOC2Account : AIAccount <AIAccount_Content, AIAccount_Handles, NSURLHandleClient> {

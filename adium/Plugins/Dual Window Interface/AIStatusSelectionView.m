@@ -7,9 +7,6 @@
 //
 
 #import "AIStatusSelectionView.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 
 #define PREF_GROUP_AWAY_MESSAGES 	@"Away Messages"
 #define KEY_SAVED_AWAYS			@"Saved Away Messages"

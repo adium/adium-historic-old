@@ -14,9 +14,6 @@
 \------------------------------------------------------------------------------------------------------ */
 
 #import "AIEmoticonPreferences.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 #import "AIEmoticonsPlugin.h"
 #import "AIEmoticon.h"
 #import "AIEmoticonPack.h"

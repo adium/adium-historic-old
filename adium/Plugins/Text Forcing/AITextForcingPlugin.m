@@ -14,8 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AITextForcingPlugin.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
 #import "AITextForcingPreferences.h"
 
 #define TEXT_FORCING_DEFAULT_PREFS	@"TextForcingDefaults"

@@ -6,11 +6,6 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
-
 #define PREF_GROUP_ALERTS		@"Alerts"
 #define KEY_EVENT_ACTIONSET		@"Contact Actions"	//storage of a set of events and associated actions
 

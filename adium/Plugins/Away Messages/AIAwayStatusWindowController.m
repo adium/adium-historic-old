@@ -16,9 +16,6 @@
 #import "AIAwayStatusWindowController.h"
 #import "AIAwayStatusWindowPlugin.h"
 #import "AIEventSoundsPlugin.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 #define AWAY_STATUS_WINDOW_NIB			@"AwayStatusWindow"
 #define	KEY_AWAY_STATUS_WINDOW_FRAME		@"Away Status Frame"

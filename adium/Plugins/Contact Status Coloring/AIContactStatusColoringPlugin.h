@@ -13,9 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Adium/Adium.h>
-#import <Cocoa/Cocoa.h>
-
 #define CONTACT_STATUS_COLORING_DEFAULT_PREFS	@"ContactStatusColoringDefaults"
 #define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
 

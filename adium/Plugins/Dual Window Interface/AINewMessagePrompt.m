@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AINewMessagePrompt.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
 
 #define NEW_MESSAGE_PROMPT_NIB	@"NewMessagePrompt"
 

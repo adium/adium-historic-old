@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIPlugin.h"
-#import "AIAdium.h"
 
 @interface AIPlugin (PRIVATE)
 - (id)initWithOwner:(id)inOwner;

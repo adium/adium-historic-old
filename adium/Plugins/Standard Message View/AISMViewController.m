@@ -14,8 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AISMViewController.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 #import "AISMViewPlugin.h"
 
 #define DARKEN_LIGHTEN_MODIFIER		0.2

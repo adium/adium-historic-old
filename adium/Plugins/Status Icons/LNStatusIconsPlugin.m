@@ -1,8 +1,6 @@
 #import "LNStatusIcon.h"
 #import "LNStatusIconsPlugin.h"
 #import "LNStatusIconsPreferences.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
 
 
 @interface LNStatusIconsPlugin (PRIVATE)

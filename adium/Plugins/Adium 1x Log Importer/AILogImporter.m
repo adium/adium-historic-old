@@ -15,9 +15,6 @@
 
 #import "AILogImporter.h"
 #import "AILoggerPlugin.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
 
 #define LOG_IMPORT_NIB		@"LogImport"
 #define ADIUM_1X_LOGS_PATH	@"~/Library/Application Support/Adium/Users"

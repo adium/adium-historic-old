@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAccountMenuAccessPlugin.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 #define	ACCOUNT_CONNECT_MENU_TITLE		@"Connect"			//Menu item title for the connect item
 #define	ACCOUNT_DISCONNECT_MENU_TITLE		@"Disconnect"			//Menu item title

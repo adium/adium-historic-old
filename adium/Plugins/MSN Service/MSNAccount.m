@@ -7,9 +7,6 @@
 //
 
 #import "MSNAccount.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
-#import "AIAdium.h"
 #import "MSNStringAdditions.h"
 #import "MSNAccountViewController.h"
 #include <openssl/md5.h>

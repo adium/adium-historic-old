@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AILogViewerWindowController.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
 #import "AILoggerPlugin.h"
 
 #define LOG_VIEWER_NIB				@"LogViewer"

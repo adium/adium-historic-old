@@ -14,9 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIStandardToolbarItemsPlugin.h"
-#import "AIAdium.h"
 #import "AIFramedMiniToolbarButton.h"
-#import <AIUtilities/AIUtilities.h>
 
 @implementation AIStandardToolbarItemsPlugin
 

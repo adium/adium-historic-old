@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIFramedMiniToolbarButton.h"
-#import <AIUtilities/AIUtilities.h>
 
 
 @interface AIFramedMiniToolbarButton (PRIVATE)

@@ -13,8 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
-
 #define FIXED_CATEGORY_WIDTH		500		//The fixed width of an empty category
 
 @class AIPreferenceViewController;

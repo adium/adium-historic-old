@@ -26,7 +26,6 @@
 #import "AIOscarPacket.h"
 #import "AIOscarTLVBlock.h"
 #import "AIOscarConnection.h"
-#import <AIUtilities/AIUtilities.h>
 
 @interface AIOscarInfo (PRIVATE)
 - (NSData *)_encoding:(NSString **)encoding forString:(NSString *)string;

@@ -22,7 +22,6 @@
  -------------------------------------------------------------------------------------------------------*/
 
 #import "AIOscarPacket.h"
-#import <AIUtilities/AIUtilities.h>
 #import "AIOscarTLVBlock.h"
 
 @interface AIOscarPacket (PRIVATE)

@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIContactIdlePlugin.h"
-#import <AIUtilities/AIUtilities.h>
 
 @interface AIContactIdlePlugin (PRIVATE)
 - (void)setIdleForObject:(AIListObject *)inObject delayed:(BOOL)delayed silent:(BOOL)silent;

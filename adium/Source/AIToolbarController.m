@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIToolbarController.h"
-#import <AIUtilities/AIUtilities.h>
 
 #define TOOLBAR_DEFAULT_PREFS                   @"ToolbarPrefs"
 #define TOOLBAR_ITEMS_PREFIX			@"ToolbarItems_"

@@ -18,7 +18,6 @@
 */
 
 #import "AIFileUtilities.h"
-#import "AIAdium.h"
 
 @interface AIFileUtilities (PRIVATE)
 

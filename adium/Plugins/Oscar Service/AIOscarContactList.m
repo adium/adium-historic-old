@@ -27,7 +27,6 @@
 #import "AIOscarInfo.h"
 #import "AIOscarConnection.h"
 #import "AIOscarTLVBlock.h"
-#import <AIUtilities/AIUtilities.h>
 #import "AIOscarIcon.h"
 
 @interface AIOscarContactList (PRIVATE)

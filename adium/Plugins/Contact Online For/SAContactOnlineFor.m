@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "SAContactOnlineForPlugin.h"
-#import <AIUtilities/AIUtilities.h>
 
 @implementation SAContactOnlineForPlugin
 

@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAlphabeticalSortNoGroups.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
 
 int alphabeticalSortNoGroups(id objectA, id objectB, void *context);
 

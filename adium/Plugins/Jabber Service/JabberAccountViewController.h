@@ -1,6 +1,3 @@
-#import <Cocoa/Cocoa.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 
 @class JabberAccount;
 

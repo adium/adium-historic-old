@@ -5,9 +5,6 @@
 //  Created by Evan Schoenberg on Mon Sep 15 2003.
 //
 
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 #import "ESContactListWindowHandlingPreferences.h"
 #import "ESContactListWindowHandlingPlugin.h"
 

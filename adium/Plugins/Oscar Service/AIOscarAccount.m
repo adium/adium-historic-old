@@ -22,9 +22,6 @@
  -------------------------------------------------------------------------------------------------------*/
 
 #import "AIOscarAccount.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
-#import "AIAdium.h"
 #import "AIOscarPacket.h"
 #import "AIOscarTLVBlock.h"
 #import "AIOscarConnection.h"

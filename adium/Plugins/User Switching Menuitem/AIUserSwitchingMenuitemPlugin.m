@@ -7,8 +7,6 @@
 //
 
 #import "AIUserSwitchingMenuitemPlugin.h"
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 #import "AILoginWindowController.h"
 
 

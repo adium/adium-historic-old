@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIStatusCircle.h"
-#import <AIUtilities/AIUtilities.h>
 
 #define CIRCLE_SIZE_OFFSET	(-2)
 #define CIRCLE_Y_OFFSET		(1)

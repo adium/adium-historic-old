@@ -15,7 +15,6 @@
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
-#import <AIUtilities/AIUtilities.h>
 
 #define	PATH_SOUNDS			@"/Sounds"
 #define PATH_INTERNAL_SOUNDS		@"/Contents/Resources/Sounds/"

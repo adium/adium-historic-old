@@ -7,9 +7,6 @@
 //
 
 #import "CBGaimServicePlugin.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 #import "CBGaimAIMAccount.h"
 
 #define GAIM_EVENTLOOP_INTERVAL     0.02         //Interval at which to run libgaim's main event loop

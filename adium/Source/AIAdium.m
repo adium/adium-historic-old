@@ -13,7 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import "AIAdium.h"
 #import "AILoginController.h"
 #import "AISoundController.h"
 #import "AIAccountController.h"
@@ -26,7 +25,6 @@
 #import "AIMenuController.h"
 #import "AIDockController.h"
 #import "LNAboutBoxController.h"
-#import <AIUtilities/AIUtilities.h>
 
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"	//Path to Adium's application support preferences
 

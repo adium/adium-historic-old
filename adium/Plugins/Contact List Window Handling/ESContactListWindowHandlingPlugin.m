@@ -6,9 +6,6 @@
 //
 
 #import "ESContactListWindowHandlingPlugin.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 #define CONTACT_LIST_WINDOW_HANDLING_DEFAULT_PREFS @"ContactListWindowHandlingDefaults"
 

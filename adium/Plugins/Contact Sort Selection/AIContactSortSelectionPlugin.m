@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIContactSortSelectionPlugin.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 #import "AIContactSortPreferences.h"
 
 #define CONTACT_SORTING_DEFAULT_PREFS	@"SortingDefaults"

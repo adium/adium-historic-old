@@ -7,7 +7,6 @@
 //
 
 #import "AIColorSelectionPopUpButton.h"
-#import <AIUtilities/AIUtilities.h>
 
 #define COLOR_SAMPLE_WIDTH		24
 #define COLOR_SAMPLE_HEIGHT		12

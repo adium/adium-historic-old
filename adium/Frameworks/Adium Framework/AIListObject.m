@@ -15,7 +15,6 @@
 
 #import "AIListObject.h"
 #import "AIListGroup.h"
-#import <AIUtilities/AIUtilities.h>
 
 @implementation AIListObject
 

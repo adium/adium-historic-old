@@ -5,9 +5,6 @@
 //  Created by Evan Schoenberg on Mon Sep 15 2003.
 //
 
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <Cocoa/Cocoa.h>
 #import "ESContactListWindowHandlingPreferences.h"
 
 #define PREF_GROUP_CONTACT_LIST			@"Contact List"

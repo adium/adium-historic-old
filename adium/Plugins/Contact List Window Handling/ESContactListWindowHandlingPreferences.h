@@ -5,8 +5,6 @@
 //  Created by Evan Schoenberg on Mon Sep 15 2003.
 //
 
-#import <Cocoa/Cocoa.h>
-
 @class AIAdium;
 
 @interface ESContactListWindowHandlingPreferences : NSObject {

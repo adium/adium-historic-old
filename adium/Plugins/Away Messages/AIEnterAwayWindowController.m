@@ -15,9 +15,6 @@
 
 #import "AIEnterAwayWindowController.h"
 #import "AIAwayMessagesPlugin.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 
 #define KEY_AWAY_SPELL_CHECKING		@"Custom Away"
 

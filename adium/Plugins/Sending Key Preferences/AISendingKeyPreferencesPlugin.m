@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AISendingKeyPreferencesPlugin.h"
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 #import "AISendingKeyPreferences.h"
 
 #define SENDING_KEY_DEFAULT_PREFS	@"SendingKeyDefaults"

@@ -14,8 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIMenuController.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
 
 @interface AIMenuController (PRIVATE)
 @end

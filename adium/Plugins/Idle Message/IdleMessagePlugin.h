@@ -13,9 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
-
 #define PREF_GROUP_IDLE_MESSAGE				@"Idle Message"
 #define KEY_IDLE_MESSAGE_ENABLED			@"Idle Message Enabled"
 #define KEY_IDLE_MESSAGE				@"Idle Message"

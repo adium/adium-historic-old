@@ -6,10 +6,6 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
-#import "AIAdium.h"
-
 @class MSNAccount;
 
 @interface MSNAccountViewController : NSObject <AIAccountViewController>

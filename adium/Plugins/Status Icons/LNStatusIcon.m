@@ -1,5 +1,4 @@
 #import "LNStatusIcon.h"
-#import <AIUtilities/AIUtilities.h>
 
 @implementation LNStatusIcon
 

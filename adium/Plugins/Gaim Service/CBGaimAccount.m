@@ -7,9 +7,6 @@
 //
 
 #import "CBGaimAccount.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
-#import "AIAdium.h"
 
 #define NO_GROUP @"__NoGroup__"
 

@@ -16,7 +16,6 @@
 //Includes
 #import "AIMTOC2Packet.h"
 //Framework Includes
-#import <AIUtilities/AIUtilities.h>
 
 //Private methods
 @interface AIMTOC2Packet (PRIVATE)

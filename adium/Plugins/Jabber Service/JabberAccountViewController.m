@@ -1,5 +1,3 @@
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 #import "JabberAccountViewController.h"
 #import "JabberAccount.h"
 

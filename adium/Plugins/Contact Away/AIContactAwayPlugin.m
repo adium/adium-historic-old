@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIContactAwayPlugin.h"
-#import <AIUtilities/AIUtilities.h>
 
 @implementation AIContactAwayPlugin
 

@@ -14,10 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
-#import "AIAdium.h"
-
 @class AIAdium, AIOscarAccount;
 
 @interface AIOscarAccountViewController : NSObject <AIAccountViewController> {

@@ -8,9 +8,6 @@
 
 #import "AIEventSoundCustom.h"
 #import "AIEventSoundsPlugin.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
-#import "AIAdium.h"
 
 #define NIB_EVENT_SOUND_CUSTOM		@"EventSoundCustomPanel"
 #define	TABLE_COLUMN_SOUND		@"sound"

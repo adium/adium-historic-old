@@ -14,9 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAlphabeticalSortPlugin.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
 #import "AIAlphabeticalSort.h"
 #import "AIAlphabeticalSortNoGroups.h"
 

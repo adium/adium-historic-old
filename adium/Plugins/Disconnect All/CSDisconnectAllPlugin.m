@@ -6,9 +6,6 @@
 //  Copyright (c) 2003 The Adium Group. All rights reserved.
 //
 
-#import "AIAdium.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 #import "CSDisconnectAllPlugin.h"
 
 #define CONNECT_MENU_TITLE @"Connect All"

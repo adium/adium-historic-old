@@ -7,8 +7,6 @@
 //
 
 #import "CBActionSupportPlugin.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
 
 @implementation CBActionSupportPlugin
 

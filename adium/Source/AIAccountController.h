@@ -14,14 +14,10 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.5 $
- * $Date: 2003/10/31 07:16:07 $
- * $Author: jmelloy $
+ * $Revision: 1.6 $
+ * $Date: 2003/11/05 21:39:44 $
+ * $Author: adamiser $
  **/
-
-
-#import <Cocoa/Cocoa.h>
-#import "AIAdium.h"
 
 @interface AIAccountController (INTERNAL)
 // These methods are for internal Adium use only.  The public interface is in Adium.h.

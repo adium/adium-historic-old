@@ -6,9 +6,6 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
-
 #include "internal.h"
 #include "connection.h"
 #include "conversation.h"

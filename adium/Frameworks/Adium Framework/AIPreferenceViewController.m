@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIPreferenceViewController.h"
-#import <AIUtilities/AIUtilities.h>
 
 #define PREFERENCE_VIEW_NIB		@"PreferenceView"	//Filename of the preference view nib
 

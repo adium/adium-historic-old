@@ -1,5 +1,3 @@
-#import <Cocoa/Cocoa.h>
-#import "AIAdium.h"
 
 @interface LNStatusIcon : NSObject <AIListObjectLeftView> {
 

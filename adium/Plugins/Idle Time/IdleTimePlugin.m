@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "IdleTimePlugin.h"
-#import <AIUtilities/AIUtilities.h>
 #import "IdleTimeWindowController.h"
 #import "IdleTimePreferences.h"
 

@@ -7,9 +7,6 @@
 
 #import "AIAliasSupportPreferences.h"
 #import "AIAliasSupportPlugin.h"
-#import "AIAdium.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
 
 #define DISPLAYFORMAT_PREF_TITLE	@"Contact Display Formatting"
 #define DISPLAYFORMAT_PREF_NIB		@"DisplayFormatPreferences"

@@ -6,8 +6,6 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
 #import "MSNAccountViewController.h"
 #import "MSNAccount.h"
 

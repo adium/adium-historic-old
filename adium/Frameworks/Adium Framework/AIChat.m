@@ -7,7 +7,6 @@
 //
 
 #import "AIChat.h"
-#import <Adium/Adium.h>
 
 @interface AIChat (PRIVATE)
 - (id)initWithOwner:(id)inOwner forAccount:(AIAccount *)inAccount;

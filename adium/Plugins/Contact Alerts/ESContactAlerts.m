@@ -9,10 +9,6 @@
 
 #import "ESContactAlerts.h"
 #import "ESContactAlertsPlugin.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
-#import "AIAdium.h"
-
 
 #define CONTACT_ALERT_ACTIONS_NIB 	@"ContactAlertsActions"
 #define	EVENT_SOUND_PREF_NIB		@"EventSoundPrefs"

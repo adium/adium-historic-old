@@ -16,9 +16,6 @@
 #import "AIEventSoundPreferences.h"
 #import "AIEventSoundsPlugin.h"
 #import "AIEventSoundCustom.h"
-#import <AIUtilities/AIUtilities.h>
-#import <Adium/Adium.h>
-#import "AIAdium.h"
 
 @interface AIEventSoundPreferences (PRIVATE)
 - (id)initWithPlugin:(id)inPlugin owner:(id)inOwner;

@@ -14,7 +14,6 @@
 \------------------------------------------------------------------------------------------------------ */
 
 #import "AIContactWarningLevelPlugin.h"
-#import <AIUtilities/AIUtilities.h>
 
 @implementation AIContactWarningLevelPlugin
 
