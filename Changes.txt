@@ -4,22 +4,31 @@ Version 0.70
 
 *** Indicates that this line needs to be checked.
 
+New features:
 *** - Complete contact list rewrite, w00t.
-- Added support for the Rendezvous (ZeroConf) protocol
-- Added support for the Zephyr protocol with Kerberos support
-- Added explicit support for the ICQ protocol, with an option to specify custom message encoding
-- Added support for grouping multiple contacts into a single entry ("MetaContacts") via the Address Book
-- Added support for creating and joining new group chats in AIM, Yahoo, and Jabber
-- Adium can now be controlled via Applescript
+- Support for grouping multiple contacts into a single entry ("MetaContacts") via the Address Book
+- Applescript dictionary
 - Adium now detects changes in network connectivity and automatically disconnects/reconnects as appropriate. When Adium launches, autoconnecting accounts
 	wait for network availability before attempting to connect.
-- Added support for viewing ICQ, Yahoo, and MSN profiles
-- Added support for viewing Gadu-Gadu and Sametime away messages
-- Added support for protocol-specific /commands (currently only applicable in Zephyr)
-- Added option to specify Sametime serverside contact list loading and saving behavior
-- Added option to specify Home/End key behavior in message windows
-- Added support for MSN converstion closed and conversation timed out messages
+- Support for protocol-specific /commands (currently only applicable in Zephyr)
+- Preference to specify Sametime serverside contact list loading and saving behavior
+- Preference to specify Home/End key behavior in message windows
+- Group chat support:
+	* Create group chats over AIM, Yahoo, and Jabber
+	* Invite other users to group chats
+	* Many UI improvements
 *** - Added iChat away message importing (Migration Assistant)
+- (MSN) Support for converstion closed and conversation timed out messages
+- (Jabber) Support for registering new Jabber accounts
+- (ICQ, MSN, Yahoo) Support for viewing ICQ, Yahoo, and MSN profiles
+- (Gadu-Gadu, Sametime) Support for viewing Gadu-Gadu and Sametime away messages
+
+Protocols:
+- Added the Rendezvous (ZeroConf) protocol
+- Added the Zephyr protocol with Kerberos support
+- Added explicit support for the ICQ protocol, with an option to specify custom message encoding
+
+Bug fixes:
 - Fixed issue with status-based sorting not updating properly
 - Fixed issues with sending and displaying multiple spaces
 - Fixed a crash when attempting to send images
@@ -27,17 +36,24 @@ Version 0.70
 - Fixed a crash when inserting a link to the active Safari page
 - Fixed a bug when installing Adium Xtras in certain cases
 - Fixed a rare crash when loading Firefox bookmarks
-- Fixed AIM autoresponses to properly tell other clients that the message is an autoresponse
-- Fixed issue which was preventing some AIM buddy icons from animating
 - Fixed issue when saving account passwords in certain cases
-- Fixed issue with the serverside Gadu-Gadu contact list not saving
 - Fixed issue with sounds playing too loud the first time they were played
 - Fixed problem when manually ordering contact list groups
 - Fixed bug which prevented the addition to profiles and away messages of links with "%" in them
 - Fixed problem causing 10.2 users to lose color and formatting information in profiles and away messags
-- Fixed a crash when adding a contact with no groups defined (common in ICQ and Jabber)
 - Fixed issue causing the "First Message Received" sound to be played multiple times
+- (AIM) Autoresponses to properly tell other clients that the message is an autoresponse
+- (AIM) Fixed issue which was preventing some buddy icons from animating
+- (AIM) Fixed issues with spacing and capitilization of user names, both sending and receiving
+- (Gadu-Gadu) Fixed issue with the serverside Gadu-Gadu contact list not saving
+- (ICQ, Jabber) Fixed a crash when adding a contact with no groups defined
+- (MSN)  Removed 25-character restriction on display names, adding an option to treat the display name as a status message
+
+Improvements:
 - Improved the Log Viewer, adding a drawer of available contacts' and accounts' logs along with other changes
+- Improved reporting of conversation error messages
+- Improved contact alerts on entire groups of contacts
+- Improved the message preferences preview
 - Improved the Accounts contact info pane
 - Improved the Status Menu Item, which is now only available in OS X 10.3 and greater
 - Improved performance when running Applescript filters, especially lengthy ones
@@ -46,8 +62,6 @@ Version 0.70
 - Improved auto-away-after-idle functionality
 - Improved recognition and auto-linkification of URLs
 - Improved load time
-- Removed 25-character restriction on contact list display of MSN display names, adding an option to treat the display name as a status message
-- Many improvements to handling of group chats, including the ability to invite other users into chat rooms
 - Various other cosmetic and bug fixes
 - Updated to Libgaim 1.0.0
 - Significant stability improvements
