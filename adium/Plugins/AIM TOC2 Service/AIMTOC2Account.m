@@ -307,7 +307,8 @@
                                                                fontTags:YES
                                                           closeFontTags:NO
                                                               styleTags:YES
-                                             closeStyleTagsOnFontChange:NO]];
+                                             closeStyleTagsOnFontChange:NO
+                                                         encodeNonASCII:YES]];
         }else{
             message = [self validCopyOfString:[[(AIContentMessage *)object message] string]];
         }
@@ -513,7 +514,8 @@
                                                  fontTags:YES
                                             closeFontTags:NO
                                                 styleTags:YES
-                               closeStyleTagsOnFontChange:NO];
+                               closeStyleTagsOnFontChange:NO
+                                           encodeNonASCII:YES];
             
             if([profile length] > 1024){
                 [[owner interfaceController] handleErrorMessage:@"Info Size Error"
@@ -529,7 +531,8 @@
                                                    fontTags:YES
                                               closeFontTags:NO
                                                   styleTags:YES
-                                 closeStyleTagsOnFontChange:NO]];
+                                 closeStyleTagsOnFontChange:NO
+                                             encodeNonASCII:YES]];
 
             }else{
                 [self AIM_SetAway:nil];
@@ -881,7 +884,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.94 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.95 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)

@@ -8,7 +8,7 @@
 #import "CBGaimAIMAccount.h"
 #import "aim.h"
 
-#define SCREEN_NAME "otsku"
+#define SCREEN_NAME "tekjew"
 
 @implementation CBGaimAIMAccount
 

@@ -37,9 +37,9 @@ int HTMLEquivalentForFontSize(int fontSize);
 + (NSString *)encodeHTML:(NSAttributedString *)inMessage encodeFullString:(BOOL)encodeFullString
 {
     if(encodeFullString){
-        return([self encodeHTML:inMessage headers:YES fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES]);
+        return([self encodeHTML:inMessage headers:YES fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES]);
     }else{
-        return([self encodeHTML:inMessage headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO]);
+        return([self encodeHTML:inMessage headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO encodeNonASCII:NO]);
     }
 }
 
@@ -49,7 +49,8 @@ int HTMLEquivalentForFontSize(int fontSize);
 // closeFontTags: YES to close the font tags
 // styleTags: YES to include B/I/U tags
 // closeStyleTagsOnFontChange: YES to close and re-insert style tags when opening a new font tag
-+ (NSString *)encodeHTML:(NSAttributedString *)inMessage headers:(BOOL)includeHeaders fontTags:(BOOL)includeFontTags closeFontTags:(BOOL)closeFontTags styleTags:(BOOL)includeStyleTags closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange
+// encodeNonASCII: YES to encode non-ASCII characters as their HTML equivalents
++ (NSString *)encodeHTML:(NSAttributedString *)inMessage headers:(BOOL)includeHeaders fontTags:(BOOL)includeFontTags closeFontTags:(BOOL)closeFontTags styleTags:(BOOL)includeStyleTags closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange encodeNonASCII:(BOOL)encodeNonASCII
 {
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
     NSRange		searchRange;
@@ -171,12 +172,13 @@ int HTMLEquivalentForFontSize(int fontSize);
         int i;
         for(i = 0; i < [chunk length]; i++){
             unichar currentChar = [chunk characterAtIndex:i];
-            if(currentChar > 127){
+            if(encodeNonASCII && (currentChar > 127) ){
                 [string appendFormat:@"&#%d;", currentChar];
             }else if(currentChar == '\r' || currentChar == '\n'){
                 [string appendString:@"<BR>"];
             }else{
-                [string appendFormat:@"%c", currentChar];
+             //   [string appendFormat:@"%c", currentChar]; //x is unichar but does not work?
+                [string appendString:[chunk substringWithRange:NSMakeRange(i, 1)]];
             }
         }
 
