@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.153 2004/06/28 04:34:41 evands Exp $
+// $Id: AIContactController.m,v 1.154 2004/06/30 22:01:08 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -853,63 +853,6 @@
 	[[owner notificationCenter] postNotificationName:ListObject_StatusChanged
 											  object:inObject
 											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys forKey:@"Keys"] : nil)];
-	
-#warning Adam: Legacy.  This is moving back into a plugin and the event controller will be in charge.
-	if (![inObject isKindOfClass: [AIAccount class]]) {
-
-		NSString	*Online = @"Online";
-		if([modifiedKeys containsObject:Online]){ //Sign on/off
-			BOOL		newStatus = [[inObject numberStatusObjectForKey:Online] boolValue];
-			NSNumber	*oldStatusNumber = [onlineDict objectForKey:[inObject uniqueObjectID]];
-			BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
-
-			if(oldStatusNumber == nil || newStatus != oldStatus){
-				//Save the new status
-				[onlineDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject uniqueObjectID]];
-				
-				//Take action (If this update isn't silent)
-				if(!silent){
-					[[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO) object:inObject userInfo:nil];
-				}
-			}
-		}
-
-		if([modifiedKeys containsObject:@"Away"]){ //Away / Unaway
-			BOOL		newStatus = [[inObject numberStatusObjectForKey:@"Away"] boolValue];
-			NSNumber	*oldStatusNumber = [awayDict objectForKey:[inObject uniqueObjectID]];
-			BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
-			
-			if(oldStatusNumber == nil || newStatus != oldStatus){
-				//Save the new state
-				[awayDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject uniqueObjectID]];
-				
-				//Take action (If this update isn't silent)
-				if(!silent){
-					[[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO) object:inObject userInfo:nil];
-				}
-				
-			}
-		}
-		
-		if([modifiedKeys containsObject:@"IdleSince"]){ //Idle / UnIdle
-			NSDate 		*idleSince = [inObject earliestDateStatusObjectForKey:@"IdleSince"];
-			NSNumber	*oldStatusNumber = [idleDict objectForKey:[inObject uniqueObjectID]];
-			BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
-			BOOL		newStatus = (idleSince != nil);
-			
-			if(oldStatusNumber == nil || newStatus != oldStatus){
-				//Save the new state
-				[idleDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject uniqueObjectID]];
-				
-				//Take action (If this update isn't silent)
-				if(!silent){
-					[[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO) object:inObject userInfo:nil];
-				}
-				
-			}
-		}
-		
-	}
 	
 	return(attrChange);
 }
