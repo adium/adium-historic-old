@@ -21,9 +21,9 @@
 @interface BGEmoticonMenuPlugin : AIPlugin
 {
     NSArray *emoticonPacks;
-    NSMenu *eMenu;
+  //  NSMenu *eMenu;
     NSMenuItem *toolbarMenu;
-    NSMenuItem *quickMenuItem;
+//    NSMenuItem *quickMenuItem;
     NSPopUpButton *menuButton;
     NSToolbarItem *toolbarItem;
 }
