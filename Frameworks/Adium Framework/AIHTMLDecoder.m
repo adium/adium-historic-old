@@ -47,7 +47,6 @@ int HTMLEquivalentForFontSize(int fontSize);
 @implementation AIHTMLDecoder
 
 static AITextAttributes *_defaultTextDecodingAttributes = nil;
-static NSDictionary *colorNames = nil;
 
 DeclareString(HTML);
 DeclareString(CloseHTML);
@@ -159,28 +158,6 @@ DeclareString(SpaceHTML);
 	
 	if (!_defaultTextDecodingAttributes){
 		_defaultTextDecodingAttributes = [[AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12] retain];
-	}
-
-	if(!colorNames) {
-		colorNames = [[NSDictionary alloc] initWithObjectsAndKeys:
-			@"#000",    @"black",
-			@"#c0c0c0", @"silver",
-			@"#808080", @"gray",
-			@"#808080", @"grey",
-			@"#fff",    @"white",
-			@"#800000", @"maroon",
-			@"#f00",    @"red",
-			@"#800080", @"purple",
-			@"#f0f",    @"fuchsia",
-			@"#008000", @"green",
-			@"#0f0",    @"lime",
-			@"#808000", @"olive",
-			@"#ff0",    @"yellow",
-			@"#000080", @"navy",
-			@"#00f",    @"blue",
-			@"#008080", @"teal",
-			@"#0ff",    @"aqua",
-			nil];
 	}
 }
 
@@ -1008,20 +985,10 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 		}else if([arg caseInsensitiveCompare:Color] == NSOrderedSame){
 			NSString *colorString = [inArgs objectForKey:arg];
-			
-			//If colorString is a name, obtain its hex value (if it isn't already a hex value)
-			NSString *colorValue  = [colorNames objectForKey:[colorString lowercaseString]];
-			if(colorValue) colorString = colorValue;
-			
-			[textAttributes setTextColor:[colorString hexColor]];
+			[textAttributes setTextColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg]]];
 
 		}else if([arg caseInsensitiveCompare:Back] == NSOrderedSame){
-			NSString *colorString = [inArgs objectForKey:arg];
-			
-			//If colorString is a name, obtain its hex value (if it isn't already a hex value)
-			NSString *colorValue  = [colorNames objectForKey:[colorString lowercaseString]];
-			if(colorValue) colorString = colorValue;
-			[textAttributes setTextBackgroundColor:[colorString hexColor]];
+			[textAttributes setTextBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg]]];
 
 		}
 	}
@@ -1035,11 +1002,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while((arg = [enumerator nextObject])){
 		if([arg caseInsensitiveCompare:@"BGCOLOR"] == NSOrderedSame){
-			NSString *colorString = [inArgs objectForKey:arg];
-			//If colorString is a name, obtain its hex value (if it isn't already a hex value)
-			NSString *colorValue  = [colorNames objectForKey:[colorString lowercaseString]];
-			if(colorValue) colorString = colorValue;
-			[textAttributes setBackgroundColor:[colorString hexColor]];
+			[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg]]];
 		}
 	}
 }
