@@ -8,7 +8,6 @@
                 "button_okay" = NSButton; 
                 "scrollView_errorInfo" = NSScrollView; 
                 "tabView_multipleErrors" = NSTabView; 
-                "textField_errorCount" = NSTextField; 
                 "textField_errorTitle" = NSTextField; 
                 "textView_errorInfo" = NSTextView; 
             }; 
