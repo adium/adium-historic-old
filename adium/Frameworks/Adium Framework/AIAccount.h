@@ -138,6 +138,7 @@ typedef enum {
 - (void)updateStatusForKey:(NSString *)key; //The account's status did change
 
 - (NSAttributedString *)autoRefreshingOutgoingContentForStatusKey:(NSString *)key;
+- (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector;
 
 - (void)connect;
 - (void)disconnect;

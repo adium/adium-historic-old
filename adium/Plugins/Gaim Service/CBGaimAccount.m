@@ -1589,7 +1589,7 @@ static id<GaimThread> gaimThread = nil;
 }
 
 #pragma mark Group Chat
-- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage
+- (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage
 {
 	[gaimThread inviteContact:contact toChat:chat withMessage:inviteMessage];
 	

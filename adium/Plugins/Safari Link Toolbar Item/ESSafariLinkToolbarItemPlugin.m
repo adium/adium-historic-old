@@ -45,9 +45,11 @@
 	
     if(responder && [responder isKindOfClass:[NSTextView class]]){
 		
-		//Run the script.  Cache the result to speed up multiple instances of a single keyword
-		NSString	*scriptResult = [self _executeSafariLinkScript];
-
+		//Run the script in our filter thread to avoid threading conflicts, waiting for a result and then returning it
+		NSString	*scriptResult = [[[adium contentController] filterRunLoopMessenger] target:self 
+																			   performSelector:@selector(_executeSafariLinkScript)
+																					withResult:YES];
+		
 		//If the script fails, do nothing
 		if(scriptResult && [scriptResult length]){
 			//Insert the script result - it should have returned HTML, so process it first

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.74 2004/08/02 07:04:31 evands Exp $
+// $Id: AIAccount.m,v 1.75 2004/08/04 20:42:16 evands Exp $
 
 #import "AIAccount.h"
 
@@ -24,6 +24,8 @@
 - (void)_setAccountProfileTo:(NSAttributedString *)profile;
 - (void)_startAttributedRefreshTimer;
 - (void)_stopAttributedRefreshTimer;
+- (void)_updateAutoRefereshingKeysForFilteredValue:(NSAttributedString *)filteredValue originalValue:(NSAttributedString *)originalValue key:(NSString *)key;
+
 //- (void)_startStringRefreshTimer;
 //- (void)_stopStringRefreshTimer;
 @end
@@ -297,15 +299,60 @@
 - (NSAttributedString *)autoRefreshingOutgoingContentForStatusKey:(NSString *)key
 {
 	NSAttributedString	*originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS] attributedString];
-	NSAttributedString  *filteredValue = nil;
+	NSAttributedString  *filteredValue;
 	
-	//Filter the content
 	filteredValue = [[adium contentController] filterAttributedString:originalValue
 													  usingFilterType:AIFilterContent
 															direction:AIFilterOutgoing
 															  context:self];
 	
 	//Refresh periodically if the filtered string is different from the original one
+	[self _updateAutoRefereshingKeysForFilteredValue:filteredValue originalValue:originalValue key:key];
+	
+	return (filteredValue);
+}
+
+//Same as autoRefreshingOutgoingContentForStatusKey: but does its filtering in the contentController filterThread, sending
+//back the filtered attributedString to self on selector "selector" whenever it's complete.
+- (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector
+{
+	NSAttributedString	*originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS] attributedString];
+	NSDictionary		*contextDict;
+	if (originalValue){
+		contextDict = [NSDictionary dictionaryWithObjectsAndKeys:originalValue, @"originalValue",
+			NSStringFromSelector(selector), @"selectorString",
+			key, @"key", nil];
+	}else{
+		contextDict = [NSDictionary dictionaryWithObjectsAndKeys:NSStringFromSelector(selector), @"selectorString",
+			key, @"key", nil];
+	}
+	
+	//Filter the content
+	[[adium contentController] filterAttributedString:originalValue
+									  usingFilterType:AIFilterContent
+											direction:AIFilterOutgoing
+										filterContext:self
+									  notifyingTarget:self
+											 selector:@selector(gotFilteredOutgoingContent:context:)
+											  context:contextDict];
+}
+
+- (void)gotFilteredOutgoingContent:(NSAttributedString *)filteredValue context:(NSDictionary *)contextDict
+{
+	NSAttributedString	*originalValue = [contextDict objectForKey:@"originalValue"];
+	NSString			*key = [contextDict objectForKey:@"key"];
+	
+	SEL					selector = NSSelectorFromString([contextDict objectForKey:@"selectorString"]);
+	
+	//Refresh periodically if the filtered string is different from the original one
+	[self _updateAutoRefereshingKeysForFilteredValue:filteredValue originalValue:originalValue key:key];
+	
+	[self performSelector:selector
+			   withObject:filteredValue];
+}
+
+- (void)_updateAutoRefereshingKeysForFilteredValue:(NSAttributedString *)filteredValue originalValue:(NSAttributedString *)originalValue key:(NSString *)key
+{
 	if(originalValue && (![[originalValue string] isEqualToString:[filteredValue string]])){
 		if(![autoRefreshingKeys containsObject:key]){
 			[autoRefreshingKeys addObject:key];
@@ -315,8 +362,6 @@
 		[autoRefreshingKeys removeObject:key];
 		if([autoRefreshingKeys count] == 0) [self _stopAttributedRefreshTimer];
 	}
-
-	return(filteredValue);
 }
 
 //Refilter the raw attributed string and call setAttributedStatusString:forKey:

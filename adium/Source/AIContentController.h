@@ -171,13 +171,14 @@ typedef enum {
 							   usingFilterType:(AIFilterType)type
 									 direction:(AIFilterDirection)direction
 									   context:(id)context;
-	
-
-
-
-
-
-
+- (void)filterAttributedString:(NSAttributedString *)attributedString
+			   usingFilterType:(AIFilterType)type
+					 direction:(AIFilterDirection)direction
+				 filterContext:(id)filterContext
+			   notifyingTarget:(id)target
+					  selector:(SEL)selector
+					   context:(id)context;
+- (NDRunLoopMessenger *)filterRunLoopMessenger;
 
 //Content Source & Destination
 - (NSArray *)sourceAccountsForSendingContentType:(NSString *)inType

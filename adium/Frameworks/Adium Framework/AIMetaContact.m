@@ -474,26 +474,6 @@
 	//A meta contact should never receive this method, but it doesn't hurt to implement it just in case
 }
 
-#warning Do we actually need a special order index method now?
-/*
-//Returns our desired placement within a group
-- (float)orderIndex
-{
-	return([[self preferredContact] orderIndex]);
-}
-
-//Alter the placement of this object in a group (PRIVATE: These are for AIListGroup ONLY)
-- (void)setOrderIndex:(float)inIndex
-{
-	NSEnumerator	*enumerator = [objectArray objectEnumerator];
-	AIListObject	*object;
-	
-	while(object = [enumerator nextObject]){
-		[object setOrderIndex:inIndex];
-	}
-}
-*/
-
 //Contained object status cache ----------------------------------------------------------------------------------------
 //We maintain a chache of the status of the objects we contain.  This cache is updated whenever one of those objects
 //changed status and when objects are added and removed from us.

@@ -63,22 +63,34 @@
 //Update our pane to reflect our contact
 - (void)updatePane
 {	
-	NSAttributedString	*infoString;
-	
 	//Text Profile
-	infoString = [[adium contentController] filterAttributedString:[listObject statusObjectForKey:@"TextProfile"]
-												   usingFilterType:AIFilterDisplay
-														 direction:AIFilterIncoming
-														   context:listObject];
-	[self setAttributedString:infoString intoTextView:textView_profile];
-
+	[[adium contentController] filterAttributedString:[listObject statusObjectForKey:@"TextProfile"]
+									  usingFilterType:AIFilterDisplay
+											direction:AIFilterIncoming
+										filterContext:listObject
+									  notifyingTarget:self
+											 selector:@selector(gotFilteredProfile:context:)
+											  context:listObject];
 	//Away & Status
-	infoString = [[adium contentController] filterAttributedString:[listObject statusObjectForKey:@"StatusMessage"]
-												   usingFilterType:AIFilterDisplay
-														 direction:AIFilterIncoming
-														   context:listObject];
+	[[adium contentController] filterAttributedString:[listObject statusObjectForKey:@"StatusMessage"]
+									  usingFilterType:AIFilterDisplay
+											direction:AIFilterIncoming
+										filterContext:listObject
+									  notifyingTarget:self
+											 selector:@selector(gotFilteredStatus:context:)
+											  context:listObject];
+}
+
+- (void)gotFilteredProfile:(NSAttributedString *)infoString context:(AIListObject *)object
+{
+	[self setAttributedString:infoString intoTextView:textView_profile];
+}
+
+- (void)gotFilteredStatus:(NSAttributedString *)infoString context:(AIListObject *)object
+{
 	[self setAttributedString:infoString intoTextView:textView_status];
 }
+
 
 //
 - (void)setAttributedString:(NSAttributedString *)infoString intoTextView:(NSTextView *)textView
