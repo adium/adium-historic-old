@@ -26,6 +26,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentTyping.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/NDRunLoopMessenger.h>
 #import <CoreFoundation/CFRunLoop.h>
@@ -256,7 +257,6 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 		//No chat is associated with the IM conversation
 		AIListContact   *sourceContact;
 		GaimBuddy		*buddy;
-//		GaimGroup		*group;
 		GaimAccount		*account;
 		char			*name;
 		
@@ -270,17 +270,6 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 			GaimDebug (@"imChatLookupFromConv: Creating %s %s",account->username,name);
 			//No gaim_buddy corresponding to the conv->name is on our list, so create one
 			buddy = gaim_buddy_new(account, name, NULL);	//create a GaimBuddy
-			
-			/*
-			group = gaim_find_group(_(GAIM_ORPHANS_GROUP_NAME));		//get the GaimGroup
-			if (!group) {												//if the group doesn't exist yet
-				group = gaim_group_new(_(GAIM_ORPHANS_GROUP_NAME));		//create the GaimGroup
-				gaim_blist_add_group(group, NULL);						//add it gaimside
-			}
-			gaim_blist_add_buddy(buddy, NULL, group, NULL);     //add the buddy to the gaimside list
-			*/
-//#warning Must add to serverside list to get status updates.  Need to remove when the chat closes or the account disconnects. Possibly want to use some sort of hidden Adium group for this.
-//			serv_add_buddy(account->gc, buddy);				//add it to the serverside list
 		}
 
 		NSCAssert(buddy != nil, @"buddy was nil");
@@ -353,7 +342,7 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					NSDictionary	*chatCreationInfo = [chat statusObjectForKey:@"ChatCreationInfo"];
 					
 					GaimDebug (@"Creating a chat.");
-//XXX - Not all prpls support the below method for chat creation.  Need prpl-specific possibilites.
+
 					GHashTable				*components;
 					
 					//Prpl Info
@@ -425,7 +414,6 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					*/
 					
 					//Associate our chat with the libgaim conversation
-					//NSLog(@"associating the gaimconv");
 					
 					if( shouldTryToJoin ) {
 					//Join the chat serverside - the GHsahTable components, couple with the originating GaimConnect,
@@ -435,21 +423,6 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					} else {
 						//NSLog(@"#### Bailing out of group chat");
 					}
-					//Evan: I think we'll return a nil conv here.. and then Gaim will call us back with a conv...
-					//and then we'll associate it with a chat later.  That's quite possibly wrong though...
-/*
-					GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
-
-					chatLookupFromConv(conv);
- */
-					//CLear the chat's status object.   This needs to be done in the main thread.
-					//Need a number version!
-					/*
-					[chat mainThreadPerformSelector:@selector(setStatusObject:forKey:notify:)
-										 withObject:nil
-										 withObject:@"ChatCreationInfo"
-										 withObject:notifyNever];
-					 */
 				}
 			}
 		}
@@ -842,47 +815,29 @@ NSMutableDictionary* get_chatDict(void)
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	char		*buddyUTF8String;
 	const char	*groupUTF8String;
-	BOOL		performAdd = NO;
 	GaimGroup	*group;
 	GaimBuddy	*buddy;
 	
-	buddyUTF8String = g_strdup(gaim_normalize(account,[objectUID UTF8String]));
+	//Find the group (Create if necessary)
 	groupUTF8String = (groupName ? [groupName UTF8String] : "");
-	
-	//Get the group (Create if necessary)
 	if(!(group = gaim_find_group(groupUTF8String))){
 		group = gaim_group_new(groupUTF8String);
 		gaim_blist_add_group(group, NULL);
 	}
 	
-	//Verify the buddy does not already exist and create it
-	if(buddy = gaim_find_buddy(account,buddyUTF8String)){
-		GaimGroup *oldGroup;
-		
-		oldGroup = gaim_find_buddys_group(buddy);
-		//If the buddy was in our strangers group before, remove from gaim's internal list
-		if ((oldGroup != nil) && (strcmp(GAIM_ORPHANS_GROUP_NAME,oldGroup->name) == 0)){
-			gaim_blist_remove_buddy(buddy);
-			buddy = nil;
-			performAdd = YES;
-		}
-	}else{
-		performAdd = YES;	
-	}
-	
-	if (performAdd){
-		//Add the buddy locally to libgaim and then to the serverside list
-		if(!buddy){
-			GaimDebug (@"gaimThreadAddUID: Creating new buddy %s on %s",buddyUTF8String,account->username);
-
-			buddy = gaim_buddy_new(account, buddyUTF8String, NULL);
-		}
-		GaimDebug (@"Adding buddy %s to group %s",buddy->name, group->name);
-		gaim_blist_add_buddy(buddy, NULL, group, NULL);
-		serv_add_buddy(gaim_account_get_connection(account), buddy);
-	}
-	
+	//Find the buddy (Create if necessary)
+	buddyUTF8String = g_strdup(gaim_normalize(account,[objectUID UTF8String]));
+	buddy = gaim_find_buddy(account, buddyUTF8String);
+	if(!buddy) buddy = gaim_buddy_new(account, buddyUTF8String, NULL);
 	g_free(buddyUTF8String);
+
+	GaimDebug (@"Adding buddy %s to group %s",buddy->name, group->name);
+
+	/* gaim_blist_add_buddy() will move an existing contact serverside, but will not add a buddy serverside.
+	 * We're working with a new contact, hopefully, so we want to call serv_add_buddy() after modifying the gaim list.
+	 * This is the order done in add_buddy_cb() in gtkblist.c */
+	gaim_blist_add_buddy(buddy, NULL, group, NULL);
+	serv_add_buddy(gaim_account_get_connection(account), buddy);
 }
 
 - (oneway void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
@@ -896,21 +851,27 @@ NSMutableDictionary* get_chatDict(void)
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	char		*buddyUTF8String;
-	const char	*groupUTF8String;
+	GaimBuddy 	*buddy;
 	
 	buddyUTF8String =  g_strdup(gaim_normalize(account, [objectUID UTF8String]));
-	groupUTF8String = (groupName ? [groupName UTF8String] : "");
 	
-	GaimBuddy 	*buddy = gaim_find_buddy(account, buddyUTF8String);
-	if (buddy){
-		GaimGroup *group = gaim_find_group(groupUTF8String);
-		if (group){
-			//Remove this contact from the server-side and gaim-side lists
+	if (buddy = gaim_find_buddy(account, buddyUTF8String)){
+		const char	*groupUTF8String;
+		GaimGroup	*group;
+
+		groupUTF8String = (groupName ? [groupName UTF8String] : "");
+		if (group = gaim_find_group(groupUTF8String)){
+			/* Remove this contact from the server-side and gaim-side lists. 
+			 * Updating gaimside does not change the server.
+			 *
+			 * Gaim has a commented XXX as to whether this order or the reverse (blist, then serv) is correct.
+			 * We'll use the order which gaim uses as of gaim 1.1.4. */
 			serv_remove_buddy(gaim_account_get_connection(account), buddy, group);
 			gaim_blist_remove_buddy(buddy);
 		}
 	}
 	
+	//Cleanup after g_strdup() above
 	g_free(buddyUTF8String);
 }
 - (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
@@ -923,37 +884,39 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)gaimThreadMoveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
 	GaimAccount *account;
-	GaimGroup 	*oldGroup, *destGroup;
+	GaimGroup 	*group;
 	GaimBuddy	*buddy;
 	char		*buddyUTF8String;
 	const char	*groupUTF8String;
-	BOOL		didMove = NO;
-	
+	BOOL		needToAddServerside = NO;
+
 	account = accountLookupFromAdiumAccount(adiumAccount);
-	buddyUTF8String = g_strdup(gaim_normalize(account, [objectUID UTF8String]));
-	
+
 	//Get the destination group (creating if necessary)
 	groupUTF8String = (groupName ? [groupName UTF8String] : "");
-
-	destGroup = gaim_find_group(groupUTF8String);
-	if(!destGroup) destGroup = gaim_group_new(groupUTF8String);
-	
-	//Get the gaim buddy and group for this move
-	if((buddy = gaim_find_buddy(account,buddyUTF8String)) &&
-	   (oldGroup = gaim_find_buddys_group(buddy))){
-			//Procede to move the buddy gaim-side and locally
-			serv_move_buddy(buddy, oldGroup, destGroup);
-			didMove = YES;
+	group = gaim_find_group(groupUTF8String);
+	if(!group){
+		/* If we can't find the group, something's gone wrong... we shouldn't be using a group we don't have.
+		 * We'll just silently turn this into an add operation. */
+		group = gaim_group_new(groupUTF8String);
+		gaim_blist_add_group(group, NULL);
 	}
-		
-	if (!didMove){
-		GaimDebug (@"^^^ movingUID %s toGroup %s but it was not found; adding instead",buddyUTF8String,groupUTF8String);
 
-		//No GaimBuddy was found, so despite all appearances this 'move' is really an add.
-		[self gaimThreadAddUID:objectUID onAccount:adiumAccount toGroup:groupName];
+	buddyUTF8String = g_strdup(gaim_normalize(account, [objectUID UTF8String]));
+	buddy = gaim_find_buddy(account,buddyUTF8String);
+	if(!buddy){
+		/* If we can't find a buddy, something's gone wrong... we shouldn't be moving a buddy we don't have.
+ 		 * As with the group, we'll just silently turn this into an add operation. */
+		buddy = gaim_buddy_new(account, buddyUTF8String, NULL);
+		needToAddServerside = YES;
 	}
-	
 	g_free(buddyUTF8String);
+
+	/* gaim_blist_add_buddy() will update the local list and perform a serverside move as necessary */
+	gaim_blist_add_buddy(buddy, NULL, group, NULL);
+
+	/* gaim_blist_add_buddy() won't perform a serverside add, however.  Add if necessary. */
+	if(needToAddServerside) serv_add_buddy(gaim_account_get_connection(account), buddy);
 }
 - (oneway void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
@@ -1386,7 +1349,6 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)requestSecureMessaging:(BOOL)inSecureMessaging
 							   inChat:(AIChat *)inChat
 {
-	NSLog(@"Requesting %i in %@ on %x",inSecureMessaging,inChat,[NSRunLoop currentRunLoop]);
 	[gaimThreadProxy gaimThreadRequestSecureMessaging:inSecureMessaging
 											   inChat:inChat];
 }
@@ -1395,7 +1357,7 @@ NSMutableDictionary* get_chatDict(void)
 {
 	AIChat					*chat = imChatLookupFromConv(conv);
 	NSMutableDictionary		*fullSecurityDetailsDict;
-	NSLog(@"Setting %@ to %@",chat,securityDetailsDict);	
+
 	if(securityDetailsDict){
 		NSString				*format, *description;
 		fullSecurityDetailsDict = [[securityDetailsDict mutableCopy] autorelease];

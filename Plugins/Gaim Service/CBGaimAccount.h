@@ -21,23 +21,16 @@
 @class SLGaimCocoaAdapter, ESFileTransfer, AIService, AIContentMessage, AIStatus;
 
 @interface CBGaimAccount : AIAccount <AIAccount_Privacy>
-{     
-    NSMutableDictionary *chatDict;
-
-    NSMutableArray      *filesToSendArray;
-        
-	NSString			*lastDisconnectionError;
-	
+{   	
     GaimAccount         *account;
-    
+
+    NSMutableDictionary *chatDict;
+	
+	NSString			*lastDisconnectionError;
     int                 reconnectAttemptsRemaining;
 	
 	NSMutableArray		*permittedContactsArray;
-	NSMutableArray		*deniedContactsArray;
-	
-	BOOL				inDealloc;
-	
-	NSMutableDictionary	*shouldDisplayDict;
+	NSMutableArray		*deniedContactsArray;	
 }
 
 - (const char*)protocolPlugin;

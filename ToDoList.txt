@@ -20,59 +20,25 @@
 - Implement emoticons customize sheet in appearance
 - Add a warning sheet about window moving/performance for non-standard styles
 - Not fetching buddy icons as well as we could be
-- Moving MSN buddies from one group to another doesn't usually work
-- List editing "Too many buddies" error is frequent and random
 - Adding an invisible state makes a third section in the state menu (including another custom... item)
 - Contact menu is inconsistent with menu item naming, item grouping
 - View menu is inconsistent with menu item grouping
 - Update included layouts, themes, and message views
 - Group spacing is incorrect for non-standard lists
 - Dock icon overlay prefs need to be events, or need to atleast go into advanced for now
-
+- OTR Private key generation should be cleaner
+- Jabber account registration
+- The crash reporter shouldn't force people to reopen Adium after a crash.
 
 
 //-------------------------------------------------------------------------------------------------------
 // Old junk
 //-------------------------------------------------------------------------------------------------------
 
-(incomplete list, feel free to add and assign issues)
-
-[Status]
-- Status pane
-	- Idle after X minutes
-	- Auto-away after X minutes
-	- Fast User Switching
-
-[Preferences]
-- Restore defaults broken?
-- MSN preferences to Accounts Options
-
-[Accounts]
-- Jabber account registration
-- If you connect, change a server setting, disconnect, then reconnect, we still use the old server setting.
-	Specifically seen this with Jabber, switching from one jabber server to another.
-
-[Contacts]
-- Investigate Add Contact safety
-- Automatically respond YES to the MSN Synchronization dialog.  It's a stupid dialog and you would never want to say NO to it. [Evan]
-
-//Flashing reduction [Evan (now that I have Growl, I'm sick of flashing, it's very OS 9)]
-  Make it possible to use Adium without any distracting flashing and blinking
-  - Add option to prevent dock icon animations
-
-[Group chat]
-- Duplicate send/receive bug needs fixing
-
-[Menu Items]
-- Block/Unblock should change titles dynamically [Colin]
-
 [OTR]
 - Fingerprint management? (advanced)
 
 [Other]
-- The iChat status icon pack's "text entered" state is inconsistent with the rest (pencil vs. chat bubble)
-- Messages preferences' background image options are messing up default images in certain situations
-- The crash reporter shouldn't force people to reopen Adium after a crash.
 - Crash on first launch of a new user: "Item to be inserted into menu already is in another menu"
 
 //-------------------------------------------------------------------------------------------------------
@@ -167,7 +133,7 @@
     automatically offer its services when Adium is first launched, ‡ la Mail.app's
 	importer.[Brandon: Working on it.]
         
-// Address Book integration [brian - just marking it as mine if no one else beats me done]
+// Address Book integration
     - Sync (optionally) contact notes to an associated AB card's Notes field
     - Ability to add a screenname into AB as a new card
     - Add People Picker & ability to add via this panel

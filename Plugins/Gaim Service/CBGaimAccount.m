@@ -423,12 +423,20 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
+/*
+ * @brief Gaim removed a contact from the local blist
+ *
+ * This can happen in many situations:
+ *	- For every contact on an account when the account signs off
+ *	- For a contact as it is deleted by the user
+ *	- For a contact as it is deleted by Gaim (e.g. when Sametime refuses an addition because it is known to be invalid)
+ *	- In the middle of the move process as a contact moves from one group to another
+ *
+ * We need not take any action; we'll be notified of changes by Gaim as necessary.
+ */
 - (oneway void)removeContact:(AIListContact *)theContact
 {
-	if(theContact){
-		[theContact setRemoteGroupName:nil];
-		[self removeAllStatusFlagsFromContact:theContact silently:YES];
-	}
+
 }
 
 /*
@@ -2269,7 +2277,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	//Defaults
     chatDict = [[NSMutableDictionary alloc] init];
-	shouldDisplayDict = [[NSMutableDictionary alloc] init];
 
     reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 	lastDisconnectionError = nil;
@@ -2287,8 +2294,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)dealloc
 {	
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+
     [chatDict release];
-    [filesToSendArray release];
+	[lastDisconnectionError release]; lastDisconnectionError = nil;
+		
+	[permittedContactsArray release];
+	[deniedContactsArray release];
 	
     [super dealloc];
 }

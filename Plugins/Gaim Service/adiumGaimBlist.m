@@ -20,7 +20,7 @@
 
 static void adiumGaimBlistNewList(GaimBuddyList *list)
 {
-    //We're allowed to place whatever we want in blist's ui_data.    
+
 }
 
 static void adiumGaimBlistNewNode(GaimBlistNode *node)
@@ -49,7 +49,7 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 			NSString	*contactName;
 
 			contactName = [NSString stringWithUTF8String:buddy->name];
-			
+
 			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toGroupName:contactName:)
 													withObject:theContact
 													withObject:groupName
@@ -72,6 +72,7 @@ static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
 		GaimBuddy *buddy = (GaimBuddy*) node;
 		
+//		GaimDebug (@"adiumGaimBlistRemove %s",buddy->name);
 		[accountLookup(buddy->account) mainPerformSelector:@selector(removeContact:)
 												withObject:contactLookupFromBuddy(buddy)];
 		
