@@ -53,6 +53,9 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void *passw
 	char				*passwordData = nil;
 	UInt32				passwordLength = nil;
 
+	NSAssert((service && [service length] > 0),@"getPasswordFromKeychainForService: service wasn't acceptable!");
+	NSAssert((account && [account length] > 0),@"getPasswordFromKeychainForService: account wasn't acceptable!");
+		
 	ret = GetPasswordKeychain([service UTF8String],[account UTF8String],&passwordData,&passwordLength,NULL);
 	
     if (ret == noErr){
