@@ -109,17 +109,17 @@
 
 - (void) reportLoggedOut 
 {
-    NSEnumerator	*enumerator = [libezvContacts objectEnumerator];
-    AWEzvContact	*contact;
+    NSEnumerator	*enumerator;
 	AIListContact	*listContact;
 	
 	[[adium contactController] delayListObjectNotifications];
-    while (contact = [enumerator nextObject]) {
-		listContact = [[adium contactController] existingContactWithService:service
-																	account:self
-																		UID:[self UIDForContact:contact]];
+	enumerator = [[[adium contactController] allContactsInGroup:nil
+													  subgroups:YES 
+													  onAccount:self] objectEnumerator];	
+    while (listContact = [enumerator nextObject]){
 		[listContact setRemoteGroupName:nil];
     }
+
     [libezvContacts removeAllObjects];
    	[[adium contactController] endListObjectNotificationsDelay];
  
