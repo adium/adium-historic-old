@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//$Id: LNAboutBoxController.m,v 1.25 2003/12/15 03:25:00 adamiser Exp $
+//$Id: LNAboutBoxController.m,v 1.26 2003/12/15 23:05:01 adamiser Exp $
 
 #import "LNAboutBoxController.h"
 
@@ -56,7 +56,7 @@ LNAboutBoxController *sharedInstance = nil;
 //Dealloc
 - (void)dealloc
 {    
-    [avatarArray release];
+    //[avatarArray release];
     [buildNumber release];
     [buildDate release];
     
@@ -70,7 +70,7 @@ LNAboutBoxController *sharedInstance = nil;
     
     //Load our build information and avatar list
     [self _loadBuildInformation];
-    avatarArray = [[self _availableAvatars] retain];
+    //avatarArray = [[self _availableAvatars] retain];
 
     //Credits
     creditsString = [[[NSAttributedString alloc] initWithPath:[[NSBundle mainBundle] pathForResource:@"Credits.rtf" ofType:nil] documentAttributes:nil] autorelease];
@@ -142,7 +142,7 @@ LNAboutBoxController *sharedInstance = nil;
             previousKeyWasOption = YES;
         }
         
-        if(numberOfDuckClicks == [avatarArray count]){
+        if(numberOfDuckClicks == 10/*[avatarArray count]*/){
             numberOfDuckClicks = -1;            
             [[adium soundController] playSoundNamed:@"/Adium/Feather Ruffle.aif"];
         }else{
@@ -174,7 +174,7 @@ LNAboutBoxController *sharedInstance = nil;
 //Transition the duck to a new avatar
 - (void)_adiumDuckOptionClicked
 {
-    previousKeyWasOption = YES;
+/*    previousKeyWasOption = YES;
     [button_duckIcon setAlternateImage:nil];
     
     if(numberOfDuckClicks == [avatarArray count]){
@@ -189,7 +189,7 @@ LNAboutBoxController *sharedInstance = nil;
         [button_duckIcon setImage:[[[NSImage alloc] initWithContentsOfFile:[avatarArray objectAtIndex:numberOfDuckClicks]] autorelease]];
 
         [[adium soundController] playSoundNamed:@"/Aquatech/Ghost Hiss.aiff"];  
-    }
+    }*/
 }
 
 //Returns the current version of Adium
