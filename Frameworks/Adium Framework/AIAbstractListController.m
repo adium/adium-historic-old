@@ -263,14 +263,13 @@
 
 - (void)updateCellRelatedThemePreferencesFromDict:(NSDictionary *)prefDict
 {
-	if ([groupCell isKindOfClass:[AIListGroupGradientCell class]]){
-
+	if([groupCell isKindOfClass:[AIListGroupGradientCell class]]){
 		[(AIListGroupGradientCell *)groupCell setBackgroundColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]
 												   gradientColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
 
 		[(AIListGroupGradientCell *)groupCell setShadowColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
 	}
-	
+
 	[groupCell setTextColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR] representedColor]];
 
 	[contentCell setBackgroundColorIsStatus:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_AS_STATUS] boolValue]];
