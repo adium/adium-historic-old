@@ -126,7 +126,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	AIContentMessage	*responseContent;
 	NSData  			*autoReply;
 
-	autoReply = [[adium preferenceController] preferenceForKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
+	autoReply = [[adium preferenceController] preferenceForKey:STATUS_AUTO_REPLY group:GROUP_ACCOUNT_STATUS];
 	responseContent = [AIContentMessage messageInChat:chat
 										   withSource:source
 										  destination:destination
