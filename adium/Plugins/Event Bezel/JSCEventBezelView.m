@@ -96,6 +96,7 @@
     float           buddyNameFontSize = 24.0;
     float           relativeX = 1.0;
     float           relativeY = 1.0;
+	NSSize			buddyIconSize;
         
     // Clear the view and paint the backdrop image
     [[NSColor clearColor] set];
@@ -109,13 +110,14 @@
     [backdropImage compositeToPoint: NSZeroPoint operation:NSCompositeSourceOver];
     
     // Resize the buddy icon if needed
-    [buddyIconImage setSize:NSMakeSize(IMAGE_DIMENSION*relativeX,IMAGE_DIMENSION*relativeX)];
+	buddyIconSize = NSMakeSize(IMAGE_DIMENSION*relativeX,IMAGE_DIMENSION*relativeX);
+//    [buddyIconImage setSize:NSMakeSize(IMAGE_DIMENSION*relativeX,IMAGE_DIMENSION*relativeX)];
     
     // Set up the Rects
     if (queueField && (![queueField isEqualToString:@""])) {
         // Buddy Icon Image and label
         buddyIconPoint = NSMakePoint(ceil(82.0*relativeX),ceil(150.0*relativeY));
-        buddyIconLabelRect = NSMakeRect(buddyIconPoint.x-2,buddyIconPoint.y-2,[buddyIconImage size].width+4,[buddyIconImage size].height+4);
+        buddyIconLabelRect = NSMakeRect(buddyIconPoint.x-2,buddyIconPoint.y-2,buddyIconSize.width+4,buddyIconSize.height+4);
         // Main buddy name
         buddyNameRect = NSMakeRect(12.0,ceil(116.0*relativeY),ceil(187.0*relativeX),ceil(30.0*relativeY));
         // Main buddy Status
@@ -125,7 +127,7 @@
     } else {
         // Buddy Icon Image and label
         buddyIconPoint = NSMakePoint(ceil(82.0*relativeX),ceil(120.0*relativeY));
-        buddyIconLabelRect = NSMakeRect(buddyIconPoint.x-2,buddyIconPoint.y-2,[buddyIconImage size].width+4,[buddyIconImage size].height+4);
+        buddyIconLabelRect = NSMakeRect(buddyIconPoint.x-2,buddyIconPoint.y-2,buddyIconSize.width+4,buddyIconSize.height+4);
         // Main buddy name
         buddyNameRect = NSMakeRect(12.0,ceil(80.0*relativeY),ceil(187.0*relativeX),ceil(30.0*relativeY));
         // Main buddy Status
@@ -168,8 +170,13 @@
             [noShadow set];
         }
     }
-    [buddyIconImage compositeToPoint: buddyIconPoint operation:NSCompositeSourceOver];
-    if (buddyIconBadge) {
+
+	[buddyIconImage drawInRect:NSMakeRect(buddyIconPoint.x, buddyIconPoint.y, buddyIconSize.width, buddyIconSize.height)
+					  fromRect:NSMakeRect(0, 0, [buddyIconImage size].width, [buddyIconImage size].height)
+					 operation:NSCompositeSourceOver
+					  fraction:1.0];
+    
+	if (buddyIconBadge) {
         [buddyIconBadge compositeToPoint: NSMakePoint(buddyIconPoint.x -6.0, buddyIconPoint.y - 6-0) operation:NSCompositeSourceOver];
     }
     
@@ -255,8 +262,8 @@
         // set the flag so we don't load the default icon innecesary
         defaultBuddyImage = YES;
     }
-    [buddyIconImage setScalesWhenResized:YES];
-    [buddyIconImage setSize:NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION)];
+//    [buddyIconImage setScalesWhenResized:YES];
+//    [buddyIconImage setSize:NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION)];
 }
 
 - (NSImage *)buddyIconBadge

@@ -163,7 +163,7 @@
             //set the buddy image
             NSImage *image = [[[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len)) length:buddyIcon->len]] autorelease];
             [statusDict setObject:image forKey:@"UserIcon"];
-            
+
             //BuddyImagePointer is just for us, shh, keep it secret ;)
             [modifiedKeys addObject:@"UserIcon"];
         }

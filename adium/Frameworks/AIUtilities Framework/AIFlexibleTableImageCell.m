@@ -78,16 +78,14 @@
 
 //Draw our custom content
 - (void)drawContentsWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
-{    
-    BOOL    imageFlipped = [image isFlipped];
-    
+{
     //Set up a shift transformation to align our lines to a pixel (and prevent anti-aliasing)
     NSAffineTransform * aliasShift = [NSAffineTransform transform];
     [aliasShift translateXBy:ALIAS_SHIFT_X yBy:ALIAS_SHIFT_Y];
     
-    if(!imageFlipped) [image setFlipped:YES];
+    [image setFlipped:![image isFlipped]];
     [image drawInRect:cellFrame fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height) operation:NSCompositeSourceOver fraction:1.0];
-    if(!imageFlipped) [image setFlipped:NO];
+    [image setFlipped:![image isFlipped]];
 
     //
     if(drawFrame){
