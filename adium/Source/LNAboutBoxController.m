@@ -112,7 +112,10 @@ LNAboutBoxController *sharedInstance = nil;
 {    
     if([[textView_credits window] isMainWindow]){
 	scrollLocation += scrollRate;
+	
 	if(scrollLocation > maxScroll) scrollLocation = 0;    
+	if(scrollLocation < 0) scrollLocation = maxScroll;
+	
 	[textView_credits scrollPoint:NSMakePoint(0, scrollLocation)];
     }
 }
