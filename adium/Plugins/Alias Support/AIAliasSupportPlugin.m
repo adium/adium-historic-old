@@ -230,7 +230,7 @@
 	
     //Apply the values
     [[inObject displayArrayForKey:@"Adium Alias"] setObject:inAlias withOwner:self];
-    [[inObject displayArrayForKey:@"Display Name"] setPrimaryObject:displayName withOwner:self];
+    [[inObject displayArrayForKey:@"Display Name"] setObject:displayName withOwner:self priorityLevel:Highest_Priority];
     [[inObject displayArrayForKey:@"Long Display Name"] setObject:longDisplayName withOwner:self];
 	
 	//notify
