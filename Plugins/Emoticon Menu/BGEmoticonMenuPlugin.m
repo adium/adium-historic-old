@@ -33,12 +33,20 @@
 @implementation BGEmoticonMenuPlugin
 
 #define PREF_GROUP_EMOTICONS			@"Emoticons"
+#define	TITLE_INSERT_EMOTICON			AILocalizedString(@"Insert Emoticon",nil)
+#define	TITLE_EMOTICON					AILocalizedString(@"Emoticon",nil)
 
 - (void)installPlugin
 {
     //init the menues and menuItems
-    quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Insert Emoticon" target:self action:@selector(dummyTarget:) keyEquivalent:@""];
-    quickContextualMenuItem = [[NSMenuItem alloc] initWithTitle:@"Insert Emoticon" target:self action:@selector(dummyTarget:) keyEquivalent:@""];
+    quickMenuItem = [[NSMenuItem alloc] initWithTitle:TITLE_INSERT_EMOTICON
+											   target:self
+											   action:@selector(dummyTarget:) 
+										keyEquivalent:@""];
+    quickContextualMenuItem = [[NSMenuItem alloc] initWithTitle:TITLE_INSERT_EMOTICON
+														 target:self
+														 action:@selector(dummyTarget:)
+												  keyEquivalent:@""];
 	needToRebuildMenus = YES;
 	
     //add the items to their menus.
@@ -70,7 +78,7 @@
 		//Add menu to toolbar item (for text mode)
 		NSMenuItem	*mItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] init] autorelease];
 		[mItem setSubmenu:menu];
-		[mItem setTitle:@"Emoticon"];
+		[mItem setTitle:AILocalizedString(@"Emoticon",nil)];
 		[item setMenuFormRepresentation:mItem];
 	}
 }
@@ -103,9 +111,9 @@
 	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
 	[button setImage:[NSImage imageNamed:@"emoticonToolbar" forClass:[self class]]];
 	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:@"InsertEmoticon"
-                                                               label:AILocalizedString(@"Emoticon",nil)
-                                                        paletteLabel:AILocalizedString(@"Insert Emoticon",nil)
-                                                             toolTip:AILocalizedString(@"Insert Emoticon",nil)
+                                                               label:TITLE_EMOTICON
+                                                        paletteLabel:TITLE_INSERT_EMOTICON
+                                                             toolTip:TITLE_INSERT_EMOTICON
                                                               target:self
                                                      settingSelector:@selector(setView:)
                                                          itemContent:button
@@ -156,7 +164,7 @@
 //Build a flat emoticon menu for a single pack
 - (NSMenu *)flatEmoticonMenuForPack:(AIEmoticonPack *)incomingPack
 {
-    NSMenu			*packMenu = [[NSMenu alloc] initWithTitle:@"Emoticon"];
+    NSMenu			*packMenu = [[NSMenu alloc] initWithTitle:TITLE_EMOTICON];
     NSEnumerator	*emoteEnum = [[incomingPack emoticons] objectEnumerator];
     AIEmoticon		*anEmoticon;
 	
