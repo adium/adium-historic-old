@@ -207,41 +207,43 @@
 	displayName = [displayNameArray objectValue];
 	
     //Build and set the Long Display Name
-    switch(displayFormat)
-    {
-        case DISPLAY_NAME:
-            longDisplayName = displayName;
-		break;
-            
-        case DISPLAY_NAME_SCREEN_NAME:
-            formattedUID = [inObject formattedUID];
-            if(!displayName || [displayName compare:formattedUID] == 0){
-                longDisplayName = displayName;
-            }else{
-                longDisplayName = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
-            }
-		break;
-            
-        case SCREEN_NAME_DISPLAY_NAME:
-            formattedUID = [inObject formattedUID];
-            if(!displayName || [displayName compare:formattedUID] == 0){
-                longDisplayName = displayName;
-            }else{
-                longDisplayName = [NSString stringWithFormat:@"%@ (%@)",formattedUID,displayName];
-            }
-		break;
-            
-        case SCREEN_NAME:
-            longDisplayName = [inObject formattedUID];
-		break;
-			
-        default:
-			longDisplayName = nil;
-		break;
-    }
-	
-    //Apply the Long Display Name
-    [[inObject displayArrayForKey:@"Long Display Name"] setObject:longDisplayName withOwner:self];
+	if ([inObject isKindOfClass:[AIListContact class]]){
+		switch(displayFormat)
+		{
+			case DISPLAY_NAME:
+				longDisplayName = displayName;
+				break;
+				
+			case DISPLAY_NAME_SCREEN_NAME:
+				formattedUID = [inObject formattedUID];
+				if(!displayName || [displayName compare:formattedUID] == 0){
+					longDisplayName = displayName;
+				}else{
+					longDisplayName = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
+				}
+					break;
+				
+			case SCREEN_NAME_DISPLAY_NAME:
+				formattedUID = [inObject formattedUID];
+				if(!displayName || [displayName compare:formattedUID] == 0){
+					longDisplayName = displayName;
+				}else{
+					longDisplayName = [NSString stringWithFormat:@"%@ (%@)",formattedUID,displayName];
+				}
+					break;
+				
+			case SCREEN_NAME:
+				longDisplayName = [inObject formattedUID];
+				break;
+				
+			default:
+				longDisplayName = nil;
+				break;
+		}
+		
+		//Apply the Long Display Name
+		[[inObject displayArrayForKey:@"Long Display Name"] setObject:longDisplayName withOwner:self];
+	}
 	
 	//Notify
 	modifiedAttributes = [NSArray arrayWithObjects:@"Display Name", @"Long Display Name", @"Adium Alias", nil];
