@@ -26,7 +26,7 @@
  	higher priority.
  
 	Delegate method:
-		- (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner
+		- (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority
 */
 
 #import "AIMutableOwnerArray.h"
@@ -116,8 +116,8 @@
         [priorityArray addObject:[NSNumber numberWithFloat:priority]];
 	}
 
-	if (delegate && [delegate respondsToSelector:@selector(mutableOwnerArray:didSetObject:withOwner:)]){
-		[delegate mutableOwnerArray:self didSetObject:anObject withOwner:inOwner];
+	if (delegate && [delegate respondsToSelector:@selector(mutableOwnerArray:didSetObject:withOwner:priorityLevel:)]){
+		[delegate mutableOwnerArray:self didSetObject:anObject withOwner:inOwner priorityLevel:priority];
 	}
 		
 	//Our array may no longer have the return value sorted to the front, clear this flag so it can be sorted again
