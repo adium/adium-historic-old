@@ -25,7 +25,7 @@ jabberSpec      "xmpp:".*@.+\.{domains}(\/.*)?
 aolIMSpec       "aim:goim?screenname="[^\s&]+("&message=".+)?
 
 
-%option noyywrap 8bit caseless debug prefix="SHLinkLexer"
+%option noyywrap 8bit caseless prefix="SHLinkLexer"
 
 %x CANONICAL
 %%
