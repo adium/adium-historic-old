@@ -324,7 +324,7 @@ extern void* objc_getClass(const char *name);
     NSEnumerator	*enumerator;
     AIHandle		*handle;
 
-//    NSLog(@"(iChat)loginStatusChanged %i message:%@ reason:%i",inStatus,inMessage,inReason);
+    NSLog(@"(iChat)loginStatusChanged %i message:%@ reason:%i",inStatus,inMessage,inReason);
     
     switch(inStatus){
         case 0: //Offline
@@ -430,7 +430,7 @@ extern void* objc_getClass(const char *name);
     int			flags = [inMessage flags];
     NSString		*compactedName = [[inMessage sender] compactedString];
 
-//    NSLog(@"(iChat)messageReceived:(%i)%@:%@ [%i,%@]", [inMessage bodyFormat], [inMessage sender], [inMessage body], [inMessage flags], [inMessage time]);
+    NSLog(@"(iChat)messageReceived:(%i)%@:%@ [%i,%@]", [inMessage bodyFormat], [inMessage sender], [inMessage body], [inMessage flags], [inMessage time]);
 
     //Ignore echoed messages (anything outgoing)
     if(!(flags & kMessageOutgoingFlag)){
@@ -497,6 +497,8 @@ extern void* objc_getClass(const char *name);
     if(waitingForFirstUpdate == 1) [self firstSignOnUpdateReceived];
     if(waitingForFirstUpdate) waitingForFirstUpdate--;
 
+//    NSLog(@"buddyPropertiesChanged: %@", inProperties);
+    
     buddyEnumerator = [inProperties objectEnumerator];
     while((buddyPropertiesDict = [buddyEnumerator nextObject])){
         NSString	*compactedName = [buddyPropertiesDict objectForKey:@"FZPersonID"];
@@ -507,10 +509,21 @@ extern void* objc_getClass(const char *name);
             //Get the handle
             handle = [handleDict objectForKey:compactedName];
             if(!handle){ //If the handle doesn't exist
+                NSString *serverGroup;
+                NSArray	*groupArray;
+                
+                //Get the server group
+                groupArray = [buddyPropertiesDict objectForKey:@"FZPersonBuddyGroups"];
+                if([groupArray count]){
+                    serverGroup = [groupArray objectAtIndex:0];
+                }else{
+                    serverGroup = @"No Group";
+                }
+                
                 //Create and add the handle
                 handle = [AIHandle handleWithServiceID:[[service handleServiceType] identifier]
                                                     UID:compactedName
-                                            serverGroup:@"iChat"
+                                            serverGroup:serverGroup
                                                 temporary:![[buddyPropertiesDict objectForKey:@"FZPersonIsBuddy"] boolValue]
                                             forAccount:self];
                 [handleDict setObject:handle forKey:compactedName];
@@ -625,23 +638,23 @@ extern void* objc_getClass(const char *name);
 
 
 - (oneway void)service:(id)inService requestOutgoingFileXfer:(id)file{
-//    NSLog(@"(iChat)requestOutgoingFileXfer (%@)",file);
+    NSLog(@"(iChat)requestOutgoingFileXfer (%@)",file);
 }
 - (oneway void)service:(id)inService requestIncomingFileXfer:(id)file{
-//    NSLog(@"(iChat)requestIncomingFileXfer (%@)",file);
+    NSLog(@"(iChat)requestIncomingFileXfer (%@)",file);
 }
 - (oneway void)service:(id)inService chat:(id)chat member:(id)member statusChanged:(int)inStatus{
-//    NSLog(@"(iChat)chat:member:statusChanged (%@, %@, %i)",chat,member,inStatus);
+    NSLog(@"(iChat)chat:member:statusChanged (%@, %@, %i)",chat,member,inStatus);
 }
 - (oneway void)service:(id)inService chat:(id)chat showError:(id)error{
-//    NSLog(@"(iChat)chat:showError (%@, %@)",chat,error);
+    NSLog(@"(iChat)chat:showError (%@, %@)",chat,error);
     [[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"iChat Error (%@)", screenName] withDescription:error];
 }
 - (oneway void)service:(id)inService chat:(id)chat statusChanged:(int)inStatus{
-//    NSLog(@"(iChat)chat:statusChanged (%@, %i)",chat,inStatus);
+    NSLog(@"(iChat)chat:statusChanged (%@, %i)",chat,inStatus);
 }
 - (oneway void)service:(id)inService directIMRequestFrom:(id)from invitation:(id)invitation{
-//    NSLog(@"(iChat)directIMRequestFrom (%@, %@)",from,invitation);
+    NSLog(@"(iChat)directIMRequestFrom (%@, %@)",from,invitation);
 }
 - (oneway void)service:(id)inService invitedToChat:(id)chat isChatRoom:(char)isRoom invitation:(id)invitation{
     if(!isRoom){
@@ -649,18 +662,18 @@ extern void* objc_getClass(const char *name);
         [self service:inService chat:chat messageReceived:invitation];
 
     }else{
-//        NSLog(@"Woot: invitedToChat (%@, %i, %@)",chat,isRoom,invitation);
+        NSLog(@"Woot: invitedToChat (%@, %i, %@)",chat,isRoom,invitation);
     }    
 }
 - (oneway void)service:(id)inService youAreDesignatedNotifier:(char)notifier{
-//    NSLog(@"(iChat)Adium is designated notifier (%i)",(int)notifier);
+    NSLog(@"(iChat)Adium is designated notifier (%i)",(int)notifier);
 }
 
 - (oneway void)service:(id)inService buddyPictureChanged:(id)buddy imageData:(id)data{
     NSString	*compactedName = [buddy compactedString];
     AIHandle	*handle;
 
-//    NSLog(@"(iChat)buddyPictureChanged (%@)",buddy);
+    NSLog(@"(iChat)buddyPictureChanged (%@)",buddy);
 
     //Sign on update monitoring
     if(processingSignOnUpdates) numberOfSignOnUpdates++;
@@ -678,10 +691,10 @@ extern void* objc_getClass(const char *name);
 }
 
 - (oneway void)openNotesChanged:(id)unknown{
-//    NSLog(@"(iChat)openNotesChanged (%@)",unknown);
+    NSLog(@"(iChat)openNotesChanged (%@)",unknown);
 }
 - (oneway void)myStatusChanged:(id)unknown{
-//    NSLog(@"(iChat)myStatusChanged (%@)",unknown);
+    NSLog(@"(iChat)myStatusChanged (%@)",unknown);
 }
 
 //Removes all the possible status flags (that are valid on AIM/iChat) from the passed handle

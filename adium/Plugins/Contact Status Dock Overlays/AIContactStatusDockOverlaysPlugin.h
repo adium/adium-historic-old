@@ -16,9 +16,12 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
+@class AIStatusOverlayPreferences;
+
 @interface AIContactStatusDockOverlaysPlugin : AIPlugin <AIListObjectObserver> {
     NSMutableArray		*unviewedObjectsArray;
     AIIconState			*overlayState;
+    AIStatusOverlayPreferences	*preferences;
 
 }
 
