@@ -16,9 +16,14 @@
 /*
     An array that keeps track of who owns each of its objects.
     
-    Every object in the array has an associated owner.  The best use for this class is when multiple pieces of code may be trying to control the same thing.  For instance, if there are several events that can cause something to change colors, by using an owner-array it is possible to prevent conflicts and determine an average color based on all the values.  It's also easy for a specific owner to remove the value they contributed, or replace it with another.
+    Every object in the array has an associated owner.  The best use for this class is when multiple pieces of code
+ 	may be trying to control the same thing.  For instance, if there are several events that can cause something to
+ 	change colors, by using an owner-array it is possible to prevent conflicts and determine an average color based
+ 	on all the values.  It's also easy for a specific owner to remove the value they contributed, or replace it with
+ 	another.
  
-	Priority levels can be used to dictate the ordering of objects in the array.  0 is the highest priority; 10 is the lowest.
+	Floating point priority levels can be used to dictate the ordering of objects in the array.  Lower numbers have
+ 	higher priority.
 */
 
 #import "AIMutableOwnerArray.h"
@@ -66,6 +71,7 @@
 	
 	return([desc autorelease]);
 }
+
 
 //Value Storage --------------------------------------------------------------------------------------------------------
 #pragma mark Value Storage
