@@ -1,5 +1,6 @@
 {
     IBClasses = (
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
             ACTIONS = {cancel = id; okay = id; statusControlChanged = id; }; 
             CLASS = AIEditStateWindowController; 
@@ -18,6 +19,7 @@
                 "label_statusMessage" = NSTextField; 
                 "popUp_state" = NSPopUpButton; 
                 "scrollView_autoReply" = NSScrollView; 
+                "scrollView_statusMessage" = AIAutoScrollView; 
                 target = id; 
                 "textField_idleHours" = NSTextField; 
                 "textField_idleMinutes" = NSTextField; 
@@ -36,6 +38,13 @@
                 "window_anchorOnRightSide" = NSWindow; 
             }; 
             SUPERCLASS = NSTextField; 
+        }, 
+        {
+            ACTIONS = {sendContent = id; }; 
+            CLASS = AISendingTextView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {target = id; }; 
+            SUPERCLASS = NSTextView; 
         }, 
         {CLASS = AISmartStepper; LANGUAGE = ObjC; SUPERCLASS = NSStepper; }, 
         {
