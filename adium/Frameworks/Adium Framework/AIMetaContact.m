@@ -566,6 +566,7 @@
 		unsigned int i = 0;
 		while ((i < count) && !userIcon){
 			userIcon = [[self objectAtIndex:i] userIcon];
+			i++;
 		}
 	}
 
