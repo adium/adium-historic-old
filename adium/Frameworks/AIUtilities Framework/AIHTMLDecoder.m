@@ -119,9 +119,9 @@ int HTMLEquivalentForFontSize(int fontSize);
 
             //Family
             if([familyName caseInsensitiveCompare:currentFamily] != 0){
-                int langNum = 11; /*While this seems to work, I do not understand why.  A better option must exist. 
-                                    11 seems to mean "supports ASCII and foreign language" or something, as all languages tested
-                                    worked fine.*/
+                //The langNum is weird.  HTML calls for a two-letter code... AIM seems to put 11 here for Japanese.  Any other data?
+                //Putting 11 in that spot for all text messes up English fonts, apparently, sometimes.
+                int langNum = 0; 
                 [string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"%i\"",familyName,langNum]];
                 [currentFamily release]; currentFamily = [familyName retain];
             }
