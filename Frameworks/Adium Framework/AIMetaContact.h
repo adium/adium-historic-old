@@ -20,6 +20,8 @@
 	BOOL					containsOnlyOneService;
 
 	NSMutableArray			*containedObjects;			//Manually ordered array of contents
+	BOOL					containedObjectsNeedsSort;
+	BOOL					delayContainedObjectSorting;
 	
     BOOL					expanded;			//Exanded/Collapsed state of this object
 	
@@ -35,13 +37,16 @@
 - (AIListContact *)preferredContact;
 - (AIListContact *)preferredContactWithService:(AIService *)inService;
 
+//Used for one metaContact talking to another
 - (void)containedMetaContact:(AIMetaContact *)containedMetaContact didChangeContainsOnlyOneUniqueContact:(BOOL)inContainsOnlyOneUniqueContact;
 
+//YES if the metaContact has only one UID/serviceID within it - for example, three different accounts' AIListContacts for a particular screen name
 - (BOOL)containsOnlyOneUniqueContact;
+
+//Similarly, YES if the metaContact has only one serviceID within it.
 - (BOOL)containsOnlyOneService;
 - (int)uniqueContainedObjectsCount;
 - (AIListObject *)uniqueObjectAtIndex:(int)inIndex;
-- (NSArray *)listContacts;
 
 - (NSDictionary *)dictionaryOfServiceClassesAndListContacts;
 
@@ -51,5 +56,10 @@
 // (PRIVATE: For contact controller ONLY)
 - (BOOL)addObject:(AIListObject *)inObject;
 - (void)removeObject:(AIListObject *)inObject;
+
+//An flat array of AIListContacts each with a different internalObjectID
 - (NSArray *)listContacts;
+
+//Delay sorting the contained object list; this should only be used by the contactController. Be sure to set it back to YES when operations are done
+- (void)setDelayContainedObjectSorting:(BOOL)flag;
 @end

@@ -488,12 +488,31 @@ DeclareString(FormattedUID);
 	return [[self statusObjectForKey:@"StatusMessage"] string];
 }
 
-//Display name, influenced by plugins
+//Display name.  A listObject attempts to have the same displayName as its containing contact (potentially its metaContact).
+//If it is not in a metaContact, its display name is return by [self ownDisplayName]
 - (NSString *)displayName
 {
-    NSString	*outName = [[self displayArrayForKey:DisplayName] objectValue];
+    NSString	*outName;
+	
+	//Look for a parent contact and draw a display name from by default to provide a consistent naming
+	AIListObject	*parentObject = [[adium contactController] parentContactForListObject:self];
+	if (parentObject != self){
+		outName = [parentObject displayName];
+	}else{
+		outName = [self ownDisplayName];
+	}
+
+	//If a display name was found, return it; otherwise, return the formattedUID
     return(outName ? outName : [self formattedUID]);
 }
+
+//Display name, drawing first from any externally-provided display name, then falling back to the formatted UID
+- (NSString *)ownDisplayName
+{
+    NSString	*outName = [[self displayArrayForKey:DisplayName] objectValue];
+    return(outName ? outName : [self formattedUID]);	
+}
+
 //Apply an alias
 - (void)setDisplayName:(NSString *)alias
 {

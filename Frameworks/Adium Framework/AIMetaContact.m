@@ -31,7 +31,7 @@
 
 @implementation AIMetaContact
 
-int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *context);
+int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *context);
 
 //init
 - (id)initWithObjectID:(NSNumber *)inObjectID
@@ -51,6 +51,8 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 	containsOnlyOneUniqueContact = YES;
 	containsOnlyOneService = YES;
 	expanded = YES;
+	containedObjectsNeedsSort = NO;
+	delayContainedObjectSorting = NO;
 	
 	largestOrder = 1.0;
 	smallestOrder = 1.0;
@@ -177,7 +179,8 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 		
 		[inObject setContainingObject:self];
 		[containedObjects addObject:inObject];
-
+		containedObjectsNeedsSort = YES;
+		
 		[_listContacts release]; _listContacts = nil;
 
 		[self _updateCachedStatusOfObject:inObject];
@@ -198,7 +201,7 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 		[self _removeCachedStatusOfObject:inObject];
 		
 		[containedObjects removeObject:inObject];
-
+		
 		if ([inObject isKindOfClass:[AIListContact class]] && [(AIListContact *)inObject remoteGroupName]){
 			//Reset it to its remote group
 			[inObject setContainingObject:nil];
@@ -225,14 +228,15 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 - (AIListContact *)preferredContact
 {
 	if (!_preferredContact){
+		NSArray			*theContainedObjects = [self containedObjects];
 		AIListContact   *preferredContact = nil;
 		AIListContact   *thisContact;
 		unsigned		index;
-		unsigned		count = [containedObjects count];
+		unsigned		count = [theContainedObjects count];
 		
 		//Search for an available contact
 		for (index = 0; index < count; index++){
-			thisContact = [containedObjects objectAtIndex:index];
+			thisContact = [theContainedObjects objectAtIndex:index];
 			if ([thisContact statusSummary] == AIAvailableStatus){
 				preferredContact = thisContact;
 				break;
@@ -242,17 +246,17 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 		//If no available contacts, find the first online contact
 		if (!preferredContact){
 			for (index = 0; index < count; index++){
-				thisContact = [containedObjects objectAtIndex:index];
+				thisContact = [theContainedObjects objectAtIndex:index];
 				if ([thisContact online]){
 					preferredContact = thisContact;
 					break;
 				}
 			}
 		}
-		
+
 		//If no online contacts, find the first contact
 		if (!preferredContact && (count != 0)){
-			preferredContact = [containedObjects objectAtIndex:0];
+			preferredContact = [theContainedObjects objectAtIndex:0];
 		}
 		
 		_preferredContact = preferredContact;
@@ -314,7 +318,7 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 	if (!_listContacts){
 		NSMutableArray	*listContacts = [[NSMutableArray alloc] init];
 		NSMutableArray	*uniqueObjectIDs = [NSMutableArray array];
-		[self _addListContacts:containedObjects toArray:listContacts uniqueObjectIDs:uniqueObjectIDs];
+		[self _addListContacts:[self containedObjects] toArray:listContacts uniqueObjectIDs:uniqueObjectIDs];
 		
 		_listContacts = listContacts;
 	}
@@ -407,15 +411,6 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 - (BOOL)containsOnlyOneService
 {
 	return containsOnlyOneService;
-}
-
-- (NSString *)formattedUID
-{
-	if (containsOnlyOneUniqueContact){
-		return([[self preferredContact] formattedUID]);
-	}else{
-		return nil;
-	}
 }
 
 - (void)containedMetaContact:(AIMetaContact *)containedMetaContact didChangeContainsOnlyOneUniqueContact:(BOOL)inContainsOnlyOneUniqueContact
@@ -778,26 +773,41 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 		userIcon = [[self preferredContact] userIcon];
 	}
 	if (!userIcon){
-		unsigned int count = [containedObjects count];
+		NSArray		*theContainedObjects = [self containedObjects];
+		
+		unsigned int count = [theContainedObjects count];
 		unsigned int i = 0;
 		while ((i < count) && !userIcon){
-			userIcon = [[containedObjects objectAtIndex:i] userIcon];
+			userIcon = [[theContainedObjects objectAtIndex:i] userIcon];
 			i++;
 		}
 	}
 
-	return userIcon;
+	return(userIcon);
 }
 
 - (NSString *)displayName
 {
 	NSString	*displayName = [super displayName];
+	
+	//If we have no alias, and we contain more than one UID, [super displayName] will return nil due to the overriding
+	//of formattedUID below.
 	if (!displayName){
-		displayName = [[self preferredContact] displayName];
+		displayName = [[self preferredContact] ownDisplayName];
 	}
 	
 	//	return [displayName stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]];
-	return displayName;
+	return(displayName);
+}
+
+//FormattedUID will return nil if we have multiple different UIDs contained within us
+- (NSString *)formattedUID
+{
+	if (containsOnlyOneUniqueContact){
+		return([[self preferredContact] formattedUID]);
+	}else{
+		return nil;
+	}
 }
 
 - (NSString *)longDisplayName
@@ -809,7 +819,7 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 	}
 
 	//    return([longDisplayName stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]]);
-	return longDisplayName;
+	return(longDisplayName);
 }
 
 
@@ -818,6 +828,12 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 //Return our contained objects
 - (NSArray *)containedObjects
 {
+	//Sort the containedObjects if the flag tells us it's needed
+	if (containedObjectsNeedsSort && !delayContainedObjectSorting){
+		containedObjectsNeedsSort = NO;
+		[containedObjects sortUsingFunction:containedContactSort context:nil];
+	}
+	
 	return(containedObjects);
 }
 
@@ -836,19 +852,19 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 //Retrieve an object by index
 - (id)objectAtIndex:(unsigned)index
 {
-    return([containedObjects objectAtIndex:index]);
+    return([[self containedObjects] objectAtIndex:index]);
 }
 
 //Retrieve the index of an object
 - (int)indexOfObject:(AIListObject *)inObject
 {
-    return([containedObjects indexOfObject:inObject]);
+    return([[self containedObjects] indexOfObject:inObject]);
 }
 
 //Return an enumerator of our content
 - (NSEnumerator *)objectEnumerator
 {
-    return([containedObjects objectEnumerator]);
+    return([[self containedObjects] objectEnumerator]);
 }
 
 - (NSEnumerator *)listContactsEnumerator
@@ -867,7 +883,7 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 
 - (AIListObject *)objectWithService:(AIService *)inService UID:(NSString *)inUID
 {
-	NSEnumerator	*enumerator = [containedObjects objectEnumerator];
+	NSEnumerator	*enumerator = [[self containedObjects] objectEnumerator];
 	AIListObject	*object;
 	
 	while(object = [enumerator nextObject]){
@@ -899,9 +915,8 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 		smallestOrder = inOrderIndex;
 	}
 	
-	[containedObjects sortUsingFunction:containedContactSort context:nil];
-
 	//We're no longer positive of our preferredContact, so clear the cache
+	containedObjectsNeedsSort = YES;
 	_preferredContact = nil;
 	[_listContacts release]; _listContacts = nil;
 }
@@ -916,18 +931,33 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 	return largestOrder;
 }
 
+#pragma mark Contained Contact sorting
+
+- (void)setDelayContainedObjectSorting:(BOOL)flag
+{
+	delayContainedObjectSorting = flag;
+	
+	if (!delayContainedObjectSorting){
+		//Clear our preferred contact so the next call to it will update the preferred contact
+		_preferredContact = nil;
+		
+		[_listContacts release]; _listContacts = nil;
+	}
+}
+
 //Sort contained contacts
-int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *context)
+int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *context)
 {
 	float orderIndexA = [objectA orderIndex];
 	float orderIndexB = [objectB orderIndex];
-	
 	if(orderIndexA > orderIndexB){
 		return(NSOrderedDescending);
+		
 	}else if (orderIndexA < orderIndexB){
 		return(NSOrderedAscending);
+		
 	}else{
-		return([[objectA internalObjectID] caseInsensitiveCompare:[objectB internalObjectID]]);
+		return([[objectA internalUniqueObjectID] caseInsensitiveCompare:[objectB internalUniqueObjectID]]);
 	}
 }
 

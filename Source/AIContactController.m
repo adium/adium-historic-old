@@ -520,7 +520,7 @@ DeclareString(UID);
 	}
 	
     //If no more updates are left to process, disable the update timer
-	//If there are no delay update requests, remove the hold
+	//If there are no delayed update requests, remove the hold
 	if(!delayedUpdateTimer || !updatesOccured){
 		if(delayedUpdateTimer){
 			[delayedUpdateTimer invalidate];
@@ -585,6 +585,9 @@ DeclareString(UID);
 	AIListContact	*listContact = nil;
 	NSEnumerator	*enumerator = [containedContactsArray objectEnumerator];
 	
+	
+	[metaContact setDelayContainedObjectSorting:YES];
+	
 	while (containedContact = [enumerator nextObject]){
 		if ([[containedContact objectForKey:KEY_IS_METACONTACT] boolValue]){
 			//This contained contact is a meta contact, so it'll just have an objectID
@@ -602,6 +605,8 @@ DeclareString(UID);
 			}
 		}
 	}
+	
+	[metaContact setDelayContainedObjectSorting:NO];
 }
 
 
