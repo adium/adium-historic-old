@@ -17,51 +17,52 @@
 @protocol AIFlexibleTableViewDelegate, AIMessageViewController;
 
 @interface AISMViewController : AIObject <AIMessageViewController> {
-    AIChat			*chat;
+    AIChat					*chat;
     AIFlexibleTableView		*messageView;
 	AIAutoScrollView		*scrollView_messages;
-    AIFlexibleTableRow          *previousRow;
+    AIFlexibleTableRow		*previousRow;
     
-    NSImage			*iconIncoming;
-    NSImage			*iconOutgoing;
+    NSImage					*iconIncoming;
+    NSImage					*iconOutgoing;
 
     //Preference cache
-    NSColor			*outgoingSourceColor;
-    NSColor			*outgoingLightSourceColor;
-    NSColor			*incomingSourceColor;
-    NSColor			*incomingLightSourceColor;
+    NSColor					*outgoingSourceColor;
+    NSColor					*outgoingLightSourceColor;
+    NSColor					*incomingSourceColor;
+    NSColor					*incomingLightSourceColor;
 
-    BOOL			ignoreTextStyles;
+    BOOL					ignoreTextStyles;
     
-    NSString			*prefixIncoming;
-    NSString			*prefixOutgoing;
-    NSFont			*prefixFont;
+    NSString				*prefixIncoming;
+    NSString				*prefixOutgoing;
+    NSFont					*prefixFont;
 
-    NSMutableString             *timeStampFormat;
-    NSDateFormatter		*timeStampFormatter;
+    NSMutableString			*timeStampFormat;
+    NSDateFormatter			*timeStampFormatter;
     
-    NSColor			*colorIncoming;
-    NSColor			*colorIncomingBorder;
-    NSColor			*colorIncomingDivider;
-    NSColor			*colorOutgoing;
-    NSColor			*colorOutgoingBorder;
-    NSColor			*colorOutgoingDivider;
+    NSColor					*colorIncoming;
+    NSColor					*colorIncomingBorder;
+    NSColor					*colorIncomingDivider;
+    NSColor					*colorOutgoing;
+    NSColor					*colorOutgoingBorder;
+    NSColor					*colorOutgoingDivider;
     
-    BOOL			combineMessages;
-    BOOL			inlinePrefixes;
-    BOOL                        showUserIcons;
-    float                       headIndent;
+    BOOL					combineMessages;
+    BOOL					inlinePrefixes;
+    BOOL					showUserIcons;
+    float					headIndent;
     
 	//Threads are a lot like George W. Bush in that they are the devil.
-    BOOL                        rebuilding;
-    BOOL                        restartRebuilding;
-    BOOL                        abandonRebuilding;
-	BOOL						lockContentThreadQueue;
-    NSMutableArray              *contentThreadQueue;
+    BOOL					rebuilding;
+    BOOL					restartRebuilding;
+    BOOL					abandonRebuilding;
+	BOOL					lockContentThreadQueue;
+    NSMutableArray			*contentThreadQueue;
 }
 
 + (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat;
 - (NSView *)messageView;
+- (NSScrollView *)messageScrollView;
 - (AIChat *)chat;
 
 @end
