@@ -27,10 +27,13 @@
 	//Current configuration
     AIAccountViewController		*accountViewController;
 	AIAccountProxySettings 		*accountProxyController;
-	AIAccount					*account;	
+	AIAccount					*account;
+	
+	//Delete if the sheet is canceled (should be YES when called on a new account, NO otherwise)
+	BOOL	deleteIfCanceled;
 }
 
-+ (void)editAccount:(AIAccount *)account onWindow:(id)parentWindow;
++ (void)editAccount:(AIAccount *)account onWindow:(id)parentWindow deleteIfCanceled:(BOOL)inDeleteIfCanceled;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
 

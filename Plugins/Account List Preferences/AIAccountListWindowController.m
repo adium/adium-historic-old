@@ -121,13 +121,21 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 - (IBAction)selectServiceType:(id)sender
 {
     AIAccount	*account;
-
+	int			accountRow;
+	
 	//Create the new account.  Our list will automatically update in response to the account being created
 	account = [[adium accountController] newAccountAtIndex:-1 forService:[sender representedObject]];
 
 	//And then, we can select and edit the new account
-    [tableView_accountList selectRow:[accountArray indexOfObject:account] byExtendingSelection:NO];
-    [self editAccount:nil];
+	accountRow = [accountArray indexOfObject:account];
+	[tableView_accountList selectRow:accountRow byExtendingSelection:NO];
+	[tableView_accountList scrollRowToVisible:accountRow];
+
+	[AIEditAccountWindowController editAccount:account
+									  onWindow:[self window]
+							  deleteIfCanceled:YES];
+	
+	[self editAccount:nil];
 }
 
 //Edit the selected account
@@ -135,7 +143,9 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 {
     int	selectedRow = [tableView_accountList selectedRow];
 	if(selectedRow >= 0 && selectedRow < [accountArray count]){		
-		[AIEditAccountWindowController editAccount:[accountArray objectAtIndex:selectedRow] onWindow:[self window]];
+		[AIEditAccountWindowController editAccount:[accountArray objectAtIndex:selectedRow] 
+										  onWindow:[self window]
+								  deleteIfCanceled:NO];
     }
 }
 

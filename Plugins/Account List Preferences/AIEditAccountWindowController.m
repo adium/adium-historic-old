@@ -10,7 +10,7 @@
 #import "AIAccountProxySettings.h"
 
 @interface AIEditAccountWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount;
+- (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount deleteIfCanceled:(BOOL)inDeleteIfCanceled;
 - (void)_addCustomViewAndTabsForAccount:(AIAccount *)inAccount;
 - (int)_addCustomView:(NSView *)customView toView:(NSView *)setupView tabViewItemIdentifier:(NSString *)identifier;
 - (void)_configureResponderChain:(NSTimer *)inTimer;
@@ -19,11 +19,13 @@
 
 @implementation AIEditAccountWindowController
 
-+ (void)editAccount:(AIAccount *)inAccount onWindow:(id)parentWindow
++ (void)editAccount:(AIAccount *)inAccount onWindow:(id)parentWindow deleteIfCanceled:(BOOL)inDeleteIfCanceled
 {
 	AIEditAccountWindowController	*controller;
 	
-	controller = [[self alloc] initWithWindowNibName:@"EditAccountSheet" account:inAccount];
+	controller = [[self alloc] initWithWindowNibName:@"EditAccountSheet" 
+											 account:inAccount
+									deleteIfCanceled:inDeleteIfCanceled];
 
 	if(parentWindow){
 		[NSApp beginSheet:[controller window]
@@ -37,11 +39,12 @@
 }
 
 //init the window controller
-- (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount
+- (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount deleteIfCanceled:(BOOL)inDeleteIfCanceled
 {
     [super initWithWindowNibName:windowNibName];
 
 	account = [inAccount retain];
+	deleteIfCanceled = inDeleteIfCanceled;
 
 	return(self);
 }
@@ -114,6 +117,12 @@
 //Cancel.  Close without saving changes
 - (IBAction)cancel:(id)sender
 {
+	/* deleteIfCanceled should only be YES if we were called to edit a newly created account. Canceling the process should
+	 * delete the account which we were passed. */
+	if(deleteIfCanceled){
+		[[adium accountController] deleteAccount:account save:YES];
+	}
+
 	[self closeWindow:nil];
 }
 
