@@ -9,7 +9,7 @@
 #import "ESSendMessageContactAlertPlugin.h"
 
 @interface ESSendMessageAlertDetailPane (PRIVATE)
-- (void)setDestinationListObject:(AIListObject *)inObject;
+- (void)setDestinationContact:(AIListObject *)inObject;
 @end
 
 @implementation ESSendMessageAlertDetailPane
@@ -45,7 +45,7 @@
 
 	//Configure the destination menu
 	[popUp_messageTo setMenu:[[adium contactController] menuOfAllContactsInGroup:nil withTarget:self]];
-	[self setDestinationListObject:(destContact ? destContact : inObject)];
+	[self setDestinationContact:(destContact ? destContact : inObject)];
 	
 	//Configure the remaining controls
 	AIAccount *sourceAccount = [[adium accountController] accountWithAccountNumber:[[inDetails objectForKey:KEY_MESSAGE_SEND_FROM] intValue]];
@@ -76,7 +76,7 @@
 //Destination contact was selected from menu
 - (void)selectContact:(id)sender
 {
-	[self setDestinationListObject:[sender representedObject]];	
+	[self setDestinationContact:[sender representedObject]];	
 }
 
 //Set our destination contact
