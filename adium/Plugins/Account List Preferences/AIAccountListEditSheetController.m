@@ -72,14 +72,12 @@
     [[account properties] setObject:[NSNumber numberWithBool:savePassword] forKey:@"SavedPassword"];
     
     //Broadcast a properties changed notification so everyone can update
-    [[[owner accountController] accountNotificationCenter] postNotificationName:Account_PropertiesChanged
-                                                                         object:account
-                                                                       userInfo:nil];
+    [[[owner accountController] accountNotificationCenter] postNotificationName:Account_PropertiesChanged object:account userInfo:nil];
     
     [self closeWindow:nil];
 }    
 
-// closes this window
+// closes this window and delete the account we got here from clicking the "new" button
 - (IBAction)closeWindow:(id)sender
 {
     if(!del)
@@ -91,8 +89,9 @@
     }
     else
     {
-        if([self windowShouldClose:nil]) //this SHOULD delete the account instead. Doesn't currently
+        if([self windowShouldClose:nil]) 
         {
+            [[owner accountController] deleteAccount:account];
             [[self window] close];
         }
     }
