@@ -394,7 +394,7 @@ DeclareString(UID);
 			
 			localGroup = [self groupWithUID:remoteGroup];
 			existingObject = [localGroup objectWithService:inObjectService UID:inObjectUID];
-			NSLog(@"%@ ; %@",localGroup,existingObject);
+
 			if(existingObject){
 				//If an object exists in this group with the same UID and serviceID, create a MetaContact
 				//for the two.
