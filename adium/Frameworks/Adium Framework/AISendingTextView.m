@@ -77,7 +77,8 @@ static NSImage *pushIndicatorImage = nil;
 
     //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:self];
-
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSViewFrameDidChangeNotification object:self];
+	
     return(self);
 }
 
@@ -498,6 +499,12 @@ static NSImage *pushIndicatorImage = nil;
     return(_desiredSizeCached);
 }
 
+//Reset the desired size cache when our frame changes
+- (void)frameDidChange:(NSNotification *)notification
+{
+    _desiredSizeCached = NSMakeSize(0,0); 
+}
+
 //Post a size changed notification (if necessary)
 - (void)textDidChange:(NSNotification *)notification
 {
@@ -506,7 +513,6 @@ static NSImage *pushIndicatorImage = nil;
         [[adium contentController] contentsChangedInTextEntryView:self];
     }
 
-    
     //Reset cache
     _desiredSizeCached = NSMakeSize(0,0); 
 
