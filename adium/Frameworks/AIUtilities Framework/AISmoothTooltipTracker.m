@@ -45,7 +45,6 @@
 
 - (void)dealloc
 {
-	NSLog(@"%@ dealloc",self);
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[self removeCursorRect];
