@@ -129,6 +129,7 @@ typedef enum {
 - (void)addContacts:(NSArray *)contactArray toGroup:(AIListGroup *)group;
 - (void)removeListObjects:(NSArray *)objectArray;
 - (void)moveListObjects:(NSArray *)objectArray toGroup:(AIListGroup *)group index:(int)index;
+- (void)requestAddContactWithUID:(NSString *)contactUID serviceID:(NSString *)inServiceID;
 
 //Contact info
 - (IBAction)showContactInfo:(id)sender;
