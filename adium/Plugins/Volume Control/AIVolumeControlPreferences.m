@@ -42,6 +42,8 @@
     }else{
         [slider_volume setFloatValue:[[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]];
     }
+
+    [self configureControlDimming];
 }
 
 //New value selected on the volume slider

@@ -106,9 +106,9 @@
 															 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		style = [plugin messageStyleBundleWithName:styleName];
 		
-		//If the preferred style is unavailable, load Smooth Operator
+		//If the preferred style is unavailable, load the default
 		if (!style){
-			styleName = AILocalizedString(@"Smooth Operator","Smooth Operator message style name. Make sure this matches the localized Smooth Operator style bundle's name!");
+			styleName = AILocalizedString(@"Mockie","Default message style name. Make sure this matches the localized style bundle's name!");
 			style = [plugin messageStyleBundleWithName:styleName];
 		}
 		
