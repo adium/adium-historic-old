@@ -110,11 +110,11 @@
     int				selectedTabIndex = -1;
     
     //Remove any tabs
-    if([tabView_auxilary selectedTabViewItem]){
-        selectedTabIndex = [tabView_auxilary indexOfTabViewItem:[tabView_auxilary selectedTabViewItem]];
+    if([tabView_auxiliary selectedTabViewItem]){
+        selectedTabIndex = [tabView_auxiliary indexOfTabViewItem:[tabView_auxiliary selectedTabViewItem]];
     }
-    while([tabView_auxilary numberOfTabViewItems] > 1){
-        [tabView_auxilary removeTabViewItem:[tabView_auxilary tabViewItemAtIndex:[tabView_auxilary numberOfTabViewItems] - 1]];
+    while([tabView_auxiliary numberOfTabViewItems] > 1){
+        [tabView_auxiliary removeTabViewItem:[tabView_auxiliary tabViewItemAtIndex:[tabView_auxiliary numberOfTabViewItems] - 1]];
     }
     
     //Close any currently open controllers
@@ -148,24 +148,24 @@
     while([nextView nextKeyView]) nextView = [nextView nextKeyView];
     [nextView setNextKeyView:button_autoConnect];
 	
-    //Swap in the account auxilary tabs
+    //Swap in the account auxiliary tabs
     enumerator = [[accountViewController auxiliaryTabs] objectEnumerator];
     while(tabViewItem = [enumerator nextObject]){
-        [tabView_auxilary addTabViewItem:tabViewItem];
+        [tabView_auxiliary addTabViewItem:tabViewItem];
     }
 	
     //There must be a better way to do this.  When moving tabs over, they will stay selected - resulting in multiple selected tabs.  My quick fix is to manually select each tab in the view.  Not the greatest, but it'll work for now.
-    [tabView_auxilary selectLastTabViewItem:nil];
+    [tabView_auxiliary selectLastTabViewItem:nil];
     int i;
-    for(i = 1;i < [tabView_auxilary numberOfTabViewItems];i++){
-        [tabView_auxilary selectPreviousTabViewItem:nil];
+    for(i = 1;i < [tabView_auxiliary numberOfTabViewItems];i++){
+        [tabView_auxiliary selectPreviousTabViewItem:nil];
     }
 	
     //Re-select same index (if possible)
-    if((selectedTabIndex > 0) && (selectedTabIndex < [tabView_auxilary numberOfTabViewItems])){
-        [tabView_auxilary selectTabViewItemAtIndex:selectedTabIndex];
+    if((selectedTabIndex > 0) && (selectedTabIndex < [tabView_auxiliary numberOfTabViewItems])){
+        [tabView_auxiliary selectTabViewItemAtIndex:selectedTabIndex];
     }else{
-        [tabView_auxilary selectFirstTabViewItem:nil];
+        [tabView_auxiliary selectFirstTabViewItem:nil];
     }
 }
 
@@ -232,7 +232,7 @@
     [tableView_accountList selectRow:index byExtendingSelection:NO];
     
     //Select the 'Account' tab and put focus on the account fields
-    [tabView_auxilary selectTabViewItemAtIndex:0];
+    [tabView_auxiliary selectTabViewItemAtIndex:0];
     [[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
 }
 
