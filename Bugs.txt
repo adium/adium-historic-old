@@ -31,9 +31,9 @@ List and Tabs
     the second time.
   - An incoming message which opens a new tab will also unminimize the associated window
   - Tooltips appear in the contact list even when over the scroll bar
-
-Insert Link sheet
-  - Override NSTextView tab input to send cursor to next responder.
+  - If an initial contact list display has only one group, and that group is collapsed,
+    an infinite scrollbar is shown.  This is probably indicative of a problem somewhere in
+	our autosizing code.
 
 Other
   - Links without protocol specifiers do not open when clicked.
