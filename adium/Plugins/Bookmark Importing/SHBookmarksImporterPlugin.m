@@ -14,7 +14,7 @@
 - (NSMenu *)buildBookmarkMenuFor:(id <NSMenuItem>)menuItem;
 @end
 
-@class SHSafariBookmarksImporter, SHCaminoBookmarksImporter;
+@class SHSafariBookmarksImporter, SHCaminoBookmarksImporter, SHMozillaBookmarksImporter;
 
 @implementation SHBookmarksImporterPlugin
 
@@ -31,6 +31,7 @@ static NSMenu       *bookmarkSets;
     // install new importer classes here - very similar to AIPluginController
     [self installImporterClass:[SHSafariBookmarksImporter class]];
     [self installImporterClass:[SHCaminoBookmarksImporter class]];
+    [self installImporterClass:[SHMozillaBookmarksImporter class]];
     
     // initial menu configuration
     [self configureMenus];
