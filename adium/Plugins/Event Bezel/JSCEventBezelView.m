@@ -41,13 +41,11 @@ BOOL pantherOrLater;
     }
     
     // Set the attributes for the main buddy name and the other strings
-    mainAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys: [[NSFontManager sharedFontManager] 
-        convertFont:[NSFont systemFontOfSize:24.0] toHaveTrait: NSBoldFontMask], NSFontAttributeName, 
+    mainAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
                     [NSColor whiteColor], NSForegroundColorAttributeName,
                     textShadow, NSShadowAttributeName,
                     parrafo, NSParagraphStyleAttributeName, nil] retain];
-    mainAttributesMask = [[NSMutableDictionary dictionaryWithObjectsAndKeys: [[NSFontManager sharedFontManager] 
-        convertFont:[NSFont systemFontOfSize:24.0] toHaveTrait: NSBoldFontMask], NSFontAttributeName, 
+    mainAttributesMask = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
                     [NSColor darkGrayColor], NSForegroundColorAttributeName,
                     parrafo, NSParagraphStyleAttributeName, nil] retain];
     secondaryAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
