@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.65 2004/01/07 21:29:17 adamiser Exp $
+// $Id: AIContactController.m,v 1.66 2004/01/07 21:33:10 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -23,15 +23,15 @@
 #import "AIContactListGeneration.h"
 
 #define CONTACT_LIST_GROUP_NAME		@"Contact List"		//The name of the main contact list group
-#define STRANGER_GROUP_NAME		@"__Strangers"		//The name of the hidden stranger group
-#define KEY_CONTACT_LIST 		@"ContactList"		//Contact list key
+#define STRANGER_GROUP_NAME			@"__Strangers"		//The name of the hidden stranger group
+#define KEY_CONTACT_LIST 			@"ContactList"		//Contact list key
 #define PREF_GROUP_CONTACT_LIST		@"Contact List"		//Contact list preference group
-#define GET_INFO_MENU_TITLE		@"Get Info"
+#define GET_INFO_MENU_TITLE			@"Get Info"
 #define KEY_CONTACT_LIST_ORDER		@"Contact List Order"
 #define KEY_CONTACT_GROUP_ORDER		@"Contact Group Order"
 
 #define ORDER_INDEX_SMALLEST		0
-#define ORDER_INDEX_LARGEST		10000
+#define ORDER_INDEX_LARGEST			10000
 
 #define UPDATE_CLUMP_INTERVAL		1.0
 
