@@ -6160,6 +6160,7 @@
 				9E6A9BF70732CB500032C9F6,
 				9E6A9BF80732CB500032C9F6,
 				34F1022F0734499700890D3B,
+				C4C63A09073889B2005E076D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19712,6 +19713,7 @@
 		};
 		9C8C7FA303CBA17B00267226 = {
 			children = (
+				C4C63A08073889B1005E076D,
 				4BE666CC0577AFA0007E115C,
 				9C8C7FA403CBA21B00267226,
 				9C8C7FA503CBA21B00267226,
@@ -21342,6 +21344,20 @@
 		};
 		C497518D05BBB979009958A6 = {
 			fileRef = C497518C05BBB0C5009958A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4C63A08073889B1005E076D = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = LogViewer.png;
+			path = Plugins/Logger/LogViewer.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4C63A09073889B2005E076D = {
+			fileRef = C4C63A08073889B1005E076D;
 			isa = PBXBuildFile;
 			settings = {
 			};
