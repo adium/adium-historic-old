@@ -107,18 +107,4 @@
 	[accountConnectionStatusGroupingOfflineTimer release]; accountConnectionStatusGroupingOfflineTimer = nil;
 }
 
-/*
-- (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key ofType:(SEL)selector listObject:(AIListObject *)inObject 
-{
-	id		newStatus = [inObject performSelector:selector withObject:key];
-	id		oldStatus = [cache objectForKey:[inObject uniqueObjectID]];
-	
-	if(newStatus && (oldStatus == nil || ![newStatus performSelector:@selector(compare:) withObject:oldStatus] == 0)){
-		[cache setObject:newStatus forKey:[inObject uniqueObjectID]];
-		return(YES);
-	}else{
-		return(NO);
-	}
-}
-*/
 @end
