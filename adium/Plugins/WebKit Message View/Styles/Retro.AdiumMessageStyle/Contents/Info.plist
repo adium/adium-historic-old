@@ -20,5 +20,9 @@
 	<integer>11</integer>
     <key>DisableCustomBackground</key>
 	<true/>
+	<key>ShowsUserIcons:Bubbleless</key>
+	<false/>
+	<key>ShowsUserIcons:Bubbleless - Time on Consecutive</key>
+	<false/>
 </dict>
 </plist>
