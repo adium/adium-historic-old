@@ -201,7 +201,8 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     [self updateProgressDisplay];
     [tableView_results reloadData];   
     [textView_content setString:@""];
-    // at this point the searchkit index is stale as well... but i haven't figured that out yet :(
+    [availableLogArray removeAllObjects];
+    [self initLogFiltering];
 }
 
 //Close the window
