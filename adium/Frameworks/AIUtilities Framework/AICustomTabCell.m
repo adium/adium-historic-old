@@ -279,7 +279,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     NSView          *view = [eventData objectForKey:@"view"];
 
     //Set ourself (or our close button) has hovered
-    if((allowsInactiveTabClosing || selected) && [[eventData objectForKey:@"close"] boolValue]){
+    if((allowsInactiveTabClosing || selected || [NSEvent cmdKey]) && [[eventData objectForKey:@"close"] boolValue]){
         hoveringClose = YES;
         [view setNeedsDisplayInRect:offsetCloseButtonRect];
     }else{
@@ -296,7 +296,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     NSView          *view = [eventData objectForKey:@"view"];
 
     //Set ourself (or our close button) has not hovered
-    if((allowsInactiveTabClosing || selected) && [[eventData objectForKey:@"close"] boolValue]){
+    if(/*(allowsInactiveTabClosing || selected || [NSEvent cmdKey]) &&*/ [[eventData objectForKey:@"close"] boolValue]){
         hoveringClose = NO;
         [view setNeedsDisplayInRect:offsetCloseButtonRect];
     }else{
@@ -312,7 +312,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     NSPoint	clickLocation = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
     NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, cellFrame.origin.x, cellFrame.origin.y);
     
-    if((allowsInactiveTabClosing || selected) && /*[[tabViewItem tabView] numberOfTabViewItems] != 1 &&*/ NSPointInRect(clickLocation, offsetCloseButtonRect)){
+    if((allowsInactiveTabClosing || selected || [NSEvent cmdKey]) && /*[[tabViewItem tabView] numberOfTabViewItems] != 1 &&*/ NSPointInRect(clickLocation, offsetCloseButtonRect)){
         //Track the close button
         [self trackMouse:theEvent
                   inRect:offsetCloseButtonRect
