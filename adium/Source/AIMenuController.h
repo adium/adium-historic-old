@@ -28,7 +28,9 @@ typedef enum {
 } MENU_LOCATION;
 
 typedef enum {
-    Context_Group_Manage,Context_Contact_Manage, Context_Contact_Action, Context_Contact_NegativeAction, Context_Contact_Additions, Context_Contact_TabAction,Context_Contact_ListAction    
+    Context_Group_Manage,Context_Contact_Manage, Context_Contact_Action, Context_Contact_NegativeAction,
+    Context_Contact_Additions, Context_Contact_TabAction, Context_Contact_ListAction, Context_TextView_EmoticonAction,
+    Context_TextView_LinkAction, Context_TextView_General
 } CONTEXT_MENU_LOCATION;
 
 @interface AIMenuController : NSObject {
@@ -67,12 +69,13 @@ typedef enum {
     IBOutlet	id			menu_Dock_Status;
     IBOutlet    NSMenuItem  *menuItem_Format_Italics;
     
-    NSMenu						*contextualMenu;
+    NSMenu                              *contextualMenu;
     NSMutableDictionary			*contextualMenuItemDict;
-    AIListContact				*contactualMenuContact;
+    AIListContact                       *contactualMenuContact;
+    NSTextView                          *contextualMenuTextView;
     
-    NSMutableArray				*locationArray;
-    BOOL                        isTracking;
+    NSMutableArray                      *locationArray;
+    BOOL                                 isTracking;
 	
 }
 
@@ -83,6 +86,7 @@ typedef enum {
 //Contextual menu items
 - (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(CONTEXT_MENU_LOCATION)location;
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forListObject:(AIListObject *)inObject;
+- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject;
 - (AIListContact *)contactualMenuContact;
 
 //Control over the italics menu item
