@@ -59,6 +59,7 @@ static NSImage *pushIndicatorImage = nil;
     sendOnEnter = YES;
 	pushPop = YES;
     insertingText = NO;
+	defaultTypingAttributes = nil;
     returnArray = [[NSMutableArray alloc] init];
     historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
     pushArray = [[NSMutableArray alloc] init];
@@ -106,6 +107,20 @@ static NSImage *pushIndicatorImage = nil;
 {
     target = inTarget;
     selector = inSelector;
+}
+
+- (void)setDefaultTypingAttributes:(NSDictionary *)dict
+{
+	[defaultTypingAttributes release];
+	defaultTypingAttributes = [dict retain];
+}
+- (NSDictionary *)defaultTypingAttributes
+{
+	return defaultTypingAttributes;
+}
+- (void)resetToDefaultTypingAttributes
+{
+	[self setTypingAttributes:defaultTypingAttributes];
 }
 
 //Send messages on a command-return
