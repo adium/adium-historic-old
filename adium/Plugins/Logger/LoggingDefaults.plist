@@ -4,13 +4,5 @@
 <dict>
 	<key>Enable Logging</key>
 	<true/>
-        <key>Enable HTML Logging</key>
-        <true/>
-        <key>Enable Style Logging</key>
-        <true/>
-        <key>Enable Font Logging</key>
-        <false/>
-        <key>Enable Status Logging</key>
-        <true/>
 </dict>
 </plist>
