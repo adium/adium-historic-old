@@ -147,6 +147,7 @@
 	if(row >= 0 && row < [self numberOfRows]){ //Somebody keeps calling this method with row = numberOfRows, which is wrong.
 
 		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
+		[cell setHighlighted:[self isRowSelected:row]];
 
 		//Draw the grid
 		if([self drawsAlternatingRows] && [cell drawGridBehindCell]){
