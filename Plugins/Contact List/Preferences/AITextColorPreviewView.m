@@ -8,22 +8,44 @@
 
 #import "AITextColorPreviewView.h"
 
+@interface AITextColorPreviewView (PRIVATE)
+- (void)_init;
+@end
 
 @implementation AITextColorPreviewView
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    [super initWithCoder:aDecoder];
+    [self _init];
+    return(self);
+}
+
+- (id)initWithFrame:(NSRect)frameRect
+{
+    [super initWithFrame:frameRect];
+    [self _init];
+    return(self);
+}
+
+- (void)_init
+{
+	backColorOverride = nil;
+}
 
 - (void)drawRect:(NSRect)rect
 {
 	NSMutableDictionary	*attributes;
 	NSAttributedString	*sample;
 	id					shadow = nil;
-		
+
 	//Background
 	if(backgroundGradientColor){
 		[[AIGradient gradientWithFirstColor:[backgroundGradientColor color]
 							   secondColor:[backgroundColor color]
 								 direction:AIVertical] drawInRect:rect];
 	}else{
-		[[backgroundColor color] set];
+		[(backColorOverride ? backColorOverride : [backgroundColor color]) set];
 		[NSBezierPath fillRect:rect];
 	}
 
@@ -51,6 +73,21 @@
 								  rect.origin.y + (rect.size.height - sampleHeight) / 2.0,
 								  rect.size.width,
 								  sampleHeight)];
+}
+
+- (void)dealloc
+{
+	[backColorOverride release];
+	[super dealloc];
+}
+
+//Overrides.  pass nil to disable
+- (void)setBackColorOverride:(NSColor *)inColor
+{
+	if(backColorOverride != inColor){
+		[backColorOverride release];
+		backColorOverride = [inColor retain];
+	}
 }
 
 @end

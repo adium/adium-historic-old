@@ -6,9 +6,9 @@
 //  Copyright 2004 __MyCompanyName__. All rights reserved.
 //
 
-#import "AIListGroupGradientCell.h"
+#import "AIListGroupCell.h"
 
-@interface AIListGroupBubbleCell : AIListGroupGradientCell {
+@interface AIListGroupBubbleCell : AIListGroupCell {
 
 }
 

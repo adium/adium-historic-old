@@ -540,8 +540,8 @@
 			children = (
 				340F440306D8202A0072E2FA,
 				340F440406D8202A0072E2FA,
-				34A48AD106F647FD002C7C5F,
 				34A48AD206F647FD002C7C5F,
+				34A48AD106F647FD002C7C5F,
 				4B93587906DBC6D3007977AA,
 				4BF98D5506D1485100E8781D,
 			);
@@ -745,15 +745,6 @@
 			settings = {
 			};
 		};
-		340F487606DA5E440072E2FA = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIListGroupGradientCell.m;
-			path = "Frameworks/Adium Framework/AIListGroupGradientCell.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		340F487706DA5E440072E2FA = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -769,15 +760,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIListGroupMockieCell.m;
 			path = "Frameworks/Adium Framework/AIListGroupMockieCell.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		340F487906DA5E440072E2FA = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIListGroupGradientCell.h;
-			path = "Frameworks/Adium Framework/AIListGroupGradientCell.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -835,12 +817,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		340F488006DA5E450072E2FA = {
-			fileRef = 340F487606DA5E440072E2FA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		340F488106DA5E450072E2FA = {
 			fileRef = 340F487706DA5E440072E2FA;
 			isa = PBXBuildFile;
@@ -849,12 +825,6 @@
 		};
 		340F488206DA5E450072E2FA = {
 			fileRef = 340F487806DA5E440072E2FA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		340F488306DA5E450072E2FA = {
-			fileRef = 340F487906DA5E440072E2FA;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6529,7 +6499,6 @@
 				340F486A06DA5E1F0072E2FA,
 				340F486C06DA5E1F0072E2FA,
 				340F488106DA5E450072E2FA,
-				340F488306DA5E450072E2FA,
 				340F488406DA5E450072E2FA,
 				340F488706DA5E450072E2FA,
 				340F488906DA5E450072E2FA,
@@ -6671,7 +6640,6 @@
 				340F486706DA5E1F0072E2FA,
 				340F486806DA5E1F0072E2FA,
 				340F486B06DA5E1F0072E2FA,
-				340F488006DA5E450072E2FA,
 				340F488206DA5E450072E2FA,
 				340F488506DA5E450072E2FA,
 				340F488606DA5E450072E2FA,
@@ -14285,8 +14253,8 @@
 		};
 		4BD388C306B5899E000A346A = {
 			children = (
-				34A489F106F64359002C7C5F,
 				34A489F206F64359002C7C5F,
+				34A489F106F64359002C7C5F,
 				4BF98D2906D147BB00E8781D,
 				4BF98D4806D1483100E8781D,
 				4BF98DB506D1497D00E8781D,
@@ -16752,8 +16720,6 @@
 			children = (
 				340F487F06DA5E440072E2FA,
 				340F487B06DA5E440072E2FA,
-				340F487906DA5E440072E2FA,
-				340F487606DA5E440072E2FA,
 				340F487706DA5E440072E2FA,
 				340F487806DA5E440072E2FA,
 				340F487A06DA5E440072E2FA,

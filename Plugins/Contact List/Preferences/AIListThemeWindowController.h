@@ -67,17 +67,17 @@
 	IBOutlet	AITextColorPreviewView	*preview_grid;
 	IBOutlet	NSButton				*checkBox_drawGrid;
 	IBOutlet	NSButton				*checkBox_backgroundAsStatus;
+	IBOutlet	NSButton				*checkBox_backgroundAsEvents;
 	IBOutlet	NSColorWell				*colorWell_statusText;
 	IBOutlet	NSButton				*checkBox_fadeOfflineImages;
 
 	IBOutlet	NSButton				*checkBox_groupGradient;
+	IBOutlet	NSButton				*checkBox_groupShadow;
 	IBOutlet	NSColorWell				*colorWell_groupText;
-	IBOutlet	NSColorWell				*colorWell_groupTextInverted;
 	IBOutlet	NSColorWell				*colorWell_groupShadow;
 	IBOutlet	NSColorWell				*colorWell_groupBackground;
 	IBOutlet	NSColorWell				*colorWell_groupBackgroundGradient;
 	IBOutlet	AITextColorPreviewView	*preview_group;
-	IBOutlet	AITextColorPreviewView	*preview_groupInverted;
 	
 	NSString				*themeName;
 }

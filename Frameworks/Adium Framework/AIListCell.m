@@ -346,7 +346,7 @@ static NSParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	NSMutableDictionary	*labelAttributes;
 	NSDictionary		*additionalAttributes = [self additionalLabelAttributes];
 
-	NSColor				*currentTextColor = ([self isSelectionInverted] ? [self invertedTextColor] : [self textColor]);
+	NSColor				*currentTextColor = ([self cellIsSelected] ? [self invertedTextColor] : [self textColor]);
 	
 	if (additionalAttributes){
 		labelAttributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -373,8 +373,8 @@ static NSParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	return(nil);
 }
 
-//YES if our selection should be drawn inverted
-- (BOOL)isSelectionInverted
+//YES if our cell is currently selected
+- (BOOL)cellIsSelected
 {
 	return([self isHighlighted] &&
 		   [[controlView window] isKeyWindow] &&
@@ -385,6 +385,17 @@ static NSParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 - (BOOL)drawGridBehindCell
 {
 	return(YES);
+}
+
+//The background color for this cell.  This will either be [controlView backgroundColor] or [controlView alternatingGridColor]
+- (NSColor *)backgroundColor
+{
+	//We could just call backgroundColorForRow: but it's best to avoid doing a rowForItem lookup if there is no grid
+	if([controlView drawsAlternatingRows]){
+		return([controlView backgroundColorForRow:[controlView rowForItem:listObject]]);
+	}else{
+		return([controlView backgroundColor]);
+	}
 }
 
 @end

@@ -7,9 +7,12 @@
             OUTLETS = {
                 "button_setBackgroundImage" = NSButton; 
                 "checkBox_away" = NSButton; 
+                "checkBox_backgroundAsEvents" = NSButton; 
                 "checkBox_backgroundAsStatus" = NSButton; 
                 "checkBox_drawGrid" = NSButton; 
                 "checkBox_fadeOfflineImages" = NSButton; 
+                "checkBox_groupGradient" = NSButton; 
+                "checkBox_groupShadow" = NSButton; 
                 "checkBox_idle" = NSButton; 
                 "checkBox_idleAndAway" = NSButton; 
                 "checkBox_offline" = NSButton; 
@@ -27,7 +30,6 @@
                 "colorWell_groupBackgroundGradient" = NSColorWell; 
                 "colorWell_groupShadow" = NSColorWell; 
                 "colorWell_groupText" = NSColorWell; 
-                "colorWell_groupTextInverted" = NSColorWell; 
                 "colorWell_idle" = NSColorWell; 
                 "colorWell_idleAndAway" = NSColorWell; 
                 "colorWell_idleAndAwayLabel" = NSColorWell; 
@@ -49,7 +51,6 @@
                 "preview_background" = AITextColorPreviewView; 
                 "preview_grid" = AITextColorPreviewView; 
                 "preview_group" = AITextColorPreviewView; 
-                "preview_groupInverted" = AITextColorPreviewView; 
                 "preview_idle" = AITextColorPreviewView; 
                 "preview_idleAndAway" = AITextColorPreviewView; 
                 "preview_offline" = AITextColorPreviewView; 

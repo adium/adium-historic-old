@@ -14,9 +14,8 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName withName:(NSString *)inName;
 - (void)configureControls;
 - (void)configureControlDimming;
-
 - (void)updateSliderValues;
-
+- (void)configureBackgroundColoring;
 @end
 
 @implementation AIListThemeWindowController
@@ -159,11 +158,11 @@
 	
 	//Groups
 	[colorWell_groupText setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR] representedColor]];
-	[colorWell_groupTextInverted setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR_INVERTED] representedColor]];
 	[colorWell_groupBackground setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]];
 	[colorWell_groupBackgroundGradient setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
 	[colorWell_groupShadow setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
 	[checkBox_groupGradient setState:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_GRADIENT] boolValue]];
+	[checkBox_groupShadow setState:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW] boolValue]];
 		
 	//
     [colorWell_statusText setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_CONTACT_STATUS_COLOR] representedColor]];
@@ -179,10 +178,12 @@
 	[slider_backgroundFade setFloatValue:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]];
 	[checkBox_drawGrid setState:[[preferenceDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
 	[checkBox_backgroundAsStatus setState:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_AS_STATUS] boolValue]];
+	[checkBox_backgroundAsEvents setState:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_AS_EVENTS] boolValue]];
     [checkBox_fadeOfflineImages setState:[[preferenceDict objectForKey:KEY_LIST_THEME_FADE_OFFLINE_IMAGES] boolValue]];
 	
 	[self updateSliderValues];
 	[self configureControlDimming];
+	[self configureBackgroundColoring];
 }
 
 - (void)preferenceChanged:(id)sender
@@ -380,47 +381,50 @@
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LIST_THEME_GROUP_BACKGROUND
                                               group:PREF_GROUP_LIST_THEME];
-		[preview_groupInverted setNeedsDisplay:YES];
+		[preview_group setNeedsDisplay:YES];
 		
     }else if(sender == colorWell_groupBackgroundGradient){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT
                                               group:PREF_GROUP_LIST_THEME];
-		[preview_groupInverted setNeedsDisplay:YES];
-		
-	}else if(sender == colorWell_groupTextInverted){
-		[[adium preferenceController] setPreference:[[sender color] stringRepresentation]
-											 forKey:KEY_LIST_THEME_GROUP_TEXT_COLOR_INVERTED
-											  group:PREF_GROUP_LIST_THEME];
-		[preview_groupInverted setNeedsDisplay:YES];
+		[preview_group setNeedsDisplay:YES];
 		
 	}else if(sender == colorWell_groupShadow){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR
                                               group:PREF_GROUP_LIST_THEME];
-		[preview_groupInverted setNeedsDisplay:YES];
+		[preview_group setNeedsDisplay:YES];
 		
     }else if(sender == checkBox_backgroundAsStatus){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LIST_THEME_BACKGROUND_AS_STATUS
                                               group:PREF_GROUP_LIST_THEME];
-		[preview_groupInverted setNeedsDisplay:YES];
+		[self configureBackgroundColoring];
+		
+    }else if(sender == checkBox_backgroundAsEvents){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LIST_THEME_BACKGROUND_AS_EVENTS
+                                              group:PREF_GROUP_LIST_THEME];
+		[self configureBackgroundColoring];
 		
     }else if(sender == colorWell_statusText){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LIST_THEME_CONTACT_STATUS_COLOR
                                               group:PREF_GROUP_LIST_THEME];
-		[preview_groupInverted setNeedsDisplay:YES];
 		
     }else if(sender == checkBox_fadeOfflineImages){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LIST_THEME_FADE_OFFLINE_IMAGES
                                               group:PREF_GROUP_LIST_THEME];
-		[preview_groupInverted setNeedsDisplay:YES];
 		
     }else if(sender == checkBox_groupGradient){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LIST_THEME_GROUP_GRADIENT
+                                              group:PREF_GROUP_LIST_THEME];
+		
+    }else if(sender == checkBox_groupShadow){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LIST_THEME_GROUP_SHADOW
                                               group:PREF_GROUP_LIST_THEME];
 		
 	}
@@ -451,29 +455,66 @@
 //Configure control dimming
 - (void)configureControlDimming
 {
-	//Enable/Disable color wells
-    [colorWell_signedOff setEnabled:[checkBox_signedOff state]];
-    [colorWell_signedOffLabel setEnabled:[checkBox_signedOff state]];	
-    [colorWell_signedOn setEnabled:[checkBox_signedOn state]];
-    [colorWell_signedOnLabel setEnabled:[checkBox_signedOn state]];
+	int		backStatus = [checkBox_backgroundAsStatus state];
+	int		backEvent = [checkBox_backgroundAsEvents state];
+	
+	//Enable/Disable status color wells
     [colorWell_away setEnabled:[checkBox_away state]];
-    [colorWell_awayLabel setEnabled:[checkBox_away state]];
+    [colorWell_awayLabel setEnabled:([checkBox_away state] && backStatus)];
     [colorWell_idle setEnabled:[checkBox_idle state]];
-    [colorWell_idleLabel setEnabled:[checkBox_idle state]];
-    [colorWell_typing setEnabled:[checkBox_typing state]];
-    [colorWell_typingLabel setEnabled:[checkBox_typing state]];
-    [colorWell_unviewedContent setEnabled:[checkBox_unviewedContent state]];
-    [colorWell_unviewedContentLabel setEnabled:[checkBox_unviewedContent state]];
+    [colorWell_idleLabel setEnabled:([checkBox_idle state] && backStatus)];
     [colorWell_online setEnabled:[checkBox_online state]];
-    [colorWell_onlineLabel setEnabled:[checkBox_online state]];
+    [colorWell_onlineLabel setEnabled:([checkBox_online state] && backStatus)];
     [colorWell_idleAndAway setEnabled:[checkBox_idleAndAway state]];
-    [colorWell_idleAndAwayLabel setEnabled:[checkBox_idleAndAway state]];
+    [colorWell_idleAndAwayLabel setEnabled:([checkBox_idleAndAway state] && backStatus)];
 	[colorWell_offline setEnabled:[checkBox_offline state]];
-    [colorWell_offlineLabel setEnabled:[checkBox_offline state]];
+    [colorWell_offlineLabel setEnabled:([checkBox_offline state] && backStatus)];
+
+	//Enable/Disable event color wells
+    [colorWell_signedOff setEnabled:[checkBox_signedOff state]];
+    [colorWell_signedOffLabel setEnabled:([checkBox_signedOff state] && backEvent)];	
+    [colorWell_signedOn setEnabled:[checkBox_signedOn state]];
+    [colorWell_signedOnLabel setEnabled:([checkBox_signedOn state] && backEvent)];
+    [colorWell_typing setEnabled:[checkBox_typing state]];
+    [colorWell_typingLabel setEnabled:([checkBox_typing state] && backEvent)];
+    [colorWell_unviewedContent setEnabled:[checkBox_unviewedContent state]];
+    [colorWell_unviewedContentLabel setEnabled:([checkBox_unviewedContent state] && backEvent)];
 	
 	//Background image
 	[button_setBackgroundImage setEnabled:[checkBox_useBackgroundImage state]];
 	[textField_backgroundImagePath setEnabled:[checkBox_useBackgroundImage state]];
+}
+
+//Update the previews for our background coloring toggles
+- (void)configureBackgroundColoring
+{
+	NSColor	*color;
+
+	//Status
+	color = ([checkBox_backgroundAsStatus state] ? nil : [colorWell_background color]);
+	[preview_away setBackColorOverride:color];
+	[preview_idle setBackColorOverride:color];
+	[preview_online setBackColorOverride:color];
+	[preview_idleAndAway setBackColorOverride:color];
+	[preview_offline setBackColorOverride:color];
+	
+	//Events
+	color = ([checkBox_backgroundAsEvents state] ? nil : [colorWell_background color]);
+	[preview_signedOff setBackColorOverride:color];
+	[preview_signedOn setBackColorOverride:color];
+	[preview_typing setBackColorOverride:color];
+	[preview_unviewedContent setBackColorOverride:color];
+
+	//Redisplay
+	[preview_away setNeedsDisplay:YES];
+	[preview_idle setNeedsDisplay:YES];
+	[preview_online setNeedsDisplay:YES];
+	[preview_idleAndAway setNeedsDisplay:YES];
+	[preview_offline setNeedsDisplay:YES];
+	[preview_signedOff setNeedsDisplay:YES];
+	[preview_signedOn setNeedsDisplay:YES];
+	[preview_typing setNeedsDisplay:YES];
+	[preview_unviewedContent setNeedsDisplay:YES];
 }
 
 @end

@@ -297,6 +297,10 @@
 	shouldUseContactTextColors = flag;
 }
 
+
+
+
+
 //Drawing --------------------------------------------------------------------------------------------------------------
 #pragma mark Drawing
 //Draw content of our cell
@@ -335,7 +339,7 @@
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
 	NSColor	*labelColor = [self labelColor];
-	if(labelColor && ![self isSelectionInverted]){
+	if(labelColor && ![self cellIsSelected]){
 		[labelColor set];
 		[NSBezierPath fillRect:rect];
 	}
@@ -447,7 +451,7 @@
 				rect.size.width -= NAME_STATUS_PAD;
 			}
 			
-			NSDictionary		*attributes = ([self isSelectionInverted] ?
+			NSDictionary		*attributes = ([self cellIsSelected] ?
 											   [self statusAttributesInverted] :
 											   [self statusAttributes]);
 			NSAttributedString 	*extStatus = [[[NSAttributedString alloc] initWithString:string
@@ -488,12 +492,17 @@
 - (NSColor *)labelColor
 {
 	if(backgroundColorIsStatus){
-		NSColor *labelColor = [listObject displayArrayObjectForKey:@"Label Color"];
+		NSColor *labelColor = [listObject displayArrayObjectForKey:@"Label Color"];		
 		return([labelColor colorWithAlphaComponent:backgroundOpacity]);
 	}else{
 		return(nil);
 	}
 }
+
+
+
+
+
 
 //Contact text color
 - (NSColor *)textColor
@@ -538,7 +547,7 @@
 //
 - (float)imageOpacityForDrawing
 {
-	return([self isSelectionInverted] ? SELECTED_IMAGE_OPACITY : [[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue]);
+	return([self cellIsSelected] ? SELECTED_IMAGE_OPACITY : [[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue]);
 }
 
 @end
