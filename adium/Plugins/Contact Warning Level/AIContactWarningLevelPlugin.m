@@ -29,9 +29,9 @@
     return(@"Warning Level");
 }
 
-- (NSString *)entryForObject:(AIListObject *)inObject
+- (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    NSString	*entry = nil;
+    NSAttributedString	*entry = nil;
 
     if([inObject isKindOfClass:[AIListContact class]]){
         int 	warningLevel;
@@ -41,9 +41,7 @@
 
         //Return the correct string
 	if(warningLevel != 0){
-	    entry = [[NSString stringWithFormat:@"%d%%", warningLevel] retain];
-	}else{
-	    entry = nil;
+            entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d%%", warningLevel]];
 	}
     }
 

@@ -15,7 +15,7 @@
 
 #import "ErrorMessageWindowController.h"
 
-#define MAX_ERRORS			40		//The max # of errors to display
+#define MAX_ERRORS			80		//The max # of errors to display
 #define	ERROR_WINDOW_NIB		@"ErrorWindow"	//Filename of the error window nib
 
 @interface ErrorMessageWindowController (PRIVATE)

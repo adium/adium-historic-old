@@ -263,7 +263,7 @@ typedef enum {
 
 @protocol AIContactListTooltipEntry <NSObject>
 - (NSString *)labelForObject:(AIListObject *)inObject;
-- (NSString *)entryForObject:(AIListObject *)inObject;
+- (NSAttributedString *)entryForObject:(AIListObject *)inObject;
 @end
 
 @interface NSObject (AITextEntryFilter)
@@ -458,7 +458,8 @@ typedef enum {
     NSMutableArray		*interfaceArray;
     NSMutableArray		*contactListTooltipEntryArray;
     NSMutableArray              *contactListTooltipSecondaryEntryArray;
-
+    float                       maxLabelWidth;
+    
     NSMutableArray		*flashObserverArray;
     NSTimer			*flashTimer;
     int				flashState;

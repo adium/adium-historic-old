@@ -196,8 +196,16 @@ static AIInfoWindowController *sharedInstance = nil;
         
         if (status) {
             NSMutableAttributedString * statusString = [[[owner contentController] filteredAttributedString:status] mutableCopy];
-            [statusString replaceOccurrencesOfString:@"\r" withString:@"\r\t\t" options:NSLiteralSearch range:NSMakeRange(0, [statusString length])];
-            [statusString replaceOccurrencesOfString:@"\n" withString:@"\n\t\t" options:NSLiteralSearch range:NSMakeRange(0, [statusString length])];
+            NSMutableParagraphStyle     *indentStyle;
+            
+            NSRange                     firstLineRange = [[statusString string] lineRangeForRange:NSMakeRange(0,0)];
+            
+            //Set correct indent & tabbing on the first line of the profile
+            [statusString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,firstLineRange.length)];
+            //Indent the remaining lines of profile
+            indentStyle = [paragraphStyle mutableCopy];
+            [indentStyle setFirstLineHeadIndent:InfoIndentB];
+            [statusString addAttribute:NSParagraphStyleAttributeName value:indentStyle range:NSMakeRange(firstLineRange.length, [statusString length] - firstLineRange.length)];
             
             [infoString appendAttributedString:[statusString addAttributes:valueAttributes range:NSMakeRange(0,[statusString length])]];
         } else {
@@ -241,9 +249,21 @@ static AIInfoWindowController *sharedInstance = nil;
         //Only show the profile is one exists
         if (textProfile && [textProfile length]) {
             [infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
-            NSMutableAttributedString * textProfileString = [[[owner contentController] filteredAttributedString:textProfile] mutableCopy];
-            [textProfileString replaceOccurrencesOfString:@"\r" withString:@"\r\t\t" options:NSLiteralSearch range:NSMakeRange(0, [textProfileString length])];
-            [textProfileString replaceOccurrencesOfString:@"\n" withString:@"\n\t\t" options:NSLiteralSearch range:NSMakeRange(0, [textProfileString length])];
+            NSMutableAttributedString   *textProfileString = [[[owner contentController] filteredAttributedString:textProfile] mutableCopy];
+            NSMutableParagraphStyle     *indentStyle;
+            
+            NSRange                     firstLineRange = [[textProfile string] lineRangeForRange:NSMakeRange(0,0)];
+
+//            NSLog(@"%i %i %i",firstLineRange.location,firstLineRange.length,[textProfileString length]);
+            
+            //Set correct indent & tabbing on the first line of the profile
+            [textProfileString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,firstLineRange.length)];
+            //Indent the remaining lines of profile
+            indentStyle = [paragraphStyle mutableCopy];
+            [indentStyle setFirstLineHeadIndent:InfoIndentB];
+           
+            [textProfileString addAttribute:NSParagraphStyleAttributeName value:indentStyle range:NSMakeRange(firstLineRange.length, [textProfileString length] - firstLineRange.length)];
+            
             [infoString appendAttributedString:[textProfileString addAttributes:valueAttributes range:NSMakeRange(0,[textProfileString length])]];
         }
     }

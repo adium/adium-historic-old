@@ -29,7 +29,6 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
 
 - (void)filterContentObject:(AIContentObject *)inObject
 {
-
     if([[inObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         int				loop;
         BOOL				mayContainLinks = NO;
