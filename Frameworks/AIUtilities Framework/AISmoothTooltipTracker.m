@@ -55,6 +55,10 @@
 
 - (void)dealloc
 {
+#if LOG_TRACKING_INFO
+	NSLog(@"[%@] dealloc",self);
+#endif
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[self removeCursorRect];
@@ -91,6 +95,9 @@
 									trackingRect);
 		tooltipTrackingTag = [view addTrackingRect:trackingRect owner:self userData:nil assumeInside:mouseInside];
 		
+#if LOG_TRACKING_INFO
+		NSLog(@"installCursorRect: [%@] addTrackingRect %@ on %@ : tag = %i",self,NSStringFromRect(trackingRect),view,tooltipTrackingTag);
+#endif
 		//If the mouse is already inside, begin tracking the mouse immediately
 		if(mouseInside) [self _startTrackingMouse];
 	}
@@ -99,10 +106,18 @@
 //Remove the cursor rect
 - (void)removeCursorRect
 {
+#if LOG_TRACKING_INFO
+	NSLog(@"[%@] Remove rect %@ : tag = %i?",self,view,tooltipTrackingTag);
+#endif
+
 	if(tooltipTrackingTag != -1){
 		[view removeTrackingRect:tooltipTrackingTag];
 		tooltipTrackingTag = -1;
 		[self _stopTrackingMouse];
+		
+#if LOG_TRACKING_INFO
+		NSLog(@"Removed %i.",tooltipTrackingTag);
+#endif
 	}
 }
 
