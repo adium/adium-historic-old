@@ -291,7 +291,7 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						if (!(pce->is_int)){
 							NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
 							if (value){
-								valueUTF8String = g_strdup(valueUTF8String);
+								valueUTF8String = g_strdup([value UTF8String]);
 							}else{
 								NSLog(@"String: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
 							}
