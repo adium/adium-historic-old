@@ -374,6 +374,9 @@ static char *hash_password(const char * const password);
 
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
 
+    //Delay updates until we're finished signing off
+    [[owner contactController] delayContactListUpdatesFor:5]; //Signoff shouldn't take any longer than 5 seconds
+
     //Flush all our handle status flags
     enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES ownedBy:self] objectEnumerator];
     while((handle = [enumerator nextObject])){
@@ -1033,14 +1036,11 @@ static char *hash_password(const char * const password);
     }else{ //A ping interval has not yet been established
         if(!firstPing){ //Record the date our first ping was recieved
             firstPing = [[NSDate date] retain];
-            NSLog(@"First ping recieved");
 
         }else{ //On the second ping...
                //Determine the amount of time that has elapsed between the pings
             pingInterval = [[NSDate date] timeIntervalSinceDate:firstPing];
-
             [firstPing release]; firstPing = nil;
-            NSLog(@"Ping interval: %i seconds",(int)pingInterval);
 
             //We multiply the ping interval by 2.2 to allow the ping time to arrive late (and to prevent disconnect if a single ping is lost).  The closer the scale is to 1, the more sensitive the ping will become.  The further away from 1, the longer it will take to realize a ping failure.  With a ping of 50 seconds, 2.2 would disconnect us 110 seconds after the latest ping, so anywhere between 60 and 170 seconds after the connection is lost.  This is responsive enough to prove useful, but lax enough to handle fairly extreme lag (and even the loss of a ping packet).
             pingInterval *= 2.2;
