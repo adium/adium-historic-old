@@ -19,7 +19,7 @@
 #import "ESGaimYahooAccount.h"
 #import "ESGaimYahooAccountViewController.h"
 #import "SLGaimCocoaAdapter.h"
-#import <AIUtilities/AIHTMLDecoder.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>

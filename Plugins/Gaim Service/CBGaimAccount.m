@@ -22,15 +22,16 @@
 #import "CBGaimAccount.h"
 #import "SLGaimCocoaAdapter.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AIHTMLDecoder.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/CBObjectAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/ESSystemNetworkDefaults.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIMetaContact.h>

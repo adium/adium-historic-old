@@ -20,10 +20,11 @@
 #import "AIStatusController.h"
 #import "CBGaimOscarAccount.h"
 #import "SLGaimCocoaAdapter.h"
-#import <AIUtilities/AIHTMLDecoder.h>
-#import <AIUtilities/CBObjectAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
+#import <AIUtilities/CBObjectAdditions.h>
 #import <Adium/AIListContact.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>

@@ -19,8 +19,8 @@
 #import "ESGaimJabberAccount.h"
 #import "ESGaimJabberAccountViewController.h"
 #import "SLGaimCocoaAdapter.h"
-#import <AIUtilities/AIHTMLDecoder.h>
 #import <Adium/AIChat.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>

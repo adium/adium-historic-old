@@ -19,9 +19,9 @@
 #import "AIStatusController.h"
 #import "ESGaimMSNAccount.h"
 #import "libgaim/state.h"
-#import <AIUtilities/AIHTMLDecoder.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <Adium/AIAccount.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatus.h>
