@@ -1087,6 +1087,66 @@
 			settings = {
 			};
 		};
+		4B7764CB03C4A03700A8010A = {
+			isa = PBXFileReference;
+			path = "Adium Framework.rtf";
+			refType = 4;
+		};
+		4B7764CC03C4A03700A8010A = {
+			isa = PBXFileReference;
+			path = AIAccountController.rtf;
+			refType = 4;
+		};
+		4B7764CD03C4A03700A8010A = {
+			isa = PBXFileReference;
+			path = AIContactController.rtf;
+			refType = 4;
+		};
+		4B7764CE03C4A03700A8010A = {
+			isa = PBXFileReference;
+			path = AIContentController.rtf;
+			refType = 4;
+		};
+		4B7764CF03C4A03800A8010A = {
+			isa = PBXFileReference;
+			path = AIInterfaceController.rtf;
+			refType = 4;
+		};
+		4B7764D003C4A03800A8010A = {
+			isa = PBXFileReference;
+			path = AILoginController.rtf;
+			refType = 4;
+		};
+		4B7764D103C4A03800A8010A = {
+			isa = PBXFileReference;
+			path = AIMenuController.rtf;
+			refType = 4;
+		};
+		4B7764D203C4A03800A8010A = {
+			isa = PBXFileReference;
+			path = AIPreferenceController.rtf;
+			refType = 4;
+		};
+		4B7764D303C4A03800A8010A = {
+			isa = PBXFileReference;
+			path = AISoundController.rtf;
+			refType = 4;
+		};
+		4B7764D403C4A03800A8010A = {
+			isa = PBXFileReference;
+			path = "Creating Plugins.rtf";
+			refType = 4;
+		};
+		4B7764D503C4A03800A8010A = {
+			isa = PBXFileReference;
+			path = "Creating service code.rtf";
+			refType = 4;
+		};
+		4B7764D603C4A03800A8010A = {
+			isa = PBXFileReference;
+			path = "Mutable owner arrays.rtf";
+			refType = 4;
+		};
 		4B79C39103C08BDE00A8010A = {
 			fileRef = F54441AC0378A36A01A8010A;
 			isa = PBXBuildFile;
@@ -8172,106 +8232,22 @@
 		};
 		F5E6713603B4D12601A8010A = {
 			children = (
-				F5E6713803B4D12601A8010A,
-				F5E6713903B4D12601A8010A,
-				F5E6713A03B4D12601A8010A,
-				F5E6713B03B4D12601A8010A,
-				F5E6713C03B4D12601A8010A,
-				F5E6713D03B4D12601A8010A,
-				F5E6713E03B4D12601A8010A,
-				F5E6713F03B4D12601A8010A,
-				F5E6714003B4D12601A8010A,
-				F5E6714103B4D12601A8010A,
-				F5E6714203B4D12601A8010A,
-				F5E6714303B4D12601A8010A,
-				F5E6714403B4D12601A8010A,
-				F5E6714503B4D12601A8010A,
-				F5E6714603B4D12601A8010A,
-				F5E6714703B4D12601A8010A,
+				4B7764CC03C4A03700A8010A,
+				4B7764CD03C4A03700A8010A,
+				4B7764CE03C4A03700A8010A,
+				4B7764CF03C4A03800A8010A,
+				4B7764D003C4A03800A8010A,
+				4B7764D103C4A03800A8010A,
+				4B7764D203C4A03800A8010A,
+				4B7764D303C4A03800A8010A,
+				4B7764CB03C4A03700A8010A,
+				4B7764D403C4A03800A8010A,
+				4B7764D503C4A03800A8010A,
+				4B7764D603C4A03800A8010A,
 			);
 			isa = PBXGroup;
 			name = developer;
 			path = Documentation/developer;
-			refType = 4;
-		};
-		F5E6713803B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = "Adium Framework.rtf";
-			refType = 4;
-		};
-		F5E6713903B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = "Changing menu items.rtf";
-			refType = 4;
-		};
-		F5E6713A03B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = "Contact object display.rtf";
-			refType = 4;
-		};
-		F5E6713B03B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = "Contact status control.rtf";
-			refType = 4;
-		};
-		F5E6713C03B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = Content.rtf;
-			refType = 4;
-		};
-		F5E6713D03B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = "Core Controllers.rtf";
-			refType = 4;
-		};
-		F5E6713E03B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = "Creating a plugin.rtf";
-			refType = 4;
-		};
-		F5E6713F03B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = "Creating service code.rtf";
-			refType = 4;
-		};
-		F5E6714003B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = "Custom Interfaces.rtf";
-			refType = 4;
-		};
-		F5E6714103B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = "Mutable owner arrays.rtf";
-			refType = 4;
-		};
-		F5E6714203B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = Notifications.rtf;
-			refType = 4;
-		};
-		F5E6714303B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = "Observing handles.rtf";
-			refType = 4;
-		};
-		F5E6714403B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = "Playing sounds.rtf";
-			refType = 4;
-		};
-		F5E6714503B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = Preferences.rtf;
-			refType = 4;
-		};
-		F5E6714603B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = "The contact list.rtf";
-			refType = 4;
-		};
-		F5E6714703B4D12601A8010A = {
-			isa = PBXFileReference;
-			path = "Working with accounts.rtf";
 			refType = 4;
 		};
 	};
