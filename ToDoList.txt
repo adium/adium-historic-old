@@ -3,7 +3,6 @@
 //-------------------------------------------------------------------------------------------------------
 - Contact list isn't defaulting right at all
 - First launch, need setup assistant or need to open account prefs
-- Account string should read "click the + to add a new account" when there are no accounts [Colin]
 - Account add button needs a triangle to indicate that it's a popup
 - Default new accounts (or atleast the first new account) to online
 - List toolbar needs icon for toggle groups, add group, toggle offline contacts
