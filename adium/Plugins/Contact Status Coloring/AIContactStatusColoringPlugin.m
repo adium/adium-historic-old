@@ -222,14 +222,6 @@
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    //Optimize this...
-    if(notification == nil ||  [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0){
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
-
-        alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
-        if (!alpha) alpha = 100.0; //we don't like invisible stuff.
-    }
-    
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_STATUS_COLORING] == 0){
 	NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
         NSEnumerator	*enumerator;
@@ -300,6 +292,9 @@
         unviewedContentEnabled = [[prefDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue];
         onlineEnabled = [[prefDict objectForKey:KEY_ONLINE_ENABLED] boolValue];
         idleAndAwayEnabled = [[prefDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue];
+
+        //
+        alpha = [[prefDict objectForKey:KEY_STATUS_LABEL_OPACITY] floatValue];
 
         //Force each contact to update (Messy)
 	enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];

@@ -19,6 +19,8 @@
 #define CONTACT_STATUS_COLORING_DEFAULT_PREFS	@"ContactStatusColoringDefaults"
 #define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
 
+#define KEY_STATUS_LABEL_OPACITY	@"Status Label Opacity"
+
 #define KEY_AWAY_ENABLED		@"Away Enabled"
 #define KEY_IDLE_ENABLED		@"Idle Enabled"
 #define KEY_TYPING_ENABLED		@"Typing Enabled"
