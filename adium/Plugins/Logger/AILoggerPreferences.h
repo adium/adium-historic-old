@@ -15,6 +15,7 @@
 
 @interface AILoggerPreferences : AIPreferencePane {
     IBOutlet	NSButton	*checkBox_enableLogging;
+	IBOutlet	NSButton	*checkBox_enableHTML;
 }
 
 @end

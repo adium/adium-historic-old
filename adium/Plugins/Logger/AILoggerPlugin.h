@@ -17,9 +17,6 @@
 #define LOGGING_DEFAULT_PREFS       @"LoggingDefaults"
 #define PREF_GROUP_LOGGING	@"Logging"
 #define KEY_LOGGER_ENABLE	@"Enable Logging"
-#define	KEY_LOGGER_STYLE	@"Enable Style Logging"
-#define	KEY_LOGGER_FONT		@"Enable Font Logging"
-#define KEY_LOGGER_STATUS	@"Enable Status Logging"
 #define	KEY_LOGGER_HTML		@"Enable HTML Logging"
 
 @class AILoggerPreferences, AILoggerAdvancedPreferences;
@@ -30,7 +27,8 @@
     //Current logging settings
     BOOL		    observingContent;
     BOOL		    logIndexingEnabled; //Does this system support log indexing?
-    
+    BOOL			logHTML;
+	
     //Log viewer menu items
     NSMenuItem		    *logViewerMenuItem;
     NSMenuItem		    *viewContactLogsMenuItem;
