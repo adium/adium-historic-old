@@ -5013,6 +5013,7 @@
 				34A65B0606A5A15300898470,
 				9E20910C06A601A500E33E27,
 				9E20910F06A601B100E33E27,
+				9E217B7906A74CA8002A3F27,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5339,6 +5340,8 @@
 				7EF3C3BE06A5C4AF005307A6,
 				9E20910A06A601A100E33E27,
 				9E20910D06A601AD00E33E27,
+				9E217B7B06A74CA8002A3F27,
+				9E217B7C06A74CA8002A3F27,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5660,6 +5663,7 @@
 				34A65B0706A5A15300898470,
 				9E20910E06A601AF00E33E27,
 				9E20911006A601B200E33E27,
+				9E217B7A06A74CA8002A3F27,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21240,6 +21244,65 @@
 			settings = {
 			};
 		};
+		9E217B7506A74CA7002A3F27 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CBStatusMenuItemPreferences.h;
+			path = "Plugins/Status Menu Item/CBStatusMenuItemPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E217B7606A74CA7002A3F27 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CBStatusMenuItemPreferences.m;
+			path = "Plugins/Status Menu Item/CBStatusMenuItemPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E217B7706A74CA7002A3F27 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = StatusMenuItemDefaultPrefs.plist;
+			path = "Plugins/Status Menu Item/StatusMenuItemDefaultPrefs.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E217B7806A74CA7002A3F27 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = StatusMenuItemPrefs.nib;
+			path = "Plugins/Status Menu Item/StatusMenuItemPrefs.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E217B7906A74CA8002A3F27 = {
+			fileRef = 9E217B7506A74CA7002A3F27;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E217B7A06A74CA8002A3F27 = {
+			fileRef = 9E217B7606A74CA7002A3F27;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E217B7B06A74CA8002A3F27 = {
+			fileRef = 9E217B7706A74CA7002A3F27;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E217B7C06A74CA8002A3F27 = {
+			fileRef = 9E217B7806A74CA7002A3F27;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		9E49CC5C04BF6F8700415B22 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -21396,10 +21459,14 @@
 			children = (
 				9E791E26057746D100547562,
 				6C0FD8C20578D47B00D70FEB,
+				9E217B7706A74CA7002A3F27,
 				9E791D9405768B7A00547562,
 				9E791D9505768B7A00547562,
 				9E791DA30577094300547562,
 				9E791DA40577094400547562,
+				9E217B7506A74CA7002A3F27,
+				9E217B7606A74CA7002A3F27,
+				9E217B7806A74CA7002A3F27,
 			);
 			isa = PBXGroup;
 			name = "Status Menu Item";
