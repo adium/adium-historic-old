@@ -22,7 +22,7 @@
 #import <Adium/AIListContact.h>
 
 #pragma mark Gaim Images
-#define MESSAGE_IMAGE_CACHE_NAME		@"Image_%@_%i"
+#define MESSAGE_IMAGE_CACHE_NAME		@"TEMP-Image_%@_%i"
 
 static NSString* _messageImageCachePath(int imageID, CBGaimAccount* adiumAccount)
 {
@@ -121,7 +121,11 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 		NSString		*messageString;
 
 		messageString = [NSString stringWithUTF8String:message];
-		AILog(@"Source: %s \t Name: %s \t Nick: %s", who, gaim_conversation_get_name(conv), gaim_conv_chat_get_nick(GAIM_CONV_CHAT(conv)));
+		AILog(@"Source: %s \t Name: %s \t Nick: %s : Message %@", 
+			  who,
+			  gaim_conversation_get_name(conv),
+			  gaim_conv_chat_get_nick(GAIM_CONV_CHAT(conv)),
+			  messageString);
 		messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[AIHTMLDecoder decodeHTML:messageString],@"AttributedMessage",
 			[NSString stringWithUTF8String:who],@"Source",
 			[NSNumber numberWithInt:flags],@"GaimMessageFlags",
@@ -254,7 +258,8 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 														   withObject:[NSNumber numberWithInt:errorType]];
 				}
 
-				GaimDebug (@"*** Conversation error (%@): %@",
+				GaimDebug (@"*** Conversation error type %i (%@): %@",
+						   errorType,
 						   ([chat listObject] ? [[chat listObject] UID] : [chat name]),messageString);
 			}
 		}
