@@ -113,7 +113,7 @@
 {
     AIMutableOwnerArray		*visibleArray;
     int 			loop;
-
+          
     //Make sure a contact array exists
     if(!sortedContactArray) sortedContactArray = [contactArray mutableCopy];
 

@@ -354,7 +354,7 @@ static char *hash_password(const char * const password);
     
     if(connectionPhase == 0){ //Send & Receive regular AIM commands
         //Receive any incoming packets
-        if([socket readyForReceiving] && (packet = [AIMTOC2Packet packetFromSocket:socket sequence:&remoteSequence])){
+        while([socket readyForReceiving] && (packet = [AIMTOC2Packet packetFromSocket:socket sequence:&remoteSequence])){
             NSString		*message = [packet string];
             NSString		*command = [message TOCStringArgumentAtIndex:0];
 
@@ -882,9 +882,10 @@ static char *hash_password(const char * const password);
     NSString		*type;
     NSString		*value;
     AIContactGroup	*currentGroup = nil;
-    
-    [[owner contactController] delayContactListUpdatesFor:10];
-    
+
+    [[owner contactController] delayContactListUpdatesFor:10]; //Delay updates until we're finished signing on
+    //10 seconds should be long enough for even the slowest net connections.
+
     //Create a scanner
     scanner = [NSScanner scannerWithString:configString];
     [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];

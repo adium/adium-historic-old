@@ -83,11 +83,13 @@
 
 - (void)contactChanged:(NSNotification *)notification
 {
-    NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
-    AISCLOutlineView	*SCLView;
-    
-    while((SCLView = [enumerator nextObject])){
-        [SCLView reloadData];
+    if(![[owner contactController] contactListUpdatesDelayed]){
+        NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
+        AISCLOutlineView	*SCLView;
+
+        while((SCLView = [enumerator nextObject])){
+            [SCLView reloadData];
+        }
     }
 }
 

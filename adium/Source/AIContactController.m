@@ -166,7 +166,8 @@
     [inGroup addObject:newGroup];
     
     //Re-order and update the list
-    [self updateListForObject:newGroup];
+    [newGroup sortGroupAndSubGroups:NO]; //update the group
+    [self updateListForObject:newGroup]; //update the list
     
     return(newGroup);
 }
@@ -400,20 +401,15 @@
 {
     int	handleAltered = 0;
     int loop;
-    
+
     //Let all the observers know it changed
     for(loop = 0;loop < [handleObserverArray count];loop++){
         handleAltered += [[handleObserverArray objectAtIndex:loop] updateHandle:inHandle keys:InModifiedKeys];
     }
 
-    if(handleAltered != 0 && !delayedUpdating){
-        [contactList sortGroupAndSubGroups:YES];
-
-        //tell everyone to redraw
-        [[self contactNotificationCenter] postNotificationName:Contact_ObjectChanged object:inHandle];
-    }else{
-        requiresUpdating = YES;
-    }
+    if(handleAltered){ //If the handle was modified
+        [self updateListForObject:inHandle];
+    }        
 }
 
 
@@ -456,48 +452,44 @@
     return([contactArray autorelease]);
 }
 
-//Delays updating the contact list for the specified # of seconds.  Things are still updated, just not as frequently.  Call this before making massive changes to the contact list.  This also prevents any sorting from taking place.
+//Delays updating the contact list for the specified # of seconds.  Things are still updated, just not as frequently.  Call this before making massive changes to the contact list.
 - (void)delayContactListUpdatesFor:(int)seconds
 {
-#warning Delaying updates causes a crash when editing the buddy list.  changes are made to the buddy list (specifically deleting of groups/handles), and then the outline view tries to redraw on its own, and attempts to references the deleted objects (since it hasn't been sent any update events due to the delay.  Disabled for now.
-
-/*    if(delayedUpdating != 0){
-        //If we're already delayed, increase the delay length
+    if(delayedUpdating){ //If we're already delayed, increase the delay length
         if(seconds > delayedUpdating){
             delayedUpdating = seconds;    
         }
-        NSLog(@"(push)Delaying Updates for %i seconds",seconds);
 
-    }else{
+    }else{ //Otherwise, initiate a delay
         //Flag delayed
         delayedUpdating = seconds;    
-        NSLog(@"Delaying Updates for %i seconds",seconds);
         
-        //Install a passive update timer
+        //Install an update timer to resort/update the list every second
         [NSTimer scheduledTimerWithTimeInterval:(1.0/1.0) target:self selector:@selector(delayedUpdateTimer:) userInfo:nil repeats:YES];
-    }*/
+    }
 }
+
+- (BOOL)contactListUpdatesDelayed
+{
+    return(delayedUpdating != 0);
+}
+
 
 // Internal --------------------------------------------------------------------------------
 //Call after making changes to an object on the contact list
 - (void)updateListForObject:(AIContactObject *)inObject
 {
-    if(!delayedUpdating){
-        AIContactObject		*object = inObject;
+    AIContactObject	*object = inObject;
 
-        //Resort all groups above this object
-        while( (object = [object containingGroup]) ){
+    //Resort its group, and any groups above it
+    if(!delayedUpdating){ //Skip sorting when updates are delayed
+        while((object = [object containingGroup])){
             [(AIContactGroup *)object sortGroupAndSubGroups:NO];
         }
-
-        //Post an 'object' changed message, signaling that the object's status has changed.
-        //When buddy sorting is off and groups have no content reliant display attributes, this refresh will often be unnecessary, but for now the whole list (excluding other sub groups) needs to be resorted and refreshed :(
-        [[self contactNotificationCenter] postNotificationName:Contact_ListChanged object:nil];
-
-    }else{
-        requiresUpdating = YES; //Postpone the updating until later
-
     }
+
+    //Post an 'object' changed message, signaling that the object's status has changed.
+    [[self contactNotificationCenter] postNotificationName:Contact_ObjectChanged object:inObject];
 }
 
 //Returns the handle with the specified Service and UID in the group (or any subgroups)
@@ -554,21 +546,14 @@
 
 - (void)delayedUpdateTimer:(NSTimer *)inTimer
 {
-    //update
-    if(requiresUpdating){
-        [contactList sortGroupAndSubGroups:YES];
-        [[self contactNotificationCenter] postNotificationName:Contact_ListChanged object:nil];
-        
-        NSLog(@"(UPDATE) Delaying: %i seconds",delayedUpdating);
-    }else{
-        NSLog(@"Delaying: %i seconds",delayedUpdating);
-    }
-    
+    //Resort and redisplay the entire list at once (since sorting has been skipped while delayed)
+    [contactList sortGroupAndSubGroups:YES];
+    [[self contactNotificationCenter] postNotificationName:Contact_ListChanged object:nil];
+
     //decrease the counter
-    requiresUpdating = NO;
     delayedUpdating--;
     if(delayedUpdating == 0){
-        [inTimer invalidate];
+        [inTimer invalidate]; //end the delay
     }
 }
 

@@ -218,7 +218,6 @@ typedef enum {
     NSNotificationCenter	*contactNotificationCenter;
     NSMutableArray		*handleObserverArray;
     int				delayedUpdating;
-    BOOL			requiresUpdating;
 
     AIPreferenceCategory	*contactInfoCategory;
 }
@@ -249,6 +248,7 @@ typedef enum {
 - (void)addContactInfoView:(AIContactInfoViewController *)inView;
 
 - (void)delayContactListUpdatesFor:(int)seconds;
+- (BOOL)contactListUpdatesDelayed;
 
 @end
 

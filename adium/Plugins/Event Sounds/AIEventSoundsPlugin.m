@@ -43,22 +43,24 @@
 
 - (BOOL)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
 {
-    //Sign on/off
-    if([inModifiedKeys containsObject:@"Online"]){
-        BOOL	oldOnline = [[onlineDict objectForKey:[inHandle UID]] boolValue]; //! UID is not unique enough !
-        BOOL	newOnline = [[inHandle statusArrayForKey:@"Online"] containsAnyIntegerValueOf:1];
-
-        if(newOnline != oldOnline){
-            if(newOnline){
-                [[owner soundController] playSoundNamed:@"(Adium)Buddy_SignedOn.aif"];
-            }else{
-                [[owner soundController] playSoundNamed:@"(Adium)Buddy_SignedOff.aif"];
+    if(![[owner contactController] contactListUpdatesDelayed]){ //Don't play sounds whens signing on
+        //Sign on/off
+        if([inModifiedKeys containsObject:@"Online"]){
+            BOOL	oldOnline = [[onlineDict objectForKey:[inHandle UID]] boolValue]; //! UID is not unique enough !
+            BOOL	newOnline = [[inHandle statusArrayForKey:@"Online"] containsAnyIntegerValueOf:1];
+    
+            if(newOnline != oldOnline){
+                if(newOnline){
+                    [[owner soundController] playSoundNamed:@"(Adium)Buddy_SignedOn.aif"];
+                }else{
+                    [[owner soundController] playSoundNamed:@"(Adium)Buddy_SignedOff.aif"];
+                }
+    
+                [onlineDict setObject:[NSNumber numberWithBool:newOnline] forKey:[inHandle UID]];
             }
-
-            [onlineDict setObject:[NSNumber numberWithBool:newOnline] forKey:[inHandle UID]];
         }
     }
-    
+        
     return(NO);
 }
 
