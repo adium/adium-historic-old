@@ -57,6 +57,9 @@
 	[scrollView_contactList setDrawsBackground:NO];
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutoHideScrollBar:YES];
+
+	//Dragging
+	[contactListView registerForDraggedTypes:[NSArray arrayWithObject:@"AIListObject"]];
 }
 
 - (BOOL)windowShouldClose:(id)sender
