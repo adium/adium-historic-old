@@ -190,22 +190,40 @@
 				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
 			}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]){
 				tempEvent = AILocalizedString(@"has gone away",nil);
-				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
-				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
+				if ([contact statusObjectForKey:@"IdleSince"]) {
+					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor]];
+					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
+				} else {
+					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
+					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
+				}
 			}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]){
 				tempEvent = AILocalizedString(@"is available",nil);
-				#warning Jorge: Here would be nice to have a check on the contact status and color accordingly
-				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
-				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
+				if ([contact statusObjectForKey:@"IdleSince"]) {
+					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
+					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
+				} else {
+					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
+					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
+				}
 			}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]){
 				tempEvent = AILocalizedString(@"is idle",nil);
-				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
-				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
+				if ([[contact statusObjectForKey:@"Away"] boolValue]) {
+					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor]];
+					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
+				} else {
+					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
+					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
+				}
 			}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]){
 				tempEvent = AILocalizedString(@"is no longer idle",nil);
-				#warning Jorge: Here would be nice to have a check on the contact status and color accordingly
-				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
-				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
+				if ([[contact statusObjectForKey:@"Away"] boolValue]) {
+					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
+					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
+				} else {
+					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
+					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
+				}
             }else if([notificationName isEqualToString: Content_FirstContentRecieved]){
 				tempEvent = AILocalizedString(@"new message",nil);
 				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
