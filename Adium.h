@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 /** 
  * $Revision: 1.48 $
- *  $Date: 2004/08/24 19:16:23 $
+ *  $Date$
  *  $Author#
  *
  **/
@@ -41,6 +41,7 @@
 //#import "ESObjectWithStatus.h"
 
 #import "AIAccount.h"
+#import "AIService.h"
 #import "AIAccountViewController.h"
 #import "AIActionDetailsPane.h"
 #import "AIChat.h"
@@ -64,7 +65,6 @@
 #import "AIPlugin.h"
 #import "AIPreferencePane.h"
 #import "AIEmoticonPreferences.h"
-#import "AIServiceType.h"
 #import "AISortController.h"
 #import "AIWindowController.h"
 #import "AIContextMenuTextView.h"

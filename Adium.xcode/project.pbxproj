@@ -5910,7 +5910,6 @@
 				34BD9DB205314751000AB133,
 				34BD9DB305314751000AB133,
 				34BD9DB405314751000AB133,
-				34BD9DB505314751000AB133,
 				34BD9DB605314751000AB133,
 				34BD9DB705314751000AB133,
 				34BD9DBB05314751000AB133,
@@ -5955,6 +5954,7 @@
 				4B93589006DBC71B007977AA,
 				4B93589306DBC71B007977AA,
 				4B93589506DBC71B007977AA,
+				4BAFD57906E0091100FF7FBC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5973,12 +5973,6 @@
 		};
 		34BD9DB405314751000AB133 = {
 			fileRef = F5793924033E74C301A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9DB505314751000AB133 = {
-			fileRef = F5793925033E74C301A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6059,7 +6053,6 @@
 				34BD9DCA05314751000AB133,
 				34BD9DCB05314751000AB133,
 				34BD9DCC05314751000AB133,
-				34BD9DCD05314751000AB133,
 				34BD9DD105314751000AB133,
 				34BD9DD205314751000AB133,
 				34BD9DD305314751000AB133,
@@ -6103,6 +6096,7 @@
 				4B93589106DBC71B007977AA,
 				4B93589206DBC71B007977AA,
 				4B93589406DBC71B007977AA,
+				4BAFD57A06E0091100FF7FBC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6127,12 +6121,6 @@
 		};
 		34BD9DCC05314751000AB133 = {
 			fileRef = F5793913033E748F01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9DCD05314751000AB133 = {
-			fileRef = F5793914033E748F01A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -10472,12 +10460,12 @@
 		};
 		4B4F5B2D042D645F00A8010A = {
 			children = (
+				4BAFD57706E0091100FF7FBC,
+				4BAFD57806E0091100FF7FBC,
 				F5793922033E74C301A8010A,
 				F579390B033E748F01A8010A,
 				4B28DDAB0599FED200343093,
 				4B28DDAC0599FED200343093,
-				F5793925033E74C301A8010A,
-				F5793914033E748F01A8010A,
 			);
 			isa = PBXGroup;
 			name = "Accounts & Services";
@@ -13160,6 +13148,36 @@
 		};
 		4BAD188F066A83550002008E = {
 			fileRef = 4BAD188D066A83550002008E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAFD57706E0091100FF7FBC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIService.h;
+			path = "Frameworks/Adium Framework/AIService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAFD57806E0091100FF7FBC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIService.m;
+			path = "Frameworks/Adium Framework/AIService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAFD57906E0091100FF7FBC = {
+			fileRef = 4BAFD57706E0091100FF7FBC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAFD57A06E0091100FF7FBC = {
+			fileRef = 4BAFD57806E0091100FF7FBC;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -22579,15 +22597,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F5793914033E748F01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIServiceType.m;
-			path = "Frameworks/Adium Framework/AIServiceType.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F5793922033E74C301A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -22612,15 +22621,6 @@
 			lastKnownFileType = sourcecode.c.h;
 			name = AIPlugin.h;
 			path = "Frameworks/Adium Framework/AIPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5793925033E74C301A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIServiceType.h;
-			path = "Frameworks/Adium Framework/AIServiceType.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
