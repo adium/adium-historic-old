@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Event Sound Set</key>
-	<string>$$BundlePath$$/Contents/Resources/Sounds/Adium</string>
+	<string>$$BundlePath$$/Contents/Resources/Sounds/Adium.AdiumSoundset</string>
         <key>Mute When Away</key>
             <false />
 </dict>
