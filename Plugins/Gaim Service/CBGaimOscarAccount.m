@@ -253,20 +253,31 @@ static BOOL didInitOscar = NO;
 
 - (NSString *)connectionStringForStep:(int)step
 {
-	static NSString *steps[] = {
-		@"Connecting",
-		@"Screen name sent",
-		@"Password sent",
-		@"Received authorization",
-		@"Connection established",
-		@"Finalizing connection",
-	};
-	if(step < 0 || step > 5)
-		return nil;
-	else
-		return AILocalizedString(steps[step], /*comment*/ nil);
-}
+	switch (step)
+	{
+		case 0:
+			return AILocalizedString(@"Connecting",nil);
+			break;
+		case 1:
+			return AILocalizedString(@"Screen name sent",nil);
+			break;
+		case 2:
+			return AILocalizedString(@"Password sent",nil);
+			break;			
+		case 3:
+			return AILocalizedString(@"Received authorization",nil);
+			break;
+		case 4:
+			return AILocalizedString(@"Connection established",nil);
+			break;
+		case 5:
+			return AILocalizedString(@"Finalizing connection",nil);
+			break;
+	}
 
+	return nil;
+}
+	
 - (NSString *)hostKey
 {
 	return KEY_OSCAR_HOST;
@@ -596,10 +607,10 @@ static BOOL didInitOscar = NO;
     while(![scanner isAtEnd]){
         //Find an HTML IMG tag
         if([scanner scanUpToString:@"<img" intoString:&chunkString]){
-#warning do we really need this?
-            //[processedString appendString:chunkString];
+			//Append the text leading up the the IMG tag; a directIM may have image tags inline with message text
+            [processedString appendString:chunkString];
         }
-		
+
         //Process the tag
         if([scanner scanString:tagStart intoString:nil]){ //If a tag wasn't found, we don't process.
 			//Get the tag itself
