@@ -118,4 +118,26 @@
     return([owner interfaceController]);
 }
 
+
+- (AIChat *)createChatCommand:(NSScriptCommand *)command 
+{
+	NSDictionary	*evaluatedArguments = [command evaluatedArguments];
+	NSString		*UID = [evaluatedArguments objectForKey:@"UID"];
+	NSString		*serviceID = [evaluatedArguments objectForKey:@"serviceID"];
+	AIListContact   *contact;
+	AIChat			*chat = nil;
+
+	contact = [[owner contactController] preferredContactWithUID:UID
+													andServiceID:serviceID 
+										   forSendingContentType:CONTENT_MESSAGE_TYPE];
+	NSLog(@"Created %@",contact);
+	if(contact){
+		//Open the chat and set it as active
+		chat = [[owner contentController] openChatWithContact:contact];
+		NSLog(@"So chat is %@",chat);
+		[[owner interfaceController] setActiveChat:chat];
+	}
+	
+	return chat;
+}
 @end

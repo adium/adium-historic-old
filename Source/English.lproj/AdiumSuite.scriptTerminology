@@ -249,12 +249,19 @@
 					<key>Name</key>
 					<string>display name</string>
 				</dict>
-				<key>displayServiceID</key>
+				<key>serviceID</key>
 				<dict>
 					<key>Description</key>
-					<string>Service (such as AIM, ICQ, or MSN) of this object.</string>
+					<string>Specific service (such as AIM, ICQ, or MSN) of this object. (See serviceClass)</string>
 					<key>Name</key>
 					<string>serviceID</string>
+				</dict>
+				<key>serviceClass</key>
+				<dict>
+					<key>Description</key>
+					<string>Same as serviceID in most cases; a general class of compatible protocols.  This is curently only different for AIM, ICQ, and .Mac, all of which have different serviceIDs but the same service class, AIM.  For future compatibility, this is the recommended service identifier.</string>
+					<key>Name</key>
+					<string>serviceClass</string>
 				</dict>
 				<key>formattedUID</key>
 				<dict>
@@ -397,6 +404,11 @@
 					<string>contacts</string>
 				</dict>
 			</dict>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>AdiumSuite.CreateChat</key>
+				<string>createChatCommand:</string>
+			</dict>
 		</dict>
 		<key>NSApplication</key>
 		<dict>
@@ -493,6 +505,30 @@
 				<key>Description</key>
 				<string>a contact or chat to which to send</string>
 			</dict>
+		</dict>
+		<key>CreateChat</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>UID</key>
+				<dict>
+					<key>Description</key>
+					<string>The screen name (UID) of the destination contact.</string>
+					<key>Name</key>
+					<string>with UID</string>
+				</dict>
+				<key>serviceID</key>
+				<dict>
+					<key>Description</key>
+					<string>The service ID (such as AIM, MSN, Yahoo, Jabber, ICQ) on which the chat should be initiated.</string>
+					<key>Name</key>
+					<string>on service</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Create a new chat.</string>
+			<key>Name</key>
+			<string>create chat</string>
 		</dict>
 	</dict>
 	<key>Description</key>
