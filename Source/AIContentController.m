@@ -41,6 +41,10 @@ static BOOL					pauseFilteringForSafety = NO;
 static BOOL					threadedFiltersInUse = NO;
 static NSLock				*filterCreationLock = nil;
 
+//The autorelease pool presently in use; it will be periodically released and recreated
+static NSAutoreleasePool *currentAutoreleasePool = nil;
+#define	AUTORELEASE_POOL_REFRESH	5.0
+
 //init
 - (void)initController
 {
@@ -376,18 +380,35 @@ static NSLock				*filterCreationLock = nil;
 //Only called once, the first time a threaded filtering is requested
 - (void)thread_createFilterRunLoopMessenger
 {
-	NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
+	NSTimer	*autoreleaseTimer;
 	
-	filterRunLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
+	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
+	
+	filterRunLoopMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
 	[filterRunLoopMessenger setMessageRetryTimeout:3.0];
 
 	[filterCreationLock unlock];
-		
+
+	autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
+														 target:self
+													   selector:@selector(refreshAutoreleasePool:)
+													   userInfo:nil
+														repeats:YES] retain];
 	CFRunLoopRun();
 	
-	[pool release];
-	
-	filterRunLoopMessenger = nil;
+	[currentAutoreleasePool release];
+	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
+		
+	[filterRunLoopMessenger release]; filterRunLoopMessenger = nil;
+}
+
+//Our autoreleased objects will only be released when the outermost autorelease pool is released.
+//This is handled automatically in the main thread, but we need to do it manually here.
+//Release the current pool, then create a new one.
+- (void)refreshAutoreleasePool:(NSTimer *)inTimer
+{
+	[currentAutoreleasePool release];
+	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 }
 
 //Messaging ------------------------------------------------------------------------------------------------------------
@@ -920,7 +941,7 @@ static NSLock				*filterCreationLock = nil;
 
 //Close a chat
 - (BOOL)closeChat:(AIChat *)inChat
-{
+{	
     if(mostRecentChat == inChat)
         mostRecentChat = nil;
     
@@ -930,6 +951,8 @@ static NSLock				*filterCreationLock = nil;
 
     //Remove the chat
     [chatArray removeObject:inChat];
+
+	AILog(@"closeChat: %@ so now %@ (%i)",inChat,chatArray,[chatArray containsObjectIdenticalTo:inChat]);
 
     //Remove all content from the chat
     [inChat removeAllContent];
@@ -1012,21 +1035,22 @@ static NSLock				*filterCreationLock = nil;
 		enumerator = [[(AIMetaContact *)inContact listContacts] objectEnumerator];
 		while(listContact = [enumerator nextObject]){
 			NSSet		*listContactChats;
-			
+			AILog(@"allChatsWithContact : meta : %@",listContact);
 			if (listContactChats = [self allChatsWithContact:listContact]){
 				[foundChats unionSet:listContactChats];
+				AILog(@"yields %@",foundChats);
 			}
 		}
 		
 	}else{
 		NSEnumerator	*chatEnumerator = [chatArray objectEnumerator];
 		AIChat			*chat;
-
+		AILog(@"allChatsWithContact looking for %@",[inContact internalObjectID]);
 		while((chat = [chatEnumerator nextObject])){
-/*			if([[chat participatingListObjects] containsObject:inContact]){ */
 			if([[[chat listObject] internalObjectID] isEqualToString:[inContact internalObjectID]]){
 				if (!foundChats) foundChats = [NSMutableSet set];
 				[foundChats addObject:chat];
+				AILog(@"%@ gave us %@",inContact,foundChats);
 			}
 		}
 	}
