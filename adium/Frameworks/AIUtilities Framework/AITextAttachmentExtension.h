@@ -17,6 +17,7 @@
     NSString	*stringRepresentation;
     BOOL        shouldSaveImageForLogging;
 	BOOL		hasAlternate;
+	NSString	*imagePath;
 }
 
 - (void)setString:(NSString *)inString;
@@ -25,5 +26,8 @@
 - (void)setShouldSaveImageForLogging:(BOOL)flag;
 - (BOOL)hasAlternate;
 - (void)setHasAlternate:(BOOL)flag;
+
+- (void)setImagePath:(NSString *)inPath;
+- (NSString *)imagePath;
 
 @end

@@ -23,7 +23,15 @@
 	stringRepresentation = nil;
     shouldSaveImageForLogging = NO;
 	hasAlternate = NO;
+	imagePath = nil;
     return self;
+}
+
+- (void)dealloc
+{
+	[imagePath release];
+	[stringRepresentation release];
+	[super dealloc];
 }
     
 - (void)setString:(NSString *)inString
@@ -43,6 +51,21 @@
 	
     return (stringRepresentation);
 }
+
+- (void)setImagePath:(NSString *)inPath
+{
+	if(imagePath != inPath){
+		[imagePath release];
+		imagePath = [inPath retain];
+	}
+}
+- (NSString *)imagePath
+{
+	return(imagePath);
+}
+
+
+
 
 - (BOOL)shouldSaveImageForLogging
 {

@@ -137,6 +137,7 @@
         NSFileWrapper               *emoticonFileWrapper = [[[NSFileWrapper alloc] initWithPath:[self _pathToEmoticonImage]] autorelease];
         AITextAttachmentExtension   *emoticonAttachment = [[[AITextAttachmentExtension alloc] init] autorelease];
         
+		[emoticonAttachment setImagePath:[self _pathToEmoticonImage]];
         [emoticonAttachment setFileWrapper:emoticonFileWrapper];
 		[emoticonAttachment setHasAlternate:YES];
         _cachedAttributedString = [[NSAttributedString attributedStringWithAttachment:emoticonAttachment] retain];

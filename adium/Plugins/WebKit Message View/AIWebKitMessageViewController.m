@@ -274,13 +274,13 @@
             // Using a safeString so image attachments are removed
             // while waiting for a permanent fix that would allows us to use emoticons
             [inString replaceCharactersInRange:range withString:
-              [AIHTMLDecoder encodeHTML:[[(AIContentMessage *)content message] safeString]
-                  headers:NO fontTags:NO closeFontTags:NO styleTags:YES 
-                  closeStyleTagsOnFontChange:NO encodeNonASCII:YES 
-                  imagesPath:@"/tmp"]];
+				[AIHTMLDecoder encodeHTML:/*[*/[(AIContentMessage *)content message] /*safeString]*/
+									   headers:NO fontTags:NO closeFontTags:NO styleTags:YES 
+					closeStyleTagsOnFontChange:NO encodeNonASCII:YES 
+									imagesPath:@"/tmp" attachmentsAsText:NO]];
         }
-		
-        range = [inString rangeOfString:@"%time%"];
+
+range = [inString rangeOfString:@"%time%"];
         if(range.location != NSNotFound){
 			[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentMessage *)content date]]];
         }
