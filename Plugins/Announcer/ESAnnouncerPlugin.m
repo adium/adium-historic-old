@@ -21,9 +21,9 @@
 - (void)installPlugin
 {
     //Install our contact alerts
-	[[adium contactAlertsController] registerActionID:CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER
+	[[adium contactAlertsController] registerActionID:SPEAK_TEXT_ALERT_IDENTIFIER
 										  withHandler:self];
-	[[adium contactAlertsController] registerActionID:CONTACT_ALERT_SPEAK_EVENT_IDENTIFIER
+	[[adium contactAlertsController] registerActionID:SPEAK_EVENT_ALERT_IDENTIFIER
 										  withHandler:self];
     
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ANNOUNCER_DEFAULT_PREFS 
@@ -98,7 +98,7 @@
 #pragma mark Speak Text Alert
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	if([actionID isEqualToString:CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER]){
+	if([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]){
 		return(ANNOUNCER_ALERT_SHORT);
 	}else{ /*Speak Event*/
 		return(ANNOUNCER_EVENT_ALERT_SHORT);
@@ -107,7 +107,7 @@
 
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-	if([actionID isEqualToString:CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER]){		
+	if([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]){		
 		NSString *textToSpeak = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
 		
 		if(textToSpeak && [textToSpeak length]){
@@ -127,7 +127,7 @@
 
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-	if([actionID isEqualToString:CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER]){
+	if([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]){
 		return([ESAnnouncerSpeakTextAlertDetailPane actionDetailsPane]);
 	}else{ /*Speak Event*/
 		return([ESAnnouncerSpeakEventAlertDetailPane actionDetailsPane]);
@@ -146,7 +146,7 @@
 				  [NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:NO] :
 				  nil);
 	
-	if([actionID isEqualToString:CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER]){
+	if([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]){
 		NSString	*userText = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
 
 		if(timeFormat){
@@ -166,10 +166,7 @@
 	}else{ /*Speak Event*/	
 		
 		//Handle messages in a custom manner
-		if([actionID isEqualToString:CONTENT_MESSAGE_RECEIVED] ||
-		   [actionID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST] ||
-		   [actionID isEqualToString:CONTENT_MESSAGE_SENT]){
-
+		if([[self class] customEventSpeechHandlingForEventID:eventID]){
 			AIContentMessage	*content = [userInfo objectForKey:@"AIContentObject"];
 			NSString			*message = [[[content message] safeString] string];
 			AIListObject		*source = [content source];
@@ -269,11 +266,18 @@
 
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
-	if([actionID isEqualToString:CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER]){
+	if([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]){
 		return(YES);
 	}else{ /*Speak Event*/
 		return(NO);
 	}
+}
+
++ (BOOL)customEventSpeechHandlingForEventID:(NSString *)eventID
+{
+	return([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED] ||
+		   [eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST] ||
+		   [eventID isEqualToString:CONTENT_MESSAGE_SENT]);
 }
 
 @end

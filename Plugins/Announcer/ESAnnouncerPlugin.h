@@ -16,8 +16,8 @@
 #define KEY_PITCH						@"Pitch"
 #define KEY_RATE						@"Rate"
 
-#define CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER		@"SpeakText"
-#define CONTACT_ALERT_SPEAK_EVENT_IDENTIFIER	@"SpeakEvent"
+#define SPEAK_TEXT_ALERT_IDENTIFIER		@"SpeakText"
+#define SPEAK_EVENT_ALERT_IDENTIFIER	@"SpeakEvent"
 
 @interface ESAnnouncerPlugin : AIPlugin <AIActionHandler> {
     NSString					*lastSenderString;
