@@ -25,6 +25,7 @@
 #import "CBGaimOscarAccount.h"
 
 #import "adiumGaimCore.h"
+#import "adiumGaimOTR.h"
 
 //For MSN user icons
 //#include <libgaim/session.h>
@@ -1377,6 +1378,72 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)performContactMenuActionFromDict:(NSDictionary *)dict 
 {
 	[gaimThreadProxy gaimThreadPerformContactMenuActionFromDict:dict];
+}
+
+
+#pragma mark Secure messaging
+- (oneway void)gaimThreadRequestSecureMessaging:(BOOL)inSecureMessaging
+										 inChat:(AIChat *)inChat
+{
+	GaimConversation	*conv;
+	if(conv = convLookupFromChat(inChat, [inChat account])){
+		
+		if(inSecureMessaging){
+			adium_gaim_otr_connect_conv(conv);
+		}else{
+			adium_gaim_otr_disconnect_conv(conv);	
+		}
+	}
+}
+
+- (oneway void)requestSecureMessaging:(BOOL)inSecureMessaging
+							   inChat:(AIChat *)inChat
+{
+	[gaimThreadProxy gaimThreadRequestSecureMessaging:inSecureMessaging
+											   inChat:inChat];
+}
+
+- (void)gaimConversation:(GaimConversation *)conv setSecurityDetails:(NSDictionary *)securityDetailsDict
+{
+	AIChat					*chat = imChatLookupFromConv(conv);
+	NSMutableDictionary		*fullSecurityDetailsDict = [securityDetailsDict mutableCopy];
+	NSString				*format, *description;
+	
+	/* Encrypted by Off-the-Record Messaging
+	 *
+	 * Fingerprint for TekJew:
+	 * <Fingerprint>
+	 *
+	 * Secure ID for this session:
+	 * Incoming: <Incoming SessionID>
+	 * Outgoing: <Outgoing SessionID>
+	 */
+	format = [@"%@\n\n" stringByAppendingString:AILocalizedString(@"Fingerprint for %@:","Fingerprint for <name>:")];
+	format = [format stringByAppendingString:@"\n%@\n\n%@\n%@ %@\n%@ %@"];
+
+	description = [NSString stringWithFormat:format,
+		AILocalizedString(@"Encrypted by Off-the-Record Messaging",nil),
+		[[chat listObject] formattedUID],
+		[securityDetailsDict objectForKey:@"Fingerprint"],
+		AILocalizedString(@"Secure ID for this session:",nil),
+		AILocalizedString(@"Incoming:",nil),
+		[securityDetailsDict objectForKey:@"Incoming SessionID"],
+		AILocalizedString(@"Outgoing:",nil),
+		[securityDetailsDict objectForKey:@"Outgoing SessionID"],
+		nil];
+	
+	[fullSecurityDetailsDict setObject:description
+								forKey:@"Description"];
+	[chat mainPerformSelector:@selector(setSecurityDetails:)
+				   withObject:fullSecurityDetailsDict];
+
+	[fullSecurityDetailsDict release];
+}
+
+- (void)refreshedSecurityOfGaimConversation:(GaimConversation *)conv
+{
+	NSLog(@"*** Refreshed security...");
+	GaimDebug (@"*** Refreshed security...");
 }
 
 - (void)dealloc

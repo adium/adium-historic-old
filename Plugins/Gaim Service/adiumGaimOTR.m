@@ -12,14 +12,85 @@
 #import <Libgaim/ui.h>
 #import <Libgaim/dialogs.h>
 
+#pragma mark Adium convenience functions
+
+//Return the ConnContext for a GaimConversation, or NULL if none exists
+static ConnContext* context_for_conv(GaimConversation *conv)
+{
+    GaimAccount *account;
+    char *username;
+    const char *accountname, *proto;
+    ConnContext *context;
+	
+    /* Do nothing if this isn't an IM conversation */
+    if (gaim_conversation_get_type(conv) != GAIM_CONV_IM) return;
+	
+    account = gaim_conversation_get_account(conv);
+    accountname = gaim_account_get_username(account);
+    proto = gaim_account_get_protocol_id(account);
+    username = g_strdup(
+						gaim_normalize(account, gaim_conversation_get_name(conv)));
+	
+    context = otrl_context_find(username, accountname, proto, 0, NULL,
+								NULL, NULL);
+	g_free(username);
+
+	return context;
+}
+
+
+/* Return an NSDictionary* describing a ConnContext.
+* @"Fingerprint" : NSString of the fingerprint
+* @"Incoming SessionID" : NSString of the incoming sessionID
+* @"Outgoing SessionID" : NSString of the outgoing sessionID
+*/
+static NSDictionary* details_for_context(ConnContext *context)
+{
+	NSDictionary		*securityDetailsDict;
+	
+    char fingerprint[45];
+    unsigned char *sessionid;
+    char sess1[21], sess2[21];
+    int i;
+    SessionDirection dir = context->sesskeys[1][0].dir;
+	
+    /* Make a human-readable version of the fingerprint */
+    otrl_privkey_hash_to_human(fingerprint,
+							   context->active_fingerprint->fingerprint);
+    /* Make a human-readable version of the sessionid (in two parts) */
+    sessionid = context->sesskeys[1][0].sessionid;
+    for(i=0;i<10;++i) sprintf(sess1+(2*i), "%02x", sessionid[i]);
+    sess1[20] = '\0';
+    for(i=0;i<10;++i) sprintf(sess2+(2*i), "%02x", sessionid[i+10]);
+    sess2[20] = '\0';
+	
+    /*
+	 secondary = g_strdup_printf("Fingerprint for %s:\n%s\n\n"
+								 "Secure id for this session:\n"
+								 "<span %s>%s</span> <span %s>%s</span>", context->username,
+								 fingerprint,
+								 dir == SESS_DIR_LOW ? "weight=\"bold\"" : "", sess1,
+								 dir == SESS_DIR_HIGH ? "weight=\"bold\"" : "", sess2);
+	 */
+	
+	securityDetailsDict = [NSDictionary dictionaryWithObjectsAndKeys:
+		[NSString stringWithUTF8String:fingerprint], @"Fingerprint",
+		[NSString stringWithUTF8String:((dir == SESS_DIR_LOW) ? sess1 : sess2)], @"Incoming SessionID",
+		[NSString stringWithUTF8String:((dir == SESS_DIR_HIGH) ? sess2 : sess1)], @"Outgoing SessionID",
+		nil];
+	
+	return(securityDetailsDict);
+}
+
 #pragma mark Dialogs
+
 /* This is just like gaim_notify_message, except: (a) it doesn't grab
-* keyboard focus, (b) the button is "OK" instead of "Close", and (c)
-* the labels aren't limited to 2K. */
+ * keyboard focus, (b) the button is "OK" instead of "Close", and (c)
+ * the labels aren't limited to 2K. */
 static void otrg_adium_dialog_notify_message(GaimNotifyMsgType type,
 										   const char *title, const char *primary, const char *secondary)
 {
-	GaimDebug (@"otrg_adium_dialog_notify_message: type %i ; title %s ; primary %s ; secondary %s", type, title, primary, secondary);
+	//Just pass it to gaim_notify_message()
 	gaim_notify_message(adium_gaim_get_handle(), type, title, primary, secondary, NULL, NULL);
 }
 
@@ -28,9 +99,8 @@ struct s_OtrgDialogWait {
 	char	*label;
 };
 
-/* Put up a Please Wait dialog, with the "OK" button desensitized.
-* Return a handle that must eventually be passed to
-* otrg_dialog_wait_done. */
+/* Began generating a private key.
+ * Return a handle that will be passed to otrg_adium_dialog_private_key_wait_done(). */
 static OtrgDialogWaitHandle otrg_adium_dialog_private_key_wait_start(const char *account,
 																   const char *protocol)
 {
@@ -65,36 +135,18 @@ static OtrgDialogWaitHandle otrg_adium_dialog_private_key_wait_start(const char 
     return handle;
 }
 
-/* Append the given text to the dialog, and sensitize the "OK" button. */
+/* Done creating the private key */
 static void otrg_adium_dialog_private_key_wait_done(OtrgDialogWaitHandle handle)
 {
-	GaimDebug (@"otrg_adium_dialog_private_key_wait_done");
-
 	gaim_notify_message(adium_gaim_get_handle(), GAIM_NOTIFY_MESSAGE, "Done", "Private key generation...", "complete.", NULL, NULL);
-
-	/*
-    const char *oldmarkup;
-    char *newmarkup;
-	
-    oldmarkup = adium_label_get_label(GTK_LABEL(handle->label));
-    newmarkup = g_strdup_printf("%s%s", oldmarkup, " Done.");
-	
-    gtk_label_set_markup(adium_LABEL(handle->label), newmarkup);
-    gtk_widget_show(handle->label);
-    gtk_dialog_set_response_sensitive(GTK_DIALOG(handle->dialog),
-									  GTK_RESPONSE_ACCEPT, 1);
-	
-    g_free(newmarkup);
-    free(handle);
-	 */
 }
 
 /* Show a dialog informing the user that a correspondent (who) has sent
-* us a Key Exchange Message (kem) that contains an unknown fingerprint.
-* Ask the user whether to accept the fingerprint or not.  If yes, call
-* response_cb(ops, opdata, response_data, resp) with resp = 1.  If no,
-* set resp = 0.  If the user destroys the dialog without answering, set
-* resp = -1. */
+ * us a Key Exchange Message (kem) that contains an unknown fingerprint.
+ * Ask the user whether to accept the fingerprint or not.  If yes, call
+ * response_cb(ops, opdata, response_data, resp) with resp = 1.  If no,
+ * set resp = 0.  If the user destroys the dialog without answering, set
+ * resp = -1. */
 static void otrg_adium_dialog_unknown_fingerprint(const char *who,
 												const char *protocol, OTRKeyExchangeMsg kem,
 												void (*response_cb)(OtrlMessageAppOps *ops, void *opdata,
@@ -102,7 +154,6 @@ static void otrg_adium_dialog_unknown_fingerprint(const char *who,
 												OtrlMessageAppOps *ops, void *opdata,
 												OTRConfirmResponse *response_data)
 {
-	GaimDebug (@"otrg_adium_dialog_unknown_fingerprint: who: %s protocol: %s",who,protocol);
     char hash[45];
     NSString *label_text;
 //    struct ufcbdata *cbd = malloc(sizeof(struct ufcbdata));
@@ -123,116 +174,84 @@ static void otrg_adium_dialog_unknown_fingerprint(const char *who,
 	}
 }
 
-
 /* Call this when a context transitions from (a state other than
-* CONN_CONNECTED) to CONN_CONNECTED. */
+ * CONN_CONNECTED) to CONN_CONNECTED. */
 static void otrg_adium_dialog_connected(ConnContext *context)
 {
-    char fingerprint[45];
-    unsigned char *sessionid;
-    char sess1[21], sess2[21];
-    char *primary = g_strdup_printf("Private connection with %s "
-									"established.", context->username);
-    char *secondary;
-    int i;
-    SessionDirection dir = context->sesskeys[1][0].dir;
+	NSDictionary		*securityDetailsDict;
+	GaimAccount			*account;
+	GaimConversation	*conv;
 	
-    /* Make a human-readable version of the fingerprint */
-    otrl_privkey_hash_to_human(fingerprint,
-							   context->active_fingerprint->fingerprint);
-    /* Make a human-readable version of the sessionid (in two parts) */
-    sessionid = context->sesskeys[1][0].sessionid;
-    for(i=0;i<10;++i) sprintf(sess1+(2*i), "%02x", sessionid[i]);
-    sess1[20] = '\0';
-    for(i=0;i<10;++i) sprintf(sess2+(2*i), "%02x", sessionid[i+10]);
-    sess2[20] = '\0';
-    
-    secondary = g_strdup_printf("Fingerprint for %s:\n%s\n\n"
-								"Secure id for this session:\n"
-								"<span %s>%s</span> <span %s>%s</span>", context->username,
-								fingerprint,
-								dir == SESS_DIR_LOW ? "weight=\"bold\"" : "", sess1,
-								dir == SESS_DIR_HIGH ? "weight=\"bold\"" : "", sess2);
+	//Find the GaimAccount and existing conversation which was just connected
+	account = gaim_accounts_find(context->accountname, context->protocol);
+	conv = gaim_find_conversation_with_account(context->username, account);
 	
-    otrg_dialog_notify_info("Private connection established",
-							primary, secondary);
+	//If there is no existing conversation, make one
+	if(!conv){
+		conv = gaim_conversation_new(GAIM_CONV_IM, account, context->username);	
+	}
 	
-    g_free(primary);
-    g_free(secondary);
- /*   dialog_update_label(context, 1); */
+	securityDetailsDict = details_for_context(context);
+
+	[[SLGaimCocoaAdapter sharedInstance] gaimConversation:conv
+									   setSecurityDetails:securityDetailsDict];
 }
 
 /* Call this when a context transitions from CONN_CONNECTED to
 * (a state other than CONN_CONNECTED). */
 static void otrg_adium_dialog_disconnected(ConnContext *context)
 {
-    char *primary = g_strdup_printf("Private connection with %s lost.",
-									context->username);
-    otrg_dialog_notify_warning("Private connection lost", primary, NULL);
-    g_free(primary);
-/*    dialog_update_label(context, 0); */
+	GaimConversation	*conv;
+
+	conv = gaim_find_conversation_with_account(context->username,
+											   gaim_accounts_find(context->accountname, context->protocol));
+	[[SLGaimCocoaAdapter sharedInstance] gaimConversation:conv
+									   setSecurityDetails:nil];
 }
 
 /* Call this when we receive a Key Exchange message that doesn't cause
 * our state to change (because it was just the keys we knew already). */
 static void otrg_adium_dialog_stillconnected(ConnContext *context)
 {
-    char *secondary = g_strdup_printf("<span size=\"larger\">Successfully "
-									  "refreshed private connection with %s.</span>", context->username);
-    otrg_dialog_notify_info("Refreshed private connection", NULL, secondary);
-    g_free(secondary);
-/*    dialog_update_label(context, 1); */
+	GaimConversation	*conv;
+	GaimAccount			*account;
+	
+	account = gaim_accounts_find(context->accountname, context->protocol);
+	conv = gaim_find_conversation_with_account(context->username,
+											   account);
+	[[SLGaimCocoaAdapter sharedInstance] refreshedSecurityOfGaimConversation:conv];
 }
 
 /* Set all OTR buttons to "sensitive" or "insensitive" as appropriate.
 * Call this when accounts are logged in or out. */
 static void otrg_adium_dialog_resensitize_all(void)
 {
-	GaimDebug (@"otrg_adium_dialog_resensitize_all");
- //   gaim_conversation_foreach(dialog_resensitize);
+
 }
 
-/* Set up the per-conversation information display */
+/* When a conversation is created, check to see if it is already connected */
 static void otrg_adium_dialog_new_conv(GaimConversation *conv)
 {
-	GaimDebug (@"otrg_adium_dialog_new_conv: %s",conv->name);
-#if 0
-    GaimAccount *account;
-    char *username;
-    const char *accountname, *proto;
-    ConnContext *context;
-    ConnectionState state;
+	ConnContext		*context;
+	ConnectionState state;
 	
-    /* Do nothing if this isn't an IM conversation */
-    if (gaim_conversation_get_type(conv) != GAIM_CONV_IM) return;
-	
-    account = gaim_conversation_get_account(conv);
-    accountname = gaim_account_get_username(account);
-    proto = gaim_account_get_protocol_id(account);
-    username = g_strdup(
-						gaim_normalize(account, gaim_conversation_get_name(conv)));
-	
-    context = otrl_context_find(username, accountname, proto, 0, NULL,
-								NULL, NULL);
+	context = context_for_conv(conv);
     state = context ? context->state : CONN_UNCONNECTED;
-    g_free(username);
 
-	/* Add a clickable button, or set one up, or something, which when clicked ends up calling
-		otrg_dialog_clicked_connect(conv); */
-#endif
-	
-	/* XXX DEBUG: Immediately attempt to connect */
-	//otrg_plugin_send_default_query_conv(conv);
+	if(state == CONN_CONNECTED){
+		NSDictionary	*securityDetailsDict;
+		
+		securityDetailsDict = details_for_context(context);
+		
+		[[SLGaimCocoaAdapter sharedInstance] gaimConversation:conv
+										   setSecurityDetails:securityDetailsDict];
+	}
 }
 
-/* Remove the per-conversation information display */
+/* Called before Gaim destroys a conversation */
 static void otrg_adium_dialog_remove_conv(GaimConversation *conv)
 {
-	GaimDebug (@"otrg_adium_dialog_remove_conv: %s",conv->name);
-	/* Do nothing if this isn't an IM conversation */
-    if (gaim_conversation_get_type(conv) != GAIM_CONV_IM) return;
 	
-	/* Remove the buttons or disable them or whatever */
 }
 
 static OtrgDialogUiOps otrg_adium_dialog_ui_ops = {
@@ -337,6 +356,26 @@ static OtrgUiUiOps otrg_adium_ui_ui_ops = {
 OtrgUiUiOps *otrg_adium_ui_get_ui_ops(void)
 {
     return &otrg_adium_ui_ui_ops;
+}
+
+#pragma mark Connecting/Disconnecting
+void adium_gaim_otr_connect_conv(GaimConversation *conv)
+{
+	/* Do nothing if this isn't an IM conversation */
+	if(gaim_conversation_get_type(conv) == GAIM_CONV_IM){ 
+		otrg_plugin_send_default_query_conv(conv);
+	}		
+}
+
+void adium_gaim_otr_disconnect_conv(GaimConversation *conv)
+{
+	ConnContext	*context;
+	
+	/* Do nothing if this isn't an IM conversation */
+	if((gaim_conversation_get_type(conv) == GAIM_CONV_IM) &&
+	   (context = context_for_conv(conv))){
+		   otrg_ui_disconnect_connection(context);
+	}
 }
 
 #pragma mark Initial setup

@@ -7,3 +7,7 @@
 //
 
 #import "SLGaimCocoaAdapter.h"
+
+void adium_gaim_otr_connect_conv(GaimConversation *conv);
+void adium_gaim_otr_disconnect_conv(GaimConversation *conv);
+void initGaimOTRSupprt(void);

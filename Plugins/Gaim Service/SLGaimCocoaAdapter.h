@@ -73,6 +73,11 @@
 
 - (oneway void)performContactMenuActionFromDict:(NSDictionary *)dict;
 
+- (oneway void)requestSecureMessaging:(BOOL)inSecureMessaging
+							   inChat:(AIChat *)inChat;
+- (void)gaimConversation:(GaimConversation *)conv setSecurityDetails:(NSDictionary *)securityDetailsDict;
+- (void)refreshedSecurityOfGaimConversation:(GaimConversation *)conv;
+
 - (void)setMainThreadMessenger:(NDRunLoopMessenger *)inMainThreadMessenger;
 @end
 
