@@ -13,24 +13,28 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIMiniToolbar, AIListObject, AIAccount, AISendingTextView, AIAutoScrollView, AIChat, AIPlasticButton, AIAccountSelectionView, AITabStatusIconsPlugin;
+#import "ESChatUserListController.h"
+
+@class AIMiniToolbar, AIListObject, AIAccount, AISendingTextView, AIAutoScrollView, AIChat;
+@class AIPlasticButton, AIAccountSelectionView, AITabStatusIconsPlugin;
+
 @protocol AIAccountSelectionViewDelegate, AIMessageViewController;
 
-@interface AIMessageViewController : AIObject <AIAccountSelectionViewDelegate> {
+@interface AIMessageViewController : AIObject <AIAccountSelectionViewDelegate, AIListControllerDelegate> {
     IBOutlet	NSView					*view_contents;
     IBOutlet	NSScrollView			*scrollView_outgoingView;
     IBOutlet	AIMessageEntryTextView	*textView_outgoing;
 				NSView					*controllerView_messages;
     IBOutlet	NSView					*scrollView_messages;
 	IBOutlet	NSSplitView				*splitView_messages;
-	//IBOutlet	NSView					*view_userPane;
 	
 	IBOutlet	NSButton				*button_inviteUser;
 	
     IBOutlet	AIMiniToolbar			*toolbar_bottom;
 
-    IBOutlet	NSTableView				*tableView_userList;
-    IBOutlet	AIAutoScrollView		*scrollView_userList;
+	IBOutlet	AIAutoScrollView		*scrollView_userList;
+    IBOutlet	AIListOutlineView		*userListView;
+	ESChatUserListController			*userListController;
 
     IBOutlet	AIPlasticButton			*button_send;
 

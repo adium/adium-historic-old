@@ -10,4 +10,10 @@
 
 @implementation ESChatUserListController
 
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
+{
+	[[self delegate] performSelector:@selector(outlineViewSelectionDidChange:)
+						  withObject:notification];
+}
+
 @end
