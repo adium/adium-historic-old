@@ -94,7 +94,7 @@
     [skipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     [skipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
     [skipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
-    [skipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@",\"'"]];
+    [skipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'"]];
     
     // scan upto the next whitespace char so that we don't unnecessarity confuse flex
     // otherwise we end up validating urls that look like this "http://www.adiumx.com/ <--cool"
@@ -102,13 +102,17 @@
     [preScanner setCharactersToBeSkipped:skipSet];
     [preScanner setScanLocation:location];
     while([preScanner scanUpToCharactersFromSet:skipSet intoString:&scanString]){
-        SHStringOffset = [preScanner scanLocation] - [scanString length];
+        unsigned int localStringLen = [scanString length];
+        if(localStringLen > 2 && [scanString characterAtIndex:localStringLen - 1] == ','){
+            scanString = [NSString stringWithString:[scanString substringToIndex:localStringLen - 1]];
+        }
+        SHStringOffset = localStringLen; //[preScanner scanLocation] - [scanString length];
         
         // if we have a valid URL then save the scanned string, and make a SHMarkedHyperlink out of it.
         // this way, we can preserve things like the matched string (to be converted to a NSURL),
         // parent string, it's validation status (valid, file, degenerate, etc), and it's range in the parent string
         if([self isStringValidURL:scanString]){
-            NSRange urlRange = NSMakeRange([preScanner scanLocation] - [scanString length],[scanString length]);
+            NSRange urlRange = NSMakeRange([preScanner scanLocation] - localStringLen,[scanString length]);
             
             NSMutableString    *newURL = [NSMutableString stringWithString:scanString];
             
