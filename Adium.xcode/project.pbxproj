@@ -522,8 +522,8 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			name = AIAbstractListWindowController.h;
-			path = "Frameworks/Adium Framework/AIAbstractListWindowController.h";
+			name = AIAbstractListController.h;
+			path = "Frameworks/Adium Framework/AIAbstractListController.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -531,8 +531,8 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
-			name = AIAbstractListWindowController.m;
-			path = "Frameworks/Adium Framework/AIAbstractListWindowController.m";
+			name = AIAbstractListController.m;
+			path = "Frameworks/Adium Framework/AIAbstractListController.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -552,6 +552,8 @@
 			children = (
 				340F440306D8202A0072E2FA,
 				340F440406D8202A0072E2FA,
+				4BF000CC06B5513400C32219,
+				4BF000CD06B5513400C32219,
 				4B93587906DBC6D3007977AA,
 				4BF98D5506D1485100E8781D,
 			);
@@ -5109,7 +5111,6 @@
 				9E20910F06A601B100E33E27,
 				9E217B7906A74CA8002A3F27,
 				4B9A684206AEB44B0010BF69,
-				4BF000CE06B5513400C32219,
 				4BA0E3DC06B6BBD3001750FC,
 				344C0D5106B6D63800DA7200,
 				6E4D961306B739AC005235E9,
@@ -5128,6 +5129,8 @@
 				343EAB8C06EF859C001CDAFF,
 				343EAB8E06EF859C001CDAFF,
 				343EAB9206EF8604001CDAFF,
+				34CEBE6206F117DF00A89DDE,
+				34CEBE6506F1180700A89DDE,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5707,7 +5710,6 @@
 				9E20911006A601B200E33E27,
 				9E217B7A06A74CA8002A3F27,
 				4B9A684306AEB44B0010BF69,
-				4BF000CF06B5513400C32219,
 				4BA0E3DD06B6BBD3001750FC,
 				4BA0E3E106B6BBDF001750FC,
 				344C0D5006B6D63800DA7200,
@@ -5726,6 +5728,8 @@
 				343EAB8B06EF859C001CDAFF,
 				343EAB8D06EF859C001CDAFF,
 				343EAB9306EF8604001CDAFF,
+				34CEBE6306F117DF00A89DDE,
+				34CEBE6406F1180100A89DDE,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6007,6 +6011,7 @@
 				4B93589306DBC71B007977AA,
 				4B93589506DBC71B007977AA,
 				4BAFD57906E0091100FF7FBC,
+				34CEBE2106F1005E00A89DDE,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6149,6 +6154,7 @@
 				4B93589206DBC71B007977AA,
 				4B93589406DBC71B007977AA,
 				4BAFD57A06E0091100FF7FBC,
+				34CEBE2006F1005C00A89DDE,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7032,6 +7038,78 @@
 			name = Preferences;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		34CEBE2006F1005C00A89DDE = {
+			fileRef = 4BF000CD06B5513400C32219;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34CEBE2106F1005E00A89DDE = {
+			fileRef = 4BF000CC06B5513400C32219;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34CEBE5A06F1133200A89DDE = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIListController.h;
+			path = "Plugins/Standard Contact List View/AIListController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34CEBE5B06F1133200A89DDE = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIListController.m;
+			path = "Plugins/Standard Contact List View/AIListController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34CEBE6006F117DF00A89DDE = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESContactInfoListController.h;
+			path = Source/ESContactInfoListController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34CEBE6106F117DF00A89DDE = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESContactInfoListController.m;
+			path = Source/ESContactInfoListController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34CEBE6206F117DF00A89DDE = {
+			fileRef = 34CEBE6006F117DF00A89DDE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34CEBE6306F117DF00A89DDE = {
+			fileRef = 34CEBE6106F117DF00A89DDE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34CEBE6406F1180100A89DDE = {
+			fileRef = 34CEBE5B06F1133200A89DDE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34CEBE6506F1180700A89DDE = {
+			fileRef = 34CEBE5A06F1133200A89DDE;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34D434FA051A6559003B2F21 = {
 			fileEncoding = 4;
@@ -16231,18 +16309,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BF000CE06B5513400C32219 = {
-			fileRef = 4BF000CC06B5513400C32219;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BF000CF06B5513400C32219 = {
-			fileRef = 4BF000CD06B5513400C32219;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BF2E194067CAE9200743318 = {
 			isa = PBXFileReference;
 			lastKnownFileType = folder;
@@ -16579,13 +16645,13 @@
 		};
 		4BF98D4806D1483100E8781D = {
 			children = (
-				4BF000CC06B5513400C32219,
-				4BF000CD06B5513400C32219,
+				34CEBE5A06F1133200A89DDE,
+				34CEBE5B06F1133200A89DDE,
 				4BD6F0B706B988AC002AB122,
 				4BD6F0B806B988AC002AB122,
 			);
 			isa = PBXGroup;
-			name = "Outline View";
+			name = "List / Outline View";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -19119,6 +19185,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks \"Frameworks";
 				INFOPLIST_FILE = Plists/AdiumHyperlinks_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = "-seg1addr 0x10400000";
@@ -23005,6 +23072,8 @@
 			children = (
 				F570A59803704B6101A8010A,
 				F570A59903704B6101A8010A,
+				34CEBE6006F117DF00A89DDE,
+				34CEBE6106F117DF00A89DDE,
 				340F47EA06DA41DB0072E2FA,
 				340F47EB06DA41DB0072E2FA,
 				F5CDCE4B0350760A01A8010A,
