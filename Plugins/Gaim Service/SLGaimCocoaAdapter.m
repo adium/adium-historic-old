@@ -860,6 +860,10 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 				}else if([messageString rangeOfString:@"transfer"].location != NSNotFound){
 					//Ignore the transfer errors; we will handle them locally
 					errorType = -2;
+					
+				}else if ([messageString rangeOfString:@"User information not available"].location != NSNotFound){
+					//Ignore user information errors; they are irrelevent
+					errorType = -2;
 				}
 
 				if (errorType == -1){
@@ -2120,18 +2124,20 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	const char  *groupUTF8String = (groupName ? [groupName UTF8String] : "");
 	BOOL		performAdd = NO;
+	GaimGroup	*group;
+	GaimBuddy	*buddy;
 	
 	//Get the group (Create if necessary)
-	GaimGroup *group = gaim_find_group(groupUTF8String);
-	if(!group){
+	if(!(group = gaim_find_group(groupUTF8String))){
 		group = gaim_group_new(groupUTF8String);
 		gaim_blist_add_group(group, NULL);
 	}
 	
 	//Verify the buddy does not already exist and create it
-	GaimBuddy *buddy = gaim_find_buddy(account,buddyUID);
-	if(buddy){
-		GaimGroup *oldGroup = gaim_find_buddys_group(buddy);
+	if(buddy = gaim_find_buddy(account,buddyUID)){
+		GaimGroup *oldGroup;
+		
+		oldGroup = gaim_find_buddys_group(buddy);
 		//If the buddy was in our strangers group before, remove from gaim's internal list
 		if ((oldGroup != nil) && (strcmp(GAIM_ORPHANS_GROUP_NAME,oldGroup->name) == 0)){
 			gaim_blist_remove_buddy(buddy);
@@ -2187,30 +2193,34 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 - (oneway void)gaimThreadMoveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
-	const char  *buddyUID = [objectUID UTF8String];
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	const char  *buddyUTF8String, *groupUTF8String;
+	GaimAccount *account;
+	GaimGroup 	*oldGroup, *destGroup;
+	GaimBuddy	*buddy;
+	BOOL		didMove = NO;
+	
+	buddyUTF8String = [objectUID UTF8String];
+	account = accountLookupFromAdiumAccount(adiumAccount);
 	
 	//Get the destination group (creating if necessary)
-	const char  *groupUTF8String = (groupName ? [groupName UTF8String] : "");
+	groupUTF8String = (groupName ? [groupName UTF8String] : "");
 
-	GaimGroup 	*destGroup = gaim_find_group(groupUTF8String);
+	destGroup = gaim_find_group(groupUTF8String);
 	if(!destGroup) destGroup = gaim_group_new(groupUTF8String);
 	
 	//Get the gaim buddy and group for this move
-	GaimBuddy *buddy = gaim_find_buddy(account,buddyUID);
-	if(buddy){
-		GaimGroup *oldGroup = gaim_find_buddys_group(buddy);
-		if (oldGroup) {
+	if((buddy = gaim_find_buddy(account,buddyUTF8String)) &&
+	   (oldGroup = gaim_find_buddys_group(buddy))){
 			//Procede to move the buddy gaim-side and locally
 			serv_move_buddy(buddy, oldGroup, destGroup);
-		} else {
-			//The buddy was not in any group before; add the buddy to the desired group
-			serv_add_buddy(account->gc, buddy);
-		}
-	}else{
+			didMove = YES;
+	}
+		
+	if (!didMove){
+		GaimDebug (@"^^^ movingUID %s toGroup %s but it was not found; adding instead",buddyUTF8String,groupUTF8String);
+
 		//No GaimBuddy was found, so despite all appearances this 'move' is really an add.
 		[self gaimThreadAddUID:objectUID onAccount:adiumAccount toGroup:groupName];
-	
 	}
 }
 

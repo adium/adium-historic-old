@@ -91,14 +91,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName contactName:(NSString *)contactName
 {
-	NSLog(@"%@ : %@",[self UID],[theContact UID]);
 	//When a new contact is created, if we aren't already silent and delayed, set it  a second to cover our initial
 	//status updates
 	if (!silentAndDelayed){
-		[self silenceAllContactUpdatesForInterval:1.0];
-		[[adium contactController] delayListObjectNotificationsUntilInactivity];
-		
-		NSLog(@"Wasn't silentAndDelayed but now is %i",silentAndDelayed);
+		[self silenceAllContactUpdatesForInterval:2.0];
+		[[adium contactController] delayListObjectNotificationsUntilInactivity];		
 	}
 	
 	//If the name we were passed differs from the current formatted UID of the contact, it's itself a formatted UID
@@ -197,6 +194,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (oneway void)updateSignon:(AIListContact *)theContact withData:(void *)data
 {
 	NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
+	
 	if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != YES)){
 		[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
 		[self _setInstantMessagesWithContact:theContact enabled:YES];
@@ -405,7 +403,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact
 {	
     //Request profile
-    if ([[inContact numberStatusObjectForKey:@"Online"] boolValue]){
+    if ([inContact online] || [inContact isStranger]){
 		[gaimThread getInfoFor:[inContact UID] onAccount:self];
     }
 }
@@ -533,6 +531,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Open a chat for Adium
 - (BOOL)openChat:(AIChat *)chat
 {
+	AIListContact	*listContact;
+	
+	//Obtain the contact's information if it's a stranger
+	if ((listContact = [chat listObject]) && ([listContact isStranger])){
+		[self delayedUpdateContactStatus:listContact];
+	}
+	
 	//Correctly enable/disable the chat
 	[chat setStatusObject:[NSNumber numberWithBool:YES]
 				   forKey:@"Enabled" 
@@ -1359,7 +1364,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Our account has connected
 - (oneway void)accountConnectionConnected
 {
-	NSLog(@"************ %@ CONNECTED ***********",[self UID]);
+	AILog(@"************ %@ CONNECTED ***********",[self UID]);
 	
     //We are now online
     [self setStatusObject:nil forKey:@"Connecting" notify:NO];
@@ -1375,7 +1380,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[self updateStatusForKey:@"IdleSince"];
 	
     //Silence updates
-	NSLog(@"%@: Silencing for 18",self);
+	AILog(@"%@: Silencing for 18",self);
     [self silenceAllContactUpdatesForInterval:18.0];
 	[[adium contactController] delayListObjectNotificationsUntilInactivity];
 	
@@ -1396,7 +1401,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
 	
-	NSLog(@"************ %@ --step-- %i",[self UID],[step intValue]);
+	AILog(@"************ %@ --step-- %i",[self UID],[step intValue]);
 }
 
 - (void)createNewGaimAccount
@@ -1749,7 +1754,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					[gaimThread setBuddyIcon:buddyIconFilename onAccount:self];
 					
 				}else{
-					NSLog(@"Error writing file %@",buddyIconFilename);   
+					AILog(@"Error writing file %@",buddyIconFilename);   
 				}
 				
 				//Cleanup
