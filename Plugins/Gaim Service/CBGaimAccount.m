@@ -98,7 +98,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//Create a gaim account if one does not already exist
 	if (!account) {
 		[self createNewGaimAccount];
-		GaimDebug (@"%x: created GaimAccount 0x%x with UID %@, protocolPlugin %s", [NSRunLoop currentRunLoop],account, [self UID], [self protocolPlugin]);
+		GaimDebug(@"%x: created GaimAccount 0x%x with UID %@, protocolPlugin %s", [NSRunLoop currentRunLoop],account, [self UID], [self protocolPlugin]);
 	}
 	
     return account;
@@ -1003,7 +1003,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		return ([processedString autorelease]);
 	}else{
-		GaimDebug (@"Sending a file to a chat.  Are you insane?");
+		GaimDebug(@"Sending a file to a chat.  Are you insane?");
 		return (inString);
 	}
 }
@@ -1032,7 +1032,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 		[chat addParticipatingListObject:contact];
 
-		GaimDebug (@"added user %@ in chat %@",contactName,[chat name]);
+		GaimDebug(@"added user %@ in chat %@",contactName,[chat name]);
 	}
 }
 
@@ -1054,7 +1054,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		[chat removeParticipatingListObject:contact];
 		
-		GaimDebug (@"removed user %@ in chat %@",contactName,[chat name]);
+		GaimDebug(@"removed user %@ in chat %@",contactName,[chat name]);
 	}	
 }
 
@@ -1254,7 +1254,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Set up the ESFileTransfer and query the fileTransferController for a save location
 - (oneway void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	GaimDebug (@"File transfer request received: %@",fileTransfer);
+	GaimDebug(@"File transfer request received: %@",fileTransfer);
     [[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
 }
 
@@ -1305,7 +1305,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	GaimDebug (@"Destroy file transfer %@",fileTransfer);
+	GaimDebug(@"Destroy file transfer %@",fileTransfer);
 	[fileTransfer release];
 }
 
@@ -1313,7 +1313,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Subsequently inform the fileTransferController that the fun has begun.
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
-    GaimDebug (@"Accepted file transfer %@",fileTransfer);
+    GaimDebug(@"Accepted file transfer %@",fileTransfer);
 	
 	GaimXfer		*xfer;
 	GaimXferType	xferType;
@@ -1367,7 +1367,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	if (!account) {
 		//create a gaim account if one does not already exist
 		[self createNewGaimAccount];
-		GaimDebug (@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
+		GaimDebug(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
 	}
 	
 	//We are connecting
@@ -1388,11 +1388,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//Set password and connect
 	gaim_account_set_password(account, [password UTF8String]);
 
-	GaimDebug (@"Adium: Connect: %@ initiating connection.",[self UID]);
+	GaimDebug(@"Adium: Connect: %@ initiating connection.",[self UID]);
 
 	[gaimThread connectAccount:self];
 
-	GaimDebug (@"Adium: Connect: %@ done initiating connection %x.",[self UID], account->gc);
+	GaimDebug(@"Adium: Connect: %@ done initiating connection %x.",[self UID], account->gc);
 }
 
 
@@ -1479,7 +1479,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	if(!proxyEnabled){
 		//No proxy
 		gaim_proxy_info_set_type(proxy_info, GAIM_PROXY_NONE);
-		GaimDebug (@"Connecting with no proxy.");
+		GaimDebug(@"Connecting with no proxy.");
 		[invocation invoke];
 		
 	}else if ((proxyType == Adium_Proxy_Default_SOCKS5) || 
@@ -1502,11 +1502,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				adiumProxyType = Proxy_SOCKS4;
 		}
 		
-		GaimDebug (@"Loading proxy dictionary.");
+		GaimDebug(@"Loading proxy dictionary.");
 		
 		if((systemProxySettingsDictionary = [ESSystemNetworkDefaults systemProxySettingsDictionaryForType:adiumProxyType])) {
 
-			GaimDebug (@"Retrieved %@",systemProxySettingsDictionary);
+			GaimDebug(@"Retrieved %@",systemProxySettingsDictionary);
 
 			host = [systemProxySettingsDictionary objectForKey:@"Host"];
 			port = [[systemProxySettingsDictionary objectForKey:@"Port"] intValue];
@@ -1531,7 +1531,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			}
 		}
 		
-		GaimDebug (@"Systemwide proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
+		GaimDebug(@"Systemwide proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
 		
 		[invocation invoke];
 
@@ -1570,7 +1570,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 													  context:invocation];
 		}else{
 			
-			GaimDebug (@"Adium proxy settings: %i %s:%i",proxy_info->type,proxy_info->host,proxy_info->port);
+			GaimDebug(@"Adium proxy settings: %i %s:%i",proxy_info->type,proxy_info->host,proxy_info->port);
 			[invocation invoke];
 		}
 	}
@@ -1584,7 +1584,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	if (inPassword){
 		gaim_proxy_info_set_password(proxy_info, (char *)[inPassword UTF8String]);
 		
-		GaimDebug (@"GotPassword: Proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
+		GaimDebug(@"GotPassword: Proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
 
 		[invocation invoke];
 
@@ -1670,12 +1670,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 	
-	GaimDebug (@"%@ reported disconnecting: %@",[self UID],lastDisconnectionError);
+	GaimDebug(@"%@ reported disconnecting: %@",[self UID],lastDisconnectionError);
 }
 
 - (oneway void)accountConnectionNotice:(NSString *)connectionNotice
 {
-    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Connection Notice",[self UID],[service description]]
+    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"%@ (%@) : Connection Notice",nil),[self formattedUID],[service description]]
                                     withDescription:connectionNotice];
 }
 
@@ -1753,7 +1753,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	if (!account) {
 		//create a gaim account if one does not already exist
 		[self createNewGaimAccount];
-		GaimDebug (@"Registering: created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
+		GaimDebug(@"Registering: created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
 	}
 	
 	//We are connecting
@@ -1774,7 +1774,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//Set password and connect
 	gaim_account_set_password(account, [password UTF8String]);
 	
-	GaimDebug (@"Adium: Connect: %@ initiating connection.",[self UID]);
+	GaimDebug(@"Adium: Connect: %@ initiating connection.",[self UID]);
 	
 	[gaimThread registerAccount:self];
 }
@@ -1810,7 +1810,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
     //Now look at keys which only make sense if we have an account
 	if(account){
-		GaimDebug (@"Updating status for key: %@",key);
+		GaimDebug(@"%@: Updating status for key: %@",self, key);
 
 		if([key isEqualToString:@"IdleSince"]){
 			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
@@ -1977,7 +1977,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		//image to one, and then pass libgaim the path.
 		if(image){
 			GaimPluginProtocolInfo  *prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(gaim_find_prpl(account->protocol_id));
-			GaimDebug (@"Original image of size %f %f",[image size].width,[image size].height);
+			GaimDebug(@"Original image of size %f %f",[image size].width,[image size].height);
 			
 			if (prpl_info && (prpl_info->icon_spec.format)){
 				char					**prpl_formats =  g_strsplit (prpl_info->icon_spec.format,",",0);
@@ -2014,7 +2014,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 					/* Our original data is no longer valid, since we had to scale to a different size */
 					originalData = nil;
-					GaimDebug (@"Scaled image to size %@",NSStringFromSize([image size]));
+					GaimDebug(@"Scaled image to size %@",NSStringFromSize([image size]));
 				}
 
 				
@@ -2027,7 +2027,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 						if (strcmp(prpl_formats[i],"gif") == 0){
 							/* Try to use our original data.  If we had to scale, originalData will have been set
 							 * to nil and we'll continue below to convert the image. */
-							GaimDebug (@"l33t script kiddie animated GIF!!111");
+							GaimDebug(@"l33t script kiddie animated GIF!!111");
 
 							buddyIconData = originalData;
 							if(buddyIconData)
@@ -2057,6 +2057,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 							buddyIconData = [image GIFRepresentation];
 							if(buddyIconData)
 								break;
+
 						}else if (strcmp(prpl_formats[i],"bmp") == 0){
 							buddyIconData = [image BMPRepresentation];
 							if (buddyIconData)
@@ -2067,11 +2068,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				}
 				
 				if([buddyIconData writeToFile:buddyIconFilename atomically:YES]){
-					GaimDebug (@"%@ setBuddyIcon:%@ onAccount:%@",gaimThread,buddyIconFilename,self);
 					[gaimThread setBuddyIcon:buddyIconFilename onAccount:self];
 					
 				}else{
-					AILog(@"Error writing file %@",buddyIconFilename);   
+					GaimDebug(@"Error writing file %@",buddyIconFilename);   
 				}
 				
 				//Cleanup
