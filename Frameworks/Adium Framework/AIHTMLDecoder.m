@@ -677,7 +677,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	NSMutableAttributedString	*attrString;
 	AITextAttributes			*textAttributes;
 	BOOL						send = NO, receive = NO, inDiv = NO, inLogSpan = NO;
-
+	
     //set up
 	if(inDefaultAttributes){
 		textAttributes = [AITextAttributes textAttributesWithDictionary:inDefaultAttributes];
@@ -707,7 +707,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			unsigned scanLocation = [scanner scanLocation]; //Remember our location (if this is an invalid tag we'll need to move back)
 
 			if([tagOpen isEqualToString:LessThan]){ // HTML <tag>
-				BOOL validTag = [scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]; //Get the tag
+				BOOL		validTag = [scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]; //Get the tag
+				NSString	*charactersToSkipAfterThisTag = nil;
+
 				if(validTag){ 
 					//HTML
 					if([chunkString caseInsensitiveCompare:HTML] == NSOrderedSame){
@@ -820,8 +822,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						/* Skip any newlines following an HTML line break; if we have one we want to ignore the other.
 						 * This is generally unnecessary; it is a hack around a winAIM bug where 
 						 * newlines are sent as "<BR>\n\r" */
-						[scanner scanCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] 
-											intoString:nil];
+						charactersToSkipAfterThisTag = @"\n\r";
 
 					//Bold
 					}else if([chunkString caseInsensitiveCompare:B] == NSOrderedSame){
@@ -891,8 +892,19 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 				}
 
 				if(validTag){ //Skip over the end tag character '>'
-					if (![scanner isAtEnd])
+					if(![scanner isAtEnd]){
 						[scanner setScanLocation:[scanner scanLocation]+1];
+						
+						//Skip any other characters we are supposed to skip before continuing
+						if(charactersToSkipAfterThisTag){
+							NSCharacterSet *charSetToSkip;
+							
+							charSetToSkip = [NSCharacterSet characterSetWithCharactersInString:charactersToSkipAfterThisTag];
+							[scanner scanCharactersFromSet:charSetToSkip
+												intoString:nil];
+						}
+					}
+					
 				}else{
 					//When an invalid tag is encountered, we add the <, and then move our scanner back to continue processing
 					[attrString appendString:LessThan withAttributes:[textAttributes dictionary]];
