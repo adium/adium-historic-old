@@ -10,7 +10,6 @@
 
 #define NO_GROUP						@"__NoGroup__"
 #define ACCOUNT_IMAGE_CACHE_PATH		@"~/Library/Caches/Adium"
-#define USER_ICON_CACHE_NAME			@"UserIcon_%@"
 
 #define AUTO_RECONNECT_DELAY		2.0	//Delay in seconds
 #define RECONNECTION_ATTEMPTS		4
@@ -1370,14 +1369,87 @@ static id<GaimThread> gaimThread = nil;
 		//Now pass libgaim the new icon.  Libgaim takes icons as a file, so we save our
 		//image to one, and then pass libgaim the path.
 		if(image){          
-			NSData 		*data = [image JPEGRepresentation];
-			NSString    *buddyImageFilename = [self _userIconCachePath];
+			GaimPluginProtocolInfo  *prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(gaim_find_prpl(account->protocol_id));
+			char					**prpl_formats =  g_strsplit (prpl_info->icon_spec.format,",",0);
+			int						i;
+
+			NSString				*buddyIconFilename = [self _userIconCachePath];
+			NSData					*buddyIconData = nil;
+			NSSize					imageSize = [image size];
+			BOOL					acceptableSize, prplScales;
 			
-			if([data writeToFile:buddyImageFilename atomically:YES]){
-				[gaimThread setBuddyIcon:buddyImageFilename onAccount:self];
+			if (GAIM_DEBUG) NSLog(@"image of size %f %f",imageSize.width,imageSize.height);
+			
+			/* 
+				We need to scale it down if:
+					1) The prpl needs to scale before it sends (?) AND
+					2) The image is larger than the maximum size allowed by the protocol
+			 */
+			acceptableSize = (prpl_info->icon_spec.min_width <= imageSize.width &&					
+								   prpl_info->icon_spec.max_width >= imageSize.width &&
+								   prpl_info->icon_spec.min_height <= imageSize.height &&
+								   prpl_info->icon_spec.max_height >= imageSize.height);
+			prplScales = (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_SEND);
+			if (prplScales && !acceptableSize){
+				//Determine the scaled size
+				NSSize  newImageSize = imageSize;
+				NSImage *newImage;
+				
+				if(imageSize.width > prpl_info->icon_spec.max_width)
+					newImageSize.width = prpl_info->icon_spec.max_width;
+				else if(imageSize.width < prpl_info->icon_spec.min_width)
+					newImageSize.width = prpl_info->icon_spec.min_width;
+				if(imageSize.height > prpl_info->icon_spec.max_height)
+					newImageSize.height = prpl_info->icon_spec.max_height;
+				else if(imageSize.height < prpl_info->icon_spec.min_height)
+					newImageSize.height = prpl_info->icon_spec.min_height;
+				
+				//Draw the image, scaled, onto a new image
+				newImage = [[[NSImage alloc] initWithSize:newImageSize] autorelease];
+
+				[newImage lockFocus];
+				[image drawInRect:NSMakeRect(0,0,newImageSize.width,newImageSize.height)
+						 fromRect:NSMakeRect(0,0,imageSize.width,imageSize.height)
+						operation:NSCompositeCopy
+						 fraction:1.0];
+				[newImage unlockFocus];
+				
+				image = newImage;
+			}
+
+			for (i = 0; prpl_formats[i]; i++) {
+				if (strcmp(prpl_formats[i],"png") == 0){
+					//Get TIFF data to avoid an odd PNG exception
+					NSData				*imageTIFFData = [image TIFFRepresentation];
+					NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
+					
+					//Get the bitmap rep as PNG data
+					buddyIconData = [bitmapRep representationUsingType:NSPNGFileType properties:nil];
+					break;
+					
+				}else if ((strcmp(prpl_formats[i],"jpeg") == 0) || (strcmp(prpl_formats[i],"jpg") == 0)){
+					buddyIconData = [image JPEGRepresentation];
+					break;
+					
+				}else if ((strcmp(prpl_formats[i],"tiff") == 0) || (strcmp(prpl_formats[i],"tif") == 0)){
+					buddyIconData = [image TIFFRepresentation];
+					break;
+					
+				}else if (strcmp(prpl_formats[i],"bmp") == 0){
+					NSData				*imageTIFFData = [image TIFFRepresentation];
+					NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
+					
+					//Get the bitmap rep as PNG data
+					buddyIconData = [bitmapRep representationUsingType:NSBMPFileType properties:nil];
+					break;
+				}
+			}
+
+			if([buddyIconData writeToFile:buddyIconFilename atomically:YES]){
+				[gaimThread setBuddyIcon:buddyIconFilename onAccount:self];
 
 			}else{
-				NSLog(@"Error writing file %@",buddyImageFilename);   
+				NSLog(@"Error writing file %@",buddyIconFilename);   
 			}
 		}
 	}
@@ -1562,7 +1634,7 @@ static id<GaimThread> gaimThread = nil;
 
 - (NSString *)_userIconCachePath
 {    
-    NSString    *userIconCacheFilename = [NSString stringWithFormat:USER_ICON_CACHE_NAME, [self uniqueObjectID]];
+    NSString    *userIconCacheFilename = [NSString stringWithFormat:@"UserIcon_%@_%@", [self uniqueObjectID], [NSString randomStringOfLength:4]];
     return([[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
 }
 

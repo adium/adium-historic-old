@@ -61,7 +61,8 @@ static CBGaimServicePlugin  *servicePluginInstance;
 	servicePluginInstance = self;
 
 	//Register our defaults
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS forClass:[self class]]
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS 
+																		forClass:[self class]]
 										  forGroup:GROUP_ACCOUNT_STATUS];
 	
 	_accountDict = [[NSMutableDictionary alloc] init];
@@ -75,7 +76,7 @@ static CBGaimServicePlugin  *servicePluginInstance;
     NapsterService  = [[[ESNapsterService alloc] initWithService:self] retain];
 	NovellService   = [[[ESNovellService alloc] initWithService:self] retain];
 	JabberService   = [[[ESJabberService alloc] initWithService:self] retain];
-	TrepiaService   = [[[ESTrepiaService alloc] initWithService:self] retain];
+//	TrepiaService   = [[[ESTrepiaService alloc] initWithService:self] retain];
     YahooService	= [[[ESYahooService alloc] initWithService:self] retain];
 	YahooJapanService = [[[ESYahooJapanService alloc] initWithService:self] retain];
 }
@@ -90,7 +91,7 @@ static CBGaimServicePlugin  *servicePluginInstance;
 	[JabberService release]; JabberService = nil;
     [NapsterService release]; NapsterService = nil;
     [MSNService release]; MSNService = nil;
-	[TrepiaService release]; TrepiaService = nil;
+//	[TrepiaService release]; TrepiaService = nil;
     [YahooService release]; YahooService = nil;
 	[YahooJapanService release]; YahooJapanService = nil;
 	[NovellService release]; NovellService = nil;
