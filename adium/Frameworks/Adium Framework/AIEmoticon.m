@@ -140,6 +140,7 @@
         AITextAttachmentExtension   *emoticonAttachment = [[[AITextAttachmentExtension alloc] init] autorelease];
         
         [emoticonAttachment setFileWrapper:emoticonFileWrapper];
+		[emoticonAttachment setHasAlternate:YES];
         _cachedAttributedString = [[NSAttributedString attributedStringWithAttachment:emoticonAttachment] retain];
     }
     
