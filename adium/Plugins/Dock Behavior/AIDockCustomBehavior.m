@@ -282,7 +282,7 @@ AIDockCustomBehavior	*sharedInstance = nil;
 
         //
         selectedMenuItem = (NSMenuItem *)[[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
-        selectedEventDict = [[behaviorArray objectAtIndex:row] mutableCopy];
+        selectedEventDict = [[[behaviorArray objectAtIndex:row] mutableCopy] autorelease];
         newBehavior = [selectedMenuItem representedObject];
 
         if([newBehavior compare:[selectedEventDict objectForKey:KEY_DOCK_EVENT_BEHAVIOR]] != 0){ //Ignore a duplicate selection

@@ -209,8 +209,8 @@
 
         }else{ //This is a new tooltip
             NSArray                     *tabArray;
-            NSMutableParagraphStyle     *paragraphStyleTitle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];;
-            NSMutableParagraphStyle     *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];;
+            NSMutableParagraphStyle     *paragraphStyleTitle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+            NSMutableParagraphStyle     *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 
             //Hold onto the new object
             [tooltipListObject release];
@@ -337,11 +337,13 @@
                 
                 //The largest size should be the label's size plus the distance to the next tab at least a space past its end
                 labelWidth = [labelAttribString size].width;
+                [labelAttribString release];
                 
                 if (labelWidth > maxLabelWidth)
                     maxLabelWidth = labelWidth;
             }
         }
+        [entryString release];
     }
     
     //Add labels plus entires to the toolTip
@@ -409,11 +411,13 @@
                 
                 //The largest size should be the label's size plus the distance to the next tab at least a space past its end
                 labelWidth = [labelAttribString size].width;
+                [labelAttribString release];
                 
                 if (labelWidth > maxLabelWidth)
                     maxLabelWidth = labelWidth;
             }
         }
+        [entryString release];
     }
 
     //Add labels plus entires to the toolTip

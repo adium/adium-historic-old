@@ -222,9 +222,11 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                [attributes setObject:[NSNumber numberWithInt:uniqueEmoticonID++] forKey:@"IKHiddenAttachmentUniq"]; //Add unique ID so ranges remain distinct
                [attributes removeObjectForKey:NSAttachmentAttributeName];
                [repAttStr addAttributes:attributes range:NSMakeRange(0,[repAttStr length])];
+               [attributes release];
 
                //Insert string
                [textStorage replaceCharactersInRange:NSMakeRange(charIndex,1) withAttributedString:repAttStr];
+               [repAttStr release];
                handled = YES;
            }
 

@@ -94,7 +94,7 @@ static AIInfoWindowController *sharedInstance = nil;
     infoString = [[NSMutableAttributedString alloc] init];
 
     //Create an paragraph style with the correct tabbing and indents
-    paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
     [paragraphStyle setTabStops:[NSArray arrayWithObjects:
         [[[NSTextTab alloc] initWithType:NSRightTabStopType location:InfoIndentA] autorelease],
         [[[NSTextTab alloc] initWithType:NSLeftTabStopType location:InfoIndentB] autorelease],
@@ -206,8 +206,10 @@ static AIInfoWindowController *sharedInstance = nil;
             indentStyle = [paragraphStyle mutableCopy];
             [indentStyle setFirstLineHeadIndent:InfoIndentB];
             [statusString addAttribute:NSParagraphStyleAttributeName value:indentStyle range:NSMakeRange(firstLineRange.length, [statusString length] - firstLineRange.length)];
+            [indentStyle release];
             
             [infoString appendAttributedString:[statusString addAttributes:valueAttributes range:NSMakeRange(0,[statusString length])]];
+            [statusString release];
         } else {
             [infoString appendString:@"Yes" withAttributes:valueAttributes];
         }
@@ -263,8 +265,10 @@ static AIInfoWindowController *sharedInstance = nil;
             [indentStyle setFirstLineHeadIndent:InfoIndentB];
            
             [textProfileString addAttribute:NSParagraphStyleAttributeName value:indentStyle range:NSMakeRange(firstLineRange.length, [textProfileString length] - firstLineRange.length)];
+            [indentStyle release];
             
             [infoString appendAttributedString:[textProfileString addAttributes:valueAttributes range:NSMakeRange(0,[textProfileString length])]];
+            [textProfileString release];
         }
     }
     

@@ -202,7 +202,7 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 NSAttributedString *_safeString(NSAttributedString *inString)
 {
     if([inString containsAttachments]){
-        NSMutableAttributedString *safeString = [inString mutableCopy];
+        NSMutableAttributedString *safeString = [[inString mutableCopy] autorelease];
         int currentLocation = 0;
         NSRange attachmentRange;
 

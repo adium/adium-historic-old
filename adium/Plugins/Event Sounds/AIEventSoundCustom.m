@@ -344,7 +344,7 @@ AIEventSoundCustom	*sharedInstance = nil;
         
         [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
         //Set the new sound path
-        NSMutableDictionary	*selectedSoundDict = [[eventSoundArray objectAtIndex:setRow] mutableCopy];
+        NSMutableDictionary	*selectedSoundDict = [[[eventSoundArray objectAtIndex:setRow] mutableCopy] autorelease];
         [selectedSoundDict setObject:soundPath forKey:KEY_EVENT_SOUND_PATH];
 
         [eventSoundArray replaceObjectAtIndex:setRow withObject:selectedSoundDict];
@@ -409,7 +409,7 @@ AIEventSoundCustom	*sharedInstance = nil;
 
         //
         selectedMenuItem = (NSMenuItem *)[[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
-        selectedSoundDict = [[eventSoundArray objectAtIndex:row] mutableCopy];
+        selectedSoundDict = [[[eventSoundArray objectAtIndex:row] mutableCopy] autorelease];
         newSoundPath = [selectedMenuItem representedObject];
         setRow = row;
         if(newSoundPath && [newSoundPath compare:[selectedSoundDict objectForKey:KEY_EVENT_SOUND_PATH]] != 0){ //Ignore a duplicate selection
