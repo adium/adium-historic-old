@@ -124,19 +124,14 @@
 		lastValue = [tempArray objectAtIndex:([tempArray count]-1)];
 	}
 	
-	//NSLog(@"#### userValue: '%@', lastValueLength: %d",userValue,lastValueLength);
-	
 	//We only need to attempt an autocompletion if characters have been added - deleting shouldn't autocomplete
     if(userValueLength > oldUserLength){
         completionValue = [self completionForString:lastValue];
     
-		//NSLog(@"##### completionValue = %@",(completionValue != nil ? completionValue : @""));
         if(completionValue != nil && [completionValue length] > lastValueLength){
             //Auto-complete the string - note that it retains the text that the user typed, and simply adds
             //the additional characters needed to match the completionValue
             [self setStringValue:[userValue stringByAppendingString:[completionValue substringFromIndex:lastValueLength]]];
-			
-			//NSLog(@"###### setting the value!");
 			
             //Select the auto-completed text
             [self selectRange:NSMakeRange(userValueLength, [completionValue length] - lastValueLength)];
@@ -191,8 +186,6 @@
 		compString = [(NSString *)[tempArray objectAtIndex:([tempArray count]-1)] compactedString];
 	}
 	
-	//NSLog(@"## compString: %@",compString);
-	
     //Setup
     length = [compString length];
     range = NSMakeRange(0, length);
@@ -213,8 +206,6 @@
 //Return a string which may be the actual aString or may be some other string implied by it
 - (NSString *)impliedStringValueForString:(NSString *)aString
 {
-	NSLog(@"#### Given: %@",aString);
-
 	if (aString){
 		//Check if aString implies a different completion; ensure that this new completion is not itself
 		//a potential completion (if it is, we assume the user's manually entered stringValue to be the intended value)
@@ -229,7 +220,6 @@
 		}
 	}
 	
-	NSLog(@"Implied: %@",aString);
 	return aString;	
 }
 
