@@ -37,6 +37,7 @@
 														multiline:multiline];
 	
 	[requestWindowController showWindow:nil];
+	[[requestWindowController window] makeKeyAndOrderFront:nil];
 }
 
 //Init
