@@ -225,7 +225,7 @@
 		case GAIM_BUDDY_IDLE_RETURN: {
 			NSDate *idleDate = [theContact statusObjectForKey:@"IdleSince"];
 			int currentIdle = buddy->idle;
-			NSLog(@"buddy->idle %i",currentIdle);
+			//NSLog(@"buddy->idle %i",currentIdle);
 
 			if(currentIdle != (int)([idleDate timeIntervalSince1970])){
 				//If there is an idle time, or if there was one before, then update
