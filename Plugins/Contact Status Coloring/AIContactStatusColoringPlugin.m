@@ -22,12 +22,16 @@
 - (void)removeFromFlashArray:(AIListObject *)inObject;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_applyColorToObject:(AIListObject *)inObject;
+
+- (void)fadeObject:(AIListObject *)inObject fromOpacity:(float)startValue toOpacity:(float)endValue;
+- (void)stopFadeOfObject:(AIListObject *)inObject;
 @end
 
 @implementation AIContactStatusColoringPlugin
 
 #define OFFLINE_IMAGE_OPACITY	0.5
 #define FULL_IMAGE_OPACITY		1.0
+#define	OPACITY_REFRESH			0.2
 
 #define CONTACT_STATUS_THEMABLE_PREFS   		@"Contact Status Coloring Themable Prefs"
 #define CONTACT_STATUS_COLORING_DEFAULT_PREFS	@"ContactStatusColoringDefaults"
@@ -150,24 +154,38 @@
 			labelColor = offlineLabelColor;
 			if(offlineImageFading) opacity = OFFLINE_IMAGE_OPACITY;
 			
+			[self stopFadeOfObject:inObject];
+			
 		}else if(signedOffEnabled && ([inObject integerStatusObjectForKey:@"Signed Off"])){
+
+			//Set colors
             color = signedOffColor;
             invertedColor = signedOffInvertedColor;
             labelColor = signedOffLabelColor;
 			isEvent = YES;
-    
+
+			[self fadeObject:inObject fromOpacity:1.0 toOpacity:0.8];
+
         }else if(signedOnEnabled && [inObject integerStatusObjectForKey:@"Signed On"]){
-            color = signedOnColor;
+            
+			color = signedOnColor;
             invertedColor = signedOnInvertedColor;
             labelColor = signedOnLabelColor;
 			isEvent = YES;
+
+			[self fadeObject:inObject fromOpacity:OFFLINE_IMAGE_OPACITY toOpacity:1.0];
 
         }else if(typingEnabled && ([inObject integerStatusObjectForKey:KEY_TYPING] == AITyping)){
             color = typingColor;
             invertedColor = typingInvertedColor;
             labelColor = typingLabelColor;
 			isEvent = YES;
-        }
+			
+			[self stopFadeOfObject:inObject];
+			
+        }else{
+			[self stopFadeOfObject:inObject];	
+		}
     }
 
     if(!color){
@@ -244,6 +262,109 @@
     if([flashingListObjectArray count] == 0){
         [[adium interfaceController] unregisterFlashObserver:self];
     }
+}
+
+- (void)fadeObject:(AIListObject *)listObject fromOpacity:(float)startValue toOpacity:(float)endValue
+{
+	if(![[listObject containingObject] isKindOfClass:[AIMetaContact class]]){
+		NSTimer				*tempDisplayOpacityTimer;
+		NSDictionary		*tempDisplayOpacityDict;
+		AIMutableOwnerArray	*tempDisplayOpacityArray;
+		NSNumber			*initialDisplayOpacity;
+		
+		tempDisplayOpacityArray = [listObject displayArrayForKey:@"Temporary Display Opacity"];
+		
+		//We should start with the current value. If there isn't one, we start at startValue
+		if(!(initialDisplayOpacity= [tempDisplayOpacityArray objectValue])){
+			initialDisplayOpacity = [NSNumber numberWithFloat:startValue];
+			[tempDisplayOpacityArray setObject:initialDisplayOpacity withOwner:self];
+		}
+		
+		tempDisplayOpacityDict = [NSDictionary dictionaryWithObjectsAndKeys:listObject, @"listObject",
+			initialDisplayOpacity, @"initialDisplayOpacity",
+			[NSNumber numberWithFloat:endValue], @"endingDisplayOpacity",
+			nil];
+		
+		//If we already have an opacity timer for this object, invalidate it
+		tempDisplayOpacityTimer = [listObject statusObjectForKey:@"tempDisplayOpacityTimer" fromAnyContainedObject:NO];
+		if(tempDisplayOpacityTimer){
+			[tempDisplayOpacityTimer invalidate];
+			NSLog(@"fadeObject %@: invalidated %x",listObject,tempDisplayOpacityTimer);
+			[listObject setStatusObject:nil
+								 forKey:@"tempDisplayOpacityTimer"
+								 notify:NotifyNever];	
+		}
+		
+		tempDisplayOpacityTimer = [NSTimer scheduledTimerWithTimeInterval:OPACITY_REFRESH
+																   target:self
+																 selector:@selector(opacityRefresh:)
+																 userInfo:tempDisplayOpacityDict
+																  repeats:YES];
+		//Store the timer for later use
+		[listObject setStatusObject:tempDisplayOpacityTimer
+							 forKey:@"tempDisplayOpacityTimer"
+							 notify:NotifyNever];
+	}
+}
+
+//Update the 
+- (void)opacityRefresh:(NSTimer *)inTimer
+{
+	NSDictionary	*userInfo = [inTimer userInfo];
+	AIListObject	*listObject = [userInfo objectForKey:@"listObject"];
+	float			displayOpacity = [[listObject displayArrayObjectForKey:@"Temporary Display Opacity"] floatValue];
+	float			initialDisplayOpacity = [[userInfo objectForKey:@"initialDisplayOpacity"] floatValue];
+	float			targetDisplayOpacity = [[userInfo objectForKey:@"endingDisplayOpacity"] floatValue];
+		
+	//Move displayOpacity towards targetDisplayOpacity by a fraction of the difference between our destination and our origin opacities
+	displayOpacity = displayOpacity + ((targetDisplayOpacity - initialDisplayOpacity) / (2 / OPACITY_REFRESH));
+
+	[[listObject displayArrayForKey:@"Temporary Display Opacity"] setObject:[NSNumber numberWithFloat:displayOpacity]
+																  withOwner:self];
+	
+	//Force a redraw
+	[[adium notificationCenter] postNotificationName:ListObject_AttributesChanged 
+											  object:listObject
+											userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Temporary Display Opacity"] 
+																				 forKey:@"Keys"]];
+
+	//If we are now above the target and the intitial was below, or we are below and the initial was above, stop the continual fading
+	//We don't want to remove the Temporary Display Opacity right now; we want to wait until stopFadeOfObject: is called when another status change occurs
+	if (((displayOpacity > targetDisplayOpacity) && (initialDisplayOpacity < targetDisplayOpacity)) ||
+		((displayOpacity < targetDisplayOpacity) && (initialDisplayOpacity > targetDisplayOpacity))){
+		[inTimer invalidate];
+		
+		[listObject setStatusObject:nil
+							 forKey:@"tempDisplayOpacityTimer"
+							 notify:NotifyNever];
+	}
+}
+
+- (void)stopFadeOfObject:(AIListObject *)listObject
+{
+	NSTimer				*tempDisplayOpacityTimer;
+	AIMutableOwnerArray	*tempDisplayOpacityArray;
+	
+	//If we have an opacity timer for this object, invalidate it
+	if(tempDisplayOpacityTimer = [listObject statusObjectForKey:@"tempDisplayOpacityTimer" fromAnyContainedObject:NO]){
+		[tempDisplayOpacityTimer invalidate];
+
+		[listObject setStatusObject:nil
+							 forKey:@"tempDisplayOpacityTimer"
+							 notify:NotifyNever];	
+	}
+	
+	//Clear any temporary display opacity we have set
+	if((tempDisplayOpacityArray = [listObject displayArrayForKey:@"Temporary Display Opacity" create:NO]) &&
+	   ([tempDisplayOpacityArray objectWithOwner:self])){
+		[tempDisplayOpacityArray setObject:nil withOwner:self];
+
+		//Force a redraw
+		[[adium notificationCenter] postNotificationName:ListObject_AttributesChanged 
+												  object:listObject
+												userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Temporary Display Opacity"] 
+																					 forKey:@"Keys"]];		
+	}
 }
 
 //
