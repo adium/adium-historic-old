@@ -39,15 +39,23 @@
 - (void)awakeFromNib
 {
     NSFileManager 	*fileManager = [NSFileManager defaultManager];
-    
-    //Search for either an exception log or a crash log
+
+	//Search for an exception log
     if([fileManager fileExistsAtPath:EXCEPTIONS_PATH]){
         [self reportCrashForLogAtPath:EXCEPTIONS_PATH];
-        
-    }else if([fileManager fileExistsAtPath:CRASHES_PATH]){
-        [self reportCrashForLogAtPath:CRASHES_PATH];
-        
-    }
+    }else{
+		int seconds = 10;
+		
+		while(seconds){
+			//As soon as we find a log, snatch it and move on
+			if([fileManager fileExistsAtPath:CRASHES_PATH] && [[NSString stringWithContentsOfFile:CRASHES_PATH] length]){
+				[self reportCrashForLogAtPath:CRASHES_PATH];
+				break;
+			}	
+			NSLog(@"No log yet, waiting a second... (%i)",seconds);
+			[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
+		}
+	}
 }
 
 //Display the report crash window for the passed log
@@ -56,9 +64,12 @@
     NSString	*emailAddress, *aimAccount;
     NSRange		binaryRange;
     
+	NSLog(@"LostAt:%@",inPath);
+	NSLog(@"---");
     //Fetch and delete the log
     crashLog = [[NSString stringWithContentsOfFile:inPath] retain];
     //[[NSFileManager defaultManager] trashFileAtPath:inPath];
+	NSLog(@"CrashLog:%@",crashLog);
     
     //Strip off binary descriptions.. we don't need to send all that
     binaryRange = [crashLog rangeOfString:@"Binary Images Description:"];
@@ -100,6 +111,7 @@
     
     //Fill in crash log
     [[textView_crashLog textStorage] setAttributedString:attrLogString];
+	NSLog(@"%@",[attrLogString string]);
     
     //Display the sheet
     [NSApp beginSheet:panel_privacySheet
