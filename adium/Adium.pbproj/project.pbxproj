@@ -7248,7 +7248,6 @@
 				HEADER_SEARCH_PATHS = "\"/sw/postgresql:include\" /usr/local/pgsql/include";
 				INSTALL_PATH = /Adium.app/Contents/Plugins/;
 				LIBRARY_SEARCH_PATHS = "/sw/lib /usr/local/pgsql/lib";
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lpq -lssl -lcrypto";
 				OTHER_REZFLAGS = "";
