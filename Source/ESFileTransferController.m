@@ -26,6 +26,7 @@ static ESFileTransferPreferences *preferences;
 - (void)showProgressWindow:(id)sender;
 
 - (BOOL)shouldOpenCompleteFileTransfer:(ESFileTransfer *)fileTransfer;
+- (void)_removeFileTransfer:(ESFileTransfer *)fileTransfer;
 @end
 
 @implementation ESFileTransferController
@@ -111,6 +112,12 @@ static ESFileTransferPreferences *preferences;
 - (NSArray *)fileTransferArray
 {
 	return(fileTransferArray);
+}
+
+//Remove a file transfer from our array.
+- (void)_removeFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	[fileTransferArray removeObject:fileTransfer];
 }
 
 #pragma mark Sending and receiving
@@ -246,6 +253,10 @@ static ESFileTransferPreferences *preferences;
 				[fileTransfer openFile];
 			}
 			
+			if(autoClearCompletedTransfers){
+				[ESFileTransferProgressWindowController removeFileTransfer:fileTransfer];
+				[self _removeFileTransfer:fileTransfer];
+			}
 			break;
 		}
 		case Canceled_Remote_FileTransfer:
@@ -344,7 +355,8 @@ static ESFileTransferPreferences *preferences;
 {
 	autoAcceptType = [[prefDict objectForKey:KEY_FT_AUTO_ACCEPT] intValue];
 	autoOpenSafe = [[prefDict objectForKey:KEY_FT_AUTO_OPEN_SAFE] boolValue];
-
+	autoClearCompletedTransfers = [[prefDict objectForKey:KEY_FT_AUTO_CLEAR_COMPLETED] boolValue];
+	
 	//If we created a safe file extensions set and no longer need it, desroy it
 	if(!autoOpenSafe && safeFileExtensions){
 		[safeFileExtensions release]; safeFileExtensions = nil;

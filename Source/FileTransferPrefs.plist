@@ -8,6 +8,8 @@
 	<false/>
 	<key>FT AutoOpenSafe</key>
 	<false/>
+	<key>FT AutoClearCompleted</key>
+	<false/>
 	<key>FT ShowProgressWindow</key>
 	<true/>
 </dict>

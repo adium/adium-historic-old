@@ -56,6 +56,11 @@
 	[super dealloc];
 }
 
+- (ESFileTransfer *)fileTransfer
+{
+	return(fileTransfer);
+}
+
 - (ESFileTransferProgressView *)view
 {	
 	return(view);
@@ -113,6 +118,9 @@
 {
 	forceUpdate = YES;
 	[self gotUpdateForFileTransfer:inFileTransfer];
+	
+	[view setAllowsCancel:![self isStopped]];
+	
 	[[view window] display];
 	forceUpdate = NO;
 }
@@ -287,6 +295,16 @@
 	[owner fileTransferProgressRow:self
 				 heightChangedFrom:oldHeight
 								to:newHeight];
+}
+
+#warning move to ESFileTransfer
+- (BOOL)isStopped
+{
+	FileTransferStatus	status = [fileTransfer status];
+
+	return((status == Complete_FileTransfer) ||
+		   (status == Canceled_Local_FileTransfer) ||
+		   (status == Canceled_Remote_FileTransfer));
 }
 
 #pragma mark Localized readable values

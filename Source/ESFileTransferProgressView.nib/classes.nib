@@ -2,6 +2,12 @@
     IBClasses = (
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            CLASS = AIRolloverButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {
             ACTIONS = {revealAction = id; stopResumeAction = id; }; 
             CLASS = ESFileTransferProgressRow; 
             LANGUAGE = ObjC; 
@@ -36,7 +42,8 @@
             CLASS = FirstResponder; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSObject; 
-        }
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

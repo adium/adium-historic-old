@@ -56,6 +56,11 @@
                                              forKey:KEY_FT_AUTO_ACCEPT
                                               group:PREF_GROUP_FILE_TRANSFER];
 		[self configureControlDimming];
+		
+	}else if(sender == checkBox_autoClearCompleted){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_FT_AUTO_CLEAR_COMPLETED
+                                              group:PREF_GROUP_FILE_TRANSFER];
 	}
 }
 
@@ -92,6 +97,7 @@
 	
 	[checkBox_autoOpenFiles setState:[[prefDict objectForKey:KEY_FT_AUTO_OPEN_SAFE] boolValue]];
 	[checkBox_showProgress setState:[[prefDict objectForKey:KEY_FT_SHOW_PROGRESS_WINDOW] boolValue]];
+	[checkBox_autoClearCompleted setState:[[prefDict objectForKey:KEY_FT_AUTO_CLEAR_COMPLETED] boolValue]];
 
 	[self configureControlDimming];
 }

@@ -28,6 +28,7 @@
 - (IBAction)stopResumeAction:(id)sender;
 - (IBAction)revealAction:(id)sender;
 
+- (ESFileTransfer *)fileTransfer;
 - (ESFileTransferProgressView *)view;
 
 - (void)fileTransferProgressView:(ESFileTransferProgressView *)inView
@@ -35,5 +36,6 @@
 							  to:(float)newHeight;
 
 - (FileTransferType)type;
+- (BOOL)isStopped;
 
 @end
