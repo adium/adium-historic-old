@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 771 $ $Date: 2004/05/22 04:01:28 $ -->
+<!--$Rev: 777 $ $Date: 2004/05/22 20:08:07 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -55,8 +55,8 @@ try {
         pstmt.setInt(1, sender);
         rset = pstmt.executeQuery();
         rset.next();
-        
-        title = rset.getString("display_name") + " (" + 
+
+        title = rset.getString("display_name") + " (" +
             rset.getString("username") + ")";
 
         sender_sn = rset.getString("username");
@@ -70,12 +70,12 @@ try {
 
         rset = pstmt.executeQuery();
 
-        
+
         while(rset.next()) {
             title = rset.getString("name");
             sender_sn = rset.getString("name");
-            notes += rset.getString("display_name") + " (" + 
-                rset.getString("service") + "." + 
+            notes += rset.getString("display_name") + " (" +
+                rset.getString("service") + "." +
                 rset.getString("username") + ")<br />";
         }
     }
@@ -129,7 +129,7 @@ try {
             pstmt = conn.prepareStatement("select distinct " +
             " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
             " as date, date_trunc('month', message_date) as full_date " +
-            " from messages where sender_id = ? order by full_date"); 
+            " from messages where sender_id = ? order by full_date");
 
             pstmt.setInt(1, sender);
         }
@@ -139,7 +139,7 @@ try {
             " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
             " as date, date_trunc('month', message_date) as full_date " +
             " from messages, meta_contact where sender_id = user_id "+
-            " and meta_id = ? order by full_date"); 
+            " and meta_id = ? order by full_date");
 
             pstmt.setInt(1, meta_id);
         }
@@ -186,20 +186,20 @@ try {
         " scramble(username) " +
         " as username from adium.users " +
         " natural join adium.user_display_name udn" +
-        " where case when true = " + loginUsers + 
+        " where case when true = " + loginUsers +
         " then login = true " +
-        " else 1 = 1 " + 
+        " else 1 = 1 " +
         " end " +
         " and not exists (select 'x' from adium.user_display_name where " +
         " user_id = users.user_id and effdate > udn.effdate) " +
         " order by scramble(display_name), username");
 
     if(!loginUsers) {
-        out.print("<p><i><a href=\"statistics.jsp?sender=" + 
+        out.print("<p><i><a href=\"statistics.jsp?sender=" +
             sender + "&login=true\">Login Users</a></i></p>");
     } else {
         out.print("<p><i><a href=\"statistics.jsp?sender=" +
-            sender + "&login=false\">" + 
+            sender + "&login=false\">" +
             "All Users</a></i></p>");
     }
 
@@ -207,8 +207,8 @@ try {
 
     while (rset.next())  {
         if (rset.getInt("user_id") != sender) {
-            out.println("<p><a href=\"statistics.jsp?sender=" + 
-            rset.getString("user_id") + "&login=" + 
+            out.println("<p><a href=\"statistics.jsp?sender=" +
+            rset.getString("user_id") + "&login=" +
             Boolean.toString(loginUsers) +
             "\" title=\"" + rset.getString("username") + "\">" +
             rset.getString("display_name") +
@@ -234,7 +234,7 @@ try {
         " max(length(message)) as max_sent_length, " +
         " trunc(avg(length(message)),2) as avg_sent_length " +
         " from adium.messages " +
-        " where sender_id = ? " + 
+        " where sender_id = ? " +
         " group by sender_id " +
         " union all " +
         " select " +
@@ -245,19 +245,19 @@ try {
         " from adium.messages " +
         " where recipient_id =  ? " +
         " group by recipient_id ");
-    
+
     pstmt.setInt(1, sender);
     pstmt.setInt(2, sender);
 
     if(meta_id != 0) {
- 
+
         pstmt = conn.prepareStatement("select " +
             " count(*) as total_sent, "+
             " min(length(message)) as min_sent_length, " +
             " max(length(message)) as max_sent_length, " +
             " trunc(avg(length(message)),2) as avg_sent_length " +
             " from adium.messages, adium.meta_contact " +
-            " where sender_id = user_id " + 
+            " where sender_id = user_id " +
             " and meta_id = ? " +
             " union all " +
             " select " +
@@ -268,51 +268,51 @@ try {
             " from adium.messages, adium.meta_contact " +
             " where recipient_id =  user_id " +
             " and meta_id = ? ");
-        
+
         pstmt.setInt(1, meta_id);
         pstmt.setInt(2, meta_id);
 
     }
 
     totals = pstmt.executeQuery();
-        
+
     /*
     out.println("<pre>");
     while(totals.next()) {
         out.println(totals.getString(1));
     }
-    
+
     out.println("</pre>");
     */
-        
+
     if(totals.next()) {
 
-        out.print("Total Messages Sent: " + 
+        out.print("Total Messages Sent: " +
             totals.getString("total_sent") + "<br>");
         total_messages += totals.getInt("total_sent");
-        
+
         out.print("Minimum sent length: " + totals.getString("min_sent_length") +
         "<br>");
-        out.print("Average Sent Length: " + 
+        out.print("Average Sent Length: " +
             totals.getString("avg_sent_length") +
             "<br>");
 
-        out.print("Maximum Sent Length: " + 
+        out.print("Maximum Sent Length: " +
             totals.getString("max_sent_length") +
             "<br /><br />");
-        
+
         totals.next();
-            
-        out.print("Total Messages Received: " + 
+
+        out.print("Total Messages Received: " +
         totals.getString("total_sent") + "<br />");
         total_messages += totals.getInt("total_sent");
-        
+
         out.println("Mimimum Received Length: " + totals.getString("min_sent_length") + "<br />");
         out.println("Average Received Length: " + totals.getString("avg_sent_length") + "<br />");
         out.println("Maximum Received Length: " + totals.getString("max_sent_length") + "<br />");
- 
+
         out.println("<br />Total Messages Sent/Received: " + total_messages + "<br /><br/>");
-    
+
     }
 %>
                 </div>
@@ -328,19 +328,19 @@ try {
     "count(*) as count from adium.messages where sender_id = ? or recipient_id = ? " +
     " group by date_part('year', message_date) " +
     " order by date_part('year', message_date)");
-    
+
     pstmt.setInt(1, sender);
     pstmt.setInt(2, sender);
 
     if(meta_id != 0) {
         pstmt = conn.prepareStatement("select date_part('year', message_date) " +
         " as year, " +
-        " count(*) as count from adium.messages, adium.meta_contact " + 
+        " count(*) as count from adium.messages, adium.meta_contact " +
         " where (sender_id = user_id or recipient_id = user_id) " +
         " and meta_id = ? " +
         " group by date_part('year', message_date) " +
         " order by date_part('year', message_date)");
-        
+
         pstmt.setInt(1, meta_id);
     }
 
@@ -362,7 +362,7 @@ try {
     }
 
     maxDistance = max * 1.25;
-    
+
     out.print("<table width=\"350\" border=\"0\">");
     for(int i = 0; i < yearAry.size(); i++) {
         double distance = (Integer.parseInt(countAry.get(i).toString()) / maxDistance) * 225;
@@ -380,7 +380,7 @@ try {
 %>
                 </div>
                 <div class="boxWideBottom"></div>
-            
+
                 <h1>Messages Sent/Received by Month</h1>
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
@@ -409,7 +409,7 @@ try {
     for(int i = 0; i < 13; i++) {
         monthArray[i] = 0;
     }
-    
+
     max = 0;
     while(year.next()) {
         monthArray[year.getInt("month")] = year.getInt("count");
@@ -429,15 +429,15 @@ try {
         "<img src=\"images/bar2.gif\" width = \"15\" height=\"" +
         (int)height + "\"></td>");
     }
-    
+
     out.print("</tr>");
-    String months[] = {"", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
+    String months[] = {"", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
         "Aug", "Sep", "Oct", "Nov", "Dec"};
     for(int i = 1; i < 13; i++) {
         out.print("<tr><td align=\"right\">" + months[i] + ":</td><td "+
         " align=\"left\"> " + monthArray[i] + "</td></tr>");
     }
-    
+
     out.print("<tr>");
     for(int i = 1; i < 13; i++) {
         out.print("<td>" + i + "</td>");
@@ -487,20 +487,20 @@ try {
 
         pstmt.setInt(1, meta_id);
     }
-    
+
     rset = pstmt.executeQuery();
 
     out.println("<table>");
-    
+
     out.println("<tr><td>#</td>"+
         "<td>Message</td><td >"+
         "Cnt</td></tr>");
 
     while(rset.next()) {
         out.println("<tr><td>" + rset.getRow() + "</td>");
-        out.println("<td>" + 
+        out.println("<td>" +
             rset.getString("message") + "</td>");
-        out.println("<td>" + 
+        out.println("<td>" +
                 rset.getString("count") + "</td></tr>");
     }
     out.println("</table>");
@@ -528,7 +528,7 @@ try {
         " group by sender_sn, recipient_sn, message "+
         " having count(*) > 1 " +
         " order by count(*) desc limit 20");
-    
+
     pstmt.setInt(1, sender);
     pstmt.setInt(2, sender);
 
@@ -553,7 +553,7 @@ try {
     }
 
     rset = pstmt.executeQuery();
- 
+
 %>
                 <table>
                     <tr>
@@ -566,7 +566,7 @@ try {
 <%
     while(rset.next()) {
         out.println("<tr>");
-        out.println("<td>" + 
+        out.println("<td>" +
             rset.getRow() + "</td>");
         out.println("<td>" + rset.getString("sender_sn") + "</td>");
         out.println("<td>" + rset.getString("recipient_sn") + "</td>");
@@ -588,7 +588,7 @@ try {
 
     pstmt.setInt(1, sender);
     pstmt.setInt(2, sender);
-    
+
     if(meta_id != 0) {
         pstmt = conn.prepareStatement("select username, sum(num_messages), (select message from messages where sender_id = user_id order by random() limit 1) as message from users natural join meta_contact, user_statistics where user_id = sender_id and meta_id = ? group by username, user_id order by sum desc, username limit 20");
 

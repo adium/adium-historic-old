@@ -88,9 +88,9 @@ where   m.sender_id = s.user_id
 create or replace rule insert_message_v as
 on insert to adium.message_v
 do instead  (
-    
+
     -- Usernames
-    
+
     insert into adium.users (username,service)
     select new.sender_sn, coalesce(new.sender_service, 'AIM')
     where not exists (
@@ -111,15 +111,15 @@ do instead  (
     insert into adium.user_display_name
     (user_id, display_name)
     select user_id, new.sender_display
-    from   adium.users 
+    from   adium.users
     where  username = new.sender_sn
      and   service = coalesce(new.sender_service, 'AIM')
      and   new.sender_display is not null
     and not exists (
         select 'x'
         from   adium.user_display_name udn
-        where  user_id = 
-               (select user_id from adium.users 
+        where  user_id =
+               (select user_id from adium.users
                 where  username = new.sender_sn
                  and   service = coalesce(new.sender_service, 'AIM'))
             and   display_name = new.sender_display
@@ -139,8 +139,8 @@ do instead  (
     and not exists (
         select 'x'
         from   adium.user_display_name udn
-        where  user_id = 
-               (select user_id from adium.users 
+        where  user_id =
+               (select user_id from adium.users
                where username = new.recipient_sn
                 and  service = coalesce(new.sender_service, 'AIM'))
         and    display_name = new.recipient_display
@@ -166,7 +166,7 @@ do instead  (
     set num_messages = num_messages + 1,
     last_message = CURRENT_TIMESTAMP
     where sender_id = (select user_id from adium.users where username =
-    new.sender_sn and service = coalesce(new.sender_service, 'AIM')) 
+    new.sender_sn and service = coalesce(new.sender_service, 'AIM'))
     and recipient_id = (select user_id from adium.users where username =
     new.recipient_sn and service = coalesce(new.recipient_service, 'AIM'));
 
@@ -174,17 +174,17 @@ do instead  (
     insert into adium.user_statistics
     (sender_id, recipient_id, num_messages)
     select
-    (select user_id from adium.users 
+    (select user_id from adium.users
     where username = new.sender_sn and service = new.sender_service),
     (select user_id from adium.users
     where username = new.recipient_sn and service = new.recipient_service),
     1
-    where not exists 
+    where not exists
         (select 'x' from adium.user_statistics
         where sender_id = (select user_id from adium.users where username =
-        new.sender_sn and service = new.sender_service) 
-        and recipient_id = 
-        (select user_id from adium.users where username = 
+        new.sender_sn and service = new.sender_service)
+        and recipient_id =
+        (select user_id from adium.users where username =
         new.recipient_sn and service = new.recipient_service))
 );
 
@@ -206,6 +206,7 @@ notes           text,
 sent_sn         text,
 received_sn     text,
 single_sn       text,
+meta_id         int references adium.meta_container(meta_id),
 date_start      timestamp,
 date_finish     timestamp,
 date_added      timestamp default now()
@@ -251,18 +252,18 @@ meta_id         int references adium.meta_container (meta_id),
 user_id         int references adium.users (user_id),
 key_id          int references adium.information_keys (key_id),
 value           text,
-    constraint meta_or_user_not_null 
+    constraint meta_or_user_not_null
         check (meta_id is not null or user_id is not null)
 );
 
-create or replace view adium.user_contact_info as 
-(select user_id, username, key_id, key_name, value 
-from adium.users natural join 
+create or replace view adium.user_contact_info as
+(select user_id, username, key_id, key_name, value
+from adium.users natural join
      adium.contact_information natural join
      adium.information_keys where delete = false);
 
-create or replace view adium.meta_contact_info as 
-(select meta_id, name, key_id, key_name, value 
-from adium.meta_container natural join 
+create or replace view adium.meta_contact_info as
+(select meta_id, name, key_id, key_name, value
+from adium.meta_container natural join
      adium.contact_information natural join
      adium.information_keys where delete = false);

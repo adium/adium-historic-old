@@ -6,6 +6,10 @@
  *
  */
 
-alter table adium.meta_contact add preferred boolean;
-alter table adium.meta_contact alter column preferred set default = false;
-update adium.meta_contact set preferred = false;
+alter table adium.saved_chats add column meta_id int
+    references adium.meta_container (meta_id);
+
+create index user_stats_sender on adium.user_statistics (sender_id);
+create index user_stats_recipient on adium.user_statistics (recipient_id);
+create index meta_contact_user on adium.meta_contact (user_id);
+create index meta_contact_meta on adium.meta_contact (meta_id);

@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date: 2004/05/22 04:01:28 $ -->
+<!--$Rev: 697 $ $Date: 2004/05/22 20:08:07 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -75,7 +75,7 @@ try {
 
     while (rset.next())  {
         out.println("<p>");
-        out.print("<input type=\"checkbox\" name=\"" + 
+        out.print("<input type=\"checkbox\" name=\"" +
             rset.getString("user_id") + "\" ");
 
         if(rset.getBoolean("login")) {
@@ -109,8 +109,8 @@ try {
     pstmt = conn.prepareStatement("select user_id, scramble(username) " +
         " as username, scramble(display_name) as display_name " +
         " from adium.users natural join user_display_name udn " +
-        " where not exists (select 'x' from user_display_name " + 
-        " where user_id = udn.user_id  and effdate > udn.effdate) " + 
+        " where not exists (select 'x' from user_display_name " +
+        " where user_id = udn.user_id  and effdate > udn.effdate) " +
         " order by not exists (select 'x' from meta_contact " +
         " where user_id = users.user_id), not exists (select 'x' from " +
         " user_contact_info where user_id = users.user_id), " +
@@ -122,7 +122,7 @@ try {
 
         String editURL = "editUser.jsp?user_id=" + rset.getInt("user_id");
 %>
-<span class="edit"<a href="#" 
+<span class="edit"<a href="#"
     onClick="window.open('<%= editURL %>', 'Edit User', 'width=275,height=<%= height %>')">Edit Info ...</a></span>
 <%
 
@@ -140,9 +140,9 @@ try {
         out.println("<table>");
 
         while(infoSet.next()) {
-            out.println("<tr><td class=\"left\">" + 
+            out.println("<tr><td class=\"left\">" +
                 infoSet.getString("key_name") + "</td>" +
-                "<td>" + infoSet.getString("value") + 
+                "<td>" + infoSet.getString("value") +
                 "</td></tr>");
         }
         out.println("</table>");
@@ -159,10 +159,10 @@ try {
             out.println("<p>Select preferred meta-contact for this user:</p>");
 
             out.println("<form action=\"updatePreferredMeta.jsp\" method=\"get\">");
-            out.println("<input type=\"hidden\" name=\"user_id\" value=\"" + 
+            out.println("<input type=\"hidden\" name=\"user_id\" value=\"" +
                 rset.getInt("user_id") + "\" />");
             while(metaSet.next()) {
-                out.print("<input type=\"radio\" name=\"meta_id\" value=\"" + metaSet.getString("meta_id") + 
+                out.print("<input type=\"radio\" name=\"meta_id\" value=\"" + metaSet.getString("meta_id") +
                     "\"");
                 if(metaSet.getBoolean("preferred")) {
                     out.print(" checked=\"checked\"");

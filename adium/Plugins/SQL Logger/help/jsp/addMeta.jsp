@@ -12,7 +12,7 @@ ResultSet rset = null;
 
 try {
     pstmt = conn.prepareStatement("select key_id, key_name from adium.information_keys where delete = false order by key_name");
-    
+
     rset = pstmt.executeQuery();
 %>
 <html>
@@ -37,8 +37,8 @@ try {
             rset.getString("key_name") + "</label>");
 
         out.println("</td><td>");
-        
-        out.println("<input type=\"text\" name=\"" + 
+
+        out.println("<input type=\"text\" name=\"" +
             rset.getString("key_id") + "\" size=\"20\">");
 
         out.println("</td></tr>");

@@ -35,14 +35,14 @@ try {
     while(rset.next()) {
         out.println("<tr><td align=\"right\">");
 
-        out.println("<input type=\"checkbox\" name=\"" + 
-            rset.getInt("key_id") + "\" id=\"" + 
+        out.println("<input type=\"checkbox\" name=\"" +
+            rset.getInt("key_id") + "\" id=\"" +
             rset.getString("key_name") + "\"/>");
         out.println("</td><td>");
-        
+
         out.println("<label for=\"" + rset.getString("key_name") +
             "\">" + rset.getString("key_name") + "</label>");
-        
+
         out.println("</td></tr>");
     }
 
@@ -52,7 +52,7 @@ try {
         out.println("</td></tr>");
     }
 %>
-        
+
             </table>
                 <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
                 <input type="reset" /><input type="submit" />

@@ -30,24 +30,24 @@ try {
         pstmt = conn.prepareStatement("delete from adium.meta_contact where meta_id = ?");
 
         pstmt.setInt(1, meta_id);
-        
+
         pstmt.executeUpdate();
-        
-        
+
+
         pstmt = conn.prepareStatement("delete from adium.contact_information where meta_id = ?");
 
         pstmt.setInt(1, meta_id);
 
         pstmt.executeUpdate();
-        
-        
+
+
         pstmt = conn.prepareStatement("delete from adium.meta_container where meta_id = ?");
         pstmt.setInt(1, meta_id);
-        
+
         pstmt.executeUpdate();
 
     } else if(name != null && !name.equals("") && meta_id != 0) {
-        
+
         pstmt = conn.prepareStatement("update adium.meta_container set name = ? where meta_id = ?");
 
         pstmt.setString(1, name);
