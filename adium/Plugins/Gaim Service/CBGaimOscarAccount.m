@@ -7,8 +7,6 @@
 
 #import "CBGaimOscarAccount.h"
 
-#define OSCAR_DELAYED_UPDATE_INTERVAL   3
-
 #define KEY_OSCAR_HOST  @"Oscar:Host"
 #define KEY_OSCAR_PORT  @"Oscar:Port"
 

@@ -15,6 +15,8 @@
 	IBOutlet	NSTextField			*textField_proxyPortNumber;
 	IBOutlet	NSTextField			*textField_proxyUserName;
 	IBOutlet	NSSecureTextField   *textField_proxyPassword;
+	
+	IBOutlet	NSTextField			*textField_alias;
 }
 
 - (IBAction)changedConnectionPreference:(id)sender;
