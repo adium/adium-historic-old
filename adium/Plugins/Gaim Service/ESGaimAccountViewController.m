@@ -42,7 +42,7 @@
 //Basic characterset by default
 -(NSString *)validScreenNameCharacters
 {
-    return (@"abcdefghijklmnopqrstuvwxyz0123456789. ");
+    return (@"abcdefghijklmnopqrstuvwxyz0123456789.");
 }
 //I like the number 24.  Also, I like cookies.  However, cookies are not of type (int), so 24 it is.
 -(int)maximumScreenNameLength

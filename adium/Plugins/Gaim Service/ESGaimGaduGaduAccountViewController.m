@@ -20,7 +20,7 @@
 
 -(NSString *)validScreenNameCharacters
 {
-    return ([[super validScreenNameCharacters] stringByAppendingString:@"_"]);
+    return ([[super validScreenNameCharacters] stringByAppendingString:@" _"]);
 }
 
 @end

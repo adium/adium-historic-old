@@ -56,7 +56,7 @@
 
 -(NSString *)validScreenNameCharacters
 {
-    return ([[super validScreenNameCharacters] stringByAppendingString:@"@"]);
+    return ([[super validScreenNameCharacters] stringByAppendingString:@" @"]);
 }
 
 -(NSString *)auxiliaryGaimAccountViewTabsNib
