@@ -2215,14 +2215,20 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		NSLog(@"*** FATAL ***: Failed to initialize gaim core");
 		GaimDebug (@"*** FATAL ***: Failed to initialize gaim core");
 	}
-
-	//Load the Adium-specific accounts list (see #define in accounts.c)
+	
+	/* Why use Gaim's accounts and blist list when we have the information locally?
+	 *		- Faster account connection: Gaim doesn't have to recreate the local list
+	 *		- Privacy/blocking support depends on the accounts and blist files existing
+	 *		- Using Gaim's own buddy icon caching (which depends both files) allows us to avoid
+	 *			re-requesting icons we already have locally on some protocols such as AIM.
+	 */
+	//Load the accounts list
 	gaim_accounts_load();
-
-	//Setup the buddy list; then load the Adium-specific blist (see #define in blist.c)
-    gaim_set_blist(gaim_blist_new());
+	
+	//Setup the buddy list; then load the blist.
+	gaim_set_blist(gaim_blist_new());
 	gaim_blist_load();
-
+	
 	//Load gaim plugins
 #if ENABLE_WEBCAM
 	gaim_init_j2k_plugin();
