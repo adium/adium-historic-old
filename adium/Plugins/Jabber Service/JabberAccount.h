@@ -19,7 +19,7 @@
 
 @class AIGroup;
 
-@interface JabberAccount : AIAccount <AIAccount_Content, AIAccount_Handles>
+@interface JabberAccount : AIAccount <AIAccount_Content, AIAccount_Handles, JabberRosterDelegate>
 {
     JabberID *myID;
     NSString *myPassword;
@@ -27,6 +27,9 @@
     NSMutableDictionary *chatDict;
     JabberSession *session;
     JabberGroupTracker *groupTracker;
+
+    // If the roster updates we are getting are batched or not
+    bool delay;
 }
 
 //AIAccount_Content

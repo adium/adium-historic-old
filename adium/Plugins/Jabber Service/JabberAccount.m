@@ -1,6 +1,7 @@
 #import "JabberAccount.h"
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
+#import <acid.h>
 #import "AIAdium.h"
 #import "JabberAccountViewController.h"
 #include <openssl/md5.h>
@@ -17,14 +18,13 @@
 - (void)authenticate:(NSString*)password;
 - (void)onError:(NSNotification*)n;
 - (void)disconnect;
+- (void)onPresenceChange:(NSNotification*)n;
 - (AIChat *)_openChatWithHandle:(AIHandle *)handle;
 @end
 
 @implementation JabberAccount
 
-/*********************/
-/* AIAccount_Content */
-/*********************/
+#pragma mark AIAccount_Content
 
 - (BOOL)sendContentObject:(AIContentObject *)object
 {
@@ -58,18 +58,8 @@
 
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
         if(weAreOnline){
-            if(inListObject == nil){
-                available = YES; //If we're online, we're most likely available to message this object
-
-            }else{
-                if([inListObject isKindOfClass:[AIListContact class]]){
-                    AIHandle    *handle = [(AIListContact *)inListObject handleForAccount:self];
-
-                    if(handle && [[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
-                        available = YES; //This handle is online and on our list
-                    }
-                }
-            }
+            // Jabber can send messages to people while they are offline. They get them later.
+            available = YES;
         }
     }
 
@@ -115,10 +105,7 @@
     return NO;
 }
 
-
-/*********************/
-/* AIAccount_Handles */
-/*********************/
+#pragma mark AIAccount_Handles
 
 // Returns a dictionary of AIHandles available on this account
 - (NSDictionary *)availableHandles //return nil if no contacts/list available
@@ -179,24 +166,37 @@
                                     withDescription:errorDesc];
 }
 
-/********************/
-/* AIAccount_Groups */
-/********************/
-
-/********************************/
-/* AIAccount subclassed methods */
-/********************************/
+#pragma mark AIAccount subclassed methods
 
 - (void)initAccount
 {
+    NSLog(@"JabberAccount initAccount:");
     handleDict = [[NSMutableDictionary alloc] init];
     chatDict = [[NSMutableDictionary alloc] init];
+    session = [[JabberSession alloc] init];
+    delay = FALSE;
+    [[session roster] setDelegate: self];
+    [session addObserver:self selector:@selector(onSessionConnected:) name:JSESSION_CONNECTED];
+    [session addObserver:self selector:@selector(onSessionAuthReady:) name:JSESSION_AUTHREADY];
+    [session addObserver:self selector:@selector(onError:) name:JSESSION_ERROR_SOCKET];
+    [session addObserver:self selector:@selector(onError:) name:JSESSION_ERROR_CONNECT_FAILED];
+    [session addObserver:self selector:@selector(onError:) name:JSESSION_ERROR_AUTHFAILED];
+    [session addObserver:self selector:@selector(onError:) name:JSESSION_ERROR_BADUSER];
+    [session addObserver:self selector:@selector(onError:) name:JSESSION_ERROR_REGFAILED];
+    [session addObserver:self selector:@selector(onError:) name:JSESSION_ERROR_XMLPARSER];
+    [session addObserver:self selector:@selector(onSessionStarted:) name:JSESSION_STARTED];
+    [session addObserver:self selector:@selector(onSessionEnded:) name:JSESSION_ENDED];
+    [session addObserver:self selector:@selector(onMessage:)
+                   xpath:@"/message[!@type='groupchat']"];
+    [session addObserver:self selector:@selector(onPresenceChange:) name:JPRESENCE_JID_DEFAULT_CHANGED];
+    [session addObserver:self selector:@selector(onPresenceChange:) name:JPRESENCE_JID_UNAVAILABLE];    
 }
 
 - (void)dealloc
 {
     [handleDict release];
     [chatDict release];
+    [session release];
     [super dealloc];
 }
 
@@ -260,9 +260,7 @@
     }
 }
 
-/*******************/
-/* Private methods */
-/*******************/
+#pragma mark Private methods
 
 - (void)connect
 {
@@ -271,28 +269,40 @@
     myID = [JabberID withUserHost:[self UID] andResource:@"Adium"];
     [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_CONNECTING]
                                         forKey:@"Status" account:self];
-    NSAssert(session == nil, @"Session should be nil before connecting");
-    session = [[JabberSession alloc] init];
-    NSLog(@"adding session connected listener");
-    [session addObserver:self selector:@selector(onSessionConnected:) name:JSESSION_CONNECTED];
-    NSLog(@"adding auth ready listener");
-    [session addObserver:self selector:@selector(onSessionAuthReady:) name:JSESSION_AUTHREADY];
-    NSLog(@"adding error listener");
-    [session addObserver:self selector:@selector(onError:) name:JSESSION_ERROR_SOCKET];
-    [session addObserver:self selector:@selector(onError:) name:JSESSION_ERROR_CONNECT_FAILED];
-    [session addObserver:self selector:@selector(onError:) name:JSESSION_ERROR_AUTHFAILED];
-    [session addObserver:self selector:@selector(onError:) name:JSESSION_ERROR_BADUSER];
-    [session addObserver:self selector:@selector(onError:) name:JSESSION_ERROR_REGFAILED];
-    [session addObserver:self selector:@selector(onError:) name:JSESSION_ERROR_XMLPARSER];
-    NSLog(@"adding started listener");
-    [session addObserver:self selector:@selector(onSessionStarted:) name:JSESSION_STARTED];
-    [session addObserver:self selector:@selector(onSessionEnded:) name:JSESSION_ENDED];
-    NSLog(@"adding message listener");
-    [session addObserver:self selector:@selector(onMessage:)
-             xpath:@"/message[!@type='groupchat']"];
     NSLog(@"starting session");
     [session startSession:myID onPort:5222];
 }
+
+- (void)authenticate:(NSString*)password
+{
+    NSLog(@"jabber: sending password");
+    [[session authManager] authenticateWithPassword:password];
+}
+
+/* Without this, the onMessage listener won't register properly. But I don't understand it. What does this do? */
+- (id)copyWithZone:(NSZone*)z
+{
+    return [self retain];
+}
+
+- (void)disconnect
+{
+    NSLog(@"jabber: disconnect");
+    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING]
+        forKey:@"Status" account:self];
+    [session removeObserver:self];
+    [session stopSession];
+    NSAssert(myID != nil, @"no id when disconnecting");
+    [myID release];
+    myID = nil;
+
+    // Set status as offline
+    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
+        forKey:@"Status" account:self];
+}
+
+#pragma mark JabberSession callbacks
+
 
 - (void)onSessionStarted:(NSNotification*)n
 {
@@ -300,7 +310,7 @@
     groupTracker = [[JabberGroupTracker alloc] init];
     NSLog(@"jabber: session started");
     [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
-                                        forKey:@"Status" account:self];
+                                    forKey:@"Status" account:self];
     [session sendString:@"<presence><priority>5</priority></presence>"];
 }
 
@@ -325,12 +335,6 @@
 {
     NSLog(@"jabber: auth ready");
     [[owner accountController] passwordForAccount:self notifyingTarget:self selector:@selector(authenticate:)];
-}
-
-- (void)authenticate:(NSString*)password
-{
-    NSLog(@"jabber: sending password");
-    [[session authManager] authenticateWithPassword:password];
 }
 
 - (void)onMessage:(NSNotification*)n
@@ -365,29 +369,116 @@
     NSLog(@"done");
 }
 
-/* Without this, the onMessage listener won't register properly. But I don't understand it. What does this do? */
-- (id)copyWithZone:(NSZone*)z
+- (void) onPresenceChange: (NSNotification*)n
 {
-    return [self retain];
+    if ([n name] == JPRESENCE_JID_UNAVAILABLE) {
+        NSString *uid = [[n object] userhost];
+        NSLog(@"%@ unavailable", uid);
+        AIHandle *handle = [handleDict objectForKey: uid];
+        if (!handle) {
+            // Acid apparently sends presence changes before roster changes
+            NSLog(@"presence for previously unknown handle %@", uid);
+            handle = [self addHandleWithUID:uid serverGroup:nil temporary:NO];
+        }
+        NSMutableDictionary *handleStatusDict = [handle statusDictionary];
+        [handleStatusDict setObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status"];
+        [handleStatusDict setObject:[NSNumber numberWithBool:NO] forKey:@"Online"];        
+        [[owner contactController] handleStatusChanged:handle
+                                    modifiedStatusKeys:[NSArray arrayWithObjects: @"Online", @"Status", nil]
+                                               delayed:NO
+                                                silent:NO];
+    } else { // JPRESENCE_JID_DEFAULT_CHANGED
+        JabberPresence *pres = [n object];
+        NSString *uid = [[pres from] userhost];
+        NSLog(@"default presence change for %@", uid);
+        AIHandle *handle = [handleDict objectForKey: uid];
+        if (!handle) {
+            // Acid apparently sends presence changes before roster changes
+            NSLog(@"presence for previously unknown handle %@", uid);
+            handle = [self addHandleWithUID:uid serverGroup:nil temporary:NO];
+        }
+        NSMutableDictionary *handleStatusDict = [handle statusDictionary];
+        NSMutableArray *changed = [NSMutableArray arrayWithCapacity:2];
+
+        NSString *newShow = [pres show];
+        bool newAway = (newShow != nil);
+        id oldAway = [handleStatusDict objectForKey:@"Away"];
+        if (oldAway == nil || oldAway != newAway) {
+            [changed addObject: @"Away"];
+            [handleStatusDict setObject:[NSNumber numberWithBool:newAway] forKey:@"Away"];
+        }
+
+        id oldMessage = [handleStatusDict objectForKey:@"StatusMessage"];
+        NSString *newMessage = [[NSAttributedString alloc] initWithString: [pres status]];
+        if (oldMessage != newMessage) {
+            [changed addObject: @"StatusMessage"];
+            if (newMessage == nil)
+                [handleStatusDict removeObjectForKey: @"StatusMessage"];
+            else
+                [handleStatusDict setObject:newMessage forKey:@"StatusMessage"];
+        }
+
+        id oldOnline = [handleStatusDict objectForKey:@"Online"];
+        if (oldOnline == nil || oldOnline == NO) {
+            [changed addObject: @"Online"];
+            [changed addObject: @"Status"];
+            [handleStatusDict setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
+            [handleStatusDict setObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status"];
+        }
+        
+        [[owner contactController] handleStatusChanged:handle
+                                    modifiedStatusKeys:changed
+                                               delayed:NO
+                                                silent:NO];        
+    }
 }
 
-- (void)disconnect
-{
-    NSLog(@"jabber: disconnect");
-    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING]
-        forKey:@"Status" account:self];
-    NSAssert(session != nil, @"no session when disconnecting");
-    [session removeObserver:self];
-    [session stopSession];
-    [session release];
-    session = nil;
-    NSAssert(myID != nil, @"no id when disconnecting");
-    [myID release];
-    myID = nil;
+#pragma mark JabberRosterDelegate protocol
 
-    // Set status as offline
-    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
-        forKey:@"Status" account:self];
+-(void) onBeginUpdate {
+    NSLog(@"onBeginUpdate");
+    delay = TRUE;
+}
+
+-(void) onEndUpdate {
+    NSLog(@"onEndUpdate");
+    delay = FALSE;
+}
+
+-(void) onItem:(id)item addedToGroup:(NSString*)group
+{
+    if ([item conformsTo: @protocol(JabberRosterItem)]) {
+        // Item created and/or added to group
+        NSLog(@"item %@ added to group %@", [item displayName], group);
+        NSString *uid = [[item JID] userhost];
+        AIHandle *handle = [handleDict objectForKey: uid];
+        if (!handle) {
+            NSLog(@"creating");
+            handle = [self addHandleWithUID:uid serverGroup:nil temporary:NO];
+        } else
+            NSLog(@"already present");
+    } else {
+        // New group added
+        NSLog(@"group %@ added", group);
+    }
+}
+
+- (void) onItem:(id)item removedFromGroup:(NSString*)group
+{
+    if ([item conformsTo: @protocol(JabberRosterItem)]) {
+        // Item destroyed and/or removed from a group
+        NSString *uid = [[item JID] userhost];
+        NSLog(@"item %@ removed from from %@", [item displayName], group);
+        AIHandle *handle = [handleDict objectForKey: uid];
+        if (handle) {
+            NSLog(@"removing");
+            [self removeHandleWithUID:uid];
+        } else
+            NSLog(@"already removed");
+    } else {
+        // Group removed
+        NSLog(@"group %@ removed", group);
+    }
 }
 
 @end
