@@ -8,22 +8,15 @@
 
 #import "ESFlexibleToolbarItem.h"
 
-#warning should have delegate protocol
-
 @implementation ESFlexibleToolbarItem
 
 - (id)initWithItemIdentifier:(NSString *)itemIdentifier
 {
-	[super initWithItemIdentifier:itemIdentifier];
-	
-	validationDelegate = nil;
-	
-	return(self);
-}
+	if(self = [super initWithItemIdentifier:itemIdentifier]){
+		validationDelegate = nil;
+	}
 
-- (id)copyWithZone:(NSZone *)inZone
-{
-	return([super copyWithZone:inZone]);
+	return(self);
 }
 
 - (void)setValidationDelegate:(id)inDelegate
