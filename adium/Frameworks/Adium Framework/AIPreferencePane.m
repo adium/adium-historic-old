@@ -71,7 +71,7 @@
 //Compare to another category view (for sorting on the preference window)
 - (NSComparisonResult)compare:(AIPreferencePane *)inPane
 {
-    return([label caseInsensitiveCompare:[inPane label]]);
+    return([[self label] caseInsensitiveCompare:[inPane label]]);
 }
 
 //Returns our view
