@@ -17,13 +17,13 @@
 #import "AIDockController.h"
 
 @interface AIDockController (PRIVATE)
-//- (void)privBounce;
-//- (void)bounceWithTimer:(NSTimer *)timer;
-//- (void)bounceForeverWithTimer:(NSTimer *)timer;
-//- (void)setAppIcon:(NSImage *)newIcon;
 - (void)loadIconPackFromPath:(NSString *)folderPath;
 - (void)_buildIcon;
 - (void)animateIcon:(NSTimer *)timer;
+- (void)_singleBounce;
+- (void)_continuousBounce;
+- (void)_stopBouncing;
+- (void)_bounceWithInterval:(double)delay;
 @end
 
 @implementation AIDockController
@@ -36,11 +36,17 @@
     //init
     activeIconStateArray = [[NSMutableArray alloc] init];
     dockImageArray = [[NSMutableArray alloc] init];
+    currentAttentionRequest = -1;
+    animationTimer = nil;
+    bounceTimer = nil;
 
     //Set the default icon
     familyPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Adiumy Icons/Adiumy Green.AdiumIcon"];
     [self loadIconPackFromPath:familyPath];
     [self _buildIcon];
+
+    //
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillBecomeActive:) name:NSApplicationWillBecomeActiveNotification object:nil];
 }
 
 - (void)closeController
@@ -298,145 +304,78 @@
 
 
 
-/*
-
-
-//icon family methods
-- (AIIconFamily *)currentIconFamily
+//Perform a bouncing behavior
+- (void)performBehavior:(DOCK_BEHAVIOR)behavior
 {
-    return iconFamily;
-}
-
-- (void)setIconFamily:(AIIconFamily *)newIconFamily
-{
-    [self setIconFamily:newIconFamily initializingClosed:NO];
-}
-
-- (void)setIconFamily:(AIIconFamily *)newIconFamily initializingClosed:(BOOL)closed
-{
-    [iconFamily release];
-    iconFamily = [newIconFamily retain];
-    if (closed) {
-        [self setAppIcon:[iconFamily closedImage]];
-    } else {
-        [self setAppIcon:[iconFamily openedImage]];
-    }
-}
-
-- (void)alert
-{
-    [self setAppIcon:[iconFamily alertImage]];
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(resetAppIcon:) userInfo:nil repeats:NO];
-}
-
-- (void)setAppIcon:(NSImage *)newIcon
-{
-    [currentIcon release];
-    currentIcon = [newIcon retain];
-
-    [[owner notificationCenter] postNotification:[NSNotification notificationWithName:Dock_IconWillChange object:newIcon]];
-    [[NSApplication sharedApplication] setApplicationIconImage:newIcon];
-    [[owner notificationCenter] postNotification:[NSNotification notificationWithName:Dock_IconDidChange object:newIcon]];
-}
-
-//bouncing methods
-- (void)bounce //for external use only.
-{
-    [self privBounce];
-    [self alert];
-}
-
-- (void)bounceWithInterval:(double)delay times:(int)num
-{       
-    if(!currentTimer)
-    {
-        [self privBounce]; // do one right away
-        [self alert];
+    //Stop any current behavior
+    [self _stopBouncing];
     
-        currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay+1 target:self selector: @selector(bounceWithTimer:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:delay],@"delay",[NSNumber numberWithInt:num-1],@"num",nil] repeats:NO]; // delay+1 so we take into account the time it takes to bounce. num-1 to because we did one already.
-    }
+    //Start up the new behavior
+    switch(behavior){
+        case BOUNCE_NONE: break;
+        case BOUNCE_ONCE: [self _singleBounce]; break;
+        case BOUNCE_REPEAT: [self _continuousBounce]; break;
+        case BOUNCE_DELAY5: [self _bounceWithInterval:5.0]; break;
+        case BOUNCE_DELAY10: [self _bounceWithInterval:10.0]; break;
+        case BOUNCE_DELAY15: [self _bounceWithInterval:15.0]; break;
+        case BOUNCE_DELAY30: [self _bounceWithInterval:30.0]; break;
+        case BOUNCE_DELAY60: [self _bounceWithInterval:60.0]; break;
+        default: break;
+    }    
 }
 
-- (void)bounceForeverWithInterval:(double)delay
+//Start a delayed bounce
+- (void)_bounceWithInterval:(double)delay
 {
-    if(!currentTimer && ![NSApp isActive])
-    {
-        [self privBounce]; // do one right away
-        [self alert];
+    [self _singleBounce]; // do one right away
 
-        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(startEternalTimer:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:delay], @"delay", nil] repeats:NO];
-    }
+    bounceTimer = [[NSTimer scheduledTimerWithTimeInterval:delay
+                                                    target:self
+                                                  selector:@selector(bounceWithTimer:)
+                                                  userInfo:nil
+                                                   repeats:YES] retain];
+}
+- (void)bounceWithTimer:(NSTimer *)timer
+{
+    [self _singleBounce];
 }
 
-- (void)stopBouncing
+//Bounce once
+- (void)_singleBounce
 {
-    if([currentTimer isValid])
-    {
-        [currentTimer invalidate];
-        currentTimer = nil;
-    }
-    else if(currentTimer)
-    {
-        currentTimer = nil;
-    }
-}
-
-//PRIVATE ========
-
-- (void)privBounce
-{
-    if([NSApp respondsToSelector:@selector(requestUserAttention:)])
-    {
+    if([NSApp respondsToSelector:@selector(requestUserAttention:)]){
         [NSApp requestUserAttention:NSInformationalRequest];
     }
 }
 
-- (void)startEternalTimer:(NSTimer *)timer
+//Bounce continuously
+- (void)_continuousBounce
 {
-    double delay = [[[timer userInfo] objectForKey:@"delay"] doubleValue];
-    currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay+1 target:self selector: @selector(bounceForeverWithTimer:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:delay],@"delay",nil] repeats:YES]; // delay+1 so we take into account the time it takes to bounce.
-
-    if ([timer isValid])
-        [timer invalidate];
-}
-
-- (void)bounceWithTimer:(NSTimer *)timer
-{
-    [self privBounce];
-    [self alert];
-    
-    if([[[timer userInfo] objectForKey:@"num"] intValue] > 1)
-    {
-        currentTimer = [NSTimer scheduledTimerWithTimeInterval:[[[timer userInfo] objectForKey:@"delay"] doubleValue] target:self selector:@selector(bounceWithTimer:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:[[[timer userInfo] objectForKey:@"num"] intValue]-1],@"num",[[timer userInfo] objectForKey:@"delay"],@"delay",nil] repeats:NO];
-    }
-    else
-    {
-        currentTimer = nil;
-    }
-
-}
-
-- (void)bounceForeverWithTimer:(NSTimer *)timer
-{
-    if ([NSApp isActive])
-    {
-        [timer invalidate];
-        currentTimer = nil;
-    } else {
-        [self privBounce];
-        [self alert];
+    if([NSApp respondsToSelector:@selector(requestUserAttention:)]){
+        currentAttentionRequest = [NSApp requestUserAttention:NSCriticalRequest];
     }
 }
 
-- (void)resetAppIcon:(NSTimer *)timer
+//Stop bouncing
+- (void)_stopBouncing
 {
-    [self setAppIcon:[iconFamily openedImage]];
+    //Stop any timer
+    if(bounceTimer){
+        [bounceTimer invalidate]; [bounceTimer release]; bounceTimer = nil;
+    }
+
+    //Stop any continuous bouncing
+    if(currentAttentionRequest != -1){
+        if([NSApp respondsToSelector:@selector(cancelUserAttentionRequest:)]){
+            [NSApp cancelUserAttentionRequest:currentAttentionRequest];
+        }
+        currentAttentionRequest = -1;
+    }
 }
 
 - (void)appWillBecomeActive:(NSNotification *)notification
 {
-    if (currentIcon == [iconFamily alertImage])
-        [self setAppIcon:[iconFamily openedImage]];
-}*/
+    [self _stopBouncing]; //Stop any bouncing
+}
 
 @end

@@ -112,11 +112,8 @@
 //Reload the contact list (if updates aren't delayed)
 - (void)contactOrderChanged:(NSNotification *)notification
 {
-    if(![[owner contactController] holdContactListUpdates]){
-        AIListObject		*object = [notification object];
-        
-        //Redisplay
-        [contactListView reloadData];
+    if(![[owner contactController] holdContactListUpdates]){        
+        [contactListView reloadData]; //Redisplay
     }
 }
 

@@ -71,6 +71,17 @@ typedef enum {
     AISortGroupAndSuperGroups
 } AISortMode;
 
+typedef enum {
+    BOUNCE_NONE = 0,
+    BOUNCE_ONCE,
+    BOUNCE_REPEAT,
+    BOUNCE_DELAY5,
+    BOUNCE_DELAY10,
+    BOUNCE_DELAY15,
+    BOUNCE_DELAY30,
+    BOUNCE_DELAY60
+} DOCK_BEHAVIOR;
+
 //Preference Categories
 #define PREFERENCE_CATEGORY_CONNECTIONS	@"Connections"
 #define PREFERENCE_CATEGORY_INTERFACE	@"Interface"
@@ -458,35 +469,23 @@ typedef enum {
 @interface AIDockController: NSObject {
     IBOutlet	AIAdium 	*owner;
     
-//    AIIconFamily		*iconFamily;
-
-//    NSImage			*currentIcon;
-
     int				animationFrames;
     int				currentFrame;
 
     NSTimer 			*animationTimer;
+    NSTimer			*bounceTimer;
     NSMutableDictionary		*availableIconStateDict;
     NSMutableArray		*activeIconStateArray;
     NSMutableArray		*dockImageArray;
+
+    int				currentAttentionRequest;
 }
 
 - (AIIconState *)setIconStateNamed:(NSString *)inName;
 - (void)setIconState:(AIIconState *)iconState;
 - (void)removeIconState:(AIIconState *)inState;
 - (float)dockIconScale;
-
-
-/*- (AIIconFamily *)currentIconFamily;
-- (void)setIconFamily:(AIIconFamily *)iconFamily;
-- (void)setIconFamily:(AIIconFamily *)newIconFamily initializingClosed:(BOOL)closed;
-
-- (void)alert;
-
-- (void)bounce;
-- (void)bounceWithInterval:(double)delay times:(int)num;
-- (void)bounceForeverWithInterval:(double)delay;
-- (void)stopBouncing;*/
+- (void)performBehavior:(DOCK_BEHAVIOR)behavior;
 
 @end
 

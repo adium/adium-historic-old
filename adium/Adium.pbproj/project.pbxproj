@@ -3209,6 +3209,19 @@
 			settings = {
 			};
 		};
+		4B68D3880463330600A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = DockBehaviorDefaults.plist;
+			path = "Plugins/Dock Behavior/DockBehaviorDefaults.plist";
+			refType = 4;
+		};
+		4B68D3890463330600A8010A = {
+			fileRef = 4B68D3880463330600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B70F28803D1C55C00A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
@@ -6973,6 +6986,7 @@
 				9CDF247703E8CBAA000001C9,
 				9CDF247903E8CBBC000001C9,
 				9CDF247B03E8CBC6000001C9,
+				4B68D3880463330600A8010A,
 			);
 			isa = PBXGroup;
 			name = "Dock Behavior";
@@ -7012,6 +7026,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CDF247C03E8CBC6000001C9,
+				4B68D3890463330600A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

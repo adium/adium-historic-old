@@ -27,7 +27,7 @@ typedef enum {
 
 @class IdleTimeWindowController, IdleTimePreferences;
 
-@interface AIIdleTimePlugin : AIPlugin <AIMiniToolbarItemDelegate, AIContactListTooltipEntry> {
+@interface AIIdleTimePlugin : AIPlugin <AIMiniToolbarItemDelegate> {
     IdleTimePreferences	*preferences;
 
     BOOL		isIdle;
