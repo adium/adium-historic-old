@@ -100,24 +100,58 @@
 //Private ------------------------------------------------------------------------------------------
 - (void)textDidChange:(NSNotification *)notification
 {
-    NSString	*userValue, *completionValue;
-
+    NSString		*userValue, *completionValue;
+	unsigned int	userValueLength;
+	
     //Auto-complete
     userValue = [self stringValue];
-
-    if([userValue length] > oldUserLength){
+	userValueLength = [userValue length];
+	
+	//We only need to attempt an autocompletion if characters have been added - deleting shouldn't autocomplete
+    if(userValueLength > oldUserLength){
         completionValue = [self completionForString:userValue];
     
-        if(completionValue != nil && [completionValue length] != 0){
-            //Auto-complete the string
-            [self setStringValue:completionValue];
-    
+        if(completionValue != nil && [completionValue length] > userValueLength){
+            //Auto-complete the string - note that it retains the text that the user typed, and simply adds
+            //the additional characters needed to match the completionValue
+            [self setStringValue:[userValue stringByAppendingString:[completionValue substringFromIndex:userValueLength]]];
+			
             //Select the auto-completed text
-            [self selectRange:NSMakeRange([userValue length], [completionValue length] - [userValue length])];
+            [self selectRange:NSMakeRange(userValueLength, [completionValue length] - userValueLength)];
         }
     }
 
-    oldUserLength = [userValue length];
+    oldUserLength = userValueLength;
+}
+
+- (void)textDidEndEditing:(NSNotification *)notification
+{
+    // This method helps make the text field a little smarter - as the user types, the auto-completions retain
+    // the user-entered characters as they were typed (basically, retaining the case as it was entered). If
+    // the user presses tab or enter, then this method is triggered and the text field tries to replace the
+    // text with a (case-insensitive) matching string (basically, having the effect that the entered string's
+    // case is "corrected" to match the auto-completion value). If the user *wants* to enter a string identical
+    // to a completion value, but with different case, he or she can avoid this automatic case "correction" by
+    // NOT hitting tab or enter, and instead just clicking the appropriate button or control they want to use.
+    
+    NSEnumerator    *enumerator;
+    NSString        *userValue, *currentString;
+    
+    // If the field matches an entry in stringSet (except maybe case) replace it with the correct-case string
+    userValue = [self stringValue];
+    
+    if([userValue length] >= minLength){
+        // Look for matching first matching string (except for case)
+        enumerator = [stringSet objectEnumerator];
+        while((currentString = [enumerator nextObject])){
+            if([currentString compare:userValue options:NSCaseInsensitiveSearch] == 0){
+                [self setStringValue:currentString];
+                break;
+            }
+        }
+    }
+    
+    [super textDidEndEditing:notification];
 }
 
 //Returns the known completion for a string segment
