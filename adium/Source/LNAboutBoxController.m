@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//$Id: LNAboutBoxController.m,v 1.28 2004/01/12 19:38:19 evands Exp $
+//$Id: LNAboutBoxController.m,v 1.29 2004/02/27 10:44:26 eevyl Exp $
 
 #import "LNAboutBoxController.h"
 
@@ -144,9 +144,9 @@ LNAboutBoxController *sharedInstance = nil;
         
         if(numberOfDuckClicks == 10/*[avatarArray count]*/){
             numberOfDuckClicks = -1;            
-            [[adium soundController] playSoundNamed:@"/Adium/Feather Ruffle.aif"];
+            [[adium soundController] playSoundNamed:@"/Adium.AdiumSoundset/Feather Ruffle.aif"];
         }else{
-            [[adium soundController] playSoundNamed:@"/Adium/Quack.aif"];
+            [[adium soundController] playSoundNamed:@"/Adium.AdiumSoundset/Quack.aif"];
         }
     }
 }
