@@ -49,7 +49,7 @@ Message Window:
 	+ Open new windows behind the frontmost window (When not opening in tabs)
 	+ Insert emoticon menu item, contextual menu item
 	+ Tab-complete usernames in messages and chat
-	+ Allow cmd-shift-left/right to cycle tabs in addition to cmd left/right
+	+ Allow cmd-shift-left/right to cycle tabs in addition to cmd left/right [Colin]
 	+ Remember last X lines of previous conversation, restore to new message windows
 	
 Contact List Display:
