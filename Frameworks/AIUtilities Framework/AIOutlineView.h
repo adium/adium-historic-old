@@ -9,6 +9,8 @@
 #define AIOutlineViewUserDidExpandItemNotification		@"AIOutlineViewUserDidExpandItemNotification"
 #define AIOutlineViewUserDidCollapseItemNotification	@"AIOutlineViewUserDidCollapseItemNotification"
 
+@class NSMutableString;
+@class NSMenu, NSEvent, NSOutlineView, NSImage;
 @class AIOutlineView;
 
 /*!
