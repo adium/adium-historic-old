@@ -493,4 +493,10 @@
 	
 }
 
+#pragma mark Image sending
+- (BOOL)canSendImagesForChat:(AIChat *)inChat
+{
+	return NO;
+}
+
 @end
