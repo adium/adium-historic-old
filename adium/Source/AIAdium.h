@@ -86,12 +86,13 @@
 - (IBAction)confirmQuit:(id)sender;
 
 //return zero or more pathnames to objects in the Application Support folders,
-//As well as withing the Resources/ directory of the Adium Bundle
+//  as well as within the Resources/ directory of the Adium bundle.
 //only those pathnames that exist are returned.
 //you can pass nil as the name to get all the Adium application-support folders
 //  that exist.
-//example: say you call [adium resourcePathsForName:@"Scripts"], and there's a Scripts folder
-//  in ~/L/AS/Adium\ 2.0 and in /L/AS/Adium\ 2.0, but not /N/L/AS/Adium\ 2.0.
+//example: say you call [adium resourcePathsForName:@"Scripts"], and there's a
+//  Scripts folder in ~/L/AS/Adium\ 2.0 and in /L/AS/Adium\ 2.0, but not in
+//  /N/L/AS/Adium\ 2.0.
 //the array you get back will be { @"/Users/you/L/AS/Adium 2.0/Scripts",
 //  @"/L/AS/Adium 2.0/Scripts" }.
 - (NSArray *)resourcePathsForName:(NSString *)name;
