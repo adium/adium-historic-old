@@ -410,7 +410,21 @@
 	[self updateActiveWindowMenuItem];
 	
 	[mostRecentActiveChat release]; mostRecentActiveChat = nil;
-	if(inChat) mostRecentActiveChat = [inChat retain];
+	if(inChat) mostRecentActiveChat = [inChat retain];	
+}
+
+//A chat has become visible: send out a notification for components and plugins to take action
+- (void)chatDidBecomeVisible:(AIChat *)inChat inWindow:(NSWindow *)inWindow
+{
+	[[adium notificationCenter] postNotificationName:@"AIChatDidBecomeVisible"
+											  object:inChat
+											userInfo:[NSDictionary dictionaryWithObject:inWindow
+																				 forKey:@"NSWindow"]];
+}
+
+- (NSWindow *)windowForChat:(AIChat *)inChat
+{
+	return [interfacePlugin windowForChat:inChat];
 }
 
 //A chat window did close: rebuild our window menu to remove the chat
