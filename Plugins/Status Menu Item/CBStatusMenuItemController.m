@@ -88,6 +88,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 
         //Setup for open chats and unviewed content catching
         accountMenuItemsArray = [[NSMutableArray alloc] init];
+        stateMenuItemsArray = [[NSMutableArray alloc] init];
         unviewedObjectsArray = [[NSMutableArray alloc] init];
 		openChatsArray = [[NSMutableArray alloc] init];
         needsUpdate = YES;
@@ -117,6 +118,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 		
         //Register ourself for the account menu items
         [[adium accountController] registerAccountMenuPlugin:self];
+        [[adium statusController] registerStateMenuPlugin:self];
     }
     
     return self;
@@ -186,6 +188,29 @@ static	NSImage						*adiumRedHighlightImage = nil;
     //We need to update next time we're clicked
     needsUpdate = YES;
 }
+
+
+//StateMenuPlugin --------------------------------------------------------
+#pragma mark StateMenuPlugin
+
+- (void)addStateMenuItems:(NSArray *)menuItemArray
+{
+    //Stick 'em in!
+    [stateMenuItemsArray addObjectsFromArray:menuItemArray];
+    
+    //We need to update next time we're clicked
+    needsUpdate = YES;
+}
+
+- (void)removeStateMenuItems:(NSArray *)menuItemArray
+{
+    //Pull 'em out!
+    [stateMenuItemsArray removeObjectsInArray:menuItemArray];
+    
+    //We need to update next time we're clicked
+    needsUpdate = YES;
+}
+
 
 //Twiddle visibility --------------------------------------------------------
 #pragma mark Twiddle visibility
@@ -281,7 +306,16 @@ static	NSImage						*adiumRedHighlightImage = nil;
         //Clear out all the items, start from scratch
         [menu removeAllItems];
         
-        //Add the account menu items
+		//Add the state menu items
+        enumerator = [stateMenuItemsArray objectEnumerator];
+        menuItem = nil;
+        while(menuItem = [enumerator nextObject]){
+            [menu addItem:menuItem];
+        }
+
+        [menu addItem:[NSMenuItem separatorItem]];
+
+		//Add the account menu items
         enumerator = [accountMenuItemsArray objectEnumerator];
         menuItem = nil;
         while(menuItem = [enumerator nextObject]){
