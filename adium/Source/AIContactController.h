@@ -53,7 +53,8 @@ typedef enum {
     AISortGroupAndSuperGroups
 } AISortMode;
 
-@protocol AIListObjectObserver //notified of changes
+//Observer which receives notifications of changes in list object status
+@protocol AIListObjectObserver
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
 @end
 
