@@ -279,12 +279,12 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 
 static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user)
 {
-    if (GAIM_DEBUG) NSLog(@"adiumGaimConvChatAddUser");
+	[accountLookup(conv->account) accountConvAddedUser:user inConversation:conv];
 }
 
 static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users)
 {
-    if (GAIM_DEBUG) NSLog(@"adiumGaimConvChatAddUsers");
+	[accountLookup(conv->account) accountConvAddedUsers:users inConversation:conv];
 }
 
 static void adiumGaimConvChatRenameUser(GaimConversation *conv, const char *oldName, const char *newName)
@@ -294,12 +294,12 @@ static void adiumGaimConvChatRenameUser(GaimConversation *conv, const char *oldN
 
 static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user)
 {
-    if (GAIM_DEBUG) NSLog(@"adiumGaimConvChatRemoveUser");
+	[accountLookup(conv->account) accountConvRemovedUser:user inConversation:conv];
 }
 
 static void adiumGaimConvChatRemoveUsers(GaimConversation *conv, GList *users)
 {
-    if (GAIM_DEBUG) NSLog(@"adiumGaimConvChatRemoveUsers");
+	[accountLookup(conv->account) accountConvRemovedUsers:users inConversation:conv];
 }
 
 static void adiumGaimConvSetTitle(GaimConversation *conv, const char *title)
@@ -740,7 +740,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)uninstallPlugin
 {
-	gaim_signals_disconnect_by_handle(gaim_adium_get_handle());
 	gaim_signals_disconnect_by_handle(gaim_adium_get_handle());
 	
     [_accountDict release]; _accountDict = nil;
