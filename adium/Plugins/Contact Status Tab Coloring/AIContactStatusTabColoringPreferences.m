@@ -64,6 +64,18 @@
     [self configureControlDimming];
 }
 
+- (void)viewWillClose
+{
+	[colorWell_away deactivate];
+	[colorWell_idle deactivate];
+	[colorWell_signedOff deactivate];
+	[colorWell_signedOn deactivate];
+	[colorWell_typing deactivate];
+	[colorWell_unviewedContent deactivate];
+	[colorWell_idleAndAway deactivate];
+	[colorWell_offline deactivate];
+}
+
 //Enable/disable controls that are available/unavailable
 - (void)configureControlDimming
 {
