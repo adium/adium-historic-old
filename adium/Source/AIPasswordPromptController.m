@@ -95,7 +95,7 @@ AIPasswordPromptController	*controller = nil;
 
     //save password?
     if(savePassword){
-        [AIKeychain putPasswordInKeychainForService:[NSString stringWithFormat:@"Adium.%@",[account accountID]] account:[account accountID] password:password];
+        [AIKeychain putPasswordInKeychainForService:[NSString stringWithFormat:@"Adium.%@",[account UIDAndServiceID]] account:[account UIDAndServiceID] password:password];
     }
 
     //close up and notify our caller

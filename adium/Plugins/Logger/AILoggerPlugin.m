@@ -59,7 +59,7 @@
             //Log the message
             [self _addMessage:[[content message] string]
                         toLog:[destination UIDAndServiceID]
-                       source:[source accountID]
+                       source:[source UIDAndServiceID]
                          date:[content date]];
         }
     }

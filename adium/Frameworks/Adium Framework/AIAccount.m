@@ -88,7 +88,10 @@
 //Functions for subclasses to override
 - (void)initAccount{};
 - (NSView *)accountView{return(nil);};
-- (NSString *)accountID{return(nil);};
+- (NSString *)accountID{return(nil);}; 		//Specific to THIS account plugin, and the user's account name
+- (NSString *)UID{return(nil);};		//The user's account name
+- (NSString *)serviceID{return(nil);};		//The service ID (shared by any account code accessing this service)
+- (NSString *)UIDAndServiceID{return(nil);}; 	//ServiceID.UID
 - (NSString *)accountDescription{return(nil);};
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue{};
 - (NSArray *)supportedStatusKeys{return([NSArray array]);}

@@ -26,10 +26,10 @@
 @class AIDockBehaviorPreferences;
 
 @interface AIDockBehaviorPlugin : AIPlugin {
-    AIDockBehaviorPreferences *preferences;
+    AIDockBehaviorPreferences 	*preferences;
 }
 
 - (void)installPlugin;
-- (void)messageIn:(NSNotification *)notification;
+//- (void)messageIn:(NSNotification *)notification;
 
 @end

@@ -15,9 +15,9 @@
 #import "AIPreferenceCategory.h"
 #import "AISendingTextView.h"
 #import "AIIconFamily.h"
+#import "AIIconState.h"
 #import "AIHandle.h"
 #import "AIListContact.h"
 #import "AIListGroup.h"
 #import "AIListObject.h"
 #import "AIContentStatus.h"
-
