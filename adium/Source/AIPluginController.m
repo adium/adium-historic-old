@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.82 2004/07/14 18:44:59 evands Exp $
+//$Id: AIPluginController.m,v 1.83 2004/07/15 00:59:41 ramoth4 Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -115,6 +115,7 @@ ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin;
 	[self loadPluginWithClass:[BGThemesPlugin class]];
 	[self loadPluginWithClass:[CBActionSupportPlugin class]];
 	[self loadPluginWithClass:[CBContactCountingDisplayPlugin class]];
+    [self loadPluginWithClass:[CBStatusMenuItemPlugin class]];
     [self loadPluginWithClass:[CBURLHandlingPlugin class]];
     [self loadPluginWithClass:[CPFVersionChecker class]];
 	[self loadPluginWithClass:[CSDisconnectAllPlugin class]];
