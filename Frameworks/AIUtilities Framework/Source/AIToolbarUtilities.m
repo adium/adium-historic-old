@@ -37,8 +37,11 @@
 
     [item setLabel:label];
     [item setPaletteLabel:paletteLabel];
-    [item setToolTip:toolTip];
-    [item setTarget:target];
+	[item setToolTip:toolTip];
+
+	if(target){
+		[item setTarget:target];
+	}
 
     //the settingSelector parameter can either be @selector(setView:) or @selector(setImage:).  Pass in the right
     //one depending upon whether your NSToolbarItem will have a custom view or an image, respectively
@@ -46,7 +49,9 @@
     if(settingSelector && itemContent){
         [item performSelector:settingSelector withObject:itemContent];
     }
-    [item setAction:action];
+	if(action){
+		[item setAction:action];
+	}
 	
     //If this NSToolbarItem is supposed to have a menu "form representation" associated with it (for text-only mode),
     //we set it up here.  Actually, you have to hand an NSMenuItem (not a complete NSMenu) to the toolbar item,
