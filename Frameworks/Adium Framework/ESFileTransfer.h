@@ -75,7 +75,7 @@ typedef enum {
 - (void)setStatus:(FileTransferStatus)inStatus;
 - (FileTransferStatus)status;
 
-- (void)setPercentDone:(float)inPercent bytesSent:(unsigned int)inBytesSent;
+- (void)setPercentDone:(float)inPercent bytesSent:(int)inBytesSent;
 - (float)percentDone;
 - (unsigned long long)bytesSent;
 

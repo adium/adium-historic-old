@@ -120,10 +120,10 @@
 }
 
 //Progress update
-- (void)setPercentDone:(float)inPercent bytesSent:(unsigned int)inBytesSent
+- (void)setPercentDone:(float)inPercent bytesSent:(int)inBytesSent
 {
 	float oldPercentDone = percentDone;
-	unsigned int oldBytesSent = bytesSent;
+	int oldBytesSent = bytesSent;
 	
     if (inPercent == -1){
         if (inBytesSent != -1 && size != -1){
