@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.46 2004/06/28 03:43:24 evands Exp $
+// $Id: AISoundController.m,v 1.47 2004/06/28 04:04:07 evands Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -89,8 +89,8 @@
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_GENERAL]){    
-        NSDictionary 	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_SOUNDS]){    
+        NSDictionary 	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
 		NSNumber		*customVolumeNumber = [preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL];
         
 		//On Panther, we only use the QuickTime sound playing code if a customvolume is set,
@@ -107,9 +107,7 @@
         
         //If we should be muted now, clear out the speech array.
         if(muteSounds) [speechArray removeAllObjects];
-    }
-	
-	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_SOUNDS]){    
+
 		muteWhileAway = [[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue];
 	}
 }
@@ -144,7 +142,7 @@
 //Play a sound by path
 - (void)playSoundAtPath:(NSString *)inPath
 {
-    if(!muteSounds && (!muteWhileAway || ![[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
+    if(!muteSounds && (!muteWhileAway || ![[owner preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
         if(useCustomVolume && customVolume != 0){
 			//If the user is specifying a custom volume, we must use quicktime to play our sounds.
 			[self _quicktimePlaySound:inPath];
@@ -440,7 +438,8 @@
 		
 		[speechArray addObject:dict];
 		[dict release];
-		if(!muteSounds && (!muteWhileAway || ![[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
+		
+		if(!muteSounds && (!muteWhileAway || ![[owner preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
 			[self speakNext];
 		}
     }

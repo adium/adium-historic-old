@@ -14,13 +14,17 @@
  \------------------------------------------------------------------------------------------------------ */
 
 //Sound Controller
-#define	KEY_SOUND_SET                           @"Set"
-#define	KEY_SOUND_SET_CONTENTS			@"Sounds"
-#define KEY_SOUND_MUTE                          @"Mute Sounds"
-#define KEY_SOUND_TEMPORARY_MUTE		@"Mute Sounds Temporarily"
-#define KEY_SOUND_USE_CUSTOM_VOLUME		@"Use Custom Volume"
-#define KEY_SOUND_CUSTOM_VOLUME_LEVEL           @"Custom Volume Level"
-#define KEY_USE_SYSTEM_SOUND_OUTPUT             @"Use System Sound Output"
+#define	KEY_SOUND_SET						@"Set"
+#define	KEY_SOUND_SET_CONTENTS				@"Sounds"
+#define KEY_SOUND_MUTE						@"Mute Sounds"
+#define KEY_SOUND_TEMPORARY_MUTE			@"Mute Sounds Temporarily"
+#define KEY_SOUND_USE_CUSTOM_VOLUME			@"Use Custom Volume"
+#define KEY_SOUND_CUSTOM_VOLUME_LEVEL		@"Custom Volume Level"
+#define KEY_USE_SYSTEM_SOUND_OUTPUT			@"Use System Sound Output"
+
+#define PREF_GROUP_SOUNDS					@"Sounds"
+#define KEY_EVENT_MUTE_WHILE_AWAY			@"Mute While Away"
+
 
 @interface AISoundController : NSObject {
     IBOutlet	AIAdium		*owner;
@@ -29,6 +33,7 @@
     NSMutableArray		*soundCacheArray;
     BOOL				useCustomVolume;
     BOOL				muteSounds;
+	BOOL				muteWhileAway;
 //    BOOL                                soundsAsAlerts;
     int					customVolume;
 	
