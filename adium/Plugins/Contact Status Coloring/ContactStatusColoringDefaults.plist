@@ -16,8 +16,6 @@
     <true/>
     <key>Online Enabled</key>
     <false/>
-    <key>Open Tab Enabled</key>
-    <false/>
     <key>Idle And Away Enabled</key>
     <false/>
     <key>Away Color</key>
@@ -33,8 +31,6 @@
     <key>Unviewed Content Color</key>
     <string>255,255,255</string>
     <key>Online Color</key>
-    <string>255,255,255</string>
-    <key>Open Tab Color</key>
     <string>255,255,255</string>
     <key>Idle And Away Color</key>
     <string>255,255,255</string>
@@ -52,8 +48,6 @@
     <string>0,144,197</string>
     <key>Online Label Color</key>
     <string>0,0,255</string>
-    <key>Open Tab Label Color</key>
-    <string>0,255,0</string>
     <key>Idle And Away Label Color</key>
     <string>234,234,234</string>
 </dict>
