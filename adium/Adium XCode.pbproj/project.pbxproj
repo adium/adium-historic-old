@@ -6383,6 +6383,19 @@
 			settings = {
 			};
 		};
+		349D706705998D370059824C = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "buildnum=`./Other/buildnum`\nbuilddate=`perl -e 'print time;'`\necho $buildnum \"|\" $builddate > build/Adium\\ Crash\\ Reporter.app/Contents/Resources/buildnum\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
+		};
 		34ADDFFF05158D4B003B2F21 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -19944,6 +19957,7 @@
 				4B7F78B20597F42400162728,
 				4B7F78B30597F42400162728,
 				4B215DAA0598965C00305B3C,
+				349D706705998D370059824C,
 			);
 			buildRules = (
 			);
@@ -22353,7 +22367,7 @@
 				INFOPLIST_FILE = Plists/Contact_Online_For.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = "Contact Online For";
