@@ -162,6 +162,19 @@ void Adium_HandleSignal(int i){
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 
     //
+    {
+        //***TEMP***
+#define KEY_CONTACT_LIST                @"ContactList"		//Contact list key
+#define PREF_GROUP_CONTACT_LIST		@"Contact List"		//Contact list preference group
+        if (![preferenceController preferenceForKey:@"Temp:DeletedContactList" group:PREF_GROUP_CONTACT_LIST]){
+            [preferenceController setPreference:nil forKey:KEY_CONTACT_LIST group:PREF_GROUP_CONTACT_LIST];
+            [preferenceController setPreference:[NSNumber numberWithBool:YES] 
+                                         forKey:@"Temp:DeletedContactList" 
+                                          group:PREF_GROUP_CONTACT_LIST];
+        }
+    }
+    
+    
     [contactController finishIniting];
     [preferenceController finishIniting];
     [interfaceController finishIniting];
