@@ -103,4 +103,9 @@ typedef enum {
 - (NSImage *)chatImage;
 - (NSImage *)chatMenuImage;
 
+- (void)setSecurityDetails:(NSDictionary *)securityDetails;
+- (NSDictionary *)securityDetails;
+- (BOOL)isSecure;
+- (BOOL)supportsSecureMessagingToggling;
+
 @end

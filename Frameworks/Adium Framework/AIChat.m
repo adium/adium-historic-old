@@ -163,6 +163,28 @@ static int nextChatNumber = 0;
 	}
 	
 }
+//Secure chatting ------------------------------------------------------------------------------------------------------
+- (void)setSecurityDetails:(NSDictionary *)securityDetails
+{
+	[self setStatusObject:securityDetails
+				   forKey:@"SecurityDetails"
+				   notify:NotifyNow];
+}
+- (NSDictionary *)securityDetails
+{
+	return([self statusObjectForKey:@"SecurityDetails"]);
+}
+
+- (BOOL)isSecure
+{
+	return([self securityDetails] != nil);
+}
+
+- (BOOL)supportsSecureMessagingToggling
+{
+	return((BOOL)[account allowSecureMessagingTogglingForChat:self]);
+}
+
 //Name  ----------------------------------------------------------------------------------------------------------------
 #pragma mark Name
 - (NSString *)name
