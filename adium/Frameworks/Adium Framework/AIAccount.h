@@ -50,6 +50,9 @@ typedef enum {
 //Support for standard UID based contacts
 @protocol AIAccount_List
 	- (void)removeListObjects:(NSArray *)objects;
+	
+	- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group;
+    - (BOOL)contactListEditable;
 
 //    // Returns a dictionary of AIHandles available on this account
 //    - (NSDictionary *)availableHandles; //return nil if no contacts/list available
