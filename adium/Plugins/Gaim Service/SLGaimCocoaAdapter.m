@@ -1549,7 +1549,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	
 	AIListObject *listObject = [chat listObject];
 	if (listObject){
-		[chatDict setObject:nil forKey:[listObject uniqueObjectID]];
+		[chatDict removeObjectForKey:[listObject uniqueObjectID]];
 	}else{
 		//Multiuser chat.  Bleh.
 	}
