@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 776 $ $Date: 2004/05/22 20:08:07 $ -->
+<!--$Rev: 778 $ $Date: 2004/05/23 17:45:50 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -191,8 +191,7 @@ try {
     " scramble(recipient_sn) as recipient_sn, " +
     " message, message_date, message_id, " +
     " to_char(message_date, 'fmDay, fmMonth DD, YYYY') as fancy_date, " +
-    " exists (select 'x' from adium.message_notes " +
-    " where message_id = view.message_id) as notes";
+    " message_notes.message_id is not null as notes";
     if(showDisplay) {
        queryText += ", scramble(sender_display) as sender_display, "+
            " scramble(recipient_display) as recipient_display " +
@@ -210,6 +209,8 @@ try {
     } else {
         queryText += " from adium.simple_message_v as view ";
     }
+
+    queryText += " natural left join adium.message_notes ";
 
     String concurrentWhereClause = " where ";
 

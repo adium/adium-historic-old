@@ -17,12 +17,14 @@ try {
     pstmt.setString(3, request.getParameter("notes"));
     pstmt.executeUpdate();
 
+%>
+<html>
+<body onLoad="window.opener.parent.location.reload(); window.close()"></body>
+</html>
+<%
 } catch (SQLException e) {
     out.println("<br />" + e.getMessage());
 } finally {
     conn.close();
 }
 %>
-<html>
-<body onLoad="window.close()">
-</html>
