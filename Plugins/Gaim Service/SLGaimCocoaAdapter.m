@@ -2377,7 +2377,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		[chatDict removeObjectForKey:chatUniqueUD];
 
 		if(conv->ui_data){
-			[conv->ui_data release];
+			[(AIChat *)conv->ui_data release];
 			conv->ui_data = nil;
 		}
 		
