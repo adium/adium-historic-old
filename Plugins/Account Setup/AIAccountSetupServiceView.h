@@ -21,10 +21,13 @@
 	NSArray				*accounts;
 	NSSize				serviceIconSize;
 	
-	AIAccount		*hoveredAccount;
+	AIAccount			*hoveredAccount;
 	
 	int 				accountNameHeight;
 }
+
+- (id)initWithService:(AIService *)inService;
 - (void)setServiceIconSize:(NSSize)inSize;
+- (void)addAccounts:(NSArray *)array;
 
 @end
