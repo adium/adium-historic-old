@@ -215,7 +215,7 @@
 //knowlege of the metaContact's effective contents
 - (void)_determineIfWeShouldAppearToContainOnlyOneContact
 {
-	int count = [self containedObjectsCount];
+	unsigned int count = [self containedObjectsCount];
 	
 	if (count > 1){
 		NSString	*formattedUIDToMatch = nil;
@@ -224,7 +224,7 @@
 		NSString	*offline_formattedUIDToMatch = nil;
 		NSString	*offline_serviceIDToMatch = nil;
 		
-		int i;
+		unsigned int i;
 		for (i = 0; i < count; i++){
 			AIListContact   *thisContact = [self objectAtIndex:i];
 			
@@ -560,4 +560,26 @@
 {
 	return [[super longDisplayName] stringByAppendingString:@"-Meta"];	
 }
+
+//We always want to provide a userIcon if at all possible.
+//First get our userIcon as normal.
+//If that returns nil, look at our preferredContact's userIcon.
+//If that returns nil, find any userIcon of a containedContact.
+- (NSImage *)userIcon
+{
+	NSImage *userIcon = [super userIcon];
+	if (!userIcon){
+		userIcon = [[self preferredContact] userIcon];
+	}
+	if (!userIcon){
+		unsigned int count = [self containedObjectsCount];
+		unsigned int i;
+		for (i = 0; i < count; i++){
+			userIcon = [[self objectAtIndex:i] userIcon];
+		}
+	}
+	
+	return userIcon;
+}
+
 @end
