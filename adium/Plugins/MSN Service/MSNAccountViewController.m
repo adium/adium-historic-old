@@ -67,11 +67,10 @@
     
     [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:account];
     
-    //this needs to be cleaned up (i don't have the docs on hand, can someone get the right info?)
-    [textField_email setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789_.@ "] length:48 caseSensitive:NO errorMessage:@"Improper Format"]];
+    [textField_email setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789+-._"] length:129 caseSensitive:NO errorMessage:@"Improper Format"]];
     
     //this too
-    [textField_friendlyName setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789_.@!#$%^&*() "] length:255 caseSensitive:NO errorMessage:@"Improper Format"]];
+    [textField_friendlyName setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet decomposableCharacterSet] length:129 caseSensitive:NO errorMessage:@"Improper Format"]];
     
     return self;
 }
