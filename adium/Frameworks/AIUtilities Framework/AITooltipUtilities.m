@@ -120,6 +120,7 @@ static	AITooltipOrientation	tooltipOrientation;
     tooltipWindow = [[NSPanel alloc] initWithContentRect:NSMakeRect(0,0,0,0) styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
     [tooltipWindow setLevel:NSStatusWindowLevel]; //Just using the floating panel level is insufficient because the contact list can float, too
     [tooltipWindow setHidesOnDeactivate:NO];
+    [tooltipWindow setIgnoresMouseEvents:YES];
     [tooltipWindow setBackgroundColor:[NSColor colorWithCalibratedRed:1.000 green:1.000 blue:0.800 alpha:1.0]];
     [tooltipWindow setAlphaValue:0.9];
     [tooltipWindow setHasShadow:YES];
