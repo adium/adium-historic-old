@@ -14,6 +14,8 @@
 #define TITLE_SHOW_DETAILS		AILocalizedString(@"Show Details...",nil)
 #define TITLE_ABOUT_ENCRYPTION	AILocalizedString(@"About Encryption...",nil)
 
+#define TITLE_ENCRYPTION		AILocalizedString(@"Encryption",nil)
+
 @interface ESSecureMessagingPlugin (PRIVATE)
 - (void)registerToolbarItem;
 - (NSMenu *)_secureMessagingMenu;
@@ -64,7 +66,7 @@
 	[button setImage:lockImage_Locked];
 
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"Encryption"
-														  label:AILocalizedString(@"Encryption",nil)
+														  label:TITLE_ENCRYPTION
 												   paletteLabel:AILocalizedString(@"Encrypted Messaging",nil)
 														toolTip:AILocalizedString(@"Toggle encrypted messaging. Shows a closed lock when secure and an open lock when insecure.",nil)
 														 target:self
@@ -231,6 +233,7 @@
 		NSMenuItem	*item;
 
 		_secureMessagingMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+		[_secureMessagingMenu setTitle:TITLE_ENCRYPTION];
 
 		item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:TITLE_MAKE_SECURE
 																	 target:self
