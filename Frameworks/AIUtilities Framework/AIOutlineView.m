@@ -15,7 +15,7 @@
 
 #import "AIOutlineView.h"
 
-@implementation AIOutlineView (PRIVATE)
+@interface AIOutlineView (PRIVATE)
 - (void)_initOutlineView;
 @end
 
