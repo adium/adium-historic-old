@@ -80,3 +80,4 @@
 #import "SUSpeaker.h"
 #import "ESQuicklyResizingPanel.h"
 #import "AIParagraphStyleAdditions.h"
+#import "CBApplicationAdditions.h"

@@ -9,7 +9,7 @@
 @interface CBStatusMenuItemController : NSObject 
 {
     NSStatusItem    *statusItem;
-    NSMenu          *itemMenu;
+    NSMenu          *theMenu;
     
     AIAdium         *owner;
 }

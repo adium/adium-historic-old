@@ -29,14 +29,8 @@ CBStatusMenuItemController *sharedInstance = nil;
     if(self = [super init])
     {
         owner = [inOwner retain];
-
-        /*id obj;        
-        NSEnumerator *numer = [[[owner accountController] accountArray] objectEnumerator];
-        while(obj = [numer nextObject])
-        {
-            
-        }*/
         
+        //Create and set up the Status Item.
         statusItem = [[[NSStatusBar systemStatusBar]
             statusItemWithLength:NSSquareStatusItemLength] retain];
     
@@ -46,7 +40,25 @@ CBStatusMenuItemController *sharedInstance = nil;
         {
             [statusItem setAlternateImage:[AIImageUtilities imageNamed:@"adiumHighlight.png" forClass:[self class]]];
         }
-        //[statusItem setMenu:itemMenu];
+        
+        //Create our menu
+        theMenu = [[NSMenu alloc] initWithTitle:@""];
+        [theMenu setAutoenablesItems:NO];
+        
+        AIAccount *account;        
+        NSEnumerator *numer = [[[owner accountController] accountArray] objectEnumerator];
+        NSMenuItem *item;
+        
+        //Add and install menu items for each account
+        while(account = [numer nextObject])
+        {
+            item = [[NSMenuItem alloc] initWithTitle:[account accountDescription] target:self action:nil keyEquivalent:@""];
+            [item setRepresentedObject:[account retain]];
+            [theMenu addItem:item];
+            [theMenu update];
+        }
+
+        [statusItem setMenu:theMenu];
         [statusItem setEnabled:YES];
     }
     
@@ -57,7 +69,7 @@ CBStatusMenuItemController *sharedInstance = nil;
 {
     [owner release];
     [statusItem release];
-    //[itemMenu release];
+    [theMenu release];
     [super dealloc];
 }
 
