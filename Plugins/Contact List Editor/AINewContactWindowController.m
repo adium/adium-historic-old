@@ -317,7 +317,7 @@
 		NSScanner	*scanner = [NSScanner scannerWithString:(caseSensitive ? name : [name lowercaseString])];
 		NSString	*validSegment = nil;
 		
-		[scanner scanCharactersFromSet:[service allowedCharacters] intoString:&validSegment];
+		[scanner scanCharactersFromSet:[service allowedCharactersForUIDs] intoString:&validSegment];
 		if(!validSegment || [validSegment length] != [name length]){
 			enabled = NO;
 		}
