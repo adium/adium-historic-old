@@ -72,9 +72,7 @@
 	[[adium contactAlertsController] registerActionID:@"EventBezel" withHandler:self];
 	
     //watch preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    //set up preferences initially
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EVENT_BEZEL];
 }
 
 - (void)uninstallPlugin
@@ -90,33 +88,30 @@
 }
 
 //
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_EVENT_BEZEL]){
-        NSDictionary    *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
-        
-        showEventBezel = [[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue];
-        
-        [ebc setBezelDuration: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_DURATION] intValue]];
-        ignoreClicks = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IGNORE_CLICKS] boolValue];
-		includeText = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_INCLUDE_TEXT] boolValue];
-		
-        [eventArray removeAllObjects];
-        if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue])
-            [eventArray addObject:Content_FirstContentRecieved];                
-        if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_ONLINE] boolValue])
-            [eventArray addObject:CONTACT_STATUS_ONLINE_YES];
-        if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_OFFLINE] boolValue])
-            [eventArray addObject:CONTACT_STATUS_ONLINE_NO];
-        if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_AWAY] boolValue])
-            [eventArray addObject:CONTACT_STATUS_AWAY_YES];
-        if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_AVAILABLE] boolValue])
-            [eventArray addObject:CONTACT_STATUS_AWAY_NO];
-        if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_IDLE] boolValue])
-            [eventArray addObject:CONTACT_STATUS_IDLE_YES];
-        if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_NO_IDLE] boolValue])
-            [eventArray addObject:CONTACT_STATUS_IDLE_NO];
-    }
+	showEventBezel = [[prefDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue];
+	
+	[ebc setBezelDuration: [[prefDict objectForKey:KEY_EVENT_BEZEL_DURATION] intValue]];
+	ignoreClicks = [[prefDict objectForKey:KEY_EVENT_BEZEL_IGNORE_CLICKS] boolValue];
+	includeText = [[prefDict objectForKey:KEY_EVENT_BEZEL_INCLUDE_TEXT] boolValue];
+	
+	[eventArray removeAllObjects];
+	if([[prefDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue])
+		[eventArray addObject:Content_FirstContentRecieved];                
+	if([[prefDict objectForKey:KEY_EVENT_BEZEL_ONLINE] boolValue])
+		[eventArray addObject:CONTACT_STATUS_ONLINE_YES];
+	if([[prefDict objectForKey:KEY_EVENT_BEZEL_OFFLINE] boolValue])
+		[eventArray addObject:CONTACT_STATUS_ONLINE_NO];
+	if([[prefDict objectForKey:KEY_EVENT_BEZEL_AWAY] boolValue])
+		[eventArray addObject:CONTACT_STATUS_AWAY_YES];
+	if([[prefDict objectForKey:KEY_EVENT_BEZEL_AVAILABLE] boolValue])
+		[eventArray addObject:CONTACT_STATUS_AWAY_NO];
+	if([[prefDict objectForKey:KEY_EVENT_BEZEL_IDLE] boolValue])
+		[eventArray addObject:CONTACT_STATUS_IDLE_YES];
+	if([[prefDict objectForKey:KEY_EVENT_BEZEL_NO_IDLE] boolValue])
+		[eventArray addObject:CONTACT_STATUS_IDLE_NO];
 }
 
 - (void)eventNotification:(NSNotification *)notification
