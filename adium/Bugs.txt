@@ -7,6 +7,7 @@
 //------------------------------------------------------------------------------------
 - Adium doesn't crash enough.
 	Starting Adium is just so enjoyable we should find ways to do it more often.
+	[Dave] I can make Adium crash on EVERY startup, should I do it?
 
 - Spawning new windows unhides Adium
 	We don't want to spawn new windows while Adium is hidden.  Windows should be queued
@@ -45,10 +46,6 @@
 	is bad.  Perhaps this could be fixed at the same time as the implementation of style-based image
 	masking as Brad described.
 
-- Initial message events
-
-- Emoticons don't display properly in status messages (away messages) inside message views.
-
 - Messaging the same person from two different accounts is confusing and
   problematic.
 
@@ -80,7 +77,7 @@
 // Bugs - Resources
 //------------------------------------------------------------------------------------
 - Webkit styles rendering incorrectly in very wide windows
-	The two included styles with problems are Smooth Operator
+	The included style with problems is Smooth Operator
 
 - Webkit styles must support multi-line status messages
 	The included style with problems is Smooth Operator
