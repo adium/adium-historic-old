@@ -24,75 +24,34 @@
 {
     [super initWithUID:inUID serviceID:inServiceID];
     
-    handleArray = [[NSMutableArray alloc] init];
+	remoteGroups = [[AIMutableOwnerArray alloc] init];
     
     return(self);
 }
 
 - (void)dealloc
 {
-    [handleArray release];
+    [remoteGroups release];
     
     [super dealloc];
 }
 
-- (AIHandle *)handleForAccount:(AIAccount *)inAccount
+//Set the desired group for an account that owns this contact
+//Pass nil to indicate an account no longer owns this object
+- (void)setRemoteGroupName:(NSString *)groupName forAccount:(AIAccount *)inAccount
 {
-    AIHandle        *handle;
-    
-    if (inAccount) {
-        NSEnumerator 	*enumerator;
-        
-        //Search for an existing handle belonging to the account
-        enumerator = [handleArray objectEnumerator];
-        while((handle = [enumerator nextObject])){
-            if([handle account] == inAccount) break;
-        }
-    } else {
-        handle = [handleArray objectAtIndex:0];
-    }
-        return(handle);
+	NSString	*oldGroup = [remoteGroups objectWithOwner:inAccount];
+	
+	//Change it here
+	[remoteGroups setObject:groupName withOwner:inAccount];
+	
+	//Tell core it changed
+	[[adium contactController] listObjectRemoteGroupingChanged:self oldGroupName:oldGroup];
 }
 
-- (void)addHandle:(AIHandle *)inHandle
+- (AIMutableOwnerArray *)remoteGroupArray
 {
-    [inHandle setContainingContact:self];    
-    [handleArray addObject:inHandle];
+	return(remoteGroups);
 }
-
-- (void)removeHandle:(AIHandle *)inHandle
-{
-    NSEnumerator	*enumerator;
-    AIMutableOwnerArray	*array;
-    
-    //Remove all the status values this handle applied to us
-    enumerator = [[statusDictionary allValues] objectEnumerator];
-    while((array = [enumerator nextObject])){
-        [array setObject:nil withOwner:inHandle];
-    }
-
-    //remove it
-    [inHandle setContainingContact:nil];
-    [handleArray removeObject:inHandle];
-}
-
-- (void)removeAllHandles
-{
-    NSEnumerator	*enumerator;
-    AIHandle		*handle;
-
-    //Remove all handles
-    enumerator = [handleArray objectEnumerator];
-    while((handle = [enumerator nextObject])){
-        [self removeHandle:handle];
-    }
-}
-
-- (int)numberOfHandles
-{
-    return([handleArray count]);
-}
-
-
 
 @end

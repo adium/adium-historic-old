@@ -21,17 +21,17 @@
 #import "AIMTOC2ServicePlugin.h"
 #import "AIMTOC2ChatInviteWindowController.h"
 
-#define	AIM_ERRORS_FILE		@"AIMErrors"	//Filename of the AIM Errors plist
-#define TOC2_DEFAULTS_FILE	@"TOC2Defaults" //Filename of the account property defaults
-#define MESSAGE_QUE_DELAY	2.0		//Delay before sending contact list changes to the server
+#define	AIM_ERRORS_FILE			@"AIMErrors"	//Filename of the AIM Errors plist
+#define TOC2_DEFAULTS_FILE		@"TOC2Defaults" //Filename of the account property defaults
+#define MESSAGE_QUE_DELAY		2.0				//Delay before sending contact list changes to the server
 
-#define GROUP_AIM_ACCOUNT       @"AIM"		//Group for AIM prefs
+#define GROUP_AIM_ACCOUNT       @"AIM"			//Group for AIM prefs
 
 #define AIM_PACKET_MAX_LENGTH	2048
 
-#define UPDATE_INTERVAL		(1.0 / 10.0)	//Rate to check for socket updates
+#define UPDATE_INTERVAL			(1.0 / 10.0)	//Rate to check for socket updates
 
-#define SIGN_ON_EVENT_DURATION	30.0		//Amount of time to wait for initial sign on updates
+#define SIGN_ON_EVENT_DURATION	30.0			//Amount of time to wait for initial sign on updates
 
 #define AUTO_RECONNECT_DELAY_PING_FAILURE	2.0	//Delay in seconds
 #define AUTO_RECONNECT_DELAY_SOCKET_DROP	2.0	//Delay in seconds
@@ -41,7 +41,6 @@
 - (void)update:(NSTimer *)timer;
 - (void)signOnUpdate;
 - (void)flushMessageDelayQue:(NSTimer *)inTimer;
-- (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle;
 - (void)AIM_AddHandle:(NSString *)handleUID toGroup:(NSString *)groupName;
 - (void)AIM_RemoveHandle:(NSString *)handleUID fromGroup:(NSString *)groupName;
 - (void)AIM_RemoveGroup:(NSString *)groupName;
@@ -76,26 +75,17 @@
 - (void)AIM_LeaveChat:(NSString *)chatID;
 - (NSString *)extractStringFrom:(NSString *)searchString between:(NSString *)stringA and:(NSString *)stringB;
 - (NSString *)validCopyOfString:(NSString *)inString;
-- (void)connect;
-- (void)disconnect;
 - (void)updateContactStatus:(NSNotification *)notification;
 - (void)pingFailure:(NSTimer *)inTimer;
-- (void)autoReconnectAfterDelay:(int)delay;
-- (void)autoReconnectTimer:(NSTimer *)inTimer;
-- (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval;
-- (void)_endSilenceAllUpdates;
-- (void)silenceUpdateFromHandle:(AIHandle *)inHandle;
-- (void)handle:(AIHandle *)inHandle isIdle:(BOOL)inIdle;
 - (NSString *)loginStringForName:(NSString *)name password:(NSString *)pass;
 - (IBAction)sendCommand:(NSString *)command;
 - (NSString *)hashPassword:(NSString *)pass;
-- (void)setTypingFlagOfHandle:(AIHandle *)handle to:(BOOL)typing;
 - (NSString *)clientDescriptionForID:(NSString *)clientID;
 - (void)loadProfileFromURL:(NSString *)inURL;
 - (void)resetPingTimer;
 - (void)_AIMHandleMessageInFromUID:(NSString *)name rawMessage:(NSString *)rawMessage;
-- (AIChat *)_openChatWithHandle:(AIHandle *)handle;
-- (void)_setInstantMessagesWithHandle:(AIHandle *)inHandle enabled:(BOOL)enable;
+- (AIChat *)_openChatWithContact:(AIListContact *)contact;
+- (void)removeAllStatusFlagsFromContact:(AIListContact *)contact;
 @end
 
 @implementation AIMTOC2Account
@@ -106,7 +96,6 @@
 {
     //Init
     outQue = [[NSMutableArray alloc] init];
-    handleDict = [[NSMutableDictionary alloc] init];
     chatDict = [[NSMutableDictionary alloc] init];
     chatRoomDict = [[NSMutableDictionary alloc] init];
     silenceUpdateArray = [[NSMutableArray alloc] init];
@@ -129,14 +118,6 @@
     
     //
     [[adium notificationCenter] addObserver:self selector:@selector(updateContactStatus:) name:Contact_UpdateStatus object:nil];
-    
-    //Traffic watch debug window
-    if([NSEvent controlKey]){
-        [NSBundle loadNibNamed:@"TrafficWatch" owner:self];
-    }
-    
-    //
-    [self updateStatusForKey:@"Handle"];
 }
 
 // Return a view for the connection window
@@ -147,122 +128,121 @@
 
 // AIAccount_Handles ---------------------------------------------------------------------------
 // Add a handle
-- (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
-{
-    AIHandle	*handle;
-	
-    if(inTemporary) inGroup = @"__Strangers";    
-    if(!inGroup) inGroup = @"Unknown";
-    
-    //Check to see if the handle already exists, and remove the duplicate if it does
-    if(handle = [handleDict objectForKey:inUID]){
-        [self removeHandleWithUID:inUID]; //Remove the handle
-    }
-	
-    //Create the handle
-    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier] UID:inUID serverGroup:inGroup temporary:inTemporary forAccount:self];
-    
-    //Add the handle
-    [self AIM_AddHandle:[handle UID] toGroup:[handle serverGroup]]; //Add it server-side
-    [handleDict setObject:handle forKey:[handle UID]]; //Add it locally
-    [self silenceUpdateFromHandle:handle]; //Silence the server's initial update command
-	
-    //Update the contact list
-    [[adium contactController] handle:handle addedToAccount:self];
-	
-    return(handle);
-}
+//- (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
+//{
+//    AIHandle	*handle;
+//	
+//    if(inTemporary) inGroup = @"__Strangers";    
+//    if(!inGroup) inGroup = @"Unknown";
+//    
+//    //Check to see if the handle already exists, and remove the duplicate if it does
+//    if(handle = [handleDict objectForKey:inUID]){
+//        [self removeHandleWithUID:inUID]; //Remove the handle
+//    }
+//	
+//    //Create the handle
+//    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier] UID:inUID serverGroup:inGroup temporary:inTemporary forAccount:self];
+//    
+//    //Add the handle
+//    [self AIM_AddHandle:[handle UID] toGroup:[handle serverGroup]]; //Add it server-side
+//    [handleDict setObject:handle forKey:[handle UID]]; //Add it locally
+//    [self silenceUpdateFromHandle:handle]; //Silence the server's initial update command
+//	
+//    //Update the contact list
+//    [[adium contactController] handle:handle addedToAccount:self];
+//	
+//    return(handle);
+//}
 
 // Remove a handle
-- (BOOL)removeHandleWithUID:(NSString *)inUID
-{
-    AIHandle	*handle = [handleDict objectForKey:inUID];
-	
-    //Remove the handle
-    [self AIM_RemoveHandle:[handle UID] fromGroup:[handle serverGroup]]; //Remove it server-side
-    [handleDict removeObjectForKey:[handle UID]]; //Remove it locally
-	
-    //Update the contact list
-    [[adium contactController] handle:handle removedFromAccount:self];
-	
-    return(YES);
-}
+//- (BOOL)removeHandleWithUID:(NSString *)inUID
+//{
+//    AIHandle	*handle = [handleDict objectForKey:inUID];
+//	
+//    //Remove the handle
+//    [self AIM_RemoveHandle:[handle UID] fromGroup:[handle serverGroup]]; //Remove it server-side
+//    [handleDict removeObjectForKey:[handle UID]]; //Remove it locally
+//	
+//    //Update the contact list
+//    [[adium contactController] handle:handle removedFromAccount:self];
+//	
+//    return(YES);
+//}
 
 // Add a group to this account
-- (BOOL)addServerGroup:(NSString *)inGroup
-{
-    //
-    return(YES);
-}
+//- (BOOL)addServerGroup:(NSString *)inGroup
+//{
+//    //
+//    return(YES);
+//}
 
 // Remove a group
-- (BOOL)removeServerGroup:(NSString *)inGroup
-{
-    NSEnumerator	*enumerator;
-    AIHandle		*handle;
-	
-    //Empty the group
-    enumerator = [[handleDict allValues] objectEnumerator];
-    while((handle = [enumerator nextObject])){
-        if([[handle serverGroup] compare:inGroup] == 0){
-            [self removeHandleWithUID:[handle UID]];
-        }
-    }
-	
-    //Remove it
-	//    [self AIM_RemoveGroup:inGroup];
-	
-    return(YES);
-}
+//- (BOOL)removeServerGroup:(NSString *)inGroup
+//{
+//    NSEnumerator	*enumerator;
+//    AIHandle		*handle;
+//	
+//    //Empty the group
+//    enumerator = [[handleDict allValues] objectEnumerator];
+//    while((handle = [enumerator nextObject])){
+//        if([[handle serverGroup] compare:inGroup] == 0){
+//            [self removeHandleWithUID:[handle UID]];
+//        }
+//    }
+//	
+//    //Remove it
+//	//    [self AIM_RemoveGroup:inGroup];
+//	
+//    return(YES);
+//}
 
 // Rename a group
-- (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName
-{
-    NSEnumerator	*enumerator;
-    AIHandle		*handle;
-    NSMutableArray	*groupContents;
-	
-    //There is no easy way to rename a group on TOC!!
-    //So what we do is remove all the buddies from the existing group,
-    //and then re-add them to a new group with the correct name.
-    groupContents = [[[NSMutableArray alloc] init] autorelease];
-	
-    enumerator = [[handleDict allValues] objectEnumerator];
-    while((handle = [enumerator nextObject])){
-        if([[handle serverGroup] compare:inGroup] == 0){
-            [self AIM_RemoveHandle:[handle UID] fromGroup:[handle serverGroup]]; //Remove it server-side
-            [groupContents addObject:handle];
-        }
-    }
-	
-    enumerator = [groupContents objectEnumerator];
-    while((handle = [enumerator nextObject])){
-        [handle setServerGroup:newName]; //Set the handle to the new server group
-        [self AIM_AddHandle:[handle UID] toGroup:newName]; //Add it server-side
-    }
-    
-    //Update the contact list
-    [[adium contactController] handlesChangedForAccount:self];
-	
-    return(YES);
-}
+//- (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName
+//{
+//    NSEnumerator	*enumerator;
+//    AIHandle		*handle;
+//    NSMutableArray	*groupContents;
+//	
+//    //There is no easy way to rename a group on TOC!!
+//    //So what we do is remove all the buddies from the existing group,
+//    //and then re-add them to a new group with the correct name.
+//    groupContents = [[[NSMutableArray alloc] init] autorelease];
+//	
+//    enumerator = [[handleDict allValues] objectEnumerator];
+//    while((handle = [enumerator nextObject])){
+//        if([[handle serverGroup] compare:inGroup] == 0){
+//            [self AIM_RemoveHandle:[handle UID] fromGroup:[handle serverGroup]]; //Remove it server-side
+//            [groupContents addObject:handle];
+//        }
+//    }
+//	
+//    enumerator = [groupContents objectEnumerator];
+//    while((handle = [enumerator nextObject])){
+//        [handle setServerGroup:newName]; //Set the handle to the new server group
+//        [self AIM_AddHandle:[handle UID] toGroup:newName]; //Add it server-side
+//    }
+//    
+//    //Update the contact list
+//    [[adium contactController] handlesChangedForAccount:self];
+//	
+//    return(YES);
+//}
 
 // Return YES if the contact list is editable
-- (BOOL)contactListEditable
-{
-    return([[self statusObjectForKey:@"Online"] boolValue]);
-}
+//- (BOOL)contactListEditable
+//{
+//    return([[self statusObjectForKey:@"Online"] boolValue]);
+//}
 
 // Return a dictionary of our handles
-- (NSDictionary *)availableHandles
-{
-    if([[self statusObjectForKey:@"Online"] boolValue] || [[self statusObjectForKey:@"Connecting"] boolValue]){
-        return(handleDict);
-    }else{
-        return(nil);
-    }
-}
-
+//- (NSDictionary *)availableHandles
+//{
+//    if([[self statusObjectForKey:@"Online"] boolValue] || [[self statusObjectForKey:@"Connecting"] boolValue]){
+//        return(handleDict);
+//    }else{
+//        return(nil);
+//    }
+//}
 
 
 // AIAccount_Messaging ---------------------------------------------------------------------------
@@ -271,33 +251,34 @@
 {
     NSString	*chatRoomID;
     NSString	*message;
-    AIHandle	*handle;
-    BOOL	sent = NO;
+    BOOL		sent = NO;
 	
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
 		
         //Get the message in a sendable format (HTML or plain text)
         if(!connectedWithICQ){
-            message = [self validCopyOfString:[self encodedStringFromAttributedString:[(AIContentMessage *)object message]]];
+            message = [self validCopyOfString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message]
+                                                                headers:YES
+                                                               fontTags:YES
+                                                          closeFontTags:NO
+                                                              styleTags:YES
+                                             closeStyleTagsOnFontChange:NO
+                                                         encodeNonASCII:YES
+                                                             imagesPath:nil]];
         }else{
             message = [self validCopyOfString:[[(AIContentMessage *)object message] string]];
         }
 		
-        if([message length] <= AIM_PACKET_MAX_LENGTH){ //Ensure the message isn't too long
+		//Ensure the message isn't too long
+        if([message length] <= AIM_PACKET_MAX_LENGTH){
 			
             if(chatRoomID = [[[object chat] statusDictionary] objectForKey:@"TOC_ChatRoomID"]){ //Chat
                 [self AIM_SendChatEnc:message toChat:chatRoomID];
 				
             }else{ //Message
-                AIListContact	*listObject = (AIListContact *)[[object chat] listObject];
-                
-                handle = [listObject handleForAccount:self];
-                if(!handle){
-                    handle = [self addHandleWithUID:[[listObject UID] compactedString] serverGroup:nil temporary:YES];
-                }
-				
-                [self AIM_SendMessageEnc:message toHandle:[handle UID] autoreply:[(AIContentMessage *)object autoreply]];
-				
+                [self AIM_SendMessageEnc:message
+								toHandle:[[[object chat] listObject] UID]
+							   autoreply:[(AIContentMessage *)object autoreply]];
             }
             
             sent = YES;
@@ -307,24 +288,19 @@
 			
         }
 		
-    }else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
-        BOOL	typing;
-		
+    }else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){		
         if(![[[object chat] statusDictionary] objectForKey:@"TOC_ChatRoomID"]){ //Message
-            AIListContact	*listObject = (AIListContact *)[[object chat] listObject];
-			
-            //Get the handle for receiving this content
-            handle = [listObject handleForAccount:self];
-            typing = [(AIContentTyping *)object typing];
+            AIListContact	*contact = (AIListContact *)[[object chat] listObject];
 			
             //Send the typing client event
-            if(handle){
-                [self AIM_SendClientEvent:(typing ? 2 : 0) toHandle:[handle UID]];
+            if(contact){
+                [self AIM_SendClientEvent:([(AIContentTyping *)object typing] ? 2 : 0)
+								 toHandle:[contact UID]];
                 sent = YES;
             }
         }
-		
     }    
+	
     return(sent);
 }
 
@@ -340,73 +316,50 @@
                            imagesPath:nil]);
 }
 
-
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
-    BOOL 	available = NO;
     BOOL	weAreOnline = [[self statusObjectForKey:@"Online"] boolValue];
 	
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
-        if(weAreOnline){
-            if(inListObject == nil){ 
-                available = YES; //If we're online, we're most likely available to message this object
-				
-            }else{
-                if([inListObject isKindOfClass:[AIListContact class]]){
-                    AIHandle	*handle = [(AIListContact *)inListObject handleForAccount:self];
-					
-                    if(handle && [[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
-                        available = YES; //This handle is online and on our list
-						
-                    }
-                }
-            }
+        if(weAreOnline && (inListObject == nil || [[inListObject statusObjectForKey:@"Online" withOwner:self] boolValue])){ 
+			return(YES);
         }
     }
 	
-    return(available);
+    return(NO);
 }
 
 //Initiate a new chat
 - (AIChat *)openChatWithListObject:(AIListObject *)inListObject
 {
-    AIHandle		*handle;
     AIChat		*chat = nil;
 	
     if([inListObject isKindOfClass:[AIListContact class]]){        
-        //Get our handle for this contact
-        handle = [(AIListContact *)inListObject handleForAccount:self];
-        if(!handle){
-            handle = [self addHandleWithUID:[[inListObject UID] compactedString] serverGroup:nil temporary:YES];
-        }
-        chat = [self _openChatWithHandle:handle];
+        chat = [self _openChatWithContact:(AIListContact *)inListObject];
     }
 	
     return(chat);
 }
 
-- (AIChat *)_openChatWithHandle:(AIHandle *)handle
+- (AIChat *)_openChatWithContact:(AIListContact *)contact
 {
     AIChat	*chat;
 	
     //Create chat
-    if(!(chat = [chatDict objectForKey:[handle UID]])){
-        AIListContact	*containingContact = [handle containingContact];
-        BOOL		handleIsOnline;
-		
+    if(!(chat = [chatDict objectForKey:[contact UID]])){
         //Create the chat
         chat = [AIChat chatForAccount:self];
 		
         //Set the chat participants
-        [chat addParticipatingListObject:containingContact];
+        [chat addParticipatingListObject:contact];
 		
         //Correctly enable/disable the chat
-        handleIsOnline = [[[handle statusDictionary] objectForKey:@"Online"] boolValue];
-        [[chat statusDictionary] setObject:[NSNumber numberWithBool:handleIsOnline] forKey:@"Enabled"];
+#warning (Intentional) All opened chats assumed valid until a better system for doing this reliably is figured out.
+        [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
 		
         //
-        [chatDict setObject:chat forKey:[handle UID]];
+        [chatDict setObject:chat forKey:[contact UID]];
         [[adium contentController] noteChat:chat forAccount:self];
     }
 	
@@ -425,15 +378,6 @@
     chatRoomID = [[inChat statusDictionary] objectForKey:@"TOC_ChatRoomID"];
     if(chatRoomID){
         [self AIM_LeaveChat:chatRoomID];
-    }
-	
-    //If this chat belongs to a temporary handle, we want to remove the temporary handle from our list.
-    if(!chatRoomID){
-        AIHandle	*handle = [(AIListContact *)[inChat listObject] handleForAccount:self];
-		
-        if([handle temporary]){
-            [self removeHandleWithUID:[handle UID]];
-        }
     }
 	
     //Remove the chat from our tracking dict
@@ -480,31 +424,31 @@
 			[self setStatusObject:newIdle forKey:@"IdleSince" notify:YES];
 			
 		}else if(key == nil || [key compare:@"TextProfile"] == 0){
-                    NSData      *profileData = [self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
-                    NSString	*profile = [self encodedStringFromAttributedString:[NSAttributedString stringWithData:profileData]];
-                    
-                    if([profile length] > 1024){
-                        [[adium interfaceController] handleErrorMessage:@"Info Size Error"
-                                                        withDescription:[NSString stringWithFormat:@"Your info is too large, and could not be set.\r\rThis service limits info to 1024 characters (Your current info is %i characters)",[profile length]]];
-                    }else{
-                        [self AIM_SetProfile:profile];
-                        [self setStatusObject:profileData forKey:@"TextProfile" notify:YES];
-                    }
-                    
+			NSData      *profileData = [self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
+			NSString	*profile = [self encodedStringFromAttributedString:[NSAttributedString stringWithData:profileData]];
+			
+			if([profile length] > 1024){
+				[[adium interfaceController] handleErrorMessage:@"Info Size Error"
+												withDescription:[NSString stringWithFormat:@"Your info is too large, and could not be set.\r\rThis service limits info to 1024 characters (Your current info is %i characters)",[profile length]]];
+			}else{
+				[self AIM_SetProfile:profile];
+				[self setStatusObject:profileData forKey:@"TextProfile" notify:YES];
+			}
+			
 		}else if(key == nil || [key compare:@"AwayMessage"] == 0){
-                    NSData  *awayData = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
-                    if(awayData){
-                        NSAttributedString *statusMessageHTML = [NSAttributedString stringWithData:awayData];
-                        [self AIM_SetAway:[self encodedStringFromAttributedString:statusMessageHTML]];
-                        
-                        [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
-                        [self setStatusObject:statusMessageHTML forKey:@"StatusMessage" notify:YES];
-                        
-                    }else{
-                        [self AIM_SetAway:nil];
-                        [self setStatusObject:nil forKey:@"Away" notify:NO];
-                        [self setStatusObject:nil forKey:@"StatusMessage" notify:YES];
-                    }
+			NSData  *awayData = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+			if(awayData){
+				NSAttributedString *statusMessageHTML = [NSAttributedString stringWithData:awayData];
+				[self AIM_SetAway:[self encodedStringFromAttributedString:statusMessageHTML]];
+				
+				[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
+				[self setStatusObject:statusMessageHTML forKey:@"StatusMessage" notify:YES];
+				
+			}else{
+				[self AIM_SetAway:nil];
+				[self setStatusObject:nil forKey:@"Away" notify:NO];
+				[self setStatusObject:nil forKey:@"StatusMessage" notify:YES];
+			}
 		}
     }
 }
@@ -512,7 +456,7 @@
 // Update the status of a handle
 - (void)updateContactStatus:(NSNotification *)notification
 {
-    NSArray		*desiredKeys = [[notification userInfo] objectForKey:@"Keys"];
+    NSArray			*desiredKeys = [[notification userInfo] objectForKey:@"Keys"];
     AIListContact	*contact = [notification object];
 	
     //AIM requires a delayed load of profiles...
@@ -528,19 +472,13 @@
 // Connect
 - (void)connect{
 	NSString	*host = [self preferenceForKey:AIM_TOC2_KEY_HOST group:GROUP_ACCOUNT_STATUS];
-	int		port = [[self preferenceForKey:AIM_TOC2_KEY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
+	int			port = [[self preferenceForKey:AIM_TOC2_KEY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
 	
 	//Set our status as connecting
 	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
 	
 	//Determine if this is an ICQ account
 	connectedWithICQ = ([[[self UID] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"0123456789"]] length] == 0);
-	
-	//Debug window
-	if(textView_trafficWatchDEBUG){
-		[[textView_trafficWatchDEBUG window] setTitle:[self displayName]];
-		[[textView_trafficWatchDEBUG window] makeKeyAndOrderFront:nil];
-	}
 	
 	//Init our socket and start connecting
 	socket = [[AISocket socketWithHost:host port:port] retain];
@@ -556,20 +494,18 @@
 - (void)disconnect
 {
     NSEnumerator	*enumerator;
-    AIHandle		*handle;
+    AIListContact   *contact;
 	
     //Set our status as disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 	
     //Flush all our handle status flags
-    enumerator = [[handleDict allValues] objectEnumerator];
-    while((handle = [enumerator nextObject])){
-        [self removeAllStatusFlagsFromHandle:handle];
+#warning (Intentional) This is dreadfully inefficient.  Is there a faster solution to disconnecting?
+    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+    while((contact = [enumerator nextObject])){
+        [self removeAllStatusFlagsFromContact:contact];
+		[contact setRemoteGroupName:nil forAccount:self];
     }
-	
-    //Remove all our handles
-    [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
-    [[adium contactController] handlesChangedForAccount:self];
 	
     //Clean up and close down
     [silenceUpdateArray release]; silenceUpdateArray = nil;
@@ -584,10 +520,6 @@
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:NO];
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
 }
-
-
-
-
 
 
 // Packet/Protocol Processing -------------------------------------------------------------------------
@@ -650,15 +582,6 @@
                 NSString		*message = [packet string];
                 NSString		*command = [message TOCStringArgumentAtIndex:0];
 				
-                if(textView_trafficWatchDEBUG){
-                    [[textView_trafficWatchDEBUG textStorage] appendString:@"<- "
-                                                            withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11],NSFontAttributeName,[NSColor blackColor],NSForegroundColorAttributeName,nil]];
-                    [[textView_trafficWatchDEBUG textStorage] appendString:[NSString stringWithFormat:@"%@",[packet string]]
-                                                            withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11],NSFontAttributeName,[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.4 alpha:1.0],NSForegroundColorAttributeName,nil]];
-                    [[textView_trafficWatchDEBUG textStorage] appendString:@"\r" withAttributes:[NSDictionary dictionary]];
-                    [textView_trafficWatchDEBUG scrollRangeToVisible:NSMakeRange([[textView_trafficWatchDEBUG textStorage] length],0)];
-                }
-				
                 if([command compare:@"SIGN_ON"] == 0){
                     [self AIM_HandleSignOn:message];
 					
@@ -690,7 +613,6 @@
                     //Send AIM the init done message (at this point we become visible to other buddies)
                     [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_init_done" sequence:&localSequence]];
 					
-                    
                 }else if([command compare:@"PAUSE"] == 0){
                 }else if([command compare:@"NEW_BUDDY_REPLY2"] == 0){
                 }else if([command compare:@"BUDDY_CAPS2"] == 0){
@@ -751,23 +673,12 @@
 		
         if([packet length] <= 2048){
             packetProcessed = [[outQue objectAtIndex:0] sendToSocket:socket];
-            
         }else{
             NSLog(@"Attempted to send invalid packet (Too large, %i)",[packet length]);
             packetProcessed = YES; //Processed as in deleted :D
-            
         }
 		
         if(packetProcessed){ //If a packet fails to send, we don't log or remove it
-            if(textView_trafficWatchDEBUG){
-                [[textView_trafficWatchDEBUG textStorage] appendString:@"-> "
-                                                        withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11],NSFontAttributeName,[NSColor blackColor],NSForegroundColorAttributeName,nil]];
-                [[textView_trafficWatchDEBUG textStorage] appendString:[NSString stringWithFormat:@"%@",[[outQue objectAtIndex:0] string]]
-                                                        withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11],NSFontAttributeName,[NSColor colorWithCalibratedRed:0.0 green:0.4 blue:0.0 alpha:1.0],NSForegroundColorAttributeName,nil]];
-                [[textView_trafficWatchDEBUG textStorage] appendString:@"\r" withAttributes:[NSDictionary dictionary]];
-                [textView_trafficWatchDEBUG scrollRangeToVisible:NSMakeRange([[textView_trafficWatchDEBUG textStorage] length],0)];
-            }
-			
             [outQue removeObjectAtIndex:0];
         }
     }
@@ -779,13 +690,6 @@
     //Create a data packet for the command and add it to our outgoing que
     [outQue addObject:[AIMTOC2Packet dataPacketWithString:command sequence:&localSequence]];
 }
-
-//Send a command directly to the server from our debug window
-- (IBAction)sendDirectDebugCommand:(id)sender
-{
-    [self sendCommand:[textField_trafficSendDEBUG stringValue]];
-}
-
 
 
 //Login ---------------------------------------------------------------------------------------------------
@@ -801,7 +705,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.103 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.104 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -810,8 +714,8 @@
 {
     const char 		hash[(sizeof(HASH))] = HASH;
     const char 		*cPass = [pass cString];
-    int 		length = [pass length];
-    int 		counter;
+    int 			length = [pass length];
+    int 			counter;
     NSMutableString	*output;
 	
     //Create the hash string
@@ -883,30 +787,29 @@
 }
 
 
-
 //Server -> Client Command Handlers ------------------------------------------------------
 - (void)AIM_HandleChatInvite:(NSString *)inCommand
 {
-    NSString		*chatName = [inCommand TOCStringArgumentAtIndex:1];
-    NSString		*chatID = [inCommand TOCStringArgumentAtIndex:2];
-    NSString		*handleName = [inCommand TOCStringArgumentAtIndex:3];
-    //NSString		*inviteMessage = [inCommand nonBreakingTOCStringArgumentAtIndex:4];
-    AIHandle		*handle;
-	
-    //Get the inviting handle (creating a stranger if necessary)
-    handle = [handleDict objectForKey:[handleName compactedString]];
-    if(!handle){
-        handle = [self addHandleWithUID:[handleName compactedString] serverGroup:nil temporary:YES];
-    }
-	
-    //Display the chat invite
-    [[AIMTOC2ChatInviteWindowController chatInviteFrom:handle forChatID:chatID name:chatName account:self] showWindow:nil];
+//    NSString		*chatName = [inCommand TOCStringArgumentAtIndex:1];
+//    NSString		*chatID = [inCommand TOCStringArgumentAtIndex:2];
+//    NSString		*handleName = [inCommand TOCStringArgumentAtIndex:3];
+//    //NSString		*inviteMessage = [inCommand nonBreakingTOCStringArgumentAtIndex:4];
+//    AIHandle		*handle;
+//	
+//    //Get the inviting handle (creating a stranger if necessary)
+//    handle = [handleDict objectForKey:[handleName compactedString]];
+//    if(!handle){
+//        handle = [self addHandleWithUID:[handleName compactedString] serverGroup:nil temporary:YES];
+//    }
+//	
+//    //Display the chat invite
+//    [[AIMTOC2ChatInviteWindowController chatInviteFrom:handle forChatID:chatID name:chatName account:self] showWindow:nil];
 }
 
 - (void)acceptInvitationForChatID:(NSString *)chatID
 {
-    NSString	*message = [NSString stringWithFormat:@"toc_chat_accept %@",chatID];
-    [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
+//    NSString	*message = [NSString stringWithFormat:@"toc_chat_accept %@",chatID];
+//    [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 }
 
 - (void)declineInvitationForChatID:(NSString *)chatID
@@ -916,118 +819,117 @@
 
 - (void)AIM_HandleChatJoin:(NSString *)inCommand
 {
-    NSString		*chatID = [inCommand TOCStringArgumentAtIndex:1];
-    NSString		*chatName = [inCommand TOCStringArgumentAtIndex:2];
-    AIChat		*chat;
-	
-    //Create an AIChat for this chat room
-    chat = [AIChat chatForAccount:self];
-    [[chat statusDictionary] setObject:chatID forKey:@"TOC_ChatRoomID"];
-	
-    //Chat set participants and status
-    [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"AlwaysShowUserList"];
-    [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"DisallowAccountSwitching"];
-    [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
-    [[chat statusDictionary] setObject:chatName forKey:@"DisplayName"];
-    
-    
-    //
-    [chatRoomDict setObject:chat forKey:chatID];
-    [[adium contentController] noteChat:chat forAccount:self];
-    [[adium interfaceController] setActiveChat:chat];
+//    NSString		*chatID = [inCommand TOCStringArgumentAtIndex:1];
+//    NSString		*chatName = [inCommand TOCStringArgumentAtIndex:2];
+//    AIChat		*chat;
+//	
+//    //Create an AIChat for this chat room
+//    chat = [AIChat chatForAccount:self];
+//    [[chat statusDictionary] setObject:chatID forKey:@"TOC_ChatRoomID"];
+//	
+//    //Chat set participants and status
+//    [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"AlwaysShowUserList"];
+//    [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"DisallowAccountSwitching"];
+//    [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
+//    [[chat statusDictionary] setObject:chatName forKey:@"DisplayName"];
+//    
+//    
+//    //
+//    [chatRoomDict setObject:chat forKey:chatID];
+//    [[adium contentController] noteChat:chat forAccount:self];
+//    [[adium interfaceController] setActiveChat:chat];
 }
 
 //
 - (void)AIM_HandleChatLeft:(NSString *)inCommand
 {
-	
+//	
 }
 
 //
 - (void)AIM_HandleChatUpdateBuddy:(NSString *)inCommand
 {
-    NSString		*chatID = [inCommand TOCStringArgumentAtIndex:1];
-    BOOL		entering = ([[inCommand TOCStringArgumentAtIndex:2] characterAtIndex:0] == 'T');
-    NSArray		*userArray = [[inCommand nonBreakingTOCStringArgumentAtIndex:3] componentsSeparatedByString:@":"];
-    NSEnumerator	*enumerator;
-    NSString		*userName;
-    AIChat		*chat;
-	
-    //Get the chat
-    chat = [chatRoomDict objectForKey:chatID];
-    
-    //Add/remove users    
-    enumerator = [userArray objectEnumerator];
-    while((userName = [enumerator nextObject])){
-        AIHandle	*handle;
-        
-        //Get the handle for this user
-        handle = [handleDict objectForKey:[userName compactedString]];
-        if(!handle){
-            handle = [self addHandleWithUID:[userName compactedString] serverGroup:nil temporary:YES];
-        }
-		
-        //Add/remove list object
-        if(entering){
-            [chat addParticipatingListObject:[handle containingContact]];
-        }else{
-            [chat removeParticipatingListObject:[handle containingContact]];
-        }
-    }
-	
-    //Notify
-    [[adium notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:chat userInfo:nil];
+//    NSString		*chatID = [inCommand TOCStringArgumentAtIndex:1];
+//    BOOL		entering = ([[inCommand TOCStringArgumentAtIndex:2] characterAtIndex:0] == 'T');
+//    NSArray		*userArray = [[inCommand nonBreakingTOCStringArgumentAtIndex:3] componentsSeparatedByString:@":"];
+//    NSEnumerator	*enumerator;
+//    NSString		*userName;
+//    AIChat		*chat;
+//	
+//    //Get the chat
+//    chat = [chatRoomDict objectForKey:chatID];
+//    
+//    //Add/remove users    
+//    enumerator = [userArray objectEnumerator];
+//    while((userName = [enumerator nextObject])){
+//        AIHandle	*handle;
+//        
+//        //Get the handle for this user
+//        handle = [handleDict objectForKey:[userName compactedString]];
+//        if(!handle){
+//            handle = [self addHandleWithUID:[userName compactedString] serverGroup:nil temporary:YES];
+//        }
+//		
+//        //Add/remove list object
+//        if(entering){
+//            [chat addParticipatingListObject:[handle containingContact]];
+//        }else{
+//            [chat removeParticipatingListObject:[handle containingContact]];
+//        }
+//    }
+//	
+//    //Notify
+//    [[adium notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:chat userInfo:nil];
 }
 
 - (void)AIM_HandleEncChatIn:(NSString *)inCommand
 {
-    NSString		*chatID = [inCommand TOCStringArgumentAtIndex:1];
-    NSString		*senderName = [inCommand TOCStringArgumentAtIndex:2];
-    NSString		*rawMessage = [inCommand nonBreakingTOCStringArgumentAtIndex:6];
-    NSAttributedString	*messageText;
-    AIContentMessage	*messageObject;
-    AIHandle		*senderHandle;
-    AIChat 		*chat;
-    
-    if([[self UID] compare:[senderName compactedString]] != 0){ //Ignore echoed messages
-																//Get the sending handle (creating a stranger if necessary)
-        senderHandle = [handleDict objectForKey:[senderName compactedString]];
-        if(!senderHandle){
-            senderHandle = [self addHandleWithUID:[senderName compactedString] serverGroup:nil temporary:YES];
-        }
-		
-        //Get the chat
-        if(chat = [chatRoomDict objectForKey:chatID]){
-            //Create a content object for the message
-            messageText = [AIHTMLDecoder decodeHTML:rawMessage];
-            messageObject = [AIContentMessage messageInChat:chat
-												 withSource:[senderHandle containingContact]
-                                                destination:self
-													   date:nil
-                                                    message:messageText
-                                                  autoreply:NO];
-			
-            //Add the content object
-            [[adium contentController] addIncomingContentObject:messageObject];
-        }
-    }
+//    NSString		*chatID = [inCommand TOCStringArgumentAtIndex:1];
+//    NSString		*senderName = [inCommand TOCStringArgumentAtIndex:2];
+//    NSString		*rawMessage = [inCommand nonBreakingTOCStringArgumentAtIndex:6];
+//    NSAttributedString	*messageText;
+//    AIContentMessage	*messageObject;
+//    AIHandle		*senderHandle;
+//    AIChat 		*chat;
+//    
+//    if([[self UID] compare:[senderName compactedString]] != 0){ //Ignore echoed messages
+//																//Get the sending handle (creating a stranger if necessary)
+//        senderHandle = [handleDict objectForKey:[senderName compactedString]];
+//        if(!senderHandle){
+//            senderHandle = [self addHandleWithUID:[senderName compactedString] serverGroup:nil temporary:YES];
+//        }
+//		
+//        //Get the chat
+//        if(chat = [chatRoomDict objectForKey:chatID]){
+//            //Create a content object for the message
+//            messageText = [AIHTMLDecoder decodeHTML:rawMessage];
+//            messageObject = [AIContentMessage messageInChat:chat
+//												 withSource:[senderHandle containingContact]
+//                                                destination:self
+//													   date:nil
+//                                                    message:messageText
+//                                                  autoreply:NO];
+//			
+//            //Add the content object
+//            [[adium contentController] addIncomingContentObject:messageObject];
+//        }
+//    }
 }
 
 - (void)AIM_HandleClientEvent:(NSString *)inCommand
 {
+    int				event = [[inCommand TOCStringArgumentAtIndex:2] intValue];
     NSString		*name = [inCommand TOCStringArgumentAtIndex:1];
-    int			event = [[inCommand TOCStringArgumentAtIndex:2] intValue];
-    AIHandle		*handle;
+	AIListContact	*contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+																		 UID:[name compactedString]];
 	
     //Post the correct typing state
-    if(handle = [handleDict objectForKey:[name compactedString]]){
+    if(contact){
         if(event == 0){ //Not typing
-            [self setTypingFlagOfHandle:handle to:NO];
+            [self setTypingFlagOfContact:contact to:NO];
         }else if(event == 2){ //Typing
-            [self setTypingFlagOfHandle:handle to:YES];
+            [self setTypingFlagOfContact:contact to:YES];
         }
-		
-        [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:NO silent:NO];
     }
 }
 
@@ -1045,31 +947,22 @@
 
 - (void)_AIMHandleMessageInFromUID:(NSString *)name rawMessage:(NSString *)rawMessage
 {
-    AIHandle		*handle;
     AIContentMessage	*messageObject;
-    AIChat		*chat;
-    
-    //Ensure a handle exists (creating a stranger if necessary)
-    handle = [handleDict objectForKey:[name compactedString]];
-    if(!handle){
-        handle = [self addHandleWithUID:[name compactedString] serverGroup:nil temporary:YES];
-    }
+    AIChat				*chat;
+    AIListContact		*contact;
 	
-	//Ensure this handle is 'online'.  If we receive a message from someone offline, it's best to assume that their offline status is incorrect, and flag them as online so the user can respond to their messages.
-    if(![[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
-        [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
-        [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:NO silent:YES];
-    }
+	//
+	contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier] UID:[name compactedString]];
 	
     //Clear the 'typing' flag
-    [self setTypingFlagOfHandle:handle to:NO];
+    [self setTypingFlagOfContact:contact to:NO];
     
     //Open a chat for this handle
-    chat = [self _openChatWithHandle:handle];
+    chat = [self _openChatWithContact:contact];
     
     //Add a content object for the message
     messageObject = [AIContentMessage messageInChat:chat
-                                         withSource:[handle containingContact]
+                                         withSource:contact
                                         destination:self
                                                date:nil
                                             message:[AIHTMLDecoder decodeHTML:rawMessage]
@@ -1078,11 +971,10 @@
 }
 
 //
-- (void)_setInstantMessagesWithHandle:(AIHandle *)inHandle enabled:(BOOL)enable
+- (void)_setInstantMessagesWithContact:(AIListContact *)contact enabled:(BOOL)enable
 {
     NSEnumerator	*enumerator;
     AIChat		*chat;
-    AIListContact	*contact = [inHandle containingContact];
 	
     //Search for any chats with this contact
     enumerator = [[chatDict allValues] objectEnumerator];
@@ -1100,24 +992,21 @@
     }
 }
 
-
 - (void)AIM_HandleUpdateBuddy:(NSString *)message
 {
     NSString		*name = [message TOCStringArgumentAtIndex:1];
     NSString		*compactedName = [name compactedString];
-    AIHandle		*handle = nil;
-    NSMutableArray	*alteredStatusKeys = [[[NSMutableArray alloc] init] autorelease];
+    AIListContact	*contact = nil;
 	
-    //Get the handle
-    if(handle = [handleDict objectForKey:compactedName]){
-        NSMutableDictionary	*handleStatusDict = [handle statusDictionary];
+    //Get the contact
+    if(contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier] UID:compactedName]){
         NSNumber		*storedValue;
         NSDate			*storedDate;
         NSString		*storedString;
 		
         //Get the handle's status from the update event
         BOOL		online = ([[message TOCStringArgumentAtIndex:2] characterAtIndex:0] == 'T');
-        int		warning = [[message TOCStringArgumentAtIndex:3] intValue];
+        int			warning = [[message TOCStringArgumentAtIndex:3] intValue];
         double		idleTime = ([[message TOCStringArgumentAtIndex:5] doubleValue] * 60.0);
         NSDate		*signOnDate = [NSDate dateWithTimeIntervalSince1970:[[message TOCStringArgumentAtIndex:4] doubleValue]];
         NSString	*userFlags = [message TOCStringArgumentAtIndex:6];
@@ -1125,83 +1014,74 @@
         BOOL		away = (([userFlags length] < 3) ? NO : ([userFlags characterAtIndex:2] == 'U'));
 		
         //Online/Offline
-        storedValue = [handleStatusDict objectForKey:@"Online"];
+		storedValue = [contact statusObjectForKey:@"Online" withOwner:self];
         if(storedValue == nil || online != [storedValue intValue]){
-            [handleStatusDict setObject:[NSNumber numberWithInt:online] forKey:@"Online"];
-            [alteredStatusKeys addObject:@"Online"];
+            [contact setStatusObject:[NSNumber numberWithInt:online] withOwner:self forKey:@"Online" notify:NO];
+			
+			if(!silentAndDelayed){
+				if(online){
+					[contact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Signed On" notify:NO];
+					[contact setStatusObject:nil withOwner:self forKey:@"Signed On" afterDelay:15];
+				}else{
+					[contact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Signed Off" notify:NO];
+					[contact setStatusObject:nil withOwner:self forKey:@"Signed Off" afterDelay:15];
+				}
+			}
 			
             //Enable/disable any instant messages with this handle
-            [self _setInstantMessagesWithHandle:handle enabled:online];
+            [self _setInstantMessagesWithContact:contact enabled:online];
         }
 		
         //Warning
-        storedValue = [handleStatusDict objectForKey:@"Warning"];
+        storedValue = [contact statusObjectForKey:@"Warning" withOwner:self];
         if(storedValue == nil || warning != [storedValue intValue]){
-            [handleStatusDict setObject:[NSNumber numberWithInt:warning] forKey:@"Warning"];
-            [alteredStatusKeys addObject:@"Warning"];
-			
-			if([storedValue intValue] == 0){
-				[handleStatusDict setObject:[NSNumber numberWithInt:warning] forKey:@"Cooldown"];
-				[alteredStatusKeys addObject:@"Cooldown"];
-			}else{
-				[handleStatusDict setObject:[NSNumber numberWithInt:[storedValue intValue]] forKey:@"Cooldown"];
-				[alteredStatusKeys addObject:@"Cooldown"];
-			}
+            [contact setStatusObject:[NSNumber numberWithInt:warning] withOwner:self forKey:@"Warning" notify:NO];
+			//			
+			//			if([storedValue intValue] == 0){
+			//				[handleStatusDict setObject:[NSNumber numberWithInt:warning] forKey:@"Cooldown"];
+			//				[alteredStatusKeys addObject:@"Cooldown"];
+			//			}else{
+			//				[handleStatusDict setObject:[NSNumber numberWithInt:[storedValue intValue]] forKey:@"Cooldown"];
+			//				[alteredStatusKeys addObject:@"Cooldown"];
+			//			}
         }
 		
         //Idle time (seconds)
-        storedDate = [handleStatusDict objectForKey:@"IdleSince"];
+        storedDate = [contact statusObjectForKey:@"IdleSince" withOwner:self];
         if(storedDate == nil || (idleTime != -[storedDate timeIntervalSinceNow])){
             if(idleTime == 0 && storedDate){
-                [handleStatusDict removeObjectForKey:@"IdleSince"];
-                [alteredStatusKeys addObject:@"IdleSince"];
+				[contact setStatusObject:nil withOwner:self forKey:@"IdleSince" notify:NO];
             }else if(idleTime > 0){
-                [handleStatusDict setObject:[NSDate dateWithTimeIntervalSinceNow:-idleTime] forKey:@"IdleSince"];
-                [alteredStatusKeys addObject:@"IdleSince"];
+				[contact setStatusObject:[NSDate dateWithTimeIntervalSinceNow:-idleTime] withOwner:self forKey:@"IdleSince" notify:NO];
             }
         }
 		
         //Sign on date
-        storedDate = [handleStatusDict objectForKey:@"Signon Date"];
+        storedDate = [contact statusObjectForKey:@"Signon Date" withOwner:self];
         if(storedDate == nil || ![signOnDate isEqualToDate:storedDate]){
-            [handleStatusDict setObject:signOnDate forKey:@"Signon Date"];
-            [alteredStatusKeys addObject:@"Signon Date"];
+			[contact setStatusObject:signOnDate withOwner:self forKey:@"Signon Date" notify:NO];
         }
 		
         //Away
-        storedValue = [handleStatusDict objectForKey:@"Away"];
+        storedValue = [contact statusObjectForKey:@"Away" withOwner:self];
         if(storedValue == nil || away != [storedValue intValue]){
-            [handleStatusDict setObject:[NSNumber numberWithBool:away] forKey:@"Away"];
-            [alteredStatusKeys addObject:@"Away"];
+			[contact setStatusObject:[NSNumber numberWithBool:away] withOwner:self forKey:@"Away" notify:NO];
         }
 		
         //Client
-        storedString = [handleStatusDict objectForKey:@"Client"];
+        storedString = [contact statusObjectForKey:@"Client" withOwner:self];
         if(storedString == nil || [client compare:storedString] != 0){
-            [handleStatusDict setObject:client forKey:@"Client"];
-            [alteredStatusKeys addObject:@"Client"];
+			[contact setStatusObject:client withOwner:self forKey:@"Client" notify:NO];
         }
         
         //Display Name
-        storedString = [handleStatusDict objectForKey:@"Display Name"];
+        storedString = [contact statusObjectForKey:@"Display Name" withOwner:self];
         if(storedString == nil || [name compare:storedString] != 0){
-            [handleStatusDict setObject:name forKey:@"Display Name"];
-            [alteredStatusKeys addObject:@"Display Name"];
+			[contact setStatusObject:name withOwner:self forKey:@"Display Name" notify:NO];
         }
 		
-        //Let the contact list know a handle's status changed
-        if([alteredStatusKeys count]){
-            BOOL silent = (silentAndDelayed);
-			
-            //Temporary silence
-            if([silenceUpdateArray count] && [silenceUpdateArray containsObject:[handle UID]]){
-                silent = YES;
-                [silenceUpdateArray removeObject:[handle UID]];
-            }
-            
-            [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:alteredStatusKeys delayed:(silentAndDelayed) silent:silent];
-        }
-        
+        //Let the contact list know a contact's status changed
+		[contact notifyOfChangedStatusSilently:silentAndDelayed];
     }
 }
 
@@ -1222,53 +1102,53 @@
     NSString		*path;
     NSDictionary	*errorDict;
     NSString		*errorMessage;
-    BOOL		disconnect = NO;
-    int			errorNumber = [[message TOCStringArgumentAtIndex:1] intValue];
-    BOOL		displayError = YES;
+    BOOL			disconnect = NO;
+    int				errorNumber = [[message TOCStringArgumentAtIndex:1] intValue];
+    BOOL			displayError = YES;
     
     //Special case error situations
-    if(errorNumber == 931){
-        NSString	*contactName = [message TOCStringArgumentAtIndex:2];
-        int		subError = [[message TOCStringArgumentAtIndex:3] intValue];
-		
-        if(subError == 17){ //Contact list is full, could not add handle.
-            NSString	*handleKey = [contactName compactedString];
-            AIHandle	*handle = [[handleDict objectForKey:handleKey] retain];
-			
-            //If the handle is not temporary we remove it from our local handle dict
-            if(![handle temporary]){
-                [handleDict removeObjectForKey:handleKey];
-                [[adium contactController] handle:handle removedFromAccount:self];
-            }
-			
-            //If the handle was temporary
-            if([handle temporary]){
-                AIChat	*chat;
-                NSLog(@"Contact list is full, unable to track stranger: %@",contactName);
-				
-                //Display the contact list is full status note
-                if(chat = [chatDict objectForKey:handleKey]){
-                    AIContentStatus	*content;
-                    
-                    //Create our content object
-                    content = [AIContentStatus statusInChat:chat
-                                                 withSource:[handle containingContact]
-                                                destination:self
-                                                       date:[NSDate date]
-                                                    message:[NSString stringWithFormat:@"Your contact list is full.\rAdium is unable to track the status of '%@'.", contactName]];
-                    [[adium contentController] addIncomingContentObject:content];
-                }                    
-                
-                //Ask the server for an update to this handle's status, since we're unable to track it on our contact list.
-                [self AIM_GetStatus:[handle UID]];
-                
-                //Handle this error silently.
-                displayError = NO;
-            }
-			
-            [handle release];
-        }
-    }
+//    if(errorNumber == 931){
+//        NSString	*contactName = [message TOCStringArgumentAtIndex:2];
+//        int		subError = [[message TOCStringArgumentAtIndex:3] intValue];
+//		
+//        if(subError == 17){ //Contact list is full, could not add handle.
+//            NSString	*handleKey = [contactName compactedString];
+//            AIHandle	*handle = [[handleDict objectForKey:handleKey] retain];
+//			
+//            //If the handle is not temporary we remove it from our local handle dict
+//            if(![handle temporary]){
+//                [handleDict removeObjectForKey:handleKey];
+//                [[adium contactController] handle:handle removedFromAccount:self];
+//            }
+//			
+//            //If the handle was temporary
+//            if([handle temporary]){
+//                AIChat	*chat;
+//                NSLog(@"Contact list is full, unable to track stranger: %@",contactName);
+//				
+//                //Display the contact list is full status note
+//                if(chat = [chatDict objectForKey:handleKey]){
+//                    AIContentStatus	*content;
+//                    
+//                    //Create our content object
+//                    content = [AIContentStatus statusInChat:chat
+//                                                 withSource:[handle containingContact]
+//                                                destination:self
+//                                                       date:[NSDate date]
+//                                                    message:[NSString stringWithFormat:@"Your contact list is full.\rAdium is unable to track the status of '%@'.", contactName]];
+//                    [[adium contentController] addIncomingContentObject:content];
+//                }                    
+//                
+//                //Ask the server for an update to this handle's status, since we're unable to track it on our contact list.
+//                [self AIM_GetStatus:[handle UID]];
+//                
+//                //Handle this error silently.
+//                displayError = NO;
+//            }
+//			
+//            [handle release];
+//        }
+//    }
 	
     if(displayError){
         //Get the error message data
@@ -1299,9 +1179,10 @@
     NSString		*type;
     NSString		*value = nil;
     NSString		*currentGroup = @"New Group";
-    NSMutableArray	*addedArray = [NSMutableArray array];
-    int			index = 0;
     
+	//
+	[[adium contactController] delayListObjectNotifications];
+	
     //Create a scanner
     scanner = [NSScanner scannerWithString:configString];
     [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
@@ -1329,22 +1210,14 @@
                     //NSLog(@"Privacy Mode:%@",value);
                     
                 }else if([type compare:@"g"] == 0){ //GROUP
-													//Save the new group name string
-                    [currentGroup release];
-                    currentGroup = [value copy];
-                    index = 0;
+					currentGroup = value;
 					
                 }else if([type compare:@"b"] == 0){ //BUDDY
-													//Create the handle
-                    AIHandle *daHandle = [AIHandle handleWithServiceID:[[service handleServiceType] identifier]
-																   UID:[value compactedString]
-														   serverGroup:currentGroup
-															 temporary:NO
-															forAccount:self];
-					
-                    [handleDict setObject:daHandle forKey:[value compactedString]];
-                    [addedArray addObject:daHandle];
-                    index++;
+					AIListContact	*contact;
+					//
+					contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+																		UID:[value compactedString]];
+					[contact setRemoteGroupName:currentGroup forAccount:self];
 					
                 }else if([type compare:@"p"] == 0){
                 }else if([type compare:@"d"] == 0){
@@ -1362,16 +1235,6 @@
             }
         }
     }
-    
-    //I made this change because I didn't feel like breaking everyone else's code :) You can have fun with that, adam :P
-    NSEnumerator *walker = [addedArray objectEnumerator];
-    AIHandle *obj;
-    while(obj = [walker nextObject])
-    {
-        [[adium contactController] handle:obj addedToAccount:self];
-    }
-    
-    [[adium contactController] handlesChangedForAccount:self];
 }
 
 - (void)AIM_HandleGotoURL:(NSString *)message
@@ -1568,15 +1431,6 @@
 }
 
 
-
-//Silence the next update from the specified handle
-- (void)silenceUpdateFromHandle:(AIHandle *)inHandle
-{
-    [silenceUpdateArray addObject:[inHandle UID]];
-}
-
-
-
 // Profile Loading --------------------------------------------------------------------------------------------
 - (void)loadProfileFromURL:(NSString *)inURLString
 {
@@ -1613,11 +1467,10 @@
     profile = [self extractStringFrom:profileHTML between:PROFILE_START and:PROFILE_END];
 	
     if(userName && profile){
-        AIHandle	*handle = [handleDict objectForKey:[userName compactedString]];
-		
+		AIListContact	*contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+																			 UID:[userName compactedString]];
         //Add profile to the handle
-        [[handle statusDictionary] setObject:[AIHTMLDecoder decodeHTML:profile] forKey:@"TextProfile"];
-        [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"TextProfile"] delayed:NO silent:NO];
+        [contact setStatusObject:[AIHTMLDecoder decodeHTML:profile] withOwner:self forKey:@"TextProfile" notify:YES];
     }
 	
     //Cleanup
@@ -1649,22 +1502,22 @@
 
 - (void)AIM_HandleEviled:(NSString *)message
 {
-    NSString	*level = [message TOCStringArgumentAtIndex:1];
-    NSString	*enemy = [message TOCStringArgumentAtIndex:2];
-	
-    int		cooldown = [[[[handleDict objectForKey:[self UID]] statusDictionary] objectForKey:@"Cooldown"] intValue];
-    
-    if(enemy !=nil){
-		[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level (%@)",[self UID],enemy] withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
-		
-    }else if(cooldown < [level intValue]){
-		[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level (Anonymous)", [self UID]] withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
-		
-    }else if([level intValue] == 0){
-		[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level Cleared",[self UID]] withDescription:[NSString stringWithFormat:@"Your warning level is now normal"]];
-    }
+#warning (Intentional) This code is assuming we are on our own contact list?  We cannot make this assumption.
+//    NSString	*level = [message TOCStringArgumentAtIndex:1];
+//    NSString	*enemy = [message TOCStringArgumentAtIndex:2];
+//	
+//    int		cooldown = [[[[handleDict objectForKey:[self UID]] statusDictionary] objectForKey:@"Cooldown"] intValue];
+//    
+//    if(enemy !=nil){
+//		[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level (%@)",[self UID],enemy] withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
+//		
+//    }else if(cooldown < [level intValue]){
+//		[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level (Anonymous)", [self UID]] withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
+//		
+//    }else if([level intValue] == 0){
+//		[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level Cleared",[self UID]] withDescription:[NSString stringWithFormat:@"Your warning level is now normal"]];
+//    }
 }
-
 
 
 //Server Activity Pings ---------------------------------------------------------------------------------------
@@ -1737,13 +1590,16 @@
     return(string);
 }
 
-// Removes all the possible status flags (that are valid on AIM/TOC) from the passed handle
-- (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle
+// Removes all the possible status flags (that are valid on AIM/TOC) from the passed contact
+- (void)removeAllStatusFlagsFromContact:(AIListContact *)contact
 {
-    NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",@"TextProfile",nil];
+    NSArray			*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",@"TextProfile",nil];
+	NSEnumerator	*enumerator = [keyArray objectEnumerator];
+	NSString		*key;
 	
-    [[handle statusDictionary] removeObjectsForKeys:keyArray];
-    [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray delayed:YES silent:YES];
+	while(key = [enumerator nextObject]){
+		[contact setStatusObject:nil withOwner:self forKey:key notify:NO];
+	}
 }
 
 // Dealloc
@@ -1764,13 +1620,12 @@
     [super dealloc];
 }
 
-- (void)setTypingFlagOfHandle:(AIHandle *)handle to:(BOOL)typing
+- (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing
 {
-    BOOL currentValue = [[[handle statusDictionary] objectForKey:@"Typing"] boolValue];
+    BOOL currentValue = [[contact statusObjectForKey:@"Typing" withOwner:self] boolValue];
 	
-    if((typing && !currentValue) || (!typing && currentValue)){
-        [[handle statusDictionary] setObject:[NSNumber numberWithBool:typing] forKey:@"Typing"];
-        [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:YES silent:NO];
+    if(typing != currentValue){
+		[contact setStatusObject:[NSNumber numberWithBool:typing] withOwner:self forKey:[NSArray arrayWithObject:@"Typing"] notify:YES];
     }
 }
 
