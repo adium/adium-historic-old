@@ -26,7 +26,8 @@
 
 @implementation AIContactStatusColoringPlugin
 
-#define CONTACT_STATUS_THEMABLE_PREFS   @"Contact Status Coloring Themable Prefs"
+#define CONTACT_STATUS_THEMABLE_PREFS   		@"Contact Status Coloring Themable Prefs"
+#define CONTACT_STATUS_COLORING_DEFAULT_PREFS	@"ContactStatusColoringDefaults"
 
 - (void)installPlugin
 {
@@ -61,8 +62,6 @@
     onlineLabelColor = nil;
     idleAndAwayLabelColor = nil;
 	offlineLabelColor = nil;
-
-    alpha = 100.0;
 
     //Setup our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LIST_THEME];
@@ -270,6 +269,9 @@
         [idleAndAwayLabelColor release];
         [offlineLabelColor release];
 		
+        //
+        alpha = 1.0;
+		
 		//Cache the preference values
         signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
         signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
@@ -311,9 +313,6 @@
         onlineEnabled = [[prefDict objectForKey:KEY_ONLINE_ENABLED] boolValue];
         idleAndAwayEnabled = [[prefDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue];
         offlineEnabled = [[prefDict objectForKey:KEY_OFFLINE_ENABLED] boolValue];
-		
-        //
-        alpha = [[prefDict objectForKey:KEY_STATUS_LABEL_OPACITY] floatValue];
 		
 		if (notification){
 			//Update all objects

@@ -14,23 +14,10 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #define	PREF_GROUP_CONTACT_LIST			@"Contact List"
-#define KEY_LIST_LAYOUT_NAME	@"List Layout Name"
-#define KEY_LIST_THEME_NAME		@"List Theme Name"
+#define KEY_LIST_LAYOUT_NAME			@"List Layout Name"
+#define KEY_LIST_THEME_NAME				@"List Theme Name"
 
 @interface AICLPreferences : AIPreferencePane {
-    IBOutlet	NSView			*view_prefViewGeneral;
-    IBOutlet	NSButton		*button_setFont;
-    IBOutlet	NSTextField		*textField_fontName;
-    IBOutlet	NSButton		*checkBox_alternatingGrid;
-    IBOutlet	NSButton		*checkBox_showLabels;
-	IBOutlet	NSButton		*checkBox_tooltips;
-    IBOutlet	NSColorWell		*colorWell_contact;
-    IBOutlet	NSColorWell		*colorWell_background;
-    IBOutlet	NSColorWell		*colorWell_grid;
-	
-	NSString	*currentLayoutName;
-	NSString	*currentThemeName;
-	
 	IBOutlet	NSTableView		*tableView_layout;
 	IBOutlet	NSTableView		*tableView_theme;
 	
@@ -39,7 +26,9 @@
 	IBOutlet	NSButton		*button_layoutEdit;
 	IBOutlet	NSButton		*button_themeEdit;
 	
-	BOOL	ignoreSelectionChanges;
+	BOOL		ignoreSelectionChanges;
+	NSString	*currentLayoutName;
+	NSString	*currentThemeName;
 	
 	NSArray		*layoutArray;
 	NSArray		*themeArray;
@@ -50,13 +39,12 @@
 	NSImage		*layoutPillows;
 }
 
++ (BOOL)deleteSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
 - (IBAction)spawnLayout:(id)sender;
 - (IBAction)spawnTheme:(id)sender;
 - (IBAction)deleteLayout:(id)sender;
 - (IBAction)deleteTheme:(id)sender;
 - (IBAction)editTheme:(id)sender;
 - (IBAction)editLayout:(id)sender;
-
-+ (BOOL)deleteSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
 
 @end
