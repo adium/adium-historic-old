@@ -9,6 +9,7 @@
 
     NSMutableString		*timeStampFormat;
     NSDateFormatter		*timeStampFormatter;
+	NSDateFormatter		*timeStampFormatterMinutesSeconds;
 	
 	AIContentObject		*previousContent;
 	NSMutableArray		*newContent;
