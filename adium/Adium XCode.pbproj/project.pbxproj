@@ -353,6 +353,8 @@
 				6C60B13D0560594B00CAD137,
 				3481DDE405704EEC00CD38D6,
 				9CBADC550571267C005187DA,
+				9E87CDF105748FFA001CB886,
+				9E87CF580574909B001CB886,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -453,6 +455,7 @@
 				3419F43D05314C4C00C68BA3,
 				3419F44E05314C5900C68BA3,
 				3419F46005314C6800C68BA3,
+				9E87CF570574909B001CB886,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -3641,10 +3644,11 @@
 			buildRules = (
 			);
 			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				INFOPLIST_FILE = Plists/Volume_Control.plist;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -5143,7 +5147,6 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = Plists/Fast_User_Switching_Support.plist;
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
 				OTHER_REZFLAGS = "";
@@ -5158,7 +5161,7 @@
 			isa = PBXNativeTarget;
 			name = "Fast User Switching Support";
 			productName = "Fast User Switching Support";
-			productReference = 344EE91205744F5F000F342B;
+			productReference = 9E87CDF105748FFA001CB886;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
 <plist version=\"1.0\">
@@ -5187,15 +5190,6 @@
 </plist>
 ";
 			productType = "com.apple.product-type.bundle";
-		};
-		344EE91205744F5F000F342B = {
-			expectedFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			name = "Fast User Switching Support.bundle";
-			path = "/Users/evands/adium/build/Fast User Switching Support.bundle";
-			refType = 0;
-			sourceTree = "<absolute>";
 		};
 		344EE91A05744FFB000F342B = {
 			fileRef = 34BD9DE105314751000AB133;
@@ -5283,6 +5277,12 @@
 		};
 		344EE97C05745706000F342B = {
 			fileRef = 344EE94B057456BE000F342B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344EE9D305749E38000F342B = {
+			fileRef = 9E87CF580574909B001CB886;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7112,6 +7112,7 @@
 				34BD9D07053146CC000AB133,
 				34BD9D08053146CC000AB133,
 				9C1040650571281200F3C158,
+				9E87CF61057491C4001CB886,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -8104,6 +8105,7 @@
 				3419FE150531585600C68BA3,
 				3419FE160531585600C68BA3,
 				3419FE170531585600C68BA3,
+				344EE9D305749E38000F342B,
 				3419FE180531585600C68BA3,
 				3419FE190531585600C68BA3,
 				3419FE1A0531585600C68BA3,
@@ -23873,6 +23875,169 @@
 			path = "Plugins/Action Support/CBActionSupportPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		9E87CDF105748FFA001CB886 = {
+			expectedFileType = folder;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Fast User Switching Support.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9E87CF530574909B001CB886 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E87CF540574909B001CB886 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E87CF550574909B001CB886 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E87CF560574909B001CB886 = {
+			buildActionMask = 2147483647;
+			files = (
+				9E87CF59057490C4001CB886,
+				9E87CF5A057490C4001CB886,
+				9E87CF5B057490C4001CB886,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E87CF570574909B001CB886 = {
+			buildPhases = (
+				9E87CF530574909B001CB886,
+				9E87CF540574909B001CB886,
+				9E87CF550574909B001CB886,
+				9E87CF560574909B001CB886,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
+				INFOPLIST_FILE = Plists/Status_Menu_Item.plist;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
+				PRODUCT_NAME = "Status Menu Item";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				9E87CF5D057490F5001CB886,
+				9E87CF5F057490F5001CB886,
+			);
+			isa = PBXNativeTarget;
+			name = "Status Menu Item";
+			productName = "Status Menu Item";
+			productReference = 9E87CF580574909B001CB886;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Status Menu Item</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Status_Menu_Item</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		9E87CF580574909B001CB886 = {
+			expectedFileType = folder;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Status Menu Item.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9E87CF59057490C4001CB886 = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E87CF5A057490C4001CB886 = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E87CF5B057490C4001CB886 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E87CF5C057490F5001CB886 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		9E87CF5D057490F5001CB886 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 9E87CF5C057490F5001CB886;
+		};
+		9E87CF5E057490F5001CB886 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		9E87CF5F057490F5001CB886 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 9E87CF5E057490F5001CB886;
+		};
+		9E87CF60057491C4001CB886 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 9E87CF570574909B001CB886;
+			remoteInfo = "Status Menu Item";
+		};
+		9E87CF61057491C4001CB886 = {
+			isa = PBXTargetDependency;
+			target = 9E87CF570574909B001CB886;
+			targetProxy = 9E87CF60057491C4001CB886;
 		};
 		9E95316703C8E0BE00415B22 = {
 			expectedFileType = sourcecode.c.h;
