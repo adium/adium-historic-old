@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.85 2004/06/17 23:31:42 dchoby98 Exp $
+// $Id: AIContentController.m,v 1.86 2004/06/25 03:58:21 evands Exp $
 
 #import "AIContentController.h"
 
@@ -358,6 +358,7 @@
 
 		//Tell the interface to open the chat
 		if(![chat hasContent]){
+			NSLog(@"displayContentObject %@ : %@",inObject,chat);
 			[[owner interfaceController] openChat:chat]; 
 		}
 		
@@ -388,6 +389,7 @@
 - (AIChat *)openChatWithContact:(AIListContact *)inContact
 {
 	AIChat	*chat = [self chatWithContact:inContact initialStatus:nil];
+	NSLog(@"openChatWithContact: %@",[inContact UID]);
 	if(chat) [[owner interfaceController] openChat:chat]; 
 
 	return(chat);	
@@ -439,6 +441,7 @@
 			[chatArray addObject:chat];
 
 			//Inform the account of its creation and post a notification if successful
+			NSLog(@"chatWithContact %@",[inContact UID]);
 			if([(AIAccount<AIAccount_Content> *)account openChat:chat]){
 				[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
 			}else{
@@ -491,6 +494,7 @@
 			[chatArray addObject:chat];
 			
 			//Inform the account of its creation and post a notification if successful
+			NSLog(@"chatWithName %@",inName);
 			if([(AIAccount<AIAccount_Content> *)account openChat:chat]){
 				[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
 			}else{
@@ -566,6 +570,7 @@
 	
 	//Open the chat on account B 
 	[chat addParticipatingListObject:newContact];
+	NSLog(@"switching %@ to %@",chat,[newAccount UID]);
 	[(AIAccount<AIAccount_Content> *)newAccount openChat:chat];
 	[chat setAccount:newAccount];
 	
