@@ -52,14 +52,6 @@ static IdleTimeWindowController *sharedIdleTimeInstance = nil;
     [self configureControls:nil];
 }
 
-//Close the window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
-
 - (BOOL)windowShouldClose:(id)sender
 {
     //Close this shared instance

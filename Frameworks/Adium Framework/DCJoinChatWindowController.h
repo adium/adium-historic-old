@@ -22,7 +22,6 @@
 
 - (void)configureForAccount:(AIAccount *)inAccount;
 - (IBAction)joinChat:(id)sender;
-- (IBAction)closeWindow:(id)sender;
 
 - (void)setJoinChatEnabled:(BOOL)enabled;
 - (AIListContact *)contactFromText:(NSString *)text;

@@ -41,14 +41,6 @@
     }
 }
 
-//Close this window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
-
 - (AIListContact *)contactFromTextField
 {
 	AIListContact	*contact;

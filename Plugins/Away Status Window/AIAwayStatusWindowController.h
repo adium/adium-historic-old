@@ -31,6 +31,5 @@
 - (IBAction)comeBack:(id)sender;
 - (IBAction)toggleMute:(id)sender;
 - (IBAction)toggleShowBezel:(id)sender;
-- (void)closeWindow:(id)sender;
 
 @end

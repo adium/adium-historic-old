@@ -60,13 +60,6 @@
     [sheet orderOut:nil];
 }
 
-//Close this window
-- (IBAction)closeWindow:(id)sender
-{
-	if([[self window] isSheet]) [NSApp endSheet:[self window]];
-	[[self window] close];
-}
-
 #pragma mark Actions
 //Adds an alert that makes the message get sent when the contact comes online again.
 - (IBAction)sendLater:(id)sender

@@ -87,7 +87,6 @@ typedef enum {
 + (id)openForPlugin:(id)inPlugin;
 + (id)openForContact:(AIListContact *)inContact plugin:(id)inPlugin;
 + (id)existingWindowController;
-- (IBAction)closeWindow:(id)sender;
 - (IBAction)updateSearch:(id)sender;
 - (IBAction)selectSearchType:(id)sender;
 - (IBAction)deleteSelectedLogs:(id)sender;

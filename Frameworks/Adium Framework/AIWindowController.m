@@ -77,8 +77,12 @@ Adium, Copyright 2001-2005, Adam Iser
 - (IBAction)closeWindow:(id)sender
 {
     if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
+		if([[self window] isSheet]){
+			[NSApp endSheet:[self window]];
+		}else{
+			[[self window] close];
+		}
+	}
 }
 
 /*!

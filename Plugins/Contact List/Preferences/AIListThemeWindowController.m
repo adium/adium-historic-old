@@ -71,15 +71,6 @@
     return(YES);
 }
 
-//Close this window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-		if([[self window] isSheet]) [NSApp endSheet:[self window]];
-        [[self window] close];
-    }
-}
-
 //Called as the sheet closes, dismisses the sheet
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {

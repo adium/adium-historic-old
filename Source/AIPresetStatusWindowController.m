@@ -71,16 +71,6 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
 }
 
 /*!
- * Close our window
- */
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
-
-/*!
  * @brief Window should close
  *
  * Invoked before our window is closed.  We always allow closing of the state window, so always return YES here.

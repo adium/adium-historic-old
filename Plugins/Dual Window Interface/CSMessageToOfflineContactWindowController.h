@@ -14,8 +14,6 @@
 
 + (void)showSheetInWindow:(NSWindow *)inWindow forMessageViewController:(AIMessageViewController *) inMessageViewController;
 
-- (IBAction)closeWindow:(id)sender;
-
 // Actions
 - (IBAction)sendLater:(id)sender;
 - (IBAction)dontSend:(id)sender;

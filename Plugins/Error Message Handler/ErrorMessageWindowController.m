@@ -88,14 +88,6 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
     [self closeWindow:nil];
 }
 
-// closes this window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
-
 
 // Private --------------------------------------------------------------------------------
 #pragma mark Private

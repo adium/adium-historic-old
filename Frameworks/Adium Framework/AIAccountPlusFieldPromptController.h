@@ -15,7 +15,6 @@
 
 + (void)showPrompt;
 + (void)closeSharedInstance;
-- (IBAction)closeWindow:(id)sender;
 - (IBAction)okay:(id)sender;
 - (AIListContact *)contactFromTextField;
 

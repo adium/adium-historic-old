@@ -133,22 +133,6 @@ Adium, Copyright 2001-2005, Adam Iser
     return(NO);
 }
 
-/*!
- * @brief Close the editor
- *
- * Close the editor window or sheet.  The editor will close and clean itself up automatically.
- */
-- (IBAction)closeWindow:(id)sender
-{
-	if([self windowShouldClose:nil]){
-		if([[self window] isSheet]){
-			[NSApp endSheet:[self window]];
-		}else{
-			[[self window] close];
-		}
-	}
-}
-
 
 //Behavior -------------------------------------------------------------------------------------------------------------
 #pragma mark Behavior
