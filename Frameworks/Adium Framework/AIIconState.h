@@ -15,21 +15,21 @@
 
 
 @interface AIIconState : AIObject {
-    BOOL		animated;
-    BOOL		overlay;
+    BOOL			animated;
+    BOOL			overlay;
 
     //Static
-    NSImage		*image;
+    NSImage			*image;
 
     //Animated
     NSMutableArray	*imageArray;
-    float		delay;
-    BOOL 		looping;
-    int			currentFrame;
-    int			numberOfFrames;
+    float			delay;
+    BOOL 			looping;
+    int				currentFrame;
+    int				numberOfFrames;
 
     //Animated w/ delayed rendering
-    NSArray		*iconRendering_states;
+    NSArray			*iconRendering_states;
     AIIconState		*iconRendering_baseState;
     AIIconState		*iconRendering_animationState;
 }
