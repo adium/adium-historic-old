@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.92 2004/07/12 22:24:36 adamiser Exp $
+// $Id: AIContentController.m,v 1.93 2004/07/19 19:12:45 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -297,6 +297,14 @@
 										  usingFilterType:AIFilterContent
 												direction:AIFilterOutgoing
 												  context:inObject]];
+
+		//Special outgoing content filter for AIM away message bouncing.  Used to filter %n,%t,...
+		if([inObject isKindOfClass:[AIContentMessage class]] && [(AIContentMessage *)inObject isAutoreply]){
+			[inObject setMessage:[self filterAttributedString:[inObject message]
+											  usingFilterType:AIFilterAutoReplyContent
+													direction:AIFilterOutgoing
+													  context:inObject]];
+		}		
     }
 	
     //Send the object
