@@ -16,6 +16,9 @@
 
 #import "AIContentController.h"
 #import "CBActionSupportPlugin.h"
+#import "AIInterfaceController.h"
+#import "AIChat.h"
+#import "AIAccount.h"
 
 /*!
  * @class CBActionSupportPlugin
@@ -42,9 +45,12 @@
         
         if(meRange.location == 0 && meRange.length == 4)
         {
+        	NSString *displayName = [[[[[adium interfaceController] activeChat] account] displayName] stringByAppendingString:@" "];
+        	NSString *prefix = displayName ? [@"*" stringByAppendingString:displayName] : @"*";
+
             ourMessage = [[inAttributedString mutableCopyWithZone:nil] autorelease];
             
-            [ourMessage replaceCharactersInRange:meRange withString:@"*"];
+            [ourMessage replaceCharactersInRange:meRange withString:prefix];
             
             NSAttributedString *splat = [[NSAttributedString alloc] initWithString:@"*" 
                                                                         attributes:[ourMessage attributesAtIndex:0 
