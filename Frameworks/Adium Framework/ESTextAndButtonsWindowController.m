@@ -78,6 +78,8 @@
 	}else{
 		[controller showWindow:nil];
 	}
+	
+	return controller;
 }
 
 /*
