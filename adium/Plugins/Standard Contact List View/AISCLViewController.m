@@ -485,20 +485,8 @@
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
 {
-//    NSEnumerator	*enumerator;
-//    id			object;
-//    BOOL		handles = NO, groups = NO;
-//
-//    //We either drag all handles, or all groups.  A mix of the two is not allowed
-//    enumerator = [items objectEnumerator];
-//    while((object = [enumerator nextObject]) && !(handles && groups)){
-//        if([object isKindOfClass:[AIEditorListGroup class]]) groups = YES;
-//        if([object isKindOfClass:[AIEditorListHandle class]]) handles = YES;
-//    }
-//
-//    if(!(handles && groups)){
-
-	
+	//Kill any selections
+	[outlineView deselectAll:nil];
 	
 	//Hide any open tooltip
     [self _hideTooltip];
@@ -517,45 +505,14 @@
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
 
+	//No dropping into contacts
     if([avaliableType compare:@"AIListObject"] == 0){
-		
-		//No dropping into contacts
 		if(index == -1 && ![item isKindOfClass:[AIListGroup class]]){
 			return(NSDragOperationNone);
 		}
 	}
-		
-		
-		
-		//        if([[dragItems objectAtIndex:0] isKindOfClass:[AIEditorListGroup class]] &&	//Dragging a group
-//           ([selectedCollection sortMode] == AISortByIndex)){				//List is sorted by index
-//
-//            //If the group is being hovered over a group or within a group, refocus them below the group
-//            if(item != nil){
-//                [outlineView setDropItem:nil dropChildIndex:[[selectedCollection list] indexOfObject:item] + 1];
-//            }
-//            
-//            return(NSDragOperationPrivate);	//Valid Drop
-//
-//        }else if(([[dragItems objectAtIndex:0] isKindOfClass:[AIEditorListHandle class]]) &&	//Dragging a handle
-//                 (item != nil) &&								//Drag to inside a group
-//                 ([item isKindOfClass:[AIEditorListGroup class]])/* &&				//Not dragging onto a handle
-//                 ([dragItems indexOfObject:item] == NSNotFound))*/){				//Not dragged into itself
-//            
-//            //If Collection is alphabetized & user is dropping into a group, refocus them onto the containing group
-//            if([selectedCollection sortMode] != AISortByIndex && index != -1){		
-//                [outlineView setDropItem:item dropChildIndex:-1];
-//            }
-//
-            return(NSDragOperationPrivate); 	//Valid Drop
-//    
-//        }else{
-//            return(NSDragOperationNone);	//Invalid Drop
-//            
-//        }
-//    }
-//
-//    return(NSDragOperationNone);
+	
+	return(NSDragOperationPrivate);
 }
 
 //
@@ -577,7 +534,6 @@
 
     return(YES);
 }
-
 
 
 //Auto-resizing support ------------------------------------------------------------------------------------------------
