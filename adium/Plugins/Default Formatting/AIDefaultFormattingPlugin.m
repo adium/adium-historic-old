@@ -37,7 +37,7 @@
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DEFAULT_FORMATTING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_FORMATTING];
 
     //Our preference view
-    preferences = [[AIDefaultFormattingPreferences defaultFormattingPreferencesWithOwner:owner] retain];
+    preferences = [[AIDefaultFormattingPreferences preferencePaneWithOwner:owner] retain];
 
     //Observe
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];

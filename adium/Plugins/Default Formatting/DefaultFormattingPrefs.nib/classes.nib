@@ -1,19 +1,36 @@
 {
     IBClasses = (
         {
-            ACTIONS = {changePreference = id; }; 
+            CLASS = AIColorSelectionPopUpButton; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSPopUpButton; 
+        }, 
+        {
             CLASS = AIDefaultFormattingPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_setFont" = NSButton; 
-                "colorWell_backgroundColor" = NSColorWell; 
-                "colorWell_textColor" = NSColorWell; 
+                "colorPopUp_backgroundColor" = AIColorSelectionPopUpButton; 
+                "colorPopUp_textColor" = AIColorSelectionPopUpButton; 
                 "textField_desiredFont" = NSTextField; 
-                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

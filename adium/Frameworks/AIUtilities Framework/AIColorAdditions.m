@@ -69,6 +69,17 @@ float _v(float m1, float m2, float hue);
 
 @implementation NSColor (AIColorAdditions)
 
+//Returns YES if the colors are equal
+- (BOOL)equalToRGBColor:(NSColor *)inColor
+{
+    NSColor	*convertedA = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+    NSColor	*convertedB = [inColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+    
+    return(([convertedA redComponent] == [convertedB redComponent]) &&
+           ([convertedA blueComponent] == [convertedB blueComponent]) &&
+           ([convertedA greenComponent] == [convertedB greenComponent]));
+}
+
 //Returns YES if this color is dark
 - (BOOL)colorIsDark
 {

@@ -15201,6 +15201,32 @@
 			settings = {
 			};
 		};
+		D34F70BD05359A5D00A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIColorSelectionPopUpButton.h;
+			path = "Frameworks/AIUtilities Framework/AIColorSelectionPopUpButton.h";
+			refType = 4;
+		};
+		D34F70BE05359A5D00A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIColorSelectionPopUpButton.m;
+			path = "Frameworks/AIUtilities Framework/AIColorSelectionPopUpButton.m";
+			refType = 4;
+		};
+		D34F70BF05359A5D00A8010B = {
+			fileRef = D34F70BD05359A5D00A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D34F70C005359A5D00A8010B = {
+			fileRef = D34F70BE05359A5D00A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		D35BB1A40533AD1C00A8010B = {
 			isa = PBXFileReference;
 			name = pref8.tif;
@@ -17396,6 +17422,7 @@
 				4B740FB9051D500C00A8010A,
 				4B740FBB051D500C00A8010A,
 				34F77077052B72C4004616D4,
+				D34F70BF05359A5D00A8010B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17510,6 +17537,7 @@
 				4B740FBA051D500C00A8010A,
 				4B740FBC051D500C00A8010A,
 				34F77078052B72C4004616D4,
+				D34F70C005359A5D00A8010B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18218,6 +18246,8 @@
 				4B3E502303EC538D00A8010A,
 				4BC0304B0453388C00A8010A,
 				4BC0304C0453388C00A8010A,
+				D34F70BD05359A5D00A8010B,
+				D34F70BE05359A5D00A8010B,
 				F570A59003704AB901A8010A,
 				F570A59103704AB901A8010A,
 				F57938F8033E745F01A8010A,
