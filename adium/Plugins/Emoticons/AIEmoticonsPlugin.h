@@ -16,11 +16,12 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-
+#define PREF_GROUP_EMOTICONS	@"Emoticons"
 #define	KEY_EMOTICON_PACK_PATH	@"EmoticonPackPath"
 #define KEY_EMOTICON_PACK_CONTENTS	@"EmoticonPackContents"
 
 @protocol AIContentFilter;
+@class AIEmoticonPreferences;
 
 @interface AIEmoticonsPlugin : AIPlugin <AIContentFilter> {
     BOOL		replaceEmoticons;
@@ -28,6 +29,10 @@
     NSMutableArray	*emoticons;
     
     NSMutableArray	*quickScanList;
+	
+	AIEmoticonPreferences	*prefs;
 }
+
+- (void)preferencesChanged:(NSNotification *)notification;
 
 @end

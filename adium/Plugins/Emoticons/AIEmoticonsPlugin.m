@@ -15,6 +15,7 @@
 
 #import "AIEmoticonsPlugin.h"
 #import "AIEmoticon.h"
+#import "AIEmoticonPreferences.h"
 #import "AIAdium.h"
 #import <AIUtilities/AIUtilities.h>
 
@@ -44,12 +45,23 @@
     quickScanList = [[NSMutableArray alloc] init];
     emoticons = [[NSMutableArray alloc] init];
 
+	//Preferences
+	 //Defaults
+	[[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"EmoticonDefaults" forClass:[self class]] forGroup:PREF_GROUP_EMOTICONS];
+	
+	 //View
+	prefs = [[AIEmoticonPreferences emoticonPreferencesWithOwner:owner] retain];
+	
+	 //Keep up-to-date
+	[self preferencesChanged:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+
     //Create a custom emoticons directory ~/Library/Application Support/Adium 2.0/Emoticons
 		// Note: we should call AIAdium..., but that doesn't work, so I'm getting the info
 		// "directly" FIX
     [AIFileUtilities createDirectory:[[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath]/*[AIAdium applicationSupportDirectory]*/ stringByAppendingPathComponent:PATH_EMOTICONS]];
 	
-    replaceEmoticons = YES;
+    //replaceEmoticons = YES;
 	if (![self loadEmoticonsFromPacks])
 		[self setupForTesting];	// use the bundled graphics if not emoticon pack could be found
 
@@ -59,6 +71,14 @@
     [[owner contentController] registerDisplayingContentFilter:self];
     //[[owner contentController] registerIncomingContentFilter:self];
  
+}
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_EMOTICONS] == 0){
+	
+		replaceEmoticons = [[[owner preferenceController] preferenceForKey:@"Enable" group:PREF_GROUP_EMOTICONS object:nil] intValue] == NSOnState;
+    }
 }
 
 - (void)filterContentObject:(AIContentObject *)inObject
@@ -204,36 +224,25 @@
 	if (foundGoodPack) {
 		NSDictionary*	smileyPack = [emoticonPackArray objectAtIndex:0];
 		NSArray*		smileyList = [smileyPack objectForKey:KEY_EMOTICON_PACK_CONTENTS];
-		int				i, o;
+		int				i;
 		AIEmoticon		*emo = nil;
-		NSString*		emoText = nil;
-		//NSRange			charRange;
-		//NSCharacterSet*	newlineSet = [NSCharacterSet characterSetWithCharactersInString:@"\n"];
-		NSArray*		fakeSeparation = nil;
+		NSMutableString*	emoText = nil;
+		NSRange			charRange;
+		NSCharacterSet*	newlineSet = [NSCharacterSet characterSetWithCharactersInString:@"\n"];
+		//NSArray*		fakeSeparation = nil;
 		
 		for (i = 0;	i < [smileyList count]; i++)
 		{
 			path = [smileyList objectAtIndex:i];
 			
+			emoText = [NSMutableString stringWithContentsOfFile:[path stringByAppendingPathComponent:@"TextEquivalents.txt"]];
+			
 			// Check string for UNIX or Windows line end encoding, repairing if needed.
-			emoText = [NSString stringWithContentsOfFile:[path stringByAppendingPathComponent:@"TextEquivalents.txt"]];
-			
-			fakeSeparation = [emoText componentsSeparatedByString:@"\n"];
-			
-			emoText = [fakeSeparation objectAtIndex:0];
-			
-			for (o = 1; o < [fakeSeparation count]; o++)
-			{
-				emoText = [emoText stringByAppendingString:@"\r"];
-				emoText = [emoText stringByAppendingString:[fakeSeparation objectAtIndex:o]];
-			}
-			
-			/*charRange = [emoText rangeOfCharacterFromSet:newlineSet];
-			while (charRange.length != 0)
-			{
-				
+			charRange = [emoText rangeOfCharacterFromSet:newlineSet];
+			while (charRange.length != 0)	{
+				[emoText replaceCharactersInRange:charRange withString:@"\r"];
 				charRange = [emoText rangeOfCharacterFromSet:newlineSet];
-			}*/
+			}
 			
 			// Make the emoticon object, add it to the master list
 			emo = [[AIEmoticon alloc] initWithPath:[path stringByAppendingPathComponent:@"Emoticon.tiff"] andText:emoText];
