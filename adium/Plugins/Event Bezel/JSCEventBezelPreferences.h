@@ -27,8 +27,6 @@
     IBOutlet NSButton       *checkBox_showHidden;
     IBOutlet NSButton       *checkBox_showAway;
     IBOutlet NSButton       *checkBox_includeText;
-    
-    BOOL                    viewIsLoaded;
 }
 
 - (IBAction)changePreference:(id)sender;
