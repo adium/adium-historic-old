@@ -76,7 +76,7 @@
 			children = (
 				112F5664050A3BAF005FD3EF,
 				112F5665050A3BAF005FD3EF,
-				112F5666050A3BAF005FD3EF,
+				4BEA21ED052B4A8900A8010A,
 				112F5667050A3BAF005FD3EF,
 			);
 			isa = PBXGroup;
@@ -95,13 +95,6 @@
 			isa = PBXFileReference;
 			name = AIGroupedIdleAwaySortNoGroups.m;
 			path = "Plugins/Grouped Idle Time Idle Away Sort/AIGroupedIdleAwaySortNoGroups.m";
-			refType = 4;
-		};
-		112F5666050A3BAF005FD3EF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AIGroupedIdleAwaySortPlugin;
-			path = "Plugins/Grouped Idle Time Idle Away Sort/AIGroupedIdleAwaySortPlugin";
 			refType = 4;
 		};
 		112F5667050A3BAF005FD3EF = {
@@ -182,7 +175,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				11D6D3B2050A443100437DB3,
-				11D6D3B4050A443200437DB3,
+				4BEA21EE052B4A8E00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -910,12 +903,6 @@
 			settings = {
 			};
 		};
-		11D6D3B4050A443200437DB3 = {
-			fileRef = 112F5666050A3BAF005FD3EF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		11D6D3B5050A443300437DB3 = {
 			fileRef = 112F5667050A3BAF005FD3EF;
 			isa = PBXBuildFile;
@@ -1153,7 +1140,6 @@
 				F50A325A03B5798301A8010A,
 				29B97323FDCFA39411CA2CEA,
 				19C28FACFE9D520D11CA2CBB,
-				34D300840527A00F0046AB44,
 			);
 			isa = PBXGroup;
 			name = CocAIMe2;
@@ -1462,18 +1448,6 @@
 			settings = {
 			};
 		};
-		34041075052A74510012A3D2 = {
-			isa = PBXFileReference;
-			name = ContactAnnouncer.nib;
-			path = Plugins/Announcer/ContactAnnouncer.nib;
-			refType = 4;
-		};
-		34041076052A74510012A3D2 = {
-			fileRef = 34041075052A74510012A3D2;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		344E7995051FB13B003B41B1 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -1512,7 +1486,6 @@
 			files = (
 				34ADE00005158D4B003B2F21,
 				34ADE00305159186003B2F21,
-				34041076052A74510012A3D2,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1626,7 +1599,6 @@
 				346E641505157B14003B2F21,
 				34ADDFFF05158D4B003B2F21,
 				34ADE00205159186003B2F21,
-				34041075052A74510012A3D2,
 			);
 			isa = PBXGroup;
 			name = Announcer;
@@ -1977,11 +1949,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		34D300840527A00F0046AB44 = {
-			isa = PBXFileReference;
-			path = "Info-Adium__Upgraded_.plist";
-			refType = 4;
 		};
 		34D434FA051A6559003B2F21 = {
 			fileEncoding = 4;
@@ -11685,6 +11652,19 @@
 		};
 		4BE9201103DEE2FE00A8010A = {
 			fileRef = 4BE9201003DEE2FE00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BEA21ED052B4A8900A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIGroupedIdleAwaySortPlugin.h;
+			path = "Plugins/Grouped Idle Time Idle Away Sort/AIGroupedIdleAwaySortPlugin.h";
+			refType = 4;
+		};
+		4BEA21EE052B4A8E00A8010A = {
+			fileRef = 4BEA21ED052B4A8900A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
