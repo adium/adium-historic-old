@@ -20,9 +20,9 @@
 //Side views (Status icons, status circles, etc)
 #define VIEW_PADDING				3		//Padding between the list object name and it's side views
 #define VIEW_INNER_PADDING			3		//Padding between individual side views
-#define LEFT_PADDING				-7		//Padding on the far left of our cell
+#define LEFT_PADDING				-8		//Padding on the far left of our cell
 #define LEFT_PADDING_GROUP			0		//Padding on the far left of our cell when displaying a group
-#define RIGHT_PADDING				6		//Padding on the far right of our cell
+#define RIGHT_PADDING				9		//Padding on the far right of our cell
 #define NAME_OFFSET_X				-4		//Offset to apply to our name text (To counter any margins in text layout)
 #define	LABEL_PADDING_REDUCTION		4.0 	//25% of the requested label endcap padding
 #define GROUP_LABEL_OFFSET			-8		//Offset of the label when drawing behind a group name
