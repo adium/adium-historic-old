@@ -251,7 +251,7 @@
 
 - (void)deleteTemporaryFiles
 {
-	[[NSFileManager defaultManager] removeFilesInDirectory:@"~/Library/Caches/Adium"
+	[[NSFileManager defaultManager] removeFilesInDirectory:[self cachesPath]
 												withPrefix:@"TEMP"
 											 movingToTrash:NO];
 }
@@ -568,6 +568,18 @@
 	}
     
 	return(pathArray);
+}
+
+- (NSString *)cachesPath
+{
+	static NSString *cachesPath = nil;
+	if(!cachesPath){
+		cachesPath = [[[[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Caches"] stringByAppendingPathComponent:@"Adium"] stringByAppendingPathComponent:[[self loginController] currentUser]] stringByExpandingTildeInPath] retain];
+
+		//Ensure our cache path exists
+		[[NSFileManager defaultManager] createDirectoriesForPath:cachesPath];
+	}
+	return cachesPath;
 }
 
 - (NSString *)pathOfPackWithName:(NSString *)name extension:(NSString *)extension resourceFolderName:(NSString *)folderName
