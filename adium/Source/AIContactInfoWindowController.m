@@ -91,7 +91,9 @@ static AIContactInfoWindowController *sharedInstance = nil;
     //Configure the preference views
     [mainCategory configureForObject:inContact];
 
-    [[self window] setTitle:[NSString stringWithFormat:@"%@ (%@) Info",[inContact UID], [inContact serviceID]]];
+    [[self window] setTitle:([inContact serviceID] ?
+       [NSString stringWithFormat:@"%@ (%@) Info",[inContact UID], [inContact serviceID]] : 
+       [NSString stringWithFormat:@"%@ Info",[inContact UID]])];
 }
 
 - (void)configureForNoContact
