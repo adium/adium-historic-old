@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Active Emoticon Packs_BGTheme_Emoticons</key>
+	<array>
+		<string>Default</string>
+	</array>
+	<key>Alternating Grid_BGTheme_Contact List Display</key>
+	<false/>
+	<key>Autoresize Horizontal_BGTheme_Dual Window Interface</key>
+	<true/>
+	<key>Autoresize Vertical_BGTheme_Dual Window Interface</key>
+	<true/>
+	<key>Away Color_BGTheme_Contact Status Coloring</key>
+	<string>49,49,49</string>
+	<key>Away Enabled_BGTheme_Contact Status Coloring</key>
+	<true/>
+	<key>Away Label Color_BGTheme_Contact Status Coloring</key>
+	<string>234,234,214</string>
+	<key>Background Color_BGTheme_Contact List Display</key>
+	<string>255,255,255</string>
+	<key>Bold Groups_BGTheme_Contact List Display</key>
+	<true/>
+	<key>Borderless_BGTheme_Contact List Display</key>
+	<false/>
+	<key>Contact Color_BGTheme_Contact List Display</key>
+	<string>0,0,0</string>
+	<key>Custom Group Color_BGTheme_Contact List Display</key>
+	<false/>
+	<key>Display Idle Time_BGTheme_Idle Display</key>
+	<true/>
+	<key>Font_BGTheme_Contact List Display</key>
+	<string>Lucida Grande,11</string>
+	<key>Grid Color_BGTheme_Contact List Display</key>
+	<string>237,243,254</string>
+	<key>GridLine Darkness_BGTheme_Message Display</key>
+	<real>0.10000000000000001</real>
+	<key>Group Color_BGTheme_Contact List Display</key>
+	<string>0,0,0</string>
+	<key>Idle And Away Color_BGTheme_Contact Status Coloring</key>
+	<string>49,49,49</string>
+	<key>Idle And Away Enabled_BGTheme_Contact Status Coloring</key>
+	<false/>
+	<key>Idle And Away Label Color_BGTheme_Contact Status Coloring</key>
+	<string>233,233,214</string>
+	<key>Idle Color_BGTheme_Contact Status Coloring</key>
+	<string>49,49,49</string>
+	<key>Idle Enabled_BGTheme_Contact Status Coloring</key>
+	<true/>
+	<key>Idle Label Color_BGTheme_Contact Status Coloring</key>
+	<string>234,234,234</string>
+	<key>Idle Time Text Color_BGTheme_Idle Display</key>
+	<string>52,52,52</string>
+	<key>Incoming Prefix Color Name_BGTheme_Message Display</key>
+	<string>Blue</string>
+	<key>Incoming Prefix Color_BGTheme_Message Display</key>
+	<string>0,32,127</string>
+	<key>Incoming Prefix Light Color_BGTheme_Message Display</key>
+	<string>64,112,255</string>
+	<key>Label Around Contact_BGTheme_Contact List Display</key>
+	<false/>
+	<key>Label Groups Color_BGTheme_Contact List Display</key>
+	<string>255,255,255</string>
+	<key>Label Groups_BGTheme_Contact List Display</key>
+	<false/>
+	<key>Label Opacity_BGTheme_Contact List Display</key>
+	<real>1</real>
+	<key>Online Color_BGTheme_Contact Status Coloring</key>
+	<string>0,0,0</string>
+	<key>Online Enabled_BGTheme_Contact Status Coloring</key>
+	<false/>
+	<key>Online Label Color_BGTheme_Contact Status Coloring</key>
+	<string>209,234,220</string>
+	<key>Opacity_BGTheme_Contact List Display</key>
+	<real>1</real>
+	<key>Outgoing Prefix Color Name_BGTheme_Message Display</key>
+	<string>Green</string>
+	<key>Outgoing Prefix Color_BGTheme_Message Display</key>
+	<string>0,127,0</string>
+	<key>Outgoing Prefix Light Color_BGTheme_Message Display</key>
+	<string>64,255,64</string>
+	<key>Outline Groups Color_BGTheme_Contact List Display</key>
+	<string>255,255,255</string>
+	<key>Outline Groups_BGTheme_Contact List Display</key>
+	<false/>
+	<key>Outline Labels_BGTheme_Contact List Display</key>
+	<false/>
+	<key>Row Spacing_BGTheme_Contact List Display</key>
+	<real>2</real>
+	<key>Sender Gradient Darkness_BGTheme_Message Display</key>
+	<real>0.14999999999999999</real>
+	<key>Shadows_BGTheme_Contact List Display</key>
+	<true/>
+	<key>Show GridLines_BGTheme_Message Display</key>
+	<true/>
+	<key>Show Labels_BGTheme_Contact List Display</key>
+	<true/>
+	<key>Show Sender Gradient_BGTheme_Message Display</key>
+	<false/>
+	<key>Signed Off Color_BGTheme_Contact Status Coloring</key>
+	<string>255,255,255</string>
+	<key>Signed Off Enabled_BGTheme_Contact Status Coloring</key>
+	<true/>
+	<key>Signed Off Label Color_BGTheme_Contact Status Coloring</key>
+	<string>198,55,43</string>
+	<key>Signed On Color_BGTheme_Contact Status Coloring</key>
+	<string>255,255,255</string>
+	<key>Signed On Enabled_BGTheme_Contact Status Coloring</key>
+	<true/>
+	<key>Signed On Label Color_BGTheme_Contact Status Coloring</key>
+	<string>43,198,56</string>
+	<key>Status Label Opacity_BGTheme_Contact Status Coloring</key>
+	<real>1</real>
+	<key>Tab Away Color_BGTheme_Contact Status Coloring</key>
+	<string>73,73,0</string>
+	<key>Tab Away Enabled_BGTheme_Contact Status Coloring</key>
+	<true/>
+	<key>Tab Idle And Away Color_BGTheme_Contact Status Coloring</key>
+	<string>75,75,75</string>
+	<key>Tab Idle And Away Enabled_BGTheme_Contact Status Coloring</key>
+	<false/>
+	<key>Tab Idle Color_BGTheme_Contact Status Coloring</key>
+	<string>75,75,75</string>
+	<key>Tab Idle Enabled_BGTheme_Contact Status Coloring</key>
+	<true/>
+	<key>Tab Online Color_BGTheme_Contact Status Coloring</key>
+	<string>0,0,0</string>
+	<key>Tab Online Enabled_BGTheme_Contact Status Coloring</key>
+	<false/>
+	<key>Tab Signed Off Color_BGTheme_Contact Status Coloring</key>
+	<string>89,0,0</string>
+	<key>Tab Signed Off Enabled_BGTheme_Contact Status Coloring</key>
+	<true/>
+	<key>Tab Signed On Color_BGTheme_Contact Status Coloring</key>
+	<string>0,88,14</string>
+	<key>Tab Signed On Enabled_BGTheme_Contact Status Coloring</key>
+	<true/>
+	<key>Tab Typing Color_BGTheme_Contact Status Coloring</key>
+	<string>0,84,114</string>
+	<key>Tab Typing Enabled_BGTheme_Contact Status Coloring</key>
+	<true/>
+	<key>Tab Unviewed Content Color_BGTheme_Contact Status Coloring</key>
+	<string>0,18,114</string>
+	<key>Tab Unviewed Content Enabled_BGTheme_Contact Status Coloring</key>
+	<true/>
+	<key>Tab Unviewed Flash Enabled_BGTheme_Contact Status Coloring</key>
+	<true/>
+	<key>Tab Use Custom Colors_BGTheme_Contact Status Coloring</key>
+	<true/>
+	<key>Typing Color_BGTheme_Contact Status Coloring</key>
+	<string>255,255,255</string>
+	<key>Typing Enabled_BGTheme_Contact Status Coloring</key>
+	<true/>
+	<key>Typing Label Color_BGTheme_Contact Status Coloring</key>
+	<string>43,157,198</string>
+	<key>Unviewed Content Color_BGTheme_Contact Status Coloring</key>
+	<string>255,255,255</string>
+	<key>Unviewed Content Enabled_BGTheme_Contact Status Coloring</key>
+	<true/>
+	<key>Unviewed Content Label Color_BGTheme_Contact Status Coloring</key>
+	<string>43,69,198</string>
+	<key>Use Gradient_BGTheme_Contact List Display</key>
+	<false/>
+	<key>themeAuthor</key>
+	<string>Adium</string>
+	<key>themeName</key>
+	<string>Adium Default</string>
+	<key>themeVersion</key>
+	<string></string>
+</dict>
+</plist>

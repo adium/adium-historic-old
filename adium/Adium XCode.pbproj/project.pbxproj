@@ -25229,6 +25229,21 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		6EF3F85F05EF179B0037D3CC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "Adium Default.AdiumTheme";
+			path = "Plugins/Themes/Adium Default.AdiumTheme";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EF3F86005EF179B0037D3CC = {
+			fileRef = 6EF3F85F05EF179B0037D3CC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //6E0
 //6E1
 //6E2
@@ -28011,6 +28026,7 @@
 				C42C171205BA68A000135D3C,
 				4BE8CF2805EA62EB00F87407,
 				4BE8CF2905EA62EB00F87407,
+				6EF3F86005EF179B0037D3CC,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -28063,6 +28079,7 @@
 		};
 		C42C170005BA687800135D3C = {
 			children = (
+				6EF3F85F05EF179B0037D3CC,
 				C42C170305BA689F00135D3C,
 				C42C170405BA689F00135D3C,
 				C42C170505BA689F00135D3C,
