@@ -2,11 +2,14 @@
 <%@ page import = 'javax.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'java.util.regex.*' %>
+<%@ page import = 'java.util.Vector' %>
+<%@ page import = 'java.util.Enumeration' %>
+<%@ page import = 'sqllogger.*' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/details.jsp $-->
-<!--$Rev: 900 $ $Date$ -->
+<!--$Rev: 901 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -212,45 +215,36 @@ try {
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
 <%
-    rset = stmt.executeQuery("select user_id, " +
-        " display_name as display_name, " +
-        " username as username, " +
-        " lower(service) as service " +
-        " from im.users " +
-        " natural join im.user_display_name udn" +
-        " where case when true = " + loginUsers +
-        " then login = true" +
-        " else 1 = 1 end " +
-        " and not exists (select 'x' from im.user_display_name where " +
-        " user_id = users.user_id and effdate > udn.effdate) " +
-        " order by display_name, username");
+    Vector userVec = User.getUsersWithDisplayNames(conn, loginUsers);
 
     if(!loginUsers) {
-        out.print("<p><i><a href=\"details.jsp?sender=" +
-            sender + "&login=true&meta_id=" + meta_id + "&date=" +
-            date + "\">Login Users</a></i></p>");
+        out.print("<p><i><a href=\"statistics.jsp?sender=" +
+            sender + "&login=true\">Login Users</a></i></p>");
     } else {
-        out.print("<p><i><a href=\"details.jsp?sender=" +
-            sender + "&meta_id=" + meta_id + "&login=false&date=" +
-            date + "\">" +
+        out.print("<p><i><a href=\"statistics.jsp?sender=" +
+            sender + "&login=false\">" +
             "All Users</a></i></p>");
     }
+
     out.println("<p></p>");
 
-    while (rset.next())  {
-        if (rset.getInt("user_id") != sender) {
-            out.println("<p><img src=\"images/services/" +
-                rset.getString("service") +
-                ".png\" width=\"12\" height=\"12\" /> " +
-                "<a href=\"statistics.jsp?sender=" +
-                rset.getString("user_id") + "&login=" +
-                Boolean.toString(loginUsers) +
-                "\" + title=\"" + rset.getString("username") + "\">" +
-                rset.getString("display_name") +
-                "</a></p>");
+	Enumeration e = userVec.elements();
+
+    while (e.hasMoreElements())  {
+		User u = (User) e.nextElement();
+        if (Integer.parseInt(u.getValue("user_id")) != sender) {
+            out.println("<p>");
+            out.println("<img src=\"images/services/" +
+                u.getValue("service") + ".png\" width=\"12\" height=\"12\" />");
+            out.println("<a href=\"statistics.jsp?sender=" +
+            u.getValue("user_id") + "&login=" +
+            Boolean.toString(loginUsers) +
+            "\" title=\"" + u.getValue("username") + "\">" +
+            u.getValue("display_name") +
+            "</a></p>");
         }
         else {
-            out.println("<p>" + rset.getString("username") + "</p>");
+            out.println("<p>" + u.getValue("username") + "</p>");
         }
     }
 
@@ -342,8 +336,7 @@ try {
             Average Sent Length: 0<br />
     <%  } %>
         <br />
-    <%  rset.next();
-        if(rset.getString("identifier").equals("R")) {
+    <%  if(rset.next() && rset.getString("identifier").equals("R")) {
     %>
             Total Received: <%= rset.getString("total_sent") %><br />
             <% total += rset.getInt("total_sent"); %>

@@ -1,6 +1,5 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.sql.*' %>
-<%@ page import = 'java.util.ArrayList' %>
 <%@ page import = 'javax.naming.*' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

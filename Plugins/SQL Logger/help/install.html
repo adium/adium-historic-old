@@ -85,12 +85,24 @@ postgres $] /usr/local/bin/createdb <i>USERNAME</i>
 postgres $] /usr/local/bin/createuser <i>USERNAME</i>
 postgres $] su <i>username</i></pre></div>
 <h3>Configuring PostgreSQL</h3>
-<p>Edit your ~/.bash_profile script using pico.  Add the following lines:</p>
+<p>At this point you need to determine what shell you're using.  The default
+  is Bash, but some peopple use TCSH.  Don't worry about which you're using;
+  it doesn't matter.</p>
+<p>Type <code>echo $SHELL</code>.  It should return either Bash or TCSH.</p>
+<h4>For Bash users</h4>
+<p>Edit your ~/.bash_profile script using <code>pico</code> or <code>open -e</code>.  Add the following lines:</p>
 <div class="tutorialcode"><pre>PATH=$PATH:/usr/local/bin
 CLASSPATH=/usr/local/pgsql/share/java/postgresql.jar:$CLASSPATH
 export PATH CLASSPATH</pre></div>
+<h4>For TCSH</h4>
+<p>Edit ~/.tcshrc with <code>pico</code> or <code>open -e</code>.  Add the
+  following lines:</p>
+<div class="tutorialcode">
+<pre>setenv PATH /usr/local/bin:$PATH
+setenv CLASSPATH /usr/local/pgsql/share/java/postgresql.jar:$CLASSPATH</pre>
+</div>
 <p>Now you're ready to use the SQL Logger  stuff.</p>
-<div class="tutorialcode"><pre>cd ~/sqllogger/sql
+<div class="tutorialcode"><pre>cd ~/Desktop/sqllogger/sql
 psql &lt; create.sql</pre></div>
 <p>At this point, it is helpful to edit the search path of the database.</p>
 <div class="tutorialcode"><pre>jmelloy $] psql
@@ -106,13 +118,16 @@ jmelloy=# alter user <i>username</i> set search_path=im,public;</pre></div>
 <p>At this point, you're ready to import your logs into the database.  Simply
   use the parser.pl script, and it will import all of your adium 2.x
   logfiles.</p>
-<div class="tutorialcode"><pre>jmelloy $] ./parser.pl</pre></div>
+<div class="tutorialcode"><pre>jmelloy $] adium/parser.pl</pre></div>
 <h3>Installing tsearch for fast searching</h3>
+<p>Note: All steps but the last two may be completed while the import script
+  is running.  The final step should be run after the importer script has
+  finished.</p>
 <div class="tutorialcode"><pre>jmelloy $] cd <i>POSTGRES_SOURCE_LOCATION</i>/contrib/tsearch2
 jmelloy $] make
 jmelloy $] sudo make install
 jmelloy $] psql &lt; tsearch2.sql
-jmelloy $] cd ~/sqllogger/sql
+jmelloy $] cd ~/Desktop/sqllogger/sql
 jmelloy $] psql &lt; tsearch2.sql</pre></div>
 <p>Now you need to install Resin if you wish to view the logs with the web
   interface.  The web interface is currently more powerful than the built-in

@@ -1,7 +1,9 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.sql.*' %>
-<%@ page import = 'java.util.ArrayList' %>
 <%@ page import = 'javax.naming.*' %>
+<%@ page import = 'java.util.Vector' %>
+<%@ page import = 'sqllogger.*' %>
+<%@ page import = 'java.util.Enumeration' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,6 +14,8 @@
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
+
+String startChar = request.getParameter("start");
 
 PreparedStatement pstmt = null;
 Statement stmt = null;
@@ -100,6 +104,23 @@ try {
                 <div class="boxWideContent">
 <%
 
+    out.println("<div align=\"center\">");
+    String letters[] = {"a", "b", "c", "d", "e", "f", "g", "h","i",
+            "j", "k", "l", "m", "n", "l", "o", "p", "q", "r", "s", "t",
+            "u", "v", "w", "x", "y", "z"};
+
+    for(int i = 0; i < letters.length; i++) {
+        out.println("<a href=\"users.jsp?start=" + letters[i] +
+                "\">" + letters[i] + "</a> | ");
+        if(i == 13) {
+            out.println("<br />");
+        }
+    }
+
+    out.println("<a href=\"users.jsp?start=0\"> #</a>");
+
+    out.println("</div><br />");
+
     pstmt = conn.prepareStatement("select count(*) * 31 + 80 as height from im.information_keys where delete = false");
 
     rset = pstmt.executeQuery();
@@ -108,38 +129,29 @@ try {
 
     int height = rset.getInt("height");
 
-    pstmt = conn.prepareStatement("select user_id, username " +
-        " as username, display_name as display_name, " +
-        " lower(service) as service " +
-        " from im.users natural join user_display_name udn " +
-        " where not exists (select 'x' from user_display_name " +
-        " where user_id = udn.user_id  and effdate > udn.effdate) " +
-        " order by not exists (select 'x' from meta_contact " +
-        " where user_id = users.user_id), not exists (select 'x' from " +
-        " user_contact_info where user_id = users.user_id), " +
-        " display_name, username");
+    Vector userVec = User.getUsersStartingWith(conn, startChar);
+    Enumeration e = userVec.elements();
 
-    rset = pstmt.executeQuery();
+    while(e.hasMoreElements()) {
+        User user = (User) e.nextElement();
 
-    while(rset.next()) {
-
-        String editURL = "editUser.jsp?user_id=" + rset.getInt("user_id");
+        String editURL = "editUser.jsp?user_id=" + user.getValue("user_id");
 %>
 <span class="edit"<a href="#"
     onClick="window.open('<%= editURL %>', 'Edit User', 'width=275,height=<%= height %>')">Edit Info ...</a></span>
 <%
 
         out.print("<h2><img src=\"images/services/" +
-            rset.getString("service") + ".png\" width=\"14\" height=\"14\" /> " +
-            rset.getString("display_name") + " (" +
+            user.getValue("service") + ".png\" width=\"14\" height=\"14\" /> " +
+            user.getValue("display_name") + " (" +
             "<a href=\"chats.jsp?sender=" +
-            rset.getString("user_id") + "\">" +
-            rset.getString("username") + "</a>)</h2>");
+            user.getValue("user_id") + "\">" +
+            user.getValue("username") + "</a>)</h2>");
         out.println("<div class=\"meta\">");
 
         infoStmt = conn.prepareStatement("select key_name, value from im.user_contact_info where user_id = ? order by key_name");
 
-        infoStmt.setInt(1, rset.getInt("user_id"));
+        infoStmt.setInt(1, Integer.parseInt(user.getValue("user_id")));
 
         infoSet = infoStmt.executeQuery();
 

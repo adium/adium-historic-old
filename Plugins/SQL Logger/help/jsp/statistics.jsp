@@ -1,12 +1,14 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.sql.*' %>
-<%@ page import = 'java.util.ArrayList' %>
 <%@ page import = 'javax.naming.*' %>
+<%@ page import = 'java.util.Enumeration' %>
+<%@ page import = 'java.util.Vector' %>
+<%@ page import = 'sqllogger.*' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/statistics.jsp $-->
-<!--$Rev: 900 $ $Date$ -->
+<!--$Rev: 907 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -41,7 +43,7 @@ double recAve = 0;
 int max = 0;
 int years = 0;
 
-int monthArray[][] = new int[10][14];
+int monthArray[][][] = new int[10][14][2];
 
 PreparedStatement pstmt = null;
 Statement stmt = null;
@@ -144,7 +146,7 @@ try {
                 " count(*) as count, " +
                 " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
                 " as date, date_trunc('month', message_date) as full_date, " +
-                " sender_id = ? as is_sender " +
+                " case when sender_id = ? then 1 else 0 end as is_sender " +
                 " from messages where sender_id = ? or " +
                 " recipient_id = ? group by date_part('month', message_date), " +
                 " to_char(date_trunc('month', message_date), 'Mon, YYYY'), " +
@@ -161,7 +163,9 @@ try {
                     " as month, date_part('year', message_date) as year, " +
                     " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
                     " as date, date_trunc('month', message_date) as full_date, " +
-                    " count(*) as count, sender_id = user_id as is_sender " +
+                    " count(*) as count, " +
+                    " case when sender_id = user_id then 1 else 0 end as " +
+                    " is_sender " +
                     " from im.messages, im.meta_contact " +
                     " where (sender_id = user_id or " +
                     " recipient_id = user_id) and meta_id = ? " +
@@ -187,7 +191,8 @@ try {
 
         for(int i = 0; i < 10; i++) {
             for(int j = 0; j < 14; j++) {
-                monthArray[i][j] = 0;
+                monthArray[i][j][0] = 0;
+                monthArray[i][j][1] = 0;
             }
         }
 
@@ -218,23 +223,32 @@ try {
             }
 
             boolean found = false;
-            if(totals.getInt("count") > max) max = totals.getInt("count");
 
             for(int i = 0; i < years && !found; i++) {
-                if(monthArray[i][0] == totals.getInt("year")) {
+                if(monthArray[i][0][0] == totals.getInt("year")) {
                     found = true;
-                    monthArray[i][totals.getInt("month")] = totals.getInt("count");
-                    monthArray[i][13] += totals.getInt("count");
+                    monthArray[i][totals.getInt("month")][totals.getInt("is_sender")] =
+                        totals.getInt("count");
+                    monthArray[i][13][totals.getInt("is_sender")] += totals.getInt("count");
                 }
             }
 
             if(!found) {
-                monthArray[years][0] = totals.getInt("year");
-                monthArray[years][totals.getInt("month")] = totals.getInt("count");
-                monthArray[years++][13] += totals.getInt("count");
+                monthArray[years][0][0] = totals.getInt("year");
+                monthArray[years][totals.getInt("month")][totals.getInt("is_sender")] +=
+                    totals.getInt("count");
+                monthArray[years++][13][totals.getInt("is_sender")] +=
+                    totals.getInt("count");
             }
-
         }
+
+        for (int i = 0; i < years; i++) {
+            for(int j = 1; j < 13; j++) {
+                if(monthArray[i][j][0] + monthArray[i][j][1] > max)
+                    max = monthArray[i][j][0] + monthArray[i][j][1];
+            }
+        }
+
 %>
                 </div>
                 <div class="boxThinBottom"></div>
@@ -262,18 +276,7 @@ try {
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
 <%
-    rset = stmt.executeQuery("select user_id, " +
-        " display_name as display_name, " +
-        " username " +
-        " as username, lower(service) as service from im.users " +
-        " natural join im.user_display_name udn" +
-        " where case when true = " + loginUsers +
-        " then login = true " +
-        " else 1 = 1 " +
-        " end " +
-        " and not exists (select 'x' from im.user_display_name where " +
-        " user_id = users.user_id and effdate > udn.effdate) " +
-        " order by display_name, username");
+    Vector userVec = User.getUsersWithDisplayNames(conn, loginUsers);
 
     if(!loginUsers) {
         out.print("<p><i><a href=\"statistics.jsp?sender=" +
@@ -286,20 +289,23 @@ try {
 
     out.println("<p></p>");
 
-    while (rset.next())  {
-        if (rset.getInt("user_id") != sender) {
+	Enumeration e = userVec.elements();
+
+    while (e.hasMoreElements())  {
+		User u = (User) e.nextElement();
+        if (Integer.parseInt(u.getValue("user_id")) != sender) {
             out.println("<p>");
             out.println("<img src=\"images/services/" +
-                rset.getString("service") + ".png\" width=\"12\" height=\"12\" />");
+                u.getValue("service") + ".png\" width=\"12\" height=\"12\" />");
             out.println("<a href=\"statistics.jsp?sender=" +
-            rset.getString("user_id") + "&login=" +
+            u.getValue("user_id") + "&login=" +
             Boolean.toString(loginUsers) +
-            "\" title=\"" + rset.getString("username") + "\">" +
-            rset.getString("display_name") +
+            "\" title=\"" + u.getValue("username") + "\">" +
+            u.getValue("display_name") +
             "</a></p>");
         }
         else {
-            out.println("<p>" + rset.getString("username") + "</p>");
+            out.println("<p>" + u.getValue("username") + "</p>");
         }
     }
 
@@ -337,22 +343,31 @@ out.println("<br />Total Messages Sent/Received: " + total_messages + "<br /><br
                 <div class="boxWideContent">
 <%
 
-double maxDistance = max * 1.25;
+double maxDistance = max * 1.2;
 
 for(int yrCnt = 0; yrCnt < years; yrCnt++) {
     out.print("<br />\n");
-    out.println("<b>" + monthArray[yrCnt][0] + "</b> (" +
-            monthArray[yrCnt][13] + ")<br />");
-    out.println("<table height=\"250\" width=\"350\"" +
+    out.println("<b>" + monthArray[yrCnt][0][0] + "</b> (" +
+            (monthArray[yrCnt][13][0] + monthArray[yrCnt][13][1]) +
+            ")<br />");
+    out.println("<table height=\"250\" width=\"400\"" +
             " cellspacing=\"0\"><tr>");
 
     for(int i = 1; i < 13; i++) {
-        double height = monthArray[yrCnt][i] / maxDistance * 225;
-        if (height < 1 && height != 0) height = 1;
         out.println("<td valign=\"bottom\" rowspan=\"13\"" +
-                " background=\"images/gridline2.gif\">"+
-                "<img src=\"images/bar2.gif\" width = \"15\" height=\"" +
-                (int)height + "\"></td>");
+                " background=\"images/gridline2.gif\">");
+
+        double sendHeight = monthArray[yrCnt][i][1] / maxDistance * 225;
+        if (sendHeight < 1 && sendHeight != 0) sendHeight = 1;
+        out.println("<img src=\"images/bar2.gif\" width = \"15\" height=\"" +
+                (int)sendHeight + "\">");
+
+        double recHeight = monthArray[yrCnt][i][0] / maxDistance * 225;
+        if (recHeight < 1 && recHeight != 0) recHeight = 1;
+        out.println("<img src=\"images/bar_red.gif\" width = \"15\" height=\"" +
+                (int)recHeight + "\">");
+
+        out.println("</td>");
     }
 
     out.println("</tr>");
@@ -361,7 +376,8 @@ for(int yrCnt = 0; yrCnt < years; yrCnt++) {
         "Aug", "Sep", "Oct", "Nov", "Dec"};
     for(int i = 1; i < 13; i++) {
         out.println("<tr><td align=\"right\">" + months[i] + ":</td><td "+
-                " align=\"left\"> " + monthArray[yrCnt][i] +
+                " align=\"left\" width=\"100\"> " + monthArray[yrCnt][i][1] +
+                " / " + monthArray[yrCnt][i][0] +
                 "</td></tr>");
     }
 

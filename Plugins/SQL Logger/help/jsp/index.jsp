@@ -2,15 +2,18 @@
 <%@ page import = 'javax.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'java.util.ArrayList' %>
+<%@ page import = 'java.util.Vector' %>
 <%@ page import = 'java.util.StringTokenizer' %>
 <%@ page import = 'java.util.regex.Pattern' %>
 <%@ page import = 'java.util.regex.Matcher' %>
 <%@ page import = 'java.net.URLEncoder' %>
+<%@ page import = 'sqllogger.*' %>
+<%@ page import = 'java.util.Enumeration' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/index.jsp $-->
-<!--$Rev: 900 $ $Date$ -->
+<!--$Rev: 909 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -230,167 +233,7 @@ try {
         out.println("</div>\n");
         out.println("<div class=\"boxThinBottom\"></div>\n");
     }
-    String commandArray[] = new String[20];
-    int aryCount = 0;
-    boolean unconstrained = false;
 
-    queryText = "select sender_sn as sender_sn, "+
-    " recipient_sn as recipient_sn, " +
-    " message, message_date, message_id, " +
-    " to_char(message_date, 'fmDay, fmMonth DD, YYYY') as fancy_date, " +
-    " message_notes.message_id is not null as notes";
-    if(showDisplay) {
-       queryText += ", sender_display as sender_display, "+
-           " recipient_display as recipient_display " +
-           " from im.message_v as view ";
-    } else if (showMeta) {
-        queryText += ", coalesce(send.name, sender_sn) as sender_meta, " +
-            " coalesce(rec.name, recipient_sn) as recipient_meta " +
-            " from im.simple_message_v as view left join " +
-            " im.meta_contact as r " +
-            " on (recipient_id = r.user_id and r.preferred = true) " +
-            " left join im.meta_container rec on (r.meta_id = rec.meta_id)" +
-            " left join im.meta_contact as s " +
-            " on (sender_id = s.user_id and s.preferred = true) " +
-            " left join im.meta_container send on (s.meta_id = send.meta_id)";
-    } else {
-        queryText += " from im.simple_message_v as view ";
-    }
-
-    queryText += " natural left join im.message_notes ";
-
-    String concurrentWhereClause = " where ";
-
-    if (dateStart == null) {
-        queryText += "where message_date > 'now'::date ";
-        concurrentWhereClause += " message_date > 'now'::date ";
-    } else {
-        queryText += "where message_date > ?::timestamp ";
-        concurrentWhereClause += " message_date > ?::timestamp ";
-        commandArray[aryCount++] = new String(dateStart);
-        if(dateFinish == null) {
-            unconstrained = true;
-        }
-    }
-
-    if (dateFinish != null) {
-        queryText += " and message_date < ?::timestamp";
-        concurrentWhereClause += "and message_date < ?::timestamp ";
-        commandArray[aryCount++] = new String(dateFinish);
-    }
-
-    if (from_sn != null && to_sn != null) {
-        if(showDisplay) {
-            queryText += " and (((sender_display like ? " +
-                " or sender_sn like ?) " +
-                " and (recipient_display like ? or recipient_sn like ?)) or " +
-                " ((sender_display like ? or sender_sn like ?) " +
-                " and (recipient_display like ? or recipient_sn like ? )))";
-
-            commandArray[aryCount++] = new String(to_sn);
-            commandArray[aryCount++] = new String(to_sn);
-
-            commandArray[aryCount++] = new String(from_sn);
-            commandArray[aryCount++] = new String(from_sn);
-
-            commandArray[aryCount++] = new String(from_sn);
-            commandArray[aryCount++] = new String(from_sn);
-
-            commandArray[aryCount++] = new String(to_sn);
-            commandArray[aryCount++] = new String(to_sn);
-        } else {
-            queryText += " and ((sender_sn like ? " +
-            " and recipient_sn like ?) or " +
-            "(sender_sn like ? and recipient_sn like ?)) ";
-            commandArray[aryCount++] = new String(to_sn);
-            commandArray[aryCount++] = new String(from_sn);
-            commandArray[aryCount++] = new String(from_sn);
-            commandArray[aryCount++] = new String(to_sn);
-        }
-    } else if (from_sn != null && to_sn == null) {
-        if(showDisplay) {
-            queryText += " and (sender_sn like ? or sender_display like ?) ";
-            commandArray[aryCount++] = new String(from_sn);
-            commandArray[aryCount++] = new String(from_sn);
-        } else {
-            queryText += " and sender_sn like ? ";
-
-            commandArray[aryCount++] = new String(from_sn);
-        }
-
-    } else if (from_sn == null && to_sn != null) {
-        if(showDisplay) {
-            queryText += " and (recipient_sn like ? or recipient_display like ?)";
-            commandArray[aryCount++] = new String(to_sn);
-            commandArray[aryCount++] = new String(to_sn);
-        } else {
-            queryText += " and recipient_sn like ? ";
-
-            commandArray[aryCount++] = new String(to_sn);
-        }
-    }
-
-    if (contains_sn != null) {
-        if(showDisplay) {
-            queryText += " and (recipient_sn like ? or sender_sn like ? " +
-                " or recipient_display like ? or sender_display like ?) ";
-
-
-            commandArray[aryCount++] = new String(contains_sn);
-            commandArray[aryCount++] = new String(contains_sn);
-            commandArray[aryCount++] = new String(contains_sn);
-            commandArray[aryCount++] = new String(contains_sn);
-        } else {
-            queryText += " and (recipient_sn like ? or sender_sn like ?) ";
-            commandArray[aryCount++] = new String(contains_sn);
-            commandArray[aryCount++] = new String(contains_sn);
-        }
-    }
-
-
-    if (service != null) {
-        queryText += " and (sender_service = ? or recipient_service = ?)";
-        commandArray[aryCount++] = new String(service);
-        commandArray[aryCount++] = new String(service);
-    }
-
-    if (meta_id != 0) {
-        queryText += " and (send.meta_id = ? or rec.meta_id = ?)";
-    }
-
-    // Only pick the lowest note_id so only one shows up for multiples
-
-    queryText += " and not exists (select 'x' from im.message_notes b where b.message_id = message_notes.message_id and b.date_added > message_notes.date_added)";
-
-    queryText += " order by message_date, message_id";
-
-    if(unconstrained) {
-        queryText += " limit 250";
-        out.print("<div align=\"center\"><i>Limited to 250 " +
-        "messages.</i><br><br></div>\n");
-    }
-
-    String query = "select service as service, username as username " +
-    "from im.users natural join "+
-    "(select sender_id as user_id from im.messages "+
-    concurrentWhereClause + " union " +
-    "select recipient_id as user_id from im.messages " +
-    concurrentWhereClause + ") messages order by username";
-
-    pstmt = conn.prepareStatement(query);
-
-    if(dateStart != null && dateFinish != null) {
-        pstmt.setString(1, dateStart);
-        pstmt.setString(2, dateFinish);
-        pstmt.setString(3, dateStart);
-        pstmt.setString(4, dateFinish);
-    } else if(dateStart == null && dateFinish != null) {
-        pstmt.setString(1, dateFinish);
-        pstmt.setString(2, dateFinish);
-    } else if(unconstrained) {
-        pstmt.setString(1, dateStart);
-        pstmt.setString(2, dateStart);
-    }
 
     out.println("<h1>Users</h1>");
     out.println("<div class=\"boxThinTop\"></div>\n");
@@ -398,25 +241,27 @@ try {
 
     try {
 
-        rset = pstmt.executeQuery();
+        Vector userVec = User.getUsersForInterval(conn, dateStart, dateFinish);
+        Enumeration e = userVec.elements();
 
-        while(rset.next()) {
+        while(e.hasMoreElements()) {
+            User u = (User) e.nextElement();
             out.print("<p>" +
                 "<a href=\"index.jsp?start=" + dateStart +
                 "&finish=" + dateFinish + "&service=" +
-                rset.getString("service") + "\">" +
+                u.getValue("service") + "\">" +
                 "<img src=\"images/services/" +
-                rset.getString("service").toLowerCase() +
+                u.getValue("service").toLowerCase() +
                 ".png\" width=\"12\" height=\"12\" /></a> " +
                 "<a href=\"index.jsp?start=" + dateStart +
                 "&finish=" + dateFinish + "&contains=" +
-                rset.getString("username") + "\">"+
-                rset.getString("username") + "</a></p>\n");
+                u.getValue("username") + "\">"+
+                u.getValue("username") + "</a></p>\n");
         }
 
         out.print("<a href=\"index.jsp?start=" + dateStart +
             "&finish=" + dateFinish + "\"><i>All</i></a>");
-    } catch (SQLException e) {
+    } catch (UserException e) {
         out.print("<span style=\"color: red\">" + e.getMessage() + "</span>");
     }
 
@@ -479,6 +324,7 @@ try {
 %>
             </div>
             <div id="content">
+
             <h1>View Messages by Date</h1>
 
             <div class="boxWideTop"></div>
@@ -606,21 +452,17 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-
-    pstmt = conn.prepareStatement(queryText);
-
-    for(int i = 0; i < aryCount; i++) {
-        pstmt.setString(i + 1, commandArray[i]);
+    Vector messageVec = new Vector();
+    try {
+        messageVec = Message.getMessagesForInterval(conn,
+                dateStart, dateFinish,
+                from_sn, to_sn, contains_sn, service,
+                meta_id, showDisplay, showMeta);
+    } catch (MessageException e) {
+        out.println(e.getMessage());
     }
 
-    if(meta_id != 0) {
-        pstmt.setInt(aryCount + 1, meta_id);
-        pstmt.setInt(aryCount + 2, meta_id);
-    }
-
-    rset = pstmt.executeQuery();
-
-    if (!rset.isBeforeFirst()) {
+    if (messageVec.size() == 0) {
         out.print("<div align=\"center\"><i>No records found.</i></div>\n");
     }
 
@@ -634,37 +476,41 @@ try {
     prevSender = new String();
     prevRecipient = new String();
 
-    Date currentDate = null;
+    String currentDate = new String();
     Timestamp currentTime = new Timestamp(0);
 
     int greyCount = 1;
 
-    while (rset.next()) {
-        if(!rset.getDate("message_date").equals(currentDate)) {
-            currentDate = rset.getDate("message_date");
+    Enumeration e = messageVec.elements();
+
+    while (e.hasMoreElements()) {
+        Message m = (Message) e.nextElement();
+
+        if(!m.getValue("message_date").equals(currentDate)) {
+            currentDate = m.getValue("message_date");
             prevSender = "";
             prevRecipient = "";
 
             out.println("<div class=\"weblogDateHeader\">");
-            out.println(rset.getString("fancy_date"));
+            out.println(m.getValue("fancy_date"));
             out.println("</div>\n");
-        } else if (rset.getTimestamp("message_date").getTime() -
+        } else if (Timestamp.valueOf(m.getValue("message_timestamp")).getTime() -
             currentTime.getTime() > 60*10*1000) {
             out.println("<hr width=\"75%\">");
         }
 
-        currentTime = rset.getTimestamp("message_date");
+        currentTime = Timestamp.valueOf(m.getValue("message_timestamp"));
 
         sent_color = null;
         received_color = null;
-        String message = rset.getString("message");
+        String message = m.getValue("message");
 
         for(int i = 0; i < userArray.size(); i++) {
             if (!showMeta &&
-                    userArray.get(i).equals(rset.getString("sender_sn"))) {
+                    userArray.get(i).equals(m.getValue("sender_sn"))) {
                 sent_color = colorArray[i % colorArray.length];
             } else if (showMeta &&
-                    userArray.get(i).equals(rset.getString("sender_meta"))) {
+                    userArray.get(i).equals(m.getValue("sender_meta"))) {
                 sent_color = colorArray[i % colorArray.length];
             }
         }
@@ -672,18 +518,18 @@ try {
         if (sent_color == null) {
             sent_color = colorArray[userArray.size() % colorArray.length];
             if(!showMeta) {
-                userArray.add(rset.getString("sender_sn"));
+                userArray.add(m.getValue("sender_sn"));
             } else {
-                userArray.add(rset.getString("sender_meta"));
+                userArray.add(m.getValue("sender_meta"));
             }
         }
 
         for(int i = 0; i < userArray.size(); i++) {
             if (!showMeta &&
-                    userArray.get(i).equals(rset.getString("recipient_sn"))) {
+                    userArray.get(i).equals(m.getValue("recipient_sn"))) {
                 received_color = colorArray[i % colorArray.length];
             } else if (showMeta &&
-                    userArray.get(i).equals(rset.getString("recipient_meta"))) {
+                    userArray.get(i).equals(m.getValue("recipient_meta"))) {
                 received_color = colorArray[i % colorArray.length];
             }
         }
@@ -691,9 +537,9 @@ try {
         if (received_color == null) {
             received_color = colorArray[userArray.size() % colorArray.length];
             if(!showMeta) {
-                userArray.add(rset.getString("recipient_sn"));
+                userArray.add(m.getValue("recipient_sn"));
             } else {
-                userArray.add(rset.getString("recipient_meta"));
+                userArray.add(m.getValue("recipient_meta"));
             }
         }
 
@@ -704,50 +550,52 @@ try {
 
             Pattern p = Pattern.compile("(?i)(.*?)(" +
             hlWords.get(i).toString() + ")(.*?)");
-            Matcher m = p.matcher(message);
+            Matcher match = p.matcher(message);
             StringBuffer sb = new StringBuffer();
             int oldIndex = 0;
-            while(m.find()) {
-                sb.append(message.substring(oldIndex,m.start()));
+            while(match.find()) {
+                sb.append(message.substring(oldIndex,match.start()));
                 if(sb.toString().lastIndexOf('<') <=
                   sb.toString().lastIndexOf('>')) {
-                    sb.append(m.group(1) + "<b style=\"color:black;background-color:" +
+                    sb.append(match.group(1) +
+                    "<b style=\"color:black;background-color:" +
                     hlColor[i % hlColor.length] + "\">");
-                    sb.append(m.group(2) + "</b>" + m.group(3));
+                    sb.append(match.group(2) + "</b>" + match.group(3));
                 } else {
-                    sb.append(m.group(1) + m.group(2) + m.group(3));
+                    sb.append(match.group(1) + match.group(2) +
+                            match.group(3));
                 }
-                oldIndex = m.end();
+                oldIndex = match.end();
             }
             sb.append(message.substring(oldIndex, message.length()));
 
             message = sb.toString();
         }
 
-        if(!rset.getString("sender_sn").equals(prevSender) ||
-            !rset.getString("recipient_sn").equals(prevRecipient)) {
+        if(!m.getValue("sender_sn").equals(prevSender) ||
+            !m.getValue("recipient_sn").equals(prevRecipient)) {
 
             greyCount = 1;
 
             out.print("<div class=\"message_container\" id=\""
-                + rset.getString("message_id") + "\">");
+                + m.getValue("message_id") + "\">");
 
             out.println("<div class=\"sender\">");
             out.print("<a href=\"index.jsp?from=" +
-            rset.getString("sender_sn") +
-            "&to=" + rset.getString("recipient_sn") +
+            m.getValue("sender_sn") +
+            "&to=" + m.getValue("recipient_sn") +
             "&start=" + dateStart +
-            "&finish=" + dateFinish + "#" + rset.getInt("message_id") + "\" ");
+            "&finish=" + dateFinish + "#" + m.getValue("message_id") + "\" ");
 
-            out.print("title=\"" + rset.getString("sender_sn") + "\">");
+            out.print("title=\"" + m.getValue("sender_sn") + "\">");
 
             out.print("<span style=\"color: " + sent_color + "\">");
             if(showDisplay) {
-                out.print(rset.getString("sender_display").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+                out.print(m.getValue("sender_display").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
             } else if (showMeta) {
-                out.print(rset.getString("sender_meta").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+                out.print(m.getValue("sender_meta").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
             } else {
-                out.print(rset.getString("sender_sn").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+                out.print(m.getValue("sender_sn").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
             }
             out.print("</span></a>\n");
 
@@ -755,21 +603,21 @@ try {
                 out.println("&rarr;");
 
                 out.println("<a href=\"index.jsp?from=" +
-                rset.getString("sender_sn") +
-                    "&to=" + rset.getString("recipient_sn") +
+                m.getValue("sender_sn") +
+                    "&to=" + m.getValue("recipient_sn") +
                     "&start=" + dateStart +
                     "&finish=" + dateFinish +
-                    "#" + rset.getInt("message_id") +
-                    "\" title=\"" + rset.getString("recipient_sn") + "\">");
+                    "#" + m.getValue("message_id") +
+                    "\" title=\"" + m.getValue("recipient_sn") + "\">");
 
                 out.print("<span style=\"color: " +
                 received_color + "\">");
                 if(showDisplay) {
-                    out.print(rset.getString("recipient_display").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+                    out.print(m.getValue("recipient_display").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
                 } else if (showMeta) {
-                    out.print(rset.getString("recipient_meta").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+                    out.print(m.getValue("recipient_meta").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
                 } else {
-                    out.print(rset.getString("recipient_sn").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+                    out.print(m.getValue("recipient_sn").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
                 }
                 out.print("</span></a>");
             }
@@ -778,16 +626,16 @@ try {
             out.println("<div class=\"msg_container_next\">\n");
         }
 
-        prevSender = rset.getString("sender_sn");
-        prevRecipient = rset.getString("recipient_sn");
+        prevSender = m.getValue("sender_sn");
+        prevRecipient = m.getValue("recipient_sn");
 
         out.println("<div class=\"time_initial\">");
-        if(rset.getBoolean("notes")) {
+        if(m.getValue("notes").equals("t")) {
             pstmt = conn.prepareStatement("select title, notes " +
             " from im.message_notes where message_id = ? " +
             " order by date_added ");
 
-            pstmt.setInt(1, rset.getInt("message_id"));
+            pstmt.setInt(1, Integer.parseInt(m.getValue("message_id")));
             noteSet = pstmt.executeQuery();
 
             out.print("<a class=\"info\" href=\"#\">");
@@ -802,12 +650,12 @@ try {
         }
         out.println("<a href=\"#\" title=\"Add Note ...\" " +
             "onClick=\"window.open('saveForm.jsp?action=saveNote.jsp&message_id=" +
-            rset.getString("message_id") + "', 'Add Note', "+
+            m.getValue("message_id") + "', 'Add Note', "+
             "'width=275,height=225')\">");
 
         out.print("<img src=\"images/note_add.png\" alt=\"Add Note\"></a>");
 
-        out.print(rset.getTime("message_date"));
+        out.print(m.getValue("message_time"));
         out.println("</div>\n");
 
         out.println("<div class=\"message\"><p " +
