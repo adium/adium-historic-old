@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+// $Id: AIPasswordPromptController.m,v 1.7 2003/12/08 05:39:59 jmelloy Exp $
+
 #import "AIPasswordPromptController.h"
 
 #define 	PASSWORD_PROMPT_NIB 		@"PasswordPrompt"
