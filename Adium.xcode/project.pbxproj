@@ -3306,7 +3306,6 @@
 				346C9CDB0600460F000F5A8A,
 				346C9CE106004611000F5A8A,
 				346C9CE706004613000F5A8A,
-				346C9CE906004614000F5A8A,
 				346C9CEB06004614000F5A8A,
 				6E6EA019066F9C2600FA0D91,
 			);
@@ -3588,12 +3587,6 @@
 		};
 		346C9CE706004613000F5A8A = {
 			fileRef = 4B5AAA1F03E02EB900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		346C9CE906004614000F5A8A = {
-			fileRef = C497516205BBAEB1009958A6;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6367,7 +6360,6 @@
 				34254F4605EC0C2E00F11AD7,
 				34254F4805EC0C3400F11AD7,
 				34254F4C05EC0C4300F11AD7,
-				C497518D05BBB979009958A6,
 				34BD9D29053146CC000AB133,
 				4B29094005F944BF0087D16F,
 				4BD6735906001BD70049CAF7,
@@ -6383,7 +6375,6 @@
 				4BD673FB06001CC10049CAF7,
 				4BD6740106001CC40049CAF7,
 				4BD6742606001CF40049CAF7,
-				4BD6743006001D1D0049CAF7,
 				4BD6743106001D1E0049CAF7,
 				4BD6743606001D210049CAF7,
 				4BD6743D06001D310049CAF7,
@@ -6393,7 +6384,6 @@
 				4BD6747606001D840049CAF7,
 				4BD6747C06001D890049CAF7,
 				4BD6755206001E1E0049CAF7,
-				4BD6755306001E1E0049CAF7,
 				4BD6755406001E1E0049CAF7,
 				4BD6755D06001E2B0049CAF7,
 				4BD6756B06001E320049CAF7,
@@ -8086,7 +8076,6 @@
 				4BE9200B03DED0E500A8010A,
 				4BE9200E03DED34C00A8010A,
 				4BE9201003DEE2FE00A8010A,
-				C497516205BBAEB1009958A6,
 				4B5AAA1F03E02EB900A8010A,
 				6E6EA018066F9C2600FA0D91,
 			);
@@ -12667,7 +12656,6 @@
 				4B584E06055DD6A000E89D48,
 				4B584E07055DD6A000E89D48,
 				F5F0FEA004B1336C01A80106,
-				C497514905BBAC25009958A6,
 				F5F0FEA204B133AB01A80106,
 			);
 			isa = PBXGroup;
@@ -13954,7 +13942,6 @@
 				4B970BF80535B864002F28F9,
 				4B970BF90535B864002F28F9,
 				4B970BFC0535B879002F28F9,
-				C497516305BBAFE4009958A6,
 				34D43504051ADC10003B2F21,
 			);
 			isa = PBXGroup;
@@ -15400,7 +15387,6 @@
 				4B31E8C204C46A9100A8010A,
 				4B31E8C304C46A9100A8010A,
 				4B31E8C504C46A9100A8010A,
-				C4947AFF05BD177E00780FE2,
 				4B25363306BECC97003498D4,
 				4B970BE00535B6AC002F28F9,
 				4B970BE10535B6AC002F28F9,
@@ -16296,12 +16282,6 @@
 			settings = {
 			};
 		};
-		4BD6743006001D1D0049CAF7 = {
-			fileRef = C497514905BBAC25009958A6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6743106001D1E0049CAF7 = {
 			fileRef = F5F0FEA204B133AB01A80106;
 			isa = PBXBuildFile;
@@ -16808,12 +16788,6 @@
 		};
 		4BD6755206001E1E0049CAF7 = {
 			fileRef = 4BA1300304C0A4E300A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6755306001E1E0049CAF7 = {
-			fileRef = C497516305BBAFE4009958A6;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -22035,57 +22009,6 @@
 			settings = {
 			};
 		};
-		C4947AFF05BD177E00780FE2 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = "Contact Status Coloring Themable Prefs.plist";
-			path = "Plugins/Contact Status Coloring/Contact Status Coloring Themable Prefs.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C497514905BBAC25009958A6 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = "Emoticon Themable Prefs.plist";
-			path = "Plugins/Emoticons/Emoticon Themable Prefs.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C497516205BBAEB1009958A6 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = "SMV Themable Prefs.plist";
-			path = "Plugins/Standard Message View/SMV Themable Prefs.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C497516305BBAFE4009958A6 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = "Dual Window Themable Prefs.plist";
-			path = "Plugins/Dual Window Interface/Dual Window Themable Prefs.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C497518C05BBB0C5009958A6 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = "Dock Themable Prefs.plist";
-			path = "Source/Dock Themable Prefs.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C497518D05BBB979009958A6 = {
-			fileRef = C497518C05BBB0C5009958A6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		C4C63A08073889B1005E076D = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -23369,7 +23292,6 @@
 				34FC6D7007318F6600801C83,
 				348E556A053A188C0021E541,
 				4BDF17240450CBDE00A8010A,
-				C497518C05BBB0C5009958A6,
 				4B333F73048144D900A8010A,
 				D3B4A920052DE51000A8010B,
 				F5A3C2DD039A516E01A8010A,
