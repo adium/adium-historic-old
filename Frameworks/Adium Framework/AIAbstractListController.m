@@ -119,6 +119,9 @@
 	[contactListView setDataSource:self];	
 	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedItem:)];
 	
+	//We handle our own intercell spacing, so override the default (3.0, 2.0) to be (0.0, 0.0) instead.
+	[contactListView setIntercellSpacing:NSZeroSize];
+	
 	[scrollView_contactList setDrawsBackground:NO];
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutoHideScrollBar:YES];
@@ -515,10 +518,27 @@
  */
 - (NSString *)typeSelectTableView:(KFTypeSelectTableView *)tableView stringValueForTableColumn:(NSTableColumn *)col row:(int)row
 {
+    NSString *stringValue = @"";
+    
     if ((id)tableView == (id)contactListView)
-        return [[contactListView itemAtRow:row] longDisplayName];
-    else
-        return @"";
+    {
+        id item = [contactListView itemAtRow:row];
+        
+        AIListCell *cell;
+        if ([item isKindOfClass:[AIListGroup class]])
+            cell = groupCell;
+        else
+            cell = contentCell;
+ 
+        [self outlineView:contactListView 
+          willDisplayCell:cell
+           forTableColumn:col
+                     item:item];
+        
+        stringValue = [cell labelString];
+    }
+    
+    return stringValue;
 }
 
 #pragma mark Drag and drop
