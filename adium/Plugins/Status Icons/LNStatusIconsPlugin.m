@@ -104,14 +104,12 @@
 		BOOL newDisplayStatusIcon  = [[prefDict objectForKey:KEY_DISPLAY_STATUS_ICONS] boolValue];
 		
 		if (newDisplayStatusIcon && !displayStatusIcon){
-			//Start observing
-			[[adium contactController] registerListObjectObserver:self];
-
+			
 			//Now we will be displaying status icons
 			displayStatusIcon = newDisplayStatusIcon;	
-
-			//Update all our contacts to show status icons as necessary
-			[[adium contactController] updateAllListObjectsForObserver:self];
+			
+			//Start observing, which will update all objects
+			[[adium contactController] registerListObjectObserver:self];
 			
 		}else if (displayStatusIcon && !newDisplayStatusIcon){
 			//Now we won't be displaying status icons

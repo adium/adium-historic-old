@@ -21,7 +21,7 @@
 #define KEY_SHOW_OFFLINE_CONTACTS			@"Show Offline Contacts"
 
 @interface AIOfflineContactHidingPlugin (PRIVATE)
-- (void)configureOfflineContactHiding;
+- (void)configureOfflineContactHiding:(BOOL)firstTime;
 - (void)configurePreferences;
 @end
 
@@ -50,6 +50,14 @@
     [[adium contactController] unregisterListObjectObserver:self];
 }
 
+//Set up preferences initially
+- (void)configurePreferences
+{
+	showOfflineContacts = [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
+																	group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
+	[self configureOfflineContactHiding:YES];
+}
+
 //Toggle the display of offline contacts (call from menu)
 - (IBAction)toggleOfflineContactsMenu:(id)sender
 {
@@ -59,30 +67,24 @@
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:showOfflineContacts]
 										 forKey:KEY_SHOW_OFFLINE_CONTACTS
 										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-
+	
 	//Update the menu item's title
-	[self configureOfflineContactHiding];
-}
-
-//Set up preferences initially
-- (void)configurePreferences
-{
-	showOfflineContacts = [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
-																	group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
-	[self configureOfflineContactHiding];
+	[self configureOfflineContactHiding:NO];
 }
 
 //Set Show/Hide Text and update the contact list
-- (void)configureOfflineContactHiding
+- (void)configureOfflineContactHiding:(BOOL)firstTime
 {
 	//The menu item shows the opposite of the current state, since that what happens if you toggle it
 	[showOfflineMenuItem setTitle:(showOfflineContacts ? HIDE_OFFLINE_MENU_TITLE : SHOW_OFFLINE_MENU_TITLE)];
 	
-	//Refresh visibility of all contacts
-	[[adium contactController] updateAllListObjectsForObserver:self];
-	
-	//Resort the entire list, since we know the whole thing changed
-	[[adium contactController] sortContactList];	
+	if (!firstTime){
+		//Refresh visibility of all contacts
+		[[adium contactController] updateAllListObjectsForObserver:self];
+		
+		//Resort the entire list, since we know the whole thing changed
+		[[adium contactController] sortContactList];	
+	}
 }
 
 //Update visibility of a list object
