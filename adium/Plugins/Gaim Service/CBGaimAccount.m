@@ -740,10 +740,13 @@ static id<GaimThread> gaimThread = nil;
 
 -(void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID
 {
-	//Get our contact
-	AIListContact   *contact = [self _contactWithUID:[sourceUID compactedString]];
-	
-	[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) addObject:contact];
+	//Can't really trust sourceUID to not be @"" or something silly like that
+	if ([sourceUID length]){
+		//Get our contact
+		AIListContact   *contact = [self _contactWithUID:[sourceUID compactedString]];
+		
+		[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) addObject:contact];
+	}
 }
 
 -(oneway void)privacyPermitListRemoved:(NSString *)sourceUID
@@ -757,13 +760,16 @@ static id<GaimThread> gaimThread = nil;
 
 -(void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID
 {
-	//Get our contact, which must already exist for us to care about its removal
-	AIListContact   *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
-																		   accountID:[self uniqueObjectID]
-																				 UID:[sourceUID compactedString]];
-	
-	if (contact){
-		[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) removeObject:contact];
+	//Can't really trust sourceUID to not be @"" or something silly like that
+	if ([sourceUID length]){
+		//Get our contact, which must already exist for us to care about its removal
+		AIListContact   *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
+																			   accountID:[self uniqueObjectID]
+																					 UID:[sourceUID compactedString]];
+		
+		if (contact){
+			[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) removeObject:contact];
+		}
 	}
 }
 
