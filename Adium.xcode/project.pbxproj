@@ -288,36 +288,6 @@
 			settings = {
 			};
 		};
-		3404893106173DAB004D0B7E = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESVersionCheckerWindowController.h;
-			path = "Plugins/Version Checker/ESVersionCheckerWindowController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3404893206173DAB004D0B7E = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESVersionCheckerWindowController.m;
-			path = "Plugins/Version Checker/ESVersionCheckerWindowController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3404893306173DAB004D0B7E = {
-			fileRef = 3404893106173DAB004D0B7E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3404893406173DAB004D0B7E = {
-			fileRef = 3404893206173DAB004D0B7E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34048AC50617CB4C004D0B7E = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -1308,20 +1278,6 @@
 		};
 		342910CD07AE228600C815F6 = {
 			fileRef = 342910CB07AE228600C815F6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3429200806288D9B00BB9217 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = VersionCannotConnect.nib;
-			path = "Plugins/Version Checker/VersionCannotConnect.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3429200906288D9B00BB9217 = {
-			fileRef = 3429200806288D9B00BB9217;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2911,63 +2867,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#current\nif ([ -e \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current\" ]); then\nrm -rf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current\"\nfi\n\nmkdir  \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current\"\n\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Headers\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Headers\"\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Libgaim\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Libgaim\"\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Resources\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Resources\"\n\n#Root\nif ([ -e \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Headers\" ]); then\nrm -rf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Headers\"\nfi\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Headers\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Headers\"\n\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Libgaim\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Libgaim\"\n\nif ([ -e \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Resources\" ]); then\nrm -rf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Resources\"\nfi\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Resources\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Resources\"\n";
-		};
-		344ECBA90620F323007256C6 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = agent.png;
-			path = "Plugins/Version Checker/agent.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344ECBAA0620F323007256C6 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = VersionAvailable.nib;
-			path = "Plugins/Version Checker/VersionAvailable.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344ECBAB0620F323007256C6 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = "VersionChecker Defaults.plist";
-			path = "Plugins/Version Checker/VersionChecker Defaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344ECBAC0620F323007256C6 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = VersionUpToDate.nib;
-			path = "Plugins/Version Checker/VersionUpToDate.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344ECBAD0620F323007256C6 = {
-			fileRef = 344ECBA90620F323007256C6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344ECBAE0620F323007256C6 = {
-			fileRef = 344ECBAA0620F323007256C6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344ECBAF0620F323007256C6 = {
-			fileRef = 344ECBAB0620F323007256C6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344ECBB00620F323007256C6 = {
-			fileRef = 344ECBAC0620F323007256C6;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		344EE9210574504B000F342B = {
 			children = (
@@ -6275,9 +6174,7 @@
 				6E5A43DF061160C60078C342,
 				3420E6600611D80100AE67E3,
 				3420E6620611D80100AE67E3,
-				34D5B281061263B300B98336,
 				9E6417070613C55D006AF387,
-				3404893306173DAB004D0B7E,
 				6E7C19BC0623BF80008A1C99,
 				4BAA1B420632EDF100D8B92C,
 				4BAA1B480632EE2700D8B92C,
@@ -6384,6 +6281,8 @@
 				34E2A2F207B018B2006735BC,
 				34E2A2F407B018B2006735BC,
 				34E2A3E907B08CCB006735BC,
+				4BCAC70707B5A4FB006641B9,
+				4BCAC70907B5A4FB006641B9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6517,10 +6416,7 @@
 				4BD6758506001E450049CAF7,
 				4BD6758806001E460049CAF7,
 				34A1A79D078634AF005FA1A5,
-				344ECBAE0620F323007256C6,
-				344ECBB00620F323007256C6,
 				6E7C19BE0623BF80008A1C99,
-				3429200906288D9B00BB9217,
 				7E824CDD06387FAF00813072,
 				BF00023B063A4FFE0019910B,
 				4BBF41E70661194A001D31E1,
@@ -6573,9 +6469,6 @@
 				4BD6756B06001E320049CAF7,
 				4B191D8A0611C10800E8A4E7,
 				4B191D8B0611C10800E8A4E7,
-				34F58F35061A76C500B4B5D6,
-				344ECBAD0620F323007256C6,
-				344ECBAF0620F323007256C6,
 				6ECFABC50622370E001C7E93,
 				4BAA1B470632EE2700D8B92C,
 				4BAA1B4D0632EEB800D8B92C,
@@ -6703,6 +6596,12 @@
 				4BCAC4E707B59B65006641B9,
 				4BCAC51007B59D7F006641B9,
 				4BCAC56D07B5A31A006641B9,
+				4BCAC71407B5A50F006641B9,
+				4BCAC71507B5A50F006641B9,
+				4BCAC71607B5A50F006641B9,
+				4BCAC71707B5A50F006641B9,
+				4BCAC71807B5A50F006641B9,
+				4BCAC71907B5A50F006641B9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6843,9 +6742,7 @@
 				6E5A43E0061160C60078C342,
 				3420E6610611D80100AE67E3,
 				3420E6630611D80100AE67E3,
-				34D5B262061260AE00B98336,
 				9E6417080613C55D006AF387,
-				3404893406173DAB004D0B7E,
 				6E7C19BD0623BF80008A1C99,
 				4BAA1B430632EDF100D8B92C,
 				4BAA1B490632EE2700D8B92C,
@@ -6951,6 +6848,8 @@
 				34E2A2F007B018B2006735BC,
 				34E2A2F507B018B2006735BC,
 				34E2A3E807B08CCB006735BC,
+				4BCAC70807B5A4FB006641B9,
+				4BCAC70A07B5A4FB006641B9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8800,18 +8699,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34D5B262061260AE00B98336 = {
-			fileRef = 83DB8F220611460E00A5C28C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34D5B281061263B300B98336 = {
-			fileRef = 83DB8F230611460E00A5C28C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34DF006707A788AC00B92233 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -10063,20 +9950,6 @@
 		};
 		34F52BDB06E2B24200887BE2 = {
 			fileRef = 34F52BD906E2B24200887BE2;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34F58F33061A76C500B4B5D6 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = archer.png;
-			path = "Plugins/Version Checker/archer.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34F58F35061A76C500B4B5D6 = {
-			fileRef = 34F58F33061A76C500B4B5D6;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -16079,6 +15952,151 @@
 			settings = {
 			};
 		};
+		4BCAC70307B5A4FA006641B9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CPFVersionChecker.h;
+			path = Source/CPFVersionChecker.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC70407B5A4FA006641B9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CPFVersionChecker.m;
+			path = Source/CPFVersionChecker.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC70507B5A4FA006641B9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESVersionCheckerWindowController.h;
+			path = Source/ESVersionCheckerWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC70607B5A4FB006641B9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESVersionCheckerWindowController.m;
+			path = Source/ESVersionCheckerWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC70707B5A4FB006641B9 = {
+			fileRef = 4BCAC70307B5A4FA006641B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCAC70807B5A4FB006641B9 = {
+			fileRef = 4BCAC70407B5A4FA006641B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCAC70907B5A4FB006641B9 = {
+			fileRef = 4BCAC70507B5A4FA006641B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCAC70A07B5A4FB006641B9 = {
+			fileRef = 4BCAC70607B5A4FB006641B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCAC70E07B5A50F006641B9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = agent.png;
+			path = Resources/agent.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC70F07B5A50F006641B9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = archer.png;
+			path = Resources/archer.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC71007B5A50F006641B9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = VersionAvailable.nib;
+			path = Resources/VersionAvailable.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC71107B5A50F006641B9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = VersionCannotConnect.nib;
+			path = Resources/VersionCannotConnect.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC71207B5A50F006641B9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = "VersionChecker Defaults.plist";
+			path = "Resources/VersionChecker Defaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC71307B5A50F006641B9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = VersionUpToDate.nib;
+			path = Resources/VersionUpToDate.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC71407B5A50F006641B9 = {
+			fileRef = 4BCAC70E07B5A50F006641B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCAC71507B5A50F006641B9 = {
+			fileRef = 4BCAC70F07B5A50F006641B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCAC71607B5A50F006641B9 = {
+			fileRef = 4BCAC71007B5A50F006641B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCAC71707B5A50F006641B9 = {
+			fileRef = 4BCAC71107B5A50F006641B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCAC71807B5A50F006641B9 = {
+			fileRef = 4BCAC71207B5A50F006641B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCAC71907B5A50F006641B9 = {
+			fileRef = 4BCAC71307B5A50F006641B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BCB9B5E0567FF5D001D3559 = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.rtf;
@@ -20464,38 +20482,20 @@
 //834
 		83DB8F21061145C400A5C28C = {
 			children = (
-				83DB8F230611460E00A5C28C,
-				83DB8F220611460E00A5C28C,
-				3404893106173DAB004D0B7E,
-				3404893206173DAB004D0B7E,
-				344ECBAA0620F323007256C6,
-				344ECBAC0620F323007256C6,
-				3429200806288D9B00BB9217,
-				344ECBAB0620F323007256C6,
-				34F58F33061A76C500B4B5D6,
-				344ECBA90620F323007256C6,
+				4BCAC70307B5A4FA006641B9,
+				4BCAC70407B5A4FA006641B9,
+				4BCAC70507B5A4FA006641B9,
+				4BCAC70607B5A4FB006641B9,
+				4BCAC71007B5A50F006641B9,
+				4BCAC71107B5A50F006641B9,
+				4BCAC71307B5A50F006641B9,
+				4BCAC71207B5A50F006641B9,
+				4BCAC70E07B5A50F006641B9,
+				4BCAC70F07B5A50F006641B9,
 			);
 			isa = PBXGroup;
 			name = "Version Checker";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		83DB8F220611460E00A5C28C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CPFVersionChecker.m;
-			path = "Plugins/Version Checker/CPFVersionChecker.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		83DB8F230611460E00A5C28C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CPFVersionChecker.h;
-			path = "Plugins/Version Checker/CPFVersionChecker.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
