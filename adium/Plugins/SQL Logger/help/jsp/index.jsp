@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 794 $ $Date: 2004/05/31 02:03:26 $ -->
+<!--$Rev: 803 $ $Date: 2004/06/13 18:32:28 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -147,6 +147,9 @@ try {
 <link rel="stylesheet" type="text/css" href="styles/layout.css" />
 <link rel="stylesheet" type="text/css" href="styles/default.css" />
 <link rel="stylesheet" type="text/css" href="styles/message.css" />
+<script lanaguage = "JavaScript">
+    window.name='viewer';
+</script>
 </head>
 <body>
     <div id="container">
@@ -372,10 +375,23 @@ try {
     if(contains_sn != null)
         safeCont = contains_sn.replaceAll("%", "%25");
 %>
+
                 <p><a href="#"
                 onClick="window.open('simpleViewer.jsp?start=<% if(dateStart != null) out.print(dateStart); else out.print(today); %>&finish=<%= dateFinish %>&from=<%=safeSend%>&to=<%= safeRec %>&contains=<%= safeCont %>&screen_or_display=<%= screenDisplayMeta %>&meta_id=<%=meta_id%>&chat_id=<%=chat_id%>', 'Save Chat', 'width=640,height=480')">Simple Message View</a></p>
 
+<%
+    if(dateStart  == null) {
+%>
+                <p><a href="#"
+                onClick="window.open('cal.jsp', 'Calendar', 'width=150,height=175')">Calendar</a></p>
     <%
+    }
+    else {
+%>
+                <p><a href="#"
+                onClick="window.open('cal.jsp?date=<%=dateStart%>', 'Calendar', 'width=150,height=175')">Calendar</a></p>
+<%
+    }
     out.println("</div>\n");
     out.println("<div class=\"boxThinBottom\"></div>\n");
 
