@@ -36,12 +36,11 @@
 
 -(void)switchHandler:(NSNotification*) notification
 {
-    if ([[notification name] isEqualToString:NSWorkspaceSessionDidResignActiveNotification])
-    {       //Deactivation
+    if ([[notification name] isEqualToString:NSWorkspaceSessionDidResignActiveNotification]) {
+		//Deactivation
  
         //Go away if we aren't already away
-        if ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil)
-        {
+        if ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil) {
             NSAttributedString *away = [[NSAttributedString alloc] initWithString:FAST_USER_SWITCH_AWAY_STRING
 																	   attributes:[[adium contentController] defaultFormattingAttributes]];
             [[adium preferenceController] setPreference:[away dataRepresentation] 
@@ -61,10 +60,10 @@
 												  group:PREF_GROUP_GENERAL];
 			setMuteThroughFastUserSwitch = YES;
 		}
-    }
-    else    //Activation
-    {
-        //Remove the away status flag if we set it originally
+    } else {  
+		//Activation
+        
+		//Remove the away status flag if we set it originally
         if (setAwayThroughFastUserSwitch) {
             //Remove the away status flag	
             [[adium preferenceController] setPreference:nil forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
