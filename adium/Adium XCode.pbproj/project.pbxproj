@@ -378,6 +378,8 @@
 				34BD9CD1053146CC000AB133,
 				34BD9DAF05314751000AB133,
 				34BD9DE205314755000AB133,
+				4B7F78B40597F42400162728,
+				34BD9F2C0531477E000AB133,
 				9C6C7C3C057110FB00231613,
 				4B7F278205440C0800CDFC90,
 				34BD9E9405314758000AB133,
@@ -388,7 +390,6 @@
 				34BD9F0905314776000AB133,
 				34BD9F1C0531477A000AB133,
 				343C893805704B5D005E0632,
-				34BD9F2C0531477E000AB133,
 				34BD9F4F05314787000AB133,
 				34BD9F640531478C000AB133,
 				34BD9F7405314791000AB133,
@@ -450,7 +451,6 @@
 				3419F44E05314C5900C68BA3,
 				3419F46005314C6800C68BA3,
 				B72537BB058C4577004BA969,
-				4B7F78B40597F42400162728,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -8697,6 +8697,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
+				4BC8AAB0059A2D5500F940E1,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17368,22 +17369,6 @@
 			settings = {
 			};
 		};
-		4B215DAA0598965C00305B3C = {
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				4B215DAC0598966800305B3C,
-			);
-			isa = PBXCopyFilesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B215DAC0598966800305B3C = {
-			fileRef = 34BD9E9305314755000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B215DAD059896A000305B3C = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -17418,20 +17403,6 @@
 		};
 		4B215DBE0598A71400305B3C = {
 			fileRef = 4B215DBD0598A71400305B3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B215DBF0598A71D00305B3C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = crashDuck.tif;
-			path = "Adium Crash Reporter/crashDuck.tif";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B215DC00598A71D00305B3C = {
-			fileRef = 4B215DBF0598A71D00305B3C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -19961,7 +19932,7 @@
 			files = (
 				4B7F78C20597F5B700162728,
 				4B215DBE0598A71400305B3C,
-				4B215DC00598A71D00305B3C,
+				4BC8AAB3059A315900F940E1,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19990,12 +19961,13 @@
 				4B7F78B10597F42400162728,
 				4B7F78B20597F42400162728,
 				4B7F78B30597F42400162728,
-				4B215DAA0598965C00305B3C,
 				349D706705998D370059824C,
+				4BC8AABA059A33B400F940E1,
 			);
 			buildRules = (
 			);
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "@executable_path/../../../../Frameworks/";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
@@ -20064,10 +20036,11 @@
 				4B7F78BD0597F44D00162728,
 				4B7F78BE0597F44D00162728,
 				4B215DBD0598A71400305B3C,
-				4B215DBF0598A71D00305B3C,
+				4BC8AAB2059A315900F940E1,
 			);
 			isa = PBXGroup;
 			name = "Adium Crash Reporter";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -21182,6 +21155,39 @@
 			path = "Plugins/Stress Test/AIStressTestPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BC8AAB0059A2D5500F940E1 = {
+			fileRef = 4B7F78B50597F42400162728;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC8AAB2059A315900F940E1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = crashDuck.png;
+			path = "Adium Crash Reporter/crashDuck.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BC8AAB3059A315900F940E1 = {
+			fileRef = 4BC8AAB2059A315900F940E1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC8AABA059A33B400F940E1 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Create symlink to the AIUtilities framework in the main Adium application\n#\ncd $SYMROOT\ncd \"Adium.app/Contents/Resources/Adium Crash Reporter.app/Contents/\"\n\necho \"Symlinking AIUtilities framework...\"\nln -fhs \"../../../Frameworks\" \"Frameworks\"\necho \"Done\"";
 		};
 		4BC8AFD604FD3C1000A8010A = {
 			children = (
@@ -25361,8 +25367,8 @@
 		};
 		9EB3C52204F94D96001D1F74 = {
 			children = (
-				4BBEC8B70563E7CC0013C8F7,
 				4B7F78BA0597F42D00162728,
+				4BBEC8B70563E7CC0013C8F7,
 				4BBEC8B80563E7CC0013C8F7,
 				4BE9FFE7055981AB00359B15,
 				F59DB6AD033EB74801A8010A,
