@@ -60,23 +60,21 @@ static NSSize				menuIconCacheSize;
 //Retrieve a user icon sized for a menu, returning the appropriate service icon if no user icon is found
 + (NSImage *)menuUserIconForObject:(AIListObject *)inObject
 {
-	NSImage *userIcon = nil;
+	NSImage *userIcon;
 	
-	if ([inObject isKindOfClass:[AIListContact class]]){
-		//Retrieve the icon from our cache
-		userIcon = [menuIconCache objectForKey:[(AIListContact *)inObject internalObjectID]];
-		
-		//Render the icon if it's not cached
-		if(!userIcon){
-			userIcon = [[(AIListContact *)inObject userIcon] imageByScalingToSize:menuIconCacheSize
-																		 fraction:1.0
-																		flipImage:NO
-																   proportionally:YES];
-			if(userIcon) [menuIconCache setObject:userIcon
-										   forKey:[(AIListContact *)inObject internalObjectID]];
-		}
+	//Retrieve the icon from our cache
+	userIcon = [menuIconCache objectForKey:[inObject internalObjectID]];
+	
+	//Render the icon if it's not cached
+	if(!userIcon){
+		userIcon = [[inObject userIcon] imageByScalingToSize:menuIconCacheSize
+													fraction:1.0
+												   flipImage:NO
+											  proportionally:YES];
+		if(userIcon) [menuIconCache setObject:userIcon
+									   forKey:[inObject internalObjectID]];
 	}
-	
+
 	return(userIcon ?
 		   userIcon :
 		   [AIServiceIcons serviceIconForObject:inObject
