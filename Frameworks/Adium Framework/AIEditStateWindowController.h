@@ -15,6 +15,7 @@
  */
 
 #import "AIWindowController.h"
+#import "AIStatus.h"
 
 @class ESTextViewWithPlaceholder, AIStatus, AIService, AIAutoScrollView, AISendingTextView;
 
@@ -49,7 +50,7 @@
 	id			target;
 }
 
-+ (void)editCustomState:(AIStatus *)statusState forAccount:(AIAccount *)inAccount onWindow:(id)parentWindow notifyingTarget:(id)inTarget;
++ (void)editCustomState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount onWindow:(id)parentWindow notifyingTarget:(id)inTarget;
 
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;

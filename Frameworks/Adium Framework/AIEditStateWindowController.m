@@ -27,7 +27,7 @@
 #define WINDOW_HEIGHT_PADDING	90
 
 @interface AIEditStateWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget;
+- (id)initWithWindowNibName:(NSString *)windowNibName forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget;
 - (id)_positionControl:(id)control relativeTo:(id)guide height:(int *)height;
 - (void)configureStateMenu;
 - (void)updateBasedOnSelectedStatus;
@@ -47,16 +47,17 @@
  * Open either a sheet or window containing a state editor.  The state editor will be primed with the passed state
  * dictionary.  When the user successfully closes the editor, the target will be notified and passed the updated
  * state dictionary
- * @param state Initial state dictionary
- * @param account The account which to configure the custom state window; nil to configure globally
+ * @param inStatusState Initial AIStatus
+ * @param inStatusType AIStatusType to use initially if inStatusState is nil
+ * @param inAccount The account which to configure the custom state window; nil to configure globally
  * @param parentWindow Parent window for a sheet, nil for a stand alone editor
  * @param inTarget Target object to notify when editing is complete
  */
-+ (void)editCustomState:(AIStatus *)statusState forAccount:(AIAccount *)inAccount onWindow:(id)parentWindow notifyingTarget:(id)inTarget
++ (void)editCustomState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount onWindow:(id)parentWindow notifyingTarget:(id)inTarget
 {
 	AIEditStateWindowController	*controller;
 	
-	controller = [[self alloc] initWithWindowNibName:@"EditStateSheet" forAccount:inAccount customState:statusState notifyingTarget:inTarget];
+	controller = [[self alloc] initWithWindowNibName:@"EditStateSheet" forType:inStatusType andAccount:inAccount customState:inStatusState notifyingTarget:inTarget];
 	
 	if(parentWindow){
 		[NSApp beginSheet:[controller window]
@@ -72,11 +73,16 @@
 /*!
  * Init the window controller
  */
-- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget
+- (id)initWithWindowNibName:(NSString *)windowNibName forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget
 {
     [super initWithWindowNibName:windowNibName];
 
-	originalStatusState = (inStatusState ? [inStatusState retain] : [[AIStatus status] retain]);
+	if(inStatusState){
+		originalStatusState = [inStatusState retain];
+	}else{
+		originalStatusState = [[AIStatus statusOfType:inStatusType] retain];
+	}
+
 	target = inTarget;
 	
 	account = [inAccount retain];

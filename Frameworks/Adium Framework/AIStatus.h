@@ -48,6 +48,7 @@ typedef enum {
 
 + (AIStatus *)status;
 + (AIStatus *)statusWithDictionary:(NSDictionary *)inDictionary;
++ (AIStatus *)statusOfType:(AIStatusType)inStatusType;
 
 - (NSImage *)icon;
 

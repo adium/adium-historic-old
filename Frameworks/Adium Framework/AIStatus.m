@@ -44,16 +44,30 @@
  */
 + (AIStatus *)statusWithDictionary:(NSDictionary *)inDictionary
 {
-	AIStatus	*status = [[[self alloc] init] autorelease];
+	AIStatus	*status = [self status];
 	[status->statusDict addEntriesFromDictionary:inDictionary];
 
 	return(status); 
 }
 
 /*
- * @brief Initialize
+ * @brief Create an autoreleased AIStatus of a specified type
  *
- * Objective C has no multiple inheritance, so emulate inheriting from AIObject by setting our adium variable manually.
+ * The new AIStatus will have its statusType and statusName set appropriately.
+ *
+ * @result New autoreleased AIStatus
+ */
++ (AIStatus *)statusOfType:(AIStatusType)inStatusType
+{
+	AIStatus	*status = [self status];
+	[status setStatusType:inStatusType];
+	[status setStatusName:[[[AIObject sharedAdiumInstance] statusController] defaultStatusNameForType:inStatusType]];
+	
+	return(status);
+}
+
+/*
+ * @brief Initialize
  */
 - (id)init
 {
@@ -461,6 +475,23 @@
 {
 	[statusDict setObject:[NSNumber numberWithInt:mutabilityType]
 				   forKey:STATE_MUTABILITY_TYPE];
+}
+
++ (NSImage *)statusIconForStatusType:(AIStatusType)inStatusType
+{
+	NSString	*statusID;
+	
+	switch(inStatusType)
+	{
+		case AIAvailableStatusType:
+			statusID = @"available";
+			break;			
+		case AIAwayStatusType:
+			statusID = @"away";
+			break;
+	}
+
+	return([AIStatusIcons statusIconForStatusID:statusID type:AIStatusIconList direction:AIIconNormal]);
 }
 
 - (NSString *)description
