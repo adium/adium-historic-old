@@ -6744,7 +6744,6 @@
 				4BD6753C06001E120049CAF7,
 				4BD6753D06001E140049CAF7,
 				4BD6756006001E2E0049CAF7,
-				4BD6757B06001E3F0049CAF7,
 				4BD6758106001E430049CAF7,
 				4BD6758306001E440049CAF7,
 				6E5A43DF061160C60078C342,
@@ -7237,7 +7236,6 @@
 				4BD6753E06001E140049CAF7,
 				4BD6755006001E1D0049CAF7,
 				4BD6756106001E2E0049CAF7,
-				4BD6757C06001E400049CAF7,
 				4BD6758206001E430049CAF7,
 				4BD6758406001E440049CAF7,
 				6E5A43E0061160C60078C342,
@@ -13826,35 +13824,6 @@
 			settings = {
 			};
 		};
-		4B30490B047FBD6A00A8010A = {
-			children = (
-				4B30491A047FBDCE00A8010A,
-				4B30491B047FBDCE00A8010A,
-			);
-			isa = PBXGroup;
-			name = "Dock Icon Selection";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B30491A047FBDCE00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIDockIconSelectionPlugin.h;
-			path = "Plugins/Dock Icon Selection/AIDockIconSelectionPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B30491B047FBDCE00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIDockIconSelectionPlugin.m;
-			path = "Plugins/Dock Icon Selection/AIDockIconSelectionPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B31E8C004C46A9100A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -14074,7 +14043,6 @@
 				4B9A683D06AEB41C0010BF69,
 				4BD388C306B5899E000A346A,
 				4B0E342E04C4677700A8010A,
-				4B30490B047FBD6A00A8010A,
 				40AC0EEA03B5BEDB00A80202,
 				6EC1684406C1707800F9FAD3,
 				6E4D961006B73991005235E9,
@@ -18184,18 +18152,6 @@
 		};
 		4BD6756B06001E320049CAF7 = {
 			fileRef = 4BA5325D050FC5E800A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6757B06001E3F0049CAF7 = {
-			fileRef = 4B30491A047FBDCE00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6757C06001E400049CAF7 = {
-			fileRef = 4B30491B047FBDCE00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
