@@ -122,7 +122,6 @@
 		advanced pane, possibly on a per-category basis)
   - Add advanced categories for service specific preferences
   - Make heights of preference panes equal where possible
-  - Fade between preference panes when switching?
 
 //Alerts
   - Display time stamps in the panel alert
