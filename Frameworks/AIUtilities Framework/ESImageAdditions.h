@@ -19,7 +19,6 @@ typedef enum {
 	IMAGE_POSITION_LOWER_RIGHT
 } IMAGE_POSITION;
 
-
 @interface NSImage (ESImageAdditions)
 
 + (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass;
@@ -30,7 +29,7 @@ typedef enum {
 - (NSImage *)imageByScalingToSize:(NSSize)size;
 - (NSImage *)imageByFadingToFraction:(float)delta;
 - (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta;
-- (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta flipImage:(BOOL)flipImage;
+- (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta flipImage:(BOOL)flipImage proportionally:(BOOL)proportionally;
 + (NSImage *)imageFromGWorld:(GWorldPtr)gWorldPtr;
 + (NSImage *)systemCloseButtonImageForState:(AICloseButtonState)state controlTint:(NSControlTint)inTint;
 + (NSImage *)systemCheckmark;
