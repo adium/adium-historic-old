@@ -12,7 +12,7 @@
 
 #define IDLE_TIME_DEFAULT_PREFERENCES	@"IdleDefaultPrefs"
 
-#define PREF_GROUP_IDLE_TIME			@"Idle"
+#define PREF_GROUP_IDLE_TIME		@"Idle"
 #define KEY_IDLE_TIME_ENABLED		@"Idle Enabled"
 #define KEY_IDLE_TIME_IDLE_MINUTES	@"Threshold"
 

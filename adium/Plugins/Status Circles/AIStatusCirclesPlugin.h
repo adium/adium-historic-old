@@ -13,12 +13,43 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#import <Adium/Adium.h>
 #import <Cocoa/Cocoa.h>
 
-@class AIStatusCircle;
+#define STATUS_CIRCLES_DEFAULT_PREFS	@"StatusCirclesDefaults"
+#define PREF_GROUP_STATUS_CIRCLES	@"StatusCircles"
+
+#define KEY_DISPLAY_IDLE_TIME		@"Display Idle Time"
+
+#define KEY_AWAY_COLOR			@"Away Color"
+#define KEY_IDLE_AWAY_COLOR		@"Idle & Away Color"
+#define KEY_IDLE_COLOR			@"Idle Color"
+#define KEY_ONLINE_COLOR		@"Online Color"
+#define KEY_OPEN_TAB_COLOR		@"Open Tab Color"
+#define KEY_SIGNED_OFF_COLOR		@"Signed Off Color"
+#define KEY_SIGNED_ON_COLOR		@"Signed On Color"
+#define KEY_UNVIEWED_COLOR		@"Unviewed Content Color"
+#define KEY_WARNING_COLOR		@"Warning Color"
+
+@class AIStatusCirclesPreferences;
+//@class AIStatusCircle;
 
 @interface AIStatusCirclesPlugin : AIPlugin <AIFlashObserver> {
+    AIStatusCirclesPreferences *preferences;
+
     NSMutableArray	*flashingContactArray;
+
+    BOOL		displayIdleTime;
+
+    NSColor		*signedOffColor;
+    NSColor		*signedOnColor;
+    NSColor		*onlineColor;
+    NSColor		*awayColor;
+    NSColor		*idleColor;
+    NSColor		*idleAwayColor;
+    NSColor		*openTabColor;
+    NSColor		*unviewedContentColor;
+    NSColor		*warningColor;
 }
 
 @end
