@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*
-    Assists with loading images from an auxilary bundle.
+    Assists with loading images from an auxiliary bundle.
 */
 
 //Includes

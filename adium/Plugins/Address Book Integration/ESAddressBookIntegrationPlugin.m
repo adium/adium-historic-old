@@ -161,7 +161,7 @@
     if (inData) {
         //Check if we retrieved data from the 'me' address book card
         if (tag == meTag) {
-	    [[adium preferenceController] setPreference:inData forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
+			[[adium preferenceController] setPreference:inData forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
             meTag = -1;
         }else{
             //Apply the image to the appropriate listObject

@@ -40,7 +40,7 @@
     [[[view_accountView superview] window] setInitialFirstResponder:textField_username];
 }
 
-- (NSArray *)auxilaryTabs
+- (NSArray *)auxiliaryTabs
 {
     return nil;
 }
