@@ -118,7 +118,7 @@
         NSArray *tabViewItems = [inTabView tabViewItems];
         auxiliaryTabs = [tabViewItems copy];
         
-        //Now release the tabs and the window they came from, as they were simply messengers, and killing the messenger is always fun
+        //Now release the tabs and the window they came from
         NSEnumerator    *enumerator = [tabViewItems objectEnumerator];
         NSTabViewItem   *tabViewItem;
         

@@ -22,7 +22,7 @@
                 "button_newAccount" = NSButton; 
                 "popupMenu_serviceList" = NSPopUpButton; 
                 "scrollView_accountList" = AIAutoScrollView; 
-                "tabView_auxilary" = NSTabView; 
+                "tabView_auxiliary" = NSTabView; 
                 "tableView_accountList" = AIAlternatingRowTableView; 
                 "view_accountDetails" = NSView; 
                 "view_accountPreferences" = NSView; 
