@@ -32,6 +32,11 @@
 #define KEY_SPEECH_PRESET_EVENT_ID			@"Notification"
 #define	KEY_SPEECH_PRESET_DETAILS			@"Details"
 
+//Growl
+#define GROWL_DEFAULT_PREFS					@"GrowlDefaults"
+#define	GROWL_PRESETS						@"GrowlPresets"
+#define KEY_GROWL_PRESET_EVENT_ID			@"Notification"
+
 @interface ESGlobalEventsPreferencesPlugin (PRIVATE)
 - (NSArray *)soundSetArrayAtPath:(NSString *)inPath creator:(NSString **)outCreator description:(NSString **)outDesc;
 - (void)activateSoundSet:(NSArray *)soundSetArray;
@@ -42,7 +47,14 @@
 - (void)activateSpeechPreset:(NSArray *)presetArray;
 - (NSDictionary *)speechAlertFromDictionary:(NSDictionary *)dictionary;
 
-- (NSArray *)behaviorForPreset:(NSString *)presetName inPresetArray:(NSArray *)presetArray;
+- (void)activateGrowlPreset:(NSArray *)presetArray;
+- (NSDictionary *)growlAlertFromDictionary:(NSDictionary *)dictionary;
+
+- (NSArray *)_behaviorForPreset:(NSString *)presetName inPresetArray:(NSArray *)presetArray;
+
+- (void)_activateSet:(NSArray *)setArray withActionID:(NSString *)actionID alertGenerationSelector:(SEL)selector;
+- (NSArray *)_availablePresetsFromArray:(NSArray *)presetsArray;
+- (void)_updateActiveSetFromPresetsArray:(NSArray *)presetsArray withActionID:(NSString *)actionID alertGenerationSelector:(SEL)selector preferencesKey:(NSString *)prefKey preferencesGroup:(NSString *)prefGroup;
 @end
 
 @implementation ESGlobalEventsPreferencesPlugin
@@ -57,8 +69,9 @@
 										  forClass:[self class]] retain];
 	speechPresetsArray = [[NSArray arrayNamed:SPEECH_PRESETS
 									 forClass:[self class]] retain];
-	
-	
+	growlPresetsArray = [[NSArray arrayNamed:GROWL_PRESETS
+									forClass:[self class]] retain];
+	NSLog(@"%@",growlPresetsArray);
     //Register default preferences and pre-set behavior
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_SOUNDS_DEFAULT_PREFS 
 																		forClass:[self class]] 
@@ -66,7 +79,10 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_BEHAVIOR_DEFAULT_PREFS
 																		forClass:[self class]]
 										  forGroup:PREF_GROUP_DOCK_BEHAVIOR];
-
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GROWL_DEFAULT_PREFS
+																		forClass:[self class]]
+										  forGroup:PREF_GROUP_GROWL];
+	
 	//Wait for Adium to finish launching before we perform further actions
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
@@ -87,6 +103,7 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
  	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DOCK_BEHAVIOR];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ANNOUNCER];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GROWL];
 	
 	[[adium notificationCenter] removeObserver:self
 										  name:Adium_CompletedApplicationLoad
@@ -119,7 +136,7 @@
 		if(activeBehaviorSet && [activeBehaviorSet length] != 0){ //preset
 			NSArray			*behaviorArray;
 			
-			behaviorArray = [self behaviorForPreset:activeBehaviorSet inPresetArray:dockBehaviorPresetsArray];
+			behaviorArray = [self _behaviorForPreset:activeBehaviorSet inPresetArray:dockBehaviorPresetsArray];
 			[self activateDockBehaviorSet:behaviorArray];
 		}
 	}else if([group isEqualToString:PREF_GROUP_ANNOUNCER]){
@@ -130,8 +147,19 @@
 		if(activeSpeechSet && [activeSpeechSet length] != 0){ //preset
 			NSArray			*presetArray;
 			
-			presetArray = [self behaviorForPreset:activeSpeechSet inPresetArray:speechPresetsArray];
+			presetArray = [self _behaviorForPreset:activeSpeechSet inPresetArray:speechPresetsArray];
 			[self activateSpeechPreset:presetArray];
+		}
+	}else if([group isEqualToString:PREF_GROUP_GROWL]){
+		NSString		*activeGrowlSet;
+		
+		//Load the behaviorSet
+		activeGrowlSet = [prefDict objectForKey:KEY_GROWL_ACTIVE_PRESET];
+		if(activeGrowlSet && [activeGrowlSet length] != 0){ //preset
+			NSArray			*presetArray;
+			
+			presetArray = [self _behaviorForPreset:activeGrowlSet inPresetArray:growlPresetsArray];
+			[self activateGrowlPreset:presetArray];
 		}		
 	}
 }
@@ -227,75 +255,22 @@
 #pragma mark Dock behavior sets
 - (void)activateDockBehaviorSet:(NSArray *)behaviorArray
 {
-	NSEnumerator	*enumerator;
-	NSDictionary	*dictionary;
-
-	//Clear out old global dock behavior alerts
-	[[adium contactAlertsController] removeAllGlobalAlertsWithActionID:DOCK_BEHAVIOR_ALERT_IDENTIFIER];
-	
-	//
-	enumerator = [behaviorArray objectEnumerator];
-	while((dictionary = [enumerator nextObject])){
-		[[adium contactAlertsController] addGlobalAlert:[self dockAlertFromPresetDictionary:dictionary]];
-	}
+	[self _activateSet:behaviorArray withActionID:DOCK_BEHAVIOR_ALERT_IDENTIFIER alertGenerationSelector:@selector(dockAlertFromPresetDictionary:)];
 }
 
 //Returns an array of the available preset names
 - (NSArray *)availableDockBehaviorPresets
 {
-    NSMutableArray	*availablePresets = [NSMutableArray array];
-    NSEnumerator	*enumerator;
-    NSDictionary	*set;
-    
-    //Grab the name of each set
-    enumerator = [dockBehaviorPresetsArray objectEnumerator];
-    while((set = [enumerator nextObject])){
-        [availablePresets addObject:[set objectForKey:@"Name"]];
-    }
-
-    return(availablePresets);
+	return [self _availablePresetsFromArray:dockBehaviorPresetsArray];
 }
 
 - (void)updateActiveDockBehaviorSet
 {
-	NSArray			*alertsArray = [[adium contactAlertsController] alertsForListObject:nil
-																		   withActionID:DOCK_BEHAVIOR_ALERT_IDENTIFIER];
-	NSEnumerator	*enumerator;
-	NSDictionary	*presetDict;
-	NSString		*activeSetName = nil;
-
-    //Each set is a dictionary with a Name and a Behavior
-	enumerator = [dockBehaviorPresetsArray objectEnumerator];
-
-    while((presetDict = [enumerator nextObject]) && !activeSetName){
-		//the Behavior of a set is an array of dicts, each of which represents a contact alert
-		NSArray	*behaviorArray = [presetDict objectForKey:@"Behavior"];
-		
-		//The alertsArray and this behaviorDict can only be the same if they have the same count
-		if([behaviorArray count] == [alertsArray count]){
-			NSEnumerator	*behaviorEnumerator;
-			NSDictionary	*dictionary;
-			
-			//If they do, then they are the same iff the alertsArray contains each alert created by the behaviorArray.
-			//As soon as it doesn't, we know we don't have a match and can stop.
-			behaviorEnumerator = [behaviorArray objectEnumerator];
-			while((dictionary = [behaviorEnumerator nextObject])){
-				if(![alertsArray containsObject:[self dockAlertFromPresetDictionary:dictionary]]){
-					break;
-				}
-			}
-			
-			//If it made it to the end, dictionary will be nil and we have a match.
-			if(!dictionary) activeSetName = [presetDict objectForKey:@"Name"];
-		}
-	}
-
-	//Can't set nil because if we do the default will be reapplied on next launch
-	[[adium preferenceController] setPreference:(activeSetName ?
-												 activeSetName : 
-												 @"")
-										 forKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET
-										  group:PREF_GROUP_DOCK_BEHAVIOR];
+	[self _updateActiveSetFromPresetsArray:dockBehaviorPresetsArray
+							  withActionID:DOCK_BEHAVIOR_ALERT_IDENTIFIER
+				   alertGenerationSelector:@selector(dockAlertFromPresetDictionary:)
+							preferencesKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET
+						  preferencesGroup:PREF_GROUP_DOCK_BEHAVIOR];
 }
 
 - (NSDictionary *)dockAlertFromPresetDictionary:(NSDictionary *)dictionary
@@ -314,74 +289,21 @@
 #pragma mark Speech presets
 - (void)activateSpeechPreset:(NSArray *)presetArray
 {
-	NSEnumerator	*enumerator;
-	NSDictionary	*dictionary;
-	
-	//Clear out old global dock behavior alerts
-	[[adium contactAlertsController] removeAllGlobalAlertsWithActionID:SPEAK_EVENT_ALERT_IDENTIFIER];
-	
-	//
-	enumerator = [presetArray objectEnumerator];
-	while((dictionary = [enumerator nextObject])){
-		[[adium contactAlertsController] addGlobalAlert:[self speechAlertFromDictionary:dictionary]];
-	}	
+	[self _activateSet:presetArray withActionID:SPEAK_EVENT_ALERT_IDENTIFIER alertGenerationSelector:@selector(speechAlertFromDictionary:)];
 }
 
 - (NSArray *)availableSpeechPresets
 {
-	NSMutableArray	*availablePresets = [NSMutableArray array];
-    NSEnumerator	*enumerator;
-    NSDictionary	*set;
-    
-    //Grab the name of each set
-    enumerator = [speechPresetsArray objectEnumerator];
-    while((set = [enumerator nextObject])){
-        [availablePresets addObject:[set objectForKey:@"Name"]];
-    }
-    
-    return(availablePresets);
+	return [self _availablePresetsFromArray:speechPresetsArray];
 }
 
 - (void)updateActiveSpeechPreset
 {
-	NSArray			*alertsArray = [[adium contactAlertsController] alertsForListObject:nil
-																		   withActionID:SPEAK_EVENT_ALERT_IDENTIFIER];
-	NSEnumerator	*enumerator;
-	NSDictionary	*presetDict;
-	NSString		*activeSetName = nil;
-	
-    //Each set is a dictionary with a Name and a Behavior
-	enumerator = [speechPresetsArray objectEnumerator];
-	
-    while((presetDict = [enumerator nextObject]) && !activeSetName){
-		//the Behavior of a set is an array of dicts, each of which represents a contact alert
-		NSArray	*behaviorArray = [presetDict objectForKey:@"Behavior"];
-		
-		//The alertsArray and this behaviorDict can only be the same if they have the same count
-		if([behaviorArray count] == [alertsArray count]){
-			NSEnumerator	*behaviorEnumerator;
-			NSDictionary	*dictionary;
-			
-			//If they do, then they are the same iff the alertsArray contains each alert created by the behaviorArray.
-			//As soon as it doesn't, we know we don't have a match and can stop.
-			behaviorEnumerator = [behaviorArray objectEnumerator];
-			while((dictionary = [behaviorEnumerator nextObject])){
-				if(![alertsArray containsObject:[self speechAlertFromDictionary:dictionary]]){
-					break;
-				}
-			}
-			
-			//If it made it to the end, dictionary will be nil and we have a match.
-			if(!dictionary) activeSetName = [presetDict objectForKey:@"Name"];
-		}
-	}
-	
-	//Can't set nil because if we do the default will be reapplied on next launch
-	[[adium preferenceController] setPreference:(activeSetName ?
-												 activeSetName : 
-												 @"")
-										 forKey:KEY_SPEECH_ACTIVE_PRESET
-										  group:PREF_GROUP_ANNOUNCER];
+	[self _updateActiveSetFromPresetsArray:speechPresetsArray
+							  withActionID:SPEAK_EVENT_ALERT_IDENTIFIER
+				   alertGenerationSelector:@selector(speechAlertFromDictionary:)
+							preferencesKey:KEY_SPEECH_ACTIVE_PRESET
+						  preferencesGroup:PREF_GROUP_ANNOUNCER];
 }
 
 - (NSDictionary *)speechAlertFromDictionary:(NSDictionary *)dictionary
@@ -398,9 +320,42 @@
 	return(speechAlert);
 }
 
+#pragma mark Growl presets
+- (void)activateGrowlPreset:(NSArray *)presetArray
+{
+	[self _activateSet:presetArray withActionID:GROWL_EVENT_ALERT_IDENTIFIER alertGenerationSelector:@selector(growlAlertFromDictionary:)];
+}
+
+- (NSArray *)availableGrowlPresets
+{
+	return [self _availablePresetsFromArray:growlPresetsArray];
+}
+
+- (void)updateActiveGrowlPreset
+{
+	[self _updateActiveSetFromPresetsArray:growlPresetsArray
+							  withActionID:GROWL_EVENT_ALERT_IDENTIFIER
+				   alertGenerationSelector:@selector(growlAlertFromDictionary:)
+							preferencesKey:KEY_GROWL_ACTIVE_PRESET
+						  preferencesGroup:PREF_GROUP_GROWL];
+}
+
+- (NSDictionary *)growlAlertFromDictionary:(NSDictionary *)dictionary
+{
+	NSString		*eventID = [dictionary objectForKey:KEY_GROWL_PRESET_EVENT_ID];
+//	NSDictionary	*details = [dictionary objectForKey:KEY_GROWL_PRESET_DETAILS];
+	NSDictionary	*speechAlert = [NSDictionary dictionaryWithObjectsAndKeys:
+		eventID, KEY_EVENT_ID,
+		GROWL_EVENT_ALERT_IDENTIFIER, KEY_ACTION_ID,
+		[NSNumber numberWithBool:NO], KEY_ONE_TIME_ALERT,
+		/*details, KEY_ACTION_DETAILS,*/nil];
+
+	return(speechAlert);
+}
+
 #pragma mark All simple presets
 //Returns the behavior for a preset
-- (NSArray *)behaviorForPreset:(NSString *)presetName inPresetArray:(NSArray *)presetArray
+- (NSArray *)_behaviorForPreset:(NSString *)presetName inPresetArray:(NSArray *)presetArray
 {
     NSEnumerator	*enumerator;
     NSDictionary	*set;
@@ -415,4 +370,80 @@
     
     return(nil);
 }
+
+- (void)_activateSet:(NSArray *)setArray withActionID:(NSString *)actionID alertGenerationSelector:(SEL)selector
+{
+	NSEnumerator	*enumerator;
+	NSDictionary	*dictionary;
+	
+	//Clear out old global dock behavior alerts
+	[[adium contactAlertsController] removeAllGlobalAlertsWithActionID:actionID];
+	
+	//
+	enumerator = [setArray objectEnumerator];
+	while((dictionary = [enumerator nextObject])){
+		[[adium contactAlertsController] addGlobalAlert:[self performSelector:selector
+																   withObject:dictionary]];
+	}
+}
+
+- (NSArray *)_availablePresetsFromArray:(NSArray *)presetsArray
+{
+	NSMutableArray	*availablePresets = [NSMutableArray array];
+    NSEnumerator	*enumerator;
+    NSDictionary	*set;
+    
+    //Grab the name of each set
+    enumerator = [presetsArray objectEnumerator];
+    while((set = [enumerator nextObject])){
+        [availablePresets addObject:[set objectForKey:@"Name"]];
+    }
+	
+    return availablePresets;
+}
+
+
+- (void)_updateActiveSetFromPresetsArray:(NSArray *)presetsArray withActionID:(NSString *)actionID alertGenerationSelector:(SEL)selector preferencesKey:(NSString *)prefKey preferencesGroup:(NSString *)prefGroup
+{		
+	NSArray			*alertsArray = [[adium contactAlertsController] alertsForListObject:nil
+																		   withActionID:actionID];
+	NSEnumerator	*enumerator;
+	NSDictionary	*presetDict;
+	NSString		*activeSetName = nil;
+	
+    //Each set is a dictionary with a Name and a Behavior
+	enumerator = [presetsArray objectEnumerator];
+	
+    while((presetDict = [enumerator nextObject]) && !activeSetName){
+		//the Behavior of a set is an array of dicts, each of which represents a contact alert
+		NSArray	*behaviorArray = [presetDict objectForKey:@"Behavior"];
+		
+		//The alertsArray and this behaviorDict can only be the same if they have the same count
+		if([behaviorArray count] == [alertsArray count]){
+			NSEnumerator	*behaviorEnumerator;
+			NSDictionary	*dictionary;
+			
+			//If they do, then they are the same iff the alertsArray contains each alert created by the behaviorArray.
+			//As soon as it doesn't, we know we don't have a match and can stop.
+			behaviorEnumerator = [behaviorArray objectEnumerator];
+			while((dictionary = [behaviorEnumerator nextObject])){
+				if(![alertsArray containsObject:[self performSelector:selector
+														   withObject:dictionary]]){
+					break;
+				}
+			}
+			
+			//If it made it to the end, dictionary will be nil and we have a match.
+			if(!dictionary) activeSetName = [presetDict objectForKey:@"Name"];
+		}
+	}
+	
+	//Can't set nil because if we do the default will be reapplied on next launch
+	[[adium preferenceController] setPreference:(activeSetName ?
+												 activeSetName : 
+												 @"")
+										 forKey:prefKey
+										  group:prefGroup];
+}
+
 @end

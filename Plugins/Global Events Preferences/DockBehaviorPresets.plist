@@ -11,13 +11,26 @@
                 <key>Behavior</key>
                 <real>1</real>
                 <key>Notification</key>
-                <string>Content_MessageReceivedFirst</string>
+                <string>Content_MessageReceived</string>
             </dict>
+            <dict>
+                <key>Behavior</key>
+                <real>2</real>
+                <key>Notification</key>
+                <string>Interface_ErrorMessageReceived</string>
+            </dict>
+        </array>
+    </dict>
+	    <dict>
+        <key>Name</key>
+        <string>On New Background Messages</string>
+        <key>Behavior</key>
+        <array>
             <dict>
                 <key>Behavior</key>
                 <real>1</real>
                 <key>Notification</key>
-                <string>Content_MessageReceived</string>
+                <string>Content_MessageReceivedBackground</string>
             </dict>
             <dict>
                 <key>Behavior</key>
