@@ -36,14 +36,13 @@
  * @brief Label
  */
 - (NSString *)label{
-    return(AILocalizedString(@"Contact List","Contact List Advanced Preferences category name"));
+    return(CONTACT_LIST_TITLE);
 }
 
 /*!
  * @brief Nib name
  */
 - (NSString *)nibName{
-	NSLog(@"returning nib");
     return(@"ContactListAdvancedPrefs");
 }
 
