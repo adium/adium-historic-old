@@ -248,6 +248,9 @@ typedef enum {
 - (void)toggleToolbarShown:(id)sender;
 - (void)runToolbarCustomizationPalette:(id)sender;
 
+//Window levels menu
+- (NSMenu *)menuForWindowLevelsNotifyingTarget:(id)target;
+
 //Private
 - (void)initController;
 - (void)finishIniting;
