@@ -9,6 +9,7 @@ Version 0.52 (4/16/2004)
 - Fixed MSN and Yahoo reconnect behavior to not attempt a reconnect if you sign on from another location
 - An attempt to connect with an invalid password now reprompts for a correct password
 - ICQ contacts and accounts are now differentiated from AIM contacts in tooltips and the account lists, respectively
+- Initial contact note support (via the Contact Inspector)
 - Fixed address book integration for contacts with spaces in their screennames
 - Fixed retrieval of AIM away messages and profiles which contain non-Roman characters
 - Fixed autocompletion in the New Message window

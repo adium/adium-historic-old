@@ -11,40 +11,40 @@
 |
 | You should have received a copy of the GNU General Public License along with this program; if not,
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-                                              \------------------------------------------------------------------------------------------------------ */
+\------------------------------------------------------------------------------------------------------ */
 
 #import "BGContactNotesPlugin.h"
 #import "AIContactListEditorPlugin.h"
 #import "AIContactInfoWindowController.h"
 
 #define	CONTACT_NOTES_NIB			@"ContactNotes"		//Filename of the notes info view
-#define	PREF_GROUP_ALIASES			@"Aliases"              //Preference group to store aliases in
+#define	PREF_GROUP_NOTES			@"Notes"              //Preference group to store aliases in
 
 @interface BGContactNotesPlugin (PRIVATE) // should call an internal method to add to the list object :)
-- (NSArray *)_addNotes:(NSString *)inAlias toObject:(AIListObject *)inObject notify:(BOOL)notify;
+- (NSArray *)_addNotes:(NSString *)inNotes toObject:(AIListObject *)inObject notify:(BOOL)notify;
 @end
 
 @implementation BGContactNotesPlugin
+// here follows a shameless hack of the alias support and idle time into a notes monstrosity
 
 - (void)installPlugin
 {    
     //Register ourself as a handle observer
     [[adium contactController] registerListObjectObserver:self];
     
-    //Observe preferences changes 
-    [[adium notificationCenter] addObserver:self
-                                   selector:@selector(preferencesChanged:)
-                                       name:Preference_GroupChanged 
-                                     object:nil]; // notes changed not.?
-    
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_NOTES_NIB owner:self];
     contactView = [[AIPreferenceViewController controllerWithName:@"Notes" 
                                                      categoryName:@"None" 
-                                                             view:view_ContactNotesView 
+                                                             view:view_contactNotesInfoView 
                                                          delegate:self] retain];
     [[adium contactController] addContactInfoView:contactView];
     [textField_notes setDelegate:self];
+    
+    //Install our tooltip entry
+    // currently the tooltip works, but longer entries and just about anything
+    // can make the spacing/alignment/edges go a bit bitchy
+    //[[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:NO];
     
     activeListObject = nil;
     delayedChangesTimer = nil;
@@ -55,6 +55,25 @@
     [delayedChangesTimer release]; delayedChangesTimer = nil;
     [[adium contactController] unregisterListObjectObserver:self];
 }
+
+//Tooltip entry ---------------------------------------------------------------------------------------
+- (NSString *)labelForObject:(AIListObject *)inObject
+{
+    return(@"Notes");
+}
+
+- (NSAttributedString *)entryForObject:(AIListObject *)inObject
+{
+    NSAttributedString * entry = nil;
+    if([inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES]){
+        NSString *currentNotes;
+        currentNotes = [(AIListContact *)inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES];
+        entry = [[NSAttributedString alloc] initWithString:currentNotes];
+    }
+    
+    return([entry autorelease]);
+}
+// end tooltip ----------------------------------
 
 - (IBAction)setNotes:(id)sender
 {
@@ -68,8 +87,8 @@
         //Apply
         [self _addNotes:notes toObject:activeListObject notify:YES];
         
-        //Save the alias
-        [activeListObject setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
+        //Save the note
+        [activeListObject setPreference:notes forKey:@"Notes" group:PREF_GROUP_NOTES];
     }
 }
 
@@ -77,116 +96,37 @@
 {
     //Be sure we've set the last changes and invalidated the timer
     if(delayedChangesTimer) {
-        [self setAlias:nil];
+        [self setNotes:nil];
         if ([delayedChangesTimer isValid]) {
             [delayedChangesTimer invalidate]; 
         }
         [delayedChangesTimer release]; delayedChangesTimer = nil;
     }
     
-    NSString	*alias;
+    NSString	*note;
     
     //Hold onto the object
     [activeListObject release]; activeListObject = nil;
     activeListObject = [inObject retain];
     
-    //Fill in the current alias
-    if(alias = [inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES]){
-        [textField_alias setStringValue:alias];
+    //Fill in the current note
+    if(note = [inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES]){
+        [textField_notes setStringValue:note];
     }else{
-        [textField_alias setStringValue:@""];
+        [textField_notes setStringValue:@""];
     }
 }
 
-
-//Called as contacts are created, load their alias
+//Called as contacts are created, load their notes
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
-{
-    if((inModifiedKeys == nil) || ([inModifiedKeys containsObject:@"FormattedUID"])){
-        if([inObject isKindOfClass:[AIListContact class]]){
-            return([self _applyAlias:[inObject preferenceForKey:@"Alias"
-                                                          group:PREF_GROUP_ALIASES 
-                                          ignoreInheritedValues:YES]
-                            toObject:inObject
-                              notify:YES]);
-        }
-    }
-    
+{    
     return(nil);
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
-{
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DISPLAYFORMAT] == 0){
-        //load new displayFormat
-        displayFormat = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_DISPLAYFORMAT] objectForKey:@"Long Display Format"] intValue]; 
-        
-        //Update all existing contacts
-        [[adium contactController] updateAllListObjectsForObserver:self];
-    }
-}
-
-
 //Private ---------------------------------------------------------------------------------------
-//Apply an alias to an object (Does not save the alias!)
-- (NSArray *)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject notify:(BOOL)notify
-{
-    NSArray				*modifiedAttributes;
-    NSString			*displayName = nil;
-    NSString			*longDisplayName = nil;
-    NSString			*formattedUID = nil;
-    
-    AIMutableOwnerArray *displayNameArray = [inObject displayArrayForKey:@"Display Name"];
-    
-    //Apply the alias
-    [[inObject displayArrayForKey:@"Adium Alias"] setObject:inAlias withOwner:self];
-    [displayNameArray setObject:inAlias withOwner:self priorityLevel:High_Priority];
-    
-    //Get the displayName which is now active for the object
-    displayName = [displayNameArray objectValue];
-    
-    //Build and set the Long Display Name
-    switch(displayFormat)
-    {
-        case DISPLAY_NAME:
-            longDisplayName = displayName;
-            break;
-            
-        case DISPLAY_NAME_SCREEN_NAME:
-            formattedUID = [inObject formattedUID];
-            if(!displayName || [displayName compare:formattedUID] == 0){
-                longDisplayName = displayName;
-            }else{
-                longDisplayName = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
-            }
-		break;
-            
-        case SCREEN_NAME_DISPLAY_NAME:
-            formattedUID = [inObject formattedUID];
-            if(!displayName || [displayName compare:formattedUID] == 0){
-                longDisplayName = displayName;
-            }else{
-                longDisplayName = [NSString stringWithFormat:@"%@ (%@)",formattedUID,displayName];
-            }
-		break;
-            
-        case SCREEN_NAME:
-            longDisplayName = [inObject formattedUID];
-            break;
-            
-        default:
-            longDisplayName = nil;
-            break;
-    }
-    
-    //Apply the Long Display Name
-    [[inObject displayArrayForKey:@"Long Display Name"] setObject:longDisplayName withOwner:self];
-    
-    //Notify
-    modifiedAttributes = [NSArray arrayWithObjects:@"Display Name", @"Long Display Name", @"Adium Alias", nil];
-    if(notify) [[adium contactController] listObjectAttributesChanged:inObject modifiedKeys:modifiedAttributes];
-    
-    return(modifiedAttributes);
+- (NSArray *)_addNotes:(NSString *)inNotes toObject:(AIListObject *)inObject notify:(BOOL)notify;
+{    
+    return(nil);
 }
 
 //need to watch it as it changes as we can't catch the window closing
@@ -201,13 +141,13 @@
     
     delayedChangesTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5
                                                             target:self
-                                                          selector:@selector(_delayedSetAlias:) 
+                                                          selector:@selector(_delayedSetNotes:) 
                                                           userInfo:nil repeats:NO] retain];
 }
 
-- (void)_delayedSetAlias:(NSTimer *)inTimer
+- (void)_delayedSetNotes:(NSTimer *)inTimer
 {
-    [self setAlias:nil];
+    [self setNotes:nil];
 }
 
 @end

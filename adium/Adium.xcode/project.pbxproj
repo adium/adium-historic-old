@@ -197,6 +197,7 @@
 				6C5C3C2605F6532600490341,
 				4B04B0500600A661007060DF,
 				4B04B0520600A661007060DF,
+				C4382558062E7C5E00F5A31D,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -248,6 +249,7 @@
 				52AEBD6005ABA95700B19C56,
 				346C9C4806004517000F5A8A,
 				346C9C5306004525000F5A8A,
+				C438254B062E7C5E00F5A31D,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -8666,6 +8668,7 @@
 		};
 		4B4F5B25042D637700A8010A = {
 			children = (
+				C4382545062E795000F5A31D,
 				343C89B005704DEC005E0632,
 				4B28907503C1D14200A8010A,
 				F5148D9404C8B3BF018B6CC7,
@@ -17975,6 +17978,196 @@
 			path = Plugins/Themes/ThemesPrefs2.nib;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		C4382545062E795000F5A31D = {
+			children = (
+				C4382548062E798500F5A31D,
+				C4382549062E798500F5A31D,
+				C438254A062E798500F5A31D,
+			);
+			isa = PBXGroup;
+			name = "Contact Notes";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4382548062E798500F5A31D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = BGContactNotesPlugin.h;
+			path = "Plugins/Contact Notes/BGContactNotesPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4382549062E798500F5A31D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = BGContactNotesPlugin.m;
+			path = "Plugins/Contact Notes/BGContactNotesPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C438254A062E798500F5A31D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ContactNotes.nib;
+			path = "Plugins/Contact Notes/ContactNotes.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C438254B062E7C5E00F5A31D = {
+			buildPhases = (
+				C438254E062E7C5E00F5A31D,
+				C4382550062E7C5E00F5A31D,
+				C4382551062E7C5E00F5A31D,
+				C4382554062E7C5E00F5A31D,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Plists/Contact Notes.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
+				PRODUCT_NAME = "Contact Notes";
+				REZ_EXECUTABLE = NO;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				C438254C062E7C5E00F5A31D,
+				C438254D062E7C5E00F5A31D,
+			);
+			isa = PBXNativeTarget;
+			name = "Contact Notes";
+			productName = "Latex Plugin";
+			productReference = C4382558062E7C5E00F5A31D;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Latex Plugin</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Latex_Plugin</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+	<key>CSResourcesFileMapped</key>
+	<string>yes</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		C438254C062E7C5E00F5A31D = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = B72537BD058C45CF004BA969;
+		};
+		C438254D062E7C5E00F5A31D = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = B72537BF058C45D3004BA969;
+		};
+		C438254E062E7C5E00F5A31D = {
+			buildActionMask = 2147483647;
+			files = (
+				C4382559062E7C9800F5A31D,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4382550062E7C5E00F5A31D = {
+			buildActionMask = 2147483647;
+			files = (
+				C438255A062E7C9F00F5A31D,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4382551062E7C5E00F5A31D = {
+			buildActionMask = 2147483647;
+			files = (
+				C438255B062E7CA400F5A31D,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4382554062E7C5E00F5A31D = {
+			buildActionMask = 2147483647;
+			files = (
+				C4382555062E7C5E00F5A31D,
+				C4382556062E7C5E00F5A31D,
+				C4382557062E7C5E00F5A31D,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4382555062E7C5E00F5A31D = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4382556062E7C5E00F5A31D = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4382557062E7C5E00F5A31D = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4382558062E7C5E00F5A31D = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Contact Notes.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C4382559062E7C9800F5A31D = {
+			fileRef = C4382548062E798500F5A31D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C438255A062E7C9F00F5A31D = {
+			fileRef = C438254A062E798500F5A31D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C438255B062E7CA400F5A31D = {
+			fileRef = C4382549062E798500F5A31D;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		C4947AFF05BD177E00780FE2 = {
 			fileEncoding = 30;
