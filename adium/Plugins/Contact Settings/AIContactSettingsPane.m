@@ -38,17 +38,13 @@
 //Configure the pane for a list object
 - (void)configureForListObject:(AIListObject *)inObject
 {
-	//New list object
 	NSString	*alias;
 
-	[listObject release];
-	listObject = [inObject retain];
-	
 	//Be sure we've set the last changes before changing which object we are editing
 	[textField_alias fireImmediately];
 	
 	//Hold onto the object
-	[listObject release]; listObject = nil;
+	[listObject release];
 	listObject = [inObject retain];
 	
 	//Fill in the current alias

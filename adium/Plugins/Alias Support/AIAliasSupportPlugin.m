@@ -57,15 +57,7 @@
 								   selector:@selector(applyAliasRequested:)
 									   name:Contact_ApplyDisplayName
 									 object:nil];
-		
-    //Install the contact info view
-    [NSBundle loadNibNamed:CONTACT_ALIAS_NIB owner:self];
-//    contactView = [[AIPreferenceViewController controllerWithName:@"Alias" 
-//													 categoryName:@"None" 
-//															 view:view_contactAliasInfoView 
-//														 delegate:self] retain];
-#warning    [[adium contactController] addContactInfoView:contactView];
-    
+
 	//Create the menu item
 	menuItem_contactName = [[[NSMenuItem alloc] initWithTitle:CONTACT_NAME_MENU_TITLE
 												target:nil
@@ -77,8 +69,6 @@
 	
 	menu_contactSubmenu = [[self _contactNameMenu] retain];
 	[menuItem_contactName setSubmenu:menu_contactSubmenu];
-
-    activeListObject = nil;
 	
 	[self preferencesChanged:nil];
 }
@@ -90,49 +80,12 @@
 	[menu_contactSubmenu release];
 }
 
-- (IBAction)setAlias:(id)sender
-{
-    if (activeListObject) {
-        NSString	*alias = [textField_alias stringValue];
-        
-        //A 0 length alias is no alias at all.
-        if ([alias length] == 0)
-            alias = nil; 
-        
-        //Apply
-        [self _applyAlias:alias toObject:activeListObject notify:YES];
-        
-        //Save the alias
-        [activeListObject setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
-    }
-}
-
 -(IBAction)changeFormat:(id)sender
 {
 	
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]] forKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT];
 	
 }
-
-- (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
-{
-	NSString	*alias;
-	
-    //Be sure we've set the last changes before changing which object we are editing
-	[textField_alias fireImmediately];
-    
-    //Hold onto the object
-    [activeListObject release]; activeListObject = nil;
-    activeListObject = [inObject retain];
-
-    //Fill in the current alias
-    if(alias = [inObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES]){
-        [textField_alias setStringValue:alias];
-    }else{
-        [textField_alias setStringValue:@""];
-    }
-}
-
 
 //Called as contacts are created, load their alias
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
