@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.54 2004/02/28 22:04:29 evands Exp $
+// $Id: AIAccountController.m,v 1.55 2004/02/28 22:11:50 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -394,6 +394,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 }
 
 //Change the UID of an existing account
+#warning Deprecated
 - (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID
 {
     if(inUID && [inUID length] != 0){
