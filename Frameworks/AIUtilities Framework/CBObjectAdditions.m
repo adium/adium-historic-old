@@ -68,7 +68,9 @@
 	}else{
 		returnValue = nil;
 		[self performSelectorOnMainThread:aSelector waitUntilDone:NO];
-	}	
+	}
+
+	return(returnValue);
 }
 
 //Perform a selector on the main thread, optionally taking an argument, and return its return value
