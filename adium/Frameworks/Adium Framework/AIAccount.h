@@ -114,6 +114,7 @@ typedef enum {
 
 - (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval;
 - (void)autoReconnectAfterDelay:(int)delay;
+- (void)autoReconnectAfterNumberDelay:(NSNumber *)delayNumber;
 
 /*
  * @method properties

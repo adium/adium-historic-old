@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.54 2004/04/14 23:01:20 evands Exp $
+// $Id: AIAccount.m,v 1.55 2004/05/06 10:44:57 evands Exp $
 
 #import "AIAccount.h"
 
@@ -399,6 +399,10 @@
 //Auto-Reconnect -------------------------------------------------------------------------------------------------------
 #pragma mark Auto-Reconnect
 //Attempts to auto-reconnect (after an X second delay)
+- (void)autoReconnectAfterNumberDelay:(NSNumber *)delayNumber
+{
+	[self autoReconnectAfterDelay:[delayNumber intValue]];
+}
 - (void)autoReconnectAfterDelay:(int)delay
 {
     //Install a timer to autoreconnect after a delay
