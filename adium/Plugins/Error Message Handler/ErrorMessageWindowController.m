@@ -133,9 +133,12 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 
     frame.size.height += heightChange;
     frame.origin.y -= heightChange;
-    [[self window] setFrame:frame display:YES animate:YES];
+	if ([NSApp isOnPantherOrBetter]){
+		[[self window] setFrame:frame display:YES animate:YES];
+	}else{
+		[[self window] setFrame:frame display:YES];
+	}
 
-    
     //Display the current error count
     if([errorTitleArray count] == 1){
         [tabView_multipleErrors selectTabViewItemAtIndex:0]; //hide the 'okay all' button and error count
