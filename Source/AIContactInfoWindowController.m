@@ -259,7 +259,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	if(inObject == nil || displayedObject != inObject){
 		NSImage		*userIcon;
 		NSSize		userIconSize, imageView_userIconSize;
-			
+		BOOL		useDisplayName = NO;
+		
 		//Update our displayed object
 		[displayedObject release];
 		displayedObject = [inObject retain];
@@ -270,34 +271,37 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		}else{
 			[[self window] setTitle:AILocalizedString(@"Contact Info",nil)];
 		}
-		
-		//Account name
-		if (inObject){
-			NSString	*formattedUID = [inObject formattedUID];
-			[textField_accountName setStringValue:(formattedUID ? formattedUID : [inObject displayName])];	
-		}else{
-			[textField_accountName setStringValue:@""];
-		}
-			
+
 		//Service
 		if([inObject isKindOfClass:[AIListContact class]]){
 			NSString	*displayServiceID;
 			if ([inObject isKindOfClass:[AIMetaContact class]]){
 				if ([[(AIMetaContact *)inObject listContacts] count] > 1){
 					displayServiceID = META_SERVICE_STRING;
+					useDisplayName = YES;
 				}else{
 					displayServiceID = [[[(AIMetaContact *)inObject preferredContact] service] shortDescription];
 				}
+				
 			}else{
 				displayServiceID = [[inObject service] shortDescription];
 			}
 			
 			[textField_service setStringValue:(displayServiceID ? displayServiceID : @"")];
 			
-		} else if([inObject isKindOfClass:[AIListGroup class]]) {
+		}else if([inObject isKindOfClass:[AIListGroup class]]){
 			[textField_service setStringValue:AILocalizedString(@"Group",nil)];
-		} else {
+		}else{
 			[textField_service setStringValue:@""];
+		}
+		
+		//Account name
+		if (inObject){
+			[textField_accountName setStringValue:(useDisplayName ?
+												   [inObject displayName] :
+												   [inObject formattedUID])];	
+		}else{
+			[textField_accountName setStringValue:@""];
 		}
 		
 		//User Icon
