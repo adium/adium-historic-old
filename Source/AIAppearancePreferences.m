@@ -17,6 +17,7 @@
 #import "AIAppearancePreferences.h"
 #import "AIAppearancePreferencesPlugin.h"
 #import "AIDockController.h"
+#import "AIDockIconSelectionSheet.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIIconState.h>
@@ -131,6 +132,30 @@
                                              forKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE
                                               group:PREF_GROUP_LIST_LAYOUT];
 	}
+}
+
+/*!
+ *
+ */
+- (IBAction)showAllDockIcons:(id)sender
+{
+	[AIDockIconSelectionSheet showDockIconSelectorOnWindow:[[self view] window]];
+}
+
+/*!
+ *
+ */
+- (IBAction)customizeListLayout:(id)sender
+{
+
+}
+
+/*!
+ *
+ */
+- (IBAction)customizeListTheme:(id)sender
+{
+
 }
 
 

@@ -1,6 +1,7 @@
 {
     IBClasses = (
         {
+            ACTIONS = {customizeListLayout = id; customizeListTheme = id; showAllDockIcons = id; }; 
             CLASS = AIAppearancePreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
