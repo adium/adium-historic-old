@@ -4742,6 +4742,7 @@
 		};
 		4BD1F41C06D282EC00B3975E = {
 			children = (
+				4BFDF29607D2D36E008E4B91,
 				34D8355407CBEB0E006466F2,
 				34D8355907CBEB0E006466F2,
 				34D8355B07CBEB0E006466F2,
@@ -4872,6 +4873,20 @@
 		};
 		4BD1F5D206D28D2E00B3975E = {
 			fileRef = 34486B4D06D1DF0300DA778C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BFDF29607D2D36E008E4B91 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = Aqua_Tab_Background.png;
+			path = Resources/Aqua_Tab_Background.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BFDF29707D2D36E008E4B91 = {
+			fileRef = 4BFDF29607D2D36E008E4B91;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5121,6 +5136,7 @@
 				34D835A707CBEBEF006466F2,
 				34D835A807CBEBEF006466F2,
 				34D835A907CBEBEF006466F2,
+				4BFDF29707D2D36E008E4B91,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
