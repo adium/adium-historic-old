@@ -13,6 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
+#import <AddressBook/AddressBook.h>
 #import "BGContactNotesPlugin.h"
 #import "AIContactListEditorPlugin.h"
 #import "AIContactInfoWindowController.h"
@@ -49,6 +50,18 @@
     // can make the spacing/alignment/edges go a bit bitchy
     //[[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:NO];
     
+    //Observe preferences changes
+    [[adium notificationCenter] addObserver:self 
+                                   selector:@selector(preferencesChanged:) 
+                                       name:Preference_GroupChanged 
+                                     object:nil];
+    
+    //Observe external address book changes
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(addressBookChanged:)
+                                                 name:kABDatabaseChangedExternallyNotification
+                                               object:nil];    
+    
     activeListObject = nil;
     delayedChangesTimer = nil;
 }
@@ -57,6 +70,26 @@
 {
     [delayedChangesTimer release]; delayedChangesTimer = nil;
     [[adium contactController] unregisterListObjectObserver:self];
+}
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_ADDRESSBOOK] == 0){
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
+        noteSync = [[prefDict objectForKey:KEY_AB_NOTE_SYNC] boolValue];        
+        [self updateAllContacts];
+    }
+}
+
+- (void)addressBookChanged:(NSNotification *)notification
+{
+    [self updateAllContacts];
+}
+
+//Update all existing contacts
+- (void)updateAllContacts
+{
+    [[adium contactController] updateAllListObjectsForObserver:self];
 }
 
 //Tooltip entry ---------------------------------------------------------------------------------------

@@ -21,7 +21,7 @@
         menuButton = [[NSPopUpButton alloc] init];
         [menuButton setImage:[NSImage imageNamed:@"EmoticonMenu"]];
         [self buildMenu]; 
-        [self buildContextMenu];
+        [self buildContextualMenu];
         //[self buildToolbarItem];
         // add popup button to window's toolbar
         // register for menus
@@ -59,8 +59,8 @@
     [toolbarMenu setSubmenu: eMenu];
     [toolbarMenu setTitle: [toolbarItem label]];
     [toolbarItem setMenuFormRepresentation: toolbarMenu];
-    
 }
+
 -(void)buildMenu
 {
     NSEnumerator *emoteEnum = [emoticons objectEnumerator];
@@ -88,7 +88,7 @@
     AIEmoticon *selectedEmoticon;
     // selectedEmoticon = some really fun call or other technique :P
     NSString *emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
-    // [[[[AIController defaultController] currentChat] textEntryView] insertCharacters:emoString];
+    [[[[adium interfaceController] currentChat] textEntryView] insertCharacters:emoString];
 }
 
 -(NSMenu *)eMenu

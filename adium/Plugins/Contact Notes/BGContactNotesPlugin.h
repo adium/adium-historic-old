@@ -24,9 +24,12 @@
     AIPreferenceViewController		*contactView;
     AIListObject                        *activeListObject;
     NSTimer                             *delayedChangesTimer;
+    BOOL noteSync;
+    
 }
 
 - (void)installPlugin;
+- (void)updateAllContacts;
 - (IBAction)setNotes:(id)sender;
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject;
 
