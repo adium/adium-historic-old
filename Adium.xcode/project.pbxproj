@@ -278,6 +278,12 @@
 			settings = {
 			};
 		};
+		3402DFFF07CB0A980044F818 = {
+			fileRef = 344C0D4906B6D61B00DA7200;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34048AC50617CB4C004D0B7E = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -2663,7 +2669,7 @@
 				344C0D4F06B6D63800DA7200,
 				344C0D4E06B6D63800DA7200,
 				344C0D4806B6D61B00DA7200,
-				344C0D4C06B6D62600DA7200,
+				344C0D4906B6D61B00DA7200,
 			);
 			isa = PBXGroup;
 			name = Applescriptability;
@@ -2683,28 +2689,13 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = text.xml;
-			name = English;
-			path = Source/English.lproj/AdiumSuite.scriptTerminology;
+			name = AdiumSuite.scriptTerminology;
+			path = Source/AdiumSuite.scriptTerminology;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		344C0D4A06B6D61B00DA7200 = {
 			fileRef = 344C0D4806B6D61B00DA7200;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344C0D4C06B6D62600DA7200 = {
-			children = (
-				344C0D4906B6D61B00DA7200,
-			);
-			isa = PBXVariantGroup;
-			name = AdiumSuite.scriptTerminology;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344C0D4D06B6D62600DA7200 = {
-			fileRef = 344C0D4C06B6D62600DA7200;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7283,7 +7274,7 @@
 				9E28FDE706ADB30D0041553E,
 				9E28FDE806ADB30D0041553E,
 				344C0D4A06B6D61B00DA7200,
-				344C0D4D06B6D62600DA7200,
+				3402DFFF07CB0A980044F818,
 				C45F7F6706C75E210056B1F2,
 				4BF98DCD06D149EE00E8781D,
 				340F47EC06DA41DB0072E2FA,
@@ -22099,8 +22090,8 @@
 		};
 		F50CD61C03603BE201A8010A = {
 			children = (
-				347E784A07CA96D600350507,
 				347E784B07CA96D700350507,
+				347E784A07CA96D600350507,
 				347E785207CA96E200350507,
 				347E785307CA96E200350507,
 				347E785E07CA970500350507,
