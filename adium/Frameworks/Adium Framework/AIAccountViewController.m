@@ -33,33 +33,27 @@
     if(![NSBundle loadNibNamed:[self nibName] owner:self]){
         NSLog(@"couldn't load account view bundle");
     }
-	
-	//Extract our auxilary tabs from the nib
-	if(view_auxilaryTabView){
-		auxilaryTabs = [[view_auxilaryTabView tabViewItems] copy];
-		[view_auxilaryTabView removeTabViewItem:[view_auxilaryTabView tabViewItemAtIndex:0]];
-		[view_auxilaryTabView removeTabViewItem:[view_auxilaryTabView tabViewItemAtIndex:0]];
-		[[view_auxilaryTabView window] release];
-	}
-	
-	//Observer account changes
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(accountPreferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:account];
-	[[adium contactController] registerListObjectObserver:self];
-	
+    
+    [self loadAuxiliaryTabsFromTabView:view_auxiliaryTabView];
+    
+    //Observer account changes
+    [[adium notificationCenter] addObserver:self
+                                   selector:@selector(accountPreferencesChanged:)
+                                       name:Preference_GroupChanged
+                                     object:account];
+    [[adium contactController] registerListObjectObserver:self];
+    
     return(self);
 }
 
 //Dealloc
 - (void)dealloc
 {    
-	[[adium contactController] unregisterListObjectObserver:self];
+    [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
     [view_accountView release];
-    [auxilaryTabs release];
-	
+    [auxiliaryTabs release];
+    
     [super dealloc];
 }
 
@@ -73,15 +67,15 @@
 - (void)configureViewAfterLoad
 {
     NSString		*accountName, *savedPassword;
-
-	//Display formatted account name
-	accountName = [account preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
+    
+    //Display formatted account name
+    accountName = [account preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
     if(accountName != nil && [accountName length] != 0){
         [textField_accountName setStringValue:accountName];
     }else{
         [textField_accountName setStringValue:[account UID]];
     }
-	
+    
     //Display saved password
     savedPassword = [[adium accountController] passwordForAccount:account];
     if(savedPassword != nil && [savedPassword length] != 0){
@@ -89,10 +83,10 @@
     }else{
         [textField_password setStringValue:@""];
     }
-
-	//Enable/Disable controls
-	[self updateListObject:nil keys:nil delayed:NO silent:NO];
-
+    
+    //Enable/Disable controls
+    [self updateListObject:nil keys:nil delayed:NO silent:NO];
+    
 }
 
 //Return the inline view for this account
@@ -102,10 +96,31 @@
 }
 
 //Return the auxilary tabs for this account
-- (NSArray *)auxilaryTabs
+- (NSArray *)auxiliaryTabs
 {    
-    return(auxilaryTabs);
+    return(auxiliaryTabs);
 }
+
+- (void)loadAuxiliaryTabsFromTabView:(NSTabView *)inTabView
+{
+    //Extract our auxilary tabs from the nib, where they are stored in an NSTabView inside an NSWindow
+    if(inTabView){
+        //Get the array of tabs
+        NSArray *tabViewItems = [inTabView tabViewItems];
+        auxiliaryTabs = [tabViewItems copy];
+        
+        //Now release the tabs and the window they came from, as they were simply messengers, and killing the messenger is always fun
+        NSEnumerator    *enumerator = [tabViewItems objectEnumerator];
+        NSTabViewItem   *tabViewItem;
+        
+        while (tabViewItem = [enumerator nextObject]){
+            [inTabView removeTabViewItem:tabViewItem];
+        }
+        
+        [[inTabView window] release];
+    }
+}
+
 
 //Update display for account status change
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
@@ -126,22 +141,22 @@
     NSString    *group = [[notification userInfo] objectForKey:@"Group"];
     
     if(notification == nil || [group compare:GROUP_ACCOUNT_STATUS] == 0){
-		NSString    *key = [[notification userInfo] objectForKey:@"Key"];
-		
-		//Redisplay if the username changes
-		if([key compare:KEY_ACCOUNT_NAME] == 0){
-			[self configureViewAfterLoad];
-		}
+        NSString    *key = [[notification userInfo] objectForKey:@"Key"];
+        
+        //Redisplay if the username changes
+        if([key compare:KEY_ACCOUNT_NAME] == 0){
+            [self configureViewAfterLoad];
+        }
     }
 }
 
 //Save changes made to a preference control
 - (IBAction)changedPreference:(id)sender
 {
-	//Save changed password
-	if(sender == textField_password){
+    //Save changed password
+    if(sender == textField_password){
         NSString	*password = [sender stringValue];
-		
+        
         if(password && [password length] != 0){
             [[adium accountController] setPassword:password forAccount:account];
         }else{
@@ -156,23 +171,23 @@
     NSString    *accountName = [textField_accountName stringValue];
     
     if([[accountName compactedString] compare:[account UID]] != 0){
-		//If the name has changed completely, create a new account
-		//
-		// ####
-		// When we call changeUIDOfAccount, the account controller will delete us from the account list.
-		// This deletion will spawn a rebuild of the account preferences window, which will in turn delete
-		// this account view controller and all it's views.  The act of deleting the view which sent us this
-		// message will cause a crash as we exit below.
-		// 
-		// I've implemented a quick 'patchy' fix.  If you see a real fix for this problem, make it be :)
-		// ####
-		//
-		[self performSelector:@selector(_delayedChangeTo:) withObject:accountName afterDelay:0.0001];
-
+        //If the name has changed completely, create a new account
+        //
+        // ####
+        // When we call changeUIDOfAccount, the account controller will delete us from the account list.
+        // This deletion will spawn a rebuild of the account preferences window, which will in turn delete
+        // this account view controller and all it's views.  The act of deleting the view which sent us this
+        // message will cause a crash as we exit below.
+        // 
+        // I've implemented a quick 'patchy' fix.  If you see a real fix for this problem, make it be :)
+        // ####
+        //
+        [self performSelector:@selector(_delayedChangeTo:) withObject:accountName afterDelay:0.0001];
+        
     }else{
-		[account setPreference:accountName forKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
-
-	}
+        [account setPreference:accountName forKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
+        
+    }
 }
 - (void)_delayedChangeTo:(NSString *)toName{
     NSString    *flatUserName = [toName compactedString];

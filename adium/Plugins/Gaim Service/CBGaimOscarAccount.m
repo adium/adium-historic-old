@@ -9,6 +9,8 @@
 #import "CBGaimOscarAccount.h"
 #import "aim.h"
 
+#define OSCAR_DELAYED_UPDATE_INTERVAL   2
+
 //From oscar.c
 struct oscar_data {
     aim_session_t *sess;
@@ -97,7 +99,7 @@ struct oscar_data {
     //General updates
     [super accountUpdateBuddy:buddy];
     
-        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(_delayedBlistUpdate:) userInfo:[NSValue valueWithPointer:buddy] repeats:NO];
+        [NSTimer scheduledTimerWithTimeInterval:OSCAR_DELAYED_UPDATE_INTERVAL target:self selector:@selector(_delayedBlistUpdate:) userInfo:[NSValue valueWithPointer:buddy] repeats:NO];
 }
 
 - (void)_delayedBlistUpdate:(NSTimer *)inTimer

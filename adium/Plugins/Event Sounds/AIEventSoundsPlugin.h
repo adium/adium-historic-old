@@ -25,7 +25,7 @@
 #define	KEY_EVENT_SOUND_NOTIFICATION	@"Notification"
 #define KEY_EVENT_MUTE_WHILE_AWAY       @"Mute While Away"
 
-#define CONTACT_ALERT_IDENTIFIER        @"Sound"
+#define SOUND_ALERT_IDENTIFIER        @"Sound"
 
 #define SOUND_MENU_ICON_SIZE		16
 

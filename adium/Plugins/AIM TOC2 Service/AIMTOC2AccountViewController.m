@@ -56,19 +56,19 @@
 //Save changes made to a preference control
 - (IBAction)changedPreference:(id)sender
 {
-	//Handle the standard preferences
-	[super changedPreference:sender];
-
-	//Our custom preferences
+    //Handle the standard preferences
+    [super changedPreference:sender];
+    
+    //Our custom preferences
     if(sender == textField_host){
         [account setPreference:[sender stringValue] forKey:AIM_TOC2_KEY_HOST group:GROUP_ACCOUNT_STATUS];
-
+        
     }else if(sender == textField_port){
         [account setPreference:[sender stringValue] forKey:AIM_TOC2_KEY_PORT group:GROUP_ACCOUNT_STATUS];
-
+        
     }else if(sender == textField_fullName){
         [account setPreference:[sender stringValue] forKey:@"FullName" group:GROUP_ACCOUNT_STATUS];    
-
+        
     }
 }
 

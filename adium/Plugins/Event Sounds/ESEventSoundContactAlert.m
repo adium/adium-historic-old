@@ -41,7 +41,7 @@
                                            target:self
                                            action:@selector(selectedAlert:)
                                     keyEquivalent:@""] autorelease];
-    [menuItem setRepresentedObject:CONTACT_ALERT_IDENTIFIER];
+    [menuItem setRepresentedObject:SOUND_ALERT_IDENTIFIER];
     return (menuItem);
 }
 
@@ -54,7 +54,7 @@
     [popUp_actionDetails setMenu:[self soundListMenu]];
     
     //Set the menu to its previous setting if the stored event matches
-    if ([(NSString *)[currentDict objectForKey:KEY_EVENT_ACTION] isEqualToString:CONTACT_ALERT_IDENTIFIER]) {
+    if ([(NSString *)[currentDict objectForKey:KEY_EVENT_ACTION] isEqualToString:SOUND_ALERT_IDENTIFIER]) {
         [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[currentDict objectForKey:KEY_EVENT_DETAILS]]];        
     }
     
@@ -130,7 +130,7 @@
     //Add custom sounds to the menu as needed
     //Get the current dictionary
     NSDictionary *currentDict = [[adium contactAlertsController] currentDictForContactAlert:self];
-    if (currentDict && ([(NSString *)[currentDict objectForKey:KEY_EVENT_ACTION] compare:CONTACT_ALERT_IDENTIFIER] == 0)) {
+    if (currentDict && ([(NSString *)[currentDict objectForKey:KEY_EVENT_ACTION] compare:SOUND_ALERT_IDENTIFIER] == 0)) {
         //add it if it's not already in the menu
         NSString *soundPath = [currentDict objectForKey:KEY_EVENT_DETAILS];
         if (soundPath && ([soundPath length] != 0) && [popUp_actionDetails indexOfItemWithRepresentedObject:soundPath] == -1) {

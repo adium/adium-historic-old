@@ -19,13 +19,6 @@
 #define KEY_SIGNED_OFF_LENGTH			@"Signed Off Length"
 #define KEY_SIGNED_ON_LENGTH			@"Signed On Length"
 
-#define CONTACT_STATUS_ONLINE_YES	@"Contact_StatusOnlineYes"
-#define CONTACT_STATUS_ONLINE_NO	@"Contact_StatusOnlineNO"
-#define CONTACT_STATUS_AWAY_YES		@"Contact_StatusAwayYes"
-#define CONTACT_STATUS_AWAY_NO		@"Contact_StatusAwayNo"
-#define CONTACT_STATUS_IDLE_YES		@"Contact_StatusIdleYes"
-#define CONTACT_STATUS_IDLE_NO		@"Contact_StatusIdleNo"
-
 @protocol AIListObjectObserver;
 @class AIContactStatusEventsPreferences;
 

@@ -198,6 +198,13 @@ typedef enum {
 #define Dock_IconWillChange					@"Dock_IconWillChange"
 #define Dock_IconDidChange					@"Dock_IconDidChange"
 
+#define CONTACT_STATUS_ONLINE_YES                               @"Contact_StatusOnlineYes"
+#define CONTACT_STATUS_ONLINE_NO                                @"Contact_StatusOnlineNO"
+#define CONTACT_STATUS_AWAY_YES                                 @"Contact_StatusAwayYes"
+#define CONTACT_STATUS_AWAY_NO                                  @"Contact_StatusAwayNo"
+#define CONTACT_STATUS_IDLE_YES                                 @"Contact_StatusIdleYes"
+#define CONTACT_STATUS_IDLE_NO                                  @"Contact_StatusIdleNo"
+
 #define AILocalizedString(key, comment) [[NSBundle bundleForClass: [self class]] localizedStringForKey: (key) value:@"" table:nil]
 
 //Crash reporter
@@ -262,7 +269,7 @@ typedef enum {
 
 @protocol AIAccountViewController <NSObject>
 - (NSView *)view;
-- (NSArray *)auxilaryTabs;
+- (NSArray *)auxiliaryTabs;
 - (void)configureViewAfterLoad;
 @end
 

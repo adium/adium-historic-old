@@ -80,12 +80,16 @@
 
         //Put the sound paths into a dictionary (so it's quicker to lookup sounds), and observe the notifications
         [soundPathDict release]; soundPathDict = [[NSMutableDictionary alloc] init];
-
+        
+//        [[adium contactAlertsController] removeAllGlobalAlertsWithAction:SOUND_ALERT_IDENTIFIER];
+//        
         enumerator = [eventSoundArray objectEnumerator];
         while((eventDict = [enumerator nextObject])){
+
             NSString	*notificationName = [eventDict objectForKey:KEY_EVENT_SOUND_NOTIFICATION];
             NSString	*soundPath = [[eventDict objectForKey:KEY_EVENT_SOUND_PATH] stringByExpandingBundlePath];
-
+//
+//            [[adium contactAlertsController] addGlobalAction:SOUND_ALERT_IDENTIFIER 
             //Observe the notification
             [[adium notificationCenter] addObserver:self
                                            selector:@selector(eventNotification:)
@@ -183,7 +187,7 @@
 
 - (NSString *)identifier
 {
-    return CONTACT_ALERT_IDENTIFIER;
+    return SOUND_ALERT_IDENTIFIER;
 }
 
 - (ESContactAlert *)contactAlert
@@ -194,11 +198,21 @@
 //performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
 - (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
 {
-    if (details != nil && [details length] != 0) {
-            [[adium soundController] playSoundAtPath:details]; //Play the sound
-        return YES;
-    } else {
-        return NO;
+    if (inObject){
+        if (details != nil && [details length] != 0) {
+                [[adium soundController] playSoundAtPath:details]; //Play the sound
+            return YES;
+        } else {
+            return NO;
+        }
+    }else{
+        NSDictionary    *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
+        if (!([[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue] && [[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
+            [[adium soundController] playSoundAtPath:details];
+            return YES;
+        } else {
+            return NO;
+        }
     }
 }
 

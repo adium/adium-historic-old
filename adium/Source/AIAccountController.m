@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.41 2003/12/25 15:52:51 adamiser Exp $
+// $Id: AIAccountController.m,v 1.42 2003/12/29 04:04:59 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -367,16 +367,19 @@
 //Switches the service of the specified account
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService
 {
-    AIAccount	*newAccount;
-    NSString    *accountUID = [[[inAccount UID] copy] autorelease]; //Deleting the account will release the UID
-    int		index = [accountArray indexOfObject:inAccount];
-	
-    //Delete the existing account
-    [self deleteAccount:inAccount];
+    AIAccount	*newAccount = nil;
     
-    //Add an account with the new UID
-    newAccount = [self accountOfType:[inService identifier] withUID:accountUID];
-    [self insertAccount:newAccount atIndex:index];
+    if (inAccount) {
+        NSString    *accountUID = [[[inAccount UID] copy] autorelease]; //Deleting the account will release the UID
+        int		index = [accountArray indexOfObject:inAccount];
+	
+        //Delete the existing account
+        [self deleteAccount:inAccount];
+        
+        //Add an account with the new UID
+        newAccount = [self accountOfType:[inService identifier] withUID:accountUID];
+        [self insertAccount:newAccount atIndex:index];
+    }
     
     return(newAccount);
 }

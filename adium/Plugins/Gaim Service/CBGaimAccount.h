@@ -7,7 +7,6 @@
 //
 
 #include "internal.h"
-
 #include "connection.h"
 #include "conversation.h"
 #include "core.h"
@@ -24,6 +23,8 @@
 #include "sslconn.h"
 #include "sound.h"
 #include "util.h"
+
+#define KEY_PROFILE     @"TextProfile"
 
 @interface CBGaimAccount : AIAccount <AIAccount_Handles,AIAccount_Content>
 {     

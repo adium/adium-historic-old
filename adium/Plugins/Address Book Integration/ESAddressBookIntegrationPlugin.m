@@ -21,6 +21,7 @@
 
 - (void)installPlugin
 {
+    NSLog(@"ABIntegration: installPlugin");
     //Register ourself as a handle observer
     [[adium contactController] registerListObjectObserver:self];
     
@@ -31,15 +32,18 @@
           
     propertyDict = [[NSDictionary dictionaryWithObjectsAndKeys:kABAIMInstantProperty,@"AIM",kABJabberInstantProperty,@"Jabber",kABMSNInstantProperty,@"MSN",kABYahooInstantProperty,@"Yahoo",kABICQInstantProperty,@"ICQ",nil] retain];
     trackingDict = [[NSMutableDictionary alloc] init];
+    
+    NSLog(@"ABIntegration: Retrieving sharedAddressBook");
     sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
-    
+
     [self preferencesChanged:nil];
-    
+
+    NSLog(@"ABIntegration: Adding observers");
     //Observe preferences changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     //Observe external address book changes
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addressBookChanged:) name:kABDatabaseChangedExternallyNotification object:nil];
-    
+    NSLog(@"ABIntegration: installPlugin done");
 }
 
 - (void)uninstallPlugin
@@ -130,12 +134,14 @@
         displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
         enableImages = [[prefDict objectForKey:KEY_AB_ENABLE_IMAGES] boolValue];
         automaticSync = [[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue];
+        NSLog(@"ABIntegration: preferencesChanged: %@",notification);
         [self updateAllContacts];
     }
 }
 
 - (void)addressBookChanged:(NSNotification *)notification
 {
+    NSLog(@"ABIntegration: addressBookChanged: %@",notification);
     [self updateAllContacts];
 }
 
@@ -150,7 +156,7 @@
                        delayed:YES
                         silent:NO]; 
     }
-    
+    NSLog(@"ABIntegration: updateAllContacts calling updateSelf");
     [self updateSelf];
 }
 
@@ -181,16 +187,20 @@
 
 - (void)updateSelf
 {
+    NSLog(@"ABIntegration: updateSelf");
+    NSLog(@"ABIntegration: updateSelf address book %@",sharedAddressBook);
     //Get the "me" address book entry, if one exists
     ABPerson *me = [sharedAddressBook me];
-    
+    NSLog(@"ABIntegration: updateSelf me? %i",(me != nil));    
     //If one was found
     if (me) {
         NSData *myImage = [me imageData];
         if (myImage) {
+            NSLog(@"ABIntegration: updateSelf myImageData found.");
 	    [[adium preferenceController] setPreference:myImage forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
         }
     }
+    NSLog(@"ABIntegration: updateSelf done");
 }
 
 - (NSArray *)searchForObject:(AIListObject *)inObject

@@ -97,7 +97,7 @@
     NSString	*emailAddress, *aimAccount;
     NSRange		binaryRange;
     
-	if([[NSFileManager defaultManager] fileExistsAtPath:CRASHES_PATH]){
+	if([[NSFileManager defaultManager] fileExistsAtPath:inPath]){
 		NSString	*newLog = [NSString stringWithContentsOfFile:inPath];
 		if(newLog && [newLog length]){
 			//Hang onto and delete the log

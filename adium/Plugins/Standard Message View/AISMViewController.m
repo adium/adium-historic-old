@@ -17,6 +17,7 @@
 #import "AISMViewPlugin.h"
 
 #define ICON_SIZE 32.0
+#define QUEUED_MESSAGE_OPACITY 0.5
 
 @interface AISMViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat;
@@ -327,7 +328,9 @@
         [self _addContentMessage:(AIContentMessage *)content];
     }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
         [self _addContentStatus:(AIContentStatus *)content];
-    }
+    }/*else if([[content type] compare:CONTENT_QUEUED_MESSAGE_TYPE] == 0){
+        [self _addQueuedContentMessage:(AIContentMessage *)content];
+    }*/
 }
 
 - (NSArray *)_rowsForAddingContentObject:(AIContentObject *)content
@@ -356,6 +359,22 @@
     
     [rowArray release];
 }
+//Add rows for a queued content message object
+- (void)_addQueuedContentMessage:(AIContentMessage *)content
+{
+    NSArray             *rowArray = [[self _rowsForAddingContentMessage:content] retain];
+    
+    NSEnumerator        *enumerator = [rowArray objectEnumerator];
+    AIFlexibleTableRow  *row;
+    
+    while (row = [enumerator nextObject]) {
+        [row setOpacity:QUEUED_MESSAGE_OPACITY];
+        [messageView addRow:row];
+    }
+    
+    [rowArray release];    
+}
+
 //Add a preconstructed row to the messageView
 - (void)_addContentMessageRow:(AIFlexibleTableRow *)row
 {
