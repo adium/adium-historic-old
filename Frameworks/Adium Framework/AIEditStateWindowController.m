@@ -31,10 +31,9 @@
 #define	SEND_ON_ENTER					@"Send On Enter"
 
 @interface AIEditStateWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget;
+- (id)initWithWindowNibName:(NSString *)windowNibName forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget showSaveCheckbox:(BOOL)inShowSaveCheckbox;
 - (id)_positionControl:(id)control relativeTo:(id)guide height:(int *)height;
 - (void)configureStateMenu;
-- (void)hideSaveCheckbox;
 
 - (void)setOriginalStatusState:(AIStatus *)inState forType:(AIStatusType)inStatusType;
 - (void)setAccount:(AIAccount *)inAccount;
@@ -61,11 +60,11 @@ static	NSMutableDictionary	*controllerDict = nil;
  * @param inStatusState Initial AIStatus
  * @param inStatusType AIStatusType to use initially if inStatusState is nil
  * @param inAccount The account which to configure the custom state window; nil to configure globally
- * @param allowSave YES if the save checkbox should be shown; NO if it should not
+ * @param showSaveCheckbox YES if the save checkbox should be shown; NO if it should not
  * @param parentWindow Parent window for a sheet, nil for a stand alone editor
  * @param inTarget Target object to notify when editing is complete
  */
-+ (id)editCustomState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount withSaveOption:(BOOL)allowSave onWindow:(id)parentWindow notifyingTarget:(id)inTarget
++ (id)editCustomState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount withSaveOption:(BOOL)inShowSaveCheckbox onWindow:(id)parentWindow notifyingTarget:(id)inTarget
 {
 	AIEditStateWindowController	*controller;
 
@@ -77,13 +76,14 @@ static	NSMutableDictionary	*controllerDict = nil;
 		[controller configureForAccountAndWorkingStatusState];
 
 	}else{
-		controller = [[self alloc] initWithWindowNibName:@"EditStateSheet" forType:inStatusType andAccount:inAccount customState:inStatusState notifyingTarget:inTarget];
+		controller = [[self alloc] initWithWindowNibName:@"EditStateSheet" 
+												 forType:inStatusType 
+											  andAccount:inAccount
+											 customState:inStatusState 
+										 notifyingTarget:inTarget
+										showSaveCheckbox:inShowSaveCheckbox];
 		if(!controllerDict) controllerDict = [[NSMutableDictionary alloc] init];
 		[controllerDict setObject:controller forKey:targetHash];
-
-		if(!allowSave){
-			[controller hideSaveCheckbox];
-		}		
 	}
 	
 	if(parentWindow){
@@ -104,7 +104,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 /*!
  * @brief Init the window controller
  */
-- (id)initWithWindowNibName:(NSString *)windowNibName forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget
+- (id)initWithWindowNibName:(NSString *)windowNibName forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget showSaveCheckbox:(BOOL)inShowSaveCheckbox
 {
     if(self = [super initWithWindowNibName:windowNibName]){
 		[self setOriginalStatusState:inStatusState forType:inStatusType];
@@ -112,6 +112,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 		
 		target = inTarget;
 		isOnPantherOrBetter = [NSApp isOnPantherOrBetter];
+		showSaveCheckbox = inShowSaveCheckbox;
 	}
 	
 	return(self);
@@ -196,6 +197,15 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[textField_idleMinutes setFormatter:intFormatter];
 	[intFormatter release];
 	*/
+
+	if(!showSaveCheckbox){
+		if(isOnPantherOrBetter){
+			[checkBox_save setHidden:YES];
+		}else{
+			[checkBox_save setFrame:NSZeroRect];
+			[checkBox_save setNeedsDisplay:YES];
+		}
+	}
 	
 	[super windowDidLoad];
 }
@@ -533,7 +543,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 {
 	double		idleStart = [textField_idleHours intValue]*3600 + [textField_idleMinutes intValue]*60;
 	
-	[workingStatusState setMutabilityType:(([checkBox_save isHidden] || [checkBox_save state] == NSOnState) ?
+	[workingStatusState setMutabilityType:((!showSaveCheckbox || ([checkBox_save state] == NSOnState)) ?
 										   AIEditableStatusState :
 										   AITemporaryEditableStatusState)];
 
@@ -545,14 +555,6 @@ static	NSMutableDictionary	*controllerDict = nil;
 	}
 
 	return(workingStatusState);
-}
-
-- (void)hideSaveCheckbox
-{
-	//Ensure the window is loaded
-	[self window];
-
-	[checkBox_save setHidden:YES];
 }
 
 @end
