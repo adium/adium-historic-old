@@ -1,8 +1,8 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 
 # Jeffrey Melloy <jmelloy@visualdistortion.org>
 # $URL: http://svn.visualdistortion.org/repos/projects/adium/parser.pl $
-# $Rev: 394 $ $Date: 2003/08/21 08:12:50 $
+# $Rev: 754 $ $Date: 2004/05/14 00:40:37 $
 #
 # Script will parse Adium logs <= 1.6.x and put them in postgresql table.
 # Table is created with "adium.sql"
