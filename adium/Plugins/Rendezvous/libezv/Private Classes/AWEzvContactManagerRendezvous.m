@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.12 2004/07/16 10:32:35 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.13 2004/07/16 12:46:29 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -643,6 +643,8 @@ NSData *decode_dns(char* buffer, int len )
     if (resultType == DNSServiceBrowserReplyRemoveInstance) {
 	/* delete the contact */
         contact = [contacts objectForKey:[NSString stringWithUTF8String:replyName]];
+	if (!contact)
+	    return;
 
 	[[client client] userLoggedOut:contact];
     
