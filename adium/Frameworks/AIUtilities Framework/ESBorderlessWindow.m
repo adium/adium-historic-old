@@ -13,7 +13,6 @@
 //In Interface Builder we set ESInvisibleWindow to be the class for our window, so our own initializer is called here.
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
 
-	NSLog(@"borderless window %i becomes %i",aStyle,NSBorderlessWindowMask);
     //Call NSWindow's version of this function, but pass in the all-important value of NSBorderlessWindowMask
     //for the styleMask so that the window doesn't have a title bar
     NSWindow *window = [super initWithContentRect:contentRect 
