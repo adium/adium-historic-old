@@ -488,10 +488,15 @@
 }
 
 #pragma mark Finder-style searching
-- (void)outlineView:(NSOutlineView *)outlineView userDidTypeString:(NSString *)inputString
+/*
+ * @brief Select in response to user typing
+ */
+- (void)outlineView:(NSOutlineView *)outlineView userDidTypeString:(NSString *)inputString matchTargetNumber:(int)targetNumber
 {
 	NSEnumerator	*enumerator;
 	AIListObject	*containedObject;
+	int				matchNumber = 0;
+	
 	int row = -1;
 	
 	if([contactList isKindOfClass:[AIMetaContact class]]){
@@ -501,26 +506,28 @@
 	}
 	
 	//Enumerate the contact list
-	while((row == -1) && (containedObject = [enumerator nextObject])){
+	while((matchNumber < targetNumber) && (containedObject = [enumerator nextObject])){
 		if([containedObject isKindOfClass:[AIListGroup class]]){
 			//Enumerator contained groups
 			NSEnumerator	*thisGroupEnumerator = [[(AIListGroup *)containedObject containedObjects] objectEnumerator];
 			AIListObject	*groupContainedObject;
-			while((row == -1) && (groupContainedObject = [thisGroupEnumerator nextObject])){
+			while((matchNumber < targetNumber) && (groupContainedObject = [thisGroupEnumerator nextObject])){
 				if([[groupContainedObject longDisplayName] rangeOfString:inputString
 														   options:(NSCaseInsensitiveSearch | NSAnchoredSearch | NSLiteralSearch)].location != NSNotFound){
 					row = [outlineView rowForItem:groupContainedObject];
+					if(row != -1) matchNumber++;
 				}				
 			}
 		}else{
 			if([[containedObject longDisplayName] rangeOfString:inputString
 												  options:(NSCaseInsensitiveSearch | NSAnchoredSearch | NSLiteralSearch)].location != NSNotFound){
 				row = [outlineView rowForItem:containedObject];
+				if(row != -1) matchNumber++;
 			}
 		}
 	}
 	
-	if(row != -1){
+	if((matchNumber == targetNumber) && (row != -1)){
 		//Select the best matching row
 		if([NSApp isOnTigerOrBetter]){
 			[outlineView selectRowIndexes:[NSClassFromString(@"NSIndexSet") indexSetWithIndex:row]	byExtendingSelection:NO];
@@ -528,12 +535,19 @@
 			[outlineView selectRow:row byExtendingSelection:NO];
 		}
 
-		//Scroll the selection so it's visible
+		//Scroll the selection so that its visible
 		[outlineView scrollRectToVisible:[outlineView rectOfRow:row]];
 	}
 }
 
 #pragma mark Drag and drop
+/*
+ * @brief Initiate drag and drop by writing items to the pasteboard
+ *
+ * We provide @"Private" for AIListObject, indicating we are using the private dragItems instance variable.
+ * We promise @"AIListObjectUniqueIDs" which will be generated as needed as an array of uniqueObjectIDs corresponding to
+ * the drag items array.
+ */
 - (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
 {
 	//Kill any selections
