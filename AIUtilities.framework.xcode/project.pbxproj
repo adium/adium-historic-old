@@ -4169,7 +4169,6 @@
 		};
 		4BD1EEE106D25F4A00B3975E = {
 			children = (
-				4BD1F40A06D2824000B3975E,
 				4BD1F41906D282AD00B3975E,
 				4BD1F40D06D2824800B3975E,
 				4BD1F41006D2825300B3975E,
@@ -4375,6 +4374,7 @@
 				4BD1F2D806D2699D00B3975E,
 				4BD1EED206D25EC900B3975E,
 				4BD1F32D06D26CE800B3975E,
+				4BD1F38606D276DD00B3975E,
 				4BD1EFB906D265AA00B3975E,
 				4BD1EF3006D2631300B3975E,
 				4BD1EF3606D2632300B3975E,
@@ -4420,7 +4420,6 @@
 				4BD1F30206D26AB600B3975E,
 				348E5E1D06D2F457004C051C,
 				4BD1EF7406D2636A00B3975E,
-				4BD1F38606D276DD00B3975E,
 				4BD1F2B406D268C300B3975E,
 				4BD1F2D506D2693200B3975E,
 				4BD1EEE706D25FFF00B3975E,
@@ -4583,7 +4582,7 @@
 				34486BF506D1DF0400DA778C,
 			);
 			isa = PBXGroup;
-			name = "Image view with AB image picker";
+			name = "Image view with image picker from AB/iChat";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
@@ -4638,6 +4637,7 @@
 			children = (
 				34486B9806D1DF0300DA778C,
 				34486B9906D1DF0300DA778C,
+				4BD1F40A06D2824000B3975E,
 			);
 			isa = PBXGroup;
 			name = "OutlineView with several improvements";
@@ -4698,6 +4698,7 @@
 			);
 			isa = PBXGroup;
 			name = "Alternating row table/outlline views";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
