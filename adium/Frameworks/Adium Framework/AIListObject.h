@@ -30,6 +30,8 @@
     AIListGroup				*containingGroup;		//The group this object is in
 	float					orderIndex;				//Placement of this contact within a group
 	
+	NSLock					*statusUpdateLock;
+	NSLock					*delayedStatusTimerLock;
 	//
 }
 
