@@ -16,6 +16,10 @@
 	AIListObject		*preferredListObject;
 	NSString			*name;
 	NSString			*uniqueChatID;
+	
+	NSImage				*_serviceImage; 	//Cache of the default service image for our contact
+	NSImage				*_cachedImage;		//Cache of our big image, so we can know easily when it changes
+	NSImage				*_cachedMiniImage; 	//Cache of our mini image, so we only need to render it once
 }
 
 + (id)chatForAccount:(AIAccount *)inAccount initialStatusDictionary:(NSDictionary *)inDictionary;
@@ -45,4 +49,8 @@
 - (void)setName:(NSString *)inName;
 
 - (NSString *)uniqueChatID;
+
+- (NSImage *)chatImage;
+- (NSImage *)chatMenuImage;
+
 @end
