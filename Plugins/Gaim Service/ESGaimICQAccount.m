@@ -7,6 +7,9 @@
 
 #import "ESGaimICQAccount.h"
 
+@interface ESGaimICQAccount (PRIVATE)
+- (void)updateStatusMessage:(AIListContact *)theContact;
+@end
 
 @implementation ESGaimICQAccount
 
@@ -47,10 +50,86 @@
 	return([self encodedAttributedString:inAttributedString forListObject:inListObject]);
 }
 
-//Setting aliases serverside would override the information Gaim is feeding us
+/*
+ * @brief Setting aliases serverside would override the information Gaim is feeding us
+ */
 - (BOOL)shouldSetAliasesServerside
 {
 	return(NO);
+}
+
+#pragma mark Status
+/*
+ * @brief Get the ICQ status message when going away and coming back
+ *
+ * We really should have a buddy-status-message signal from libgaim, but I can't figure out where to
+ * add it to the libgaim code.... so this ghetto fix will do for now, pending the status rewrite for gaim
+ * when we'll revisit this.  Only problem with this method is that an ICQ user going from one away state
+ * to another isn't going to get updated properly... so this should be fixed eventually. -eds
+ */
+- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
+{
+	[super _updateAwayOfContact:theContact toAway:newAway];
+	
+	[self updateStatusMessage:theContact];
+}
+
+- (NSString *)ICQStatusMessageForState:(int)state
+{
+	NSString	*statusMessage = nil;
+
+	if (state & AIM_ICQ_STATE_CHAT)
+		statusMessage = STATUS_DESCRIPTION_FREE_FOR_CHAT;
+	else if (state & AIM_ICQ_STATE_DND)
+		statusMessage = STATUS_DESCRIPTION_DND;
+	else if (state & AIM_ICQ_STATE_OUT)
+		statusMessage = STATUS_DESCRIPTION_NOT_AVAILABLE;
+	else if (state & AIM_ICQ_STATE_BUSY)
+		statusMessage = STATUS_DESCRIPTION_OCCUPIED;
+	else if (state & AIM_ICQ_STATE_WEBAWARE)
+		statusMessage = AILocalizedString(@"Web Aware",nil);
+	else if (state & AIM_ICQ_STATE_INVISIBLE)
+		statusMessage = STATUS_DESCRIPTION_INVISIBLE;
+
+	return statusMessage;
+}
+
+- (void)updateStatusMessage:(AIListContact *)theContact
+{
+	GaimBuddy	*buddy;
+	const char	*uidUTF8String = [[theContact UID] UTF8String];
+	
+	if ((gaim_account_is_connected(account)) &&
+		(buddy = gaim_find_buddy(account, uidUTF8String))) {
+		
+		NSString		*statusMsgString = nil;
+		NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
+
+		/* ((buddy->uc & 0xffff0000) >> 16) is nicely undocumented magic from oscar.c.  It turns out that real
+		 * men don't document their code. */
+		statusMsgString = [self ICQStatusMessageForState:((buddy->uc & 0xffff0000) >> 16)];
+		
+		if (statusMsgString && [statusMsgString length]) {
+			if (![statusMsgString isEqualToString:oldStatusMsgString]) {
+				NSAttributedString *attrStr;
+				
+				attrStr = [[NSAttributedString alloc] initWithString:statusMsgString];
+				
+				[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
+				[theContact setStatusObject:attrStr forKey:@"StatusMessage" notify:NO];
+				
+				[attrStr release];
+			}
+			
+		} else if (oldStatusMsgString && [oldStatusMsgString length]) {
+			//If we had a message before, remove it
+			[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
+			[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
+		}
+		
+		//apply changes
+		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	}
 }
 
 /*
@@ -77,8 +156,15 @@
 	switch(statusType){
 		case AIAvailableStatusType:
 		{
-			if([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT])
+			if([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT]){
 				gaimStatusType = "Free For Chat";
+			}else{
+				/* ICQ uses "Online" rather than "Available" for the base available state.
+				 * For any available state we don't have a specific statusType for, use "Online"
+				 * rather than the "Available" CBGaimAccount will provide. */ 				
+				gaimStatusType = "Online";
+			}
+			
 			break;
 		}
 
