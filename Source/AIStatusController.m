@@ -29,6 +29,8 @@
 #define STATE_TITLE_MENU_LENGTH		30
 #define STATUS_TITLE_CUSTOM			AILocalizedString(@"Custom...",nil)
 
+#define BUILT_IN_STATE_ARRAY		@"BuiltInStatusStates"
+
 //Private idle function
 extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
@@ -44,10 +46,11 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 - (NSArray *)_menuItemsForStatusesOfType:(AIStatusType)type forServiceCodeUniqueID:(NSString *)inServiceCodeUniqueID withTarget:(id)target;
 - (void)_addMenuItemsForStatusOfType:(AIStatusType)type
-				 serviceCodeUniqueID:(NSString *)serviceCodeUniqueID
 						  withTarget:(id)target
+							 fromSet:(NSSet *)sourceArray
 							 toArray:(NSMutableArray *)menuItems
 				  alreadyAddedTitles:(NSMutableSet *)alreadyAddedTitles;
+- (void)buildBuiltInStatusTypes;
 @end
 									
 /*!
@@ -66,6 +69,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	stateMenuItemArraysDict = [[NSMutableDictionary alloc] init];
 	stateMenuPluginsArray = [[NSMutableArray alloc] init];
 	stateMenuSelectionUpdateDelays = 0;
+	_stateArrayForMenuItems = nil;
 
 	//Init
 	[self _setMachineIsIdle:NO];
@@ -85,6 +89,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 								   selector:@selector(updateAllStateMenuSelections)
 									   name:AIActiveStatusStateChangedNotification
 									 object:nil];
+	
+	[self buildBuiltInStatusTypes];
 }
 
 /*!
@@ -94,6 +100,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 {
 	[[adium notificationCenter] removeObserver:self];
 	[stateArray release]; stateArray = nil;
+	[_stateArrayForMenuItems release]; _stateArrayForMenuItems = nil;
 	[activeStatusState release]; activeStatusState = nil;
 }
 
@@ -160,7 +167,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 											 withTarget:target] objectEnumerator];
 		while(menuItem = [enumerator nextObject]){
 			[menu addItem:menuItem];
-		}
+		}		
 	}
 
 	return([menu autorelease]);
@@ -178,13 +185,26 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	NSMutableArray  *menuItems = [[NSMutableArray alloc] init];
 	NSMutableSet	*alreadyAddedTitles = [NSMutableSet set];
 	
+	//First, add our built-in items (so they will be at the top of the array and service-specific 'copies' won't replace them)
+	[self _addMenuItemsForStatusOfType:type
+							withTarget:target
+							   fromSet:builtInStatusTypes[type]
+							   toArray:menuItems
+					alreadyAddedTitles:alreadyAddedTitles];
+
+	//Now, add items for this service, or from all available services, as appropriate
 	if(inServiceCodeUniqueID){
-		//Insert a menu item for each available account on this service
-		[self _addMenuItemsForStatusOfType:type
-					   serviceCodeUniqueID:inServiceCodeUniqueID
-								withTarget:target
-								   toArray:menuItems
-						alreadyAddedTitles:alreadyAddedTitles];
+		NSSet	*statusDicts;
+		
+		//Obtain the status dicts for this type and service code unique ID
+		if(statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:inServiceCodeUniqueID]){
+			//And add them
+			[self _addMenuItemsForStatusOfType:type
+									withTarget:target
+									   fromSet:statusDicts
+									   toArray:menuItems
+							alreadyAddedTitles:alreadyAddedTitles];
+		}
 		
 	}else{
 		NSEnumerator	*enumerator;
@@ -195,55 +215,56 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		while(serviceCodeUniqueID = [enumerator nextObject]){
 			//Obtain the status dicts for this type and service code unique ID if it is online
 			if([[adium accountController] serviceWithUniqueIDIsOnline:serviceCodeUniqueID]){
-				[self _addMenuItemsForStatusOfType:type
-							   serviceCodeUniqueID:serviceCodeUniqueID
-										withTarget:target
-										   toArray:menuItems
-								alreadyAddedTitles:alreadyAddedTitles];
+				NSSet	*statusDicts;
+				
+				//Obtain the status dicts for this type and service code unique ID
+				if(statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:serviceCodeUniqueID]){
+					//And add them
+					[self _addMenuItemsForStatusOfType:type
+											withTarget:target
+											   fromSet:statusDicts
+											   toArray:menuItems
+									alreadyAddedTitles:alreadyAddedTitles];
+				}
 			}
 		}
 	}
-	
+
 	[menuItems sortUsingFunction:statusMenuItemSort context:nil];
 	
 	return([menuItems autorelease]);
 }
 
 - (void)_addMenuItemsForStatusOfType:(AIStatusType)type
-				 serviceCodeUniqueID:(NSString *)serviceCodeUniqueID
 						  withTarget:(id)target
+							 fromSet:(NSSet *)statusDicts
 							 toArray:(NSMutableArray *)menuItems
 				  alreadyAddedTitles:(NSMutableSet *)alreadyAddedTitles
 {
-	NSSet	*statusDicts;
-
-	//Obtain the status dicts for this type and service code unique ID
-	if(statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:serviceCodeUniqueID]){
-		NSEnumerator	*statusDictEnumerator = [statusDicts objectEnumerator];
-		NSDictionary	*statusDict;
+	NSEnumerator	*statusDictEnumerator = [statusDicts objectEnumerator];
+	NSDictionary	*statusDict;
+	
+	//Enumerate the status dicts
+	while(statusDict = [statusDictEnumerator nextObject]){
+		NSString	*title = [statusDict objectForKey:KEY_STATUS_DESCRIPTION];
 		
-		//Enumerate the status dicts
-		while(statusDict = [statusDictEnumerator nextObject]){
-			NSString	*title = [statusDict objectForKey:KEY_STATUS_DESCRIPTION];
-			
-			/*
-			 * Only add if it has not already been added by another service.... Services need to use unique titles if they have
-			 * unique state names, but are welcome to share common name/description combinations, which is why the #defines
-			 * exist.
-			 */
-			if(![alreadyAddedTitles containsObject:title]){
-				NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
-																							  target:target
-																							  action:@selector(selectStatus:)
-																					   keyEquivalent:@""] autorelease];
-				[menuItem setRepresentedObject:statusDict];
-				[menuItem setImage:[[[AIStatusIcons statusIconForStatusID:((type == AIAvailableStatusType) ? @"available" : @"away")
-																	 type:AIStatusIconList
-																direction:AIIconNormal] copy] autorelease]];
-				[menuItem setEnabled:YES];
-				[menuItems addObject:menuItem];
-				[alreadyAddedTitles addObject:title];
-			}
+		/*
+		 * Only add if it has not already been added by another service.... Services need to use unique titles if they have
+		 * unique state names, but are welcome to share common name/description combinations, which is why the #defines
+		 * exist.
+		 */
+		if(![alreadyAddedTitles containsObject:title]){
+			NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
+																						  target:target
+																						  action:@selector(selectStatus:)
+																				   keyEquivalent:@""] autorelease];
+			[menuItem setRepresentedObject:statusDict];
+			[menuItem setImage:[[[AIStatusIcons statusIconForStatusID:((type == AIAvailableStatusType) ? @"available" : @"away")
+																 type:AIStatusIconList
+															direction:AIIconNormal] copy] autorelease]];
+			[menuItem setEnabled:YES];
+			[menuItems addObject:menuItem];
+			[alreadyAddedTitles addObject:title];
 		}
 	}
 }
@@ -306,18 +327,6 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		
 		if(!stateArray) stateArray = [[NSMutableArray alloc] init];
 
-/*
-		//Convert the statuses to AIStatus objects
-		enumerator = [savedStateArray objectEnumerator];
-		while(statusData = [enumerator nextObject]){
-			AIStatus	*status = [NSKeyedUnarchiver unarchiveObjectWithData:statusData];
-			if(status){
-				[stateArray addObject:status];
-			}else{
-				NSLog(@"bleh. %@ failed.",statusData);
-			}
-		}
-*/
 		//Update Adium 0.8svn saved states -- VERY TEMPORARY!
 		[self upgradeSVNSavedStatesToCurrent];
 			
@@ -326,6 +335,24 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	}
 
 	return(stateArray);
+}
+
+- (NSArray *)builtInStateArray
+{
+	if(!builtInStateArray){
+		NSArray			*savedBuiltInStateArray = [NSArray arrayNamed:BUILT_IN_STATE_ARRAY forClass:[self class]];
+		NSEnumerator	*enumerator;
+		NSDictionary	*dict;
+		
+		builtInStateArray = [[NSMutableArray alloc] init];
+		
+		enumerator = [savedBuiltInStateArray objectEnumerator];
+		while(dict = [enumerator nextObject]){
+			[builtInStateArray addObject:[AIStatus statusWithDictionary:dict]];
+		}
+	}
+	
+	return(builtInStateArray);
 }
 
 /*!
@@ -366,6 +393,9 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  */ 
 - (void)_saveStateArrayAndNotifyOfChanges
 {
+	//Clear the sorted menu items array since our state array changed.
+	[_stateArrayForMenuItems release]; _stateArrayForMenuItems = nil;
+	
 	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:stateArray]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
@@ -725,18 +755,47 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	}else if(statusTypeB > statusTypeA){
 		return NSOrderedAscending;
 	}else{
-		NSArray	*originalArray = (NSArray *)context;
-		
-		//Return them in the same relative order as the original array if they are of the same type
-		int indexA = [originalArray indexOfObjectIdenticalTo:objectA];
-		int indexB = [originalArray indexOfObjectIdenticalTo:objectB];
+		AIStatusMutabilityType mutabilityTypeA = [objectA mutabilityType];
+		AIStatusMutabilityType mutabilityTypeB = [objectB mutabilityType];
 
-		if(indexA > indexB){
-			return NSOrderedDescending;
+		if(mutabilityTypeA != mutabilityTypeB){
+			//Sort locked status states to the top, as these are our built-in presets
+			if(mutabilityTypeA == AILockedStatusState){
+				return NSOrderedAscending;
+			}else{
+				return NSOrderedDescending;				
+			}
 		}else{
-			return NSOrderedAscending;
+			NSArray	*originalArray = (NSArray *)context;
+			
+			//Return them in the same relative order as the original array if they are of the same type
+			int indexA = [originalArray indexOfObjectIdenticalTo:objectA];
+			int indexB = [originalArray indexOfObjectIdenticalTo:objectB];
+			
+			if(indexA > indexB){
+				return NSOrderedDescending;
+			}else{
+				return NSOrderedAscending;
+			}
 		}
 	}
+}
+
+/*
+ * @brief Return a sorted state array for use in menu item creation
+ *
+ * The array is created by adding the built in states to the user states, then sorting using _statusArraySort
+ *
+ * @result A cached NSArray which is sorted by status type (available, away), built-in vs. user-made, and then original ordering.
+ */
+ - (NSArray *)stateArrayForMenuItems
+{
+	if(!_stateArrayForMenuItems){
+		NSArray	*tempArray = [[self stateArray] arrayByAddingObjectsFromArray:[self builtInStateArray]];
+		_stateArrayForMenuItems = [[tempArray sortedArrayUsingFunction:_statusArraySort context:tempArray] retain];
+	}
+
+	return _stateArrayForMenuItems;
 }
 
 /*!
@@ -756,7 +815,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 
 	//Create a menu item for each state.  States must first be sorted such that states of the same AIStatusType 
 	//are grouped together.
-	enumerator = [[[self stateArray] sortedArrayUsingFunction:_statusArraySort context:[self stateArray]] objectEnumerator];
+	enumerator = [[self stateArrayForMenuItems] objectEnumerator];
 	while(statusState = [enumerator nextObject]){
 		AIStatusType thisStatusType = [statusState statusType];
 		
@@ -766,7 +825,6 @@ int _statusArraySort(id objectA, id objectB, void *context)
 												  target:self
 												  action:@selector(selectCustomState:)
 										   keyEquivalent:@""];
-#warning IMAGE
 			[menuItem setImage:[[[AIStatus statusIconForStatusType:currentStatusType] copy] autorelease]];
 			[menuItem setTag:currentStatusType];
 			[menuItemArray addObject:menuItem];
@@ -906,19 +964,15 @@ int _statusArraySort(id objectA, id objectB, void *context)
 			appropiateActiveStatusState = activeStatusState;
 		}
 		
-		// Our "Custom..." menu choice has a nil represented object.  Here we check if the active state is in our
-		// state array.  If it is not, that means the active state is a custom state, so we'll set searchState
-		// to nil so our enumeration sets the "Custom..." menu choice as active.  Otherwise, set searchState to
-		// our active state so we set the active state's menu item as active.
-		AIStatus	*searchState = ([stateArray containsObjectIdenticalTo:appropiateActiveStatusState] ?
-									appropiateActiveStatusState :
-									nil);
-
 		menuItemStatusState = [dict objectForKey:@"AIStatus"];
-		
-		if(searchState){
-			//If the search state exists (is a saved state), search for the match
-			if(menuItemStatusState == searchState){
+
+		/* Our "Custom..." menu choice has a nil represented object.  If the appropriate active search state is
+		 * in our array of states from which we made menu items, we'll be searching to match it.  If it isn't,
+		 * we have a custom state and will be searching for the custom item of the right type, switching all other
+		 * menu items to NSOffState. */
+		if([[self stateArrayForMenuItems] containsObjectIdenticalTo:appropiateActiveStatusState]){
+			//If the search state is in the array so is a saved state, search for the match
+			if(menuItemStatusState == appropiateActiveStatusState){
 				if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
 			}else{
 				if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
@@ -930,7 +984,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 				if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
 			}else{
 				//If it doesn't, check the tag to see if it should be on or off.
-				if([menuItem tag] == [searchState statusType]){
+				if([menuItem tag] == [appropiateActiveStatusState statusType]){
 					if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
 				}else{
 					if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
@@ -1050,6 +1104,27 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	}
 	
 	return(title);
+}
+
+- (void)buildBuiltInStatusTypes
+{
+	NSDictionary	*statusDict;
+
+	builtInStatusTypes[AIAvailableStatusType] = [[NSMutableSet alloc] init];
+	statusDict = [NSDictionary dictionaryWithObjectsAndKeys:
+			STATUS_NAME_AVAILABLE, KEY_STATUS_NAME,
+			STATUS_DESCRIPTION_AVAILABLE, KEY_STATUS_DESCRIPTION,
+			[NSNumber numberWithInt:AIAvailableStatusType], KEY_STATUS_TYPE,
+			nil];
+	[builtInStatusTypes[AIAvailableStatusType] addObject:statusDict];
+	
+	builtInStatusTypes[AIAwayStatusType] = [[NSMutableSet alloc] init];
+	statusDict = [NSDictionary dictionaryWithObjectsAndKeys:
+		STATUS_NAME_AWAY, KEY_STATUS_NAME,
+		STATUS_DESCRIPTION_AWAY, KEY_STATUS_DESCRIPTION,
+		[NSNumber numberWithInt:AIAwayStatusType], KEY_STATUS_TYPE,
+		nil];
+	[builtInStatusTypes[AIAwayStatusType] addObject:statusDict];	
 }
 
 @end

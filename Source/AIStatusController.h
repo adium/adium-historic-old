@@ -91,8 +91,10 @@
 
 	//Status states
 	NSMutableArray			*stateArray;
+	NSMutableArray			*builtInStateArray;
 	AIStatus				*activeStatusState;
 	NSMutableDictionary		*statusDictsByServiceCodeUniqueID[STATUS_TYPES_COUNT];
+	NSMutableSet			*builtInStatusTypes[STATUS_TYPES_COUNT];
 
 	//Machine idle tracking
 	BOOL					machineIsIdle;
@@ -103,6 +105,7 @@
 	NSMutableArray			*stateMenuPluginsArray;
 	NSMutableDictionary		*stateMenuItemArraysDict;
 	int						stateMenuSelectionUpdateDelays;
+	NSArray					*_stateArrayForMenuItems;
 }
 
 - (void)initController;
@@ -119,6 +122,7 @@
 - (AIStatus *)activeStatusState;
 
 - (NSString *)descriptionForStateOfStatus:(AIStatus *)statusState;
+- (NSString *)defaultStatusNameForType:(AIStatusType)statusType;
 
 //State Editing
 - (void)addStatusState:(AIStatus *)state;

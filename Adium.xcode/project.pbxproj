@@ -7028,6 +7028,7 @@
 				7E6642F7065336BA0050E8C8,
 				3419FE230531586A00C68BA3,
 				34E9F1F20790BF5500662E8E,
+				34F2F80C07C41445007EAAAB,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10386,6 +10387,21 @@
 		};
 		34F2E8F207C2D0C4007EAAAB = {
 			fileRef = 34F2E8E207C2D0C4007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2F80B07C41445007EAAAB = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
+			name = BuiltInStatusStates.plist;
+			path = Source/BuiltInStatusStates.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2F80C07C41445007EAAAB = {
+			fileRef = 34F2F80B07C41445007EAAAB;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -23767,6 +23783,7 @@
 				348E556A053A188C0021E541,
 				4BDF17240450CBDE00A8010A,
 				4B333F73048144D900A8010A,
+				34F2F80B07C41445007EAAAB,
 				D3B4A920052DE51000A8010B,
 				F5A3C2DD039A516E01A8010A,
 				F5CDCE460350758501A8010A,
