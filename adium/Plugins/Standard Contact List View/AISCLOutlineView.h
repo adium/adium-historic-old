@@ -84,8 +84,8 @@
 - (void)setGroupFont:(NSFont *)inFont;
 - (NSFont *)groupFont;
 
+- (void)updateHorizontalSizeForObjects:(NSArray *)inObjects;
 - (void)updateHorizontalSizeForObject:(AIListObject *)inObject;
-- (void)performFullRecalculation;
-
+- (BOOL)_performPartialRecalculationForObject:(AIListObject *)inObject;
 
 @end
