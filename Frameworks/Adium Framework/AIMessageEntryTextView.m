@@ -69,7 +69,7 @@ static NSImage *pushIndicatorImage = nil;
 		[self setAllowsUndo:YES];
 	}
 	if([self respondsToSelector:@selector(setAllowsDocumentBackgroundColorChange:)]) {
-		[self setAllowsDocumentBackgroundColorChange:YES;
+		[self setAllowsDocumentBackgroundColorChange:YES];
 	}
 
 	[self setImportsGraphics:YES];
