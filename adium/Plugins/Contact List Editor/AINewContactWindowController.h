@@ -24,9 +24,10 @@
 	IBOutlet	NSButton			*button_add;
 	
 	NSArray							*accounts;
+	NSString						*contactName;
 }
 
-+ (void)promptForNewContactOnWindow:(NSWindow *)parentWindow;
++ (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact;
 - (IBAction)cancel:(id)sender;
 - (IBAction)addContact:(id)sender;
 - (IBAction)closeWindow:(id)sender;

@@ -23,18 +23,21 @@
 - (void)_buildGroupMenu:(NSMenu *)menu forGroup:(AIListGroup *)group level:(int)level;
 - (void)validateEnteredName;
 - (void)updateAccountList;
+- (void)enterContactName;
+- (void)setContactName:(NSString *)contact;
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem;
 @end
 
 @implementation AINewContactWindowController
 
-//Prompt for a new user.  Pass nil for a panel prompt.
-+ (void)promptForNewContactOnWindow:(NSWindow *)parentWindow
+//Prompt for a new user.  Pass nil for a panel prompt. Include a particular name if you wish.
++ (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact
 {
 	AINewContactWindowController	*newContactWindow;
 	
 	newContactWindow = [[self alloc] initWithWindowNibName:ADD_CONTACT_PROMPT_NIB];
-	
+	[newContactWindow setContactName:contact];
+		
 	if(parentWindow){
 		[NSApp beginSheet:[newContactWindow window]
 		   modalForWindow:parentWindow
@@ -60,6 +63,8 @@
 - (void)dealloc
 {
 	[accounts release];
+	if( contactName )
+		[contactName release];
 	
     [super dealloc];
 }
@@ -75,7 +80,8 @@
 									   name:Account_ListChanged
 									 object:nil];
 	[self updateAccountList];
-
+	[self enterContactName];
+	
 	[[self window] center];
 }
 
@@ -241,6 +247,22 @@
 
 //Contact Name ---------------------------------------------------------------------------------------------------------
 #pragma mark Contact Name
+//Fill in the name field if we came from a tab
+- (void)enterContactName
+{
+	if( contactName ) {
+		[textField_contactName setStringValue:contactName];
+		[self validateEnteredName];
+	}
+}
+
+- (void)setContactName:(NSString *)contact
+{
+	if( contact ) {
+		contactName = [[contact copy] retain];
+	}
+}
+
 //Entered name is changing
 - (void)controlTextDidChange:(NSNotification *)notification
 {

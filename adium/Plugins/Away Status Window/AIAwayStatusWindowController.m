@@ -101,7 +101,6 @@ AIAwayStatusWindowController	*sharedAwayStatusInstance = nil;
 
     // Is an away message still up?
     if(awayMessage) {
-
         // Should we should the away message?
         if( shouldShow ) {
             [self showWindow:nil];
