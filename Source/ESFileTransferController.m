@@ -33,8 +33,7 @@
 #import <Adium/AIListObject.h>
 #import <Adium/ESFileTransfer.h>
 
-#define SEND_FILE_TO_CONTACT		AILocalizedString(@"Send File to %@",nil)
-#define SEND_FILE					AILocalizedString(@"Send File",nil)
+#define SEND_FILE					AILocalizedString(@"Send File...",nil)
 #define CONTACT						AILocalizedString(@"Contact",nil)
 
 #define	SEND_FILE_IDENTIFIER		@"SendFile"
@@ -75,7 +74,7 @@ static ESFileTransferPreferences *preferences;
 	[[adium contactAlertsController] registerEventID:FILE_TRANSFER_COMPLETE withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 
     //Install the Send File menu item
-	menuItem_sendFile = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:SEND_FILE_TO_CONTACT,CONTACT]
+	menuItem_sendFile = [[NSMenuItem alloc] initWithTitle:SEND_FILE
 												   target:self action:@selector(sendFileToSelectedContact:)
 											keyEquivalent:@"F"];
 	[menuItem_sendFile setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
@@ -337,8 +336,6 @@ static ESFileTransferPreferences *preferences;
 			listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																	 forListContact:(AIListContact *)selectedObject];
 		}
-		
-		[menuItem setTitle:[NSString stringWithFormat:SEND_FILE_TO_CONTACT,(listContact ? [selectedObject displayName] : CONTACT)]];
 		
 		return(listContact != nil);
 		
