@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.63 2004/05/19 12:20:19 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.64 2004/05/20 09:37:29 evands Exp $
 
 #import "AIInterfaceController.h"
 
@@ -504,12 +504,15 @@
             fullLength = NSMakeRange(0, [entryString length]);
         if ([entryString replaceOccurrencesOfString:@"\n" withString:@"\n\t\t" options:NSLiteralSearch range:fullLength])
             fullLength = NSMakeRange(0, [entryString length]);
-        
+		
         //Run the entry through the filters and add it to tipString
-		entryString = [[owner contentController] filterAttributedString:entryString
+		entryString = [[[[owner contentController] filterAttributedString:entryString
 														usingFilterType:AIFilterDisplay
 															  direction:AIFilterIncoming
-																context:object];
+																context:object] mutableCopy] autorelease];
+
+		[entryString addAttributes:entryDict range:NSMakeRange(0,[entryString length])];
+
         [tipString appendAttributedString:entryString];
     }
 
@@ -585,22 +588,18 @@
 	NSResponder *responder = [window firstResponder]; 
 
     if(menuItem == menuItem_bold || menuItem == menuItem_italic){
-		NSFontManager	*fontManager = [NSFontManager sharedFontManager];
-		NSFont			*selectedFont = [fontManager selectedFont];
+		NSFont			*selectedFont = [[NSFontManager sharedFontManager] selectedFont];
 		
 		//We must be in a text view, have text on the pasteboard, and have a font that supports bold or italic
 		if([responder isKindOfClass:[NSTextView class]]){
 #warning Evan: This should be cached by the font manager additions.
-			if(selectedFont != [fontManager convertFont:selectedFont toHaveTrait:(menuItem == menuItem_bold ? NSBoldFontMask : NSItalicFontMask)] || 
-			   selectedFont != [fontManager convertFont:selectedFont toHaveTrait:(menuItem == menuItem_bold ? NSUnboldFontMask : NSUnitalicFontMask)]){
-				return(YES);
-			}
+			return (menuItem == menuItem_bold ? [selectedFont supportsBold] : [selectedFont supportsItalics]);
 		}
 		return(NO);
 		
 	}else if(menuItem == menuItem_paste || menuItem == menuItem_pasteFormatted){
 		return([[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, nil]] != nil);
-
+	
 	}else if(menuItem == menuItem_showToolbar){
 		[menuItem_showToolbar setTitle:([[window toolbar] isVisible] ? @"Hide Toolbar" : @"Show Toolbar")];
 		return([window toolbar] != nil);
