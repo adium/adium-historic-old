@@ -9,6 +9,10 @@
 #import "JSCEventBezelPreferences.h"
 #import "JSCEventBezelPlugin.h"
 
+@interface JSCEventBezelPreferences (PRIVATE)
+- (void)preferencesChanged:(NSNotification *)notification;
+@end
+
 @implementation JSCEventBezelPreferences
 
 // Preference pane properties
@@ -172,8 +176,15 @@
                                           group:PREF_GROUP_EVENT_BEZEL];
 }
 
-//Configure the preference view
 - (void)viewDidLoad
+{
+    //Observer preference changes
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
+}
+
+//Configure the preference view
+- (void)preferencesChanged:(NSNotification *)notification
 {
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
     
