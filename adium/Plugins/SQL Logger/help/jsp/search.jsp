@@ -38,6 +38,13 @@ if (searchString == null || searchString.equals("")) {
     searchFormURL += "&amp;searchString=" + searchString;
 }
 
+String service = request.getParameter("service");
+if (service == null || service.equals("0")) {
+    service = null;
+} else {
+    searchFormURL += "&amp;service=" + service;
+}
+
 String orderBy = request.getParameter("order_by");
 
 if (orderBy != null && orderBy.equals("")) {
@@ -203,9 +210,10 @@ try {
                         if (searchString != null)
                             out.print("value=\"" +
                                 searchString.replaceAll("\"","&quot;") +
-                                "\"");%> id="searchstring" />
+                                "\"");
+                        %> id="searchstring" />
                             </td>
-                                                        <td rowspan="3">
+                            <td rowspan="3">
                             <label for="orderBy">Order By</label><br />
                             <select name="order_by" id="orderBy">
                                 <option value=""
@@ -263,6 +271,28 @@ try {
                                 <input type="text" name="recipient"
                         <% if (recipient != null)
                             out.print("value=\"" + recipient + "\""); %> id="recipient" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <label for="service">Service:</label>
+                            </td>
+                            <td>
+                                <select name="service" id="service">
+                                    <option value="0">Choose One</option>
+<%
+    pstmt = conn.prepareStatement("select distinct service from im.users");
+
+    rset = pstmt.executeQuery();
+    while(rset.next()) {
+        out.print("<option value=\"" + rset.getString("service") + "\"" );
+        if(rset.getString("service").equals(service)) {
+            out.print(" selected=\"selected\"");
+        }
+        out.print(">" + rset.getString("service") + "</option>\n");
+    }
+%>
+                                </select>
                             </td>
                         </tr>
                         <tr>
@@ -350,6 +380,12 @@ try {
                 cmdArray[cmdCntr++] = date_finish;
             }
 
+            if(service != null) {
+                shortQuery += " and (sender_service = ? or recipient_service = ?) ";
+                cmdArray[cmdCntr++] = service;
+                cmdArray[cmdCntr++] = service;
+            }
+
             if (orderBy != null) {
                 shortQuery += " order by " + orderBy;
                 cmdArray[cmdCntr++] = orderBy;
@@ -404,6 +440,8 @@ try {
             if(searchType.equals("tsearch1")) {
 
                 queryString = "select s.username as sender_sn, "+
+                    " s.service as sender_service, " +
+                    " r.service as recipient_service, " +
                     " r.username as recipient_sn," +
                     " message, message_date, message_id " +
                     " from im.messages, im.users s, im.users r " +
@@ -414,6 +452,8 @@ try {
             } else if (searchType.equals("tsearch2")) {
                 queryString = "select s.username as sender_sn, "+
                     " r.username as recipient_sn, " +
+                    " s.service as sender_service, " +
+                    " r.service as recipient_service, " +
                     " headline(message, q) as message, message_date, " +
                     " message_id " +
                     " from im.messages, im.users s, im.users r, "+
@@ -462,6 +502,12 @@ try {
             if(date_finish != null) {
                 queryString += " and message_date <= ? ";
                 cmdAry[cmdCntr++] = new String(date_finish);
+            }
+
+            if(service != null) {
+                queryString += " and (s.service = ? or r.service = ?) ";
+                cmdAry[cmdCntr++] = new String(service);
+                cmdAry[cmdCntr++] = new String(service);
             }
 
             if (orderBy != null) {

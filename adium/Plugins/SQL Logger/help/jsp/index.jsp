@@ -10,7 +10,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/index.jsp $-->
-<!--$Rev: 858 $ $Date: 2004/08/07 19:42:01 $ -->
+<!--$Rev: 859 $ $Date: 2004/08/07 20:26:24 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -507,12 +507,12 @@ try {
                     </td>
                 </tr>
                 <tr>
-                    <td align=\"right\"
+                    <td align="right">
                         <label for="service">Service:</label>
                     </td>
                     <td>
-                        <select name="service">
-                            <option value=\"0\">Choose One</option>
+                        <select name="service" id="service">
+                            <option value="0">Choose One</option>
 <%
     pstmt = conn.prepareStatement("select distinct service from users");
     rset = pstmt.executeQuery();
