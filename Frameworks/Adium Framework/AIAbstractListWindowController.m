@@ -47,6 +47,8 @@
 //Setup the window after it has loaded
 - (void)windowDidLoad
 {
+	[super windowDidLoad];
+	
     //Configure the contact list view
 	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
 	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[AIListContactCell alloc] init]];
@@ -64,6 +66,8 @@
 
 - (BOOL)windowShouldClose:(id)sender
 {
+	[super windowShouldClose:sender];
+	
 	[tooltipTracker setDelegate:nil];
 	[tooltipTracker release]; tooltipTracker = nil;
 	
