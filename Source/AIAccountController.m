@@ -143,14 +143,16 @@
 		//####################################
 		if([serviceID isEqualToString:@"AIM-LIBGAIM"]){
 			NSString 	*uid = [accountDict objectForKey:ACCOUNT_UID];
-			const char	firstCharacter = [uid characterAtIndex:0];
-
-			if([uid hasSuffix:@"@mac.com"]){
-				serviceID = @"libgaim-oscar-Mac";
-			}else if(firstCharacter >= '0' && firstCharacter <= '9'){
-				serviceID = @"libgaim-oscar-ICQ";
-			}else{
-				serviceID = @"libgaim-oscar-AIM";
+			if(uid && [uid length]){
+				const char	firstCharacter = [uid characterAtIndex:0];
+				
+				if([uid hasSuffix:@"@mac.com"]){
+					serviceID = @"libgaim-oscar-Mac";
+				}else if(firstCharacter >= '0' && firstCharacter <= '9'){
+					serviceID = @"libgaim-oscar-ICQ";
+				}else{
+					serviceID = @"libgaim-oscar-AIM";
+				}
 			}
 		}else if([serviceID isEqualToString:@"GaduGadu-LIBGAIM"]){
 			serviceID = @"libgaim-Gadu-Gadu";
