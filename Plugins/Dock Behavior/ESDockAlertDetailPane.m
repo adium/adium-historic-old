@@ -25,17 +25,22 @@
 - (NSMenu *)behaviorListMenu;
 @end
 
+/*
+ * @class ESDockAlertDetailPane
+ * @brief Details pane for the Bounce Dock action
+ */
 @implementation ESDockAlertDetailPane
 
-//Pane Details
-- (NSString *)label{
-	return(@"");
-}
+/*
+ * @brief Nib name
+ */
 - (NSString *)nibName{
     return(@"DockBehaviorContactAlert");    
 }
 
-//Configure the detail view
+/*
+ * @brief Configure the detail view
+ */
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
@@ -45,7 +50,9 @@
     [popUp_actionDetails setMenu:[self behaviorListMenu]];
 }
 
-//Configure for the action
+/*
+ * @brief Configure for the action
+ */
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
 {
 	int behaviorIndex = [popUp_actionDetails indexOfItemWithRepresentedObject:[inDetails objectForKey:KEY_DOCK_BEHAVIOR_TYPE]];
@@ -54,7 +61,9 @@
 	}
 }
 
-//Return our current configuration
+/*
+ * @brief Return our current configuration
+ */
 - (NSDictionary *)actionDetails
 {
 	NSString	*behavior = [[popUp_actionDetails selectedItem] representedObject];
@@ -66,13 +75,17 @@
 	}	
 }
 
-//The user selected a behavior
+/*
+ * @brief The user selected a behavior
+ */
 - (IBAction)selectBehavior:(id)sender
 {
 	[self detailsForHeaderChanged];
 }
 
-//Builds and returns a dock behavior list menu
+/*
+ * @brief Builds and returns a dock behavior list menu
+ */
 - (NSMenu *)behaviorListMenu
 {
     NSMenu			*behaviorMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
@@ -88,7 +101,10 @@
     return(behaviorMenu);
 }
 
-//
+/*
+ * @brief Convenience behaviorListMenu method
+ * @result An NSMenuItem
+ */
 - (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name
 {
     NSMenuItem		*menuItem;
