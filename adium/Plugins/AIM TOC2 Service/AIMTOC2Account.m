@@ -333,7 +333,7 @@
 			
             //Send the typing client event
             if(contact){
-                [self AIM_SendClientEvent:([(AIContentTyping *)object typing] ? 2 : 0)
+                [self AIM_SendClientEvent:(([(AIContentTyping *)object typingState] == AITyping) ? 2 : 0)
 								 toHandle:[contact UID]];
                 sent = YES;
             }
@@ -754,7 +754,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.136 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.137 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
