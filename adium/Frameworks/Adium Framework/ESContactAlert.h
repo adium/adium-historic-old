@@ -24,8 +24,11 @@
 
 + (id)contactAlert;
 - (id)init;
+- (IBAction)selectedAlert:(id)sender;
 - (NSMenuItem *)alertMenuItem;
+- (void)configureView;
 - (NSString *)nibName;
+- (NSImage *)icon;
 //PRIVATE
 - (void)setObject:(id)object forKey:(NSString *)key;
 - (void)saveEventActionArray;

@@ -36,7 +36,7 @@
 }
 
 //setup display for opening message window
--(IBAction)selectedAlert:(id)sender
+- (void)configureView
 {  
     NSDictionary *currentDict = [[[adium contactAlertsController] currentDictForContactAlert:self] retain];
     

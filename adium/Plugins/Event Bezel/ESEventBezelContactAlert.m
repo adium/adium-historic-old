@@ -23,7 +23,7 @@
 }
 
 //No further configuration is required
--(IBAction)selectedAlert:(id)sender
+- (void)configureView
 {
     [self configureWithSubview:nil];
 }

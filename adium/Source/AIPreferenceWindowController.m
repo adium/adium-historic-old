@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.39 2004/03/26 03:42:57 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.40 2004/04/02 10:07:27 overmind911 Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -81,7 +81,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		case AIPref_Dock: tabIdentifier = 5; break;
 		case AIPref_Sound: tabIdentifier = 6; break;
 		case AIPref_Emoticons: tabIdentifier = 7; break;
-		case AIPref_Alerts: tabIdentifier = 8; break;
 		default: tabIdentifier = 1; break;
 	}
 	tabViewItem = [tabView_category tabViewItemWithIdentifier:[NSString stringWithFormat:@"%i",tabIdentifier]];
@@ -314,10 +313,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
                 [self _sizeWindowToFitFlatView:view_Emoticons];
                 break;
             case 8:
-                [self _insertPanesForCategory:AIPref_Alerts intoView:view_Alerts showContainers:YES];
-                [self _sizeWindowToFitFlatView:view_Alerts];
-            break;
-            case 9:
                 [self _sizeWindowForContentHeight:ADVANCED_PANE_HEIGHT];
                 [outlineView_advanced reloadData];
                 

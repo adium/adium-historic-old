@@ -1,0 +1,23 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {add = id; cancel = id; }; 
+            CLASS = CSNewContactAlertWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "popUp_action" = NSPopUpButton; 
+                "popUp_contact" = NSPopUpButton; 
+                "popUp_event" = NSPopUpButton; 
+                "view_auxilary" = NSView; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

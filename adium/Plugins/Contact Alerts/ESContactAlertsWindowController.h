@@ -13,29 +13,28 @@
 
 @interface ESContactAlertsWindowController : AIWindowController {
 
-    IBOutlet	NSPopUpButton			*popUp_addEvent;
-    IBOutlet	AIAlternatingRowTableView	*tableView_actions;
-    IBOutlet	NSButton			*button_delete;
-    IBOutlet	NSButton			*button_oneTime;
-    IBOutlet	NSButton			*button_active;
-    IBOutlet	NSPopUpButton			*popUp_contactList;
-    IBOutlet	NSView				*view_main;
+    IBOutlet	NSTableView			*tableView_actions;
+    IBOutlet	NSTableView			*tableView_source;
     
-    NSPopUpButtonCell				*dataCell;
-    NSMenu					*actionMenu;
-    AIListObject				*activeContactObject;
-    ESContactAlerts				*instance;
+	NSMutableArray					*alertContacts;      //The contacts that have alerts
+	NSMutableArray					*actionsArray;
+	
+	NSToolbar						*toolbar_editing;
+	NSMutableDictionary				*toolbarItems;
+	NSToolbarItem					*addItem,
+									*editItem,
+									*deleteItem;
+	
+    AIListObject					*activeContactObject;
+    ESContactAlerts					*instance;
 }
 
 + (id)showContactAlertsWindowForObject:(AIListObject *)inContact;
 + (void)closeContactAlertsWindow;
 
-- (IBAction)deleteEventAction:(id)sender;
 - (IBAction)closeWindow:(id)sender;
-- (IBAction)oneTimeEvent:(id)sender;
-- (IBAction)addedEvent:(id)sender;
-- (IBAction)onlyWhileActive:(id)sender;
-
-- (void)accountListChanged:(NSNotification *)notification;
+- (IBAction)addAlert:(id)sender;
+- (IBAction)editAlert:(id)sender;
+- (IBAction)deleteAlert:(id)sender;
 
 @end

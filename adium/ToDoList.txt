@@ -13,7 +13,7 @@ Bugs
 -------------------------------------------------------------------------------------------------------
 * Don't spawn new windows when we're hidden, doing so will unhide us
     What should we do with the new content then? Throw it in the trash? Feed it to Laura's geckos?
-* In certain fonts, the tails of letters will stain in the text entry field after it clears.  This is visible with HoeflerText(size 12) - type a few j's and then press esc to clear the field.
+* In certain fonts, the tails of letters will stain in the text entry field after it clears.  This is visible with HoeflerText(size 12) - type a few j's and then press esc to clear the field. (hehe)
 
 
 
@@ -75,24 +75,24 @@ Contact alerts:
 	(Model: http://homepage.mac.com/adamiser/sortathis6.png)
 
 	Steps:
-	- Remove alerts preference pane
-	- Remove contact menu from alert window
-	- Remove event popup from alert window
-	- Disallow editing of events
-	- Remove event view insertion (on selection)
-	- Rework context menus.. change to "Edit Alerts"
-	+ Add icons (16x16) to event types, and display them in the event list
-	+ Add toolbar to window, add, edit, delete
-	+ Add sheet for 'add', 'edit'.  Must be independent from alert window.
-	+ Sheet has event, action, and contact (submenued by group) popups.
-	+ Add source list on left of all objects with alerts
-	+ Clicking in source list changes displayed alerts
+    = Remove alerts preference pane
+	= Remove contact menu from alert window
+	= Remove event popup from alert window
+	= Disallow editing of events
+	= Remove event view insertion (on selection)
+	= Rework context menus.. change to "Edit Alerts"
+	+ Add icons (16x16) to event types, and display them in the event list (still needed on some.  make the ESContactAlert subclasses respond to -icon)
+	= Add toolbar to window, add, edit, delete
+	= Add sheet for 'add', 'edit'.  Must be independent from alert window.
+	= Sheet has event, action, and contact (submenued by group) popups.
+	= Add source list on left of all objects with alerts
+	= Clicking in source list changes displayed
 	+ Menu has "all contacts in ___" items, and "all contacts" item
-	+ Dynamically load view into sheet depending on selected alert
+	= Dynamically load view into sheet depending on selected alert
 	+ Redesign views, simplify, use big controls
-	+ Add "Add alert" context menu - that opens the sheet as a panel and allows easy adding
+	= Add "Add alert" context menu - that opens the sheet as a panel and allows easy adding
 	+ Add "Contact Alerts" menu item to window menu for opening alert window
-	+ Auto-fill sheet for new alert based on selection in window on clicking add
+	= Auto-fill sheet for new alert based on selection in window on clicking add
 
 
 Contact list display:

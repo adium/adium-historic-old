@@ -47,9 +47,15 @@
 - (AIListObject *)activeObject;
 - (void)reload:(AIListObject *)object usingCache:(BOOL)useCache;
 - (NSWindow *)activeWindow;
+- (void)saveEventActionArray;
+- (void)actionChangedTo:(NSString *)inAction;
+
+- (void)setMainView:(NSView *)inView;
+- (NSView *)mainView;
 
 - (IBAction)deleteEventAction:(id)sender;
 - (IBAction)newEvent:(id)sender;
+- (IBAction)changeEvent:(id)sender;
 
 - (BOOL)isEqual:(id)inInstance;
 - (unsigned) hash;
