@@ -22,34 +22,32 @@
 // one really big init method that does it all...
 -(id)initWithString:(NSString *)inString withValidationStatus:(URI_VERIFICATION_STATUS)status parentString:(NSString *)pInString andRange:(NSRange)inRange
 {
-    [self init];
-    
-    [self setURLFromString:inString];
-    linkRange = inRange;
-    [self setParentString:pInString];
-    urlStatus = status;
-    
-    return self;
+    if((self = [self init]) {
+		[self setURLFromString:inString];
+		linkRange = inRange;
+		[self setParentString:pInString];
+		urlStatus = status;
+	}
+
+	return self;
 }
 
 - (id)init
 {
-	[super init];
-	
-	linkURL = nil;
-	pString = nil;
-	
+	self = [super init];
+
 	return self;
 }
 
-#pragma mark accessors
 -(void)dealloc
 {
-    [linkURL release]; linkURL = nil;
-    [pString release]; pString = nil;
+    [linkURL release];
+    [pString release];
 	
     [super dealloc];
 }
+
+#pragma mark accessors
 
 -(NSRange)range
 {
