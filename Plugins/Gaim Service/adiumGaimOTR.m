@@ -14,11 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContentController.h"
 #import "adiumGaimOTR.h"
-#import <AIUtilities/CBObjectAdditions.h>
+#import "AIContentController.h"
+#import "AIPreferenceController.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
+#import <AIUtilities/CBObjectAdditions.h>
 
 /* libotr headers */
 #import <libotr/proto.h>
@@ -30,9 +31,12 @@
 #import <Libgaim/dialogs.h>
 #import <Libgaim/otr-plugin.h>
 
-/* Adium headers */
+/* Adium OTR headers */
 #import "ESGaimOTRUnknownFingerprintController.h"
 #import "ESGaimOTRPrivateKeyGenerationWindowController.h"
+
+static ESGaimOTRAdapter		*otrAdapter = nil;
+static NSMutableDictionary	*otrPolicyCache = nil;
 
 #pragma mark Adium convenience functions
 
@@ -431,10 +435,15 @@ static OtrlPolicy otrg_adium_ui_find_policy(GaimAccount *account, const char *na
 	AIListContact				*contact = contactLookupFromBuddy(buddy);
 	NSNumber					*policyNumber;
 
-	policyNumber = [ESGaimOTRAdapter mainPerformSelector:@selector(policyForContact:)
-											  withObject:contact
-											 returnValue:YES];
-	
+	//First try to use our cache
+	policyNumber = [otrPolicyCache objectForKey:[contact internalObjectID]];
+	if(!policyNumber){
+		//If a policy isn't cached, look it up
+		policyNumber = [otrAdapter mainPerformSelector:@selector(determinePolicyForContact:)
+											withObject:contact
+										   returnValue:YES];
+	}
+
 	return [policyNumber intValue];
 }
 
@@ -477,6 +486,8 @@ void initGaimOTRSupprt(void)
 	//Init the plugin
 	gaim_init_otr_plugin();
 	
+	otrAdapter = [[ESGaimOTRAdapter alloc] init];
+
 	//Set the UI Ops
 	otrg_ui_set_ui_ops(otrg_adium_ui_get_ui_ops());
 
@@ -485,15 +496,40 @@ void initGaimOTRSupprt(void)
 
 @implementation ESGaimOTRAdapter
 
+- (id)init
+{
+	if(self = [super init]){
+		[[adium preferenceController] registerPreferenceObserver:self
+														forGroup:GROUP_ENCRYPTION];
+	}
+
+	return self;
+}
+
+/*!
+ * @brief Preferences changed
+ *
+ * Clear our policy cache.
+ */
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if(!key || [key isEqualToString:KEY_ENCRYPTED_CHAT_PREFERENCE]){
+		[otrPolicyCache release]; otrPolicyCache = [[NSMutableDictionary alloc] init];
+	}
+}
+
 /*!
  * @brief Return the OtrlPolicy for a contact as the intValue of an NSNumber
  *
- * Look to the contact's preference, then to its account's preference, then fall back on OPPORTUNISTIC as a default
+ * Look to the contact's preference, then to its account's preference, then fall back on OPPORTUNISTIC as a default.
+ * Cache the result in our otrPolicyCache NSMutableDictionary.
  */
-+ (NSNumber *)policyForContact:(AIListContact *)contact
+- (NSNumber *)determinePolicyForContact:(AIListContact *)contact
 {
-	OtrlPolicy					policy;
-	
+	OtrlPolicy	policy;
+	NSNumber	*policyNumber;
+
 	//Force OTRL_POLICY_MANUAL when interacting with mobile numbers
 	if([[contact UID] characterAtIndex:0] == '+'){
 		policy = OTRL_POLICY_MANUAL;
@@ -534,7 +570,10 @@ void initGaimOTRSupprt(void)
 		}
 	}
 
-	return [NSNumber numberWithInt:policy];	
+	policyNumber = [NSNumber numberWithInt:policy];
+	[otrPolicyCache setObject:policyNumber
+					   forKey:[contact internalObjectID]];
+	return policyNumber;	
 }
 
 @end
