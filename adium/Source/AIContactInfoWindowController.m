@@ -25,15 +25,15 @@
 @implementation AIContactInfoWindowController
 
 //Return the shared contact info window
-static AIContactInfoWindowController *sharedInstance = nil;
+static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 + (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory
 {
     //Create the window
-    if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB category:inCategory];
+    if(!sharedContactInfoInstance){
+        sharedContactInfoInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB category:inCategory];
     }
     
-    return(sharedInstance);
+    return(sharedContactInfoInstance);
 }
 
 //Close the window
@@ -127,7 +127,7 @@ static AIContactInfoWindowController *sharedInstance = nil;
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 	
 	//Close down our shared instance
-    [sharedInstance autorelease]; sharedInstance = nil;
+    [sharedContactInfoInstance autorelease]; sharedContactInfoInstance = nil;
 
     return(YES);
 }

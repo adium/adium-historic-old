@@ -17,14 +17,14 @@
 
 @implementation JSCEventBezelController
 
-JSCEventBezelController *sharedInstance = nil;
+JSCEventBezelController *sharedEventBezelInstance = nil;
 
 + (JSCEventBezelController *)eventBezelController
 {
-    if(!sharedInstance) {
-        sharedInstance = [[self alloc] initWithWindowNibName:EVENT_BEZEL_NIB];
+    if(!sharedEventBezelInstance) {
+        sharedEventBezelInstance = [[self alloc] initWithWindowNibName:EVENT_BEZEL_NIB];
     }
-    return(sharedInstance);
+    return(sharedEventBezelInstance);
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName
@@ -55,8 +55,8 @@ JSCEventBezelController *sharedInstance = nil;
 
 - (BOOL)windowShouldClose:(id)sender
 {
-    [sharedInstance autorelease];
-    sharedInstance = nil;
+    [sharedEventBezelInstance autorelease];
+    sharedEventBezelInstance = nil;
     
     return(YES);
 }

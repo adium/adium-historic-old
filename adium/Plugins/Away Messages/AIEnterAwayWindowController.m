@@ -36,13 +36,13 @@
 @implementation AIEnterAwayWindowController
 
 //Return a new contact list window controller
-AIEnterAwayWindowController	*sharedInstance = nil;
+AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 + (AIEnterAwayWindowController *)enterAwayWindowController
 {
-    if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:ENTER_AWAY_WINDOW_NIB];
+    if(!sharedEnterAwayInstance){
+        sharedEnterAwayInstance = [[self alloc] initWithWindowNibName:ENTER_AWAY_WINDOW_NIB];
     }
-    return(sharedInstance);
+    return(sharedEnterAwayInstance);
 }
 
 //Closes this window
@@ -216,7 +216,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 
     //Release the shared instance
-    [sharedInstance autorelease]; sharedInstance = nil;
+    [sharedEnterAwayInstance autorelease]; sharedEnterAwayInstance = nil;
 
     return(YES);
 }

@@ -13,9 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /*
- * $Revision: 1.12 $
- * $Date: 2004/01/20 05:06:32 $
- * $Author: jmelloy $
+ * $Revision: 1.13 $
+ * $Date: 2004/03/11 04:33:27 $
+ * $Author: adamiser $
  */
 
 #import "JMSQLLogViewerWindowController.h"
@@ -43,20 +43,20 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key);
 
 @implementation JMSQLLogViewerWindowController
 
-static JMSQLLogViewerWindowController *sharedInstance = nil;
+static JMSQLLogViewerWindowController *sharedSQLViewerInstance = nil;
 + (id)logViewerWindowController
 {
-    if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:SQL_LOG_VIEWER_NIB];
+    if(!sharedSQLViewerInstance){
+        sharedSQLViewerInstance = [[self alloc] initWithWindowNibName:SQL_LOG_VIEWER_NIB];
     }
 
-    return(sharedInstance);
+    return(sharedSQLViewerInstance);
 }
 
 + (void)closeSharedInstance
 {
-    if(sharedInstance){
-        [sharedInstance closeWindow:nil];
+    if(sharedSQLViewerInstance){
+        [sharedSQLViewerInstance closeWindow:nil];
     }
 }
 
@@ -144,7 +144,7 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
                                          forKey:KEY_LOG_VIEWER_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 
-    [sharedInstance autorelease]; sharedInstance = nil;
+    [sharedSQLViewerInstance autorelease]; sharedSQLViewerInstance = nil;
     [selectedLogArray release]; selectedLogArray = nil;
     [availableLogArray release]; availableLogArray = nil;
     [selectedColumn release]; selectedColumn = nil;

@@ -33,26 +33,26 @@ extern int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, vo
 
 @implementation ESContactAlertsWindowController
 //Open a new info window
-static ESContactAlertsWindowController *sharedInstance = nil;
+static ESContactAlertsWindowController *sharedAlertsWindowInstance = nil;
 + (id)showContactAlertsWindowForObject:(AIListObject *)inContact
 {
-    if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_ALERT_WINDOW_NIB];
-        [sharedInstance initialWindowConfig];
+    if(!sharedAlertsWindowInstance){
+        sharedAlertsWindowInstance = [[self alloc] initWithWindowNibName:CONTACT_ALERT_WINDOW_NIB];
+        [sharedAlertsWindowInstance initialWindowConfig];
     }
 
 
-    [sharedInstance configureWindowforObject:inContact];
-    [sharedInstance showWindow:nil];
+    [sharedAlertsWindowInstance configureWindowforObject:inContact];
+    [sharedAlertsWindowInstance showWindow:nil];
 
-    return(sharedInstance);
+    return(sharedAlertsWindowInstance);
 }
 
 //Close the alerts window
 + (void)closeContactAlertsWindow
 {
-    if(sharedInstance){
-        [sharedInstance closeWindow:nil];
+    if(sharedAlertsWindowInstance){
+        [sharedAlertsWindowInstance closeWindow:nil];
     }
 }
 
@@ -444,7 +444,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
 - (IBAction)switchToContact:(id)sender
 {
-    [sharedInstance configureWindowforObject:[sender representedObject]];
+    [sharedAlertsWindowInstance configureWindowforObject:[sender representedObject]];
 }
 - (void)testSelectedEvent:(id)sender
 {

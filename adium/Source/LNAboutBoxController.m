@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//$Id: LNAboutBoxController.m,v 1.29 2004/02/27 10:44:26 eevyl Exp $
+//$Id: LNAboutBoxController.m,v 1.30 2004/03/11 04:33:28 adamiser Exp $
 
 #import "LNAboutBoxController.h"
 
@@ -34,13 +34,13 @@
 @implementation LNAboutBoxController
 
 //Returns the shared about box instance
-LNAboutBoxController *sharedInstance = nil;
+LNAboutBoxController *sharedAboutBoxInstance = nil;
 + (LNAboutBoxController *)aboutBoxController
 {
-    if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:ABOUT_BOX_NIB];
+    if(!sharedAboutBoxInstance){
+        sharedAboutBoxInstance = [[self alloc] initWithWindowNibName:ABOUT_BOX_NIB];
     }
-    return(sharedInstance);
+    return(sharedAboutBoxInstance);
 }
 
 //Init
@@ -102,7 +102,7 @@ LNAboutBoxController *sharedInstance = nil;
 //Cleanup as the window is closing
 - (BOOL)windowShouldClose:(id)sender
 {
-    [sharedInstance autorelease]; sharedInstance = nil;
+    [sharedAboutBoxInstance autorelease]; sharedAboutBoxInstance = nil;
     [scrollTimer invalidate]; [scrollTimer release]; scrollTimer = nil;
 
     return(YES);

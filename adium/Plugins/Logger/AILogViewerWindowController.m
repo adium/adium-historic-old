@@ -65,33 +65,33 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key);
 @implementation AILogViewerWindowController
 
 //Open the log viewer window
-static AILogViewerWindowController *sharedInstance = nil;
+static AILogViewerWindowController *sharedLogViewerInstance = nil;
 + (id)openForPlugin:(id)inPlugin
 {
-    if(!sharedInstance) sharedInstance = [[self alloc] initWithWindowNibName:([NSApp isOnPantherOrBetter] ? LOG_VIEWER_NIB : LOG_VIEWER_JAG_NIB) plugin:inPlugin];
-    [sharedInstance showWindow:nil];
-    return(sharedInstance);
+    if(!sharedLogViewerInstance) sharedLogViewerInstance = [[self alloc] initWithWindowNibName:([NSApp isOnPantherOrBetter] ? LOG_VIEWER_NIB : LOG_VIEWER_JAG_NIB) plugin:inPlugin];
+    [sharedLogViewerInstance showWindow:nil];
+    return(sharedLogViewerInstance);
 }
 
 //Open the log viewer window to a specific contact's logs
 + (id)openForContact:(AIListContact *)inContact plugin:(id)inPlugin
 {
     [self openForPlugin:inPlugin];
-    if(inContact) [sharedInstance setSearchString:[inContact UID] mode:LOG_SEARCH_TO];
-    return(sharedInstance);
+    if(inContact) [sharedLogViewerInstance setSearchString:[inContact UID] mode:LOG_SEARCH_TO];
+    return(sharedLogViewerInstance);
 }
 
 //Returns the window controller if one exists
 + (id)existingWindowController
 {
-    return(sharedInstance);
+    return(sharedLogViewerInstance);
 }
 
 //Close the log viewer window
 + (void)closeSharedInstance
 {
-    if(sharedInstance){
-        [sharedInstance closeWindow:nil];
+    if(sharedLogViewerInstance){
+        [sharedLogViewerInstance closeWindow:nil];
     }
 }
 
@@ -209,7 +209,7 @@ static AILogViewerWindowController *sharedInstance = nil;
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 
     //Clean up
-    [sharedInstance autorelease]; sharedInstance = nil;
+    [sharedLogViewerInstance autorelease]; sharedLogViewerInstance = nil;
     
     return(YES);
 }

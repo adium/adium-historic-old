@@ -27,19 +27,19 @@
 
 @implementation AINewMessagePrompt
 
-static AINewMessagePrompt *sharedInstance = nil;
+static AINewMessagePrompt *sharedNewMessageInstance = nil;
 + (void)newMessagePrompt
 {
-    if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:NEW_MESSAGE_PROMPT_NIB];
+    if(!sharedNewMessageInstance){
+        sharedNewMessageInstance = [[self alloc] initWithWindowNibName:NEW_MESSAGE_PROMPT_NIB];
     }
-    [[sharedInstance window] makeKeyAndOrderFront:nil];
+    [[sharedNewMessageInstance window] makeKeyAndOrderFront:nil];
 }
 
 + (void)closeSharedInstance
 {
-    if(sharedInstance){
-        [sharedInstance closeWindow:nil];
+    if(sharedNewMessageInstance){
+        [sharedNewMessageInstance closeWindow:nil];
     }
 }
 
@@ -131,7 +131,7 @@ static AINewMessagePrompt *sharedInstance = nil;
 
 - (BOOL)windowShouldClose:(id)sender
 {
-    [self autorelease]; sharedInstance = nil; //Close the shared instance
+    [self autorelease]; sharedNewMessageInstance = nil; //Close the shared instance
     return(YES);
 }
 

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.33 2004/02/07 20:11:58 evands Exp $
+// $Id: AIPreferenceWindowController.m,v 1.34 2004/03/11 04:33:28 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -47,20 +47,20 @@
 
 @implementation AIPreferenceWindowController
 //The shared instance guarantees (with as little work as possible) that only one preference controller can be open at a time.  It also makes handling releasing the window very simple.
-static AIPreferenceWindowController *sharedInstance = nil;
+static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 + (AIPreferenceWindowController *)preferenceWindowController
 {
-    if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:PREFERENCE_WINDOW_NIB];
+    if(!sharedPreferenceInstance){
+        sharedPreferenceInstance = [[self alloc] initWithWindowNibName:PREFERENCE_WINDOW_NIB];
     }
     
-    return(sharedInstance);
+    return(sharedPreferenceInstance);
 }
 
 + (void)closeSharedInstance
 {
-    if(sharedInstance){
-        [sharedInstance closeWindow:nil];
+    if(sharedPreferenceInstance){
+        [sharedPreferenceInstance closeWindow:nil];
     }
 }
 
@@ -194,7 +194,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     [[adium notificationCenter] postNotificationName:Preference_WindowDidClose object:nil];
 
     //autorelease the shared instance
-    [sharedInstance autorelease]; sharedInstance = nil;
+    [sharedPreferenceInstance autorelease]; sharedPreferenceInstance = nil;
 
     return(YES);
 }

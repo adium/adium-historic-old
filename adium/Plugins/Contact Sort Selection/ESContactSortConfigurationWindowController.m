@@ -14,17 +14,17 @@
 
 + (id)showSortConfigurationWindowForController:(AISortController *)controller
 {
-	static ESContactSortConfigurationWindowController   *sharedInstance = nil;
+	static ESContactSortConfigurationWindowController   *sharedSortConfigInstance = nil;
 	
-    if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:@"SortConfiguration"];
+    if(!sharedSortConfigInstance){
+        sharedSortConfigInstance = [[self alloc] initWithWindowNibName:@"SortConfiguration"];
     }
 	
-	[sharedInstance configureForController:controller];
+	[sharedSortConfigInstance configureForController:controller];
 	
-	[sharedInstance showWindow:nil];
+	[sharedSortConfigInstance showWindow:nil];
 	
-	return sharedInstance;
+	return sharedSortConfigInstance;
 }
 
 - (void)configureForController:(AISortController *)controller

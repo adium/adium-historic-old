@@ -25,21 +25,21 @@
 @implementation AIEventSoundCustom
 
 //
-AIEventSoundCustom	*sharedInstance = nil;
+AIEventSoundCustom	*sharedEventSoundInstance = nil;
 + (id)showEventSoundCustomPanel
 {
-    if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:NIB_EVENT_SOUND_CUSTOM];
+    if(!sharedEventSoundInstance){
+        sharedEventSoundInstance = [[self alloc] initWithWindowNibName:NIB_EVENT_SOUND_CUSTOM];
     }
-    return(sharedInstance);
+    return(sharedEventSoundInstance);
 }
 
 //
 + (void)closeEventSoundCustomPanel
 {
-    if(sharedInstance){
-        [sharedInstance closeWindow:nil];
-        [sharedInstance release]; sharedInstance = nil;
+    if(sharedEventSoundInstance){
+        [sharedEventSoundInstance closeWindow:nil];
+        [sharedEventSoundInstance release]; sharedEventSoundInstance = nil;
     }
 }
 
@@ -110,7 +110,7 @@ AIEventSoundCustom	*sharedInstance = nil;
 
     //Clean up shared instance
     [self autorelease];
-    sharedInstance = nil;
+    sharedEventSoundInstance = nil;
 
     return(YES);
 }
