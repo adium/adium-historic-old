@@ -38,6 +38,10 @@
 	menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT_TO_GROUP target:self action:@selector(addContact:) keyEquivalent:@""] autorelease];
 	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
 
+	//Add contact context menu item for tabs
+	menuItem_tabAddContact = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT target:self action:@selector(addContact:) keyEquivalent:@""] autorelease];
+    [[adium menuController] addContextualMenuItem:menuItem_tabAddContact toLocation:Context_Contact_TabAction];
+	
 	//Add group menu item
     menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_GROUP target:self action:@selector(addGroup:) keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
@@ -65,6 +69,14 @@
 	//Disable 'delete selection' if nothing is selected or the contact list isn't in front
 	if(menuItem == menuItem_delete){
 		return([[adium contactController] selectedListObjectInContactList] != nil);
+	} else if(menuItem == menuItem_tabAddContact) {
+		AIListObject	*selectedObject = [[adium menuController] contactualMenuContact];
+		
+		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
+			return( ([[[selectedObject containingGroup] UID] compare:@"Orphans"] == 0) ||
+					([[[selectedObject containingGroup] UID] compare:@"__Strangers"] == 0) );
+		}
+		
 	}
 	
 	return(YES);
