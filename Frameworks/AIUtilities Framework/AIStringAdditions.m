@@ -264,12 +264,12 @@
 // Convert spaces to '+'
 - (NSString *)stringByEncodingURLEscapes
 {
-    int				sourceLength = [self length];
+    unsigned		sourceLength = [self length];
     const char		*cSource = [self cString];
     char			*cDest;
     NSMutableData	*destData;
-    int				s = 0;
-    int				d = 0;
+    unsigned		s = 0;
+    unsigned		d = 0;
 	
     //Worst case scenario is 3 times the original length (every character escaped)
     destData = [NSMutableData dataWithLength:(sourceLength * 3)];
@@ -299,7 +299,7 @@
         s++;
     }
 	
-    return([NSString stringWithCString:cDest length:d]);
+    return [[[NSString alloc] initWithBytes:cDest length:d encoding:NSASCIIStringEncoding] autorelease];
 }
 
 //stringByDecodingURLEscapes
@@ -307,12 +307,12 @@
 // Convert '+' back to a space
 - (NSString *)stringByDecodingURLEscapes
 {
-    int				sourceLength = [self length];
+    unsigned		sourceLength = [self length];
     const char		*cSource = [self cString];
     char			*cDest;
     NSMutableData	*destData;
-    int				s = 0;
-    int				d = 0;
+    unsigned		s = 0;
+    unsigned		d = 0;
 	
     //Best case scenario is 1/3 the original length (every character escaped); worst should be the same length
     destData = [NSMutableData dataWithLength:sourceLength];
@@ -337,7 +337,7 @@
         d++;
     }
 	
-    return([NSString stringWithCString:cDest length:d]);
+    return [[[NSString alloc] initWithBytes:cDest length:d encoding:NSASCIIStringEncoding] autorelease];
 }
 
 - (NSString *)string
@@ -356,8 +356,8 @@
 	while(1) {
 		if ([scanner scanUpToCharactersFromSet:mustBeEscaped intoString:&lastChunk]){
 			[result appendString:lastChunk];
+			curLocation = [scanner scanLocation];
 		}
-		curLocation = [scanner scanLocation];
 		if(curLocation >= maxLocation)
 			break;
 		else {
@@ -378,6 +378,79 @@
 			[scanner setScanLocation:++curLocation];
 		}
 	}
+//	NSLog(@"escaped string: %@\ninto string: %@", self, result);
+	return result;
+}
+
+- (NSString *)stringByUnescapingFromHTML {
+	if([self length] == 0) return self; //avoids various RangeExceptions.
+	
+	static NSString *ampersand = @"&", *semicolon = @";";
+	
+	NSString *segment = nil, *entity = nil;
+	NSScanner *scanner = [NSScanner scannerWithString:self];
+	[scanner setCaseSensitive:YES];
+	unsigned myLength = [self length];
+	NSMutableString *result = [NSMutableString string];
+	
+	do {
+		if([scanner scanUpToString:ampersand intoString:&segment] || [self characterAtIndex:[scanner scanLocation]] == '&') {
+//			NSLog(@"scanned to ampersand");
+			if(segment) {
+				[result appendString:segment];
+				segment = nil;
+			}
+			if(![scanner isAtEnd]) {
+				[scanner setScanLocation:[scanner scanLocation]+1];
+			}
+		}
+		if([scanner scanUpToString:semicolon intoString:&entity]) {
+			unsigned number;
+			if([entity characterAtIndex:0] == '#') {
+//				NSLog(@"it's numeric: entity is %@", entity);
+				NSScanner *numScanner = [NSScanner scannerWithString:entity];
+				[numScanner setCaseSensitive:YES];
+				unichar secondCharacter = [entity characterAtIndex:1];
+				BOOL appendIt = NO;
+				if(secondCharacter == 'x' || secondCharacter == 'X') {
+					//hexadecimal: "#x..." or "#X..."
+//					NSLog(@"characterAtIndex:2 == '%C'", [entity characterAtIndex:2]);
+					[numScanner setScanLocation:2];
+					appendIt = [numScanner scanHexInt:&number];
+				} else {
+					//decimal: "#..."
+//					NSLog(@"characterAtIndex:1 == '%C'", [entity characterAtIndex:1]);
+					[numScanner setScanLocation:1];
+					appendIt = [numScanner scanInt:(int *)&number];
+				}
+//				NSLog(@"appendIt: %u", appendIt);
+				if(appendIt) {
+#warning add surrogate support!
+					[result appendFormat:@"%C", (unichar)number];
+				}
+			} else {
+				//named entity. for now, we only support the four essential ones.
+				static NSDictionary *entityNames = nil;
+				if(entityNames == nil) {
+					entityNames = [[NSDictionary alloc] initWithObjectsAndKeys:
+						[NSNumber numberWithUnsignedInt:'"'], @"quot",
+						[NSNumber numberWithUnsignedInt:'&'], @"amp",
+						[NSNumber numberWithUnsignedInt:'<'], @"lt",
+						[NSNumber numberWithUnsignedInt:'>'], @"gt",
+						nil];
+				}
+				number = [[entityNames objectForKey:[entity lowercaseString]] unsignedIntValue];
+//				NSLog(@"named entity: entity value for name @\"%@\" is (0x%x) '%C'", [entity lowercaseString], (unichar)number, number);
+				if(number) {
+					[result appendFormat:@"%C", (unichar)number];
+				}
+			}
+			if(![scanner isAtEnd]) {
+				[scanner setScanLocation:[scanner scanLocation]+1];
+			}
+		} //if([scanner scanUpToString:semicolon intoString:&entity])
+	} while([scanner scanLocation] < myLength);
+//	NSLog(@"unescaped %@\ninto %@", self, result);
 	return result;
 }
 
