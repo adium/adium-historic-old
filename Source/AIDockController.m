@@ -515,7 +515,7 @@
         default: desc=@"Invalid"; break;
     }    
 	
-	return(AILocalizedString(desc,""));
+	return(NSLocalizedString(desc,""));
 }
 
 //Start a delayed bounce

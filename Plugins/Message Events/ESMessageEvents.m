@@ -27,11 +27,11 @@
 	NSString	*description;
 	
 	if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
-		description = AILocalizedString(@"Is sent a message",nil);
+		description = NSLocalizedString(@"Is sent a message",nil);
 	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
-		description = AILocalizedString(@"Sends a message",nil);
+		description = NSLocalizedString(@"Sends a message",nil);
 	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
-		description = AILocalizedString(@"Sends an initial message",nil);
+		description = NSLocalizedString(@"Sends an initial message",nil);
 	}else{
 		description = @"";
 	}
@@ -44,11 +44,11 @@
 	NSString	*description;
 	
 	if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
-		description = AILocalizedString(@"Message Sent",nil);
+		description = NSLocalizedString(@"Message Sent",nil);
 	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
-		description = AILocalizedString(@"Message Received",nil);
+		description = NSLocalizedString(@"Message Received",nil);
 	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
-		description = AILocalizedString(@"Message Received (New)",nil);
+		description = NSLocalizedString(@"Message Received (New)",nil);
 	}else{
 		description = @"";
 	}
@@ -80,13 +80,13 @@
 	NSString	*description;
 	
 	if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
-		description = AILocalizedString(@"When %@ is sent a message by you",nil);
+		description = NSLocalizedString(@"When %@ is sent a message by you",nil);
 	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
-		description = AILocalizedString(@"When %@ sends a message to you",nil);
+		description = NSLocalizedString(@"When %@ sends a message to you",nil);
 	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
-		description = AILocalizedString(@"When %@ sends an initial message to you",nil);
+		description = NSLocalizedString(@"When %@ sends an initial message to you",nil);
 	}else{
-		description = AILocalizedString(@"Unknown",nil);
+		description = NSLocalizedString(@"Unknown",nil);
 	}
 	
 	return([NSString stringWithFormat:description, [listObject displayName]]);

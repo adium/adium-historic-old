@@ -38,17 +38,17 @@
 	NSString	*description;
 	
 	if([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES]){
-		description = AILocalizedString(@"Connects",nil);
+		description = NSLocalizedString(@"Connects",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_ONLINE_NO]){
-		description = AILocalizedString(@"Disconnects",nil);
+		description = NSLocalizedString(@"Disconnects",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_YES]){
-		description = AILocalizedString(@"Goes away",nil);
+		description = NSLocalizedString(@"Goes away",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_NO]){
-		description = AILocalizedString(@"Returns from away",nil);
+		description = NSLocalizedString(@"Returns from away",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_YES]){
-		description = AILocalizedString(@"Goes idle",nil);
+		description = NSLocalizedString(@"Goes idle",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
-		description = AILocalizedString(@"Returns from idle",nil);
+		description = NSLocalizedString(@"Returns from idle",nil);
 	}else{
 		description = @"";
 	}
@@ -61,17 +61,17 @@
 	NSString	*description;
 	
 	if([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES]){
-		description = AILocalizedString(@"Contact Signed On",nil);
+		description = NSLocalizedString(@"Contact Signed On",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_ONLINE_NO]){
-		description = AILocalizedString(@"Contact Signed Off",nil);
+		description = NSLocalizedString(@"Contact Signed Off",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_YES]){
-		description = AILocalizedString(@"Contact Went Away",nil);
+		description = NSLocalizedString(@"Contact Went Away",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_NO]){
-		description = AILocalizedString(@"Contact Returned from Away",nil);
+		description = NSLocalizedString(@"Contact Returned from Away",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_YES]){
-		description = AILocalizedString(@"Contact Went Idle",nil);
+		description = NSLocalizedString(@"Contact Went Idle",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
-		description = AILocalizedString(@"Contact Returned from Idle",nil);
+		description = NSLocalizedString(@"Contact Returned from Idle",nil);
 	}else{
 		description = @"";	
 	}
@@ -109,19 +109,19 @@
 	NSString	*description;
 	
 	if([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES]){
-		description = AILocalizedString(@"When %@ connects",nil);
+		description = NSLocalizedString(@"When %@ connects",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_ONLINE_NO]){
-		description = AILocalizedString(@"When %@ disconnects",nil);
+		description = NSLocalizedString(@"When %@ disconnects",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_YES]){
-		description = AILocalizedString(@"When %@ goes away",nil);
+		description = NSLocalizedString(@"When %@ goes away",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_NO]){
-		description = AILocalizedString(@"When %@ returns from away",nil);
+		description = NSLocalizedString(@"When %@ returns from away",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_YES]){
-		description = AILocalizedString(@"When %@ goes idle",nil);
+		description = NSLocalizedString(@"When %@ goes idle",nil);
 	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
-		description = AILocalizedString(@"When %@ returns from idle",nil);
+		description = NSLocalizedString(@"When %@ returns from idle",nil);
 	}else{
-		description = AILocalizedString(@"Unknown",nil);
+		description = NSLocalizedString(@"Unknown",nil);
 	}
 	
 	return([NSString stringWithFormat:description, [listObject displayName]]);

@@ -26,7 +26,7 @@
 #import "libpq-fe.h"
 #import "JMSQLLoggerAdvancedPreferences.h"
 
-#define SQL_LOG_VIEWER  AILocalizedString(@"SQL Log Viewer",nil)
+#define SQL_LOG_VIEWER  NSLocalizedString(@"SQL Log Viewer",nil)
 
 @interface AISQLLoggerPlugin (PRIVATE)
 - (void)_addMessage:(NSAttributedString *)message dest:(NSString *)destName source:(NSString *)sourceName sendDisplay:(NSString *)sendDisp destDisplay:(NSString *)destDisp sendServe:(NSString *)s_service recServe:(NSString *)r_service;

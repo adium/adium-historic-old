@@ -885,11 +885,11 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 #define MENU_IMAGE_FRACTION_CONNECTING  	0.60
 #define MENU_IMAGE_FRACTION_OFFLINE  		0.30
 
-#define	ACCOUNT_CONNECT_MENU_TITLE			AILocalizedString(@"Connect: %@","Connect account prefix")
-#define	ACCOUNT_DISCONNECT_MENU_TITLE		AILocalizedString(@"Disconnect: %@","Disconnect account prefix")
-#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocalizedString(@"Cancel: %@","Connecting an account prefix")
-#define	ACCOUNT_DISCONNECTING_MENU_TITLE	AILocalizedString(@"Cancel: %@","Disconnecting an account prefix")
-#define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedString(@"Auto-Connect on Launch",nil)
+#define	ACCOUNT_CONNECT_MENU_TITLE			NSLocalizedString(@"Connect: %@","Connect account prefix")
+#define	ACCOUNT_DISCONNECT_MENU_TITLE		NSLocalizedString(@"Disconnect: %@","Disconnect account prefix")
+#define	ACCOUNT_CONNECTING_MENU_TITLE		NSLocalizedString(@"Cancel: %@","Connecting an account prefix")
+#define	ACCOUNT_DISCONNECTING_MENU_TITLE	NSLocalizedString(@"Cancel: %@","Disconnecting an account prefix")
+#define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		NSLocalizedString(@"Auto-Connect on Launch",nil)
 
 - (void)registerAccountMenuPlugin:(id<AccountMenuPlugin>)accountMenuPlugin
 {

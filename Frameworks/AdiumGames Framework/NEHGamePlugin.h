@@ -22,10 +22,10 @@
 #define MSG_BUSY			@"Busy"
 #define MSG_TIMEOUT			@"Timeout"
 
-#define BUTTON_OK   AILocalizedString(@"Okay","")
-#define BUTTON_ERR  AILocalizedString(@"Okay","")
-#define BUTTON_YES  AILocalizedString(@"Yes","")
-#define BUTTON_NO   AILocalizedString(@"No","")
+#define BUTTON_OK   NSLocalizedString(@"Okay","")
+#define BUTTON_ERR  NSLocalizedString(@"Okay","")
+#define BUTTON_YES  NSLocalizedString(@"Yes","")
+#define BUTTON_NO   NSLocalizedString(@"No","")
 
 //Tag values for the play as radio button group
 #define				TAG_PLAYER_1		0

@@ -114,7 +114,7 @@
 	NSString	*description;
 	
 	if([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]){
-		description = AILocalizedString(@"Error",nil);
+		description = NSLocalizedString(@"Error",nil);
 	}else{
 		description = @"";
 	}

@@ -9,7 +9,7 @@
 #import "DCInviteToChatPlugin.h"
 #import "DCInviteToChatWindowController.h"
 
-#define INVITE_CONTACT			AILocalizedString(@"Invite to Chat",nil)
+#define INVITE_CONTACT			NSLocalizedString(@"Invite to Chat",nil)
 
 @interface DCInviteToChatPlugin (PRIVATE)
 - (NSMenu *)groupChatMenuForContact:(AIListContact *)contact;

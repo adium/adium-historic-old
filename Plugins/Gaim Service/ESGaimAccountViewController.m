@@ -89,10 +89,10 @@
 {
     NSMenu			*proxyMenu = [[NSMenu alloc] init];
 	
-    [proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"None",nil) tag:Gaim_Proxy_None]];
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide SOCKS4 Settings",nil) tag:Gaim_Proxy_Default_SOCKS4]];
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide SOCKS5 Settings",nil) tag:Gaim_Proxy_Default_SOCKS5]];
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide HTTP Settings",nil) tag:Gaim_Proxy_Default_HTTP]];
+    [proxyMenu addItem:[self _proxyMenuItemWithTitle:NSLocalizedString(@"None",nil) tag:Gaim_Proxy_None]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:NSLocalizedString(@"Systemwide SOCKS4 Settings",nil) tag:Gaim_Proxy_Default_SOCKS4]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:NSLocalizedString(@"Systemwide SOCKS5 Settings",nil) tag:Gaim_Proxy_Default_SOCKS5]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:NSLocalizedString(@"Systemwide HTTP Settings",nil) tag:Gaim_Proxy_Default_HTTP]];
 	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"SOCKS4" tag:Gaim_Proxy_SOCKS4]];
 	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"SOCKS5" tag:Gaim_Proxy_SOCKS5]];
 	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"HTTP" tag:Gaim_Proxy_HTTP]];

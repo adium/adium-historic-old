@@ -16,7 +16,7 @@
     return(AIPref_Advanced_ContactList);
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Display Preferences",nil));
+    return(NSLocalizedString(@"Display Preferences",nil));
 }
 - (NSString *)nibName{
     return(@"CLViewAdvancedPrefs");

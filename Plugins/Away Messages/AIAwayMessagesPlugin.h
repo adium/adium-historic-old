@@ -17,7 +17,7 @@
 #define KEY_SAVED_AWAYS				@"Saved Away Messages"
 
 #define MENU_AWAY_DISPLAY_LENGTH		30
-#define ELIPSIS_STRING					AILocalizedString(@"...",nil)
+#define ELIPSIS_STRING					NSLocalizedString(@"...",nil)
 
 @class AIAwayMessagePreferences;
 

@@ -11,9 +11,9 @@
 
 #define PREVIEW_FILE	@"Preview"
 
-#define NO_BACKGROUND_ITEM_TITLE		AILocalizedString(@"No Image",nil)
-#define DEFAULT_BACKGROUND_ITEM_TITLE   AILocalizedString(@"Default Image",nil)
-#define CUSTOM_BACKGROUND_ITEM_TITLE	AILocalizedString(@"Custom...",nil)
+#define NO_BACKGROUND_ITEM_TITLE		NSLocalizedString(@"No Image",nil)
+#define DEFAULT_BACKGROUND_ITEM_TITLE   NSLocalizedString(@"Default Image",nil)
+#define CUSTOM_BACKGROUND_ITEM_TITLE	NSLocalizedString(@"Custom...",nil)
 
 #define	PREF_GROUP_DISPLAYFORMAT		@"Display Format"  //To watch when the contact name display format changes
 
@@ -288,7 +288,7 @@
 
 		//If the preferred style is unavailable, load the default
 		if (!style){
-			styleName = AILocalizedString(@"Mockie","Default message style name. Make sure this matches the localized style bundle's name!");
+			styleName = NSLocalizedString(@"Mockie","Default message style name. Make sure this matches the localized style bundle's name!");
 			style = [plugin messageStyleBundleWithName:styleName];
 		}
 	}
@@ -489,7 +489,7 @@
 					//Add the No Variant menu item
 					NSString		*noVariantName = [style objectForInfoDictionaryKey:@"DisplayNameForNoVariant"];
 					if (!noVariantName){
-						noVariantName = AILocalizedString(@"Normal","Normal style variant menu item");
+						noVariantName = NSLocalizedString(@"Normal","Normal style variant menu item");
 					}
 					subMenuItem = [[[NSMenuItem alloc] initWithTitle:noVariantName 
 															  target:self

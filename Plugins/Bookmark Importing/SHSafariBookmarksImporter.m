@@ -17,7 +17,7 @@
 #define SAFARI_DICT_TITLE       @"Title"
 #define SAFARI_DICT_URI_TITLE   @"title"
 
-#define SAFARI_ROOT_MENU_TITLE  AILocalizedString(@"Safari",nil)
+#define SAFARI_ROOT_MENU_TITLE  NSLocalizedString(@"Safari",nil)
 
 @interface SHSafariBookmarksImporter(PRIVATE)
 - (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;

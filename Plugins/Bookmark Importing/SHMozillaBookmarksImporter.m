@@ -10,7 +10,7 @@
 #define MOZILLA_BOOKMARKS_PATH  @"~/Library/Mozilla/Profiles/default"
 #define MOZILLA_BOOKMARKS_FILE_NAME @"bookmarks.html"
 
-#define MOZILLA_ROOT_MENU_TITLE AILocalizedString(@"Mozilla",nil)
+#define MOZILLA_ROOT_MENU_TITLE NSLocalizedString(@"Mozilla",nil)
 
 @class SHMozillaCommonParser;
 

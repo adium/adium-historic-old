@@ -20,8 +20,8 @@
  **/
 
 //Localization
-#ifndef AILocalizedString
-#define AILocalizedString(key, comment) [[NSBundle bundleForClass: [self class]] localizedStringForKey: (key) value:@"" table:nil]
+#ifndef NSLocalizedString
+#define NSLocalizedString(key, comment) [[NSBundle bundleForClass: [self class]] localizedStringForKey: (key) value:@"" table:nil]
 #endif
 
 //Static strings

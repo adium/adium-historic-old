@@ -6,7 +6,7 @@
 
 #import "SHABBookmarksImporter.h"
 
-#define AB_ROOT_MENU_TITLE AILocalizedString(@"Address Book",nil)
+#define AB_ROOT_MENU_TITLE NSLocalizedString(@"Address Book",nil)
 
 @interface SHABBookmarksImporter(PRIVATE)
 - (void)getUrlsFromAB;

@@ -11,7 +11,7 @@
 #import "AIListThemeWindowController.h"
 
 #define CONTACT_BEZEL_NIB   @"ContactEventBezel"
-#define EVENT_BEZEL_ALERT   AILocalizedString(@"Show Event Notification Window",nil)
+#define EVENT_BEZEL_ALERT   NSLocalizedString(@"Show Event Notification Window",nil)
 
 @interface JSCEventBezelPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -185,15 +185,15 @@
 			}
 			
 			if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_YES]){
-				tempEvent = AILocalizedString(@"is now online",nil);
+				tempEvent = NSLocalizedString(@"is now online",nil);
 				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor]];
 				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
 			}else if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_NO]){
-				tempEvent = AILocalizedString(@"has gone offline",nil);
+				tempEvent = NSLocalizedString(@"has gone offline",nil);
 				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor]];
 				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor]];
 			}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]){
-				tempEvent = AILocalizedString(@"has gone away",nil);
+				tempEvent = NSLocalizedString(@"has gone away",nil);
 				if ([contact statusObjectForKey:@"IdleSince"]) {
 					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor]];
 					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
@@ -202,7 +202,7 @@
 					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
 				}
 			}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]){
-				tempEvent = AILocalizedString(@"is available",nil);
+				tempEvent = NSLocalizedString(@"is available",nil);
 				if ([contact statusObjectForKey:@"IdleSince"]) {
 					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
 					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
@@ -211,7 +211,7 @@
 					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
 				}
 			}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]){
-				tempEvent = AILocalizedString(@"is idle",nil);
+				tempEvent = NSLocalizedString(@"is idle",nil);
 				if ([contact integerStatusObjectForKey:@"Away" fromAnyContainedObject:NO]) {
 					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor]];
 					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
@@ -220,7 +220,7 @@
 					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
 				}
 			}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]){
-				tempEvent = AILocalizedString(@"is no longer idle",nil);
+				tempEvent = NSLocalizedString(@"is no longer idle",nil);
 				if ([contact integerStatusObjectForKey:@"Away" fromAnyContainedObject:NO]) {
 					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
 					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
@@ -229,7 +229,7 @@
 					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
 				}
             }else if([notificationName isEqualToString: Content_FirstContentRecieved]){
-				tempEvent = AILocalizedString(@"new message",nil);
+				tempEvent = NSLocalizedString(@"new message",nil);
 				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
 				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
 			}
