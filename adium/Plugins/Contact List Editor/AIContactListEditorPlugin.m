@@ -23,6 +23,7 @@
 #define EDIT_CONTACT_LIST   AILocalizedString(@"Edit Contact List…",nil)
 #define EDIT_CONTACT_LIST_TOOLBAR   AILocalizedString(@"Edit Contact List",nil)
 #define ADD_CONTACT   AILocalizedString(@"Add Contact…",nil)
+#define DELETE_CONTACT   AILocalizedString(@"Delete Selection",nil)
 
 @interface AIContactListEditorPlugin (PRIVATE)
 - (void)_generateCollectionsArray;
@@ -45,6 +46,10 @@
 
 	//Add contact menu item
     menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT target:self action:@selector(addContact:) keyEquivalent:@""] autorelease];
+    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
+
+	//Delete selection menu item
+    menuItem = [[[NSMenuItem alloc] initWithTitle:DELETE_CONTACT target:self action:@selector(deleteSelection:) keyEquivalent:@"\b"] autorelease];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
 	
     //Edit contact list toolbar item
@@ -81,6 +86,16 @@
 	[AINewContactWindowController promptForNewContactOnWindow:nil];
 }
 
+//
+- (IBAction)deleteSelection:(id)sender
+{
+	NSLog(@"Don't delete %@, that's your friend!",[[[adium contactController] selectedContact] displayName]);
+//	AIListObject	*object = [[adium contactController] selectedContact];
+//	
+//	if(object){
+//		[[adium contactController] removeListObjects:[NSArray arrayWithObject:object] fromGroup:group];
+//	}
+}
 
 
 
