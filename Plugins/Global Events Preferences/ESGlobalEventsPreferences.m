@@ -20,6 +20,7 @@
 #import "ESGlobalEventsPreferences.h"
 #import "ESGlobalEventsPreferencesPlugin.h"
 #import <Adium/ESPresetManagementController.h>
+#import <Adium/ESPresetNameSheetController.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
@@ -287,6 +288,12 @@
 	//Edit Presets
 	[eventPresetsMenu addItem:[NSMenuItem separatorItem]];
 
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Add New Preset...",nil)
+																	 target:self
+																	 action:@selector(addNewPreset:)
+															  keyEquivalent:@""] autorelease];
+	[eventPresetsMenu addItem:menuItem];
+	
 	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Edit Presets...",nil)
 																	 target:self
 																	 action:@selector(editPresets:)
@@ -314,6 +321,34 @@
 	[plugin setEventPreset:eventPreset];
 
 	[self updateSoundSetSelection];
+}
+
+/*
+ * Add a new preset
+ *
+ * Called by the "Add New preset..." menu item.  Functions the same as duplicate from the preset management, duplicating
+ * the current event set with a new name.
+ */
+- (void)addNewPreset:(id)sender
+{
+	NSString	*defaultName;
+	NSString	*explanatoryText;
+	
+	defaultName = [NSString stringWithFormat:@"%@ (%@)",
+		[[adium preferenceController] preferenceForKey:@"Active Event Set"
+												 group:PREF_GROUP_EVENT_PRESETS],
+		AILocalizedString(@"Copy",nil)];
+	explanatoryText = AILocalizedString(@"Enter a unique name for this new event set.",nil);
+
+	[ESPresetNameSheetController showPresetNameSheetWithDefaultName:defaultName
+													explanatoryText:explanatoryText
+														   onWindow:[[self view] window]
+													notifyingTarget:self
+														   userInfo:nil];
+
+	//Get our event presets menu back to its proper selection
+	[popUp_eventPreset selectItemWithTitle:[[adium preferenceController] preferenceForKey:@"Active Event Set"
+																					group:PREF_GROUP_EVENT_PRESETS]];	
 }
 
 /*
@@ -807,12 +842,32 @@
 	
 	//Apply the sound set so its events are in the current alerts.
 	[plugin applySoundSetWithPath:soundSetPath];
-	
+
+	/* Update the selection, which will select Custom as appropriate.  This must be done before saving the event
+	 * preset so the menu is on the correct sound set to save.
+	 */
+	[self updateSoundSetSelection];
+
 	/* Save the preset which is now updated to have the appropriate sounds; 
 	 * in saving, the name of the soundset, or @"", will also be saved.
 	 */
 	[self saveCurrentEventPreset];
+}
+
+/*
+ * @brief Revert the event set to how it was before the last attempted operation
+ */
+- (void)revertToSavedEventSet
+{
+	NSDictionary		*eventPreset;
+
+	[popUp_eventPreset selectItemWithTitle:[[adium preferenceController] preferenceForKey:@"Active Event Set"
+																					group:PREF_GROUP_EVENT_PRESETS]];	
+	eventPreset = [[popUp_eventPreset selectedItem] representedObject];
+
+	[plugin setEventPreset:eventPreset];
 	
+	//Ensure the correct sound set is selected
 	[self updateSoundSetSelection];
 }
 
@@ -844,6 +899,8 @@
 	return(currentEventSetForSaving);
 }
 
+#pragma mark Preset saving
+
 /*
  * @brief Save the current event preset
  *
@@ -873,15 +930,58 @@
  */
 - (void)showPresetCopySheet:(NSString *)originalPresetName
 {
-	[textField_name setStringValue:[NSString stringWithFormat:@"%@ (%@)",
-		originalPresetName,
-		AILocalizedString(@"Copy",nil)]];
+	NSString	*defaultName;
+	NSString	*explanatoryText;
 	
-	[NSApp beginSheet:panel_editingAdiumPreset
-	   modalForWindow:[[self view] window]
-		modalDelegate:self
-	   didEndSelector:NULL
-		  contextInfo:NULL];
+	defaultName = [NSString stringWithFormat:@"%@ (%@)", originalPresetName, AILocalizedString(@"Copy",nil)];
+	explanatoryText = AILocalizedString(@"You are editing a default event set.  Please enter a unique name for your modified set.",nil);
+	
+	[ESPresetNameSheetController showPresetNameSheetWithDefaultName:defaultName
+													explanatoryText:explanatoryText
+														   onWindow:[[self view] window]
+													notifyingTarget:self
+														   userInfo:nil];
+}
+
+- (BOOL)presetNameSheetController:(ESPresetNameSheetController *)controller
+			  shouldAcceptNewName:(NSString *)newName
+						 userInfo:(id)userInfo
+{
+	return(![[[plugin builtInEventPresets] allKeys] containsObject:newName] &&
+		   ![[[plugin storedEventPresets] allKeys] containsObject:newName]);
+}
+	
+- (void)presetNameSheetControllerDidEnd:(ESPresetNameSheetController *)controller 
+							 returnCode:(ESPresetNameSheetReturnCode)returnCode
+								newName:(NSString *)newName
+							   userInfo:(id)userInfo
+{
+	switch(returnCode){
+		case ESPresetNameSheetOkayReturn:
+		{
+			//XXX error if overwriting existing set?
+			NSMutableDictionary	*newEventPreset = [self currentEventSetForSaving];
+			[newEventPreset setObject:newName
+							   forKey:@"Name"];
+			
+			//Now save the current settings
+			[plugin saveEventPreset:newEventPreset];
+			
+			//Presets menu
+			[[adium preferenceController] setPreference:newName
+												 forKey:@"Active Event Set"
+												  group:PREF_GROUP_EVENT_PRESETS];
+			[popUp_eventPreset setMenu:[self eventPresetsMenu]];
+			[popUp_eventPreset selectItemWithTitle:newName];
+			
+			break;
+		}
+		case ESPresetNameSheetCancelReturn:
+		{
+			[self revertToSavedEventSet];
+			break;
+		}
+	}
 }
 		
 /*!
@@ -894,24 +994,6 @@
  */
 - (IBAction)selectedNameForPresetCopy:(id)sender
 {
-	//XXX error if overwriting existing set?
-	NSMutableDictionary	*newEventPreset = [self currentEventSetForSaving];
-	NSString			*name = [textField_name stringValue];
-	[newEventPreset setObject:name
-					   forKey:@"Name"];
-
-	[panel_editingAdiumPreset orderOut:nil];
-    [NSApp endSheet:panel_editingAdiumPreset];
-
-	//Now save the current settings
-	[plugin saveEventPreset:newEventPreset];
-
-	//Presets menu
-	[[adium preferenceController] setPreference:name
-										 forKey:@"Active Event Set"
-										  group:PREF_GROUP_EVENT_PRESETS];
-	[popUp_eventPreset setMenu:[self eventPresetsMenu]];
-	[popUp_eventPreset selectItemWithTitle:name];
 	
 }
 
