@@ -163,8 +163,11 @@
                         <span class="teamData">AIM:</span>bgann7899
                     </div>
                     <div class="teamMember">
-                        <h2>Steve Holt</h2>
-                        <span class="teamData">Email:</span><a href="mailto:4N01@simplstick.com">4N01@simplstick.com</a><br />
+                        <h2>Stephen Holt</h2>
+			<img class="teamAvatar" width="64" height="64" border="0" src="images/avatars/avatar_Stephen Holt.png" alt="avatar" />
+			<span class="teamData">Website:</span><a href="http://www.simplstick.com/">http://www.simplstick.com/</a><br />
+                        <span class="teamData">Email:</span><a href="mailto:sholt@simplstick.com">sholt@simplstick.com</a><br />
+			<span class="teamData">AIM:</span>Earth Mark Two
                     </div>
                     <div class="teamMember">
                         <h2>Mac-arena the Bored Zo</h2>
