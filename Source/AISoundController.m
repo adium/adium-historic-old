@@ -496,26 +496,28 @@ NSSound finished playing callback
 - (void)speakText:(NSString *)text withVoice:(NSString *)voiceString andPitch:(float)pitch andRate:(int)rate
 {
     if(text && [text length]){
-		NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-		
-		if(text){
-			[dict setObject:text forKey:TEXT_TO_SPEAK];
-		}
-		
-		if(voiceString){
-			int voiceIndex = [voiceArray indexOfObject:voiceString];
-			if(voiceIndex != NSNotFound){
-				[dict setObject:[NSNumber numberWithInt:voiceIndex] forKey:VOICE_INDEX];
-			}
-		}
-		
-		if(pitch) [dict setObject:[NSNumber numberWithFloat:pitch] forKey:PITCH];
-		if(rate) [dict setObject:[NSNumber numberWithInt:rate] forKey:RATE];
-		
-		[speechArray addObject:dict];
-		[dict release];
-		
 		if(!muteSounds && (!muteWhileAway || ![[owner preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
+			NSMutableDictionary *dict;
+			
+			dict = [[NSMutableDictionary alloc] init];
+			
+			if(text){
+				[dict setObject:text forKey:TEXT_TO_SPEAK];
+			}
+			
+			if(voiceString){
+				int voiceIndex = [voiceArray indexOfObject:voiceString];
+				if(voiceIndex != NSNotFound){
+					[dict setObject:[NSNumber numberWithInt:voiceIndex] forKey:VOICE_INDEX];
+				}
+			}
+			
+			if(pitch) [dict setObject:[NSNumber numberWithFloat:pitch] forKey:PITCH];
+			if(rate) [dict setObject:[NSNumber numberWithInt:rate] forKey:RATE];
+			
+			[speechArray addObject:dict];
+			[dict release];
+			
 			[self speakNext];
 		}
     }
