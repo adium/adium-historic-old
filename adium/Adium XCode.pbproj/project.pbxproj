@@ -346,6 +346,7 @@
 				BF380C3105A8FF9000A74E9F,
 				52AEBD6105ABA95700B19C56,
 				C42C16FF05BA682C00135D3C,
+				6EB4AC3405BCB81D00D0042B,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -443,6 +444,7 @@
 				3419F34105314BA100C68BA3,
 				3419F35605314BAB00C68BA3,
 				3419F36605314BB400C68BA3,
+				6EB4AC3305BCB81D00D0042B,
 				344AB2A40579128A00384CEE,
 				3419F37405314BBE00C68BA3,
 				3419F38205314BC900C68BA3,
@@ -9607,6 +9609,7 @@
 				3419FE0E0531585600C68BA3,
 				3419FE0F0531585600C68BA3,
 				3419FE100531585600C68BA3,
+				6EB4AF0D05BCEA1700D0042B,
 				3419FE110531585600C68BA3,
 				344AB7260579237600384CEE,
 				3419FE120531585600C68BA3,
@@ -17874,6 +17877,7 @@
 		};
 		4B13323F0459BE4500A8010A = {
 			children = (
+				6EB4AC5F05BCB91100D0042B,
 				B782F088058BB60B00AF4BBA,
 				344AB2C90579137E00384CEE,
 				9C8C7FA303CBA17B00267226,
@@ -24887,6 +24891,238 @@
 			path = "Plugins/Idle Message/IdleMessagePreferences.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		6EB4AC2F05BCB81D00D0042B = {
+			buildActionMask = 2147483647;
+			files = (
+				6EB4AC6C05BCB9D000D0042B,
+				6EB4AC6E05BCB9D000D0042B,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6EB4AC3005BCB81D00D0042B = {
+			buildActionMask = 2147483647;
+			files = (
+				6EB4AC7005BCB9D000D0042B,
+				6EB4AC7105BCB9D000D0042B,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6EB4AC3105BCB81D00D0042B = {
+			buildActionMask = 2147483647;
+			files = (
+				6EB4AC6D05BCB9D000D0042B,
+				6EB4AC6F05BCB9D000D0042B,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6EB4AC3205BCB81D00D0042B = {
+			buildActionMask = 2147483647;
+			files = (
+				6EB4ADA705BCC1C300D0042B,
+				6EB4AC5705BCB8F600D0042B,
+				6EB4AC5605BCB8EC00D0042B,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6EB4AC3305BCB81D00D0042B = {
+			buildPhases = (
+				6EB4AC2F05BCB81D00D0042B,
+				6EB4AC3005BCB81D00D0042B,
+				6EB4AC3105BCB81D00D0042B,
+				6EB4AC3205BCB81D00D0042B,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Message Push Preferences-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Message Push Preferences";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "Message Push Preferences";
+			productName = "Message Push Preferences";
+			productReference = 6EB4AC3405BCB81D00D0042B;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Message Push Preferences</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Message_Push_Preferences</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		6EB4AC3405BCB81D00D0042B = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Message Push Preferences.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6EB4AC5605BCB8EC00D0042B = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EB4AC5705BCB8F600D0042B = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EB4AC5F05BCB91100D0042B = {
+			children = (
+				6EB4AC6605BCB9CC00D0042B,
+				6EB4AC6705BCB9CD00D0042B,
+				6EB4AC6805BCB9CE00D0042B,
+				6EB4AC6905BCB9CE00D0042B,
+				6EB4AC6A05BCB9CF00D0042B,
+				6EB4AC6B05BCB9CF00D0042B,
+			);
+			isa = PBXGroup;
+			name = "Message Push Preferences";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EB4AC6605BCB9CC00D0042B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCMessagePushPreferences.h;
+			path = "Plugins/Message Push Preferences/DCMessagePushPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EB4AC6705BCB9CD00D0042B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCMessagePushPreferences.m;
+			path = "Plugins/Message Push Preferences/DCMessagePushPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EB4AC6805BCB9CE00D0042B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCMessagePushPreferencesPlugin.h;
+			path = "Plugins/Message Push Preferences/DCMessagePushPreferencesPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EB4AC6905BCB9CE00D0042B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCMessagePushPreferencesPlugin.m;
+			path = "Plugins/Message Push Preferences/DCMessagePushPreferencesPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EB4AC6A05BCB9CF00D0042B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = MessagePushDefaults.plist;
+			path = "Plugins/Message Push Preferences/MessagePushDefaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EB4AC6B05BCB9CF00D0042B = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = MessagePushPreferences.nib;
+			path = "Plugins/Message Push Preferences/MessagePushPreferences.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6EB4AC6C05BCB9D000D0042B = {
+			fileRef = 6EB4AC6605BCB9CC00D0042B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EB4AC6D05BCB9D000D0042B = {
+			fileRef = 6EB4AC6705BCB9CD00D0042B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EB4AC6E05BCB9D000D0042B = {
+			fileRef = 6EB4AC6805BCB9CE00D0042B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EB4AC6F05BCB9D000D0042B = {
+			fileRef = 6EB4AC6905BCB9CE00D0042B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EB4AC7005BCB9D000D0042B = {
+			fileRef = 6EB4AC6A05BCB9CF00D0042B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EB4AC7105BCB9D000D0042B = {
+			fileRef = 6EB4AC6B05BCB9CF00D0042B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EB4ADA705BCC1C300D0042B = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6EB4AF0D05BCEA1700D0042B = {
+			fileRef = 6EB4AC3405BCB81D00D0042B;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		6ECE6C2004749C9600CAEAD0 = {
 			isa = PBXFileReference;
