@@ -183,6 +183,7 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
+				34D189280760F75E0075A380,
 				4B191D8C0611C11000E8A4E7,
 				34B5EBA106589A88007B9A56,
 				4B191D8E0611C11400E8A4E7,
@@ -349,6 +350,36 @@
 		};
 		34082691075B5CB900703011 = {
 			fileRef = 3408268F075B5CB900703011;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		340833EA075C3A7900703011 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AILocalizationTextField.h;
+			path = "Frameworks/Adium Framework/AILocalizationTextField.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		340833EB075C3A7900703011 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AILocalizationTextField.m;
+			path = "Frameworks/Adium Framework/AILocalizationTextField.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		340833EC075C3A7900703011 = {
+			fileRef = 340833EA075C3A7900703011;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		340833ED075C3A7900703011 = {
+			fileRef = 340833EB075C3A7900703011;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4719,8 +4750,6 @@
 			children = (
 				34FDD6E305632BFD00F5B30F,
 				34FDD6E405632BFD00F5B30F,
-				34D2E8670758BB0B0054C56D,
-				34D2E8680758BB0B0054C56D,
 				349FE301074D01D300E36B3B,
 				349FE300074D01D300E36B3B,
 				349FE2FF074D01D300E36B3B,
@@ -4729,6 +4758,9 @@
 				349FE2FD074D01D300E36B3B,
 				349FE2FC074D01D200E36B3B,
 				07CE05590661D7E600C50929,
+				34D2E8670758BB0B0054C56D,
+				34D2E8680758BB0B0054C56D,
+				34D2EB6C0758D65D0054C56D,
 				34D2E86D0758BD2A0054C56D,
 				349E602307543E17008ACCED,
 				349E602407543E17008ACCED,
@@ -4738,6 +4770,10 @@
 				344701980755270100565588,
 				3447019D0755271E00565588,
 				3447019E0755271E00565588,
+				34D183B9075FC6ED0075A380,
+				34D183BA075FC6ED0075A380,
+				34D183BB075FC6ED0075A380,
+				34D183BC075FC6ED0075A380,
 			);
 			isa = PBXGroup;
 			name = "File Transfer";
@@ -6136,28 +6172,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BD9D3D053146CC000AB133,
-				34BD9D27053146CC000AB133,
-				34BD9D28053146CC000AB133,
-				C497518D05BBB979009958A6,
-				34BD9D29053146CC000AB133,
-				34BD9D2A053146CC000AB133,
-				34BD9D2C053146CC000AB133,
-				4BD6735206001BD50049CAF7,
+				4BD673E806001CB50049CAF7,
+				4BD6737706001BF10049CAF7,
+				4BD6738A06001C2C0049CAF7,
+				4BD673EB06001CB60049CAF7,
+				4BD6740206001CC40049CAF7,
 				4BD6735506001BD60049CAF7,
 				4BD6735F06001BE60049CAF7,
 				4BD6736206001BE70049CAF7,
+				34BD9D2A053146CC000AB133,
+				4BD6735206001BD50049CAF7,
+				34BD9D28053146CC000AB133,
+				34BD9D27053146CC000AB133,
+				34BD9D2C053146CC000AB133,
 				4BD6736906001BEA0049CAF7,
 				4BD6736A06001BEA0049CAF7,
 				4BD6737106001BED0049CAF7,
-				4BD6737706001BF10049CAF7,
-				4BD6738A06001C2C0049CAF7,
 				4BD6739A06001C400049CAF7,
 				4BD673AB06001C510049CAF7,
-				4BD673E806001CB50049CAF7,
-				4BD673EB06001CB60049CAF7,
 				4BD673F606001CC00049CAF7,
 				4BD673FC06001CC10049CAF7,
-				4BD6740206001CC40049CAF7,
 				4BD6742506001CF40049CAF7,
 				4BD6742F06001D1D0049CAF7,
 				4BD6743506001D210049CAF7,
@@ -6229,6 +6263,8 @@
 				34254F4605EC0C2E00F11AD7,
 				34254F4805EC0C3400F11AD7,
 				34254F4C05EC0C4300F11AD7,
+				C497518D05BBB979009958A6,
+				34BD9D29053146CC000AB133,
 				4B29094005F944BF0087D16F,
 				4BD6735906001BD70049CAF7,
 				4BD6735A06001BE40049CAF7,
@@ -6355,6 +6391,10 @@
 				34D2EC180758FBB90054C56D,
 				34082690075B5CB900703011,
 				34082691075B5CB900703011,
+				34D183BD075FC6ED0075A380,
+				34D183BE075FC6ED0075A380,
+				34D183BF075FC6ED0075A380,
+				34D183C0075FC6ED0075A380,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6760,6 +6800,7 @@
 		};
 		34BD9D5F053146CC000AB133 = {
 			buildActionMask = 12;
+			comments = Frameworks;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
@@ -6890,6 +6931,9 @@
 				4BAFD57906E0091100FF7FBC,
 				34A48AD406F647FD002C7C5F,
 				34E6D3900727354600A2643A,
+				340833EC075C3A7900703011,
+				34D1897F076114C00075A380,
+				34D189B2076131850075A380,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7008,6 +7052,7 @@
 				349DDD5306406A7D00542726,
 				6E4D960F06B7397A005235E9,
 				340F481B06DA4EDD0072E2FA,
+				34D189290760F75F0075A380,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7061,6 +7106,8 @@
 				4BAFD57A06E0091100FF7FBC,
 				34A48AD306F647FD002C7C5F,
 				34E6D3910727354600A2643A,
+				340833ED075C3A7900703011,
+				34D18980076114C00075A380,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7957,6 +8004,146 @@
 		};
 		34CEBE6306F117DF00A89DDE = {
 			fileRef = 34CEBE6106F117DF00A89DDE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D183B9075FC6ED0075A380 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = FTProgressRevealRollover_Selected.tif;
+			path = Source/icons/FTProgressRevealRollover_Selected.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D183BA075FC6ED0075A380 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = FTProgressRevealRollover.tif;
+			path = Source/icons/FTProgressRevealRollover.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D183BB075FC6ED0075A380 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = FTProgressStopRollover_Selected.tif;
+			path = Source/icons/FTProgressStopRollover_Selected.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D183BC075FC6ED0075A380 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = FTProgressStopRollover.tif;
+			path = Source/icons/FTProgressStopRollover.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D183BD075FC6ED0075A380 = {
+			fileRef = 34D183B9075FC6ED0075A380;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D183BE075FC6ED0075A380 = {
+			fileRef = 34D183BA075FC6ED0075A380;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D183BF075FC6ED0075A380 = {
+			fileRef = 34D183BB075FC6ED0075A380;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D183C0075FC6ED0075A380 = {
+			fileRef = 34D183BC075FC6ED0075A380;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D188DB0760F0F50075A380 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AILocalizationControl.m;
+			path = "Frameworks/Adium Framework/AILocalizationControl.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D189280760F75E0075A380 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			name = "Nibs needing manual localization.txt";
+			path = "Documentation/localizing/Nibs needing manual localization.txt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D189290760F75F0075A380 = {
+			fileRef = 34D189280760F75E0075A380;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D1897D076114C00075A380 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AILocalizationButton.h;
+			path = "Frameworks/Adium Framework/AILocalizationButton.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D1897E076114C00075A380 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AILocalizationButton.m;
+			path = "Frameworks/Adium Framework/AILocalizationButton.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D1897F076114C00075A380 = {
+			fileRef = 34D1897D076114C00075A380;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D18980076114C00075A380 = {
+			fileRef = 34D1897E076114C00075A380;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D18983076114D20075A380 = {
+			children = (
+				34D189B1076131850075A380,
+				34D188DB0760F0F50075A380,
+				340833EA075C3A7900703011,
+				340833EB075C3A7900703011,
+				34D1897D076114C00075A380,
+				34D1897E076114C00075A380,
+			);
+			isa = PBXGroup;
+			name = "Localization Assistance";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D189B1076131850075A380 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AILocalizationAssistance.h;
+			path = "Frameworks/Adium Framework/AILocalizationAssistance.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D189B2076131850075A380 = {
+			fileRef = 34D189B1076131850075A380;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -21806,7 +21993,6 @@
 				3408268E075B5CB900703011,
 				3408268F075B5CB900703011,
 				4BCB9B5E0567FF5D001D3559,
-				34D2EB6C0758D65D0054C56D,
 			);
 			isa = PBXGroup;
 			name = "About Box";
@@ -22151,6 +22337,7 @@
 				340F444F06D87A830072E2FA,
 				F5300A2C032F761101A8010A,
 				4B4F5B2E042D647600A8010A,
+				34D18983076114D20075A380,
 				F5B89EFC033CA8CC01A8010A,
 				4B4F5B2F042D647C00A8010A,
 			);
