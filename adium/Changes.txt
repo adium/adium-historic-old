@@ -4,6 +4,7 @@ Version 0.52 (4/16/2004)
 - Message windows now display a customizable number of lines from the previous conversation when opened
 - Added proxy connect options to Yahoo! accounts
 - Added proxy connect, host, port, connect via, resource, and encryption options to Jabber accounts
+- Added the option to play sounds using the system specified Output Device for System Alerts
 - Fixed Jabber message sending and receiving (formatting is not yet supported)
 - Fixed MSN and Yahoo reconnect behavior to not attempt a reconnect if you sign on from another location
 - An attempt to connect with an invalid password now reprompts for a correct password
