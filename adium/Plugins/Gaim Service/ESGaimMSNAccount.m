@@ -117,16 +117,22 @@ static BOOL didInitMSN = NO;
 	if([[self statusObjectForKey:@"Online"] boolValue]){
 
 		if([key isEqualToString:@"FullNameAttr"]){
-			if (GAIM_DEBUG) NSLog(@"Updating FullNameAttr to %@",[[self autoRefreshingOutgoingContentForStatusKey:key] string]);
-			[self _setFriendlyNameTo:[[self autoRefreshingOutgoingContentForStatusKey:key] string]];
+			
+			NSString	*friendlyName = [[self autoRefreshingOutgoingContentForStatusKey:key] string];
+			NSString	*oldFriendlyName = [[self displayArrayForKey:@"Display Name" create:NO] objectWithOwner:self];
+			
+			if (!friendlyName || ![friendlyName isEqualToString:oldFriendlyName]){
+				[self _setFriendlyNameTo:friendlyName];
+			}
 		}
 	}
 }
 
 -(void)_setFriendlyNameTo:(NSString *)inAlias
 {
-#warning we should ignore this set if it hasnt changed...
  	if (gaim_account_is_connected(account)){
+		if (GAIM_DEBUG) NSLog(@"Updating FullNameAttr to %@",inAlias);
+
  		msn_set_friendly_name(account->gc, [inAlias UTF8String]);
 	}
 }
