@@ -16,9 +16,9 @@
 @class AIAccountSetupView;
 
 @interface AIAccountSetupWindowController : AIWindowController {
-	IBOutlet		NSView		*view_overview;
+	IBOutlet	AIAccountSetupView	*view_overview;
 	
-	AIAccountSetupView			*activeView;
+	AIAccountSetupView				*activeView;
 }
 
 + (AIAccountSetupWindowController *)accountSetupWindowController;
