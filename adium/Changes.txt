@@ -13,6 +13,7 @@ Version 0.58
 - Improved preference windows
 - Improved the Mockie message style, including fixing issues in very wide windows
 - Fixed many MSN bugs, including a crash when dragging contacts between groups
+- Fixed a bug where shorter emoticons could mask larger ones
 - Fixed a crash while dragging emoticon packs
 - Fixed a crash when displaying error messages
 - Fixed a crash when joining a multiuser chat
