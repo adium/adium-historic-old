@@ -34,6 +34,7 @@
 - (void)viewDidLoad
 {
     [themesList setPlugin:themePlugin];
+	
     //Configure our buttons
     [createButton setImage:[AIImageUtilities imageNamed:@"plus" forClass:[self class]]];
     [removeButton setImage:[AIImageUtilities imageNamed:@"minus" forClass:[self class]]];    
