@@ -109,7 +109,8 @@ IdleMessagePlugin,
 JSCEventBezelPlugin,
 SAContactOnlineForPlugin,
 SHBookmarksImporterPlugin,
-SHLinkManagementPlugin;
+SHLinkManagementPlugin,
+ESGlobalEventsPreferencesPlugin;
 
 @interface AICoreComponentLoader (PRIVATE)
 - (void)_loadComponentClass:(Class)inClass;
@@ -208,6 +209,7 @@ SHLinkManagementPlugin;
 	[self _loadComponentClass:[SAContactOnlineForPlugin class]];
 	[self _loadComponentClass:[SHBookmarksImporterPlugin class]];
 	[self _loadComponentClass:[SHLinkManagementPlugin class]];
+	[self _loadComponentClass:[ESGlobalEventsPreferencesPlugin class]];
 }
 
 //Give all components a chance to close
