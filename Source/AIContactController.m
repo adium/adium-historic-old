@@ -277,7 +277,7 @@ DeclareString(UID);
 	
 	
 	//Create temporary strings outside the loop
-	NSString	*Contact = @"Contact";
+	// NSString	*Contact = @"Contact"; // related to the commented block below
 	NSString	*Group = @"Group";
 	NSString	*Type = @"Type";
 	NSString	*Ordering = @"Ordering";
