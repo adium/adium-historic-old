@@ -10,7 +10,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/index.jsp $-->
-<!--$Rev: 843 $ $Date: 2004/07/21 19:31:02 $ -->
+<!--$Rev: 854 $ $Date: 2004/08/04 16:31:54 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -24,6 +24,8 @@ boolean showMeta = false;
 Date today = new Date(System.currentTimeMillis());
 int chat_id = 0;
 int meta_id = 0;
+int message_id = 0;
+int time = 15;
 
 String formURL = new String("saveForm.jsp?action=saveChat.jsp");
 
@@ -106,6 +108,18 @@ try {
     meta_id = 0;
 }
 
+try {
+    message_id = Integer.parseInt(request.getParameter("message_id"));
+} catch (NumberFormatException e) {
+    message_id = 0;
+}
+
+try {
+    time = Integer.parseInt(request.getParameter("time"));
+} catch (NumberFormatException e) {
+    time = 15;
+}
+
 String hlColor[] = {"#ff6","#a0ffff", "#9f9", "#f99", "#f69"};
 
 PreparedStatement pstmt = null;
@@ -140,6 +154,20 @@ try {
     } else {
         title = "SQL Logger";
     }
+
+    if(message_id != 0) {
+        pstmt = conn.prepareStatement("select message_date + '" + time + " minutes'::interval as finish, message_date - '" + time + " minutes'::interval as start from messages where message_id = ?");
+
+        pstmt.setInt(1, message_id);
+
+        rset = pstmt.executeQuery();
+
+        if(rset.next()) {
+            dateStart = rset.getString("start");
+            dateFinish = rset.getString("finish");
+        }
+    }
+
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -174,6 +202,7 @@ try {
                     <li><a href="statistics.jsp">Statistics</a></li>
                     <li><a href="users.jsp">Users</a></li>
                     <li><a href="meta.jsp">Meta-Contacts</a></li>
+                    <li><a href="query.jsp">Query</a></li>
                 </ul>
             </div>
             <div id="sidebar-a">
@@ -240,29 +269,71 @@ try {
     }
 
     if (from_sn != null && to_sn != null) {
-        queryText += " and ((sender_sn like ? " +
-        " and recipient_sn like ?) or " +
-        "(sender_sn like ? and recipient_sn like ?)) ";
-        commandArray[aryCount++] = new String(to_sn);
-        commandArray[aryCount++] = new String(from_sn);
-        commandArray[aryCount++] = new String(from_sn);
-        commandArray[aryCount++] = new String(to_sn);
+        if(showDisplay) {
+            queryText += " and (((sender_display like ? " +
+                " or sender_sn like ?) " +
+                " and (recipient_display like ? or recipient_sn like ?)) or " +
+                " ((sender_display like ? or sender_sn like ?) " +
+                " and (recipient_display like ? or recipient_sn like ? )))";
 
+            commandArray[aryCount++] = new String(to_sn);
+            commandArray[aryCount++] = new String(to_sn);
+
+            commandArray[aryCount++] = new String(from_sn);
+            commandArray[aryCount++] = new String(from_sn);
+
+            commandArray[aryCount++] = new String(from_sn);
+            commandArray[aryCount++] = new String(from_sn);
+
+            commandArray[aryCount++] = new String(to_sn);
+            commandArray[aryCount++] = new String(to_sn);
+        } else {
+            queryText += " and ((sender_sn like ? " +
+            " and recipient_sn like ?) or " +
+            "(sender_sn like ? and recipient_sn like ?)) ";
+            commandArray[aryCount++] = new String(to_sn);
+            commandArray[aryCount++] = new String(from_sn);
+            commandArray[aryCount++] = new String(from_sn);
+            commandArray[aryCount++] = new String(to_sn);
+        }
     } else if (from_sn != null && to_sn == null) {
-        queryText += " and sender_sn like ? ";
+        if(showDisplay) {
+            queryText += " and (sender_sn like ? or sender_display like ?) ";
+            commandArray[aryCount++] = new String(from_sn);
+            commandArray[aryCount++] = new String(from_sn);
+        } else {
+            queryText += " and sender_sn like ? ";
 
-        commandArray[aryCount++] = new String(from_sn);
+            commandArray[aryCount++] = new String(from_sn);
+        }
 
     } else if (from_sn == null && to_sn != null) {
-        queryText += " and recipient_sn like ? ";
+        if(showDisplay) {
+            queryText += " and (recipient_sn like ? or recipient_display like ?)";
+            commandArray[aryCount++] = new String(to_sn);
+            commandArray[aryCount++] = new String(to_sn);
+        } else {
+            queryText += " and recipient_sn like ? ";
 
-        commandArray[aryCount++] = new String(to_sn);
+            commandArray[aryCount++] = new String(to_sn);
+        }
     }
 
     if (contains_sn != null) {
-        queryText += " and (recipient_sn like ? or sender_sn like ?) ";
-        commandArray[aryCount++] = new String(contains_sn);
-        commandArray[aryCount++] = new String(contains_sn);
+        if(showDisplay) {
+            queryText += " and (recipient_sn like ? or sender_sn like ? " +
+                " or recipient_display like ? or sender_display like ?) ";
+
+
+            commandArray[aryCount++] = new String(contains_sn);
+            commandArray[aryCount++] = new String(contains_sn);
+            commandArray[aryCount++] = new String(contains_sn);
+            commandArray[aryCount++] = new String(contains_sn);
+        } else {
+            queryText += " and (recipient_sn like ? or sender_sn like ?) ";
+            commandArray[aryCount++] = new String(contains_sn);
+            commandArray[aryCount++] = new String(contains_sn);
+        }
     }
 
     if (meta_id != 0) {
@@ -617,11 +688,11 @@ try {
 
             out.print("<span style=\"color: " + sent_color + "\">");
             if(showDisplay) {
-                out.print(rset.getString("sender_display"));
+                out.print(rset.getString("sender_display").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
             } else if (showMeta) {
-                out.print(rset.getString("sender_meta"));
+                out.print(rset.getString("sender_meta").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
             } else {
-                out.print(rset.getString("sender_sn"));
+                out.print(rset.getString("sender_sn").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
             }
             out.print("</span></a>\n");
 
@@ -639,11 +710,11 @@ try {
                 out.print("<span style=\"color: " +
                 received_color + "\">");
                 if(showDisplay) {
-                    out.print(rset.getString("recipient_display"));
+                    out.print(rset.getString("recipient_display").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
                 } else if (showMeta) {
-                    out.print(rset.getString("recipient_meta"));
+                    out.print(rset.getString("recipient_meta").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
                 } else {
-                    out.print(rset.getString("recipient_sn"));
+                    out.print(rset.getString("recipient_sn").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
                 }
                 out.print("</span></a>");
             }
