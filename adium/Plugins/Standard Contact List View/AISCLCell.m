@@ -188,7 +188,7 @@
         //Background Color (If this cell is selected, we don't display the background color)
         if ([self isHighlighted] && ([[controlView window] isKeyWindow] && [[controlView window] firstResponder] == controlView)){
             if ([(AISCLOutlineView *)controlView labelAroundContactOnly]) {
-                backgroundColor = [NSColor selectedControlColor];
+                backgroundColor = [NSColor alternateSelectedControlColor];
             } else {
                 backgroundColor = nil;
             }
