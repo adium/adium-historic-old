@@ -14,7 +14,7 @@
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category
 {
-    return(AIPref_Advanced_Service);
+    return(AIPref_Advanced);
 }
 - (NSString *)label
 {
