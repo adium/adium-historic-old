@@ -105,6 +105,8 @@ from cStringIO import StringIO
 MAILHOST = 'localhost'
 MAILPORT = 25
 
+FROMHOST = 'users.sourceforge.net'
+
 # Diff trimming stuff
 DIFF_HEAD_LINES = 20
 DIFF_TAIL_LINES = 20
