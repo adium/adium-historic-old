@@ -1,0 +1,37 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {
+            CLASS = ESContactAlertsActionColumn; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableColumn; 
+        }, 
+        {
+            ACTIONS = {addedEvent = id; deleteEventAction = id; oneTimeEvent = id; }; 
+            CLASS = ESContactAlertsPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                actionColumn = ESContactAlertsActionColumn; 
+                "button_delete" = NSButton; 
+                "button_oneTime" = NSButton; 
+                "popUp_addEvent" = NSPopUpButton; 
+                "popUp_contactList" = NSPopUpButton; 
+                "tableView_actions" = AIAlternatingRowTableView; 
+                "view_main" = NSView; 
+                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = ESContactAlertsPrefsTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIAlternatingRowTableView; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
