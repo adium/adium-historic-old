@@ -31,7 +31,6 @@
 
 #define KEY_LIST_LAYOUT_CONTACT_SPACING			@"Contact Spacing"
 #define KEY_LIST_LAYOUT_GROUP_TOP_SPACING		@"Group Top Spacing"
-#define KEY_LIST_LAYOUT_GROUP_BOTTOM_SPACING	@"Group Bottom Spacing"
 
 #define KEY_LIST_LAYOUT_WINDOW_SHADOWED			@"Window Shadowed"
 
