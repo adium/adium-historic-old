@@ -114,12 +114,6 @@
   - Use WebKit to handle the HTML unless there is some overwhelming reason we parse it
     // this should resolve several issues and gives great benefits - like tooltips & copy link
   
-//Preferences
-  - Improve organization of advanced preferences (group several small panes into a general
-		advanced pane, possibly on a per-category basis)
-  - Add advanced categories for service specific preferences
-  - Make heights of preference panes equal where possible
-
 //Alerts
   - Display time stamps in the panel alert
   - Support %escapes in spoken alert (such as %n to speak the contact's name)
