@@ -5560,6 +5560,9 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = AIUtilities.framework_Prefix.pch;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Plists/AIUtilities_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
@@ -5567,6 +5570,7 @@
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
 				OTHER_LDFLAGS = "-seg1addr 0x11000000";
 				PRODUCT_NAME = AIUtilities;
+				WARNING_CFLAGS = " -Wno-long-double";
 				WRAPPER_EXTENSION = framework;
 			};
 			dependencies = (
