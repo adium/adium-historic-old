@@ -25,12 +25,7 @@ Messages & Chat
      getting this with our newest AIChat leakage cleanup?  If so, how?)
 
 Meta Contacts
-  - To/From bar in messages can get into a weird infinite loop when multiple possible source
-	and target accounts/contacts exist on the same serviceClass (Adam: was this the result
-	of another bug which has since been fixed?  I cannot reproduce this)
   - MetaContact ordering does not always restore properly
-  - Away message is output multiple times when an open chat's contact goes away
-	and that contact is within a metaContact (Adam: I'm not seeing this)
   - Unchecking the address book consolidate contacts option has no effect [Evan]
 
 [MEDIUM]
