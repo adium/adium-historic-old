@@ -1116,15 +1116,14 @@
         nil]);
 }
 
-//Update our status for a key
+//Update our status
 - (void)updateStatusForKey:(NSString *)key
 {    
 	[super updateStatusForKey:key];
 
-	BOOL    areOnline = [[self statusObjectForKey:@"Online"] boolValue];
-
     //Now look at keys which only make sense while online
-    if(areOnline){
+    if([[self statusObjectForKey:@"Online"] boolValue]){
+		
         if ([key compare:@"IdleSince"] == 0){
             NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
             // Even if we're setting a non-zero idle time, set it to zero first.

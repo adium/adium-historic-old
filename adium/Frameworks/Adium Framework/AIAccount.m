@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.20 2003/12/24 15:17:19 adamiser Exp $
+// $Id: AIAccount.m,v 1.21 2003/12/24 15:31:13 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -42,7 +42,8 @@
     
     //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
     [self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-
+	[self updateStatusForKey:nil];
+	
     //Init the account
     [self initAccount];
 
@@ -101,12 +102,16 @@
     return([[self statusArrayForKey:key] objectWithOwner:self]);
 }
 
-//
+//Update this account's status
+//Status keys that are used by every account (Or used by the majority of accounts and harmless to others) should be
+//placed here, instead of duplicated in each account plugin.
 - (void)updateStatusForKey:(NSString *)key
 {
 	BOOL    areOnline = [[self statusObjectForKey:@"Online"] boolValue];
 	
-    //Online status changed, call connect or disconnect as appropriate
+    //Online status changed
+	//Call connect or disconnect as appropriate
+	//
     if([key compare:@"Online"] == 0){
         if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue] && !areOnline){
 			//Retrieve the user's password and then call connect
@@ -120,6 +125,16 @@
 			
         }
     }
+
+	//Username formatting changed
+	//Update the display name for this account
+	//
+    if(key == nil || [key compare:@"Handle"] == 0){
+		[self setStatusObject:[self preferenceForKey:@"Handle" group:GROUP_ACCOUNT_STATUS]
+					   forKey:@"Display Name"
+					   notify:YES];
+    }
+	
 }
 
 //Callback after the user enters their password for connecting
