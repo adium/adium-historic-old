@@ -199,6 +199,279 @@
 //342
 //343
 //344
+		342E2CF307297E220054D77A = {
+			children = (
+				342E2D0907297E460054D77A,
+				342E2D0607297E460054D77A,
+				342E2D0707297E460054D77A,
+				342E2D0207297E460054D77A,
+				342E2CFD07297E460054D77A,
+				342E2D0007297E460054D77A,
+				342E2D0A07297E460054D77A,
+				342E2D0507297E460054D77A,
+				342E2D0107297E460054D77A,
+				342E2D0807297E460054D77A,
+				342E2CFF07297E460054D77A,
+				342E2D0B07297E460054D77A,
+				342E2D0307297E460054D77A,
+				342E2D0407297E460054D77A,
+				342E2CFE07297E460054D77A,
+			);
+			isa = PBXGroup;
+			name = "AppleScript Object";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2CFD07297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NDComponentInstance.m;
+			path = "Frameworks/AIUtilities Framework/NDComponentInstance.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2CFE07297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSURL+NDCarbonUtilities.m";
+			path = "Frameworks/AIUtilities Framework/NSURL+NDCarbonUtilities.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2CFF07297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSString+NDCarbonUtilities.m";
+			path = "Frameworks/AIUtilities Framework/NSString+NDCarbonUtilities.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2D0007297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NDResourceFork.h;
+			path = "Frameworks/AIUtilities Framework/NDResourceFork.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2D0107297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSAppleEventDescriptor+NDAppleScriptObject.m";
+			path = "Frameworks/AIUtilities Framework/NSAppleEventDescriptor+NDAppleScriptObject.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2D0207297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NDComponentInstance.h;
+			path = "Frameworks/AIUtilities Framework/NDComponentInstance.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2D0307297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSString+NDUtilities.m";
+			path = "Frameworks/AIUtilities Framework/NSString+NDUtilities.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2D0407297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSURL+NDCarbonUtilities.h";
+			path = "Frameworks/AIUtilities Framework/NSURL+NDCarbonUtilities.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2D0507297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSAppleEventDescriptor+NDAppleScriptObject.h";
+			path = "Frameworks/AIUtilities Framework/NSAppleEventDescriptor+NDAppleScriptObject.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2D0607297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NDAppleScriptObject.m;
+			path = "Frameworks/AIUtilities Framework/NDAppleScriptObject.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2D0707297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NDAppleScriptObject_Protocols.h;
+			path = "Frameworks/AIUtilities Framework/NDAppleScriptObject_Protocols.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2D0807297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSString+NDCarbonUtilities.h";
+			path = "Frameworks/AIUtilities Framework/NSString+NDCarbonUtilities.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2D0907297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NDAppleScriptObject.h;
+			path = "Frameworks/AIUtilities Framework/NDAppleScriptObject.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2D0A07297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NDResourceFork.m;
+			path = "Frameworks/AIUtilities Framework/NDResourceFork.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2D0B07297E460054D77A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSString+NDUtilities.h";
+			path = "Frameworks/AIUtilities Framework/NSString+NDUtilities.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E2D0C07297E460054D77A = {
+			fileRef = 342E2CFD07297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		342E2D0D07297E460054D77A = {
+			fileRef = 342E2CFE07297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		342E2D0E07297E460054D77A = {
+			fileRef = 342E2CFF07297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		342E2D0F07297E460054D77A = {
+			fileRef = 342E2D0007297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		342E2D1007297E460054D77A = {
+			fileRef = 342E2D0107297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		342E2D1107297E460054D77A = {
+			fileRef = 342E2D0207297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		342E2D1207297E460054D77A = {
+			fileRef = 342E2D0307297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		342E2D1307297E460054D77A = {
+			fileRef = 342E2D0407297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		342E2D1407297E460054D77A = {
+			fileRef = 342E2D0507297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		342E2D1507297E460054D77A = {
+			fileRef = 342E2D0607297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		342E2D1607297E460054D77A = {
+			fileRef = 342E2D0707297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		342E2D1707297E460054D77A = {
+			fileRef = 342E2D0807297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		342E2D1807297E460054D77A = {
+			fileRef = 342E2D0907297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		342E2D1907297E460054D77A = {
+			fileRef = 342E2D0A07297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		342E2D1A07297E460054D77A = {
+			fileRef = 342E2D0B07297E460054D77A;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
 		34486B3806D1DF0300DA778C = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -4522,6 +4795,7 @@
 		};
 		4BD1EFBC06D2661200B3975E = {
 			children = (
+				342E2CF307297E220054D77A,
 				4BD1EFBF06D2662600B3975E,
 				4BD1F2DB06D26A2E00B3975E,
 				4BD1F2AE06D2686200B3975E,
@@ -5172,6 +5446,14 @@
 				34A274220721EC6A004F3455,
 				34A274350721F231004F3455,
 				34E6CE5D072632EA00A2643A,
+				342E2D0F07297E460054D77A,
+				342E2D1107297E460054D77A,
+				342E2D1307297E460054D77A,
+				342E2D1407297E460054D77A,
+				342E2D1607297E460054D77A,
+				342E2D1707297E460054D77A,
+				342E2D1807297E460054D77A,
+				342E2D1A07297E460054D77A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5320,6 +5602,13 @@
 				34A274230721EC6A004F3455,
 				34A274360721F231004F3455,
 				34E6CE5E072632EA00A2643A,
+				342E2D0C07297E460054D77A,
+				342E2D0D07297E460054D77A,
+				342E2D0E07297E460054D77A,
+				342E2D1007297E460054D77A,
+				342E2D1207297E460054D77A,
+				342E2D1507297E460054D77A,
+				342E2D1907297E460054D77A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
