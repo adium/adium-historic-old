@@ -7,7 +7,7 @@
 	<key>Combine Messeages HeadIndent</key>
 	<real>25</real>
 	<key>GridLine Darkness</key>
-	<real>0.10000000000000001</real>
+	<real>0.1</real>
 	<key>Hide Duplicate Prefixes</key>
 	<true/>
 	<key>Hide Duplicate Times</key>
@@ -37,7 +37,7 @@
 	<key>Prefix Outgoing</key>
 	<string>%a%r</string>
 	<key>Sender Gradient Darkness</key>
-	<real>0.14999999999999999</real>
+	<real>0.15</real>
 	<key>Show AM-PM</key>
 	<false/>
 	<key>Show GridLines</key>
