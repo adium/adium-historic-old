@@ -9,17 +9,17 @@
 #import "AIContentTyping.h"
 
 @interface AIContentTyping (PRIVATE)
-- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest typing:(BOOL)inTyping;
+- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest typingState:(AITypingState)inTyping;
 @end
 
 @implementation AIContentTyping
 
-+ (id)typingContentInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest typing:(BOOL)inTyping
++ (id)typingContentInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest typingState:(AITypingState)inTypingState
 {
-    return([[[self alloc] initWithChat:inChat source:inSource destination:inDest typing:inTyping] autorelease]);
+    return([[[self alloc] initWithChat:inChat source:inSource destination:inDest typingState:inTypingState] autorelease]);
 }
 
-- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest typing:(BOOL)inTyping
+- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest typingState:(AITypingState)inTypingState
 {
     [super initWithChat:inChat source:inSource destination:inDest date:nil];
 	
@@ -29,7 +29,7 @@
 	displayContent = NO;
 	
 	//Store typing state
-    typing = inTyping;
+    typingState = inTypingState;
     
     return(self);
 }
@@ -46,11 +46,11 @@
 }
 
 //YES if typing, NO if not typing
-- (void)setTyping:(BOOL)inTyping{
-	typing = inTyping;
+- (void)setTypingState:(AITypingState)inTypingState{
+	typingState = inTypingState;
 }
-- (BOOL)typing{
-    return(typing);
+- (AITypingState)typingState{
+    return(typingState);
 }
 
 @end
