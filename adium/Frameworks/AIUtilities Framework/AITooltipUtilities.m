@@ -13,9 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import "AIUtilities.h"
 #import "AITooltipUtilities.h"
-#import "AIAttributedStringAdditions.h"
 
 #define TOOLTIP_MAX_WIDTH           300
 #define TOOLTIP_INSET               4.0
@@ -78,7 +76,7 @@ static	AITooltipOrientation	tooltipOrientation;
             if (tooltipTitle) [tooltipTitle release];
             if (inTitle) {
                 tooltipTitle = [inTitle retain];
-                [textView_tooltipTitle replaceCharactersInRange:NSMakeRange(0,[[textView_tooltipTitle textStorage] length]) withRTF:[tooltipTitle dataRepresentation]];            
+                [[textView_tooltipTitle textStorage] replaceCharactersInRange:NSMakeRange(0,[[textView_tooltipTitle textStorage] length]) withAttributedString:tooltipTitle];
             } else {
                 tooltipTitle = nil;
                 [[textView_tooltipTitle textStorage] deleteCharactersInRange:NSMakeRange(0,[[textView_tooltipTitle textStorage] length])];            
@@ -87,7 +85,7 @@ static	AITooltipOrientation	tooltipOrientation;
             if (tooltipBody) [tooltipBody release]; 
             if (inBody) {
                 tooltipBody = [inBody retain];
-                [textView_tooltipBody replaceCharactersInRange:NSMakeRange(0,[[textView_tooltipBody textStorage] length]) withRTF:[tooltipBody dataRepresentation]];
+                [[textView_tooltipBody textStorage] replaceCharactersInRange:NSMakeRange(0,[[textView_tooltipBody textStorage] length]) withAttributedString:tooltipBody];
             } else {
                 tooltipBody = [inBody retain];
                 [[textView_tooltipBody textStorage] deleteCharactersInRange:NSMakeRange(0,[[textView_tooltipBody textStorage] length])];

@@ -29,8 +29,9 @@
     return(@"Online Since");
 }
 
-- (NSString *)entryForObject:(AIListObject *)inObject
+- (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
+    NSAttributedString * entry = nil;
     if([inObject isKindOfClass:[AIListContact class]] && [[(AIListContact *)inObject statusArrayForKey:@"Online"] greatestIntegerValue]){
         NSDate	*signonDate, *currentDate;
         currentDate = [NSDate date];
@@ -50,16 +51,16 @@
             signonTime = [timeFormatter stringForObjectValue:signonDate];
             
             if([currentDay compare:signonDay] == 0){ //Show time
-                return(signonTime);
+                entry = [[NSAttributedString alloc] initWithString:signonTime];
                 
             }else{ //Show date and time
-                return([NSString stringWithFormat:@"%@, %@", signonDay, signonTime]);
+                entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@, %@", signonDay, signonTime]];
                 
             }
         }
     }
 
-    return(nil);
+    return(entry);
 }
 
 @end

@@ -54,7 +54,6 @@ NSAttributedString *_safeString(NSAttributedString *inString);
     int numberOfReplacements = 0;
     
     while ( (theRange = [[self string] rangeOfString:target options:opts range:searchRange]).location != NSNotFound ) {
-        NSLog(@"begin: %@ %i %i ; %i %i",[self string],searchRange.location,searchRange.length,theRange.location);
         [self replaceCharactersInRange:theRange withString:replacement];
         numberOfReplacements++;
         searchRange.length = searchRange.length - ((theRange.location + theRange.length) - searchRange.location);
@@ -62,10 +61,99 @@ NSAttributedString *_safeString(NSAttributedString *inString);
         searchRange.location = theRange.location + theRange.length;
         if (searchRange.length - searchRange.location < 1)
             break;
-        NSLog(@"end: %@ %i %i",[self string],searchRange.location,searchRange.length);
     }
-    NSLog(@"%i replacements",numberOfReplacements);
     return numberOfReplacements;
+}
+
+- (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString*)replacement attributes:(NSDictionary*)attributes options:(unsigned)opts range:(NSRange)searchRange
+{
+    NSRange theRange;
+    int numberOfReplacements = 0;
+    
+    NSAttributedString * replacementString = [[NSAttributedString alloc] initWithString:replacement attributes:attributes];
+    
+    while ( (theRange = [[self string] rangeOfString:target options:opts range:searchRange]).location != NSNotFound ) {
+        
+        [self replaceCharactersInRange:theRange withAttributedString:replacementString];
+        numberOfReplacements++;
+        searchRange.length = searchRange.length - ((theRange.location + theRange.length) - searchRange.location);
+        
+        searchRange.location = theRange.location + theRange.length;
+        if (searchRange.length - searchRange.location < 1)
+            break;
+    }
+    
+    [replacementString release];
+    
+    return numberOfReplacements;
+}
+
+//from Adium 1.6 AIAttributedStringFormattingAdditions
+//adjust the colors in the string so they're visible on the background
+- (void)adjustColorsToShowOnBackground:(NSColor *)backgroundColor
+{
+    int 	index = 0;
+    int         stringLength = [self length];
+    float	backgroundBrightness, backgroundSum;
+    
+    //--get the brightness of our background--
+    backgroundColor = [backgroundColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+    backgroundBrightness = [backgroundColor brightnessComponent];
+    backgroundSum = [backgroundColor redComponent] + [backgroundColor greenComponent] + [backgroundColor blueComponent];
+    [backgroundColor release];
+    
+    //we need to scan each colored "chunk" of the message - and check to make sure it is a "visible" color
+    while(index < stringLength){
+        NSColor		*fontColor;
+        NSRange		effectiveRange;
+        float		brightness, sum;
+        float		deltaBrightness, deltaSum;
+        BOOL		colorChanged = NO;
+        
+        //--get the font color--
+        fontColor = [self attribute:NSForegroundColorAttributeName atIndex:index effectiveRange:&effectiveRange];                
+        if(fontColor == nil) fontColor = [NSColor blackColor];
+        fontColor = [fontColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+        
+        //--check brightness--
+        brightness = [fontColor brightnessComponent];
+        deltaBrightness = backgroundBrightness - brightness;
+        
+        if(deltaBrightness >= 0 && deltaBrightness < 0.4){ //too close                    
+                                                           //change the color
+            fontColor = [NSColor colorWithCalibratedHue:[fontColor hueComponent] saturation:[fontColor saturationComponent] brightness:backgroundBrightness - 0.4 alpha:[fontColor alphaComponent]];
+            fontColor = [fontColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+            
+            colorChanged = YES;
+            
+        }else if(deltaBrightness < 0 && deltaBrightness > -0.4){ //too close
+                                                                 //change the color
+            fontColor = [NSColor colorWithCalibratedHue:[fontColor hueComponent] saturation:[fontColor saturationComponent] brightness:backgroundBrightness + 0.4 alpha:[fontColor alphaComponent]];
+            fontColor = [fontColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+            
+            colorChanged = YES;
+        }
+        
+        //--check components--
+        sum = [fontColor redComponent] + [fontColor greenComponent] + [fontColor blueComponent];
+        deltaSum = backgroundSum - sum;
+        
+        if(deltaSum < 1.0 && deltaSum > -1.0){ //still too similar                    
+                                               //just give up and make the color black or white
+            if(backgroundBrightness <= 0.5){
+                fontColor = [[NSColor whiteColor] colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+            }else{
+                fontColor = [[NSColor blackColor] colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+            }
+            colorChanged = YES;
+        }
+        
+        if(colorChanged){
+            [self addAttribute:NSForegroundColorAttributeName value:fontColor range:effectiveRange];
+        }
+        
+        index = effectiveRange.location + effectiveRange.length;
+    }
 }
 
 @end

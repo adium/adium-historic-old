@@ -53,9 +53,9 @@
     return(entry);
 }
 
-- (NSString *)entryForObject:(AIListObject *)inObject
+- (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    NSString	*entry = nil;
+    NSAttributedString	*entry = nil;
 
     if([inObject isKindOfClass:[AIListContact class]]){
         BOOL 			away;
@@ -73,9 +73,9 @@
 
         //Return the correct string
         if(statusMessage != nil && [statusMessage length] != 0){
-            entry = [statusMessage string];
+            entry = statusMessage;
         }else if(away){
-            entry = @"Yes";
+            entry = [[NSAttributedString alloc] initWithString:@"Yes"];
         }
     }
 

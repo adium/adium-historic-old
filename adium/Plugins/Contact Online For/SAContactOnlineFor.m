@@ -33,8 +33,9 @@
     return(nil);
 }
 
-- (NSString *)entryForObject:(AIListObject *)inObject
+- (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
+    NSAttributedString * entry = nil;
     if([inObject isKindOfClass:[AIListContact class]] && [[(AIListContact *)inObject statusArrayForKey:@"Online"] greatestIntegerValue]){
         NSDate	*signonDate, *currentDate;
 
@@ -42,11 +43,11 @@
         signonDate = [[(AIListContact *)inObject statusArrayForKey:@"Signon Date"] earliestDate];
         
         if(signonDate){
-            return([NSDateFormatter stringForTimeIntervalSinceDate:signonDate showingSeconds:NO abbreviated:NO]);
+            entry = [[NSAttributedString alloc] initWithString:[NSDateFormatter stringForTimeIntervalSinceDate:signonDate showingSeconds:NO abbreviated:NO]];
         }
     }
 
-    return(nil);
+    return(entry);
 }
 
 @end

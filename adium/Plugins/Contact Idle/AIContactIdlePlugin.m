@@ -126,9 +126,9 @@
     return(entry);
 }
 
-- (NSString *)entryForObject:(AIListObject *)inObject
+- (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    NSString	*entry = nil;
+    NSAttributedString	*entry = nil;
 
     if([inObject isKindOfClass:[AIListContact class]]){
         int idle = (int)[[(AIListContact *)inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
@@ -141,9 +141,9 @@
             int	minutes = (int)(idle % 60);
 
             if(hours){
-                entry = [NSString stringWithFormat:@"%i hour%@, %i minute%@", hours, (hours == 1 ? @"": @"s"), minutes, (minutes == 1 ? @"": @"s")];
+                entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%i hour%@, %i minute%@", hours, (hours == 1 ? @"": @"s"), minutes, (minutes == 1 ? @"": @"s")]];
             }else{
-                entry = [NSString stringWithFormat:@"%i minute%@", minutes, (minutes == 1 ? @"": @"s")];
+                entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%i minute%@", minutes, (minutes == 1 ? @"": @"s")]];
             }
         }
     }

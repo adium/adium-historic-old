@@ -208,17 +208,14 @@
             [AITooltipUtilities showTooltipWithTitle:tooltipTitle body:tooltipBody image:tooltipImage imageOnRight:DISPLAY_IMAGE_ON_RIGHT onWindow:nil atPoint:point orientation:TooltipBelow];
 
         }else{ //This is a new tooltip
+            NSArray                     *tabArray;
+            NSMutableParagraphStyle     *paragraphStyleTitle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];;
+            NSMutableParagraphStyle     *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];;
+
             //Hold onto the new object
             [tooltipListObject release];
             tooltipListObject = [object retain];
 
-            [tooltipTitle release]; tooltipTitle = nil;
-            tooltipTitle = [[self _tooltipTitleForObject:object] retain];
-            
-            //Build a tooltip string for the new object
-            [tooltipBody release]; tooltipBody = nil;
-            tooltipBody = [[self _tooltipBodyForObject:object] retain];
-            
             [tooltipImage release]; tooltipImage = nil;
             //Buddy Icon
             AIMutableOwnerArray *ownerArray = [tooltipListObject statusArrayForKey:@"BuddyImage"];
@@ -226,6 +223,42 @@
                 tooltipImage = [[ownerArray objectAtIndex:0] retain];
             }else{
                 tooltipImage = nil;
+            }
+            
+            //Reset the maxLabelWidth for the tooltip generation
+            maxLabelWidth = 0;
+            
+            //Build a tooltip string for the primary information
+            [tooltipTitle release]; tooltipTitle = nil;
+            tooltipTitle = [[self _tooltipTitleForObject:object] retain];
+            
+            //If there is an image, set the title tab and indentation settings independently
+            if (tooltipImage) {
+                //Set a right-align tab at the maximum label width and a left-align just past it
+                tabArray = [[NSArray alloc] initWithObjects:[[NSTextTab alloc] initWithType:NSRightTabStopType location:maxLabelWidth],[[NSTextTab alloc] initWithType:NSLeftTabStopType location:maxLabelWidth + LABEL_ENTRY_SPACING],nil];
+
+                [paragraphStyleTitle setTabStops:tabArray];
+                [paragraphStyleTitle setHeadIndent:(maxLabelWidth + LABEL_ENTRY_SPACING)];
+                
+                [tooltipTitle addAttribute:NSParagraphStyleAttributeName value:paragraphStyleTitle range:NSMakeRange(0,[tooltipTitle length])];
+                
+                //Reset the max label width since the body will be independent
+                maxLabelWidth = 0;
+            }
+            
+            //Build a tooltip string for the secondary information
+            [tooltipBody release]; tooltipBody = nil;
+            tooltipBody = [[self _tooltipBodyForObject:object] retain];
+            
+            //Set a right-align tab at the maximum label width for the body and a left-align just past it
+            tabArray = [[NSArray alloc] initWithObjects:[[NSTextTab alloc] initWithType:NSRightTabStopType location:maxLabelWidth],[[NSTextTab alloc] initWithType:NSLeftTabStopType location:maxLabelWidth + LABEL_ENTRY_SPACING],nil];
+            [paragraphStyle setTabStops:tabArray];
+            [paragraphStyle setHeadIndent:(maxLabelWidth + LABEL_ENTRY_SPACING)];
+            
+            [tooltipBody addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,[tooltipBody length])];
+            //If there is no image, also use these settings for the top part
+            if (!tooltipImage) {
+                 [tooltipTitle addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,[tooltipTitle length])];
             }
             
             //Display the new tooltip
@@ -250,9 +283,7 @@
     NSEnumerator                        *labelEnumerator;
     NSMutableArray                      *labelArray = [[NSMutableArray alloc] init];
     NSMutableArray                      *entryArray = [[NSMutableArray alloc] init];
-    NSArray                             *tabArray;
-    NSMutableString                     *entryString;
-    float                               maxLabelWidth = 0;
+    NSMutableAttributedString           *entryString;
     float                               labelWidth;
     BOOL                                isFirst = YES;
     
@@ -269,7 +300,6 @@
     NSMutableDictionary                 *labelEndLineDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:2] , NSFontAttributeName, nil];
     NSMutableDictionary                 *entryDict =[NSMutableDictionary dictionaryWithObjectsAndKeys:
         toolTipsFont, NSFontAttributeName, nil];
-    NSMutableParagraphStyle             *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
     
     //"<DisplayName>" (or) "<DisplayName> (<UID>)"
     if([displayName compare:uid] == 0){
@@ -299,10 +329,11 @@
             
             NSString        *labelString = [tooltipEntry labelForObject:object];
             if (labelString && [labelString length]) {
-                NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@:",labelString] attributes:labelDict];
                 
                 [entryArray addObject:entryString];
                 [labelArray addObject:labelString];
+                
+                NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@:",labelString] attributes:labelDict];
                 
                 //The largest size should be the label's size plus the distance to the next tab at least a space past its end
                 labelWidth = [labelAttribString size].width;
@@ -313,20 +344,12 @@
         }
     }
     
-    //Set a right-align tab at the maximum label width and a left-align just past it
-    tabArray = [[NSArray alloc] initWithObjects:[[NSTextTab alloc] initWithType:NSRightTabStopType location:maxLabelWidth],[[NSTextTab alloc] initWithType:NSLeftTabStopType location:maxLabelWidth + LABEL_ENTRY_SPACING],nil];
-    [paragraphStyle setTabStops:tabArray];
-    [paragraphStyle setHeadIndent:(maxLabelWidth + LABEL_ENTRY_SPACING)];
-    [labelDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
-    [labelEndLineDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
-    [entryDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
-    
     //Add labels plus entires to the toolTip
     enumerator = [entryArray objectEnumerator];
     labelEnumerator = [labelArray objectEnumerator];
     
     while((entryString = [enumerator nextObject])){        
-        NSAttributedString * labelString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t ",[labelEnumerator nextObject]]
+        NSAttributedString * labelString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t",[labelEnumerator nextObject]]
                                                                            attributes:labelDict];
         
         //Add a carriage return
@@ -340,7 +363,7 @@
         
         //Add the label (with its spacing)
         [titleString appendAttributedString:labelString];
-        [titleString appendString:entryString withAttributes:entryDict];
+        [titleString appendAttributedString:[entryString addAttributes:entryDict range:NSMakeRange(0,[entryString length])]];
     }
     return [titleString autorelease];
 }
@@ -357,20 +380,15 @@
     NSMutableDictionary             *labelEndLineDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:1] , NSFontAttributeName, nil];
     NSMutableDictionary             *entryDict =[NSMutableDictionary dictionaryWithObjectsAndKeys:
         toolTipsFont, NSFontAttributeName, nil];
-    NSMutableParagraphStyle         *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
     
     //Entries from plugins
     id <AIContactListTooltipEntry>  tooltipEntry;
     NSEnumerator                    *enumerator;
-    NSEnumerator                    *labelEnumerator;
-    NSMutableAttributedString       *lineBreakAndSpaceToColumnString = nil;     
+    NSEnumerator                    *labelEnumerator; 
     NSMutableArray                  *labelArray = [[NSMutableArray alloc] init];
     NSMutableArray                  *entryArray = [[NSMutableArray alloc] init];    
-    NSArray                         *tabArray;
-    NSMutableString                 *entryString;
-    float                           maxLabelWidth = 0;
+    NSMutableAttributedString       *entryString;
     float                           labelWidth;
-    int                             lineBreakAndSpaceToColumnStringLength;
     BOOL                            firstEntry = YES;
     
     //Calculate the widest label while loading the arrays
@@ -383,10 +401,11 @@
             
             NSString        *labelString = [tooltipEntry labelForObject:object];
             if (labelString && [labelString length]) {
-                NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@:",labelString] attributes:labelDict];
                 
                 [entryArray addObject:entryString];
                 [labelArray addObject:labelString];
+                
+                NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@:",labelString] attributes:labelDict];
                 
                 //The largest size should be the label's size plus the distance to the next tab at least a space past its end
                 labelWidth = [labelAttribString size].width;
@@ -396,20 +415,7 @@
             }
         }
     }
-    
-    //Set a right-align tab at the maximum label width and a left-align just past it
-    tabArray = [[NSArray alloc] initWithObjects:[[NSTextTab alloc] initWithType:NSRightTabStopType location:maxLabelWidth],[[NSTextTab alloc] initWithType:NSLeftTabStopType location:maxLabelWidth + LABEL_ENTRY_SPACING],nil];
-    [paragraphStyle setTabStops:tabArray];
-    [paragraphStyle setHeadIndent:(maxLabelWidth + LABEL_ENTRY_SPACING)];
-    
-    [labelDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
-    [labelEndLineDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
-    [entryDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
-    
-    //Used for wrapping text to the tabbed location
-    lineBreakAndSpaceToColumnString = [[NSMutableAttributedString alloc] initWithString:@"\r\t\t" attributes:entryDict]; 
-    lineBreakAndSpaceToColumnStringLength = [lineBreakAndSpaceToColumnString length];
-    
+
     //Add labels plus entires to the toolTip
     enumerator = [entryArray objectEnumerator];
     labelEnumerator = [labelArray objectEnumerator];
@@ -427,13 +433,21 @@
         //Add the label (with its spacing)
         [tipString appendAttributedString:labelString];
         
+        NSRange fullLength = NSMakeRange(0, [entryString length]);
+       
+        //remove any background coloration
+        [entryString removeAttribute:NSBackgroundColorAttributeName range:fullLength];
         
-       //headIndent doesn't apply to the first line of a paragraph... so when new lines are in the entry, we need to tab over to the proper location
-        [entryString replaceOccurrencesOfString:@"\r" withString:@"\r\t\t" options:NSLiteralSearch range:NSMakeRange(0, [entryString length])];
-        [entryString replaceOccurrencesOfString:@"\n" withString:@"\n\t\t" options:NSLiteralSearch range:NSMakeRange(0, [entryString length])];
+        //adjust foreground colors for the tooltip background
+        [entryString adjustColorsToShowOnBackground:[NSColor colorWithCalibratedRed:1.000 green:1.000 blue:0.800 alpha:1.0]];
         
-      [tipString appendString:entryString withAttributes:entryDict];
-                
+        //headIndent doesn't apply to the first line of a paragraph... so when new lines are in the entry, we need to tab over to the proper location
+        [entryString replaceOccurrencesOfString:@"\r" withString:@"\r\t\t" options:NSLiteralSearch range:fullLength];
+        [entryString replaceOccurrencesOfString:@"\n" withString:@"\n\t\t" options:NSLiteralSearch range:fullLength];
+        
+        //Run the entry through the filters and add it to tipString
+        [tipString appendAttributedString:
+            [[owner contentController] filteredAttributedString:[entryString addAttributes:entryDict range:fullLength]]];
     }
     return([tipString autorelease]);
 }
