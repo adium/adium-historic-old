@@ -529,7 +529,8 @@ void initGaimOTRSupprt(void)
 {
 	OtrlPolicy	policy;
 	NSNumber	*policyNumber;
-
+	NSString	*contactInternalObjectID;
+	
 	//Force OTRL_POLICY_MANUAL when interacting with mobile numbers
 	if([[contact UID] characterAtIndex:0] == '+'){
 		policy = OTRL_POLICY_MANUAL;
@@ -571,8 +572,12 @@ void initGaimOTRSupprt(void)
 	}
 
 	policyNumber = [NSNumber numberWithInt:policy];
-	[otrPolicyCache setObject:policyNumber
-					   forKey:[contact internalObjectID]];
+	
+	if(contactInternalObjectID = [contact internalObjectID]){
+		[otrPolicyCache setObject:policyNumber
+						   forKey:contactInternalObjectID];
+	}
+	
 	return policyNumber;	
 }
 
