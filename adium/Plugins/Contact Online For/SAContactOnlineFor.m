@@ -21,7 +21,7 @@
 - (void)installPlugin
 {
     //Install our tooltip entry
-    [[owner interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
+    [[owner interfaceController] registerContactListTooltipEntry:self secondaryEntry:NO];
 }
 
 //Tooltip entry ---------------------------------------------------------------------------------------
