@@ -59,10 +59,10 @@
 
 - (void)dealloc
 {
-	[super dealloc];
-	
 	[libezvContacts release];
 	[libezv release];
+
+	[super dealloc];
 }
 
 - (BOOL)disconnectOnFastUserSwitch
@@ -87,6 +87,9 @@
 
 - (void)disconnect
 {
+	//As per AIAccount's documentation, call super's implementation
+	[super disconnect];
+
     // Say we're disconnecting...
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
     
@@ -100,39 +103,22 @@
 
 #pragma mark Libezv Callbacks
 // Libezv Callbacks
-- (void) reportLoggedIn {
-	[self accountDidConnect];
+- (void)reportLoggedIn
+{
+	[self didConnect];
     
 	//We need to set our user icon after connecting
     [self updateStatusForKey:KEY_USER_ICON];
 }
 
-- (void) reportLoggedOut 
+- (void)reportLoggedOut 
 {
-    NSEnumerator	*enumerator;
-	AIListContact	*listContact;
-	
-	[[adium contactController] delayListObjectNotifications];
-	enumerator = [[[adium contactController] allContactsInGroup:nil
-													  subgroups:YES 
-													  onAccount:self] objectEnumerator];	
-    while (listContact = [enumerator nextObject]){
-		[listContact setRemoteGroupName:nil];
-    }
-
-    [libezvContacts removeAllObjects];
-   	[[adium contactController] endListObjectNotificationsDelay];
- 
-	//We are now offline
-    [self setStatusObject:nil forKey:@"Disconnecting" notify:NO];
-    [self setStatusObject:nil forKey:@"Connecting" notify:NO];
-    [self setStatusObject:nil forKey:@"Online" notify:NO];
-	
-	//Apply any changes
-    [self notifyOfChangedStatusSilently:NO];
+	[libezvContacts removeAllObjects];
+		
+	[self didDisconnect];
 }
 
-- (void) userChangedState:(AWEzvContact *)contact
+- (void)userChangedState:(AWEzvContact *)contact
 {
     AIListContact	*listContact;
 	NSString		*contactName, *statusMessage;
@@ -225,7 +211,7 @@
     [listContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
-- (void) userLoggedOut:(AWEzvContact *)contact
+- (void)userLoggedOut:(AWEzvContact *)contact
 {
     AIListContact *listContact;
     
@@ -238,7 +224,7 @@
 }
 
 //We received a message from an AWEzvContact
-- (void) user:(AWEzvContact *)contact sentMessage:(NSString *)message withHtml:(NSString *)html
+- (void)user:(AWEzvContact *)contact sentMessage:(NSString *)message withHtml:(NSString *)html
 {
     AIListContact		*listContact;
     AIContentMessage	*msgObj;
@@ -264,7 +250,7 @@
 				   notify:YES];
 }
 
-- (void) user:(AWEzvContact *)contact typingNotification:(AWEzvTyping)typingStatus
+- (void)user:(AWEzvContact *)contact typingNotification:(AWEzvTyping)typingStatus
 {
     AIListContact   *listContact;
     AIChat			*chat;
@@ -278,21 +264,21 @@
 					    notify:YES];
 }
 
-- (void) user:(AWEzvContact *)contact typeAhead:(NSString *)message withHtml:(NSString *)html {
+- (void)user:(AWEzvContact *)contact typeAhead:(NSString *)message withHtml:(NSString *)html {
 /* unimplemented in libezv at this stage */
 }
 
-- (void) user:(AWEzvContact *)contact sentFile:(NSString *)filename size:(size_t)size cookie:(int)cookie
+- (void)user:(AWEzvContact *)contact sentFile:(NSString *)filename size:(size_t)size cookie:(int)cookie
 {
 /* sorry, no file transfer in libezv at the moment */
 }
 
-- (void) reportError:(NSString *)error ofLevel:(AWEzvErrorSeverity)severity
+- (void)reportError:(NSString *)error ofLevel:(AWEzvErrorSeverity)severity
 {
 
 }
 
-- (void) reportError:(NSString *)error ofLevel:(AWEzvErrorSeverity)severity forUser:(NSString *)contact
+- (void)reportError:(NSString *)error ofLevel:(AWEzvErrorSeverity)severity forUser:(NSString *)contact
 {
 
 }
@@ -303,7 +289,7 @@
 - (BOOL)sendContentObject:(AIContentObject *)object
 {
     BOOL sent = NO;
-    if([[object type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
+    if([[object type] isEqualToString:CONTENT_MESSAGE_TYPE]){
 		NSAttributedString  *attributedMessage = [(AIContentMessage *)object message];
 		NSString			*message = [attributedMessage string];
 		NSString			*htmlMessage = [AIHTMLDecoder encodeHTML:attributedMessage
