@@ -213,9 +213,9 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 
         if([[comboBox_title stringValue] length] != 0){
             edited_title = YES;
+	    [button_save setState:YES];
         }else{
             edited_title = NO;
-            [self textDidChange:nil]; //Update the displayed title
         }
     }
 }
@@ -233,7 +233,6 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 
         //make the text editing active
         [[self window] makeFirstResponder:textView_awayMessage];
-        [button_save setState:YES];
     }
 }
 
