@@ -58,7 +58,7 @@
     
     while(currentImage = [enumerator nextObject]){
     
-        [currentImage drawAtPoint:NSMakePoint(inRect.origin.x + currentWidth, inRect.origin.y) fromRect:NSMakeRect(0, 0, [currentImage size].width, [currentImage size].height) operation:NSCompositeSourceOver fraction:1.0];
+        [currentImage drawAtPoint:NSMakePoint(inRect.origin.x + currentWidth, inRect.origin.y + ceil((inRect.size.height / 2.0)) - ceil(([currentImage size].height / 2.0))) fromRect:NSMakeRect(0, 0, [currentImage size].width, [currentImage size].height) operation:NSCompositeSourceOver fraction:1.0];
 
         currentWidth += [currentImage size].width;
 
