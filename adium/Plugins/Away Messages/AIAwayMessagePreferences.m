@@ -588,7 +588,7 @@
 
 - (BOOL)outlineView:(NSOutlineView*)olv acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
-    NSString 		*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIContactObjects"]];
+    NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIAwayMessage"]];
     int			oldIndex = [self indexOfObject:dragItem inArray:awayMessageArray];
 
     if([availableType compare:@"AIAwayMessage"] == 0){
@@ -611,7 +611,13 @@
             if(item == nil){ //To root
                 [dragItem retain];
                 [self removeObject:dragItem fromArray:awayMessageArray]; //Remove from old location.  We can't use removeObject, since it will treat similar aways as identical and remove them all!
-                [awayMessageArray insertObject:dragItem atIndex:(oldIndex > index ? index : index - 1)]; //Add to new location
+
+				if (index = -1){
+					[awayMessageArray addObject:dragItem];
+				}else {
+					[awayMessageArray insertObject:dragItem atIndex:(oldIndex > index ? index : index - 1)]; //Add to new location
+				}
+				
                 [dragItem release];
 
             }/*else if([itemType compare:@"Group"] == 0){
