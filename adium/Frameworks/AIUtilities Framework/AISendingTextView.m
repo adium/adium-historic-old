@@ -24,9 +24,10 @@
 - (void)_sendContent;
 - (void)_historyUp;
 - (void)_historyDown;
+- (void)_pushContent;
+- (void)_popContent;
 - (void)_setPushIndicatorVisible:(BOOL)visible;
 - (void)_positionIndicator:(NSNotification *)notification;
-- (void)_popPushContent;
 @end
 
 /*
@@ -104,6 +105,8 @@ static NSImage *pushIndicatorImage = nil;
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
 {
     BOOL result = NO;
+	NSRect visibleRect;
+	
     unichar theChar = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
     //check for command-return to send the message
     switch (theChar)
@@ -111,31 +114,30 @@ static NSImage *pushIndicatorImage = nil;
 	case '\r':
 	    if(availableForSending) [self _sendContent]; //Send the content
 	    result = YES;
-	break;
+		break;
 	case '\E':
-            //Reset entry
+		//Reset entry
 	    [self setString:@""];
-
-            //Pop off a pushed message if one exists
-            [self _popPushContent];
-
-            result = YES;
+		result = YES;
         break;
     }
-    if([theEvent modifierFlags] & NSCommandKeyMask) { //option is being held
+	
+	// Command-Arrow moves through history
+    if([theEvent modifierFlags] & NSCommandKeyMask) { //command is being held
         switch(theChar){
             case NSUpArrowFunctionKey:
                 [self _historyUp];
                 result = YES;
-            break;
-
+				break;
+				
             case NSDownArrowFunctionKey:
                 [self _historyDown];
-                result = YES;
-	    break;
+				result = YES;
+				break;
+		}
+		
 	}
-    }
-
+		
     return(result);
 }
 
@@ -215,8 +217,6 @@ static NSImage *pushIndicatorImage = nil;
     //notify target
     [target performSelector:selector];
 
-    //Pop off a pushed message if one exists
-    [self _popPushContent];
 }
 
 // Required protocol methods --------------------------------------------------------
@@ -302,28 +302,33 @@ static NSImage *pushIndicatorImage = nil;
 
         //Display history
         [self setAttributedString:[historyArray objectAtIndex:currentHistoryLocation]];
-
-    }else{
-        //Push message
-        if([[self textStorage] length] != 0){
-            [pushArray addObject:[[self textStorage] copy]];
-            [self setString:@""];
-            [self _setPushIndicatorVisible:YES];
-        }
-    }
+	}
 }
 
-//Pulls of push content if any exists
-- (void)_popPushContent
+//Push and Pop -----------------------------------------------------------------
+
+// Pop into the message entry field
+- (void)_popContent
 {
-    if([pushArray count]){
+	if([pushArray count]){
         [self setAttributedString:[pushArray lastObject]];
-        [self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
+		[self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
         [pushArray removeLastObject];
         if([pushArray count] == 0){
             [self _setPushIndicatorVisible:NO];
         }
     }
+	
+}
+
+// Push out of the message entry field
+- (void)_pushContent
+{
+	if([[self textStorage] length] != 0){
+		[pushArray addObject:[[self textStorage] copy]];
+		[self setString:@""];
+		[self _setPushIndicatorVisible:YES];
+	}	
 }
 
 //Push indicator
@@ -466,23 +471,37 @@ static NSImage *pushIndicatorImage = nil;
     }
 }
 
-//Scroll the message view up or down
-//- (void)moveForward:(id)sender
+
+// Scroll the message view up or down
+// These methods are invoked on Control-Up or Control-Down
+- (void)moveToEndOfLine:(id)sender
+{
+	NSRect visibleRect = [messageScrollView documentVisibleRect];
+				visibleRect.origin.y -= [messageScrollView verticalLineScroll];
+				[[messageScrollView documentView] scrollRectToVisible:visibleRect];     
+}
+
+- (void)moveToBeginningOfLine:(id)sender
+{
+	NSRect visibleRect = [messageScrollView documentVisibleRect];
+				visibleRect.origin.y += [messageScrollView verticalLineScroll];
+				[[messageScrollView documentView] scrollRectToVisible:visibleRect];    
+}
+
+
+// Push and Pop content
+// These methods are invoked on Option-Up or Option-Down
 - (void)moveToEndOfParagraph:(id)sender
 {
-    NSRect	visibleRect = [messageScrollView documentVisibleRect];
-    
-    visibleRect.origin.y += [messageScrollView verticalLineScroll] * 2;
-    [[messageScrollView documentView] scrollRectToVisible:visibleRect];    
+	[self _pushContent];  
 }
-//- (void)moveBackward:(id)sender
+
 - (void)moveToBeginningOfParagraph:(id)sender
 {
-    NSRect	visibleRect = [messageScrollView documentVisibleRect];
-    
-    visibleRect.origin.y -= [messageScrollView verticalLineScroll] * 2;
-    [[messageScrollView documentView] scrollRectToVisible:visibleRect];    
+	[self _popContent];
 }
+
+
 
 
 //Private ------------------------------------------------------------------------------------
