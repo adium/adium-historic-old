@@ -66,11 +66,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     view_pref = inPrefView;
     [view_pref retain];
 
-    [eventActionArray release];
-    eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
-    if (!eventActionArray)
-        eventActionArray = [[NSMutableArray alloc] init];
-    [eventActionArray retain];
+    [self reloadFromPrefs];
 
     [view_blank release];
     view_blank = [[NSView alloc] init];
@@ -243,10 +239,8 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 - (IBAction)actionOpenMessage:(id)sender
 {
     NSMutableDictionary * detailsDict;
-    
-    [selectedActionDict setObject:[NSNumber numberWithInt:1] forKey:KEY_EVENT_DETAILS_UNIQUE];
-    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
-    [self saveEventActionArray];
+
+    [selectedActionDict setObject:[NSNumber numberWithInt:1] forKey:KEY_EVENT_DETAILS_UNIQUE]; //will save at end of function
 
     detailsDict = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS_DICT];
     
@@ -259,7 +253,12 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         AIAccount * account;
         while( (account = [accountEnumerator nextObject]) && ([[account statusObjectForKey:@"Status"] intValue] == STATUS_OFFLINE) );
         if (account) //if we found an online account, set it as the default account choice
-            [popUp_actionDetails_open_message selectItemAtIndex:[popUp_actionDetails_open_message indexOfItemWithRepresentedObject:account]];
+        {
+            NSString * accountID = [account accountID];
+            [popUp_actionDetails_open_message selectItemAtIndex: [popUp_actionDetails_open_message indexOfItemWithRepresentedObject:account]]; //set the menu view
+            
+            [selectedActionDict setObject:accountID forKey:KEY_EVENT_DETAILS]; //will save at end of function
+          }
         [self saveOpenMessageDetails:nil];
     }
     else //restore the old settings
@@ -267,13 +266,13 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         //Restore the account
         AIAccount * account = [[owner accountController] accountWithID:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]];
        [popUp_actionDetails_open_message selectItemAtIndex:[popUp_actionDetails_open_message indexOfItemWithRepresentedObject:account]];
-
-        [button_anotherAccount_open_message setState:[[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]];
+       [button_anotherAccount_open_message setState:[[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]];
     }
+
+    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+    [self saveEventActionArray];
     
     [self configureWithSubview:view_details_open_message];
-    
-
 }
 
 //setup display for sending a message
@@ -391,6 +390,8 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 //Builds and returns a sound list menu - from AIEventSoundsPreferences.m
 - (NSMenu *)soundListMenu
 {
+    if (!soundMenu_cached)
+    {
     NSEnumerator	*enumerator;
     NSDictionary	*soundSetDict;
     NSMenu		*soundMenu = [[NSMenu alloc] init];
@@ -436,10 +437,10 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
             [soundMenu addItem:menuItem];
         }
     }
-
     [soundMenu setAutoenablesItems:NO];
-
-    return(soundMenu);
+    soundMenu_cached = soundMenu;
+    }
+    return(soundMenu_cached);
 }
 //Select a sound from one of the sound popUp menus
 - (IBAction)selectSound:(id)sender
@@ -509,6 +510,9 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
     [selectedActionDict setObject:accountID forKey:KEY_EVENT_DETAILS];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+
+    //Save event preferences
+    [self saveEventActionArray];
 }
 
 //builds an alphabetical menu of contacts for all online accounts; online contacts are sorted to the top and seperated
