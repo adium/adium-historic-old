@@ -318,7 +318,10 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                 unsigned int	tempIndex = charIndex;
                 NSColor			*tempColor = nil;
                 
-                while ((tempColor = [textStorage attribute:NSForegroundColorAttributeName atIndex: --tempIndex effectiveRange:nil]) == nil && tempIndex != 0)	{}
+                if (tempIndex > 0)
+                    while ((tempColor = [textStorage attribute:NSForegroundColorAttributeName atIndex: --tempIndex effectiveRange:nil]) == nil && tempIndex != 0);
+                else if ([textStorage length] > 1)
+                    while ((tempColor = [textStorage attribute:NSForegroundColorAttributeName atIndex: ++tempIndex effectiveRange:nil]) == nil && tempIndex != ([textStorage length] - 1));
                 if (tempColor)
                     [attributes		setObject:tempColor forKey:NSForegroundColorAttributeName];
                 [attributes		setObject:origSmiley forKey:@"IKHiddenAttachment"];
