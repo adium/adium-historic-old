@@ -18,7 +18,6 @@
 @interface AIAccountListPreferences : AIPreferencePane <AIListObjectObserver> {
 	//Account preferences
     IBOutlet		NSTabView					*tabView_auxiliary;
-    IBOutlet		NSView						*view_accountPreferences;
     IBOutlet		NSView						*view_accountDetails;
     IBOutlet		NSPopUpButton				*popupMenu_serviceList;
 	IBOutlet		ESDelayedTextField			*textField_accountName;

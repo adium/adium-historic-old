@@ -50,7 +50,6 @@
 {
     //init
     accountViewController = nil;
-    view_accountPreferences = nil;
 	configuredForService = nil;
 	configuredForAccount = nil;
     
@@ -82,7 +81,6 @@
 	[textField_accountName fireImmediately];
 	
     [[adium contactController] unregisterListObjectObserver:self];
-    [view_accountPreferences release]; view_accountPreferences = nil;
     [accountViewController release]; accountViewController = nil;
     [[adium notificationCenter] removeObserver:self];
 }
@@ -345,8 +343,8 @@
     index = [tableView_accountList selectedRow];
     NSParameterAssert(index >= 0 && index < [accountArray count]);
     targetAccount = [accountArray objectAtIndex:index];
-    
-    NSBeginAlertSheet(@"Delete Account",@"Delete",@"Cancel",@"",[view_accountPreferences window], self, 
+
+    NSBeginAlertSheet(@"Delete Account",@"Delete",@"Cancel",@"",[[self view] window], self, 
 					  @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, 
 					  @"Delete the account %@?", [targetAccount displayName]);
 }
