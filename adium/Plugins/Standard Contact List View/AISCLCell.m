@@ -49,7 +49,6 @@
 //Init
 - (id)init
 {
-	NSLog(@"init");
     [super init];
 
 	//Set up our custom text system.
@@ -64,15 +63,17 @@
     return self;
 }
 
+//Copy
 - (id)copyWithZone:(NSZone *)zone
 {
-	return([self retain]);
+	AISCLCell	*newCell = [[AISCLCell alloc] init];
+	[newCell setListObject:listObject];
+	return(newCell);
 }
 
 //Dealloc
 - (void)dealloc
 {
-	NSLog(@"dealloc");
 	[textContainer release];
 	[layoutManager release];
 	[textStorage release];
