@@ -48,9 +48,9 @@ typedef enum
 } AdiumProxyType;
 
 
-@protocol AIListObjectObserver;
+@protocol AIListObjectObserver, AIServiceController;
 
-@class AIAdium, AIAccount, AIListObject, AIAccountViewController, DCJoinChatViewController;
+@class AIAdium, AIAccount, AIListObject, AIAccountViewController;
 
 @protocol AccountMenuPlugin <NSObject>
 - (NSString *)identifier;
@@ -80,6 +80,7 @@ typedef enum
 - (AIService *)serviceWithUniqueID:(NSString *)identifier;
 - (AIService *)firstServiceWithServiceID:(NSString *)serviceID;
 - (NSArray *)servicesWithServiceClass:(NSString *)serviceClass;
+- (BOOL)serviceWithUniqueIDIsOnline:(NSString *)identifier;
 - (void)registerService:(AIService *)inService;
 - (NSMenu *)menuOfServicesWithTarget:(id)target 
 				  activeServicesOnly:(BOOL)activeServicesOnly
