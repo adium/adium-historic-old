@@ -147,7 +147,7 @@
 {
     autoHideScrollBar = inValue;
     
-    [self setCorrectScrollbarVisibility];
+    if(autoHideScrollBar) [self setCorrectScrollbarVisibility];
 }
 
 //Hides or shows the scrollbar as necessary
