@@ -16,6 +16,7 @@ typedef enum {
 
 + (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass;
 - (NSData *)JPEGRepresentation;
+- (NSData *)PNGRepresentation;
 - (void)tileInRect:(NSRect)rect;
 + (NSImage *)imageFromGWorld:(GWorldPtr)gWorldPtr;
 + (NSImage *)systemCloseButtonImageForState:(AICloseButtonState)state controlTint:(NSControlTint)inTint;
