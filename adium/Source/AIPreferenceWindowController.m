@@ -13,22 +13,24 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.34 2004/03/11 04:33:28 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.35 2004/03/12 06:26:58 evands Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
 #import "AIPreferenceController.h"
 
-#define PREFERENCE_WINDOW_NIB			@"PreferenceWindow"	//Filename of the preference window nib
-#define TOOLBAR_PREFERENCE_WINDOW		@"PreferenceWindow"	//Identifier for the preference toolbar
-#define	KEY_PREFERENCE_WINDOW_FRAME		@"Preference Window Frame"
-#define KEY_PREFERENCE_SELECTED_CATEGORY	@"Preference Selected Category"
+#define PREFERENCE_WINDOW_NIB					@"PreferenceWindow"	//Filename of the preference window nib
+#define TOOLBAR_PREFERENCE_WINDOW				@"PreferenceWindow"	//Identifier for the preference toolbar
+#define KEY_PREFERENCE_WINDOW_TOOLBAR_DISPLAY   @"Preference Window Toolbar Display Mode"
+#define KEY_PREFERENCE_WINDOW_TOOLBAR_SIZE		@"Preference Window Toolbar Size Mode"
+#define	KEY_PREFERENCE_WINDOW_FRAME				@"Preference Window Frame"
+#define KEY_PREFERENCE_SELECTED_CATEGORY		@"Preference Selected Category"
 #define KEY_ADVANCED_PREFERENCE_SELECTED_ROW    @"Preference Advanced Selected Row"
 #define FLAT_PADDING_OFFSET                     45
-#define PREFERENCE_WINDOW_TITLE			@"Preferences"
-#define PREFERENCE_PANE_ARRAY			@"PaneArray"
-#define PREFERENCE_GROUP_NAME			@"GroupName"
-#define ADVANCED_PANE_HEIGHT			300
+#define PREFERENCE_WINDOW_TITLE					@"Preferences"
+#define PREFERENCE_PANE_ARRAY					@"PaneArray"
+#define PREFERENCE_GROUP_NAME					@"GroupName"
+#define ADVANCED_PANE_HEIGHT					300
 
 @interface AIPreferenceWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
@@ -172,6 +174,18 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
+	
+	//Save toolbar state
+	NSToolbar *toolbar = [[self window] toolbar];
+
+	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[toolbar displayMode]]
+										 forKey:KEY_PREFERENCE_WINDOW_TOOLBAR_DISPLAY
+										  group:PREF_GROUP_GENERAL];
+	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[toolbar sizeMode]]
+										 forKey:KEY_PREFERENCE_WINDOW_TOOLBAR_SIZE
+										  group:PREF_GROUP_GENERAL];
+	
+	
     NSEnumerator	*enumerator;
     AIPreferencePane	*pane;
     
@@ -190,7 +204,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
         [pane closeView];
     }
     
-    //Let everyone know we did close
+    //Let everyone know we will close
     [[adium notificationCenter] postNotificationName:Preference_WindowDidClose object:nil];
 
     //autorelease the shared instance
@@ -211,9 +225,15 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     [toolbar setDelegate:self];
     [toolbar setAllowsUserCustomization:NO];
     [toolbar setAutosavesConfiguration:NO];
-    [toolbar setDisplayMode: NSToolbarDisplayModeIconAndLabel];
-    [toolbar setSizeMode: NSToolbarSizeModeRegular];
-
+	
+//    [toolbar setDisplayMode: NSToolbarDisplayModeIconAndLabel];
+//    [toolbar setSizeMode: NSToolbarSizeModeRegular];
+	
+	[toolbar setDisplayMode:[[[adium preferenceController] preferenceForKey:KEY_PREFERENCE_WINDOW_TOOLBAR_DISPLAY
+																	  group:PREF_GROUP_GENERAL] intValue]];
+	[toolbar setSizeMode:[[[adium preferenceController] preferenceForKey:KEY_PREFERENCE_WINDOW_TOOLBAR_SIZE
+																   group:PREF_GROUP_GENERAL] intValue]];
+	
     //install it
     [[self window] setToolbar:toolbar];
 }
