@@ -23,8 +23,6 @@ enum ProgressState {
 - (NSString *)unit; //e.g. @"MB" for a download
 //maybe we should have different units for the three numbers.
 
-- (void)setActivityWindowController:controller;
-
 - (BOOL)cancel;
 - (BOOL)canCancel;
 - (BOOL)pause;
