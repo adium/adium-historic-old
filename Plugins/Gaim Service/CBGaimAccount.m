@@ -1110,6 +1110,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     serv_set_permit_deny(gaim_account_get_connection(account));
 }
 
+- (PRIVACY_OPTION)privacyOptions
+{
+	return account->perm_deny;
+}
+
 /*****************************************************/
 /* File transfer / AIAccount_Files inherited methods */
 /*****************************************************/
