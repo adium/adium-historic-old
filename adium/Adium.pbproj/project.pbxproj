@@ -14214,6 +14214,7 @@
 				D35F44E50544064200A8010B,
 				D35F44E60544064200A8010B,
 				D35F44E70544064200A8010B,
+				BFDBEB450555F63400000202,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14236,7 +14237,7 @@
 			);
 			buildSettings = {
 				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS/include\" \"Plugins/Gaim Service/LIBS/include/libgaim\" \"Plugins/Gaim Service/LIBS/include/glib-2.0\"";
-				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\"";
+				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"/Users/overmind/Projects/adium/Plugins/Gaim Service/LIBS\"";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -15537,12 +15538,25 @@
 			path = "Plugins/Contact Alerts/ContactAlertsInfo.nib";
 			refType = 4;
 		};
+		BFDBEB440555F63400000202 = {
+			isa = PBXFileReference;
+			name = liboscar.a;
+			path = "Plugins/Gaim Service/LIBS/liboscar.a";
+			refType = 2;
+		};
+		BFDBEB450555F63400000202 = {
+			fileRef = BFDBEB440555F63400000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		BFE858110554F48300000202 = {
 			children = (
 				BFE858120554F48300000202,
 				BFE858130554F48300000202,
 				BFE858140554F48300000202,
 				BFE858150554F48300000202,
+				BFDBEB440555F63400000202,
 			);
 			isa = PBXGroup;
 			name = oscar;
