@@ -184,4 +184,9 @@
     }
 }
 
+- (NSColor *)_highlightColorForCell
+{
+	return ([NSColor clearColor]);
+}
+
 @end
