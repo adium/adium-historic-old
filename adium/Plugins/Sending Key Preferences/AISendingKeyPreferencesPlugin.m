@@ -29,7 +29,6 @@
     //Setup our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
     preferences = [[AISendingKeyPreferences preferencePane] retain];
-    preferencesAdvanced = [[AISendingKeyPreferencesAdvanced preferencePane] retain];
     
     //Register as a text entry filter
     [[adium contentController] registerTextEntryFilter:self];
@@ -71,7 +70,6 @@
 - (void)_configureSendingKeysForObject:(id)inObject
 {
     if([inObject isKindOfClass:[AISendingTextView class]]){
-        [(AISendingTextView *)inObject setSendOnEnter:[[[[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Enter"] boolValue]];
         [(AISendingTextView *)inObject setSendOnReturn:[[[[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Return"] boolValue]];
     }
 }
