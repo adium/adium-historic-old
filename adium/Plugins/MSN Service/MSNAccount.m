@@ -1373,9 +1373,13 @@
                 }
                 else if([command isEqualToString:@"NAK"])
                 {
-                    //Shout at the user somehow, NSLog for now. Should be a dialog later.
+                    //Shout at the user
                     NSLog(@"Faiure to send message %@", 
                         [messageDict objectForKey:[message objectAtIndex:1]]);
+                        
+                    [[owner interfaceController] handleErrorMessage:@"MSN Error"
+                        withDescription:[NSString stringWithFormat:@"Failure to send message:\n%@",
+                            [messageDict objectForKey:[message objectAtIndex:1]]]];
                     
                     [messageDict removeObjectForKey:[message objectAtIndex:1]];
                 }
