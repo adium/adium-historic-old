@@ -21,6 +21,9 @@
 	[super init];
 	
 	lastBackgroundBezierPath = nil;
+	outlineBubble = NO;
+	outlineBubbleLineWidth = 1.0;
+	drawWithGradient = NO;
 	
 	return(self);
 }
@@ -70,7 +73,29 @@
 		//Draw our background with rounded corners, retaining the bezier path for use in drawUserIconInRect:position:
 		[lastBackgroundBezierPath release];
 		lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:rect]] retain];
-		[lastBackgroundBezierPath fill];
+		
+		//Draw using a (slow) AIGradient if requested, otherwise just fill
+		if (drawWithGradient){
+			AIGradient	*gradient;
+			NSColor		*labelColor;
+			
+			labelColor = [self labelColor];
+			
+			gradient = [AIGradient gradientWithFirstColor:labelColor
+											  secondColor:[labelColor darkenAndAdjustSaturationBy:0.4] 
+												direction:AIVertical];
+			[gradient drawInBezierPath:lastBackgroundBezierPath];
+			
+		}else{
+			[lastBackgroundBezierPath fill];
+		}
+		
+		//Draw an outline around the bubble in the textColor if requested
+		if(outlineBubble){
+			[lastBackgroundBezierPath setLineWidth:outlineBubbleLineWidth];
+			[[self textColor] set];
+			[lastBackgroundBezierPath stroke];
+		}
 	}
 }
 
@@ -116,6 +141,20 @@
 - (BOOL)drawGridBehindCell
 {
 	return(NO);
+}
+
+- (void)setOutlineBubble:(BOOL)flag
+{
+	outlineBubble = flag;
+}
+- (void)setOutlineBubbleLineWidth:(float)inWidth
+{
+	outlineBubbleLineWidth = inWidth;
+}
+
+- (void)setDrawWithGradient:(BOOL)flag
+{
+	drawWithGradient = flag;
 }
 
 @end
