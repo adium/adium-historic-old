@@ -27,12 +27,12 @@
 #define DUAL_INTERFACE_DEFAULT_PREFS		@"DualWindowDefaults"
 #define DUAL_INTERFACE_WINDOW_DEFAULT_PREFS	@"DualWindowMessageDefaults"
 
-#define CONTACT_LIST_WINDOW_MENU_TITLE		@"Contact List"		//Title for the contact list menu item
-#define MESSAGES_WINDOW_MENU_TITLE		@"Messages"		//Title for the messages window menu item
-#define CLOSE_TAB_MENU_TITLE			@"Close Tab"		//Title for the close tab menu item
-#define CLOSE_MENU_TITLE			@"Close"		//Title for the close menu item
-#define PREVIOUS_MESSAGE_MENU_TITLE		@"Previous Message"
-#define NEXT_MESSAGE_MENU_TITLE			@"Next Message"
+#define CONTACT_LIST_WINDOW_MENU_TITLE		AILocalizedString(@"Contact List","Title for the contact list menu item")
+#define MESSAGES_WINDOW_MENU_TITLE		AILocalizedString(@"Messages","Title for the messages window menu item")
+#define CLOSE_TAB_MENU_TITLE			AILocalizedString(@"Close Tab","Title for the close tab menu item")
+#define CLOSE_MENU_TITLE			AILocalizedString(@"Close","Title for the close menu item")
+#define PREVIOUS_MESSAGE_MENU_TITLE		AILocalizedString(@"Previous Message",nil)
+#define NEXT_MESSAGE_MENU_TITLE			AILocalizedString(@"Next Message",nil)
 
 
 @interface AIDualWindowInterfacePlugin (PRIVATE)
@@ -242,12 +242,36 @@
     [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }
 
+- (IBAction)toggleContactList:(id)sender
+{
+    if(contactListWindowController){ //The window is loaded
+        NSLog(@"perform close..");
+//        [[contactListWindowController window] performClose:nil];
+        [contactListWindowController close:nil];
+    } else {
+        contactListWindowController = [[AIContactListWindowController contactListWindowControllerForInterface:self owner:owner] retain];   
+        [contactListWindowController makeActive:nil];
+    } 
+ 
+}
 
 //Messages -------------------------------------------------------------------------
 //Close the active window
 - (IBAction)close:(id)sender
 {
     [[[NSApplication sharedApplication] keyWindow] performClose:nil];
+  /*  if ([window styleMask] && NSClosableWindowMask) {
+        [window performClose:nil];
+    } else {
+        BOOL shouldClose = YES;
+        if ([[window delegate] respondsToSelector:@selector(windowShouldClose:)])
+            shouldClose = [(id)[window delegate] windowShouldClose:nil];
+        else if ([window respondsToSelector:@selector(windowShouldClose:)])
+            shouldClose = [(id)window windowShouldClose:nil];
+        if (shouldClose)
+            [window close];    
+    }
+*/
 }
 
 //Close the active tab
@@ -511,8 +535,8 @@
         }
     }
 
-    //Display the account selector
-    if(![[[inChat statusDictionary] objectForKey:@"DisallowAccountSwitching"] boolValue]){
+    //Display the account selector if multiple accounts are available for sending to the contact
+    if ( (![[[inChat statusDictionary] objectForKey:@"DisallowAccountSwitching"] boolValue]) && ([[owner accountController] numberOfAccountsAvailableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:listObject]>1) ) {
         [[messageTabContainer messageViewController] setAccountSelectionMenuVisible:YES];
     }
 
@@ -610,7 +634,7 @@
 
     //Contact list window
     //Add toolbar Menu
-    item = [[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE target:self action:@selector(showContactList:) keyEquivalent:@"/"];
+    item = [[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE target:self action:@selector(toggleContactList:) keyEquivalent:@"/"];
     [item setRepresentedObject:contactListWindowController];
     [[owner menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
     [windowMenuArray addObject:[item autorelease]];
