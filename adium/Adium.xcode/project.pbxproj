@@ -10989,9 +10989,11 @@
 			children = (
 				4B910DBF053588A900846781,
 				4B910DC0053588A900846781,
+				4B6660A204ADF2DD00A8010A,
+				4B6660A304ADF2DD00A8010A,
 			);
 			isa = PBXGroup;
-			name = "PopUp Buttons";
+			name = Buttons;
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
@@ -11037,8 +11039,6 @@
 				F57938B8033E739101A8010A,
 				4BFFA4430644C74E00FC068D,
 				4BFFA4440644C74E00FC068D,
-				4B6660A204ADF2DD00A8010A,
-				4B6660A304ADF2DD00A8010A,
 				34BD83DB054E530700EB2652,
 				34BD83DA054E530700EB2652,
 				4B9AB61704D2C84700A8010A,
@@ -12228,7 +12228,7 @@
 				34F2BD2E059CF8E70005B238,
 			);
 			isa = PBXGroup;
-			name = "Adium Crash Reporter";
+			name = "Crash Reporter";
 			path = Other;
 			refType = 4;
 			sourceTree = "<group>";

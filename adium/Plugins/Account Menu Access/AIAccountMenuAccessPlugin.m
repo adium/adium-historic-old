@@ -46,14 +46,6 @@
 								   selector:@selector(preferencesChanged:)
 									   name:Preference_GroupChanged
 									 object:nil];
-		
-	/*
-	 [[adium notificationCenter] addObserver:self 
-									selector:@selector(listObjectAttributesChanged:)
-										name:ListObject_AttributesChanged 
-									  object:nil];
-	 */
-	
     [[adium contactController] registerListObjectObserver:self];
     
     accountMenuArray = [[NSMutableArray alloc] init];
@@ -94,21 +86,6 @@
     return(nil);
 }
 
-//Redisplay the modified object (Attribute change)
-/*
-- (void)listObjectAttributesChanged:(NSNotification *)notification
-{
-	AIListObject *inObject = [notification object];
-	
-	if([inObject isKindOfClass:[AIAccount class]]){
-		NSMenuItem		*targetMenuItem = [self _menuItemForAccount:(AIAccount *)inObject];
-		if (targetMenuItem) {
-			[targetMenuItem setTitle:[inObject displayName]];
-		}
-	}
-}
-*/
-
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
@@ -124,9 +101,7 @@
     }
 }
 
-
 // Private ------------------
-
 - (void)updateMenuForAccount:(AIAccount *)account
 {
 	NSMenuItem		*targetMenuItem = [self _menuItemForAccount:account];
@@ -216,7 +191,6 @@
     }
 }
 
-
 - (NSMenuItem *)_menuItemForAccount:(AIAccount *)account
 {
 	NSEnumerator	*enumerator;
@@ -235,20 +209,6 @@
 	return targetMenuItem;	
 }
 
-/*
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
-{
-    NSEnumerator    *enumerator;
-    AIAccount       *account;
-	
-	enumerator = [[[adium accountController] accountArray] objectEnumerator];
-	while((account = [enumerator nextObject])){
-		[self updateMenuForAccount:account];
-	}
-    
-    return(YES);
-}
-*/
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	return(YES);
