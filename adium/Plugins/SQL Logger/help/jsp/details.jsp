@@ -5,8 +5,8 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/details.jsp $-->
-<!--$Rev: 809 $ $Date: 2004/06/25 01:19:47 $ -->
+<!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/details.jsp $-->
+<!--$Rev: 829 $ $Date: 2004/06/30 05:19:55 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -51,8 +51,8 @@ try {
 
     stmt = conn.createStatement();
 
-    pstmt = conn.prepareStatement("select scramble(username) as username, "+
-    "scramble(display_name) as display_name, " +
+    pstmt = conn.prepareStatement("select username as username, "+
+    " display_name as display_name, " +
     " date_part(\'day\', ?::timestamp + \'1 month\'::interval -"+
     " \'1 day\'::interval) as last_day, "+
     " ?::timestamp + \'1 month\'::interval as end_month, " +
@@ -205,8 +205,8 @@ try {
                 <div class="boxThinContent">
 <%
     rset = stmt.executeQuery("select user_id, " +
-        " scramble(display_name) as display_name, " +
-        " scramble(username) " +
+        " display_name as display_name, " +
+        " username " +
         " as username from im.users " +
         " natural join im.user_display_name udn" +
         " where case when true = " + loginUsers +
@@ -214,7 +214,7 @@ try {
         " else 1 = 1 end " +
         " and not exists (select 'x' from im.user_display_name where " +
         " user_id = users.user_id and effdate > udn.effdate) " +
-        " order by scramble(display_name), username");
+        " order by display_name, username");
 
     if(!loginUsers) {
         out.print("<p><i><a href=\"statistics.jsp?sender=" +
@@ -497,8 +497,8 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    pstmt = conn.prepareStatement("select scramble(sender_sn) as sender_sn"+
-        ", scramble(recipient_sn) as recipient_sn, "+
+    pstmt = conn.prepareStatement("select sender_sn as sender_sn"+
+        ", recipient_sn as recipient_sn, "+
         " message, count(*) "+
         " from simple_message_v smv "+
         " where not exists "+
@@ -519,8 +519,8 @@ try {
     pstmt.setString(4, endMonth);
 
     if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select scramble(sender_sn) as sender_sn"+
-            ", scramble(recipient_sn) as recipient_sn, "+
+        pstmt = conn.prepareStatement("select sender_sn as sender_sn"+
+            ", recipient_sn as recipient_sn, "+
             " message, count(*) "+
             " from simple_message_v smv, meta_contact "+
             " where not exists "+
@@ -687,7 +687,7 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    pstmt = conn.prepareStatement("select scramble(username) as username, "+
+    pstmt = conn.prepareStatement("select username as username, "+
     " recipient_id as \"Recipient\", "+
     " count(*) as \"Sent\", (select count(*)"+
     " from messages where"+
@@ -732,7 +732,7 @@ try {
     pstmt.setString(11, endMonth);
 
     if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select scramble(username) as username, "+
+        pstmt = conn.prepareStatement("select username as username, "+
             " recipient_id as \"Recipient\", "+
             " count(*) as \"Sent\", (select count(*)"+
             " from messages where"+

@@ -5,8 +5,8 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/simpleViewer.jsp $-->
-<!--$Rev: 809 $ $Date: 2004/06/25 01:19:47 $ -->
+<!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/simpleViewer.jsp $-->
+<!--$Rev: 829 $ $Date: 2004/06/30 05:19:55 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -156,18 +156,18 @@ a:hover {
     int aryCount = 0;
     boolean unconstrained = false;
 
-    queryText = "select scramble(sender_sn) as sender_sn, "+
-    " scramble(recipient_sn) as recipient_sn, " +
+    queryText = "select sender_sn, "+
+    " recipient_sn, " +
     " message, message_date, message_id, " +
     " to_char(message_date, 'fmDay, fmMonth DD, YYYY') as fancy_date, " +
     " message_notes.message_id is not null as notes";
     if(showDisplay) {
-       queryText += ", scramble(sender_display) as sender_display, "+
-           " scramble(recipient_display) as recipient_display " +
+       queryText += ", sender_display, "+
+           " recipient_display " +
            " from im.message_v as view ";
     } else if (showMeta) {
-        queryText += ", coalesce(send.name, scramble(sender_sn)) as sender_meta, " +
-            " coalesce(rec.name, scramble(recipient_sn)) as recipient_meta " +
+        queryText += ", coalesce(send.name, sender_sn) as sender_meta, " +
+            " coalesce(rec.name, recipient_sn) as recipient_meta " +
             " from im.simple_message_v as view left join " +
             " im.meta_contact as r " +
             " on (recipient_id = r.user_id and r.preferred = true) " +
@@ -200,37 +200,28 @@ a:hover {
     }
 
     if (from_sn != null && to_sn != null) {
-        queryText += " and (((sender_sn like ? " +
+        queryText += " and ((sender_sn like ? " +
         " and recipient_sn like ?) or " +
-        "(sender_sn like ? and recipient_sn like ?)) or " +
-        "((scramble(sender_sn) like ? and scramble(recipient_sn) like ?) or " +
-        "(scramble(recipient_sn) like ? and scramble(sender_sn) like ?)))";
+        "(sender_sn like ? and recipient_sn like ?)) or ";
         commandArray[aryCount++] = new String(to_sn);
         commandArray[aryCount++] = new String(from_sn);
         commandArray[aryCount++] = new String(from_sn);
         commandArray[aryCount++] = new String(to_sn);
-        commandArray[aryCount++] = new String(to_sn);
-        commandArray[aryCount++] = new String(from_sn);
-        commandArray[aryCount++] = new String(to_sn);
-        commandArray[aryCount++] = new String(from_sn);
 
     } else if (from_sn != null && to_sn == null) {
-        queryText += " and (sender_sn like ? or scramble(sender_sn) like ?)";
+        queryText += " and sender_sn like ?";
 
-        commandArray[aryCount++] = new String(from_sn);
         commandArray[aryCount++] = new String(from_sn);
 
     } else if (from_sn == null && to_sn != null) {
-        queryText += " and (recipient_sn like ? or scramble(recipient_sn) like ?)";
+        queryText += " and recipient_sn like ? ";
 
         commandArray[aryCount++] = new String(to_sn);
         commandArray[aryCount++] = new String(to_sn);
     }
 
     if (contains_sn != null) {
-        queryText += " and (recipient_sn like ? or sender_sn like ? or scramble(recipient_sn) like ? or scramble(sender_sn) like ?) ";
-        commandArray[aryCount++] = new String(contains_sn);
-        commandArray[aryCount++] = new String(contains_sn);
+        queryText += " and (recipient_sn like ? or sender_sn like ?) ";
         commandArray[aryCount++] = new String(contains_sn);
         commandArray[aryCount++] = new String(contains_sn);
     }

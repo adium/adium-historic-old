@@ -7,7 +7,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 778 $ $Date: 2004/06/13 18:32:29 $ -->
+<!--$Rev: 778 $ $Date: 2004/06/30 05:19:55 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");

@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 487 $ $Date: 2004/06/25 01:19:47 $ -->
+<!--$Rev: 487 $ $Date: 2004/06/30 05:19:55 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -98,12 +98,12 @@ try {
     </tr>
     <%
     if(!loginUsers) {
-        rset = stmt.executeQuery("select user_id, scramble(username) "+
+        rset = stmt.executeQuery("select user_id, username "+
             " as username from im.users" +
             " order by username");
     } else {
         rset = stmt.executeQuery("select sender_id as user_id, "+
-            " scramble(username) as username "+
+            " username as username "+
             "from user_statistics, users where sender_id = user_id "+
             " group by sender_id, username "+
             " having count(*) > 1 order by username");

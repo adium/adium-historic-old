@@ -1,5 +1,6 @@
 create schema im;
 
+ -- Stores each user who sends or receives a message.
 create table im.users (
 user_id     serial primary key,
 username    varchar(50) not null,
@@ -8,6 +9,7 @@ login       boolean default false,
 unique(username,service)
 );
 
+ -- Stores each message sent and received
 create table im.messages (
 message_id serial primary key,
 message_date timestamp default now(),
@@ -16,12 +18,16 @@ sender_id int references im.users(user_id) not null,
 recipient_id int references im.users(user_id) not null
 );
 
+ -- Stores aliases/display names for users, with history.
+ -- This is able to view messages with the display name they were using at the
+ -- time it was sent.
 create table im.user_display_name (
 user_id         int references im.users(user_id) not null,
 display_name    varchar(300),
 effdate         timestamp default now()
 );
 
+ -- Stores a total count of messages for speed purposes.
 create table im.user_statistics (
 sender_id       int references im.users(user_id) not null,
 recipient_id    int references im.users(user_id) not null,
@@ -30,6 +36,7 @@ last_message    timestamp default now(),
 primary key (sender_id, recipient_id)
 );
 
+ -- Createe a few commonly used indexes
 create index im_sender_recipient on im.messages(sender_id, recipient_id);
 create index im_msg_date_sender_recipient on
    im.messages (message_date, sender_id, recipient_id);
@@ -37,6 +44,11 @@ create index im_recipient on im.messages(recipient_id);
 create index im_display_user on im.user_display_name(user_id);
 create index im_message_date on im.messages(message_date);
 
+ -- message_v contains the message, sender and recipient screennames, and
+ -- sender/recipient display names
+ -- the subselect to get display names makes it slower than simple_message_v
+ -- uses a not exists subselect for the display names to get the first display
+ -- name with an effective date less than the message
 create or replace view im.message_v as
 select message_id,
        message_date,
@@ -71,6 +83,7 @@ where  m.sender_id = s.user_id
        and    udn.effdate <= message_date
        );
 
+ -- simple_message_v: does not contain display names for speed
 create or replace view im.simple_message_v as
 select  m.message_date,
         s.username as sender_sn,
@@ -84,6 +97,15 @@ from    im.messages m,
         im.users r
 where   m.sender_id = s.user_id
  and    m.recipient_id = r.user_id;
+
+/*
+ * function which does an insert.
+ * 1) insert a new user if one does not exist with that name/service already
+ * 2) insert a new display name if it is different and not null, with the
+ *      effdate
+ * 3) insert a message
+ * 4) update user_statistics with a new count
+ */
 
 create or replace rule insert_message_v as
 on insert to im.message_v
@@ -196,21 +218,25 @@ do instead  (
         new.recipient_sn and service = new.recipient_service))
 );
 
+ -- Contains names of the meta contacts.
 create table im.meta_container (
 meta_id         serial primary key,
-name            text not null,
-url             text,
-email           text,
-location        text,
-notes           text
+name            text not null
 );
 
+ -- contains users who belong to a meta-contact, with a boolean to determine
+ -- which is their primary meta-contact (if one users belongs to more than one)
 create table im.meta_contact (
 meta_id         int references im.meta_container (meta_id) not null,
 user_id         int references im.users (user_id) not null,
 preferred       boolean default false
 );
 
+ -- saved_searches and saved_chats are used by the JSPs to label
+ -- conversations.  Simply save the parameters, so they behave like a
+ -- smart folder.  If data is added that fits the criteria, it will show up.
+
+ -- used to save the search results
 create table im.saved_searches (
 search_id       serial primary key,
 title           text,
@@ -224,6 +250,7 @@ date_finish     timestamp,
 date_added      timestamp default now()
 );
 
+ -- used to save the chat settings
 create table im.saved_chats (
 chat_id         serial primary key,
 title           text,
@@ -237,6 +264,7 @@ date_finish     timestamp,
 date_added      timestamp default now()
 );
 
+ -- saves a note and links it to a message id
 create table im.message_notes (
 message_id      int references im.messages(message_id),
 title           text not null,
@@ -244,24 +272,23 @@ notes           text not null,
 date_added      timestamp default now()
 );
 
-create table im.preferences (
-rule            text,
-value           varchar(30)
-);
 
-insert into im.preferences values ('scramble', 'false');
-
+ -- the master table for the extensible metadata system.
+ -- saved names of categories (URL, location, etc)
 create table im.information_keys (
 key_id          serial primary key,
 key_name        text not null,
 delete          boolean default false
 );
 
+ -- insert a couple to start with so joins don't get messed up when the
+ -- database is clean
 insert into im.information_keys (key_name) values ('Location');
 insert into im.information_keys (key_name) values ('URL');
 insert into im.information_keys (key_name) values ('Email');
 insert into im.information_keys (key_name) values ('Notes');
 
+ -- stores information, linked to either a meta contact or a user.
 create table im.contact_information (
 meta_id         int references im.meta_container (meta_id),
 user_id         int references im.users (user_id),
@@ -271,12 +298,14 @@ value           text,
         check (meta_id is not null or user_id is not null)
 );
 
+ -- View to see users with metadata added
 create or replace view im.user_contact_info as
 (select user_id, username, key_id, key_name, value
 from im.users natural join
      im.contact_information natural join
      im.information_keys where delete = false);
 
+ -- View to see meta contacts with metadata
 create or replace view im.meta_contact_info as
 (select meta_id, name, key_id, key_name, value
 from im.meta_container natural join

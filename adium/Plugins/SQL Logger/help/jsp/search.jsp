@@ -314,8 +314,8 @@ try {
             out.print("For a non-case-sensitive, faster query, "+
             "install the tsearch module.</i></div>");
 
-            String shortQuery = new String("select scramble(sender_sn) "+
-            "as sender_sn, scramble(recipient_sn) as recipient_sn, " +
+            String shortQuery = new String("select sender_sn "+
+            "as sender_sn, recipient_sn as recipient_sn, " +
             "message, message_date, message_id from message_v where " +
             "message ~ ? ");
 
@@ -402,8 +402,8 @@ try {
 
             if(searchType.equals("tsearch1")) {
 
-                queryString = "select scramble(s.username) as sender_sn, "+
-                    " scramble(r.username) as recipient_sn," +
+                queryString = "select s.username as sender_sn, "+
+                    " r.username as recipient_sn," +
                     " message, message_date, message_id " +
                     " from im.messages, im.users s, im.users r " +
                     " where " +
@@ -411,8 +411,8 @@ try {
                     " and messages.recipient_id = r.user_id " +
                     " and message_idx ## ? ";
             } else if (searchType.equals("tsearch2")) {
-                queryString = "select scramble(s.username) as sender_sn, "+
-                    " scramble(r.username) as recipient_sn, " +
+                queryString = "select s.username as sender_sn, "+
+                    " r.username as recipient_sn, " +
                     " headline(message, q) as message, message_date, " +
                     " message_id " +
                     " from im.messages, im.users s, im.users r, "+
