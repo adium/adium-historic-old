@@ -234,7 +234,7 @@
 				//set the buddy image
 				NSImage *image = [[[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len))
 																			   length:buddyIcon->len]] autorelease];
-				[theContact setStatusObject:image withOwner:self forKey:@"UserIcon" notify:NO];
+				[theContact setStatusObject:image primary:YES withOwner:self forKey:@"UserIcon" notify:NO];
 			}
 		}   break;
 	}
