@@ -60,4 +60,32 @@ typedef enum
 
     return([localizedDateFormatString autorelease]);
 }
+
++ (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate
+{
+    NSMutableString *theString = [[NSMutableString alloc] init];
+    
+    double seconds = [[NSDate date] timeIntervalSinceDate:inDate];
+    int days = 0, hours = 0, minutes = 0; 
+    days = (int)(seconds / 86400);
+    seconds -= days * 86400;
+    if (seconds) {
+        hours = (int)(seconds / 3600);
+        seconds -= hours * 3600;
+    }
+    if (seconds) {
+        minutes = (int)(seconds / 60);
+        seconds -= minutes * 60;
+    }
+    if (days)
+        [theString appendString:[NSString stringWithFormat:@"%i day%@ ",days,days==1 ? @"":@"s"]];
+    if (hours)
+        [theString appendString:[NSString stringWithFormat:@"%i hour%@ ",hours,hours==1 ? @"":@"s"]];
+    if (minutes)
+        [theString appendString:[NSString stringWithFormat:@"%i minute%@ ",minutes,minutes==1 ? @"":@"s"]];
+    if (seconds)
+        [theString appendString:[NSString stringWithFormat:@"%i second%@ ",(int)seconds,seconds==1 ? @"":@"s"]];
+    
+    return theString;
+}
 @end

@@ -12,5 +12,6 @@
 @interface NSDateFormatter (ESDateFormatterAdditions)
 
 + (NSString *)localizedDateFormatStringShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm;
++ (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate;
 
 @end
