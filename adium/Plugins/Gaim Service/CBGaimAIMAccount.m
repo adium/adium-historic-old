@@ -8,7 +8,7 @@
 #import "CBGaimAIMAccount.h"
 #import "aim.h"
 
-#define SCREEN_NAME "tekjew"
+#define SCREEN_NAME "otsku"
 
 @implementation CBGaimAIMAccount
 
@@ -25,10 +25,6 @@
     
 - (NSString *)serviceID{
     return @"AIM";
-}
-
-- (NSString *)UIDAndServiceID{
-    return [NSString stringWithFormat:@"%@.%@", [self serviceID], [self UID]]; 
 }
 
 // Return a readable description of this account's username
