@@ -518,6 +518,7 @@
     if([profile length] > 1024){
         [[adium interfaceController] handleErrorMessage:@"Info Size Error"
                                         withDescription:[NSString stringWithFormat:@"Your info is too large, and could not be set.\r\rThis service limits info to 1024 characters (Your current info is %i characters)",[profile length]]];
+        // in theory this would be where to activate that field, and below to disable it
     }else{
         [self AIM_SetProfile:[self encodedAttributedString:profile forListObject:nil]];
         [self setStatusObject:profile forKey:@"TextProfile" notify:YES];
@@ -774,7 +775,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.118 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.119 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
