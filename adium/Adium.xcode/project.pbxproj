@@ -4997,6 +4997,10 @@
 				07CE05990661D87E00C50929,
 				07CE059A0661D87E00C50929,
 				07CE059B0661D87E00C50929,
+				4BCC20AB066B9A00007C8449,
+				4BCC20AC066B9A00007C8449,
+				4BCC20AD066B9A00007C8449,
+				4BCC20AE066B9A00007C8449,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8904,7 +8908,7 @@
 			children = (
 				6CED9083065B686A00A9C196,
 				4BDC4CC4066227DB00C28445,
-				7EC35A1A066B0C84002129B7,
+				4B28F07E066B9C69002CA36D,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -10274,6 +10278,21 @@
 			settings = {
 			};
 		};
+		4B28F07E066B9C69002CA36D = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 4B28F2D2066B9C71002CA36D;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B28F2D2066B9C71002CA36D = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
+		};
 		4B29093F05F944BF0087D16F = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -11263,17 +11282,6 @@
 			);
 			isa = PBXGroup;
 			name = "New Alert Panel";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B584F090638C0230019FAD2 = {
-			children = (
-				F52707A104E203EA0114B3C0,
-				F52707A004E203EA0114B3C0,
-				F5148D9604C8B4AA018B6CC7,
-			);
-			isa = PBXGroup;
-			name = "Alerts Window";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -14048,6 +14056,74 @@
 		};
 		4BCB9B5F0567FF5D001D3559 = {
 			fileRef = 4BCB9B5E0567FF5D001D3559;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCC20A6066B99F4007C8449 = {
+			children = (
+				4BCC20A7066B9A00007C8449,
+				4BCC20A8066B9A00007C8449,
+				4BCC20A9066B9A00007C8449,
+				4BCC20AA066B9A00007C8449,
+			);
+			isa = PBXGroup;
+			name = Icons;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCC20A7066B9A00007C8449 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = info1.png;
+			path = Source/icons/info1.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCC20A8066B9A00007C8449 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = info2.png;
+			path = Source/icons/info2.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCC20A9066B9A00007C8449 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = info3.png;
+			path = Source/icons/info3.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCC20AA066B9A00007C8449 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = info4.png;
+			path = Source/icons/info4.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCC20AB066B9A00007C8449 = {
+			fileRef = 4BCC20A7066B9A00007C8449;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCC20AC066B9A00007C8449 = {
+			fileRef = 4BCC20A8066B9A00007C8449;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCC20AD066B9A00007C8449 = {
+			fileRef = 4BCC20A9066B9A00007C8449;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCC20AE066B9A00007C8449 = {
+			fileRef = 4BCC20AA066B9A00007C8449;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -19311,21 +19387,6 @@
 			settings = {
 			};
 		};
-		7EC35A1A066B0C84002129B7 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 7EC35CA6066B0CA6002129B7;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		7EC35CA6066B0CA6002129B7 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
-		};
 		7EC35CAB066B0CB9002129B7 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -21536,7 +21597,9 @@
 			children = (
 				F527079504E203BB0114B3C0,
 				F527079604E203BB0114B3C0,
-				4B584F090638C0230019FAD2,
+				F52707A104E203EA0114B3C0,
+				F52707A004E203EA0114B3C0,
+				F5148D9604C8B4AA018B6CC7,
 				4B584F060638C01B0019FAD2,
 			);
 			isa = PBXGroup;
@@ -21627,8 +21690,8 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
-			name = ESContactAlertsWindowController.m;
-			path = "Plugins/Contact Alerts/ESContactAlertsWindowController.m";
+			name = ESContactAlertsPane.m;
+			path = "Plugins/Contact Alerts/ESContactAlertsPane.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -21636,8 +21699,8 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			name = ESContactAlertsWindowController.h;
-			path = "Plugins/Contact Alerts/ESContactAlertsWindowController.h";
+			name = ESContactAlertsPane.h;
+			path = "Plugins/Contact Alerts/ESContactAlertsPane.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -23667,6 +23730,7 @@
 				F570A59803704B6101A8010A,
 				F570A59903704B6101A8010A,
 				F5CDCE4B0350760A01A8010A,
+				4BCC20A6066B99F4007C8449,
 			);
 			isa = PBXGroup;
 			name = "Contact Info Window";

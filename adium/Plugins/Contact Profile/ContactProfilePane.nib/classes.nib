@@ -4,7 +4,12 @@
         {
             CLASS = AIContactProfilePane; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"imageView_userIcon" = NSImageView; "textField_accountName" = NSTextField; }; 
+            OUTLETS = {
+                "imageView_userIcon" = NSImageView; 
+                "textField_accountName" = NSTextField; 
+                "textField_status" = NSTextField; 
+                "textView_profile" = NSTextView; 
+            }; 
             SUPERCLASS = AIContactInfoPane; 
         }, 
         {

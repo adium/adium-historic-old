@@ -6,7 +6,7 @@
 //
 
 #import "CSNewContactAlertWindowController.h"
-#import "ESContactAlertsWindowController.h"
+#import "ESContactAlertsPane.h"
 #import "ESContactAlertsPlugin.h"
 
 #define NEW_ALERT_NIB @"NewAlert"

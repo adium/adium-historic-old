@@ -29,6 +29,7 @@
 - (void)viewWillClose;
 - (IBAction)changePreference:(id)sender;
 - (void)configureControlDimming;
+- (void)resizable;
 
 
 @end

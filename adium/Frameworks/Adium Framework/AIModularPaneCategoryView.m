@@ -54,6 +54,7 @@
         if(![paneView superview]){
             [self addSubview:paneView];
             [paneView setFrameOrigin:NSMakePoint(0,yPos)];
+			if([pane resizable]) [paneView setFrameSize:[self frame].size];
         }
         
         //Move down for the next view
