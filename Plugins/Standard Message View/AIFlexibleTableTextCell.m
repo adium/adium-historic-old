@@ -16,14 +16,16 @@
 #import "AIFlexibleTableTextCell.h"
 #import "AIFlexibleTableView.h"
 #import "AIFlexibleTableRow.h"
-#import "AICursorAdditions.h"
-#import "AITooltipUtilities.h"
-#import "AILinkTrackingController.h"
-#import "AITextAttachmentExtension.h"
-#import "AIAttributedStringAdditions.h"
-#import "AIParagraphStyleAdditions.h"
-#import "AIStringUtilities.h"
-#import "AIMenuAdditions.h"
+
+#import <AIUtilities/AICursorAdditions.h>
+#import <AIUtilities/AITooltipUtilities.h>
+#import <AIUtilities/AILinkTrackingController.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIParagraphStyleAdditions.h>
+#import <AIUtilities/AIStringUtilities.h>
+#import <AIUtilities/AIMenuAdditions.h>
+
+#import <Adium/AITextAttachmentExtension.h>
 
 #define USE_OPTIMIZED_LIVE_RESIZE   NO  //If YES, text layout will not be recalculated during a resize
 
