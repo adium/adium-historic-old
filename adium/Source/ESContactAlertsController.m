@@ -3,7 +3,7 @@
 //  Adium XCode
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.9 2003/12/08 05:34:48 jmelloy Exp $
+//  $Id: ESContactAlertsController.m,v 1.10 2003/12/16 15:43:17 adamiser Exp $
 
 
 /*
@@ -218,14 +218,14 @@ Alert Execution
         [completedActionTypes removeAllObjects];
         
         //load inObject events
-        eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
+        eventActionArray =  [inObject preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS];
         //process inObject events
         [self processEventActionArray:eventActionArray forObject:inObject keys:inModifiedKeys];
 
         //load [inObject containingGroup] events
-        eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:[inObject containingGroup]];
+        //eventActionArray =  [[inObject containingGroup] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS];
         //process the group events
-        [self processEventActionArray:eventActionArray forObject:inObject keys:inModifiedKeys];
+        //[self processEventActionArray:eventActionArray forObject:inObject keys:inModifiedKeys];
     }
     return nil; //we don't change any attributes
 }
@@ -275,7 +275,7 @@ Alert Execution
                     //after all tests
                     if (success && [[actionDict objectForKey:KEY_EVENT_DELETE] intValue]) { //delete the action from the array if succesful and necessary
                         [eventActionArray removeObject:actionDict];
-                        [[owner preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
+                        [inObject setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS];
                         
                         //Broadcast a one time event fired message
                         [[owner notificationCenter] postNotificationName:One_Time_Event_Fired

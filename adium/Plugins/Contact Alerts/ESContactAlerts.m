@@ -127,7 +127,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
         
         //If no cache is available (or we're not using the cache), load the array
         if(!newActionArray){
-            newActionArray = [[adium preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:object]; //load from prefs
+            newActionArray = [object preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS]; //load from prefs
             
             //Update the cache
             if(newActionArray){
@@ -177,7 +177,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 //Save the event actions (contact context sensitive)
 - (void)saveEventActionArray
 {
-    [[adium preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
+    [activeContactObject setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS];
 }
 
 //--Events--

@@ -173,17 +173,17 @@
     }
         
     //Check to be sure bezel for contact and for its group is enabled
-    NSNumber *contactDisabledNumber = [[adium preferenceController] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:contact];
-    NSNumber *groupDisabledNumber = [[adium preferenceController] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:[contact containingGroup]];
+    NSNumber *contactDisabledNumber = [contact preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
+    //NSNumber *groupDisabledNumber = [[contact containingGroup] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
     BOOL contactEnabled = !contactDisabledNumber || (![contactDisabledNumber boolValue]);
-    BOOL groupEnabled = !groupDisabledNumber || (![groupDisabledNumber boolValue]);
+    //BOOL groupEnabled = !groupDisabledNumber || (![groupDisabledNumber boolValue]);
     // If Adium is hidden, check if we want it to show (and unhide Adium in the process)
     BOOL showIfHidden = ![NSApp isHidden] || ([NSApp isHidden] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_HIDDEN] boolValue]);
     // If you are away, check if we want it to show
     BOOL showIfAway = ![[adium accountController] propertyForKey:@"AwayMessage" account:nil]
         || ([[adium accountController] propertyForKey:@"AwayMessage" account:nil] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]);
     
-    if (contactEnabled && groupEnabled && showIfHidden && showIfAway){
+    if (contactEnabled && /*groupEnabled &&*/ showIfHidden && showIfAway){
         if ([NSApp isHidden]) {
             [NSApp unhideWithoutActivation];
         }
@@ -280,7 +280,7 @@
     [activeListObject release]; activeListObject = nil;
     activeListObject = [inObject retain];
     
-    contactDisableBezel = [[adium preferenceController] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:activeListObject];
+    contactDisableBezel = [activeListObject preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
     if (contactDisableBezel)
         [checkBox_disableBezel setState:[contactDisableBezel boolValue]];
     else
@@ -290,7 +290,7 @@
 - (IBAction)changedSetting:(id)sender
 {
     if (sender == checkBox_disableBezel) {
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkBox_disableBezel state]] forKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:activeListObject];
+        [activeListObject setPreference:[NSNumber numberWithBool:[checkBox_disableBezel state]] forKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
     }
 }
 

@@ -331,9 +331,7 @@
     // Preferred account for this contact --
     // The preferred account always has priority, as long as it is available for sending content
     if(inObject){
-        NSString	*accountID = [[owner preferenceController] preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
-                                                                       group:PREF_GROUP_PREFERRED_ACCOUNTS
-                                                                      object:inObject];
+        NSString	*accountID = [inObject preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT group:PREF_GROUP_PREFERRED_ACCOUNTS];
 
         if(accountID && (account = [self accountWithID:accountID])){
             if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
@@ -517,10 +515,9 @@
         AIContentObject		*contentObject = [[notification userInfo] objectForKey:@"Object"];
         AIAccount		*sourceAccount = (AIAccount *)[contentObject source];
 
-        [[owner preferenceController] setPreference:[sourceAccount accountID]
-                                             forKey:KEY_PREFERRED_SOURCE_ACCOUNT
-                                              group:PREF_GROUP_PREFERRED_ACCOUNTS
-                                             object:destObject];
+        [destObject setPreference:[sourceAccount accountID]
+			   forKey:KEY_PREFERRED_SOURCE_ACCOUNT
+			    group:PREF_GROUP_PREFERRED_ACCOUNTS];
 
         [lastAccountIDToSendContent setObject:[sourceAccount accountID] forKey:[destObject serviceID]];
     }

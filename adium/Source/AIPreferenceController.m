@@ -13,13 +13,11 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.32 2003/12/15 03:25:00 adamiser Exp $
+// $Id: AIPreferenceController.m,v 1.33 2003/12/16 15:43:17 adamiser Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
 #import "AIPreferenceCategory.h"
-
-#define PREF_FOLDER_NAME 	@"Preferences"		//Name of the preferences folder
 
 @interface AIPreferenceController (PRIVATE)
 - (NSMutableDictionary *)loadPreferenceGroup:(NSString *)groupName;
@@ -31,13 +29,18 @@
 //init
 - (void)initController
 {
+    //
     paneArray = [[NSMutableArray alloc] init];
     groupDict = [[NSMutableDictionary alloc] init];
     delayedNotificationGroups = [[NSMutableSet alloc] init];
     shouldDelay = NO;
     
-    [owner registerEventNotification:Preference_GroupChanged displayName:@"Preferences Changed"];
-    
+    //
+    [owner registerEventNotification:Preference_GroupChanged displayName:@"Preferences Changed"];    
+
+    //Create the 'ByObject' object specific preference directory
+    [AIFileUtilities createDirectory:[[[owner loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]];
+
 }
 
 //We can't do these in initing, since the toolbar controller hasn't loaded yet
@@ -124,14 +127,21 @@
     }
 }
 
-
 //Using Handle/Group Specific Preferences --------------------------------------------------------------
 //Return an object specific preference.
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
+/*- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
 {
-    return([self preferenceForKey:inKey group:groupName objectKey:[NSString stringWithFormat:@"(%@)", [object UIDAndServiceID]]]);
-}
+    id      value;
+    
+    value = [object preferenceForKey:inKey group:groupName];
+    if(!value) value = [[self preferencesForGroup:groupName] objectForKey:inKey];
+    
+    return(value);
+    
+    //return([self preferenceForKey:inKey group:groupName objectKey:[NSString stringWithFormat:@"(%@)", [object UIDAndServiceID]]]);
+}*/
 
+/*
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName objectKey:(NSString *)prefDictKey
 {
     NSMutableDictionary	*prefDict, *objectPrefDict;
@@ -143,7 +153,7 @@
     if(objectPrefDict) value = [objectPrefDict objectForKey:inKey];
 
     //If an object specific is not found, use the global preference
-    if(!value){
+    if(!(value = [object preferenceForKey:inKey group:groupName){
         value = [[self preferencesForGroup:groupName] objectForKey:inKey];
     }
 
@@ -180,7 +190,7 @@
         //Broadcast a group changed notification
         [[owner notificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
     }
-}
+}*/
 
 //This should be used like [lockFocus] / [unlockFocus] around groups of preference changes
 - (void)delayPreferenceChangedNotifications:(BOOL)inDelay
@@ -203,7 +213,13 @@
 {
     return([self loadPreferenceGroup:groupName]);    
 }
- 
+
+//Return a preference key
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName
+{
+    return([[self loadPreferenceGroup:groupName] objectForKey:inKey]);
+}
+
 //Set a preference value
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName
 {

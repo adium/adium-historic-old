@@ -90,14 +90,12 @@
     [choicesMenu addItem:menuItem];
 
     [format_menu setMenu:choicesMenu];
-
-    [format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[[adium preferenceController] preferenceForKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT object:nil] intValue]]];
-
+    [format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[[[adium preferenceController] preferencesForGroup:PREF_GROUP_DISPLAYFORMAT] objectForKey:@"Long Display Format"] intValue]]];
 }
 
 -(IBAction)changeFormat:(id) sender
 {
-    [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]] forKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT object:nil];
+    [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]] forKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT];
 }
 
 - (void)dealloc

@@ -22,7 +22,7 @@
     float		orderIndex;
     NSMutableDictionary	*statusDictionary;
     NSString		*serviceID;
-
+    NSMutableDictionary *prefDict;
 }
 
 - (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID;
@@ -37,6 +37,11 @@
 - (NSString *)displayName;
 - (NSString *)longDisplayName;
 - (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey;
+
+//Prefs
+- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName ignoreInheritedValues:(BOOL)ignore;
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName;
 
 //Nesting
 - (void)setContainingGroup:(AIListGroup *)inGroup;

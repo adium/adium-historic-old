@@ -158,14 +158,13 @@
 //Add a tab view item container (without changing the current selection)
 - (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem atIndex:(int)index
 {    
-    NSString	*savedFrame;
+    AIListObject    *listObject = [[[(AIMessageTabViewItem *)inTabViewItem messageViewController] chat] listObject];
+    NSString	    *savedFrame;
     
     [self window]; //Ensure our window has loaded
     if([tabView_messages numberOfTabViewItems] == 0) {
         //Restore the window position for the object about to have its chat added as the first in this window
-        savedFrame = [[adium preferenceController] preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
-                                                              group:PREF_GROUP_WINDOW_POSITIONS
-                                                             object:[[[(AIMessageTabViewItem *)inTabViewItem messageViewController] chat] listObject]];
+        savedFrame = [listObject preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME group:PREF_GROUP_WINDOW_POSITIONS];
 
         if(savedFrame){
             [[self window] setFrameFromString:savedFrame];
@@ -199,11 +198,12 @@
 
     //If that was our last container, save the position for its contact
     if([tabView_messages numberOfTabViewItems] == 0){
+	AIListObject    *listObject = [[[(AIMessageTabViewItem *)inTabViewItem messageViewController] chat] listObject];
+	
         //Save the window position
-        [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
-                                             forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
-                                            group:PREF_GROUP_WINDOW_POSITIONS
-                                             object:[[[(AIMessageTabViewItem *)inTabViewItem messageViewController] chat] listObject]];
+        [listObject setPreference:[[self window] stringWithSavedFrame]
+			   forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
+                            group:PREF_GROUP_WINDOW_POSITIONS];
 
         //close the window (unless we're already closing)
         if(!windowIsClosing){
