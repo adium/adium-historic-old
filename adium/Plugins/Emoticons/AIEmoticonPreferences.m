@@ -75,6 +75,8 @@
 
 - (void)viewWillClose
 {
+	[[adium notificationCenter] removeObserver:self];
+	
     //Flush all the images we loaded
     [plugin flushEmoticonImageCache];
 }
