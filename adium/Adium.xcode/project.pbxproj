@@ -5745,10 +5745,8 @@
 				4BA62DB306C51297001D6B3C,
 				4BA62DB406C51297001D6B3C,
 				4BA62DB506C51297001D6B3C,
-				4BA62DB606C51297001D6B3C,
 				4BA62DB706C51297001D6B3C,
 				4BA62DB806C51297001D6B3C,
-				4BA62DB906C51297001D6B3C,
 				4BA62DBA06C51298001D6B3C,
 				C45F7F6706C75E210056B1F2,
 				4BF5246806CA6E8E00CDBCEB,
@@ -5758,6 +5756,8 @@
 				9E23E9E306CC506A00D3C897,
 				4BF98D5206D1484500E8781D,
 				4BF98DCD06D149EE00E8781D,
+				4BF5D3AB06D2484A00B28227,
+				4BF5D3AC06D2484C00B28227,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15088,12 +15088,6 @@
 			settings = {
 			};
 		};
-		4BA62DB606C51297001D6B3C = {
-			fileRef = 4BA62DAE06C51297001D6B3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BA62DB706C51297001D6B3C = {
 			fileRef = 4BA62DAF06C51297001D6B3C;
 			isa = PBXBuildFile;
@@ -15102,12 +15096,6 @@
 		};
 		4BA62DB806C51297001D6B3C = {
 			fileRef = 4BA62DB006C51297001D6B3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BA62DB906C51297001D6B3C = {
-			fileRef = 4BA62DB106C51297001D6B3C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -19588,6 +19576,18 @@
 			path = "Frameworks/AIUtilities Framework/AITableViewAdditions.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BF5D3AB06D2484A00B28227 = {
+			fileRef = 4BF302F106873CCE000DCA65;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF5D3AC06D2484C00B28227 = {
+			fileRef = 34D509B106A4A82300334A7A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BF98D2906D147BB00E8781D = {
 			children = (
