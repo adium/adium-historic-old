@@ -433,6 +433,23 @@
 				   forKey:STATUS_MUTABILITY_TYPE];
 }
 
+/*!
+ * @brief Return a unique ID for this status
+ *
+ * The unique ID will be assigned if necessary.
+ */
+- (NSNumber *)uniqueStatusID
+{
+	NSNumber	*uniqueStatusID = [statusDict objectForKey:STATUS_UNIQUE_ID];
+	if(!uniqueStatusID){
+		uniqueStatusID = [[adium statusController] nextUniqueStatusID];
+		[statusDict setObject:uniqueStatusID
+					   forKey:STATUS_UNIQUE_ID];
+	}
+	
+	return uniqueStatusID;
+}
+
 - (NSString *)description
 {
 	return([NSString stringWithFormat:@"%@ : %@",[super description], statusDict]);

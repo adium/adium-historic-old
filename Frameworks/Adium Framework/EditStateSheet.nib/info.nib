@@ -3,49 +3,48 @@
 <plist version="1.0">
 <dict>
 	<key>IBDocumentLocation</key>
-	<string>558 278 356 240 0 0 1280 832 </string>
+	<string>1382 230 356 240 1280 -170 1280 1024 </string>
 	<key>IBFramework Version</key>
 	<string>364.0</string>
 	<key>IBGroupedObjects</key>
 	<dict>
+		<key>0</key>
+		<array>
+			<string>18</string>
+			<string>8</string>
+		</array>
 		<key>1</key>
 		<array>
-			<string>101</string>
-			<string>102</string>
-		</array>
-		<key>2</key>
-		<array>
-			<string>127</string>
-			<string>129</string>
-			<string>132</string>
+			<string>33</string>
+			<string>29</string>
+			<string>17</string>
 		</array>
 		<key>3</key>
 		<array>
-			<string>125</string>
-			<string>128</string>
-			<string>126</string>
-		</array>
-		<key>6</key>
-		<array>
-			<string>186</string>
-			<string>185</string>
-		</array>
-		<key>7</key>
-		<array>
-			<string>158</string>
-			<string>122</string>
+			<string>21</string>
+			<string>10</string>
+			<string>36</string>
 		</array>
 	</dict>
 	<key>IBLastGroupID</key>
-	<string>8</string>
-	<key>IBOldestOS</key>
-	<integer>2</integer>
+	<string>4</string>
 	<key>IBOpenObjects</key>
 	<array>
-		<integer>5</integer>
-		<integer>99</integer>
+		<integer>9</integer>
 	</array>
 	<key>IBSystem Version</key>
 	<string>7U16</string>
+	<key>IBUserGuides</key>
+	<dict>
+		<key>9</key>
+		<dict>
+			<key>guideLocations</key>
+			<array>
+				<string>Vertical:381.000000</string>
+			</array>
+			<key>guidesLocked</key>
+			<false/>
+		</dict>
+	</dict>
 </dict>
 </plist>

@@ -20,28 +20,35 @@
 @class AIAccount, ESTextViewWithPlaceholder, AIService, AIAutoScrollView, AISendingTextView;
 
 @interface AIEditStateWindowController : AIWindowController {
-	IBOutlet	NSTextField		*label_state;
-	IBOutlet	NSPopUpButton	*popUp_state;
+	IBOutlet	NSBox				*box_title;
+	IBOutlet	NSTextField			*label_title;
+	IBOutlet	NSTextField			*textField_title;
+	
+	IBOutlet	NSBox				*box_separatorLine;
+	
+	IBOutlet	NSBox				*box_state;
+	IBOutlet	NSTextField			*label_state;
+	IBOutlet	NSPopUpButton		*popUp_state;
 	BOOL		needToRebuildPopUpState;
 	
-	IBOutlet	NSTextField		*label_statusMessage;
-	IBOutlet	NSBox			*box_statusMessage;
+	IBOutlet	NSTextField			*label_statusMessage;
+	IBOutlet	NSBox				*box_statusMessage;
 	IBOutlet	AISendingTextView	*textView_statusMessage;
 	IBOutlet	AIAutoScrollView	*scrollView_statusMessage;
 
-	IBOutlet	NSButton		*checkbox_autoReply;
-	IBOutlet	NSButton		*checkbox_customAutoReply;
+	IBOutlet	NSButton			*checkbox_autoReply;
+	IBOutlet	NSButton			*checkbox_customAutoReply;
 	IBOutlet	AIAutoScrollView	*scrollView_autoReply;
 	IBOutlet	AISendingTextView	*textView_autoReply;
 
-	IBOutlet	NSButton		*checkbox_idle;
-	IBOutlet	NSBox			*box_idle;
-	IBOutlet	NSTextField		*textField_idleMinutes;
-	IBOutlet	NSTextField		*textField_idleHours;
+	IBOutlet	NSButton			*checkbox_idle;
+	IBOutlet	NSBox				*box_idle;
+	IBOutlet	NSTextField			*textField_idleMinutes;
+	IBOutlet	NSTextField			*textField_idleHours;
 
-	IBOutlet	NSButton		*button_save;
-	IBOutlet	NSButton		*button_cancel;
-	IBOutlet	NSButton		*button_OK;
+	IBOutlet	NSButton			*checkBox_save;
+	IBOutlet	NSButton			*checkBox_okay;
+	IBOutlet	NSButton			*checkBox_cancel;
 
 	AIStatus	*originalStatusState;
 	AIStatus	*workingStatusState;
@@ -50,7 +57,7 @@
 	id			target;
 }
 
-+ (id)editCustomState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount onWindow:(id)parentWindow notifyingTarget:(id)inTarget;
++ (id)editCustomState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount withSaveOption:(BOOL)allowSave onWindow:(id)parentWindow notifyingTarget:(id)inTarget;
 
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;

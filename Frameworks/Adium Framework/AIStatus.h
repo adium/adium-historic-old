@@ -28,11 +28,13 @@
 #define	STATUS_FORCED_INITIAL_IDLE_TIME		@"Forced Initial Idle Time"
 #define STATUS_INVISIBLE					@"Invisible"
 #define STATUS_MUTABILITY_TYPE				@"Mutability Type"
+#define STATUS_UNIQUE_ID					@"Unique ID"
 
 //Mutability types
 typedef enum {
 	AIEditableStatusState = 0, /* A user created state which can be modified -- the default, should be 0 */
-	AILockedStatusState /* A state which is built into Adium and can not be modified */
+	AILockedStatusState, /* A state which is built into Adium and can not be modified */
+	AITemporaryEditableStatusState /* A user created state which is not part of the permanent stored state array */
 } AIStatusMutabilityType;
 
 //General status types
