@@ -78,10 +78,6 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_WEBKIT_NAME_FORMAT
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	}else if(sender == checkBox_backgroundColorFormatting){
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-											 forKey:KEY_WEBKIT_ALLOW_BACKGROUND_COLORING
-											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	}else if(sender == popUp_minimumFontSize){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_WEBKIT_MIN_FONT_SIZE
@@ -107,7 +103,6 @@
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	[popUp_nameFormat compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue]];
 	[checkBox_customNameFormatting setState:[[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue]];
-	[checkBox_backgroundColorFormatting setState:[[prefDict objectForKey:KEY_WEBKIT_ALLOW_BACKGROUND_COLORING] boolValue]];
 
 	[popUp_minimumFontSize setMenu:[self _fontSizeMenu]];
 	[popUp_minimumFontSize compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_WEBKIT_MIN_FONT_SIZE] intValue]];

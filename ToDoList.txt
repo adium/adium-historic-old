@@ -15,7 +15,6 @@
 - Status window when away preference is not implemented
 - Status set state after inactivity is not implemented
 - Finish implementing and commit state icons on the contact list code
-- Remove fonts/colors preference from advanced, force it to YES
 - Clean up layout in advanced messages pane
 - Default mininum font size to 8 or 9pt
 - MSN display names as extended status isn't working

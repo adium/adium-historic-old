@@ -20,7 +20,6 @@
 #define WEBKIT_DEFAULT_PREFS					@"WebKit Defaults"
 
 #define KEY_WEBKIT_NAME_FORMAT					@"Name Format"
-#define KEY_WEBKIT_ALLOW_BACKGROUND_COLORING	@"Use Background Color"
 #define KEY_WEBKIT_USE_NAME_FORMAT				@"Use Custom Name Format"
 #define	KEY_WEBKIT_TIME_STAMP_FORMAT			@"Time Stamp"
 #define KEY_WEBKIT_MIN_FONT_SIZE				@"Min Font Size"
@@ -31,7 +30,6 @@
 	
 	IBOutlet	NSButton		*checkBox_customNameFormatting;
 	IBOutlet	NSPopUpButton   *popUp_nameFormat;
-	IBOutlet	NSButton		*checkBox_backgroundColorFormatting;
 	
 	IBOutlet	NSPopUpButton	*popUp_minimumFontSize;
 	IBOutlet	NSPopUpButton	*popUp_timeStampFormat;
