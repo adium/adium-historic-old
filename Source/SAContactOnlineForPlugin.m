@@ -41,7 +41,7 @@
  */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(AILocalizedString(@"Online For", "A time interval such as '3 days' will be shown after this identifier");
+    return(AILocalizedString(@"Online For", "A time interval such as '3 days' will be shown after this identifier"));
 }
 
 /*!
