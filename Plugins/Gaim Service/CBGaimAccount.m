@@ -675,7 +675,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		//We can now tell the other side that we're done typing
 		//[gaimThread sendTyping:AINotTyping inChat:chat];
-
+		AILog(@"Sent %@",[messageDict objectForKey:@"Message"]);
         return;
     }
 
@@ -751,12 +751,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		[chat addParticipatingListObject:contact];
 		
-		GaimDebugg (@"added user %@ in conversation %@",contactName,[chat name]);
+		GaimDebug (@"added user %@ in conversation %@",contactName,[chat name]);
 	}	
 }
 - (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv
 {
-	GaimDebugg (@"added a whole list!");
+	GaimDebug (@"added a whole list!");
 }
 - (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
 {
