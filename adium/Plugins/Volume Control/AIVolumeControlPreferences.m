@@ -16,7 +16,7 @@
 #import "AIVolumeControlPreferences.h"
 #import "AIVolumeControlPlugin.h"
 
-#define DEFAULT_VOLUME 1.0
+#define VOLUME_SOUND_PATH   @"/System/Library/LoginPlugins/BezelServices.loginPlugin/Contents/Resources/volume.aiff"
 
 @interface AIVolumeControlPreferences(PRIVATE)
 - (NSMenu *)outputDeviceMenu;
@@ -41,8 +41,8 @@
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
     
 	[popUp_outputDevice setMenu:[self outputDeviceMenu]];
-	
-//	[checkbox_useCustomVolume setState:[[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] boolValue]];
+	[popUp_outputDevice compatibleSelectItemWithTag:[[preferenceDict objectForKey:KEY_SOUND_SOUND_DEVICE_TYPE] intValue]];
+
     if([[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue] == YES){
         [slider_volume setFloatValue:0.0];
     }else{
@@ -80,7 +80,7 @@
 
     //Play a sample sound
     if(playSample){
-        [[adium soundController] playSoundAtPath:@"/System/Library/LoginPlugins/BezelServices.loginPlugin/Contents/Resources/volume.aiff"];
+        [[adium soundController] playSoundAtPath:VOLUME_SOUND_PATH];
     }
 }
 
@@ -89,7 +89,6 @@
 {
 	if (sender == popUp_outputDevice){
 		SoundDeviceType soundType = [[popUp_outputDevice selectedItem] tag];
-		NSLog(@"%i",soundType);
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:soundType]
 											 forKey:KEY_SOUND_SOUND_DEVICE_TYPE
 											  group:PREF_GROUP_SOUNDS];
@@ -98,12 +97,8 @@
 		[[adium preferenceController] setPreference: [NSNumber numberWithBool:[button_muteWhileAway state]]
 											 forKey:KEY_EVENT_MUTE_WHILE_AWAY
 											  group:PREF_GROUP_SOUNDS];
-	}else if (sender == checkbox_useCustomVolume){
-		//No longer used
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkbox_useCustomVolume state]]
-											 forKey:KEY_SOUND_USE_CUSTOM_VOLUME
-											  group:PREF_GROUP_SOUNDS];
 	}
+	
 	[super changePreference:sender];
 }
 
@@ -132,7 +127,7 @@
 //Configure control dimming
 - (void)configureControlDimming
 {
- //   [slider_volume setEnabled:[checkbox_useCustomVolume state]];
+
 }
 
 @end
