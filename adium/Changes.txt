@@ -4,6 +4,7 @@
 Version 0.61 (6/25/2004)
 - Added support for MSN Buddy Icons
 - Added support for Yahoo! Buddy Icons
+- Added support for editing an account's Buddy Icon (for AIM, MSN, and Yahoo!)
 - Added support for MSN File Transfer (to/from Windows Official MSN and LibGaim-based MSN clients such as Adium)
 - Added support for idle status for MSN contacts
 - Added status icons to tabs (Replacing the text coloring used previously)

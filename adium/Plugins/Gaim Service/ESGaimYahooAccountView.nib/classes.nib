@@ -19,6 +19,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_checkMail" = NSButton; 
+                "imageView_userIcon" = ESImageViewWithImagePicker; 
                 "menu_proxy" = NSPopUpButton; 
                 "textField_alias" = NSTextField; 
                 "textField_hostName" = NSTextField; 
@@ -34,6 +35,13 @@
             CLASS = ESGaimYahooAccountViewController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = ESGaimAccountViewController; 
+        }, 
+        {
+            ACTIONS = {copy = id; paste = id; }; 
+            CLASS = ESImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
