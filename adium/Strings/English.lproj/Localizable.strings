@@ -183,6 +183,12 @@
 /* AIWebKitMessageViewController */
 "Smooth Operator" = "Smooth Operator";
 
+/* BZActivityWindowController */
+"Activity Window deletion-confirmation title" = "Deletion cannot be undone, and deleted items will be canceled implicitly.";
+"Activity Window deletion-confirmation message format" = "Are you sure you want to delete the %@ \"%@\"?";
+"OK" = "OK";
+"Cancel" = "Cancel";
+
 /* CBGaimOscarAccount */
 "Connecting" = "Connecting";
 "Screen name sent" = "Screen name sent";
