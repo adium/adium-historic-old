@@ -103,4 +103,9 @@
 	shouldAlwaysSendAsText = flag;	
 }
 
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"%@<%x>: %@",NSStringFromClass([self class]),self,[super description]];
+}
+
 @end
