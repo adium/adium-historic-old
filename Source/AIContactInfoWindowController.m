@@ -83,6 +83,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 {
 	[displayedObject release]; displayedObject = nil;
 	[loadedPanes release]; loadedPanes = nil;
+	
     [super dealloc];
 }	
 
