@@ -565,7 +565,7 @@
 
 - (void)getPackets:(NSTimer *)timer
 {
-    /*NSData *inData = nil;
+    /*NSData *inData = nil; //don't want old data hanving around
     if ([socket isValid])
     {
         switch([[[timer userInfo] objectForKey:@"Number"] intValue])
@@ -573,6 +573,7 @@
             case 0: //read
                 if([socket readyForReceiving])
                 {
+                    //get the data, put it into message.
                     [socket getDataToNewline:&inData];
                     NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
                         length:[inData length]]);
@@ -580,6 +581,7 @@
                         length:[inData length]-2] 
                     componentsSeparatedByString:@" "];
                     
+                    //just convenience
                     NSString *command = [message objectAtIndex:0];
                     
                     if([command isEqual:@"CHL"])
@@ -631,15 +633,40 @@
                 }
                 break;
                 
-            case 2: //recieve a payload command, the length is in String.
+            case 2: //Receive a payload command, the length is in String. 
+                    //Afterward, the data will be in String, AS AN NSDATA. BE CAREFUL
                 if([socket readyForReceiving])
                 {
-                    //read data of length in String, then receive.
+                    //get the length
+                    int length = [[[timer userInfo] objectForKey:@"String"] intValue];
                     
-                    //do some checking here
+                    //if we don't have temp, create it
+                    if([[timer userInfo] objectForKey:@"temp"] == nil)
+                    {
+                        [[timer userInfo] setObject:[[NSMutableData alloc] init] forKey:@"temp"];
+                    }
                     
-                    //go back to reading packets, only if we are done here, though.
-                    [[timer userInfo] setObject:[NSNumber numberWithInt:0] forKey:@"Number"];
+                    //Get data, then check if we don't have all the data
+                    if(![socket getData:&inData ofLength:length])
+                    {
+                        //put the data in temp.
+                        [[[timer userInfo] objectForKey:@"temp"] appendData:inData];
+                    }
+                    else //if we do have all the data
+                    {
+                        //put the data in String.
+                        [[[timer userInfo] objectForKey:@"temp"] appendData:inData];
+                        
+                        //put the final data into String.
+                        [[timer userInfo] setObject:[[timer userInfo] objectForKey:@"temp"]
+                            forKey:@"String"];
+                        
+                        //remove temp
+                        [[timer userInfo] removeObjectForKey:@"temp"];
+                        
+                        //go back to reading packets, we are done here.
+                        [[timer userInfo] setObject:[NSNumber numberWithInt:0] forKey:@"Number"];
+                    }
                 }
             break;
         }
