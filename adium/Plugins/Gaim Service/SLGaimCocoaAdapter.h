@@ -8,8 +8,14 @@
 
 
 @protocol GaimThread
+- (void)addAdiumAccount:(id)adiumAccount;
 - (oneway void)sendMessage:(NSString *)encodedMessage fromAccount:(id)sourceAccount inChat:(AIChat *)chat withFlags:(int)flags;
 - (oneway void)sendTyping:(BOOL)typing inChat:(AIChat *)chat;
+- (oneway void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName;
+- (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:groupName;
+- (oneway void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName;
+- (oneway void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName;
+- (oneway void)closeChat:(AIChat *)chat;
 - (void)connectAccount:(id)adiumAccount;
 - (void)disconnectAccount:(id)adiumAccount;
 @end
@@ -25,8 +31,17 @@
 
 }
 
++ (SLGaimCocoaAdapter *)sharedInstance;
+- (void)addAdiumAccount:(id)adiumAccount;
 - (oneway void)sendMessage:(NSString *)encodedMessage fromAccount:(id)sourceAccount inChat:(AIChat *)chat withFlags:(int)flags;
 - (oneway void)sendTyping:(BOOL)typing inChat:(AIChat *)chat;
+- (oneway void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName;
+- (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:groupName;
+- (oneway void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName;
+- (oneway void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName;
+- (oneway void)closeChat:(AIChat *)chat;
 - (void)connectAccount:(id)adiumAccount;
 - (void)disconnectAccount:(id)adiumAccount;
+
+- (void)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
 @end

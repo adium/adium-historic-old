@@ -177,7 +177,6 @@ static BOOL didInitOscar = NO;
 	struct buddyinfo	*bi;
 	GaimBuddy			*buddy;
 	
-//	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
 	const char				*buddyName = [[theContact UID] UTF8String];
 	
 	if ((od = gc->proto_data) &&

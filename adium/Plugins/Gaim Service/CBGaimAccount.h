@@ -8,11 +8,13 @@
 #import "SLGaimCocoaAdapter.h"
 
 @protocol AdiumGaimDO
+- (GaimAccount*)gaimAccount;
+
 - (oneway void)accountConnectionConnected;
 - (oneway void)accountConnectionReportDisconnect:(NSString *)text;
 - (oneway void)accountConnectionNotice:(const char*)text;
 - (oneway void)accountConnectionDisconnected;
-- (oneway void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text;
+- (oneway void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count;
 
 - (oneway void)newContact:(AIListContact *)theContact;
 - (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName;
@@ -42,13 +44,17 @@
 - (oneway void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID;
 - (oneway void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID;
 
+- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID;
 - (oneway void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
 - (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(float)percent bytesSent:(float)bytesSent;
 - (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
 - (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
 
+- (AIListContact *)_contactWithUID:(NSString *)UID;
 - (AIChat *)chatWithName:(NSString *)name;
+- (AIChat *)chatWithContact:(AIListContact *)contact;
 
+- (oneway void)doSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject;
 @end
 
 @interface CBGaimAccount : AIAccount <AIAccount_List, AIAccount_Content, AIAccount_Privacy,AdiumGaimDO>
@@ -127,7 +133,7 @@
 - (oneway void)accountConnectionReportDisconnect:(NSString *)text;
 - (oneway void)accountConnectionNotice:(const char*)text;
 - (oneway void)accountConnectionDisconnected;
-- (oneway void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text;
+- (oneway void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count;
 
 - (oneway void)newContact:(AIListContact *)theContact;
 - (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName;
@@ -157,11 +163,14 @@
 - (oneway void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID;
 - (oneway void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID;
 
+- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID;
 - (oneway void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
 - (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(float)percent bytesSent:(float)bytesSent;
 - (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
 - (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
 
 - (AIChat *)chatWithName:(NSString *)name;
+- (AIChat *)chatWithContact:(AIListContact *)contact;
 
+- (oneway void)doSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject;
 @end

@@ -57,7 +57,7 @@
 
 static BOOL didInitSSL = NO;
 
-static NSDistantObject<GaimThread> *gaimThread = nil;
+static id<GaimThread> gaimThread = nil;
 
 + (void)setGaimThread:(SLGaimCocoaAdapter *)sender
 {
@@ -271,8 +271,7 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 - (oneway void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData
 {
 	NSImage *userIcon = [[NSImage alloc] initWithData:userIconData];
-#warning XXX copy?
-	[theContact setStatusObject:[[userIcon copy] autorelease] forKey:@"UserIcon" notify:NO];
+	[theContact setStatusObject:userIcon forKey:@"UserIcon" notify:NO];
 	[userIcon release];
 	
 	//Apply any changes
@@ -403,23 +402,8 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 		//Have the gaim thread perform the serverside actions
 		[gaimThread removeUID:[object UID] onAccount:self fromGroup:groupName];
 		
-		[object setStatusObject:nil forKey:@"GaimBuddy" notify:NO];
-		
 		//Remove it from Adium's list
 		[object setRemoteGroupName:nil];
-	}
-}
-
-//Called by the gaim thread to actually remove the buddy from the server and gaim's own list
-- (void)performRemoveUID:(NSString *)objectUID fromGroup:(NSString *)groupName
-{
-	const char  *buddyUID = [objectUID UTF8String];
-	GaimBuddy 	*buddy = gaim_find_buddy(account, buddyUID);
-	
-	//Remove this contact from the server-side and gaim-side lists
-	serv_remove_buddy(gc, buddyUID, [groupName UTF8String]);
-	if (buddy){
-		gaim_blist_remove_buddy(buddy);
 	}
 }
 
@@ -427,29 +411,13 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 {
 	NSEnumerator	*enumerator = [objects objectEnumerator];
 	AIListContact	*object;
+	NSString		*groupName = [self _mapOutgoingGroupName:[inGroup UID]];
 	
 	while(object = [enumerator nextObject]){
-		NSString	*groupName = [self _mapOutgoingGroupName:[inGroup UID]];
+		[gaimThread addUID:[object UID] onAccount:self toGroup:groupName];
 		
-		//Get the group (Create if necessary)
-		GaimGroup *group = gaim_find_group([groupName UTF8String]);
-		if(group == NULL){
-			group = gaim_group_new([[inGroup UID] UTF8String]);
-			gaim_blist_add_group(group, NULL);
-		}
-		
-     	//verify the buddy does not already exist, and create it
-		GaimBuddy *buddy = gaim_find_buddy(account,[[object UID] UTF8String]);
-		if(buddy == NULL){
-			buddy = gaim_buddy_new(account, [[object UID] UTF8String], NULL);
-			
-			//Add the buddy locally to libgaim, and then to the serverside list
-			gaim_blist_add_buddy(buddy, NULL, group, NULL);
-			serv_add_buddy(gc, [[object UID] UTF8String], group);
-			
-			//Add it to Adium's list
-			[object setRemoteGroupName:[inGroup UID]]; //Use the non-mapped group name locally
-		}
+		//Add it to Adium's list
+		[object setRemoteGroupName:[inGroup UID]]; //Use the non-mapped group name locally
 	}
 }
 
@@ -469,72 +437,28 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 			//			NSString	*oldGroupName = [self _mapOutgoingGroupName:[listObject remoteGroupName]];
 			
 			//Tell the gaim thread to perform the serverside operation
-#warning XXX - moveListObjects:change
-			[gaimThread makeAccount:self 
-					performSelector:@selector(performMoveUID:toGroup:)
-						 withObject:[listObject UID]
-						 withObject:groupName];
-			
+			[gaimThread moveUID:[listObject UID] onAccount:self toGroup:groupName];
+
 			//Use the non-mapped group name locally
 			[listObject setRemoteGroupName:[group UID]];
 		}
 	}		
 }
 
-//Called by the gaim thread to actually move a specified UID serverside
-- (void)performMoveUID:(NSString *)objectUID toGroup:(NSString *)groupName
-{
-	//Get the destionation group (creating if necessary)
-	GaimGroup 	*destGroup = gaim_find_group([groupName UTF8String]);
-	if(!destGroup) destGroup = gaim_group_new([groupName UTF8String]);
-	
-	//Get the gaim buddy and group for this move
-	GaimBuddy *buddy = gaim_find_buddy(account,[objectUID UTF8String]);
-	GaimGroup *oldGroup = gaim_find_buddys_group(buddy);
-	if(buddy){
-		if (oldGroup) {
-			//Procede to move the buddy gaim-side and locally
-			serv_move_buddy(buddy, oldGroup, destGroup);
-		} else {
-			//The buddy was not in any group before; add the buddy to the desired group
-			serv_add_buddy(gc, buddy->name, destGroup);
-		}
-	}
-}
-
 - (void)renameGroup:(AIListGroup *)inGroup to:(NSString *)newName
 {
-	//Tell the gaim thread to perform the serverside operation
-	#warning XXX - renameGroup:change
-	[gaimThread makeAccount:self 
-			performSelector:@selector(performRenameGroup:to:)
-				 withObject:inGroup
-				 withObject:newName];
-	
+	NSString		*groupName = [self _mapOutgoingGroupName:[inGroup UID]];
+
+	//Tell the gaim thread to perform the serverside operation	
+	[gaimThread renameGroup:groupName onAccount:self to:newName];
+
 	//We must also update the remote grouping of all our contacts in that group
 	NSEnumerator	*enumerator = [[[adium contactController] allContactsInGroup:inGroup subgroups:YES onAccount:self] objectEnumerator];
 	AIListContact	*contact;
 	
 	while(contact = [enumerator nextObject]){
+		//Evan: should we use groupName or newName here?
 		[contact setRemoteGroupName:newName];
-	}
-}
-
-//Called by the gaim thread to actually rename the group serverside
-- (void)performRenameGroup:(AIListGroup *)inGroup to:(NSString *)newName
-{
-    GaimGroup *group = gaim_find_group([[self _mapOutgoingGroupName:[inGroup UID]] UTF8String]);
-	
-	//If we don't have a group with this name, just ignore the rename request
-    if(group){
-		//Rename gaimside
-		gaim_blist_rename_group(group, [newName UTF8String]);
-		
-		/*
-		 //These may be necessary:
-		 serv_rename_group(gc, group, [newName UTF8String]);     //rename
-		 gaim_blist_remove_group(group);                         //remove the old one gaimside
-		 */
 	}
 }
 
@@ -800,15 +724,8 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 
 - (BOOL)closeChat:(AIChat*)chat
 {
-#warning XXX
-/*    GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
-    if (conv){
-        gaim_conversation_destroy(conv);
-	}
-	*/
-	
-    [[chat statusDictionary] removeObjectForKey:@"GaimConv"];
-	
+	[gaimThread closeChat:chat];
+		
 #warning Wrong. perhaps use a chat identifier of sorts
 	AIListObject	*listObject = [chat listObject];
 	if (listObject){
@@ -963,7 +880,6 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 #pragma mark File Transfer
 
 //Create a protocol-specific xfer object, set it up as requested, and begin sending
-#warning Wrong
 - (void)_beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	GaimXfer *xfer = [self newOutgoingXferForFileTransfer:fileTransfer];
@@ -1111,6 +1027,7 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 	//Configure libgaim's proxy settings; continueConnectWithConfiguredProxy will be called once we are ready
 	[self configureAccountProxy];
 }
+
 - (void)continueConnectWithConfiguredProxy
 {
 	//Set password and connect
@@ -1124,8 +1041,6 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 		gc = gaim_account_get_connection(account);
 		if (!gc) NSLog(@"no gc, retrying");
 	}
-	
-	//	gc = gaim_account_connect(account);	
 
 	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Done initiating connection %x.",gc);
 }
@@ -1388,7 +1303,7 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 	[lastDisconnectionError release]; lastDisconnectionError = nil;
 }
 
-- (oneway void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text
+- (oneway void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count
 {
 	NSString	*connectionProgressString = [self connectionStringForStep:step];
 	NSNumber	*connectionProgressPrecent = [NSNumber numberWithFloat:((float)step/(float)(step_count-1))];
@@ -1418,7 +1333,7 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
 
     gaim_accounts_add(account);
 	
-#warning Not quite right yet
+//EDS THREAD?
 #if 0
 	{
 		NSPort 			*port1 = [NSPort port];
@@ -1860,4 +1775,13 @@ static NSDistantObject<GaimThread> *gaimThread = nil;
     return([[[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"] stringByExpandingTildeInPath]);	
 }
 
+- (AIListContact *)_contactWithUID:(NSString *)sourceUID
+{
+	return [super _contactWithUID:sourceUID];
+}
+
+- (oneway void)doSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject
+{
+	[self performSelector:selector withObject:firstObject withObject:secondObject];
+}
 @end
