@@ -35,6 +35,9 @@
     int displayFormat;
     
     AIAliasSupportPreferences		*prefs;
+	
+	NSMenu							*menu_contactSubmenu;
+	NSMenuItem						*menuItem_contactName;
 }
 
 - (void)installPlugin;
