@@ -26,7 +26,7 @@
 /*!
  * @brief Retrieve a password from the keychain for a specified service/account combination
  *
- * Retreives a generic password from the default keychain for a specified service/account combination, requesting authorization to access the keychain if necessary.
+ * Retreives a password from the default keychain for a specified service/account combination, requesting authorization to access the keychain if necessary.  Uses the Internet Password mechanisms.
  * @param service An <tt>NSString</tt> identifying the service for this password
  * @param account An <tt>NSString</tt> identifying the account for this password
  * @return The requested password as an <tt>NSString</tt>, or nil if no password was found or the user denied keychain access
@@ -36,7 +36,7 @@
 /*!
  * @brief Store a password for a specified service/account combination
  *
- * Stores a generic password in the default keychain for a specified service/account combination, requesting authorization to access the keychain if necessary.
+ * Stores a password in the default keychain for a specified service/account combination, requesting authorization to access the keychain if necessary. Uses the Internet Password mechanisms.
  * @param service An <tt>NSString</tt> identifying the service for this password
  * @param account An <tt>NSString</tt> identifying the account for this password
  * @param password A <tt>NSString</tt> of the password to store.
@@ -47,7 +47,7 @@
 /*!
  * @brief Remove a password from the keychain for a specified service/account combination
  *
- * Remove a generic password from the default keychain for a specified service/account combination, requesting authorization to access the keychain if necessary.
+ * Remove a password from the default keychain for a specified service/account combination, requesting authorization to access the keychain if necessary. Uses the Internet Password mechanisms.
  * @param service An <tt>NSString</tt> identifying the service for this password
  * @param account An <tt>NSString</tt> identifying the account for this password
  * @return YES if removal was successful; NO if the service/account combination was not found or removal was unsuccessful.
