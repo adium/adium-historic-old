@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.115 2004/03/13 05:49:24 evands Exp $
+// $Id: AIContactController.m,v 1.116 2004/03/13 06:01:17 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -397,7 +397,7 @@
 		}
 	}
     
-    //Post an status changed message (if necessary)
+    //Post an attributes changed message (if necessary)
     if([modifiedAttributeKeys count]){
 		[self listObjectAttributesChanged:inObject modifiedKeys:modifiedAttributeKeys];
     }
