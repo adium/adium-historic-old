@@ -26,6 +26,7 @@
     IBOutlet NSButton       *checkBox_fadeOut;
     IBOutlet NSButton       *checkBox_showHidden;
     IBOutlet NSButton       *checkBox_showAway;
+    IBOutlet NSButton       *checkBox_includeText;
     
     BOOL                    viewIsLoaded;
 }

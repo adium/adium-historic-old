@@ -40,5 +40,7 @@
         <true/>
         <key>Show While Away</key>
         <true/>
+        <key>Include Text</key>
+        <true/>
 </dict>
 </plist>

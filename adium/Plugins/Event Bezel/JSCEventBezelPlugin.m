@@ -126,6 +126,7 @@
         [ebc setBezelDuration: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_DURATION] intValue]];
         [ebc setDoFadeIn: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FADE_IN] boolValue]];
         [ebc setDoFadeOut: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FADE_OUT] boolValue]];
+        [ebc setIncludeText: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_INCLUDE_TEXT] boolValue]];
         
         [eventArray removeAllObjects];
         if ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue])

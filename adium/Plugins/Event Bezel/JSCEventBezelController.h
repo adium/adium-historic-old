@@ -22,6 +22,7 @@
     NSColor                         *buddyNameLabelColor;
     NSImage                         *backdropImage;
     BOOL                            doFadeIn, doFadeOut;
+    BOOL                            includeText;
 }
 
 + (JSCEventBezelController *)eventBezelControllerForOwner:(id)inOwner;
@@ -52,5 +53,6 @@ withMessage:(NSString *)message;
 - (void)setDoFadeOut:(BOOL)b;
 - (BOOL)doFadeIn;
 - (void)setDoFadeIn:(BOOL)b;
-
+- (BOOL)includeText;
+- (void)setIncludeText:(BOOL)b;
 @end

@@ -33,6 +33,7 @@
 #define KEY_EVENT_BEZEL_FADE_OUT            @"Fade Out"
 #define KEY_EVENT_BEZEL_SHOW_HIDDEN         @"Show Hidden"
 #define KEY_EVENT_BEZEL_SHOW_AWAY           @"Show While Away"
+#define KEY_EVENT_BEZEL_INCLUDE_TEXT        @"Include Text"
 
 #define SIZE_NORMAL                         0
 #define SIZE_SMALL                          1

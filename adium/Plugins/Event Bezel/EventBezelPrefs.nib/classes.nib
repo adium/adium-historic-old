@@ -33,6 +33,7 @@
                 "checkBox_firstMessage" = NSButton; 
                 "checkBox_idle" = NSButton; 
                 "checkBox_imageBadges" = NSButton; 
+                "checkBox_includeText" = NSButton; 
                 "checkBox_nameLabels" = NSButton; 
                 "checkBox_noIdle" = NSButton; 
                 "checkBox_offline" = NSButton; 
