@@ -287,7 +287,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 
 				if(!updatedObject) updatedObject = [[originalObject mutableCopy] autorelease];
 				[self _replaceKeyword:keyword withScript:infoDict inString:inString toObject:updatedObject];
-
+				inString = [updatedObject string];
 			}
 		}
 	}
