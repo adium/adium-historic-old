@@ -2,6 +2,7 @@ Adium
 Copyright (C) 2001-2005 by the following:
 
 Adam Atlas
+ATMB
 Colin Barrett
 Erik J. Barzeski
 Adam Betts
@@ -16,8 +17,11 @@ Asher Haig
 Jasper Hauser
 Stephen Holt
 Adam Iser
+Severin Klaus
 Ian Krieg
+Thomas Kunze
 Scott Lamb
+Daisuke Okada
 Mac-arena the Bored Zo
 Chris Serino
 Jeffrey Melloy
@@ -26,5 +30,6 @@ Stephen Poprocki
 Evan Schoenberg
 Greg Smith
 Vinay Venkatesh
+Zeu Maxou
 
 If you have contributed to Adium and are not on this list, please contact us.
