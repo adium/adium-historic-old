@@ -98,9 +98,6 @@
 		}
 	}
     
-	//Observe preference changes
-	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-
     //Turn on URL validation for our textView
     [textView_URL setContiniousURLValidationEnabled:YES];
     
