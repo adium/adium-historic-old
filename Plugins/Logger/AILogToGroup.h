@@ -13,15 +13,24 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+@class AILog;
+
 @interface AILogToGroup : NSObject {
-    NSString	    *path;
-    NSString	    *to;
-    NSString	    *from;
-    NSMutableArray  *logArray;
+    NSString			*path;
+    NSString			*to;
+    NSString			*from;
+	NSString			*serviceClass;
+	
+	NSMutableDictionary	*logDict;
+	NSMutableDictionary	*partialLogDict;
+	
+	NSFileManager		*defaultManager;
 }
 
-- (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo;
-- (NSArray *)logArray;
+- (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass;
+- (NSEnumerator *)logEnumerator;
+- (NSString *)path;
 - (NSString *)to;
+- (AILog *)logAtPath:(NSString *)path;
 
 @end

@@ -80,14 +80,13 @@
 	
 	if(selectedRow >= 0 && selectedRow < [table_filterList numberOfRows]){
 		if(showingContacts){
-            [controller_LogViewer setSearchString:[[controller_LogViewer toArray] objectAtIndex:selectedRow]
-																						   mode:LOG_SEARCH_TO];
+			[controller_LogViewer filterForContactName:[[controller_LogViewer toArray] objectAtIndex:selectedRow]];
 		}else{
-            [controller_LogViewer setSearchString:[[controller_LogViewer fromArray] objectAtIndex:selectedRow]
-											 mode:LOG_SEARCH_FROM];
+			[controller_LogViewer filterForAccountName:[[controller_LogViewer fromArray] objectAtIndex:selectedRow]];
 		}
 	}else{
-		[controller_LogViewer setSearchString:@""];
+		[controller_LogViewer filterForContactName:nil];
+		[controller_LogViewer filterForAccountName:nil];
 	}
 }
 
@@ -99,7 +98,8 @@
 	[table_filterList reloadData];
 
     //Reset any log searching
-	[controller_LogViewer setSearchString:@""];
+	[controller_LogViewer filterForContactName:nil];
+	[controller_LogViewer filterForAccountName:nil];
 }
 
 @end

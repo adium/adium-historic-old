@@ -21,13 +21,14 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 
 @implementation AILog
 
-- (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo date:(NSCalendarDate *)inDate
+- (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass date:(NSDate *)inDate
 {
     [super init];
 	
     path = [inPath retain];
     from = [inFrom retain];
     to = [inTo retain];
+	serviceClass = [inServiceClass retain];
     date = [inDate retain];
     dateSearchString = nil;
  	
@@ -39,6 +40,7 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
     [path release];
     [from release];
     [to release];
+	[serviceClass release];
     [date release];
     [dateSearchString release];
     
@@ -54,41 +56,46 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 - (NSString *)to{
     return(to);
 }
+- (NSString *)serviceClass{
+	return(serviceClass);
+}
 - (NSDate *)date{
     return(date);
 }
-- (NSString *)dateSearchString
+
+- (BOOL)isFromSameDayAsDate:(NSCalendarDate *)inDate
 {
-    static NSFormatter     *dateSearchFormatter = nil;
-    
-    //Setup our shared date formatter
-    if(!dateSearchFormatter){
-		NSString    *searchFormat = [NSString stringWithFormat:@"%@ %@",
-			[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString],
-			[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString]];
-		dateSearchFormatter = [[NSDateFormatter alloc] initWithDateFormat:searchFormat allowNaturalLanguage:YES];
-    }
-    
-    //Load and cache our search string
-    if(!dateSearchString){
-		dateSearchString = [[dateSearchFormatter stringForObjectValue:date] retain];
-    }
-    
-    return(dateSearchString);
+	return([[date dateWithCalendarFormat:nil timeZone:nil] dayOfCommonEra] == [inDate dayOfCommonEra]);
 }
 
 //Sort by To, then Date
 - (NSComparisonResult)compareTo:(AILog *)inLog
 {
     NSComparisonResult  result = [to caseInsensitiveCompare:[inLog to]];
-    if(result == NSOrderedSame) result = [date compare:[inLog date]];
+    if(result == NSOrderedSame){
+		NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
+		
+		if (interval < 0){
+			result = NSOrderedAscending;
+		}else if (interval > 0){
+			result = NSOrderedDescending;
+		}
+	}
 	
     return(result);
 }
 - (NSComparisonResult)compareToReverse:(AILog *)inLog
 {
     NSComparisonResult  result = [[inLog to] caseInsensitiveCompare:to];
-    if(result == NSOrderedSame) result = [date compare:[inLog date]];
+    if(result == NSOrderedSame){
+		NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
+		
+		if (interval < 0){
+			result = NSOrderedAscending;
+		}else if (interval > 0){
+			result = NSOrderedDescending;
+		}
+	}
 	
     return(result);
 }
@@ -96,14 +103,30 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 - (NSComparisonResult)compareFrom:(AILog *)inLog
 {
     NSComparisonResult  result = [from caseInsensitiveCompare:[inLog from]];
-    if(result == NSOrderedSame) result = [date compare:[inLog date]];
-    
+    if(result == NSOrderedSame){
+		NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
+		
+		if (interval < 0){
+			result = NSOrderedAscending;
+		}else if (interval > 0){
+			result = NSOrderedDescending;
+		}
+	} 
+	
     return(result);
 }
 - (NSComparisonResult)compareFromReverse:(AILog *)inLog
 {
     NSComparisonResult  result = [[inLog from] caseInsensitiveCompare:from];
-    if(result == NSOrderedSame) result = [date compare:[inLog date]];
+    if(result == NSOrderedSame){
+		NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
+		
+		if (interval < 0){
+			result = NSOrderedAscending;
+		}else if (interval > 0){
+			result = NSOrderedDescending;
+		}
+	}
     
     return(result);
 }
@@ -111,16 +134,32 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 //Sort by Date, then To
 - (NSComparisonResult)compareDate:(AILog *)inLog
 {
-    NSComparisonResult  result = [date compare:[inLog date]];
-    if(result == NSOrderedSame) result = [to caseInsensitiveCompare:[inLog to]];
-    
+	NSComparisonResult  result;
+	NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
+	
+	if (interval < 0){
+		result = NSOrderedAscending;
+	}else if (interval > 0){
+		result = NSOrderedDescending;
+	}else{
+		result = [to caseInsensitiveCompare:[inLog to]];
+    }
+	
     return(result);
 }
 - (NSComparisonResult)compareDateReverse:(AILog *)inLog
 {
-    NSComparisonResult  result = [[inLog date] compare:date];
-    if(result == NSOrderedSame) result = [to caseInsensitiveCompare:[inLog to]];
-    
+	NSComparisonResult  result;
+	NSTimeInterval		interval = [[inLog date] timeIntervalSinceDate:date];
+	
+	if (interval < 0){
+		result = NSOrderedAscending;
+	}else if (interval > 0){
+		result = NSOrderedDescending;
+	}else{
+		result = [[inLog to] caseInsensitiveCompare:to];
+    }
+	
     return(result);
 }
 
@@ -130,7 +169,7 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
     unsigned long   year = 0;
     unsigned long   month = 0;
     unsigned long   day = 0;
-	
+
     scandate([fileName cString], &year, &month, &day);
     if(year && month && day){
         return([NSCalendarDate dateWithYear:year month:month day:day hour:0 minute:0 second:0 timeZone:[NSTimeZone defaultTimeZone]]);

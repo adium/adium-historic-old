@@ -20,12 +20,13 @@
 @implementation AILogFromGroup
 
 //A group of logs from one of our accounts
-- (AILogFromGroup *)initWithPath:(NSString *)inPath from:(NSString *)inFrom
+- (AILogFromGroup *)initWithPath:(NSString *)inPath fromUID:(NSString *)inFromUID serviceClass:(NSString *)inServiceClass;
 {
     [super init];
     
     path = [inPath retain];
-    from = [inFrom retain];
+    fromUID = [inFromUID retain];
+	serviceClass = [inServiceClass retain];
     toGroupArray = nil;
     
     return(self);
@@ -35,26 +36,31 @@
 - (void)dealloc
 {
     [path release];
-    [from release];
+    [fromUID release];
+	[serviceClass release];
     [toGroupArray release];
     
     [super dealloc];
 }
 
 //
-- (NSString *)from
+- (NSString *)fromUID
 {
-    return(from);
+    return(fromUID);
 }
 
-//Returns all of our to groups
+- (NSString *)serviceClass
+{
+	return(serviceClass);
+}
+
+//Returns all of our 'to' groups, creating them if necessary
 - (NSArray *)toGroupArray
 {
-    //Create our toGroups if necessary
     if(!toGroupArray){
 		NSEnumerator    *enumerator;
-		NSString	*folderName;
-		NSString	*fullPath;
+		NSString		*folderName;
+		NSString		*fullPath;
 		
 		//
 		toGroupArray = [[NSMutableArray alloc] init];
@@ -68,8 +74,9 @@
 			while(!toGroup){
 				//#### Why does this alloc fail sometimes? ####
 				toGroup = [[AILogToGroup alloc] initWithPath:[path stringByAppendingPathComponent:folderName]
-														from:from
-														  to:folderName];
+														from:fromUID
+														  to:folderName
+												serviceClass:serviceClass];
 				
 				//Not sure why, but I've had that alloc fail on me before
 				if(toGroup) [toGroupArray addObject:toGroup];
