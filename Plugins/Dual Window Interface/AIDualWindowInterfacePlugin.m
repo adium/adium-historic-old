@@ -17,7 +17,6 @@
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
 #import "AIMessageTabViewItem.h"
-#import "ESDualWindowMessageWindowPreferences.h"
 #import "ESDualWindowMessageAdvancedPreferences.h"
 
 #define ADIUM_UNIQUE_CONTAINER			@"ADIUM_UNIQUE_CONTAINER"
@@ -42,8 +41,7 @@
 #warning move to separate plugin
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] 
 										  forGroup:PREF_GROUP_INTERFACE];
-		
-	preferenceMessageController = [[ESDualWindowMessageWindowPreferences preferencePane] retain];
+
 	preferenceMessageAdvController = [[ESDualWindowMessageAdvancedPreferences preferencePane] retain];
 
 	

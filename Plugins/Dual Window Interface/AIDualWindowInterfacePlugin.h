@@ -15,7 +15,7 @@
 
 @class AIMessageWindowController, AIMessageViewController, AIMessageTabViewItem, AITabSwitchingPreferences,
 AIContactListWindowController,
-AIDualWindowPreferences, ESDualWindowMessageAdvancedPreferences, ESDualWindowMessageWindowPreferences;
+AIDualWindowPreferences, ESDualWindowMessageAdvancedPreferences;
 
 @protocol AIMessageView, AIInterfaceController, AITabHoldingInterface, AIContactListCleanup;
 
@@ -88,7 +88,6 @@ typedef enum {
     //Preferences
     AIDualWindowPreferences                 *preferenceController;
     ESDualWindowMessageAdvancedPreferences	*preferenceMessageAdvController;
-    ESDualWindowMessageWindowPreferences    *preferenceMessageController;
 
 	BOOL					applicationIsHidden;
 
