@@ -17,18 +17,70 @@
 	return(newCell);
 }
 
+//
+- (void)dealloc
+{
+	[_groupGradient release];
+	[_groupExpandedGradient release];
+	
+	[super dealloc];
+}
+
 //Draw a gradient behind our group
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	NSBezierPath 	*path;
+	NSImage			*image;
 	
 	if([controlView isItemExpanded:listObject]){
-		path = [NSBezierPath bezierPathWithRoundedTopCorners:rect radius:MOCKIE_RADIUS];
+		image = [self cachedGroupGradient:rect.size];
 	}else{
-		path = [NSBezierPath bezierPathWithRoundedRect:rect radius:MOCKIE_RADIUS];
+		image = [self cachedExpandedGroupGradient:rect.size];
 	}
 	
-	[[self backgroundGradient] drawInBezierPath:path];
+	[image drawInRect:rect
+			 fromRect:NSMakeRect(0,0,rect.size.width,rect.size.height)
+			operation:NSCompositeSourceOver
+			 fraction:1.0];
 }
+
+- (NSImage *)cachedGroupGradient:(NSSize)inSize
+{
+	NSRect	rect;
+	
+	if(!_groupGradient || !NSEqualSizes(inSize,_groupGradientSize)){
+		[_groupGradient release];
+		NSLog(@"rendering gradient");
+		rect = NSMakeRect(0,0,inSize.width,inSize.height);
+		
+		_groupGradient = [[NSImage alloc] initWithSize:inSize];
+		_groupGradientSize = inSize;
+
+		[_groupGradient lockFocus];
+		[[self backgroundGradient] drawInBezierPath:[NSBezierPath bezierPathWithRoundedTopCorners:rect radius:MOCKIE_RADIUS]];
+		[_groupGradient unlockFocus];
+	}
+	
+	return(_groupGradient);
+}
+- (NSImage *)cachedExpandedGroupGradient:(NSSize)inSize
+{
+	NSRect	rect;
+	
+	if(!_groupExpandedGradient || !NSEqualSizes(inSize,_groupExpandedGradientSize)){
+		[_groupExpandedGradient release];
+		NSLog(@"rendering gradient");
+		rect = NSMakeRect(0,0,inSize.width,inSize.height);
+		
+		_groupExpandedGradient = [[NSImage alloc] initWithSize:inSize];
+		_groupExpandedGradientSize = inSize;
+		
+		[_groupExpandedGradient lockFocus];
+		[[self backgroundGradient] drawInBezierPath:[NSBezierPath bezierPathWithRoundedRect:rect radius:MOCKIE_RADIUS]];
+		[_groupExpandedGradient unlockFocus];
+	}
+	
+	return(_groupExpandedGradient);
+}
+
 
 @end

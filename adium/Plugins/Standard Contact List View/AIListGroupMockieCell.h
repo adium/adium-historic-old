@@ -11,7 +11,10 @@
 #define MOCKIE_RADIUS		6		//Radius of the rounded mockie corners
 
 @interface AIListGroupMockieCell : AIListGroupGradientCell {
-
+	NSImage		*_groupGradient;
+	NSImage		*_groupExpandedGradient;
+	NSSize		_groupGradientSize;
+	NSSize		_groupExpandedGradientSize;
 }
 
 - (id)copyWithZone:(NSZone *)zone;
