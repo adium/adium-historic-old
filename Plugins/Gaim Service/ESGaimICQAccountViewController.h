@@ -4,10 +4,10 @@
 //
 //  Created by Evan Schoenberg on 8/29/04.
 
-#import "ESGaimAccountViewController.h"
+#import "AIAccountViewController.h"
 #import "ESGaimICQAccount.h"
 
-@interface ESGaimICQAccountViewController : ESGaimAccountViewController {
+@interface ESGaimICQAccountViewController : AIAccountViewController {
 	IBOutlet	NSPopUpButton		*popUp_encoding;
 }
 

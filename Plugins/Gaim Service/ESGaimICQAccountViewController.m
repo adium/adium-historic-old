@@ -17,7 +17,7 @@
     return(@"ESGaimICQAccountView");
 }
 
-
+//
 - (void)awakeFromNib
 {
 	[super awakeFromNib];
@@ -25,18 +25,19 @@
 	[popUp_encoding setMenu:[self encodingMenu]];	
 }
 
-//Configure our controls
+//Configure controls
 - (void)configureForAccount:(AIAccount *)inAccount
 {
     [super configureForAccount:inAccount];
-	
 	[popUp_encoding selectItemWithRepresentedObject:[account preferenceForKey:KEY_ICQ_ENCODING
 																		group:GROUP_ACCOUNT_STATUS]];
 }
 
-- (void)selectEncoding:(id)sender
+//Save controls
+- (void)saveConfiguration
 {
-	[account setPreference:[sender representedObject]
+    [super saveConfiguration];
+	[account setPreference:[[popUp_encoding selectedItem] representedObject]
 					forKey:KEY_ICQ_ENCODING
 					 group:GROUP_ACCOUNT_STATUS];	
 }
@@ -208,8 +209,8 @@
 	enumerator = [inArray objectEnumerator];
 	while(name = [enumerator nextObject]){
 		menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
-																		target:self
-																		action:@selector(selectEncoding:)
+																		target:nil
+																		action:nil
 																 keyEquivalent:@""];
 		[menuItem setRepresentedObject:name];
 		if(canIndent) [menuItem setIndentationLevel:1];
