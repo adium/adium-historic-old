@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.81 2004/01/16 04:13:06 adamiser Exp $
+// $Id: AIContactController.m,v 1.82 2004/01/17 03:39:37 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -526,16 +526,20 @@
 //Retrieve a contact from the contact list (Creating if necessary)
 - (AIListContact *)contactWithService:(NSString *)serviceID UID:(NSString *)UID
 {
-	NSString		*key = [NSString stringWithFormat:@"%@.%@", serviceID, UID];
-	AIListContact	*contact = [contactDict objectForKey:key];
+	AIListContact	*contact = nil;
 	
-	if(!contact){
-		//Create
-		contact = [[[AIListContact alloc] initWithUID:UID serviceID:serviceID] autorelease];
-		[self _informObserversOfObjectCreation:contact];
+	if(serviceID && UID){ //Ignore invalid requests
+		NSString		*key = [NSString stringWithFormat:@"%@.%@", serviceID, UID];
 		
-		//Add
-		[contactDict setObject:contact forKey:key];
+		contact = [contactDict objectForKey:key];
+		if(!contact){
+			//Create
+			contact = [[[AIListContact alloc] initWithUID:UID serviceID:serviceID] autorelease];
+			[self _informObserversOfObjectCreation:contact];
+			
+			//Add
+			[contactDict setObject:contact forKey:key];
+		}
 	}
 	
 	return(contact);
