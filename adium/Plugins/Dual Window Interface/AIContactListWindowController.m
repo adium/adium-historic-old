@@ -250,11 +250,14 @@
     NSRect	newFrame;
 
     if([contactListView conformsToProtocol:@protocol(AIAutoSizingView)]){
-	NSSize  contactViewPadding;
-        NSRect	currentFrame = [[self window] frame];
-        NSSize	desiredSize = [(NSView<AIAutoSizingView> *)contactListView desiredSize];
-        NSRect	screenFrame = [[[self window] screen] visibleFrame];
-
+	NSSize      contactViewPadding;
+        NSWindow    *theWindow = [self window];
+        
+        NSRect      currentFrame = [theWindow frame];
+        NSSize      desiredSize = [(NSView<AIAutoSizingView> *)contactListView desiredSize];
+        NSRect      screenFrame = [[theWindow screen] visibleFrame];
+        NSRect      totalScreenFrame = [[theWindow screen] frame];
+        
 	//Keep track of padding around the contact view
 	contactViewPadding.height = currentFrame.size.height - [scrollView_contactList frame].size.height;
 	contactViewPadding.width = currentFrame.size.width - [scrollView_contactList frame].size.width;
@@ -267,19 +270,13 @@
         }
         newFrame.size.height = desiredSize.height + contactViewPadding.height + SCROLL_VIEW_PADDING_Y;
         
-        //Adjust the Y Origin
         if(newFrame.size.height > screenFrame.size.height){
             newFrame.size.height = screenFrame.size.height; //Max Height
             if(autoResizeHorizontally){
                 newFrame.size.width += 16; //Factor scrollbar into width
             }
         }
-        if((currentFrame.origin.y - EDGE_CATCH_Y > screenFrame.origin.y) || ((currentFrame.origin.y + currentFrame.size.height) + EDGE_CATCH_Y > (screenFrame.origin.y + screenFrame.size.height))){
-            newFrame.origin.y = currentFrame.origin.y + (currentFrame.size.height - newFrame.size.height); //Expand down
-        }else{
-            newFrame.origin.y = currentFrame.origin.y; //Expand up
-        }
-
+        
         //Adjust the X Origin
         if(autoResizeHorizontally){
             if((currentFrame.origin.x + currentFrame.size.width) + EDGE_CATCH_X > (screenFrame.origin.x + screenFrame.size.width)){
@@ -289,6 +286,17 @@
             }
         }else{
             newFrame.origin.x = currentFrame.origin.x;
+        }
+        
+        //Adjust the Y Origin: Maintain the upper lefthand corner if possible
+        newFrame.origin.y = currentFrame.origin.y + currentFrame.size.height - newFrame.size.height;
+        //For configurations with the dock on the bottom, allow a "grace" region in which we allow the contact list to be in the extreme corner; otherwise, account for the dock in checking our positioning
+        if (((newFrame.origin.x < EDGE_CATCH_X) || (newFrame.origin.x+newFrame.size.width) > (screenFrame.size.width-EDGE_CATCH_X)) && (screenFrame.size.width == totalScreenFrame.size.width)) {
+            if (newFrame.origin.y < totalScreenFrame.origin.y)
+                newFrame.origin.y = totalScreenFrame.origin.y;
+        } else {
+            if (newFrame.origin.y < screenFrame.origin.y)
+                newFrame.origin.y = screenFrame.origin.y;   
         }
     }
 
@@ -305,9 +313,9 @@
     savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
     if(savedFrame){
         NSRect savedFrameRect = NSRectFromString(savedFrame);
-
+  //      savedFrameRect.origin.y -= savedFrameRect.size.height;
 //        if (borderless) {
-        NSLog(@"Restoring window to:(%f,%f) %f by %f ; screen is ",savedFrameRect.origin.x,savedFrameRect.origin.y,savedFrameRect.size.width,savedFrameRect.size.height);
+ //       NSLog(@"Restoring window to:(%f,%f) %f by %f ; screen is ",savedFrameRect.origin.x,savedFrameRect.origin.y,savedFrameRect.size.width,savedFrameRect.size.height);
 //            [[self window] setFrameOrigin:savedFrameRect.origin];
 //        } else {
             [[self window] setFrame:savedFrameRect display:YES];            
@@ -379,6 +387,8 @@
     [contactListView release];
     
     //Save the window position
+//    NSRect frameToSave = [[self window] frame];
+//    frameToSave.origin
     [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
