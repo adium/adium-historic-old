@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.41 2004/04/15 05:13:36 ramoth4 Exp $
+$Id: ToDoList.txt,v 1.42 2004/04/15 08:25:18 bgannin Exp $
 
 Legend
 + Change or Addition
@@ -54,7 +54,8 @@ Minor Changes
 Contacts:
 	+ Allow specifying an image for a contact in the inspector (Independent of address book)
 	+ Add to buddy list menu item, contextual menu item (for strangers)
-	+ Add area for typing contact notes to inspector, display notes in tooltip [Brian]
+	+ Add area for typing contact notes to inspector, display notes in tooltip [Brian] 
+                // notes in, tooltips spacing funky [tooltips off]
 	+ AIM accounts should show AIM as their service type, while ICQ should show ICQ, .Mac show .Mac, etc.
 	+ Add Contact should have more intelligent defaults, and generally be less of a pain [Nelson, but if anyone has any nice ideas for ways this should work, do tell]
 
@@ -81,7 +82,9 @@ Message Window:
 	+ Insert/Edit link menu item, accompanying link entry panel, edit link context menu
 	+ Open new windows behind the frontmost window (When not opening in tabs) [Colin]
         I don't know quite what to do here. I'd like some guideance. <<< I never got any guidence, dammit! :P
-	+ Insert emoticon menu item, contextual menu item
+	+ Insert emoticon menu item, contextual menu item [Brian]
+            //if you want to work on it before I get back to it I'll send the files, 
+            //just needs insert functionality and some clean-up (namely dynamism)
 	+ Tab-complete usernames in messages and chat
 	
 Contact List Display:
