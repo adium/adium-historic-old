@@ -386,7 +386,7 @@
     }
 }
 
-- (void)setStatusState:(AIStatus *)statusState
+- (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage
 {
 	if([self online]){
 		AIStatusType	statusType = [statusState statusType];
@@ -395,10 +395,9 @@
 				[self setAccountAwayTo:nil];
 				break;
 			case AIAwayStatusType:
-				[self setAccountAwayTo:[statusState statusMessage]];
+				[self setAccountAwayTo:statusMessage];
 				break;		
-		}		
-		
+		}
 	}
 }
 
@@ -462,7 +461,7 @@
 - (void)updateAllStatusKeys
 {
     [self updateStatusForKey:@"IdleSince"];
-    [self updateStatusForKey:@"AwayMessage"];
+	[self updateStatusForKey:@"StatusState"];
     [self updateStatusForKey:KEY_USER_ICON];
 }
 
