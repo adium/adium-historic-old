@@ -85,12 +85,13 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
     [self preferencesChanged:nil];
     
     //Configure the 'Sound' table column
-    dataCell = [[[AITableViewPopUpButtonCell alloc] init] autorelease];
+    dataCell = [[AITableViewPopUpButtonCell alloc] init];
     [dataCell setMenu:[self soundListMenu]];
     [dataCell setControlSize:NSSmallControlSize];
     [dataCell setFont:[NSFont menuFontOfSize:11]];
     [dataCell setBordered:NO];
     [[tableView_sounds tableColumnWithIdentifier:TABLE_COLUMN_SOUND] setDataCell:dataCell];
+	[dataCell release];
     
 }
 
@@ -316,26 +317,33 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 - (void)concludeOtherPanel:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     if(returnCode == NSOKButton){
-        NSString *soundPath = [[panel filenames] objectAtIndex:0];
+        NSString			*soundPath;
+		NSMutableDictionary	*selectedSoundDict;
+        NSPopUpButtonCell	*dataCell;
+		
+		soundPath = [[panel filenames] objectAtIndex:0];
         
         [[adium soundController] playSoundAtPath:soundPath]; //Play the sound
+		
         //Set the new sound path
-        NSMutableDictionary	*selectedSoundDict = [[[eventSoundArray objectAtIndex:setRow] mutableCopy] autorelease];
+        selectedSoundDict = [[eventSoundArray objectAtIndex:setRow] mutableCopy];
         [selectedSoundDict setObject:[soundPath stringByCollapsingBundlePath] forKey:KEY_EVENT_SOUND_PATH];
 
         [eventSoundArray replaceObjectAtIndex:setRow withObject:selectedSoundDict];
         
+		[selectedSoundDict release];
+		
         //Save event sound preferences
         [self saveEventSoundArray];
         
         //Reconfigure the 'Sound' table column
-        NSPopUpButtonCell		*dataCell;
-        dataCell = [[[AITableViewPopUpButtonCell alloc] init] autorelease];
+        dataCell = [[AITableViewPopUpButtonCell alloc] init];
         [dataCell setMenu:[self soundListMenu]];
         [dataCell setControlSize:NSSmallControlSize];
         [dataCell setFont:[NSFont menuFontOfSize:11]];
         [dataCell setBordered:NO];
         [[tableView_sounds tableColumnWithIdentifier:TABLE_COLUMN_SOUND] setDataCell:dataCell];
+		[dataCell release];
     }
 }
 
@@ -374,13 +382,13 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
     NSString	*identifier = [tableColumn identifier];
 
     if([identifier isEqualToString:TABLE_COLUMN_SOUND]){
-        NSMenuItem		*selectedMenuItem;
+        NSMenuItem			*selectedMenuItem;
         NSMutableDictionary	*selectedSoundDict;
-        NSString		*newSoundPath;
+        NSString			*newSoundPath;
 
         //
         selectedMenuItem = (NSMenuItem *)[[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
-        selectedSoundDict = [[[eventSoundArray objectAtIndex:row] mutableCopy] autorelease];
+        selectedSoundDict = [[eventSoundArray objectAtIndex:row] mutableCopy];
         newSoundPath = [selectedMenuItem representedObject];
         setRow = row;
         if(newSoundPath && ![newSoundPath isEqualToString:[selectedSoundDict objectForKey:KEY_EVENT_SOUND_PATH]]){ //Ignore a duplicate selection
@@ -394,6 +402,8 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
             //Save event sound preferences
             [self saveEventSoundArray];
         }
+		
+		[selectedSoundDict release];
     }
 }
 
