@@ -59,9 +59,8 @@
     //Get the selected group    
 
     //Create the new away entry
-    newAwayTitle = [[[NSString alloc] initWithString:AWAY_NEW_MESSAGE_STRING] autorelease];
     newAwayString = [[[NSAttributedString alloc] initWithString:AWAY_NEW_MESSAGE_STRING attributes:[NSDictionary dictionaryWithObjectsAndKeys:nil]] autorelease];
-    newAwayDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Away",@"Type",newAwayString,@"Message",newAwayTitle,@"Title",nil];
+    newAwayDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Away",@"Type",newAwayString,@"Message",nil];
     
     //Add the new away
     [awayMessageArray addObject:newAwayDict];
@@ -264,7 +263,6 @@
                 @"Away", @"Type",
                 [[dict objectForKey:@"Message"] dataRepresentation], @"Message", [dict objectForKey:@"Title"], @"Title",
                 nil]];
-
         }
     }
 
@@ -308,11 +306,6 @@
             //Nothing can be changed about groups
 
         }else if([type compare:@"Away"] == 0){
-            NSString * title = [displayedMessage objectForKey:@"Title"];
-            if ([title compare:[[displayedMessage objectForKey:@"Message"] string]] == 0){
-                //Title and Message are the same previously, they should be now, as well
-                [displayedMessage setObject:[[[textView_message textStorage] copy] string] forKey:@"Title"];
-            }
             //Set the new message
             [displayedMessage setObject:[[textView_message textStorage] copy] forKey:@"Message"];
         }

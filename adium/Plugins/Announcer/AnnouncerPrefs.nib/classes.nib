@@ -1,0 +1,20 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = ESAnnouncerPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_incoming" = NSButton; 
+                "checkBox_outgoing" = NSButton; 
+                "checkBox_sender" = NSButton; 
+                "checkBox_status" = NSButton; 
+                "checkBox_time" = NSButton; 
+                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
