@@ -211,7 +211,6 @@ Preferences -> Keys - ability to add Shift mask for Return/Enter [brian]
 
 //Contact List
 	- Easy identification of mobile users
-	- Option to not display groups
 	- Round label caps for events
 	- Improve status heirachy 
 	- We need to either support contacts at the root level or not suport them; we currently do a mixture
