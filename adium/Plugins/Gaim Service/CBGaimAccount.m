@@ -11,25 +11,79 @@
 #import <Adium/Adium.h>
 #import "AIAdium.h"
 
-#include "internal.h"
-#include "connection.h"
-#include "conversation.h"
-#include "core.h"
-#include "debug.h"
-#include "ft.h"
-#include "notify.h"
-#include "plugin.h"
-#include "pounce.h"
-#include "prefs.h"
-#include "privacy.h"
-#include "proxy.h"
-#include "request.h"
-#include "signals.h"
-#include "sslconn.h"
-#include "sound.h"
-#include "util.h"
+#define SCREEN_NAME "libgadium"
+#define PASSWORD "roxor"
+#define PROTOCOL "prpl-oscar"
 
 @implementation CBGaimAccount
+
+/************************/
+/* accountBlist methods */
+/************************/
+
+- (void)accountBlistNewNode:(GaimBlistNode *)node
+{
+    if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
+    {
+        GaimBuddy *buddy = (GaimBuddy *)node;
+                
+        AIHandle *theHandle = [AIHandle 
+            handleWithServiceID:[[service handleServiceType] identifier]
+            UID:[NSString stringWithCString:buddy->name]
+            serverGroup:@"Libgaim!"
+            temporary:NO
+            forAccount:self];
+            
+        [handleDict setObject:theHandle forKey:[NSString stringWithFormat:@"%s", buddy->name]];
+        
+        node->ui_data = [theHandle retain];
+    }
+}
+
+- (void)accountBlistUpdate:(GaimBuddyList *)list withNode:(GaimBlistNode *)node
+{
+    if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
+    {
+        GaimBuddy *buddy = (GaimBuddy *)node;
+        if(buddy->present == GAIM_BUDDY_SIGNING_ON || buddy->present == GAIM_BUDDY_ONLINE)
+        {
+            AIHandle *theHandle = node->ui_data;
+            
+            [[theHandle statusDictionary] 
+                setObject:[NSNumber numberWithInt:1] 
+                forKey:@"Online"];
+                
+            [[theHandle statusDictionary] 
+                setObject:[NSString stringWithCString:buddy->server_alias]
+                forKey:@"Display Name"];
+                
+            [[owner contactController] handleStatusChanged:theHandle
+                modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", @"Display Name",nil]
+                delayed:NO
+                silent:NO];
+        }
+        else if(buddy->present == GAIM_BUDDY_SIGNING_OFF || buddy->present == GAIM_BUDDY_OFFLINE)
+        {
+            AIHandle *theHandle = (AIHandle *)node->ui_data;
+            
+            [[theHandle statusDictionary] 
+                setObject:[NSNumber numberWithInt:0] 
+                forKey:@"Online"];
+            
+            [[owner contactController] handleStatusChanged:theHandle
+                modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", nil]
+                delayed:NO
+                silent:NO];
+        }
+    }
+}
+
+- (void)accountBlistRemove:(GaimBuddyList *)list withNode:(GaimBlistNode *)node
+{
+    [handleDict removeObjectForKey:[NSString stringWithFormat:@"%s", ((GaimBuddy *)node)->name]];
+    [(AIHandle *)node->ui_data release];
+    node->ui_data = NULL;
+}
 
 /********************************/
 /* AIAccount subclassed methods */
@@ -69,8 +123,8 @@
                     
                 //****** Create a test account *********
                 //#warning put username and pass here to connect!! :)
-                GaimAccount *testAccount = gaim_account_new("otsku", "prpl-oscar");
-                gaim_account_set_password(testAccount, "UJ3Vj48Z");
+                GaimAccount *testAccount = gaim_account_new(SCREEN_NAME, PROTOCOL);
+                gaim_account_set_password(testAccount, PASSWORD);
                 gaim_account_connect(testAccount);
                 //**************************************
                 
@@ -99,19 +153,19 @@
 }
 
 - (NSString *)accountID{
-    return(@"GAIM");
+    return([NSString stringWithCString:SCREEN_NAME]);
 }
 
 - (NSString *)UID{
-    return(@"GAIM");
+    return([NSString stringWithCString:SCREEN_NAME]);
 }
     
 - (NSString *)serviceID{
-    return(@"GAIM");
+    return([NSString stringWithCString:PROTOCOL]);
 }
 
 - (NSString *)UIDAndServiceID{
-    return(@"TEST.TEST");
+    return([NSString stringWithFormat:@"%s.%s", PROTOCOL, SCREEN_NAME]);
 }
 
 - (NSString *)accountDescription

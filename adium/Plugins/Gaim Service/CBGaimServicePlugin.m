@@ -14,6 +14,10 @@
 
 #define GAIM_EVENTLOOP_INTERVAL     0.02         //Interval at which to run libgaim's main event loop
 
+@interface CBGaimServicePlugin(Internal)
+- (NSMutableDictionary *)_accountDictionary;
+@end
+
 @implementation CBGaimServicePlugin
 
 // Debug ------------------------------------------------------------------------------------------------------
@@ -80,18 +84,20 @@ static void adiumGaimBlistNewNode(GaimBlistNode *node)
     //We're allowed to place whatever we want in node's ui_data.    
     NSLog(@"adiumGaimBlistNewNode");
     
-/*    if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
+    if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
     {
         GaimBuddy *buddy = (GaimBuddy *)node;
         
-        AIHandle *theHandle = [AIHandle 
-            handleWithServiceID:[[service handleServiceType] identifier]
-            UID:[NSString stringWithCString:buddy->name]
-            serverGroup:@"Libgaim!"
-            temporary:NO
-            forAccount:self];                                                
-        [handleDict setObject:theHandle forKey:[NSString stringWithFormat:@"%s", buddy->name]];
-    } */
+        NSMutableDictionary *_accountDict = [[[(AIHandle *)node->ui_data account] service] _accountDictionary];
+        
+        id theAccount = [_accountDict objectForKey:
+            [NSString stringWithFormat:@"%s.%s", 
+                (char *)gaim_account_get_protocol_id(buddy->account),
+                (char *)gaim_account_get_username(buddy->account)]];
+        
+        if([theAccount respondsToSelector:@selector(accountBlistNewNode:)])
+            [theAccount accountBlistNewNode:node];
+    }
 }
 
 static void adiumGaimBlistShow(GaimBuddyList *list)
@@ -102,47 +108,28 @@ static void adiumGaimBlistShow(GaimBuddyList *list)
 static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 {
     NSLog(@"adiumGaimBlistUpdate");
-
-/*    if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
-    {
-        GaimBuddy *buddy = (GaimBuddy *)node;
-        if(buddy->present == GAIM_BUDDY_SIGNING_ON)
-        {
-            AIHandle *theHandle = [handleDict objectForKey:[NSString stringWithCString:buddy->name]];
-            
-            [[theHandle statusDictionary] 
-                setObject:[NSNumber numberWithInt:1] 
-                forKey:@"Online"];
-                
-            [[theHandle statusDictionary] 
-                setObject:[NSString stringWithCString:buddy->server_alias]
-                forKey:@"Display Name"];
-                
-            [[owner contactController] handleStatusChanged:theHandle
-                modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", @"Display Name",nil]
-                delayed:NO
-                silent:NO];
-        }
-        else if(buddy->present == GAIM_BUDDY_SIGNING_OFF)
-        {
-            AIHandle *theHandle = [handleDict objectForKey:[NSString stringWithCString:buddy->name]];
-            
-            [[theHandle statusDictionary] 
-                setObject:[NSNumber numberWithInt:0] 
-                forKey:@"Online"];
-            
-            [[owner contactController] handleStatusChanged:theHandle
-                modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", nil]
-                delayed:NO
-                silent:NO];
-        }
-    }*/
+    
+    if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
+    {        
+        id theAccount = [(AIHandle *)node->ui_data account];
+        
+        if([theAccount respondsToSelector:@selector(accountBlistNewNode:)])
+            [theAccount accountBlistUpdate:list withNode:node];
+    }
 }
 
 static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
 {
     //Here we're responsible for destroying what we placed in the node's ui_data earlier
-    //NSLog(@"adiumGaimBlistRemove");
+    NSLog(@"adiumGaimBlistRemove");
+
+    if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
+    {
+        id theAccount = [(AIHandle *)node->ui_data account];
+        
+        if([theAccount respondsToSelector:@selector(accountBlistNewNode:)])
+            [theAccount accountBlistRemove:list withNode:node];
+    }
 }
 
 static void adiumGaimBlistDestroy(GaimBuddyList *list)
@@ -473,7 +460,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)installPlugin
 {
-    accountArray = [[NSMutableArray alloc] init];
+    accountDict = [[NSMutableDictionary alloc] init];
 
     char *plugin_search_paths[1];
 
@@ -513,7 +500,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)uninstallPlugin
 {
-    [accountArray release];
+    [accountDict release];
 }
 
 //Periodic timer to run libgaim's event loop
@@ -532,7 +519,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 {
     CBGaimAccount *anAccount = [[[CBGaimAccount alloc] initWithProperties:inProperties service:self owner:inOwner] autorelease];
     
-    [accountArray addObject:anAccount];
+    [accountDict setObject:anAccount forKey:[anAccount UIDAndServiceID]];
     
     return anAccount;
 }
@@ -549,5 +536,13 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (AIServiceType *)handleServiceType
 {
     return(handleServiceType);
+}
+@end
+
+
+@implementation CBGaimServicePlugin(Internal)
+- (NSMutableDictionary *)_accountDictionary
+{
+    return accountDict;
 }
 @end

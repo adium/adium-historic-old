@@ -1,4 +1,4 @@
-//
+ //
 //  CBGaimServicePlugin.h
 //  Adium
 //
@@ -31,8 +31,8 @@
 
 
 @interface CBGaimServicePlugin : AIPlugin <AIServiceController> {
-        AIServiceType		*handleServiceType;
-        NSMutableArray		*accountArray;
+        AIServiceType			*handleServiceType;
+        NSMutableDictionary		*accountDict;
         
         IBOutlet 	NSView		*view_preferences;
 }
