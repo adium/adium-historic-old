@@ -86,3 +86,4 @@
 #import "AIWindowAdditions.h"
 #import "AIFileManagerAdditions.h"
 #import "ESTextViewWithPlaceholder.h"
+#import "ESArrayAdditions.h"
