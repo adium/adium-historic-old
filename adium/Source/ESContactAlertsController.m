@@ -47,6 +47,7 @@ Plugin Contact Alert registration
 
 - (void)registerContactAlertProvider:(NSObject<ESContactAlertProvider> *)contactAlertProvider
 {
+    NSLog(@"register!");
  //Add to our array of contact alert providers
     [contactAlertProviderArray addObject:contactAlertProvider];
     //Sort?
@@ -64,17 +65,19 @@ Communication between the contact alerts UI and plugins
 
 - (void)createAlertsArrayWithOwner:(NSObject<ESContactAlerts> *)inOwner;
 {
+    NSLog(@"create an alerts array");
     //create the alertsArray
     NSMutableArray *alertsArray = [[NSMutableArray alloc] init];
     id contactAlertProvider;
     
     NSEnumerator *providerEnumerator = [contactAlertProviderArray objectEnumerator];
     while (contactAlertProvider = [providerEnumerator nextObject]) {
+        NSLog(@"looking..");
         [alertsArray addObject:[contactAlertProvider contactAlert]];
     }
 
     //store it into our mutableOwnerArray for alerts
-    [arrayOfAlertsArrays setObject:alertsArray withOwner:owner];
+    [arrayOfAlertsArrays setObject:alertsArray withOwner:inOwner];
     [alertsArray release];
     
     [arrayOfStateDictionaries setObject:[[[NSMutableDictionary alloc] init] autorelease] withOwner:inOwner];
@@ -167,7 +170,7 @@ Methods used by ESContactAlerts
     while (contactAlert = [enumerator nextObject]) {
         [actionListMenu addItem:[contactAlert alertMenuItem]];   
     }
-        
+    NSLog(@"returning menu");   
     return([actionListMenu autorelease]);
 }
 
