@@ -35,7 +35,7 @@
     IBOutlet		NSButton					*button_deleteAccount;
 
 	//Current configuration
-	id <AIServiceController>		configuredForService;
+	AIService						*configuredForService;
 	AIAccount						*configuredForAccount;
     AIAccountViewController			*accountViewController;
 	NSTimer							*responderChainTimer;
