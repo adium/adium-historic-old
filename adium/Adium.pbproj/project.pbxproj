@@ -1412,6 +1412,32 @@
 			settings = {
 			};
 		};
+		3C88C78B04D8CB8C00A80106 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = IKTableImageCell.h;
+			path = "Frameworks/AIUtilities Framework/IKTableImageCell.h";
+			refType = 4;
+		};
+		3C88C78C04D8CB8C00A80106 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = IKTableImageCell.m;
+			path = "Frameworks/AIUtilities Framework/IKTableImageCell.m";
+			refType = 4;
+		};
+		3C88C78D04D8CB8C00A80106 = {
+			fileRef = 3C88C78B04D8CB8C00A80106;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3C88C78E04D8CB8C00A80106 = {
+			fileRef = 3C88C78C04D8CB8C00A80106;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //3C0
 //3C1
 //3C2
@@ -13706,6 +13732,7 @@
 				9E49CC5E04BF6F8700415B22,
 				4B95210504C049E900A8010A,
 				4B9AB61904D2C84700A8010A,
+				3C88C78D04D8CB8C00A80106,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13810,6 +13837,7 @@
 				9E49CC5F04BF6F8700415B22,
 				4B95210604C049E900A8010A,
 				4B9AB61A04D2C84700A8010A,
+				3C88C78E04D8CB8C00A80106,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14529,6 +14557,8 @@
 				4BC030370452E86200A8010A,
 				4B9AB61704D2C84700A8010A,
 				4B9AB61804D2C84700A8010A,
+				3C88C78B04D8CB8C00A80106,
+				3C88C78C04D8CB8C00A80106,
 				4B3E502603EC651400A8010A,
 				4B3E502703EC651400A8010A,
 				F5793953033E74E401A8010A,

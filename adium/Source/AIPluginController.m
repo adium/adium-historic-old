@@ -69,7 +69,7 @@
         AIPlugin		*plugin;
 
         pluginName = [pluginList objectAtIndex:loop];
-        NSLog (@"Loading plugin: \"%@\"", pluginName);
+        //NSLog (@"Loading plugin: \"%@\"", pluginName);
         if([[pluginName pathExtension] compare:EXTENSION_ADIUM_PLUGIN] == 0){
             NS_DURING
                 //Load the plugin
