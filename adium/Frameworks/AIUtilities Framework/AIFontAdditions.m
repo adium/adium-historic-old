@@ -45,8 +45,9 @@
 		//If the font doesn't exist on the system, use the controlContentFont
 		if (!font){
 			font = [NSFont controlContentFontOfSize:fontSize];
+			NSAssert(font != nil, @"controlContentFont not found.");
 		}
-		
+
         [sizeDict setObject:font
                      forKey:sizeString];
         [fontDict setObject:sizeDict forKey:fontName];
