@@ -1505,16 +1505,9 @@
 				34415B9C059FA8DF0019246B,
 				34E3C8870638D40500AA3EF7,
 				34E3C8880638D40500AA3EF7,
-				34564738069F43A800F728BC,
-				3456477F069F469E00F728BC,
-				3483148C06A70A57002C097A,
-				34564781069F469E00F728BC,
-				34564782069F469E00F728BC,
-				34564783069F469E00F728BC,
-				34564784069F469E00F728BC,
-				34564785069F469E00F728BC,
-				34564788069F469F00F728BC,
-				34564789069F469F00F728BC,
+				348D8D1A06CC079F00449EBB,
+				348D8D1B06CC079F00449EBB,
+				348D8D3506CC07E300449EBB,
 			);
 			isa = PBXGroup;
 			name = Services;
@@ -1537,6 +1530,7 @@
 				34C2E6650634CF010018E5D2,
 				34F1429D05E95AFF00B32FD7,
 				34415BC3059FA95B0019246B,
+				348D8D3206CC07C400449EBB,
 			);
 			isa = PBXGroup;
 			name = Accounts;
@@ -3658,6 +3652,188 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		348D8D1206CC078C00449EBB = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = zephyr.png;
+			path = "Plugins/Gaim Service/zephyr.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348D8D1306CC078D00449EBB = {
+			fileRef = 348D8D1206CC078C00449EBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348D8D1A06CC079F00449EBB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESZephyrService.m;
+			path = "Plugins/Gaim Service/ESZephyrService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348D8D1B06CC079F00449EBB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESZephyrService.h;
+			path = "Plugins/Gaim Service/ESZephyrService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348D8D1C06CC079F00449EBB = {
+			fileRef = 348D8D1A06CC079F00449EBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348D8D1D06CC079F00449EBB = {
+			fileRef = 348D8D1B06CC079F00449EBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348D8D2206CC07BC00449EBB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimZephyrAccountViewController.m;
+			path = "Plugins/Gaim Service/ESGaimZephyrAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348D8D2306CC07BC00449EBB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ESGaimZephyrAccountView.nib;
+			path = "Plugins/Gaim Service/ESGaimZephyrAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348D8D2406CC07BD00449EBB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimZephyrAccountViewController.h;
+			path = "Plugins/Gaim Service/ESGaimZephyrAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348D8D2506CC07BD00449EBB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCGaimZephyrJoinChatViewController.m;
+			path = "Plugins/Gaim Service/DCGaimZephyrJoinChatViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348D8D2606CC07BD00449EBB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimZephyrAccount.m;
+			path = "Plugins/Gaim Service/ESGaimZephyrAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348D8D2706CC07BD00449EBB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCGaimZephyrJoinChatViewController.h;
+			path = "Plugins/Gaim Service/DCGaimZephyrJoinChatViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348D8D2806CC07BD00449EBB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimZephyrAccount.h;
+			path = "Plugins/Gaim Service/ESGaimZephyrAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348D8D2906CC07BE00449EBB = {
+			fileRef = 348D8D2206CC07BC00449EBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348D8D2A06CC07BE00449EBB = {
+			fileRef = 348D8D2306CC07BC00449EBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348D8D2B06CC07BE00449EBB = {
+			fileRef = 348D8D2406CC07BD00449EBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348D8D2C06CC07BE00449EBB = {
+			fileRef = 348D8D2506CC07BD00449EBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348D8D2D06CC07BE00449EBB = {
+			fileRef = 348D8D2606CC07BD00449EBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348D8D2E06CC07BE00449EBB = {
+			fileRef = 348D8D2706CC07BD00449EBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348D8D2F06CC07BE00449EBB = {
+			fileRef = 348D8D2806CC07BD00449EBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348D8D3206CC07C400449EBB = {
+			children = (
+				348D8D2806CC07BD00449EBB,
+				348D8D2606CC07BD00449EBB,
+				348D8D2706CC07BD00449EBB,
+				348D8D2506CC07BD00449EBB,
+				348D8D2306CC07BC00449EBB,
+				348D8D2406CC07BD00449EBB,
+				348D8D2206CC07BC00449EBB,
+			);
+			isa = PBXGroup;
+			name = Zephyr;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348D8D3506CC07E300449EBB = {
+			children = (
+				34564738069F43A800F728BC,
+				3456477F069F469E00F728BC,
+				3483148C06A70A57002C097A,
+				34564781069F469E00F728BC,
+				34564782069F469E00F728BC,
+				34564783069F469E00F728BC,
+				34564784069F469E00F728BC,
+				34564785069F469E00F728BC,
+				34564788069F469F00F728BC,
+				34564789069F469F00F728BC,
+				348D8D1206CC078C00449EBB,
+			);
+			isa = PBXGroup;
+			name = Images;
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		348E4ED9053667A40021E541 = {
 			fileEncoding = 30;
@@ -13758,6 +13934,10 @@
 				6EA3688606B73E7D009CA81A,
 				6EA3688C06B73F28009CA81A,
 				6EA3689206B73F67009CA81A,
+				348D8D1D06CC079F00449EBB,
+				348D8D2B06CC07BE00449EBB,
+				348D8D2E06CC07BE00449EBB,
+				348D8D2F06CC07BE00449EBB,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13799,6 +13979,8 @@
 				6EA3688506B73E7D009CA81A,
 				6EA3688B06B73F28009CA81A,
 				6EA3689106B73F67009CA81A,
+				348D8D1306CC078D00449EBB,
+				348D8D2A06CC07BE00449EBB,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13852,6 +14034,10 @@
 				6EA3688706B73E7D009CA81A,
 				6EA3688D06B73F28009CA81A,
 				6EA3689306B73F67009CA81A,
+				348D8D1C06CC079F00449EBB,
+				348D8D2906CC07BE00449EBB,
+				348D8D2C06CC07BE00449EBB,
+				348D8D2D06CC07BE00449EBB,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
