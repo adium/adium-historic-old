@@ -33,11 +33,20 @@ DeclareString(AppendNextMessage);
 											  forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		preferences = [[ESWebKitMessageViewPreferences preferencePaneForPlugin:self] retain];
 		
-		styleDictionary = [[NSMutableDictionary alloc] init];
+		styleDictionary = nil;
 		[self _loadAvailableWebkitStyles];
-        		
+			
+		//Observe for installation of new styles
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(stylesChanged:)
+										   name:Adium_Xtras_Changed
+										 object:nil];
+		
 		//Observe preference changes and set our initial preferences
-		[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+		[[adium notificationCenter] addObserver:self 
+									   selector:@selector(preferencesChanged:)
+										   name:Preference_GroupChanged
+										 object:nil];
 		[self preferencesChanged:nil];
 		
 		//Register ourself as a message view plugin
@@ -128,6 +137,11 @@ DeclareString(AppendNextMessage);
 	NSString		*filePath, *resourcePath;
 	NSArray			*resourcePaths;
 	
+	//Clear the current dictionary of styles and ready a new mutable dictionary
+	[styleDictionary release];
+	styleDictionary = [[NSMutableDictionary alloc] init];
+	
+	//Get all resource paths to search
 	resourcePaths = [[adium resourcePathsForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT] arrayByAddingObject:[[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:@"Styles"]];
 	enumerator = [resourcePaths objectEnumerator];
 
@@ -411,7 +425,8 @@ DeclareString(AppendNextMessage);
 																   closeStyleTagsOnFontChange:YES
 																			   encodeNonASCII:YES 
 																				   imagesPath:@"/tmp"
-																			attachmentsAsText:NO]];
+																			attachmentsAsText:NO
+																				   simpleTagsOnly:NO]];
 			}
 		}
 		
@@ -584,6 +599,12 @@ DeclareString(AppendNextMessage);
 	[inString replaceOccurrencesOfString:@"\r" withString:@"<br />" 
 								 options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
 	return(inString);
+}
+
+#pragma mark Styles changed
+- (void)stylesChanged:(NSNotification *)notification
+{
+	[self _loadAvailableWebkitStyles];
 }
 
 @end
