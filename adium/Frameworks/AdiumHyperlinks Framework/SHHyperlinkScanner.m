@@ -7,7 +7,7 @@
 #import "SHMarkedHyperlink.h"
 #import "SHHyperlinkScanner.h"
 
-static NSCharacterSet *skipSet = nil;
+static NSMutableCharacterSet *skipSet = nil;
 
 @implementation SHHyperlinkScanner
 
@@ -93,14 +93,11 @@ static NSCharacterSet *skipSet = nil;
     NSString    *scanString = nil;
     int location = SHStringOffset; //get our location from SHStringOffset, so we can pick up where we left off.
 	if (!skipSet){
-		NSMutableCharacterSet   *mutableSkipSet = [[NSMutableCharacterSet alloc] init];
-		[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-		[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
-		[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
-		[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'"]];
-		
-		skipSet = [mutableSkipSet copy];
-		[mutableSkipSet release];
+		skipSet = [[NSMutableCharacterSet alloc] init];
+		[skipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		[skipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
+		[skipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
+		[skipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'"]];
     }
 	
     // scan upto the next whitespace char so that we don't unnecessarity confuse flex
