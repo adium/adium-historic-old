@@ -20,6 +20,9 @@
 - (void)addAccountMenuItems:(NSArray *)menuItemArray;
 - (void)removeAccountMenuItems:(NSArray *)menuItemArray;
 
+//Chat Observer
+- (void)chatOpened:(NSNotification *)notification;
+- (void)chatClosed:(NSNotification *)notification;
 @end
 
 @implementation CBStatusMenuItemController
@@ -87,11 +90,22 @@ static	NSImage						*adiumRedHighlightImage = nil;
         [statusItem setMenu:theMenu];
         [theMenu setDelegate:self];
 
-        //Setup for unviewed content catching
+        //Setup for open chats and unviewed content catching
         accountMenuItemsArray = [[NSMutableArray alloc] init];
         unviewedObjectsArray = [[NSMutableArray alloc] init];
+		openChatsArray = [[NSMutableArray alloc] init];
         needsUpdate = YES;
-
+		
+		//Register to recieve chat opened and chat closed notifications
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(chatOpened:)
+										   name:Chat_DidOpen
+										 object:nil];
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(chatClosed:)
+										   name:Chat_WillClose
+										 object:nil];
+		
         //Register as a chat observer (So we can catch the unviewed content status flag)
         [[adium contentController] registerChatObserver:self];
 				
@@ -195,6 +209,24 @@ static	NSImage						*adiumRedHighlightImage = nil;
 //Chat Observer --------------------------------------------------------
 #pragma mark Chat Observer
 
+- (void)chatOpened:(NSNotification *)notification
+{
+	//Add it to the array
+	[openChatsArray addObject:[notification object]];
+	
+	//We need to update the menu next time we are clicked
+	needsUpdate = YES;
+}
+
+- (void)chatClosed:(NSNotification *)notification
+{
+	//Remove it from the array
+	[openChatsArray removeObject:[notification object]];
+	
+	//We need to update the menu next time we are clicked
+	needsUpdate = YES;
+}
+
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	//If the contact's unviewed content state has changed
@@ -254,25 +286,28 @@ static	NSImage						*adiumRedHighlightImage = nil;
             [menu addItem:menuItem];
         }
         
-        //Prepare to add any unviewed objects
-        enumerator = [unviewedObjectsArray objectEnumerator];
+        //Prepare to add any open chats
+        enumerator = [openChatsArray objectEnumerator];
         chat = nil;
         
-        //If there exist any of unviewed objects, prepare to add them
-        if([unviewedObjectsArray count] > 0){
+        //If there exist any open chats, add them
+        if([openChatsArray count] > 0){
             //Add a seperator
             [menu addItem:[NSMenuItem separatorItem]];
             //Create and add the menu items
             while(chat = [enumerator nextObject]){
-                //Create a menu item from the list object
+                //Create a menu item from the chat
                 menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[chat displayName] 
 																				 target:self
 																				 action:@selector(switchToChat:) 
 																		  keyEquivalent:@""] autorelease];
                 //Set the represented object
                 [menuItem setRepresentedObject:chat];
-                //Set the image
-                [menuItem setImage:unviewedContentImage];
+				
+                //Set the image if it's unviewed
+				if([unviewedObjectsArray containsObjectIdenticalTo:chat]) {
+					[menuItem setImage:unviewedContentImage];
+				}
                 //Add it to the menu
                 [menu addItem:menuItem];
             }
