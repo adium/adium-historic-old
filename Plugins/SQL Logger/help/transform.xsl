@@ -53,7 +53,7 @@
               href="http://www.visualdistortion.org/sqllogger/SQL_Logger_70.tar.gz"
               class="offsides"><b>Adium Plugin (.70)</b></a>
               <br/>
-              
+
               <h4>Fire</h4>
               <a href="http://fire.sourceforge.net" class="offsides">Fire</a>
               <br /><h4>PostgreSQL</h4>
