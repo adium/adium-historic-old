@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Proxy Type</key>
-	<integer>1</integer>
+	<integer>5</integer>
 	<key>Proxy Needs Authentication</key>
 	<false/>
 
