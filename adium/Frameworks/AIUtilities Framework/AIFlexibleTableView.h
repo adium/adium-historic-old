@@ -15,24 +15,33 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIMessageObject, AISMTextView;
+@class AIAdium, AIContactHandle, AIFlexibleTableColumn, AIFlexibleTableCell;
 
-@interface AISMVMessageCell : NSCell {
-    NSAttributedString	*string;
+@protocol AIFlexibleTableViewDelegate <NSObject>
+- (AIFlexibleTableCell *)cellForColumn:(AIFlexibleTableColumn *)inCol row:(int)inRow;
+- (int)numberOfRows;
+@end
+
+@interface AIFlexibleTableView : NSControl {
+    NSMutableArray		*columnArray;	//Our columns
+
+    float			contentsHeight;	//Total height of our content
+    NSMutableArray		*rowHeightArray; //Height of every row
     
-    NSSize		cellSize;
-    NSColor		*backgroundColor;
+    id <AIFlexibleTableViewDelegate>	delegate;
 
-    //Text rendering cache
-    NSTextStorage 	*textStorage;
-    NSTextContainer 	*textContainer;
-    NSLayoutManager 	*layoutManager;
-    NSRange		glyphRange;
+    int				oldWidth;
 }
 
-+ (AISMVMessageCell *)messageCellWithString:(NSAttributedString *)inString backgroundColor:(NSColor *)inBackgroundColor;
-- (NSSize)sizeCellForWidth:(float)inWidth;
-- (NSSize)cellSize;
-- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
+- (void)setDelegate:(id <AIFlexibleTableViewDelegate>)inDelegate;
+- (void)addColumn:(AIFlexibleTableColumn *)inColumn;
+
+- (void)loadNewRow;
+- (void)reloadData;
 
 @end
+
+
+
+
+

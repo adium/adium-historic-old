@@ -17,12 +17,14 @@
 #import <Adium/Adium.h>
 #import "AISMViewPlugin.h"
 #import "AIAdium.h"
-#import "AISMTextView.h"
+#import "AISMViewController.h"
 
 @implementation AISMViewPlugin
 
 - (void)installPlugin
 {
+    controllerArray = [[NSMutableArray alloc] init];
+    
     [[owner interfaceController] registerMessageViewController:self];
 }
 
@@ -34,14 +36,35 @@
 //returns a NEW message view configured for the specified handle
 - (NSView *)messageViewForHandle:(AIContactHandle *)inHandle
 {
-    AISMTextView	*messageView = [AISMTextView messageTextViewForHandle:inHandle owner:owner];
+    AISMViewController	*controller = [AISMViewController messageViewControllerForHandle:inHandle owner:owner];
 
-    return(messageView);
+    [controllerArray addObject:controller];
+
+    return([controller messageView]);
 }
 
 - (void)closeMessageView:(NSView *)inView
 {
-    
+    NSEnumerator	*enumerator;
+    AISMViewController	*controller;
+
+    //Remove the view from our array
+    enumerator = [controllerArray objectEnumerator];
+    while((controller = [enumerator nextObject])){
+        if([controller messageView] == inView){
+            [controllerArray removeObject:controller];
+            return; //We've found and removed our view, return.
+        }
+    }
 }
 
 @end
+
+
+
+
+
+
+
+
+
