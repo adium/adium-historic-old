@@ -142,7 +142,7 @@
  * @param inObject An object
  * @return Returns the priority of the object, or 0 if the object is not in the array.
  */
-- (float)priorityOfObject:(id)inObject
+- (float)priorityOfObject:(id)inObject;
 
 /*!
  * @brief Retrive enumerator for objects
