@@ -88,6 +88,7 @@ typedef enum {
 - (AIListGroup *)parentGroup;
 
 //Display
+- (NSString *)ownDisplayName;
 - (NSString *)formattedUID;
 - (NSString *)longDisplayName;
 
