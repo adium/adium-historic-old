@@ -21,7 +21,6 @@
 		[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:WEBKIT_DEFAULT_PREFS forClass:[self class]]
 											  forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		preferences = [[ESWebKitMessageViewPreferences preferencePaneForPlugin:self] retain];
-		advancedPreferences = [[ESWKMVAdvancedPreferences preferencePaneForPlugin:self] retain];
 		
 		//Observe for installation of new styles
 		[[adium notificationCenter] addObserver:self
