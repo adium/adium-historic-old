@@ -22,12 +22,21 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AWRendezvousAccount.h"
-#import "AWRendezvousPlugin.h"
-
+#import "AIContactController.h"
+#import "AIContentController.h"
+#import "AIStatusController.h"
 #import "AWEzv.h"
 #import "AWEzvContact.h"
 #import "AWEzvDefines.h"
+#import "AWRendezvousAccount.h"
+#import "AWRendezvousPlugin.h"
+#import <AIUtilities/AIHTMLDecoder.h>
+#import <AIUtilities/AIMutableOwnerArray.h>
+#import <Adium/AIChat.h>
+#import <Adium/AIContentMessage.h>
+#import <Adium/AIContentTyping.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIStatus.h>
 
 @interface AWRendezvousAccount (PRIVATE)
 - (NSString *)UIDForContact:(AWEzvContact *)contact;

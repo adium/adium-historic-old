@@ -1,14 +1,43 @@
-//
-//  CBGaimAccount.m
-//  Adium
-//
-//  Created by Colin Barrett on Sun Oct 19 2003.
-//  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
-//
+/* 
+ * Adium is the legal property of its developers, whose names are listed in the copyright file included
+ * with this source distribution.
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ * Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program; if not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
+#import "AIAccountController.h"
+#import "AIContactController.h"
+#import "AIContentController.h"
+#import "AIInterfaceController.h"
+#import "AIPreferenceController.h"
 #import "CBGaimAccount.h"
 #import "SLGaimCocoaAdapter.h"
-#import "AIAccount.h"
+#import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AIHTMLDecoder.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIMutableOwnerArray.h>
+#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/ESSystemNetworkDefaults.h>
+#import <Adium/AIAccount.h>
+#import <Adium/AIChat.h>
+#import <Adium/AIContentMessage.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIListGroup.h>
+#import <Adium/AIMetaContact.h>
+#import <Adium/AIService.h>
+#import <Adium/AIServiceIcons.h>
+#import <Adium/AIStatus.h>
+#import <Adium/ESFileTransfer.h>
 
 #define NO_GROUP						@"__NoGroup__"
 
@@ -101,7 +130,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	if([self online]){
 		//When a new contact is created, if we aren't already silent and delayed, set it  a second to cover our initial
 		//status updates
-		if (!silentAndDelayed){
+		if(!silentAndDelayed){
 			[self silenceAllContactUpdatesForInterval:2.0];
 			[[adium contactController] delayListObjectNotificationsUntilInactivity];		
 		}
@@ -613,12 +642,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (AIChat *)mainThreadChatWithContact:(AIListContact *)contact
 {
 	AIChat *chat;
-	
+
 	//First, make sure the chat is created
 	[[adium contentController] mainPerformSelector:@selector(chatWithContact:)
 										withObject:contact
 									 waitUntilDone:YES];
-		
+
 	//Now return the existing chat
 	chat = [[adium contentController] existingChatWithContact:contact];
 
@@ -2059,7 +2088,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				
 				//If titleForContactMenuLabel:forContact: returns nil, we don't add the menuItem
 				if(title = [self titleForContactMenuLabel:act->label
-											   forContact:inContact]){
+											   forContact:inContact]){ 
 					menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
 																					 target:self
 																					 action:@selector(performContactMenuAction:)

@@ -1,11 +1,29 @@
-//
-//  AIListController.m
-//  Adium
-//
-//  Created by Evan Schoenberg on 9/9/04.
-//
+/* 
+ * Adium is the legal property of its developers, whose names are listed in the copyright file included
+ * with this source distribution.
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ * Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program; if not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
+#import "AIContactController.h"
+#import "AIInterfaceController.h"
 #import "AIListController.h"
+#import "AIPreferenceController.h"
+#import <AIUtilities/AIAutoScrollView.h>
+#import <AIUtilities/AIWindowAdditions.h>
+#import <AIUtilities/ESOutlineViewAdditions.h>
+#import <Adium/AIListGroup.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIListOutlineView.h>
 
 #define EDGE_CATCH_X				40
 #define EDGE_CATCH_Y				40
@@ -159,26 +177,6 @@ typedef enum {
 	}
 }
 
-//ToolbarHeightForWindow from Apple
-float ToolbarHeightForWindow(NSWindow *window)
-{
-    NSToolbar *toolbar;
-    float toolbarHeight = 0.0;
-    NSRect windowFrame;
-    
-    toolbar = [window toolbar];
-    
-    if(toolbar && [toolbar isVisible])
-    {
-        windowFrame = [NSWindow contentRectForFrameRect:[window frame]
-											  styleMask:[window styleMask]];
-        toolbarHeight = NSHeight(windowFrame)
-			- NSHeight([[window contentView] frame]);
-    }
-    
-    return toolbarHeight;
-}
-
 //Desired frame of our window - if one of the BOOL values is NO, don't modify that value from the current frame
 - (NSRect)_desiredWindowFrameUsingDesiredWidth:(BOOL)useDesiredWidth desiredHeight:(BOOL)useDesiredHeight
 {
@@ -194,7 +192,7 @@ float ToolbarHeightForWindow(NSWindow *window)
 	viewFrame = [scrollView_contactList frame];
 	screenFrame = [currentScreen frame];
 	visibleScreenFrame = [currentScreen visibleFrame];
-	toolbarHeight = ToolbarHeightForWindow(theWindow);
+	toolbarHeight = [theWindow toolbarHeight];
 	
 	//Width
 	if(useDesiredWidth){

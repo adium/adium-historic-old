@@ -6,9 +6,11 @@
 //  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
-#import "AWRendezvousService.h"
+#import "AIStatusController.h"
 #import "AWRendezvousAccount.h"
+#import "AWRendezvousService.h"
 #import "ESRendezvousAccountViewController.h"
+#import <Adium/DCJoinChatViewController.h>
 
 @implementation AWRendezvousService
 

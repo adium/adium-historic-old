@@ -19910,6 +19910,8 @@
 			fileRef = 7E6642FF065337090050E8C8;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+				);
 			};
 		};
 		7E664307065337090050E8C8 = {
@@ -19922,6 +19924,8 @@
 			fileRef = 7E664301065337090050E8C8;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+				);
 			};
 		};
 		7E664309065337090050E8C8 = {
@@ -19934,6 +19938,8 @@
 			fileRef = 7E664303065337090050E8C8;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+				);
 			};
 		};
 		7E66430B065337090050E8C8 = {
