@@ -94,7 +94,7 @@
     NSRange      localSelectionRange = NSMakeRange(0,0);
                  selectionRange = NSMakeRange(0,0);
     NSString    *linkText = nil;
-    NSString    *linkURL = nil;
+    id    linkURL = nil;
     
         //fetch the range of the selection
         localSelectionRange = [(NSTextView *)editableView selectedRange];
@@ -110,8 +110,12 @@
                                            effectiveRange:&localSelectionRange];
             
             if(linkURL) {
-                [[textView_URL textStorage] setAttributedString:[[NSAttributedString alloc]
-                                                 initWithString:[linkURL string]]];
+                if([linkURL isKindOfClass:[NSString class]]){
+                    [[textView_URL textStorage] setAttributedString:[[NSAttributedString alloc]
+                                                     initWithString:[(NSString *)linkURL string]]];
+                }else if([linkURL isKindOfClass:[NSURL class]]){
+                    [[textView_URL textStorage] setAttributedString:[[NSAttributedString alloc]
+                                                     initWithString:[(NSURL *)linkURL absoluteString]]];                }
             }
             if(linkText) {
                 [textField_linkText setStringValue:linkText];
