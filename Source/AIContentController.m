@@ -360,26 +360,27 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 										filterContext:(id)filterContext
 										   invocation:(NSInvocation *)invocation
 {
-	
-	//Perform the main filters
-	attributedString = [self _filterAttributedString:attributedString
-									   contentFilter:inContentFilterArray
-									   filterContext:filterContext
-										   usingLock:mainFilterLock];
-	
-	/*
-	 Now perform the threaded-only filters.
-	 
-	 The threadedFilterLock also serves as a way to know if a filtering operation is currently in progress.
-	 Running a filter may take multiple run loops (e.g. applescript execution).
-	 It is not acceptable for our autorelease pool to be released between these loops
-	 as we have autoreleased objects upon which we are depending; we can check against the lock
-	 using isUnlocked (non-blocking) to know if it is safe.
-	 */	
-	attributedString = [self _filterAttributedString:attributedString
-									   contentFilter:inThreadedContentFilterArray
-									   filterContext:filterContext
-										   usingLock:threadedFilterLock];
+	if(attributedString){
+		//Perform the main filters
+		attributedString = [self _filterAttributedString:attributedString
+										   contentFilter:inContentFilterArray
+										   filterContext:filterContext
+											   usingLock:mainFilterLock];
+		
+		/*
+		 Now perform the threaded-only filters.
+		 
+		 The threadedFilterLock also serves as a way to know if a filtering operation is currently in progress.
+		 Running a filter may take multiple run loops (e.g. applescript execution).
+		 It is not acceptable for our autorelease pool to be released between these loops
+		 as we have autoreleased objects upon which we are depending; we can check against the lock
+		 using isUnlocked (non-blocking) to know if it is safe.
+		 */
+		attributedString = [self _filterAttributedString:attributedString
+										   contentFilter:inThreadedContentFilterArray
+										   filterContext:filterContext
+											   usingLock:threadedFilterLock];
+	}
 	
 	if (invocation){
 		//Put that attributed string into the invocation as the first argument after the two hidden arguments of every NSInvocation
