@@ -17786,7 +17786,6 @@
 		4B3717000510D19400A8010A = {
 			children = (
 				4BCFC91104E930BA00A8010A,
-				F5A01D85037980F201A8010A,
 				F5F846FE04C702DB01A80106,
 			);
 			isa = PBXGroup;
@@ -22018,15 +22017,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIStringAdditions.m;
 			path = "Frameworks/AIUtilities Framework/AIStringAdditions.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BEF84D203BE41E900A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = InstantMessageFramework.h;
-			path = "Plugins/AIM iChat Service/InstantMessageFramework.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -26872,15 +26862,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F54441AC0378A36A01A8010A = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
-			lastKnownFileType = wrapper.framework;
-			name = InstantMessage.framework;
-			path = /System/Library/PrivateFrameworks/InstantMessage.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
 		F544A5DE03B3628B01A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -27573,42 +27554,6 @@
 			);
 			isa = PBXGroup;
 			name = Images;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F56621A503AD02AC01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIMiChatAccount.h;
-			path = "Plugins/AIM iChat Service/AIMiChatAccount.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F56621A603AD02AC01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIMiChatAccount.m;
-			path = "Plugins/AIM iChat Service/AIMiChatAccount.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F56621A703AD02AC01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIMiChatServicePlugin.h;
-			path = "Plugins/AIM iChat Service/AIMiChatServicePlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F56621A803AD02AC01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIMiChatServicePlugin.m;
-			path = "Plugins/AIM iChat Service/AIMiChatServicePlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -29068,21 +29013,6 @@
 			);
 			isa = PBXGroup;
 			name = "Standard Message View";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5A01D85037980F201A8010A = {
-			children = (
-				F56621A703AD02AC01A8010A,
-				F56621A803AD02AC01A8010A,
-				F56621A503AD02AC01A8010A,
-				F56621A603AD02AC01A8010A,
-				4BEF84D203BE41E900A8010A,
-				F54441AC0378A36A01A8010A,
-			);
-			isa = PBXGroup;
-			name = "AIM (iChat)";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
