@@ -136,11 +136,13 @@ static id<GaimThread> gaimThread = nil;
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"Server Display Name"
 								 notify:NO];
-			
+
 			//Set a 25-characters-or-less version as the lowest priority display name
-			[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:25]
-															 withOwner:self
-														 priorityLevel:Lowest_Priority];
+			[theContact setStatusObject:gaimAlias forKey:@"StatusMessage" notify:NO];
+			
+//			[[theContact displayArrayForKey:@"Display Name"] setObject:/*[*/gaimAlias/* stringWithEllipsisByTruncatingToLength:25]*/
+//															 withOwner:self
+//														 priorityLevel:Lowest_Priority];
 			changes = YES;
 		}
 	}
