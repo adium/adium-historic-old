@@ -1,10 +1,6 @@
 #!/usr/bin/perl -w
 
 use strict;
-use IO::Handle;
-
-
-PIPEHANDLE->autoflush(1);
 
 my $input;
 
