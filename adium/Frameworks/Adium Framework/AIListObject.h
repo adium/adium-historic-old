@@ -13,7 +13,16 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIMutableOwnerArray, AIListGroup;
+@class AIMutableOwnerArray, AIListGroup, AISortController;
+
+typedef enum {
+	AIAvailableStatus = 'avaL',
+	AIAwayStatus = 'awaY',
+	AIIdleStatus = 'idlE',
+	AIAwayAndIdleStatus = 'aYiE',
+	AIOfflineStatus = 'offL',
+	AIUnknownStatus = 'unkN'
+} AIStatusSummary;
 
 @interface AIListObject : AIObject {
     NSString				*UID;
@@ -28,8 +37,10 @@
 	NSMutableArray			*delayedStatusTimers;
 
 	//Grouping, Manual ordering
-    AIListGroup				*containingGroup;		//The group this object is in
+    AIListObject			*containingObject;		//The group this object is in
 	float					orderIndex;				//Placement of this contact within a group
+	
+	NSMutableArray			*containedObjects;			//Manually ordered array of contents
 }
 
 - (NSEnumerator *)statusKeyEnumerator;
@@ -42,18 +53,19 @@
 - (NSString *)UID;
 - (NSString *)serviceID;
 - (NSString *)uniqueObjectID;
+- (NSString *)ultraUniqueObjectID;
++ (NSString *)uniqueObjectIDForUID:(NSString *)inUID serviceID:(NSString *)inServiceID;
 
 //Visibility
 - (void)setVisible:(BOOL)inVisible;
-- (BOOL)isVisible;
+- (BOOL)visible;
 
 //Grouping
-- (AIListGroup *)containingGroup;
+- (AIListGroup *)containingObject;
 - (float)orderIndex;
 
 //Display
 - (NSString *)formattedUID;
-- (NSString *)displayName;
 - (NSString *)longDisplayName;
 - (NSString *)displayServiceID;
 - (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey;
@@ -84,6 +96,30 @@
 - (void)setOrderIndex:(float)inIndex;
 
 //Grouping (PRIVATE: These are for AIListGroup ONLY)
-- (void)setContainingGroup:(AIListGroup *)inGroup;
+- (void)setContainingObject:(AIListObject *)inGroup;
+
+//Key-Value pairing
+- (BOOL)online;
+- (AIStatusSummary)statusSummary;
+
+- (NSString *)displayName;
+- (void)setDisplayName:(NSString *)alias;
+
+- (NSString *)notes;
+- (void)setNotes:(NSString *)notes;
+
+//Containing contacts (for subclassing)
+- (BOOL)addObject:(AIListObject *)inObject;
+- (void)removeObject:(AIListObject *)inObject;
+- (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible;
+- (void)sortListObject:(AIListObject *)inObject sortController:(AISortController *)sortController;
+
+//Containing contacts (handled for subclasses)
+- (NSEnumerator *)objectEnumerator;
+- (id)objectAtIndex:(unsigned)index;
+- (int)indexOfObject:(AIListObject *)inObject;
+- (NSArray *)containedObjects;
+- (unsigned)containedObjectsCount;
+- (AIListObject *)objectWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
 
 @end

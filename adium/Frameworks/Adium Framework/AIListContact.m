@@ -21,19 +21,30 @@
 
 - (id)initWithUID:(NSString *)inUID accountID:(NSString *)inAccountID serviceID:(NSString *)inServiceID
 {
-    [super initWithUID:inUID serviceID:inServiceID];
-    
+    [self initWithUID:inUID serviceID:inServiceID];
+
 	accountID = [inAccountID retain];
-	remoteGroupName = nil;
-    
+
     return(self);
+}
+
+- (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID
+{
+	[super initWithUID:inUID serviceID:inServiceID];
+
+	accountID = nil;
+	remoteGroupName = nil;
+    ultraUniqueObjectID = nil;
+	
+	return(self);
 }
 
 - (void)dealloc
 {
 	[accountID release];
     [remoteGroupName release];
-    
+    [ultraUniqueObjectID release];
+	
     [super dealloc];
 }
 
@@ -43,6 +54,23 @@
 	return(accountID);
 }
 
+- (AIAccount *)account
+{
+	return([[adium accountController] accountWithObjectID:accountID]);
+}
+
+- (NSString *)ultraUniqueObjectID
+{
+	if (!ultraUniqueObjectID){
+		if (accountID){
+			ultraUniqueObjectID = [[[self uniqueObjectID] stringByAppendingString:accountID] retain];
+		}else{
+			ultraUniqueObjectID = [[self uniqueObjectID] retain];
+		}
+	}
+	
+	return (ultraUniqueObjectID);
+}
 
 //Remote Grouping ------------------------------------------------------------------------------------------------------
 #pragma mark Remote Grouping
@@ -66,6 +94,70 @@
 - (NSString *)remoteGroupName
 {
 	return(remoteGroupName);
+}
+
+
+#pragma mark Applescript Commands
+- (id)sendScriptCommand:(NSScriptCommand *)command {
+	NSDictionary	*evaluatedArguments = [command evaluatedArguments];
+	NSString		*message = [evaluatedArguments objectForKey:@"message"];
+	AIAccount		*account = [evaluatedArguments objectForKey:@"account"];
+	NSString		*filePath = [evaluatedArguments objectForKey:@"filePath"];
+	
+	AIListContact   *targetMessagingContact = nil;
+	AIListContact   *targetFileTransferContact = nil;
+
+	if (account){
+		targetMessagingContact = [[adium contactController] contactOnAccount:account
+															 fromListContact:self];
+		targetFileTransferContact = targetMessagingContact;
+	}
+	
+	//Send any message we were told to send
+	if (message && [message length]){
+		AIChat			*chat;
+		BOOL			autoreply = [[evaluatedArguments objectForKey:@"autoreply"] boolValue];
+		
+		//Make sure we know where we are sending the message - if we don't have a target yet, find the best contact for
+		//sending CONTENT_MESSAGE_TYPE.
+		if (!targetMessagingContact){
+			//Get the target contact.  This could be the same contact, an identical contact on another account, 
+			//or a subcontact (if we're talking about a metaContact, for example)
+			targetMessagingContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
+																				forListContact:self];
+			account = [targetMessagingContact account];	
+		}
+		
+		chat = [[adium contentController] openChatWithContact:targetMessagingContact];
+		
+		//Take the string and turn it into an attributed string (in case we were passed HTML)
+		NSAttributedString  *attributedMessage = [AIHTMLDecoder decodeHTML:message];
+		AIContentMessage	*messageContent;
+		messageContent = [AIContentMessage messageInChat:chat
+											  withSource:account
+											 destination:targetMessagingContact
+													date:nil
+												 message:attributedMessage
+											   autoreply:autoreply];
+		
+		[[adium contentController] sendContentObject:messageContent];
+	}
+	
+	//Send any file we were told to send
+	if (filePath && [filePath length]){
+		//Make sure we know where we are sending the file - if we don't have a target yet, find the best contact for
+		//sending FILE_TRANSFER_TYPE.
+		if (!targetFileTransferContact){
+			//Get the target contact.  This could be the same contact, an identical contact on another account, 
+			//or a subcontact (if we're talking about a metaContact, for example)
+			targetFileTransferContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+																				   forListContact:self];
+		}
+		
+		[[adium fileTransferController] sendFile:filePath toListContact:targetFileTransferContact];
+	}
+		
+	return nil;
 }
 
 @end
