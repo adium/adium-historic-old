@@ -135,7 +135,7 @@ typedef enum {
 //Interface selection
 - (AIListObject *)selectedListObject;
 - (AIListObject *)selectedListObjectInContactList;
-- (NSArray *)arrayOfSelectedListObjectsInContactList
+- (NSArray *)arrayOfSelectedListObjectsInContactList;
 
 //Private
 - (void)initController;
