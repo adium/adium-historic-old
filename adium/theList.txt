@@ -16,9 +16,9 @@ Bugs
 = Account name not displaying correctly after service switch
 * Create new account, tab from username->pass->account list.  Next tab should go back to username
 * Stop contact list from auto-resizing under the dock - this is a tough area.  It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how wide the dock is; only how tall it is.
-* Message tabs are not refreshing correctly when status changes
-* Stray tab divider is displaying when dragging tabs
-* When dragging a tab off quickly, it is possible for the tab bar to not finish moving to the correct position or to crash.
+= Message tabs are not refreshing correctly when status changes (Fixed?)
+= Stray tab divider is displaying when dragging tabs
+= When dragging a tab off quickly, it is possible for the tab bar to not finish moving to the correct position or to crash.
 * Don't spawn new windows when we're hidden, doing so will unhide us
 * Window content is drawing 2 pixels to the left when dragging tabs
 * Prevent cmd-delete from working in the message window
