@@ -442,7 +442,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     }
 }
 
-- (IBAction)switchToContact:(id) ender
+- (IBAction)switchToContact:(id)sender
 {
     [sharedInstance configureWindowforObject:[sender representedObject]];
 }
