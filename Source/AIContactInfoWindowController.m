@@ -23,6 +23,7 @@
 #import "AIPreferenceController.h"
 #import "ESContactAlertsPane.h"
 #import "ESContactInfoListController.h"
+#import "ESContactAlertsController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AITabViewAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
