@@ -1,6 +1,6 @@
 //
-//  ESWebDynamicScrollBarsView.h
-//  Adium XCode
+//  ESWebView.h
+//  Adium
 //
 //  Created by Evan Schoenberg on Wed Mar 10 2004.
 //

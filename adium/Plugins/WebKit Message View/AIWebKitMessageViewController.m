@@ -1,12 +1,12 @@
 //
 //  AIWebKitMessageViewController.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Adam Iser on Fri Feb 27 2004.
 //
 
 #import "AIWebKitMessageViewController.h"
-#import "ESWebFrameViewAdditions.h"
+//#import "ESWebFrameViewAdditions.h"
 #import "ESWebView.h"
 
 #define NEW_CONTENT_RETRY_DELAY 0.01
@@ -49,15 +49,18 @@
 									 object:inChat];
 
 	//Create our webview
-	webView = [[WebView alloc] initWithFrame:NSMakeRect(0,0,100,100) //Arbitrary frame
-								   frameName:nil
-								   groupName:nil];
+	webView = [[ESWebView alloc] initWithFrame:NSMakeRect(0,0,100,100) //Arbitrary frame
+									 frameName:nil
+									 groupName:nil];
+	
 	[webView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 	[webView setFrameLoadDelegate:self];
 	[webView setPolicyDelegate:self];
 	[webView setUIDelegate:self];
 	[webView setMaintainsBackForwardList:NO];
-
+	
+	
+//	[[[[[webView mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
 	
 	//Observe preference changes and set our initial preferences
 	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -100,7 +103,7 @@
 //Return our scroll view
 - (NSView *)messageScrollView
 {
-	return([[[webView mainFrame] frameView] frameScrollView]);
+	return([[webView mainFrame] frameView]);
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
@@ -129,6 +132,13 @@
 	//Add
 	[newContent addObject:content];
 	[self processNewContent];
+	
+//	[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(report:) userInfo:nil repeats:YES];
+}
+
+- (void)report:(NSTimer *)timer
+{
+	NSLog(@"window is %@; FR is %@",[[[[[webView mainFrame] frameView] documentView] enclosingScrollView] window],[[[[[[webView mainFrame] frameView] documentView] enclosingScrollView] window] firstResponder]);	
 }
 
 - (void)processNewContent
@@ -314,7 +324,9 @@
 				
 				NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
 				
-				[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:[[[NSDateFormatter alloc] initWithDateFormat:timeFormat allowNaturalLanguage:NO] stringForObjectValue:[(AIContentMessage *)content date]]];
+				[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
+										withString:[[[NSDateFormatter alloc] initWithDateFormat:timeFormat 
+																		   allowNaturalLanguage:NO] stringForObjectValue:[(AIContentMessage *)content date]]];
 				
 			}
         }
@@ -340,7 +352,6 @@
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
 {
 	webViewIsReady = YES;
-	//NSLog(@"Ready");
 }
 
 #pragma mark WebPolicyDelegate
@@ -351,6 +362,8 @@
     frame:(WebFrame *)frame
     decisionListener:(id<WebPolicyDecisionListener>)listener
 {
+	NSLog(@"decidePolicyForNavigationAction:%@ %@ %@ %@",actionInformation,request,frame,listener);
+	
     int actionKey = [[actionInformation objectForKey: WebActionNavigationTypeKey] intValue];
     if (actionKey == WebNavigationTypeOther) {
         [listener use];
