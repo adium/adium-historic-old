@@ -41,6 +41,7 @@
 	[emoticonPack release];
 	[plugin release];
 	[preferences release];
+	[previewView release];
 
 	[super dealloc];
 }
