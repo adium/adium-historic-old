@@ -21,10 +21,14 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 
 @implementation AILog
 
+static	NSTimeZone	*defaultTimeZone = nil;
+
 - (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass date:(NSDate *)inDate
 {
     [super init];
 	
+	if(!defaultTimeZone) defaultTimeZone = [[NSTimeZone defaultTimeZone] retain];
+		
     path = [inPath retain];
     from = [inFrom retain];
     to = [inTo retain];
@@ -211,7 +215,7 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 
     scandate([fileName cString], &year, &month, &day);
     if(year && month && day){
-        return([NSCalendarDate dateWithYear:year month:month day:day hour:0 minute:0 second:0 timeZone:[NSTimeZone defaultTimeZone]]);
+        return([NSCalendarDate dateWithYear:year month:month day:day hour:0 minute:0 second:0 timeZone:defaultTimeZone]);
     }else{
         return(nil);
     }

@@ -15,6 +15,10 @@
 
 #import "BGContactsTable.h"
 
+@interface BGContactsTable (PRIVATE)
+- (NSString *)displayNameForContactAtToIndex:(unsigned)index;
+@end
+
 @implementation BGContactsTable
 
 //
@@ -22,16 +26,26 @@
 {
 	showingContacts = YES;
 	blankImage = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
+	_displayNameArray = nil;
+	
 	// Build the popup filter menu
 	[[[popup_filterType menu] addItemWithTitle:AILocalizedString(@"Contacts",nil) target:self action:@selector(switchTable:) keyEquivalent:@""] setTag:0];
 	[[[popup_filterType menu] addItemWithTitle:AILocalizedString(@"Accounts",nil) target:self action:@selector(switchTable:) keyEquivalent:@""] setTag:1];
 	// Need to remove the minimal menuitem needed in IB
 	[[popup_filterType menu] removeItemAtIndex:0];
+	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(logViewerDidCreateLogArrays:)
+									   name:LOG_VIEWER_DID_CREATE_LOG_ARRAYS
+									 object:nil];
 }
 
 - (void)dealloc
 {
+	[[adium notificationCenter] removeObserver:self];
+	
 	[blankImage release];
+	[_displayNameArray release]; _displayNameArray = nil;
 	
 	[super dealloc];
 }
@@ -57,25 +71,17 @@
     if([[tableColumn identifier] isEqual:@"service"]){
 		NSArray	*serviceArray = (showingContacts ? [controller_LogViewer toServiceArray] : [controller_LogViewer fromServiceArray]);
 		NSImage	*image = [AIServiceIcons serviceIconForServiceID:[serviceArray objectAtIndex:row]
-                                                                    type:AIServiceIconSmall
-                                                               direction:AIIconNormal];
+															type:AIServiceIconSmall
+													   direction:AIIconNormal];
 		return(image ? image : blankImage);
-			
+		
     }else if([[tableColumn identifier] isEqual:@"name"]){
 		if(showingContacts){
-                    NSString *alias = [NSString stringWithString:@""];
-                    // grab a contact, then its display name... is this quick?!
-                    alias = [[[adium contactController] existingListObjectWithUniqueID:[NSString stringWithFormat:@"%@.%@",[[controller_LogViewer toServiceArray] objectAtIndex:row],[[controller_LogViewer toArray] objectAtIndex:row]]] displayName];
-                    if([alias isEqual:@""] == NO && alias != nil)
-                    {
-                        return([NSString stringWithFormat:@"%@ (%@)", alias, [[controller_LogViewer toArray] objectAtIndex:row]]);
-                    }
-                    else
-                        return([[controller_LogViewer toArray] objectAtIndex:row]);
+			return([self displayNameForContactAtToIndex:row]);
 		}else{
 			return([[controller_LogViewer fromArray] objectAtIndex:row]);
 		}
-
+		
 	}else{
 		return(@"");
 	}
@@ -163,6 +169,40 @@
     //Reset any log searching
 	[controller_LogViewer filterForContactName:nil];
 	[controller_LogViewer filterForAccountName:nil];
+}
+
+- (NSString *)displayNameForContactAtToIndex:(unsigned)index
+{
+	if(!_displayNameArray){		
+		NSArray	*toServiceArray = [controller_LogViewer toServiceArray];
+		NSArray	*toArray = [controller_LogViewer toArray];
+		unsigned count = [toArray count];
+		unsigned i;
+		
+		_displayNameArray = [[NSMutableArray alloc] init];
+		
+		for(i = 0; i < count; i++){
+			NSString *displayName;
+			NSString *toService = [toServiceArray objectAtIndex:i];
+			NSString *to = [toArray objectAtIndex:i];
+
+			displayName = [[[adium contactController] existingListObjectWithUniqueID:[NSString stringWithFormat:@"%@.%@",toService,to]] displayName];
+
+			if(displayName && ![displayName isEqualToString:to]){
+				[_displayNameArray addObject:[NSString stringWithFormat:@"%@ (%@)", to, displayName]];
+			}else{
+	 			[_displayNameArray addObject:to];
+			}
+		}
+	}
+
+	return([_displayNameArray objectAtIndex:index]);
+}
+
+- (void)logViewerDidCreateLogArrays:(NSNotification *)aNotification
+{
+	[_displayNameArray release]; _displayNameArray = nil;
+	[table_filterList setNeedsDisplay:YES];
 }
 
 @end
