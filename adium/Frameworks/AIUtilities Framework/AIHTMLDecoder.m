@@ -204,23 +204,29 @@ int HTMLEquivalentForFontSize(int fontSize);
         [chunk replaceOccurrencesOfString:@">" withString:@"&gt;"
             options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
         
-        //Append string character by character, replacing any non-ascii characters with the designated unicode
+        //If we need to encode non-ASCII to HTML, append string character by character, replacing any non-ascii characters with the designated unicode
         //escape sequence.
-        int i;
-        for(i = 0; i < [chunk length]; i++){
-            unichar currentChar = [chunk characterAtIndex:i];
-            if(encodeNonASCII && (currentChar > 127) ){
-                [string appendFormat:@"&#%d;", currentChar];
-            }else if(currentChar == '\r' || currentChar == '\n'){
-                [string appendString:@"<BR>"];
-            }else{
-                //unichar characters may have a length of up to 3; be careful to get the whole character
-                NSRange composedCharRange = [chunk rangeOfComposedCharacterSequenceAtIndex:i];
-                [string appendString:[chunk substringWithRange:composedCharRange]];
-                i += composedCharRange.length - 1;
-            }
-        }
-
+		if (encodeNonASCII) {
+			int i;
+			for(i = 0; i < [chunk length]; i++){
+				unichar currentChar = [chunk characterAtIndex:i];
+				if(currentChar > 127){
+					[string appendFormat:@"&#%d;", currentChar];
+				}else if(currentChar == '\r' || currentChar == '\n'){
+					[string appendString:@"<BR>"];
+				}else{
+					//unichar characters may have a length of up to 3; be careful to get the whole character
+					NSRange composedCharRange = [chunk rangeOfComposedCharacterSequenceAtIndex:i];
+					[string appendString:[chunk substringWithRange:composedCharRange]];
+					i += composedCharRange.length - 1;
+				}
+			}
+		} else {
+			[chunk replaceOccurrencesOfString:@"\r" withString:@"<BR>" options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+			[chunk replaceOccurrencesOfString:@"\n" withString:@"<BR>" options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+			[string appendString:chunk];
+		}
+		
         //Release the chunk
         [chunk release];
 
