@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by David Clark on Tue Jul 13 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "DCJoinChatWindowController.h"
@@ -32,24 +31,16 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 
 }
 
-+ (void)closeSharedInstance
-{
-    if(sharedJoinChatInstance){
-        [sharedJoinChatInstance closeWindow:nil];
-    }
-}
-
 - (IBAction)joinChat:(id)sender
 {
 	
 	// If there is a controller, it handles all of the join-chat work
 	if( controller ) {
 		[controller joinChatWithAccount:[[popUp_service selectedItem] representedObject]];
-		[controller release];
+		[controller release]; controller = nil;
 	}
 	
-	[DCJoinChatWindowController closeSharedInstance];
-
+	[self closeWindow:nil];
 }
 
 - (void)configureForAccount:(AIAccount *)inAccount
@@ -163,7 +154,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 
 - (BOOL)windowShouldClose:(id)sender
 {
-    [self autorelease]; sharedJoinChatInstance = nil; //Close the shared instance
+    [sharedJoinChatInstance autorelease]; sharedJoinChatInstance = nil; //Close the shared instance
     return(YES);
 }
 
@@ -171,7 +162,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 - (IBAction)closeWindow:(id)sender
 {
     if([self windowShouldClose:nil]){
-		[DCJoinChatWindowController closeSharedInstance];
+		 [[self window] close];
     }
 }
 
