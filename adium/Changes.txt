@@ -16,7 +16,7 @@ Version 0.63 (7/23/2004)
 - Cleaned up contextual menus, window menu, 
 - Added a preference to turn off contact list tooltips
 - Aliases can now be set from the add contact window
-- Improvemed and simplified the theme preferences
+- Improved and simplified the theme preferences
 - The close buttons on tabs now only display when hovered
 - Added contact icons to the window menu
 - Added service icons to the account preferences, file menu
