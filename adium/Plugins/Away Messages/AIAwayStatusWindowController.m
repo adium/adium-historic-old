@@ -235,7 +235,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
                 showingAMorPM:[[prefDict objectForKey:KEY_SMV_SHOW_AMPM] boolValue]] retain];
 
 }
-
+// XXX replace this to use ESDateFormatter
 - (void)updateAwayTime:(id)userInfo
 {    
     [textField_awayTime setStringValue:
