@@ -70,7 +70,7 @@
 			NSString 		*identifier = [tabViewItem identifier];
 			NSString		*label = [tabViewItem label];
 			
-			if(![toolbarItems objectForKey:identifier]){
+			if(![toolbarItems objectForKey:identifier] && (tabViewItem != tabViewItem_loading)){
 				[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
 												withIdentifier:identifier
 														 label:label
@@ -84,7 +84,7 @@
 														  menu:NULL];
 			}
 		}
-
+		
 		[[[self window] toolbar] setConfigurationFromDictionary:toolbarItems];
 	}
 }
@@ -133,10 +133,31 @@
 //Resize our window when the tabview selection changes
 - (void)selectTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	if(tabViewItem != [self selectedTabViewItem] && [self respondsToSelector:@selector(setHidden:)]) [self setHidden:YES];
+	if(tabViewItem != [self selectedTabViewItem]){
+		if(tabViewItem_loading){
+			//Start the spinning progress indicator
+			[progressIndicator_loading setUsesThreadedAnimation:YES];
+			[progressIndicator_loading startAnimation:self];
+			
+			//Select the loading tab view
+			[super selectTabViewItem:tabViewItem_loading];
+			
+			/* Now inform our delegate that we will be selecting the desired tab view 
+			 * since after [super selectTabViewItem:tabViewItem_loading]; it thinks we are selecting tabViewItem_loading */
+			if([[self delegate] respondsToSelector:@selector(tabView:willSelectTabViewItem:)]){
+				[[self delegate] tabView:self willSelectTabViewItem:tabViewItem];
+			}
+			
+		}else if ([self respondsToSelector:@selector(setHidden:)]){
+			//If not, just hide
+			[self setHidden:YES];
+		}
+	}
 	
-	//Select
-	[super selectTabViewItem:tabViewItem];
+	if(!tabViewItem_loading){
+		//Select before resizing if we don't have a tab to show while loading
+		[super selectTabViewItem:tabViewItem];
+	}
 	
 	//Resize the window
 	if([[self delegate] respondsToSelector:@selector(tabView:heightForTabViewItem:)]){
@@ -153,7 +174,20 @@
 		[[self window] setFrame:frame display:isVisible animate:isVisible];		
 	}
 	
-	if([self respondsToSelector:@selector(setHidden:)]) [self setHidden:NO];
+	if(tabViewItem_loading){
+		//Select after resizing if we had a tab to show while loading
+		[super selectTabViewItem:tabViewItem];
+		
+		//And stop the animation on the next run loop
+		[progressIndicator_loading performSelector:@selector(stopAnimation:)
+										withObject:self
+										afterDelay:0];
+		
+	}else if ([self respondsToSelector:@selector(setHidden:)]){
+		//Otherwise, we simply hid before, so unhide now
+		[self setHidden:NO];
+	}
 }
+
 
 @end

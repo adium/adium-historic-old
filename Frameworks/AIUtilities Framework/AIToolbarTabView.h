@@ -10,13 +10,16 @@
  * @class AIToolbarTabView
  * @brief <tt>NSTabView</tt> subclass for creating preference-type windows
  *
- * <p>This is a special <tt>NSTabView</tt> subclass that's useful in creating preference-type windows.  The tabview will automatically create a window toolbar and add an toolbar item for each tab it contains.  The tabview delegate will be asked for the toolbar images.</p>
+ * <p>This is a special <tt>NSTabView</tt> subclass which is useful when creating preference-type windows.  The tabview will automatically create a window toolbar and add an toolbar item for each tab it contains.  The tabview delegate will be asked for the toolbar images.</p>
  * <p>This class also contains methods for auto-sizing the parent window based on the selected tab.  The delegate is asked for the window size, and this tabview takes care of the animation.</p>
  * @see <tt><a href="category_n_s_object(_a_i_toolbar_tab_view_delegate).html" target="_top">NSObject(AIToolbarTabViewDelegate)</a></tt>
 */
 @interface AIToolbarTabView : NSTabView {
     NSMutableDictionary *toolbarItems;
 	int					oldHeight;
+	
+	IBOutlet NSTabViewItem			*tabViewItem_loading;
+	IBOutlet NSProgressIndicator	*progressIndicator_loading;
 }
 
 @end
