@@ -30,6 +30,21 @@
 		   display:NO];
 }
 
+//Toolbar height
+- (float)toolbarHeight
+{
+	NSToolbar 	*toolbar = [self toolbar];
+	float 		toolbarHeight = 0.0;
+	
+	if(toolbar && [toolbar isVisible]){
+		NSRect 		windowFrame = [NSWindow contentRectForFrameRect:[self frame]
+														  styleMask:[self styleMask]];
+		toolbarHeight = NSHeight(windowFrame) - NSHeight([[self contentView] frame]);
+	}
+	
+	return(toolbarHeight);
+}
+
 
 //Is this window textured/brushed metal?
 - (BOOL)isTextured
