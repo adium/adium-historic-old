@@ -26,7 +26,7 @@
 - (oneway void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName;
 - (oneway void)xferRequestRejected:(GaimXfer *)xfer;
 
-- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat;
+- (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessaget;
 - (void)createNewGroupChat:(AIChat *)chat withListObject:(AIListObject *)contact;
 
 - (oneway void)setAway:(NSString *)awayHTML onAccount:(id)adiumAccount;

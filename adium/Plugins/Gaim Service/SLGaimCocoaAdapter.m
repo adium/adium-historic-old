@@ -220,6 +220,8 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 	
 	if (!conv && adiumAccount){
 		AIListObject *listObject = [chat listObject];
+		
+		//If we have a listObject, we are dealing with a one-on-one chat, so proceed accordingly
 		if (listObject){
 			const char			*destination = [[listObject UID] UTF8String];
 			conv = gaim_conversation_new(GAIM_CONV_IM,account, destination);
@@ -227,42 +229,90 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 			//associate the AIChat with the gaim conv
 			imChatLookupFromConv(conv);
 		}else{
+			//Otherwise, we have a multiuser chat.
 			
-#warning XXX
+			//All multiuser chats should have a non-nil name.
 			NSString	*chatName = [chat name];
 			if (chatName){
 				const char *name = [chatName UTF8String];
 				
-				//Look for an existing gaimChat (for now, it had better exist already which means trouble if we get here!)
+				/*
+				 Look for an existing gaimChat.  If we find one, our job is complete.
+				 
+				 We will never find one if we are joining a chat on our own (via the Join Chat dialogue).
+				 
+				 We should never get to this point if we were invited to a chat, as chatLookupFromConv(),
+				 which was called when we accepted the invitation and got the chat information from Gaim,
+				 will have associated the GaimConversation with the chat and we would have stopped after
+				 [[chatDict objectForKey:[chat uniqueChatID]] pointerValue] above.
+				 
+				 However, there's no reason not to check just in case.
+				 */
 				GaimChat *gaimChat = gaim_blist_find_chat (account, name);
 				if (!gaimChat){
+					
+					/*
+					 If we don't have a GaimChat with this name on this account, we need to create one.
+					 Our chat, which should have been created via the Adium Join Chat API, should have
+					 a ChatCreationInfo status object with the information we need to ask Gaim to
+					 perform the join.
+					 */
+					NSDictionary	*chatCreationInfo = [chat statusObjectForKey:@"ChatCreationInfo"];
+					
 					NSLog(@"gotta create a chat");
-					GHashTable *components;
-					GList *tmp;
-					GaimGroup *group;
-					const char *group_name = _("Chats");
-					GaimPlugin *prpl;
-					GaimPluginProtocolInfo *prpl_info = NULL;
+#warning Not all prpls support the below method for chat creation.  Need prpl-specific possibilites.
+					GHashTable				*components;
+					GaimGroup				*group;
+					const char				*group_name = _("Chats");
+					
+					//Prpl Info
+					GaimConnection			*gc = gaim_account_get_connection(account);
+					GList					*list, *tmp;
 					struct proto_chat_entry *pce;
-					GList *parts;
-						
-					//The below is not right. (Revised from: The below is not even close to right :P).
+					
+					//Create a hash table	
 					components = g_hash_table_new_full(g_str_hash, g_str_equal,
 													   g_free, g_free);
 					
-					prpl = gaim_find_prpl(gaim_account_get_protocol_id(account));
-					prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(prpl);
-					// ************* ENUMERATE SPACE LORD
-					parts = prpl_info->chat_info(gaim_account_get_connection(account));
-					pce = parts->data;
-
-					g_hash_table_replace(components,
-										  g_strdup(name),   /* name */
-										  g_strdup_printf("%d", /* gc-specific identifier */
-														  pce->identifier));
+					/*
+					 Get the chat_info for our desired account.  This will be a GList of proto_chat_entry
+					 objects, each of which has a label and identifier.  Each may also have is_int, with a minimum
+					 and a maximum integer value.
+					 */
+					list = (GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info(gc);
 					
-					// serv_join_chat(gaim_account_get_connection(account), components);
-
+					//Look at each proto_chat_entry in the list and put it in the hash table
+					//The hash table should contain char* objects created via a g_strdup method
+					for (tmp = list; tmp; tmp = tmp->next)
+					{
+						pce = tmp->data;
+						char	*identifier = g_strdup(pce->identifier);
+						char	*valueUTF8String = nil;
+						
+						if (!(pce->is_int)){
+							NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
+							if (value){
+								valueUTF8String = g_strdup(valueUTF8String);
+							}else{
+								NSLog(@"String: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+							}
+						}else{
+							NSNumber	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
+							if (value){
+								valueUTF8String = g_strdup_printf("%d",[value intValue]);
+							}else{
+								NSLog(@"Int: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+							}							
+						}
+						
+						//Store our chatCreationInfo-supplied value in the compnents hash table
+						g_hash_table_replace(components,
+											 identifier,
+											 valueUTF8String);
+					}
+					
+					/*
+					 //Add the GaimChat to our local buddy list?
 					gaimChat = gaim_chat_new(account,
 											 name,
 											 components);
@@ -274,12 +324,22 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					if (gaimChat != NULL) {
 						gaim_blist_add_chat(gaimChat, group, NULL);
 					}
+					*/
 					
 					//Associate our chat with the libgaim conversation
-					NSLog(@"associating the gaimconv");
-					GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
+					//NSLog(@"associating the gaimconv");
 					
+					//Join the chat serverside - the GHsahTable components, couple with the originating GaimConnect,
+					//now contains all the information the prpl will need to process our request.
+					NSLog(@"In the event of an emergency, your GHashTable may be used as a flotation device...");
+					serv_join_chat(gc, components);
+					//Evan: I think we'll return a nil conv here.. and then Gaim will call us back with a conv...
+					//and then we'll associate it with a chat later.  That's quite possibly wrong though...
+/*
+					GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
+
 					chatLookupFromConv(conv);
+ */
 				}
 			}
 		}
@@ -2132,7 +2192,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 #pragma mark Chats
 - (oneway void)openChat:(AIChat *)chat onAccount:(id)adiumAccount
 {
-	[runLoopMessenger target:self performSelector:@selector(gaimThreadOpenChat:onAccount:)
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadOpenChat:onAccount:)
 				  withObject:chat
 				  withObject:adiumAccount];
 }
@@ -2156,19 +2217,20 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}
 }
 
-- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat;
+- (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 {
 	[runLoopMessenger target:self
-			 performSelector:@selector(gaimThreadAddChatUser:toChat:)
+			 performSelector:@selector(gaimThreadInviteContact:toChat:withMessage:)
 				  withObject:contact
-				  withObject:chat];
+				  withObject:chat
+				  withObject:inviteMessage];
 }
 
-- (oneway void)gaimThreadAddChatUser:(AIListObject *)listObject toChat:(AIChat *)chat
+- (oneway void)gaimThreadInviteContact:(AIListContact *)listContact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage
 {
-	GaimConversation	*conv = [[chatDict objectForKey:[chat uniqueChatID]] pointerValue];
+	GaimConversation *conv = convLookupFromChat(chat,[chat account]);
 
-	NSLog(@"#### gaimThreadAddChatUser:%@ toChat:%@",[listObject UID],[chat name]);
+	NSLog(@"#### gaimThreadInviteContact:%@ toChat:%@",[listContact UID],[chat name]);
 	// dchoby98
 	if(conv) {
 		NSLog(@"#### gaimThreadAddChatUser found conv");
@@ -2179,11 +2241,11 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 			//GaimBuddy		*buddy = gaim_find_buddy(account, [[listObject UID] UTF8String]);
 			GaimConvChat	*gaimChat = gaim_conversation_get_chat_data(conv);
 			//const char *temp = [[NSString stringWithString:@"Hello"] UTF8String];
-			NSLog(@"#### gaimThreadAddChatUser chat: %d buddy: %@",chat==nil,[listObject UID]);
+			NSLog(@"#### gaimThreadAddChatUser chat: %d buddy: %@",chat==nil,[listContact UID]);
 			serv_chat_invite(gaim_conversation_get_gc(conv),
 							 gaim_conv_chat_get_id(gaimChat),
-							 "",
-							 [[listObject UID] UTF8String]);
+							 (inviteMessage ? [inviteMessage UTF8String] : ""),
+							 [[listContact UID] UTF8String]);
 			
 			//gaim_conv_chat_add_user(gaimChat,[[listObject UID] UTF8String],[[NSString stringWithString:@"Hello"] UTF8String]);
 		}
@@ -2198,68 +2260,13 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 				  withObject:contact];
 }
 
-- (oneway void)gaimThreadCreateNewChat:(AIChat *)chat withListObject:(AIListObject *)contact
+- (oneway void)gaimThreadCreateNewChat:(AIChat *)chat withListObject:(AIListContact *)contact
 {
-	GaimConversation	*conv = existingConvLookupFromChat(chat);
-	NSLog(@"#### gaimThreadCreateNewChat:%@ withListObject:%@",[chat name],[contact UID]);
-	if(conv) {
-		NSLog(@"#### gaimThreadCreateNewChat found conv");
-		GaimAccount *account = accountLookupFromAdiumAccount([chat account]);
-		
-		if( account ) {
-			NSLog(@"#### gaimThreadCreateNewChat found account");
-			
-			// Try #2
-			const char *name = [[chat name] UTF8String];
-			GaimChat *gaimChat = gaim_blist_find_chat (account, name);
-			
-			if( !gaimChat ) {
-				GHashTable *components;
-				GList *tmp;
-				GaimGroup *group;
-				const char *group_name = _("Chats");
-				GaimPlugin *prpl;
-				GaimPluginProtocolInfo *prpl_info = NULL;
-				struct proto_chat_entry *pce;
-				GList *parts;
-				
-				// (another) The below is not right. (Revised from: The below is not even close to right :P).
-				components = g_hash_table_new_full(g_str_hash, g_str_equal,
-												   g_free, g_free);
-				
-				prpl = gaim_find_prpl(gaim_account_get_protocol_id(account));
-				prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(prpl);
-				parts = prpl_info->chat_info(gaim_account_get_connection(account));
-				pce = parts->data;
-				
-				g_hash_table_replace(components,
-									 g_strdup(name),   /* name */
-									 g_strdup_printf("%d", /* gc-specific identifier */
-													 pce->identifier));
-				
-				gaimChat = gaim_chat_new(account,
-										 name,
-										 components);
-				if ((group = gaim_find_group(group_name)) == NULL) {
-					group = gaim_group_new(group_name);
-					gaim_blist_add_group(group, NULL);
-				}
-				
-				if (gaimChat != NULL) {
-					gaim_blist_add_chat(gaimChat, group, NULL);
-				}
-				
-				//Associate our chat with the libgaim conversation
-				//NSLog(@"#### associating the gaimconv");
-				//GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
-				
-				//chatLookupFromConv(conv);
-				
-				[self inviteContact:contact toChat:chat];
-
-			}
-		}
-	}
+	//Create the chat
+	GaimConversation	*conv = convLookupFromChat(chat, [chat account]);
+	
+	//Invite the contact, with no message
+	[self gaimThreadInviteContact:contact toChat:chat withMessage:nil];
 }
 
 
