@@ -28414,7 +28414,6 @@
 				D3DA2E40052E65E400A8010B,
 				D3DA2E3E052E65DE00A8010B,
 				D3B4A91E052DD87700A8010B,
-				D3D3D473052E5B6F00A8010B,
 				D3DA2E3A052E657600A8010B,
 				D3DA2E3C052E657C00A8010B,
 				4BCB9B5E0567FF5D001D3559,
@@ -28422,14 +28421,6 @@
 			isa = PBXGroup;
 			name = "About Box";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		D3D3D473052E5B6F00A8010B = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = Quack.aif;
-			path = Sounds/Adium/Quack.aif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
