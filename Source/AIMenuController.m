@@ -219,11 +219,11 @@
 	}
 }
 
-- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject
+- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inTextView
 {
     //remember menu config
     [contextualMenu_TextView release];
-    contextualMenu_TextView = [inObject retain];
+    contextualMenu_TextView = [inTextView retain];
 	
 	return([self contextualMenuWithLocations:inLocationArray usingMenu:textViewContextualMenu]);
 }
