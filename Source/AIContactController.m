@@ -15,34 +15,41 @@
 
 // $Id$
 
+//#define CONTACTS_INFO_WITH_PROMPT
+
 #import "AIContactController.h"
 #import "AIAccountController.h"
 #import "AIContactInfoWindowController.h"
 
-#define PREF_GROUP_CONTACT_LIST		@"Contact List"			//Contact list preference group
-#define KEY_FLAT_GROUPS				@"FlatGroups"			//Group storage
-#define KEY_FLAT_CONTACTS			@"FlatContacts"			//Contact storage
-#define KEY_FLAT_METACONTACTS		@"FlatMetaContacts"		//Metacontact objectID storage
+#ifdef CONTACTS_INFO_WITH_PROMPT
+#import "ESShowContactInfoPromptController.h"
+#endif
 
-#define	OBJECT_STATUS_CACHE			@"Object Status Cache"
+#define PREF_GROUP_CONTACT_LIST			@"Contact List"			//Contact list preference group
+#define KEY_FLAT_GROUPS					@"FlatGroups"			//Group storage
+#define KEY_FLAT_CONTACTS				@"FlatContacts"			//Contact storage
+#define KEY_FLAT_METACONTACTS			@"FlatMetaContacts"		//Metacontact objectID storage
 
-#define VIEW_CONTACTS_INFO  		AILocalizedString(@"View Contact's Info",nil)
-#define VIEW_INFO	    			AILocalizedString(@"View Info",nil)
-#define ALTERNATE_GET_INFO_MASK		(NSCommandKeyMask | NSShiftKeyMask | NSAlternateKeyMask)
+#define	OBJECT_STATUS_CACHE				@"Object Status Cache"
 
-#define UPDATE_CLUMP_INTERVAL		1.0
+#define VIEW_CONTACTS_INFO				AILocalizedString(@"View Contact's Info",nil)
+#define VIEW_CONTACTS_INFO_WITH_PROMPT	AILocalizedString(@"View Info For...",nil)
+#define VIEW_INFO						AILocalizedString(@"View Info",nil)
+#define ALTERNATE_GET_INFO_MASK			(NSCommandKeyMask | NSShiftKeyMask | NSAlternateKeyMask)
 
-#define TOP_METACONTACT_ID			@"TopMetaContactID"
-#define KEY_IS_METACONTACT			@"isMetaContact"
-#define KEY_OBJECTID				@"objectID"
-#define KEY_METACONTACT_OWNERSHIP   @"MetaContact Ownership"
-#define CONTACT_DEFAULT_PREFS		@"ContactPrefs"
+#define UPDATE_CLUMP_INTERVAL			1.0
 
-#define	SHOW_GROUPS_MENU_TITLE		AILocalizedString(@"Show Contact List Groups",nil)
-#define	HIDE_GROUPS_MENU_TITLE		AILocalizedString(@"Hide Contact List Groups",nil)
-#define SHOW_GROUPS_IDENTIFER		@"ShowGroups"
+#define TOP_METACONTACT_ID				@"TopMetaContactID"
+#define KEY_IS_METACONTACT				@"isMetaContact"
+#define KEY_OBJECTID					@"objectID"
+#define KEY_METACONTACT_OWNERSHIP		@"MetaContact Ownership"
+#define CONTACT_DEFAULT_PREFS			@"ContactPrefs"
 
-#define	KEY_USE_CONTACT_LIST_GROUPS			@"Use Contact List Groups"
+#define	SHOW_GROUPS_MENU_TITLE			AILocalizedString(@"Show Contact List Groups",nil)
+#define	HIDE_GROUPS_MENU_TITLE			AILocalizedString(@"Hide Contact List Groups",nil)
+#define SHOW_GROUPS_IDENTIFER			@"ShowGroups"
+
+#define	KEY_USE_CONTACT_LIST_GROUPS		@"Use Contact List Groups"
 
 @interface AIContactController (PRIVATE)
 - (AIListGroup *)processGetGroupNamed:(NSString *)serverGroup;
@@ -320,7 +327,7 @@ DeclareString(UID);
 {
 	//If we're dealing with a meta contact, update the status of the contacts contained within it
 	if([inContact isKindOfClass:[AIMetaContact class]]){
-		NSEnumerator	*enumerator = [(AIMetaContact *)inContact objectEnumerator];
+		NSEnumerator	*enumerator = [[(AIMetaContact *)inContact listContacts] objectEnumerator];
 		AIListContact	*contact;
 		
 		while(contact = [enumerator nextObject]){
@@ -328,7 +335,13 @@ DeclareString(UID);
 		}
 		
 	}else{
-		[[inContact account] updateContactStatus:inContact];
+		AIAccount *account = [inContact account];
+		if(![account online]){
+			account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																			 toContact:inContact];
+		}
+		
+		[account updateContactStatus:inContact];
 	}
 }
 
@@ -399,19 +412,21 @@ DeclareString(UID);
 		
 		//Inform observers of any changes
 		if(delayedContactChanges){
-			[[adium notificationCenter] postNotificationName:Contact_ListChanged object:nil];
+//			[[adium notificationCenter] postNotificationName:Contact_ListChanged object:nil];
 			delayedContactChanges = 0;
 			shouldSort = YES;
 		}
 		if (delayedStatusChanges){
-			if([[self activeSortController] shouldSortForModifiedStatusKeys:delayedModifiedStatusKeys]){
+			if(!shouldSort &&
+			   [[self activeSortController] shouldSortForModifiedStatusKeys:delayedModifiedStatusKeys]){
 				shouldSort = YES;
 			}
 			[delayedModifiedStatusKeys removeAllObjects];
 			delayedStatusChanges = 0;
 		}
 		if(delayedAttributeChanges){
-			if([[self activeSortController] shouldSortForModifiedAttributeKeys:delayedModifiedAttributeKeys]){
+			if(!shouldSort && 
+			   [[self activeSortController] shouldSortForModifiedAttributeKeys:delayedModifiedAttributeKeys]){
 				shouldSort = YES;
 			}			
 			[[adium notificationCenter] postNotificationName:ListObject_AttributesChanged
@@ -575,7 +590,7 @@ DeclareString(UID);
 	}else{
 		[[adium notificationCenter] postNotificationName:Contact_ListChanged 
 												  object:object
-												userInfo:(group ? [NSDictionary dictionaryWithObject:group forKey:@"containingObject"] : nil)];
+												userInfo:(group ? [NSDictionary dictionaryWithObject:group forKey:@"ContainingGroup"] : nil)];
 	}
 }
 
@@ -1251,6 +1266,13 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 }
 
+#ifdef CONTACTS_INFO_WITH_PROMPT
+- (void)showSpecifiedContactInfo:(id)sender
+{
+	[ESShowContactInfoPromptController showPrompt];
+}
+#endif
+
 //Add a contact info view
 - (void)addContactInfoPane:(AIContactInfoPane *)inPane
 {
@@ -1261,15 +1283,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (void)prepareContactInfo
 {
 	contactInfoPanes = [[NSMutableArray alloc] init];
-	
-	//Install the Get Info menu item
-//	menuItem_getInfo = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO
-//												  target:self
-//												  action:@selector(showContactInfo:)
-//										   keyEquivalent:@"i"];
-//	[menuItem_getInfo setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
-//	[[adium menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Manage];
-	
+		
 	//Add our get info contextual menu item
 	menuItem_getInfoContextualContact = [[NSMenuItem alloc] initWithTitle:VIEW_INFO
 															target:self
@@ -1310,7 +1324,16 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 										 object:[menuItem_getInfoAlternate menu]];
 		
     }
-		
+	
+#ifdef CONTACTS_INFO_WITH_PROMPT
+	//Install the Get Info (prompting for a contact name) menu item
+	menuItem_getInfo = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO_WITH_PROMPT
+												  target:self
+												  action:@selector(showSpecifiedContactInfo:)
+										   keyEquivalent:@""];
+	[[adium menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Editing];
+#endif
+	
 	//Add our get info toolbar item
 	NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"ShowInfo"
 																		   label:@"Info"
@@ -1798,19 +1821,19 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 {
 	NSEnumerator	*enumerator;
 	AIListObject	*listObject;
-	
+
 	//Contact
 	enumerator = [contactDict objectEnumerator];
 	while(listObject = [enumerator nextObject]){
 		if([[listObject internalObjectID] isEqualToString:uniqueID]) return(listObject);
 	}
-		
+
 	//Group
 	enumerator = [groupDict objectEnumerator];
 	while(listObject = [enumerator nextObject]){
 		if([[listObject internalObjectID] isEqualToString:uniqueID]) return(listObject);
 	}
-	
+
 	//Metacontact
 	enumerator = [metaContactDict objectEnumerator];
 	while(listObject = [enumerator nextObject]){
