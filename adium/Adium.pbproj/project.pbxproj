@@ -765,7 +765,7 @@
 				11C157DA04A88E04008E0C76,
 				11C157DC04A88E04008E0C76,
 				F5F0FE9E04B12CAC01A80106,
-				F5B8AFF704B6B21001A80106,
+				3C73F84004D62A2900A80106,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -786,7 +786,7 @@
 				11C157DB04A88E04008E0C76,
 				11C157DD04A88E04008E0C76,
 				F5F0FE9F04B12CAC01A80106,
-				F5B8AFF804B6B21001A80106,
+				3C73F84104D62A2900A80106,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -835,10 +835,10 @@
 			children = (
 				11C157D604A88E04008E0C76,
 				11C157D704A88E04008E0C76,
+				3C73F83E04D62A2900A80106,
+				3C73F83F04D62A2900A80106,
 				F5F0FE9C04B12CAC01A80106,
 				F5F0FE9D04B12CAC01A80106,
-				F5B8AFF504B6B21001A80106,
-				F5B8AFF604B6B21001A80106,
 				11C157D804A88E04008E0C76,
 				11C157D904A88E04008E0C76,
 				F5F0FEA004B1336C01A80106,
@@ -1382,6 +1382,68 @@
 //292
 //293
 //294
+//3C0
+//3C1
+//3C2
+//3C3
+//3C4
+		3C73F83404D5EEB900A80106 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = IKTableImageCell.h;
+			path = "Frameworks/AIUtilities Framework/IKTableImageCell.h";
+			refType = 4;
+		};
+		3C73F83504D5EEB900A80106 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = IKTableImageCell.m;
+			path = "Frameworks/AIUtilities Framework/IKTableImageCell.m";
+			refType = 4;
+		};
+		3C73F83604D5EEB900A80106 = {
+			fileRef = 3C73F83404D5EEB900A80106;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3C73F83704D5EEB900A80106 = {
+			fileRef = 3C73F83504D5EEB900A80106;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3C73F83E04D62A2900A80106 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEmoticonPack.h;
+			path = "Frameworks/AIUtilities Framework/AIEmoticonPack.h";
+			refType = 4;
+		};
+		3C73F83F04D62A2900A80106 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEmoticonPack.m;
+			path = "Frameworks/AIUtilities Framework/AIEmoticonPack.m";
+			refType = 4;
+		};
+		3C73F84004D62A2900A80106 = {
+			fileRef = 3C73F83E04D62A2900A80106;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3C73F84104D62A2900A80106 = {
+			fileRef = 3C73F83F04D62A2900A80106;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//3C0
+//3C1
+//3C2
+//3C3
+//3C4
 //400
 //401
 //402
@@ -13671,6 +13733,7 @@
 				9E49CC5E04BF6F8700415B22,
 				4B95210504C049E900A8010A,
 				4B9AB61904D2C84700A8010A,
+				3C73F83604D5EEB900A80106,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13775,6 +13838,7 @@
 				9E49CC5F04BF6F8700415B22,
 				4B95210604C049E900A8010A,
 				4B9AB61A04D2C84700A8010A,
+				3C73F83704D5EEB900A80106,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14434,6 +14498,8 @@
 				4B254C4303F6D8FC00A8010A,
 				11F486D904A7F802007575DA,
 				11F486DA04A7F802007575DA,
+				3C73F83404D5EEB900A80106,
+				3C73F83504D5EEB900A80106,
 				F5793979033E755501A8010A,
 				F579397A033E755501A8010A,
 				4BC02D310452C69100A8010A,
@@ -18060,32 +18126,6 @@
 			isa = PBXGroup;
 			name = Preferences;
 			refType = 4;
-		};
-		F5B8AFF504B6B21001A80106 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AICheckboxList.h;
-			path = Plugins/Emoticons/AICheckboxList.h;
-			refType = 4;
-		};
-		F5B8AFF604B6B21001A80106 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AICheckboxList.m;
-			path = Plugins/Emoticons/AICheckboxList.m;
-			refType = 4;
-		};
-		F5B8AFF704B6B21001A80106 = {
-			fileRef = F5B8AFF504B6B21001A80106;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5B8AFF804B6B21001A80106 = {
-			fileRef = F5B8AFF604B6B21001A80106;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F5B9714A0379874801A8010A = {
 			fileRef = F57938AB033E737001A8010A;
