@@ -5385,6 +5385,8 @@
 				344158AA059F90FB0019246B,
 				34416165059FC5430019246B,
 				34416166059FC5430019246B,
+				34F142A705E95B4D00B32FD7,
+				34F142A605E95B4C00B32FD7,
 				34415B9B059FA8DF0019246B,
 				34415B9C059FA8DF0019246B,
 			);
@@ -5403,8 +5405,9 @@
 				34415960059F94F80019246B,
 				34416060059FC2450019246B,
 				34416053059FC2270019246B,
-				34416059059FC2310019246B,
 				344159A2059F971C0019246B,
+				34416059059FC2310019246B,
+				34F1429D05E95AFF00B32FD7,
 				34415BC3059FA95B0019246B,
 			);
 			isa = PBXGroup;
@@ -16969,6 +16972,108 @@
 			settings = {
 			};
 		};
+		34F1429D05E95AFF00B32FD7 = {
+			children = (
+				34F1429F05E95B0E00B32FD7,
+				34F142A105E95B0E00B32FD7,
+				34F1429E05E95B0E00B32FD7,
+				34F142A005E95B0E00B32FD7,
+			);
+			isa = PBXGroup;
+			name = Trepia;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F1429E05E95B0E00B32FD7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimTrepiaAccountViewController.h;
+			path = "Plugins/Gaim Service/ESGaimTrepiaAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F1429F05E95B0E00B32FD7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimTrepiaAccount.h;
+			path = "Plugins/Gaim Service/ESGaimTrepiaAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F142A005E95B0E00B32FD7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimTrepiaAccountViewController.m;
+			path = "Plugins/Gaim Service/ESGaimTrepiaAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F142A105E95B0E00B32FD7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimTrepiaAccount.m;
+			path = "Plugins/Gaim Service/ESGaimTrepiaAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F142A205E95B0F00B32FD7 = {
+			fileRef = 34F1429E05E95B0E00B32FD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F142A305E95B0F00B32FD7 = {
+			fileRef = 34F1429F05E95B0E00B32FD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F142A405E95B0F00B32FD7 = {
+			fileRef = 34F142A005E95B0E00B32FD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F142A505E95B0F00B32FD7 = {
+			fileRef = 34F142A105E95B0E00B32FD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F142A605E95B4C00B32FD7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESTrepiaService.m;
+			path = "Plugins/Gaim Service/ESTrepiaService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F142A705E95B4D00B32FD7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESTrepiaService.h;
+			path = "Plugins/Gaim Service/ESTrepiaService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F142A805E95B4D00B32FD7 = {
+			fileRef = 34F142A605E95B4C00B32FD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F142A905E95B4D00B32FD7 = {
+			fileRef = 34F142A705E95B4D00B32FD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34F2BC67059CC2840005B238 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -20341,6 +20446,9 @@
 				34416173059FC55A0019246B,
 				344161C5059FC72E0019246B,
 				340915F205C0A5DF00CDE3DD,
+				34F142A205E95B0F00B32FD7,
+				34F142A305E95B0F00B32FD7,
+				34F142A905E95B4D00B32FD7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20381,6 +20489,9 @@
 				3441615C059FC5340019246B,
 				34416168059FC5440019246B,
 				34416174059FC55A0019246B,
+				34F142A405E95B0F00B32FD7,
+				34F142A505E95B0F00B32FD7,
+				34F142A805E95B4D00B32FD7,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
