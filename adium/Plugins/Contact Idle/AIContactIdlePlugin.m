@@ -22,7 +22,6 @@
 
 @implementation AIContactIdlePlugin
 
-
 - (void)installPlugin
 {
     //
@@ -43,7 +42,7 @@
 }
 
 //Called when a handle's status changes
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     if(	inModifiedKeys == nil || [inModifiedKeys containsObject:@"IdleSince"]){
 
@@ -66,7 +65,7 @@
         }
 
         //Set the correct idle value
-        [self setIdleForObject:inObject delayed:delayed silent:silent];
+        [self setIdleForObject:inObject delayed:NO silent:silent];
     }
 
     return(nil);
@@ -80,7 +79,8 @@
 
     enumerator = [idleObjectArray objectEnumerator];
     while((object = [enumerator nextObject])){
-        //should I really be muting here?  ?  (Does it matter either way?)
+		//There's actually no reason to re-sort in response to these status changes, but there is no way for us to
+		//let the Adium core know that.
         [self setIdleForObject:object delayed:YES silent:YES]; //Update the contact's idle time
     }
 }
@@ -101,10 +101,8 @@
     //Let everyone know we changed it
     [[adium contactController] listObjectStatusChanged:inObject
                                     modifiedStatusKeys:[NSArray arrayWithObject:@"Idle"]
-                                               delayed:delayed
                                                 silent:silent];
 }
-
 
 
 //Tooltip entry ---------------------------------------------------------------------------------
@@ -112,11 +110,11 @@
 {
     int 	idle = (int)[[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
     NSString	*entry = nil;
-        
+	
     if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
-	entry = @"Idle";
+		entry = @"Idle";
     }else if(idle != 0){
-	entry = @"Idle Time";
+		entry = @"Idle Time";
     }
     
     return(entry);
@@ -126,21 +124,21 @@
 {
     int 		idle = (int)[[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
     NSAttributedString	*entry = nil;
-
-    if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
-	entry = [[NSAttributedString alloc] initWithString:@"Yes"];
 	
+    if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
+		entry = [[NSAttributedString alloc] initWithString:@"Yes"];
+		
     }else if(idle != 0){
-	int	hours = (int)(idle / 60);
-	int	minutes = (int)(idle % 60);
-
-	if(hours){
-	    entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%i hour%@, %i minute%@", hours, (hours == 1 ? @"": @"s"), minutes, (minutes == 1 ? @"": @"s")]];
-	}else{
-	    entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%i minute%@", minutes, (minutes == 1 ? @"": @"s")]];
-	}
+		int	hours = (int)(idle / 60);
+		int	minutes = (int)(idle % 60);
+		
+		if(hours){
+			entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%i hour%@, %i minute%@", hours, (hours == 1 ? @"": @"s"), minutes, (minutes == 1 ? @"": @"s")]];
+		}else{
+			entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%i minute%@", minutes, (minutes == 1 ? @"": @"s")]];
+		}
     }
-
+	
     return([entry autorelease]);
 }
 

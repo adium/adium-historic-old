@@ -55,7 +55,7 @@ static AIInfoWindowController *sharedInstance = nil;
 }
 
 //Called as changes are made to a handle, update our display
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     //If we're currently displaying this handle, and it's profile or other displayed information changed...
     if(inObject == activeContactObject/* && [inModifiedKeys containsObject:@"TextProfile"]*/){
