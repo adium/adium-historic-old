@@ -59,7 +59,7 @@
 }
 - (void)Contact_StatusAwayNo:(NSNotification *)notification{
     AIListObject *object = [notification object];
-	NSString *statusType = [NSString stringWithString:@"active"];
+	NSString *statusType = [NSString stringWithString:@"return_away"];
     
     if([object integerStatusObjectForKey:@"Online"])
 		[self statusMessage:[NSString stringWithFormat:@"%@ came back",[object displayName]] forObject:object withType:statusType];
@@ -84,7 +84,7 @@
 }
 - (void)Contact_StatusIdleNo:(NSNotification *)notification{
 	AIListObject *object = [notification object];
-	NSString *statusType = [NSString stringWithString:@"active"];
+	NSString *statusType = [NSString stringWithString:@"return_idle"];
 	
 	[self statusMessage:[NSString stringWithFormat:@"%@ became active",[object displayName]] forObject:object withType:statusType];
 }
