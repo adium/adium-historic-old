@@ -68,6 +68,8 @@ typedef enum {
 - (IBAction)updateSearch:(id)sender;
 - (IBAction)selectSearchType:(id)sender;
 - (IBAction)deleteSelectedLogs:(id)sender;
+- (void)setSearchString:(NSString *)inString mode:(LogSearchMode)inMode;
+- (void)resetSearch;
 - (NSMutableArray *)fromArray;
 - (NSMutableArray *)serviceArray;
 - (NSMutableArray *)toArray;

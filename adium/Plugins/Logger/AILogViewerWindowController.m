@@ -52,7 +52,6 @@ static NSString* searchFieldIdentifier = @"Search Field Indentifier";
 - (void)selectDisplayedLog;
 - (NSAttributedString *)hilightOccurrencesOfString:(NSString *)littleString inString:(NSAttributedString *)bigString firstOccurrence:(NSRange *)outRange;
 - (void)sortSelectedLogArrayForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction;
-- (void)setSearchString:(NSString *)inString mode:(LogSearchMode)inMode;
 - (void)startSearching;
 - (void)stopSearching;
 - (void)setSearchMode:(LogSearchMode)inMode;
