@@ -38,6 +38,14 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     }
 	
 	//Configure and show window
+	
+#warning Metacontact
+	//Find the highest-up metaContact so our info is accurate
+	AIListObject	*containingObject;
+	while ([(containingObject = [listObject containingObject]) isKindOfClass:[AIMetaContact class]]){
+		listObject = containingObject;
+	}
+		
 	[sharedContactInfoInstance configureForListObject:listObject];
 	[sharedContactInfoInstance showWindow:nil];
 }

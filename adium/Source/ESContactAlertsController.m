@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.32 2004/07/27 18:52:03 evands Exp $
+//  $Id: ESContactAlertsController.m,v 1.33 2004/07/30 20:34:59 evands Exp $
 
 
 #import "ESContactAlertsController.h"
@@ -320,6 +320,7 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 //Add an alert (passed as a dictionary) to a list object
 - (void)addAlert:(NSDictionary *)newAlert toListObject:(AIListObject *)listObject
 {
+	NSLog(@"Add %@ to %@",newAlert, listObject);
 	NSString			*newAlertEventID = [newAlert objectForKey:KeyEventID];
 	NSMutableDictionary	*contactAlerts;
 	NSMutableArray		*eventArray;
