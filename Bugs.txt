@@ -11,6 +11,7 @@
 - [ICQ] Encoding problems
 - 10.2 users are losing color in their profiles & away messages (colors not saving)
 - First Message Received triggered multiple times
+- [GaduGadu] Contacts not saving to the server-list
 
 //------------------------------------------------------------------------------------
 // Adium X 0.70 remaining issues
@@ -64,9 +65,6 @@
 
 - [Yahoo] File transfer limitations
 	Files over 1 MB in size fail to send
-
-- [GaduGadu] Contacts not saving to the server-list
-
 
 //------------------------------------------------------------------------------------
 // Bugs - Resources
