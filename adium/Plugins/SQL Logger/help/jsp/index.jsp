@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 394 $ $Date: 2003/08/21 08:12:50 $ -->
+<!--$Rev: 400 $ $Date: 2003/08/28 09:19:57 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -214,7 +214,7 @@ try {
                 out.print(" | ");
             }
             out.print("<a href=\"index.jsp?&after=" + afterDate + 
-            " + &before=" + beforeDate + "&contains=" + 
+            "&before=" + beforeDate + "&contains=" + 
             rset.getString("username") + "\">"+
             rset.getString("username") + "</a>");
         }
@@ -276,7 +276,7 @@ try {
             userArray.add(rset.getString("recipient_sn"));
         }
         
-        message = message.replaceAll("\n", "<br>"); 
+        message = message.replaceAll("\r|\n", "<br />");
         message = message.replaceAll("   ", " &nbsp; ");
         
         out.print("<tr>\n");

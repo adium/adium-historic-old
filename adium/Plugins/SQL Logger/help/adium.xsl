@@ -50,6 +50,9 @@
               <br /><a
                 href="http://www.postgresql.org/docs/7.3/interactive/index.html"
                 class="offsides">PSQL Documentation</a>
+              <br /><a
+              href="http://www.xceltech.net/products/freeware_products.html"
+              class="offsides">PostMan Query</a>
             </td>
             <td>
               <xsl:apply-templates select="body"/>

@@ -2,8 +2,11 @@
 <page>
   <title>Adium SQL Logging Instructions</title>
   <body>
-    <p>SQL Logging implements Adium logging into a PostgreSQL database.<br />
-      This offers several advantages:</p>
+    <p>SQL Logging implements logging from the Mac OS X instant messaging
+      program Adium directly into a PostgreSQL database.  It consists of a
+      plugin for Adium, a web-interface for the logs written in JSP, and HTML
+      documentation.</p>
+    <p>SQL Logging  offers several advantages:</p>
     <ul>
       <li>Searching is very, very quick.</li>
       <li>Exceptionally detailed statistics.</li>
@@ -19,7 +22,7 @@
     You can find information and installation instructions at <a
       href="http://www.entropy.ch/software/macosx/postgresql/"
       class="offsite">http://www.entropy.ch/software/macosx/postgresql/</a>.
-  This tutorial has an OS X-style installer, and has a package for starting
+  This tutorial has an OS X-style installer, includes the Java driver, and has a package for starting
   PostgreSQL up at startup.</p>
     <p>There is also a set of installation instructions for installing
     PostgreSQL from source at <a
@@ -51,7 +54,11 @@
         [<a href="http://www.visualdistortion.org/adium/changes/sql/adium.sql.txt" class="offsite">Changes</a>]</li>
         <li>sql/tsearch.sql (setup for fast searching)
         [<a href="http://www.visualdistortion.org/adium/changes/sql/tsearch.sql.txt" class="offsite">Changes</a>]</li>
-      </ul>
+        <li>sql/update.sql (updates database to newest schema) 
+          [<a
+            href="http://www.visualdistortion.org/adium/changes/sql/update.sql.txt"
+            class="offsite">Changes</a>]</li>
+        </ul>
       <li>Web Viewing Pages</li>
         <ul>
           <li>jsp/index.jsp (main message viewer) 

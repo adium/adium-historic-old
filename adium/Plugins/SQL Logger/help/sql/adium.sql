@@ -3,7 +3,9 @@ create schema adium;
 create table adium.users (
 user_id serial primary key,
 username varchar(50) not null,
-service varchar(30) default 'AIM',
+service varchar(30) not null default 'AIM',
+num_sent int default 0,
+num_received int default 0,
 unique(username,service)
 );
 
@@ -26,7 +28,7 @@ create index adium_msg_date_sender_recipient on
    adium.messages (message_date, sender_id, recipient_id);
 create index adium_recipient on adium.messages(recipient_id);
 create index adium_display_user on adium.user_display_name(user_id);
-create index adium_display_date on adium.user_display_name(effdate,user_id);
+create index adium_display_date on adium.user_display_name(effdate);
 
 create or replace view adium.message_v as
 select message_id,
@@ -106,8 +108,21 @@ do instead  (
     insert into adium.messages
         (message,sender_id,recipient_id, message_date)
     values (new.message,
-    (select user_id from users where username = new.sender_sn),
-    (select user_id from users where username = new.recipient_sn),
+    (select user_id from users where username = new.sender_sn and
+    service=new.sender_service),
+    (select user_id from users where username = new.recipient_sn and
+    service=new.recipient_service),
     coalesce(new.message_date, now() )
-    )
+    );
+
+    update adium.users
+    set num_sent = num_sent + 1
+    where user_id = (select user_id from users where username= new.sender_sn
+      and service = new.sender_service);
+
+    update adium.users
+    set num_received = num_received + 1
+    where user_id = (select user_id from users where username =
+    new.recipient_sn
+     and service = new.recipient_service);
 );

@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 354 $ $Date: 2003/08/05 04:25:49 $ -->
+<!--$Rev: 401 $ $Date: 2003/08/28 09:19:57 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -46,19 +46,25 @@ try {
     stmt = conn.createStatement();
 
     if(sender != 0) {
-    	pstmt = conn.prepareStatement("select username from adium.users where user_id = ?");
-    	pstmt.setInt(1, sender);
-    	rset = pstmt.executeQuery();
-    	rset.next();
-    	sender_sn = new String(rset.getString("username"));
-    	
+        pstmt = conn.prepareStatement("select username,display_name from " +
+        " adium.users natural join adium.user_display_name udn " +
+        " where user_id = ?"+
+        " and not exists " +
+        " (select 'x' from adium.user_display_name " +
+        " where effdate > udn.effdate and user_id = users.user_id)");
+        pstmt.setInt(1, sender);
+        rset = pstmt.executeQuery();
+        rset.next();
+        sender_sn = new String(rset.getString("username"));
+        String display_name = new String(rset.getString("display_name"));
+        
         out.print("<td valign=\"top\">");
         pstmt = conn.prepareStatement(" select " +
         " count(*) as total_sent, "+
         " min(length(message)) as min_sent_length, " +
         " max(length(message)) as max_sent_length, " +
         " trunc(avg(length(message)),2) as avg_sent_length " +
-        " from adium.messages " +
+        " from adium.messages" +
         " where sender_id = ? " + 
         " group by sender_id " +
         " union all " +
@@ -86,8 +92,13 @@ try {
         */
         totals.next();
 
-        out.print("<div align=\"center\"><h3>" + sender_sn + 
-        "</h3></div>");
+        out.print("<div align=\"center\"><h3>");
+        if(display_name.equals(sender_sn)) {
+            out.print(sender_sn);
+        } else {
+            out.print(display_name + " (" + sender_sn + ")");
+        }
+        out.print("</h3></div>");
         
         out.print("Total messages sent: " + totals.getString("total_sent") + "<br>");
         total_messages += totals.getInt("total_sent");
@@ -254,7 +265,8 @@ try {
         " as \"Max Received\" from messages a, users "+
         " where a.sender_id = ? " +
         " and users.user_id = a.recipient_id " +
-        " group by sender_id, recipient_id, username");
+        " group by sender_id, recipient_id, username" +
+        " order by username ");
 
         pstmt.setInt(1, sender);
 
