@@ -133,29 +133,27 @@
 //Resize our window when the tabview selection changes
 - (void)selectTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	if(tabViewItem != [self selectedTabViewItem]){
-		if([self respondsToSelector:@selector(setHidden:)]) [self setHidden:YES];
+	if(tabViewItem != [self selectedTabViewItem] && [self respondsToSelector:@selector(setHidden:)]) [self setHidden:YES];
+	
+	//Select
+	[super selectTabViewItem:tabViewItem];
+	
+	//Resize the window
+	if([[self delegate] respondsToSelector:@selector(tabView:heightForTabViewItem:)]){
+		int		height = [[self delegate] tabView:self heightForTabViewItem:tabViewItem];
 		
-		//Select
-		[super selectTabViewItem:tabViewItem];
+		BOOL	isVisible = [[self window] isVisible];
+		NSRect 	frame = [[self window] frame];
 		
-		//Resize the window
-		if([[self delegate] respondsToSelector:@selector(tabView:heightForTabViewItem:)]){
-			int		height = [[self delegate] tabView:self heightForTabViewItem:tabViewItem];
-			
-			BOOL	isVisible = [[self window] isVisible];
-			NSRect 	frame = [[self window] frame];
-			
-			//Factor out old view's height, factor in new view's height		
-			frame.size.height += (height - oldHeight);
-			frame.origin.y -= (height - oldHeight);
-			oldHeight = height;
-			
-			[[self window] setFrame:frame display:isVisible animate:isVisible];		
-		}
+		//Factor out old view's height, factor in new view's height		
+		frame.size.height += (height - oldHeight);
+		frame.origin.y -= (height - oldHeight);
+		oldHeight = height;
 		
-		if([self respondsToSelector:@selector(setHidden:)]) [self setHidden:NO];
+		[[self window] setFrame:frame display:isVisible animate:isVisible];		
 	}
+	
+	if([self respondsToSelector:@selector(setHidden:)]) [self setHidden:NO];
 }
 
 @end

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.44 2004/05/24 03:46:52 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.45 2004/05/24 04:15:08 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -131,7 +131,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     NSString        *savedFrame;
     int             selectedTab;
     NSTabViewItem   *tabViewItem;
-    
+
     //
     [outlineView_advanced setIndentationPerLevel:10];
     [coloredBox_advancedTitle setColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.15]];
