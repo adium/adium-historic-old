@@ -17,7 +17,6 @@
 #import <Adium/Adium.h>
 #import "AIAdium.h"
 #import "AIPreferenceController.h"
-#import "AIPreferenceViewController.h"
 #import "AIPreferenceWindowController.h"
 #import "AIPreferenceCategory.h"
 
@@ -35,16 +34,16 @@
 {
     AIMiniToolbarItem	*toolbarItem;
 
-    categoryArray = [[NSMutableArray alloc] init];
+    paneArray = [[NSMutableArray alloc] init];
     groupDict = [[NSMutableDictionary alloc] init];
     
-    [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_CONNECTIONS image:[AIImageUtilities imageNamed:@"connectionsprefs" forClass:[self class]]]];
+/*    [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_CONNECTIONS image:[AIImageUtilities imageNamed:@"connectionsprefs" forClass:[self class]]]];
     [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_MESSAGES image:[AIImageUtilities imageNamed:@"interfaceprefs" forClass:[self class]]]];
     [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_CONTACTLIST image:[AIImageUtilities imageNamed:@"notfound" forClass:[self class]]]];
     [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_STATUS image:[AIImageUtilities imageNamed:@"statusprefs" forClass:[self class]]]];
     [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_DOCK image:[AIImageUtilities imageNamed:@"notfound" forClass:[self class]]]];
     [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_SOUNDS image:[AIImageUtilities imageNamed:@"notfound" forClass:[self class]]]];
-    [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_OTHER image:[AIImageUtilities imageNamed:@"notfound" forClass:[self class]]]];
+    [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_OTHER image:[AIImageUtilities imageNamed:@"notfound" forClass:[self class]]]];*/
 
     [owner registerEventNotification:Preference_GroupChanged displayName:@"Preferences Changed"];
 
@@ -70,16 +69,16 @@
 //dealloc
 - (void)dealloc
 {
-    [categoryArray release]; categoryArray = nil;
+    [paneArray release]; paneArray = nil;
     [groupDict release]; groupDict = nil;
 
     [super dealloc];
 }
 
-//Return the array of categories
-- (NSArray *)categoryArray
+//Return the array of preference panes
+- (NSArray *)paneArray
 {
-    return(categoryArray);
+    return(paneArray);
 }
 
 //Show the preference window
@@ -91,9 +90,12 @@
 
 //Adding Preferences ----------------------------------------------------------------------
 //Add a view to the preferences
-- (void)addPreferenceView:(AIPreferenceViewController *)inView
+- (void)addPreferencePane:(AIPreferencePane *)inPane
 {
-    NSString			*destCategoryName;
+    //Add the pane to our array
+    [paneArray addObject:inPane];
+    
+/*    NSString			*destCategoryName;
     AIPreferenceCategory	*destCategory = nil;
     AIPreferenceCategory	*category;
     NSEnumerator		*enumerator;
@@ -113,15 +115,15 @@
         NSLog(@"unknown category");
     }
     
-    [destCategory addView:inView];
+    [destCategory addView:inView];*/
 }
 
-- (void)openPreferencesToView:(AIPreferenceViewController *)inView
+- (void)openPreferencesToPane:(AIPreferencePane *)inPane
 {
-    AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowControllerWithOwner:owner];
+/*    AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowControllerWithOwner:owner];
 
     [preferenceWindow showView:inView];
-    [preferenceWindow showWindow:nil];
+    [preferenceWindow showWindow:nil];*/
 }
 
 //Register a dictionary of defaults
@@ -142,6 +144,7 @@
         }
     }
 }
+
 
 //Using Handle/Group Specific Preferences --------------------------------------------------------------
 //Return an object specific preference.
@@ -240,10 +243,5 @@
 }
 
 @end
-
-
-
-
-
 
 

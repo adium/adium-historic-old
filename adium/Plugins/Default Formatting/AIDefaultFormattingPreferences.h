@@ -20,8 +20,6 @@
 @interface AIDefaultFormattingPreferences : NSObject {
     AIAdium			*owner;
 
-    NSDictionary		*preferenceDict;
-
     IBOutlet	NSView			*view_prefView;
     IBOutlet	NSTextField		*textField_desiredFont;
     IBOutlet	NSButton		*button_setFont;

@@ -24,7 +24,6 @@
 @interface AIIdleTimeDisplayPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
 - (void)configureView;
-- (void)configureControlDimming;
 @end
 
 @implementation AIIdleTimeDisplayPreferences
@@ -42,44 +41,43 @@
                                              forKey:KEY_DISPLAY_IDLE_TIME
                                               group:PREF_GROUP_IDLE_TIME_DISPLAY];
     }
-
-    [self configureControlDimming];
 }
 
 //Private ---------------------------------------------------------------------------
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-
+    //Init
     [super init];
     owner = [inOwner retain];
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:IDLE_TIME_DISPLAY_PREF_NIB owner:self];
-
-    //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:IDLE_TIME_DISPLAY_PREF_TITLE categoryName:PREFERENCE_CATEGORY_CONTACTLIST view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
-
-    //Load our preferences and configure the view
-    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME_DISPLAY] retain];
-    [self configureView];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Display withDelegate:self label:IDLE_TIME_DISPLAY_PREF_TITLE]];
 
     return(self);
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:IDLE_TIME_DISPLAY_PREF_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_prefView);
 }
 
 //Configures our view for the current preferences
 - (void)configureView
 {
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
+
     [checkBox_displayIdle setState:[[preferenceDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue]];
-
-    [self configureControlDimming]; //disable the unavailable controls
 }
 
-//Enable/disable controls that are available/unavailable
-- (void)configureControlDimming
-{
-}
 
 @end

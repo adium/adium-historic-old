@@ -21,21 +21,15 @@
 
     IBOutlet	NSView			*view_prefView;
     IBOutlet	NSTableView		*tableView_icons;
-//    IBOutlet	NSImageView		*imageView_preview;
     IBOutlet	NSTextField		*textField_title;
-//    IBOutlet	NSTextField		*textField_description;
     IBOutlet	NSTextField		*textField_creator;
-//    IBOutlet	NSTextField		*textField_link;
 
     IBOutlet	NSMatrix		*matrix_iconPreview;
-
+    
     NSTimer			*animationTimer;
     int 			cycle;
-    
-    
     NSMutableArray		*iconArray;
     NSDictionary		*selectedIcon;
-
     NSMutableArray		*previewStateArray;
 }
 

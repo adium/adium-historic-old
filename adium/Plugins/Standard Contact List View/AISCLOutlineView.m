@@ -24,7 +24,7 @@
 #define	CONTACT_LIST_EMPTY_MESSAGE		@"No Available Contacts"		//Message to display when the contact list is empty
 #define DESIRED_MIN_WIDTH	40
 #define DESIRED_MIN_HEIGHT	20
-#define EMPTY_HEIGHT		20
+#define EMPTY_HEIGHT		-2
 #define EMPTY_WIDTH		140
 
 @interface AISCLOutlineView (PRIVATE)

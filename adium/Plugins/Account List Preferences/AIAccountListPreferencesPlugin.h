@@ -25,8 +25,6 @@
     IBOutlet		NSButton	*button_deleteAccount;
     IBOutlet		NSButton	*button_toggleAccount;
 
-    AIPreferenceViewController	*preferenceView;
-
     NSMutableDictionary	*toolbarItems;
 
     NSArray		*serviceArray;

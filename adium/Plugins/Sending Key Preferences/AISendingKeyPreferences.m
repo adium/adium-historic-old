@@ -27,7 +27,7 @@
 @end
 
 @implementation AISendingKeyPreferences
-
+//
 + (AISendingKeyPreferences *)sendingKeyPreferencesWithOwner:(id)inOwner
 {
     return([[[self alloc] initWithOwner:inOwner] autorelease]);
@@ -54,28 +54,35 @@
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-
+    //Init
     [super init];
     owner = [inOwner retain];
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:SENDING_KEY_PREF_NIB owner:self];
-
-    //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:SENDING_KEY_PREF_TITLE categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
-
-    //Load our preferences and configure the view
-    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] retain];
-    [self configureView];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Sending withDelegate:self label:SENDING_KEY_PREF_TITLE]];
 
     return(self);
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:SENDING_KEY_PREF_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_prefView);
 }
 
 //Configures our view for the current preferences
 - (void)configureView
 {
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+
     [checkBox_sendOnEnter setState:[[preferenceDict objectForKey:@"Send On Enter"] intValue]];
     [checkBox_sendOnReturn setState:[[preferenceDict objectForKey:@"Send On Return"] intValue]];
 }

@@ -39,7 +39,7 @@
 @end
 
 @implementation AISMPreferences
- 
+//
 + (AISMPreferences *)messageViewPreferencesWithOwner:(id)inOwner
 {
     return([[[self alloc] initWithOwner:inOwner] autorelease]);
@@ -48,8 +48,8 @@
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
-    
     if(sender == button_setPrefixFont){
+        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         NSFontManager	*fontManager = [NSFontManager sharedFontManager];
         NSFont		*selectedFont = [[preferenceDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont];
 
@@ -139,7 +139,6 @@
 }
 
 
-
 //Private ---------------------------------------------------------------------------
 //Called in response to a font panel change
 - (void)changeFont:(id)sender
@@ -155,41 +154,66 @@
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-
+    //Init
     [super init];
-
     owner = [inOwner retain];
-
     prefixColors = [[NSDictionary dictionaryNamed:AISM_PREFIX_COLORS forClass:[self class]] retain];
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:AISM_PREF_NIB owner:self];
-
-    //Install our preference views
+    //Register our preference panes
     //Prefixes
-    preferenceViewController = [AIPreferenceViewController controllerWithName:AISM_PREF_TITLE_PREFIX categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_prefixes];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
+    prefixesPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:AISM_PREF_TITLE_PREFIX] retain];
+    [[owner preferenceController] addPreferencePane:prefixesPane];
 
     //TimeStamps
-    preferenceViewController = [AIPreferenceViewController controllerWithName:AISM_PREF_TITLE_TIMES categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_timeStamps];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
+    timeStampsPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:AISM_PREF_TITLE_TIMES] retain];
+    [[owner preferenceController] addPreferencePane:timeStampsPane];
 
     //Gridding
-    preferenceViewController = [AIPreferenceViewController controllerWithName:AISM_PREF_TITLE_GRID categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_gridding];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
+    griddingPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:AISM_PREF_TITLE_GRID] retain];
+    [[owner preferenceController] addPreferencePane:griddingPane];
 
     //Aliases
-    preferenceViewController = [AIPreferenceViewController controllerWithName:AISM_PREF_TITLE_ALIAS categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_alias];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
-    
-    //Load the preferences, and configure our view
-    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] retain];
-    [self configureView];
+    aliasPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Accounts_Profile withDelegate:self label:AISM_PREF_TITLE_ALIAS] retain];
+    [[owner preferenceController] addPreferencePane:aliasPane];
 
     return(self);
 }
 
+//
+- (void)dealloc
+{
+    [prefixesPane release];
+    [timeStampsPane release];
+    [griddingPane release];
+    [aliasPane release];
+
+    [super dealloc];
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Make sure our nib is loaded
+    if(!view_prefixes){
+        [NSBundle loadNibNamed:AISM_PREF_NIB owner:self];
+
+        //Configure our views
+        [self configureView];
+    }
+    
+    //Return the correct view
+    if(preferencePane == prefixesPane){
+        return(view_prefixes);
+    }else if(preferencePane == timeStampsPane){
+        return(view_timeStamps);
+    }else if(preferencePane == griddingPane){
+        return(view_gridding);
+    }else{// if(preferencePane == aliasPane){
+        return(view_alias);
+    }
+}
+
+//Display the font name in our text field
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField
 {
     if(inFont){
@@ -202,6 +226,8 @@
 //Configures our view for the current preferences
 - (void)configureView
 {
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+
     //Font
     [self showFont:[[preferenceDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont] inField:textField_prefixFontName];
 
@@ -229,6 +255,7 @@
     [self configureControlDimming];
 }
 
+//Build a menu of colors
 - (void)buildColorMenu:(NSPopUpButton *)inMenu
 {
     NSEnumerator	*enumerator;
@@ -289,8 +316,5 @@
 }
 
 @end
-
-
-
 
 

@@ -45,8 +45,6 @@
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-    
     //Init
     [super init];
     owner = [inOwner retain];
@@ -54,23 +52,9 @@
     animationTimer = nil;
     [self _buildIconArray];
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:DOCK_ICON_SELECTION_PREF_NIB owner:self];
-
-    //Install and configure our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:DOCK_ICON_SELECTION_PREF_TITLE categoryName:PREFERENCE_CATEGORY_DOCK view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
-    [self setupPreferenceView];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Dock withDelegate:self label:DOCK_ICON_SELECTION_PREF_TITLE]];
     
-    //Observe preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
-
-    //Observe the preference window open and close so we only animate when it's visible
-    [[owner notificationCenter] addObserver:self selector:@selector(preferenceWindowWillOpen:) name:Preference_WindowWillOpen object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(preferenceWindowDidClose:) name:Preference_WindowDidClose object:nil];
-
-
     return(self);
 }
 
@@ -100,44 +84,22 @@
     }
 }
 
-//
-- (void)preferencesChanged:(NSNotification *)notification
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){
-        NSDictionary 	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
-        NSDictionary	*iconDict;
-        NSString	*iconName;
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:DOCK_ICON_SELECTION_PREF_NIB owner:self];
 
-        //Set the selected icon
-        iconName = [preferenceDict objectForKey:KEY_ACTIVE_DOCK_ICON];
-        iconDict = [self _iconInArrayNamed:iconName];
-        [self configureForSelectedIcon:iconDict];
-        
+        //Configure our view
+        [self configureView];
     }
-}
 
-//
-- (void)preferenceWindowWillOpen:(NSNotification *)notification
-{
-    //Start animating
-    if(!animationTimer){
-        animationTimer = [[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(animate:) userInfo:nil repeats:YES] retain];
-    }
-}
-
-//
-- (void)preferenceWindowDidClose:(NSNotification *)notification
-{
-    //Stop animating
-    if(animationTimer){
-        [animationTimer invalidate];
-        [animationTimer release];
-        animationTimer = nil;
-    }
+    return(view_prefView);
 }
 
 //Setup our preference view
-- (void)setupPreferenceView
+- (void)configureView
 {
     NSEnumerator	*enumerator;
     NSTableColumn	*column;
@@ -155,7 +117,48 @@
 
         [column setDataCell:cell];
     }
+
+    //Start animating
+    if(!animationTimer){
+        animationTimer = [[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(animate:) userInfo:nil repeats:YES] retain];
+    }
+
+    //Observe preference changes
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
 }
+
+//Preferences have changed
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){
+        NSDictionary 	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+        NSDictionary	*iconDict;
+        NSString	*iconName;
+
+        //Set the selected icon
+        iconName = [preferenceDict objectForKey:KEY_ACTIVE_DOCK_ICON];
+        iconDict = [self _iconInArrayNamed:iconName];
+        [self configureForSelectedIcon:iconDict];
+        
+    }
+}
+
+//
+/*- (void)preferenceWindowWillOpen:(NSNotification *)notification
+{
+}
+
+//
+- (void)preferenceWindowDidClose:(NSNotification *)notification
+{
+    //Stop animating
+    if(animationTimer){
+        [animationTimer invalidate];
+        [animationTimer release];
+        animationTimer = nil;
+    }
+}*/
 
 //Configures our view for the passed icon being selected
 - (void)configureForSelectedIcon:(NSDictionary *)iconDict

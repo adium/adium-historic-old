@@ -20,8 +20,6 @@
 @interface AITextForcingPreferences : NSObject {
     AIAdium			*owner;
 
-    NSDictionary		*preferenceDict;
-
     IBOutlet	NSView			*view_prefView;
 
     IBOutlet	NSButton		*checkBox_forceFont;

@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIAccount.h"
-#import "AIPreferenceViewController.h"
+#import "AIPreferencePane.h"
 #import "AIPlugin.h"
 #import "AIServiceType.h"
 #import "AIContentObject.h"
@@ -31,3 +31,5 @@
 #import "AIContentTyping.h"
 #import "AIChat.h"
 #import "AIListChat.h"
+#import "AIPreferenceViewController.h"
+

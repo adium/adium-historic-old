@@ -18,10 +18,25 @@
 @class AIAdium, AIPreferenceViewController;
 
 @interface AIPreferenceWindowController : NSWindowController {
-    IBOutlet	NSScrollView	*scrollView_contents;
+    IBOutlet	NSTabView	*tabView_category;
+    
+    IBOutlet	NSView		*view_Accounts_Connections;
+    IBOutlet	NSView		*view_Accounts_Profile;
+    IBOutlet	NSView		*view_Accounts_Hosts;
+    IBOutlet	NSView		*view_ContactList_General;
+    IBOutlet	NSView		*view_ContactList_Display;
+    IBOutlet	NSView		*view_Messages_Display;
+    IBOutlet	NSView		*view_Messages_Sending;
+    IBOutlet	NSView		*view_Messages_Receiving;
+    IBOutlet	NSView		*view_Status_Away;
+    IBOutlet	NSView		*view_Status_Idle;
+    IBOutlet	NSView		*view_Dock;
+    IBOutlet	NSView		*view_Sound;
 
     AIAdium			*owner;
     NSMutableDictionary		*toolbarItems;
+
+    
 }
 
 + (AIPreferenceWindowController *)preferenceWindowControllerWithOwner:(id)inOwner;

@@ -66,16 +66,40 @@
 //init
 - (id)initWithOwner:(id)inOwner plugin:(AIEmoticonsPlugin *)pluginSet
 {
-    AIPreferenceViewController	*preferenceViewController;
-
+    //Init
     [super init];
     owner = [inOwner retain];
     plugin = pluginSet;
     packs = [[NSMutableArray alloc] init];
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:EMOTICON_PREF_NIB owner:self];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:EMOTICON_PREF_TITLE]];
 
+    return(self);
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:EMOTICON_PREF_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_prefView);
+}
+
+//Configures our view for the current preferences
+- (void)configureView
+{
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS];
+
+    //Enablement
+    [checkBox_enable setState:[[preferenceDict objectForKey:@"Enable"] intValue]];
+    
     //Init NSTableView of Packs
     NSButtonCell	*newCell = [[[NSButtonCell alloc] init] autorelease];
 
@@ -83,32 +107,13 @@
     [newCell setControlSize:NSSmallControlSize];
     [newCell setTitle:@""];
     [newCell setRefusesFirstResponder:YES];
-    
+
     [[[table_packList tableColumns] objectAtIndex:0] setDataCell:newCell];
     [[[table_packList tableColumns] objectAtIndex:0] setIdentifier:@"check"];
     [[[table_packList tableColumns] objectAtIndex:1] setIdentifier:@"packname"];
-    
+
     [table_packList setDataSource:self];
-
-    //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:EMOTICON_PREF_TITLE categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
-
-    //Load our preferences and configure the view
-    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS] retain];
-    [self configureView];
-    //[checkList_packList addItemName:@"Test1" state:NSOnState];
-    //[checkList_packList addItemName:@"Test2" state:NSOffState];
-
-    return(self);
-}
-
-//Configures our view for the current preferences
-- (void)configureView
-{
-    //Enablement
-    [checkBox_enable	setState:[[preferenceDict objectForKey:@"Enable"] intValue]];
-
+    
     //Emoticon Packs
     [plugin allEmoticonPacks:packs];
     [table_packList reloadData];

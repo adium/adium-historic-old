@@ -10,9 +10,9 @@
 #import <AIUtilities/AIUtilities.h>
 
 #define TRIANGLE_PADDING_X 	3
-#define TRIANGLE_OFFSET_Y 	7
-#define LABEL_OFFSET_Y 		2
-#define BACK_OFFSET_Y		4
+#define TRIANGLE_OFFSET_Y 	4
+#define LABEL_OFFSET_Y 		0
+#define BACK_OFFSET_Y		0
 
 @interface AIBrushedPopUpButton (PRIVATE)
 - (void)stopTrackingCursor;
@@ -25,17 +25,30 @@
 {
     [super initWithCoder:aDecoder];
 
-    //Preload some images
-    popUpRolloverCaps = [[AIImageUtilities imageNamed:@"PopUpRollover_Caps" forClass:[self class]] retain];
-    popUpRolloverMiddle = [[AIImageUtilities imageNamed:@"PopUpRollover_Middle" forClass:[self class]] retain];
-    popUpPressedCaps = [[AIImageUtilities imageNamed:@"PopUpPressed_Caps" forClass:[self class]] retain];
-    popUpPressedMiddle = [[AIImageUtilities imageNamed:@"PopUpPressed_Middle" forClass:[self class]] retain];
-    popUpTriangle = [[AIImageUtilities imageNamed:@"PopUpArrow" forClass:[self class]] retain];
-    popUpTriangleWhite = [[AIImageUtilities imageNamed:@"PopUpArrowWhite" forClass:[self class]] retain];
+    if([[self cell] controlSize] == NSRegularControlSize){
+        //Preload some images
+        popUpRolloverCaps = [[AIImageUtilities imageNamed:@"PopUpRollover_Caps" forClass:[self class]] retain];
+        popUpRolloverMiddle = [[AIImageUtilities imageNamed:@"PopUpRollover_Middle" forClass:[self class]] retain];
+        popUpPressedCaps = [[AIImageUtilities imageNamed:@"PopUpPressed_Caps" forClass:[self class]] retain];
+        popUpPressedMiddle = [[AIImageUtilities imageNamed:@"PopUpPressed_Middle" forClass:[self class]] retain];
+        popUpTriangle = [[AIImageUtilities imageNamed:@"PopUpArrow" forClass:[self class]] retain];
+        popUpTriangleWhite = [[AIImageUtilities imageNamed:@"PopUpArrowWhite" forClass:[self class]] retain];
+
+    }else{
+        //Preload some images
+        popUpRolloverCaps = [[AIImageUtilities imageNamed:@"SmallPopUpRollover_Caps" forClass:[self class]] retain];
+        popUpRolloverMiddle = [[AIImageUtilities imageNamed:@"SmallPopUpRollover_Middle" forClass:[self class]] retain];
+        popUpPressedCaps = [[AIImageUtilities imageNamed:@"SmallPopUpPressed_Caps" forClass:[self class]] retain];
+        popUpPressedMiddle = [[AIImageUtilities imageNamed:@"SmallPopUpPressed_Middle" forClass:[self class]] retain];
+        popUpTriangle = [[AIImageUtilities imageNamed:@"SmallPopUpArrow" forClass:[self class]] retain];
+        popUpTriangleWhite = [[AIImageUtilities imageNamed:@"SmallPopUpArrowWhite" forClass:[self class]] retain];
+        
+    }
 
     //
     mouseIn = NO;
     trackingTag = 0;
+    popUpTitle = nil;
 
     return(self);    
 }
@@ -50,8 +63,29 @@
     [popUpTriangle release];
     [popUpTriangleWhite release];
 
+    [popUpTitle release];
+    
     [super dealloc];
 }
+
+//Handle title setting on our own, since NSPopUpButton doesn't seem to do it reliably.
+- (void)setTitle:(NSString *)aString
+{
+    if(popUpTitle != aString){
+        [popUpTitle release];
+        popUpTitle = [aString retain];
+
+        [self setNeedsDisplay:YES];
+    }
+}
+- (void)selectItem:(id <NSMenuItem>)item
+{
+    if(popUpTitle){
+        [popUpTitle release]; popUpTitle = nil;
+    }
+    [super selectItem:item];
+}
+
 
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow
 {
@@ -67,10 +101,14 @@
     NSString		*title;
     NSFont		*font;
     NSRect		frame;
-    
-    font = [NSFont boldSystemFontOfSize:11];
-    title = [self titleOfSelectedItem];
 
+    font = [self font];//[NSFont boldSystemFontOfSize:11];
+    if(popUpTitle){
+        title = popUpTitle;
+    }else{
+        title = [self titleOfSelectedItem];
+    }
+        
     textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
 
     frame = [self frame];
@@ -87,14 +125,20 @@
     NSString		*title;
     NSImage		*triangle;
     NSFont		*font;
-    int			contentRight, labelWidth;
+    int			contentRight;
+    NSSize		labelSize;
     NSImage		*caps, *middle;
     NSRect 		frame, sourceRect, destRect;
     int 		capWidth, capHeight;
-
+    int			centeredLabelY;
+    
     //Get the font and displayed string
-    font = [NSFont boldSystemFontOfSize:11];
-    title = [self titleOfSelectedItem];
+    font = [self font];
+    if(popUpTitle){
+        title = popUpTitle;
+    }else{
+        title = [self titleOfSelectedItem];
+    }
     
     //Get the colors
     if(mouseIn){
@@ -120,12 +164,12 @@
     }
 
     //Precalc dimensions
+    frame = [self bounds];
     capWidth = [caps size].width / 2.0;
     capHeight = [caps size].height;
-    labelWidth = [title sizeWithAttributes:textAttributes].width;
-    contentRight = capWidth + labelWidth + TRIANGLE_PADDING_X + [triangle size].width;
-    frame = [self bounds];
-    frame.origin.y -= BACK_OFFSET_Y;
+    labelSize = [title sizeWithAttributes:textAttributes];
+    centeredLabelY = ((capHeight - labelSize.height) / 2.0);
+    contentRight = capWidth + labelSize.width + TRIANGLE_PADDING_X + [triangle size].width;
     
     //Draw the backgound
     if(mouseIn){
@@ -156,11 +200,11 @@
     }
 
     //Draw the embossed title
-    [title drawInRect:NSOffsetRect(rect, capWidth, LABEL_OFFSET_Y + 1) withAttributes:bezelAttributes];
-    [title drawInRect:NSOffsetRect(rect, capWidth, LABEL_OFFSET_Y) withAttributes:textAttributes];
+    [title drawAtPoint:NSMakePoint(frame.origin.x + capWidth, frame.origin.y + frame.size.height - labelSize.height - centeredLabelY) withAttributes:bezelAttributes];
+    [title drawAtPoint:NSMakePoint(frame.origin.x + capWidth, frame.origin.y + frame.size.height - labelSize.height - centeredLabelY - 1) withAttributes:textAttributes];
 
     //Draw the triangle
-    [triangle compositeToPoint:NSMakePoint(rect.origin.x + capWidth + labelWidth + TRIANGLE_PADDING_X, rect.origin.y + [triangle size].height + TRIANGLE_OFFSET_Y) operation:NSCompositeSourceOver];
+    [triangle compositeToPoint:NSMakePoint(frame.origin.x + capWidth + labelSize.width + TRIANGLE_PADDING_X, frame.origin.y + frame.size.height - TRIANGLE_OFFSET_Y) operation:NSCompositeSourceOver];
 }
 
 - (void)resetCursorRects

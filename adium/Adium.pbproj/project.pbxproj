@@ -1334,6 +1334,7 @@
 				4BDF17250450CBDE00A8010A,
 				4B333F74048144D900A8010A,
 				4B24A26B0482B34B00A8010A,
+				4BAE56E804CC5FCC00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3864,6 +3865,18 @@
 			settings = {
 			};
 		};
+		4B3B3FF004CB958F00A8010A = {
+			fileRef = F57938BA033E739101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B3B3FF104CB959000A8010A = {
+			fileRef = F57938F1033E745F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B3C469A04981D5800A8010A = {
 			fileRef = F53B9A0702CCED6401A8010A;
 			isa = PBXBuildFile;
@@ -4150,6 +4163,32 @@
 			isSharedContext = 0;
 			isa = PBXAppleScriptBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B4ABB4D04CC9F9C00A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIPreferenceViewController.h;
+			path = "Frameworks/Adium Framework/AIPreferenceViewController.h";
+			refType = 4;
+		};
+		4B4ABB4E04CC9F9C00A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIPreferenceViewController.m;
+			path = "Frameworks/Adium Framework/AIPreferenceViewController.m";
+			refType = 4;
+		};
+		4B4ABB4F04CC9F9C00A8010A = {
+			fileRef = 4B4ABB4D04CC9F9C00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B4ABB5004CC9F9C00A8010A = {
+			fileRef = 4B4ABB4E04CC9F9C00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B4C45A0040AC65700A8010A = {
 			fileRef = 4BCDEB3603D4DC6F00A8010A;
@@ -4526,6 +4565,78 @@
 		};
 		4B4FA12C04126C5F00A8010A = {
 			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B4FC53804C8D23900A8010A = {
+			isa = PBXFileReference;
+			name = SmallPopUpPressed_Caps.tif;
+			path = "Frameworks/AIUtilities Framework/Images/SmallPopUpPressed_Caps.tif";
+			refType = 4;
+		};
+		4B4FC53904C8D23900A8010A = {
+			isa = PBXFileReference;
+			name = SmallPopUpPressed_Middle.tif;
+			path = "Frameworks/AIUtilities Framework/Images/SmallPopUpPressed_Middle.tif";
+			refType = 4;
+		};
+		4B4FC53A04C8D23900A8010A = {
+			isa = PBXFileReference;
+			name = SmallPopUpRollover_Caps.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/SmallPopUpRollover_Caps.tiff";
+			refType = 4;
+		};
+		4B4FC53B04C8D23900A8010A = {
+			isa = PBXFileReference;
+			name = SmallPopUpRollover_Middle.tif;
+			path = "Frameworks/AIUtilities Framework/Images/SmallPopUpRollover_Middle.tif";
+			refType = 4;
+		};
+		4B4FC53C04C8D23900A8010A = {
+			fileRef = 4B4FC53804C8D23900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B4FC53D04C8D23900A8010A = {
+			fileRef = 4B4FC53904C8D23900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B4FC53E04C8D23900A8010A = {
+			fileRef = 4B4FC53A04C8D23900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B4FC53F04C8D23900A8010A = {
+			fileRef = 4B4FC53B04C8D23900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B4FC54004C8E22B00A8010A = {
+			isa = PBXFileReference;
+			name = SmallPopUpArrow.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/SmallPopUpArrow.tiff";
+			refType = 4;
+		};
+		4B4FC54104C8E22B00A8010A = {
+			isa = PBXFileReference;
+			name = SmallPopUpArrowWhite.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/SmallPopUpArrowWhite.tiff";
+			refType = 4;
+		};
+		4B4FC54204C8E22B00A8010A = {
+			fileRef = 4B4FC54004C8E22B00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B4FC54304C8E22B00A8010A = {
+			fileRef = 4B4FC54104C8E22B00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6196,6 +6307,44 @@
 			path = "Mutable owner arrays.rtf";
 			refType = 4;
 		};
+		4B776A2004C981C700A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIStatusSelectionView.h;
+			path = "Plugins/Dual Window Interface/AIStatusSelectionView.h";
+			refType = 4;
+		};
+		4B776A2104C981C700A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIStatusSelectionView.m;
+			path = "Plugins/Dual Window Interface/AIStatusSelectionView.m";
+			refType = 4;
+		};
+		4B776A2204C981C700A8010A = {
+			fileRef = 4B776A2004C981C700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B776A2304C981C700A8010A = {
+			fileRef = 4B776A2104C981C700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B776A2404C9832F00A8010A = {
+			isa = PBXFileReference;
+			name = StatusSelectionView.nib;
+			path = "Plugins/Dual Window Interface/StatusSelectionView.nib";
+			refType = 4;
+		};
+		4B776A2504C9832F00A8010A = {
+			fileRef = 4B776A2404C9832F00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B79E4F2046D67FC0018AE8B = {
 			isa = PBXFileReference;
 			name = Folder.tiff;
@@ -7352,6 +7501,18 @@
 			settings = {
 			};
 		};
+		4BAE56E704CC5FCC00A8010A = {
+			isa = PBXFileReference;
+			name = Placeholder.tiff;
+			path = Source/Placeholder.tiff;
+			refType = 4;
+		};
+		4BAE56E804CC5FCC00A8010A = {
+			fileRef = 4BAE56E704CC5FCC00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BAE85A40498194200A8010A = {
 			children = (
 				4BAE85B0049819A100A8010A,
@@ -8317,6 +8478,9 @@
 				4B25494603F6A32700A8010A,
 				4B25494703F6A32700A8010A,
 				4BCFEF4C03F59F2800A8010A,
+				4B776A2004C981C700A8010A,
+				4B776A2104C981C700A8010A,
+				4B776A2404C9832F00A8010A,
 				4B25494803F6A32700A8010A,
 				4B25494903F6A32700A8010A,
 				4BCFEC5903F574A400A8010A,
@@ -9370,18 +9534,6 @@
 		};
 		4BEC44B204AFCFDB00A8010A = {
 			fileRef = F59DB3D7033EA9CD01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BED5A2B03C32B5B00A8010A = {
-			fileRef = F57938F1033E745F01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BED5A2C03C32B5C00A8010A = {
-			fileRef = F57938BA033E739101A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -13423,6 +13575,12 @@
 				4B95211404C049F600A8010A,
 				4B95211504C049F600A8010A,
 				4B95211604C049F600A8010A,
+				4B4FC53C04C8D23900A8010A,
+				4B4FC53D04C8D23900A8010A,
+				4B4FC53E04C8D23900A8010A,
+				4B4FC53F04C8D23900A8010A,
+				4B4FC54204C8E22B00A8010A,
+				4B4FC54304C8E22B00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13582,7 +13740,6 @@
 				F579392F033E74C401A8010A,
 				F5793935033E74C401A8010A,
 				F59DB3E8033EB4B601A8010A,
-				4BED5A2B03C32B5B00A8010A,
 				4BED5A2D03C32CA500A8010A,
 				9E95316403C8E08800415B22,
 				4B8748D203DC812A00A8010A,
@@ -13596,6 +13753,8 @@
 				4B821390049CA6CC00A8010A,
 				4B82139F049CC3A000A8010A,
 				4B2CE1D0049E838800A8010A,
+				4B3B3FF104CB959000A8010A,
+				4B4ABB4F04CC9F9C00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13616,7 +13775,6 @@
 				F579391D033E748F01A8010A,
 				F579391E033E748F01A8010A,
 				F579391F033E748F01A8010A,
-				4BED5A2C03C32B5C00A8010A,
 				4BED5A2E03C32CA600A8010A,
 				9E95316603C8E08F00415B22,
 				4B8748D103DC812900A8010A,
@@ -13630,6 +13788,8 @@
 				4B821391049CA6CC00A8010A,
 				4B8213A0049CC3A000A8010A,
 				4B2CE1D1049E838800A8010A,
+				4B3B3FF004CB958F00A8010A,
+				4B4ABB5004CC9F9C00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14245,6 +14405,12 @@
 				4B95210C04C049F600A8010A,
 				4B95210D04C049F600A8010A,
 				4B95210E04C049F600A8010A,
+				4B4FC53804C8D23900A8010A,
+				4B4FC53904C8D23900A8010A,
+				4B4FC53A04C8D23900A8010A,
+				4B4FC53B04C8D23900A8010A,
+				4B4FC54004C8E22B00A8010A,
+				4B4FC54104C8E22B00A8010A,
 				4BFAB3D00446600C00A8010A,
 				F570A5E803704DEA01A8010A,
 				F570A5E503704DEA01A8010A,
@@ -14932,6 +15098,7 @@
 				4B25494A03F6A32700A8010A,
 				4B25494C03F6A32700A8010A,
 				4BA1300104C0A2D900A8010A,
+				4B776A2204C981C700A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14948,6 +15115,7 @@
 				4B707E7104B8B34800A8010A,
 				4BA12FFE04C0A17300A8010A,
 				4BA1300404C0A4E300A8010A,
+				4B776A2504C9832F00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14963,6 +15131,7 @@
 				4B25494B03F6A32700A8010A,
 				4B25494D03F6A32700A8010A,
 				4BA1300204C0A2D900A8010A,
+				4B776A2304C981C700A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15913,8 +16082,8 @@
 		F5793913033E748F01A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			name = AIPreferenceViewController.m;
-			path = "Frameworks/Adium Framework/AIPreferenceViewController.m";
+			name = AIPreferencePane.m;
+			path = "Frameworks/Adium Framework/AIPreferencePane.m";
 			refType = 4;
 		};
 		F5793914033E748F01A8010A = {
@@ -15976,8 +16145,8 @@
 		F5793923033E74C301A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			name = AIPreferenceViewController.h;
-			path = "Frameworks/Adium Framework/AIPreferenceViewController.h";
+			name = AIPreferencePane.h;
+			path = "Frameworks/Adium Framework/AIPreferencePane.h";
 			refType = 4;
 		};
 		F5793924033E74C301A8010A = {
@@ -17751,6 +17920,8 @@
 				F5793913033E748F01A8010A,
 				F57938F4033E745F01A8010A,
 				F57938B9033E739101A8010A,
+				4B4ABB4D04CC9F9C00A8010A,
+				4B4ABB4E04CC9F9C00A8010A,
 				F5793915033E748F01A8010A,
 			);
 			isa = PBXGroup;
@@ -18221,6 +18392,7 @@
 				F57938BB033E739101A8010A,
 				F57938BC033E739101A8010A,
 				F5A137FC03421FEB01A8010A,
+				4BAE56E704CC5FCC00A8010A,
 				9C82689903D9B23F00F1D4AF,
 			);
 			isa = PBXGroup;

@@ -30,6 +30,8 @@
     NSView				*contactListView;
     NSSize				contactViewPadding;
 
+    NSView				*view_statusSelection;
+
     id <AIContainerInterface>		interface;
     AIAdium				*owner;
 

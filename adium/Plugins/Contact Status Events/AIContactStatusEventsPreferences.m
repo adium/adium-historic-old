@@ -29,7 +29,7 @@
 @end
 
 @implementation AIContactStatusEventsPreferences
-
+//
 + (AIContactStatusEventsPreferences *)contactStatusEventsPreferencesWithOwner:(id)inOwner
 {
     return([[[self alloc] initWithOwner:inOwner] autorelease]);
@@ -57,38 +57,36 @@
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-
     [super init];
     owner = [inOwner retain];
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:STATUS_EVENTS_PREF_NIB owner:self];
-
-    //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:STATUS_EVENTS_PREF_TITLE categoryName:PREFERENCE_CATEGORY_STATUS view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
-
-    //Load our preferences and configure the view
-    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_STATUS_EVENTS] retain];
-    [self configureView];
+    //Register our preference pane
+//    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:PREFERENCE_CATEGORY_ CONNECTIONS withDelegate:self]];
 
     return(self);
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:STATUS_EVENTS_PREF_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_prefView);
 }
 
 //Configures our view for the current preferences
 - (void)configureView
 {
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STATUS_EVENTS];
 
     [textField_signedOffLength setIntValue:[[preferenceDict objectForKey:KEY_SIGNED_OFF_LENGTH] intValue]];
     [textField_signedOnLength setIntValue:[[preferenceDict objectForKey:KEY_SIGNED_ON_LENGTH] intValue]];
-
-    [self configureControlDimming]; //disable the unavailable controls
-}
-
-//Enable/disable controls that are available/unavailable
-- (void)configureControlDimming
-{
 }
 
 @end

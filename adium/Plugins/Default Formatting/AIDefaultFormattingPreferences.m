@@ -40,6 +40,7 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == button_setFont){
+        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
         NSFontManager	*fontManager = [NSFontManager sharedFontManager];
         NSFont		*selectedFont = [[preferenceDict objectForKey:KEY_FORMATTING_FONT] representedFont];
     
@@ -68,23 +69,28 @@
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-
+    //init
     [super init];
     owner = [inOwner retain];
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:DEFAULT_FORMATTING_PREF_NIB owner:self];
-
-    //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:DEFAULT_FORMATTING_PREF_TITLE categoryName:PREFERENCE_CATEGORY_MESSAGES view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
-
-    //Load our preferences and configure the view
-    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING] retain];
-    [self configureView];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Sending withDelegate:self label:DEFAULT_FORMATTING_PREF_TITLE]];
 
     return(self);
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:DEFAULT_FORMATTING_PREF_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_prefView);
 }
 
 //Called in response to a font panel change
@@ -98,6 +104,7 @@
     [[owner preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_FORMATTING_FONT group:PREF_GROUP_FORMATTING];
 }
 
+//Display the font name in our text field
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField
 {
     if(inFont){
@@ -110,6 +117,8 @@
 //Configures our view for the current preferences
 - (void)configureView
 {
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
+
     //Font
     [self showFont:[[preferenceDict objectForKey:KEY_FORMATTING_FONT] representedFont] inField:textField_desiredFont];
 

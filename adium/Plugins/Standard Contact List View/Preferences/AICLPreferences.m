@@ -35,7 +35,7 @@
 @end
 
 @implementation AICLPreferences
-
+//
 + (AICLPreferences *)contactListPreferencesWithOwner:(id)inOwner
 {
     return([[[self alloc] initWithOwner:inOwner] autorelease]);
@@ -44,7 +44,9 @@
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
+
     if(sender == button_setFont){
+        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
         NSFontManager	*fontManager = [NSFontManager sharedFontManager];
         NSFont		*contactListFont = [[preferenceDict objectForKey:KEY_SCL_FONT] representedFont];
 
@@ -93,7 +95,6 @@
 }
 
 
-
 //Private ---------------------------------------------------------------------------
 //Called in response to a font panel change
 - (void)changeFont:(id)sender
@@ -109,26 +110,31 @@
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-    
+    //Init
     [super init];
-
     owner = [inOwner retain];
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:CL_PREF_NIB owner:self];    
-    
-    //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:CL_PREF_TITLE categoryName:PREFERENCE_CATEGORY_CONTACTLIST view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
-
-    //Load the preferences, and configure our view
-    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST] retain];
-    [self configureView];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Display withDelegate:self label:CL_PREF_TITLE]];
     
     return(self);    
 }
 
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:CL_PREF_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_prefView);
+}
+
+//Display the name of a font in our text field
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField
 {
     if(inFont){
@@ -138,6 +144,7 @@
     }
 }
 
+//Display the current opacity percent
 - (void)showOpacityPercent
 {
     float	opacity = [slider_opacity floatValue];
@@ -145,9 +152,11 @@
     [textField_opacityPercent setStringValue:[NSString stringWithFormat:@"%i",(int)opacity]];
 }
 
-//Configures our view for the current preferences
+//Configure our view for the current preferences
 - (void)configureView
 {
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+
     //Display
     [self showFont:[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont] inField:textField_fontName];
     [colorWell_contact setColor:[[preferenceDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor]];

@@ -24,7 +24,6 @@
 @interface AIStatusCirclesPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
 - (void)configureView;
-- (void)configureControlDimming;
 @end
 
 @implementation AIStatusCirclesPreferences
@@ -87,36 +86,40 @@
                                              forKey:KEY_DISPLAY_IDLE_TIME
                                               group:PREF_GROUP_STATUS_CIRCLES];
     }
-
-    [self configureControlDimming];
 }
 
 //Private ---------------------------------------------------------------------------
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-
+    //Init
     [super init];
     owner = [inOwner retain];
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:STATUS_CIRCLES_PREF_NIB owner:self];
-
-    //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:STATUS_CIRCLES_PREF_TITLE categoryName:PREFERENCE_CATEGORY_CONTACTLIST view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
-
-    //Load our preferences and configure the view
-    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_STATUS_CIRCLES] retain];
-    [self configureView];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Display withDelegate:self label:STATUS_CIRCLES_PREF_TITLE]];
 
     return(self);
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:STATUS_CIRCLES_PREF_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_prefView);
 }
 
 //Configures our view for the current preferences
 - (void)configureView
 {
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STATUS_CIRCLES];
 
     [checkBox_displayIdle setState:[[preferenceDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue]];
 
@@ -129,13 +132,6 @@
     [colorWell_signedOn setColor:[[preferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
     [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
     [colorWell_warning setColor:[[preferenceDict objectForKey:KEY_WARNING_COLOR] representedColor]];
-
-    [self configureControlDimming]; //disable the unavailable controls
-}
-
-//Enable/disable controls that are available/unavailable
-- (void)configureControlDimming
-{
 }
 
 @end

@@ -31,11 +31,6 @@
     IBOutlet	NSColorWell		*colorWell_grid;
     IBOutlet	NSSlider		*slider_opacity;
     IBOutlet	NSTextField		*textField_opacityPercent;
-
-    IBOutlet	NSTextField	*test_1;
-    IBOutlet	NSTextField	*test_2;
-
-    NSDictionary		*preferenceDict;
 }
 
 + (AICLPreferences *)contactListPreferencesWithOwner:(id)inOwner;

@@ -28,7 +28,7 @@
 @end
 
 @implementation IdleTimePreferences
-
+//
 + (IdleTimePreferences *)idleTimePreferencesWithOwner:(id)inOwner
 {
     return([[[self alloc] initWithOwner:inOwner] autorelease]);
@@ -55,28 +55,35 @@
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-
+    //Init
     [super init];
     owner = [inOwner retain];
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:IDLE_TIME_PREF_NIB owner:self];
-
-    //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:IDLE_TIME_PREF_TITLE categoryName:PREFERENCE_CATEGORY_STATUS view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
-
-    //Load the preferences, and configure our view
-    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME] retain];
-    [self configureView];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Status_Idle withDelegate:self label:IDLE_TIME_PREF_TITLE]];
 
     return(self);
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:IDLE_TIME_PREF_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_prefView);
 }
 
 //Configures our view for the current preferences
 - (void)configureView
 {
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME];
+
     //Idle
     [checkBox_enableIdle setState:[[preferenceDict objectForKey:KEY_IDLE_TIME_ENABLED] boolValue]];
     [textField_idleMinutes setIntValue:[[preferenceDict objectForKey:KEY_IDLE_TIME_IDLE_MINUTES] intValue]];

@@ -15,8 +15,8 @@
 
 #import <AIUtilities/AIUtilities.h>
 #import "AIPreferenceCategory.h"
-#import "AIPreferenceViewController.h"
 #import "AIFlippedCategoryView.h"
+#import "AIPreferenceViewController.h"
 
 @interface AIPreferenceCategory (PRIVATE)
 - (AIPreferenceCategory *)initWithName:(NSString *)inName image:(NSImage *)inImage;

@@ -27,7 +27,7 @@
 @end
 
 @implementation AIContactSortPreferences
-
+//
 + (AIContactSortPreferences *)contactSortPreferencesWithOwner:(id)inOwner
 {
     return([[[self alloc] initWithOwner:inOwner] autorelease]);
@@ -44,39 +44,46 @@
 }
 
 
-
-
 //Private ---------------------------------------------------------------------------
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-
     [super init];
     owner = [inOwner retain];
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:CONTACT_SORT_PREF_NIB owner:self];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_General withDelegate:self label:CONTACT_SORT_PREF_TITLE]];
 
-    //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:CONTACT_SORT_PREF_TITLE categoryName:PREFERENCE_CATEGORY_CONTACTLIST view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
-
-    //Load our preferences and configure the view
-    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING] retain];
-    [self configureView];
-
+    //Observe changes to the sort selector list
     [[owner notificationCenter] addObserver:self selector:@selector(configureView) name:Contact_SortSelectorListChanged object:nil];
 
     return(self);
 }
 
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:CONTACT_SORT_PREF_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_prefView);
+}
+
 //Configures our view for the current preferences
 - (void)configureView
 {
+    NSDictionary			*preferenceDict;
     NSString				*identifier;
     NSEnumerator			*enumerator;
     id <AIListSortController>		controller;
+
+    //Load our preferences
+    preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING];
     
     //Soundset popup
     [self buildSortModeMenu];
@@ -113,16 +120,5 @@
     }
 }
 
-
 @end
-
-
-
-
-
-
-
-
-
-
 
