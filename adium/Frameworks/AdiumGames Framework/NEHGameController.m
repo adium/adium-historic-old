@@ -2,7 +2,7 @@
 //  NEHGameController.m
 //  Adium
 //
-//  Created by Nelson El-Hage on Sun Jan 18 2004.
+//  Created by Nelson Elhage on Sun Jan 18 2004.
 //
 
 #import "NEHGameController.h"

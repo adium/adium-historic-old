@@ -210,14 +210,14 @@ static NSMenu			* menu_Games;
 	[windowController close];
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+/*- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	AIListContact	*selectedContact = [[adium menuController] contactualMenuContact];
 
 	BOOL valid = (selectedContact && [selectedContact isKindOfClass:[AIListContact class]]);
 
     return(valid);
-}
+}*/
 
 #pragma mark Stubs for things subclasses implement
 
