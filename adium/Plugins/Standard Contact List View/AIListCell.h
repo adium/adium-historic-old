@@ -20,6 +20,8 @@
     BOOL			isGroup;
 	
 	NSView			*controlView;
+	
+	NSTextAlignment	textAlignment;
 
 	NSTextStorage 	*textStorage;
 	NSLayoutManager	*layoutManager;
@@ -30,5 +32,9 @@
 
 - (void)setListObject:(AIListObject *)inObject;
 - (void)setControlView:(NSView *)inControlView;
+
+- (void)setTextAlignment:(NSTextAlignment)inAlignment;
+- (NSTextAlignment)textAlignment;
+
 
 @end

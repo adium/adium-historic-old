@@ -15,12 +15,6 @@
 
 #define GROUP_TEXT_ALIGN		NSCenterTextAlignment// NSLeftTextAlignment //NSCenterTextAlignment
 
-//NSLeftTextAlignment		= 0, /* Visually left aligned */
-//NSRightTextAlignment	= 1, /* Visually right aligned */
-//NSCenterTextAlignment	= 2,
-
-
-
 @implementation AIListGroupCell
 
 //Copy
@@ -34,11 +28,6 @@
 - (NSSize)cellSize
 {
 	return(NSMakeSize(0, (int)[[self font] defaultLineHeightForFont] + (VERTICAL_GROUP_PADDING * 2)));
-}
-
-- (NSTextAlignment)textAlignment
-{
-	return(GROUP_TEXT_ALIGN);
 }
 
 - (NSColor *)flippyColor
@@ -89,15 +78,5 @@
 
 	[self drawDisplayNameWithFrame:rect];
 }
-
-
-
-
-//Flippy Drawing
-
-
-//
-
-
 
 @end

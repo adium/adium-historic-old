@@ -8,28 +8,28 @@
 
 #import "AIListGroupMockieCell.h"
 
-#define MOCKIE_GROUP_TOP_PADDING		2
-#define MOCKIE_GROUP_BOTTOM_PADDING		0
-
+//#define MOCKIE_GROUP_TOP_PADDING		2
+//#define MOCKIE_GROUP_BOTTOM_PADDING		0
+//
 @implementation AIListGroupMockieCell
 
 //Copy
-- (id)copyWithZone:(NSZone *)zone
-{
-	AIListGroupMockieCell	*newCell = [[AIListGroupMockieCell alloc] init];
-	[newCell setListObject:listObject];
-	return(newCell);
-}
+//- (id)copyWithZone:(NSZone *)zone
+//{
+//	AIListGroupMockieCell	*newCell = [[AIListGroupMockieCell alloc] init];
+//	[newCell setListObject:listObject];
+//	return(newCell);
+//}
 
-- (int)topPadding
-{
-	return(MOCKIE_GROUP_TOP_PADDING);
-}
-
-- (int)bottomPadding
-{
-	return(MOCKIE_GROUP_BOTTOM_PADDING);
-}
+//- (int)topPadding
+//{
+//	return(MOCKIE_GROUP_TOP_PADDING);
+//}
+//
+//- (int)bottomPadding
+//{
+//	return(MOCKIE_GROUP_BOTTOM_PADDING);
+//}
 
 //Draw a gradient behind our group
 - (void)drawBackgroundWithFrame:(NSRect)rect

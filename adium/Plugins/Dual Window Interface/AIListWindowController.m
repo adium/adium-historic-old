@@ -22,6 +22,9 @@
 #import "AIListGroupMockieCell.h"
 #import "AIListContactBrickCell.h"
 
+#import "AIListLayoutWindowController.h"
+
+
 #define CONTACT_LIST_WINDOW_NIB				@"ContactListWindow"		//Filename of the contact list window nib
 #define CONTACT_LIST_WINDOW_TRANSPARENT_NIB @"ContactListWindowTransparent" //Filename of the minimalist transparent version
 #define CONTACT_LIST_TOOLBAR				@"ContactList"				//ID of the contact list toolbar
@@ -53,7 +56,7 @@
 #define CONTACTS_USE_MOCKIE_CELL NO
 #define CONTACTS_USE_BUBBLE_CELL NO
 
-#define GROUPS_USE_MOCKIE_CELL		NO 
+#define GROUPS_USE_MOCKIE_CELL		YES 
 #define GROUPS_USE_GRADIENT_CELL	YES
 #define DRAW_ALTERNATING_GRID	YES
 #define ALTERNATING_GRID_COLOR	[NSColor colorWithCalibratedRed:0.926 green:0.949 blue:0.992 alpha:1.0]
@@ -133,32 +136,9 @@
 	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[AIListContactCell alloc] init]];	
 
 
-	if(GROUPS_USE_MOCKIE_CELL){
-		[contactListView setGroupCell:[[AIListGroupMockieCell alloc] init]];	
-	}else{
-		[contactListView setGroupCell:(GROUPS_USE_GRADIENT_CELL ? [[AIListGroupGradientCell alloc] init] : [[AIListGroupCell alloc] init])];	
-	}
-
-	if(CONTACTS_USE_MOCKIE_CELL){
-		[contactListView setContentCell:[[AIListContactBrickCell alloc] init]];
-	}else{
-		[contactListView setContentCell:(CONTACTS_USE_BUBBLE_CELL ? [[AIListContactBubbleCell alloc] init] : [[AIListContactCell alloc] init])];
-	}
 	
+	[self configureListView];
 	
-    [contactListView setTarget:self];
-	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
-	
-	[contactListView setDrawsAlternatingRows:DRAW_ALTERNATING_GRID];
-	[contactListView setAlternatingRowColor:ALTERNATING_GRID_COLOR];
-	
-	[contactListView setBackgroundColor:BACKGROUND_COLOR];
-	
-	
-	//Bye bye CPU cycles, I'll miss you!
-	[[self window] setOpaque:(BACKGROUND_ALPHA == 1.0)];
-	[contactListView setUpdateShadowsWhileDrawing:(BACKGROUND_ALPHA < 0.8)];
-	//--
 	
 #warning grr
 
@@ -257,8 +237,72 @@
 			[self autorelease];
 		}
 	}
-
+	
+	
+	
+	//Layout ------------
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_LAYOUT]){
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
+		
+		//Alignment
+		[contentCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue]];
+		[groupCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
+		
+		//Redisplay
+		[contactListView setNeedsDisplay:YES];
+	}
+	
+	
 }
+
+- (void)configureListView
+{
+	//Cleanup first
+	[groupCell release];
+	[contentCell release];
+	
+	//Cells
+	if(GROUPS_USE_MOCKIE_CELL){
+		groupCell = [[AIListGroupMockieCell alloc] init];	
+	}else{
+		groupCell = (GROUPS_USE_GRADIENT_CELL ? [[AIListGroupGradientCell alloc] init] : [[AIListGroupCell alloc] init]);	
+	}
+	[contactListView setGroupCell:groupCell];
+
+	if(CONTACTS_USE_MOCKIE_CELL){
+		contentCell = [[AIListContactBrickCell alloc] init];
+	}else{
+		contentCell = (CONTACTS_USE_BUBBLE_CELL ? [[AIListContactBubbleCell alloc] init] : [[AIListContactCell alloc] init]);
+	}
+	[contactListView setContentCell:contentCell];
+	
+	//
+    [contactListView setTarget:self];
+	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
+	
+	[contactListView setDrawsAlternatingRows:DRAW_ALTERNATING_GRID];
+	[contactListView setAlternatingRowColor:ALTERNATING_GRID_COLOR];
+	
+	[contactListView setBackgroundColor:BACKGROUND_COLOR];
+	
+	
+	//Bye bye CPU cycles, I'll miss you!
+	[[self window] setOpaque:(BACKGROUND_ALPHA == 1.0)];
+	[contactListView setUpdateShadowsWhileDrawing:(BACKGROUND_ALPHA < 0.8)];
+	//--
+	
+	
+	
+}
+
+
+
+
+
+
+
+
+
 
 //Double click in outline view
 - (IBAction)performDefaultActionOnSelectedContact:(id)sender

@@ -25,4 +25,6 @@
     IBOutlet	NSColorWell		*colorWell_grid;
 }
 
+- (IBAction)spawnLayout:(id)sender;
+
 @end

@@ -8,7 +8,7 @@
 
 #import "AIListGroupGradientCell.h"
 
-#define MOCKIE_RADIUS	6
+#define MOCKIE_RADIUS		6
 
 @interface AIListGroupMockieCell : AIListGroupGradientCell {
 
