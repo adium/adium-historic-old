@@ -20,9 +20,141 @@
 
 @interface AIPreferencePane (PRIVATE)
 - (id)initInCategory:(PREFERENCE_CATEGORY)inCategory withDelegate:(id)inDelegate label:(NSString *)inLabel;
+- (NSString *)nibName;
+- (void)viewDidLoad;
+- (void)viewWillClose;
+- (void)configureControlDimming;
 @end
 
 @implementation AIPreferencePane
+
+//Return a new preference pane
++ (AIPreferencePane *)preferencePaneWithOwner:(id)inOwner
+{
+    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+}
+
+//Init
+- (id)initWithOwner:(id)inOwner
+{
+    [super init];
+    
+    //Init
+    owner = inOwner;
+    view = nil;
+    isUpdated = YES;
+    
+    //Register
+    [[owner preferenceController] addPreferencePane:self];
+    
+    return(self);
+}
+
+//TRANSITION ONLY, will be removed
+- (BOOL)isUpdated
+{
+    return(isUpdated);
+}
+
+//Compare to another category view (for sorting on the preference window)
+- (NSComparisonResult)compare:(AIPreferencePane *)inPane
+{
+    return([label caseInsensitiveCompare:[inPane label]]);
+}
+
+//Returns our view
+- (NSView *)view
+{
+    if(!view){
+        //Load and configure our view
+        [NSBundle loadNibNamed:[self nibName] owner:self];
+        [self viewDidLoad];
+        [view setAutoresizingMask:(NSViewMaxYMargin)];
+    }
+    
+    return(view);
+}
+
+//Close our view
+- (void)closeView
+{
+    if(isUpdated){
+        if(view){
+            [self viewWillClose];
+            [view release]; view = nil;
+        }
+    }else{ //TRANSITION ONLY, will be removed
+        if([delegate respondsToSelector:@selector(closeViewForPreferencePane:)]){
+            //Tell our delegate to close its view
+            [delegate closeViewForPreferencePane:self];
+        }
+        
+        [preferenceView release]; preferenceView = nil;
+        [view_containerView release]; view_containerView = nil;        
+    }
+}
+
+
+//For subclasses -------------------------------------------------------------------------------
+//Preference category
+- (PREFERENCE_CATEGORY)category
+{
+    if(isUpdated){
+        return(AIPref_Advanced_Other);
+    }else{ //TRANSITION ONLY, will be removed
+        return(category);
+    }
+}
+
+//Preference label
+- (NSString *)label
+{
+    if(isUpdated){
+        return(@"");
+    }else{ //TRANSITION ONLY, will be removed
+        return(label);
+    }
+}
+
+//Nib to load
+- (NSString *)nibName
+{
+    return(@"");    
+}
+
+//Configure the preference view
+- (void)viewDidLoad
+{
+    
+}
+
+//Preference view is closing
+- (void)viewWillClose
+{
+    
+}
+
+//Apply a changed preference
+- (IBAction)changePreference:(id)sender
+{
+    [self configureControlDimming];
+}
+
+//Configure control dimming
+- (void)configureControlDimming
+{
+    
+}
+
+
+
+
+
+
+
+
+//--------------Old Code, transition only, will be removed---------
+#pragma mark
 
 //Create a new preference view controller
 + (AIPreferencePane *)preferencePaneInCategory:(PREFERENCE_CATEGORY)inCategory withDelegate:(id)inDelegate label:(NSString *)inLabel
@@ -40,6 +172,7 @@
     category = inCategory;
     label = [inLabel retain];
     preferenceView = nil;
+    isUpdated = NO;
 
     //
 
@@ -49,30 +182,14 @@
 //
 - (void)dealloc
 {
-    [label release];
+    if(!isUpdated) [label release];
     
     [super dealloc];
 }
 
-//
-- (PREFERENCE_CATEGORY)category
-{
-    return(category);
-}
-
-- (NSString *)label
-{
-    return(label);
-}
-
-//Compare to another category view (for sorting on the preference window)
-- (NSComparisonResult)compare:(AIPreferencePane *)inPane
-{
-    return([label caseInsensitiveCompare:[inPane label]]);
-}
-
 - (NSView *)viewWithContainer:(BOOL)includeContainer
 {
+    NSParameterAssert(!isUpdated);
     //Setup the view
     if(!view_containerView && [delegate respondsToSelector:@selector(viewForPreferencePane:)]){
         //Get the preference view from our delegate
@@ -105,17 +222,6 @@
     }
     
     return(view_containerView);
-}
-
-- (void)closeView
-{
-    if([delegate respondsToSelector:@selector(closeViewForPreferencePane:)]){
-        //Tell our delegate to close its view
-        [delegate closeViewForPreferencePane:self];
-    }
-
-    [preferenceView release]; preferenceView = nil;
-    [view_containerView release]; view_containerView = nil;
 }
 
 @end

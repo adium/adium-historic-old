@@ -16,29 +16,45 @@
 #import <Cocoa/Cocoa.h>
 #import "AIAdium.h"
 
-@class AIPreferencePane;
+@class AIPreferencePane, AIAdium;
 
-@interface NSObject(AIPreferencePaneDelegate)
+@interface NSObject(AIPreferencePaneDelegate)   //Will be removed, transition only
 - (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane;
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane;
 - (void)restoreDefaultsForPreferencePane:(AIPreferencePane *)preferencePane;
 @end
 
 @interface AIPreferencePane : NSObject {
-    IBOutlet	NSView			*view_containerView;
-    IBOutlet	NSView			*view_containerSubView;
-    IBOutlet	NSTextField		*textField_title;
+    AIAdium                             *owner;
+    
+    IBOutlet	NSView			*view_containerView;    //Will be removed, transition only
+    IBOutlet	NSView			*view_containerSubView; //Will be removed, transition only
+    IBOutlet	NSTextField		*textField_title;       //Will be removed, transition only 
 
-    id				delegate;
-    PREFERENCE_CATEGORY		category;
-    NSString			*label;
-    NSView			*preferenceView;
+    id				delegate;           //Will be removed, transition only
+    PREFERENCE_CATEGORY		category;           //Will be removed, transition only
+    NSString			*label;             //Will be removed, transition only
+    NSView			*preferenceView;    //Will be removed, transition only
+    BOOL                        isUpdated;          //Will be removed, transition only
+    
+    NSView                      *view;
 }
 
-+ (AIPreferencePane *)preferencePaneInCategory:(PREFERENCE_CATEGORY)inCategory withDelegate:(id)inDelegate label:(NSString *)inLabel;
++ (AIPreferencePane *)preferencePaneWithOwner:(id)inOwner;
+- (NSComparisonResult)compare:(AIPreferencePane *)inPane;
+- (NSView *)view;
+- (void)closeView;
 - (PREFERENCE_CATEGORY)category;
 - (NSString *)label;
+- (IBAction)changePreference:(id)sender;
+- (void)configureControlDimming;
+- (id)initWithOwner:(id)inOwner;
+
+
+//Will be removed, transition only
++ (AIPreferencePane *)preferencePaneInCategory:(PREFERENCE_CATEGORY)inCategory withDelegate:(id)inDelegate label:(NSString *)inLabel;
+- (PREFERENCE_CATEGORY)category;
 - (NSView *)viewWithContainer:(BOOL)includeContainer;
-- (void)closeView;
+- (BOOL)isUpdated;
 
 @end

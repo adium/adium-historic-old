@@ -92,7 +92,8 @@ typedef enum {
 
 //Preference Categories
 typedef enum {
-    AIPref_Accounts = 0,
+    //Temporary, for transition only
+    AIPref_Accounts = 0, 
     AIPref_ContactList_General,
     AIPref_ContactList_Groups,
     AIPref_ContactList_Contacts,
@@ -105,7 +106,21 @@ typedef enum {
     AIPref_Dock_Icon,
     AIPref_Sound,
     AIPref_Emoticons,
-    AIPref_Alerts
+    AIPref_Alerts,
+    
+/*    AIPref_Accounts = 0,
+    AIPref_ContactList,
+    AIPref_Messages,
+    AIPref_Dock_General,
+    AIPref_Dock_Icon,
+    AIPref_Sound,
+    AIPref_Alerts,*/
+    AIPref_Advanced_ContactList,
+    AIPref_Advanced_Messages,
+    AIPref_Advanced_Status,
+    AIPref_Advanced_Other
+    
+
 } PREFERENCE_CATEGORY;
 
 //Preference groups

@@ -23,16 +23,24 @@
 #define TOOLBAR_PREFERENCE_WINDOW		@"PreferenceWindow"	//Identifier for the preference toolbar
 #define	KEY_PREFERENCE_WINDOW_FRAME		@"Preference Window Frame"
 #define KEY_PREFERENCE_SELECTED_CATEGORY	@"Preference Selected Category"
-#define FLAT_PADDING_OFFSET 45
+#define FLAT_PADDING_OFFSET                     45
 #define PREFERENCE_WINDOW_TITLE			@"Preferences"
+#define PREFERENCE_PANE_ARRAY			@"PaneArray"
+#define PREFERENCE_GROUP_NAME			@"GroupName"
+#define ADVANCED_PANE_HEIGHT			300
 
 @interface AIPreferenceWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
 - (void)configureToolbarItems;
 - (void)installToolbar;
 - (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIFlippedCategoryView *)inView showContainers:(BOOL)includeContainers;
+- (void)_insertPanes:(NSArray *)paneArray intoView:(AIFlippedCategoryView *)inView showContainers:(BOOL)includeContainers;
 - (void)_sizeWindowToFitTabView:(NSTabView *)tabView;
 - (void)_sizeWindowToFitFlatView:(AIFlippedCategoryView *)view;
+- (void)_sizeWindowForContentHeight:(int)height;
+- (NSArray *)advancedCategoryArray;
+- (NSDictionary *)_createGroupNamed:(NSString *)inName forCategory:(PREFERENCE_CATEGORY)category;
+- (NSArray *)_prefsInCategory:(PREFERENCE_CATEGORY)category;
 @end
 
 @implementation AIPreferenceWindowController
@@ -95,6 +103,8 @@ static AIPreferenceWindowController *sharedInstance = nil;
     owner = [inOwner retain];
     toolbarItems = [[NSMutableDictionary dictionary] retain];
     loadedPanes = [[NSMutableArray alloc] init];
+    _advancedCategoryArray = nil;
+    loadedAdvancedPanes = nil;
 
     return(self);    
 }
@@ -104,7 +114,8 @@ static AIPreferenceWindowController *sharedInstance = nil;
     [owner release];
     [toolbarItems release];
     [loadedPanes release];
-    
+    [loadedAdvancedPanes release];
+
     [super dealloc];
 }
 
@@ -119,6 +130,8 @@ static AIPreferenceWindowController *sharedInstance = nil;
 
     //
     [self installToolbar];
+    [outlineView_advanced setIndentationPerLevel:10];
+    [coloredBox_advancedTitle setColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.15]];
  
     //Select the previously selected category
     selectedTab = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_SELECTED_CATEGORY] intValue];
@@ -232,6 +245,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     [tabView_category selectTabViewItemWithIdentifier:[sender itemIdentifier]];
 }
 
+//
 - (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
     int	identifier = [[tabViewItem identifier] intValue];
@@ -276,6 +290,10 @@ static AIPreferenceWindowController *sharedInstance = nil;
                 [self _insertPanesForCategory:AIPref_Alerts intoView:view_Alerts showContainers:YES];
                 [self _sizeWindowToFitFlatView:view_Alerts];
             break;
+            case 8:
+                [self _sizeWindowForContentHeight:ADVANCED_PANE_HEIGHT];
+                [outlineView_advanced reloadData];
+            break;
         }
     }
 
@@ -283,40 +301,34 @@ static AIPreferenceWindowController *sharedInstance = nil;
     [[self window] setTitle:[NSString stringWithFormat:@"%@ : %@",PREFERENCE_WINDOW_TITLE,[tabViewItem label]]];    
 }
 
+//Insert all the preference panes for the category into the passed view
 - (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIFlippedCategoryView *)inView showContainers:(BOOL)includeContainers
+{
+    [self _insertPanes:[self _prefsInCategory:inCategory] intoView:inView showContainers:includeContainers];    
+}
+
+//Insert the passed preference panes into a view
+- (void)_insertPanes:(NSArray *)paneArray intoView:(AIFlippedCategoryView *)inView showContainers:(BOOL)includeContainers
 {
     NSEnumerator	*enumerator;
     AIPreferencePane	*pane;
-    NSMutableArray	*paneArray = [NSMutableArray array];
     int			yPos = 0;
-
-    //Get the panes for this category
-    enumerator = [[[owner preferenceController] paneArray] objectEnumerator];
-    while(pane = [enumerator nextObject]){
-        if([pane category] == inCategory){
-            [paneArray addObject:pane];
-            [loadedPanes addObject:pane];
-        }
-    }
-
-    //Alphabetize them
-    [paneArray sortUsingSelector:@selector(compare:)];
-
+    
     //Add their views
     enumerator = [paneArray objectEnumerator];
     while(pane = [enumerator nextObject]){
-        NSView	*paneView = [pane viewWithContainer:includeContainers];
-
+        NSView	*paneView = ([pane isUpdated] ? [pane view] : [pane viewWithContainer:includeContainers]);
+        
         //Add the view
         if([paneView superview] != inView){
             [inView addSubview:paneView];
             [paneView setFrameOrigin:NSMakePoint(0,yPos)];
         }
-    
+        
         //Move down for the next view
         yPos += [paneView frame].size.height;
     }
-
+    
     //Set the desired height of this view
     [inView setDesiredHeight:yPos];
 }
@@ -324,11 +336,9 @@ static AIPreferenceWindowController *sharedInstance = nil;
 //Resize our window to fit the specified tabview
 - (void)_sizeWindowToFitTabView:(NSTabView *)tabView
 {
-    BOOL		isVisible = [[self window] isVisible];
     NSEnumerator	*enumerator;
     NSTabViewItem	*tabViewItem;
     int			maxHeight = 0;
-    NSRect 		frame = [[self window] frame];
 
     //Determine the tallest view contained within this tab view.
     enumerator = [[tabView tabViewItems] objectEnumerator];
@@ -346,28 +356,73 @@ static AIPreferenceWindowController *sharedInstance = nil;
         }
     }
 
-    //Add in window frame padding
-    maxHeight += yPadding;
-
-    //Adjust our window's frame
-    frame.origin.y += frame.size.height - maxHeight;
-    frame.size.height = maxHeight;
-    [[self window] setFrame:frame display:isVisible animate:isVisible];
+    //Resize the window
+    [self _sizeWindowForContentHeight:maxHeight];
 }
 
+//Resize our window to fit the specified non-tabbed view
 - (void)_sizeWindowToFitFlatView:(AIFlippedCategoryView *)view
+{
+    [self _sizeWindowForContentHeight:([view desiredHeight] - FLAT_PADDING_OFFSET)];
+}
+
+//Resize our window to fit the specified content height
+- (void)_sizeWindowForContentHeight:(int)height
 {
     BOOL	isVisible = [[self window] isVisible];
     NSRect 	frame = [[self window] frame];
-    int		height = [(AIFlippedCategoryView *)view desiredHeight];
 
     //Add in window frame padding
-    height += yPadding - FLAT_PADDING_OFFSET;
+    height += yPadding;
 
     //Adjust our window's frame
     frame.origin.y += frame.size.height - height;
     frame.size.height = height;
     [[self window] setFrame:frame display:isVisible animate:isVisible];
+}
+
+//Returns the advanced preference categories
+- (NSArray *)advancedCategoryArray
+{
+    if(!_advancedCategoryArray){
+        _advancedCategoryArray = [[NSMutableArray alloc] init];
+        
+        //Load our advanced categories
+        [_advancedCategoryArray addObject:[self _createGroupNamed:@"Contact List" forCategory:AIPref_Advanced_ContactList]];
+        [_advancedCategoryArray addObject:[self _createGroupNamed:@"Messages" forCategory:AIPref_Advanced_Messages]];
+        [_advancedCategoryArray addObject:[self _createGroupNamed:@"Status" forCategory:AIPref_Advanced_Status]];
+        [_advancedCategoryArray addObject:[self _createGroupNamed:@"Other" forCategory:AIPref_Advanced_Other]];
+    }
+    
+    return(_advancedCategoryArray);
+}
+
+//
+- (NSDictionary *)_createGroupNamed:(NSString *)inName forCategory:(PREFERENCE_CATEGORY)category
+{
+    return([NSDictionary dictionaryWithObjectsAndKeys:inName, PREFERENCE_GROUP_NAME, [self _prefsInCategory:category], PREFERENCE_PANE_ARRAY, nil]);
+}
+
+//Loads, alphabetizes, and caches prefs for the speficied category
+- (NSArray *)_prefsInCategory:(PREFERENCE_CATEGORY)inCategory
+{
+    NSEnumerator	*enumerator;
+    AIPreferencePane	*pane;
+    NSMutableArray	*paneArray = [NSMutableArray array];
+    
+    //Get the panes for this category
+    enumerator = [[[owner preferenceController] paneArray] objectEnumerator];
+    while(pane = [enumerator nextObject]){
+        if([pane category] == inCategory){
+            [paneArray addObject:pane];
+            [loadedPanes addObject:pane];
+        }
+    }
+    
+    //Alphabetize them
+    [paneArray sortUsingSelector:@selector(compare:)];
+    
+    return(paneArray);
 }
 
 //Toolbar item methods
@@ -405,5 +460,88 @@ static AIPreferenceWindowController *sharedInstance = nil;
 {
     return([self toolbarDefaultItemIdentifiers:toolbar]);
 }
+
+
+//Advanced outline view data source
+- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+{
+    if(item == nil){ //Root
+        return([[self advancedCategoryArray] objectAtIndex:index]);
+    }else{
+        return([[item objectForKey:PREFERENCE_PANE_ARRAY] objectAtIndex:index]);
+    }
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+{
+    if([item isKindOfClass:[NSDictionary class]]){ //Only groups are expandable
+        return(YES);
+    }else{
+        return(NO);
+    }
+}
+
+- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+{
+    if(item == nil){ //Root
+        return([[self advancedCategoryArray] count]);
+    }else{
+        return([[item objectForKey:PREFERENCE_PANE_ARRAY] count]);
+    }
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+{
+    if([item isKindOfClass:[NSDictionary class]]){
+        return([[[NSAttributedString alloc] initWithString:[item objectForKey:PREFERENCE_GROUP_NAME]
+                                                attributes:[NSDictionary dictionaryWithObject:[NSFont boldSystemFontOfSize:11] forKey:NSFontAttributeName]] autorelease]);
+        
+    }else if([item isKindOfClass:[AIPreferencePane class]]){
+        float	cellWidth = [outlineView frameOfCellAtColumn:[outlineView indexOfTableColumn:tableColumn] row:[outlineView rowForItem:item]].size.width - 4;
+        
+        return([[(AIPreferencePane *)item label] stringByTruncatingTailToWidth:cellWidth]);
+        
+    }
+    
+    return(nil);
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldSelectItem:(id)item
+{
+    if([item isKindOfClass:[AIPreferencePane class]]){
+        NSEnumerator		*enumerator;
+        AIPreferencePane	*pane;
+        
+        //Close open panes
+        enumerator = [loadedAdvancedPanes objectEnumerator];
+        while(pane = [enumerator nextObject]){
+            [pane closeView];
+        }
+        [loadedAdvancedPanes release]; loadedAdvancedPanes = nil;
+        [view_Advanced removeAllSubviews];
+        
+        //Load new panes
+        if([item isKindOfClass:[AIPreferencePane class]]){
+            loadedAdvancedPanes = [[NSArray arrayWithObject:item] retain];
+            [self _insertPanes:loadedAdvancedPanes intoView:view_Advanced showContainers:NO];
+            [textField_advancedTitle setStringValue:[item label]];
+        }    
+        
+        return(YES);
+    }else{
+        return(NO);
+    }
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
+{
+    return(YES);
+}
+
+- (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
+{
+    
+}
+
 
 @end
