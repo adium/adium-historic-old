@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.25 2003/12/26 15:13:48 adamiser Exp $
+// $Id: AIAccount.m,v 1.26 2003/12/26 15:40:10 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -75,9 +75,11 @@
 //Monitor preferences changed for account status keys, and pass these to our subclass
 - (void)_accountPreferencesChanged:(NSNotification *)notification
 {
-	if([notification object] == self){
+	//Ignore changes directed at another account
+	if([notification object] == nil || [notification object] == self){
 		NSString    *group = [[notification userInfo] objectForKey:@"Group"];
-		
+
+		//For convenience, we let the account know when a status key for it has changed
 		if([group compare:GROUP_ACCOUNT_STATUS] == 0){
 			NSString	*key = [[notification userInfo] objectForKey:@"Key"];
 			
@@ -116,14 +118,16 @@
 	//
     if([key compare:@"Online"] == 0){
         if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
-			if(!areOnline){
+			if(!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]){
+				NSLog(@"instructing %@ to connect",[self displayName]);
 				//Retrieve the user's password and then call connect
 				[[adium accountController] passwordForAccount:self 
 											  notifyingTarget:self
 													 selector:@selector(passwordReturnedForConnect:)];
 			}
         }else{
-			if(areOnline){
+			if(areOnline && ![[self statusObjectForKey:@"Disconnecting"] boolValue]){
+				NSLog(@"instructing %@ to disconnect",[self displayName]);
 				//Disconnect
 				[self disconnect];
 			}
@@ -144,7 +148,10 @@
 //Callback after the user enters their password for connecting
 - (void)passwordReturnedForConnect:(NSString *)inPassword
 {
-	if(inPassword && [inPassword length] != 0){
+	//If a password was returned, and we're still waiting to connect
+	if(inPassword && [inPassword length] != 0 &&
+	   ![[self statusObjectForKey:@"Online"] boolValue] &&
+	   ![[self statusObjectForKey:@"Connecting"] boolValue]){
         //Save the new password
 		if(password != inPassword){
             [password release]; password = [inPassword copy];
