@@ -14,8 +14,6 @@
 	IBOutlet		NSPopUpButton		*popUp_userIconPosition;
 	IBOutlet		NSPopUpButton		*popUp_statusIconPosition;
 	IBOutlet		NSPopUpButton		*popUp_serviceIconPosition;
-	IBOutlet		NSPopUpButton		*popUp_contactCellStyle;
-	IBOutlet		NSPopUpButton		*popUp_groupCellStyle;
 
 	IBOutlet		NSButton			*checkBox_userIconVisible;
 	IBOutlet		NSButton			*checkBox_extendedStatusVisible;
