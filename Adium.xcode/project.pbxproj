@@ -5,50 +5,6 @@
 	};
 	objectVersion = 39;
 	objects = {
-		0701A04707D30D80007369FB = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CBGrowlAlertDetailPane.h;
-			path = Plugins/Growl/CBGrowlAlertDetailPane.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		0701A04807D30D81007369FB = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CBGrowlAlertDetailPane.m;
-			path = Plugins/Growl/CBGrowlAlertDetailPane.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		0701A04907D30D81007369FB = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = GrowlAlert.nib;
-			path = Plugins/Growl/GrowlAlert.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		0701A04A07D30D81007369FB = {
-			fileRef = 0701A04707D30D80007369FB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		0701A04B07D30D81007369FB = {
-			fileRef = 0701A04807D30D81007369FB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		0701A04C07D30D81007369FB = {
-			fileRef = 0701A04907D30D81007369FB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		074DDB5C07CB413F0033AFF7 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -2812,24 +2768,6 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		344F4A4C078DDC9500226DFC = {
-			fileRef = 6CFB75BC06F5957D00091DC9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344F4A4D078DDC9700226DFC = {
-			fileRef = 52C623E206697B3B0006C387;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344F4A4E078DDC9900226DFC = {
-			fileRef = 52C623E306697B3B0006C387;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34503C7E058F96C400FB7AD1 = {
 			fileEncoding = 30;
@@ -6821,7 +6759,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" Plugins/Growl \"Frameworks/AIHyperlinks Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\" \"Frameworks\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6829,7 +6767,7 @@
 				GCC_USE_GCC3_PFE_SUPPORT = YES;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\"";
+				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\" \"Frameworks\"";
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INSTALL_PATH = /;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
@@ -6987,7 +6925,6 @@
 				34C68B2B0778FA5C00EB423C,
 				07836212077B0CA90032D975,
 				3452A9F807891C8A00C3C494,
-				344F4A4D078DDC9700226DFC,
 				4BDAF69807A1561000276D68,
 				4B7A567A07A1754400BDC540,
 				34DFF5FC07A63DB100B92233,
@@ -7051,7 +6988,8 @@
 				4B08399407D2350D0034A001,
 				3428328807D2643F004F01C9,
 				3428328A07D2643F004F01C9,
-				0701A04A07D30D81007369FB,
+				9E124DEB07D34C7300AA91C5,
+				9E124DED07D34C7400AA91C5,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7315,7 +7253,6 @@
 				34C68B400778FAB500EB423C,
 				34C6A3BC077A8CB500EB423C,
 				34539E9C077BD09600A83891,
-				344F4A4C078DDC9500226DFC,
 				3433667507948C1400C84B15,
 				3433673307949E2200C84B15,
 				34DFF53907A62EB200B92233,
@@ -7354,7 +7291,8 @@
 				342838EE07D2D004004F01C9,
 				3428392507D2D013004F01C9,
 				4BB5B78207D2DC4900CFE06F,
-				0701A04C07D30D81007369FB,
+				9E124DF107D34C9100AA91C5,
+				9E124DF207D34C9100AA91C5,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7483,7 +7421,6 @@
 				34C68B260778FA1300EB423C,
 				34C68B2C0778FA5C00EB423C,
 				3452A9F907891C8A00C3C494,
-				344F4A4E078DDC9900226DFC,
 				4BDAF69907A1561000276D68,
 				4B7A567B07A1754400BDC540,
 				34DFF5FD07A63DB400B92233,
@@ -7547,7 +7484,8 @@
 				4B08399507D2350D0034A001,
 				3428328907D2643F004F01C9,
 				3428328B07D2643F004F01C9,
-				0701A04B07D30D81007369FB,
+				9E124DEC07D34C7300AA91C5,
+				9E124DEE07D34C7400AA91C5,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7664,8 +7602,8 @@
 				34BD9D5A053146CC000AB133,
 				34B588A1058D833A00E7EF0D,
 				34C18B0D06CAC95400FF5FF9,
-				34E9F2020790BF7500662E8E,
 				348E5ACB06D2A74C004C051C,
+				9E124DF607D34CF500AA91C5,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7692,7 +7630,6 @@
 				34D837FE07CC339D006466F2,
 				3496AB7307CE7DD10055BBAB,
 				3419FE230531586A00C68BA3,
-				34E9F1F20790BF5500662E8E,
 				349C6F8B07C99D2C005EB896,
 			);
 			isa = PBXCopyFilesBuildPhase;
@@ -11394,27 +11331,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "## Fix Growl-WithInstaller.framework symlinks\n\ncd \"$SRCROOT/Plugins/Growl/Growl-WithInstaller.framework\"\necho $PWD\n\n#current\nif [ '!' -d Versions/Current ]; then\n\tmkdir Versions/Current\nfi\n\nln -sf ../../Versions/A/Headers Versions/Current/Headers\nln -sf ../../Versions/A/Growl-WithInstaller Versions/Current/Growl-WithInstaller\nln -sf ../../Versions/A/Resources Versions/Current/Resources\n\n#Root\nif ([ -d Headers ]); then\n\trm -rf Headers\nfi\nln -sf Versions/Current/Headers Headers\n\nln -sf Versions/Current/Growl-WithInstaller Growl-WithInstaller\n\nif ([ -d Resources ]); then\n\trm -rf Resources\nfi\nln -sf Versions/Current/Resources Resources\n";
-		};
-		34E9F1F10790BF5400662E8E = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = "Growl-WithInstaller.framework";
-			path = "Plugins/Growl/Growl-WithInstaller.framework";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34E9F1F20790BF5500662E8E = {
-			fileRef = 34E9F1F10790BF5400662E8E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34E9F2020790BF7500662E8E = {
-			fileRef = 34E9F1F10790BF5400662E8E;
-			isa = PBXBuildFile;
-			settings = {
-			};
+			shellScript = "## Fix Growl-WithInstaller.framework symlinks\n\ncd \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\necho $PWD\n\n#current\nif [ '!' -d Versions/Current ]; then\n\tmkdir Versions/Current\nfi\n\nln -sf ../../Versions/A/Headers Versions/Current/Headers\nln -sf ../../Versions/A/Growl-WithInstaller Versions/Current/Growl-WithInstaller\nln -sf ../../Versions/A/Resources Versions/Current/Resources\n\n#Root\nif ([ -d Headers ]); then\n\trm -rf Headers\nfi\nln -sf Versions/Current/Headers Headers\n\nln -sf Versions/Current/Growl-WithInstaller Growl-WithInstaller\n\nif ([ -d Resources ]); then\n\trm -rf Resources\nfi\nln -sf Versions/Current/Resources Resources\n";
 		};
 		34EF54A107CE8E4700A685F1 = {
 			isa = PBXFileReference;
@@ -19201,35 +19118,17 @@
 //524
 		52C623DE06697AFA0006C387 = {
 			children = (
-				6CFB75BC06F5957D00091DC9,
-				0701A04907D30D81007369FB,
-				0701A04707D30D80007369FB,
-				0701A04807D30D81007369FB,
-				52C623E206697B3B0006C387,
-				52C623E306697B3B0006C387,
-				34E9F1F10790BF5400662E8E,
+				9E124DE707D34C7300AA91C5,
+				9E124DE807D34C7300AA91C5,
+				9E124DEF07D34C9000AA91C5,
+				9E124DF007D34C9000AA91C5,
+				9E124DE907D34C7300AA91C5,
+				9E124DEA07D34C7300AA91C5,
+				9E124DF507D34CF500AA91C5,
 			);
 			isa = PBXGroup;
 			name = Growl;
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52C623E206697B3B0006C387 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = NEHGrowlPlugin.h;
-			path = Plugins/Growl/NEHGrowlPlugin.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52C623E306697B3B0006C387 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = NEHGrowlPlugin.m;
-			path = Plugins/Growl/NEHGrowlPlugin.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -19369,14 +19268,6 @@
 			lastKnownFileType = wrapper.nib;
 			name = EventSoundContactAlert.nib;
 			path = "Plugins/Event Sounds/EventSoundContactAlert.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6CFB75BC06F5957D00091DC9 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = GrowlAlert.png;
-			path = Plugins/Growl/GrowlAlert.png;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -21038,6 +20929,108 @@
 //9E2
 //9E3
 //9E4
+		9E124DE707D34C7300AA91C5 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CBGrowlAlertDetailPane.h;
+			path = Source/CBGrowlAlertDetailPane.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E124DE807D34C7300AA91C5 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CBGrowlAlertDetailPane.m;
+			path = Source/CBGrowlAlertDetailPane.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E124DE907D34C7300AA91C5 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NEHGrowlPlugin.h;
+			path = Source/NEHGrowlPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E124DEA07D34C7300AA91C5 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NEHGrowlPlugin.m;
+			path = Source/NEHGrowlPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E124DEB07D34C7300AA91C5 = {
+			fileRef = 9E124DE707D34C7300AA91C5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E124DEC07D34C7300AA91C5 = {
+			fileRef = 9E124DE807D34C7300AA91C5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E124DED07D34C7400AA91C5 = {
+			fileRef = 9E124DE907D34C7300AA91C5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E124DEE07D34C7400AA91C5 = {
+			fileRef = 9E124DEA07D34C7300AA91C5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E124DEF07D34C9000AA91C5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = GrowlAlert.nib;
+			path = Resources/GrowlAlert.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E124DF007D34C9000AA91C5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = GrowlAlert.png;
+			path = Resources/GrowlAlert.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E124DF107D34C9100AA91C5 = {
+			fileRef = 9E124DEF07D34C9000AA91C5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E124DF207D34C9100AA91C5 = {
+			fileRef = 9E124DF007D34C9000AA91C5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E124DF507D34CF500AA91C5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = "Growl-WithInstaller.framework";
+			path = "Frameworks/Growl-WithInstaller.framework";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E124DF607D34CF500AA91C5 = {
+			fileRef = 9E124DF507D34CF500AA91C5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		9E20910A06A601A100E33E27 = {
 			fileRef = 9E791E26057746D100547562;
 			isa = PBXBuildFile;
