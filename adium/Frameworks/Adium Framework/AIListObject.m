@@ -59,9 +59,10 @@ DeclareString(FormattedUID);
 											  group:ObjectStatusCache 
 							  ignoreInheritedValues:YES];
 	if (formattedUID && ![formattedUID isEqualToString:UID]){
-		[self setStatusObject:formattedUID
-					   forKey:FormattedUID
-					   notify:NO];
+		//No need to go through the whole rigamarole of setStatusObject:forKey:, especially since that will end up resaving the preference we just loaded
+		//This whole formattedUID preference thing is basically just a hack for protocols which have a formatted UID we only get once we sign on; this way
+		//offline contacts display with the properly formatted UID instead of the compactedString version Adium uses for internal bookkeeping.
+		[statusDictionary setObject:formattedUID forKey:FormattedUID];
 	}
 	
     return(self);
