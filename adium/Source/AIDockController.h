@@ -48,6 +48,8 @@ typedef enum {
 	
     BOOL					observingFlash;
     BOOL					needsDisplay;
+	
+	NSTimeInterval			currentBounceInterval;
 }
 
 //Icon animation & states
