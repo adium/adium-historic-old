@@ -124,6 +124,9 @@
 		case 'OWEB': /* OmniWeb (4.x and 5.x) */
 			importerClass = [SHOmniWebBookmarksImporter class];
 			break;
+		case 'ShiR': /* Shiira - Safari-compatible bookmarks, using Safari importer for now */
+			importerClass = [SHSafariBookmarksImporter class];
+			break;
 		case 'MSIE': /* Internet Explorer */
 			importerClass = [SHMSIEBookmarksImporter class];
 			break;			
