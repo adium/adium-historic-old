@@ -65,6 +65,7 @@
 //Window is closing
 - (BOOL)windowShouldClose:(id)sender
 {
+	[[NSColorPanel sharedColorPanel] close];
 	[self autorelease];
     return(YES);
 }
