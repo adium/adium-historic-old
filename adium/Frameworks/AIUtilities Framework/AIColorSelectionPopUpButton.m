@@ -54,9 +54,9 @@
 
 - (void)dealloc
 {
-    [availableColors release];
-    [customColor release];
-    [customMenuItem release];
+    [availableColors release]; availableColors = nil;
+    [customColor release]; customColor = nil;
+    [customMenuItem release]; customMenuItem = nil;
     
     [super dealloc];
 }
