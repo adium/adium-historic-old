@@ -883,6 +883,20 @@
 			settings = {
 			};
 		};
+		3429200806288D9B00BB9217 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = VersionCannotConnect.nib;
+			path = "Plugins/Version Checker/VersionCannotConnect.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3429200906288D9B00BB9217 = {
+			fileRef = 3429200806288D9B00BB9217;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		342DC48A05783B8D000E1D83 = {
 			children = (
 				342DC5C005783DE7000E1D83,
@@ -3867,6 +3881,7 @@
 				344ECBB00620F323007256C6,
 				6ECFABC50622370E001C7E93,
 				6E7C19BE0623BF80008A1C99,
+				3429200906288D9B00BB9217,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16629,6 +16644,7 @@
 				3404893206173DAB004D0B7E,
 				344ECBAA0620F323007256C6,
 				344ECBAC0620F323007256C6,
+				3429200806288D9B00BB9217,
 				344ECBAB0620F323007256C6,
 				34F58F33061A76C500B4B5D6,
 				344ECBA90620F323007256C6,
