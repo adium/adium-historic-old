@@ -13,12 +13,12 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.31 2004/02/27 00:16:13 evands Exp $
+// $Id: AISoundController.m,v 1.32 2004/02/27 09:31:46 eevyl Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
 
-#define	PATH_SOUNDS					@"/Sounds/"
+#define	PATH_SOUNDS					@"/Sounds"
 #define PATH_INTERNAL_SOUNDS		@"/Contents/Resources/Sounds/"
 #define SOUND_SET_PATH_EXTENSION	@"txt"
 #define SOUND_DEFAULT_PREFS			@"SoundPrefs"
