@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.28 2003/12/30 08:05:57 evands Exp $
+// $Id: AIAccount.m,v 1.29 2004/01/07 21:23:04 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -32,7 +32,6 @@
 
     //Get our service
     service = [inService retain];
-    changedStatusKeys = [[NSMutableArray alloc] init];
 
     //Handle the preference changed monitoring (for account status) for our subclass
     [[adium notificationCenter] addObserver:self
@@ -86,24 +85,6 @@
 			[self updateStatusForKey:key];
 		}
 	}
-}
-
-//Quickly set a status key for this account
-- (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
-{
-    [[self statusArrayForKey:key] setObject:value withOwner:self];
-    [changedStatusKeys addObject:key];
-    
-    if(notify){
-		[[adium contactController] listObjectStatusChanged:self modifiedStatusKeys:changedStatusKeys delayed:NO silent:NO];
-		[changedStatusKeys release]; changedStatusKeys = [[NSMutableArray alloc] init];
-    }
-}
-
-//Quickly retrieve a status key for this account
-- (id)statusObjectForKey:(NSString *)key
-{
-    return([[self statusArrayForKey:key] objectWithOwner:self]);
 }
 
 //Update this account's status

@@ -98,7 +98,6 @@ typedef enum {
  */
 @interface AIAccount : AIListObject {
     id <AIServiceController>	service;				//The service controller that spawned us
-    NSMutableArray				*changedStatusKeys;		//Status keys that have changed since the last notification
 	NSString					*password;				//Password of this account
 
     BOOL						silentAndDelayed; 			//We are waiting for and processing our sign on updates
@@ -133,8 +132,6 @@ typedef enum {
 - (id <AIAccountViewController>)accountView;	//Return a view controller for the connection window
 - (NSArray *)supportedPropertyKeys;		//Return an array of supported status keys
 - (void)updateStatusForKey:(NSString *)key; //The account's status did change
-- (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify;
-- (id)statusObjectForKey:(NSString *)key;
 - (void)connect;
 - (void)disconnect;
 

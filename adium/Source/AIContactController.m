@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.61 2003/12/15 03:25:00 adamiser Exp $
+// $Id: AIContactController.m,v 1.62 2004/01/07 21:23:04 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -57,31 +57,33 @@
     //
     contactObserverArray = [[NSMutableArray alloc] init];
     sortControllerArray = [[NSMutableArray alloc] init];
-    delayedDict = [[NSMutableDictionary alloc] init];
     activeSortController = nil;
-    delayedUpdates = 0;
-    contactList = [[AIListGroup alloc] initWithUID:CONTACT_LIST_GROUP_NAME];
-    contactListGeneration = [[AIContactListGeneration alloc] initWithContactList:contactList];
+    delayedStatusChanges = 0;
+	delayedAttributeChanges = 0;
+    delayedContentChanges = 0;
+	updatesAreDelayed = NO;
+	contactDict = nil;
+	groupDict = nil;
+	contactList = nil;
 
+	//
     [owner registerEventNotification:ListObject_StatusChanged displayName:@"Contact Status Changed"];
-    
-    //
     contactInfoCategory = [[AIPreferenceCategory categoryWithName:@"" image:nil] retain];
+}
 
-    
-    //Load the contact ordering
-    [self loadContactOrdering];
-
+//finish initing
+- (void)finishIniting
+{
+	[self loadContactList];
 }
 
 //close
 - (void)closeController
 {
-    //Save the group expand/collapse state
-    [contactListGeneration saveGroupState];
-
-    //Save order index information
-    [self saveContactOrdering];
+	//Save contact list
+	[[owner preferenceController] setPreference:[self _arrayRepresentationOfGroupContent:contactList]
+										 forKey:KEY_CONTACT_LIST
+										  group:PREF_GROUP_CONTACT_LIST];
 }
 
 //dealloc
@@ -89,13 +91,237 @@
 {
     [contactList release];
     [contactObserverArray release]; contactObserverArray = nil;
-    [contactListGeneration release];
     [contactInfoCategory release];
 
     [super dealloc];
 }
 
-// Contact Info --------------------------------------------------------------------------------
+
+//Local Contact List Storage -------------------------------------------------------------------------------------------
+//Load the contact list
+- (void)loadContactList
+{
+	NSArray		*contactListArray;
+	
+	//Load the contact list
+	contactDict = [[NSMutableDictionary alloc] init];
+	groupDict = [[NSMutableDictionary alloc] init];
+	contactList = [[AIListGroup alloc] initWithUID:CONTACT_LIST_GROUP_NAME];
+	if(contactListArray = [[owner preferenceController] preferenceForKey:KEY_CONTACT_LIST group:PREF_GROUP_CONTACT_LIST]){
+		[self _loadListObjectsFromGroupContent:contactListArray intoGroup:contactList];
+	}
+}
+
+//Flatten the passed group into an array
+- (NSArray *)_arrayRepresentationOfGroupContent:(AIListGroup *)inGroup
+{
+	NSMutableArray	*array = [NSMutableArray array];
+	NSEnumerator	*enumerator = [inGroup objectEnumerator];
+	AIListObject	*object;
+	
+	//Get the represented dicts of all our content
+	while(object = [enumerator nextObject]){
+		NSString		*type = nil;
+		NSDictionary	*infoDict = nil;
+		
+		//
+		if([object isKindOfClass:[AIListContact class]]){
+			type = @"AIListContact";
+			infoDict = [NSDictionary dictionaryWithObjectsAndKeys:
+				[object UID], @"UID",
+				[object serviceID], @"ServiceID",
+				nil];
+			
+		}else if([object isKindOfClass:[AIListGroup class]]){
+			type = @"AIListGroup";
+			infoDict = [NSDictionary dictionaryWithObjectsAndKeys:
+				[object UID], @"UID",
+				[self _arrayRepresentationOfGroupContent:(AIListGroup *)object], @"Content",
+				nil];
+		}
+		
+		//
+		if(type && infoDict){
+			[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+				type, @"Type",
+				infoDict, @"Info",
+				nil]];
+		}
+	}
+	
+	return(array);
+}
+
+//Create groups and objects from the previously flattened group array
+- (void)_loadListObjectsFromGroupContent:(NSArray *)contentArray intoGroup:(AIListGroup *)inGroup
+{
+	NSEnumerator	*enumerator;
+	NSDictionary	*objectDict;
+	
+	enumerator = [contentArray objectEnumerator];
+	while(objectDict = [enumerator nextObject]){
+		NSString		*type = [objectDict objectForKey:@"Type"];
+		NSDictionary	*infoDict = [objectDict objectForKey:@"Info"];
+		AIListObject	*object = nil;
+		
+		if([type compare:@"AIListContact"] == 0){			
+			object = [self contactWithService:[infoDict objectForKey:@"ServiceID"]
+										  UID:[infoDict objectForKey:@"UID"]];
+			
+			[inGroup addObject:object];
+			
+		}else if([type compare:@"AIListGroup"] == 0){
+			object = [self groupWithUID:[infoDict objectForKey:@"UID"]];
+			
+			[inGroup addObject:object];
+			[self _loadListObjectsFromGroupContent:[infoDict objectForKey:@"Content"]
+										 intoGroup:(AIListGroup *)object];
+			
+		}
+	}
+}
+
+
+//Status and Display updates -------------------------------------------------------------------------------------------
+//Delay all list object notifications until a period of inactivity occurs
+//This delays Contact_ListChanged, ListObject_AttributesChanged, and Contact_OrderChanged notifications
+// Delayed: Delays sorting and redrawing to prevent redundancy when making a large number of changes
+- (void)delayListObjectNotifications
+{
+#warning (Intentional) Event delays are disabled for now, pending an investigation of their usefulness :)
+//    if(!delayedUpdateTimer){
+//			updatesAreDelayed = YES;
+//        	delayedUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:UPDATE_CLUMP_INTERVAL target:self selector:@selector(_performDelayedUpdates:) userInfo:nil repeats:YES] retain];
+//    }
+}
+
+//Remote grouping of a list object has changed
+- (void)listObjectRemoteGroupingChanged:(AIListContact *)inObject oldGroupName:(NSString *)oldGroupName
+{
+	AIMutableOwnerArray		*remoteGroups = [inObject remoteGroupArray];
+	NSEnumerator			*enumerator;
+	NSString				*groupName;
+	BOOL					keepAtOldLocation = NO;
+	
+	//
+	if(updatesAreDelayed) delayedContentChanges++;
+	
+	//First, let's check to see if any account still wants the object in the old location.  If no one still wants it
+	//there we can remove it - otherwise, it stays.
+	if(oldGroupName){
+		enumerator = [remoteGroups objectEnumerator];
+		while(groupName = [enumerator nextObject]){
+			if([oldGroupName compare:groupName] == 0){
+				keepAtOldLocation = YES;
+				break;
+			}
+		}
+		
+		if(!keepAtOldLocation){
+			AIListGroup *oldGroup = [self groupWithUID:oldGroupName];
+			
+			[oldGroup removeObject:inObject];
+			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:oldGroup];
+		}
+	}
+	
+	//Second, we check to make sure the object is in every requested group
+	//If it's not in a group, we create that group at the root of the contact list (if necessary) and stick it in there
+	enumerator = [remoteGroups objectEnumerator];
+	while(groupName = [enumerator nextObject]){
+		AIListGroup		*group = [self groupWithUID:groupName];
+		
+		//Add to list if necessary
+		if([[group containingGroups] count] == 0){
+			[contactList addObject:group];
+		}
+		
+		//Add the object if necessary
+		if(![group containsObject:inObject]){
+			[group addObject:inObject];
+			
+			//Post a list content changed notification for the contaning group
+			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:group];
+		}
+	}
+}
+
+//Called after modifying a contact's status
+// Silent: Silences all events, notifications, sounds, overlays, etc. that would have been associated with this status change
+- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{
+    NSArray		*modifiedAttributeKeys;
+		
+    //Let all observers know the contact's status has changed
+	modifiedAttributeKeys = [self _informObserversOfObjectStatusChange:inObject withKeys:inModifiedKeys silent:silent];
+	
+    //Resort the contact list
+	if(updatesAreDelayed){
+		delayedStatusChanges++;
+	}else{
+		//We can safely skip sorting if we know the modified attributes will invoke a resort later
+		if(![[self activeSortController] shouldSortForModifiedAttributeKeys:modifiedAttributeKeys] &&
+		   [[self activeSortController] shouldSortForModifiedStatusKeys:inModifiedKeys]){
+			[self sortListObject:inObject];
+		}
+	}
+    
+    //Post an attributes changed message (if necessary)
+    if([modifiedAttributeKeys count]){
+		[self listObjectAttributesChanged:inObject modifiedKeys:modifiedAttributeKeys];
+    }
+}
+
+//Call after modifying an object's display attributes
+//(When modifying display attributes in response to a status change, this is not necessary)
+- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys
+{	
+	if(updatesAreDelayed){
+		delayedAttributeChanges++;
+	}else{
+        //Resort the contact list if necessary
+        if([[self activeSortController] shouldSortForModifiedAttributeKeys:inModifiedKeys]){
+			[self sortListObject:inObject];
+        }
+		
+        //Post an attributes changed message
+		[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged
+												  object:inObject
+												userInfo:(inModifiedKeys ? [NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"] : nil)];
+	}
+}
+
+//Performs any delayed list object/handle updates
+- (void)_performDelayedUpdates:(NSTimer *)timer
+{
+    //If updates have been delayed, we process them.  If not, we turn off the delayed update timer.
+	if(delayedStatusChanges || delayedAttributeChanges || delayedContentChanges){
+		//Send out global attribute & status changed notifications (to cover any delayed updates)
+		if(delayedAttributeChanges){
+			[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:nil];
+		}
+		if(delayedContentChanges){
+			[[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
+		}
+		
+		//Resort the list
+		[self sortContactList];
+		
+        //Reset the delayed update count back to 0
+		delayedStatusChanges = 0;
+		delayedAttributeChanges = 0;
+		delayedContentChanges = 0;
+		
+    }else{
+        //Disable the delayed update timer (it is no longer needed).
+        [delayedUpdateTimer invalidate]; [delayedUpdateTimer release]; delayedUpdateTimer = nil;
+		updatesAreDelayed = NO;
+    }
+}
+
+
+//Contact Info --------------------------------------------------------------------------------
+//Show info for the selected contact
 - (IBAction)showContactInfo:(id)sender
 {
     [self showInfoForContact:[self selectedContact]];
@@ -113,7 +339,14 @@
     [contactInfoCategory addView:inView];
 }
 
-// Selected contact ------------------------------------------------
+//Always be able to show the inspector
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+    return(YES);
+}
+
+
+//Selected contact ------------------------------------------------
 @protocol _RESPONDS_TO_CONTACT //Just a temp protocol to suppress compiler warning when I call contact on the responders below
 - (AIListContact *)contact;
 @end
@@ -141,40 +374,8 @@
     return(nil);
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
-{
-    return(YES); //Always be able to show the inspector
-}
 
 
-
-// Contact list generation
-- (void)handlesChangedForAccount:(AIAccount *)inAccount
-{
-    //Apply the changes to the contact list
-    [contactListGeneration handlesChangedForAccount:inAccount];
-
-    //Post a handles changed notification for the account
-    [[owner notificationCenter] postNotificationName:Account_HandlesChanged object:inAccount]; 
-}
-
-- (void)handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount
-{
-    //Apply the changes to the contact list
-    [contactListGeneration handle:inHandle addedToAccount:inAccount];
-
-    //Post a handles changed notification
-    [[owner notificationCenter] postNotificationName:Account_HandlesChanged object:inAccount];
-}
-
-- (void)handle:(AIHandle *)inHandle removedFromAccount:(AIAccount *)inAccount
-{
-    //Apply the changes to the contact list
-    [contactListGeneration handle:inHandle removedFromAccount:inAccount];
-
-    //Post a handles changed notification
-    [[owner notificationCenter] postNotificationName:Account_HandlesChanged object:inAccount];
-}
 
 
 
@@ -211,158 +412,6 @@
     [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
 }
 
-//Called after modifying a handle's status
-- (void)handleStatusChanged:(AIHandle *)inHandle modifiedStatusKeys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
-{
-    AIListContact	*listContact;
-    
-    listContact = [inHandle containingContact];
-    if(listContact){
-        NSDictionary		*handleStatusDict = [inHandle statusDictionary];
-        NSEnumerator		*enumerator;
-        NSString		*key;
-        
-        //Apply all the changed status values to the handle's containing contact
-        if(inModifiedKeys){
-            enumerator = [inModifiedKeys objectEnumerator];
-        }else{
-            enumerator = [[handleStatusDict allKeys] objectEnumerator]; //If nil is passed, copy all keys
-        }
-        while((key = [enumerator nextObject])){
-            AIMutableOwnerArray	*ownerArray = [listContact statusArrayForKey:key];
-
-            [ownerArray setObject:[handleStatusDict objectForKey:key] withOwner:inHandle];
-        }
-
-        //Acknowledge the contact status changes
-        [self listObjectStatusChanged:listContact modifiedStatusKeys:inModifiedKeys delayed:delayed silent:silent];
-    }
-}
-
-//Called after modifying a contact's status directly (and not through a handle)
-// Silent: Silences all events, notifications, sounds, overlays, etc. that would have been associated with this status change
-// Delayed: Delays any sorting and redisplay associated with this status change.  When changing the status of many objects, pass YES to greatly increase performance.
-- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
-{
-    NSEnumerator		*enumerator;
-    NSMutableArray		*modifiedAttributeKeys;
-    id <AIListObjectObserver>	observer;
-
-    //Handle delayed updates
-    if(delayed) [self _addDelayedUpdate];
-
-    //Let all the observers know the contact has changed
-    modifiedAttributeKeys = [NSMutableArray array];
-    enumerator = [contactObserverArray objectEnumerator];
-    while((observer = [enumerator nextObject])){
-        NSArray	*newKeys;
-
-        if((newKeys = [observer updateListObject:inObject keys:inModifiedKeys delayed:delayed silent:silent])){
-            [modifiedAttributeKeys addObjectsFromArray:newKeys];
-        }
-    }
-
-    //Resort the contact list (If necessary)
-    if(!delayed && //Delay sorting
-       ([[self activeSortController] shouldSortForModifiedStatusKeys:inModifiedKeys] ||
-        [[self activeSortController] shouldSortForModifiedAttributeKeys:modifiedAttributeKeys])){
-        [self sortListGroup:[inObject containingGroup] mode:AISortGroupAndSuperGroups];
-        [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:[inObject containingGroup]];
-    }
-
-    //Post a 'status' changed message, signaling that the object's status has changed.
-    if(inModifiedKeys){
-        [[owner notificationCenter] postNotificationName:ListObject_StatusChanged object:inObject userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
-    }else{
-        [[owner notificationCenter] postNotificationName:ListObject_StatusChanged object:inObject];
-    }
-
-    //Post an attributes changed message (if necessary)
-    if([modifiedAttributeKeys count] != 0){
-        [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:inObject userInfo:[NSDictionary dictionaryWithObject:modifiedAttributeKeys forKey:@"Keys"]];
-    }
-}
-
-//Call after modifying an object's display attributes.  (When modifying display attributes in response to a status change, this is not necessary)
-- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed
-{
-    //Handle delayed updates
-    if(delayed) {
-        NSString * UIDAndServiceID = [inObject UIDAndServiceID];
-        NSMutableDictionary * keyDict = [delayedDict objectForKey:UIDAndServiceID];
-
-        if (keyDict) {
-            NSArray     *oldKeys = [keyDict objectForKey:@"Keys"];
-
-            if (!oldKeys || !inModifiedKeys) { //if an all-points bulletin came in, keep it all-points by not adding any other keys
-                [keyDict removeObjectForKey:@"Keys"];
-            } else {
-                NSMutableArray  *keyArray = [[oldKeys mutableCopy] autorelease];
-
-                [keyArray addObjectsFromArray:inModifiedKeys];  //consolidate previous modified keys with the new ones
-                [keyDict setObject:keyArray forKey:@"Keys"];
-                [delayedDict setObject:keyDict forKey:UIDAndServiceID];
-            }
-        } else {
-            [delayedDict setObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",inModifiedKeys,@"Keys",nil] forKey:UIDAndServiceID];            
-        }
-        [self _addDelayedUpdate];
-    } else {
-        //Resort the contact list if necessary
-        if ([[self activeSortController] shouldSortForModifiedAttributeKeys:inModifiedKeys]){
-            [self sortListGroup:[inObject containingGroup] mode:AISortGroupAndSuperGroups];
-            [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:[inObject containingGroup]];
-        }
-
-        //Post an attributes changed message
-        if(inModifiedKeys){
-            [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:inObject userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
-        }else{
-            [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:inObject];
-        }
-    }
-}
-
-//Add a delayed update
-- (void)_addDelayedUpdate
-{
-    if(!delayedUpdateTimer){
-        delayedUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:UPDATE_CLUMP_INTERVAL target:self selector:@selector(_performDelayedUpdates:) userInfo:nil repeats:YES] retain];
-    }
-    delayedUpdates++;
-}
-
-//Performs any delayed list object/handle updates
-- (void)_performDelayedUpdates:(NSTimer *)timer
-{
-    //If updates have been delayed, we process them.  If not, we turn off the delayed update timer.
-    if(delayedUpdates){
-        //send out listObject_AttributesChanged notifications for all delayed objects, with modified keys as appropriate
-        NSEnumerator *enumerator = [delayedDict objectEnumerator];
-        NSDictionary *dict;
-        while (dict = [enumerator nextObject]) {
-            AIListObject * inObject = [dict objectForKey:@"Object"];
-            NSArray * inModifiedKeys = [dict objectForKey:@"Keys"];
-            if(inModifiedKeys){
-                [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:inObject userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
-            }else{
-                [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:inObject];
-            }
-        }
-
-        //Resort and redisplay the entire list at once, to cover any delayed updates
-        [self sortListGroup:contactList mode:AISortGroupAndSubGroups];
-        [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
-
-        //Reset the delayed update count back to 0
-        delayedUpdates = 0;
-        //Clear the delayedDict as we have now processed its entires
-        [delayedDict removeAllObjects];
-    }else{
-        //Disable the delayed update timer (it is no longer needed).
-        [delayedUpdateTimer invalidate]; [delayedUpdateTimer release]; delayedUpdateTimer = nil;
-    }
-}
 
 
 // Contact Sorting --------------------------------------------------------------------------------
