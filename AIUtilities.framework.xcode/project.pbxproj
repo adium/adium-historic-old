@@ -4394,6 +4394,39 @@
 			settings = {
 			};
 		};
+		34E46928075681AE004C3A42 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIVariableHeightOutlineView.h;
+			path = "Frameworks/AIUtilities Framework/AIVariableHeightOutlineView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E46929075681AE004C3A42 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIVariableHeightOutlineView.m;
+			path = "Frameworks/AIUtilities Framework/AIVariableHeightOutlineView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E4692A075681AE004C3A42 = {
+			fileRef = 34E46928075681AE004C3A42;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34E4692B075681AE004C3A42 = {
+			fileRef = 34E46929075681AE004C3A42;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //340
 //341
 //342
@@ -4777,6 +4810,8 @@
 		};
 		4BD1EFB906D265AA00B3975E = {
 			children = (
+				34E46928075681AE004C3A42,
+				34E46929075681AE004C3A42,
 				34486B9406D1DF0300DA778C,
 				34486B9506D1DF0300DA778C,
 			);
@@ -5447,6 +5482,7 @@
 				34A2EBE9073B3BCD0042C391,
 				34A2EBEB073B3BCD0042C391,
 				34A2EBEF073B3BCD0042C391,
+				34E4692A075681AE004C3A42,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5601,6 +5637,7 @@
 				34A2EBE8073B3BCD0042C391,
 				34A2EBEA073B3BCD0042C391,
 				34A2EBEE073B3BCD0042C391,
+				34E4692B075681AE004C3A42,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
