@@ -391,6 +391,15 @@ static NSImage *pushIndicatorImage = nil;
 - (AIChat *)chat{
     return(chat);
 }
+//Return the selected countact (to auto-configure the contact menu)
+- (AIListContact *)contact
+{
+    if([[chat listObject] isKindOfClass:[AIListContact class]]){
+        return((AIListContact *)[chat listObject]);
+    }else{
+        return(nil);
+    }
+}
 
 
 //Auto Sizing --------------------------------------------------------------------------
