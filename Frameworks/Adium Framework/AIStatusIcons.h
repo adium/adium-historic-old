@@ -22,4 +22,6 @@ typedef enum {
 + (NSImage *)statusIconForStatusID:(NSString *)statusID type:(AIStatusIconType)iconType direction:(AIIconDirection)iconDirection;
 + (BOOL)setActiveStatusIconsFromPath:(NSString *)inPath;
 
++ (NSImage *)previewMenuImageForStatusIconsAtPath:(NSString *)inPath;
+
 @end

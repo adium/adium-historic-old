@@ -31,4 +31,6 @@ typedef enum {
 + (NSImage *)serviceIconForServiceID:(NSString *)serviceID type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection;
 + (BOOL)setActiveServiceIconsFromPath:(NSString *)inPath;
 
++ (NSImage *)previewMenuImageForServiceIconsAtPath:(NSString *)inPath;
+
 @end
