@@ -471,8 +471,16 @@
 				default:
 				break;
 			}
-			int half = (drawRect.size.height - labelFontHeight) / 2.0;
-			int offset = (labelFontHeight - statusFontHeight) + ([[self font] descender] - [[self statusFont] descender]);
+			
+			int half, offset;
+			
+			if(drawUnder){
+				half = (drawRect.size.height - statusFontHeight) / 2.0;
+				offset = 0;
+			}else{
+				half = (drawRect.size.height - labelFontHeight) / 2.0;
+				offset = (labelFontHeight - statusFontHeight) + ([[self font] descender] - [[self statusFont] descender]);
+			}
 
 			[extStatus drawInRect:NSMakeRect(drawRect.origin.x,
 											 drawRect.origin.y + half + offset,
