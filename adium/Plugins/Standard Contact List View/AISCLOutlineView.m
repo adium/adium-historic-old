@@ -99,6 +99,11 @@
 //Called before we're inserted in a window
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview
 {
+    //Pass this on to our delegate
+    if([[self delegate] respondsToSelector:@selector(view:willMoveToSuperview:)]){
+        [[self delegate] view:self willMoveToSuperview:newSuperview];
+    }
+
     //Observe our window becoming and resigning main
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeMainNotification object:[self window]];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignMainNotification object:[self window]];
@@ -112,7 +117,7 @@
 {
     [super viewDidMoveToSuperview];
 
-    //Inform our delegate that we moved to another superview
+    //Pass this on to our delegate
     if([[self delegate] respondsToSelector:@selector(view:didMoveToSuperview:)]){
         [[self delegate] view:self didMoveToSuperview:[self superview]];
     }
@@ -523,11 +528,6 @@
 
 
 //Custom mouse tracking ----------------------------------------------------------------------
-- (void)mouseMoved:(NSEvent *)theEvent
-{
-    [[self delegate] mouseMoved:theEvent];
-}
-
 //Forward mouse events to our containing window if it's borderless (and command is pressed)
 - (void)mouseDown:(NSEvent *)theEvent
 {
@@ -539,8 +539,8 @@
 														  dequeue:NO];
 
 		//Quick hack to hide any active tooltips
-		if([[self delegate] respondsToSelector:@selector(_endTrackingMouse)])
-			[[self delegate] performSelector:@selector(_endTrackingMouse)];
+		if([[self delegate] respondsToSelector:@selector(hideTooltip)])
+			[[self delegate] performSelector:@selector(hideTooltip)];
 		
 		//Pass along the event (either to ourself or our window, depending on what it is)
 		if([nextEvent type] == NSLeftMouseUp){
