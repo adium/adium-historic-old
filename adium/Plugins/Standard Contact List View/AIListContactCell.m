@@ -24,7 +24,7 @@
 
 #define badgewidth 				30
 
-#define CONTACT_TEXT_ALIGN		NSRightTextAlignment //NSLeftTextAlignment
+#define CONTACT_TEXT_ALIGN		NSLeftTextAlignment//NSCenterTextAlignment
 //NSLeftTextAlignment		= 0, /* Visually left aligned */
 //NSRightTextAlignment	= 1, /* Visually right aligned */
 //NSCenterTextAlignment	= 2,
