@@ -6,10 +6,11 @@
 //  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
-@interface NEHGrowlPlugin : AIPlugin <AIActionHandler> {
+@protocol AIActionHandler;
+@protocol GrowlAppBridgeDelegate;
+
+@interface NEHGrowlPlugin : AIPlugin <AIActionHandler, GrowlAppBridgeDelegate> {
 	BOOL			 showWhileAway;
 }
-
-- (void)growlLaunched:(void *)context;
 
 @end
