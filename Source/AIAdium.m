@@ -685,6 +685,8 @@ void Adium_HandleSignal(int i){
 		returnString = @"0.681";
 	}else if ([inString isEqualToString:@"0.7b3"]){
 		returnString = @"0.682";
+	}else if ([inString isEqualToString:@"0.7b4"]){
+		returnString = @"0.683";
 	}
 	
 	return(returnString ? returnString : inString);
