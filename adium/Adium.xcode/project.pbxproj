@@ -24,6 +24,36 @@
 //072
 //073
 //074
+		0742B0430647FFA400FDE635 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = BZBezierPathAdditions.h;
+			path = "Frameworks/AIUtilities Framework/BZBezierPathAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0742B0440647FFA400FDE635 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = BZBezierPathAdditions.m;
+			path = "Frameworks/AIUtilities Framework/BZBezierPathAdditions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0742B0450647FFA400FDE635 = {
+			fileRef = 0742B0430647FFA400FDE635;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		0742B0460647FFA400FDE635 = {
+			fileRef = 0742B0440647FFA400FDE635;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		07A07ADC05F9325C00179FDC = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -5610,6 +5640,7 @@
 				34C2DF6F0634A5820018E5D2,
 				34C2E5090634C7250018E5D2,
 				4BFFA4450644C74E00FC068D,
+				0742B0450647FFA400FDE635,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6062,6 +6093,7 @@
 				34C2DF710634A5830018E5D2,
 				34C2E50A0634C7250018E5D2,
 				4BFFA4460644C74E00FC068D,
+				0742B0460647FFA400FDE635,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21002,6 +21034,8 @@
 		};
 		F59C470D033E544E01A8010A = {
 			children = (
+				0742B0430647FFA400FDE635,
+				0742B0440647FFA400FDE635,
 				9E9739D905784EFA00CF3AEE,
 				9E9739D805784EF900CF3AEE,
 				4B7BB54105B1906700598C55,
