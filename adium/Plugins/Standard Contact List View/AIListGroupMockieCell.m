@@ -8,9 +8,6 @@
 
 #import "AIListGroupMockieCell.h"
 
-#define MOCKIE_GROUP_TOP_SPACING		4
-#define MOCKIE_GROUP_BOTTOM_PADDING		0
-
 @implementation AIListGroupMockieCell
 
 //Copy
@@ -19,14 +16,6 @@
 	id newCell = [super copyWithZone:zone];
 	return(newCell);
 }
-
-//Give our cell some spacing so groups appear as separate blocks, and disallow any bottom spacing
-//- (int)topSpacing{
-//	return([super topSpacing] + MOCKIE_GROUP_TOP_SPACING);
-//}
-//- (int)bottomSpacing{
-//	return(MOCKIE_GROUP_BOTTOM_PADDING);
-//}
 
 //Draw a gradient behind our group
 - (void)drawBackgroundWithFrame:(NSRect)rect
@@ -41,6 +30,5 @@
 	
 	[[self backgroundGradient] drawInBezierPath:path];
 }
-
 
 @end
