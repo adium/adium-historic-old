@@ -68,13 +68,28 @@
 //Size our cell to fit our content
 - (NSSize)cellSize
 {
-	NSSize	size = [super cellSize];
-	
-	if(userIconVisible && userIconSize.height > labelFontHeight){
-		return(NSMakeSize(0, size.height + userIconSize.height));
+	int		largestElementHeight;
+		
+	//Display Name Height (And status text if below name)
+	if(extendedStatusVisible && extendedStatusIsBelowName){
+		largestElementHeight = labelFontHeight + statusFontHeight;
 	}else{
-		return(NSMakeSize(0, size.height + labelFontHeight));
+		largestElementHeight = labelFontHeight;
 	}
+	
+	//User Icon Height
+	if(userIconSize.height > largestElementHeight){
+		largestElementHeight = userIconSize.height;
+	}
+	
+	//Status text height (If beside name)
+	if(extendedStatusVisible && !extendedStatusIsBelowName){
+		if(statusFontHeight > largestElementHeight){
+			largestElementHeight = statusFontHeight;
+		}
+	}
+	
+	return(NSMakeSize(0, [super cellSize].height + largestElementHeight));
 }
 
 - (int)cellWidth
@@ -234,6 +249,9 @@
 }
 
 //Element Positioning
+- (void)setExtendedStatusIsBelowName:(BOOL)inBelowName{
+	extendedStatusIsBelowName = inBelowName;
+}
 - (void)setUserIconPosition:(LIST_POSITION)inPosition{
 	userIconPosition = inPosition;
 }
@@ -302,10 +320,9 @@
 	if(serviceIconPosition == LIST_POSITION_RIGHT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	
 	//Extended Status
-	BOOL	drawUnder = [self drawStatusBelowLabelInRect:rect];
-	if(drawUnder) rect = [self drawUserExtendedStatusInRect:rect drawUnder:drawUnder];
+	if(extendedStatusIsBelowName) rect = [self drawUserExtendedStatusInRect:rect drawUnder:YES];
 	rect = [self drawDisplayNameWithFrame:rect];
-	if(!drawUnder) rect = [self drawUserExtendedStatusInRect:rect drawUnder:drawUnder];
+	if(!extendedStatusIsBelowName) rect = [self drawUserExtendedStatusInRect:rect drawUnder:NO];
 	
 }
 
@@ -500,12 +517,6 @@
 - (NSImage *)serviceImage
 {
 	return([AIServiceIcons serviceIconForObject:listObject type:AIServiceIconList direction:AIIconFlipped]);
-}
-
-//YES if our status should draw below the label text
-- (BOOL)drawStatusBelowLabelInRect:(NSRect)rect
-{
-	return(labelFontHeight + statusFontHeight - HULK_CRUSH_FACTOR <= rect.size.height);
 }
 
 //No need to the grid if we have a status color to draw

@@ -138,6 +138,7 @@
 	[popUp_groupTextAlignment compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
 	[popUp_windowStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]];
 
+	[popUp_extendedStatusPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION] intValue]];
 	[popUp_userIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue]];
 	[popUp_statusIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
 	[popUp_serviceIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];
@@ -186,7 +187,12 @@
 											 forKey:KEY_LIST_LAYOUT_WINDOW_STYLE
 											  group:PREF_GROUP_LIST_LAYOUT];
 		[self configureControlDimming];
-
+		
+	}else if(sender == popUp_extendedStatusPosition){
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
+											 forKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION
+											  group:PREF_GROUP_LIST_LAYOUT];
+		
 	}else if(sender == popUp_userIconPosition){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_USER_ICON_POSITION
@@ -356,10 +362,6 @@
 	[[[popUp_contactCellStyle menu] itemWithTag:CELL_STYLE_BRICK] setEnabled:enableNormal];
 	[[[popUp_contactCellStyle menu] itemWithTag:CELL_STYLE_BUBBLE] setEnabled:enableBubble];
 	[[[popUp_contactCellStyle menu] itemWithTag:CELL_STYLE_BUBBLE_FIT] setEnabled:enableBubble];
-		
-	//Group Style
-		
-
 }
 
 
