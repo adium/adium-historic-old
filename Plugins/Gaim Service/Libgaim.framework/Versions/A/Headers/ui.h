@@ -28,8 +28,8 @@ typedef struct {
     void (*update_keylist)(void);
 
     void (*config_buddy)(GaimBuddy *buddy);
-	
-	OtrlPolicy (*find_policy)(GaimAccount *account, const char *name);
+
+    OtrlPolicy (*find_policy)(GaimAccount *account, const char *name);
 } OtrgUiUiOps;
 
 /* Set the UI ops */
