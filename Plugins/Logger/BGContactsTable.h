@@ -22,6 +22,7 @@
     IBOutlet    NSPopUpButton                  *popup_filterType;
 	
 	BOOL		showingContacts;
+	NSImage		*blankImage;
 }
 
 - (IBAction)switchTable:(id)sender;
