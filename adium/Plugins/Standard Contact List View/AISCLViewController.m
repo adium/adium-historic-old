@@ -447,7 +447,7 @@
         [NSNumber numberWithInt:Context_Contact_Action],
         [NSNumber numberWithInt:Context_Contact_NegativeAction],
         [NSNumber numberWithInt:Context_Contact_Additions], nil]
-                                                    forContact:[contactListView listObject]]);
+												 forListObject:[contactListView listObject]]);
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item

@@ -874,17 +874,18 @@
 //Context menu
 -(NSMenu *)contextualMenuForFlexibleTableView:(AIFlexibleTableView *)tableView
 {
-    AIListObject	*selectedContact = [chat listObject];
+    AIListObject	*selectedObject = [chat listObject];
     
-    if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]){
-        return ([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+    if(selectedObject){
+        return([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
             [NSNumber numberWithInt:Context_Contact_Manage],
             [NSNumber numberWithInt:Context_Contact_Action],
             [NSNumber numberWithInt:Context_Contact_NegativeAction],
             [NSNumber numberWithInt:Context_Contact_Additions], nil]
-                                                        forContact:(AIListContact *)selectedContact]);
-    }
-    return nil;
+													  forListObject:selectedObject]);
+    }else{
+		return(nil);
+	}
 }
 
 @end
