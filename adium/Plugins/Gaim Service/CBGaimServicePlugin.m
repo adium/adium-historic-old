@@ -830,7 +830,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 {
 //	char *plugin_search_paths[2];
 	servicePluginInstance = self;
-	
+
 	//Register our defaults
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS forClass:[self class]]
 										  forGroup:GROUP_ACCOUNT_STATUS];
@@ -866,8 +866,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		NSLog(@"Error: No MSN/SSL Support");
 	}
 	
-	
-	
     //Setup the buddy list
     gaim_set_blist(gaim_blist_new());
             
@@ -888,7 +886,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	[self configureSignals];
 
 	_accountDict = [[NSMutableDictionary alloc] init];
-		
+
     //Install the services
     OscarService	= [[[CBOscarService alloc] initWithService:self] retain];
     GaduGaduService = [[[ESGaduGaduService alloc] initWithService:self] retain];
@@ -897,6 +895,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	JabberService   = [[[ESJabberService alloc] initWithService:self] retain];
 	TrepiaService   = [[[ESTrepiaService alloc] initWithService:self] retain];
     YahooService	= [[[ESYahooService alloc] initWithService:self] retain];
+
 }
 
 - (void)uninstallPlugin

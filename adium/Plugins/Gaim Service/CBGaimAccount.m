@@ -1335,7 +1335,7 @@
 - (void)accountConnectionDisconnected
 {
     NSEnumerator    *enumerator;
-    BOOL			connectionIsSuicidal = gc->wants_to_die;
+    BOOL			connectionIsSuicidal = (gc ? gc->wants_to_die : NO);
 	
 	//Reset the gaim account (We don't want it tracking anything between sessions)
     [self resetLibGaimAccount];
