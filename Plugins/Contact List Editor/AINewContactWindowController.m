@@ -30,6 +30,7 @@
 - (void)selectGroup:(id)sender;
 - (void)selectFirstValidServiceType;
 - (void)selectServiceType:(id)sender;
+- (void)updateContactNameLabel;
 @end
 
 @implementation AINewContactWindowController
@@ -82,6 +83,8 @@
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
+	originalContactNameLabelFrame = [textField_contactNameLabel frame];
+	
 	[self buildContactTypeMenu];
 	[self buildGroupMenu];
 
@@ -245,6 +248,7 @@
 
 - (void)configureForCurrentServiceType
 {
+	[self updateContactNameLabel];
 	[self updateAccountList];
 	[self validateEnteredName];
 }
@@ -300,8 +304,7 @@
 		}
 	}
 	
-	[self updateAccountList];
-	[self validateEnteredName];
+	[self configureForCurrentServiceType];
 }
 
 - (void)setContactName:(NSString *)contact
@@ -418,6 +421,52 @@
 	}
 	
 	return nil;
+}
+
+- (void)updateContactNameLabel
+{
+	NSString	*userNameLabel = (service ? [service userNameLabel] : nil);
+	NSRect		oldFrame;
+	NSRect		newFrame;
+
+	oldFrame = [textField_contactNameLabel frame];
+
+	//If the old frame is smaller than our original frame, treat the old frame as that original frame
+	//for resizing and positioning purposes
+	if(oldFrame.size.width < originalContactNameLabelFrame.size.width){
+		oldFrame = originalContactNameLabelFrame;
+	}
+
+	//Set to the userNameLabel, using a default value if we have no userNameLabel, then sizeToFit
+	[textField_contactNameLabel setStringValue:[(userNameLabel ? userNameLabel : AILocalizedString(@"Contact ID",nil)) stringByAppendingString:@":"]];
+	[textField_contactNameLabel sizeToFit];
+	newFrame = [textField_contactNameLabel frame];
+
+	//Enforce a minimum width of the original contact name label frame width
+	if(newFrame.size.width < originalContactNameLabelFrame.size.width){
+		newFrame.size.width = originalContactNameLabelFrame.size.width;
+	}
+
+	//Only use integral widths to keep alignment correct;
+	//round up as an extra pixel of whitespace never hurt anybody
+	newFrame.size.width = round(newFrame.size.width + 0.5);
+
+	//Keep the right edge in the same place at all times
+	newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
+
+	[textField_contactNameLabel setFrame:newFrame];	
+	[textField_contactNameLabel setNeedsDisplay:YES];
+
+	//Resize the window to fit the contactNameLabel if the current size is not correct
+	if(newFrame.size.width != oldFrame.size.width){
+		NSRect	windowFrame = [[self window] frame];
+		float	difference = newFrame.size.width - oldFrame.size.width;
+
+		windowFrame.origin.x -= difference;
+		windowFrame.size.width += difference;
+
+		[[self window] setFrame:windowFrame display:YES animate:YES];
+	}
 }
 
 //

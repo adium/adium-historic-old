@@ -24,9 +24,13 @@
 	IBOutlet	NSTableView			*tableView_accounts;
 	IBOutlet	NSButton			*button_add;
 	
+	IBOutlet	NSTextField			*textField_contactNameLabel;
+	
 	NSArray							*accounts;
 	NSString						*contactName;
 	AIService						*service;
+	
+	NSRect							originalContactNameLabelFrame;
 }
 
 + (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact service:(AIService *)inService;
