@@ -26,6 +26,7 @@
     AIFlexibleLink		*hoveredLink;
     NSString			*hoveredString;
     id				oldFirstResponder;
+    BOOL			trackingMouseMovedEvents;
     
     //Text rendering cache
     NSTextStorage 		*textStorage;
