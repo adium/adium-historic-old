@@ -61,7 +61,7 @@ static	NSRect	windowFrame;
 //We do this because the window has no title bar for the user to drag (so we have to implement dragging ourselves)
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-    if ([theEvent cmdKey]) {
+    if (![theEvent cmdKey]) {
         NSPoint		currentLocation;
 		NSScreen	*currentScreen = [self screen];
         NSPoint		newOrigin = windowFrame.origin;
@@ -109,7 +109,7 @@ static	NSRect	windowFrame;
 //to establish the initial location.
 - (void)mouseDown:(NSEvent *)theEvent
 {    
-    if ([theEvent cmdKey]) {
+    if (![theEvent cmdKey]) {
         //grab the mouse location in global coordinates
         previousLocation = [self convertBaseToScreen:[theEvent locationInWindow]];
 		windowFrame = [self frame];
