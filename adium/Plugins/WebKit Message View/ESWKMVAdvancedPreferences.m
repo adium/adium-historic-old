@@ -49,6 +49,10 @@
 	
 	[checkBox_combineConsecutive setState:[[prefDict objectForKey:KEY_WEBKIT_COMBINE_CONSECUTIVE] boolValue]];
 	[checkBox_combineConsecutive setToolTip:AILocalizedString(@"Not all styles will display properly if this is disabled. Also, it looks silly.","Advanced webkit preferences: combine consecutive messages warning")];
+	
+	[checkBox_customNameFormatting setState:[[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue]];
+	
+	[self configureControlDimming];
 }
 
 - (IBAction)changePreference:(id)sender
@@ -57,12 +61,20 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_WEBKIT_COMBINE_CONSECUTIVE
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
+	}else if(sender == checkBox_customNameFormatting){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_WEBKIT_USE_NAME_FORMAT
+											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	}
+	
+	[self configureControlDimming];
 }
 
 - (void)configureControlDimming
 {
-
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	
+	[popUp_nameFormat setEnabled:[[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue]];
 }
 
 - (IBAction)changeFormat:(id)sender
