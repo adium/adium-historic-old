@@ -306,7 +306,7 @@
 		do{
 			range = [inString rangeOfString:@"%service%"];
 			if(range.location != NSNotFound){
-				[inString replaceCharactersInRange:range withString:[[content source] serviceID]];
+				[inString replaceCharactersInRange:range withString:[[content source] displayServiceID]];
 			}
 		} while(range.location != NSNotFound);
 		
