@@ -21,7 +21,7 @@
 	
 	NSToolbarItem			*toolbarItem;
 	
-	NDComponentInstance		*currentComponentInstance;
+	NDComponentInstance		*componentInstance;
 }
 
 @end
