@@ -38,11 +38,8 @@
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
-    if(sender == createTabs_inLastWindow){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_USE_LAST_WINDOW
-                                              group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-    }else if(sender == autohide_tabBar){
+
+    if(sender == autohide_tabBar){
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:![sender state]]
 				      forKey:KEY_AUTOHIDE_TABBAR
 				       group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
@@ -62,7 +59,6 @@
 {
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
-    [createTabs_inLastWindow setState:[[preferenceDict objectForKey:KEY_USE_LAST_WINDOW] boolValue]];
     [autohide_tabBar setState:![[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue]];
     [checkBox_allowInactiveClosing setState:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
     
@@ -72,9 +68,7 @@
 //Enable/disable controls that are available/unavailable
 - (void)configureControlDimming
 {
-	NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-	BOOL			newWindows = [[preferenceDict objectForKey:KEY_ALWAYS_CREATE_NEW_WINDOWS] boolValue];
-    [createTabs_inLastWindow setEnabled:!newWindows];
+
 }
 
 @end
