@@ -18,7 +18,9 @@
 - (void)installPlugin
 {
     //Setup our preferences
-//    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SPELL_CHECKING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SPELLING];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SPELL_CHECKING_DEFAULT_PREFS 
+																		forClass:[self class]]
+										  forGroup:PREF_GROUP_SPELLING];
 //    preferences = [[AISpellCheckingPreferences preferencePane] retain];
 
     //Register as a text entry filter
