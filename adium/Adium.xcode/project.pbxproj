@@ -4096,6 +4096,21 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34B38CE506A3517300AFA38B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESFileWrapperExtension.m;
+			path = "Frameworks/AIUtilities Framework/ESFileWrapperExtension.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B38CE606A3517300AFA38B = {
+			fileRef = 34B38CE506A3517300AFA38B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34B5875A058D801D00E7EF0D = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -6623,7 +6638,6 @@
 				4BEA8360068B7D68007DCC70,
 				4BEA8361068B7D68007DCC70,
 				4BEA8362068B7D68007DCC70,
-				34C8D40D069FE47500472094,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6723,6 +6737,7 @@
 				34564577069F366500F728BC,
 				34C9059606A067EB0059F78F,
 				34C9059906A067EB0059F78F,
+				34B38CE606A3517300AFA38B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8042,23 +8057,8 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34C8D40B069FE47500472094 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESFileWrapperExtension.m;
-			path = "Frameworks/AIUtilities Framework/ESFileWrapperExtension.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34C8D40C069FE47500472094 = {
 			fileRef = 34C8D40A069FE47500472094;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34C8D40D069FE47500472094 = {
-			fileRef = 34C8D40B069FE47500472094;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -23214,7 +23214,7 @@
 				11F486D904A7F802007575DA,
 				11F486DA04A7F802007575DA,
 				34C8D40A069FE47500472094,
-				34C8D40B069FE47500472094,
+				34B38CE506A3517300AFA38B,
 				F5793979033E755501A8010A,
 				F579397A033E755501A8010A,
 				4BC02D310452C69100A8010A,
