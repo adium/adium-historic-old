@@ -31,6 +31,7 @@ Insert Link sheet
 
 Other
   - Dock icon does not appear to be saved for some users while Adium is closed
+  - Links with URI's without protocol specifiers do not open when clicked.
 
 //------------------------------------------------------------------------------------
 // Bugs - Libgaim
