@@ -106,6 +106,7 @@
 		int		rowHeight;
 		BOOL	coloredRow;
 		int		numberOfColumns, numberOfRows;
+		
 		//Setup
 		numberOfRows = [self numberOfRows];
 		numberOfColumns = [self numberOfColumns];

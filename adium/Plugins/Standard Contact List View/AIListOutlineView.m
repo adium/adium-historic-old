@@ -28,7 +28,7 @@
 	backgroundImage = nil;
 	backgroundFade = 1.0;
 	updateShadowsWhileDrawing = NO;
-//	drawsBackground = YES;
+	drawsBackground = YES;
 
 	[self sizeLastColumnToFit];
 	
@@ -225,9 +225,20 @@
 //    } 
 //}
 //
-//// Returns our desired size
-//- (NSSize)desiredSize
-//{
+
+// Returns our desired size
+#define EMPTY_HEIGHT				24
+#define EMPTY_WIDTH					140
+- (NSSize)desiredSize
+{
+	if([self numberOfRows] == 0){
+		return(NSMakeSize(EMPTY_WIDTH, EMPTY_HEIGHT));
+	}else{
+		NSLog(@"totalHeight = %i",(int)[self totalHeight]);
+		return(NSMakeSize(EMPTY_WIDTH, [self totalHeight] + 2));
+	}
+}
+
 //    //We need to convert this to a lazy cache
 //    
 //    if([self numberOfRows] == 0){
@@ -250,6 +261,8 @@
 //         return( NSMakeSize(totalWidth, desiredHeight) );
 //    }
 //}
+
+
 //- (void)outlineViewItemDidExpand:(NSNotification *)notification
 //{
 //    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification
@@ -346,10 +359,10 @@
 	[self setNeedsDisplay:YES];
 }
 
-//- (void)setDrawsBackground:(BOOL)inDraw
-//{
-//	drawsBackground = inDraw;
-//}
+- (void)setDrawsBackground:(BOOL)inDraw
+{
+	drawsBackground = inDraw;
+}
 
 - (void)setBackgroundFade:(float)fade
 {
@@ -360,6 +373,7 @@
 {
 	[backgroundColor release];
 	backgroundColor = [inColor retain];
+	NSLog(@"setBackgroundColor:%@",inColor);
 }
 
 - (NSColor *)backgroundColor
@@ -378,13 +392,13 @@
 {
 	NSRect visRect = [[self enclosingScrollView] documentVisibleRect];
 
+#warning --
 	[super drawBackgroundInClipRect:clipRect];
 	
-//	if(drawsBackground){
-		//Color
+	if(drawsBackground){
+		//BG Color
 		[backgroundColor set];
 		NSRectFill(clipRect);
-#warning		[NSBezierPath fillRect:clipRect];
 		
 		//Image
 		if(backgroundImage){
@@ -395,7 +409,10 @@
 							  operation:NSCompositeSourceOver
 							   fraction:backgroundFade];
 		}	
-//	}
+	}else{
+		[[NSColor clearColor] set];
+		NSRectFill(clipRect);
+	}
 }
 
 

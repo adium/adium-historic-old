@@ -193,18 +193,20 @@
 	NSAttributedString	*displayName = [self displayNameStringWithAttributes:YES];
 	NSSize				nameSize = [displayName size];
 	
+	if(nameSize.width > rect.size.width) nameSize = rect.size;
+
 	//Alignment
 	switch([self textAlignment]){
 		case NSCenterTextAlignment:
 			rect.origin.x += (rect.size.width - nameSize.width) / 2.0;
-		break;
+			break;
 		case NSRightTextAlignment:
 			rect.origin.x += (rect.size.width - nameSize.width);
-		break;
+			break;
 		default:
-		break;
+			break;
 	}
-	
+
 	//Draw (centered vertical)
 	int half = (rect.size.height - nameSize.height) / 2.0;
 	[displayName drawInRect:NSMakeRect(rect.origin.x,
@@ -213,8 +215,19 @@
 									   rect.size.height - half)];
 	
 	
-	rect.origin.x += nameSize.width;
-	rect.size.width -= nameSize.width;
+	switch([self textAlignment]){
+		case NSCenterTextAlignment:
+			//How to handle this case?
+		break;
+		case NSRightTextAlignment:
+			rect.size.width -= nameSize.width;
+		break;
+		default:
+			rect.origin.x += nameSize.width;
+			rect.size.width -= nameSize.width;
+		break;
+	}
+	
 	return(rect);
 	
 	

@@ -77,7 +77,6 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureToolbar;
 - (void)contactListChanged:(NSNotification *)notification;
-- (float)backgroundAlpha;
 @end
 
 @implementation AIListWindowController
@@ -224,20 +223,20 @@
 		[[self window] setHidesOnDeactivate:[[prefDict objectForKey:KEY_CLWH_HIDE] boolValue]];
     }
 	
-    if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY])){
-        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-		
-		//Force auto-resizing on for borderless lists
-		if(!borderless){
-			autoResizeVertically = [[prefDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue];
-			autoResizeHorizontally = [[prefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
-		}else{
-			autoResizeVertically = YES;
-			autoResizeHorizontally = YES;
-		}
-		
-        [self _configureAutoResizing];
-    }
+//    if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY])){
+//        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+//		
+//		//Force auto-resizing on for borderless lists
+//		if(!borderless){
+//			autoResizeVertically = [[prefDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue];
+//			autoResizeHorizontally = [[prefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
+//		}else{
+//			autoResizeVertically = YES;
+//			autoResizeHorizontally = YES;
+//		}
+//		
+//        [self _configureAutoResizing];
+//    }
 
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]){
 		if([(NSString *)[[notification userInfo] objectForKey:@"Key"] isEqualToString:KEY_SCL_BORDERLESS]){
@@ -253,8 +252,14 @@
 	//Layout ------------
     if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_LAYOUT])){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
-		BOOL			windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+		int				windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+		float			backgroundAlpha	= [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
 
+		//
+		autoResizeVertically = [[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
+		autoResizeHorizontally = NO;
+        [self _configureAutoResizing];
+		
 		//Cells
 		[groupCell release];
 		[contentCell release];
@@ -308,23 +313,18 @@
 		//Mockie special cases
 		if(windowStyle == WINDOW_STYLE_MOCKIE){
 			[groupCell setTopSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
+			[contentCell setBackgroundOpacity:backgroundAlpha];
 		}
-//		[contactListView setDrawsBackground:(windowStyle != WINDOW_STYLE_MOCKIE)];
+		[contactListView setDrawsBackground:(windowStyle != WINDOW_STYLE_MOCKIE)];
 
 		//Shadow
 		[[self window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
 		
-		//Special mockie case
-#warning dup and GRR
-		if([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
-													 group:PREF_GROUP_LIST_LAYOUT] intValue] == WINDOW_STYLE_MOCKIE){
-			[contentCell setBackgroundOpacity:[[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_WINDOW_TRANSPARENCY
-																						group:PREF_GROUP_LIST_THEME] floatValue]];
-		}
-		
-		//Redisplay
+		//Outline View
+		[self updateTransparency];
 		[contactListView setGroupCell:groupCell];
 		[contactListView setContentCell:contentCell];
+		[contactListView setDrawsAlternatingRows:[[prefDict objectForKey:KEY_LIST_LAYOUT_GRID_ENABLED] boolValue]];
 		[contactListView setNeedsDisplay:YES];
 	}
 	
@@ -332,50 +332,54 @@
     if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_THEME])){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
 		NSString		*imagePath = [prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH];
-		float			backgroundAlpha	= [self backgroundAlpha];
-		NSLog(@"%0.2f",backgroundAlpha);
+		float			backgroundAlpha	= [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY
+																					group:PREF_GROUP_LIST_LAYOUT] floatValue];
+
 		//Background Image
 		if(imagePath && [imagePath length] && [[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]){
 			[contactListView setBackgroundImage:[[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease]];
 		}else{
 			[contactListView setBackgroundImage:nil];
 		}
-		[contactListView setBackgroundFade:([[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue] * backgroundAlpha)];
 		
-		//Background/Grid
-		BOOL	drawGrid = [[prefDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue];
-		
-		[contactListView setDrawsAlternatingRows:(backgroundAlpha != 0.0 ? drawGrid : NO)];
-		[contactListView setAlternatingRowColor:[[prefDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor]];
-		[contactListView setBackgroundColor:[[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
-
-		//Special mockie case
-#warning dup and GRR
-		if([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
-													 group:PREF_GROUP_LIST_LAYOUT] intValue] == WINDOW_STYLE_MOCKIE){
-			[contentCell setBackgroundOpacity:[[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_WINDOW_TRANSPARENCY
-																						group:PREF_GROUP_LIST_THEME] floatValue]];
-		}
-		
-		//Transparency.  Bye bye CPU cycles, I'll miss you!
-		[[self window] setOpaque:(backgroundAlpha == 1.0)];
-		[contactListView setUpdateShadowsWhileDrawing:(backgroundAlpha < 0.8)];
-		//--
-		
+		//Background
+		[self updateTransparency];
 	}
 }
 
-- (float)backgroundAlpha
+- (void)updateTransparency
 {
-	if([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
-												 group:PREF_GROUP_LIST_LAYOUT] intValue] != WINDOW_STYLE_MOCKIE){
-		return([[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_WINDOW_TRANSPARENCY
-														 group:PREF_GROUP_LIST_THEME] floatValue]);
-	}else{
-		return(0.0);
-	}
+	NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
+	NSDictionary	*layoutTheme = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
+	float			backgroundAlpha	= [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
+	int				windowStyle = [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+		
+	[contactListView setBackgroundFade:([[layoutTheme objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue] * backgroundAlpha)];
+	[contactListView setBackgroundColor:[[[layoutTheme objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
+	[contactListView setAlternatingRowColor:[[[layoutTheme objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
+
+	if(windowStyle == WINDOW_STYLE_MOCKIE) backgroundAlpha = 0.0;
+
+	//Transparency.  Bye bye CPU cycles, I'll miss you!
+	[[self window] setOpaque:(backgroundAlpha == 1.0)];
+	[contactListView setUpdateShadowsWhileDrawing:(backgroundAlpha < 0.8)];
+	//--
 }
 
+
+
+//- (float)backgroundAlpha
+//{
+//#warning hmm, need?
+//	if([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
+//												 group:PREF_GROUP_LIST_LAYOUT] intValue] != WINDOW_STYLE_MOCKIE){
+//		return([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY
+//														 group:PREF_GROUP_LIST_LAYOUT] floatValue]);
+//	}else{
+//		return(0.0);
+//	}
+//}
+//
 
 
 
@@ -523,10 +527,45 @@
 //Desired frame of our window
 - (NSRect)_desiredWindowFrame
 {
-#warning ###
-	NSWindow    *theWindow = [self window];
-	NSRect      currentFrame = [theWindow frame];
-    NSRect		newFrame = currentFrame;
+	NSRect      windowFrame = [[self window] frame];
+	NSRect		viewFrame = [scrollView_contactList frame];
+	NSSize		desiredViewSize = [contactListView desiredSize];
+	NSRect		screenFrame = [[[self window] screen] visibleFrame];
+	NSRect		newWindowFrame = NSMakeRect(0, 0, windowFrame.size.width, windowFrame.size.height);
+	
+	//Subtract the current size of the view from our frame
+	//newWindowSize.width -= viewFrame.size.width;
+	newWindowFrame.size.height -= viewFrame.size.height;
+	
+	//Now, figure out how big the view wants to be and add that to our frame
+	//newWindowSize.width += desiredViewSize.width;
+	newWindowFrame.size.height += desiredViewSize.height;
+	
+	//If the window is not near the bottom edge of the screen, keep its titlebar in place
+	if(windowFrame.origin.y > screenFrame.origin.y + EDGE_CATCH_Y ||
+	   windowFrame.origin.y + windowFrame.size.height + EDGE_CATCH_Y > screenFrame.origin.y + screenFrame.size.height){
+		newWindowFrame.origin.y = windowFrame.origin.y + (windowFrame.size.height - newWindowFrame.size.height);
+	}else{
+		newWindowFrame.origin.y = windowFrame.origin.y;
+	}
+	newWindowFrame.origin.x = windowFrame.origin.x;
+	
+	//And adjust if we've fallen off the screen
+	//windowFrame = NSIntersectionRect(windowFrame, visibleScreenFrame);
+	
+	return(newWindowFrame);
+}
+	
+	
+	
+	
+	
+	
+	
+
+	//	NSWindow    *theWindow = [self window];
+//	NSRect      currentFrame = [theWindow frame];
+//    NSRect		newFrame = currentFrame;
 /*	
     if([contactListView conformsToProtocol:@protocol(AIAutoSizingView)]){
 		NSScreen	*activeScreen;
@@ -576,9 +615,9 @@
 		}
 		
 	}*/
-	
-	return(newFrame);
-}
+//	
+//	return(newFrame);
+//}
 
 	
 //Prevent the system from altering our window positioning
@@ -636,6 +675,8 @@
 		//Factor the width of this item into our total
 #warning ###		[contactListView updateHorizontalSizeForObject:object];
 	}
+	
+	[self contactListDesiredSizeChanged:nil];
 }
 
 //Reload the contact list (if updates aren't delayed)
@@ -875,6 +916,28 @@
 
     return(YES);
 }
+
+
+- (void)outlineViewItemDidExpand:(NSNotification *)notification
+{
+	[self contactListDesiredSizeChanged:nil];
+//	[self performSelector:@selector(contactListDesiredSizeChanged:) withObject:nil afterDelay:0.000001];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification
+//														object:contactListView];
+}
+
+- (void)outlineViewItemDidCollapse:(NSNotification *)notification
+{
+	[self contactListDesiredSizeChanged:nil];
+//	[self performSelector:@selector(contactListDesiredSizeChanged:) withObject:nil afterDelay:0.000001];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification
+//														object:contactListView];
+}
+	
+
+
+
+
 
 
 //Tooltip --------------------------------------------------------------------------------------------------------------

@@ -25,7 +25,9 @@
 - (void)setContentCell:(id)cell;
 - (void)setGroupCell:(id)cell;
 - (void)setRowHeight:(float)rowHeight;
-			
+- (int)totalHeight;
+- (id)groupCell;
+	
 @end
 
 @interface NSObject (AIMultiCellVariableHeightCell)
