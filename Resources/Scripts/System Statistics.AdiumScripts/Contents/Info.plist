@@ -14,10 +14,16 @@
 	<string>System Statistics</string>
 	<key>CFBundlePackageType</key>
 	<string>AdIM</string>
-	<key>Set</key>
-	<string>System Statistics</string>
 	<key>Scripts</key>
 	<array>
+		<dict>
+			<key>File</key>
+			<string>StatusMessage</string>
+			<key>Keyword</key>
+			<string>%_statusMessage</string>
+			<key>Title</key>
+			<string>My Status Message</string>
+		</dict>
 		<dict>
 			<key>File</key>
 			<string>ActiveApplication</string>
@@ -59,5 +65,7 @@
 			<string>Uptime</string>
 		</dict>
 	</array>
+	<key>Set</key>
+	<string>System Statistics</string>
 </dict>
 </plist>
