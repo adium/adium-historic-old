@@ -883,7 +883,7 @@ static id<GaimThread> gaimThread = nil;
 - (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(NSNumber *)percent bytesSent:(NSNumber *)bytesSent
 {
 	NSLog(@"File Transfer: %f%% complete",[percent floatValue]);
-    [fileTransfer setPercentDone:[percent floatValue] bytesSent:[bytesSent floatValue]];
+    [fileTransfer setPercentDone:[percent floatValue] bytesSent:[bytesSent unsignedValue]];
 }
 
 //The remote side canceled the transfer, the fool.  Tell the fileTransferController
