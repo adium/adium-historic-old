@@ -22,8 +22,6 @@
 
 //Accounts Window
   Move account preferences to their own window
-	- Accessed via an 'Accounts...' menu item in the Adium menu
-	- Make all account related controls normal sized
 	- Move user-icon and alias into the 'personal' tab
 	- Dim service icon slightly on selection (Similar to contact list)
 	- Use status icon to show online state instead of postfixing 'online/offline'
@@ -51,19 +49,9 @@
 	- Use standard +/- controls for adding and removing events (Not a popup)
 	- Organize and group event menu, clarify and focus events
 
-//Contact window toolbar
-  Additional contact window toolbar items
-	- Offline contacts toggle
-	- Add group (Opens add group panel)
-	- Add contact (Opens add contact panel)
-
 //Message window toolbar
   Additional message window toolbar items
-	- Open log viewer (to logs of active contact) 
 	- Open font/color panel (standard system buttons)
-	- Send file (opens file prompt)
-	- User icon (Displays the contact's user icon)
-	- Insert script (Popup, mirroring insert script in edit menu)
 
 //Auto-completion
   Tab auto-completion in the message window
@@ -115,7 +103,6 @@
 //Sorting Improvements
   - Improve status sorting defaults
   - Simplify custom sort window by removing duplicate/redundant options
-  - Move sort menu items out of their submenu (into the main view menu)
  
 //Flashing reduction
   Make it possible to use Adium without any distracting flashing and blinking
@@ -216,9 +203,6 @@
 
 //Announcer Improvements
 	- Allow user to have more control over what is spoken by the announcer plugin
-
-//Log viewer
-	- Make contact drawer behave as additional filter to the search field
 
 //Service-Specific
 	- Add 'priority' support for jabber connections
