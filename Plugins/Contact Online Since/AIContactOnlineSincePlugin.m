@@ -43,7 +43,7 @@
             
             //Create the formatters
             dayFormatter = [NSDateFormatter localizedShortDateFormatter];
-            timeFormatter = [[[NSDateFormatter alloc] initWithDateFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES] allowNaturalLanguage:YES] autorelease];
+            timeFormatter = [[NSDateFormatter alloc] initWithDateFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES] allowNaturalLanguage:YES];
             
             //Get day & time strings
             currentDay = [dayFormatter stringForObjectValue:currentDate];
@@ -55,8 +55,10 @@
                 
             }else{ //Show date and time
                 entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@, %@", signonDay, signonTime]];
-                
+
             }
+			
+			[timeFormatter release];
         }
     }
 
