@@ -5,7 +5,7 @@ Version 0.53 (4/  /2004)
 - Added "Novell GroupWise" protocol support
 - Added "Yahoo! Japan" protocol support
 - Added support for custom link titles (Edit->Add Link)
-- Added support for message sending via aim://goim URLs
+- Added support for message sending via aim:goim URLs
 - Added support for placing contact list below all other windows
 - Added an 'add contact' menu item for message tabs
 - Added the ability to cancel connecting accounts
