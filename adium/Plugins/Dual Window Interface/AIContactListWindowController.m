@@ -132,7 +132,7 @@
 {
     if(autoResizeVertically){
         NSRect	newFrame = [self _desiredWindowFrame];
-
+        
         //Set this as our window's size
         if(!autoResizeHorizontal){ //Allow horiz resizing still
             [[self window] setMaxSize:NSMakeSize(10000, newFrame.size.height)];
@@ -176,16 +176,18 @@
             newFrame.size.width = currentFrame.size.width;
         }
         newFrame.size.height = desiredSize.height + contactViewPadding.height + SCROLL_VIEW_PADDING_Y;
-
+        
         //Adjust the Y Origin
         if(newFrame.size.height > screenFrame.size.height){
             newFrame.size.height = screenFrame.size.height; //Max Height
-            newFrame.size.width += 16; //Factor scrollbar into width
+            if(autoResizeHorizontal){
+                newFrame.size.width += 16; //Factor scrollbar into width
+            }
         }
-        if(currentFrame.origin.y - EDGE_CATCH_Y < screenFrame.origin.y){
-            newFrame.origin.y = currentFrame.origin.y; //Expand up
-        }else{
+        if((currentFrame.origin.y - EDGE_CATCH_Y > screenFrame.origin.y) || ((currentFrame.origin.y + currentFrame.size.height) + EDGE_CATCH_Y > (screenFrame.origin.y + screenFrame.size.height))){
             newFrame.origin.y = currentFrame.origin.y + (currentFrame.size.height - newFrame.size.height); //Expand down
+        }else{
+            newFrame.origin.y = currentFrame.origin.y; //Expand up
         }
 
         //Adjust the X Origin
