@@ -16,7 +16,7 @@
 
 - (void)installPlugin
 {
-    disconnectItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DISCONNECT_MENU_TITLE
+/*    disconnectItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DISCONNECT_MENU_TITLE
 																		   target:self
 																		   action:@selector(disconnectAll:)
 																	keyEquivalent:@"K"] autorelease];
@@ -53,7 +53,7 @@
     [[adium menuController] addMenuItem:cancelConnectItem toLocation:LOC_File_Accounts];
 	
 	[[adium menuController] addMenuItem:connectDockItem toLocation:LOC_Dock_Status];
-	[[adium menuController] addMenuItem:disconnectDockItem toLocation:LOC_Dock_Status];
+	[[adium menuController] addMenuItem:disconnectDockItem toLocation:LOC_Dock_Status];*/
 }
 
 -(void)uninstallPlugin
