@@ -85,7 +85,7 @@
             } else if ([[url host] caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
 				NSString *name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];				
 				[[adium contactController] requestAddContactWithUID:name
-														  serviceID:@"AIM"];
+															service:[[adium accountController] firstServiceWithServiceID:@"AIM"]];
 			}
             
         }else if([[url scheme] isEqualToString:@"ymsgr"]){
