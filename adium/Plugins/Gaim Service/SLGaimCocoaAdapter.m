@@ -97,6 +97,7 @@ static NDRunLoopMessenger   *runLoopMessenger = nil;
 	
 	runLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
 
+	NSLog(@"running");
 	[[NSRunLoop currentRunLoop] run];
 
 	NSLog(@"DONE!");
@@ -329,7 +330,7 @@ static void adiumGaimConnNotice(GaimConnection *gc, const char *text)
 {
     if(GAIM_DEBUG) NSLog(@"Connection Notice: gc=%x (%s)", gc, text);
 	
-	NSString *connectionNotice = [NSString stringWithUTF8String:text];
+	NSString *connectionNotice = [[NSString stringWithUTF8String:text] retain];
 	[accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionNotice:)
 										 withObject:connectionNotice];
 }
@@ -338,7 +339,7 @@ static void adiumGaimConnReportDisconnect(GaimConnection *gc, const char *text)
 {
     if(GAIM_DEBUG) NSLog(@"Connection Disconnected: gc=%x (%s)", gc, text);
 	
-	NSString	*disconnectError = [NSString stringWithUTF8String:text];	
+	NSString	*disconnectError = [[NSString stringWithUTF8String:text] retain];
     [accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionReportDisconnect:)
 										 withObject:disconnectError];
 }
@@ -389,7 +390,7 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 		if(![theContact remoteGroupName]){
 			GaimGroup *g = gaim_find_buddys_group(buddy);
 			if(g && g->name){
-				NSString *groupName = [NSString stringWithUTF8String:g->name];
+				NSString *groupName = [[NSString stringWithUTF8String:g->name] retain];
 				[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toGroupName:)
 														withObject:theContact
 														withObject:groupName];
@@ -398,7 +399,7 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 		
 		const char *alias = gaim_get_buddy_alias(buddy);
 		if (alias){
-			NSString *aliasString = [NSString stringWithUTF8String:alias];
+			NSString *aliasString = [[NSString stringWithUTF8String:alias] retain];
 			
 			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
 													withObject:theContact
@@ -1586,6 +1587,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)connectAccount:(id)adiumAccount
 {
+	NSLog(@"connect");
 	[runLoopMessenger target:self 
 			 performSelector:@selector(gaimThreadConnectAccount:) 
 				  withObject:adiumAccount];

@@ -172,10 +172,8 @@ static id<GaimThread> gaimThread = nil;
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
-
-	//We should receive retained data
-	[data release];
 }
+
 //Signed offline
 - (oneway void)updateSignoff:(AIListContact *)theContact withData:(void *)data
 {
@@ -193,10 +191,8 @@ static id<GaimThread> gaimThread = nil;
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
-	
-	//We should receive retained data
-	[data release];
 }
+
 //Signon Time
 - (oneway void)updateSignonTime:(AIListContact *)theContact withData:(NSDate *)signonDate
 {	
@@ -218,17 +214,13 @@ static id<GaimThread> gaimThread = nil;
 - (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data
 {
 	[self _updateAway:theContact toAway:YES];
-	
-	//We should receive retained data
-	[data release];
 }
+
 - (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data
 {
 	[self _updateAway:theContact toAway:NO];
-	
-	//We should receive retained data
-	[data release];
 }
+
 - (void)_updateAway:(AIListContact *)theContact toAway:(BOOL)newAway
 {
 	NSNumber *storedValue = [theContact statusObjectForKey:@"Away"];
@@ -924,15 +916,13 @@ static id<GaimThread> gaimThread = nil;
     [[adium fileTransferController] beganFileTransfer:fileTransfer];
 }
 
-//User refused a receive request.  Tell gaim, then release the ESFileTransfer object
+//User refused a receive request.  Tell gaim, we don't release the ESFileTransfer object since that will happen when the xfer is destroyed
 - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
 {
 	GaimXfer	*xfer = [[fileTransfer accountData] pointerValue];
 	if (xfer) {
 		[gaimThread xferRequestRejected:xfer];
 	}
-
-    [fileTransfer release];
 }
 
 //Account Connectivity -------------------------------------------------------------------------------------------------
@@ -1617,7 +1607,7 @@ static id<GaimThread> gaimThread = nil;
 			[newString appendString:chunkString];
 		}
 		
-		if ([scanner scanString:targetString intoString:nil]) {
+		if ([scanner scanString:targetString intoString:&chunkString]) {
 			
 			//Get the image ID from the tag
 			[scanner scanInt:&imageID];
@@ -1627,21 +1617,26 @@ static id<GaimThread> gaimThread = nil;
 			
 			//Get the image, then write it out as a png
 			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
-			NSString			*imagePath = [self _messageImageCachePathForID:imageID];
-			
-			//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
-			//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
-			NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_imgstore_get_data(gaimImage) 
-																					  length:gaim_imgstore_get_size(gaimImage)]];
-			NSData				*imageTIFFData = [image TIFFRepresentation];
-			NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
-            
-			//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string
-            if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]){
-				[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
+			if (gaimImage){
+				NSString			*imagePath = [self _messageImageCachePathForID:imageID];
+				
+				//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
+				//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
+				NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_imgstore_get_data(gaimImage) 
+																						  length:gaim_imgstore_get_size(gaimImage)]];
+				NSData				*imageTIFFData = [image TIFFRepresentation];
+				NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
+				
+				//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string
+				if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]){
+					[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
+				}
+				
+				[image release];
+			}else{
+				//If we didn't get a gaimImage, just leave the tag for now.. maybe it was important?
+				[newString appendString:chunkString];
 			}
-			
-			[image release];
 		}
 	}
 	

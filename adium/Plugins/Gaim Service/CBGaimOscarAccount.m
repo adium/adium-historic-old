@@ -373,7 +373,7 @@ static BOOL didInitOscar = NO;
 												   encoding:userinfo->info_encoding];
 			
 			NSString *oldProfileString = [theContact statusObjectForKey:@"TextProfileString"];
-
+			NSLog(@"%@: \"%@\"",[theContact UID],profileString);
 			if (profileString && [profileString length]) {
 				if (![profileString isEqualToString:oldProfileString]) {
 
