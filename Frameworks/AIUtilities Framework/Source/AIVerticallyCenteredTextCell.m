@@ -35,12 +35,7 @@
 {
 	NSFont		*font  = [self font];
 	NSString	*title = [self stringValue];
-	
-	BOOL 		 highlighted;
-	NSColor 	*highlightColor;
-	
-	highlightColor = [self highlightColorWithFrame:cellFrame inView:controlView];
-	highlighted = [self isHighlighted];
+	BOOL		highlighted = [self isHighlighted];
 	
 	//Draw the cell's text
 	if(title != nil){
@@ -48,9 +43,7 @@
 		float			 stringHeight;
 		NSColor			*textColor;
 
-		// If we are highlighted AND are drawing with the alternate color, then we want to draw our text with the alternate text color.
-		// For any other case, we should draw using our normal text color.
-		if(highlighted && [highlightColor isEqual:[NSColor alternateSelectedControlColor]]){
+		if(highlighted){
 			textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
 		}else{
 			if([self isEnabled]){
