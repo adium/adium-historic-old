@@ -38,7 +38,7 @@
 
 - (void)toggleContiniousURLValidationEnabled
 {
-    //toggle the validation BOOL, and immeditely reevaluate view
+    //toggle the validation BOOL, and immeditely re-evaluate view
     continiousURLValidation = !continiousURLValidation;
 }
 

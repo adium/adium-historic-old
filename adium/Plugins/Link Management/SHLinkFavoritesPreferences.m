@@ -44,9 +44,16 @@
     [favoritesList release];
 }
 
+#pragma mark Favorites Editing
 - (IBAction)addLink:(id)sender
 {
     [[SHLinkEditorWindowController alloc] initAddLinkFavoritesWindowControllerWithView:view];
+}
+
+- (IBAction)removeLink:(id)sender
+{
+    [[[AIObject sharedAdiumInstance] preferenceController] setPreference:nil forKey:[favoritesList selectedLink] group:PREF_GROUP_LINK_FAVORITES];
+    [favoritesList buildLinksList];
 }
 
 @end
