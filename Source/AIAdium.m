@@ -59,6 +59,7 @@
 - (NSDictionary *)versionUpgradeDict;
 
 - (NSString *)processBetaVersionString:(NSString *)inString;
+- (void)deleteTemporaryFiles;
 @end
 
 @implementation AIAdium
@@ -243,7 +244,6 @@
     [accountController finishIniting];
 	[contactController finishIniting];
     [interfaceController finishIniting];
-    [preferenceController finishIniting];
 	
 	if (versionUpgradeDict){
 		[[self notificationCenter] postNotificationName:Adium_VersionUpgraded
@@ -280,6 +280,25 @@
     [applescriptabilityController closeController];
 	[toolbarController closeController];
     [preferenceController closeController];
+	
+	[self deleteTemporaryFiles];
+}
+
+- (void)deleteTemporaryFiles
+{
+	NSEnumerator	*enumerator;
+	NSFileManager	*defaultManager = [NSFileManager defaultManager];
+	NSString		*cachePath = [@"~/Library/Caches/Adium" stringByExpandingTildeInPath];
+	NSString		*tempFilePrefix = @"TEMP";
+	NSString		*fileName;
+	
+	enumerator = [[defaultManager directoryContentsAtPath:cachePath] objectEnumerator];
+	while(fileName = [enumerator nextObject]){
+		if([fileName hasPrefix:tempFilePrefix]){
+			[defaultManager removeFileAtPath:[cachePath stringByAppendingPathComponent:fileName]
+									 handler:nil];
+		}
+	}
 }
 
 
