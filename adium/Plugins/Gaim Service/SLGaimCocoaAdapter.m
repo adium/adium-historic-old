@@ -1377,6 +1377,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 
 static void *adiumGaimRequestFields(const char *title, const char *primary, const char *secondary, GaimRequestFields *fields, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData)
 {
+#if 0	
 	int		    i;
 	
     NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"");
@@ -1384,8 +1385,8 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 		(primary ? primary : ""),
 		((primary && secondary) ? "\n\n" : ""),
 		(secondary ? secondary : "")];
-
-#if 0	
+	
+	//Begin code from Gaim
 	GaimGtkRequestData *data;
 	GtkSizeGroup *sg;
 	GList *gl, *fl;
