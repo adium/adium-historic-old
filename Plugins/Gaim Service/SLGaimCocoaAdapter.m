@@ -2205,6 +2205,10 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)initLibGaim
 {	
+	//Set the gaim user directory to be within this user's directory
+	NSString	*gaimUserDir = [[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libgaim"];
+	set_gaim_user_dir([[gaimUserDir stringByExpandingTildeInPath] UTF8String]);
+	
 	//Register ourself as libgaim's UI handler
 	gaim_core_set_ui_ops(&adiumGaimCoreOps);
 	if(!gaim_core_init("Adium")) {
