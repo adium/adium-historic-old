@@ -5590,7 +5590,6 @@
 				B774EFC4058C48F6009C7C67,
 				4B90B54E064220B400D23731,
 				34BD9D0D053146CC000AB133,
-				520FE46A05BE2118002D063D,
 				346C9D46060046AB000F5A8A,
 				4B6EA1BE058FA6900070A9A1,
 				4B215DB0059896B000305B3C,
@@ -7971,6 +7970,36 @@
 			path = /System/Library/Frameworks/SystemConfiguration.framework;
 			refType = 0;
 			sourceTree = "<absolute>";
+		};
+		34F101E307342B4D00890D3B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimDotMacAccount.m;
+			path = "Plugins/Gaim Service/ESGaimDotMacAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F101E407342B4D00890D3B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimDotMacAccount.h;
+			path = "Plugins/Gaim Service/ESGaimDotMacAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F101E707342B5A00890D3B = {
+			fileRef = 34F101E407342B4D00890D3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F101E807342B5B00890D3B = {
+			fileRef = 34F101E307342B4D00890D3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34F1429D05E95AFF00B32FD7 = {
 			children = (
@@ -10998,6 +11027,8 @@
 		};
 		4B387DE10719931C004DE713 = {
 			children = (
+				34F101E407342B4D00890D3B,
+				34F101E307342B4D00890D3B,
 				4B387EB707199FE5004DE713,
 				4B387EB807199FE5004DE713,
 			);
@@ -12147,6 +12178,7 @@
 				34F52BDA06E2B24200887BE2,
 				4B387EB907199FE5004DE713,
 				4B388E0F0719C376004DE713,
+				34F101E707342B5A00890D3B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12256,6 +12288,7 @@
 				34F52BDB06E2B24200887BE2,
 				4B387EBA07199FE5004DE713,
 				4B388E100719C376004DE713,
+				34F101E807342B5B00890D3B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17043,17 +17076,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		520FE46905BE2118002D063D = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 52AEBD6005ABA95700B19C56;
-			remoteInfo = TicTacToe;
-		};
-		520FE46A05BE2118002D063D = {
-			isa = PBXTargetDependency;
-			targetProxy = 520FE46905BE2118002D063D;
 		};
 		520FE46C05BE22B8002D063D = {
 			fileRef = 34BD9DE105314751000AB133;
