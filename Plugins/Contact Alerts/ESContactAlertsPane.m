@@ -25,4 +25,10 @@
 	[contactAlertsViewController configureForListObject:inObject];
 }
 
+- (void)viewWillClose
+{
+	[contactAlertsViewController viewWillClose];
+	
+	[super viewWillClose];
+}
 @end
