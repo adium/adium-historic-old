@@ -37,6 +37,8 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 
 @implementation ESContactAlerts
 
+#pragma mark Creation
+
 - (id)initWithDetailsView:(NSView *)inView withTable:(AIAlternatingRowTableView*)inTable withPrefView:(NSView *)inPrefView
 {
     [super init];
@@ -91,8 +93,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     [soundMenu_cached release]; soundMenu_cached = nil;
 }
 
-// Functions for the window and preference pane to learn about our contact's alerts ---------------------------------------
-
+#pragma mark Window and Preference Pane Info Functions
 //--Configuration and modification--
 - (void)configForObject:(AIListObject *)inObject
 {
@@ -153,7 +154,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     }
 }
 
-//--Accessing information--
+#pragma mark Accessing Information
 - (int)currentRow
 {   return row;                                         }
 - (NSMutableArray *)eventActionArray
@@ -169,7 +170,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 - (NSWindow *)activeWindow
 {   return [view_main window];                          }
 
-    // Actions! ---------------------------------------------------------------------------------------------------------------------
+#pragma mark Actions
 - (NSMenu *)actionListMenu //menu of possible actions
 {
     if (!actionListMenu_cached) {
@@ -178,14 +179,14 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     return actionListMenu_cached;
 }
 
-// Saving --------------------------------------------------------------------------------------------------------------------------------
+#pragma mark Saving
 //Save the event actions (contact context sensitive)
 - (void)saveEventActionArray
 {
     [activeContactObject setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS];
 }
 
-//--Events--
+#pragma mark Events
 //Builds and returns an event menu
 - (NSMenu *)eventMenu
 {
@@ -256,7 +257,8 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 }
 
 
-// Subview management -------------------------------------------------------------------------------------
+#pragma mark Subview Management
+
 //Swap out subviews
 - (void)configureWithSubview:(NSView *)view_inView
 {
@@ -314,7 +316,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     [[view_main window] setFrame:containerFrame display:YES animate:YES];
     [[view_main window] setMinSize:minimumSize];
 }
-// Table events -----------------------------------------------------------------------------------------
+#pragma mark Table Events
 
 //Delete the selected action
 -(IBAction)deleteEventAction:(id)sender
@@ -341,7 +343,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
  }
  */
 
-// The generic buttons -----------------------------------------------------------------------------------
+#pragma mark Generic Buttons 
 
 - (void)oneTimeEvent:(NSButton *)inButton
 {
@@ -358,7 +360,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     [self saveEventActionArray];
 }
 
-// Notification handling -----------
+#pragma mark Notification Handling
 
 // Update when a one time event fires while we're open
 - (void)oneTimeEventFired:(NSNotification *)notification
@@ -370,7 +372,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     [tableView_actions reloadData];
 }
 
-// Comparison testing of ESContactAlerts instances -----------------------------------------------------------------
+#pragma mark Comparison Testing
 
 //determine if two instances of ESContactAlerts refer to the same contact
 - (BOOL)isEqual:(id)inInstance
