@@ -143,6 +143,12 @@
     return(0); //Return 0 since we don't contain text
 }
 
+- (NSRange)rangeForWordAtIndex:(int)index
+{
+    NSRange wordRange;
+    wordRange.location = 0;	wordRange.length = 0;
+    return(wordRange); //override if needed (for text)
+}
 //Sets this cell's selection to the proposed index
 - (BOOL)selectFrom:(int)sourceIndex to:(int)destIndex
 {

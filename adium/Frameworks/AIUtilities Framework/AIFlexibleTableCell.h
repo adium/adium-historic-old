@@ -53,6 +53,7 @@
 
 //Selection
 - (int)characterIndexAtPoint:(NSPoint)point;
+- (NSRange)rangeForWordAtIndex:(int)index;
 - (BOOL)selectFrom:(int)sourceIndex to:(int)destIndex;
 - (NSAttributedString *)stringFromIndex:(int)sourceIndex to:(int)destIndex;
 
