@@ -11,10 +11,10 @@
 #define EXCEPTIONS_PATH		[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
 
 @implementation AIException
-/* load
+/* initialize
 *   install ourself to handle exceptions
  */
-+ (void)load
++ (void)initialize
 {
     //Anything you can do, I can do better...
     [self poseAsClass: [NSException class]];
