@@ -698,9 +698,6 @@ static NSImage *pushIndicatorImage = nil;
 	}
 }
 
-//XXX - Another bit of image code not ready for prime time yet :)
-#define ALLOW_INSERTION_OF_IMAGES   FALSE
-
 //The textView's method of inserting into the view is insufficient; we can do better.
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
@@ -717,15 +714,15 @@ static NSImage *pushIndicatorImage = nil;
 		//we can keep track of the paths of the files sent to us and insert their icons into the text view for later
 		//use.
 		
-		///XXX some services only will support files, not images... so we should adjust accordingly
-		if (ALLOW_INSERTION_OF_IMAGES && img /* && [delegate canInsertImageIntoMessageEntryTextView:self] */){
+		if (img && [chat canSendImages]){
 			AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
 			NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:img];
 			
 			[attachment setAttachmentCell:cell];
 			[attachment setShouldSaveImageForLogging:YES];
 			[attachment setHasAlternate:NO];
-			
+			[attachment setPreferredFilename:[[NSProcessInfo processInfo] globallyUniqueString]];
+
 			//Insert an attributed string into the text at the current insertion point
 			attachString = [NSAttributedString attributedStringWithAttachment:attachment];
 			[self insertText:attachString];
