@@ -6,11 +6,6 @@
 
 
 #import "SHAutoValidatingTextView.h"
-#import "SHLinkLexer.h"
-
-@interface SHAutoValidatingTextView (PRIVATE)
-- (BOOL)_validateURL;
-@end
 
 @implementation SHAutoValidatingTextView
 
@@ -51,7 +46,7 @@
 {
     return(URLIsValid);
 }
-- (int)validationStatus
+- (URI_VERIFICATION_STATUS)validationStatus
 {
     return(validStatus);
 }
@@ -60,16 +55,11 @@
 - (void)textDidChange:(NSNotification *)notification
 {
     if(continiousURLValidation) {//call the URL validatation if set
-        URLIsValid = [self _validateURL];
+        SHHyperlinkScanner  *laxScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
+        
+        URLIsValid = [laxScanner isStringValidURL:[[self textStorage] string]];
+        validStatus = [laxScanner validationStatus];
     }
-}
-
-- (BOOL)_validateURL // Now with FLEX!
-{
-    SHHyperlinkScanner  *laxScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
-    
-    if([laxScanner isStringValidURL:[[self textStorage] string]]) return YES;
-    return NO;
 }
 
 @end
