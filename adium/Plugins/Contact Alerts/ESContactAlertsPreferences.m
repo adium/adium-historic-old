@@ -339,11 +339,17 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     NSString	*identifier = [tableColumn identifier];
     if([identifier compare:TABLE_COLUMN_ACTION] == 0){
         AIListObject *object = [prefAlertsArray objectAtIndex:row];
+		
+		//Configure the instance
         [instance configForObject:object];
+		
+		//Adjust row to be instance-relative
         row -= [[offsetDictionary objectForKey:[object UIDAndServiceID]] intValue];
 
+		//Select the action in the menu
         [cell selectItemWithRepresentedObject:[[instance dictAtIndex:row] objectForKey:KEY_EVENT_ACTION]];
 
+		//Reconfigure the instance to the active object
         [instance configForObject:activeContactObject];
     }
 }
@@ -352,11 +358,12 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     NSString	*identifier = [tableColumn identifier];
+	
     if([identifier compare:TABLE_COLUMN_ACTION] == 0){
-        NSMenuItem		*selectedMenuItem;
+        NSMenuItem			*selectedMenuItem;
         NSMutableDictionary	*selectedActionDict;
-        NSString		*newAction;
-        AIListObject *listObject = [prefAlertsArray objectAtIndex:row];
+        NSString			*newAction;
+        AIListObject		*listObject = [prefAlertsArray objectAtIndex:row];
 
         [instance configForObject:listObject];
 
@@ -383,32 +390,40 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotfication
 {
     int row = [tableView_actions selectedRow];
-    if (row != -1) //a row is selected
-    {
-		NSLog(@"row is %i",row);
-        AIListObject * object = [prefAlertsArray objectAtIndex:row];
+    if (row != -1) { //a row is selected
+		AIListObject	*object = [prefAlertsArray objectAtIndex:row];
+		NSDictionary	*selectedActionDict;
+		NSString		*action;
+		int				actionIndex;
+		
         activeContactObject = object;
+		
+		//Correct for the offset so that row is in terms the instance can handle
         row -= [[offsetDictionary objectForKey:[object UIDAndServiceID]] intValue];
-		NSLog(@"row becomes %i",row);
+
         [popUp_contactList selectItemWithRepresentedObject:activeContactObject];
+
+		//tell the instance which contact and relative row is selected
         [instance configForObject:activeContactObject];
-		NSLog(@"telling instance");
-        [instance currentRowIs:row]; //tell the instance which row is selected
+        [instance currentRowIs:row]; 
 
         //rebuild the event menu to apply to this instance
         [popUp_addEvent setMenu:[instance eventMenu]];
-		NSLog(@"instance dictAtIndex %i",row);
-        NSDictionary * selectedActionDict = [[[instance dictAtIndex:row] copy] autorelease];
-        NSString *action = [selectedActionDict objectForKey:KEY_EVENT_ACTION];
-		NSLog(@"%@ : %@",selectedActionDict,action);
-        [[[actionColumn dataCellForRow:row] menu] performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
-        [button_oneTime setState:[[selectedActionDict objectForKey:KEY_EVENT_DELETE] intValue]];
+
+		selectedActionDict = [[[instance dictAtIndex:row] copy] autorelease];
+        action = [selectedActionDict objectForKey:KEY_EVENT_ACTION];
+
+		//Find the action associated with the newly selected event and perform its action if possible
+		actionIndex = [actionMenu indexOfItemWithRepresentedObject:action];
+		if (actionIndex != -1)
+			[[[actionColumn dataCellForRow:row] menu] performActionForItemAtIndex:actionIndex]; //will appply appropriate subview in the process
+        
+		[button_oneTime setState:[[selectedActionDict objectForKey:KEY_EVENT_DELETE] intValue]];
         [button_active setState:[[selectedActionDict objectForKey:KEY_EVENT_ACTIVE] intValue]];
 
         [button_delete setEnabled:YES];
         [button_oneTime setEnabled:YES];
         [button_active setEnabled:YES];
-		NSLog(@"done.");
     }
     else //no selection
     {

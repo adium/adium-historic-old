@@ -120,11 +120,11 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     if (object) //nil objects can't be loaded, clearly
     {
         NSMutableArray  *newActionArray =  nil;
-        NSString        *UID = [object UID];
+        NSString        *UIDAndServiceID = [object UIDAndServiceID];
         
         //Load our cached array if available
         if(useCache){
-            newActionArray = [cachedAlertsDict objectForKey:UID];
+            newActionArray = [cachedAlertsDict objectForKey:UIDAndServiceID];
         }
         
         //If no cache is available (or we're not using the cache), load the array
@@ -134,14 +134,14 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
             //Update the cache
             if(newActionArray){
                 newActionArray = [[newActionArray mutableCopy] autorelease];
-                [cachedAlertsDict setObject:newActionArray forKey:UID]; //cache it
+                [cachedAlertsDict setObject:newActionArray forKey:UIDAndServiceID]; //cache it
             }else{
-                [cachedAlertsDict removeObjectForKey:UID]; //pref is now clear - remove from our cache
+                [cachedAlertsDict removeObjectForKey:UIDAndServiceID]; //pref is now clear - remove from our cache
             }
         }
         
         //If this is our currently active contact
-        if([[object UID] compare:[activeContactObject UID]] == 0) {
+        if([[object UIDAndServiceID] compare:[activeContactObject UIDAndServiceID]] == 0) {
             if (!newActionArray) {
                 newActionArray = [[[NSMutableArray alloc] init] autorelease]; //Create a new, empty action array   
             }
