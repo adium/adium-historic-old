@@ -30,7 +30,10 @@
 
     //Register as a chat observer (So we can catch the unviewed content status flag)
     [[adium contentController] registerChatObserver:self];
-
+	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(chatWillClose:)
+									   name:Chat_WillClose object:nil];
 }
 
 - (void)uninstallPlugin
@@ -65,6 +68,29 @@
     }
 
     return(nil);
+}
+
+/*!
+* @brief Respond to a chat closing
+ *
+ * Once a chat is closed we forget about whether it has received an auto-response.  If the chat is re-opened, it will
+ * receive our auto-response again.  This behavior is not necessarily desired, but is a side effect of basing our
+ * already-received list on chats and not contacts.  However, many users have come to expect this behavior and it's
+ * presence is neither strongly negative or positive.
+ */
+- (void)chatWillClose:(NSNotification *)notification
+{
+	AIChat	*inChat = [notification object];
+
+	if([unviewedObjectsArray containsObjectIdenticalTo:inChat]){
+		[unviewedObjectsArray removeObject:inChat];
+		
+		//If there are no more contacts with unviewed content, stop animating the dock
+		if([unviewedObjectsArray count] == 0 && unviewedState){
+			[[adium dockController] removeIconStateNamed:@"Alert"];
+			unviewedState = NO;
+		}
+	}
 }
 
 @end
