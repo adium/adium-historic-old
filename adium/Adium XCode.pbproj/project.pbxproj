@@ -6219,24 +6219,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34498CA805EEF31300D5816E = {
-			fileRef = 34498CA505EEF31200D5816E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34498CA905EEF31300D5816E = {
-			fileRef = 34498CA605EEF31300D5816E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34498CAA05EEF31300D5816E = {
-			fileRef = 34498CA705EEF31300D5816E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34498DC405EEF52100D5816E = {
 			fileRef = 34498CA505EEF31200D5816E;
 			isa = PBXBuildFile;
@@ -9427,9 +9409,6 @@
 				34254F4805EC0C3400F11AD7,
 				34254F4A05EC0C3D00F11AD7,
 				34254F4C05EC0C4300F11AD7,
-				34498CA805EEF31300D5816E,
-				34498CA905EEF31300D5816E,
-				34498CAA05EEF31300D5816E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
