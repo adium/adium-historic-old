@@ -1015,7 +1015,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 		if (!resultsColumn){			
 			//Set up the results column
 			resultsColumn = [[NSTableColumn alloc] initWithIdentifier:@"Rank"];
-			[[resultsColumn headerCell] setLocalizedString:AILocalizedString(@"Rank",nil)];
+			[[resultsColumn headerCell] setTitle:AILocalizedString(@"Rank",nil)];
 			[resultsColumn setDataCell:[[[ESRankingCell alloc] init] autorelease]];
 			
 			//Add it to the table
