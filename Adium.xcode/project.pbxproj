@@ -2064,7 +2064,6 @@
 				34416085059FC2A30019246B,
 				34416086059FC2A30019246B,
 				3460EF7706458C1D0099922D,
-				34F52BBF06E2AF5700887BE2,
 			);
 			isa = PBXGroup;
 			name = "Gadu-Gadu";
@@ -7957,20 +7956,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34F52BBF06E2AF5700887BE2 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ESGaimICQAccountView.nib;
-			path = "Plugins/Gaim Service/ESGaimICQAccountView.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34F52BC006E2AF5700887BE2 = {
-			fileRef = 34F52BBF06E2AF5700887BE2;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34F52BCB06E2AFBC00887BE2 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -11978,7 +11963,6 @@
 				6EA3689106B73F67009CA81A,
 				348D8D1306CC078D00449EBB,
 				348D8D2A06CC07BE00449EBB,
-				34F52BC006E2AF5700887BE2,
 				34F52BCC06E2AFBC00887BE2,
 			);
 			isa = PBXResourcesBuildPhase;
