@@ -32,6 +32,10 @@
 - (NSString *)nibName{
     return(@"AddressBookPrefs");
 }
+- (NSImage *)image{
+	if(!_addressBookImage) _addressBookImage = [[NSImage imageNamed:@"AddressBook" forClass:[self class]] retain];
+	return _addressBookImage;
+}
 
 - (NSDictionary *)restorablePreferences
 {
@@ -69,6 +73,12 @@
 	[checkBox_metaContacts setState:[[prefDict objectForKey:KEY_AB_CREATE_METACONTACTS] boolValue]];
 	
 	[self configureControlDimming];
+}
+
+- (void)dealloc
+{
+	[_addressBookImage release];	
+	[super dealloc];
 }
 
 - (void)configureControlDimming
