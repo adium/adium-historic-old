@@ -59,7 +59,7 @@
 {
 	[self configureControls];
 
-	[textField_themeName setStringValue:themeName];
+	[textField_themeName setStringValue:(themeName ? themeName : @"")];
 }
 
 //Window is closing
