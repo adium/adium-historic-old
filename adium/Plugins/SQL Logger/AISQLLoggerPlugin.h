@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | AISQLLoggerPlugin 1.0 for Adium                                                                         |
 | AISQLLoggerPlugin: Copyright (C) 2003 Jeffrey Melloy.                                                   |
-| <jmelloy@visualdistortion.org> <http://www.visualdistortion.org>                                        |
+| <jmelloy@visualdistortion.org> <http://www.visualdistortion.org/adium/>                                 |
 | Adium: Copyright (C) 2001-2002 Adam Iser. <adamiser@mac.com> <http://www.adiumx.com>                    |---\
 \---------------------------------------------------------------------------------------------------------/   |
   | This program is free software; you can redistribute it and/or modify it under the terms of the GNU        |

@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | AISQLLoggerPlugin 1.0 for Adium                                                                         |
 | AILoggerPlugin: Copyright (C) 2002 Jeffrey Melloy.                                                      |
-| <jmelloy@visualdistortion.org> <http://www.visualdistortion.org>                                        |
+| <jmelloy@visualdistortion.org> <http://www.visualdistortion.org/adium/>                                 |
 | Adium: Copyright (C) 2001-2002 Adam Iser. <adamiser@mac.com> <http://www.adiumx.com>                    |---\
 \---------------------------------------------------------------------------------------------------------/   |
   | This program is free software; you can redistribute it and/or modify it under the terms of the GNU        |
@@ -24,7 +24,6 @@
 @interface AISQLLoggerPlugin (PRIVATE)
 - (void)_addMessage:(NSAttributedString *)message dest:(NSString *)destName source:(NSString *)sourceName date:(NSDate *)date sendServe:(NSString *)s_service recServe:(NSString *)r_service;
 
-- (NSString *)encodeHTML:(NSAttributedString *)inMessage;
 @end
 
 @implementation AISQLLoggerPlugin
@@ -117,7 +116,7 @@ recServe:(NSString *)r_service
 {
     NSString	*sqlStatement;
     NSMutableString 	*escapeHTMLMessage;
-    escapeHTMLMessage = [NSMutableString stringWithString:[self encodeHTML:message]];
+    escapeHTMLMessage = [NSMutableString stringWithString:[AIHTMLDecoder encodeHTML:message encodeFullString:NO]];
     
     char	escapeMessage[[escapeHTMLMessage length] * 2 + 1];
     char	escapeSender[[sourceName length] * 2 + 1];
@@ -158,104 +157,6 @@ recServe:(NSString *)r_service
 
 - (NSString *)pluginURL {
     return @"http://www.visualdistortion.org";
-}
-
-- (NSString *)encodeHTML:(NSAttributedString *)inMessage
-{
-    NSMutableString	*string;
-    NSFontManager	*fontManager = [NSFontManager sharedFontManager];
-    
-    BOOL		currentBold;
-    BOOL		currentItalic;
-    BOOL		currentUnderline;
-    
-    NSString		*inMessageString;
-    int			messageLength;
-    NSRange		searchRange;
-    
-    //Get the incoming message as a regular string, and it's length
-    inMessageString = [inMessage string];
-    messageLength = [inMessage length];
-    
-    //Setup the default attributes
-    currentBold = NO;
-    currentItalic = NO;
-    currentUnderline = NO;
-    
-    string = [NSMutableString stringWithString:@""];
-    
-    //Loop through the entire string
-    //Grab chunks of string with similar attributes.
-    searchRange = NSMakeRange(0,0);
-    while(searchRange.location < messageLength){
-        NSDictionary	*attributes = 
-            [inMessage attributesAtIndex:searchRange.location effectiveRange:&searchRange];
-        NSFont		*font = [attributes objectForKey:NSFontAttributeName];
-        
-        NSFontTraitMask	traits = [fontManager traitsOfFont:font];
-        BOOL		bold = (traits & NSBoldFontMask);
-        BOOL		italic = (traits & NSItalicFontMask);
-        int		underline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
-        
-        NSMutableString	*chunk = [NSMutableString stringWithString:
-            [[inMessageString substringWithRange:searchRange] mutableCopy]];
-        
-        //Bold/Italic/Underline start
-        if(bold && !currentBold){
-            [string appendString:@"<B>"];
-            currentBold = bold;
-        }
-        if(italic && !currentItalic){
-            [string appendString:@"<I>"];
-            currentItalic = italic;
-        }
-        if(!currentUnderline && underline){
-            [string appendString:@"<U>"];
-            currentUnderline = underline;
-        }
-        
-        //Disable bold/italic/underline
-        if(currentUnderline && !underline){
-            [string appendString:@"</U>"];
-            currentUnderline = underline;
-        }
-        if(currentItalic && !italic){
-            [string appendString:@"</I>"];
-            currentItalic = italic;
-        }
-        if(currentBold && !bold){
-            [string appendString:@"</B>"];
-            currentBold = bold;
-        }
-        
-        //Escape special HTML characters.
-        
-        [chunk replaceOccurrencesOfString:@"&" withString:@"&amp;"
-            options:NSCaseInsensitiveSearch range:NSMakeRange(0, [chunk length])];
-        
-        [chunk replaceOccurrencesOfString:@"<" withString:@"&lt;"
-            options:NSCaseInsensitiveSearch range:NSMakeRange(0, [chunk length])];
-        
-        [chunk replaceOccurrencesOfString:@">" withString:@"&gt;"
-            options:NSCaseInsensitiveSearch range:NSMakeRange(0, [chunk length])];
-        
-        
-        //append string
-        
-        [string appendString:(NSString *)chunk];
-        
-        searchRange.location += searchRange.length;
-    }
-    
-    if (currentUnderline) {
-        [string appendString:@"</U>"];
-    } else if (currentItalic) {
-        [string appendString:@"</I>"];
-    } else if (currentBold) {
-        [string appendString:@"</B>"];
-    }
-
-    return(string);
 }
 
 @end
