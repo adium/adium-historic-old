@@ -107,6 +107,11 @@ body {
     background: url("images/status_right.png") top right no-repeat;
 }
 
+IMG {
+	vertical-align:middle;
+	margin-top:-3px;
+}
+
 #Chat {
 	overflow: hidden;
 	margin-bottom: -8px;
