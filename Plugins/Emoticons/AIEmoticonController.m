@@ -106,13 +106,6 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	/*
-	serviceAppropriateEmoticons = [[[adium preferenceController] preferenceForKey:KEY_EMOTICON_SERVICE_APPROPRIATE
-																			group:PREF_GROUP_EMOTICONS] boolValue];
-
-	 */
-	serviceAppropriateEmoticons = YES;
-
 	//Flush our cached active emoticons
 	[self resetActiveEmoticons];
 	
@@ -165,16 +158,14 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	NSString					*serviceClassContext = nil;
     int                         currentLocation = 0;
 
-	if(serviceAppropriateEmoticons){
-		if([context isKindOfClass:[AIContentObject class]]){
-			serviceClassContext = [[[(AIContentObject *)context destination] service] serviceClass];
-	
-		}else if([context isKindOfClass:[AIListContact class]]){
-			serviceClassContext = [[[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																						   toContact:(AIListContact *)context] service] serviceClass];
-		}else if([context isKindOfClass:[AIListObject class]] && [context respondsToSelector:@selector(service)]){
-			serviceClassContext = [[(AIListObject *)context service] serviceClass];
-		}
+	if([context isKindOfClass:[AIContentObject class]]){
+		serviceClassContext = [[[(AIContentObject *)context destination] service] serviceClass];
+		
+	}else if([context isKindOfClass:[AIListContact class]]){
+		serviceClassContext = [[[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																					   toContact:(AIListContact *)context] service] serviceClass];
+	}else if([context isKindOfClass:[AIListObject class]] && [context respondsToSelector:@selector(service)]){
+		serviceClassContext = [[(AIListObject *)context service] serviceClass];
 	}
 	
     //Number of characters we've replaced so far (used to calcluate placement in the destination string)
@@ -290,7 +281,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		}
 
 		//If we are using service appropriate emoticons, check if this is on the right service and, if so, compare.
-		if(serviceAppropriateEmoticons){
+		if(thisLength > bestServiceAppropriateLength){
 			AIEmoticon	*thisEmoticon = [candidateEmoticons objectAtIndex:i];
 			if([thisEmoticon isAppropriateForServiceClass:serviceClassContext]){
 				bestServiceAppropriateLength = thisLength;
@@ -309,7 +300,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		bestIndex = bestServiceAppropriateIndex;
 		*replacementString = serviceAppropriateReplacementString;
 	}
-	
+
 	//Return the length by reference
 	*textLength = bestLength;
 
