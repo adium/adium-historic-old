@@ -20,6 +20,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 accountController = AIAccountController; 
+                applescriptabilityController = ESApplescriptabilityController; 
                 contactAlertsController = ESContactAlertsController; 
                 contactController = AIContactController; 
                 contentController = AIContentController; 
@@ -31,7 +32,6 @@
                 pluginController = AIPluginController; 
                 preferenceController = AIPreferenceController; 
                 soundController = AISoundController; 
-                statusWindowController = BZStatusWindowController; 
                 toolbarController = AIToolbarController; 
             }; 
             SUPERCLASS = NSObject; 
@@ -193,6 +193,12 @@
             LANGUAGE = ObjC; 
             OUTLETS = {owner = AIAdium; statusViewTemplate = BZStatusItemView; table = NSTableView; }; 
             SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            CLASS = ESApplescriptabilityController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {owner = AIAdium; }; 
+            SUPERCLASS = NSObject; 
         }, 
         {
             CLASS = ESContactAlertsController; 
