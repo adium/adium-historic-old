@@ -1,17 +1,17 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-\---------------------------------------------------------------------------------------------------------/
- | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
- | General Public License as published by the Free Software Foundation; either version 2 of the License,
- | or (at your option) any later version.
- |
- | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
- | Public License for more details.
- |
- | You should have received a copy of the GNU General Public License along with this program; if not,
- | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- \------------------------------------------------------------------------------------------------------ */
+                                              \---------------------------------------------------------------------------------------------------------/
+                                              | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+                                              | General Public License as published by the Free Software Foundation; either version 2 of the License,
+                                              | or (at your option) any later version.
+                                              |
+                                              | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+                                              | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+                                              | Public License for more details.
+                                              |
+                                              | You should have received a copy of the GNU General Public License along with this program; if not,
+                                              | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+                                              \------------------------------------------------------------------------------------------------------ */
 
 #import "AIDockAccountStatusPlugin.h"
 #import "AIAdium.h"
@@ -32,10 +32,13 @@
     awayState = nil;
     idleState = nil;
     connectingState = nil;
-    
+
     //Observe account status changed notification
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:nil];
+
+    //Observer preference changes
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self accountStatusChanged:nil];
 }
 
@@ -52,11 +55,18 @@
     [self accountStatusChanged:nil];
 }
 
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if( ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0) && ([(NSString *)[[notification userInfo] objectForKey:@"Key"] compare:KEY_ACTIVE_DOCK_ICON] == 0) )
+    {
+        [self accountStatusChanged:nil];
+    }
+}
+
 - (void)accountStatusChanged:(NSNotification *)notification
 {
     NSString	*key = [[notification userInfo] objectForKey:@"Key"];
     AIAccount	*changedAccount = [notification object];
-
     if(notification == nil || [key compare:@"Status"] == 0){ //Account status changed
         NSEnumerator	*enumerator;
         AIAccount		*account;
@@ -73,10 +83,8 @@
                 connectingAccounts++;
             }
         }
-
         //Online
-        if(onlineAccounts && !onlineState){
-            onlineState = [[owner dockController] setIconStateNamed:@"Online"];
+        if(onlineAccounts && (notification == nil || !onlineState)) {            onlineState = [[owner dockController] setIconStateNamed:@"Online"];
         }else if(!onlineAccounts && onlineState){
             [[owner dockController] removeIconState:onlineState]; onlineState = nil;
         }
