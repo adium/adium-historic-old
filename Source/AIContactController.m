@@ -819,11 +819,11 @@ DeclareString(UID);
 	//
 	//It is possible for one listContact to be currently within the metaContact while its twin sister on another
 	//account is not, in the case that the latter account just signed on for the first time.  This is why we look
-	//at the ultraUniqueObjectID, which is account-specific, causing a relatively cheap increase in computational
+	//at the internalUniqueObjectID, which is account-specific, causing a relatively cheap increase in computational
 	//demands in terms of the search but a better behavior overall.
 	enumerator = [contactsToGroupArray objectEnumerator];
 	while ((listContact = [enumerator nextObject]) && (metaContact == nil)){
-		metaContact = [contactToMetaContactLookupDict objectForKey:[listContact ultrainternalObjectID]];
+		metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalUniqueObjectID]];
 	}
 	
 	//Create a new MetaContact is we didn't find one.
