@@ -12,7 +12,7 @@ body {
 }
 
 .chatbox {
-	margin: 6px 0 6px 0;
+	margin: 3px 0 3px 0;
 }
 
 .buddyicon {
@@ -21,7 +21,7 @@ body {
 }
 
 .name {
-	margin: -3px 0px 2px 36px;
+	margin: 0px 0px 2px 36px;
 	font: 11px "Lucida Grande";
 	font-weight: bold;
 	height: 13px;
