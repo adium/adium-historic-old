@@ -147,14 +147,14 @@ static  NSSize                  dragCellSize;           //Size of the cell being
 
     //Load our images (Images are shared between all AICustomTabsView instances)
     if(!haveLoadedImages){
-	if([[self window] isTextured]){
-	    tabDivider = [[AIImageUtilities imageNamed:@"Tab_Divider" forClass:[self class]] retain];
-	    tabBackground = [[AIImageUtilities imageNamed:@"Tab_Background" forClass:[self class]] retain];
-	}else{
-	    tabDivider = [[AIImageUtilities imageNamed:@"Aqua_Tab_Divider" forClass:[self class]] retain];
-	    tabBackground = [[AIImageUtilities imageNamed:@"Aqua_Tab_Background" forClass:[self class]] retain];
-	}
-
+		if([[self window] isTextured]){
+			tabDivider = [[AIImageUtilities imageNamed:@"Tab_Divider" forClass:[self class]] retain];
+			tabBackground = [[AIImageUtilities imageNamed:@"Tab_Background" forClass:[self class]] retain];
+		}else{
+			tabDivider = [[AIImageUtilities imageNamed:@"Aqua_Tab_Divider" forClass:[self class]] retain];
+			tabBackground = [[AIImageUtilities imageNamed:@"Aqua_Tab_Background" forClass:[self class]] retain];
+		}
+		
         haveLoadedImages = YES;
     }
     
@@ -516,12 +516,12 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 {
     NSEnumerator	*enumerator;
     AICustomTabCell	*tabCell;
-    int			xLocation;
-    BOOL		finished = YES;
-    int                 tabExtraWidth;
-    int                 totalTabWidth;
-    int                 reducedWidth = 0;
-    int                 reduceThreshold = 1000000;
+    int				xLocation;
+    BOOL			finished = YES;
+    int				tabExtraWidth;
+    int				totalTabWidth;
+    int				reducedWidth = 0;
+    int				reduceThreshold = 1000000;
 
     //Get the total tab width
     totalTabWidth = [self _totalTabWidth];
@@ -592,7 +592,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
                     if(finished) finished = NO;
                 }
             }
-            [tabCell setFrame:NSMakeRect(origin.x, origin.y, size.width, size.height)];
+            [tabCell setFrame:NSMakeRect((int)origin.x, (int)origin.y, (int)size.width, (int)size.height)];
             
             //Move to the next tab
             xLocation += size.width + CUSTOM_TABS_GAP; //overlap the tabs a bit
