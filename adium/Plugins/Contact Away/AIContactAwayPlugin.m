@@ -37,14 +37,18 @@
     //Get the status message
     ownerArray = [inObject statusArrayForKey:@"StatusMessage"];
     if([ownerArray count] != 0){
-	statusMessage = [ownerArray objectAtIndex:0];
+		statusMessage = [ownerArray objectAtIndex:0];
     }
     
     //Return the correct string
     if(statusMessage != nil && [statusMessage length] != 0){
-	entry = @"Away Message";
+		if (away){
+			entry = @"Away Message";
+		}else{
+			entry = @"Status";
+		}
     }else if(away){
-	entry = @"Away";
+		entry = @"Away";
     }
     
     return(entry);
@@ -56,23 +60,23 @@
     NSAttributedString 	*statusMessage = nil;
     AIMutableOwnerArray	*ownerArray;
     BOOL		away;
-
+	
     //Get the away state
     away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
-
+	
     //Get the status message
     ownerArray = [inObject statusArrayForKey:@"StatusMessage"];
     if([ownerArray count] != 0){
-	statusMessage = [ownerArray objectAtIndex:0];
+		statusMessage = [ownerArray objectAtIndex:0];
     }
-
+	
     //Return the correct string
     if(statusMessage != nil && [statusMessage length] != 0){
-	entry = statusMessage;
+		entry = statusMessage;
     }else if(away){
-	entry = [[[NSAttributedString alloc] initWithString:@"Yes"] autorelease];
+		entry = [[[NSAttributedString alloc] initWithString:@"Yes"] autorelease];
     }
-
+	
     return(entry);
 }
 
