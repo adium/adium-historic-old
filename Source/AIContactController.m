@@ -66,7 +66,7 @@
 
 - (void)_listChangedGroup:(AIListObject *)group object:(AIListObject *)object;
 
-- (void)_positionObject:(AIListObject *)listObject atIndex:(int)index inGroup:(AIListGroup *)group;
+- (void)_positionObject:(AIListObject *)listObject atIndex:(int)index inGroup:(AIListObject<AIContainingObject> *)group;
 - (void)_moveObjectServerside:(AIListObject *)listObject toGroup:(AIListGroup *)group;
 - (void)_renameGroup:(AIListGroup *)listGroup to:(NSString *)newName;
 
@@ -77,7 +77,6 @@
 - (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact;
 - (BOOL)_performAddListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact;
 - (void)removeListObject:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact;
-- (NSArray *)allMetaContactsInGroup:(AIListGroup *)inGroup;
 - (void)_loadMetaContactsFromArray:(NSArray *)array;
 - (void)_saveMetaContacts:(NSDictionary *)allMetaContactsDict;
 
@@ -376,20 +375,12 @@ DeclareString(UID);
 				performedGrouping = YES;
 				
 			}else{
+				AIMetaContact	*metaContact;
+				
 				//If no object exists in this group which matches, we should check if there is already
 				//a MetaContact holding a matching ListContact, since we should include this contact in it
-				
-				NSEnumerator	*enumerator = [[self allMetaContactsInGroup:localGroup] objectEnumerator];
-				AIMetaContact   *metaContact;
-				while (metaContact = [enumerator nextObject]){
-					if ([metaContact objectWithService:inObjectService
-												   UID:inObjectUID]){
-						break;
-					}	
-				}
-				
 				//If we found a metaContact to which we should add, do it.
-				if (metaContact){
+				if (metaContact = [contactToMetaContactLookupDict objectForKey:[inObject internalObjectID]]){
 					[self addListObject:inObject toMetaContact:metaContact];
 					performedGrouping = YES;
 				}
@@ -625,20 +616,21 @@ DeclareString(UID);
 		oldMetaContact = [contactToMetaContactLookupDict objectForKey:[listObject internalObjectID]];
 		
 		if ([self _performAddListObject:listObject toMetaContact:metaContact]){
-			NSDictionary		*containedContactDict;
-			NSMutableDictionary	*allMetaContactsDict;
-			NSMutableArray		*containedContactsArray;
 			
-			NSString			*metaContactInternalObjectID = [metaContact internalObjectID];
-			
-			//Get the dictionary of all metaContacts
-			allMetaContactsDict = [[[[owner preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
-																			 group:PREF_GROUP_CONTACT_LIST] mutableCopy] autorelease];
-			if (!allMetaContactsDict){
-				allMetaContactsDict = [NSMutableDictionary dictionary];
-			}
-			
+			//If this listObject was not in this metaContact in any form before, store the change
 			if (metaContact != oldMetaContact){
+				NSDictionary		*containedContactDict;
+				NSMutableDictionary	*allMetaContactsDict;
+				NSMutableArray		*containedContactsArray;
+				
+				NSString			*metaContactInternalObjectID = [metaContact internalObjectID];
+				
+				//Get the dictionary of all metaContacts
+				allMetaContactsDict = [[[[owner preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
+																				 group:PREF_GROUP_CONTACT_LIST] mutableCopy] autorelease];
+				if (!allMetaContactsDict){
+					allMetaContactsDict = [NSMutableDictionary dictionary];
+				}
 				
 				//Remove the list object from any other metaContact it is in at present
 				if (oldMetaContact){
@@ -1373,27 +1365,6 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 	
 	return(contactArray);
-}
-
-- (NSArray *)allMetaContactsInGroup:(AIListGroup *)inGroup
-{
-	NSMutableArray	*metaContactArray = [NSMutableArray array];
-	NSEnumerator	*enumerator;
-    AIListObject	*object;
-	
-	if(inGroup == nil) inGroup = contactList;  //Passing nil scans the entire contact list
-	
-	enumerator = [inGroup objectEnumerator];
-    while((object = [enumerator nextObject])){
-        if([object isMemberOfClass:[AIListGroup class]]){
-			[metaContactArray addObjectsFromArray:[self allMetaContactsInGroup:(AIListGroup *)object]];
-			
-		}else if([object isMemberOfClass:[AIMetaContact class]]){
-			[metaContactArray addObject:object];
-		}
-	}
-	
-	return(metaContactArray);	
 }
 
 //Returns a menu containing all the groups within a group
