@@ -69,27 +69,26 @@
 //Called when Adium receives content
 - (void)didReceiveContent:(NSNotification *)notification
 {
-    AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
-    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"IdleMessage" group:GROUP_ACCOUNT_STATUS]];
 
+    AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
+            
+    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"IdleMessage" group:GROUP_ACCOUNT_STATUS]];
     //If the user received a message, send our idle message to them
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         if(idleMessage && [idleMessage length] != 0){
             //Only send if there's no away message up!
             if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil) {
-                AIListContact	*contact = [contentObject source];
-
+                AIChat	*chat = [contentObject chat];
                 //Create and send an idle bounce message (If the sender hasn't received one already)
-                if(![receivedIdleMessage containsObject:[contact UIDAndServiceID]]){
+                if([receivedIdleMessage indexOfObjectIdenticalTo:chat] == NSNotFound){
                     AIContentMessage	*responseContent;
-
-                    responseContent = [AIContentMessage messageInChat:[contentObject chat]
+                    
+                    responseContent = [AIContentMessage messageInChat:chat
                                                            withSource:[contentObject destination]
-                                                          destination:contact
+                                                          destination:[contentObject source]
                                                                  date:nil
                                                               message:idleMessage
                                                             autoreply:YES];
-
                     [[adium contentController] sendContentObject:responseContent];
                 }	
             }	
@@ -103,14 +102,14 @@
     AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
 
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        AIListContact	*contact = [contentObject destination];
-        NSString 	*senderUID = [contact UIDAndServiceID];
+        AIChat	*chat = [contentObject chat];
 
-        //Add the handle's UID to our 'already received idle message' array, so they only receive the message once.
-        if(![receivedIdleMessage containsObject:senderUID]){
-            [receivedIdleMessage addObject:senderUID];
+        if([receivedIdleMessage indexOfObjectIdenticalTo:chat] == NSNotFound){
+            [receivedIdleMessage addObject:chat];
         }
     }
 }
+
+//evands: need to check into removing chats form our array when they are destroyed
 
 @end
