@@ -2259,6 +2259,7 @@
 				346C9D3006004650000F5A8A,
 				34C2D70506338E2E0018E5D2,
 				3498914C064C48020095598E,
+				34B019A6064E8E8A0011D119,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2286,6 +2287,7 @@
 				346C9D1606004646000F5A8A,
 				34C2D70606338E2E0018E5D2,
 				3498914D064C48020095598E,
+				34B019A7064E8E8A0011D119,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3577,6 +3579,36 @@
 			path = Plugins/Announcer/AnnouncerDefaults.plist;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		34B019A4064E8E8A0011D119 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = JVFontPreviewField.h;
+			path = "Plugins/WebKit Message View/JVFontPreviewField.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B019A5064E8E8A0011D119 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = JVFontPreviewField.m;
+			path = "Plugins/WebKit Message View/JVFontPreviewField.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B019A6064E8E8A0011D119 = {
+			fileRef = 34B019A4064E8E8A0011D119;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B019A7064E8E8A0011D119 = {
+			fileRef = 34B019A5064E8E8A0011D119;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34B5875A058D801D00E7EF0D = {
 			fileEncoding = 30;
@@ -17467,6 +17499,8 @@
 				34C2D70406338E2E0018E5D2,
 				3498914A064C48020095598E,
 				3498914B064C48020095598E,
+				34B019A4064E8E8A0011D119,
+				34B019A5064E8E8A0011D119,
 				34C2D8C00633BBA80018E5D2,
 				34989146064C47F20095598E,
 				347065E406015DC5004F0D20,
