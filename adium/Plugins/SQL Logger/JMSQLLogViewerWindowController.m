@@ -12,6 +12,11 @@
  | You should have received a copy of the GNU General Public License along with this program; if not,
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
+/*
+ * $Revision: 1.5 $
+ * $Date: 2003/10/28 15:59:17 $
+ * $Author: jmelloy $
+ */
 
 #import "JMSQLLogViewerWindowController.h"
 #import "AIAdium.h"
