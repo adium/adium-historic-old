@@ -417,7 +417,7 @@
     //Now look at keys which only make sense while online
     else if(areOnline){
         if ([key compare:@"IdleSince"] == 0){
-	    NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
             // Even if we're setting a non-zero idle time, set it to zero first.
             // Some clients ignore idle time changes unless it moves to/from 0.
             serv_set_idle(gc, 0);
@@ -425,17 +425,17 @@
                 int newIdle = -[idleSince timeIntervalSinceNow];
                 serv_set_idle(gc, newIdle);
             }
-	    [self setStatusObject:idleSince forKey:@"IdleSince" notify:YES];
+			[self setStatusObject:idleSince forKey:@"IdleSince" notify:YES];
         }
         else if ([key compare:@"AwayMessage"] == 0) {
-	    NSString	*awayMessage = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+			NSString	*awayMessage = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
             [self setAwayMessage:awayMessage];
-	    [self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
+			[self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
         }
         else if([key compare:@"TextProfile"] == 0){
             NSString	*profile = [self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
-	    [self setProfile:profile];
-	    [self setStatusObject:profile forKey:@"TextProfile" notify:YES];
+			[self setProfile:profile];
+			[self setStatusObject:profile forKey:@"TextProfile" notify:YES];
         }
     }
     

@@ -16,7 +16,8 @@
 #import "AIDockAccountStatusPlugin.h"
 
 @interface AIDockAccountStatusPlugin (PRIVATE)
-- (int)_numberOfAccountsWithBoolKey:(NSString *)inKey;
+- (BOOL)_accountsWithBoolKey:(NSString *)inKey;
+- (BOOL)_accountsWithKey:(NSString *)inKey;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_updateIconForKey:(NSString *)key;
 @end
@@ -25,11 +26,14 @@
 
 - (void)installPlugin
 {
+	//Observe account status changes
+	[[adium contactController] registerListObjectObserver:self];
+
     //Observer preference changes
     [[adium notificationCenter] addObserver:self
-				   selector:@selector(preferencesChanged:)
-				       name:Preference_GroupChanged
-				     object:nil];
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -44,60 +48,78 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     NSString    *group = [[notification userInfo] objectForKey:@"Group"];
-    NSString    *key = [[notification userInfo] objectForKey:@"Key"];
     
-    if(notification == nil || ([group compare:PREF_GROUP_GENERAL] == 0 && [key compare:KEY_ACTIVE_DOCK_ICON] == 0)){
-	[self _updateIconForKey:nil];
-	
-    }else if([group compare:GROUP_ACCOUNT_STATUS] == 0){
-	[self _updateIconForKey:key];
+    if(notification == nil || [group compare:PREF_GROUP_GENERAL] == 0){
+		NSString    *key = [[notification userInfo] objectForKey:@"Key"];
+
+		if(notification == nil || [key compare:KEY_ACTIVE_DOCK_ICON] == 0){
+			[self updateListObject:nil keys:nil delayed:NO silent:NO];
+		}
     }
 }
 
-- (void)_updateIconForKey:(NSString *)key
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
-    if(key == nil || [key compare:@"Online"] == 0){
-	if([self _numberOfAccountsWithBoolKey:@"Online"] > 0){
-	    [[adium dockController] setIconStateNamed:@"Online"];
-	}else{
-	    [[adium dockController] removeIconStateNamed:@"Online"];
+	if(inObject == nil || [inObject isKindOfClass:[AIAccount class]]){
+		if(inObject == nil || [inModifiedKeys containsObject:@"Online"]){
+			if([self _accountsWithBoolKey:@"Online"] > 0){
+				[[adium dockController] setIconStateNamed:@"Online"];
+			}else{
+				[[adium dockController] removeIconStateNamed:@"Online"];
+			}
+			
+		}
+		if(inObject == nil || [inModifiedKeys containsObject:@"Connecting"]){
+			if([self _accountsWithBoolKey:@"Connecting"] > 0){
+				[[adium dockController] setIconStateNamed:@"Connecting"];
+			}else{
+				[[adium dockController] removeIconStateNamed:@"Connecting"];
+			}
+			
+		}
+		if(inObject == nil || [inModifiedKeys containsObject:@"Away"]){
+			if([self _accountsWithKey:@"Away"] > 0){
+				[[adium dockController] setIconStateNamed:@"Away"];
+			}else{
+				[[adium dockController] removeIconStateNamed:@"Away"];
+			}
+			
+		}
+		if(inObject == nil || [inModifiedKeys containsObject:@"IdleSince"]){
+			if([self _accountsWithKey:@"IdleSince"] > 0){
+				[[adium dockController] setIconStateNamed:@"Idle"];
+			}else{
+				[[adium dockController] removeIconStateNamed:@"Idle"];
+			}
+			
+		}	
 	}
 	
-    }else if(key == nil || [key compare:@"Connecting"] == 0){
-	if([self _numberOfAccountsWithBoolKey:@"Connecting"] > 0){
-	    [[adium dockController] setIconStateNamed:@"Connecting"];
-	}else{
-	    [[adium dockController] removeIconStateNamed:@"Connecting"];
-	}
-	
-    }else if(key == nil || [key compare:@"AwayMessage"] == 0){	    
-	if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] != nil){
-	    [[adium dockController] setIconStateNamed:@"Away"];
-	}else{
-	    [[adium dockController] removeIconStateNamed:@"Away"];
-	}
-	
-    }else if(key == nil || [key compare:@"IdleSince"] == 0){
-	if([[adium preferenceController] preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] != nil){
-	    [[adium dockController] setIconStateNamed:@"Idle"];
-	}else{
-	    [[adium dockController] removeIconStateNamed:@"Idle"];
-	}
-	
-    }	
+	return(nil);
 }
 
-- (int)_numberOfAccountsWithBoolKey:(NSString *)inKey
+- (BOOL)_accountsWithBoolKey:(NSString *)inKey
 {
     NSEnumerator    *enumerator = [[[adium accountController] accountArray] objectEnumerator];
-    int		    onlineAccounts = 0;
     AIAccount       *account;
-
+	
     while((account = [enumerator nextObject])){
-	if([[account preferenceForKey:inKey group:GROUP_ACCOUNT_STATUS] boolValue]) onlineAccounts++;
+		if([[account statusObjectForKey:inKey] boolValue]) return(YES);
     }
     
-    return(onlineAccounts);
+    return(NO);
+}
+
+- (BOOL)_accountsWithKey:(NSString *)inKey
+{
+    NSEnumerator    *enumerator = [[[adium accountController] accountArray] objectEnumerator];
+    AIAccount       *account;
+	
+    while((account = [enumerator nextObject])){
+		if([account statusObjectForKey:inKey]) return(YES);
+    }
+    
+    return(NO);
 }
 
 @end

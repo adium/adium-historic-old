@@ -617,6 +617,7 @@
     [updateTimer release]; updateTimer = nil;
 
     //Set our status as offline
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO]; //Needed if we were connecting when the error happened
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:NO];
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
 }
@@ -732,22 +733,22 @@
 
                 }else if([command compare:@"CONFIG2"] == 0){
                     [self AIM_HandleConfig:message];
-
+					
                     [self silenceAllHandleUpdatesForInterval:SIGN_ON_EVENT_DURATION];
-
+					
                     //Flag ourself as online
-		    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
-		    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
-
+					[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
+					[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
+					
                     //Set our correct status
-		    [self updateStatusForKey:@"IdleSince"];
-		    [self updateStatusForKey:@"TextProfile"];
-		    [self updateStatusForKey:@"AwayMessage"];
-		    
-		    //Format our nickname as it was entered for the account
-		    if(!connectedWithICQ){
-			[self AIM_SetNick:[self preferenceForKey:@"Handle" group:GROUP_AIM_ACCOUNT]];
-		    }
+					[self updateStatusForKey:@"IdleSince"];
+					[self updateStatusForKey:@"TextProfile"];
+					[self updateStatusForKey:@"AwayMessage"];
+					
+					//Format our nickname as it was entered for the account
+					if(!connectedWithICQ){
+						[self AIM_SetNick:[self preferenceForKey:@"Handle" group:GROUP_AIM_ACCOUNT]];
+					}
                     
                     //Send AIM the init done message (at this point we become visible to other buddies)
                     [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_init_done" sequence:&localSequence]];
@@ -863,7 +864,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.98 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.99 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
