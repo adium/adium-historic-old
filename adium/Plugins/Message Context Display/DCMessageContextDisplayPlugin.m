@@ -74,38 +74,41 @@
 	
 	chat = (AIChat *)[notification object];
 	dict = [NSMutableDictionary dictionary];
-	enumerator = [[chat contentObjectArray] objectEnumerator];
 	
-	//Is there already stored context for this person?
-	previousDict = [[chat listObject] preferenceForKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
-	
-	cnt = 1;
-	
-	// Only save if we need to save more AND there is still unsaved content available
-	while( (cnt <= linesToDisplay) && (content = [enumerator nextObject]) ) {
-				
-		// Only record actual messages, no context or status
-		if( [content isKindOfClass:[AIContentMessage class]] && ![content isKindOfClass:[AIContentContext class]]) {
-			contentDict = [self savableContentObject:content];
-			[dict setObject:contentDict forKey:[[NSNumber numberWithInt:cnt] stringValue]];
-			cnt++;
+	if(chat) {
+		enumerator = [[chat contentObjectArray] objectEnumerator];
+		
+		//Is there already stored context for this person?
+		previousDict = [[chat listObject] preferenceForKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
+		
+		cnt = 1;
+		
+		// Only save if we need to save more AND there is still unsaved content available
+		while( (cnt <= linesToDisplay) && (content = [enumerator nextObject]) ) {
+			
+			// Only record actual messages, no context or status
+			if( [content isKindOfClass:[AIContentMessage class]] && ![content isKindOfClass:[AIContentContext class]]) {
+				contentDict = [self savableContentObject:content];
+				[dict setObject:contentDict forKey:[[NSNumber numberWithInt:cnt] stringValue]];
+				cnt++;
+			}
+			
+		}
+		
+		// If there's room left, append the old messages too
+		if( cnt <= linesToDisplay && previousDict ) {
+			
+			prevcnt = 1;
+			
+			while( cnt <= linesToDisplay+1 && prevcnt <= [previousDict count] ) {
+				NSDictionary *tempDict = [NSDictionary dictionaryWithDictionary:[previousDict objectForKey:[[NSNumber numberWithInt:prevcnt] stringValue]]];
+				[dict setObject:tempDict forKey:[[NSNumber numberWithInt:cnt] stringValue]];
+				prevcnt++;
+				cnt++;
+			}
 		}
 		
 	}
-	
-	// If there's room left, append the old messages too
-	if( cnt <= linesToDisplay ) {
-		
-		prevcnt = 1;
-		
-		while( cnt <= linesToDisplay+1 && prevcnt <= [previousDict count] ) {
-			NSDictionary *tempDict = [NSDictionary dictionaryWithDictionary:[previousDict objectForKey:[[NSNumber numberWithInt:prevcnt] stringValue]]];
-			[dict setObject:tempDict forKey:[[NSNumber numberWithInt:cnt] stringValue]];
-			prevcnt++;
-			cnt++;
-		}
-	}
-	
 	
 	// Did we find anything useful to save? If not, leave it untouched
 	if( [dict count] > 0 ) {
