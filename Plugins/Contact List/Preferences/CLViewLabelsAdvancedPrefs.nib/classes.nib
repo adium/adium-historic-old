@@ -1,0 +1,69 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIDualWindowAdvancedPrefs; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_horizontalResize" = NSButton; 
+                "checkBox_verticalResize" = NSButton; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIDualWindowPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_autoResize" = NSButton; 
+                "checkBox_horizontalResize" = NSButton; 
+                "view_resizing" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = ESCLViewAdvancedPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkbox_borderless" = NSButton; 
+                "checkbox_labelAroundContact" = NSButton; 
+                "checkbox_outlineGroups" = NSButton; 
+                "checkbox_outlineLabels" = NSButton; 
+                "checkbox_tooltipsInBackground" = NSButton; 
+                "colorWell_outlineGroupsColor" = NSColorWell; 
+                "slider_labelOpacity" = NSSlider; 
+                "slider_opacity" = NSSlider; 
+                "slider_rowSpacing" = NSSlider; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {
+            CLASS = ESCLViewLabelsAdvancedPrefs; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkbox_labelAroundContact" = NSButton; 
+                "checkbox_labelGroups" = NSButton; 
+                "checkbox_outlineLabels" = NSButton; 
+                "checkbox_useGradient" = NSButton; 
+                "colorWell_labelGroupsColor" = NSColorWell; 
+                "slider_labelOpacity" = NSSlider; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

@@ -1,0 +1,63 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {cancel = id; okay = id; preferenceChanged = id; }; 
+            CLASS = AIListLayoutWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_extendedStatusVisible" = NSButton; 
+                "checkBox_horizontalAutosizing" = NSButton; 
+                "checkBox_serviceIconsVisible" = NSButton; 
+                "checkBox_statusIconsVisible" = NSButton; 
+                "checkBox_userIconVisible" = NSButton; 
+                "checkBox_verticalAutosizing" = NSButton; 
+                "checkBox_windowHasShadow" = NSButton; 
+                "fontField_contact" = JVFontPreviewField; 
+                "fontField_group" = JVFontPreviewField; 
+                "fontField_status" = JVFontPreviewField; 
+                "popUp_contactCellStyle" = NSPopUpButton; 
+                "popUp_contactTextAlignment" = NSPopUpButton; 
+                "popUp_extendedStatusPosition" = NSPopUpButton; 
+                "popUp_groupCellStyle" = NSPopUpButton; 
+                "popUp_groupTextAlignment" = NSPopUpButton; 
+                "popUp_serviceIconPosition" = NSPopUpButton; 
+                "popUp_statusIconPosition" = NSPopUpButton; 
+                "popUp_userIconPosition" = NSPopUpButton; 
+                "popUp_windowStyle" = NSPopUpButton; 
+                "slider_contactLeftIndent" = NSSlider; 
+                "slider_contactRightIndent" = NSSlider; 
+                "slider_contactSpacing" = NSSlider; 
+                "slider_groupBottomSpacing" = NSSlider; 
+                "slider_groupTopSpacing" = NSSlider; 
+                "slider_horizontalWidth" = NSSlider; 
+                "slider_userIconSize" = NSSlider; 
+                "slider_windowTransparency" = NSSlider; 
+                "textField_contactLeftIndent" = NSTextField; 
+                "textField_contactRightIndent" = NSTextField; 
+                "textField_contactSpacing" = NSTextField; 
+                "textField_groupBottomSpacing" = NSTextField; 
+                "textField_groupTopSpacing" = NSTextField; 
+                "textField_horizontalWidthIndicator" = NSTextField; 
+                "textField_horizontalWidthText" = NSTextField; 
+                "textField_layoutName" = NSTextField; 
+                "textField_userIconSize" = NSTextField; 
+                "textField_windowTransparency" = NSTextField; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {chooseFontWithFontPanel = id; selectFont = id; }; 
+            CLASS = JVFontPreviewField; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTextField; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

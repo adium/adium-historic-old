@@ -1,0 +1,40 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIAccountController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"view_accountPreferences" = NSView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = AICLPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_customGroupColor" = NSButton; 
+                "colorWell_group" = NSColorWell; 
+                "view_prefViewGroups" = NSView; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {
+            CLASS = AIMTOC2Service; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"view_preferences" = NSView; }; 
+            SUPERCLASS = AIService; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIPlugin; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
+        {CLASS = AIService; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}
