@@ -98,8 +98,8 @@
     NSAttributedString  *entry = nil;
 	NSString			*currentNotes;
     
-	if((currentNotes = [inObject statusObjectForKey:@"Notes"]) ||
-	   (currentNotes = [inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES])){
+	if((currentNotes = [inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES] ||)
+		(currentNotes = [inObject statusObjectForKey:@"Notes"])){
         entry = [[NSAttributedString alloc] initWithString:currentNotes];
     }
     
