@@ -1204,7 +1204,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Configure libgaim's proxy settings using the current system values
 - (void)configureAccountProxyNotifyingTarget:(id)target selector:(SEL)selector
 {
-	NSLog(@"configureAccountProxyNotifyingTarget");
 	GaimProxyInfo		*proxy_info;
 	GaimProxyType		gaimAccountProxyType;
 	
