@@ -115,8 +115,9 @@
     messageDelayTimer = nil;
 	
     //Defaults
-    NSString 	*path = [[NSBundle bundleForClass:[self class]] pathForResource:TOC2_DEFAULTS_FILE ofType:@"plist"];
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:path] forGroup:GROUP_ACCOUNT_STATUS];
+	//Register our default preferences and install our preference views
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TOC2_DEFAULTS_FILE forClass:[self class]]
+										  forGroup:GROUP_ACCOUNT_STATUS];
 }
 
 // AIAccount_Handles ---------------------------------------------------------------------------
@@ -766,7 +767,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.128 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.129 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)

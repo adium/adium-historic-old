@@ -2,9 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Host</key>
+	<key>TOC2 Host</key>
 	<string>toc.oscar.aol.com</string>
-	<key>Port</key>
+	<key>TOC2 Port</key>
 	<string>9898</string>
 	<key>FullName</key>
 	<string></string>
