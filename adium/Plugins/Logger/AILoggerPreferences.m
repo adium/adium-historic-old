@@ -52,7 +52,7 @@
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
 
         [checkBox_enableLogging setState:[[preferenceDict objectForKey:KEY_LOGGER_ENABLE] boolValue]];
-		[checkBox_enableHTML setState:[[preferenceDict objectForKey:KEY_LOGGER_HTML] boolValue]];
+		[checkBox_enableHTML setState:![[preferenceDict objectForKey:KEY_LOGGER_HTML] boolValue]];
     }
 }
 
@@ -64,7 +64,7 @@
                                              forKey:KEY_LOGGER_ENABLE
                                               group:PREF_GROUP_LOGGING];
     } else if(sender == checkBox_enableHTML) {
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:![sender state]]
                                              forKey:KEY_LOGGER_HTML
                                               group:PREF_GROUP_LOGGING];
     }
