@@ -24,6 +24,9 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
 - (BOOL)windowShouldClose:(id)sender;
 - (void)_adiumDuckOptionClicked;
+- (NSString *)_applicationVersion;
+- (void)_loadBuildInformation;
+- (NSArray *)_availableAvatars;
 @end
 
 @implementation LNAboutBoxController
@@ -46,20 +49,6 @@ LNAboutBoxController *sharedInstance = nil;
     numberOfDuckClicks = -1;
     owner = [inOwner retain];
     
-    buildDate = @"-1";
-    buildNumber = @"-1";
-    char *path, date[256], num[256];
-    if(path = (char *)[[[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil] fileSystemRepresentation])
-    {
-        FILE *f = fopen(path, "r");
-        fscanf(f, "%s | %s", num, date);
-        fclose(f);
-        if(*num)
-            buildNumber = [[NSString stringWithFormat:@"Build Number: %s", num] retain];
-        if(*date)
-            buildDate = [[NSString stringWithFormat:@"Build Date: %s", date] retain];
-    }
-    
     return(self);
 }
 
@@ -78,43 +67,25 @@ LNAboutBoxController *sharedInstance = nil;
 //Prepare the about box window
 - (void)windowDidLoad
 {
-    //Get the directory listing of avatars and put in the avatarArray
-    NSString 	*avatarName;
-    NSString 	*avatarPath;
-    NSArray 	*avatarList;
-    avatarArray = [[NSMutableArray alloc] init];
-    avatarPath = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_RESOURCES] stringByExpandingTildeInPath];
+    NSAttributedString		*creditsString;
+    
+    //Load our build information and avatar list
+    [self _loadBuildInformation];
+    avatarArray = [[self _availableAvatars] retain];
 
+    //Credits
+    creditsString = [[[NSAttributedString alloc] initWithPath:[[NSBundle mainBundle] pathForResource:@"Credits.rtf" ofType:nil] documentAttributes:nil] autorelease];
+    [[textView_credits textStorage] setAttributedString:creditsString];
 
-    avatarList = [[NSFileManager defaultManager] directoryContentsAtPath:avatarPath];
-    int loop;
-    for(loop = 0;loop < [avatarList count];loop++){
-        avatarName = [avatarList objectAtIndex:loop];
-        [avatarArray addObject:[avatarPath stringByAppendingPathComponent:avatarName]];
-    }
-
-    //Set up the link
-    NSAttributedString		*siteLink;
-    NSDictionary		*attributes;
-
-    attributes = [NSDictionary dictionaryWithObjectsAndKeys:ADIUM_SITE_LINK, NSLinkAttributeName,
-        [NSFont cachedFontWithName:@"Lucida Grande" size:14], NSFontAttributeName,
-        [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment], NSParagraphStyleAttributeName,
-        [NSNumber numberWithInt:1], NSUnderlineStyleAttributeName, nil];
-
-    siteLink = [[NSAttributedString alloc] initWithString:ADIUM_LINK_TEXT attributes:attributes];
-
-    [[linkTextView_siteLink enclosingScrollView] setDrawsBackground:NO];
-    [linkTextView_siteLink setDrawsBackground:NO];
-    [linkTextView_siteLink setEditable:NO];
-    [linkTextView_siteLink setShowTooltip:NO];
-    [[linkTextView_siteLink textStorage] setAttributedString:siteLink];
-    [linkTextView_siteLink resetCursorRects];
-
-    [siteLink release];
-
+    //Start scrolling    
+    scrollLocation = 0; 
+    maxScroll = [[textView_credits textStorage] size].height - [[textView_credits enclosingScrollView] documentVisibleRect].size.height;
+    scrollTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/20.0) target:self selector:@selector(scrollTimer:) userInfo:nil repeats:YES] retain];
+    
+    //Setup the build date / version
     [button_buildButton setTitle:buildDate];
-
+    [textField_version setStringValue:[self _applicationVersion]];
+    
     [[self window] center];
 }
 
@@ -130,20 +101,36 @@ LNAboutBoxController *sharedInstance = nil;
 - (BOOL)windowShouldClose:(id)sender
 {
     [sharedInstance autorelease]; sharedInstance = nil;
+    [scrollTimer invalidate]; [scrollTimer release]; scrollTimer = nil;
 
     return(YES);
+}
+
+//Scroll credits
+- (void)scrollTimer:(NSTimer *)scrollTimer
+{    
+    if([[textView_credits window] isMainWindow]){
+	scrollLocation += 1.0;
+	if(scrollLocation > maxScroll) scrollLocation = 0;    
+	[textView_credits scrollPoint:NSMakePoint(0, scrollLocation)];
+    }
+}
+
+//Visit the Adium homepage
+- (IBAction)visitHomepage:(id)sender
+{
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://www.adiumx.com"]];
 }
 
 //Flap or transition the duck when clicked
 - (IBAction)adiumDuckClicked:(id)sender
 {
-
     numberOfDuckClicks++;
 
     if([NSEvent optionKey]){
         [self _adiumDuckOptionClicked];
+	
     }else{
-
         if(previousKeyWasOption){
             [button_duckIcon setImage:[AIImageUtilities imageNamed:@"Awake" forClass:[self class]]];
             [button_duckIcon setAlternateImage:[AIImageUtilities imageNamed:@"Flap" forClass:[self class]]];
@@ -162,10 +149,11 @@ LNAboutBoxController *sharedInstance = nil;
 //Toggle build date/number display
 - (IBAction)buildFieldClicked:(id)sender
 {
-    if((++numberOfBuildFieldClicks)%2 == 0)
+    if((++numberOfBuildFieldClicks) % 2 == 0){
         [button_buildButton setTitle:buildDate];
-    else
-        [button_buildButton setTitle:buildNumber];
+    }else{
+	[button_buildButton setTitle:buildNumber];
+    }
 }
 
 //Transition the duck to a new avatar
@@ -187,6 +175,66 @@ LNAboutBoxController *sharedInstance = nil;
 
         [[owner soundController] playSoundNamed:@"/Aquatech/Ghost Hiss.aiff"];  
     }
+}
+
+//Returns the current version of Adium
+- (NSString *)_applicationVersion
+{
+    NSDictionary    *infoDict = [[NSBundle mainBundle] infoDictionary];
+    NSString	    *version = [infoDict objectForKey:@"CFBundleVersion"];
+
+    return([NSString stringWithFormat:@"Adium %@",(version ? version : @"")]);
+}
+
+//Returns an array of available avatar filenames
+- (NSArray *)_availableAvatars
+{
+    NSMutableArray	    *outArray = [NSMutableArray array];
+    NSString		    *avatarPath;
+    NSDirectoryEnumerator   *enumerator;
+    NSString		    *avatarName;
+    
+    //Get the directory listing
+    avatarPath = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_RESOURCES] stringByExpandingTildeInPath];
+    enumerator = [[NSFileManager defaultManager] enumeratorAtPath:avatarPath];
+
+    //Filter out any invalid
+    while(avatarName = [enumerator nextObject]){
+	if(![avatarName hasPrefix:@"."]){
+	    [outArray addObject:[avatarPath stringByAppendingPathComponent:avatarName]];
+	}
+    }
+
+    return(outArray);
+}
+
+//Load the current build date and our cryptic, non-sequential build number ;)
+- (void)_loadBuildInformation
+{
+    //Grab the info from our buildnum script
+    char *path, unixDate[256], num[256];
+    if(path = (char *)[[[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil] fileSystemRepresentation])
+    {
+        FILE *f = fopen(path, "r");
+        fscanf(f, "%s | %s", num, unixDate);
+        fclose(f);
+	
+        if(*num){
+            buildNumber = [[NSString stringWithFormat:@"%s", num] retain];
+	}
+	
+	if(*unixDate){
+	    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%B %e, %Y" allowNaturalLanguage:NO] autorelease];
+            NSDate	    *date;
+	    
+	    date = [NSDate dateWithTimeIntervalSince1970:[[NSString stringWithCString:unixDate] doubleValue]];
+            buildDate = [[dateFormatter stringForObjectValue:date] retain];
+	}
+    }
+
+    //Default to empty strings if something goes wrong
+    if(!buildDate) buildDate = [@"" retain];
+    if(!buildNumber) buildNumber = [@"" retain];
 }
 
 @end
