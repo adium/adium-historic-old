@@ -18,8 +18,7 @@
     IBOutlet    NSButton        *checkBox_showUserIcons;
     IBOutlet    NSButton        *checkBox_combineMessages;
     
-    IBOutlet    NSButton        *checkBox_ignoreTextColor;
-    IBOutlet    NSButton        *checkBox_ignoreBackgroundColor;
+    IBOutlet    NSButton        *checkBox_ignoreTextStyles;
     
     IBOutlet    NSPopUpButton   *popUp_timeStamps;
     IBOutlet    NSPopUpButton   *popUp_prefixFormat;

@@ -30,8 +30,7 @@
     NSColor			*incomingSourceColor;
     NSColor			*incomingLightSourceColor;
 
-    BOOL			ignoreTextColor;
-    BOOL			ignoreBackgroundColor;
+    BOOL			ignoreTextStyles;
     
     NSString			*prefixIncoming;
     NSString			*prefixOutgoing;
