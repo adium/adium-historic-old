@@ -1,6 +1,6 @@
 //
 //  ESUserIconHandlingPlugin.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Fri Feb 20 2004.
 //
