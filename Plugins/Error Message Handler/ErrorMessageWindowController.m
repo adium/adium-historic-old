@@ -33,6 +33,8 @@
 *   returns the shared instance of AIErrorController
 */
 static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
+//static NSDictionary					*boldErrorTitleAttributes = nil;
+
 + (id)errorMessageWindowController
 {
     if(!sharedErrorMessageInstance){
@@ -102,6 +104,14 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
     //init
     [super initWithWindowNibName:windowNibName];
 
+	/*
+	if(!boldErrorTitleAttributes){
+		boldErrorTitleAttributes = [[NSDictionary dictionaryWithObject:[[NSFontManager defaultManager] convertFont:[NSFont systemFontOfSize:0] 
+																									   toHaveTrait:NSBoldFontMask]
+																forKey:NSFontAttributeName] retain];
+	}
+	*/
+	
     errorTitleArray = [[NSMutableArray alloc] init];
     errorDescArray =  [[NSMutableArray alloc] init];
     errorWindowTitleArray = [[NSMutableArray alloc] init];
@@ -122,21 +132,31 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 {
     NSRect	frame = [[self window] frame];
     int		heightChange;
-    
-    //Display the current error message
-    [textField_errorTitle setStringValue:[errorTitleArray objectAtIndex:0]];
-    [textView_errorInfo setString:[errorDescArray objectAtIndex:0]];
 
-    //Resize the window to fit the error message
-    [textView_errorInfo sizeToFit];
-    heightChange = [textView_errorInfo frame].size.height - [scrollView_errorInfo documentVisibleRect].size.height;
+    //Display the current error title
+	NSString	*title = [errorTitleArray objectAtIndex:0];
+    [textView_errorTitle setString:title];
 
-    frame.size.height += heightChange;
+	//Resize the window frame to fit the error title
+	[textView_errorTitle sizeToFit];
+	heightChange = [textView_errorTitle frame].size.height - [scrollView_errorTitle documentVisibleRect].size.height;
+	frame.size.height += heightChange;
+	frame.origin.y -= heightChange;
+
+	//Display the message
+	[textView_errorInfo setString:[errorDescArray objectAtIndex:0]];
+
+	//Resize the window frame to fit the error message
+	[textView_errorInfo sizeToFit];
+	heightChange = [textView_errorInfo frame].size.height - [scrollView_errorInfo documentVisibleRect].size.height;
+	frame.size.height += heightChange;
     frame.origin.y -= heightChange;
+	
+	//Perform the window resizing as needed
 	if ([NSApp isOnPantherOrBetter]){
 		[[self window] setFrame:frame display:YES animate:YES];
 	}else{
-		[[self window] setFrame:frame display:YES];
+		[[self window] setFrame:frame display:YES]; //animate:YES can crash in 10.2
 	}
 
     //Display the current error count
@@ -164,11 +184,15 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 // called after the about window loads, so we can set up the window before it's displayed
 - (void)windowDidLoad
 {
-    //Setup the textview
+    //Setup the textviews
+    [textView_errorTitle setHorizontallyResizable:NO];
+    [textView_errorTitle setVerticallyResizable:YES];
+    [textView_errorTitle setDrawsBackground:NO];
+    [scrollView_errorTitle setDrawsBackground:NO];
+	
     [textView_errorInfo setHorizontallyResizable:NO];
     [textView_errorInfo setVerticallyResizable:YES];
     [textView_errorInfo setDrawsBackground:NO];
-
     [scrollView_errorInfo setDrawsBackground:NO];
 }
 
