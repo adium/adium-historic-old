@@ -34,6 +34,11 @@
 - (void)accountConvUpdated:(GaimConversation*)conv type:(GaimConvUpdateType)type;
 - (void)accountConvReceivedIM:(const char*)message inConversation:(GaimConversation*)conv withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
 - (void)accountConvReceivedChatMessage:(const char*)message inConversation:(GaimConversation*)conv from:(const char *)source withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
+- (void)accountConvAddedUser:(const char *)user inConversation:(GaimConverastion *)conv;
+- (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConverastion *)conv;
+- (void)accountConvRemovedUser:(const char *)user inConversation:(GaimConverastion *)conv;
+- (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConverastion *)conv;
+
 //accountXfer methods
 - (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer;
 - (void)accountXferUpdateProgress:(GaimXfer *)xfer percent:(float)percent;

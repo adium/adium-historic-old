@@ -36,7 +36,7 @@
 - (NSString *)_mapIncomingGroupName:(NSString *)name;
 - (NSString *)_mapOutgoingGroupName:(NSString *)name;
 - (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy;
-- (void)_sendMessage:(const char *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags time:(time_t)mtime;
+- (void)_receivedMessage:(const char *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags time:(time_t)mtime;
 @end
 
 @implementation CBGaimAccount
@@ -463,7 +463,7 @@
 	//Clear the typing flag of the listContact
 	[self setTypingFlagOfContact:sourceContact to:NO];
 	
-	[self _sendMessage:message inChat:chat fromListContact:sourceContact flags:flags time:mtime];
+	[self _receivedMessage:message inChat:chat fromListContact:sourceContact flags:flags time:mtime];
 }
 
 
@@ -504,10 +504,10 @@
 														accountID:[self uniqueObjectID]
 															  UID:[sourceUID compactedString]];
 	
-	[self _sendMessage:message inChat:chat fromListContact:sourceContact flags:flags time:mtime];
+	[self _receivedMessage:message inChat:chat fromListContact:sourceContact flags:flags time:mtime];
 }
 
-- (void)_sendMessage:(const char *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags time:(time_t)mtime
+- (void)_receivedMessage:(const char *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags time:(time_t)mtime
 {
 	NSString				*bodyString;
 	
@@ -581,6 +581,25 @@
 	
 	return ([newString autorelease]);
 }
+
+#pragma mark GaimConversation User Lists
+- (void)accountConvAddedUser:(const char *)user inConversation:(GaimConverastion *)conv
+{
+	NSLog(@"added user %s in conversation %s (%@)",user,conv->name,conv->ui_data);
+}
+- (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConverastion *)conv
+{
+	NSLog(@"added a whole list!");
+}
+- (void)accountConvRemovedUser:(const char *)user inConversation:(GaimConverastion *)conv
+{
+	NSLog(@"removed user %s in conversation %s (%@)",user,conv->name,conv->ui_data);	
+}
+- (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConverastion *)conv
+{
+	NSLog(@"removed a whole list!");
+}
+
 
 /********************************/
 /* AIAccount subclassed methods */
@@ -726,8 +745,15 @@
 	if (listObject) {
 		//Associate our chat with the libgaim conversation
 		if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
+			
+			//Evan: Temporary asserts
+			NSAssert (account != nil, @"openChat: account was nil");
+			NSAssert (listObject != nil, @"openChat: listObject was nil");
+			NSAssert ([listObject UID] != nil, @"openChat: [listObject UID] was nil");
+			NSAssert ([[listObject UID] UTF8String] != nil, @"openChat: [[listObject UID] UTF8String] was nil");
+			
 			GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_IM, account, [[listObject UID] UTF8String]);
-			NSAssert(conv != nil, @"gaim_conversation_new returned nil");
+			NSAssert(conv != nil, @"openChat: GAIM_CONV_IM: gaim_conversation_new returned nil");
 			
 			conv->ui_data = chat;
 			[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
@@ -777,7 +803,7 @@
 			//Associate our chat with the libgaim conversation
 			if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
 				GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
-				NSAssert(conv != nil, @"gaim_conversation_new returned nil");
+				NSAssert(conv != nil, @"openChat: GAIM_CONV_CHAT: gaim_conversation_new returned nil");
 				
 				[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
 				conv->ui_data = chat;
@@ -1369,11 +1395,13 @@
 	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
 	
 	//Configure libgaim's proxy settings
-//	[self configureAccountProxy];
+	[self configureAccountProxy];
 	
 	//Set password and connect
 	gaim_account_set_password(account, [password UTF8String]);
+	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Initiating connection.");
 	gc = gaim_account_connect(account);
+	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Done initiating connection.");
 }
 
 //Configure libgaim's proxy settings using the current system values
