@@ -16,16 +16,16 @@
 - (void)installPlugin
 {
     disconnectItem = [[[NSMenuItem alloc] initWithTitle:DISCONNECT_MENU_TITLE
-                                                target:self
-                                                action:@selector(disconnectAll:)
-                                         keyEquivalent:@"K"] autorelease];
+												 target:self
+												 action:@selector(disconnectAll:)
+										  keyEquivalent:@"K"] autorelease];
     
     connectItem = [[[NSMenuItem alloc] initWithTitle:CONNECT_MENU_TITLE
                                               target:self
                                               action:@selector(connectAll:)
                                        keyEquivalent:@"k"] autorelease];
     [connectItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
-
+	
     [[adium menuController] addMenuItem:connectItem toLocation:LOC_File_Accounts];
     [[adium menuController] addMenuItem:disconnectItem toLocation:LOC_File_Accounts];
 }

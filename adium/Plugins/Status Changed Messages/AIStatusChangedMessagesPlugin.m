@@ -30,8 +30,8 @@
     [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusAwayNo:) name:@"Contact_StatusAwayNo" object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusOnlineYes:) name:@"Contact_StatusOnlineYes" object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusOnlineNO:) name:@"Contact_StatusOnlineNO" object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusIdleYes:) name:@"Contact_StatusIdleYes" object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusIdleNo:) name:@"Contact_StatusIdleNo" object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusIdleYes:) name:CONTACT_STATUS_IDLE_YES object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusIdleNo:) name:CONTACT_STATUS_IDLE_NO object:nil];
 }
 
 //Catch away message changes and display them
