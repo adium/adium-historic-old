@@ -212,7 +212,7 @@
 			buildStyles = (
 				4A9504CCFFE6A4B311CA0CBA,
 				4A9504CDFFE6A4B311CA0CBA,
-				34B4B64B0708B5E4002C4C6D,
+				342E171507284F310054D77A,
 			);
 			hasScannedForEncodings = 1;
 			isa = PBXProject;
@@ -391,6 +391,7 @@
 			children = (
 				34086A7705E5E42500ABB759,
 				34086A7805E5E42600ABB759,
+				342E17EA072869610054D77A,
 			);
 			isa = PBXGroup;
 			name = "User Icon Handling";
@@ -1424,6 +1425,38 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		342E171507284F310054D77A = {
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_DYNAMIC_NO_PIC = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				OTHER_CFLAGS = "-DCRASH_REPORTER -DADIUM_COMPONENTS -DDEBUG_BUILD";
+				ZERO_LINK = NO;
+			};
+			isa = PBXBuildStyle;
+			name = "Deployment-Debug";
+		};
+		342E17EA072869610054D77A = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = userIconToolbar.png;
+			path = "Plugins/User Icon Handling/userIconToolbar.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342E17EB072869610054D77A = {
+			fileRef = 342E17EA072869610054D77A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34327BD6060D2FE6003D7AD9 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1733,8 +1766,8 @@
 				34415B9C059FA8DF0019246B,
 				34E3C8870638D40500AA3EF7,
 				34E3C8880638D40500AA3EF7,
-				348D8D1A06CC079F00449EBB,
 				348D8D1B06CC079F00449EBB,
+				348D8D1A06CC079F00449EBB,
 				34B919C9062DEF15004F1223,
 				34B919CA062DEF15004F1223,
 				4BAFD5A106E00AD200FF7FBC,
@@ -2772,7 +2805,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#current\nif ([ -e \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current\" ]); then\nrm -r \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current\"\nfi\n\nmkdir  \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current\"\n\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Headers\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Headers\"\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Libgaim\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Libgaim\"\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Resources\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Resources\"\n\n#Root\nif ([ -e \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Headers\" ]); then\nrm -r \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Headers\"\nfi\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Headers\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Headers\"\n\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Libgaim\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Libgaim\"\n\nif ([ -e \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Resources\" ]); then\nrm -r \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Resources\"\nfi\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Resources\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Resources\"\n";
+			shellScript = "#current\nif ([ -e \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current\" ]); then\nrm -rf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current\"\nfi\n\nmkdir  \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current\"\n\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Headers\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Headers\"\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Libgaim\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Libgaim\"\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/A/Resources\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Resources\"\n\n#Root\nif ([ -e \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Headers\" ]); then\nrm -rf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Headers\"\nfi\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Headers\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Headers\"\n\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Libgaim\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Libgaim\"\n\nif ([ -e \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Resources\" ]); then\nrm -rf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Resources\"\nfi\nln -sf \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Versions/Current/Resources\" \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework/Resources\"\n";
 		};
 		344ECBA90620F323007256C6 = {
 			isa = PBXFileReference;
@@ -5268,14 +5301,6 @@
 			settings = {
 			};
 		};
-		34B4B64B0708B5E4002C4C6D = {
-			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OTHER_CFLAGS = "-DCRASH_REPORTER -DADIUM_COMPONENTS -DDEBUG_BUILD";
-			};
-			isa = PBXBuildStyle;
-			name = "Deployment-Debug";
-		};
 		34B5875A058D801D00E7EF0D = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -6071,6 +6096,7 @@
 				34F6A9330710E20000F485C4,
 				34F6A9340710E20000F485C4,
 				34A273AB0721E58F004F3455,
+				342E17EB072869610054D77A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9729,7 +9755,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "-DDEVELOPMENT_BUILD -DADIUM_COMPONENTS -DDEBUG_BUILD";
+				OTHER_CFLAGS = "-DADIUM_COMPONENTS -DDEBUG_BUILD";
 				PRECOMP_DESTINATION_DIR = "";
 				ZERO_LINK = YES;
 			};
