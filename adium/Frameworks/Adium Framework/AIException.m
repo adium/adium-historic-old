@@ -26,6 +26,8 @@
     //Hack for an inexplicable exception we don't seem to be able to fix
     if ((![self reason]) || ([[self reason] isEqualToString:@"_sharedInstance is invalid."])) {
         [super raise];
+    } if ((![self name]) || ([[self name] isEqualToString:@"GIFReadingException"])) {
+	[super raise];
     } else {
         NSDictionary    *dict = [self userInfo];
         NSString        *stackTrace = nil;
