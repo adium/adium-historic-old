@@ -176,7 +176,18 @@ DeclareString(FormattedUID);
 	}
 }
 
-//Returns our desired placement within a group
+//Returns the group this contact is ultimately within, traversing any other containing objects to find it
+- (AIListGroup *)parentGroup
+{
+	AIListObject	*parentGroup = [[[adium contactController] parentContactForListObject:self] containingObject];
+	if (parentGroup && [parentGroup isKindOfClass:[AIListGroup class]]){
+		return((AIListGroup *)parentGroup);
+	}else{
+		return(nil);
+	}
+}
+	
+	//Returns our desired placement within a group
 - (float)orderIndex
 {
 	return(orderIndex);
@@ -508,6 +519,7 @@ DeclareString(FormattedUID);
 	if([alias length] == 0) alias = nil; 
 	
 	NSString	*oldAlias = [self preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES];
+	NSLog(@"Alias: %@ ; oldAlias: %@",alias,oldAlias);
 	if ((!alias && oldAlias) ||
 		(alias && !([alias isEqualToString:oldAlias]))){
 		//Save the alias
