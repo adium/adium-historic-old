@@ -612,7 +612,7 @@ typedef enum {
     IBOutlet	NSMenuItem	*menu_Contact_Action;
     IBOutlet	NSMenuItem	*menu_Contact_NegativeAction;
     IBOutlet	NSMenuItem	*menu_Contact_Additions;
-    IBOutlet	NSMenuItem	*menu_Dock_Status;
+    IBOutlet	id		menu_Dock_Status;
         
     NSMutableArray		*locationArray;
 
