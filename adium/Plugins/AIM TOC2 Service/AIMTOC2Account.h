@@ -50,6 +50,7 @@
     NSTimeInterval	pingInterval;
     NSDate		*firstPing;
 
+    BOOL		waitingForFirstUpdate;
     BOOL		processingSignOnUpdates;
     int			numberOfSignOnUpdates;
 }

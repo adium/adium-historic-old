@@ -101,6 +101,9 @@
 {
     [[owner contactController] setHoldContactListUpdates:YES]; //Hold contact list updates
 
+    //Post a handles changed notification
+    [[owner notificationCenter] postNotificationName:Account_HandlesChanged object:inAccount];
+    
     //Rebuild the list
     [self breakDownContactList]; //Move existing contacts into the abandoned contact dict
     [self _handlesChangedForAccount:inAccount]; //Build the new contact list
