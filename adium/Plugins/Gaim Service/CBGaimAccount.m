@@ -357,6 +357,8 @@
             }
             listContact = [self contactAssociatedWithBuddy:buddy];
         }
+		
+		NSAssert(listContact != nil, @"contactAssociatedWithBuddy must have failed?");
         // Need to start a new chat, associating with the gaim conv
         chat = [[adium contentController] chatWithContact:listContact
 											initialStatus:[NSDictionary dictionaryWithObject:[NSValue valueWithPointer:conv]
@@ -364,6 +366,7 @@
 		// Associate the gaim conv with the AIChat
 		conv->ui_data = chat;
 		
+		NSAsset(chat != nil, @"failed to generate a chat");		
     } else  {
         NSAssert(listContact != nil, @"Existing chat yet no existing handle?");
     }
