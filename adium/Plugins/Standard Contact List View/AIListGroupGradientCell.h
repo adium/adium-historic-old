@@ -12,4 +12,6 @@
 
 }
 
+- (AIGradient *)backgroundGradient;
+
 @end

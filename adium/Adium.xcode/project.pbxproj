@@ -5190,6 +5190,8 @@
 				4B1EE92706B7E22A00A919E9,
 				4BD6F0B906B988AC002AB122,
 				4B12D41A06B9C93600186CDD,
+				4BF28D5606BA954C00B3FE6F,
+				4BF28D6006BA9AA600B3FE6F,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5837,6 +5839,8 @@
 				4B1EE92806B7E22A00A919E9,
 				4BD6F0BA06B988AC002AB122,
 				4B12D41B06B9C93600186CDD,
+				4BF28D5706BA954C00B3FE6F,
+				4BF28D6106BA9AA600B3FE6F,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15929,12 +15933,16 @@
 				4BF002CD06B55FCF00C32219,
 				4B1EE91D06B7E22900A919E9,
 				4B1EE91E06B7E22900A919E9,
+				4BF28D5E06BA9AA600B3FE6F,
+				4BF28D5F06BA9AA600B3FE6F,
 				4B12D41806B9C93600186CDD,
 				4B12D41906B9C93600186CDD,
 				4B1EE91F06B7E22900A919E9,
 				4B1EE92006B7E22900A919E9,
 				4B1EE92106B7E22900A919E9,
 				4B1EE92206B7E22900A919E9,
+				4BF28D5406BA954C00B3FE6F,
+				4BF28D5506BA954C00B3FE6F,
 			);
 			isa = PBXGroup;
 			name = "BASE CLASSES";
@@ -18739,6 +18747,66 @@
 			path = "Frameworks/AIUtilities Framework/AIFlexibleTableTextCell.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BF28D5406BA954C00B3FE6F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIListGroupMockieCell.h;
+			path = "Plugins/Standard Contact List View/AIListGroupMockieCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF28D5506BA954C00B3FE6F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIListGroupMockieCell.m;
+			path = "Plugins/Standard Contact List View/AIListGroupMockieCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF28D5606BA954C00B3FE6F = {
+			fileRef = 4BF28D5406BA954C00B3FE6F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF28D5706BA954C00B3FE6F = {
+			fileRef = 4BF28D5506BA954C00B3FE6F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF28D5E06BA9AA600B3FE6F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIListContactBrickCell.h;
+			path = "Plugins/Standard Contact List View/AIListContactBrickCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF28D5F06BA9AA600B3FE6F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIListContactBrickCell.m;
+			path = "Plugins/Standard Contact List View/AIListContactBrickCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF28D6006BA9AA600B3FE6F = {
+			fileRef = 4BF28D5E06BA9AA600B3FE6F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF28D6106BA9AA600B3FE6F = {
+			fileRef = 4BF28D5F06BA9AA600B3FE6F;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BF2B70B048A82E900A8010A = {
 			isa = PBXFileReference;

@@ -19,6 +19,8 @@
 #import "AIListGroupGradientCell.h"
 #import "AIListContactCell.h"
 #import "AIListContactBubbleCell.h"
+#import "AIListGroupMockieCell.h"
+#import "AIListContactBrickCell.h"
 
 #define CONTACT_LIST_WINDOW_NIB				@"ContactListWindow"		//Filename of the contact list window nib
 #define CONTACT_LIST_WINDOW_TRANSPARENT_NIB @"ContactListWindowTransparent" //Filename of the minimalist transparent version
@@ -48,9 +50,11 @@
 
 
 
+#define CONTACTS_USE_MOCKIE_CELL YES
 #define CONTACTS_USE_BUBBLE_CELL YES
 
-#define GROUPS_USE_GRADIENT_CELL		NO
+#define GROUPS_USE_MOCKIE_CELL		YES 
+#define GROUPS_USE_GRADIENT_CELL	YES
 #define DRAW_ALTERNATING_GRID	NO
 #define ALTERNATING_GRID_COLOR	[NSColor colorWithCalibratedRed:0.926 green:0.949 blue:0.992 alpha:1.0]
 
@@ -128,8 +132,19 @@
 	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
 	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[AIListContactCell alloc] init]];	
 
-	[contactListView setContentCell:(CONTACTS_USE_BUBBLE_CELL ? [[AIListContactBubbleCell alloc] init] : [[AIListContactCell alloc] init])];
-	[contactListView setGroupCell:(GROUPS_USE_GRADIENT_CELL ? [[AIListGroupGradientCell alloc] init] : [[AIListGroupCell alloc] init])];	
+
+	if(GROUPS_USE_MOCKIE_CELL){
+		[contactListView setGroupCell:[[AIListGroupMockieCell alloc] init]];	
+	}else{
+		[contactListView setGroupCell:(GROUPS_USE_GRADIENT_CELL ? [[AIListGroupGradientCell alloc] init] : [[AIListGroupCell alloc] init])];	
+	}
+
+	if(CONTACTS_USE_MOCKIE_CELL){
+		[contactListView setContentCell:[[AIListContactBrickCell alloc] init]];
+	}else{
+		[contactListView setContentCell:(CONTACTS_USE_BUBBLE_CELL ? [[AIListContactBubbleCell alloc] init] : [[AIListContactCell alloc] init])];
+	}
+	
 	
     [contactListView setTarget:self];
 	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
