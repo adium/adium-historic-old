@@ -90,24 +90,14 @@ BOOL pantherOrLater;
     NSPoint         buddyIconPoint;
     NSRect          buddyIconLabelRect, buddyNameRect, buddyStatusRect, queueRect;
     NSString        *tempString;
-    NSShadow        *tempShadow;
+    NSShadow        *tempShadow = [[[NSShadow alloc] init] autorelease];
+    NSShadow        *noShadow = [[[NSShadow alloc] init] autorelease];
     
     // Clear the view and paint the backdrop image
     [[NSColor clearColor] set];
     NSRectFill([self frame]);
     [backdropImage compositeToPoint: NSZeroPoint operation:NSCompositeSourceOver];
-    
-    // Set up the shadow for Panther or later
-    if (pantherOrLater) {
-        NSSize      shadowSize;
-        tempShadow = [[[NSShadow alloc] init] autorelease];
-        shadowSize.width = 0.0;
-        shadowSize.height = -3.0;
-        [tempShadow setShadowOffset:shadowSize];
-        [tempShadow setShadowBlurRadius:5.0];
-        [tempShadow set];
-    }
-    
+        
     // Set up the Rects
     if (queueField && (![queueField isEqualToString:@""])) {
         // Buddy Icon Image and label
@@ -131,24 +121,49 @@ BOOL pantherOrLater;
         queueRect = NSMakeRect(0.0,0.0,0.0,0.0);
     }
     
+    
+    // Set up the shadow for Panther or later
+    if (pantherOrLater) {
+        NSSize      shadowSize;
+        shadowSize.width = 0.0;
+        shadowSize.height = -3.0;
+        [tempShadow setShadowOffset:shadowSize];
+        [tempShadow setShadowBlurRadius:5.0];
+        shadowSize.width = 0.0;
+        shadowSize.height = 0.0;
+        [noShadow setShadowOffset:shadowSize];
+        [noShadow setShadowBlurRadius:0.0];
+}
+
     // Paint the buddy icon or placeholder
     if (buddyIconLabelColor) {
-        [buddyIconLabelColor set];
-        [NSBezierPath fillRect:buddyIconLabelRect];
-        [[NSColor whiteColor] set];
-        [NSBezierPath fillRect: NSMakeRect(buddyIconPoint.x, buddyIconPoint.y, 48.0,48.0)];
-	
-	if(pantherOrLater) {
-            NSSize      shadowSize;
-            shadowSize.width = 0.0;
-            shadowSize.height = 0.0;
-            [tempShadow setShadowOffset:shadowSize];
-            [tempShadow setShadowBlurRadius:0.0];
+        if(pantherOrLater) {
             [tempShadow set];
         }
+        [buddyIconLabelColor set];
+        [NSBezierPath fillRect:buddyIconLabelRect];
+	
+	if(pantherOrLater) {
+            [noShadow set];
+        }
+        [[NSColor whiteColor] set];
+        [NSBezierPath fillRect: NSMakeRect(buddyIconPoint.x, buddyIconPoint.y, 48.0,48.0)];
+        [buddyIconImage compositeToPoint: buddyIconPoint operation:NSCompositeSourceOver];
+    } else {
+        if(pantherOrLater) {
+            [noShadow set];
+        }
+        [[NSColor whiteColor] set];
+        [NSBezierPath fillRect: NSMakeRect(buddyIconPoint.x, buddyIconPoint.y, 48.0,48.0)];
+        if(pantherOrLater) {
+            [tempShadow set];
+        }
+        [buddyIconImage compositeToPoint: buddyIconPoint operation:NSCompositeSourceOver];
     }
-    [buddyIconImage compositeToPoint: buddyIconPoint operation:NSCompositeSourceOver];
     if (buddyIconBadge) {
+	if(pantherOrLater) {
+            [noShadow set];
+        }
         [buddyIconBadge compositeToPoint: NSMakePoint(buddyIconPoint.x -6.0, buddyIconPoint.y - 6-0) operation:NSCompositeSourceOver];
     }
             
