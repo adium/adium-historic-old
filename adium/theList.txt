@@ -73,7 +73,7 @@ Minor Changes
 - Remove the advanced option for vertical resizing, this is already covered in the main preferences.
 + Allow user to have more control over what is spoken by the announcer plugin
 + Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
-+ Add dividers to view menu
+= Add dividers to view menu
 + Preference to place tabs on the top of the window (Make it look pretty)
 + Make option-clicking a tab close button close all other tabs
 # Make option-sending a message send the message to every tab in the current message window. (I know this could be useful).  Evan: This should be done via "/all" or something instead of option-send... that's too close to "insert a line break" for my tastes.
