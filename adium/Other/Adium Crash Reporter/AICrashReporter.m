@@ -104,8 +104,8 @@
 			crashLog = [newLog retain];
 			[[NSFileManager defaultManager] trashFileAtPath:inPath];
 			
-			//Strip off binary descriptions.. we don't need to send all that
-			binaryRange = [crashLog rangeOfString:@"Binary Images Description:"];
+			//Strip off PPC thread state and binary descriptions.. we don't need to send all that
+			binaryRange = [crashLog rangeOfString:@"PPC Thread State:"];
 			if(binaryRange.location != NSNotFound){
 				NSString	*shortLog = [crashLog substringToIndex:binaryRange.location];
 				[crashLog release]; crashLog = [shortLog retain];
