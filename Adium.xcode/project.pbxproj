@@ -6584,7 +6584,6 @@
 				4BAA1B610632EFE700D8B92C,
 				4BAA1B630632F00000D8B92C,
 				4B494B45063AB63000E2EF06,
-				4B6C3557063BF4B600D3819D,
 				34B9BD01064062170097AF93,
 				34B9BD02064062170097AF93,
 				349DDD12064066B500542726,
@@ -6702,6 +6701,8 @@
 				4BCAC4E507B59B65006641B9,
 				4BCAC4E607B59B65006641B9,
 				4BCAC4E707B59B65006641B9,
+				4BCAC51007B59D7F006641B9,
+				4BCAC56D07B5A31A006641B9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12726,7 +12727,6 @@
 		4B4F5B29042D63DC00A8010A = {
 			children = (
 				9E6417090613C564006AF387,
-				83DB8F21061145C400A5C28C,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -13022,18 +13022,12 @@
 			settings = {
 			};
 		};
-		4B5829D30613D0BD0004BD25 = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			path = Sounds;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B587C0507ABFC87001832A9 = {
 			children = (
 				34E29FCE07AF091C006735BC,
 				34E2A2FD07B0193B006735BC,
 				4B587C3707ABFCA8001832A9,
+				4BCAC53407B59F9C006641B9,
 			);
 			isa = PBXGroup;
 			name = "Happy Components";
@@ -13326,41 +13320,6 @@
 			lastKnownFileType = text.xml;
 			name = DockBehaviorDefaults.plist;
 			path = "Plugins/Global Events Preferences/DockBehaviorDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B6C3555063BF4B600D3819D = {
-			children = (
-				4B6C3556063BF4B600D3819D,
-				4B6C355D063BF52E00D3819D,
-			);
-			isa = PBXVariantGroup;
-			name = Localizable.strings;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B6C3556063BF4B600D3819D = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = English;
-			path = Strings/English.lproj/Localizable.strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B6C3557063BF4B600D3819D = {
-			fileRef = 4B6C3555063BF4B600D3819D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B6C355D063BF52E00D3819D = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = Spanish;
-			path = Strings/Spanish.lproj/Localizable.strings;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -16061,6 +16020,65 @@
 			settings = {
 			};
 		};
+		4BCAC50D07B59D7F006641B9 = {
+			children = (
+				4BCAC50E07B59D7F006641B9,
+				4BCAC50F07B59D7F006641B9,
+			);
+			isa = PBXVariantGroup;
+			name = Localizable.strings;
+			path = Resources/Strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC50E07B59D7F006641B9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = English;
+			path = English.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC50F07B59D7F006641B9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Spanish;
+			path = Spanish.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC51007B59D7F006641B9 = {
+			fileRef = 4BCAC50D07B59D7F006641B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCAC53407B59F9C006641B9 = {
+			children = (
+				83DB8F21061145C400A5C28C,
+			);
+			isa = PBXGroup;
+			name = Other;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC56C07B5A31A006641B9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = Sounds;
+			path = Resources/Sounds;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCAC56D07B5A31A006641B9 = {
+			fileRef = 4BCAC56C07B5A31A006641B9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BCB9B5E0567FF5D001D3559 = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.rtf;
@@ -17904,7 +17922,7 @@
 				4BF2E6B3067CB70E00743318,
 				4BB1E47D067F2E9F00D1DB86,
 				4BAFD5E806E00D1700FF7FBC,
-				4B5829D30613D0BD0004BD25,
+				4BCAC56C07B5A31A006641B9,
 				4BA62D7F06C51256001D6B3C,
 			);
 			includeInIndex = 0;
@@ -17925,7 +17943,6 @@
 				34A29DB706ED68C000E1366C,
 				4BF2EA3F067CB7A200743318,
 				4BF2EA40067CB7A200743318,
-				4BF2EA42067CB7A200743318,
 				4BB1E493067F2EAC00D1DB86,
 			);
 			isa = PBXCopyFilesBuildPhase;
@@ -17939,12 +17956,6 @@
 		};
 		4BF2EA40067CB7A200743318 = {
 			fileRef = 4BF2E6B3067CB70E00743318;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BF2EA42067CB7A200743318 = {
-			fileRef = 4B5829D30613D0BD0004BD25;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -20466,6 +20477,7 @@
 			);
 			isa = PBXGroup;
 			name = "Version Checker";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -22500,7 +22512,7 @@
 		};
 		F50A325A03B5798301A8010A = {
 			children = (
-				4B6C3555063BF4B600D3819D,
+				4BCAC50D07B59D7F006641B9,
 				4B191D880611C10800E8A4E7,
 				4B191D890611C10800E8A4E7,
 				F59DB6AD033EB74801A8010A,
