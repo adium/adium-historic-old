@@ -350,6 +350,30 @@
 			settings = {
 			};
 		};
+		11F2C7FB047ACDC50021C483 = {
+			isa = PBXFileReference;
+			name = ContactStatusColoringPrefs.nib;
+			path = "Plugins/Contact Status Coloring/ContactStatusColoringPrefs.nib";
+			refType = 4;
+		};
+		11F2C7FC047ACDC50021C483 = {
+			fileRef = 11F2C7FB047ACDC50021C483;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11F2C7FD047ACDD50021C483 = {
+			isa = PBXFileReference;
+			name = StatusCirclesPrefs.nib;
+			path = "Plugins/Status Circles/StatusCirclesPrefs.nib";
+			refType = 4;
+		};
+		11F2C7FE047ACDD50021C483 = {
+			fileRef = 11F2C7FD047ACDD50021C483;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //110
 //111
 //112
@@ -8990,6 +9014,7 @@
 				F59DB3AF033EA8EC01A8010A,
 				112F94040476EBE1001277FE,
 				112F94050476EBE1001277FE,
+				11F2C7FD047ACDD50021C483,
 				117ED00F0475BC1A00733160,
 			);
 			isa = PBXGroup;
@@ -9011,6 +9036,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				117ED0100475BC1A00733160,
+				11F2C7FE047ACDD50021C483,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13599,6 +13625,7 @@
 				F57939AA033E75FD01A8010A,
 				112F94000476EBB9001277FE,
 				112F94010476EBB9001277FE,
+				11F2C7FB047ACDC50021C483,
 				117ED0110475BCF100733160,
 			);
 			isa = PBXGroup;
@@ -13619,6 +13646,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				117ED0120475BCF100733160,
+				11F2C7FC047ACDC50021C483,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
