@@ -7,8 +7,6 @@
             OUTLETS = {delegate = id; "popUp_accounts" = NSButton; "view_contents" = NSView; }; 
             SUPERCLASS = NSView; 
         }, 
-        {CLASS = AIBrushedPopUpButton; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButton; }, 
-        {CLASS = CBEmbossedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 
