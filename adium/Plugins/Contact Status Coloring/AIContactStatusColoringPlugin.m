@@ -68,13 +68,14 @@
     preferences = [[AIContactStatusColoringPreferences preferencePane] retain];
     
     //Register themable preferences
-    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:CONTACT_STATUS_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];    
-
-    //Observe list object changes
-    [[adium contactController] registerListObjectObserver:self];
+    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:CONTACT_STATUS_THEMABLE_PREFS 
+																  forClass:[self class]] 
+											  forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     //Observe preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) 
+									   name:Preference_GroupChanged 
+									 object:nil];
     [self preferencesChanged:nil];
 
 }
@@ -86,8 +87,8 @@
 
 	if([inObject isKindOfClass:[AIListContact class]]){
 		if(	inModifiedKeys == nil ||
-			[inModifiedKeys containsObject:@"Typing"] ||
-			[inModifiedKeys containsObject:@"UnviewedContent"] || 
+			[inModifiedKeys containsObject:KEY_TYPING] ||
+			[inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT] || 
 			[inModifiedKeys containsObject:@"Away"] ||
 			[inModifiedKeys containsObject:@"Idle"] ||
 			[inModifiedKeys containsObject:@"Online"] ||
@@ -100,8 +101,8 @@
 		}
 		
 		//Update our flash array
-		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"UnviewedContent"]){
-			int unviewedContent = [inObject integerStatusObjectForKey:@"UnviewedContent"];
+		if(inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
+			int unviewedContent = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
 			
 			if(unviewedContent && ![flashingListObjectArray containsObject:inObject]){ //Start flashing
 				[self addToFlashArray:inObject];
@@ -114,7 +115,6 @@
     return(modifiedAttributes);
 }
 
-
 //Applies the correct color to the passed object
 - (void)_applyColorToObject:(AIListObject *)inObject
 {
@@ -123,7 +123,7 @@
     int				idle;
 
     //Prefetch the value for unviewed content, we need it multiple times below
-    unviewedContent = [inObject integerStatusObjectForKey:@"UnviewedContent"];
+    unviewedContent = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
 
     //Unviewed content
     if(!color && (unviewedContentEnabled && unviewedContent)){
@@ -151,7 +151,7 @@
             invertedColor = signedOnInvertedColor;
             labelColor = signedOnLabelColor;
             
-        }else if(typingEnabled && ([inObject integerStatusObjectForKey:@"Typing"] == AITyping)){
+        }else if(typingEnabled && ([inObject integerStatusObjectForKey:KEY_TYPING] == AITyping)){
             color = typingColor;
             invertedColor = typingInvertedColor;
             labelColor = typingLabelColor;
@@ -314,7 +314,13 @@
         //
         alpha = [[prefDict objectForKey:KEY_STATUS_LABEL_OPACITY] floatValue];
 		
-		[[adium contactController] updateAllListObjectsForObserver:self];
+		if (notification){
+			//Update all objects
+			[[adium contactController] updateAllListObjectsForObserver:self];
+		}else{
+			//Observe list object changes
+			[[adium contactController] registerListObjectObserver:self];
+		}
     }
 }
 
