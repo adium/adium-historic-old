@@ -165,7 +165,11 @@
 	//This is the controller for the actual view (not self, despite the naming oddness)
     [messageViewController release];
 	[userListController release];
+
 	[controllerView_messages release];
+	
+	//Release view_contents, for which we are responsible because we loaded it via -[NSBundle loadNibNamed:owner]
+	[view_contents release];
 	
     [super dealloc];
 }
@@ -545,7 +549,7 @@
 	//This is necessary for text entry filters to work correctly.
 	[textView_outgoing setChat:chat];
 	[[adium contentController] didOpenTextEntryView:textView_outgoing];
-	
+
     //Observe text entry view size changes so we can dynamically resize as the user enters text
     [[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(outgoingTextViewDesiredSizeDidChange:)
@@ -813,7 +817,6 @@
  */
 - (int)_userListViewProperWidthIgnoringUserMininum:(BOOL)ignoreUserMininum
 {
-	NSLog(@"userListMinWidth =%i",userListMinWidth);
 	int dividerThickness = [splitView_messages dividerThickness];
 	int allowedWidth = ([splitView_messages frame].size.width / 2.0) - dividerThickness;
 	int	width = USER_LIST_MIN_WIDTH;
@@ -821,7 +824,6 @@
 	//We must never fall below the user's prefered mininum or above the allowed width
 	if(!ignoreUserMininum && width < userListMinWidth) width = userListMinWidth;
 	if(width > allowedWidth) width = allowedWidth;
-	NSLog(@"eeee =%i",width);
 
 	return(width);
 }
