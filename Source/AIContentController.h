@@ -176,7 +176,7 @@ typedef enum {
 - (NSArray *)emoticonsArray;
 
 //Encryption
-- (NSMenu *)encryptionMenuNotifyingTarget:(id)target;
+- (NSMenu *)encryptionMenuNotifyingTarget:(id)target withDefault:(BOOL)withDefault;
 
 //Private
 - (void)initController;
