@@ -315,6 +315,8 @@
 	} 
 }
 
+#pragma mark Status States
+
 /*!
  * @brief Set the account to a specified statusState
  *
@@ -362,6 +364,32 @@
 	[self setStatusState:statusState
 	  usingStatusMessage:statusMessage];
 }
+
+- (AIStatusSummary)statusSummary
+{
+	if ([self integerStatusObjectForKey:@"Online"]){
+		AIStatus	*statusState = [self statusState];
+		if ([statusState statusType] == AIAwayStatusType){
+			if ([self statusObjectForKey:@"IdleSince"]){
+				return AIAwayAndIdleStatus;
+			}else{
+				return AIAwayStatus;
+			}
+
+		}else if ([self statusObjectForKey:@"IdleSince"]){
+			return AIIdleStatus;
+
+		}else{
+			return AIAvailableStatus;
+
+		}
+
+	}else{
+		return AIOfflineStatus;
+	}
+}
+
+#pragma mark Passwowrds
 
 /*!
  * @brief Password entered callback
