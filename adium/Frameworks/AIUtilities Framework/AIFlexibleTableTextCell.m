@@ -68,7 +68,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     }else{
         [cell setBackgroundColor:inBackColor];
     }
-    NSLog(@"initing textcell with string %@",inString);
     
     return(cell);
 }
