@@ -15,63 +15,172 @@
 
 #import "AIListGroup.h"
 
+@interface AIListGroup (PRIVATE)
+- (void)_setVisibleCount:(int)newCount;
+@end
+
 @implementation AIListGroup
 
+//init
 - (id)initWithUID:(NSString *)inUID
 {
     [super initWithUID:inUID serviceID:nil];
-
+	
     objectArray = [[NSMutableArray alloc] init];
-    visibleCount = 0;
+	largestIndex = 1;
     expanded = NO;
+	
+	//Default invisible
+    visibleCount = 0;
+	visible = NO;
+	[self setStatusObject:[NSNumber numberWithInt:visibleCount] forKey:@"VisibleObjectCount" notify:YES];
     
     return(self);
 }
 
-//Contained Objects
-//Returns the specified object
-- (id)objectAtIndex:(unsigned)index
-{
-    NSParameterAssert(index >= 0 && index < [objectArray count]);
 
-    return([objectArray objectAtIndex:index]);
-}
-
-- (NSEnumerator *)objectEnumerator
-{
-    return([objectArray objectEnumerator]);
-}
-
-//Expanded State
-//Set whether this group is expanded or collapsed
+//Expanded State -------------------------------------------------------------------------------------------------------
+//Set the expanded/collapsed state of this group (PRIVATE: For the contact list view to let us know our state)
 - (void)setExpanded:(BOOL)inExpanded
 {
     expanded = inExpanded;
 }
-- (BOOL)isExpanded{
+//Returns the current expanded/collapsed state of this group
+- (BOOL)isExpanded
+{
     return(expanded);
 }
 
+
+//Visibility -----------------------------------------------------------------------------------------------------------
+/*
+ The visible objects contained in a group are always sorted to the top.  This allows us to easily retrieve only visible
+ objects without having to physically remove invisible objects from the group.
+ */
 //Returns the number of visible objects in this group
 - (unsigned)visibleCount
 {
     return(visibleCount);
 }
 
+//Called when the visibility of an object in this group changes
+- (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible
+{
+	//Update our visibility as a result of this change
+	[self _setVisibleCount:(inVisible ? visibleCount + 1 : visibleCount - 1)];
+	
+	//Sort the contained object to the bottom (invisible section) of the group
+	[[adium contactController] sortListObject:inObject];
+}
+
+//Set this group as visible if it contains anything visible
+- (void)_setVisibleCount:(int)newCount
+{
+	if((newCount && !visibleCount) || (!newCount && visibleCount)){
+		[self setVisible:(newCount != 0)];
+	}
+	visibleCount = newCount;
+	
+	//
+	[self setStatusObject:[NSNumber numberWithInt:visibleCount] forKey:@"VisibleObjectCount" notify:YES];
+}
+
+
+//Contained Objects ----------------------------------------------------------------------------------------------------
+//Returns the number of objects in this group
 - (unsigned)count
 {
     return([objectArray count]);
 }
 
-//Resorts the group contents
-- (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(id <AIListSortController>)sortController
+//Retrieve an object by index
+- (id)objectAtIndex:(unsigned)index
 {
-    AIMutableOwnerArray		*visibleArray;
-    NSEnumerator		*enumerator;
-    AIListObject		*object;
+    NSParameterAssert(index >= 0 && index < [objectArray count]);
+	
+    return([objectArray objectAtIndex:index]);
+}
 
-    //Sort the contents of any groups within this group
+//Return an enumerator of our contents
+- (NSEnumerator *)objectEnumerator
+{
+    return([objectArray objectEnumerator]);
+}
+
+//Test for the presence of an object in our group
+- (BOOL)containsObject:(AIListObject *)inObject
+{
+	return([objectArray containsObject:inObject]);
+}
+
+//Retrieve the index of an object
+- (int)indexOfObject:(AIListObject *)inObject
+{
+    return([objectArray indexOfObject:inObject]);
+}
+
+
+//Contained Object Editing ---------------------------------------------------------------------------------------------
+//Add an object to this group (PRIVATE: For contact controller only)
+- (void)addObject:(AIListObject *)inObject
+{
+	if(![objectArray containsObject:inObject]){
+		//Update our visible count
+		if([inObject isVisible]) [self _setVisibleCount:visibleCount+1];
+		
+		//Add the object
+		[inObject addContainingGroup:self];
+		[inObject setOrderIndex:largestIndex++ forGroup:self];
+		[objectArray addObject:inObject];
+		
+		//
+		[self setStatusObject:[NSNumber numberWithInt:[objectArray count]] forKey:@"ObjectCount" notify:YES];
+	}
+}
+
+//Remove an object from this group (PRIVATE: For contact controller only)
+- (void)removeObject:(AIListObject *)inObject
+{	
+	if([objectArray containsObject:inObject]){
+		//Update our visible count
+		if([inObject isVisible]) [self _setVisibleCount:visibleCount-1];
+		
+		//Remove the object
+		[inObject removeContainingGroup:nil];
+		[inObject setOrderIndex:0 forGroup:self];
+		[objectArray removeObject:inObject];
+		
+		//
+		[self setStatusObject:[NSNumber numberWithInt:[objectArray count]] forKey:@"ObjectCount" notify:YES];
+	}
+}
+
+//Remove all the objects from this group (PRIVATE: For contact controller only)
+- (void)removeAllObjects
+{	
+	//Remove all the objects
+	while([objectArray count]){
+		[self removeObject:[objectArray objectAtIndex:0]];
+	}
+}
+
+
+//Sorting --------------------------------------------------------------------------------------------------------------
+//Resort an object in this group (PRIVATE: For contact controller only)
+- (void)sortListObject:(AIListObject *)inObject sortController:(AISortController *)sortController
+{
+	[objectArray removeObject:inObject];
+	[objectArray insertObject:inObject atIndex:[sortController indexForInserting:inObject intoObjects:objectArray inGroup:self]];
+}
+
+//Resorts the group contents (PRIVATE: For contact controller only)
+- (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(AISortController *)sortController
+{
+    //Sort the groups within this group
     if(subGroups){
+		NSEnumerator		*enumerator;
+		AIListObject		*object;
+		
         enumerator = [objectArray objectEnumerator];
         while((object = [enumerator nextObject])){
             if([object isMemberOfClass:[AIListGroup class]]){
@@ -79,73 +188,11 @@
             }
         }
     }
-
+	
     //Sort this group
     if(sortController){
-        [sortController sortListObjects:objectArray];
+        [sortController sortListObjects:objectArray inGroup:self];
     }
-
-    //Count the number of visible items in this group
-    visibleCount = 0;
-    enumerator = [objectArray objectEnumerator];
-    while((object = [enumerator nextObject])){
-        if(![[object displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1]){
-            visibleCount++;
-        }
-    }
-
-    //Set this group as visible if it contains anything visible
-    visibleArray = [self displayArrayForKey:@"Hidden"];
-    [visibleArray setObject:[NSNumber numberWithInt:(visibleCount == 0)] withOwner:self];
 }
-
-
-//Editing
-//Adds an object to this group
-- (void)addObject:(AIListObject *)inObject
-{
-    [inObject setContainingGroup:self];
-    [objectArray addObject:inObject];
-}
-
-//Replace an object in this group
-- (void)replaceObject:(AIListObject *)oldObject with:(AIListObject *)newObject
-{
-    int index;
-
-    index = [objectArray indexOfObject:oldObject];
-    [objectArray replaceObjectAtIndex:index withObject:newObject];
-}
-
-//Removes an object from this group
-- (void)removeObject:(AIListObject *)inObject
-{
-    [inObject setContainingGroup:nil];
-    [objectArray removeObject:inObject];
-}
-
-//Returns the index of an object
-- (int)indexOfObject:(AIListObject *)inObject
-{
-    return([objectArray indexOfObject:inObject]);
-}
-
-//Remove all the objects from this group
-- (void)removeAllObjects
-{
-    NSEnumerator		*enumerator;
-    AIListObject		*object;
-
-    //Set all the contanining groups to nil
-    enumerator = [objectArray objectEnumerator];
-    while((object = [enumerator nextObject])){
-        [object setContainingGroup:nil];
-    }
-        
-    //Remove the objects
-    [objectArray removeAllObjects];
-    visibleCount = 0;
-}
-
 
 @end
