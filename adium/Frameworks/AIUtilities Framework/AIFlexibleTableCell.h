@@ -46,7 +46,7 @@
 
 //Sizing
 - (NSSize)cellSize;
-- (int)sizeCellForWidth:(float)inWidth;
+- (void)sizeCellForWidth:(float)inWidth;
 
 //Drawing
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;

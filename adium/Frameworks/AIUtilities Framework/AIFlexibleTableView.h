@@ -35,7 +35,6 @@
 
 - (void)setDelegate:(id <AIFlexibleTableViewDelegate>)inDelegate;
 - (void)addColumn:(AIFlexibleTableColumn *)inColumn;
-
 - (void)loadNewRow;
 - (void)reloadData;
 

@@ -26,7 +26,7 @@
 - (BOOL)isFlipped;
 - (void)frameChanged:(NSNotification *)notification;
 - (void)buildMessageCellArray;
-- (void)addCellsForRow:(int)inRow;
+- (BOOL)addCellsForRow:(int)inRow;
 - (void)resizeCells;
 - (void)resizeToFillContainerView;
 @end
@@ -59,7 +59,7 @@
 
 - (void)addColumn:(AIFlexibleTableColumn *)inColumn
 {
-    [columnArray addObject:inColumn];    
+    [columnArray addObject:inColumn];
 }
 
 - (void)drawRect:(NSRect)rect
@@ -112,7 +112,9 @@
 - (void)loadNewRow
 {
     //Add the new content
-    [self addCellsForRow:([delegate numberOfRows] - 1)];
+    if([self addCellsForRow:([delegate numberOfRows] - 1)]){
+        [self resizeCells];
+    }
 
     //Resize and redisplay
     [self resizeToFillContainerView];
@@ -130,6 +132,7 @@
     }
 
     //Resize and redisplay
+    [self resizeCells];
     [self resizeToFillContainerView];
     [self setNeedsDisplay:YES];
 }
@@ -163,9 +166,10 @@
     [self setNeedsDisplay:YES];
 }
 
-//Add a cell
-- (void)addCellsForRow:(int)inRow
+//Add a cell.  Returns YES if the cells should be resized
+- (BOOL)addCellsForRow:(int)inRow
 {
+    BOOL			columnWidthDidChange = NO;
     NSEnumerator		*columnEnumerator;
     AIFlexibleTableColumn	*column;
     int				newRowHeight = 0;
@@ -174,18 +178,21 @@
     columnEnumerator = [columnArray objectEnumerator];
     while((column = [columnEnumerator nextObject])){
         AIFlexibleTableCell	*cell = [delegate cellForColumn:column row:inRow];
-        int			cellHeight;
 
-        cellHeight = [column addCell:cell];
+        if([column addCell:cell]){ //Returns YES if the column's width was changed
+            columnWidthDidChange = YES;
+        }
 
         //By comparing the heights of each cell, we find the largest height and set it as the height of our row
-        if(cellHeight > newRowHeight){
-            newRowHeight = cellHeight;
+        if([cell cellSize].height > newRowHeight){
+            newRowHeight = [cell cellSize].height;
         }
     }
 
     [rowHeightArray addObject:[NSNumber numberWithInt:newRowHeight]];
     contentsHeight += newRowHeight;
+
+    return(columnWidthDidChange); //Return YES if the cells should be resized
 }
 
 //Recalculate the cell dimensions
@@ -221,7 +228,8 @@
     
             cellEnumerator = [[flexibleColumn cellArray] objectEnumerator];
             while((cell = [cellEnumerator nextObject])){
-                [rowHeightArray addObject:[NSNumber numberWithInt:[cell sizeCellForWidth:columnWidth]]];
+                [cell sizeCellForWidth:columnWidth]; //Resize the cell
+                [rowHeightArray addObject:[NSNumber numberWithInt:[cell cellSize].height]]; //Add it's height
             }
         }
     
