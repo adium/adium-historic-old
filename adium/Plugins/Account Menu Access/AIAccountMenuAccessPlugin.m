@@ -27,6 +27,7 @@
 - (void)updateMenuForAccount:(AIAccount *)account;
 - (void)toggleAutoConnect:(id)sender;
 - (IBAction)toggleConnection:(id)sender;
+- (NSMenuItem *)_menuItemForAccount:(AIAccount *)account;
 @end
 
 @implementation AIAccountMenuAccessPlugin
@@ -38,10 +39,15 @@
 								   selector:@selector(accountListChanged:)
 									   name:Account_ListChanged
 									 object:nil];
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(listObjectAttributesChanged:)
+									   name:ListObject_AttributesChanged 
+									 object:nil];
     [[adium notificationCenter] addObserver:self
 								   selector:@selector(preferencesChanged:)
 									   name:Preference_GroupChanged
 									 object:nil];
+		
     [[adium contactController] registerListObjectObserver:self];
     
     accountMenuArray = [[NSMutableArray alloc] init];
@@ -77,8 +83,22 @@
     if([inObject isKindOfClass:[AIAccount class]]){
 		[self updateMenuForAccount:(AIAccount *)inObject];
     }
-    
+
+    //We don't change any keys
     return(nil);
+}
+
+//Redisplay the modified object (Attribute change)
+- (void)listObjectAttributesChanged:(NSNotification *)notification
+{
+	AIListObject *inObject = [notification object];
+	
+	if([inObject isKindOfClass:[AIAccount class]]){
+		NSMenuItem		*targetMenuItem = [self _menuItemForAccount:(AIAccount *)inObject];
+		if (targetMenuItem) {
+			[targetMenuItem setTitle:[inObject displayName]];
+		}
+	}
 }
 
 //
@@ -98,22 +118,15 @@
 
 
 // Private ------------------
+
 - (void)updateMenuForAccount:(AIAccount *)account
 {
     NSEnumerator	*enumerator;
     NSMenuItem		*menuItem;
-    NSMenuItem		*targetMenuItem = nil;
     NSMenuItem		*connectToggleItem;
     NSMenuItem		*autoConnectItem;
 	
-    //Find the menu
-    enumerator = [accountMenuArray objectEnumerator];
-    while((menuItem = [enumerator nextObject])){    
-        if([menuItem representedObject] == account){
-            targetMenuItem = menuItem;
-            break;
-        }
-    }
+	NSMenuItem		*targetMenuItem = [self _menuItemForAccount:account];
 	
     if(targetMenuItem){
         if([[account supportedPropertyKeys] containsObject:@"Online"]){
@@ -146,6 +159,8 @@
                 [autoConnectItem setState:NSOffState];
             }
         }        
+		
+		[targetMenuItem setTitle:[account displayName]];
     }
 }
 
@@ -223,6 +238,25 @@
         [[adium menuController] addMenuItem:menuItem toLocation:LOC_File_Accounts];
         [self updateMenuForAccount:account];
     }
+}
+
+
+- (NSMenuItem *)_menuItemForAccount:(AIAccount *)account
+{
+	NSEnumerator	*enumerator;
+	NSMenuItem		*menuItem;
+    NSMenuItem		*targetMenuItem = nil;
+	
+	//Find the menu
+	enumerator = [accountMenuArray objectEnumerator];
+	while((menuItem = [enumerator nextObject])){    
+		if([menuItem representedObject] == account){
+			targetMenuItem = menuItem;
+			break;
+		}
+	}
+	
+	return targetMenuItem;	
 }
 
 @end
