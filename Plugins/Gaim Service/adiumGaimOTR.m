@@ -106,15 +106,31 @@ static void otrg_adium_dialog_notify_message(GaimNotifyMsgType type,
 static int otrg_adium_dialog_display_otr_message(const char *accountname, const char *protocol,
 												 const char *username, const char *msg)
 {
-	NSLog(@"otrg_adium_dialog_display_otr_message: %s",msg);
-	AILog(@"otrg_adium_dialog_display_otr_message: %s",msg);
+	GaimAccount			*account;
+	GaimConversation	*conv;
+	AIChat				*chat;
+	NSString			*localizedMessage;
 
-	GaimAccount	*account = gaim_accounts_find(accountname, protocol);
-
-	if (gaim_conv_present_error(username, account, msg)){
-		return 0;
+	//Find the GaimAccount and existing conversation which was just connected
+	account = gaim_accounts_find(accountname, protocol);
+	conv = gaim_find_conversation_with_account(username, account);
+	
+	if(conv &&
+	   (chat = existingChatLookupFromConv(conv)) &&
+	   (localizedMessage = [[SLGaimCocoaAdapter sharedInstance] localizedOTRMessage:msg
+																	   withUsername:username])){
+	
+		[[[AIObject sharedAdiumInstance] contentController] mainPerformSelector:@selector(displayStatusMessage:ofType:inChat:)
+																	 withObject:localizedMessage
+																	 withObject:@"encryption"
+																	 withObject:chat];
+		
+		return 0; /* We handled it */
 	}else{
-		return 1;
+		NSLog(@"otrg_adium_dialog_display_otr_message: %s",msg);
+		AILog(@"otrg_adium_dialog_display_otr_message: %s",msg);
+
+		return 1; /* We didn't handle it */
 	}
 }
 
