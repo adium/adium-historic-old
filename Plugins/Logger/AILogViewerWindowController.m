@@ -18,7 +18,7 @@
 #import "AILog.h"
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
-#import "ESRankingCell.h"
+#import "ESRankingCell.h" 
 
 #define LOG_VIEWER_NIB                          @"LogViewer"
 #define LOG_VIEWER_JAG_NIB			@"LogViewerJag"
