@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.146 2004/06/15 18:04:37 adamiser Exp $
+// $Id: AIContactController.m,v 1.147 2004/06/18 17:56:55 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -948,6 +948,7 @@
 - (NSMenu *)menuOfAllGroupsInGroup:(AIListGroup *)inGroup withTarget:(id)target
 {
 	NSMenu	*menu = [[NSMenu alloc] initWithTitle:@""];
+	[menu setAutoenablesItems:NO];
 	[self _menuOfAllGroups:menu forGroup:inGroup withTarget:target level:0];
 	return([menu autorelease]);
 }
