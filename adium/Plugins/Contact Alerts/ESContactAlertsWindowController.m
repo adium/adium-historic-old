@@ -132,12 +132,11 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
 -(IBAction)deleteEventAction:(id)sender
 {
-    
-    //if (row != -1)
-    //{
+    if ([instance currentRow] != -1)
+    {
         [instance deleteEventAction:nil];
         [self tableViewSelectionDidChange:nil];
-    //}
+    }
 }
 
 //TableView datasource --------------------------------------------------------
