@@ -22,10 +22,6 @@
 	[[adium contactAlertsController] registerActionID:@"SendMessage" withHandler:self];
     
     attributes = nil;
-    
-    //Observe preference changes
-//    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-//    [self preferencesChanged:nil];
 }
 
 - (void)uninstallPlugin
