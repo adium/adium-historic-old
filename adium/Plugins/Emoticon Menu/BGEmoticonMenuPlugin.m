@@ -30,7 +30,7 @@ static NSMenu       *eContextualMenu = nil;
 - (void)installPlugin
 {
     //init the menues and menuItems
-    quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Insert Emoticon" target:self action:nil keyEquivalent:@""];
+    quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Insert Emoticon" target:self action:@selector(dummyTarget:) keyEquivalent:@""];
     quickContextualMenuItem = [[NSMenuItem alloc] initWithTitle:@"Insert Emoticon" target:self action:nil keyEquivalent:@""];
     eMenu = [[NSMenu alloc] initWithTitle:@""];
     eContextualMenu = [[NSMenu alloc] initWithTitle:@""];
@@ -135,7 +135,7 @@ static NSMenu       *eContextualMenu = nil;
     return packMenu;
 }
 
--(void)insertEmoticon:(id)sender
+- (void)insertEmoticon:(id)sender
 {
     NSString *emoString = nil;
     // Actually, since sender can be a menu item or a button, it'd be better to look up the name in the emoticon pack's emoticons array,
@@ -174,6 +174,17 @@ static NSMenu       *eContextualMenu = nil;
         }
         [responder insertText:emoString];
     }
+}
+
+//Just a target so we get the validateMenuItem: call for the emoticon menu
+-(IBAction)dummyTarget:(id)sender{
+}
+
+//Disable the emoticon menu if a text field is not active
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+	return(responder && [responder isKindOfClass:[NSText class]]);
 }
 
 -(NSMenu *)eMenu
