@@ -45,6 +45,7 @@
                 
                 //figure this out later
             }
+        }
         /*}else if([[url scheme] isEqualToString:@"ymsgr"]){
             if([[url host] compare:@"sendim" options:NSCaseInsensitiveSearch] == 0){
                 recipient = [url query];
