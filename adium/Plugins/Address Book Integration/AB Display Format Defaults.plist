@@ -5,7 +5,7 @@
 	<key>AB Enable Import</key>
 	<true/>
 	<key>AB Display Format</key>
-	<true/>
+	<integer>0</integer>
 	<key>AB Image Sync</key>
 	<false/>
         <key>AB Note Sync</key>

@@ -20,7 +20,6 @@
 #define AB_DISPLAYFORMAT_DEFAULT_PREFS                  @"AB Display Format Defaults"
 
 typedef enum {
-    None = 0,
     FirstLast,
     First,
     LastFirst,
