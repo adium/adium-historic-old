@@ -131,13 +131,46 @@
     //Create an instance of every saved account
 	enumerator = [accountList objectEnumerator];
 	while(accountDict = [enumerator nextObject]){
+		NSString		*serviceID = [accountDict objectForKey:ACCOUNT_TYPE];
         AIAccount		*newAccount;
         AIService		*service;
 		NSString		*accountUID;
 		int				accountNumber;
 		
+		//TEMPORARY UPGRADE CODE  0.63 -> 0.70 (Account format changed)
+		//####################################
+		if([serviceID isEqualToString:@"AIM-LIBGAIM"]){
+			NSString 	*uid = [accountDict objectForKey:ACCOUNT_UID];
+			const char	firstCharacter = [uid characterAtIndex:0];
+
+			if([uid hasSuffix:@"@mac.com"]){
+				serviceID = @"libgaim-oscar-Mac";
+			}else if(firstCharacter >= '0' && firstCharacter <= '9'){
+				serviceID = @"libgaim-oscar-ICQ";
+			}else{
+				serviceID = @"libgaim-oscar-AIM";
+			}
+		}else if([serviceID isEqualToString:@"GaduGadu-LIBGAIM"]){
+			serviceID = @"libgaim-Gadu-Gadu";
+		}else if([serviceID isEqualToString:@"Jabber-LIBGAIM"]){
+			serviceID = @"libgaim-Jabber";
+		}else if([serviceID isEqualToString:@"MSN-LIBGAIM"]){
+			serviceID = @"libgaim-MSN";
+		}else if([serviceID isEqualToString:@"Napster-LIBGAIM"]){
+			serviceID = @"libgaim-Napster";
+		}else if([serviceID isEqualToString:@"Novell-LIBGAIM"]){
+			serviceID = @"libgaim-GroupWise";
+		}else if([serviceID isEqualToString:@"Sametime-LIBGAIM"]){
+			serviceID = @"libgaim-Sametime";
+		}else if([serviceID isEqualToString:@"Yahoo-LIBGAIM"]){
+			serviceID = @"libgaim-Yahoo!";
+		}else if([serviceID isEqualToString:@"Yahoo-Japan-LIBGAIM"]){
+			serviceID = @"libgaim-Yahoo!-Japan";
+		}
+		//####################################
+		
 		//Fetch the account service, UID, and ID
-		service = [self serviceWithUniqueID:[accountDict objectForKey:ACCOUNT_TYPE]];
+		service = [self serviceWithUniqueID:serviceID];
 		accountUID = [accountDict objectForKey:ACCOUNT_UID];
 		accountNumber = [[accountDict objectForKey:ACCOUNT_OBJECT_ID] intValue];
 		
