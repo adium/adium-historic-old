@@ -1,4 +1,23 @@
-<!-- $Id: stylesheet.css,v 1.3 2003/08/08 05:48:45 jmelloy Exp $ -->
+<!-- $Id: stylesheet.css,v 1.4 2003/10/27 21:13:09 jmelloy Exp $ -->
+
+.dummy {
+    color: #fff;
+}
+
+.important {
+    text-align: center;
+    background-color: #c33;
+    border-color: #ff3;
+    border-top-style: dashed;
+    border-bottom-style: dashed;
+    border-left-style: dashed;
+    border-right-style: dashed;
+    padding: 5px;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 0;
+    margin-bottom: 0:
+}
 
 .tutorialcode {
     margin-left:50px;

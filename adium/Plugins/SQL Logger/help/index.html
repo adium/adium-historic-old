@@ -16,7 +16,8 @@
 <h4>SQL Logger<br>
 </h4>
 <a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a><br><a href="tsearch.html" class="sidebar">TSearch Installation</a><br><a href="resin.html" class="sidebar">Resin Installation</a><br><a href="technical.html" class="sidebar">Technical
-              Details</a><br><a href="performance.html" class="sidebar">Performance/Maintenance</a><br><h4>Adium</h4>
+              Details</a><br><a href="performance.html" class="sidebar">Performance/Maintenance</a><br><a href="quick_install.html" class="sidebar">Quick Install
+              Notes</a><br><h4>Adium</h4>
 <a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://adium.sourceforge.net" class="offsides">Adium
                 2.0</a><br><a href="http://www.funmac.com/forumdisplay.php?forumid=38" class="offsides">Adium
                 Forums</a><br><a href="http://www.visualdistortion.org/adium/stats/" class="offsides">CVS Statistics</a><br><a href="http://www.visualdistortion.org/adium/rss.xml" class="offsides">CVS Commit RSS Feed</a><br><h4>PostgreSQL</h4>
@@ -36,6 +37,9 @@
       <li>Can see multiple concurrent conversations, or only one</li>
       <li>Other goodness.</li>
     </ul>
+<div class="important">If you are compiling from source with Panther,
+        PostgreSQL 7.3 will not work.  The newest 7.4 beta will,
+        however.</div>
 <p>To install this, a few things are required.
     Setup, however, is not that bad.
     At the base level, all that is required is PostgreSQL (duh).
@@ -182,7 +186,7 @@ bare-bones: the sending and receiving screenames, the message, and a date.</p>
   The first one is called &quot;DBI&quot; (DataBase Interface) and the second &quot;DBD-PG&quot;
   (DataBase Driver-PostgreSQL).  Both can be gotten from fink or CPAN.
   The fink modules are called dbi-pm and dbd-pg-pm (in unstable).  More
-  information on installation and use can be found in <a href="technical.html">Technical Details</a>.
+  information on installation and use can be found in <a href="technical.html#parser.pl">Technical Details</a>.
   Run it by typing <code>./parser.pl</code>.
   It should automatically find all of your logs, but you may need to edit the
   paths.

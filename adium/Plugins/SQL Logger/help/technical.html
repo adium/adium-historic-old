@@ -16,7 +16,8 @@
 <h4>SQL Logger<br>
 </h4>
 <a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a><br><a href="tsearch.html" class="sidebar">TSearch Installation</a><br><a href="resin.html" class="sidebar">Resin Installation</a><br><a href="technical.html" class="sidebar">Technical
-              Details</a><br><a href="performance.html" class="sidebar">Performance/Maintenance</a><br><h4>Adium</h4>
+              Details</a><br><a href="performance.html" class="sidebar">Performance/Maintenance</a><br><a href="quick_install.html" class="sidebar">Quick Install
+              Notes</a><br><h4>Adium</h4>
 <a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://adium.sourceforge.net" class="offsides">Adium
                 2.0</a><br><a href="http://www.funmac.com/forumdisplay.php?forumid=38" class="offsides">Adium
                 Forums</a><br><a href="http://www.visualdistortion.org/adium/stats/" class="offsides">CVS Statistics</a><br><a href="http://www.visualdistortion.org/adium/rss.xml" class="offsides">CVS Commit RSS Feed</a><br><h4>PostgreSQL</h4>
@@ -134,31 +135,34 @@
 <pre>sudo perl -MCPAN -e 'install DBI'</pre>
     </div>
 <p>If this is your first time running CPAN, it will ask a few questions.
-    The defaults are fine.</p>
+    The defaults are fine.  Or simply tell it you do not want to manually
+    configure.</p>
 <p>Now it's time to install DBD::Pg.  It's quite possible that if you have
     trouble this will be the longest step of the process.  Thanks to evands
     for being a guinea pig on this one.</p>
-<p>DBD::Pg has a process where it attempts to connect to a working
-    PostgreSQL installation.  Because of this, the default CPAN install
-    process will fail.  So it's best to not even try, right off the bat.</p>
+<p>DBD::Pg has a test where it attempts to connect to a working
+    PostgreSQL installation.  If you're installing PostgreSQL 7.4, this will
+    currently fail entirely.  (Using DBD::Pg 1.22)</p>
 <p>There are a few environmental variables that need to be set to allow the
     compile process to find the various libraries PostgreSQL installs.
     Set the following:</p>
 <div class="tutorialcode">
     <pre>setenv POSTGRES_INCLUDE=/usr/local/pgsql/include
-setenv POSTGRES_LIB=/usr/local/pgsql/lib -lssl
-setenv DBI_DSN=dbi:Pg:dbname=<i>database/username</i>
+      setenv POSTGRES_LIB=&quot;/usr/local/pgsql/lib -lssl -lcrypto&quot;
+setenv DBI_DSN=DBI:Pg:dbname=<i>username</i>
 setenv DBI_USER=<i>username</i>
-setenv DBI_PASS=<i>Password</i></pre>
+setenv DBI_PASS=<i>password</i></pre>
 </div>
-<p>If you are running Bash as your shell (Panther):</p>
+<p>If you are running Bash as your shell or using Panther:</p>
 <div class="tutorialcode">
   <pre>export POSTGRES_INCLUDE=/usr/local/pgsql/include
-export POSTGRES_LIB=/usr/local/pgsql/lib -lssl
-export DBI_DSN=dbi:Pg:dbname=<i>database/username</i>
+export POSTGRES_LIB=&quot;/usr/local/pgsql/lib -lssl -lcrypto&quot;
+export DBI_DSN=DBI:Pg:dbname=<i>username</i>
 export DBI_USER=<i>username</i>
 export DBI_PASS=<i>password</i></pre>
 </div>
+<br><div class="important">Capitalization is very important for the DBI_DSN
+      environmental variable!</div>
 <p>If you run it now, you will probably see errors relating to <code>ranlib</code> or
     <code>libpq.a</code>.  Just run the following command preemptively:</p>
 <div class="tutorialcode">
@@ -168,6 +172,10 @@ export DBI_PASS=<i>password</i></pre>
 <div class="tutorialcode">
 <pre>sudo perl -MCPAN -e 'install DBD::Pg'</pre>
   </div>
+<p>If you're installing PostgreSQL 7.4 and DBD::Pg 1.22, the make test WILL
+    fail.  If you are sure you have the environmental variables
+    POSTGRES_INCLUDE and POSTGRES_LIB set correctly, you can force an install.</p>
+<div class="tutorialcode"><pre>sudo perl -MCPAN -e shell 'force install DBD::Pg'</pre></div>
 <p>If you want to install via fink, the packages are called &quot;dbi-pm&quot; and
     &quot;dbd-pg-pg&quot; [unstable]</p>
 <p>

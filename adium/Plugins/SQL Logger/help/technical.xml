@@ -119,31 +119,34 @@
     <div class="tutorialcode"><pre>sudo perl -MCPAN -e 'install DBI'</pre>
     </div>
   <p>If this is your first time running CPAN, it will ask a few questions.
-    The defaults are fine.</p>
+    The defaults are fine.  Or simply tell it you do not want to manually
+    configure.</p>
   <p>Now it's time to install DBD::Pg.  It's quite possible that if you have
     trouble this will be the longest step of the process.  Thanks to evands
     for being a guinea pig on this one.</p>
-  <p>DBD::Pg has a process where it attempts to connect to a working
-    PostgreSQL installation.  Because of this, the default CPAN install
-    process will fail.  So it's best to not even try, right off the bat.</p>
+  <p>DBD::Pg has a test where it attempts to connect to a working
+    PostgreSQL installation.  If you're installing PostgreSQL 7.4, this will
+    currently fail entirely.  (Using DBD::Pg 1.22)</p>
   <p>There are a few environmental variables that need to be set to allow the
     compile process to find the various libraries PostgreSQL installs.
     Set the following:</p>
   <div class="tutorialcode">
     <pre>setenv POSTGRES_INCLUDE=/usr/local/pgsql/include
-setenv POSTGRES_LIB=/usr/local/pgsql/lib -lssl
-setenv DBI_DSN=dbi:Pg:dbname=<i>database/username</i>
+      setenv POSTGRES_LIB="/usr/local/pgsql/lib -lssl -lcrypto"
+setenv DBI_DSN=DBI:Pg:dbname=<i>username</i>
 setenv DBI_USER=<i>username</i>
-setenv DBI_PASS=<i>Password</i></pre>
+setenv DBI_PASS=<i>password</i></pre>
 </div>
-<p>If you are running Bash as your shell (Panther):</p>
+<p>If you are running Bash as your shell or using Panther:</p>
 <div class="tutorialcode">
   <pre>export POSTGRES_INCLUDE=/usr/local/pgsql/include
-export POSTGRES_LIB=/usr/local/pgsql/lib -lssl
-export DBI_DSN=dbi:Pg:dbname=<i>database/username</i>
+export POSTGRES_LIB="/usr/local/pgsql/lib -lssl -lcrypto"
+export DBI_DSN=DBI:Pg:dbname=<i>username</i>
 export DBI_USER=<i>username</i>
 export DBI_PASS=<i>password</i></pre>
-</div>
+</div><br />
+<div class="important">Capitalization is very important for the DBI_DSN
+      environmental variable!</div>
   <p>If you run it now, you will probably see errors relating to <code>ranlib</code> or
     <code>libpq.a</code>.  Just run the following command preemptively:</p>
   <div class="tutorialcode"><pre>sudo ranlib /usr/local/pgsql/lib/libpq.a</pre>
@@ -151,6 +154,10 @@ export DBI_PASS=<i>password</i></pre>
   <p>After running that, install DBD::Pg:</p>
   <div class="tutorialcode"><pre>sudo perl -MCPAN -e 'install DBD::Pg'</pre>
   </div>
+  <p>If you're installing PostgreSQL 7.4 and DBD::Pg 1.22, the make test WILL
+    fail.  If you are sure you have the environmental variables
+    POSTGRES_INCLUDE and POSTGRES_LIB set correctly, you can force an install.</p>
+  <div class="tutorialcode"><pre>sudo perl -MCPAN -e shell 'force install DBD::Pg'</pre></div>
   <p>If you want to install via fink, the packages are called "dbi-pm" and
     "dbd-pg-pg" [unstable]</p>.
   <p><code>parser.pl</code> will look in <code>~/Library/Application
