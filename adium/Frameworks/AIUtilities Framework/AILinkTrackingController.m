@@ -69,6 +69,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     NSPoint		location;
 
     location = [link trackingRect].origin;
+#warning I've had bad access here.  Somehow the links are getting dealloced?
+
     location = [controlView convertPoint:location toView:nil];
     location = [[theEvent window] convertBaseToScreen:location];
 

@@ -17,11 +17,6 @@
 #import "AIAdium.h"
 #import "AILoggerPlugin.h"
 #import "AILogViewerWindowController.h"
-#import "AILogImporter.h"
-
-#define LOGGER_DEFAULT_PREFS		@"LoggerDefaults"
-#define PREF_GROUP_LOGGING		@"Logging"
-#define KEY_HAS_IMPORTED_16_LOGS	@"Has Imported Adium 1.6 Logs"
 
 @interface AILoggerPlugin (PRIVATE)
 - (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(AIListObject *)object onDate:(NSDate *)date;
@@ -31,9 +26,7 @@
 
 - (void)installPlugin
 {
-    //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LOGGING];
-
+    //Observe content
     [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
 
     //Install the log viewer menu item
@@ -51,15 +44,6 @@
     //Create a logs directory
     logBasePath = [[[[[owner loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath] retain];
     [AIFileUtilities createDirectory:logBasePath];
-
-    //Import Adium 1.6 logs
-    if(![[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_HAS_IMPORTED_16_LOGS] boolValue]){
-        [[AILogImporter logImporterWithOwner:owner] importAdium1xLogs];
-
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:YES]
-                                             forKey:KEY_HAS_IMPORTED_16_LOGS
-                                              group:PREF_GROUP_LOGGING];
-    }
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem

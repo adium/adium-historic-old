@@ -24,7 +24,7 @@
 @protocol AIContentFilter;
 @protocol AITextEntryFilter;
 
-@interface MXLaTeXPlugin : AIPlugin  {
+@interface MXLaTeXPlugin : AIPlugin <AIContentFilter>  {
 
 }
 

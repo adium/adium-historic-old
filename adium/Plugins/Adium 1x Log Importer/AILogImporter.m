@@ -19,7 +19,8 @@
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
 
-#define LOG_IMPORT_NIB				@"LogImport"
+#define LOG_IMPORT_NIB		@"LogImport"
+#define ADIUM_1X_LOGS_PATH	@"~/Library/Application Support/Adium/Users"
 
 @implementation AILogImporter
 
@@ -35,6 +36,15 @@
     owner = [inOwner retain];
     [super initWithWindowNibName:windowNibName owner:self];
 
+    //
+    sourcePathArray = nil;
+    destPathArray = nil;
+    sourcePathEnumerator = nil;
+    destPathEnumerator = nil;
+    usersToImport = nil;
+    availableUsers = nil;
+    
+    
     return(self);
 }
 
@@ -42,7 +52,14 @@
 - (void)dealloc
 {
     [owner release];
-
+    [importTimer release];
+    [sourcePathArray release];
+    [destPathArray release];
+    [sourcePathEnumerator release];
+    [destPathEnumerator release];
+    [usersToImport release];
+    [availableUsers release];
+    
     [super dealloc];
 }
 
@@ -51,6 +68,21 @@
 {
     //Center
     [[self window] center];
+
+    //Config table view
+    NSButtonCell	*newCell;
+    newCell = [[[NSButtonCell alloc] init] autorelease];
+    [newCell setButtonType:NSSwitchButton];
+    [newCell setControlSize:NSSmallControlSize];
+    [newCell setTitle:@""];
+    [newCell setRefusesFirstResponder:YES];
+    [[[tableView_userList tableColumns] objectAtIndex:0] setDataCell:newCell];
+
+    //Fetch the list of available logs
+    availableUsers = [[self availableUsers] retain];
+    usersToImport = [[NSMutableArray alloc] init];
+    
+    [tableView_userList reloadData];
 }
 
 //Close the window
@@ -64,6 +96,8 @@
 //Called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
+    //Stop any importing
+    [importTimer invalidate];
     [self autorelease];
 
     return(YES);
@@ -76,8 +110,67 @@
 }
 
 
-//Import logs from Adium 1.x
-- (void)importAdium1xLogs
+//Available Users Table View ----------------------------------------------------------------------
+- (int)numberOfRowsInTableView:(NSTableView *)tableView
+{
+    return([availableUsers count]);
+}
+
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+    NSString	*identifier = [tableColumn identifier];
+
+    if([identifier compare:@"check"] == 0){
+        if([usersToImport containsObject:[availableUsers objectAtIndex:row]]){
+            return([NSNumber numberWithBool:YES]);
+        }else{
+            return([NSNumber numberWithBool:NO]);
+        }
+    }else{
+        return([availableUsers objectAtIndex:row]);
+    }
+}
+
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+    NSString	*user = [availableUsers objectAtIndex:row];
+    
+    if([object intValue] == 0){
+        [usersToImport removeObject:user];
+    }else{
+        [usersToImport addObject:user];
+    }    
+}
+
+
+//Importing ------------------------------------------------------------------------------------
+//Returns an array of users available for import
+- (NSArray *)availableUsers
+{	
+    NSString		*oldUserFolder;
+    NSMutableArray	*userArray;
+    NSEnumerator	*enumerator;
+    NSString		*directoryContents;
+    NSString		*folderName;
+    
+    //Get the user list
+    oldUserFolder = [ADIUM_1X_LOGS_PATH stringByExpandingTildeInPath];
+    directoryContents = [[NSFileManager defaultManager] directoryContentsAtPath:oldUserFolder];
+    userArray = [NSMutableArray array];
+    
+    //Remove any hidden files
+    enumerator = [directoryContents objectEnumerator];
+    while((folderName = [enumerator nextObject])){
+        if(![folderName hasPrefix:@"."]){
+            [userArray addObject:folderName];
+        }
+    }
+
+    return(userArray);
+}
+
+//Import the selected logs from Adium 1.x
+- (IBAction)importLogs:(id)sender
 {
     NSString		*newLogFolder;
     NSString		*oldUserFolder;
@@ -85,11 +178,11 @@
     NSString		*userFolder;
 
     //Configure and show the window
-    [self window]; //Make sure the window is loaded
     [textField_Goal setStringValue:@"Importing Adium 1.x Logs"];
     [textField_Progress setStringValue:@"Preparing to import"];
     [progress_working startAnimation:nil];
-    [self showWindow:nil];
+    [panel_progress center];
+    [panel_progress makeKeyAndOrderFront:nil];
 
     //We scan through the log folder, and build an array of files that need copying,
     //and where they need copying to.  The files are actually copied from within a timer
@@ -98,11 +191,11 @@
     destPathArray = [[NSMutableArray alloc] init];
     
     //
-    oldUserFolder = [@"~/Library/Application Support/Adium/Users" stringByExpandingTildeInPath];
+    oldUserFolder = [ADIUM_1X_LOGS_PATH stringByExpandingTildeInPath];
     newLogFolder = [[[[owner loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath];
 
-    //For every user
-    userEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:oldUserFolder] objectEnumerator];
+    //For every selected user
+    userEnumerator = [usersToImport objectEnumerator];
     while((userFolder = [userEnumerator nextObject])){
         NSString	*oldLogFolder;
         NSEnumerator	*logEnumerator;
@@ -131,11 +224,14 @@
     //Install the copy timer
     sourcePathEnumerator = [[sourcePathArray objectEnumerator] retain];
     destPathEnumerator = [[destPathArray objectEnumerator] retain];
-    [NSTimer scheduledTimerWithTimeInterval:0.00001
-                                     target:self
-                                   selector:@selector(_importAdium1xLogsCopyTimer:)
-                                   userInfo:nil
-                                    repeats:YES];
+    importTimer = [[NSTimer scheduledTimerWithTimeInterval:0.00001
+                                                   target:self
+                                                 selector:@selector(_importAdium1xLogsCopyTimer:)
+                                                 userInfo:nil
+                                                  repeats:YES] retain];
+    
+    //Hide the import window
+    [[self window] orderOut:nil];
 }
 
 - (void)_importAdium1xLogsCopyTimer:(NSTimer *)timer
@@ -143,7 +239,6 @@
     NSString	*sourcePath = [sourcePathEnumerator nextObject];
     NSString	*destPath = [destPathEnumerator nextObject];
 
-//    NSLog(@"%@\r  to %@",sourcePath,destPath);
     if(sourcePath && destPath){
         [textField_Progress setStringValue:[NSString stringWithFormat:@"Copying %@", [destPath lastPathComponent]]];
 
@@ -152,12 +247,7 @@
         [[NSFileManager defaultManager] copyPath:sourcePath toPath:destPath handler:nil];
         
     }else{ //Import complete
-        [timer invalidate];
         [self closeWindow:nil];
-        [sourcePathArray release]; sourcePathArray = nil;
-        [destPathArray release]; destPathArray = nil;
-        [sourcePathEnumerator release]; sourcePathEnumerator = nil;
-        [destPathEnumerator release]; destPathEnumerator = nil;
     }
 }
 

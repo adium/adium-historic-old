@@ -24,11 +24,19 @@
 
 - (void)installPlugin
 {
-    [[owner notificationCenter] addObserver:self selector:@selector(latexifyIncomingString:) name:Content_WillReceiveContent object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(latexifyOutgoingString:) name:Content_WillSendContent object:nil];
-    NSPerformService(@"Equation Service/Typeset in main ES window",[NSPasteboard generalPasteboard]);
-    ////NSLog(@"MXLaTeX: installPlugin");
+#warning I've disabled the LaTeX plugin for now, please update it.
+    /*
+     - Update to use the new AITextAttachmentExtensions to correct logging, and stop assertions.
+     - Update as a Displaying Content Filter
+     - Do a quick check for $$ in the messages before running through the bigger calculations
+     - Don't launch the latex helper app until a latex message needs filtering
+     * Fix the pasteboard related stack overflow crash on quit this plugin is causing.  To reproduce, simply send a message to yourself and then quit Adium with Cmd-Q.
+     */
 
+/*    [[owner notificationCenter] addObserver:self selector:@selector(latexifyIncomingString:) name:Content_WillReceiveContent object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(latexifyOutgoingString:) name:Content_WillSendContent object:nil];
+    NSPerformService(@"Equation Service/Typeset in main ES window",[NSPasteboard generalPasteboard]);*/
+    ////NSLog(@"MXLaTeX: installPlugin");
 }
 - (void)latexifyIncomingString:(NSNotification *)notification {
     [self latexifyString:notification isIncoming:YES];
