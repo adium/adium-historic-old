@@ -8,7 +8,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 487 $ $Date: 2003/11/27 06:37:44 $ -->
+<!--$Rev: 495 $ $Date: 2003/12/17 07:02:50 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -208,21 +208,35 @@ try {
     if (from_sn != null && to_sn != null) {
         queryText += " and ((sender_sn = ? " + 
         " and recipient_sn = ?) or " +
-        "(sender_sn = ? and recipient_sn = ?))";
+        "(sender_sn = ? and recipient_sn = ?) or " +
+        "(scramble(sender_sn) = ? and scramble(recipient_sn) = ?) or " +
+        "(scramble(recipient_sn) = ? and scramble(sender_sn) = ?))";
+        commandArray[aryCount++] = new String(to_sn);
         commandArray[aryCount++] = new String(to_sn);
         commandArray[aryCount++] = new String(from_sn);
         commandArray[aryCount++] = new String(from_sn);
         commandArray[aryCount++] = new String(to_sn);
+        commandArray[aryCount++] = new String(from_sn);
+        commandArray[aryCount++] = new String(from_sn);
+        commandArray[aryCount++] = new String(to_sn);
+    
     } else if (from_sn != null && to_sn == null) {
-        queryText += " and sender_sn = ? ";
+        queryText += " and (sender_sn = ? or scramble(sender_sn) = ?)";
+        
         commandArray[aryCount++] = new String(from_sn);
+        commandArray[aryCount++] = new String(from_sn);
+
     } else if (from_sn == null && to_sn != null) {
-        queryText += " and recipient_sn = ? ";
+        queryText += " and (recipient_sn = ? or scramble(recipient_sn) =?)";
+        
+        commandArray[aryCount++] = new String(to_sn);
         commandArray[aryCount++] = new String(to_sn);
     }
 
     if (contains_sn != null) {
-        queryText += " and (recipient_sn = ? or sender_sn = ?) ";
+        queryText += " and (recipient_sn = ? or sender_sn = ? or scramble(recipient_sn) = ? or scramble(sender_sn) = ?) ";
+        commandArray[aryCount++] = new String(contains_sn);
+        commandArray[aryCount++] = new String(contains_sn);
         commandArray[aryCount++] = new String(contains_sn);
         commandArray[aryCount++] = new String(contains_sn);
     }

@@ -660,7 +660,8 @@
                                          closeFontTags:YES
                                              styleTags:YES
                             closeStyleTagsOnFontChange:NO
-                                        encodeNonASCII:NO] UTF8String];
+                                        encodeNonASCII:NO
+                                            imagesPath:nil] UTF8String];
     }
 
     serv_set_away(gc, GAIM_AWAY_CUSTOM, newValue);
@@ -677,7 +678,8 @@
                                     closeFontTags:YES
                                         styleTags:YES
                        closeStyleTagsOnFontChange:NO
-                                   encodeNonASCII:NO] UTF8String];
+                                   encodeNonASCII:NO
+                                       imagesPath:nil] UTF8String];
     }
 
     serv_set_info(gc, newValue);
@@ -779,7 +781,8 @@
                                      closeFontTags:NO
                                          styleTags:YES
                         closeStyleTagsOnFontChange:NO
-                                    encodeNonASCII:NO];
+                                    encodeNonASCII:NO
+                                        imagesPath:nil];
         AIChat *chat = [cm chat];
         GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
         NSAssert(conv != NULL, @"Not a gaim conversation");

@@ -128,6 +128,11 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     return(logBasePath);
 }
 
++ (NSString *)logPathWithAccount:(AIAccount *)account andObject:(NSString *)object
+{
+    return [[logBasePath stringByAppendingPathComponent:[account UIDAndServiceID]] stringByAppendingPathComponent:object];
+}
+
 //Enable/Disable our view log menus
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
@@ -188,11 +193,13 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 
         if(source){
             if(logHTML){
+                NSString *imagesDirectory = [NSString stringWithFormat:@"%@ (%@) images", object, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
+                NSString *imagesPath = [[AILoggerPlugin logPathWithAccount:account andObject:object] stringByAppendingPathComponent:imagesDirectory];
                 logMessage = [NSString stringWithFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@: </span><pre class=\"message\">%@</pre></div>\n",
 		    ([content isOutgoing] ? @"send" : @"receive"),
 		    dateString,
 		    [source UID],
-		    [AIHTMLDecoder encodeHTML:message headers:NO fontTags:logFont closeFontTags:logFont styleTags:logStyle closeStyleTagsOnFontChange:closeStyle encodeNonASCII:YES]];
+		    [AIHTMLDecoder encodeHTML:message headers:NO fontTags:logFont closeFontTags:logFont styleTags:logStyle closeStyleTagsOnFontChange:closeStyle encodeNonASCII:YES imagesPath:imagesPath]];
             }else{
                 logMessage = [NSString stringWithFormat:@"(%@) %@: %@\n", dateString, [source UID], [message string]];
             }
@@ -232,7 +239,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     FILE	*file;
 
     //Create path to log file (.../Logs/ServiceID.AccountUID/HandleUID/HandleUID (YY|MM|DD).adiumLog)
-    logPath = [[logBasePath stringByAppendingPathComponent:[account UIDAndServiceID]] stringByAppendingPathComponent:object];
+    logPath = [AILoggerPlugin logPathWithAccount:account andObject:object];
     if(logHTML) {
         logFileName = [NSString stringWithFormat:@"%@ (%@).html", object, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
     } else {

@@ -72,6 +72,7 @@
     
     [attachment setAttachmentCell:cell];
     [attachment setString:textEquivalent];
+    [attachment setShouldSaveImageForLogging:YES];
     attachString = [NSAttributedString attributedStringWithAttachment:attachment];
     
     [img release];

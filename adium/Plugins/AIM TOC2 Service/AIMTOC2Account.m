@@ -308,7 +308,8 @@
                                                           closeFontTags:NO
                                                               styleTags:YES
                                              closeStyleTagsOnFontChange:NO
-                                                         encodeNonASCII:YES]];
+                                                         encodeNonASCII:YES
+                                                             imagesPath:nil]];
         }else{
             message = [self validCopyOfString:[[(AIContentMessage *)object message] string]];
         }
@@ -515,7 +516,8 @@
                                             closeFontTags:NO
                                                 styleTags:YES
                                closeStyleTagsOnFontChange:NO
-                                           encodeNonASCII:YES];
+                                           encodeNonASCII:YES
+                                               imagesPath:nil];
             
             if([profile length] > 1024){
                 [[adium interfaceController] handleErrorMessage:@"Info Size Error"
@@ -532,7 +534,8 @@
                                               closeFontTags:NO
                                                   styleTags:YES
                                  closeStyleTagsOnFontChange:NO
-                                             encodeNonASCII:YES]];
+                                             encodeNonASCII:YES
+                                                 imagesPath:nil]];
 
             }else{
                 [self AIM_SetAway:nil];
@@ -884,7 +887,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.96 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.97 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)

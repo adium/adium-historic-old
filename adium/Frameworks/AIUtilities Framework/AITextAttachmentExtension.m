@@ -17,6 +17,13 @@
 
 @implementation AITextAttachmentExtension
 
+- (id)init
+{
+    [super init];
+    shouldSaveImageForLogging = NO;
+    return self;
+}
+    
 - (void)setString:(NSString *)inString
 {
     if(stringRepresentation != inString){
@@ -31,6 +38,16 @@
 	[self setString:[super description]];
     }
     return stringRepresentation;
+}
+
+- (BOOL)shouldSaveImageForLogging
+{
+    return shouldSaveImageForLogging;
+}
+
+- (void)setShouldSaveImageForLogging:(BOOL)flag
+{
+    shouldSaveImageForLogging = flag;
 }
 
 @end
