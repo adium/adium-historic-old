@@ -22,6 +22,7 @@
 @interface AIMessageEntryTextView (PRIVATE)
 - (void)_setPushIndicatorVisible:(BOOL)visible;
 - (void)_positionIndicator:(NSNotification *)notification;
+- (void)_resetCacheAndPostSizeChanged;
 @end
 
 static NSImage *pushIndicatorImage = nil;
@@ -143,14 +144,8 @@ static NSImage *pushIndicatorImage = nil;
         [[adium contentController] contentsChangedInTextEntryView:self];
     }
 	
-    //Reset cache
-    _desiredSizeCached = NSMakeSize(0,0); 
-	
-    //Post notification if size changed
-    if(!NSEqualSizes([self desiredSize], lastPostedSize)){
-        [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self];
-        lastPostedSize = [self desiredSize];
-    }
+    //Reset cache and resize
+	[self _resetCacheAndPostSizeChanged];
 }
 
 
@@ -336,7 +331,20 @@ static NSImage *pushIndicatorImage = nil;
 //Reset the desired size cache when our frame changes
 - (void)frameDidChange:(NSNotification *)notification
 {
-    _desiredSizeCached = NSMakeSize(0,0); 
+	[self _resetCacheAndPostSizeChanged];
+}
+
+//Reset the desired size cache and post a size changed notification.  Call after the text's dimensions change
+- (void)_resetCacheAndPostSizeChanged
+{
+	//Reset the size cache
+    _desiredSizeCached = NSMakeSize(0,0);
+
+    //Post notification if size changed
+    if(!NSEqualSizes([self desiredSize], lastPostedSize)){
+        [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self];
+        lastPostedSize = [self desiredSize];
+    }
 }
 
 
