@@ -212,12 +212,21 @@ DeclareString(Idle);
 		int	hours = (int)(idle / 60);
 		int	minutes = (int)((int)idle % 60);
 		
-#warning XXX LOCALIZE ME
+		NSString	*hoursString = nil, *minutesString;
+		
+		minutesString = ((minutes == 1) ? 
+						 AILocalizedString(@"1 minute",nil) :
+						 [NSString stringWithFormat:AILocalizedString(@"%i minutes",nil),minutes]);
 		if(hours){
-			entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%i hour%@, %i minute%@", hours, (hours == 1 ? @"": @"s"), minutes, (minutes == 1 ? @"": @"s")]];
-		}else{
-			entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%i minute%@", minutes, (minutes == 1 ? @"": @"s")]];
+			hoursString = ((hours == 1) ? 
+						   AILocalizedString(@"1 hour",nil) :
+						   [NSString stringWithFormat:AILocalizedString(@"%i hours",nil),hours]);
 		}
+		
+		entry = [[NSAttributedString alloc] initWithString:
+			(hoursString ?
+			 [NSString stringWithFormat:@"%@, %@",hoursString, minutesString] :
+			 minutesString)];
     }
 	
     return([entry autorelease]);
