@@ -73,6 +73,8 @@
 {
     [stringArray release];
     stringArray = [strings mutableCopy];
+	
+	[impliedCompletionDictionary release]; impliedCompletionDictionary = nil;
 }
 
 //Adds a string to the existing string list
