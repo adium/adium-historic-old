@@ -287,4 +287,19 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	[super updateAwayReturn:theContact withData:data];
 	[self updateStatusMessage:theContact];	
 }
+
+- (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
+{
+	if(strcmp(label, "Un-hide From") == 0){
+		return([NSString stringWithFormat:AILocalizedString(@"Un-hide From %@",nil),[inContact formattedUID]]);
+	}if(strcmp(label, "Temporarily Hide From") == 0){
+			return([NSString stringWithFormat:AILocalizedString(@"Temporarily Hide From %@",nil),[inContact formattedUID]]);
+	}else if(strcmp(label, "Unsubscribe") == 0){
+		return([NSString stringWithFormat:AILocalizedString(@"Unsubscribe %@",nil),[inContact formattedUID]]);
+	}else if(strcmp(label, "(Re-)Request authorization") == 0){
+		return([NSString stringWithFormat:AILocalizedString(@"Re-request Authorization from %@",nil),[inContact formattedUID]]);
+	}
+	
+	return([super titleForContactMenuLabel:label forContact:inContact]);
+}
 @end
