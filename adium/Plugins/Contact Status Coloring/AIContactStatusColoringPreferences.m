@@ -213,8 +213,26 @@
 //Clean up our preference pane
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
+	[colorWell_signedOff deactivate];
+	[colorWell_signedOffLabel deactivate];
+	[colorWell_signedOn deactivate];
+	[colorWell_signedOnLabel deactivate];
+	[colorWell_away deactivate];
+	[colorWell_awayLabel deactivate];
+	[colorWell_idle deactivate];
+	[colorWell_idleLabel deactivate];
+	[colorWell_typing deactivate];
+	[colorWell_typingLabel deactivate];
+	[colorWell_unviewedContent deactivate];
+	[colorWell_unviewedContentLabel deactivate];
+	[colorWell_online deactivate];
+	[colorWell_onlineLabel deactivate];
+	[colorWell_idleAndAway deactivate];
+	[colorWell_idleAndAwayLabel deactivate];	
+	[colorWell_offline deactivate];
+	[colorWell_offlineLabel deactivate];
+	
     [view_prefView release]; view_prefView = nil;
-
 }
 
 
