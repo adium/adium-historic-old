@@ -407,20 +407,20 @@
 			NSAssert(listContact != nil, @"listContact was nil immediately after contactAssociatedWithBuddy");
         }
 		
-#warning this assertion is firing almost randomly.  I had two instances of Adium connect on the same account name, and
-#warning an incoming message caused the one instance to assert here, but the other instance was fine...
-		
-#warning If no serviceID or UID is passed up there ^^ , listContact will be nil and trigger this assertion
-#warning ... so, if buddy is nil or buddy->name is nil or 0 length, we wont get a UID, wont get a list contact, and then will assert below
-		
-#warning is this how we are supposed to handle incoming stranger messages?  By looking up a buddy from conv->name ?
-		//Evan: It's the best we have to work with if conv->ui_data is nil.
-		
 		/*
-		 (serviceID && [serviceID length] && UID && [UID length])
-		 */
+		 Adam: I had two instances of Adium connect on the same account name, and
+		an incoming message caused the one instance to assert here, but the other instance was fine...
 		
-		NSAssert(listContact != nil, @"contactAssociatedWithBuddy must have failed?");
+		If no serviceID or UID is passed up there ^^ , listContact will be nil and trigger this assertion
+		... so, if buddy is nil or buddy->name is nil or 0 length, we wont get a UID, wont get a list contact, and then will assert below
+		
+		Is this how we are supposed to handle incoming stranger messages?  By looking up a buddy from conv->name ?
+		
+		 Evan: It's the best we have to work with if conv->ui_data is nil.
+		 */
+#warning This assertion is firing almost randomly
+		
+		NSAssert(listContact != nil, @"contactAssociatedWithBuddy must have returned nil.");
         // Need to start a new chat, associating with the gaim conv
         chat = [[adium contentController] chatWithContact:listContact
 											initialStatus:[NSDictionary dictionaryWithObject:[NSValue valueWithPointer:conv]
@@ -428,7 +428,7 @@
 		// Associate the gaim conv with the AIChat
 		conv->ui_data = chat;
 		
-		NSAssert(chat != nil, @"failed to generate a chat");		
+		NSAssert(chat != nil, @"Failed to generate a chat");		
     } else  {
         NSAssert(listContact != nil, @"Existing chat yet no existing handle?");
     }
