@@ -149,7 +149,7 @@
 - (void)playSoundNamed:(NSString *)inName
 {
     NSString      *path;
-    NSArray       *soundsFolders = [[AIObject sharedAdiumInstance] resourcePathsForName:PATH_SOUNDS];
+    NSArray       *soundsFolders = [adium resourcePathsForName:PATH_SOUNDS];
     NSEnumerator  *folderEnum    = [soundsFolders objectEnumerator];
     NSFileManager *mgr           = [NSFileManager defaultManager];
     BOOL           isDir         = NO;
