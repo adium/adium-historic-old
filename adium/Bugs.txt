@@ -65,10 +65,6 @@
 - Webkit styles rendering incorrectly in very wide windows
 	The two included styles with problems are Smooth Operator and Mockie
 
-- Webkit styles are inconsistently handling long lines
-	All styles should use the overflow scrollbar if possible.  The following styles
-	do not: Elisha, Minimal, Mockie, Retro, Simple
-
 - Webkit styles must support multi-line status messages
 	The included style with problems is Smooth Operator 
 
