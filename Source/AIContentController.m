@@ -1178,7 +1178,8 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		NSEnumerator	*chatEnumerator = [chatArray objectEnumerator];
 		AIChat			*chat;
 		while((chat = [chatEnumerator nextObject])){
-			if([[[chat listObject] internalObjectID] isEqualToString:[inContact internalObjectID]]){
+			if(![chat name] &&
+				[[[chat listObject] internalObjectID] isEqualToString:[inContact internalObjectID]]){
 				if (!foundChats) foundChats = [NSMutableSet set];
 				[foundChats addObject:chat];
 			}
