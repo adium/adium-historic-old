@@ -76,6 +76,8 @@ static AIInfoWindowController *sharedInstance = nil;
     NSTextAttachment 		*attatchment;
     NSImage 			*buddyImage;
     
+    BOOL                        online = [[inContact statusArrayForKey:@"Online"] greatestIntegerValue];
+    
     //Make sure our window is loaded
     [self window];
 
@@ -146,7 +148,7 @@ static AIInfoWindowController *sharedInstance = nil;
     
     //Signon Date
     NSDate *signonDate = [[inContact statusArrayForKey:@"Signon Date"] earliestDate];
-    if(signonDate){
+    if(signonDate && online){
         NSString        *currentDay, *signonDay, *signonTime;
         NSDateFormatter	*dayFormatter, *timeFormatter;
 
