@@ -172,6 +172,8 @@ int HTMLEquivalentForFontSize(int fontSize);
         for(i = 0; i < [chunk length]; i++) {
             if([chunk characterAtIndex:i] > 127) {
                 [string appendFormat:@"&#%d;", [chunk characterAtIndex:i]];
+            } else if ([chunk characterAtIndex:i] == 13) {
+                [string appendString:@"\n"];
             } else {
                 [string appendFormat:@"%c", [chunk characterAtIndex:i]];
             }
@@ -369,9 +371,12 @@ int HTMLEquivalentForFontSize(int fontSize)
 
                     }else if ([chunkString caseInsensitiveCompare:@"NBSP"] == 0){
                         [attrString appendString:@"Ê" withAttributes:[textAttributes dictionary]];
-                    
-                    }
-                    else if ([chunkString hasPrefix:@"#"]) {
+
+                    }else if ([chunkString hasPrefix:@"#x"]) {
+                        [attrString appendString:[NSString stringWithFormat:@"%C",
+                            [chunkString substringFromIndex:1]]
+                            withAttributes:[textAttributes dictionary]];
+                    }else if ([chunkString hasPrefix:@"#"]) {
                         [attrString appendString:[NSString stringWithFormat:@"%C", 
                             [[chunkString substringFromIndex:1] intValue]] 
                             withAttributes:[textAttributes dictionary]];
