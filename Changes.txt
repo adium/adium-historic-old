@@ -3,8 +3,10 @@
 
 Version 0.72
 - Fixed major stability issues involving Applescript filters
-- Fixed issue with erroneous autolinkification of text with multiple periods
+- Fixed issues with erroneous autolinkification of text with multiple periods
+- Fixed issues with automatic away after idle 
 - Fixed a crash when deleting logs
+- Improved Contact List vertical autosizing when placed at the bottom of the screen
 - (Jabber) Fixed issue with messages appearing gray.
 - (Jabber) Fixed issue with % in Jabber IDs
 - (AIM) Fixed issue with _ or @ in screennames
