@@ -13,6 +13,10 @@
 #define RESOURCE_TYPE_CLOSE_BUTTON			'pxm#'
 #define RESOURCE_ID_CHECKMARK				260
 
+@interface NSImage (ESImageAdditions_PRIVATE)
+- (NSBitmapImageRep *)bitmapRep;
+@end
+
 @implementation NSImage (ESImageAdditions)
 
 // Returns an image from the owners bundle with the specified name
@@ -106,7 +110,7 @@
 
 	NSData	*GIFRepresentation = nil;
 	
-	NSBitmapImageRep *bm = [self bitmapRep:self]; 
+	NSBitmapImageRep *bm = [self bitmapRep]; 
 	
 	if(bm){
 		NSDictionary *properties =  [NSDictionary dictionaryWithObjectsAndKeys:
@@ -472,9 +476,9 @@
 	[aCache unlockFocus];
 }
 
-- (NSBitmapImageRep *)getBitmap:(NSImage *)image
+- (NSBitmapImageRep *)getBitmap
 {
-	NSRect				r = NSMakeRect(0., 0., [image size].width, [image size].height);
+	NSRect				r = NSMakeRect(0., 0., [self size].width, [self size].height);
 	NSBitmapImageRep	*bm = nil;
 	
 	[[NSColor clearColor] set];
@@ -487,7 +491,7 @@
 	// if something should happen, NS_DURING/NS_HANDLER protects us!
 	NS_DURING
 		[tiffCache lockFocusOnRepresentation:rep];
-		[image compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
+		[self compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
 		
 		// OK, now let's create an NSBitmapImageRep form the data.. 
 		bm =  [[[NSBitmapImageRep alloc] initWithFocusedViewRect:r] autorelease];
@@ -510,9 +514,9 @@
 // So we must get their data and blast that into a deeper cache
 // Yucky, so we wrap this all up inside this object...
 //
-- (NSBitmapImageRep *)bitmapRep:(NSImage *)image
+- (NSBitmapImageRep *)bitmapRep
 {
-	NSArray *reps = [image representations];
+	NSArray *reps = [self representations];
 	int i = [reps count];
 	while (i--) {
 		NSBitmapImageRep *rep = (NSBitmapImageRep *)[reps objectAtIndex:i];
@@ -520,7 +524,7 @@
 			([rep bitsPerPixel] > 2))
 			return rep;
 	}
-	return [self getBitmap:image];
+	return [self getBitmap];
 }
 
 @end
