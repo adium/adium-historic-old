@@ -30,5 +30,6 @@
 
 - (IBAction)deleteAwayMessage:(id)sender;
 - (IBAction)newAwayMessage:(id)sender;
+- (IBAction)importiChatAways:(id)sender;
 
 @end
