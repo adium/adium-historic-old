@@ -227,7 +227,7 @@
 		}else{
 			/* We have a notification (so this isn't the first time through): */
 
-			//If we weren't craete meta contacts before but we are now
+			//If we weren't creating meta contacts before but we are now
 			if (!oldCreateMetaContacts && createMetaContacts){
 				//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
 				[self rebuildAddressBookDict];
