@@ -49,7 +49,7 @@ const int STARTUP_TIME = 20;
 }
 
 // Returns YES if the contact is available for receiving content of the specified type
-- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
+- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
     BOOL        available = NO;
     BOOL        weAreOnline = ([[[owner accountController] propertyForKey:@"Status" account:self] intValue]
