@@ -1167,7 +1167,7 @@ NSMutableDictionary* get_chatDict(void)
 }
 
 //Available message doesn't work on all protocols. OSCAR has its own accessor
-- (oneway void)gaimThreadSetAvailableMessageTo:(NSString *)availableHTML onAccount:(id)adiumAccount
+- (oneway void)gaimThreadSetAvailableMessage:(NSString *)availableHTML onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)){
@@ -1175,10 +1175,10 @@ NSMutableDictionary* get_chatDict(void)
 		serv_set_away(account->gc, "Available", [availableHTML UTF8String]);
 	}
 }
-- (oneway void)setAvailableMessageTo:(NSString *)availableHTML onAccount:(id)adiumAccount
+- (oneway void)setAvailableMessage:(NSString *)availableHTML onAccount:(id)adiumAccount
 {
-	[gaimThreadProxy gaimThreadSetAvailableMessageTo:availableHTML
-										   onAccount:adiumAccount];
+	[gaimThreadProxy gaimThreadSetAvailableMessage:availableHTML
+										 onAccount:adiumAccount];
 }
 
 //Set invisible. This will clear any other status.
@@ -1345,7 +1345,6 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)gaimThreadOSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	OscarData   *od;
 
 	//Because we can get here from a delay, it's possible that we are now disconnected. Sanity checks are good.
 	if(account &&
@@ -1364,12 +1363,14 @@ NSMutableDictionary* get_chatDict(void)
 
 - (oneway void)gaimThreadOSCARSetAvailableMessageTo:(NSString *)availableHTML onAccount:(id)adiumAccount
 {
-	GaimAccount *account;
+	GaimAccount		*account;
 	GaimConnection	*gc;
+	OscarData		*od;
+
 	if((account = accountLookupFromAdiumAccount(adiumAccount)) &&
 	   (gc = gaim_account_get_connection(account)) &&
 	   (od = gc->proto_data)){
-		aim_srv_setavailmsg(od->sess, [availableHTML UTF8String]);
+		aim_srv_setavailmsg(od->sess, (char *)[availableHTML UTF8String]);
 	}
 }
 

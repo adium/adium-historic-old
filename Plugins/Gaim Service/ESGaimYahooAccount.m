@@ -51,11 +51,13 @@ static NSDictionary		*presetStatusesDictionary = nil;
 {
 	static NSSet *supportedPropertyKeys = nil;
 	
-	if (!supportedPropertyKeys)
-		supportedPropertyKeys = [[[NSMutableSet alloc] initWithObjects:
-			@"Available",
+	if (!supportedPropertyKeys){
+		supportedPropertyKeys = [[NSMutableSet alloc] initWithObjects:
+			@"AvailableMessage",
 			@"Invisible",
-			nil] unionSet:[super supportedPropertyKeys]];
+			nil];
+		[supportedPropertyKeys unionSet:[super supportedPropertyKeys]];
+	}
 	
 	return supportedPropertyKeys;
 }
@@ -100,7 +102,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 #pragma mark Status
 - (void)performSetAccountAvailableTo:(NSString *)availableHTML
 {
-	[[self gaimThread] setAvailableMessageTo:availableHTML onAccount:self];	
+	[[self gaimThread] setAvailableMessage:availableHTML onAccount:self];	
 }
 
 #pragma mark Encoding
@@ -120,7 +122,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 					   attachmentsAsText:YES
 		  attachmentImagesOnlyForSending:NO
 						  simpleTagsOnly:YES
-					  bodyBackground:NO]);
+						  bodyBackground:NO]);
 	}else{
 		return [inAttributedString string];
 	}

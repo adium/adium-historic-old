@@ -149,7 +149,7 @@ Adium, Copyright 2001-2005, Adam Iser
 			KEY_USER_ICON,
 			nil];
 	}
-			
+
 	return(supportedPropertyKeys);
 }
 
