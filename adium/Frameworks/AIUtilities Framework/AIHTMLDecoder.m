@@ -210,8 +210,6 @@ int HTMLEquivalentForFontSize(int fontSize)
     NSMutableAttributedString	*attrString;
     AITextAttributes		*textAttributes;
     int				asciiChar;
-
-    NSLog(@"%@",inMessage);
     
     //set up
     textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
@@ -411,7 +409,6 @@ int HTMLEquivalentForFontSize(int fontSize)
     while((arg = [enumerator nextObject])){
         if([arg caseInsensitiveCompare:@"BGCOLOR"] == 0){
             [textAttributes setBackgroundColor:[[inArgs objectForKey:arg] hexColor]];
-            NSLog(@"BG: %@",[inArgs objectForKey:arg]);
         }
     }
 
