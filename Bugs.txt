@@ -2,6 +2,9 @@
 // Already Fixed, awaiting the next Adium release
 //------------------------------------------------------------------------------------
 
+Insert Link sheet
+  - Multiple sheets can be invoked at the same time (needs to be modal sheet)
+
 //------------------------------------------------------------------------------------
 // Adium X Known Issues
 //------------------------------------------------------------------------------------
@@ -27,11 +30,11 @@ List and Tabs
   - Tooltips appear in the contact list even when over the scroll bar
 
 Insert Link sheet
-  - Multiple sheets can be invoked at the same time (needs to be modal sheet)
+  - Override NSTextView tab input to send cursor to next responder.
 
 Other
   - Dock icon does not appear to be saved for some users while Adium is closed
-  - Links with URI's without protocol specifiers do not open when clicked.
+  - Links without protocol specifiers do not open when clicked.
 
 //------------------------------------------------------------------------------------
 // Bugs - Libgaim
