@@ -10,6 +10,7 @@
 
 @interface SHBookmarksImporterPlugin(PRIVATE)
 - (void)installImporterClass:(Class)inClass;
+- (void)_forkBookmarkThread:(id)sender;
 - (void)configureMenus:(id)sender;
 - (NSMenu *)buildBookmarkMenuFor:(id <NSMenuItem>)menuItem;
 - (void)_rebuildMenus:(NSMenuItem *)menuItem isFromMainMenu:(BOOL)fromMain;
@@ -63,9 +64,15 @@ static NSMenu       *bookmarkSets;
     
     bookmarksLock = [[NSLock alloc] init];
     // initial menu configuration
-    [NSThread detachNewThreadSelector:@selector(configureMenus:)
-                             toTarget:self
-                           withObject:nil];
+//    [NSThread detachNewThreadSelector:@selector(configureMenus:)
+//                             toTarget:self
+//                           withObject:nil];
+    
+     
+    [[adium notificationCenter] addObserver:self
+                                   selector:@selector(_forkBookmarkThread:)
+                                       name:Adium_PluginsDidFinishLoading
+                                     object:nil];
     
     [[adium menuController] addMenuItem:bookmarkRootMenuItem toLocation:LOC_Edit_Additions];
     [[adium menuController] addContextualMenuItem:bookmarkRootContextualMenuItem toLocation:Context_TextView_LinkAction];
@@ -73,12 +80,23 @@ static NSMenu       *bookmarkSets;
 
 - (void)uninstallPlugin
 {
-    //blank for now
+    [[adium notificationCenter] removeObserver:self
+                                          name:NSApplicationDidFinishLaunchingNotification
+                                        object:nil];
 }
 
 - (IBAction)dummyTarget:(id)sender
 {
     //nothing to see here...
+}
+
+- (void)_forkBookmarkThread:(NSNotification *)notification
+{
+    if([[notification name] isEqualToString:Adium_PluginsDidFinishLoading]){
+        [NSThread detachNewThreadSelector:@selector(configureMenus:)
+                                 toTarget:self
+                               withObject:nil];
+    }
 }
 
 // method to nicely install new importers

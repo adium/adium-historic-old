@@ -232,6 +232,8 @@
     [preferenceController finishIniting];
     [interfaceController finishIniting];
     [accountController finishIniting];
+    
+    [[self notificationCenter] postNotificationName:Adium_PluginsDidFinishLoading object:nil];
 }
 
 //Give all the controllers a chance to close down

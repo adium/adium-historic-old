@@ -133,4 +133,5 @@
 #define CONTACT_STATUS_AWAY_NO			@"Contact_StatusAwayNo"
 #define CONTACT_STATUS_IDLE_YES			@"Contact_StatusIdleYes"
 #define CONTACT_STATUS_IDLE_NO			@"Contact_StatusIdleNo"
-#define Adium_Xtras_Changed				@"Adium_Xtras_Changed"
+#define Adium_Xtras_Changed                     @"Adium_Xtras_Changed"
+#define Adium_PluginsDidFinishLoading           @"Adium_PluginsDidFinishLoading"
