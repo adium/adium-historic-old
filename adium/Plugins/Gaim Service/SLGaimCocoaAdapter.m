@@ -1023,7 +1023,6 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	}	
 		
 	//If we didn't grab a translated version using AILocalizedString, at least display the English version Gaim supplied
-#warning This generates really ugly output in most cases; the title should not be used as it is
 	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
 										  withObject:([errorMessage length] ? errorMessage : primaryString)
 										  withObject:([description length] ? description : ([secondaryString length] ? secondaryString : @"") )
