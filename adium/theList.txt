@@ -9,10 +9,6 @@ Legend
 # Debatable (ASK and debate before doing!)
 = Done
 
-This list is for what needs to happen for 2.0
-
-Don't delete things from this list. Just use `=' to indicate it's done. We'll cull things all at once :)
-
 ----
 Bugs
 ----
@@ -27,7 +23,7 @@ Bugs
 * Prevent cmd-delete from working in the message window
 * Mousekeys to move tabs causes a crash: http://www.visualdistortion.org/crash/view.jsp?crash=5930
 * Contact list display format preference not applying correctly on launch
-
+* Link tracking doesn't work if the link is the entire body of the first message received UNTIL you send a message, at which point it starts working
 
 -------------
 Minor Changes
@@ -36,7 +32,7 @@ Minor Changes
 Contacts:
 	+ Allow specifying an image for a contact in the inspector (Independent of address book) - this should go with the inspector/Get Info merger...
 	= Add Offline status coloring
-	- Remove sorting preferences.  Consolidate these and place them in the view menu
+	= Remove sorting preferences.  Consolidate these and place them in the view menu - (Evan: MINOR CHANGE?! I'm hurt.)
 	+ Add to buddy list menu item, contextual menu item (for strangers)
 	+ Add area for typing contact notes to inspector, display notes in tooltip
 
@@ -55,7 +51,7 @@ Accounts:
 	+ Auto-complete aliases and address book entries in New message prompt, log viewer
 
 Menu Bar:
-	= Add dividers to view menu
+	+/= Add dividers to view menu - The current solution is imperfect; it would be better to define new menu locations in the menu controller.
 	= Change window cycling menu items to 'Previous Chat' 'Next Chat'
 	
 Message Window:
