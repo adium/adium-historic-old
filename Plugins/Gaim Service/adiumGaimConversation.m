@@ -199,17 +199,35 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 				AIChatErrorType	errorType = -1;
 
 				if([messageString rangeOfString:@"Unable to send message"].location != NSNotFound){
+					/* Unable to send message = generic and AIM errors */
 					if(([messageString rangeOfString:@"Not logged in"].location != NSNotFound) ||
 					   ([messageString rangeOfString:@"is not online"].location != NSNotFound)){
-						errorType = AIChatUserNotAvailable;
+						errorType = AIChatMessageSendingUserNotAvailable;
 
 					}else if([messageString rangeOfString:@"In local permit/deny"].location != NSNotFound){
-						errorType = AIChatUserIsBlocked;
+						errorType = AIChatMessageSendingUserIsBlocked;
 
 					}else if(([messageString rangeOfString:@"Refused by client"].location != NSNotFound) ||
 							 ([messageString rangeOfString:@"message is too large"].location != NSNotFound)){
 						//XXX - there may be other conditions, but this seems the most common so that's how we'll classify it
 						errorType = AIChatMessageSendingTooLarge;
+					}
+
+				}else if(([messageString rangeOfString:@"Message could not be sent"].location != NSNotFound) ||
+						 ([messageString rangeOfString:@"Message may have not been sent"].location != NSNotFound)){
+					/* Message could not be sent = MSN errors */
+					if([messageString rangeOfString:@"because a time out occurred"].location != NSNotFound){
+						errorType = AIChatMessageSendingTimeOutOccurred;
+
+					}else if([messageString rangeOfString:@"because the user is offline"].location != NSNotFound){
+						errorType = AIChatMessageSendingUserNotAvailable;
+						
+					}else if([messageString rangeOfString:@"not allowed while invisible"].location != NSNotFound){
+						errorType = AIChatMessageSendingNotAllowedWhileInvisible;
+						
+					}else if(([messageString rangeOfString:@"because a connection error occurred"].location != NSNotFound) ||
+							 ([messageString rangeOfString:@"because an error with the switchboard"].location != NSNotFound)){
+						errorType = AIChatMessageSendingConnectionError;
 					}
 
 				}else if([messageString rangeOfString:@"You missed"].location != NSNotFound){
@@ -232,9 +250,6 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 						errorType = AIChatMessageReceivingMissedLocalIsTooEvil;
 
 					}
-
-				}else if([messageString rangeOfString:@"Message may have not been sent because a time out occurred"].location != NSNotFound){
-					errorType = AIChatMessageSendingTimeOutOccurred;
 
 				}else if([messageString isEqualToString:@"Command failed"]){
 					errorType = AIChatCommandFailed;
