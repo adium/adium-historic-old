@@ -2288,6 +2288,24 @@
 			settings = {
 			};
 		};
+		344C0F0706B7099F00DA7200 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 4947F5BC0655E85200B791E5;
+			remoteInfo = Rendezvous;
+		};
+		344C0F0806B7099F00DA7200 = {
+			isa = PBXTargetDependency;
+			target = 4947F5BC0655E85200B791E5;
+			targetProxy = 344C0F0706B7099F00DA7200;
+		};
+		344C0F0D06B709AC00DA7200 = {
+			fileRef = 4947F5CB0655E85200B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		344ECA4506209C2D007256C6 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
@@ -4923,6 +4941,7 @@
 				4B6EA1BE058FA6900070A9A1,
 				4B215DB0059896B000305B3C,
 				4B53CD9406B08AE300FCDA0C,
+				344C0F0806B7099F00DA7200,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -11977,6 +11996,7 @@
 			dstPath = "../PlugIns Disabled";
 			dstSubfolderSpec = 7;
 			files = (
+				344C0F0D06B709AC00DA7200,
 				4B53CD9506B08B2100FCDA0C,
 			);
 			isa = PBXCopyFilesBuildPhase;
