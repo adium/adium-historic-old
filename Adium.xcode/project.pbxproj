@@ -1577,10 +1577,10 @@
 		};
 		343EAB8306EF857F001CDAFF = {
 			children = (
-				343EAB8606EF859C001CDAFF,
 				343EAB8706EF859C001CDAFF,
 				343EAB8806EF859C001CDAFF,
 				343EAB8906EF859C001CDAFF,
+				343EAB8606EF859C001CDAFF,
 				343EAB8A06EF859C001CDAFF,
 			);
 			isa = PBXGroup;
@@ -4518,6 +4518,7 @@
 			};
 		};
 		34A29D9406ED68BF00E1366C = {
+			includeInIndex = 0;
 			isa = PBXFileReference;
 			lastKnownFileType = folder;
 			name = "Contact List";
@@ -9687,7 +9688,7 @@
 			};
 		};
 		4B24A2330482B34B00A8010A = {
-			includeInIndex = 1;
+			includeInIndex = 0;
 			isa = PBXFileReference;
 			lastKnownFileType = folder;
 			name = "Dock Icons";
@@ -16269,6 +16270,7 @@
 				4BA62D7F06C51256001D6B3C,
 				4B57CDB9068498D7003FF229,
 			);
+			includeInIndex = 0;
 			isa = PBXGroup;
 			name = "Xtras (Built In)";
 			path = "";
