@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.75 2004/08/04 20:42:16 evands Exp $
+// $Id: AIAccount.m,v 1.76 2004/08/12 00:47:02 evands Exp $
 
 #import "AIAccount.h"
 
@@ -424,6 +424,11 @@
 	
 }
 
+- (const char *)customServerToCheckForReachability
+{
+	return nil;
+}
+
 //Contact Status -------------------------------------------------------------------------------------------------------
 #pragma mark Contact Status
 //If an account wants to, it can implement delayedUpdateContactStatus to protect itself from flooding
@@ -512,7 +517,6 @@
 					  group:GROUP_ACCOUNT_STATUS];
     }
 }
-
 
 //Update Silencing -----------------------------------------------------------------------------------------------------
 #pragma mark Update Silencing

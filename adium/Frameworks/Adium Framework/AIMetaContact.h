@@ -16,6 +16,7 @@
 	AIListContact			*_preferredContact;
 	
 	BOOL					containsOnlyOneUniqueContact;
+	BOOL					containsOnlyOneService;
 }
 
 //The objectID is unique to a meta contact and is used as the UID for purposes of AIListContact inheritance

@@ -22,6 +22,8 @@
 
 - (id)_statusObjectForKey:(NSString *)key containedObjectSelector:(SEL)containedObjectSelector;
 - (void)_determineIfWeShouldAppearToContainOnlyOneContact;
+
+- (void)_addListContacts:(NSArray *)inContacts toArray:(NSMutableArray *)listContacts uniqueObjectIDs:(NSMutableArray *)uniqueObjectIDs;
 @end
 
 @implementation AIMetaContact
@@ -38,6 +40,7 @@
 	containedObjects = [[NSMutableArray alloc] init];
 	
 	containsOnlyOneUniqueContact = YES;
+	containsOnlyOneService = YES;
 	
 	return(self);
 }
@@ -62,6 +65,12 @@
 		uniqueObjectID = [[NSString stringWithFormat:@"MetaContact-%i",[objectID intValue]] retain];
 	}
 	return(uniqueObjectID);
+}
+
+//
+- (NSString *)accountID
+{
+	return([[self preferredContact] accountID]);
 }
 
 //Object Storage -------------------------------------------------------------------------------------------------------
@@ -91,6 +100,10 @@
 			if (([inObject online] || ![self online]) &&
 				((newUID == nil)||
 				(currentUID && (![currentUID isEqualToString:newUID] || ![currentService isEqualToString:newService])))){
+				
+				if (![currentService isEqualToString:newService]){
+					containsOnlyOneService = NO;
+				}
 				
 				containsOnlyOneUniqueContact = NO;
 				
@@ -224,12 +237,58 @@
 
 - (NSArray *)listContacts
 {
-	return [self containedObjects];
+	NSMutableArray	*listContacts = [NSMutableArray array];
+	NSMutableArray	*uniqueObjectIDs = [NSMutableArray array];
+	[self _addListContacts:[self containedObjects] toArray:listContacts uniqueObjectIDs:uniqueObjectIDs];
+		
+	return listContacts;
+}
+
+- (void)_addListContacts:(NSArray *)inContacts toArray:(NSMutableArray *)listContacts uniqueObjectIDs:(NSMutableArray *)uniqueObjectIDs
+{
+	unsigned		index;
+	unsigned		count = [inContacts count];
+	
+	//Search for an available contact
+	for (index = 0; index < count; index++){
+		AIListObject	*listObject = [inContacts objectAtIndex:index];
+		if ([listObject isKindOfClass:[AIMetaContact class]]){
+			//Parse the contained metacontact recrusively
+			[self _addListContacts:[(AIMetaContact *)listObject containedObjects]
+						   toArray:listContacts
+				   uniqueObjectIDs:uniqueObjectIDs];
+			
+		}else{
+			NSString	*llistObjectUniqueObjectID = [listObject uniqueObjectID];
+			unsigned int listContactIndex = [uniqueObjectIDs indexOfObject:llistObjectUniqueObjectID];
+			
+			if (listContactIndex == NSNotFound){
+				//This contact isn't in the array yet, so add it
+				[listContacts addObject:listObject];
+				[uniqueObjectIDs addObject:llistObjectUniqueObjectID];
+				
+			}else{
+				//If it is found, but it is offline and this contact is online, swap 'em out so our array
+				//has the best possible listContacts (making display elsewhere more straightforward)
+				if (![[listContacts objectAtIndex:listContactIndex] online] &&
+					[listObject online]){
+					
+					[listContacts replaceObjectAtIndex:listContactIndex
+											withObject:listObject];
+				}
+			}
+		}
+	}
 }
 
 - (BOOL)containsOnlyOneUniqueContact
 {
 	return containsOnlyOneUniqueContact;
+}
+
+- (BOOL)containsOnlyOneService
+{
+	return containsOnlyOneService;
 }
 
 - (NSString *)formattedUID
@@ -244,7 +303,7 @@
 
 - (NSString *)displayServiceID
 {
-	if (containsOnlyOneUniqueContact){
+	if (containsOnlyOneService){
 		return([[self preferredContact] displayServiceID]);
 	}else{
 		return nil;
@@ -271,6 +330,8 @@
 //		- When all contacts within the metaContact are offline and have the same UID and service
 //This makes the UID and service information presented to the user as accurate as possible for at-a-glance
 //knowlege of the metaContact's effective contents
+
+#warning rework to handle containsOnlyOneService checking simultaneously
 - (void)_determineIfWeShouldAppearToContainOnlyOneContact
 {
 	unsigned int count = [self containedObjectsCount];

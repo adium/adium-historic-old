@@ -151,6 +151,7 @@ typedef enum {
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
 - (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 - (BOOL)createNewGroupChatWithListObject:(AIListObject *)contact;
+- (const char *)customServerToCheckForReachability;
 
 //Images
 - (NSImage *)image;
