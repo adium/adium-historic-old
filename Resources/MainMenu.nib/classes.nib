@@ -28,6 +28,7 @@
                 contentController = AIContentController; 
                 debugController = ESDebugController; 
                 dockController = AIDockController; 
+                emoticonController = AIEmoticonController; 
                 fileTransferController = ESFileTransferController; 
                 interfaceController = AIInterfaceController; 
                 loginController = AILoginController; 
@@ -66,6 +67,12 @@
         }, 
         {
             CLASS = AIDockController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {adium = AIAdium; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = AIEmoticonController; 
             LANGUAGE = ObjC; 
             OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 

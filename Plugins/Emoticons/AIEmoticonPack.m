@@ -16,7 +16,7 @@
 
 #import "AIEmoticon.h"
 #import "AIEmoticonPack.h"
-#import "AIEmoticonsPlugin.h"
+#import "AIEmoticonController.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 
 #define EMOTICON_PATH_EXTENSION			@"emoticon"

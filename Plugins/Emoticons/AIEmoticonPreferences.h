@@ -17,11 +17,11 @@
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
-#import <Adium/AIPreferencePane.h>
+#import <Adium/AIWindowController.h>
 
 @class AIEmoticonPack, AIAlternatingRowTableView;
 
-@interface AIEmoticonPreferences : AIPreferencePane
+@interface AIEmoticonPreferences : AIWindowController
 {
     IBOutlet    AIAlternatingRowTableView   *table_emoticonPacks;
     NSMutableArray							*emoticonPackPreviewControllers;
@@ -38,6 +38,7 @@
 	BOOL									viewIsOpen;
 }
 
++ (void)showEmoticionCustomizationOnWindow:(NSWindow *)parentWindow;
 - (void)toggledPackController:(id)packController;
 - (void)emoticonXtrasDidChange;
 

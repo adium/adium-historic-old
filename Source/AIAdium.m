@@ -21,6 +21,7 @@
 #import "AICorePluginLoader.h"
 #import "AICrashController.h"
 #import "AIDockController.h"
+#import "AIEmoticonController.h"
 #import "AIExceptionController.h"
 #import "AIInterfaceController.h"
 #import "AILoginController.h"
@@ -127,6 +128,9 @@ static NSString	*prefsCategory;
 - (AIContactController *)contactController{
     return(contactController);
 }
+- (AIEmoticonController *)emoticonController{
+    return(emoticonController);
+}
 - (AISoundController *)soundController{
     return(soundController);
 }
@@ -222,6 +226,7 @@ static NSString	*prefsCategory;
 	[debugController initController]; //should init after the menuController to add its menu item if needed
 	[contactAlertsController initController];
     [soundController initController];
+	[emoticonController initController];
     [accountController initController];
 	[contactController initController];
     [contentController initController];
@@ -279,6 +284,7 @@ static NSString	*prefsCategory;
     [contentController closeController];
     [contactController closeController];
     [accountController closeController];
+	[emoticonController closeController];
     [soundController closeController];
     [menuController closeController];
     [applescriptabilityController closeController];

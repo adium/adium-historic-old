@@ -14,7 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIEmoticonsPlugin.h"
+#import "AIEmoticonController.h"
+#warning crosslinking, move emoticon stuff to framework i guess
 #import "AIEmoticon.h"
 #import "AIEmoticonPack.h"
 #import "AIEmoticonPreferences.h"
@@ -33,7 +34,7 @@
 #define EMOTICON_PACK_PATH_EXTENSION		@"emoticonPack"
 #define PROTEUS_EMOTICON_SET_PATH_EXTENSION @"emoticons"
 
-@interface AIEmoticonsPlugin (PRIVATE)
+@interface AIEmoticonController (PRIVATE)
 - (NSDictionary *)emoticonIndex;
 - (NSCharacterSet *)emoticonHintCharacterSet;
 - (NSCharacterSet *)emoticonStartCharacterSet;
@@ -56,11 +57,11 @@
 
 int packSortFunction(id packA, id packB, void *packOrderingArray);
 
-@implementation AIEmoticonsPlugin
+@implementation AIEmoticonController
 
 #define EMOTICONS_THEMABLE_PREFS      @"Emoticon Themable Prefs"
 
-- (void)installPlugin
+- (void)initController
 {
     //Init    
     observingContent = NO;
@@ -89,7 +90,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 									 object:nil];
 }
 
-- (void)uninstallPlugin
+- (void)closeController
 {
 //	[[adium contentController] unregisterOutgoingContentFilter:self];
 }

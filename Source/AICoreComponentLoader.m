@@ -143,7 +143,6 @@ ESAutoAwayPlugin;
 	[self _loadComponentClass:[AIDockBehaviorPlugin class]];
 	[self _loadComponentClass:[AIDockUnviewedContentPlugin class]];
 	[self _loadComponentClass:[AIDualWindowInterfacePlugin class]];
-	[self _loadComponentClass:[AIEmoticonsPlugin class]];
 	[self _loadComponentClass:[AIEventSoundsPlugin class]];
 	[self _loadComponentClass:[AIExtendedStatusPlugin class]];
 	[self _loadComponentClass:[AILoggerPlugin class]];

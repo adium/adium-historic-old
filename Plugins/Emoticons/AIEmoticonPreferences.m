@@ -18,11 +18,12 @@
 #import "AIEmoticonPack.h"
 #import "AIEmoticonPackPreviewController.h"
 #import "AIEmoticonPreferences.h"
-#import "AIEmoticonsPlugin.h"
+#import "AIEmoticonController.h"
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AITableViewAdditions.h>
 #import <AIUtilities/BZGenericViewCell.h>
 #import <AIUtilities/ESImageAdditions.h>
+#import <Adium/AIListObject.h>
 
 #define	EMOTICON_PACK_DRAG_TYPE         @"AIEmoticonPack"
 #define EMOTICON_MIN_ROW_HEIGHT         17
@@ -37,19 +38,48 @@
 
 @implementation AIEmoticonPreferences
 
-//Preference pane properties
-- (PREFERENCE_CATEGORY)category{
-    return(AIPref_Advanced);
-}
-- (NSString *)label{
-    return(AILocalizedString(@"Emoticons","Emoticons/Smilies"));
-}
-- (NSString *)nibName{
-    return(@"EmoticonPrefs");
++ (void)showEmoticionCustomizationOnWindow:(NSWindow *)parentWindow
+{
+	AIEmoticonPreferences	*controller;
+	
+	controller = [[self alloc] initWithWindowNibName:@"EmoticonPrefs"];
+	
+	if(parentWindow){
+		[NSApp beginSheet:[controller window]
+		   modalForWindow:parentWindow
+			modalDelegate:controller
+		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
+			  contextInfo:nil];
+	}else{
+		[controller showWindow:nil];
+		[[controller window] makeKeyAndOrderFront:nil];
+		[NSApp activateIgnoringOtherApps:YES];
+	}
 }
 
+/*!
+* Invoked as the sheet closes, dismiss the sheet
+ */
+- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    [sheet orderOut:nil];
+}
+
+
+//Preference pane properties
+//- (PREFERENCE_CATEGORY)category{
+//    return(AIPref_Advanced);
+//}
+//- (NSString *)label{
+//    return(AILocalizedString(@"Emoticons","Emoticons/Smilies"));
+//}
+//- (NSString *)nibName{
+//    return(@"EmoticonPrefs");
+//}
+
 //Configure the preference view
-- (void)viewDidLoad
+//- (void)viewDidLoad
+- (void)windowDidLoad
 {
     //Pack table
     [table_emoticonPacks registerForDraggedTypes:[NSArray arrayWithObject:EMOTICON_PACK_DRAG_TYPE]];
@@ -92,7 +122,8 @@
 	viewIsOpen = YES;
 }
 
-- (void)viewWillClose
+- (void)windowWillClose:(id)sender
+//- (void)viewWillClose
 {
 	viewIsOpen = NO;
 
@@ -102,19 +133,19 @@
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 
     //Flush all the images we loaded
-    [plugin flushEmoticonImageCache];
+    [[adium emoticonController] flushEmoticonImageCache];
 }
 
 - (void)configurePreviewControllers
 {
-	NSEnumerator	*enumerator = [[plugin availableEmoticonPacks] objectEnumerator];
+	NSEnumerator	*enumerator = [[[adium emoticonController] availableEmoticonPacks] objectEnumerator];
 	AIEmoticonPack	*pack;
 
 	[emoticonPackPreviewControllers release];
 	emoticonPackPreviewControllers = [[NSMutableArray alloc] init];
 	while(pack = [enumerator nextObject]){
 		[emoticonPackPreviewControllers addObject:[AIEmoticonPackPreviewController previewControllerForPack:pack
-																								 withPlugin:plugin
+																								 withPlugin:[adium emoticonController]
 																								preferences:self]];
 	}
 	
@@ -130,7 +161,7 @@
     //Remember the selected pack
     if([table_emoticonPacks numberOfSelectedRows] == 1 && [table_emoticonPacks selectedRow] != -1){
 		[selectedEmoticonPack release];
-        selectedEmoticonPack = [[[plugin availableEmoticonPacks] objectAtIndex:[table_emoticonPacks selectedRow]] retain];
+        selectedEmoticonPack = [[[[adium emoticonController] availableEmoticonPacks] objectAtIndex:[table_emoticonPacks selectedRow]] retain];
     }else{
         selectedEmoticonPack = nil;
     }
@@ -252,7 +283,7 @@
 	if (tableView == table_emoticons && [@"Enabled" isEqualToString:[tableColumn identifier]]) {
 		AIEmoticon  *emoticon = [[selectedEmoticonPack emoticons] objectAtIndex:row];
 		
-		[plugin setEmoticon:emoticon inPack:selectedEmoticonPack enabled:[object intValue]];
+		[[adium emoticonController] setEmoticon:emoticon inPack:selectedEmoticonPack enabled:[object intValue]];
 	}
 }
 
@@ -302,7 +333,7 @@
             while(dragRow = [enumerator nextObject]){
                 [movedPacks addObject:[[emoticonPackPreviewControllers objectAtIndex:[dragRow intValue]] emoticonPack]];
             }
-            [plugin moveEmoticonPacks:movedPacks toIndex:row];
+            [[adium emoticonController] moveEmoticonPacks:movedPacks toIndex:row];
             
 			[self configurePreviewControllers];
 			
@@ -378,7 +409,7 @@
 
 		[table_emoticonPacks deselectAll:nil];
 		//Note the changed packs
-        [plugin xtrasChanged:nil];
+        [[adium emoticonController] xtrasChanged:nil];
     }
 }
 
