@@ -16,6 +16,9 @@
 - (void)setAwayMessage:(id)msg;
 - (void)signonTimerExpired:(NSTimer*)timer;
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
+- (void)connect;
+- (void)disconnect;
+- (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle;
 @end
 
 @implementation CBGaimAccount
@@ -205,9 +208,7 @@
 
     //if anything changed
     if([modifiedKeys count] > 0)
-    {
-//        NSLog(@"Changed %@", modifiedKeys);
-        
+    {  
         //tell the contact controller, silencing if necessary
         [[owner contactController] handleStatusChanged:theHandle
                                     modifiedStatusKeys:modifiedKeys
@@ -415,6 +416,7 @@
     gc = NULL;
     NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
     signonTimer = nil;
+    
 }
 
 - (void)dealloc
@@ -449,32 +451,16 @@
 
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    NSLog(@"gaim: statusForKey: %@ willChangeTo: %@", key, inValue);
     ACCOUNT_STATUS status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
-        
     if([key compare:@"Online"] == 0)
     {
-        if([inValue boolValue]) //Connect
-        { 
-            if(status == STATUS_OFFLINE)
-            {                
-                //get password
-                [[owner accountController] passwordForAccount:self 
-                    notifyingTarget:self selector:@selector(finishConnect:)];
+        if([inValue boolValue]) {
+            if(status == STATUS_OFFLINE) { 
+                [self connect];
             }
-        }
-        else //Disconnect
-        {
-            if(status == STATUS_ONLINE)
-            {
-                //we're signing off, give us a minute.
-                [[owner accountController] 
-                    setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING]
-                    forKey:@"Status" account:self];
-                
-                gaim_account_disconnect(account); gc = NULL;
-                silentAndDelayed = YES;
-                NSLog(@"Setting handle updates to silent and delayed (disconnecting)");
+        } else { //Disconnect
+            if(status == STATUS_ONLINE) {
+                [self disconnect];
             }
         }
     } 
@@ -493,6 +479,7 @@
         }
     }
 }
+
 
 - (void)setAwayMessage:(id)message
 {
@@ -724,8 +711,49 @@
                                     withDescription:errorDesc];
 }
 
-- (AIAdium *)owner
+/***************************/
+/* Account private methods */
+/***************************/
+
+// Removes all the possible status flags (that are valid on the calling account) from the passed handle
+- (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle
 {
-    return owner;   
+    NSArray * keyArray = [self supportedPropertyKeys];
+    [[handle statusDictionary] removeObjectsForKeys:keyArray];
+    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray delayed:YES silent:YES];
 }
+
+//connecting / disconnecting
+- (void)connect
+{
+    //get password
+    [[owner accountController] passwordForAccount:self 
+                                  notifyingTarget:self selector:@selector(finishConnect:)];
+}
+
+- (void)disconnect
+{
+    //signing off
+    [[owner accountController] 
+                    setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING]
+                         forKey:@"Status" account:self];
+    
+    //Flush all our handle status flags
+  //  enumerator = [[handleDict allValues] objectEnumerator];
+ //   while((handle = [enumerator nextObject])){
+ //       [self removeAllStatusFlagsFromHandle:handle];
+//    }
+    
+    //Remove all our handles
+   // [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
+  //  [[owner contactController] handlesChangedForAccount:self];
+    
+    //tell gaim to disconnect
+    
+    silentAndDelayed = YES;
+    NSLog(@"Setting handle updates to silent and delayed (disconnecting)");
+    gaim_account_disconnect(account); gc = NULL;
+}
+
+
 @end
