@@ -7266,6 +7266,7 @@
 				3477CAD10776E55800995429,
 				34C69E6F07794B9200EB423C,
 				34C6A4CB077AB3AA00EB423C,
+				4BE8AF6F0796EC1300B6E49B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7446,6 +7447,7 @@
 				34B70344076EDB370016E8BA,
 				34C69E7007794B9200EB423C,
 				34C6A4CC077AB3AD00EB423C,
+				4BE8AF700796EC1300B6E49B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12299,6 +12301,8 @@
 				4BAFD57806E0091100FF7FBC,
 				F5793922033E74C301A8010A,
 				F579390B033E748F01A8010A,
+				4BE8AF6D0796EC1200B6E49B,
+				4BE8AF6E0796EC1200B6E49B,
 				4B28DDAB0599FED200343093,
 				4B28DDAC0599FED200343093,
 			);
@@ -17204,6 +17208,36 @@
 			name = "Log Viewer";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BE8AF6D0796EC1200B6E49B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAbstractAccount.h;
+			path = "Frameworks/Adium Framework/AIAbstractAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BE8AF6E0796EC1200B6E49B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAbstractAccount.m;
+			path = "Frameworks/Adium Framework/AIAbstractAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BE8AF6F0796EC1300B6E49B = {
+			fileRef = 4BE8AF6D0796EC1200B6E49B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE8AF700796EC1300B6E49B = {
+			fileRef = 4BE8AF6E0796EC1200B6E49B;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BE8E5390483B59800A8010A = {
 			children = (
