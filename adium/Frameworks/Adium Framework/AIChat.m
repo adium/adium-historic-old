@@ -9,6 +9,7 @@
 
 @interface AIChat (PRIVATE)
 - (id)initForAccount:(AIAccount *)inAccount;
+- (void)clearUniqueChatID;
 @end
 
 @implementation AIChat
@@ -109,7 +110,7 @@
 		//The uniqueChatID may depend upon the account, so clear it
 		[self clearUniqueChatID];
 		
-		[[adium notificationCenter] postNotificationName:Content_ChatAccountChanged object:self]; //Notify
+		[[adium notificationCenter] postNotificationName:Chat_AccountChanged object:self]; //Notify
 	}
 }
 
@@ -187,7 +188,7 @@
 {
 	if (![participatingListObjects containsObjectIdenticalTo:inObject]){
 		[participatingListObjects addObject:inObject]; //Add
-		[[adium notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:self]; //Notify
+		[[adium notificationCenter] postNotificationName:Chat_ParticipatingListObjectsChanged object:self]; //Notify
 	}
 
 }
@@ -202,7 +203,7 @@
 - (void)removeParticipatingListObject:(AIListObject *)inObject
 {
     [participatingListObjects removeObject:inObject]; //Remove	
-	[[adium notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:self]; //Notify
+	[[adium notificationCenter] postNotificationName:Chat_ParticipatingListObjectsChanged object:self]; //Notify
 
 }
 
