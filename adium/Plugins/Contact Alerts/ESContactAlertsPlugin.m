@@ -260,19 +260,19 @@
 
 - (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
 {
-    NSDictionary		*objects = [inToolbarItem configurationObjects];
-    AIListContact		*object = [objects objectForKey:@"ContactObject"];
-    BOOL			enabled = object &&  [object isKindOfClass:[AIListObject class]];
-
+    NSDictionary	*objects = [inToolbarItem configurationObjects];
+    AIListContact	*object = [objects objectForKey:@"ContactObject"];
+    BOOL		enabled = object &&  [object isKindOfClass:[AIListObject class]];
+    
     [inToolbarItem setEnabled:enabled];
-    return(enabled);
+    return(YES);
 }
 
 - (IBAction)toolbarContactAlerts:(AIMiniToolbarItem *)toolbarItem
 {
     NSDictionary		*objects = [toolbarItem configurationObjects];
     AIListObject		*object = [objects objectForKey:@"ContactObject"];
-
+    
     [ESContactAlertsWindowController showContactAlertsWindowWithOwner:owner forObject:object];
 }
 
