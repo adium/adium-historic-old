@@ -79,7 +79,7 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 	
 	//Observe window style changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 }
 
 
@@ -146,7 +146,7 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 		}
 	}
 	
-	if([group isEqualToString:PREF_GROUP_LIST_LAYOUT]){
+	if([group isEqualToString:PREF_GROUP_APPEARANCE]){
 		if(!key || [key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE]){
 			int	newWindowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 

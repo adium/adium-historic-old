@@ -346,27 +346,27 @@
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	NSString	*column = [tableColumn identifier];
-
-	if(tableView == tableView_layout){
-		if([column isEqualToString:@"name"]){
-			NSImage	*image = nil;
-			switch([[[[layoutArray objectAtIndex:row] objectForKey:@"preferences"] objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]){
-				case WINDOW_STYLE_STANDARD: image = layoutStandard; break;
-				case WINDOW_STYLE_BORDERLESS: image = layoutBorderless; break;
-				case WINDOW_STYLE_MOCKIE: image = layoutMockie; break;
-				case WINDOW_STYLE_PILLOWS: image = layoutPillows; break;
-				case WINDOW_STYLE_PILLOWS_FITTED: image = layoutPillows; break;
-			}
-			[cell setImage:image];
-		}else{
-			[cell setImage:nil];
-		}
-	}else if(tableView == tableView_theme){
-		if([column isEqualToString:@"preview"]){
-			[cell setThemeDict:[[themeArray objectAtIndex:row] objectForKey:@"preferences"]];
-		}		
-	}
+//	NSString	*column = [tableColumn identifier];
+//
+//	if(tableView == tableView_layout){
+//		if([column isEqualToString:@"name"]){
+//			NSImage	*image = nil;
+//			switch([[[[layoutArray objectAtIndex:row] objectForKey:@"preferences"] objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]){
+//				case WINDOW_STYLE_STANDARD: image = layoutStandard; break;
+//				case WINDOW_STYLE_BORDERLESS: image = layoutBorderless; break;
+//				case WINDOW_STYLE_MOCKIE: image = layoutMockie; break;
+//				case WINDOW_STYLE_PILLOWS: image = layoutPillows; break;
+//				case WINDOW_STYLE_PILLOWS_FITTED: image = layoutPillows; break;
+//			}
+//			[cell setImage:image];
+//		}else{
+//			[cell setImage:nil];
+//		}
+//	}else if(tableView == tableView_theme){
+//		if([column isEqualToString:@"preview"]){
+//			[cell setThemeDict:[[themeArray objectAtIndex:row] objectForKey:@"preferences"]];
+//		}		
+//	}
 }
 
 @end
