@@ -16,17 +16,12 @@
     return "prpl-jabber";
 }
 
-#define KEY_JABBER_RESOURCE			@"Jabber:Resource"
-#define KEY_JABBER_ALLOW_PLAINTEXT  @"Jabber:Allow Plaintext Authentication"
-
 - (void)initAccount
 {
 	[super initAccount];
-	bareUID = nil;
 }
 - (void)dealloc
 {
-	[bareUID release];
 	[super dealloc];
 }
 
