@@ -18,7 +18,7 @@
 - (void)installPlugin
 {
     BOOL weDontWantAlertSoundsOnByDefault = [[[adium preferenceController] preferenceForKey:KEY_SYS_SOUND_PATHER_FIRST_RUN
-																					  group:PREF_GROUP_GENERAL] boolValue];
+																					  group:PREF_GROUP_SOUNDS] boolValue];
 	
     //Install our preference view
     if([NSApp isOnPantherOrBetter]){
@@ -27,11 +27,11 @@
         if(weDontWantAlertSoundsOnByDefault){
             [[adium preferenceController] setPreference:[NSNumber numberWithBool:NO]
                                                  forKey:KEY_USE_SYSTEM_SOUND_OUTPUT
-                                                  group:PREF_GROUP_GENERAL];
+                                                  group:PREF_GROUP_SOUNDS];
 			
             [[adium preferenceController] setPreference:[NSNumber numberWithBool:NO]
                                                  forKey:KEY_SYS_SOUND_PATHER_FIRST_RUN
-                                                  group:PREF_GROUP_GENERAL];
+                                                  group:PREF_GROUP_SOUNDS];
         }
     }
 }

@@ -34,7 +34,7 @@
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
     
 	[checkbox_useCustomVolume setState:[[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] boolValue]];
     if([[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue] == YES){
@@ -49,7 +49,7 @@
 //New value selected on the volume slider
 - (IBAction)selectVolume:(id)sender
 {
-    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
     float			value = [slider_volume floatValue];
     BOOL			mute = (value == 0.0);
     BOOL			playSample = NO;
@@ -58,7 +58,7 @@
     if(value != [[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]){
         [[adium preferenceController] setPreference:[NSNumber numberWithFloat:value]
                                              forKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL
-                                              group:PREF_GROUP_GENERAL];
+                                              group:PREF_GROUP_SOUNDS];
         playSample = YES;
     }
 
@@ -66,7 +66,7 @@
     if(mute != [[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue]){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:mute]
                                              forKey:KEY_SOUND_MUTE
-                                              group:PREF_GROUP_GENERAL];
+                                              group:PREF_GROUP_SOUNDS];
         playSample = NO;
     }
 
@@ -81,7 +81,7 @@
 {
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkbox_useCustomVolume state]]
 										 forKey:KEY_SOUND_USE_CUSTOM_VOLUME
-										  group:PREF_GROUP_GENERAL];
+										  group:PREF_GROUP_SOUNDS];
 	[super changePreference:sender];
 }
 
