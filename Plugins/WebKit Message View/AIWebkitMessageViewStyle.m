@@ -26,6 +26,7 @@
 #import <Adium/AIContentStatus.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 
 //
@@ -769,7 +770,7 @@ DeclareString(AppendNextMessage);
 	do{
 		range = [inString rangeOfString:@"%incomingIconPath%"];
 		if(range.location != NSNotFound){
-			AIListObject	*listObject = [chat listObject];
+			AIListContact	*listObject = [chat listObject];
 			NSString		*iconPath = nil;
 			
 			if (listObject){
