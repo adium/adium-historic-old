@@ -18,7 +18,12 @@
  */
 + (AIStatus *)status
 {
-	return([[[self alloc] init] autorelease]);
+	AIStatus	*newStatus = [[[self alloc] init] autorelease];
+	
+	//Configure defaults as necessary
+	[newStatus setAutoReplyIsStatusMessage:YES];
+	
+	return(newStatus);
 }
 
 /*
