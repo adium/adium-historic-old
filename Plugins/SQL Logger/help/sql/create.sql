@@ -38,8 +38,7 @@ create table im.user_statistics (
 sender_id       int references im.users(user_id) not null,
 recipient_id    int references im.users(user_id) not null,
 num_messages    int default 1,
-last_message    timestamp default now(),
-primary key (sender_id, recipient_id)
+period          date
 );
 
  -- Createe a few commonly used indexes
@@ -126,19 +125,19 @@ do instead  (
     -- Usernames
 
     insert into im.users (username,service)
-    select new.sender_sn, coalesce(new.sender_service, 'AIM')
+    select lower(new.sender_sn), coalesce(new.sender_service, 'AIM')
     where not exists (
         select 'x'
         from im.users
-        where username = new.sender_sn
+        where username = lower(new.sender_sn)
         and service ilike coalesce(new.sender_service, 'AIM'));
 
     insert into im.users (username, service)
-    select new.recipient_sn, coalesce(new.recipient_service, 'AIM')
+    select lower(new.recipient_sn), coalesce(new.recipient_service, 'AIM')
     where not exists (
         select 'x'
         from im.users
-        where username = new.recipient_sn
+        where username = lower(new.recipient_sn)
         and service ilike coalesce(new.recipient_service, 'AIM'));
 
     -- Display Names
@@ -151,14 +150,14 @@ do instead  (
         else new.sender_display end,
         coalesce(new.message_date, now())
     from   im.users
-    where  username = new.sender_sn
+    where  username = lower(new.sender_sn)
      and   service ilike coalesce(new.sender_service, 'AIM')
     and not exists (
         select 'x'
         from   im.user_display_name udn
         where  user_id =
                (select user_id from im.users
-                where  username = new.sender_sn
+                where  username = lower(new.sender_sn)
                  and   service ilike coalesce(new.sender_service, 'AIM'))
             and   display_name = case when new.sender_display is null
              or new.sender_display = '' then new.sender_sn
@@ -180,14 +179,14 @@ do instead  (
         else new.recipient_display end,
         coalesce(new.message_date, now())
     from im.users
-    where username = new.recipient_sn
+    where username = lower(new.recipient_sn)
      and  service ilike coalesce(new.recipient_service, 'AIM')
      and not exists (
         select 'x'
         from   im.user_display_name udn
         where  user_id =
                (select user_id from im.users
-               where username = new.recipient_sn
+               where username = lower(new.recipient_sn)
                 and  service ilike coalesce(new.recipient_service, 'AIM'))
         and    display_name = case when new.recipient_display is null or
         new.recipient_display = '' then new.recipient_sn
@@ -204,38 +203,42 @@ do instead  (
     insert into im.messages
         (message,sender_id,recipient_id, message_date)
     values (new.message,
-    (select user_id from im.users where username = new.sender_sn and
+    (select user_id from im.users where username = lower(new.sender_sn) and
     service ilike coalesce(new.sender_service, 'AIM')),
-    (select user_id from im.users where username = new.recipient_sn and
+    (select user_id from im.users where username = lower(new.recipient_sn) and
     service ilike coalesce(new.recipient_service, 'AIM')),
     coalesce(new.message_date, now() )
     );
 
     -- Updating statistics
     update im.user_statistics
-    set num_messages = num_messages + 1,
-    last_message = CURRENT_TIMESTAMP
-    where sender_id = (select user_id from im.users where username =
-    new.sender_sn and service ilike coalesce(new.sender_service, 'AIM'))
+    set num_messages = num_messages + 1
+    where sender_id = (select user_id from im.users
+    where username = lower(new.sender_sn)
+    and service ilike coalesce(new.sender_service, 'AIM'))
     and recipient_id = (select user_id from im.users where username =
-    new.recipient_sn and service ilike coalesce(new.recipient_service, 'AIM'));
+    lower(new.recipient_sn)
+    and service ilike coalesce(new.recipient_service, 'AIM'))
+    and period = date_trunc('month', coalesce(new.message_date, now()))::date;
 
     -- Inserting statistics if none exist
     insert into im.user_statistics
-    (sender_id, recipient_id, num_messages)
+    (sender_id, recipient_id, num_messages, period)
     select
     (select user_id from im.users
-    where username = new.sender_sn and service ilike new.sender_service),
+    where username = lower(new.sender_sn) and service ilike new.sender_service),
     (select user_id from im.users
-    where username = new.recipient_sn and service ilike new.recipient_service),
-    1
+    where username = lower(new.recipient_sn) and service ilike new.recipient_service),
+    1,
+    date_trunc('month', new.message_date)::date
     where not exists
         (select 'x' from im.user_statistics
         where sender_id = (select user_id from im.users where username =
-        new.sender_sn and service ilike new.sender_service)
+        lower(new.sender_sn) and service ilike new.sender_service)
         and recipient_id =
         (select user_id from im.users where username =
-        new.recipient_sn and service ilike new.recipient_service))
+        lower(new.recipient_sn) and service ilike new.recipient_service)
+        and period = date_trunc('month', coalesce(new.message_date, now()))::date)
 );
 
  -- Contains names of the meta contacts.
@@ -285,7 +288,7 @@ insert into im.information_keys (key_name) values ('Notes');
 create table im.contact_information (
 meta_id         int references im.meta_container (meta_id),
 user_id         int references im.users (user_id),
-key_id          int references im.information_keys (key_id),
+key_id          int references im.information_keys (key_id) not null,
 value           text,
     constraint meta_or_user_not_null
         check (meta_id is not null or user_id is not null)
@@ -394,7 +397,7 @@ from   users natural join contact_information
           natural join information_keys
 where username = ''fetchgreebledonx''');
 
-select setval('saved_items_item_id_seq', 3);
+select setval('im.saved_items_item_id_seq', 3);
 
 --statuses
 \echo table status
