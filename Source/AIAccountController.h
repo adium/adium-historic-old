@@ -32,15 +32,6 @@
 
 @class AIServiceType, AIAdium, AIAccount, AIListObject, AIAccountViewController, DCJoinChatViewController;
 
-@protocol AIServiceController <NSObject>
-- (NSString *)identifier;
-- (NSString *)description;
-- (AIServiceType *)handleServiceType;
-- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID;
-- (AIAccountViewController *)accountView;	//Return a view controller for the connection window
-- (DCJoinChatViewController *)joinChatView; //Return a custom view for the join chat window
-@end
-
 @protocol AccountMenuPlugin <NSObject>
 - (NSString *)identifier;
 - (void)addAccountMenuItems:(NSArray *)menuItemArray;
@@ -61,23 +52,23 @@
 	NSMutableArray			*accountMenuPluginsArray;
 	NSMutableDictionary		*accountMenuItemArraysDict;
 	
-	NSArray					*_cachedActiveServiceTypes;
+	NSArray					*_cachedActiveServices;
 }
 
 //Services
 - (NSArray *)availableServices;
-- (NSArray *)activeServiceTypes;
-- (id <AIServiceController>)serviceControllerWithIdentifier:(NSString *)inType;
-- (void)registerService:(id <AIServiceController>)inService;
+- (NSArray *)activeServices;
+- (AIService *)serviceWithUniqueID:(NSString *)identifier;
+- (AIService *)firstServiceWithServiceID:(NSString *)serviceID;
+- (void)registerService:(AIService *)inService;
 - (NSMenu *)menuOfServicesWithTarget:(id)target;
-- (AIServiceType *)firstServiceTypeWithServiceID:(NSString *)serviceID;
 
 //Accounts
 - (NSArray *)accountArray;
-- (AIAccount *)accountWithObjectID:(NSString *)inID;
-- (NSArray *)accountsWithServiceID:(NSString *)serviceID;
+- (AIAccount *)accountWithAccountNumber:(int)accountNumber;
+- (NSArray *)accountsWithService:(AIService *)service;
 - (AIAccount *)defaultAccount;
-- (AIAccount *)createAccountOfType:(NSString *)inType withUID:(NSString *)inUID objectID:(int)inObjectID;
+- (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID accountNumber:(int)inAccountNumber;
 
 //Account Editing
 - (AIAccount *)newAccountAtIndex:(int)index;
@@ -92,9 +83,9 @@
 - (void)unregisterAccountMenuPlugin:(id<AccountMenuPlugin>)accountMenuPlugin;
 
 //Preferred Source Accounts 
-- (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
+- (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
 - (NSMenu *)menuOfAccountsWithTarget:(id)target includeOffline:(BOOL)includeOffline;
-- (NSArray *)menuItemsForAccountsWithTarget:(id)target;
+- (NSArray *)menuItemsForAccountsWithTarget:(id)target includeOffline:(BOOL)includeOffline;
 - (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject withTarget:(id)target includeOffline:(BOOL)includeOffline;
 
 //Connection convenience methods
