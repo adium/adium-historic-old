@@ -3,6 +3,7 @@
         {
             CLASS = DCGaimMeanwhileJoinChatViewController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {"textField_inviteUsers" = NSTextField; "textField_topic" = NSTextField; }; 
             SUPERCLASS = DCJoinChatViewController; 
         }, 
         {
