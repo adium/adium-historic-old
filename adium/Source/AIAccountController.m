@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.90 2004/07/13 07:30:43 evands Exp $
+// $Id: AIAccountController.m,v 1.91 2004/07/15 01:01:43 ramoth4 Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -556,6 +556,50 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	
 	return([menu autorelease]);
 }	
+
+//Returns an array containing menu items for all accounts. 
+//- Accounts not available for sending content are disabled.
+//- Selector called on account selection is selectAccount:
+//- The menu item's represented objects are the AIAccounts they represent
+- (NSArray *)menuItemsForAccountsWithTarget:(id)target;
+{
+	NSEnumerator	*enumerator;
+	AIAccount		*account;
+	NSMutableArray  *array;
+	
+	//Prepare our menu
+	array = [[NSMutableArray alloc] init];
+	
+	BOOL multipleServices = ([[self activeServiceTypes] count] > 1);
+	
+    //Insert a menu item for each available account
+    enumerator = [accountArray objectEnumerator];
+    while(account = [enumerator nextObject]){
+        NSMenuItem	*menuItem;
+        
+        //Create
+        menuItem = [[[NSMenuItem alloc] initWithTitle:(multipleServices ?
+													   [NSString stringWithFormat:@"%@ (%@)",[account formattedUID],[account serviceID]] :
+													   [account formattedUID])
+											   target:target
+											   action:@selector(selectAccount:)
+										keyEquivalent:@""] autorelease];
+        [menuItem setRepresentedObject:account];
+		[menuItem setImage:[account serviceMenuImage]];
+		
+        //Disabled if the account is offline
+        if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]){
+            [menuItem setEnabled:NO];
+        }else{
+            [menuItem setEnabled:YES];
+        }
+		
+        //Add
+        [array addObject:menuItem];
+    }
+	
+	return((NSArray *)[array autorelease]);
+}
 
 //Returns a menu of all accounts available for sending content to a list object
 //- Preferred choices are placed at the top of the menu.
