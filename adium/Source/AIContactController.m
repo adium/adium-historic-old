@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.147 2004/06/18 17:56:55 evands Exp $
+// $Id: AIContactController.m,v 1.148 2004/06/22 16:47:55 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -416,6 +416,9 @@
 			[self _listChangedGroup:localGroup object:inObject];
 		}
 	}
+	
+	//Update the stranger status of this object (Contacts are strangers if they exist in no group)
+	[inObject setStatusObject:(remoteGroup == nil ? [NSNumber numberWithBool:YES] : nil) forKey:@"Stranger" notify:YES];
 }
 
 //Post a list grouping changed notification for the object and group
