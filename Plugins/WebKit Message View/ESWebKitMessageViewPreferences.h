@@ -15,10 +15,8 @@
  */
 
 #import <Adium/AIPreferencePane.h>
-#import <WebKit/WebKit.h>
-#import "ESWebView.h"
 
-@class JVFontPreviewField, AIContentObject, AIAutoScrollView, AIWebkitMessageViewController;
+@class ESWebView, JVFontPreviewField, AIContentObject, AIAutoScrollView, AIWebKitMessageViewController;
 
 @interface ESWebKitMessageViewPreferences : AIPreferencePane {
 	IBOutlet	JVFontPreviewField  *fontPreviewField_currentFont;
@@ -36,7 +34,7 @@
 	//Message preview
 	IBOutlet	NSView				*view_previewLocation;
 	NSMutableDictionary				*previewListObjectsDict;
-	AIWebkitMessageViewController	*previewController;
+	AIWebKitMessageViewController	*previewController;
 	ESWebView						*preview;
 	
 	BOOL							viewIsOpen;

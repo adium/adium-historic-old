@@ -14,11 +14,11 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIWebKitMessageViewPlugin.h"
-#import "ESWebView.h"
-#import <WebKit/WebKit.h>
+#import <Adium/AIObject.h>
 
-@class AIWebkitMessageViewStyle;
+@class AIWebKitMessageViewPlugin, AIWebkitMessageViewStyle, AIContentObject, ESWebView;
+
+@protocol AIMessageViewController;
 
 @interface AIWebKitMessageViewController : AIObject <AIMessageViewController> {
 	id							plugin;

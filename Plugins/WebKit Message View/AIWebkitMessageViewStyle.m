@@ -487,6 +487,12 @@ DeclareString(AppendNextMessage);
 	return(noVariantName ? noVariantName : AILocalizedString(@"Normal","Normal style variant menu item"));
 }
 
++ (NSString *)noVariantNameForBundle:(NSBundle *)inBundle
+{
+	NSString	*noVariantName = [inBundle objectForInfoDictionaryKey:@"DisplayNameForNoVariant"];
+	return(noVariantName ? noVariantName : AILocalizedString(@"Normal","Normal style variant menu item"));	
+}
+
 /*!
  * @brief Default variant for all style versions
  */
@@ -495,6 +501,12 @@ DeclareString(AppendNextMessage);
 	return(styleVersion < 3 ? [self noVariantName] : [styleBundle objectForInfoDictionaryKey:@"DefaultVariant"]);
 }
 
++ (NSString *)defaultVariantForBundle:(NSBundle *)inBundle
+{
+	return([[inBundle objectForInfoDictionaryKey:KEY_WEBKIT_VERSION] intValue] < 3 ? 
+		   [self noVariantNameForBundle:inBundle] : 
+		   [inBundle objectForInfoDictionaryKey:@"DefaultVariant"]);	
+}
 
 //Keyword Replacement --------------------------------------------------------------------------------------------------
 #pragma mark Keyword replacement

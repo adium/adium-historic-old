@@ -106,6 +106,7 @@ typedef enum {
 - (NSArray *)availableVariants;
 - (NSString *)pathForVariant:(NSString *)variant;
 - (NSString *)defaultVariant;
++ (NSString *)defaultVariantForBundle:(NSBundle *)inBundle;
 
 //Keyword substitution
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content;
