@@ -5039,10 +5039,9 @@
 		343C89A505704D8D005E0632 = {
 			expectedFileType = folder;
 			isa = PBXFileReference;
-			name = "Address Book Integration.AdiumPlugin";
-			path = "build/Address Book Integration.AdiumPlugin";
-			refType = 4;
-			sourceTree = "<group>";
+			path = "Address Book Integration.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		343C89AA05704D8E005E0632 = {
 			fileRef = 343C89A505704D8D005E0632;
