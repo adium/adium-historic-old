@@ -548,7 +548,7 @@ static NSImage *pushIndicatorImage = nil;
             NSMakeRect(0, 0, [pushIndicatorImage size].width, [pushIndicatorImage size].height)]; 
 		[indicator setButtonType:NSMomentaryPushButton];
         [indicator setAutoresizingMask:(NSViewMinXMargin)];
-        [indicator setImage:[NSImage imageNamed:@"stackImage" forClass:[self class]]];
+        [indicator setImage:pushIndicatorImage];
         [indicator setImagePosition:NSImageOnly];
 		[indicator setBezelStyle:NSRegularSquareBezelStyle];
 		[indicator setBordered:NO];
