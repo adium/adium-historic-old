@@ -553,7 +553,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	newAccount = [self createAccountWithService:inService
 											UID:[inAccount UID]
 								  accountNumber:[inAccount accountNumber]];
-	accountIndex = [accountArray indexOfObject:inAccount]
+	accountIndex = [accountArray indexOfObject:inAccount];
 		
     [self insertAccount:newAccount
 				atIndex:((accountIndex != NSNotFound) ? accountIndex : 0)
@@ -633,7 +633,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline
 {
 	AIAccount		*account;
-	NSEnumerator	*enumerator;
 	
 	//If passed a contact, we have a few better ways to determine the account than just using the first
     if(inContact){
