@@ -35,7 +35,6 @@
 
 - (void)dealloc
 {
-	[backgroundImage release];
 	[super dealloc];
 }
 
