@@ -4363,7 +4363,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
 			name = DefaultAccountIcon.png;
-			path = "Plugins/Account List Preferences/DefaultAccountIcon.png";
+			path = Source/DefaultAccountIcon.png;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -9307,6 +9307,15 @@
 			settings = {
 			};
 		};
+		34E29FCE07AF091C006735BC = {
+			children = (
+				F5B53FBF0333ABA701A8010A,
+			);
+			isa = PBXGroup;
+			name = Accounts;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		34E38235068F7F0300303451 = {
 			children = (
 				34E3823E068F7F2300303451,
@@ -11889,7 +11898,6 @@
 		};
 		4B1332390459BCFA00A8010A = {
 			children = (
-				F5B53FBF0333ABA701A8010A,
 				F510B76D03339ED501A8010A,
 				34C188A006CAB36400FF5FF9,
 				4B81631203D1C24E00A8010A,
@@ -11920,7 +11928,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			name = AIAccountListWindowController.h;
-			path = "Plugins/Account List Preferences/AIAccountListWindowController.h";
+			path = Source/AIAccountListWindowController.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -11929,7 +11937,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIAccountListWindowController.m;
-			path = "Plugins/Account List Preferences/AIAccountListWindowController.m";
+			path = Source/AIAccountListWindowController.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -13074,6 +13082,7 @@
 		};
 		4B587C0507ABFC87001832A9 = {
 			children = (
+				34E29FCE07AF091C006735BC,
 				4B587C3707ABFCA8001832A9,
 			);
 			isa = PBXGroup;
@@ -13822,7 +13831,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			name = AIEditAccountWindowController.h;
-			path = "Plugins/Account List Preferences/AIEditAccountWindowController.h";
+			path = Source/AIEditAccountWindowController.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -13831,7 +13840,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIEditAccountWindowController.m;
-			path = "Plugins/Account List Preferences/AIEditAccountWindowController.m";
+			path = Source/AIEditAccountWindowController.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -13839,7 +13848,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
 			name = EditAccountSheet.nib;
-			path = "Plugins/Account List Preferences/EditAccountSheet.nib";
+			path = Source/EditAccountSheet.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -17446,7 +17455,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
 			name = AccountProxy.nib;
-			path = "Plugins/Account List Preferences/AccountProxy.nib";
+			path = Source/AccountProxy.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -17455,7 +17464,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			name = AIAccountProxySettings.h;
-			path = "Plugins/Account List Preferences/AIAccountProxySettings.h";
+			path = Source/AIAccountProxySettings.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -17464,7 +17473,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIAccountProxySettings.m;
-			path = "Plugins/Account List Preferences/AIAccountProxySettings.m";
+			path = Source/AIAccountProxySettings.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -23122,7 +23131,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			name = AIAccountListPreferencesPlugin.h;
-			path = "Plugins/Account List Preferences/AIAccountListPreferencesPlugin.h";
+			path = Source/AIAccountListPreferencesPlugin.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -23131,7 +23140,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIAccountListPreferencesPlugin.m;
-			path = "Plugins/Account List Preferences/AIAccountListPreferencesPlugin.m";
+			path = Source/AIAccountListPreferencesPlugin.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -23139,7 +23148,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
 			name = AccountListWindow.nib;
-			path = "Plugins/Account List Preferences/AccountListWindow.nib";
+			path = Source/AccountListWindow.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
