@@ -28,11 +28,8 @@
     outgoing = ([source isKindOfClass:[AIAccount class]]);
     
     //Store the date
-    if(!inDate){
-        date = [[NSDate date] retain];
-    } else {
-		date = [inDate retain];
-	}
+    date = inDate;
+	if(inDate) [inDate retain];
 	
     
     return(self);
@@ -42,7 +39,8 @@
 {
     [source release];
     [destination release];
-	[date release];
+	if(date) 
+		[date release];
 
     [super dealloc];
 }
