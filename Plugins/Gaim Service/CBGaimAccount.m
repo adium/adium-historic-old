@@ -1814,9 +1814,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		AIListObject *listObject = [notification object];
 		
 		//If the notification object is a listContact belonging to this account, update the serverside information
-		if (account &&
-			[listObject isKindOfClass:[AIListContact class]] && 
+		if (account && 
 			[(AIListContact *)listObject account] == self &&
+			[self shouldSetAliasesServerside] &&
+			[listObject isKindOfClass:[AIListContact class]] &&
 			[[userInfo objectForKey:@"Key"] isEqualToString:@"Alias"]){
 			
 			NSString *alias = [listObject preferenceForKey:@"Alias"
@@ -1939,19 +1940,23 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (NSNumber *)shouldCheckMail
 {
-	return ([self preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS]);
+	return([self preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS]);
 }
 
 - (BOOL)displayConversationClosed
 {
-	return NO;
+	return(NO);
 }
 
 - (BOOL)displayConversationTimedOut
 {
-	return NO;
+	return(NO);
 }
 
+- (BOOL)shouldSetAliasesServerside
+{
+	return(NO);
+}
 
 - (NSString *)internalObjectID
 {
