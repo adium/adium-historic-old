@@ -103,7 +103,6 @@ static AINewMessagePrompt *sharedNewMessageInstance = nil;
 {
     NSEnumerator		*enumerator;
     AIListContact		*contact;
-    AIAccount			*account;
     
     //Configure the auto-complete view
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
