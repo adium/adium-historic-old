@@ -16,7 +16,6 @@ Bugs
 * Window content is drawing 2 pixels to the left when dragging tabs
 * Prevent cmd-delete from working in the message window
 * Link tracking doesn't work if the link is the entire body of the first message received UNTIL you send a message, at which point it starts working
-* Don't overwrite user specified icons in the address book.  Only overwrite iChat placed icons (and store ours such that iChat will overwrite them)
 * Libgaim disconnect errors are being displayed, and not ignored (since they are handled internally)
 
 
@@ -204,6 +203,7 @@ Unfixable(?) Issues
 * Stop contact list from auto-resizing under the dock
 	It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how wide the dock is; only how tall it is.
 
+* Don't overwrite user specified icons in the address book.  Only overwrite iChat placed icons (and store ours such that iChat will overwrite them) - (Evan: I spent an hour going through private frameworks trying to figure this out.  If you have any ideas, please let me know.)
 
 -------------------------------------------------------------------------------------------------------
 Waiting On
