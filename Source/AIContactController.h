@@ -102,10 +102,7 @@ typedef enum {
 	
     NSMutableArray			*contactInfoPanes;
 	
-    NSMutableDictionary		*listOrderDict;
-    NSMutableDictionary		*reverseListOrderDict;
-    float					largestOrder;
-    float					smallestOrder;
+	float					nextOrderIndex;
 
     int		signedOffLength;
     int		signedOnLength;
@@ -176,5 +173,7 @@ typedef enum {
 - (void)initController;
 - (void)finishIniting;
 - (void)closeController;
+
+- (float)nextOrderIndex;
 
 @end
