@@ -24,6 +24,7 @@
     IBOutlet NSButton 		*button_comeBack;
     IBOutlet NSTextView 	*textView_awayMessage;
     IBOutlet NSTextField	*textField_awayTime;
+    IBOutlet NSButton           *button_mute;
     
     NSDate	*awayDate;
     NSTimer	*awayTimer;
@@ -36,4 +37,5 @@
 - (IBAction)comeBack:(id)sender;
 - (void)updateWindow;
 - (void)setVisible:(bool)visible;
+- (IBAction)toggleMute:(id)sender;
 @end

@@ -59,7 +59,7 @@
     NSDictionary *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
     //Build the soundset menu
     [popUp_soundSet setMenu:[self _soundSetMenu]];
-    [button_muteWhenAway setState:[[preferenceDict objectForKey:KEY_EVENT_MUTE_WHEN_AWAY] boolValue]];
+    [button_muteWhileAway setState:[[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
 
     //Observer preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -99,10 +99,10 @@
 }
 
 //The user toggled the mute when away checkbox
-- (IBAction)toggleMuteWhenAway:(id)sender
+- (IBAction)toggleMuteWhileAway:(id)sender
 {
-    [[owner preferenceController] setPreference: [NSNumber numberWithBool:[button_muteWhenAway state]]
-                                         forKey:KEY_EVENT_MUTE_WHEN_AWAY
+    [[owner preferenceController] setPreference: [NSNumber numberWithBool:[button_muteWhileAway state]]
+                                         forKey:KEY_EVENT_MUTE_WHILE_AWAY
                                           group:PREF_GROUP_SOUNDS];
 }
 

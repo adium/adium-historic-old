@@ -27,7 +27,7 @@
 #define KEY_EVENT_SOUND_SET		@"Event Sound Set"
 #define	KEY_EVENT_SOUND_PATH		@"Path"
 #define	KEY_EVENT_SOUND_NOTIFICATION	@"Notification"
-#define KEY_EVENT_MUTE_WHEN_AWAY        @"Mute When Away"
+#define KEY_EVENT_MUTE_WHILE_AWAY        @"Mute While Away"
 
 
 @class AIEventSoundPreferences;
