@@ -74,7 +74,7 @@
 {
 	if(!_gradient || !NSEqualSizes(inSize,_gradientSize)){
 		[_gradient release];
-		NSLog(@"rendering gradient");
+		NSLog(@"Reticulating spines");
 		_gradient = [[NSImage alloc] initWithSize:inSize];
 		_gradientSize = inSize;
 		

@@ -81,6 +81,7 @@
 //Set the desired group for this contact.  Pass nil to indicate this object is no longer listed.
 - (void)setRemoteGroupName:(NSString *)inName
 {
+	NSLog(@"%@ setRemoteGroupName: %@",self,inName);
 	if(inName != remoteGroupName){
 		[remoteGroupName release];
 		remoteGroupName = [inName retain];

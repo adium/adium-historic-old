@@ -7,6 +7,7 @@
 #import "ESObjectWithStatus.h"
 
 @class AIAccount, AIContentObject;
+@protocol AIContainingObject;
 
 #define Chat_WillClose							@"Chat_WillClose"
 #define	Chat_Created							@"Chat_Created"
@@ -27,7 +28,7 @@ typedef enum {
 	AIChatClosedWindow
 } AIChatUpdateType;
 
-@interface AIChat : ESObjectWithStatus {
+@interface AIChat : ESObjectWithStatus <AIContainingObject> {
     AIAccount			*account;
 	NSDate				*dateOpened;
 	BOOL				isOpen;
@@ -37,6 +38,8 @@ typedef enum {
 	AIListObject		*preferredListObject;
 	NSString			*name;
 	NSString			*uniqueChatID;
+	
+	BOOL				expanded;			//Exanded/Collapsed state of this object
 }
 
 + (id)chatForAccount:(AIAccount *)inAccount;

@@ -114,6 +114,11 @@
 	[delegate performDefaultActionOnSelectedObject:selectedObject sender:sender];
 }
 
+- (void)reloadData
+{
+	[contactListView reloadData];
+}
+
 //Preferences ---------------------------------------------
 #pragma mark Preferences
 - (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict andThemeFromPrefDict:(NSDictionary *)themeDict
@@ -314,7 +319,7 @@
 {
     if(item == nil){
 		if (hideRoot){
-			return([(AIListGroup *)contactList visibleCount]);
+			return([contactList visibleCount]);
 		}else{
 			return(1);
 		}
