@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>Force Background Color</key>
-	<true/>
+	<false/>
 	<key>Force Font</key>
-	<true/>
+	<false/>
 	<key>Force Text Color</key>
-	<true/>
+	<false/>
 	<key>Desired Font</key>
 	<string>Helvetica,12</string>
 	<key>Desired Text Color</key>
