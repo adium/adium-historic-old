@@ -7,8 +7,13 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_enable" = NSButton; 
+                "checkBox_enableEmoticon" = NSButton; 
+                "image_emoticonImage" = NSImageView; 
+                "table_curEmoticonTexts" = NSTableView; 
                 "table_curEmoticons" = NSTableView; 
                 "table_packList" = NSTableView; 
+                "text_emoticonName" = NSTextField; 
+                "text_emoticonPack" = NSTextField; 
                 "text_packInfo" = NSTextView; 
                 "view_prefView" = NSView; 
             }; 

@@ -32,9 +32,9 @@
         // Handle flipped axes
         BOOL	wasFlipped = TRUE;
         if (![img isFlipped]) {
-            [img setFlipped:TRUE];
             wasFlipped = FALSE;
         }
+        [img setFlipped:TRUE];
         
         // Size and location
           // Get image metrics

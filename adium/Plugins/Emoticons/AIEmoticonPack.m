@@ -365,23 +365,21 @@
     
     if (enabled == TRUE)
     {
-        switch (curState)
+        /*switch (curState)
         {
         case	NSOffState:
-            if ([self _allEmoticonsEnabled]) {
-                [[self _preferencesDictionary] setObject:[NSNumber numberWithInt:NSOnState] forKey:@"inUse"];
-            } else {
-                [[self _preferencesDictionary] setObject:[NSNumber numberWithInt:NSMixedState] forKey:@"inUse"];
-            }
-            [self _savePreferences];
             //[[owner preferenceController] setPreference:[self _preferencesDictionary] forKey:[self preferencesKey] group:PREF_GROUP_EMOTICONS];	//Save
             break;
         case	NSMixedState:
         case	NSOnState:
-            // Do nothing
-            NSLog (@"Attempt to enable an enabled pack");
             break;
+        }*/
+        if ([self _allEmoticonsEnabled]) {
+            [[self _preferencesDictionary] setObject:[NSNumber numberWithInt:NSOnState] forKey:@"inUse"];
+        } else {
+            [[self _preferencesDictionary] setObject:[NSNumber numberWithInt:NSMixedState] forKey:@"inUse"];
         }
+        [self _savePreferences];
     }
     else
     {
