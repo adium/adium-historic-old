@@ -42,6 +42,7 @@
 	[[AIAwayStatusWindowController awayStatusWindowController] closeWindow];
 }
 
+#warning the AIAwayStatusWindowController is loading into memory whether away or not, i believe
 //Update our away window when the away status changes
 - (void)preferencesChanged:(NSNotification *)notification
 {

@@ -195,8 +195,10 @@
 		AIAccount   *targetAccount = account;
 		
 		//Create a new account & Update our custom formatting
-		targetAccount = [[adium accountController] changeUIDOfAccount:account to:flatUserName];
+		//targetAccount = [[adium accountController] changeUIDOfAccount:account to:flatUserName];
 		[targetAccount setPreference:accountName forKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
+		//Notify the account of the change
+		[targetAccount changedUIDto:flatUserName];
         
     }else{
         [account setPreference:accountName forKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];

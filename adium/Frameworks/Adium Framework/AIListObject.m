@@ -355,7 +355,7 @@
 //Display Name Convenience Methods -------------------------------------------------------------------------------------
 #pragma mark Display Name Convenience Methods
 /*
- A list object basically has 5 different variations of display.
+ A list object basically has 4 different variations of display.
 
  - UID, the base UID of the contact "aiser123"
  - formattedUID, formating or alteration of the UID provided by the account code "AIser 123"

@@ -195,6 +195,7 @@
         [tabView_auxiliary addTabViewItem:tabViewItem];
     }
 	
+	
     //There must be a better way to do this.  When moving tabs over, they will stay selected - resulting in multiple selected tabs.  My quick fix is to manually select each tab in the view.  Not the greatest, but it'll work for now.
     [tabView_auxiliary selectLastTabViewItem:nil];
     int i;
@@ -208,6 +209,7 @@
     }else{
         [tabView_auxiliary selectFirstTabViewItem:nil];
     }
+
 }
 
 //User toggled the autoconnect preference
@@ -251,7 +253,7 @@
 - (void)accountListChanged:(NSNotification *)notification
 {
     //Update our reference to the accounts
-    selectedAccount = nil;
+//    selectedAccount = nil;
     [accountArray release]; accountArray = [[[adium accountController] accountArray] retain];
     
     //Refresh the table (if the window is loaded)
@@ -338,7 +340,7 @@
 //Return the account description or image
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    return([[accountArray objectAtIndex:row] displayName]);
+    return([[accountArray objectAtIndex:row] formattedUID]);
 }
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
@@ -383,10 +385,15 @@
         }
 		
         //Configure for the newly selected account
-        selectedAccount = [accountArray objectAtIndex:selectedRow];
-        [self configureAccountOptionsView];
+		AIAccount *previouslySelectedAccount = selectedAccount;
+		selectedAccount = [accountArray objectAtIndex:selectedRow];
+		
+		if (previouslySelectedAccount != selectedAccount){
+			[self configureAccountOptionsView];
+		}
 		
     }else{
+		selectedAccount = nil;
         [button_deleteAccount setEnabled:NO];
 		[popupMenu_serviceList setEnabled:NO];
     }

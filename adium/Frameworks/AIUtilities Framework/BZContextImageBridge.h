@@ -3,7 +3,6 @@
 //  Adium XCode
 //
 //  Created by Mac-arena the Bored Zo on Thu Feb 12 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 /*used to translate between Quartz and NSImage.

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.42 2004/02/24 15:00:50 evands Exp $
+// $Id: AIAccount.m,v 1.43 2004/02/28 22:04:28 evands Exp $
 
 #import "AIAccount.h"
 
@@ -62,11 +62,42 @@
 	delayedUpdateStatusTimer = nil;
 	delayedUpdateStatusTarget = nil;
     
+	NSString *formattedAccountName = [self preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
+	[self setStatusObject:formattedAccountName
+				   forKey:@"Formatted UID"
+				   notify:NO];
+	
     //Init the account
     [self initAccount];
     
     return(self);
 }
+
+- (void)changedUIDto:(NSString *)inUID
+{
+	//Get our preferences from the old UID
+	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self UIDAndServiceID]
+																					 path:[self pathToPreferences]];
+	
+	[UID release]; UID = [inUID retain];
+		
+	NSString *formattedAccountName = [self preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
+	[self setStatusObject:formattedAccountName
+				   forKey:@"Formatted UID"
+				   notify:YES];	
+	
+	[[adium preferenceController] setCachedObjectPrefs:prefDict
+												forKey:[self UIDAndServiceID]
+												  path:[self pathToPreferences]];
+	
+	[self accountUIDdidChange];
+	
+	//Broadcast an account list changed message
+    [[adium notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
+}
+//Subclasses may override this to make internal changes when the UID changes
+- (void)accountUIDdidChange {}
+
 
 //Dealloc
 - (void)dealloc

@@ -3,7 +3,6 @@
 //  Adium XCode
 //
 //  Created by Brian Ganninger on Sat Jan 03 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "BGThemesPreferences.h"
@@ -60,19 +59,14 @@
 
 -(IBAction)createAction:(id)sender
 {
-    if([sender tag] == 0)
-    {
+    if([sender tag] == 0) {
 		[NSApp stopModal];
     }
-    if([sender tag] == 1)
-    {
+    if([sender tag] == 1) {
         // tell the plugin to create a theme using all the attributes of the create tab
-        if([nameField objectValue] == @"" || [nameField objectValue] == @" ") // sadly doesn't catch all invalid instances :(
-        {
+        if([nameField objectValue] == @"" || [nameField objectValue] == @" ") { // sadly doesn't catch all invalid instances :(
             NSRunAlertPanel(@"No theme name entered",@"A valid name is required to save a theme. Please enter one before saving.",@"Return",nil,nil);
-        }
-        else
-        {
+        } else {
             [themePlugin createThemeNamed:[nameField objectValue] by:[authorField objectValue] version:[versionField objectValue]];
         }
         [nameField setObjectValue:@""];

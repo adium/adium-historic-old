@@ -3,16 +3,15 @@
 //  Adium XCode
 //
 //  Created by Colin Barrett on Sun Jan 11 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "CBContactCountingDisplayPlugin.h"
 #import "CBContactCountingDisplayPreferences.h"
 
-#define CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS @"ContactCountingDisplayDefaults"
+#define CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS  @"ContactCountingDisplayDefaults"
 
-#define VISIBLE_COUNTING_MENU_ITEM_TITLE @"Count Visible Contacts"
-#define ALL_COUNTING_MENU_ITEM_TITLE @"Count All Contacts"
+#define VISIBLE_COUNTING_MENU_ITEM_TITLE		@"Count Visible Contacts"
+#define ALL_COUNTING_MENU_ITEM_TITLE			@"Count All Contacts"
 
 @implementation CBContactCountingDisplayPlugin
 
@@ -20,13 +19,21 @@
 {
 	
     //register our prefs
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS 
+																		forClass:[self class]] 
+										  forGroup:PREF_GROUP_CONTACT_LIST];
     
     //init our menu items
-    visibleCountingMenuItem = [[NSMenuItem alloc] initWithTitle:VISIBLE_COUNTING_MENU_ITEM_TITLE target:self action:@selector(toggleMenuItem:) keyEquivalent:@""];
+    visibleCountingMenuItem = [[NSMenuItem alloc] initWithTitle:VISIBLE_COUNTING_MENU_ITEM_TITLE 
+														 target:self 
+														 action:@selector(toggleMenuItem:)
+												  keyEquivalent:@""];
 	[[adium menuController] addMenuItem:visibleCountingMenuItem toLocation:LOC_View_General];		
 
-    allCountingMenuItem     = [[NSMenuItem alloc] initWithTitle:ALL_COUNTING_MENU_ITEM_TITLE target:self action:@selector(toggleMenuItem:) keyEquivalent:@""];
+    allCountingMenuItem     = [[NSMenuItem alloc] initWithTitle:ALL_COUNTING_MENU_ITEM_TITLE
+														 target:self 
+														 action:@selector(toggleMenuItem:)
+												  keyEquivalent:@""];
 	[[adium menuController] addMenuItem:allCountingMenuItem toLocation:LOC_View_General];		
     
 	//set up the prefs
@@ -34,28 +41,32 @@
 	
     //install our observers
     [[adium contactController] registerListObjectObserver:self];
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
 	
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0)
-    {
-            allCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_ALL_CONTACTS group:PREF_GROUP_CONTACT_LIST] boolValue];
-        visibleCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_VISIBLE_CONTACTS group:PREF_GROUP_CONTACT_LIST] boolValue];
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0) {
+            allCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_ALL_CONTACTS 
+																 group:PREF_GROUP_CONTACT_LIST] boolValue];
+        visibleCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_VISIBLE_CONTACTS
+																 group:PREF_GROUP_CONTACT_LIST] boolValue];
 
-		if(allCount != [allCountingMenuItem state])
-		{
+		if(allCount != [allCountingMenuItem state]) {
 			[allCountingMenuItem setState:allCount];
 		}
-		if(visibleCount != [visibleCountingMenuItem state])
-		{
+		if(visibleCount != [visibleCountingMenuItem state]) {
 			[visibleCountingMenuItem setState:visibleCount];
 		}
 		
-		//Refresh all
-		[[adium contactController] updateAllListObjectsForObserver:self];
+		if (notification) {
+			//Refresh all
+			[[adium contactController] updateAllListObjectsForObserver:self];
+		}
     }
 }
 
@@ -64,8 +75,9 @@
 	NSArray		*modifiedAttributes = nil;
 	
 	if([inObject isKindOfClass:[AIListGroup class]]){
-		if(inModifiedKeys == nil || ( (visibleCount || allCount) && ([inModifiedKeys containsObject:@"ObjectCount"] || [inModifiedKeys containsObject:@"VisibleObjectCount"])))
-		{
+		if(inModifiedKeys == nil || 
+		   ( (visibleCount || allCount) && ([inModifiedKeys containsObject:@"ObjectCount"] || 
+											[inModifiedKeys containsObject:@"VisibleObjectCount"]))) {
 			NSString *addString = nil;
 			
 			if(visibleCount && allCount)
@@ -96,7 +108,6 @@
 
 - (void)uninstallPlugin
 {
-        
     //we are no longer an observer
     [[adium notificationCenter] removeObserver:self];
     [[adium contactController] unregisterListObjectObserver:self];
