@@ -207,7 +207,7 @@
         if(boldFont){
             float boldHeight = [boldFont defaultLineHeightForFont];            
             if(boldHeight > fontHeight) fontHeight = boldHeight;
-        }            
+        }
         [contactListView setRowHeight:fontHeight];
         [contactListView setIntercellSpacing:NSMakeSize(3.0,[[prefDict objectForKey:KEY_SCL_SPACING] floatValue])];      
 		
