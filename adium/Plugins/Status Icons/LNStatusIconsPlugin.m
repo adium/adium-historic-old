@@ -65,7 +65,7 @@
 				[iconArray setObject:statusIcon withOwner:self];
 			}
 			
-			idle = [inObject doubleStatusObjectForKey:@"Idle"];
+			idle = [[inObject numberStatusObjectForKey:@"Idle"] doubleValue];
 			away = [inObject integerStatusObjectForKey:@"Away"];
 			
 			if((away != 0) && (idle != 0)){

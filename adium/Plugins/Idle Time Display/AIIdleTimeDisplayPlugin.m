@@ -74,7 +74,7 @@
         double			idle;
 		
         //Set the correct idle time
-        idle = [inObject doubleStatusObjectForKey:@"Idle"];
+        idle = [[inObject numberStatusObjectForKey:@"Idle"] doubleValue];
 		
         if(displayIdleOnLeft){
 			viewArray = [inObject displayArrayForKey:@"Left View"];
