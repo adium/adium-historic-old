@@ -618,60 +618,62 @@ DeclareString(UID);
 //so the association is lasting across program launches.
 - (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact
 {
-	AIMetaContact		*oldMetaContact;
-	
-	//Obtain any metaContact this listObject is current within, so we can remove it later
-	oldMetaContact = [contactToMetaContactLookupDict objectForKey:[listObject internalObjectID]];
-	
-	if ([self _performAddListObject:listObject toMetaContact:metaContact]){
-		NSDictionary		*containedContactDict;
-		NSMutableDictionary	*allMetaContactsDict;
-		NSMutableArray		*containedContactsArray;
+	if (listObject != metaContact){
+		AIMetaContact		*oldMetaContact;
 		
-		NSString			*metaContactInternalObjectID = [metaContact internalObjectID];
-
-		//Get the dictionary of all metaContacts
-		allMetaContactsDict = [[[[owner preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
-																		 group:PREF_GROUP_CONTACT_LIST] mutableCopy] autorelease];
-		if (!allMetaContactsDict){
-			allMetaContactsDict = [NSMutableDictionary dictionary];
-		}
+		//Obtain any metaContact this listObject is current within, so we can remove it later
+		oldMetaContact = [contactToMetaContactLookupDict objectForKey:[listObject internalObjectID]];
 		
-		if (metaContact != oldMetaContact){
+		if ([self _performAddListObject:listObject toMetaContact:metaContact]){
+			NSDictionary		*containedContactDict;
+			NSMutableDictionary	*allMetaContactsDict;
+			NSMutableArray		*containedContactsArray;
 			
-			//Remove the list object from any other metaContact it is in at present
-			if (oldMetaContact){
-				[self removeListObject:listObject fromMetaContact:oldMetaContact];
+			NSString			*metaContactInternalObjectID = [metaContact internalObjectID];
+			
+			//Get the dictionary of all metaContacts
+			allMetaContactsDict = [[[[owner preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
+																			 group:PREF_GROUP_CONTACT_LIST] mutableCopy] autorelease];
+			if (!allMetaContactsDict){
+				allMetaContactsDict = [NSMutableDictionary dictionary];
 			}
 			
-			//Load the array for the new metaContact
-			containedContactsArray = [[[allMetaContactsDict objectForKey:metaContactInternalObjectID] mutableCopy] autorelease];
-			if (!containedContactsArray) containedContactsArray = [NSMutableArray array];
-			containedContactDict = nil;
-			
-			//Create the dictionary describing this list object
-			if ([listObject isKindOfClass:[AIMetaContact class]]){
-				containedContactDict = [NSDictionary dictionaryWithObjectsAndKeys:
-					[NSNumber numberWithBool:YES],KEY_IS_METACONTACT,
-					[(AIMetaContact *)listObject objectID],KEY_OBJECTID,nil];
+			if (metaContact != oldMetaContact){
 				
-			}else if ([listObject isKindOfClass:[AIListContact class]]){
-				containedContactDict = [NSDictionary dictionaryWithObjectsAndKeys:
-					[[listObject service] serviceID],ServiceID,
-					[listObject UID],UID,nil];
+				//Remove the list object from any other metaContact it is in at present
+				if (oldMetaContact){
+					[self removeListObject:listObject fromMetaContact:oldMetaContact];
+				}
+				
+				//Load the array for the new metaContact
+				containedContactsArray = [[[allMetaContactsDict objectForKey:metaContactInternalObjectID] mutableCopy] autorelease];
+				if (!containedContactsArray) containedContactsArray = [NSMutableArray array];
+				containedContactDict = nil;
+				
+				//Create the dictionary describing this list object
+				if ([listObject isKindOfClass:[AIMetaContact class]]){
+					containedContactDict = [NSDictionary dictionaryWithObjectsAndKeys:
+						[NSNumber numberWithBool:YES],KEY_IS_METACONTACT,
+						[(AIMetaContact *)listObject objectID],KEY_OBJECTID,nil];
+					
+				}else if ([listObject isKindOfClass:[AIListContact class]]){
+					containedContactDict = [NSDictionary dictionaryWithObjectsAndKeys:
+						[[listObject service] serviceID],ServiceID,
+						[listObject UID],UID,nil];
+				}
+				
+				//Only add if this dict isn't already in the array
+				if (containedContactDict && ([containedContactsArray indexOfObject:containedContactDict] == NSNotFound)){
+					[containedContactsArray addObject:containedContactDict];
+					[allMetaContactsDict setObject:containedContactsArray forKey:metaContactInternalObjectID];
+					
+					//Save
+					[self _saveMetaContacts:allMetaContactsDict];
+					
+					[[owner contactAlertsController] mergeAndMoveContactAlertsFromListObject:listObject 
+																			  intoListObject:metaContact];				
+				}			
 			}
-			
-			//Only add if this dict isn't already in the array
-			if (containedContactDict && ([containedContactsArray indexOfObject:containedContactDict] == NSNotFound)){
-				[containedContactsArray addObject:containedContactDict];
-				[allMetaContactsDict setObject:containedContactsArray forKey:metaContactInternalObjectID];
-				
-				//Save
-				[self _saveMetaContacts:allMetaContactsDict];
-				
-				[[owner contactAlertsController] mergeAndMoveContactAlertsFromListObject:listObject 
-																		  intoListObject:metaContact];				
-			}			
 		}
 	}
 }
@@ -821,7 +823,11 @@ DeclareString(UID);
 	//Look for an existing MetaContact we can use.  The first one we find is the lucky winner.
 	enumerator = [contactsToGroupArray objectEnumerator];
 	while ((listContact = [enumerator nextObject]) && (metaContact == nil)){
-		metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalObjectID]];
+		if ([listContact isKindOfClass:[AIMetaContact class]]){
+			metaContact = (AIMetaContact *)listContact;
+		}else{
+			metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalObjectID]];
+		}
 	}
 	
 	//Create a new MetaContact is we didn't find one.
@@ -1748,7 +1754,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 											userInfo:userInfo];
 }
 
-- (void)moveListObjects:(NSArray *)objectArray toGroup:(AIListGroup *)group index:(int)index
+- (void)moveListObjects:(NSArray *)objectArray toGroup:(AIListObject<AIContainingObject> *)group index:(int)index
 {
 	NSEnumerator	*enumerator;
 	AIListContact	*listContact;
@@ -1765,7 +1771,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	[[owner contactController] sortContactList];
 }
 
-- (void)moveContact:(AIListContact *)listContact toGroup:(AIListObject *)group
+- (void)moveContact:(AIListContact *)listContact toGroup:(AIListObject<AIContainingObject> *)group
 {
 	//Move the object to the new group if necessary
 	if(group != [listContact containingObject]){			
