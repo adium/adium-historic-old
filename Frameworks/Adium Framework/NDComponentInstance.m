@@ -9,13 +9,16 @@
 #import "NDComponentInstance.h"
 #import "NSAppleEventDescriptor+NDAppleScriptObject.h"
 
-const OSType					kFinderCreatorCode = 'MACS';
+const OSType		kFinderCreatorCode = 'MACS';
+
+const NSString		* NDAppleScriptOffendingObject = @"Error Offending Object",
+						* NDAppleScriptPartialResult = @"Error Partial Result";
 
 /*
  * category interface NDComponentInstance (Private)
  */
 @interface NDComponentInstance (Private)
-- (ComponentInstance)scriptingComponent;
+- (ComponentInstance)instanceRecord;
 @end
 
 /*
@@ -30,9 +33,9 @@ static NDComponentInstance		* sharedComponentInstance = nil;
  */
 + (id)sharedComponentInstance
 {
-	if( sharedComponentInstance == nil && (sharedComponentInstance = [[self alloc] init]) == NULL)
-		NSLog(@"Could not create shared Component Instance");
-
+	if( sharedComponentInstance == nil )
+		sharedComponentInstance = [[self alloc] init];
+	NSAssert( sharedComponentInstance != nil, @"Could not create shared Component Instance" );
 	return sharedComponentInstance;
 }
 
@@ -99,19 +102,19 @@ static NDComponentInstance		* sharedComponentInstance = nil;
  */
 - (id)initWithComponent:(Component)aComponent
 {
-	if( self = [super init] )
+	if( (self = [super init]) != nil )
 	{
 		if( aComponent == NULL )
 		{
 			// crashes here
-			if( (scriptingComponent = OpenDefaultComponent( kOSAComponentType, kAppleScriptSubtype )) == NULL )
+			if( (instanceRecord = OpenDefaultComponent( kOSAComponentType, kAppleScriptSubtype )) == NULL )
 			{
 				[self release];
 				self = nil;
 				NSLog(@"Could not open connection with default AppleScript component");
 			}
 		}
-		else if( (scriptingComponent = OpenComponent( aComponent )) == NULL )
+		else if( (instanceRecord = OpenComponent( aComponent )) == NULL )
 		{
 			[self release];
 			self = nil;
@@ -127,12 +130,13 @@ static NDComponentInstance		* sharedComponentInstance = nil;
 -(void)dealloc
 {
 	[self setAppleEventSendTarget:nil];
-	[activeTarget release];
-
-	if( scriptingComponent != NULL )
-	{
+	[self setActiveTarget:nil];
+//	[self setAppleEventSpecialHandler:nil];
+//	[self setAppleEventResumeHandler:nil];
 		
-		CloseComponent( scriptingComponent );
+	if( instanceRecord != NULL )
+	{
+		CloseComponent( instanceRecord );
 	}
 	[super dealloc];
 }
@@ -142,7 +146,7 @@ static NDComponentInstance		* sharedComponentInstance = nil;
  */
 - (void)setDefaultTarget:(NSAppleEventDescriptor *)aDefaultTarget
 {
-	if( OSASetDefaultTarget( [self scriptingComponent], [aDefaultTarget aeDesc] ) != noErr )
+	if( OSASetDefaultTarget( [self instanceRecord], [aDefaultTarget aeDesc] ) != noErr )
 		NSLog( @"Could not set default target" );
 }
 
@@ -179,9 +183,9 @@ static NDComponentInstance		* sharedComponentInstance = nil;
 		/*	need to save the default send proceedure as we will call it in our send proceedure	*/
 		if( aTarget != nil )
 		{
-			if( defaultSendProcPtr == NULL )		// need to save this so we can restore it
+			if( defaultSendProcPtr == NULL )		// need to save this so we can restor it
 			{
-				ComponentInstance		theComponent = [self scriptingComponent];
+				ComponentInstance		theComponent = [self instanceRecord];
 
 				NSAssert( OSAGetSendProc( theComponent, &defaultSendProcPtr, &defaultSendProcRefCon) == noErr, @"Could not get default AppleScript send procedure");
 				NSAssert( OSASetSendProc( theComponent, AppleEventSendProc, (long)self ) == noErr, @"Could not set send procedure" );
@@ -195,10 +199,10 @@ static NDComponentInstance		* sharedComponentInstance = nil;
 			[sendAppleEventTarget release];
 			sendAppleEventTarget = nil;
 
-			NSAssert( OSASetSendProc( [self scriptingComponent], defaultSendProcPtr, defaultSendProcRefCon ) == noErr, @"Could not restore default send procedure");
+			NSAssert( OSASetSendProc( [self instanceRecord], defaultSendProcPtr, defaultSendProcRefCon ) == noErr, @"Could not restore default send procedure");
 
-			defaultSendProcPtr = NULL;
-			defaultSendProcRefCon = 0;
+//			defaultSendProcPtr = NULL;
+//			defaultSendProcRefCon = 0;
 		}
 	}
 }
@@ -216,7 +220,7 @@ static NDComponentInstance		* sharedComponentInstance = nil;
  */
 - (void)setActiveTarget:(id<NDAppleScriptObjectActive>)aTarget
 {
-	OSErr						AppleScriptActiveProc( long aRefCon );
+	static OSErr		AppleScriptActiveProc( long aRefCon );
 
 	if( aTarget != activeTarget )
 	{
@@ -227,7 +231,7 @@ static NDComponentInstance		* sharedComponentInstance = nil;
 			/*	need to save the default active proceedure as we will call it in our active proceedure	*/
 			if( defaultActiveProcPtr == NULL )
 			{
-				ComponentInstance		theComponent = [self scriptingComponent];
+				ComponentInstance		theComponent = [self instanceRecord];
 
 				NSAssert( OSAGetActiveProc(theComponent, &defaultActiveProcPtr, &defaultActiveProcRefCon ) == noErr, @"Could not get default AppleScript active procedure");
 				NSAssert( OSASetActiveProc( theComponent, AppleScriptActiveProc , (long)self ) == noErr, @"Could not set AppleScript active procedure.");
@@ -240,7 +244,7 @@ static NDComponentInstance		* sharedComponentInstance = nil;
 		{
 			[activeTarget release];
 			activeTarget = nil;
-			NSAssert( OSASetActiveProc( [self scriptingComponent], defaultActiveProcPtr, defaultActiveProcRefCon ) == noErr, @"Could not set default active procedure.");
+			NSAssert( OSASetActiveProc( [self instanceRecord], defaultActiveProcPtr, defaultActiveProcRefCon ) == noErr, @"Could not set default active procedure.");
 			defaultActiveProcPtr = NULL;
 			defaultActiveProcRefCon = 0;
 		}
@@ -255,21 +259,51 @@ static NDComponentInstance		* sharedComponentInstance = nil;
 	return activeTarget;
 }
 
+#if 0
+- (void)setAppleEventSpecialHandler:(id<NDScriptDataAppleEventSpecialHandler>)aHandler
+{
+	if( aHandler != appleEventSpecialHandler )
+	{
+		[appleEventSpecialHandler release];
+		appleEventSpecialHandler = [aHandler retain];
+	}
+}
+
+- (id<NDScriptDataAppleEventSpecialHandler>)appleEventSpecialHandler
+{
+	return appleEventSpecialHandler;
+}
+
+- (void)setAppleEventResumeHandler:(id<NDScriptDataAppleEventResumeHandler>)aHandler
+{
+	if( aHandler != appleEventResumeHandler )
+	{
+		[appleEventResumeHandler release];
+		appleEventResumeHandler = [aHandler retain];
+	}
+}
+
+- (id<NDScriptDataAppleEventResumeHandler>)appleEventResumeHandler
+{
+	return appleEventResumeHandler;
+}
+#endif
+
 /*
  * -sendAppleEvent:sendMode:sendPriority:timeOutInTicks:idleProc:filterProc:
  */
 - (NSAppleEventDescriptor *)sendAppleEvent:(NSAppleEventDescriptor *)theAppleEventDescriptor sendMode:(AESendMode)aSendMode sendPriority:(AESendPriority)aSendPriority timeOutInTicks:(long)aTimeOutInTicks idleProc:(AEIdleUPP)anIdleProc filterProc:(AEFilterUPP)aFilterProc
 {
 	NSAppleEventDescriptor		* theReplyAppleEventDesc = nil;
-	AppleEvent					theReplyAppleEvent;
-	
+	AppleEvent						theReplyAppleEvent;
+
 	NSParameterAssert( defaultSendProcPtr != NULL );
 
 	if( defaultSendProcPtr( [theAppleEventDescriptor aeDesc], &theReplyAppleEvent, aSendMode, aSendPriority, aTimeOutInTicks, anIdleProc, aFilterProc, defaultSendProcRefCon ) == noErr )
 	{
 		theReplyAppleEventDesc = [NSAppleEventDescriptor descriptorWithAEDescNoCopy:&theReplyAppleEvent];
 	}
-
+	
 	return theReplyAppleEventDesc;
 }
 
@@ -283,23 +317,90 @@ static NDComponentInstance		* sharedComponentInstance = nil;
 }
 
 /*
+ * -error
+ */
+- (NSDictionary *)error
+{
+	AEDesc					aDescriptor;
+	unsigned int			theIndex;
+	NSMutableDictionary	* theDictionary = [NSMutableDictionary dictionaryWithCapacity:7];
+
+	struct { const NSString * key; const DescType desiredType; const OSType selector; }
+			theResults[] = {
+			{ NSAppleScriptErrorMessage, typeText, kOSAErrorMessage },
+			{ NSAppleScriptErrorNumber, typeShortInteger, kOSAErrorNumber },
+			{ NSAppleScriptErrorAppName, typeText, kOSAErrorApp },
+			{ NSAppleScriptErrorBriefMessage, typeText, kOSAErrorBriefMessage },
+			{ NSAppleScriptErrorRange, typeOSAErrorRange, kOSAErrorRange },
+			{ NDAppleScriptOffendingObject, typeObjectSpecifier, kOSAErrorOffendingObject, },
+			{ NDAppleScriptPartialResult, typeBest, kOSAErrorPartialResult },
+			{ nil, 0, 0 }
+			};
+	for( theIndex = 0; theResults[theIndex].key != nil; theIndex++ )
+	{
+		if( OSAScriptError([self instanceRecord], theResults[theIndex].selector, theResults[theIndex].desiredType, &aDescriptor ) == noErr )
+		{
+			[theDictionary setObject:(id)[[NSAppleEventDescriptor descriptorWithAEDescNoCopy:&aDescriptor] objectValue] forKey:(id)theResults[theIndex].key];
+		}
+	}
+
+	return theDictionary;
+}
+
+/*
+ * -name
+ */
+- (NSString *)name
+{
+	AEDesc		theDesc = { typeNull, NULL };
+	NSString		* theName = nil;
+	if ( OSAScriptingComponentName( [self instanceRecord], &theDesc) == noErr )
+		theName = [[NSAppleEventDescriptor descriptorWithAEDescNoCopy:&theDesc] stringValue];
+
+	return theName;
+}
+
+/*
  * description
  */
 - (NSString *)description
 {
-	AEDesc		theDesc = { typeNull, NULL };
-	NSString		* theDescription = nil;
-	OSErr			theError;
-	if ( (theError = OSAScriptingComponentName( [self scriptingComponent], &theDesc)) == noErr )
-	{
-		theDescription = [@"NDComponentInstance name:" stringByAppendingString:[[NSAppleEventDescriptor descriptorWithAEDescNoCopy:&theDesc] stringValue]];
-	}
-	else
-	{
-		theDescription = @"NDComponentInstance: name not available";
-	}
+	NSString		* theName = [self name];
+	return theName == nil
+		? [@"NDComponentInstance name:" stringByAppendingString:theName]
+		: @"NDComponentInstance name: not available";
+}
 
-	return theDescription;
+/*
+ * -isEqualToComponentInstance:
+ */
+- (BOOL)isEqualToComponentInstance:(NDComponentInstance *)aComponentInstance
+{
+	return aComponentInstance == self || [aComponentInstance instanceRecord] == [self instanceRecord];
+}
+
+/*
+ * -isEqualTo:
+ */
+- (BOOL)isEqualTo:(id)anObject
+{
+	return anObject == self || ([anObject isKindOfClass:[self class]] && [self isEqualToComponentInstance:anObject]);
+}
+
+/*
+ * -copyWithZone:
+ */
+- (id)copyWithZone:(NSZone *)aZone
+{
+	return [self retain];
+}
+
+/*
+ * -hash
+ */
+- (unsigned int)hash
+{
+	return (unsigned int)instanceRecord;
 }
 
 /*
@@ -316,19 +417,19 @@ OSErr AppleEventSendProc( const AppleEvent *anAppleEvent, AppleEvent *aReply, AE
 	NSCParameterAssert( self != nil );
 	
 	/*	if we have an instance, it has a target and we can create a NSAppleEventDescriptor	*/
-
 	if( theSendTarget != nil && theAppleEventDescriptor != nil )
 	{
-		if( theAppleEventDescReply = [theSendTarget sendAppleEvent:theAppleEventDescriptor sendMode:aSendMode sendPriority:aSendPriority timeOutInTicks:aTimeOutInTicks idleProc:anIdleProc filterProc:aFilterProc] )
-		{			
+		theAppleEventDescReply = [theSendTarget sendAppleEvent:theAppleEventDescriptor sendMode:aSendMode sendPriority:aSendPriority timeOutInTicks:aTimeOutInTicks idleProc:anIdleProc filterProc:aFilterProc];
+
+		if( theAppleEventDescReply )
+		{
 			if( [theAppleEventDescReply getAEDesc:(AEDesc*)aReply] )
 			{
 				theError = noErr;			// NO ERROR
 			}
 		}
-		else
+		else if( self->defaultSendProcPtr != NULL )
 		{
-			/* if theSendTarget replies NULL, use the defaultSendProcPtr */
 			theError = (self->defaultSendProcPtr)( anAppleEvent, aReply, aSendMode, aSendPriority, aTimeOutInTicks, anIdleProc, aFilterProc, self->defaultSendProcRefCon );			
 		}
 	}
@@ -344,7 +445,7 @@ OSErr AppleEventSendProc( const AppleEvent *anAppleEvent, AppleEvent *aReply, AE
 /*
  * function AppleScriptActiveProc
  */
-OSErr AppleScriptActiveProc( long aRefCon )
+static OSErr AppleScriptActiveProc( long aRefCon )
 {
 	NDComponentInstance	* self = (id)aRefCon;
 	id							theActiveTarget = [self activeTarget];
@@ -360,6 +461,47 @@ OSErr AppleScriptActiveProc( long aRefCon )
 	return theError;
 }
 
+#if 0
+
+static OSErr AppleEventSpecialHandler(const AppleEvent * anAppleEvent, AppleEvent * aReply, long aRefCon )
+{
+	NDComponentInstance		* self = (id)aRefCon;
+	OSErr							theError = errOSASystemError;
+	id								theSpecialHandler = [self appleEventSpecialHandler];
+
+	NSCParameterAssert( self != nil );
+
+	if( theSpecialHandler )
+	{
+		theError = [theSpecialHandler handleSpecialAppleEvent:[NSAppleEventDescriptor descriptorWithAEDesc:anAppleEvent] ? noErr : errAEEventNotHandled;
+	}
+	else
+	{
+	}
+	
+	return theError;
+}
+
+static OSErr AppleEventResumeHandler(const AppleEvent * anAppleEvent, AppleEvent * aReply, long aRefCon )
+{
+	NDComponentInstance		* self = (id)aRefCon;
+	OSErr							theError = errOSASystemError;
+	id								theResumeHandler = [self appleEventResumeHandler];
+	NSCParameterAssert( self != nil );
+
+	if( theResumeHandler )
+	{
+		theError = [theResumeHandler handleResumeAppleEvent:[NSAppleEventDescriptor descriptorWithAEDesc:anAppleEvent] ? noErr : errAEEventNotHandled;
+	}
+	else
+	{
+	}
+	
+	return theError;
+}
+
+#endif
+
 @end
 
 /*
@@ -368,11 +510,11 @@ OSErr AppleScriptActiveProc( long aRefCon )
 @implementation NDComponentInstance (Private)
 
 /*
- * -scriptingComponent
+ * -instanceRecord
  */
-- (ComponentInstance)scriptingComponent
+- (ComponentInstance)instanceRecord
 {
-	return scriptingComponent;
+	return instanceRecord;
 }
 
 @end

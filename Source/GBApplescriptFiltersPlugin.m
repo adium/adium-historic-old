@@ -22,8 +22,9 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/MVMenuButton.h>
-#import <Adium/NDAppleScriptObject.h>
+#import <Adium/NDScriptData.h>
 #import <Adium/NDComponentInstance.h>
+#import <Adium/NSAppleEventDescriptor+NDScriptData.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIHTMLDecoder.h>
 
@@ -644,15 +645,15 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
  */
 - (NSString *)_executeScript:(NSMutableDictionary *)infoDict withArguments:(NSArray *)arguments
 {
-	NDAppleScriptObject		*script;
+	NDScriptContext			*scriptContext;
 	NSAppleEventDescriptor	*resultDescriptor;
 	NSString				*result = nil;
 
 	//Attempt to use a cached script
-	script = [infoDict objectForKey:@"NDAppleScriptObject"];
+	scriptContext = [infoDict objectForKey:@"NDScriptContext"];
 	
 	//If none is found, load and cache
-	if (!script){
+	if (!scriptContext){
 		//We run from a thread, so we need a unique componentInstance, as the shared one is NOT threadsafe. Each script
 		//does not need one; we can reuse the same one for every script called from this thread.
 		if (!componentInstance){
@@ -673,29 +674,30 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 
 
 		//Load the script
-		script = [NDAppleScriptObject appleScriptObjectWithContentsOfURL:[infoDict objectForKey:@"Path"]
-													   componentInstance:componentInstance];
-		if(script){
-			[infoDict setObject:script
-						 forKey:@"NDAppleScriptObject"];
+		scriptContext = [NDScriptContext scriptDataWithContentsOfURL:[infoDict objectForKey:@"Path"]
+												   componentInstance:componentInstance];
+
+		if(scriptContext){
+			[infoDict setObject:scriptContext
+						 forKey:@"NDScriptContext"];
 		}
 	}
 
 #ifdef APPLESCRIPT_FILTER_DEBUG
 	numExecuted++;
 	NSLog(@"%i: Executing %@",numExecuted,[infoDict objectForKey:@"Title"]);
-	[script executeSubroutineNamed:@"substitute" argumentsArray:arguments];
+	[scriptContext executeSubroutineNamed:@"substitute" argumentsArray:arguments];
 	NSLog(@"%i: Finished.",numExecuted);
 #else
-	[script executeSubroutineNamed:@"substitute" argumentsArray:arguments];
+	[scriptContext executeSubroutineNamed:@"substitute" argumentsArray:arguments];
 #endif
 	
-	resultDescriptor = [script resultAppleEventDescriptor];
+	resultDescriptor = [scriptContext resultAppleEventDescriptor];
 	
 	if (resultDescriptor){
 		result = [resultDescriptor stringValue];
 	}
-	
+
 	return(result);
 }
 
@@ -710,33 +712,33 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 								filterProc:(AEFilterUPP)filterProc
 {
 	NSAppleEventDescriptor	*eventDescriptor;
-	AEEventClass			eventClass = [appleEventDescriptor eventClass];
-	BOOL					shouldHandle = NO;
+
+	BOOL					handleOnMainThread = NO;
 
 	/* 
 		We want to send certain eventClasses (those which necessitate user interaction) to the main thread
 		since the UI is not threadsafe.
 	 */
-#ifdef APPLESCRIPT_FILTER_DEBUG
-	NSLog(@"%i: appleEvent: %@",numExecuted,appleEventDescriptor);
-#endif
-	
-	if(eventClass == 'syso'){
-		AEEventID eventID = [appleEventDescriptor eventID];
-		
-		//For most 'syso' events we want to use the main thread, as these are the UI interaction events.
+	handleOnMainThread =  [appleEventDescriptor isTargetCurrentProcess];
+
+	if(handleOnMainThread){
+		AEEventClass	eventClass = [appleEventDescriptor eventClass];
+		AEEventID		eventID = [appleEventDescriptor eventID];
+
+		//For most events targeting our current process we want to use the main thread.
 		//We can build a list of exceptions here for potentially slow 'syso' events which don't involve the UI
-		if((eventID != 'rand') && /* random number generation */
-		   (eventID != 'exec')) /* execution of applications */
-		{
-			shouldHandle = YES;
+		if(eventClass == 'syso'){
+			if(eventID == 'rand'){ /* random number generation */
+			   handleOnMainThread = NO;
+			}
 		}
-		
-	}else if(eventClass == 'gtqp'){
-		shouldHandle = YES;
 	}
-	
-	if(shouldHandle){
+
+#ifdef APPLESCRIPT_FILTER_DEBUG
+	NSLog(@"%i (mainthread %i): appleEvent: %@",numExecuted,handleOnMainThread,appleEventDescriptor);
+#endif
+
+	if(handleOnMainThread){
 		NSInvocation			*invocation;
 		SEL						selector;
 		

@@ -17,9 +17,9 @@
 #import <Adium/AIPlugin.h>
 
 @class NDComponentInstance;
-@protocol AIContentFilter, NDAppleScriptObjectSendEvent, NDAppleScriptObjectActive;
+@protocol AIContentFilter, NDScriptDataObjectSendEvent, NDScriptDataObjectActive;
 
-@interface GBApplescriptFiltersPlugin : AIPlugin <AIContentFilter, NDAppleScriptObjectSendEvent, NDAppleScriptObjectActive> {    
+@interface GBApplescriptFiltersPlugin : AIPlugin <AIContentFilter, NDScriptDataObjectSendEvent, NDScriptDataObjectActive> {    
 	NSMenuItem				*scriptMenuItem;			//Script menu parent
 	NSMenuItem				*contextualScriptMenuItem;	//Script menu parent
 	NSMenu 					*scriptMenu;			//Submenu of scripts
