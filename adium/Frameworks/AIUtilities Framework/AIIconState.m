@@ -241,7 +241,6 @@
 			NSSize size = [overlayImage size];
 			
             //Layer it on top of our working image
-			[workingImage setFlipped:YES];
             [workingImage lockFocus];
             [overlayImage drawAtPoint:NSMakePoint(0,0)
 							 fromRect:NSMakeRect(0,0,size.width,size.height)
@@ -251,6 +250,14 @@
         }
     }
 	
+	/*NSImage *finalImage = [[NSImage alloc] initWithSize:[workingImage size]];
+	[finalImage lockFocus];
+	[workingImage compositeToPoint:NSMakePoint(0,0)
+						 operation:NSCompositeSourceOver];
+	[finalImage unlockFocus];
+	
+	[workingImage release];
+	*/
     return([workingImage autorelease]);
 }
 

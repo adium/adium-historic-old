@@ -27,6 +27,7 @@
     NSDictionary		*selectedIcon;
     int					selectedIconIndex;
 	NSString			*selectedIconPath;
+	NSImage				*activeFrameImage;
 	
 	NSMutableArray		*previewStateArray;
 	

@@ -27,10 +27,9 @@
     NSImage	*img = [self image];
     
     if(img){
-		
         // Handle flipped axes
 		[img setFlipped:![img isFlipped]];
-
+		
         // Size and location
         // Get image metrics
         NSSize	imgSize = [img size];
