@@ -282,14 +282,14 @@
     minWindowSize = [[self window] minSize];
     
     //Add the status selection view
-    contactListFrame = [scrollView_contactList frame];
+/*    contactListFrame = [scrollView_contactList frame];
     view_statusSelection = [[[AIStatusSelectionView alloc] initWithFrame:NSMakeRect(contactListFrame.origin.x, contactListFrame.origin.y + contactListFrame.size.height - 16 + 1, contactListFrame.size.width, 16) owner:owner] autorelease];
     
     [view_statusSelection setAutoresizingMask:(NSViewMaxXMargin | NSViewMinYMargin | NSViewWidthSizable)];
     [[[self window] contentView] addSubview:view_statusSelection];
 
     [scrollView_contactList setFrameSize:NSMakeSize(contactListFrame.size.width, contactListFrame.size.height - 16)];
-
+*/
     //Swap in the contact list view
     contactListViewController = [[[owner interfaceController] contactListViewController] retain];
     contactListView = [[contactListViewController contactListView] retain];
@@ -297,6 +297,10 @@
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutoHideScrollBar:YES];
     [[self window] makeFirstResponder:contactListView];
+    
+    //Grrr
+    //[scrollView_contactList setHasVerticalScroller:YES];
+    //[[scrollView_contactList verticalScroller] setControlSize:NSSmallControlSize];
 
     //Remember how much padding we have around the contact list view, and observe desired size changes
     contactViewPadding = NSMakeSize([[self window] frame].size.width - [scrollView_contactList frame].size.width,

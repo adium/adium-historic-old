@@ -34,11 +34,12 @@ static NSImage		*tabCloseBack = nil;
 static NSImage		*tabCloseFrontPressed = nil;
 static NSImage		*tabCloseFrontRollover = nil;
 
-#define TAB_CLOSE_LEFTPAD	2	//Padding left of close button
-#define TAB_CLOSE_RIGHTPAD	4	//Padding right of close button
-#define TAB_CLOSE_Y_OFFSET	4 // 5
-#define TAB_RIGHT_PAD		6
-#define TAB_MIN_WIDTH		10 //90
+#define TAB_CLOSE_LEFTPAD	1	//Padding left of close button
+#define TAB_CLOSE_RIGHTPAD	3	//Padding right of close button
+#define TAB_CLOSE_Y_OFFSET	0       //Vertical offset of close button from center
+#define TAB_RIGHT_PAD		5       //Tab right edge padding
+#define TAB_MIN_WIDTH		16      //(Could be used to) Enforce a mininum tab size safari style
+#define TAB_SELECTED_HIGHER     YES     //Draw the selected tab higher?
 
 @implementation AICustomTabCell
 
@@ -72,6 +73,13 @@ static NSImage		*tabCloseFrontRollover = nil;
 - (void)setFrame:(NSRect)inFrame
 {
     frame = inFrame;
+
+    //We seem to use the close button rect everywhere, so it's best to calculate it once here
+    int     centeredYPos = frame.origin.y + (frame.size.height - [tabCloseFront size].height) / 2.0;
+    closeButtonRect = NSMakeRect(frame.origin.x + [tabFrontLeft size].width + TAB_CLOSE_LEFTPAD,
+                                 centeredYPos + TAB_CLOSE_Y_OFFSET,
+                                 [tabCloseFront size].width,
+                                 [tabCloseFront size].height);
 }
 
 - (NSRect)frame
@@ -111,7 +119,6 @@ static NSImage		*tabCloseFrontRollover = nil;
 }
 
 
-
 // Private ---------------------------------------------------------------------
 //init
 - (id)initForTabViewItem:(NSTabViewItem *)inTabViewItem
@@ -122,23 +129,38 @@ static NSImage		*tabCloseFrontRollover = nil;
 
     //Share these images between all AICustomTabCell instances
     if(!haveLoadedImages){
-        tabFrontLeft = [[AIImageUtilities imageNamed:@"Tab_Left" forClass:[self class]] retain];
-        tabFrontMiddle = [[AIImageUtilities imageNamed:@"Tab_Middle" forClass:[self class]] retain];
-        tabFrontRight = [[AIImageUtilities imageNamed:@"Tab_Right" forClass:[self class]] retain];
+	if([[[inTabViewItem tabView] window] isTextured]){
+	    tabFrontLeft = [[AIImageUtilities imageNamed:@"Tab_Left" forClass:[self class]] retain];
+	    tabFrontMiddle = [[AIImageUtilities imageNamed:@"Tab_Middle" forClass:[self class]] retain];
+	    tabFrontRight = [[AIImageUtilities imageNamed:@"Tab_Right" forClass:[self class]] retain];
 
-        tabBackLeft = [[AIImageUtilities imageNamed:@"TabMask_Left" forClass:[self class]] retain];
-        tabBackRight = [[AIImageUtilities imageNamed:@"TabMask_Right" forClass:[self class]] retain];
-        tabBackMiddle = [[AIImageUtilities imageNamed:@"TabMask_Middle" forClass:[self class]] retain];
+	    tabBackLeft = [[AIImageUtilities imageNamed:@"TabMask_Left" forClass:[self class]] retain];
+	    tabBackRight = [[AIImageUtilities imageNamed:@"TabMask_Right" forClass:[self class]] retain];
+	    tabBackMiddle = [[AIImageUtilities imageNamed:@"TabMask_Middle" forClass:[self class]] retain];
 
-        tabCloseFront = [[AIImageUtilities imageNamed:@"TabClose_Front" forClass:[self class]] retain];
-        tabCloseBack = [[AIImageUtilities imageNamed:@"TabClose_Back" forClass:[self class]] retain];
-        tabCloseFrontPressed = [[AIImageUtilities imageNamed:@"TabClose_Front_Pressed" forClass:[self class]] retain];
-        tabCloseFrontRollover = [[AIImageUtilities imageNamed:@"TabClose_Front_Rollover" forClass:[self class]] retain];
+	    tabCloseFront = [[AIImageUtilities imageNamed:@"TabClose_Front" forClass:[self class]] retain];
+	    tabCloseBack = [[AIImageUtilities imageNamed:@"TabClose_Back" forClass:[self class]] retain];
+	    tabCloseFrontPressed = [[AIImageUtilities imageNamed:@"TabClose_Front_Pressed" forClass:[self class]] retain];
+	    tabCloseFrontRollover = [[AIImageUtilities imageNamed:@"TabClose_Front_Rollover" forClass:[self class]] retain];
+	
+	}else{
+	    tabFrontLeft = [[AIImageUtilities imageNamed:@"Aqua_Tab_Left" forClass:[self class]] retain];
+	    tabFrontMiddle = [[AIImageUtilities imageNamed:@"Aqua_Tab_Middle" forClass:[self class]] retain];
+	    tabFrontRight = [[AIImageUtilities imageNamed:@"Aqua_Tab_Right" forClass:[self class]] retain];
 
+	    tabBackLeft = [[AIImageUtilities imageNamed:@"Aqua_TabMask_Left" forClass:[self class]] retain];
+	    tabBackRight = [[AIImageUtilities imageNamed:@"Aqua_TabMask_Right" forClass:[self class]] retain];
+	    tabBackMiddle = [[AIImageUtilities imageNamed:@"Aqua_TabMask_Middle" forClass:[self class]] retain];
+
+	    tabCloseFront = [[NSImage systemCloseButtonImageForState:AIButtonHovered] retain];
+	    tabCloseBack = [[NSImage systemCloseButtonImageForState:AIButtonDisabled] retain];
+	    tabCloseFrontPressed = [[NSImage systemCloseButtonImageForState:AIButtonPressed] retain];
+	    tabCloseFrontRollover = [[NSImage systemCloseButtonImageForState:AIButtonHovered] retain];
+	}
+	
         haveLoadedImages = YES;
     }
 
-    
     //init
     tabViewItem = inTabViewItem;
     allowsInactiveTabClosing = NO;
@@ -149,12 +171,6 @@ static NSImage		*tabCloseFrontRollover = nil;
     trackingTag = 0;
     closeTrackingTag = 0;
 
-    //Calculate the close button position ahead of time
-    closeButtonRect = NSMakeRect([tabFrontLeft size].width + TAB_CLOSE_LEFTPAD,
-                                 TAB_CLOSE_Y_OFFSET,
-                                 [tabCloseFront size].width,
-                                 [tabCloseFront size].height);
-        
     return(self);
 }
 
@@ -169,7 +185,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge, middleLeftEdge, tabCloseWidth;
     NSRect	sourceRect, destRect;
     NSSize	labelSize;
-
+    
     //Pre-calc some dimensions
     labelSize = [tabViewItem sizeOfLabel:NO];
     leftCapWidth = [tabFrontLeft size].width;
@@ -210,7 +226,7 @@ static NSImage		*tabCloseFrontRollover = nil;
 
     }else if(highlighted){
         [[NSColor colorWithCalibratedWhite:0.0 alpha:0.08] set];
-        [NSBezierPath fillRect:NSMakeRect(rect.origin.x + 2, rect.origin.y, rect.size.width - 3, rect.size.height)];
+        [NSBezierPath fillRect:NSMakeRect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)];
     }
 
     //
@@ -218,24 +234,24 @@ static NSImage		*tabCloseFrontRollover = nil;
     rect.size.width -= leftCapWidth + rightCapWidth;
     
     //Close Button
-    //if([[tabViewItem tabView] numberOfTabViewItems] != 1/* && selected*/){
-        NSPoint	destPoint = NSMakePoint(rect.origin.x + TAB_CLOSE_LEFTPAD, rect.origin.y + TAB_CLOSE_Y_OFFSET);
+    NSPoint destPoint = closeButtonRect.origin;
+    
+    if(TAB_SELECTED_HIGHER && selected) destPoint.y += 1;
+    if(hoveringClose){
+	[(trackingClose ? tabCloseFrontPressed : tabCloseFrontRollover) compositeToPoint:destPoint operation:NSCompositeSourceOver];
+    }else{
+	[(selected ? tabCloseFront : tabCloseBack) compositeToPoint:destPoint operation:NSCompositeSourceOver];
+    }
 
-        if(hoveringClose){
-            [(trackingClose ? tabCloseFrontPressed : tabCloseFrontRollover) compositeToPoint:destPoint operation:NSCompositeSourceOver];
-        }else{
-            [(selected ? tabCloseFront : tabCloseBack) compositeToPoint:destPoint operation:NSCompositeSourceOver];
-        }
-
-        rect.origin.x += TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD;
-        rect.size.width -= (TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD) + TAB_RIGHT_PAD;
-    //}
+    rect.origin.x += TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD;
+    rect.size.width -= (TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD) + TAB_RIGHT_PAD;
     
     //Draw the title
     destRect = NSMakeRect(rect.origin.x,
                             rect.origin.y + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
                             rect.size.width,
                             labelSize.height);
+    if(TAB_SELECTED_HIGHER && selected) destRect.origin.y += 1;
     [tabViewItem drawLabel:YES inRect:destRect];
 
 }
@@ -244,8 +260,6 @@ static NSImage		*tabCloseFrontRollover = nil;
 //Install tracking rects for our tab and its close button
 - (void)addTrackingRectsInView:(NSView *)view withFrame:(NSRect)trackRect cursorLocation:(NSPoint)cursorLocation
 {
-    NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, [self frame].origin.x, [self frame].origin.y);
-
     userData = [[NSDictionary dictionaryWithObjectsAndKeys:view, @"view", nil] retain]; //We have to retain and release the userData ourself
     trackingTag = [view addTrackingRect:trackRect
                                   owner:self
@@ -254,11 +268,11 @@ static NSImage		*tabCloseFrontRollover = nil;
     highlighted = NSPointInRect(cursorLocation, trackRect);
 
     closeUserData = [[NSDictionary dictionaryWithObjectsAndKeys:view, @"view", [NSNumber numberWithBool:YES], @"close", nil] retain]; //We have to retain and release the userData ourself
-    closeTrackingTag = [view addTrackingRect:offsetCloseButtonRect
+    closeTrackingTag = [view addTrackingRect:closeButtonRect
                                        owner:self
                                     userData:closeUserData
-                                assumeInside:NSPointInRect(cursorLocation, offsetCloseButtonRect)];
-    hoveringClose = NSPointInRect(cursorLocation, offsetCloseButtonRect);
+                                assumeInside:NSPointInRect(cursorLocation, closeButtonRect)];
+    hoveringClose = NSPointInRect(cursorLocation, closeButtonRect);
 }
 
 //Remove our tracking rects
@@ -274,14 +288,13 @@ static NSImage		*tabCloseFrontRollover = nil;
 //Mouse entered our tabs (or close button)
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-    NSRect          offsetCloseButtonRect = NSOffsetRect(closeButtonRect, [self frame].origin.x, [self frame].origin.y);
     NSDictionary    *eventData = [theEvent userData];
     NSView          *view = [eventData objectForKey:@"view"];
 
     //Set ourself (or our close button) has hovered
     if((allowsInactiveTabClosing || selected || [NSEvent cmdKey]) && [[eventData objectForKey:@"close"] boolValue]){
         hoveringClose = YES;
-        [view setNeedsDisplayInRect:offsetCloseButtonRect];
+        [view setNeedsDisplayInRect:closeButtonRect];
     }else{
         highlighted = YES;
         [view setNeedsDisplayInRect:[self frame]];
@@ -291,14 +304,13 @@ static NSImage		*tabCloseFrontRollover = nil;
 //Mouse left one of our tabs
 - (void)mouseExited:(NSEvent *)theEvent
 {
-    NSRect          offsetCloseButtonRect = NSOffsetRect(closeButtonRect, [self frame].origin.x, [self frame].origin.y);
     NSDictionary    *eventData = [theEvent userData];
     NSView          *view = [eventData objectForKey:@"view"];
 
     //Set ourself (or our close button) has not hovered
-    if(/*(allowsInactiveTabClosing || selected || [NSEvent cmdKey]) &&*/ [[eventData objectForKey:@"close"] boolValue]){
+    if([[eventData objectForKey:@"close"] boolValue]){
         hoveringClose = NO;
-        [view setNeedsDisplayInRect:offsetCloseButtonRect];
+        [view setNeedsDisplayInRect:closeButtonRect];
     }else{
         highlighted = NO;
         [view setNeedsDisplayInRect:[self frame]];
@@ -310,12 +322,11 @@ static NSImage		*tabCloseFrontRollover = nil;
 - (BOOL)willTrackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView
 {
     NSPoint	clickLocation = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
-    NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, cellFrame.origin.x, cellFrame.origin.y);
     
-    if((allowsInactiveTabClosing || selected || [NSEvent cmdKey]) && /*[[tabViewItem tabView] numberOfTabViewItems] != 1 &&*/ NSPointInRect(clickLocation, offsetCloseButtonRect)){
+    if((allowsInactiveTabClosing || selected || [NSEvent cmdKey]) && /*[[tabViewItem tabView] numberOfTabViewItems] != 1 &&*/ NSPointInRect(clickLocation, closeButtonRect)){
         //Track the close button
         [self trackMouse:theEvent
-                  inRect:offsetCloseButtonRect
+                  inRect:closeButtonRect
                   ofView:controlView
             untilMouseUp:YES];
 
@@ -329,23 +340,20 @@ static NSImage		*tabCloseFrontRollover = nil;
 
 - (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView
 {
-    NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, [self frame].origin.x, [self frame].origin.y);
-
     trackingClose = YES;
     hoveringClose = YES;
-    [controlView setNeedsDisplayInRect:offsetCloseButtonRect];
+    [controlView setNeedsDisplayInRect:closeButtonRect];
 
     return(YES);
 }
 
 - (BOOL)continueTracking:(NSPoint)lastPoint at:(NSPoint)currentPoint inView:(NSView *)controlView
 {
-    NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, [self frame].origin.x, [self frame].origin.y);
-    BOOL	hovering = NSPointInRect(currentPoint, offsetCloseButtonRect);
+    BOOL	hovering = NSPointInRect(currentPoint, closeButtonRect);
 
     if(hoveringClose != hovering){
         hoveringClose = hovering;
-        [controlView setNeedsDisplayInRect:offsetCloseButtonRect];
+        [controlView setNeedsDisplayInRect:closeButtonRect];
     }
     
     return(YES);
@@ -353,8 +361,7 @@ static NSImage		*tabCloseFrontRollover = nil;
 
 - (void)stopTracking:(NSPoint)lastPoint at:(NSPoint)stopPoint inView:(NSView *)controlView mouseIsUp:(BOOL)flag
 {
-    NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, [self frame].origin.x, [self frame].origin.y);
-    BOOL	hovering = NSPointInRect(stopPoint, offsetCloseButtonRect);
+    BOOL	hovering = NSPointInRect(stopPoint, closeButtonRect);
 
     if(hovering){
         [(AICustomTabsView *)controlView removeTabViewItem:tabViewItem];
@@ -362,7 +369,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     
     hoveringClose = NO;
     trackingClose = NO;
-    [controlView setNeedsDisplayInRect:offsetCloseButtonRect];
+    [controlView setNeedsDisplayInRect:closeButtonRect];
 }
 
 @end

@@ -13,19 +13,14 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIMessageViewController, AIAdium;
-@protocol AIInterfaceContainer;
+#import "AIWindowAdditions.h"
 
-@interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer> {
-    AIMessageViewController 	*messageView;
-    AIAdium			*owner;
+@implementation NSWindow (AIWindowAdditions)
+
+//Is this window textured/brushed metal?
+- (BOOL)isTextured
+{
+    return(([self styleMask] & NSTexturedBackgroundWindowMask) != 0);
 }
-
-+ (AIMessageTabViewItem *)messageTabWithView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
-- (void)makeActive:(id)sender;
-- (void)close:(id)sender;
-- (NSString *)labelString;
-- (AIMessageViewController *)messageViewController;
-- (void)tabViewItemWasSelected;
 
 @end

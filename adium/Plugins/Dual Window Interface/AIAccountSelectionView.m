@@ -83,7 +83,7 @@
     int			selectedIndex;
 
     //remove any existing menu items
-    [[popUp_accounts menu] removeAllItemsButFirst];
+    [[popUp_accounts menu] removeAllItems];
 
     //insert a menu for each account
     enumerator = [[[owner accountController] accountArray] objectEnumerator];
@@ -131,7 +131,7 @@
     AIAccount		*account = [delegate account];
     
     //Select the correct item
-    [popUp_accounts selectItemAtIndex:[popUp_accounts indexOfItemWithRepresentedObject:account]];
+    [popUp_accounts selectItem:[[popUp_accounts menu] itemAtIndex:[popUp_accounts indexOfItemWithRepresentedObject:account]]];
 
     //Update the 'Checked' menu item (NSPopUpButton doesn't like to do this automatically for us)
     enumerator = [[[popUp_accounts menu] itemArray] objectEnumerator];
@@ -142,9 +142,6 @@
             [menuItem setState:NSOffState];
         }
     }
-
-    //Size the menu to fit
-    [popUp_accounts sizeToFit];
 }
 
 @end

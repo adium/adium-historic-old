@@ -46,10 +46,13 @@
 #define CUSTOM_TABS_FPS		30.0                    //Animation speed
 #define CUSTOM_TABS_STEP        0.6
 #define CUSTOM_TABS_SLOW_STEP   0.1
-#define CUSTOM_TABS_OVERLAP	2                       //Overlapped pixels between tabs
 #define CUSTOM_TABS_INDENT	3                       //Indent on left and right of tabbar
+#define CUSTOM_TABS_GAP		1                       //Gap between tabs
 
-//objects shared by all instances of AICustomTabsView
+//Objects shared by all instances of AICustomTabsView
+static  NSImage			*tabBackground = nil;
+static  NSImage			*tabDivider = nil;
+
 static  AICustomTabCell         *dragTabCell = nil;     //Custom tab cell being dragged
 static  AICustomTabsView        *sourceTabBar = nil;    //source tabBar of the drag
 static  AICustomTabsView        *destTabBar = nil;      //destination tabBar of the drag
@@ -87,8 +90,7 @@ static  NSSize                  dragCellSize;           //Size of the cell being
     arrangeCellTimer = nil;
     selectedCustomTabCell = nil;
     removingLastTabHidesWindow = YES;
-    tabDivider = [[AIImageUtilities imageNamed:@"Tab_Divider" forClass:[self class]] retain];
-        
+
     //register as a drag observer
     [self unregisterDraggedTypes];
     [self registerForDraggedTypes:[self acceptableDragTypes]];
@@ -99,12 +101,11 @@ static  NSSize                  dragCellSize;           //Size of the cell being
     return(self);
 }
 
-//
+//Dealloc
 - (void)dealloc
 {
     [arrangeCellTimer invalidate]; [arrangeCellTimer release]; arrangeCellTimer = nil;
     [tabCellArray release];
-    [tabDivider release];
     [selectedCustomTabCell release];
     [super dealloc];
 }
@@ -139,10 +140,24 @@ static  NSSize                  dragCellSize;           //Size of the cell being
 //Draw
 - (void)drawRect:(NSRect)rect
 {
+    static  BOOL	haveLoadedImages = NO;
     NSEnumerator	*enumerator;
     AICustomTabCell	*tabCell, *nextTabCell;
     NSRect		tabFrame;
 
+    //Load our images (Images are shared between all AICustomTabsView instances)
+    if(!haveLoadedImages){
+	if([[self window] isTextured]){
+	    tabDivider = [[AIImageUtilities imageNamed:@"Tab_Divider" forClass:[self class]] retain];
+	    tabBackground = [[AIImageUtilities imageNamed:@"Tab_Background" forClass:[self class]] retain];
+	}else{
+	    tabDivider = [[AIImageUtilities imageNamed:@"Aqua_Tab_Divider" forClass:[self class]] retain];
+	    tabBackground = [[AIImageUtilities imageNamed:@"Aqua_Tab_Background" forClass:[self class]] retain];
+	}
+
+        haveLoadedImages = YES;
+    }
+    
     //Get the active tab's frame
     tabFrame = [selectedCustomTabCell frame];
     
@@ -175,7 +190,7 @@ static  NSSize                  dragCellSize;           //Size of the cell being
 
             //Draw the divider
             if(sourceTabBar == self || activeTabBar == self || (tabCell != selectedCustomTabCell && (!nextTabCell || nextTabCell != selectedCustomTabCell)) ){
-                [tabDivider compositeToPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width - 2, cellFrame.origin.y) operation:NSCompositeSourceOver];
+                [tabDivider compositeToPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y) operation:NSCompositeSourceOver];
             }
 
             //(Restore selection)
@@ -186,78 +201,41 @@ static  NSSize                  dragCellSize;           //Size of the cell being
     }
 }
 
+//Constrain a rect horizontally
+NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
+{
+    if(rect.origin.x < left){
+	rect.size.width -= left - rect.origin.x;
+	rect.origin.x = left;
+    }
+    if(NSMaxX(rect) > right){
+	rect.size.width -= NSMaxX(rect) - right;
+    }
+    
+    return(rect);
+} 
+
 //Draw our background strip
 - (void)_drawBackgroundInRect:(NSRect)rect withFrame:(NSRect)viewFrame selectedTabRect:(NSRect)tabFrame
 {
     NSRect		drawRect;
-    NSPoint		drawPointA, drawPointB;
-
-    //Paint black over region left of active tab
+    
+    //Draw dark gradient left of active tab
     drawRect = NSMakeRect(viewFrame.origin.x,
-                          viewFrame.origin.y + 1,
+                          viewFrame.origin.y,
                           tabFrame.origin.x - viewFrame.origin.x,
-                          viewFrame.size.height - 1);
+                          viewFrame.size.height);
     if(NSIntersectsRect(drawRect, rect)){
-        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.20] set];
-        [NSBezierPath fillRect:NSIntersectionRect(drawRect, rect)];
+	[tabBackground tileInRect:AIConstrainRectWidth(drawRect, NSMinX(rect), NSMaxX(rect))];
     }
-    
-    //Draw the black tab line left of active tab
-    drawPointA = NSMakePoint(drawRect.origin.x, drawRect.origin.y + drawRect.size.height - 0.5);
-    drawPointB = NSMakePoint(drawRect.origin.x + drawRect.size.width, drawRect.origin.y + drawRect.size.height - 0.5);
-    if(drawPointA.y > rect.origin.y && drawPointA.y < NSMaxY(rect)){
-        //Crop line to fit within drawn rect
-        if(drawPointA.x < rect.origin.x) drawPointA.x = rect.origin.x;
-        if(drawPointB.x > NSMaxX(rect)) drawPointB.x = NSMaxX(rect);
-        
-        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.38] set];
-        [NSBezierPath strokeLineFromPoint:drawPointA toPoint:drawPointB];
-    }
-    
-    //Paint black over region right of active tab
+
+    //Draw dark gradient right of active tab
     drawRect = NSMakeRect(tabFrame.origin.x + tabFrame.size.width,
-                          viewFrame.origin.y + 1,
+                          viewFrame.origin.y,
                           (viewFrame.origin.x + viewFrame.size.width) - (tabFrame.origin.x + tabFrame.size.width),
-                          viewFrame.size.height - 1);
+                          viewFrame.size.height);
     if(NSIntersectsRect(drawRect, rect)){
-        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.20] set];
-        [NSBezierPath fillRect:NSIntersectionRect(drawRect, rect)];
-    }
-    
-    //Draw the black tab line right of active tab
-    drawPointA = NSMakePoint(drawRect.origin.x, drawRect.origin.y + drawRect.size.height - 0.5);
-    drawPointB = NSMakePoint(drawRect.origin.x + drawRect.size.width, drawRect.origin.y + drawRect.size.height - 0.5);
-    if(drawPointA.y > rect.origin.y && drawPointA.y < NSMaxY(rect)){
-        //Crop line to fit within drawn rect
-        if(drawPointA.x < rect.origin.x) drawPointA.x = rect.origin.x;
-        if(drawPointB.x > NSMaxX(rect)) drawPointB.x = NSMaxX(rect);
-        
-        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.38] set];
-        [NSBezierPath strokeLineFromPoint:drawPointA toPoint:drawPointB];
-    }
-    
-    //Bottom edge light
-    drawPointA = NSMakePoint(viewFrame.origin.x, viewFrame.origin.y + 1.5);
-    drawPointB = NSMakePoint(viewFrame.origin.x + viewFrame.size.width, viewFrame.origin.y + 1.5);
-    if(drawPointA.y > rect.origin.y && drawPointA.y < NSMaxY(rect)){
-        //Crop line to fit within drawn rect
-        if(drawPointA.x < rect.origin.x) drawPointA.x = rect.origin.x;
-        if(drawPointB.x > NSMaxX(rect)) drawPointB.x = NSMaxX(rect);
-        
-        [[NSColor colorWithCalibratedWhite:1.0 alpha:0.16] set];
-        [NSBezierPath strokeLineFromPoint:drawPointA toPoint:drawPointB];
-    }
-    
-    //Bottom edge dark
-    drawPointA = NSMakePoint(viewFrame.origin.x, viewFrame.origin.y + 0.5);
-    drawPointB = NSMakePoint(viewFrame.origin.x + viewFrame.size.width, viewFrame.origin.y + 0.5);
-    if(drawPointA.y > rect.origin.y && drawPointA.y < NSMaxY(rect)){
-        //Crop line to fit within drawn rect
-        if(drawPointA.x < rect.origin.x) drawPointA.x = rect.origin.x;
-        if(drawPointB.x > NSMaxX(rect)) drawPointB.x = NSMaxX(rect);
-        
-        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.41] set];
-        [NSBezierPath strokeLineFromPoint:drawPointA toPoint:drawPointB];
+	[tabBackground tileInRect:AIConstrainRectWidth(drawRect, NSMinX(rect), NSMaxX(rect))];
     }
 }
 
@@ -323,7 +301,7 @@ static  NSSize                  dragCellSize;           //Size of the cell being
     NSTabViewItem	*selectedTab = [inTabView selectedTabViewItem];
 
     //Set old cell for a redisplay
-    [self setNeedsDisplayInRect:[selectedCustomTabCell frame]];
+    [self setNeedsDisplayInRect:NSInsetRect([selectedCustomTabCell frame], -(CUSTOM_TABS_GAP * 2), 0)];
 
     //Record the new selected tab cell, and correctly set it as selected
     enumerator = [tabCellArray objectEnumerator];
@@ -338,7 +316,7 @@ static  NSSize                  dragCellSize;           //Size of the cell being
     }
 
     //Redisplay new cell
-    [self setNeedsDisplayInRect:[selectedCustomTabCell frame]];
+    [self setNeedsDisplayInRect:NSInsetRect([selectedCustomTabCell frame], -(CUSTOM_TABS_GAP * 2), 0)];
 
     //Reset cursor tracking
     [self _stopTrackingCursor];
@@ -430,12 +408,6 @@ static  NSSize                  dragCellSize;           //Size of the cell being
         enumerator = [tabCellArray objectEnumerator];
         while((tabCell = [enumerator nextObject])){            
             NSRect trackRect = [tabCell frame];
-
-            //Compensate for overlap
-            trackRect.origin.x += CUSTOM_TABS_OVERLAP;
-            trackRect.size.width -= CUSTOM_TABS_OVERLAP;
-
-            //add the tracking tags
             [tabCell addTrackingRectsInView:self withFrame:trackRect cursorLocation:localPoint];
         }
     }
@@ -591,7 +563,7 @@ static  NSSize                  dragCellSize;           //Size of the cell being
             
             //Make a gap to signify that the dragged cell can be dropped here
             if(activeTabBar == self && index == hoverIndex){
-                xLocation += dragCellSize.width - CUSTOM_TABS_OVERLAP;
+                xLocation += dragCellSize.width + CUSTOM_TABS_GAP;
             }
             
             //Get the object's size
@@ -623,7 +595,7 @@ static  NSSize                  dragCellSize;           //Size of the cell being
             [tabCell setFrame:NSMakeRect(origin.x, origin.y, size.width, size.height)];
             
             //Move to the next tab
-            xLocation += size.width - CUSTOM_TABS_OVERLAP; //overlap the tabs a bit
+            xLocation += size.width + CUSTOM_TABS_GAP; //overlap the tabs a bit
             
             index++;
         }
@@ -652,13 +624,13 @@ static  NSSize                  dragCellSize;           //Size of the cell being
 //Returns the total width of our tab cells
 - (int)_totalTabWidth
 {
-    int			totalWidth = CUSTOM_TABS_OVERLAP + (CUSTOM_TABS_INDENT * 2);
+    int			totalWidth = (CUSTOM_TABS_INDENT * 2);
     NSEnumerator	*enumerator;
     AICustomTabCell	*tabCell;
     
     enumerator = [tabCellArray objectEnumerator];
     while((tabCell = [enumerator nextObject])){
-        totalWidth += [tabCell size].width - CUSTOM_TABS_OVERLAP;
+        totalWidth += [tabCell size].width + CUSTOM_TABS_GAP;
     }
     
     return(totalWidth);
@@ -855,7 +827,7 @@ static  NSSize                  dragCellSize;           //Size of the cell being
 
             //Move past this tab
             hoverIndex++;
-            lastLocation += [tabCell frame].size.width - CUSTOM_TABS_OVERLAP;
+            lastLocation += [tabCell frame].size.width + CUSTOM_TABS_GAP;
         }
     }
     
@@ -908,13 +880,14 @@ static  NSSize                  dragCellSize;           //Size of the cell being
     if(!dragTabImage || !dragWindowImage) useCustomDraggingCode = NO; //Fall back to stock dragging on failure
     
     if(useCustomDraggingCode){
-        dragTabFloater = [ESFloater floaterWithImage:dragTabImage frame:NO];
+        dragTabFloater = [ESFloater floaterWithImage:dragTabImage styleMask:NSBorderlessWindowMask];
         [dragTabFloater setVisible:(!sourceWindowWillHide) animate:NO];
         [dragTabFloater setMaxOpacity:1.0];
         
-        dragWindowFloater = [ESFloater floaterWithImage:dragWindowImage frame:YES];
+	unsigned int styleMask = ([[sourceView window] isTextured] ? NSTitledWindowMask | NSTexturedBackgroundWindowMask : NSTitledWindowMask);
+        dragWindowFloater = [ESFloater floaterWithImage:dragWindowImage styleMask:styleMask];
         [dragWindowFloater setVisible:(sourceWindowWillHide) animate:NO];
-        [dragWindowFloater setMaxOpacity:/*1.0*/ 0.75];
+        [dragWindowFloater setMaxOpacity:0.75];
     }
 
     //Adjust the drag offset so the cursor is atleast always touching the tab drag image (Is there a macro that can do this ?)
