@@ -19,7 +19,7 @@
 
 @class AIAdium;
 
-@interface AISCLOutlineView : AIAlternatingRowOutlineView {    
+@interface AISCLOutlineView : AIAlternatingRowOutlineView <AIAutoSizingView> {    
     NSTrackingRectTag		trackingRectTag;	//Tracing rect for the whole outline view
     int				oldSelection;		//Holds the selection when it's hidden
     BOOL			editing;		//YES when the list is in edit mode... (temp)
@@ -31,11 +31,11 @@
 
 - (void)setFont:(NSFont *)inFont;
 - (NSFont *)font;
-
 - (void)setColor:(NSColor *)inColor;
 - (void)setInvertedColor:(NSColor *)inInvertedColor;
 - (void)setColor:(NSColor *)inColor andInvertedColor:(NSColor *)inInvertedColor;
 - (NSColor *)color;
 - (NSColor *)invertedColor;
+- (NSSize)desiredSize;
 
 @end
