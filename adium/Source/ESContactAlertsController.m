@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.27 2004/06/28 07:08:38 evands Exp $
+//  $Id: ESContactAlertsController.m,v 1.28 2004/07/02 02:50:20 evands Exp $
 
 
 #import "ESContactAlertsController.h"
@@ -159,7 +159,8 @@ DeclareString(KeyOneTimeAlert);
 	
 	//Add events for this object (replacing any inherited from the containing object so that this object takes precendence)
 	NSDictionary	*newEvents = [preferenceSource preferenceForKey:KEY_CONTACT_ALERTS
-															  group:PREF_GROUP_CONTACT_ALERTS];
+															  group:PREF_GROUP_CONTACT_ALERTS
+											  ignoreInheritedValues:YES];
 	if(newEvents && [newEvents count]){
 		if(!events) events = [NSMutableDictionary dictionary];
 		[events addEntriesFromDictionary:newEvents];
@@ -286,7 +287,9 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 	id  preferenceSource = listObject;
 	if (!preferenceSource) preferenceSource = [owner preferenceController];
 	
-	NSDictionary	*contactAlerts = [preferenceSource preferenceForKey:@"Contact Alerts" group:@"Contact Alerts" ignoreInheritedValues:YES];
+	NSDictionary	*contactAlerts = [preferenceSource preferenceForKey:KEY_CONTACT_ALERTS
+																  group:PREF_GROUP_CONTACT_ALERTS
+												  ignoreInheritedValues:YES];
 	NSMutableArray	*alertArray = [NSMutableArray array];
 	NSEnumerator	*groupEnumerator;
 	NSString		*alertID;
@@ -318,7 +321,8 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 	
 	//Get the alerts for this list object
 	contactAlerts = [[preferenceSource preferenceForKey:KEY_CONTACT_ALERTS
-												  group:PREF_GROUP_CONTACT_ALERTS] mutableCopy];
+												  group:PREF_GROUP_CONTACT_ALERTS
+								  ignoreInheritedValues:YES] mutableCopy];
 	if(!contactAlerts) contactAlerts = [[NSMutableDictionary alloc] init];
 	
 	//Get the event array for the new alert, making a copy so we can modify it
@@ -358,7 +362,8 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 	if (!preferenceSource) preferenceSource = [owner preferenceController];
 	
 	NSMutableDictionary	*contactAlerts = [[preferenceSource preferenceForKey:KEY_CONTACT_ALERTS 
-																	   group:PREF_GROUP_CONTACT_ALERTS] mutableCopy];
+																	   group:PREF_GROUP_CONTACT_ALERTS
+													   ignoreInheritedValues:YES] mutableCopy];
 	NSString			*victimEventID = [victimAlert objectForKey:KeyEventID];
 	NSMutableArray		*eventArray;
 	
@@ -384,9 +389,8 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 
 - (void)removeAllGlobalAlertsWithActionID:(NSString *)actionID
 {
-	id					preferenceSource = [owner preferenceController];
-	NSDictionary		*contactAlerts = [preferenceSource preferenceForKey:KEY_CONTACT_ALERTS 
-																	  group:PREF_GROUP_CONTACT_ALERTS];
+	NSDictionary		*contactAlerts = [[owner preferenceController] preferenceForKey:KEY_CONTACT_ALERTS 
+																				  group:PREF_GROUP_CONTACT_ALERTS];
 	NSMutableDictionary *newContactAlerts = [contactAlerts mutableCopy];
 	NSEnumerator		*enumerator = [contactAlerts keyEnumerator];
 	NSString			*victimEventID;
