@@ -104,7 +104,20 @@
 
 - (IBAction)send:(id)sender
 {
-    NSString *bugReport, *time, *buildDate, *email, *shortDesc, *longDesc, *log;
+	NSDictionary	*crashReport = [NSDictionary dictionaryWithObjectsAndKeys:
+		[[NSDate date] description], @"time",
+//		, @"build",
+		[textField_emailAddress stringValue], @"email",
+		[textField_accountIM stringValue], @"uid",
+		[textField_description stringValue], @"short_desc",
+		[textView_details string], @"desc",
+		crashLog, @"log",
+		nil];
+
+	[self sendReport:crashReport];
+	
+	
+ //   NSString *bugReport, *time, *buildDate, *email, *shortDesc, *longDesc, *log;
     
     /*
         we need to do the following here:
@@ -115,23 +128,74 @@
         for each of the fields.
     */
     
-    bugReport = [NSString stringWithFormat:@"time=%@&build=%@&email=%@&short_desc=%@&desc=%@&log=%@",
-        time, buildDate, email, shortDesc, longDesc, log];
-    
-    [self sendReport:[bugReport retain]];
+//    bugReport = [NSString stringWithFormat:@"time=%@&build=%@&email=%@&short_desc=%@&desc=%@&log=%@",
+//        time, buildDate, email, shortDesc, longDesc, log];
+//    
+//    [self sendReport:[bugReport retain]];
 }
 
-- (void)sendReport:(NSString *)bugReport
-{    
-    while(1)
-    {
-        if([self tryToSendReport:bugReport])
-        {
-            [bugReport release];
-            [NSApp terminate:nil];
-            break;
-        }
-    }
+- (void)sendReport:(NSDictionary *)crashReport
+{
+//	NSMutableString *reportString = [[[NSMutableString alloc] init] autorelease];
+//	NSEnumerator	*enumerator;
+//	NSString		*key;
+//	NSString		*value;
+//	BOOL			sent = NO;
+//	
+//	//Compact the fields of the report into a long URL string
+//	enumerator = [[crashReport allKeys] objectEnumerator];
+//	while(key = [enumerator nextObject]){
+//		if([reportString length] != 0) [reportString appendString:@"&"];
+//		[reportString appendFormat:@"%@=%@", key, [[crashReport objectForKey:key] stringByEncodingURLEscapes]];
+//	}
+//	
+//	//
+//	while(!sent){
+//		NSError 		*error;
+//		NSURLResponse 	*reply;
+//		NSMutableURLRequest *request;
+//		
+//		request = [NSMutableURLRequest 
+//        requestWithURL:[NSURL URLWithString:BUG_REPORT_URL]
+//		   cachePolicy:NSURLRequestReloadIgnoringCacheData
+//       timeoutInterval:120];
+//		[request addValue:@"Adium 2.0a" forHTTPHeaderField:@"X-Adium-Bug-Report"];
+//		[request setHTTPMethod:@"POST"];
+//		[request setHTTPBody:[bugReport dataUsingEncoding:NSUTF8StringEncoding]];
+//		
+//		//start the barbershop pole (using multi-threading)
+//
+//		NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&reply error:&error];
+//		
+//		//stop the pole
+//		if(data)      
+//			//return YES;
+//		
+//		if(NSRunAlertPanel(@"Unable to send crash report",
+//						   [error localizedDescription],
+//						   @"Try Again", 
+//						   @"Cancel",
+//						   nil) == NSAlertAlternateReturn){
+//			//return YES;
+//		}
+//	}
+//	
+//	
+//	
+//	
+//	
+//	
+//	NSLog(@"%@",reportString);
+//
+//	/*    while(1)
+//    {
+//        if([self tryToSendReport:bugReport])
+//        {
+//            [bugReport release];
+//            [NSApp terminate:nil];
+//            break;
+//        }
+//    }*/
 }
 
 - (BOOL)tryToSendReport:(NSString *)bugReport

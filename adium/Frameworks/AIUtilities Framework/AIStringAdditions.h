@@ -22,5 +22,6 @@
 - (NSString *)stringByTruncatingTailToWidth:(float)inWidth;
 - (NSString *)stringByEncodingURLEscapes;
 - (NSString *)stringByDecodingURLEscapes;
-- (BOOL)isURLEncoded;
+//- (BOOL)isURLEncoded;
+
 @end

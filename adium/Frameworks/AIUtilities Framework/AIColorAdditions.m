@@ -23,8 +23,6 @@ float ONE_THIRD = 1.0/3.0;
 float ONE_SIXTH = 1.0/6.0;
 float TWO_THIRD = 2.0/3.0;
 
-int hexToInt(char hex);
-char intToHex(int val);
 float min(float a, float b, float c);
 float max(float a, float b, float c);
 float _v(float m1, float m2, float hue);
@@ -298,41 +296,25 @@ float max(float a, float b, float c){
 }
 
 //Convert hex to an int
-int hexToInt(char hex){
+int hexToInt(char hex)
+{
     if(hex >= '0' && hex <= '9'){
-        return (hex - '0');
-    }else if(hex == 'A'){
-        return 10;
-    }else if(hex == 'B'){
-        return 11;
-    }else if(hex == 'C'){
-        return 12;
-    }else if(hex == 'D'){
-        return 13;
-    }else if(hex == 'E'){
-        return 14;
+        return(hex - '0');
+    }else if(hex >= 'a' && hex <= 'f'){
+        return(hex - 'a' + 10);
+    }else if(hex >= 'A' && hex <= 'F'){
+        return(hex - 'A' + 10);
     }else{
-        return 15;
+        return(0);
     }
 }
-
+#warning move to another file
 //Convert int to a hex
-char intToHex(int val){
-
-    if(val < 10){
-        return('0' + val);
-    }else if(val == 10){
-        return 'A';
-    }else if(val == 11){
-        return 'B';
-    }else if(val == 12){
-        return 'C';
-    }else if(val == 13){
-        return 'D';
-    }else if(val == 14){
-        return 'E';
+char intToHex(int digit)
+{
+    if(digit > 9){
+        return('a' + digit - 10);
     }else{
-        return 'F';
+        return('0' + digit);
     }
 }
-

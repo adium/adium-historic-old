@@ -19,10 +19,10 @@
 	IBOutlet	NSPanel			*panel_privacySheet;
 	IBOutlet	NSTextView		*textView_crashLog;
 	
-	NSString	*crashLog;		//Current crash log
+	NSString					*crashLog;		//Current crash log
 }
 
-- (void)sendReport:(NSString *)bugReport;
+- (void)sendReport:(NSDictionary *)crashReport;
 - (BOOL)tryToSendReport:(NSString *)bugReport;
 - (IBAction)send:(id)sender;
 - (void)awakeFromNib;
