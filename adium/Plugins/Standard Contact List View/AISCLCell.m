@@ -131,6 +131,7 @@
     displayNameSize = [displayName size];
     cellSize.width += displayNameSize.width;
     cellSize.height += displayNameSize.height;
+    [displayName release];
     
     int height = cellSize.height;
     
