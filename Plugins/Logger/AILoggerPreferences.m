@@ -36,24 +36,20 @@
 //Setup preferences
 - (void)viewDidLoad
 {
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LOGGING];
 }
 
 - (void)viewWillClose
 {
-	[[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 //Reflect new preferences in view
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [PREF_GROUP_LOGGING isEqualToString:[[notification userInfo] objectForKey:@"Group"]]){
-        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
-
-        [checkBox_enableLogging setState:[[preferenceDict objectForKey:KEY_LOGGER_ENABLE] boolValue]];
-		[checkBox_enableHTML setState:![[preferenceDict objectForKey:KEY_LOGGER_HTML] boolValue]];
-    }
+	[checkBox_enableLogging setState:[[prefDict objectForKey:KEY_LOGGER_ENABLE] boolValue]];
+	[checkBox_enableHTML setState:![[prefDict objectForKey:KEY_LOGGER_HTML] boolValue]];
 }
 
 //Save changed preference
