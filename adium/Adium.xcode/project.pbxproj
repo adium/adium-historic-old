@@ -5287,6 +5287,7 @@
 				7EBC6E5F069DE5BC00020736,
 				4B2E560E06A33D85008866CF,
 				4B60991F06A4483400EC8D78,
+				34D509B206A4A82400334A7A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7713,7 +7714,6 @@
 				4B090DCD065CD50D00FF0528,
 				4B090DCE065CD50D00FF0528,
 				4BDF2C91061E376C00EA75C5,
-				4947F5BB0655E7C400B791E5,
 			);
 			isa = PBXGroup;
 			name = Libgaim;
@@ -8249,6 +8249,20 @@
 			path = "Plugins/Dual Window Interface/DualWindowMessageDefaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		34D509B106A4A82300334A7A = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "tab-entered-text.png";
+			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-entered-text.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D509B206A4A82400334A7A = {
+			fileRef = 34D509B106A4A82300334A7A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34D5B262061260AE00B98336 = {
 			fileRef = 83DB8F220611460E00A5C28C;
@@ -15365,6 +15379,7 @@
 		4BD672C406001B530049CAF7 = {
 			children = (
 				4B7F278605440C6200CDFC90,
+				4947F5BB0655E7C400B791E5,
 				4BA88A4C0524AFD700A8010A,
 			);
 			isa = PBXGroup;
@@ -18136,6 +18151,7 @@
 				4B57CDCC06849ABB003FF229,
 				4B41F9180686173A00C09B4B,
 				4BF302F106873CCE000DCA65,
+				34D509B106A4A82300334A7A,
 			);
 			isa = PBXGroup;
 			name = "Tab Status Icons";
