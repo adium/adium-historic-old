@@ -154,24 +154,20 @@ const BOOL defaultHasAlpha = YES;
 
 - (OSStatus)plotIcon:(IconRef)icon inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelNSColor:(NSColor *)color flags:(PlotIconRefFlags)flags
 {
-	[color retain];
-
 	RGBColor  rgb;
 	RGBColor *rgbptr;
 	if(color != nil) {
+		float red, green, blue;
+		[color getRed:&red green:&green blue:&blue alpha:NULL];
+		rgb.red   = 65535 * red;
+		rgb.green = 65535 * green;
+		rgb.blue  = 65535 * blue;
 		rgbptr = &rgb;
-		rgb.red   = (short)[color redComponent];
-		rgb.green = (short)[color greenComponent];
-		rgb.blue  = (short)[color blueComponent];
 	} else {
 		rgbptr = NULL;
 	}
 
-	OSStatus err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelRGBColor:rgbptr flags:flags];
-
-	[color release];
-
-	return err;
+	return [self plotIcon:icon inRect:bounds alignment:align transform:transform labelRGBColor:rgbptr flags:flags];
 }
 
 - (OSStatus)plotIcon:(IconRef)icon inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelIndex:(SInt16)label flags:(PlotIconRefFlags)flags
