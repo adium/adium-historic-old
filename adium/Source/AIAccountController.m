@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.77 2004/04/11 04:38:48 evands Exp $
+// $Id: AIAccountController.m,v 1.78 2004/04/12 14:31:54 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -719,7 +719,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Password Storage -----------------------------------------------------------------------------------------------------
 #pragma mark Password Storage
 - (NSString *)_accountNameForAccount:(AIAccount *)inAccount{
-	return([NSString stringWithFormat:@"%@.%@",[inAccount serviceID],[inAccount UID]]);
+	return([NSString stringWithFormat:@"%@.%@",[inAccount serviceID],[inAccount uniqueObjectID]]);
 }
 - (NSString *)_passKeyForAccount:(AIAccount *)inAccount{
 	return([NSString stringWithFormat:@"Adium.%@",[self _accountNameForAccount:inAccount]]);
