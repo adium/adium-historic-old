@@ -512,6 +512,9 @@ int HTMLEquivalentForFontSize(int fontSize)
                     }else if ([chunkString caseInsensitiveCompare:@"QUOT"] == 0){
                         [attrString appendString:@"\"" withAttributes:[textAttributes dictionary]];
 
+                    }else if ([chunkString caseInsensitiveCompare:@"APOS"] == 0){
+                        [attrString appendString:@"'" withAttributes:[textAttributes dictionary]];
+						
                     }else if ([chunkString caseInsensitiveCompare:@"NBSP"] == 0){
                         [attrString appendString:@" " withAttributes:[textAttributes dictionary]];
 
