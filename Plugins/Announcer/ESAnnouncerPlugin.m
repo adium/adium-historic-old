@@ -31,13 +31,6 @@
 																		forClass:[self class]] 
 										  forGroup:PREF_GROUP_ANNOUNCER];
 	
-    //Install the contact info view
-/*
-	[NSBundle loadNibNamed:CONTACT_ANNOUNCER_NIB owner:self];
-    contactView = [[AIPreferenceViewController controllerWithName:@"Announcer" categoryName:@"None" view:view_contactAnnouncerInfoView delegate:self] retain];
-    [[adium contactController] addContactInfoView:contactView];
-    [popUp_voice addItemsWithTitles:[[adium soundController] voices]];
- */
     lastSenderString = nil;
 }
 
@@ -46,53 +39,6 @@
     //Uninstall our contact alert
 //    [[adium contactAlertsController] unregisterContactAlertProvider:self];
     
-}
-
-#pragma mark Contact specific preferences
-- (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
-{
-    NSString	*voice = nil;
-    NSNumber	*pitchNumber = nil;
-    NSNumber	*rateNumber = nil;
-	
-    //Hold onto the object
-    [activeListObject release]; activeListObject = nil;
-    activeListObject = [inObject retain];
-    voice = [activeListObject preferenceForKey:KEY_VOICE_STRING group:PREF_GROUP_ANNOUNCER  ignoreInheritedValues:YES];
-    if(voice) {
-        [popUp_voice selectItemWithTitle:voice];
-    } else {
-        [popUp_voice selectItemAtIndex:0]; //"Default"
-    }
-	
-    pitchNumber = [activeListObject preferenceForKey:KEY_PITCH group:PREF_GROUP_ANNOUNCER ignoreInheritedValues:YES];
-    if(pitchNumber) {
-		[slider_pitch setFloatValue:[pitchNumber floatValue]];
-    } else {
-		[slider_pitch setFloatValue:[[adium soundController] defaultPitch]];
-    }
-	
-    rateNumber = [activeListObject preferenceForKey:KEY_RATE group:PREF_GROUP_ANNOUNCER ignoreInheritedValues:YES];
-    if(rateNumber) {
-		[slider_rate setIntValue:[rateNumber intValue]];
-    } else {
-		[slider_rate setIntValue:[[adium soundController] defaultRate]];
-    }
-}
-
-- (IBAction)changedSetting:(id)sender
-{
-    if (sender == popUp_voice) {
-		NSString * voice = [popUp_voice titleOfSelectedItem];
-		if ([voice isEqualToString:@"Default"]){
-			voice = nil;
-		}
-		[activeListObject setPreference:voice forKey:KEY_VOICE_STRING group:PREF_GROUP_ANNOUNCER];
-    } else if (sender == slider_pitch) {
-        [activeListObject setPreference:[NSNumber numberWithFloat:[slider_pitch floatValue]] forKey:KEY_PITCH group:PREF_GROUP_ANNOUNCER];
-    } else if (sender == slider_rate) {
-        [activeListObject setPreference:[NSNumber numberWithInt:[slider_rate intValue]] forKey:KEY_RATE group:PREF_GROUP_ANNOUNCER];
-    }
 }
 
 //Speak Text Alert -----------------------------------------------------------------------------------------------------
@@ -250,18 +196,11 @@
 		float		pitch = 0;
 		int			rate = 0;
 		
-		//Retrieve custom settings for this listObject
-		if(listObject){
-			voice = [listObject preferenceForKey:KEY_VOICE_STRING group:PREF_GROUP_ANNOUNCER];			
-			pitch = [[listObject preferenceForKey:KEY_PITCH group:PREF_GROUP_ANNOUNCER] floatValue];
-			rate = [[listObject preferenceForKey:KEY_RATE group:PREF_GROUP_ANNOUNCER] intValue];
-		}
-		
-		if(voice || pitch || rate){
-			[[adium soundController] speakText:textToSpeak withVoice:voice andPitch:pitch andRate:rate];
-		}else{
-			[[adium soundController] speakText:textToSpeak];
-		}
+		voice = [details objectForKey:KEY_VOICE_STRING];			
+		pitch = [[details objectForKey:KEY_PITCH] floatValue];
+		rate = [[details objectForKey:KEY_RATE] intValue];
+
+		[[adium soundController] speakText:textToSpeak withVoice:voice andPitch:pitch andRate:rate];
 	}
 }
 

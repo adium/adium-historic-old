@@ -6,11 +6,10 @@
 //  Copyright 2004-2005 The Adium Team. All rights reserved.
 //
 
-@class AIActionDetailsPane;
+#import "ESAnnouncerAbstractDetailPane.h"
 
-@interface ESAnnouncerSpeakEventAlertDetailPane : AIActionDetailsPane {
-	IBOutlet	AILocalizationButton	*checkBox_speakEventTime;
-	IBOutlet	AILocalizationButton	*checkBox_speakContactName;
+@interface ESAnnouncerSpeakEventAlertDetailPane : ESAnnouncerAbstractDetailPane {
+
 }
 
 @end

@@ -33,14 +33,28 @@
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            CLASS = ESAnnouncerAbstractDetailPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_speakContactName" = AILocalizationButton; 
+                "checkBox_speakEventTime" = AILocalizationButton; 
+                "label_pitch" = NSTextField; 
+                "label_rate" = NSTextField; 
+                "label_voice" = NSTextField; 
+                "popUp_voices" = NSPopUpButton; 
+                "slider_pitch" = NSSlider; 
+                "slider_rate" = NSSlider; 
+            }; 
+            SUPERCLASS = AIActionDetailsPane; 
+        }, 
+        {
             CLASS = ESAnnouncerSpeakTextAlertDetailPane; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "checkBox_speakEventTime" = AILocalizationButton; 
                 "textView_textToSpeak" = NSTextView; 
                 "textView_textToSpeakLabel" = AILocalizationTextField; 
             }; 
-            SUPERCLASS = AIActionDetailsPane; 
+            SUPERCLASS = ESAnnouncerAbstractDetailPane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
