@@ -58,5 +58,6 @@
 - (NSString *)nibName;
 - (void)makeActive:(id)sender;
 - (void)close:(id)sender;
+- (void)showWindowInFront:(BOOL)inFront;
 
 @end

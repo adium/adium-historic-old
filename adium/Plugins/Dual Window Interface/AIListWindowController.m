@@ -121,6 +121,7 @@
     
     //Restore the window position
     frameString = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
+	NSLog(@"%@",frameString);
 	if(frameString){
 		NSRect		windowFrame = NSRectFromString(frameString);
 		
@@ -439,12 +440,6 @@
 
 //Interface Container --------------------------------------------------------------------------------------------------
 #pragma mark Interface Container
-//Make this container active
-- (void)makeActive:(id)sender
-{
-    [self showWindow:nil];
-}
-
 //Close this container
 - (void)close:(id)sender
 {
@@ -469,6 +464,17 @@
 {
     [[adium notificationCenter] postNotificationName:Interface_ContactListDidResignMain object:self];
 }
+
+//
+- (void)showWindowInFront:(BOOL)inFront
+{
+	if(inFront){
+		[self showWindow:nil];
+	}else{
+		[[self window] orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
+	}
+}
+
 
 
 //Resizing And Positioning ---------------------------------------------------------------------------------------------

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.98 2004/08/03 23:16:07 evands Exp $
+// $Id: AIInterfaceController.m,v 1.99 2004/08/09 18:08:48 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIStandardListWindowController.h"
@@ -215,13 +215,14 @@
 //Show the contact list window
 - (IBAction)showContactList:(id)sender
 {
-	[contactListPlugin showContactListAndBringToFront:NO];
+	[contactListPlugin showContactListAndBringToFront:YES];
 }
 
 //Show the contact list window and bring Adium to the front
 - (IBAction)showContactListAndBringToFront:(id)sender
 {
 	[contactListPlugin showContactListAndBringToFront:YES];
+	[[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }
 
 //Close the contact list window

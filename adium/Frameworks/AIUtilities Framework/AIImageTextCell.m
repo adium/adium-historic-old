@@ -47,7 +47,7 @@
 //Copy
 - (id)copyWithZone:(NSZone *)zone
 {
-	AIImageTextCell	*newCell = [[AIImageTextCell alloc] init];
+	id newCell = [super copyWithZone:zone];
 	[newCell setFont:font];
 	[newCell setSubString:subString];
 	[newCell setMaxImageWidth:maxImageWidth];
@@ -87,8 +87,10 @@
     NSImage	*image = [self image];
     BOOL 	highlighted;
 
+	[super drawInteriorWithFrame:cellFrame inView:controlView];
+	
     highlighted = [self isHighlighted];
-    if(highlighted) {
+    if(highlighted){
         [self _drawHighlightWithFrame:cellFrame inView:controlView];
     }
 

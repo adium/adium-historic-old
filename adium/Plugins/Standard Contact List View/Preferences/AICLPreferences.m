@@ -52,6 +52,37 @@
 	[self updateLayouts];
 	[self updateThemes];
 	
+	
+#warning cells
+	NSCell *dataCell;
+		
+	dataCell = [[[AIImageTextCell alloc] init] autorelease];
+    [dataCell setFont:[NSFont systemFontOfSize:12]];
+	[dataCell setIgnoresFocus:YES];
+	[dataCell setDrawsGradientHighlight:YES];
+	[[tableView_layout tableColumnWithIdentifier:@"name"] setDataCell:dataCell];
+	
+	dataCell = [[[AIGradientCell alloc] init] autorelease];
+    [dataCell setFont:[NSFont systemFontOfSize:12]];
+	[dataCell setIgnoresFocus:YES];	
+	[dataCell setDrawsGradientHighlight:YES];
+	[[tableView_layout tableColumnWithIdentifier:@"preview"] setDataCell:dataCell];
+
+	dataCell = [[[AIGradientCell alloc] init] autorelease];
+    [dataCell setFont:[NSFont systemFontOfSize:12]];
+	[dataCell setIgnoresFocus:YES];
+	[dataCell setDrawsGradientHighlight:YES];
+	[[tableView_theme tableColumnWithIdentifier:@"name"] setDataCell:dataCell];
+	
+	dataCell = [[[AIGradientCell alloc] init] autorelease];
+    [dataCell setFont:[NSFont systemFontOfSize:12]];
+	[dataCell setIgnoresFocus:YES];	
+	[dataCell setDrawsGradientHighlight:YES];
+	[[tableView_theme tableColumnWithIdentifier:@"preview"] setDataCell:dataCell];
+	
+	
+	
+	
 	//Display
     [self showFont:[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont] inField:textField_fontName];
     [colorWell_contact setColor:[[preferenceDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor]];
