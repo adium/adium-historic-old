@@ -358,6 +358,7 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 	NSAttributedString	*returnValue = nil;
 	
 	if (inData){
+		//If inData (which must bt non-nil) is not valid archived data, this returns nil.
 		NSUnarchiver		*unarchiver = [[NSUnarchiver alloc] initForReadingWithData:inData];
 		
 		if (unarchiver){
