@@ -11,8 +11,6 @@
 #define ORIGINAL_HEIGHT             206.0
 #define IMAGE_DIMENSION             48.0
 
-BOOL pantherOrLater;
-
 @implementation JSCEventBezelView
 
 - (void)awakeFromNib
@@ -23,9 +21,7 @@ BOOL pantherOrLater;
     
     [self setBuddyIconLabelColor: nil];
         
-    pantherOrLater = (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
-    
-    if (pantherOrLater) {
+    if ([NSApp isOnPantherOrBetter]) {
         NSSize      shadowSize;
         NSShadow    *textShadow = [[[NSShadow alloc] init] autorelease];
         shadowSize.width = 0.0;
@@ -140,7 +136,7 @@ BOOL pantherOrLater;
     
     
     // Set up the shadow for Panther or later
-    if (pantherOrLater) {
+    if ([NSApp isOnPantherOrBetter]) {
         tempShadow = [[[NSShadow alloc] init] autorelease];
         noShadow = [[[NSShadow alloc] init] autorelease];
         NSSize      shadowSize;
@@ -160,7 +156,7 @@ BOOL pantherOrLater;
         [buddyIconLabelColor set];
         [NSBezierPath fillRect:buddyIconLabelRect];
 	
-	if(pantherOrLater) {
+	if([NSApp isOnPantherOrBetter]) {
             [noShadow set];
         }
         [[NSColor whiteColor] set];
@@ -168,7 +164,7 @@ BOOL pantherOrLater;
     } else {
         [[NSColor whiteColor] set];
         [NSBezierPath fillRect: NSMakeRect(buddyIconPoint.x, buddyIconPoint.y, 48.0*relativeX,48.0*relativeX)];
-        if(pantherOrLater) {
+        if([NSApp isOnPantherOrBetter]) {
             [noShadow set];
         }
     }

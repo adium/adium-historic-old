@@ -62,7 +62,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key);
 static AILogViewerWindowController *sharedInstance = nil;
 + (id)openWithOwner:(id)inOwner plugin:(id)inPlugin
 {
-    if(!sharedInstance) sharedInstance = [[self alloc] initWithWindowNibName:(NSAppKitVersionNumber > NSAppKitVersionNumber10_2_3 ? LOG_VIEWER_NIB : LOG_VIEWER_JAG_NIB) owner:inOwner plugin:inPlugin];
+    if(!sharedInstance) sharedInstance = [[self alloc] initWithWindowNibName:([NSApp isOnPantherOrBetter] ? LOG_VIEWER_NIB : LOG_VIEWER_JAG_NIB) owner:inOwner plugin:inPlugin];
     [sharedInstance showWindow:nil];
     return(sharedInstance);
 }

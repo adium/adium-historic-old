@@ -90,7 +90,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     [self preferencesChanged:nil];
 
     //Init index searching
-    if(NSAppKitVersionNumber > NSAppKitVersionNumber10_2_3) [self initLogIndexing];
+    if([NSApp isOnPantherOrBetter]) [self initLogIndexing];
 }
 
 //Update for the new preferences

@@ -49,8 +49,6 @@
 #define CUSTOM_TABS_OVERLAP	2                       //Overlapped pixels between tabs
 #define CUSTOM_TABS_INDENT	3                       //Indent on left and right of tabbar
 
-#define NSAppKitVersionNumber10_2_3 663.6               //to fix some problems with gcc 3.1
-
 //objects shared by all instances of AICustomTabsView
 static  AICustomTabCell         *dragTabCell = nil;     //Custom tab cell being dragged
 static  AICustomTabsView        *sourceTabBar = nil;    //source tabBar of the drag
@@ -878,7 +876,7 @@ static  NSSize                  dragCellSize;           //Size of the cell being
     NSPoint             clickLocation = [inEvent locationInWindow];
     NSPoint             startPoint;
     BOOL                sourceWindowWillHide;
-    BOOL                useCustomDraggingCode = (NSAppKitVersionNumber > NSAppKitVersionNumber10_2_3);
+    BOOL                useCustomDraggingCode = [NSApp isOnPantherOrBetter];
     
     //Setup
     dragTabCell = [inTabCell retain]; //Make sure this doesn't go anywhere until the drag is complete

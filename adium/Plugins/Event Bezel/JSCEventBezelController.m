@@ -10,8 +10,6 @@
 
 #define EVENT_BEZEL_NIB         @"EventBezel"
 
-BOOL pantherOrLater;
-
 @interface JSCEventBezelController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
 - (BOOL)windowShouldClose:(id)sender;
@@ -34,9 +32,7 @@ JSCEventBezelController *sharedInstance = nil;
     [super initWithWindowNibName:windowNibName owner:self];
     
     owner = [inOwner retain];
-    
-    pantherOrLater = (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
-    
+        
     bezelPosition = -1;
             
     return(self);
@@ -57,7 +53,7 @@ JSCEventBezelController *sharedInstance = nil;
     [[self window] setIgnoresMouseEvents:YES];
     [[self window] setAlphaValue:1.0];
     [[self window] setOpaque:NO];
-    [[self window] setHasShadow:!pantherOrLater];
+    [[self window] setHasShadow:![NSApp isOnPantherOrBetter]];
 }
 
 - (BOOL)windowShouldClose:(id)sender
@@ -117,7 +113,7 @@ withMessage:(NSString *)message
         
         [bezelWindow setDisplayDuration: bezelDuration];
                 
-        if (pantherOrLater) {
+        if ([NSApp isOnPantherOrBetter]) {
             [[self window] invalidateShadow];
         }
         

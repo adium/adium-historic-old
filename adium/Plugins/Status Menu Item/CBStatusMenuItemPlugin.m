@@ -12,7 +12,7 @@
 
 - (void)installPlugin
 {
-    itemController = [CBStatusMenuItemController statusMenuItemControllerForOwner:self];
+    itemController = [CBStatusMenuItemController statusMenuItemControllerForOwner:owner];
 }
 
 - (void)uninstallPlugin
