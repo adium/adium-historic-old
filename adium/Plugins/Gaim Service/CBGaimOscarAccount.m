@@ -3,13 +3,12 @@
 //  Adium XCode
 //
 //  Created by Colin Barrett on Thu Nov 06 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "CBGaimOscarAccount.h"
 #import "aim.h"
 
-#define OSCAR_DELAYED_UPDATE_INTERVAL   2
+#define OSCAR_DELAYED_UPDATE_INTERVAL   3
 
 //From oscar.c
 struct oscar_data {
@@ -124,7 +123,7 @@ struct oscar_data {
     //General updates
     [super accountUpdateBuddy:buddy];
 	
-	//we delay for 2 seconds to wait for the away message to come in... is there not some kind of notification when this happens instead?
+	//we delay for 3 seconds to wait for the away message to come in... is there not some kind of notification when this happens instead?
 	timer = [NSTimer scheduledTimerWithTimeInterval:OSCAR_DELAYED_UPDATE_INTERVAL target:self selector:@selector(_delayedBlistUpdate:) userInfo:[NSValue valueWithPointer:buddy] repeats:NO];
 	[delayedUpdateTimers addObject:timer];
 }
