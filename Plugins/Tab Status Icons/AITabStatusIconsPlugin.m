@@ -26,7 +26,7 @@
 	
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(statusIconSetDidChange:)
-									   name:@"AIStatusIconSetDidChange"
+									   name:AIStatusIconSetDidChangeNotification
 									 object:nil];
 }
 
