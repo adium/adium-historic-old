@@ -356,6 +356,7 @@
 				9E87CDF105748FFA001CB886,
 				9E87CF580574909B001CB886,
 				342DC47505783AF0000E1D83,
+				344AB2A50579128A00384CEE,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -442,6 +443,7 @@
 				3419F34105314BA100C68BA3,
 				3419F35605314BAB00C68BA3,
 				3419F36605314BB400C68BA3,
+				344AB2A40579128A00384CEE,
 				3419F37405314BBE00C68BA3,
 				3419F38205314BC900C68BA3,
 				342DC47405783AF0000E1D83,
@@ -2317,7 +2319,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3B305314BE000C68BA3 = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = folder;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "SQL Logger.AdiumPlugin";
@@ -5325,6 +5327,231 @@
 		};
 		343FA4530567DC460049DFFB = {
 			fileRef = 343FA4520567DC460049DFFB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344AB29D0579125C00384CEE = {
+			fileRef = 342DC47505783AF0000E1D83;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344AB2A00579128A00384CEE = {
+			buildActionMask = 2147483647;
+			files = (
+				344AB2C50579136A00384CEE,
+				344AB2D40579140800384CEE,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		344AB2A10579128A00384CEE = {
+			buildActionMask = 2147483647;
+			files = (
+				344AB4510579195800384CEE,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		344AB2A20579128A00384CEE = {
+			buildActionMask = 2147483647;
+			files = (
+				344AB2C60579136A00384CEE,
+				344AB2D50579140800384CEE,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		344AB2A30579128A00384CEE = {
+			buildActionMask = 2147483647;
+			files = (
+				344AB2AD057912A300384CEE,
+				344AB2AE057912A300384CEE,
+				344AB2AF057912A300384CEE,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		344AB2A40579128A00384CEE = {
+			buildPhases = (
+				344AB2A00579128A00384CEE,
+				344AB2A10579128A00384CEE,
+				344AB2A20579128A00384CEE,
+				344AB2A30579128A00384CEE,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Open Message Window Contact Alert-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Open Message Window Contact Alert";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "Open Message Window Contact Alert";
+			productName = "Open Message Window Contact Alert";
+			productReference = 344AB2A50579128A00384CEE;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Open Message Window Contact Alert</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Open_Message_Window_Contact_Alert</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		344AB2A50579128A00384CEE = {
+			expectedFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Open Message Window Contact Alert.bundle";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		344AB2AD057912A300384CEE = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344AB2AE057912A300384CEE = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344AB2AF057912A300384CEE = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344AB2B4057912C500384CEE = {
+			children = (
+				344AB2C30579136900384CEE,
+				344AB2C40579136900384CEE,
+				344AB2D20579140700384CEE,
+				344AB2D30579140800384CEE,
+				344AB4500579195700384CEE,
+			);
+			isa = PBXGroup;
+			name = "Open Message Window Contact Alert";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344AB2C30579136900384CEE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESOpenMessageWindowContactAlertPlugin.h;
+			path = "Plugins/Open Message Window Contact Alert/ESOpenMessageWindowContactAlertPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344AB2C40579136900384CEE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESOpenMessageWindowContactAlertPlugin.m;
+			path = "Plugins/Open Message Window Contact Alert/ESOpenMessageWindowContactAlertPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344AB2C50579136A00384CEE = {
+			fileRef = 344AB2C30579136900384CEE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344AB2C60579136A00384CEE = {
+			fileRef = 344AB2C40579136900384CEE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344AB2C90579137E00384CEE = {
+			children = (
+				344AB2B4057912C500384CEE,
+				342DC48A05783B8D000E1D83,
+			);
+			isa = PBXGroup;
+			name = "Contact Alerts";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344AB2D20579140700384CEE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESOpenMessageWindowContactAlert.h;
+			path = "Plugins/Open Message Window Contact Alert/ESOpenMessageWindowContactAlert.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344AB2D30579140800384CEE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESOpenMessageWindowContactAlert.m;
+			path = "Plugins/Open Message Window Contact Alert/ESOpenMessageWindowContactAlert.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344AB2D40579140800384CEE = {
+			fileRef = 344AB2D20579140700384CEE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344AB2D50579140800384CEE = {
+			fileRef = 344AB2D30579140800384CEE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344AB4500579195700384CEE = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = OpenMessageWindowContactAlert.nib;
+			path = "Plugins/Open Message Window Contact Alert/OpenMessageWindowContactAlert.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344AB4510579195800384CEE = {
+			fileRef = 344AB4500579195700384CEE;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -8338,6 +8565,7 @@
 				3419FE100531585600C68BA3,
 				3419FE110531585600C68BA3,
 				3419FE120531585600C68BA3,
+				344AB29D0579125C00384CEE,
 				3419FE130531585600C68BA3,
 				3419FE150531585600C68BA3,
 				3419FE160531585600C68BA3,
@@ -16830,10 +17058,10 @@
 		};
 		4B13323F0459BE4500A8010A = {
 			children = (
+				344AB2C90579137E00384CEE,
 				4B1F0F2E04AE300500A8010A,
 				9C8C7FA303CBA17B00267226,
 				4BDDCA01041104BB00A8010A,
-				342DC48A05783B8D000E1D83,
 				B7AE664D0465778E0051E914,
 			);
 			isa = PBXGroup;
