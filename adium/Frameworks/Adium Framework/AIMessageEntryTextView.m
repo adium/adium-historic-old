@@ -534,7 +534,7 @@ static NSImage *pushIndicatorImage = nil;
 			[NSNumber numberWithInt:Context_TextView_General],
 			[NSNumber numberWithInt:Context_TextView_EmoticonAction], nil]
                                                                                         forTextView:self];
-		itemsArray = [[adiumMenu itemArray] copy];
+		itemsArray = [adiumMenu itemArray];
 		
 		if([itemsArray count] > 0) {
 			[contextualMenu addItem:[NSMenuItem separatorItem]];
@@ -546,6 +546,7 @@ static NSImage *pushIndicatorImage = nil;
                                 [(NSMenu *)contextualMenu insertItem:menuItem atIndex:i++];
 			}
 		}
+                [adiumMenu removeAllItems];
 	}
 	
     return contextualMenu; //return the menu
