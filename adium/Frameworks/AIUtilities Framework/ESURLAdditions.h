@@ -8,4 +8,7 @@
 
 - (unsigned int)length;
 
+//Search is case sensitive, and you're responsible for removing any percent escapes (and +'s too)
+- (NSString *)queryArgumentForKey:(NSString *)key;
+
 @end

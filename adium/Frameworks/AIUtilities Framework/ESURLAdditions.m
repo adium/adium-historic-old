@@ -14,4 +14,18 @@
 	return [[self absoluteString] length];
 }
 
+- (NSString *)queryArgumentForKey:(NSString *)key
+{
+    NSString *obj = nil;
+    NSArray *arguments = [[self query] componentsSeparatedByString:@"&"];
+    NSEnumerator *numer = [arguments objectEnumerator];
+    
+    while(obj = [numer nextObject]){
+        NSArray *keyAndValue = [obj componentsSeparatedByString:@"="];
+        if([[keyAndValue objectAtIndex:0] isEqualToString:key]){
+            return [keyAndValue objectAtIndex:1];
+        }
+    }
+}
+
 @end
