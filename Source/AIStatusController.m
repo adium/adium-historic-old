@@ -552,17 +552,22 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	AIAccount		*account;
 	AIStatus		*aStatusState;
 	
+	BOOL			noConnectedAccounts = ![[adium accountController] oneOrMoreConnectedAccounts];
+
 	//We should connect all accounts if our accounts to connect array is empty and there are no connected accounts
 	BOOL			shouldConnectAllAccounts = (([accountsToConnect count] == 0) &&
-												![[adium accountController] oneOrMoreConnectedAccounts]);
+												noConnectedAccounts);
 
 	isProcessingGlobalChange = YES;
 	[self setDelayStateMenuUpdates:YES];
 	
 	enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	while(account = [enumerator nextObject]){
-		if([account online] || ([accountsToConnect containsObject:account] || shouldConnectAllAccounts)){
-			//If this account is online, or no accounts are online, set the status completely
+		if([account online] ||
+		   (noConnectedAccounts && [accountsToConnect containsObject:account]) || 
+		   (shouldConnectAllAccounts)){
+			/* If this account is online, or no accounts are online and this is an account to connect,
+			 * or we should be connecting all accounts, set the status completely. */
 			[account setStatusState:statusState];
 		}else{
 			//If this account should not have its state set now, perform internal bookkeeping so a future sign-on
