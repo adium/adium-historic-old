@@ -21,7 +21,7 @@
 //Random alphanumeric string
 + (NSString *)randomStringOfLength:(int)inLength
 {
-	NSMutableString	*string = [[NSString alloc] init];
+	NSMutableString	*string = [[NSMutableString alloc] init];
 	NSString		*randomCharacters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	int				i;
 	
@@ -31,7 +31,7 @@
 	//Add the random characters (This is a slow implementation, but it's not really important)
 	for(i = 0; i < inLength; i++){
 		char	randomChar = [randomCharacters characterAtIndex:(random() % [randomCharacters length])];
-		string = [string stringByAppendingString:[NSString stringWithFormat:@"%c",randomChar]];
+		[string appendString:[NSString stringWithFormat:@"%c",randomChar]];
 	}
 	
 	return([string autorelease]);
