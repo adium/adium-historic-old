@@ -31,9 +31,13 @@
 - (void)_init;
 - (void)outlineViewDeleteSelectedRows:(NSTableView *)tableView;
 - (void)_drawGridInClipRect:(NSRect)rect;
+- (BOOL)_restoreSelectionFromSavedSelection;
+- (void)_saveCurrentSelection;
 @end
 
 @implementation AIAlternatingRowOutlineView
+
+static Class		NSMutableIndexSetClass = nil;
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
@@ -64,8 +68,14 @@
 - (void)_init
 {
     drawsAlternatingRows = NO;
+	hidesSelectionWhenNotMain = NO;
     alternatingRowColor = [[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0] retain];
-    
+    isOnPantherOrBetter = [NSApp isOnPantherOrBetter];
+			
+	if (isOnPantherOrBetter && !NSMutableIndexSetClass){
+		NSMutableIndexSetClass = NSClassFromString(@"NSMutableIndexSet");	
+	}
+	
     //Group expand/collapse notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:self];
@@ -87,7 +97,14 @@
         [self setNeedsDisplay:YES];
     }
 }
-
+- (void)setHidesSelectionWhenNotMain:(BOOL)flag
+{
+	hidesSelectionWhenNotMain = flag;
+}
+- (BOOL)hidesSelectionWhenNotMain
+{
+	return hidesSelectionWhenNotMain;
+}
 
 // Scrolling ----------------------------------------------------------------------
 - (void)tile
@@ -172,13 +189,22 @@
     }else{
         needsReload = NO;
 
-        //Remember the currently selected item
-        selectedItem = [self itemAtRow:[self selectedRow]];
-
+		int				selectedRow;
+		BOOL			restoredSelection = NO;
+		NSEnumerator	*enumerator;
+		NSArray			*selectedItems = nil;
+		id				selectedItem;
+		
+		//Restore any currently saved selection
+		restoredSelection = [self _restoreSelectionFromSavedSelection];
+		
+	    //Remember the currently selected items
+		selectedItems = [self arrayOfSelectedItems];
+		
         //Reload
         [super reloadData];
 
-        //After reloading data, we correctly expand/collaps all groups
+        //After reloading data, we correctly expand/collapse all groups
         if([[self delegate] respondsToSelector:@selector(outlineView:expandStateOfItem:)]){
             NSObject <AICollapseExpand> 	*delegate = [self delegate];
             int 	numberOfRows = [delegate outlineView:self numberOfChildrenOfItem:nil];
@@ -199,33 +225,161 @@
             }
         }
 
-        //Restore (if possible) the previously selected object
-        selectedRow = [self rowForItem:selectedItem];
-        if(selectedRow != NSNotFound){
-            [self selectRow:selectedRow byExtendingSelection:NO];
-        }
+		//Restore (if possible) the previously selected objects
+		enumerator = [selectedItems objectEnumerator];
+		if (isOnPantherOrBetter){
+			id  indexSet = [NSMutableIndexSetClass indexSet];
+			
+			//Build an index set
+			while (selectedItem = [enumerator nextObject]){
+				selectedRow = [self rowForItem:selectedItem];
+				if(selectedRow != NSNotFound){
+					[indexSet addIndex:selectedRow];
+				}
+			}
+			
+			//Select the indexes
+			[self selectRowIndexes:indexSet byExtendingSelection:NO];
+			
+		}else{
+			//Selected each previously selected row if possible
+			while (selectedItem = [enumerator nextObject]){
+				selectedRow = [self rowForItem:selectedItem];
+				if(selectedRow != NSNotFound){
+					[self selectRow:selectedRow byExtendingSelection:YES];
+				}
+			}			
+		}
+		
+		//Update the saved selection if necessary
+		if (restoredSelection){
+			[self _saveCurrentSelection];
+			[self deselectAll:nil];
+		}
     }
-    
 }
 
 - (void)reloadItem:(id)item reloadChildren:(BOOL)reloadChildren
 {
-	id	selectedItem;
-	int	selectedRow;
+	int				selectedRow;
+	BOOL			restoredSelection = NO;
+	NSEnumerator	*enumerator;
+	NSArray			*selectedItems = nil;
+	id				selectedItem;
+	
+	//Restore any currently saved selection
+	restoredSelection = [self _restoreSelectionFromSavedSelection];
 
-	//Remember the currently selected item
-	selectedItem = [self itemAtRow:[self selectedRow]];
-
+	//Remember the currently selected items
+	selectedItems = [self arrayOfSelectedItems];
+	
 	//Reload
 	[super reloadItem:item reloadChildren:reloadChildren];
 
-	//Restore (if possible) the previously selected object
-	selectedRow = [self rowForItem:selectedItem];
-	if(selectedRow != NSNotFound){
-		[self selectRow:selectedRow byExtendingSelection:NO];
+	//Restore (if possible) the previously selected objects
+	enumerator = [selectedItems objectEnumerator];
+	if (isOnPantherOrBetter){
+		id  indexSet = [NSMutableIndexSetClass indexSet];
+		
+		//Build an index set
+		while (selectedItem = [enumerator nextObject]){
+			selectedRow = [self rowForItem:selectedItem];
+			if(selectedRow != NSNotFound){
+				[indexSet addIndex:selectedRow];
+			}
+		}
+		
+		//Select the indexes
+		[self selectRowIndexes:indexSet byExtendingSelection:NO];
+
+	}else{
+		//Selected each previously selected row if possible
+		while (selectedItem = [enumerator nextObject]){
+			selectedRow = [self rowForItem:selectedItem];
+			if(selectedRow != NSNotFound){
+				[self selectRow:selectedRow byExtendingSelection:YES];
+			}
+		}			
+	}
+	
+	//Update the saved selection if necessary, then clear it again
+	if (restoredSelection){
+		[self _saveCurrentSelection];
+		[self deselectAll:nil];
 	}
 }
 
+
+
+// Selection Hiding --------------------------------------------------------------------
+//Restore the selection and inform the delegate
+- (void)windowBecameMain:(NSNotification *)notification
+{
+	if (hidesSelectionWhenNotMain){
+		[self _restoreSelectionFromSavedSelection];
+	}
+	
+	//Pass this on to our delegate
+	SEL didBecomeMainSEL = @selector(window:didBecomeMain:);
+    if([[self delegate] respondsToSelector:didBecomeMainSEL]){
+        [[self delegate] performSelector:didBecomeMainSEL
+							  withObject:[self window]
+							  withObject:notification];
+    }
+}
+
+//Hide the selection and inform the delegate
+- (void)windowResignedMain:(NSNotification *)notification
+{
+	if (hidesSelectionWhenNotMain){
+		[self _saveCurrentSelection];
+		[self deselectAll:nil];
+	}
+	
+	//Pass this on to our delegate
+	SEL didRegisnMainSEL = @selector(window:didResignMain:);
+    if([[self delegate] respondsToSelector:didRegisnMainSEL]){
+		[[self delegate] performSelector:didRegisnMainSEL
+							  withObject:[self window]
+							  withObject:notification];
+    }
+}
+
+- (void)_saveCurrentSelection
+{
+	if (isOnPantherOrBetter){
+		[lastSelectedRowIndexes release]; lastSelectedRowIndexes = [self selectedRowIndexes];
+		
+		//It'll return an empty index if nothing is selected; we don't want to try to restore that, so clear it out
+		if ([lastSelectedRowIndexes count])
+			[lastSelectedRowIndexes retain];
+		else
+			lastSelectedRowIndexes = nil;
+		
+	}else{
+		lastSelectedRow = [self selectedRow];
+	}
+}
+
+//Attempt to restore the selection.  Return YES if a selection was restored; return NO if no change was made.
+- (BOOL)_restoreSelectionFromSavedSelection
+{
+	if (isOnPantherOrBetter){
+		if (lastSelectedRowIndexes){
+			//- (void)selectRowIndexes:(NSIndexSet *)indexes byExtendingSelection:(BOOL)extend is only available 10.3 or better
+			[self selectRowIndexes:lastSelectedRowIndexes byExtendingSelection:NO];
+			[lastSelectedRowIndexes release]; lastSelectedRowIndexes = nil;
+			
+			return YES;
+		}
+	}else{
+		if(lastSelectedRow >= 0 && lastSelectedRow < [self numberOfRows] && [self selectedRow] == -1){
+			[self selectRow:lastSelectedRow byExtendingSelection:NO];
+		}
+	}
+	
+	return NO;
+}
 
 // Drawing ----------------------------------------------------------------------
 //Draw the alternating colors and grid below the "bottom" of the outlineview

@@ -17,11 +17,19 @@
     BOOL	drawsAlternatingRows;
     NSColor	*alternatingRowColor;
 
-    BOOL	needsReload;
+	BOOL		hidesSelectionWhenNotMain;
+	
+	int			lastSelectedRow;
+    id			lastSelectedRowIndexes; //NSIndexSet* - OS X 10.3
+	BOOL		isOnPantherOrBetter;
+	
+    BOOL		needsReload;
 }
 
 - (void)_init;
 - (void)setDrawsAlternatingRows:(BOOL)flag;
 - (void)setAlternatingRowColor:(NSColor *)color;
+- (void)setHidesSelectionWhenNotMain:(BOOL)flag;
+- (BOOL)hidesSelectionWhenNotMain;
 
 @end
