@@ -35,11 +35,14 @@
         
     GaimAccount         *account;
     GaimConnection      *gc;
+    
+    int                 reconnectAttemptsLeft;
 }
 
 - (const char*)protocolPlugin;
 - (GaimAccount*)gaimAccount;
 
+-(NSString *)encodedStringFromAttributedString:(NSAttributedString *)inAttributedString;
 
 //accountBlist methods
 - (void)accountNewBuddy:(GaimBuddy*)buddy;
