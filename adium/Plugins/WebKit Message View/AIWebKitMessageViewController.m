@@ -901,7 +901,7 @@ DeclareString(AppendNextMessage);
 		do{
 			range = [inString rangeOfString:@"%senderScreenName%"];
 			if(range.location != NSNotFound){
-				[inString replaceCharactersInRange:range withString:[[content source] formattedUID]];
+				[inString replaceCharactersInRange:range withString:[[[content source] formattedUID] stringByEscapingForHTML]];
 			}
 		} while(range.location != NSNotFound);
         
@@ -940,18 +940,8 @@ DeclareString(AppendNextMessage);
 				if ([(AIContentMessage *)content isAutoreply]){
 					senderDisplay = [NSString stringWithFormat:@"%@ %@",senderDisplay,AILocalizedString(@"(Autoreply)","Short word inserted after the sender's name when displaying a message which was an autoresponse")];
 				}
-				
-				NSString *escapeSenderDisplay;
-				escapeSenderDisplay = [NSString stringWithString:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithString:senderDisplay]
-																											  headers:NO 
-																											 fontTags:NO
-																								   includingColorTags:NO  closeFontTags:NO 
-																											styleTags:NO closeStyleTagsOnFontChange:NO 
-																									   encodeNonASCII:YES imagesPath:nil
-																									attachmentsAsText:NO attachmentImagesOnlyForSending:NO
-																									   simpleTagsOnly:NO]];;
 					
-				[inString replaceCharactersInRange:range withString:escapeSenderDisplay];
+				[inString replaceCharactersInRange:range withString:[senderDisplay stringByEscapingForHTML]];
 			}
 		} while(range.location != NSNotFound);
         
@@ -983,7 +973,7 @@ DeclareString(AppendNextMessage);
 		do{
 			range = [inString rangeOfString:@"%status%"];
 			if(range.location != NSNotFound) {
-				[inString replaceCharactersInRange:range withString:[(AIContentStatus *)content status]];
+				[inString replaceCharactersInRange:range withString:[[(AIContentStatus *)content status] stringByEscapingForHTML]];
 			}
 		} while(range.location != NSNotFound);
 		
@@ -1007,7 +997,7 @@ DeclareString(AppendNextMessage);
 		range = [inString rangeOfString:@"%chatName%"];
 		if(range.location != NSNotFound){
 			[inString replaceCharactersInRange:range
-									withString:[chat name]];
+									withString:[[chat name] stringByEscapingForHTML]];
 			
 		}
 	} while(range.location != NSNotFound);
