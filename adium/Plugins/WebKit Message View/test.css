@@ -56,10 +56,20 @@ body {
     
 .buddyicon {
     position: absolute;
+	background: url("images/buddy_background.png");
     top: -5px;
     left: -29px;
-    z-index: 3;
+    z-index: 4;
+	height: 40px;
+	width: 40px;
     }
+	
+.buddyicon img {
+	position: absolute;
+	top: 6px;
+	left: 3px;
+	z-index: 3;
+	}
     
 .message {
     position: relative;
