@@ -20,8 +20,12 @@
 #import <AIUtilities/ESImageAdditions.h>
 
 #define APPLESCRIPT_ALERT_SHORT AILocalizedString(@"Run an Applescript",nil)
-#define APPLESCRIPT_ALERT_LONG AILocalizedString(@"Run the Applescript \"%@\"",nil)
+#define APPLESCRIPT_ALERT_LONG AILocalizedString(@"Run the Applescript \"%@\"","%@ will be replaced by the name of the applescript to run.")
 
+/*
+ * @class ESApplescriptContactAlertPlugin
+ * @brief Component which provides a "Run an Applescript" Action
+ */
 @implementation ESApplescriptContactAlertPlugin
 
 - (void)installPlugin
