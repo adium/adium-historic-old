@@ -15,7 +15,7 @@
 
 @class AIAccountController, AIAccount, AIAutoScrollView;
 
-@interface AIAccountListPreferences : AIPreferencePane <AIListObjectObserver> {
+@interface AIAccountListWindowController : AIWindowController <AIListObjectObserver> {
 	//Account status
 	IBOutlet		NSTextField					*textField_status;
 	IBOutlet		NSProgressIndicator			*progress_status;
@@ -27,11 +27,12 @@
     IBOutlet		NSView						*view_accountDetails;
     IBOutlet		NSPopUpButton				*popupMenu_serviceList;
 	IBOutlet		ESDelayedTextField			*textField_accountName;
+	IBOutlet		NSTextField					*textField_userNameLabel;
     IBOutlet		NSButton					*button_autoConnect;
 
 	//Account list
     IBOutlet		AIAutoScrollView			*scrollView_accountList;
-    IBOutlet		AIAlternatingRowTableView   *tableView_accountList;
+    IBOutlet		NSTableView					*tableView_accountList;
 	IBOutlet		NSButton					*button_newAccount;
     IBOutlet		NSButton					*button_deleteAccount;
 

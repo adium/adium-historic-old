@@ -1,0 +1,47 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {
+                changeUIDField = id; 
+                deleteAccount = id; 
+                newAccount = id; 
+                registerAccount = id; 
+                selectServiceType = id; 
+                toggleAutoConnect = id; 
+                toggleConnectStatus = id; 
+            }; 
+            CLASS = AIAccountListWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_autoConnect" = NSButton; 
+                "button_deleteAccount" = NSButton; 
+                "button_newAccount" = NSButton; 
+                "button_register" = NSButton; 
+                "button_toggleConnect" = NSButton; 
+                "popupMenu_serviceList" = NSPopUpButton; 
+                "progress_status" = NSProgressIndicator; 
+                "scrollView_accountList" = AIAutoScrollView; 
+                "tabView_auxiliary" = NSTabView; 
+                "tableView_accountList" = NSTableView; 
+                "textField_accountName" = ESDelayedTextField; 
+                "textField_status" = NSTextField; 
+                "textField_userNameLabel" = NSTextField; 
+                "view_accountDetails" = NSView; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = ESDelayedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}
