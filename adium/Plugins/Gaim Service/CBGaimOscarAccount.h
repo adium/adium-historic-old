@@ -16,7 +16,7 @@
 }
 
 //Overriden from CBGaimAccount
-- (void)accountUpdateBuddy:(GaimBuddy*)buddy;
+//- (void)accountUpdateBuddy:(GaimBuddy*)buddy;
 - (NSArray *)supportedPropertyKeys;
 
 extern gchar *oscar_encoding_to_utf8(const char *encoding, char *text, int textlen);
