@@ -472,7 +472,7 @@
 		int 	accountViewHeight;
 
 		//Create the account selection view and insert it into our window (Initial frame is arbitrary)
-		view_accountSelection = [[AIAccountSelectionView alloc] initWithFrame:NSMakeRect(0,0,0,0) delegate:self];
+		view_accountSelection = [[AIAccountSelectionView alloc] initWithFrame:NSZeroRect delegate:self];
 
 		//Insert the account selection view at the top of our view
 		accountViewHeight = [view_accountSelection frame].size.height;
