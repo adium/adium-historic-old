@@ -14,6 +14,7 @@
                 showAboutBox = id; 
                 showForums = id; 
                 showHelp = id; 
+                showXtras = id; 
             }; 
             CLASS = AIAdium; 
             LANGUAGE = ObjC; 
