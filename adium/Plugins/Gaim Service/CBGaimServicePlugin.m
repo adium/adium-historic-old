@@ -728,7 +728,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     MSNService		= [[[ESMSNService alloc] initWithService:self] retain];
     NapsterService  = [[[ESNapsterService alloc] initWithService:self] retain];
 	TrepiaService   = [[[ESTrepiaService alloc] initWithService:self] retain];
-    YahooService	= [[[ESYahooService alloc] initWithService:self] retain];
+    YahooService	= nil /* [[[ESYahooService alloc] initWithService:self] retain] */;
 	
     JabberService   = nil /* [[[ESJabberService alloc] initWithService:self] retain] */;
 }
