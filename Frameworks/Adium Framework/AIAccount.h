@@ -53,6 +53,9 @@ typedef enum {
 
     //Instructs the account to initiate sending of a file
 	- (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer;
+
+	//Instructs the account to cancel a filet ransfer in progress
+	- (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer;
 @end
 
 //Support for privacy settings
@@ -67,7 +70,6 @@ typedef enum {
     -(void)setPrivacyOptions:(PRIVACY_OPTION)option;
 
 @end
-
 
 /*!
  * @class AIAccount
@@ -158,6 +160,11 @@ typedef enum {
 - (BOOL)openChat:(AIChat *)chat;
 //Close a chat instance
 - (BOOL)closeChat:(AIChat *)chat;
+/*
+ Returns YES if typing notifications will be cleared by the account or the remote side after a message is sent;
+ Returns NO if Adium should send a stopped typing message after the message is sent.
+ */
+- (BOOL)suppressTypingNotificationChangesAfterSendForListObject:(AIListObject *)listObject;
 
 //Support for standard UID based contacts --
 - (void)removeContacts:(NSArray *)objects;

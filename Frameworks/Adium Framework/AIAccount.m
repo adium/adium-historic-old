@@ -588,6 +588,11 @@
 	return(NO);
 }
 
+//Suppress sending a stopped typing notificationa after sending?
+- (BOOL)suppressTypingNotificationChangesAfterSendForListObject:(AIListObject *)listObject{
+	return(NO);
+}
+
 //Support for standard UID based contacts --
 - (void)removeContacts:(NSArray *)objects{}
 - (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group{}
