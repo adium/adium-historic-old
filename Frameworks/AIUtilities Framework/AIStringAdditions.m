@@ -36,7 +36,7 @@
 		if (randomNum > 9) randomNum+=7;
 		
 		char randomChar = '0' + randomNum;
-		[string appendString:[NSString stringWithFormat:@"%c",randomChar]];
+		[string appendFormat:@"%c",randomChar];
 	}
 	
 	return([string autorelease]);
