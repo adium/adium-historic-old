@@ -550,17 +550,7 @@
 	return returnValue;
 }
 
-#warning debugging
-- (NSString *)displayName
-{
-	return [[super displayName] stringByAppendingString:@"-Meta"];
-}
-
-- (NSString *)longDisplayName
-{
-	return [[super longDisplayName] stringByAppendingString:@"-Meta"];	
-}
-
+#pragma mark User Icon
 //We always want to provide a userIcon if at all possible.
 //First get our userIcon as normal.
 //If that returns nil, look at our preferredContact's userIcon.
@@ -573,13 +563,24 @@
 	}
 	if (!userIcon){
 		unsigned int count = [self containedObjectsCount];
-		unsigned int i;
-		for (i = 0; i < count; i++){
+		unsigned int i = 0;
+		while ((i < count) && !userIcon){
 			userIcon = [[self objectAtIndex:i] userIcon];
 		}
 	}
-	
+
 	return userIcon;
+}
+
+#warning debugging
+- (NSString *)displayName
+{
+	return [[super displayName] stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]];
+}
+
+- (NSString *)longDisplayName
+{
+	return [[super longDisplayName] stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]];
 }
 
 @end
