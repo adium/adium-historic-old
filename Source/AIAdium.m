@@ -50,20 +50,17 @@
 #   define ADIUM_SUBFOLDER_OF_APP_SUPPORT		@"Adium 2.0"
 #   define ADIUM_SUBFOLDER_OF_LIBRARY			@"Application Support/Adium 2.0"
 #endif
-#define ADIUM_FAQ_PAGE						@"http://faq.adiumx.com/"
-#define ADIUM_FORUM_PAGE					@"http://forum.adiumx.com"
+
+#define ADIUM_FAQ_PAGE						AILocalizedString(@"http://faq.adiumx.com/","Adium FAQ page. Localize only if a translated version exists.")
+#define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com","Adium forums page. Localize only if a translated version exists.")
 #define ADIUM_XTRAS_PAGE					@"http://www.adiumxtras.com/"
 #define ADIUM_BUG_PAGE						@"mailto:bugs@adiumx.com"
 #define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
 
 //Portable Adium prefs key
-#define PORTABLE_ADIUM_KEY	@"Preference Folder Location"
-
-//#define KEY_USER_VIEWED_LICENSE			@"AdiumUserLicenseViewed"
-//#define KEY_LAST_VERSION_LAUNCHED			@"Last Version Launched"
+#define PORTABLE_ADIUM_KEY					@"Preference Folder Location"
 
 static NSString	*prefsCategory;
-
 
 @interface AIAdium (PRIVATE)
 - (void)configureCrashReporter;
