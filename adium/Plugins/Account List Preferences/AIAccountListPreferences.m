@@ -68,6 +68,7 @@
 	if([[[adium accountController] accountArray] count] == 0){
 		[self performSelector:@selector(newAccount:) withObject:nil afterDelay:0.0001];
 	}
+
 }
 
 //Preference view is closing
@@ -270,7 +271,7 @@
 	BOOL	accountBusy = ([[configuredForAccount statusObjectForKey:@"Connecting"] boolValue] ||
 						   [[configuredForAccount statusObjectForKey:@"Disconnecting"] boolValue]);
 
-	//Update the status string and progree bar
+	//Update the status string and progress bar
 	if(!accountBusy){
 		[textField_status setStringValue:@""];
 		[progress_status setDoubleValue:0.0];
@@ -278,17 +279,21 @@
 
 	}else{
 		NSString	*status = [configuredForAccount statusObjectForKey:@"ConnectionProgressString"];
+		float		progressPercent = ([[configuredForAccount statusObjectForKey:@"ConnectionProgressPercent"] floatValue]*100);
 		[textField_status setStringValue:(status ? status : @"")];
-		[progress_status setDoubleValue:[[configuredForAccount statusObjectForKey:@"ConnectionProgressPercent"] floatValue]];
-		if([progress_status respondsToSelector:@selector(setHidden:)]) [progress_status setHidden:NO];
+		
+		if ((progressPercent > 0) && (progressPercent <= 100)){
+			if([progress_status respondsToSelector:@selector(setHidden:)]) [progress_status setHidden:NO];
+			[progress_status setDoubleValue:progressPercent];
+		}
 		
 	}
-
+	
 	//Force the controls to display
 	//[textField_status setNeedsDisplay:YES];
 	//[progress_status  setNeedsDisplay:YES];
 	
-	//Update the 'connect' button's title to match it's action
+	//Update the 'connect' button's title to match its action
 	if([[configuredForAccount statusObjectForKey:@"Online"] boolValue]){
 		[button_toggleConnect setTitle:@"Disconnect"];
 	}else if([[configuredForAccount statusObjectForKey:@"Connecting"] boolValue] ||
@@ -309,7 +314,7 @@
 		   [inModifiedKeys containsObject:@"ConnectionProgressString"] ||
 		   [inModifiedKeys containsObject:@"ConnectionProgressPercent"]){
 			
-			//Refresh this account in our list if it's status has changed
+			//Refresh this account in our list if its status has changed
 			int accountRow = [accountArray indexOfObject:inObject];
 			if(accountRow >= 0 && accountRow < [accountArray count]){
 				[tableView_accountList setNeedsDisplayInRect:[tableView_accountList rectOfRow:accountRow]];
