@@ -26,6 +26,7 @@ typedef enum {
 + (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass;
 - (NSData *)JPEGRepresentation;
 - (NSData *)PNGRepresentation;
+- (NSData *)GIFRepresentation;
 - (NSData *)BMPRepresentation;
 - (void)tileInRect:(NSRect)rect;
 - (NSImage *)imageByScalingToSize:(NSSize)size;
