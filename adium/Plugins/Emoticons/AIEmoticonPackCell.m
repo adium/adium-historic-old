@@ -137,7 +137,7 @@ static  float   distanceBetweenEmoticons = 0;
         }
 
         //Move over for the next emoticon, leaving some space
-		float desiredIncrease = imageSize.width + EMOTICON_SPACING;
+		float desiredIncrease = destRect.size.width + EMOTICON_SPACING;
 		if (distanceBetweenEmoticons < desiredIncrease)
 			distanceBetweenEmoticons = desiredIncrease;
         x += distanceBetweenEmoticons;
