@@ -27,9 +27,8 @@
     NSMutableDictionary *chatDict;
     JabberSession *session;
     JabberGroupTracker *groupTracker;
-
-    // If the roster updates we are getting are batched or not
-    bool delay;
+    NSTimer *initialTimer;
+    bool silentAndDelayed;
 }
 
 //AIAccount_Content
@@ -64,6 +63,8 @@
 - (BOOL)removeGroup:(NSString *)inGroup;*/
 
 - (void)displayError:(NSString *)errorDesc;
+
+- (void)startupEnded;
 
 //AIAccount subclassed methods
 - (void)initAccount; 				//Init anything relating to the account
