@@ -459,6 +459,7 @@ static id<GaimThread> gaimThread = nil;
 - (oneway void)addChat:(AIChat *)chat
 {
 #warning is there a reason this is not using the openChat method in contentController ?
+#warning yes.
 	//Open the chat
 	[[adium interfaceController] openChat:chat];
 }
