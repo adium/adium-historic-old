@@ -65,6 +65,8 @@
     [[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
+    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(screenParametersChanged:) name:NSApplicationDidChangeScreenParametersNotification object:nil];
+        
     [contactListView setTarget:self];
     [contactListView setDataSource:self];
     [contactListView setDelegate:self];
@@ -116,8 +118,8 @@
     
     [contactListView performFullRecalculation];
     
-//    [contactListView display];
     [[contactListView window] compatibleInvalidateShadow];
+    [[contactListView window] display];
 }
 
 //Reload the contact list (if updates aren't delayed)
@@ -125,9 +127,9 @@
 {
     [contactListView reloadData]; //Redisplay
     [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView];
-    
-//    [contactListView display];
+
     [[contactListView window] compatibleInvalidateShadow];
+    [[contactListView window] display];
 }
 
 //Redisplay the modified object (Attribute change)
@@ -221,12 +223,6 @@
         [contactListView setDrawsAlternatingRows:alternatingGrid];
         [contactListView setAlternatingRowColor:gridColor];
 
-//        NSLog(@"%@",[contactListView superview]);
-     /*
-        if ([[[contactListView superview] superview] respondsToSelector:@selector(setUpdateShadowsWhileScrolling:)]) {
-       [(AIAutoScrollView *)[[contactListView superview] superview] setUpdateShadowsWhileScrolling:(alpha != 1.0)];
-        }
-       */ 
         /*
             For this view to be transparent, it's containing window must be set as non-opaque.  It would make sense to use: [[contactListView window] setOpaque:(alpha == 100.0)];
 
@@ -234,10 +230,12 @@
             */
     //    [[contactListView window] setOpaque:NO];
         [[contactListView window] setAlphaValue:(/*alpha == 1.0 ? 1.0 :*/ 0.9999999)];
-    //    [contactListView display];
-        [[contactListView window] compatibleInvalidateShadow];
-        
+
         [contactListView performFullRecalculation];
+        
+        [[contactListView window] compatibleInvalidateShadow];
+        [[contactListView window] display];
+        [[contactListView window] compatibleInvalidateShadow];
     }
    
 
@@ -350,14 +348,7 @@
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
-    //Changing the selection with the mouse calls outlineViewSelectionWillChange before we get here; changing it with the keyboard does not.  It would be wasteful to update the shadow display twice, hence the check below.
-    if (!fixedShadows) {
-        //update the shadows
-//        [contactListView setNeedsDisplay:YES];
-        [[contactListView window] compatibleInvalidateShadow];
-    } else {
-        fixedShadows = NO;   
-    }
+    [[contactListView window] display];
     
     AIListObject	*selectedObject = nil;
     NSOutlineView	*outlineView = [notification object];
@@ -383,11 +374,10 @@
 - (void)outlineViewSelectionIsChanging:(NSNotification *)notification
 {
     //update the shadows
-//    [contactListView setNeedsDisplay:YES];
-    [[contactListView window] compatibleInvalidateShadow];
+    //[[contactListView window] display];
     
     //Don't need to fix shadows after the selection changes
-    fixedShadows = YES;
+//    fixedShadows = YES;
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
@@ -453,6 +443,10 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView];
 }
 
+- (void)screenParametersChanged:(NSNotification *)notification
+{
+    [contactListView performFullRecalculation];
+}
 
 // Tooltips ------------------------------------------------------------------------------------
 //Add a tracking rect to catch when the mouse enters/exits our view
