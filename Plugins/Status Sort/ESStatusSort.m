@@ -140,7 +140,7 @@ DeclareString(sOnline)
 			case Unavailable: 
 				//If one of groupAway or groupIdle is off, or we need a generic unavailable sort
 				if (groupUnavailable ||
-					((groupAvailable && (!groupAway || !(groupIdleOrIdleTime))))){
+					((groupAvailable && (!groupAway || !groupIdleOrIdleTime)))){
 					sortOrder[i++] = Unavailable;
 				}
 				break;
