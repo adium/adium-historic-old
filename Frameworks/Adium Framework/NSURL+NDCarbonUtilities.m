@@ -84,20 +84,18 @@
 }
 
 /*
- * -getFinderInfoFlags:type:creator:
+ * -finderInfoFlags:type:creator:
  */
-- (BOOL)getFinderInfoFlags:(UInt16*)outFlags type:(OSType*)outType creator:(OSType*)outCreator
+- (BOOL)finderInfoFlags:(UInt16*)aFlags type:(OSType*)aType creator:(OSType*)aCreator
 {
-	FSRef					theRef;
-	struct FSCatalogInfo	theInfo;
+	FSSpec			theFSSpec;
+	struct FInfo	theInfo;
 
-	if( [self getFSRef:&theRef] && (FSGetCatalogInfo( &theRef, kFSCatInfoFinderInfo, &theInfo, /*outName*/ NULL, /*fsSpec*/ NULL, /*parentRef*/ NULL) == noErr) )
+	if( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
 	{
-		struct FileInfo *finderInfo = (struct FileInfo *)&(theInfo.finderInfo);
-
-		if( outFlags )   *outFlags   = finderInfo->finderFlags;
-		if( outType )    *outType    = finderInfo->fileType;
-		if( outCreator ) *outCreator = finderInfo->fileCreator;
+		if( aFlags ) *aFlags = theInfo.fdFlags;
+		if( aType ) *aType = theInfo.fdType;
+		if( aCreator ) *aCreator = theInfo.fdCreator;
 
 		return YES;
 	}
@@ -110,14 +108,13 @@
  */
 - (NSPoint)finderLocation
 {
-	FSRef					 theRef;
-	struct FSCatalogInfo	 theInfo;
-	NSPoint					 thePoint = { 0, 0 };
+	FSSpec			theFSSpec;
+	struct FInfo	theInfo;
+	NSPoint			thePoint = NSMakePoint( 0, 0 );
 
-	if( [self getFSRef:&theRef] && (FSGetCatalogInfo( &theRef, kFSCatInfoFinderInfo, &theInfo, /*outName*/ NULL, /*fsSpec*/ NULL, /*parentRef*/ NULL) == noErr) )
+	if( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
 	{
-		struct FileInfo	*finderInfo = (struct FileInfo *)&(theInfo.finderInfo);
-		thePoint = NSMakePoint(finderInfo->location.h, finderInfo->location.v);
+		thePoint = NSMakePoint(theInfo.fdLocation.h, theInfo.fdLocation.v );
  	}
 
 	return thePoint;
@@ -128,27 +125,17 @@
  */
 - (BOOL)setFinderInfoFlags:(UInt16)aFlags mask:(UInt16)aMask type:(OSType)aType creator:(OSType)aCreator
 {
-	BOOL  theResult = NO;
+	BOOL				theResult = NO;
+	FSSpec			theFSSpec;
+	struct FInfo	theInfo = { 0 };
 
-	FSRef theRef;
-	if([self getFSRef:&theRef]) {
-		struct FSCatalogInfo	 catalogInfo;
-		struct FileInfo			*finderInfo = (struct FileInfo *)&(catalogInfo.finderInfo);
-		struct FSRefParam		 pb = {
-			.ref = &theRef,
-			.whichInfo = kFSCatInfoFinderInfo,
-			.catInfo = &catalogInfo,
-			.spec = NULL,
-			.parentRef = NULL,
-			.outName = NULL,
-		};
-		if(PBGetCatalogInfoSync(&pb) == noErr) {
-			finderInfo->finderFlags = (aFlags & aMask) | (finderInfo->finderFlags & !aMask);
-			finderInfo->fileType    = aType;
-			finderInfo->fileCreator = aCreator;
+	if( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
+	{
+		theInfo.fdFlags = (aFlags & aMask) | (theInfo.fdFlags & !aMask);
+		theInfo.fdType = aType;
+		theInfo.fdCreator = aCreator;
 
-			theResult = (PBSetCatalogInfoSync(&pb) == noErr);
-		}
+		theResult = FSpSetFInfo( &theFSSpec, &theInfo) == noErr;
 	}
 
 	return theResult;
@@ -159,28 +146,18 @@
  */
 - (BOOL)setFinderLocation:(NSPoint)aLocation
 {
-	BOOL  theResult = NO;
-	
-	FSRef theRef;
-	if([self getFSRef:&theRef]) {
-		struct FSCatalogInfo	 catalogInfo;
-		struct FileInfo			*finderInfo = (struct FileInfo *)&(catalogInfo.finderInfo);
-		struct FSRefParam		 pb = {
-			.ref = &theRef,
-			.whichInfo = kFSCatInfoFinderInfo,
-			.catInfo = &catalogInfo,
-			.spec = NULL,
-			.parentRef = NULL,
-			.outName = NULL,
-		};
-		if(PBGetCatalogInfoSync(&pb) == noErr) {
-			finderInfo->location.h = aLocation.x;
-			finderInfo->location.v = aLocation.y;
-			
-			theResult = (PBSetCatalogInfoSync(&pb) == noErr);
-		}
+	BOOL				theResult = NO;
+	FSSpec			theFSSpec;
+	struct FInfo	theInfo = { 0 };
+
+	if( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
+	{
+		theInfo.fdLocation.h = aLocation.x;
+		theInfo.fdLocation.v = aLocation.y;
+
+		theResult = FSpSetFInfo( &theFSSpec, &theInfo) == noErr;
 	}
-	
+
 	return theResult;
 }
 
@@ -191,7 +168,10 @@
 - (BOOL)hasCustomIcon
 {
 	UInt16	theFlags;
-	return [self getFinderInfoFlags:&theFlags type:NULL creator:NULL] == YES && (theFlags & kHasCustomIcon) != 0;
+	return [self finderInfoFlags:&theFlags type:NULL creator:NULL] == YES && (theFlags & kHasCustomIcon) != 0;
 }
 
 @end
+
+
+
