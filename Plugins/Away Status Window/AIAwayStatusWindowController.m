@@ -81,9 +81,11 @@ AIAwayStatusWindowController	*sharedAwayStatusInstance = nil;
 	[super windowDidLoad];
 
 	//Observe preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
-    
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EVENT_BEZEL];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_AWAY_STATUS_WINDOW];
+
 	//Install a timer to periodically update the away time
 	awayTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0
 												  target:self
@@ -107,7 +109,7 @@ AIAwayStatusWindowController	*sharedAwayStatusInstance = nil;
 	[super windowShouldClose:sender];
 	
     //Clean up and release the shared instance
-    [[adium notificationCenter] removeObserver:self];    
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[awayTimer invalidate];
 	[awayTimer release];
     [sharedAwayStatusInstance autorelease]; sharedAwayStatusInstance = nil;
@@ -123,35 +125,29 @@ AIAwayStatusWindowController	*sharedAwayStatusInstance = nil;
 
 //Window Content -------------------------------------------------------------------------------------------------------
 //Preferences have changed, update window
-- (void)preferencesChanged:(NSNotification *)notification
-{
-    NSString    *group = [[notification userInfo] objectForKey:@"Group"];
-	
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+{	
 	//Mute Sounds
-	if(notification == nil || [group isEqualToString:PREF_GROUP_SOUNDS]){
-		[button_mute setState:[[[adium preferenceController] preferenceForKey:KEY_EVENT_MUTE_WHILE_AWAY
-																		group:PREF_GROUP_SOUNDS] boolValue]];
+	if([group isEqualToString:PREF_GROUP_SOUNDS]){
+		[button_mute setState:[[prefDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
 		
 	}
-	
+
 	//Show Bezels
-	if(notification == nil || [group isEqualToString:PREF_GROUP_EVENT_BEZEL]){
-		[button_showBezel setState:![[[adium preferenceController] preferenceForKey:KEY_EVENT_BEZEL_SHOW_AWAY
-																			  group:PREF_GROUP_EVENT_BEZEL] boolValue]];
+	if([group isEqualToString:PREF_GROUP_EVENT_BEZEL]){
+		[button_showBezel setState:![[prefDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
 		
 	}
 	
 	//Away Message
-	if(notification == nil || [group isEqualToString:GROUP_ACCOUNT_STATUS] && [notification object] == nil){
-		NSAttributedString	*awayMessage = [[[adium preferenceController] preferenceForKey:@"AwayMessage"
-																					 group:GROUP_ACCOUNT_STATUS] attributedString];
+	if([group isEqualToString:GROUP_ACCOUNT_STATUS] && object == nil){
+		NSAttributedString	*awayMessage = [[prefDict objectForKey:@"AwayMessage"] attributedString];
 		if(awayMessage) [[textView_awayMessage textStorage] setAttributedString:awayMessage];
 	}
 	
 	//Window behavior
-	if(notification == nil || [group isEqualToString:PREF_GROUP_AWAY_STATUS_WINDOW]){
-		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW];
-		
+	if([group isEqualToString:PREF_GROUP_AWAY_STATUS_WINDOW]){
 		[(NSPanel *)[self window] setFloatingPanel:[[prefDict objectForKey:KEY_FLOAT_AWAY_STATUS_WINDOW] boolValue]];
 		[(NSPanel *)[self window] setHidesOnDeactivate:[[prefDict objectForKey:KEY_HIDE_IN_BACKGROUND_AWAY_STATUS_WINDOW] boolValue]];
 
