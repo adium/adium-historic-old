@@ -9,12 +9,17 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
+#define PREF_GROUP_AWAY_MESSAGES 	@"Away Messages"
+
 @class AIAwayMessagePreferences;
 
 @interface AIAwayMessagesPlugin : AIPlugin/*<AIPreferenceViewControllerDelegate>*/ {
 
     AIAwayMessagePreferences	*preferences;
 
+    NSMenuItem			*menuItem_away;
+    NSMenuItem			*menuItem_customMessage;
+    NSMenu			*menu_awaySubmenu;
 }
 
 @end

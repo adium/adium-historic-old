@@ -7,12 +7,15 @@
 //
 
 #import "AIEnterAwayWindowController.h"
+#import "AIAwayMessagesPlugin.h"
 #import "AIAdium.h"
 #import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
 
 #define ENTER_AWAY_WINDOW_NIB		@"EnterAwayWindow"		//Filename of the window nib
 #define	KEY_ENTER_AWAY_WINDOW_FRAME	@"Enter Away Frame"
-
+#define DEFAULT_AWAY_MESSAGE		@""
+#define KEY_QUICK_AWAY_MESSAGE		@"Quick Away Message"
 
 @interface AIEnterAwayWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
@@ -39,6 +42,28 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     }
 }
 
+//Cancel
+- (IBAction)cancel:(id)sender
+{
+    [self closeWindow:nil];
+}
+
+//Set the away
+- (IBAction)setAwayMessage:(id)sender
+{
+    NSData	*newAway;
+
+    //Save the away message
+    newAway = [[textView_awayMessage textStorage] dataRepresentation];
+    [[owner preferenceController] setPreference:newAway forKey:KEY_QUICK_AWAY_MESSAGE group:PREF_GROUP_AWAY_MESSAGES];
+
+    //Set the away
+    [[owner accountController] setStatusObject:newAway forKey:@"AwayMessage" account:nil];
+
+    //Close our window
+    [self closeWindow:nil];
+}
+
 
 //Private ----------------------------------------------------------------
 //init the window controller
@@ -63,6 +88,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 - (void)windowDidLoad
 {
     NSString	*savedFrame;
+    NSData	*lastAway;
 
     //Restore the window position
     savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_ENTER_AWAY_WINDOW_FRAME];
@@ -70,6 +96,18 @@ AIEnterAwayWindowController	*sharedInstance = nil;
         [[self window] setFrameFromString:savedFrame];
     }
 
+    //Restore the last used custom away
+    lastAway = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_QUICK_AWAY_MESSAGE];
+    if(lastAway){
+        [textView_awayMessage setAttributedString:[NSAttributedString stringWithData:lastAway]];
+    }else{
+        [textView_awayMessage setString:DEFAULT_AWAY_MESSAGE];
+    }
+
+    //Configure out sending view
+    [textView_awayMessage setTarget:self action:@selector(setAwayMessage:)];
+    [textView_awayMessage setSendOnReturn:NO]; //Pref for these later :)
+    [textView_awayMessage setSendOnEnter:YES]; //
 }
 
 //Close the contact list window

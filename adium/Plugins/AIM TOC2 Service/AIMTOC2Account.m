@@ -47,6 +47,7 @@ static char *hash_password(const char * const password);
 - (void)AIM_SendMessage:(NSString *)inMessage toHandle:(NSString *)handleUID;
 - (void)AIM_SetIdle:(double)inSeconds;
 - (void)AIM_SetProfile:(NSString *)profile;
+- (void)AIM_SetAway:(NSString *)away;
 - (void)AIM_SetStatus;
 - (void)AIM_GetProfile:(NSString *)handleUID;
 - (NSString *)extractStringFrom:(NSString *)searchString between:(NSString *)stringA and:(NSString *)stringB;
@@ -250,7 +251,7 @@ static char *hash_password(const char * const password);
 // AIAccount_Status --------------------------------------------------------------------------------
 - (NSArray *)supportedStatusKeys
 {
-    return([NSArray arrayWithObjects:@"Online", @"IdleTime", @"IdleManuallySet", @"TextProfile", nil]);
+    return([NSArray arrayWithObjects:@"Online", @"IdleTime", @"IdleManuallySet", @"TextProfile", @"AwayMessage", nil]);
 }
 
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
@@ -282,6 +283,11 @@ static char *hash_password(const char * const password);
         NSString		*profile = [AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]];
 
         [self AIM_SetProfile:profile];
+
+    }else if([key compare:@"AwayMessage"] == 0){
+        NSString		*away = [AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]];
+
+        [self AIM_SetAway:away];
     }
 
 }
@@ -1064,6 +1070,20 @@ static char *hash_password(const char * const password);
     [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 }
 
+- (void)AIM_SetAway:(NSString *)away
+{
+    NSString	*message;
+
+    if(away){
+        message = [NSString stringWithFormat:@"toc_set_away \"%@\"",[self validCopyOfString:away]];
+    }else{
+        message = @"toc_set_away";
+    }
+
+    //Send the message
+    [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
+}
+
 - (void)AIM_GetProfile:(NSString *)handleUID
 {
     NSString	*message;
@@ -1078,6 +1098,7 @@ static char *hash_password(const char * const password);
 {
     double 		idle = [[[owner accountController] statusObjectForKey:@"IdleTime" account:self] doubleValue];
     NSAttributedString 	*profile = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"TextProfile" account:self]];
+    NSAttributedString 	*away = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"AwayMessage" account:self]];
     
     if(idle){
         [self AIM_SetIdle:idle];
@@ -1085,6 +1106,10 @@ static char *hash_password(const char * const password);
 
     if(profile){
         [self AIM_SetProfile:[AIHTMLDecoder encodeHTML:profile]];
+    }
+    
+    if(away){
+        [self AIM_SetAway:[AIHTMLDecoder encodeHTML:away]];
     }
 }
 

@@ -1,10 +1,26 @@
 {
     IBClasses = (
         {
-            ACTIONS = {closeWindow = id; }; 
+            ACTIONS = {cancel = id; closeWindow = id; setAwayMessage = id; }; 
             CLASS = AIEnterAwayWindowController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_setAwayMessage" = NSButton; 
+                "textView_awayMessage" = AISendingTextView; 
+            }; 
             SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            CLASS = AIMiniToolbar; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {representedObject = id; }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {
+            CLASS = AISendingTextView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {target = id; }; 
+            SUPERCLASS = NSTextView; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
