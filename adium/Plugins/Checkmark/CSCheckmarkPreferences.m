@@ -1,25 +1,33 @@
-//
-//  CSCheckmarkPreferences.m
-//  Adium XCode
-//
-//  Created by Chris Serino on Sun Jan 04 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
-//
+/*-------------------------------------------------------------------------------------------------------*\
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+\---------------------------------------------------------------------------------------------------------/
+| This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+| General Public License as published by the Free Software Foundation; either version 2 of the License,
+| or (at your option) any later version.
+|
+| This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+| the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+| Public License for more details.
+|
+| You should have received a copy of the GNU General Public License along with this program; if not,
+| write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+\------------------------------------------------------------------------------------------------------ */
 
-#import "CSCheckmarkPlugin.h"
 #import "CSCheckmarkPreferences.h"
+#import "CSCheckmarkPlugin.h"
 
-
-#define	CHECKMARK_PREF_NIB			@"CheckmarkPreferences"
-#define CHECKMARK_PREF_TITLE		AILocalizedString(@"Checkmark Display",nil)
-
-@interface CSCheckmarkPreferences (PRIVATE)
-- (IBAction)changePreference:(id)sender;
-- (void)configureView;
-@end
-
-//Preference methods
 @implementation CSCheckmarkPreferences
+
+//Preference pane properties
+- (PREFERENCE_CATEGORY)category{
+    return(AIPref_Advanced_ContactList);
+}
+- (NSString *)label{
+    return(@"Checkmark Display");
+}
+- (NSString *)nibName{
+    return(@"CheckmarkPreferences");
+}
 
 - (NSDictionary *)restorablePreferences
 {
@@ -28,26 +36,6 @@
 	return(defaultsDict);
 }
 
-
-+ (CSCheckmarkPreferences *)checkmarkPreferences
-{
-    return([[[self alloc] init] autorelease]);
-}
-
-
-- (IBAction)changePreference:(id)sender
-{
-	
-    if(sender == checkBox_displayCheckmark){
-		
-    	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-											 forKey:KEY_DISPLAY_CHECKMARK
-											  group:PREF_GROUP_CHECKMARK];
-    }
-	
-}
-
-/*
 //Configure the preference view
 - (void)viewDidLoad
 {
@@ -56,52 +44,14 @@
     [checkBox_displayCheckmark setState:[[preferenceDict objectForKey:KEY_DISPLAY_CHECKMARK] boolValue]];
 }
 
-- (void)viewWillClose
+// Called in response to all preference controls, applies new settings
+- (IBAction)changePreference:(id)sender
 {
-    [[adium notificationCenter] removeObserver:self];
-}
-*/
-
-
-- (id)init
-{
-    //Init
-    [super init];
-	
-    //Register our preference pane
-    [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Advanced_ContactList withDelegate:self label:CHECKMARK_PREF_TITLE]];
-	
-    return(self);
-}
-
-
-- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    //Load our preference view nib
-    if(!view_prefView){
-        [NSBundle loadNibNamed:CHECKMARK_PREF_NIB owner:self];
-		
-        //Configure our view
-        [self configureView];
+    if(sender == checkBox_displayCheckmark) {
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_DISPLAY_CHECKMARK
+                                              group:PREF_GROUP_CHECKMARK];
     }
-	
-    return(view_prefView);
 }
-
-//Clean up our preference pane
-- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    [view_prefView release]; view_prefView = nil;
-	
-}
-
-- (void)configureView
-{
-    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CHECKMARK];
-	
-    [checkBox_displayCheckmark setState:[[preferenceDict objectForKey:KEY_DISPLAY_CHECKMARK] boolValue]];
-	
-}
-
 
 @end

@@ -1,52 +1,51 @@
-//
-//  CSCheckmarkPlugin.m
-//  Adium XCode
-//
-//  Created by Chris Serino on Sun Jan 04 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
-//
+/*-------------------------------------------------------------------------------------------------------*\
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+\---------------------------------------------------------------------------------------------------------/
+| This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+| General Public License as published by the Free Software Foundation; either version 2 of the License,
+| or (at your option) any later version.
+|
+| This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+| the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+| Public License for more details.
+|
+| You should have received a copy of the GNU General Public License along with this program; if not,
+| write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+\------------------------------------------------------------------------------------------------------ */
 
 #import "CSCheckmarkPlugin.h"
 #import "CSCheckmarkPreferences.h"
 
-//In case you want to use an image uncomment this and comment out the @interface
-//#define CHECKMARK_IMAGE @"/Applications/Mail.app/Contents/Resources/iChatToolbar.tiff"
 @interface CSCheckmarkPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation CSCheckmarkPlugin
 
-#pragma mark Plugin Initiation
 - (void)installPlugin
 {
-    displayCheckmark = NO;
-    
-	//Register our default preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CHECKMARK_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CHECKMARK];
+    //Setup our preferences
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CHECKMARK_DEFAULT_PREFS forClass:[self class]]
+										  forGroup:PREF_GROUP_CHECKMARK];
+    preferences = [[CSCheckmarkPreferences preferencePane] retain];
 	
-    //Our preference view
-    checkmarkPreferences = [[CSCheckmarkPreferences checkmarkPreferences] retain];
-    [[adium contactController] registerListObjectObserver:self];
-    
-	[self preferencesChanged:nil];
-		
     //Observe
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    
-    //Also code for if you want to use a image instead of the resource
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
+	
+    [[adium contactController] registerListObjectObserver:self];
+	
+	//Also code for if you want to use a image instead of the resource
     //checkmarkImage =  [[NSImage alloc] initWithContentsOfFile:CHECKMARK_IMAGE];
-    checkmarkImage =  [[NSImage systemCheckmark] retain];
+	checkmarkImage =  [[NSImage systemCheckmark] retain];
     [checkmarkImage setScalesWhenResized:YES];
     [checkmarkImage setFlipped:YES];
+	
+	[self preferencesChanged:nil];
 }
 
-- (void)dealloc
-{
-    [checkmarkImage release];
-}
-
-#pragma mark Private
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CHECKMARK] == 0){
@@ -84,7 +83,7 @@
 - (void)drawInRect:(NSRect)inRect
 {
     if ([checkmarkImage size].height > inRect.size.height)
-	[checkmarkImage setSize:inRect.size];
+		[checkmarkImage setSize:inRect.size];
     
     NSPoint drawingPoint = NSMakePoint(inRect.origin.x, inRect.origin.y + ceil((inRect.size.height / 2.0)) - ceil(([checkmarkImage size].height / 2.0)));
     [checkmarkImage drawAtPoint:drawingPoint fromRect:NSMakeRect(0, 0, [checkmarkImage size].width, [checkmarkImage size].height) operation:NSCompositeSourceOver fraction:1.0];
@@ -94,7 +93,7 @@
 - (float)widthForHeight:(int)inHeight
 {
     if ([checkmarkImage size].height > inHeight)
-	return [checkmarkImage size].width * ((float)inHeight / [checkmarkImage size].height);
+		return [checkmarkImage size].width * ((float)inHeight / [checkmarkImage size].height);
     return ([checkmarkImage size].width);
 }
 
