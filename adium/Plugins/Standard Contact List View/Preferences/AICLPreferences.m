@@ -107,10 +107,10 @@
 //	[dataCell setDrawsGradientHighlight:YES];
 //	[[tableView_theme tableColumnWithIdentifier:@"preview"] setDataCell:dataCell];
 	
-	dataCell = [[[AIListThemePreviewCell alloc] init] autorelease];
-	[dataCell setIgnoresFocus:YES];	
-	[dataCell setDrawsGradientHighlight:YES];
-	[[tableView_theme tableColumnWithIdentifier:@"preview"] setDataCell:dataCell];
+//	dataCell = [[[AIListThemePreviewCell alloc] init] autorelease];
+//	[dataCell setIgnoresFocus:YES];	
+//	[dataCell setDrawsGradientHighlight:YES];
+//	[[tableView_theme tableColumnWithIdentifier:@"preview"] setDataCell:dataCell];
 	
 	//
     [tableView_layout setTarget:self];

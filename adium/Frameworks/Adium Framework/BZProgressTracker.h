@@ -62,7 +62,7 @@ enum ProgressState {
 
 @interface BZProgressTracker: NSObject <BZProgressTrackerDelegate, BZProgressTracker>
 {
-	id activity;
+	id<BZProgressTracker> activity;
 	NSString *name, *type;
 	BZActivityWindowController *activityWindowController;
 
