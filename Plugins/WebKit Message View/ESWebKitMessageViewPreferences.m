@@ -176,6 +176,9 @@
 		
 		//Disable the header control if this style doesn't have a header
 		[checkBox_showHeader setEnabled:[[previewController messageStyle] hasHeader]];
+
+		//Disable user icon toggling if the style doesn't support them
+		[checkBox_showUserIcons setEnabled:[[previewController messageStyle] allowsUserIcons]];
 	}
 	
 }
