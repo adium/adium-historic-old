@@ -1,6 +1,38 @@
 				Adium X Version History
 				-----------------------
 
+Version 0.61 (6/25/2004)
+- Added support for MSN Buddy Icons
+- Added support for MSN File Transfer
+- Added status icons to tabs (Replacing the text coloring used previously)
+- Added a toolbar to the message window
+- Removed the 'orphans' group (Adium no longer adds strangers to the contact list)
+- Improvements to 'Show offline contacts' menu item
+- Improvements to message view contextual menus
+- Improvements to scripting
+- Improvements to installing xtras
+- Improvements to HTML support
+- Improvements to error handling
+- Improvements to file transfer
+- Improvements to tooltips
+- Improvements to the 'Add Contact' panel
+- Temporary fix for Yahoo connectivity issues
+- Fixed several major connection related issues
+- Fixed issue with jabber presence not displaying on connect
+- Fixed issue with recognition of ICQ authorizations
+- Fixed issue with the announcer preferences
+- Fixed issue with encoding on Yahoo! Japan
+- Fixed issue with speaking status messages
+- Fixed issue with contacts losing their display names when moving between groups
+- Fixed issue with the group menu in the 'Add Contact' panel
+- Fixed issue with the 'delete' contextual menu item on tabs
+- Fixed issue with send file context menu on inactive tabs
+- Fixed issue with the away status window not closing with cmd-w
+- Fixed a crash when closing message windows in certain situations
+- Fixed a crash on quit
+- Performance improvements
+- Launch time improvements
+
 Version 0.60 (6/16/2004)
 - Added script for inserting an iTunes link for the playing song
 - Info window now shows to which accounts a contact has been added
