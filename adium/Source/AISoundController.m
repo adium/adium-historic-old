@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.48 2004/06/28 04:37:24 evands Exp $
+// $Id: AISoundController.m,v 1.49 2004/07/06 00:22:13 evands Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -64,13 +64,13 @@
     [[AIObject sharedAdiumInstance] createResourcePathForName:PATH_SOUNDS];
     
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
-
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]]
+										  forGroup:PREF_GROUP_SOUNDS];
     
     //Ensure the temporary mute is off
     [[owner preferenceController] setPreference:[NSNumber numberWithBool:NO]
                                          forKey:KEY_SOUND_TEMPORARY_MUTE
-                                          group:PREF_GROUP_GENERAL];   
+                                          group:PREF_GROUP_SOUNDS];   
     
     //observe pref changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -171,7 +171,7 @@
 - (void)_quicktimePlaySound:(NSString *)inPath
 {
     NSMovie	*movie;
-	
+
     //Search for this sound in our cache
     movie = [soundCacheDict objectForKey:inPath];
 	
