@@ -706,45 +706,21 @@
 }
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat
 {
-    return([[messageViewArray objectAtIndex:0] messageViewControllerForChat:inChat]);
+	//Sometimes our users find it amusing to disable plugins that are located within the Adium bundle.  This error
+	//trap prevents us from crashing if they happen to disable all the available message view plugins.
+	//PUT THAT PLUGIN BACK IT WAS IMPORTANT!
+	if([messageViewArray count] == 0){
+		NSRunCriticalAlertPanel(@"No Message View Plugin Installed",
+								@"Adium cannot find its message view plugin, please re-install.  If you've manually disabled Adium's message view plugin, please re-enable it.",
+								@"Quit",
+								nil,
+								nil);
+		[NSApp terminate:nil];
+	}
+	
+	return([[messageViewArray objectAtIndex:0] messageViewControllerForChat:inChat]);
 }
 
-//Returns a value indicating which message view should be used on this system
-//Ignoring the result of this can cause all sorts of nastiness
-- (DCMessageViewType)preferredMessageView
-{
-	DCMessageViewType viewToUse = DCStandardMessageView;
-
-	if(USE_WEBKIT_PLUGIN && [NSApp isOnPantherOrBetter] && [NSApp isWebKitAvailable] ) {
-		viewToUse = DCWebkitMessageView;
-	}
-	
-	if( viewToUse == DCWebkitMessageView ) {
-		if( ![[owner pluginController] pluginEnabled:WEBKIT_PLUGIN] ) {
-			viewToUse = DCStandardMessageView;
-		}
-	}
-	
-	if( viewToUse == DCStandardMessageView ) {
-		if( ![[owner pluginController] pluginEnabled:SMV_PLUGIN] ) {
-			viewToUse = 0;
-			
-			// Offer to quit before things really go bad
-			if( NSRunInformationalAlertPanel(@"No Message View Plugin Installed",
-											@"Adium could not find a message view plugin to use. Please reenable the WebKit Message View or Standard Message View in the Finder.",
-											@"Quit", 
-											@"Continue",
-											 nil) == NSAlertDefaultReturn) {
-				[NSApp terminate:nil];
-			
-			}
-				
-		}
-	}
-	
-	return viewToUse;
-
-}
 
 //Error Display --------------------------------------------------------------------------------------------------------
 #pragma mark Error Display
