@@ -20,9 +20,6 @@ Adium, Copyright 2001-2004, Adam Iser
 
 //Private
 - (void)initController;
-- (void)finishIniting;
 - (void)closeController;
-
-- (BOOL)pluginEnabled:(NSString *)pluginName;
 
 @end

@@ -20,7 +20,6 @@
 #import "AIInterfaceController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
-#import "AIPluginController.h"
 #import "AIPreferenceController.h"
 #import "AIMenuController.h"
 #import "AIDockController.h"
@@ -28,6 +27,8 @@
 #import "ESContactAlertsController.h"
 #import "LNAboutBoxController.h"
 #import "AILicenseWindowController.h"
+#import "AICorePluginLoader.h"
+#import "AICoreComponentLoader.h"
 
 #import <ExceptionHandling/NSExceptionHandler.h>
 
@@ -120,9 +121,6 @@
 }
 - (ESDebugController *)debugController{
 	return(debugController);
-}
-- (AIPluginController *)pluginController{
-	return(pluginController);
 }
 //- (BZActivityWindowController *)activityWindowController {
 //	return activityWindowController;
@@ -222,7 +220,6 @@
 	
 //    [activityWindowController initController];
 	[componentLoader initController];
-    [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 
 	NSDictionary	*versionUpgradeDict = [self versionUpgradeDict];
 	
@@ -232,18 +229,14 @@
 											   userInfo:versionUpgradeDict];
 	}
 	
-	/* 
-	 Use willFinishIniting for controllers which:
-		a) depend on other controllers having init'd -AND-
-		b) supply information which other controllers or plugins will need to init
-	 */
 	[preferenceController willFinishIniting];
 	
-	/*
-	 Plugin controller should finish initing first. The accountController needs all accounts
-	 and services available.
-	*/
-	[pluginController finishIniting];
+
+    [pluginLoader initController]; //should always init last.  Plugins rely on everything else.
+	
+	
+	
+	
 	
 	/*
 	 Account controller should finish initing before the contact controller so accounts and services are available
@@ -275,7 +268,7 @@
 	[preferenceController beginClosing];
 
     //Close the controllers in reverse order
-    [pluginController closeController]; //should always unload first.  Plugins rely on all the controllers.
+    [pluginLoader closeController]; //should always unload first.  Plugins rely on all the controllers.
 	[componentLoader closeController];
     [contactAlertsController closeController];
     [fileTransferController closeController];
