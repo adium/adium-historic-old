@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.88 2004/05/02 20:55:08 adamiser Exp $
+$Id: ToDoList.txt,v 1.89 2004/05/02 23:43:34 evands Exp $
 
 
 Legend
@@ -19,7 +19,7 @@ Bugs
 * When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
    - (Adam: This is probably the keychain access, I'm not sure we can speed this up)
    - (Evan: We shouldn't need to write to the keychain when the uid changes now since we're using the uniqueObjectID. Maybe an observer doing something dumb?)
-
+* Clicking the info button with nothing selected (1 group, 0 contacts defined) shows a blank window titled "Window"
 * Only one password request dialog is allowed at a time.  This limitation causes issues for users with multiple accounts who don't save passwords.
 * Our 'new message' toolbar button is gooooone gone gone gone gone
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
@@ -35,6 +35,10 @@ Contact List:
 * Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
    - (Confirmed by Hanji)
 * For contacts with no Adium alias and a matching address book card, the contact list format preference will be ignored.  So, if it's set to "Alias (Contact Name)", it will only display the address book name at first.  If the preference is toggled, the correct formatting will be applied.
+* Can "add" a contact with no accounts (the button should dim with no accounts checked)
+* When connected to an msn account with no groups or contacts, clicking the drawer button on the contact list makes the contact list window disappear.
+* Adding an msn contact with no groups defined crashes adium.
+* Adding a group makes the contact list window reappear.
 * Auto-resizing is no longer correctly sticking to the bottom of the screen?
 
 
