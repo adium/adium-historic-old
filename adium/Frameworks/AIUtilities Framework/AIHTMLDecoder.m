@@ -44,10 +44,12 @@ int HTMLEquivalentForFontSize(int fontSize);
     BOOL		currentUnderline;
     int			currentSize;
     NSString		*currentColor;
+    
     NSString		*inMessageString;
     int			messageLength;
     NSRange		searchRange;
-	short		loop;
+    short		loop;
+    BOOL		firstPass = YES;
     
     //Get the incoming message as a regular string, and it's length
     inMessageString = [inMessage string];
@@ -68,86 +70,85 @@ int HTMLEquivalentForFontSize(int fontSize);
     //Loop through the entire string
     searchRange = NSMakeRange(0,0);
     while(searchRange.location < messageLength){
-        NSDictionary	*attributes = [inMessage attributesAtIndex:searchRange.location effectiveRange:&searchRange];
+        NSDictionary	*attributes = [inMessage 
+            attributesAtIndex:searchRange.location effectiveRange:&searchRange];
         NSFont		*font = [attributes objectForKey:NSFontAttributeName];
         NSString	*color = [[attributes objectForKey:NSForegroundColorAttributeName] hexString];
         int		underline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
+        NSString	*familyName = [font familyName];
+        float		pointSize = [font pointSize];
+        NSFontTraitMask	traits = [fontManager traitsOfFont:font];
+        BOOL		bold = (traits & NSBoldFontMask);
+        BOOL		italic = (traits & NSItalicFontMask);
+                
+        //Disable bold/italic/underline
+        if(currentItalic && !italic){
+            [string appendString:@"</I>"];
+            currentItalic = italic;
+        }
+        if(currentBold && !bold){
+            [string appendString:@"</B>"];
+            currentBold = bold;
+        }
+        if(currentUnderline && !underline){
+            [string appendString:@"</U>"];
+            currentUnderline = underline;
+        }
 
         //font
-        if(font && currentFont != font){ //Quick test to make sure it's not the same font
-            NSString		*familyName = [font familyName];
-            float		pointSize = [font pointSize];
-            NSFontTraitMask	traits = [fontManager traitsOfFont:font];
-            BOOL		bold = (traits & NSBoldFontMask);
-            BOOL		italic = (traits & NSItalicFontMask);
+        if ([color compare:currentColor]
+            || pointSize != currentSize
+            || [familyName compare:currentFamily]
+        ) {
 
-            //Disable bold/italic/underline
-            if(currentItalic && !italic){
-                [string appendString:@"</I>"];
-                currentItalic = bold;
+            if(firstPass) {
+                [string appendString:@"<FONT"];
+                firstPass = NO;
             }
-            if(currentBold && !bold){
-                [string appendString:@"</B>"];
-                currentBold = bold;
+            else {
+                [string appendString:@"</FONT><FONT"];
             }
 
             //Family
-            if([familyName compare:currentFamily]){
-                [string appendString:[NSString stringWithFormat:@"<FONT FACE=\"%@\" LANG=\"0\">",familyName]];
-                [currentFamily release]; currentFamily = [familyName retain];
-            }
-
+            [string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"0\"",familyName]];
+            [currentFamily release]; currentFamily = [familyName retain];
+            
             //Size
-            if(pointSize != currentSize){
-                [string appendString:[NSString stringWithFormat:@"<FONT ABSZ=%i SIZE=%i>",(int)pointSize,HTMLEquivalentForFontSize((int)pointSize)]];
-                currentSize = pointSize;
-            }
-            
-            //Bold
-            if(bold && !currentBold){
-                [string appendString:@"<B>"];
-                currentBold = bold;
-            }
-            if(italic && !currentItalic){
-                [string appendString:@"<I>"];
-                currentItalic = italic;
-            }
-            
-            
+            [string appendString:[NSString 
+                stringWithFormat:@" ABSZ=\"%i\" SIZE=\"%i\"",
+                (int)pointSize,HTMLEquivalentForFontSize((int)pointSize)]];
+            currentSize = pointSize;
+ 
             [currentFont release]; currentFont = [font retain];
-        }
-            
-        //color
-        if(!color && currentColor){
-            [string appendString:@"<FONT COLOR=\"#000000\">"];
-            [currentColor release]; currentColor = nil;
-        }else if([color compare:currentColor]){
-            [string appendString:[NSString stringWithFormat:@"<FONT COLOR=\"#%@\">",color]];
-            [currentColor release]; currentColor = [color retain];
-        }
 
-        //underline
-        if(currentUnderline && !underline){
-            [string appendString:@"</U>"];
-        }else if(!currentUnderline && underline){
-            [string appendString:@"<U>"];
-        }
-/*                
-                currentUnderline = underline;
-            
-            }else if([key compare:NSParagraphStyleAttributeName] == 0){
-            
-            }else if([key compare:NSSuperscriptAttributeName] == 0){
-            
-            }else if([key compare:NSLinkAttributeName] == 0){
-            
-            }else if([key compare:NSBackgroundColorAttributeName] == 0){
-            
-            }else if([key compare:NSAttachmentAttributeName] == 0){
-    
+            //color
+            if(!color && currentColor){
+                [string appendString:@" COLOR=\"#000000\""];
+                [currentColor release]; currentColor = @"#000000"; // was nil
+            }else if([color compare:currentColor]){
+                [string appendString:[NSString stringWithFormat:@" COLOR=\"#%@\"",color]];
+                [currentColor release]; currentColor = [color retain];
             }
+            
+            [string appendString:@">"];
         }
-  */
+        
+        //underline
+        if(!currentUnderline && underline){
+            [string appendString:@"<U>"];
+            currentUnderline = underline;
+        }
+        //Bold
+        if(bold && !currentBold){
+            [string appendString:@"<B>"];
+            currentBold = bold;
+        }
+        //Italic
+        if(italic && !currentItalic){
+            [string appendString:@"<I>"];
+            currentItalic = italic;
+        }
+        
         //Append the string, escaping additional characters for HTML.
         loop = searchRange.location;
         while (loop < (searchRange.location + searchRange.length))
@@ -169,15 +170,25 @@ int HTMLEquivalentForFontSize(int fontSize);
             }
             loop++;
         }
-		
+        
         searchRange.location += searchRange.length;
+    }
+
+    if(currentBold) {
+        [string appendString:@"</B>"];
+    }
+    if(currentItalic) {
+        [string appendString:@"</I>"];
+    }
+    if(currentUnderline) {
+        [string appendString:@"</U>"];
     }
 
     [currentFamily release];
     [currentColor release];
     [currentFont release];
 
-    [string appendString:@"</HTML>"];
+    [string appendString:@"</FONT></HTML>"];
 
     return(string);
 }
