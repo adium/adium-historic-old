@@ -4,28 +4,31 @@
 <dict>
 	<key>AdiumSetVersion</key>
 	<integer>1</integer>
+	<key>BasedOnURL</key>
+	<string>http://messenger.msn.com/Resource/Emoticons.aspx</string>
 	<key>Emoticons</key>
 	<dict>
 		<key>Angry Face.tiff</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
-				<string>&gt;:o</string>
+				<string>:-@</string>
+				<string>:@</string>
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Angry Face</string>
+			<string>Angry</string>
 		</dict>
 		<key>Blush.tiff</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
-				<string>:-[</string>
-				<string>:[</string>
+				<string>:-$</string>
+				<string>:$</string>
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Blush</string>
+			<string>Embarassed</string>
 		</dict>
 		<key>Crying.tiff</key>
 		<dict>
@@ -37,16 +40,6 @@
 			<key>Name</key>
 			<string>Crying</string>
 		</dict>
-		<key>Foot In Mouth.tiff</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>:-!</string>
-				<string></string>
-			</array>
-			<key>Name</key>
-			<string>Foot In Mouth</string>
-		</dict>
 		<key>Frown.tiff</key>
 		<dict>
 			<key>Equivalents</key>
@@ -56,24 +49,25 @@
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Frown</string>
+			<string>Sad</string>
 		</dict>
 		<key>Gasp.tiff</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
-				<string>=-o</string>
-				<string>=-O</string>
+				<string>:-O</string>
+				<string>:o</string>
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Gasp</string>
+			<string>Surprised</string>
 		</dict>
 		<key>Grin.tiff</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
 				<string>:-D</string>
+				<string>:d</string>
 				<string></string>
 			</array>
 			<key>Name</key>
@@ -83,20 +77,19 @@
 		<dict>
 			<key>Equivalents</key>
 			<array>
-				<string>O:-)</string>
-				<string>O:)</string>
-				<string>o:-)</string>
-				<string>o:)</string>
+				<string>(A)</string>
+				<string>(a)</string>
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Halo</string>
+			<string>Angel</string>
 		</dict>
 		<key>Kiss.tiff</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
-				<string>:-*</string>
+				<string>(K)</string>
+				<string>(k)</string>
 				<string></string>
 			</array>
 			<key>Name</key>
@@ -106,22 +99,22 @@
 		<dict>
 			<key>Equivalents</key>
 			<array>
-				<string>:-x</string>
-				<string>:-X</string>
+				<string>:-#</string>
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Lips are Sealed</string>
+			<string>Don't tell anyone</string>
 		</dict>
 		<key>Money-mouth.tiff</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
-				<string>:-$</string>
+				<string>:-S</string>
+				<string>:s</string>
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Money-mouth</string>
+			<string>Confused</string>
 		</dict>
 		<key>Smile.tiff</key>
 		<dict>
@@ -138,32 +131,23 @@
 		<dict>
 			<key>Equivalents</key>
 			<array>
-				<string>:-p</string>
 				<string>:-P</string>
+				<string>:p</string>
 				<string></string>
 			</array>
 			<key>Name</key>
 			<string>Sticking Out Tongue</string>
 		</dict>
-		<key>Undecided.tiff</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>:-\</string>
-				<string></string>
-			</array>
-			<key>Name</key>
-			<string>Undecided</string>
-		</dict>
 		<key>Wearing Sunglasses.tiff</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
-				<string>8-)</string>
+				<string>(H)</string>
+				<string>(h)</string>
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Wearing Sunglasses</string>
+			<string>Hot</string>
 		</dict>
 		<key>Wink.tiff</key>
 		<dict>
