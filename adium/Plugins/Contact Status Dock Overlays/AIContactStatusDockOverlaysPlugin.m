@@ -103,34 +103,32 @@
 {
     if(showStatus || showContent){ //Skip this entirely if overlays are off
 		
-        if([inModifiedKeys containsObject:@"UnviewedContent"] ||
-		   [inModifiedKeys containsObject:@"Signed On"] ||
-		   [inModifiedKeys containsObject:@"Signed Off"]){
+		if(![[inObject containingObject] isKindOfClass:[AIMetaContact class]]){
 			
-			if((showContent && [inObject integerStatusObjectForKey:@"UnviewedContent"]) ||
-			   (showStatus && [inObject integerStatusObjectForKey:@"Signed On"]) ||
-			   (showStatus && [inObject integerStatusObjectForKey:@"Signed Off"])){
+			if([inModifiedKeys containsObject:@"UnviewedContent"] ||
+			   [inModifiedKeys containsObject:@"Signed On"] ||
+			   [inModifiedKeys containsObject:@"Signed Off"]){
 				
-				//Ignore any objects within a meta contact
-				if(![[inObject containingObject] isKindOfClass:[AIMetaContact class]]){
+				if((showContent && [inObject integerStatusObjectForKey:@"UnviewedContent"]) ||
+				   (showStatus && ([inObject integerStatusObjectForKey:@"Signed On"] || 
+								   [inObject integerStatusObjectForKey:@"Signed Off"]))){
 					
 					if(![unviewedObjectsArray containsObject:inObject]){
 						[unviewedObjectsArray addObject:inObject];
 					}
-					
-				}
-				
-			}else{
-				if([unviewedObjectsArray containsObject:inObject]){
-					[unviewedObjectsArray removeObject:inObject];
+
+				}else{
+					if([unviewedObjectsArray containsObject:inObject]){
+						[unviewedObjectsArray removeObject:inObject];
+					}
 				}
 			}
+			
+			[self _setOverlay]; //Redraw our overlay
 		}
-		
-		[self _setOverlay]; //Redraw our overlay
 	}
 
-    return(nil);
+return(nil);
 }
 
 //
