@@ -463,17 +463,18 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 //Receiving step 1: Add an incoming content object - entry point
 - (void)receiveContentObject:(AIContentObject *)inObject
 {
-    AIChat			*chat = [inObject chat];
-    AIListObject 	*object = [inObject source];
-	
-    if(object){
+	if(inObject){
+		AIChat			*chat = [inObject chat];
+		AIListObject 	*object = [inObject source];
+		
+		
         //Notify: Will Receive Content
         if([inObject trackContent]){
             [[adium notificationCenter] postNotificationName:Content_WillReceiveContent
 													  object:chat
 													userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
         }
-
+		
 		//Run the object through our incoming content filters
         if([inObject filterContent]){
 			[self filterAttributedString:[inObject message]
