@@ -4946,6 +4946,18 @@
 			isa = PBXAppleScriptBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4B435D440528AEEA00A8010A = {
+			isa = PBXFileReference;
+			name = stackImage.tiff;
+			path = "Frameworks/Adium Framework/stackImage.tiff";
+			refType = 4;
+		};
+		4B435D450528AEEA00A8010A = {
+			fileRef = 4B435D440528AEEA00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B4ABB4D04CC9F9C00A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -5105,6 +5117,7 @@
 			children = (
 				F570A61703704F6601A8010A,
 				F570A61803704F6601A8010A,
+				4B435D440528AEEA00A8010A,
 			);
 			isa = PBXGroup;
 			name = Interface;
@@ -16736,6 +16749,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5793920033E748F01A8010A,
+				4B435D450528AEEA00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

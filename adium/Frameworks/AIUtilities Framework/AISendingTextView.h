@@ -31,9 +31,12 @@
     BOOL		availableForSending;
 
     NSMutableArray	*historyArray;
-    NSMutableArray	*pushArray;
     int 		currentHistoryLocation;
 
+    NSMutableArray	*pushArray;
+    BOOL		pushIndicatorVisible;
+    NSImageView 	*indicator;
+        
     NSSize		lastPostedSize;
     NSSize		_desiredSizeCached;
 }
