@@ -28,6 +28,7 @@
 
     - Automatically scrolls to bottom on new content
     - Automatically hides & shows the vertical scroller depending on content height
+	- Shows a focus ring even if the contained view would not normally show one (an NSTextView, for example)
  */
 
 
@@ -52,6 +53,11 @@
     autoHideScrollBar = NO;
     updateShadowsWhileScrolling = NO;
 	passKeysToDocumentView = NO;
+	
+	//Focus ring
+	lastResp = nil;
+	shouldDrawFocusRing = NO;
+	
     [self setAutoHideScrollBar:YES];
 }
 
@@ -271,6 +277,46 @@
 		}	
 	}
 }
+
+// Drawing ------------------------------------------------------------------------
+#pragma mark Drawing
+//Focus ring drawing code by Nicholas Riley, posted on cocoadev and available at:
+//http://cocoa.mamasam.com/COCOADEV/2002/03/2/29535.php
+- (BOOL)needsDisplay
+{
+	NSResponder *resp = nil;
+	NSWindow	*window = [self window];
+	
+	if([window isKeyWindow]){
+		resp = [window firstResponder];
+		if(resp == lastResp){
+			return([super needsDisplay]);
+		}
+		
+	}else if(lastResp == nil){
+		return([super needsDisplay]);
+		
+	}
+	
+	shouldDrawFocusRing = (resp != nil &&
+						   [resp isKindOfClass:[NSView class]] &&
+						   [(NSView *)resp isDescendantOf:self]); // [sic]
+	lastResp = resp;
+	
+	[self setKeyboardFocusRingNeedsDisplayInRect:[self bounds]];
+	return(YES);
+}
+
+//Draw a focus ring around our view
+- (void)drawRect:(NSRect)rect
+{
+	[super drawRect:rect];
+	
+	if(shouldDrawFocusRing){
+		NSSetFocusRingStyle(NSFocusRingOnly);
+		NSRectFill(rect);
+	}
+} 
 
 @end
 

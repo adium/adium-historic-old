@@ -15,14 +15,17 @@
 
 @interface AIAutoScrollView : NSScrollView {
     NSRect	oldDocumentFrame;
-    
+
     BOOL	autoScrollToBottom;
 	BOOL	inAutoScrollToBottom;
-	
+
     BOOL	autoHideScrollBar;
-    
+
     BOOL	updateShadowsWhileScrolling;
 	BOOL	passKeysToDocumentView;
+
+	BOOL					shouldDrawFocusRing;
+	NSResponder				*lastResp;
 }
 
 - (void)setAutoHideScrollBar:(BOOL)inValue;
