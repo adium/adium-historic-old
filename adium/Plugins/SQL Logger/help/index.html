@@ -5,14 +5,9 @@
 <title>Adium SQL Logging Instructions</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
-<body><table border="0" cellspacing="0" cellpadding="5">
-<tr><td colspan="2" bgcolor="#000000" align="right"><h2 class="titlebar">Adium SQL Logging Instructions</h2></td></tr>
-<tr>
-<td width="170" height="20" background="images/transp-change.png" bgcolor="green"></td>
-<td height="20" background="images/transp-change.png"></td>
-</tr>
-<tr>
-<td width="170" bgcolor="green" valign="top" align="right">
+<body><div id="container">
+<div id="banner"><h2 class="titlebar">Adium SQL Logging Instructions</h2></div>
+<div id="sidebar-a">
 <h4>SQL Logger<br>
 </h4>
 <a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a><br><a href="tsearch.html" class="sidebar">TSearch Installation</a><br><a href="resin.html" class="sidebar">Resin Installation</a><br><a href="technical.html" class="sidebar">Technical
@@ -23,8 +18,8 @@
                 Forums</a><br><a href="http://www.visualdistortion.org/adium/stats/" class="offsides">CVS Statistics</a><br><a href="http://www.visualdistortion.org/adium/rss.xml" class="offsides">CVS Commit RSS Feed</a><br><h4>PostgreSQL</h4>
 <a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
 <a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a><br><a href="http://www.visualdistortion.org/guestbook.jsp" class="offsides">Guestbook</a><br><a href="http://www.visualdistortion.org/pictures/" class="offsides">Pictures</a><br><a href="http://www.visualdistortion.org/films/" class="offsides">Films</a><br><a href="http://www.visualdistortion.org/music/" class="offsides">Music</a>
-</td>
-<td>
+</div>
+<div id="content">
 <p>SQL Logging implements logging from the Mac OS X instant messaging
       program Adium directly into a PostgreSQL database.  It consists of a
       plugin for Adium, a web-interface for the logs written in JSP, and HTML
@@ -38,8 +33,11 @@
       <li>Other goodness.</li>
     </ul>
 <div class="important">If you are compiling from source with Panther,
-      PostgreSQL 7.3 will not work.  The newest 7.4 beta or release candidate 
-      will, however.</div>
+      PostgreSQL 7.3 will not work.  PostgreSQL 7.4 
+      will work, however.</div>
+<div class="important">Make sure you check out the Quick Install
+      instructions <a href="quick_install.html">here.</a>
+</div>
 <p>To install this, a few things are required.
     Setup, however, is not that bad.
     At the base level, all that is required is PostgreSQL (duh).
@@ -76,54 +74,67 @@
     database.  Get the following package (this is also included in the
     Adium source): <a href="adium-sql.tar.gz">adium.tar.gz</a>.  After using Stuffit Expander or
     the command line to unpack it, there should these files inside:
-    <ul>
-      <li>Setup files:</li>
-      <ul>
-        <li>sql/adium.sql (main database setup)
-        [<a href="http://www.visualdistortion.org/adium/changes/sql/adium.sql.txt" class="offsite">Changes</a>]</li>
-        <li>sql/tsearch.sql (setup for fast searching)
-        [<a href="http://www.visualdistortion.org/adium/changes/sql/tsearch.sql.txt" class="offsite">Changes</a>]</li>
-        <li>sql/update.sql (updates database to newest schema) 
-          [<a href="http://www.visualdistortion.org/adium/changes/sql/update.sql.txt" class="offsite">Changes</a>]</li>
-        </ul>
-      <li>Web Viewing Pages</li>
-        <ul>
-          <li>jsp/index.jsp (main message viewer) 
-          [<a href="http://www.visualdistortion.org/adium/changes/jsp/index.jsp.txt" class="offsite">Changes</a>]</li>
-          <li>jsp/search.jsp (searching tool)
-          [<a href="http://www.visualdistortion.org/adium/changes/jsp/search.jsp.txt" class="offsite">Changes</a>]</li>
-          <li>jsp/statistics.jsp (user statistics)
-          [<a href="http://www.visualdistortion.org/adium/changes/jsp/statistics.jsp.txt" class="offsite">Changes</a>]</li>
-          <li>jsp/details.jsp (monthly statistics)
-            [<a href="http://www.visualdistortion.org/adium/changes/jsp/details.jsp.txt" class="offsite">Changes</a>]</li>
-          <li>jsp/images/ (images for the statistics page)</li>
-        </ul>
-      <li>Useful Perl Scripts</li>
-        <ul>
-          <li>parser.pl (script to import Adium logs &lt;= 1.6.x) 
-          [<a href="http://www.visualdistortion.org/adium/changes/parser.pl.txt" class="offsite">Changes</a>]</li>
-          <li>parser-2.pl (script to import logs &gt;= 2.0)
-          [<a href="http://www.visualdistortion.org/adium/changes/parser-2.pl.txt" class="offsite">Changes</a>]</li>
-          <li>restore.pl (returns original log files to pristine state)
-          [<a href="http://www.visualdistortion.org/adium/changes/restore.pl.txt" class="offsite">Changes</a>]</li>
-        </ul>
-        <li>These HTML/XML pages:</li>
-      <ul>
-        <li>index (this page)
-          [<a href="http://www.visualdistortion.org/adium/changes/index.html.txt" class="offsite">HTML Changes</a>]
-          [<a href="http://www.visualdistortion.org/adium/changes/index.xml.txt" class="offsite">XML Changes</a>]</li>
-        <li>resin (JSP setup instructions)
-          [<a href="http://www.visualdistortion.org/adium/changes/resin.html.txt" class="offsite">HTML Changes</a>]
-          [<a href="http://www.visualdistortion.org/adium/changes/resin.xml.txt" class="offsite">XML Changes</a>]</li>
-          <li>tsearch (tsearch setup instructions)
-            [<a href="http://www.visualdistortion.org/adium/changes/tsearch.html.txt" class="offsite">HTML Changes</a>]
-            [<a href="http://www.visualdistortion.org/adium/changes/tsearch.xml.txt" class="offsite">XML Changes</a>]</li>
-          <li>technical (technical details/detailed parser instructions)
-            [<a href="http://www.visualdistortion.org/adium/changes/technical.html.txt" class="offsite">HTML Changes</a>]
-            [<a href="http://www.visualdistortion.org/adium/changes/technical.xml.txt" class="offsite">XML Changes</a>]</li>
-          <li>adium.xslt (XSLT stylesheet to transform XML to HTML) [<a href="http://www.visualdistortion.org/adium/changes/adium.xsl.txt" class="offsite">Changes</a>]</li>
-      </ul>
-    </ul>
+    <div class="filelist">
+      <h4>Setup files:</h4>
+      <dl>
+        <dt>sql/adium.sql</dt>
+        <dd>main database setup script
+        [<a href="http://www.visualdistortion.org/adium/changes/sql/adium.sql.txt" class="offsite">Changes</a>]</dd>
+      <dt>sql/tsearch.sql</dt>
+      <dd>setup for fast searching
+        [<a href="http://www.visualdistortion.org/adium/changes/sql/tsearch.sql.txt" class="offsite">Changes</a>]</dd>
+      <dt>sql/update.sql</dt>
+      <dd>updates database to newest schema
+          [<a href="http://www.visualdistortion.org/adium/changes/sql/update.sql.txt" class="offsite">Changes</a>]</dd>
+      </dl>
+        <h4>Web Viewing Pages</h4>
+      <dl>
+        <dt>jsp/index.jsp</dt>
+        <dd>main message viewer
+          [<a href="http://www.visualdistortion.org/adium/changes/jsp/index.jsp.txt" class="offsite">Changes</a>]</dd>
+        <dt>jsp/search.jsp</dt>
+        <dd>searching tool
+          [<a href="http://www.visualdistortion.org/adium/changes/jsp/search.jsp.txt" class="offsite">Changes</a>]</dd>
+        <dt>jsp/statistics.jsp</dt>
+        <dd>user statistics
+          [<a href="http://www.visualdistortion.org/adium/changes/jsp/statistics.jsp.txt" class="offsite">Changes</a>]</dd>
+        <dt>jsp/details.jsp</dt>
+        <dd>monthly statistics
+            [<a href="http://www.visualdistortion.org/adium/changes/jsp/details.jsp.txt" class="offsite">Changes</a>]</dd>
+          <dt>jsp/images/</dt>
+          <dd>images for the statistics page)</dd>
+        </dl>
+        <h4>Useful Perl Scripts</h4>
+        <dl>
+        <dt>parser.pl</dt>
+          <dd>script to import Adium logs &lt;= 1.6.x
+          [<a href="http://www.visualdistortion.org/adium/changes/parser.pl.txt" class="offsite">Changes</a>]</dd>
+        <dt>parser-2.pl</dt>
+        <dd>script to import logs &gt;= 2.0
+          [<a href="http://www.visualdistortion.org/adium/changes/parser-2.pl.txt" class="offsite">Changes</a>]</dd>
+        <dt>restore.pl</dt>
+        <dd>returns original log files to pristine state
+          [<a href="http://www.visualdistortion.org/adium/changes/restore.pl.txt" class="offsite">Changes</a>]</dd>
+      </dl>
+        <h4>These HTML/XML pages:</h4>
+        <dl>
+        <dt>index</dt>
+        <dd>this page
+          [<a href="http://www.visualdistortion.org/adium/changes/index.xml.txt" class="offsite">XML Changes</a>]</dd>
+        <dt>resin</dt>
+        <dd>JSP setup instructions)
+          [<a href="http://www.visualdistortion.org/adium/changes/resin.xml.txt" class="offsite">XML Changes</a>]</dd>
+        <dt>tsearch</dt>
+        <dd>tsearch setup instructions
+            [<a href="http://www.visualdistortion.org/adium/changes/tsearch.xml.txt" class="offsite">XML Changes</a>]</dd>
+          <dt>technical</dt>
+          <dd>technical details/detailed parser instructions
+            [<a href="http://www.visualdistortion.org/adium/changes/technical.xml.txt" class="offsite">XML Changes</a>]</dd>
+          <dt>adium.xslt</dt>
+          <dd>XSLT stylesheet to transform XML to HTML
+            [<a href="http://www.visualdistortion.org/adium/changes/adium.xsl.txt" class="offsite">Changes</a>]</dd>
+        </dl>
+      </div>
     </p>
 <p>The JSP files will allow you to view logs through a web interface.  These
     can be used locally and from the world-wide web.</p>
@@ -230,9 +241,8 @@ bare-bones: the sending and receiving screennames, the message, and a date.</p>
   uses a JSP engine (Resin or Tomcat).  I use Resin.  Instructions are in the
   sidebar on the left.
   </p>
-<hr>
-<div align="right"><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a></div>
-</td>
-</tr>
-</table></body>
+</div>
+<div id="footer">Adium SQL Logging Instructions<br><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a>
+</div>
+</div></body>
 </html>

@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 474 $ $Date: 2003/11/09 06:56:53 $ -->
+<!--$Rev: 485 $ $Date: 2003/11/25 22:09:43 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -24,6 +24,7 @@ loginUsers = Boolean.valueOf(request.getParameter("login")).booleanValue();
 <html>
     <head>
         <title>Adium Statistics</title>
+        <link rel="stylesheet" type="text/css" href="stylesheet.css">
     </head>
     <body>
     <% 
@@ -158,8 +159,8 @@ try {
         maxDistance = max * 1.25;
         
         out.print("<table width=\"350\" border=\"0\">");
-        out.print("<tr><td colspan=\"3\" align=\"center\" bgcolor=\"teal\">"+
-        "<font color=\"white\">Messages sent/received by year</font></td>");
+        out.print("<tr><td colspan=\"3\" class=\"header\">"+
+        "Messages sent/received by year</td>");
         for(int i = 0; i < yearAry.size(); i++) {
             double distance = (Integer.parseInt(countAry.get(i).toString()) / maxDistance) * 225;
             if (distance < 1) distance = 1;
@@ -199,8 +200,8 @@ try {
         
         out.print("<br />\n<table height=\"323\" width=\"350\"" +
         " cellspacing=\"0\"><tr>");
-        out.print("<td colspan=\"14\" align=\"center\" bgcolor=\"teal\"><font "+
-        " color=\"white\">Messages sent/received by month</font></td><tr>");
+        out.print("<td colspan=\"14\" class=\"header\"> "+
+        "Messages sent/received by month</td><tr>");
 
         for(int i = 1; i < 13; i++) {
             double height = monthArray[i] / maxDistance * 300;
@@ -249,6 +250,78 @@ try {
         }
         out.print("</td></tr></table>");
         out.print("</td></tr></table>");
+        
+        /* Conversation Stuff */
+        
+        pstmt = conn.prepareStatement("select message, count(*) " +
+                " from messages where sender_id = ? group by message " +
+                " order by count(*) desc limit 20 ");
+
+        pstmt.setInt(1, sender);
+
+        rset = pstmt.executeQuery();
+
+        out.println("<table>");
+        out.println("<tr><td colspan=\"3\" class=\"header\">"+
+                "Most Popular Messages</td></tr>");
+        out.println("<tr><td class=\"colhead\">#</td>"+
+                "<td class=\"colhead\">Message</td><td class=\"colhead\">"+
+                "Cnt</td></tr>");
+        while(rset.next()) {
+            out.println("<tr><td class=\"rowcount\">" + rset.getRow() + "</td>");
+            out.println("<td class=\"" + ((rset.getRow() % 2 == 0) ? "even\">" : "odd\">") + rset.getString("message") + "</td>");
+            out.println("<td class=\"" + ((rset.getRow() % 2 == 0) ? "even\">" : "odd\">") + rset.getString("count") + "</td></tr>");
+        }
+        out.println("</table>");
+
+
+        /* Conversation Starters */
+
+        pstmt = conn.prepareStatement("select sender_sn, recipient_sn, "+
+            " message, count(*) "+
+            " from simple_message_v smv "+
+            " where not exists "+
+                " (select 'x' from messages "+
+                " where sender_id in (smv.sender_id, smv.recipient_id) "+
+                " and recipient_id in (smv.sender_id, smv.recipient_id) "+
+                " and message_date < smv.message_date "+
+                " and message_date > smv.message_date - '10 minutes'::interval) "+
+            " and (sender_id = ? or recipient_id = ?) "+
+            " group by sender_sn, recipient_sn, message "+
+            " order by count(*) desc limit 20");
+        
+        pstmt.setInt(1, sender);
+        pstmt.setInt(2, sender);
+
+        rset = pstmt.executeQuery();
+        
+        %>
+        <table>
+            <tr>
+            <td class="header" colspan="5">
+                Most Popular Conversation Starters
+            </td>
+            </tr>
+            <tr>
+                <td class="colhead">#</td>
+                <td class="colhead">Sender</td>
+                <td class="colhead">Recipient</td>
+                <td class="colhead">Message</td>
+                <td class="colhead">Count</td>
+            </tr>
+            <%
+            while(rset.next()) {
+                out.println("<tr>");
+                out.println("<td class=\"rowcount\">" + 
+                    rset.getRow() + "</td>");
+                out.println("<td>" + rset.getString("sender_sn") + "</td>");
+                out.println("<td>" + rset.getString("recipient_sn") + "</td>");
+                out.println("<td>" + rset.getString("message") + "</td>");
+                out.println("<td>" + rset.getString("count") + "</td>");
+                out.println("</tr>");
+            }
+            out.print("</table>");
+
 
         pstmt = conn.prepareStatement("select username, recipient_id as \"Recipient\", "+ 
         " coalesce((select num_messages "+
@@ -293,36 +366,31 @@ try {
         */
         
         out.print("<table>");
-        
-        int cntr = 0;
+        out.print("<tr><td class=\"header\" colspan=\"" + 
+                rsmd.getColumnCount() + "\">Statistics by User</td></tr>");
         while(rset.next()) {
-            if (cntr % 25 == 0) {
+            if ((rset.getRow() - 1) % 25 == 0 || rset.getRow() == 1) {
+            out.println("<tr><td class=\"colhead\">#</td>");
                 for(int j = 2; j <= rsmd.getColumnCount(); j++) {
-                    out.print("<td bgcolor=\"teal\"><font color=\"white\">"+
-                    rsmd.getColumnName(j) + "</font></td>");
+                    out.print("<td class=\"colhead\">"+
+                    rsmd.getColumnName(j) + "</td>");
                 }
             }
 
             out.print("<tr>");
-            if (cntr % 2 == 0) {
-                out.print("<td><a href=\"statistics.jsp?sender=" + 
+            out.println("<td class=\"rowCount\">" + rset.getRow() + "</td>");
+            out.print("<td class=\"" + 
+                ((rset.getRow() % 2 == 0) ? "even" : "odd") +
+                "\"><a href=\"statistics.jsp?sender=" + 
                 rset.getString("Recipient") + "\">" +
                 rset.getString("username") +
                 "</a></td>");
-            } else {
-                out.print("<td bgcolor=\"#cccccc\"><a href=\"statistics.jsp"+
-                "?sender=" + rset.getString("Recipient") + "\">" + 
-                rset.getString("username") + "</a></td>");
-            }
             
             for(int i = 3; i <= rsmd.getColumnCount(); i++) {
-                if (cntr % 2 == 0) 
-                    out.print("<td>" + rset.getString(i) + "</td>");
-                else
-                    out.print("<td bgcolor=\"#cccccc\">" + rset.getString(i) +
-                    "</td>");
+                out.print("<td class=\"" +
+                    ((rset.getRow() % 2 ==0) ? "even" : "odd") +"\">" +
+                    rset.getString(i) + "</td>");
             }
-            cntr++;
             out.print("</tr>");
         }
 
@@ -350,7 +418,7 @@ try {
     modCounter = conn.createStatement();
     
     totals = modCounter.executeQuery("select case when count(*) > 150 "+
-        " then count(*) / 5 + case when count(*) % 5 > 0 then 1 end "+
+        " then count(*) / 5 + case when count(*) % 5 > 0 then 1 else 0 end "+
         " else 30 end from users");
 
     totals.next();

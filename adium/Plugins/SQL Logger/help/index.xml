@@ -17,9 +17,12 @@
     </ul>
 
     <div class="important">If you are compiling from source with Panther,
-      PostgreSQL 7.3 will not work.  The newest 7.4 beta or release candidate 
-      will, however.</div>
-    
+      PostgreSQL 7.3 will not work.  PostgreSQL 7.4 
+      will work, however.</div>
+
+
+    <div class="important">Make sure you check out the Quick Install
+      instructions <a href="quick_install.html">here.</a></div>
     <p>To install this, a few things are required.
     Setup, however, is not that bad.
     At the base level, all that is required is PostgreSQL (duh).
@@ -58,68 +61,97 @@
     Adium source): <a
       href="adium-sql.tar.gz">adium.tar.gz</a>.  After using Stuffit Expander or
     the command line to unpack it, there should these files inside:
-    <ul>
-      <li>Setup files:</li>
-      <ul>
-        <li>sql/adium.sql (main database setup)
-        [<a href="http://www.visualdistortion.org/adium/changes/sql/adium.sql.txt" class="offsite">Changes</a>]</li>
-        <li>sql/tsearch.sql (setup for fast searching)
-        [<a href="http://www.visualdistortion.org/adium/changes/sql/tsearch.sql.txt" class="offsite">Changes</a>]</li>
-        <li>sql/update.sql (updates database to newest schema) 
+    <div class="filelist">
+      <h4>Setup files:</h4>
+      <dl>
+        <dt>sql/adium.sql</dt>
+        <dd>main database setup script
+        [<a
+          href="http://www.visualdistortion.org/adium/changes/sql/adium.sql.txt"
+          class="offsite">Changes</a>]</dd>
+      <dt>sql/tsearch.sql</dt>
+      <dd>setup for fast searching
+        [<a
+          href="http://www.visualdistortion.org/adium/changes/sql/tsearch.sql.txt"
+          class="offsite">Changes</a>]</dd>
+      <dt>sql/update.sql</dt>
+      <dd>updates database to newest schema
           [<a
             href="http://www.visualdistortion.org/adium/changes/sql/update.sql.txt"
-            class="offsite">Changes</a>]</li>
-        </ul>
-      <li>Web Viewing Pages</li>
-        <ul>
-          <li>jsp/index.jsp (main message viewer) 
-          [<a href="http://www.visualdistortion.org/adium/changes/jsp/index.jsp.txt" class="offsite">Changes</a>]</li>
-          <li>jsp/search.jsp (searching tool)
-          [<a href="http://www.visualdistortion.org/adium/changes/jsp/search.jsp.txt" class="offsite">Changes</a>]</li>
-          <li>jsp/statistics.jsp (user statistics)
-          [<a href="http://www.visualdistortion.org/adium/changes/jsp/statistics.jsp.txt" class="offsite">Changes</a>]</li>
-          <li>jsp/details.jsp (monthly statistics)
+            class="offsite">Changes</a>]</dd>
+      </dl>
+        <h4>Web Viewing Pages</h4>
+      <dl>
+        <dt>jsp/index.jsp</dt>
+        <dd>main message viewer
+          [<a
+            href="http://www.visualdistortion.org/adium/changes/jsp/index.jsp.txt"
+            class="offsite">Changes</a>]</dd>
+        <dt>jsp/search.jsp</dt>
+        <dd>searching tool
+          [<a
+            href="http://www.visualdistortion.org/adium/changes/jsp/search.jsp.txt"
+            class="offsite">Changes</a>]</dd>
+        <dt>jsp/statistics.jsp</dt>
+        <dd>user statistics
+          [<a
+            href="http://www.visualdistortion.org/adium/changes/jsp/statistics.jsp.txt"
+            class="offsite">Changes</a>]</dd>
+        <dt>jsp/details.jsp</dt>
+        <dd>monthly statistics
             [<a
               href="http://www.visualdistortion.org/adium/changes/jsp/details.jsp.txt"
-              class="offsite">Changes</a>]</li>
-          <li>jsp/images/ (images for the statistics page)</li>
-        </ul>
-      <li>Useful Perl Scripts</li>
-        <ul>
-          <li>parser.pl (script to import Adium logs &lt;= 1.6.x) 
-          [<a href="http://www.visualdistortion.org/adium/changes/parser.pl.txt" class="offsite">Changes</a>]</li>
-          <li>parser-2.pl (script to import logs &gt;= 2.0)
-          [<a href="http://www.visualdistortion.org/adium/changes/parser-2.pl.txt" class="offsite">Changes</a>]</li>
-          <li>restore.pl (returns original log files to pristine state)
-          [<a href="http://www.visualdistortion.org/adium/changes/restore.pl.txt" class="offsite">Changes</a>]</li>
-        </ul>
-        <li>These HTML/XML pages:</li>
-      <ul>
-        <li>index (this page)
-          [<a href="http://www.visualdistortion.org/adium/changes/index.html.txt" class="offsite">HTML Changes</a>]
-          [<a href="http://www.visualdistortion.org/adium/changes/index.xml.txt" class="offsite">XML Changes</a>]</li>
-        <li>resin (JSP setup instructions)
-          [<a href="http://www.visualdistortion.org/adium/changes/resin.html.txt" class="offsite">HTML Changes</a>]
+              class="offsite">Changes</a>]</dd>
+          <dt>jsp/images/</dt>
+          <dd>images for the statistics page)</dd>
+        </dl>
+        <h4>Useful Perl Scripts</h4>
+        <dl>
+        <dt>parser.pl</dt>
+          <dd>script to import Adium logs &lt;= 1.6.x
+          [<a
+            href="http://www.visualdistortion.org/adium/changes/parser.pl.txt"
+            class="offsite">Changes</a>]</dd>
+        <dt>parser-2.pl</dt>
+        <dd>script to import logs &gt;= 2.0
+          [<a
+            href="http://www.visualdistortion.org/adium/changes/parser-2.pl.txt"
+            class="offsite">Changes</a>]</dd>
+        <dt>restore.pl</dt>
+        <dd>returns original log files to pristine state
+          [<a
+            href="http://www.visualdistortion.org/adium/changes/restore.pl.txt"
+            class="offsite">Changes</a>]</dd>
+      </dl>
+        <h4>These HTML/XML pages:</h4>
+        <dl>
+        <dt>index</dt>
+        <dd>this page
+          [<a
+            href="http://www.visualdistortion.org/adium/changes/index.xml.txt"
+            class="offsite">XML Changes</a>]</dd>
+        <dt>resin</dt>
+        <dd>JSP setup instructions)
           [<a
             href="http://www.visualdistortion.org/adium/changes/resin.xml.txt"
-            class="offsite">XML Changes</a>]</li>
-          <li>tsearch (tsearch setup instructions)
-            [<a href="http://www.visualdistortion.org/adium/changes/tsearch.html.txt" class="offsite">HTML Changes</a>]
+            class="offsite">XML Changes</a>]</dd>
+        <dt>tsearch</dt>
+        <dd>tsearch setup instructions
             [<a
               href="http://www.visualdistortion.org/adium/changes/tsearch.xml.txt"
-              class="offsite">XML Changes</a>]</li>
-          <li>technical (technical details/detailed parser instructions)
-            [<a
-              href="http://www.visualdistortion.org/adium/changes/technical.html.txt"
-              class="offsite">HTML Changes</a>]
+              class="offsite">XML Changes</a>]</dd>
+          <dt>technical</dt>
+          <dd>technical details/detailed parser instructions
             [<a
               href="http://www.visualdistortion.org/adium/changes/technical.xml.txt"
-              class="offsite">XML Changes</a>]</li>
-          <li>adium.xslt (XSLT stylesheet to transform XML to HTML) [<a
+              class="offsite">XML Changes</a>]</dd>
+          <dt>adium.xslt</dt>
+          <dd>XSLT stylesheet to transform XML to HTML
+            [<a
               href="http://www.visualdistortion.org/adium/changes/adium.xsl.txt"
-              class="offsite">Changes</a>]</li>
-      </ul>
-    </ul>
+              class="offsite">Changes</a>]</dd>
+        </dl>
+      </div>
     </p>
 
     <p>The JSP files will allow you to view logs through a web interface.  These
