@@ -163,11 +163,11 @@ static AIListObject				*activeListObject = nil;
         }else{
             [infoString appendString:@"\r\r\tStatus:\t" withAttributes:labelAttributes];
         }
-        NSLog(@"%@",status);
+//        NSLog(@"%@",status);
         if (status) {
             NSMutableAttributedString   *statusString = [[[adium contentController] fullyFilteredAttributedString:status 
 																								listObjectContext:activeListObject] mutableCopy];
-			NSLog(@"became %@\n\n%@",statusString,[statusString string]);
+//			NSLog(@"became %@\n\n%@",statusString,[statusString string]);
             NSMutableParagraphStyle     *indentStyle;
             
             NSRange                     firstLineRange = [[statusString string] lineRangeForRange:NSMakeRange(0,0)];
