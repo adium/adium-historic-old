@@ -133,7 +133,7 @@ CBStatusMenuItemController *sharedInstance = nil;
         if(!groupItem) //No group menu item!
         {
             //so we create one
-            groupItem = [[[NSMenuItem alloc] initWithTitle:[[contact containingGroup] UID] target:nil action:NULL keyEquivalent:@""] autorelease];
+            groupItem = [[[NSMenuItem alloc] initWithTitle:[[contact containingGroup] UID] action:nil keyEquivalent:@""] autorelease];
             [groupItem setRepresentedObject:[contact containingGroup]];
             [groupItem setEnabled:YES];
             
@@ -260,7 +260,7 @@ CBStatusMenuItemController *sharedInstance = nil;
         numer = [groupsMenuItems objectEnumerator];
         while(item = [numer nextObject])
         {
-            [array addObject:[item representedObject]];
+            [groupArray addObject:[item representedObject]];
         }
         
         //sort the array
@@ -271,7 +271,7 @@ CBStatusMenuItemController *sharedInstance = nil;
         while(item = [groupsMenuItems objectForKey:[(AIListObject *)[numer nextObject] UID]])
         {
             [[item menu] removeItem:item];
-            [theMenu addItemAtIndex:item];
+            [theMenu addItem:item];
         }
     }
     
