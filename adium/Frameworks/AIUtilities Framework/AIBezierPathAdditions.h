@@ -2,7 +2,7 @@
 //  BZBezierPathAdditions.h
 //  Adium
 //
-//  Created by Mac-arena the Bored Zo on Tue May 04 2004.
+//  Created by Mac-arena the Bored Zo and Chris Serino.
 
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
@@ -19,10 +19,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Foundation/Foundation.h>
+@interface NSBezierPath (AIBezierPathAdditions) 
 
-@interface NSBezierPath (BZBezierPathAdditions)
-
++ (NSBezierPath *)bezierPathWithRoundedRect:(NSRect)rect radius:(float)radius;
 + (NSBezierPath *)bezierPathRoundedRectOfSize:(NSSize)backgroundSize;
 + (NSBezierPath *)bezierPathWithRoundedRect:(NSRect)bounds;
 

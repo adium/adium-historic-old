@@ -1,14 +1,40 @@
 //
-//  CSBezierPathAdditions.m
+//  AIBezierPathAdditions.m
 //  Adium
 //
-//  Created by Chris Serino on Sun Oct 12 2003.
-//
+//  Created by Mac-arena the Bored Zo and Chris Serino.
 
-#import "CSBezierPathAdditions.h"
+/*-------------------------------------------------------------------------------------------------------*\
+| Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+\---------------------------------------------------------------------------------------------------------/
+ | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ | General Public License as published by the Free Software Foundation; either version 2 of the License,
+ | or (at your option) any later version.
+ |
+ | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ | Public License for more details.
+ |
+ | You should have received a copy of the GNU General Public License along with this program; if not,
+ | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ \------------------------------------------------------------------------------------------------------ */
+
+#import "AIBezierPathAdditions.h"
 
 
-@implementation NSBezierPath (CSBezierPathAdditions)
+@implementation NSBezierPath (AIBezierPathAdditions)
+
++ (NSBezierPath *)bezierPathRoundedRectOfSize:(NSSize)backgroundSize
+{
+	NSRect pathRect = { { 0, 0 }, backgroundSize };
+
+	return [self bezierPathWithRoundedRect:pathRect];
+}
+
++ (NSBezierPath *)bezierPathWithRoundedRect:(NSRect)bounds
+{
+	return [self bezierPathWithRoundedRect:bounds radius:bounds.size.height / 2.0];
+}
 
 + (NSBezierPath *)bezierPathWithRoundedRect:(NSRect)rect radius:(float)radius
 {

@@ -5,7 +5,7 @@
 //  Created by Ian Krieg on Mon Jul 28 2003.
 //
 
-#import "CSBezierPathAdditions.h"
+#import "AIBezierPathAdditions.h"
 #import "IKTableImageCell.h"
 
 @implementation IKTableImageCell

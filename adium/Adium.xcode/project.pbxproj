@@ -24,36 +24,6 @@
 //072
 //073
 //074
-		0742B0430647FFA400FDE635 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = BZBezierPathAdditions.h;
-			path = "Frameworks/AIUtilities Framework/BZBezierPathAdditions.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		0742B0440647FFA400FDE635 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = BZBezierPathAdditions.m;
-			path = "Frameworks/AIUtilities Framework/BZBezierPathAdditions.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		0742B0450647FFA400FDE635 = {
-			fileRef = 0742B0430647FFA400FDE635;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		0742B0460647FFA400FDE635 = {
-			fileRef = 0742B0440647FFA400FDE635;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		07A07ADC05F9325C00179FDC = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -6238,7 +6208,6 @@
 				34BD9E2505314755000AB133,
 				4B910DC1053588A900846781,
 				348E4EDF053667A40021E541,
-				34E0F18B053AE56F00031341,
 				34BD83DD054E530800EB2652,
 				4BCB9ACA0567E7A9001D3559,
 				9E9739DB05784EFA00CF3AEE,
@@ -6263,7 +6232,6 @@
 				34C2DF6F0634A5820018E5D2,
 				34C2E5090634C7250018E5D2,
 				4BFFA4450644C74E00FC068D,
-				0742B0450647FFA400FDE635,
 				4BBF41F306611A15001D31E1,
 				07CE0D0C0661E0D200C50929,
 				07CE0D470661E12A00C50929,
@@ -6276,6 +6244,7 @@
 				34C8D40C069FE47500472094,
 				34C9059706A067EB0059F78F,
 				34C9059806A067EB0059F78F,
+				6C4C9A2706A43137001861A6,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6700,7 +6669,6 @@
 				34BD9E8B05314755000AB133,
 				4B910DC2053588A900846781,
 				348E4EDD053667A40021E541,
-				34E0F18A053AE56F00031341,
 				34BD83DC054E530800EB2652,
 				4BCB9ACB0567E7A9001D3559,
 				9E9739DA05784EFA00CF3AEE,
@@ -6725,7 +6693,6 @@
 				34C2DF710634A5830018E5D2,
 				34C2E50A0634C7250018E5D2,
 				4BFFA4460644C74E00FC068D,
-				0742B0460647FFA400FDE635,
 				4BBF41F406611A15001D31E1,
 				07CE0D0B0661E0D200C50929,
 				07CE0D460661E12A00C50929,
@@ -6738,6 +6705,7 @@
 				34C9059606A067EB0059F78F,
 				34C9059906A067EB0059F78F,
 				34B38CE606A3517300AFA38B,
+				6C4C9A2806A43137001861A6,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8288,36 +8256,6 @@
 		};
 		34D5B281061263B300B98336 = {
 			fileRef = 83DB8F230611460E00A5C28C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34E0F188053AE56F00031341 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CSBezierPathAdditions.m;
-			path = "Frameworks/AIUtilities Framework/CSBezierPathAdditions.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34E0F189053AE56F00031341 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CSBezierPathAdditions.h;
-			path = "Frameworks/AIUtilities Framework/CSBezierPathAdditions.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34E0F18A053AE56F00031341 = {
-			fileRef = 34E0F188053AE56F00031341;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34E0F18B053AE56F00031341 = {
-			fileRef = 34E0F189053AE56F00031341;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -19482,6 +19420,36 @@
 			settings = {
 			};
 		};
+		6C4C9A2506A43137001861A6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIBezierPathAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIBezierPathAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C4C9A2606A43137001861A6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIBezierPathAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIBezierPathAdditions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C4C9A2706A43137001861A6 = {
+			fileRef = 6C4C9A2506A43137001861A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C4C9A2806A43137001861A6 = {
+			fileRef = 6C4C9A2606A43137001861A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		6C5C3C2505F6532600490341 = {
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
@@ -24636,6 +24604,8 @@
 		};
 		F59C470D033E544E01A8010A = {
 			children = (
+				6C4C9A2506A43137001861A6,
+				6C4C9A2606A43137001861A6,
 				9E9739D905784EFA00CF3AEE,
 				9E9739D805784EF900CF3AEE,
 				07CE0D0A0661E0D200C50929,
@@ -24646,10 +24616,6 @@
 				4BA7F23805E2E8D100ABF4FC,
 				F5793938033E74E401A8010A,
 				F5793939033E74E401A8010A,
-				0742B0430647FFA400FDE635,
-				0742B0440647FFA400FDE635,
-				34E0F189053AE56F00031341,
-				34E0F188053AE56F00031341,
 				34C2E5070634C7240018E5D2,
 				34C2E5080634C7250018E5D2,
 				F579393A033E74E401A8010A,
