@@ -20,6 +20,13 @@
     return(@"GBiTuner");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:ITUNER_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_ITUNER];
+	return(defaultsDict);
+}
+
 //Configure the preference view
 - (void)viewDidLoad
 {

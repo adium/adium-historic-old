@@ -26,6 +26,11 @@
     return(@"ThemesPrefs2");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	return(nil);
+}
+
 - (void)viewDidLoad
 {
     [nameField setObjectValue:@""];

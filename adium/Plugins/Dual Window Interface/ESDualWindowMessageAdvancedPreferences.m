@@ -23,6 +23,19 @@
     return(@"DualWindowMessageAdvanced");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsTemp = [NSDictionary dictionaryWithObjectsAndKeys:
+		[defaultPrefs objectForKey:KEY_ALWAYS_CREATE_NEW_WINDOWS],KEY_ALWAYS_CREATE_NEW_WINDOWS,
+		[defaultPrefs objectForKey:KEY_USE_LAST_WINDOW],KEY_USE_LAST_WINDOW,
+		[defaultPrefs objectForKey:KEY_AUTOHIDE_TABBAR],KEY_AUTOHIDE_TABBAR,
+		[defaultPrefs objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE],KEY_ENABLE_INACTIVE_TAB_CLOSE,
+		nil];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultsTemp forKey:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	return(defaultsDict);
+}
+
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
