@@ -244,23 +244,30 @@ AIDockCustomBehavior	*sharedInstance = nil;
     NSString	*identifier = [tableColumn identifier];
 
     if([identifier compare:TABLE_COLUMN_BEHAVIOR] == 0){
-        NSMenuItem		*selectedMenuItem;
+        NSMenuItem			*selectedMenuItem;
         NSMutableDictionary	*selectedEventDict;
-        NSNumber		*newBehavior;
-
+        NSNumber			*newBehavior;
+		
         //
-        selectedMenuItem = (NSMenuItem *)[[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
-        selectedEventDict = [[[behaviorArray objectAtIndex:row] mutableCopy] autorelease];
-        newBehavior = [selectedMenuItem representedObject];
-
-        if([newBehavior compare:[selectedEventDict objectForKey:KEY_DOCK_EVENT_BEHAVIOR]] != 0){ //Ignore a duplicate selection
-            //Set the new behavior
-            [selectedEventDict setObject:newBehavior forKey:KEY_DOCK_EVENT_BEHAVIOR];
-            [behaviorArray replaceObjectAtIndex:row withObject:selectedEventDict];
-
-            //Save custom behavior
-            [self saveCustomBehavior];
-        }
+		if (object) {
+			int		index = [object intValue];
+			NSMenu  *menu = [[tableColumn dataCell] menu];
+			
+			if ((index > 0) && (index < [menu numberOfItems])) {
+				selectedMenuItem = (NSMenuItem *)[menu itemAtIndex:index];
+				selectedEventDict = [[[behaviorArray objectAtIndex:row] mutableCopy] autorelease];
+				newBehavior = [selectedMenuItem representedObject];
+				
+				if([newBehavior compare:[selectedEventDict objectForKey:KEY_DOCK_EVENT_BEHAVIOR]] != 0){ //Ignore a duplicate selection
+																										 //Set the new behavior
+					[selectedEventDict setObject:newBehavior forKey:KEY_DOCK_EVENT_BEHAVIOR];
+					[behaviorArray replaceObjectAtIndex:row withObject:selectedEventDict];
+					
+					//Save custom behavior
+					[self saveCustomBehavior];
+				}
+			}
+		}
     }
 }
 
