@@ -19,16 +19,10 @@ BOOL pantherOrLater;
 {
     NSParagraphStyle    *parrafo = [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment];
     
-    backdropImage = [[NSImage alloc] initWithContentsOfFile:
-        [[NSBundle bundleForClass:[self class]] pathForResource:@"backdrop" ofType:@"png"]];
-    
-    buddyIconImage = [NSImage imageNamed: @"DefaultIcon"];
-    [buddyIconImage setScalesWhenResized:YES];
+    defaultBuddyImage = NO;
     
     [self setBuddyIconLabelColor: nil];
-    
-    defaultBuddyImage = YES;
-    
+        
     pantherOrLater = (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
     
     if (pantherOrLater) {
@@ -110,7 +104,6 @@ BOOL pantherOrLater;
     // Clear the view and paint the backdrop image
     [[NSColor clearColor] set];
     NSRectFill([self frame]);
-    [backdropImage setScalesWhenResized:YES];
     if ((bezelSize.width != ORIGINAL_WIDTH) || (bezelSize.height != ORIGINAL_HEIGHT)) {
         // Calculate the transformations
         relativeX = bezelSize.width / ORIGINAL_WIDTH;
@@ -259,16 +252,15 @@ BOOL pantherOrLater;
         [newImage retain];
         [buddyIconImage release];
         buddyIconImage = newImage;
-        //[buddyIconImage setFrameSize:NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION)];
-        [buddyIconImage setScalesWhenResized:YES];
-        [buddyIconImage setSize:NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION)];
         defaultBuddyImage = NO;
     } else if (!defaultBuddyImage){
         [buddyIconImage release];
-        buddyIconImage = [NSImage imageNamed: @"DefaultIcon"];
+        buddyIconImage = [[NSImage imageNamed: @"DefaultIcon"] retain];
         // set the flag so we don't load the default icon innecesary
         defaultBuddyImage = YES;
     }
+    [buddyIconImage setScalesWhenResized:YES];
+    [buddyIconImage setSize:NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION)];
 }
 
 - (NSImage *)buddyIconBadge
@@ -379,6 +371,19 @@ BOOL pantherOrLater;
 - (void)setBezelSize:(NSSize)newSize
 {
     bezelSize = newSize;
+}
+
+- (NSImage *)backdropImage
+{
+    return backdropImage;
+}
+
+- (void)setBackdropImage:(NSImage *)newImage
+{
+    [newImage retain];
+    [backdropImage release];
+    backdropImage = newImage;
+    [backdropImage setScalesWhenResized:YES];
 }
 
 @end

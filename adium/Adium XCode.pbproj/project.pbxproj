@@ -2300,7 +2300,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3B305314BE000C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "SQL Logger.AdiumPlugin";
@@ -21572,6 +21572,20 @@
 			settings = {
 			};
 		};
+		6C0FFB2205723F1B00E75F79 = {
+			expectedFileType = image.png;
+			isa = PBXFileReference;
+			name = backdropDark.png;
+			path = "Plugins/Event Bezel/backdropDark.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C0FFB2305723F1B00E75F79 = {
+			fileRef = 6C0FFB2205723F1B00E75F79;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		6C1CC23105415D5700B64925 = {
 			expectedFileType = "compiled.mach-o.executable";
 			isa = PBXFileReference;
@@ -21699,6 +21713,7 @@
 				6C271CE50561719200057D9C,
 				6C271CE60561719200057D9C,
 				6C271CEB056177CA00057D9C,
+				6C0FFB2305723F1B00E75F79,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21837,6 +21852,7 @@
 				6C271CE30561719200057D9C,
 				6C271CE40561719200057D9C,
 				6C60B14805605A3500CAD137,
+				6C0FFB2205723F1B00E75F79,
 				6C60B14905605A3500CAD137,
 				6C60B14A05605A3500CAD137,
 				6C60B14B05605A3600CAD137,

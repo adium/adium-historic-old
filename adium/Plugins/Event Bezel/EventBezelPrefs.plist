@@ -30,5 +30,7 @@
         <false/>
         <key>Size</key>
         <integer>0</integer>
+        <key>Background</key>
+        <integer>0</integer>
 </dict>
 </plist>

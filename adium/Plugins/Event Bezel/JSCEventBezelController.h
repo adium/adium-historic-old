@@ -20,6 +20,7 @@
     NSSize                          bezelSize;
     NSColor                         *buddyIconLabelColor;
     NSColor                         *buddyNameLabelColor;
+    NSImage                         *backdropImage;
 }
 
 + (JSCEventBezelController *)eventBezelControllerForOwner:(id)inOwner;
@@ -44,5 +45,7 @@ withMessage:(NSString *)message;
 - (void)setUseBuddyNameLabel:(BOOL)b;
 - (NSSize)bezelSize;
 - (void)setBezelSize:(NSSize)newSize;
+- (NSImage *)backdropImage;
+- (void)setBackdropImage:(NSImage *)newImage;
 
 @end

@@ -74,6 +74,9 @@ forEvent:(NSString *)event
 withMessage:(NSString *)message
 {
     if ([self window]) {
+        
+        [bezelView setBackdropImage: [self backdropImage]];
+        
         [bezelView setBuddyIconImage:buddyIcon];
         
         if ([bezelWindow fadingOut]) {
@@ -232,6 +235,18 @@ withMessage:(NSString *)message
 - (void)setBezelSize:(NSSize)newSize
 {
     bezelSize = newSize;
+}
+
+- (NSImage *)backdropImage
+{
+    return backdropImage;
+}
+
+- (void)setBackdropImage:(NSImage *)newImage
+{
+    [newImage retain];
+    [backdropImage release];
+    backdropImage = newImage;
 }
 
 @end
