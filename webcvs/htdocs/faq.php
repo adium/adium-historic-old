@@ -89,10 +89,10 @@
                     Adium X is an instant messaging client for Mac OS X.  Adium supports multiple protocols, allowing you to communicate on many services from within a single application.</p>
                     
                     <p><span class="faqQuestion">What are the requirements to use Adium?</span><br />
-                    Adium requires Mac OS X 10.2 or higher ("Jaguar" or better) to run. Certain features (Log content searching, tab dragging animations) require Mac OS X 10.3 ("Panther").</p>
+                    Adium requires Mac OS X 10.2 or higher ("Jaguar" or better) to run. Certain features (WebKit Messaeg Styles, log content searching, and tab dragging animations) require Mac OS X 10.3 ("Panther").</p>
                     
                     <p><span class="faqQuestion">What services does Adium X support?</span><br />
-                    Adium supports AIM, MSN, Yahoo, Jabber, Gadu-Gadu, Trepia, and Napster.</p>
+                    Adium supports AIM, MSN, Yahoo!, Yahoo! Japan, Gadu-Gadu, Jabber, Napster, and Novell GroupWise.</p>
                     
                     <p><span class="faqQuestion">Is Adium affiliated or endorsed by any of these companies?</span><br />
                     No, Absolutely not.  Adium is an independent, third-party instant messaging client. It is not associated with and is not supported by AOL, MSN, Yahoo, or any other such company</p>
@@ -101,13 +101,13 @@
                     Adium is free, and is distributed under the <a href="http://www.fsf.org/copyleft/gpl.html">GNU General Public License</a>.</p>
                     
                     <p><span class="faqQuestion">How is Adium pronounced?</span><br />
-                    Officially, Adium is pronounced like stadium, though there are adherents to Add-ee-um.  The project leads actually pronounce it differently, you're welcome to choose.</p>
+                    Officially, Adium is pronounced like stadium, though there are adherents to Add-ee-um.  The project leads actually pronounce it differently; you're welcome to choose.</p>
                     
                     <p><span class="faqQuestion">What's with the ducks?</span><br />
                     The intention was for Adium's icon to be a messenger bird (as used in the past to deliver messages over long distances).  However, Adam Iser's graphical "skills" resulted in a strange, multicolored duck creature.  The duck caught on, and inspired <a href="http://www.artofadambetts.com/">Adam Betts</a> to re-create the duck as a professional quality icon set, which was adopted as the official mascot of Adium X.</p>
 
                     <p><span class="faqQuestion">What is LibGaim?</span><br />
-                    LibGaim is the core of the linux/windows IM client <a href="http://gaim.sf.net">Gaim</a>.  Adium uses LibGaim to access all of the instant messaging services.</p>
+                    LibGaim is the core of the Linux/Windows IM client <a href="http://gaim.sf.net">Gaim</a>.  Adium uses LibGaim to access all of the instant messaging services.</p>
 
                 </div>
                 <div class="boxWideBottom"></div>
@@ -134,7 +134,7 @@
                     Yes.  In Adium's Preferences (on the "Messages" pane) uncheck the option "Create new messages in tabs".</p>
 
                     <p><span class="faqQuestion">How do I set my buddy icon?</span><br />
-                    There is currently no way to set your buddy icon inside Adium. Adium uses the picture in your Address Book 'me' card as your buddy icon</p>
+                    Adium will use your address book 'me' card by default.  To change your icon, just double-click the icon in the Accounts preferences, drag an image into the image well, or paste in an image in.</p>
                     
                 </div>
                 <div class="boxWideBottom"></div>
@@ -150,8 +150,8 @@
                 <p><span class="faqQuestion">Where should I send feedback and requests?</span><br />
                 Send feedback and requests to <a href="mailto:feedback@adiumx.com">feedback@adiumx.com</a>.</p>
               
-                <p><span class="faqQuestion">Should I send crash reports, are they helpful?</span><br />
-                Yes!  <i>Please</i> send us your crash reports, they are extremely useful.  The crash reporter will remember your email address, and the descriptions are completely optional, so sending a crash report is just as much work as ignoring one, and they really do help.</p>
+                <p><span class="faqQuestion">Should I send crash reports? Are they helpful?</span><br />
+                Yes!  <i>Please</i> send us your crash reports; they are extremely useful.  The crash reporter will remember your email address, and the descriptions are completely optional, so sending a crash report is just as much work as ignoring one. They really do help -- if we don't know about a crash, we can't fix it.</p>
 
                 </div>
                 <div class="boxWideBottom"></div>
@@ -167,7 +167,7 @@
                     The "Connection reset by peer" message is like getting a busy signal on the phone.  Try again in a few minutes.</p>
                     
                     <p><span class="faqQuestion">Can I submit code changes to Adium?</span><br />
-                    Definitely.  Create a patch file for your changes and email them (along with a description) to one of the developers.  Alternatively, speak to a developer in #adium on irc.freenode.net about your patch.  We are more likely to accept your patch if it's clean, documented, precise, and bug free.</p>
+                    Definitely.  Go to the <a href="http://sourceforge.net/tracker/?group_id=67507&atid=518088">Adium patch tracker</a> and click Submit New (you will need a free sourceforge.net account).  There are instructions on the Submissions page for how to create your patch file.  Alternatively, speak to a developer in #adium on irc.freenode.net about your patch.  We are more likely to accept your patch if it's clean, documented, precise, and bug free.</p>
                     
                     <p><span class="faqQuestion">How do I get developer access to the Adium CVS?</span><br />
                     The best way to get developer access is to send us several good patches.  It is also helpful to keep in contact with us via IM or in #adium on irc.freenode.net.</p>
@@ -184,7 +184,7 @@
                 	<a href="http://gaim.sourceforge.net"><img width="88" height="31" src="http://gaim.sourceforge.net/images/powered_by_libgaim.png" border="0" alt="Adium is powered by libgaim "/></a> <a href="http://www.blogger.com"><img width="88" height="31" src="http://buttons.blogger.com/bloggerbutton1.gif" border="0" alt="This page is powered by Blogger. Isn't yours?" /></a> <a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=67507&amp;type=2" width="125" height="37" border="0" alt="SourceForge.net Logo"/></a>
                 </div>
                 <div id="notice">
-                    Adium is not endorsed by or affiliated with <a class="hidden" href="http://www.aol.com">America Online, Inc.</a> The marks AOL and AIM are registered trademarks of America Online, Inc.
+                    Adium is not endorsed by or affiliated with <a class="hidden" href="http://www.aol.com">America Online, Inc.</a>, <a class="hidden" href="http://www.microsoft.com">Microsoft Corp.</a>, or <a class="hidden" href="http://www.yahoo.com">Yahoo!, Inc.</a> The marks AOL, AIM, MSN, Yahoo!, Yahoo! Japan, Jabber, Gadu-Gadu, Napster, and GroupWise are registered trademarks of their respective owners.
                 </div>
                 <div class="cleanHackBoth"> </div>
             </div>
