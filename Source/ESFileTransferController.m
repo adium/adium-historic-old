@@ -429,7 +429,7 @@ static ESFileTransferPreferences *preferences;
 	}else if([eventID isEqualToString:FILE_TRANSFER_BEGAN]){
 		description = AILocalizedString(@"When a file transfer begins",nil);
 	}else if([eventID isEqualToString:FILE_TRANSFER_CANCELED]){
-		description = AILocalizedString(@"When a file transfer is canceled by the other side",nil);
+		description = AILocalizedString(@"When a file transfer is canceled remotely",nil);
 	}else if([eventID isEqualToString:FILE_TRANSFER_COMPLETE]){
 		description = AILocalizedString(@"When a file transfer is completed successfully",nil);
 	}else{		
