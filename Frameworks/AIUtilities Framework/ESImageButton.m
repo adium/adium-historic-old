@@ -51,11 +51,16 @@
 		//Move the display point down by the height of our image
 		point.y -= [bigImage size].height;
 
-		[imageFloater release];
+		if(imageFloater){
+			[imageFloater close:nil];
+			[imageFloater release];
+		}
+
 		imageFloater = [[ESFloater floaterWithImage:bigImage styleMask:NSBorderlessWindowMask] retain];
 		[imageFloater setMaxOpacity:0.90];
 		[imageFloater moveFloaterToPoint:point];
 		[imageFloater setVisible:YES animate:YES];
+		imageFloaterShouldBeOpen = TRUE;
 	}
 }
 
@@ -66,6 +71,7 @@
 	
 	if(imageFloater){
 		[imageFloater setVisible:NO animate:YES];
+		imageFloaterShouldBeOpen = FALSE;
 		
 		//Let it stay around briefly before closing so the animation fades it out
 		[self performSelector:@selector(destroyImageFloater)
@@ -78,8 +84,10 @@
 
 - (void)destroyImageFloater
 {
-	[imageFloater close:nil];
-	[imageFloater release]; imageFloater = nil;
+	if(!imageFloaterShouldBeOpen){
+		[imageFloater close:nil];
+		[imageFloater release]; imageFloater = nil;
+	}
 }
 
 @end
