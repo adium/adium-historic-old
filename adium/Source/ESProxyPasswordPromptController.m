@@ -48,7 +48,7 @@
 - (void)windowDidLoad
 {
     [textField_server setStringValue:([server length] ? server : @"<None>")];
-    [textField_userName setStringValue:([userName length] ? userName @"<None>")];
+    [textField_userName setStringValue:([userName length] ? userName : @"<None>")];
 	
 	[super windowDidLoad];
 }
