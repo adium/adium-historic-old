@@ -184,6 +184,11 @@
 //Close a continer
 - (void)closeContainer:(AIMessageWindowController *)container
 {
+	[container closeWindow:nil];
+}
+
+- (void)containerDidClose:(AIMessageWindowController *)container
+{
 	NSString	*key = [[containers allKeysForObject:container] lastObject];
 	if(key) [containers removeObjectForKey:key];
 }

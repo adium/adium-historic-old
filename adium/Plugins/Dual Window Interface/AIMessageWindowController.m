@@ -123,7 +123,11 @@
     while((tabViewItem = [enumerator nextObject])){
 		[[adium interfaceController] closeChat:[tabViewItem chat]];
     }
-
+	
+	//Chats have all closed, set active to nil, let the interface know we closed
+	[[adium interfaceController] chatDidBecomeActive:nil];
+	[interface containerDidClose:self];
+	
     return(YES);
 }
 
@@ -143,7 +147,7 @@
 //		[tabView_customTabs setAllowsTabRearranging:(![[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue])];
 //		[tabView_customTabs setAllowsTabDragging:(![[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue])];
 
-		alwaysShowTabs = NO;//![[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
+		alwaysShowTabs = YES;//![[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 		[self updateTabBarVisibilityAndAnimate:(notification != nil)];
     }
 }
@@ -196,7 +200,7 @@
 	AIChat	*chat = [inTabViewItem chat];
 
 	if([containedChats indexOfObject:chat] != index){
-		if([tabView_messages indexOfTabViewItem:inTabViewItem] < index) index++;
+		if([tabView_messages indexOfTabViewItem:inTabViewItem] < index) index--;
 		
 		[tabView_customTabs moveTab:inTabViewItem toIndex:index selectTab:NO];
 		[containedChats moveObject:chat toIndex:index];
@@ -216,66 +220,6 @@
 {
     return(containedChats);
 }
-
-//Build array of list objects to sort
-//We can't keep track of this easily since participating list objects may change due to multi-user chat
-//- (NSArray *)listObjectsForContainedChats
-//{
-//	NSMutableArray	*listObjects = [NSMutableArray array];
-//	NSEnumerator	*enumerator;
-//	AIChat			*chat;
-//	AIListObject	*listObject;
-//	
-//#warning would love to do away with this
-//	enumerator = [containedChats objectEnumerator];
-//	while(chat = [enumerator nextObject]){
-//		listObject = [chat listObject];
-//		if(listObject) [listObjects addObject:listObject];
-//	}
-//	
-//	return(listObjects);
-//}
-
-//
-//- (void)sortContainedChats
-//{
-//	NSMutableArray	*listObjects = [NSMutableArray array];
-//	NSEnumerator	*enumerator;
-//	AIChat			*chat;
-//	AIListObject	*listObject;
-//	
-//#warning would love to do away with this
-//	enumerator = [containedChats objectEnumerator];
-//	while(chat = [enumerator nextObject]){
-//		listObject = [chat listObject];
-//		if(listObject) [listObjects addObject:listObject];
-//	}
-//	
-//	//Sort that array
-//	[[[adium contactController] activeSortController] sortListObjects:listObjects];
-//	
-//	//Sync our tabs back up with the sorted array
-//#warning off for now
-////	enumerator = [[[[tabView_customTabs tabCells] copy] autorelease] objectEnumerator];
-////	while(tabCell = [enumerator nextObject]){
-////		listObject = [[(AIMessageTabViewItem *)[tabCell tabViewItem] messageViewController] listObject];
-////		
-////		if(listObject){
-////			newIndex = [listObjectArray indexOfObjectIdenticalTo:listObject];
-////			if(newIndex != NSNotFound)
-////				[tabView_customTabs moveTab:tabCell toIndex:newIndex selectTab:NO];
-////			
-////		}else{
-////			//Move chats to the bottom of the stack - they will be moved to the end in the order they were before since
-////			//we are using a forward enumerator
-////			[tabView_customTabs moveTab:tabCell toIndex:([tabView_customTabs numberOfTabViewItems]-1) selectTab:NO];			
-////		}
-////	}
-//}
-
-	
-	
-
 
 
 //Active Chat Tracking -------------------------------------------------------------------------------------------------
