@@ -320,7 +320,10 @@
     return([NSString stringWithCString:cDest length:d]);
 }
 
-
+- (NSString *)string
+{
+	return self;
+}
 
 
 
