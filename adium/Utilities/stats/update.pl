@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+# $Id: update.pl,v 1.2 2003/12/08 04:31:00 jmelloy Exp $
+
 use warnings;
 use strict;
 
