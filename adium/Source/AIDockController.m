@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.57 2004/06/07 06:54:14 evands Exp $
+// $Id: AIDockController.m,v 1.58 2004/06/08 21:15:58 evands Exp $
 
 #import "AIDockController.h"
 
@@ -226,7 +226,7 @@
 				if(image) [tempIconCache setObject:image forKey:imagePath];
 			}
 			
-			if(image && [image isValid]){
+			if(image){
 				[imageArray addObject:image];
 			}else{
 				NSLog(@"Failed to load image %@",imagePath);
