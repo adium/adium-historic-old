@@ -141,7 +141,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	
 	//Request the roster now; while gaim official manages to request before doing blist updates, libgaim does not
 	//If we don't request, all buddies will seem to be unauthorized so won't report their online status
-	JabberStream *js = gc->proto_data;
+	JabberStream *js = account->gc->proto_data;
 	jabber_roster_request(js);
 }
 
@@ -162,9 +162,13 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 - (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
+	if (gaim_account_is_connected(account)){
+		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
+		
+		return jabber_outgoing_xfer_new(account->gc,destsn);
+	}
 	
-	return jabber_outgoing_xfer_new(gc,destsn);
+	return nil;
 }
 
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
@@ -199,10 +203,10 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 - (void)updateStatusMessage:(AIListContact *)theContact
 {
-	if (gc){
+	if (gaim_account_is_connected(account)){
 		const char  *uidUTF8String = [[theContact UID] UTF8String];
 		GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
-		JabberBuddy *jb = jabber_buddy_find(gc->proto_data, uidUTF8String, FALSE);	
+		JabberBuddy *jb = jabber_buddy_find(account->gc->proto_data, uidUTF8String, FALSE);	
 		
 		//Retrieve the current status string
 		NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];

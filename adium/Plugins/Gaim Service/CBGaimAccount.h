@@ -29,7 +29,6 @@
 	NSString			*lastDisconnectionError;
 	
     GaimAccount         *account;
-    GaimConnection      *gc;
     
     int                 reconnectAttemptsRemaining;
 	

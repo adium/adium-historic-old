@@ -109,9 +109,13 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 - (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
+	if (gaim_account_is_connected(account)){
+		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
+		
+		return yahoo_xfer_new(account->gc,destsn);
+	}
 	
-	return yahoo_xfer_new(gc,destsn);
+	return nil;
 }
 
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
@@ -153,8 +157,8 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 	const char				*buddyName = [[theContact UID] UTF8String];
 	
-	if (gc &&
-		(od = gc->proto_data) &&
+	if (gaim_account_is_connected(account) &&
+		(od = account->gc->proto_data) &&
 		(userInfo = g_hash_table_lookup(od->friends, buddyName))) {
 		
 		NSString		*statusMsgString = nil;
