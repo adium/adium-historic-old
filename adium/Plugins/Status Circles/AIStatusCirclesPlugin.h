@@ -21,7 +21,6 @@
 
 #define KEY_DISPLAY_IDLE_TIME		@"Display Idle Time"
 
-#define KEY_TYPING_COLOR		@"Typing Color"
 #define KEY_AWAY_COLOR			@"Away Color"
 #define KEY_IDLE_AWAY_COLOR		@"Idle & Away Color"
 #define KEY_IDLE_COLOR			@"Idle Color"
@@ -29,7 +28,6 @@
 #define KEY_OPEN_TAB_COLOR		@"Open Tab Color"
 #define KEY_SIGNED_OFF_COLOR		@"Signed Off Color"
 #define KEY_SIGNED_ON_COLOR		@"Signed On Color"
-#define KEY_TYPING_COLOR		@"Typing Color"
 #define KEY_UNVIEWED_COLOR		@"Unviewed Content Color"
 #define KEY_WARNING_COLOR		@"Warning Color"
 

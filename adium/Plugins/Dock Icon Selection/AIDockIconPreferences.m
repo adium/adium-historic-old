@@ -58,7 +58,7 @@
     [NSBundle loadNibNamed:DOCK_ICON_SELECTION_PREF_NIB owner:self];
 
     //Install and configure our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:DOCK_ICON_SELECTION_PREF_TITLE categoryName:PREFERENCE_CATEGORY_OTHER view:view_prefView];
+    preferenceViewController = [AIPreferenceViewController controllerWithName:DOCK_ICON_SELECTION_PREF_TITLE categoryName:PREFERENCE_CATEGORY_DOCK view:view_prefView];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
     [self setupPreferenceView];
     

@@ -15,8 +15,8 @@
 
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
-#import "AIStatusCirclesPreferences.h"
 #import "AIStatusCirclesPlugin.h"
+#import "AIStatusCirclesPreferences.h"
 
 #define	STATUS_CIRCLES_PREF_NIB		@"StatusCirclesPrefs"
 #define STATUS_CIRCLES_PREF_TITLE	@"Status - Contact Status Circles"
@@ -70,11 +70,6 @@
     }else if(sender == colorWell_openTab){
         [[owner preferenceController] setPreference:[[colorWell_openTab color] stringRepresentation]
                                              forKey:KEY_OPEN_TAB_COLOR
-                                              group:PREF_GROUP_STATUS_CIRCLES];
-
-    }else if(sender == colorWell_typing){
-        [[owner preferenceController] setPreference:[[colorWell_typing color] stringRepresentation]
-                                             forKey:KEY_TYPING_COLOR
                                               group:PREF_GROUP_STATUS_CIRCLES];
 
     }else if(sender == colorWell_unviewedContent){
@@ -132,7 +127,6 @@
     [colorWell_openTab setColor:[[preferenceDict objectForKey:KEY_OPEN_TAB_COLOR] representedColor]];
     [colorWell_signedOff setColor:[[preferenceDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor]];
     [colorWell_signedOn setColor:[[preferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
-    [colorWell_typing setColor:[[preferenceDict objectForKey:KEY_TYPING_COLOR] representedColor]];
     [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
     [colorWell_warning setColor:[[preferenceDict objectForKey:KEY_WARNING_COLOR] representedColor]];
 

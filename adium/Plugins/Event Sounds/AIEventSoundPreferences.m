@@ -154,7 +154,7 @@
     [NSBundle loadNibNamed:EVENT_SOUND_PREF_NIB owner:self];
 
     //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:EVENT_SOUND_PREF_TITLE categoryName:PREFERENCE_CATEGORY_OTHER view:view_prefView];
+    preferenceViewController = [AIPreferenceViewController controllerWithName:EVENT_SOUND_PREF_TITLE categoryName:PREFERENCE_CATEGORY_SOUNDS view:view_prefView];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
     //Observer preference changes

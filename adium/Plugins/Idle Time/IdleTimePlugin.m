@@ -104,7 +104,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 {
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_IDLE_TIME] == 0){
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME];
-    
+	
         //Store the new values locally
         idleEnabled = [[prefDict objectForKey:KEY_IDLE_TIME_ENABLED] boolValue];
         idleThreshold = [[prefDict objectForKey:KEY_IDLE_TIME_IDLE_MINUTES] intValue] * 60; //convert to seconds

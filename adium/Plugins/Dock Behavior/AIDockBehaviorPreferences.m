@@ -110,7 +110,7 @@
     [NSBundle loadNibNamed:DOCK_BEHAVIOR_PREF_NIB owner:self];
 
     //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:DOCK_BEHAVIOR_PREF_TITLE categoryName:PREFERENCE_CATEGORY_OTHER view:view_prefView];
+    preferenceViewController = [AIPreferenceViewController controllerWithName:DOCK_BEHAVIOR_PREF_TITLE categoryName:PREFERENCE_CATEGORY_DOCK view:view_prefView];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
     //Observer preference changes

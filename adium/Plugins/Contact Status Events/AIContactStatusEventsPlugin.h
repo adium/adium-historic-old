@@ -16,14 +16,33 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
+#define STATUS_EVENTS_DEFAULT_PREFS	@"ContactStatusEventsDefaults"
+#define PREF_GROUP_STATUS_EVENTS	@"Contact Status Events"
+
+#define KEY_SIGNED_OFF_LENGTH			@"Signed Off Length"
+#define KEY_SIGNED_ON_LENGTH			@"Signed On Length"
+#define KEY_TYPING_LENGTH			@"Typing Length"
+
 @protocol AIContactObserver;
 
+@class AIContactStatusEventsPreferences;
+
 @interface AIContactStatusEventsPlugin : AIPlugin <AIContactObserver> {
+    AIContactStatusEventsPreferences	*preferences;
+    
     NSMutableDictionary		*onlineDict;
     NSMutableDictionary		*awayDict;
     NSMutableDictionary		*idleDict;
+    NSMutableDictionary		*typingDict;
+
+    int		signedOffLength;
+    int		signedOnLength;
+    int		typingLength;
 
 }
 
+- (void)installPlugin;
+- (void)uninstallPlugin;
+- (void)preferencesChanged:(NSNotification *)notification;
 
 @end
