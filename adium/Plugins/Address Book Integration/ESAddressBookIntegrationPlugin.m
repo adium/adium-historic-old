@@ -215,17 +215,12 @@
     NSArray             *results = nil;
     NSString            *property = [propertyDict objectForKey:[inObject serviceID]];
     if (property) {
-        NSString *screenName = [inObject UID];
+        NSString *screenName = [inObject formattedUID];
         
         //search for the screen name as we have it stored (case insensitive)
         results = [self _searchForScreenName:screenName withService:property];
         
-        //If we don't find anything, try again using the compacted version of the screen name (case insensitive)
-        if (!results || ![results count]) {
-            results = [self _searchForScreenName:[screenName compactedString] withService:property];
-        }
-        
-        //If we don't find anything yet and are an AIM account, try again using the ICQ property
+        //If we don't find anything yet and inObject is an AIM account, try again using the ICQ property
         if ((!results || ![results count]) && [property isEqualToString:kABAIMInstantProperty]) {
             results = [self _searchForScreenName:screenName withService:kABICQInstantProperty];
         }
@@ -236,12 +231,28 @@
 
 - (NSArray *)_searchForScreenName:(NSString *)name withService:(NSString *)service
 {
-    ABSearchElement * searchElement = [ABPerson searchElementForProperty:service 
-                                                                   label:nil 
-                                                                     key:nil 
-                                                                   value:name 
-                                                              comparison:kABEqualCaseInsensitive];
-    return [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElement];
+	NSEnumerator	*componentEnumerator = [[name componentsSeparatedByString:@" "] objectEnumerator];
+	NSString		*component;
+	NSMutableArray  *searchElementsArray = [NSMutableArray array];
+	
+	//Build an array of ABSearchElement objects, one for each word in the name
+	while ((component = [componentEnumerator nextObject])){
+		[searchElementsArray addObject:[ABPerson searchElementForProperty:service 
+																	label:nil 
+																	  key:nil 
+																	value:component 
+															   comparison:kABContainsSubStringCaseInsensitive]];
+	}
+	
+	//AND the search elements together
+	ABSearchElement *searchElement;
+	if ([searchElementsArray count] > 1){
+		searchElement = [ABSearchElement searchElementForConjunction:kABSearchAnd children:searchElementsArray];
+	}else{
+		searchElement = [searchElementsArray objectAtIndex:0];
+	}
+	
+	return [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElement];
 }
 
 @end
