@@ -18,6 +18,7 @@ New features:
 	* Invite other users to group chats
 	* Many UI improvements
 *** - Added iChat away message importing (Migration Assistant)
+- Added in-conversation feedback on message errors and file transfer initiation, cancelation, and completion
 - (MSN) Support for converstion closed and conversation timed out messages
 - (Jabber) Support for registering new Jabber accounts
 - (ICQ, MSN, Yahoo) Support for viewing ICQ, Yahoo, and MSN profiles
@@ -42,15 +43,20 @@ Bug fixes:
 - Fixed bug with adding links with "%" in them to away messages and profiles
 - Fixed problem causing 10.2 users to lose color and formatting information in profiles and away messags
 - Fixed issue causing the "First Message Received" sound to be played multiple times
+- Fixed several other minor glitches
 - (AIM) Autoresponses to properly tell other clients that the message is an autoresponse
 - (AIM) Fixed issue which was preventing some buddy icons from animating
 - (AIM) Fixed issues with spacing and capitilization of user names, both sending and receiving
 - (Gadu-Gadu) Fixed issue with the serverside Gadu-Gadu contact list not saving
+- (Groupwise) Fixed GroupWise SSL support
 - (ICQ, Jabber) Fixed a crash when adding a contact with no groups defined
 - (MSN) Removed 25-character restriction on display names, adding an option to treat the display name as a status message
 
 Improvements:
-- Improved the Log Viewer, adding a drawer of available contacts' and accounts' logs along with other changes
+- Improved the Log Viewer:
+	* Added a drawer for filtering logs by source or destination
+	* Improved date sorting, adding support for natural language searches ("last Tuesday")
+	* Significant performance and feedback improvements
 - Improved reporting of conversation error messages
 - Improved contact alerts on entire groups of contacts
 - Improved the message preferences preview
@@ -59,12 +65,13 @@ Improvements:
 - Improved performance when running Applescript filters, especially lengthy ones
 - Improved name autocompletion in the New Message window
 - Improved behavior when automatically docking the message or contact window to the edges of the screen
-- Improved auto-away-after-idle functionality
 - Improved recognition and auto-linkification of URLs
+- Improved snap-to-edge behavior when dragging borderless windows; holding shift now disables the snap-to-edge temporarily
 - Improved load time
+- (Growl) Added several sevents to the Growl plugin
 - Various other cosmetic and bug fixes
 - Updated to Libgaim 1.0.0
-- Significant stability improvements
+- Significant stability and performance improvements
 
 Version 0.63 (7/23/2004)
 - Added support for the Sametime protocol
