@@ -201,7 +201,7 @@ static NSImage		*tabCloseFrontPressed = nil;
     rect.size.width -= leftCapWidth + rightCapWidth;
     
     //Close Button
-    if([[tabViewItem tabView] numberOfTabViewItems] != 1/* && selected*/){
+    //if([[tabViewItem tabView] numberOfTabViewItems] != 1/* && selected*/){
         NSPoint	destPoint = NSMakePoint(rect.origin.x + TAB_CLOSE_LEFTPAD, rect.origin.y + TAB_CLOSE_Y_OFFSET);
 
         if(hoveringClose){
@@ -212,7 +212,7 @@ static NSImage		*tabCloseFrontPressed = nil;
 
         rect.origin.x += TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD;
         rect.size.width -= (TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD) + TAB_RIGHT_PAD;
-    }
+    //}
     
     //Draw the title
     destRect = NSMakeRect(rect.origin.x,
@@ -237,7 +237,7 @@ static NSImage		*tabCloseFrontPressed = nil;
     NSPoint	clickLocation = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
     NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, cellFrame.origin.x, cellFrame.origin.y);
     
-    if(selected && [[tabViewItem tabView] numberOfTabViewItems] != 1 && NSPointInRect(clickLocation, offsetCloseButtonRect)){
+    if(selected && /*[[tabViewItem tabView] numberOfTabViewItems] != 1 &&*/ NSPointInRect(clickLocation, offsetCloseButtonRect)){
         //Track the close button
         [self trackMouse:theEvent
                   inRect:offsetCloseButtonRect
