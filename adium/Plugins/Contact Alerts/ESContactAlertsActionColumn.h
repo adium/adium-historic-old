@@ -7,12 +7,12 @@
 //
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
-
+#import "ESContactAlerts.h"
 
 @interface ESContactAlertsActionColumn : NSTableColumn {
-    NSMutableArray				*prefAlertsArray;
+    ESContactAlerts *	instance;
 }
 
-- (void)setPrefAlertsArray:(NSMutableArray *)inPrefAlertsArray;
+- (void)setInstance:(ESContactAlerts *)inInstance;
 
 @end

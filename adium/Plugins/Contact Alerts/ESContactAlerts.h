@@ -38,12 +38,10 @@
     IBOutlet	NSButton		*button_anotherAccount_open_message;
     
     int					row;
-    int					offset;
 
     AIListObject			*activeContactObject;
     NSMutableArray			*eventActionArray;
     NSMutableArray			*eventSoundArray;
-
 
     NSMutableDictionary			*selectedActionDict;
 
@@ -52,12 +50,14 @@
     NSMenu				*soundMenu_cached;
 
     NSString				*oldIdentifier;
+
+    NSMutableDictionary			*cachedAlertsDict;
     
     AIAdium				*owner;
 }
 
-- (id)init;
-- (id)initForObject:(AIListObject *)inObject withDetailsView:(NSView *)inView withTable:(AIAlternatingRowTableView *)inTable withPrefView:(NSView *)inPrefView owner:(id)inOwner;
+- (id)initWithDetailsView:(NSView *)inView withTable:(AIAlternatingRowTableView*)inTable withPrefView:(NSView *)inPrefView owner:(id)inOwner;
+- (void)configForObject:(AIListObject *)inObject;
 - (void)removeAllSubviews:(NSView *)view;
 - (void)configureWithSubview:(NSView *)view_inView;
 - (void)oneTimeEvent:(NSButton *)inButton;
@@ -70,11 +70,9 @@
 - (NSMutableDictionary *)dictAtIndex:(int)inRow;
 - (NSMutableArray *)eventActionArray;
 - (void)currentRowIs:(int)currentRow;
-- (void)setOffset:(int)inOffset;
-- (void)changeOffsetBy:(int)changeOffset;
 - (void)replaceDictAtIndex:(int)inRow withDict:(NSDictionary *)newDict;
 - (AIListObject *)activeObject;
-- (void)reloadFromPrefs;
+- (void)reload:(AIListObject *)object usingCache:(BOOL)useCache;
 
 - (IBAction)deleteEventAction:(id)sender;
 - (IBAction)newEvent:(id)sender;

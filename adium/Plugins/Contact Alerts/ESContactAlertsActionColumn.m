@@ -24,9 +24,9 @@
     [super dealloc];
 }
 
-- (void)setPrefAlertsArray:(NSMutableArray *)inPrefAlertsArray
+- (void)setInstance:(ESContactAlerts *)inInstance
 {
-    prefAlertsArray = inPrefAlertsArray;
+    instance =  inInstance;
 }
 
 - (id)dataCellForRow:(int)row
@@ -36,10 +36,8 @@
 
     if (row != -1)
     {
-        ESContactAlerts				*instance;
-        NSMenu					*actionMenu;
-        instance = [prefAlertsArray objectAtIndex:row];
-
+        NSMenu			*actionMenu;
+        
         actionMenu = [instance actionListMenu];
 
         [dataCell setMenu:actionMenu];

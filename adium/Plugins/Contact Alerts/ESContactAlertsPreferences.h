@@ -27,6 +27,7 @@
     AIAdium					*owner;
     AIListObject				*activeContactObject;
     NSMutableArray				*prefAlertsArray;
+    NSMutableDictionary				*offsetDictionary;
     IBOutlet NSView				*view_prefView;
 
     ESContactAlerts				*instance;
