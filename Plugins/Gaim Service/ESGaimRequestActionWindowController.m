@@ -46,7 +46,7 @@
 	//msg may be in HTML; decode it just in case
 	GaimDebug (@"got msg %@",msg);
 	attribMsg = (msg ? [AIHTMLDecoder decodeHTML:msg] : nil);
-	GaimDebugg (@"so attribMsg is %@",attribMsg);
+	GaimDebug (@"so attribMsg is %@",attribMsg);
 	
 	actionCount = [[infoDict objectForKey:@"Count"] intValue];
 	callBacks = [[infoDict objectForKey:@"callBacks"] retain];
