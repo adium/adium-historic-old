@@ -1571,9 +1571,9 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}	
 }
 
-- (oneway void)openChat:(AIChat *)chat
+- (oneway void)openChat:(AIChat *)chat onAccount:(id)adiumAccount
 {
-	GaimConversation *conv = convLookupFromChat(chat,nil);	
+	GaimConversation *conv = convLookupFromChat(chat,adiumAccount);
 }
 
 - (oneway void)closeChat:(AIChat *)chat
