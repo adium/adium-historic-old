@@ -55,6 +55,27 @@
 	[(id)super setFrame:inFrame];
 }
 
+/*
+ * @brief Handle automatic sizing and positioning
+ *
+ * There's a lot of magic in this method, unfortunately, but it does what it does quite well.
+ * The goal: Start off with a nicely positioned control.  It looks good containing the text it contains; it is positioned
+ * properly in relation to other controls.  Then, change its string value, generally bringing in a localized string from
+ * the Localizable.strings file via AILocalizedString() or the like.  The control should 'magically' be resized, maintaining
+ * its position [including taking into account its alignment].  Furthermore, if the control is informed of other views
+ * relative to it via having its view_anchorTo* outlets connected, take into account these other views.  Resize them if possible
+ * to maintain the same relative spacing as they had originally.  If the control has a window it is allowed to resize,
+ * informed of it via a connected window_anchorTo* outlet, resize the window as necessary to allow enough space for the 
+ * newly sized control.
+ *
+ * The TARGET_CONTROL #define is used rather than self because classes using this method can choose to send sizing messages
+ * to another object.  For example, AILocalizationButtonCell uses (NSControl *)[self controlView].
+ *
+ * Whew.
+ *
+ * @param oldFrame The original frame, before sizing
+ * @param inStringValue The string value which was set. This is passed purely for debugging purposes and is not used in this method.
+ */
 - (void)_handleSizingWithOldFrame:(NSRect)oldFrame stringValue:(NSString *)inStringValue
 {
 	//Textfield uses 17, button uses 14.
@@ -90,7 +111,7 @@
 		case NSCenterTextAlignment:
 		{
 			//Keep the center in the same place
-			float windowMaxX = NSMaxX([[TARGET_CONTROL window] frame]);
+			float windowMaxX = NSMaxX([[TARGET_CONTROL superview] frame]);
 			
 			newFrame.origin.x = oldFrame.origin.x + (oldFrame.size.width - newFrame.size.width)/2;
 			
@@ -287,7 +308,6 @@
 				}
 			}
 		}
-		
 	} /* end of (newFrame.size.width != oldFrame.size.width) */
 }
 
