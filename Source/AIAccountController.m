@@ -745,7 +745,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		if(!inObject && !inPreferred){
 			[sourceAccounts addObject:account];
 			
-		}else if([inObject service] == [account service]){
+		}else if([[[inObject service] serviceClass] isEqualToString:[[account service] serviceClass]]){
 			BOOL			knowsObject = NO;
 			BOOL			canFindObject = NO;
 			AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject service]
