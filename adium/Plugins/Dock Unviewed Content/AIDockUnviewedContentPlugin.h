@@ -18,7 +18,7 @@
 
 @interface AIDockUnviewedContentPlugin : AIPlugin <AIListObjectObserver> {
     NSMutableArray		*unviewedObjectsArray;
-    AIIconState			*unviewedState;
+    BOOL			unviewedState;
 
 }
 

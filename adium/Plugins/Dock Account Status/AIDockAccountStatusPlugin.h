@@ -17,10 +17,6 @@
 #import <Adium/Adium.h>
 
 @interface AIDockAccountStatusPlugin : AIPlugin {
-    AIIconState			*onlineState;
-    AIIconState			*awayState;
-    AIIconState			*idleState;
-    AIIconState			*connectingState;
     
 }
 
