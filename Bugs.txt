@@ -16,16 +16,12 @@ Dock
 [MEDIUM]
 Contact List
     - Extended Status to the right of names is misaligned with baseline.
-Log Viewer
-    - Logs appear twice in the Log Viewer if you choose 'View Logs' for a contact. 
 [LOW]
 
 Contacts
   - Adding contact that already exists
-    Adding an existing contact causes issues.  It may result in duplicate contacts on
-    the user's list, and will make the contact appear offline.  Sometimes they will
-    appear on the list twice until Adium is restarted.
-    
+    Adding an existing contact causes issues.  It may make the contact appear offline.
+
 List and Tabs
   - Tooltip alignment fails in long away messages and other large blocks of text.
   - Double clicking two names in succession causes the first name to highlight
