@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.74 2004/04/03 00:35:17 evands Exp $
+// $Id: AIAccountController.m,v 1.75 2004/04/03 17:52:59 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -316,11 +316,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Returns a new default account
 - (AIAccount *)defaultAccount
 {
-	if([NSApp isOnPantherOrBetter]){
-		return([self createAccountOfType:@"AIM-LIBGAIM" withUID:@"" objectID:0]);
-	}else{
-		return([self createAccountOfType:@"AIM (TOC2)" withUID:@"" objectID:0]);
-	}
+	return([self createAccountOfType:@"AIM-LIBGAIM" withUID:@"" objectID:0]);
 }
 
 
