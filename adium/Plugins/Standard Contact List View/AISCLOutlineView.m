@@ -31,7 +31,7 @@
 - (id)init
 {
     NSTableColumn	*tableColumn;
-    NSFont		*font = [NSFont systemFontOfSize:11];
+    NSFont *font = [NSFont systemFontOfSize:11];
 
     [super init];
 
@@ -46,7 +46,7 @@
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 
     //Appearance
-    [self setFont:font];
+    [super setFont:font];
     [self setRowHeight:[font defaultLineHeightForFont]];
     [self setIndentationPerLevel:10];
 
@@ -153,6 +153,12 @@
     trackingRectTag = [self addTrackingRect:[scrollView bounds] owner:self userData:nil assumeInside:NO];*/
 }
 
+- (void)setFont:(NSFont *)inFont
+{
+	[super setFont:inFont];
+	NSLog(@"font is: %@ and should be %@", [[self font] fontName], inFont);
+}
+
 //Draw a custom 'no available contacts' message when the list is empty
 - (void)drawRect:(NSRect)rect
 {
@@ -161,13 +167,14 @@
 
     [super drawRect:rect];
 
-    if(numberOfRows == 0){
+    if(numberOfRows == 0)
+	{
         NSDictionary		*attributes;
         NSAttributedString	*emptyMessage;
         int			position;
 
         //Create the empty message
-        attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11],NSFontAttributeName,nil];
+        attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont systemFontOfSize:11],NSFontAttributeName,nil];
         emptyMessage = [[NSAttributedString alloc] initWithString:CONTACT_LIST_EMPTY_MESSAGE attributes:attributes];
 
         //Center it

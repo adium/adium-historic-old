@@ -66,9 +66,7 @@
         [NSNumber numberWithInt:[[[sizePopUp selectedItem] title] intValue]], @"SIZE",
         nil];
 
-    [preferenceController setPreference: dict
-                                 forKey: CL_DEFAULT_FONT
-                                  group: CL_PREFERENCE_GROUP];
+    [preferenceController setPreference: dict forKey:CL_DEFAULT_FONT group:CL_PREFERENCE_GROUP];
     [self _prefsChangedNotify];
 }
 
@@ -76,9 +74,7 @@
 {
     if (sender == enableGridSwitch)
     {
-        [preferenceController setPreference: [NSNumber numberWithBool:[sender state]]
-                                     forKey: CL_ENABLE_GRID
-                                      group: CL_PREFERENCE_GROUP];
+        [preferenceController setPreference: [NSNumber numberWithBool:[sender state]] forKey:CL_ENABLE_GRID group:CL_PREFERENCE_GROUP];
 
         [alternatingGridSwitch setEnabled:[sender state]];
         [gridColorWell setEnabled:[sender state]];
@@ -86,9 +82,7 @@
     }
     else if (sender == alternatingGridSwitch)
     {
-        [preferenceController setPreference: [NSNumber numberWithBool:[sender state]]
-                                     forKey: CL_ALTERNATING_GRID
-                                      group: CL_PREFERENCE_GROUP];        
+        [preferenceController setPreference: [NSNumber numberWithBool:[sender state]] forKey: CL_ALTERNATING_GRID group: CL_PREFERENCE_GROUP];        
     }
     [self _prefsChangedNotify];
 }
