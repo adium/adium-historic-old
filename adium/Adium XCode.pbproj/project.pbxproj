@@ -1428,6 +1428,7 @@
 				3419F34505314BA100C68BA3,
 				3419F34605314BA100C68BA3,
 				3419F34705314BA100C68BA3,
+				4B037C070558B5C700FF5530,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1456,6 +1457,7 @@
 				3419F34905314BA100C68BA3,
 				3419F34A05314BA100C68BA3,
 				3419F34B05314BA100C68BA3,
+				4B037C110558B6CD00FF5530,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1484,6 +1486,7 @@
 				3419F34D05314BA100C68BA3,
 				3419F34E05314BA100C68BA3,
 				3419F34F05314BA100C68BA3,
+				4B037C080558B5C700FF5530,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5161,12 +5164,6 @@
 			path = "Plugins/Gaim Service/LIBS/liboscar.a";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34B368900555ACC90033C7D5 = {
-			fileRef = 34B3688F0555ACC90033C7D5;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BD83DA054E530700EB2652 = {
 			expectedFileType = sourcecode.c.objc;
@@ -15412,6 +15409,50 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B037C050558B5C700FF5530 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AILoggerAdvancedPreferences.h;
+			path = Plugins/Logger/AILoggerAdvancedPreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B037C060558B5C700FF5530 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AILoggerAdvancedPreferences.m;
+			path = Plugins/Logger/AILoggerAdvancedPreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B037C070558B5C700FF5530 = {
+			fileRef = 4B037C050558B5C700FF5530;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B037C080558B5C700FF5530 = {
+			fileRef = 4B037C060558B5C700FF5530;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B037C100558B6CD00FF5530 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = LoggerAdvancedPrefs.nib;
+			path = Plugins/Logger/LoggerAdvancedPrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B037C110558B6CD00FF5530 = {
+			fileRef = 4B037C100558B6CD00FF5530;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B03DDF30533AC59002B2CA3 = {
 			expectedFileType = image.tiff;
 			isa = PBXFileReference;
@@ -17787,7 +17828,7 @@
 				4B7F279805440CB900CDFC90,
 				4B7F279905440CB900CDFC90,
 				4B7F279A05440CB900CDFC90,
-				34B368900555ACC90033C7D5,
+				4BE1950C055767D400003079,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17810,7 +17851,7 @@
 				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS/include\" \"Plugins/Gaim Service/LIBS/include/libgaim\" \"Plugins/Gaim Service/LIBS/include/glib-2.0\"";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"Plugins/Gaim Service/Protocols\"";
+				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"Plugins/Gaim Service/Protocols\" \"/Users/adamiser/Code/adium/Plugins/Gaim Service/LIBS\"";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
 				OTHER_REZFLAGS = "";
@@ -20068,6 +20109,12 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4BE1950C055767D400003079 = {
+			fileRef = 34B3688F0555ACC90033C7D5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BE4B0E903F9C2AF00A8010A = {
 			expectedFileType = text.plist;
 			fileEncoding = 30;
@@ -21106,11 +21153,14 @@
 				9C8C7FA503CBA21B00267226,
 				4BD68227045B010D00A8010A,
 				4BD68228045B010D00A8010A,
+				4B3DB8FD04547A8D00A8010A,
 				4B54D1020502865F00A8010A,
 				4B54D1030502865F00A8010A,
-				4B3DB8FD04547A8D00A8010A,
-				4B54D10605028BC400A8010A,
 				4B54D10805028DAE00A8010A,
+				4B037C050558B5C700FF5530,
+				4B037C060558B5C700FF5530,
+				4B037C100558B6CD00FF5530,
+				4B54D10605028BC400A8010A,
 			);
 			isa = PBXGroup;
 			name = Logger;

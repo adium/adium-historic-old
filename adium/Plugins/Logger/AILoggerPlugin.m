@@ -18,6 +18,7 @@
 #import "AILoggerPlugin.h"
 #import "AILogViewerWindowController.h"
 #import "AILoggerPreferences.h"
+#import "AILoggerAdvancedPreferences.h"
 
 #define LOGGING_DEFAULT_PREFS	@"LoggingDefaults"
 
@@ -35,6 +36,7 @@
     //Setup our preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LOGGING];
     preferences = [[AILoggerPreferences preferencePaneWithOwner:owner] retain];
+    advancedPreferences = [[AILoggerAdvancedPreferences preferencePaneWithOwner:owner] retain];
 
     //Install the log viewer menu item
     logViewerMenuItem = [[NSMenuItem alloc] initWithTitle:@"Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@"l"];
@@ -61,34 +63,21 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_LOGGING] == 0){
-        BOOL	newLogValue = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_LOGGER_ENABLE] boolValue];
-
-        BOOL	newLogStyle = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_LOGGER_STYLE] boolValue];
-
-        BOOL	newLogFont = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_LOGGER_FONT] boolValue];
-
-        BOOL	newLogStatus = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_LOGGER_STATUS] boolValue];
-
-        BOOL	newLogHTML = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_LOGGER_HTML] boolValue];
+        NSDictionary    *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
+        BOOL            newLogValue;
         
-        if(newLogStyle != logStyle) {
-            logStyle = newLogStyle;
-        }
-        if(newLogFont != logFont) {
-            logFont = newLogFont;
-        }
-        if(newLogStatus != logStatus) {
-            logStatus = newLogStatus;
-        }
-        if(newLogHTML != logHTML) {
-            logHTML = newLogHTML;
-        }
+        //Load new values
+        logStyle = [[preferenceDict objectForKey:KEY_LOGGER_STYLE] boolValue];
+        logFont = [[preferenceDict objectForKey:KEY_LOGGER_FONT] boolValue];
+        logStatus = [[preferenceDict objectForKey:KEY_LOGGER_STATUS] boolValue];
+        logHTML = [[preferenceDict objectForKey:KEY_LOGGER_HTML] boolValue];
         
+        //Start/Stop logging
+        newLogValue = [[preferenceDict objectForKey:KEY_LOGGER_ENABLE] boolValue];
         if(newLogValue != observingContent){
             observingContent = newLogValue;
 
             if(!observingContent){ //Stop Logging
-                //Stop Observing
                 [[owner notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
 
             }else{ //Start Logging
