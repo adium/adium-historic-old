@@ -11,6 +11,13 @@
             SUPERCLASS = AIPlugin; 
         }, 
         {CLASS = AIPlugin; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {setNotes = id; }; 
+            CLASS = BGContactNotesPlugin; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"textField_notes" = NSTextField; "view_contactNotesInfoView" = NSView; }; 
+            SUPERCLASS = AIPlugin; 
+        }, 
         {CLASS = ESDelayedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
