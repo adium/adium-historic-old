@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.42 2004/05/05 19:08:17 boredzo Exp $
+// $Id: AISoundController.m,v 1.43 2004/05/20 12:57:06 adamiser Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -351,7 +351,7 @@
         NSString		*fullPath;
 
         if([[file lastPathComponent] characterAtIndex:0] != '.' &&
-           [[file pathExtension] compare:SOUND_SET_PATH_EXTENSION] != 0 &&
+           [[file pathExtension] caseInsensitiveCompare:SOUND_SET_PATH_EXTENSION] != 0 &&
            ![[file pathComponents] containsObject:@"CVS"]){ //Ignore certain files
 
             //Determine if this is a file or a directory
