@@ -38,12 +38,19 @@
 	if([inObject isKindOfClass:[AIMetaContact class]]){
 		NSMutableString	*entryString;
 		AIListContact	*contact;
-		
+		BOOL			shouldAppendString = NO;
+
 		entry = [[NSMutableAttributedString alloc] init];
 		entryString = [entry mutableString];
-	
-		NSEnumerator	*enumerator = [(AIMetaContact *)inObject objectEnumerator];
+
+		NSEnumerator	*enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
 		while(contact = [enumerator nextObject]){
+			if (shouldAppendString){
+				[entryString appendString:@"\r"];
+			}else{
+				shouldAppendString = YES;
+			}
+			
 			NSImage	*statusIcon = [[contact displayArrayObjectForKey:@"Tab Status Icon"] imageByScalingToSize:NSMakeSize(9,9)];
 			
 			if(statusIcon){
