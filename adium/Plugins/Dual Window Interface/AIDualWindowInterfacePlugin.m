@@ -976,11 +976,7 @@
     
     //Add the messageWindowController to our array
     [messageWindowControllerArray addObject:messageWindowController];
-    
-    #warning ramoth4: this is slightly evil, but it gives the desired result
-	/*[[adium notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
-	NSLog(@"----New Chat Created: %@",chat);*/
-    
+        
     return(messageWindowController);
 }
 
