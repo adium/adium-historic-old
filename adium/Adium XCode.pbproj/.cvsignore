@@ -1,0 +1,5 @@
+*~.nib
+build
+*.pbxuser
+.DS_Store
+.xvpics
