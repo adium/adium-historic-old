@@ -58,7 +58,7 @@
 	} else if ( menuItem == menuItem_inviteToChatContext ) {
 		
 		if( shouldRebuildChatList ) {
-			AIListContact *object = [[adium menuController] contactualMenuContact];
+			AIListObject *object = [[adium menuController] contactualMenuObject];
 			if([object isKindOfClass:[AIListContact class]]){
 				[menuItem_inviteToChatContext setSubmenu:[self groupChatMenuForContact:(AIListContact *)object]];
 			}
