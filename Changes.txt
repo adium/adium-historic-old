@@ -1,5 +1,54 @@
 				Adium X Version History
 				-----------------------
+Version 0.70
+
+*** Indicates that this line needs to be checked.
+
+*** - Complete contact list rewrite, w00t.
+- Added support for the Rendezvous (ZeroConf) protocol
+- Added support for the Zephyr protocol with Kerberos support
+- Added explicit support for the ICQ protocol, with an option to specify custom message encoding
+- Added support for grouping multiple contacts into a single entry ("MetaContacts") via the Address Book
+- Added support for creating and joining new group chats in AIM, Yahoo, and Jabber
+- Adium can now be controlled via Applescript
+- Adium now detects changes in network connectivity and automatically disconnects/reconnects as appropriate. When Adium launches, autoconnecting accounts
+	wait for network availability before attempting to connect.
+- Added support for viewing ICQ, Yahoo, and MSN profiles
+- Added support for viewing Gadu-Gadu and Sametime away messages
+- Added support for protocol-specific /commands (currently only applicable in Zephyr)
+- Added option to specify Sametime serverside contact list loading and saving behavior
+- Added option to specify Home/End key behavior in message windows
+*** - Added iChat away message importing (Migration Assistant)
+- Fixed issue with status-based sorting not updating properly
+- Fixed issues with sending and displaying multiple spaces
+- Fixed a crash when attempting to send images
+- Fixed a crash related to the emoticon menus
+- Fixed a crash when inserting a link to the active Safari page
+- Fixed a bug when installing Adium Xtras in certain cases
+- Fixed a rare crash when loading Firefox bookmarks
+- Fixed AIM autoresponses to properly tell other clients that the message is an autoresponse
+- Fixed issue which was preventing some AIM buddy icons from animating
+- Fixed issue when saving account passwords in certain cases
+- Fixed issue with the serverside Gadu-Gadu contact list not saving
+- Fixed issue with sounds playing too loud the first time they were played
+- Fixed problem when manually ordering contact list groups
+- Fixed bug which prevented the addition to profiles and away messages of links with "%" in them
+- Fixed problem causing 10.2 users to lose color and formatting information in profiles and away messags
+- Fixed a crash when adding a contact with no groups defined (common in ICQ and Jabber)
+- Fixed issue causing the "First Message Received" sound to be played multiple times
+- Improved the Log Viewer, adding a drawer of available contacts' and accounts' logs along with other changes
+- Improved the Accounts contact info pane
+- Improved the Status Menu Item, which is now only available in OS X 10.3 and greater
+- Improved performance when running Applescript filters, especially lengthy ones
+- Improved name autocompletion in the New Message window
+- Improved behavior when automatically docking the message or contact window to the edges of the screen
+- Improved auto-away-after-idle functionality
+- Improved recognition and auto-linkification of URLs
+- Improved load time
+- Many improvements to handling of group chats, including the ability to invite other users into chat rooms
+- Various other cosmetic and bug fixes
+- Updated to Libgaim 0.82.1
+- Significant stability improvements
 
 Version 0.63 (7/23/2004)
 - Added support for the Sametime protocol
