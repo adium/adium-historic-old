@@ -481,4 +481,9 @@ DeclareString(FormattedUID);
 	return (outName ? outName : serviceID);
 }
 
+//For debugging purposes only
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"%@:%@",[super description],[self uniqueObjectID]];
+}
 @end
