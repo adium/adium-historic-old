@@ -74,7 +74,8 @@ typedef enum {
 	-(NSArray *)listObjectIDsOnPrivacyList:(PRIVACY_TYPE)type;
     //Set the privacy options
     -(void)setPrivacyOptions:(PRIVACY_OPTION)option;
-
+	//Get the privacy options
+	-(PRIVACY_OPTION)privacyOptions;
 @end
 
 /*!
