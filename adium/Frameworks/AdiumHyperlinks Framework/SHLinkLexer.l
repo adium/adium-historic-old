@@ -15,6 +15,7 @@
  */
 #define YY_NO_UNPUT
 unsigned int SHStringOffset;
+int SHValidShift = 0;
 #include "SHLinkLexer.h"
 %}
 
@@ -37,8 +38,8 @@ yahooIMSpec	ymsgr:sendim\?.+
 %x CANONICAL
 %%
 
-<CANONICAL>{urlSpecifier}   {SHStringOffset += SHleng; BEGIN INITIAL; return SH_URL_VALID;}
-<CANONICAL>{ipURL}          {SHStringOffset += SHleng; BEGIN INITIAL; return SH_URL_VALID;}
+<CANONICAL>{urlSpecifier}   {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
+<CANONICAL>{ipURL}          {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
 <CANONICAL>.*		    {SHStringOffset += SHleng; BEGIN INITIAL; return SH_URL_INVALID;}
 
 file:\/\/\/.*		    {SHStringOffset += SHleng; return SH_FILE_VALID;}
@@ -53,7 +54,7 @@ nntp:\/\/       |
 cifs:\/\/	|
 smb:\/\/	|
 itms:\/\/	|
-gopher:\/\/		    {SHStringOffset += SHleng; BEGIN CANONICAL;}
+gopher:\/\/		    {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
 
 mailto:{mailSpecifier}      {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
 {mailSpecifier}		    {SHStringOffset += SHleng; return SH_MAILTO_DEGENERATE;}	
