@@ -14,6 +14,8 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIContentController.h"
+#import "AIFlexibleTableCell.h"
+#import "AIFlexibleTableView.h"
 #import "AIMenuController.h"
 #import "AIPreferenceController.h"
 #import "AISMViewController.h"
@@ -22,8 +24,6 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIColorAdditions.h>
-#import <AIUtilities/AIFlexibleTableCell.h>
-#import <AIUtilities/AIFlexibleTableView.h>
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIScrollViewAdditions.h>
 #import <AIUtilities/AITextAttributes.h>

@@ -26,8 +26,8 @@
 #import "JMSQLLoggerAdvancedPreferences.h"
 #import "libpq-fe.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AIHTMLDecoder.h>
 #import <Adium/AIAccount.h>
+#import <Adium/AIHTMLDecoder.h>
 
 #define SQL_LOG_VIEWER  AILocalizedString(@"SQL Log Viewer",nil)
 
