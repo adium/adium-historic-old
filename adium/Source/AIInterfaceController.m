@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.51 2004/01/27 17:53:03 evands Exp $
+// $Id: AIInterfaceController.m,v 1.52 2004/02/02 07:23:10 ramoth4 Exp $
 
 #import "AIInterfaceController.h"
 
@@ -21,6 +21,10 @@
 #define ERROR_MESSAGE_WINDOW_TITLE		AILocalizedString(@"Adium : Error","Error message window title")
 #define LABEL_ENTRY_SPACING                     4.0
 #define DISPLAY_IMAGE_ON_RIGHT                  NO
+
+#define PREF_GROUP_FORMATTING			@"Formatting"
+#define KEY_FORMATTING_FONT			@"Default Font"
+
 
 @interface AIInterfaceController (PRIVATE)
 - (void)flashTimer:(NSTimer *)inTimer;
@@ -550,8 +554,29 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     if(menuItem == menuItem_bold || menuItem == menuItem_italic){
-	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-	return([responder isKindOfClass:[NSTextView class]]);
+	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder]; 
+        if(![responder isKindOfClass:[NSTextView class]])
+        {
+            return NO;
+        }
+        else
+        {
+            NSFontManager   *fontManager = [NSFontManager sharedFontManager];
+            NSFont          *messageViewFont = [[[owner preferenceController] preferenceForKey:KEY_FORMATTING_FONT group:PREF_GROUP_FORMATTING] representedFont];
+                        
+            if(menuItem == menuItem_bold)
+            {
+                return !((messageViewFont == [fontManager convertFont:messageViewFont toHaveTrait:NSBoldFontMask]) && (messageViewFont == [fontManager convertFont:messageViewFont toHaveTrait:NSUnboldFontMask]));
+            }
+            else if(menuItem == menuItem_italic)
+            {
+                return !((messageViewFont == [fontManager convertFont:messageViewFont toHaveTrait:NSItalicFontMask]) && (messageViewFont == [fontManager convertFont:messageViewFont toHaveTrait:NSUnitalicFontMask]));
+            }
+            else
+            {
+                return YES;
+            }
+        }
     }else{
 	return(YES);
     }
