@@ -7833,7 +7833,6 @@
 				CA25AAAD07B428C800DDBD7E,
 				CA25AAAF07B428C800DDBD7E,
 				CA25AAB107B428C800DDBD7E,
-				CA25AB5407B42A8500DDBD7E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7879,7 +7878,6 @@
 				CA25AAAE07B428C800DDBD7E,
 				CA25AAB007B428C800DDBD7E,
 				CA25AAB207B428C800DDBD7E,
-				CA25AB5507B42A8500DDBD7E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22170,8 +22168,6 @@
 		};
 		CA25AB4707B4299600DDBD7E = {
 			children = (
-				CA25AB5207B42A8400DDBD7E,
-				CA25AB5307B42A8400DDBD7E,
 				CA25AB4807B429A900DDBD7E,
 			);
 			isa = PBXGroup;
@@ -22190,34 +22186,6 @@
 		};
 		CA25AB4907B429A900DDBD7E = {
 			fileRef = CA25AB4807B429A900DDBD7E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CA25AB5207B42A8400DDBD7E = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = BDGaimImporter.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		CA25AB5307B42A8400DDBD7E = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = BDGaimImporter.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		CA25AB5407B42A8500DDBD7E = {
-			fileRef = CA25AB5207B42A8400DDBD7E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CA25AB5507B42A8500DDBD7E = {
-			fileRef = CA25AB5307B42A8400DDBD7E;
 			isa = PBXBuildFile;
 			settings = {
 			};
