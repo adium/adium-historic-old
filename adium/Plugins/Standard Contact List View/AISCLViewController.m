@@ -153,7 +153,7 @@
 		[contactListView reloadItem:object reloadChildren:YES];
 	}
 	
-    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView];
 }
 
 //Redisplay the modified object (Attribute change)
