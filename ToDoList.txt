@@ -27,6 +27,7 @@
 - Group chat userlist is using contact list background colors
 - Dragging a group chat's tab, then clicking a user in the userlist crashes
 - Should we be logging colors?
+- Setting the default download directory changes Safari's
 
 //-------------------------------------------------------------------------------------------------------
 // Old junk
