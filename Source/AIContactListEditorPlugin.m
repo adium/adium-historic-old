@@ -27,19 +27,20 @@
 #import <Adium/AIListObject.h>
 
 #define ADD_CONTACT					AILocalizedString(@"Add Contact",nil)
-#define ADD_CONTACT_ELLIPSIS   		[ADD_CONTACT stringByAppendingString:[NSString stringWithUTF8String:"…"]]
+#define ADD_CONTACT_ELLIPSIS   		[ADD_CONTACT stringByAppendingString:[NSString ellipsis]]
 
 #define ADD_CONTACT_TO_GROUP		AILocalizedString(@"Add Contact To Group",nil)
-#define ADD_CONTACT_TO_GROUP_ELLIPSIS	[ADD_CONTACT_TO_GROUP stringByAppendingString:[NSString stringWithUTF8String:"…"]]
+#define ADD_CONTACT_TO_GROUP_ELLIPSIS	[ADD_CONTACT_TO_GROUP stringByAppendingString:[NSString ellipsis]]
 
 #define ADD_GROUP   				AILocalizedString(@"Add Group",nil)
-#define ADD_GROUP_ELLIPSIS			[ADD_GROUP stringByAppendingString:[NSString stringWithUTF8String:"…"]]
+#define ADD_GROUP_ELLIPSIS			[ADD_GROUP stringByAppendingString:[NSString ellipsis]]
 
 #define DELETE_CONTACT   			AILocalizedString(@"Delete Selection",nil)
 #define DELETE_CONTACT_CONTEXT		AILocalizedString(@"Delete",nil)
+#define DELETE_CONTACT_CONTEXT_ELLIPSIS    [DELETE_CONTACT_CONTEXT stringByAppendingString:[NSString ellipsis]]
 
 #define RENAME_GROUP				AILocalizedString(@"Rename Group",nil)
-#define RENAME_GROUP_ELLIPSIS		[RENAME_GROUP stringByAppendingString:[NSString stringWithUTF8String:"…"]]
+#define RENAME_GROUP_ELLIPSIS		[RENAME_GROUP stringByAppendingString:[NSString ellipsis]]
 
 #define INVITE_CONTACT				AILocalizedString(@"Invite to This Chat...",nil)
 
