@@ -82,7 +82,7 @@
 	if(!storedEventPresets) storedEventPresets = [[NSMutableDictionary alloc] init];
 
 	NSNumber	*setDefaults = [[NSUserDefaults standardUserDefaults] objectForKey:@"Adium:RegisteredDefaultEvents"];
-	if(TRUE || !setDefaults || ![setDefaults boolValue]){
+	if(!setDefaults || ![setDefaults boolValue]){
 		[self setEventPreset:[builtInEventPresets objectForKey:@"Default Notifications"]];
 		[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES]
 												  forKey:@"Adium:RegisteredDefaultEvents"];
