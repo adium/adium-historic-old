@@ -11,6 +11,6 @@
 }
 
 + (void)enableExceptionCatching;
-- (NSString *)decodedExceptionBacktrace;
+- (NSString *)decodedExceptionStackTrace;
 
 @end
