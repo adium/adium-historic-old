@@ -11,6 +11,7 @@
 #import <Adium/Adium.h>
 #import "AIAdium.h"
 #import "MSNStringAdditions.h"
+#import "MSNAccountViewController.h"
 #include <openssl/md5.h>
 #include <unistd.h>
 
@@ -91,7 +92,7 @@
         //create the payload
         NSString *payload = [NSString stringWithFormat:
             @"MIME-Version: 1.0\r\nContent-Type: text/x-msmsgscontrol\r\nTypingUser: %@\r\n\r\n\r\n",
-            screenName];
+            email];
             
         if(sbSocket && [sbSocket isValid])//there's already an SB session
         {
@@ -256,10 +257,14 @@
 
 - (void)initAccount
 {
-    screenName = @"adium2testing@hotmail.com";
-    password = @"panther";
-    friendlyName = [NSString stringWithFormat:@"%s - %@", getlogin(), @"The Adium Tester"];
+    //email = [[self properties] objectForKey:@"Email"];
+    //password = @"";
+    //friendlyName = [[self properties] objectForKey:@"FriendlyName"];
     
+    email = nil;
+    password = nil;
+    friendlyName = nil;
+      
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
     
@@ -279,17 +284,17 @@
 
 - (id <AIAccountViewController>)accountView
 {
-    return nil;
+    return([MSNAccountViewController accountViewForOwner:owner account:self]);
 }
 
 - (NSString *)accountID //unique throught the whole app
 {
-    return [NSString stringWithFormat:@"MSN.%@",screenName];
+    return [NSString stringWithFormat:@"MSN.%@",[propertiesDict objectForKey:@"Email"]];
 }
 
 - (NSString *)UID //unique to the service
 {
-    return screenName;
+    return [propertiesDict objectForKey:@"Email"];
 }
 
 - (NSString *)serviceID //service id
@@ -302,9 +307,9 @@
     return [NSString stringWithFormat:@"%@.%@",[self serviceID],[self UID]];
 }
 
-- (NSString *)accountDescription //returns the email addy
+- (NSString *)accountDescription
 {
-    return friendlyName;
+    return [propertiesDict objectForKey:@"Email"];
 }
 
 - (NSArray *)supportedStatusKeys
@@ -342,24 +347,48 @@
 
 - (void)startConnect
 {
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
-    
-    connectionPhase = 1;
-	
-	if (socket)
-	{
-		[socket release];
-		socket = nil;
-	}
-    
-    stepTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
-        target:self
-        selector:@selector(update:)
-        userInfo:[[NSMutableDictionary alloc] initWithObjectsAndKeys:
-            @"", @"String",
-            [NSNumber numberWithInt:0], @"Number",
-            nil]
-        repeats:YES];
+    [[owner accountController] passwordForAccount:self notifyingTarget:self selector:@selector(finishConnect:)];
+}
+
+- (void)finishConnect:(NSString *)inPassword
+{
+    if(inPassword && [inPassword length] != 0)
+    {
+        [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
+        
+        if(email != [propertiesDict objectForKey:@"Email"])
+        {
+            [email release];
+            email = [[propertiesDict objectForKey:@"Email"] copy];
+        }
+        if(friendlyName != [propertiesDict objectForKey:@"FriendlyName"])
+        {
+            [friendlyName release];
+            friendlyName = [[propertiesDict objectForKey:@"FriendlyName"] copy];
+        }
+        if(password != inPassword)
+        {
+            [password release];
+            password = [inPassword copy];
+        }
+        
+        connectionPhase = 1;
+            
+        if (socket)
+        {
+            [socket release];
+            socket = nil;
+        }
+        
+        stepTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
+            target:self
+            selector:@selector(update:)
+            userInfo:[[NSMutableDictionary alloc] initWithObjectsAndKeys:
+                @"", @"String",
+                [NSNumber numberWithInt:0], @"Number",
+                nil]
+            repeats:YES];
+    }
 }
 
 - (void)connect:(NSTimer *)timer
@@ -411,10 +440,10 @@
                     
             case 6:
                 if ([socket sendData:[[NSString stringWithFormat:@"USR 2 MD5 I %s\r\n",
-                    [screenName cString]] dataUsingEncoding:NSUTF8StringEncoding]]){
+                    [email cString]] dataUsingEncoding:NSUTF8StringEncoding]]){
                     
                     /*NSLog(@">>> %@",[NSString stringWithFormat:@"USR 2 MD5 I %s",
-                        [screenName cString]]);*/
+                        [email cString]]);*/
                     connectionPhase ++;
                 }
                 break;
@@ -479,10 +508,10 @@
                     
             case 12:
                 if ([socket sendData:[[NSString stringWithFormat:@"USR 2 MD5 I %s\r\n",
-                    [screenName cString]] dataUsingEncoding:NSUTF8StringEncoding]])
+                    [email cString]] dataUsingEncoding:NSUTF8StringEncoding]])
                 {
                     /*NSLog(@">>> %@",[NSString stringWithFormat:@"USR 2 MD5 I %s",
-                        [screenName cString]]);*/
+                        [email cString]]);*/
                     connectionPhase ++;
                 }
                 break;
@@ -621,7 +650,7 @@
             case 20:
                 if([socket sendData:
                         [[NSString stringWithFormat:@"REA 4 %@ %@\r\n",
-                            screenName, [friendlyName urlEncode]]
+                            email, [friendlyName urlEncode]]
                         dataUsingEncoding:NSUTF8StringEncoding]])
                 {
                     //NSLog(@">>> %@", @"CHG 5 NLN");			
@@ -856,7 +885,7 @@
                                 port:[[hostAndPort objectAtIndex:1] intValue]];
                             NSMutableDictionary *socketDict = nil;
                             
-                            //[self sendPayloadMessage:[NSString stringWithFormat:@"ANS 1 %@ %@ %@\r\n", screenName, [message objectAtIndex:4], [message objectAtIndex:1]]onSocket:sbSocket];
+                            //[self sendPayloadMessage:[NSString stringWithFormat:@"ANS 1 %@ %@ %@\r\n", email, [message objectAtIndex:4], [message objectAtIndex:1]]onSocket:sbSocket];
                                 
                             
                             if (socketDict = [switchBoardDict 
@@ -874,7 +903,7 @@
                             
                             [socketDict setObject:[NSNumber numberWithInt:1] forKey:@"Phase"];
                             [socketDict setObject:[NSString stringWithFormat:@"ANS 1 %@ %@ %@\r\n",
-                                    screenName, [message objectAtIndex:4], [message objectAtIndex:1]] forKey:@"String"];
+                                    email, [message objectAtIndex:4], [message objectAtIndex:1]] forKey:@"String"];
                             
                             [self manageSBSocket:socketDict withHandle:[message objectAtIndex:5]];
                         }
@@ -1063,168 +1092,6 @@
     // Set status as offline
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE]
         forKey:@"Status" account:self];
-}
-
-// Returns fields as NSString key/value pairs, and the body under the key "MSG Body"
-+ (NSDictionary *)parseMessage:(NSData *)payload
-{
-	int curMode = 0;
-	
-	NSMutableDictionary		*dict = [[NSMutableDictionary alloc] init];
-	NSString				*loadStr = [NSString stringWithCString:[payload bytes] length:[payload length]],
-							*curField = nil, *curValue = nil;
-	unsigned long			lastCharIndex = 0, curCharIndex = 0;
-	unichar					curChar;
-	BOOL					done = NO;
-	NSRange					range;
-	
-    NSLog (@"Parsing message payload of length %d.", [payload length]);
-    
-	while (!done)
-	{
-		curChar = [loadStr characterAtIndex:curCharIndex];
-	
-		switch (curMode)
-		{
-		case 0:	// Scanning in a field
-			if (curChar == ':')
-			{				
-				range.location = lastCharIndex;
-				range.length = curCharIndex - lastCharIndex;
-				
-				if ([loadStr characterAtIndex:(curCharIndex + 1)] == ' ')
-				{	// The space after the colon is not required by the format, but not part of the
-					// field value either
-					curCharIndex++;
-				}
-				
-				if (range.length != 0)
-				{
-					curField = [loadStr substringWithRange:range];
-				}
-				else
-				{
-					NSLog (@"Message with empty field name.");
-					curField = nil;
-				}
-				curMode = 1;
-				lastCharIndex = curCharIndex + 1;
-			}
-			else if (curChar == '\r')
-			{
-				if (lastCharIndex == curCharIndex)
-				{	// EXIT LOOP
-					done = TRUE;	// The tell-tale blank line was found!
-					curCharIndex++;
-				}
-				else
-				{	// Strange error: field name that ends in newline: "badfield\n\r" instead of colon: "goodfield: value\n\r"
-					// Report error:
-					range.location = lastCharIndex;
-					range.length = curCharIndex - lastCharIndex;
-					
-					if (range.length != 0)
-					{
-						NSLog (@"Badly formed field: (no colon) %@", [loadStr substringWithRange:range]);
-					}
-					else
-					{
-						NSLog (@"Badly formed field (no colon)");
-					}
-					
-					// Proceed: (reset counting variables, at next line's start)
-					if ([loadStr characterAtIndex:(curCharIndex + 1)] == '\r')
-						curCharIndex++;
-					lastCharIndex = curCharIndex + 1;
-				}
-			}
-			break;
-			
-			
-		case 1: // Scanning in a value
-			if (curChar == '\n')
-			{
-				// Put the range of the text into string
-				range.location = lastCharIndex;
-				range.length = curCharIndex - lastCharIndex;
-				
-				if (range.length != 0)
-					curValue = [loadStr substringWithRange:range];
-				else
-					curValue = @"";
-				
-				// Store values in dictionary
-				if (curField != nil)
-				{
-					//NSLog (@"MSN message values: %@: %@", curField, curValue);
-					[dict setObject:curValue forKey:curField];
-				}
-				
-				// Move on
-				//curCharIndex++;	// To account for following required '\r'
-				curMode = 0;
-				lastCharIndex = curCharIndex + 1;
-			}
-		
-			break;
-		}
-		
-		++curCharIndex;
-		
-		if (curCharIndex + 1 >= [loadStr length]) done = TRUE;	// +1 because we often look one past it for checks.
-	}
-	
-	// Get the message body
-	
-	NSString*	encoding = [dict objectForKey:@"Content-Type"];
-	curField = @"MSG Body";
-	//range.length = 13;
-	//range.location = range.length - ([encoding length] - 1);
-	
-	
-	if ([encoding rangeOfString:@"charset=UTF-8"].location != NSNotFound)//[encoding compare:@"charset=UTF-8" options:nil range:range])//contains:@"charset=UTF-8"])
-	{
-		range.location = curCharIndex;
-		range.length = ([payload length] - curCharIndex);
-		
-		if (range.length > 0)
-			curValue = [NSString stringWithCString:[[payload subdataWithRange:range] bytes] length:range.length];
-		else
-			curValue = @"";
-		
-		// Store values in dictionary
-		if (curField != nil)
-		{
-			//NSLog (@"MSN message values: %@: %@", curField, curValue);
-			[dict setObject:curValue forKey:curField];
-		}
-	}
-	else
-	{
-		NSLog (@"Did not recognize encoding: %@.  Will assume UTF-8", encoding);
-        
-        
-		range.location = curCharIndex;
-		range.length = ([payload length] - curCharIndex);
-		
-		if (range.length > 0)
-			curValue = [NSString stringWithCString:[[payload subdataWithRange:range] bytes] length:range.length];
-		else
-			curValue = @"";
-		
-		// Store values in dictionary
-		if (curField != nil)
-		{
-			//NSLog (@"MSN message values: %@: %@", curField, curValue);
-			[dict setObject:curValue forKey:curField];
-		}
-	}
-	
-	// Make the immutable dictionary
-	NSDictionary* returnDict = [NSDictionary dictionaryWithDictionary:dict];
-	[dict release];
-	
-	return (returnDict);
 }
 
 - (BOOL)sendPayloadMessage:(NSString *)message onSocket:(AISocket *)Socket
@@ -1610,4 +1477,168 @@
     }
 }
 
+/*************************/
+/* SPECIAL SHINY METHODS */
+/*************************/
+
+// Returns fields as NSString key/value pairs, and the body under the key "MSG Body"
++ (NSDictionary *)parseMessage:(NSData *)payload
+{
+	int curMode = 0;
+	
+	NSMutableDictionary		*dict = [[NSMutableDictionary alloc] init];
+	NSString				*loadStr = [NSString stringWithCString:[payload bytes] length:[payload length]],
+							*curField = nil, *curValue = nil;
+	unsigned long			lastCharIndex = 0, curCharIndex = 0;
+	unichar					curChar;
+	BOOL					done = NO;
+	NSRange					range;
+	
+    NSLog (@"Parsing message payload of length %d.", [payload length]);
+    
+	while (!done)
+	{
+		curChar = [loadStr characterAtIndex:curCharIndex];
+	
+		switch (curMode)
+		{
+		case 0:	// Scanning in a field
+			if (curChar == ':')
+			{				
+				range.location = lastCharIndex;
+				range.length = curCharIndex - lastCharIndex;
+				
+				if ([loadStr characterAtIndex:(curCharIndex + 1)] == ' ')
+				{	// The space after the colon is not required by the format, but not part of the
+					// field value either
+					curCharIndex++;
+				}
+				
+				if (range.length != 0)
+				{
+					curField = [loadStr substringWithRange:range];
+				}
+				else
+				{
+					NSLog (@"Message with empty field name.");
+					curField = nil;
+				}
+				curMode = 1;
+				lastCharIndex = curCharIndex + 1;
+			}
+			else if (curChar == '\r')
+			{
+				if (lastCharIndex == curCharIndex)
+				{	// EXIT LOOP
+					done = TRUE;	// The tell-tale blank line was found!
+					curCharIndex++;
+				}
+				else
+				{	// Strange error: field name that ends in newline: "badfield\n\r" instead of colon: "goodfield: value\n\r"
+					// Report error:
+					range.location = lastCharIndex;
+					range.length = curCharIndex - lastCharIndex;
+					
+					if (range.length != 0)
+					{
+						NSLog (@"Badly formed field: (no colon) %@", [loadStr substringWithRange:range]);
+					}
+					else
+					{
+						NSLog (@"Badly formed field (no colon)");
+					}
+					
+					// Proceed: (reset counting variables, at next line's start)
+					if ([loadStr characterAtIndex:(curCharIndex + 1)] == '\r')
+						curCharIndex++;
+					lastCharIndex = curCharIndex + 1;
+				}
+			}
+			break;
+			
+			
+		case 1: // Scanning in a value
+			if (curChar == '\n')
+			{
+				// Put the range of the text into string
+				range.location = lastCharIndex;
+				range.length = curCharIndex - lastCharIndex;
+				
+				if (range.length != 0)
+					curValue = [loadStr substringWithRange:range];
+				else
+					curValue = @"";
+				
+				// Store values in dictionary
+				if (curField != nil)
+				{
+					//NSLog (@"MSN message values: %@: %@", curField, curValue);
+					[dict setObject:curValue forKey:curField];
+				}
+				
+				// Move on
+				//curCharIndex++;	// To account for following required '\r'
+				curMode = 0;
+				lastCharIndex = curCharIndex + 1;
+			}
+		
+			break;
+		}
+		
+		++curCharIndex;
+		
+		if (curCharIndex + 1 >= [loadStr length]) done = TRUE;	// +1 because we often look one past it for checks.
+	}
+	
+	// Get the message body
+	
+	NSString*	encoding = [dict objectForKey:@"Content-Type"];
+	curField = @"MSG Body";
+	//range.length = 13;
+	//range.location = range.length - ([encoding length] - 1);
+	
+	
+	if ([encoding rangeOfString:@"charset=UTF-8"].location != NSNotFound)//[encoding compare:@"charset=UTF-8" options:nil range:range])//contains:@"charset=UTF-8"])
+	{
+		range.location = curCharIndex;
+		range.length = ([payload length] - curCharIndex);
+		
+		if (range.length > 0)
+			curValue = [NSString stringWithCString:[[payload subdataWithRange:range] bytes] length:range.length];
+		else
+			curValue = @"";
+		
+		// Store values in dictionary
+		if (curField != nil)
+		{
+			//NSLog (@"MSN message values: %@: %@", curField, curValue);
+			[dict setObject:curValue forKey:curField];
+		}
+	}
+	else
+	{
+		NSLog (@"Did not recognize encoding: %@.  Will assume UTF-8", encoding);
+                
+		range.location = curCharIndex;
+		range.length = ([payload length] - curCharIndex);
+		
+		if (range.length > 0)
+			curValue = [NSString stringWithCString:[[payload subdataWithRange:range] bytes] length:range.length];
+		else
+			curValue = @"";
+		
+		// Store values in dictionary
+		if (curField != nil)
+		{
+			//NSLog (@"MSN message values: %@: %@", curField, curValue);
+			[dict setObject:curValue forKey:curField];
+		}
+	}
+	
+	// Make the immutable dictionary
+	NSDictionary* returnDict = [NSDictionary dictionaryWithDictionary:dict];
+	[dict release];
+	
+	return (returnDict);
+}
 @end
