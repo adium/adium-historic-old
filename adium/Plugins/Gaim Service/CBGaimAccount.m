@@ -1188,9 +1188,7 @@ static id<GaimThread> gaimThread = nil;
 	[[adium contactController] delayListObjectNotificationsUntilInactivity];
 	
     //Tell libgaim to disconnect
-    if(gaim_account_is_connected(account)){
-		[gaimThread disconnectAccount:self];
-    }
+	[gaimThread disconnectAccount:self];
 }
 
 //Our account was disconnected, report the error
@@ -1505,31 +1503,16 @@ static id<GaimThread> gaimThread = nil;
 		
 		//If the notification object is a listContact belonging to this account, update the serverside information
 		if ([listObject isKindOfClass:[AIListContact class]] && 
-			[[(AIListContact *)listObject accountID] isEqualToString:[self uniqueObjectID]]){
+			[[(AIListContact *)listObject accountID] isEqualToString:[self uniqueObjectID]] &&
+			[[userInfo objectForKey:@"Key"] isEqualToString:@"Alias"]){
 			
-			if (gaim_account_is_connected(account)){
-				const char  *uidUTF8String = [[listObject UID] UTF8String];
-				GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
-				
-				NSString	*key = [userInfo objectForKey:@"Key"];
-				
-				if ([key isEqualToString:@"Alias"]){
-					const char *alias;
-					
-					alias = [[listObject preferenceForKey:@"Alias"
-													group:PREF_GROUP_ALIASES 
-									ignoreInheritedValues:YES] UTF8String];
-
-					if ((alias && !buddy->alias) ||
-						(!alias && buddy->alias) ||
-						((buddy->alias && alias && (strcmp(buddy->alias,alias) != 0)))){
-					
-						gaim_blist_alias_buddy(buddy,alias);
-						serv_alias_buddy(buddy);
-					}
-				}
-			}
+			NSString *alias = [listObject preferenceForKey:@"Alias"
+													 group:PREF_GROUP_ALIASES 
+									 ignoreInheritedValues:YES];
+			
+			[gaimThread setAlias:alias forUID:[listObject UID] onAccount:self];
 		}
+		
 	}else if (([notification object] == self) && ([prefGroup isEqualToString:GROUP_ACCOUNT_STATUS])){
 		//Update the mail checking setting
 		if (account){

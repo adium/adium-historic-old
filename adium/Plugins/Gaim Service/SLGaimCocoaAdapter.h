@@ -15,6 +15,9 @@
 - (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:groupName;
 - (oneway void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName;
 - (oneway void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName;
+
+- (oneway void)setAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount;
+
 - (oneway void)openChat:(AIChat *)chat onAccount:(id)adiumAccount;
 - (oneway void)closeChat:(AIChat *)chat;
 - (void)connectAccount:(id)adiumAccount;
@@ -50,6 +53,9 @@
 - (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:groupName;
 - (oneway void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName;
 - (oneway void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName;
+
+- (oneway void)setAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount;
+
 - (oneway void)openChat:(AIChat *)chat onAccount:(id)adiumAccount;
 - (oneway void)closeChat:(AIChat *)chat;
 - (void)connectAccount:(id)adiumAccount;
