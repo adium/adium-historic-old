@@ -255,8 +255,6 @@
 
 - (BOOL)isStopped
 {
-	FileTransferStatus	status = [self status];
-	
 	return((status == Complete_FileTransfer) ||
 		   (status == Canceled_Local_FileTransfer) ||
 		   (status == Canceled_Remote_FileTransfer));
