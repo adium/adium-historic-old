@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.46 2004/01/19 19:34:15 bgannin Exp $
+// $Id: AIDockController.m,v 1.47 2004/01/25 09:14:18 bgannin Exp $
 
 #import "AIDockController.h"
 
@@ -52,7 +52,7 @@
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
     
     //Register themable preferences
-    [[owner preferenceController] registerThemableKeys:[NSArray arrayNamed:DOCK_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
+    [[owner preferenceController] registerThemableKeys:[NSArray arrayNamed:DOCK_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
 
     //observe pref changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
