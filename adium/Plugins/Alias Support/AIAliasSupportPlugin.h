@@ -37,6 +37,7 @@
 }
 
 - (void)installPlugin;
+- (void)preferencesChanged:(NSNotification *)notification;
 - (IBAction)setAlias:(id)sender;
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject;
 
