@@ -8,10 +8,16 @@
 
 #import "CBContactCountingDisplayPlugin.h"
 
+#define CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS @"ContactCountingDisplayDefaults"
+
 @implementation CBContactCountingDisplayPlugin
 
 - (void)installPlugin
 {
+ /*   //Set up preferences
+    prefs = [[CBContactCountingDisplayPreferences contactCountingDisplayPreferences] retain];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST]; */
+
     //install our observers
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(contactsChanged:) name:ListObject_StatusChanged object:nil];
@@ -24,26 +30,20 @@
 
 - (void)contactsChanged:(NSNotification *)notification
 {
-    /* some important keys:
-        @"VisibleObjectCount" - ListGroup status object (NSNumber)
-        @"Right Text" - ListObject display array (AIMutableOwnerArray)
-    */
+    if((visibleCount || allCount) && [[notification object] isOfClass:[AIListGroup class]])
+    {
+        AIListGroup *group = [notification object];
+        NSString *addString = nil;
         
-    AIListObject *listObject = [notification object];
-    NSArray *groups = [listObject containingGroups];
-    NSString *addString;
-    
-    if(groups)
-    {        
-        NSEnumerator *numer = [groups objectEnumerator];
-        AIListGroup *group;
-        while(group = [numer nextObject])
-        {
-            addString = [NSString stringWithFormat:@" (%i/%i)", [[group statusObjectForKey:@"VisibleObjectCount"] intValue], [group count]];
-            
-            //Shouldn't really have to use primary object.
+        if(visibleCount && allCount)
+            addString = [NSString stringWithFormat:@" (%i/%i)", [[group statusObjectForKey:@"VisibleObjectCount"] intValue], [[group statusObjectForKey:@"ObjectCount"] intValue]];
+        else if(visibleCount)
+            addString = [NSString stringWithFormat:@" (%i)", [[group statusObjectForKey:@"VisibleObjectCount"] intValue]];
+        else if(allCount)
+            addString = [NSString stringWithFormat:@" (%i)", [[group statusObjectForKey:@"ObjectCount"] intValue]];
+        
+        if(addString)
             [[group displayArrayForKey:@"Right Text"] setPrimaryObject:addString withOwner:self];
-        }
     }
 }
 

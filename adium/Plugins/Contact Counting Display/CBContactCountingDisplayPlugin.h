@@ -6,9 +6,16 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
+#define PREF_GROUP_CONTACT_LIST     @"Contact List"
+#define KEY_COUNT_ALL_CONTACTS      @"Count All Contacts"
+#define KEY_COUNT_VISIBLE_CONTACTS  @"Count Visible Contacts"
+
 @interface CBContactCountingDisplayPlugin : AIPlugin 
 {
-
+    BOOL                                allCount;
+    BOOL                                visibleCount;
+    
+    CBContactCountingDisplayPreferences *prefs;
 }
 - (void)installPlugin;
 - (void)uninstallPlugin;
