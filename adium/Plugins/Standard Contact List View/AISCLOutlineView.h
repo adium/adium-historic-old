@@ -20,7 +20,9 @@
 
     BOOL			showLabels;
     BOOL                        labelAroundContactOnly;
-        
+    float                       labelOpacity;
+    BOOL                        outlineLabels;
+    
     NSFont			*font;
     NSFont			*groupFont;
     NSColor			*color;
@@ -57,11 +59,17 @@
 
 - (void)setIsBorderless:(BOOL)inIsBorderless;
 
+- (void)setShowLabels:(BOOL)inValue;
+- (BOOL)showLabels;
+
+- (void)setOutlineLabels:(BOOL)inValue;
+- (BOOL)outlineLabels;
+
 - (void)setLabelAroundContactOnly:(BOOL)inLabelAroundContactOnly;
 - (BOOL)labelAroundContactOnly;
 
-- (void)setShowLabels:(BOOL)inValue;
-- (BOOL)showLabels;
+- (void)setLabelOpacity:(float)inValue;
+- (float)labelOpacity;
 
 - (void)setGroupFont:(NSFont *)inFont;
 - (NSFont *)groupFont;

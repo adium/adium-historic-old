@@ -34,5 +34,9 @@
         <false/>
         <key>Label Around Contact</key>
         <false/>
+        <key>Outline Labels</key>
+        <false/>
+        <key>Label Opacity</key>
+        <real>1.0</real>
 </dict>
 </plist>

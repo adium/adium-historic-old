@@ -116,7 +116,7 @@
     
     [contactListView performFullRecalculation];
     
-    [contactListView display];
+//    [contactListView display];
     [[contactListView window] compatibleInvalidateShadow];
 }
 
@@ -126,7 +126,7 @@
     [contactListView reloadData]; //Redisplay
     [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView];
     
-    [contactListView display];
+//    [contactListView display];
     [[contactListView window] compatibleInvalidateShadow];
 }
 
@@ -162,8 +162,11 @@
         BOOL		alternatingGrid = [[prefDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue];
         BOOL		customGroupColor = [[prefDict objectForKey:KEY_SCL_CUSTOM_GROUP_COLOR] boolValue];
         BOOL		boldGroups = [[prefDict objectForKey:KEY_SCL_BOLD_GROUPS] boolValue];
+        
         BOOL		showLabels = [[prefDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue];
         BOOL            labelAroundContactOnly = [[prefDict objectForKey:KEY_SCL_LABEL_AROUND_CONTACT] boolValue];
+        BOOL            outlineLabels = [[prefDict objectForKey:KEY_SCL_OUTLINE_LABELS] boolValue];
+        float           labelOpacity = [[prefDict objectForKey:KEY_SCL_LABEL_OPACITY] floatValue];
         
         isBorderless = [[prefDict objectForKey:KEY_SCL_BORDERLESS] boolValue];
         
@@ -199,6 +202,11 @@
           
         //Colors
         [contactListView setShowLabels:showLabels];
+        if (showLabels) {
+            [contactListView setOutlineLabels:outlineLabels];
+            [contactListView setLabelOpacity:labelOpacity];
+        }
+        
         [contactListView setLabelAroundContactOnly:labelAroundContactOnly];
         [contactListView setColor:color];
         [contactListView setGroupColor:(customGroupColor ? groupColor : color)];
@@ -213,18 +221,20 @@
         [contactListView setDrawsAlternatingRows:alternatingGrid];
         [contactListView setAlternatingRowColor:gridColor];
 
+//        NSLog(@"%@",[contactListView superview]);
+     /*
         if ([[[contactListView superview] superview] respondsToSelector:@selector(setUpdateShadowsWhileScrolling:)]) {
-            [(AIAutoScrollView *)[[contactListView superview] superview] setUpdateShadowsWhileScrolling:(alpha != 1.0)];
+       [(AIAutoScrollView *)[[contactListView superview] superview] setUpdateShadowsWhileScrolling:(alpha != 1.0)];
         }
-        
+       */ 
         /*
             For this view to be transparent, it's containing window must be set as non-opaque.  It would make sense to use: [[contactListView window] setOpaque:(alpha == 100.0)];
 
             However, setting a window to opaque causes it's contents to be shadowed.  It is a pain (and a major speed hit) to maintain shadows beneath the contact list text.  A little trick to prevent the window manager from shadowing the window content is to set the window itself as non-opaque.  The contents of a window that is non-opaque will not cast a shadow.  Setting the window's alpha value to 0.9999999 removes the shadowing without giving the slightest appearance of opacity to the window titlebar and widgets.
             */
-        [[contactListView window] setOpaque:NO];
+    //    [[contactListView window] setOpaque:NO];
         [[contactListView window] setAlphaValue:(/*alpha == 1.0 ? 1.0 :*/ 0.9999999)];
-        [contactListView display];
+    //    [contactListView display];
         [[contactListView window] compatibleInvalidateShadow];
         
         [contactListView performFullRecalculation];
@@ -343,7 +353,7 @@
     //Changing the selection with the mouse calls outlineViewSelectionWillChange before we get here; changing it with the keyboard does not.  It would be wasteful to update the shadow display twice, hence the check below.
     if (!fixedShadows) {
         //update the shadows
-        [contactListView display];
+//        [contactListView setNeedsDisplay:YES];
         [[contactListView window] compatibleInvalidateShadow];
     } else {
         fixedShadows = NO;   
@@ -373,7 +383,7 @@
 - (void)outlineViewSelectionIsChanging:(NSNotification *)notification
 {
     //update the shadows
-    [contactListView display];
+//    [contactListView setNeedsDisplay:YES];
     [[contactListView window] compatibleInvalidateShadow];
     
     //Don't need to fix shadows after the selection changes
