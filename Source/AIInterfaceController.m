@@ -1304,7 +1304,7 @@
 	[menuItem setTag:AIFloatingWindowLevel];
 	[windowPositionMenu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Normal",nil)
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Normally",nil)
 																	 target:target
 																	 action:@selector(selectedWindowLevel:)
 															  keyEquivalent:@""] autorelease];
