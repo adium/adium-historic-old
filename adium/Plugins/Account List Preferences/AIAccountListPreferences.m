@@ -135,7 +135,6 @@
 //Configure the account specific options
 - (void)configureAccountOptionsView
 {
-	NSLog(@"configuring!");
     NSEnumerator	*enumerator;
     NSTabViewItem	*tabViewItem;
     NSView			*accountView;
@@ -150,7 +149,6 @@
         [tabView_auxiliary removeTabViewItem:[tabView_auxiliary tabViewItemAtIndex:[tabView_auxiliary numberOfTabViewItems] - 1]];
     }
     
-	NSLog(@"remove subviews and release current");
     //Close any currently open controllers
     [view_accountDetails removeAllSubviews];
     if(accountViewController){
@@ -165,18 +163,26 @@
     autoConnect = [[selectedAccount preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue];
     [button_autoConnect setState:autoConnect];
 
-	NSLog(@"should load here");
     //Correctly size the sheet for the account details view
     accountViewController = [[selectedAccount accountView] retain];
     accountView = [accountViewController view];
-	NSLog(@"done loading");
+
     //Swap in the account details view
     [view_accountDetails addSubview:accountView];
-    [accountView setFrameOrigin:NSMakePoint(0,([view_accountDetails frame].size.height - [accountView frame].size.height))];
+	float accountViewHeight = [accountView frame].size.height;
+	
+    [accountView setFrameOrigin:NSMakePoint(0,([view_accountDetails frame].size.height - accountViewHeight))];
     if([accountViewController conformsToProtocol:@protocol(AIAccountViewController)]){
         [accountViewController configureViewAfterLoad]; //allow the account subview to set itself up after the window has loaded
+	
+		NSView *auxiliaryAccountDetails = [accountViewController auxiliaryAccountDetails];
+		if (auxiliaryAccountDetails) {
+			[view_accountDetails addSubview:auxiliaryAccountDetails];
+			[auxiliaryAccountDetails setFrameOrigin:NSMakePoint(0,([view_accountDetails frame].size.height -accountViewHeight -[auxiliaryAccountDetails frame].size.height))];
+		}
+	 
     }
-	NSLog(@"configureViewAfterLoad was just called");
+
     //Hook up the key view chain
     [popupMenu_serviceList setNextKeyView:[accountView nextKeyView]];
     NSView	*nextView = accountView;

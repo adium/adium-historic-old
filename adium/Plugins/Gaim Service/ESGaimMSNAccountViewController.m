@@ -41,4 +41,9 @@
     return MSN_AUXILIARY_NIB;
 }
 
+- (NSView *)auxiliaryAccountDetails
+{
+	return view_auxiliaryAccountDetails;
+}
+
 @end

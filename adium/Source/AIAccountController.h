@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.8 $
- * $Date: 2004/02/08 00:23:00 $
- * $Author: adamiser $
+ * $Revision: 1.9 $
+ * $Date: 2004/02/23 20:59:17 $
+ * $Author: evands $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
@@ -34,6 +34,7 @@
 @protocol AIAccountViewController <NSObject>
 - (NSView *)view;
 - (NSArray *)auxiliaryTabs;
+- (NSView *)auxiliaryAccountDetails;
 - (void)configureViewAfterLoad;
 @end
 

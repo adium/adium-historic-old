@@ -111,6 +111,11 @@
     return(auxiliaryTabs);
 }
 
+- (NSView *)auxiliaryAccountDetails
+{
+	return nil;
+}
+
 - (void)loadAuxiliaryTabsFromTabView:(NSTabView *)inTabView
 {
     //Extract our auxiliary tabs from the nib, where they are stored in an NSTabView inside an NSWindow
@@ -120,12 +125,10 @@
 		
 		//Create the auxiliaryTabs array if this is an initial set of auxiliary tabs
 		//or add to the array if auxiliaries already exist
-		NSLog(@"Auxiliary tabs is %@",auxiliaryTabs);
 		if (!auxiliaryTabs)
 			auxiliaryTabs = [tabViewItems mutableCopy];
 		else
 			[auxiliaryTabs addObjectsFromArray:tabViewItems];
-		NSLog(@"Auxiliary tabs is now %@",auxiliaryTabs);
 		
         //Now release the tabs and the window they came from
         NSEnumerator    *enumerator = [tabViewItems objectEnumerator];
@@ -138,7 +141,6 @@
         [[inTabView window] release];
     }
 }
-
 
 //Update display for account status change
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent

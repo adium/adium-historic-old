@@ -22,6 +22,7 @@
     NSMutableArray			*auxiliaryTabs;
     
     IBOutlet		NSView			*view_accountView;              //Inline account preferences
+	IBOutlet		NSView			*view_auxiliaryAccountDetails;
     IBOutlet		NSTextField		*textField_accountName;		//Account name
     IBOutlet		NSTextField		*textField_password;		//Password
     IBOutlet		NSTabView		*view_auxiliaryTabView;		//Tab view containing auxiliary tabs
@@ -36,5 +37,5 @@
 - (IBAction)changedPreference:(id)sender;
 - (void)loadAuxiliaryTabsFromTabView:(NSTabView *)inTabView;
 - (NSString *)nibName;
-
+- (NSView *)auxiliaryAccountDetails;
 @end
