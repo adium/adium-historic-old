@@ -2,20 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>message_incoming_backgroundColor</key>
-	<string>226,226,226</string>
-	<key>message_incoming_darkPrefixColor</key>
-	<string>0,71,195</string>
-	<key>message_outgoing_backgroundColor</key>
-	<string>255,255,255</string>
-	<key>message_outgoing_darkPrefixColor</key>
-	<string>0,127,0</string>
-	<key>message_inline_dividerColor</key>
-	<string>205,205,205</string>
-	<key>message_outgoing_sourceColor</key>
-	<string>0,83,0</string>
-	<key>message_incoming_sourceColor</key>
-	<string>0,21,83</string>
 	<key>message_send_onEnter</key>
 	<true/>
 	<key>message_send_onReturn</key>

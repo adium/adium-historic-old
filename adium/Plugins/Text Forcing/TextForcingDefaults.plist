@@ -3,16 +3,16 @@
 <plist version="1.0">
 <dict>
 	<key>Force Background Color</key>
-	<false/>
+	<true/>
 	<key>Force Font</key>
-	<false/>
+	<true/>
 	<key>Force Text Color</key>
-	<false/>
+	<true/>
 	<key>Desired Font</key>
-	<string>Lucida Grande,11</string>
+	<string>Helvetica,12</string>
 	<key>Desired Text Color</key>
 	<string>0,0,0</string>
 	<key>Desired Background Color</key>
-	<string>255,255,255</string>
+	<string>226,226,226</string>
 </dict>
 </plist>

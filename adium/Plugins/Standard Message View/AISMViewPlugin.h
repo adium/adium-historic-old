@@ -17,9 +17,35 @@
 #import <Adium/Adium.h>
 
 @protocol AIMessageViewController;
+@class AISMPreferences;
+
+#define PREF_GROUP_STANDARD_MESSAGE_DISPLAY	@"Message Display"
+
+#define	KEY_SMV_PREFIX_FONT			@"Prefix Font"
+#define	KEY_SMV_SHOW_TIME_STAMPS		@"Show Time Stamps"
+#define	KEY_SMV_SHOW_TIME_SECONDS		@"Show Seconds"
+#define	KEY_SMV_HIDE_DUPLICATE_TIME_STAMPS	@"Hide Duplicate Times"
+#define	KEY_SMV_SHOW_PREFIX			@"Show Prefix"
+#define	KEY_SMV_HIDE_DUPLICATE_PREFIX		@"Hide Duplicate Prefixes"
+#define	KEY_SMV_INCOMING_PREFIX_COLOR		@"Incoming Prefix Color"
+#define	KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR	@"Incoming Prefix Light Color"
+#define	KEY_SMV_INCOMING_PREFIX_COLOR_NAME	@"Incoming Prefix Color Name"
+#define	KEY_SMV_OUTGOING_PREFIX_COLOR		@"Outgoing Prefix Color"
+#define	KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR	@"Outgoing Prefix Light Color"
+#define	KEY_SMV_OUTGOING_PREFIX_COLOR_NAME	@"Outgoing Prefix Color Name"
+#define	KEY_SMV_DISPLAY_GRID_LINES		@"Show GridLines"
+#define	KEY_SMV_GRID_DARKNESS			@"GridLine Darkness"
+#define	KEY_SMV_DISPLAY_SENDER_GRADIENT		@"Show Sender Gradient"
+#define	KEY_SMV_SENDER_GRADIENT_DARKNESS	@"Sender Gradient Darkness"
+#define	KEY_SMV_PREFIX_INCOMING			@"Prefix Incoming"
+#define	KEY_SMV_PREFIX_OUTGOING			@"Prefix Outgoing"
+#define	KEY_SMV_TIME_STAMP_FORMAT		@"Time Stamp"
+#define	KEY_SMV_TIME_STAMP_FORMAT_SECONDS	@"Time Stamp Seconds"
 
 @interface AISMViewPlugin : AIPlugin <AIMessageViewController> {
     NSMutableArray		*controllerArray;
+
+    AISMPreferences		*preferences;
 }
 
 @end

@@ -1162,6 +1162,19 @@
 			settings = {
 			};
 		};
+		4B5AAA1F03E02EB900A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = PrefixColors.plist;
+			path = "Plugins/Standard Message View/PrefixColors.plist";
+			refType = 4;
+		};
+		4B5AAA2003E02EB900A8010A = {
+			fileRef = 4B5AAA1F03E02EB900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B64792403DB613700A8010A = {
 			isa = PBXTargetDependency;
 			target = F53EA2CD02C803C101A8010A;
@@ -1640,6 +1653,18 @@
 			settings = {
 			};
 		};
+		4B72128F03DE1C8A00A8010A = {
+			fileRef = 9EB7C05903D52BA200415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B72129003DE1C8B00A8010A = {
+			fileRef = 9EB7C05803D52BA200415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B77649403C35D4200A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
@@ -1712,6 +1737,7 @@
 				4B187A0303D59CCC00A8010A,
 				4BBC8E4B03BA0DB900A8010A,
 				F570A5B103704C3701A8010A,
+				4B8EFC0403E18F2D00A8010A,
 				F579394C033E74E401A8010A,
 				4BEF84CD03BE41C700A8010A,
 				F55B415903AB8B2601A8010A,
@@ -2017,6 +2043,32 @@
 		};
 		4B8748D203DC812A00A8010A = {
 			fileRef = F570A61703704F6601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B8EFC0403E18F2D00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIPopUpButtonAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIPopUpButtonAdditions.h";
+			refType = 4;
+		};
+		4B8EFC0503E18F2D00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIPopUpButtonAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIPopUpButtonAdditions.m";
+			refType = 4;
+		};
+		4B8EFC0603E18F2D00A8010A = {
+			fileRef = 4B8EFC0403E18F2D00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B8EFC0703E18F2D00A8010A = {
+			fileRef = 4B8EFC0503E18F2D00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2432,6 +2484,57 @@
 		};
 		4BCDEB4403D4DC9700A8010A = {
 			fileRef = 4BCDEB4203D4DC9700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE9200A03DED0E500A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISMPreferences.h;
+			path = "Plugins/Standard Message View/AISMPreferences.h";
+			refType = 4;
+		};
+		4BE9200B03DED0E500A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISMPreferences.m;
+			path = "Plugins/Standard Message View/AISMPreferences.m";
+			refType = 4;
+		};
+		4BE9200C03DED0E500A8010A = {
+			fileRef = 4BE9200A03DED0E500A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE9200D03DED0E500A8010A = {
+			fileRef = 4BE9200B03DED0E500A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE9200E03DED34C00A8010A = {
+			isa = PBXFileReference;
+			name = AISMPrefView.nib;
+			path = "Plugins/Standard Message View/AISMPrefView.nib";
+			refType = 4;
+		};
+		4BE9200F03DED34C00A8010A = {
+			fileRef = 4BE9200E03DED34C00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE9201003DEE2FE00A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = SMVDefaults.plist;
+			path = "Plugins/Standard Message View/SMVDefaults.plist";
+			refType = 4;
+		};
+		4BE9201103DEE2FE00A8010A = {
+			fileRef = 4BE9201003DEE2FE00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3365,18 +3468,6 @@
 			path = "Plugins/Dock Behavior/AIDockBehaviorPlugin.m";
 			refType = 4;
 		};
-		9EB7C05A03D52BA200415B22 = {
-			fileRef = 9EB7C05803D52BA200415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9EB7C05B03D52BA200415B22 = {
-			fileRef = 9EB7C05903D52BA200415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		9EB7C05C03D52C0300415B22 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
@@ -3386,7 +3477,7 @@
 		9EDAC4E703D5160100415B22 = {
 			buildActionMask = 2147483647;
 			files = (
-				9EB7C05A03D52BA200415B22,
+				4B72129003DE1C8B00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3401,7 +3492,7 @@
 		9EDAC4E903D5160100415B22 = {
 			buildActionMask = 2147483647;
 			files = (
-				9EB7C05B03D52BA200415B22,
+				4B72128F03DE1C8A00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4681,6 +4772,7 @@
 				4B187A0503D59CCC00A8010A,
 				4BF1F04903D7B99700A8010A,
 				4BF1F04D03D7B9F000A8010A,
+				4B8EFC0603E18F2D00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4754,6 +4846,7 @@
 				4B187A0603D59CCC00A8010A,
 				4BF1F04A03D7B99700A8010A,
 				4BF1F04E03D7B9F000A8010A,
+				4B8EFC0703E18F2D00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8345,6 +8438,7 @@
 			children = (
 				F5793995033E75B001A8010A,
 				4BCDEB4203D4DC9700A8010A,
+				4BE9200A03DED0E500A8010A,
 			);
 			isa = PBXGroup;
 			name = Headers;
@@ -8497,6 +8591,7 @@
 				4B187A0403D59CCC00A8010A,
 				4BBC8E4C03BA0DB900A8010A,
 				F570A5B203704C3701A8010A,
+				4B8EFC0503E18F2D00A8010A,
 				F579394D033E74E401A8010A,
 				4BEF84CE03BE41C700A8010A,
 				F55B415603AB8B0901A8010A,
@@ -8814,6 +8909,10 @@
 				F579399B033E75B701A8010A,
 				F5793996033E75B001A8010A,
 				4BCDEB4103D4DC9700A8010A,
+				4BE9200B03DED0E500A8010A,
+				4BE9200E03DED34C00A8010A,
+				4BE9201003DEE2FE00A8010A,
+				4B5AAA1F03E02EB900A8010A,
 			);
 			isa = PBXGroup;
 			name = "Standard Message View";
@@ -8825,6 +8924,7 @@
 			files = (
 				F5793999033E75B001A8010A,
 				4BCDEB4403D4DC9700A8010A,
+				4BE9200C03DED0E500A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8832,6 +8932,9 @@
 		F59F9A85032BE6B101A8010A = {
 			buildActionMask = 2147483647;
 			files = (
+				4BE9200F03DED34C00A8010A,
+				4BE9201103DEE2FE00A8010A,
+				4B5AAA2003E02EB900A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8841,6 +8944,7 @@
 			files = (
 				F579399A033E75B001A8010A,
 				4BCDEB4303D4DC9700A8010A,
+				4BE9200D03DED0E500A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

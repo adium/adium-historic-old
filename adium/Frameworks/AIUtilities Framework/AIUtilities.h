@@ -52,3 +52,4 @@
 #import "AIFlexibleTableImageCell.h"
 #import "AIFlexibleTableColumn.h"
 #import "AIEventAdditions.h"
+#import "AIPopUpButtonAdditions.h"

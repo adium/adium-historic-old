@@ -35,5 +35,6 @@
 - (NSDictionary *)dictionary;
 - (void)setUnderline:(BOOL)inUnderline;
 - (void)setTextColor:(NSColor *)inColor;
+- (void)setBackgroundColor:(NSColor *)inColor;
 
 @end

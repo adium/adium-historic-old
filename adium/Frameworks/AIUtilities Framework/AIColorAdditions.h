@@ -25,6 +25,7 @@
 
 @interface NSColor (AIColorAdditions)
 
+- (BOOL)colorIsDark;
 - (NSColor *)darkenBy:(float)amount;
 - (NSString *)hexString;
 - (NSString *)stringRepresentation;
