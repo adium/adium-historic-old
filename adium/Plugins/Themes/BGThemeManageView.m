@@ -74,7 +74,12 @@
 
 -(NSString *)selectedTheme
 {
-    return [THEME_PATH stringByAppendingPathComponent:[themes objectAtIndex:[table selectedRow]]];
+	int selectedRow = [table selectedRow];
+	if (selectedRow != -1) {
+		return [THEME_PATH stringByAppendingPathComponent:[themes objectAtIndex:selectedRow]];
+	} else {
+		return nil;
+	}
 }
 
 -(void)showPreview:(id)sender
@@ -88,9 +93,12 @@
 -(IBAction)removeTheme:(id)sender
 {
     // bam! we get rid of that nasty theme ASAP... so quick there's no status update!
-    [[NSFileManager defaultManager] removeFileAtPath:[self selectedTheme] handler:self];
-    [self buildThemesList];
-    [table reloadData];
+	NSString *selectedThemePath = [self selectedTheme];
+	if (selectedThemePath) {
+		[[NSFileManager defaultManager] removeFileAtPath:selectedThemePath handler:self];
+		[self buildThemesList];
+		[table reloadData];
+	}
 }
 
 -(IBAction)applyTheme:(id)sender
@@ -111,5 +119,7 @@
 {
     themesPlugin = newPlugin;
 }
+
+#warning Controls should dim (setEnabled:NO) when no theme is selected.
 
 @end
