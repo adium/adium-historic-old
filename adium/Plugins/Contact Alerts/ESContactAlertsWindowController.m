@@ -66,7 +66,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
         [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                              forKey:KEY_CONTACT_ALERTS_WINDOW_FRAME
                                               group:PREF_GROUP_WINDOW_POSITIONS];
-        [instance release];
+        [instance release]; instance = nil;
         [[self window] close];
     }
 }
@@ -311,11 +311,11 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
 - (void)dealloc
 {
-    [owner release];
-    [activeContactObject release];
-    [popUp_addEvent release];
-    [instance release];
-    [dataCell release];
+    [owner release]; owner = nil;
+    [activeContactObject release]; activeContactObject = nil;
+    [popUp_addEvent release]; popUp_addEvent = nil;
+    [instance release]; instance = nil;
+    [dataCell release]; dataCell = nil;
     [super dealloc];
 }
 

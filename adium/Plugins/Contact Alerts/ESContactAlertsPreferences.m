@@ -43,7 +43,9 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     owner = [inOwner retain];
 
     offsetDictionary = [[NSMutableDictionary alloc] init];
-
+    
+    instance = nil;
+    
     //Register our preference pane
     [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Alerts withDelegate:self label:ALERTS_PREF_TITLE]];
 
@@ -77,13 +79,17 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
     [[owner notificationCenter] removeObserver:self];
-
     [view_prefView release]; view_prefView = nil;
-
     [prefAlertsArray release]; prefAlertsArray = nil;
-    [activeContactObject release];
-    [instance release];
+    [activeContactObject release]; activeContactObject = nil;
+    [instance release]; instance = nil;
 }
+
+- (void)dealloc
+{
+    [super dealloc];
+}
+
 
 //Configures our view for the current preferences, jumping to the indicated contact
 - (void)configureView
@@ -94,9 +100,8 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         [popUp_contactList selectItemAtIndex:0];
         activeContactObject = [[popUp_contactList selectedItem] representedObject];
     }
-
+    
     instance = [[ESContactAlerts alloc] initWithDetailsView:view_main withTable:tableView_actions withPrefView:view_prefView owner:owner];
-    [instance retain];
 
     [instance configForObject:activeContactObject];
 
@@ -406,15 +411,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 - (BOOL)shouldSelectRow:(int)inRow
 {
     return(YES);
-}
-
-- (void)dealloc
-{
-    [owner release];
-    [prefAlertsArray release];
-    [activeContactObject release];
-    [offsetDictionary release];
-    [super dealloc];
 }
 
 //builds an alphabetical menu of contacts for all online accounts; online contacts are sorted to the top and seperated
