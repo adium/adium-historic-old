@@ -39,10 +39,6 @@
 - (const char*)protocolPlugin;
 - (GaimAccount*)gaimAccount;
 
-// accountConnection methods
-- (void)accountConnectionReportDisconnect:(const char*)text;
-- (void)accountConnectionConnected;
-- (void)accountConnectionDisconnected;
 
 //accountBlist methods
 - (void)accountNewBuddy:(GaimBuddy*)buddy;
@@ -99,7 +95,13 @@
 
 
 //Connectivity
+- (void)connect;
 - (void)configureAccountProxy;
+- (void)disconnect;
+- (void)accountConnectionReportDisconnect:(const char*)text;
+- (void)accountConnectionDisconnected;
+- (void)accountConnectionConnected;
+- (void)resetLibGaimAccount;
 
 //Account status
 - (NSArray *)supportedPropertyKeys;
