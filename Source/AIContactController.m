@@ -236,7 +236,7 @@ DeclareString(UID);
 	NSDictionary	*infoDict;
 	
 	NSString	*Expanded = @"Expanded";
-	NSString	*Ordering = @"Ordering";
+//	NSString	*Ordering = @"Ordering";
 	
 	while(infoDict = [enumerator nextObject]){
 		AIListObject	*object = nil;
@@ -269,7 +269,7 @@ DeclareString(UID);
 	// NSString	*Contact = @"Contact"; // related to the commented block below
 	NSString	*Group = @"Group";
 	NSString	*Type = @"Type";
-	NSString	*Ordering = @"Ordering";
+//	NSString	*Ordering = @"Ordering";
 	NSString	*Expanded = @"Expanded";
 	
 	while(object = [enumerator nextObject]){
