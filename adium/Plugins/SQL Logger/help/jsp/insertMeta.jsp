@@ -22,11 +22,24 @@ try {
 }
 
 PreparedStatement pstmt = null;
+ResultSet rs = null;
 
 try {
     if(meta_id != 0 && user_id != 0) {
-        
-        pstmt = conn.prepareStatement("insert into adium.meta_contact (meta_id, user_id) values (?, ?)");
+
+        pstmt = conn.prepareStatement("select count(*) from adium.meta_contact where user_id = ?");
+
+        pstmt.setInt(1, user_id);
+
+        rs = pstmt.executeQuery();
+
+        rs.next();
+
+        if(rs.getInt(1) != 0) {
+            pstmt = conn.prepareStatement("insert into adium.meta_contact (meta_id, user_id) values (?, ?)");
+        } else {
+            pstmt = conn.prepareStatement("insert into adium.meta_contact (meta_id, user_id, preferred) values (?, ?, true)");
+        }
 
         pstmt.setInt(1, meta_id);
         pstmt.setInt(2, user_id);

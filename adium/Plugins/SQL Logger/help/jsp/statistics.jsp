@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 758 $ $Date: 2004/05/15 17:56:46 $ -->
+<!--$Rev: 771 $ $Date: 2004/05/22 04:01:28 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -508,11 +508,11 @@ try {
 %>
                 </div>
                 <div class="boxWideBottom"></div>
-                
+
                 <h1>Most Popular Conversation Starters</h1>
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
-                
+
 <%
     pstmt = conn.prepareStatement("select scramble(sender_sn) as sender_sn"+
         ", scramble(recipient_sn) as recipient_sn, "+
@@ -590,7 +590,7 @@ try {
     pstmt.setInt(2, sender);
     
     if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select username, sum(num_messages), (select message from messages where sender_id = user_id order by random() limit 1) as message from users natural join meta_contact, user_statistics where user_id = sender_id and (sender_id = user_id or recipient_id = user_id) and meta_id = ? group by username, user_id order by sum desc, username limit 20");
+        pstmt = conn.prepareStatement("select username, sum(num_messages), (select message from messages where sender_id = user_id order by random() limit 1) as message from users natural join meta_contact, user_statistics where user_id = sender_id and meta_id = ? group by username, user_id order by sum desc, username limit 20");
 
         pstmt.setInt(1, meta_id);
     }
