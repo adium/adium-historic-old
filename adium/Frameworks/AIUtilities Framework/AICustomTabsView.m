@@ -901,7 +901,7 @@ static  NSSize                  dragCellSize;           //Size of the cell being
         
         dragWindowFloater = [ESFloater floaterWithImage:dragWindowImage frame:YES];
         [dragWindowFloater setVisible:(sourceWindowWillHide) animate:NO];
-        [dragWindowFloater setMaxOpacity:0.75];
+        [dragWindowFloater setMaxOpacity:/*1.0*/ 0.75];
     }
 
     //Adjust the drag offset so the cursor is atleast always touching the tab drag image (Is there a macro that can do this ?)

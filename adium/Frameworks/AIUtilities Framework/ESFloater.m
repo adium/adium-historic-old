@@ -12,9 +12,11 @@
 #define WINDOW_FADE_SLOW_STEP                   0.1
 #define WINDOW_FADE_MAX                         1.0
 #define WINDOW_FADE_MIN                         0.0
+#define WINDOW_FADE_SNAP                        0.05 //How close to min/max we must get before fade is finished
 
 @interface ESFloater (PRIVATE)
 - (id)initWithImage:(NSImage *)inImage frame:(BOOL)frame;
+- (void)_setWindowOpacity:(float)opacity;
 @end
 
 @implementation ESFloater
@@ -44,10 +46,9 @@
                                            defer:NO];
     [panel setHidesOnDeactivate:NO];
     [panel setIgnoresMouseEvents:YES];
-    [panel setOpaque:NO];
     [panel setLevel:NSStatusWindowLevel];
-    [panel setAlphaValue:WINDOW_FADE_MIN];
     [panel setHasShadow:NO];
+    [self _setWindowOpacity:WINDOW_FADE_MIN];
     
     //Setup the static view
     staticView = [[ESStaticView alloc] initWithFrame:frame image:inImage];
@@ -99,7 +100,7 @@
 - (void)setMaxOpacity:(float)inMaxOpacity
 {
     maxOpacity = inMaxOpacity;
-    if(windowIsVisible) [panel setAlphaValue:maxOpacity];
+    if(windowIsVisible) [self _setWindowOpacity:maxOpacity];
 }
 
 //Window Visibility --------------------------------------------------------------------------------------------------
@@ -114,7 +115,7 @@
                 visibilityTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/WINDOW_FADE_FPS) target:self selector:@selector(_updateWindowVisiblityTimer:) userInfo:nil repeats:YES] retain];
             }
         }else{
-            [panel setAlphaValue:(windowIsVisible ? maxOpacity : WINDOW_FADE_MIN)];
+            [self _setWindowOpacity:(windowIsVisible ? maxOpacity : WINDOW_FADE_MIN)];
         }
     }
 }
@@ -126,17 +127,23 @@
     
     if(windowIsVisible){
         alphaValue += (maxOpacity - alphaValue) * ([NSEvent shiftKey] ? WINDOW_FADE_SLOW_STEP : WINDOW_FADE_STEP);
-        if(alphaValue > maxOpacity) alphaValue = maxOpacity;
+        if(alphaValue > maxOpacity - WINDOW_FADE_SNAP) alphaValue = maxOpacity;
     }else{
         alphaValue -= (alphaValue - WINDOW_FADE_MIN) * ([NSEvent shiftKey] ? WINDOW_FADE_SLOW_STEP : WINDOW_FADE_STEP);
-        if(alphaValue < WINDOW_FADE_MIN) alphaValue = WINDOW_FADE_MIN;
+        if(alphaValue < WINDOW_FADE_MIN + WINDOW_FADE_SNAP) alphaValue = WINDOW_FADE_MIN;
     }
-    [panel setAlphaValue:alphaValue];
+    [self _setWindowOpacity:alphaValue];
     
     //
-    if(alphaValue == maxOpacity && alphaValue == WINDOW_FADE_MIN){
+    if(alphaValue == maxOpacity || alphaValue == WINDOW_FADE_MIN){
         [visibilityTimer invalidate]; [visibilityTimer release]; visibilityTimer = nil;
     }
+}
+
+- (void)_setWindowOpacity:(float)opacity
+{
+    [panel setAlphaValue:opacity];
+    [panel setOpaque:(opacity == 1.0)];
 }
 
 
