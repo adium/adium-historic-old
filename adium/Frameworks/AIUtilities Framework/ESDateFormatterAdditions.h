@@ -6,7 +6,7 @@
 
 @interface NSDateFormatter (ESDateFormatterAdditions)
 
-+ (NSString *)localizedDateFormatString;
++ (NSDateFormatter *)localizedDateFormatter;
 + (NSString *)localizedDateFormatStringShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm;
 + (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate;
 + (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate showingSeconds:(BOOL)showSeconds abbreviated:(BOOL)abbreviate;
