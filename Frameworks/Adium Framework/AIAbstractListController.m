@@ -36,6 +36,7 @@
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/ESOutlineViewAdditions.h>
+#import <Adium/KFTypeSelectTableView.h>
 
 #warning crosslink
 #import "AIAppearancePreferencesPlugin.h"
@@ -498,78 +499,24 @@
 }
 
 #pragma mark Finder-style searching
+
 /*!
- * @brief Select in response to user typing
+ * @brief Configure the type select table view for wrapping
  */
-- (void)outlineView:(NSOutlineView *)outlineView userDidTypeString:(NSString *)inputString matchTargetNumber:(int)targetNumber
+- (void)configureTypeSelectTableView:(KFTypeSelectTableView *)tableView
 {
-	NSEnumerator	*enumerator;
-	AIListObject	*containedObject;
-	NSArray			*containedObjects;
-	int				matchNumber = 0;
+    [tableView setSearchWraps:YES]; 
+}
 
-	int	matchArray[targetNumber];
-	int row = -1;
-	
-	if([contactList isKindOfClass:[AIMetaContact class]]){
-		containedObjects = [(AIMetaContact *)contactList listContacts];				
-	}else{
-		containedObjects = [contactList containedObjects];		
-	}
-	
-	enumerator = [containedObjects objectEnumerator];
-	//Enumerate the contact list
-	while((matchNumber < targetNumber) && (containedObject = [enumerator nextObject])){
-		if([containedObject isKindOfClass:[AIListGroup class]]){
-			//Enumerator contained groups
-			NSEnumerator	*thisGroupEnumerator = [[(AIListGroup *)containedObject containedObjects] objectEnumerator];
-			AIListObject	*groupContainedObject;
-			while((matchNumber < targetNumber) && (groupContainedObject = [thisGroupEnumerator nextObject])){
-				if([[groupContainedObject longDisplayName] rangeOfString:inputString
-																 options:(NSCaseInsensitiveSearch | NSAnchoredSearch | NSLiteralSearch)].location != NSNotFound){
-					row = [outlineView rowForItem:groupContainedObject];
-					
-					if(row != -1){
-						matchArray[matchNumber] = row;
-						matchNumber++;
-					}
-				}				
-			}
-		}else{
-			if([[containedObject longDisplayName] rangeOfString:inputString
-														options:(NSCaseInsensitiveSearch | NSAnchoredSearch | NSLiteralSearch)].location != NSNotFound){
-				row = [outlineView rowForItem:containedObject];
-				if(row != -1){
-					matchArray[matchNumber] = row;
-					matchNumber++;
-				}
-			}
-		}
-	}
-	
-	/* If we are targeting a match number greater than the actual number of matches, take the target number
-	 * mod the number of matches to have it loop around. */
-	if(targetNumber > matchNumber){
-		targetNumber = (targetNumber % matchNumber);
-		
-		// mod(x,x) == 0, but in that situation we want the match x. (so 3 matches, 3 tabs, 3rd match, not 0th match.)
-		if(targetNumber == 0) targetNumber = matchNumber;
-	}
-
-	//If targetNumber <= the number of matches, matchArray[targetNumber-1] contains the row of the appropriate match.
-	if(targetNumber <= matchNumber){
-		row = matchArray[targetNumber-1]; //Array starts at 0; targetNumber is the Xth match.
-
-		//Select the best matching row
-		if([NSApp isOnTigerOrBetter]){
-			[outlineView selectRowIndexes:[NSClassFromString(@"NSIndexSet") indexSetWithIndex:row]	byExtendingSelection:NO];
-		}else{
-			[outlineView selectRow:row byExtendingSelection:NO];
-		}
-
-		//Scroll the selection so that its visible
-		[outlineView scrollRectToVisible:[outlineView rectOfRow:row]];
-	}
+/*!
+ * @brief Return the string value used for type selection
+ */
+- (NSString *)typeSelectTableView:(KFTypeSelectTableView *)tableView stringValueForTableColumn:(NSTableColumn *)col row:(int)row
+{
+    if ((id)tableView == (id)contactListView)
+        return [[contactListView itemAtRow:row] longDisplayName];
+    else
+        return @"";
 }
 
 #pragma mark Drag and drop

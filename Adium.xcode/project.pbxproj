@@ -6160,6 +6160,85 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34A6FE7607D7E06A00972830 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "KFTypeSelectTableView+Posing.m";
+			path = "Frameworks/Adium Framework/KFTypeSelectTableView+Posing.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A6FE7707D7E06A00972830 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "KFTypeSelectTableView+Posing.h";
+			path = "Frameworks/Adium Framework/KFTypeSelectTableView+Posing.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A6FE7807D7E06A00972830 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = KFTypeSelectTableView.m;
+			path = "Frameworks/Adium Framework/KFTypeSelectTableView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A6FE7907D7E06A00972830 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = KFTypeSelectTableView.h;
+			path = "Frameworks/Adium Framework/KFTypeSelectTableView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A6FE8007D7E07300972830 = {
+			children = (
+				34A6FE7607D7E06A00972830,
+				34A6FE7707D7E06A00972830,
+				34A6FE7807D7E06A00972830,
+				34A6FE7907D7E06A00972830,
+			);
+			isa = PBXGroup;
+			name = "Type Select Table View";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A6FEB907D7E2E200972830 = {
+			fileRef = 34A6FE7707D7E06A00972830;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34A6FEBA07D7E2E300972830 = {
+			fileRef = 34A6FE7607D7E06A00972830;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A6FEBB07D7E2E400972830 = {
+			fileRef = 34A6FE7907D7E06A00972830;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34A6FEBC07D7E2E500972830 = {
+			fileRef = 34A6FE7807D7E06A00972830;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34AC36B907B5C51400145239 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -7861,6 +7940,8 @@
 				34D8350807CBE889006466F2,
 				34D8350907CBE889006466F2,
 				34D8350B07CBE889006466F2,
+				34A6FEB907D7E2E200972830,
+				34A6FEBB07D7E2E400972830,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8069,6 +8150,8 @@
 				34F2E81B07C2CD6C007EAAAB,
 				34F2E83A07C2CDBE007EAAAB,
 				34EF54A407CE8EC300A685F1,
+				34A6FEBA07D7E2E300972830,
+				34A6FEBC07D7E2E500972830,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9866,6 +9949,7 @@
 				34D834D007CBE7B1006466F2,
 				34D834E207CBE7D5006466F2,
 				34D834CD07CBE7A3006466F2,
+				34A6FE8007D7E07300972830,
 				34D8346E07CBE6F5006466F2,
 				34D8344007CBE6E1006466F2,
 				34D8346C07CBE6F4006466F2,

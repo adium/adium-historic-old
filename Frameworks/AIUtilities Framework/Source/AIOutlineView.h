@@ -72,21 +72,6 @@
  */
 - (void)outlineView:(NSOutlineView *)outlineView draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation;
 
-/*!
- * @brief Informs the delegate the user typed into the outline view
- *
- * As the user types, the delegate can be informed of each successive string the typing generates.
- *
- * If the user does not type for .2 seconds, the next call will start with just the next typed character, 
- * so Finder-style name matching can be performed if desired.  As with the Finder, the user can press Tab to cycle through
- * available matches.
- *
- * @param outlineView The outline view
- * @param inputString The aggregated typed string
- * @param targetNumber The number of the target which should be matched.  This will be 1 for a new inputString; it will increase as the user presses tab on the same search.
- */
-- (void)outlineView:(NSOutlineView *)outlineView userDidTypeString:(NSString *)inputString matchTargetNumber:(int)targetNumber;
-
 @end
 
 /*!
@@ -97,16 +82,12 @@
  * <p>It supports contextual menu, expanded state, deletion, and dragging-ended notification methods for its delegate (see the <tt>AIOutlineViewDelegate</tt> protocol description for details).</p>
  * <p>It posts AIOutlineViewUserDidExpandItemNotification and AIOutlineViewUserDidCollapseItemNotification to the default NSNotificationCenter when items expand and collapse, respectively; for these notifications, the object is the <tt>AIOutlineView</tt> and the userInfo is an NSDictionary with the changed item in the key @"Object".
  * <p>It supports improved keyboard navigation of the outline view, including supporting the delete key.</p>
+ * <p>It adds the use of tab and backtab to cycle through matches when using KFTypeSelectTableView</p>
  * <p>Finally, it fixes a crash when reloadData is called from 'outlineView:setObjectValue:forTableColumn:byItem:' while the last row is edited in a way that will reduce the number of rows in the outline view (crash fix is relevant on all system versions as of OS X 10.3.7).</p>
 */
 @interface AIOutlineView : NSOutlineView {
     BOOL		needsReload;
 	BOOL		ignoreExpandCollapse;
-
-	//Finder-style searching
-	UInt32			lastKeypressTick;
-	NSMutableString	*currentInputString;
-	int				tabCount;
 }
 
 @end
