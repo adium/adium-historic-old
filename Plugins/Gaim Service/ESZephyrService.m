@@ -45,7 +45,7 @@
 	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-"]);
 }
 - (NSCharacterSet *)allowedCharactersForUIDs{
-	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._@-,*"]);	
+	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._@-"]);	
 }
 - (NSCharacterSet *)ignoredCharacters{
 	return([NSCharacterSet characterSetWithCharactersInString:@""]);
@@ -58,6 +58,9 @@
 }
 - (AIServiceImportance)serviceImportance{
 	return(AIServiceUnsupported);
+}
+- (BOOL)canCreateGroupChats{
+	return(YES);
 }
 
 @end
