@@ -75,16 +75,8 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 
 	//Observe accounts so we can display accurate status
     [[adium contactController] registerListObjectObserver:self];
-}
-
-/*
- * @brief Close the window
- */
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
+	
+	[super windowDidLoad];
 }
 
 /*
@@ -97,6 +89,8 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	
 	//Cleanup and close our shared instance
 	[sharedAccountWindowInstance autorelease]; sharedAccountWindowInstance = nil;
+	
+	[super windowShouldClose:sender];
 	
 	return(YES);
 }
