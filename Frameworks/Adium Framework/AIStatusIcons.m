@@ -287,7 +287,7 @@ static AIStatusType statusTypeForListObject(AIListObject *listObject)
 	
 	if(iconDict && [[iconDict objectForKey:@"AdiumSetVersion"] intValue] == 1){
 		NSDictionary	*previewIconNames = [iconDict objectForKey:@"List"];
-		NSEnumerator	*enumerator = [[NSArray arrayWithObjects:STATUS_NAME_AVAILABLE,STATUS_NAME_AWAY,@"idle",@"offline",nil] objectEnumerator];
+		NSEnumerator	*enumerator = [[NSArray arrayWithObjects:STATUS_NAME_AVAILABLE,STATUS_NAME_AWAY,@"Idle",@"Offline",nil] objectEnumerator];
 		NSString		*iconID;
 		int				xOrigin = 0;
 
