@@ -255,10 +255,18 @@
  */
 - (void)configureAccountList
 {
-    AIImageTextCell			*cell;
+    AIImageTextCell		*cell;
+	NSRect				oldFrame, newFrame;
 	
-	//Setup our buttons
-	[button_editAccount setTitle:@"Edit"];
+	//Setup our edit button, keeping its right side in the same location
+	oldFrame = [button_editAccount frame];
+	[button_editAccount setTitle:AILocalizedString(@"Edit",nil)];
+	[button_editAccount sizeToFit];
+	newFrame = [button_editAccount frame];
+	if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
+	newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
+	[button_editAccount setFrame:newFrame];
+	
 	
 	//Configure our table view
 	[tableView_accountList setTarget:self];
@@ -387,13 +395,13 @@
 		NSString	*title;
 		
 		if([[account statusObjectForKey:@"Connecting"] boolValue]){
-			title = @"Connecting";
+			title = AILocalizedString(@"Connecting",nil);
 		}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
-			title = @"Disconnecting";
+			title = AILocalizedString(@"Disconnecting",nil);
 		}else if([[account statusObjectForKey:@"Online"] boolValue]){
-			title = @"Online";
+			title = AILocalizedString(@"Online",nil);
 		}else{
-			title = @"Offline";
+			title = AILocalizedString(@"Offline",nil);
 		}
 
 		return(title);
