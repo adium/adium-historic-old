@@ -74,6 +74,8 @@
 		description = AILocalizedString(@"When you disconnect",nil);
 	}else if([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
 		description = AILocalizedString(@"When you receive a new email notification",nil);
+	}else{
+		description = @"";
 	}
 	
 	return(description);
