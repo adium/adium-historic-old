@@ -26,7 +26,7 @@
 @class AWEzv;
 
 @interface AWRendezvousAccount : AIAccount <AIAccount_Content, AWEzvClientProtocol> {
-    AWEzv *libezv;
+    AWEzv				*libezv;
     NSMutableDictionary	*libezvContacts;
 }
 
