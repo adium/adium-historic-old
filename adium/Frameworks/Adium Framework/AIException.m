@@ -26,17 +26,19 @@
     //Ignore various harmless or unavoidable exceptions the system uses
     if ((![self reason]) || //Harmless
 		([[self reason] isEqualToString:@"_sharedInstance is invalid."]) || //Address book framework is weird sometimes
-		([[self reason] isEqualToString:@"No text was found"])) //ICeCoffEE is an APE haxie which would crash us whenever a user pasted, or something like that
+		([[self reason] isEqualToString:@"No text was found"]) || //ICeCoffEE is an APE haxie which would crash us whenever a user pasted, or something like that
+		([[self reason] isEqualToString:@"Error (1000) creating CGSWindow"])) //This looks like an odd NSImage error... it occurs sporadically, seems harmless, and doesn't appear avoidable
 	{
 
 	    [super raise];
 		
-    } else if ((![self name]) || 
-		  ([[self name] isEqualToString:@"GIFReadingException"]) || 
-		  ([[self name] isEqualToString:@"NSPortTimeoutException"]) ||
-		  ([[self name] isEqualToString:@"NSAccessibilityException"]) ||
-		  ([[self name] isEqualToString:@"NSImageCacheException"]) /*||
-		  ([[self name] isEqualToString:@"NSInternalInconsistencyException"])*/) {
+    } else if ((![self name]) || //Harmless
+		  ([[self name] isEqualToString:@"GIFReadingException"]) || //GIF reader sucks
+		  ([[self name] isEqualToString:@"NSPortTimeoutException"]) || //Harmless - it timed out for a reason
+		  ([[self name] isEqualToString:@"NSAccessibilityException"]) || //Harmless - one day we should figure out how we aren't accessible, but not today
+		  ([[self name] isEqualToString:@"NSImageCacheException"]) /*|| //NSImage is silly
+		  ([[self name] isEqualToString:@"NSInternalInconsistencyException"])*/) //Ignore NSAssert?
+	{
 	    [super raise];
 	
     } else {
