@@ -1051,7 +1051,8 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	NSString *errorMessage = nil;
 	NSString *description = nil;
 			
-	if (secondaryString && [secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound){
+	if (secondaryString && (([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound) ||
+							([secondaryString rangeOfString:@"Already there"].location != NSNotFound))){
 		return;
 	}
 	

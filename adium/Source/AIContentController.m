@@ -13,11 +13,19 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.99 2004/08/03 06:23:27 evands Exp $
+// $Id: AIContentController.m,v 1.100 2004/08/04 20:42:19 evands Exp $
 
 #import "AIContentController.h"
 
 @interface AIContentController (PRIVATE)
+
+- (void)finishReceiveContentObject:(AIContentObject *)inObject;
+- (void)finishSendContentObject:(AIContentObject *)inObject;
+- (void)finishDisplayContentObject:(AIContentObject *)inObject;
+
+
+
+
 - (NSAttributedString *)_filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject usingFilterArray:(NSArray *)inArray;
 - (NSString *)_filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject/* usingFilterArray:(NSArray *)inArray*/;
 - (void)_filterContentObject:(AIContentObject *)inObject usingFilterArray:(NSArray *)inArray;
@@ -28,6 +36,8 @@
 @end
 
 @implementation AIContentController
+
+static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 
 //init
 - (void)initController
@@ -211,23 +221,101 @@
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)attributedString
 							   usingFilterType:(AIFilterType)type
 									 direction:(AIFilterDirection)direction
-									   context:(id)context
+									   context:(id)filterContext
 {
-	if(attributedString){
-		NSParameterAssert(type >= 0 && type < FILTER_TYPE_COUNT);
-		NSParameterAssert(direction >= 0 && direction < FILTER_DIRECTION_COUNT);
-		
-		NSEnumerator		*enumerator = [contentFilter[type][direction] objectEnumerator];
-		id<AIContentFilter>	filter;
-    	
-		while((filter = [enumerator nextObject])){
-			attributedString = [filter filterAttributedString:attributedString context:context];
-		}
-	}
-    
-    return(attributedString);
+	//Perform the filter in our filter thread to avoid threading conflicts, waiting for a result and then returning it
+	attributedString = [filterRunLoopMessenger target:self 
+									  performSelector:@selector(thread_filterAttributedString:contentFilter:filterContext:invocation:) 
+										   withObject:attributedString
+										   withObject:contentFilter[type][direction]
+										   withObject:filterContext
+										   withObject:nil
+										   withResult:YES];
+	return (attributedString);
 }
 
+//Filters an attributed string.  If the string is associated with a contact or list object, pass that object as context.
+//Selector should take two arguments.  The first will be the filtered attributedString; the second is the passed context.
+//Filtration occurs in a background thread, sequentially, and will notify target at selector when complete.
+- (void)filterAttributedString:(NSAttributedString *)attributedString
+			   usingFilterType:(AIFilterType)type
+					 direction:(AIFilterDirection)direction
+				 filterContext:(id)filterContext
+			   notifyingTarget:(id)target
+					  selector:(SEL)selector
+					   context:(id)context
+{
+	NSParameterAssert(type >= 0 && type < FILTER_TYPE_COUNT);
+	NSParameterAssert(direction >= 0 && direction < FILTER_DIRECTION_COUNT);
+	
+	NSInvocation *invocation;
+	invocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
+	
+	[invocation setSelector:selector];
+	[invocation setTarget:target];
+	[invocation setArgument:&context atIndex:3]; //context, the second argument after the two hidden arguments of every NSInvocation
+	[invocation retainArguments];
+	
+	if (!filterRunLoopMessenger){
+		[NSThread detachNewThreadSelector:@selector(thread_createFilterRunLoopMessenger) toTarget:self withObject:nil];
+		
+		while (!filterRunLoopMessenger);
+	}
+	
+	[filterRunLoopMessenger target:self 
+				   performSelector:@selector(thread_filterAttributedString:contentFilter:filterContext:invocation:) 
+						withObject:attributedString
+						withObject:contentFilter[type][direction]
+						withObject:filterContext
+						withObject:invocation];
+}
+
+- (NDRunLoopMessenger *)filterRunLoopMessenger
+{
+	return (filterRunLoopMessenger);
+}
+
+- (NSAttributedString *)thread_filterAttributedString:(NSAttributedString *)attributedString 
+										contentFilter:(NSArray *)inContentFilterArray
+										filterContext:(id)filterContext
+										   invocation:(NSInvocation *)invocation
+{
+	if (attributedString){
+		NSEnumerator		*enumerator = [inContentFilterArray objectEnumerator];
+		id<AIContentFilter>	filter;
+		
+		while((filter = [enumerator nextObject])){
+			attributedString = [filter filterAttributedString:attributedString context:filterContext];
+		}
+	}
+	
+	if (invocation){
+		//Put that attributed string into the invocation as the first argument after the two hidden arguments of every NSInvocation
+		[invocation setArgument:&attributedString atIndex:2];
+		[invocation retainArguments]; //redundant?
+		
+		[invocation performSelectorOnMainThread:@selector(invoke) withObject:nil waitUntilDone:YES];
+	}
+	
+	return(attributedString);
+}
+
+
+//Only called once, the first time a threaded filtering is requested
+- (void)thread_createFilterRunLoopMessenger
+{
+	NSLog(@"creation time");
+	NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
+	
+	filterRunLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
+	[filterRunLoopMessenger setMessageRetryTimeout:3.0];
+	
+	CFRunLoopRun();
+	
+	[pool release];
+	
+	filterRunLoopMessenger = nil;
+}
 
 //Messaging ------------------------------------------------------------------------------------------------------------
 #pragma mark Messaging
@@ -236,9 +324,6 @@
 {
     AIChat			*chat = [inObject chat];
     AIListObject 	*object = [inObject source];
-	NSArray			*contentObjectArray = [chat contentObjectArray];
-	
-	BOOL			shouldBeFirstMessage = NO;
 	
     if(object){
         //Notify: Will Receive Content
@@ -250,71 +335,130 @@
 
 		//Run the object through our incoming content filters
         if([inObject filterContent]){
-			[inObject setMessage:[self filterAttributedString:[inObject message]
-											  usingFilterType:AIFilterContent
-													direction:AIFilterIncoming
-													  context:inObject]];
-        }
-		
-		if([inObject trackContent]) {
-			int		contentLength = [contentObjectArray count];
+			[self filterAttributedString:[inObject message]
+						 usingFilterType:AIFilterContent
+							   direction:AIFilterIncoming
+						   filterContext:inObject
+						 notifyingTarget:self
+								selector:@selector(didFilterAttributedString:receivingContext:)
+								 context:inObject];
 			
-			// Dave's patented super-duper-uber-convoluted check for first-message-ness:
-			// If (it is literally the first message in this view) OR (the previous message is context AND this one is not context)
-			// Then, and only then, should we consider this a first message
-			if(contentLength <= 1 || 
-			   ([[(AIContentObject *)[contentObjectArray objectAtIndex:0] type] isEqualToString:CONTENT_CONTEXT_TYPE] &&
-				![[inObject type] isEqualToString:CONTENT_CONTEXT_TYPE]) ){
-				shouldBeFirstMessage = YES;
-			}
+        }else{
+			[self finishReceiveContentObject:inObject];
 		}
-
-		//Display the content
-		[self displayContentObject:inObject];
-
-		//Notify: Did Receive Content
-        if([inObject trackContent]){
-            if([contentObjectArray count] > 1 && !shouldBeFirstMessage){
-                [[owner notificationCenter] postNotificationName:Content_DidReceiveContent
-														  object:chat
-														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
-            }else{
-                [[owner notificationCenter] postNotificationName:Content_FirstContentRecieved 
-														  object:chat
-														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
-            }
-            mostRecentChat = chat;
-        }
     }
+}
+
+- (void)didFilterAttributedString:(NSAttributedString *)filteredMessage receivingContext:(AIContentObject *)inObject
+{
+	[inObject setMessage:filteredMessage];
+	
+	[self performSelector:@selector(finishReceiveContentObject:)
+			   withObject:inObject
+			   afterDelay:0.0000001];
+}
+
+- (void)finishReceiveContentObject:(AIContentObject *)inObject
+{
+	AIChat			*chat = [inObject chat];
+	NSArray			*contentObjectArray = [chat contentObjectArray];
+	
+	BOOL			shouldBeFirstMessage = NO;
+	
+	if([inObject trackContent]) {
+		int		contentLength = [contentObjectArray count];
+		
+		// Dave's patented super-duper-uber-convoluted check for first-message-ness:
+		// If (it is literally the first message in this view) OR (the previous message is context AND this one is not context)
+		// Then, and only then, should we consider this a first message
+		if(contentLength <= 1 || 
+		   ([[(AIContentObject *)[contentObjectArray objectAtIndex:0] type] isEqualToString:CONTENT_CONTEXT_TYPE] &&
+			![[inObject type] isEqualToString:CONTENT_CONTEXT_TYPE]) ){
+			shouldBeFirstMessage = YES;
+		}
+	}
+	
+	//Display the content
+	[self displayContentObject:inObject];
+	
+	//Notify: Did Receive Content
+	if([inObject trackContent]){
+		if([contentObjectArray count] > 1 && !shouldBeFirstMessage){
+			[[owner notificationCenter] postNotificationName:Content_DidReceiveContent
+													  object:chat
+													userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
+		}else{
+			[[owner notificationCenter] postNotificationName:Content_FirstContentRecieved 
+													  object:chat
+													userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+		}
+		mostRecentChat = chat;
+	}
 }
 
 //Send a content object
 - (BOOL)sendContentObject:(AIContentObject *)inObject
 {
+    AIChat		*chat = [inObject chat];    	
+
+    //Run the object through our outgoing content filters
+    if([inObject filterContent]){
+		[self filterAttributedString:[inObject message]
+					 usingFilterType:AIFilterContent
+						   direction:AIFilterOutgoing
+					   filterContext:inObject
+					 notifyingTarget:self
+							selector:@selector(didFilterAttributedString:contentSendingContext:)
+							 context:inObject];
+		
+    }else{
+		[self performSelector:@selector(finishSendContentObject:)
+				   withObject:inObject
+				   afterDelay:0.000001];
+	}
+	
+	// XXX
+	return YES;
+}
+
+-(void)didFilterAttributedString:(NSAttributedString *)filteredString contentSendingContext:(AIContentObject *)inObject
+{
+	[inObject setMessage:filteredString];
+
+	//Special outgoing content filter for AIM away message bouncing.  Used to filter %n,%t,...
+	if([inObject isKindOfClass:[AIContentMessage class]] && [(AIContentMessage *)inObject isAutoreply]){
+		[self filterAttributedString:[inObject message]
+					 usingFilterType:AIFilterAutoReplyContent
+						   direction:AIFilterOutgoing
+					   filterContext:inObject
+					 notifyingTarget:self
+							selector:@selector(didFilterAttributedString:autoreplySendingContext:)
+							 context:inObject];
+	}else{		
+		[self performSelector:@selector(finishSendContentObject:)
+				   withObject:inObject
+				   afterDelay:0.000001];
+	}
+}
+
+-(void)didFilterAttributedString:(NSAttributedString *)filteredString autoreplySendingContext:(AIContentObject *)inObject
+{
+	[inObject setMessage:filteredString];
+
+	[self performSelector:@selector(finishSendContentObject:)
+			   withObject:inObject
+			   afterDelay:0.000001];
+}
+
+- (void)finishSendContentObject:(AIContentObject *)inObject
+{
     AIChat		*chat = [inObject chat];
-    BOOL		sent = NO;
-    	
-    //Notify: Will Send Content
+	
+	//Notify: Will Send Content
     if([inObject trackContent]){
         [[owner notificationCenter] postNotificationName:Content_WillSendContent
 												  object:chat 
 												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
-    }
-
-    //Run the object through our outgoing content filters
-    if([inObject filterContent]){
-		[inObject setMessage:[self filterAttributedString:[inObject message]
-										  usingFilterType:AIFilterContent
-												direction:AIFilterOutgoing
-												  context:inObject]];
-
-		//Special outgoing content filter for AIM away message bouncing.  Used to filter %n,%t,...
-		if([inObject isKindOfClass:[AIContentMessage class]] && [(AIContentMessage *)inObject isAutoreply]){
-			[inObject setMessage:[self filterAttributedString:[inObject message]
-											  usingFilterType:AIFilterAutoReplyContent
-													direction:AIFilterOutgoing
-													  context:inObject]];
-		}		
     }
 	
     //Send the object
@@ -333,7 +477,7 @@
 			}
 			
 			mostRecentChat = chat;
-			sent = YES;
+//			sent = YES;
 		}
 	}else{
 		//We shouldn't send the content, so something was done with it.. clear the text entry view
@@ -342,7 +486,7 @@
 												userInfo:nil];
 	}
 	
-    return(sent);
+//    return(sent);
 }
 
 //Display a content object
@@ -350,13 +494,22 @@
 - (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters
 {
 	if (useContentFilters){
-		[inObject setMessage:[self filterAttributedString:[inObject message]
-										  usingFilterType:AIFilterContent
-												direction:([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming)
-												  context:inObject]];
+		[self filterAttributedString:[inObject message]
+					 usingFilterType:AIFilterContent
+						   direction:([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming)
+					   filterContext:inObject
+					 notifyingTarget:self
+							selector:@selector(didFilterAttributedString:contentFilterDisplayContext:)
+							 context:inObject];
+	}else{
+		[self displayContentObject:inObject];
 	}
+}
+
+- (void)didFilterAttributedString:(NSAttributedString *)filteredString contentFilterDisplayContext:(AIContentObject *)inObject
+{
+	[inObject setMessage:filteredString];
 	
-	//Add the object
 	[self displayContentObject:inObject];
 }
 
@@ -367,12 +520,28 @@
     //Filter the content object
     if([inObject filterContent]){
 		BOOL message = ([inObject isKindOfClass:[AIContentMessage class]] && ![(AIContentMessage *)inObject isAutoreply]);
-		[inObject setMessage:[self filterAttributedString:[inObject message]
-										  usingFilterType:(message ? AIFilterMessageDisplay : AIFilterDisplay)
-												direction:([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming)
-												  context:inObject]];
-    }
-    
+		[self filterAttributedString:[inObject message]
+					 usingFilterType:(message ? AIFilterMessageDisplay : AIFilterDisplay)
+						   direction:([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming)
+					   filterContext:inObject
+					 notifyingTarget:self
+							selector:@selector(didFilterAttributedString:displayContext:)
+							 context:inObject];
+    }else{
+		[self finishDisplayContentObject:inObject];
+	}
+
+}
+
+- (void)didFilterAttributedString:(NSAttributedString *)filteredString displayContext:(AIContentObject *)inObject
+{
+	[inObject setMessage:filteredString];
+	
+	[self finishDisplayContentObject:inObject];
+}
+
+- (void)finishDisplayContentObject:(AIContentObject *)inObject
+{
     //Check if the object should display
     if([inObject displayContent]){
 		AIChat		*chat = [inObject chat];
@@ -510,7 +679,7 @@
 }
 
 //Creates a chat for communication with the contact, but does not make the chat active (Doesn't open a chat window)
-//If a chat already exists it will be returned (and initialStatus will be ignored).
+//If a chat already exists it will be returned
 - (AIChat *)chatWithContact:(AIListContact *)inContact
 {
 	NSEnumerator	*enumerator;

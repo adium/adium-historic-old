@@ -334,7 +334,7 @@
             [self setAccountIdleTo:idleSince];
 			
         } else if ( ([key isEqualToString:@"AwayMessage"])){
-            [self setAccountAwayTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
+            [self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountAwayTo:)];
 			
         } else if ( ([key isEqualToString:KEY_USER_ICON])) {
 			if(data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
