@@ -553,21 +553,16 @@ DeclareString(FormattedUID);
 	return contacts;
 }
 
-- (NSArray *)arrayOfServices
+- (NSSet *)arrayOfServices
 {
-	NSMutableArray		*services = [NSMutableArray array];
-	AIListObject		*current;
+	NSMutableSet		*services = [NSMutableSet set];
 	NSString			*service;
-	NSMutableArray		*contactList;
 	int i;
 	
 	for( i = 0; i < [containedObjects count]; i++ ) {
 		service = [[containedObjects objectAtIndex:i] serviceID];
 		
-		// Is there already an entry for this service?
-		if( [services indexOfObject:service] == NSNotFound ) {
-			[services addObject:service];
-		}
+		[services addObject:service];
 	}
 	
 	return services;

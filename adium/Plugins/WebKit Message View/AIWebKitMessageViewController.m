@@ -733,9 +733,6 @@ DeclareString(AppendNextMessage);
 	NSString		*dateMessage = nil;
 	AIContentStatus *dateSeparator = nil;
 	BOOL			contentIsSimilar = NO;
-	BOOL			shouldShowDateHeader = NO;
-    NSCalendarDate *previousDate = [[previousContent date] dateWithCalendarFormat:nil timeZone:nil];
-    NSCalendarDate *currentDate = [[content date] dateWithCalendarFormat:nil timeZone:nil];
 	
 	//Should we merge consecutive messages?
 	contentIsSimilar = (previousContent && [content isSimilarToContent:previousContent]);

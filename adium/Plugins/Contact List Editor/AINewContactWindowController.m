@@ -244,10 +244,9 @@
 	selectedObject = [[adium contactController] selectedListObject];
 
 	if(selectedObject != nil) {
-		if([selectedObject isKindOfClass:[AIListGroup class]]){
-			group = (AIListGroup*)selectedObject;
-		}else{
-			group = [selectedObject containingObject];
+		group = (AIListGroup*)selectedObject;
+		while (group && ![group isKindOfClass:[AIListGroup class]]){
+			group = (AIListGroup*)[selectedObject containingObject];
 		}
 		
 		if(group){

@@ -13,7 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIContactHandle, AIMessageObject;
+@protocol AIListObjectObserver;
+
+@class AIContactHandle, AIMessageObject, AIMetaContact;
 
 #define ListObject_AttributesChanged			@"ListObject_AttributesChanged"
 #define ListObject_StatusChanged				@"ListObject_StatusChanged"
@@ -67,7 +69,7 @@ typedef enum {
 @protocol ContactListOutlineView
 @end
 
-@class AIContactInfoPane;
+@class AIContactInfoPane, AIListContact, AIListGroup, AISortController;
 
 @interface AIContactController : NSObject {
     IBOutlet	AIAdium		*owner;

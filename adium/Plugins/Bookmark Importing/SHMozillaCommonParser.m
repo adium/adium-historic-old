@@ -49,7 +49,7 @@ DeclareString(bMdashHTML)
 DeclareString(bookmarkDictTitle)
 DeclareString(bookmarkDictContent)
 
-+ (void)load
++ (void)initialize
 {
     InitString(gtSign,@">")
     InitString(Hclose,@"</H")

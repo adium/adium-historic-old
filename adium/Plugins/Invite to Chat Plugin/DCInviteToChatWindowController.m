@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by David Clark on Tue Jul 13 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "DCInviteToChatWindowController.h"
@@ -15,7 +14,7 @@
 - (void)windowDidLoad;
 - (BOOL)windowShouldClose:(id)sender;
 - (BOOL)shouldCascadeWindows;
-- (void)setChat:(AIChat *)inChat contact:(AIListObject *)inContact service:(NSString *)inService;
+- (void)setChat:(AIChat *)inChat contact:(AIListContact *)inContact service:(NSString *)inService;
 @end
 
 @implementation DCInviteToChatWindowController
@@ -70,7 +69,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
     return(self);
 }
 
-- (void)setChat:(AIChat *)inChat contact:(AIListObject *)inContact service:(NSString *)inService
+- (void)setChat:(AIChat *)inChat contact:(AIListContact *)inContact service:(NSString *)inService
 {
 	contact = inContact;
 	service = inService;

@@ -6,6 +6,10 @@
 //
 
 #import "AIChat.h"
+#import "AIAccount.h"
+#import "AIListContact.h"
+#import "ESFileTransfer.h"
+#import "AIContentMessage.h"
 
 @interface AIChat (PRIVATE)
 - (id)initForAccount:(AIAccount *)inAccount;
@@ -200,14 +204,14 @@
 }
 
 //
-- (void)removeParticipatingListObject:(AIListObject *)inObject
+- (void)removeParticipatingListObject:(AIListContact *)inObject
 {
     [participatingListObjects removeObject:inObject]; //Remove	
 	[[adium notificationCenter] postNotificationName:Chat_ParticipatingListObjectsChanged object:self]; //Notify
 
 }
 
-- (void)setPreferredListObject:(AIListObject *)inObject
+- (void)setPreferredListObject:(AIListContact *)inObject
 {
 	preferredListObject = inObject;
 }

@@ -70,8 +70,6 @@
         //Find all the message styles
         while((filePath = [fileEnumerator nextObject])){
             if([[filePath pathExtension] caseInsensitiveCompare:AdiumMessageStyle] == 0){
-                NSString		*fullPath;
-                AIIconState		*previewState;
                 NSBundle		*style;
 
 				//Load the style and add it to our dictionary

@@ -20,6 +20,10 @@
 #define Content_DidReceiveContent					@"Content_DidReceiveContent"
 #define Content_FirstContentRecieved				@"Content_FirstContentRecieved"
 
+@protocol AITextEntryView;
+
+@class AIChat, AIContentObject, NDRunLoopMessenger;
+
 typedef enum {
 	AIFilterContent = 0,		// Changes actual message and non-message content
 	AIFilterDisplay,			// Changes only how non-message content is displayed locally (Profiles, aways, auto-replies, ...)
@@ -128,7 +132,9 @@ typedef enum {
 - (void)receiveContentObject:(AIContentObject *)inObject;
 - (BOOL)sendContentObject:(AIContentObject *)inObject;
 - (void)displayContentObject:(AIContentObject *)inObject;
+- (void)displayContentObject:(AIContentObject *)inObject immediately:(BOOL)immediately;
 - (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters;
+- (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters immediately:(BOOL)immediately;
 
 //Filtering / Tracking text entry
 - (void)registerTextEntryFilter:(id)inFilter;

@@ -13,6 +13,12 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+@class AIMessageWindowController, AIMessageViewController, AIMessageTabViewItem, AITabSwitchingPreferences,
+AIContactListWindowController,
+AIDualWindowPreferences, ESDualWindowMessageAdvancedPreferences, ESDualWindowMessageWindowPreferences;
+
+@protocol AIMessageView, AIInterfaceController, AITabHoldingInterface, AIContactListCleanup;
+
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
 
 #define DUAL_INTERFACE_DEFAULT_PREFS		@"DualWindowDefaults"
@@ -24,8 +30,6 @@
 #define KEY_ENABLE_INACTIVE_TAB_CLOSE		@"Enable Inactive Tab Close"
 #define KEY_KEEP_TABS_ARRANGED				@"Keep Tabs Arranged"
 #define KEY_ARRANGE_TABS_BY_GROUP			@"Arrange Tabs By Group"
-
-@class ESDualWindowMessageAdvancedPreferences, AIMessageWindowController, AIMessageTabViewItem, ESDualWindowMessageWindowPreferences;
 
 #define KEY_ALWAYS_CREATE_NEW_WINDOWS 		@"Always Create New Windows"
 #define KEY_USE_LAST_WINDOW					@"Use Last Window"
@@ -43,12 +47,6 @@ typedef enum {
 	AISwitchShiftArrows,
 	AIBrackets
 } AITabKeys;
-
-@class AIContactListWindowController, AIMessageWindowController, AIMessageViewController, AIDualWindowPreferences,
-AIDualWindowAdvancedPrefs, ESDualWindowMessageWindowPreferences, ESDualWindowMessageAdvancedPreferences,
-AITabSwitchingPreferences;
-
-@protocol AIMessageView, AIInterfaceController, AITabHoldingInterface, AIContactListCleanup;
 
 @protocol AIInterfaceContainer <NSObject>
 - (void)makeActive:(id)sender;	//Make the container active/front
@@ -96,7 +94,7 @@ AITabSwitchingPreferences;
     
     //Preferences
     AIDualWindowPreferences                 *preferenceController;
-    AIDualWindowAdvancedPrefs               *preferenceMessageAdvController;
+    ESDualWindowMessageAdvancedPreferences	*preferenceMessageAdvController;
     ESDualWindowMessageWindowPreferences    *preferenceMessageController;
 
 	BOOL					applicationIsHidden;

@@ -3,11 +3,20 @@
 //  Adium
 //
 //  Created by Adam Iser on Wed Aug 04 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIListThemeWindowController.h"
 #import "AICLPreferences.h"
+#import "AITextColorPreviewView.h"
+
+@interface AIListThemeWindowController (PRIVATE)
+- (id)initWithWindowNibName:(NSString *)windowNibName withName:(NSString *)inName;
+- (void)configureControls;
+- (void)configureControlDimming;
+
+- (void)updateSliderValues;
+
+@end
 
 @implementation AIListThemeWindowController
 

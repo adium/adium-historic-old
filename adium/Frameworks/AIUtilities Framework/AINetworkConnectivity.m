@@ -5,6 +5,19 @@
 //  Created by Evan Schoenberg on 8/17/04.
 //
 
+/*
+ AINetworkConnectivity posts the notification AINetwork_ConnectivityChanged when the system's internet connection on any
+ available interface goes up or down.  The notification has an NSNumber object of either YES or NO which reflects the
+ new connectivity state.  
+ 
+ + (void)refreshReachabilityAndNotify is offerred to immediately refresh reachability, although
+ this should not generally be needed (it is used in Adium to force an update when waking from sleep, for example, in case
+									  the system doesn't believe that network connectivity was ever lost).
+ 
+ + (BOOL)networkIsReachable always reflects the last network reachability state retrieved by AINetworkCnonnectivity.
+ The notification should be relied upon whenever possible; this method exists primarily to assist in debugging.
+ */
+ 
 #import "AINetworkConnectivity.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 
@@ -30,7 +43,7 @@ static void localIPsChangedCallback(SCDynamicStoreRef store, CFArrayRef changedK
 static void networkReachabilityChangedCallback(SCNetworkReachabilityRef target, SCNetworkConnectionFlags flags, void *info);
 
 static AINetworkConnectivity				*myself = nil;
-static NSMutableArray						*customReachabilityRefArray = nil;
+//static NSMutableArray						*customReachabilityRefArray = nil;
 
 static NSTimer								*aggregatedChangesTimer = nil;
 static BOOL									networkIsReachable = NO;

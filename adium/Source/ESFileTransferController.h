@@ -5,6 +5,7 @@
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
 //
 
+@class ESFileTransfer, AIListContact;
 
 //File transfers
 @interface ESFileTransferController : NSObject <AIEventHandler> {

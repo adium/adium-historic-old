@@ -55,6 +55,7 @@
 
 //Cell sizing and padding
 - (NSSize)cellSize;
+- (int)cellWidth;
 - (void)setSplitVerticalSpacing:(int)inSpacing;
 - (void)setTopSpacing:(int)inSpacing;
 - (int)topSpacing;

@@ -11,6 +11,11 @@
 
 @interface AIListLayoutWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName withName:(NSString *)inName;
+
+- (void)configureControls;
+- (void)configureControlDimming;
+
+- (void)updateSliderValues;
 @end
 
 @implementation AIListLayoutWindowController

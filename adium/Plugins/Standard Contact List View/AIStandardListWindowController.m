@@ -10,6 +10,10 @@
 
 #define TOOLBAR_CONTACT_LIST				@"ContactList"				//Toolbar identifier
 
+@interface AIStandardListWindowController (PRIVATE)
+- (void)_configureToolbar;
+@end
+
 @implementation AIStandardListWindowController
 
 //Init

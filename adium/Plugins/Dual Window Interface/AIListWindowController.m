@@ -15,7 +15,10 @@
 
 #import "AIListWindowController.h"
 #import "AIStatusSelectionView.h"
+
 #import "AIListOutlineView.h"
+
+#import "AIListCell.h"
 #import "AIListGroupGradientCell.h"
 #import "AIListContactCell.h"
 #import "AIListContactBubbleCell.h"
@@ -78,6 +81,10 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureToolbar;
 - (void)contactListChanged:(NSNotification *)notification;
+
+- (void)updateTransparency;
+- (void)updateCellRelatedThemePreferences;
+
 @end
 
 @implementation AIListWindowController

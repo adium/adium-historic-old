@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.104 2004/08/17 03:29:09 evands Exp $
+// $Id: AIInterfaceController.m,v 1.105 2004/08/21 05:14:57 evands Exp $
 
 #import "AIInterfaceController.h"
 #import "AIStandardListWindowController.h"
@@ -246,7 +246,7 @@
 	
 	//Determine the correct container for this chat
 	if(groupChatsByContactGroup){
-		AIListGroup	*group = [[inChat listObject] containingObject];
+		AIListObject	*group = [[inChat listObject] containingObject];
 		containerID = (group ? [group displayName] : @"Chat"); 
 	}else{
 		//Open new chats into the first container (if not available, create a new one)
@@ -1169,7 +1169,6 @@
 		
 		//We must be in a text view, have text on the pasteboard, and have a font that supports bold or italic
 		if([responder isKindOfClass:[NSTextView class]]){
-#warning Evan: This should be cached by the font manager additions.
 			return (menuItem == menuItem_bold ? [selectedFont supportsBold] : [selectedFont supportsItalics]);
 		}
 		return(NO);

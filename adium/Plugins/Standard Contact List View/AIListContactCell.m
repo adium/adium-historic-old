@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Tue Jul 27 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIListContactCell.h"
@@ -23,6 +22,10 @@
 #define STATUS_ICON_RIGHT_PAD			3
 #define HULK_CRUSH_FACTOR 1
  
+@interface AIListContactCell (PRIVATE)
+- (NSImage *)userIconImageOfSize:(NSSize)inSize;
+- (BOOL)drawStatusBelowLabelInRect:(NSRect)rect;
+@end
 
 @implementation AIListContactCell
 
@@ -371,8 +374,8 @@
 				rect.size.width -= NAME_STATUS_PAD;
 			}
 			
-			NSString *extStatus = [[[NSAttributedString alloc] initWithString:string
-																   attributes:[self statusAttributes]] autorelease];
+			NSAttributedString *extStatus = [[[NSAttributedString alloc] initWithString:string
+																			 attributes:[self statusAttributes]] autorelease];
 			
 			//Alignment
 			NSSize		nameSize = [extStatus size];
@@ -419,8 +422,8 @@
 //Contact text color
 - (NSColor *)textColor
 {
-	NSColor	*textColor = [[listObject displayArrayForKey:@"Text Color"] objectValue];
-	return(textColor ? textColor : [super textColor]);
+	NSColor	*theTextColor = [[listObject displayArrayForKey:@"Text Color"] objectValue];
+	return(theTextColor ? theTextColor : [super textColor]);
 }
 
 //Contact user image

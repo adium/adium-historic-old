@@ -7,7 +7,6 @@
 
 #import "AIWindowController.h"
 
-
 @implementation AIWindowController
 
 - (id)initWithWindowNibName:(NSString *)windowNibName

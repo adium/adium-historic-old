@@ -15,6 +15,8 @@
 
 @class AIMutableOwnerArray, AIListGroup, AISortController, ESObjectWithStatus;
 
+#import "ESObjectWithStatus.h"
+
 typedef enum {
 	AIAvailableStatus = 'avaL',
 	AIAwayStatus = 'awaY',
@@ -55,7 +57,7 @@ typedef enum {
 - (BOOL)visible;
 
 //Grouping
-- (AIListGroup *)containingObject;
+- (AIListObject *)containingObject;
 - (float)orderIndex;
 
 //Display
@@ -105,7 +107,7 @@ typedef enum {
 - (unsigned)containedObjectsCount;
 - (NSArray *)listContacts;
 - (NSDictionary *)dictionaryOfServicesAndListContacts;
-- (NSArray *)arrayOfServices;
+- (NSSet *)arrayOfServices;
 - (AIListObject *)objectWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
 
 //mutableOwnerArray delegate and methods

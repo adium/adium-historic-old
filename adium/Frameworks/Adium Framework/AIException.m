@@ -7,6 +7,7 @@
 
 #import "AIException.h"
 #import <ExceptionHandling/NSExceptionHandler.h>
+#import "AIAdium.h"
 
 #define EXCEPTIONS_PATH		[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
 

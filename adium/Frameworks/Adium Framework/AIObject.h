@@ -5,7 +5,7 @@
 //  Created by Adam Iser on Sun Dec 14 2003.
 //
 
-#import <Foundation/Foundation.h>
+#import "AIAdium.h"
 
 @class AIAdium;
 

@@ -14,8 +14,8 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.31 $
- * $Date: 2004/08/16 07:30:45 $
+ * $Revision: 1.32 $
+ * $Date: 2004/08/21 05:14:50 $
  * $Author: evands $
  **/
 
@@ -28,7 +28,9 @@
 //Offline is faded by 70%
 #define OFFLINE_MENU_IMAGE_FRACTION		0.30
 
-@class AIServiceType, AIAdium, AIAccount, AIListObject;
+@protocol AIListObjectObserver;
+
+@class AIServiceType, AIAdium, AIAccount, AIListObject, AIAccountViewController, DCJoinChatViewController;
 
 @protocol AIServiceController <NSObject>
 - (NSString *)identifier;
