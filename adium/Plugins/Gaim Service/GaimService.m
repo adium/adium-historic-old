@@ -61,6 +61,6 @@
 
 - (NSString *)gaimDescriptionSuffix
 {
-    return(@"via LibGaim (Unstable)");
+    return(@" (LibGaim)");
 }
 @end
