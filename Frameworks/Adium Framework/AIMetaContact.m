@@ -96,7 +96,13 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 	return ([NSString stringWithFormat:@"MetaContact-%i",[inObjectID intValue]]);
 }
 
-//
+//A metaContact's internalObjectID is completely unique to it, so return that for interalUniqueObjectID
+- (NSString *)internalUniqueObjectID
+{
+	return([self internalObjectID]);
+}
+
+//Return the account of this metaContact, which we may treat as the preferredContact's account
 - (AIAccount *)account
 {
 	return([[self preferredContact] account]);
