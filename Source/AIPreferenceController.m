@@ -38,12 +38,12 @@
     delayedNotificationGroups = [[NSMutableSet alloc] init];
     preferenceChangeDelays = 0;
 	
-    //Create the 'ByObject' and 'Accounts' object specific preference directory
-	[[NSFileManager defaultManager] createDirectoriesForPath:[[[owner loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]];
-	[[NSFileManager defaultManager] createDirectoriesForPath:[[[owner loginController] userDirectory] stringByAppendingPathComponent:ACCOUNT_PREFS_PATH]];
-
 	//
 	userDirectory = [[[owner loginController] userDirectory] retain];
+	
+    //Create the 'ByObject' and 'Accounts' object specific preference directory
+	[[NSFileManager defaultManager] createDirectoriesForPath:[userDirectory stringByAppendingPathComponent:OBJECT_PREFS_PATH]];
+	[[NSFileManager defaultManager] createDirectoriesForPath:[userDirectory stringByAppendingPathComponent:ACCOUNT_PREFS_PATH]];
 	
 	//Register our default preferences
     [self registerDefaults:[NSDictionary dictionaryNamed:PREFS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
@@ -310,10 +310,8 @@
     NSMutableDictionary	*prefDict = nil;
     
     //We may not have logged in as a user yet.
-    if([[owner loginController] userDirectory] && !(prefDict = [groupDict objectForKey:groupName])){
-        NSString 	*path = [[owner loginController] userDirectory];
-
-        prefDict = [NSMutableDictionary dictionaryAtPath:path withName:groupName create:YES];
+    if(userDirectory && !(prefDict = [groupDict objectForKey:groupName])){
+        prefDict = [NSMutableDictionary dictionaryAtPath:userDirectory withName:groupName create:YES];
         [groupDict setObject:prefDict forKey:groupName];
     }
     
@@ -323,10 +321,8 @@
 //Save a preference group
 - (void)savePreferences:(NSMutableDictionary *)prefDict forGroup:(NSString *)groupName
 {
-    NSString	*path = [[owner loginController] userDirectory];
-    
-    if (![prefDict writeToPath:path withName:groupName]){
-		NSLog(@"preferenceController: Error writing %@ to %@ withName %@",prefDict,path,groupName);
+    if (![prefDict writeToPath:userDirectory withName:groupName]){
+		NSLog(@"preferenceController: Error writing %@ to %@ withName %@",prefDict,userDirectory,groupName);
 	}
 }
 
