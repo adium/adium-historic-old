@@ -86,11 +86,14 @@ static NSArray *emptyArray;
         
         while(linkDict = [enumerator nextObject]){
             if(nil == [linkDict objectForKey:caminoDictFolderKey]){
-                [caminoArray addObject:[self hyperlinkForBookmark:linkDict]];
+				NSDictionary	*menuDict = [self hyperlinkForBookmark:linkDict];
+                if(menuDict) [caminoArray addObject:menuDict];
+				
             }else{
-                NSArray *outArray = [linkDict objectForKey:CaminoDictChildKey];
-                [caminoArray addObject:[self menuDictWithTitle:[linkDict objectForKey:caminoDictTitleKey]
-                                                     menuItems:[self drillPropertyList:outArray? outArray : emptyArray]]];
+                NSArray 		*outArray = [linkDict objectForKey:CaminoDictChildKey];
+				NSDictionary	*menuDict = [self menuDictWithTitle:[linkDict objectForKey:caminoDictTitleKey]
+														  menuItems:[self drillPropertyList:outArray? outArray : emptyArray]];
+                if(menuDict) [caminoArray addObject:menuDict];
             }
         }
     }
@@ -99,13 +102,17 @@ static NSArray *emptyArray;
 
 - (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
+	if(!inTitle || !inMenuItems) return(nil);
     return [NSDictionary dictionaryWithObjectsAndKeys:inTitle, bookmarkDictTitle, inMenuItems, bookmarkDictContent, nil];
 }
 
 - (SHMarkedHyperlink *)hyperlinkForBookmark:(NSDictionary *)inDict
 {
     NSString    *title = [inDict objectForKey:caminoDictTitleKey];
-    return  [[[SHMarkedHyperlink alloc] initWithString:[inDict objectForKey:caminoDictURLKey]
+	NSString	*url = [inDict objectForKey:caminoDictURLKey];
+	
+	if(!title || !url) return(nil);
+    return  [[[SHMarkedHyperlink alloc] initWithString:url
                                   withValidationStatus:SH_URL_VALID
                                           parentString:title
                                               andRange:NSMakeRange(0,[title length])] autorelease];
