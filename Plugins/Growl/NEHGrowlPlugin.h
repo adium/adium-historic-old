@@ -11,5 +11,4 @@
 
 - (void)registerAdium:(void*)context;
 - (void)handleEvent:(NSNotification*)notification;
-- (void)preferencesChanged:(NSNotification*)notification;
 @end
