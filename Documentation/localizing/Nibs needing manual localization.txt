@@ -2,7 +2,7 @@ ESFileTransferProgressView.nib
 PasswordPrompt.nib
 ProxyPasswordPrompt.nib
 AccountListWindow.nib
-
+MessageContextDisplayPrefs.nib (probably)
 
 ---untouched, will be changing---
 EnterAwayWindow
@@ -15,4 +15,5 @@ IdleMessagePrefs
 IdleTimePrefs
 ContactSettingsPane
 ContactListWindowHandling (merge into a 'general' advanced pane)
-
+DefaultFormatting
+TextForcingPrefs
