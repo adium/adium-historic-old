@@ -12,12 +12,12 @@ function DownloadSourceAddress()
 
 function DownloadTitle()
 {
-    return("Download v0.58.1");
+    return("Download v0.58");
 }
 
 function DownloadVersion()
 {
-    return("0.58.1");
+    return("0.58");
 }
 
 ?>
