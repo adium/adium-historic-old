@@ -1206,7 +1206,6 @@
         NSString *packet;
         unsigned long	 thisTrid = [self getTrid:YES];
         
-    
         packet = [NSString stringWithFormat:@"MSG %d A %d\r\n%@",
                 thisTrid, [message length],
                 message];
