@@ -24,7 +24,7 @@
         [super awakeFromNib];
     }
 
-	originalFrame = [self frame];
+	originalFrame = [[self viewForSizing] frame];
 }
 
 - (void)setRightAnchorMovementType:(AILocalizationAnchorMovementType)inType
@@ -43,11 +43,12 @@
 {
 	//Textfield uses 17, button uses 14.
 	
-	NSRect	newFrame;
+	NSRect		newFrame;
+	NSControl	*viewForSizing = [self viewForSizing];
 	
-	[self sizeToFit];
+	[viewForSizing sizeToFit];
 	
-	newFrame = [self frame];
+	newFrame = [viewForSizing frame];
 	NSLog(@"%@: original %@ old %@ new %@",inStringValue,NSStringFromRect(originalFrame),NSStringFromRect(oldFrame),NSStringFromRect(newFrame));
 	//Enforce a minimum width of the original frame width
 	if(newFrame.size.width < originalFrame.size.width){
@@ -67,7 +68,7 @@
 		case NSCenterTextAlignment:
 		{
 			//Keep the center in the same place
-			float windowMaxX = NSMaxX([[self window] frame]);
+			float windowMaxX = NSMaxX([[viewForSizing window] frame]);
 			
 			NSLog(@"%@: CENTER: newFrame was %@, oldFrame was %@",inStringValue,NSStringFromRect(newFrame),NSStringFromRect(oldFrame));
 			newFrame.origin.x = oldFrame.origin.x + (oldFrame.size.width - newFrame.size.width)/2;
@@ -88,7 +89,13 @@
 	}
 	
 	NSLog(@"%@: initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
-	[super setFrame:newFrame];	
+	//If the viewForSizing is self, we want to do super's implementation so we don't reset originalFrame
+	if(viewForSizing == self){
+		[super setFrame:newFrame];
+	}else{
+		[viewForSizing setFrame:newFrame];
+	}
+	
 	[self setNeedsDisplay:YES];
 	
 	//Resize the window to fit the contactNameLabel if the current size is not correct
@@ -106,7 +113,13 @@
 			newFrame.origin.x = 17;
 			NSLog(@"%@: 1 initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
 
-			[super setFrame:newFrame];	
+			//If the viewForSizing is self, we want to do super's implementation so we don't reset originalFrame
+			if(viewForSizing == self){
+				[super setFrame:newFrame];
+			}else{
+				[viewForSizing setFrame:newFrame];
+			}
+
 			[self setNeedsDisplay:YES];
 		}
 		
@@ -120,7 +133,13 @@
 			newFrame.origin.x = NSMaxX([window_anchorOnRightSide frame]) - newFrame.size.width - 17;
 
 			NSLog(@"%@: 2 initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
-			[super setFrame:newFrame];	
+			//If the viewForSizing is self, we want to do super's implementation so we don't reset originalFrame
+			if(viewForSizing == self){
+				[super setFrame:newFrame];
+			}else{
+				[viewForSizing setFrame:newFrame];
+			}			
+			
 			[self setNeedsDisplay:YES];			
 		}
 		
@@ -175,7 +194,13 @@
 					//Move us left to keep our distance from our anchor view to the right
 					newFrame.origin.x = rightAnchorFrame.origin.x - newFrame.size.width - 10;
 					
-					[self setFrame:newFrame];
+					//If the viewForSizing is self, we want to do super's implementation so we don't reset originalFrame
+					if(viewForSizing == self){
+						[super setFrame:newFrame];
+					}else{
+						[viewForSizing setFrame:newFrame];
+					}
+
 					[self setNeedsDisplay:YES];
 				}
 				
@@ -226,7 +251,13 @@
 					//+8 perhaps for textviews; 0 for buttons, which have weird frames.
 					newFrame.origin.x -= ((NSMaxX(newFrame) - NSMinX(rightAnchorFrame))/* + 8 */);
 					
-					[self setFrame:newFrame];
+					//If the viewForSizing is self, we want to do super's implementation so we don't reset originalFrame
+					if(viewForSizing == self){
+						[super setFrame:newFrame];
+					}else{
+						[viewForSizing setFrame:newFrame];
+					}
+
 					[self setNeedsDisplay:YES];
 					
 					//As we did initially, check to see if we now need to expand the window to the left
@@ -240,7 +271,13 @@
 						newFrame.origin.x = 17;
 						NSLog(@"%@: 1 initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
 						
-						[super setFrame:newFrame];	
+						//If the viewForSizing is self, we want to do super's implementation so we don't reset originalFrame
+						if(viewForSizing == self){
+							[super setFrame:newFrame];
+						}else{
+							[viewForSizing setFrame:newFrame];
+						}
+
 						[self setNeedsDisplay:YES];
 					}
 				}
