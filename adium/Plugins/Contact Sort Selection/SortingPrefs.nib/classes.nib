@@ -1,0 +1,23 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {selectSortMode = id; }; 
+            CLASS = AIContactSortPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "popUp_sortMode" = NSPopUpButton; 
+                "textField_description" = NSTextField; 
+                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = AIContactSortSelectionPlugin; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIPlugin; 
+        }, 
+        {CLASS = AIPlugin; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

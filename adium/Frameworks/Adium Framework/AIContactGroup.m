@@ -119,7 +119,9 @@
     }
 
     //Sort this group
-    [sortController sortContactObjects:sortedContactArray];
+    if(sortController){
+        [sortController sortContactObjects:sortedContactArray];
+    }
     
     //Count the number of visible items in this group
     sortedCount = 0;

@@ -37,7 +37,6 @@
 - (AIContactGroup *)loadContactList;
 - (AIContactGroup *)createGroupFromDict:(NSDictionary *)groupDict;
 - (NSDictionary *)saveDictForGroup:(AIContactGroup *)inGroup;
-- (id <AIContactSortController>)activeSortController;
 @end
 
 @implementation AIContactController
@@ -50,6 +49,7 @@
     //
     handleObserverArray = [[NSMutableArray alloc] init];
     sortControllerArray = [[NSMutableArray alloc] init];
+    activeSortController = nil;
     delayedUpdating = 0;
     contactList = nil;
 
@@ -420,20 +420,33 @@
 {
     [sortControllerArray addObject:inController];
 }
+- (NSArray *)sortControllerArray{
+    return(sortControllerArray);
+}
+
+//Sets and get the active sort controller
+- (void)setActiveSortController:(id <AIContactSortController>)inController
+{
+    activeSortController = inController;    
+}
+- (id <AIContactSortController>)activeSortController{
+    return(activeSortController);
+}
+
 
 //Sort a group
 - (void)sortContactGroup:(AIContactGroup *)inGroup mode:(AISortMode)sortMode
 {
     //Sort the group (and subgroups)
     [inGroup sortGroupAndSubGroups:(sortMode == AISortGroupAndSubGroups)
-                    sortController:[self activeSortController]];
+                    sortController:activeSortController];
 
     //Sort any groups above it
     if(sortMode == AISortGroupAndSuperGroups){
         AIContactGroup	*group = inGroup;
 
         while((group = [group containingGroup])){
-            [group sortGroupAndSubGroups:NO sortController:[self activeSortController]];
+            [group sortGroupAndSubGroups:NO sortController:activeSortController];
         }
     }
 }
@@ -694,12 +707,6 @@
     [saveDict setObject:objectArray forKey:@"Contents"];
 
     return([saveDict autorelease]);
-}
-
-//Returns the active sort controller
-- (id <AIContactSortController>)activeSortController
-{
-    return([sortControllerArray objectAtIndex:0]);
 }
 
 

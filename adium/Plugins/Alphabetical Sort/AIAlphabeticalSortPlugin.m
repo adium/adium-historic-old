@@ -25,6 +25,16 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     //[[owner contactController] unregisterContactSortController:self];
 }
 
+- (NSString *)description{
+    return(@"Sort contacts and groups alphabetically.");
+}
+- (NSString *)identifier{
+    return(@"Alphabetical");
+}
+- (NSString *)displayName{
+    return(@"Alphabetical");
+}
+
 - (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys
 {
     return(NO); //Ignore
