@@ -23,8 +23,15 @@ typedef enum
     static NSString *formatString = nil, *formatStringWithSeconds = nil, *formatStringWithAMorPM = nil, *formatStringWithSecondsAndAMorPM = nil, *cacheCheck = nil;
         
     NSString *checkString = [[NSUserDefaults standardUserDefaults] stringForKey:NSTimeFormatString];
-    BOOL isCache = [cacheCheck isEqualToString:checkString]; //look for a cached value
-
+    BOOL isCache, screwedOver = NO;
+    if(checkString)
+        isCache = [cacheCheck isEqual:checkString]; //look for a cached value
+    else
+    {
+	isCache = YES;
+    	screwedOver = YES;
+    }
+    
     StringType type;
         
     if(!seconds && !showAmPm)
@@ -56,6 +63,9 @@ typedef enum
             type = BOTH;
     }
     
+    if(screwedOver)
+	return @"%h:%M %p"; //we are screeeeewwwwwed! we're not even 
+gonna honor their settings here, just get out!
     if(!isCache)
         cacheCheck = checkString; //save the cache
     
