@@ -24,6 +24,7 @@
     IBOutlet	AIAlternatingRowOutlineView	*outlineView_aways;
     IBOutlet	NSButton			*button_delete;
     IBOutlet	NSTextView			*textView_message;
+    IBOutlet	NSTextView			*textView_autoresponse;
     IBOutlet	AIAutoScrollView		*scrollView_awayList;
     IBOutlet	AIAutoScrollView		*scrollView_awayText;
 

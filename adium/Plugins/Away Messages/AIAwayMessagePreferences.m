@@ -112,6 +112,12 @@
 {
     //Redisplay
     [outlineView_aways setNeedsDisplay:YES];
+
+    if ([notification object] == textView_message) {
+	if (!([displayedMessage objectForKey:@"Autoresponse"])) {
+	    [[textView_autoresponse textStorage] setAttributedString:[textView_message textStorage]];
+	}
+    }
 }
 
 
@@ -206,8 +212,6 @@
     [[owner preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
 }
 
-
-
 //Private ----------------------------------------------------
 //Recursively load the away messages, rebuilding the structure with mutable objects
 - (NSMutableArray *)_loadAwaysFromArray:(NSArray *)array
@@ -228,14 +232,21 @@
                 nil]];
 
         }else if([type compare:@"Away"] == 0){
-            [mutableArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
-                @"Away", @"Type",
-                [NSAttributedString stringWithData:[dict objectForKey:@"Message"]], @"Message",[dict objectForKey:@"Title"], @"Title",
-                nil]];
-
+	    NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
+	    NSString * title = [dict objectForKey:@"Title"];
+	    NSData * autoresponse = [dict objectForKey:@"Autoresponse"];
+	    
+	    [newDict setObject:@"Away" forKey:@"Type"];
+	    [newDict setObject:[NSAttributedString stringWithData:[dict objectForKey:@"Message"]] forKey:@"Message"];
+	    if (title && [title length]) {
+		[newDict setObject:title forKey:@"Title"];
+	    }
+	    if (autoresponse) {
+		[newDict setObject:[NSAttributedString stringWithData:autoresponse] forKey:@"Autoresponse"];
+	    }
+            [mutableArray addObject:newDict];
         }
     }
-
     return(mutableArray);
 }
 
@@ -258,13 +269,21 @@
                 nil]];
 
         }else if([type compare:@"Away"] == 0){
-            [saveArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                @"Away", @"Type",
-                [[dict objectForKey:@"Message"] dataRepresentation], @"Message", [dict objectForKey:@"Title"], @"Title",
-                nil]];
+	    NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
+	    NSString * title = [dict objectForKey:@"Title"];
+	    NSData * autoresponse = [[dict objectForKey:@"Autoresponse"] dataRepresentation];
+	    
+	    [newDict setObject:@"Away" forKey:@"Type"];
+	    [newDict setObject:[[dict objectForKey:@"Message"] dataRepresentation] forKey:@"Message"];
+	    if (title && [title length]) {
+		[newDict setObject:title forKey:@"Title"];
+	    }
+	    if (autoresponse) {
+		[newDict setObject:autoresponse forKey:@"Autoresponse"];
+	    }
+            [saveArray addObject:newDict];
         }
     }
-
     return(saveArray);
 }
 
@@ -283,12 +302,23 @@
 	    [textView_message setString:@""];
 	    [textView_message setEditable:NO];
 	    [textView_message setSelectable:NO];
+	    [textView_autoresponse setString:@""];
+	    [textView_autoresponse setEditable:NO];
+	    [textView_autoresponse setSelectable:NO];
+	    
 
 	}else if([type compare:@"Away"] == 0){
 	    //Show the away message in our text view, and enable it for editing
+	    NSAttributedString * autoresponse = [awayDict objectForKey:@"Autoresponse"];
+	    BOOL hasAutoresponse = ([[autoresponse string] length] > 0);
+
 	    [[textView_message textStorage] setAttributedString:[awayDict objectForKey:@"Message"]];
+	    [[textView_autoresponse textStorage] setAttributedString:hasAutoresponse ? autoresponse : [awayDict objectForKey:@"Message"]];
+
 	    [textView_message setEditable:YES];
-	    [textView_message setSelectable:YES];
+	    [textView_message setSelectable:YES];	    
+	    [textView_autoresponse setEditable:YES];
+	    [textView_autoresponse setSelectable:YES];
 	}
     }
     else
@@ -296,6 +326,9 @@
         [textView_message setString:@""];
         [textView_message setEditable:NO];
         [textView_message setSelectable:NO];
+	[textView_autoresponse setString:@""];
+	[textView_autoresponse setEditable:NO];
+	[textView_autoresponse setSelectable:NO];
     }
 
     displayedMessage = awayDict;
@@ -315,8 +348,16 @@
 
         }else if([type compare:@"Away"] == 0){
             //Set the new message
-            [displayedMessage setObject:[[textView_message textStorage] copy] forKey:@"Message"];
-        }
+	    NSAttributedString * awayMessage = [[textView_message textStorage] copy];
+            [displayedMessage setObject:awayMessage forKey:@"Message"];
+
+	    NSAttributedString * autoresponse = [[textView_autoresponse textStorage] copy];
+	    if ([autoresponse isEqualToAttributedString:awayMessage]){
+		[displayedMessage removeObjectForKey:@"Autoresponse"];
+	    }else{
+		[displayedMessage setObject:autoresponse forKey:@"Autoresponse"];
+	    }
+	}
     }
 }
 

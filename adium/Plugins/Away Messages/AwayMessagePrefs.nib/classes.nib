@@ -15,6 +15,7 @@
                 "outlineView_aways" = AIAlternatingRowOutlineView; 
                 "scrollView_awayList" = AIAutoScrollView; 
                 "scrollView_awayText" = AIAutoScrollView; 
+                "textView_autoresponse" = NSTextView; 
                 "textView_message" = NSTextView; 
                 "view_prefView" = NSView; 
             }; 
