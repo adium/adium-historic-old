@@ -6669,11 +6669,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BD9F300531477E000AB133,
-				CA3D0EB206DEA79600EB58DA,
-				CA3D0EB306DEA79600EB58DA,
-				CA3D0EB406DEA79600EB58DA,
-				CA3D0EB506DEA79600EB58DA,
-				CA3D0EB606DEA79600EB58DA,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21528,36 +21523,6 @@
 			path = pref4.tif;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		CA3D0EB206DEA79600EB58DA = {
-			fileRef = CA3D0EAD06DEA79500EB58DA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CA3D0EB306DEA79600EB58DA = {
-			fileRef = CA3D0EAE06DEA79500EB58DA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CA3D0EB406DEA79600EB58DA = {
-			fileRef = CA3D0EAF06DEA79500EB58DA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CA3D0EB506DEA79600EB58DA = {
-			fileRef = CA3D0EB006DEA79600EB58DA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CA3D0EB606DEA79600EB58DA = {
-			fileRef = CA3D0EB106DEA79600EB58DA;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 //CA0
 //CA1
