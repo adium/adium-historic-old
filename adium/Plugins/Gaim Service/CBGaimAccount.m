@@ -283,7 +283,7 @@ static BOOL didInitSSL = NO;
 	//Apply any changes
 	[theContact performSelectorOnMainThread:@selector(notifyOfChangedStatusNumberSilently:)
 								 withObject:[NSNumber numberWithBool:silentAndDelayed]
-							  waitUntilDone:NO];
+							  waitUntilDone:YES];
 }
 
 - (void)accountRemoveBuddy:(NSValue *)buddyValue
@@ -1109,7 +1109,7 @@ static BOOL didInitSSL = NO;
 		//tell the fileTransferController to display appropriately
 		[[adium fileTransferController] performSelectorOnMainThread:@selector(beganFileTransfer:)
 														 withObject:fileTransfer
-													  waitUntilDone:NO];
+													  waitUntilDone:YES];
 	}
 }
 //By default, protocols can not create GaimXfer objects
