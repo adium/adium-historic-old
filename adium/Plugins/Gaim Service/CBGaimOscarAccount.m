@@ -57,7 +57,6 @@ static BOOL didInitOscar = NO;
 	[super dealloc];
 }
 
-
 //AIM doesn't require we close our tags, so don't waste the characters
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
@@ -627,6 +626,9 @@ if ((userinfo != NULL) && (userinfo->capabilities)) {
     ret = g_strconcat(tmp, _("<b>Capabilities:</b> "), caps, "\n", NULL);
     g_free(tmp);
 }
+
+static void oscar_ask_direct_im(GaimBlistNode *node, gpointer ignored);
+
 */
 
 #if 0

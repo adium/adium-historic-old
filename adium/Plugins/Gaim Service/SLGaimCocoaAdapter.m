@@ -874,10 +874,10 @@ static void *adiumGaimNotifyFormatted(const char *title, const char *primary, co
 
 static void *adiumGaimNotifyUri(const char *uri)
 {
-	NSLog(@"Notify uri: %s",uri);
-	
-	NSURL   *notifyURI = [NSURL URLWithString:[NSString stringWithCString:uri]];
-	[[NSWorkspace sharedWorkspace] openURL:notifyURI];
+	if (uri){
+		NSURL   *notifyURI = [NSURL URLWithString:[NSString stringWithUTF8String:uri]];
+		[[NSWorkspace sharedWorkspace] openURL:notifyURI];
+	}
 
     return(nil);
 }

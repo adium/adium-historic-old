@@ -1102,14 +1102,7 @@ static id<GaimThread> gaimThread = nil;
 	AIListContact	*contact;
 	
 	while (contact = [enumerator nextObject]){
-/*	//Remove all gaim buddies (which will call accountRemoveBuddy for each one)
-		GaimBuddy *buddy;
-		
-		buddy = [[contact statusObjectForKey:@"GaimBuddy"] pointerValue];
-		if (buddy){
-			gaim_blist_remove_buddy(buddy);
-		}
-		*/
+
 		[contact setRemoteGroupName:nil];
 		[self removeAllStatusFlagsFromContact:contact];
 	}
@@ -1143,7 +1136,7 @@ static id<GaimThread> gaimThread = nil;
 	//connectionIsSuicidal == TRUE when Gaim thinks we shouldn't attempt a reconnect.
 	if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]/* && lastDisconnectionError*/){
 		if (reconnectAttemptsRemaining && 
-			[self shouldAttemptReconnectAfterDisconnectionError:lastDisconnectionError] && !(connectionIsSuicidal)) {
+			[self shouldAttemptReconnectAfterDisconnectionError:lastDisconnectionError]/* && !(connectionIsSuicidal)*/) {
 			
 			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
 			reconnectAttemptsRemaining--;
