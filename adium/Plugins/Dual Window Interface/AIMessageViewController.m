@@ -52,6 +52,8 @@
 {
     [super init];
 	
+	NSLog(@"%@ initForChat %@",self,inChat);
+	
     //
     view_accountSelection = nil;
     delegate = nil;
@@ -89,15 +91,17 @@
 	messageViewController = [[[adium interfaceController] messageViewControllerForChat:chat] retain];
 	
 	//Get the messageView from the controller
-	controllerView_messages = [messageViewController messageView];
+	controllerView_messages = [[messageViewController messageView] retain];
+	[controllerView_messages setFrame:[scrollView_messages frame]];
 	
 	//scrollView_messages is originally a placeholder; replace it with controllerView_messages
 	[[scrollView_messages superview] replaceSubview:scrollView_messages with:controllerView_messages];
 	
 	//scrollView_messages should now be a containing view from the controller; it may or may not be the same as controllerView_messages
 	scrollView_messages = [messageViewController messageScrollView];
-	
+		
 	[controllerView_messages setNextResponder:textView_outgoing];
+	NSLog(@"%@ %@",controllerView_messages,scrollView_messages);
 	/*if (controllerView_messages != scrollView_messages)
 		[scrollView_messages setNextResponder:controllerView_messages];
 */
@@ -472,7 +476,7 @@
 
 	//Split View (contains UserList and Messages)
     [splitView_messages setFrame:superFrame];
-
+	
     //UserList
     if(showUserList){
 		if( ![[splitView_messages subviews] containsObject:scrollView_userList] ) {

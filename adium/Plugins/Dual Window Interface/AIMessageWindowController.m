@@ -514,7 +514,9 @@
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-    return([NSArray arrayWithObjects:@"ShowInfo", NSToolbarSeparatorItemIdentifier, @"InsertEmoticon", NSToolbarFlexibleSpaceItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, @"ShowPreferences", nil]);
+    return([NSArray arrayWithObjects:@"ShowInfo", NSToolbarSeparatorItemIdentifier, 
+		@"SafariLink",@"InsertBookmark",@"InsertEmoticon", NSToolbarFlexibleSpaceItemIdentifier, 
+		@"ShowPreferences", NSToolbarCustomizeToolbarItemIdentifier, nil]);
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
