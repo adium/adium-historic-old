@@ -417,19 +417,6 @@
 }
 
 /*!
- * @brief Set a status state if no status state is currently set
- *
- * If the account doesn't already have a status state, call setStatusStateAndRemainOffline: with the passed statusState.
- * This is intended for use by the statusController only.
- */
-- (void)setInitialStatusStateIfNeeded:(AIStatus *)statusState
-{
-	if(![self statusState]){
-		[self setStatusStateAndRemainOffline:statusState];
-	}
-}
-
-/*!
  * @brief Callback from the threaded filter performed in [self updateStatusForKey:@"StatusState"]
  */
 - (void)gotFilteredStatusMessage:(NSAttributedString *)statusMessage forStatusState:(AIStatus *)statusState
@@ -465,7 +452,13 @@
 - (AIStatus *)statusState
 {
 	if ([self integerStatusObjectForKey:@"Online"]){
-		return([super statusState]);
+		AIStatus	*statusState = [super statusState];
+		if(!statusState){
+			statusState = [[adium statusController] defaultInitialStatusState];
+			[self setStatusStateAndRemainOffline:statusState];		
+		}
+		
+		return(statusState);
 	}else{
 		return([[adium statusController] offlineStatusState]);
 	}

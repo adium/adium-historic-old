@@ -55,7 +55,6 @@
 				  alreadyAddedTitles:(NSMutableSet *)alreadyAddedTitles;
 - (void)buildBuiltInStatusTypes;
 
-- (void)setInitialStatusState;
 @end
 
 /*!
@@ -109,35 +108,54 @@
  */
 - (void)finishIniting
 {
-	//Observe changes to the account list so we can set an initial state when accounts are created
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(accountListChanged:)
-									   name:Account_ListChanged
-									 object:nil];
-	[self setInitialStatusState];
-
 	/* Load our array of accounts which were connected when we quit; these will be the accounts to connect if an online
 	 * status is selected with no accounts online. */
 	NSArray	*savedAccountsToConnect = [[adium preferenceController] preferenceForKey:@"SavedAccountsToConnect"
 																			   group:GROUP_ACCOUNT_STATUS];
+	NSEnumerator	*enumerator;
+	AIAccount		*account;
+
 	if(savedAccountsToConnect){
-		NSEnumerator	*enumerator = [savedAccountsToConnect objectEnumerator];
 		NSString		*internalObjectID;
 
+		enumerator = [savedAccountsToConnect objectEnumerator];
 		while(internalObjectID = [enumerator nextObject]){
 			AIAccount	*account = [[adium accountController] accountWithInternalObjectID:internalObjectID];
 			if(account) [accountsToConnect addObject:account];
 		}
 	}else{
 		/* First launch situation.  Use auto connect if possible to avoid signing on all accounts. */
-		NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
-		AIAccount		*account;
-
+		enumerator = [[[adium accountController] accountArray] objectEnumerator];
 		while(account = [enumerator nextObject]){
 			if([[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]){
 				[accountsToConnect addObject:account];
 			}
 		}
+	}
+	
+	//Put each account into the status it was in last time we quit.
+	enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	while(account = [enumerator nextObject]){
+		NSData		*lastStatusData = [account preferenceForKey:@"LastStatus"
+														  group:GROUP_ACCOUNT_STATUS];
+		AIStatus	*lastStatus = nil;
+		if(lastStatusData){
+			lastStatus = [NSKeyedUnarchiver unarchiveObjectWithData:lastStatusData];
+		}
+
+		if(lastStatus){
+			AIStatus	*existingStatus;
+			
+			/* We want to use a loaded status instance if one exists.  This will be the case if the account
+			 * was last in a built-in or user defined and saved state.  If the last state was unsaved, existingStatus
+			 * will be nil.
+			 */
+			existingStatus = [self statusStateWithUniqueStatusID:[lastStatus uniqueStatusID]];
+			
+			if(existingStatus) lastStatus = existingStatus;
+		}
+		
+		[account setStatusStateAndRemainOffline:lastStatus];
 	}
 }
 
@@ -147,22 +165,42 @@
  * Save the currently array of accountsToConnect so we can make use of them on next launch for better
  * global status behavior.
  *
+ * Also save the current status state of each account so it can be restored on next launch.
+ *
  * Note: accountsToConnect is not the same as online accounts. It may, for example, have a single entry which is
  * the last account to have been connected (if no accounts are currently online).
  */
 - (void)beginClosing
 {
 	NSMutableArray	*savedAccountsToConnect = [NSMutableArray array];
-	NSEnumerator	*enumerator = [accountsToConnect objectEnumerator];
+	NSEnumerator	*enumerator;
 	AIAccount		*account;
 
+	enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	while(account = [enumerator nextObject]){
-		[savedAccountsToConnect addObject:[account internalObjectID]];
+		
+		//If this is in our accountToConnect array, we'll want to save its internalObjectID.
+		if([accountsToConnect containsObject:account]){
+			[savedAccountsToConnect addObject:[account internalObjectID]];
+		}
+		
+		//Store the current status state for use on next launch
+		AIStatus	*currentStatus = [account statusState];
+		[account setPreference:(currentStatus ?
+								[NSKeyedArchiver archivedDataWithRootObject:currentStatus] :
+								nil)
+						forKey:@"LastStatus"
+						 group:GROUP_ACCOUNT_STATUS];
 	}
 
 	[[adium preferenceController] setPreference:savedAccountsToConnect
 										 forKey:@"SavedAccountsToConnect"
 										  group:GROUP_ACCOUNT_STATUS];
+	
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:stateArray]
+										 forKey:KEY_SAVED_STATUS
+										  group:PREF_GROUP_SAVED_STATUS];
+	
 }
 
 /*!
@@ -480,25 +518,6 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 }
 
 /*!
- * @brief Set the initial status state if necessary for each account
- *
- * Any account which does not currently have a status state will be set to [self defaultIniitalStatusState].
- *
- * This is called as Adium finishes initializing and is also used after accounts are created.
- */
-- (void)setInitialStatusState
-{
-	AIStatus	*statusState = [self defaultInitialStatusState];
-	NSAssert(statusState != nil, @"Got nil initial status state");
-	
-	//Apply the state to our accounts without notifying
-	[[adium contactController] delayListObjectNotifications];
-	[[[adium accountController] accountArray] makeObjectsPerformSelector:@selector(setInitialStatusStateIfNeeded:)
-															  withObject:statusState];
-	[[adium contactController] endListObjectNotificationsDelay];
-}
-
-/*!
  * @brief Apply a state to all accounts
  *
  * Applies the passed state to all accounts
@@ -526,17 +545,6 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	}
 	[self setDelayStateMenuUpdates:NO];
 	isProcessingGlobalChange = YES;
-}
-
-/*!
- * @brief Account list changed
- *
- * Accounts should always have a status state. When the account list changes, ensure taht accounts have an
- * initial state set.
- */
-- (void)accountListChanged:(NSNotification *)notification
-{
-	[self setInitialStatusState];
 }
 
 #pragma mark Retrieving Status States
@@ -599,6 +607,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	//Ensure the built in states have been loaded
 	[self builtInStateArray];
 
+	NSAssert(offlineStatusState != nil, @"Nil offline status state");
 	return offlineStatusState;
 }
 
@@ -676,7 +685,6 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		NSCountedSet		*statusCounts = [NSCountedSet set];
 		AIAccount			*account;
 		AIStatus			*statusState;
-		NSNumber			*count;
 		unsigned			 highestCount = 0;
 		BOOL				 accountsAreOnline = [[adium accountController] oneOrMoreConnectedOrConnectingAccounts];
 
