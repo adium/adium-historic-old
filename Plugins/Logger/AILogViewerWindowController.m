@@ -155,50 +155,75 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 //Init our log filtering tree
 - (void)initLogFiltering
 {
-    NSString		*logFolderPath;
-    NSEnumerator	*enumerator;
-    NSString		*folderName;
-	
-    //Process each account folder (/Logs/SERVICE.ACCOUNT_NAME/)
+    NSString				*logFolderPath;
+    NSEnumerator			*enumerator;
+    NSString				*folderName;
+	NSString				*service;
+	NSMutableDictionary		*toDict = [NSMutableDictionary dictionary];
+
+    //Process each account folder (/Logs/SERVICE.ACCOUNT_NAME/) - sorting by compare: will result in an ordered list
+	//first by service, then by account name.
     logFolderPath = [[[[adium loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath];
-    enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:[AILoggerPlugin logBasePath]] objectEnumerator];
+    enumerator = [[[[NSFileManager defaultManager] directoryContentsAtPath:[AILoggerPlugin logBasePath]] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
     while((folderName = [enumerator nextObject])){
 		AILogFromGroup  *logFromGroup = [[AILogFromGroup alloc] initWithPath:folderName from:folderName];
-                
-		[availableLogArray addObject:logFromGroup]; 
-                if(![[logFromGroup from] isEqual:@".DS_Store"]) // avoid the directory info
-                {
-                    NSEnumerator    *toEnum = [[logFromGroup toGroupArray] objectEnumerator];
-                    NSArray         *broken = [[logFromGroup from] componentsSeparatedByString:@"."];
-                    NSString        *service;
-                    NSString        *from;
-                    AILogToGroup    *currentToGroup;
-                    
-                    // error checking in case of old, malformed or otherwise odd folders & whatnot sitting in log base
-                    if([broken count] >= 2){
-                        service = [broken objectAtIndex:0];
-                        from = [[logFromGroup from] substringFromIndex:([service length] + 1)]; //one off for the seperator
-                    }
-                    else{
-                        service = @"";
-                        from = [logFromGroup from];
-                    }
-                    
-                    [fromArray addObject:from];
-                    [fromServiceArray addObject:service];
-                    
-                    // to processing
-                    while(currentToGroup = [toEnum nextObject]){
-                        if(![[currentToGroup to] isEqual:@".DS_Store"]){
-                            if(![toArray containsObject:[currentToGroup to]]){
-                                [toArray addObject:[currentToGroup to]]; 
-								[toServiceArray addObject:service];
-                            }                            
-                        }
-                    }
-                }
+		NSString		*logFromGroupFrom = [logFromGroup from];
+		
+		if(![logFromGroupFrom isEqual:@".DS_Store"]) { // avoid the directory info
+			
+			[availableLogArray addObject:logFromGroup]; 
+			
+			NSEnumerator    *toEnum;
+			NSArray         *broken = [logFromGroupFrom componentsSeparatedByString:@"."];
+			NSString        *from;
+			AILogToGroup    *currentToGroup;
+			
+			// error checking in case of old, malformed or otherwise odd folders & whatnot sitting in log base
+			if([broken count] >= 2){
+				service = [broken objectAtIndex:0];
+				from = [[logFromGroup from] substringFromIndex:([service length] + 1)]; //one off for the seperator
+			}
+			else{
+				service = @"";
+				from = [logFromGroup from];
+			}
+			
+			[fromArray addObject:from];
+			[fromServiceArray addObject:service];
+			
+			// to processing
+			
+			NSMutableSet	*toSetForThisService = [toDict objectForKey:service];
+			if (!toSetForThisService){
+				toSetForThisService = [NSMutableSet set];
+				[toDict setObject:toSetForThisService
+						   forKey:service];
+			}
+			
+			//Add the 'to' for each grouping on this account
+			toEnum = [[logFromGroup toGroupArray] objectEnumerator];
+			while(currentToGroup = [toEnum nextObject]){
+				NSString	*currentTo = [currentToGroup to];
+				if(![currentTo isEqual:@".DS_Store"]){
+					[toSetForThisService addObject:currentTo];
+				}
+			}
+		}
 		[logFromGroup release];
-    }
+	}
+	
+	enumerator = [toDict keyEnumerator];
+	while (service = [enumerator nextObject]){
+		NSSet		*toSetForThisService = [toDict objectForKey:service];
+		unsigned	i;
+		unsigned	count = [toSetForThisService count];
+		
+		[toArray addObjectsFromArray:[[toSetForThisService allObjects] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]];
+		//Add service to the toServiceArray for each of these objects
+		for (i=0 ; i < count ; i++){
+			[toServiceArray addObject:service];
+		}
+	}
 }
 
 //Setup the window before it is displayed
