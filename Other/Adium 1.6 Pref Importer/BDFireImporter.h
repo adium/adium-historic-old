@@ -17,7 +17,7 @@
 #import "BDImporter.h"
 
 
-#define SETTINGS_PATH	[[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Fire"] stringByAppendingPathComponent:@"FireConfiguration.plist"]
+
 
 @interface BDFireImporter : BDImporter {
 

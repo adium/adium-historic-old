@@ -14,6 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "BDClientSupport.h"
 #import "BDFireImporter.h"
 #import "BDImporter.h"
 #import "BDProteusImporter.h"
@@ -25,7 +26,7 @@
     IBOutlet NSButton		*button_Import;
     IBOutlet NSButton		*button_proteusAddAccount;
     IBOutlet NSButton		*button_proteusDelAccount;
-    IBOutlet NSImageView	*image_proteusImage;
+    IBOutlet NSImageView	*image_clientImage;
     IBOutlet NSTableView	*table_proteusAccounts;
     IBOutlet NSTabView		*tabView_ClientTab;
 	IBOutlet NSPanel		*panel_importPanel;
@@ -33,6 +34,15 @@
 	BDProteusImporter		*proteus;
 	BDFireImporter			*fire;
 	BDiChatImporter			*iChat;
+	NSMutableArray			*accountList;
 	
 }
+
+#pragma mark -
+#pragma mark Importer Configuration
+
+- (void)configureProteusTab;
+- (void)configureiChatTab;
+- (void)configureFireTab;
+- (void)configureGaimTab;
 @end

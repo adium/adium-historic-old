@@ -20,16 +20,19 @@
 
 - (id)init
 {
-	[self setProteusVersion];
+	perversion = [self proteusVersion];
+	NSLog(perversion);
 	return self;
 }
 
-- (void)setProteusVersion
+- (NSString *)proteusVersion
 {
-	NSBundle *pr0t3us = [NSBundle bundleWithPath:PATH_TO_PROTEUS];
-	NSDictionary *proteusInfo = [NSDictionary dictionaryWithContentsOfFile:[pr0t3us pathForResource:@"Info" ofType:@".plist"]];
-	NSLog(@"%@",[proteusInfo objectForKey:@"CFBundleShortVersionString"]);
-	
+	NSFileManager *fm = [NSFileManager defaultManager];
+	if ([fm fileExistsAtPath:PROTEUS4_STATUS_DATA]){
+		return @"4";
+	}else if ([fm fileExistsAtPath:PROTEUS3_STATUS_DATA]){
+		return @"3";
+	}
 }
 
 

@@ -44,4 +44,15 @@
 {
 	return [clientIcon setSize:NSMakeSize(iconSize,iconSize)];
 }
+
+#pragma mark -
+#pragma mark Data interaction methods
+
+- (NSString *)versionForApplication:(NSString *)applicationName
+{
+	NSString *path = [NSString stringWithString:[[NSWorkspace sharedWorkspace] fullPathForApplication:applicationName]];
+	NSBundle *appBundle = [NSBundle bundleWithPath:path];
+	return [[appBundle infoDictionary] objectForKey:@"CFBundleVersion"];
+}
+
 @end

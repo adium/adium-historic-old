@@ -16,10 +16,17 @@
 
 #import "BDImporter.h"
 
-#define SETTINGS_PATH	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Preferences"] stringByAppendingPathComponent:@"com.apple.iChat.plist"]
+
 
 @interface BDiChatImporter : BDImporter {
+	NSString *pathForLogs;
 	
 }
+
+- (void)setLogDirectory:(NSString *)logPath;
+- (NSString *)logDirectory;
+
+- (void)importStatusMessageForType:(NSString *)statusType;
+
 
 @end
