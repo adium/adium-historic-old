@@ -7,6 +7,14 @@
 //  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
+#include <Libgaim/libgaim.h>
+#import "GaimCommon.h"
+#import "CBGaimAccount.h"
+
+#define	ENABLE_WEBCAM	TRUE
+
+@class AIChat, AIListContact, CBGaimAccount, NDRunLoopMessenger;
+
 /*!
  * @class SLGaimCocoaAdapter
  * Singleton to run libgaim from a Cocoa event loop.
@@ -62,9 +70,21 @@
 - (void)displayFileSendError;
 - (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
 - (void *)handleNotifyEmails:(size_t)count detailed:(BOOL)detailed subjects:(const char **)subjects froms:(const char **)froms tos:(const char **)tos urls:(const char **)urls;
-- (NSString *)_processGaimImagesInString:(NSString *)inString forAdiumAccount:(id)adiumAccount;
 
 - (oneway void)performContactMenuActionFromDict:(NSDictionary *)dict;
 
 - (void)setMainThreadMessenger:(NDRunLoopMessenger *)inMainThreadMessenger;
 @end
+
+//Lookup functions
+void* adium_gaim_get_handle(void);
+GaimConversation* existingConvLookupFromChat(AIChat *chat);
+GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount);
+AIChat* imChatLookupFromConv(GaimConversation *conv);
+AIChat* existingChatLookupFromConv(GaimConversation *conv);
+AIChat* chatLookupFromConv(GaimConversation *conv);
+AIListContact* contactLookupFromIMConv(GaimConversation *conv);
+AIListContact* contactLookupFromBuddy(GaimBuddy *buddy);
+GaimAccount* accountLookupFromAdiumAccount(CBGaimAccount *adiumAccount);
+CBGaimAccount* accountLookup(GaimAccount *acct);
+NSMutableDictionary* get_chatDict(void);

@@ -7,6 +7,7 @@
 //
 
 #import "CBGaimAccount.h"
+#import "SLGaimCocoaAdapter.h"
 #import "AIAccount.h"
 
 #define NO_GROUP						@"__NoGroup__"
@@ -98,11 +99,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//A quick sign on/sign off can leave these messages in the threaded messaging queue... we most definitely don't want
 	//to put the contact back into a remote group after signing off, as a ghost will appear. Spooky!
 	if([self online]){
-		NSLog(@"%@: Update %@ to %@",self,theContact,groupName);
-
 		//When a new contact is created, if we aren't already silent and delayed, set it  a second to cover our initial
 		//status updates
-
 		if (!silentAndDelayed){
 			[self silenceAllContactUpdatesForInterval:2.0];
 			[[adium contactController] delayListObjectNotificationsUntilInactivity];		
@@ -973,13 +971,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 	if ((chat) &&
 		(contact = [self contactWithUID:contactName])){
-		
+
 		if (!namesAreCaseSensitive){
 			[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
 		}
-		
+
 		[chat addParticipatingListObject:contact];
-		
+
 		GaimDebug (@"added user %@ in chat %@",contactName,[chat name]);
 	}
 }

@@ -3059,132 +3059,6 @@
 			settings = {
 			};
 		};
-		34564738069F43A800F728BC = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = meanwhile.png;
-			path = "Plugins/Gaim Service/meanwhile.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34564739069F43A800F728BC = {
-			fileRef = 34564738069F43A800F728BC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3456477F069F469E00F728BC = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = yahoo.png;
-			path = "Plugins/Gaim Service/yahoo.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34564781069F469E00F728BC = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = msn.png;
-			path = "Plugins/Gaim Service/msn.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34564782069F469E00F728BC = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = aim.png;
-			path = "Plugins/Gaim Service/aim.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34564783069F469E00F728BC = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = napster.png;
-			path = "Plugins/Gaim Service/napster.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34564784069F469E00F728BC = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = novell.png;
-			path = "Plugins/Gaim Service/novell.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34564785069F469E00F728BC = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = icq.png;
-			path = "Plugins/Gaim Service/icq.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34564788069F469F00F728BC = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "gadu-gadu.png";
-			path = "Plugins/Gaim Service/gadu-gadu.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34564789069F469F00F728BC = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = jabber.png;
-			path = "Plugins/Gaim Service/jabber.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3456478A069F469F00F728BC = {
-			fileRef = 3456477F069F469E00F728BC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3456478C069F469F00F728BC = {
-			fileRef = 34564781069F469E00F728BC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3456478D069F469F00F728BC = {
-			fileRef = 34564782069F469E00F728BC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3456478E069F469F00F728BC = {
-			fileRef = 34564783069F469E00F728BC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3456478F069F469F00F728BC = {
-			fileRef = 34564784069F469E00F728BC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34564790069F469F00F728BC = {
-			fileRef = 34564785069F469E00F728BC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34564793069F469F00F728BC = {
-			fileRef = 34564788069F469F00F728BC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34564794069F469F00F728BC = {
-			fileRef = 34564789069F469F00F728BC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		345DFF4A05564DB200CEE7B3 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -3809,7 +3683,6 @@
 		3470638906010161004F0D20 = {
 			children = (
 				9E57141405B2168100283CAD,
-				F50CD61C03603BE201A8010A,
 				34878F710518289B003B2F21,
 				F53B9AC502CD12AB01A8010A,
 				4B4F5B24042D636A00A8010A,
@@ -3892,6 +3765,7 @@
 				3479A8AF05DCA15400998B3D,
 				4BD7D0CB04620D8800A8010A,
 				9E39940D078E8281001E09A4,
+				F50CD61C03603BE201A8010A,
 				C4382545062E795000F5A31D,
 				6C05CA1505492EE70088ECBF,
 				4B6688F804A60CC300A8010A,
@@ -3985,20 +3859,6 @@
 			path = "Plugins/Address Book Integration/AB Display Format Defaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		3483148C06A70A57002C097A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "yahoo-menu.png";
-			path = "Plugins/Gaim Service/yahoo-menu.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3483148D06A70A57002C097A = {
-			fileRef = 3483148C06A70A57002C097A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		3483928405E68B05002BC6C0 = {
 			fileEncoding = 30;
@@ -4184,20 +4044,6 @@
 			settings = {
 			};
 		};
-		348D8D1206CC078C00449EBB = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = zephyr.png;
-			path = "Plugins/Gaim Service/zephyr.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348D8D1306CC078D00449EBB = {
-			fileRef = 348D8D1206CC078C00449EBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		348D8D1A06CC079F00449EBB = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -4348,26 +4194,6 @@
 			);
 			isa = PBXGroup;
 			name = Zephyr;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348D8D3506CC07E300449EBB = {
-			children = (
-				34564738069F43A800F728BC,
-				3456477F069F469E00F728BC,
-				3483148C06A70A57002C097A,
-				34564781069F469E00F728BC,
-				34564782069F469E00F728BC,
-				34564783069F469E00F728BC,
-				34564784069F469E00F728BC,
-				34564785069F469E00F728BC,
-				34564788069F469F00F728BC,
-				34564789069F469F00F728BC,
-				348D8D1206CC078C00449EBB,
-			);
-			isa = PBXGroup;
-			name = "Service Images";
-			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5963,6 +5789,366 @@
 		};
 		34B9BD02064062170097AF93 = {
 			fileRef = 34B9BD00064062170097AF93;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE0E907A2ECCF00663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = adiumGaimConnection.h;
+			path = "Plugins/Gaim Service/adiumGaimConnection.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE0EA07A2ECD000663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = adiumGaimConnection.m;
+			path = "Plugins/Gaim Service/adiumGaimConnection.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE0EB07A2ECD000663CC9 = {
+			fileRef = 34BBE0E907A2ECCF00663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE0EC07A2ECD000663CC9 = {
+			fileRef = 34BBE0EA07A2ECD000663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE10907A2EE3700663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = adiumGaimBlist.h;
+			path = "Plugins/Gaim Service/adiumGaimBlist.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE10A07A2EE3700663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = adiumGaimBlist.m;
+			path = "Plugins/Gaim Service/adiumGaimBlist.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE10B07A2EE3800663CC9 = {
+			fileRef = 34BBE10907A2EE3700663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE10C07A2EE3800663CC9 = {
+			fileRef = 34BBE10A07A2EE3700663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE11007A2EED500663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = adiumGaimFt.h;
+			path = "Plugins/Gaim Service/adiumGaimFt.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE11107A2EED600663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = adiumGaimFt.m;
+			path = "Plugins/Gaim Service/adiumGaimFt.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE11207A2EED600663CC9 = {
+			fileRef = 34BBE11007A2EED500663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE11307A2EED600663CC9 = {
+			fileRef = 34BBE11107A2EED600663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE11607A2EF2B00663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = adiumGaimPrivacy.h;
+			path = "Plugins/Gaim Service/adiumGaimPrivacy.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE11707A2EF2B00663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = adiumGaimPrivacy.m;
+			path = "Plugins/Gaim Service/adiumGaimPrivacy.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE11807A2EF2B00663CC9 = {
+			fileRef = 34BBE11607A2EF2B00663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE11907A2EF2B00663CC9 = {
+			fileRef = 34BBE11707A2EF2B00663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE11C07A2EF7F00663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = adiumGaimRequest.h;
+			path = "Plugins/Gaim Service/adiumGaimRequest.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE11D07A2EF7F00663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = adiumGaimRequest.m;
+			path = "Plugins/Gaim Service/adiumGaimRequest.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE11E07A2EF8000663CC9 = {
+			fileRef = 34BBE11C07A2EF7F00663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE11F07A2EF8000663CC9 = {
+			fileRef = 34BBE11D07A2EF7F00663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE12207A2EFF800663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = adiumGaimNotify.h;
+			path = "Plugins/Gaim Service/adiumGaimNotify.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE12307A2EFF800663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = adiumGaimNotify.m;
+			path = "Plugins/Gaim Service/adiumGaimNotify.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE12407A2EFF800663CC9 = {
+			fileRef = 34BBE12207A2EFF800663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE12507A2EFF800663CC9 = {
+			fileRef = 34BBE12307A2EFF800663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE12807A2F09A00663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = adiumGaimRoomlist.h;
+			path = "Plugins/Gaim Service/adiumGaimRoomlist.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE12907A2F09B00663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = adiumGaimRoomlist.m;
+			path = "Plugins/Gaim Service/adiumGaimRoomlist.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE12A07A2F09B00663CC9 = {
+			fileRef = 34BBE12807A2F09A00663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE12B07A2F09B00663CC9 = {
+			fileRef = 34BBE12907A2F09B00663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE17E07A2F10400663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = adiumGaimConversation.h;
+			path = "Plugins/Gaim Service/adiumGaimConversation.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE17F07A2F10400663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = adiumGaimConversation.m;
+			path = "Plugins/Gaim Service/adiumGaimConversation.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE18007A2F10400663CC9 = {
+			fileRef = 34BBE17E07A2F10400663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE18107A2F10400663CC9 = {
+			fileRef = 34BBE17F07A2F10400663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE18407A2F20E00663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = adiumGaimWebcam.h;
+			path = "Plugins/Gaim Service/adiumGaimWebcam.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE18507A2F20E00663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = adiumGaimWebcam.m;
+			path = "Plugins/Gaim Service/adiumGaimWebcam.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE18607A2F20E00663CC9 = {
+			fileRef = 34BBE18407A2F20E00663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE18707A2F20E00663CC9 = {
+			fileRef = 34BBE18507A2F20E00663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE18A07A2F2A600663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = adiumGaimEventloop.h;
+			path = "Plugins/Gaim Service/adiumGaimEventloop.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE18B07A2F2A600663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = adiumGaimEventloop.m;
+			path = "Plugins/Gaim Service/adiumGaimEventloop.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE18C07A2F2A600663CC9 = {
+			fileRef = 34BBE18A07A2F2A600663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE18D07A2F2A600663CC9 = {
+			fileRef = 34BBE18B07A2F2A600663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE1B207A2F36400663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = adiumGaimCore.h;
+			path = "Plugins/Gaim Service/adiumGaimCore.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE1B307A2F36400663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = adiumGaimCore.m;
+			path = "Plugins/Gaim Service/adiumGaimCore.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE1B407A2F36400663CC9 = {
+			fileRef = 34BBE1B207A2F36400663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE1B507A2F36400663CC9 = {
+			fileRef = 34BBE1B307A2F36400663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE1B807A2F4C500663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = adiumGaimSignals.h;
+			path = "Plugins/Gaim Service/adiumGaimSignals.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE1B907A2F4C500663CC9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = adiumGaimSignals.m;
+			path = "Plugins/Gaim Service/adiumGaimSignals.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BBE1BA07A2F4C500663CC9 = {
+			fileRef = 34BBE1B807A2F4C500663CC9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BBE1BB07A2F4C500663CC9 = {
+			fileRef = 34BBE1B907A2F4C500663CC9;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7922,9 +8108,33 @@
 		};
 		34C2CFE6063340780018E5D2 = {
 			children = (
+				34BBE10907A2EE3700663CC9,
+				34BBE10A07A2EE3700663CC9,
+				34BBE0E907A2ECCF00663CC9,
+				34BBE0EA07A2ECD000663CC9,
+				34BBE17E07A2F10400663CC9,
+				34BBE17F07A2F10400663CC9,
+				34BBE1B207A2F36400663CC9,
+				34BBE1B307A2F36400663CC9,
+				34BBE18A07A2F2A600663CC9,
+				34BBE18B07A2F2A600663CC9,
+				34BBE11007A2EED500663CC9,
+				34BBE11107A2EED600663CC9,
+				34BBE12207A2EFF800663CC9,
+				34BBE12307A2EFF800663CC9,
+				34BBE11607A2EF2B00663CC9,
+				34BBE11707A2EF2B00663CC9,
+				34BBE11C07A2EF7F00663CC9,
+				34BBE11D07A2EF7F00663CC9,
+				34BBE12807A2F09A00663CC9,
+				34BBE12907A2F09B00663CC9,
+				34BBE1B807A2F4C500663CC9,
+				34BBE1B907A2F4C500663CC9,
+				34BBE18407A2F20E00663CC9,
+				34BBE18507A2F20E00663CC9,
+				4BDF2C91061E376C00EA75C5,
 				34048AC50617CB4C004D0B7E,
 				34048AC60617CB4C004D0B7E,
-				4BDF2C91061E376C00EA75C5,
 			);
 			isa = PBXGroup;
 			name = Libgaim;
@@ -13139,6 +13349,18 @@
 				349FF9FB0750751500E36B3B,
 				349FFA040750755200E36B3B,
 				34E4516E07555B76004C3A42,
+				34BBE0EB07A2ECD000663CC9,
+				34BBE10B07A2EE3800663CC9,
+				34BBE11207A2EED600663CC9,
+				34BBE11807A2EF2B00663CC9,
+				34BBE11E07A2EF8000663CC9,
+				34BBE12407A2EFF800663CC9,
+				34BBE12A07A2F09B00663CC9,
+				34BBE18007A2F10400663CC9,
+				34BBE18607A2F20E00663CC9,
+				34BBE18C07A2F2A600663CC9,
+				34BBE1B407A2F36400663CC9,
+				34BBE1BA07A2F4C500663CC9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13156,16 +13378,6 @@
 				341E886D0648FF1B00E0C828,
 				34F59BFE0667A99300F01E8C,
 				343A7F2706935DB600150CEC,
-				34564739069F43A800F728BC,
-				3456478A069F469F00F728BC,
-				3456478C069F469F00F728BC,
-				3456478D069F469F00F728BC,
-				3456478E069F469F00F728BC,
-				3456478F069F469F00F728BC,
-				34564790069F469F00F728BC,
-				34564793069F469F00F728BC,
-				34564794069F469F00F728BC,
-				3483148D06A70A57002C097A,
 				6E4D961806B73A96005235E9,
 				6E4D961E06B73B38005235E9,
 				6E4D962406B73BE0005235E9,
@@ -13175,7 +13387,6 @@
 				6EA3688506B73E7D009CA81A,
 				6EA3688B06B73F28009CA81A,
 				6EA3689106B73F67009CA81A,
-				348D8D1306CC078D00449EBB,
 				348D8D2A06CC07BE00449EBB,
 				34F52BCC06E2AFBC00887BE2,
 				4B388E4D0719C445004DE713,
@@ -13262,6 +13473,18 @@
 				349FF9FC0750751600E36B3B,
 				349FFA050750755200E36B3B,
 				34E4516F07555B76004C3A42,
+				34BBE0EC07A2ECD000663CC9,
+				34BBE10C07A2EE3800663CC9,
+				34BBE11307A2EED600663CC9,
+				34BBE11907A2EF2B00663CC9,
+				34BBE11F07A2EF8000663CC9,
+				34BBE12507A2EFF800663CC9,
+				34BBE12B07A2F09B00663CC9,
+				34BBE18107A2F10400663CC9,
+				34BBE18707A2F20E00663CC9,
+				34BBE18D07A2F2A600663CC9,
+				34BBE1B507A2F36400663CC9,
+				34BBE1BB07A2F4C500663CC9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13354,7 +13577,6 @@
 				4B76476C07A07BEC0021CCD7,
 				34F59B760667A33900F01E8C,
 				34C2CF8F0633405C0018E5D2,
-				348D8D3506CC07E300449EBB,
 				34C2CFE6063340780018E5D2,
 			);
 			isa = PBXGroup;

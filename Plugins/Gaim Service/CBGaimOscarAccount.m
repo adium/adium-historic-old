@@ -7,6 +7,7 @@
 //
 
 #import "CBGaimOscarAccount.h"
+#import "SLGaimCocoaAdapter.h"
 
 #define KEY_OSCAR_HOST  @"Oscar:Host"
 #define KEY_OSCAR_PORT  @"Oscar:Port"
