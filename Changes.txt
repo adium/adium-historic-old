@@ -9,7 +9,6 @@ Version 0.80 (13/-3/2525)
 - Toolbar buttons: send file, scripts, offline contacts, add contact, add group, view logs, user icon
 - Speech no longer interrupts speech from other applications
 - (ICQ) ICQ Custom Encoding preference is a menu
-- (Sametime) Added support for group (conference) chats
 - Menu item improvements: better status feedback, status menu, unviewed content in open chats
 - Background image options in the contact list (tiled, scaled, centered)
 - Background image options for message windows (tiled, scaled, centered)
@@ -86,6 +85,8 @@ Version 0.80 (13/-3/2525)
 	- Added locked/unlocked message window toolbar item to indicate encryption status and provide encryption options
 	- Provided via Off-the-Record Messaging, compatible with any other participating client or client with an OTR plugin.
 	- For more information on OTR, visit http://www.cypherpunks.ca/otr/
+
+- (Sametime) Upgraded to meanwhile 0.4cvs, fixing a common crash when connecting and adding support for the Directory service.
 
 - Streamlined and cleaned up Advanced preferences
 
