@@ -51,7 +51,7 @@
 	
         //if([modifiedKey compare:@"IdleSince"] == 0 ){ //We ignore account specific idle (why?)
 
-	if( notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:GROUP_ACCOUNT_STATUS] == 0 ) {
+	if( notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:GROUP_ACCOUNT_STATUS] ) {
             if([[[adium preferenceController] preferenceForKey:KEY_IDLE_MESSAGE_ENABLED group:PREF_GROUP_IDLE_MESSAGE] boolValue] ) {
 
                 //Remove existing content sent/received observer, and install new (if away)
@@ -92,7 +92,7 @@
             
     NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"IdleMessage" group:GROUP_ACCOUNT_STATUS]];
     //If the user received a message, send our idle message to them
-    if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
+    if([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE]){
         if(idleMessage && [idleMessage length] != 0){
             //Only send if there's no away message up!
             if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil) {
@@ -119,7 +119,7 @@
 {
     AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
 
-    if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
+    if([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE]){
         AIChat	*chat = [contentObject chat];
 
         if([receivedIdleMessage indexOfObjectIdenticalTo:chat] == NSNotFound){

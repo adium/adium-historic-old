@@ -110,7 +110,8 @@
     AIContentObject 	*contentObject = [[notification userInfo] objectForKey:@"Object"];
     
     //If the user received a message which another user sent (not an autoreply), send our away message to source
-    if(([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0) && ![(AIContentMessage *)contentObject isAutoreply]){
+    if(([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE]) &&
+	   ![(AIContentMessage *)contentObject isAutoreply]){
         
         NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"Autoresponse"
 																													   group:GROUP_ACCOUNT_STATUS]];
@@ -145,7 +146,7 @@
 {
     AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
     
-    if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
+    if([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE]){
         AIChat	*chat = [contentObject chat];
         
         if([receivedAwayMessage indexOfObjectIdenticalTo:chat] == NSNotFound){
@@ -261,7 +262,7 @@
     NSString    *key = [[notification userInfo] objectForKey:@"Key"];
     
 	if(notification == nil || ([group isEqualToString:GROUP_ACCOUNT_STATUS] && [notification object] == nil)){
-		if(!key || [key compare:@"AwayMessage"] == 0){
+		if(!key || [key isEqualToString:@"AwayMessage"]){
 			//Update our away menus
 			[self _updateMenusToReflectAwayState:[self shouldConfigureForAway]];
 			[self _updateAwaySubmenus];
@@ -291,7 +292,7 @@
 		}
     } else if([group isEqualToString:PREF_GROUP_AWAY_MESSAGES]){
 		//Rebuild the away menu
-		if([key compare:KEY_SAVED_AWAYS] == 0){
+		if([key isEqualToString:KEY_SAVED_AWAYS]){
 			[self _updateAwaySubmenus];
 		}
 		
@@ -378,12 +379,12 @@
     while((awayDict = [enumerator nextObject])){
         NSString *type = [awayDict objectForKey:@"Type"];
         
-        if([type compare:@"Group"] == 0){
+        if([type isEqualToString:@"Group"] == 0){
             //NSString		*group = [awayDict objectForKey:@"Name"];
             
             //Create & process submenu
             
-        }else if([type compare:@"Away"] == 0){
+        }else if([type isEqualToString:@"Away"]){
             NSString		*away = [awayDict objectForKey:@"Title"];
             if (!away) //no title was found
                 away = [[NSAttributedString stringWithData:[awayDict objectForKey:@"Message"]] string];

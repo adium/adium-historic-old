@@ -201,7 +201,7 @@
 //Preferences changed
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_STATUS_COLORING] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_STATUS_COLORING]){
 		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
 		BOOL			customColorsEnabled = [[prefDict objectForKey:KEY_TAB_USE_CUSTOM_COLORS] boolValue];
 			

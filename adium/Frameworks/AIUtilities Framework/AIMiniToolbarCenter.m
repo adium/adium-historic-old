@@ -97,7 +97,7 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 //Returns yes if the specified toolbar is being customized
 - (BOOL)customizing:(AIMiniToolbar *)toolbar
 {
-    if(customizeIdentifier && (toolbar == nil || [customizeIdentifier compare:[toolbar identifier]] == 0)){
+    if(customizeIdentifier && (toolbar == nil || [customizeIdentifier isEqualToString:[toolbar identifier]])){
         return(YES);
     }else{
         return(NO);

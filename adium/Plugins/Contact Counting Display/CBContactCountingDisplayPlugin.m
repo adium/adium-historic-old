@@ -52,8 +52,11 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0 || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST_DISPLAY] == 0) {
-            allCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_ALL_CONTACTS 
+    if(notification == nil ||
+	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST] ||
+	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]) {
+
+		allCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_ALL_CONTACTS 
                                                                      group:PREF_GROUP_CONTACT_LIST] boolValue];
         visibleCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_VISIBLE_CONTACTS
                                                                      group:PREF_GROUP_CONTACT_LIST] boolValue];

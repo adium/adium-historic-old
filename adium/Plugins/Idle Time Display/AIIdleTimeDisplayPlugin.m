@@ -136,7 +136,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     //Optimize this...
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_IDLE_TIME_DISPLAY] == 0){
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_IDLE_TIME_DISPLAY]){
 		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
 		
         //Cache the preference values

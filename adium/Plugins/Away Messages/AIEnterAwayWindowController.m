@@ -124,7 +124,7 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
         while( (dict = [enumerator nextObject]) && !found)
         {
             NSString * storedTitle = [dict objectForKey:@"Title"];
-            if ( storedTitle && ([storedTitle compare:theTitle] == 0) )
+            if ( storedTitle && ([storedTitle isEqualToString:theTitle]) )
             {
                 int index = [tempArray indexOfObject:dict];
                 NSMutableDictionary * newdict = [[dict mutableCopy] autorelease];
@@ -254,14 +254,14 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
     while((dict = [enumerator nextObject])){
         NSString	*type = [dict objectForKey:@"Type"];
 
-        if([type compare:@"Group"] == 0){
+        if([type isEqualToString:@"Group"]){
             [mutableArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
                 @"Group", @"Type",
                 [self _loadAwaysFromArray:[dict objectForKey:@"Contents"]], @"Contents",
                 [dict objectForKey:@"Name"], @"Name",
                 nil]];
 
-        }else if([type compare:@"Away"] == 0){
+        }else if([type isEqualToString:@"Away"]){
             [mutableArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
                 @"Away", @"Type",
                 [NSAttributedString stringWithData:[dict objectForKey:@"Message"]], @"Message",[dict objectForKey:@"Title"], @"Title",
@@ -284,14 +284,14 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
     while((dict = [enumerator nextObject])){
         NSString	*type = [dict objectForKey:@"Type"];
 
-        if([type compare:@"Group"] == 0){
+        if([type isEqualToString:@"Group"]){
             [saveArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                 @"Group", @"Type",
                 [self _saveArrayFromArray:[dict objectForKey:@"Contents"]], @"Contents",
                 [dict objectForKey:@"Name"], @"Name",
                 nil]];
 
-        }else if([type compare:@"Away"] == 0){
+        }else if([type isEqualToString:@"Away"]){
             [saveArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                 @"Away", @"Type",
                 [[dict objectForKey:@"Message"] dataRepresentation], @"Message", [dict objectForKey:@"Title"], @"Title",

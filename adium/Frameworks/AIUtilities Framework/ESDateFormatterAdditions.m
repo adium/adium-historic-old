@@ -32,7 +32,7 @@ typedef enum
     NSString            *currentTimeFormatString = [[NSUserDefaults standardUserDefaults] stringForKey:NSTimeFormatString];
 
     //if the time format string changed, clear the cache, then save the current one
-    if ([currentTimeFormatString compare:oldTimeFormatString] != 0) {
+    if (![currentTimeFormatString isEqualToString:oldTimeFormatString]) {
         int i;
         for (i=0;i<4;i++)
             cache[i]=nil;

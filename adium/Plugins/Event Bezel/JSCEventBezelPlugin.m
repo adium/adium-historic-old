@@ -234,7 +234,7 @@
 				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
 			}
 			
-			tempBuddyIcon = [[[contact displayArrayForKey:@"UserIcon"] objectValue] retain];
+			tempBuddyIcon = [[[contact displayArrayForKey:KEY_USER_ICON] objectValue] retain];
 			if(!tempBuddyIcon){
 				tempBuddyIcon = [[NSImage imageNamed: @"DefaultIcon"] retain];
 			}

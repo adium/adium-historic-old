@@ -131,28 +131,28 @@ AIAwayStatusWindowController	*sharedAwayStatusInstance = nil;
     NSString    *group = [[notification userInfo] objectForKey:@"Group"];
 	
 	//Mute Sounds
-	if(notification == nil || [group compare:PREF_GROUP_SOUNDS] == 0){
+	if(notification == nil || [group isEqualToString:PREF_GROUP_SOUNDS]){
 		[button_mute setState:[[[adium preferenceController] preferenceForKey:KEY_EVENT_MUTE_WHILE_AWAY
 																		group:PREF_GROUP_SOUNDS] boolValue]];
 		
 	}
 	
 	//Show Bezels
-	if(notification == nil || [group compare:PREF_GROUP_EVENT_BEZEL] == 0){
+	if(notification == nil || [group isEqualToString:PREF_GROUP_EVENT_BEZEL]){
 		[button_showBezel setState:![[[adium preferenceController] preferenceForKey:KEY_EVENT_BEZEL_SHOW_AWAY
 																			  group:PREF_GROUP_EVENT_BEZEL] boolValue]];
 		
 	}
 	
 	//Away Message
-	if(notification == nil || [group compare:GROUP_ACCOUNT_STATUS] == 0 && [notification object] == nil){
+	if(notification == nil || [group isEqualToString:GROUP_ACCOUNT_STATUS] && [notification object] == nil){
 		NSAttributedString	*awayMessage = [[[adium preferenceController] preferenceForKey:@"AwayMessage"
 																					 group:GROUP_ACCOUNT_STATUS] attributedString];
 		if(awayMessage) [[textView_awayMessage textStorage] setAttributedString:awayMessage];
 	}
 	
 	//Window behavior
-	if(notification == nil || [group compare:PREF_GROUP_AWAY_STATUS_WINDOW] == 0){
+	if(notification == nil || [group isEqualToString:PREF_GROUP_AWAY_STATUS_WINDOW]){
 		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW];
 		
 		[(NSPanel *)[self window] setFloatingPanel:[[prefDict objectForKey:KEY_FLOAT_AWAY_STATUS_WINDOW] boolValue]];

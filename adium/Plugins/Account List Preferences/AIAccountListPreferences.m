@@ -541,7 +541,7 @@
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:ACCOUNT_DRAG_TYPE]];
 	
-    if([avaliableType compare:@"AIAccount"] == 0){
+    if([avaliableType isEqualToString:@"AIAccount"]){
         int	newIndex;
         
         //Select the moved account

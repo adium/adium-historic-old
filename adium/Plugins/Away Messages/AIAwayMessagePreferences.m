@@ -121,14 +121,14 @@
     while((dict = [enumerator nextObject])){
         NSString	*type = [dict objectForKey:@"Type"];
 
-        if([type compare:@"Group"] == 0){
+        if([type isEqualToString:@"Group"]){
             [mutableArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
                 @"Group", @"Type",
                 [self _loadAwaysFromArray:[dict objectForKey:@"Contents"]], @"Contents",
                 [dict objectForKey:@"Name"], @"Name",
                 nil]];
 
-        }else if([type compare:@"Away"] == 0){
+        }else if([type isEqualToString:@"Away"]){
             NSMutableDictionary     *newDict = [NSMutableDictionary dictionary];
             NSString                *title = [dict objectForKey:@"Title"];
             NSData                  *autoresponse = [dict objectForKey:@"Autoresponse"];
@@ -161,14 +161,14 @@
     while((dict = [enumerator nextObject])){
         NSString	*type = [dict objectForKey:@"Type"];
 
-        if([type compare:@"Group"] == 0){
+        if([type isEqualToString:@"Group"]){
             [saveArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                 @"Group", @"Type",
                 [self _saveArrayFromArray:[dict objectForKey:@"Contents"]], @"Contents",
                 [dict objectForKey:@"Name"], @"Name",
                 nil]];
 
-        }else if([type compare:@"Away"] == 0){
+        }else if([type isEqualToString:@"Away"]){
             NSMutableDictionary     *newDict = [NSMutableDictionary dictionary];
             NSString                *title = [dict objectForKey:@"Title"];
             NSData                  *autoresponse = [[dict objectForKey:@"Autoresponse"] dataRepresentation];
@@ -224,7 +224,7 @@
         //Get the selected item
         type = [awayDict objectForKey:@"Type"];
 
-        if([type compare:@"Group"] == 0){
+        if([type isEqualToString:@"Group"]){
             //Empty our text view, and disable it
             [textView_message setString:@""];
             [textView_message setEditable:NO];
@@ -232,7 +232,7 @@
             [textView_autoresponse setString:@""];
             [textView_autoresponse setEditable:NO];
             [textView_autoresponse setSelectable:NO];
-        }else if([type compare:@"Away"] == 0){
+        }else if([type isEqualToString:@"Away"]){
             //Show the away message in our text view, and enable it for editing
             NSAttributedString * autoresponse = [awayDict objectForKey:@"Autoresponse"];
             BOOL hasAutoresponse = ([[autoresponse string] length] > 0);
@@ -266,10 +266,10 @@
         //Get the selected item
         type = [displayedMessage objectForKey:@"Type"];
 
-        if([type compare:@"Group"] == 0){
+        if([type isEqualToString:@"Group"]){
             //Nothing can be changed about groups
 
-        }else if([type compare:@"Away"] == 0){
+        }else if([type isEqualToString:@"Away"]){
             //Set the new message
             NSAttributedString * awayMessage = [[[textView_message textStorage] copy] autorelease];
             [displayedMessage setObject:awayMessage forKey:@"Message"];
@@ -388,7 +388,7 @@
     }else{
         NSString *type = [item objectForKey:@"Type"];
 
-        if([type compare:@"Group"] == 0){ //Group
+        if([type isEqualToString:@"Group"]){ //Group
             return([(NSArray *)[item objectForKey:@"Contents"] count]);
         }else{
             return(0);
@@ -404,7 +404,7 @@
     }else{
         NSString *type = [item objectForKey:@"Type"];
 
-        if([type compare:@"Group"] == 0){ //Group
+        if([type isEqualToString:@"Group"]){ //Group
             return([[item objectForKey:@"Contents"] objectAtIndex:index]);
         }else{
             return(nil);
@@ -417,7 +417,7 @@
 {
     NSString *type = [item objectForKey:@"Type"];
 
-    if([type compare:@"Group"] == 0){ //Group
+    if([type isEqualToString:@"Group"]){ //Group
         return(YES);
     }else{
         return(NO);
@@ -431,16 +431,16 @@
     //If this item is the one we're editing, make it look as if the changes are applying live by pulling the text right from our text view
     if(item == displayedMessage){
         NSString * title = [displayedMessage objectForKey:@"Title"];
-        if (!title || [title compare:[[displayedMessage objectForKey:@"Message"] string]] == 0){
+        if (!title || [title isEqualToString:[[displayedMessage objectForKey:@"Message"] string]]){
             return([[textView_message textStorage] string]);
         }else{
             return(title);
         }
     }
 
-    if([type compare:@"Group"] == 0){ //Group
+    if([type isEqualToString:@"Group"]){ //Group
         return([item objectForKey:@"Name"]);
-    }else if([type compare:@"Away"] == 0){ //Away message
+    }else if([type isEqualToString:@"Away"]){ //Away message
         NSString * title = [item objectForKey:@"Title"];
         return(title ? title : [[item objectForKey:@"Message"] string]);
     }else{
@@ -451,7 +451,7 @@
 - (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
     NSString *type = [item objectForKey:@"Type"];
-    if([type compare:@"Away"] == 0){ //Away message
+    if([type isEqualToString:@"Away"]){ //Away message
         if(object && [(NSString *)object length] != 0){
             [item setObject:object forKey:@"Title"];
         }else{
@@ -505,17 +505,17 @@
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIAwayMessage"]];
 
-    if([avaliableType compare:@"AIAwayMessage"] == 0){
+    if([avaliableType isEqualToString:@"AIAwayMessage"]){
         NSString *type = [dragItem objectForKey:@"Type"];
         NSString *itemType = [item objectForKey:@"Type"];
 
-        if([type compare:@"Group"] == 0){ //If they are dragging a group
-            if(item == nil || [itemType compare:@"Group"] == 0){ //To root, or onto/into a group
+        if([type isEqualToString:@"Group"]){ //If they are dragging a group
+            if(item == nil || [itemType isEqualToString:@"Group"]){ //To root, or onto/into a group
                 return(NSDragOperationPrivate);
             }
 
-        }else if([type compare:@"Away"] == 0){ //If they are dragging an away
-            if(item == nil || [itemType compare:@"Group"] == 0){ //To root, or onto/into a group
+        }else if([type isEqualToString:@"Away"]){ //If they are dragging an away
+            if(item == nil || [itemType isEqualToString:@"Group"]){ //To root, or onto/into a group
                 return(NSDragOperationPrivate);
             }
         }
@@ -529,11 +529,11 @@
     NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIAwayMessage"]];
     int			oldIndex = [self indexOfObject:dragItem inArray:awayMessageArray];
 
-    if([availableType compare:@"AIAwayMessage"] == 0){
+    if([availableType isEqualToString:@"AIAwayMessage"]){
         NSString *type = [dragItem objectForKey:@"Type"];
       //NSString *itemType = [item objectForKey:@"Type"];
 
-        if([type compare:@"Group"] == 0){ //If they are dragging a group
+        if([type isEqualToString:@"Group"]){ //If they are dragging a group
             /*            
             if(item == nil){ //To root
 
@@ -545,7 +545,7 @@
                 }
             }
             */
-        }else if([type compare:@"Away"] == 0){ //If they are dragging an away
+        }else if([type isEqualToString:@"Away"]){ //If they are dragging an away
             if(item == nil){ //To root
                 [dragItem retain];
                 [self removeObject:dragItem fromArray:awayMessageArray]; //Remove from old location.  We can't use removeObject, since it will treat similar aways as identical and remove them all!

@@ -102,7 +102,7 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DISPLAYFORMAT] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DISPLAYFORMAT]){
 		
 		// Clear old checkmark
 		[[menu_contactSubmenu itemWithTag:displayFormat] setState:NSOffState];
@@ -166,7 +166,7 @@
 			case DISPLAY_NAME_SCREEN_NAME:
 				formattedUID = [inObject formattedUID];
 
-				if(!displayName || [displayName compare:formattedUID] == 0){
+				if(!displayName || [displayName isEqualToString:formattedUID]){
 					longDisplayName = displayName;
 				}else{
 					longDisplayName = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
@@ -175,7 +175,7 @@
 				
 			case SCREEN_NAME_DISPLAY_NAME:
 				formattedUID = [inObject formattedUID];
-				if(!displayName || [displayName compare:formattedUID] == 0){
+				if(!displayName || [displayName isEqualToString:formattedUID]){
 					longDisplayName = displayName;
 				}else{
 					longDisplayName = [NSString stringWithFormat:@"%@ (%@)",formattedUID,displayName];

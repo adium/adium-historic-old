@@ -103,12 +103,15 @@
 {
     NSString	*identifier = [tableColumn identifier];
 
-    if([identifier compare:@"icon"] == 0){
+    if([identifier isEqualToString:@"icon"]){
         return([itemImageArray objectAtIndex:row]);
-    }else if([identifier compare:@"label"] == 0){
+		
+    }else if([identifier isEqualToString:@"label"]){
         return([[itemArray objectAtIndex:row] paletteLabel]);
+		
     }else{
         return([itemArray objectAtIndex:row]);
+		
     }
 }
 

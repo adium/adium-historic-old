@@ -1,6 +1,8 @@
 //------------------------------------------------------------------------------------
 // Already Fixed, awaiting the next Adium release
 //------------------------------------------------------------------------------------
+- Multiple identical emoticons in a row don't display
+- Advanced user name format WebKit option does not apply properly
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
@@ -62,7 +64,7 @@
 - [AIM / Jabber] File transfer limitations
 	File transfers often fail to navigate firewalls and routers
 
-- [Yahoo] Fil transfer limitations
+- [Yahoo] File transfer limitations
 	Files over 1 MB in size fail to send
 	
 - [GaduGadu] Contacts not saving to the server-list
@@ -124,7 +126,6 @@
 	.adiumEmoticonSet (call me a capitalization nut :)?
 	[Dave] Since we do case-insensitive compares, and the Finder doesn't seem to care, we COULD use AdiumEmoticonSet
 	[Adam] Need to be careful.. some users are running on case-sensitive file systems
-- Crash reporter doesn't appear for some users (snu on IRC in particular)
 - New mail notification does not always display?
 
 

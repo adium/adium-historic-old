@@ -211,8 +211,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
         
         //Font (If the color, font, or size has changed)
         if(includeFontTags && (pointSize != currentSize ||
-							   [familyName compare:currentFamily] ||
-							   [color compare:currentColor] ||
+							   ![familyName isEqualToString:currentFamily] ||
+							   ![color isEqualToString:currentColor] ||
 							   (currentColor && !color))){
             //Close any existing font tags, and open a new one
             if(closeFontTags && openFontTag){

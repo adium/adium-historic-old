@@ -349,11 +349,11 @@
         @"Offline",
 	@"IdleSince",
 	@"IdleManuallySet",
-//      @"UserIcon",
+//      KEY_USER_ICON,
         @"Away",
         @"AwayMessage",
 //      @"TextProfile",
-//      @"UserIcon",
+//      KEY_USER_ICON,
 //      @"DefaultUserIconFilename",
         nil];
 	
@@ -366,7 +366,7 @@
     [self updateStatusForKey:@"IdleSince"];
     [self updateStatusForKey:@"TextProfile"];
     [self updateStatusForKey:@"AwayMessage"];
-    [self updateStatusForKey:@"UserIcon"];
+    [self updateStatusForKey:KEY_USER_ICON];
 }
 
 

@@ -55,7 +55,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
 	///*
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:@"Contact Status Coloring"] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:@"Contact Status Coloring"]){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:@"Contact Status Coloring"];
 		
 		//Snatch colors from status coloring plugin's prefs    
@@ -69,7 +69,7 @@
     }
 	//*/
     
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DOCK_OVERLAYS] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DOCK_OVERLAYS]){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS];
 		
         //

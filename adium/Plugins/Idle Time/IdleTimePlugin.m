@@ -108,7 +108,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || 
-	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_IDLE_TIME] == 0){
+	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_IDLE_TIME]){
 		
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME];
 	

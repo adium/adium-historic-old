@@ -45,7 +45,7 @@
     
     //Get the correct images
     if(![[self cell] isHighlighted]){
-        if([[self keyEquivalent] compare:@"\r"] == 0){
+        if([[self keyEquivalent] isEqualToString:@"\r"]){
             caps = plasticDefaultCaps;
             middle = plasticDefaultMiddle;
         }else{

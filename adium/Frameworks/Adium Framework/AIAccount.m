@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.61 2004/06/07 05:56:03 evands Exp $
+// $Id: AIAccount.m,v 1.62 2004/06/07 06:53:53 evands Exp $
 
 #import "AIAccount.h"
 
@@ -129,7 +129,7 @@
         NSString    *group = [[notification userInfo] objectForKey:@"Group"];
         
         //For convenience, we let the account know when a status key for it has changed
-        if([group compare:GROUP_ACCOUNT_STATUS] == 0){
+        if([group isEqualToString:GROUP_ACCOUNT_STATUS]){
             NSString	*key = [[notification userInfo] objectForKey:@"Key"];
             
             [self updateStatusForKey:key];
@@ -208,7 +208,7 @@
     
     //Online status changed
     //Call connect or disconnect as appropriate
-    if([key compare:@"Online"] == 0){
+    if([key isEqualToString:@"Online"]){
         if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
             if(!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]){
 				if ([self requiresPassword]){
@@ -229,7 +229,7 @@
             }
         }
 		
-    }else if([key compare:@"FullNameAttr"] == 0) {
+    }else if([key isEqualToString:@"FullNameAttr"]) {
         //Account's full name (alias) formatting changed
         //Update the display name for this account
 		NSString	*displayName = [[[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
@@ -241,7 +241,7 @@
 		[[adium contactController] listObjectAttributesChanged:self
 												  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
 		
-    }else if([key compare:@"FormattedUID"] == 0){
+    }else if([key isEqualToString:@"FormattedUID"]){
 		//Transfer formatted UID to status dictionary
 		[self setStatusObject:[self preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS]
 					   forKey:@"FormattedUID"

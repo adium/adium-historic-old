@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.56 2004/06/05 06:51:24 evands Exp $
+// $Id: AIDockController.m,v 1.57 2004/06/07 06:54:14 evands Exp $
 
 #import "AIDockController.h"
 
@@ -85,10 +85,10 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_GENERAL]){
         NSString	*key = [[notification userInfo] objectForKey:@"Key"];
         
-        if(notification == nil || (key && [key compare:KEY_ACTIVE_DOCK_ICON] == 0)){
+        if(notification == nil || (key && [key isEqualToString:KEY_ACTIVE_DOCK_ICON])){
             NSDictionary        *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
             NSMutableDictionary	*newAvailableIconStateDict;
             NSString		*iconPath;
@@ -109,7 +109,7 @@
 			
 			//On launch we only need to update the icon file if this is a new version of Adium.  When preferences
 			//change we always want to update it
-			if(notification != nil || !lastLaunchedVersion || !version || [lastLaunchedVersion compare:version] != 0){
+			if(notification != nil || !lastLaunchedVersion || !version || ![lastLaunchedVersion isEqualToString:version]){
                 NSString		*icnsPath = [[NSBundle mainBundle] pathForResource:@"Adium" ofType:@"icns"];
                 IconFamily		*iconFamily;
                 NSImage			*image;

@@ -71,7 +71,7 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
 {
 	if(notification == nil || 
 	   ([notification object] == listObject && 
-		[(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:@"Contact Alerts"] == 0)){
+		[(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:@"Contact Alerts"])){
 
 		//Update our list of alerts
 		[alertArray release];
