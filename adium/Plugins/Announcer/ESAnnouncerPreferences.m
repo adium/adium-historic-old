@@ -32,7 +32,7 @@
     [checkBox_status setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_STATUS] boolValue]];
     [checkBox_time setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_TIME] boolValue]];
     [checkBox_sender setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_SENDER] boolValue]];
-    [checkBox_messageText setState:[[dict objectForKey:KEY_ANNOUNCER_MESSAGETEXT] boolValue]];
+    [checkBox_messageText setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_MESSAGETEXT] boolValue]];
     [self configureControlDimming];
 }
 
