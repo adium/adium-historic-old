@@ -6,10 +6,9 @@
 //
 
 #import "CSNewContactAlertWindowController.h"
-#import "ESContactAlertsPane.h"
-#import "ESContactAlertsPlugin.h"
+#import "ESContactAlertsViewController.h"
 
-#import "AIImageTextView.h"
+#import "AIImageTextCellView.h"
 
 #define NEW_ALERT_NIB @"NewAlert"
 
