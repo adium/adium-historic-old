@@ -44,7 +44,6 @@ WebKit Message View:
 	+ Add keypress forwarding
 	+ Add preference to switch active style, preview styles
 	+ Add support for displaying emoticon images
-	+ Add support for displaying buddy icons using the UserIconPath status object
     
 Message Window:
 	+ Insert/Edit link menu item, accompanying link entry panel, edit link context menu
@@ -240,3 +239,4 @@ Features & Changes:
 = Add support for the scrolling / paging keys in the WebKit View
 = Tab scrubbing.  If control is held when mousing over a tab, select that tab
 = Make option-clicking a tab close button close all other tabs
+= WebKit: Add support for displaying buddy icons using the UserIconPath status object
