@@ -10,6 +10,7 @@
 
 // Pref keys
 #define KEY_DISPLAY_CONTEXT			@"Display Message Context"
+#define	KEY_DIM_RECENT_CONTEXT		@"Dim Recent Context"
 #define KEY_DISPLAY_LINES			@"Lines to Display"
 #define KEY_DISPLAY_MODE			@"Display Mode"
 #define KEY_HAVE_TALKED_DAYS		@"Have Talked Days"
@@ -34,6 +35,7 @@
 	
 	BOOL							isObserving;
 	BOOL							shouldDisplay;
+	BOOL							dimRecentContext;
 	int								linesToDisplay;
 	
 	int								displayMode;

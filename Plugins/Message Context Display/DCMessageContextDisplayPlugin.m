@@ -59,6 +59,8 @@
 		shouldDisplay = [[preferenceDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue];
 		linesToDisplay = [[preferenceDict objectForKey:KEY_DISPLAY_LINES] intValue];
 
+		dimRecentContext = [[preferenceDict objectForKey:KEY_DIM_RECENT_CONTEXT] boolValue];
+		
 		if( shouldDisplay && linesToDisplay > 0 && !isObserving ) {
 			
 			//Observe new message windows only if we aren't already observing them
@@ -102,12 +104,12 @@
 		previousDict = [[chat listObject] preferenceForKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
 		
 		cnt = 1;
-		
+				
 		// Only save if we need to save more AND there is still unsaved content available
 		while( (cnt <= linesToDisplay) && (content = [enumerator nextObject]) ) {
 			
-			// Only record actual messages, no context or status
-			if( [content isKindOfClass:[AIContentMessage class]] && ![content isKindOfClass:[AIContentContext class]]) {
+			// Only record actual messages, no status
+			if( [content isKindOfClass:[AIContentMessage class]] || [content isKindOfClass:[AIContentContext class]]) {
 				contentDict = [self savableContentObject:content];
 				[dict setObject:contentDict forKey:[[NSNumber numberWithInt:cnt] stringValue]];
 				cnt++;
@@ -139,7 +141,7 @@
 }
 
 //Returns a dictionary representation of a content object which can be written to disk
-//ONLY handles AIContentMessage objects right now
+//ONLY handles AIContentMessage and AIContentContext objects right now
 - (NSDictionary *)savableContentObject:(AIContentObject *)content
 {
 	NSMutableDictionary	*contentDict = nil;
@@ -166,7 +168,7 @@
 	
 	[contentDict setObject:[NSNumber numberWithBool:[content isOutgoing]] forKey:@"Outgoing"];
 	
-	// ONLY log AIContentMessages right now... no status messages
+	// ONLY log AIContentMessage and AIContentContexts right now... no status messages
 	[contentDict setObject:[NSNumber numberWithBool:[(AIContentMessage *)content isAutoreply]] forKey:@"Autoreply"];
 	[contentDict setObject:[[(AIContentMessage *)content date] description] forKey:@"Date"];
 	[contentDict setObject:[[[(AIContentMessage *)content message] safeString] dataRepresentation] forKey:@"Message"];
@@ -184,10 +186,12 @@
 	AIContentContext	*responseContent;
 	id					source;
 	id					dest;
+	BOOL				isContext = YES;
 		
 	chat = (AIChat *)[notification object];
 		
 	NSDictionary	*chatDict = [[chat listObject] preferenceForKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
+	
 	NSDictionary	*messageDict;
 	
 	if( chatDict && shouldDisplay && linesToDisplay > 0 ) {
@@ -196,12 +200,13 @@
 		
 		NSCalendarDate *mostRecentMessage = [NSDate dateWithNaturalLanguageString:[[chatDict objectForKey:@"1"] objectForKey:@"Date"]];
 		
+		// find out how long it's been since the context was saved, if we care
+		if( !dimRecentContext ) {
+			NSTimeInterval timeInterval = -[mostRecentMessage timeIntervalSinceNow];
+			isContext = !(timeInterval > -300 && timeInterval < 300);
+		}
+		
 		if( [self contextShouldBeDisplayed:mostRecentMessage] ) {
-			
-			
-		//if( displayMode == MODE_ALWAYS ||
-		//	 (displayMode == MODE_HAVE_TALKED && ([[NSCalendarDate calendarDate] dayOfCommonEra]-[mostRecentMessage dayOfCommonEra]) <= haveTalkedDays ) ||
-		//	 (displayMode == MODE_HAVE_NOT_TALKED && ([[NSCalendarDate calendarDate] dayOfCommonEra]-[mostRecentMessage dayOfCommonEra]) > haveNotTalkedDays) ) {
 			
 			//Max number of lines to display
 			cnt = ([chatDict count] >= linesToDisplay ? linesToDisplay : [chatDict count]);
@@ -213,8 +218,8 @@
 				
 				type = [messageDict objectForKey:@"Type"];
 				
-				//Currently, we only add Message content objects
-				if( [type isEqualToString:CONTENT_MESSAGE_TYPE] ) {
+				//Currently, we only add Message or Context content objects
+				if( [type isEqualToString:CONTENT_MESSAGE_TYPE] || [type isEqualToString:CONTENT_CONTEXT_TYPE] ) {
 					message = [NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
 					
 					NSString *from = [messageDict objectForKey:@"From"];
@@ -231,14 +236,29 @@
 
 					// Make the message response if all is well
 					if(message && source && dest) {
-						responseContent = [AIContentContext messageInChat:chat
-															   withSource:source
-															  destination:dest
-																	 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
-																  message:message
-																autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
+						
+						// Make the message appear as context if isContext is true or it was a context object
+						// last time or if we should always dim recent context. Make a regular message otherwise
+						if(isContext || [type isEqualToString:CONTENT_CONTEXT_TYPE] || dimRecentContext) {
+							responseContent =[AIContentContext messageInChat:chat
+																  withSource:source
+																 destination:dest
+																		date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
+																	 message:message
+																   autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
+						} else {	
+							responseContent =[AIContentMessage messageInChat:chat
+																  withSource:source
+																 destination:dest
+																		date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
+																	 message:message
+																   autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];							
+							[responseContent setTrackContent:NO];
+						}
 
-						[[adium contentController] displayContentObject:responseContent usingContentFilters:YES immediately:YES];
+						if(responseContent)
+							[[adium contentController] displayContentObject:responseContent usingContentFilters:YES immediately:YES];
+
 					}
 					
 				}

@@ -18,6 +18,7 @@
             CLASS = DCMessageContextDisplayPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkBox_doNotDim" = NSButton; 
                 "checkBox_showContext" = NSButton; 
                 "matrix_radioButtons" = NSMatrix; 
                 "menu_haveNotTalkedUnits" = NSPopUpButton; 
