@@ -574,14 +574,18 @@ static BOOL didInitOscar = NO;
 - (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString
 {
 	NSScanner			*scanner;
-    NSCharacterSet		*tagCharStart, *tagEnd, *absoluteTagEnd;
-    NSString			*chunkString;
+//    NSCharacterSet		*tagCharStart, *tagEnd, *absoluteTagEnd;
+	static NSCharacterSet *elementEndCharacters = nil;
+	if(!elementEndCharacters)
+		elementEndCharacters = [[NSCharacterSet characterSetWithCharactersInString:@" >"] retain];
+	static NSString		*tagStart = @"<", *tagEnd = @">";
+	NSString			*chunkString;
 	NSMutableString		*processedString;
 	
-    tagCharStart = [NSCharacterSet characterSetWithCharactersInString:@"<"];
-    tagEnd = [NSCharacterSet characterSetWithCharactersInString:@" >"];
-    absoluteTagEnd = [NSCharacterSet characterSetWithCharactersInString:@">"];
-	
+//    tagCharStart = [NSCharacterSet characterSetWithCharactersInString:@"<"];
+//    tagEnd = [NSCharacterSet characterSetWithCharactersInString:@" >"];
+//    absoluteTagEnd = [NSCharacterSet characterSetWithCharactersInString:@">"];
+
     scanner = [NSScanner scannerWithString:inString];
 	[scanner setCaseSensitive:NO];
     [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
@@ -592,18 +596,16 @@ static BOOL didInitOscar = NO;
     while(![scanner isAtEnd]){
         //Find an HTML IMG tag
         if([scanner scanUpToString:@"<img" intoString:&chunkString]){
-            [processedString appendString:chunkString];
+#warning do we really need this?
+            //[processedString appendString:chunkString];
         }
 		
         //Process the tag
-        if([scanner scanCharactersFromSet:tagCharStart intoString:nil]){ //If a tag wasn't found, we don't process.
-																		 //            unsigned scanLocation = [scanner scanLocation]; //Remember our location (if this is an invalid tag we'll need to move back)
-			
+        if([scanner scanString:tagStart intoString:nil]){ //If a tag wasn't found, we don't process.
 			//Get the tag itself
-			if([scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]){
-				
-				if([chunkString caseInsensitiveCompare:@"IMG"] == 0){
-					if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+			if([scanner scanUpToCharactersFromSet:elementEndCharacters intoString:&chunkString]){
+				if([chunkString caseInsensitiveCompare:@"IMG"] == NSOrderedSame){
+					if([scanner scanUpToString:tagEnd intoString:&chunkString]){
 						
 						//Load the src image
 						NSDictionary	*imgArguments = [AIHTMLDecoder parseArguments:chunkString];
