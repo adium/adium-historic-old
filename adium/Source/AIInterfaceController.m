@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.68 2004/06/07 06:54:14 evands Exp $
+// $Id: AIInterfaceController.m,v 1.69 2004/06/07 22:49:14 evands Exp $
 
 #import "AIInterfaceController.h"
 
@@ -607,7 +607,7 @@
 		return(NO);
 		
 	}else if(menuItem == menuItem_paste || menuItem == menuItem_pasteFormatted){
-		return([[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, nil]] != nil);
+		return([[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType,nil]] != nil);
 	
 	}else if(menuItem == menuItem_showToolbar){
 		[menuItem_showToolbar setTitle:([[window toolbar] isVisible] ? @"Hide Toolbar" : @"Show Toolbar")];
