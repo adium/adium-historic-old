@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="481"
+   name="svn:this_dir"
+   committed-date="2003-11-23T21:33:15.323585Z"
+   url="http://svn.visualdistortion.org/repos/projects/adium/src/SQL_Logger_Prefs.nib"
+   last-author="jmelloy"
+   kind="dir"
+   uuid="78ce1152-e5c0-0310-bb23-f261db3f93e4"
+   revision="510"/>
+<entry
+   committed-rev="481"
+   name="objects.nib"
+   text-time="2003-11-24T22:23:00.000000Z"
+   committed-date="2003-11-23T21:33:15.323585Z"
+   checksum="851dfac3fca8ae7763cf91211ee5cb9c"
+   last-author="jmelloy"
+   kind="file"
+   prop-time="2003-11-24T22:23:00.000000Z"/>
+<entry
+   committed-rev="481"
+   name="info.nib"
+   text-time="2003-11-24T22:23:00.000000Z"
+   committed-date="2003-11-23T21:33:15.323585Z"
+   checksum="c066762819f3a0f242b2e387123ab254"
+   last-author="jmelloy"
+   kind="file"
+   prop-time="2003-11-24T22:23:00.000000Z"/>
+<entry
+   committed-rev="481"
+   name="keyedobjects.nib"
+   text-time="2003-11-24T22:23:00.000000Z"
+   committed-date="2003-11-23T21:33:15.323585Z"
+   checksum="bf3fa84faec3e38de6114643fcd857e4"
+   last-author="jmelloy"
+   kind="file"
+   prop-time="2003-11-24T22:23:00.000000Z"/>
+<entry
+   committed-rev="481"
+   name="classes.nib"
+   text-time="2003-11-24T22:23:00.000000Z"
+   committed-date="2003-11-23T21:33:15.323585Z"
+   checksum="4b760fb2095e4f023a4f99b0f130a330"
+   last-author="jmelloy"
+   kind="file"
+   prop-time="2003-11-24T22:23:00.000000Z"/>
+<entry
+   name="CVS"
+   kind="dir"/>
+</wc-entries>
