@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/statistics.jsp $-->
-<!--$Rev: 854 $ $Date: 2004/08/04 16:31:54 $ -->
+<!--$Rev: 856 $ $Date: 2004/08/07 19:42:01 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -46,7 +46,7 @@ try {
 
     if(sender != 0) {
         pstmt = conn.prepareStatement("select username as username, "+
-        "display_name as display_name from " +
+        "display_name as display_name, lower(service) as service  from " +
         " im.users natural join im.user_display_name udn " +
         " where user_id = ?"+
         " and not exists " +
@@ -56,7 +56,9 @@ try {
         rset = pstmt.executeQuery();
         rset.next();
 
-        title = rset.getString("display_name") + " (" +
+        title = "<img src=\"images/services/" + rset.getString("service") +
+            ".png\" width=\"28\" height=\"28\"> " +
+            rset.getString("display_name") + " (" +
             rset.getString("username") + ")";
 
         sender_sn = rset.getString("username");
@@ -64,7 +66,7 @@ try {
     }
 
     if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select name, service, username,display_name from im.meta_container natural join im.meta_contact natural join im.users natural join im.user_display_name udn where meta_id = ? and not exists (select 'x' from im.user_display_name where user_id = udn.user_id and effdate > udn.effdate)");
+        pstmt = conn.prepareStatement("select name, lower(service) as service, username,display_name from im.meta_container natural join im.meta_contact natural join im.users natural join im.user_display_name udn where meta_id = ? and not exists (select 'x' from im.user_display_name where user_id = udn.user_id and effdate > udn.effdate)");
 
         pstmt.setInt(1, meta_id);
 
@@ -74,8 +76,10 @@ try {
         while(rset.next()) {
             title = rset.getString("name");
             sender_sn = rset.getString("name");
-            notes += rset.getString("display_name") + " (" +
-                rset.getString("service") + "." +
+            notes += "<img src=\"images/services/" +
+                rset.getString("service") +
+                ".png\" width=\"12\" height=\"12\" /> " +
+                rset.getString("display_name") + " (" +
                 rset.getString("username") + ")<br />";
         }
     }
@@ -185,7 +189,7 @@ try {
     rset = stmt.executeQuery("select user_id, " +
         " display_name as display_name, " +
         " username " +
-        " as username from im.users " +
+        " as username, lower(service) as service from im.users " +
         " natural join im.user_display_name udn" +
         " where case when true = " + loginUsers +
         " then login = true " +
@@ -208,7 +212,10 @@ try {
 
     while (rset.next())  {
         if (rset.getInt("user_id") != sender) {
-            out.println("<p><a href=\"statistics.jsp?sender=" +
+            out.println("<p>");
+            out.println("<img src=\"images/services/" +
+                rset.getString("service") + ".png\" width=\"12\" height=\"12\" />");
+            out.println("<a href=\"statistics.jsp?sender=" +
             rset.getString("user_id") + "&login=" +
             Boolean.toString(loginUsers) +
             "\" title=\"" + rset.getString("username") + "\">" +

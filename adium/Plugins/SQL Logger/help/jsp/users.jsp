@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date: 2004/08/04 16:31:54 $ -->
+<!--$Rev: 697 $ $Date: 2004/08/07 19:42:01 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -108,7 +108,8 @@ try {
     int height = rset.getInt("height");
 
     pstmt = conn.prepareStatement("select user_id, username " +
-        " as username, display_name as display_name " +
+        " as username, display_name as display_name, " +
+        " lower(service) as service " +
         " from im.users natural join user_display_name udn " +
         " where not exists (select 'x' from user_display_name " +
         " where user_id = udn.user_id  and effdate > udn.effdate) " +
@@ -127,7 +128,9 @@ try {
     onClick="window.open('<%= editURL %>', 'Edit User', 'width=275,height=<%= height %>')">Edit Info ...</a></span>
 <%
 
-        out.print("<h2>" + rset.getString("display_name") + " (" +
+        out.print("<h2><img src=\"images/services/" +
+            rset.getString("service") + ".png\" width=\"14\" height=\"14\" /> " +
+            rset.getString("display_name") + " (" +
             rset.getString("username") + ")</h2>");
         out.println("<div class=\"meta\">");
 
