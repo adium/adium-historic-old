@@ -168,6 +168,7 @@
     [scrollView_messages setNextResponder:textView_outgoing];
     [scrollView_messages setAutoScrollToBottom:YES];
     [scrollView_messages setAutoHideScrollBar:NO];
+    [scrollView_messages setHasVerticalScroller:YES];
 
     //Register for notifications
     [[owner notificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:contact];
