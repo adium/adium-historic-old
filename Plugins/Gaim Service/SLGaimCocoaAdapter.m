@@ -37,6 +37,9 @@
 //Gaim slash command interface
 #include <libgaim/cmds.h>
 
+//Webcam
+#include <libgaim/webcam.h>
+
 #define ACCOUNT_IMAGE_CACHE_PATH		@"~/Library/Caches/Adium"
 #define MESSAGE_IMAGE_CACHE_NAME		@"Image_%@_%i"
 
@@ -1250,7 +1253,7 @@ static void adiumGaimWebcamNew(GaimWebcam *gwc)
 //	gtk_widget_show(GTK_WIDGET(c->window));
 }
 
-NSData	*frameData = nil;
+static NSMutableData	*frameData = nil;
 
 static void adiumGaimWebcamUpdate(GaimWebcam *gwc,
 								   const unsigned char *image, unsigned int size,
