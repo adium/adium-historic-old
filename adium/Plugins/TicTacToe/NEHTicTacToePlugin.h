@@ -17,11 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-@class NEHTicTacToeController;
-@class AIPlugin, AICompletingTextField;
-@protocol AIContentFilter;
+#import <AdiumGames/NEHGamePlugin.h>
 
-#pragma mark Message defitions
+#pragma mark Message definitions
 
 #define MSG_TYPE_INVITE		@"Invite"
 #define MSG_TYPE_ACK		@"Acknowledge"
@@ -37,27 +35,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define BUTTON_OK   AILocalizedString(@"OK","")
 #define BUTTON_ERR  AILocalizedString(@"OK","")
 
-@interface NEHTicTacToePlugin : AIPlugin <AIContentFilter> {
-	NSMenuItem				* menuItem_invite;
-	NSMenuItem				* menuItem_newGame;
-	
-	//This dictionary maps [account UIDAndServiceID] => 
-	//{NSDictionary of [contact UIDAndServiceID] =>  NEHTicTacToeController*}
-	NSMutableDictionary		* gamesForAccounts;
-	
-	IBOutlet NSWindow		* window_newGame;
-	IBOutlet AICompletingTextField	* textField_handle;
-	IBOutlet NSPopUpButton  * popUp_account;
-	IBOutlet NSMatrix		* radio_playAs;
-	IBOutlet NSWindowController * windowController;
+@interface NEHTicTacToePlugin : NEHGamePlugin {
 }
 
-+ (NEHTicTacToePlugin*)plugin;
-
-- (void)endGameFor:(NEHTicTacToeController*)control;
-- (IBAction)newGame:(id)sender;
-
-- (IBAction)sendInvite:(id)sender;
-- (IBAction)cancelInvite:(id)sender;
 
 @end
