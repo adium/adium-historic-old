@@ -25,6 +25,7 @@
     
     BOOL		sendOnEnter;
     BOOL		sendOnReturn;
+	BOOL		pushPop;
     NSMutableArray	*returnArray;
     BOOL		insertingText;
     
