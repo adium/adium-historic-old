@@ -38,7 +38,9 @@
 
 //Semi-Private
 - (void)addObject:(AIContactObject *)inObject;
+- (void)insertObject:(AIContactObject *)inObject atIndex:(int)index;
 - (void)replaceObject:(AIContactObject *)oldObject with:(AIContactObject *)newObject;
 - (void)removeObject:(AIContactObject *)inObject;
+- (int)indexOfObject:(AIContactObject *)inObject;
 
 @end
