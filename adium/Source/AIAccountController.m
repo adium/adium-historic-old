@@ -55,12 +55,57 @@
     availableServiceArray = [[NSMutableArray alloc] init];
     accountArray = [[NSMutableArray alloc] init];
     lastAccountIDToSendContent = nil;
-
+    sleepingOnlineAccounts = nil;
+    
     [owner registerEventNotification:Account_StatusChanged displayName:@"Account Status Changed"];
     
     //Register our default preferences
     accountStatusDict = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_ACCOUNTS] objectForKey:KEY_ACCOUNT_STATUS] mutableCopy];
     if(!accountStatusDict) accountStatusDict = [[NSMutableDictionary alloc] init];
+
+    //Monitor sleep
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(systemWillSleep:) name:AISystemWillSleep_Notification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(systemDidWake:) name:AISystemDidWake_Notification object:nil];
+    
+}
+
+//
+- (void)systemWillSleep:(NSNotification *)notification
+{
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
+
+    //Remove any existing online account array
+    [sleepingOnlineAccounts release]; sleepingOnlineAccounts = [[NSMutableArray alloc] init];
+
+    //Process each account, looking for any that are online
+    enumerator = [accountArray objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([[account supportedStatusKeys] containsObject:@"Online"] && [[account statusObjectForKey:@"Online"] boolValue]){
+            //Remember that this account was online
+            [sleepingOnlineAccounts addObject:account];
+            
+            //Disconnect it
+            [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:account];
+        }
+    }
+}
+
+//
+- (void)systemDidWake:(NSNotification *)notification
+{
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
+    
+    //Reconnect all sleeping online accounts
+    enumerator = [sleepingOnlineAccounts objectEnumerator];
+    while((account = [enumerator nextObject])){
+        //Connect it
+        [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:account];
+    }
+
+    //Cleanup
+    [sleepingOnlineAccounts release]; sleepingOnlineAccounts = nil;
 }
 
 // close

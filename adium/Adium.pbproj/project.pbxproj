@@ -1217,6 +1217,7 @@
 				1058C7A1FEA54F0111CA2CBB,
 				F531836F019E40BB01A80165,
 				01BD68FF015E255C7F000001,
+				4BDB241F04AF52B000A8010A,
 				F5819CE9032124CE01A8010A,
 			);
 			isa = PBXGroup;
@@ -8130,6 +8131,54 @@
 			settings = {
 			};
 		};
+		4BDB240B04AF501400A8010A = {
+			children = (
+				4BDB240C04AF502B00A8010A,
+				4BDB240D04AF502B00A8010A,
+			);
+			isa = PBXGroup;
+			name = Other;
+			path = "";
+			refType = 4;
+		};
+		4BDB240C04AF502B00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISleepNotification.h;
+			path = "Frameworks/AIUtilities Framework/AISleepNotification.h";
+			refType = 4;
+		};
+		4BDB240D04AF502B00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISleepNotification.m;
+			path = "Frameworks/AIUtilities Framework/AISleepNotification.m";
+			refType = 4;
+		};
+		4BDB240E04AF502B00A8010A = {
+			fileRef = 4BDB240C04AF502B00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDB240F04AF502B00A8010A = {
+			fileRef = 4BDB240D04AF502B00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDB241F04AF52B000A8010A = {
+			isa = PBXFrameworkReference;
+			name = IOKit.framework;
+			path = /System/Library/Frameworks/IOKit.framework;
+			refType = 0;
+		};
+		4BDB242004AF52B000A8010A = {
+			fileRef = 4BDB241F04AF52B000A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BDC17720493C90E00A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -12549,6 +12598,7 @@
 				4BC0304D0453388C00A8010A,
 				11F486DB04A7F802007575DA,
 				4B6660C004ADF30900A8010A,
+				4BDB240E04AF502B00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12637,6 +12687,7 @@
 				4BC0304E0453388C00A8010A,
 				11F486DC04A7F802007575DA,
 				4B6660C104ADF30900A8010A,
+				4BDB240F04AF502B00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12646,6 +12697,7 @@
 			files = (
 				F53B9A1902CCEDE701A8010A,
 				F53B9A2A02CCEF0D01A8010A,
+				4BDB242004AF52B000A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15909,6 +15961,7 @@
 				F549EF14036B104401A8010A,
 				F549EF0D036B0F7F01A8010A,
 				F549EF0B036B0F7201A8010A,
+				4BDB240B04AF501400A8010A,
 			);
 			isa = PBXGroup;
 			name = Utilities;
