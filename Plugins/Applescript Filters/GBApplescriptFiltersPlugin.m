@@ -525,7 +525,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	NDAppleScriptObject		*script;
 	NSAppleEventDescriptor	*resultDescriptor;
 	NSString				*result = nil;
-	
+
 	//Attempt to use a cached script
 	script = [infoDict objectForKey:@"NDAppleScriptObject"];
 	
@@ -535,10 +535,10 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		//does not need one; we can reuse the same one for every script called from this thread.
 		if (!componentInstance){
 			componentInstance = [[NDComponentInstance componentInstance] retain];
-			
+
 			//We want to receive the sendAppleEvent calls below for scripts running with our componentInstance
 			[componentInstance setAppleEventSendTarget:self];
-			
+
 			/*
 			 We don't want any funny business happening while the applescript runs; if we don't set an activeTarget,
 			 the thread will appear open and invocations will come out of order.  If we wanted to disregard ordering,
@@ -548,7 +548,8 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 			 */
 			[componentInstance setActiveTarget:self];
 		}
-		
+
+
 		//Load the script
 		script = [NDAppleScriptObject appleScriptObjectWithContentsOfURL:[infoDict objectForKey:@"Path"]
 													   componentInstance:componentInstance];
@@ -557,7 +558,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 						 forKey:@"NDAppleScriptObject"];
 		}
 	}
-	
+
 	[script executeSubroutineNamed:@"substitute" argumentsArray:arguments];
 	
 	resultDescriptor = [script resultAppleEventDescriptor];
@@ -579,27 +580,26 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 {
 	NSAppleEventDescriptor	*eventDescriptor;
 	AEEventClass			eventClass = [appleEventDescriptor eventClass];
-	BOOL					useMainThread = NO;
+	BOOL					shouldHandle = NO;
+
 	/* 
 		We want to send certain eventClasses (those which necessitate user interaction) to the main thread
 		since the UI is not threadsafe.
 	 */
-//	NSLog(@"appleEventDescriptor: %@",appleEventDescriptor);
-
 	if(eventClass == 'syso'){
 		AEEventID eventID = [appleEventDescriptor eventID];
 		
 		//For most 'syso' events we want to use the main thread, as these are the UI interaction events.
 		//We can build a list of exceptions here for potentially slow 'syso' events which don't involve the UI
 		if(eventID != 'rand'){	/*random number generation */
-			useMainThread = YES;
+			shouldHandle = YES;
 		}
 		
 	}else if(eventClass == 'gtqp'){
-		useMainThread = YES;
+		shouldHandle = YES;
 	}
 	
-	if(useMainThread){
+	if(shouldHandle){
 		NSInvocation			*invocation;
 		SEL						selector;
 		
@@ -622,12 +622,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		[invocation getReturnValue:&eventDescriptor];
 		
 	}else{
-		eventDescriptor = [componentInstance sendAppleEvent:appleEventDescriptor
-												   sendMode:sendMode
-											   sendPriority:sendPriority
-											 timeOutInTicks:timeOutInTicks
-												   idleProc:idleProc
-												 filterProc:filterProc];		
+		eventDescriptor = nil;
 	}
 
 	return(eventDescriptor);
