@@ -42,11 +42,12 @@
 - (void)installPlugin
 {
     menuConfiguredForAway = NO;
-    
+    receivedAwayMessage = nil;
+	
     //Register our default preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AWAY_SPELLING_DEFAULT_PREFS 
 																		forClass:[self class]]
-					  forGroup:PREF_GROUP_SPELLING];
+										  forGroup:PREF_GROUP_SPELLING];
     
     //Our preference view
     preferences = [[AIAwayMessagePreferences awayMessagePreferences] retain];
@@ -112,10 +113,12 @@
     //If the user received a message, send our away message to source
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         
-        NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS]];
+        NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"Autoresponse"
+																													   group:GROUP_ACCOUNT_STATUS]];
         
         if(!awayMessage){
-            awayMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]];
+            awayMessage = [NSAttributedString stringWithData:[[adium preferenceController] preferenceForKey:@"AwayMessage" 
+																									  group:GROUP_ACCOUNT_STATUS]];
         }
         
         if(awayMessage && [awayMessage length] != 0){
@@ -248,7 +251,8 @@
 //Is the user currently away?
 - (BOOL)shouldConfigureForAway
 {
-    return(([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] != nil) && ![NSEvent optionKey]);
+    return(([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] != nil) && 
+		   ![NSEvent optionKey]);
 }
 
 //Update our menu if the away list changes
@@ -401,8 +405,5 @@
 }
 
 @end
-
-
-
 
 
