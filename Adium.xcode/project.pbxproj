@@ -170,6 +170,7 @@
 				French,
 				German,
 				Spanish,
+				Italian,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA;
 			projectDirPath = "";
@@ -299,6 +300,8 @@
 		3402E01A07CB0CEC0044F818 = {
 			children = (
 				3402E01807CB0CE40044F818,
+				34FD5BB007F1F85B00687C70,
+				34FD5BBA07F1F87400687C70,
 			);
 			isa = PBXVariantGroup;
 			name = ESFileTransferProgressView.nib;
@@ -331,6 +334,7 @@
 			children = (
 				3402E01F07CB0D150044F818,
 				34A6E9BA07D6365A00972830,
+				34FD5BE407F1F91400687C70,
 			);
 			isa = PBXVariantGroup;
 			name = ProxyPasswordPrompt.nib;
@@ -347,6 +351,7 @@
 			children = (
 				3402E02007CB0D150044F818,
 				34A6E9B807D6365000972830,
+				34FD5BE307F1F90400687C70,
 			);
 			isa = PBXVariantGroup;
 			name = PasswordPrompt.nib;
@@ -401,6 +406,7 @@
 				3402E03F07CB0E400044F818,
 				34A6E9AB07D635B100972830,
 				34BFDDB607E7A43D00AD984D,
+				34FD5BEB07F1F92900687C70,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -1818,8 +1824,8 @@
 		};
 		343EAB8306EF857F001CDAFF = {
 			children = (
-				34D8333807CBD758006466F2,
 				34D8333907CBD758006466F2,
+				34D8333807CBD758006466F2,
 				34D8333A07CBD758006466F2,
 				34D8333707CBD758006466F2,
 				34D8333007CBD741006466F2,
@@ -1935,6 +1941,7 @@
 			children = (
 				34D832BD07CBD641006466F2,
 				3440974407DA070700321BB3,
+				34FD5BD407F1F8B700687C70,
 			);
 			isa = PBXVariantGroup;
 			name = MessageContextDisplayPrefs.nib;
@@ -5987,6 +5994,7 @@
 			children = (
 				34A6F68207D65D5B00972830,
 				34A6F68607D65D6E00972830,
+				34FD5BC707F1F89400687C70,
 			);
 			isa = PBXVariantGroup;
 			name = GeneralPreferences.nib;
@@ -12875,6 +12883,62 @@
 			lastKnownFileType = sourcecode.c.h;
 			name = ESWebFrameViewAdditions.h;
 			path = "Plugins/WebKit Message View/ESWebFrameViewAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FD5BB007F1F85B00687C70 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = Resources/Italian.lproj/ESFileTransferProgressView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FD5BBA07F1F87400687C70 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/ESFileTransferProgressView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FD5BC707F1F89400687C70 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = Resources/Italian.lproj/GeneralPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FD5BD407F1F8B700687C70 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = Resources/Italian.lproj/MessageContextDisplayPrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FD5BE307F1F90400687C70 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = Resources/Italian.lproj/PasswordPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FD5BE407F1F91400687C70 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = Resources/Italian.lproj/ProxyPasswordPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FD5BEB07F1F92900687C70 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Italian;
+			path = Resources/Italian.lproj/Localizable.strings;
 			refType = 4;
 			sourceTree = "<group>";
 		};
