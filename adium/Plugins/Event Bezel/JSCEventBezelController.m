@@ -102,6 +102,8 @@ withMessage:(NSString *)message
         
         if  (isMessageEvent && [self includeText] && message) {
             [bezelView setMainBuddyStatus: [NSString stringWithFormat: @"%@: %@",event, message]];
+        } else if (isMessageEvent && ![self includeText] && message) {
+            [bezelView setMainBuddyStatus: @"new message"];
         } else if (!isMessageEvent && message) {
             [bezelView setMainBuddyStatus: [NSString stringWithFormat: @"%@ \"%@\"",event, message]];
         } else {
