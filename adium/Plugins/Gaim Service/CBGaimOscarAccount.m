@@ -545,6 +545,15 @@ static BOOL didInitOscar = NO;
 	}
 }
 
+- (oneway void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString
+{
+	//For AIM, we get profiles by themselves and don't want this userInfo with all its fields.
+	//For ICQ, however, this userInfo is just what the doctor ordered.
+	if (accountIsICQ){
+		[super updateUserInfo:theContact withData:userInfoString];
+	}
+}
+
 #pragma mark Group Chat
 
 - (BOOL)joinGroupChatNamed:(NSString *)name
