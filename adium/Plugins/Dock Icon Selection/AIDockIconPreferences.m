@@ -21,6 +21,8 @@
 #define ANIMATION_SPEED_CHANGE			0.50
 #define ANIMATION_STATE_SWITCH_DELAY	1.00
 
+#define DEFAULT_DOCK_ICON_NAME		@"Adiumy Green"
+
 @interface AIDockIconPreferences (PRIVATE)
 - (void)configureForSelectedIcon:(NSDictionary *)iconDict;
 - (void)_buildIconArray;
@@ -102,15 +104,20 @@
 //Preferences have changed
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){
-        NSDictionary 	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+	NSDictionary *userInfo = [notification userInfo];
+	
+    if(notification == nil || 
+	   (([(NSString *)[userInfo objectForKey:@"Group"] isEqualToString:PREF_GROUP_GENERAL]) && 
+		([[userInfo objectForKey:@"Key"] isEqualToString:KEY_ACTIVE_DOCK_ICON]))){
+
         NSDictionary	*iconDict;
-        NSString	*iconName;
+        NSString		*iconName;
 
         //Set the selected icon
-        iconName = [preferenceDict objectForKey:KEY_ACTIVE_DOCK_ICON];
+        iconName = [[adium preferenceController] preferenceForKey:KEY_ACTIVE_DOCK_ICON
+															group:PREF_GROUP_GENERAL];
         iconDict = [self _iconInArrayNamed:iconName];
-		
+			
         [self configureForSelectedIcon:iconDict];
     }
 }
@@ -385,18 +392,41 @@
 // delete support, via table delegate and nifty dialog + move to trash
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {            
-    selectedIconPath = [[iconArray objectAtIndex:selectedIconIndex] valueForKey:@"Path"];
-    NSBeginAlertSheet(@"Delete Dock Icon",@"Delete",@"Cancel",@"",[[self view] window], self, 
-                      @selector(trashConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
-                      @"Are you sure you want to delete the %@ Dock Icon? It will be moved to the Trash, which may take a moment, depending on its size.",[[selectedIconPath lastPathComponent] stringByDeletingPathExtension]);
+	NSString	*selectedIconPath = [[iconArray objectAtIndex:selectedIconIndex] valueForKey:@"Path"];
+	NSString	*name = [[selectedIconPath lastPathComponent] stringByDeletingPathExtension];
+	
+	//Deleting the default would be messy.  Just don't let it happen.
+	if (![name isEqualToString:DEFAULT_DOCK_ICON_NAME]){
+		NSBeginAlertSheet(AILocalizedString(@"Delete Dock Icon",nil),
+						  AILocalizedString(@"Delete",nil),
+						  AILocalizedString(@"Cancel",nil),
+						  @"",
+						  [[self view] window], 
+						  self, 
+						  @selector(trashConfirmSheetDidEnd:returnCode:contextInfo:), /* Did end selector */
+						  nil,  /* Did dismiss selector */
+						  selectedIconPath, /* Context Info */
+						  AILocalizedString(@"Are you sure you want to delete the %@ Dock Icon? It will be moved to the Trash.",nil), name);
+	}
 }
 
-- (void)trashConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)trashConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(NSString *)selectedIconPath
 {
     if(returnCode == NSOKButton)
     {
-            [[NSFileManager defaultManager] trashFileAtPath:selectedIconPath];
-            [self _buildIconArray];
+		//We don't want to try loading a new image after we trash the dock icon folder
+		[self _stopAnimating];
+		
+		//Trash the file
+		[[NSFileManager defaultManager] trashFileAtPath:selectedIconPath];
+
+		//Rebuild the icon array
+		[self _buildIconArray];
+
+		//We are deleting the currently selected icon, so reset to the default
+		[[adium preferenceController] setPreference:DEFAULT_DOCK_ICON_NAME
+											 forKey:KEY_ACTIVE_DOCK_ICON 
+											  group:PREF_GROUP_GENERAL];		
     }
 }
 // ----- end trashiness -------
