@@ -359,7 +359,7 @@
         [chat addParticipatingListObject:contact];
 		
         //Correctly enable/disable the chat
-#warning (Intentional) All opened chats assumed valid until a better system for doing this reliably is figured out.
+#warning Adam: All opened chats assumed valid until a better system for doing this reliably is figured out.
         [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
 		
         //
@@ -531,7 +531,7 @@
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 	
     //Flush all our handle status flags
-#warning (Intentional) This is dreadfully inefficient.  Is there a faster solution to disconnecting?
+#warning Adam: This is dreadfully inefficient.  Is there a faster solution to disconnecting?
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
     while((contact = [enumerator nextObject])){
         [self removeAllStatusFlagsFromContact:contact];
@@ -736,7 +736,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.106 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.107 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1533,7 +1533,7 @@
 
 - (void)AIM_HandleEviled:(NSString *)message
 {
-#warning (Intentional) This code is assuming we are on our own contact list?  We cannot make this assumption.
+#warning Adam: This code is assuming we are on our own contact list?  We cannot make this assumption.
 //    NSString	*level = [message TOCStringArgumentAtIndex:1];
 //    NSString	*enemy = [message TOCStringArgumentAtIndex:2];
 //	

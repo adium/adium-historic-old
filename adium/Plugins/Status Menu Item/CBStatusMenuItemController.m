@@ -24,7 +24,7 @@ CBStatusMenuItemController *sharedInstance = nil;
 + (CBStatusMenuItemController *)statusMenuItemController
 {
     if (!sharedInstance) {
-#warning       sharedInstance = [[self alloc] init];
+//		sharedInstance = [[self alloc] init];
     }
     return (sharedInstance);
 }
@@ -79,7 +79,7 @@ CBStatusMenuItemController *sharedInstance = nil;
     NSString    *group = [[notification userInfo] objectForKey:@"Group"];
     
     if([group compare:GROUP_ACCOUNT_STATUS] == 0){
-	[self accountsChanged:nil];
+		[self accountsChanged:nil];
     }
 }
 
@@ -92,27 +92,27 @@ CBStatusMenuItemController *sharedInstance = nil;
     AIAccount *account = nil;        
     NSEnumerator *numer = [[[adium accountController] accountArray] objectEnumerator];
     NSMenuItem *item;
-        
+	
     //Add and install menu items for each account
     while(account = [numer nextObject])
     {
         item = [[[NSMenuItem alloc] initWithTitle:[account displayName] target:self action:@selector(toggleConnection:) keyEquivalent:@""] autorelease];
         [item setRepresentedObject:[account retain]];
-
-	if([[[account statusArrayForKey:@"Online"] objectWithOwner:account] boolValue]){
-	    [item setImage:[AIImageUtilities imageNamed:@"Account_Online.tiff" forClass:[self class]]];
-	    [item setEnabled:YES];
-	}else if([[[account statusArrayForKey:@"Connecting"] objectWithOwner:account] boolValue]){
-	    [item setImage:[AIImageUtilities imageNamed:@"Account_Connecting.tiff" forClass:[self class]]];
-	    [item setEnabled:NO];
-	}else if([[[account statusArrayForKey:@"Disconnecting"] objectWithOwner:account] boolValue]){
-	    [item setImage:[AIImageUtilities imageNamed:@"Account_Connecting.tiff" forClass:[self class]]];
-	    [item setEnabled:NO];
-	    break;
-	}else{
-	    [item setImage:[AIImageUtilities imageNamed:@"Account_Offline.tiff" forClass:[self class]]];
-	    [item setEnabled:YES];
-	}
+		
+		if([[[account statusArrayForKey:@"Online"] objectWithOwner:account] boolValue]){
+			[item setImage:[AIImageUtilities imageNamed:@"Account_Online.tiff" forClass:[self class]]];
+			[item setEnabled:YES];
+		}else if([[[account statusArrayForKey:@"Connecting"] objectWithOwner:account] boolValue]){
+			[item setImage:[AIImageUtilities imageNamed:@"Account_Connecting.tiff" forClass:[self class]]];
+			[item setEnabled:NO];
+		}else if([[[account statusArrayForKey:@"Disconnecting"] objectWithOwner:account] boolValue]){
+			[item setImage:[AIImageUtilities imageNamed:@"Account_Connecting.tiff" forClass:[self class]]];
+			[item setEnabled:NO];
+			break;
+		}else{
+			[item setImage:[AIImageUtilities imageNamed:@"Account_Offline.tiff" forClass:[self class]]];
+			[item setEnabled:YES];
+		}
         
         [accountsMenuItems addObject:item];
     }
@@ -120,6 +120,7 @@ CBStatusMenuItemController *sharedInstance = nil;
     [self buildMenu];
 }
 
+#warning Adam: Rebuilding this menu on every status change is slow
 - (void)contactsChanged:(NSNotification *)notification
 {
     if([[notification object] isKindOfClass:[AIAccount class]]) //do it in the other method

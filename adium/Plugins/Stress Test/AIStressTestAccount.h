@@ -7,14 +7,13 @@
 //
 
 @interface AIStressTestAccount : AIAccount <AIAccount_Content> {
-    NSMutableDictionary	*handleDict;
     NSMutableDictionary	*chatDict;
 
-    AIChat	*commandChat;
-    AIHandle	*commandHandle;
+    AIChat			*commandChat;
+    AIListContact	*commandContact;
 }
 - (void)echo:(NSString *)string;
 - (void)_echo:(NSString *)string;
-- (AIChat *)chatForHandle:(AIHandle *)inHandle;
+- (AIChat *)chatForContact:(AIListContact *)inContact;
 
 @end

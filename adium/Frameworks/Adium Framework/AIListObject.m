@@ -331,7 +331,7 @@
     
     //If we don't have a value
     if(!value){
-#warning (Intentional) Preferences will only inherit from the first occurence of a list object.
+#warning Adam: Preferences will only inherit from the first occurence of a list object.
 		//Is the ability to inherit from multiple locations worth the performance impact it would have
 		//for those contacts?  Is inheriting from multiple places the behavior we want?
 		if([containingGroups count]){
