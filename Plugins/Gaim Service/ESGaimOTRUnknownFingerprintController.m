@@ -12,17 +12,17 @@
 
 @implementation ESGaimOTRUnknownFingerprintController
 
-+ (void)showUnknownFingerprintPromptForUsername:(const char *)who
-									   protocol:(const char *)protocol
-										   hash:(const char *)hash
-								   responseInfo:(NSDictionary *)responseInfo
++ (void)showUnknownFingerprintPrompWithResponseInfo:(NSDictionary *)responseInfo
 {
 	NSString			*messageString;
-
+	NSString			*protocol = [responseInfo objectForKey:@"protocol"];
+	NSString			*who = [responseInfo objectForKey:@"who"];
+	NSString			*hash = [responseInfo objectForKey:@"hash"];
+	
 	messageString = [NSString stringWithFormat:
-		AILocalizedString(@"%s (%s) has sent you an unknown encryption fingerprint:\n\n%s\n\nDo you want to accept this fingerprint as valid?", nil),
+		AILocalizedString(@"%@ (%@) has sent you an unknown encryption fingerprint:\n\n%@\n\nDo you want to accept this fingerprint as valid?", nil),
 		who,
-		(protocol ? protocol : [AILocalizedString(@"Unknown", nil) UTF8String]), 
+		([protocol length] ? protocol : [AILocalizedString(@"Unknown", nil) UTF8String]), 
 		hash];
 
 	
