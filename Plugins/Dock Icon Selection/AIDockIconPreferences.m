@@ -70,10 +70,12 @@
     //Set all column data cells to image cells
     enumerator = [[tableView_icons tableColumns] objectEnumerator];
     while((column = [enumerator nextObject])){
-        AIScaledImageCell	*cell = [[[AIScaledImageCell alloc] init] autorelease];
+        AIScaledImageCell	*cell;
+		
+		cell = [[AIScaledImageCell alloc] init];
         [cell setImageScaling:NSScaleProportionally];
-
         [column setDataCell:cell];
+		[cell release];
     }
     
     //Load our icons
@@ -201,8 +203,9 @@
         }
 		
         //Generate the preview icon state, and add it to our preview state array
-        tempIconState = [[[AIIconState alloc] initByCompositingStates:tempArray] autorelease];
+        tempIconState = [[AIIconState alloc] initByCompositingStates:tempArray];
         [previewStateArray addObject:tempIconState];
+		[tempIconState release];
     }
 
     //Redisplay
