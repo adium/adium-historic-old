@@ -47,10 +47,6 @@
 
 - Double clicking two names in succession causes the first name to highlight
     the second time. (wordsaboutmehere)
-
-- Using Address Book images as contacts' icons even if the contact already has a
-	contact icon does not work.  The contact's icon is used instead. [Evan: works fine
-	for me.  How do you produce this behavior?]
 	
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
