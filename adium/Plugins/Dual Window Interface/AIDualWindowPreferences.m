@@ -30,10 +30,16 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_autoResize){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+	//The preference changed notification sent out below will result in our preferencesChanged code being called.
+	//That code will change the state of our main autoresizing checkbox (sender).  This will cause problems if
+	//we're trying to use [sender state] in both of the setPreference calls below.  Instead, we must get the state
+	//ahead of time to ensure it applies evenly to both preferences.
+	BOOL	senderState = [sender state]; 
+	
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:senderState]
                                              forKey:KEY_DUAL_RESIZE_VERTICAL
                                               group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:senderState]
                                              forKey:KEY_DUAL_RESIZE_HORIZONTAL
                                               group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
     }
