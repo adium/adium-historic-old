@@ -258,6 +258,7 @@
 //Save the event sounds
 - (void)saveEventSoundArray
 {
+     [[owner preferenceController] setPreference:@"" forKey:KEY_EVENT_SOUND_SET group:PREF_GROUP_SOUNDS]; //Remove the soundset preference because we now have a custom one
     [[owner preferenceController] setPreference:eventSoundArray forKey:KEY_EVENT_CUSTOM_SOUNDSET group:PREF_GROUP_SOUNDS];
 }
 
