@@ -25,8 +25,12 @@
 #define RENAME_GROUP				AILocalizedString(@"Rename Group...",nil)
 #define INVITE_CONTACT				AILocalizedString(@"Invite to This Chat...",nil)
 
+#define	ADD_CONTACT_IDENTIFIER		@"AddContact"
+#define ADD_GROUP_IDENTIFIER		@"AddGroup"
+
 @interface AIContactListEditorPlugin (PRIVATE)
 - (void)deleteFromArray:(NSArray *)array;
+- (void)promptForNewContactOnWindow:(NSWindow *)inWindow strangerListContact:(AIListContact *)inListContact;
 @end
 
 @implementation AIContactListEditorPlugin
@@ -35,7 +39,8 @@
 - (void)installPlugin
 {
     NSMenuItem		*menuItem;
-    
+	NSToolbarItem	*toolbarItem;
+
 	//Add contact menu item
     menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT
 										   target:self
@@ -76,7 +81,31 @@
 	//Delete selection context menu item
 	menuItem = [[[NSMenuItem alloc] initWithTitle:DELETE_CONTACT_CONTEXT target:self action:@selector(deleteSelectionFromTab:) keyEquivalent:@""] autorelease];
 	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Contact_NegativeAction];
-    
+
+	//Add Contact toolbar item
+    toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:ADD_CONTACT_IDENTIFIER
+														  label:AILocalizedString(@"Add Contact",nil)
+												   paletteLabel:AILocalizedString(@"Add Contact",nil)
+														toolTip:AILocalizedString(@"Add a new contact",nil)
+														 target:self
+												settingSelector:@selector(setImage:)
+													itemContent:[NSImage imageNamed:@"AddContact" forClass:[self class]]
+														 action:@selector(addContact:)
+														   menu:nil];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];	
+
+	//Add Contact toolbar item
+    toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:ADD_GROUP_IDENTIFIER
+														  label:AILocalizedString(@"Add Group",nil)
+												   paletteLabel:AILocalizedString(@"Add Group",nil)
+														toolTip:AILocalizedString(@"Add a new group",nil)
+														 target:self
+												settingSelector:@selector(setImage:)
+													itemContent:[NSImage imageNamed:@"AddGroup" forClass:[self class]]
+														 action:@selector(addGroup:)
+														   menu:nil];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];	
+	
 	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(addContactRequest:) 
 									   name:Contact_AddNewContact 
@@ -106,17 +135,34 @@
 //Prompt for a new contact
 - (IBAction)addContact:(id)sender
 {
-	[AINewContactWindowController promptForNewContactOnWindow:nil name:nil service:nil];
+	//Get the "selected" list object (contact list or message window)
+	AIListContact	*stranger = nil;
+	AIListObject	*selectedObject;
+	
+	selectedObject = [[adium contactController] selectedListObject];	
+	
+	//Pass this selectedObject only if it's a listContact and a stranger
+	if ([selectedObject isKindOfClass:[AIListContact class]] &&
+		[(AIListContact *)selectedObject isStranger]){
+		stranger = (AIListContact *)selectedObject;
+	}
+	
+	[self promptForNewContactOnWindow:nil
+				  strangerListContact:stranger];
 }
 
 //Prompt for a new contact with the current tab's name
 - (IBAction)addContactFromTab:(id)sender
 {
-	AIListContact *listContact = [[adium menuController] contactualMenuContact];
+	[self promptForNewContactOnWindow:nil
+				  strangerListContact:[[adium menuController] contactualMenuContact]];
+}
 
-	[AINewContactWindowController promptForNewContactOnWindow:nil
-														 name:[listContact UID] 
-													  service:[listContact service]];
+- (void)promptForNewContactOnWindow:(NSWindow *)inWindow strangerListContact:(AIListContact *)inListContact
+{
+	[AINewContactWindowController promptForNewContactOnWindow:inWindow
+														 name:(inListContact ? [inListContact UID] : nil)
+													  service:(inListContact ? [inListContact service] : nil)];
 }
 
 - (void)addContactRequest:(NSNotification *)notification
