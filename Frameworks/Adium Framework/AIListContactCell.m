@@ -60,6 +60,11 @@
 - (void)dealloc
 {
 	[statusFont release];
+	[statusColor release];
+	
+	[_statusAttributes release];
+	[_statusAttributesInverted release];
+	
 	[super dealloc];
 }
 

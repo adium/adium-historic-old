@@ -59,10 +59,12 @@ static NSParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 //Dealloc
 - (void)dealloc
 {
-	[genericUserIcon release];
-	[font release];
 	[textColor release];
 	[invertedTextColor release];
+	
+	[font release];
+	[genericUserIcon release];
+	
 	[super dealloc];
 }
 

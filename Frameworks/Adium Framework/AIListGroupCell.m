@@ -23,6 +23,10 @@
 //Dealloc
 - (void)dealloc
 {
+	[shadowColor release];
+	[backgroundColor release];
+	[gradientColor release];
+
 	[self flushGradientCache];
 	[super dealloc];
 }
