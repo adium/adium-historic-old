@@ -138,11 +138,8 @@
 			if([self updateCache:onlineCache forKey:@"Online" ofType:@selector(numberStatusObjectForKey:) listObject:inObject] && !silent){
 				NSString	*event = ([[inObject numberStatusObjectForKey:@"Online"] boolValue] ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO);
 				[[adium contactAlertsController] generateEvent:event
-												 forListObject:inObject];
-				
-				[[adium notificationCenter] postNotificationName:event
-														  object:inObject
-														userInfo:nil];
+												 forListObject:inObject
+													  userInfo:nil];
 			}
 		}
 		
@@ -153,34 +150,25 @@
 				if([self updateCache:awayCache forKey:@"Away" ofType:@selector(numberStatusObjectForKey:) listObject:inObject] && !silent){
 					NSString	*event = ([[inObject numberStatusObjectForKey:@"Away"] boolValue] ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO);
 					[[adium contactAlertsController] generateEvent:event
-													 forListObject:inObject];
-					
-					[[adium notificationCenter] postNotificationName:event
-															  object:inObject 
-															userInfo:nil];
+													 forListObject:inObject
+														  userInfo:nil];
 				}
 			}
 			if([modifiedKeys containsObject:@"IdleSince"]){
 				if([self updateCache:idleCache forKey:@"IdleSince" ofType:@selector(earliestDateStatusObjectForKey:) listObject:inObject] && !silent){
 					NSString	*event = (([inObject earliestDateStatusObjectForKey:@"IdleSince"] != nil) ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO);
 					[[adium contactAlertsController] generateEvent:event
-													 forListObject:inObject];
-					
-					[[adium notificationCenter] postNotificationName:event
-															  object:inObject 
-															userInfo:nil];
+													 forListObject:inObject
+														  userInfo:nil];
 				}
 			}
 			if([modifiedKeys containsObject:@"StatusMessage"]){
 				if([self updateCache:statusMessageCache forKey:@"StatusMessage" ofType:@selector(stringFromAttributedStringStatusObjectForKey:) listObject:inObject] && !silent){
 					if ([inObject statusObjectForKey:@"StatusMessage"] != nil){
-						//Evan: Not yet a contact alert - how could/should we use this?
+						//Evan: Not yet a contact alert, but we use the notification - how could/should we use this?
 						[[adium contactAlertsController] generateEvent:CONTACT_STATUS_MESSAGE
-														 forListObject:inObject];
-						
-						[[adium notificationCenter] postNotificationName:CONTACT_STATUS_MESSAGE
-																  object:inObject 
-																userInfo:nil];
+														 forListObject:inObject
+															  userInfo:nil];
 					}
 				}
 			}
