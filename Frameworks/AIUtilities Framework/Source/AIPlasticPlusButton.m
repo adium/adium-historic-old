@@ -18,7 +18,6 @@
 {
 	if((self = [super initWithFrame:frameRect])) {
 		[self setImage:[NSImage imageNamed:@"plus" forClass:[self class]]];
-		arrowPath = [[self popUpArrowPath] retain];
 	}
 	return self;    
 }
@@ -43,17 +42,28 @@
 	}
 }
 
-//Path for the little popup arrow (Cached)
+//Path for the little popup arrow (Cached, depdenant upon our current frame)
 - (NSBezierPath *)popUpArrowPath
 {
-	NSRect frame = [self frame];
-	arrowPath = [NSBezierPath bezierPath];
-	[arrowPath moveToPoint:NSMakePoint(NSWidth(frame)-8, NSHeight(frame)-6)];
-	[arrowPath relativeLineToPoint:NSMakePoint( 6, 0)];
-	[arrowPath relativeLineToPoint:NSMakePoint(-3, 3)];
-	[arrowPath closePath];
+	if(!arrowPath){
+		NSRect frame = [self frame];
 
+		arrowPath = [[NSBezierPath bezierPath] retain];
+		[arrowPath moveToPoint:NSMakePoint(NSWidth(frame)-8, NSHeight(frame)-6)];
+		[arrowPath relativeLineToPoint:NSMakePoint( 6, 0)];
+		[arrowPath relativeLineToPoint:NSMakePoint(-3, 3)];
+		[arrowPath closePath];
+	}
+	
 	return arrowPath;
+}
+
+//If our frame changes, release and clear the arrowPath cache so it will be recalculated when we next draw.
+- (void)setFrame:(NSRect)inFrame
+{
+	[arrowPath release]; arrowPath = nil;
+	
+	[super setFrame:inFrame];
 }
 
 @end
