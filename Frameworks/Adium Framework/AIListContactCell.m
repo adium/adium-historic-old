@@ -418,12 +418,18 @@
 			rect.size.width -= SERVICE_ICON_LEFT_PAD;
 		}
 		
-		NSImage *image = [self serviceImage];
-		rect = [image drawInRect:rect
-						  atSize:NSMakeSize(0, 0)
-						position:position
-						fraction:[self imageOpacityForDrawing]];
-
+		/*
+		 Draw the service icon if (it is not a badge), or if (it is a badge and there is a userIconImage)
+		 (We have already drawn the service icon if there is no userIconImage, in drawUserIconInRect:position:)
+		 */
+		if (!isBadge || ([self userIconImage] != nil)){
+			NSImage *image = [self serviceImage];
+			rect = [image drawInRect:rect
+							  atSize:NSMakeSize(0, 0)
+							position:position
+							fraction:[self imageOpacityForDrawing]];
+		}
+		
 		if(!isBadge){
 			if(position == IMAGE_POSITION_LEFT) rect.origin.x += SERVICE_ICON_RIGHT_PAD;
 			rect.size.width -= SERVICE_ICON_RIGHT_PAD;
