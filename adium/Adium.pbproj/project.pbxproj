@@ -6017,32 +6017,6 @@
 			settings = {
 			};
 		};
-		4BCE1B700483086F00A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AIEditorSourceOutlineView.h;
-			path = "/Users/adamiser/Code/Adium Clippings:ToDo/AIEditorSourceOutlineView.h";
-			refType = 0;
-		};
-		4BCE1B710483086F00A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AIEditorSourceOutlineView.m;
-			path = "/Users/adamiser/Code/Adium Clippings:ToDo/AIEditorSourceOutlineView.m";
-			refType = 0;
-		};
-		4BCE1B720483086F00A8010A = {
-			fileRef = 4BCE1B700483086F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCE1B730483086F00A8010A = {
-			fileRef = 4BCE1B710483086F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BCFEC5803F5718700A8010A = {
 			children = (
 				4B25494603F6A32700A8010A,
@@ -9022,8 +8996,6 @@
 				4BD0DF2E046BF84700A8010A,
 				F55B411003AB88D601A8010A,
 				F55B411103AB88D601A8010A,
-				4BCE1B700483086F00A8010A,
-				4BCE1B710483086F00A8010A,
 				4BFB1570043497E700A8010A,
 				4B4F5B31042D673500A8010A,
 				F55B411703AB88D601A8010A,
@@ -9049,7 +9021,6 @@
 				4B8434C0046E80860003BC68,
 				4B8434C1046E80870003BC68,
 				4B8434C4046E94920003BC68,
-				4BCE1B720483086F00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9093,7 +9064,6 @@
 				4BA8005A046C63DF00C50DA9,
 				4B8434BF046E80840003BC68,
 				4B8434C5046E94920003BC68,
-				4BCE1B730483086F00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
