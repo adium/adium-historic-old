@@ -12,6 +12,8 @@
 #include <glib.h>
 #include <libgaim/eventloop.h>
 
+#import "SLGaimCocoaAdapter.h"
+
 @implementation SLGaimCocoaAdapter
 
 /*
@@ -34,9 +36,9 @@ static NSMutableDictionary *fhDict;
  **/
 static SLGaimCocoaAdapter *myself;
 
-static gint adium_timeout_add_full(gint, guint, GSourceFunc, gpointer, GDestroyFunc);
-static gint adium_io_add_watch_full(GIOChannel*, gint, GIOCondition, GIOFunc, gpointer, GDestroyNotify);
-static void adium_source_remove(guint);
+static guint adium_timeout_add_full(gint, guint, GSourceFunc, gpointer, GDestroyNotify);
+static guint adium_io_add_watch_full(GIOChannel*, gint, GIOCondition, GIOFunc, gpointer, GDestroyNotify);
+static gboolean adium_source_remove(guint);
 
 static GaimEventLoopUiOps adiumEventLoopUiOps = {
     adium_timeout_add_full,
@@ -45,11 +47,11 @@ static GaimEventLoopUiOps adiumEventLoopUiOps = {
 };
 
 // The next source key; continuously incrementing
-static gint sourceId;
+static guint sourceId;
 
 // The structure of values of sourceInfoDict and fhDict
-struct {
-    gint tag;
+struct SourceInfo {
+    guint tag;
     id source;
     GDestroyNotify notify;
     union {
@@ -58,7 +60,7 @@ struct {
     };
     GIOChannel *channel;
     gpointer user_data;
-} sourceInfo;
+};
 
 + init
 {
@@ -66,15 +68,16 @@ struct {
     fhDict = [[NSMutableDictionary alloc] init];
     NSAssert(myself == nil, @"SLGaimCocoaAdapter is a singleton");
     myself = self;
-    gaim_eventloop_set_ui_ops(adiumEventLoopUiOps);
+    gaim_eventloop_set_ui_ops(&adiumEventLoopUiOps);
+    return self;
 }
 
-static gint adium_timeout_add_full(gint priority, guint interval,
+static guint adium_timeout_add_full(gint priority, guint interval,
         GSourceFunc function, gpointer data, GDestroyNotify notify)
 {
     // NSTimer doesn't do priority, so that argument is ignored.
 
-    struct sourceInfo *info = (struct sourceInfo*)malloc(sizeof(struct sourceInfo));
+    struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
 
     NSTimer *timer = [NSTimer timerWithTimeInterval:(NSTimeInterval)interval/1e6
                                              target:myself
@@ -87,18 +90,18 @@ static gint adium_timeout_add_full(gint priority, guint interval,
     info->source = timer;
     info->channel = NULL;
     info->user_data = data;
-    [sourceDict addObject:[NSValue valueWithPointer:info] withKey:[NSValue valueWithInt:sourceId]];
+    [sourceInfoDict setObject:[NSValue valueWithPointer:info] forKey:[NSNumber numberWithUnsignedInt:sourceId]];
     return sourceId++;
 }
 
 - (void) callTimerFunc:(id)userInfo
 {
-    struct sourceInfo *info = [userInfo pointerValue];
-    if (! info->sourceFunction())
+    struct SourceInfo *info = [userInfo pointerValue];
+    if (! info->sourceFunction(info->user_data))
         adium_source_remove(info->tag);
 }
 
-static gint adium_io_add_watch_full(GIOChannel *channel, gint priority,
+static guint adium_io_add_watch_full(GIOChannel *channel, gint priority,
         GIOCondition condition, GIOFunc func, gpointer user_data,
         GDestroyNotify notify)
 {
@@ -107,23 +110,21 @@ static gint adium_io_add_watch_full(GIOChannel *channel, gint priority,
     // XXX Condition is very restricted: we only support G_IO_IN
     // Should check on G_IO_ERR at least; this might be folded in with the
     // read stuff.
-    NSFileHandle *fh = [NSFileHandle initWithFileHandle:g_io_channel_unix_get_fd(channel)];
-    struct sourceInfo *info = (struct sourceInfo*)malloc(sizeof(struct sourceInfo));
+    NSFileHandle *fh = [[NSFileHandle alloc] initWithFileDescriptor:g_io_channel_unix_get_fd(channel)];
+    struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
     info->tag = sourceId;
     info->notify = notify;
     info->ioFunction = func;
     info->channel = channel;
     info->user_data = user_data;
-    [[NSNotificationCenter defaultCenter] addObserver:self
+    [[NSNotificationCenter defaultCenter] addObserver:myself
                                              selector:@selector(callIOFunc:)
                                                  name:NSFileHandleDataAvailableNotification
                                                object:fh];
     [fh waitForDataInBackgroundAndNotify];
     NSCAssert(condition == G_IO_IN, @"Condition is something other than pure read");
-    [sourceDict addObject:[NSValue valueWithPointer:info] withKey:[NSValue valueWithInt:sourceId]];
-    [fhDict addObject:[NSValue valueWithPointer:info] withKey:fh];
-    if (notify != NULL)
-        [notifyDict addObject:[NSValue valueWithPointer:notify] withKey:[NSValue valueWithInt:sourceId]];
+    [sourceInfoDict setObject:[NSValue valueWithPointer:info] forKey:[NSNumber numberWithUnsignedInt:sourceId]];
+    [fhDict setObject:[NSValue valueWithPointer:info] forKey:fh];
     return sourceId++;
 }
 
@@ -131,33 +132,35 @@ static gint adium_io_add_watch_full(GIOChannel *channel, gint priority,
 {
     NSFileHandle *fh = (NSFileHandle*) object;
     NSAssert(fh != nil, @"IO on nil NSFileHandle");
-    struct sourceInfo *info = (struct sourceInfo*) [[fhDict objectForKey:fh] pointerValue];
+    struct SourceInfo *info = (struct SourceInfo*) [[fhDict objectForKey:fh] pointerValue];
     NSAssert(info != NULL, @"NSFileHandle not found in dictionary");
     if (! info->ioFunction(info->channel, G_IO_IN, info->user_data))
         adium_source_remove(info->tag);
 }
 
-static void adium_source_remove(guint tag) {
-    struct SourceInfo *sourceInfo = (SourceInfo*)
-        [[sourceInfoDict valueForKey:[NSValue valueWithInt:tag]] pointerValue];
+static gboolean adium_source_remove(guint tag) {
+    struct SourceInfo *sourceInfo = (struct SourceInfo*)
+        [[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
 
-    NSCAssert(sourceInfo != NULL, @"Source does not exist");
+    if (sourceInfo == NULL)
+        return FALSE;
 
-    if ([sourceInfo->source instanceOf:@class(NSTimer)]) {
+    if ([sourceInfo->source isKindOfClass:[NSTimer class]]) {
         NSTimer *timer = (NSTimer*) sourceInfo->source;
         [timer invalidate];
         [timer release];
     } else { // file handle
         NSFileHandle *fh = (NSFileHandle*) sourceInfo->source;
         [fh release];
-        [fhDict removeObjectWithKey:fh];
+        [fhDict removeObjectForKey:fh];
     }
 
-    if (source->notify != NULL)
-        source->notify(source->user_info);
+    if (sourceInfo->notify != NULL)
+        sourceInfo->notify(sourceInfo->user_data);
 
-    [sourceInfoDict removeObjectWithKey:tag];
+    [sourceInfoDict removeObjectForKey:[NSNumber numberWithUnsignedInt:tag]];
     free(sourceInfo);
+    return TRUE;
 }
 
 @end
