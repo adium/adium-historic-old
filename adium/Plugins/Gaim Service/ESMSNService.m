@@ -43,8 +43,6 @@
 {
     ESGaimMSNAccount *anAccount = [[[ESGaimMSNAccount alloc] initWithUID:inUID service:self] autorelease];
     
-    [super addAccount:anAccount forGaimAccountPointer:nil];
-    
     return anAccount;
 }
 @end
