@@ -91,9 +91,6 @@
 		}
 	}
 	
-	//If the chat has no list object, return the online icon for the state since there will be no status
-	if(![inChat listObject]) return (@"available");
-	
 	return(nil);
 }
 
