@@ -25,6 +25,7 @@
 - (NSMenu *)_sortSelectionMenu;
 - (void)_setActiveSortControllerFromPreferences;
 - (void)_setConfigureSortMenuItemTitleForController:(AISortController *)controller;
+- (void)_configureSortSelectionMenuItems;
 @end
 
 @implementation AIContactSortSelectionPlugin
