@@ -31,8 +31,8 @@
     statusDictionary = [[NSMutableDictionary alloc] init];
 
     //
-    prefDict = [[NSMutableDictionary dictionaryWithContentsOfFile:[[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]] retain];
-    
+    prefDict = [[NSDictionary dictionaryAtPath:[[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH] withName:[self UIDAndServiceID] create:NO] mutableCopy];
+	
     return(self);
 }
 
@@ -172,7 +172,7 @@
     //### TEMPORARY (OLD OBJECT PREFERENCE IMPORT CODE) #######
     if(!value && [[adium preferenceController] tempImportOldPreferenceForKey:inKey group:groupName object:self]){
 	[prefDict release];
-	prefDict = [[NSMutableDictionary dictionaryWithContentsOfFile:[[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]] retain];
+	prefDict = [[NSDictionary dictionaryAtPath:[[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH] withName:[self UIDAndServiceID] create:NO] mutableCopy];
 	if(prefDict) value = [prefDict objectForKey:inKey];
     }
     //#########################################################
