@@ -12,6 +12,7 @@ Version 0.58
 - Improved event notifications
 - Improved installation of X(tras)
 - Improved preference windows
+- Improved the Standard Message View for Jaguar users
 - Improved the Mockie message style, including fixing issues in very wide windows
 - Fixed many MSN bugs, including a crash when dragging contacts between groups and a problem using HTTP Connect Method
 - Fixed a crash when joining a multiuser chat
