@@ -52,10 +52,10 @@
 	return([NSCharacterSet characterSetWithCharactersInString:@" "]);
 }
 - (int)allowedLength{
-	return(28);
+	return(999);
 }
 - (int)allowedLengthForUIDs{
-	return(28);
+	return(999);
 }
 - (BOOL)caseSensitive{
 	return(NO);
