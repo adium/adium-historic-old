@@ -11,8 +11,7 @@ double currentBuildUnixDate = 0;
 double latestBuildUnixDate;
 
 #define VERSION_CHECKER_TITLE @"Check for Updates..."
-//Tried this earlier, it didn't like it too well, but then i changed stuff :D
-//It's what's supposed to be here, I promise :) The problem before was a lack of a curly brace, right?  (saw that scanning through the irc backlog a while ago). Yessir :D 2 of them, hehe.
+
 @interface CPFVersionChecker (PRIVATE)
 - (void)adiumIsUpToDate:(BOOL)upToDate;
 @end
