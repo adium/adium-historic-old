@@ -7401,15 +7401,6 @@
 			settings = {
 			};
 		};
-		34C1CA8D05B15B3D0055C2E3 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = "Idle Time Themable Prefs.plist";
-			path = "Plugins/Idle Time Display/Idle Time Themable Prefs.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34C2CF85063340540018E5D2 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -10975,95 +10966,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B31E8E104C4712F00A8010A = {
-			children = (
-				4B31E8E204C471A500A8010A,
-				4B31E8E304C471A500A8010A,
-				4B31E8E404C471A500A8010A,
-				4B31E8E504C471A500A8010A,
-				4B31E8E604C471A500A8010A,
-				4B31E8E704C471A500A8010A,
-				4B31E8E904C471A500A8010A,
-				4B31E8E804C471A500A8010A,
-				34C1CA8D05B15B3D0055C2E3,
-			);
-			isa = PBXGroup;
-			name = "Idle Time Display";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B31E8E204C471A500A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIIdleTimeDisplayPlugin.h;
-			path = "Plugins/Idle Time Display/AIIdleTimeDisplayPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B31E8E304C471A500A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIIdleTimeDisplayPlugin.m;
-			path = "Plugins/Idle Time Display/AIIdleTimeDisplayPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B31E8E404C471A500A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIIdleTimeDisplayPreferences.h;
-			path = "Plugins/Idle Time Display/AIIdleTimeDisplayPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B31E8E504C471A500A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIIdleTimeDisplayPreferences.m;
-			path = "Plugins/Idle Time Display/AIIdleTimeDisplayPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B31E8E604C471A500A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIIdleView.h;
-			path = "Plugins/Idle Time Display/AIIdleView.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B31E8E704C471A500A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIIdleView.m;
-			path = "Plugins/Idle Time Display/AIIdleView.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B31E8E804C471A500A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = IdleTimeDisplayDefaults.plist;
-			path = "Plugins/Idle Time Display/IdleTimeDisplayDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B31E8E904C471A500A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = IdleTimeDisplayPrefs.nib;
-			path = "Plugins/Idle Time Display/IdleTimeDisplayPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B333F73048144D900A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -11086,10 +10988,6 @@
 			children = (
 				6C1CC23205415D5700B64925,
 				6C1CC23105415D5700B64925,
-				BF0F5BD805A2B1590034AD18,
-				4B5D67D3050CF56700A8010A,
-				4BF42E7806AC36640091DE5D,
-				4B31E8E104C4712F00A8010A,
 			);
 			includeInIndex = 0;
 			isa = PBXGroup;
@@ -11714,75 +11612,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B5D67D3050CF56700A8010A = {
-			children = (
-				4B5D67D4050CF57E00A8010A,
-				4B5D67D5050CF57E00A8010A,
-				4B5D67D6050CF57E00A8010A,
-				4B5D67D7050CF57E00A8010A,
-				C497514605BB99DC009958A6,
-				4B5D67D8050CF57E00A8010A,
-				4B5D67D9050CF57E00A8010A,
-			);
-			isa = PBXGroup;
-			name = "Contact Status Tab Coloring";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B5D67D4050CF57E00A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIContactStatusTabColoringPlugin.h;
-			path = "Plugins/Contact Status Tab Coloring/AIContactStatusTabColoringPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B5D67D5050CF57E00A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIContactStatusTabColoringPlugin.m;
-			path = "Plugins/Contact Status Tab Coloring/AIContactStatusTabColoringPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B5D67D6050CF57E00A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIContactStatusTabColoringPreferences.h;
-			path = "Plugins/Contact Status Tab Coloring/AIContactStatusTabColoringPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B5D67D7050CF57E00A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIContactStatusTabColoringPreferences.m;
-			path = "Plugins/Contact Status Tab Coloring/AIContactStatusTabColoringPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B5D67D8050CF57E00A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = TabColoringDefaults.plist;
-			path = "Plugins/Contact Status Tab Coloring/TabColoringDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B5D67D9050CF57E00A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = TabColoringPrefs.nib;
-			path = "Plugins/Contact Status Tab Coloring/TabColoringPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B60991906A447D400EC8D78 = {
 			children = (
 				4B60992206A4485200EC8D78,
@@ -12113,32 +11942,6 @@
 			lastKnownFileType = text.plist;
 			name = "Alias Defaults.plist";
 			path = "Plugins/Alias Support/Alias Defaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B776A2004C981C700A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIStatusSelectionView.h;
-			path = "Plugins/Dual Window Interface/AIStatusSelectionView.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B776A2104C981C700A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIStatusSelectionView.m;
-			path = "Plugins/Dual Window Interface/AIStatusSelectionView.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B776A2404C9832F00A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = StatusSelectionView.nib;
-			path = "Plugins/Dual Window Interface/StatusSelectionView.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -16822,17 +16625,6 @@
 			settings = {
 			};
 		};
-		4BF42E7806AC36640091DE5D = {
-			children = (
-				4B776A2004C981C700A8010A,
-				4B776A2104C981C700A8010A,
-				4B776A2404C9832F00A8010A,
-			);
-			isa = PBXGroup;
-			name = "Status Selection View";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BF45A970483C6CD00A8010A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -20769,83 +20561,6 @@
 			settings = {
 			};
 		};
-		BF0F5BD805A2B1590034AD18 = {
-			children = (
-				BF0F5BD905A2B1E30034AD18,
-				BF0F5BDA05A2B1E30034AD18,
-				BF0F5C3C05A2BDB70034AD18,
-				BF0F5C3D05A2BDB80034AD18,
-				BFD02C9105A6B27900C7857F,
-				BF318ED205A513C900D07184,
-			);
-			isa = PBXGroup;
-			name = "Single Window Interface";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF0F5BD905A2B1E30034AD18 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CSSingleWindowInterfacePlugin.h;
-			path = "Plugins/Single Window Interface/CSSingleWindowInterfacePlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF0F5BDA05A2B1E30034AD18 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CSSingleWindowInterfacePlugin.m;
-			path = "Plugins/Single Window Interface/CSSingleWindowInterfacePlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF0F5C3C05A2BDB70034AD18 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CSSingleWindowInterfaceWindowController.h;
-			path = "Plugins/Single Window Interface/CSSingleWindowInterfaceWindowController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF0F5C3D05A2BDB80034AD18 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CSSingleWindowInterfaceWindowController.m;
-			path = "Plugins/Single Window Interface/CSSingleWindowInterfaceWindowController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF318EC205A5015C00D07184 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CSCurrentChatsListViewController.h;
-			path = "Plugins/Single Window Interface/CSCurrentChatsListViewController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF318EC305A5015C00D07184 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CSCurrentChatsListViewController.m;
-			path = "Plugins/Single Window Interface/CSCurrentChatsListViewController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF318ED205A513C900D07184 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = "Single Window Interface.nib";
-			path = "Plugins/Single Window Interface/Single Window Interface.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		BF7BF5E7052BA0EF00000202 = {
 			children = (
 				348E54C00539D04C0021E541,
@@ -20900,25 +20615,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		BFD02C9105A6B27900C7857F = {
-			children = (
-				BF318EC205A5015C00D07184,
-				BF318EC305A5015C00D07184,
-				BFD02C9205A6B3DC00C7857F,
-			);
-			isa = PBXGroup;
-			name = "Current Chats List";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BFD02C9205A6B3DC00C7857F = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = "Current Chats List.nib";
-			path = "Plugins/Single Window Interface/Current Chats List.nib";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		BFEBDBF90669025600CBF845 = {
 			children = (
@@ -21465,15 +21161,6 @@
 			lastKnownFileType = text.xml;
 			name = "Contact Status Coloring Themable Prefs.plist";
 			path = "Plugins/Contact Status Coloring/Contact Status Coloring Themable Prefs.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C497514605BB99DC009958A6 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = "Tab Coloring Themable Prefs.plist";
-			path = "Plugins/Contact Status Tab Coloring/Tab Coloring Themable Prefs.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
