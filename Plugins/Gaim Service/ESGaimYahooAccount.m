@@ -219,4 +219,19 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	}
 }
 
+#pragma mark Contact List Menu Items
+- (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
+{
+	if(strcmp(label, "Add Buddy") == 0){
+		//We handle Add Buddy ourselves
+		return(nil);
+	}else if(strcmp(label, "Join in Chat") == 0){
+		return([NSString stringWithFormat:AILocalizedString(@"Join %@'s Chat",nil),[inContact formattedUID]]);
+	}else if(strcmp(label, "Initiate Conference") == 0){
+		return([NSString stringWithFormat:AILocalizedString(@"Initiate Conference with %@",nil), [inContact formattedUID]]);
+	}
+
+	return([super titleForContactMenuLabel:label forContact:inContact]);
+}
+
 @end

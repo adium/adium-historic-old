@@ -2769,7 +2769,22 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     return([[[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"] stringByExpandingTildeInPath]);	
 }
 
+- (oneway void)performContactMenuActionFromDict:(NSDictionary *)dict 
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadPerformContactMenuActionFromDict:)
+				  withObject:dict];	
+}
 
+- (oneway void)gaimThreadPerformContactMenuActionFromDict:(NSDictionary *)dict
+{
+	GaimBlistNodeAction *act = [[dict objectForKey:@"GaimBlistNodeAction"] pointerValue];
+	GaimBuddy			*buddy = [[dict objectForKey:@"GaimBuddy"] pointerValue];
+
+	//Perform act's callback with the desired buddy and data
+	if(act->callback)
+		act->callback((GaimBlistNode *)buddy, act->data);
+}
 
 - (void)dealloc
 {
