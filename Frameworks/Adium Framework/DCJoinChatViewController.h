@@ -24,7 +24,7 @@
 				 onAccount:(AIAccount *)inAccount
 		  chatCreationInfo:(NSDictionary *)inInfo 
 		  invitingContacts:(NSArray *)contactsToInvite
-	withInivitationMessage:(NSString *)invitationMessage;
+	 withInvitationMessage:(NSString *)invitationMessage;
 - (NSArray *)contactsFromNamesSeparatedByCommas:(NSString *)namesSeparatedByCommas onAccount:(AIAccount *)inAccount;
 
 @end

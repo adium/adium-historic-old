@@ -47,7 +47,7 @@
 				 onAccount:(AIAccount *)inAccount
 		  chatCreationInfo:(NSDictionary *)inInfo 
 		  invitingContacts:(NSArray *)contactsToInvite
-	withInivitationMessage:(NSString *)invitationMessage
+	 withInvitationMessage:(NSString *)invitationMessage
 {
 	chat = [[adium contentController] chatWithName:inName
 										 onAccount:inAccount
