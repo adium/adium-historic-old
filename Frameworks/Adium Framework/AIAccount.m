@@ -100,7 +100,6 @@
 	return(accountNumber);
 }
 
-
 //Preferences ----------------------------------------------------------------------------------------------------------
 #pragma mark Preferences
 //Store our account prefs in a separate folder to keep things clean
@@ -243,16 +242,17 @@
 		
     }else if([key isEqualToString:@"FullNameAttr"]) {
         //Account's full name (alias) formatting changed
-        //Update the display name for this account
-		NSString	*displayName = [[[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
-		if([displayName length] == 0) displayName = nil;
-		
-		[[self displayArrayForKey:@"Display Name"] setObject:displayName
-												   withOwner:self];
-		//notify
-		[[adium contactController] listObjectAttributesChanged:self
-												  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
-		
+		if([self superclassManagesDisplayName]){
+			//Update the display name for this account
+			NSString	*displayName = [[[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
+			if([displayName length] == 0) displayName = nil;
+			
+			[[self displayArrayForKey:@"Display Name"] setObject:displayName
+													   withOwner:self];
+			//notify
+			[[adium contactController] listObjectAttributesChanged:self
+													  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
+		}
     }else if([key isEqualToString:@"FormattedUID"]){
 		//Transfer formatted UID to status dictionary
 		[self setStatusObject:[self preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS]
@@ -266,6 +266,12 @@
 	//
 }
 
+//Return YES if the display name (in the preference key @"FullNameAttr") should be managed by AIAccount.
+//Return NO if a subclass will handle making it visible to the user (for example, if it should be filtered, first).
+- (BOOL)superclassManagesDisplayName
+{
+	return YES;
+}
 
 //Auto-Refreshing Status String ----------------------------------------------------------------------------------------
 //Tests an attributed status string.  If the string contains dynamic content it will be scheduled for automatic
@@ -386,7 +392,6 @@
 		attributedRefreshTimer = nil;
 	}
 }
-
 
 //Subclasses -----------------------------------------------------------------------------------------------------------
 #pragma mark Subclasses
