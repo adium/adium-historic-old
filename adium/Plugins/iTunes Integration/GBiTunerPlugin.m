@@ -27,7 +27,7 @@
     //Dictionary of the scripts to be run for various keys\r
     scriptDict = [[NSDictionary alloc] initWithObjectsAndKeys:
         @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r set theAlbum to album of current track \r end tell \r return theAlbum as string \r end if",@"%_album",
-        @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r set theArtist to artist of current track \r end tell \r return theArtist as string \r end if",@"%_artist",
+        @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r set theArtist to artist of current track \r end tell \r return theArtist as string \r end if",@"%_artist",
         @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r set theGenre to genre of current track \r end tell \r return theGenre as string \r end if",@"%_genre",
         @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r set theTrack to name of current track \r end tell \r return theTrack as string \r end if",@"%_track",
         @"tell application \"System Events\" \r set iTunes to ((application processes whose (name is equal to \"iTunes\")) count) \r end tell \r if iTunes is greater than 0 then \r tell application \"iTunes\" \r  set theYear to year of current track \r end tell \r return theYear as string \r end if",@"%_year",
@@ -86,11 +86,7 @@
 		while (pattern = [enumerator nextObject]){
             //if the original string contained this pattern
             if([originalAttributedString rangeOfString:pattern].location != NSNotFound){
-				
-                if(!mesg){
-                    mesg = [[inAttributedString mutableCopyWithZone:nil] autorelease];
-                }
-                
+				mesg = [[inAttributedString mutableCopy] autorelease];                
                 [mesg replaceOccurrencesOfString:pattern 
                                       withString:[self hashLookup:pattern] 
                                          options:NSLiteralSearch 
