@@ -71,6 +71,7 @@
 {
 	[[adium notificationCenter] removeObserver:self];
 	[newContent release];
+	[previousContent release];
 	[newContentTimer invalidate]; [newContentTimer release];
 	[plugin release]; plugin = nil;
 	[chat release]; chat = nil;
