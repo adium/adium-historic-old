@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.69 2004/04/25 05:38:03 bgannin Exp $
+// $Id: AIContentController.m,v 1.70 2004/04/25 06:46:47 bgannin Exp $
 
 #import "AIContentController.h"
 
@@ -749,9 +749,9 @@
 {
     emoticonPacks = inEmoticonPacks;
 }
-- (NSArray *)emoticonsArray
+- (NSArray *)emoticonPacks
 {
-    return emoticonsArray;   
+    return emoticonPacks;   
 }
 //emoticonsArray is an array of all AIEmoticon objects in the active emoticon set, maintained by the Emoticons plugin
 - (void)setEmoticonsArray:(NSArray *)inEmoticonsArray
