@@ -519,52 +519,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	return(argArray);
 }
 
-#if 0
-//Execute the script, returning its output
-- (NSString *)_executeScript:(NSMutableDictionary *)infoDict withArguments:(NSArray *)arguments
-{
-	NSAppleScript   *script;
-	NSString		*result;
-	
-	//Attempt to use a cached script
-	script = [infoDict objectForKey:@"NSAppleScript"];
-	
-	//If none is found, load and cache
-	if (!script){
-		script = [[[NSAppleScript alloc] initWithContentsOfURL:[infoDict objectForKey:@"Path"]
-														 error:nil] autorelease];
-		[infoDict setObject:script
-					 forKey:@"NSAppleScript"];
-	}
-	
-	if([[infoDict objectForKey:@"RequiresUserInteraction"] boolValue]){
-		NSAppleEventDescriptor	*eventDescriptor;
-		NSInvocation			*invocation;
-		NSString				*function = @"substitute";
-		SEL						selector = @selector(executeFunction:withArguments:error:);
-		
-		invocation = [NSInvocation invocationWithMethodSignature:[script methodSignatureForSelector:selector]];
-		[invocation setSelector:selector];
-		[invocation setTarget:script];
-		[invocation setArgument:&function atIndex:2];
-		[invocation setArgument:&arguments atIndex:3];
-		
-		[invocation performSelectorOnMainThread:@selector(invoke)
-									 withObject:nil
-								  waitUntilDone:YES];
-		
-		[invocation getReturnValue:&eventDescriptor];
-		result = [eventDescriptor stringValue];
-		
-	}else{
-		result = [[script executeFunction:@"substitute" withArguments:arguments error:nil] stringValue];
-	}
-	
-	return(result);
-}
-
-#else
-/* Currently crashes intermittently. */
 //Execute the script, returning its output
 - (NSString *)_executeScript:(NSMutableDictionary *)infoDict withArguments:(NSArray *)arguments
 {
@@ -592,11 +546,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 					 forKey:@"NDAppleScriptObject"];
 	}
 	
-	static int timesExecutedScript = 0;
-	
-	NSLog(@"%i: Excecuting %@",++timesExecutedScript,[infoDict objectForKey:@"Title"]);
 	[script executeSubroutineNamed:@"substitute" argumentsArray:arguments];
-	NSLog(@"Done executing\n");
 	
 	resultDescriptor = [script resultAppleEventDescriptor];
 	
@@ -618,7 +568,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	NSAppleEventDescriptor	*eventDescriptor;
 	
 	if ([appleEventDescriptor eventClass] == 'syso'){
-		NSLog(@"sendAppleEvent MAIN: %@",appleEventDescriptor);
+//		NSLog(@"sendAppleEvent MAIN: %@",appleEventDescriptor);
 
 		NSInvocation			*invocation;
 		SEL						selector;
@@ -648,11 +598,9 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 												   idleProc:idleProc
 												 filterProc:filterProc];
 	}
-//	NSLog(@"Returning %@",eventDescriptor);
+
 	return(eventDescriptor);
 }
-
-#endif
 
 #pragma mark Toolbar item
 - (void)registerToolbarItem
