@@ -75,11 +75,11 @@
         if(statusMessage != nil && [statusMessage length] != 0){
             entry = statusMessage;
         }else if(away){
-            entry = [[NSAttributedString alloc] initWithString:@"Yes"];
+            entry = [[[NSAttributedString alloc] initWithString:@"Yes"] autorelease];
         }
     }
 
-    return([entry autorelease]);
+    return(entry);
 }
 
 
