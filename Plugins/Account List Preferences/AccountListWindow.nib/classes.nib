@@ -18,6 +18,7 @@
                 "button_newAccount" = NSButton; 
                 "button_register" = NSButton; 
                 "button_toggleConnect" = NSButton; 
+                "imageView_userIcon" = ESImageViewWithImagePicker; 
                 "popupMenu_serviceList" = NSPopUpButton; 
                 "progress_status" = NSProgressIndicator; 
                 "scrollView_accountList" = AIAutoScrollView; 
@@ -40,6 +41,13 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = ESDelayedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
+        {
+            ACTIONS = {copy = id; paste = id; }; 
+            CLASS = ESImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
