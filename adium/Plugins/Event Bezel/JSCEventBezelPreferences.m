@@ -35,7 +35,15 @@
                                           group:PREF_GROUP_EVENT_BEZEL];
     
     //Enable others checkboxes if this one is checked
+    [popUp_position setEnabled: [checkBox_showBezel state]];
+}
 
+- (IBAction)changePosition:(id)sender
+{
+    //NSLog(@"%d", [popUp_position indexOfSelectedItem]);
+    [[owner preferenceController] setPreference: [NSNumber numberWithInt: [popUp_position indexOfSelectedItem]]
+                                         forKey: KEY_EVENT_BEZEL_POSITION
+                                          group: PREF_GROUP_EVENT_BEZEL];
 }
 
 //Configure the preference view
@@ -45,8 +53,11 @@
     
     // Set the values of the checkboxes
     [checkBox_showBezel setState:[[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue]];
-
+    
+    [popUp_position selectItemAtIndex: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_POSITION] intValue]];
+    
     // Enable or disable checkboxes based on the "show bezel" checkbox
+    [popUp_position setEnabled: [checkBox_showBezel state]];
 }
 
 @end

@@ -74,10 +74,14 @@ JSCEventBezelController *sharedInstance = nil;
     //NSLog(@"despertando controlador");
 }
 
-- (void)showBezelWithContact:(AIListContact *)contact forEvent:(NSString *)event withMessage:(NSString *)message
+- (void)showBezelWithContact:(AIListContact *)contact forEvent:(NSString *)event withMessage:(NSString *)message atPosition:(int)position
 {
     if ([self window]) {
         AIMutableOwnerArray         *ownerArray;
+        // bezel position variables
+        NSSize mainScreenSize;
+        NSRect windowSize;
+        NSPoint mainScreenOrigin, newOrigin;
         //NSAttributedString          *status = nil;
         //NSMutableAttributedString   *statusString;
         
@@ -137,20 +141,35 @@ JSCEventBezelController *sharedInstance = nil;
             [bezelView setMainAwayMessage: @""];
         }
         
-        [bezelView setNeedsDisplay:YES];
         // To do: add more placement options using preferences
-        if (true) {
-            NSSize mainScreenSize;
-            NSRect windowSize;
-            NSPoint mainScreenOrigin, newOrigin;
-            
-            mainScreenSize = [[NSScreen mainScreen] frame].size;
-            mainScreenOrigin = [[NSScreen mainScreen] frame].origin;
-            windowSize = [[self window] frame];
-            newOrigin.x = mainScreenOrigin.x + (ceil(mainScreenSize.width / 2.0) - ceil(windowSize.size.width / 2.0));
-            newOrigin.y = mainScreenOrigin.y + 140.0;
-            [[self window] setFrameOrigin: newOrigin];
+        mainScreenSize = [[NSScreen mainScreen] frame].size;
+        mainScreenOrigin = [[NSScreen mainScreen] frame].origin;
+        windowSize = [[self window] frame];
+        switch (position) {
+            case 0:
+                newOrigin.x = mainScreenOrigin.x + (ceil(mainScreenSize.width / 2.0) - ceil(windowSize.size.width / 2.0));
+                newOrigin.y = mainScreenOrigin.y + 140.0;
+            break;
+            case 1:
+                newOrigin.x = mainScreenOrigin.x + mainScreenSize.width - (10 + windowSize.size.width);
+                newOrigin.y = mainScreenOrigin.y + mainScreenSize.height - (32 + windowSize.size.height);
+            break;
+            case 2:
+                newOrigin.x = mainScreenOrigin.x + mainScreenSize.width - (10 + windowSize.size.width);
+                newOrigin.y = mainScreenOrigin.y + 10;
+            break;
+            case 3:
+                newOrigin.x = mainScreenOrigin.x + 10;
+                newOrigin.y = mainScreenOrigin.y + 10;
+            break;
+            case 4:
+                newOrigin.x = mainScreenOrigin.x + 10;
+                newOrigin.y = mainScreenOrigin.y + mainScreenSize.height - (32 + windowSize.size.height);
+            break;
         }
+        [[self window] setFrameOrigin: newOrigin];
+        
+        [bezelView setNeedsDisplay:YES];
         
         if (pantherOrLater) {
             [[self window] invalidateShadow];

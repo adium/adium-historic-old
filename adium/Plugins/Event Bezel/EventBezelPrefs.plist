@@ -4,5 +4,7 @@
 <dict>
 	<key>Show Event Bezel</key>
 	<false/>
+        <key>Event Bezel Position</key>
+        <integer>0</integer>
 </dict>
 </plist>

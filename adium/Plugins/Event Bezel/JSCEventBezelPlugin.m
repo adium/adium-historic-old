@@ -76,7 +76,10 @@
         while ((account = [accountEnumerator nextObject])) {
             AIHandle    *contactHandle;
             if (contactHandle = [contact handleForAccount: account]) {
-                [ebc showBezelWithContact: contact forEvent: [notification name] withMessage: nil];
+                [ebc showBezelWithContact: contact
+                                 forEvent: [notification name]
+                              withMessage: nil
+                              atPosition: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_POSITION] intValue]];
             }
         }
     }
