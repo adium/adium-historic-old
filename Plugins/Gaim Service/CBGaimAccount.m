@@ -1544,10 +1544,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
 
 	if (!gaimThread){
-		NDRunLoopMessenger *mainThreadMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
-		gaimThread = [[SLGaimCocoaAdapter sharedInstance] retain];
-	
-		[gaimThread setMainThreadMessenger:mainThreadMessenger];
+		gaimThread = [[SLGaimCocoaAdapter sharedInstance] retain];	
 	}
 	
 	[gaimThread addAdiumAccount:self];

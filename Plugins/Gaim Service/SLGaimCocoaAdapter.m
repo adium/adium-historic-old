@@ -20,8 +20,6 @@
 #import "CBGaimServicePlugin.h"
 #import "CBGaimAccount.h"
 
-#import "ESGaimNotifyEmailWindowController.h"
-
 #import "CBGaimOscarAccount.h"
 
 #import "adiumGaimCore.h"
@@ -59,7 +57,6 @@ NSMutableDictionary *accountDict = nil;
 NSMutableDictionary *chatDict = nil;
 
 static NDRunLoopMessenger					*gaimThreadMessenger = nil;
-static NDRunLoopMessenger					*mainThreadMesesnger = nil;
 static SLGaimCocoaAdapter					*gaimThreadProxy = nil;
 
 //The autorelease pool presently in use; it will be periodically released and recreated
@@ -85,10 +82,9 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	return sharedInstance;
 }
 
-
-- (void)setMainThreadMessenger:(NDRunLoopMessenger *)inMainThreadMessenger
++ (NDRunLoopMessenger *)gaimThreadMessenger
 {
-	mainThreadMesesnger = [inMainThreadMessenger retain];
+	return gaimThreadMessenger;
 }
 
 //Register the account gaimside in the gaim thread to avoid a conflict on the g_hash_table containing accounts
@@ -1290,41 +1286,6 @@ NSMutableDictionary* get_chatDict(void)
 }
 
 #pragma mark Request callbacks
-- (oneway void)gaimThreadDoRequestInputCbValue:(NSValue *)callBackValue
-							 withUserDataValue:(NSValue *)userDataValue 
-								   inputString:(NSString *)string
-{
-	GaimRequestInputCb callBack = [callBackValue pointerValue];
-	if (callBack){
-		callBack([userDataValue pointerValue],[string UTF8String]);
-	}	
-}
-- (oneway void)doRequestInputCbValue:(NSValue *)callBackValue
-				   withUserDataValue:(NSValue *)userDataValue 
-						 inputString:(NSString *)string
-{	
-	[gaimThreadProxy gaimThreadDoRequestInputCbValue:callBackValue
-								   withUserDataValue:userDataValue
-										 inputString:string];
-}
-
-- (oneway void)gaimThreadDoRequestActionCbValue:(NSValue *)callBackValue
-							  withUserDataValue:(NSValue *)userDataValue 
-								  callBackIndex:(NSNumber *)callBackIndexNumber
-{
-	GaimRequestActionCb callBack = [callBackValue pointerValue];
-	if (callBack){
-		callBack([userDataValue pointerValue],[callBackIndexNumber intValue]);
-	}
-}
-- (oneway void)doRequestActionCbValue:(NSValue *)callBackValue
-					withUserDataValue:(NSValue *)userDataValue
-						callBackIndex:(NSNumber *)callBackIndexNumber
-{
-	[gaimThreadProxy gaimThreadDoRequestActionCbValue:callBackValue
-									withUserDataValue:userDataValue
-										callBackIndex:callBackIndexNumber];
-}
 
 - (oneway void)gaimThreadPerformContactMenuActionFromDict:(NSDictionary *)dict
 {
