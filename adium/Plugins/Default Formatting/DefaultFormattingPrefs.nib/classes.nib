@@ -1,0 +1,19 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIDefaultFormattingPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_setFont" = NSButton; 
+                "colorWell_backgroundColor" = NSColorWell; 
+                "colorWell_textColor" = NSColorWell; 
+                "textField_desiredFont" = NSTextField; 
+                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
