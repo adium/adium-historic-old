@@ -9,12 +9,12 @@
                 actionSpeakText = id; 
                 deleteEventAction = id; 
                 newEvent = id; 
-                oneTimeEvent = id; 
                 saveMessageDetails = id; 
+                selectAccount = id; 
                 selectBehavior = id; 
                 selectSound = id; 
             }; 
-            CLASS = AIContactAlerts; 
+            CLASS = ESContactAlerts; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_anotherAccount" = NSButton; 

@@ -682,17 +682,26 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 
     if (view_pref != nil)
     {
+
         containerFrame = [view_pref frame];
         containerFrame.size.height += heightChange;
         containerFrame.origin.y -= heightChange;
         [view_pref setFrame:containerFrame];
         [view_pref display];
+
+        containerFrame = [[[view_pref superview] superview] frame];
+        containerFrame.size.height += heightChange;
+        [[[view_pref superview] superview] setFrame:containerFrame];
+        [view_pref setFrameOrigin:NSMakePoint(0,0)];
+        [[[view_pref superview] superview] display];
+        
     }
     
     [view_main replaceSubview:view_blank with:view_inView];
     NSRect viewFrame = [view_main frame];
     viewFrame.size = [view_inView frame].size;
-    [view_main setFrame:[view_inView frame]];
+ //   [view_main setFrame:[view_inView frame]];
+    [view_main setFrameSize:[view_inView frame].size];
 
     //   [view_main setFrameOrigin:NSMakePoint(0,0)];
     

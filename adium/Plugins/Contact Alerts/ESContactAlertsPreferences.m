@@ -116,7 +116,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     if ([prefAlertsArray count]) //no specific contact, but some alerts do exist
     {
         [tableView_actions selectRow:0 byExtendingSelection:NO];
-        [self tableViewSelectionIsChanging:nil];
+        [self tableViewSelectionDidChange:nil];
     }
 
     //Update the outline view
@@ -140,13 +140,13 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         else
         {
             [tableView_actions selectRow:firstIndex byExtendingSelection:NO];
-            [self tableViewSelectionIsChanging:nil];
+            [self tableViewSelectionDidChange:nil];
         }
     }
     else //got nil
     {
         [tableView_actions selectRow:0 byExtendingSelection:NO];
-        [self tableViewSelectionIsChanging:nil];
+        [self tableViewSelectionDidChange:nil];
     }
 }
 
@@ -208,7 +208,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     }
     [instance deleteEventAction:nil]; //delete the event from the instance
 
-    [self tableViewSelectionIsChanging:nil];
+    [self tableViewSelectionDidChange:nil];
 
 }
 
@@ -220,7 +220,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
     int firstIndex = [prefAlertsArray indexOfObject:instance];
     [tableView_actions selectRow:(firstIndex + [instance count] - 1) byExtendingSelection:NO];
-    [self tableViewSelectionIsChanging:nil];
+    [self tableViewSelectionDidChange:nil];
 
     //Update the outline view
 
@@ -309,8 +309,8 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 }
 
 //selection changed; update the view
-//- (void)tableViewSelectionDidChange:(NSNotification *)aNotfication
-- (void)tableViewSelectionIsChanging:(NSNotification *)aNotfication
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotfication
+//- (void)tableViewSelectionIsChanging:(NSNotification *)aNotfication
 {
     int row = [tableView_actions selectedRow];
     NSLog(@"row = %d",row);
