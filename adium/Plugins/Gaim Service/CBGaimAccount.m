@@ -5,7 +5,8 @@
 //  Created by Colin Barrett on Sun Oct 19 2003.
 //
 
-//evands note: may want to use a mutableOwnerArray inside chat statusDictionary properties so that we can have multiple gaim accounts in the same chat.
+//evands note: may want to use a mutableOwnerArray inside chat statusDictionary properties
+//so that we can have multiple gaim accounts in the same chat.
 
 #import "CBGaimAccount.h"
 #import "CBGaimServicePlugin.h"
@@ -98,10 +99,13 @@
             [[chat statusDictionary] setObject:onlineNum forKey:@"Enabled"];
             
             //Notify
-            [[adium notificationCenter] postNotificationName:Content_ChatStatusChanged object:chat userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Enabled"] forKey:@"Keys"]];            
+            [[adium notificationCenter] postNotificationName:Content_ChatStatusChanged
+                                                      object:chat 
+                                                    userInfo:[NSDictionary dictionaryWithObject:
+                                                            [NSArray arrayWithObject:@"Enabled"] forKey:@"Keys"]];            
         }
 		/*           
-			//This doesn't work - buddy->signon is always 0.  evands has a patch to fix this gaimside, but the gaim pepople won't accept it since signon is apparently oscar-specific.
+			//buddy->signon is always 0 - this will be fixed gaimside soon.
 			if (online && buddy->signon != 0) {
 				//Set the signon time
 				NSMutableDictionary * statusDict = [theHandle statusDictionary];
@@ -112,7 +116,7 @@
 		*/
     }
 	
-    //Display Name - use the serverside buddy_alias if present - do we want to be doing this?
+    //Display Name - use the serverside buddy_alias if present
     {
         char *alias = (char *)gaim_get_buddy_alias(buddy);
         char *disp_name = (char *)[[statusDict objectForKey:@"Display Name"] UTF8String];
@@ -160,7 +164,8 @@
                        forKey:@"BuddyImagePointer"];
             
             //set the buddy image
-            NSImage *image = [[[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len)) length:buddyIcon->len]] autorelease];
+            NSImage *image = [[[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len))
+                                                                           length:buddyIcon->len]] autorelease];
             [statusDict setObject:image forKey:@"UserIcon"];
 			
             //BuddyImagePointer is just for us, shh, keep it secret ;)
@@ -267,9 +272,12 @@
     }
 }
 
-- (void)accountConvReceivedIM: (const char*)message inConversation:(GaimConversation*)conv withFlags: (GaimMessageFlags)flags atTime: (time_t)mtime
+- (void)accountConvReceivedIM:(const char*)message inConversation:(GaimConversation*)conv withFlags:(GaimMessageFlags)flags atTime: (time_t)mtime
 {
-    NSLog(@"Received %s from %s",message,conv->name);
+    if (GAIM_DEBUG) {
+	NSLog(@"Received %s from %s",message,conv->name);
+    }
+    
     if ((flags & GAIM_MESSAGE_SEND) != 0) {
         /*
          * TODO
@@ -396,11 +404,13 @@
     return sent;
 }
 
-//Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
+//Return YES if we're available for sending the specified content.
+//If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
     BOOL 	available = NO;
-    BOOL	weAreOnline = ([inType compare:CONTENT_MESSAGE_TYPE] == 0 && [[self statusObjectForKey:@"Online"] boolValue]);
+    BOOL	weAreOnline = ([inType compare:CONTENT_MESSAGE_TYPE] == 0 &&
+                               [[self statusObjectForKey:@"Online"] boolValue]);
     
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
         if(weAreOnline){
@@ -441,7 +451,7 @@
 {
     AIChat *chat;
 	
-    //create a chat if we're passed a null conversation or the conversation we're passed doesn't have a chat associated with it
+    //create a chat if we're passed a null conversation or the conversation we're passed doesn't have a chat yet
 	//    if(!(chat = [chatDict objectForKey:[handle UID]])){
     if(!conv || !(chat = conv->ui_data)){
         chat = [AIChat chatForAccount:self];
@@ -513,7 +523,11 @@
     }
     
     //Create the handle
-    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier] UID:inUID serverGroup:inGroup temporary:inTemporary forAccount:self];
+    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier] 
+                                       UID:inUID 
+                               serverGroup:inGroup 
+                                 temporary:inTemporary 
+                                forAccount:self];
     NSString    *handleUID = [handle UID];
     NSString    *handleServerGroup = [handle serverGroup];
     
@@ -663,7 +677,8 @@
 /*****************************************************/
 #pragma mark File Transfer
 
-//The account requested that we received a file; set up the ESFileTransfer and query the fileTransferController for a save location
+//The account requested that we received a file.
+//Set up the ESFileTransfer and query the fileTransferController for a save location
 - (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer
 {
     NSLog(@"file transfer request received");
@@ -674,7 +689,8 @@
     [[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
 }
 
-//The account requested that we send a file, but we do not know what file yet - query the fileTransferController for a target file
+//The account requested that we send a file, but we do not know what file yet.
+//Query the fileTransferController for a target file
 /*- (void)accountXferSendFileWithXfer:(GaimXfer *)xfer
 {
     ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
@@ -731,7 +747,8 @@
     gaim_xfer_destroy(xfer);
 }
 
-//Accept a send or receive ESFileTransfer object, beginning the transfer.  Subsequently inform the fileTransferController that the fun has begun.
+//Accept a send or receive ESFileTransfer object, beginning the transfer.
+//Subsequently inform the fileTransferController that the fun has begun.
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
     NSLog(@"accept file transfer");
@@ -818,15 +835,12 @@
 	//Set password and connect
 	gaim_account_set_password(account, [password UTF8String]);
 	gc = gaim_account_connect(account);
-	NSLog(@"Adium: Got a gc of %x",gc);
 }
 
 //Configure libgaim's proxy settings using the current system values
 - (void)configureAccountProxy
 {
 	if([(CBGaimServicePlugin *)service configureGaimProxySettings]) {
-		//proxy info - once account prefs are in place, this should be able to use the gaim prefs (which are set by the
-		//service plugin and are our systemwide prefs) or account-specific prefs
 		GaimProxyInfo *proxy_info = gaim_proxy_info_new();
 		
 		char *type = (char *)gaim_prefs_get_string("/core/proxy/type");
@@ -862,13 +876,10 @@
 {
     //We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
-    NSLog(@"Adium: disconnect");
     //Tell libgaim to disconnect
     if(gaim_account_is_connected(account)){
-        NSLog(@"Adium: disconnecting account 0x%x",account);
         gaim_account_disconnect(account); 
     }
-    NSLog(@"Adium: disconnect complete");
 }
 /*****************************/
 /* accountConnection methods */
@@ -882,7 +893,6 @@
 //Our account has disconnected (called automatically by gaimServicePlugin)
 - (void)accountConnectionDisconnected
 {
-    NSLog(@"Adium: accountConnectionDisconnected");
     NSEnumerator    *enumerator;
     AIHandle        *handle;
     
@@ -910,15 +920,17 @@
     
     //Remove our chat dictionary
     [chatDict release]; chatDict = [[NSMutableDictionary alloc] init];
-	
-	//Reset the gaim account (We don't want it tracking anything between sessions)
-	[self resetLibGaimAccount];
-
-	//If we were disconnected unexpectedly, attempt a reconnect
-	if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
-            [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
+    
+    //Reset the gaim account (We don't want it tracking anything between sessions)
+    [self resetLibGaimAccount];
+    
+    //If we were disconnected unexpectedly, attempt a reconnect
+    if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
+	if (reconnectAttemptsRemaining) {
+	    [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
+	    reconnectAttemptsRemaining--;
 	}
-    NSLog(@"Adium: finished accountConnectionDisconnected");
+    }
 }
 
 //Our account has connected (called automatically by gaimServicePlugin)
@@ -933,6 +945,9 @@
     
     //Set our initial status
     [self updateAllStatusKeys];
+    
+    //Reset reconnection attempts
+    reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 }
 
 //Reset the libgaim account, causing it to forget all saved information
@@ -941,13 +956,11 @@
 {
     gaim_core_mainloop_finish_events();
     
-	//Destroy the account
+	//Remove the account - may want to also destroy it?  Just destroying it causes crashes.
 	//This will remove any gaimBuddies, account information, etc.
-    NSLog(@"Adium: deleting account 0x%x (with gc 0x%x)", account, gc);
     [(CBGaimServicePlugin *)service removeAccount:account];
     gaim_accounts_remove (account); account = NULL;
     gc = NULL;
-    NSLog(@"Adium: cleared our gc");
 
 	//Recreate a fresh version of the account
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
@@ -1015,6 +1028,11 @@
             if(data = [self preferenceForKey:KEY_PROFILE group:GROUP_ACCOUNT_STATUS]){
                 profile = [NSAttributedString stringWithData:data];
             }
+	    
+	    if (GAIM_DEBUG) {
+		NSLog(@"updating profile to %@",[profile string]);
+	    }
+	    
             [self setAccountProfileTo:profile];
             
         }

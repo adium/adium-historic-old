@@ -12,6 +12,7 @@
 
 #import "GaimServices.h"
 
+
 #define GAIM_EVENTLOOP_INTERVAL     0.02         //Interval at which to run libgaim's main event loop
 
 @interface CBGaimServicePlugin (PRIVATE)
@@ -43,14 +44,15 @@ static CBGaimAccount* accountLookup(GaimAccount *acct)
 // Debug ------------------------------------------------------------------------------------------------------
 static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, const char *format, va_list args)
 {
-/*   gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
-
-    //Log error
-    if(!category) category = "general"; //Category can be nil
-    NSLog(@"(Debug: %s) %s", category, arg_s);
-    
-    g_free(arg_s);
-    */
+    if (GAIM_DEBUG) {
+	gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
+	
+	//Log error
+	if(!category) category = "general"; //Category can be nil
+	NSLog(@"(Debug: %s) %s", category, arg_s);
+	
+	g_free(arg_s);
+    }
 }
 
 static GaimDebugUiOps adiumGaimDebugOps = {
@@ -569,23 +571,16 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     }
     
     //Tell libgaim to load its plugins
-    plugin_search_paths[0] = (char *)[[[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:@"/Contents/Frameworks/Protocols/"] stringByExpandingTildeInPath] UTF8String];
-    plugin_search_paths[1] = (char *)[[[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:@"/Contents/Frameworks/Plugins/"] stringByExpandingTildeInPath] UTF8String];
+    NSString *bundlePath = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByExpandingTildeInPath];
+    plugin_search_paths[0] = (char *)[[[bundlePath stringByAppendingPathComponent:@"/Contents/Frameworks/Protocols/"] UTF8String];
+    plugin_search_paths[1] = (char *)[[[bundlePath stringByAppendingPathComponent:@"/Contents/Frameworks/Plugins/"] UTF8String];
     gaim_plugins_set_search_paths(sizeof(plugin_search_paths) / sizeof(*plugin_search_paths), plugin_search_paths);
     gaim_plugins_probe(NULL);
     
     //Setup the buddy list
     gaim_set_blist(gaim_blist_new());
-    //gaim_blist_load();
-    
-    //Privacy
-    //gaim_privacy_init();
-    
-    /* Proxy */
-    //gaim_proxy_init();
-    //[self configureGaimProxySettings];
-        
-    //Setup libgaim core preferences
+            
+    //**Setup libgaim core preferences**
     
     //Disable gaim away handling - we do it ourselves
     gaim_prefs_set_bool("/core/conversations/away_back_on_send", FALSE);
@@ -599,8 +594,12 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     gaim_prefs_set_bool("/core/conversations/im/send_typing", TRUE);
         
     //Install the libgaim event loop timer
-    [NSTimer scheduledTimerWithTimeInterval:GAIM_EVENTLOOP_INTERVAL target:self selector:@selector(gaimEventLoopTimer:) userInfo:nil repeats:YES];
-    
+    [NSTimer scheduledTimerWithTimeInterval:GAIM_EVENTLOOP_INTERVAL 
+                                     target:self
+                                   selector:@selector(gaimEventLoopTimer:)
+                                   userInfo:nil
+                                    repeats:YES];
+    //Install the services
     AIMService = [[[CBAIMService alloc] initWithService:self] retain];
     MSNService = [[[ESMSNService alloc] initWithService:self] retain];
     YahooService = [[[ESYahooService alloc] initWithService:self] retain]; 
@@ -660,11 +659,11 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (BOOL)configureGaimProxySettings
 {
     Boolean             result;
-    CFDictionaryRef     proxyDict;
-    CFNumberRef         enableNum;
+    CFDictionaryRef     proxyDict = nil;
+    CFNumberRef         enableNum = nil;
     int                 enable;
-    CFStringRef         hostStr;
-    CFNumberRef         portNum;
+    CFStringRef         hostStr = nil;
+    CFNumberRef         portNum = nil;
     int                 portInt;
     
     char    host[300];

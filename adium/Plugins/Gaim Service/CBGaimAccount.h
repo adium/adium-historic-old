@@ -36,7 +36,7 @@
     GaimAccount         *account;
     GaimConnection      *gc;
     
-    int                 reconnectAttemptsLeft;
+    int                 reconnectAttemptsRemaining;
 }
 
 - (const char*)protocolPlugin;
