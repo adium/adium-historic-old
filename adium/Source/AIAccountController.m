@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.69 2004/03/24 14:44:19 evands Exp $
+// $Id: AIAccountController.m,v 1.70 2004/03/25 00:38:21 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -768,6 +768,13 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 											 account:[self _accountNameForAccount:inAccount]];
 }
 
+- (NSString *)passwordForProxyServer:(NSString *)server userName:(NSString *)userName
+{
+	NSString *password = [AIKeychain getPasswordFromKeychainForService:[self _passKeyForProxyServer:server]
+															   account:[self _accountNameForProxyServer:server 
+																							   userName:userName]];
+	return password;
+}
 
 - (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector
 {
@@ -776,7 +783,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     //check the keychain for this password
     password = [AIKeychain getPasswordFromKeychainForService:[self _passKeyForProxyServer:server]
                                                      account:[self _accountNameForProxyServer:server userName:userName]];
-    
+    NSLog(@"password for %@ %@ is %@",server,userName,password);
     if(password && [password length] != 0){
         //Invoke the target right away
         [inTarget performSelector:inSelector withObject:password afterDelay:0.0001];    
