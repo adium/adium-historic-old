@@ -22,6 +22,12 @@
 
 @class AIPreferenceWindowController;
 
+@interface ESDualWindowMessageAdvancedPreferences (PRIVATE)
+- (NSMenu *)_fontSizeMenu;
+- (NSMenu *)_timeStampMenu;
+- (void)_addTimeStampChoice:(NSDateFormatter *)formatter toMenu:(NSMenu *)menu;
+@end
+
 @implementation ESDualWindowMessageAdvancedPreferences
 
 //Preference pane properties
@@ -112,8 +118,8 @@
 	[popUp_minimumFontSize compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_WEBKIT_MIN_FONT_SIZE] intValue]];
 	
 	[popUp_timeStampFormat setMenu:[self _timeStampMenu]];
-	[popUp_minimumFontSize selectItemWithRepresentedObject:[[prefDict objectForKey:KEY_WEBKIT_TIME_STAMP_FORMAT] intValue]];
-	
+	[popUp_timeStampFormat selectItemWithRepresentedObject:[prefDict objectForKey:KEY_WEBKIT_TIME_STAMP_FORMAT]];
+
     [self configureControlDimming];
 }
 
