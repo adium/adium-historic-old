@@ -9,6 +9,7 @@
 #import "SHLinkLexer.h"
 
 #define LINK_EDITOR_NIB_NAME        @"LinkEditor"
+#define FAVS_EDITOR_NIB_NAME        @"FavsEditor"
 #define CHOOSE_URL                  AILocalizedString(@"Select...",nil)
 
 @interface SHLinkEditorWindowController (PRIVATE)
@@ -61,7 +62,7 @@
 - (void)initAddLinkFavoritesWindowControllerWithView:(NSView *)view
 {
     SHLinkEditorWindowController    *favsEditor;
-    favsEditor = [self initWithWindowNibName:LINK_EDITOR_NIB_NAME];
+    favsEditor = [self initWithWindowNibName:FAVS_EDITOR_NIB_NAME];
     editLink = NO;
     favoriteWindow = YES;
     //[favsEditor showWindow:nil];
