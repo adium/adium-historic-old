@@ -24,6 +24,7 @@
 - (NSDictionary *)_iconInArrayNamed:(NSString *)name;
 - (void)setupPreferenceView;
 - (void)animate:(NSTimer *)timer;
+- (void)stateChange:(NSTimer *)timer;
 - (void)_startAnimating;
 - (void)_stopAnimating;
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -36,7 +37,7 @@
     return(AIPref_Dock);
 }
 - (NSString *)label{
-    return(@"Dock Icon");
+    return(AILocalizedString(@"Dock Icon", nil);
 }
 - (NSString *)nibName{
     return(@"IconSelectionPrefs");
@@ -48,9 +49,12 @@
     NSEnumerator	*enumerator;
     NSTableColumn	*column;
 
-    cycle = 0;
+	cycle = -1;
     animationTimer = nil;
-
+	stateChangeTimer = nil;
+	selectedIconIndex = -1;
+	selectedIcon = nil;
+	
     //Configure the table view
     [tableView_icons setIntercellSpacing:NSMakeSize(4,2)];
     [tableView_icons setTarget:self];
@@ -81,7 +85,8 @@
 {
     [iconArray release]; iconArray = nil;
     [previewStateArray release]; previewStateArray = nil;
-    
+    [selectedIcon release]; selectedIcon = nil;
+	
     //Stop animating
     [self _stopAnimating];
     
@@ -100,25 +105,10 @@
         //Set the selected icon
         iconName = [preferenceDict objectForKey:KEY_ACTIVE_DOCK_ICON];
         iconDict = [self _iconInArrayNamed:iconName];
+		
+
         [self configureForSelectedIcon:iconDict];
-        
-    }
-}
-
-//Start animating
-- (void)_startAnimating
-{
-    if(!animationTimer){
-        animationTimer = [[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(animate:) userInfo:nil repeats:YES] retain];
-    }
-}
-
-- (void)_stopAnimating
-{
-    if(animationTimer){
-        [animationTimer invalidate];
-        [animationTimer release];
-        animationTimer = nil;
+		selectedIconIndex = [iconArray indexOfObject:iconDict];        
     }
 }
 
@@ -133,8 +123,22 @@
     NSString		*state;
     NSArray		*previewArray;
     
+	if (selectedIconIndex != -1) {
+		int oldIndex = selectedIconIndex;
+		
+		//Set selectedIconIndex to -1 and stop animating so the state doesn't change after we've restored it
+		selectedIconIndex = -1;
+		[self _stopAnimating];
+		
+		[[iconArray objectAtIndex:oldIndex] setObject:[selectedIcon objectForKey:@"Original State"]
+													  forKey:@"State"];
+		[[matrix_iconPreview selectedCell] setImage:[[selectedIcon objectForKey:@"Original State"] image]];
+	}
+	
+	
     //Remember this as selected
-    selectedIcon = iconDict;
+	//LEAKING?
+    [selectedIcon release]; selectedIcon = [[iconDict copy] retain];
 
     //
     iconPackDict = [[adium dockController] iconPackAtPath:[iconDict objectForKey:@"Path"]];
@@ -162,7 +166,7 @@
     previewEnumerator = [previewArray objectEnumerator];
     while((stateArray = [previewEnumerator nextObject])){
         NSMutableArray	*tempArray;
-        AIIconState	*tempIconState;
+        AIIconState		*tempIconState;
 
         //Build an array of all the states we want to composite for this preview
         tempArray = [NSMutableArray array];
@@ -174,7 +178,7 @@
                 [tempArray addObject:tempState];
             }
         }
-
+		
         //Generate the preview icon state, and add it to our preview state array
         tempIconState = [[[AIIconState alloc] initByCompositingStates:tempArray] autorelease];
         [previewStateArray addObject:tempIconState];
@@ -185,39 +189,96 @@
     [self animate:nil];
 }
 
-//Animate the preview icons
-- (void)animate:(NSTimer *)timer
+//Start animating
+- (void)_startAnimating
 {
-    NSEnumerator	*previewEnumerator;
-    AIIconState		*state;
-    NSEnumerator	*cellEnumerator;
-    NSImageCell		*cell;
-
-    if([matrix_iconPreview canDraw]){
-        cycle++;
-
-        //Process each preview
-        previewEnumerator = [previewStateArray objectEnumerator];
-        cellEnumerator = [[matrix_iconPreview cells] objectEnumerator];
-        while((state = [previewEnumerator nextObject])){
-            int	cycleSkip = ([state animationDelay] / 0.1);
-
-            //Move to the next frame
-            if([state animated] && !(cycle % cycleSkip)){
-                [state nextFrame];
-            }
-
-            //Update the cell
-            cell = [cellEnumerator nextObject];
-            [cell setImage:[state image]];
-        }
-
-        //Redisplay
-        [matrix_iconPreview setNeedsDisplay:YES];
-        
+    if(!stateChangeTimer){
+		stateToAnimate = nil;
+		previewToAnimateEnumerator = nil;
+		
+		stateChangeTimer = [[NSTimer scheduledTimerWithTimeInterval:2 
+															 target:self 
+														   selector:@selector(stateChange:)
+														   userInfo:nil
+															repeats:YES] retain];
+		[self stateChange:nil];
     }
 }
 
+- (void)_stopAnimating
+{
+    if(animationTimer){
+        [animationTimer invalidate];
+        [animationTimer release];
+        animationTimer = nil;
+	}
+	
+	if(stateChangeTimer){
+		[stateChangeTimer invalidate];
+		[stateChangeTimer release];
+		stateChangeTimer = nil;
+	}
+	
+	[stateToAnimate release]; stateToAnimate = nil;
+	[previewToAnimateEnumerator release]; previewToAnimateEnumerator = nil;
+}
+
+//Animate the preview icons
+- (void)animate:(NSTimer *)timer
+{
+	[stateToAnimate nextFrame];
+	[[matrix_iconPreview selectedCell] setImage:[stateToAnimate image]];
+	
+	//Redisplay now.
+	[tableView_icons display];
+}
+
+- (void)stateChange:(NSTimer *)timer
+{
+	if (!previewToAnimateEnumerator)
+		previewToAnimateEnumerator = [[previewStateArray objectEnumerator] retain];
+
+	AIIconState *newStateToAnimate = [previewToAnimateEnumerator nextObject];
+	
+	//If we reached the end, make a new enumerator and start again
+	if (!newStateToAnimate) {
+		[previewToAnimateEnumerator release];
+		previewToAnimateEnumerator = [[previewStateArray objectEnumerator] retain];
+		
+		newStateToAnimate = [previewToAnimateEnumerator nextObject];
+	}
+	
+	[stateToAnimate release]; stateToAnimate = [newStateToAnimate retain];
+
+	if (selectedIconIndex != -1) {
+		[[iconArray objectAtIndex:selectedIconIndex] setObject:stateToAnimate
+														forKey:@"State"];
+	}
+	
+	NSLog(@"flipped? %i animated=%i",[[stateToAnimate image] isFlipped],[stateToAnimate animated]);
+	//Set the image to the new state
+	[[matrix_iconPreview selectedCell] setImage:[stateToAnimate image]];
+	
+	//Update our view
+	[tableView_icons setNeedsDisplay:YES];
+	
+	if (animationTimer) {
+		[animationTimer invalidate];
+        [animationTimer release];
+        animationTimer = nil;
+	}
+	if ([stateToAnimate animated]) {
+		//Start the flash timer
+		animationTimer = [[NSTimer scheduledTimerWithTimeInterval:[stateToAnimate animationDelay]
+														   target:self
+														 selector:@selector(animate:)
+														 userInfo:nil
+														  repeats:YES] retain];
+		
+		//Move to the first frame of animation
+		//			[self animateIcon:animationTimer]; //Set the icon and move to the next frame
+	}
+}
 //User selected an icon in the table view
 - (void)selectIcon:(id)sender
 {
@@ -240,8 +301,11 @@
         [[adium preferenceController] setPreference:iconName forKey:KEY_ACTIVE_DOCK_ICON group:PREF_GROUP_GENERAL];
         
         //Set the selected icon
-        [self configureForSelectedIcon:[iconArray objectAtIndex:index]];        
+        [self configureForSelectedIcon:[iconArray objectAtIndex:index]];
+        
+		selectedIconIndex = index;
     }
+	[self _startAnimating];
 }
 
 //Build our array of icons
@@ -276,13 +340,14 @@
                 previewState = [[[[adium dockController] iconPackAtPath:fullPath] objectForKey:@"State"] objectForKey:@"Preview"];
     
                 //Add this icon to our icon array
-                [iconArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:fullPath, @"Path", previewState, @"State", nil]];
+                [iconArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:fullPath, @"Path", previewState, @"State", previewState, @"Original State", nil]];
     
             }
         }
     }
 
-    selectedIcon = [iconArray objectAtIndex:2];
+	[selectedIcon release];
+    selectedIcon = [[iconArray objectAtIndex:2] copy];
     
     //Update our view
     [tableView_icons reloadData];
@@ -326,7 +391,7 @@
     index = (row * columns) + [tableView indexOfTableColumn:tableColumn];
 
     if(index >= 0 && index < icons){
-        return([[[iconArray objectAtIndex:index] objectForKey:@"State"] image]);
+		return [[[iconArray objectAtIndex:index] objectForKey:@"State"] image];
     }else{
         return([[[NSImage alloc] init] autorelease]); //new blank for now
     }
@@ -341,7 +406,7 @@
 
     index = (row * columns) + [tableView indexOfTableColumn:tableColumn];
 
-    if(index >= 0 && index < icons && ([iconArray objectAtIndex:index] == selectedIcon)){
+    if(index >= 0 && index < icons && (index == selectedIconIndex)){
         [cell setHighlighted:YES];
     }else{
         [cell setHighlighted:NO];
