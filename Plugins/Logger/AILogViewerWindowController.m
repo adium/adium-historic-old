@@ -242,6 +242,11 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 	//Toolbar
 	[self installToolbar];
     	
+	//Localize tableView_results column headers
+	[[[tableView_results tableColumnWithIdentifier:@"To"] headerCell] setStringValue:AILocalizedString(@"To",nil)];
+	[[[tableView_results tableColumnWithIdentifier:@"From"] headerCell] setStringValue:AILocalizedString(@"From",nil)];
+	[[[tableView_results tableColumnWithIdentifier:@"Date"] headerCell] setStringValue:AILocalizedString(@"Date",nil)];
+	
     //Prepare the search controls
     [self buildSearchMenu];
     if([textView_content respondsToSelector:@selector(setUsesFindPanel:)]){
