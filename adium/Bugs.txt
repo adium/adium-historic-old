@@ -7,6 +7,7 @@
 - Crash when launching from a UFS partition
 - Incorrect resizing when switching between sort configuration types
 - Webkit performance issues related to templates
+- Message view buddy icons don't change when the user's icon changes
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
@@ -34,11 +35,6 @@
 - Event Notification window moves out of place between resolution changes.
 
 - Tooltips are not appearing for links in profile text.
-
-- Message view animation
-	Animating buddy icons in the message view are annoying.  Caching the animation is good; displaying it
-	is bad.  Perhaps this could be fixed at the same time as the implementation of style-based image
-	masking as Brad described.
 
 - Messaging the same person from two different accounts is confusing and
   problematic.
