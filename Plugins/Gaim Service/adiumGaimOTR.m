@@ -212,6 +212,9 @@ static void otrg_adium_dialog_unknown_fingerprint(OtrlUserState us, const char *
     otrl_privkey_hash_to_human(hash, kem->key_fingerprint);
 	
 	responseInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+		[NSString stringWithUTF8String:hash], @"hash",
+		[NSString stringWithUTF8String:who], @"who",
+		[NSString stringWithUTF8String:((p && p->info->name) ? p->info->name : @"")], @"protocol",
 		[NSValue valueWithPointer:response_cb], @"response_cb",
 		[NSValue valueWithPointer:us], @"OtrlUserState",
 		[NSValue valueWithPointer:ops], @"OtrlMessageAppOps",
@@ -219,12 +222,7 @@ static void otrg_adium_dialog_unknown_fingerprint(OtrlUserState us, const char *
 		[NSValue valueWithPointer:response_data], @"OTRConfirmResponse",
 		nil];
 
-	AILog(@"start on %x",[NSRunLoop currentRunLoop]);
-
-	[ESGaimOTRUnknownFingerprintController mainPerformSelector:@selector(showUnknownFingerprintPromptForUsername:protocol:hash:responseInfo:)
-													withObject:who
-													withObject:((p && p->info->name) ? p->info->name : nil)
-													withObject:hash
+	[ESGaimOTRUnknownFingerprintController mainPerformSelector:@selector(showUnknownFingerprintPromptWithResponseInfo:)
 													withObject:responseInfo];
 }
 
@@ -241,8 +239,6 @@ void otrg_adium_unknown_fingerprint_response(NSDictionary *responseInfo, BOOL ac
 	OtrlMessageAppOps *ops = [[responseInfo objectForKey:@"OtrlMessageAppOps"] pointerValue];
 	void *opdata = [[responseInfo objectForKey:@"opdata"] pointerValue];
 	OTRConfirmResponse *response_data = [[responseInfo objectForKey:@"OTRConfirmResponse"] pointerValue];
-
-	AILog(@"response_cb on %x",[NSRunLoop currentRunLoop]);
 
 	response_cb(us, ops, opdata, response_data, (accepted ? 1 : 0));
 }
@@ -463,7 +459,7 @@ void adium_gaim_otr_connect_conv(GaimConversation *conv)
 void adium_gaim_otr_disconnect_conv(GaimConversation *conv)
 {
 	ConnContext	*context;
-	AILog(@"adium_gaim_otr_disconnect_conv %x", [NSRunLoop currentRunLoop]);
+
 	/* Do nothing if this isn't an IM conversation */
 	if((gaim_conversation_get_type(conv) == GAIM_CONV_IM) &&
 	   (context = context_for_conv(conv))){
