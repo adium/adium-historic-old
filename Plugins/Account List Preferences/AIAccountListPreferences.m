@@ -127,7 +127,7 @@
 	//Restrict the account name field to valid characters and length
     [textField_accountName setFormatter:
 		[AIStringFormatter stringFormatterAllowingCharacters:[inService allowedCharactersForAccountName]
-													  length:[inService allowedLengthForAccountName]
+													  length:[inService allowedLength]
 											   caseSensitive:[inService caseSensitive]
 												errorMessage:@"The characters you're entering are not valid for an account name on this service."]];
 }
