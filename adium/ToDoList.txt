@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.103 2004/05/07 22:33:29 evands Exp $
+$Id: ToDoList.txt,v 1.104 2004/05/08 04:40:39 evands Exp $
 
 
 Legend
@@ -113,6 +113,12 @@ Other:
 -------------------------------------------------------------------------------------------------------
 Big Stuff
 -------------------------------------------------------------------------------------------------------
+
+Menu controller:
+	Destroy it and replace it with something that isn't so nasty.  The menu system at present validating every single 
+	menu item on every single menu whenever any menu is clicked.  This is incredibly inefficient, especially as the number
+	of menu items grows and the complexity of the tasks they are called onto perform to validate does, as well. For example,
+	clicking the Window menu should not require querying the currently selected contact to see if it can receive a file.
 
 Contact alerts:
 	Improve the contact alerts interface, reducing all editing to one window that is easier to use.
