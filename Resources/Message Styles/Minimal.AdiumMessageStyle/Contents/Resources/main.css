@@ -54,11 +54,11 @@ a { text-decoration: none; }
 	font-weight: normal;
 	position: relative;
 	top: 0px;
-	left: -1px;
+	left: -10px;
 	text-align: right;
 	width: 10px;
 	float: left;
-	margin-right: 2px;
+	margin-right: -8px;
 }
 
 .sender { text-align: left; }
@@ -118,7 +118,7 @@ a { text-decoration: none; }
 }
 
 .placeholder_next {
-	margin-left: 18px;
+	margin-left: 30px;
 }
 
 .placeholder_next[visible="Incoming/buddy_icon.png"], .placeholder_next[visible="Outgoing/buddy_icon.png"] {
