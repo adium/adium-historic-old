@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.91 2004/08/12 14:18:58 adamiser Exp $
+//$Id: AIPluginController.m,v 1.92 2004/08/15 20:47:38 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -149,7 +149,6 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin;
 	[self loadPluginWithClass:[DCInviteToChatPlugin class]];
 	[self loadPluginWithClass:[ESAccountNetworkConnectivityPlugin class]];
 	[self loadPluginWithClass:[ESMetaContactContentsPlugin class]];
-
 	
 	//	[self loadPluginWithClass:[AISMViewPlugin class]];
 		

@@ -113,10 +113,12 @@ typedef enum {
 - (AIChat *)existingChatWithContact:(AIListContact *)inContact;
 - (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo;
 - (AIChat *)existingChatWithName:(NSString *)inName onAccount:(AIAccount *)account;
+- (AIChat *)openChat:(AIChat *)chat;
 - (BOOL)closeChat:(AIChat *)inChat;
 - (NSArray *)chatArray;
 - (BOOL)switchToMostRecentUnviewedContent;
 - (void)switchChat:(AIChat *)chat toAccount:(AIAccount *)newAccount;
+- (void)switchChat:(AIChat *)chat toListContact:(AIListContact *)newContact;
 
 //Status
 - (void)registerChatObserver:(id <AIChatObserver>)inObserver;

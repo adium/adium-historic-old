@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.104 2004/08/12 14:18:27 adamiser Exp $
+// $Id: AIContentController.m,v 1.105 2004/08/15 20:47:38 evands Exp $
 
 #import "AIContentController.h"
 
@@ -680,7 +680,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 	//If we're dealing with a meta contact, open a chat with the preferred contact for this meta contact
 	//It's a good idea for the caller to pick the preferred contact for us, since they know the content type
 	//being sent and more information - but we'll do it here as well just to be safe.
-#warning WRONG
+
 	if ([inContact isKindOfClass:[AIMetaContact class]]){
 		inContact = [[owner contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
 															   forListContact:inContact];
@@ -699,7 +699,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 			break;
 		}
 		
-		//If this object is within a meta contact, and a chat for and object in that meta contact already exists
+		//If this object is within a meta contact, and a chat for an object in that meta contact already exists
 		if([[inContact containingObject] isKindOfClass:[AIMetaContact class]] && 
 		   [[chat listObject] containingObject] == [inContact containingObject]){
 
@@ -790,6 +790,17 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 	return(chat);
 }
 
+- (AIChat *)openChat:(AIChat *)chat
+{
+	if(chat){		
+		if (![chatArray containsObjectIdenticalTo:chat]){
+			[chatArray addObject:chat];
+		}
+		
+		[[owner interfaceController] openChat:chat]; 
+	}
+}
+
 - (AIChat *)existingChatWithName:(NSString *)inName onAccount:(AIAccount *)account
 {
 	NSEnumerator	*enumerator;
@@ -826,32 +837,39 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
     return(YES);
 }
 
-//Switch a chat from one account to another
+//Switch a chat from one account to another, updating the target list contact to be an 'identical' one on the target account.
 - (void)switchChat:(AIChat *)chat toAccount:(AIAccount *)newAccount
 {
-	AIListContact	*oldContact = (AIListContact *)[chat listObject];
-	AIListContact	*newContact = [[owner contactController] contactWithService:[oldContact serviceID] accountID:[newAccount uniqueObjectID] UID:[oldContact UID]];
+	AIAccount	*oldAccount = [chat account];
+	if (newAccount != oldAccount){
+		//Hang onto stuff until we're done
+		[chat retain];
 
-	//Hang onto stuff until we're done
-	[chat retain];
-	[oldContact retain];
-	
-	//Close down the chat on account A
-	[chat removeParticipatingListObject:oldContact];
-	[(AIAccount<AIAccount_Content> *)[chat account] closeChat:chat];
-	
-	//Open the chat on account B 
-	[chat addParticipatingListObject:newContact];
-	[(AIAccount<AIAccount_Content> *)newAccount openChat:chat];
-	[chat setAccount:newAccount];
-	
-	//Let everyone else know we switched the account of this chat
-	[[owner notificationCenter] postNotificationName:Content_ChatAccountChanged object:chat];
-	
-	//Clean up
-	[chat release];
-	[oldContact release];
+		//Close down the chat on account A
+		[(AIAccount<AIAccount_Content> *)oldAccount closeChat:chat];
+		
+		//Open the chat on account B
+		[chat setAccount:newAccount];
+		[(AIAccount<AIAccount_Content> *)newAccount openChat:chat];
+		
+		//Clean up
+		[chat release];
+		
+		//We want to keep the same destination for the chat but switch it to a listContact on the desired account.
+		[self switchChat:chat toListContact:[chat listObject]];
+	}
 }
+
+//Switch the list contact of the account; this does not change the source account - use switchChat:toAccount: for that.
+- (void)switchChat:(AIChat *)chat toListContact:(AIListContact *)inContact
+{
+	//Switch the inContact over to a contact on the new account so we send messages to the right place.
+	AIListContact	*newContact = [[owner contactController] contactWithService:[inContact serviceID]
+																	  accountID:[[chat account] uniqueObjectID]
+																			UID:[inContact UID]];
+	[chat setListObject:newContact];
+}
+
 
 //Returns all chats with the object
 - (NSArray *)allChatsWithListObject:(AIListObject *)inObject
@@ -887,7 +905,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 - (BOOL)switchToMostRecentUnviewedContent
 {
 	AIChat  *newActiveChat = nil;
-	
+
     if(mostRecentChat && [mostRecentChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
 		//First choice: switch to the chat which received chat most recently if it has unviewed content
 		newActiveChat = mostRecentChat;

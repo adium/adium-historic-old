@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.171 2004/08/12 23:08:02 evands Exp $
+// $Id: AIContactController.m,v 1.172 2004/08/15 20:47:37 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -936,10 +936,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		if ([contact online] || includeOffline){
 			
 			if (!serviceImage){
-				menuServiceImage = [[[[owner accountController] serviceControllerWithIdentifier:[contact serviceID]] handleServiceType] menuImage];
+				menuServiceImage = [[[owner accountController] firstServiceTypeWithServiceID:[contact serviceID]] menuImage];
 			}
 			
-			NSMenuItem *tempItem = [[NSMenuItem alloc] initWithTitle:[contact displayName]
+			NSMenuItem *tempItem = [[NSMenuItem alloc] initWithTitle:[contact formattedUID]
 															  target:target
 															  action:@selector(selectContainedContact:)
 													   keyEquivalent:@""];
@@ -1458,9 +1458,21 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			//Place new contacts at the bottom of our list (by giving them the largest ordering index)
 			largestOrder += 1.0;
 			[contact setOrderIndex:largestOrder];
+
+			//Do the update thing
+			[self _updateAllAttributesOfObject:contact];
+
+			//Check to see if we should add to a metaContact
+			AIMetaContact *metaContact = [contactToMetaContactLookupDict objectForKey:[contact uniqueObjectID]];
+			if (metaContact){
+				/* We already know to add this object to the metaContact, since we did it before with another object, 
+				   but this particular listContact is new and needs to be added directly to the metaContact
+				   (on future launches, the metaContact will obtain it automatically since all contacts matching this UID
+				   and serviceID should be included). */
+				[self _performAddListObject:contact toMetaContact:metaContact];
+			}
 			
 			//Add
-			[self _updateAllAttributesOfObject:contact];
 			[contactDict setObject:contact forKey:key];
 		}
 	}
