@@ -31,17 +31,6 @@
 	}
 }
 
-//
-- (NSColor *)flippyColor
-{
-	return([NSColor whiteColor]);
-}
-
-- (NSColor *)textColor
-{
-	return([NSColor whiteColor]);
-}
-
 //Draw a gradient behind our group
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
@@ -59,6 +48,7 @@
 //Shadow our text to make it prettier
 - (NSDictionary *)additionalLabelAttributes
 {
+#warning 10.3 only
 	NSShadow	*shadow = [[[NSShadow alloc] init] autorelease];
 	
 	[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
