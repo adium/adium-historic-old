@@ -26,6 +26,7 @@
 				@"Adium-ContactIdle", CONTACT_STATUS_IDLE_YES,
 				@"Adium-ContactUnidle", CONTACT_STATUS_IDLE_NO,
 				@"Adium-NewMessage", Content_FirstContentRecieved,
+				@"Adium-MessageWhileHidden", Content_DidReceiveContent,
 				nil];
 	
 	//Launch Growl if needed
@@ -73,7 +74,8 @@
 	NSData   * iconData = nil;
 	
 	//shamlessly ripped from the event bezel :)
-	if([notificationName isEqualToString:Content_FirstContentRecieved]) {
+	if([notificationName isEqualToString:Content_FirstContentRecieved] ||
+		[notificationName isEqualToString:Content_DidReceiveContent]) {
 		NSArray *participatingListObjects = [[notification object] participatingListObjects];
 		if([participatingListObjects count]){
 			contact = [participatingListObjects objectAtIndex:0];
@@ -93,20 +95,25 @@
 		title = contactName;
 		
 		if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
-			description = AILocalizedString(@"came online",nil);
+			description = AILocalizedString(@"came online","");
 		}else if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
-			description = AILocalizedString(@"went offline",nil);
+			description = AILocalizedString(@"went offline","");
 		}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]) {
-			description = AILocalizedString(@"went away",nil);
+			description = AILocalizedString(@"went away","");
 		}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]) {
-			description = AILocalizedString(@"is available",nil);
+			description = AILocalizedString(@"is available","");
 		}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]) {
-			description = AILocalizedString(@"is idle",nil);
+			description = AILocalizedString(@"is idle","");
 		}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]) {
-			description = AILocalizedString(@"is no longer idle",nil);
-		}else if([notificationName isEqualToString: Content_FirstContentRecieved]) {
+			description = AILocalizedString(@"is no longer idle","");
+		}else if([notificationName isEqualToString: Content_FirstContentRecieved]){
 			message = [[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] string];
-			description = [NSString stringWithFormat: AILocalizedString(@"%@",nil), message];
+			description = [NSString stringWithFormat: AILocalizedString(@"%@","New content notification"), message];
+		}else if([notificationName isEqualToString: Content_DidReceiveContent]) {
+			if(![NSApp isHidden])
+				return;
+			message = [[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] string];
+			description = [NSString stringWithFormat: AILocalizedString(@"%@","Message notification while hidden"), message];
 		}else{
 			description = @"OMGWTFBBQ!";
 		}
