@@ -151,7 +151,7 @@
             invertedColor = signedOnInvertedColor;
             labelColor = signedOnLabelColor;
             
-        }else if(typingEnabled && [inObject integerStatusObjectForKey:@"Typing"]){
+        }else if(typingEnabled && ([inObject integerStatusObjectForKey:@"Typing"] == AITyping)){
             color = typingColor;
             invertedColor = typingInvertedColor;
             labelColor = typingLabelColor;
