@@ -28,7 +28,7 @@
 														 target:self 
 														 action:@selector(toggleMenuItem:)
 												  keyEquivalent:@""];
-    [[adium menuController] addMenuItem:[NSMenuItem separatorItem] toLocation:LOC_View_General];		
+    [[adium menuController] addMenuItem:(NSMenuItem *)[NSMenuItem separatorItem] toLocation:LOC_View_General];		
     [[adium menuController] addMenuItem:visibleCountingMenuItem toLocation:LOC_View_General];		
 
     allCountingMenuItem     = [[NSMenuItem alloc] initWithTitle:ALL_COUNTING_MENU_ITEM_TITLE
