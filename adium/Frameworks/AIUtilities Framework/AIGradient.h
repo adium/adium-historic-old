@@ -27,6 +27,8 @@ typedef enum {
 + (AIGradient*)gradientWithFirstColor:(NSColor*)inColor1
 						  secondColor:(NSColor*)inColor2
 							direction:(AIDirection)inDirection;
++ (AIGradient*)selectedControlGradientWithDirection:(AIDirection)inDirection;
+
 - (id)initWithFirstColor:(NSColor*)inColor1
 			 secondColor:(NSColor*)inColor2
 			   direction:(AIDirection)inDirection;

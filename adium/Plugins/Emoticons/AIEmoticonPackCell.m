@@ -32,15 +32,13 @@
     NSEnumerator    *enumerator;
     AIEmoticon      *emoticon;
     NSColor         *textColor;
-    NSColor         *highlightColor;
     int             x;
     
     //Indent
     cellFrame.origin.x += EMOTICON_LEFT_MARGIN;
     
     //Determine the correct text color
-    highlightColor = [self highlightColorWithFrame:cellFrame inView:controlView];
-    if([self isHighlighted] && [highlightColor isEqual:[NSColor alternateSelectedControlColor]]){
+    if([self isHighlighted]){
         textColor = [NSColor alternateSelectedControlTextColor];
     }else{
         textColor = [NSColor controlTextColor];
