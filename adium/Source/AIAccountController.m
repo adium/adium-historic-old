@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.37 2003/12/22 17:54:38 adamiser Exp $
+// $Id: AIAccountController.m,v 1.38 2003/12/22 19:04:27 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -76,7 +76,7 @@
 - (void)finishIniting
 {
     //### TEMPORARY (OLD ACCOUNT PREFERENCE IMPORT CODE) #######
-    NSArray     *oldAccountArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_ACCOUNTS] objectForKey:ACCOUNT_LIST];
+    NSArray     *oldAccountArray = [[[owner preferenceController] preferencesForGroup:@"Accounts"] objectForKey:ACCOUNT_LIST];
     if(oldAccountArray && [oldAccountArray count]){
 	NSMutableArray     *importedAccounts = [NSMutableArray array];
 	NSLog(@"Importing old accounts");
@@ -105,6 +105,7 @@
 	}
 	
 	[self saveAccounts:importedAccounts];
+	[[owner preferenceController] setPreference:nil forKey:@"Accounts" group:ACCOUNT_LIST];
     }
     //#########################################################
     
