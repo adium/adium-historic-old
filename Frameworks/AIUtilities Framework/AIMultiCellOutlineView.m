@@ -162,7 +162,7 @@
 		
 		//Draw the cell
 		NSRect	cellFrame = [self frameOfCellAtColumn:0 row:row];
-		if([[self selectedRowIndexes] containsIndex:row]) [cell _drawHighlightWithFrame:cellFrame inView:self];
+		if([self isRowSelected:row]) [cell _drawHighlightWithFrame:cellFrame inView:self];
 		[cell drawWithFrame:cellFrame inView:self];
 	}
 }
@@ -339,50 +339,44 @@
 
 - (void)highlightSelectionInClipRect:(NSRect)clipRect
 {
-#warning 10.3 only
 	if(drawsSelectedRowHighlight && (!drawHighlightOnlyWhenMain || [[self window] isMainWindow])){
-		NSIndexSet *indices = [self selectedRowIndexes];
-		unsigned int bufSize = [indices count];
-		unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
-		unsigned int i;
-		NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
-		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
-		
-		for(i = 0; i < bufSize; i++) {
-			unsigned int startIndex = buf[i];
-			unsigned int endIndex = startIndex;
+		//Apple wants us to do some pretty crazy stuff for selections in 10.3
+		//We'll continue to use the old simpler cleaner safer easier method for 10.2
+		if([NSApp isPantherOrBetter]){
+			NSIndexSet *indices = [self selectedRowIndexes];
+			unsigned int bufSize = [indices count];
+			unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
+			unsigned int i;
 			
-			//Process the selected rows in clumps
-#warning This code merges consecutive selected rows into the same gradient, do we want this?
-			while(i < bufSize-1 && buf[i+1] == endIndex + 1){
-				i++;
-				endIndex++;
+			NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
+			[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
+			
+			for(i = 0; i < bufSize; i++) {
+				[self _drawRowSelectionInRect:[self rectOfRow:buf[i]]];
 			}
 			
-			NSLog(@"select from %i to %i",startIndex,endIndex);
+			free(buf);
+		}else{
+			NSEnumerator	*enumerator = [self selectedRowEnumerator];
+			NSNumber		*rowNumber;
 			
-			NSRect selectRect;
-			if(startIndex == endIndex){
-				selectRect = [self rectOfRow:startIndex];
-			}else{
-				selectRect = NSUnionRect([self rectOfRow:startIndex],[self rectOfRow:endIndex]);
+			while(rowNumber = [enumerator nextObject]){
+				[self _drawRowSelectionInRect:[self rectOfRow:[rowNumber intValue]]];
 			}
-			
-			//Draw the gradient
-			AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
-			[gradient drawInRect:selectRect];
-			
-			//Draw a line at the light side, to make it look a lot cleaner
-			selectRect.size.height = 1;
-			[[NSColor alternateSelectedControlColor] set];
-			NSRectFillUsingOperation(selectRect, NSCompositeSourceOver);
-			
-			
-			//
 		}
-		
-		free(buf);
 	}
+}
+
+- (void)_drawRowSelectionInRect:(NSRect *)rect
+{
+	//Draw the gradient
+	AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
+	[gradient drawInRect:selectRect];
+	
+	//Draw a line at the light side, to make it look a lot cleaner
+	selectRect.size.height = 1;
+	[[NSColor alternateSelectedControlColor] set];
+	NSRectFillUsingOperation(selectRect, NSCompositeSourceOver);
 	
 }
 
