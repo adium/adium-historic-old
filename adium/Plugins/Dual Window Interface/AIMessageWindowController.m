@@ -310,6 +310,7 @@
     NSArray					*viewArrayCopy = [[[tabView_messages tabViewItems] copy] autorelease]; //the array will change as we remove views, so we must work with a copy
     NSEnumerator			*enumerator;
     AIMessageTabViewItem	*tabViewItem;
+	AIChat					*chat;
 
     //Close down
     windowIsClosing = YES; //This is used to prevent sending more close commands than needed.
@@ -318,7 +319,10 @@
     //Close all our tabs
     enumerator = [viewArrayCopy objectEnumerator];
     while((tabViewItem = [enumerator nextObject])){
-        [[adium interfaceController] closeChat:[[tabViewItem messageViewController] chat]];
+		chat = [[tabViewItem messageViewController] chat]
+		if (chat){
+			[[adium interfaceController] closeChat:chat];
+		}
     }
 
     return(YES);
