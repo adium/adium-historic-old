@@ -18,6 +18,8 @@
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 
+#define MAX_HISTORY	25
+
 @interface AISendingTextView (PRIVATE)
 - (void)dealloc;
 @end
@@ -47,8 +49,9 @@
     sendOnReturn = YES;
     sendOnEnter = YES;
     returnArray = [[NSMutableArray alloc] init];
+    historyArray = [[NSMutableArray alloc] init];
     availableForSending = YES;
-
+    currentHistoryLocation = -1;
     [self setDrawsBackground:YES];
 
     //
@@ -94,12 +97,47 @@
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
 {
     BOOL result = NO;
-
+    unichar theChar = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
     //check for command-return to send the message
-    if([[theEvent charactersIgnoringModifiers] characterAtIndex:0] == '\r'){
-        if(availableForSending) [target performSelector:selector]; //Notify the target
-    
-        result = YES;
+    switch (theChar)
+    {
+	case '\r':
+	    if(availableForSending) [target performSelector:selector]; //Notify the target
+	    result = YES;
+	    break;
+	case '\E':
+	    [self setString:@""];
+	    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
+	    result = YES;
+	    break;
+    }
+    if ([theEvent modifierFlags] & NSCommandKeyMask) { //command is being held
+	int historyArrayCount;
+	switch (theChar)
+	{
+	case (NSUpArrowFunctionKey): 
+	    if ((historyArrayCount = [historyArray count])) {
+		if ( currentHistoryLocation == -1) {
+		    currentHistoryLocation = (historyArrayCount-1);
+		} else if ( currentHistoryLocation > 0 ) {
+		    currentHistoryLocation--;
+		    [self setAttributedString:[historyArray objectAtIndex:currentHistoryLocation]];
+		    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
+		}
+	    }
+	    break;
+	case (NSDownArrowFunctionKey):
+	    if ((historyArrayCount = [historyArray count])) {
+		if ( (++currentHistoryLocation) > historyArrayCount) {
+		    [self setString:@""];
+		    currentHistoryLocation = -1;
+		} else {
+		    [self setAttributedString:[historyArray objectAtIndex:currentHistoryLocation]];
+		    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
+		}
+	    }
+	    break;
+	}
     }
 
     return(result);
@@ -215,7 +253,14 @@
     }
 }
 
+- (void)addToHistory:(NSAttributedString *)inString
+{
+    [historyArray addObject:inString]; //manage size?
 
+    if ([historyArray count] > MAX_HISTORY){
+	[historyArray removeObjectAtIndex:0];
+    }
+}
 //Contact menu ---------------------------------------------------------------
 //Set and return the selected contact (to auto-configure the contact menu)
 - (void)setChat:(AIChat *)inChat
