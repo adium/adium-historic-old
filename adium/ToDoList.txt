@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.31 2004/04/09 04:17:36 evands Exp $
+$Id: ToDoList.txt,v 1.32 2004/04/10 22:21:14 evands Exp $
 
 Legend
 + Change or Addition
@@ -19,15 +19,12 @@ Bugs
 * Contact list flippy triangles are white behind them in 10.2 [Colin]
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * Is TOC2 hiding somewhere? Check out: http://www.visualdistortion.org/crash/view.jsp?crash=7680
-* Deleting a "new account" doesn't display <New Account> as the name in  the resulting confirmation dialogue [Fixed in Patch Tracker, waiting on sourceforge to stop being dumb]
-* Version checker reports 'up to date' when there is no net connection (and when the server cannot be reached?) [Fixed in Patch Tracker, waiting on sourceforge to stop being dumb]
 * We aren't processing <code> tags in our HTML decoder (Jabber uses them)
 * Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
 * User icons are still getting flipped.  We need to determine if they're from libgaim or from the address book.
 * Changing an alias in the inspector does not correctly update the contact list
 * Yahoo giving some users a Gaim error: unknown error 29 on connect
 * Some URLs in profiles aren't allowing clicks properly.
-* Spaces in the address book STILL don't work properly, and they really should be better now. Grr.
 * We have a 10.2.8 crash in contact list resize code, somehow: http://www.visualdistortion.org/crash/view.jsp?crash=8008 (There are a couple like this)
 -------------------------------------------------------------------------------------------------------
 Minor Changes
@@ -35,7 +32,7 @@ Minor Changes
 Contacts:
 	+ Allow specifying an image for a contact in the inspector (Independent of address book)
 	+ Add to buddy list menu item, contextual menu item (for strangers)
-	+ Add area for typing contact notes to inspector, display notes in tooltip
+	+ Add area for typing contact notes to inspector, display notes in tooltip [Brian]
 
 Alerts:
 	+ Allow user to have more control over what is spoken by the announcer plugin
@@ -50,6 +47,7 @@ Accounts:
 	+ Allow user to cancel connecting of accounts
 	+ Auto-complete aliases in log viewer
 	+ Add account specific proxy fields (Type, host, port) for all libgaim connections [Evan]
+	+ Standardize on the service description for Oscar accounts - do something like "AIM, ICQ, and .Mac" in the services dropdown, in the new message prompt, etc.
 	
 WebKit Message View:
 	+ Add preference to switch active style, preview styles
@@ -61,7 +59,6 @@ Message Window:
         I don't know quite what to do here. I'd like some guideance. <<< I never got any guidence, dammit! :P
 	+ Insert emoticon menu item, contextual menu item
 	+ Tab-complete usernames in messages and chat
-	+ Remember last X lines of previous conversation, restore to new message windows [Dave]
 	
 Contact List Display:
 	+ Small contact list icon to identify mobile device users
@@ -210,64 +207,68 @@ Unfixable(?) Issues
 -------------------------------------------------------------------------------------------------------
 Waiting On
 -------------------------------------------------------------------------------------------------------
-+ Ability to view all currently blocked users  (Libgaim does not yet have support for accessing the privacy settings)
-
 
 -------------------------------------------------------------------------------------------------------
 Done
 -------------------------------------------------------------------------------------------------------
 Bug Fixes:
 = Account name not displaying correctly after service switch
-= Message tabs are not refreshing correctly when status changes (Fixed?)
-= Stray tab divider is displaying when dragging tabs
-= When dragging a tab off quickly, it is possible for the tab bar to not finish moving to the correct position or to crash.
-= Mousekeys to move tabs causes a crash: http://www.visualdistortion.org/crash/view.jsp?crash=5930
+= accountXferDestroy in CBGaimAccount appears to be doing.. something.. wrong, causing a lot of file transfer crashes.
+= 'Auto-Away' controls do not dim when there are no away messages (configureControlDimming overrides savedAwaysMenu)
+= 'Auto-Away' menu dimming does not refresh when away messages are changed
+= 'Auto-Away' menu does not refresh when away messages are changed
+= Auto-Idle does not remove when 'Auto-Away' is turned on (Set them both to 1 minute, wait, click 'return', idle stays)
+= Contact alerts window is still registering for a notification when the account changed, but not implementing an action method.
 = Contact list display format preference not applying correctly on launch
-= Window content is drawing 2 pixels to the left when dragging tabs
-= Prevent cmd-delete from working in the message window
+= Deleting a "new account" doesn't display <New Account> as the name in  the resulting confirmation dialogue
+= Deleting the default theme makes the prefs crash on subsequent loads.
+= If preferences are selected to advanced on close, the window will be vertically small on re-open.
+= In certain fonts, the tails of letters will stain in the text entry field after it clears.  This is visible with HoeflerText(size 12) - type a few j's and then press esc to clear the field. (hehe)
 = Libgaim disconnect errors are being displayed, and not ignored (since they are handled internally)
+= Message tabs are not refreshing correctly when status changes (Fixed?)
+= Mousekeys to move tabs causes a crash: http://www.visualdistortion.org/crash/view.jsp?crash=5930
 = Preference window crashes if you have a color picker open, close the window, and then click inside the picker.  The colorwell just needs to be told activate:NO in viewWillClose.  Fixing this requires verifying that viewWillClose is being called on advan
-ced preference panes.
+= Prevent cmd-delete from working in the message window
 = Pushing escape clears the text field, instead of allowing you to convert from kanji to roman. This can be considered a bug, but some people like the escape key to be used to clear the text field too, so maybe this could be a preference or something.
 	Evan: I say we just take this nonstandard 'feature' out.
 	Colin: It's not nonstandard and it's a good feature.
 	Evan: Okay, okay, popular response has been that they love it.  We'll think about a revised Keybaord preferences, perhaps in the Sending tab, to encapsulate this and maybe other preferences?
-= 'Auto-Away' controls do not dim when there are no away messages (configureControlDimming overrides savedAwaysMenu)
-= 'Auto-Away' menu does not refresh when away messages are changed
-= 'Auto-Away' menu dimming does not refresh when away messages are changed
-= Auto-Idle does not remove when 'Auto-Away' is turned on (Set them both to 1 minute, wait, click 'return', idle stays)
-= In certain fonts, the tails of letters will stain in the text entry field after it clears.  This is visible with HoeflerText(size 12) - type a few j's and then press esc to clear the field. (hehe)
-= Contact alerts window is still registering for a notification when the account changed, but not implementing an action method.
-= Deleting the default theme makes the prefs crash on subsequent loads.
-= accountXferDestroy in CBGaimAccount appears to be doing.. something.. wrong, causing a lot of file transfer crashes.
-= If preferences are selected to advanced on close, the window will be vertically small on re-open.
+= Spaces in the address book STILL don't work properly, and they really should be better now. Grr.
+= Stray tab divider is displaying when dragging tabs
+= Version checker reports 'up to date' when there is no net connection (and when the server cannot be reached?)
+= When dragging a tab off quickly, it is possible for the tab bar to not finish moving to the correct position or to crash.
+= Window content is drawing 2 pixels to the left when dragging tabs
+ced preference panes.
+
 
 Features & Changes:
-= Add support for displaying emoticon images (webkit message view)
-= Add Offline status coloring
-= Remove sorting preferences.  Consolidate these and place them in the view menu - (Evan: MINOR CHANGE?! I'm hurt.)
-= Move user name field out of account code and into account list preferences code
-= Display 'New Account' in account list for accounts without a UID
-= Add dividers to view menu
-= Change window cycling menu items to 'Previous Chat' 'Next Chat'
-= Add a 'None' soundset 
-= iTunes script runner should load scripts from the Application Support directory
-= iTunes %_status script should display "Not Playing" when iTunes isn't open
 = Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
-= We probably need a default priority preference.
-= Revamp emoticons preferences
-= Make source list display all available emoticon packs
+= Add a 'None' soundset 
 = Add checkboxes in source list to enable/disable packs
+= Add dividers to view menu
+= Add Offline status coloring
+= Add support for displaying emoticon images (webkit message view)
 = Add support for the scrolling / paging keys in the WebKit View
-= Tab scrubbing.  If control is held when mousing over a tab, select that tab
-= Make option-clicking a tab close button close all other tabs
-= WebKit: Add support for displaying buddy icons using the UserIconPath status object
-= Webkit: Add keypress forwarding
 = Auto-complete aliases in New Message prompt
-= Create new account, tab from username->pass->account list.  Next tab should go back to username
-= Remove "per-contact" window position/size saving.  Use size/position of last window, cascade new ones 
+= Change window cycling menu items to 'Previous Chat' 'Next Chat'
 = Clean up emoticon preference layout.  Move checkbox next to pack name, align icons, adjust padding, etc.
-= Make the "Custom Tab Status Coloring" preferences work as intended (if disabled, the contact list labels colors are used for tab text colors).
-= Remove submenus from accounts in the File menu
-= Make selecting an account in the menu connect / disconnect
+= Create new account, tab from username->pass->account list.  Next tab should go back to username
+= Display 'New Account' in account list for accounts without a UID
 = Interact with libgaim via a thread to avoid beachballing (Wait for Scott's patch - libgaim 0.76!, should fix)
+= iTunes %_status script should display "Not Playing" when iTunes isn't open
+= iTunes script runner should load scripts from the Application Support directory
+= Make option-clicking a tab close button close all other tabs
+= Make selecting an account in the menu connect / disconnect
+= Make source list display all available emoticon packs
+= Make the "Custom Tab Status Coloring" preferences work as intended (if disabled, the contact list labels colors are used for tab text colors).
+= Move user name field out of account code and into account list preferences code
+= Remember last X lines of previous conversation, restore to new message windows [Dave]
+= Remove "per-contact" window position/size saving.  Use size/position of last window, cascade new ones 
+= Remove sorting preferences.  Consolidate these and place them in the view menu - (Evan: MINOR CHANGE?! I'm hurt.)
+= Remove submenus from accounts in the File menu
+= Revamp emoticons preferences
+= Tab scrubbing.  If control is held when mousing over a tab, select that tab
+= We probably need a default priority preference.
+= Webkit: Add keypress forwarding
+= WebKit: Add support for displaying buddy icons using the UserIconPath status object
+
