@@ -19,20 +19,20 @@
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 
-#define LOG_INDEX_NAME                          @"Logs_%@.index"
-#define DIRTY_LOG_ARRAY_NAME                    @"DirtyLogs_%@.plist"
-#define KEY_LOG_INDEX_VERSION                   @"Log Index Version"
+#define LOG_INDEX_NAME				@"Logs_%@.index"
+#define DIRTY_LOG_ARRAY_NAME		@"DirtyLogs_%@.plist"
+#define KEY_LOG_INDEX_VERSION		@"Log Index Version"
 
-#define LOG_INDEX_STATUS_INTERVAL               20      //Interval before updating the log indexing status
-#define LOG_CLEAN_SAVE_INTERVAL                 500     //Number of logs to index continuiously before saving the dirty array and index
+#define LOG_INDEX_STATUS_INTERVAL	20      //Interval before updating the log indexing status
+#define LOG_CLEAN_SAVE_INTERVAL		500     //Number of logs to index continuiously before saving the dirty array and index
 
-#define LOG_VIEWER	    			AILocalizedString(@"Log Viewer",nil)
-#define VIEW_CONTACTS_LOGS                      AILocalizedString(@"View Contact's Logs",nil)
-#define VIEW_LOGS	    			AILocalizedString(@"View Logs",nil)
+#define LOG_VIEWER					AILocalizedString(@"Log Viewer",nil)
+#define VIEW_CONTACTS_LOGS			AILocalizedString(@"View Contact's Logs",nil)
+#define VIEW_LOGS					AILocalizedString(@"View Logs",nil)
 
 #define	CURRENT_LOG_VERSION			3       //Version of the log index.  Increase this number to reset everyones index.
 
-#define	LOG_VIEWER_IDENTIFIER                   @"LogViewer"
+#define	LOG_VIEWER_IDENTIFIER		@"LogViewer"
 
 @interface AILoggerPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -264,7 +264,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 - (NSString *)stringForContentMessage:(AIContentMessage *)content
 {
 	NSString		*date = [[content date] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES
-																													 showingAMorPM:NO]
+																													 showingAMorPM:YES]
 																 timeZone:nil
 																   locale:nil];
 	NSAttributedString      *message = [[content message] safeString];
@@ -308,7 +308,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 - (NSString *)stringForContentStatus:(AIContentStatus *)content
 {
 	NSString		*date = [[content date] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES
-																													 showingAMorPM:NO]
+																													 showingAMorPM:YES]
 																 timeZone:nil
 																   locale:nil];
 	NSString		*message = [[content message] string];
