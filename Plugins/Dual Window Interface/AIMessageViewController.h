@@ -62,6 +62,7 @@
 - (void)addToTextEntryView:(NSAttributedString *)inString;
 - (void)setShouldSendMessagesToOfflineContacts:(BOOL)should;
 - (IBAction)sendMessageLater:(id)sender;
+- (BOOL)userListVisible;
 
 @end
 
