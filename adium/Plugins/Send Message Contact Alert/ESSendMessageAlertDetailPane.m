@@ -55,7 +55,7 @@
 	
 	NSAttributedString  *messageText = [[[NSAttributedString alloc] initWithData:[inDetails objectForKey:KEY_MESSAGE_SEND_MESSAGE]] autorelease];
 	if(messageText){
-		[textView_message setAttributedString:messageText];
+		[[textView_message textStorage] setAttributedString:messageText];
 	}else{
 		[textView_message setString:@""];
 	}
@@ -70,7 +70,7 @@
 		[toListObject uniqueObjectID], KEY_MESSAGE_SEND_TO,
 		[[[popUp_messageFrom selectedItem] representedObject] uniqueObjectID], KEY_MESSAGE_SEND_FROM,
 		[NSNumber numberWithBool:[button_useAnotherAccount state]], KEY_MESSAGE_OTHER_ACCOUNT,
-		[textView_message dataRepresentation], KEY_MESSAGE_SEND_MESSAGE,
+		[[textView_message textStorage] dataRepresentation], KEY_MESSAGE_SEND_MESSAGE,
 		nil]);
 }
 
