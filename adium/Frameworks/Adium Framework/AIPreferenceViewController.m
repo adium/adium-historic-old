@@ -76,7 +76,7 @@
         NSRect	containerFrame = [view_containerView frame];
  
         //Set our colored box to a sexy blue
-        [view_coloredBox setColor:[NSColor colorWithCalibratedRed:(66.0/255.0) green:(132.0/255.0) blue:(217.0/255.0) alpha:0.4]];
+        //[view_coloredBox setColor:[NSColor colorWithCalibratedRed:(66.0/255.0) green:(132.0/255.0) blue:(217.0/255.0) alpha:0.4]];
         
         //Make the container view the correct height to fit the new preference view
         containerFrame.size.height -= [view_containerSubView frame].size.height;

@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#define FIXED_CATEGORY_WIDTH		450		//The fixed width of an empty category
+#define FIXED_CATEGORY_WIDTH		500		//The fixed width of an empty category
 
 @class AIPreferenceViewController;
 
