@@ -43,7 +43,7 @@
 
 - (void)dealloc
 {
-	[containedObjects release];
+	[containedObjects release]; containedObjects = nil;
 	
 	[super dealloc];
 }
