@@ -150,21 +150,28 @@ static NSMenu       *eContextualMenu = nil;
         AIEmoticonPack *selectedPack = nil;
         AIEmoticon *selectedEmoticon;
         id object;
-        NSEnumerator *menuEnum = [[eMenu itemArray] objectEnumerator];
-        while(object = [menuEnum nextObject])
-        {
-            if([object submenu] == [sender menu])
+        if([sender isKindOfClass:[NSMenuItem class]]){
+            NSEnumerator *menuEnum = [[[[sender menu] supermenu] itemArray] objectEnumerator];
+            while(object = [menuEnum nextObject])
             {
-                selectedPack = [emoticonPacks objectAtIndex:[[eMenu itemArray] indexOfObject:object]];
+                if([object submenu] == [sender menu])
+                {
+                    selectedPack = [emoticonPacks objectAtIndex:[[[[sender menu] supermenu] itemArray] indexOfObject:object]];
+                }
+            }
+            
+            if (selectedPack) {
+                    selectedEmoticon = [[selectedPack emoticons] objectAtIndex:[[sender menu] indexOfItem:sender]];
+                    emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
             }
         }
-		if (selectedPack) {
-			selectedEmoticon = [[selectedPack emoticons] objectAtIndex:[[sender menu] indexOfItem:sender]];
-			emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
-		}
     }
     NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
     if(emoString && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
+        NSRange tmpRange = [(NSTextView *)responder selectedRange];
+        if(0 != tmpRange.length){
+            [(NSTextView *)responder setSelectedRange:NSMakeRange((tmpRange.location + tmpRange.length),0)];
+        }
         [responder insertText:emoString];
     }
 }
