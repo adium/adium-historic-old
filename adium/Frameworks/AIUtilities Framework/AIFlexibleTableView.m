@@ -65,6 +65,7 @@
     contentsHeight = 0;
     forwardsKeyEvents = NO;
     selectClicks = 1;
+    contentOrigin = NSMakePoint(0, 0);
 
     contentBottomAligned = YES;
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
@@ -106,7 +107,7 @@
     NSEnumerator		*rowEnumerator;
     AIFlexibleTableRow		*row;
     NSRect			documentVisibleRect;
-    NSPoint			cellPoint = NSMakePoint(0, contentsHeight - VIEW_PADDING_BOTTOM);
+    NSPoint			cellPoint = contentOrigin;
     BOOL			foundVisible = NO;
     
     //Get our visible rect (we don't want to draw non-visible rows)
@@ -270,7 +271,7 @@
 {
     NSEnumerator		*rowEnumerator;
     AIFlexibleTableRow		*row;
-    NSPoint			rowPoint = NSMakePoint(0, contentsHeight - VIEW_PADDING_BOTTOM);
+    NSPoint			rowPoint = contentOrigin;
 
     //Deselect all
     [self _deselectAll];
@@ -386,7 +387,7 @@
 //Reset cursor tracking for cells within the passed visible rect.  Pass an empty visible rect to remove all cursor tracking
 - (void)_resetCursorRectsForVisibleRect:(NSRect)visibleRect
 {
-    NSPoint			cellPoint = NSMakePoint(0, contentsHeight - VIEW_PADDING_BOTTOM);
+    NSPoint			cellPoint = contentOrigin;
     NSEnumerator		*rowEnumerator, *enumerator;
     AIFlexibleTableRow		*row;
     BOOL			foundVisible = NO;
@@ -457,7 +458,7 @@
     NSEnumerator		*rowEnumerator;
     AIFlexibleTableRow		*row;
 
-    *outOrigin = NSMakePoint(0, contentsHeight - VIEW_PADDING_BOTTOM);
+    *outOrigin = contentOrigin;
 
     //Determine the clicked row
     rowEnumerator = [rowArray objectEnumerator];
@@ -490,7 +491,7 @@
             contentsHeight += [row sizeRowForWidth:size.width];
         }
     }
-        
+
     //Resize our view
     [self _resizeViewToWidth:size.width height:contentsHeight];
 }
@@ -518,6 +519,13 @@
     size.height = height;
     if(size.height < documentVisibleRect.size.height){
         size.height = documentVisibleRect.size.height;
+    }
+
+    //Remember our content origin
+    if(contentBottomAligned && contentsHeight < documentVisibleRect.size.height){
+        contentOrigin = NSMakePoint(0, documentVisibleRect.size.height - VIEW_PADDING_BOTTOM);
+    }else{
+        contentOrigin = NSMakePoint(0, contentsHeight - VIEW_PADDING_BOTTOM);
     }
 
     //Resize our view, and redisplay
