@@ -116,7 +116,9 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     activeSearchString = nil;
     displayedLog = nil;
     
-    sortDirection = YES;
+	blankImage = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
+
+	sortDirection = YES;
     searchMode = LOG_SEARCH_TO;
     dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] allowNaturalLanguage:YES];
     availableLogArray = [[NSMutableArray alloc] init];
@@ -145,6 +147,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     [selectedColumn release];
     [dateFormatter release];
     [displayedLog release];
+	[blankImage release];
     
     [super dealloc];
 }
@@ -669,12 +672,6 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     [activeSearchString release]; activeSearchString = [[searchField_logs stringValue] copy];
 }
 
--(void)resetSearch
-{
-    // damn it, this needs to also reset the list to 'all'
-    [self setSearchString:@""];
-}
-
 //Build the search mode menu
 - (void)buildSearchMenu
 {
@@ -907,8 +904,13 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     
     [resultsLock lock];
     if(row < 0 || row >= [selectedLogArray count]){
-		value = @"";
-    }else{
+		if([identifier isEqualToString:@"Service"]){
+			value = blankImage;
+		}else{
+			value = @"";
+		}
+		
+	}else{
 		AILog       *theLog = [selectedLogArray objectAtIndex:row];
 		NSArray     *broken = [[theLog from] componentsSeparatedByString:@"."];
 		NSString    *service;
@@ -931,9 +933,10 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 		}else if([identifier isEqualToString:@"Date"]){
 			value = [dateFormatter stringForObjectValue:[theLog date]];
 		}else if([identifier isEqualToString:@"Service"]){
-			value = [AIServiceIcons serviceIconForService:[[adium accountController] firstServiceWithServiceID:service]
-													 type:AIServiceIconSmall
-												direction:AIIconNormal];
+			NSImage *image = [AIServiceIcons serviceIconForService:[[adium accountController] firstServiceWithServiceID:service]
+															  type:AIServiceIconSmall
+														 direction:AIIconNormal];
+			value = (image ? image : blankImage);
 		}
     }
     [resultsLock unlock];

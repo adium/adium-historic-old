@@ -66,7 +66,7 @@
 											 mode:LOG_SEARCH_FROM];
 		}
 	}else{
-		[controller_LogViewer resetSearch];
+		[controller_LogViewer setSearchString:@""];
 	}
 }
 
@@ -78,7 +78,7 @@
 	[table_filterList reloadData];
 
     //Reset any log searching
-	[controller_LogViewer resetSearch];
+	[controller_LogViewer setSearchString:@""];
 }
 
 @end
