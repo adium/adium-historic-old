@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Mon Jul 14 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIContactAlertsWindowController.h"
@@ -122,8 +121,11 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
     eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
 
-    if(!eventActionArray) eventActionArray = [[NSMutableArray alloc] init];
-
+    if(!eventActionArray)
+    {
+        eventActionArray = [[NSMutableArray alloc] init];
+        //NSLog(@"Not found.");
+    }
     //Update the outline view
     [tableView_actions reloadData];
 }
@@ -249,7 +251,6 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 //editing is over
 - (void)controlTextDidEndEditing:(NSNotification *)notification
 {
-    NSLog(@"Ended editing.");
     int row = [tableView_actions selectedRow];
     NSMutableDictionary	*selectedActionDict;
 
