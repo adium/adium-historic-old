@@ -6416,6 +6416,7 @@
 				9E399410078E82FE001E09A4,
 				4BDAF69807A1561000276D68,
 				4B7A567A07A1754400BDC540,
+				34DFF5FC07A63DB100B92233,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6742,6 +6743,23 @@
 				4BDAF69707A1561000276D68,
 				4B7A567C07A1754400BDC540,
 				34DFEC2607A4865000B92233,
+				34DFF53607A62EB100B92233,
+				34DFF53707A62EB200B92233,
+				34DFF53807A62EB200B92233,
+				34DFF53907A62EB200B92233,
+				34DFF53A07A62EB200B92233,
+				34DFF53C07A62EB200B92233,
+				34DFF53D07A62EB200B92233,
+				34DFF53E07A62EB200B92233,
+				34DFF53F07A62EB200B92233,
+				34DFF54007A62EB200B92233,
+				34DFF54107A62EB200B92233,
+				34DFF54207A62EB200B92233,
+				34DFF54307A62EB200B92233,
+				34DFF54507A62EB200B92233,
+				34DFF54607A62EB200B92233,
+				34DFF54707A62EB300B92233,
+				34DFF54807A62EB300B92233,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6996,6 +7014,7 @@
 				9E399411078E82FE001E09A4,
 				4BDAF69907A1561000276D68,
 				4B7A567B07A1754400BDC540,
+				34DFF5FD07A63DB400B92233,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8833,6 +8852,301 @@
 		};
 		34DFEC2607A4865000B92233 = {
 			fileRef = 34DFEC2507A4865000B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF46007A5EABF00B92233 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESSecureMessagingPlugin.h;
+			path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF46107A5EABF00B92233 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESSecureMessagingPlugin.m;
+			path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF46607A5EAC800B92233 = {
+			children = (
+				34DFF46007A5EABF00B92233,
+				34DFF46107A5EABF00B92233,
+				34DFF53007A62EB100B92233,
+				34DFF52F07A62EB100B92233,
+				34DFF52507A62EB000B92233,
+				34DFF52707A62EB000B92233,
+				34DFF52307A62EAF00B92233,
+				34DFF53507A62EB100B92233,
+				34DFF52D07A62EB000B92233,
+				34DFF53307A62EB100B92233,
+				34DFF53207A62EB100B92233,
+				34DFF53407A62EB100B92233,
+				34DFF52407A62EB000B92233,
+				34DFF52B07A62EB000B92233,
+				34DFF52C07A62EB000B92233,
+				34DFF52A07A62EB000B92233,
+				34DFF52E07A62EB100B92233,
+				34DFF52907A62EB000B92233,
+				34DFF52607A62EB000B92233,
+			);
+			isa = PBXGroup;
+			name = "Secure Messaging";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF52307A62EAF00B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 04.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 04.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF52407A62EB000B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 10.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 10.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF52507A62EB000B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 02.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 02.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF52607A62EB000B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Unlocked State.png";
+			path = "Plugins/Secure Messaging/Lock_Unlocked State.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF52707A62EB000B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 03.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 03.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF52907A62EB000B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 15.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 15.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF52A07A62EB000B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 13.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 13.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF52B07A62EB000B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 11.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 11.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF52C07A62EB000B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 12.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 12.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF52D07A62EB000B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 06.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 06.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF52E07A62EB100B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 14.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 14.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF52F07A62EB100B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 01.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 01.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF53007A62EB100B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Locked State.png";
+			path = "Plugins/Secure Messaging/Lock_Locked State.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF53207A62EB100B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 08.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 08.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF53307A62EB100B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 07.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 07.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF53407A62EB100B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 09.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 09.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF53507A62EB100B92233 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "Lock_Open Anim 05.png";
+			path = "Plugins/Secure Messaging/Lock_Open Anim 05.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DFF53607A62EB100B92233 = {
+			fileRef = 34DFF52307A62EAF00B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF53707A62EB200B92233 = {
+			fileRef = 34DFF52407A62EB000B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF53807A62EB200B92233 = {
+			fileRef = 34DFF52507A62EB000B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF53907A62EB200B92233 = {
+			fileRef = 34DFF52607A62EB000B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF53A07A62EB200B92233 = {
+			fileRef = 34DFF52707A62EB000B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF53C07A62EB200B92233 = {
+			fileRef = 34DFF52907A62EB000B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF53D07A62EB200B92233 = {
+			fileRef = 34DFF52A07A62EB000B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF53E07A62EB200B92233 = {
+			fileRef = 34DFF52B07A62EB000B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF53F07A62EB200B92233 = {
+			fileRef = 34DFF52C07A62EB000B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF54007A62EB200B92233 = {
+			fileRef = 34DFF52D07A62EB000B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF54107A62EB200B92233 = {
+			fileRef = 34DFF52E07A62EB100B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF54207A62EB200B92233 = {
+			fileRef = 34DFF52F07A62EB100B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF54307A62EB200B92233 = {
+			fileRef = 34DFF53007A62EB100B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF54507A62EB200B92233 = {
+			fileRef = 34DFF53207A62EB100B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF54607A62EB200B92233 = {
+			fileRef = 34DFF53307A62EB100B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF54707A62EB300B92233 = {
+			fileRef = 34DFF53407A62EB100B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF54807A62EB300B92233 = {
+			fileRef = 34DFF53507A62EB100B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF5FC07A63DB100B92233 = {
+			fileRef = 34DFF46007A5EABF00B92233;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DFF5FD07A63DB400B92233 = {
+			fileRef = 34DFF46107A5EABF00B92233;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -12243,6 +12557,7 @@
 				F1D0C631051AC2380000000E,
 				6E5A43DC0611604B0078C342,
 				34A65AF606A5A0C400898470,
+				34DFF46607A5EAC800B92233,
 				4BC8AFD604FD3C1000A8010A,
 				4B0473B7043E43F200A8010A,
 				4BBAEE9703DD7D8900A8010A,
