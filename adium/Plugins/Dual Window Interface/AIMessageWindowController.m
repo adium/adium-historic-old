@@ -161,14 +161,6 @@
     [[self window] setBottomCornerRounded:NO]; //Sneaky lil private method
 
     [[self window] useOptimizedDrawing:YES]; //should be set to YES unless subview overlap... we should be good to go.  check the docs on this for more info.
-
-    #warning The below doesn't fix the no shadows on initial display problem.  Thoughts?
-
-/*
-    [[self window] setHasShadow:YES];
-    [[self window] invalidateShadow];
-    [[self window] display];
-*/
 }
 
 //called as the window closes
@@ -180,7 +172,10 @@
 
     //We are closing
     windowIsClosing = YES;
-
+    
+    //The USA PATRIOT act must be stopped.  Tell the notificationCenter about it.
+    [[owner notificationCenter] removeObserver:self];
+    
     //Close all our tabs
     enumerator = [viewArrayCopy objectEnumerator];
     while((tabViewItem = [enumerator nextObject])){
@@ -191,7 +186,6 @@
     [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
-    
     return(YES);
 }
 
