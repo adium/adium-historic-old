@@ -142,6 +142,7 @@
 {
 	//Load the crash reporter
 #ifdef CRASH_REPORTER
+#warning Crash reporter enabled.
     [self configureCrashReporter];
 #endif
 
@@ -243,7 +244,7 @@ void Adium_HandleSignal(int i){
     
     //Log and Handle all exceptions
     [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
-    
+
     //Install custom handlers which properly terminate Adium if one is received
     signal(SIGILL, Adium_HandleSignal);		/* 4:   illegal instruction (not reset when caught) */
     signal(SIGTRAP, Adium_HandleSignal);	/* 5:   trace trap (not reset when caught) */
