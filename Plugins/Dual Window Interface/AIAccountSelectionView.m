@@ -113,42 +113,32 @@
 
 + (BOOL)multipleContactsForContact:(AIListContact *)inObject
 {
+	AIListObject *listObject;
+	
 	//Find the parent meta contact if possible
-	AIListObject	*containingObject;
-	while ([(containingObject = [inObject containingObject]) isKindOfClass:[AIMetaContact class]]){
-		inObject = (AIMetaContact *)containingObject;
-	}
-
-	return ([inObject isKindOfClass:[AIMetaContact class]] && ![(AIMetaContact *)inObject containsOnlyOneUniqueContact]);
+	listObject = [[[AIObject sharedAdiumInstance] contactController] parentContactForListObject:inObject];
+	
+	return (([listObject isKindOfClass:[AIMetaContact class]]) &&
+			([[(AIMetaContact *)listObject listContacts] count] > 1));
 }
 
 #pragma mark Acccounts
-//Configures the account menu (dimming invalid accounts if applicable)
+//Configures the account menu to show all online accounts
 - (void)configureAccountsMenu
 {
     if(delegate){
-	
 		AIListObject	*listObject = [delegate listObject];
 		
-//		if ([AIAccountSelectionView multipleAccountsForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:listObject]){
-			
-			//I don't like magic numbers.  And I hate nibs.  How is this fixable?
-			[box_accounts setFrame:NSMakeRect(0,0,212,38)];
-						
-			//
-			[popUp_accounts setMenu:[[adium accountController] menuOfAccountsForSendingContentType:CONTENT_MESSAGE_TYPE
-																					  toListObject:listObject
-																						withTarget:self
-																					includeOffline:NO]];
-			//
-			[[popUp_accounts menu] setAutoenablesItems:NO];
-			
-			//Select our current account
-			[self updateAccountsMenu];
-/*		}else{
-			[box_accounts setFrame:NSMakeRect(0,0,0,0)];
-		}
-			*/
+		//
+		[popUp_accounts setMenu:[[adium accountController] menuOfAccountsForSendingContentType:CONTENT_MESSAGE_TYPE
+																				  toListObject:listObject
+																					withTarget:self
+																				includeOffline:NO]];
+		//
+		[[popUp_accounts menu] setAutoenablesItems:NO];
+		
+		//Select our current account
+		[self updateAccountsMenu];
 	}
 }
 
@@ -167,30 +157,19 @@
 		AIListObject	*listObject = [delegate listObject];
 
 		//Find the parent meta contact if possible
-		AIListObject	*containingObject;
-		while ([(containingObject = [listObject containingObject]) isKindOfClass:[AIMetaContact class]]){
-			listObject = containingObject;
-		}
-				
-//		if ([AIAccountSelectionView multipleContactsForListObject:listObject]){
-			
-			//I don't like magic numbers.  And I hate nibs.  How is this fixable?
-			[box_contacts setFrame:NSMakeRect(212,0,212,38)];
-			
-			//
-			[popUp_contacts setMenu:[[adium contactController] menuOfContainedContacts:listObject
-																			forService:nil
-																			withTarget:self
-																		includeOffline:![listObject online]]]; //If the contact is not online, the menu should not be empty so include online
-			//
-			[[popUp_contacts menu] setAutoenablesItems:NO];
-			
-			
-			[self updateContactsMenu];
-			
-//		}else{
-//			[box_contacts setFrame:NSMakeRect(0,0,0,0)];
-//		}
+		listObject = [[[AIObject sharedAdiumInstance] contactController] parentContactForListObject:listObject];
+	
+		//We include offline since some protocols include 'inivisibility' 
+		//which may make a contact appear offline but not be.
+		[popUp_contacts setMenu:[[adium contactController] menuOfContainedContacts:listObject
+																		forService:nil
+																		withTarget:self
+																	includeOffline:YES/*![listObject online]*/]];
+		//
+		[[popUp_contacts menu] setAutoenablesItems:NO];
+		
+		
+		[self updateContactsMenu];
 	}
 	
 	[self configureAccountsMenu];
