@@ -748,12 +748,11 @@
 		if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
 			
 			//Evan: Temporary asserts
-			NSAssert (account != nil, @"openChat: account was nil");
 			NSAssert (listObject != nil, @"openChat: listObject was nil");
 			NSAssert ([listObject UID] != nil, @"openChat: [listObject UID] was nil");
 			NSAssert ([[listObject UID] UTF8String] != nil, @"openChat: [[listObject UID] UTF8String] was nil");
 			
-			GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_IM, account, [[listObject UID] UTF8String]);
+			GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_IM, [self gaimAccount], [[listObject UID] UTF8String]);
 			NSAssert(conv != nil, @"openChat: GAIM_CONV_IM: gaim_conversation_new returned nil");
 			
 			conv->ui_data = chat;
@@ -766,7 +765,7 @@
 		const char *name = [[chat name] UTF8String];
 		
 		//Look for an existing gaimChat (for now, it had better exist already!)
-		GaimChat *gaimChat = gaim_blist_find_chat (account, name);
+		GaimChat *gaimChat = gaim_blist_find_chat ([self gaimAccount], name);
 		if (!gaimChat){
 			NSLog(@"gotta create a chat");
 			GHashTable *components;
@@ -1426,7 +1425,8 @@
 	
 	if (proxyType == Gaim_Proxy_None){
 		//No proxy
-		proxy_info->type  = GAIM_PROXY_NONE;
+		gaim_proxy_info_set_type(GAIM_PROXY_NONE, gaimAccountProxyType);
+		
 		gaim_account_set_proxy_info(account,proxy_info);
 		[self continueConnectWithConfiguredProxy];
 		
