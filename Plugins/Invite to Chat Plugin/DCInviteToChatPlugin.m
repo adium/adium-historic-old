@@ -95,7 +95,7 @@
 				
 		// Get a dictionary of (service, contacts in that service)
 		if([contact isKindOfClass:[AIMetaContact class]])
-			serviceDict = [contact dictionaryOfServicesAndListContacts];
+			serviceDict = [(AIMetaContact *)contact dictionaryOfServicesAndListContacts];
 		else
 			serviceDict = [NSDictionary dictionaryWithObject:contact forKey:[[contact service] serviceID]];
 		

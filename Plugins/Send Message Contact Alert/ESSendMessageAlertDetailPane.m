@@ -41,7 +41,7 @@
 
 	//Attempt to find the destination object
 	destUniqueID = [inDetails objectForKey:KEY_MESSAGE_SEND_TO];
-	if(destUniqueID) destContact = [[adium contactController] existingListObjectWithUniqueID:destUniqueID];
+	if(destUniqueID) destContact = (AIListContact *)[[adium contactController] existingListObjectWithUniqueID:destUniqueID];
 
 	//Configure the destination menu
 	[popUp_messageTo setMenu:[[adium contactController] menuOfAllContactsInGroup:nil withTarget:self]];

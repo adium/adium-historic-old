@@ -106,7 +106,7 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context)
 //Add new alert
 - (IBAction)addAlert:(id)sender
 {
-	[CSNewContactAlertWindowController editAlert:nil forListObject:listObject onWindow:[[self view] window] notifyingTarget:self userInfo:nil];
+	[CSNewContactAlertWindowController editAlert:nil forListObject:(AIListContact *)listObject onWindow:[[self view] window] notifyingTarget:self userInfo:nil];
 }
 
 //Edit existing alert
@@ -116,7 +116,7 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context)
 	if(selectedRow >= 0 && selectedRow < [tableView_actions numberOfRows]){
 		NSDictionary	*alert = [alertArray objectAtIndex:selectedRow];
 		
-		[CSNewContactAlertWindowController editAlert:alert forListObject:listObject onWindow:[[self view] window] notifyingTarget:self userInfo:alert];
+		[CSNewContactAlertWindowController editAlert:alert forListObject:(AIListContact *)listObject onWindow:[[self view] window] notifyingTarget:self userInfo:alert];
 	}
 }
 
