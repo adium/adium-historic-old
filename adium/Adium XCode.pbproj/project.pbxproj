@@ -23149,6 +23149,30 @@
 //522
 //523
 //524
+		5233D6A705B606FA00E9A4EC = {
+			children = (
+				5233D6A805B606FA00E9A4EC,
+			);
+			isa = PBXVariantGroup;
+			name = NewTicTacToeGame.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		5233D6A805B606FA00E9A4EC = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Plugins/TicTacToe/English.lproj/NewTicTacToeGame.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		5233D6A905B606FA00E9A4EC = {
+			fileRef = 5233D6A705B606FA00E9A4EC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		52AEBD5C05ABA95700B19C56 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -23167,6 +23191,7 @@
 				52AEBD7C05ABA9AA00B19C56,
 				52AEBD7D05ABA9AA00B19C56,
 				52AEBD7E05ABA9AA00B19C56,
+				5233D6A905B606FA00E9A4EC,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -23202,7 +23227,7 @@
 			);
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/TicTacToe-Info.plist";
 				PRODUCT_NAME = TicTacToe;
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -23444,6 +23469,7 @@
 			children = (
 				52AEBD6405ABA9A800B19C56,
 				52AEBD6605ABA9A800B19C56,
+				5233D6A705B606FA00E9A4EC,
 				52AEBD6A05ABA9A900B19C56,
 				52AEBD6B05ABA9A900B19C56,
 				52AEBD6C05ABA9A900B19C56,
