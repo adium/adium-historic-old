@@ -203,7 +203,7 @@
     return(closeImage);
 }
 
-//Returns the current theme's miniature panel close button
+//Returns the system check mark
 + (NSImage *)systemCheckmark
 {
     NSString    *theFilePath = @"/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Resources/Extras.rsrc";
