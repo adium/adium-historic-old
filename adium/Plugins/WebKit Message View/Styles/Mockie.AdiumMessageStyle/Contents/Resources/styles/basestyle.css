@@ -23,7 +23,7 @@ body {
 }
 
 .time_consecutive {
-	font-weight: bold;
+	font-weight: normal;
 }
 
 .status_container {
@@ -36,4 +36,35 @@ body {
 
 a, a:link {
 	text-decoration: none;
+}
+
+.context .message {
+	background: rgba(255,255,255,0.4);
+	color: rgba(0,0,0,0.6);
+}
+
+.context .time_consecutive {
+	color: rgba(0,0,0,0.6);
+}
+
+.context .time_consecutive + p {
+	border-top: 1px solid rgba(0,0,0,0.2);
+}
+
+.context .buddyicon {
+	background: rgba(0,0,0,0.2);
+}
+
+.context .sender {
+	background: no-repeat url(../images/context/topleft.png);
+}
+
+.context .time_initial
+{
+	background: no-repeat url(../images/context/topright.png) right;
+}
+
+.context + .actual {
+	border-top: 4px solid rgba(0,0,0,0.1);
+	padding-top: 5px;
 }

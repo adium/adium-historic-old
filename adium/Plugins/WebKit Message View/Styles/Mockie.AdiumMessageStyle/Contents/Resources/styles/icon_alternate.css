@@ -1,19 +1,9 @@
 .incoming .buddyicon {
-	display: block;
 	float: right;
-	width: 40px;
-	height: 40px;
 	margin: 0px 0px 5px 5px;
-	padding: 0px;
-	text-align: center;
 }
 
 .outgoing .buddyicon {
-	display: blocK;
 	float: left;
-	width: 40px;
-	height: 40px;
 	margin: 0px 5px 5px 0px;
-	padding: 0px;
-	text-align: center;
 }
