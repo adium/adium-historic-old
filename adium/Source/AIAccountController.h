@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.10 $
- * $Date: 2004/03/01 04:55:24 $
- * $Author: adamiser $
+ * $Revision: 1.11 $
+ * $Date: 2004/03/05 03:07:00 $
+ * $Author: evands $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
@@ -90,5 +90,6 @@
 - (void)initController;
 - (void)closeController;
 - (void)finishIniting;
+- (void)saveAccounts;
 
 @end
