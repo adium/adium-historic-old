@@ -189,6 +189,7 @@ DeclareString(FormattedUID);
 	
     if(!array){
         array = [[AIMutableOwnerArray alloc] init];
+		[array setDelegate:self];
         [displayDictionary setObject:array forKey:inKey];
         [array release];
     }
@@ -231,8 +232,8 @@ DeclareString(FormattedUID);
 		if (changedStatusDict){
 			//Inform our containing group and ourself (in case subclasses want to know) about the new status object value
 			if (containingObject)
-				[containingObject listObject:self didSetStatusObject:value forKey:key];
-			[self listObject:self didSetStatusObject:value forKey:key];
+				[containingObject listObject:self didSetStatusObject:value forKey:key notify:notify];
+			[self listObject:self didSetStatusObject:value forKey:key notify:notify];
 			
 			//If notify, send out the notification now; otherwise, add it to changedStatusKeys for later notification 
 			if (notify){
@@ -296,21 +297,20 @@ DeclareString(FormattedUID);
 		[[adium contactController] listObjectStatusChanged:self
 										modifiedStatusKeys:keys
 													silent:silent];
+		
+		//Let our containing object know about the notification request
+		if (containingObject)
+			[containingObject notifyOfChangedStatusSilently:silent];
+
 		[keys release];
     }
 }
 
-- (void)notifyOfChangedStatusNumberSilently:(NSNumber *)silentNumber
-{
-	[self notifyOfChangedStatusSilently:[silentNumber boolValue]];
-}
-
-//Quickly retrieve a status key for this object
+//Quickly retrieve a status key enumerator for this object
 - (NSEnumerator	*)statusKeyEnumerator
 {
 	return([statusDictionary keyEnumerator]);
 }
-
 
 - (id)statusObjectForKey:(NSString *)key
 {
@@ -334,14 +334,30 @@ DeclareString(FormattedUID);
    return([[statusDictionary objectForKey:key] string]);
 }
 
-//Subclasses may choose to override these
-- (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key
+//Subclasses may wish to override these
+- (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
 {
 	if (inObject == self) {
 		if ([key isEqualToString:FormattedUID]){
 			[self setPreference:value forKey:key group:ObjectStatusCache];
 		}
 	}
+}
+
+//AIMutableOwnerArray delegate ------------------------------------------------------------------------------------------
+#pragma mark AIMutableOwnerArray delegate
+
+//A mutable owner array (one of our displayArrays) set an object
+- (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner
+{
+	if (containingObject)
+		[containingObject listObject:self mutableOwnerArray:inArray didSetObject:anObject withOwner:inOwner];
+}
+
+//Empty implementation by default - we do not need to take any action when a mutable owner array changes
+- (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(AIListObject *)anObject withOwner:(AIListObject *)inOwner
+{
+#warning Evan: We could destroy empty mutable owner arrays here... worthwhile?
 }
 
 //Object specific preferences ------------------------------------------------------------------------------------------

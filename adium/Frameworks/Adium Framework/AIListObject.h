@@ -84,7 +84,7 @@ typedef enum {
 - (void)delayedStatusChange:(NSDictionary *)statusChangeDict;
 - (void)notifyOfChangedStatusSilently:(BOOL)silent;
 - (id)statusObjectForKey:(NSString *)key;
-- (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key;
+- (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify;
 
 - (id)statusObjectForKey:(NSString *)key;
 - (int)integerStatusObjectForKey:(NSString *)key;
@@ -95,7 +95,7 @@ typedef enum {
 //Alter the placement of this object in a group (PRIVATE: These are for AIListGroup ONLY)
 - (void)setOrderIndex:(float)inIndex;
 
-//Grouping (PRIVATE: These are for AIListGroup ONLY)
+//Grouping (PRIVATE: These are for AIListGroup and AIMetaContact ONLY)
 - (void)setContainingObject:(AIListObject *)inGroup;
 
 //Key-Value pairing
