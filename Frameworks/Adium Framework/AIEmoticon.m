@@ -15,6 +15,7 @@
  */
 
 #import "AIEmoticon.h"
+#import "AIEmoticonPack.h"
 #import "AITextAttachmentExtension.h"
 
 @interface AIEmoticon (PRIVATE)
@@ -50,7 +51,7 @@
 		path = [inPath retain];
 		name = [inName retain];
 		textEquivalents = [inTextEquivalents retain];
-		pack = [(NSObject *)inPack retain];
+		pack = [inPack retain];
 		_cachedAttributedString = nil;
     }
 
@@ -63,7 +64,7 @@
     [path release];
 	[name release];
     [textEquivalents release];
-	[(NSObject *)pack release];
+	[pack release];
     [_cachedAttributedString release];
     [_cachedImage release];
 
@@ -173,10 +174,24 @@
     return([attributedString autorelease]);
 }
 
-//A more useful debug description
+
+/*
+ * @brief Is this emoticon appropriate for a service class?
+ *
+ * @result YES if this emoticon is not associated with any service class or is associated with the passed one.
+ */
+- (BOOL)isAppropriateForServiceClass:(NSString *)inServiceClass
+{
+	NSString	*ourServiceClass = [pack serviceClass];
+	return(!ourServiceClass || [ourServiceClass isEqualToString:inServiceClass]);
+}
+
+/*
+ * @brief A more useful debug description
+ */
 - (NSString *)description
 {
-    return([NSString stringWithFormat:@"%@ (%@)", [[path lastPathComponent] stringByDeletingPathExtension], [[self textEquivalents] objectAtIndex:0]]);
+    return([NSString stringWithFormat:@"%@<%x> (Equivalents: %@) [in %@]",name,self,[self textEquivalents],pack]);
 }
 
 /*!
