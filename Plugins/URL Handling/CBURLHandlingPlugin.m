@@ -42,17 +42,22 @@
 	//Start Internet Config, passing it Adium's creator code
 	Err = ICStart(&ICInst, 'AdiM');
 	
-	//Configure the protocols we want.  Note that this file needs to remain in MacRoman encoding for that ¥ (option-8)
-	//to be recognized properly.
-	[self setHelperAppForKey:"\pHelper¥aim" withInstance:ICInst]; //AIM, official
-	[self setHelperAppForKey:"\pHelper¥ymsgr" withInstance:ICInst]; //Yahoo!, official
-	[self setHelperAppForKey:"\pHelper¥xmpp" withInstance:ICInst]; //Jabber, official
-	[self setHelperAppForKey:"\pHelper¥jabber" withInstance:ICInst]; //Jabber, unofficial
-	[self setHelperAppForKey:"\pHelper¥icq" withInstance:ICInst]; //ICQ, unofficial
-	[self setHelperAppForKey:"\pHelper¥msn" withInstance:ICInst]; //MSN, unofficial
+	//Bracket multiple calls with ICBegin() for efficiency as per documentation
+	ICBegin(ICInst, icReadWritePerm);
 
+	//Configure the protocols we want.
+	[self setHelperAppForKey:(kICHelper "aim") withInstance:ICInst]; //AIM, official
+	[self setHelperAppForKey:(kICHelper "ymsgr") withInstance:ICInst]; //Yahoo!, official
+	[self setHelperAppForKey:(kICHelper "xmpp") withInstance:ICInst]; //Jabber, official
+	[self setHelperAppForKey:(kICHelper "jabber") withInstance:ICInst]; //Jabber, unofficial
+	[self setHelperAppForKey:(kICHelper "icq") withInstance:ICInst]; //ICQ, unofficial
+	[self setHelperAppForKey:(kICHelper "msn") withInstance:ICInst]; //MSN, unofficial
+ 
 	//Adium xtras
-	[self setHelperAppForKey:"\pHelper¥adiumxtra" withInstance:ICInst];
+	[self setHelperAppForKey:(kICHelper "adiumxtra") withInstance:ICInst];
+
+	//End whatever it was that ICBegin() began
+	ICEnd(ICInst);
 
 	//We're done with Internet Config, so stop it
 	Err = ICStop(ICInst);
@@ -71,6 +76,7 @@
 	long		TheSize;
 
 	TheSize = sizeof(Spec);
+
 	// Get the current aim helper app, to fill the Spec and TheSize variables
 	Err = ICGetPref(ICInst, key, &Junk, &Spec, &TheSize);
 
@@ -80,7 +86,7 @@
 		Spec.fCreator = 'AdIM';
 
 		//Set the helper app to Adium
-		Err = ICSetPref(ICInst, key, Junk, &Spec, TheSize);
+		Err = ICSetPref(ICInst, key, kICAttrNoChange, &Spec, TheSize);
 	}
 }
 
