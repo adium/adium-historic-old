@@ -25,7 +25,7 @@
 
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
-    SHHyperlinkScanner          *scanner = [[[SHHyperlinkScanner alloc] initWithStrictChecking:NO] autorelease];
+    SHHyperlinkScanner          *scanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
     NSMutableAttributedString   *replacementMessage = [[[NSMutableAttributedString alloc] initWithString:@""] autorelease];
     NSRange                      linkRange = NSMakeRange(0,0);
     unsigned                     index = 0;
@@ -46,6 +46,8 @@
         index += linkRange.length;
     }
     
+	[scanner release];
+	
     return (replacementMessage);
 }
 
