@@ -19,12 +19,12 @@
 #define AIMessageWindow_ControllerOrderChanged 		@"AIMessageWindow_ControllerOrderChanged"
 #define AIMessageWindow_SelectedControllerChanged 	@"AIMessageWindow_SelectedControllerChanged"
 
-@class AIAdium, AIMessageSendingTextView, AIMiniToolbar, AIMessageViewController;
+@class AIAdium, AIMessageSendingTextView, AIMiniToolbar, AIMessageViewController, AIColoredBoxView;
 @protocol AIContainerInterface, AIInterfaceContainer;
 
 @interface AIMessageWindowController : NSWindowController {
     IBOutlet	NSTabView	*tabView_messages;
-
+    
     AIAdium			*owner;
     BOOL			windowIsClosing;
     id <AIContainerInterface> 	interface;

@@ -25,6 +25,7 @@
 
 #define MESSAGE_VIEW_NIB		@"MessageView"		//Filename of the message view nib
 #define MESSAGE_TAB_TOOLBAR		@"MessageTab"		//ID of the message tab toolbar
+#define ENTRY_TEXTVIEW_MIN_HEIGHT	20
 #define ENTRY_TEXTVIEW_MAX_HEIGHT	70
 #define ENTRY_TEXTVIEW_PADDING		3
 #define RESIZE_CORNER_TOOLBAR_OFFSET 	0
@@ -181,6 +182,8 @@
 //Toggle the visibility of our account selection menu
 - (void)setAccountSelectionMenuVisible:(BOOL)visible
 {
+    visible = NO;
+    
     if(visible && !view_accountSelection){ //Show the account selection view
         view_accountSelection = [[AIAccountSelectionView alloc] initWithFrame:NSMakeRect(0,0,100,100) delegate:self owner:owner];
         [view_contents addSubview:view_accountSelection];
@@ -230,9 +233,14 @@
     //Configure for our chat
     [self setChat:inChat];
 
+    //
+    [button_send setTitle:@"Send"];
+    [button_send setButtonType:NSMomentaryPushInButton];
+
     //Config the outgoing text view
     [textView_outgoing setOwner:owner];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
+    [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
 
     //Resize and arrange our views
     [self sizeAndArrangeSubviews];
@@ -326,9 +334,11 @@
 {
     if([self textHeight] != currentTextEntryHeight){
         [self sizeAndArrangeSubviews]; //Resize our contents to fit the text (If it's height has changed)
+        [view_contents setNeedsDisplay:YES];
     }
 }
-
+#define TEXT_ENTRY_PADDING 2
+#define SEND_BUTTON_PADDING 2
 //Arrange and resize our subviews based on the current state of this view (whether or not: it's locked to a contact, the account view is visible)
 - (void)sizeAndArrangeSubviews
 {
@@ -337,7 +347,7 @@
 
     superFrame.origin.y = 0;
     superFrame.origin.x = 0;
-
+    
     //Account
     if(view_accountSelection){
         height = [view_accountSelection frame].size.height;
@@ -352,12 +362,19 @@
     superFrame.size.height -= height;
     superFrame.origin.y += height;
 
+    //Send Button
+    int buttonWidth = [button_send frame].size.width;
+    [button_send setFrame:NSMakeRect(superFrame.origin.x + superFrame.size.width - buttonWidth,
+                                     superFrame.origin.y - 1,
+                                     [button_send frame].size.width,
+                                     [button_send frame].size.height)];
+    
     //Text entry
     currentTextEntryHeight = [self textHeight];
     [scrollView_outgoingView setHasVerticalScroller:(currentTextEntryHeight == ENTRY_TEXTVIEW_MAX_HEIGHT)];
-    [scrollView_outgoingView setFrame:NSMakeRect(-1, superFrame.origin.y, superFrame.size.width + 2, currentTextEntryHeight)];
-    superFrame.size.height -= currentTextEntryHeight;
-    superFrame.origin.y += currentTextEntryHeight;
+    [scrollView_outgoingView setFrame:NSMakeRect(0, superFrame.origin.y, superFrame.size.width - (buttonWidth + SEND_BUTTON_PADDING), currentTextEntryHeight)];
+    superFrame.size.height -= currentTextEntryHeight + TEXT_ENTRY_PADDING;
+    superFrame.origin.y += currentTextEntryHeight + TEXT_ENTRY_PADDING;
 
     //UserList
     if(showUserList){
@@ -370,7 +387,7 @@
     }
     
     //Messages
-    [scrollView_messages setFrame:NSMakeRect(-1, superFrame.origin.y, superFrame.size.width + 2, superFrame.size.height + 1)];
+    [scrollView_messages setFrame:NSMakeRect(0, superFrame.origin.y, superFrame.size.width, superFrame.size.height)];
 }
 
 - (float)textHeight
@@ -393,6 +410,8 @@
     
     if(textHeight > ENTRY_TEXTVIEW_MAX_HEIGHT){
         textHeight = ENTRY_TEXTVIEW_MAX_HEIGHT;
+    }else if(textHeight < ENTRY_TEXTVIEW_MIN_HEIGHT){
+        textHeight = ENTRY_TEXTVIEW_MIN_HEIGHT;
     }
 
     return(textHeight);

@@ -29,7 +29,7 @@
 - (void)resetCursorRects;
 @end
 
-#define TAB_LABEL_INSET		3	//Pixels the tab's label is inset into it's endcap
+#define TAB_LABEL_INSET		-4	//Pixels the tab's label is inset into it's endcap
 #define TAB_DRAG_DISTANCE 	4	//Distance required before a drag kicks in
 
 @implementation AICustomTab
@@ -52,6 +52,14 @@
     selected = inSelected;
     [[self superview] setNeedsDisplay:YES]; //Since tabs overlap, we must redisplay them all
 }
+
+//
+- (void)setDrawDivider:(BOOL)inDrawDivider
+{
+    drawDivider = inDrawDivider;
+    [[self superview] setNeedsDisplay:YES]; //Since tabs overlap, we must redisplay them all
+}
+
 
 //Set the depressed state of this tab
 - (void)setDepressed:(BOOL)inDepressed
@@ -91,18 +99,32 @@
 {
     [super initWithFrame:frameRect];
 
-    tabFrontLeft = [[AISystemTabRendering tabFrontLeft] retain];
-    tabFrontMiddle = [[AISystemTabRendering tabFrontMiddle] retain];
-    tabFrontRight = [[AISystemTabRendering tabFrontRight] retain];
-    tabBackLeft = [[AISystemTabRendering tabBackLeft] retain];
-    tabBackMiddle = [[AISystemTabRendering tabBackMiddle] retain];
-    tabBackRight = [[AISystemTabRendering tabBackRight] retain];
+  //  tabFrontLeft = [[AISystemTabRendering tabFrontLeft] retain];
+
+
+    tabFrontLeft = [[AIImageUtilities imageNamed:@"Tab_Left.tiff" forClass:[self class]] retain];
+    tabFrontMiddle = [[AIImageUtilities imageNamed:@"Tab_Middle.tiff" forClass:[self class]] retain];
+    tabFrontRight = [[AIImageUtilities imageNamed:@"Tab_Right.tiff" forClass:[self class]] retain];
+
+        //[[AISystemTabRendering tabFrontMiddle] retain];
+
+
+    tabBackLeft = [[AIImageUtilities imageNamed:@"TabMask_Left.tiff" forClass:[self class]] retain];
+    tabBackRight = [[AIImageUtilities imageNamed:@"TabMask_Right.tiff" forClass:[self class]] retain];
+    tabBackMiddle = [[AIImageUtilities imageNamed:@"TabMask_Middle.tiff" forClass:[self class]] retain];
+
+    tabDivider = [[AIImageUtilities imageNamed:@"Tab_Divider.tiff" forClass:[self class]] retain];
+    
+ //   tabFrontRight = [[AISystemTabRendering tabFrontRight] retain];
+//    tabBackLeft = [[AISystemTabRendering tabBackLeft] retain];
+//    tabBackMiddle = [[AISystemTabRendering tabBackMiddle] retain];
+//    tabBackRight = [[AISystemTabRendering tabBackRight] retain];
     tabPushLeft = [[AISystemTabRendering tabPushLeft] retain];
     tabPushMiddle = [[AISystemTabRendering tabPushMiddle] retain];
     tabPushRight = [[AISystemTabRendering tabPushRight] retain];
 
     //Flip our images
-    [tabFrontLeft setFlipped:YES];
+/*    [tabFrontLeft setFlipped:YES];
     [tabFrontMiddle setFlipped:YES];
     [tabFrontRight setFlipped:YES];
     [tabBackLeft setFlipped:YES];
@@ -110,7 +132,7 @@
     [tabBackRight setFlipped:YES];
     [tabPushLeft setFlipped:YES];
     [tabPushMiddle setFlipped:YES];
-    [tabPushRight setFlipped:YES];
+    [tabPushRight setFlipped:YES];*/
     
     tabViewItem = [inTabViewItem retain];
     selected = NO;
@@ -149,15 +171,15 @@
     int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge, middleLeftEdge, middleWidth;
     NSRect	sourceRect, destRect;
     NSSize	labelSize;
-    
+  
     //Pick the correct images depending on our state
-    if(depressed){
+/*    if(depressed){
         left = tabPushLeft; middle = tabPushMiddle; right = tabPushRight;
-    }else if(selected){
+    }else if(selected){*/
         left = tabFrontLeft; middle = tabFrontMiddle; right = tabFrontRight;
-    }else{
+/*    }else{
         left = tabBackLeft; middle = tabBackMiddle; right = tabBackRight;
-    }
+    }*/
     
     //Pre-calc some dimensions
     labelSize = [tabViewItem sizeOfLabel:NO];
@@ -167,30 +189,46 @@
     middleRightEdge = (rect.origin.x + rect.size.width - rightCapWidth);
     middleLeftEdge = (rect.origin.x + leftCapWidth);
     middleWidth = middleRightEdge - middleLeftEdge;
+
+    if(selected){
+        //Draw left mask
+        [tabBackLeft compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
+
+        //Draw the left cap
+        [left compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
     
-    //Draw the left cap
-    [left compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
+        //Draw the middle
+        sourceRect = NSMakeRect(0, 0, [middle size].width, [middle size].height);
+        destRect = NSMakeRect(middleLeftEdge, rect.origin.y + rect.size.height, sourceRect.size.width, sourceRect.size.height);
+    
+        while(destRect.origin.x < middleRightEdge){
+            //Crop
+            if((destRect.origin.x + destRect.size.width) > middleRightEdge){
+                sourceRect.size.width -= (destRect.origin.x + destRect.size.width) - middleRightEdge;
+            }
 
-    //Draw the middle
-    sourceRect = NSMakeRect(0, 0, [middle size].width, [middle size].height);
-    destRect = NSMakeRect(middleLeftEdge, rect.origin.y + rect.size.height, sourceRect.size.width, sourceRect.size.height);
-
-    while(destRect.origin.x < middleRightEdge){
-        //Crop
-        if((destRect.origin.x + destRect.size.width) > middleRightEdge){
-            sourceRect.size.width -= (destRect.origin.x + destRect.size.width) - middleRightEdge;
+            [tabBackMiddle compositeToPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver];
+            [middle compositeToPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver];
+            destRect.origin.x += destRect.size.width;
         }
 
-        [middle compositeToPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver];
-        destRect.origin.x += destRect.size.width;
+        //Draw right mask
+        [tabBackRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
+
+        //Draw the right cap
+        [right compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
+    }else{
+        if(drawDivider){
+            //Draw the divider
+            [tabDivider compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
+            
+        }
+        
     }
-
-    //Draw the right cap
-    [right compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
-
+    
     //Draw the title
     destRect = NSMakeRect(rect.origin.x + leftCapWidth - TAB_LABEL_INSET,
-                          rect.origin.y - 1 + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
+                          rect.origin.y + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
                           middleWidth + (TAB_LABEL_INSET * 2),
 			  labelSize.height);
 

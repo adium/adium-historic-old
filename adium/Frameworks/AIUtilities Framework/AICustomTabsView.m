@@ -42,7 +42,8 @@
 @end
 
 #define CUSTOM_TABS_FPS		30.0		//Animation speed
-#define CUSTOM_TABS_OVERLAP	7		//Overlapped pixels between tabs
+#define CUSTOM_TABS_OVERLAP	2		//Overlapped pixels between tabs
+#define CUSTOM_TABS_LEFT_INDENT	6
 
 @implementation AICustomTabsView
 
@@ -106,6 +107,10 @@
         [tab setSelected:(tabViewItem == [tabView selectedTabViewItem])];
         [tab setFrameSize:[tab size]];
 
+        if(tabViewItem == [tabView selectedTabViewItem]){
+            [selectedCustomTab release]; selectedCustomTab = [tab retain];
+        }
+        
         //Add the tab to our view, and to our tab array
         [self addSubview:tab];
         [tabArray addObject:tab];
@@ -191,13 +196,15 @@
 
         //Remember the treshold at which tabs are squished
         reduceThreshold = (tab ? [tab size].width : 0);
-        tabXOrigin = 0;
 
-    }else{
-        tabXOrigin = (-tabExtraWidth) / 2.0;
+    }//else{
+//        tabXOrigin = (-tabExtraWidth) / 2.0;
 
-    }
-    
+//    }
+
+    tabXOrigin = CUSTOM_TABS_LEFT_INDENT;
+
+
     //Draw the tabs
     xLocation = tabXOrigin;
     enumerator = [tabArray objectEnumerator];
@@ -247,16 +254,72 @@
 {
     int imageWidth;
     int xOffset;
+
+    NSRect	tabFrame;
+    NSRect	drawRect;
     
-    //Draw the background
-    imageWidth = [tabBackground size].width;
+    //Get the active tab's frame
+    tabFrame = [selectedCustomTab frame];
+    
+//tabArray
+//selectedTab
+    //Paint black over region left of active tab
+    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.20] set];
+//    [[NSColor greenColor] set];
+    drawRect = NSMakeRect(rect.origin.x,
+                          rect.origin.y + 1,
+                          tabFrame.origin.x - rect.origin.x,
+                          rect.size.height - 1);
+    [NSBezierPath fillRect:drawRect];
+
+//    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.2] set];
+    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.38] set];
+    [NSBezierPath strokeLineFromPoint:NSMakePoint(drawRect.origin.x, drawRect.origin.y + drawRect.size.height - 0.5)
+                              toPoint:NSMakePoint(drawRect.origin.x + drawRect.size.width, drawRect.origin.y + drawRect.size.height - 0.5)];
+
+
+    
+    //Paint black over region right of active tab
+//    [[NSColor blueColor] set];
+    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.20] set];
+    drawRect = NSMakeRect(tabFrame.origin.x + tabFrame.size.width,
+                          rect.origin.y + 1,
+                          (rect.origin.x + rect.size.width) - (tabFrame.origin.x + tabFrame.size.width),
+                          rect.size.height - 1);
+    [NSBezierPath fillRect:drawRect];
+
+    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.38] set];
+    [NSBezierPath strokeLineFromPoint:NSMakePoint(drawRect.origin.x, drawRect.origin.y + drawRect.size.height - 0.5)
+                              toPoint:NSMakePoint(drawRect.origin.x + drawRect.size.width, drawRect.origin.y + drawRect.size.height - 0.5)];
+
+    //Bottom edge light
+    [[NSColor colorWithCalibratedWhite:1.0 alpha:0.16] set];
+    [NSBezierPath strokeLineFromPoint:NSMakePoint(rect.origin.x, rect.origin.y + 1.5)
+                              toPoint:NSMakePoint(rect.origin.x + rect.size.width, rect.origin.y + 1.5)];
+
+    //Bottom edge dark
+    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.41] set];
+    [NSBezierPath strokeLineFromPoint:NSMakePoint(rect.origin.x, rect.origin.y + 0.5)
+                              toPoint:NSMakePoint(rect.origin.x + rect.size.width, rect.origin.y + 0.5)];
+    
+
+    
+    //Draw black 'tab edge mask' portions on left/right of active tab
+    //Draw left & right edges of active tab
+    //Draw separators between other tabs
+
+
+
+    
+    
+/*    imageWidth = [tabBackground size].width;
     if(tabBackground && imageWidth){
         xOffset = 0;
         while(xOffset < rect.size.width){
             [tabBackground compositeToPoint:NSMakePoint(rect.origin.x + xOffset,0) operation:NSCompositeSourceOver];
             xOffset += imageWidth;
         }
-    }
+    }*/
 
     //Draw our subviews
     [super drawRect:rect];
@@ -267,7 +330,20 @@
 //Change our selection to match the current selected tabViewItem
 - (void)tabView:(NSTabView *)inTabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
+    NSEnumerator	*enumerator;
+    AICustomTab		*tab;
+    NSTabViewItem	*selectedTab = [inTabView selectedTabViewItem];
+
+    enumerator = [tabArray objectEnumerator];
+    while((tab = [enumerator nextObject])){
+        if([tab tabViewItem] == selectedTab){
+            [selectedCustomTab release];
+            selectedCustomTab = [tab retain];
+        }
+    }
+    
     //Set the tab view as selected
+    selectedTab = [inTabView selectedTabViewItem];
 //    [self moveActiveTabToFront];
     [self reorderViews];
     
@@ -438,18 +514,26 @@
 //Move the active tab frontward
 - (void)moveActiveTabToFront
 {
-    NSTabViewItem	*selectedTab = [tabView selectedTabViewItem];
+//    NSTabViewItem	*selectedTab = [tabView selectedTabViewItem];
     NSEnumerator	*enumerator;
     AICustomTab		*tab;
+    AICustomTab	*previousTab = nil;
     
     enumerator = [tabArray objectEnumerator];
     while((tab = [enumerator nextObject])){
-        if([tab tabViewItem] == selectedTab){
+        if(/*[*/tab/* tabViewItem]*/ ==/* selectedTab*/selectedCustomTab){
             [tab setSelected:YES];
             [self bringSubviewToFront:tab]; //Bring the selected view front (to avoid incorrect image overlap)
+            [tab setDrawDivider:NO];
+            if(previousTab){
+                [previousTab setDrawDivider:NO];
+            }
         }else{
             [tab setSelected:NO];
+            [tab setDrawDivider:YES];
         }
+        
+        previousTab = tab;
     }
 }
 
