@@ -6,6 +6,7 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
+#import "AIFlexibleTableView.h"
 #import "AIFlexibleTableColumn.h"
 #import "AIFlexibleTableCell.h"
 
@@ -22,28 +23,27 @@
     return(self);
 }
 
-//Add and access cells
-- (int)addCell:(AIFlexibleTableCell *)inCell
+//Add and access cells.  Returns YES if our column's width changes
+- (BOOL)addCell:(AIFlexibleTableCell *)inCell
 {
+    BOOL columnWidthDidChange = NO;
+    
     //If this cell is wider than our column, resize ourself so it fits
     if(!flexibleWidth){
         int	cellWidth = [inCell cellSize].width;
 
         if(cellWidth > width){
             width = cellWidth;
-            //[view columnDidResize:self];
+            columnWidthDidChange = YES;
         }
+    }else{ //If our width is flexible, resize the cell to fit
+        [inCell sizeCellForWidth:width];
     }
 
     //Add the cell
     [cellArray addObject:inCell];
 
-    //If our width is flexible, resize the cell to fix our width and return the resulting height
-    if(flexibleWidth){
-        return([inCell sizeCellForWidth:width]);
-    }else{ //Otherwise, return the cell's set height  
-        return([inCell cellSize].height);       
-    }
+    return(columnWidthDidChange);
 }
 
 - (NSArray *)cellArray{
@@ -69,5 +69,6 @@
 - (float)width{
     return(width);
 }
+
 
 @end

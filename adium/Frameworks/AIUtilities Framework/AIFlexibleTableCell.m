@@ -136,8 +136,8 @@
     return(NSMakeSize(cellSize.width + (leftPadding + rightPadding) + FRACTIONAL_PADDING, cellSize.height + (topPadding + bottomPadding))); //We add padding to offset any fractional character widths
 }
 
-//Dynamically resizes this cell for the desired width.  Returns the required height
-- (int)sizeCellForWidth:(float)inWidth
+//Dynamically resizes this cell for the desired width
+- (void)sizeCellForWidth:(float)inWidth
 {
     if(!textStorage){
         //Once a dynamic width is requested, we build the necessary text management instances to handle wrapping and formatting.  This avoids the overhead (memory and speed) of these classes when drawing simple, non-wrapping strings.  Once these classes are present, this cell will use them to draw and properly wrap.
@@ -156,7 +156,8 @@
     [textContainer setContainerSize:NSMakeSize(inWidth - (leftPadding + rightPadding)/* - FRACTIONAL_PADDING*/, 1e7)];
     glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
 
-    return([layoutManager usedRectForTextContainer:textContainer].size.height + (topPadding + bottomPadding)); //Offset to fix rounding errors from partial character widths
+    //Save the new cell dimensions
+    cellSize = [layoutManager usedRectForTextContainer:textContainer].size;
 }
 
 // Drawing -------------------------------------------------------------------------------

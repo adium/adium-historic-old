@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIFlexibleTableCell;
+@class AIFlexibleTableCell, AIFlexibleTableView;
 
 @interface AIFlexibleTableColumn : NSObject {
     NSMutableArray	*cellArray;
@@ -18,10 +18,10 @@
 }
 
 - (NSArray *)cellArray;
-- (int)addCell:(AIFlexibleTableCell *)inCell;
+- (BOOL)addCell:(AIFlexibleTableCell *)inCell;
 - (float)width;
 - (void)setWidth:(float)inWidth;
 - (void)setFlexibleWidth:(BOOL)inFlexible;
 - (BOOL)flexibleWidth;
-    
+  
 @end
