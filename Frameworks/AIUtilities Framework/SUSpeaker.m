@@ -149,7 +149,7 @@ Note that extreme value can make your app crash..."  */
 /*"Returns the voice names in the same order as expected by setVoice:."*/
 +(NSArray*)voiceNames
 {
-    NSMutableArray *voices = [NSMutableArray arrayWithCapacity:0];
+    NSMutableArray *voices = nil;
     short voiceCount;
     OSErr error = noErr;
     int voiceIndex;
@@ -157,7 +157,8 @@ Note that extreme value can make your app crash..."  */
     error = CountVoices(&voiceCount);
     
     if(error != noErr) return voices;
-    
+
+    voices = [NSMutableArray arrayWithCapacity:voiceCount];
     for(voiceIndex=0; voiceIndex<voiceCount; voiceIndex++)
     {
         VoiceSpec	voiceSpec;
@@ -168,7 +169,7 @@ Note that extreme value can make your app crash..."  */
         error = GetVoiceDescription( &voiceSpec, &voiceDescription, sizeof(voiceDescription));
         if(error == noErr)
         {
-            NSString *voiceName = [[[NSString alloc] initWithUTF8String:&(voiceDescription.name[1])] autorelease];
+            NSString *voiceName = [NSString stringWithUTF8String:&(voiceDescription.name[1])];
             
             [voices addObject:voiceName];
         }
@@ -209,6 +210,30 @@ textBytes: LongInt): OSErr;*/
             [_delegate didFinishSpeaking:self];
         }
     }
+}
+-(NSString *)demoTextForVoiceAtIndex:(int)voiceIndex
+{
+	NSString *demoText = nil;
+	OSErr error = noErr;
+	
+	VoiceSpec	voiceSpec;
+	VoiceDescription voiceDescription;
+	
+	if(voiceIndex >= 0){
+		error = GetIndVoice(voiceIndex+1, &voiceSpec);
+		if(error == noErr){
+			error = GetVoiceDescription( &voiceSpec, &voiceDescription, sizeof(voiceDescription));
+		}
+	}else{
+		error = GetVoiceDescription( NULL, &voiceDescription, sizeof(voiceDescription));		
+	}
+
+	
+	if(error == noErr){
+		demoText = [NSString stringWithUTF8String:&(voiceDescription.comment[1])];
+	}
+	
+	return demoText;
 }
 
 //---Delegate

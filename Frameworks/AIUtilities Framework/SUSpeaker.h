@@ -34,6 +34,7 @@
 -(void) resetToDefaults;
 -(int) pitch;
 -(int) rate;
+-(NSString *)demoTextForVoiceAtIndex:(int)voiceIndex;
 
 -(void) setDelegate:(id)delegate;
 -(id) delegate;
