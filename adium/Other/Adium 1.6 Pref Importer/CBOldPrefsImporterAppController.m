@@ -84,7 +84,7 @@
 	if([[appDict objectForKey:@"NSApplicationName"] rangeOfString:@"Adium"].location != NSNotFound &&
            [[appDict objectForKey:@"NSApplicationName"] rangeOfString:@"Importer"].location == NSNotFound){
 	    //Alert
-	    NSBeginAlertSheet(@"Adium is running", @"Okay", nil, nil, window_main, nil, nil, nil, nil, @"Please close all copies of Adium before importing.");
+	    NSBeginAlertSheet(@"Adium is running", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"Please close all copies of Adium before importing.");
 
 	    //Return NO
 	    return(NO);
