@@ -181,30 +181,35 @@ static BOOL didInitOscar = NO;
 																				 UID:sourceUID];
 	if(!contact){
 		NSString	*contactServiceID = nil;
-		AIService	*contactService;
-		const char	firstCharacter = [sourceUID characterAtIndex:0];
 		
-		//Determine service based on UID
-		if([sourceUID hasSuffix:@"@mac.com"]){
-			contactServiceID = @"libgaim-oscar-Mac";
-		}else if(firstCharacter >= '0' && firstCharacter <= '9'){
-			contactServiceID = @"libgaim-oscar-ICQ";
-//		}else if(isMobile = (firstCharacter == '+')){
-//			contactServiceID = @"libgaim-oscar-AIM";
-		}else{
-			contactServiceID = @"libgaim-oscar-AIM";
-		}
-
-		contactService = [[adium accountController] serviceWithUniqueID:contactServiceID];
-
-		contact = [[adium contactController] contactWithService:contactService
+		contact = [[adium contactController] contactWithService:[self _serviceForUID:sourceUID]
 														account:self
 															UID:sourceUID];
 	}
 	
 	return(contact);
 }
+
+- (AIService *)_serviceForUID:(NSString *)contactUID
+{
+	AIService	*contactService;
+	const char	firstCharacter = [contactUID characterAtIndex:0];
 	
+	//Determine service based on UID
+	if([contactUID hasSuffix:@"@mac.com"]){
+		contactServiceID = @"libgaim-oscar-Mac";
+	}else if(firstCharacter >= '0' && firstCharacter <= '9'){
+		contactServiceID = @"libgaim-oscar-ICQ";
+	//		}else if(isMobile = (firstCharacter == '+')){
+	//			contactServiceID = @"libgaim-oscar-AIM";
+	}else{
+		contactServiceID = @"libgaim-oscar-AIM";
+	}
+	
+	contactService = [[adium accountController] serviceWithUniqueID:contactServiceID];
+	
+	return(contactService);
+}
 	
 #pragma mark Account Connection
 

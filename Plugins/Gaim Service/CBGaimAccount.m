@@ -408,7 +408,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (oneway void)requestAddContactWithUID:(NSString *)contactUID
 {
-	[[adium contactController] requestAddContactWithUID:UID service:service];
+	[[adium contactController] requestAddContactWithUID:contactUID
+												service:[self _serviceForUID:contactUID]];
+}
+
+- (AIService *)_serviceForUID:(NSString *)contactUID
+{
+	return([self service]);
 }
 
 - (void)gotGroupForContact:(AIListContact *)listContact {};
