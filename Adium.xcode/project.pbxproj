@@ -7566,7 +7566,6 @@
 				34A250B607E0F822009854E1,
 				4BFC2E7907E357F00063D70C,
 				34C899AC07E51B18009357F6,
-				4BFE2EA007E61A4E00C07EBE,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8171,6 +8170,7 @@
 				34E00F8707B92B89000DF265,
 				34943DEF07BAD918000F2A03,
 				3402D38B07CB04FC0044F818,
+				4BFE2EA807E61FB200C07EBE,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19157,7 +19157,7 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BFE2EA007E61A4E00C07EBE = {
+		4BFE2EA807E61FB200C07EBE = {
 			fileRef = 4BFE2E9F07E61A4E00C07EBE;
 			isa = PBXBuildFile;
 			settings = {
