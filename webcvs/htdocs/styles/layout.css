@@ -329,3 +329,9 @@ p + .date {
 	margin-top: 0;
 	height: 40px;
 }
+
+.forumsearchinput {
+	width: 120px;
+	margin-right: 4px;
+	margin-bottom: 0px;
+}

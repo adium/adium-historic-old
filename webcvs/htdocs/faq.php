@@ -44,7 +44,17 @@
                 <h1>Can't find an answer?</h1>
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
-                    <p>Search the <a href="http://forum.adiumx.com">Adium forum</a></p>
+                    <p>Search the <a href="http://forum.adiumx.com">Adium forum</a><br />
+                        <form action="http://www.funmac.com/search.php" method="post">
+                            <input type="hidden" name="s" value="" />
+                            <input type="hidden" name="searchdate" value="-1" />
+                            <input type="hidden" name="forumchoice" value="38" />
+                            <input type="hidden" name="action" value="simplesearch" />
+                            <input type="text" class="forumsearchinput" name="query" />
+                            <input type="submit" class="forumsearchbutton" value="Go" />
+                        </form>
+                        <span class="tiny"><a href="iseek://url/?=&name=Adium%20Forums&category=Foros&encoding=5&scheme=http&url=www.funmac.com/search.php?s=%26searchdate=-1%26beforeafter=after%26forumchoice=38%26action=simplesearch%26query=">iSeek URL</a> (click to add it)</span>
+                    </p>
                     <p>Try asking in our <a href="irc://irc.freenode.net/#adium">irc channel</a>:<br />
                     <span class="tiny">Server: irc.freenode.net</span><br />
                     <span class="tiny">Channel: #adium</span></p>
