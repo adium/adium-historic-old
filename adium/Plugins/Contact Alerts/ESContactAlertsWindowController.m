@@ -16,6 +16,8 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
+int alertAlphabeticalSort(id objectA, id objectB, void *context);
+
 @implementation ESContactAlertsWindowController
 
 //Open a new info window
@@ -99,11 +101,25 @@
 
 		//Update our list of alerts
 		[alertArray release];
-		alertArray = [[[adium contactAlertsController] alertsForListObject:listObject] retain];
+		alertArray = [[[adium contactAlertsController] alertsForListObject:listObject] mutableCopy];
+		
+		//Sort them
+		[alertArray sortUsingFunction:alertAlphabeticalSort context:nil];
 		
 		//Refresh
 		[tableView_actions reloadData];
 	}
+}
+
+//Sort by event ID, then Action ID
+int alertAlphabeticalSort(id objectA, id objectB, void *context)
+{
+	NSComparisonResult	result = [(NSString *)[objectA objectForKey:KEY_EVENT_ID] compare:(NSString *)[objectB objectForKey:KEY_EVENT_ID]];
+	if(result == NSOrderedSame){
+		result = [(NSString *)[objectA objectForKey:KEY_ACTION_ID] compare:(NSString *)[objectB objectForKey:KEY_ACTION_ID]];
+	}
+
+	return(result);
 }
 
 
