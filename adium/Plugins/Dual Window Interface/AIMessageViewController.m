@@ -116,10 +116,14 @@
 	[scrollView_userList setAutoScrollToBottom:NO];
 	[scrollView_userList setAutoHideScrollBar:YES];
 	[scrollView_userList retain];
+	
 	[tableView_userList setDelegate:self];
 	[tableView_userList setTarget:self];
 	[tableView_userList setDoubleAction:@selector(cellWasDoubleClicked:)];
 	[tableView_userList setNextResponder:controllerView_messages];
+	
+	NSTableColumn *leftCol = [[tableView_userList tableColumns] objectAtIndex:0];
+	[leftCol setDataCell:[[[NSImageCell alloc] init] autorelease]];
 	
 	// Set up the split view
 	[splitView_messages setDelegate:self];
@@ -144,6 +148,12 @@
 												 name:AIViewDesiredSizeDidChangeNotification 
 											   object:textView_outgoing];
     
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(listObjectChanged:)
+									   name:ListObject_StatusChanged
+									 object:nil];
+
+
     //Finish everything up
 	[self chatStatusChanged:nil];
 	[self chatParticipatingListObjectsChanged:nil];
@@ -245,14 +255,12 @@
 //For our account selector view
 - (AIListObject *)listObject
 {
-	NSLog(@"#### listObject = %@",[chat listObject]);
     return([chat listObject]);
 }
 
 //Selected item in the group chat view
 - (AIListObject *)preferredListObject
 {
-	NSLog(@"#### preferredListObject");
 	if( [[splitView_messages subviews] containsObject:scrollView_userList] && ([tableView_userList selectedRow] != -1)) {
 		return [[chat participatingListObjects] objectAtIndex:[tableView_userList selectedRow]];
 	}
@@ -433,7 +441,6 @@
     int		height;
     NSRect	superFrame = [view_contents frame];
 
-	//NSLog(@"#### Original superFrame: %@",NSStringFromRect(superFrame));
 	
     superFrame.origin.y = 0;
     superFrame.origin.x = 0;
@@ -465,22 +472,15 @@
 
     //UserList
     if(showUserList){
-		// NSLog(@"#### YES showUserList");
 		if( ![[splitView_messages subviews] containsObject:scrollView_userList] ) {
-			//NSLog(@"####     and add it");
 			[splitView_messages addSubview:scrollView_userList];
-			//NSLog(@"splitFrame %@",NSStringFromRect([splitView_messages frame]));
-			//NSLog(@"superFrame %@",NSStringFromRect(superFrame));
 			NSRect splitFrame = [splitView_messages frame];
 			[controllerView_messages setFrame:NSMakeRect(0,0,NSWidth(splitFrame)-USER_LIST_WIDTH-[splitView_messages dividerThickness],NSHeight(splitFrame))];
 			[scrollView_userList setFrame:NSMakeRect(NSWidth(splitFrame)-USER_LIST_WIDTH,0,USER_LIST_WIDTH,NSHeight(splitFrame))];
-			//NSLog(@"userListFrame %@",NSStringFromRect([scrollView_userList frame]));
 		}
     }else{
-		//NSLog(@"#### NO showUserList");
 		if( [[splitView_messages subviews] containsObject:scrollView_userList] ) {
 			[scrollView_userList removeFromSuperview];
-			//NSLog(@"####    and remove it");
 		}
     }
 	
@@ -501,29 +501,31 @@
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    return([[[chat participatingListObjects] objectAtIndex:row] displayName]);
+	AIListObject *listObject = [[chat participatingListObjects] objectAtIndex:row];
+
+	// Identifier 0: status image column. 1: name
+	if( [(NSNumber *)[tableColumn identifier] intValue] == 0 ) {
+		return [AITabStatusIconsPlugin iconForListObject:listObject];
+	} else {
+		return([listObject displayName]);
+	}
 }
 
 // Allow selection of a contact, prepare info on them
 - (BOOL)tableView:(NSTableView *)aTableView shouldSelectRow:(int)rowIndex
-{
-	NSLog(@"#### Chat: should select %@",[[[chat participatingListObjects] objectAtIndex:rowIndex] displayName]);
-	
+{	
 	return YES;
 }
 
 // Cell was single-clicked
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
-	NSLog(@"#### Chat: did select %@",[[[chat participatingListObjects] objectAtIndex:[tableView_userList selectedRow]] displayName]);	
 	int selectedIndex = [tableView_userList selectedRow];
 	[chat setPreferredListObject:[[chat participatingListObjects] objectAtIndex:selectedIndex]];
 }
 
 - (void)cellWasDoubleClicked:(id)sender
-{
-	NSLog(@"#### Chat: double-clicked %@",sender);
-	
+{	
 	/*
 	int selectedIndex = [tableView_userList selectedRow];
 	
@@ -535,6 +537,11 @@
 	}
 	*/
 	
+}
+
+- (void)listObjectChanged:(NSNotification *)notification
+{
+	[tableView_userList reloadData];
 }
 
 #pragma mark Split View Delegate
