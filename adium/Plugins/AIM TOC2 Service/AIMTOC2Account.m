@@ -66,7 +66,7 @@ static char *hash_password(const char * const password);
 - (void)AIM_SetStatus;
 - (void)AIM_GetProfile:(NSString *)handleUID;
 - (void)AIM_GetStatus:(NSString *)handleUID;
-- (void)AIM_SendWarningToHandle:(NSString *)handleUID anonymous:(BOOL)anonymous;
+- (void)AIM_SendWarningWithHandle:(NSString *)handleUID anonymous:(BOOL)anonymous;
 - (NSString *)extractStringFrom:(NSString *)searchString between:(NSString *)stringA and:(NSString *)stringB;
 - (NSString *)validCopyOfString:(NSString *)inString;
 - (void)connect;
@@ -559,7 +559,7 @@ static char *hash_password(const char * const password);
                 o = d - a + b + 71665152;
 
 //                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
-                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.71 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
+                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.72 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
 
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 
@@ -1370,15 +1370,9 @@ static char *hash_password(const char * const password);
 
 - (void)AIM_HandleEviled:(NSString *)message
 {
-    NSString		*compactedName = [[self UID] compactedString];
-    AIHandle		*handle = [handleDict objectForKey:compactedName];
-    NSMutableDictionary	*handleStatusDict = [handle statusDictionary];
-	
     NSString	*level = [message TOCStringArgumentAtIndex:1];
     NSString	*enemy = [message TOCStringArgumentAtIndex:2];
-    BOOL	cooldown = [[handleStatusDict objectForKey:@"Cooldown"] boolValue];
-
-    NSLog(@"%s",cooldown);
+    BOOL	cooldown = [[statusDict objectForKey:@"Cooldown"] boolValue];
     
     if((enemy == nil) && (!cooldown)){
 	[[owner interfaceController] handleErrorMessage:@"Warning Level (Anonymous)" withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
@@ -1482,7 +1476,7 @@ static char *hash_password(const char * const password);
 
 }
 
-- (void)AIM_SendWarningToHandle:(NSString *)handleUID anonymous:(BOOL)anonymous;
+- (void)AIM_SendWarningWithHandle:(NSString *)handleUID anonymous:(BOOL)anonymous;
 {
     NSString	*message;
 
