@@ -136,27 +136,13 @@
 - (void)contentObjectAdded:(NSNotification *)notification
 {
     id <AIContentObject>	newObject = [[notification userInfo] objectForKey:@"Object"];
-    NSScrollView		*enclosingScrollView;
-    NSRect			documentVisibleRect;
-    BOOL			autoScroll;
 
-    //Handle the content
+    //Add the content
     [self addCellsForContactObject:newObject];
- 
-    //Determine if we want to auto-scroll to the bottom after adding this new message
-    enclosingScrollView = [self enclosingScrollView];
-    documentVisibleRect = [enclosingScrollView documentVisibleRect];
-    autoScroll = ((documentVisibleRect.origin.y + documentVisibleRect.size.height) > ([self frame].size.height - AUTOSCROLL_CATCH_SIZE));
 
     //Resize and redisplay
     [self resizeToFillContainerView];
     [self setNeedsDisplay:YES];
-    
-    //Perform the auto-scroll
-    if(autoScroll){ //Scroll to the bottom
-        [[enclosingScrollView contentView] scrollToPoint:NSMakePoint(0, [self frame].size.height - documentVisibleRect.size.height)];
-        [enclosingScrollView reflectScrolledClipView:[enclosingScrollView contentView]];
-    }
 }
 
 //Private ---------------------------------------------------------------------------
@@ -248,13 +234,12 @@ lineColorDarkDivider = [[backColorIn darkenBy:0.2] retain];
 
 //Called when the frame changes.  Adjust to fill the new frame
 - (void)frameChanged:(NSNotification *)notification
-{
+{    
+    //Resize and redisplay
     [self resizeToFillContainerView];
-    [self resizeCells]; //ghetto live resize
+    [self resizeCells]; //live resize the contents
     [self setNeedsDisplay:YES];
 }
-
-
 
 //Flush and completely rebuild the message cell array
 - (void)buildMessageCellArray
@@ -368,20 +353,41 @@ lineColorDarkDivider = [[backColorIn darkenBy:0.2] retain];
     }
 }
 
-//Recalculate our dimensions
+//Recalculate our dimensions, resizing our view to fill the entire space
 - (void)resizeToFillContainerView
 {
-    NSRect	documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
-    NSSize	size;
-    
+    NSScrollView		*enclosingScrollView;
+    NSRect			documentVisibleRect;
+    BOOL			autoScroll;
+    NSSize			size;
+
+    //Before resizing the view, we decide if the user is close to the bottom of our view.  If they are, we want to keep them at the bottom no matter what happens during the resize.
+    enclosingScrollView = [self enclosingScrollView];
+    documentVisibleRect = [enclosingScrollView documentVisibleRect];
+    autoScroll = ((documentVisibleRect.origin.y + documentVisibleRect.size.height) > ([self frame].size.height - AUTOSCROLL_CATCH_SIZE));
+
+    //Resize our view
     size.width = documentVisibleRect.size.width;
     size.height = contentsHeight;
     if(size.height < documentVisibleRect.size.height){
         size.height = documentVisibleRect.size.height;
     }
     [self setFrameSize:size];
+
+    //If the user was near the bottom, move them back to the bottom (autoscroll)
+    if(autoScroll){
+        [[enclosingScrollView contentView] scrollToPoint:NSMakePoint(0, [self frame].size.height - documentVisibleRect.size.height)];
+        [enclosingScrollView reflectScrolledClipView:[enclosingScrollView contentView]];
+    }
 }
 
 
 @end
+
+
+
+
+
+
+
 
