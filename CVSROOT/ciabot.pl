@@ -29,14 +29,11 @@
 # below.
 #
 #
-# $Id: ciabot.pl,v 1.22 2004/01/23 03:41:27 ramoth4 Exp $
+# $Id: ciabot.pl,v 1.23 2004/01/23 05:13:31 ramoth4 Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $rpc_uri $sendmail $sync_delay
 		$xml_rpc $ignore_regexp $alt_local_message_target);
-
-
-
 
 ### Configuration
 
@@ -103,6 +100,7 @@ my @dirfiles;  # This array is mapped to the @dir array and contains files
                # affected in each directory
 
 
+$" = ":";
 
 ### Input data loading
 
@@ -112,7 +110,7 @@ my @dirfiles;  # This array is mapped to the @dir array and contains files
 
 @files = split (' ,,,', ($ARGV[0] or ''));
 $dir[0] = shift @files or die "$0: no directory specified\n";
-$dirfiles[0] = join (' ,,,', @files) or die "$0: no files specified\n";
+$dirfiles[0] = "@files" or die "$0: no files specified\n";
 
 
 # Guess module name.
@@ -250,7 +248,7 @@ for (my $dirnum = 0; $dirnum < @dir; $dirnum++) {
     s/</&lt;/g;
     s/>/&gt;/g;
     $message .= "  <file>$_</file>\n";
-  } split(' ,,,,', $dirfiles[$dirnum]);
+  } split($", $dirfiles[$dirnum]);
 }
 
 $message .= <<EM
