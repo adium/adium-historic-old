@@ -44,4 +44,9 @@
 
 - (void)setExpanded:(BOOL)inExpanded;
 - (BOOL)isExpanded;
+
+// (PRIVATE: For contact controller ONLY)
+- (BOOL)addObject:(AIListObject *)inObject;
+- (void)removeObject:(AIListObject *)inObject;
+- (NSArray *)listContacts;
 @end
