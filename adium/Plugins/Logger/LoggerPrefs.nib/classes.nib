@@ -5,6 +5,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_enableFont" = NSButton; 
+                "checkBox_enableHTML" = NSButton; 
                 "checkBox_enableLogging" = NSButton; 
                 "checkBox_enableStatus" = NSButton; 
                 "checkBox_enableStyle" = NSButton; 
