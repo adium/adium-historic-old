@@ -187,7 +187,6 @@ struct oscar_data {
                 //tell the contact controller, silencing if necessary
                 [[adium contactController] handleStatusChanged:theHandle
                                             modifiedStatusKeys:modifiedKeys
-                                                       delayed:silentAndDelayed
                                                         silent:silentAndDelayed];
             }
         }

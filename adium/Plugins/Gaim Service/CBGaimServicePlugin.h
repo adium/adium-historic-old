@@ -40,8 +40,4 @@
 - (void)addAccount:(id)anAccount forGaimAccountPointer:(GaimAccount *)gaimAcct;
 - (void)removeAccount:(GaimAccount *)gaimAcct;
 - (BOOL)configureGaimProxySettings;
-
-- (void)setAccountIdleTo:(NSTimeInterval)idle;
-- (void)setAccountAwayTo:(NSAttributedString *)awayMessage;
-- (void)setAccountProfileTo:(NSAttributedString *)profile;
 @end
