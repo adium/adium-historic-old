@@ -34,16 +34,17 @@
 {
     NSArray		*modifiedAttributes = nil;
 
-    if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){
+    if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"] || [inModifiedKeys containsObject:@"Signed Off"]){
         AIMutableOwnerArray	*hiddenArray = [inHandle displayArrayForKey:@"Hidden"];
-        int			hidden = ![[inHandle statusArrayForKey:@"Online"] greatestIntegerValue];
-
+        int			online = [[inHandle statusArrayForKey:@"Online"] greatestIntegerValue];
+        int			justSignedOff = [[inHandle statusArrayForKey:@"Signed Off"] containsAnyIntegerValueOf:1];
+        
         //Remove any 'hidden' value we've previously inserted
         [hiddenArray removeObjectsWithOwner:self];
-
+        
         //Insert an updated value
-        if(hidden){
-            [hiddenArray addObject:[NSNumber numberWithInt:hidden] withOwner:self];
+        if(!online && !justSignedOff){
+            [hiddenArray addObject:[NSNumber numberWithInt:YES] withOwner:self]; //Hidden
         }
 
         modifiedAttributes = [NSArray arrayWithObject:@"Hidden"];
