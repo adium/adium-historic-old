@@ -178,7 +178,6 @@
     if([[sender title] isEqualToString:[ACCOUNT_CONNECTING_MENU_TITLE stringByAppendingFormat:@" %@",TARGET_ACCOUNT_TITLE]]){
         //let the user disconnect from the menu item.
         [targetAccount setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-        [targetAccount  disconnect];
     }else{
         [targetAccount setPreference:[NSNumber numberWithBool:!online] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
     }
