@@ -7,18 +7,18 @@ Version 0.58
 - Added automatic use of Safari, Camino, FireFox, and OmniWeb bookmarks
 - Added "new mail" notification support for Yahoo! and MSN
 - Added ability to group chat tabs by contact list groups
+- Improved AIM DirectIM (IM Image) support
+- Improved Gadu-Gadu support
 - Improved event notifications
 - Improved installation of X(tras)
-- Improved AIM DirectIM (IM Image) support
 - Improved preference windows
 - Improved the Mockie message style, including fixing issues in very wide windows
-- Improved Gadu-Gadu support
-- Fixed many MSN bugs, including a crash when dragging contacts between groups
+- Fixed many MSN bugs, including a crash when dragging contacts between groups and a problem using HTTP Connect Method
+- Fixed a crash when joining a multiuser chat
+- Fixed several issues with messages sent from or to ICQ users
 - Fixed a bug where shorter emoticons could mask larger ones
 - Fixed a crash while dragging emoticon packs
 - Fixed a crash when displaying error messages
-- Fixed a crash when joining a multiuser chat
-- Fixed several issues with messages sent from or to ICQ users
 - Fixed a crash when clicking poorly formed aim://goim links
 
 Version 0.57 (5/21/2004)
