@@ -36,7 +36,7 @@
 
 
 @interface ESContactAlertsController : NSObject {
-    IBOutlet	AIAdium			*owner;
+    IBOutlet	AIAdium			*adium;
 	
 	NSMutableDictionary			*globalOnlyEventHandlers;
 	NSMutableDictionary			*eventHandlers;
