@@ -362,7 +362,17 @@
 //        NSLog(@"sending %s to %@",[body UTF8String],[[chat listObject] displayName]);
         gaim_conv_im_send(im, [body UTF8String]);
         sent = YES;
-    }
+	}else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
+//		AIListContact	*contact = (AIListContact *)[[object chat] listObject];
+//		
+//		//Send the typing client event
+//		if(contact){
+//			[self AIM_SendClientEvent:([(AIContentTyping *)object typing] ? 2 : 0)
+//							 toHandle:[contact UID]];
+//			sent = YES;
+//		}
+	}
+	
     return sent;
 }
 
@@ -765,7 +775,10 @@
     BOOL currentValue = [[contact statusObjectForKey:@"Typing" withOwner:self] boolValue];
 	
     if(typing != currentValue){
-		[contact setStatusObject:[NSNumber numberWithBool:typing] withOwner:self forKey:[NSArray arrayWithObject:@"Typing"] notify:YES];
+		[contact setStatusObject:[NSNumber numberWithBool:typing]
+					   withOwner:self
+						  forKey:@"Typing"
+						  notify:YES];
     }
 }
 
