@@ -74,7 +74,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Called when the mouse enters the link
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-    NSWindow		*window = [theEvent window];
+	NSWindow		*window = [theEvent window];
     AIFlexibleLink	*link = [theEvent userData];
     NSPoint		location;
 
@@ -129,7 +129,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 		
 		if(linkString != nil && [linkString length] != 0){
 			//add http:// to the link string if a protocol wasn't specified
-			if([linkString rangeOfString:@"://"].location == NSNotFound && [linkString rangeOfString:@"mailto:"].location == NSNotFound){
+			if(([linkString rangeOfString:@"://"].location == NSNotFound) &&
+			   ([linkString rangeOfString:@"mailto:"].location == NSNotFound)){
 				linkURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",linkString]];
 			}else{
 				linkURL = [NSURL URLWithString:linkString];
@@ -335,10 +336,10 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
         [NSCursor setHandPointCursor]; //Set link cursor
 
-		//If the link's title matches it's URL, there is no need to show the tooltip.
+		//If the link's title matches its URL, there is no need to show the tooltip.
 		if(showTooltip &&
-		   [[inHoveredLink title] caseInsensitiveCompare:[inHoveredLink url]] != 0 &&
-		   [[@"http://" stringByAppendingString:[inHoveredLink title]] caseInsensitiveCompare:[inHoveredLink url]] != 0){
+		   [[inHoveredLink title] caseInsensitiveCompare:[inHoveredLink url]] != NSOrderedSame &&
+		   [[@"http://" stringByAppendingString:[inHoveredLink title]] caseInsensitiveCompare:[inHoveredLink url]] != NSOrderedSame){
 			
 			[hoveredLink release]; hoveredLink = [inHoveredLink retain];
 			[hoveredString release]; hoveredString = [[NSString stringWithFormat:@"%@", [hoveredLink url]] retain];
