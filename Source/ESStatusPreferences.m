@@ -8,6 +8,8 @@
 
 #import "ESStatusPreferences.h"
 #import "AIStatusController.h"
+#import "AIAccountController.h"
+#import <Adium/AIAccount.h>
 #import <Adium/AIEditStateWindowController.h>
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AIAutoScrollView.h>
@@ -179,13 +181,27 @@
 {
 	if(originalState){
 		/* As far the user was concerned, this was an edit.  The unique status ID should remain the same so that anything
-		 * depending upon this status will update to using it.  At the same time, the old one may still be in use elsewhere
-		 * (if, for example, an account has it active).  It should therefore have its uniqueID cleared so it will obtain a new
-		 * one as needed */
+		 * depending upon this status will update to using it.  Furthermore, since this may be a copy of originalState
+		 * rather than the exact same object, we should update all accounts which are using this state to use the new copy
+		 */
 		[newState setUniqueStatusID:[originalState uniqueStatusID]];
-		[originalState setUniqueStatusID:nil];
+		
+		NSEnumerator	*enumerator;
+		AIAccount		*account;
+		
+		enumerator = [[[adium accountController] accountArray] objectEnumerator];
+		while(account = [enumerator nextObject]){
+			if([account statusState] == originalState){
+				[account setStatusStateAndRemainOffline:newState];
+				
+				[self notifyOfChangedStatusSilently:YES];
+			}
+		}
 
 		[[adium statusController] replaceExistingStatusState:originalState withStatusState:newState];
+
+		[originalState setUniqueStatusID:nil];
+
 	}else{
 		[[adium statusController] addStatusState:newState];
 	}
