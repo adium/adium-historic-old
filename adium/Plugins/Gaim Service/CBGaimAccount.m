@@ -499,17 +499,22 @@
 
 - (void)setAwayMessage:(id)message
 {
-    const char *newValue = NULL;
+    char *awayMessage = NULL;
+    
     if (message) {
-        newValue = [[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
-                                      headers:YES
-                                     fontTags:YES
-                                closeFontTags:YES
-                                    styleTags:YES
-                   closeStyleTagsOnFontChange:NO] UTF8String];
+        NSString * encodedMessage = [AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
+                                                                headers:YES
+                                                               fontTags:YES
+                                                          closeFontTags:YES
+                                                              styleTags:YES
+                                             closeStyleTagsOnFontChange:NO];
+        //g_malloc a char * so it remains in existence past this method
+        char * awayMessage = g_malloc(strlen([encodedMessage cString]) * 4 + 1);
+        [encodedMessage getCString:awayMessage];
     }
-    NSLog(@"setting away message...");
-    serv_set_away(gc, NULL, newValue);
+
+    //this will g_free the old one if necessary
+    serv_set_away(gc, NULL, awayMessage);
 }
 
 - (void)finishConnect:(NSString *)inPassword
