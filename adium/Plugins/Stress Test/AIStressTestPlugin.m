@@ -1,15 +1,12 @@
-/***
 ///
 //  AIStressTestPlugin.m
 //  Adium
 //
 //  Created by Adam Iser on Fri Sep 26 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIStressTestPlugin.h"
 #import "AIStressTestAccount.h"
-
 
 @implementation AIStressTestPlugin
 
@@ -23,13 +20,13 @@
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
 
     //Register this service
-//#warning [[adium accountController] registerService:self];
+    [[adium accountController] registerService:self];
 }
 
 //Return a new account with the specified properties
-- (id)accountWithProperties:(NSDictionary *)inProperties
+- (id)accountWithUID:(NSString *)inUID
 {
-//    return([[[AIStressTestAccount alloc] initWithProperties:inProperties service:self] autorelease]);
+    return([[[AIStressTestAccount alloc] initWithUID:inUID service:self] autorelease]);
 }
 
 // Return a Plugin-specific ID and description
@@ -39,7 +36,7 @@
 }
 - (NSString *)description
 {
-    return(@"Stress Test (Do not use)");
+    return(@"Stress Test (Das ist verboten)");
 }
 
 // Return an ID, description, and image for handles owned by accounts of this type
@@ -49,4 +46,3 @@
 }
 
 @end
-*/
