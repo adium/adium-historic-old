@@ -47,6 +47,7 @@
 								   selector:@selector(accountPreferencesChanged:)
 									   name:Preference_GroupChanged
 									 object:account];
+	[[adium contactController] registerListObjectObserver:self];
 	
     return(self);
 }
@@ -54,6 +55,7 @@
 //Dealloc
 - (void)dealloc
 {    
+	[[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
     [view_accountView release];
     [auxilaryTabs release];
@@ -87,7 +89,10 @@
     }else{
         [textField_password setStringValue:@""];
     }
-	
+
+	//Enable/Disable controls
+	[self updateListObject:nil keys:nil delayed:NO silent:NO];
+
 }
 
 //Return the inline view for this account
@@ -100,6 +105,19 @@
 - (NSArray *)auxilaryTabs
 {    
     return(auxilaryTabs);
+}
+
+//Update display for account status change
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+{
+	if(inObject == nil || inObject == account){
+		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){
+			[textField_accountName setEnabled:![[account statusObjectForKey:@"Online"] boolValue]];
+			[textField_password setEnabled:![[account statusObjectForKey:@"Online"] boolValue]];
+		}
+	}
+	
+	return(nil);
 }
 
 //Display changed account preferences
