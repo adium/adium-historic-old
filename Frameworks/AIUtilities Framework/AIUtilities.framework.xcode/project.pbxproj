@@ -509,6 +509,14 @@
 			);
 			hasScannedForEncodings = 1;
 			isa = PBXProject;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				Italian,
+				Dutch,
+			);
 			mainGroup = 0867D691FE84028FC02AAC07;
 			productRefGroup = 034768DFFF38A50411DB9C8B;
 			projectDirPath = "";
@@ -3369,6 +3377,46 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		3498FEA707F489600004B79A = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Italian;
+			path = Resources/Italian.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3498FEAE07F489730004B79A = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Dutch;
+			path = Resources/Dutch.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3498FEAF07F489770004B79A = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = French;
+			path = Resources/French.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3498FEB007F4897A0004B79A = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = German;
+			path = Resources/German.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3498FEB107F4897D0004B79A = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Japanese;
+			path = Resources/Japanese.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		34BFE58007E9180500AD984D = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -3457,6 +3505,11 @@
 		34D833AB07CBE355006466F2 = {
 			children = (
 				34D833A907CBE34B006466F2,
+				3498FEA707F489600004B79A,
+				3498FEAE07F489730004B79A,
+				3498FEAF07F489770004B79A,
+				3498FEB007F4897A0004B79A,
+				3498FEB107F4897D0004B79A,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
