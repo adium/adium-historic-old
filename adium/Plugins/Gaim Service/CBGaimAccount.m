@@ -90,7 +90,7 @@
 	[theContact setStatusObject:[NSNumber numberWithBool:online] withOwner:self forKey:@"Online" notify:NO];
 	[self _setInstantMessagesWithContact:theContact enabled:online];
 	/*           
-	    //buddy->signon is always 0 - this will be fixed gaimside soon.
+	    //buddy->signon is always 0 - this will be fixed in libgaim 0.75.
 	    if (online && buddy->signon != 0) {
 		//Set the signon time
 		NSMutableDictionary * statusDict = [theHandle statusDictionary];
