@@ -47,7 +47,7 @@ DeclareString(FormattedUID);
     containingGroup = nil;
     UID = [inUID retain];	
     serviceID = [inServiceID retain];
-
+	
 	orderIndex = -1;
 	delayedStatusTimers = nil;
 	
@@ -182,13 +182,11 @@ DeclareString(FormattedUID);
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
 {
 	if(key){
-		[statusUpdateLock lock];
 		if(value){
 			[statusDictionary setObject:value forKey:key];
 		}else{
 			[statusDictionary removeObjectForKey:key];
 		}
-		[statusUpdateLock unlock];
 		
 		//Inform our containing group and ourself (in case subclasses want to know) about the new status object value
 		if (containingGroup)
@@ -201,12 +199,9 @@ DeclareString(FormattedUID);
 											modifiedStatusKeys:[NSArray arrayWithObject:key]
 														silent:NO];
 		}else{
-			[statusUpdateLock lock];
-			
 			if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
 			[changedStatusKeys addObject:key];
 			
-			[statusUpdateLock unlock];
 		}
 	}
 }
@@ -214,8 +209,6 @@ DeclareString(FormattedUID);
 //Perform a status change after a short delay
 - (void)setStatusObject:(id)value forKey:(NSString *)key afterDelay:(NSTimeInterval)delay
 {
-	[delayedStatusTimerLock lock];
-	
 	if(!delayedStatusTimers) delayedStatusTimers = [[NSMutableArray alloc] init];
 	NSTimer		*timer = [NSTimer scheduledTimerWithTimeInterval:delay
 														  target:self
@@ -226,8 +219,6 @@ DeclareString(FormattedUID);
 															nil]
 														 repeats:NO];
 	[delayedStatusTimers addObject:timer];
-	
-	[delayedStatusTimerLock unlock];
 }
 
 - (void)delayedStatusChange:(NSDictionary *)statusChangeDict
