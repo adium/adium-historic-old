@@ -264,8 +264,7 @@ static NEHTicTacToeController * sharedInstance = nil;
     }
 	else
 	{
-		NSRunAlertPanel(CONTACT_NOT_FOUND,[NSString stringWithFormat:CONTACT_NOT_FOUND_MESSAGE,[textField_handle stringValue]],
-							BUTTON_ERR,nil,nil);
+		NSBeginAlertSheet(CONTACT_NOT_FOUND,BUTTON_ERR,nil,nil,boardWindow,self,NULL,NULL,NULL,CONTACT_NOT_FOUND_MESSAGE,[textField_handle stringValue]);
 	}
 }
 
@@ -303,7 +302,7 @@ static NEHTicTacToeController * sharedInstance = nil;
 	[self sendMessage:MSG_TIMEOUT ofType:MSG_TYPE_CANCEL];
 	[timer invalidate];
 	timeout = nil;
-	NSRunAlertPanel(TIMEOUT,TIMEOUT_MESSAGE,BUTTON_OK,nil,nil);	
+	NSBeginAlertSheet(TIMEOUT,BUTTON_OK,nil,nil,boardWindow,self,NULL,NULL,NULL,TIMEOUT_MESSAGE);
 }
 
 #pragma mark Board Management Stuff
@@ -377,14 +376,13 @@ static NEHTicTacToeController * sharedInstance = nil;
 			winner = [board winner];
 			if(winner != PLAYER_NONE)
 			{
-				NSRunAlertPanel(GAME_OVER,(winner == player)?
-									YOU_WIN : YOU_LOSE, BUTTON_OK, nil, nil);
+				NSBeginAlertSheet(GAME_OVER,BUTTON_OK,nil,nil,boardWindow,self,NULL,NULL,NULL,(winner == player)?YOU_WIN:YOU_LOSE);
 				[status setStringValue: (winner == player)?YOU_WIN:YOU_LOSE];
 				[squares setEnabled:NO];
 			}
 			else				//Tie
 			{
-				NSRunAlertPanel(GAME_OVER,TIE, BUTTON_OK, nil, nil);
+				NSBeginAlertSheet(GAME_OVER,BUTTON_OK,nil,nil,boardWindow,self,NULL,NULL,NULL,TIE);
 				[status setStringValue: TIE];
 				[squares setEnabled:NO];
 			}
@@ -525,7 +523,7 @@ static NEHTicTacToeController * sharedInstance = nil;
 				timeout = nil;
 			}
 			[self reset];
-			NSRunAlertPanel(INVITE_REJECTED,INVITE_REJECTED_MESSAGE,BUTTON_OK,nil,nil);
+			NSBeginAlertSheet(INVITE_REJECTED,BUTTON_OK,nil,nil,boardWindow,self,NULL,NULL,NULL,INVITE_REJECTED_MESSAGE);
 		}
 		else NSLog(@"TTT:Reject message received with state %d.",state);
 	}
@@ -534,7 +532,7 @@ static NEHTicTacToeController * sharedInstance = nil;
 		if(state == State_InviteReceived)
 		{
 			[self reset];
-			NSRunAlertPanel(INVITE_CANCELLED,INVITE_CANCELLED_MESSAGE,BUTTON_OK,nil,nil);
+			NSBeginAlertSheet(INVITE_CANCELLED,BUTTON_OK,nil,nil,boardWindow,self,NULL,NULL,NULL,INVITE_CANCELLED_MESSAGE);
 		}
 		else NSLog(@"TTT:Cancel message received with state %d.",state);
 	}
@@ -554,7 +552,7 @@ static NEHTicTacToeController * sharedInstance = nil;
 		if(state == State_Playing)
 		{
 			[self reset];
-			NSRunAlertPanel(GAME_ENDED,GAME_ENDED_MESSAGE,BUTTON_OK,nil,nil);
+			NSBeginAlertSheet(GAME_ENDED,BUTTON_OK,nil,nil,boardWindow,self,NULL,NULL,NULL,GAME_ENDED_MESSAGE);
 		}
 		else NSLog(@"TTT:End game message received with state %d.",state);
 	}
