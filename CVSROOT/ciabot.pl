@@ -6,6 +6,7 @@
 # Loosely based on cvslog by Russ Allbery <rra@stanford.edu>
 # Copyright 1998  Board of Trustees, Leland Stanford Jr. University
 #
+#
 # Copyright 2001, 2003, 2004  Petr Baudis <pasky@ucw.cz>
 #
 # This program is free software; you can redistribute it and/or modify it under
@@ -28,7 +29,7 @@
 # If it does not work, try to disable $xml_rpc in the configuration section
 # below.
 #
-# $Id: ciabot.pl,v 1.18 2004/01/23 03:31:02 ramoth4 Exp $
+# $Id: ciabot.pl,v 1.19 2004/01/23 03:32:03 ramoth4 Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $rpc_uri $sendmail $sync_delay
