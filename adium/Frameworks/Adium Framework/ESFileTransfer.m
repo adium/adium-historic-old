@@ -1,6 +1,6 @@
 //
 //  ESFileTransfer.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Thu Nov 13 2003.
 //

@@ -1,6 +1,6 @@
 //
 //  AIGradientCell.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Chris Serino on Wed Jan 28 2004.
 //

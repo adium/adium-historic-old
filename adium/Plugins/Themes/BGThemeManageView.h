@@ -1,6 +1,6 @@
 //
 //  BGThemeManageView.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Brian Ganninger on Sun Jan 11 2004.
 //

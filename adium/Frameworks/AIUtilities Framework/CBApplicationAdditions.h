@@ -1,6 +1,6 @@
 //
 //  CBApplicationAdditions.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Colin Barrett on Fri Nov 28 2003.
 //

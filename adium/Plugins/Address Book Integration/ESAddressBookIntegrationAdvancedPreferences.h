@@ -1,6 +1,6 @@
 //
 //  ESAddressBookIntegrationAdvancedPreferences.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Fri Nov 21 2003.
 //

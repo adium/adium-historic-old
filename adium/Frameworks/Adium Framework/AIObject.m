@@ -1,6 +1,6 @@
 //
 //  AICoreObject.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Adam Iser on Sun Dec 14 2003.
 //

@@ -1,6 +1,6 @@
 //
 //  JSCEventBezelWindow.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Jorge Salvador Caffarena.
 //  Copyright (c) 2003 All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  BGThemesPlugin.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Brian Ganninger on Sat Jan 03 2004.
 //

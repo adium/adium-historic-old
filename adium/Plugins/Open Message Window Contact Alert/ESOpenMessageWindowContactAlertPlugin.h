@@ -1,6 +1,6 @@
 //
 //  ESOpenMessageWindowContactAlertPlugin.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Sat Nov 29 2003.
 

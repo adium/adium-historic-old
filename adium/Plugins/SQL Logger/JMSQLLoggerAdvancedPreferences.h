@@ -1,6 +1,6 @@
 /*
  *  JMSQLLoggerAdvancePreferences.h
- *  Adium XCode
+ *  Adium
  * 
  *
  */

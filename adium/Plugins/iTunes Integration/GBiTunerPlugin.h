@@ -1,6 +1,6 @@
 //
 //  GBiTunerPlugin.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Gregory Barchard on Wed Dec 10 2003.
 

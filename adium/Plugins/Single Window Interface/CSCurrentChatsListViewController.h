@@ -1,6 +1,6 @@
 //
 //  CSCurrentChatsListViewController.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Chris Serino on Thu Jan 01 2004.
 //

@@ -1,6 +1,6 @@
 //
 //  BZContextImageBridge.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Mac-arena the Bored Zo on Thu Feb 12 2004.
 //

@@ -1,6 +1,6 @@
 //
 //  ESQuicklyResizingPanel.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Sat Oct 25 2003.
 //

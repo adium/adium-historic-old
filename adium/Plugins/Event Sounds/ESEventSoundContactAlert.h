@@ -1,6 +1,6 @@
 //
 //  ESEventSoundContactAlert.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
 

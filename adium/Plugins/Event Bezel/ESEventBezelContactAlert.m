@@ -1,6 +1,6 @@
 //
 //  ESEventBezelContactAlert.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Thu Nov 27 2003.
 //

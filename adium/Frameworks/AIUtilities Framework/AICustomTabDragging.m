@@ -1,6 +1,6 @@
 //
 //  AICustomTabDragging.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Adam Iser on Sat Mar 06 2004.
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.

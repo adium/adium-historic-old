@@ -1,6 +1,6 @@
 //
 //  JMSQLLoggerAdvancedPreferences.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Jeffrey Melloy on Sun Nov 09 2003.
 //

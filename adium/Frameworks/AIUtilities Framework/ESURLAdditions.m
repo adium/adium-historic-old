@@ -1,6 +1,6 @@
 //
 //  ESURLAdditions.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Tue Feb 17 2004.
 //

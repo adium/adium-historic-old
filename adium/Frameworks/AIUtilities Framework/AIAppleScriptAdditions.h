@@ -1,6 +1,6 @@
 //
 //  AIAppleScriptAdditions.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Adam Iser on Mon Feb 16 2004.
 //

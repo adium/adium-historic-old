@@ -1,6 +1,6 @@
 //
 //  CSSingleWindowInterfaceWindowController.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Chris Serino on Wed Dec 31 2003.
 //
