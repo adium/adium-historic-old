@@ -16,6 +16,8 @@
 @class AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject, AIListObject, ESFileTransfer;
 @protocol AIServiceController, AIAccountViewController;
 
+//#import "AIListObject.h"
+
 typedef enum {
     STATUS_NA = -1,
     STATUS_OFFLINE,
