@@ -112,7 +112,8 @@
 		//
 		[popUp_accounts setMenu:[[adium accountController] menuOfAccountsForSendingContentType:CONTENT_MESSAGE_TYPE
 																				  toListObject:listObject
-																					withTarget:self]];
+																					withTarget:self
+																				includeOffline:NO]];
 		
 		//Select our current account
 		selectedIndex = [popUp_accounts indexOfItemWithRepresentedObject:[delegate account]];
