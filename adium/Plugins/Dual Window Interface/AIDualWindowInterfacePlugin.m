@@ -55,6 +55,7 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_transferMessageTabContainer:(AIMessageTabViewItem *)tabViewItem toWindow:(AIMessageWindowController *)messageWindowController;
 - (void)arrangeTabs:(id)sender;
+- (void)arrangeTabsByGroup:(id)sender;
 - (AIMessageWindowController *)_primaryMessageWindow;
 - (AIMessageWindowController *)_createMessageWindow;
 - (void)_destroyMessageWindow:(AIMessageWindowController *)inWindow;
@@ -198,9 +199,19 @@
 		
 		//Cache the tab sorting prefs
 		BOOL newKeepTabsArranged = [[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue];
-		arrangeByGroup = [[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue];
+		BOOL newArrangeByGroup = [[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue];
 
-		//If anything changed, check if we should autoarrange tabs
+		//If group arranging changed, check if we should autoarrange by group
+		if( newArrangeByGroup != arrangeByGroup ) {
+			
+			arrangeByGroup = newArrangeByGroup;
+			
+			// Force arrange by group if we should
+			if( arrangeByGroup )
+				[self arrangeTabsByGroup:menuItem_splitByGroup];
+		}
+		
+		//If forced sorting changed, check if we should autoarrange tabs
 		if( newKeepTabsArranged != keepTabsArranged ) {
 			
 			keepTabsArranged = newKeepTabsArranged;
@@ -215,7 +226,7 @@
 			if( keepTabsArranged )
 				[self arrangeTabs:menuItem_arrangeTabs_alternate];
 		}
-				
+						
     } else if( contactListWindowController &&
 			   ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST_DISPLAY] == 0) ){
 		
@@ -237,25 +248,39 @@
     
     //Transfer container from one one window to another
     oldMessageWindow = [self _messageWindowForContainer:(AIMessageTabViewItem *)tabViewItem];
+
     if(oldMessageWindow != newMessageWindow){
         //Get the frame of the source window (We must do this before removing the tab, since removing a tab may destroy the source window)
         NSRect  oldMessageWindowFrame = [[oldMessageWindow window] frame];
-        
+
         //Remove the tab
         [tabViewItem retain];
         [oldMessageWindow removeTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem];
         
         if(!newMessageWindow) {
 			NSRect          newFrame;
-            
+
             //Default to the width of the source message window, and the drop point
 			newFrame.size.width = oldMessageWindowFrame.size.width;
-			newFrame.size.height = oldMessageWindowFrame.size.height;   
+			newFrame.size.height = oldMessageWindowFrame.size.height;
+			
 			newFrame.origin = screenPoint;
-            
+			
             //Create a new window, set the frame
             newMessageWindow = [self _createMessageWindow];
-            [[newMessageWindow window] setFrame:newFrame display:NO];
+			
+			if( newFrame.origin.x == -1 && newFrame.origin.y == -1) {
+				NSRect curFrame = [[newMessageWindow window] frame];
+				newFrame.origin = curFrame.origin;				
+				//newFrame.origin.x = NSMinX(oldMessageWindowFrame);
+				//newFrame.origin.y = NSMaxY(oldMessageWindowFrame);
+
+				//[[newMessageWindow window] cascadeTopLeftFromPoint:(newFrame.origin)];
+			}
+			
+			[[newMessageWindow window] setFrame:newFrame display:NO];
+			//NSLog(@"#### newFrame: Origin: (%f, %f) Width: %f, Height: %f",newFrame.origin.x,newFrame.origin.y,newFrame.size.width,newFrame.size.height);
+
         }
         
         [(AIMessageWindowController *)newMessageWindow addTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem 
@@ -660,6 +685,12 @@
 		[[adium menuController] addMenuItem:menuItem_arrangeTabs toLocation:LOC_Window_Commands];
 		[[adium menuController] addMenuItem:menuItem_arrangeTabs_alternate toLocation:LOC_Window_Commands];
         
+		//menuItem_splitByGroup = [[NSMenuItem alloc] initWithTitle:SPLIT_ALL_CHATS
+		//												   target:self
+		//												   action:@selector(arrangeTabsByGroup:)
+		//											keyEquivalent:@""];
+		//[[adium menuController] addMenuItem:menuItem_splitByGroup toLocation:LOC_Window_Commands];
+		
 	}
 	
     //Add contextual menu items
@@ -680,13 +711,7 @@
 													  action:@selector(consolidateAllChats:)
 											   keyEquivalent:@"O"];
     [[adium menuController] addMenuItem:menuItem_consolidate toLocation:LOC_Window_Commands];
-    
-	menuItem_splitByGroup = [[NSMenuItem alloc] initWithTitle:SPLIT_ALL_CHATS
-													   target:self
-													   action:@selector(splitAllChatsByGroup:)
-												keyEquivalent:@""];
-	[[adium menuController] addMenuItem:menuItem_splitByGroup toLocation:LOC_Window_Commands];
-		
+    		
     menuItem_toggleTabBar = [[NSMenuItem alloc] initWithTitle:TOGGLE_TAB_BAR
 													   target:nil 
 													   action:@selector(toggleForceTabBarVisible:)
@@ -873,7 +898,7 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     BOOL enabled = YES;
-	
+
     if(menuItem == menuItem_closeTab){
         AIMessageWindowController *messageWindow = [self _messageWindowForContainer:(AIMessageTabViewItem *)activeContainer];
 		
@@ -892,7 +917,6 @@
 		if([messageWindowControllerArray count] <= 1) enabled = NO; //only with more than one window open
 		
 	}else if (menuItem == menuItem_splitByGroup){
-		NSLog(@"#### Split by Group menu item validation: message window count: %d",![messageWindowControllerArray count]);
         if(![messageWindowControllerArray count]) enabled = NO;
 		
     }else if (menuItem == menuItem_arrangeTabs || menuItem == menuItem_arrangeTabs_alternate){
@@ -1021,25 +1045,59 @@
 	}
 }
 
-- (IBAction)splitTabsByGroup:(id)sender
+- (IBAction)arrangeTabsByGroup:(id)sender
 {
 	
 	AIMessageWindowController   *controller;
 	NSEnumerator				*controllerEnumerator = [messageWindowControllerArray objectEnumerator];
 	NSEnumerator				*tabCellEnumerator;
+	NSEnumerator				*dictionaryEnumerator;
+	NSEnumerator				*arrayEnumerator;
 	AICustomTabCell				*tabCell;
-	AIListObject				*listObject;
-	AIListGroup					*listGroup;
+	AIMessageTabViewItem		*tabViewItem;
+	NSString					*listGroupID;
+	NSMutableDictionary			*splitDict = [NSMutableDictionary dictionary];
+	NSMutableArray				*splitArray;
 	
 	// Run through all message windows
 	while( controller = [controllerEnumerator nextObject] ) {
 		
-		// Run through each tab cell and get its listObject
+		// Run through each tab cell and get its tabViewItem and group
 		tabCellEnumerator = [[[controller customTabsView] tabCells] objectEnumerator];
 		while( tabCell = [tabCellEnumerator nextObject] ) {
-			listObject = [[(AIMessageTabViewItem *)[tabCell tabViewItem] messageViewController] listObject];
-			listGroup = [listObject containingGroup];
-			NSLog(@"%@ is in group %@",[listObject uniqueObjectID],[listGroup uniqueObjectID]);
+			tabViewItem = (AIMessageTabViewItem *)[tabCell tabViewItem];
+			listGroupID = [[[[[tabViewItem messageViewController] chat] listObject] containingGroup] uniqueObjectID];
+			
+			// Is there an array for this group yet?
+			if( splitArray = [splitDict objectForKey:listGroupID]) {
+				// Add this chat to the existing group array
+				[splitArray addObject:tabViewItem];
+			} else {
+				// Create a mutable array for this group
+				[splitDict setObject:[NSMutableArray arrayWithObject:tabViewItem] forKey:listGroupID];
+			}
+			
+		}
+		
+	}
+	
+	// If we split into more than one group, create the windows with the appropriate tabs
+	if( ([splitDict count] > 1) ) {
+		
+		dictionaryEnumerator = [splitDict objectEnumerator];
+		
+		while( splitArray = [dictionaryEnumerator nextObject] ) {
+			
+			//controller = [self _createMessageWindow];
+			arrayEnumerator = [splitArray objectEnumerator];
+			tabViewItem = [arrayEnumerator nextObject];
+			
+			[self _transferMessageTabContainer:tabViewItem toWindow:nil];
+			controller = [self _messageWindowForContainer:tabViewItem];
+			
+			while( tabViewItem = [arrayEnumerator nextObject] ) {
+				[self _transferMessageTabContainer:tabViewItem toWindow:controller];
+			}
 		}
 	}
 
