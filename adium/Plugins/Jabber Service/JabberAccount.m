@@ -389,7 +389,7 @@ const int STARTUP_TIME = 20;
                                             message:[[NSAttributedString alloc] initWithString:[m body]]
                                           autoreply:NO];
     NSLog(@"adding incoming content object");
-    [[owner contentController] addIncomingContentObject:messageObject];
+    [[owner contentController] receiveContentObjectmessageObject];
     NSLog(@"done");
 }
 

@@ -11,11 +11,10 @@
 
 - (void)installPlugin
 {
-    //Register us as a filter
-    [[adium contentController] registerOutgoingContentFilter:self];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterOutgoing];
 }
 
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
     NSMutableAttributedString   *ourMessage = nil;
     if (inAttributedString) {

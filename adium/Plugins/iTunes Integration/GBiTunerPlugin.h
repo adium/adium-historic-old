@@ -10,7 +10,7 @@
 
 @protocol AIContentFilter;
 
-@interface GBiTunerPlugin : AIPlugin <AIContentFilter, AIStringFilter> {    
+@interface GBiTunerPlugin : AIPlugin <AIContentFilter> {    
 	NSMenuItem				*scriptMenuItem;		//Script menu parent
 	NSMenu 					*scriptMenu;			//Submenu of scripts
 

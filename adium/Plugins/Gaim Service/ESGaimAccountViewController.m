@@ -27,7 +27,6 @@
     
 	CBGaimAccount   *theAccount = (CBGaimAccount *)inAccount;
 	NSString		*hostName, *proxyHostName, *proxyUserName, *proxyPassword;
-	NSString		*alias;
 	NSNumber		*proxyTypeNumber, *proxyPortNumber;
 	int				port;
 	
@@ -66,7 +65,7 @@
 	}
 	
     //Account alias
-    alias = [account preferenceForKey:@"FullName" group:GROUP_ACCOUNT_STATUS];
+	NSString *alias = [[[inAccount preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
 	[textField_alias setStringValue:(alias ? alias : @"")];
 	
 	[self configureConnectionControlDimming];
@@ -163,7 +162,9 @@
 			[textField_portNumber setIntValue:[(CBGaimAccount *)account port]];
 		}
 	}else if(sender == textField_alias){
-			[account setPreference:[sender stringValue] forKey:@"FullName" group:GROUP_ACCOUNT_STATUS];    
+		[account setPreference:[[NSAttributedString stringWithString:[sender stringValue]] dataRepresentation]
+						forKey:@"FullNameAttr"
+						 group:GROUP_ACCOUNT_STATUS];    
 	}
 }
 	

@@ -500,7 +500,78 @@ static id<GaimThread> gaimThread = nil;
 	
 }
 
-#pragma mark Chat User Lists
+- (oneway void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
+{
+	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
+	AIListContact			*sourceContact;
+	
+	if ((flags & GAIM_MESSAGE_SEND) != 0) {
+        // gaim is telling us that our message was sent successfully. Some day, we should avoid claiming it was
+		// until we get this notification.
+        return;
+    }
+
+	sourceContact = (AIListContact*) [chat listObject];
+	
+	//Clear the typing flag of the listContact
+	[self setTypingFlagOfContact:sourceContact to:NO];
+	
+	if (GAIM_DEBUG) NSLog(@"Received %@ from %@",[messageDict objectForKey:@"Message"],[sourceContact UID]);
+
+	[self _receivedMessage:[messageDict objectForKey:@"Message"]
+					inChat:chat 
+		   fromListContact:sourceContact 
+					 flags:flags
+					  date:[messageDict objectForKey:@"Date"]];
+}
+
+- (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
+{	
+	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
+	AIListContact			*sourceContact = [self _contactWithUID:[[messageDict objectForKey:@"Source"] compactedString]];
+
+	if ((flags & GAIM_MESSAGE_SEND) != 0) {
+		/*
+		 * TODO
+		 * gaim is telling us that our message was sent successfully. Some
+		 * day, we should avoid claiming it was until we get this
+		 * notification.
+		 */
+		return;
+	}
+	
+	if (GAIM_DEBUG) NSLog(@"Chat: Received %@ from %@ in %s",[messageDict objectForKey:@"Message"],[sourceContact UID],[chat name]);
+		
+	[self _receivedMessage:[messageDict objectForKey:@"Message"]
+					inChat:chat 
+		   fromListContact:sourceContact 
+					 flags:flags
+					  date:[messageDict objectForKey:@"Date"]];
+}
+
+- (void)_receivedMessage:(NSString *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date
+{		
+	if ((flags & GAIM_MESSAGE_IMAGES) != 0) {
+		message = [self _processGaimImagesInString:message];
+	}
+	
+	AIContentMessage *messageObject = [AIContentMessage messageInChat:chat
+														   withSource:sourceContact
+														  destination:self
+																 date:date
+															  message:[AIHTMLDecoder decodeHTML:message]
+															autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
+	
+	[[adium contentController] receiveContentObject:messageObject];
+}
+
+- (AIListContact *)contactAssociatedWithConversation:(GaimConversation *)conv withBuddy:(GaimBuddy *)buddy
+{
+	return ([self _contactAssociatedWithBuddy:buddy 
+									 usingUID:[NSString stringWithUTF8String:(conv->name)]]);
+}
+
+#pragma mark GaimConversation User Lists
 - (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
 {
 	if (chat){
@@ -615,71 +686,6 @@ static id<GaimThread> gaimThread = nil;
     return(NO);
 }
 
-
-- (oneway void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
-{
-	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
-	AIListContact			*sourceContact;
-	
-	if ((flags & GAIM_MESSAGE_SEND) != 0) {
-        // gaim is telling us that our message was sent successfully. Some day, we should avoid claiming it was
-		// until we get this notification.
-        return;
-    }
-	
-	sourceContact = (AIListContact*) [chat listObject];
-	
-	//Clear the typing flag of the listContact
-	[self setTypingFlagOfContact:sourceContact to:NO];
-	
-	if (GAIM_DEBUG) NSLog(@"Received %@ from %@",[messageDict objectForKey:@"Message"],[sourceContact UID]);
-	
-	[self _receivedMessage:[messageDict objectForKey:@"Message"]
-					inChat:chat 
-		   fromListContact:sourceContact 
-					 flags:flags
-					  date:[messageDict objectForKey:@"Date"]];
-}
-
-- (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
-{	
-	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
-	AIListContact			*sourceContact = [self _contactWithUID:[[messageDict objectForKey:@"Source"] compactedString]];
-	
-	if ((flags & GAIM_MESSAGE_SEND) != 0) {
-		/*
-		 * TODO
-		 * gaim is telling us that our message was sent successfully. Some
-		 * day, we should avoid claiming it was until we get this
-		 * notification.
-		 */
-		return;
-	}
-	
-	if (GAIM_DEBUG) NSLog(@"Chat: Received %@ from %@ in %s",[messageDict objectForKey:@"Message"],[sourceContact UID],[chat name]);
-	
-	[self _receivedMessage:[messageDict objectForKey:@"Message"]
-					inChat:chat 
-		   fromListContact:sourceContact 
-					 flags:flags
-					  date:[messageDict objectForKey:@"Date"]];
-}
-
-- (void)_receivedMessage:(NSString *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date
-{		
-	if ((flags & GAIM_MESSAGE_IMAGES) != 0) {
-		message = [self _processGaimImagesInString:message];
-	}
-	
-	AIContentMessage *messageObject = [AIContentMessage messageInChat:chat
-														   withSource:sourceContact
-														  destination:self
-																 date:date
-															  message:[AIHTMLDecoder decodeHTML:message]
-															autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
-	
-	[[adium contentController] addIncomingContentObject:messageObject];
-}
 
 /*********************/
 /* AIAccount_Privacy */
@@ -1307,29 +1313,17 @@ static id<GaimThread> gaimThread = nil;
 			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			[self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];
 			
-		} else if ( ([key compare:@"AwayMessage"] == 0) || ([key compare:@"TextProfile"] == 0) ){
-			NSAttributedString	*attributedString = nil;
+		}else if(([key compare:@"AwayMessage"] == 0) || ([key compare:@"TextProfile"] == 0)){
+			[self setAccountAwayTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
 			
-			if(data = [self preferenceForKey:key group:GROUP_ACCOUNT_STATUS]){
-				attributedString = [NSAttributedString stringWithData:data];
-			}
+		}else if([key compare:@"TextProfile"] == 0){
+			[self setAccountProfileTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
 			
-			[self updateAttributedStatusString:attributedString forKey:key];
-			
-		} else if([key compare:@"UserIcon"] == 0) {
+		}else if([key compare:@"UserIcon"] == 0){
 			if(data = [self preferenceForKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS]){
 				[self setAccountUserImage:[[[NSImage alloc] initWithData:data] autorelease]];
 			}
-		}
-	}
-}
-- (void)setAttributedStatusString:(NSAttributedString *)attributedString forKey:(NSString *)key
-{
-	if([[self statusObjectForKey:@"Online"] boolValue]){
-		if ([key compare:@"AwayMessage"] == 0){
-			[self setAccountAwayTo:attributedString];
-		} else if ([key compare:@"TextProfile"] == 0) {
-			[self setAccountProfileTo:attributedString];
+			
 		}
 	}
 }
@@ -1349,37 +1343,41 @@ static id<GaimThread> gaimThread = nil;
 
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage
 {
-    char	*awayHTML = nil;
-    
-    //Convert the away message to HTML, and pass it to libgaim
-    if(awayMessage){
-        awayHTML = (char *)[[self encodedAttributedString:awayMessage forListObject:nil] UTF8String];
-    }
-	if (gc && account) {
-//Status Changes: We could use "Invisible" instead of GAIM_AWAY_CUSTOM for invisibility...
-		serv_set_away(gc, GAIM_AWAY_CUSTOM, awayHTML);
+	if([[awayMessage string] compare:[[self statusObjectForKey:@"StatusMessage"] string]] != 0){
+		char	*awayHTML = nil;
+		
+		//Convert the away message to HTML, and pass it to libgaim
+		if(awayMessage){
+			awayHTML = (char *)[[self encodedAttributedString:awayMessage forListObject:nil] UTF8String];
+		}
+		if (gc && account) {
+			//Status Changes: We could use "Invisible" instead of GAIM_AWAY_CUSTOM for invisibility...
+			serv_set_away(gc, GAIM_AWAY_CUSTOM, awayHTML);
+		}
+		
+		//We are now away
+		[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:YES];
+		[self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
 	}
-    
-    //We are now away
-    [self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:YES];
-    [self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
 }
 
 - (void)setAccountProfileTo:(NSAttributedString *)profile
 {
-    char 	*profileHTML = nil;
-    
-    //Convert the profile to HTML, and pass it to libgaim
-    if(profile){
-        profileHTML = (char *)[[self encodedAttributedString:profile forListObject:nil] UTF8String];
-    }
-	if (gc && account)
-		serv_set_info(gc, profileHTML);
-    
-    if (GAIM_DEBUG) NSLog(@"updating profile to %@",[profile string]);
-    
-    //We now have a profile
-    [self setStatusObject:profile forKey:@"TextProfile" notify:YES];
+	if([[profile string] compare:[[self statusObjectForKey:@"TextProfile"] string]] != 0){
+		char 	*profileHTML = nil;
+		
+		//Convert the profile to HTML, and pass it to libgaim
+		if(profile){
+			profileHTML = (char *)[[self encodedAttributedString:profile forListObject:nil] UTF8String];
+		}
+		if (gc && account)
+			serv_set_info(gc, profileHTML);
+		
+		if (GAIM_DEBUG) NSLog(@"updating profile to %@",[profile string]);
+		
+		//We now have a profile
+		[self setStatusObject:profile forKey:@"TextProfile" notify:YES];
+	}
 }
 
 // *** USER IMAGE

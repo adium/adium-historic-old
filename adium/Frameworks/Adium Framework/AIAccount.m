@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.57 2004/05/16 07:20:51 evands Exp $
+// $Id: AIAccount.m,v 1.58 2004/05/19 12:19:56 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -50,13 +50,11 @@
     //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
     [self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 	[self updateStatusForKey:@"Handle"];
-    [self updateStatusForKey:@"FullName"];
+    [self updateStatusForKey:@"FullNameAttr"];
     [self updateStatusForKey:@"FormattedUID"];
     
-    attributedRefreshDict = [[NSMutableDictionary alloc] init];
+    autoRefreshingKeys = [[NSMutableArray alloc] init];
     attributedRefreshTimer = nil;
-	stringRefreshDict = [[NSMutableDictionary alloc] init];
-	stringRefreshTimer = nil;
 	
 	reconnectTimer = nil;
 
@@ -93,8 +91,7 @@
 	
 	[self _stopAttributedRefreshTimer];
 	[self _stopStringRefreshTimer];
-	[attributedRefreshDict release]; attributedRefreshDict = nil;
-	[stringRefreshDict release]; stringRefreshDict = nil;
+	[autoRefreshingKeys release]; autoRefreshingKeys = nil;
 	
     [[adium notificationCenter] removeObserver:self];
     [service release];
@@ -188,16 +185,13 @@
 {
 	if([key isEqualToString:@"Online"]){
 		if([value boolValue]){
-			if([attributedRefreshDict count])	[self _startAttributedRefreshTimer];
-			if([stringRefreshDict count])		[self _startStringRefreshTimer];
+			if([autoRefreshingKeys count])	[self _startAttributedRefreshTimer];
 		}else{
 			[self _stopAttributedRefreshTimer];
-			[self _stopStringRefreshTimer];
 		}
 	}else if ([key isEqualToString:@"Disconnecting"]){
 		if ([value boolValue]){
 			[self _stopAttributedRefreshTimer];	
-			[self _stopStringRefreshTimer];
 		}
 	}
 	
@@ -213,7 +207,6 @@
     
     //Online status changed
     //Call connect or disconnect as appropriate
-    //
     if([key compare:@"Online"] == 0){
         if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
             if(!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]){
@@ -235,14 +228,11 @@
             }
         }
 		
-    }else if([key compare:@"FullName"] == 0) {
+    }else if([key compare:@"FullNameAttr"] == 0) {
         //Account's full name (alias) formatting changed
         //Update the display name for this account
-        //
-		NSString *displayName = [self preferenceForKey:@"FullName" group:GROUP_ACCOUNT_STATUS];
-
-		if (!displayName || ![displayName length])
-			displayName = nil;
+		NSString	*displayName = [[[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
+		if([displayName length] == 0) displayName = nil;
 		
 		[[self displayArrayForKey:@"Display Name"] setObject:displayName
 												   withOwner:self];
@@ -258,113 +248,71 @@
 
 	} 
 }
-
-//Set an attributed status value (nil for no value), setting up a refresh timer if the filters changed the string
-- (void)updateAttributedStatusString:(NSAttributedString *)status forKey:(NSString *)key
+- (void)updateStatusForAutoRefreshingKey:(NSString *)key
 {
-    BOOL refreshPeriodically;
-    NSAttributedString  *filteredMessage = [[adium contentController] filteredAttributedString:status
-																			 listObjectContext:self
-                                                                                    isOutgoing:YES];
-    //refresh periodically if the filtered string is different from the original one
-    refreshPeriodically = (status && (![[status string] isEqualToString:[filteredMessage string]]));
-    
-    if(refreshPeriodically){
-        [attributedRefreshDict setObject:status forKey:key];
-		[self _startAttributedRefreshTimer];
-
-    }else{
-        [attributedRefreshDict removeObjectForKey:key];
-        if([attributedRefreshDict count] == 0) [self _stopAttributedRefreshTimer];
-
-    }
-
-    //Set the status in account code
-    [self setAttributedStatusString:filteredMessage forKey:key];
+	//
 }
-//Set an string status value (nil for no value), setting up a refresh timer if the filters changed the string
-- (void)updateStatusString:(NSString *)status forKey:(NSString *)key
+
+
+//Auto-Refreshing Status String ----------------------------------------------------------------------------------------
+//Tests an attributed status string.  If the string contains dynamic content it will be scheduled for automatic
+//refreshing and periodically updated.  If the string does not contain dynamic content any existing scheduling for
+//it will be removed.  Call this method when the value of an attributed status that supports automatic refreshing
+//is changed by the user.  This method returns the current value of the auto-refreshing string for you to use.
+- (NSAttributedString *)autoRefreshingOutgoingContentForStatusKey:(NSString *)key
 {
-    BOOL refreshPeriodically;
-    NSString  *filteredMessage = [[adium contentController] filteredString:status
-														 listObjectContext:self];
+	NSAttributedString	*originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS] attributedString];
+	NSAttributedString  *filteredValue = nil;
+    BOOL 				refreshPeriodically;
+	NSData				*data;
 	
-    //refresh periodically if the filtered string is different from the original one
-    refreshPeriodically = (status && (![status isEqualToString:filteredMessage]));
-    
-    if(refreshPeriodically){
-        [stringRefreshDict setObject:status forKey:key];
-		[self _startStringRefreshTimer];
-		
-    }else{
-        [stringRefreshDict removeObjectForKey:key];
-        if([stringRefreshDict count] == 0) [self _stopStringRefreshTimer];
-		
-    }
+	//Filter the content
+	filteredValue = [[adium contentController] filterAttributedString:originalValue
+													  usingFilterType:AIFilterContent
+															direction:AIFilterOutgoing
+															  context:self];
 	
-    //Set the status in account code
-    [self setStatusString:filteredMessage forKey:key];
+	//Refresh periodically if the filtered string is different from the original one
+	if(originalValue && (![[originalValue string] isEqualToString:[filteredValue string]])){
+		if(![autoRefreshingKeys containsObject:key]){
+			[autoRefreshingKeys addObject:key];
+			[self _startAttributedRefreshTimer];
+		}
+	}else{
+		[autoRefreshingKeys removeObject:key];
+		if([autoRefreshingKeys count] == 0) [self _stopAttributedRefreshTimer];
+	}
+
+	return(filteredValue);
 }
 
 //Refilter the raw attributed string and call setAttributedStatusString:forKey:
 - (void)_refreshAttributedStrings:(NSTimer *)inTimer
 {
-    NSEnumerator    *keyEnumerator = [attributedRefreshDict keyEnumerator];
+    NSEnumerator    *keyEnumerator = [autoRefreshingKeys objectEnumerator];
     NSString        *key;
-    while (key = [keyEnumerator nextObject]){
-        NSAttributedString *filteredMessage = [[adium contentController] filteredAttributedString:[attributedRefreshDict objectForKey:key]
-																				listObjectContext:self
-                                                                                   isOutgoing:YES];
-        [self setAttributedStatusString:filteredMessage forKey:key];
-    }
-}
-//Refilter the raw string and call setStatusString:forKey:
-- (void)_refreshStrings:(NSTimer *)inTimer
-{
-    NSEnumerator    *keyEnumerator = [stringRefreshDict keyEnumerator];
-    NSString        *key;
-    while (key = [keyEnumerator nextObject]){
-        NSString *filteredMessage = [[adium contentController] filteredString:[stringRefreshDict objectForKey:key]
-																	  listObjectContext:self];
-        [self setStatusString:filteredMessage forKey:key];
+    while(key = [keyEnumerator nextObject]){
+		[self updateStatusForKey:key];
     }
 }
 
-//Start timers
+//Start/stop timer
 - (void)_startAttributedRefreshTimer
 {
 	if(!attributedRefreshTimer){
 		attributedRefreshTimer = [[NSTimer scheduledTimerWithTimeInterval:FILTERED_STRING_REFRESH
-														 target:self
-													   selector:@selector(_refreshAttributedStrings:) 
-													   userInfo:attributedRefreshDict repeats:YES] retain];
+																   target:self
+																 selector:@selector(_refreshAttributedStrings:) 
+																 userInfo:nil
+																  repeats:YES] retain];
 	}
 }
-- (void)_startStringRefreshTimer
-{
-	if(!stringRefreshTimer){
-		stringRefreshTimer = [[NSTimer scheduledTimerWithTimeInterval:FILTERED_STRING_REFRESH
-															   target:self
-															 selector:@selector(_refreshStrings:) 
-															 userInfo:stringRefreshDict repeats:YES] retain];
-	}
-}
-
-//Stop timers
 - (void)_stopAttributedRefreshTimer
 {
 	if(attributedRefreshTimer){
 		[attributedRefreshTimer invalidate];
 		[attributedRefreshTimer release];
 		attributedRefreshTimer = nil;
-	}
-}
-- (void)_stopStringRefreshTimer
-{
-	if(stringRefreshTimer){
-		[stringRefreshTimer invalidate];
-		[stringRefreshTimer release];
-		stringRefreshTimer = nil;
 	}
 }
 
@@ -376,8 +324,6 @@
 - (void)connect{};
 - (void)disconnect{};
 - (NSArray *)supportedPropertyKeys{return([NSArray array]);}
-- (void)setAttributedStatusString:(NSAttributedString *)inAttributedString forKey:(NSString *)key{};
-- (void)setStatusString:(NSString *)inString forKey:(NSString *)key{};
 
 //Functions subclasses may choose to override
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject

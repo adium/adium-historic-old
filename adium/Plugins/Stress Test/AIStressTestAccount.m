@@ -202,7 +202,7 @@
 												   date:nil
                                                 message:[[[NSAttributedString alloc] initWithString:message attributes:[NSDictionary dictionary]] autorelease]
 											  autoreply:NO];
-        [[adium contentController] addIncomingContentObject:messageObject];
+        [[adium contentController] receiveContentObject:messageObject];
 		
     }
 	
@@ -243,7 +243,7 @@
                                                        date:nil
                                                     message:[[[NSAttributedString alloc] initWithString:message attributes:[NSDictionary dictionary]] autorelease]
                                                   autoreply:NO];
-            [[adium contentController] addIncomingContentObject:messageObject];
+            [[adium contentController] receiveContentObject:messageObject];
         }
 
         [userInfo setObject:[NSNumber numberWithBool:!msgIn] forKey:@"in"];
@@ -295,7 +295,7 @@
                                                date:nil
                                             message:[[[NSAttributedString alloc] initWithString:string attributes:[NSDictionary dictionary]] autorelease]
                                           autoreply:NO];
-    [[adium contentController] addIncomingContentObject:messageObject];
+    [[adium contentController] receiveContentObject:messageObject];
 }
 
 // AIAccount_Status --------------------------------------------------------------------------------

@@ -110,21 +110,18 @@ static BOOL didInitMSN = NO;
 	
     //Now look at keys which only make sense while online
 	if([[self statusObjectForKey:@"Online"] boolValue]){
-		if([key compare:@"FullName"] == 0){
-			[self updateStatusString:[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS] forKey:@"FullName"];
-		}
-	}
-}
+		NSData  *data;
 
-- (void)setStatusString:(NSString *)inString forKey:(NSString *)key
-{
-	if([key compare:@"FullName"] == 0){
-		[self _setFriendlyNameTo:inString];
+		if([key compare:@"FullNameAttr"] == 0){
+			NSLog(@"Updating FullNameAttr to %@",[[self autoRefreshingOutgoingContentForStatusKey:key] string]);
+			[self _setFriendlyNameTo:[[self autoRefreshingOutgoingContentForStatusKey:key] string]];
+		}
 	}
 }
 
 -(void)_setFriendlyNameTo:(NSString *)inAlias
 {
+#warning we should ignore this set if it hasnt changed...
  	if (gc && account) 
  		msn_set_friendly_name(gc,[inAlias UTF8String]);
 }
@@ -133,7 +130,7 @@ static BOOL didInitMSN = NO;
 - (void)updateAllStatusKeys
 {
 	[super updateAllStatusKeys];
-	[self updateStatusForKey:@"FullName"];
+	[self updateStatusForKey:@"FullNameAttr"];
 }
 
 /*

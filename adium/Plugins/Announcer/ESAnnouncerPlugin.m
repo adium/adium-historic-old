@@ -115,7 +115,7 @@
 						NSString * senderString;
 						//Get the sender string
 						/*  if(isOutgoing){ //speak outgoing message sender names
-						senderString = [[adium accountController] propertyForKey:@"FullName" account:(AIAccount *)source];
+						senderString = [[adium accountController] propertyForKey:@"FullNameAttr" account:(AIAccount *)source];
 						if(!senderString || [senderString length] == 0) senderString = [(AIAccount *)source accountDescription];
 						}else{ */ //incoming message sender name
 						senderString = [(AIListContact *)source displayName];

@@ -41,13 +41,13 @@
     preferences = [[AITextForcingPreferences preferencePane] retain];
 
     //Register our content filter
-    [[adium contentController] registerIncomingContentFilter:self];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterIncoming];
     
     //Observe
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
 
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
 	if(forceFont || forceText || forceBackground){
 		if(inAttributedString && [inAttributedString length]){

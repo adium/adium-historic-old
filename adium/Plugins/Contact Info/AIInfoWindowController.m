@@ -164,9 +164,10 @@ static AIListObject             *activeListObject = nil;
         }
 //        NSLog(@"%@",status);
         if (status) {
-            NSMutableAttributedString   *statusString = [[[adium contentController] fullyFilteredAttributedString:status 
-																								listObjectContext:activeListObject] mutableCopy];
-//			NSLog(@"became %@\n\n%@",statusString,[statusString string]);
+            NSMutableAttributedString   *statusString = [[[adium contentController] filterAttributedString:status
+																						   usingFilterType:AIFilterDisplay
+																								 direction:AIFilterIncoming
+																								   context:activeListObject] mutableCopy];
             NSMutableParagraphStyle     *indentStyle;
             
             NSRange                     firstLineRange = [[statusString string] lineRangeForRange:NSMakeRange(0,0)];
@@ -237,8 +238,10 @@ static AIListObject             *activeListObject = nil;
     NSAttributedString 	*textProfile = [activeListObject statusObjectForKey:@"TextProfile"];
     if(textProfile && [textProfile length]){
 		[infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
-		NSMutableAttributedString   *textProfileString = [[[adium contentController] fullyFilteredAttributedString:textProfile 
-                                                                                                         listObjectContext:activeListObject] mutableCopy];
+		NSMutableAttributedString   *textProfileString = [[[adium contentController] filterAttributedString:textProfile
+																							usingFilterType:AIFilterDisplay
+																								  direction:AIFilterIncoming
+																									context:activeListObject] mutableCopy];
 		NSMutableParagraphStyle     *indentStyle;
 		
 		NSRange                     firstLineRange = [[textProfileString string] lineRangeForRange:NSMakeRange(0,0)];

@@ -109,7 +109,7 @@
 									 withType:type];
 		
         //Add the object
-        [[adium contentController] addIncomingContentObject:content];
+        [[adium contentController] receiveContentObject:content];
     }
 }
 

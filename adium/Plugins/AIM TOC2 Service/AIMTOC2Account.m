@@ -440,25 +440,13 @@
             NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
             [self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];
             
-        } else if ( ([key compare:@"AwayMessage"] == 0) || ([key compare:@"TextProfile"] == 0) ){
-            NSAttributedString	*attributedString = nil;
-            
-            if(data = [self preferenceForKey:key group:GROUP_ACCOUNT_STATUS]){
-                attributedString = [NSAttributedString stringWithData:data];
-            }
-            
-            [self updateAttributedStatusString:attributedString forKey:key];
-            
-        }
-    }
-}
+        }else if([key compare:@"AwayMessage"] == 0){
+			[self setAccountAwayTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
+			
+        }else if([key compare:@"TextProfile"] == 0){
+			[self setAccountProfileTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
 
-- (void)setAttributedStatusString:(NSAttributedString *)attributedString forKey:(NSString *)key
-{
-    if ([key compare:@"AwayMessage"] == 0){
-        [self setAccountAwayTo:attributedString];
-    } else if ([key compare:@"TextProfile"] == 0) {
-        [self setAccountProfileTo:attributedString];
+		}
     }
 }
 
@@ -761,7 +749,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.132 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.133 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1026,7 +1014,7 @@
                                                date:nil
                                             message:[AIHTMLDecoder decodeHTML:rawMessage]
                                           autoreply:NO];
-    [[adium contentController] addIncomingContentObject:messageObject];
+    [[adium contentController] receiveContentObjectmessageObject];
 }
 
 //
