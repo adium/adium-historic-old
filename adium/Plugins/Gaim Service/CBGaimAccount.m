@@ -75,7 +75,6 @@
             //use the buddy's information gaimside to create the needed Adium handle
             theHandle = [self createHandleAssociatingWithBuddy:buddy];
             //Update the contact list
-#warning            if (!silentAndDelayed)
                 [[adium contactController] handle:theHandle 
                                    addedToAccount:self];
         }
