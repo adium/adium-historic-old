@@ -164,7 +164,7 @@ typedef enum {
 
 // Public core controller protocols ------------------------------------------------------------
 @protocol AIListObjectObserver //notified of changes
-    - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys;
+    - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent;
 @end
 
 @protocol AIAutoSizingView //Sends Interface_ViewDesiredSizeDidChange notifications
@@ -363,7 +363,9 @@ typedef enum {
     AIListGroup			*contactList;
     AIListGroup			*strangerGroup;
     NSMutableArray		*contactObserverArray;
-    int				holdUpdates;
+
+    NSTimer			*delayedUpdateTimer;
+    int				delayedUpdates;
 
     NSMutableArray		*sortControllerArray;
     id<AIListSortController> 	activeSortController;
@@ -393,11 +395,11 @@ typedef enum {
 - (AIListGroup *)groupInGroup:(AIListGroup *)inGroup withUID:(NSString *)UID;
 
 //Contact status & Attributes
-- (void)handleStatusChanged:(AIHandle *)inHandle modifiedStatusKeys:(NSArray *)inModifiedKeys;
-- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys;
+- (void)handleStatusChanged:(AIHandle *)inHandle modifiedStatusKeys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent;
+- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent;
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver;
 - (void)unregisterListObjectObserver:(id)inObserver;
-- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
+- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed;
 
 //Contact list sorting
 - (NSArray *)sortControllerArray;
@@ -413,10 +415,6 @@ typedef enum {
 
 //Interface selection
 - (AIListContact *)selectedContact;
-
-//Update optimization
-- (void)setHoldContactListUpdates:(BOOL)inHoldUpdates;
-- (BOOL)holdContactListUpdates;
 
 //Contact ordering
 - (float)orderIndexOfContact:(AIListContact *)contact;

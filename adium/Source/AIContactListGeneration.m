@@ -77,7 +77,7 @@
     //Remove ALL status flags from the handle, and give observers a chance to remove their attributes
     statusKeyArray = [[inHandle statusDictionary] allKeys];
     [[inHandle statusDictionary] removeAllObjects];
-    [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:statusKeyArray];
+    [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:statusKeyArray delayed:NO silent:YES];
 
     //Remove the handle
     [containingContact removeHandle:inHandle];
@@ -189,7 +189,14 @@
     NSString		*handleUID = [handle UID];
     AIListContact	*contact;
     BOOL		updateList = NO;
-    
+
+//attempt at simple dynamic temp group
+    if([handle temporary]){
+        serverGroup = @"Strangers";
+        NSLog(@"%@ temporary",handleUID);
+    }
+       
+
     //Does a contact for this handle already exist on our list?
     contact = [[owner contactController] contactInGroup:contactList withService:[handle serviceID] UID:handleUID serverGroup:nil];
     if(contact){ //If it does
@@ -232,7 +239,7 @@
     }
 
     //Give observers a chance to add attributes for the new handle
-    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:nil];
+    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:nil delayed:YES silent:YES];
 
     return(updateList);
 }

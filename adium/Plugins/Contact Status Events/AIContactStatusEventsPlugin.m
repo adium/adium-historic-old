@@ -67,27 +67,29 @@
     [super dealloc];
 }
 
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
+//To increase the speed of heavy contact list operations (connecting/disconnecting/etc), we don't sent out any events when the contact list updates are delayed.
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
     int		timeInterval = 15;//time interval that the status should remain
-    
-    //To increase the speed of heavy contact list operations (connecting/disconnecting/etc), we don't sent out any events when the contact list updates are delayed.
-    if(![[owner contactController] holdContactListUpdates]){
-        
-        if([inModifiedKeys containsObject:@"Online"]){ //Sign on/off
-            BOOL	newStatus = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
-            NSNumber	*oldStatusNumber = [onlineDict objectForKey:[inObject UIDAndServiceID]];
-            BOOL	oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
-            
-            if(oldStatusNumber == nil || newStatus != oldStatus){
+
+    if([inModifiedKeys containsObject:@"Online"]){ //Sign on/off
+        BOOL	newStatus = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
+        NSNumber	*oldStatusNumber = [onlineDict objectForKey:[inObject UIDAndServiceID]];
+        BOOL	oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
+
+       // NSLog(@"%@ Online changed from %i to %i (Holding Updates: %i)",[inObject displayName],oldStatus,newStatus,[[owner contactController] holdContactListUpdates]);
+
+        if(oldStatusNumber == nil || newStatus != oldStatus){
+            //Save the new status
+            [onlineDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject UIDAndServiceID]];
+
+            //Take action (If this update isn't silent)
+            if(!silent){
                 AIMutableOwnerArray	*signedOnArray = [inObject statusArrayForKey:@"Signed On"];
                 AIMutableOwnerArray	*signedOffArray = [inObject statusArrayForKey:@"Signed Off"];
-                
+
                 //Post an online/offline notification
-                [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO)
-                                                            object:inObject
-                                                        userInfo:nil];
-                [onlineDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject UIDAndServiceID]];
+                [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO) object:inObject userInfo:nil];
 
                 //Clear any existing juston/just off values
                 [signedOnArray setObject:nil withOwner:inObject];
@@ -96,47 +98,51 @@
                 //Set status flags and install timers for "Just signed on" and "Just signed off"
                 [(newStatus ? signedOnArray : signedOffArray) setObject:[NSNumber numberWithBool:YES] withOwner:inObject];
                 [[owner contactController] listObjectStatusChanged:inObject
-                                                modifiedStatusKeys:[NSArray arrayWithObjects:@"Signed On",@"Signed Off",nil]];
+                                                modifiedStatusKeys:[NSArray arrayWithObjects:@"Signed On",@"Signed Off",nil]
+                                                           delayed:delayed
+                                                            silent:silent];
 
-		if(newStatus){
-		    timeInterval = signedOnLength;
-		    
-		}else{
-		    timeInterval = signedOffLength;
-		    
-		}
-
+                timeInterval = (newStatus ? signedOnLength : signedOffLength);
                 if(timeInterval >= 0){
-		    [NSTimer scheduledTimerWithTimeInterval:timeInterval target:self selector:@selector(clearOnlineFlags:) userInfo:inObject repeats:NO];
-		}
+                    [NSTimer scheduledTimerWithTimeInterval:timeInterval target:self selector:@selector(clearOnlineFlags:) userInfo:inObject repeats:NO];
+                }
+                
             }
         }
+    }
 
-        if([inModifiedKeys containsObject:@"Away"]){ //Away / Unaway
-            BOOL 	newStatus = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
-            NSNumber	*oldStatusNumber = [awayDict objectForKey:[inObject UIDAndServiceID]];
-            BOOL	oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
+    if([inModifiedKeys containsObject:@"Away"]){ //Away / Unaway
+        BOOL 	newStatus = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
+        NSNumber	*oldStatusNumber = [awayDict objectForKey:[inObject UIDAndServiceID]];
+        BOOL	oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
 
-            if(oldStatusNumber == nil || newStatus != oldStatus){
-                [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO)
-                                                          object:inObject
-                                                        userInfo:nil];
-                [awayDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject UIDAndServiceID]];
+        if(oldStatusNumber == nil || newStatus != oldStatus){
+            //Save the new state
+            [awayDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject UIDAndServiceID]];
+
+            //Take action (If this update isn't silent)
+            if(!silent){
+                [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO) object:inObject userInfo:nil];
             }
+            
         }
+    }
 
-        if([inModifiedKeys containsObject:@"IdleSince"]){ //Idle / UnIdle
-            NSDate 	*idleSince = [[inObject statusArrayForKey:@"IdleSince"] earliestDate];
-            NSNumber	*oldStatusNumber = [idleDict objectForKey:[inObject UIDAndServiceID]];
-            BOOL	oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
-            BOOL	newStatus = (idleSince != nil);
+    if([inModifiedKeys containsObject:@"IdleSince"]){ //Idle / UnIdle
+        NSDate 	*idleSince = [[inObject statusArrayForKey:@"IdleSince"] earliestDate];
+        NSNumber	*oldStatusNumber = [idleDict objectForKey:[inObject UIDAndServiceID]];
+        BOOL	oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
+        BOOL	newStatus = (idleSince != nil);
 
-            if(oldStatusNumber == nil || newStatus != oldStatus){
-                [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO)
-                                                          object:inObject
-                                                        userInfo:nil];
-                [idleDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject UIDAndServiceID]];
+        if(oldStatusNumber == nil || newStatus != oldStatus){
+            //Save the new state
+            [idleDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject UIDAndServiceID]];
+
+            //Take action (If this update isn't silent)
+            if(!silent){
+                [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO) object:inObject userInfo:nil];
             }
+            
         }
     }
 
@@ -150,7 +156,7 @@
     [[object statusArrayForKey:@"Signed On"] setObject:nil withOwner:object];
     [[object statusArrayForKey:@"Signed Off"] setObject:nil withOwner:object];
 
-    [[owner contactController] listObjectStatusChanged:object modifiedStatusKeys:[NSArray arrayWithObjects:@"Signed On", @"Signed Off", nil]];
+    [[owner contactController] listObjectStatusChanged:object modifiedStatusKeys:[NSArray arrayWithObjects:@"Signed On", @"Signed Off", nil] delayed:NO silent:NO];
 }
 
 - (void)preferencesChanged:(NSNotification *)notification

@@ -681,8 +681,9 @@
                             forKey:@"Display Name"];
                             
                         [[owner contactController] handleStatusChanged:theHandle
-                            modifiedStatusKeys:
-                                [NSArray arrayWithObjects:@"Online", @"Display Name"]];
+                                                    modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", @"Display Name"]
+                                                               delayed:NO
+                                                                silent:NO];
             
                     }
                 }
@@ -785,10 +786,11 @@
                                         [NSCharacterSet characterSetWithCharactersInString:@"\r\n"]]
                                             urlDecode]
                                 forKey:@"Display Name"];
-                                
+
                             [[owner contactController] handleStatusChanged:theHandle
-                                modifiedStatusKeys:
-                                    [NSArray arrayWithObjects:@"Online", @"Display Name"]];
+                                                        modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", @"Display Name"]
+                                                                   delayed:NO
+                                                                    silent:NO];
                             
                         }
                         else if([command isEqual:@"MSG"])
@@ -824,10 +826,11 @@
                                 setObject:[[message objectAtIndex:3]
                                             urlDecode]
                                 forKey:@"Display Name"];
-                                
+
                             [[owner contactController] handleStatusChanged:theHandle
-                                modifiedStatusKeys:
-                                    [NSArray arrayWithObjects:@"Online", @"Display Name"]];
+                                                        modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", @"Display Name"]
+                                                                   delayed:NO
+                                                                    silent:NO];
                         }
                         else if([command isEqual:@"FLN"])
                         { // offline
@@ -837,10 +840,11 @@
                             [[theHandle statusDictionary]
                                 setObject:[NSNumber numberWithInt:0]
                                 forKey:@"Online"];
-                                
+
                             [[owner contactController] handleStatusChanged:theHandle
-                                modifiedStatusKeys:
-                                    [NSArray arrayWithObject:@"Online"]];
+                                                        modifiedStatusKeys:[NSArray arrayWithObject:@"Online"]
+                                                                   delayed:NO
+                                                                    silent:NO];
                         }
                         else if([command isEqual:@"RNG"])
                         {
@@ -1559,8 +1563,10 @@
                         AIHandle *Handle = [handleDict objectForKey:handle];
                         [[Handle statusDictionary] 
                             setObject:[NSNumber numberWithInt:NO] forKey:@"Typing"];
-                        [[owner contactController] handleStatusChanged:Handle modifiedStatusKeys:
-                            [NSArray arrayWithObject:@"Typing"]];
+                        [[owner contactController] handleStatusChanged:Handle
+                                                    modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]
+                                                               delayed:NO
+                                                                silent:NO];
                         
                         //Add a content object for the message
                         messageObject = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:contact onAccount:self]
@@ -1578,8 +1584,10 @@
                         
                         [[Handle statusDictionary] 
                             setObject:[NSNumber numberWithInt:YES] forKey:@"Typing"];
-                        [[owner contactController] handleStatusChanged:Handle modifiedStatusKeys:
-                            [NSArray arrayWithObject:@"Typing"]];
+                        [[owner contactController] handleStatusChanged:Handle
+                                                    modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]
+                                                               delayed:NO
+                                                                silent:NO];
                     }
                 }
                 else

@@ -42,16 +42,14 @@
     NSDictionary	*preferencesDict;	// Our preferences dictionary
 
     NSMutableDictionary	*handleDict;		// A dictionary of all available handles
- //   NSMutableDictionary	*messageChatDict;
     NSMutableDictionary	*chatDict;
     
     NSTimer		*pingTimer;
     NSTimeInterval	pingInterval;
     NSDate		*firstPing;
 
-    BOOL		waitingForFirstUpdate;
-    BOOL		processingSignOnUpdates;
-    int			numberOfSignOnUpdates;
+    BOOL		silenceAndDelayBuddyUpdates; // We are waiting for and processing our sign on updates
+    NSMutableArray	*silenceUpdateArray; 	//Array of handle UID's who's next update should be silenced
 
     NSURLHandle		*profileURLHandle;	// URLHandle for the currently loading profile
 

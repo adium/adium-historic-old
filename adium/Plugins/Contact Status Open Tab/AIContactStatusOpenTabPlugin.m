@@ -53,7 +53,7 @@
 - (void)updateOpenTabStatusOnListObject:(AIListObject *)inObject withStatus:(BOOL)inStatus
 {
     [[inObject statusArrayForKey:@"Open Tab"] setObject:[NSNumber numberWithBool:inStatus] withOwner:self];
-    [[owner contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"Open Tab"]];
+    [[owner contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"Open Tab"] delayed:NO silent:NO];
 }
 
 @end

@@ -34,6 +34,8 @@
 #define ORDER_INDEX_SMALLEST		0
 #define ORDER_INDEX_LARGEST		10000
 
+#define UPDATE_CLUMP_INTERVAL		1.0
+
 @interface AIContactController (PRIVATE)
 - (void)_handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount;
 - (void)_handle:(AIHandle *)inHandle removedFromAccount:(AIAccount *)inAccount;
@@ -44,6 +46,8 @@
 - (void)breakDownContactList;
 - (void)breakDownGroup:(AIListGroup *)inGroup;
 - (float)_setOrderIndexOfKey:(NSString *)key to:(float)index;
+- (void)_addDelayedUpdate;
+- (void)_performDelayedUpdates:(NSTimer *)timer;
 @end
 
 @implementation AIContactController
@@ -55,7 +59,7 @@
     contactObserverArray = [[NSMutableArray alloc] init];
     sortControllerArray = [[NSMutableArray alloc] init];
     activeSortController = nil;
-    holdUpdates = NO;
+    delayedUpdates = 0;
     contactList = [[AIListGroup alloc] initWithUID:CONTACT_LIST_GROUP_NAME];
     contactListGeneration = [[AIContactListGeneration alloc] initWithContactList:contactList owner:owner];
 
@@ -147,10 +151,8 @@
 // Contact list generation
 - (void)handlesChangedForAccount:(AIAccount *)inAccount
 {
-    //Hold contact list updates, and apply the changes to the contact list
-    [[owner contactController] setHoldContactListUpdates:YES];
+    //Apply the changes to the contact list
     [contactListGeneration handlesChangedForAccount:inAccount];
-    [[owner contactController] setHoldContactListUpdates:NO];
 
     //Post a handles changed notification for the account
     [[owner notificationCenter] postNotificationName:Account_HandlesChanged object:inAccount]; 
@@ -158,10 +160,8 @@
 
 - (void)handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount
 {
-    //Hold contact list updates, and apply the changes to the contact list
-//    [[owner contactController] setHoldContactListUpdates:YES];
+    //Apply the changes to the contact list
     [contactListGeneration handle:inHandle addedToAccount:inAccount];
-//    [[owner contactController] setHoldContactListUpdates:NO];
 
     //Post a handles changed notification
     [[owner notificationCenter] postNotificationName:Account_HandlesChanged object:inAccount];
@@ -169,10 +169,8 @@
 
 - (void)handle:(AIHandle *)inHandle removedFromAccount:(AIAccount *)inAccount
 {
-    //Hold contact list updates, and apply the changes to the contact list
-//    [[owner contactController] setHoldContactListUpdates:YES];
+    //Apply the changes to the contact list
     [contactListGeneration handle:inHandle removedFromAccount:inAccount];
-//    [[owner contactController] setHoldContactListUpdates:NO];
 
     //Post a handles changed notification
     [[owner notificationCenter] postNotificationName:Account_HandlesChanged object:inAccount];
@@ -194,7 +192,7 @@
     //Let the handle observer process all existing contacts
     enumerator = [[self allContactsInGroup:nil subgroups:YES] objectEnumerator];
     while((contact = [enumerator nextObject])){
-        [inObserver updateListObject:contact keys:nil];
+        [inObserver updateListObject:contact keys:nil delayed:YES silent:YES];
     }
 
     //Resort and update the contact list (Since the observer has most likely changed attributes)
@@ -214,7 +212,7 @@
 }
 
 //Called after modifying a handle's status
-- (void)handleStatusChanged:(AIHandle *)inHandle modifiedStatusKeys:(NSArray *)inModifiedKeys
+- (void)handleStatusChanged:(AIHandle *)inHandle modifiedStatusKeys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
     AIListContact	*listContact;
     
@@ -237,16 +235,22 @@
         }
 
         //Acknowledge the contact status changes
-        [self listObjectStatusChanged:listContact modifiedStatusKeys:inModifiedKeys];
+        [self listObjectStatusChanged:listContact modifiedStatusKeys:inModifiedKeys delayed:delayed silent:silent];
     }
 }
 
 //Called after modifying a contact's status directly (and not through a handle)
-- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys
+// Silent: Silences all events, notifications, sounds, overlays, etc. that would have been associated with this status change
+// Delayed: Delays any sorting and redisplay associated with this status change.  When changing the status of many objects, pass YES to greatly increase performance.
+- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
     NSEnumerator		*enumerator;
     NSMutableArray		*modifiedAttributeKeys;
     id <AIListObjectObserver>	observer;
+
+    //Handle delayed updates
+    if(delayed) [self _addDelayedUpdate];
+    NSLog(@"Status: %@ %@ %i %@", (delayed ? @"(DELAYED)" : @"         "), (silent ? @"(SILENT)" : @"        "), [inModifiedKeys count], [inObject displayName]);
 
     //Let all the observers know the contact has changed
     modifiedAttributeKeys = [NSMutableArray array];
@@ -254,13 +258,13 @@
     while((observer = [enumerator nextObject])){
         NSArray	*newKeys;
 
-        if((newKeys = [observer updateListObject:inObject keys:inModifiedKeys])){
+        if((newKeys = [observer updateListObject:inObject keys:inModifiedKeys delayed:delayed silent:silent])){
             [modifiedAttributeKeys addObjectsFromArray:newKeys];
         }
     }
 
     //Resort the contact list (If necessary)
-    if(!holdUpdates && //Skip sorting when updates are delayed
+    if(!delayed && //Delay sorting
        ([[self activeSortController] shouldSortForModifiedStatusKeys:inModifiedKeys] ||
         [[self activeSortController] shouldSortForModifiedAttributeKeys:modifiedAttributeKeys])){
 
@@ -281,12 +285,14 @@
     }
 }
 
-
-//Call after modifying an object's display attributes
-- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys
+//Call after modifying an object's display attributes.  (When modifying display attributes in response to a status change, this is not necessary)
+- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed
 {
+    //Handle delayed updates
+    if(delayed) [self _addDelayedUpdate];
+
     //Resort the contact list (If necessary)
-    if(!holdUpdates && //Skip sorting when updates are delayed
+    if(!delayed && //Delay sorting
         [[self activeSortController] shouldSortForModifiedAttributeKeys:inModifiedKeys]){
 
         [self sortListGroup:[inObject containingGroup] mode:AISortGroupAndSuperGroups];
@@ -298,6 +304,38 @@
         [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:inObject userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
     }else{
         [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:inObject];
+    }
+}
+
+//Add a delayed update
+- (void)_addDelayedUpdate
+{
+    if(!delayedUpdateTimer){
+        NSLog(@"  -- Delayed Start -- ");
+        delayedUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:UPDATE_CLUMP_INTERVAL target:self selector:@selector(_performDelayedUpdates:) userInfo:nil repeats:YES] retain];
+    }
+    delayedUpdates++;
+}
+
+//Performs any delayed list object/handle updates
+- (void)_performDelayedUpdates:(NSTimer *)timer
+{
+    //If updates have been delayed, we process them.  If not, we turn off the delayed update timer.
+    if(delayedUpdates){
+        NSLog(@"   Flush %i delayed updates ",delayedUpdates);
+
+        //Resort and redisplay the entire list at once, to cover any delayed updates
+        [self sortListGroup:contactList mode:AISortGroupAndSubGroups];
+        [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
+
+        //Reset the delayed update count back to 0
+        delayedUpdates = 0;
+
+    }else{
+        //Disable the delayed update timer (it is no longer needed).
+        [delayedUpdateTimer invalidate]; [delayedUpdateTimer release]; delayedUpdateTimer = nil;
+
+        NSLog(@"  -- Delayed End -- ");
     }
 }
 
@@ -484,6 +522,8 @@
 - (void)sortListGroup:(AIListGroup *)inGroup mode:(AISortMode)sortMode
 {
     if(inGroup == nil) inGroup = contactList; //Passing nil sorts the entire contact list
+
+    NSLog(@"**Sort %@",[inGroup displayName]);
     
     //Sort the group (and subgroups)
     [inGroup sortGroupAndSubGroups:(sortMode == AISortGroupAndSubGroups)
@@ -528,31 +568,6 @@
     }
 
     return([contactArray autorelease]);
-}
-
-//Call before making large changes to the contact list, or changes to a large number of contacts
-- (void)setHoldContactListUpdates:(BOOL)inHoldUpdates
-{
-    if(inHoldUpdates){
-        holdUpdates++;
-    }else{
-        holdUpdates--;
-    }
-
-//    NSLog(@"setHoldContactListUpdates (%@) to %i",(inHoldUpdates ? @"YES":@"NO"),holdUpdates);
-
-    if(holdUpdates < 0) holdUpdates = 0;  //This should never be needed, but just incase
-    if(holdUpdates == 0){
-        //Resort and redisplay the entire list at once (since sorting has been skipped while delayed)
-        [self sortListGroup:contactList mode:AISortGroupAndSubGroups];
-        [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
-    }
-}
-
-//Returns YES if the contact list updates are currently on hold
-- (BOOL)holdContactListUpdates
-{
-    return(holdUpdates != 0);
 }
 
 //Returns the handle with the specified Service and UID in the group (or any subgroups)

@@ -156,8 +156,7 @@
         if(trackContent){
             //Set 'UnrespondedContent' to YES  (This could be done by a seperate plugin, but I'm not sure that's necessary)
             [[chatObject statusArrayForKey:@"UnrespondedContent"] setObject:[NSNumber numberWithBool:YES] withOwner:chatObject];
-            [[owner contactController] listObjectStatusChanged:chatObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
-    
+            [[owner contactController] listObjectStatusChanged:chatObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"] delayed:NO silent:NO];
     
             //Did receive content
             [[owner notificationCenter] postNotificationName:Content_DidReceiveContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
@@ -204,8 +203,7 @@
             if(trackContent){
                 //Set 'UnrespondedContent' to NO  (This could be done by a seperate plugin, but I'm not sure that's necessary)
                 [[chatObject statusArrayForKey:@"UnrespondedContent"] setObject:[NSNumber numberWithBool:NO] withOwner:chatObject];
-                [[owner contactController] listObjectStatusChanged:chatObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
-
+                [[owner contactController] listObjectStatusChanged:chatObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"] delayed:NO silent:NO];
 
                 //Did send content
                 [[owner notificationCenter] postNotificationName:Content_DidSendContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
@@ -301,7 +299,7 @@
 
     //Set 'UnrespondedContent' to NO  (This could be done by a seperate plugin, but I'm not sure that's necessary)
     [[chatObject statusArrayForKey:@"UnrespondedContent"] setObject:[NSNumber numberWithBool:NO] withOwner:chatObject];
-    [[owner contactController] listObjectStatusChanged:chatObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
+    [[owner contactController] listObjectStatusChanged:chatObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"] delayed:NO silent:NO];
 
     //Notify the account, and remove the chat
     [(AIAccount<AIAccount_Content> *)[inChat account] closeChat:inChat];

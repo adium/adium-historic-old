@@ -586,7 +586,7 @@
     [ownerArray setObject:[NSNumber numberWithInt:(currentUnviewed+1)] withOwner:inObject];
 
     //
-    [[owner contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
+    [[owner contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] delayed:NO silent:NO];
 }
 
 //
@@ -599,7 +599,7 @@
         [ownerArray setObject:[NSNumber numberWithInt:0] withOwner:inObject];
 
         //
-        [[owner contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
+        [[owner contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] delayed:NO silent:NO];
     }
 }
 
