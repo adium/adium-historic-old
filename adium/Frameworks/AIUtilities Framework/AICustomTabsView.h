@@ -34,7 +34,8 @@
     NSImage		*dragImage;
     NSSize		dragInitialOffset;	//Offset of the cursor on the drag image
     AICustomTab		*dragTab;
-    
+
+    BOOL		tabHasBeenDragged;
     BOOL		viewsRearranging;	//YES if our views are currently animating/rearranging
 }
 

@@ -37,6 +37,7 @@
 - (void)setFocusedForDrag:(BOOL)value;
 - (void)setDragIndex:(int)inIndex;
 - (int)totalTabWidth;
+- (void)moveActiveTabToFront;
 @end
 
 #define CUSTOM_TABS_FPS		30.0		//Animation speed
@@ -109,6 +110,9 @@
         [self addSubview:tab];
         [tabArray addObject:tab];
     }
+
+    //Bring our active tab front
+    [self moveActiveTabToFront];
 }
 
 //Starts a smooth animation to put the views in their correct places
@@ -198,19 +202,8 @@
 //Change our selection to match the current selected tabViewItem
 - (void)tabView:(NSTabView *)inTabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    NSEnumerator	*enumerator;
-    AICustomTab		*tab;
-
     //Set the tab view as selected
-    enumerator = [tabArray objectEnumerator];
-    while((tab = [enumerator nextObject])){
-        if([tab tabViewItem] == tabViewItem){
-            [tab setSelected:YES];
-            [self bringSubviewToFront:tab]; //Bring the selected view front (to avoid incorrect image overlap)
-        }else{
-            [tab setSelected:NO];
-        }
-    }
+    [self moveActiveTabToFront];
 
     //Notify
     [[NSNotificationCenter defaultCenter] postNotificationName:AITabView_DidChangeSelectedItem
@@ -363,6 +356,23 @@
     }
 
     return(totalWidth);
+}
+
+- (void)moveActiveTabToFront
+{
+    NSTabViewItem	*selectedTab = [tabView selectedTabViewItem];
+    NSEnumerator	*enumerator;
+    AICustomTab		*tab;
+    
+    enumerator = [tabArray objectEnumerator];
+    while((tab = [enumerator nextObject])){
+        if([tab tabViewItem] == selectedTab){
+            [tab setSelected:YES];
+            [self bringSubviewToFront:tab]; //Bring the selected view front (to avoid incorrect image overlap)
+        }else{
+            [tab setSelected:NO];
+        }
+    }
 }
 
 @end
