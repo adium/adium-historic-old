@@ -32,8 +32,6 @@
     
     NSMutableArray		*emoticons;
     
-    NSMutableArray		*quickScanList;
-    NSMutableString		*quickScanString;
     NSCharacterSet		*quickScanSet;
 	
     AIEmoticonPreferences	*prefs;
