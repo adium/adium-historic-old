@@ -50,6 +50,7 @@
 //Install the plugin
 - (void)installPlugin
 {
+	NSLog(@"Subclasses should override installPlugin.");
 }
 
 - (void)uninstallPlugin
