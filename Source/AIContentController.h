@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#import "ESContactAlertsController.h"
+
 #define Content_ContentObjectAdded					@"Content_ContentObjectAdded"
 #define Content_WillSendContent						@"Content_WillSendContent"
 #define Content_WillReceiveContent					@"Content_WillReceiveContent"
@@ -69,7 +71,7 @@ typedef enum {
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
 @end
 
-@interface AIContentController : NSObject<AIEventHandler> {
+@interface AIContentController : NSObject <AIEventHandler> {
     IBOutlet	AIAdium		*adium;
 	
     NSMutableArray			*textEntryFilterArray;
