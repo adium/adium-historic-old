@@ -17,25 +17,28 @@
 @protocol AITextEntryView;
 
 @interface AIMessageEntryTextView : AISendingTextView <AITextEntryView> {
-    AIAdium			*adium;
-    AIChat			*chat;
+    AIAdium             *adium;
+    AIChat              *chat;
     
-	BOOL			clearOnEscape;
-	BOOL			pushPopEnabled;
+    BOOL                 clearOnEscape;
+    BOOL                 pushPopEnabled;
 
     NSMutableArray	*historyArray;
-    int				currentHistoryLocation;
+    int                  currentHistoryLocation;
 
     NSMutableArray	*pushArray;
-    BOOL			pushIndicatorVisible;
+    BOOL                 pushIndicatorVisible;
     NSButton		*indicator;
-	NSMenu			*pushMenu;
-	NSDictionary	*defaultTypingAttributes;
+    NSMenu              *pushMenu;
+    NSDictionary	*defaultTypingAttributes;
 	
-    NSSize			lastPostedSize;
-	NSSize			_desiredSizeCached;
+    NSSize               lastPostedSize;
+    NSSize               _desiredSizeCached;
     
-    NSView			*associatedView;
+    NSView              *associatedView;
+    
+    NSMenu              *newMenuTop;
+    NSMenu              *newMenuBottom;
 }
 
 - (id)initWithFrame:(NSRect)frameRect;

@@ -54,6 +54,8 @@ static NSImage *pushIndicatorImage = nil;
 	[self setAllowsUndo:YES];
         
     //set up contextual menus
+    newMenuTop = nil;
+    newMenuBottom = nil;
     [self setMenu:[self contextualMenuForAISendingTextView:self mergeWithMenu:[self menu]]];
 
     //
@@ -76,6 +78,8 @@ static NSImage *pushIndicatorImage = nil;
     [returnArray release]; returnArray = nil;
     [historyArray release]; historyArray = nil;
     [pushArray release]; pushArray = nil;
+    [newMenuTop release]; newMenuTop = nil;
+    [newMenuBottom release]; newMenuBottom = nil;
     [super dealloc];
 }
 
@@ -529,35 +533,44 @@ static NSImage *pushIndicatorImage = nil;
 #pragma mark Contextual Menus
 - (NSMenu *)contextualMenuForAISendingTextView:(AISendingTextView *)textView  mergeWithMenu:(NSMenu *)mergeMenu
 {
-    NSMenu          *oldMenu;
-    NSMenu          *newMenuTop = [self _menuItemsTop];
-    NSMenu          *newMenuBottom = [self _menuItemsBottom];
-    NSArray         *menuItems;
+   /* NSArray         *menuItems;
     NSEnumerator    *enumerator;
     NSMenuItem      *itemForInsertion;
     
-    if(newMenuTop) {
-        [mergeMenu addItem:[NSMenuItem separatorItem]];
-        menuItems = [[newMenuTop itemArray] retain];
+    if(nil == newMenuTop) {
+        newMenuTop = [self _menuItemsTop];
+    }
+    if(nil == newMenuBottom) {
+        newMenuBottom = [self _menuItemsBottom];
+    }
+    
+    if(nil != newMenuTop) {
+        //[mergeMenu addItem:[NSMenuItem separatorItem]];
+        menuItems = [newMenuTop itemArray];
         enumerator = [menuItems objectEnumerator];
             while((itemForInsertion = [enumerator nextObject])) {
-                [newMenuTop removeItem:itemForInsertion];
-                NSLog(@"Adding: %@",[itemForInsertion title]);
-                [mergeMenu addItem:itemForInsertion];
+                if(![[mergeMenu itemArray] containsObject:itemForInsertion]){
+                    [newMenuTop removeItem:itemForInsertion];
+                    NSLog(@"Adding: %@",[itemForInsertion title]);
+                    [mergeMenu addItem:itemForInsertion];
+                }
         }
     }
     
-    if(newMenuBottom){
-        [mergeMenu addItem:[NSMenuItem separatorItem]];
+    if(nil != newMenuBottom){
+        //[mergeMenu addItem:[NSMenuItem separatorItem]];
         menuItems = [newMenuBottom itemArray];
         enumerator = [menuItems objectEnumerator];
             while((itemForInsertion = [enumerator nextObject])) {
-                [newMenuBottom removeItem:itemForInsertion];
-                NSLog(@"Adding: %@",[itemForInsertion title]);
-                [mergeMenu addItem:itemForInsertion];
+                if(![[mergeMenu itemArray] containsObject:itemForInsertion]){
+                    [newMenuBottom removeItem:itemForInsertion];
+                    NSLog(@"Adding: %@",[itemForInsertion title]);
+                    [mergeMenu addItem:itemForInsertion];
+                }
         }
     }
-    return(mergeMenu);
+    return(mergeMenu);*/
+    return(nil);
 }
 
 - (NSMenu *)_menuItemsTop
