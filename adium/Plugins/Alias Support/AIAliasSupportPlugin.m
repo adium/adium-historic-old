@@ -265,7 +265,9 @@
 
             break;
 
-        case ADDRESS_BOOK_FIRST_LAST: {
+        case ADDRESS_BOOK_FIRST_LAST:
+        case ADDRESS_BOOK_LAST_FIRST:
+        case ADDRESS_BOOK_FIRST: {
             NSArray* contacts;
             uint numberOfContacts;
             uint currentContactIndex;
@@ -303,9 +305,17 @@
 
                     if ( [ screenName caseInsensitiveCompare:currentScreenNameForContact ] == NSOrderedSame ) {
                         if ( currentContactFirstName != nil && currentContactLastName != nil ) {
-                            longDisplayName = [ NSString stringWithFormat:@"%@ %@",
-                                currentContactFirstName,
-                                currentContactLastName ];
+                            if (displayFormat == ADDRESS_BOOK_FIRST_LAST) {
+                                longDisplayName = [ NSString stringWithFormat:@"%@ %@",
+                                    currentContactFirstName,
+                                    currentContactLastName ];
+                            } else if (displayFormat == ADDRESS_BOOK_LAST_FIRST) {
+                                longDisplayName = [ NSString stringWithFormat:@"%@, %@",
+                                    currentContactLastName,
+                                    currentContactFirstName ];
+                            } else if (displayFormat == ADDRESS_BOOK_FIRST) {
+                                longDisplayName = currentContactFirstName;
+                            }
                         } else if ( currentContactFirstName != nil && currentContactLastName == nil ) {
                             longDisplayName = currentContactFirstName;
                         } else if ( currentContactFirstName == nil && currentContactLastName != nil ) {
