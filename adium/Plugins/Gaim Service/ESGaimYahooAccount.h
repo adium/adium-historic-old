@@ -6,7 +6,7 @@
 
 #import "CBGaimAccount.h"
 
-@interface ESGaimYahooAccount : CBGaimAccount {
+@interface ESGaimYahooAccount : CBGaimAccount <AIAccount_Files>{
 
 }
 
