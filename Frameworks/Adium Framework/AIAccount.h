@@ -1,18 +1,17 @@
-/*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2005, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-\---------------------------------------------------------------------------------------------------------/
- | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
- | General Public License as published by the Free Software Foundation; either version 2 of the License,
- | or (at your option) any later version.
- |
- | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
- | Public License for more details.
- |
- | You should have received a copy of the GNU General Public License along with this program; if not,
- | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- \------------------------------------------------------------------------------------------------------ */
-
+/* 
+Adium, Copyright 2001-2005, Adam Iser
+ 
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ General Public License as published by the Free Software Foundation; either version 2 of the License,
+ or (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License along with this program; if not,
+ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 @class AIHandleIdentifier, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject, AIListObject, ESFileTransfer, DCJoinChatWindowController;
 @protocol AIServiceController;
 
@@ -80,106 +79,63 @@ typedef enum {
  * accounts, check out 'working with accounts' and 'creating service code'.
  */
 @interface AIAccount : AIListObject {
+	int							accountNumber;					//Unique integer that represents this account
+	
     NSString                    *password;
     BOOL                        silentAndDelayed;				//We are waiting for and processing our sign on updates
     BOOL						disconnectedByFastUserSwitch;	//We are offline because of a fast user switch
-	int							accountNumber;					//Unique integer that represents this account
-	
 	BOOL						namesAreCaseSensitive;
 	
 	//Auto-reconnect
 	NSTimer						*reconnectTimer;
-
+	
 	//Attributed string refreshing
     NSTimer                     *attributedRefreshTimer;
     NSMutableArray				*autoRefreshingKeys;
-
+	
 	//Contact update guarding
 	NSTimer						*delayedUpdateStatusTimer;
 	AIListContact				*delayedUpdateStatusTarget;
-	
 	NSTimer						*silenceAllContactUpdatesTimer;
 }
 
-- (id)initWithUID:(NSString *)inUID accountNumber:(int)inAccountNumber service:(AIService *)inService;
-- (int)accountNumber;
-
-- (void)silenceAllContactUpdatesForInterval:(NSTimeInterval)interval;
-- (void)autoReconnectAfterDelay:(int)delay;
-- (void)autoReconnectAfterNumberDelay:(NSNumber *)delayNumber;
-
-/*
- * @method properties
- * These properties are always applicable:
- *
- * Status          ACCOUNT_STATUS
- * Idle Since      NSDate
- *
- * And these are applicable only when Status is STATUS_ONLINE:
- *
- * Signon Date     NSDate
- * IdleSince       NSDate
- * StatusMessage   NSAttributedString
- * Away            boolean
- */
-
-//Methods that should be subclassed
-- (void)initAccount; 				//Init anything relating to the account
-
-- (NSArray *)supportedPropertyKeys;		//Return an array of supported status keys
-- (void)updateStatusForKey:(NSString *)key; //The account's status did change
-
-- (NSAttributedString *)autoRefreshingOutgoingContentForStatusKey:(NSString *)key;
-- (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector;
-- (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector context:(id)originalContext;
-
-/*
- Return YES if the display name (in the preference key @"FullNameAttr") should be managed by AIAccount.
- Return NO if a subclass will handle making it visible to the user (for example, if it should be filtered, first).
- */
-- (BOOL)superclassManagesDisplayName;
-
+- (void)initAccount;
 - (void)connect;
 - (void)disconnect;
-
-//Methods that might be subclassed
-- (BOOL)requiresPassword;
-- (BOOL)disconnectOnFastUserSwitch;
-- (BOOL)shouldSendAutoresponsesWhileAway;
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
-- (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
-- (BOOL)connectivityBasedOnNetworkReachability;
 - (void)performRegisterWithPassword:(NSString *)inPassword;
 
-- (AIListContact *)_contactWithUID:(NSString *)sourceUID;
-- (void)updateContactStatus:(AIListContact *)inContact;
+//Properties
+- (BOOL)requiresPassword;
+- (BOOL)shouldSendAutoresponsesWhileAway;
+- (BOOL)disconnectOnFastUserSwitch;
+- (BOOL)connectivityBasedOnNetworkReachability;
+- (BOOL)suppressTypingNotificationChangesAfterSendForListObject:(AIListObject *)listObject;
+
+//Status
+- (NSArray *)supportedPropertyKeys;
+- (id)statusForKey:(NSString *)key;
+- (void)updateStatusForKey:(NSString *)key;
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact;
 - (float)delayedUpdateStatusInterval;
 
-
-//Support for messaging --
-//Send a message object to its destination
-- (BOOL)sendContentObject:(AIContentObject *)object;
-//Returns YES if the object is available for receiving content of the specified type.  Pass a nil object to check the account's ability to send any content of the given type.  Pass YES for absolute and the account will only return YES if it's absolutely certain that it can send content to the specified object.
+//Messaging, Chatting, Strings
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
-//Open a chat instance
 - (BOOL)openChat:(AIChat *)chat;
-//Close a chat instance
 - (BOOL)closeChat:(AIChat *)chat;
-/*
- Returns YES if typing notifications will be cleared by the account or the remote side after a message is sent;
- Returns NO if Adium should send a stopped typing message after the message is sent.
- */
-- (BOOL)suppressTypingNotificationChangesAfterSendForListObject:(AIListObject *)listObject;
+- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
+- (BOOL)joinGroupChatNamed:(NSString *)name;
+- (BOOL)sendContentObject:(AIContentObject *)object;
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
 
-//Support for standard UID based contacts --
-- (void)removeContacts:(NSArray *)objects;
+//Presence Tracking
+- (BOOL)contactListEditable;
 - (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group;
+- (void)removeContacts:(NSArray *)objects;
+- (void)deleteGroup:(AIListGroup *)group;
 - (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group;
 - (void)renameGroup:(AIListGroup *)group to:(NSString *)newName;
-- (void)deleteGroup:(AIListGroup *)group;
-- (BOOL)contactListEditable;
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact;
 
 @end
 
+#import "AIAbstractAccount.h"
