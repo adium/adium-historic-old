@@ -150,10 +150,22 @@
 
 //Add a tab view item container (without changing the current selection)
 - (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
-{
+{    
+    NSString	*savedFrame;
+
     [self window]; //Ensure our window has loaded
+    if ([tabView_messages numberOfTabViewItems] == 0) {
+        //Restore the window position for the object about to have its chat added as the first in this window
+        savedFrame = [[owner preferenceController] preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME 
+                                                               group:PREF_GROUP_WINDOW_POSITIONS 
+                                                              object:[[[(AIMessageTabViewItem *)inTabViewItem messageViewController] chat] listObject]];
+            if(savedFrame){
+                [[self window] setFrameFromString:savedFrame];
+            }   
+    }
     [tabView_messages addTabViewItem:inTabViewItem]; //Add the tab
     [interface containerDidOpen:inTabViewItem]; //Let the interface know it opened
+
     [self showWindow:nil]; //Show the window
 }
 
@@ -172,9 +184,17 @@
     [tabView_messages removeTabViewItem:inTabViewItem];
     [interface containerDidClose:inTabViewItem];
 
-    //If that was our last container, close the window (unless we're already closing)
-    if(!windowIsClosing && [tabView_messages numberOfTabViewItems] == 0){
+    //If that was our last container, save the position for its contact
+    if([tabView_messages numberOfTabViewItems] == 0){
+        //Save the window position
+        [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+                                             forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
+                                            group:PREF_GROUP_WINDOW_POSITIONS
+                                             object:[[[(AIMessageTabViewItem *)inTabViewItem messageViewController] chat] listObject]];
+        //close the window (unless we're already closing)
+        if (!windowIsClosing) {
         [self closeWindow:nil];
+        }
     }
 }
 
@@ -211,14 +231,6 @@
 //Setup our window before it is displayed
 - (void)windowDidLoad
 {
-    NSString	*savedFrame;
-    
-    //Restore the window position
-    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME];
-    if(savedFrame){
-        [[self window] setFrameFromString:savedFrame];
-    }
-
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
 
@@ -248,11 +260,6 @@
         [[owner interfaceController] closeChat:[[tabViewItem messageViewController] chat]];
     }
     [interface containerDidBecomeActive:nil];
-
-    //Save the window position
-    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
-                                         forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
-                                          group:PREF_GROUP_WINDOW_POSITIONS];
 
     return(YES);
 }

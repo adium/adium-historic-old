@@ -175,6 +175,7 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
     }
     return voices;
 }
+/*
 +(NSString*)defaultVoiceName
 {
     NSString *voiceName;
@@ -183,9 +184,9 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
     
     GetIndVoice(NULL, &voiceSpec);
     GetVoiceDescription( &voiceSpec, &voiceDescription, sizeof(voiceDescription));
-    voiceName = [[[NSString alloc] initWithCString:&(voiceDescription.name[1]) length:voiceDescription.name[0]] autorelease];
+    voiceName = [[NSString alloc] initWithCString:&(voiceDescription.name[1]) length:voiceDescription.name[0]];
     return voiceName;
-}
+}*/
 
 
 //setVolume: SetSpeechInfo(_speechChannel, soCurrentVoice, ????);

@@ -24,6 +24,7 @@
 #define	KEY_SMV_PREFIX_FONT			@"Prefix Font"
 #define	KEY_SMV_SHOW_TIME_STAMPS		@"Show Time Stamps"
 #define	KEY_SMV_SHOW_TIME_SECONDS		@"Show Seconds"
+#define KEY_SMV_SHOW_AMPM                       @"Show AM-PM"
 #define	KEY_SMV_HIDE_DUPLICATE_TIME_STAMPS	@"Hide Duplicate Times"
 #define	KEY_SMV_SHOW_PREFIX			@"Show Prefix"
 #define	KEY_SMV_HIDE_DUPLICATE_PREFIX		@"Hide Duplicate Prefixes"

@@ -6,6 +6,8 @@
 	<string>LucidaGrande-Bold,11</string>
 	<key>Show Time Stamps</key>
 	<true/>
+        <key>Show AM-PM</key>
+        <false/>
 	<key>Hide Duplicate Times</key>
 	<true/>
 	<key>Show Prefix</key>
