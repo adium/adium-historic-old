@@ -5,7 +5,6 @@
 //
 //  Created by Stephen Holt on Fri Apr 23 2004.
 
-#ifdef USE_TEXTVIEW_CONTEXTMENUS
 #import "AIContextMenuTextView.h"
 
 @implementation AIContextMenuTextView
@@ -61,4 +60,3 @@
     [super dealloc];
 }
 @end
-#endif

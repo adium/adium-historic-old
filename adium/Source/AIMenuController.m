@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIMenuController.m,v 1.30 2004/04/25 10:27:03 earthmkii Exp $
+// $Id: AIMenuController.m,v 1.31 2004/04/27 10:44:05 earthmkii Exp $
 
 #import "AIMenuController.h"
 
@@ -40,10 +40,8 @@
     contextualMenu = [[NSMenu alloc] init];
     contextualMenuItemDict = [[NSMutableDictionary alloc] init];
     contactualMenuContact = nil;
-#ifdef USE_TEXTVIEW_CONTEXTMENUS
     textViewContextualMenu = [[NSMenu alloc] init];
     contextualMenu_TextView = nil;
-#endif
 }
 
 //close
@@ -255,7 +253,6 @@
 }
 
 // disabled until post .53
-#ifdef USE_TEXTVIEW_CONTEXTMENUS
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject
 {
     NSEnumerator    *enumerator;
@@ -292,7 +289,7 @@
     }
     return(textViewContextualMenu);
 }
-#endif
+
 
 - (AIListContact *)contactualMenuContact
 {
@@ -300,12 +297,10 @@
 }
 
 // disabled until post .53
-#ifdef USE_TEXTVIEW_CONTEXTMENUS
 - (NSTextView *)contextualMenuTextView
 {
     return(contextualMenu_TextView);
 }
-#endif
 
 - (void)removeItalicsKeyEquivalent
 {
