@@ -51,11 +51,18 @@
 
 - (void)contentObjectAdded:(NSNotification *)notification
 {
-	AIContentObject	*content = [[notification userInfo] objectForKey:@"Object"];
+	AIContentObject		*content = [[notification userInfo] objectForKey:@"Object"];
+	NSMutableString		*contentString = [[[content message] string] mutableCopy];
+	
+	if(contentString && [contentString length]){
+		//We need to escape a few things to get our string to the javascript without trouble
+		[contentString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange(0,[contentString length])];
+		[contentString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange(0,[contentString length])];
+		[contentString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange(0,[contentString length])];
 
-	NSLog(@"%@",[[content message] string]);
-	NSLog(@" %@",[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); documentAppend('%@'); scrollToBottomIfNeeded();", [[content message] string]]]);
-
+		//Now, feed the message to our javascript, which will append it to the bottom of the webview
+		[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"documentAppend(\"%@\");", contentString]];
+	}
 }
 
 //Dealloc
