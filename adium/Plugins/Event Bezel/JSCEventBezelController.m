@@ -103,9 +103,7 @@ withMessage:(NSString *)message
         [bezelView setUseBuddyNameLabel: useBuddyNameLabel];
         
         [bezelWindow setDisplayDuration: bezelDuration];
-        
-        [bezelView setNeedsDisplay:YES];
-        
+                
         if (pantherOrLater) {
             [[self window] invalidateShadow];
         }
