@@ -204,14 +204,39 @@
 	if (foundGoodPack) {
 		NSDictionary*	smileyPack = [emoticonPackArray objectAtIndex:0];
 		NSArray*		smileyList = [smileyPack objectForKey:KEY_EMOTICON_PACK_CONTENTS];
-		int				i;
+		int				i, o;
 		AIEmoticon		*emo = nil;
+		NSString*		emoText = nil;
+		//NSRange			charRange;
+		//NSCharacterSet*	newlineSet = [NSCharacterSet characterSetWithCharactersInString:@"\n"];
+		NSArray*		fakeSeparation = nil;
 		
 		for (i = 0;	i < [smileyList count]; i++)
 		{
 			path = [smileyList objectAtIndex:i];
 			
-			emo = [[AIEmoticon alloc] initWithPath:[path stringByAppendingPathComponent:@"Emoticon.tiff"] andText:[NSString stringWithContentsOfFile:[path stringByAppendingPathComponent:@"TextEquivalents.txt"]]];
+			// Check string for UNIX or Windows line end encoding, repairing if needed.
+			emoText = [NSString stringWithContentsOfFile:[path stringByAppendingPathComponent:@"TextEquivalents.txt"]];
+			
+			fakeSeparation = [emoText componentsSeparatedByString:@"\n"];
+			
+			emoText = [fakeSeparation objectAtIndex:0];
+			
+			for (o = 1; o < [fakeSeparation count]; o++)
+			{
+				emoText = [emoText stringByAppendingString:@"\r"];
+				emoText = [emoText stringByAppendingString:[fakeSeparation objectAtIndex:o]];
+			}
+			
+			/*charRange = [emoText rangeOfCharacterFromSet:newlineSet];
+			while (charRange.length != 0)
+			{
+				
+				charRange = [emoText rangeOfCharacterFromSet:newlineSet];
+			}*/
+			
+			// Make the emoticon object, add it to the master list
+			emo = [[AIEmoticon alloc] initWithPath:[path stringByAppendingPathComponent:@"Emoticon.tiff"] andText:emoText];
 			[emoticons addObject:emo];
 		}
 	}
