@@ -424,7 +424,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		[self _saveStateArrayAndNotifyOfChanges];
 		[[adium preferenceController] setPreference:nil
 											 forKey:@"Saved Status"
-											  group:OLD_GROUP_AWAY_MESSAGES];
+											  group:PREF_GROUP_SAVED_STATUS];
 	}
 }
 
