@@ -187,51 +187,52 @@ static BOOL didInitOscar = NO;
 	GaimBuddy			*buddy;
 	
 	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
-	od = gc->proto_data;
-	userinfo = aim_locate_finduserinfo(od->sess, buddy->name);
-	bi = g_hash_table_lookup(od->buddyinfo, gaim_normalize(buddy->account, buddy->name));
+	if ((od = gc->proto_data) &&
+		(userinfo = aim_locate_finduserinfo(od->sess, buddy->name))){
 	
-	if ((bi != NULL) && (bi->availmsg != NULL) && !(buddy->uc & UC_UNAVAILABLE)) {
+		bi = g_hash_table_lookup(od->buddyinfo, gaim_normalize(buddy->account, buddy->name));
 		
-		//Available status message
-		statusMsgString = [NSString stringWithUTF8String:(bi->availmsg)];
-		
-	} else if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away_len > 0) && 
-			   (userinfo->away != NULL) && (userinfo->away_encoding != NULL)) {
-		
-		//Away message
-		statusMsgString = [self stringWithBytes:userinfo->away
-										 length:userinfo->away_len
-									   encoding:userinfo->away_encoding];
-		
-		//If the away message changed, make sure the contact is marked as away
-		BOOL		newAway;
-		NSNumber	*storedValue;
-		
-		newAway =  ((buddy->uc & UC_UNAVAILABLE) != 0);
-		storedValue = [theContact statusObjectForKey:@"Away"];
-		if((!newAway && (storedValue == nil)) || newAway != [storedValue boolValue]) {
-			[theContact setStatusObject:[NSNumber numberWithBool:newAway] forKey:@"Away" notify:NO];
+		if ((bi != NULL) && (bi->availmsg != NULL) && !(buddy->uc & UC_UNAVAILABLE)) {
+			
+			//Available status message
+			statusMsgString = [NSString stringWithUTF8String:(bi->availmsg)];
+			
+		} else if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away_len > 0) && 
+				   (userinfo->away != NULL) && (userinfo->away_encoding != NULL)) {
+			
+			//Away message
+			statusMsgString = [self stringWithBytes:userinfo->away
+											 length:userinfo->away_len
+										   encoding:userinfo->away_encoding];
+			
+			//If the away message changed, make sure the contact is marked as away
+			BOOL		newAway;
+			NSNumber	*storedValue;
+			
+			newAway =  ((buddy->uc & UC_UNAVAILABLE) != 0);
+			storedValue = [theContact statusObjectForKey:@"Away"];
+			if((!newAway && (storedValue == nil)) || newAway != [storedValue boolValue]) {
+				[theContact setStatusObject:[NSNumber numberWithBool:newAway] forKey:@"Away" notify:NO];
+			}
 		}
-	}
-	
-	//Update the status message if necessary
-	if (statusMsgString && [statusMsgString length]) {
-		if (![statusMsgString isEqualToString:oldStatusMsgString]) {
-			[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
-			[theContact setStatusObject:[AIHTMLDecoder decodeHTML:statusMsgString]
-								 forKey:@"StatusMessage"
-								 notify:NO];
+		
+		//Update the status message if necessary
+		if (statusMsgString && [statusMsgString length]) {
+			if (![statusMsgString isEqualToString:oldStatusMsgString]) {
+				[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
+				[theContact setStatusObject:[AIHTMLDecoder decodeHTML:statusMsgString]
+									 forKey:@"StatusMessage"
+									 notify:NO];
+			}
+		} else if (oldStatusMsgString) {
+			[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
+			[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
 		}
-	} else if (oldStatusMsgString) {
-		[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
-		[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
+		
+		//Apply any changes
+		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
-	
-	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
-
 - (void)updateInfo:(AIListContact *)theContact
 {
 	OscarData			*od;
@@ -239,38 +240,40 @@ static BOOL didInitOscar = NO;
 	GaimBuddy			*buddy;
 	
 	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];	
-	od = gc->proto_data;
-	userinfo = aim_locate_finduserinfo(od->sess, buddy->name);
 	
-	//Update the profile if necessary - length must be greater than one since we get "" with info_len 1
-	//when attempting to retrieve the profile of an AOL member (which can't be done via AIM).
-	if ((userinfo->info_len > 1) && (userinfo->info != NULL) && (userinfo->info_encoding != NULL)) {
-		
-		//Away message
-		NSString *profileString = [self stringWithBytes:userinfo->info
-												 length:userinfo->info_len
-											   encoding:userinfo->info_encoding];
-		
-		NSString *oldProfileString = [theContact statusObjectForKey:@"TextProfileString"];
-		
-		if (profileString && [profileString length]) {
-			if (![profileString isEqualToString:oldProfileString]) {
-				[theContact setStatusObject:profileString
-									 forKey:@"TextProfileString" 
-									 notify:NO];
-				[theContact setStatusObject:[AIHTMLDecoder decodeHTML:profileString]
-									 forKey:@"TextProfile" 
-									 notify:NO];
+	if ((od = gc->proto_data) &&
+		(userinfo = aim_locate_finduserinfo(od->sess, buddy->name))){
+			
+		//Update the profile if necessary - length must be greater than one since we get "" with info_len 1
+		//when attempting to retrieve the profile of an AOL member (which can't be done via AIM).
+		if ((userinfo->info_len > 1) && (userinfo->info != NULL) && (userinfo->info_encoding != NULL)) {
+			
+			//Away message
+			NSString *profileString = [self stringWithBytes:userinfo->info
+													 length:userinfo->info_len
+												   encoding:userinfo->info_encoding];
+			
+			NSString *oldProfileString = [theContact statusObjectForKey:@"TextProfileString"];
+			
+			if (profileString && [profileString length]) {
+				if (![profileString isEqualToString:oldProfileString]) {
+					[theContact setStatusObject:profileString
+										 forKey:@"TextProfileString" 
+										 notify:NO];
+					[theContact setStatusObject:[AIHTMLDecoder decodeHTML:profileString]
+										 forKey:@"TextProfile" 
+										 notify:NO];
+				}
+			} else if (oldProfileString) {
+				[theContact setStatusObject:nil forKey:@"TextProfileString" notify:NO];
+				[theContact setStatusObject:nil forKey:@"TextProfile" notify:NO];	
 			}
-		} else if (oldProfileString) {
-			[theContact setStatusObject:nil forKey:@"TextProfileString" notify:NO];
-			[theContact setStatusObject:nil forKey:@"TextProfile" notify:NO];	
 		}
+		
+		//Apply any changes
+		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
-	
-	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-}
+}	
 
 - (void)updateMiscellaneous:(AIListContact *)theContact
 {
@@ -278,86 +281,87 @@ static BOOL didInitOscar = NO;
 	aim_userinfo_t		*userinfo;
 	GaimBuddy			*buddy;
 	
-	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];	
-	od = gc->proto_data;
-	userinfo = aim_locate_finduserinfo(od->sess, buddy->name);
+	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
+	if ((od = gc->proto_data) && 
+		(userinfo = aim_locate_finduserinfo(od->sess, buddy->name))){
 	
 	/*
 	 userinfo->membersince;
 	 userinfo->capabilities;
 	 */
-	
-	//Client
-	NSString *storedString = [theContact statusObjectForKey:@"Client"];
-	NSString *client = nil;
-	
-	if (userinfo->present & AIM_USERINFO_PRESENT_FLAGS) {
-		if (userinfo->capabilities & AIM_CAPS_HIPTOP) {
-			client = @"AIM via Hiptop";
-		} else if (userinfo->flags & AIM_FLAG_WIRELESS) {
-			client = @"AOL Mobile Device";
-		} else if (userinfo->flags & AIM_FLAG_ADMINISTRATOR) {
-			client = @"AOL Administrator";
-		} else if (userinfo->flags & AIM_FLAG_AOL) {
-			client = @"America Online";
-		}/* else if ((userinfo->flags & AIM_FLAG_FREE) || (userinfo->flags & AIM_FLAG_UNCONFIRMED)) {
+		
+		//Client
+		NSString *storedString = [theContact statusObjectForKey:@"Client"];
+		NSString *client = nil;
+		
+		if (userinfo->present & AIM_USERINFO_PRESENT_FLAGS) {
+			if (userinfo->capabilities & AIM_CAPS_HIPTOP) {
+				client = @"AIM via Hiptop";
+			} else if (userinfo->flags & AIM_FLAG_WIRELESS) {
+				client = @"AOL Mobile Device";
+			} else if (userinfo->flags & AIM_FLAG_ADMINISTRATOR) {
+				client = @"AOL Administrator";
+			} else if (userinfo->flags & AIM_FLAG_AOL) {
+				client = @"America Online";
+			}/* else if ((userinfo->flags & AIM_FLAG_FREE) || (userinfo->flags & AIM_FLAG_UNCONFIRMED)) {
 							client = @"AOL Instant Messenger";
-		}*/
-	}
-	
-	/*
-	 if (b->name && (b->uc & 0xffff0000) && isdigit(b->name[0])) {
-		 
-		 //ICQ
-		 int uc = b->uc >> 16;
-		 if (uc & AIM_ICQ_STATE_INVISIBLE)
-			 emblems[i++] = "invisible";
-		 else if (uc & AIM_ICQ_STATE_CHAT)
-			 emblems[i++] = "freeforchat";
-		 else if (uc & AIM_ICQ_STATE_DND)
-			 emblems[i++] = "dnd";
-		 else if (uc & AIM_ICQ_STATE_OUT)
-			 emblems[i++] = "na";
-		 else if (uc & AIM_ICQ_STATE_BUSY)
-			 emblems[i++] = "occupied";
-		 else if (uc & AIM_ICQ_STATE_AWAY)
-			 emblems[i++] = "away";
-	 } else {
-		 if (b->uc & UC_UNAVAILABLE) 
-			 emblems[i++] = "away";
-	 }
-	 
-	 if (b->uc & UC_WIRELESS)
-	 emblems[i++] = "wireless";
-	 if (b->uc & UC_AOL)
-	 emblems[i++] = "aol";
-	 if (b->uc & UC_ADMIN)
-	 emblems[i++] = "admin";
-	 if (b->uc & UC_AB && i < 4)
-	 emblems[i++] = "activebuddy";
-	 
-	 if ((i < 4) && (userinfo != NULL) && (userinfo->capabilities & AIM_CAPS_HIPTOP))
-	 emblems[i++] = "hiptop";
-	 
-	 if ((i < 4) && (userinfo != NULL) && (userinfo->capabilities & AIM_CAPS_SECUREIM))
-	 emblems[i++] = "secure";
-	 */
-	
-	if(client) {
-		//Set the client if necessary
-		if (storedString == nil || ![client isEqualToString:storedString]){
-			[theContact setStatusObject:client forKey:@"Client" notify:NO];
-			
-			//Apply any changes
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+			}*/
 		}
-	} else {
-		//Clear the client value if one was present before
-		if (storedString){
-			[theContact setStatusObject:nil forKey:@"Client" notify:NO];
-			
-			//Apply any changes
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];	
+		
+		/*
+		 if (b->name && (b->uc & 0xffff0000) && isdigit(b->name[0])) {
+			 
+			 //ICQ
+			 int uc = b->uc >> 16;
+			 if (uc & AIM_ICQ_STATE_INVISIBLE)
+				 emblems[i++] = "invisible";
+			 else if (uc & AIM_ICQ_STATE_CHAT)
+				 emblems[i++] = "freeforchat";
+			 else if (uc & AIM_ICQ_STATE_DND)
+				 emblems[i++] = "dnd";
+			 else if (uc & AIM_ICQ_STATE_OUT)
+				 emblems[i++] = "na";
+			 else if (uc & AIM_ICQ_STATE_BUSY)
+				 emblems[i++] = "occupied";
+			 else if (uc & AIM_ICQ_STATE_AWAY)
+				 emblems[i++] = "away";
+		 } else {
+			 if (b->uc & UC_UNAVAILABLE) 
+				 emblems[i++] = "away";
+		 }
+		 
+		 if (b->uc & UC_WIRELESS)
+		 emblems[i++] = "wireless";
+		 if (b->uc & UC_AOL)
+		 emblems[i++] = "aol";
+		 if (b->uc & UC_ADMIN)
+		 emblems[i++] = "admin";
+		 if (b->uc & UC_AB && i < 4)
+		 emblems[i++] = "activebuddy";
+		 
+		 if ((i < 4) && (userinfo != NULL) && (userinfo->capabilities & AIM_CAPS_HIPTOP))
+		 emblems[i++] = "hiptop";
+		 
+		 if ((i < 4) && (userinfo != NULL) && (userinfo->capabilities & AIM_CAPS_SECUREIM))
+		 emblems[i++] = "secure";
+		 */
+		
+		if(client) {
+			//Set the client if necessary
+			if (storedString == nil || ![client isEqualToString:storedString]){
+				[theContact setStatusObject:client forKey:@"Client" notify:NO];
+				
+				//Apply any changes
+				[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+			}
+		} else {
+			//Clear the client value if one was present before
+			if (storedString){
+				[theContact setStatusObject:nil forKey:@"Client" notify:NO];
+				
+				//Apply any changes
+				[theContact notifyOfChangedStatusSilently:silentAndDelayed];	
+			}
 		}
 	}
 }
