@@ -47,7 +47,6 @@
 	[menuItem release];
 	
 	return(encryptionMenu);
-	
 }
 
 //Preference view is closing
