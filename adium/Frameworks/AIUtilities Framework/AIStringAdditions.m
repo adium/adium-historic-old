@@ -22,24 +22,24 @@
 //Random alphanumeric string
 + (NSString *)randomStringOfLength:(unsigned int)inLength
 {
-    NSMutableString	*string = [[NSMutableString alloc] init];
-    int				i;
-
-    //Prepare our random
-    srandom(TickCount());
-
-    //Add the random characters
-    for(i = 0; i < inLength; i++){
-	//get a random number between 0 and 35
-	int randomNum = (random() % 36);
-	//0-9 are the digits; add 7 to get to A-Z
-	if (randomNum > 9) randomNum+=7;
+	NSMutableString	*string = [[NSMutableString alloc] init];
+	int				i;
 	
-	char randomChar = '0' + randomNum;
-	[string appendString:[NSString stringWithFormat:@"%c",randomChar]];
-    }
-
-    return([string autorelease]);
+	//Prepare our random
+	srandom(TickCount());
+	
+	//Add the random characters
+	for(i = 0; i < inLength; i++){
+		//get a random number between 0 and 35
+		int randomNum = (random() % 36);
+		//0-9 are the digits; add 7 to get to A-Z
+		if (randomNum > 9) randomNum+=7;
+		
+		char randomChar = '0' + randomNum;
+		[string appendString:[NSString stringWithFormat:@"%c",randomChar]];
+	}
+	
+	return([string autorelease]);
 }
 
 + (NSString *)stringWithContentsOfASCIIFile:(NSString *)path
