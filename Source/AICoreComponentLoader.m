@@ -62,7 +62,6 @@ AIOfflineContactHidingPlugin,
 AISCLViewPlugin,
 AISpellCheckingPlugin,
 AIStandardToolbarItemsPlugin,
-AIStateEditorPlugin,
 AIStateMenuPlugin,
 AIStatusChangedMessagesPlugin,
 AITabStatusIconsPlugin,
@@ -104,7 +103,8 @@ SHLinkManagementPlugin,
 ESGlobalEventsPreferencesPlugin,
 ESGeneralPreferencesPlugin,
 NEHGrowlPlugin,
-ESSecureMessagingPlugin;
+ESSecureMessagingPlugin,
+ESStatusPreferencesPlugin;
 
 @interface AICoreComponentLoader (PRIVATE)
 - (void)_loadComponentClass:(Class)inClass;
@@ -152,7 +152,6 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[AISCLViewPlugin class]];
 	[self _loadComponentClass:[AISpellCheckingPlugin class]];
 	[self _loadComponentClass:[AIStandardToolbarItemsPlugin class]];
-	[self _loadComponentClass:[AIStateEditorPlugin class]];
 	[self _loadComponentClass:[AIStateMenuPlugin class]];
 	[self _loadComponentClass:[AIStatusChangedMessagesPlugin class]];
 	[self _loadComponentClass:[AITabStatusIconsPlugin class]];
@@ -194,6 +193,7 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[ESGeneralPreferencesPlugin class]];
 	[self _loadComponentClass:[NEHGrowlPlugin class]];
 	[self _loadComponentClass:[ESSecureMessagingPlugin class]];
+	[self _loadComponentClass:[ESStatusPreferencesPlugin class]];
 }
 
 /*!
