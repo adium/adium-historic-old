@@ -18,6 +18,8 @@
 @interface AIListCell : NSCell {
     AIListObject	*listObject;
     BOOL			isGroup;
+	
+	NSView			*controlView;
 
 	NSTextStorage 	*textStorage;
 	NSLayoutManager	*layoutManager;
@@ -27,5 +29,6 @@
 }
 
 - (void)setListObject:(AIListObject *)inObject;
+- (void)setControlView:(NSView *)inControlView;
 
 @end
