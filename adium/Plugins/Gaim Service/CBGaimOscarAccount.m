@@ -176,7 +176,10 @@ struct oscar_data {
                         }else{ //remove any away message
                             if ([theContact statusObjectForKey:@"StatusMessage" withOwner:self]) {
                                 [theContact setStatusObject:nil withOwner:self forKey:@"StatusMessage" notify:NO];
-                                [theContact setStatusObject:[NSNumber numberWithBool:NO] withOwner:self forKey:@"Away" notify:NO];
+                                [theContact setStatusObject:[NSNumber numberWithBool:NO]
+						  withOwner:self
+						     forKey:@"Away"
+						     notify:NO];
                             }
                         }
                         
@@ -185,10 +188,17 @@ struct oscar_data {
                             gchar *info_utf8 = oscar_encoding_to_utf8(userinfo->info_encoding, userinfo->info, userinfo->info_len);
                             if (info_utf8 != NULL) {
                                 NSString *profileString = [NSString stringWithUTF8String:info_utf8];
-                                if (![profileString isEqualToString:[theContact statusObjectForKey:@"TextProfileString" withOwner:self]]) {
+                                if (![profileString isEqualToString:[theContact statusObjectForKey:@"TextProfileString" 
+											 withOwner:self]]) {
                                     NSAttributedString *profileDecoded = [AIHTMLDecoder decodeHTML:profileString];
-                                    [theContact setStatusObject:profileString withOwner:self forKey:@"TextProfileString" notify:NO];
-                                    [theContact setStatusObject:profileDecoded withOwner:self forKey:@"TextProfile" notify:NO];
+                                    [theContact setStatusObject:profileString 
+						      withOwner:self 
+							 forKey:@"TextProfileString" 
+							 notify:NO];
+                                    [theContact setStatusObject:profileDecoded
+						      withOwner:self 
+							 forKey:@"TextProfile" 
+							 notify:NO];
                                 }
                                 g_free(info_utf8);
                             }
@@ -199,25 +209,43 @@ struct oscar_data {
                             [theContact setStatusObject:[NSDate dateWithTimeIntervalSince1970:(userinfo->onlinesince)] withOwner:self forKey:@"Signon Date" notify:NO];
 //                            [modifiedKeys addObject:@"Signon Date"];
                         }
-                    }
-                }
-            }
-            
-            //if anything changed
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-//            if([modifiedKeys count] > 0)
-//            {
-//                //tell the contact controller, silencing if necessary
-//                [[adium contactController] handleStatusChanged:theHandle
-//                                            modifiedStatusKeys:modifiedKeys
-//                                                        silent:silentAndDelayed];
-//            }
-        }
+			
+			//Set the warning level or clear it if it's now 0.
+			int warningLevel = (int)((userinfo->warnlevel/10.0) + 0.5);
+			NSNumber *currentWarningLevel = [theContact statusObjectForKey:@"Warning" withOwner:self];
+			if (warningLevel > 0){
+			    if (!currentWarningLevel || ([currentWarningLevel intValue] != warningLevel)) {
+				[theContact setStatusObject:[NSNumber numberWithInt:warningLevel]
+						  withOwner:self 
+						     forKey:@"Warning"
+						     notify:NO];
+			    }
+			}else{
+			    if (currentWarningLevel) {
+				[theContact setStatusObject:nil
+						  withOwner:self
+						     forKey:@"Warning" 
+						     notify:NO];   
+			    }
+			}
+		    }
+		}
+		
+		//if anything changed
+		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+		//            if([modifiedKeys count] > 0)
+		//            {
+		//                //tell the contact controller, silencing if necessary
+		//                [[adium contactController] handleStatusChanged:theHandle
+		//                                            modifiedStatusKeys:modifiedKeys
+		//                                                        silent:silentAndDelayed];
+		//            }
+	    }
+	}
     }
 }
-
-//This check is against the attributed string, not the HTML it creates... so it's worthless. :)
-/*- (void)setProfile:(NSAttributedString *)profile
+    //This check is against the attributed string, not the HTML it creates... so it's worthless. :)
+    /*- (void)setProfile:(NSAttributedString *)profile
 {
     if (profile){
         int length = [profile length];
