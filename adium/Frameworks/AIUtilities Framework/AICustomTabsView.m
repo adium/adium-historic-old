@@ -222,21 +222,26 @@ static  NSImage			*tabDivider = nil;
 //Reposition a tab
 - (void)moveTab:(AICustomTabCell *)tabCell toIndex:(int)index selectTab:(BOOL)shouldSelect
 {
-	NSTabViewItem	*tabViewItem = [[tabCell tabViewItem] retain];
-	
-	//Ignore the 'shouldSelect' choice if this cell is already selected
-	if(tabViewItem == [tabView selectedTabViewItem]) shouldSelect = YES;
-	
-	//Move the tab
-	[tabView removeTabViewItem:tabViewItem];
-	[tabView insertTabViewItem:tabViewItem atIndex:index];
-	if(shouldSelect) [tabView selectTabViewItem:tabViewItem];
-	[tabViewItem release];
-	
-	//Inform our delegate of the re-order
-	if([delegate respondsToSelector:@selector(customTabViewDidChangeOrderOfTabViewItems:)]){
-		[delegate customTabViewDidChangeOrderOfTabViewItems:self];
+	NSTabViewItem	*tabViewItem = [tabCell tabViewItem];
+
+	//Ignore the move request if the tab is already at the proper index
+	if ([tabView indexOfTabViewItem:tabViewItem] != index){
+		//Ignore the 'shouldSelect' choice if this cell is already selected
+		if(tabViewItem == [tabView selectedTabViewItem]) shouldSelect = YES;
+		
+		//Move the tab
+		[tabViewItem retain];
+		[tabView removeTabViewItem:tabViewItem];
+		[tabView insertTabViewItem:tabViewItem atIndex:index];
+		[tabViewItem release];
+		
+		//Inform our delegate of the re-order
+		if([delegate respondsToSelector:@selector(customTabViewDidChangeOrderOfTabViewItems:)]){
+			[delegate customTabViewDidChangeOrderOfTabViewItems:self];
+		}
 	}
+	
+	if(shouldSelect) [tabView selectTabViewItem:tabViewItem];
 }
 
 //Returns number of tab view items (Returns the number of visible tabs if a drag is happening from this bar)
