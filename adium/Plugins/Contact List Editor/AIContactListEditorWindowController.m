@@ -221,6 +221,8 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 - (void)collectionArrayChanged:(NSNotification *)notification
 {
     [tableView_sourceList reloadData]; //Redisplay our collection view
+
+    selectedCollection = nil;
     [self tableViewSelectionIsChanging:nil]; //Update the content view
 
     //If the user has multiple collections, open the drawer

@@ -157,7 +157,7 @@ extern void* objc_getClass(const char *name);
 
 - (BOOL)contactListEditable
 {
-    return(NO);
+    return(YES);
 }
 
 - (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
@@ -178,6 +178,7 @@ extern void* objc_getClass(const char *name);
     //Add the handle
     [handleDict setObject:handle forKey:[handle UID]]; //Add it locally
     //Add it server-side
+    [AIMService addBuddies:[NSArray arrayWithObject:[handle UID]] toGroups:[NSArray arrayWithObject:@"iChat"]];
 
     //Update the contact list
     [[owner contactController] handle:handle addedToAccount:self];
@@ -187,6 +188,15 @@ extern void* objc_getClass(const char *name);
 
 - (BOOL)removeHandleWithUID:(NSString *)inUID
 {
+    AIHandle	*handle = [handleDict objectForKey:inUID];
+    
+    //Remove the handle
+    [AIMService removeBuddies:[NSArray arrayWithObject:[handle UID]] fromGroups:[NSArray arrayWithObject:@""]]; //Remove it server-side
+    [handleDict removeObjectForKey:[handle UID]]; //Remove it locally
+
+    //Update the contact list
+    [[owner contactController] handle:handle removedFromAccount:self];
+
     return(YES);
 }
 
