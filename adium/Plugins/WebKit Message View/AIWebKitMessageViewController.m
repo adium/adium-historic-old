@@ -35,8 +35,13 @@
 
 //User Icons
 - (void)participatingListObjectsChanged:(NSNotification *)notification;
+- (void)accountChanged:(NSNotification *)notification;
 - (void)_updateUserIconForObject:(AIListObject *)inObject;
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject;
+
+//Dragging
+- (BOOL)shouldHandleDragWithPasteboard:(NSPasteboard *)pasteboard;
+- (NSTextView *)textView;
 @end
 
 @implementation AIWebKitMessageViewController
@@ -104,9 +109,12 @@ DeclareString(AppendNextMessage);
 	[webView setFrameLoadDelegate:self];
 	[webView setPolicyDelegate:self];
 	[webView setUIDelegate:self];
+	[webView setDraggingDelegate:self];
 	[webView setMaintainsBackForwardList:NO];
-	[webView unregisterDraggedTypes]; 
-		
+	
+	NSArray *draggedTypes = [NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil];
+	[webView registerForDraggedTypes:draggedTypes];
+
 	//Observe preference changes. Our initial preferences are also applied by refreshView, so no need for an explicit
 	//[self prefrencesChanged:nil] call here.
 	[[adium notificationCenter] addObserver:self 
@@ -145,6 +153,7 @@ DeclareString(AppendNextMessage);
 	[webView setFrameLoadDelegate:nil];
 	[webView setPolicyDelegate:nil];
 	[webView setUIDelegate:nil];
+	[webView setDraggingDelegate:nil];
 	
 	[newContent release]; newContent = nil;
 	[previousContent release]; previousContent = nil;
@@ -1186,5 +1195,92 @@ DeclareString(AppendNextMessage);
 	
 	return webViewMenuItems;
 }
+
+
+//Dragging delegate -----------------------------------------
+#pragma mark Dragging delegate
+
+//If we're getting a non-image file, we can handle it immediately.  Otherwise, the drag is the textView's problem.
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
+{
+	NSPasteboard	*pasteboard = [sender draggingPasteboard];
+	BOOL	success = NO;
+	
+	if (![pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]] &&
+		[pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]]){
+		
+		//Not an image but it is a file - send it immediately as a file transfer
+		NSArray			*files = [pasteboard propertyListForType:NSFilenamesPboardType];
+		NSEnumerator	*enumerator = [files objectEnumerator];
+		NSString		*path;
+		while (path = [enumerator nextObject]){
+			AIListObject *listObject = [chat listObject];
+			if (listObject){
+				[[adium fileTransferController] sendFile:path toListContact:(AIListContact *)listObject];
+			}else{
+				NSLog(@"Crazy talk.");
+			}
+		}
+		success = YES;
+		
+	}else{
+		NSTextView *textView = [self textView];
+		if(textView){
+			[[webView window] makeFirstResponder:textView]; //Make it first responder
+			success = [textView performDragOperation:sender];
+		}
+	}
+	
+	return success;
+}
+
+//Pass on the prepareForDragOperation if it's not one we're handling in this class
+- (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
+{
+	NSPasteboard	*pasteboard = [sender draggingPasteboard];
+	BOOL	success = YES;
+	
+	if (![self shouldHandleDragWithPasteboard:pasteboard]){	
+		NSTextView *textView = [self textView];
+		if(textView){
+			success = [textView prepareForDragOperation:sender];
+		}
+	}
+	
+	return success;
+}
+	
+//Pass on the concludeDragOperation if it's not one we're handling in this class
+- (void)concludeDragOperation:(id <NSDraggingInfo>)sender
+{
+	NSPasteboard	*pasteboard = [sender draggingPasteboard];
+	
+	if (![self shouldHandleDragWithPasteboard:pasteboard]){
+		NSTextView *textView = [self textView];
+		if(textView){
+			[textView concludeDragOperation:sender];
+		}
+	}
+}
+
+- (BOOL)shouldHandleDragWithPasteboard:(NSPasteboard *)pasteboard
+{
+	return (![pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]] &&
+			[pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]]);
+}
+
+- (NSTextView *)textView
+{
+	id	responder = [webView nextResponder];
+	
+	//When walking the responder chain, we want to skip ScrollViews and ClipViews.
+	while(responder &&
+		  ![responder isKindOfClass:[NSTextView class]]){
+		responder = [responder nextResponder];
+	}
+	
+	return responder;
+}
+
 
 @end
