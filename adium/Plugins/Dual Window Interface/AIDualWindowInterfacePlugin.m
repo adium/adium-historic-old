@@ -420,7 +420,11 @@
 //A container was closed
 - (void)containerDidClose:(id <AIInterfaceContainer>)inContainer
 {
-    if(inContainer == contactListWindowController){
+    if(inContainer == activeContainer){
+		activeContainer = nil;
+	}
+	
+	if(inContainer == contactListWindowController){
         [contactListWindowController release]; contactListWindowController = nil;
     }
     
@@ -469,7 +473,6 @@
 
     //force a message tab open in case of failure somewhere else
     if(!messageTabContainer){
-        NSLog(@"Content received, but no chat open.  Forcing the chat open");
         [self openChat:[object chat]];
     }
 

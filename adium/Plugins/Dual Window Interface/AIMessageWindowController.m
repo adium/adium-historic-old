@@ -184,12 +184,9 @@
 //Remove a tab view item container
 - (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
 {
-    //Before closing a container, we must set active to nil
-    [interface containerDidBecomeActive:nil];
-
     //If the tab is selected, select the next tab.
     if(inTabViewItem == [tabView_messages selectedTabViewItem]){
-	[tabView_messages selectNextTabViewItem:nil];
+		[tabView_messages selectNextTabViewItem:nil];
     }
 
     //Remove the tab and let the interface know a container closed
@@ -272,9 +269,9 @@
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
-    NSArray				*viewArrayCopy = [[[tabView_messages tabViewItems] copy] autorelease]; //the array will change as we remove views, so we must work with a copy
+    NSArray					*viewArrayCopy = [[[tabView_messages tabViewItems] copy] autorelease]; //the array will change as we remove views, so we must work with a copy
     NSEnumerator			*enumerator;
-    AIMessageTabViewItem		*tabViewItem;
+    AIMessageTabViewItem	*tabViewItem;
 
     //Close down
     windowIsClosing = YES; //This is used to prevent sending more close commands than needed.
@@ -285,7 +282,6 @@
     while((tabViewItem = [enumerator nextObject])){
         [[adium interfaceController] closeChat:[[tabViewItem messageViewController] chat]];
     }
-    [interface containerDidBecomeActive:nil];
 
     return(YES);
 }
