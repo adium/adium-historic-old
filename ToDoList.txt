@@ -7,8 +7,6 @@
 - Implement 'edit menu' sheets for deleting list layouts and themes
 - Improve behavior when customizing existing layouts and themes
 - Improve behavior when canceling changes to layouts and themes
-- Implement emoticon menu in appearance
-- Implement emoticons customize sheet in appearance
 - Add a warning sheet about window moving/performance for non-standard styles
 - Update included layouts, themes, and message views
 - Jabber account registration
