@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Thu Jun 12 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIAutoLinkingPlugin.h"

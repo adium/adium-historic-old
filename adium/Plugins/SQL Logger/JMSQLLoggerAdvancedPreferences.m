@@ -3,7 +3,6 @@
 //  Adium XCode
 //
 //  Created by Jeffrey Melloy on Sun Nov 09 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "JMSQLLoggerAdvancedPreferences.h"

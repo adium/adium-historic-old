@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Sun Aug 03 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 // notes: saveEventActionArray is probably being called too often
 

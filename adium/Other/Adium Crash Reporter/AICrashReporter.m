@@ -3,13 +3,12 @@
 //  Adium XCode
 //
 //  Created by Adam Iser on Mon Dec 22 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import <AIUtilities/AIUtilities.h>
 #import "AICrashReporter.h"
 
-#define CRASH_REPORT_URL		@"http://www.visualdistortion.org/crash/post.jsp"
+#define CRASH_REPORT_URL	@"http://www.visualdistortion.org/crash/post.jsp"
 #define EXCEPTIONS_PATH		[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
 #define CRASHES_PATH		[@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
 

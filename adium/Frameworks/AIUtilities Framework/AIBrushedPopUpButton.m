@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Fri Jul 11 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIBrushedPopUpButton.h"

@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Thu Sep 18 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "ESCLViewAdvancedPreferences.h"
