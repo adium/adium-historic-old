@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="Colloquy 2.0" />
+	<meta name="formatter" content="libxslt 1.0.30" />
+    <link rel="stylesheet" href="main.css" type="text/css" />
+    
+	<script type="text/ecmascript" defer="defer">
+		var scrollToBottomIsNeeded = false;
+
+		function appendMessage(html) {
+			//Remove any existing insertion point
+			insert = document.getElementById("insert");
+			if(insert) insert.parentNode.removeChild(insert);
+
+			//Append the new message to the bottom of our chat block
+			chat = document.getElementById("Chat");
+			range = document.createRange();
+			range.selectNode(chat);
+			documentFragment = range.createContextualFragment(html);
+			chat.appendChild(documentFragment);
+			alignChat();
+		}
+		
+		function appendNextMessage(html){
+			//
+			insert = document.getElementById("insert");
+		
+			//make new node
+			range = document.createRange();
+			range.selectNode(insert.parentNode);
+			newNode = range.createContextualFragment(html);
+
+			//swap
+			insert.parentNode.replaceChild(newNode,insert);
+			alignChat();
+		}
+		
+		function scrollToBottom() {
+			document.body.scrollTop = document.body.offsetHeight;
+		}
+
+		function checkIfScrollToBottomIsNeeded() {
+			scrollToBottomIsNeeded = ( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
+		}
+
+		function scrollToBottomIfNeeded() {
+			if( scrollToBottomIsNeeded )
+				document.body.scrollTop = document.body.offsetHeight;
+		}
+
+		function setStylesheet( id, url ) {
+			code = "<style id=\"" + id + "\" type=\"text/css\" media=\"screen,print\">";
+			if( url.length ) code += "@import url( \"" + url + "\" );";
+			code += "</style>";
+			range = document.createRange();
+			head = document.getElementsByTagName( "head" ).item(0);
+			range.selectNode( head );
+			documentFragment = range.createContextualFragment( code );
+			head.removeChild( document.getElementById( id ) );
+			head.appendChild( documentFragment );
+		}
+		document.onclick = imageCheck;
+		function imageCheck() {
+			node = event.target;
+			if(node.tagName == 'IMG' && node.alt) {
+				a = document.createElement('a');
+				a.setAttribute('onclick', 'imageSwap(this)');
+				a.setAttribute('src', node.src);
+				text = document.createTextNode(node.alt);
+				a.appendChild(text);
+				node.parentNode.replaceChild(a, node);
+			}
+		}
+		function imageSwap(node) {
+			img = document.createElement('img');
+			img.setAttribute('src', node.src);
+			img.setAttribute('alt', node.firstChild.nodeValue);
+			node.parentNode.replaceChild(img, node);
+		}
+		function alignChat() {
+			var windowHeight = window.innerHeight;
+			if (windowHeight > 0) {
+				var contentElement = document.getElementById('Chat');
+				var contentHeight = contentElement.offsetHeight;
+				if (windowHeight - contentHeight > 0) {
+					contentElement.style.position = 'relative';
+					contentElement.style.top = (windowHeight - contentHeight) + 'px';
+				}
+				else {
+					contentElement.style.position = 'static';
+				}
+			}
+		}
+		window.onresize = alignChat;
+
+	</script>
+</head>
+<body onload="scrollToBottom();alignChat();">
+<div id="Chat">
+<div class="incoming context">
+    <div class="buddyicon">
+        <img src="Incoming/buddy_icon.png" width="40" height="40" />
+    </div>
+    <div class="sender">
+        <span alt="ramoth4">Colin the Great</span>
+    </div>
+    <div class="time_initial">
+    10:23
+    </div>
+    <div class="message">
+        <p>Testing context messages!</p>
+        <div class="time_consecutive">24'33"</div><p>Not much</p>
+        <div id="insert"></div>
+    </div>
+</div>
+<div class="outgoing context">
+    <div class="buddyicon">
+        <img src="Incoming/buddy_icon.png" width="40" height="40" />
+    </div>
+    <div class="sender">
+        Jorge Salvador Caffarena (eevyl@mac.com) testing very long wassup
+    </div>
+    <div class="time_initial">
+        10:24:14
+    </div>
+    <div class="message">
+        <p>more test</p>
+        <div id="insert"></div>
+    </div>
+</div>
+<div class="incoming actual">
+    <div class="buddyicon">
+        <img src="Incoming/buddy_icon.png" width="40" height="40" />
+    </div>
+    <div class="sender">
+        <span alt="ramoth4">Colin the Great</span>
+    </div>
+    <div class="time_initial">
+    10:23
+    </div>
+    <div class="message">
+        <p>Ahoy!</p>
+    </div>
+</div>
+<div class="status_container">
+  <div class="status_message">
+    Pepito has gone offline
+    <span class="status_time">        
+    10:23    
+    </span>
+  </div>    
+</div>
+<div class="status_container">
+    <div class="status_message">
+    Colin has returned from idle
+    <span class="status_time">        
+    10:23    
+    </span>
+    </div>    
+</div>
+<div class="outgoing actual">
+    <div class="buddyicon">
+        <img src="Incoming/buddy_icon.png" width="40" height="40" />
+    </div>
+    <div class="sender">
+        Jorge Salvador Caffarena (eevyl@mac.com) testing very long wassup
+    </div>
+    <div class="time_initial">
+        10:24
+    </div>
+    <div class="message">
+        <p>That is what happens when a long url is inserted, magic scroller</p>
+        <div class="time_consecutive">24'33"</div><p>Not much <a href="http://www.apple.com/long/url/as/it/can/be/whatever">http://www.apple.com/long/url/as/it/can/be/whatever/longer/than/anything/</a></p>
+        <div id="insert"></div>
+    </div>
+</div>
+</div>
+<div class="bottomdivider"></div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+body {
+	top: -10px;
+}
+				
+.incoming {
+	color: black;
+}
+  
+.outgoing {
+	color: black;
+}
+             
+.sender {
+	color: white;
+	font-weight: bold;
+	font-size: 11px;
+}
+                  
+.time_initial {
+	color: white;
+	font-weight: bold;
+	font-size: 11px;
+}
+
+.time_consecutive {
+	font-weight: bold;
+}
+
+.status_container {
+	color: gray;
+}
+
+.bottomdivider {
+	border-bottom: 1px solid #BEBEBE;
+}
+
+a, a:link {
+	text-decoration: none;
+}

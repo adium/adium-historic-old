@@ -1,0 +1,163 @@
+body {
+	margin: -5px 0px 0px 0px;
+}
+
+#Chat {
+	overflow: hidden;
+	margin-right: 10px;
+	margin-bottom: 5px;
+	margin-left: 10px;
+}
+
+.incoming {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	clear: both;
+}
+  
+.outgoing {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	clear: both;
+}
+
+.sender {
+	padding-left: 4px;
+	height: 14px;
+	margin-right: 4px;
+	overflow: hidden;
+	padding-right: 45px;
+}
+
+.time_initial {
+	float: right;
+	position: relative;
+	height: 14px;
+	top: -14px;
+	padding-right: 4px;
+	right: 0px;
+	margin-bottom: -14px;
+}
+
+.time_consecutive {
+	float: right;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-right: 4px;
+}
+
+.message {
+	overflow: hidden;
+}
+
+p {
+	margin: 0px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+}
+
+.status_container {
+	margin-left: 5px;
+	margin-right: 5px;
+	clear: both;
+	margin-bottom: 5px;
+}
+
+.status_time {
+	float: right;
+}
+
+.bottomdivider {
+	width: 100%;
+	position: fixed;
+	bottom: 0px;
+	margin: 0px;
+	padding: 0px;
+	left: 0px;
+}
+
+/*<group=Switcher>*/
+ul, li {
+	list-style-type: none;
+	margin: 0px; padding: 0px;
+}
+
+#mainmenu {
+	color: #666;
+	background: rgba(255,255,255,0.2);
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	z-index: 200;
+	font-size: 9px;
+	margin-right: -7px;
+}
+
+#mainmenu a:link, #mainmenu a:visited {
+	text-decoration: none;
+	color: rgba(0,0,0,0.4);
+}
+
+#mainmenu a:hover, #mainmenu a:active	 {
+	text-decoration: none;
+	color: #fff;
+}
+
+/* SwitchMenuBar */
+
+#switchmenu ul {
+	width: 105px;
+}
+
+/* SwitchMenuBarTitles */
+
+#switchmenu li {
+	float: left;
+	margin-right: 4px;
+}
+
+/* SwitchMenuBarDropDown */
+
+#switchmenu li ul li {
+	float:left;
+	clear:both;
+	width: 69px;
+}
+
+#switchmenu li a {
+	display: block;
+	padding: 3px;
+}
+
+#switchmenu a:hover {
+	background-color: rgba(255,255,255,0.8);
+}
+
+#switchmenu ul li ul {
+	display: none;
+	width: 69px;
+}
+
+#switchmenu li ul a:hover {
+	background-color: rgba(48,99,176,0.4);
+	color: white;
+	width: 63px;
+}
+
+#switchmenu li:hover ul {
+	background-color: rgba(255,255,255,0.8);
+	visibility: visible;
+	display: block;
+	position:absolute;
+	z-index:10;
+}
+
+#switchmenu li:hover {
+	background: rgba(255,255,255,0.8);
+}
+
+#switchmenu li:hover a:link, #switchmenu li:hover a:visited {
+	color: black;
+}
+/*</group>*/
