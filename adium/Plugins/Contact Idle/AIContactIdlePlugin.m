@@ -30,7 +30,7 @@
     idleObjectArray = nil;
 
     //Install our tooltip entry
-    [[owner interfaceController] registerContactListTooltipEntry:self];
+    [[owner interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
 
     //
     [[owner contactController] registerListObjectObserver:self];
@@ -109,9 +109,22 @@
 
 
 //Tooltip entry ---------------------------------------------------------------------------------
-- (NSString *)label
+- (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(@"Idle");
+    NSString	*entry = nil;
+    
+    if([inObject isKindOfClass:[AIListContact class]]){
+        int idle = (int)[[(AIListContact *)inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
+        
+        if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
+            entry = @"Idle";
+            
+        }else if(idle != 0){
+            entry = @"Idle Time";
+        }
+    }
+    
+    return(entry);
 }
 
 - (NSString *)entryForObject:(AIListObject *)inObject

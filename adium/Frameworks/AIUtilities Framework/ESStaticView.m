@@ -67,7 +67,10 @@
 {
     //Draw
     if (image) {
-        [image drawInRect:rect fromRect:sourceRect operation:NSCompositeSourceOver fraction:1.0];
+        if (NSContainsRect(rect,sourceRect))
+            [image drawInRect:NSInsetRect(rect,(rect.size.width-sourceRect.size.width)/2,(rect.size.height-sourceRect.size.height)/2) fromRect:sourceRect operation:NSCompositeSourceOver fraction:1.0];
+        else
+            [image drawInRect:rect fromRect:sourceRect operation:NSCompositeSourceOver fraction:1.0];
     } else {
         //Clear
         [[NSColor clearColor] set];

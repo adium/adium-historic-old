@@ -21,11 +21,11 @@
 - (void)installPlugin
 {
     //Install our tooltip entry
-    [[owner interfaceController] registerContactListTooltipEntry:self];
+    [[owner interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
 }
 
 //Tooltip entry ---------------------------------------------------------------------------------------
-- (NSString *)label
+- (NSString *)labelForObject:(AIListObject *)inObject
 {
     return(@"Warning Level");
 }
