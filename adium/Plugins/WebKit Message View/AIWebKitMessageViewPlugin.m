@@ -9,7 +9,7 @@
 - (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath allowingColors:(BOOL)allowColors;
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath;
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content allowingColors:(BOOL)allowColors;
-- (NSMutableString *)fillKeywords:(NSMutableString *)inString forStyle:(NSBundle *)style forChat:(AIChat *)chat;
+- (NSMutableString *)fillKeywords:(NSMutableString *)inString forStyle:(NSBundle *)style variant:(NSString *)variant forChat:(AIChat *)chat;
 - (NSMutableString *)escapeString:(NSMutableString *)inString;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_loadPreferencesForWebView:(ESWebView *)webView withStyleNamed:(NSString *)styleName;
@@ -203,7 +203,7 @@ DeclareString(AppendNextMessage);
 }
 
 
-- (void)loadStyle:(NSBundle *)style withName:(NSString *)styleName withCSS:(NSString *)CSS forChat:(AIChat *)chat intoWebView:(ESWebView *)webView
+- (void)loadStyle:(NSBundle *)style withName:(NSString *)styleName variant:(NSString *)variant withCSS:(NSString *)CSS forChat:(AIChat *)chat intoWebView:(ESWebView *)webView
 {
 	NSString		*basePath, *headerHTML, *footerHTML, *stylePath;
 	NSMutableString *templateHTML;
@@ -221,7 +221,7 @@ DeclareString(AppendNextMessage);
 	templateHTML = [NSMutableString stringWithContentsOfASCIIFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
 
 	templateHTML = [NSMutableString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
-	templateHTML = [self fillKeywords:templateHTML forStyle:style forChat:chat];
+	templateHTML = [self fillKeywords:templateHTML forStyle:style variant:variant forChat:chat];
 
 	//Feed it to the webview
 	[[webView mainFrame] loadHTMLString:templateHTML baseURL:nil];
@@ -525,7 +525,7 @@ DeclareString(AppendNextMessage);
 	return(inString);
 }
 
-- (NSMutableString *)fillKeywords:(NSMutableString *)inString forStyle:(NSBundle *)style forChat:(AIChat *)chat
+- (NSMutableString *)fillKeywords:(NSMutableString *)inString forStyle:(NSBundle *)style variant:(NSString *)variant forChat:(AIChat *)chat
 {
 	NSRange	range;
 	
@@ -594,26 +594,31 @@ DeclareString(AppendNextMessage);
 		range = [inString rangeOfString:@"==bodyBackground=="];
 
 		if(range.location != NSNotFound){
-			
-			NSString	*background = [[adium preferenceController] preferenceForKey:[self backgroundKeyForStyle:[style name]]
-																			   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-			NSColor		*backgroundColor = [[[adium preferenceController] preferenceForKey:[self backgroundColorKeyForStyle:[style name]]
-																					 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] representedColor];
+			BOOL disableCustomBackground = [self boolForKey:@"DisableCustomBackground"
+													  style:style 
+													variant:variant
+												boolDefault:NO];
 			NSMutableString *backgroundTag = nil;
-			
-			if (background || backgroundColor){
-				backgroundTag = [[[NSMutableString alloc] init] autorelease];;
-				if (background){
-					[backgroundTag appendString:[NSString stringWithFormat:@"background: url('%@') no-repeat fixed; ",background]];
-				}
-				if (backgroundColor){
-					[backgroundTag appendString:[NSString stringWithFormat:@"background-color: #%@; ",[backgroundColor hexString]]];
+
+			if (!disableCustomBackground){
+				NSString	*background = [[adium preferenceController] preferenceForKey:[self backgroundKeyForStyle:[style name]]
+																				   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+				NSColor		*backgroundColor = [[[adium preferenceController] preferenceForKey:[self backgroundColorKeyForStyle:[style name]]
+																						 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] representedColor];
+				
+				if (background || backgroundColor){
+					backgroundTag = [[[NSMutableString alloc] init] autorelease];;
+					if (background){
+						[backgroundTag appendString:[NSString stringWithFormat:@"background: url('%@') no-repeat fixed; ",background]];
+					}
+					if (backgroundColor){
+						[backgroundTag appendString:[NSString stringWithFormat:@"background-color: #%@; ",[backgroundColor hexString]]];
+					}
 				}
 			}
-
+			
 			[inString replaceCharactersInRange:range
 									withString:(backgroundTag ? (NSString *)backgroundTag : @"")];
-			
 		}
 	}
 	

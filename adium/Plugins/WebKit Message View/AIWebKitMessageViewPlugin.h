@@ -60,6 +60,6 @@ typedef enum {
 - (NSString *)backgroundColorKeyForStyle:(NSString *)desiredStyle;
 
 - (void)processContent:(AIContentObject *)content withPreviousContent:(AIContentObject *)previousContent forWebView:(WebView *)webView fromStylePath:(NSString *)stylePath allowingColors:(BOOL)allowColors;
-- (void)loadStyle:(NSBundle *)style withName:(NSString *)styleName withCSS:(NSString *)CSS forChat:(AIChat *)chat intoWebView:(ESWebView *)webView;
+- (void)loadStyle:(NSBundle *)style withName:(NSString *)styleName variant:(NSString *)variant withCSS:(NSString *)CSS forChat:(AIChat *)chat intoWebView:(ESWebView *)webView;
 - (BOOL)boolForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant boolDefault:(BOOL)defaultValue;
 @end

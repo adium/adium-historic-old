@@ -120,11 +120,13 @@
 		//Note that we do not support open windows changing styles; new styles only affect new windows.
 		//Variants and font settings and such can change midstream.
 		if (!notification ||  (stylePath && [stylePath isEqualToString:newStylePath])){
-			NSString *desiredVariant, *CSS;
+			NSString *variant, *CSS;
 			
-			desiredVariant = [[adium preferenceController] preferenceForKey:[plugin variantKeyForStyle:styleName]
+			variant = [[adium preferenceController] preferenceForKey:[plugin variantKeyForStyle:styleName]
 																	  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];			
-			CSS = (desiredVariant ? [NSString stringWithFormat:@"Variants/%@.css",desiredVariant] : @"main.css");
+			CSS = (variant ? [NSString stringWithFormat:@"Variants/%@.css",variant] : @"main.css");
+			
+			allowColors = [plugin boolForKey:@"AllowTextColors" style:style variant:variant boolDefault:YES];
 			
 			if (notification){
 				[webView stringByEvaluatingJavaScriptFromString:
@@ -135,10 +137,13 @@
 				[stylePath release];
 				stylePath = [[style resourcePath] retain];
 
-				[plugin loadStyle:style withName:styleName withCSS:CSS forChat:chat intoWebView:webView];
+				[plugin loadStyle:style 
+						 withName:styleName
+						  variant:variant
+						  withCSS:CSS
+						  forChat:chat
+					  intoWebView:webView];
 			}
-			
-			allowColors = [plugin boolForKey:@"AllowTextColors" style:style variant:desiredVariant boolDefault:YES];
 		}
 	}
 }
