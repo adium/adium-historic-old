@@ -1,0 +1,44 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {toggleInactiveServices = id; }; 
+            CLASS = AIAccountListWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "box_newUserHeader" = NSBox; 
+                "box_serviceDivider" = NSBox; 
+                "button_inactiveServicesToggle" = NSButton; 
+                "grid_activeServices" = AIViewGridView; 
+                "grid_inactiveServices" = AIViewGridView; 
+                "textField_inactiveServicesToggle" = NSTextField; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButton; }, 
+        {
+            CLASS = AIPlasticDropDownButton; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIPlasticButton; 
+        }, 
+        {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {CLASS = AIViewGridView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = ESDelayedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
+        {
+            ACTIONS = {copy = id; paste = id; }; 
+            CLASS = ESImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}
