@@ -18,7 +18,6 @@
 
 @interface AIVolumeControlPreferences : AIPreferencePane {
     IBOutlet	NSSlider		*slider_volume;
-    IBOutlet	NSButton		*button_Reset;
 }
 
 - (IBAction)selectVolume:(id)sender;
