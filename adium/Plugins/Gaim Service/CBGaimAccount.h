@@ -33,7 +33,7 @@
 - (void)accountConvDestroy:(GaimConversation*)conv;
 - (void)accountConvUpdated:(GaimConversation*)conv type:(GaimConvUpdateType)type;
 - (void)accountConvReceivedIM:(const char*)message inConversation:(GaimConversation*)conv withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
-
+- (void)accountConvReceivedChatMessage:(const char*)message inConversation:(GaimConversation*)conv from:(const char *)source withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
 //accountXfer methods
 - (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer;
 - (void)accountXferUpdateProgress:(GaimXfer *)xfer percent:(float)percent;
