@@ -83,9 +83,10 @@ DeclareString(AppendNextMessage);
 	/*
 	 Version 0: Initial Webkit Version
 	 Version 1: Template.html now handles all scroll-to-bottom functionality.  It is no longer required to call the
-	 scrollToBottom functions when inserting content.
+     	         scrollToBottom functions when inserting content.
 	 Version 2: No signigifant changes
-	 Version 3: main.css is no longer a separate style, default style a separate file in /variants like all others
+	 Version 3: main.css is no longer a separate style, it now serves as the base stylesheet and is imported by default.
+	             The default variant is now a separate file in /variants like all other variants.
 	 */
 	styleVersion = [[styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_VERSION] intValue];
 
@@ -278,6 +279,7 @@ DeclareString(AppendNextMessage);
 {
 	NSMutableString	*templateHTML = [NSMutableString stringWithFormat:baseHTML,		//Template
 		[[NSURL fileURLWithPath:stylePath] absoluteString],							//Base path
+		(styleVersion < 3 ? @"" : @"@import url( \"main.css\" );"),					//Import main.css by default (For version 3 and newer styles)
 		[self pathForVariant:variant],												//Variant path
 		(showHeader ? headerHTML : @""),
 		footerHTML];
