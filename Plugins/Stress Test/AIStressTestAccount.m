@@ -78,12 +78,18 @@
 // Send a content object
 - (BOOL)sendContentObject:(AIContentObject *)object
 {
-    if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0 && ![(AIContentMessage *)object isAutoreply]){
-        NSString	*message = [[(AIContentMessage *)object message] string];
-        NSArray		*commands = [message componentsSeparatedByString:@" "];
-        NSString	*type = [commands objectAtIndex:0];
+    if([[object type] isEqualToString:CONTENT_MESSAGE_TYPE] && ![(AIContentMessage *)object isAutoreply]){
+        NSString	*message;
+        NSArray		*commands;
+        NSString	*type = 
         
-        if([type compare:@"create"] == 0){
+		message = [[(AIContentMessage *)object message] string];
+		AILog(@"Stress Test: Sending %@",message);
+
+		commands = [message componentsSeparatedByString:@" "];
+		type = (([commands count]) ? [commands objectAtIndex:0] : nil);
+		
+        if([type isEqualToString:@"create"]){
             int count = [[commands objectAtIndex:1] intValue];
             int i;
             
@@ -99,35 +105,36 @@
 			
             [self echo:[NSString stringWithFormat:@"Created %i handles",count]];
             
-        }else if([type compare:@"online"] == 0){
+        }else if([type isEqualToString:@"online"]){
             NSMutableArray	*handleArray = [NSMutableArray array];
             int 		count = [[commands objectAtIndex:1] intValue];
-            BOOL 		silent = NO;
-            int 		i;
+			BOOL 		silent = NO;
+			int 		i;
 			
-            if([commands count] > 2) silent = ([[commands objectAtIndex:2] isEqualToString:@"silent"]);
-			
-            for(i=0;i < count;i++){
-				AIListContact	*contact;
-                NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
+			if([commands count] > 2) silent = ([[commands objectAtIndex:2] isEqualToString:@"silent"]);
+			if(count){				
+				for(i=0;i < count;i++){
+					AIListContact	*contact;
+					NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
+					
+					contact = [[adium contactController] contactWithService:service
+																	account:self
+																		UID:buddyUID];
+					[handleArray addObject:contact];
+				}
 				
-				contact = [[adium contactController] contactWithService:service
-																account:self
-																	UID:buddyUID];
-				[handleArray addObject:contact];
-            }
-			
-			if (silent) [[adium contactController] delayListObjectNotifications];
-
-            [NSTimer scheduledTimerWithTimeInterval:0.00001
-											 target:self
-										   selector:@selector(timer_online:)
-										   userInfo:[NSDictionary dictionaryWithObjectsAndKeys:handleArray,@"handles",
-																							[NSNumber numberWithBool:silent],@"silent",nil] 
-											repeats:YES];
+				if (silent) [[adium contactController] delayListObjectNotifications];
+				
+				[NSTimer scheduledTimerWithTimeInterval:0.00001
+												 target:self
+											   selector:@selector(timer_online:)
+											   userInfo:[NSDictionary dictionaryWithObjectsAndKeys:handleArray,@"handles",
+												   [NSNumber numberWithBool:silent],@"silent",nil] 
+												repeats:YES];
+			}
             [self echo:[NSString stringWithFormat:@"%i handles signing on %@",count,(silent?@"(Silently)":@"")]];
 			
-        }else if([type compare:@"offline"] == 0){
+        }else if([type isEqualToString:@"offline"]){
             int 	count = [[commands objectAtIndex:1] intValue];
             BOOL 	silent = NO;
 			BOOL	shouldNotify = !silent;
@@ -136,23 +143,23 @@
 			NSString	*ONLINE = @"Online";
 			
             if([commands count] > 2) silent = ([(NSString *)@"silent" compare:[commands objectAtIndex:2]] == 0);
-			
-			if (silent) [[adium contactController] delayListObjectNotifications];
-
-            for(i=0;i < count;i++){
-				AIListContact	*contact;
+			if(count){
+				if (silent) [[adium contactController] delayListObjectNotifications];
 				
-				contact = [[adium contactController] existingContactWithService:service
-																		account:self
-																			UID:[NSString stringWithFormat:@"Buddy%i",i]];
-				[contact setStatusObject:nil forKey:ONLINE notify:shouldNotify];
-            }
-
-			if (silent) [[adium contactController] endListObjectNotificationsDelay];
-			
+				for(i=0;i < count;i++){
+					AIListContact	*contact;
+					
+					contact = [[adium contactController] existingContactWithService:service
+																			account:self
+																				UID:[NSString stringWithFormat:@"Buddy%i",i]];
+					[contact setStatusObject:nil forKey:ONLINE notify:shouldNotify];
+				}
+				
+				if (silent) [[adium contactController] endListObjectNotificationsDelay];
+			}
             [self echo:[NSString stringWithFormat:@"%i handles signed off %@",count,(silent?@"(Silently)":@"")]];
 			
-        }else if([type compare:@"msgin"] == 0){
+        }else if([type isEqualToString:@"msgin"]){
             int 		count = [[commands objectAtIndex:1] intValue];
 			int 		spread = [[commands objectAtIndex:2] intValue];
             NSString	*messageIn = [commands objectAtIndex:3];
@@ -166,7 +173,7 @@
 											   messageIn,@"message",nil] 
 											repeats:YES];
 			
-        }else if([type compare:@"msginout"] == 0){
+        }else if([type isEqualToString:@"msginout"]){
             int 		count = [[commands objectAtIndex:1] intValue];
             int 		spread = [[commands objectAtIndex:2] intValue];
             NSString	*messageOut = [commands objectAtIndex:3];
@@ -181,7 +188,7 @@
 											   [NSNumber numberWithBool:NO],@"in",nil] 
 											repeats:YES];
             
-		}else if ([type compare:@"groupchat"] == 0) {
+		}else if ([type isEqualToString:@"groupchat"]) {
             int 		count = [[commands objectAtIndex:1] intValue];
 			NSString	*messageIn = [commands objectAtIndex:2];
 			
@@ -193,10 +200,10 @@
 											   messageIn,@"message",nil] 
 											repeats:YES];	
 			
-        }else if ([type compare:@"crash"] == 0){
+        }else if ([type isEqualToString:@"crash"]){
             NSMutableArray *help = [[NSMutableArray alloc] init];
-            [help addObject:nil];   
-        }else{
+            [help addObject:nil]; 
+        }else if ([object destination] == commandContact){
             [self echo:[NSString stringWithFormat:@"Unknown command %@",type]];
         }
     }
@@ -210,7 +217,7 @@
     NSMutableArray		*array = [userInfo objectForKey:@"handles"];
     AIListContact		*contact = [array lastObject];
 	BOOL				silent = [[userInfo objectForKey:@"silent"] boolValue];
-    
+
 	[contact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
 
 	//Apply any changes
