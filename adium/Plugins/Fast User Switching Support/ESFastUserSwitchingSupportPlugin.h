@@ -8,6 +8,7 @@
 
 @interface ESFastUserSwitchingSupportPlugin : AIPlugin {
     BOOL setAwayThroughFastUserSwitch;
+    BOOL setMuteThroughFastUserSwitch;
 }
 
 @end

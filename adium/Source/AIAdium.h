@@ -147,6 +147,7 @@ typedef enum {
 #define	KEY_SOUND_SET			@"Set"
 #define	KEY_SOUND_SET_CONTENTS		@"Sounds"
 #define KEY_SOUND_MUTE			@"Mute Sounds"
+#define KEY_SOUND_TEMPORARY_MUTE        @"Mute Sounds Temporarily"
 #define KEY_SOUND_USE_CUSTOM_VOLUME	@"Use Custom Volume"
 #define KEY_SOUND_CUSTOM_VOLUME_LEVEL	@"Custom Volume Level"
 

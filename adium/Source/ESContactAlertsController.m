@@ -147,6 +147,7 @@ Methods used by ESContactAlert instances
     NSMutableDictionary *stateDictionary = [arrayOfStateDictionaries objectWithOwner:inOwner];
     return [stateDictionary objectForKey:ACTIVE_OBJECT];
 }
+//Save changes to an array of alerts
 - (void)saveEventActionArrayForContactAlert:(ESContactAlert *)contactAlert
 {
     id inOwner = [self _ownerOfContactAlert:contactAlert];
@@ -156,8 +157,8 @@ Methods used by ESContactAlert instances
 Methods used by ESContactAlerts
 *******/
 
-- (NSMenu *)actionListMenuWithOwner:(id <ESContactAlerts>)inOwner //menu of possible actions
-{
+//menu of possible actions
+- (NSMenu *)actionListMenuWithOwner:(id <ESContactAlerts>)inOwner {
     NSMenu              *actionListMenu = [[NSMenu alloc] init];
     NSArray             *alertsArray = [arrayOfAlertsArrays objectWithOwner:inOwner];
     NSEnumerator        *enumerator;
@@ -170,6 +171,7 @@ Methods used by ESContactAlerts
     return([actionListMenu autorelease]);
 }
 
+//an ESContactAlerts instance notifying the controller that its array or object changed
 - (void)updateOwner:(id <ESContactAlerts>)inOwner toArray:(NSArray *)eventActionArray forObject:(AIListObject *)inObject
 {
     NSMutableDictionary *stateDictionary = [arrayOfStateDictionaries objectWithOwner:inOwner];
@@ -179,6 +181,7 @@ Methods used by ESContactAlerts
     
     [stateDictionary setObject:inObject forKey:ACTIVE_OBJECT];
 }
+//an ESContactAlerts instance notifying the controller that its active row changed
 - (void)updateOwner:(id <ESContactAlerts>)inOwner toRow:(int)row
 {
     NSMutableDictionary *stateDictionary = [arrayOfStateDictionaries objectWithOwner:inOwner];

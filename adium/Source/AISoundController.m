@@ -61,6 +61,12 @@
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
 
+    
+    //Ensure the temporary mute is off
+    [[owner preferenceController] setPreference:[NSNumber numberWithBool:NO]
+                                         forKey:KEY_SOUND_TEMPORARY_MUTE
+                                          group:PREF_GROUP_GENERAL];   
+    
     //observe pref changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
@@ -199,8 +205,12 @@
         //Remember the values of some preferences
         useCustomVolume = [[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] intValue];
         customVolume = ([[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue] * 512.0);
-        muteSounds = [[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue];
-
+        muteSounds = ( [[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue] || [[preferenceDict objectForKey:KEY_SOUND_TEMPORARY_MUTE] intValue] );
+        
+        //If we should be muted now, clear out the speech array.
+        if (muteSounds)
+            [speechArray removeAllObjects];
+        
         //Display the custom volume performance warning
         if(useCustomVolume && ![[preferenceDict objectForKey:KEY_SOUND_WARNED_ABOUT_CUSTOM_VOLUME] intValue]){
             int result;
@@ -327,8 +337,8 @@
 	
 	[speechArray addObject:dict];
 	[dict release];
-
-	[self speakNext];
+        if (!muteSounds)
+            [self speakNext];
     }
 }
 
