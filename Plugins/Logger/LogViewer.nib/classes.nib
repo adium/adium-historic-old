@@ -43,10 +43,8 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "controller_LogViewer" = AILogViewerWindowController; 
-                "popup_switcherThingie" = NSPopUpButton; 
-                "table_accounts" = NSTableView; 
-                "table_contacts" = NSTableView; 
-                "tabs_hiddenLogSwitch" = NSTabView; 
+                "popup_filterType" = NSPopUpButton; 
+                "table_filterList" = NSTableView; 
             }; 
             SUPERCLASS = AIObject; 
         }, 

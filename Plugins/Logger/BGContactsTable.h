@@ -17,11 +17,13 @@
 #import "AILogViewerWindowController.h"
 
 @interface BGContactsTable : AIObject {
-    IBOutlet    NSTableView                    *table_contacts;
-    IBOutlet    NSTableView                    *table_accounts;
-    IBOutlet    NSTabView                      *tabs_hiddenLogSwitch;
     IBOutlet    AILogViewerWindowController    *controller_LogViewer;
-    IBOutlet    NSPopUpButton                  *popup_switcherThingie;
+    IBOutlet    NSTableView                    *table_filterList;
+    IBOutlet    NSPopUpButton                  *popup_filterType;
+	
+	BOOL		showingContacts;
 }
--(IBAction)switchTable:(id)sender;
+
+- (IBAction)switchTable:(id)sender;
+
 @end

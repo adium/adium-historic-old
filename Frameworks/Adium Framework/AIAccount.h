@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject, AIListObject, ESFileTransfer, DCJoinChatWindowController;
+@class AIHandleIdentifier, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject, AIListObject, ESFileTransfer, DCJoinChatWindowController;
 @protocol AIServiceController;
 
 #import "AIListObject.h"
