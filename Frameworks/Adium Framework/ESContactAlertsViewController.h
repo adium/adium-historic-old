@@ -18,12 +18,13 @@
 
 #define CONTACT_ALERTS_DETAILS_FOR_HEADER_CHANGED	@"ContactAlertDetailsForHeaderChanged"
 
-@class AIAlternatingRowTableView, AIListObject;
+@class AIAlternatingRowTableView, AIListObject, AIAutoScrollView;
 
 @interface ESContactAlertsViewController : AIObject {
 	IBOutlet	NSView						*view;
 	
 	IBOutlet	AIAlternatingRowTableView	*tableView_actions;
+	IBOutlet	AIAutoScrollView			*scrollView_actions;
 	IBOutlet	NSButton					*button_add;
     IBOutlet	NSButton					*button_delete;
     IBOutlet	NSButton					*button_edit;
@@ -34,9 +35,13 @@
 	id							delegate;
 	
 	BOOL						configureForGlobal;
+	BOOL						showEventsInEditSheet;
+
+	NSString					*targetEventID;
 }
 
 - (void)configureForListObject:(AIListObject *)inObject;
+- (void)configureForListObject:(AIListObject *)inObject showingAlertsForEventID:(NSString *)inTargetEventID;
 
 - (IBAction)addAlert:(id)sender;
 - (IBAction)editAlert:(id)sender;
@@ -46,6 +51,7 @@
 - (id)delegate;
 
 - (void)setConfigureForGlobal:(BOOL)inConfigureForGlobal;
+- (void)setShowEventsInEditSheet:(BOOL)inShowEventsInEditSheet;
 
 - (void)viewWillClose;
 
@@ -58,12 +64,14 @@
 					   updatedAlert:(NSDictionary *)newAlert
 						   oldAlert:(NSDictionary *)oldAlert;
 
-//Delegate is notificed with the deleted dictionary when the user deletes an alert
+//Delegate is notified with the deleted dictionary when the user deletes an alert
 - (void)contactAlertsViewController:(ESContactAlertsViewController *)inController
 					   deletedAlert:(NSDictionary *)deletedAlert;
 
+//Delegate may specify the initial event ID when creating new contacts. If this is not implemented or returns nil, the default is used.
+- (NSString *)initialEventIDForNewContactAlert;
 @end
 
 @interface NSObject (AIActionHandlerOptionalMethods)
-- (void)didSelectAlert:(NSDictionary *)alert;
+- (void)performPreviewForAlert:(NSDictionary *)alert;
 @end
