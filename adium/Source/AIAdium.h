@@ -88,9 +88,7 @@ typedef enum {
 
 //Preference Categories
 typedef enum {
-    AIPref_Accounts_Connections = 0,
-    AIPref_Accounts_Profile,
-    AIPref_Accounts_Hosts,
+    AIPref_Accounts = 0,
     AIPref_ContactList_General,
     AIPref_ContactList_Groups,
     AIPref_ContactList_Contacts,
@@ -491,10 +489,7 @@ typedef enum {
 @interface AIPreferenceController : NSObject {
     IBOutlet	AIAdium			*owner;
 
-//    NSMutableArray			*categoryArray;
-
     NSMutableArray			*paneArray;		//An array of preference panes
-    
     NSMutableDictionary			*groupDict;		//A dictionary of pref dictionaries
 }
 
