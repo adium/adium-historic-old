@@ -118,16 +118,14 @@ LNAboutBoxController *sharedInstance = nil;
 {
 
     numberOfDuckClicks++;
-    if(numberOfDuckClicks % ([avatarArray count] + 1)){
-        [[owner soundController] playSoundNamed:@"/Adium/Feather Ruffle.aif"];
-    }else{
-        [[owner soundController] playSoundNamed:@"/Adium/Quack.aif"];
-    }
+
     if (numberOfDuckClicks == [avatarArray count]) {
         numberOfDuckClicks = 0;
         [button_duckIcon setImage:[AIImageUtilities imageNamed:@"Awake" forClass:[self class]]];
+        [[owner soundController] playSoundNamed:@"/Adium/Feather Ruffle.aif"];
     } else {
         [button_duckIcon setImage:[[NSImage alloc] initWithContentsOfFile:[avatarArray objectAtIndex:numberOfDuckClicks]]];
+        [[owner soundController] playSoundNamed:@"/Adium/Quack.aif"];
     }
 
 }
