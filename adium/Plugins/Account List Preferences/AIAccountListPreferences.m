@@ -94,6 +94,7 @@
 //Preference view is closing
 - (void)viewWillClose
 {
+    [[adium contactController] unregisterListObjectObserver:self];
     [view_accountPreferences release]; view_accountPreferences = nil;
     [accountViewController release]; accountViewController = nil;
     [[adium notificationCenter] removeObserver:self];
