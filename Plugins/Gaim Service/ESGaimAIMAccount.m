@@ -568,11 +568,12 @@
 			}*/
 		}
 
+		[theContact setIsMobile:isMobile notify:NotifyLater];
+
 		if(client){
 			//Set the client if necessary
 			if (storedString == nil || ![client isEqualToString:storedString]){
 				[theContact setStatusObject:client forKey:@"Client" notify:NotifyLater];
-				[theContact setIsMobile:isMobile notify:NotifyLater];
 						
 				//Apply any changes
 				[theContact notifyOfChangedStatusSilently:silentAndDelayed];
@@ -581,7 +582,6 @@
 			//Clear the client value if one was present before
 			if(storedString){
 				[theContact setStatusObject:nil forKey:@"Client" notify:NotifyLater];
-				[theContact setIsMobile:isMobile notify:NotifyLater];
 						
 				//Apply any changes
 				[theContact notifyOfChangedStatusSilently:silentAndDelayed];	
