@@ -9,6 +9,10 @@
 #import "ESFileTransferProgressView.h"
 #import "ESFileTransferProgressRow.h"
 
+#define	NORMAL_TEXT_COLOR		[NSColor controlTextColor]
+#define	SELECTED_TEXT_COLOR		[NSColor whiteColor]
+#define TRANSFER_STATUS_COLOR	[NSColor disabledControlTextColor]
+
 @interface ESFileTransferProgressView (PRIVATE)
 - (void)updateHeaderLine;
 - (void)updateButtonReveal;
@@ -35,9 +39,6 @@
 
 	buttonStopResumeIsHovered = NO;
 	buttonRevealIsHovered = NO;
-	
-#warning Safari does something cool with this, reclaiming its space when it hides.
-	//[progressIndicator setDisplayedWhenStopped:NO];
 }
 
 - (void)dealloc
@@ -49,7 +50,12 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-	return [self retain];
+	return([self retain]);
+}
+
+- (NSMenu *)menuForEvent:(NSEvent *)theEvent
+{
+	return([owner menuForEvent:theEvent]);
 }
 
 #pragma mark Source and destination
@@ -107,33 +113,41 @@
 			//Redisplay the progress bar.  We never do this at present, so unimplemented for now.
 		}else{
 			NSRect	progressRect = [progressIndicator frame];
-			NSPoint	origin;
+			NSRect	frame;
 			float	distanceToMove = progressRect.size.height / 2;
 			
 			[progressIndicator setDisplayedWhenStopped:NO];
 			[progressIndicator setIndeterminate:YES];
 			[progressIndicator stopAnimation:self];
 
+			//I don't trust setDisplayedWhenStopped... call me crazy.
+			[progressIndicator setFrame:NSZeroRect];
+			[progressIndicator setNeedsDisplay:YES];
+			
 			//Top objects moving down
 			{
-				origin = [textField_fileName frame].origin;
-				origin.y -= distanceToMove;
-				[textField_fileName setFrameOrigin:origin];
+				frame = [textField_fileName frame];
+				frame.origin.y -= distanceToMove;
+				//Don't let it be any further right than the progress bar used to be to avoid our buttons
+				frame.size.width = (progressRect.origin.x + progressRect.size.width) - frame.origin.x;
+				[textField_fileName setFrame:frame];
 			}
 			
 			//Bottom objects moving up
 			{
-				origin = [twiddle_details frame].origin;
-				origin.y += distanceToMove;
-				[twiddle_details setFrameOrigin:origin];
-				
-				origin = [textField_detailsLabel frame].origin;
-				origin.y += distanceToMove;
-				[textField_detailsLabel setFrameOrigin:origin];
-				
-				origin = [box_transferStatusFrame frame].origin;
-				origin.y += distanceToMove;
-				[box_transferStatusFrame setFrameOrigin:origin];
+				frame = [twiddle_details frame];
+				frame.origin.y += distanceToMove;
+				[twiddle_details setFrame:frame];
+
+				frame = [textField_detailsLabel frame];
+				frame.origin.y += distanceToMove;
+				[textField_detailsLabel setFrame:frame];
+								
+				frame = [box_transferStatusFrame frame];
+				frame.origin.y += distanceToMove;
+				//Don't let it be any further right than the progress bar used to be to avoid our buttons
+				frame.size.width = (progressRect.origin.x + progressRect.size.width) - frame.origin.x;
+				[box_transferStatusFrame setFrame:frame];
 			}
 		}
 		
@@ -236,20 +250,17 @@
 		NSColor	*transferStatusColor;
 		
 		if(isSelected){
-			newColor = [NSColor whiteColor];
+			newColor = SELECTED_TEXT_COLOR;
 			transferStatusColor = newColor;
 		}else{
-			newColor = [NSColor controlTextColor];
-			transferStatusColor = [NSColor disabledControlTextColor];
+			newColor = NORMAL_TEXT_COLOR;
+			transferStatusColor = TRANSFER_STATUS_COLOR;
 		}
 		
 		[textField_rate setTextColor:newColor];
 		[textField_source setTextColor:newColor];
 		[textField_destination setTextColor:newColor];		
 		[textField_fileName setTextColor:newColor];
-
-#warning color
-//		[textField_transferStatus setTextColor:newColor];
 		
 		[self updateButtonStopResume];
 		[self updateButtonReveal];
@@ -328,7 +339,7 @@ static NSDictionary	*transferStatusSelectedAttributes = nil;
 			transferStatusSelectedAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:
 				paragraphStyle, NSParagraphStyleAttributeName,
 				[NSFont systemFontOfSize:9], NSFontAttributeName, 
-				[NSColor whiteColor], NSForegroundColorAttributeName, nil] retain];
+				SELECTED_TEXT_COLOR, NSForegroundColorAttributeName, nil] retain];
 		}
 		
 		attributes = transferStatusSelectedAttributes;
@@ -341,7 +352,7 @@ static NSDictionary	*transferStatusSelectedAttributes = nil;
 			transferStatusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:
 				paragraphStyle, NSParagraphStyleAttributeName,
 				[NSFont systemFontOfSize:9], NSFontAttributeName, 
-				[NSColor disabledControlTextColor], NSForegroundColorAttributeName, nil] retain];
+				TRANSFER_STATUS_COLOR, NSForegroundColorAttributeName, nil] retain];
 		}
 		
 		attributes = transferStatusAttributes;

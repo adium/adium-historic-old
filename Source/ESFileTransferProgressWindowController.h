@@ -30,4 +30,6 @@
 							 to:(float)newHeight;
 - (void)progressRowDidChangeType:(ESFileTransferProgressRow *)progressRow;
 
+- (void)_removeFileTransferRow:(ESFileTransferProgressRow *)progressRow;
+
 @end

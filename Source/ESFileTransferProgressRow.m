@@ -74,14 +74,15 @@
 
 - (void)informOfAwakefromNib
 {
-	[owner progressRowDidAwakeFromNib:self];
-
 	//If we already know something about this file transfer, update since we missed delegate calls
 	[self updateSourceAndDestination];
 	[self fileTransfer:fileTransfer didSetSize:[fileTransfer size]];
 	[self fileTransfer:fileTransfer didSetLocalFilename:[fileTransfer localFilename]];
 	[self fileTransfer:fileTransfer didSetType:[fileTransfer type]];
-	
+
+	//Once we've set up some basic information, tell our owner it can the view
+	[owner progressRowDidAwakeFromNib:self];
+
 	//This always calls gotUpdate and display, so do it last
 	[self fileTransfer:fileTransfer didSetStatus:[fileTransfer status]];
 }
@@ -275,6 +276,7 @@
 }
 
 //Button actions
+#pragma mark Button actions
 - (IBAction)stopResumeAction:(id)sender
 {
 	[fileTransfer cancel];
@@ -288,6 +290,52 @@
 	if([fileTransfer status] == Complete_FileTransfer){
 		[fileTransfer openFile];
 	}
+}
+- (void)removeRowAction:(id)sender
+{
+	if([self isStopped]){
+		[owner _removeFileTransferRow:self];
+	}
+}
+
+#pragma mark Contextual menu
+- (NSMenu *)menuForEvent:(NSEvent *)theEvent
+{
+	NSMenu		*contextualMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	NSMenuItem  *menuItem;
+	
+	//Allow open and show in finder on complete incoming transfers and all outgoing transfers
+	if(([fileTransfer status] == Complete_FileTransfer) ||
+	   ([fileTransfer type] == Outgoing_FileTransfer)){
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Open",nil)
+																		 target:self
+																		 action:@selector(openFileAction:)
+																  keyEquivalent:@""] autorelease];
+		[contextualMenu addItem:menuItem];
+
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Show in Finder",nil)
+																		 target:self
+																		 action:@selector(revealAction:)
+																  keyEquivalent:@""] autorelease];
+		[contextualMenu addItem:menuItem];
+		
+	}	
+
+	if([self isStopped]){
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Remove from List",nil)
+																		 target:self
+																		 action:@selector(removeRowAction:)
+																  keyEquivalent:@""] autorelease];
+		[contextualMenu addItem:menuItem];	
+	}else{
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Cancel",nil)
+																		 target:self
+																		 action:@selector(stopResumeAction:)
+																  keyEquivalent:@""] autorelease];
+		[contextualMenu addItem:menuItem];
+	}	
+	
+	return([contextualMenu autorelease]);
 }
 
 //Pass height change information on to our owner
