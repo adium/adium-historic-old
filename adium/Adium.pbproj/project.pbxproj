@@ -100,6 +100,7 @@
 				F501BB1403882A2901A8010A,
 				F5AAD090039BA10901A8010A,
 				A1D4690703AFDCBF00A8000D,
+				F50F253A03B0425301A80202,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -141,6 +142,7 @@
 				F50CD62803603C7201A8010A,
 				F501BB1303882A2901A8010A,
 				F5AAD08F039BA10901A8010A,
+				F50F252D03B0425301A80202,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -168,6 +170,7 @@
 				F50CD61C03603BE201A8010A,
 				F501BB0D03882A0201A8010A,
 				F5AAD085039BA0D301A8010A,
+				F50F253F03B042BC01A80202,
 				F5B53FBE0333AB9201A8010A,
 				F53EA2B502C8020E01A8010A,
 				F5A01D85037980F201A8010A,
@@ -221,6 +224,7 @@
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
+				F55E2CD103B12CF801A80202,
 				F5BE33D4039BE34001A8010A,
 				F5CED5F10388303901A8010A,
 				F55263BC0333CA4401A8010A,
@@ -762,10 +766,10 @@
 		F501BB1C03882ADA01A8010A = {
 			children = (
 				F55B410003AB87CA01A8010A,
-				F55B410103AB87CA01A8010A,
 				F55B410203AB87CA01A8010A,
 				F55B410303AB87CA01A8010A,
 				F55B410403AB87CA01A8010A,
+				F55B410103AB87CA01A8010A,
 			);
 			isa = PBXGroup;
 			name = Images;
@@ -948,6 +952,236 @@
 		};
 		F50CD64503603E0F01A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50F252D03B0425301A80202 = {
+			buildPhases = (
+				F50F253003B0425301A80202,
+				F50F253203B0425301A80202,
+				F50F253303B0425301A80202,
+				F50F253503B0425301A80202,
+				F50F253903B0425301A80202,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Idle Time";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				F50F252E03B0425301A80202,
+				F50F252F03B0425301A80202,
+			);
+			isa = PBXBundleTarget;
+			name = "Idle Time";
+			productName = "Event Sounds";
+			productReference = F50F253A03B0425301A80202;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Idle Time</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIIdleTimePlugin</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F50F252E03B0425301A80202 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F50F252F03B0425301A80202 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		F50F253003B0425301A80202 = {
+			buildActionMask = 2147483647;
+			files = (
+				F50F253D03B042AC01A80202,
+				F50F255E03B04FB801A80202,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F50F253203B0425301A80202 = {
+			buildActionMask = 2147483647;
+			files = (
+				F50F255503B0470E01A80202,
+				F50F255703B04C5B01A80202,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F50F253303B0425301A80202 = {
+			buildActionMask = 2147483647;
+			files = (
+				F50F253E03B042AC01A80202,
+				F50F255F03B04FB801A80202,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F50F253503B0425301A80202 = {
+			buildActionMask = 2147483647;
+			files = (
+				F50F253603B0425301A80202,
+				F50F253703B0425301A80202,
+				F50F253803B0425301A80202,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F50F253603B0425301A80202 = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50F253703B0425301A80202 = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50F253803B0425301A80202 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50F253903B0425301A80202 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F50F253A03B0425301A80202 = {
+			isa = PBXBundleReference;
+			path = "Idle Time.AdiumPlugin";
+			refType = 3;
+		};
+		F50F253B03B042AC01A80202 = {
+			isa = PBXFileReference;
+			name = IdleTimePlugin.h;
+			path = "Plugins/Idle Time/IdleTimePlugin.h";
+			refType = 4;
+		};
+		F50F253C03B042AC01A80202 = {
+			isa = PBXFileReference;
+			name = IdleTimePlugin.m;
+			path = "Plugins/Idle Time/IdleTimePlugin.m";
+			refType = 4;
+		};
+		F50F253D03B042AC01A80202 = {
+			fileRef = F50F253B03B042AC01A80202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50F253E03B042AC01A80202 = {
+			fileRef = F50F253C03B042AC01A80202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50F253F03B042BC01A80202 = {
+			children = (
+				F55E2CCF03B0F8F601A80202,
+				F50F253C03B042AC01A80202,
+				F50F255D03B04FB801A80202,
+				F50F255603B04C5B01A80202,
+				F55E2CD003B0F91F01A80202,
+			);
+			isa = PBXGroup;
+			name = "Idle Time";
+			refType = 4;
+		};
+		F50F254A03B0431C01A80202 = {
+			isa = PBXBundleReference;
+			name = "Idle Time.AdiumPlugin";
+			path = "build/Idle Time.AdiumPlugin";
+			refType = 4;
+		};
+		F50F255303B0431C01A80202 = {
+			fileRef = F50F254A03B0431C01A80202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50F255403B0470E01A80202 = {
+			isa = PBXFileReference;
+			name = idle.tif;
+			path = "Plugins/Idle Time/idle.tif";
+			refType = 4;
+		};
+		F50F255503B0470E01A80202 = {
+			fileRef = F50F255403B0470E01A80202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50F255603B04C5B01A80202 = {
+			isa = PBXFileReference;
+			name = SetIdleTime.nib;
+			path = "Plugins/Idle Time/SetIdleTime.nib";
+			refType = 4;
+		};
+		F50F255703B04C5B01A80202 = {
+			fileRef = F50F255603B04C5B01A80202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50F255C03B04FB801A80202 = {
+			isa = PBXFileReference;
+			name = IdleTimeWindowController.h;
+			path = "Plugins/Idle Time/IdleTimeWindowController.h";
+			refType = 4;
+		};
+		F50F255D03B04FB801A80202 = {
+			isa = PBXFileReference;
+			name = IdleTimeWindowController.m;
+			path = "Plugins/Idle Time/IdleTimeWindowController.m";
+			refType = 4;
+		};
+		F50F255E03B04FB801A80202 = {
+			fileRef = F50F255C03B04FB801A80202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50F255F03B04FB801A80202 = {
+			fileRef = F50F255D03B04FB801A80202;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2476,6 +2710,7 @@
 				F551A50F03AC4C5001A8010A,
 				F551A51003AC4C5001A8010A,
 				F551A51103AC4C5001A8010A,
+				F50F255303B0431C01A80202,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2670,6 +2905,7 @@
 		};
 		F551A4F903AC4C2301A8010A = {
 			children = (
+				F50F254A03B0431C01A80202,
 				F551A4FA03AC4C4E01A8010A,
 				F551A4FB03AC4C4E01A8010A,
 				F551A4FC03AC4C4F01A8010A,
@@ -3611,6 +3847,27 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		F55E2CCF03B0F8F601A80202 = {
+			children = (
+				F50F253B03B042AC01A80202,
+				F50F255C03B04FB801A80202,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F55E2CD003B0F91F01A80202 = {
+			children = (
+				F50F255403B0470E01A80202,
+			);
+			isa = PBXGroup;
+			name = Images;
+			refType = 4;
+		};
+		F55E2CD103B12CF801A80202 = {
+			isa = PBXTargetDependency;
+			target = F50F252D03B0425301A80202;
 		};
 		F56621A503AD02AC01A8010A = {
 			fileEncoding = 30;

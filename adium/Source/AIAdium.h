@@ -71,6 +71,7 @@ typedef enum {
 #define Account_ListChanged 					@"Account_ListChanged"
 #define Account_PropertiesChanged				@"Account_PropertiesChanged"
 #define Account_StatusChanged					@"Account_StatusChanged"
+#define Account_IdleStatusChanged					@"Account_IdleStatusChanged"
 #define Contact_ObjectChanged					@"Contact_ObjectChanged"
 #define Contact_ListChanged						@"Contact_ListChanged"
 #define Interface_ContactSelectionChanged		@"Interface_ContactSelectionChanged"

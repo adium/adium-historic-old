@@ -39,6 +39,7 @@ static char *hash_password(const char * const password);
 - (void)AIM_HandleConfig:(NSString *)message;
 - (void)AIM_HandleMessageIn:(NSString *)inCommand;
 - (void)AIM_SendMessage:(NSString *)inMessage toHandle:(NSString *)handleUID;
+- (void)AIM_SetIdle:(double)inSeconds;
 - (NSString *)validCopyOfString:(NSString *)inString;
 @end
 
@@ -271,6 +272,29 @@ static char *hash_password(const char * const password);
     [self setStatus:STATUS_OFFLINE];
 }
 
+- (void)setIdleTime:(double)inSeconds manually:(BOOL)setManually
+{
+    idleWasSetManually = setManually;
+    [self AIM_SetIdle:0];
+    [self AIM_SetIdle:inSeconds];
+
+    if(inSeconds>0) idle = TRUE;
+    else idle = FALSE;
+    
+    [[[owner accountController] accountNotificationCenter] postNotificationName:Account_IdleStatusChanged
+                                                                         object:self
+                                                                       userInfo:nil];
+}
+
+- (BOOL)idleWasSetManually
+{
+    return(idleWasSetManually);
+}
+
+- (BOOL)isIdle
+{
+    return(idle);
+}
 
 // Internal --------------------------------------------------------------------------------
 //Dealloc
@@ -861,7 +885,7 @@ static char *hash_password(const char * const password);
     AIContactGroup	*contactList;
     
     [[owner contactController] delayContactListUpdatesFor:10];
-
+    
     //Get the root contact list group
     contactList = [[owner contactController] contactList];
     
@@ -907,6 +931,17 @@ static char *hash_password(const char * const password);
     }
 
 }
+
+- (void)AIM_SetIdle:(double)inSeconds
+{
+    NSString	*idleMessage;
+
+    idleMessage = [NSString stringWithFormat:@"toc_set_idle %0.0f",(double)inSeconds];
+
+    //Send the message
+    [outQue addObject:[AIMTOC2Packet dataPacketWithString:idleMessage sequence:&localSequence]];
+}
+
 
 // Hashes a password for sending to AIM (to avoid sending them in plain-text)
 #define HASH "Tic/Toc"

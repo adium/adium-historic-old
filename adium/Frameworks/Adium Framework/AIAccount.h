@@ -95,6 +95,13 @@ typedef enum {
     //Services that are always connected (or not connection based) need not implement this protocol
 @end
 
+@protocol AIAccount_IdleTime
+
+- (void)setIdleTime:(double)inSeconds manually:(BOOL)setManually;
+- (BOOL)idleWasSetManually;
+- (BOOL)isIdle;
+
+@end
 
 @interface AIAccount : NSObject <AIAccount_Required> {
     AIAdium			*owner;
