@@ -121,14 +121,17 @@
 		
     } else if (automaticSync && [inModifiedKeys containsObject: KEY_USER_ICON]) {
         
-		//Find the person
-        ABPerson *person = [self searchForObject:inObject];
-        
-        if (person){
-			//Set the person's image to the inObject's serverside User Icon.
-			NSImage	*image = [inObject statusObjectForKey:KEY_USER_ICON];
-			if(image){
-				[person setImageData:[image TIFFRepresentation]];
+		//Only update when the serverside icon changes if there is no Adium preference overriding it
+		if (![inObject preferenceForKey:KEY_USER_ICON group:PREF_GROUP_USERICONS ignoreInheritedValues:YES]){
+			//Find the person
+			ABPerson *person = [self searchForObject:inObject];
+			
+			if (person){
+				//Set the person's image to the inObject's serverside User Icon.
+				NSImage	*image = [inObject statusObjectForKey:KEY_USER_ICON];
+				if(image){
+					[person setImageData:[image TIFFRepresentation]];
+				}
 			}
 		}
     }
@@ -162,7 +165,10 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_ADDRESSBOOK]){
+	NSDictionary	*userInfo = [notification userInfo];
+	NSString		*group = [userInfo objectForKey:@"Group"];
+	
+    if(notification == nil || [group isEqualToString:PREF_GROUP_ADDRESSBOOK]){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
         //load new displayFormat
 		enableImport = [[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue];
@@ -173,7 +179,28 @@
 		useABImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
 		
         [self updateAllContacts];
-    }
+		
+    }else if (automaticSync && ([group isEqualToString:PREF_GROUP_USERICONS])){
+		AIListObject	*inObject = [notification object];
+		if (inObject){
+			//Find the person
+			ABPerson *person = [self searchForObject:inObject];
+			
+			if (person){
+				//Set the person's image to the inObject's serverside User Icon.
+				NSData	*imageData = [inObject preferenceForKey:KEY_USER_ICON
+													  group:PREF_GROUP_USERICONS
+										  ignoreInheritedValues:YES];
+				
+				//If the pref is now nil, we should restore the address book back to the serverside icon if possible
+				if(!imageData){
+					imageData = [[inObject statusObjectForKey:KEY_USER_ICON] TIFFRepresentation];
+				}
+				
+				[person setImageData:imageData];
+			}
+		}
+	}
 }
 
 #pragma mark Image data
