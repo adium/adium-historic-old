@@ -38,6 +38,7 @@ static CBGaimAccount* accountLookup(GaimAccount *acct)
     return ret;
 }
 
+#pragma mark Debug
 // Debug ------------------------------------------------------------------------------------------------------
 static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, const char *format, va_list args)
 {
@@ -54,7 +55,7 @@ static GaimDebugUiOps adiumGaimDebugOps = {
     adiumGaimDebugPrint
 };
 
-
+#pragma mark Connection
 // Connection ------------------------------------------------------------------------------------------------------
 static void adiumGaimConnConnectProgress(GaimConnection *gc, const char *text, size_t step, size_t step_count)
 {
@@ -95,7 +96,7 @@ static GaimConnectionUiOps adiumGaimConnectionOps = {
     adiumGaimConnReportDisconnect
 };
 
-
+#pragma mark Contact List
 // Contact List ------------------------------------------------------------------------------------------------------
 static void adiumGaimBlistNewList(GaimBuddyList *list)
 {
@@ -177,7 +178,7 @@ static GaimBlistUiOps adiumGaimBlistOps = {
     adiumGaimBlistRequestAddGroup
 };
 
-
+#pragma mark Conversation
 // Conversation ------------------------------------------------------------------------------------------------------
 static void adiumGaimConvDestroy(GaimConversation *conv)
 {
@@ -255,7 +256,7 @@ static GaimConversationUiOps adiumGaimConversationOps = {
     adiumGaimConvUpdated
 };
 
-
+#pragma mark Conversation Window
 // Conversation Window ---------------------------------------------------------------------------------------------
 static GaimConversationUiOps *adiumGaimConvWindowGetConvUiOps()
 {
@@ -329,7 +330,7 @@ static GaimConvWindowUiOps adiumGaimWindowOps = {
     adiumGaimConvWindowGetActiveIndex
 };
 
-
+#pragma mark Notify
 // Notify ----------------------------------------------------------------------------------------------------------
 static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, const char *primary, const char *secondary, GCallback cb, void *userData)
 {
@@ -379,7 +380,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
     adiumGaimNotifyClose
 };
 
-
+#pragma mark Request
 // Request ------------------------------------------------------------------------------------------------------
 static void *adiumGaimRequestInput(const char *title, const char *primary, const char *secondary, const char *defaultValue, gboolean multiline, gboolean masked, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb, void *userData)
 {
@@ -418,6 +419,7 @@ static GaimRequestUiOps adiumGaimRequestOps = {
     adiumGaimRequestClose
 };
 
+#pragma mark File Transfer
 // File Transfer ------------------------------------------------------------------------------------------------------
 
 static void adiumGaimNewXfer(GaimXfer *xfer)
@@ -480,6 +482,7 @@ static GaimXferUiOps adiumGaimFileTrasnferOps = {
     adiumGaimCancelRemote
 };
 
+#pragma mark Privacy
 // Privacy ------------------------------------------------------------------------------------------------------
 
 static void adiumGaimPermitAdded(GaimAccount *account, const char *name)
@@ -506,7 +509,7 @@ static GaimPrivacyUiOps adiumGaimPrivacyOps = {
     adiumGaimDenyRemoved
 };
 
-
+#pragma mark Core
 // Core ------------------------------------------------------------------------------------------------------
 static void adiumGaimPrefsInit(void)
 {
@@ -546,7 +549,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     adiumGaimCoreQuit
 };
 
-
+#pragma mark Beef
 // Beef ------------------------------------------------------------------------------------------------------
 
 - (void)installPlugin
@@ -666,6 +669,9 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     return(handleServiceType);
 }
 
+
+#pragma mark Proxy
+// Proxy ------------------------------------------------------------------------------------------------------
 
 /*
  "/core/proxy/type",
