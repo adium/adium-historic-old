@@ -60,17 +60,6 @@
     [super dealloc];
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
-{
-	if(notification == nil ||
-	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_LINK_FAVORITES] == 0){
-
-		//Refresh our favorites menu
-		[self _buildPopUpMenu];
-	}
-}
-
-
 //Window Methods -------------------------------------------------------------------------------------------------------
 #pragma mark Window Methods
 - (void)windowDidLoad
@@ -111,7 +100,6 @@
     
 	//Observe preference changes
 	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-	[self preferencesChanged:nil];
 
     //Turn on URL validation for our textView
     [textView_URL setContiniousURLValidationEnabled:YES];
@@ -148,45 +136,6 @@
 - (IBAction)cancel:(id)sender
 {
     [self closeWindow:sender];
-}
-
-
-//Favorites Popup Menu -------------------------------------------------------------------------------------------------
-#pragma mark Favorites Popup Menu
-//Build the favorites popup menu
-- (void)_buildPopUpMenu
-{
-    NSDictionary		*favorite;
-    NSEnumerator        *enumerator;
-	NSDictionary		*favoriteArray = [[adium preferenceController] preferenceForKey:KEY_LINK_FAVORITES
-																				  group:PREF_GROUP_LINK_FAVORITES];
-    
-	//Empty the menu and insert an empty menu item to serve as the pop-up button's selected item
-    [[popUp_Favorites menu] removeAllItemsButFirst];
-	
-	//Add items for each link
-    enumerator = [favoriteArray objectEnumerator];
-    while(favorite = [enumerator nextObject]){
-		[[popUp_Favorites menu] addItemWithTitle:[favorite objectForKey:KEY_LINK_TITLE]
-										  target:self
-										  action:nil
-								   keyEquivalent:@""
-							   representedObject:favorite];
-    }
-	
-    [popUp_Favorites setTitle:CHOOSE_URL];
-}
-
-//User selected a link, display it in the text fields (Called by menu item)
-- (IBAction)selectFavoriteURL:(NSPopUpButton *)sender
-{
-    if([sender isKindOfClass:[NSPopUpButton class]]){
-		NSDictionary		*favorite = [[sender selectedItem] representedObject];
-		NSAttributedString	*attrTitle = [[[NSAttributedString alloc] initWithString:[favorite objectForKey:KEY_LINK_URL]] autorelease];
-		
-        [[textView_URL textStorage] setAttributedString:attrTitle];
-        [textField_linkText setStringValue:[favorite objectForKey:KEY_LINK_TITLE]];
-    }
 }
 
 

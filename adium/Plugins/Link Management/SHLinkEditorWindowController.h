@@ -16,9 +16,6 @@
     
     IBOutlet    NSButton                    *button_OK;
     IBOutlet    NSButton                    *button_Cancel;
-    IBOutlet    NSButton                    *button_AddFavorites;
-    
-    IBOutlet    NSPopUpButton               *popUp_Favorites;
     
     IBOutlet    NSTextField                 *textField_linkText;
     IBOutlet    SHAutoValidatingTextView    *textView_URL;
@@ -34,6 +31,5 @@
 - (IBAction)cancel:(id)sender;
 
 - (IBAction)acceptURL:(id)sender;
-- (IBAction)selectFavoriteURL:(id)sender;
 
 @end

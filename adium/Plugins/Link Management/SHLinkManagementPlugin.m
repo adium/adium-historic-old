@@ -21,11 +21,6 @@
 - (void)installPlugin
 {
 	NSMenuItem	*menuItem;
-	
-	//Setup our preferences
-	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LINK_MANAGEMENT_DEFAULTS forClass:[self class]]
-                                          forGroup:PREF_GROUP_LINK_FAVORITES];
-    preferences = [[SHLinkFavoritesPreferences preferencePane] retain];
 
     //Add/Edit Link... menu item (edit menu)
     menuItem = [[[NSMenuItem alloc] initWithTitle:EDIT_LINK_TITLE
