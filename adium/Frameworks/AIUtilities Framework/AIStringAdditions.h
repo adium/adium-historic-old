@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface NSString (AIStringAdditions)
-+ (NSString *)randomStringOfLength:(int)inLength;
++ (NSString *)randomStringOfLength:(unsigned int)inLength;
 - (NSString *)compactedString;
 - (int)intValueFromHex;
 - (NSString *)stringByExpandingBundlePath;
@@ -23,6 +23,7 @@
 - (NSString *)stringByEncodingURLEscapes;
 - (NSString *)stringByDecodingURLEscapes;
 - (NSString *)safeFilenameString;
+- (NSString *)stringWithEllipsisByTruncatingToLength:(unsigned int)length;
 //- (BOOL)isURLEncoded;
 
 @end

@@ -20,7 +20,7 @@
 @implementation NSString (AIStringAdditions)
 
 //Random alphanumeric string
-+ (NSString *)randomStringOfLength:(int)inLength
++ (NSString *)randomStringOfLength:(unsigned int)inLength
 {
     NSMutableString	*string = [[NSMutableString alloc] init];
     int				i;
@@ -108,6 +108,21 @@
     TruncateThemeText((CFMutableStringRef)string, kThemeSmallSystemFont, kThemeStateActive, inWidth, truncEnd, NULL);
     
     return([string autorelease]);
+}
+
+- (NSString *)stringWithEllipsisByTruncatingToLength:(unsigned int)length
+{
+	NSString *returnString;
+	
+	if (length < [self length]) {
+		//Truncate and append the ellipsis
+		returnString = [[self substringToIndex:length] stringByAppendingString:@"É"];
+	} else {
+		//We don't need to truncate, so don't append an ellipsis
+		returnString = self;
+	}
+	
+	return (returnString);
 }
 
 - (NSString *)safeFilenameString
