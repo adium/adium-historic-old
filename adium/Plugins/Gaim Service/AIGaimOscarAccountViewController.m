@@ -37,6 +37,7 @@
             [textView_textProfile setString:@""];
 		}
     }
+    [[NSNotificationCenter defaultCenter] addObserver:textView_textProfile selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:textView_textProfile];
 }
 
 //Profile text was changed

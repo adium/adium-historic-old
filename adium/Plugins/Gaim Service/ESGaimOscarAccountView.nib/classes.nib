@@ -12,6 +12,7 @@
             }; 
             SUPERCLASS = AIObject; 
         }, 
+        {CLASS = AIContextMenuTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
             CLASS = AIGaimAIMAccountViewController; 
             LANGUAGE = ObjC; 

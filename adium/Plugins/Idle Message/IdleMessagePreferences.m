@@ -53,6 +53,7 @@
 
 	//This doesn't work.  Why not?
 	//[[textView_idleMessage window] setInitialFirstResponder:textView_idleMessage];
+    [[NSNotificationCenter defaultCenter] addObserver:textView_idleMessage selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:textView_idleMessage];
 }
 
 //force the textView to save its contents when the view will close
