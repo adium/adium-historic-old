@@ -39,8 +39,9 @@
         signonDate = [[inObject statusArrayForKey:@"Signon Date"] earliestDate];
         
         if(signonDate){
-            entry = [[NSAttributedString alloc] initWithString:
-		[NSDateFormatter stringForTimeIntervalSinceDate:signonDate showingSeconds:NO abbreviated:NO]];
+            entry = [[NSAttributedString alloc] initWithString:[NSDateFormatter stringForTimeIntervalSinceDate:signonDate 
+																								showingSeconds:NO 
+																								   abbreviated:NO]];
         }
     }
 

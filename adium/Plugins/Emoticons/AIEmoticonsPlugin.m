@@ -174,7 +174,7 @@
 }
 
 //Filter a content object before display, inserting graphical emoticons
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
 {
     NSMutableAttributedString   *replacementMessage = nil;
     if (inAttributedString) {

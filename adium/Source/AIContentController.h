@@ -28,7 +28,7 @@
 @end
 
 @protocol AIContentFilter
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject;
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject;
 @end
 
 @interface NSObject (AITextEntryFilter)
@@ -88,8 +88,8 @@
 - (void)registerDisplayingContentFilter:(id <AIContentFilter>)inFilter;
 - (void)unregisterDisplayingContentFilter:(id <AIContentFilter>)inFilter;
 - (void)filterObject:(AIContentObject *)inObject isOutgoing:(BOOL)isOutgoing;
-- (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString isOutgoing:(BOOL)isOutgoing;
-- (NSAttributedString *)fullyFilteredAttributedString:(NSAttributedString *)inString;
+- (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject isOutgoing:(BOOL)isOutgoing;
+- (NSAttributedString *)fullyFilteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject;
 
 //Emoticons
 - (void)setEmoticonsArray:(NSArray *)inEmoticonsArray;

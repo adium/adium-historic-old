@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.50 2004/01/18 17:51:19 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.51 2004/01/27 17:53:03 evands Exp $
 
 #import "AIInterfaceController.h"
 
@@ -491,7 +491,7 @@
         
         //Run the entry through the filters and add it to tipString
         [tipString appendAttributedString:
-            [[owner contentController] fullyFilteredAttributedString:[entryString addAttributes:entryDict range:fullLength]]];
+            [[owner contentController] fullyFilteredAttributedString:[entryString addAttributes:entryDict range:fullLength] listObjectContext:object]];
     }
     return([tipString autorelease]);
 }

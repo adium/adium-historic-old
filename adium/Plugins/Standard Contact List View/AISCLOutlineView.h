@@ -87,5 +87,6 @@
 - (void)updateHorizontalSizeForObjects:(NSArray *)inObjects;
 - (void)updateHorizontalSizeForObject:(AIListObject *)inObject;
 - (BOOL)_performPartialRecalculationForObject:(AIListObject *)inObject;
+- (void)_performFullRecalculation;
 
 @end

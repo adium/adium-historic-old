@@ -16,7 +16,7 @@
     [[adium contentController] registerOutgoingContentFilter:self];
 }
 
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
 {
     NSMutableAttributedString   *ourMessage = nil;
     if (inAttributedString) {
