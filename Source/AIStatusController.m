@@ -19,6 +19,8 @@
 #import "AIPreferenceController.h"
 #import "AIStatusController.h"
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
+#import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatusIcons.h>
 
@@ -43,7 +45,6 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 - (void)_setMachineIsIdle:(BOOL)inIdle;
 - (void)_addStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
 - (void)_removeStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
-- (void)_updateStateMenuSelectionForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
 - (NSString *)_titleForMenuDisplayOfState:(AIStatus *)statusState;
 
 - (NSArray *)_menuItemsForStatusesOfType:(AIStatusType)type forServiceCodeUniqueID:(NSString *)inServiceCodeUniqueID withTarget:(id)target;
@@ -69,7 +70,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 {
 	stateMenuItemArraysDict = [[NSMutableDictionary alloc] init];
 	stateMenuPluginsArray = [[NSMutableArray alloc] init];
-	
+	stateMenuSelectionUpdateDelays = 0;
+
 	//Init
 	[self _setMachineIsIdle:NO];
 	
@@ -330,8 +332,6 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 
 		//Apply the state to our accounts and notify
 		[self _applyStateToAllAccounts:activeStatusState];
-		[[adium notificationCenter] postNotificationName:AIActiveStatusStateChangedNotification
-												  object:activeStatusState];
 	}
 }
 
@@ -369,8 +369,10 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  */ 
 - (void)_applyStateToAllAccounts:(AIStatus *)statusState
 {
+	[self setDelayStateMenuSelectionUpdates:YES];
 	[[[adium accountController] accountArray] makeObjectsPerformSelector:@selector(setStatusState:)
 															  withObject:statusState];
+	[self setDelayStateMenuSelectionUpdates:NO];
 }
 
 /*!
@@ -647,7 +649,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  *
  * A state menu plugin is the mitigator between our state menu items and a menu.  As states change the plugin
  * is told to add and remove items from the menu.  Everything else is handled by the status controller.
- * @param stateMenuPlugin The state menu plugin to dadam iregister
+ * @param stateMenuPlugin The state menu plugin to register
  */
 - (void)registerStateMenuPlugin:(id <StateMenuPlugin>)stateMenuPlugin
 {
@@ -678,7 +680,30 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	[stateMenuItemArraysDict removeObjectForKey:identifier];
 	[stateMenuPluginsArray removeObjectIdenticalTo:stateMenuPlugin];
 }
+
+/*
+ * @brief Remove the status controller's tracking for a plugin's menu items
+ *
+ * This should be called in preparation for one or more plugin:didAddMenuItems: calls to clear out the current
+ * tracking for the statusController generated menu items.
+ */
+- (void)removeAllMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin
+{
+	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
+	NSMutableArray  *menuItemArray = [stateMenuItemArraysDict objectForKey:identifier];
 	
+	//Clear the array
+	[menuItemArray removeAllObjects];
+}
+
+- (void)plugin:(id <StateMenuPlugin>)stateMenuPlugin didAddMenuItems:(NSArray *)addedMenuItems
+{
+	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
+	NSMutableArray  *menuItemArray = [stateMenuItemArraysDict objectForKey:identifier];
+
+	[menuItemArray addObjectsFromArray:addedMenuItems];
+}
+
 /*!
  * @brief Add state menu items
  *
@@ -694,7 +719,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	AIStatus		*statusState;
 	
 	//Create a menu item for each state
-	enumerator = [[[adium statusController] stateArray] objectEnumerator];
+	enumerator = [[self stateArray] objectEnumerator];
 	while(statusState = [enumerator nextObject]){
 		menuItem = [[NSMenuItem alloc] initWithTitle:[self _titleForMenuDisplayOfState:statusState]
 											  target:self
@@ -704,7 +729,8 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		//NSMenuItem will call setFlipped: on the image we pass it, causing flipped drawing elsewhere if we pass it the
 		//shared status icon.  So we pass it a copy of the shared icon that it's free to manipulate.
 		[menuItem setImage:[[[statusState icon] copy] autorelease]];
-		[menuItem setRepresentedObject:statusState];
+		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObject:statusState
+																   forKey:@"AIStatus"]];
 		[menuItemArray addObject:menuItem];
 		[menuItem release];
 	}
@@ -718,12 +744,12 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 													   type:AIStatusIconList
 												  direction:AIIconNormal]];
 	[menuItemArray addObject:menuItem];
-	
-	//Update the selected menu item
-	[self _updateStateMenuSelectionForPlugin:stateMenuPlugin];
-	
+
 	//Now that we are done creating the menu items, tell the plugin about them
 	[stateMenuPlugin addStateMenuItems:menuItemArray];
+
+	//Update the selected menu item after giving the plugin a chance to do with the menu items as it wants
+	[self updateStateMenuSelectionForPlugin:stateMenuPlugin];
 }
 
 /*!
@@ -737,7 +763,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
 	NSMutableArray  *menuItemArray = [stateMenuItemArraysDict objectForKey:identifier];
 
-	//Inform the plugin that we are removing the items in the this array 
+	//Inform the plugin that we are removing the items in this array 
 	[stateMenuPlugin removeStateMenuItems:menuItemArray];
 	
 	//Now clear the array
@@ -759,15 +785,43 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 }
 
 /*!
+ * @brief Completely rebuild all state menus for a single plugin
+ */
+- (void)rebuildAllStateMenusForPlugin:(id <StateMenuPlugin>)stateMenuPlugin
+{
+	[self _removeStateMenuItemsForPlugin:stateMenuPlugin];
+	[self _addStateMenuItemsForPlugin:stateMenuPlugin];	
+}
+
+/*!
  * @brief Update the selected state in all state menus
  */
 - (void)updateAllStateMenuSelections
 {
-	NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
-	id <StateMenuPlugin>	stateMenuPlugin;
+	if(stateMenuSelectionUpdateDelays == 0){
+		NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
+		id <StateMenuPlugin>	stateMenuPlugin;
+		
+		while(stateMenuPlugin = [enumerator nextObject]){
+			[self updateStateMenuSelectionForPlugin:stateMenuPlugin];
+		}
+	}
+}
+
+/*!
+ * @brief Delay state menu selection updates
+ *
+ * This should be called to prevent duplicative updates when multiple accounts are changing status simultaneously.
+ */
+- (void)setDelayStateMenuSelectionUpdates:(BOOL)shouldDelay
+{
+	if(shouldDelay)
+		stateMenuSelectionUpdateDelays++;
+	else
+		stateMenuSelectionUpdateDelays--;
 	
-	while(stateMenuPlugin = [enumerator nextObject]){
-		[self _updateStateMenuSelectionForPlugin:stateMenuPlugin];
+	if(stateMenuSelectionUpdateDelays == 0){
+		[self updateAllStateMenuSelections];
 	}
 }
 
@@ -777,21 +831,34 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  * Updates the selected state menu item to reflect the currently active state.
  * @param stateMenuPlugin The state menu plugin we're updating
  */
-- (void)_updateStateMenuSelectionForPlugin:(id <StateMenuPlugin>)stateMenuPlugin
+- (void)updateStateMenuSelectionForPlugin:(id <StateMenuPlugin>)stateMenuPlugin
 {
 	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
 	NSEnumerator	*enumerator = [[stateMenuItemArraysDict objectForKey:identifier] objectEnumerator];
 	NSMenuItem		*menuItem;
 	
-	// Our "Custom..." menu choice has a nil represented object.  Here we check if the active state is in our
-	// state array.  If it is not, that means the active state is a custom state, so we'll set searchState
-	// to nil so our enumeration sets the "Custom..." menu choice as active.  Otherwise, set searchState to
-	// our active state so we set the active state's menu item as active.
-	AIStatus	*searchState = ([stateArray containsObject:activeStatusState] ? activeStatusState : nil);
-
 	//Scan each menu item and correctly set it as active or non-active
 	while(menuItem = [enumerator nextObject]){
-		if([menuItem representedObject] == searchState){
+		NSDictionary	*dict = [menuItem representedObject];
+		AIAccount		*account;
+		AIStatus		*appropiateActiveStatusState;
+		
+		//Search for the account or global status state as appropriate for this menu item.
+		if(account = [dict objectForKey:@"AIAccount"]){
+			appropiateActiveStatusState = [account statusState];
+		}else{
+			appropiateActiveStatusState = activeStatusState;
+		}
+		
+		// Our "Custom..." menu choice has a nil represented object.  Here we check if the active state is in our
+		// state array.  If it is not, that means the active state is a custom state, so we'll set searchState
+		// to nil so our enumeration sets the "Custom..." menu choice as active.  Otherwise, set searchState to
+		// our active state so we set the active state's menu item as active.
+		AIStatus	*searchState = ([stateArray containsObjectIdenticalTo:appropiateActiveStatusState] ?
+									appropiateActiveStatusState :
+									nil);
+
+		if([dict objectForKey:@"AIStatus"] == searchState){
 			if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
 		}else{
 			if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
@@ -813,22 +880,48 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  * @brief Select a state menu item
  *
  * Invoked by a state menu item, sets the state corresponding to the menu item as the active state.
+ *
+ * If the representedObject NSDictionary has an @"AIAccount" object, set the state just for the appropriate AIAccount.
+ * Otherwise, set the state globally.
  */
 - (void)selectState:(id)sender
 {
-	[self setActiveStatusState:[sender representedObject]];
+	NSDictionary	*dict = [sender representedObject];
+	AIStatus		*statusState = [dict objectForKey:@"AIStatus"];
+	AIAccount		*account = [dict objectForKey:@"AIAccount"];
+	
+	if(account){
+		[account setStatusState:statusState];
+	}else{
+		[self setActiveStatusState:statusState];
+	}
 }
 
 /*!
  * @brief Select the custom state menu item
  *
  * Invoked by the custom state menu item, opens a custom state window.
+ * If the representedObject NSDictionary has an @"AIAccount" object, configure just for the appropriate AIAccount.
+ * Otherwise, configure globally.
  */
 - (IBAction)selectCustomState:(id)sender
 {
-	[AIEditStateWindowController editCustomState:[self activeStatusState]
-										onWindow:nil
-								 notifyingTarget:self];
+	NSDictionary	*dict = [sender representedObject];
+	AIAccount		*account = [dict objectForKey:@"AIAccount"];
+
+	if(account){
+		[AIEditStateWindowController editCustomState:[account statusState]
+										  forAccount:account
+											onWindow:nil
+									 notifyingTarget:self];
+
+	}else{
+		[AIEditStateWindowController editCustomState:[self activeStatusState]
+										  forAccount:nil
+											onWindow:nil
+									 notifyingTarget:self];
+	}
+
 }
 
 /*!
@@ -837,9 +930,13 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  * Invoked when the custom state window is closed by the user clicking OK.  In response this method sets the custom
  * state as the active state.
  */
-- (void)customStatusState:(AIStatus *)originalState changedTo:(AIStatus *)newState
+- (void)customStatusState:(AIStatus *)originalState changedTo:(AIStatus *)newState forAccount:(AIAccount *)account
 {
-	[self setActiveStatusState:newState];
+	if(account){
+		[account setStatusState:newState];
+	}else{
+		[self setActiveStatusState:newState];
+	}
 }
 
 /*!

@@ -163,6 +163,7 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
 	
 	if(selectedIndex >= 0 && selectedIndex < [stateArray count]){
 		[AIEditStateWindowController editCustomState:[stateArray objectAtIndex:selectedIndex]
+										  forAccount:nil
 											onWindow:[self window]
 									 notifyingTarget:self];
 	}
@@ -173,7 +174,7 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
  *
  * Invoked when the user successfully edits a state.  This method adds the new or updated state to Adium's state array.
  */
-- (void)customStatusState:(AIStatus *)originalState changedTo:(AIStatus *)newState
+- (void)customStatusState:(AIStatus *)originalState changedTo:(AIStatus *)newState forAccount:(AIAccount *)account
 {
 	if(originalState){
 		[[adium statusController] replaceExistingStatusState:originalState withStatusState:newState];
@@ -206,6 +207,7 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
 - (IBAction)newState:(id)sender
 {
 	[AIEditStateWindowController editCustomState:nil
+									  forAccount:nil
 										onWindow:[self window]
 								 notifyingTarget:self];
 }

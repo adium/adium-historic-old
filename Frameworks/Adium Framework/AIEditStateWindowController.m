@@ -14,6 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIAccount.h"
 #import "AIEditStateWindowController.h"
 #import "AIStatus.h"
 #import "AIStatusController.h"
@@ -26,7 +27,7 @@
 #define WINDOW_HEIGHT_PADDING	90
 
 @interface AIEditStateWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName customState:(AIStatus *)inState notifyingTarget:(id)inTarget;
+- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget;
 - (id)_positionControl:(id)control relativeTo:(id)guide height:(int *)height;
 - (void)configureStateMenu;
 - (void)updateBasedOnSelectedStatus;
@@ -47,14 +48,15 @@
  * dictionary.  When the user successfully closes the editor, the target will be notified and passed the updated
  * state dictionary
  * @param state Initial state dictionary
+ * @param account The account which to configure the custom state window; nil to configure globally
  * @param parentWindow Parent window for a sheet, nil for a stand alone editor
  * @param inTarget Target object to notify when editing is complete
  */
-+ (void)editCustomState:(AIStatus *)statusState onWindow:(id)parentWindow notifyingTarget:(id)inTarget
++ (void)editCustomState:(AIStatus *)statusState forAccount:(AIAccount *)inAccount onWindow:(id)parentWindow notifyingTarget:(id)inTarget
 {
 	AIEditStateWindowController	*controller;
 	
-	controller = [[self alloc] initWithWindowNibName:@"EditStateSheet" customState:statusState notifyingTarget:inTarget];
+	controller = [[self alloc] initWithWindowNibName:@"EditStateSheet" forAccount:inAccount customState:statusState notifyingTarget:inTarget];
 	
 	if(parentWindow){
 		[NSApp beginSheet:[controller window]
@@ -70,15 +72,14 @@
 /*!
  * Init the window controller
  */
-- (id)initWithWindowNibName:(NSString *)windowNibName customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget
+- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget
 {
     [super initWithWindowNibName:windowNibName];
 
 	originalStatusState = (inStatusState ? [inStatusState retain] : [[AIStatus status] retain]);
 	target = inTarget;
 	
-	//XXX
-	service = nil;
+	account = [inAccount retain];
 	
 	return(self);
 }
@@ -89,6 +90,8 @@
 - (void)dealloc
 {
 	[originalStatusState release];
+	[account release];
+
 	[super dealloc];
 }
 
@@ -102,13 +105,13 @@
 
 	[scrollView_statusMessage setAutoHideScrollBar:YES];
 	[scrollView_statusMessage setAlwaysDrawFocusRingIfFocused:YES];
-	[textView_statusMessage setTarget:self action:@selector(okay)];
+	[textView_statusMessage setTarget:self action:@selector(okay:)];
 	[textView_statusMessage setSendOnReturn:YES];
 	[textView_statusMessage setSendOnEnter:NO];
 
 	[scrollView_autoReply setAutoHideScrollBar:YES];
 	[scrollView_autoReply setAlwaysDrawFocusRingIfFocused:YES];
-	[textView_autoReply setTarget:self action:@selector(okay)];
+	[textView_autoReply setTarget:self action:@selector(okay:)];
 	[textView_autoReply setSendOnReturn:YES];
 	[textView_autoReply setSendOnEnter:NO];
 	
@@ -123,7 +126,8 @@
  */
 - (void)configureStateMenu
 {
-	[popUp_state setMenu:[[adium statusController] menuOfStatusesForService:service withTarget:self]];
+	[popUp_state setMenu:[[adium statusController] menuOfStatusesForService:(account ? [account service] : nil)
+																 withTarget:self]];
 	needToRebuildPopUpState = NO;	
 }
 
@@ -166,22 +170,11 @@
  */
 - (IBAction)okay:(id)sender
 {
-	NSLog(@"Okay");
-	if(target && [target respondsToSelector:@selector(customStatusState:changedTo:)]){
-		[target customStatusState:originalStatusState changedTo:[self currentConfiguration]];
+	if(target && [target respondsToSelector:@selector(customStatusState:changedTo:forAccount:)]){
+		[target customStatusState:originalStatusState changedTo:[self currentConfiguration] forAccount:account];
 	}
 	
 	[self closeWindow:nil];
-}
-
-/*!
- * @brief Okay
- *
- * Save changes, notify our target of the new configuration, and close the editor.
- */
-- (void)okay
-{
-	[self okay:nil];
 }
 
 /*!

@@ -45,11 +45,11 @@
 	IBOutlet	NSButton		*button_OK;
 
 	AIStatus	*originalStatusState;
-	AIService	*service;
+	AIAccount	*account;
 	id			target;
 }
 
-+ (void)editCustomState:(AIStatus *)state onWindow:(id)parentWindow notifyingTarget:(id)inTarget;
++ (void)editCustomState:(AIStatus *)statusState forAccount:(AIAccount *)inAccount onWindow:(id)parentWindow notifyingTarget:(id)inTarget;
 
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
@@ -62,5 +62,5 @@
 @end
 
 @interface NSObject (AICustomStatusWindowTarget)
-- (void)customStatusState:(AIStatus *)originalState changedTo:(AIStatus *)newState;
+- (void)customStatusState:(AIStatus *)originalState changedTo:(AIStatus *)newState forAccount:(AIAccount *)account;
 @end

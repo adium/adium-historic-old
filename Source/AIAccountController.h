@@ -48,8 +48,7 @@ typedef enum
 	Adium_Proxy_Default_SOCKS5
 } AdiumProxyType;
 
-
-@protocol AIListObjectObserver, AIServiceController;
+@protocol AIListObjectObserver, AIServiceController, StateMenuPlugin;
 
 @class AIAdium, AIAccount, AIListObject, AIAccountViewController, AIService, AIListContact;
 
@@ -58,7 +57,7 @@ typedef enum
 - (void)removeAccountMenuItems:(NSArray *)menuItemArray;
 @end
 
-@interface AIAccountController : NSObject<AIListObjectObserver>{
+@interface AIAccountController : NSObject<AIListObjectObserver, StateMenuPlugin>{
     IBOutlet	AIAdium		*adium;	
 	
     NSMutableArray			*accountArray;				//Array of active accounts
