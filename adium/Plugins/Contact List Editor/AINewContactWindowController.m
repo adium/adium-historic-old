@@ -145,6 +145,18 @@
 																				 UID:UID];
 			[[adium contactController] addContacts:[NSArray arrayWithObject:contact]
 										   toGroup:[[popUp_targetGroup selectedItem] representedObject]];
+			
+			// Add the alias, if it exists
+			NSString	*alias = [textField_contactAlias stringValue];
+			if([alias length] == 0) alias = nil; 
+
+			[contact setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
+			
+			[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+													  object:contact
+													userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+																						 forKey:@"Notify"]];
+			
 		}
 	}
 	

@@ -16,6 +16,7 @@
                 "popUp_contactType" = NSPopUpButton; 
                 "popUp_targetGroup" = NSPopUpButton; 
                 "tableView_accounts" = NSTableView; 
+                "textField_contactAlias" = NSTextField; 
                 "textField_contactName" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
