@@ -923,7 +923,9 @@ DeclareString(UID);
 		}else{
 			NSDictionary	*serviceDict = [(AIMetaContact *)inContact dictionaryOfServicesAndListContacts];
 			NSArray			*contactArray = [serviceDict objectForKey:service];
-			NSImage			*serviceImage = [[[[owner accountController] serviceControllerWithIdentifier:service] handleServiceType] menuImage];
+			NSImage			*serviceImage = [AIServiceIcons serviceIconForService:service
+																			 type:AIServiceIconSmall
+																		direction:AIIconNormal]
 			
 			[self _addMenuItemsFromArray:contactArray
 								  toMenu:contactMenu
@@ -963,8 +965,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		if ([contact online] || includeOffline){
 			
 			if (!serviceImage){
-				menuServiceImage = [AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall
-					direction:AIIconNormal];
+				menuServiceImage = [AIServiceIcons serviceIconForObject:contact
+																   type:AIServiceIconSmall
+															  direction:AIIconNormal];
 			}
 			
 			NSMenuItem *tempItem = [[NSMenuItem alloc] initWithTitle:[contact formattedUID]
