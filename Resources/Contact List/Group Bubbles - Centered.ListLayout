@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Contact Cell Style</key>
-	<integer>0</integer>
 	<key>Contact Font</key>
 	<string>Helvetica,11</string>
 	<key>Contact Left Indent</key>
@@ -18,10 +16,12 @@
 	<integer>1</integer>
 	<key>Grid Enabled</key>
 	<false/>
-	<key>Group Cell Style</key>
-	<integer>1</integer>
+	<key>Group Bottom Spacing</key>
+	<integer>0</integer>
 	<key>Group Font</key>
 	<string>Helvetica,11</string>
+	<key>Group Gradient</key>
+	<true/>
 	<key>Group Text Alignment</key>
 	<integer>2</integer>
 	<key>Group Top Spacing</key>

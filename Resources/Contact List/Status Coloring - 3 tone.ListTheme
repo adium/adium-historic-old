@@ -8,6 +8,8 @@
 	<true/>
 	<key>Away Label Color</key>
 	<string>255,237,229</string>
+	<key>Background As Events</key>
+	<true/>
 	<key>Background As Status</key>
 	<true/>
 	<key>Background Color</key>
@@ -28,12 +30,16 @@
 	<string>80,107,148</string>
 	<key>Group Background Gradient</key>
 	<string>91,162,255</string>
+	<key>Group Gradient</key>
+	<true/>
 	<key>Group Inverted Text Color</key>
 	<string>255,255,255</string>
+	<key>Group Shadow</key>
+	<true/>
 	<key>Group Shadow Color</key>
 	<string>128,128,128</string>
 	<key>Group Text Color</key>
-	<string>0,0,0</string>
+	<string>255,255,255</string>
 	<key>Idle And Away Color</key>
 	<string>49,49,49</string>
 	<key>Idle And Away Enabled</key>
@@ -50,6 +56,8 @@
 	<string>50,50,50</string>
 	<key>Offline Enabled</key>
 	<true/>
+	<key>Offline Image Opacity</key>
+	<real>0.5</real>
 	<key>Offline Label Color</key>
 	<string>240,240,240</string>
 	<key>Online Color</key>
@@ -86,5 +94,7 @@
 	<string>43,69,198</string>
 	<key>Use Background Image</key>
 	<false/>
+	<key>Window Transparency</key>
+	<real>1</real>
 </dict>
 </plist>
