@@ -99,7 +99,7 @@
         [toolbarItem release]; toolbarItem = nil;
     }
     
-    toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:AILocalizedString(@"LinkEditor",nil)
+    toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:@"LinkEditor"
                                                            label:AILocalizedString(@"Link",nil)
                                                     paletteLabel:AILocalizedString(@"Insert Link",nil)
                                                          toolTip:AILocalizedString(@"Add/Edit Hyperlink",nil)

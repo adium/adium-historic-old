@@ -20,6 +20,8 @@
 #import "ESDualWindowMessageWindowPreferences.h"
 #import "ESDualWindowMessageAdvancedPreferences.h"
 
+#define ADIUM_UNIQUE_CONTAINER			@"ADIUM_UNIQUE_CONTAINER"
+
 @implementation AIDualWindowInterfacePlugin
 
 //Install
@@ -69,7 +71,7 @@
 //Interface: Chat Control ----------------------------------------------------------------------------------------------
 #pragma mark Interface: Chat Control
 //Open a new chat window
-- (id)openChat:(AIChat *)chat inContainerNamed:(NSString *)containerName atIndex:(int)index
+- (id)openChat:(AIChat *)chat inContainerWithID:(NSString *)containerID atIndex:(int)index
 {
 	AIMessageTabViewItem		*messageTab = [[chat statusDictionary] objectForKey:@"MessageTabViewItem"];
 	AIMessageWindowController	*container = nil;
@@ -77,7 +79,7 @@
 	
 	//Create the messasge tab (if necessary)
 	if(!messageTab){
-		container = [self openContainerNamed:containerName];
+		container = [self openContainerWithID:containerID name:containerID];
 		messageView = [AIMessageViewController messageViewControllerForChat:chat];
 
 		//Add chat to container
@@ -117,10 +119,10 @@
 }
 
 //Move a chat
-- (void)moveChat:(AIChat *)chat toContainerNamed:(NSString *)containerName index:(int)index
+- (void)moveChat:(AIChat *)chat toContainerWithID:(NSString *)containerID index:(int)index
 {
 	AIMessageTabViewItem		*messageTab = [[chat statusDictionary] objectForKey:@"MessageTabViewItem"];
-	AIMessageWindowController	*container = [containers objectForKey:containerName];
+	AIMessageWindowController	*container = [containers objectForKey:containerID];
 
 	if([messageTab container] == container){
 		[container moveTabViewItem:messageTab toIndex:index];
@@ -141,16 +143,17 @@
 	
 	while(container = [containerEnumerator nextObject]){
 		[openContainersAndChats addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-			[container name], @"Title",
+			[container containerID], @"ID",
 			[container containedChats], @"Content",
+			[container name], @"Name",
 			nil]];
 	}
 	
 	return(openContainersAndChats);
 }
 
-//Returns an array of open container names
-- (NSArray *)openContainerNames
+//Returns an array of open container IDs
+- (NSArray *)openContainers
 {
 	return([containers allKeys]);
 }
@@ -169,28 +172,28 @@
 	return(openContainersAndChats);
 }
 
-//Returns the name of the container containing the chat
-- (NSString *)containerNameForChat:(AIChat *)chat
+//Returns the ID of the container containing the chat
+- (NSString *)containerIDForChat:(AIChat *)chat
 {
-	return([[[[chat statusDictionary] objectForKey:@"MessageTabViewItem"] container] name]);
+	return([[[[chat statusDictionary] objectForKey:@"MessageTabViewItem"] container] containerID]);
 }
 
 //Returns an array of all the chats in a container
-- (NSArray *)openChatsInContainerNamed:(NSString *)containerName
+- (NSArray *)openChatsInContainerWithID:(NSString *)containerID
 {
-	return([[containers objectForKey:containerName] containedChats]);
+	return([[containers objectForKey:containerID] containedChats]);
 }
 
 
 //Containers -----------------------------------------------------------------------------------------------------------
 #pragma mark Containers
 //Open a new container
-- (id)openContainerNamed:(NSString *)containerName
+- (id)openContainerWithID:(NSString *)containerID name:(NSString *)containerName
 {
-	AIMessageWindowController	*container = [containers objectForKey:containerName];
+	AIMessageWindowController	*container = [containers objectForKey:containerID];
 	if(!container){
-		container = [AIMessageWindowController messageWindowControllerForInterface:self withName:containerName];
-		[containers setObject:container forKey:containerName];
+		container = [AIMessageWindowController messageWindowControllerForInterface:self withID:containerID name:containerName];
+		[containers setObject:container forKey:containerID];
 		
 		//If Adium is hidden, remember to open this container later
 		if(applicationIsHidden) [delayedContainerShowArray addObject:container];
@@ -264,7 +267,8 @@
 			newFrame.origin = screenPoint;
 			
 			//Create a new unique container, set the frame
-			newMessageWindow = [self openContainerNamed:[NSString stringWithFormat:@"ADIUM_UNIQUE_CONTAINER:%i", uniqueContainerNumber++]];
+			newMessageWindow = [self openContainerWithID:[NSString stringWithFormat:@"%@:%i", ADIUM_UNIQUE_CONTAINER, uniqueContainerNumber++]
+													name:@"Messages"];
 			
 			if(newFrame.origin.x == -1 && newFrame.origin.y == -1){
 				NSRect curFrame = [[newMessageWindow window] frame];

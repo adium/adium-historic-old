@@ -84,8 +84,9 @@ static  NSImage			*tabDivider = nil;
 //Dealloc
 - (void)dealloc
 {
+	[dragCell release]; dragCell = nil;
     [arrangeCellTimer invalidate]; [arrangeCellTimer release]; arrangeCellTimer = nil;
-    [tabCellArray release];
+    [tabCellArray release]; tabCellArray = nil;
     [super dealloc];
 }
 

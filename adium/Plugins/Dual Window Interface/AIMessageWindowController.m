@@ -26,7 +26,7 @@
 #define TOOLBAR_MESSAGE_WINDOW					@"MessageWindow"			//Toolbar identifier
 
 @interface AIMessageWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName interface:(AIDualWindowInterfacePlugin *)inInterface name:(NSString *)inName;
+- (id)initWithWindowNibName:(NSString *)windowNibName interface:(AIDualWindowInterfacePlugin *)inInterface containerID:(NSString *)inContainerID containerName:(NSString *)inName;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureToolbar;
 - (BOOL)_resizeTabBarAbsolute:(NSNumber *)absolute;
@@ -42,18 +42,27 @@
 @implementation AIMessageWindowController
 
 //Create a new message window controller
-+ (AIMessageWindowController *)messageWindowControllerForInterface:(AIDualWindowInterfacePlugin *)inInterface withName:(NSString *)inName
++ (AIMessageWindowController *)messageWindowControllerForInterface:(AIDualWindowInterfacePlugin *)inInterface
+															withID:(NSString *)inContainerID
+															  name:(NSString *)inName
 {
-    return([[[self alloc] initWithWindowNibName:MESSAGE_WINDOW_NIB interface:inInterface name:inName] autorelease]);
+    return([[[self alloc] initWithWindowNibName:MESSAGE_WINDOW_NIB
+									  interface:inInterface
+									containerID:inContainerID
+										   containerName:inName] autorelease]);
 }
 
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName interface:(AIDualWindowInterfacePlugin *)inInterface name:(NSString *)inName
+- (id)initWithWindowNibName:(NSString *)windowNibName
+				  interface:(AIDualWindowInterfacePlugin *)inInterface
+				containerID:(NSString *)inContainerID
+					   containerName:(NSString *)inName
 {
     interface = [inInterface retain];
-	name = [inName retain];
+	containerName = [inName retain];
+	containerID = [inContainerID retain];
 	containedChats = [[NSMutableArray alloc] init];
- 	
+
     //Load our window
     [super initWithWindowNibName:windowNibName];
     [self window];
@@ -85,14 +94,22 @@
     [tabView_customTabs setDelegate:nil];
 	[containedChats release];
 	[toolbarItems release];
-	[name release];
+	[containerName release];
+	[containerID release];
 
     [super dealloc];
 }
 
+//Human readable container name
 - (NSString *)name
 {
-	return(name);
+	return(containerName);
+}
+
+//Internal container ID
+- (NSString *)containerID
+{
+	return(containerID);
 }
 
 //Setup our window before it is displayed
@@ -118,8 +135,10 @@
 //Close the message window
 - (IBAction)closeWindow:(id)sender
 {
-    [[self window] performClose:nil];
-}
+	//Hide our window now, and close it in a little bit (to ensure tabs have time to cleanup and finish drag operations)
+	//This will create a smoother close, as the user won't see the individual tabs closing
+	[[self window] orderOut:nil];
+	[[self window] performSelector:@selector(performClose:) withObject:nil afterDelay:0.0001];}
 
 //
 - (void)showWindowInFront:(BOOL)inFront
@@ -163,6 +182,7 @@
 		[tabView_customTabs setAllowsTabRearranging:[[adium interfaceController] allowChatOrdering]];
 			
 		[self updateTabBarVisibilityAndAnimate:(notification != nil)];
+		[self _updateWindowTitleAndIcon];
     }
 }
 
@@ -274,23 +294,24 @@
 //Update our window title
 - (void)_updateWindowTitleAndIcon
 {
+	NSString				*title;
+	AIMessageTabViewItem	*label = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label];
+	
 	//Window Title
     if([tabView_messages numberOfTabViewItems] == 1){
-        [[self window] setTitle:[NSString stringWithFormat:@"%@", [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label]]];
+        title = [NSString stringWithFormat:@"%@", label];
     }else{
-        [[self window] setTitle:[NSString stringWithFormat:@"%@ - %@", name, [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label]]];
-//        [[self window] setTitle:name/*@"Adium : Messages"*/];
+		title = [NSString stringWithFormat:@"%@ - %@", containerName, label];
     }
+	[[self window] setTitle:title];
 	
 	//Window Icon (We display state in the window title if tabs are not visible)
 	NSButton	*button = [[self window]standardWindowButton:NSWindowDocumentIconButton];
-	//	NSLog(@"%@",button);
-	
-//	if([tabView_messages numberOfTabViewItems] == 1 && !alwaysShowTabs){
+	if(!tabBarIsVisible){
 		[button setImage:[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] stateIcon]];
-//	}else{
-//		[button setImage:nil];
-//	}
+	}else{
+		[button setImage:nil];
+	}
 }
 
 
@@ -353,7 +374,7 @@
 //
 - (int)customTabView:(AICustomTabsView *)tabView indexForInsertingTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	return([[adium interfaceController] indexForInsertingChat:[(AIMessageTabViewItem *)tabViewItem chat] intoContainerNamed:name]);
+	return([[adium interfaceController] indexForInsertingChat:[(AIMessageTabViewItem *)tabViewItem chat] intoContainerWithID:containerID]);
 }
 
 //Close a message tab
@@ -394,11 +415,6 @@
             
 			//We invoke both of these on a delay to prevent a display issue when dragging completes and the tab bar
 			//is momentarily told to hide and then quickly to become visible again
-//            if(animate){
-//				[self performSelector:@selector(_resizeTabBarTimer:)
-//						   withObject:nil
-//						   afterDelay:0.0001];
-//            }else{
 			if(animate){
 				[self performSelector:@selector(_resizeTabBarAbsolute:)
 						   withObject:[NSNumber numberWithBool:YES]
@@ -406,8 +422,6 @@
 			}else{
 				[self _resizeTabBarAbsolute:[NSNumber numberWithBool:YES]];
 			}
-			
-//			}
         }
     }    
 }
@@ -519,7 +533,7 @@
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
     return([NSArray arrayWithObjects:@"ShowInfo", NSToolbarSeparatorItemIdentifier, 
-		@"SafariLink",@"InsertBookmark",@"InsertEmoticon", NSToolbarFlexibleSpaceItemIdentifier, 
+		@"InsertEmoticon", @"LinkEditor", @"InsertBookmark", @"SafariLink", NSToolbarFlexibleSpaceItemIdentifier, 
 		@"ShowPreferences", NSToolbarCustomizeToolbarItemIdentifier, nil]);
 }
 

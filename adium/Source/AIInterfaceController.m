@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.86 2004/07/20 17:17:10 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.87 2004/07/20 19:02:48 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -37,7 +37,7 @@
 - (void)_resetOpenChatsCache;
 - (void)_resortChat:(AIChat *)chat;
 - (void)_resortAllChats;
-- (NSArray *)_listObjectsForChatsInContainerNamed:(NSString *)containerName;
+- (NSArray *)_listObjectsForChatsInContainerWithID:(NSString *)containerID;
 - (void)_addItemToMainMenuAndDock:(NSMenuItem *)item;
 - (NSAttributedString *)_tooltipTitleForObject:(AIListObject *)object;
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object;
@@ -52,15 +52,10 @@
 {     
     contactListViewArray = [[NSMutableArray alloc] init];
     messageViewArray = [[NSMutableArray alloc] init];
-//    interfaceArray = [[NSMutableArray alloc] init];
     contactListTooltipEntryArray = [[NSMutableArray alloc] init];
     contactListTooltipSecondaryEntryArray = [[NSMutableArray alloc] init];
 	closeMenuConfiguredForChat = NO;
 	_cachedOpenChats = nil;
-
-#warning load from pref
-groupChatsByContactGroup = YES;
-arrangeChats = YES;
 
     tooltipListObject = nil;
     tooltipTitle = nil;
@@ -100,12 +95,6 @@ arrangeChats = YES;
 	[menuController addMenuItem:item toLocation:LOC_Window_Fixed];
 	[menuController addMenuItem:[[item copy] autorelease] toLocation:LOC_Dock_Status];
 
-#warning dont observe if not enabled
-	[[owner notificationCenter] addObserver:self 
-								   selector:@selector(contactOrderChanged:)
-									   name:Contact_OrderChanged 
-									 object:nil];
-	
 	//Observe preference changes
 	[[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:)
 									   name:Preference_GroupChanged
@@ -166,10 +155,21 @@ arrangeChats = YES;
 	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_INTERFACE]){
 		NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_INTERFACE];
 
+		//
+		[[owner notificationCenter] removeObserver:self name:Contact_OrderChanged object:nil];
+
+		//Update prefs
 		groupChatsByContactGroup = [[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue];
 		arrangeChats = [[prefDict objectForKey:KEY_SORT_CHATS] boolValue];
-
 #warning these need to work for existing windows too...
+
+		//Observe contact order changes if auto-arranging is enabled
+		if(arrangeChats){
+			[[owner notificationCenter] addObserver:self 
+										   selector:@selector(contactOrderChanged:)
+											   name:Contact_OrderChanged 
+											 object:nil];
+		}
 	}
 }
 		
@@ -212,28 +212,28 @@ arrangeChats = YES;
 - (void)openChat:(AIChat *)inChat
 {
 	NSArray		*containers = [interfacePlugin openContainersAndChats];
-	NSString	*containerName;
+	NSString	*containerID;
 	int			index = -1;
 	
 	//Determine the correct container for this chat
 	if(groupChatsByContactGroup){
 		AIListGroup	*group = [[inChat listObject] containingGroup];
-		containerName = (group ? [group displayName] : @"Chat"); 
+		containerID = (group ? [group displayName] : @"Chat"); 
 	}else{
 		//Open new chats into the first container (if not available, create a new one)
 		if([containers count] > 0){
-			containerName = [[containers objectAtIndex:0] objectForKey:@"Title"];
+			containerID = [[containers objectAtIndex:0] objectForKey:@"ID"];
 		}else{
-			containerName = @"Adium_First_Container";
+			containerID = @"Messages";
 		}
 	}
 
 	//Determine the correct placement for this chat withing the container
 	if(arrangeChats){
-		index = [self indexForInsertingChat:inChat intoContainerNamed:containerName];
+		index = [self indexForInsertingChat:inChat intoContainerWithID:containerID];
 	}
 	
-	[interfacePlugin openChat:inChat inContainerNamed:containerName atIndex:index];
+	[interfacePlugin openChat:inChat inContainerWithID:containerID atIndex:index];
 }
 
 //Set the active chat window
@@ -265,9 +265,9 @@ arrangeChats = YES;
 }
 
 //
-- (NSArray *)openChatsInContainerNamed:(NSString *)containerName
+- (NSArray *)openChatsInContainerWithID:(NSString *)containerID
 {
-	return([interfacePlugin openChatsInContainerNamed:containerName]);
+	return([interfacePlugin openChatsInContainerWithID:containerID]);
 }
 
 //Resets the cache of open chats
@@ -373,10 +373,10 @@ arrangeChats = YES;
 //
 - (void)_resortChat:(AIChat *)chat
 {
-	NSString	*containerName = [interfacePlugin containerNameForChat:chat];
+	NSString	*containerID = [interfacePlugin containerIDForChat:chat];
 		
-	[interfacePlugin moveChat:chat toContainerNamed:containerName
-						index:[self indexForInsertingChat:chat intoContainerNamed:containerName]];
+	[interfacePlugin moveChat:chat toContainerWithID:containerID
+						index:[self indexForInsertingChat:chat intoContainerWithID:containerID]];
 	
 }
 
@@ -384,11 +384,11 @@ arrangeChats = YES;
 - (void)_resortAllChats
 {
 	AISortController	*sortController = [[owner contactController] activeSortController];
-	NSEnumerator		*containerEnumerator = [[interfacePlugin openContainerNames] objectEnumerator];
-	NSString			*containerName;
+	NSEnumerator		*containerEnumerator = [[interfacePlugin openContainers] objectEnumerator];
+	NSString			*containerID;
 	
-	while(containerName = [containerEnumerator nextObject]){
-		NSArray			*chatsInContainer = [self openChatsInContainerNamed:containerName];
+	while(containerID = [containerEnumerator nextObject]){
+		NSArray			*chatsInContainer = [self openChatsInContainerWithID:containerID];
 		NSArray  		*listObjects;
 		NSMutableArray  *sortedListObjects;
 		NSEnumerator	*objectEnumerator;
@@ -396,7 +396,7 @@ arrangeChats = YES;
 		int				index = 0;
 		
 		//Sort the chats in this container
-		listObjects = [self _listObjectsForChatsInContainerNamed:containerName];
+		listObjects = [self _listObjectsForChatsInContainerWithID:containerID];
 		sortedListObjects = [listObjects mutableCopy];
 		[sortController sortListObjects:sortedListObjects];
 		
@@ -404,33 +404,32 @@ arrangeChats = YES;
 		objectEnumerator = [listObjects objectEnumerator];
 		while(object = [objectEnumerator nextObject]){
 			[interfacePlugin moveChat:[chatsInContainer objectAtIndex:[listObjects indexOfObject:object]]
-					 toContainerNamed:containerName
+					toContainerWithID:containerID
 								index:index++];
 		}
 	}
 }
 
-
-- (int)indexForInsertingChat:(AIChat *)chat intoContainerNamed:(NSString *)containerName
+- (int)indexForInsertingChat:(AIChat *)chat intoContainerWithID:(NSString *)containerID
 {
 	AISortController	*sortController = [[owner contactController] activeSortController];
 
 	return([sortController indexForInserting:[chat listObject]
-								 intoObjects:[self _listObjectsForChatsInContainerNamed:containerName]]);
+								 intoObjects:[self _listObjectsForChatsInContainerWithID:containerID]]);
 }
 
 //Build array of list objects to sort
 //We can't keep track of this easily since participating list objects may change due to multi-user chat
 //Multi-user chats make this so difficult :(
 #warning would love to do away with this
-- (NSArray *)_listObjectsForChatsInContainerNamed:(NSString *)containerName
+- (NSArray *)_listObjectsForChatsInContainerWithID:(NSString *)containerID
 {
 	NSMutableArray	*listObjects = [NSMutableArray array];
 	NSEnumerator	*enumerator;
 	AIChat			*chat;
 	AIListObject	*listObject;
 
-	enumerator = [[self openChatsInContainerNamed:containerName] objectEnumerator];
+	enumerator = [[self openChatsInContainerWithID:containerID] objectEnumerator];
 	while(chat = [enumerator nextObject]){
 		listObject = [chat listObject];
 		if(listObject) [listObjects addObject:listObject];
@@ -438,9 +437,6 @@ arrangeChats = YES;
 	
 	return(listObjects);
 }
-
-
-
 
 
 //Chat close menus -----------------------------------------------------------------------------------------------------
@@ -501,11 +497,8 @@ arrangeChats = YES;
 {	
     NSMenuItem				*item;
     NSEnumerator			*enumerator;
-//    NSEnumerator			*tabViewEnumerator;
-//    NSEnumerator			*windowEnumerator;
     int						windowKey = 1;
 	BOOL					respondsToSetIndentationLevel = [menuItem_paste respondsToSelector:@selector(setIndentationLevel:)];
-	
 	
     //Remove any existing menus
     enumerator = [windowMenuArray objectEnumerator];
@@ -519,7 +512,7 @@ arrangeChats = YES;
 	NSDictionary	*containerDict;
 	
 	while(containerDict = [containerEnumerator nextObject]){
-		NSString		*containerName = [containerDict objectForKey:@"Title"];
+		NSString		*containerName = [containerDict objectForKey:@"Name"];
 		NSArray			*contentArray = [containerDict objectForKey:@"Content"];
 		NSEnumerator	*contentEnumerator = [contentArray objectEnumerator];
 		AIChat			*chat;
