@@ -198,7 +198,7 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
    -
   <b> --&gt;</b>
     &lt;database&gt;
-      &lt;jndi-name&gt;jdbc/postgresql&lt;/jndi-name&gt;
+    &lt;jndi-name&gt;<b>jdbc/postgresql</b>&lt;/jndi-name&gt;
       &lt;driver type="<b>org.postgresql.Driver</b>"&gt;
         &lt;url&gt;<b>jdbc:postgresql:<i>USERNAME</i></b>&lt;/url&gt;
         &lt;user&gt;<b><i>USERNAME</i></b>&lt;/user&gt;

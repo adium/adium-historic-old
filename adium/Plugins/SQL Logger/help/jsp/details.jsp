@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/details.jsp $-->
-<!--$Rev: 716 $ $Date: 2004/05/04 22:57:21 $ -->
+<!--$Rev: 719 $ $Date: 2004/05/05 16:26:40 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -101,7 +101,7 @@ try {
                 <img class="adiumIcon" src="images/adiumy/blue.png" width="128" height="128" border="0" alt="Adium X Icon" />
                 <div class="text">
                     <h1><%= title %></h1>
-                    <h2><%= month %></h2>
+                    <p><%= month %></p>
                 </div>
             </div>
         </div>

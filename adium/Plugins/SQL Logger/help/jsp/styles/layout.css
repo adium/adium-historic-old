@@ -17,9 +17,10 @@ body {
 }
 
 #banner {
-    padding: 0px;
+    padding-bottom: 10px;
     margin-bottom: 0;
-    height: 116px;
+    height: 136px;
+    overflow: auto;
 }
 
 #bannerTitle {
@@ -30,12 +31,11 @@ body {
 .adiumIcon {
     float: left;
     margin-left: 50px;
-    margin-top: -6px;
 }
 
 #banner .text {
     margin-left: 230px;
-    width: 220px;
+    width: 480px;
     padding-top: 10px;
 }
 
@@ -46,44 +46,6 @@ body {
 #banner .text h2 {
     margin: 0px;
 }
-
-/*<group=buttonbar>*/
-
-#buttoncontainer {
-    height: 90px;
-    margin-right: 40px;
-    float: right;
-}
-
-#buttoncontainer ul {
-    margin: 0;
-    padding: 0;
-    height: 90px;
-}
-
-#buttoncontainer ul li {
-    display: block;
-    margin: 0;
-    height: 90px;
-    float: left;
-}
-
-#buttoncontainer ul li a {
-    display: block;
-    width: 110px;
-    padding-top: 67px;
-    padding-bottom: 10px;
-}
-
-#buttoncontainer ul li .xtras {
-    width: 80px;
-}
-
-#buttoncontainer ul li a:hover {
-    width: 110px;
-}
-
-/*</group>*/
 
 /*<group=navbar>*/
 #navcontainer

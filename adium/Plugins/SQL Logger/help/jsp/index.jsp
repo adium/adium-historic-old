@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 707 $ $Date: 2004/05/04 21:29:54 $ -->
+<!--$Rev: 719 $ $Date: 2004/05/05 16:26:41 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -130,10 +130,8 @@ try {
                 <img class="adiumIcon" src="images/adiumy/green.png" width="128" height="128" border="0" alt="Adium X Icon" />
                 <div class="text">
                     <h1><%= title %></h1>
+                    <p><%= notes %></p>
                 </div>
-            </div>
-            <div id="buttoncontainer">
-            <p><%= notes %></p>
             </div>
         </div>
         <div id="central">

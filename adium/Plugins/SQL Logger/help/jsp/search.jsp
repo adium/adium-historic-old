@@ -107,10 +107,8 @@ try {
                 <img class="adiumIcon" src="images/adiumy/purple.png" width="128" height="128" border="0" alt="Adium X Icon" />
                 <div class="text">
                     <h1><%= title %></h1>
+                    <p><%= notes %></p>
                 </div>
-            </div>
-            <div id="buttoncontainer">
-                <p><%= notes %></p>
             </div>
         </div>
         <div id="central">
