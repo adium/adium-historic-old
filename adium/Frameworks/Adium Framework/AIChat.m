@@ -59,7 +59,7 @@
 	
 	if(listObject){
 		//Use the contact's image
-		image = [[listObject displayArrayForKey:KEY_USER_ICON] objectValue];
+		image = [listObject userIcon];
 		if(!image){
 			//If that is not available, use the contact's service image (cached, since it's a lot of work to look up)
 			if(!_serviceImage){
