@@ -105,6 +105,7 @@ static NDRunLoopMessenger   *runLoopMessenger = nil;
 
 	[[NSRunLoop currentRunLoop] run];
 
+	NSAssert(FALSE,@"Should we ever make it here?");
 	runLoopMessenger = nil;
 	
     return self;
@@ -193,8 +194,8 @@ static AIChat* imChatLookupFromConv(GaimConversation *conv)
 			}
 			gaim_blist_add_buddy(buddy, NULL, group, NULL);     //add the buddy to the gaimside list
 			
-#warning Must add to serverside list to get status updates.  Need to remove when the chat closes or the account disconnects. Possibly want to use some sort of hidden Adium group for this.
-			serv_add_buddy(conv->account->gc, buddy->name, group);				//add it to the serverside list
+//#warning Must add to serverside list to get status updates.  Need to remove when the chat closes or the account disconnects. Possibly want to use some sort of hidden Adium group for this.
+//			serv_add_buddy(conv->account->gc, buddy->name, group);				//add it to the serverside list
 		}
 		
 		NSCAssert(buddy != nil, @"buddy was nil");
@@ -236,55 +237,67 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 		}else{
 			
 #warning XXX
-			const char *name = [[chat name] UTF8String];
-			
-			//Look for an existing gaimChat (for now, it had better exist already which means trouble if we get here!)
-			GaimChat *gaimChat = gaim_blist_find_chat (account, name);
-			if (!gaimChat){
-				NSLog(@"gotta create a chat");
-				GHashTable *components;
-				GList *tmp;
-				GaimGroup *group;
-				const char *group_name = _("Chats");
+			NSString	*chatName = [chat name];
+			if (chatName){
+				const char *name = [chatName UTF8String];
 				
-				
-				//The below is not even close to right.
-				components = g_hash_table_new_full(g_str_hash, g_str_equal,
-												   g_free, g_free);
-				
-				/*
-				 g_hash_table_replace(components,
-									  g_strdup(g_object_get_data(tmp->data, "identifier")),
-									  g_strdup_printf("%d",
-													  gtk_spin_button_get_value_as_int(tmp->data)));
-				 */
-				
-				gaimChat = gaim_chat_new(account,
-										 name,
-										 components);
-				
-				if ((group = gaim_find_group(group_name)) == NULL)
-				{
-					group = gaim_group_new(group_name);
-					gaim_blist_add_group(group, NULL);
+				//Look for an existing gaimChat (for now, it had better exist already which means trouble if we get here!)
+				GaimChat *gaimChat = gaim_blist_find_chat (account, name);
+				if (!gaimChat){
+					NSLog(@"gotta create a chat");
+					GHashTable *components;
+					GList *tmp;
+					GaimGroup *group;
+					const char *group_name = _("Chats");
+					GaimPlugin *prpl;
+					GaimPluginProtocolInfo *prpl_info = NULL;
+					struct proto_chat_entry *pce;
+					GList *parts;
+						
+					//The below is not right. (Revised from: The below is not even close to right :P).
+					components = g_hash_table_new_full(g_str_hash, g_str_equal,
+													   g_free, g_free);
+					
+					prpl = gaim_find_prpl(gaim_account_get_protocol_id(account));
+					prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(prpl);
+					parts = prpl_info->chat_info(gaim_account_get_connection(account));
+					pce = parts->data;
+
+					g_hash_table_replace(components,
+										  g_strdup(name),   /* name */
+										  g_strdup_printf("%d", /* gc-specific identifier */
+														  pce->identifier));
+					
+					gaimChat = gaim_chat_new(account,
+											 name,
+											 components);
+					
+					if ((group = gaim_find_group(group_name)) == NULL) {
+						group = gaim_group_new(group_name);
+						gaim_blist_add_group(group, NULL);
+					}
+					
+					if (gaimChat != NULL) {
+						gaim_blist_add_chat(gaimChat, group, NULL);
+						gaim_blist_save();
+					}
+					
+					//Associate our chat with the libgaim conversation
+					NSLog(@"associating the gaimconv");
+					GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
+					
+					chatLookupFromConv(conv);
 				}
-				
-				if (gaimChat != NULL)
-				{
-					gaim_blist_add_chat(gaimChat, group, NULL);
-					gaim_blist_save();
-				}
-				
-				//Associate our chat with the libgaim conversation
-				NSLog(@"associating the gaimconv");
-				GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
-				
-				chatLookupFromConv(conv);
 			}
 		}
 	}
 	
 	return conv;
+}
+
+static GaimConversation* existingConvLookupFromChat(AIChat *chat)
+{
+	return (GaimConversation *)[[chatDict objectForKey:[chat uniqueChatID]] pointerValue];
 }
 
 
@@ -684,7 +697,6 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 										   withObject:imChatLookupFromConv(conv)];
 }
 
-//Never actually called as of gaim 0.75
 static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
 	if (GAIM_DEBUG) NSLog(@"adiumGaimConvWriteConv: %s: %s", who, message);
@@ -1159,7 +1171,7 @@ static void *adiumGaimRequestChoice(const char *title, const char *primary, cons
 //Gaim requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
 static void *adiumGaimRequestAction(const char *title, const char *primary, const char *secondary, unsigned int default_action,void *userData, size_t actionCount, va_list actions)
 {
-    int		    alertReturn, i;
+    int		    i;
 	
     NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"");
     NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
@@ -1203,7 +1215,228 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 
 static void *adiumGaimRequestFields(const char *title, const char *primary, const char *secondary, GaimRequestFields *fields, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData)
 {
-    NSLog(@"adiumGaimRequestFields");
+	int		    i;
+	
+    NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"");
+    NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
+		(primary ? primary : ""),
+		((primary && secondary) ? "\n\n" : ""),
+		(secondary ? secondary : "")];
+
+#if 0	
+	GaimGtkRequestData *data;
+	GtkSizeGroup *sg;
+	GList *gl, *fl;
+	GaimRequestFieldGroup *group;
+	GaimRequestField *field;
+	char *label_text;
+	int total_fields = 0;
+
+	for (gl = gaim_request_fields_get_groups(fields); gl != NULL;
+			gl = gl->next)
+		total_fields += g_list_length(gaim_request_field_group_get_fields(gl->data));
+
+	for (gl = gaim_request_fields_get_groups(fields);
+		 gl != NULL;
+		 gl = gl->next)
+	{
+		GList *field_list;
+		size_t field_count = 0;
+		size_t cols = 1;
+		size_t rows;
+		size_t col_num;
+		size_t row_num = 0;
+
+		group      = gl->data;
+		field_list = gaim_request_field_group_get_fields(group);
+
+		field_count = g_list_length(field_list);
+
+		rows = field_count;
+
+		col_num = 0;
+
+		for (fl = field_list; fl != NULL; fl = fl->next)
+		{
+			GaimRequestFieldType type;
+
+			field = (GaimRequestField *)fl->data;
+
+			type = gaim_request_field_get_type(field);
+
+			if (type == GAIM_REQUEST_FIELD_LABEL)
+			{
+				if (col_num > 0)
+					rows++;
+
+				rows++;
+			}
+			else if (type == GAIM_REQUEST_FIELD_STRING &&
+					 gaim_request_field_string_is_multiline(field))
+			{
+				if (col_num > 0)
+					rows++;
+
+				rows += 2;
+			}
+
+			col_num++;
+
+			if (col_num >= cols)
+				col_num = 0;
+		}
+
+		for (row_num = 0, fl = field_list;
+			 row_num < rows && fl != NULL;
+			 row_num++)
+		{
+			for (col_num = 0;
+				 col_num < cols && fl != NULL;
+				 col_num++, fl = fl->next)
+			{
+				size_t col_offset = col_num * 2;
+				GaimRequestFieldType type;
+				GtkWidget *widget = NULL;
+
+				field = fl->data;
+
+				if (!gaim_request_field_is_visible(field)) {
+					col_num--;
+					continue;
+				}
+
+				type = gaim_request_field_get_type(field);
+
+				if (type != GAIM_REQUEST_FIELD_BOOLEAN &&
+				    gaim_request_field_get_label(field))
+				{
+					char *text;
+
+					text = g_strdup_printf("%s:",
+						gaim_request_field_get_label(field));
+
+					label = gtk_label_new(NULL);
+					gtk_label_set_markup_with_mnemonic(GTK_LABEL(label), text);
+					g_free(text);
+
+					gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
+
+					gtk_size_group_add_widget(sg, label);
+
+					if (type == GAIM_REQUEST_FIELD_LABEL ||
+						(type == GAIM_REQUEST_FIELD_STRING &&
+						 gaim_request_field_string_is_multiline(field)))
+					{
+						if(col_num > 0)
+							row_num++;
+
+						gtk_table_attach_defaults(GTK_TABLE(table), label,
+												  0, 2 * cols,
+												  row_num, row_num + 1);
+
+						row_num++;
+						col_num=cols;
+					}
+					else
+					{
+						gtk_table_attach_defaults(GTK_TABLE(table), label,
+												  col_offset, col_offset + 1,
+												  row_num, row_num + 1);
+					}
+
+					gtk_widget_show(label);
+				}
+
+				if (type == GAIM_REQUEST_FIELD_STRING)
+					widget = create_string_field(field);
+				else if (type == GAIM_REQUEST_FIELD_INTEGER)
+					widget = create_int_field(field);
+				else if (type == GAIM_REQUEST_FIELD_BOOLEAN)
+					widget = create_bool_field(field);
+				else if (type == GAIM_REQUEST_FIELD_CHOICE)
+					widget = create_choice_field(field);
+				else if (type == GAIM_REQUEST_FIELD_LIST)
+					widget = create_list_field(field);
+				else if (type == GAIM_REQUEST_FIELD_ACCOUNT)
+					widget = create_account_field(field);
+				else
+					continue;
+
+				if (type == GAIM_REQUEST_FIELD_STRING &&
+					gaim_request_field_string_is_multiline(field))
+				{
+					gtk_table_attach(GTK_TABLE(table), widget,
+									 0, 2 * cols,
+									 row_num, row_num + 1,
+									 GTK_FILL | GTK_EXPAND,
+									 GTK_FILL | GTK_EXPAND,
+									 5, 0);
+				}
+				else if (type != GAIM_REQUEST_FIELD_BOOLEAN)
+				{
+					gtk_table_attach(GTK_TABLE(table), widget,
+									 col_offset + 1, col_offset + 2,
+									 row_num, row_num + 1,
+									 GTK_FILL | GTK_EXPAND,
+									 GTK_FILL | GTK_EXPAND,
+									 5, 0);
+				}
+				else
+				{
+					gtk_table_attach(GTK_TABLE(table), widget,
+									 col_offset, col_offset + 1,
+									 row_num, row_num + 1,
+									 GTK_FILL | GTK_EXPAND,
+									 GTK_FILL | GTK_EXPAND,
+									 5, 0);
+				}
+
+				gtk_widget_show(widget);
+
+				field->ui_data = widget;
+			}
+		}
+	}
+
+	g_object_unref(sg);
+
+	/* Button box. */
+	bbox = gtk_hbutton_box_new();
+	gtk_box_set_spacing(GTK_BOX(bbox), 6);
+	gtk_button_box_set_layout(GTK_BUTTON_BOX(bbox), GTK_BUTTONBOX_END);
+	gtk_box_pack_end(GTK_BOX(vbox), bbox, FALSE, TRUE, 0);
+	gtk_widget_show(bbox);
+
+	/* Cancel button */
+	button = gtk_button_new_from_stock(text_to_stock(cancel_text));
+	gtk_box_pack_start(GTK_BOX(bbox), button, FALSE, FALSE, 0);
+	gtk_widget_show(button);
+
+	g_signal_connect(G_OBJECT(button), "clicked",
+					 G_CALLBACK(multifield_cancel_cb), data);
+
+	GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT);
+
+	/* OK button */
+	button = gtk_button_new_from_stock(text_to_stock(ok_text));
+	gtk_box_pack_start(GTK_BOX(bbox), button, FALSE, FALSE, 0);
+	gtk_widget_show(button);
+
+	data->ok_button = button;
+
+	GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT);
+	gtk_window_set_default(GTK_WINDOW(win), button);
+
+	g_signal_connect(G_OBJECT(button), "clicked",
+					 G_CALLBACK(multifield_ok_cb), data);
+
+	if (!gaim_request_fields_all_required_filled(fields))
+		gtk_widget_set_sensitive(button, FALSE);
+
+	gtk_widget_show(win);
+
+	return data;
+#endif
     return(nil);
 }
 
@@ -1848,7 +2081,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 - (oneway void)gaimThreadCloseChat:(AIChat *)chat
 {
-	GaimConversation *conv = convLookupFromChat(chat,nil);
+	GaimConversation *conv = existingConvLookupFromChat(chat);
 	
 	[chatDict removeObjectForKey:[chat uniqueChatID]];
 	

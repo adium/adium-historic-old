@@ -137,6 +137,7 @@ void sendData( NSData * aData, NSPort * aPort );
 		[port removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 		port = nil;
 		[[NSNotificationCenter defaultCenter] removeObserver:self];
+		NSAssert(FALSE,@"threadWillExit!");
 	}
 }
 
@@ -151,6 +152,7 @@ void sendData( NSData * aData, NSPort * aPort );
 		[port removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 		port = nil;
 		[[NSNotificationCenter defaultCenter] removeObserver:self];
+		NSAssert(FALSE,@"portDidBecomeInvalid!");
 	}
 }
 
