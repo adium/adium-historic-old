@@ -165,6 +165,17 @@
 }
 
 //Adjust for our padding
+- (NSArray *)menuItemsForEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset
+{
+    inPoint.x -= framePadLeft;
+    inPoint.y -= framePadBottom;
+    inOffset.x += framePadLeft;
+    inOffset.y += framePadBottom;
+    
+    return([super menuItemsForEvent:theEvent atPoint:inPoint offset:inOffset]);
+}
+
+//Adjust for our padding
 - (BOOL)pointIsSelected:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
     inPoint.x -= framePadLeft;
