@@ -30,13 +30,10 @@
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-	if( delegate ) {
-		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:([[textField_roomName stringValue] length] > 0)];
-	}
+	[super configureForAccount:inAccount];
 	
 	[[view window] makeFirstResponder:textField_roomName];
-
-	[super configureForAccount:inAccount];
+	[self validateEnteredText];
 }
 
 /*
@@ -58,7 +55,6 @@
 	NSDictionary	*chatCreationInfo;
 	
 	//Obtain room and exchange from the view
-	//room = [NSString stringWithFormat:@"Chat %@",[NSString randomStringOfLength:5]];
 	room = [textField_roomName stringValue];
 
 	if (room && [room length]){
@@ -88,41 +84,11 @@
 
 - (void)validateEnteredText
 {
-	NSString *roomName = [textField_roomName stringValue];
-	BOOL enabled = NO;
-	
-	if( roomName && [roomName length] ) {
-		enabled = YES;
-	}
-	
-	if( delegate )
+	NSString	*roomName = [textField_roomName stringValue];
+	BOOL		enabled = (roomName && [roomName length]);
+
+	if(delegate)
 		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:enabled];
 }
-
-//#pragma mark Table View of contacts
-//
-//- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
-//{
-//	NSString	*identifier = [tableColumn identifier];
-//	
-//	if([identifier isEqualToString:@"check"]){
-//		return([NSNumber numberWithBool:YES]);
-//	}else if([identifier isEqualToString:@"contacts"]){
-//		return([[contacts objectAtIndex:row] displayName]);
-//	}else{
-//		return(@"");
-//	}
-//}
-//
-//- (int)numberOfRowsInTableView:(NSTableView *)tableView
-//{
-//	NSLog(@"#### numberOfRowsInTableView: %d",[contacts count]);
-//	return([contacts count]);
-//}
-//
-//- (void)updateContactsList
-//{
-//	contacts = [[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:account];
-//}
 
 @end
