@@ -370,7 +370,7 @@ this problem is along the lines of:
 {
     NSString    *logIndexPath = [self logIndexPath];
     NSURL       *logIndexPathURL = [NSURL fileURLWithPath:logIndexPath];
-    NSLog(@"%@",logIndexPath);
+
     //Load the log index (creating if necessary)
     if([[NSFileManager defaultManager] fileExistsAtPath:logIndexPath]){
 	index_Content = SKIndexOpenWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", true);
