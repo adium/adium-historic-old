@@ -187,7 +187,8 @@
 	
 	[popUp_contactType setMenu:[[adium accountController] menuOfServicesWithTarget:self 
 																activeServicesOnly:YES
-																   longDescription:NO]];
+																   longDescription:NO
+																			format:nil]];
 	
 	//- (BOOL)validateMenuItem:(NSMenuItem *)menuItem below will automatically manage the enabling/disabling 
 	//when we call update.
