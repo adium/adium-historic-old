@@ -33,9 +33,16 @@
 
 #import <limits.h> //for PATH_MAX
 
+//#define NEW_APPLICATION_SUPPORT_DIRECTORY
+
 //Path to Adium's application support preferences
-#define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
-#define ADIUM_SUBFOLDER_OF_APP_SUPPORT      @"Adium 2.0"
+#ifdef NEW_APPLICATION_SUPPORT_DIRECTORY
+#   define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium X"]
+#   define ADIUM_SUBFOLDER_OF_APP_SUPPORT      @"Adium X"
+#else
+#   define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
+#   define ADIUM_SUBFOLDER_OF_APP_SUPPORT      @"Adium 2.0"
+#endif
 #define ADIUM_FAQ_PAGE						@"http://faq.adiumx.com/"
 #define ADIUM_FORUM_PAGE					@"http://forum.adiumx.com"
 #define ADIUM_BUG_PAGE						@"mailto:bugs@adiumx.com"
@@ -154,7 +161,23 @@
 //			[NSApp terminate:nil];
 //		}
 //	}
-	
+
+#ifdef NEW_APPLICATION_SUPPORT_DIRECTORY
+#warning Using ~/Library/Application Support/Adium X
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSString *oldPath = [[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"];
+    NSString *newPath = [[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium X"];
+    BOOL isDir = NO;
+    BOOL oldExists = ([manager fileExistsAtPath:[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"] 
+                                    isDirectory:&isDir] && isDir);
+    BOOL newExists = ([manager fileExistsAtPath:[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium X"] 
+                                    isDirectory:&isDir] && isDir);
+                                                           
+    //Move that directory!
+    if(oldExists & !newExists){
+        [manager movePath:oldPath toPath:newPath handler:nil];
+    }
+#endif
 	//Load the crash reporter
 #ifdef CRASH_REPORTER
 #warning Crash reporter enabled.
