@@ -18,7 +18,6 @@
 }
 
 + (AISmoothTooltipTracker *)smoothTooltipTrackerForView:(NSView *)inView withDelegate:(id)inDelegate;
-+ (AISmoothTooltipTracker *)smoothTooltipTrackerForView:(NSView *)inView withDelegate:(id)inDelegate yOffset:(float)inYOffset;
 
 - (void)setDelegate:(id)inDelegate;
 
