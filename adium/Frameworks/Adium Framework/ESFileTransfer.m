@@ -98,20 +98,29 @@
 
 - (void)setPercentDone:(float)inPercent bytesSent:(unsigned int)inBytesSent
 {
-    if (inPercent == -1) {
-        if (inBytesSent != -1 && size != -1)
-            percentDone = (inBytesSent / size);
-    } else
-        percentDone = inPercent;
-    
-    if (inBytesSent == -1) {
-        if (inPercent != -1 && size != -1)
-            bytesSent = inPercent * size;
-    } else
-        bytesSent = inBytesSent;
+	float oldPercentDone = percentDone;
+	unsigned int oldBytesSent = bytesSent;
 	
-	if (delegate)
+    if (inPercent == -1){
+        if (inBytesSent != -1 && size != -1){
+            percentDone = (inBytesSent / size);
+		}
+    }else{
+        percentDone = inPercent;
+    }
+	
+    if (inBytesSent == -1){
+        if (inPercent != -1 && size != -1){
+            bytesSent = inPercent * size;
+		}
+    }else{
+        bytesSent = inBytesSent;
+	}
+	
+	if (delegate && 
+		((percentDone != oldPercentDone) || (bytesSent != oldBytesSent))){
 		[delegate gotUpdateForFileTransfer:self];
+	}
 }
 - (float)percentDone
 {
