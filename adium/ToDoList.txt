@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.78 2004/05/01 12:42:49 adamiser Exp $
+$Id: ToDoList.txt,v 1.79 2004/05/01 12:54:38 adamiser Exp $
 
 
 Legend
@@ -31,7 +31,6 @@ Contact List:
    - (Hanji: I've had this happen, but can't trace under what circumstances. It does seem to happen when adding myself a lot, however)
 * Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
    - (Confirmed by Hanji)
-* Contact list transparency is incorrect (the background is black/opaque) when the window is first opened.
 * For contacts with no Adium alias and a matching address book card, the contact list format preference will be ignored.  So, if it's set to "Alias (Contact Name)", it will only display the address book name at first.  If the preference is toggled, the correct formatting will be applied.
 
 -------------------------------------------------------------------------------------------------------
@@ -347,3 +346,5 @@ Features & Changes:
 = Add account specific proxy fields (Type, host, port) for all libgaim connections
 = Adium will unhide if hidden (via cmd-H) while a tooltip is visible
 = GROUP DRAGGING IS BROKEN
+= Contact list transparency is incorrect (the background is black/opaque) when the window is first opened.
+
