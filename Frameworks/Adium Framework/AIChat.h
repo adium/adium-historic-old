@@ -32,6 +32,7 @@ typedef enum {
 } AIChatUpdateType;
 
 #define KEY_ENCRYPTED_CHAT_PREFERENCE	@"Encrypted Chat Preference"
+#define GROUP_ENCRYPTION				@"Encryption"
 
 typedef enum {
 	EncryptedChat_Never,
