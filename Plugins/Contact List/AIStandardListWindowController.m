@@ -43,6 +43,67 @@
 {
 	[super windowDidLoad];
 	[self _configureToolbar];
+	
+	//Configure the state menu
+	[[popUp_state menu] removeAllItems];
+	[[adium statusController] registerStateMenuPlugin:self];
+
+	//Update the selections in our state menu when the active state changes
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(activeStateChanged:)
+									   name:AIActiveStatusStateChangedNotification
+									 object:nil];
+	[self activeStateChanged:nil];
+}
+
+/*
+ * @brief Add state menu items to our location
+ *
+ * Implemented as required by the StateMenuPlugin protocol.
+ *
+ * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be added to the menu
+ */
+- (void)addStateMenuItems:(NSArray *)menuItemArray
+{
+	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
+	NSMenuItem		*menuItem;
+	
+    while((menuItem = [enumerator nextObject])){
+		[[popUp_state menu] addItem:menuItem];
+    }
+}
+
+/*
+ * @brief Remove state menu items from our location
+ *
+ * Implemented as required by the StateMenuPlugin protocol.
+ *
+ * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be removed from the menu
+ */
+- (void)removeStateMenuItems:(NSArray *)menuItemArray
+{
+	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
+	NSMenuItem		*menuItem;
+	
+    while((menuItem = [enumerator nextObject])){    
+		[[popUp_state menu] removeItem:menuItem];
+    }
+}
+
+/*
+ * Update popup button to match selected menu item
+ *
+ * The popup button needs an extra push to update its display to match the active item in the menu.
+ */
+- (void)activeStateChanged:(NSNotification *)notification
+{
+	int	index = [popUp_state indexOfItemWithRepresentedObject:[notification object]];
+	
+	if(index >= 0 && index < [popUp_state numberOfItems]){
+		[popUp_state selectItemAtIndex:index];
+	}else{
+		[popUp_state selectItem:[popUp_state lastItem]];
+	}
 }
 
 

@@ -30,6 +30,12 @@
             SUPERCLASS = AIListOutlineView; 
         }, 
         {
+            CLASS = AIStandardListWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"popUp_state" = NSPopUpButton; }; 
+            SUPERCLASS = AIListWindowController; 
+        }, 
+        {
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
