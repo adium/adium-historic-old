@@ -16,21 +16,35 @@
 	return(NSMakeSize(0, 20));
 }
 
+- (NSColor *)flippyColor
+{
+	return([NSColor blackColor]);
+}
+
 //Draw content of our cell
 - (void)drawContentWithFrame:(NSRect)rect inView:(NSView *)controlView
 {
 	//Draw flippy
-	[[NSColor whiteColor] set];
+	[[self flippyColor] set];
 	
 	NSBezierPath	*arrowPath = [NSBezierPath bezierPath];
-	[arrowPath moveToPoint:NSMakePoint(rect.origin.x + 8, rect.origin.y + (rect.size.height/2.0) - rect.size.height*.3)];
-	[arrowPath relativeLineToPoint:NSMakePoint( 0, rect.size.height*.6)];
-	[arrowPath relativeLineToPoint:NSMakePoint( rect.size.height*.4, -rect.size.height*.3)];
+	NSPoint			center = NSMakePoint(rect.origin.x + 10, rect.origin.y + (rect.size.height/2.0));
+	
+	if([controlView isItemExpanded:listObject]){
+		[arrowPath moveToPoint:NSMakePoint(center.x - rect.size.height*.3, center.y - rect.size.height*.15)];
+		[arrowPath relativeLineToPoint:NSMakePoint( rect.size.height*.6, 0)];
+		[arrowPath relativeLineToPoint:NSMakePoint(-rect.size.height*.3, rect.size.height*.4)];		
+	}else{
+		[arrowPath moveToPoint:NSMakePoint(center.x - rect.size.height*.2, center.y - rect.size.height*.3)];
+		[arrowPath relativeLineToPoint:NSMakePoint( 0, rect.size.height*.6)];
+		[arrowPath relativeLineToPoint:NSMakePoint( rect.size.height*.4, -rect.size.height*.3)];		
+	}
+		
 	[arrowPath closePath];
 	[arrowPath fill];
 
-	rect.origin.x += 16;
-	rect.size.width -= 16;
+	rect.origin.x += rect.size.height*.7;
+	rect.size.width -= rect.size.height*.7;
 	
 	
 	[self drawDisplayNameWithFrame:rect inView:controlView];

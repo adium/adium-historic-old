@@ -60,6 +60,24 @@
 }
 
 
+//
+- (void)mouseDown:(NSEvent *)theEvent
+{
+	NSPoint	viewPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+	int		row = [self rowAtPoint:viewPoint];
+	id		item = [self itemAtRow:row];
+	
+	if([self isExpandable:item]){
+		if([self isItemExpanded:item]){
+			[self collapseItem:item];
+		}else{
+			[self expandItem:item];
+		}
+	}else{
+		[super mouseDown:theEvent];
+	}
+}
+
 //Variable row heights -------------------------------------------------------------------------------------------------
 #pragma mark Variable row heights
 - (NSRect)frameOfCellAtColumn:(int)column row:(int)row
