@@ -35,7 +35,7 @@
     [textField_port setStringValue:[account preferenceForKey:AIM_TOC2_KEY_PORT group:GROUP_ACCOUNT_STATUS]];
 
     //Full name
-    [textField_fullName setStringValue:[account preferenceForKey:@"FullName" group:GROUP_ACCOUNT_STATUS]];
+    [textField_fullName setStringValue:[account preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS]];
     
     //Profile
     NSAttributedString	*profile = [NSAttributedString stringWithData:[account preferenceForKey:AIM_TOC2_KEY_PROFILE group:GROUP_ACCOUNT_STATUS]];
@@ -57,7 +57,7 @@
         [account setPreference:[sender stringValue] forKey:AIM_TOC2_KEY_PORT group:GROUP_ACCOUNT_STATUS];
         
     }else if(sender == textField_fullName){
-        [account setPreference:[sender stringValue] forKey:@"FullName" group:GROUP_ACCOUNT_STATUS];    
+        [account setPreference:[sender stringValue] forKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS];    
         
     }
 }

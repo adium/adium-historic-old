@@ -7,9 +7,8 @@
 
 @protocol AIContentFilter;
 
-@interface AIMessageAliasPlugin  : AIPlugin <AIContentFilter, AIStringFilter>
+@interface AIMessageAliasPlugin  : AIPlugin <AIContentFilter>
 {
-    NSDictionary *hash;
 }
 
 @end

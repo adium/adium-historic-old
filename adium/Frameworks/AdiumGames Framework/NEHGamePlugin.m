@@ -46,7 +46,7 @@ static NSMenu			* menu_Games;
 	[window_newGame setWindowController:windowController];
 	
 	gamesForAccounts = [[NSMutableDictionary alloc] init];
-	[[adium contentController] registerIncomingContentFilter:self];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterIncoming];
 }
 
 - (void)uninstallPlugin
@@ -54,7 +54,7 @@ static NSMenu			* menu_Games;
 	[prefixString release];
 	[gamesForAccounts release];
 	[windowController release];
-	[[adium contentController] unregisterIncomingContentFilter:self];
+//	[[adium contentController] unregisterIncomingContentFilter:self];
 }
 
 - (void)endGameWith:(AIListContact*)contact fromAccount:(AIAccount*)account;
@@ -138,8 +138,12 @@ static NSMenu			* menu_Games;
 	}
 }
 
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inobj listObjectContext:(AIListObject *)inListObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
+	if([context isKindOfClass:[AIContentObject class]]){
+		AIContentObject *inobj = context;
+	
+	
 	NSString * str = [inAttributedString string];
 	NSRange start = [str rangeOfString:prefixString];
 	NSRange end = [str rangeOfString:@"]:"];
@@ -190,6 +194,7 @@ static NSMenu			* menu_Games;
 	else if(control != nil)		//We ignore non-invite messages from people with whom we don't have an open game
 	{
 		[control handleMessage:msg ofType:type];
+	}
 	}
 	return inAttributedString;	
 }

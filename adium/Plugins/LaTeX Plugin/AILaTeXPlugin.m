@@ -13,15 +13,16 @@
 
 - (void)installPlugin
 {
-    [[adium contentController] registerDisplayingContentFilter:self];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterOutgoing];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterIncoming];
 }
 
 - (void)uninstallPlugin
 {
-	[[adium contentController] unregisterOutgoingContentFilter:self];
+//	[[adium contentController] unregisterOutgoingContentFilter:self];
 }
 
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
     NSMutableAttributedString       *newMessage = nil;
     if (inAttributedString) {

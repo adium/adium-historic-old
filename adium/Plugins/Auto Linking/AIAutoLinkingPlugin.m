@@ -12,16 +12,16 @@
 
 - (void)installPlugin
 {
-    //Register our content filter
-	[[adium contentController] registerDisplayingContentFilter:self];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterIncoming];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterOutgoing];
 }
 
 - (void)uninstallPlugin
 {
-	[[adium contentController] unregisterDisplayingContentFilter:self];
+//	[[adium contentController] unregisterDisplayingContentFilter:self];
 }
 
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
     SHHyperlinkScanner          *scanner = [[[SHHyperlinkScanner alloc] initWithStrictChecking:NO] autorelease];
     NSMutableAttributedString   *replacementMessage = [[[NSMutableAttributedString alloc] initWithAttributedString:[scanner linkifyString:inAttributedString]] autorelease];

@@ -197,7 +197,7 @@
 				     message:[AIHTMLDecoder decodeHTML:html]
 				   autoreply:NO];
     
-    [[adium contentController] addIncomingContentObject:msgObj];
+    [[adium contentController] receiveContentObjectmsgObj];
 }
 - (void) user:(AWEzvContact *)contact typingNotification:(AWEzvTyping)typingStatus
 {

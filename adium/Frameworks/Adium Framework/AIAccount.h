@@ -18,7 +18,7 @@
 
 #import "AIListObject.h"
 
-#define GROUP_ACCOUNT_STATUS    	@"Account Status"
+#define GROUP_ACCOUNT_STATUS   @"Account Status"
 
 #define NEW_ACCOUNT_DISPLAY_TEXT	AILocalizedString(@"<New Account>",nil)
 
@@ -100,10 +100,7 @@ typedef enum {
 
 	//Attributed string refreshing
     NSTimer                     *attributedRefreshTimer;
-    NSMutableDictionary         *attributedRefreshDict;
-	//String refreshing
-	NSTimer                     *stringRefreshTimer;
-    NSMutableDictionary         *stringRefreshDict;
+    NSMutableArray				*autoRefreshingKeys;
 
 	//Contact update guarding
 	NSTimer						*delayedUpdateStatusTimer;
@@ -138,11 +135,7 @@ typedef enum {
 - (NSArray *)supportedPropertyKeys;		//Return an array of supported status keys
 - (void)updateStatusForKey:(NSString *)key; //The account's status did change
 
-- (void)updateAttributedStatusString:(NSAttributedString *)inAttributedString forKey:(NSString *)key;
-- (void)setAttributedStatusString:(NSAttributedString *)inAttributedString forKey:(NSString *)key;
-
-- (void)updateStatusString:(NSString *)status forKey:(NSString *)key;
-- (void)setStatusString:(NSString *)inString forKey:(NSString *)key;
+- (NSAttributedString *)autoRefreshingOutgoingContentForStatusKey:(NSString *)key;
 
 - (void)connect;
 - (void)disconnect;

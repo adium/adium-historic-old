@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.72 2004/05/18 16:52:23 adamiser Exp $
+// $Id: AIContentController.m,v 1.73 2004/05/19 12:20:19 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -28,12 +28,6 @@
 //init
 - (void)initController
 {
-    //Content Filtering
-    outgoingContentFilterArray = [[NSMutableArray alloc] init];
-    incomingContentFilterArray = [[NSMutableArray alloc] init];
-    displayingContentFilterArray = [[NSMutableArray alloc] init];
-	stringFilterArray = [[NSMutableArray alloc] init];
-	
     //Text entry filtering and tracking
     textEntryFilterArray = [[NSMutableArray alloc] init];
     textEntryContentFilterArray = [[NSMutableArray alloc] init];
@@ -61,11 +55,6 @@
 //dealloc
 - (void)dealloc
 {
-    [outgoingContentFilterArray release];
-    [incomingContentFilterArray release];
-    [displayingContentFilterArray release];
-	[stringFilterArray release];
-	
     [textEntryFilterArray release];
     [textEntryContentFilterArray release];
     [textEntryViews release];
@@ -75,39 +64,47 @@
 }
 
 
-//Text Entry Filters ------------------------------------------------------------------------------------
-#pragma mark Text Entry Filters
-//Register a text entry filter
+//Default Formatting -------------------------------------------------------------------------------------------------
+#pragma mark Default Formatting
+- (void)setDefaultFormattingAttributes:(NSDictionary *)inDict
+{
+	[defaultFormattingAttributes release];
+	defaultFormattingAttributes	= [inDict retain];
+}
+- (NSDictionary *)defaultFormattingAttributes
+{
+	return defaultFormattingAttributes;
+}
+
+
+//Text Entry Filtering -------------------------------------------------------------------------------------------------
+#pragma mark 
+//Text entry filters process content as it is entered by the user.
 - (void)registerTextEntryFilter:(id)inFilter
 {
-    if([inFilter respondsToSelector:@selector(didOpenTextEntryView:)] &&
-       [inFilter respondsToSelector:@selector(willCloseTextEntryView:)]){
-
-        //For performance reasons, we place filters that actually monitor content in a separate array
-        if([inFilter respondsToSelector:@selector(stringAdded:toTextEntryView:)] &&
-           [inFilter respondsToSelector:@selector(contentsChangedInTextEntryView:)]){
-            [textEntryContentFilterArray addObject:inFilter];
-        }else{
-            [textEntryFilterArray addObject:inFilter];
-        }
-
-    }else{
-        NSLog(@"Invalid AITextEntryFilter");
-    }
+	NSParameterAssert([inFilter respondsToSelector:@selector(didOpenTextEntryView:)] &&
+					  [inFilter respondsToSelector:@selector(willCloseTextEntryView:)]);
+	
+	//For performance reasons, we place filters that actually monitor content in a separate array
+	if([inFilter respondsToSelector:@selector(stringAdded:toTextEntryView:)] &&
+	   [inFilter respondsToSelector:@selector(contentsChangedInTextEntryView:)]){
+		[textEntryContentFilterArray addObject:inFilter];
+	}else{
+		[textEntryFilterArray addObject:inFilter];
+	}
 }
-
-//Returns all currently open text entry views
-- (NSArray *)openTextEntryViews
+- (void)unregisterTextEntryFilter:(id)inFilter
 {
-    return(textEntryViews);
+	[textEntryContentFilterArray removeObject:inFilter];
+	[textEntryFilterArray removeObject:inFilter];
 }
 
-//Called when a string is added to a text entry view
+//A string was added to a text entry view
 - (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
     NSEnumerator	*enumerator;
-    id			filter;
-
+    id				filter;
+	
     //Notify all text entry filters (that are interested in filtering content)
     enumerator = [textEntryContentFilterArray objectEnumerator];
     while((filter = [enumerator nextObject])){
@@ -115,12 +112,12 @@
     }
 }
 
-//Called when a text entry view's content changes
+//A text entry view's content changed
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
     NSEnumerator	*enumerator;
-    id			filter;
-
+    id				filter;
+	
     //Notify all text entry filters (that are interested in filtering content)
     enumerator = [textEntryContentFilterArray objectEnumerator];
     while((filter = [enumerator nextObject])){
@@ -128,12 +125,12 @@
     }
 }
 
-//Called as a text entry view is opened
+//A text entry view was opened
 - (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
     NSEnumerator	*enumerator;
-    id			filter;
-
+    id				filter;
+	
     //Track the view
     [textEntryViews addObject:inTextEntryView];
     
@@ -148,15 +145,15 @@
     }
 }
 
-//Called as a text entry view is closed
+//A text entry view was closed
 - (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
     NSEnumerator	*enumerator;
-    id			filter;
-
+    id				filter;
+	
     //Stop tracking the view
     [textEntryViews removeObject:inTextEntryView];
-
+	
     //Notify all text entry filters
     enumerator = [textEntryContentFilterArray objectEnumerator];
     while((filter = [enumerator nextObject])){
@@ -168,184 +165,90 @@
     }
 }
 
-- (void)setDefaultFormattingAttributes:(NSDictionary *)inDict
+//Returns all currently open text entry views
+- (NSArray *)openTextEntryViews
 {
-	[defaultFormattingAttributes release];
-	defaultFormattingAttributes	= [inDict retain];
-}
-- (NSDictionary *)defaultFormattingAttributes
-{
-	return defaultFormattingAttributes;
+    return(textEntryViews);
 }
 
 
-//Content Filters -----------------------------------------------------------------------------------------
-#pragma mark Content Filters
+//Content Filtering ----------------------------------------------------------------------------------------------------
+#pragma mark 
+//Register a content filter.  If the particular filter wants to apply to multiple types or directions, it should
+//register multiple times.  Be careful that incoming content is always contained (aka: Don't feed incoming content
+//to a shell script or something silly like that).
+- (void)registerContentFilter:(id <AIContentFilter>)inFilter
+					   ofType:(AIFilterType)type
+					direction:(AIFilterDirection)direction
+{
+	NSParameterAssert(inFilter != nil);
+	NSParameterAssert(type >= 0 && type < FILTER_TYPE_COUNT);
+	NSParameterAssert(direction >= 0 && direction < FILTER_DIRECTION_COUNT);
 
-- (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter 
-{
-    [outgoingContentFilterArray addObject:inFilter];
-}
-- (void)unregisterOutgoingContentFilter:(id <AIContentFilter>)inFilter 
-{
-    [outgoingContentFilterArray removeObject:inFilter];
-}
-
-//
-- (void)registerIncomingContentFilter:(id <AIContentFilter>)inFilter
-{
-    [incomingContentFilterArray addObject:inFilter];
-}
-- (void)unregisterIncomingContentFilter:(id <AIContentFilter>)inFilter
-{
-    [incomingContentFilterArray removeObject:inFilter];
+	if(!contentFilter[type][direction]) contentFilter[type][direction] = [[NSMutableArray alloc] init];
+	[contentFilter[type][direction] addObject:inFilter];
 }
 
-//
-- (void)registerDisplayingContentFilter:(id <AIContentFilter>)inFilter
+//Unregister all instances of filter.
+- (void)unregisterContentFilter:(id <AIContentFilter>)inFilter
 {
-    [displayingContentFilterArray addObject:inFilter];
-}
+	NSParameterAssert(inFilter != nil);
 
-- (void)unregisterDisplayingContentFilter:(id <AIContentFilter>)inFilter
-{
-    [displayingContentFilterArray removeObject:inFilter];
-}
-
-- (void)registerStringFilter:(id <AIStringFilter>)inFilter
-{
-	[stringFilterArray addObject:inFilter];
-}
-
-- (void)unregisterStringFilter:(id <AIStringFilter>)inFilter
-{
-	[stringFilterArray removeObject:inFilter];
-}
-
-//Modify a contentObject by passing it through the appropriate filters
-- (void)filterObject:(AIContentObject *)inObject isOutgoing:(BOOL)isOutgoing
-{
-	//Status objects use the string filter array before displaying
-	if ([[inObject type] isEqualToString:CONTENT_STATUS_TYPE]) {
-		
-		//Only filter for isOutgoing - status messages need not be filtered twice, once for outgoing and once for display
-		if (!isOutgoing)
-			[self _filterContentObject:inObject usingFilterArray:stringFilterArray];
-	} else {
-		[self _filterContentObject:inObject usingFilterArray:(isOutgoing ?
-															  outgoingContentFilterArray : displayingContentFilterArray)];
+	int i, j;
+	for(i = 0; i < FILTER_TYPE_COUNT; i++){
+		for(j = 0; j < FILTER_DIRECTION_COUNT; j++){
+			[contentFilter[i][j] removeObject:inFilter];
+		}
 	}
 }
 
-//Return an attributed string which is the result of passing inString through both outgoing and display filters
-- (NSAttributedString *)fullyFilteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject
+//Filters an attributed string.  If the string is associated with a contact or list object, pass that object as context.
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)attributedString
+							   usingFilterType:(AIFilterType)type
+									 direction:(AIFilterDirection)direction
+									   context:(id)context
 {
-    return [self filteredAttributedString:[self filteredAttributedString:inString listObjectContext:inListObject isOutgoing:YES] listObjectContext:inListObject isOutgoing:NO];
-}
-
-//Return an attributed string which is the result of passing inString through the specified filter (outgoing or diplay)
-- (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject isOutgoing:(BOOL)isOutgoing
-{
-    return ([self _filterAttributedString:inString
-                         forContentObject:nil
-						 listObjectContext:inListObject
-                         usingFilterArray:(isOutgoing ? 
-                                           outgoingContentFilterArray : displayingContentFilterArray)]);
-}
-
-- (NSString *)filteredString:(NSString *)inString listObjectContext:(AIListObject *)inListObject
-{
-	return ([self _filterString:inString
-			   forContentObject:nil
-			  listObjectContext:inListObject]);
-}
-
-// Send the specified attributed string and possibly a contentObject through the specified filters, returning the modified
-// string if one is generated (or the original string if one is not).  Filters get the contentObject and can modify it,
-// but should not expect its "message" member to be accurate.
-- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject usingFilterArray:(NSArray *)inArray
-{
-    NSEnumerator                *enumerator;
-    id<AIContentFilter>         filter;
-    NSAttributedString          *filteredString = inString;
-    
-    if (inString){
-        enumerator = [inArray objectEnumerator];
-        while((filter = [enumerator nextObject])){
-            filteredString = [filter filterAttributedString:filteredString forContentObject:inObject listObjectContext:inListObject];
-        }
-    }
-    
-    return filteredString;
-}
-- (NSString *)_filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject/* usingFilterArray:(NSArray *)inArray*/
-{
-    NSEnumerator                *enumerator;
-    id<AIStringFilter>			filter;
-    NSString					*filteredString = inString;
-    
-    if (inString){
-        enumerator = [stringFilterArray objectEnumerator];
-        while((filter = [enumerator nextObject])){
-            filteredString = [filter filterString:filteredString forContentObject:inObject listObjectContext:inListObject];
-        }
-    }
-    
-    return filteredString;
-}
-
-- (void)_filterContentObject:(AIContentObject *)inObject usingFilterArray:(NSArray *)inArray
-{
-    // All contentObjects should be passed through the filters
-    if ([[inObject type] isEqualToString:CONTENT_MESSAGE_TYPE]){
-        //AIContentMessages have an attributed string for a message
-        [(AIContentMessage *)inObject setMessage:[self _filterAttributedString:[(AIContentMessage *)inObject message]
-                                                              forContentObject:inObject
-															 listObjectContext:nil
-                                                              usingFilterArray:inArray]];
+	if(attributedString){
+		NSParameterAssert(type >= 0 && type < FILTER_TYPE_COUNT);
+		NSParameterAssert(direction >= 0 && direction < FILTER_DIRECTION_COUNT);
 		
-	} else if ([[inObject type] isEqualToString:CONTENT_CONTEXT_TYPE]){
-		//AIContentContexts have an attributed string for a message
-		[(AIContentContext *)inObject setMessage:[self _filterAttributedString:[(AIContentContext *)inObject message]
-															  forContentObject:inObject
-															 listObjectContext:nil
-															  usingFilterArray:inArray]];
-		
-    } else if ([[inObject type] isEqualToString:CONTENT_STATUS_TYPE]){
-		//AIContentStatus have a string for a message
-        [(AIContentStatus *)inObject setMessage:[NSAttributedString stringWithString:[self _filterString:[[(AIContentStatus *)inObject message] string]
-												   forContentObject:inObject
-												  listObjectContext:nil
-												   /*usingFilterArray:inArray*/]]];
-	} else {
-		//Other content objects just get sent through filters without an attributed string hint
-        [self _filterAttributedString:nil
-                     forContentObject:inObject
-					listObjectContext:nil
-                     usingFilterArray:inArray];
-    }
+		NSEnumerator		*enumerator = [contentFilter[type][direction] objectEnumerator];
+		id<AIContentFilter>	filter;
+    	
+		while((filter = [enumerator nextObject])){
+			attributedString = [filter filterAttributedString:attributedString context:context];
+		}
+	}
     
+    return(attributedString);
 }
-//Messaging -----------------------------------------------------------------------------------------------
+
+
+//Messaging ------------------------------------------------------------------------------------------------------------
 #pragma mark Messaging
 //Add an incoming content object
-- (void)addIncomingContentObject:(AIContentObject *)inObject
+- (void)receiveContentObject:(AIContentObject *)inObject
 {
     AIChat			*chat = [inObject chat];
     AIListObject 	*object = [inObject source];
 	BOOL			shouldBeFirstMessage = NO;
 
     if(object){
-        //Will receive content
+        //Notify: Will Receive Content
         if([inObject trackContent]){
-            [[owner notificationCenter] postNotificationName:Content_WillReceiveContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+            [[owner notificationCenter] postNotificationName:Content_WillReceiveContent
+													  object:chat
+													userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
         }
 
-        //Filter the object
+		//Run the object through our incoming content filters
         if([inObject filterContent]){
-            [self _filterContentObject:inObject usingFilterArray:incomingContentFilterArray];
+			[inObject setMessage:[self filterAttributedString:[inObject message]
+											  usingFilterType:AIFilterContent
+													direction:AIFilterIncoming
+													  context:inObject]];
         }
-
+		
 		//Post the Chat_DidOpen notification BEFORE anything displays
 		#warning dchoby98: Another bad place to put Chat_DidOpen
 		if([inObject trackContent] && [[chat contentObjectArray] count] <= 1) {
@@ -353,19 +256,16 @@
 			shouldBeFirstMessage = YES;
 		}
 
-        //Add/Display the object
-        if([inObject displayContent]){
-			[self displayContentObject:inObject];
-        }
-		
+		//Display the content
+		[self displayContentObject:inObject];
+
+		//Notify: Did Receive Content
         if([inObject trackContent]){
-            //Did receive content
-            if ([[chat contentObjectArray] count] > 1 && !shouldBeFirstMessage) {
+            if([[chat contentObjectArray] count] > 1 && !shouldBeFirstMessage){
                 [[owner notificationCenter] postNotificationName:Content_DidReceiveContent
 														  object:chat
 														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
             }else{
-                //The content was the first recieved
                 [[owner notificationCenter] postNotificationName:Content_FirstContentRecieved 
 														  object:chat
 														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
@@ -380,37 +280,36 @@
 {
     AIChat		*chat = [inObject chat];
     BOOL		sent = NO;
-    BOOL		trackContent = [inObject trackContent];		//Should Adium track this content?
-    BOOL		filterContent = [inObject filterContent];   //Should Adium filter this content?
-    BOOL		displayContent = [inObject displayContent]; //Should Adium display this content?
     	
-    //Will send content
-    if(trackContent){
+    //Notify: Will Send Content
+    if([inObject trackContent]){
         [[owner notificationCenter] postNotificationName:Content_WillSendContent
 												  object:chat 
 												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
 
-    //Filter the content object
-    if(filterContent){
-        [self filterObject:inObject isOutgoing:YES];
+    //Run the object through our outgoign content filters
+    if([inObject filterContent]){
+		[inObject setMessage:[self filterAttributedString:[inObject message]
+										  usingFilterType:AIFilterContent
+												direction:AIFilterOutgoing
+												  context:inObject]];
     }
 
     //Send the object
     if([(AIAccount <AIAccount_Content> *)[inObject source] sendContentObject:inObject]){
-        if(displayContent){
+        if([inObject displayContent]){
             //Add the object
             [self displayContentObject:inObject];
         }
 
-        if(trackContent){
+        if([inObject trackContent]){
             //Did send content
             [[owner notificationCenter] postNotificationName:Content_DidSendContent object:chat 
 						    userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
         }
 
         mostRecentChat = chat;
-        
         sent = YES;
     }
 
@@ -418,27 +317,30 @@
 }
 
 //Display a content object
+//Add content to the message view.  Doesn't do any sending or receiving, just adds the content.
 - (void)displayContentObject:(AIContentObject *)inObject
 {
-    AIChat		*chat = [inObject chat];
-    BOOL		filterContent = [inObject filterContent]; //Adium should filter this content
-
     //Filter the content object
-    if(filterContent){
-        [self filterObject:inObject isOutgoing:NO];
+    if([inObject filterContent]){
+		[inObject setMessage:[self filterAttributedString:[inObject message]
+										  usingFilterType:AIFilterDisplay
+												direction:([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming)
+												  context:inObject]];
     }
     
     //Check if the object should display
-    if ([inObject displayContent]) {
-		//If the chat doesn't have content yet, open it
+    if([inObject displayContent]){
+		AIChat		*chat = [inObject chat];
+
+		//Tell the interface to open the chat
 		if(![chat hasContent]){
 			[[owner interfaceController] openChat:chat]; 
 		}
 		
-		//Add the content to the chat
+		//Add this content to the chat
 		[chat addContentObject:inObject];
 		
-		//Content object added
+		//Notify: Content Object Added
 		[[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat
 												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
@@ -551,60 +453,6 @@
 
 	return(chat);
 }
-
-//Note a chat (Called by account code only, after creating a chat)
-//- (void)noteChat:(AIChat *)inChat forAccount:(AIAccount *)inAccount
-//{
-//	AIListObject	*listObject;
-//
-//    //Track the chat
-//    [chatArray addObject:inChat];
-//	
-//	//Up the chat count for this contact
-//	if(listObject = [inChat listObject]){
-//        int currentCount = [listObject integerStatusObjectForKey:@"ChatsCount"];
-//        [listObject setStatusObject:[NSNumber numberWithInt:(currentCount + 1)]
-//                             forKey:@"ChatsCount"
-//                             notify:YES];
-//	}
-//}
-//	
-
-
-
-//Open a chat on the specified account, or returns an existing chat
-//- (AIChat *)openChatOnAccount:(AIAccount *)inAccount withListObject:(AIListObject *)inListObject
-//{
-//    NSEnumerator	*enumerator;
-//    AIChat		*chat;
-//    
-//    //Search for an existing chat
-//    enumerator = [chatArray objectEnumerator];
-//    while(chat = [enumerator nextObject]){
-//        if([chat listObject] == inListObject) break;
-//    }
-//	
-//    if(!chat || (inAccount != nil && [chat account] != inAccount) ){
-//        //If no account is passed, use the default
-//        if(!inAccount){
-//            inAccount = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inListObject];
-//        }
-//		
-//        //Instruct the account to create a new chat
-//        chat = [(id <AIAccount_Content>)inAccount openChatWithListObject:inListObject];
-//		
-//		//Have the interface open this chat
-//		[[owner interfaceController] openChat:chat]; 
-//		
-//    }else{
-//        //Have the interface re-open this chat
-//        [[owner interfaceController] openChat:chat];    
-//		
-//    }
-//	
-//    return(chat);
-//}
-
 
 //Close a chat
 - (BOOL)closeChat:(AIChat *)inChat

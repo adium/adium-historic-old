@@ -82,7 +82,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 
 - (void)uninstallPlugin
 {
-	[[adium contentController] unregisterOutgoingContentFilter:self];
+//	[[adium contentController] unregisterOutgoingContentFilter:self];
 }
 
 //
@@ -101,9 +101,10 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 			BOOL    emoticonsEnabled = ([[self activeEmoticons] count] != 0);
 			if(observingContent != emoticonsEnabled){
 				if(emoticonsEnabled){
-					[[adium contentController] registerDisplayingContentFilter:self];
+					[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterIncoming];
+					[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterOutgoing];
 				}else{
-					[[adium contentController] unregisterDisplayingContentFilter:self];
+					[[adium contentController] unregisterContentFilter:self];
 				}
 				observingContent = emoticonsEnabled;
 			}
@@ -114,7 +115,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 #pragma mark Content filter
 
 //Filter a content object before display, inserting graphical emoticons
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
     NSMutableAttributedString   *replacementMessage = nil;
     if (inAttributedString) {

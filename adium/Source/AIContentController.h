@@ -25,27 +25,43 @@
 #define Content_ChatParticipatingListObjectsChanged @"Content_ChatParticipatingListObjectsChanged"
 #define Content_ChatAccountChanged 					@"Content_ChatAccountChanged"
 
+
+
+typedef enum {
+	AIFilterContent = 0,	// Changes the actual content
+	AIFilterDisplay			// Changes only how the content is displayed locally
+} AIFilterType;
+#define FILTER_TYPE_COUNT 2
+
+typedef enum {
+	AIFilterIncoming = 0,   // Content we are receiving
+	AIFilterOutgoing		// Content we are sending
+} AIFilterDirection;
+#define FILTER_DIRECTION_COUNT 2
+
+
+
 //Handles the display of a content type
 @protocol AIContentHandler 
 @end
 
 //AIContentFilters have the opportunity to examine every attributed string.  Non-attributed strings are not passed through these filters.
 @protocol AIContentFilter
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject;
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context;
 @end
 
 //Auxiliary filter type to the primary AIContentFilter
 //for simple filtering which uses no attributedString characteristics
-@protocol AIStringFilter
-- (NSString *)filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject;
-@end
+//@protocol AIStringFilter
+//- (NSString *)filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject;
+//@end
 
 //Dummy protocol used in several filters
-@protocol DummyStringProtocol
-- (NSString *)string;
-- (NSMutableString *)mutableString;
-@end
-
+//@protocol DummyStringProtocol
+//- (NSString *)string;
+//- (NSMutableString *)mutableString;
+//@end
+//
 @interface NSObject (AITextEntryFilter)
 //required
 - (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; 
@@ -58,10 +74,10 @@
 @interface AIContentController : NSObject {
     IBOutlet	AIAdium		*owner;
 	
-    NSMutableArray			*outgoingContentFilterArray;
-    NSMutableArray			*incomingContentFilterArray;
-    NSMutableArray			*displayingContentFilterArray;
-    NSMutableArray			*stringFilterArray;
+//    NSMutableArray			*outgoingContentFilterArray;
+//    NSMutableArray			*incomingContentFilterArray;
+//    NSMutableArray			*displayingContentFilterArray;
+//    NSMutableArray			*stringFilterArray;
 	
     NSMutableArray			*textEntryFilterArray;
     NSMutableArray			*textEntryContentFilterArray;
@@ -74,6 +90,9 @@
     
     NSArray                             *emoticonsArray;
     NSArray                             *emoticonPacks;
+	
+	NSMutableArray	*contentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
+	
 }
 
 //Chats
@@ -88,7 +107,7 @@
 
 //Sending / Receiving content
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount;
-- (void)addIncomingContentObject:(AIContentObject *)inObject;
+- (void)receiveContentObject:(AIContentObject *)inObject;
 - (BOOL)sendContentObject:(AIContentObject *)inObject;
 - (void)displayContentObject:(AIContentObject *)inObject;
 
@@ -103,20 +122,37 @@
 - (NSDictionary *)defaultFormattingAttributes;
 
 //Registering filters
-- (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter;
-- (void)unregisterOutgoingContentFilter:(id <AIContentFilter>)inFilter;
-- (void)registerIncomingContentFilter:(id <AIContentFilter>)inFilter;
-- (void)unregisterIncomingContentFilter:(id <AIContentFilter>)inFilter;
-- (void)registerDisplayingContentFilter:(id <AIContentFilter>)inFilter;
-- (void)unregisterDisplayingContentFilter:(id <AIContentFilter>)inFilter;
-- (void)registerStringFilter:(id <AIStringFilter>)inFilter;
-- (void)unregisterStringFilter:(id <AIStringFilter>)inFilter;
+//- (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter;
+//- (void)unregisterOutgoingContentFilter:(id <AIContentFilter>)inFilter;
+//- (void)registerIncomingContentFilter:(id <AIContentFilter>)inFilter;
+//- (void)unregisterIncomingContentFilter:(id <AIContentFilter>)inFilter;
+//- (void)registerDisplayingContentFilter:(id <AIContentFilter>)inFilter;
+//- (void)unregisterDisplayingContentFilter:(id <AIContentFilter>)inFilter;
+//- (void)registerStringFilter:(id <AIStringFilter>)inFilter;
+//- (void)unregisterStringFilter:(id <AIStringFilter>)inFilter;
 
 //Filtering content
-- (void)filterObject:(AIContentObject *)inObject isOutgoing:(BOOL)isOutgoing;
-- (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject isOutgoing:(BOOL)isOutgoing;
-- (NSAttributedString *)fullyFilteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject;
-- (NSString *)filteredString:(NSString *)inString listObjectContext:(AIListObject *)inListObject;
+//- (void)filterObject:(AIContentObject *)inObject isOutgoing:(BOOL)isOutgoing;
+//- (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject isOutgoing:(BOOL)isOutgoing;
+//- (NSAttributedString *)fullyFilteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject;
+//- (NSString *)filteredString:(NSString *)inString listObjectContext:(AIListObject *)inListObject;
+
+
+- (void)registerContentFilter:(id <AIContentFilter>)inFilter
+					   ofType:(AIFilterType)type
+					direction:(AIFilterDirection)direction;
+- (void)unregisterContentFilter:(id <AIContentFilter>)inFilter;
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)attributedString
+							   usingFilterType:(AIFilterType)type
+									 direction:(AIFilterDirection)direction
+									   context:(id)context;
+	
+
+
+
+
+
+
 
 //Content Source & Destination
 - (NSArray *)sourceAccountsForSendingContentType:(NSString *)inType

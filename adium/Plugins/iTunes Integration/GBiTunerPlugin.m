@@ -18,7 +18,7 @@
 - (NSMutableArray *)_loadScriptsFromDirectory:(NSString *)dirPath intoUsageArray:(NSMutableArray *)useArray;
 - (id)_filterString:(NSString *)inString originalObject:(id)originalObject;
 - (NSString *)_executeScript:(NSDictionary *)infoDict withArguments:(NSArray *)arguments;
-- (void)_replaceKeyword:(NSString *)keyword withScript:(NSDictionary *)infoDict inString:(NSString *)inString toObject:(id)toObject;
+- (void)_replaceKeyword:(NSString *)keyword withScript:(NSDictionary *)infoDict inString:(NSString *)inString inAttributedString:(id)toObject;
 - (NSArray *)_argumentsFromString:(NSString *)inString;
 - (void)buildScriptMenu;
 @end
@@ -49,18 +49,14 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	[[adium menuController] addMenuItem:scriptMenuItem toLocation:LOC_Edit_Additions];
 	
 	//Perform substitutions on outgoing content
-	[[adium contentController] registerOutgoingContentFilter:self];
-
-	//Perform simple string substitutions
-	[[adium contentController] registerStringFilter:self];
-	
+	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterOutgoing];
 }
 
 //Uninstall
 - (void)uninstallPlugin
 {
-	[[adium contentController] unregisterOutgoingContentFilter:self];
-	[[adium contentController] unregisterStringFilter:self];
+//	[[adium contentController] unregisterOutgoingContentFilter:self];
+//	[[adium contentController] unregisterStringFilter:self];
 	[scriptArray release];
     [flatScriptArray release];
 	[scriptMenuItem release];
@@ -286,54 +282,42 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 //Message Filtering ----------------------------------------------------------------------------------------------------
 #pragma mark Message Filtering
 //Filter messages for keywords to replace
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
- 	return [self _filterString:[inAttributedString string] originalObject:inAttributedString];
-}
+	NSString					*stringMessage = [inAttributedString string];
+    NSMutableAttributedString   *filteredMessage = nil;
+	NSEnumerator				*enumerator;
+	NSDictionary				*infoDict;
 
-- (NSString *)filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject;
-{
-	return [self _filterString:inString originalObject:inString];
-}
-
-- (id)_filterString:(NSString *)inString originalObject:(id)originalObject
-{
-	id<DummyStringProtocol>		updatedObject = nil;
-
-    if(inString){
-		NSEnumerator				*enumerator;
-		NSDictionary				*infoDict;
-		
-		//Ensure scripts have loaded
-		if(!scriptMenu){
-			if (buildingScriptMenu){
-				while(buildingScriptMenu);
-			}else{
-				[self buildScriptMenu];
-			}
-		}
-		
-		//Replace all keywords
-		enumerator = [flatScriptArray objectEnumerator];
-		while(infoDict = [enumerator nextObject]){
-			NSString	*keyword = [infoDict objectForKey:@"Keyword"];
-			BOOL		prefixOnly = [[infoDict objectForKey:@"PrefixOnly"] boolValue];
-
-			if((prefixOnly && [inString hasPrefix:keyword]) ||
-			   (!prefixOnly && [inString rangeOfString:keyword].location != NSNotFound)){
-
-				if(!updatedObject) updatedObject = [[originalObject mutableCopy] autorelease];
-				[self _replaceKeyword:keyword withScript:infoDict inString:inString toObject:updatedObject];
-				inString = [updatedObject string];
-			}
+	//Ensure scripts have loaded
+	if(!scriptMenu){
+		if(buildingScriptMenu){
+			while(buildingScriptMenu);
+		}else{
+			[self buildScriptMenu];
 		}
 	}
 	
-    return(updatedObject ? updatedObject : originalObject);
+	//Replace all keywords
+	enumerator = [flatScriptArray objectEnumerator];
+	while(infoDict = [enumerator nextObject]){
+		NSString	*keyword = [infoDict objectForKey:@"Keyword"];
+		BOOL		prefixOnly = [[infoDict objectForKey:@"PrefixOnly"] boolValue];
+		
+		if((prefixOnly && [stringMessage hasPrefix:keyword]) ||
+		   (!prefixOnly && [stringMessage rangeOfString:keyword].location != NSNotFound)){
+			
+			if(!filteredMessage) filteredMessage = [[inAttributedString mutableCopy] autorelease];
+			[self _replaceKeyword:keyword withScript:infoDict inString:stringMessage inAttributedString:filteredMessage];
+			stringMessage = [filteredMessage string]; //Update our plain text string, since it most likely changed
+		}
+	}
+	
+    return(filteredMessage ? filteredMessage : inAttributedString);
 }
 
 //Perform a thorough variable replacing scan
-- (void)_replaceKeyword:(NSString *)keyword withScript:(NSDictionary *)infoDict inString:(NSString *)inString toObject:(id)toObject
+- (void)_replaceKeyword:(NSString *)keyword withScript:(NSDictionary *)infoDict inString:(NSString *)inString inAttributedString:(NSMutableAttributedString *)attributedString
 {
 	NSScanner	*scanner = [NSScanner scannerWithString:inString];
 	NSString	*arglessScriptResult = nil;
@@ -359,9 +343,9 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 
 			if(keywordStart != 0 && [inString characterAtIndex:keywordStart - 1] == '\\'){
 				//Ignore the script (It was escaped), and delete the escape character
-				[[toObject mutableString] replaceCharactersInRange:NSMakeRange(keywordStart + offset - 1, 1) withString:@""];
+				[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset - 1, 1) withString:@""];
 				offset -= 1;
-					
+				
 			}else{
 				//Run the script.  Cache the result to speed up multiple instances of a single keyword
 				NSString	*scriptResult = nil;
@@ -373,8 +357,8 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 				if(!scriptResult) scriptResult = @"";
 				
 				//Replace the substring with script result
-				[[toObject mutableString] replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
-														withString:scriptResult];
+				[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
+												withString:scriptResult];
 				//Adjust for replaced text
 				offset += [scriptResult length] - (keywordEnd - keywordStart);
 				

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.62 2004/05/17 04:09:14 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.63 2004/05/19 12:20:19 adamiser Exp $
 
 #import "AIInterfaceController.h"
 
@@ -506,9 +506,13 @@
             fullLength = NSMakeRange(0, [entryString length]);
         
         //Run the entry through the filters and add it to tipString
-        [tipString appendAttributedString:
-            [[owner contentController] fullyFilteredAttributedString:[entryString addAttributes:entryDict range:fullLength] listObjectContext:object]];
+		entryString = [[owner contentController] filterAttributedString:entryString
+														usingFilterType:AIFilterDisplay
+															  direction:AIFilterIncoming
+																context:object];
+        [tipString appendAttributedString:entryString];
     }
+
     return([tipString autorelease]);
 }
 
