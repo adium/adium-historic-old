@@ -67,11 +67,13 @@
 	//Time Stamps
 #define PREF_GROUP_STANDARD_MESSAGE_DISPLAY	@"Message Display"
 #define	KEY_SMV_TIME_STAMP_FORMAT		@"Time Stamp"
+	
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 	timeStampFormat = [[prefDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT] retain];
 	timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO];
 	
-
+	timeStampFormatterMinutesSeconds = [[NSDateFormatter alloc] initWithDateFormat:@"%M:%S" allowNaturalLanguage:NO];
+	
     return(self);
 }
 
@@ -224,7 +226,12 @@
         
         range = [inString rangeOfString:@"%time"];
         if(range.location != NSNotFound){
-                [inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentMessage *)content date]]];
+			[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentMessage *)content date]]];
+        }
+		
+		range = [inString rangeOfString:@"%stime"];
+        if(range.location != NSNotFound){
+			[inString replaceCharactersInRange:range withString:[timeStampFormatterMinutesSeconds stringForObjectValue:[(AIContentMessage *)content date]]];
         }
 	} else {
 #warning Statuses should be able to know what kind of status it is, for class="away" style tags.
