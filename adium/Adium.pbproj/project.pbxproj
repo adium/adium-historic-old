@@ -1511,6 +1511,29 @@
 //4B2
 //4B3
 //4B4
+//9C0
+//9C1
+//9C2
+//9C3
+//9C4
+		9C8C7F8803CB96CD00267226 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIPluginInfo.h;
+			path = "Frameworks/Adium Framework/AIPluginInfo.h";
+			refType = 4;
+		};
+		9C8C7F8903CB96CD00267226 = {
+			fileRef = 9C8C7F8803CB96CD00267226;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//9C0
+//9C1
+//9C2
+//9C3
+//9C4
 //9E0
 //9E1
 //9E2
@@ -2977,6 +3000,7 @@
 				4BED5A2B03C32B5B00A8010A,
 				4BED5A2D03C32CA500A8010A,
 				9E95316403C8E08800415B22,
+				9C8C7F8903CB96CD00267226,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5912,6 +5936,7 @@
 			children = (
 				F59DB3E7033EB4B601A8010A,
 				F5793924033E74C301A8010A,
+				9C8C7F8803CB96CD00267226,
 				F5793922033E74C301A8010A,
 				F5793925033E74C301A8010A,
 				F57938F1033E745F01A8010A,
