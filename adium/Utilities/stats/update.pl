@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# $Id: update.pl,v 1.5 2003/12/22 21:05:18 jmelloy Exp $
+# $Id: update.pl,v 1.6 2003/12/22 21:12:57 jmelloy Exp $
 
 use warnings;
 use strict;
@@ -28,19 +28,16 @@ foreach my $key (keys %directories) {
 
     chomp ($key);
 
-    chdir("$key");
-
-    my $filename = "directory.log";
+    my $filename = $key . "/" . "directory.log";
 
     unlink $filename;
 
     open(STDOUT, ">$filename");
 
-    system('cvs', '-z3', 'log', '-l');
+    system('cvs', '-z3', 'log', '-l', $key);
 
     close STDOUT;
 
-    chdir("/home/jmelloy/adium");
 }
 
 if(@files > 0) {
