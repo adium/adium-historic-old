@@ -117,10 +117,8 @@
 		}else{
 			description = @"OMGWTFBBQ!";
 		}
-		
-		if(buddyIcon = [[contact displayArrayForKey:KEY_USER_ICON] objectValue]){
-			iconData = [buddyIcon TIFFRepresentation];
-		}
+
+		iconData = [contact userIconData];
 		
 		NSDictionary * growlEvent = [NSDictionary dictionaryWithObjectsAndKeys:
 										title, GROWL_NOTIFICATION_TITLE,
