@@ -414,7 +414,7 @@ static AILogViewerWindowController *sharedInstance = nil;
     }
 }
 
-// Contact list outline view -----------------------------------------------------------------------------
+// Contact list outline view
 //
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
@@ -502,8 +502,8 @@ static AILogViewerWindowController *sharedInstance = nil;
 }
 
 
-// Log Matches table view -----------------------------------------------------------------------------
-//
+// Log Matches table view 
+
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
     return([selectedLogArray count]);
@@ -529,7 +529,7 @@ static AILogViewerWindowController *sharedInstance = nil;
     return(value);
 }
 
-//
+
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
     int	row = [tableView_results selectedRow];
@@ -537,17 +537,11 @@ static AILogViewerWindowController *sharedInstance = nil;
     if(row >= 0 && row < [selectedLogArray count]){
         NSDictionary	*logDict = [selectedLogArray objectAtIndex:row];
 
-        NSString *logFile = [NSString stringWithFormat:@"file://%@", [logDict objectForKey:@"Path"]];
-
-        NSLog(@"%@", logFile);
-
         [self displayLogAtPath:[logDict objectForKey:@"Path"]];
-        //[[textView_content mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.visualdistortion.org"]]];
-        
     }
 }
 
-//
+
 - (void)tableView:(NSTableView*)tableView didClickTableColumn:(NSTableColumn *)tableColumn
 {    
     //Sort the log array & reflect the new column
@@ -556,7 +550,7 @@ static AILogViewerWindowController *sharedInstance = nil;
 }
 
 
-// Sorting ------------------------------------------------------------------------------------------
+// Sorting
 int _sortStringWithKey(id objectA, id objectB, void *key){
     NSString	*stringA = [objectA objectForKey:key];
     NSString	*stringB = [objectB objectForKey:key];
@@ -581,35 +575,5 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 
     return([stringA compare:stringB]);
 }
-
-
-
-
-
-
-
-
-
-
 @end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
