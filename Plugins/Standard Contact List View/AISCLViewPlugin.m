@@ -60,11 +60,16 @@
 		NSString	*key = [[notification userInfo] objectForKey:@"Key"];
 
 		if(notification == nil || !key || [key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE]){
-			windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
-																	group:PREF_GROUP_LIST_LAYOUT] intValue];
-			if(contactListWindowController){
-				[self closeContactList];
-				[self showContactListAndBringToFront:NO];
+			int	newWindowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
+																		   group:PREF_GROUP_LIST_LAYOUT] intValue];
+			if(newWindowStyle != windowStyle){
+				windowStyle = newWindowStyle;
+
+				//If a contact list is visible and the window style has changed, update for the new window style
+				if(contactListWindowController){
+					[self closeContactList];
+					[self showContactListAndBringToFront:NO];
+				}
 			}
 		}
 	}
