@@ -391,14 +391,15 @@ DeclareString(AppendNextMessage);
 	NSString		*templateFile;
 	BOOL			isContext = [[content type] isEqualToString:CONTENT_CONTEXT_TYPE];
 
-	//Disable color for context
+	//Disable color for context, message combining if desired
 	if(isContext) allowColors = NO;
+	if(!combineConsecutive) contentIsSimilar = NO;
 	
 	//
 	currentStylePath = [stylePath stringByAppendingPathComponent:([content isOutgoing] ? @"Outgoing" : @"Incoming")];
 	
 	//Load context templates if appropriate
-	if (contentIsSimilar && combineConsecutive){
+	if(contentIsSimilar){
 		templateFile = (isContext ? @"NextContext.html" : @"NextContent.html");
 	}else{
 		templateFile = (isContext ? @"Context.html" : @"Content.html");
@@ -407,8 +408,8 @@ DeclareString(AppendNextMessage);
 	newHTML = [NSMutableString stringWithContentsOfFile:[currentStylePath stringByAppendingPathComponent:templateFile]];
 	
 	//Fall back on the content files if context files were desired and not present
-	if (!newHTML){
-		if (contentIsSimilar && combineConsecutive){
+	if(!newHTML){
+		if(contentIsSimilar){
 			templateFile = @"NextContent.html";
 		}else{
 			templateFile = @"Content.html";
