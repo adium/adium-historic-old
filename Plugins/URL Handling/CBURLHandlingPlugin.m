@@ -7,6 +7,7 @@
 //
 
 #import "CBURLHandlingPlugin.h"
+#import "XtrasInstaller.h"
 
 @interface CBURLHandlingPlugin(PRIVATE)
 - (void)setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
@@ -26,11 +27,12 @@
 	//Start Internet Config, passing it Adium's creator code
 	Err = ICStart(&ICInst, 'AdiM');
 	
-	//Configure the protocols we want.  Note that this file needs to remain in MacRoman encoding for that ¥ (command-8)
+	//Configure the protocols we want.  Note that this file needs to remain in MacRoman encoding for that ¥ (option-8)
 	//to be recognized properly.
 	[self setHelperAppForKey:"\pHelper¥aim" withInstance:ICInst];
 	[self setHelperAppForKey:"\pHelper¥ymsgr" withInstance:ICInst];
 	[self setHelperAppForKey:"\pHelper¥xmpp" withInstance:ICInst];
+	[self setHelperAppForKey:"\pHelper¥adiumxtra" withInstance:ICInst];
 /*
 	[self setHelperAppForKey:"\pHelper¥jabber" withInstance:ICInst];
 	[self setHelperAppForKey:"\pHelper¥icq" withInstance:ICInst];
@@ -136,6 +138,9 @@
 									   onService:@"MSN"
 									 withMessage:nil];
 			}
+		}else if ([[url scheme] isEqualToString:@"adiumxtra"]){
+			//Installs an adium extra
+			[[XtrasInstaller installer] installXtraAtURL:url];
 		}
     }
 }

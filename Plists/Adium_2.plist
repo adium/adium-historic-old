@@ -185,6 +185,16 @@
 				<string>aim</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLIconFile</key>
+			<string>generic</string>
+			<key>CFBundleURLName</key>
+			<string>adiumxtra url</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>adiumxtra</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>0.8svn</string>
