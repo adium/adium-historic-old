@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.8 2004/06/19 03:34:47 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.9 2004/06/19 04:51:14 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -642,7 +642,7 @@ NSData *decode_dns(char* buffer, int len )
     
     if (resultType == DNSServiceBrowserReplyRemoveInstance) {
 	/* delete the contact */
-        contact = [contacts objectForKey:[NSString stringWithCString:replyName]];
+        contact = [contacts objectForKey:[[[NSString alloc] initWithUTF8String:replyName] autorelease]];
 
 	[[client client] userLoggedOut:contact];
     
@@ -658,10 +658,10 @@ NSData *decode_dns(char* buffer, int len )
     
     /* initialise contact */
     contact = [[AWEzvContact alloc] init];
-    [contact setUniqueID:[NSString stringWithCString:replyName]];
+    [contact setUniqueID:[[[NSString alloc] initWithUTF8String:replyName] autorelease]];
     [contact setManager:self];
     /* save contact in dictionary */
-    [contacts setObject:contact forKey:[NSString stringWithCString:replyName]];
+    [contacts setObject:contact forKey:[[[NSString alloc] initWithUTF8String:replyName] autorelease]];
     
     /* and resolve contact */
     /* initialise context */
@@ -927,7 +927,7 @@ void av_browse_reply  (DNSServiceBrowserReplyResultType resultType,
 		    void *context) {
     
     AWEzvContactManager *self = context;
-    if ([[self myavname] compare:[NSString stringWithCString:replyName]] != NSOrderedSame)
+    if ([[self myavname] compare:[[[NSString alloc] initWithUTF8String:replyName] autorelease]] != NSOrderedSame)
 	[self browseResult:resultType name:replyName type:replyType domain:replyDomain flags:flags av:YES];
 }
 
