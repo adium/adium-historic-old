@@ -476,7 +476,7 @@
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if ([inObject isKindOfClass:[AIAccount class]] && [inModifiedKeys containsObject:@"Online"]){
-		if([self validateMenuItem:[popUp_contactType selectedItem]]){
+		if([self validateMenuItem:(NSMenuItem *)[popUp_contactType selectedItem]]){
 			//If the current selection in the contact type menu is still valid (an account is still online), reload the accounts data
 			[tableView_accounts reloadData];
 		}else{
