@@ -64,7 +64,7 @@
         NSEnumerator			* enumerator = [hash keyEnumerator];
         NSString                * pattern;	
         NSString                * replaceWith;
-		NSRange					range, searchRange = NSMakeRange(0,[inString length]);
+		NSRange					range, searchRange;
         
         //This loop gets run for every key in the dictionary
 		while (pattern = [enumerator nextObject]){
@@ -75,10 +75,11 @@
 					str = [mesg mutableString];
 				}
 				replaceWith = nil;
+				searchRange = NSMakeRange(0,[inString length]);
 				while(searchRange.location < [str length] && (range = [str rangeOfString:pattern options:NSLiteralSearch range:searchRange]).location != NSNotFound) {
 					searchRange.location = range.location + range.length;
 					searchRange.length = [str length] - searchRange.location;
-					if(searchRange.location < [str length] && isalnum([str characterAtIndex:searchRange.location]) && [str characterAtIndex:searchRange.location] != '-')
+					if(searchRange.location < [str length] && (isalnum([str characterAtIndex:searchRange.location]) || [str characterAtIndex:searchRange.location] == '_'))
 						continue;
 					
 					if(replaceWith == nil) {
@@ -87,6 +88,9 @@
 							replaceWith = [self hashLookup:pattern contentObject:content listObject:listObject];
 						}
 					}
+					//Adjust searchRange to start from the end of the replacement
+					//length can stay the same, because the string's length also increases the same amount
+					searchRange.location += [replaceWith length] - [pattern length];
 					
 					[str replaceCharactersInRange:range withString:replaceWith];
 				}
