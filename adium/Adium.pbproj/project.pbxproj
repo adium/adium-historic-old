@@ -901,12 +901,6 @@
 			path = Emoticons.AdiumPlugin;
 			refType = 3;
 		};
-		11C157D404A88D7B008E0C76 = {
-			fileRef = 11C157D304A88D33008E0C76;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		11C157D504A88DE0008E0C76 = {
 			children = (
 				11C157D604A88E04008E0C76,
@@ -1411,8 +1405,6 @@
 				4BDF17250450CBDE00A8010A,
 				4B333F74048144D900A8010A,
 				4B24A26B0482B34B00A8010A,
-				F5A3238A04A7C61201888466,
-				11C157D404A88D7B008E0C76,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16196,12 +16188,6 @@
 			isa = PBXBundleReference;
 			path = "MX LaTeX Plugin.AdiumPlugin";
 			refType = 3;
-		};
-		F5A3238A04A7C61201888466 = {
-			fileRef = F5A3238104A7C61201888466;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F5A3238B04A7C61801888466 = {
 			fileRef = F5A3238104A7C61201888466;

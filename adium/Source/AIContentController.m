@@ -151,9 +151,6 @@
             //Add the object
 	    [self displayContentObject:inObject];
             //[chat addContentObject:inObject];
-
-            //content object addeed
-            [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
         }
 
         if(trackContent){
@@ -202,9 +199,6 @@
                 //Add the object
 		[self displayContentObject:inObject];
                 //[chat addContentObject:inObject];
-
-                //Content object added
-                [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
             }
 
             if(trackContent){
@@ -244,6 +238,9 @@
 	
 	//Add the object
 	[chat addContentObject:inObject];
+
+	//Content object added
+	[[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
 }
 

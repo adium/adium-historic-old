@@ -24,7 +24,7 @@
 #define KEY_HAS_IMPORTED_16_LOGS	@"Has Imported Adium 1.6 Logs"
 
 @interface AILoggerPlugin (PRIVATE)
-- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andContact:(AIListContact *)contact onDate:(NSDate *)date;
+- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(AIListObject *)object onDate:(NSDate *)date;
 @end
 
 @implementation AILoggerPlugin
@@ -34,9 +34,6 @@
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LOGGING];
 
-    //Observe content sending and receiving
-    //[[owner notificationCenter] addObserver:self selector:@selector(adiumSentContent:) name:Content_DidSendContent object:nil];
-    //[[owner notificationCenter] addObserver:self selector:@selector(adiumReceivedContent:) name:Content_DidReceiveContent object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
 
     //Install the log viewer menu item
@@ -88,68 +85,15 @@
     return(valid);
 }
 
-//Content was sent
-- (void)adiumSentContent:(NSNotification *)notification
-{
-    AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
-
-    //Message Content
-    if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        NSDate		*date = [content date];
-        NSString	*dateString = [date descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
-        NSString	*message = [[content message] string];
-        AIAccount	*account = [content source];
-        AIListContact	*contact = [content destination];
-
-        //Log the message
-        [self _addMessage:[NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [account UID], message]
-            betweenAccount:account
-                andContact:contact
-                    onDate:date];
-    }
-}
-
-//Content was received
-- (void)adiumReceivedContent:(NSNotification *)notification
-{
-    AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
-
-    //Message Content
-    if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        NSDate		*date = [content date];
-        NSString	*dateString = [date descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
-        NSString	*message = [[content message] string];
-        AIAccount	*account = [content destination];
-        AIListContact	*contact = [content source];
-
-        //Log the message
-        [self _addMessage:[NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [contact UID], message]
-           betweenAccount:account
-               andContact:contact
-                   onDate:date];
-    }
-}
-
-//Content was added
-/* this observer method could replace both the above sending and recieving observers
- * by using:
- * [[content destination] isKindOfClass:[AIAccount class]] and
- * [[content destination] isKindOfClass:[AIAccount class]]
- * to determine whether the message is sending or recieving
- * the only reason for using Content_ContentObjectAdded is because status changes are not
- * recieved content.
- *
- * the downside to moving both to this method is the reliance on isKindOfClass
- * the downside to not moving it is that the contentObjectAdded observer is activated
- * twice as often as is needed
- */
 - (void)contentObjectAdded:(NSNotification *)notification
 {
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
 
+    AIChat		*chat = nil;
     NSString		*message = nil;
     AIAccount		*account = nil;
-    AIListContact	*contact = nil;
+    AIListObject	*object = nil;
+    AIListObject	*source = nil;
 
     NSDate	*date = [content date];
     NSString	*dateString = [date descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
@@ -158,42 +102,35 @@
 
     //Message Content
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
-	if([[content destination] isKindOfClass:[AIAccount class]] && [[content source] isKindOfClass:[AIListContact class]]){
-	    account = [content destination];
-	    contact = [content source];
-
-	}else if([[content source] isKindOfClass:[AIAccount class]] && [[content destination] isKindOfClass:[AIListContact class]]){
-	    account = [content source];
-	    contact = [content destination];
-
-	}
+	chat	= [notification object];
+	account	= [chat account];
+	object	= [chat object];
+	source	= [content source];
 	
 	message = (NSString *)[[content message] safeString];
 	
-        if(account && contact){
-	    logMessage = [NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [contact UID], message];
+        if(account && object && source){
+	    logMessage = [NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [source UID], message];
 	}
 
     }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
-        if([[content destination] isKindOfClass:[AIAccount class]] && [[content source] isKindOfClass:[AIListContact class]]){
-	    account = [content destination];
-	    contact = [content source];
-
-	}
+	chat	= [notification object];
+	account	= [chat account];
+	object	= [chat object];
+	source	= [content source];
 	
 	message = (NSString *)[content message];
 
 	//only log the status change if the contact has a currently open tab
 	//this doesn't match the actual status notification of adium, but it does match the logging of 1.x
-        if(account && contact && [[contact statusArrayForKey:@"Open Tab"] greatestIntegerValue]){
+        if(account && object && source && [[object statusArrayForKey:@"Open Tab"] greatestIntegerValue]){
 	    logMessage = [NSString stringWithFormat:@"<%@ (%@)>\n", message, dateString];
 	}
     }
 
     //Log the message
     if(logMessage != nil){
-        [self _addMessage:logMessage betweenAccount:account andContact:contact onDate:date];
-	//NSLog(@"account:%@ contact:%@ message:%@",[account UID], [contact UID], logMessage);
+        [self _addMessage:logMessage betweenAccount:account andObject:object onDate:date];
     }
 }
 
@@ -216,15 +153,15 @@
 }
 
 //Add a message to the specified log file
-- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andContact:(AIListContact *)contact onDate:(NSDate *)date
+- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(AIListObject *)object onDate:(NSDate *)date
 {
     NSString	*logPath;
     NSString	*logFileName;
     FILE	*file;
 
     //Create path to log file (.../Logs/ServiceID.AccountUID/HandleUID/HandleUID (YY|MM|DD).adiumLog)
-    logPath = [[logBasePath stringByAppendingPathComponent:[account UIDAndServiceID]] stringByAppendingPathComponent:[contact UID]];
-    logFileName = [NSString stringWithFormat:@"%@ (%@).adiumLog", [contact UID], [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
+    logPath = [[logBasePath stringByAppendingPathComponent:[account UIDAndServiceID]] stringByAppendingPathComponent:[object UID]];
+    logFileName = [NSString stringWithFormat:@"%@ (%@).adiumLog", [object UID], [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
 
     //Create a directory for this log (if one doesn't exist)
     [AIFileUtilities createDirectory:logPath];
