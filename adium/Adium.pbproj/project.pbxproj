@@ -1038,6 +1038,7 @@
 				4BA88A530524AFF600A8010A,
 				BF7BF5EE052BA13000000202,
 				D3376B29052BBBD500A8010B,
+				9E9ED80B05433E1300415B25,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1066,6 +1067,7 @@
 				29B97326FDCFA39411CA2CEA,
 				F53B9A0E02CCED8B01A8010A,
 				F53B9A0602CCED6401A8010A,
+				9E9ED80A05433E1300415B25,
 				F53EA2CD02C803C101A8010A,
 				6576A008050269FA000EB664,
 				4BA88A380524A98F00A8010A,
@@ -1186,7 +1188,7 @@
 				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
 				HEADER_SEARCH_PATHS = "";
 				INSTALL_PATH = /;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "\"/Users/ramoth4/Projects/adium/Plugins/Gaim Service/LIBS\"";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Adium;
 				SECTORDER_FLAGS = "";
@@ -1257,6 +1259,7 @@
 				4BA88A540524AFF600A8010A,
 				BF7BF5EF052BA13000000202,
 				D3376B2A052BBBD500A8010B,
+				9E9ED80C05433E1300415B25,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -1383,6 +1386,7 @@
 				348B18340530CB7D00FF26A8,
 				D35BB1A50533AD1C00A8010B,
 				34FA22F5053B426D0042D0D9,
+				9E4DD7180543581200415B25,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1423,6 +1427,11 @@
 				4B28908D03C1D19A00A8010A,
 				4B28909103C1D1A900A8010A,
 				D2547F1E050AD55B00A80164,
+				9E4DD7130543580900415B25,
+				9E4DD7140543580900415B25,
+				9E4DD7150543580A00415B25,
+				9E4DD7160543580A00415B25,
+				9E4DD7170543580B00415B25,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4980,6 +4989,7 @@
 				4BA88A550524AFF600A8010A,
 				4BA88A3B0524A98F00A8010A,
 				4B40E1CB03DB5B9600A8010A,
+				9E9ED80D05433E1300415B25,
 				4B1F0F3704AE303600A8010A,
 				4B40E1D303DB5B9600A8010A,
 				4B40E1D203DB5B9600A8010A,
@@ -5356,6 +5366,7 @@
 		};
 		4B4F5B30042D64A100A8010A = {
 			children = (
+				9E9ED80005433D3C00415B25,
 				F53EA2B502C8020E01A8010A,
 				6576A001050269A6000EB664,
 				4BA88A4C0524AFD700A8010A,
@@ -14064,6 +14075,106 @@
 			settings = {
 			};
 		};
+		9E4DD7100543490600415B25 = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4DD7110543490700415B25 = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4DD7120543490700415B25 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4DD7130543580900415B25 = {
+			fileRef = 9E9ED82005433F5100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4DD7140543580900415B25 = {
+			fileRef = 9E9ED82105433F5100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4DD7150543580A00415B25 = {
+			fileRef = 9E9ED82205433F5100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4DD7160543580A00415B25 = {
+			fileRef = 9E9ED82305433F5100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4DD7170543580B00415B25 = {
+			fileRef = 9E9ED82405433F5100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4DD7180543581200415B25 = {
+			fileRef = 9E9ED82A05433F6700415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4DD7190543583900415B25 = {
+			fileRef = 9E9ED82005433F5100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4DD71A0543583900415B25 = {
+			fileRef = 9E9ED82105433F5100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4DD71B0543583900415B25 = {
+			fileRef = 9E9ED82205433F5100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4DD71C0543583900415B25 = {
+			fileRef = 9E9ED82305433F5100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4DD71D0543583900415B25 = {
+			fileRef = 9E9ED82405433F5100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4DD71E05435A5D00415B25 = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9E4DD72F05435AF600415B25,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E4DD72F05435AF600415B25 = {
+			fileRef = 9E9ED82A05433F6700415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		9E95316703C8E0BE00415B22 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -14086,6 +14197,324 @@
 		};
 		9E95316A03C8E0C700415B22 = {
 			fileRef = 9E95316903C8E0C700415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E9ED80005433D3C00415B25 = {
+			children = (
+				9E9ED81005433F1800415B25,
+				9E9ED81105433F1800415B25,
+				9E9ED845054340B100415B25,
+				9E9ED846054340B100415B25,
+				9E9ED81E05433F3700415B25,
+			);
+			isa = PBXGroup;
+			name = Gaim;
+			refType = 4;
+		};
+		9E9ED80505433E1300415B25 = {
+			buildActionMask = 2147483647;
+			files = (
+				9E9ED81205433F1800415B25,
+				9E9ED847054340B100415B25,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E9ED80605433E1300415B25 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E9ED80705433E1300415B25 = {
+			buildActionMask = 2147483647;
+			files = (
+				9E9ED81305433F1800415B25,
+				9E9ED848054340B100415B25,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E9ED80805433E1300415B25 = {
+			buildActionMask = 2147483647;
+			files = (
+				9E9ED81905433F3200415B25,
+				9E9ED81A05433F3200415B25,
+				9E9ED81B05433F3200415B25,
+				9E9ED81C05433F3200415B25,
+				9E9ED81D05433F3200415B25,
+				9E4DD7100543490600415B25,
+				9E4DD7110543490700415B25,
+				9E4DD7120543490700415B25,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E9ED80905433E1300415B25 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E9ED80A05433E1300415B25 = {
+			buildPhases = (
+				9E4DD71E05435A5D00415B25,
+				9E9ED80505433E1300415B25,
+				9E9ED80605433E1300415B25,
+				9E9ED80705433E1300415B25,
+				9E9ED80805433E1300415B25,
+				9E9ED80905433E1300415B25,
+			);
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS/include\" \"Plugins/Gaim Service/LIBS/include/libgaim\" \"Plugins/Gaim Service/LIBS/include/glib-2.0\"";
+				LIBRARY_SEARCH_PATHS = "\"/Users/ramoth4/Projects/adium/Plugins/Gaim Service/LIBS\"";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Gaim;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				9E9ED80E05433E7900415B25,
+				9E9ED80F05433E7900415B25,
+			);
+			isa = PBXBundleTarget;
+			name = Gaim;
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = Gaim;
+			productReference = 9E9ED80B05433E1300415B25;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>CBGaimServicePlugin</string>
+</dict>
+</plist>
+";
+		};
+		9E9ED80B05433E1300415B25 = {
+			isa = PBXBundleReference;
+			path = Gaim.AdiumPlugin;
+			refType = 3;
+		};
+		9E9ED80C05433E1300415B25 = {
+			isa = PBXTargetDependency;
+			target = 9E9ED80A05433E1300415B25;
+		};
+		9E9ED80D05433E1300415B25 = {
+			fileRef = 9E9ED80B05433E1300415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E9ED80E05433E7900415B25 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		9E9ED80F05433E7900415B25 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		9E9ED81005433F1800415B25 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = CBGaimServicePlugin.h;
+			path = "Plugins/Gaim Service/CBGaimServicePlugin.h";
+			refType = 4;
+		};
+		9E9ED81105433F1800415B25 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = CBGaimServicePlugin.m;
+			path = "Plugins/Gaim Service/CBGaimServicePlugin.m";
+			refType = 4;
+		};
+		9E9ED81205433F1800415B25 = {
+			fileRef = 9E9ED81005433F1800415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E9ED81305433F1800415B25 = {
+			fileRef = 9E9ED81105433F1800415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E9ED81405433F3100415B25 = {
+			isa = PBXFileReference;
+			name = libgaim.0.0.0.dylib;
+			path = "Plugins/Gaim Service/LIBS/libgaim.0.0.0.dylib";
+			refType = 4;
+		};
+		9E9ED81505433F3100415B25 = {
+			isa = PBXFileReference;
+			name = "libgmodule-2.0.0.dylib";
+			path = "Plugins/Gaim Service/LIBS/libgmodule-2.0.0.dylib";
+			refType = 4;
+		};
+		9E9ED81605433F3100415B25 = {
+			isa = PBXFileReference;
+			name = libintl.2.dylib;
+			path = "Plugins/Gaim Service/LIBS/libintl.2.dylib";
+			refType = 4;
+		};
+		9E9ED81705433F3100415B25 = {
+			isa = PBXFileReference;
+			name = "libglib-2.0.0.dylib";
+			path = "Plugins/Gaim Service/LIBS/libglib-2.0.0.dylib";
+			refType = 4;
+		};
+		9E9ED81805433F3100415B25 = {
+			isa = PBXFileReference;
+			name = libiconv.2.dylib;
+			path = "Plugins/Gaim Service/LIBS/libiconv.2.dylib";
+			refType = 4;
+		};
+		9E9ED81905433F3200415B25 = {
+			fileRef = 9E9ED81405433F3100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E9ED81A05433F3200415B25 = {
+			fileRef = 9E9ED81505433F3100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E9ED81B05433F3200415B25 = {
+			fileRef = 9E9ED81605433F3100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E9ED81C05433F3200415B25 = {
+			fileRef = 9E9ED81705433F3100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E9ED81D05433F3200415B25 = {
+			fileRef = 9E9ED81805433F3100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E9ED81E05433F3700415B25 = {
+			children = (
+				9E9ED81405433F3100415B25,
+				9E9ED81505433F3100415B25,
+				9E9ED81605433F3100415B25,
+				9E9ED81705433F3100415B25,
+				9E9ED81805433F3100415B25,
+				9E9ED81F05433F4200415B25,
+				9E9ED82A05433F6700415B25,
+			);
+			isa = PBXGroup;
+			name = Libraries;
+			refType = 4;
+		};
+		9E9ED81F05433F4200415B25 = {
+			children = (
+				9E9ED82005433F5100415B25,
+				9E9ED82105433F5100415B25,
+				9E9ED82205433F5100415B25,
+				9E9ED82305433F5100415B25,
+				9E9ED82405433F5100415B25,
+			);
+			isa = PBXGroup;
+			name = CopyFiles;
+			refType = 4;
+		};
+		9E9ED82005433F5100415B25 = {
+			isa = PBXFileReference;
+			name = libgaim.0.0.0.dylib;
+			path = "Plugins/Gaim Service/LIBS/libgaim.0.0.0.dylib";
+			refType = 4;
+		};
+		9E9ED82105433F5100415B25 = {
+			isa = PBXFileReference;
+			name = "libgmodule-2.0.0.dylib";
+			path = "Plugins/Gaim Service/LIBS/libgmodule-2.0.0.dylib";
+			refType = 4;
+		};
+		9E9ED82205433F5100415B25 = {
+			isa = PBXFileReference;
+			name = libintl.2.dylib;
+			path = "Plugins/Gaim Service/LIBS/libintl.2.dylib";
+			refType = 4;
+		};
+		9E9ED82305433F5100415B25 = {
+			isa = PBXFileReference;
+			name = "libglib-2.0.0.dylib";
+			path = "Plugins/Gaim Service/LIBS/libglib-2.0.0.dylib";
+			refType = 4;
+		};
+		9E9ED82405433F5100415B25 = {
+			isa = PBXFileReference;
+			name = libiconv.2.dylib;
+			path = "Plugins/Gaim Service/LIBS/libiconv.2.dylib";
+			refType = 4;
+		};
+		9E9ED82A05433F6700415B25 = {
+			includeInIndex = 1;
+			isa = PBXFolderReference;
+			name = Protocols;
+			path = "Plugins/Gaim Service/Protocols";
+			refType = 4;
+		};
+		9E9ED845054340B100415B25 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = CBGaimAccount.h;
+			path = "Plugins/Gaim Service/CBGaimAccount.h";
+			refType = 4;
+		};
+		9E9ED846054340B100415B25 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = CBGaimAccount.m;
+			path = "Plugins/Gaim Service/CBGaimAccount.m";
+			refType = 4;
+		};
+		9E9ED847054340B100415B25 = {
+			fileRef = 9E9ED845054340B100415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E9ED848054340B100415B25 = {
+			fileRef = 9E9ED846054340B100415B25;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -18022,6 +18451,11 @@
 			files = (
 				4BF1F06A03D8699C00A8010A,
 				4BF1F06D03D869A000A8010A,
+				9E4DD7190543583900415B25,
+				9E4DD71A0543583900415B25,
+				9E4DD71B0543583900415B25,
+				9E4DD71C0543583900415B25,
+				9E4DD71D0543583900415B25,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
