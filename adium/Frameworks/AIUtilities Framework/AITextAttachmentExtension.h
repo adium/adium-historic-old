@@ -18,6 +18,7 @@
     BOOL        shouldSaveImageForLogging;
 	BOOL		hasAlternate;
 	NSString	*imagePath;
+	NSSize		imageSize;
 }
 
 - (void)setString:(NSString *)inString;
@@ -29,5 +30,8 @@
 
 - (void)setImagePath:(NSString *)inPath;
 - (NSString *)imagePath;
+
+- (void)setImageSize:(NSSize)inSize;
+- (NSSize)imageSize;
 
 @end

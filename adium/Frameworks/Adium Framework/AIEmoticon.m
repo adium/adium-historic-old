@@ -119,7 +119,9 @@
 //Returns the image for this emoticon (cached)
 - (NSImage *)image
 {
-    if(!_cachedImage){
+	NSLog(@"Emoticon %@ image",self);
+	if(!_cachedImage){
+		NSLog(@"   Loading & Caching");
         _cachedImage = [[NSImage alloc] initWithContentsOfFile:[self _pathToEmoticonImage]];
     }
 
@@ -138,6 +140,7 @@
         AITextAttachmentExtension   *emoticonAttachment = [[[AITextAttachmentExtension alloc] init] autorelease];
         
 		[emoticonAttachment setImagePath:[self _pathToEmoticonImage]];
+		[emoticonAttachment setImageSize:[[self image] size]];
         [emoticonAttachment setFileWrapper:emoticonFileWrapper];
 		[emoticonAttachment setHasAlternate:YES];
         _cachedAttributedString = [[NSAttributedString attributedStringWithAttachment:emoticonAttachment] retain];
