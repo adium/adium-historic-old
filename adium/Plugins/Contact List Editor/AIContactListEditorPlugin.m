@@ -54,7 +54,7 @@
 														 target:self 
 														 action:@selector(addContactFromTab:)
 												  keyEquivalent:@""] autorelease];
-    [[adium menuController] addContextualMenuItem:menuItem_tabAddContact toLocation:Context_Contact_TabAction];
+    [[adium menuController] addContextualMenuItem:menuItem_tabAddContact toLocation:Context_Contact_Stranger_TabAction];
 	
 	//Add group menu item
     menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_GROUP
@@ -96,12 +96,7 @@
 	if(menuItem == menuItem_delete){
 		return([[adium contactController] selectedListObjectInContactList] != nil);
 	}else if(menuItem == menuItem_tabAddContact){
-		AIListObject	*selectedObject = [[adium menuController] contactualMenuContact];
-		
-		if(selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
-			return([selectedObject integerStatusObjectForKey:@"Stranger"]);
-		}
-		
+		return([[adium menuController] contactualMenuContact] != nil);
 	}
 	
 	return(YES);
