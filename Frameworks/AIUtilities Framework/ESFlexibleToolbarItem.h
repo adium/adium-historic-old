@@ -29,3 +29,14 @@
 - (void)setValidationDelegate:(id)inDelegate;
 
 @end
+
+/*!
+ * @protocol ESFlexibleToolbarItemDelegate
+ * @brief Required protocol for an ESFlexibleToolbarItem's validation delegate
+ *
+ * The delegate is sent - (void)validateFlexibleToolbarItem:(ESFlexibleToolbarItem *)toolbarItem, which must be efficient
+ */
+@interface NSObject (ESFlexibleToolbarItemDelegate)
+- (void)validateFlexibleToolbarItem:(ESFlexibleToolbarItem *)toolbarItem;
+@end
+
