@@ -45,7 +45,7 @@
         
         message = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message] encodeFullString:YES];
         handle = [[object destination] handleForAccount:self];
-        sbSocket = [switchBoardDict objectForKey:handle];
+        sbSocket = [switchBoardDict objectForKey:[handle UID]];
 
         //create the payload
         NSString *payload = [NSString stringWithFormat:
@@ -54,8 +54,7 @@
         
         if(sbSocket)//there's already an SB session
         {
-            NSLog(@"open SB socket for the handle");
-            return([self sendMessage:payload onSocket:sbSocket]);
+            [self sendMessage:payload onSocket:sbSocket];
         }
         else // create a session
         {
@@ -79,17 +78,34 @@
 // Returns YES if the contact is available for receiving content of the specified type
 - (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat
 {
-    NSLog(@"availableForSendingContentType");
-    if([[inChat object] respondsToSelector:@selector(object)])
-    {
-        AIHandle *handle = [(AIListContact *)[inChat object] handleForAccount:self];
-        
-        NSLog(@"OK to send content");
-        
-        return([[[handle statusDictionary] objectForKey:@"Online"] intValue] == 1
-                /*&& [inType isEqual:CONTENT_MESSAGE_TYPE]*/);
+    AIListObject 	*listObject = [inChat object];
+    BOOL 		available = NO;
+
+    if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
+        //If we are online
+        if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE){
+            if(!inChat || !listObject){
+                available = YES;
+
+            }else{
+                if([listObject isKindOfClass:[AIListContact class]]){
+                    AIHandle	*handle = [(AIListContact *)listObject handleForAccount:self];
+
+                    if(![[handleDict allValues] containsObject:handle] || [[[handle statusDictionary] objectForKey:@"Online"] intValue]){
+                        available = YES;
+                    }
+                /*}else if([listObject isKindOfClass:[AIListChat class]]){
+                    AIChat	*chat = [chatDict objectForKey:[listObject UID]];
+
+                    if(!chat || [[listObject statusArrayForKey:@"Online"] greatestIntegerValue]){
+                        available = YES;
+                    }*/
+                }
+            }
+        }
     }
-    return NO;
+
+    return(available);
 }
 
 - (BOOL)openChat:(AIChat *)inChat
@@ -1097,6 +1113,7 @@
                     NSLog(@">>> %@", temp);
                     [[timer userInfo] setObject:[NSNumber numberWithInt:1] forKey:@"Phase"];
                 }
+            NSLog([[timer userInfo] objectForKey:@"Handle"]);
             break;
             
         case 1:
@@ -1112,7 +1129,6 @@
                 if([[message objectAtIndex:0] isEqual:@"XFR"]
                     && [[message objectAtIndex:1] doubleValue] == (double)[self getTrid:NO])
                 {
-                    NSLog(@"Fixed");
                     //it's ours, take it out of the buffer
                     [socket removeDataBytes:[inData length]];
                     
@@ -1124,7 +1140,7 @@
                     
                     //add it to the dict
                     [switchBoardDict setObject:sbSocket 
-                        forKey:[handleDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]];
+                        forKey:[[timer userInfo] objectForKey:@"Handle"]];
                         
                     //now, setup the command for the next phase
                     [[timer userInfo] 
@@ -1136,15 +1152,13 @@
                     //move on
                     [[timer userInfo] setObject:[NSNumber numberWithInt:2] forKey:@"Phase"];
                 }
-                NSLog(@"Not fixed");
             }
             break;
             
         case 2:
-            if([[switchBoardDict 
-                    objectForKey:[handleDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]]
+            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
                     sendData:[[[timer userInfo] objectForKey:@"IDString"]
-                    dataUsingEncoding:NSUTF8StringEncoding]])
+                        dataUsingEncoding:NSUTF8StringEncoding]])
             {
                 NSLog(@">>> %@", [[timer userInfo] objectForKey:@"IDString"]);
                 
@@ -1165,10 +1179,11 @@
                         hasPrefix:@"USR 1 OK"])
                 {
                     //shout at the user
-                    NSLog(@"Uhoh! Sever killed the connection!");
+                    NSLog(@"Uhoh! Server killed the connection!");
                     
                     //remove the socket
-                    [switchBoardDict removeObjectForKey:[[timer userInfo] objectForKey:@"Handle"]];
+                    [switchBoardDict removeObjectForKey:
+                        [[timer userInfo] objectForKey:@"Handle"]];
                     
                     //stop this madness!
                     [timer invalidate];
@@ -1179,27 +1194,26 @@
                         [NSString stringWithCString:[inData bytes] length:[inData length]]);
                         
                     //prepare the message!
-                    [[timer userInfo] setObject:[NSString stringWithFormat:@"CAL 2 RINGING %@",
-                            [[[timer userInfo] objectForKey:@"Handle"] UID]]
-                        forKey:@"Ring-a-ding-ding"];
+                    [[timer userInfo] setObject:[NSString stringWithFormat:@"CAL 2 RINGING %@\r\n",
+                            [[timer userInfo] objectForKey:@"Handle"]]
+                        forKey:@"Ring"];
                     
                     //move on
-                    [[timer userInfo] setObject:[NSNumber numberWithInt:3] forKey:@"Phase"];
+                    [[timer userInfo] setObject:[NSNumber numberWithInt:4] forKey:@"Phase"];
                 }
             }
             break;
             
         case 4:
             //send the thing out
-            if([[switchBoardDict 
-                    objectForKey:[handleDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]]
-                    sendData:[[[timer userInfo] objectForKey:@"Ring-a-ding-ding"]
-                    dataUsingEncoding:NSUTF8StringEncoding]])
+            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
+                    sendData:[[[timer userInfo] objectForKey:@"Ring"]
+                        dataUsingEncoding:NSUTF8StringEncoding]])
             {
-                NSLog(@">>> %@", [[timer userInfo] objectForKey:@"Ring-a-ding-ding"]);
+                NSLog(@">>> %@", [[timer userInfo] objectForKey:@"Ring"]);
                 
                 //remove the temp variable
-                [[timer userInfo] removeObjectForKey:@"Ring-a-ding-ding"];
+                [[timer userInfo] removeObjectForKey:@"Ring"];
                 
                 //move on
                 [[timer userInfo] setObject:[NSNumber numberWithInt:5] forKey:@"Phase"];
@@ -1207,19 +1221,19 @@
             break;
             
         case 5:
-            if([[switchBoardDict objectForKey:[handleDict 
-                    objectForKey:[[timer userInfo] objectForKey:@"Handle"]]]
+            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
                     getDataToNewline:&inData remove:YES])
             {
                 //uhoh! error!
                 if(![[NSString stringWithCString:[inData bytes] length:[inData length]] 
-                        hasPrefix:@"JOI"])
+                        hasPrefix:@"CAL"])
                 {
                     //shout at the user
-                    NSLog(@"Uhoh! Sever killed the connection!");
+                    NSLog(@"Uhoh! Error!"); // for now assume all errors are fatal
                     
                     //remove the socket
-                    [switchBoardDict removeObjectForKey:[[timer userInfo] objectForKey:@"Handle"]];
+                    [switchBoardDict 
+                        removeObjectForKey:[[timer userInfo] objectForKey:@"Handle"]];
                     
                     //stop this madness!
                     [timer invalidate];
@@ -1228,17 +1242,30 @@
                 {
                     NSLog(@"<<< %@", 
                         [NSString stringWithCString:[inData bytes] length:[inData length]]);
-                    
-                    if([[[timer userInfo] objectForKey:@"Type"] isEqual:@"Empty"])
+                        
+                    //move on
+                    [[timer userInfo] setObject:[NSNumber numberWithInt:6] forKey:@"Phase"];
+                }
+            }
+            break;
+        
+        case 6:
+            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
+                    getDataToNewline:&inData remove:YES])
+            {
+                if([[NSString stringWithCString:[inData bytes] length:[inData length]] 
+                        hasPrefix:@"JOI"])
+                {
+                    NSLog(@"<<< %@", 
+                        [NSString stringWithCString:[inData bytes] length:[inData length]]);
+                        
+                    if(![[[timer userInfo] objectForKey:@"Type"] isEqual:@"Empty"])
                     {
-                        //done!!
-                        [timer invalidate];
+                        [self sendMessage:[[timer userInfo] objectForKey:@"Message"]
+                            onSocket:[switchBoardDict objectForKey:[[timer userInfo]
+                                objectForKey:@"Handle"]]];
                     }
-                    else
-                    {
-                        //prepare to send the message, but don't do anything different for now.
-                        [timer invalidate];
-                    }
+                    [timer invalidate];
                 }
             }
             break;
