@@ -172,6 +172,18 @@ Multi-user chat: <<<INCOMPLETE>>>
 + If available, ability to remove a user
 + If available, ability to set a topic. IRC and JABBER do this afaik
 
+WebKit Message View: <<<INCOMPLETE>>>
+* Redrawing problems
+* Scroll keys
+* Keypress forwarding
+* Status messages
++ Buddy icon (caching, display and scaling)
++ Bundled templates
++ Template choosing preferences
++ View refreshing on preference changes (alias, timestamp)
++ Make default template, should be fast and nice.
++ Background coloring
++ Emoticons
 
 New State System: <<<INCOMPLETE>>>
 + Events should have "flags", so that we could have a "message" event, which also has a "first message" flag, so that plugins can listen for "message" events using only one notification registration.
