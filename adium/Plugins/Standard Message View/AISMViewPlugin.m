@@ -23,6 +23,7 @@
 
 - (void)installPlugin
 {
+
 	if(![NSApp isOnPantherOrBetter] || ![NSApp isWebKitAvailable]){
 		//Register ourself as a message list view plugin
 		[[adium interfaceController] registerMessageViewPlugin:self];

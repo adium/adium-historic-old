@@ -20,7 +20,12 @@
             SUPERCLASS = AIModularPane; 
         }, 
         {
-            ACTIONS = {changePreference = id; createCustomColors = id; saveCustomColors = id; }; 
+            ACTIONS = {
+                cancelCustomColors = id; 
+                changePreference = id; 
+                createCustomColors = id; 
+                saveCustomColors = id; 
+            }; 
             CLASS = AISMPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
