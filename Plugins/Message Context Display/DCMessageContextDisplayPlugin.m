@@ -148,7 +148,7 @@
 	[contentDict setObject:[content type] forKey:@"Type"];
 	
 	objectID = [listContact internalUniqueObjectID];
-	accountNumber = [[chat account] uniqueObjectID];
+	accountNumber = [[chat account] internalObjectID];
 	
 	// Outgoing or incoming?
 	if ([content isOutgoing]){
