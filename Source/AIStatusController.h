@@ -93,6 +93,7 @@
 	NSMutableArray			*stateArray;
 	NSMutableArray			*builtInStateArray;
 	AIStatus				*_activeStatusState; //Cached active status state
+	NSMutableSet			*_allActiveStatusStates; //Cached all active status states
 	NSMutableDictionary		*statusDictsByServiceCodeUniqueID[STATUS_TYPES_COUNT];
 	NSMutableSet			*builtInStatusTypes[STATUS_TYPES_COUNT];
 
@@ -106,6 +107,8 @@
 	NSMutableDictionary		*stateMenuItemArraysDict;
 	int						stateMenuSelectionUpdateDelays;
 	NSArray					*_stateArrayForMenuItems;
+	
+	NSMutableSet			*stateMenuItemsNeedingUpdating;
 }
 
 - (void)initController;
@@ -121,6 +124,7 @@
 
 - (void)setActiveStatusState:(AIStatus *)state;
 - (AIStatus *)activeStatusState;
+- (NSSet *)allActiveStatusStates;
 
 - (NSString *)descriptionForStateOfStatus:(AIStatus *)statusState;
 - (NSString *)defaultStatusNameForType:(AIStatusType)statusType;
