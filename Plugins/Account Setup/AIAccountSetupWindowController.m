@@ -15,6 +15,7 @@
 
 #import "AIAccountSetupWindowController.h"
 #import "AIAccountSetupServiceView.h"
+#import "AIViewGridView.h"
 
 //#define	ACCOUNT_DRAG_TYPE					@"AIAccount"	    										//ID for an account drag
 //#define	ACCOUNT_CONNECT_BUTTON_TITLE		AILocalizedString(@"Connect","Connect an account")	    	//Menu item title for the connect item
