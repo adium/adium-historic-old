@@ -8778,6 +8778,7 @@
 				34BD9CE0053146CC000AB133,
 				34BD9CE1053146CC000AB133,
 				34BD9CE2053146CC000AB133,
+				4BA81D5905B0AB97001E2143,
 				34BD9CE4053146CC000AB133,
 				6C05CA1C05492FB70088ECBF,
 				34BD9CE5053146CC000AB133,
@@ -9762,6 +9763,7 @@
 				3419FDF00531585600C68BA3,
 				3419FDF10531585600C68BA3,
 				3419FDF20531585600C68BA3,
+				4BFC7F9B05B10FD30015E1EA,
 				3419FDF40531585600C68BA3,
 				6C05CA1D054930AF0088ECBF,
 				3419FDF50531585600C68BA3,
@@ -14245,69 +14247,14 @@
 		34BDA029053147BF000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BDA02A053147BF000AB133,
-				34BDA02B053147BF000AB133,
-				34BDA02C053147BF000AB133,
-				34BDA02D053147BF000AB133,
-				34BDA02E053147BF000AB133,
-				34BDA02F053147BF000AB133,
-				34BDA030053147BF000AB133,
 				34BDA031053147BF000AB133,
-				34BDA032053147BF000AB133,
+				4BA81D5B05B0ABEC001E2143,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		34BDA02A053147BF000AB133 = {
-			fileRef = 4BF5BA28042F3CFD00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA02B053147BF000AB133 = {
-			fileRef = 4BF5BA2A042F3CFD00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA02C053147BF000AB133 = {
-			fileRef = 4BFB1571043498E200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA02D053147BF000AB133 = {
-			fileRef = 9EA81D61044A611A00415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA02E053147BF000AB133 = {
-			fileRef = 4BA80057046C63DF00C50DA9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA02F053147BF000AB133 = {
-			fileRef = F55B411003AB88D601A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA030053147BF000AB133 = {
-			fileRef = F55B411203AB88D601A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34BDA031053147BF000AB133 = {
 			fileRef = F570A59C03704B9501A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA032053147BF000AB133 = {
-			fileRef = 4B8ABA170488ECE100A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -14449,68 +14396,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BDA047053147BF000AB133,
-				34BDA048053147BF000AB133,
-				34BDA049053147BF000AB133,
-				34BDA04A053147BF000AB133,
-				34BDA04B053147BF000AB133,
-				34BDA04C053147BF000AB133,
-				34BDA04D053147BF000AB133,
-				34BDA04E053147BF000AB133,
-				34BDA04F053147BF000AB133,
+				4BA81D5C05B0ABED001E2143,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34BDA047053147BF000AB133 = {
 			fileRef = F570A59D03704B9501A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA048053147BF000AB133 = {
-			fileRef = F55B411303AB88D601A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA049053147BF000AB133 = {
-			fileRef = 4BF5BA29042F3CFD00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA04A053147BF000AB133 = {
-			fileRef = 4BF5BA2B042F3CFD00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA04B053147BF000AB133 = {
-			fileRef = 4BFB1572043498E200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA04C053147BF000AB133 = {
-			fileRef = 9EA81D62044A611A00415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA04D053147BF000AB133 = {
-			fileRef = 4BA80058046C63DF00C50DA9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA04E053147BF000AB133 = {
-			fileRef = F55B411103AB88D601A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BDA04F053147BF000AB133 = {
-			fileRef = 4B8ABA180488ECE100A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -22002,6 +21894,30 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4BA81D5805B0AB97001E2143 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BDA026053147BF000AB133;
+			remoteInfo = "Contact List Editor";
+		};
+		4BA81D5905B0AB97001E2143 = {
+			isa = PBXTargetDependency;
+			target = 34BDA026053147BF000AB133;
+			targetProxy = 4BA81D5805B0AB97001E2143;
+		};
+		4BA81D5B05B0ABEC001E2143 = {
+			fileRef = F55B411203AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA81D5C05B0ABED001E2143 = {
+			fileRef = F55B411303AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BA88A320524A95F00A8010A = {
 			children = (
 				4BA88A3E0524AA7200A8010A,
@@ -23520,6 +23436,12 @@
 			path = "Frameworks/Adium Framework/AIContentStatus.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BFC7F9B05B10FD30015E1EA = {
+			fileRef = 34BDA057053147C0000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BFEA735059B679200874BD5 = {
 			fileRef = 34535740059AEE1000A83D9E;

@@ -125,7 +125,8 @@
 		[contactListView reloadData];
 		[contactListView performFullRecalculation];
 	}else{
-		[contactListView reloadItem:object reloadChildren:YES];
+		AIListGroup	*containingGroup = [[object userInfo] objectForKey:@"ContainingGroup"];
+		[contactListView reloadItem:containingGroup reloadChildren:YES];
 		[contactListView updateHorizontalSizeForObject:object];
 	}
 }
@@ -452,8 +453,6 @@
         [NSNumber numberWithInt:Context_Contact_Additions], nil]
                                                     forContact:[contactListView contact]]);
 }
-
-
 
 //Auto-resizing support -----------------------------------------------------------------
 - (void)outlineViewItemDidExpand:(NSNotification *)notification

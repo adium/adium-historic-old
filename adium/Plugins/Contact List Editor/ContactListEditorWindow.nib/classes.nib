@@ -7,21 +7,11 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            ACTIONS = {closeWindow = id; delete = id; group = id; handle = id; import = id; }; 
+            ACTIONS = {closeWindow = id; }; 
             CLASS = AIContactListEditorWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                "button_import" = NSButton; 
-                "button_newGroup" = NSButton; 
-                "button_newHandle" = NSButton; 
-                "customView_tableHeader" = AISCLEditHeaderView; 
-                "drawer_sourceList" = NSDrawer; 
-                "outlineView_contactList" = AIAlternatingRowOutlineView; 
-                "scrollView_contactList" = NSScrollView; 
-                "scrollView_sourceList" = AIAutoScrollView; 
-                "tableView_sourceList" = NSTableView; 
-            }; 
-            SUPERCLASS = NSWindowController; 
+            OUTLETS = {"browser_contactList" = NSBrowser; }; 
+            SUPERCLASS = AIWindowController; 
         }, 
         {
             CLASS = AIEditorSourceOutlineView; 
@@ -30,6 +20,11 @@
         }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {CLASS = AISCLEditHeaderView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 

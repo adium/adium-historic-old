@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.75 2004/01/09 21:38:52 adamiser Exp $
+// $Id: AIContactController.m,v 1.76 2004/01/11 06:42:06 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -216,7 +216,9 @@
 			//The contact should no longer be in this group
 			[localGroup removeObject:inObject];
 			NSLog(@"Grouping:  Removed %@ from %@",[inObject displayName],[localGroup displayName]);
-			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:localGroup];
+			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged
+																			 object:inObject
+																		   userInfo:[NSDictionary dictionaryWithObject:localGroup forKey:@"ContainingGroup"]];
 		}
 	}
 
@@ -227,7 +229,9 @@
 		localGroup = [self groupWithUID:remoteGroupName createInGroup:contactList];
 		[localGroup addObject:inObject];
 		NSLog(@"Grouping:  Added %@ to %@",[inObject displayName],remoteGroupName);
-		if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:localGroup];
+		if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged 
+																		 object:inObject
+																	   userInfo:[NSDictionary dictionaryWithObject:localGroup forKey:@"ContainingGroup"]];
 	}
 }
 
@@ -527,7 +531,9 @@
 		//Add to target group
 		if(targetGroup){
 			[targetGroup addObject:group];
-			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:targetGroup];
+			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged
+																			 object:group
+																		   userInfo:[NSDictionary dictionaryWithObject:targetGroup forKey:@"ContainingGroup"]];
 		}
 	}
 	
