@@ -29,7 +29,7 @@
 
 @interface AIEmoticonsPlugin : AIPlugin <AIContentFilter> {
     BOOL			replaceEmoticons;
-    
+    BOOL                        emoticonsEnabled;
     NSMutableArray		*emoticons;
     NSMutableDictionary	*indexedEmoticons;
     
@@ -43,6 +43,7 @@
 - (void)allEmoticonPacks:(NSMutableArray *)emoticonPackArray;
 - (void)allEmoticonPacks:(NSMutableArray *)emoticonPackArray forceReload:(BOOL)reload;
 - (BOOL)loadEmoticonsFromPacks;
+- (void)loadEmoticonsIfNecessary:(BOOL)load;
 - (NSArray *)getEmoticons;
 
 @end

@@ -49,97 +49,125 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
 - (void)installPlugin
 {
     //init
-    quickScanSet = [[NSCharacterSet alloc] init];
+//    quickScanSet = [[NSCharacterSet alloc] init];
     
-    emoticons = [[NSMutableArray alloc] init];
-    indexedEmoticons = [[NSMutableDictionary alloc] init];
+//    emoticons = [[NSMutableArray alloc] init];
+//    indexedEmoticons = [[NSMutableDictionary alloc] init];
     
-    cachedPacks = [[NSMutableArray alloc] init];
-
-    //Preferences
-    //Defaults
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"EmoticonDefaults" forClass:[self class]] forGroup:PREF_GROUP_EMOTICONS];
-
-    //View
-    prefs = [[AIEmoticonPreferences emoticonPreferencesWithOwner:owner plugin:self] retain];
-
-    //Keep up-to-date
-    [self preferencesChanged:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-
-    //Creata custom emoticons directory
+//   cachedPacks = [[NSMutableArray alloc] init];
+     //Creata custom emoticons directory
     // ~/Library/Application Support/Adium 2.0/Emoticons
     // Note: we should call AIAdium..., but that doesn't work, so I'm getting the info
     // "directly" FIX
     [AIFileUtilities createDirectory:[[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath]/*[AIAdium applicationSupportDirectory]*/ stringByAppendingPathComponent:PATH_EMOTICONS]];
 
     //replaceEmoticons = YES;
-    [self loadEmoticonsFromPacks];
+//    [self loadEmoticonsFromPacks];
 
-    //Register our content filter
-    [[owner contentController] registerDisplayingContentFilter:self];
+    //Preferences
+    //Defaults
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"EmoticonDefaults" forClass:[self class]] forGroup:PREF_GROUP_EMOTICONS];
+    //View
+    prefs = [[AIEmoticonPreferences emoticonPreferencesWithOwner:owner plugin:self] retain];
+    //Keep up-to-date
+    
+    emoticonsEnabled = NO;
+    [self preferencesChanged:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+
 }
 
 - (void)uninstallPlugin
 {
-    [quickScanSet release];
-    quickScanSet = nil;
-    
-    [emoticons release];
-    emoticons = nil;
-    
-    [cachedPacks release];
-    cachedPacks = nil;
-    
-    [indexedEmoticons release];
-    indexedEmoticons = nil;
+    [quickScanSet release]; quickScanSet = nil;
+    [emoticons release]; emoticons = nil;
+    [cachedPacks release]; cachedPacks = nil;
+    [indexedEmoticons release]; indexedEmoticons = nil;
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_EMOTICONS] == 0){
-
+        
         replaceEmoticons = [[[owner preferenceController] preferenceForKey:@"Enable" group:PREF_GROUP_EMOTICONS object:nil] intValue] == NSOnState;
-    
-        // Update pack prefs in cached list
-        NSEnumerator		*enumerator = [cachedPacks objectEnumerator];
-        //NSMutableDictionary	*packDict = nil;
-        AIEmoticonPack		*pack = nil;
-        NSString			*changedKey = [[notification userInfo] objectForKey:@"Key"];
-    
-        while (pack = [enumerator nextObject]){
-            if ([[pack preferencesKey] isEqualToString:changedKey]){
-                [pack loadPreferences];
-                [self loadEmoticonsFromPacks];
+        
+        if (replaceEmoticons) { //if emoticons are now enabled according to the prefs
+            if (!emoticonsEnabled) //if emoticons are currently unloaded
+            {
+                [self loadEmoticonsIfNecessary:YES];  //emoticons not enabled going in, so we will load what we need
+                emoticonsEnabled = YES; //now we know they are
+                //Register our content filter
+                [[owner contentController] registerDisplayingContentFilter:self];
+                
             }
+            // Update pack prefs in cached list
+            NSEnumerator		*enumerator = [cachedPacks objectEnumerator];
+            //NSMutableDictionary	*packDict = nil;
+            AIEmoticonPack		*pack = nil;
+            NSString                *changedKey = [[notification userInfo] objectForKey:@"Key"];
+            
+            while (pack = [enumerator nextObject]){
+                if ([[pack preferencesKey] isEqualToString:changedKey]){
+                    [pack loadPreferences];
+                    [self loadEmoticonsFromPacks];
+                }
+            }
+        } else { //if emoticons are now not enabled according to the prefs
+            if (emoticonsEnabled) { //if emoticons are currently loaded
+                emoticonsEnabled = NO;  //emoticons are now disabled
+                [self loadEmoticonsIfNecessary:NO];   //emoticons not enabled going in, so will unload what we no longer need
+                
+                //Unregister our content filter
+                [[owner contentController] unregisterDisplayingContentFilter:self];
+
+            }
+        }
+    }
+}
+
+-(void)loadEmoticonsIfNecessary:(BOOL)load
+{
+    if (load) {
+        if (!emoticonsEnabled) {
+            quickScanSet = [[NSCharacterSet alloc] init];
+            emoticons = [[NSMutableArray alloc] init];
+            indexedEmoticons = [[NSMutableDictionary alloc] init];
+            cachedPacks = [[NSMutableArray alloc] init];
+            [self loadEmoticonsFromPacks];
+        }
+    } else {
+        if (!emoticonsEnabled) {
+            [quickScanSet release]; quickScanSet = nil;
+            [emoticons release]; emoticons = nil;
+            [cachedPacks release]; cachedPacks = nil;
+            [indexedEmoticons release]; indexedEmoticons = nil;
         }
     }
 }
 
 - (void)filterContentObject:(AIContentObject *)inObject
 {
-    if(replaceEmoticons){
-	if([[inObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
-	    BOOL			mayContainEmoticons = NO;
-	    AIContentMessage		*contentMessage = (AIContentMessage *)inObject;
-	    NSString			*messageString = [[[contentMessage message] safeString] string];
-	    NSMutableAttributedString	*replacementMessage = nil;
-
-	    //First, we do a quick scan of the message for any substrings that might end up being emoticons
-	    //This avoids having to do the slower, more complicated scan for the majority of messages.
-	    if ([messageString rangeOfCharacterFromSet:quickScanSet].location != NSNotFound){
-		mayContainEmoticons = YES;
-	    }
-
-	    if (mayContainEmoticons){
-		replacementMessage = [self convertSmiliesInMessage:[contentMessage message]];
-
-		if(replacementMessage){
-		    [contentMessage setMessage:replacementMessage];
-		}
-	    }
-	}
+    if([[inObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
+        BOOL			mayContainEmoticons = NO;
+        AIContentMessage		*contentMessage = (AIContentMessage *)inObject;
+        NSString			*messageString = [[[contentMessage message] safeString] string];
+        NSMutableAttributedString	*replacementMessage = nil;
+        
+        //First, we do a quick scan of the message for any substrings that might end up being emoticons
+        //This avoids having to do the slower, more complicated scan for the majority of messages.
+        if ([messageString rangeOfCharacterFromSet:quickScanSet].location != NSNotFound){
+            mayContainEmoticons = YES;
+        }
+        
+        if (mayContainEmoticons){
+            replacementMessage = [self convertSmiliesInMessage:[contentMessage message]];
+            
+            if(replacementMessage){
+                [contentMessage setMessage:replacementMessage];
+            }
+        }
     }
+    
 }
 
 //most of this is ripped right from 1.x, YAY!
