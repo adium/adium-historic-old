@@ -32,6 +32,7 @@ typedef enum {
 	IBOutlet	NSPopUpButton   *popUp_customBackground;
 	IBOutlet	NSColorWell		*colorWell_customBackgroundColor;
 	IBOutlet	NSButton		*button_restoreDefaultBackgroundColor;
+	IBOutlet	NSPopUpButton   *popUp_backgroundImageType;
 	
 	NSMutableDictionary			*previewListObjectsDict;
 	
