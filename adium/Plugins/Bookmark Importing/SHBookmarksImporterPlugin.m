@@ -11,7 +11,7 @@
 @interface SHBookmarksImporterPlugin(PRIVATE)
 - (void)installImporterClass:(Class)inClass;
 - (void)configureMenus;
-- (void)buildBookmarkMenuFor:(id <NSMenuItem>)menuItem;
+- (NSMenu *)buildBookmarkMenuFor:(id <NSMenuItem>)menuItem;
 @end
 
 @class SHSafariBookmarksImporter, SHCaminoBookmarksImporter;
@@ -73,18 +73,9 @@
                                                        keyEquivalent:@""] autorelease];
             [menuItem setRepresentedObject:importer];
             [bookmarkSets addItem:menuItem];
-            //[menuItem release];
-            
-//            NSMenu *subMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-//            NSMenuItem *importerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"placeholder"
-//                                                   target:self
-//                                                   action:nil
-//                                            keyEquivalent:@""] autorelease];
-//            [importerMenuItem setRepresentedObject:importer];
-//            [subMenu addItem:importerMenuItem];
-            NSMenu *subMenu = [[[self buildBookmarkMenuFor:menuItem] copy] autorelease];
+
+            NSMenu *subMenu = [self buildBookmarkMenuFor:menuItem];
             [menuItem setSubmenu:subMenu];
-            [bookmarkSets addItem:menuItem];
         }
     }
     if([bookmarkSets numberOfItems]){
@@ -93,24 +84,28 @@
     }
 }
 
-- (void)buildBookmarkMenuFor:(id <NSMenuItem>)menuItem
+- (NSMenu *)buildBookmarkMenuFor:(id <NSMenuItem>)menuItem
 {
     id <SHBookmarkImporter> importer = [menuItem representedObject];
-    [menuItem setSubmenu:[importer parseBookmarksForOwner:self]];
+    return [[importer parseBookmarksForOwner:self] retain];
+    //[menuItem setSubmenu:importerMenu];
 }
 
-/*- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-	if(responder && [responder isKindOfClass:[NSTextView class]]){
-                if([[menuItem representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
-                    [self buildBookmarkMenuFor:menuItem];
-                }
+	if([[menuItem representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
+            if([[menuItem representedObject] bookmarksUpdated]){
+                [self buildBookmarkMenuFor:menuItem];
+            }
+        }
+        
+        if(responder && [responder isKindOfClass:[NSTextView class]]){
 		return(YES);
 	}else{
 		return(NO); //Disable the menu item if a text field is not key
 	}
-}*/
+}
 
 - (void)injectBookmarkFrom:(id)sender
 {
