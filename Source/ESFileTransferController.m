@@ -12,7 +12,7 @@
 #import "ESFileTransferPreferences.h"
 #import "ESFileTransferRequestPromptController.h"
 
-#define SEND_FILE_TO_CONTACT		AILocalizedString(@"Send File To %@",nil)
+#define SEND_FILE_TO_CONTACT		AILocalizedString(@"Send File to %@",nil)
 #define SEND_FILE					AILocalizedString(@"Send File",nil)
 #define CONTACT						AILocalizedString(@"Contact",nil)
 
