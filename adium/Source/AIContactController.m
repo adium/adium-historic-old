@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.161 2004/07/30 17:26:52 evands Exp $
+// $Id: AIContactController.m,v 1.162 2004/07/30 20:34:59 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -572,7 +572,6 @@ DeclareString(UID);
 	if(!inObjectID){
 		int topID = [[[owner preferenceController] preferenceForKey:TOP_METACONTACT_ID
 															  group:PREF_GROUP_CONTACT_LIST] intValue];
-		NSLog(@"metaContactWithObjectID: got %i",topID);
 		inObjectID = [NSNumber numberWithInt:topID];
 		[[owner preferenceController] setPreference:[NSNumber numberWithInt:([inObjectID intValue] + 1)]
 											 forKey:TOP_METACONTACT_ID
@@ -580,7 +579,6 @@ DeclareString(UID);
 		
 		//No reason to waste time restoring contacts when none are in the meta contact yet.
 		shouldRestoreContacts = NO;
-		NSLog(@"metaContactWithObjectID: it's now %@",inObjectID);
 	}
 	
 	//Look for a metacontact with this object ID.  If none is found, create one
@@ -722,7 +720,6 @@ DeclareString(UID);
 		}
 	}
 	
-	NSLog(@"_performAddListObject: ** %i **",success);
 	return success;
 }
 
@@ -797,7 +794,6 @@ DeclareString(UID);
  */
 - (AIMetaContact *)groupUIDs:(NSArray *)UIDsArray forServices:(NSArray *)servicesArray
 {
-	NSLog(@"groupUIDs: %@ forServices: %@",UIDsArray,servicesArray);
 	NSMutableArray  *contactsToGroupArray = [NSMutableArray array];
 	
 	int				count = [UIDsArray count];
