@@ -18,12 +18,12 @@
 #import "AIAccountProxySettings.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
+#import <AIUtilities/AITextFieldAdditions.h>
 #import <Adium/AIAccount.h>
 
 @interface AIAccountProxySettings (PRIVATE)
 - (void)configureControlDimming;
 - (void)updatePasswordField;
-
 
 - (NSMenu *)_proxyMenu;
 - (NSMenuItem *)_proxyMenuItemWithTitle:(NSString *)title tag:(int)tag;
