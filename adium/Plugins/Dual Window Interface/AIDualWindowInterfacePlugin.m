@@ -309,7 +309,9 @@
     }
 
     //Display the account selector
-    [[messageTabContainer messageViewController] setAccountSelectionMenuVisible:YES];
+    if(![[[inChat statusDictionary] objectForKey:@"DisallowAccountSwitching"] boolValue]){
+        [[messageTabContainer messageViewController] setAccountSelectionMenuVisible:YES];
+    }
 }
 
 //

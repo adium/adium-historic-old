@@ -34,7 +34,7 @@
 @end
 
 
-@interface AIFlexibleTableView : NSTableView {
+@interface AIFlexibleTableView : NSControl {
     //Display
     int					oldWidth;		//Used to avoid unnecessary cell resizes calculations
     float				contentsHeight;		//Total height of our content
