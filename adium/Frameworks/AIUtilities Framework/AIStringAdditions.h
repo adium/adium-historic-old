@@ -15,6 +15,7 @@
 
 @interface NSString (AIStringAdditions)
 + (NSString *)randomStringOfLength:(unsigned int)inLength;
++ (NSString *)stringWithContentsOfASCIIFile:(NSString *)path;
 - (NSString *)compactedString;
 - (int)intValueFromHex;
 - (NSString *)stringByExpandingBundlePath;

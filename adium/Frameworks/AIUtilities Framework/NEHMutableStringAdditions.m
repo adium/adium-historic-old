@@ -3,13 +3,17 @@
 //  Adium
 //
 //  Created by Nelson Elhage on Sun Mar 14 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "NEHMutableStringAdditions.h"
 
-
 @implementation NSMutableString (NEHMutableStringAdditions)
+
++ (NSMutableString *)stringWithContentsOfASCIIFile:(NSString *)path
+{
+	return ([[[NSMutableString alloc] initWithData:[NSData dataWithContentsOfFile:path]
+								   encoding:NSASCIIStringEncoding] autorelease]);
+}
 
 - (NSMutableString*)mutableString
 {
