@@ -68,7 +68,7 @@ typedef enum
                                                      options:NSLiteralSearch
                                                        range:NSMakeRange(0,[localizedDateFormatString length])];
             if (range.location == NSNotFound) {
-                NSLog(@"append %p";
+                NSLog(@"append %p");
                 [localizedDateFormatString appendString:@" %p"];
             }
         }
