@@ -24,6 +24,7 @@
     //Store source, dest, and chat
     source = [inSource retain];
     destination = [inDest retain];
+
     chat = inChat; //Not retained.  Chats hold onto, and store content.  Content need not hold onto chats.
     outgoing = ([source isKindOfClass:[AIAccount class]]);
     

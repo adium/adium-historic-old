@@ -25,6 +25,7 @@
 
 + (id)statusInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage;
 - (NSString *)message;
+- (void)setMessage:(NSString *)inMessage;
 - (NSDate *)date;
 
 @end
