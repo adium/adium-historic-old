@@ -684,7 +684,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		if(accountsAreOnline){
 			AIStatus	*bestStatusState = nil;
 	
-			while(account = [enumerator nextObject]){
+			while((account = [enumerator nextObject])) {
 				if([account online]){
 					[statusCounts addObject:[account statusState]];
 				}
