@@ -1,7 +1,7 @@
 //-------------------------------------------------------------------------------------------------------
 // Adium 0.8
 //-------------------------------------------------------------------------------------------------------
-Log Viewer - ability to delete a contact (whole folder) at once from drawer. [brian]
+Log Viewer - ability to delete a contact (whole folder) at once from drawer. [brian]  // in progress
 Preferences -> Keys - ability to add Shift mask for Return/Enter [brian]
 
 //-------------------------------------------------------------------------------------------------------
@@ -78,10 +78,6 @@ Preferences -> Keys - ability to add Shift mask for Return/Enter [brian]
 	- Source/destination contact and direction
 	- Transfer progress, speed
   Transfers should be cancelable, and stay in the window when finished.
-
-//No games
-  Remove tictactoe and the games framework.  These will be part of the adium-games
-  package and have no place in the default distribution.
 
 //Fast User Switching
   The fast user switching plugin needs to provide advanced preferences for
@@ -194,6 +190,7 @@ Preferences -> Keys - ability to add Shift mask for Return/Enter [brian]
 //-------------------------------------------------------------------------------------------------------
 //Message Preferences
 	- Clean up variant submenus and other message preference aspects
+        - Provide way to delete a message style from within Adium
 
 //Privacy Preferences
   Allow the user to easily block/unblock users by name, or users on their list.  Provide a way for them to see
@@ -201,6 +198,9 @@ Preferences -> Keys - ability to add Shift mask for Return/Enter [brian]
 	- Add block and unblock menu items which prompt for the service and name
 	- Add block / unblock contextual menu items
 	- Add "Block contacts not on my list" to AIM account preferences
+        
+//Sound Preferences
+        - Provide a way to manage (delete at minimum) soundsets
 
 //Announcer Improvements
 	- Allow user to have more control over what is spoken by the announcer plugin
