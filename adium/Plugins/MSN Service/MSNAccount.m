@@ -21,8 +21,8 @@
 - (void)connect:(NSTimer *)timer;
 - (void)update:(NSTimer *)timer;
 - (void)disconnect;
-- (void)syncContactList;
-- (void)receiveInitialStatus;
+//- (void)syncContactList;
+//- (void)receiveInitialStatus;
 @end
 
 @implementation MSNAccount
@@ -120,6 +120,15 @@
     
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
+    
+    handleDict = [[NSMutableDictionary alloc] init];
+}
+
+- (void)dealloc
+{
+    [handleDict release];
+    
+    [super dealloc];
 }
 
 - (id <AIAccountViewController>)accountView
@@ -557,18 +566,23 @@
 	
 	switch (status)
 	{
-            case STATUS_ONLINE:
-                break;
-            case STATUS_OFFLINE:
-            case STATUS_NA:
-                break;
-            case STATUS_CONNECTING:
-                [self connect:timer];
-                break;
-            case STATUS_DISCONNECTING:
-                [self disconnect];
-                break;
+        case STATUS_ONLINE:
+            break;
+        case STATUS_OFFLINE:
+        case STATUS_NA:
+            break;
+        case STATUS_CONNECTING:
+            [self connect:timer];
+            break;
+        case STATUS_DISCONNECTING:
+            [self disconnect];
+            break;
 	}
+}
+
+- (void)disconnect
+{
+    [socket release];
 }
 
 /*- (void)connect
@@ -680,11 +694,6 @@
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
     
-}*/
-
-- (void)disconnect
-{
-    [socket release];
 }
 
 - (void)syncContactList
@@ -794,6 +803,6 @@
         }
         while(![socket readyForReceiving]) {}
     }
-}
+}*/
 
 @end
