@@ -85,12 +85,8 @@
 - (void)disconnect;
 - (NSString *)connectionStringForStep:(int)step;
 - (void)configureGaimAccount;
-- (NSString *)host;
-- (NSString *)hostKey;
-- (int)port;
-- (NSString *)portKey;
 
-	//Account status
+//Account status
 - (NSArray *)supportedPropertyKeys;
 - (void)updateStatusForKey:(NSString *)key;
 - (void)setAccountUserImage:(NSImage *)image;
