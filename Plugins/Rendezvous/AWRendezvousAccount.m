@@ -390,7 +390,7 @@
 //Status keys this account supports
 - (NSSet *)supportedPropertyKeys
 {
-	static NSSet *supportedPropertyKeys = nil;
+	static NSMutableSet *supportedPropertyKeys = nil;
 	
 	if (!supportedPropertyKeys){
 		supportedPropertyKeys = [[NSMutableSet alloc] initWithObjects:
