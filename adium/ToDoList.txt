@@ -15,7 +15,9 @@ Contacts:
             // core functionality is done, now I'm adding info viewer support, AB syncing, and possibly AIM Buddy Note sycing
 	+ Add keyboard shortcut for the 'add contact' menu item
 	+ Pass our aliases to libgaim so they get uploaded to the server
-
+	+ Context menus
+		* Do we need to show the "Add Contact..." item, greyed out, on basically all contacts?
+		* Do we sure "Delete" should be in the context menu? How often is this used?
 Alerts:
 	+ Allow user to have more control over what is spoken by the announcer plugin
 	+ Display time stamps in the panel alert
@@ -61,7 +63,6 @@ Other:
     	+ Don't spawn new windows when we're hidden, instead que them and open the windows next time we're unhidden
 	+ Display new mail notices for the accounts that support it.  This is bloat - but some people expect it.
 	+ Symlink the iChat emoticons much like we symlink the iChat sounds
-	+ Allow all xtras to be installed without a restart
 
 //-------------------------------------------------------------------------------------------------------
 // Big Stuff
