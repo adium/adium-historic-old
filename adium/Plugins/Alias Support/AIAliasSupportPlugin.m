@@ -222,7 +222,8 @@
 {
     NSString		*displayName = nil;
     NSString		*longDisplayName = nil;
-
+    NSString            *serverDisplayName = nil;
+    
     //Setup the display names
     if ( inAlias != nil && [ inAlias length ] != 0 ) {
         displayName = inAlias;
@@ -240,17 +241,25 @@
             break;
             
         case DISPLAY_NAME_SCREEN_NAME:
+            serverDisplayName = [ inObject serverDisplayName ];
+            if ([displayName compare:serverDisplayName] == 0) {
+                longDisplayName = displayName;
+            } else {
             longDisplayName = [ NSString stringWithFormat:@"%@ (%@)",
                 displayName,
-                [ inObject serverDisplayName ] ];
-
+                serverDisplayName ];
+            }
             break;
             
         case SCREEN_NAME_DISPLAY_NAME:
+            serverDisplayName = [ inObject serverDisplayName ];
+            if ([displayName compare:serverDisplayName] == 0) {
+                longDisplayName = displayName;
+            } else {
             longDisplayName = [ NSString stringWithFormat:@"%@ (%@)",
-                [ inObject serverDisplayName ],
+                serverDisplayName,
                 displayName ];
-
+            }
             break;
             
         case SCREEN_NAME:
