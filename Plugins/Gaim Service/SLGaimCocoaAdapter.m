@@ -915,6 +915,7 @@ NSMutableDictionary* get_chatDict(void)
 
 			buddy = gaim_buddy_new(account, buddyUTF8String, NULL);
 		}
+		GaimDebug (@"Adding buddy %s to group %s",buddy->name, group->name);
 		gaim_blist_add_buddy(buddy, NULL, group, NULL);
 		serv_add_buddy(gaim_account_get_connection(account), buddy);
 	}
@@ -1165,6 +1166,36 @@ NSMutableDictionary* get_chatDict(void)
 							 onAccount:adiumAccount];
 }
 
+//Available message doesn't work on all protocols. OSCAR has its own accessor
+- (oneway void)gaimThreadSetAvailableMessageTo:(NSString *)availableHTML onAccount:(id)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (gaim_account_is_connected(account)){
+		
+		serv_set_away(account->gc, "Available", [availableHTML UTF8String]);
+	}
+}
+- (oneway void)setAvailableMessageTo:(NSString *)availableHTML onAccount:(id)adiumAccount
+{
+	[gaimThreadProxy gaimThreadSetAvailableMessageTo:availableHTML
+										   onAccount:adiumAccount];
+}
+
+//Set invisible. This will clear any other status.
+- (oneway void)gaimThreadSetInvisible:(BOOL)isInvisible onAccount:(id)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (gaim_account_is_connected(account)){
+		serv_set_away(account->gc, "Invisible", NULL);
+	}	
+}
+
+- (oneway void)setInvisible:(BOOL)isInvisible onAccount:(id)adiumAccount
+{
+	[gaimThreadProxy gaimThreadSetInvisible:isInvisible
+								  onAccount:adiumAccount];
+}
+
 - (oneway void)gaimThreadSetInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
 {
 	GaimAccount 	*account = accountLookupFromAdiumAccount(adiumAccount);
@@ -1314,7 +1345,8 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)gaimThreadOSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	
+	OscarData   *od;
+
 	//Because we can get here from a delay, it's possible that we are now disconnected. Sanity checks are good.
 	if(account &&
 	   gaim_account_is_connected(account) &&
@@ -1327,6 +1359,25 @@ NSMutableDictionary* get_chatDict(void)
 {
 	[gaimThreadProxy gaimThreadOSCARSetFormatTo:inFormattedUID
 									  onAccount:adiumAccount];
+}
+
+
+- (oneway void)gaimThreadOSCARSetAvailableMessageTo:(NSString *)availableHTML onAccount:(id)adiumAccount
+{
+	GaimAccount *account;
+	GaimConnection	*gc;
+	if((account = accountLookupFromAdiumAccount(adiumAccount)) &&
+	   (gc = gaim_account_get_connection(account)) &&
+	   (od = gc->proto_data)){
+		aim_srv_setavailmsg(od->sess, [availableHTML UTF8String]);
+	}
+}
+
+//Only for OSCAR
+- (oneway void)OSCARSetAvailableMessageTo:(NSString *)availableHTML onAccount:(id)adiumAccount
+{
+	[gaimThreadProxy gaimThreadOSCARSetAvailableMessageTo:availableHTML
+												onAccount:adiumAccount];	
 }
 
 #pragma mark Request callbacks
@@ -1399,6 +1450,7 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)requestSecureMessaging:(BOOL)inSecureMessaging
 							   inChat:(AIChat *)inChat
 {
+	NSLog(@"Requesting %i in %@",inSecureMessaging,inChat);
 	[gaimThreadProxy gaimThreadRequestSecureMessaging:inSecureMessaging
 											   inChat:inChat];
 }
@@ -1406,38 +1458,43 @@ NSMutableDictionary* get_chatDict(void)
 - (void)gaimConversation:(GaimConversation *)conv setSecurityDetails:(NSDictionary *)securityDetailsDict
 {
 	AIChat					*chat = imChatLookupFromConv(conv);
-	NSMutableDictionary		*fullSecurityDetailsDict = [securityDetailsDict mutableCopy];
-	NSString				*format, *description;
-	
-	/* Encrypted by Off-the-Record Messaging
-	 *
-	 * Fingerprint for TekJew:
-	 * <Fingerprint>
-	 *
-	 * Secure ID for this session:
-	 * Incoming: <Incoming SessionID>
-	 * Outgoing: <Outgoing SessionID>
-	 */
-	format = [@"%@\n\n" stringByAppendingString:AILocalizedString(@"Fingerprint for %@:","Fingerprint for <name>:")];
-	format = [format stringByAppendingString:@"\n%@\n\n%@\n%@ %@\n%@ %@"];
+	NSMutableDictionary		*fullSecurityDetailsDict;
+	NSLog(@"Setting %@ to %@",chat,securityDetailsDict);	
+	if(securityDetailsDict){
+		NSString				*format, *description;
+		fullSecurityDetailsDict = [[securityDetailsDict mutableCopy] autorelease];
+		
+		/* Encrypted by Off-the-Record Messaging
+			*
+			* Fingerprint for TekJew:
+			* <Fingerprint>
+			*
+			* Secure ID for this session:
+			* Incoming: <Incoming SessionID>
+			* Outgoing: <Outgoing SessionID>
+			*/
+		format = [@"%@\n\n" stringByAppendingString:AILocalizedString(@"Fingerprint for %@:","Fingerprint for <name>:")];
+		format = [format stringByAppendingString:@"\n%@\n\n%@\n%@ %@\n%@ %@"];
+		
+		description = [NSString stringWithFormat:format,
+			AILocalizedString(@"Encrypted by Off-the-Record Messaging",nil),
+			[[chat listObject] formattedUID],
+			[securityDetailsDict objectForKey:@"Fingerprint"],
+			AILocalizedString(@"Secure ID for this session:",nil),
+			AILocalizedString(@"Incoming:",nil),
+			[securityDetailsDict objectForKey:@"Incoming SessionID"],
+			AILocalizedString(@"Outgoing:",nil),
+			[securityDetailsDict objectForKey:@"Outgoing SessionID"],
+			nil];
+		
+		[fullSecurityDetailsDict setObject:description
+									forKey:@"Description"];
+	}else{
+		fullSecurityDetailsDict = nil;	
+	}
 
-	description = [NSString stringWithFormat:format,
-		AILocalizedString(@"Encrypted by Off-the-Record Messaging",nil),
-		[[chat listObject] formattedUID],
-		[securityDetailsDict objectForKey:@"Fingerprint"],
-		AILocalizedString(@"Secure ID for this session:",nil),
-		AILocalizedString(@"Incoming:",nil),
-		[securityDetailsDict objectForKey:@"Incoming SessionID"],
-		AILocalizedString(@"Outgoing:",nil),
-		[securityDetailsDict objectForKey:@"Outgoing SessionID"],
-		nil];
-	
-	[fullSecurityDetailsDict setObject:description
-								forKey:@"Description"];
 	[chat mainPerformSelector:@selector(setSecurityDetails:)
 				   withObject:fullSecurityDetailsDict];
-
-	[fullSecurityDetailsDict release];
 }
 
 - (void)refreshedSecurityOfGaimConversation:(GaimConversation *)conv

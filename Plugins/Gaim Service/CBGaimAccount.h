@@ -38,7 +38,7 @@
 - (void)initSSL;
 - (void)createNewGaimAccount;   //This can be sublcassed to change settings for the gaim account, which is recreated with each connect cycle
 - (void)dealloc;
-- (NSArray *)supportedPropertyKeys;
+- (NSSet *)supportedPropertyKeys;
 - (void)updateStatusForKey:(NSString *)key;
 - (NSDictionary *)defaultProperties;
 - (NSString *)unknownGroupName;
@@ -75,7 +75,7 @@
 - (void)configureGaimAccount;
 
 //Account status
-- (NSArray *)supportedPropertyKeys;
+- (NSSet *)supportedPropertyKeys;
 - (void)updateStatusForKey:(NSString *)key;
 - (void)setAccountUserImage:(NSImage *)image;
 - (void)setAccountIdleSinceTo:(NSDate *)idleSince;

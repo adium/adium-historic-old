@@ -17,13 +17,14 @@
 //Return the ConnContext for a GaimConversation, or NULL if none exists
 static ConnContext* context_for_conv(GaimConversation *conv)
 {
+	NSLog(@"context_for_conv");
     GaimAccount *account;
     char *username;
     const char *accountname, *proto;
     ConnContext *context;
 	
     /* Do nothing if this isn't an IM conversation */
-    if (gaim_conversation_get_type(conv) != GAIM_CONV_IM) return;
+    if (gaim_conversation_get_type(conv) != GAIM_CONV_IM) return nil;
 	
     account = gaim_conversation_get_account(conv);
     accountname = gaim_account_get_username(account);
@@ -76,7 +77,7 @@ static NSDictionary* details_for_context(ConnContext *context)
 	securityDetailsDict = [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSString stringWithUTF8String:fingerprint], @"Fingerprint",
 		[NSString stringWithUTF8String:((dir == SESS_DIR_LOW) ? sess1 : sess2)], @"Incoming SessionID",
-		[NSString stringWithUTF8String:((dir == SESS_DIR_HIGH) ? sess2 : sess1)], @"Outgoing SessionID",
+		[NSString stringWithUTF8String:((dir == SESS_DIR_HIGH) ? sess1 : sess2)], @"Outgoing SessionID",
 		nil];
 	
 	return(securityDetailsDict);
@@ -181,7 +182,7 @@ static void otrg_adium_dialog_connected(ConnContext *context)
 	NSDictionary		*securityDetailsDict;
 	GaimAccount			*account;
 	GaimConversation	*conv;
-	
+	NSLog(@"otrg_adium_dialog_connected");
 	//Find the GaimAccount and existing conversation which was just connected
 	account = gaim_accounts_find(context->accountname, context->protocol);
 	conv = gaim_find_conversation_with_account(context->username, account);
@@ -201,6 +202,7 @@ static void otrg_adium_dialog_connected(ConnContext *context)
 * (a state other than CONN_CONNECTED). */
 static void otrg_adium_dialog_disconnected(ConnContext *context)
 {
+	NSLog(@"otrg_adium_dialog_disconnected");
 	GaimConversation	*conv;
 
 	conv = gaim_find_conversation_with_account(context->username,
@@ -213,6 +215,7 @@ static void otrg_adium_dialog_disconnected(ConnContext *context)
 * our state to change (because it was just the keys we knew already). */
 static void otrg_adium_dialog_stillconnected(ConnContext *context)
 {
+	NSLog(@"otrg_adium_dialog_stillconnected");
 	GaimConversation	*conv;
 	GaimAccount			*account;
 	
@@ -232,17 +235,19 @@ static void otrg_adium_dialog_resensitize_all(void)
 /* When a conversation is created, check to see if it is already connected */
 static void otrg_adium_dialog_new_conv(GaimConversation *conv)
 {
+	NSLog(@"otrg_adium_dialog_new_conv");
 	ConnContext		*context;
 	ConnectionState state;
-	
+
 	context = context_for_conv(conv);
     state = context ? context->state : CONN_UNCONNECTED;
 
 	if(state == CONN_CONNECTED){
+		NSLog(@"otrg_adium_dialog_new_conv: Neat! We're already connected!");
 		NSDictionary	*securityDetailsDict;
-		
+
 		securityDetailsDict = details_for_context(context);
-		
+
 		[[SLGaimCocoaAdapter sharedInstance] gaimConversation:conv
 										   setSecurityDetails:securityDetailsDict];
 	}
@@ -251,7 +256,7 @@ static void otrg_adium_dialog_new_conv(GaimConversation *conv)
 /* Called before Gaim destroys a conversation */
 static void otrg_adium_dialog_remove_conv(GaimConversation *conv)
 {
-	
+	NSLog(@"remove conv...");
 }
 
 static OtrgDialogUiOps otrg_adium_dialog_ui_ops = {
@@ -278,13 +283,13 @@ OtrgDialogUiOps *otrg_adium_dialog_get_ui_ops(void)
 * UI, if visible. */
 static void otrg_adium_ui_update_fingerprint(void)
 {
-	GaimDebug (@"otrg_adium_ui_update_fingerprint");
+	NSLog (@"otrg_adium_ui_update_fingerprint");
 }
 
 /* Update the keylist, if it's visible */
 static void otrg_adium_ui_update_keylist(void)
 {
-	GaimDebug (@"otrg_adium_ui_update_keylist");
+	NSLog (@"otrg_adium_ui_update_keylist");
 #if 0
     gchar *titles[4];
     char hash[45];
@@ -361,6 +366,7 @@ OtrgUiUiOps *otrg_adium_ui_get_ui_ops(void)
 #pragma mark Connecting/Disconnecting
 void adium_gaim_otr_connect_conv(GaimConversation *conv)
 {
+	NSLog(@"adium_gaim_otr_connect_conv");
 	/* Do nothing if this isn't an IM conversation */
 	if(gaim_conversation_get_type(conv) == GAIM_CONV_IM){ 
 		otrg_plugin_send_default_query_conv(conv);
@@ -369,6 +375,7 @@ void adium_gaim_otr_connect_conv(GaimConversation *conv)
 
 void adium_gaim_otr_disconnect_conv(GaimConversation *conv)
 {
+	NSLog(@"adium_gaim_otr_disconnect_conv");
 	ConnContext	*context;
 	
 	/* Do nothing if this isn't an IM conversation */

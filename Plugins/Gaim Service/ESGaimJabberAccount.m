@@ -37,9 +37,18 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	
 	[super initAccount];
 }
-- (void)dealloc
+
+- (NSSet *)supportedPropertyKeys
 {
-	[super dealloc];
+	static NSSet *supportedPropertyKeys = nil;
+	
+	if (!supportedPropertyKeys)
+		supportedPropertyKeys = [[[NSMutableSet alloc] initWithObjects:
+			@"Available",
+			@"Invisible",
+			nil] unionSet:[super supportedPropertyKeys]];
+	
+	return supportedPropertyKeys;
 }
 
 - (void)configureGaimAccount
@@ -94,6 +103,13 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 	AILog(@"Jabber user name: \"%@\"",completeUserName);
 	gaim_account_set_username(account, [completeUserName UTF8String]);
+}
+
+
+#pragma mark Status
+- (void)performSetAccountAvailableTo:(NSString *)availableHTML
+{
+	[gaimThread setAvailableMessageTo:availableHTML onAccount:self];	
 }
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
