@@ -41,11 +41,12 @@ int HTMLEquivalentForFontSize(int fontSize);
     NSFont		*currentFont;
     int			currentSize;
     NSString		*currentColor;
+    NSColor		*pageColor = nil;
     
     NSString		*inMessageString;
     int			messageLength;
     NSRange		searchRange;
-    BOOL		firstPass = YES;
+    BOOL		openFontTag = NO;
     
     //Get the incoming message as a regular string, and it's length
     inMessageString = [inMessage string];
@@ -63,6 +64,13 @@ int HTMLEquivalentForFontSize(int fontSize);
     }
     else {
         string = [NSMutableString stringWithString:@""];
+    }
+
+    //Append the body tag (If there is a background color)
+    if(messageLength > 0 && (pageColor = [inMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil])){
+        [string appendString:@"<BODY BGCOLOR=\"#"];
+        [string appendString:[pageColor hexString]];
+        [string appendString:@"\">"];
     }
 
     //Loop through the entire string
@@ -90,9 +98,9 @@ int HTMLEquivalentForFontSize(int fontSize);
             || [familyName compare:currentFamily])
         ) {
 
-            if(firstPass) {
+            if(!openFontTag) {
                 [string appendString:@"<FONT"];
-                firstPass = NO;
+                openFontTag = YES;
             }
             else {
                 [string appendString:@"</FONT><FONT"];
@@ -180,10 +188,21 @@ int HTMLEquivalentForFontSize(int fontSize);
     [currentColor release];
     [currentFont release];
 
-    if (encodeFullString) {
-        [string appendString:@"</FONT></HTML>"];
+    //Close the open font tag (if there is one)
+    if(openFontTag){
+        [string appendString:@"</FONT>"];
     }
-    
+
+    //Close the body tag (if there is one)
+    if(pageColor){
+        [string appendString:@"</BODY>"];
+    }
+
+    //Close the HTML
+    if (encodeFullString) {
+        [string appendString:@"</HTML>"];
+    }
+
     return(string);
 }
 

@@ -109,6 +109,8 @@ enum {
 - serviceDefaults;							//?
 - (void)removeListener:(id)fp12;					//Remove a listener
 - (void)addListener:(id)fp12 signature:(NSString *)fp16 capabilities:(int)fp20;	//Add a listener.  iChat passes a bundle ID and 15
+
+- (void)_setIdleTime:(unsigned int)time; //this IS NOT in the protocol.  Just here to stop compile warnings for now.
 @end
 
 @protocol FZServiceListener <NSObject>

@@ -79,35 +79,9 @@
 //close
 - (void)closeController
 {
-//    NSEnumerator	*enumerator;
-//    AIListGroup		*group;
-//    NSDictionary	*preferences;
-//    NSMutableDictionary	*groupStateDict;
+    //Save the group expand/collapse state
+    [contactListGeneration saveGroupState];
 
-    //Break down the contact list to put all handles/groups in one place
-//    [self breakDownContactList];
-
-#warning group state saving off temporarily
-    //Get the group state dict
-/*    preferences = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
-    groupStateDict = [[preferences objectForKey:KEY_CONTACT_LIST_GROUP_STATE] mutableCopy];
-    if(!groupStateDict){
-        groupStateDict = [[NSMutableDictionary alloc] init];
-    }
-    [groupStateDict autorelease];
-    
-    //Set expanded/collapsed state of groups
-    enumerator = [[abandonedGroups allValues] objectEnumerator];
-    while((group = [enumerator nextObject])){
-        [groupStateDict setObject:[NSNumber numberWithBool:[group isExpanded]]
-                            forKey:[group UID]];
-    }
-
-    //Save group state
-    [[owner preferenceController] setPreference:groupStateDict
-                                         forKey:KEY_CONTACT_LIST_GROUP_STATE
-                                          group:PREF_GROUP_CONTACT_LIST];
-*/
     //Save order index information
     [[owner preferenceController] setPreference:listOrderDict
                                          forKey:KEY_CONTACT_LIST_ORDER
@@ -124,13 +98,6 @@
 
     [super dealloc];
 }
-
-/*- (void)finishIniting
-{
-    //Load the contact list
-    contactList = [[AIListGroup alloc] initWithUID:CONTACT_LIST_GROUP_NAME];
-//    [[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
-}*/
 
 // Contact Info --------------------------------------------------------------------------------
 - (IBAction)showContactInfo:(id)sender
@@ -196,7 +163,7 @@
     //Post a handles changed notification for the account
     [[owner notificationCenter] postNotificationName:Account_HandlesChanged object:inAccount]; 
 }
-#warning optimize contact list update holding so we can freely set it here
+
 - (void)handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount
 {
     //Hold contact list updates, and apply the changes to the contact list
@@ -348,6 +315,20 @@
     return(activeSortController);
 }
 
+//Correctly sets the index value of a contact, using the saved value if present.
+- (void)_setOrderIndexOfContact:(AIListContact *)contact
+{
+    NSNumber	*orderIndex;
+
+    orderIndex = [listOrderDict objectForKey:[contact UIDAndServiceID]];
+    if(!orderIndex){ //If this contact doesn't have an index, put it at the end of the list (largest order).
+        [listOrderDict setObject:[NSNumber numberWithInt:largestOrder] forKey:[contact UIDAndServiceID]];
+        [contact setIndex:largestOrder];
+        largestOrder++;
+    }else{
+        [contact setIndex:[orderIndex intValue]];
+    }
+}
 
 //Sort a group
 - (void)sortListGroup:(AIListGroup *)inGroup mode:(AISortMode)sortMode

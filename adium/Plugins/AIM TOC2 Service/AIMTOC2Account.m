@@ -620,7 +620,7 @@ static char *hash_password(const char * const password);
         }else{
             NSLog(@"Attempted to send invalid packet (Too large, %i)",[packet length]);
         }
-            
+
 //        NSLog(@"(%@)-> %@",screenName,[[outQue objectAtIndex:0] string]);
         [outQue removeObjectAtIndex:0];
     }
