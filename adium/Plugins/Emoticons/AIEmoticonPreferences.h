@@ -25,11 +25,10 @@
     IBOutlet    NSPopUpButton               *button_addEmoticons;
     IBOutlet	NSButton                    *button_removeEmoticons;
     
+	NSButtonCell							*checkCell;
     AIEmoticonPack                          *selectedEmoticonPack;
 
     NSArray                                 *dragRows;
 }
-
-- (IBAction)removeEmoticons:(id)sender;
 
 @end

@@ -16,6 +16,7 @@
 #import "AIEmoticonPackCell.h"
 #import "AIEmoticonPack.h"
 #import "AIEmoticon.h"
+#import "AIEmoticonsPlugin.h"
 
 @implementation AIEmoticonPackCell
 
@@ -26,16 +27,61 @@
 #define EMOTICON_BOTTOM_MARGIN      4
 #define EMOTICON_TOP_MARGIN         0
 
+- (id)initWithPlugin:(id)inPlugin
+{
+	if (self = [super init]) {
+		
+		packCheckCell = [[NSButtonCell alloc] init];
+		[packCheckCell setButtonType:NSSwitchButton];
+		[packCheckCell setControlSize:NSSmallControlSize];
+		[packCheckCell setTitle:@""];
+		[packCheckCell setRefusesFirstResponder:YES];
+		
+		plugin = inPlugin;
+	}
+	return self;
+}
+
+//Drawing cells actually makes copies and deallocs them rapidly; rather than creating a new packCheckCell each time
+//we reuse the same instance
+- (id)copyWithZone:(NSZone*)zone
+{
+	AIEmoticonPackCell *newCell = [super copyWithZone:zone];
+	
+	newCell->packCheckCell = [packCheckCell retain];
+	
+	return newCell;
+}
+
+- (void)dealloc
+{
+	[packCheckCell release]; packCheckCell = nil;
+	[super dealloc];
+}
+
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-    AIEmoticonPack  *pack = [self objectValue];
+	//We have to work by name here since [self objectValue] gives a different object every time
+	AIEmoticonPack *pack = [(AIEmoticonsPlugin *)plugin emoticonPackWithName:[[self objectValue] name]];
+		
     NSEnumerator    *enumerator;
     AIEmoticon      *emoticon;
     NSColor         *textColor;
     int             x;
     
-    //Indent
+	//Indent
     cellFrame.origin.x += EMOTICON_LEFT_MARGIN;
+	
+	//Draw the checkbox
+	NSSize  checkSize = [packCheckCell cellSize];
+	float   checkHeight = checkSize.height;
+	NSRect  checkFrame = NSMakeRect(cellFrame.origin.x,
+									cellFrame.origin.y + cellFrame.size.height - (checkHeight-2) - EMOTICON_BOTTOM_MARGIN,
+									checkSize.width,
+									checkHeight);
+
+	[packCheckCell setState:[pack isEnabled]];
+	[packCheckCell drawWithFrame:checkFrame inView:controlView];
     
     //Determine the correct text color
     if([self isHighlighted]){
@@ -44,21 +90,24 @@
         textColor = [NSColor controlTextColor];
     }
     
-    //Display the emoticon pack name
+    //Display the emoticon pack name starting right above the check
     NSDictionary    *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
         [NSFont boldSystemFontOfSize:12], NSFontAttributeName, 
         textColor, NSForegroundColorAttributeName, nil];
     [[pack name] drawAtPoint:NSMakePoint(cellFrame.origin.x, cellFrame.origin.y) withAttributes:attributes];
 
+	//Indent so the preview emoticons don't overlap the check
+	cellFrame.origin.x += [packCheckCell cellSize].width;
+		
     //Display a few preview emoticons
     x = EMOTICON_LEFT_ICON_MARGIN;
     enumerator = [[pack emoticons] objectEnumerator];
-    while(x < cellFrame.size.width && (emoticon = [enumerator nextObject])){
+    while((x < cellFrame.size.width) && (emoticon = [enumerator nextObject])){
         NSImage *image = [emoticon image];
         NSSize  imageSize = [image size];
         NSRect  destRect;
         
-        //Scale the emoticon, preserving it's proportions.
+        //Scale the emoticon, preserving its proportions.
         if(imageSize.width > EMOTICON_MAX_SIZE){
             destRect.size.width = EMOTICON_MAX_SIZE;
             destRect.size.height = imageSize.height * (EMOTICON_MAX_SIZE / imageSize.width);
@@ -75,7 +124,7 @@
         destRect.origin.y = cellFrame.origin.y + (cellFrame.size.height - destRect.size.height) - EMOTICON_BOTTOM_MARGIN;
         
         //If there is enough room, draw the image
-        if(x + destRect.size.width < cellFrame.size.width){
+        if((destRect.origin.x + destRect.size.width) < (cellFrame.size.width/*-cellFrame.origin.x*/)){
             BOOL    wasFlipped = [image isFlipped];
             
             if(!wasFlipped) [image setFlipped:YES]; //Temporarily flip the image so it appears correct in our flipped view
@@ -89,6 +138,39 @@
         //Move over for the next emoticon, leaving some space
         x += imageSize.width + EMOTICON_SPACING;
     }
+}
+
+- (BOOL)trackMouse:(NSEvent*)theEvent inRect:(NSRect)cellFrame ofView:(NSView*)controlView untilMouseUp:(BOOL)untilMouseUp
+{
+	//Draw the checkbox
+	NSSize		checkSize = [packCheckCell cellSize];
+	float		checkHeight = checkSize.height;
+	NSRect		checkFrame = NSMakeRect(cellFrame.origin.x,
+										cellFrame.origin.y + cellFrame.size.height - (checkHeight-2) - EMOTICON_BOTTOM_MARGIN,
+										checkSize.width,
+										checkHeight);
+	
+	NSPoint		locationInCell;
+	BOOL		result = NO;
+	
+	locationInCell = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
+	
+	//If the trackMouse: event is inside our checkFrame, pass the necessary calls to packCheckCell
+	if(NSPointInRect(locationInCell, checkFrame)) {
+		[packCheckCell highlight:YES withFrame:cellFrame inView:controlView];
+		result = [packCheckCell trackMouse:theEvent inRect:checkFrame ofView:controlView
+							  untilMouseUp:untilMouseUp];
+		
+		//We have to work by name here since [self objectValue] gives a different object every time
+		AIEmoticonPack *pack = [(AIEmoticonsPlugin *)plugin emoticonPackWithName:[[self objectValue] name]];
+		[(AIEmoticonsPlugin *)plugin setEmoticonPack:pack enabled:![pack isEnabled]];
+		
+	} else {
+		
+		result = [super trackMouse:theEvent inRect:cellFrame ofView:controlView
+					  untilMouseUp:untilMouseUp];
+	}
+	return result;
 }
 
 - (BOOL)drawsGradientHighlight

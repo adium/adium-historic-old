@@ -39,6 +39,7 @@
     path = [inPath retain];
     name = [[[inPath lastPathComponent] stringByDeletingPathExtension] retain];
     emoticonArray = nil;
+	enabled = NO;
     
     return(self);
 }
@@ -133,5 +134,14 @@
         [emoticon flushEmoticonImageCache];
     }
 }
-    
+
+- (void)setIsEnabled:(BOOL)inEnabled
+{
+	enabled = inEnabled;
+}
+- (BOOL)isEnabled
+{
+	return enabled;
+}
+
 @end
