@@ -79,7 +79,7 @@
 	[checkBox_showTooltips setLocalizedString:AILocalizedString(@"Show contact information tooltips",nil)];
 	[checkBox_showTooltipsInBackground setLocalizedString:AILocalizedString(@"While Adium is in the background", "This is a secondary preference underneath 'Show contact information tooltips'")];
 	[checkBox_windowHasShadow setLocalizedString:AILocalizedString(@"Show window shadow",nil)];
-	[checkBox_windowHasShadow setTooltip:@"Stay close to the Vorlon."];
+	[checkBox_windowHasShadow setToolTip:@"Stay close to the Vorlon."];
 
 	[label_appearance setLocalizedString:AILocalizedString(@"Appearance",nil)];
 	[label_tooltips setLocalizedString:AILocalizedString(@"Tooltips",nil)];
