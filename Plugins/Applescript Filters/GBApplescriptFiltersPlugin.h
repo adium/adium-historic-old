@@ -1,5 +1,5 @@
 //
-//  GBiTunerPlugin.h
+//  GBApplescriptFiltersPlugin.h
 //  Adium
 //
 //  Created by Gregory Barchard on Wed Dec 10 2003.
@@ -10,7 +10,7 @@
 
 @protocol AIContentFilter;
 
-@interface GBiTunerPlugin : AIPlugin <AIContentFilter> {    
+@interface GBApplescriptFiltersPlugin : AIPlugin <AIContentFilter> {    
 	NSMenuItem				*scriptMenuItem;		//Script menu parent
 	NSMenu 					*scriptMenu;			//Submenu of scripts
 
