@@ -40,15 +40,17 @@
     NSMutableArray		    *loadedPanes;
     NSMutableArray		    *loadedAdvancedPanes;
     NSMutableArray		    *_advancedCategoryArray;
+	
+	BOOL					shouldRestorePreviousSelectedPane;
 }
 
 + (void)openPreferenceWindow;
-+ (void)openPreferenceWindowToCategory:(PREFERENCE_CATEGORY)category;
++ (void)openPreferenceWindowToCategoryWithIdentifier:(NSString *)identifier;
 + (void)openPreferenceWindowToAdvancedPane:(NSString *)advancedPane;
 + (void)closePreferenceWindow;
 
 //Panes
-- (void)selectCategory:(PREFERENCE_CATEGORY)category;
+- (void)selectCategoryWithIdentifier:(NSString *)identifier;
 - (void)selectAdvancedPane:(NSString *)advancedPane;
 
 //Advanced Preferences

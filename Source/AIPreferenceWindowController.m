@@ -24,7 +24,7 @@
 #import <AIUtilities/AIViewAdditions.h>
 
 //Preferences
-#define KEY_PREFERENCE_SELECTED_CATEGORY		@"Preference Selected Category"
+#define KEY_PREFERENCE_SELECTED_CATEGORY		@"Preference Selected Category Name"
 #define KEY_ADVANCED_PREFERENCE_SELECTED_ROW    @"Preference Advanced Selected Row"
 
 //Other
@@ -66,9 +66,12 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 /*
  * @brief Open the preference window to a specific category
  */
-+ (void)openPreferenceWindowToCategory:(PREFERENCE_CATEGORY)category
++ (void)openPreferenceWindowToCategoryWithIdentifier:(NSString *)identifier
 {
-	[[self _preferenceWindowController] selectCategory:category];
+	//Load the window first
+	[[self _preferenceWindowController] window];
+	
+	[[self _preferenceWindowController] selectCategoryWithIdentifier:identifier];
 	[[self _preferenceWindowController] showWindow:nil];
 }
 
@@ -115,7 +118,8 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     loadedPanes = [[NSMutableArray alloc] init];
     loadedAdvancedPanes = nil;
     _advancedCategoryArray = nil;
-	
+	shouldRestorePreviousSelectedPane = YES;
+
     return(self);    
 }
 
@@ -156,13 +160,25 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		view_FileTransfer,
 		view_Advanced,
 		nil] retain];
+}
+
+/*
+ * @brief Invoked before the window opens
+ */
+- (IBAction)showWindow:(id)sender
+{
+	//Ensure the window is loaded
+	[self window];
 	
-    //Make the previously selected category active if it is valid
-	int previouslySelectedCategory = [[[adium preferenceController] preferenceForKey:KEY_PREFERENCE_SELECTED_CATEGORY
-																			   group:PREF_GROUP_WINDOW_POSITIONS] intValue];
-	[self selectCategory:(((previouslySelectedCategory > 0) && (previouslySelectedCategory < [viewArray count])) ?
-						  previouslySelectedCategory :
-						  0)];
+	//Make the previously selected category active if it is valid
+	if(shouldRestorePreviousSelectedPane){
+		NSString *previouslySelectedCategory = [[adium preferenceController] preferenceForKey:KEY_PREFERENCE_SELECTED_CATEGORY
+																						group:PREF_GROUP_WINDOW_POSITIONS];
+		if(!previouslySelectedCategory) previouslySelectedCategory = @"general";
+		[self selectCategoryWithIdentifier:previouslySelectedCategory];
+	}
+	
+	[super showWindow:sender];
 }
 
 /*!
@@ -179,7 +195,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[self _saveControlChanges];
 	
     //Save the selected category and advanced category
-    [[adium preferenceController] setPreference:[NSNumber numberWithInt:[tabView_category indexOfTabViewItem:[tabView_category selectedTabViewItem]]]
+    [[adium preferenceController] setPreference:[[tabView_category selectedTabViewItem] identifier]
 										 forKey:KEY_PREFERENCE_SELECTED_CATEGORY
 										  group:PREF_GROUP_WINDOW_POSITIONS];
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[tableView_advanced selectedRow]]
@@ -199,16 +215,22 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 /*!
  * @brief Select a preference category
  */
-- (void)selectCategory:(PREFERENCE_CATEGORY)category
+- (void)selectCategoryWithIdentifier:(NSString *)identifier
 {
 	NSTabViewItem	*tabViewItem;
+	int				index;
+
+	//Load the window first
+	[self window];
 	
-    if(category < 0 || category >= [tabView_category numberOfTabViewItems]) category = 0;
+	index = [tabView_category indexOfTabViewItemWithIdentifier:identifier];
+	NSAssert1(index != NSNotFound, @"Could not find tab view item with identifier %@", identifier);
 
-	tabViewItem = [tabView_category tabViewItemAtIndex:category];
-
+	tabViewItem = [tabView_category tabViewItemAtIndex:index];
 	[self tabView:tabView_category willSelectTabViewItem:tabViewItem];
     [tabView_category selectTabViewItem:tabViewItem];    
+	
+	shouldRestorePreviousSelectedPane = NO;
 }
 
 /*!
@@ -219,8 +241,13 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	NSEnumerator		*enumerator = [[self advancedCategoryArray] objectEnumerator];
 	AIPreferencePane	*pane;
 
+	shouldRestorePreviousSelectedPane = NO;
+	
+	//Load the window first
+	[self window];
+
     //First, select the advanced category
-    [self selectCategory:AIPref_Advanced];
+    [self selectCategoryWithIdentifier:@"advanced"];
 
 	//Search for the advanded pane
 	while(pane = [enumerator nextObject]){
@@ -278,8 +305,10 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  * @brief Tabview will select a new pane, load the views for that pane
  */
 - (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
-{	
-    if(tabView == tabView_category && ![[tabViewItem identifier] isEqualToString:@"loading"]){
+{
+    if(tabView == tabView_category && 
+	   ![[tabViewItem identifier] isEqualToString:@"loading"]){
+		
 		int selectedIndex = [tabView indexOfTabViewItem:tabViewItem];
 
 		//Save changes
