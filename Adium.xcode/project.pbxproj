@@ -331,6 +331,34 @@
 			settings = {
 			};
 		};
+		3408268E075B5CB900703011 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = Awake.png;
+			path = "Resources/Dock Icons/Adiumy Green.AdiumIcon/Awake.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3408268F075B5CB900703011 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = Flap.png;
+			path = "Resources/Dock Icons/Adiumy Green.AdiumIcon/Flap.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34082690075B5CB900703011 = {
+			fileRef = 3408268E075B5CB900703011;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34082691075B5CB900703011 = {
+			fileRef = 3408268F075B5CB900703011;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34086A1005E5E17B00ABB759 = {
 			children = (
 				34086A7705E5E42500ABB759,
@@ -6123,8 +6151,6 @@
 				34BD9D30053146CC000AB133,
 				34BD9D31053146CC000AB133,
 				34BD9D33053146CC000AB133,
-				34BD9D3F053146CC000AB133,
-				34BD9D40053146CC000AB133,
 				348E556B053A188C0021E541,
 				4BE9FFE8055981AB00359B15,
 				4BCB9B5F0567FF5D001D3559,
@@ -6335,6 +6361,8 @@
 				34D2EB6D0758D65D0054C56D,
 				34D2EC180758FBB90054C56D,
 				3408254E075B078B00703011,
+				34082690075B5CB900703011,
+				34082691075B5CB900703011,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6389,18 +6417,6 @@
 		};
 		34BD9D3D053146CC000AB133 = {
 			fileRef = D3B4A91E052DD87700A8010B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D3F053146CC000AB133 = {
-			fileRef = D3DA2E3A052E657600A8010B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D40053146CC000AB133 = {
-			fileRef = D3DA2E3C052E657C00A8010B;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -21810,30 +21826,14 @@
 				D3DA2E40052E65E400A8010B,
 				D3DA2E3E052E65DE00A8010B,
 				D3B4A91E052DD87700A8010B,
-				D3DA2E3A052E657600A8010B,
-				D3DA2E3C052E657C00A8010B,
+				3408268E075B5CB900703011,
+				3408268F075B5CB900703011,
 				4BCB9B5E0567FF5D001D3559,
 				34D2EB6C0758D65D0054C56D,
 			);
 			isa = PBXGroup;
 			name = "About Box";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		D3DA2E3A052E657600A8010B = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = Awake.png;
-			path = "Source/Dock Icons/Adiumy Icons/Adiumy Green.AdiumIcon/Awake.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		D3DA2E3C052E657C00A8010B = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = Flap.png;
-			path = "Source/Dock Icons/Adiumy Icons/Adiumy Green.AdiumIcon/Flap.png";
 			refType = 4;
 			sourceTree = "<group>";
 		};
