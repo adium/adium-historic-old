@@ -63,7 +63,18 @@
 //Close the interface
 - (void)closeInterface
 {
+	//Close and unload our windows
+	[[containers allValues] makeObjectsPerformSelector:@selector(closeWindow:) withObject:nil];
 	
+    //Stop observing
+    [[adium notificationCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+    //Cleanup
+	[preferenceMessageAdvController release];
+	[preferenceMessageController release];
+    [containers release];
+	[delayedContainerShowArray release];
 }	
 
 
