@@ -6,11 +6,6 @@
 // Adium X Known Issues
 //------------------------------------------------------------------------------------
 [HIGH]
-Messages & Chat
-  - Initial messages from invisible contacts sometimes don't open new message windows
-    (Adam: I cannot reproduce this with invisible contacts on Yahoo.  Are people still
-     getting this with our newest AIChat leakage cleanup?  If so, how?)
-
 Meta Contacts
   - MetaContact ordering does not always restore properly
 
