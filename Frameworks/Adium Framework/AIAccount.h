@@ -166,6 +166,7 @@ typedef enum {
 - (void)renameGroup:(AIListGroup *)group to:(NSString *)newName;
 - (void)deleteGroup:(AIListGroup *)group;
 - (BOOL)contactListEditable;
+- (NSArray *)menuItemsForContact:(AIListContact *)inContact;
 
 @end
 
