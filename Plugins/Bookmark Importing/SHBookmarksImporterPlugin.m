@@ -209,8 +209,8 @@
 	Class				NSDictionaryClass = [NSDictionary class];
 	Class				SHMarkedHyperlinkClass = [SHMarkedHyperlink class];
 	
-	NSMenu				*menuItemSubmenu = [[[NSMenu alloc] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
-	NSMenu				*contextualMenuItemSubmenu = [[[NSMenu alloc] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
+	NSMenu				*menuItemSubmenu = [[NSMenu alloc] initWithTitle:BOOKMARK_MENU_TITLE];
+	NSMenu				*contextualMenuItemSubmenu = [[NSMenu alloc] initWithTitle:BOOKMARK_MENU_TITLE];
 	[menuItemSubmenu setMenuChangedMessagesEnabled:NO];
 	[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:NO];
 	
@@ -229,6 +229,9 @@
 	[self mainPerformSelector:@selector(gotMenuItemSubmenu:contextualMenuItemSubmenu:)
 				   withObject:menuItemSubmenu
 				   withObject:contextualMenuItemSubmenu];
+	
+	[menuItemSubmenu release];
+	[contextualMenuItemSubmenu release];
 	
 	[pool release];
 }
