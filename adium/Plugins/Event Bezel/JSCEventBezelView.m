@@ -25,6 +25,8 @@ BOOL pantherOrLater;
     [buddyIconImage setScalesWhenResized:YES];
     [buddyIconImage setSize:NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION)];
     
+    [self setBuddyIconLabelColor: nil];
+    
     defaultBuddyImage = YES;
     
     pantherOrLater = (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
@@ -81,6 +83,7 @@ BOOL pantherOrLater;
     [secondaryAttributesMask release];
     [mainStatusAttributes release];
     [mainStatusAttributesMask release];
+    [buddyIconLabelColor release];
     [super dealloc];
 }
 
@@ -107,6 +110,15 @@ BOOL pantherOrLater;
     }
         
     // Paint the buddy icon or placeholder
+    if (buddyIconLabelColor) {
+        tempPoint.x = 80.0;
+        tempPoint.y = 148.0;
+        tempRect.size.width = 52.0;
+        tempRect.size.height = 52.0;
+        tempRect.origin = tempPoint;
+        [buddyIconLabelColor set];
+        [NSBezierPath fillRect:tempRect];
+    }
     tempPoint.x = 82.0;
     tempPoint.y = 150.0;
     [buddyIconImage compositeToPoint: tempPoint operation:NSCompositeSourceOver];
@@ -227,6 +239,18 @@ BOOL pantherOrLater;
     [newString retain];
     [queueField release];
     queueField = newString;
+}
+
+- (NSColor *)buddyIconLabelColor
+{
+    return buddyIconLabelColor;
+}
+
+- (void)setBuddyIconLabelColor:(NSColor *)newColor
+{
+    [newColor retain];
+    [buddyIconLabelColor release];
+    buddyIconLabelColor = newColor;
 }
 
 @end

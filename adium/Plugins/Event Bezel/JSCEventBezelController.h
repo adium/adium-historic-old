@@ -26,5 +26,6 @@ withMessage:(NSString *)message;
 
 - (int)bezelPosition;
 - (void)setBezelPosition:(int)newPosition;
+- (void)setBuddyIconLabelColor:(NSColor *)newColor;
 
 @end

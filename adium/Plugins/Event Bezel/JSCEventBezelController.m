@@ -7,7 +7,6 @@
 //
 
 #import "JSCEventBezelController.h"
-#import "AIContactStatusEventsPlugin.h"
 
 #define EVENT_BEZEL_NIB         @"EventBezel"
 
@@ -84,28 +83,17 @@ withMessage:(NSString *)message
         
         [bezelView setMainBuddyName: contactName];
         
-        if ([event isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
-            [bezelView setMainBuddyStatus: @"is now online"];
+        if ([event isEqualToString: @"is now online"] || [event isEqualToString: @"is available"] ||
+                [event isEqualToString: @"is no longer idle"] || [event isEqualToString: @"says"]) {
             [bezelView setBuddyIconBadgeType: @""];
-        } else if ([event isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
-            [bezelView setMainBuddyStatus: @"has gone offline"];
+        } else if ([event isEqualToString: @"has gone offline"]) {
             [bezelView setBuddyIconBadgeType: @"offline"];
-        } else if ([event isEqualToString: CONTACT_STATUS_AWAY_YES]) {
-            [bezelView setMainBuddyStatus: @"has gone away"];
+        } else if ([event isEqualToString: @"has gone away"]) {
             [bezelView setBuddyIconBadgeType: @"away"];
-        } else if ([event isEqualToString: CONTACT_STATUS_AWAY_NO]) {
-            [bezelView setMainBuddyStatus: @"is available"];
-            [bezelView setBuddyIconBadgeType: @""];
-        } else if ([event isEqualToString: CONTACT_STATUS_IDLE_YES]) {
-            [bezelView setMainBuddyStatus: @"is idle"];
+        } else if ([event isEqualToString: @"is idle"]) {
             [bezelView setBuddyIconBadgeType: @"idle"];
-        } else if ([event isEqualToString: CONTACT_STATUS_IDLE_NO]) {
-            [bezelView setMainBuddyStatus: @"is no longer idle"];
-            [bezelView setBuddyIconBadgeType: @""];
-        } else if ([event isEqualToString: Content_FirstContentRecieved]) {
-            [bezelView setMainBuddyStatus: @"says"];
-            [bezelView setBuddyIconBadgeType: @""];
         }
+        [bezelView setMainBuddyStatus: event];
         
         // This is not working yet, the Plugin class needs to pass the message
         if (message) {
@@ -163,6 +151,11 @@ withMessage:(NSString *)message
         }
         [[self window] setFrameOrigin: newOrigin];
     }
+}
+
+- (void)setBuddyIconLabelColor:(NSColor *)newColor
+{
+    [bezelView setBuddyIconLabelColor: newColor];
 }
 
 @end
