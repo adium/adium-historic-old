@@ -8,9 +8,7 @@
 - Account add button needs a triangle to indicate that it's a popup
 - Align controls in Privacy tab of account prefs
 - Default new accounts (or atleast the first new account) to online
-- List toolbar needs a new default set
 - List toolbar needs icon for toggle groups, add group, toggle offline contacts
-- Message window toolbar needs new default set
 - Move window shadow preference from layout to advanced
 - Move opacity preference from layout to main pane or advanced
 - Move maximum width slider from layout to main pane

@@ -630,7 +630,8 @@
 	
     //
 	toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"TextEntry", @"MessageWindow", nil]] retain];
-    [[self window] setToolbar:toolbar];
+    NSLog(@"%@",toolbarItems);
+	[[self window] setToolbar:toolbar];
 }
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
@@ -641,10 +642,9 @@
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
     return([NSArray arrayWithObjects:@"UserIcon",@"Encryption",  NSToolbarSeparatorItemIdentifier, 
-		@"ShowInfo", 
-		@"InsertEmoticon", @"LinkEditor", @"InsertBookmark", @"SafariLink", @"InsertScript", @"SendFile",
-		NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier,
-		@"ShowPreferences", NSToolbarCustomizeToolbarItemIdentifier, nil]);
+		@"InsertEmoticon", @"LinkEditor", @"SafariLink", NSToolbarShowColorsItemIdentifier,
+		NSToolbarShowFontsItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, @"SendFile",
+		@"ShowInfo", @"LogViewer", nil]);
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
