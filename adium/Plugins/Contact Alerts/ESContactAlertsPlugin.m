@@ -182,7 +182,7 @@
                 //NSAttributedString *alertMessage = [[NSAttributedString alloc] initWithString:details];
                 NSString *title = [[NSString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", [inObject displayName], [actionDict objectForKey:KEY_EVENT_DISPLAYNAME]]];
                 [[owner interfaceController] handleMessage:title withDescription:details withWindowTitle:@"Contact Alert"];
-              //  NSRunInformationalAlertPanel(title, [alertMessage string], @"Okay", nil, nil);
+                //  NSRunInformationalAlertPanel(title, [alertMessage string], @"Okay", nil, nil);
             }
 
             else if ([action compare:@"Bounce"] == 0) {
@@ -197,10 +197,37 @@
             }
 
             else if ([action compare:@"Open Message"] == 0) { //Force open a chat window
+                NSDictionary * detailsDict = [actionDict objectForKey:KEY_EVENT_DETAILS_DICT];
                 AIAccount * account = [[owner accountController] accountWithID:details];
-                [[owner notificationCenter] postNotificationName:Interface_InitiateMessage
-                                                          object:nil
-                                                        userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"To", account, @"From",nil]];
+
+                if ([[account statusObjectForKey:@"Status"] intValue] == STATUS_OFFLINE) //desired account not available
+                {
+                    success = NO; //as of now, we can't open our window
+                    if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) //use another account if necessary pref
+                    {
+                        NSMutableArray * onlineAccounts = [NSMutableArray array];
+                        NSEnumerator * accountEnumerator;
+                        accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+                        //use first acccount on the same service as the handle and available to send content
+                        while(account = [accountEnumerator nextObject]){
+                            if ( [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil])
+                            {
+                                [onlineAccounts addObject:account];
+                            }
+                        }
+                        if ([onlineAccounts count])
+                        {
+                            account = [onlineAccounts objectAtIndex:0]; //pick first account in our array of possibilities
+                            success = YES; //now we can open our window
+                        }
+                    }
+                }
+                if (success)
+                {
+                    [[owner notificationCenter] postNotificationName:Interface_InitiateMessage
+                                                              object:nil
+                                                            userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"To", account, @"From",nil]];
+                }
             }
             else
                 success = NO; //this really shouldn't happen, but we certainly weren't successful in doing.. erm.. something.
@@ -210,6 +237,11 @@
             {
                 [eventActionArray removeObject:actionDict];
                 [[owner preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
+
+                //Broadcast a one time event fired message
+                [[owner notificationCenter] postNotificationName:One_Time_Event_Fired
+                                                          object:inObject
+                                                        userInfo:nil];
             }
         }
     }

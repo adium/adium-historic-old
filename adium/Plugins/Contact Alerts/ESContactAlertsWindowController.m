@@ -58,6 +58,9 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 - (IBAction)closeWindow:(id)sender
 {
     if([self windowShouldClose:nil]){
+
+        [[owner notificationCenter] removeObserver:self]; //remove all observers
+        
         [instance removeAllSubviews:view_main];
         //Save the window position
         [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
@@ -77,6 +80,12 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     //Remember who we're displaying actions for
     [activeContactObject release]; activeContactObject = [inContact retain];
 
+    //Observers
+    [[owner notificationCenter] removeObserver:self]; //remove any previous observers
+    [[owner notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:Pref_Changed_Alerts object:activeContactObject];
+    [[owner notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:One_Time_Event_Fired object:activeContactObject];
+
+    
     //Set window title
     [[self window] setTitle:[NSString stringWithFormat:@"%@'s Alerts",[activeContactObject displayName]]];
 
@@ -137,8 +146,24 @@ static ESContactAlertsWindowController *sharedInstance = nil;
         [instance deleteEventAction:nil];
         [self tableViewSelectionDidChange:nil];
     }
+    
+    [[owner notificationCenter] postNotificationName:Window_Changed_Alerts
+                                              object:[instance activeObject]
+                                            userInfo:nil];
 }
 
+-(IBAction)addedEvent:(id)sender
+{
+    [[owner notificationCenter] postNotificationName:Window_Changed_Alerts
+                                              object:[instance activeObject]
+                                            userInfo:nil];
+}
+
+-(void)externalChangedAlerts:(NSNotification *)notification
+{
+    [instance reloadFromPrefs];
+    [tableView_actions reloadData];
+}
 //TableView datasource --------------------------------------------------------
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
@@ -207,7 +232,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
-    [instance deleteEventAction:nil]; //Delete it
+    [self deleteEventAction:nil]; //Delete it
 }
 
 //selection changed; update the view

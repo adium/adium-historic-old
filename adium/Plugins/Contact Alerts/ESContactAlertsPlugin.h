@@ -41,6 +41,9 @@
 #define	KEY_EVENT_SOUND_PATH		@"Path"
 #define	KEY_EVENT_SOUND_NOTIFICATION	@"Notification"
 
+#define Pref_Changed_Alerts		@"Alerts Changed in Pref Pane"
+#define Window_Changed_Alerts		@"Alerts Changed in Window"
+#define One_Time_Event_Fired 		@"One Time Event Fired"
 
 @protocol AIMiniToolbarItemDelegate;
 @protocol AIListObjectObserver;

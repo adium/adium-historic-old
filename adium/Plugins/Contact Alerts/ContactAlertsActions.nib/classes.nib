@@ -10,6 +10,7 @@
                 deleteEventAction = id; 
                 newEvent = id; 
                 saveMessageDetails = id; 
+                saveOpenMessageDetails = id; 
                 selectAccount = id; 
                 selectBehavior = id; 
                 selectSound = id; 
@@ -18,8 +19,10 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_anotherAccount" = NSButton; 
+                "button_anotherAccount_open_message" = NSButton; 
                 "button_displayAlert" = NSButton; 
                 "popUp_actionDetails" = NSPopUpButton; 
+                "popUp_actionDetails_open_message" = NSPopUpButton; 
                 "popUp_message_actionDetails_one" = NSPopUpButton; 
                 "popUp_message_actionDetails_two" = NSPopUpButton; 
                 "textField_actionDetails" = NSTextField; 
@@ -28,6 +31,7 @@
                 "textField_message_actionDetails" = NSTextField; 
                 "view_details_menu" = NSView; 
                 "view_details_message" = NSView; 
+                "view_details_open_message" = NSView; 
                 "view_details_text" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
