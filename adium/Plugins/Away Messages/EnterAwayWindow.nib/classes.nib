@@ -1,0 +1,12 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {closeWindow = id; }; 
+            CLASS = AIEnterAwayWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

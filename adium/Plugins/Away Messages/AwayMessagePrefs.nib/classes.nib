@@ -1,0 +1,12 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIAwayMessagePreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"view_prefView" = NSView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

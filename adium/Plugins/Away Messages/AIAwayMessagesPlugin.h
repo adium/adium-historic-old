@@ -9,9 +9,11 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
+@class AIAwayMessagePreferences;
 
 @interface AIAwayMessagesPlugin : AIPlugin/*<AIPreferenceViewControllerDelegate>*/ {
-    
+
+    AIAwayMessagePreferences	*preferences;
 
 }
 
