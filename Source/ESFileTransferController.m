@@ -386,7 +386,7 @@ static ESFileTransferPreferences *preferences;
 	}else if([eventID isEqualToString:FILE_TRANSFER_CANCELED]){
 		description = AILocalizedString(@"File transfer canceled by the other side",nil);
 	}else if([eventID isEqualToString:FILE_TRANSFER_COMPLETE]){
-		description = AILocalizedString(@"File transfer is completed successfully",nil);
+		description = AILocalizedString(@"File transfer completed successfully",nil);
 	}else{		
 		description = @"";	
 	}
