@@ -6,6 +6,12 @@
 # log folder or copy the contents.
 #
 # Run it by doing "./proteus2adium.pl --aim AIM_USER_NAME"
+#
+# Updated 24jan2004 by Seth Dillingham <seth@macrobyte.net>
+#   - pipe the input from the sqlite script, rather than running 
+#     it in backticks (more memory efficient for large histories)
+#   - correctly handles multi-line history records
+#     (Proteus uses \n whereas Adium uses <BR>)
 
 use warnings;
 use strict;
@@ -37,28 +43,44 @@ my @messages;
 
 my $query = "select substr(date, 0, 10), identifier, \'<div class=\\\"\' || case when incoming=1 then \'receive\' else \'send\' end || \'\\\"><span class=\\\"timestamp\\\">\' || substr(date, 12, 8) || \'</span><span class=\\\"sender\\\">\' || case when incoming = 1 then identifier else \'$aim_user\' end || \': </span><pre class=\\\"message\\\">\' || message || \'</pre></div>\' from \\\"aim-oscar\\\"";
 
-@messages = `./sqlite "$proteus_log_file" "$query"`;
+open( QUERYPIPE, './sqlite "' . $proteus_log_file . '" "' . $query . '" |' ) or die "Could not open the pipe: $!";
 
 umask(000);
 
+# make sure the basic output dir exists
 mkdir($base_out, 0777) unless (-d $base_out); 
 
-foreach (@messages) {
-    my $year;
-    my $month;
-    my $day;
-    my $message;
-    my $ident;
-    my $outfile;
+my $history_line = '';
 
-    ($year, $month, $day, $ident, $message) =
-    /(\d*)\-(\d*)\-(\d*)\|(.*)\|(\<div.*\<\/div\>)/;
-
-    mkdir("$base_out/$ident/", 0777) unless (-d "$base_out/$ident");
-
-    $outfile = "$base_out/$ident/$ident ($year|$month|$day).html";
-
-    open(OUT, ">>$outfile") or die;
-    print OUT "$message\n";
-    close OUT;
+while ( <QUERYPIPE> )
+{
+    chomp;
+    
+    # some of the records coming from the proteus logs are multi-line
+    # so we build $history_line by appending the record to it
+    $history_line .= $_;
+    
+    # if the pattern matches, we have the whole record
+    if ( $history_line =~ /(\d*)-(\d*)-(\d*)\|(.*)\|(<div.*<\/div>)/s )
+    {
+        my ($year, $month, $day, $ident, $message) = ($1, $2, $3, $4, $5);
+        
+        #make sure the output dir exists for the current contact
+        mkdir( "$base_out/$ident/", 0777 ) unless ( -d "$base_out/$ident" );
+        
+        my $output_file = "$base_out/$ident/$ident ($year|$month|$day).html";
+        open( OUTFILE, ">>$output_file" ) or die( "Could not open output file $output_file: $!" );
+        
+        print OUTFILE "$message\n";
+        
+        close OUTFILE or warn( "Could not close the output file $output_file: $!" );
+        
+        # clear history_line in preparation for the next record
+        $history_line = '';
+    }
+    else
+    {
+        # adium uses <BR> to separate lines instead of \n
+        $history_line .= "<BR>";
+    }
 }
