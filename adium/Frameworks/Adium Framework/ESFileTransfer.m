@@ -11,17 +11,17 @@
 
 @implementation ESFileTransfer
 //Init
-+ (id)fileTransferWithHandle:(AIHandle *)inHandle forAccount:(AIAccount *)inAccount
++ (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount
 {
-    return([[[self alloc] initWithHandle:(AIHandle *)inHandle forAccount:(AIAccount *)inAccount] autorelease]);    
+    return([[[self alloc] initWithContact:inContact forAccount:inAccount] autorelease]);    
 }
 
-- (id)initWithHandle:(AIHandle *)inHandle forAccount:(AIAccount *)inAccount;
+- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount;
 {
     [super init];
     
     //Retain our information
-    handle = [inHandle retain];
+    contact = [inContact retain];
     account = [inAccount retain];
     type = Unknown_FileTransfer;
     
@@ -30,7 +30,7 @@
 
 - (void)dealloc
 {
-    [handle release];
+    [contact release];
     [account release];
     [remoteFilename release];
     [localFilename release];
@@ -39,9 +39,9 @@
     [super dealloc];
 }
 
-- (AIHandle *)handle
+- (AIListContact *)contact
 {
-    return handle;   
+    return contact;   
 }
 
 - (AIAccount *)account
