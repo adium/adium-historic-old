@@ -169,7 +169,11 @@ DeclareString(UID);
 		[[owner preferenceController] setPreference:nil
 					 forKey:KEY_FLAT_METACONTACTS
 					  group:PREF_GROUP_CONTACT_LIST];
-	}		
+	}
+	
+	[[owner notificationCenter] removeObserver:self
+										  name:Adium_VersionWillBeUpgraded
+										object:nil];
 }
 
 //Local Contact List Storage -------------------------------------------------------------------------------------------

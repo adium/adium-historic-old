@@ -20,6 +20,7 @@
 
 //Private
 - (void)initController;
+- (void)finishIniting;
 - (void)closeController;
 
 @end

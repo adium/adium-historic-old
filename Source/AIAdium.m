@@ -221,6 +221,8 @@
 											   userInfo:versionUpgradeDict];
 	}
 	
+	[pluginController finishIniting]; //Should finish initing first; the accountController needs all accounts and services available
+	
 	/*
 	 Account controller should finish initing before the contact controller so accounts and services are available
 	 for contact creation
