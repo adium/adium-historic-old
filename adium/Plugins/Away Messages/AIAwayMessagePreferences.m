@@ -268,25 +268,34 @@
     return(saveArray);
 }
 
-//Display the specified away message in the text view
+//Display the specified away message in the text view (pass nil to clear the text view & disable it)
 - (void)_displayAwayMessage:(NSMutableDictionary *)awayDict
 {
-    NSString	*type;
+    if (awayDict)
+    {
+	NSString	*type;
 
-    //Get the selected item
-    type = [awayDict objectForKey:@"Type"];
+	//Get the selected item
+	type = [awayDict objectForKey:@"Type"];
 
-    if([type compare:@"Group"] == 0){
-        //Empty our text view, and disable it
+	if([type compare:@"Group"] == 0){
+	    //Empty our text view, and disable it
+	    [textView_message setString:@""];
+	    [textView_message setEditable:NO];
+	    [textView_message setSelectable:NO];
+
+	}else if([type compare:@"Away"] == 0){
+	    //Show the away message in our text view, and enable it for editing
+	    [[textView_message textStorage] setAttributedString:[awayDict objectForKey:@"Message"]];
+	    [textView_message setEditable:YES];
+	    [textView_message setSelectable:YES];
+	}
+    }
+    else
+    {
         [textView_message setString:@""];
         [textView_message setEditable:NO];
         [textView_message setSelectable:NO];
-
-    }else if([type compare:@"Away"] == 0){
-        //Show the away message in our text view, and enable it for editing
-        [[textView_message textStorage] setAttributedString:[awayDict objectForKey:@"Message"]];
-        [textView_message setEditable:YES];
-        [textView_message setSelectable:YES];
     }
 
     displayedMessage = awayDict;
@@ -451,9 +460,10 @@
         [button_delete setEnabled:YES];
 
     }else{
+	[self _displayAwayMessage:nil];
+	
         //Disable delete button
         [button_delete setEnabled:NO];
-
     }
 
 }
