@@ -22,10 +22,17 @@
 	NSView			*controlView;
 	
 	NSTextAlignment	textAlignment;
+	
+	int				topSpacing;
+	int				bottomSpacing;
+	int				topPadding;
+	int				bottomPadding;
 
 //	NSTextStorage 	*textStorage;
 //	NSLayoutManager	*layoutManager;
 //	NSTextContainer	*textContainer;
+	
+	
 	
 	NSImage			*genericUserIcon;
 }
@@ -36,7 +43,10 @@
 - (void)setTextAlignment:(NSTextAlignment)inAlignment;
 - (NSTextAlignment)textAlignment;
 
-
+//
+- (void)setSplitVerticalPadding:(int)inPadding;
+- (void)setTopPadding:(int)inPadding;
+- (void)setBottomPadding:(int)inPadding;
 
 //Sizing and Display
 - (NSSize)cellSize;
@@ -46,5 +56,10 @@
 - (int)bottomPadding;
 - (int)leftPadding;
 - (int)rightPadding;
+
+//
+- (void)setSplitVerticalSpacing:(int)inSpacing;
+- (void)setTopSpacing:(int)inSpacing;
+- (void)setBottomSpacing:(int)inSpacing;
 
 @end

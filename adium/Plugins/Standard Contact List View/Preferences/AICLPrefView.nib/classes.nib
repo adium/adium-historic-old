@@ -7,7 +7,7 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {spawnLayout = id; }; 
+            ACTIONS = {spawnLayout = id; spawnTheme = id; }; 
             CLASS = AICLPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {

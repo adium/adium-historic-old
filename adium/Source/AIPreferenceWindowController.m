@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.57 2004/06/13 07:24:34 evands Exp $
+// $Id: AIPreferenceWindowController.m,v 1.58 2004/08/05 19:37:29 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -75,9 +75,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	//Select the category
 	switch(inCategory){
 		case AIPref_Accounts: tabIdentifier = 1; break;
-		case AIPref_ContactList_General:
-		case AIPref_ContactList_Groups:
-		case AIPref_ContactList_Contacts: tabIdentifier = 2; break;
+		case AIPref_ContactList: tabIdentifier = 2; break;
 		case AIPref_Messages: tabIdentifier = 3; break;
 		case AIPref_Status_Away:
 		case AIPref_Status_Idle: tabIdentifier = 4; break;
@@ -133,7 +131,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	}
 }
 
-
 //Close the window
 - (IBAction)closeWindow:(id)sender
 {
@@ -141,9 +138,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
         [[self window] close];
     }
 }
-
-
-
 
 
 //Internal -------------------------------------------------------------------------------------------------------------
@@ -260,9 +254,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
                 [view_Accounts setPanes:[self _panesInCategory:AIPref_Accounts]];
             break;
             case 2:
-                [view_ContactList_General setPanes:[self _panesInCategory:AIPref_ContactList_General]];
-                [view_ContactList_Groups setPanes:[self _panesInCategory:AIPref_ContactList_Groups]];
-                [view_ContactList_Contacts setPanes:[self _panesInCategory:AIPref_ContactList_Contacts]];
+                [view_ContactList setPanes:[self _panesInCategory:AIPref_ContactList]];
             break;
             case 3:
                 [view_Messages setPanes:[self _panesInCategory:AIPref_Messages]];
@@ -316,7 +308,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 {
 	switch([[tabViewItem identifier] intValue]){
 		case 1: return([view_Accounts desiredHeight]); break;
-		case 2: return([AIModularPaneCategoryView heightForTabView:tabView_contactList]); break;
+		case 2: return([view_ContactList desiredHeight]); break;
 		case 3: return([view_Messages desiredHeight]); break;
 		case 4: return([AIModularPaneCategoryView heightForTabView:tabView_status]); break;
 		case 5: return([view_Dock desiredHeight]); break;
@@ -327,74 +319,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		default: return(0); break;
 	}
 }
-
-
-//Dynamic Content ------------------------------------------------------------------------------------------------------
-//#pragma mark Toolbar
-//Insert all the preference panes for the category into the passed view
-//- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory
-//					   intoView:(AIPreferenceCategoryView *)inView
-//{
-//    [self _insertPanes:[self _prefsInCategory:inCategory] intoView:inView];    
-//}
-//
-//Insert the passed preference panes into a view
-//- (void)_insertPanes:(NSArray *)paneArray
-//			intoView:(AIPreferenceCategoryView *)inView
-//{
-//    NSEnumerator		*enumerator;
-//    AIPreferencePane	*pane;
-//    int					yPos = 0;
-//    
-//    //Add their views
-//    enumerator = [paneArray objectEnumerator];
-//    while(pane = [enumerator nextObject]){
-//        NSView	*paneView = [pane view];
-//        
-//        //Add the view
-//        if([paneView superview] != inView){
-//            [inView addSubview:paneView];
-//            [paneView setFrameOrigin:NSMakePoint(0,yPos)];
-//        }
-//        
-//        //Move down for the next view
-//        yPos += [paneView frame].size.height;
-//    }
-//    
-//    //Set the desired height of this view
-//    [inView setDesiredHeight:yPos+2];
-//}
-//
-//- (int)_heightForTabView:(NSTabView *)tabView
-//{
-//    NSEnumerator	*enumerator;
-//    NSTabViewItem	*tabViewItem;
-//    int				maxHeight = 0;
-//
-//    //Determine the tallest view contained within this tab view.
-//    enumerator = [[tabView tabViewItems] objectEnumerator];
-//    while(tabViewItem = [enumerator nextObject]){
-//        NSEnumerator	*subViewEnumerator;
-//        NSView		*subView;
-//
-//        subViewEnumerator = [[[tabViewItem view] subviews] objectEnumerator];
-//        while(subView = [subViewEnumerator nextObject]){
-//            int		height = [(AIPreferenceCategoryView *)subView desiredHeight];
-//
-//            if(height > maxHeight){
-//                maxHeight = height;
-//            }
-//        }
-//    }
-//
-//	return(maxHeight + TAB_PADDING_OFFSET + FRAME_PADDING_OFFSET);
-//}
-//
-//Resize our window to fit the specified non-tabbed view
-//- (int)_heightForFlatView:(AIPreferenceCategoryView *)view
-//{
-//	return([view desiredHeight] + FRAME_PADDING_OFFSET);
-//}
 
 
 //Advanced Preferences -------------------------------------------------------------------------------------------------

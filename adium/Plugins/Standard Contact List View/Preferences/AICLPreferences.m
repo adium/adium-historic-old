@@ -17,6 +17,7 @@
 #import "AISCLOutlineView.h"
 #import "AISCLViewPlugin.h"
 #import "AIListLayoutWindowController.h"
+#import "AIListThemeWindowController.h"
 
 //Handles the interface interaction, and sets preference values
 //The outline view plugin is responsible for reading & setting the preferences, as well as observing changes in them
@@ -32,7 +33,7 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_ContactList_General);
+    return(AIPref_ContactList);
 }
 - (NSString *)label{
     return(@"General Appearance");
@@ -134,5 +135,9 @@
 	[AIListLayoutWindowController listLayoutOnWindow:[[self view] window]];
 }
 
+- (IBAction)spawnTheme:(id)sender
+{
+	[AIListThemeWindowController listThemeOnWindow:[[self view] window]];
+}
 
 @end

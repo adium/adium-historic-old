@@ -1,4 +1,46 @@
 {
-    IBClasses = ({CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }); 
+    IBClasses = (
+        {
+            ACTIONS = {cancel = id; okay = id; preferenceChanged = id; }; 
+            CLASS = AIListThemeWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_away" = NSButton; 
+                "checkBox_idle" = NSButton; 
+                "checkBox_idleAndAway" = NSButton; 
+                "checkBox_offline" = NSButton; 
+                "checkBox_online" = NSButton; 
+                "checkBox_signedOff" = NSButton; 
+                "checkBox_signedOn" = NSButton; 
+                "checkBox_typing" = NSButton; 
+                "checkBox_unviewedContent" = NSButton; 
+                "colorWell_away" = NSColorWell; 
+                "colorWell_awayLabel" = NSColorWell; 
+                "colorWell_idle" = NSColorWell; 
+                "colorWell_idleAndAway" = NSColorWell; 
+                "colorWell_idleAndAwayLabel" = NSColorWell; 
+                "colorWell_idleLabel" = NSColorWell; 
+                "colorWell_offline" = NSColorWell; 
+                "colorWell_offlineLabel" = NSColorWell; 
+                "colorWell_online" = NSColorWell; 
+                "colorWell_onlineLabel" = NSColorWell; 
+                "colorWell_signedOff" = NSColorWell; 
+                "colorWell_signedOffLabel" = NSColorWell; 
+                "colorWell_signedOn" = NSColorWell; 
+                "colorWell_signedOnLabel" = NSColorWell; 
+                "colorWell_typing" = NSColorWell; 
+                "colorWell_typingLabel" = NSColorWell; 
+                "colorWell_unviewedContent" = NSColorWell; 
+                "colorWell_unviewedContentLabel" = NSColorWell; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
     IBVersion = 1; 
 }

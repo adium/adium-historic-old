@@ -23,10 +23,6 @@
 	return(newCell);
 }
 
-
-
-
-
 //Padding.  Gives our cell a bit of edge padding so the user icon and name do not touch the sides
 - (int)topPadding{
 	return([super topPadding] + 1);
@@ -40,11 +36,6 @@
 - (int)rightPadding{
 	return([super rightPadding] + 4);
 }
-
-
-
-
-
 
 
 

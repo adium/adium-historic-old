@@ -25,6 +25,11 @@
 {
     [super init];
 
+	topSpacing = 0;
+	bottomSpacing = 0;
+	topPadding = 0;
+	bottomPadding = 0;
+	
 	//Set up our custom text system.
 	//Using drawAtPoint: places our text at a seemingly random vertical alignment, so we do the text drawing at a
 	//slightly lower level to avoid this.
@@ -101,21 +106,42 @@
 
 //User-defined spacing offsets.  A cell may adjust these values to to obtain a more desirable default. 
 //These are offsets, they may be negative!  Spacing is the distance between cells (Spacing gaps are not filled).
+- (void)setSplitVerticalSpacing:(int)inSpacing{
+	topSpacing = inSpacing / 2;
+	bottomSpacing = (inSpacing + 1) / 2;
+}
+- (void)setTopSpacing:(int)inSpacing{
+	topSpacing = inSpacing;
+}
 - (int)topSpacing{
-	return(0);
+	return(topSpacing);
+}
+- (void)setBottomSpacing:(int)inSpacing{
+	bottomSpacing = inSpacing;
 }
 - (int)bottomSpacing{
-	return(0);
+	return(bottomSpacing);
 }
 
 //User-defined padding offsets.  A cell may adjust these values to to obtain a more desirable default.
 //These are offsets, they may be negative!  Padding is the distance between cell edges and their content.
+- (void)setSplitVerticalPadding:(int)inPadding{
+	topPadding = inPadding / 2;
+	bottomPadding = (inPadding + 1) / 2;
+}
+- (void)setTopPadding:(int)inPadding{
+	topPadding = inPadding;
+}
+- (void)setBottomPadding:(int)inPadding{
+	bottomPadding = inPadding;
+}
 - (int)topPadding{
-	return(0);
+	return(topPadding);
 }
 - (int)bottomPadding{
-	return(0);
+	return(bottomPadding);
 }
+
 - (int)leftPadding{
 	return(0);
 }

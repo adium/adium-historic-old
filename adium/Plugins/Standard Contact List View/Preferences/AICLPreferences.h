@@ -26,5 +26,6 @@
 }
 
 - (IBAction)spawnLayout:(id)sender;
+- (IBAction)spawnTheme:(id)sender;
 
 @end

@@ -17,7 +17,13 @@
                 "popUp_statusIconPosition" = NSPopUpButton; 
                 "popUp_userIconPosition" = NSPopUpButton; 
                 "popUp_windowStyle" = NSPopUpButton; 
+                "slider_contactSpacing" = NSSlider; 
+                "slider_groupBottomSpacing" = NSSlider; 
+                "slider_groupTopSpacing" = NSSlider; 
                 "slider_userIconSize" = NSSlider; 
+                "textField_contactSpacing" = NSTextField; 
+                "textField_groupBottomSpacing" = NSTextField; 
+                "textField_groupTopSpacing" = NSTextField; 
                 "textField_userIconSize" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 

@@ -10,20 +10,20 @@
 
 - (void)installPlugin
 {
-    displayStatusIcon = NO;
-
-    //Register our default preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_ICONS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STATUS_ICONS];
-
-    //Our preference view
-    preferences = [[LNStatusIconsPreferences preferencePane] retain];
-    
-	//Observe
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
-	
-    idleImage = [[NSImage imageNamed:@"IdleIcon" forClass:[self class]] retain];
-    awayImage = [[NSImage imageNamed:@"AwayIcon" forClass:[self class]] retain];
+//    displayStatusIcon = NO;
+//
+//    //Register our default preferences
+//    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_ICONS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STATUS_ICONS];
+//
+//    //Our preference view
+//    preferences = [[LNStatusIconsPreferences preferencePane] retain];
+//    
+//	//Observe
+//    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+//    [self preferencesChanged:nil];
+//	
+//    idleImage = [[NSImage imageNamed:@"IdleIcon" forClass:[self class]] retain];
+//    awayImage = [[NSImage imageNamed:@"AwayIcon" forClass:[self class]] retain];
 }
 
 - (void)uninstallPlugin

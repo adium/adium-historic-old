@@ -43,7 +43,7 @@
 						     forGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
     
     //Our preference view
-    preferences = [[AIIdleTimeDisplayPreferences preferencePane] retain];
+#warning    preferences = [[AIIdleTimeDisplayPreferences preferencePane] retain];
 
     //Observe
     [[adium notificationCenter] addObserver:self

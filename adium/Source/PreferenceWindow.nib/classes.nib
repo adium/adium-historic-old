@@ -17,15 +17,12 @@
                 "coloredBox_advancedTitle" = AIColoredBoxView; 
                 "outlineView_advanced" = NSOutlineView; 
                 "tabView_category" = NSTabView; 
-                "tabView_contactList" = NSTabView; 
                 "tabView_status" = NSTabView; 
                 "textField_advancedTitle" = NSTextField; 
                 "view_Accounts" = AIModularPaneCategoryView; 
                 "view_Advanced" = AIModularPaneCategoryView; 
                 "view_Alerts" = AIModularPaneCategoryView; 
-                "view_ContactList_Contacts" = AIModularPaneCategoryView; 
-                "view_ContactList_General" = AIModularPaneCategoryView; 
-                "view_ContactList_Groups" = AIModularPaneCategoryView; 
+                "view_ContactList" = AIModularPaneCategoryView; 
                 "view_Dock" = AIModularPaneCategoryView; 
                 "view_Emoticons" = AIModularPaneCategoryView; 
                 "view_Keys" = AIModularPaneCategoryView; 
