@@ -14,20 +14,33 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface NSString (AIStringAdditions)
+
 + (NSString *)randomStringOfLength:(unsigned int)inLength;
+
 + (NSString *)stringWithContentsOfASCIIFile:(NSString *)path;
+
 - (NSString *)compactedString;
+
 - (int)intValueFromHex;
+
 - (NSString *)stringByExpandingBundlePath;
 - (NSString *)stringByCollapsingBundlePath;
+
 - (NSString *)stringByTruncatingTailToWidth:(float)inWidth;
+
 - (NSString *)stringByEncodingURLEscapes;
 - (NSString *)stringByDecodingURLEscapes;
+
 - (NSString *)safeFilenameString;
+
 - (NSString *)stringWithEllipsisByTruncatingToLength:(unsigned int)length;
+
 - (NSString *)string;
+
 - (NSString *)stringByEscapingForHTML;
 - (NSString *)stringByUnescapingFromHTML;
+
+- (NSString *)stringByEscapingForShell;
 //- (BOOL)isURLEncoded;
 
 @end

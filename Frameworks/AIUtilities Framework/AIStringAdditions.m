@@ -16,6 +16,8 @@
 #import "AIStringAdditions.h"
 #import <Carbon/Carbon.h>
 #import "AIColorAdditions.h"
+#include <unistd.h>
+#include <limits.h>
 
 @implementation NSString (AIStringAdditions)
 
@@ -516,6 +518,124 @@
 		} //if([scanner scanUpToString:semicolon intoString:&entity])
 	} while([scanner scanLocation] < myLength);
 //	NSLog(@"unescaped %@\ninto %@", self, result);
+	return result;
+}
+
+enum characterNatureMask {
+	whitespaceNature = 0x1, //space + \t\n\r\f\a 
+	unsafeNature, //backslash + !$`"'
+};
+static enum characterNatureMask characterNature[USHRT_MAX+1] = {
+	//this array is initialised such that the space character (0x20)
+	//	does not have the whitespace nature.
+	//this was done for brevity, as the entire array is bzeroed and then
+	//	properly initialised in -stringByEscapingForShell below.
+	0,0,0,0, 0,0,0,0, //0x00..0x07
+	0,0,0,0, 0,0,0,0, //0x08..0x0f
+	0,0,0,0, 0,0,0,0, //0x10..0x17
+	0,0,0, //0x18..0x20
+};
+
+- (NSString *)stringByEscapingForShell {
+	if(!(characterNature[' '] & whitespaceNature)) {
+		//if space doesn't have the whitespace nature, clearly we need to build the nature array.
+
+		//first, set all characters to zero.
+		bzero(&characterNature, sizeof(characterNature));
+
+		//then memorise which characters have the whitespace nature.
+		characterNature['\a'] = whitespaceNature;
+		characterNature['\t'] = whitespaceNature;
+		characterNature['\n'] = whitespaceNature;
+		characterNature['\f'] = whitespaceNature;
+		characterNature['\r'] = whitespaceNature;
+		characterNature[' ']  = whitespaceNature;
+		//NOTE: if you give more characters the whitespace nature, be sure to
+		//	update escapeNames below.
+
+		//finally, memorise which characters have the unsafe (for shells) nature.
+		characterNature['\\'] = unsafeNature;
+		characterNature['\''] = unsafeNature;
+		characterNature['"']  = unsafeNature;
+		characterNature['`']  = unsafeNature;
+		characterNature['!']  = unsafeNature;
+		characterNature['$']  = unsafeNature;
+	}
+
+	unsigned myLength = [self length];
+	unichar *myBuf = malloc(sizeof(unichar) * myLength);
+	if(!myBuf) return nil;
+	[self getCharacters:myBuf];
+	const unichar *myBufPtr = myBuf;
+
+	size_t buflen = 0;
+	unichar *buf = NULL;
+
+	const size_t buflenIncrement = getpagesize() / sizeof(unichar);
+
+	/*the boundary guard happens everywhere that i increases, and MUST happen
+	 *	at the beginning of the loop.
+	 *
+	 *initialising buflen to 0 and buf to NULL as we have done above means that
+	 *	realloc will act as malloc:
+	 *	-	i is 0 at the beginning of the loop
+	 *	-	so is buflen
+	 *	-	and buf is NULL
+	 *	-	realloc(NULL, ...) == malloc(...)
+	 *
+	 *oh, and 'SBEFS' stands for String By Escaping For Shell
+	 *	(the name of this method).
+	 */
+#define SBEFS_BOUNDARY_GUARD \
+	do { \
+		if(i == buflen) { \
+			buf = realloc(buf, sizeof(unichar) * (buflen += buflenIncrement)); \
+			if(!buf) { \
+				NSLog(@"in stringByEscapingForShell: could not allocate %lu bytes", (unsigned long)(sizeof(unichar) * buflen)); \
+				free(myBuf); \
+				return nil; \
+			} \
+		} \
+	} while(0)
+
+	unsigned i = 0;
+	for(; myLength--; ++i) {
+		SBEFS_BOUNDARY_GUARD;
+
+		if(characterNature[*myBufPtr] & whitespaceNature) {
+			//escape this character using a named escape
+			static unichar escapeNames[] = {
+				0, 0, 0, 0, 0, 0, 0,
+				'a', //0x07 BEL: \a 
+				0,
+				't', //0x09 HT: \t 
+				'n', //0x0a LF: \n 
+				0,
+				'f', //0x0c FF: \f 
+				'r', //0x0d CR: \r 
+			};
+			buf[i++] = '\\';
+			SBEFS_BOUNDARY_GUARD;
+			buf[i] = escapeNames[*myBufPtr];
+		} else {
+			if(characterNature[*myBufPtr] & unsafeNature) {
+				//escape this character
+				buf[i++] = '\\';
+				SBEFS_BOUNDARY_GUARD;
+			}
+
+			buf[i] = *myBufPtr;
+		}
+		++myBufPtr;
+	}
+
+#undef SBEFS_BOUNDARY_GUARD
+
+	free(myBuf);
+
+	NSString *result = [NSString stringWithCharacters:buf length:i];
+	free(buf);
+
 	return result;
 }
 
