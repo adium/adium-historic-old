@@ -94,6 +94,8 @@
 
 - (void)dealloc
 {
+	[super dealloc];
+	
 	[flashingListObjectArray release]; flashingListObjectArray = nil;
 	[opacityUpdateDict release]; opacityUpdateDict = nil;
 }
