@@ -21,6 +21,7 @@
 - (void)reloadAllData;
 
 - (void)_removeFileTransfer:(ESFileTransfer *)inFileTransfer;
+- (ESFileTransferProgressRow *)existingRowForFileTransfer:(ESFileTransfer *)inFileTransfer;
 @end
 
 @interface ESFileTransferController (PRIVATE)
@@ -190,30 +191,40 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	}
 }
 
-//Add a file transfer's progress row.  This will call back on progressRowDidAwakeFromNib:
+//Add a file transfer's progress row if we don't already have one for the fileTransfer.
+//This will call back on progressRowDidAwakeFromNib: if it adds a new row.
 - (void)addFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	ESFileTransferProgressRow *progressRow;
-
-	progressRow = [ESFileTransferProgressRow rowForFileTransfer:fileTransfer withOwner:self];
-
-	//Depending on how the nib is loaded, we may or may not already have called progressRowDidAwakeFromNib:
-	//and added the row there.
-	if(![progressRows containsObject:progressRow]){
-		[progressRows addObject:progressRow];
-	}	
+	
+	if(!(progressRow = [self existingRowForFileTransfer:inFileTransfer])){
+		progressRow = [ESFileTransferProgressRow rowForFileTransfer:fileTransfer withOwner:self];
+		
+		//Depending on how the nib is loaded, we may or may not already have called progressRowDidAwakeFromNib:
+		//and added the row there.
+		if(![progressRows containsObject:progressRow]){
+			[progressRows addObject:progressRow];
+		}
+	}
 }
 
 - (void)_removeFileTransfer:(ESFileTransfer *)inFileTransfer
 {
-	NSEnumerator				*enumerator = [progressRows objectEnumerator];
 	ESFileTransferProgressRow	*row;
 	
+	if(row = [self existingRowForFileTransfer:inFileTransfer]) [self _removeFileTransferRow:row];
+}
+
+- (ESFileTransferProgressRow *)existingRowForFileTransfer:(ESFileTransfer *)inFileTransfer
+{
+	NSEnumerator				*enumerator = [progressRows objectEnumerator];
+	ESFileTransferProgressRow	*row;
+		
 	while(row = [enumerator nextObject]){
 		if([row fileTransfer] == inFileTransfer) break;
 	}
 	
-	if(row) [self _removeFileTransferRow:row];
+	return(row);
 }
 
 //Remove a file transfer row from the window. This is coupled to the file transfer controller; care must be taken
