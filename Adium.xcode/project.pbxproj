@@ -10282,6 +10282,7 @@
 				4BF42E7806AC36640091DE5D,
 				4B31E8E104C4712F00A8010A,
 			);
+			includeInIndex = 0;
 			isa = PBXGroup;
 			name = "(Old Code, Disabled, etc)";
 			path = "";
