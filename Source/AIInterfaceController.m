@@ -1063,7 +1063,9 @@
         //Add the label (with its spacing)
         [titleString appendAttributedString:labelAttribString];
 		[labelAttribString release];
-        [titleString appendAttributedString:[entryString addAttributes:entryDict range:NSMakeRange(0,[entryString length])]];
+
+		[entryString addAttributes:entryDict range:NSMakeRange(0,[entryString length])];
+        [titleString appendAttributedString:entryString];
     }
     return [titleString autorelease];
 }
@@ -1157,7 +1159,6 @@
 																context:object] mutableCopy] autorelease];
 
 		[entryString addAttributes:entryDict range:NSMakeRange(0,[entryString length])];
-
         [tipString appendAttributedString:entryString];
     }
 
