@@ -164,104 +164,111 @@
     NSDictionary                *colorPreferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
     
     if ([notificationName isEqualToString:Content_FirstContentRecieved]) {
-        contact = [[[notification object] participatingListObjects] objectAtIndex:0];
-        isFirstMessage = YES;
+		NSArray *participatingListObjects = [[notification object] participatingListObjects];
+		if ([participatingListObjects count]){
+			contact = [participatingListObjects objectAtIndex:0];
+			isFirstMessage = YES;
+		}else{
+			contact = nil;
+		}
     } else {
         contact = [notification object];
     }
     
-    //Check to be sure bezel for contact and for its group is enabled
-    NSNumber *contactDisabledNumber = [contact preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
-    //NSNumber *groupDisabledNumber = [[contact containingGroup] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
-    BOOL contactEnabled = !contactDisabledNumber || (![contactDisabledNumber boolValue]);
-    //BOOL groupEnabled = !groupDisabledNumber || (![groupDisabledNumber boolValue]);
-    // If Adium is hidden, check if we want it to show (and unhide Adium in the process)
-    BOOL showIfHidden = ![NSApp isHidden] || ([NSApp isHidden] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_HIDDEN] boolValue]);
-    // If you are away, check if we want it to show
-    BOOL showIfAway = ![[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]
-        || ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]);
-    
-    if (contactEnabled && /*groupEnabled &&*/ showIfHidden && showIfAway){
-        if ([NSApp isHidden]) {
-            [NSApp unhideWithoutActivation];
-        }
-        
-        tempBuddyIcon = [[contact displayArrayForKey:@"UserIcon"] objectValue];
-        if (isFirstMessage) {
-            AIContentMessage    *contentMessage = [[notification userInfo] objectForKey:@"Object"];
-            statusMessage = [[[contentMessage message] safeString] string];
-        } else {
-            // If it is a status change, show status message
-            // Not working
-            /*ownerArray = [contact statusArrayForKey: @"StatusMessage"];
-            if (ownerArray && [ownerArray count]) {
-                statusMessage = [ownerArray objectAtIndex: 0];
-            }
-            if (statusMessage) {
-            } else {
-            }*/
-        }
-        
-        if ([notificationName isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
-            tempEvent = AILocalizedString(@"is now online",nil);
-            if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
-                [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor]];
-                [ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
-            } else {
-                [ebc setBuddyIconLabelColor: nil];
-            }
-        } else if ([notificationName isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
-            tempEvent = AILocalizedString(@"has gone offline",nil);
-            if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
-                [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor]];
-                [ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
-            } else {
-                [ebc setBuddyIconLabelColor: nil];
-            }
-        } else if ([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]) {
-            tempEvent = AILocalizedString(@"has gone away",nil);
-            if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
-                [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
-                [ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
-            } else {
-                [ebc setBuddyIconLabelColor: nil];
-            }
-        } else if ([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]) {
-            tempEvent = AILocalizedString(@"is available",nil);
-            if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
-                [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
-                [ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
-            } else {
-                [ebc setBuddyIconLabelColor: nil];
-            }
-        } else if ([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]) {
-            tempEvent = AILocalizedString(@"is idle",nil);
-            if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
-                [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
-                [ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
-            } else {
-                [ebc setBuddyIconLabelColor: nil];
-            }
-        } else if ([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]) {
-            tempEvent = AILocalizedString(@"is no longer idle",nil);
-            [ebc setBuddyIconLabelColor: nil];
-            [ebc setBuddyNameLabelColor: nil];
-        } else if ([notificationName isEqualToString: Content_FirstContentRecieved]) {
-            tempEvent = AILocalizedString(@"says",nil);
-            if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
-                [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
-                [ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
-            } else {
-                [ebc setBuddyIconLabelColor: nil];
-            }
-        }
-        
-        
-        [ebc showBezelWithContact: [contact longDisplayName]
-                        withImage: tempBuddyIcon
-                         forEvent: tempEvent
-                      withMessage: statusMessage];
-    }
+	if (contact){
+		//Check to be sure bezel for contact and for its group is enabled
+		NSNumber *contactDisabledNumber = [contact preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
+		//NSNumber *groupDisabledNumber = [[contact containingGroup] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
+		BOOL contactEnabled = !contactDisabledNumber || (![contactDisabledNumber boolValue]);
+		//BOOL groupEnabled = !groupDisabledNumber || (![groupDisabledNumber boolValue]);
+		// If Adium is hidden, check if we want it to show (and unhide Adium in the process)
+		BOOL showIfHidden = ![NSApp isHidden] || ([NSApp isHidden] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_HIDDEN] boolValue]);
+		// If you are away, check if we want it to show
+		BOOL showIfAway = ![[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]
+			|| ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]);
+		
+		if (contactEnabled && /*groupEnabled &&*/ showIfHidden && showIfAway){
+			if ([NSApp isHidden]) {
+				[NSApp unhideWithoutActivation];
+			}
+			
+			tempBuddyIcon = [[contact displayArrayForKey:@"UserIcon"] objectValue];
+			if (isFirstMessage) {
+				AIContentMessage    *contentMessage = [[notification userInfo] objectForKey:@"Object"];
+				statusMessage = [[[contentMessage message] safeString] string];
+			} else {
+				// If it is a status change, show status message
+				// Not working
+				/*ownerArray = [contact statusArrayForKey: @"StatusMessage"];
+				if (ownerArray && [ownerArray count]) {
+					statusMessage = [ownerArray objectAtIndex: 0];
+				}
+				if (statusMessage) {
+				} else {
+				}*/
+			}
+			
+			if ([notificationName isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
+				tempEvent = AILocalizedString(@"is now online",nil);
+				if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
+					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor]];
+					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
+				} else {
+					[ebc setBuddyIconLabelColor: nil];
+				}
+			} else if ([notificationName isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
+				tempEvent = AILocalizedString(@"has gone offline",nil);
+				if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
+					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor]];
+					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
+				} else {
+					[ebc setBuddyIconLabelColor: nil];
+				}
+			} else if ([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]) {
+				tempEvent = AILocalizedString(@"has gone away",nil);
+				if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
+					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
+					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
+				} else {
+					[ebc setBuddyIconLabelColor: nil];
+				}
+			} else if ([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]) {
+				tempEvent = AILocalizedString(@"is available",nil);
+				if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
+					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
+					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
+				} else {
+					[ebc setBuddyIconLabelColor: nil];
+				}
+			} else if ([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]) {
+				tempEvent = AILocalizedString(@"is idle",nil);
+				if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
+					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
+					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
+				} else {
+					[ebc setBuddyIconLabelColor: nil];
+				}
+			} else if ([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]) {
+				tempEvent = AILocalizedString(@"is no longer idle",nil);
+				[ebc setBuddyIconLabelColor: nil];
+				[ebc setBuddyNameLabelColor: nil];
+			} else if ([notificationName isEqualToString: Content_FirstContentRecieved]) {
+				tempEvent = AILocalizedString(@"says",nil);
+				if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
+					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
+					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
+				} else {
+					[ebc setBuddyIconLabelColor: nil];
+				}
+			}
+			
+			
+			[ebc showBezelWithContact: [contact longDisplayName]
+							withImage: tempBuddyIcon
+							 forEvent: tempEvent
+						  withMessage: statusMessage];
+		}
+	}
 }
 
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
