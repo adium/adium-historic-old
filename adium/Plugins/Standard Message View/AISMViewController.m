@@ -33,8 +33,8 @@
 - (AIFlexibleTableCell *)_emptyHeadIndentCellForPreviousRow:(AIFlexibleTableRow *)previousRow content:(AIContentMessage *)content;
 - (AIFlexibleTableCell *)_prefixCellForContent:(AIContentMessage *)content;
 - (AIFlexibleTableCell *)_timeStampCellForContent:(AIContentMessage *)content;
-- (AIFlexibleTableCell *)_messageCellForContent:(AIContentMessage *)content includingPrefixes:(BOOL)includePrefixes;
-- (NSAttributedString *)_prefixStringForContent:(AIContentMessage *)content;
+- (AIFlexibleTableCell *)_messageCellForContent:(AIContentMessage *)content includingPrefixes:(BOOL)includePrefixes shouldPerformHeadIndent:(BOOL)performHeadIndent;
+- (NSAttributedString *)_prefixStringForContent:(AIContentMessage *)content performHeadIndent:(BOOL)performHeadIndent;
 - (NSAttributedString *)_prefixWithFormat:(NSString *)format forContent:(AIContentMessage *)content;
 - (NSString *)_prefixStringByExpandingFormat:(NSString *)format forContent:(AIContentMessage *)content;
 - (id)_cellInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
@@ -305,9 +305,9 @@
     }
     //
     if(leftmostCell){
-        cellArray = [NSArray arrayWithObjects:leftmostCell, [self _messageCellForContent:content includingPrefixes:NO], nil];
+        cellArray = [NSArray arrayWithObjects:leftmostCell, [self _messageCellForContent:content includingPrefixes:NO shouldPerformHeadIndent:NO], nil];
     }else{
-	cellArray = [NSArray arrayWithObjects:[self _messageCellForContent:content includingPrefixes:!inlinePrefixes], nil];
+        cellArray = [NSArray arrayWithObjects:[self _messageCellForContent:content includingPrefixes:!inlinePrefixes shouldPerformHeadIndent:isHeader], nil];
     }
     row = [AIFlexibleTableRow rowWithCells:cellArray representedObject:content];
     //set the headIndent
@@ -395,7 +395,7 @@
     AIFlexibleTableCell     *prefixCell;
     
     //Prefix
-    prefixCell = [AIFlexibleTableStringCell cellWithAttributedString:[self _prefixStringForContent:content]];
+    prefixCell = [AIFlexibleTableStringCell cellWithAttributedString:[self _prefixStringForContent:content performHeadIndent:NO]];
     [prefixCell setPaddingLeft:(showUserIcons ? 1 : 4) top:3 right:1 bottom:0];
     [prefixCell setVariableWidth:YES];
     
@@ -421,11 +421,11 @@
 //Message cell (As prefix to filter message to include prefix information)
 //Cell content depends on the state of inlinePrefixes, and possibly prefix style and format
 //Also depends on current color preferences and user icon visibility.
-- (AIFlexibleTableCell *)_messageCellForContent:(AIContentMessage *)content includingPrefixes:(BOOL)includePrefixes
+- (AIFlexibleTableCell *)_messageCellForContent:(AIContentMessage *)content includingPrefixes:(BOOL)includePrefixes shouldPerformHeadIndent:(BOOL)performHeadIndent
 {
     AIFlexibleTableFramedTextCell     *messageCell;
     
-    messageCell = [AIFlexibleTableFramedTextCell cellWithAttributedString:(includePrefixes ? [self _prefixStringForContent:content] : [content message])];
+    messageCell = [AIFlexibleTableFramedTextCell cellWithAttributedString:(includePrefixes ? [self _prefixStringForContent:content performHeadIndent:performHeadIndent] : [content message])];
     [messageCell setPaddingLeft:0 top:0 right:(showUserIcons ? 4 : 0) bottom:0];
 
     if(inlinePrefixes){
@@ -451,7 +451,7 @@
 
 //Prefix Creation --------------------------------------------------------------------------------------------------
 //Build and return an attributed string for the content using the current prefix preference
-- (NSAttributedString *)_prefixStringForContent:(AIContentMessage *)content
+- (NSAttributedString *)_prefixStringForContent:(AIContentMessage *)content performHeadIndent:(BOOL)performHeadIndent
 {
     NSString    *prefixFormat = ([content isOutgoing] ? prefixOutgoing : prefixIncoming);
     NSRange     messageRange;
@@ -467,6 +467,12 @@
         headIndent = [prefixString size].width;
         [prefixString appendAttributedString:[content message]];
         [prefixString appendAttributedString:[self _prefixWithFormat:[prefixFormat substringFromIndex:messageRange.location] forContent:content]];
+        
+        if (performHeadIndent) {
+            NSMutableParagraphStyle     *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+            [paragraphStyle setHeadIndent:headIndent];
+            [prefixString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,[prefixString length])];
+        }
         
         return(prefixString);
         
