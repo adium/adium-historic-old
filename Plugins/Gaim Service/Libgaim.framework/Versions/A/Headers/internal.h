@@ -1,142 +1,97 @@
-/**
- * @file internal.h Internal definitions and includes
- * @ingroup core
- *
- * gaim
- *
- * Gaim is the legal property of its developers, whose names are too numerous
- * to list here.  Please refer to the COPYRIGHT file distributed with this
- * source distribution.
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-#ifndef _GAIM_INTERNAL_H_
-#define _GAIM_INTERNAL_H_
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
+#ifndef __INTERNAL_H__
+#define __INTERNAL_H__
+
+#include <sysdep.h>
+#include "zephyr.h"
+#include <netdb.h>
+
+#ifdef ZEPHYR_USES_HESIOD
+#include <hesiod.h>
 #endif
 
-#ifdef ENABLE_NLS
-#  include <locale.h>
-#  include <libintl.h>
-#  define _(x) gettext(x)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  include <locale.h>
-#  define N_(String) (String)
-#  define _(x) (x)
-#  define ngettext(Singular, Plural, Number) ((Number == 1) ? (Singular) : (Plural))
-#endif
-/*
- * The Singular/Plural/Number ngettext definition above was taken
- * from an email to the texinfo mailing list by Manuel Guerrero.
- * Thank you Manuel, and thank you Alex's good friend Google.
- */
-
-#ifdef HAVE_ENDIAN_H
-# include <endian.h>
+#ifndef ZEPHYR_USES_KERBEROS
+#define REALM_SZ	MAXHOSTNAMELEN
+#define INST_SZ		0		/* no instances w/o Kerberos */
+#define ANAME_SZ	9		/* size of a username + null */
+#define CLOCK_SKEW	300		/* max time to cache packet ids */
 #endif
 
-#define MSG_LEN 2048
-/* The above should normally be the same as BUF_LEN,
- * but just so we're explicitly asking for the max message
- * length. */
-#define BUF_LEN MSG_LEN
-#define BUF_LONG BUF_LEN * 2
+#define SERVER_SVC_FALLBACK	htons((unsigned short) 2103)
+#define HM_SVC_FALLBACK		htons((unsigned short) 2104)
+#define HM_SRV_SVC_FALLBACK	htons((unsigned short) 2105)
 
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#ifndef _WIN32
-#include <sys/wait.h>
-#endif
-#include <ctype.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#define ZAUTH_CKSUM_FAILED	(-2) /* Used only by server. */
+#define ZAUTH_UNSET		(-3) /* Internal to client library. */
+#define Z_MAXFRAGS		500	/* Max number of packet fragments */
+#define Z_MAXNOTICESIZE		400000	/* Max size of incoming notice */
+#define Z_MAXQUEUESIZE		1500000	/* Max size of input queue notices */
+#define Z_FRAGFUDGE		13	/* Room to for multinotice field */
+#define Z_NOTICETIMELIMIT	30	/* Time to wait for fragments */
+#define Z_INITFILTERSIZE	30	/* Starting size of uid filter */
 
-#ifdef HAVE_ICONV
-#include <iconv.h>
-#endif
+struct _Z_Hole {
+    struct _Z_Hole	*next;
+    int			first;
+    int			last;
+};
 
-#ifdef HAVE_LANGINFO_CODESET
-#include <langinfo.h>
-#endif
+struct _Z_InputQ {
+    struct _Z_InputQ	*next;
+    struct _Z_InputQ	*prev;
+    ZNotice_Kind_t	kind;
+    unsigned ZEPHYR_INT32 timep;
+    int			packet_len;
+    char		*packet;
+    int			complete;
+    struct sockaddr_in	from;
+    struct _Z_Hole	*holelist;
+    ZUnique_Id_t	uid;
+    int			auth;
+    int			header_len;
+    char		*header;
+    int			msg_len;
+    char		*msg;
+};
 
-#ifdef GAIM_PLUGINS
-# include <gmodule.h>
-# ifndef _WIN32
-#  include <dlfcn.h>
-# endif
-#endif
+extern struct _Z_InputQ *__Q_Head, *__Q_Tail;
 
-#ifndef _WIN32
-# include <netinet/in.h>
-# include <sys/socket.h>
-# include <arpa/inet.h>
-# include <sys/un.h>
-# include <sys/utsname.h>
-# include <netdb.h>
-# include <signal.h>
-# include <unistd.h>
-#endif
+extern int __Zephyr_open;	/* 0 if FD opened, 1 otherwise */
+extern int __HM_set;		/* 0 if dest addr set, 1 otherwise */
+extern int __Zephyr_server;	/* 0 if normal client, 1 if server or zhm */
 
-#ifndef MAXPATHLEN
-# define MAXPATHLEN 1024
-#endif
+extern ZLocations_t *__locate_list;
+extern int __locate_num;
+extern int __locate_next;
 
-#ifndef HOST_NAME_MAX
-# define HOST_NAME_MAX 255
-#endif
+extern ZSubscription_t *__subscriptions_list;
+extern int __subscriptions_num;
+extern int __subscriptions_next;
 
-#define PATHSIZE 1024
+extern int __Zephyr_port;		/* Port number */
+extern struct in_addr __My_addr;
 
-#include <glib.h>
+typedef Code_t (*Z_SendProc) __P((ZNotice_t *, char *, int, int));
 
-#ifdef _WIN32
-#include "win32dep.h"
-#endif
+struct _Z_InputQ *Z_GetFirstComplete __P((void));
+struct _Z_InputQ *Z_GetNextComplete __P((struct _Z_InputQ *));
+Code_t Z_XmitFragment __P((ZNotice_t*, char *,int,int));
+void Z_RemQueue __P((struct _Z_InputQ *));
+Code_t Z_AddNoticeToEntry __P((struct _Z_InputQ*, ZNotice_t*, int));
+Code_t Z_FormatAuthHeader __P((ZNotice_t *, char *, int, int *, Z_AuthProc));
+Code_t Z_FormatHeader __P((ZNotice_t *, char *, int, int *, Z_AuthProc));
+Code_t Z_FormatRawHeader __P((ZNotice_t *, char*, int,
+			      int*, char **, char **));
+Code_t Z_ReadEnqueue __P((void));
+Code_t Z_ReadWait __P((void));
+Code_t Z_SendLocation __P((char*, char*, Z_AuthProc, char*));
+Code_t Z_SendFragmentedNotice __P((ZNotice_t *notice, int len,
+				   Z_AuthProc cert_func,
+				   Z_SendProc send_func));
+Code_t Z_WaitForComplete __P((void));
+Code_t Z_WaitForNotice __P((ZNotice_t *notice,
+			    int (*pred) __P((ZNotice_t *, void *)), void *arg,
+			    int timeout));
 
-/* ugly ugly ugly */
-/* This is a workaround for the fact that G_GINT64_MODIFIER and G_GSIZE_FORMAT
- * are only defined in Glib >= 2.4 */
-#ifndef G_GINT64_MODIFIER
-#	if GLIB_SIZEOF_LONG == 8
-#		define G_GINT64_MODIFIER "l"
-#	else
-#		define G_GINT64_MODIFIER "ll"
-#	endif
-#endif
+#endif /* __INTERNAL_H__ */
 
-#ifndef G_GSIZE_FORMAT
-#	if GLIB_SIZEOF_LONG == 8
-#		define G_GSIZE_FORMAT "lu"
-#	else
-#		define G_GSIZE_FORMAT "u"
-#	endif
-#endif
-
-#define GAIM_WEBSITE "http://gaim.sourceforge.net/"
-
-#endif /* _GAIM_INTERNAL_H_ */

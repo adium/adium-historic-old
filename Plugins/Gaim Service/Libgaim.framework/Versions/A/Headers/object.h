@@ -24,7 +24,7 @@
 #ifndef _MSN_OBJECT_H_
 #define _MSN_OBJECT_H_
 
-#include <libgaim/internal.h>
+#include "internal.h"
 
 typedef enum
 {

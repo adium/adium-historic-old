@@ -29,6 +29,8 @@
 #ifndef _GAIM_PRPL_H_
 #define _GAIM_PRPL_H_
 
+struct _GaimWebcam;
+typedef struct _GaimPrplWebcam GaimPrplWebcam;
 typedef struct _GaimPluginProtocolInfo GaimPluginProtocolInfo;
 
 /**************************************************************************/
@@ -305,6 +307,15 @@ struct _GaimPluginProtocolInfo
 	/* file transfer callbacks */
 	gboolean (*can_receive_file)(GaimConnection *, const char *who);
 	void (*send_file)(GaimConnection *, const char *who, const char *filename);
+
+	GaimPrplWebcam *webcam;
+};
+
+struct _GaimPrplWebcam {
+	void (*get_feed)(GaimConnection *gc, const char *who);
+	void (*close_feed)(struct _GaimWebcam *gwc);
+	void (*invite_accepted)(GaimConnection *gc, const gchar *who);
+	void (*invite_declined)(GaimConnection *gc, const gchar *who);
 };
 
 #define GAIM_IS_PROTOCOL_PLUGIN(plugin) \
