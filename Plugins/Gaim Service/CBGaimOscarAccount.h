@@ -84,8 +84,10 @@ struct buddyinfo {
 	gboolean ico_sent;
 };
 
-@interface CBGaimOscarAccount : CBGaimAccount {
+@class AIHTMLDecoder;
 
+@interface CBGaimOscarAccount : CBGaimAccount {
+	AIHTMLDecoder	*oscarGaimThreadHTMLDecoder;
 }
 
 @end

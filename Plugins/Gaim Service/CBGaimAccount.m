@@ -297,6 +297,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 /*
  * @brief Status name to use for a Gaim buddy
+ *
+ * Called by SLGaimCocoaAdapter on the gaim thread
  */
 - (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b
 {
@@ -305,6 +307,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 /*
  * @brief Status message for a contact
+ *
+ * Called by SLGaimCocoaAdapter on the gaim thread
  */
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
 {
@@ -313,6 +317,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 /*
  * @brief Update the status message and away state of the contact
+ *
+ *  Called by SLGaimCocoaAdapter on the main thread
  */
 - (void)updateStatusForContact:(AIListContact *)theContact toStatusType:(NSNumber *)statusTypeNumber statusName:(NSString *)statusName statusMessage:(NSAttributedString *)statusMessage
 {

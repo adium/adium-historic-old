@@ -22,6 +22,7 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/CBObjectAdditions.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatus.h>
@@ -243,7 +244,15 @@
 	
 	g_free(normalized);
 	
-	return (statusMessage ? [AIHTMLDecoder decodeHTML:statusMessage] : nil);
+	if(statusMessage){
+		// We use our own HTML decoder to avoid conflicting with the shared one, since we are running in a thread
+		static AIHTMLDecoder	*statusMessageHTMLDecoder = nil;
+		if(!statusMessageHTMLDecoder) statusMessageHTMLDecoder = [[AIHTMLDecoder decoder] retain];
+		
+		return [statusMessageHTMLDecoder decodeHTML:statusMessage];
+	}else{
+		return nil;
+	}
 }
 
 @end
