@@ -13,6 +13,7 @@
 @interface ESPresetManagementController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName presets:(NSArray *)inPresets namedByKey:(NSString *)inNameKey withDelegate:(id)inDelegate;
 - (void)configureControlDimming;
+- (void)tableViewSelectionDidChange:(NSNotification *)notification;
 @end
 
 /*
@@ -172,6 +173,9 @@
 		
 		//The delegate returned a potentially changed presets array; reload table data
 		[tableView_presets reloadData];
+		
+		//Reloading after the deletion changed our selection
+		[self tableViewSelectionDidChange:nil];
 	}
 }
 
