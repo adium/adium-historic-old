@@ -283,31 +283,35 @@
 
 - (IBAction)sendMessageLater:(id)sender
 {
-	NSMutableDictionary *detailsDict = [NSMutableDictionary dictionary], *alertDict = [NSMutableDictionary dictionary];
-	NSString	*outgoingString;
+	AIListObject		*listObject;
 	
-	//Reset to the default typing attributes if an NSURL was converted to a string, to remove the blue underline
-	if ([[textView_outgoing textStorage] convertNSURLtoString]) {
-		[textView_outgoing resetToDefaultTypingAttributes];
-		[[textView_outgoing textStorage] setAttributes:[textView_outgoing defaultTypingAttributes]
-												 range:NSMakeRange(0, [[textView_outgoing textStorage] length])];
+	listObject = [chat listObject];
+	if (listObject){
+		NSMutableDictionary *detailsDict, *alertDict;
+		
+		detailsDict = [NSMutableDictionary dictionary];
+		[detailsDict setObject:[[chat account] uniqueObjectID] forKey:@"Account ID"];
+		[detailsDict setObject:[NSNumber numberWithInt:1] forKey:@"Allow Other"];
+		[detailsDict setObject:[listObject uniqueObjectID] forKey:@"Destination ID"];
+		[detailsDict setObject:[[textView_outgoing textStorage] dataRepresentation] forKey:@"Message"];
+		
+		alertDict = [NSMutableDictionary dictionary];
+		[alertDict setObject:detailsDict forKey:@"ActionDetails"];
+		[alertDict setObject:CONTACT_STATUS_ONLINE_YES forKey:@"EventID"];
+		[alertDict setObject:@"SendMessage" forKey:@"ActionID"];
+		[alertDict setObject:[NSNumber numberWithInt:1] forKey:@"OneTime"]; 
+		
+		[[adium contactAlertsController] addAlert:alertDict toListObject:listObject];
+		
+		//Reset to the default typing attributes if an NSURL was converted to a string, to remove the blue underline
+		if ([[textView_outgoing textStorage] convertNSURLtoString]) {
+			[textView_outgoing resetToDefaultTypingAttributes];
+			[[textView_outgoing textStorage] setAttributes:[textView_outgoing defaultTypingAttributes]
+													 range:NSMakeRange(0, [[textView_outgoing textStorage] length])];
+		}
+		
+		[self didSendMessage:nil];
 	}
-	
-	outgoingString = [[[[textView_outgoing textStorage] copy] string] autorelease];
-	
-	[detailsDict setObject:[[chat account] uniqueObjectID] forKey:@"Account ID"];
-	[detailsDict setObject:[NSNumber numberWithInt:1] forKey:@"Allow Other"];
-	[detailsDict setObject:[[[chat participatingListObjects] objectAtIndex:0] uniqueObjectID] forKey:@"Destination ID"];
-
-	[detailsDict setObject:outgoingString forKey:@"Message"];
-	[alertDict setObject:detailsDict forKey:@"ActionDetails"];
-	[alertDict setObject:CONTACT_STATUS_ONLINE_YES forKey:@"EventID"];
-	[alertDict setObject:@"SendMessage" forKey:@"ActionID"];
-	[alertDict setObject:[NSNumber numberWithInt:1] forKey:@"OneTime"]; 
-	
-	[[adium contactAlertsController] addAlert:alertDict toListObject:[[chat participatingListObjects] objectAtIndex:0]];
-	
-	[self didSendMessage:nil];
 }
 
 - (void)setShouldSendMessagesToOfflineContacts:(BOOL)should
