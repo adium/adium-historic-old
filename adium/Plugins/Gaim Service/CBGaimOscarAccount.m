@@ -78,6 +78,10 @@ struct buddyinfo {
 	gboolean ico_sent;
 };
 
+@interface CBGaimOscarAccount (PRIVATE)
+-(NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
+@end
+
 @implementation CBGaimOscarAccount
 
 - (const char*)protocolPlugin
@@ -152,26 +156,23 @@ struct buddyinfo {
 						
 						//Available status message
 						statusMsgString = [NSString stringWithUTF8String:(bi->availmsg)];
-
+						
 					} else if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away_len > 0) && 
 							   (userinfo->away != NULL) && (userinfo->away_encoding != NULL)) {
 						
 						//Away message
-						gchar *away_utf8 = oscar_encoding_to_utf8(userinfo->away_encoding, userinfo->away, userinfo->away_len);
-						if (away_utf8 != NULL) {
-							statusMsgString = [NSString stringWithUTF8String:away_utf8];
-							g_free(away_utf8);
-							
-							//If the away message changed, make sure the contact is marked as away
-							BOOL		newAway;
-							NSNumber	*storedValue;
-							
-							newAway =  ((buddy->uc & UC_UNAVAILABLE) != 0);
-							storedValue = [theContact statusObjectForKey:@"Away"];
-							if((!newAway && (storedValue == nil)) || newAway != [storedValue boolValue]) {
-								[theContact setStatusObject:[NSNumber numberWithBool:newAway] forKey:@"Away" notify:NO];
-							}
-
+						statusMsgString = [self stringWithBytes:userinfo->away
+														 length:userinfo->away_len
+													   encoding:userinfo->away_encoding];
+						
+						//If the away message changed, make sure the contact is marked as away
+						BOOL		newAway;
+						NSNumber	*storedValue;
+						
+						newAway =  ((buddy->uc & UC_UNAVAILABLE) != 0);
+						storedValue = [theContact statusObjectForKey:@"Away"];
+						if((!newAway && (storedValue == nil)) || newAway != [storedValue boolValue]) {
+							[theContact setStatusObject:[NSNumber numberWithBool:newAway] forKey:@"Away" notify:NO];
 						}
 					}
 										
@@ -194,30 +195,29 @@ struct buddyinfo {
 					//Update the profile if necessary
 					if ((userinfo->info_len > 0) && (userinfo->info != NULL) && (userinfo->info_encoding != NULL)) {
 						
-						gchar *info_utf8 = oscar_encoding_to_utf8(userinfo->info_encoding, userinfo->info, userinfo->info_len);
-						if (info_utf8) {
-							
-							NSString *profileString = [NSString stringWithUTF8String:info_utf8];
-							NSString *oldProfileString = [theContact statusObjectForKey:@"TextProfileString"];
-							
-							if (profileString && [profileString length]) {
-								if (![profileString isEqualToString:oldProfileString]) {
-									[theContact setStatusObject:profileString
-														 forKey:@"TextProfileString" 
-														 notify:NO];
-									[theContact setStatusObject:[AIHTMLDecoder decodeHTML:profileString]
-														 forKey:@"TextProfile" 
-														 notify:NO];
-								}
-							} else if (oldProfileString) {
-								[theContact setStatusObject:nil forKey:@"TextProfileString" notify:NO];
-								[theContact setStatusObject:nil forKey:@"TextProfile" notify:NO];	
+						//Away message
+						NSString *profileString = [self stringWithBytes:userinfo->info
+																 length:userinfo->info_len
+															   encoding:userinfo->info_encoding];
+						
+						NSString *oldProfileString = [theContact statusObjectForKey:@"TextProfileString"];
+						
+						if (profileString && [profileString length]) {
+							if (![profileString isEqualToString:oldProfileString]) {
+								[theContact setStatusObject:profileString
+													 forKey:@"TextProfileString" 
+													 notify:NO];
+								[theContact setStatusObject:[AIHTMLDecoder decodeHTML:profileString]
+													 forKey:@"TextProfile" 
+													 notify:NO];
 							}
-							g_free(info_utf8);
+						} else if (oldProfileString) {
+							[theContact setStatusObject:nil forKey:@"TextProfileString" notify:NO];
+							[theContact setStatusObject:nil forKey:@"TextProfile" notify:NO];	
 						}
 					}
-				}	break;
-					
+				} break;
+			
 				case GAIM_BUDDY_MISCELLANEOUS:
 				{  
 					/*
@@ -310,6 +310,11 @@ struct buddyinfo {
 	return contactStatusFlagsArray;
 }
 
+/* Setting available message
+struct oscar_data *od = gc->proto_data;
+aim_srv_setavailmsg(od->sess, text);
+*/
+
 //This check is against the attributed string, not the HTML it creates... so it's worthless. :)
 /*- (void)setProfile:(NSAttributedString *)profile
 {
@@ -352,22 +357,16 @@ struct buddyinfo {
 
 	GaimXfer *xfer = oscar_xfer_new(gc,destsn);
 	
-	//gaim will free filename when necessary
-	char *filename = g_strdup([[fileTransfer localFilename] UTF8String]);
-	
 	//Associate the fileTransfer and the xfer with each other
 	[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
     xfer->ui_data = [fileTransfer retain];
 	
 	//Set the filename
-	//gaim_xfer_set_local_filename(xfer, filename);
-	
-	//Set the file size?
-	//
-	
-    //accept the request
-    gaim_xfer_request_accepted(xfer, filename);
-    
+	gaim_xfer_set_local_filename(xfer, [[fileTransfer localFilename] UTF8String]);
+		
+    //request that the transfer begins
+	gaim_xfer_request(xfer);
+
     //tell the fileTransferController to display appropriately
     [[adium fileTransferController] beganFileTransfer:fileTransfer];
 }
@@ -391,23 +390,24 @@ struct buddyinfo {
 {
     return [super removeListObject:inObject fromPrivacyList:type]; 
 }
-/*
-//Creates the oscar xfer object, the ESFileTransfer object, and informs
-- (void)initiateSendOfFile:(NSString *)filename toContact:(AIListContact *)inContact
-{
-    NSString * destination = [[inContact UID] compactedString];
-    
-    //gaim will do a g_free of xferFileName while executing gaim_xfer_request_accepted
-    //so we need to malloc to prevent errors
-    char * destsn = g_malloc(strlen([destination UTF8String]) * 4 + 1);
-    [destination getCString:destsn];
-     
-    [filesToSendArray addObject:filename];
-    
-    oscar_ask_sendfile(gc,destsn);
-}
-*/
 
+-(NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding
+{
+	NSString			*encodingString = [NSString stringWithUTF8String:encoding];
+	
+	//Defalt to Unicode
+	NSStringEncoding	desiredEncoding = NSUTF8StringEncoding;
+	
+	if ([encodingString rangeOfString:@"unicode"].location != NSNotFound){
+		desiredEncoding = NSUnicodeStringEncoding;
+	}else if ([encodingString rangeOfString:@"iso"].location != NSNotFound){
+		desiredEncoding = NSISOLatin1StringEncoding;
+	}else if ([encodingString rangeOfString:@"ascii"].location != NSNotFound){
+		desiredEncoding = NSASCIIStringEncoding;
+	}
+	
+	return [[[[NSString alloc] initWithBytes:bytes length:length encoding:desiredEncoding] autorelease];
+}
 
 @end
 #pragma mark Notes
