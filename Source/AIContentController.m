@@ -1009,7 +1009,7 @@ static NSLock				*filterCreationLock = nil;
 
 		foundChats = [NSMutableSet set];
 		
-		enumerator = [[(AIMetaContact *)inContact containedObjects] objectEnumerator];
+		enumerator = [[(AIMetaContact *)inContact listContacts] objectEnumerator];
 		while(listContact = [enumerator nextObject]){
 			NSSet		*listContactChats;
 			
