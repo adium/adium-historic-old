@@ -70,7 +70,7 @@ static CBGaimServicePlugin  *servicePluginInstance;
 	[self _initGaim];
 
     //Install the services
-    OscarService	= [[[CBOscarService alloc] initWithService:self] retain];
+/*    OscarService	= [[[CBOscarService alloc] initWithService:self] retain];
     GaduGaduService = [[[ESGaduGaduService alloc] initWithService:self] retain];
     MSNService		= [[[ESMSNService alloc] initWithService:self] retain];
     NapsterService  = [[[ESNapsterService alloc] initWithService:self] retain];
@@ -79,20 +79,30 @@ static CBGaimServicePlugin  *servicePluginInstance;
 //	TrepiaService   = [[[ESTrepiaService alloc] initWithService:self] retain];
     YahooService	= [[[ESYahooService alloc] initWithService:self] retain];
 	YahooJapanService = [[[ESYahooJapanService alloc] initWithService:self] retain];
+*/
+	OscarService		= [[CBOscarService alloc] initWithService:self];
+	GaduGaduService		= [[ESGaduGaduService alloc] initWithService:self];
+	MSNService			= [[ESMSNService alloc] initWithService:self];
+	NapsterService		= [[ESNapsterService alloc] initWithService:self];
+	NovellService		= [[ESNovellService alloc] initWithService:self];
+	JabberService		= [[ESJabberService alloc] initWithService:self];
+	TrepiaService		= [[ESTrepiaService alloc] initWithService:self];
+	YahooService		= [[ESYahooService alloc] initWithService:self];
+	YahooJapanService	= [[ESYahooJapanService alloc] initWithService:self];
 }
 
 - (void)uninstallPlugin
 {
-    [_accountDict release]; _accountDict = nil;
+	[_accountDict release]; _accountDict = nil;
     
-    //Services
-    [OscarService release]; OscarService = nil;
-    [GaduGaduService release]; GaduGaduService = nil;
+	//Services
+	[OscarService release]; OscarService = nil;
+	[GaduGaduService release]; GaduGaduService = nil;
 	[JabberService release]; JabberService = nil;
-    [NapsterService release]; NapsterService = nil;
-    [MSNService release]; MSNService = nil;
+	[NapsterService release]; NapsterService = nil;
+	[MSNService release]; MSNService = nil;
 //	[TrepiaService release]; TrepiaService = nil;
-    [YahooService release]; YahooService = nil;
+	[YahooService release]; YahooService = nil;
 	[YahooJapanService release]; YahooJapanService = nil;
 	[NovellService release]; NovellService = nil;
 }
