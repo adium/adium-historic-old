@@ -17,6 +17,7 @@
 - (void)configureControlDimming;
 - (void)updateSliderValues;
 - (void)updateStatusAndServiceIconMenusFromPrefDict:(NSDictionary *)prefDict;
+- (void)updateUserIconMenuFromPrefDict:(NSDictionary *)prefDict;
 - (NSMenu *)alignmentMenuWithChoices:(int [])alignmentChoices;
 - (NSMenu *)positionMenuWithChoices:(int [])positionChoices;
 - (NSMenu *)extendedStatusStyleMenu;
@@ -137,18 +138,15 @@
 {
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 	int				textAlignmentChoices[4];
-	int				userIconPositionChoices[3];
-
+	
 	textAlignmentChoices[0] = NSLeftTextAlignment;
 	textAlignmentChoices[1] = NSCenterTextAlignment;
 	textAlignmentChoices[2] = NSRightTextAlignment;
 	textAlignmentChoices[3] = -1;
-	
-	userIconPositionChoices[0] = LIST_POSITION_LEFT;
-	userIconPositionChoices[1] = LIST_POSITION_RIGHT;
-	userIconPositionChoices[2] = -1;
 
 	[self updateStatusAndServiceIconMenusFromPrefDict:prefDict];
+	
+	[self updateUserIconMenuFromPrefDict:prefDict];
 	
 	//Context text alignment
 	[popUp_contactTextAlignment setMenu:[self alignmentMenuWithChoices:textAlignmentChoices]];
@@ -162,10 +160,6 @@
 	[popUp_extendedStatusPosition setMenu:[self extendedStatusPositionMenu]];
 	[popUp_extendedStatusPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION] intValue]];
 	
-	//User icon position
-	[popUp_userIconPosition setMenu:[self positionMenuWithChoices:userIconPositionChoices]];
-	[popUp_userIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue]];
-
 	//Window style
 	[popUp_windowStyle setMenu:[self windowStyleMenu]];
 	[popUp_windowStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]];
@@ -183,10 +177,6 @@
 	[slider_horizontalWidth setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue]];
 	[self updateSliderValues];
 	
-	[checkBox_userIconVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
-	[checkBox_extendedStatusVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
-	[checkBox_statusIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
-	[checkBox_serviceIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue]];	
 	[checkBox_windowHasShadow setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
 	[checkBox_verticalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue]];
 	[checkBox_horizontalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue]];
@@ -205,17 +195,33 @@
 											 forKey:KEY_LIST_LAYOUT_ALIGNMENT
 											  group:PREF_GROUP_LIST_LAYOUT];
 		
+		NSDictionary	*prefDict;
+		prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
+
+		[self updateStatusAndServiceIconMenusFromPrefDict:prefDict];
+		[self updateUserIconMenuFromPrefDict:prefDict];
+		
+		[self configureControlDimming];
+
 	}else if(sender == popUp_groupTextAlignment){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT
 											  group:PREF_GROUP_LIST_LAYOUT];
 		
 	}else if(sender == popUp_windowStyle){
+		NSDictionary	*prefDict;
+		
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_WINDOW_STYLE
 											  group:PREF_GROUP_LIST_LAYOUT];
+
+		prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
+
+		[self updateStatusAndServiceIconMenusFromPrefDict:prefDict];
+		[self updateUserIconMenuFromPrefDict:prefDict];
+
 		[self configureControlDimming];
-		
+
 	}else if(sender == popUp_extendedStatusPosition){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION
@@ -265,12 +271,13 @@
 		[self updateSliderValues];
 		
 	}else if(sender == checkBox_userIconVisible){
-		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
+		NSDictionary	*prefDict;
 		
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_LIST_LAYOUT_SHOW_ICON
 											  group:PREF_GROUP_LIST_LAYOUT];
 		
+		prefDict  = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 		//Update the status and service icon menus to show/hide the badge options
 		[self updateStatusAndServiceIconMenusFromPrefDict:prefDict];
 		[self configureControlDimming];
@@ -389,10 +396,41 @@
 	
 	//Bubble to fit limitations
 	BOOL nonFitted = (windowStyle != WINDOW_STYLE_PILLOWS_FITTED);
-	[checkBox_userIconVisible setEnabled:nonFitted];
-	[checkBox_extendedStatusVisible setEnabled:nonFitted];
-	[checkBox_statusIconsVisible setEnabled:nonFitted];
-	[checkBox_serviceIconsVisible setEnabled:nonFitted];
+	if (nonFitted){
+		//For the non-fitted styles, enable and set the proper state
+		[checkBox_extendedStatusVisible setEnabled:YES];
+		[checkBox_extendedStatusVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
+	}else{
+		//For the fitted style, disable and set to NO the extendedStatus
+		[checkBox_extendedStatusVisible setEnabled:NO];
+		[checkBox_extendedStatusVisible setState:NO];
+	}
+	
+	if (nonFitted || ([[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue] != NSCenterTextAlignment)){
+		//For non-fitted or non-centered fitted, enable and set the appropriate value
+		[checkBox_userIconVisible setEnabled:YES];
+		[checkBox_userIconVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
+
+		[checkBox_statusIconsVisible setEnabled:YES];
+		[checkBox_statusIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
+
+		[checkBox_serviceIconsVisible setEnabled:YES];
+		[checkBox_serviceIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue]];	
+
+	}else{
+		//For fitted and centered, disable and set to NO
+		[checkBox_userIconVisible setEnabled:NO];
+		[checkBox_userIconVisible setState:NO];
+		
+		[checkBox_statusIconsVisible setEnabled:NO];
+		[checkBox_statusIconsVisible setState:NO];
+		
+		[checkBox_serviceIconsVisible setEnabled:NO];
+		[checkBox_serviceIconsVisible setState:NO];
+	}
+
+
+
 	
 	//User icon controls
 	[slider_userIconSize setEnabled:([checkBox_userIconVisible state] && [checkBox_userIconVisible isEnabled])];
@@ -401,11 +439,20 @@
 	
 	//Other controls
 	BOOL extendedStatusEnabled = ([checkBox_extendedStatusVisible state] && [checkBox_extendedStatusVisible isEnabled]);
+	
+
 	[popUp_extendedStatusStyle setEnabled:extendedStatusEnabled];
 	[popUp_extendedStatusPosition setEnabled:extendedStatusEnabled];
-	[popUp_statusIconPosition setEnabled:([checkBox_statusIconsVisible state] && [checkBox_statusIconsVisible isEnabled])];
-	[popUp_serviceIconPosition setEnabled:([checkBox_serviceIconsVisible state] && [checkBox_serviceIconsVisible isEnabled])];
-	
+	[popUp_statusIconPosition setEnabled:([checkBox_statusIconsVisible state] && 
+										  [checkBox_statusIconsVisible isEnabled] &&
+										  ([popUp_statusIconPosition numberOfItems] > 0))];
+	[popUp_serviceIconPosition setEnabled:([checkBox_serviceIconsVisible state] &&
+										   [checkBox_serviceIconsVisible isEnabled] &&
+										   ([popUp_serviceIconPosition numberOfItems] > 0))];
+	[popUp_userIconPosition setEnabled:([checkBox_userIconVisible state] &&
+										[checkBox_userIconVisible isEnabled] &&
+										([popUp_userIconPosition numberOfItems] > 0))];
+
 	//Disable group spacing when not using mockie
 	[slider_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
 	[textField_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
@@ -415,6 +462,7 @@
 		//In standard mode, disable the horizontal autosizing slider if horiztonal autosizing is off
 		[textField_horizontalWidthText setStringValue:AILocalizedString(@"Maximum width:",nil)];
 		[slider_horizontalWidth setEnabled:horizontalAutosize];
+
 	}else{
 		//In all the borderless transparent modes, the horizontal autosizing slider becomes the
 		//horizontal sizing slider when autosizing is off
@@ -430,28 +478,86 @@
 - (void)updateStatusAndServiceIconMenusFromPrefDict:(NSDictionary *)prefDict
 {
 	int				statusAndServicePositionChoices[7];
-
-	statusAndServicePositionChoices[0] = LIST_POSITION_FAR_LEFT;
-	statusAndServicePositionChoices[1] = LIST_POSITION_LEFT;
-	statusAndServicePositionChoices[2] = LIST_POSITION_RIGHT;
-	statusAndServicePositionChoices[3] = LIST_POSITION_FAR_RIGHT;
+	BOOL			showUserIcon = [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue];
+	int				indexForFinishingChoices = 0;
 	
-	//Only show the badge choices if we are showing the user icon
-	if ([[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]){
-		statusAndServicePositionChoices[4] = LIST_POSITION_BADGE_LEFT;
-		statusAndServicePositionChoices[5] = LIST_POSITION_BADGE_RIGHT;
-		statusAndServicePositionChoices[6] = -1;
+	if ([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue] != WINDOW_STYLE_PILLOWS_FITTED){
+		statusAndServicePositionChoices[0] = LIST_POSITION_FAR_LEFT;
+		statusAndServicePositionChoices[1] = LIST_POSITION_LEFT;
+		statusAndServicePositionChoices[2] = LIST_POSITION_RIGHT;
+		statusAndServicePositionChoices[3] = LIST_POSITION_FAR_RIGHT;
+		
+		indexForFinishingChoices = 4;
 		
 	}else{
-		statusAndServicePositionChoices[4] = -1;
-		
+		//For fitted pillows, only show the options which correspond to the text alignment
+		switch([[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue]){
+			case NSLeftTextAlignment:
+				statusAndServicePositionChoices[0] = LIST_POSITION_FAR_LEFT;
+				statusAndServicePositionChoices[1] = LIST_POSITION_LEFT;
+				indexForFinishingChoices = 2;
+				break;
+				
+			case NSRightTextAlignment:
+				statusAndServicePositionChoices[0] = LIST_POSITION_RIGHT;
+				statusAndServicePositionChoices[1] = LIST_POSITION_FAR_RIGHT;
+				indexForFinishingChoices = 2;
+				
+				break;
+			case NSCenterTextAlignment:
+				
+				break;
+		}	
 	}
-		
+	
+	//Only show the badge choices if we are showing the user icon
+	if (showUserIcon && (indexForFinishingChoices != 0)){
+		statusAndServicePositionChoices[indexForFinishingChoices] = LIST_POSITION_BADGE_LEFT;
+		statusAndServicePositionChoices[indexForFinishingChoices + 1] = LIST_POSITION_BADGE_RIGHT;
+		statusAndServicePositionChoices[indexForFinishingChoices + 2] = -1;
+
+	}else{
+		statusAndServicePositionChoices[indexForFinishingChoices] = -1;
+
+	}
+
 	[popUp_statusIconPosition setMenu:[self positionMenuWithChoices:statusAndServicePositionChoices]];
 	[popUp_statusIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
 	
 	[popUp_serviceIconPosition setMenu:[self positionMenuWithChoices:statusAndServicePositionChoices]];
 	[popUp_serviceIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];	
+}
+
+- (void)updateUserIconMenuFromPrefDict:(NSDictionary *)prefDict
+{
+	int				userIconPositionChoices[3];
+	
+	if ([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue] != WINDOW_STYLE_PILLOWS_FITTED){
+		userIconPositionChoices[0] = LIST_POSITION_LEFT;
+		userIconPositionChoices[1] = LIST_POSITION_RIGHT;
+		userIconPositionChoices[2] = -1;
+	}else{
+		//For fitted pillows, only show the options which correspond to the text alignment
+		switch([[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue]){
+			case NSLeftTextAlignment:
+				userIconPositionChoices[0] = LIST_POSITION_LEFT;
+				userIconPositionChoices[1] = -1;
+				break;
+				
+			case NSRightTextAlignment:		
+				userIconPositionChoices[0] = LIST_POSITION_RIGHT;
+				userIconPositionChoices[1] = -1;
+				break;
+			case NSCenterTextAlignment:
+				userIconPositionChoices[0] = -1;				
+				break;
+		}	
+	}
+
+	
+	//User icon position
+	[popUp_userIconPosition setMenu:[self positionMenuWithChoices:userIconPositionChoices]];
+	[popUp_userIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue]];
 }
 
 #pragma mark Menu generation
@@ -523,7 +629,7 @@
 		
 		i++;
 	}
-	
+
 	return(positionMenu);
 }
 
