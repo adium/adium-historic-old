@@ -2,16 +2,19 @@
 <%@ page import = 'javax.sql.*' %>
 <%@ page import = 'javax.naming.*' %>
 <%@ page import = 'java.util.ArrayList' %>
+<%@ page import = 'java.util.StringTokenizer' %>
+<%@ page import = 'java.util.regex.Pattern' %>
+<%@ page import = 'java.util.regex.Matcher' %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 437 $ $Date: 2003/09/25 15:02:59 $ -->
+<!--$Rev: 451 $ $Date: 2003/10/12 16:30:23 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
-String afterDate, beforeDate, from_sn, to_sn, contains_sn;
+String afterDate, beforeDate, from_sn, to_sn, contains_sn, hl;
 boolean showDisplay = true, showForm = false, showConcurrentUsers = false;
 
 Date today = new Date(System.currentTimeMillis());
@@ -27,6 +30,9 @@ showForm = Boolean.valueOf(request.getParameter("form")).booleanValue();
 
 showConcurrentUsers =
     Boolean.valueOf(request.getParameter("users")).booleanValue();
+
+hl = request.getParameter("hl");
+ArrayList hlWords = new ArrayList();
 
 if (beforeDate != null && (beforeDate.equals("") || beforeDate.equals("null"))) {
     beforeDate = null;
@@ -49,6 +55,19 @@ if (screennameDisplay == null || screennameDisplay.equals("display")) {
 } else {
     showDisplay = false;
 }
+
+if (hl != null && hl.equals("")) {
+    hl = null;
+} else if (hl != null) {
+    hl = hl.trim();
+    StringTokenizer st = new StringTokenizer(hl, " ");
+    while (st.hasMoreTokens()) {
+        hlWords.add(st.nextToken());
+    }
+}
+
+String hlColor[] = {"#ff6","#a0ffff", "#9f9", "#f99", "#f69"};
+
 %>
 
 <html>
@@ -115,6 +134,16 @@ if (screennameDisplay == null || screennameDisplay.equals("display")) {
             <input type="reset">
             <input type="submit">
         </form>
+        <table border="1"><tr><td>
+        Search Words:<br />
+        <%
+        for (int i = 0; i < hlWords.size(); i++) {
+            out.print("<b style=\"color:black;" +
+                "background-color:" + hlColor[i % hlColor.length] +
+                "\">" + hlWords.get(i).toString() + "</b> ");
+        }
+        %>
+        </td></tr></table>
         <a href="search.jsp">[Search Logs]</a>&nbsp;&nbsp;
         <a href="statistics.jsp">[Statistics]</a><br /><br />
 <%
@@ -277,15 +306,36 @@ try {
                 received_color = colorArray[i % colorArray.length];
             }
         }
-        
+
         if (received_color == null) {
             received_color = colorArray[userArray.size() % colorArray.length];
             userArray.add(rset.getString("recipient_sn"));
         }
-        
+
         message = message.replaceAll("\r|\n", "<br />");
         message = message.replaceAll("   ", " &nbsp; ");
-        
+
+        for (int i = 0; i < hlWords.size(); i++) {
+
+            Pattern p = Pattern.compile("(?i)(.*?)(" + 
+            hlWords.get(i).toString() + ")(.*?)");
+            Matcher m = p.matcher(message);
+            StringBuffer sb = new StringBuffer();
+            int oldIndex = 0;
+            while(m.find()) {
+                sb.append(message.substring(oldIndex,m.start()));
+                sb.append(m.group(1) + 
+                    "<b style=\"color:black;background-color:" +
+                    hlColor[i % hlColor.length] + "\">");
+                sb.append(m.group(2) + "</b>" + m.group(3));
+                oldIndex = m.end();
+            }
+            sb.append(message.substring(oldIndex, 
+            message.length()));
+
+            message = sb.toString();
+        }
+
         out.print("<tr>\n");
         String cellColor = "#ffffff";
         if(cntr++ % 2 == 0) {

@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/search.jsp $-->
-<!--$Rev: 401 $ $Date: 2003/08/28 09:19:57 $ -->
+<!--$Rev: 449 $ $Date: 2003/10/12 16:30:23 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -281,11 +281,17 @@ try {
         Timestamp thirtyBefore = new Timestamp(beforeThirty);
         Timestamp thirtyAfter = new Timestamp(afterThirty);
 
+        String cleanString = searchString;
+        cleanString = cleanString.replaceAll("&", " ");
+        cleanString = cleanString.replaceAll("!", " ");
+
         out.print("<td><a href=\"index.jsp?from=" +
         rset.getString("sender_sn") +
         "&to=" + rset.getString("recipient_sn") +
         "&before=" + before.toString() +
-        "&after=" + after.toString() + "#" + rset.getInt("message_id") + "\">");
+        "&after=" + after.toString() + 
+        "&hl=" + cleanString +
+        "#" + rset.getInt("message_id") + "\">");
         out.print("+/-&nbsp;15&nbsp;");
         out.print("</a><br>");
 
@@ -293,7 +299,9 @@ try {
         rset.getString("sender_sn") +
         "&to=" + rset.getString("recipient_sn") +
         "&before=" + thirtyBefore.toString() +
-        "&after=" + thirtyAfter.toString() + "#" + rset.getInt("message_id") + "\">");
+        "&after=" + thirtyAfter.toString() + 
+        "&hl=" + cleanString +
+        "#" + rset.getInt("message_id") + "\">");
         out.print("+/-&nbsp;30&nbsp;");
         out.print("</a></td>");
 
