@@ -36,7 +36,7 @@
 	_preferredContact = nil;
 	_listContacts = nil;
 	
-	[super initWithUID:[objectID stringValue] serviceID:nil];
+	[super initWithUID:[objectID stringValue] service:nil];
 
 	containedObjects = [[NSMutableArray alloc] init];
 	
@@ -59,19 +59,19 @@
 	return objectID;
 }
 
-//Our unique object ID is the number associated with this account
-- (NSString *)uniqueObjectID
+//
+- (NSString *)internalObjectID
 {
-	if (!uniqueObjectID){
-		uniqueObjectID = [[NSString stringWithFormat:@"MetaContact-%i",[objectID intValue]] retain];
+	if (!internalObjectID){
+		internalObjectID = [[NSString stringWithFormat:@"MetaContact-%i",[objectID intValue]] retain];
 	}
-	return(uniqueObjectID);
+	return(internalObjectID);
 }
 
 //
-- (NSString *)accountID
+- (AIAccount *)account
 {
-	return([[self preferredContact] accountID]);
+	return([[self preferredContact] account]);
 }
 
 //Object Storage -------------------------------------------------------------------------------------------------------
@@ -89,10 +89,10 @@
 			//If the new object's formattedUID isn't the same as ours, we no longer can claim to only have one
 			//unique contact
 			NSString	*currentUID = [self formattedUID];
-			NSString	*currentService = [self displayServiceID];
+			NSString	*currentService = [[self service] serviceID];
 			
 			NSString	*newUID = [inObject formattedUID];
-			NSString	*newService = [inObject displayServiceID];
+			NSString	*newService = [[inObject service] serviceID];
 			
 			//If newUID is nil, then the containedContact is a metaContact with multiple unique contacts... 
 			//so we are no longer unique.
@@ -196,11 +196,11 @@
 	return _preferredContact;
 }
 
-- (AIListContact *)preferredContactWithServiceID:(NSString *)inServiceID
+- (AIListContact *)preferredContactWithService:(AIService *)inService
 {
 	AIListContact   *returnContact = nil;
 	
-	if (_preferredContact && [[_preferredContact serviceID] isEqualToString:inServiceID]){
+	if(_preferredContact && [_preferredContact service] == inService){
 		//First try to use our preferredContact
 		returnContact = _preferredContact;
 		
@@ -212,7 +212,7 @@
 		//Search for an available contact
 		for (index = 0; index < count; index++){
 			thisContact = [containedObjects objectAtIndex:index];
-			if (([[thisContact serviceID] isEqualToString:inServiceID]) &&
+			if (([thisContact service] == inService) &&
 				([thisContact statusSummary] == AIAvailableStatus)){
 				returnContact = thisContact;
 				break;
@@ -224,7 +224,7 @@
 			for (index = 0; index < count; index++){
 				thisContact = [containedObjects objectAtIndex:index];
 				if (([thisContact online]) && 
-					([[thisContact serviceID] isEqualToString:inServiceID])){
+					([thisContact service] == inService)){
 					returnContact = thisContact;
 					break;
 				}
@@ -234,7 +234,7 @@
 		if (!returnContact){
 			for (index = 0; index < count; index++){
 				thisContact = [containedObjects objectAtIndex:index];
-				if ([[thisContact serviceID] isEqualToString:inServiceID]){
+				if ([thisContact service] == inService){
 					returnContact = thisContact;
 					break;
 				}
@@ -250,12 +250,42 @@
 	if (!_listContacts){
 		NSMutableArray	*listContacts = [[NSMutableArray alloc] init];
 		NSMutableArray	*uniqueObjectIDs = [NSMutableArray array];
-		[self _addListContacts:[self containedObjects] toArray:listContacts uniqueObjectIDs:uniqueObjectIDs];
+		[self _addListContacts:containedObjects toArray:listContacts uniqueObjectIDs:uniqueObjectIDs];
 		
 		_listContacts = listContacts;
 	}
 	
 	return _listContacts;
+}
+
+
+
+// Return a dictionary whose keys are serviceID's
+// and whose objects are arrays of contained contacts with those serviceID's
+- (NSDictionary *)dictionaryOfServicesAndListContacts
+{
+	NSMutableDictionary *contacts = [NSMutableDictionary dictionary];
+	AIListObject		*current;
+	NSString			*serviceID;
+	NSMutableArray		*contactList;
+	int i;
+	NSArray				*listContacts = [self listContacts];
+	
+	for( i = 0; i < [listContacts count]; i++ ) {
+		current = [listContacts objectAtIndex:i];
+		serviceID = [[current service] serviceID];
+		
+		// Is there already an entry for this service?
+		if( contactList = [contacts objectForKey:serviceID] ) {
+			[contactList addObject:current];
+			
+		} else {
+			contactList = [NSMutableArray arrayWithObject:current];
+			[contacts setObject:contactList forKey:serviceID];
+		}
+	}
+	
+	return contacts;
 }
 
 - (int)uniqueContainedObjectsCount
@@ -283,13 +313,13 @@
 				   uniqueObjectIDs:uniqueObjectIDs];
 			
 		}else{
-			NSString	*llistObjectUniqueObjectID = [listObject uniqueObjectID];
-			unsigned int listContactIndex = [uniqueObjectIDs indexOfObject:llistObjectUniqueObjectID];
+			NSString	*listObjectInternalObjectID = [listObject internalObjectID];
+			unsigned int listContactIndex = [uniqueObjectIDs indexOfObject:listObjectInternalObjectID];
 			
 			if (listContactIndex == NSNotFound){
 				//This contact isn't in the array yet, so add it
 				[listContacts addObject:listObject];
-				[uniqueObjectIDs addObject:llistObjectUniqueObjectID];
+				[uniqueObjectIDs addObject:listObjectInternalObjectID];
 				
 			}else{
 				//If it is found, but it is offline and this contact is online, swap 'em out so our array
@@ -324,16 +354,6 @@
 	}
 }
 
-
-- (NSString *)displayServiceID
-{
-	if (containsOnlyOneService){
-		return([[self preferredContact] displayServiceID]);
-	}else{
-		return nil;
-	}
-}
-
 - (void)containedMetaContact:(AIMetaContact *)containedMetaContact didChangeContainsOnlyOneUniqueContact:(BOOL)inContainsOnlyOneUniqueContact
 {
 	//If the contained meta contact's status isn't the same as our current one - i.e.
@@ -360,7 +380,7 @@
 {
 	BOOL oldOnlyOne = containsOnlyOneUniqueContact;
 	
-	unsigned int count = [self containedObjectsCount];
+	unsigned int count = [containedObjects count];
 	
 	if (count > 1){
 		NSString	*formattedUIDToMatch = nil;
@@ -371,13 +391,13 @@
 		
 		unsigned int i;
 		for (i = 0; i < count; i++){
-			AIListContact   *thisContact = [self objectAtIndex:i];
+			AIListContact   *thisContact = [containedObjects objectAtIndex:i];
 			
 			NSString	*thisContactFormattedUID;
 			NSString	*thisContactServiceID;
 			
 			thisContactFormattedUID = [thisContact formattedUID];
-			thisContactServiceID = [thisContact displayServiceID];
+			thisContactServiceID = [[thisContact service] serviceID];
 			
 			if ([thisContact online]){
 //				NSLog(@"%@ is online (%@)",thisContact,thisContactFormattedUID);
@@ -442,7 +462,7 @@
 		
 		if (count == 1) {
 			//With only one contact, we are as unique as the contact we contain...
-			containsOnlyOneUniqueContact = ([[self objectAtIndex:0] formattedUID] != nil);
+			containsOnlyOneUniqueContact = ([[containedObjects objectAtIndex:0] formattedUID] != nil);
 		}else{
 			containsOnlyOneUniqueContact = YES;
 		}
@@ -694,10 +714,10 @@
 		userIcon = [[self preferredContact] userIcon];
 	}
 	if (!userIcon){
-		unsigned int count = [self containedObjectsCount];
+		unsigned int count = [containedObjects count];
 		unsigned int i = 0;
 		while ((i < count) && !userIcon){
-			userIcon = [[self objectAtIndex:i] userIcon];
+			userIcon = [[containedObjects objectAtIndex:i] userIcon];
 			i++;
 		}
 	}
@@ -726,6 +746,66 @@
 
 	//    return([longDisplayName stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]]);
 	return longDisplayName;
+}
+
+
+//Object Storage ---------------------------------------------------------------------------------------------
+#pragma mark Object Storage
+//Return our contained objects
+- (NSArray *)containedObjects
+{
+	return(containedObjects);
+}
+
+//Number of containd objects
+- (unsigned)containedObjectsCount
+{
+    return([containedObjects count]);
+}
+
+//Test for the presence of an object in our group
+- (BOOL)containsObject:(AIListObject *)inObject
+{
+	return([containedObjects containsObject:inObject]);
+}
+
+//Retrieve an object by index
+- (id)objectAtIndex:(unsigned)index
+{
+    return([containedObjects objectAtIndex:index]);
+}
+
+//Retrieve the index of an object
+- (int)indexOfObject:(AIListObject *)inObject
+{
+    return([containedObjects indexOfObject:inObject]);
+}
+
+//Return an enumerator of our content
+- (NSEnumerator *)objectEnumerator
+{
+    return([containedObjects objectEnumerator]);
+}
+
+//Remove all the objects from this group (PRIVATE: For contact controller only)
+- (void)removeAllObjects
+{
+	//Remove all the objects
+	while([containedObjects count]){
+		[self removeObject:[containedObjects objectAtIndex:0]];
+	}
+}
+
+- (AIListObject *)objectWithService:(AIService *)inService UID:(NSString *)inUID
+{
+	NSEnumerator	*enumerator = [containedObjects objectEnumerator];
+	AIListObject	*object;
+	
+	while(object = [enumerator nextObject]){
+		if([inUID isEqualToString:[object UID]] && [object service] == inService) break;
+	}
+	
+	return(object);
 }
 
 @end
