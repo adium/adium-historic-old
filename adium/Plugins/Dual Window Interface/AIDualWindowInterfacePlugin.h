@@ -19,21 +19,33 @@
 @class AIAdium, AIContactListWindowController, AIMessageWindowController, AIMessageViewController;
 @protocol AIMessageView, AIInterfaceController, AITabHoldingInterface, AIContactListCleanup;
 
-@interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceController, AITabHoldingInterface, AIContactListCleanup> {
-    AIContactListWindowController 	*contactListWindowController;
+@protocol AIInterfaceContainer
+- (void)makeActive:(id)sender;	//Make the container active/front
+- (void)close:(id)sender;	//Close the container
+@end
+
+@protocol AIContainerInterface <NSObject>
+- (void)containerDidClose:(id <AIInterfaceContainer>)inContainer;
+- (void)containerDidBecomeActive:(id <AIInterfaceContainer>)inContainer;
+- (void)containerOrderDidChange;
+@end
+
+@interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceController, AIContainerInterface> {
+    //Menus
     NSMutableArray			*windowMenuArray;
-
-    AIMessageWindowController		*messageWindow;
-    AIMessageViewController		*selectedMessageView;
-
     NSMenuItem				*menuItem_closeTab;
     NSMenuItem				*menuItem_nextMessage;
     NSMenuItem				*menuItem_previousMessage;
+
+    //Containers
+    AIContactListWindowController 	*contactListWindowController;
+    id <AIInterfaceContainer>		activeContainer;
+
+    //
+    AIMessageWindowController		*messageWindowController;
+
 }
 
 - (IBAction)showContactList:(id)sender;
-- (IBAction)closeTab:(id)sender;
-- (IBAction)showMessageWindow:(id)sender;
-- (void)closeMessageViewController:(id <AIMessageView>)controller;
 
 @end

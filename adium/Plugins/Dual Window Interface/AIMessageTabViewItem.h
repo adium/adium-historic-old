@@ -8,9 +8,17 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class AIMessageViewController;
+@protocol AIInterfaceContainer;
 
-@interface AIMessageTabViewItem : NSTabViewItem {
-
+@interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer> {
+    AIMessageViewController 	*messageView;
 }
+
++ (AIMessageTabViewItem *)messageTabViewItemWithIdentifier:(id)identifier messageView:(AIMessageViewController *)inMessageView;
+- (void)makeActive:(id)sender;
+- (void)close:(id)sender;
+- (NSString *)labelString;
+- (void)setAccountSelectionMenuVisible:(BOOL)visible;
 
 @end

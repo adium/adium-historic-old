@@ -68,8 +68,6 @@
     [super initWithFrame:frameRect];
     
     //Load our images
-//    tabBackground = [[AIImageUtilities imageNamed:@"tab_Background" forClass:[self class]] retain];
-//    tabDivider = [[AIImageUtilities imageNamed:@"tab_divider" forClass:[self class]] retain];
     tabBackground = [[AISystemTabRendering tabBackground] retain];
     
     [self rebuildViews];
@@ -153,7 +151,6 @@
         if(!absolute){
             if(origin.x > [object frame].origin.x){
                 int distance = (origin.x - [object frame].origin.x) * 0.6;
-//                if(distance > 6) distance = 6;
                 if(distance < 1) distance = 1;
             
                 origin.x = [object frame].origin.x + distance;
@@ -161,7 +158,6 @@
                 if(finished) finished = NO;
             }else if(origin.x < [object frame].origin.x){
                 int distance = ([object frame].origin.x - origin.x) * 0.6;
-//                if(distance > 6) distance = 6;
                 if(distance < 1) distance = 1;
     
                 origin.x = [object frame].origin.x - distance;
@@ -193,16 +189,6 @@
             xOffset += imageWidth;
         }
     }
-    
-    //Draw the divider
-/*    imageWidth = [tabDivider size].width;
-    if(tabDivider && imageWidth){
-        xOffset = 0;
-        while(xOffset < rect.size.width){
-            [tabDivider compositeToPoint:NSMakePoint(rect.origin.x + xOffset,0) operation:NSCompositeSourceOver];
-            xOffset += imageWidth;
-        }
-    }*/
 
     //Draw our subviews
     [super drawRect:rect];
@@ -210,7 +196,7 @@
 
 //Behavior --------------------------------------------------------------------------------
 //Change our selection to match the current selected tabViewItem
-- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
+- (void)tabView:(NSTabView *)inTabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
     NSEnumerator	*enumerator;
     AICustomTab		*tab;
@@ -225,6 +211,11 @@
             [tab setSelected:NO];
         }
     }
+
+    //Notify
+    [[NSNotificationCenter defaultCenter] postNotificationName:AITabView_DidChangeSelectedItem
+                                                        object:tabView
+                                                      userInfo:[NSDictionary dictionaryWithObjectsAndKeys:tabViewItem,@"TabViewItem",nil]];
 }
 
 //Rebuild our tab list to match the tabView
@@ -232,6 +223,10 @@
 {
     [self rebuildViews];
     [self arrangeViewsAbsolute:YES];
+
+    //Notify
+    [[NSNotificationCenter defaultCenter] postNotificationName:AITabView_DidChangeNumberOfItems
+                                                        object:tabView];
 }
 
 - (void)setFrame:(NSRect)frameRect
@@ -346,14 +341,13 @@
 
     [tabView selectTabViewItem:selectedItem];
 
-    if(tabsChanged){
-        //Let everyone know the tabs rearranged
-        [[NSNotificationCenter defaultCenter] postNotificationName:AITabViewDidChangeOrderOfTabViewItemsNotification object:tabView];
+    //Notify 
+    if(tabsChanged){      
+        [[NSNotificationCenter defaultCenter] postNotificationName:AITabView_DidChangeOrderOfItems object:tabView];
     }
 
     return(tabsChanged);
 }
-
 
 //Returns the total width of our tab tops
 - (int)totalTabWidth
@@ -370,8 +364,6 @@
 
     return(totalWidth);
 }
-
-
 
 @end
 
