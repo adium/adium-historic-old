@@ -521,7 +521,10 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
 	int selectedIndex = [tableView_userList selectedRow];
-	[chat setPreferredListObject:[[chat participatingListObjects] objectAtIndex:selectedIndex]];
+	
+	[chat setPreferredListObject:((selectedIndex != -1) ? 
+								  [[chat participatingListObjects] objectAtIndex:selectedIndex] :
+								  nil)];
 }
 
 - (void)cellWasDoubleClicked:(id)sender
