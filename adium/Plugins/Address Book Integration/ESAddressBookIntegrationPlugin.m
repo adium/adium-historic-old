@@ -70,8 +70,8 @@
     [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
     
-    [serviceDict release];
-    [trackingDict release];
+    [serviceDict release]; serviceDict = nil;
+    [trackingDict release]; trackingDict = nil;
 	//    [sharedAddressBook release];
 }
 
@@ -209,21 +209,16 @@
 - (void)consumeImageData:(NSData *)inData forTag:(int)tag
 {
     if (inData) {
-        //Check if we retrieved data from the 'me' address book card
-		/*        if ((tag == meTag) && useABImages) {
-		[[adium preferenceController] setPreference:inData forKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
-		meTag = -1;
-        }else{
-*/
 			NSNumber                *tagNumber = [NSNumber numberWithInt:tag];
 			
-			if( useABImages ) {
+			if(useABImages){
 				//Apply the image to the appropriate listObject
 				NSImage                 *image= [[[NSImage alloc] initWithData:inData] autorelease];
 				
 				//Get the object from our tracking dictionary
 				AIListObject            *listObject = [trackingDict objectForKey:tagNumber];
 				
+				if (listObject){
 				//Apply the image at lowest priority
 				[[listObject displayArrayForKey:KEY_USER_ICON] setObject:image 
 															 withOwner:self
@@ -232,6 +227,7 @@
 				//Notify
 				[[adium contactController] listObjectAttributesChanged:listObject
 														  modifiedKeys:[NSArray arrayWithObject:KEY_USER_ICON]];	
+				}
 				
 			}
 			//No further need for the dictionary entry
