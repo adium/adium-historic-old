@@ -358,12 +358,16 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 	NSAttributedString	*returnValue;
 	NSUnarchiver		*unarchiver = [[NSUnarchiver alloc] initForReadingWithData:inData];
 
-	returnValue = (NSAttributedString *)[unarchiver decodeObject];
-
-	//For reading previously stored NSData objects - we used to store them as RTF data, but that
-	//method is both slower and buggier. Any modern storage will use NSUnarchiver, so leaving this
-	//here isn't a speed problem.
-	if (!returnValue){
+	if (unarchiver){
+		//NSUnarchiver's decodeObject returns an object which is retained by the unarchiver and released
+		//when the unarchiver is deallocated.  We could rely upon autoreleasing the unarchiver, but it
+		//is cleaner to make the NSAttributedString autorelease itself.
+		returnValue = (NSAttributedString *)[[[unarchiver decodeObject] retain] autorelease];
+		
+	}else{
+		//For reading previously stored NSData objects - we used to store them as RTF data, but that
+		//method is both slower and buggier. Any modern storage will use NSUnarchiver, so leaving this
+		//here isn't a speed problem.
 		if([NSApp isOnPantherOrBetter]){
 			
 			returnValue = ([[[NSAttributedString alloc] initWithRTF:inData
@@ -376,7 +380,9 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 		}
 	}
 	
-	return returnValue;
+	[unarchiver release];
+	
+	return(returnValue);
 }
 
 - (NSAttributedString *)safeString
