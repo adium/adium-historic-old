@@ -20,11 +20,11 @@
 
 @interface AIPasswordPromptController : AIWindowController {
 
-    IBOutlet	NSTextField	*textField_password;
-    IBOutlet	NSButton	*checkBox_savePassword;
+	IBOutlet	NSTextField	*textField_password;
+	IBOutlet	NSButton	*checkBox_savePassword;
 
-    SEL 		selector;
-    id			target;
+	SEL 		selector;
+	id			target;
 
 	id			context;
 }
