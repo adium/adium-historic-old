@@ -38,6 +38,7 @@
 - (NSAttributedString *)_prefixWithFormat:(NSString *)format forContent:(AIContentMessage *)content;
 - (NSString *)_prefixStringByExpandingFormat:(NSString *)format forContent:(AIContentMessage *)content;
 - (id)_cellInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
+- (id)_lastCellInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
 - (NSArray *)_cellsInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
 @end
 
@@ -128,6 +129,8 @@
 	//Pad bottom of the message view depending on mode
 	[messageView setContentPaddingTop:0 bottom:(inlinePrefixes ? 3 : 0)];
 
+        //Indentation when combining messages in appropriate modes
+        headIndent = [[prefDict objectForKey:KEY_SMV_COMBINE_MESSAGES_INDENT] floatValue];
         
         //Old
 	outgoingSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_COLOR] representedColor] retain];
@@ -247,12 +250,14 @@
         while (cell = [enumerator nextObject]) {
             [cell setDrawBottom:NO];
         }
-        
+
         enumerator = [[self _cellsInRow:messageRow withClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
         while (cell = [enumerator nextObject]) {
             [cell setDrawTop:NO];
-            [cell setDrawTopDivider:YES];
         }
+        
+        //draw the between-messages divider in the last framedTextCell in the row, which should be the message
+        [[self _lastCellInRow:messageRow withClass:[AIFlexibleTableFramedTextCell class]] setDrawTopDivider:YES];
         
         if(!inlinePrefixes) [[self _cellInRow:previousRow withClass:[AIFlexibleTableImageCell class]] setRowSpan:2];
     }
@@ -319,7 +324,6 @@
     //Empty spacing cell
     if(!isHeader && !inlinePrefixes && combineMessages) {
         leftmostCell = [self _emptyHeadIndentCellForPreviousRow:previousRow content:content];
-      //  leftmostCell = nil;
     }
     //
     if(leftmostCell){
@@ -394,25 +398,16 @@
 - (AIFlexibleTableCell *)_emptyHeadIndentCellForPreviousRow:(AIFlexibleTableRow *)previousRow content:(AIContentMessage *)content
 {
     AIFlexibleTableFramedTextCell * cell = [[AIFlexibleTableFramedTextCell alloc] init];
+
     //size the cell for the previousRow headIndent value
     [cell sizeCellForWidth:[previousRow headIndent]];
-//    [cell sizeContentForWidth:[previousRow headIndent]];
-    
-    //set the background color appropriately
-    /*if([content isOutgoing]){
-        [cell setBackgroundColor:colorOutgoing];
-    }else{
-        [cell setBackgroundColor:colorIncoming];
-    }*/
+
     if([content isOutgoing]){
         [cell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
     }else{
         [cell setFrameBackgroundColor:colorIncoming borderColor:colorIncomingBorder dividerColor:colorIncomingDivider];
     }
-    
-    [cell setDrawTop:YES];
-    [cell setDrawBottom:(inlinePrefixes)];
-    
+        
     return ([cell autorelease]);
 }
 
@@ -454,12 +449,13 @@
     AIFlexibleTableFramedTextCell     *messageCell;
     
     messageCell = [AIFlexibleTableFramedTextCell cellWithAttributedString:(includePrefixes ? [self _prefixStringForContent:content performHeadIndent:performHeadIndent] : [content message])];
+    
     [messageCell setPaddingLeft:0 top:0 right:(showUserIcons ? 4 : 0) bottom:0];
-
+    
     if(inlinePrefixes){
-	[messageCell setInternalPaddingLeft:(showUserIcons ? 7 : 10) top:2 right:5 bottom:2];
+        [messageCell setInternalPaddingLeft:(showUserIcons ? 7 : 10) top:2 right:5 bottom:2];
     }else{
-	[messageCell setInternalPaddingLeft:4 top:2 right:4 bottom:2];
+        [messageCell setInternalPaddingLeft:4 top:2 right:4 bottom:2];
     }
 
     [messageCell setVariableWidth:YES];
@@ -476,7 +472,6 @@
     return(messageCell);
 }
     
-
 //Prefix Creation --------------------------------------------------------------------------------------------------
 //Build and return an attributed string for the content using the current prefix preference
 - (NSAttributedString *)_prefixStringForContent:(AIContentMessage *)content performHeadIndent:(BOOL)performHeadIndent
@@ -491,9 +486,11 @@
 
         //If the prefix contains a message, we build it in pieces
         [prefixString appendAttributedString:[self _prefixWithFormat:[prefixFormat substringToIndex:messageRange.location] forContent:content]];
+        
         //set the headIndent, the amount subsequent lines will need to indent
         //headIndent = [prefixString size].width;
-        headIndent = 10.0;
+        //headIndent = 25.0;
+        
         [prefixString appendAttributedString:[content message]];
         [prefixString appendAttributedString:[self _prefixWithFormat:[prefixFormat substringFromIndex:messageRange.location] forContent:content]];
         
@@ -618,6 +615,19 @@
     AIFlexibleTableCell *cell;
     
     enumerator = [[row cellArray] objectEnumerator];
+    while(cell = [enumerator nextObject]){
+        if([cell isKindOfClass:class]) return(cell);
+    }
+    
+    return(nil);
+}
+
+//Finds the last cell in a row with the specified class
+- (id)_lastCellInRow:(AIFlexibleTableRow *)row withClass:(Class)class
+{
+    NSEnumerator        *enumerator;
+    AIFlexibleTableCell *cell;
+    enumerator = [[row cellArray] reverseObjectEnumerator];
     while(cell = [enumerator nextObject]){
         if([cell isKindOfClass:class]) return(cell);
     }

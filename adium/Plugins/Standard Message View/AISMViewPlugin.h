@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @protocol AIMessageViewController;
-@class AISMPreferences;
+@class AISMPreferences, ESSMAdvancedPreferences;
 
 #define PREF_GROUP_STANDARD_MESSAGE_DISPLAY	@"Message Display"
 
@@ -23,7 +23,7 @@
 #define	KEY_SMV_PREFIX_INCOMING			@"Prefix Incoming"
 #define	KEY_SMV_PREFIX_OUTGOING			@"Prefix Outgoing"
 #define	KEY_SMV_COMBINE_MESSAGES		@"Combine Messages"
-
+#define KEY_SMV_COMBINE_MESSAGES_INDENT         @"Combine Messeages HeadIndent"
 //Old?
 #define	KEY_SMV_PREFIX_FONT			@"Prefix Font"
 #define	KEY_SMV_SHOW_TIME_STAMPS		@"Show Time Stamps"
@@ -48,6 +48,7 @@
     NSMutableArray		*controllerArray;
 
     AISMPreferences		*preferences;
+    ESSMAdvancedPreferences     *advancedPreferences;
 }
 
 @end

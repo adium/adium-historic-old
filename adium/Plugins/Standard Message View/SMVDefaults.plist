@@ -46,5 +46,7 @@
         <string>%a</string>
         <key>Prefix Outgoing</key>
         <string>%a</string>
+        <key>Combine Messeages HeadIndent</key>
+        <real>25.0</real>
  </dict>
 </plist>

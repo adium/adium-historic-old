@@ -122,7 +122,8 @@ int HTMLEquivalentForFontSize(int fontSize);
                 //The langNum is weird.  HTML calls for a two-letter code... AIM seems to put 11 here for Japanese.  Any other data?
                 //Putting 11 in that spot for all text messes up English fonts, apparently, sometimes.
                 int langNum = 0; 
-                [string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"%i\"",familyName,langNum]];
+//                [string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"%i\"",familyName,langNum]];
+                [string appendString:[NSString stringWithFormat:@" FACE=\"%@\"",familyName]];
                 [currentFamily release]; currentFamily = [familyName retain];
             }
 

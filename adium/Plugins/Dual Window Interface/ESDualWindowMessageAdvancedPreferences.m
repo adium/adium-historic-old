@@ -41,9 +41,9 @@
 				       group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
     }else if(sender == checkBox_allowInactiveClosing){
-	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-								  forKey:KEY_ENABLE_INACTIVE_TAB_CLOSE
-								   group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                      forKey:KEY_ENABLE_INACTIVE_TAB_CLOSE
+                                       group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 	
     }
 
