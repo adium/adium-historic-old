@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.68 2004/04/18 16:42:09 dchoby98 Exp $
+// $Id: AIContentController.m,v 1.69 2004/04/25 05:38:03 bgannin Exp $
 
 #import "AIContentController.h"
 
@@ -742,7 +742,17 @@
 
 
 //Emoticons (In the core?) ---------------------------------------------------------------------------------------------
-#pragma mark Emoticons (In the core?)
+#pragma mark Emoticons (In the core?) - Yes, the core, for all us access hoes ;)
+//emoticonPacks is an array of all AIEmoticonPack objects that are active, maintained by the Emoticons plugin
+// primary use: emoticon menu for grouping by pack, if you find another, congrats!
+- (void)setEmoticonPacks:(NSArray *)inEmoticonPacks
+{
+    emoticonPacks = inEmoticonPacks;
+}
+- (NSArray *)emoticonsArray
+{
+    return emoticonsArray;   
+}
 //emoticonsArray is an array of all AIEmoticon objects in the active emoticon set, maintained by the Emoticons plugin
 - (void)setEmoticonsArray:(NSArray *)inEmoticonsArray
 {

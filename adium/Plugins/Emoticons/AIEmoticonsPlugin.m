@@ -302,8 +302,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		//Sort as per the saved ordering
 		[self _sortArrayOfEmoticonPacks:_activeEmoticonPacks];
     }
-	
-    //
+    //Let the contentController know about the active emoticons by pack - easier for emoticon menu grouping
+    [[adium contentController] setEmoticonPacks:_activeEmoticonPacks];
     return(_activeEmoticonPacks);
 }
 

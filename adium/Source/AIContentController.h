@@ -69,9 +69,10 @@
 	
     NSMutableArray			*chatArray;
     
-    AIChat					*mostRecentChat;
+    AIChat                              *mostRecentChat;
     
-    NSArray					*emoticonsArray;
+    NSArray                             *emoticonsArray;
+    NSArray                             *emoticonPacks;
 }
 
 //Chats
@@ -123,6 +124,8 @@
 									preferred:(BOOL)inPreferred;
 
 //Emoticons
+- (void)setEmoticonPacks:(NSArray *)inEmoticonPacks;
+- (NSArray *)emoticonPacks;
 - (void)setEmoticonsArray:(NSArray *)inEmoticonsArray;
 - (NSArray *)emoticonsArray;
 
