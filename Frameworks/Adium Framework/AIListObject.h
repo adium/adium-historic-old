@@ -90,6 +90,7 @@ typedef enum {
 
 //Display
 - (NSString *)ownDisplayName;
+- (NSString *)ownPhoneticName;
 - (NSString *)formattedUID;
 - (NSString *)longDisplayName;
 
