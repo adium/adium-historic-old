@@ -41,6 +41,7 @@
 
 //Dummy protocol used in several filters
 @protocol DummyStringProtocol
+- (NSString *)string;
 - (NSMutableString *)mutableString;
 @end
 
