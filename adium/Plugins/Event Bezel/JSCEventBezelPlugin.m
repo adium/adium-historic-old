@@ -249,12 +249,8 @@
             }
         } else if ([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]) {
             tempEvent = AILocalizedString(@"is no longer idle",nil);
-            if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
-                [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
-                [ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
-            } else {
-                [ebc setBuddyIconLabelColor: nil];
-            }
+            [ebc setBuddyIconLabelColor: nil];
+            [ebc setBuddyNameLabelColor: nil];
         } else if ([notificationName isEqualToString: Content_FirstContentRecieved]) {
             tempEvent = AILocalizedString(@"says",nil);
             if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
