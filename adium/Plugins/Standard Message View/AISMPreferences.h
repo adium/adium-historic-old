@@ -15,7 +15,9 @@
 
 @interface AISMPreferences : AIPreferencePane {
 
-    IBOutlet    NSButton    *checkBox_showUserIcons;
+    IBOutlet    NSButton        *checkBox_showUserIcons;
+    
+    IBOutlet    NSPopUpButton   *popUp_timeStamps;
     
 }
 

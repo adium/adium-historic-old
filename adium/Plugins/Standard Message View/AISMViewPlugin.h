@@ -19,6 +19,10 @@
 #define PREF_GROUP_STANDARD_MESSAGE_DISPLAY	@"Message Display"
 
 #define KEY_SMV_SHOW_USER_ICONS                 @"Show icons"
+#define	KEY_SMV_TIME_STAMP_FORMAT		@"Time Stamp"
+
+
+
 
 
 
@@ -42,7 +46,6 @@
 #define	KEY_SMV_SENDER_GRADIENT_DARKNESS	@"Sender Gradient Darkness"
 #define	KEY_SMV_PREFIX_INCOMING			@"Prefix Incoming"
 #define	KEY_SMV_PREFIX_OUTGOING			@"Prefix Outgoing"
-#define	KEY_SMV_TIME_STAMP_FORMAT		@"Time Stamp"
 #define	KEY_SMV_TIME_STAMP_FORMAT_SECONDS	@"Time Stamp Seconds"
 
 @interface AISMViewPlugin : AIPlugin <AIMessageViewPlugin> {
