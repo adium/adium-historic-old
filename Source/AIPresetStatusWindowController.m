@@ -218,13 +218,17 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
 
 //State List Table Delegate --------------------------------------------------------------------------------------------
 #pragma mark State List (Table Delegate)
-//Number of rows
+/*
+ * @brief Number of rows
+ */
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	return([stateArray count]);
 }
 
-//Table values
+/*
+ * @brief Table values
+ */
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	NSString 		*identifier = [tableColumn identifier];
@@ -241,13 +245,25 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
 	return(nil);
 }
 
-//Selection change
+/*
+ * @brief Delete the selected row
+ */
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
+{
+    [self deleteState:nil];
+}
+
+/*
+ * @brief Selection change
+ */
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
 	[self updateControlAvailability];
 }
 	
-//Drag start
+/*
+ * @brief Drag start
+ */
 - (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
 {
     tempDragState = [stateArray objectAtIndex:[[rows objectAtIndex:0] intValue]];
@@ -258,7 +274,9 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
     return(YES);
 }
 
-//Drag validate
+/*
+ * @brief Drag validate
+ */
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op
 {
     if(op == NSTableViewDropAbove && row != -1){
@@ -268,7 +286,9 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
     }
 }
 
-//Drag complete
+/*
+ * @brief Drag complete
+ */
 - (BOOL)tableView:(NSTableView*)tv acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)op
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:STATE_DRAG_TYPE]];
