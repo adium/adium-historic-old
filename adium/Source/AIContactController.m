@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.97 2004/02/08 17:53:10 adamiser Exp $
+// $Id: AIContactController.m,v 1.98 2004/02/09 13:54:35 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -662,6 +662,27 @@
     return([contactArray autorelease]);
 }
 
+//Return all the objects in a group on an account
+- (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup onAccount:(AIAccount *)inAccount
+{
+	NSMutableArray	*contactArray = [NSMutableArray array];
+	NSEnumerator	*enumerator = [inGroup objectEnumerator];
+    AIListObject	*object;
+	
+    while((object = [enumerator nextObject])){
+        if([object isMemberOfClass:[AIMetaContact class]]){
+			[contactArray addObjectsFromArray:[self allContactsInGroup:(AIListGroup *)object onAccount:inAccount]];
+		}else if([object isMemberOfClass:[AIListContact class]]){
+			if([[(AIListContact *)object serviceID] compare:[inAccount serviceID]] == 0 &&
+			   [[(AIListContact *)object accountUID] compare:[inAccount UID]] == 0){
+				[contactArray addObject:object];
+			}
+		}
+	}
+	
+	return(contactArray);
+}
+
 //Retrieve a contact from the contact list (Creating if necessary)
 - (AIListContact *)contactWithService:(NSString *)serviceID accountUID:(NSString *)accountUID UID:(NSString *)UID
 {
@@ -737,7 +758,6 @@
 			}else{
 				targetGroup = [self groupWithUID:[groupUID substringToIndex:[groupUID length] - ([groupName length] + 1)]];
 			}
-			
 			[targetGroup addObject:group];
 			[self _listChangedGroup:targetGroup object:group];
 		}
@@ -768,7 +788,7 @@
 			//Then, procede to delete the group
 			[listObject retain];
 			[containingGroup removeObject:listObject];
-//			[groupDict removeObjectForKey:[listObject UID]];
+			[groupDict removeObjectForKey:[listObject UID]];
 			[self _listChangedGroup:containingGroup object:listObject];
 			[listObject release];
 			
@@ -825,10 +845,12 @@
 				[self _moveObject:listObject toGroup:group];
 			}else if([listObject isKindOfClass:[AIListGroup class]]){
 				NSString	*newNestName = [[[listObject UID] componentsSeparatedByString:@":"] lastObject];
-				do{
+				while(group && group != contactList){
 					NSArray		*groupNest = [[group UID] componentsSeparatedByString:@":"];
 					newNestName = [[groupNest lastObject] stringByAppendingFormat:@":%@",newNestName];
-				}while((group = [group containingGroup]) && group != contactList);
+				
+					group = [group containingGroup];
+				}
 				
 				//Rename the group to re-nest it
 				[self _renameGroup:(AIListGroup *)listObject to:newNestName];

@@ -55,7 +55,7 @@
 
 		//Change it here
 		remoteGroupName = [inName retain];
-		
+
 		//Tell core it changed
 		[[adium contactController] listObjectRemoteGroupingChanged:self];
 
