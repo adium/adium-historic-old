@@ -33,6 +33,9 @@
 - (void)_init;
 - (void)endEditing;
 - (void)setSelected:(BOOL)selected row:(int)inRow;
+- (AIFlexibleTableCell *)cellAtPoint:(NSPoint)inPoint row:(int *)outRow column:(int *)outColumn;
+- (void)deselectAll;
+- (AIFlexibleTableColumn *)columnAtIndex:(int)index;
 @end
 
 @implementation AIFlexibleTableView
@@ -260,45 +263,59 @@
 //Clicking --------------------------------------------------------------------------------
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    NSRect			documentVisibleRect;
+    AIFlexibleTableCell		*cell;
+    int				row, column;
     NSPoint			clickLocation;
-    NSEnumerator		*enumerator;
-    AIFlexibleTableColumn	*column;
-    int				width = 0;
-    NSNumber			*rowHeight;
-    int				height = 0;
-    int				targetedRow = 0;
-        
-    //The cell check is broken by the bottom aligning offset, so we need to adjust our calculations
-    documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
-    if(contentBottomAligned && contentsHeight < documentVisibleRect.size.height){
-        height = (documentVisibleRect.size.height - contentsHeight);
-    }
 
-    //Get the click location relative to our view
+    //Determine the clicked cell/row/column
     clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-
-    //Determine the row that was clicked
-    enumerator = [rowHeightArray objectEnumerator];
-    while((rowHeight = [enumerator nextObject])){
-        height += [rowHeight intValue];
-        if(height > clickLocation.y) break;
-        targetedRow++;
-    }
-
-    //Determine the column that was clicked
-    enumerator = [columnArray objectEnumerator];
-    while((column = [enumerator nextObject])){
-        width += [column width];
-        if(width > clickLocation.x) break;
-    }
-
+    cell = [self cellAtPoint:clickLocation row:&row column:&column];
+    
     //Select the row
-    [self selectRow:targetedRow];
+    [self selectRow:row];
 
-    //Open the selected cell for editing
+    //Text selection
+    {
+        NSPoint			localPoint;
+
+        //Deselect all text
+        [self deselectAll];
+
+        //Set the new selection start and end
+        localPoint = NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y);
+        selection_startRow = row;
+        selection_startColumn = column;
+        selection_startIndex = [cell characterIndexAtPoint:localPoint];
+        selection_endRow = selection_startRow;
+        selection_endColumn = selection_startColumn;
+        selection_endIndex = selection_startIndex;
+        
+        //Redisplay
+        [self setNeedsDisplay:YES];
+    }
+
+    //Open the selected cell for editing (If this was a double click)
     if([theEvent clickCount] >= 2){
-        [self editRow:targetedRow column:column];
+        [self editRow:row column:[self columnAtIndex:column]];
+    }
+}
+
+- (void)deselectAll
+{
+    NSEnumerator		*columnEnumerator;
+    AIFlexibleTableColumn	*column;
+
+    //Enumerate through each column
+    columnEnumerator = [columnArray objectEnumerator];
+    while((column = [columnEnumerator nextObject])){
+        NSEnumerator		*cellEnumerator;
+        AIFlexibleTableCell	*cell;
+
+        //Enumerate through each cell
+        cellEnumerator = [[column cellArray] objectEnumerator];
+        while((cell = [cellEnumerator nextObject])){
+            [cell selectFrom:0 to:0];
+        }
     }
 }
 
@@ -307,10 +324,124 @@
     
 }
 
+- (void)clear:(id)sender
+{
+    NSLog(@"clear");
+}
+
+- (void)selectAll:(id)sender
+{
+    NSLog(@"selectAll");
+}
+
+- (void)copy:(id)sender
+{
+    NSMutableAttributedString	*copyString = [[NSMutableAttributedString alloc] init];
+    AIFlexibleTableCell		*startCell, *endCell;
+    int				row, column;
+
+    //Select partial text in the start and end cells
+    startCell = [[self columnAtIndex:selection_startColumn] cellAtIndex:selection_startRow];
+
+    //Select text in the first cell
+    if(selection_startRow == selection_endRow && selection_startColumn == selection_endColumn){ //The selection exists completely within one cell
+        [copyString appendAttributedString:[startCell stringFromIndex:selection_startIndex to:selection_endIndex]];
+
+    }else if(selection_startRow < selection_endRow){ //The start cell is above the end cell
+        [copyString appendAttributedString:[startCell stringFromIndex:selection_startIndex to:10000]];
+
+    }else if(selection_startRow > selection_endRow){ //The start cell is below the end cell
+        [copyString appendAttributedString:[startCell stringFromIndex:selection_startIndex to:0]];
+
+    }
+    
+    //Select all text in every cell between start and end
+    for(column = ((selection_startColumn < selection_endColumn) ? selection_startColumn : selection_endColumn);
+        column <= ((selection_startColumn < selection_endColumn) ? selection_endColumn : selection_startColumn);
+        column++){
+        for(row = ((selection_startRow < selection_endRow) ? selection_startRow : selection_endRow);
+            row <= ((selection_startRow < selection_endRow) ? selection_endRow : selection_startRow);
+            row++){
+
+            if(!(row == selection_startRow && column == selection_startColumn) && !(row == selection_endRow && column == selection_endColumn)){ //Skip the first and last cells in the selection block
+                AIFlexibleTableCell	*cell = [[self columnAtIndex:column] cellAtIndex:row];
+                [copyString appendAttributedString:[cell stringFromIndex:0 to:10000]];
+                [copyString appendString:@"\r" withAttributes:nil];
+            }
+        }
+    }
+
+    //Select text in the last cell
+    endCell =[[self columnAtIndex:selection_endColumn] cellAtIndex:selection_endRow];
+    if(selection_startRow < selection_endRow){ //The start cell is above the end cell
+        [copyString appendAttributedString:[endCell stringFromIndex:0 to:selection_endIndex]];
+
+    }else if(selection_startRow > selection_endRow){ //The start cell is below the end cell
+        [copyString appendAttributedString:[endCell stringFromIndex:10000 to:selection_endIndex]];
+
+    }
+
+    [[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:nil];
+    [[NSPasteboard generalPasteboard] setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
+}
+
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-    [self mouseDown:theEvent]; //Handle this as a mouse down
+    AIFlexibleTableCell		*cell;
+    AIFlexibleTableCell		*startCell = nil, *endCell = nil;
+    int				row, column;
+    NSPoint			clickLocation;
+
+    //Determine the clicked cell/row/column
+    clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    cell = [self cellAtPoint:clickLocation row:&row column:&column];
+
+    //Remove all current selections
+    [self deselectAll];
+    
+    //Save the new selection end information
+    selection_endIndex = [cell characterIndexAtPoint:NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y)];
+    selection_endRow = row;
+    selection_endColumn = column;
+
+    //Select partial text in the start and end cells
+    startCell = [[self columnAtIndex:selection_startColumn] cellAtIndex:selection_startRow];
+    endCell = [[self columnAtIndex:selection_endColumn] cellAtIndex:selection_endRow];    
+    
+    if(selection_startRow == selection_endRow && selection_startColumn == selection_endColumn){ //The selection exists completely within one cell
+        [startCell selectFrom:selection_startIndex to:selection_endIndex];
+
+    }else if(selection_startRow < selection_endRow || selection_startColumn < selection_endColumn){ //The start cell is above or left of the end cell
+        [startCell selectFrom:selection_startIndex to:10000]; //insert generic big number here
+        [endCell selectFrom:0 to:selection_endIndex];
+        
+    }else if(selection_startRow > selection_endRow || selection_startColumn > selection_endColumn){ //The start cell is below or right of the end cell
+        [startCell selectFrom:selection_startIndex to:0];
+        [endCell selectFrom:10000 to:selection_endIndex]; //insert generic big number here
+        
+    }
+
+    //Select all text in every cell between start and end
+    //These loops are conditioned so that they always run top to bottom, left to right (Allowing selection to occur in any direction)
+    //We want to run through every cell within the selection block except the first and last cell (which have already been processed)
+    for(column = ((selection_startColumn < selection_endColumn) ? selection_startColumn : selection_endColumn);
+        column <= ((selection_startColumn < selection_endColumn) ? selection_endColumn : selection_startColumn);
+        column++){
+        for(row = ((selection_startRow < selection_endRow) ? selection_startRow : selection_endRow);
+            row <= ((selection_startRow < selection_endRow) ? selection_endRow : selection_startRow);
+            row++){
+
+            if(!(row == selection_startRow && column == selection_startColumn) && !(row == selection_endRow && column == selection_endColumn)){ //Skip the first and last cells in the selection block
+                AIFlexibleTableCell	*cell = [[self columnAtIndex:column] cellAtIndex:row]; 
+                [cell selectFrom:0 to:10000]; //insert generic big number here
+            }
+        }
+    }
+
+    //Mark our view for redisplay
+    [self setNeedsDisplay:YES];
 }
+
 
 
 //Row Selection ---------------------------------------------------------------------------------
@@ -622,6 +753,61 @@
         [enclosingScrollView reflectScrolledClipView:[enclosingScrollView contentView]];
     }
 }
+
+- (AIFlexibleTableCell *)cellAtPoint:(NSPoint)inPoint row:(int *)outRow column:(int *)outColumn
+{
+    NSRect			documentVisibleRect;
+    NSEnumerator		*enumerator;
+    AIFlexibleTableColumn	*column;
+    int				width = 0;
+    NSNumber			*rowHeight;
+    int				height = 0;
+    int				targetedRow = 0;
+    int				targetedColumn = 0;
+
+    //The cell check is broken by the bottom aligning offset, so we need to adjust our calculations
+    documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
+    if(contentBottomAligned && contentsHeight < documentVisibleRect.size.height){
+        height = (documentVisibleRect.size.height - contentsHeight);
+    }
+
+    //Determine the row that was clicked
+    enumerator = [rowHeightArray objectEnumerator];
+    while((rowHeight = [enumerator nextObject])){
+        height += [rowHeight intValue];
+        if(height > inPoint.y) break;
+        targetedRow++;
+    }
+
+    //Determine the column that was clicked
+    enumerator = [columnArray objectEnumerator];
+    while((column = [enumerator nextObject])){
+        width += [column width];
+        if(width > inPoint.x) break;
+        targetedColumn++;
+    }
+
+    //Return the row, column, and cell
+    if(outRow) *outRow = targetedRow;
+    if(outColumn) *outColumn = targetedColumn;
+
+    if(column && targetedRow >= 0 && targetedRow < [[column cellArray] count]){
+        return([[column cellArray] objectAtIndex:targetedRow]);
+    }else{
+        return(nil);
+    }
+}
+
+- (AIFlexibleTableColumn *)columnAtIndex:(int)index
+{
+    if(index >= 0 && index < [columnArray count]){
+        return([columnArray objectAtIndex:index]);
+    }else{
+        return(nil);
+    }
+}
+
+
 
 
 @end
