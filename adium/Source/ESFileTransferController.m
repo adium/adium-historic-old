@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
-//  $Id: ESFileTransferController.m,v 1.12 2004/06/17 17:32:15 evands Exp $
+//  $Id: ESFileTransferController.m,v 1.13 2004/06/24 17:22:54 evands Exp $
 
 #import "ESFileTransferController.h"
 
@@ -24,7 +24,7 @@
 	
     //Add our get info contextual menu item
     sendFileContextMenuItem = [[NSMenuItem alloc] initWithTitle:SEND_FILE
-														 target:self action:@selector(menuSendFile:)
+														 target:self action:@selector(contextualMenuSendFile:)
 												  keyEquivalent:@""];
 	[[owner menuController] addContextualMenuItem:sendFileContextMenuItem toLocation:Context_Contact_Action];
 	
@@ -101,6 +101,16 @@
 	
 	[self requestForSendingFileToListContact:listContact];
 }
+//Prompt for a new contact with the current tab's name
+- (IBAction)contextualMenuSendFile:(id)sender
+{
+	AIListObject	*selectedObject = [[owner menuController] contactualMenuContact];
+	AIListContact   *listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+																			  forListContact:(AIListContact *)selectedObject];
+	
+	
+	[self requestForSendingFileToListContact:listContact];
+}
 
 /*
 - (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
@@ -122,7 +132,6 @@
 	
     if(menuItem == sendFileMenuItem){
         AIListObject	*selectedObject = [[owner contactController] selectedListObject];
-
 		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
 			listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																	 forListContact:(AIListContact *)selectedObject];
@@ -132,7 +141,6 @@
 
 	}else if(menuItem == sendFileContextMenuItem){
 		AIListObject	*selectedObject = [[owner menuController] contactualMenuContact];
-
 		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
 			listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																	 forListContact:(AIListContact *)selectedObject];
