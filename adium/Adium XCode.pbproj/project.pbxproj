@@ -9118,6 +9118,7 @@
 				4BCB9B5F0567FF5D001D3559,
 				34536751059BA8EE00A83D9E,
 				34F2BD25059CF8070005B238,
+				C4FD6E3505BA79FF00E72643,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -28275,6 +28276,20 @@
 			settings = {
 			};
 		};
+		C4FD6E3405BA79FE00E72643 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			name = AdiumTheme.icns;
+			path = Source/AdiumTheme.icns;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4FD6E3505BA79FF00E72643 = {
+			fileRef = C4FD6E3405BA79FE00E72643;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //C40
 //C41
 //C42
@@ -28597,6 +28612,7 @@
 				4BF715C00503AFD200A8010A,
 				F552078B033F727F01A8010A,
 				4BF1F0E803D888EB00A8010A,
+				C4FD6E3405BA79FE00E72643,
 			);
 			isa = PBXGroup;
 			name = Resources;
