@@ -35,22 +35,26 @@
 
 @implementation ESGaimMSNAccount
 
-//Intercept account creation to ensure the UID will have a domain ending -- the default is @hotmail.com
-- (id)initWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID service:(AIService *)inService
+/*!
+* @brief The UID will be change. The account has a chance to perform modifications
+ *
+ * For example, MSN adds @hotmail.com to the proposedUID and returns the new value
+ *
+ * @param proposedUID The proposed, pre-filtered UID (filtered means it has no characters invalid for this servce)
+ * @result The UID to use; the default implementation just returns proposedUID.
+ */
+- (NSString *)accountWillSetUID:(NSString *)proposedUID
 {
 	NSString	*correctUID;
-
-	if((inUID) &&
-	   ([inUID length] > 0) && 
-	   ([inUID rangeOfString:@"@"].location == NSNotFound)){
-		correctUID = [inUID stringByAppendingString:DEFAULT_MSN_PASSPORT_DOMAIN];
+	
+	if(([proposedUID length] > 0) && 
+	   ([proposedUID rangeOfString:@"@"].location == NSNotFound)){
+		correctUID = [proposedUID stringByAppendingString:DEFAULT_MSN_PASSPORT_DOMAIN];
 	}else{
-		correctUID = inUID;
+		correctUID = proposedUID;
 	}
-
-	[super initWithUID:correctUID internalObjectID:inInternalObjectID service:inService];
-
-	return(self);
+	
+	return correctUID;
 }
 
 - (void)initAccount
