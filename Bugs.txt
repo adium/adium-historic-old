@@ -26,7 +26,6 @@ Messages & Chat
 
 Meta Contacts
   - MetaContact ordering does not always restore properly
-  - Unchecking the address book consolidate contacts option has no effect [Evan]
 
 [MEDIUM]
 
