@@ -124,6 +124,19 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	}
 }
 
+- (NSString *)_UIDForAddingObject:(AIListContact *)object
+{
+	NSString	*objectUID = [object UID];
+	NSString	*properUID;
+	
+	if ([objectUID rangeOfString:@"@"].location != NSNotFound){
+		properUID = objectUID;
+	}else{
+		properUID = [NSString stringWithFormat:@"%@@%@",objectUID,[self host]];
+	}
+	
+	return([properUID lowercaseString]);
+}
 
 - (NSString *)unknownGroupName {
     return (AILocalizedString(@"Roster","Roster - the Jabber default group"));
@@ -301,6 +314,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	[self updateStatusMessage:theContact];	
 }
 
+#pragma mark Menu items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
 	if(strcmp(label, "Un-hide From") == 0){
@@ -315,4 +329,39 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	
 	return([super titleForContactMenuLabel:label forContact:inContact]);
 }
+
+#pragma mark Multiuser chat
+
+//Multiuser chats come in with just the contact's name as contactName, but we want to actually do it right.
+- (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
+{
+	if (chat){
+		NSString	*chatNameWithServer = [chat name];
+		NSString	*chatParticipantName = [NSString stringWithFormat:@"%@/%@",chatNameWithServer,contactName];
+
+		AIListContact *contact = [self _contactWithUID:chatParticipantName];
+
+		[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
+		
+		[chat addParticipatingListObject:contact];
+		
+		GaimDebug (@"Jabber: added user %@ to chat %@",chatParticipantName,chatNameWithServer);
+	}	
+}
+
+- (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
+{
+	if (chat){
+		NSString	*chatNameWithServer = [chat name];
+		NSString	*chatParticipantName = [NSString stringWithFormat:@"%@/%@",chatNameWithServer,contactName];
+		
+		AIListContact *contact = [self _contactWithUID:chatParticipantName];
+		
+		[chat removeParticipatingListObject:contact];
+		
+		GaimDebug (@"Jabber: removed user %@ to chat %@",chatParticipantName,chatNameWithServer);
+	}	
+}
+
+
 @end
