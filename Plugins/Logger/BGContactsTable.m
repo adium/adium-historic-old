@@ -28,7 +28,9 @@
         return @" ";
 		
     }else if([[tableColumn identifier] isEqual:@"service"]){
-        return [[[adium accountController] firstServiceTypeWithServiceID:[[controller_LogViewer serviceArray] objectAtIndex:row]] menuImage];
+        return [AIServiceIcons serviceIconForService:[[controller_LogViewer serviceArray] objectAtIndex:row]
+												type:AIServiceIconSmall
+										   direction:AIIconNormal];
 		
     }else if([[tableColumn identifier] isEqual:@"account"]){
         return [[controller_LogViewer fromArray] objectAtIndex:row];
