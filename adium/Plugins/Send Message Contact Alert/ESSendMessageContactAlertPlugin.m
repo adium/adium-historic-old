@@ -61,7 +61,7 @@
 	return([ESSendMessageAlertDetailPane actionDetailsPane]);
 }
 
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)inDetails
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID
 {
 	BOOL					success = NO;
 	AIAccount				*account;
@@ -70,12 +70,12 @@
 	BOOL					useAnotherAccount;
 		
 	//Intended source and dest
-	account = [[adium accountController] accountWithObjectID:[inDetails objectForKey:KEY_MESSAGE_SEND_FROM]];
-	destUniqueID = [inDetails objectForKey:KEY_MESSAGE_SEND_TO];
+	account = [[adium accountController] accountWithObjectID:[details objectForKey:KEY_MESSAGE_SEND_FROM]];
+	destUniqueID = [details objectForKey:KEY_MESSAGE_SEND_TO];
 	if(destUniqueID) contact = (AIListContact *)[[adium contactController] existingListObjectWithUniqueID:destUniqueID];
 
 	//Message to send and other options
-	useAnotherAccount = [[inDetails objectForKey:KEY_MESSAGE_OTHER_ACCOUNT] boolValue];
+	useAnotherAccount = [[details objectForKey:KEY_MESSAGE_OTHER_ACCOUNT] boolValue];
 
 	//If we have a contact (and not a meta contact), we need to make sure it's the contact for account, or 
 	//availableForSendingContentType: will return NO incorrectly.
@@ -109,7 +109,7 @@
 			chat = [[adium contentController] openChatWithContact:contact];
 			[[adium interfaceController] setActiveChat:chat];
 			
-			message = [NSAttributedString stringWithData:[inDetails objectForKey:KEY_MESSAGE_SEND_MESSAGE]];
+			message = [NSAttributedString stringWithData:[details objectForKey:KEY_MESSAGE_SEND_MESSAGE]];
 				
 			//Prepare the content object we're sending
 			AIContentMessage	*content = [AIContentMessage messageInChat:chat

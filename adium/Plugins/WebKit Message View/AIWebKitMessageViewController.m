@@ -174,7 +174,9 @@
 		previousContent = [content retain];
 
 		//de-queue
-		[newContent removeObjectAtIndex:0];
+		if ([newContent count]){
+			[newContent removeObjectAtIndex:0];
+		}
 	}
 	
 	//cleanup previous 

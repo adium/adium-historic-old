@@ -13,7 +13,7 @@
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID;
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details;
 - (NSImage *)imageForActionID:(NSString *)actionID;
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details;
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID;
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID;
 @end
 

@@ -47,7 +47,8 @@
         compressionFactor = 0.0;
     */
     return ([imageRep representationUsingType:NSJPEGFileType 
-                                   properties:/*[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor]*/nil]);
+                                   properties:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] 
+																		  forKey:NSImageCompressionFactor]]);
 }
 
 //Draw this image in a rect, tiling if the rect is larger than the image
