@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.83 2004/07/15 00:59:41 ramoth4 Exp $
+//$Id: AIPluginController.m,v 1.84 2004/07/21 15:23:46 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -38,7 +38,7 @@ AIDockIconSelectionPlugin, AIDockUnviewedContentPlugin, AIDualWindowInterfacePlu
 AIEventSoundsPlugin, AIGroupedAwayByIdleSortPlugin, AIGroupedIdleAwaySortPlugin, AIIdleAwayManualSortPlugin,
 AIIdleAwaySortPlugin, AIIdleSortPlugin, AIIdleTimeDisplayPlugin, AILaTeXPlugin, AILoggerPlugin,
 AIManualSortPlugin, AIMessageAliasPlugin, AIMessageViewSelectionPlugin, AIOfflineContactHidingPlugin, AIPlugin,
-AISCLViewPlugin, AISendingKeyPreferencesPlugin, AISpellCheckingPlugin, AITabStatusIconsPlugin,
+AISCLViewPlugin, AISendingKeyPreferencesPlugin, AISpellCheckingPlugin, AITabStatusIconsPlugin, AIChatConsolidationPlugin,
 AIStandardToolbarItemsPlugin, AIStatusChangedMessagesPlugin, AIStatusCirclesPlugin, AINewMessagePanelPlugin,
 AITextForcingPlugin, AITextToolbarItemsPlugin, AITypingNotificationPlugin, AIContactAccountsPlugin,
 AIVolumeControlPlugin, BGThemesPlugin, CBActionSupportPlugin, CBContactCountingDisplayPlugin,
@@ -72,6 +72,7 @@ ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin;
 	[self loadPluginWithClass:[AIAwayMessagesPlugin class]];
 	[self loadPluginWithClass:[AIAwayStatusWindowPlugin class]];
 	[self loadPluginWithClass:[AIChatCyclingPlugin class]];
+	[self loadPluginWithClass:[AIChatConsolidationPlugin class]];
 	[self loadPluginWithClass:[AIContactAwayPlugin class]];
 	[self loadPluginWithClass:[AIContactIdlePlugin class]];
 	[self loadPluginWithClass:[AIContactProfilePlugin class]];

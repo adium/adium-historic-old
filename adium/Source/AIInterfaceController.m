@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.88 2004/07/21 14:04:24 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.89 2004/07/21 15:23:46 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -251,7 +251,7 @@
 		}
 	}
 
-	//Determine the correct placement for this chat withing the container
+	//Determine the correct placement for this chat within the container
 	if(arrangeChats){
 		index = [self indexForInsertingChat:inChat intoContainerWithID:containerID];
 	}
@@ -259,16 +259,43 @@
 	[interfacePlugin openChat:inChat inContainerWithID:containerID atIndex:index];
 }
 
-//Set the active chat window
-- (void)setActiveChat:(AIChat *)inChat
-{
-	[interfacePlugin setActiveChat:inChat];
-}
-
 //Close the window for a chat
 - (void)closeChat:(AIChat *)inChat
 {
     [interfacePlugin closeChat:inChat];
+}
+
+//Consolidate chats into a single container
+- (void)consolidateChats
+{
+	//We work with copies of these arrays, since moving chats may change their contents
+	NSArray			*openContainers = [[[interfacePlugin openContainers] copy] autorelease];
+	NSEnumerator	*containerEnumerator = [openContainers objectEnumerator];
+	NSString		*firstContainerID = [containerEnumerator nextObject];
+	NSString		*containerID;
+	
+	//For all containers but the first, move the chats they contain to the first container
+	while(containerID = [containerEnumerator nextObject]){
+		NSArray			*openChats = [[[interfacePlugin openChatsInContainerWithID:containerID] copy] autorelease];
+		NSEnumerator	*chatEnumerator = [openChats objectEnumerator];
+		AIChat			*chat;
+
+		//Move all the chats, providing a target index if chat sorting is enabled
+		while(chat = [chatEnumerator nextObject]){
+			[interfacePlugin moveChat:chat
+					toContainerWithID:firstContainerID
+								index:(arrangeChats ? [self indexForInsertingChat:chat
+															  intoContainerWithID:firstContainerID] : -1)];
+		}
+	}
+	
+	[self chatOrderDidChange];
+}
+
+//Set the active chat window
+- (void)setActiveChat:(AIChat *)inChat
+{
+	[interfacePlugin setActiveChat:inChat];
 }
 
 //Active chat
@@ -304,6 +331,7 @@
 {
 	return(!arrangeChats);
 }
+
 
 
 //Interface plugin callbacks -------------------------------------------------------------------------------------------
@@ -444,7 +472,6 @@
 //Build array of list objects to sort
 //We can't keep track of this easily since participating list objects may change due to multi-user chat
 //Multi-user chats make this so difficult :(
-#warning would love to do away with this
 - (NSArray *)_listObjectsForChatsInContainerWithID:(NSString *)containerID
 {
 	NSMutableArray	*listObjects = [NSMutableArray array];

@@ -52,8 +52,8 @@
 
 //Contained Chats
 - (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem;
-- (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem atIndex:(int)index;
-- (void)removeTabViewItem:(AIMessageTabViewItem *)inTabViewItem;
+- (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem atIndex:(int)index silent:(BOOL)silent;
+- (void)removeTabViewItem:(AIMessageTabViewItem *)inTabViewItem silent:(BOOL)silent;
 - (void)moveTabViewItem:(AIMessageTabViewItem *)inTabViewItem toIndex:(int)index;
 - (BOOL)containerIsEmpty;
 - (NSArray *)containedChats;
