@@ -15,10 +15,12 @@
 @class ESContactAlertsViewController;
 
 @interface ESGlobalEventsPreferences : AIPreferencePane {
-	IBOutlet ESContactAlertsViewController	*contactAlertsViewController;
+	IBOutlet	ESContactAlertsViewController	*contactAlertsViewController;
 	
 	IBOutlet	NSPopUpButton	*popUp_dockBehaviorSet;
 	IBOutlet	NSPopUpButton	*popUp_soundSet;
+	IBOutlet	NSPopUpButton	*popUp_speechPreset;
+	IBOutlet	NSPopUpButton	*popUp_growlPreset;
 }
 
 @end
