@@ -46,7 +46,7 @@
     }else{
 		int seconds = 10;
 		
-		while(seconds){
+		while(seconds--){
 			//As soon as we find a log, snatch it and move on
 			if([fileManager fileExistsAtPath:CRASHES_PATH] && [[NSString stringWithContentsOfFile:CRASHES_PATH] length]){
 				[self reportCrashForLogAtPath:CRASHES_PATH];
