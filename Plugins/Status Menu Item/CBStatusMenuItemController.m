@@ -321,6 +321,11 @@ static	NSImage						*adiumRedHighlightImage = nil;
         menuItem = nil;
         while(menuItem = [enumerator nextObject]){
             [menu addItem:menuItem];
+			
+			//Validate the menu items as they are added since they weren't previously validated when teh menu was clicked
+			if([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]){
+				[[menuItem target] validateMenuItem:menuItem];
+			}
         }
 
         [menu addItem:[NSMenuItem separatorItem]];
@@ -329,7 +334,26 @@ static	NSImage						*adiumRedHighlightImage = nil;
         enumerator = [accountMenuItemsArray objectEnumerator];
         menuItem = nil;
         while(menuItem = [enumerator nextObject]){
+			NSMenu	*submenu;
+			
             [menu addItem:menuItem];
+			
+			//Validate the menu items as they are added since they weren't previously validated when teh menu was clicked
+			if([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]){
+				[[menuItem target] validateMenuItem:menuItem];
+			}
+			
+			submenu = [menuItem submenu];
+			if(submenu){
+				NSEnumerator	*submenuEnumerator = [[submenu itemArray] objectEnumerator];
+				NSMenuItem		*submenuItem;
+				while(submenuItem = [submenuEnumerator nextObject]){
+					//Validate the submenu items as they are added since they weren't previously validated when teh menu was clicked
+					if([[submenuItem target] respondsToSelector:@selector(validateMenuItem:)]){
+						[[submenuItem target] validateMenuItem:submenuItem];
+					}
+				}
+			}
         }
         
         //Prepare to add any open chats
@@ -354,7 +378,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 				
                 //If there is a chat status image, use that
 				if(!(image = [AIStatusIcons statusIconForChat:chat type:AIStatusIconTab direction:AIIconNormal])){
-					//Otherwise use the contact's one
+					//Otherwise use the contact's status image
 					image = [AIStatusIcons statusIconForListObject:[chat listObject] 
 														type:AIStatusIconTab
 												   direction:AIIconNormal];
