@@ -5,9 +5,10 @@ Legend
 # Debatable (ASK and debate before doing!)
 = Done (Move to the bottom)
 
-----
+
+-------------------------------------------------------------------------------------------------------
 Bugs
-----
+-------------------------------------------------------------------------------------------------------
 * Create new account, tab from username->pass->account list.  Next tab should go back to username
 * Stop contact list from auto-resizing under the dock - this is a tough area.  It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how wide the dock is; only how tall it is.
 * Don't spawn new windows when we're hidden, doing so will unhide us
@@ -15,9 +16,10 @@ Bugs
 * Prevent cmd-delete from working in the message window
 * Link tracking doesn't work if the link is the entire body of the first message received UNTIL you send a message, at which point it starts working
 
--------------
+
+-------------------------------------------------------------------------------------------------------
 Minor Changes
--------------
+-------------------------------------------------------------------------------------------------------
 
 Contacts:
 	+ Allow specifying an image for a contact in the inspector (Independent of address book) - this should go with the inspector/Get Info merger...
@@ -66,9 +68,9 @@ Other:
 	- Don't display libgaim errors for disconnect
 
 
----------
+-------------------------------------------------------------------------------------------------------
 Big Stuff
----------
+-------------------------------------------------------------------------------------------------------
 Contact alerts:
 (http://homepage.mac.com/adamiser/sortathis6.png)
 	- Remove alerts preference pane
@@ -247,9 +249,9 @@ Downloads Pane
 
 
 
-------------------------
+-------------------------------------------------------------------------------------------------------
   Controversial stuff
------------------------
+-------------------------------------------------------------------------------------------------------
 
 Message Sending:
 	# Make option-sending a message send the message to every tab in the current message window.
@@ -376,9 +378,6 @@ ________________________
 Stuff we have to wait on
 ----------------------------------------
 
-# Interact with libgaim via a thread to avoid beachballing (Wait for Scott's patch - libgaim 0.76!, should fix)
-
-libgaim 0.76
 
 
 
@@ -407,9 +406,16 @@ make dock flap for a bit, and then stop and show unread messages
 
 
 
--------------
-DONE!
-----------------
+
+-------------------------------------------------------------------------------------------------------
+Waiting On
+-------------------------------------------------------------------------------------------------------
++ Interact with libgaim via a thread to avoid beachballing (Wait for Scott's patch - libgaim 0.76!, should fix)
+
+
+-------------------------------------------------------------------------------------------------------
+Done
+-------------------------------------------------------------------------------------------------------
 Bug Fixes:
 = Account name not displaying correctly after service switch
 = Message tabs are not refreshing correctly when status changes (Fixed?)
@@ -433,15 +439,4 @@ Features & Changes:
 = Remove +/- buttons
 = Make source list display all available emoticon packs
 = Add checkboxes in source list to enable/disable packs
-
-
-
-
-
-
-
-
-
-
-
 
