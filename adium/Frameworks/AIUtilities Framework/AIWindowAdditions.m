@@ -55,34 +55,34 @@
 
 //Exposé code from Richard Wareham, Desktop Manager developer
 //Modified by Yann Bizeul, GeekTool Developer :-)
-
 -(void)setIgnoresExpose:(BOOL)flag
 {
-    CGSConnection cid;
-    CGSWindow wid;
-    SInt32 vers; 
-    
-    Gestalt(gestaltSystemVersion,&vers); 
-    if (vers < 0x1030)
-	return;
-    wid = [ self windowNumber ];
-    cid = _CGSDefaultConnection();
-    int tags[2];
-    tags[0] = tags[1] = 0;
-    OSStatus retVal = CGSGetWindowTags(cid, wid, tags, 32);
-    if(!retVal) {
-	if (flag)
-	    tags[0] = tags[0] | 0x00000800;
-	else
-	    tags[0] -= tags[0] & 0x00000800;
-	
-	CGSSetWindowTags(cid, wid, tags, 32);
-	
-	if (flag) {
-	    tags[0] = 0x02;
-	    tags[1] = 0;
-	    CGSClearWindowTags(cid, wid, tags, 32);
-	}
-    }
+#warning this code prevents us from launching in 10.2
+//    CGSConnection cid;
+//    CGSWindow wid;
+//    SInt32 vers; 
+//    
+//    Gestalt(gestaltSystemVersion,&vers); 
+//    if (vers < 0x1030)
+//	return;
+//    wid = [ self windowNumber ];
+//    cid = _CGSDefaultConnection();
+//    int tags[2];
+//    tags[0] = tags[1] = 0;
+//    OSStatus retVal = CGSGetWindowTags(cid, wid, tags, 32);
+//    if(!retVal) {
+//	if (flag)
+//	    tags[0] = tags[0] | 0x00000800;
+//	else
+//	    tags[0] -= tags[0] & 0x00000800;
+//	
+//	CGSSetWindowTags(cid, wid, tags, 32);
+//	
+//	if (flag) {
+//	    tags[0] = 0x02;
+//	    tags[1] = 0;
+//	    CGSClearWindowTags(cid, wid, tags, 32);
+//	}
+//    }
 }
 @end
