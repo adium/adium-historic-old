@@ -502,9 +502,6 @@
     AIContentMessage	*previousContent = [previousRow representedObject];
     AIFlexibleTableRow  *prefixRow = nil, *messageRow = nil;
     BOOL                contentIsSimilar = NO;
-    
-	//NSCalendarDate *previousDate = [(AIContentContext *)[previousContent date] dateWithCalendarFormat:nil timeZone:nil];
-	//NSCalendarDate *currentDate = [(AIContentContext *)[content date] dateWithCalendarFormat:nil timeZone:nil];
 
     //We should merge if the previous content is a message and from the same source AND same day
     if((!inlinePrefixes || combineMessages) &&
@@ -516,12 +513,11 @@
 	//Show a date header if the messages were on different dates
 	if( !contentIsSimilar && ([(NSCalendarDate *)[previousContent date] dayOfCommonEra] != [(NSCalendarDate *)[content date] dayOfCommonEra])) {
 		
-		//NSString *dateMessage = [NSString stringWithFormat:@"%@",[[content date] descriptionWithCalendarFormat:@"%X" timeZone:nil locale:nil]];
-		NSString *dateMessage = [NSString stringWithFormat:@"%@",[[content date] descriptionWithCalendarFormat:@"%A, %B %d, %Y" timeZone:nil locale:nil]];	
+		NSString *dateMessage = [[NSDateFormatter localizedDateFormatter] stringForObjectValue:[content date]];
 		dateSeparator = [AIContentStatus statusInChat:[content chat]
 										   withSource:[[content chat] listObject]
 										  destination:[[content chat] account]
-												 date:nil
+												 date:[content date]
 											  message:[NSAttributedString stringWithString:dateMessage]
 											 withType:@"date_separator"];
 		
