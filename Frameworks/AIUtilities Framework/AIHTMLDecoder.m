@@ -894,8 +894,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					}
 				}
 
-				if(validTag){ //Skip over the end tag character ';'
-					[scanner scanCharactersFromSet:charEnd intoString:nil];
+				if(validTag){ //Skip over the end tag character ';'.  Don't scan all of that character, however, as we'll skip ;; and so on.
+					[scanner setScanLocation:[scanner scanLocation] + 1];
 				}else{
 					//When an invalid tag is encountered, we add the &, and then move our scanner back to continue processing
 					[attrString appendString:Ampersand withAttributes:[textAttributes dictionary]];
