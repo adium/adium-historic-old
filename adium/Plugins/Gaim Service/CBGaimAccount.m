@@ -325,11 +325,10 @@
     [fileTransfer setLocalFilename:filename];
     [filesToSendArray removeObjectAtIndex:0];
 
-    //again, be sure to malloc the cFilename so gaim can take care of freeing it later
-    char * cFilename = g_malloc(strlen([filename UTF8String]) * 4 + 1);
-    [filename getCString:cFilename];
     //set the xfer local filename; accepting the file transfer will take care of setting size and such
-    gaim_xfer_set_local_filename(xfer,cFilename);
+    //gaim takes responsibility for freeing cFilename at a later date
+    char * xferFileName = g_strdup([filename UTF8String]);
+    gaim_xfer_set_local_filename(xfer,xferFileName);
 
     //begin transferring the file
     [self acceptFileTransferRequest:fileTransfer];    
@@ -369,12 +368,10 @@
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
     GaimXfer * xfer = [[fileTransfer accountData] pointerValue];
-    NSString * filename = [fileTransfer localFilename];
-    
-    //gaim will do a g_free of xferFileName while executing gaim_xfer_request_accepted
-    //so we need to malloc to prevent errors
-    char * xferFileName = g_malloc(strlen([filename UTF8String]) * 4 + 1);
-    [filename getCString:xferFileName];
+ 
+    //gaim takes responsibility for freeing cFilename at a later date
+    char * xferFileName = g_strdup([[fileTransfer localFilename] UTF8String]);
+    gaim_xfer_set_local_filename(xfer,xferFileName);
     
     //set the size - must be done after request is accepted?
     [fileTransfer setSize:(xfer->size)];
@@ -507,9 +504,9 @@
                                               fontTags:YES
                                          closeFontTags:YES
                                              styleTags:YES
-                            closeStyleTagsOnFontChange:NO] UTF8String]);
+                            closeStyleTagsOnFontChange:NO
+                                        encodeNonASCII:NO] UTF8String]);
     }
-
     // gaim expects us to allocate the away message and leave it allocated;
     // it takes responsibilty for freeing it.
     serv_set_away(gc, GAIM_AWAY_CUSTOM, newValue);
@@ -564,7 +561,8 @@
                                           fontTags:YES
                                      closeFontTags:NO
                                          styleTags:YES
-                        closeStyleTagsOnFontChange:NO];
+                        closeStyleTagsOnFontChange:NO
+                                    encodeNonASCII:NO];
         AIChat *chat = [cm chat];
         GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
         NSAssert(conv != NULL, @"Not a gaim conversation");
