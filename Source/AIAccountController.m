@@ -623,11 +623,11 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline
 {
-	AIAccount	*account;
+	AIAccount		*account;
+	NSEnumerator	*enumerator;
 	
+	//If passed a contact, we have a few better ways to determine the account than just using the first
     if(inContact){
-		NSEnumerator	*enumerator;
-		
 		//If we've messaged this object previously, and the account we used to message it is online, return that account
         int accountID = [[inContact preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
 											   group:PREF_GROUP_PREFERRED_ACCOUNTS] intValue];
@@ -658,7 +658,20 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 				return(account);
 			}
 		}
-		
+	}
+	
+	//If the previous attempts failed, or we weren't passed a contact, use the first appropraite account
+	return([self firstAccountAvailableForSendingContentType:inType
+												  toContact:inContact
+											 includeOffline:includeOffline]);
+}
+
+- (AIAccount *)firstAccountAvailableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline
+{
+	AIAccount		*account;
+	NSEnumerator	*enumerator;
+	
+    if(inContact){
 		//First available account in our list of the correct service type
 		enumerator = [accountArray objectEnumerator];
 		while(account = [enumerator nextObject]){
@@ -676,17 +689,16 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 				return(account);
 			}
 		}
-		
-		
 	}else{
 		//First available account in our list
-		NSEnumerator	*enumerator = [accountArray objectEnumerator];
+		enumerator = [accountArray objectEnumerator];
 		while(account = [enumerator nextObject]){
-			if([account availableForSendingContentType:inType toContact:nil]){
+			if([account availableForSendingContentType:inType toContact:nil] || includeOffline){
 				return(account);
 			}
 		}
 	}
+	
 	
 	//Can't find anything
 	return(nil);

@@ -944,11 +944,14 @@ DeclareString(UID);
 //	[[owner preferenceController] delayPreferenceChangedNotifications:NO];
 }
 
+//Sort list objects alphabetically by their display name
 int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *context)
 {
 	return [[objectA displayName] caseInsensitiveCompare:[objectB displayName]];
 }
 
+//Return a menu of contacts which are within inContact on a given service. Pass nil for service to retrive all contacts.
+//The menuItems have a target of target and a selector of @selector(selectContainedContact:).
 - (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact forService:(AIService *)service withTarget:(id)target includeOffline:(BOOL)includeOffline
 {
 	NSMenu		*contactMenu = [[NSMenu alloc] initWithTitle:@""];
@@ -956,7 +959,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		
 	if([inContact isKindOfClass:[AIMetaContact class]]){
 		if (service){
-			contactArray = [[(AIMetaContact *)inContact dictionaryOfServiceClassesAndListContacts] objectForKey:[service serviceClass]];
+			NSDictionary	*dict;
+			
+			dict = [(AIMetaContact *)inContact dictionaryOfServiceClassesAndListContacts];
+			contactArray = [dict objectForKey:[service serviceClass]];
 		}else{
 			//If service is nil, get ALL contained contacts
 			contactArray = [(AIMetaContact *)inContact listContacts];
@@ -1000,11 +1006,17 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	while(contact = [enumerator nextObject]){
 		BOOL contactIsOnline = [contact online];
 		
+		//If the contact is online and we aren't doing only offline contacts, add it.
+		//If the contact is offline, and we are doing only offline contacts, add it if any account is available for sending to it.
 		if ((contactIsOnline && !offlineContacts) ||
-			(!contactIsOnline && offlineContacts)){
+			(!contactIsOnline && 
+			 offlineContacts && 
+			 ([[owner accountController] firstAccountAvailableForSendingContentType:CONTENT_MESSAGE_TYPE
+																		  toContact:contact
+																	 includeOffline:NO] != nil))){
 			NSImage			*menuServiceImage;
 			NSMenuItem		*menuItem;
-
+			
 			menuServiceImage = [AIUserIcons menuUserIconForObject:contact];
 			
 			menuItem = [[NSMenuItem alloc] initWithTitle:[contact formattedUID]
@@ -1649,7 +1661,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 												  forListContact:(AIListContact *)preferredContact];
         }
 		
-		if (!returnContact){
+		if (!returnContact || ![returnContact online]){
 			//Recurse into metacontacts if necessary
 			returnContact = [self preferredContactForContentType:inType
 												  forListContact:[(AIMetaContact *)inContact preferredContact]];
