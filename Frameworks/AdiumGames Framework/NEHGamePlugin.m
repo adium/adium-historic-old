@@ -76,10 +76,20 @@ static NSMenu			*menu_Games;
 
 	//Autofill the contact field is a contact is currently selected
 	AIListObject   *selectedContact = [[adium contactController] selectedListObject];
-	if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]])
-		[textField_handle setStringValue:[selectedContact UID]];
-	else
+	if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]){
+		NSString	*currentContactUID;
+		
+		if ([selectedContact isKindOfClass:[AIMetaContact class]]){
+			currentContactUID = [[(AIMetaContact *)selectedContact preferredContact] UID];
+		}else{
+			currentContactUID = [selectedContact UID];
+		}
+		
+		[textField_handle setStringValue:currentContactUID];
+		
+	}else{
 		selectedContact = nil;
+	}
 	
 	[windowController showWindow:nil];
 	    
