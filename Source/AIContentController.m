@@ -363,52 +363,62 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	return(attributedString);
 }
 
+static UInt32 lastAutoreleaseRefresh = 0;
+
 - (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString
 								  contentFilter:(NSArray *)inContentFilterArray
 								  filterContext:(id)filterContext
 {
 	NSEnumerator		*enumerator = [inContentFilterArray objectEnumerator];
 	id<AIContentFilter>	filter;
-	
+
 	while((filter = [enumerator nextObject])){
 		attributedString = [filter filterAttributedString:attributedString context:filterContext];
 	}
-	
-	return attributedString;
+
+	return(attributedString);
 }
 
 //Only called once, the first time a threaded filtering is requested
 - (void)thread_createFilterRunLoopMessenger
 {
-	NSTimer	*autoreleaseTimer;
+	NSTimer				*autoreleaseTimer;
 	
 	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 	
+	autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
+														target:self
+													  selector:@selector(refreshAutoreleasePool:)
+													  userInfo:nil
+													   repeats:YES] retain];
+		
 	filterRunLoopMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
 	[filterRunLoopMessenger setMessageRetryTimeout:3.0];
 
 	[filterCreationLock unlock];
 
-	autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
-														 target:self
-													   selector:@selector(refreshAutoreleasePool:)
-													   userInfo:nil
-														repeats:YES] retain];
 	CFRunLoopRun();
 	
-	[currentAutoreleasePool release];
 	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
-		
 	[filterRunLoopMessenger release]; filterRunLoopMessenger = nil;
+	[currentAutoreleasePool release];
 }
 
 //Our autoreleased objects will only be released when the outermost autorelease pool is released.
 //This is handled automatically in the main thread, but we need to do it manually here.
 //Release the current pool, then create a new one.
+static BOOL	allowFilterThreadAutoreleasePoolRefresh = YES;
 - (void)refreshAutoreleasePool:(NSTimer *)inTimer
 {
-	[currentAutoreleasePool release];
-	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
+	if (allowFilterThreadAutoreleasePoolRefresh){
+		[currentAutoreleasePool release];
+		currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
+	}
+}
+
+- (void)setAllowFilterThreadAutoreleasePoolRefresh:(BOOL)flag
+{
+	allowFilterThreadAutoreleasePoolRefresh = flag;
 }
 
 //Messaging ------------------------------------------------------------------------------------------------------------
