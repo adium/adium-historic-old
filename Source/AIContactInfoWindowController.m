@@ -479,6 +479,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	
 	//The contents of the metaContact have now changed; reload
 	[contactListView reloadData];
+	
+	[contactListController outlineViewSelectionDidChange:nil];
 }
 
 - (float)drawerTrailingOffset
