@@ -83,7 +83,7 @@
 
 //Called when the preferences change, reregister for the notifications
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	NSArray			*behaviorArray;
 	NSString		*activeBehaviorSet;
@@ -236,7 +236,7 @@ Methods for custom behvaior and contact alert classes
 //Builds and returns a dock behavior list menu
 + (NSMenu *)behaviorListMenuForTarget:(id)target
 {
-    NSMenu			*behaviorMenu = [[[NSMenu alloc] init] autorelease];
+    NSMenu			*behaviorMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
     DOCK_BEHAVIOR	behavior;
 	
 	for(behavior = 0; behavior < BOUNCE_DELAY60; behavior++){
@@ -253,10 +253,10 @@ Methods for custom behvaior and contact alert classes
 + (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name target:(id)target
 {
     NSMenuItem		*menuItem;
-    menuItem = [[[NSMenuItem alloc] initWithTitle:name
-                                           target:target
-                                           action:@selector(selectBehavior:)
-                                    keyEquivalent:@""] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
+																	 target:target
+																	 action:@selector(selectBehavior:)
+															  keyEquivalent:@""] autorelease];
     [menuItem setRepresentedObject:[NSNumber numberWithInt:behavior]];
     
     return(menuItem);

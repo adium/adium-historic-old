@@ -1639,10 +1639,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	enumerator = [group objectEnumerator];
 	while(object = [enumerator nextObject]){
 		if([object isKindOfClass:[AIListGroup class]]){
-			NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:[object displayName]
-																target:target
-																action:@selector(selectGroup:)
-														 keyEquivalent:@""] autorelease];
+			NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[object displayName]
+																						  target:target
+																						  action:@selector(selectGroup:)
+																				   keyEquivalent:@""] autorelease];
 			[menuItem setRepresentedObject:object];
 			if([menuItem respondsToSelector:@selector(setIndentationLevel:)]){
 				[menuItem setIndentationLevel:level];
@@ -1695,12 +1695,12 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			
 			menuServiceImage = [AIUserIcons menuUserIconForObject:object];
 			
-			menuItem = [[[NSMenuItem alloc] initWithTitle:(needToCreateSubmenu ? 
-														   [object displayName] :
-														   [object formattedUID])
-												   target:target 
-												   action:@selector(selectContact:)
-											keyEquivalent:@""] autorelease];
+			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:(needToCreateSubmenu ? 
+																					 [object displayName] :
+																					 [object formattedUID])
+																			 target:target 
+																			 action:@selector(selectContact:)
+																	  keyEquivalent:@""] autorelease];
 			
 			if(needToCreateSubmenu){
 				[menuItem setSubmenu:[self menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)object withTarget:target firstLevel:NO]];

@@ -40,48 +40,57 @@
 {
     NSMenuItem		*menuItem;
 	NSToolbarItem	*toolbarItem;
-
+	
 	//Add contact menu item
-    menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT
-										   target:self
-										   action:@selector(addContact:)
-									keyEquivalent:@"+"] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT
+																	 target:self
+																	 action:@selector(addContact:)
+															  keyEquivalent:@"+"] autorelease];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
 	
 	//Add contact context menu item
-	menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT_TO_GROUP
-										   target:self
-										   action:@selector(addContact:)
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_TO_GROUP
+																	 target:self
+																	 action:@selector(addContact:)
+															  keyEquivalent:@""] autorelease];
 	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
-
+	
 	//Add contact context menu item for tabs
-	menuItem_tabAddContact = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT
-														 target:self 
-														 action:@selector(addContactFromTab:)
-												  keyEquivalent:@""] autorelease];
+	menuItem_tabAddContact = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT
+																				   target:self 
+																				   action:@selector(addContactFromTab:)
+																			keyEquivalent:@""] autorelease];
     [[adium menuController] addContextualMenuItem:menuItem_tabAddContact toLocation:Context_Contact_Stranger_TabAction];
 	
 	//Add group menu item
-    menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_GROUP
-										   target:self
-										   action:@selector(addGroup:) 
-									keyEquivalent:@"+"] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_GROUP
+																	 target:self
+																	 action:@selector(addGroup:) 
+															  keyEquivalent:@"+"] autorelease];
 	[menuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
 	
 	//Delete selection menu item
-    menuItem_delete = [[NSMenuItem alloc] initWithTitle:DELETE_CONTACT target:self action:@selector(deleteSelection:) keyEquivalent:@"\b"];
+    menuItem_delete = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DELETE_CONTACT
+																		   target:self
+																		   action:@selector(deleteSelection:) 
+																	keyEquivalent:@"\b"];
     [[adium menuController] addMenuItem:menuItem_delete toLocation:LOC_Contact_Editing];
 	
 	//Rename group context menu item
-	menuItem = [[[NSMenuItem alloc] initWithTitle:RENAME_GROUP target:self action:@selector(renameGroup:) keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:RENAME_GROUP
+																	 target:self
+																	 action:@selector(renameGroup:) 
+															  keyEquivalent:@""] autorelease];
     //[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
-
+	
 	//Delete selection context menu item
-	menuItem = [[[NSMenuItem alloc] initWithTitle:DELETE_CONTACT_CONTEXT target:self action:@selector(deleteSelectionFromTab:) keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DELETE_CONTACT_CONTEXT
+																	 target:self
+																	 action:@selector(deleteSelectionFromTab:) 
+															  keyEquivalent:@""] autorelease];
 	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Contact_NegativeAction];
-
+	
 	//Add Contact toolbar item
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:ADD_CONTACT_IDENTIFIER
 														  label:AILocalizedString(@"Add Contact",nil)
@@ -93,7 +102,7 @@
 														 action:@selector(addContact:)
 														   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];	
-
+	
 	//Add Contact toolbar item
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:ADD_GROUP_IDENTIFIER
 														  label:AILocalizedString(@"Add Group",nil)
@@ -110,7 +119,7 @@
 								   selector:@selector(addContactRequest:) 
 									   name:Contact_AddNewContact 
 									 object:nil];
-
+	
 }
 
 //Uninstall

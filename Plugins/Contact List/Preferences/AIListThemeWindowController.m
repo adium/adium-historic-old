@@ -58,7 +58,7 @@
 - (void)windowDidLoad
 {
 	[self configureControls];
-
+	
 	[textField_themeName setStringValue:(themeName ? themeName : @"")];
 }
 
@@ -115,7 +115,7 @@
 		[[adium preferenceController] setPreference:newName
 											 forKey:KEY_LIST_THEME_NAME
 											  group:PREF_GROUP_CONTACT_LIST];
-
+		
 		[self closeWindow:sender];
 	}
 }
@@ -164,7 +164,7 @@
 	[colorWell_groupShadow setColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
 	[checkBox_groupGradient setState:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_GRADIENT] boolValue]];
 	[checkBox_groupShadow setState:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW] boolValue]];
-		
+	
 	//
     [colorWell_statusText setColor:[[prefDict objectForKey:KEY_LIST_THEME_CONTACT_STATUS_COLOR] representedColor]];
 	
@@ -368,7 +368,7 @@
                                              forKey:KEY_LIST_THEME_GRID_COLOR
                                               group:PREF_GROUP_LIST_THEME];
 		[preview_grid setNeedsDisplay:YES];
-
+		
     }else if(sender == slider_backgroundFade){
         [[adium preferenceController] setPreference:[NSNumber numberWithFloat:[sender floatValue]]
                                              forKey:KEY_LIST_THEME_BACKGROUND_FADE
@@ -436,7 +436,7 @@
 											 forKey:KEY_LIST_THEME_BACKGROUND_IMAGE_STYLE
 											  group:PREF_GROUP_LIST_THEME];	
 	}
-
+	
 	[self configureControlDimming];
 }
 
@@ -477,7 +477,7 @@
     [colorWell_idleAndAwayLabel setEnabled:([checkBox_idleAndAway state] && backStatus)];
 	[colorWell_offline setEnabled:[checkBox_offline state]];
     [colorWell_offlineLabel setEnabled:([checkBox_offline state] && backStatus)];
-
+	
 	//Enable/Disable event color wells
     [colorWell_signedOff setEnabled:[checkBox_signedOff state]];
     [colorWell_signedOffLabel setEnabled:([checkBox_signedOff state] && backEvent)];	
@@ -498,7 +498,7 @@
 - (void)configureBackgroundColoring
 {
 	NSColor	*color;
-
+	
 	//Status
 	color = ([checkBox_backgroundAsStatus state] ? nil : [colorWell_background color]);
 	[preview_away setBackColorOverride:color];
@@ -513,7 +513,7 @@
 	[preview_signedOn setBackColorOverride:color];
 	[preview_typing setBackColorOverride:color];
 	[preview_unviewedContent setBackColorOverride:color];
-
+	
 	//Redisplay
 	[preview_away setNeedsDisplay:YES];
 	[preview_idle setNeedsDisplay:YES];
@@ -528,34 +528,34 @@
 
 - (NSMenu *)displayImageStyleMenu
 {
-	NSMenu		*displayImageStyleMenu = [[[NSMenu alloc] init] autorelease];
+	NSMenu		*displayImageStyleMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
     NSMenuItem	*menuItem;
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Normal",nil)
-										   target:nil
-										   action:nil
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Normal",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:AINormalBackground];
 	[displayImageStyleMenu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Tile",nil)
-										   target:nil
-										   action:nil
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Tile",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:AITileBackground];
 	[displayImageStyleMenu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Fill",nil)
-										   target:nil
-										   action:nil
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Fill",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:AIFillProportionatelyBackground];
 	[displayImageStyleMenu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Stretch to fill",nil)
-										   target:nil
-										   action:nil
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Stretch to fill",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:AIFillStretchBackground];
 	[displayImageStyleMenu addItem:menuItem];
 	

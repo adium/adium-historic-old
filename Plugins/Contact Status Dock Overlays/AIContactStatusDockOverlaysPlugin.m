@@ -56,7 +56,7 @@
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {	
     if([group isEqualToString:PREF_GROUP_LIST_THEME]){
 		//Snatch colors from status coloring plugin's prefs    

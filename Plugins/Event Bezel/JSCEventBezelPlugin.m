@@ -89,7 +89,7 @@
 
 //
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	showEventBezel = [[prefDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue];
 	

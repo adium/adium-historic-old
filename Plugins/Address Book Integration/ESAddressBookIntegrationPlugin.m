@@ -187,7 +187,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
     if([group isEqualToString:PREF_GROUP_ADDRESSBOOK]){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
@@ -203,7 +203,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 
 		createMetaContacts = [[prefDict objectForKey:KEY_AB_CREATE_METACONTACTS] boolValue];
 		
-		if(group == nil){
+		if(firstTime){
 			//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
 			[self rebuildAddressBookDict];
 			

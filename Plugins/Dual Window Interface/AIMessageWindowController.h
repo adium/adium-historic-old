@@ -43,7 +43,6 @@
 	BOOL			hasShownDocumentButton;
 	
 	BOOL			toolbar_selectedTabChanged;
-	
 }
 
 + (AIMessageWindowController *)messageWindowControllerForInterface:(AIDualWindowInterfacePlugin *)inInterface

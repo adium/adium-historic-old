@@ -58,7 +58,7 @@
 		[[item view] setMenu:menu];
 		
 		//Add menu to toolbar item (for text mode)
-		NSMenuItem	*mItem = [[[NSMenuItem alloc] init] autorelease];
+		NSMenuItem	*mItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] init] autorelease];
 		[mItem setSubmenu:menu];
 		[mItem setTitle:@"Emoticon"];
 		[item setMenuFormRepresentation:mItem];
@@ -67,7 +67,7 @@
 
 //Emoticons changed
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//Flush the cached emoticon menu
 	[emoticonMenu release]; emoticonMenu = nil;

@@ -179,49 +179,50 @@
      */
     
     //Set up the menubar away selector
-    menuItem_away = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE
-					       target:self
-					       action:@selector(enterAwayMessage:)
-					keyEquivalent:@""];
+    menuItem_away = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AWAY_MESSAGE_MENU_TITLE
+																		 target:self
+																		 action:@selector(enterAwayMessage:)
+																  keyEquivalent:@""];
     
-    menuItem_removeAway = [[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE
-						     target:self
-						     action:@selector(removeAwayMessage:)
-					      keyEquivalent:AWAY_MENU_HOTKEY];
+    menuItem_removeAway = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE
+																			   target:self
+																			   action:@selector(removeAwayMessage:)
+																		keyEquivalent:AWAY_MENU_HOTKEY];
     
     //Set up 
     if ([NSApp isOnPantherOrBetter]) {
-        menuItem_away_alternate = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE
-							     target:self
-							     action:@selector(enterAwayMessage:)
-						      keyEquivalent:@""];
+        menuItem_away_alternate = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AWAY_MESSAGE_MENU_TITLE
+																					   target:self
+																					   action:@selector(enterAwayMessage:)
+																				keyEquivalent:@""];
         [menuItem_away_alternate setAlternate:YES];
         [menuItem_away_alternate setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
         
-        menuItem_removeAway_alternate = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE_SHORT
-								   target:self
-								   action:@selector(enterAwayMessage:)
-							    keyEquivalent:AWAY_MENU_HOTKEY];
+        menuItem_removeAway_alternate = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AWAY_MESSAGE_MENU_TITLE_SHORT
+																							 target:self
+																							 action:@selector(enterAwayMessage:)
+																					  keyEquivalent:AWAY_MENU_HOTKEY];
         [menuItem_removeAway_alternate setAlternate:YES];
         [menuItem_removeAway_alternate setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
-       }
+	}
     
     //Setup the dock menu away selector
-    menuItem_dockAway = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE
-						   target:self
-						   action:@selector(enterAwayMessage:)
-					    keyEquivalent:@""];
-    menuItem_dockRemoveAway = [[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE
-							 target:self
-							 action:@selector(removeAwayMessage:)
-						  keyEquivalent:@""];
+#warning Dock supports alternates in 10.4
+    menuItem_dockAway = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AWAY_MESSAGE_MENU_TITLE
+																			 target:self
+																			 action:@selector(enterAwayMessage:)
+																	  keyEquivalent:@""];
+    menuItem_dockRemoveAway = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE
+																				   target:self
+																				   action:@selector(removeAwayMessage:)
+																			keyEquivalent:@""];
     
     //Add it to the menubar
 	menuConfiguredForAway = [self shouldConfigureForAway];
     if(menuConfiguredForAway){
         [[adium menuController] addMenuItem:menuItem_removeAway toLocation:LOC_File_Status];
-         if ([NSApp isOnPantherOrBetter]) {
-             [[adium menuController] addMenuItem:menuItem_removeAway_alternate toLocation:LOC_File_Status];
+		if ([NSApp isOnPantherOrBetter]) {
+			[[adium menuController] addMenuItem:menuItem_removeAway_alternate toLocation:LOC_File_Status];
          }
         [[adium menuController] addMenuItem:menuItem_dockRemoveAway toLocation:LOC_Dock_Status];
     }else{
@@ -256,9 +257,9 @@
 
 //Update our menu if the away list changes
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if(!group || ([group isEqualToString:GROUP_ACCOUNT_STATUS] && !object)){
+	if([group isEqualToString:GROUP_ACCOUNT_STATUS] && !object){
 		if(!key || [key isEqualToString:@"AwayMessage"]){
 			//Update our away menus
 			[self _updateMenusToReflectAwayState:[self shouldConfigureForAway]];
@@ -350,13 +351,13 @@
     NSMenuItem		*menuItem;
     
     //Create the menu
-    awayMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+    awayMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
     
     //Add the 'Custom away' menu item and divider
-    menuItem = [[[NSMenuItem alloc] initWithTitle:CUSTOM_AWAY_MESSAGE_MENU_TITLE
-					   target:self
-					   action:@selector(enterAwayMessage:)
-				    keyEquivalent:(mainMenu ? AWAY_MENU_HOTKEY : @"")] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CUSTOM_AWAY_MESSAGE_MENU_TITLE
+																	 target:self
+																	 action:@selector(enterAwayMessage:)
+															  keyEquivalent:(mainMenu ? AWAY_MENU_HOTKEY : @"")] autorelease];
     [awayMenu addItem:menuItem];
 	if([awayArray count]) [awayMenu addItem:[NSMenuItem separatorItem]];
     
@@ -392,10 +393,10 @@
                 away = [[away substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:ELIPSIS_STRING];
             }
             
-            menuItem = [[[NSMenuItem alloc] initWithTitle:away
-						   target:self
-						   action:@selector(setAwayMessage:)
-					    keyEquivalent:@""] autorelease];
+            menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:away
+																			 target:self
+																			 action:@selector(setAwayMessage:)
+																	  keyEquivalent:@""] autorelease];
             [menuItem setRepresentedObject:awayDict];
             [awayMenu addItem:menuItem];
         }

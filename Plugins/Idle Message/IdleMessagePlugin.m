@@ -36,7 +36,7 @@
 
 //Account preferences changed
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	if([[[adium preferenceController] preferenceForKey:KEY_IDLE_MESSAGE_ENABLED group:PREF_GROUP_IDLE_MESSAGE] boolValue] ) {
 		

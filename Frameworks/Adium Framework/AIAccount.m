@@ -111,7 +111,7 @@
 
 //For convenience, we let the account know when a status key for it has changed
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	if(!object || object == self){
 		[self updateStatusForKey:key];

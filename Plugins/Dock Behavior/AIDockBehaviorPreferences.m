@@ -57,7 +57,7 @@
 
 //Called when the preferences change, update our preference display
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//If the Behavior set changed
 	if(!key || [key isEqualToString:KEY_DOCK_ACTIVE_BEHAVIOR_SET]){
@@ -102,24 +102,24 @@
     NSMenu		*behaviorSetMenu;
 
     //Create the behavior set menu
-    behaviorSetMenu = [[[NSMenu alloc] init] autorelease];
+    behaviorSetMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
 
     //Add all the premade behavior sets
     enumerator = [[plugin availablePresets] objectEnumerator];
     while((setName = [enumerator nextObject])){
         NSMenuItem	*menuItem;
-
+		
         //Create the menu item
-        menuItem = [[[NSMenuItem alloc] initWithTitle:setName
-                                               target:self
-                                               action:@selector(selectBehaviorSet:)
-                                        keyEquivalent:@""] autorelease];
-
+        menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:setName
+																		 target:self
+																		 action:@selector(selectBehaviorSet:)
+																  keyEquivalent:@""] autorelease];
+		
         //
         [menuItem setRepresentedObject:setName];
         [behaviorSetMenu addItem:menuItem];
     }
-
+	
     //Add the custom option
     [behaviorSetMenu addItem:[NSMenuItem separatorItem]];
     [behaviorSetMenu addItemWithTitle:AILocalizedString(@"Custom...",nil) 

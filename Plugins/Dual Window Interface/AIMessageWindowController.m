@@ -74,12 +74,17 @@
 	//Tab hiding suppression (used to force tab bars visible when a drag is occuring)
     tabBarIsVisible = YES;
     supressHiding = NO;
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabDraggingEnded:)
-												 name:AICustomTabDragDidComplete object:nil];
-	
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(tabDraggingEnded:)
+												 name:AICustomTabDragDidComplete
+											   object:nil];
 	
     //Prefs
-	[[adium notificationCenter] addObserver:self selector:@selector(updateTabArrangingBehavior) name:Interface_TabArrangingPreferenceChanged object:nil];
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(updateTabArrangingBehavior)
+									   name:Interface_TabArrangingPreferenceChanged 
+									 object:nil];
+	
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_INTERFACE];
 	
@@ -202,14 +207,14 @@
 
 //
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
     if([group isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]){
 		alwaysShowTabs = ![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 		[tabView_customTabs setAllowsInactiveTabClosing:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
 			
 		[self updateTabArrangingBehavior];
-		[self updateTabBarVisibilityAndAnimate:(group != nil)];
+		[self updateTabBarVisibilityAndAnimate:!firstTime];
 		[self _updateWindowTitleAndIcon];
     }
 

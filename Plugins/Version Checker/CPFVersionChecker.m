@@ -32,13 +32,13 @@
 	//Configure our default preferences
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:VERSION_CHECKER_DEFAULTS 
 																		forClass:[self class]]
-																		forGroup:PREF_GROUP_UPDATING];
-
+										  forGroup:PREF_GROUP_UPDATING];
+	
 	//Menu item for checking manually
-    versionCheckerMenuItem = [[[NSMenuItem alloc] initWithTitle:VERSION_CHECKER_TITLE 
-														 target:self 
-														 action:@selector(manualCheckForNewVersion:)
-												  keyEquivalent:@""] autorelease];
+    versionCheckerMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VERSION_CHECKER_TITLE 
+																				   target:self 
+																				   action:@selector(manualCheckForNewVersion:)
+																			keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:versionCheckerMenuItem toLocation:LOC_Adium_About];
 	
 	//Observe connectivity changes

@@ -42,11 +42,13 @@
 	id			tmp;
 	
     //Install some prefs.
-	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SQL_LOGGING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SQL_LOGGING];
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SQL_LOGGING_DEFAULT_PREFS
+																		forClass:[self class]]
+										  forGroup:PREF_GROUP_SQL_LOGGING];
     advancedPreferences = [[JMSQLLoggerAdvancedPreferences preferencePane] retain];
     
     //Install Menu item
-    //logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:SQL_LOG_VIEWER target:self action:@selector(showLogViewer:) keyEquivalent:@""] autorelease];
+    //logViewerMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:SQL_LOG_VIEWER target:self action:@selector(showLogViewer:) keyEquivalent:@""] autorelease];
     //[[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxiliary];
 
 	//Watch for pref changes
@@ -73,7 +75,7 @@
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	bool			newLogValue;
 	

@@ -44,7 +44,7 @@
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	if([[prefDict objectForKey:KEY_STATUS_MENU_ITEM_ENABLED] boolValue]){
 		//If it hasn't been created yet, create it. Otherwise, tell it to show itself.

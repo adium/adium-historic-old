@@ -265,10 +265,10 @@ static	NSImage						*adiumRedHighlightImage = nil;
             //Create and add the menu items
             while(chat = [enumerator nextObject]){
                 //Create a menu item from the list object
-                menuItem = [[[NSMenuItem alloc] initWithTitle:[chat displayName] 
-                                                       target:self
-                                                       action:@selector(switchToChat:) 
-                                                keyEquivalent:@""] autorelease];
+                menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[chat displayName] 
+																				 target:self
+																				 action:@selector(switchToChat:) 
+																		  keyEquivalent:@""] autorelease];
                 //Set the represented object
                 [menuItem setRepresentedObject:chat];
                 //Set the image

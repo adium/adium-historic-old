@@ -38,18 +38,18 @@
 	//If we can't find an importer for the user's browser, we don't need to install the menu item or do anything else
 	if(importer){
 		//Main bookmark menu item
-		bookmarkRootMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
-														   target:self
-														   action:@selector(dummyTarget:)
-													keyEquivalent:@""] autorelease];
+		bookmarkRootMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ROOT_MENU_TITLE
+																					 target:self
+																					 action:@selector(dummyTarget:)
+																			  keyEquivalent:@""] autorelease];
 		[bookmarkRootMenuItem setRepresentedObject:self];
 		[[adium menuController] addMenuItem:bookmarkRootMenuItem toLocation:LOC_Edit_Additions];
 		
 		//Contextual bookmark menu item
-		bookmarkRootContextualMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
-																	 target:self
-																	 action:@selector(dummyTarget:)
-															  keyEquivalent:@""] autorelease];
+		bookmarkRootContextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ROOT_MENU_TITLE
+																							   target:self
+																							   action:@selector(dummyTarget:)
+																						keyEquivalent:@""] autorelease];
 		[bookmarkRootContextualMenuItem setRepresentedObject:self];
 		[[adium menuController] addContextualMenuItem:bookmarkRootContextualMenuItem toLocation:Context_TextView_Edit];
 		
@@ -182,7 +182,6 @@
 	}
 }
 
-
 //Building -------------------------------------------------------------------------------------------------------------
 #pragma mark Building
 //Builds the bookmark menu (Detatch as a thread)
@@ -254,7 +253,7 @@
 - (void)insertBookmarks:(NSDictionary *)bookmarks intoMenu:(NSMenu *)inMenu
 {	
 	//Recursively add the contents of the group to the parent menu
-	NSMenu			*menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu			*menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
 	NSEnumerator	*enumerator = [[bookmarks objectForKey:SH_BOOKMARK_DICT_CONTENT] objectEnumerator];
 	id				object;
 	
@@ -272,8 +271,9 @@
 	}
 	
 	//Insert the submenu we built into the menu
-	NSMenuItem		*item = [[[NSMenuItem alloc] initWithTitle:[bookmarks objectForKey:SH_BOOKMARK_DICT_TITLE] action:nil
-												 keyEquivalent:@""] autorelease];
+	NSMenuItem		*item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[bookmarks objectForKey:SH_BOOKMARK_DICT_TITLE] 
+																				  action:nil
+																		   keyEquivalent:@""] autorelease];
 	[item setSubmenu:menu];
 	[menu setAutoenablesItems:YES];
 	[inMenu addItem:item];
@@ -396,7 +396,7 @@
 	[[item view] setMenu:menu];
 	
 	//Add menu to toolbar item (for text mode)
-	NSMenuItem	*mItem = [[[NSMenuItem alloc] init] autorelease];
+	NSMenuItem	*mItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] init] autorelease];
 	[mItem setSubmenu:menu];
 	[mItem setTitle:(menuTitle ? menuTitle : @"")];
 	[item setMenuFormRepresentation:mItem];	

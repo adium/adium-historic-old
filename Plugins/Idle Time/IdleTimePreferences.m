@@ -173,25 +173,25 @@
     NSMenuItem  *menuItem;
     
 	[self loadAwayMessages]; //load the away messages into awayMessageArray
-
-    menuItem = [[[NSMenuItem alloc] initWithTitle:AUTO_AWAY_QUICK_AWAY_TITLE
-											target:self
-											action:nil
-										keyEquivalent:@""] autorelease];
+	
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AUTO_AWAY_QUICK_AWAY_TITLE
+																	 target:self
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
 	[savedAwaysMenu addItem:menuItem];
 	
 	if (awayMessageArray){
 		[savedAwaysMenu addItem:[NSMenuItem separatorItem]];
-
+		
         NSEnumerator *enumerator = [awayMessageArray objectEnumerator];
         NSDictionary *dict;
         while(dict = [enumerator nextObject]){
             NSString * title = [dict objectForKey:@"Title"];
             if(title){
-				menuItem = [[[NSMenuItem alloc] initWithTitle:title
-													   target:self
-													   action:nil
-												keyEquivalent:@""] autorelease];
+				menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
+																				 target:self
+																				 action:nil
+																		  keyEquivalent:@""] autorelease];
             }else{
                 NSString * message = [[dict objectForKey:@"Message"] string];
 				
@@ -200,10 +200,10 @@
                     message = [[message substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:ELIPSIS_STRING];
                 }
                 
-                menuItem = [[[NSMenuItem alloc] initWithTitle:message
-                                                       target:self
-                                                       action:nil
-                                                keyEquivalent:@""] autorelease];
+                menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:message
+																				 target:self
+																				 action:nil
+																		  keyEquivalent:@""] autorelease];
             }
             [menuItem setRepresentedObject:dict];
             [menuItem setEnabled:YES];
@@ -216,7 +216,7 @@
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	if([key isEqualTo:KEY_SAVED_AWAYS]){
 		[self configureAutoAwayPreferences];

@@ -24,10 +24,10 @@ static NSMutableArray	*debugLogArray = nil;
 {
 #ifdef DEBUG_BUILD
 	//Contact list menu tem
-    NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Debug Window",nil)
-												   target:self
-												   action:@selector(showDebugWindow:)
-											keyEquivalent:@""] autorelease];
+    NSMenuItem *item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Debug Window",nil)
+																			 target:self
+																			 action:@selector(showDebugWindow:)
+																	  keyEquivalent:@""] autorelease];
 	[[adium menuController] addMenuItem:item toLocation:LOC_Adium_About];
 	
 	debugLogArray = [[NSMutableArray alloc] init];

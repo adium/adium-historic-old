@@ -159,7 +159,7 @@
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	[self updatePreview];
 }
@@ -376,17 +376,17 @@
 #pragma mark Menus
 -(NSMenu *)_fontSizeMenu
 {
-	NSMenu			*menu = [[[NSMenu alloc] init] autorelease];
+	NSMenu			*menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
 	NSMenuItem		*menuItem;
 	
 	int sizes[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,18,20,22,24,36,48,64,72,96};
 	int loopCounter;
 	
 	for (loopCounter = 0; loopCounter < 23; loopCounter++){
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[[NSNumber numberWithInt:sizes[loopCounter]] stringValue]
-											   target:nil
-											   action:nil
-										keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[[NSNumber numberWithInt:sizes[loopCounter]] stringValue]
+																		 target:nil
+																		 action:nil
+																  keyEquivalent:@""] autorelease];
 		[menuItem setTag:sizes[loopCounter]];
 		[menu addItem:menuItem];
 	}
@@ -419,7 +419,10 @@
     //Create the menu item
     NSDateFormatter *stampFormatter = [[[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO] autorelease];
     NSString        *dateString = [stampFormatter stringForObjectValue:[NSDate date]];
-    NSMenuItem      *menuItem = [[[NSMenuItem alloc] initWithTitle:dateString target:nil action:nil keyEquivalent:@""] autorelease];
+    NSMenuItem      *menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:dateString 
+																					  target:nil
+																					  action:nil
+																			   keyEquivalent:@""] autorelease];
     
     [menuItem setRepresentedObject:format];
     [[popUp_timeStamps menu] addItem:menuItem];
@@ -427,27 +430,27 @@
 
 - (NSMenu *)_customBackgroundMenu
 {
-	NSMenu			*menu = [[[NSMenu alloc] init] autorelease];
+	NSMenu			*menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
 	NSMenuItem		*menuItem;
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:NO_BACKGROUND_ITEM_TITLE
-										   target:self
-										   action:@selector(changeBackground:)
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:NO_BACKGROUND_ITEM_TITLE
+																	 target:self
+																	 action:@selector(changeBackground:)
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:NoBackground];
 	[menu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:DEFAULT_BACKGROUND_ITEM_TITLE
-										   target:self
-										   action:@selector(changeBackground:)
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DEFAULT_BACKGROUND_ITEM_TITLE
+																	 target:self
+																	 action:@selector(changeBackground:)
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:DefaultBackground];
 	[menu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:CUSTOM_BACKGROUND_ITEM_TITLE
-										   target:self
-										   action:@selector(changeBackground:)
-									keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CUSTOM_BACKGROUND_ITEM_TITLE
+																	 target:self
+																	 action:@selector(changeBackground:)
+															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:CustomBackground];
 	[menu addItem:menuItem];
 	
@@ -459,13 +462,13 @@
 	NSEnumerator	*enumerator = [[[[plugin availableStyleDictionary] allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] objectEnumerator];
 	NSString		*styleName;
 	
-	NSMenu			*menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu			*menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
 	
 	while (styleName = [enumerator nextObject]){
 		//Create and add the menu item for this style
 		NSMenuItem		*menuItem;
 		
-		menuItem = [[[NSMenuItem alloc] initWithTitle:styleName target:self action:@selector(changeStyle:) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:styleName target:self action:@selector(changeStyle:) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:styleName, @"styleName", nil]];
 		[menu addItem:menuItem];
 		
@@ -484,26 +487,26 @@
 				
 				//Generate the subMenu if it does not yet exist
 				if (!subMenu){
-					subMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+					subMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
 					
 					//Add the No Variant menu item
 					NSString		*noVariantName = [style objectForInfoDictionaryKey:@"DisplayNameForNoVariant"];
 					if (!noVariantName){
 						noVariantName = AILocalizedString(@"Normal","Normal style variant menu item");
 					}
-					subMenuItem = [[[NSMenuItem alloc] initWithTitle:noVariantName 
-															  target:self
-															  action:@selector(changeStyle:)
-													   keyEquivalent:@""] autorelease];
+					subMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:noVariantName 
+																						target:self
+																						action:@selector(changeStyle:)
+																				 keyEquivalent:@""] autorelease];
 					[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:styleName, @"styleName", @"", @"variant",nil]];
 					[subMenu addItem:subMenuItem];
 				}
 				
 				variant = [[variant lastPathComponent] stringByDeletingPathExtension];
-				subMenuItem = [[[NSMenuItem alloc] initWithTitle:variant
-														  target:self
-														  action:@selector(changeStyle:) 
-												   keyEquivalent:@""] autorelease];
+				subMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:variant
+																					target:self
+																					action:@selector(changeStyle:) 
+																			 keyEquivalent:@""] autorelease];
 				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:styleName, @"styleName", variant, @"variant", nil]];
 				[subMenu addItem:subMenuItem];
 			}

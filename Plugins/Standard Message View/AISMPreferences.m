@@ -65,7 +65,7 @@
 
 //Reflect new preferences in view
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//Disable and uncheck show user icons when not using an inline prefix
 	if([[prefDict objectForKey:KEY_SMV_PREFIX_INCOMING] rangeOfString:@"%m"].location != NSNotFound){
@@ -248,7 +248,7 @@
     //Create the menu item
     NSDateFormatter *stampFormatter = [[[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO] autorelease];
     NSString        *dateString = [stampFormatter stringForObjectValue:[NSDate date]];
-    NSMenuItem      *menuItem = [[[NSMenuItem alloc] initWithTitle:dateString target:nil action:nil keyEquivalent:@""] autorelease];
+    NSMenuItem      *menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:dateString target:nil action:nil keyEquivalent:@""] autorelease];
     
     [menuItem setRepresentedObject:format];
     [[popUp_timeStamps menu] addItem:menuItem];
@@ -278,7 +278,7 @@
 //Add a prefix format to the menu
 - (void)_buildPrefixFormatMenu_AddFormat:(NSString *)format withTitle:(NSString *)title
 {
-    NSMenuItem      *menuItem = [[[NSMenuItem alloc] initWithTitle:title target:nil action:nil keyEquivalent:@""] autorelease];
+    NSMenuItem      *menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title target:nil action:nil keyEquivalent:@""] autorelease];
     
     [menuItem setRepresentedObject:format];
     [[popUp_prefixFormat menu] addItem:menuItem];
@@ -302,7 +302,7 @@
 	
 	[[popUp_messageColoring menu] addItem:[NSMenuItem separatorItem]];
 
-	NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:CUSTOM_MESSAGE_STYLE_STRING target:self action:@selector(createCustomColors:) keyEquivalent:@""] autorelease];
+	NSMenuItem *menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CUSTOM_MESSAGE_STYLE_STRING target:self action:@selector(createCustomColors:) keyEquivalent:@""] autorelease];
 	[[popUp_messageColoring menu] addItem:menuItem];
 
 }
@@ -310,7 +310,7 @@
 //Add a prefix format to the menu
 - (void)_buildMessageColoringMenu_AddStyle:(NSDictionary *)colorDict withTitle:(NSString *)title
 {
-    NSMenuItem      *menuItem = [[[NSMenuItem alloc] initWithTitle:title target:nil action:nil keyEquivalent:@""] autorelease];
+    NSMenuItem      *menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title target:nil action:nil keyEquivalent:@""] autorelease];
     
     [menuItem setRepresentedObject:colorDict];
     [[popUp_messageColoring menu] addItem:menuItem];
@@ -552,7 +552,7 @@
         NSRect		imageRect;
 
         //Create the menu item and get the color
-        menuItem = [[[NSMenuItem alloc] initWithTitle:key target:nil action:nil keyEquivalent:@""] autorelease];
+        menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:key target:nil action:nil keyEquivalent:@""] autorelease];
         //The action is set on our popUp button, and not the individual menu items.  If we were to set the action on our menu items, the menu items would be passed to the preferenceChanged: method as sender, making it harder to determine which menu was altered.
         [menuItem setRepresentedObject:key];
         color = [[[prefixColors objectForKey:key] objectForKey:@"Dark"] representedColor];

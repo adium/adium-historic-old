@@ -46,7 +46,7 @@
 
 //Reflect new preferences in view
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	[checkBox_enableLogging setState:[[prefDict objectForKey:KEY_LOGGER_ENABLE] boolValue]];
 	[checkBox_enableHTML setState:![[prefDict objectForKey:KEY_LOGGER_HTML] boolValue]];

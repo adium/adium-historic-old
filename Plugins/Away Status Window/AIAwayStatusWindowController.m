@@ -126,7 +126,7 @@ AIAwayStatusWindowController	*sharedAwayStatusInstance = nil;
 //Window Content -------------------------------------------------------------------------------------------------------
 //Preferences have changed, update window
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {	
 	//Mute Sounds
 	if([group isEqualToString:PREF_GROUP_SOUNDS]){

@@ -106,6 +106,8 @@
     //Observe preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+	
+	//Preference code below assumes layout is done before theme.
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
 }
@@ -128,7 +130,7 @@
 
 //Preferences have changed
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
     if([group isEqualToString:PREF_GROUP_CONTACT_LIST]){
 		int				windowPosition = [[prefDict objectForKey:KEY_CLWH_WINDOW_POSITION] intValue];
@@ -172,12 +174,12 @@
 	//Layout and Theme ------------
 	BOOL groupLayout = ([group isEqualToString:PREF_GROUP_LIST_LAYOUT]);
 	BOOL groupTheme = ([group isEqualToString:PREF_GROUP_LIST_THEME]);
-    if(!group || groupLayout || groupTheme){
+    if(groupLayout || (groupTheme && !firstTime)){ /* We don't want to execute this code twice when initializing */
         NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 		NSDictionary	*themeDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
 		
 		//Layout only
-		if(groupLayout || !group){
+		if(groupLayout){
 			int				windowStyle = [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 			BOOL			autoResizeVertically = [[layoutDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
 			BOOL			autoResizeHorizontally = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
@@ -250,7 +252,7 @@
 		}
 		
 		//Theme only
-		if (groupTheme || !group){
+		if (groupTheme || firstTime){
 			NSString		*imagePath = [themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH];
 			
 			//Background Image

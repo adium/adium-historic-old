@@ -84,10 +84,10 @@
 		
 		if(soundSetContents && [soundSetContents count]){
 			//Add an item for the set
-			menuItem = [[[NSMenuItem alloc] initWithTitle:[[soundSetDict objectForKey:KEY_SOUND_SET] lastPathComponent]
-												   target:nil
-												   action:nil
-											keyEquivalent:@""] autorelease];
+			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[[soundSetDict objectForKey:KEY_SOUND_SET] lastPathComponent]
+																			 target:nil
+																			 action:nil
+																	  keyEquivalent:@""] autorelease];
 			[menuItem setEnabled:NO];
 			[soundMenu addItem:menuItem];
 			
@@ -103,13 +103,13 @@
 	}
 	
 	//Add the "Other..." item
-	menuItem = [[[NSMenuItem alloc] initWithTitle:OTHER_ELLIPSIS
-										   target:self
-										   action:@selector(selectSound:)
-									keyEquivalent:@""] autorelease];            
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:OTHER_ELLIPSIS
+																	 target:self
+																	 action:@selector(selectSound:)
+															  keyEquivalent:@""] autorelease];            
 	[soundMenu addItem:menuItem];
 	[soundMenu setAutoenablesItems:NO];
-
+	
     return([soundMenu autorelease]);
 }
 
@@ -117,10 +117,10 @@
 - (void)addSound:(NSString *)soundPath toMenu:(NSMenu *)soundMenu
 {
 	NSString	*soundTitle = [[soundPath lastPathComponent] stringByDeletingPathExtension];
-	NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:soundTitle
-														target:self
-														action:@selector(selectSound:)
-												 keyEquivalent:@""] autorelease];
+	NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:soundTitle
+																				  target:self
+																				  action:@selector(selectSound:)
+																		   keyEquivalent:@""] autorelease];
 	
 	[menuItem setRepresentedObject:[soundPath stringByCollapsingBundlePath]];
 	[menuItem setImage:soundFileIcon];

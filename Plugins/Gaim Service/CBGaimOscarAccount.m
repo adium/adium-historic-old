@@ -796,9 +796,9 @@ aim_srv_setavailmsg(od->sess, text);
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict];
+	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict firstTime:firstTime];
 	
 	if([group isEqualToString:PREF_GROUP_NOTES]){
 		//If the notification object is a listContact belonging to this account, update the serverside information

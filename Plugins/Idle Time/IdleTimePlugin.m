@@ -126,7 +126,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 //An idle preference has changed
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//Store the new values locally
 	idleEnabled = [[prefDict objectForKey:KEY_IDLE_TIME_ENABLED] boolValue];

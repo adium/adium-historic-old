@@ -275,10 +275,10 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 			
 			if (![set isEqualToString:lastSet]){
 				//We have a new set of scripts; create a section header for them
-				item = [[[NSMenuItem alloc] initWithTitle:set
-																target:nil
-																action:nil
-														 keyEquivalent:@""] autorelease];
+				item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:set
+																			 target:nil
+																			 action:nil
+																	  keyEquivalent:@""] autorelease];
 				if([item respondsToSelector:@selector(setIndentationLevel:)]) [item setIndentationLevel:0];
 				[menu addItem:item];
 				
@@ -296,10 +296,10 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 			title = [appendDict objectForKey:@"Keyword"];
 		}
 		
-		item = [[[NSMenuItem alloc] initWithTitle:title
-										   target:self
-										   action:@selector(selectScript:)
-									keyEquivalent:@""] autorelease];
+		item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
+																	 target:self
+																	 action:@selector(selectScript:)
+															  keyEquivalent:@""] autorelease];
 		
 		[item setRepresentedObject:appendDict];
 		if([item respondsToSelector:@selector(setIndentationLevel:)]) [item setIndentationLevel:indentationLevel];
@@ -679,7 +679,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		[[item view] setMenu:menu];
 		
 		//Add menu to toolbar item (for text mode)
-		NSMenuItem	*mItem = [[[NSMenuItem alloc] init] autorelease];
+		NSMenuItem	*mItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] init] autorelease];
 		[mItem setSubmenu:menu];
 		[mItem setTitle:[menu title]];
 		[item setMenuFormRepresentation:mItem];

@@ -21,19 +21,19 @@
 - (void)installPlugin
 {
 	NSMenuItem	*menuItem;
-
+	
     //Add/Edit Link... menu item (edit menu)
-    menuItem = [[[NSMenuItem alloc] initWithTitle:EDIT_LINK_TITLE
-										   target:self
-										   action:@selector(editFormattedLink:)
-									keyEquivalent:@"k"] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:EDIT_LINK_TITLE
+																	 target:self
+																	 action:@selector(editFormattedLink:)
+															  keyEquivalent:@"k"] autorelease];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Edit_Additions];
     
     //Context menu
-    menuItem = [[[NSMenuItem alloc] initWithTitle:EDIT_LINK_TITLE
-										   target:self
-										   action:@selector(editFormattedLink:)
-									keyEquivalent:@""] autorelease];
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:EDIT_LINK_TITLE
+																	 target:self
+																	 action:@selector(editFormattedLink:)
+															  keyEquivalent:@""] autorelease];
     [[adium menuController] addContextualMenuItem:menuItem toLocation:Context_TextView_Edit];
     [self registerToolbarItem];
 }

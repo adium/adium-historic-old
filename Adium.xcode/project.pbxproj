@@ -1783,12 +1783,9 @@
 				344161C4059FC72E0019246B,
 				34415A63059F9B9B0019246B,
 				34415A64059F9B9B0019246B,
-				349FFA020750755100E36B3B,
-				349FFA030750755200E36B3B,
 				34416159059FC5330019246B,
 				3441615A059FC5340019246B,
-				34416171059FC55A0019246B,
-				34416172059FC55A0019246B,
+				34E451DC07555D1F004C3A42,
 				343A7F3806935DD700150CEC,
 				343A7F3706935DD700150CEC,
 				4B388E080719C351004DE713,
@@ -4949,6 +4946,8 @@
 			children = (
 				349FF9F90750751500E36B3B,
 				349FF9FA0750751500E36B3B,
+				34E4516C07555B76004C3A42,
+				34E4516D07555B76004C3A42,
 			);
 			isa = PBXGroup;
 			name = Antepo;
@@ -8244,6 +8243,48 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		34E4516C07555B76004C3A42 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimAntepoAccountViewController.h;
+			path = "Plugins/Gaim Service/ESGaimAntepoAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E4516D07555B76004C3A42 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimAntepoAccountViewController.m;
+			path = "Plugins/Gaim Service/ESGaimAntepoAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E4516E07555B76004C3A42 = {
+			fileRef = 34E4516C07555B76004C3A42;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E4516F07555B76004C3A42 = {
+			fileRef = 34E4516D07555B76004C3A42;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E451DC07555D1F004C3A42 = {
+			children = (
+				34416171059FC55A0019246B,
+				34416172059FC55A0019246B,
+				349FFA020750755100E36B3B,
+				349FFA030750755200E36B3B,
+			);
+			isa = PBXGroup;
+			name = Jabber;
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		34E6D38E0727354600A2643A = {
 			fileEncoding = 4;
@@ -12651,6 +12692,7 @@
 				34F101E707342B5A00890D3B,
 				349FF9FB0750751500E36B3B,
 				349FFA040750755200E36B3B,
+				34E4516E07555B76004C3A42,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12763,6 +12805,7 @@
 				34F101E807342B5B00890D3B,
 				349FF9FC0750751600E36B3B,
 				349FFA050750755200E36B3B,
+				34E4516F07555B76004C3A42,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

@@ -126,7 +126,7 @@
 
 //
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//Release the old preference cache
 	[self _flushPreferenceCache];
@@ -184,7 +184,7 @@
 	headIndent = [[prefDict objectForKey:KEY_SMV_COMBINE_MESSAGES_INDENT] floatValue];
 	
 	//Reset all content objects if a preference actually changed
-	if(group) [self rebuildMessageViewForContent];
+	if(!firstTime) [self rebuildMessageViewForContent];
 }
 
 //Release any cached preference values
