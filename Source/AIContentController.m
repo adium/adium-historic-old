@@ -37,9 +37,8 @@
 @implementation AIContentController
 
 static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
-static BOOL					pauseFilteringForSafety = NO;
-static BOOL					threadedFiltersInUse = NO;
 static NSLock				*filterCreationLock = nil;
+static NSLock				*threadedFilterLock = nil;
 
 //The autorelease pool presently in use; it will be periodically released and recreated
 static NSAutoreleasePool *currentAutoreleasePool = nil;
@@ -99,7 +98,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 
 //Text Entry Filtering -------------------------------------------------------------------------------------------------
-#pragma mark 
+#pragma mark Text Entry Filtering
 //Text entry filters process content as it is entered by the user.
 - (void)registerTextEntryFilter:(id)inFilter
 {
@@ -194,7 +193,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 
 //Content Filtering ----------------------------------------------------------------------------------------------------
-#pragma mark 
+#pragma mark Content Filtering
 //Register a content filter.  If the particular filter wants to apply to multiple types or directions, it should
 //register multiple times.  Be careful that incoming content is always contained (aka: Don't feed incoming content
 //to a shell script or something silly like that).
@@ -233,19 +232,16 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 									 direction:(AIFilterDirection)direction
 									   context:(id)filterContext
 {
-	//Don't let filtering occur in the filter thread while we're doing this
-	pauseFilteringForSafety = YES;
-	
-	//Wait until the filter thread is not filtering
-	while (threadedFiltersInUse);
+	//Wait until the filter thread is not filtering; don't let filtering in that thread occur while we are filtering
+	[threadedFilterLock lock];
 	
 	//Perform the filter (in the main thread)
 	attributedString = [self _filterAttributedString:attributedString
 									   contentFilter:contentFilter[type][direction]
 									   filterContext:filterContext];
-	
+
 	//Unlock so the filtering thread can resume its work where it left off
-	pauseFilteringForSafety = NO;
+	[threadedFilterLock unlock];
 	
 	return (attributedString);
 }
@@ -310,19 +306,20 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 										filterContext:(id)filterContext
 										   invocation:(NSInvocation *)invocation
 {
-	//If we're using the filters in the main thread, wait until we aren't.
-	while (pauseFilteringForSafety);
-
 	/*
+	 Obtain the lock; we must ensure we don't filter while the main thread does.
+	 
+	 This lock also serves as a way to know if a filtering operation is currently in progress.
 	 Running a filter may take multiple run loops (e.g. applescript execution).
-	 it is not acceptable for our autorelease pool to be released between these loops
-	 as we have autoreleased objects upon which we are depending.
+	 It is not acceptable for our autorelease pool to be released between these loops
+	 as we have autoreleased objects upon which we are depending; we can check against the lock to know
+	 if it is safe.
 	 */
-	threadedFiltersInUse = YES;
+	[threadedFilterLock lock];
 	attributedString = [self _filterAttributedString:attributedString
 									   contentFilter:inContentFilterArray
 									   filterContext:filterContext];
-	threadedFiltersInUse = NO;
+	[threadedFilterLock unlock];
 	
 	if (invocation){
 		//Put that attributed string into the invocation as the first argument after the two hidden arguments of every NSInvocation
@@ -356,23 +353,32 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 {
 	NSTimer				*autoreleaseTimer;
 	
+	//Create an initial autorelease pool
 	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 	
+	//We will want to periodically release and recreate the autorelease pool to avoid collecting memory usage
 	autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
 														target:self
 													  selector:@selector(refreshAutoreleasePool:)
 													  userInfo:nil
 													   repeats:YES] retain];
-		
+	
+	//Initialize the lock used to coordinate threading the main vs. the filter thread
+	threadedFilterLock = [[NSLock alloc] init];
+	
+	//Create and configure our messenger to the filter thread (in which are at present)
 	filterRunLoopMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
 	[filterRunLoopMessenger setMessageRetryTimeout:3.0];
 
+	//The run loop messenger has now been created
 	[filterCreationLock unlock];
 
+	//CFRunLoop() will not exit until Adium does
 	CFRunLoopRun();
-	
+
 	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
 	[filterRunLoopMessenger release]; filterRunLoopMessenger = nil;
+	[threadedFilterLock release]; threadedFilterLock = nil;
 	[currentAutoreleasePool release];
 }
 
@@ -381,9 +387,12 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 //Release the current pool, then create a new one.
 - (void)refreshAutoreleasePool:(NSTimer *)inTimer
 {
-	if (!threadedFiltersInUse){
+	if ([threadedFilterLock tryLock]){
 		[currentAutoreleasePool release];
 		currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
+		
+		//tryLock, if succesful, obtained the lock
+		[threadedFilterLock unlock];
 	}
 }
 
@@ -1113,8 +1122,8 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 }
 
 
-//Emoticons (In the core?) ---------------------------------------------------------------------------------------------
-#pragma mark Emoticons (In the core?) - Yes, the core, for all us access hoes ;)
+//Emoticons ---------------------------------------------------------------------------------------------
+#pragma mark Emoticons
 //emoticonPacks is an array of all AIEmoticonPack objects that are active, maintained by the Emoticons plugin
 // primary use: emoticon menu for grouping by pack, if you find another, congrats!
 - (void)setEmoticonPacks:(NSArray *)inEmoticonPacks
