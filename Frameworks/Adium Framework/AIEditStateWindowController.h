@@ -39,8 +39,6 @@
 	IBOutlet	NSTextField		*textField_idleMinutes;
 	IBOutlet	NSTextField		*textField_idleHours;
 
-	IBOutlet	NSButton		*checkbox_invisible;
-	
 	IBOutlet	NSButton		*button_save;
 	IBOutlet	NSButton		*button_cancel;
 	IBOutlet	NSButton		*button_OK;

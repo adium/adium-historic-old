@@ -249,7 +249,6 @@
 	current = [self _positionControl:checkbox_autoReply relativeTo:current height:&height];
 	current = [self _positionControl:checkbox_customAutoReply relativeTo:current height:&height];
 	current = [self _positionControl:scrollView_autoReply relativeTo:current height:&height];
-	current = [self _positionControl:checkbox_invisible relativeTo:current height:&height];
 	current = [self _positionControl:checkbox_idle relativeTo:current height:&height];
 	current = [self _positionControl:box_idle relativeTo:current height:&height];
 	
