@@ -29,7 +29,7 @@
 - (BOOL)becomeFirstResponder
 {
     BOOL shouldBecomeFirstResponder;
-    if (shouldBecomeFirstResponder = [super becomeFirstResponder]){
+    if ((shouldBecomeFirstResponder = [super becomeFirstResponder])){
         if ([[self string] isEqualToString:placeholder]){
             [self setString:@""];
             [self setTextColor:[NSColor blackColor]];
@@ -40,7 +40,7 @@
 - (BOOL)resignFirstResponder
 {
     BOOL shouldResignFirstResponder;
-    if (shouldResignFirstResponder = [super resignFirstResponder]){
+    if ((shouldResignFirstResponder = [super resignFirstResponder])){
         if ([[self string] isEqualToString:@""]){
             [self setString:placeholder];
             [self setTextColor:[NSColor disabledControlTextColor]];

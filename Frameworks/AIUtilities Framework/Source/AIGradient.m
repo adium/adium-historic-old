@@ -73,7 +73,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 			 secondColor:(NSColor*)inColor2
 			   direction:(AIDirection)inDirection
 {
-	if (self = [self init]) {
+	if ((self = [self init])) {
 		[self setFirstColor:inColor1];
 		[self setSecondColor:inColor2];
 		[self setDirection:inDirection];

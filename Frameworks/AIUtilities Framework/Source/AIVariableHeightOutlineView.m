@@ -467,7 +467,7 @@
 			NSEnumerator	*enumerator = [self selectedRowEnumerator];
 			NSNumber		*rowNumber;
 
-			while(rowNumber = [enumerator nextObject]){
+			while((rowNumber = [enumerator nextObject])){
 				[self _drawRowSelectionInRect:[self rectOfRow:[rowNumber intValue]]];
 			}
 		}

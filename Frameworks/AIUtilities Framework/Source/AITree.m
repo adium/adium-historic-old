@@ -163,7 +163,7 @@ static CFTreeContext treeContextForObjCObjects = {
 	if(!nextCFTree) return nil;
 	else return [[self class] treeWithCFTree:nextCFTree createIfNecessary:flag];
 }
-- (AITree *)insertSibling:(AITree *)other {
+- (void)insertSibling:(AITree *)other {
 	NSParameterAssert(other != nil);
 	CFTreeInsertSibling(backing, [other cfTree]);
 }

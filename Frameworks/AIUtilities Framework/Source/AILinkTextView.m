@@ -119,7 +119,7 @@
 		if(!menu) menu = [[[NSMenu alloc] init] autorelease];
 		
 		enumerator = [linkMenuItems reverseObjectEnumerator];
-		while(menuItem = [enumerator nextObject]){
+		while((menuItem = [enumerator nextObject])){
 			[menu insertItem:menuItem atIndex:0];
 		}
 	}

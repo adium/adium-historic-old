@@ -55,7 +55,7 @@
 		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
 		
 		for(i = 0; i != bufSize; i++){
-			if(item = [sourceArray objectAtIndex:buf[i]]){
+			if((item = [sourceArray objectAtIndex:buf[i]])){
 				[itemArray addObject:item];
 			}
 		}
@@ -66,8 +66,8 @@
 		NSEnumerator 	*enumerator = [self selectedRowEnumerator]; 
 		NSNumber 		*row;
 		
-		while(row = [enumerator nextObject]){
-			if(item = [sourceArray objectAtIndex:[row intValue]]){
+		while((row = [enumerator nextObject])){
+			if((item = [sourceArray objectAtIndex:[row intValue]])){
 				[itemArray addObject:item]; 
 			}
 		} 

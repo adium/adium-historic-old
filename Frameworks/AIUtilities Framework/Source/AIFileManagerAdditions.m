@@ -74,7 +74,7 @@
 	dirPath = [dirPath stringByExpandingTildeInPath];
 	
 	enumerator = [[self directoryContentsAtPath:dirPath] objectEnumerator];
-	while(fileName = [enumerator nextObject]){
+	while((fileName = [enumerator nextObject])){
 		if([fileName hasPrefix:prefix]){
 			NSString	*path = [dirPath stringByAppendingPathComponent:fileName];
 			

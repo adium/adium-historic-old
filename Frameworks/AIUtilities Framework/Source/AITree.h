@@ -48,7 +48,7 @@
 
 - (AITree *)nextSibling;
 - (AITree *)nextSiblingCreatingAITreeIfNecessary:(BOOL)flag;
-- (AITree *)insertSibling:(AITree *)other;
+- (void)insertSibling:(AITree *)other;
 
 - (void)remove;
 
