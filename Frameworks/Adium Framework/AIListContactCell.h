@@ -8,6 +8,18 @@
 #import "AIListCell.h"
 #import "AIListLayoutWindowController.h"
 
+//User Icon
+#define USER_ICON_LEFT_PAD			2
+#define USER_ICON_RIGHT_PAD			2
+
+//Status icon
+#define STATUS_ICON_LEFT_PAD		2
+#define STATUS_ICON_RIGHT_PAD		2
+
+//Service icon
+#define SERVICE_ICON_LEFT_PAD		2
+#define SERVICE_ICON_RIGHT_PAD		2
+
 @interface AIListContactCell : AIListCell {
 	BOOL				userIconVisible;
 	BOOL				extendedStatusVisible;

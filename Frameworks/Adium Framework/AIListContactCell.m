@@ -13,18 +13,6 @@
 
 #define NAME_STATUS_PAD			6
 
-//User Icon
-#define USER_ICON_LEFT_PAD			3
-#define USER_ICON_RIGHT_PAD			3
-
-//Status icon
-#define STATUS_ICON_LEFT_PAD		2
-#define STATUS_ICON_RIGHT_PAD		3
-
-//Service icon
-#define SERVICE_ICON_LEFT_PAD		2
-#define SERVICE_ICON_RIGHT_PAD		3
-
 #define HULK_CRUSH_FACTOR 1
 
 
@@ -113,7 +101,7 @@
 	if(userIconVisible){
 		width += userIconSize.width;
 		width += USER_ICON_LEFT_PAD + USER_ICON_RIGHT_PAD;
-	}	
+	}
 	
 	//Status icon
 	if(statusIconsVisible &&
@@ -125,7 +113,7 @@
 
 	//Service icon
 	if(serviceIconsVisible &&
-	   (serviceIconsVisible != LIST_POSITION_BADGE_LEFT && serviceIconsVisible != LIST_POSITION_BADGE_RIGHT)){
+	   (serviceIconPosition != LIST_POSITION_BADGE_LEFT && serviceIconPosition != LIST_POSITION_BADGE_RIGHT)){
 		width += [[self serviceImage] size].width;
 		width += SERVICE_ICON_LEFT_PAD + SERVICE_ICON_RIGHT_PAD;
 	}
@@ -325,14 +313,14 @@
 	if(statusIconPosition == LIST_POSITION_LEFT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_LEFT];
 	if(serviceIconPosition == LIST_POSITION_LEFT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_LEFT];
 	
-	//Right
+	//Far Right
 	if(statusIconPosition == LIST_POSITION_FAR_RIGHT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	if(serviceIconPosition == LIST_POSITION_FAR_RIGHT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	
 	//User Icon [Right]
 	if(userIconPosition == LIST_POSITION_RIGHT) rect = [self drawUserIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	
-	//Far Right
+	//Right
 	if(statusIconPosition == LIST_POSITION_RIGHT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	if(serviceIconPosition == LIST_POSITION_RIGHT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	
@@ -368,22 +356,31 @@
 						  atSize:userIconSize
 						position:position
 						fraction:[self imageOpacityForDrawing]];
+		
+		//If we're using space on the left, shift the origin right
 		if(position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_LEFT_PAD;
+		rect.size.width -= USER_ICON_LEFT_PAD;
 		
 		//Badges
 		drawRect = [image rectForDrawingInRect:inRect
 										atSize:userIconSize
 									  position:position];
-		if(statusIconPosition == LIST_POSITION_BADGE_LEFT)
+		if(statusIconPosition == LIST_POSITION_BADGE_LEFT){
 			[self drawStatusIconInRect:drawRect position:IMAGE_POSITION_LOWER_LEFT];
-		if(statusIconPosition == LIST_POSITION_BADGE_RIGHT)
+		}else if(statusIconPosition == LIST_POSITION_BADGE_RIGHT){
 			[self drawStatusIconInRect:drawRect position:IMAGE_POSITION_LOWER_RIGHT];
-		if(serviceIconPosition == LIST_POSITION_BADGE_LEFT)
+		}
+		
+		if(serviceIconPosition == LIST_POSITION_BADGE_LEFT){
 			[self drawServiceIconInRect:drawRect position:IMAGE_POSITION_LOWER_LEFT];
-		if(serviceIconPosition == LIST_POSITION_BADGE_RIGHT)
+		}else if(serviceIconPosition == LIST_POSITION_BADGE_RIGHT){
 			[self drawServiceIconInRect:drawRect position:IMAGE_POSITION_LOWER_RIGHT];
-								
-		if(position == IMAGE_POSITION_RIGHT) rect.size.width += USER_ICON_RIGHT_PAD;
+		}
+		
+		//If we're using space on the right, shrink the width so we won't be overlapped
+//		if(position == IMAGE_POSITION_RIGHT) rect.size.width -= USER_ICON_RIGHT_PAD;
+		if(position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_RIGHT_PAD;
+		rect.size.width -= USER_ICON_RIGHT_PAD;
 	}
 	
 	return(rect);
