@@ -20,7 +20,7 @@
 #
 # Its record in the loginfo file should look like:
 #
-#       ALL        $CVSROOT/CVSROOT/ciabot.pl %{} %s $USER project from_email dest_email ignore_regexp
+#       ALL        $CVSROOT/CVSROOT/ciabot.pl %{,,,s} $USER project from_email dest_email ignore_regexp
 #
 # Note that the last four parameters are optional, you can alternatively change
 # the defaults below in the configuration section.
@@ -28,7 +28,7 @@
 # If it does not work, try to disable $xml_rpc in the configuration section
 # below.
 #
-# $Id: ciabot.pl,v 1.14 2004/01/22 23:25:42 ramoth4 Exp $
+# $Id: ciabot.pl,v 1.15 2004/01/23 03:25:33 ramoth4 Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $rpc_uri $sendmail $sync_delay
@@ -109,10 +109,9 @@ my @dirfiles;  # This array is mapped to the @dir array and contains files
 # These arguments are from %s; first the relative path in the repository
 # and then the list of files modified.
 
-@files = split (' ', ($ARGV[1] or ''));
-unshift @files, $ARGV[0];
+@files = split (' ,,,', ($ARGV[0] or ''));
 $dir[0] = shift @files or die "$0: no directory specified\n";
-$dirfiles[0] = "@files" or die "$0: no files specified\n";
+$dirfiles[0] = join (' ,,,', @files) or die "$0: no files specified\n";
 
 
 # Guess module name.
@@ -122,15 +121,15 @@ $module = $dir[0]; $module =~ s#/.*##;
 
 # Figure out who is doing the update.
 
-$user = $ARGV[2];
+$user = $ARGV[1];
 
 
 # Use the optional parameters, if supplied.
 
-$project = $ARGV[3] if $ARGV[3];
-$from_email = $ARGV[4] if $ARGV[4];
-$dest_email = $ARGV[5] if $ARGV[5];
-$ignore_regexp = $ARGV[6] if $ARGV[6];
+$project = $ARGV[2] if $ARGV[2];
+$from_email = $ARGV[3] if $ARGV[3];
+$dest_email = $ARGV[4] if $ARGV[4];
+$ignore_regexp = $ARGV[5] if $ARGV[5];
 
 
 # Parse stdin (what's interesting is the tag and log message)
@@ -250,7 +249,7 @@ for (my $dirnum = 0; $dirnum < @dir; $dirnum++) {
     s/</&lt;/g;
     s/>/&gt;/g;
     $message .= "  <file>$_</file>\n";
-  } split(/ /, $dirfiles[$dirnum]);
+  } split(' ,,,', $dirfiles[$dirnum]);
 }
 
 $message .= <<EM
