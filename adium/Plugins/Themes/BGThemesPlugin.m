@@ -91,7 +91,6 @@
         [self applyPreferenceFromKey:key inDict:updateTheme];
     }
     [[adium preferenceController] delayPreferenceChangedNotifications:NO];
-    [themePane applyDone];
 }
 
 @end

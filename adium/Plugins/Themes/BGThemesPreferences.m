@@ -33,10 +33,10 @@
 
 - (void)viewDidLoad
 {
-    [nameField setObjectValue:@""];
-    [createStatus setObjectValue:@""];
-    [manageStatus setObjectValue:@""];
     [themesList setPlugin:themePlugin];
+    //Configure our buttons
+    [createButton setImage:[AIImageUtilities imageNamed:@"plus" forClass:[self class]]];
+    [removeButton setImage:[AIImageUtilities imageNamed:@"minus" forClass:[self class]]];    
 }
 
 - (void)viewWillClose
@@ -46,46 +46,41 @@
 
 -(IBAction)createTheme:(id)sender
 {
-    // tell the plugin to create a theme using all the attributes of the create tab
-    if([nameField objectValue] == @"" || [nameField objectValue] == @" ") // sadly doesn't catch all invalid instances :(
+    [createWindow makeKeyAndOrderFront:createWindow];
+}
+
+-(IBAction)createAction:(id)sender
+{
+    if([sender tag] == 0)
     {
-        NSRunAlertPanel(@"No theme name entered",@"A valid name is required to save a theme. Please enter one before saving.",@"Return",nil,nil);
+        [createWindow orderOut:createWindow];
     }
-    else
+    if([sender tag] == 1)
     {
-        [themePlugin createThemeNamed:[nameField objectValue] by:[authorField objectValue] version:[versionField objectValue]];
+        // tell the plugin to create a theme using all the attributes of the create tab
+        if([nameField objectValue] == @"" || [nameField objectValue] == @" ") // sadly doesn't catch all invalid instances :(
+        {
+            NSRunAlertPanel(@"No theme name entered",@"A valid name is required to save a theme. Please enter one before saving.",@"Return",nil,nil);
+        }
+        else
+        {
+            [themePlugin createThemeNamed:[nameField objectValue] by:[authorField objectValue] version:[versionField objectValue]];
+        }
+        [nameField setObjectValue:@""];
+        [authorField setObjectValue:@""];
+        [versionField setObjectValue:@""];
+        [createWindow orderOut:createWindow];
     }
 }
 
 -(void)createDone
 {
-    [createStatus setObjectValue:@"New theme created."];
     [[adium notificationCenter] postNotificationName:Themes_Changed object:nil];
-}
-
--(void)applyStart // in theory this should be kind enough to start the UI when applying
-{
-    [manageStatus setObjectValue:@"Applying theme... one moment please"];
-}
-
--(void)applyDone // in theory this should be kind enough to refresh the UI when done applying
-{
-    [manageStatus setObjectValue:@"New theme applied. Enjoy."]; 
 }
 
 -(void)setPlugin:(id)newPlugin
 {
     themePlugin = newPlugin;
-}
-
--(IBAction)generatePreview:(id)sender
-{
-    NSLog(@"where's my screenshot?");
-}
-
--(IBAction)openThemesFolder:(id)sender
-{
-    [[NSWorkspace sharedWorkspace] openFile:THEME_PATH withApplication:@"Finder"];
 }
 
 @end

@@ -23,6 +23,7 @@
     [self buildThemesList];
     [table setDrawsAlternatingRows:YES];
     [table setTarget:self];
+    [table setDoubleAction:@selector(applyTheme:)];
     [table reloadData];	
     [[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self selector:@selector(themesChanged:) name:Themes_Changed object:nil];
 }
@@ -130,11 +131,11 @@
 {
     if ([themes count] == 0) { // themes aren't present
         [removeButton setEnabled:NO];
-        [applyButton setEnabled:NO];
+        //[applyButton setEnabled:NO];
     }
     else {
         [removeButton setEnabled:YES];
-        [applyButton setEnabled:YES];
+        //[applyButton setEnabled:YES];
     }
 }
 

@@ -6,6 +6,7 @@
             SUPERCLASS = NSTableView; 
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIPreferencePane; 
@@ -25,8 +26,6 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 applyButton = NSButton; 
-                previewName = NSTextField; 
-                previewWindow = NSWindow; 
                 removeButton = NSButton; 
                 table = AIAlternatingRowTableView; 
                 themesPlugin = id; 
@@ -41,20 +40,16 @@
             SUPERCLASS = AIAlternatingRowTableView; 
         }, 
         {
-            ACTIONS = {createTheme = id; generatePreview = id; openThemesFolder = id; }; 
+            ACTIONS = {createAction = id; createTheme = id; openThemesFolder = id; }; 
             CLASS = BGThemesPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                applyPreview = NSImageView; 
                 authorField = NSTextField; 
-                createButton = NSButton; 
-                createPreview = NSImageView; 
-                createStatus = NSTextField; 
-                generatePreviewButton = NSButton; 
-                manageStatus = NSTextField; 
+                createButton = AIPlasticButton; 
+                createWindow = NSWindow; 
                 nameField = NSTextField; 
+                removeButton = AIPlasticButton; 
                 themePlugin = id; 
-                themesFolderButton = NSButton; 
                 themesList = BGThemeManageView; 
                 versionField = NSTextField; 
             }; 
