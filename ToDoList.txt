@@ -77,13 +77,9 @@
 - If you connect, change a server setting, disconnect, then reconnect, we still use the old server setting.
 	Specifically seen this with Jabber, switching from one jabber server to another.
 
-[Growl]
-- Growl sticky support [Colin]
-
 [Contacts]
 - Investigate Add Contact safety
 - Automatically respond YES to the MSN Synchronization dialog.  It's a stupid dialog and you would never want to say NO to it. [Evan]
-- Finish Blocking [Colin]
 
 //Flashing reduction [Evan (now that I have Growl, I'm sick of flashing, it's very OS 9)]
   Make it possible to use Adium without any distracting flashing and blinking
@@ -93,8 +89,7 @@
 - Duplicate send/receive bug needs fixing
 
 [Menu Items]
-- Block/Unblock as a single menu item [Colin]
-- Block/Unblock should change titles dynamically
+- Block/Unblock should change titles dynamically [Colin]
 
 [OTR]
 - Fingerprint management? (advanced)
