@@ -21,10 +21,21 @@
  * @brief Notifies the delegate of a new image
  *
  * Notifies the delegate of a new image selected by the user (which may have been set in any of the ways explained in the class description).
+ * This may not provide information as worthwhile as imageViewWithImagePicker:didChangeToImageData:, which is the recommended method to implement
  * @param picker The <tt>ESImageViewWithImagePicker</tt> which changed
  * @param image An <tt>NSImage</tt> of the new image
  */
 - (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)picker didChangeToImage:(NSImage *)image;
+
+/*!
+ * imageViewWithImagePicker:didChangeToImageData:
+ * @brief Notifies the delegate of a new image
+ *
+ * Notifies the delegate of a new image selected by the user (which may have been set in any of the ways explained in the class description).
+ * @param picker The <tt>ESImageViewWithImagePicker</tt> which changed
+ * @param image An <tt>NSData</tt> with data for the new image
+ */
+- (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)picker didChangeToImageData:(NSData *)imageData;
 
 /*!
  *  deleteInImageViewWithImagePicker:
@@ -64,6 +75,8 @@
 	NSString				*title;
 	
 	BOOL					useNSImagePickerController;
+	BOOL					imagePickerClassIsAvailable;
+
 	IBOutlet	id			delegate;
 	
 	BOOL					shouldDrawFocusRing;
@@ -100,5 +113,12 @@
  * Displays the image picker window.  This is automatically invoked when the image view is double clicked
  */ 
 - (IBAction)showImagePicker:(id)sender;
+
+/*!
+ * @brief Should the image view use the address book Image Picker?
+ *
+ * If NO, a standard Open panel is used instead.
+ */
+- (void)setUseNSImagePickerController:(BOOL)inUseNSImagePickerController;
 
 @end
