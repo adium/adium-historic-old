@@ -34,7 +34,7 @@
 {
 	ESPresetManagementController	*controller;
 	
-	NSParameterAssert([inDelegate respondsToSelector:@selector(renamePreset:toName:inPresets:)]);
+	NSParameterAssert([inDelegate respondsToSelector:@selector(renamePreset:toName:inPresets:renamedPreset:)]);
 	NSParameterAssert([inDelegate respondsToSelector:@selector(duplicatePreset:inPresets:createdDuplicate:)]);
 	NSParameterAssert([inDelegate respondsToSelector:@selector(deletePreset:inPresets:)]);
 	
@@ -132,7 +132,18 @@
 		id duplicatePreset, selectedPreset;
 		int duplicatePresetIndex;
 		
+		//Finish any editing before continuing
+		NSLog(@"validate %@ and rename to %@",
+			  [[presets objectAtIndex:selectedRow] objectForKey:@"name"],
+			  [[[[tableView_presets currentEditor] string] copy] autorelease]);
+		
+		//[tableView_presets validateEditing] doesn't work?
+		[tableView_presets validateEditing];
+		[tableView_presets abortEditing];
+
 		selectedPreset = [presets objectAtIndex:selectedRow];
+		
+		NSLog(@"begin duplicate %@",[selectedPreset objectForKey:@"name"]);
 		
 		//Inform the delegate of the duplicate request
 		NSArray	*newPresets;
@@ -143,16 +154,21 @@
 		[presets autorelease]; presets = [newPresets retain];
 		
 		//The delegate returned a potentially changed presets array; reload table data
+		NSLog(@"now reload for duplicate %@",[duplicatePreset objectForKey:@"name"]);
 		[tableView_presets reloadData];
 
 		//Set up for a rename of the new duplicate if possible
-		duplicatePresetIndex = [presets indexOfObject:duplicatePreset];
-		if(duplicatePresetIndex != NSNotFound){
-			[tableView_presets selectRow:duplicatePresetIndex byExtendingSelection:NO];
-			[tableView_presets editColumn:0
-									  row:duplicatePresetIndex
-								withEvent:nil
-								   select:YES];
+		if(duplicatePreset){
+			duplicatePresetIndex = [presets indexOfObject:duplicatePreset];
+			if(duplicatePresetIndex != NSNotFound){
+				[tableView_presets selectRow:duplicatePresetIndex byExtendingSelection:NO];
+				[tableView_presets editColumn:0
+										  row:duplicatePresetIndex
+									withEvent:nil
+									   select:YES];
+			}
+		}else{
+			NSLog(@"Failed to retrieve duplicate preset while duplicating %@ in %@",selectedPreset,presets);
 		}
 	}	
 }
@@ -164,6 +180,9 @@
 {
 	int selectedRow = [tableView_presets selectedRow];
 	if(selectedRow != -1){
+		//Abort any editing before continuing
+		[tableView_presets abortEditing];
+
 		id selectedPreset = [presets objectAtIndex:selectedRow];
 
 		//Inform the delegate of the deletion
@@ -249,17 +268,35 @@
 - (void)tableView:(NSTableView *)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn *)aTableColumn row:(int)row
 {
 	if([anObject isKindOfClass:[NSString class]]){
-		id	preset = [presets objectAtIndex:row];
-		
-		//Inform the delegate of the rename
-		NSArray	*newPresets;
+		id			preset = [presets objectAtIndex:row];
+		NSString	*oldName = nil;
 
-		newPresets = [delegate renamePreset:preset toName:(NSString *)anObject inPresets:presets];
-		[presets autorelease]; presets = [newPresets retain];
-		
-		//The delegate returned a potentially changed presets array; reload table data
-		[tableView_presets reloadData];
-	}
+		if([preset isKindOfClass:[NSDictionary class]]){
+			oldName = [preset objectForKey:(nameKey ? nameKey : @"Name")];
+
+		}else if([preset isKindOfClass:[NSString class]]){
+			oldName = preset;
+		}
+
+		if(![(NSString *)anObject isEqualToString:oldName]){
+			//Inform the delegate of the rename
+			NSArray	*newPresets;
+			id			renamedPreset;
+			
+			NSLog(@"Rename  to %@ : old was %@ %i",anObject,[preset objectForKey:@"name"],[presets indexOfObjectIdenticalTo:preset]);
+			
+			newPresets = [delegate renamePreset:preset toName:(NSString *)anObject inPresets:presets renamedPreset:&renamedPreset];
+			[presets autorelease]; presets = [newPresets retain];
+			
+			//The delegate returned a potentially changed presets array; reload table data
+			[tableView_presets reloadData];
+			
+			NSLog(@"Rename : new index %i",[presets indexOfObjectIdenticalTo:renamedPreset]);
+			
+			//Select the new row
+			[tableView_presets selectRow:[presets indexOfObjectIdenticalTo:renamedPreset] byExtendingSelection:NO];
+		}
+	}		
 }
 
 /*!
