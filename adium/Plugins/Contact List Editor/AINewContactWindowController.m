@@ -41,8 +41,10 @@
 	newContactWindow = [[self alloc] initWithWindowNibName:ADD_CONTACT_PROMPT_NIB];
 	[newContactWindow setContactName:contact];
 	[newContactWindow setServiceID:inServiceID];
-		
+	
 	if(parentWindow){
+		[parentWindow makeKeyAndOrderFront:nil];
+		
 		[NSApp beginSheet:[newContactWindow window]
 		   modalForWindow:parentWindow
 			modalDelegate:newContactWindow
@@ -50,6 +52,7 @@
 			  contextInfo:nil];
 	}else{
 		[newContactWindow showWindow:nil];
+		[[newContactWindow window] makeKeyAndOrderFront:nil];
 	}
 	
 }

@@ -146,6 +146,7 @@
 	AIListObject   *object = [[adium menuController] contactualMenuContact];
 	if (object){
 		NSArray		*array = [NSArray arrayWithObject:object];
+		[NSApp activateIgnoringOtherApps:YES];
 		[self deleteFromArray:array];
 	}
 }
