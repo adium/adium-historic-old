@@ -140,13 +140,6 @@
 	}
 }
 
-
-
-
-
-
-
-
 - (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar
 {
 	NSString		*stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" ofType:@"html"] stringByDeletingLastPathComponent];
@@ -217,14 +210,16 @@
         if(range.location != NSNotFound){
            [inString replaceCharactersInRange:range withString:[[content source] serviceID]];
         }
-        
+#warning This disables any fonts in the webkit view other than what is specified by the template.
         range = [inString rangeOfString:@"%message"];
         if(range.location != NSNotFound){
             // Using a safeString so image attachments are removed
             // while waiting for a permanent fix that would allows us to use emoticons
             [inString replaceCharactersInRange:range withString:
               [AIHTMLDecoder encodeHTML:[[(AIContentMessage *)content message] safeString]
-                  headers:NO fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES imagesPath:nil]];
+                  headers:NO fontTags:NO closeFontTags:NO styleTags:YES 
+                  closeStyleTagsOnFontChange:NO encodeNonASCII:YES 
+                  imagesPath:nil]];
         }
         
         range = [inString rangeOfString:@"%time"];
@@ -232,12 +227,10 @@
                 [inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentMessage *)content date]]];
         }
 	} else {
+#warning Statuses should be able to know what kind of status it is, for class="away" style tags.
         range = [inString rangeOfString:@"%message"];
         if(range.location != NSNotFound){
-            NSAttributedString *attrMessage = [[[NSAttributedString alloc] initWithString:[(AIContentStatus *)content message]] autorelease];
-            [inString replaceCharactersInRange:range withString:
-              [AIHTMLDecoder encodeHTML:attrMessage
-                  headers:NO fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES imagesPath:nil]];
+            [inString replaceCharactersInRange:range withString:[(AIContentStatus *)content message]];
         }
         
         range = [inString rangeOfString:@"%time"];
