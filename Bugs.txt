@@ -23,7 +23,6 @@
 	alignment, status icons, service icons, user icons).  Will disable all
 	those options when using bubble-to-fit for now (pending a real solution,
 	if somebody can think of one)
-- Metacontacts display no service icon
 - Metacontact drawer is using the user's text coloring, it should be using
 	the coloring defined in its theme file instead.  This is due to how coloring
 	is applied to contacts by a separate plugin, instead of being derived from
@@ -38,10 +37,6 @@
 [Will not do]
 - Create default layouts & styles for the contact list preferences
 - What to do with contact list bottom bar?
-- Double clicking two names in succession causes the first name to highlight
-    the second time. (wordsaboutmehere)
-- [Jeff] Dragging an image to the background of the message preference tries to
-  send me that file.
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
@@ -59,6 +54,9 @@
 - Why oh why doesn't our image picker window remember its position whatsoever?
 
 - Autoresponses are sent twice when we are also idle.
+
+- Double clicking two names in succession causes the first name to highlight
+    the second time. (wordsaboutmehere)
 	
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
