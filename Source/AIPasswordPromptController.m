@@ -46,9 +46,7 @@
 
 - (void)windowDidLoad
 {
-	NSWindow *window = [self window];
-
-	[window center];
+	[[self window] center];
 }
 
 - (NSString *)savedPasswordKey
