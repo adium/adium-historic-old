@@ -261,32 +261,43 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 }
 
 //Generate a plain-text string representing a content message
+#define AUTOREPLY AILocalizedString(@" (Autoreply)",nil)
 - (NSString *)stringForContentMessage:(AIContentMessage *)content
 {
-	NSString		*date = [[content date] descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
+	NSString		*date = [[content date] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES
+																													 showingAMorPM:NO]
+																 timeZone:nil
+																   locale:nil];
 	NSAttributedString      *message = [[content message] safeString];
-	AIListObject		*source = [content source];
-	NSString		*logString = nil;
+	AIListObject			*source = [content source];
+	NSString				*logString = nil;
 
 	if(date && message && source){
 		if(logHTML){
-			logString = [NSString stringWithFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@: </span><pre class=\"message\">%@</pre></div>\n",
-				([content isOutgoing] ? @"send" : @"receive"), date, [source UID],
+			logString = [NSString stringWithFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@%@: </span><pre class=\"message\">%@</pre></div>\n",
+				([content isOutgoing] ? @"send" : @"receive"), 
+				date,
+				[source UID], 
+				([content isAutoreply] ? AUTOREPLY : @""),
 				[AIHTMLDecoder encodeHTML:message
-                                                  headers:NO 
-                                                 fontTags:NO 
-                                       includingColorTags:YES
-                                            closeFontTags:NO 
-                                                styleTags:YES
-                               closeStyleTagsOnFontChange:YES
-                                           encodeNonASCII:YES
-                                             encodeSpaces:NO
-                                               imagesPath:nil
-                                        attachmentsAsText:YES 
-                           attachmentImagesOnlyForSending:NO 
-                                           simpleTagsOnly:NO]];
+								  headers:NO 
+								 fontTags:NO 
+					   includingColorTags:YES
+							closeFontTags:NO 
+								styleTags:YES
+			   closeStyleTagsOnFontChange:YES
+						   encodeNonASCII:YES
+							 encodeSpaces:NO
+							   imagesPath:nil
+						attachmentsAsText:YES 
+		   attachmentImagesOnlyForSending:NO 
+						   simpleTagsOnly:NO]];
 		}else{
-			logString = [NSString stringWithFormat:@"(%@) %@: %@\n", date, [source UID], [message string]];
+			logString = [NSString stringWithFormat:@"(%@) %@%@: %@\n",
+				date,
+				[source UID],
+				([content isAutoreply] ? AUTOREPLY : @""),
+				[message string]];
 		}
 	}
 
@@ -296,7 +307,10 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Generate a plain-text string representing a status message
 - (NSString *)stringForContentStatus:(AIContentStatus *)content
 {
-	NSString		*date = [[content date] descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
+	NSString		*date = [[content date] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES
+																													 showingAMorPM:NO]
+																 timeZone:nil
+																   locale:nil];
 	NSString		*message = [[content message] string];
 	NSString		*logString = nil;
 
