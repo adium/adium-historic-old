@@ -16,7 +16,11 @@
 #import "AIVolumeControlPreferences.h"
 #import "AIVolumeControlPlugin.h"
 
-#define DEFAULT_VOLUME 0.5
+#define DEFAULT_VOLUME 1.0
+
+@interface AIVolumeControlPreferences(PRIVATE)
+- (NSMenu *)outputDeviceMenu;
+@end
 
 @implementation AIVolumeControlPreferences
 
@@ -36,12 +40,16 @@
 {
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
     
-	[checkbox_useCustomVolume setState:[[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] boolValue]];
+	[popUp_outputDevice setMenu:[self outputDeviceMenu]];
+	
+//	[checkbox_useCustomVolume setState:[[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] boolValue]];
     if([[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue] == YES){
         [slider_volume setFloatValue:0.0];
     }else{
         [slider_volume setFloatValue:[[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]];
     }
+	
+	[button_muteWhileAway setState:[[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
 
     [self configureControlDimming];
 }
@@ -79,16 +87,52 @@
 //Apply a changed controls
 - (IBAction)changePreference:(id)sender
 {
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkbox_useCustomVolume state]]
-										 forKey:KEY_SOUND_USE_CUSTOM_VOLUME
-										  group:PREF_GROUP_SOUNDS];
+	if (sender == popUp_outputDevice){
+		SoundDeviceType soundType = [[popUp_outputDevice selectedItem] tag];
+		
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:soundType]
+											 forKey:KEY_SOUND_SOUND_DEVICE_TYPE
+											  group:PREF_GROUP_SOUNDS];
+		
+	}else if (sender == button_muteWhileAway){
+		[[adium preferenceController] setPreference: [NSNumber numberWithBool:[button_muteWhileAway state]]
+											 forKey:KEY_EVENT_MUTE_WHILE_AWAY
+											  group:PREF_GROUP_SOUNDS];
+	}else if (sender == checkbox_useCustomVolume){
+		//No longer used
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkbox_useCustomVolume state]]
+											 forKey:KEY_SOUND_USE_CUSTOM_VOLUME
+											  group:PREF_GROUP_SOUNDS];
+	}
 	[super changePreference:sender];
+}
+
+- (NSMenu *)outputDeviceMenu
+{
+	NSMenu		*outputDeviceMenu = [[NSMenu alloc] init];
+	NSMenuItem  *menuItem;
+	
+	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"System Output Device",nil)
+										   target:nil
+										   action:nil
+									keyEquivalent:@""] autorelease];
+	[menuItem setTag:SOUND_SYTEM_OUTPUT_DEVICE];                
+	[outputDeviceMenu addItem:menuItem];
+	
+	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"System Alert Device",nil)
+										   target:nil
+										   action:nil
+									keyEquivalent:@""] autorelease];
+	[menuItem setTag:SOUND_SYTEM_ALERT_DEVICE];                
+	[outputDeviceMenu addItem:menuItem];
+	
+	return ([outputDeviceMenu autorelease]);
 }
 
 //Configure control dimming
 - (void)configureControlDimming
 {
-    [slider_volume setEnabled:[checkbox_useCustomVolume state]];
+ //   [slider_volume setEnabled:[checkbox_useCustomVolume state]];
 }
 
 @end
