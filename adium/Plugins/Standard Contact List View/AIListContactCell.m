@@ -198,6 +198,12 @@
 	labelFontHeight = [labelString heightWithWidth:1e7];
 }
 
+//
+- (void)setBackgroundColorIsStatus:(BOOL)isStatus
+{
+	backgroundColorIsStatus = isStatus;
+}
+
 
 //Drawing --------------------------------------------------------------------------------------------------------------
 #pragma mark Drawing
@@ -234,6 +240,16 @@
 	rect = [self drawDisplayNameWithFrame:rect];
 	if(!drawUnder) rect = [self drawUserExtendedStatusInRect:rect drawUnder:drawUnder];
 	
+}
+
+//Draw the background of our cell
+- (void)drawBackgroundWithFrame:(NSRect)rect
+{
+	NSColor	*labelColor = [self labelColor];
+	if(labelColor){
+		[labelColor set];
+		[NSBezierPath fillRect:rect];
+	}
 }
 
 //User Icon
@@ -363,8 +379,12 @@
 //Contact label color
 - (NSColor *)labelColor
 {
-	NSColor *labelColor = [[listObject displayArrayForKey:@"Label Color"] objectValue];
-	return([labelColor colorWithAlphaComponent:backgroundOpacity]);
+	if(backgroundColorIsStatus){
+		NSColor *labelColor = [[listObject displayArrayForKey:@"Label Color"] objectValue];
+		return([labelColor colorWithAlphaComponent:backgroundOpacity]);
+	}else{
+		return(nil);
+	}
 }
 
 //Contact text color
@@ -403,6 +423,12 @@
 - (BOOL)drawStatusBelowLabelInRect:(NSRect)rect
 {
 	return(labelFontHeight + statusFontHeight - HULK_CRUSH_FACTOR <= rect.size.height);
+}
+
+//No need to the grid if we have a status color to draw
+- (BOOL)drawGridBehindCell
+{
+	return([self labelColor] == nil);
 }
 
 @end

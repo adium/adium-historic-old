@@ -6,9 +6,9 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
-#import "AIListContactBrickCell.h"
+#import "AIListContactCell.h"
 
-@interface AIListContactMockieCell : AIListContactBrickCell {
+@interface AIListContactMockieCell : AIListContactCell {
 
 }
 

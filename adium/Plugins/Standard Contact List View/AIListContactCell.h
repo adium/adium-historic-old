@@ -17,6 +17,8 @@
 	int			userIconSize;
 	int			statusFontHeight;
 	int			labelFontHeight;
+	
+	BOOL		backgroundColorIsStatus;
 
 	BOOL		userIconPosition;
 	BOOL		statusIconPosition;

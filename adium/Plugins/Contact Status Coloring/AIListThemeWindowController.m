@@ -161,6 +161,7 @@
     [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor]];	
 	[slider_backgroundFade setFloatValue:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]];
 	[checkBox_drawGrid setState:[[preferenceDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
+	[checkBox_backgroundAsStatus setState:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_AS_STATUS] boolValue]];
 	
 	[self updateSliderValues];
 	[self configureControlDimming];
@@ -379,6 +380,12 @@
     }else if(sender == colorWell_groupShadow){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR
+                                              group:PREF_GROUP_LIST_THEME];
+		[preview_groupInverted setNeedsDisplay:YES];
+		
+    }else if(sender == checkBox_backgroundAsStatus){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LIST_THEME_BACKGROUND_AS_STATUS
                                               group:PREF_GROUP_LIST_THEME];
 		[preview_groupInverted setNeedsDisplay:YES];
 		
