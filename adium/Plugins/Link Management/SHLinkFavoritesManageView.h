@@ -17,6 +17,7 @@
                 int                          favoriteCount;
 }
 - (NSString *)selectedLink;
+- (int)favoritesCount;
 - (void)buildLinksList;
 - (void)openLinkInBrowser:(id)sender;
 

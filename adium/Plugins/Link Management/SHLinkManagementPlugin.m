@@ -28,8 +28,11 @@
     [contextMenu_EditLink setKeyEquivalent:@""];
     [[adium menuController] addContextualMenuItem:contextMenu_EditLink toLocation:Context_TextView_LinkAction];
     
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LINK_MANAGEMENT_DEFAULTS forClass:[self class]]
+    if(![[adium preferenceController] preferenceForKey:INITAL_FAVES group:PREF_GROUP_GENERAL]){
+        [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LINK_MANAGEMENT_DEFAULTS forClass:[self class]]
                                           forGroup:PREF_GROUP_LINK_FAVORITES];
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:YES] forKey:INITAL_FAVES group:PREF_GROUP_GENERAL];
+    }
     
     preferences = [[SHLinkFavoritesPreferences preferencePane] retain];
 }
