@@ -53,7 +53,8 @@
 
 -(void)_setFriendlyNameTo:(NSString *)inAlias
 {
-	msn_set_friendly_name(gc,[inAlias UTF8String]);
+	if (gc && account) 
+		msn_set_friendly_name(gc,[inAlias UTF8String]);
 }
 
 //Update all our status keys
