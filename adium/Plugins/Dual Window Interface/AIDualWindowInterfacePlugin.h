@@ -18,16 +18,16 @@
 #define DUAL_INTERFACE_DEFAULT_PREFS		@"DualWindowDefaults"
 #define DUAL_INTERFACE_WINDOW_DEFAULT_PREFS	@"DualWindowMessageDefaults"
 
-#define KEY_DUAL_RESIZE_VERTICAL                @"Autoresize Vertical"
-#define KEY_DUAL_RESIZE_HORIZONTAL              @"Autoresize Horizontal"
+#define KEY_DUAL_RESIZE_VERTICAL			@"Autoresize Vertical"
+#define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
 
 #define KEY_ALWAYS_CREATE_NEW_WINDOWS 		@"Always Create New Windows"
-#define KEY_USE_LAST_WINDOW			@"Use Last Window"
-#define KEY_AUTOHIDE_TABBAR			@"Autohide Tab Bar"
+#define KEY_USE_LAST_WINDOW					@"Use Last Window"
+#define KEY_AUTOHIDE_TABBAR					@"Autohide Tab Bar"
 #define KEY_ENABLE_INACTIVE_TAB_CLOSE		@"Enable Inactive Tab Close"
 
-#define PREF_GROUP_CONTACT_LIST_DISPLAY         @"Contact List Display"
-#define KEY_SCL_BORDERLESS                      @"Borderless"
+#define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
+#define KEY_SCL_BORDERLESS					@"Borderless"
 
 
 @class AIContactListWindowController, AIMessageWindowController, AIMessageViewController, AIDualWindowPreferences, AIDualWindowAdvancedPrefs, ESDualWindowMessageWindowPreferences, ESDualWindowMessageAdvancedPreferences;
@@ -52,9 +52,6 @@
     NSMenuItem				*menuItem_closeTab;
     NSMenuItem				*menuItem_nextMessage;
     NSMenuItem				*menuItem_previousMessage;
-    NSMenuItem				*menuItem_shiftNextMessage;
-    NSMenuItem				*menuItem_shiftPreviousMessage;
-
 
     NSMenuItem				*menuItem_openInNewWindow;
     NSMenuItem				*menuItem_openInPrimaryWindow;

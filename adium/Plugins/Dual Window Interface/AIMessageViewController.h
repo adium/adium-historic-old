@@ -21,7 +21,7 @@
     IBOutlet	NSScrollView		*scrollView_outgoingView;
     IBOutlet	AISendingTextView	*textView_outgoing;
 				NSView				*controllerView_messages;
-    IBOutlet	NSScrollView		*scrollView_messages;
+    IBOutlet	NSView				*scrollView_messages;
     IBOutlet	AIMiniToolbar		*toolbar_bottom;
 
     IBOutlet	NSTableView			*tableView_userList;
