@@ -72,7 +72,7 @@
 	
 	[popUp_customBackground setMenu:[self _customBackgroundMenu]];
 	[popUp_styles setMenu:[self _stylesMenu]];
-	
+		
 	{
 		NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
@@ -137,6 +137,11 @@
 	//Disable drag and drop onto the preview chat - Jeff doesn't need your porn :)
 	if ([preview respondsToSelector:@selector(setAllowsDragAndDrop:)]){
 		[(ESWebView *)preview setAllowsDragAndDrop:NO];
+	}
+	
+	//Disable forwarding of events so the preferences responder chain works properly
+	if([preview respondsToSelector:@selector(setShouldForwardEvents:)]){
+		[(ESWebView *)preview setShouldForwardEvents:NO];		
 	}
 		
 	[preview setFrame:[view_previewLocation frame]];
