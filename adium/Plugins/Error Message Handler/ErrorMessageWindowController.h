@@ -10,7 +10,6 @@
     IBOutlet	NSScrollView	*scrollView_errorInfo;
 
     IBOutlet	NSTabView	*tabView_multipleErrors;
-    IBOutlet	NSTextField	*textField_errorCount;
 
     IBOutlet	NSButton	*button_okay;
 
