@@ -138,6 +138,7 @@ typedef enum {
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
 - (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 - (BOOL)connectivityBasedOnNetworkReachability;
+- (void)performRegisterWithPassword:(NSString *)inPassword;
 
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID;
 - (void)updateContactStatus:(AIListContact *)inContact;
