@@ -29,7 +29,8 @@
     menuItem = [[[NSMenuItem alloc] initWithTitle:ACCOUNT_MENU_TITLE
 										   target:self
 										   action:@selector(showAccountWindow:)
-									keyEquivalent:@""] autorelease];
+										   keyEquivalent:@"a"] autorelease];
+	[menuItem setKeyEquivalentModifierMask:NSCommandKeyMask | NSShiftKeyMask];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
 }
 
