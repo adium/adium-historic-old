@@ -157,7 +157,7 @@ static NSImage *pushIndicatorImage = nil;
 				[associatedView keyDown:inEvent];
 			}
 		}
-                else if([charactersIgnoringModifiers isEqual:@"\r"] == YES){
+                else if([charactersIgnoringModifiers isEqual:@"\r"] == YES || inChar == NSEnterCharacter){
                     if(flags & NSShiftKeyMask){
                         [self insertText:@"\n"];
                     }
