@@ -1,76 +1,145 @@
 				Adium X Version History
 				-----------------------
-Version 0.70
 
-*** Indicates that this line needs to be checked.
+Version 0.70 (10/18/2004)
+Services
+- Added Rendezvous support (iChat compatible) 
+- Added Zephyr support (on properly configured machines) 
+- (MSN) Display names are no longer truncated
+- (MSN) Added the option to treat display names as status
+- (MSN) Added support for conversation closed and timed-out messages
+- (ICQ) Added support for specifying a custom text encoding
+- (Jabber) Accounts can now be registered from within Adium
+- (Sametime) Added support for server-side list storage
+- (ICQ, MSN, Yahoo) Added support for viewing profiles
+- Added support for gaim's protocol specific /commands
+- Corrected several harmless protocol errors
 
-New features:
-*** - Complete contact list rewrite, w00t.
-- Support for grouping multiple contacts into a single entry ("MetaContacts") via option-dragging in the Contact List and via the Address Book
-- Applescript dictionary
-- Adium now detects changes in network connectivity and automatically disconnects/reconnects as appropriate. When Adium launches, autoconnecting accounts wait for network availability before attempting to connect.
-- Support for protocol-specific /commands (currently only applicable in Zephyr)
-- Preference to specify Sametime serverside contact list loading and saving behavior
-- Preference to specify Home/End key behavior in message windows
-- Group chat support:
-	* Create group chats over AIM, Yahoo, and Jabber
-	* Invite other users to group chats
-	* Many UI improvements
-*** - Added iChat away message importing (Migration Assistant)
-- Added in-conversation feedback on message errors and file transfer initiation, cancelation, and completion
-- (MSN) Support for converstion closed and conversation timed out messages
-- (Jabber) Support for registering new Jabber accounts
-- (ICQ, MSN, Yahoo) Support for viewing ICQ, Yahoo, and MSN profiles
-- (Gadu-Gadu, Sametime) Support for viewing Gadu-Gadu and Sametime away messages
+Contact list
+- Added user icons, extended status, status icons, and background image support
+- Added contact grouping (From the address book or by dragging contacts with option held down)
+- Added options for contact list text alignment
+- Improved scaling, coloring, and positioning of group triangles
+- Improved opacity when using a grid or status coloring
+- Improved docking behavior (List now remembers which edge it was docked to)
+- Improved snap to edge behavior (Hold down shift while dragging to disable)
+- Improved manual ordering behavior, performance, and memory usage
 
-Protocols:
-- Added the Rendezvous (ZeroConf) protocol
-- Added the Zephyr protocol with Kerberos support
-- Added explicit support for the ICQ protocol, with an option to specify custom message encoding
+Messages and Chat
+- Added support for creating and joining group chats on AIM, Jabber, and Yahoo
+- Added an option to apply home and end in the text entry view
+- Improved HTML decoding performance
+- Improved group chat interface, behavior
+- Improved support for displaying message related errors
+- Improved behavior of typing notifications
+- Improved copy-to-clipboard behavior of the Minimal message style
+- Basic file transfer messasges (send, receive) now display in the message window
+- Updated built in MSN emoticon set to the correct key equivalents 
 
-Bug fixes:
-- Fixed issue with status-based sorting not updating properly
-- Fixed issues with sending and displaying multiple spaces
-- Fixed a crash when attempting to send images
-- Fixed a crash related to the emoticon menus
-- Fixed a crash when inserting a link to the active Safari page
-- Fixed a bug when installing Adium Xtras in certain cases
-- Fixed a rare crash when loading Firefox bookmarks
-- Fixed issue when saving account passwords in certain cases
-- Fixed issue with sounds playing too loud the first time they were played
-- Fixed problem when manually ordering contact list groups
-- Fixed bug with adding links with "%" in them to away messages and profiles
-- Fixed problem causing 10.2 users to lose color and formatting information in profiles and away messags
-- Fixed issue causing the "First Message Received" sound to be played multiple times
-- Fixed several other minor glitches
-- (AIM) Autoresponses to properly tell other clients that the message is an autoresponse
-- (AIM) Fixed issue which was preventing some buddy icons from animating
-- (AIM) Fixed issues with spacing and capitilization of user names, both sending and receiving
-- (Gadu-Gadu) Fixed issue with the serverside Gadu-Gadu contact list not saving
-- (Groupwise) Fixed GroupWise SSL support
-- (ICQ, Jabber) Fixed a crash when adding a contact with no groups defined
-- (MSN) Removed 25-character restriction on display names, adding an option to treat the display name as a status message
+General Performance and Improvements
+- Contacts with unviewed content now display in the system menu
+- Improved performance of connecting / disconnecting accounts
+- Improved dock icon loading performance, preferences performance
+- Improved system menu performance
+- Improved the stick to edges behavior of the contact list and message window
+- Improved behavior of accounts pane in the info window
+- Improved network connectivity detection, behavior when waking from sleep and switching networks
+- Adium now deletes temporary files on quit
 
-Improvements:
-- Improved the Log Viewer:
-	* Added a drawer for filtering logs by source or destination
-	* Improved date sorting, adding support for natural language searches ("last Tuesday")
-	* Significant performance and feedback improvements
-- Improved reporting of conversation error messages
-- Improved contact alerts on entire groups of contacts
-- Improved the message preferences preview
-- Improved the Accounts contact info pane
-- Improved the Status Menu Item, which is now only available in OS X 10.3 and greater
-- Improved performance when running Applescript filters, especially lengthy ones
-- Improved name autocompletion in the New Message window
-- Improved behavior when automatically docking the message or contact window to the edges of the screen
-- Improved recognition and auto-linkification of URLs
-- Improved snap-to-edge behavior when dragging borderless windows; holding shift now disables the snap-to-edge temporarily
-- Improved load time
-- (Growl) Added several sevents to the Growl plugin
-- Various other cosmetic and bug fixes
-- Updated to Libgaim 1.0.1
+Alerts, Events and Status
+- Improved readability of Growl alerts
+- Background colors for status and events can now be enabled separately
+- Added a Growl Notification for "Message received while in background"
+- Added 'New mail received' event
+- Added file transfer events to the growl plugin
+- Improved behavior of auto-away when idle, away is now automatically removed
+- Improved display of status messages with emoticon and link support
+
+Log Viewer
+- Added support for searching a single contact's logs by content
+- Added support for deleting logs from the log viewer, emoticon display in logs
+- Improved log viewer appearance, search feedback, and performance
+- Improved display of contact names in the log viewer
+
+Other
+- Improved the version checker behavior when a network connection is unavailable
+- Improved service menu with dividers and alphabetization
+- Improved applescript support
+- Updated appearance of info window
+- Updated the crash reporter to ignore several harmless errors
 - Significant stability and performance improvements
+
+Other Fixes
+- Fixed a crash in the notification window for system fonts not supporting bold
+- Fixed a crash when a proxy username was entered with the server field left blank
+- Fixed a crash when accessing the emoticon menu
+- Fixed a crash when adding a contact with no groups defined
+- Fixed a crash when adding a send message alert to a group
+- Fixed a crash when aliasing a group
+- Fixed a crash when attempting to transfer an image over a protocol without support
+- Fixed a crash when clicking the status menu duck during launch
+- Fixed a crash when closing chat windows
+- Fixed a crash when deleting an account
+- Fixed a crash when importing omniweb bookmarks
+- Fixed a crash when logging in with a proxy server
+- Fixed a crash when opening message windows in 10.2 due to message history
+- Fixed a crash when resizing a window while it was automatically scrolling to the bottom
+- Fixed a crash when the contact list refreshed while being manipulated
+- Fixed a crash when typing messages
+- Fixed a crash with contact alerts firing as Adium quit
+- Fixed a crash with contact list auto-resizing
+- Fixed issues with Gaim error message display
+- Fixed issues with HTML displaying in request action windows
+- Fixed issues with account prefs not updating correctly after being changed
+- Fixed issues with alien folders in the log directory confusing the log viewer
+- Fixed issues with auto-replies showing up as regular messages to other users
+- Fixed issues with chat windows not re-opening on incoming messages
+- Fixed issues with chats logging as (null)
+- Fixed issues with commas in the last argument of an applescript
+- Fixed issues with consecutive spaces not being displayed in messages
+- Fixed issues with contacts not leaving the userlist in a chat
+- Fixed issues with custom titled links being changed by the auto-linker
+- Fixed issues with custom volume being ignored the first time a sound plays
+- Fixed issues with dropping files onto the preview conversation in the message preferences
+- Fixed issues with entering contact names equal to the max allowed length
+- Fixed issues with errors creating xtras folders in application support
+- Fixed issues with file transfer via drag and drop onto the message window
+- Fixed issues with font preview fields not dispaying the font size
+- Fixed issues with group chats showing the wrong status icon in tabs
+- Fixed issues with groups displaying a service type in the info window
+- Fixed issues with groups not always hiding when empty
+- Fixed issues with images displaying upside-down in tooltips and message windows
+- Fixed issues with incorrect fonts displaying in the message preferences preview
+- Fixed issues with large status icons displaying behind the close button
+- Fixed issues with list ordering after a disconnect/reconnect
+- Fixed issues with messages not appearing after a date line
+- Fixed issues with multiple MSN chats active at once
+- Fixed issues with outgoing messages displaying twice in MSN chats
+- Fixed issues with preferences opening incorrectly after installing an xtra
+- Fixed issues with re-ordering not applying immediately on the contact list
+- Fixed issues with removing idle time via applecript
+- Fixed issues with scripts in profiles or aways causing a periodic stutter
+- Fixed issues with service type being ignored when adding contacts in response to events
+- Fixed issues with status changed messages ignoring message view formatting
+- Fixed issues with status messages not appearing in some chats
+- Fixed issues with tabs drawing incorrectly for group chats
+- Fixed issues with the First Message Received event firing for messages besides the first
+- Fixed issues with the allowed account name length of Yahoo, .Mac accounts
+- Fixed issues with the allowed characters of Novell account names
+- Fixed issues with the bookmark toolbar item in text only mode
+- Fixed issues with the contact list not sorting correctly
+- Fixed issues with the date header appearing in chats with no history
+- Fixed issues with the group chat user-list not displaying in certain situations
+- Fixed issues with the image picker window displaying icons at the incorrect size
+- Fixed issues with the preview conversation being logged
+- Fixed issues with tooltips appearing at incorrect times
+- Fixed issues with trailing spaces on user names when connecting
+- Fixed issues with typing and new content icons not displaying in the window titlebar
+- Fixed issues with typing notifications
+- Fixed issues with user icons not animating in the info window
+- Fixed issues with vertical alignment of status text
+- Fixed several major memory leaks
+
 
 Version 0.63 (7/23/2004)
 - Added support for the Sametime protocol
