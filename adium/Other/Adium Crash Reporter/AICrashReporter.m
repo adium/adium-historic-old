@@ -196,7 +196,7 @@
         NSDictionary	*crashReport = [NSDictionary dictionaryWithObjectsAndKeys:
             [NSString stringWithFormat:@"%@	(%@)",buildDate,(buildUser ? buildUser : buildNumber)], @"build",
             [textField_emailAddress stringValue], @"email",
-            [textField_accountIM stringValue], @"uid",
+            [textField_accountIM stringValue], @"service_name",
             shortDescription, @"short_desc",
             [textView_details string], @"desc",
             crashLog, @"log",
