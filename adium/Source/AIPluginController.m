@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.81 2004/07/13 18:53:14 adamiser Exp $
+//$Id: AIPluginController.m,v 1.82 2004/07/14 18:44:59 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -49,7 +49,7 @@ ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessage
 JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin, AIContactSettingsPlugin,
 AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
 SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin, SHBookmarksImporterPlugin,
-ESMessageEvents, ESAccountEvents;
+ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin;
 
 #ifdef ALL_IN_ONE
 @class AIWebKitMessageViewPlugin, CBGaimServicePlugin, NEHTicTacToePlugin;
@@ -142,6 +142,7 @@ ESMessageEvents, ESAccountEvents;
 	[self loadPluginWithClass:[SHLinkManagementPlugin class]];
 	[self loadPluginWithClass:[SHBookmarksImporterPlugin class]];
 	[self loadPluginWithClass:[AIContactAccountsPlugin class]];
+	[self loadPluginWithClass:[ESSafariLinkToolbarItemPlugin class]];
 	//	[self loadPluginWithClass:[AISMViewPlugin class]];
 		
 	#ifdef ALL_IN_ONE
@@ -241,7 +242,7 @@ ESMessageEvents, ESAccountEvents;
 				//Load the plugin; if the plugin is hte webkit plugin, verify webkit is available first
 				if ((![pluginName isEqualToString:WEBKIT_PLUGIN] || [NSApp isWebKitAvailable])){
 					pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
-					NSLog(@"loadPluginsFromPath:%@ : Loaded %@ (%@)",pluginPath,pluginBundle,[pluginPath stringByAppendingPathComponent:pluginName]);
+					// NSLog(@"loadPluginsFromPath:%@ : Loaded %@ (%@)",pluginPath,pluginBundle,[pluginPath stringByAppendingPathComponent:pluginName]);
 					if(pluginBundle != nil){						
 #if 1
 						//Create an instance of the plugin
