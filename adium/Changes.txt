@@ -13,7 +13,7 @@ Version 0.57
 - Fixed something...text from being a link
 - Fixed emoticons flipping in prefs
 - Improvements to the Add/Edit link system
-- Updated mockie to reflect user name format
+- Updated mockie to reflect user name format in history messages
 - Improved HTML decoder
 - Fixed several memory leaks
 - Added support for hyphens in account names
