@@ -28,6 +28,7 @@ typedef enum {
 
 + (NSImage *)serviceIconForObject:(AIListObject *)inObject type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection;
 + (NSImage *)serviceIconForService:(AIService *)service type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection;
++ (NSImage *)serviceIconForServiceID:(NSString *)serviceID type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection;
 + (BOOL)setActiveServiceIconsFromPath:(NSString *)inPath;
 
 @end
