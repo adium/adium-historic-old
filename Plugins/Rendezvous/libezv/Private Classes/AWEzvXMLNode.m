@@ -48,6 +48,14 @@
     return self;
 }
 
+- (void)dealloc
+{
+	[children release];
+	[attributes release];
+	
+	[super dealloc];
+}
+
 - (int) type {
     return type;
 }
