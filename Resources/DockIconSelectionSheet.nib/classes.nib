@@ -13,6 +13,12 @@
             SUPERCLASS = AIPreferencePane; 
         }, 
         {
+            CLASS = AIDockIconSelectionSheet; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"imageGridView_icons" = AIImageGridView; }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {
             CLASS = AIImageGridView; 
             LANGUAGE = ObjC; 
             OUTLETS = {delegate = id; }; 
@@ -30,6 +36,12 @@
                 "view_containerView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {closeWindow = id; }; 
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }

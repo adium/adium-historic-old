@@ -15,8 +15,8 @@
  */
 
 #import "AIDockController.h"
-#import "AIDockIconPreferences.h"
-#import "AIDockIconSelectionPlugin.h"
+#import "AIDockIconSelectionSheet.h"
+#import "AIAppearancePreferencesPlugin.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIImageGridView.h>
 #import <Adium/AIIconState.h>
@@ -24,31 +24,58 @@
 #define PREF_GROUP_DOCK_ICON		@"Dock Icon"
 #define DEFAULT_DOCK_ICON_NAME		@"Adiumy Green"
 
-@interface AIDockIconPreferences (PRIVATE)
-- (void)_buildIconArray;
+@interface AIDockIconSelectionSheet (PRIVATE)
 - (void)selectIconWithName:(NSString *)selectName;
 @end
 
-@implementation AIDockIconPreferences
+@implementation AIDockIconSelectionSheet
+
++ (void)showDockIconSelectorOnWindow:(NSWindow *)parentWindow
+{
+	AIDockIconSelectionSheet	*controller;
+	
+	controller = [[self alloc] initWithWindowNibName:@"DockIconSelectionSheet"];
+	
+	if(parentWindow){
+		[NSApp beginSheet:[controller window]
+		   modalForWindow:parentWindow
+			modalDelegate:controller
+		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
+			  contextInfo:nil];
+	}else{
+		[controller showWindow:nil];
+		[[controller window] makeKeyAndOrderFront:nil];
+		[NSApp activateIgnoringOtherApps:YES];
+	}
+}
+
+/*!
+ * Invoked as the sheet closes, dismiss the sheet
+ */
+- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    [sheet orderOut:nil];
+}
+
 
 //Preference pane properties
-- (PREFERENCE_CATEGORY)category{
-    return(AIPref_Advanced);
-}
-- (NSString *)label{
-    return(AILocalizedString(@"Dock Icon", nil));
-}
-- (NSString *)nibName{
-    return(@"IconSelectionPrefs");
-}
+//- (PREFERENCE_CATEGORY)category{
+//    return(AIPref_Advanced);
+//}
+//- (NSString *)label{
+//    return(AILocalizedString(@"Dock Icon", nil));
+//}
+//- (NSString *)nibName{
+//    return(@"IconSelectionPrefs");
+//}
 
 //Setup our preference view
-- (void)viewDidLoad
+//- (void)viewDidLoad
+- (void)windowDidLoad
 {
 	//Init
 	animatedIndex = -1;
 	iconArray = nil;
-    [self _buildIconArray];
 
 	//Setup our image grid
 	[imageGridView_icons setImageSize:NSMakeSize(64,64)];
@@ -58,60 +85,86 @@
 								   selector:@selector(xtrasChanged:)
 									   name:Adium_Xtras_Changed
 									 object:nil];
+	[self xtrasChanged:nil];
+	
+	[super windowDidLoad];
 }
 
 //Preference view is closing
-- (void)viewWillClose
+- (BOOL)windowShouldClose:(id)sender
 {
     [[adium notificationCenter] removeObserver:self];
     [self setAnimatedDockIconAtIndex:-1];
 
 	[iconArray release]; iconArray = nil;
+	
+	return(YES);
 }
 
 //When the xtras are changed, update our icons
 - (void)xtrasChanged:(NSNotification *)notification
 {
-	if([[notification object] caseInsensitiveCompare:@"AdiumIcon"] == 0){
-		[self _buildIconArray];
+	if(!notification || [[notification object] caseInsensitiveCompare:@"AdiumIcon"] == 0){
+		[iconArray release];
+		iconArray = [[NSMutableArray alloc] init];
+		
+		//Fetch the pack previews
+		NSEnumerator	*enumerator = [[[adium dockController] availableDockIconPacks] objectEnumerator];
+		NSString		*path;
+		
+		while(path = [enumerator nextObject]){
+			AIIconState		*previewState = [[adium dockController] previewStateForIconPackAtPath:path];
+			[iconArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:path, @"Path", previewState, @"State"]];    
+		}
+		
+		[imageGridView_icons reloadData];
+		[self selectIconWithName:[[adium preferenceController] preferenceForKey:KEY_ACTIVE_DOCK_ICON
+																		  group:PREF_GROUP_APPEARANCE]];
 	}
 }
 
-//Build an array of available icon packs
-- (void)_buildIconArray
-{
-    NSDirectoryEnumerator	*fileEnumerator;
-    NSString				*iconPath;
-    NSString				*filePath;
-	NSEnumerator			*enumerator;
 
-    //Create a fresh icon array
-    [iconArray release]; iconArray = [[NSMutableArray alloc] init];
-	enumerator = [[adium resourcePathsForName:FOLDER_DOCK_ICONS] objectEnumerator];
-	
-    while(iconPath = [enumerator nextObject]) {            
-        fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconPath];
-        
-        //Find all the .AdiumIcon's
-        while((filePath = [fileEnumerator nextObject])){
-            if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
-                NSString		*fullPath;
-                AIIconState		*previewState;
-                
-                //Get the icon pack's full path and preview state
-                fullPath = [iconPath stringByAppendingPathComponent:filePath];
-				previewState = [[adium dockController] previewStateForIconPackAtPath:fullPath];
-    
-                //Add this icon to our icon array
-                [iconArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:fullPath, @"Path", previewState, @"State", previewState, @"Original State", nil]];    
-			}
-        }
-    }
-    
-    //Update our view and re-select the correct icon
-	[imageGridView_icons reloadData];
-	[self selectIconWithName:[[adium preferenceController] preferenceForKey:KEY_ACTIVE_DOCK_ICON group:PREF_GROUP_GENERAL]];
-}
+
+
+
+//Build an array of available icon packs
+
+
+
+//- (void)_buildIconArray
+//{
+//    NSDirectoryEnumerator	*fileEnumerator;
+//    NSString				*iconPath;
+//    NSString				*filePath;
+//	NSEnumerator			*enumerator;
+//
+//    //Create a fresh icon array
+//    [iconArray release]; iconArray = [[NSMutableArray alloc] init];
+//	enumerator = [[adium resourcePathsForName:FOLDER_DOCK_ICONS] objectEnumerator];
+//	
+//    while(iconPath = [enumerator nextObject]){            
+//        fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconPath];
+//        
+//        //Find all the .AdiumIcon's
+//        while((filePath = [fileEnumerator nextObject])){
+//            if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
+//                NSString		*fullPath;
+//                AIIconState		*previewState;
+//                
+//                //Get the icon pack's full path and preview state
+//                fullPath = [iconPath stringByAppendingPathComponent:filePath];
+//				previewState = [[adium dockController] previewStateForIconPackAtPath:fullPath];
+//    
+//                //Add this icon to our icon array
+//                [iconArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:fullPath, @"Path", previewState, @"State", previewState, @"Original State", nil]];    
+//			}
+//        }
+//    }
+//    
+//    //Update our view and re-select the correct icon
+//	[imageGridView_icons reloadData];
+//	[self selectIconWithName:[[adium preferenceController] preferenceForKey:KEY_ACTIVE_DOCK_ICON group:PREF_GROUP_APPEARANCE]];
+//}
 
 //Set the selected icon by name
 - (void)selectIconWithName:(NSString *)selectName
@@ -203,7 +256,7 @@
 	NSDictionary	*iconDict = [iconArray objectAtIndex:[imageGridView_icons selectedIndex]];
 	NSString		*iconName = [[[iconDict objectForKey:@"Path"] lastPathComponent] stringByDeletingPathExtension];
 	
-	[[adium preferenceController] setPreference:iconName forKey:KEY_ACTIVE_DOCK_ICON group:PREF_GROUP_GENERAL];
+	[[adium preferenceController] setPreference:iconName forKey:KEY_ACTIVE_DOCK_ICON group:PREF_GROUP_APPEARANCE];
 }
 
 - (void)imageGridView:(AIImageGridView *)imageGridView cursorIsHoveringImageAtIndex:(int)index
@@ -245,7 +298,6 @@
 		
 		//Trash the file & Rebuild our icons
 		[[NSFileManager defaultManager] trashFileAtPath:selectedIconPath];
-		[self _buildIconArray];
 
 		//Select the next available icon
 		[imageGridView_icons selectIndex:deletedIndex];

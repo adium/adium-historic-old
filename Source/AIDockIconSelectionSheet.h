@@ -14,15 +14,22 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIPlugin.h>
+#import <Adium/AIWindowController.h>
 
-#define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
+@class AIIconState, AIImageGridView;
 
-@class AIDockIconPreferences;
+@interface AIDockIconSelectionSheet : AIWindowController {
+	IBOutlet	AIImageGridView	*imageGridView_icons;
+    NSMutableArray				*iconArray;
 
-@interface AIDockIconSelectionPlugin : AIPlugin {
-    AIDockIconPreferences	*preferences;
-
+	//Currently animated icon state and its index
+    NSTimer						*animationTimer;
+    AIIconState					*animatedIconState;
+	int 						animatedIndex;
 }
+
+//Animation
+- (void)setAnimatedDockIconAtIndex:(int)index;
+- (AIIconState *)animatedStateForDockIconAtPath:(NSString *)path;
 
 @end

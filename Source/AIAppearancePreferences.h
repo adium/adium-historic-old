@@ -32,4 +32,8 @@
 	IBOutlet	NSTextField		*label_dockIcons;
 }
 
+- (IBAction)showAllDockIcons:(id)sender;
+- (IBAction)customizeListLayout:(id)sender;
+- (IBAction)customizeListTheme:(id)sender;
+
 @end

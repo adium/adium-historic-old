@@ -6745,7 +6745,6 @@
 				4BD6753D06001E140049CAF7,
 				4BD6756006001E2E0049CAF7,
 				4BD6757B06001E3F0049CAF7,
-				4BD6757D06001E400049CAF7,
 				4BD6758106001E430049CAF7,
 				4BD6758306001E440049CAF7,
 				6E5A43DF061160C60078C342,
@@ -6883,6 +6882,7 @@
 				4BAE6C9107CF94BA007E2820,
 				4BAE6D3C07CFA0BC007E2820,
 				4BAE6D4207CFA0CB007E2820,
+				4B08399407D2350D0034A001,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7076,7 +7076,6 @@
 				4BD6753F06001E150049CAF7,
 				4BD6755106001E1D0049CAF7,
 				4BD6756806001E310049CAF7,
-				4BD6757F06001E410049CAF7,
 				4BD6758506001E450049CAF7,
 				4BD6758806001E460049CAF7,
 				7E824CDD06387FAF00813072,
@@ -7182,6 +7181,7 @@
 				4BF3CB4207D1771E00A8112A,
 				4BF3CBED07D192F500A8112A,
 				4B082CCB07D2236E0034A001,
+				4B08399C07D235190034A001,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7238,7 +7238,6 @@
 				4BD6755006001E1D0049CAF7,
 				4BD6756106001E2E0049CAF7,
 				4BD6757C06001E400049CAF7,
-				4BD6757E06001E400049CAF7,
 				4BD6758206001E430049CAF7,
 				4BD6758406001E440049CAF7,
 				6E5A43E0061160C60078C342,
@@ -7375,6 +7374,7 @@
 				4BAE6C9207CF94BA007E2820,
 				4BAE6D3D07CFA0BC007E2820,
 				4BAE6D4307CFA0CB007E2820,
+				4B08399507D2350D0034A001,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13349,6 +13349,50 @@
 			settings = {
 			};
 		};
+		4B08399207D2350D0034A001 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIDockIconSelectionSheet.h;
+			path = Source/AIDockIconSelectionSheet.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B08399307D2350D0034A001 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIDockIconSelectionSheet.m;
+			path = Source/AIDockIconSelectionSheet.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B08399407D2350D0034A001 = {
+			fileRef = 4B08399207D2350D0034A001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B08399507D2350D0034A001 = {
+			fileRef = 4B08399307D2350D0034A001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B08399B07D235190034A001 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = DockIconSelectionSheet.nib;
+			path = Resources/DockIconSelectionSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B08399C07D235190034A001 = {
+			fileRef = 4B08399B07D235190034A001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B09D5C005D5265800BC00F0 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -13786,9 +13830,6 @@
 			children = (
 				4B30491A047FBDCE00A8010A,
 				4B30491B047FBDCE00A8010A,
-				4B30491E047FBED400A8010A,
-				4B30491F047FBED400A8010A,
-				4BDD982D047FC48B00A8010A,
 			);
 			isa = PBXGroup;
 			name = "Dock Icon Selection";
@@ -13811,24 +13852,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIDockIconSelectionPlugin.m;
 			path = "Plugins/Dock Icon Selection/AIDockIconSelectionPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B30491E047FBED400A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIDockIconPreferences.h;
-			path = "Plugins/Dock Icon Selection/AIDockIconPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B30491F047FBED400A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIDockIconPreferences.m;
-			path = "Plugins/Dock Icon Selection/AIDockIconPreferences.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -16637,6 +16660,9 @@
 				4BAE6D3A07CFA0BC007E2820,
 				4BAE6D3B07CFA0BC007E2820,
 				4BAE6D5D07CFA1D7007E2820,
+				4B08399207D2350D0034A001,
+				4B08399307D2350D0034A001,
+				4B08399B07D235190034A001,
 				34C6A3BB077A8CB500EB423C,
 			);
 			isa = PBXGroup;
@@ -18174,24 +18200,6 @@
 			settings = {
 			};
 		};
-		4BD6757D06001E400049CAF7 = {
-			fileRef = 4B30491E047FBED400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6757E06001E400049CAF7 = {
-			fileRef = 4B30491F047FBED400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6757F06001E410049CAF7 = {
-			fileRef = 4BDD982D047FC48B00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6758106001E430049CAF7 = {
 			fileRef = 40AC0EEB03B5BF1000A80202;
 			isa = PBXBuildFile;
@@ -18350,14 +18358,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4BDD982D047FC48B00A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = IconSelectionPrefs.nib;
-			path = "Plugins/Dock Icon Selection/IconSelectionPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		4BDF2C91061E376C00EA75C5 = {
 			isa = PBXFileReference;
