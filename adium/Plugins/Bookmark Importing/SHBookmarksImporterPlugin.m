@@ -34,13 +34,13 @@ static NSMenu       *bookmarkSets;
     // install our menuItems
     bookmarkRootMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
                                                        target:self
-                                                       action:nil
+                                                       action:@selector(dummyTarget:)
                                                 keyEquivalent:@""] autorelease];
     [bookmarkRootMenuItem setRepresentedObject:self];
                                                
     bookmarkRootContextualMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
                                                                  target:self
-                                                                 action:nil
+                                                                 action:@selector(dummyTarget:)
                                                           keyEquivalent:@""] autorelease];
     [bookmarkRootContextualMenuItem setRepresentedObject:self];
     
@@ -54,6 +54,11 @@ static NSMenu       *bookmarkSets;
 - (void)uninstallPlugin
 {
     //blank for now
+}
+
+- (IBAction)dummyTarget:(id)sender
+{
+    //nothing to see here...
 }
 
 // method to nicely install new importers
@@ -115,25 +120,25 @@ static NSMenu       *bookmarkSets;
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 
         // if for each active importer (actually in the menu) update it's items if it's changed sice the last time
-//        if([[[bookmarkRootMenuItem submenu] itemArray] count]){
-//            NSEnumerator *enumerator = [[[bookmarkRootMenuItem submenu] itemArray] objectEnumerator];
-//            NSMenuItem *object;
-//            NSMenu  *newMenu = nil;
-//            while(object = [enumerator nextObject]){
-//                if([[object representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
-//                    if([[object representedObject] bookmarksUpdated]){
-//                        // the menu needs to be changed (bookmarks file mod. date changed)
-//                        // so remove the items, rebuild the menu, then reinstall it
-//                        [[object submenu] removeAllItems];
-//                        newMenu = [self buildBookmarkMenuFor:object];
-//                        [object setSubmenu:newMenu];
-//                        [bookmarkRootContextualMenuItem setSubmenu:[[[bookmarkRootMenuItem submenu] copy] autorelease]];
-//                    }
-//                }
-//            }
-//        }else{
-//            return NO; // disable if no sets are active (which would only happen if no browsers were installed... hey, it could happen!
-//        }
+        if([[[bookmarkRootMenuItem submenu] itemArray] count]){
+            NSEnumerator *enumerator = [[[bookmarkRootMenuItem submenu] itemArray] objectEnumerator];
+            NSMenuItem *object;
+            NSMenu  *newMenu = nil;
+            while(object = [enumerator nextObject]){
+                if([[object representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
+                    if([[object representedObject] bookmarksUpdated]){
+                        // the menu needs to be changed (bookmarks file mod. date changed)
+                        // so remove the items, rebuild the menu, then reinstall it
+                        [[object submenu] removeAllItems];
+                        newMenu = [self buildBookmarkMenuFor:object];
+                        [object setSubmenu:newMenu];
+                        [bookmarkRootContextualMenuItem setSubmenu:[[[bookmarkRootMenuItem submenu] copy] autorelease]];
+                    }
+                }
+            }
+        }else{
+            return NO; // disable if no sets are active (which would only happen if no browsers were installed... hey, it could happen!
+        }
         
         if(responder && [responder isKindOfClass:[NSTextView class]]){
 		return(YES);
