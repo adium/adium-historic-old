@@ -570,7 +570,7 @@
 	return(pathArray);
 }
 
-- (NSString *)pathOfPackWIthName:(NSString *)name extension:(NSString *)extension resourceFolderName:(NSString *)folderName
+- (NSString *)pathOfPackWithName:(NSString *)name extension:(NSString *)extension resourceFolderName:(NSString *)folderName
 {
 	NSFileManager	*fileManager = [NSFileManager defaultManager];
     NSString		*packFileName = [name stringByAppendingPathExtension:extension];
