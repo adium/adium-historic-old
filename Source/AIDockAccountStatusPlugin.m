@@ -18,9 +18,11 @@
 #import "AIContactController.h"
 #import "AIDockAccountStatusPlugin.h"
 #import "AIDockController.h"
+#import "AIStatusController.h"
 #import "AIPreferenceController.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIStatus.h>
 
 @interface AIDockAccountStatusPlugin (PRIVATE)
 - (BOOL)_accountsWithBoolKey:(NSString *)inKey;
@@ -81,13 +83,15 @@
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if(inObject == nil || [inObject isKindOfClass:[AIAccount class]]){
+		BOOL	shouldUpdateStatus = NO;
+		
 		if(inObject == nil || [inModifiedKeys containsObject:@"Online"]){
 			if([self _accountsWithBoolKey:@"Online"] > 0){
 				[[adium dockController] setIconStateNamed:@"Online"];
 			}else{
 				[[adium dockController] removeIconStateNamed:@"Online"];
 			}
-			
+			shouldUpdateStatus = YES;
 		}
 		if(inObject == nil || [inModifiedKeys containsObject:@"Connecting"]){
 			if([self _accountsWithBoolKey:@"Connecting"] > 0){
@@ -95,26 +99,30 @@
 			}else{
 				[[adium dockController] removeIconStateNamed:@"Connecting"];
 			}
-			
+			shouldUpdateStatus = YES;
 		}
-		if(inObject == nil || [inModifiedKeys containsObject:@"Away"]){
-			if([self _accountsWithBoolKey:@"Away"] > 0){
-				[[adium dockController] setIconStateNamed:@"Away"];
-			}else{
-				[[adium dockController] removeIconStateNamed:@"Away"];
-			}
-			
+		
+		if(inObject == nil || [inModifiedKeys containsObject:@"StatusState"]){
+			shouldUpdateStatus = YES;
 		}
+
 		if(inObject == nil || [inModifiedKeys containsObject:@"IdleSince"]){
 			if([self _accountsWithKey:@"IdleSince"] > 0){
 				[[adium dockController] setIconStateNamed:@"Idle"];
 			}else{
 				[[adium dockController] removeIconStateNamed:@"Idle"];
+			}	
+		}
+		
+		if(shouldUpdateStatus){
+			if([[adium statusController] activeStatusType] == AIAwayStatusType){
+				[[adium dockController] setIconStateNamed:@"Away"];
+			}else{
+				[[adium dockController] removeIconStateNamed:@"Away"];
 			}
-			
-		}	
+		}
 	}
-	
+
 	return(nil);
 }
 
