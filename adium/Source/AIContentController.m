@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.96 2004/07/28 21:30:20 evands Exp $
+// $Id: AIContentController.m,v 1.97 2004/08/02 07:07:28 evands Exp $
 
 #import "AIContentController.h"
 
@@ -21,6 +21,10 @@
 - (NSAttributedString *)_filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject usingFilterArray:(NSArray *)inArray;
 - (NSString *)_filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject/* usingFilterArray:(NSArray *)inArray*/;
 - (void)_filterContentObject:(AIContentObject *)inObject usingFilterArray:(NSArray *)inArray;
+
+- (NSArray *)_informObserversOfChatStatusChange:(AIChat *)inChat withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent;
+- (void)chatAttributesChanged:(AIChat *)inChat modifiedKeys:(NSArray *)inModifiedKeys;
+
 @end
 
 @implementation AIContentController
@@ -32,6 +36,7 @@
     textEntryFilterArray = [[NSMutableArray alloc] init];
     textEntryContentFilterArray = [[NSMutableArray alloc] init];
     textEntryViews = [[NSMutableArray alloc] init];
+	chatObserverArray = [[NSMutableArray alloc] init];
     defaultFormattingAttributes = nil;
 	emoticonPacks = nil;
 	emoticonsArray = nil;
@@ -58,7 +63,8 @@
     [textEntryContentFilterArray release];
     [textEntryViews release];
     [chatArray release];
-
+	[chatObserverArray release]; chatObserverArray = nil;
+	
     [super dealloc];
 }
 
@@ -398,32 +404,105 @@
 
 
 
-//Unviewed Content -------------------------------------------------------------------------------------------------
-#pragma mark Unviewed Content
-//Increase unviewed content
-- (void)increaseUnviewedContentOfListObject:(AIListObject *)inObject
+//Chat Status -------------------------------------------------------------------------------------------------
+#pragma mark Chat Status
+
+//Registers code to observe handle status changes
+- (void)registerChatObserver:(id <AIChatObserver>)inObserver
 {
-	int currentUnviewed = [inObject integerStatusObjectForKey:@"UnviewedContent"];
-	[inObject setStatusObject:[NSNumber numberWithInt:(currentUnviewed+1)] forKey:@"UnviewedContent" notify:YES];
+	//Add the observer
+    [chatObserverArray addObject:inObserver];
+	
+    //Let the new observer process all existing chats
+	[self updateAllChatsForObserver:inObserver];
+}
+
+- (void)unregisterChatObserver:(id <AIChatObserver>)inObserver
+{
+    [chatObserverArray removeObject:inObserver];
+}
+
+- (void)chatStatusChanged:(AIChat *)inChat modifiedStatusKeys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{
+	NSArray			*modifiedAttributeKeys;
+	
+    //Let all observers know the contact's status has changed before performing any further notifications
+	modifiedAttributeKeys = [self _informObserversOfChatStatusChange:inChat withKeys:inModifiedKeys silent:silent];
+
+    //Post an attributes changed message (if necessary)
+    if([modifiedAttributeKeys count]){
+		[self chatAttributesChanged:inChat modifiedKeys:modifiedAttributeKeys];
+    }	
+}
+
+- (void)chatAttributesChanged:(AIChat *)inChat modifiedKeys:(NSArray *)inModifiedKeys
+{
+	//Post an attributes changed message
+	[[owner notificationCenter] postNotificationName:Chat_AttributesChanged
+											  object:inChat
+											userInfo:(inModifiedKeys ? [NSDictionary dictionaryWithObject:inModifiedKeys 
+																								   forKey:@"Keys"] : nil)];
+}
+
+//Send a chatStatusChanged message for each open chat with a nil modifiedStatusKeys array
+- (void)updateAllChatsForObserver:(id <AIChatObserver>)observer
+{
+	NSEnumerator	*enumerator = [chatArray objectEnumerator];
+	AIChat			*chat;
+	
+	while (chat = [enumerator nextObject]){
+		[self chatStatusChanged:chat modifiedStatusKeys:nil silent:NO];
+	}
+}
+
+//Notify observers of a status change.  Returns the modified attribute keys
+- (NSArray *)_informObserversOfChatStatusChange:(AIChat *)inChat withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent
+{
+	NSMutableArray				*attrChange = nil;
+	NSEnumerator				*enumerator;
+    id <AIChatObserver>	observer;
+
+	//Let our observers know
+	enumerator = [chatObserverArray objectEnumerator];
+	while((observer = [enumerator nextObject])){
+		NSArray	*newKeys;
+		
+		if(newKeys = [observer updateChat:inChat keys:modifiedKeys silent:silent]){
+			if (!attrChange) attrChange = [NSMutableArray array];
+			[attrChange addObjectsFromArray:newKeys];
+		}
+	}
+	
+	//Send out the notification for other observers
+	[[owner notificationCenter] postNotificationName:Chat_StatusChanged
+											  object:inChat
+											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys 
+																								 forKey:@"Keys"] : nil)];
+	
+	return(attrChange);
+}
+
+//Increase unviewed content
+- (void)increaseUnviewedContentOfChat:(AIChat *)inChat
+{
+	int currentUnviewed = [inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
+	[inChat setStatusObject:[NSNumber numberWithInt:(currentUnviewed+1)]
+					 forKey:KEY_UNVIEWED_CONTENT
+					 notify:YES];
 }
 
 //Clear unviewed content
-- (void)clearUnviewedContentOfListObject:(AIListObject *)inObject
+- (void)clearUnviewedContentOfChat:(AIChat *)inChat
 {
-	[inObject setStatusObject:[NSNumber numberWithInt:0] forKey:@"UnviewedContent" notify:YES];
+	[inChat setStatusObject:nil forKey:KEY_UNVIEWED_CONTENT notify:YES];
 }
-
-
-
-
-
 
 //Chats -------------------------------------------------------------------------------------------------
 #pragma mark Chats
 //Opens a chat for communication with the contact, creating if necessary.  The new chat will be made active.
 - (AIChat *)openChatWithContact:(AIListContact *)inContact
 {
-	AIChat	*chat = [self chatWithContact:inContact initialStatus:nil];
+	AIChat	*chat = [self chatWithContact:inContact];
 
 	if(chat) [[owner interfaceController] openChat:chat]; 
 
@@ -431,9 +510,8 @@
 }
 
 //Creates a chat for communication with the contact, but does not make the chat active (Doesn't open a chat window)
-//If desired, the chat's initial status can be set during creation.  Pass nil for default initial status.
 //If a chat already exists it will be returned (and initialStatus will be ignored).
-- (AIChat *)chatWithContact:(AIListContact *)inContact initialStatus:(NSDictionary *)initialStatus
+- (AIChat *)chatWithContact:(AIListContact *)inContact
 {
 	NSEnumerator	*enumerator;
 	AIChat			*chat = nil;
@@ -478,7 +556,7 @@
 	
 		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
 			//Create a new chat
-			chat = [AIChat chatForAccount:account initialStatusDictionary:initialStatus];
+			chat = [AIChat chatForAccount:account];
 			[chat addParticipatingListObject:inContact];
 			[chatArray addObject:chat];
 
@@ -510,7 +588,7 @@
 															   forListContact:inContact];
 	}
 	
-	//Search for an existing chat we can switch instead of replacing
+	//Search for an existing chat
 	enumerator = [chatArray objectEnumerator];
 	while(chat = [enumerator nextObject]){
 		//If a chat for this object already exists
@@ -520,7 +598,7 @@
 	return chat;
 }
 
-- (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account initialStatus:(NSDictionary *)initialStatus
+- (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo
 {
 	AIChat			*chat = nil;
 	
@@ -530,9 +608,10 @@
 	if (!chat){
 		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
 			//Create a new chat
-			chat = [AIChat chatForAccount:account initialStatusDictionary:initialStatus];
+			chat = [AIChat chatForAccount:account];
 			[chat setName:inName];
 			[chatArray addObject:chat];
+			if (infoDict) [chat setStatusObject:chatCreationInfo forKey:@"ChatCreationInfo" notify:NotifyNever];
 			
 			//Inform the account of its creation and post a notification if successful
 			if([(AIAccount<AIAccount_Content> *)account openChat:chat]){
@@ -642,12 +721,30 @@
 //Switch to a chat with the most recent unviewed content.  Returns YES if one existed
 - (BOOL)switchToMostRecentUnviewedContent
 {
-    if(mostRecentChat && [mostRecentChat listObject] && [[[mostRecentChat listObject] numberStatusObjectForKey:@"UnviewedContent"] intValue]){
-		[[owner interfaceController] setActiveChat:mostRecentChat];
+	AIChat  *newActiveChat = nil;
+	
+    if(mostRecentChat && [mostRecentChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
+		//First choice: switch to the chat which received chat most recently if it has unviewed content
+		newActiveChat = mostRecentChat;
+		
+	}else{
+		//Second choice: switch to the first chat we can find which has unviewed content
+		NSEnumerator	*enumerator = [chatArray objectEnumerator];
+		AIChat			*chat;
+		while ((chat = [enumerator nextObject]) && ![chat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]);
+		
+		if (chat) newActiveChat = chat;
+	}
+
+	if (newActiveChat){
+		//If either the first or second choice was made, set the new active chat and return YES
+		[[owner interfaceController] setActiveChat:newActiveChat];
 		return(YES);
+		
     }else{
+		//Third choice: don't switch, returning NO
 		return(NO);
-    }
+	}
 }
 
 //Content Source & Destination -----------------------------------------------------------------------------------------

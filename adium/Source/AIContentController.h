@@ -15,16 +15,17 @@
 
 #define Chat_WillClose								@"Chat_WillClose"
 #define Chat_DidOpen								@"Chat_DidOpen"
+#define Chat_AttributesChanged						@"Chat_AttributesChanged"
+#define Chat_StatusChanged							@"Chat_StatusChagned"
+
 #define Content_ContentObjectAdded					@"Content_ContentObjectAdded"
 #define Content_WillSendContent						@"Content_WillSendContent"
 #define Content_DidSendContent						@"Content_DidSendContent"
 #define Content_WillReceiveContent					@"Content_WillReceiveContent"
 #define Content_DidReceiveContent					@"Content_DidReceiveContent"
 #define Content_FirstContentRecieved				@"Content_FirstContentRecieved"
-#define Content_ChatStatusChanged					@"Content_ChatStatusChanged"
 #define Content_ChatParticipatingListObjectsChanged @"Content_ChatParticipatingListObjectsChanged"
 #define Content_ChatAccountChanged 					@"Content_ChatAccountChanged"
-
 
 
 typedef enum {
@@ -44,6 +45,11 @@ typedef enum {
 	AIFilterOutgoing		// Content we are sending
 } AIFilterDirection;
 #define FILTER_DIRECTION_COUNT 2
+
+//Observer which receives notifications of changes in chat status
+@protocol AIChatObserver
+- (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
+@end
 
 //Handles the display of a content type
 @protocol AIContentHandler 
@@ -89,31 +95,39 @@ typedef enum {
 	NSDictionary			*defaultFormattingAttributes;
 	
     NSMutableArray			*chatArray;
+	NSMutableArray			*chatObserverArray;
+
+    AIChat					*mostRecentChat;
     
-    AIChat                              *mostRecentChat;
-    
-    NSArray                             *emoticonsArray;
-    NSArray                             *emoticonPacks;
+    NSArray					*emoticonsArray;
+    NSArray					*emoticonPacks;
 	
-	NSMutableArray	*contentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
+	NSMutableArray			*contentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
 	
 }
 
 //Chats
 - (NSArray *)allChatsWithListObject:(AIListObject *)inObject;
 - (AIChat *)openChatWithContact:(AIListContact *)inContact;
-- (AIChat *)chatWithContact:(AIListContact *)inContact initialStatus:(NSDictionary *)initialStatus;
+- (AIChat *)chatWithContact:(AIListContact *)inContact;
 - (AIChat *)existingChatWithContact:(AIListContact *)inContact;
-- (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account initialStatus:(NSDictionary *)initialStatus;
+- (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo;
 - (AIChat *)existingChatWithName:(NSString *)inName onAccount:(AIAccount *)account;
 - (BOOL)closeChat:(AIChat *)inChat;
 - (NSArray *)chatArray;
 - (BOOL)switchToMostRecentUnviewedContent;
 - (void)switchChat:(AIChat *)chat toAccount:(AIAccount *)newAccount;
 
-//Unviewed Content
-- (void)increaseUnviewedContentOfListObject:(AIListObject *)inObject;
-- (void)clearUnviewedContentOfListObject:(AIListObject *)inObject;
+//Status
+- (void)registerChatObserver:(id <AIChatObserver>)inObserver;
+- (void)unregisterChatObserver:(id <AIChatObserver>)inObserver;
+- (void)chatStatusChanged:(AIChat *)inChat modifiedStatusKeys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
+- (void)updateAllChatsForObserver:(id <AIChatObserver>)observer;
+
+
+//Unviewed Content Status
+- (void)increaseUnviewedContentOfChat:(AIChat *)inChat;
+- (void)clearUnviewedContentOfChat:(AIChat *)inChat;
 
 //Sending / Receiving content
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount;
