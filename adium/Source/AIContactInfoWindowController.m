@@ -23,6 +23,7 @@
 @interface AIContactInfoWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory  owner:(AIAdium*)inOwner;
 - (void)configureForContact:(AIListContact *)inContact;
+- (void)configureForNoContact;
 @end
 
 @implementation AIContactInfoWindowController
@@ -82,10 +83,7 @@ static AIContactInfoWindowController *sharedInstance = nil;
 
         [self configureForContact:[[owner contactController] selectedContact]];
     }else{
-        //show the "No Contact Selected" view
-        [[self window] setContentView:view_noContact];
-
-        [[self window] setTitle:@"Contact Info"];
+        [self configureForNoContact];
     }
 }
 
@@ -95,23 +93,28 @@ static AIContactInfoWindowController *sharedInstance = nil;
     //Configure the preference views
     [mainCategory configureForObject:inContact];
 
-    [[self window] setTitle:[NSString stringWithFormat:@"%@ Info",[inContact displayName]]];
+    [[self window] setTitle:[NSString stringWithFormat:@"%@ (%@) Info",[inContact UID], [inContact serviceID]]];
+}
+
+- (void)configureForNoContact
+{
+    //show the "No Contact Selected" view
+    [[self window] setContentView:view_noContact];
+
+    [[self window] setTitle:@"Contact Info"];
 }
 
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
-    if ([[owner contactController] selectedContact] != nil) {
+    if ([[owner contactController] selectedContact]) {
         //install the category
         [scrollView_contents setDocumentView:[mainCategory contentView]];
         [[self window] setContentView:view_contact];
         
         [self configureForContact:[[owner contactController] selectedContact]];
     }else{
-        //show the "No Contact Selected" view
-        [[self window] setContentView:view_noContact];
-        
-        [[self window] setTitle:@"Contact Info"];
+        [self configureForNoContact];
     }
     
     [[self window] center];
