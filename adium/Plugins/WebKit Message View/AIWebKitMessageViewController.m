@@ -148,8 +148,6 @@
 				templateHTML = [NSMutableString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
 				templateHTML = [plugin fillKeywords:templateHTML forStyle:style forChat:chat];
 				
-				templateHTML = [NSString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
-				
 				//Feed it to the webview
 				[[webView mainFrame] loadHTMLString:templateHTML baseURL:nil];
 			}
