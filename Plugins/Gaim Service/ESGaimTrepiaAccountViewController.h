@@ -6,9 +6,9 @@
 //  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
-#include "ESGaimAccountViewController.h"
+#include "AIAccountViewController.h"
 
-@interface ESGaimTrepiaAccountViewController : ESGaimAccountViewController {
+@interface ESGaimTrepiaAccountViewController : AIAccountViewController {
 
 }
 

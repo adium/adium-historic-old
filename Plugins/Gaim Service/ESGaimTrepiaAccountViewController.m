@@ -12,10 +12,6 @@
 
 #ifndef TREPIA_NOT_AVAILABLE
 
-- (NSString *)nibName{
-    return(@"ESGaimTrepiaAccountView");
-}
-
 #endif
 
 @end
