@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.61 2004/05/08 08:27:59 evands Exp $
+// $Id: AIInterfaceController.m,v 1.62 2004/05/17 04:09:14 adamiser Exp $
 
 #import "AIInterfaceController.h"
 
@@ -549,8 +549,8 @@
 }
 
 
-//Custom Bold / Italic menu items----------------------------------------------------------------------------------
-#pragma mark Custom Bold / Italic
+//Custom Dimming menu items --------------------------------------------------------------------------------------------
+#pragma mark Custom Dimming menu items
 //The standard ones do not dim correctly when unavailable
 - (IBAction)toggleFontTrait:(id)sender
 {
@@ -563,10 +563,24 @@
     }
 }
 
+- (void)toggleToolbarShown:(id)sender
+{
+	NSWindow	*window = [[NSApplication sharedApplication] keyWindow]; 	
+	[window toggleToolbarShown:sender];
+}
+
+- (void)runToolbarCustomizationPalette:(id)sender
+{
+	NSWindow	*window = [[NSApplication sharedApplication] keyWindow]; 	
+	[window runToolbarCustomizationPalette:sender];
+}
+
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
+	NSWindow	*window = [[NSApplication sharedApplication] keyWindow];
+	NSResponder *responder = [window firstResponder]; 
+
     if(menuItem == menuItem_bold || menuItem == menuItem_italic){
-		NSResponder		*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder]; 
 		NSFontManager	*fontManager = [NSFontManager sharedFontManager];
 		NSFont			*selectedFont = [fontManager selectedFont];
 		
@@ -578,9 +592,18 @@
 				return(YES);
 			}
 		}
-		return(NO);		
+		return(NO);
+		
 	}else if(menuItem == menuItem_paste || menuItem == menuItem_pasteFormatted){
 		return([[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, nil]] != nil);
+
+	}else if(menuItem == menuItem_showToolbar){
+		[menuItem_showToolbar setTitle:([[window toolbar] isVisible] ? @"Hide Toolbar" : @"Show Toolbar")];
+		return([window toolbar] != nil);
+	
+	}else if(menuItem == menuItem_customizeToolbar){
+		return([window toolbar] != nil && [[window toolbar] isVisible]);
+
 	}else{
 		return(YES);
 	}
