@@ -48,7 +48,7 @@
 	[self setDestinationListObject:(destContact ? destContact : inObject)];
 	
 	//Configure the remaining controls
-	AIAccount *sourceAccount = [[adium accountController] accountWithObjectID:[inDetails objectForKey:KEY_MESSAGE_SEND_FROM]];
+	AIAccount *sourceAccount = [[adium accountController] accountWithAccountNumber:[[inDetails objectForKey:KEY_MESSAGE_SEND_FROM] intValue]];
 	if(sourceAccount){
 		[popUp_messageFrom selectItemWithRepresentedObject:sourceAccount];
 	}
