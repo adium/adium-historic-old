@@ -63,6 +63,15 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     }
 }
 
+
+- (void)setShowTooltip:(BOOL)inShowTooltip
+{
+
+    showTooltip = inShowTooltip;
+
+}
+
+
 //Called when the mouse enters the link
 - (void)mouseEntered:(NSEvent *)theEvent
 {
@@ -73,6 +82,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     location = [link trackingRect].origin;
     location = [controlView convertPoint:location toView:nil];
     location = [[theEvent window] convertBaseToScreen:location];
+
 
     //Ignore the mouse entry if our view is hidden, or our window is non-main
     if([window isMainWindow] && [controlView canDraw]){
@@ -85,6 +95,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 - (void)mouseExited:(NSEvent *)theEvent
 {
     [self _setMouseOverLink:NO atPoint:NSMakePoint(0,0)];
+
 }
 
 //Handle a mouse down.  Returns NO if the mouse down event should continue to be processed
@@ -309,24 +320,37 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Configure the mouse for being over a link or not
 - (void)_setMouseOverLink:(AIFlexibleLink *)inHoveredLink atPoint:(NSPoint)inPoint
 {
+
+
+
+
     if(inHoveredLink != nil && mouseOverLink == NO){
         //Keep track of the hovered link/string
-        [hoveredLink release]; hoveredLink = [inHoveredLink retain];
-        [hoveredString release]; hoveredString = [[NSString stringWithFormat:@"%@", [hoveredLink url]] retain];
+
         mouseOverLink = YES;
 
         [[NSCursor handPointCursor] set]; //Set link cursor
 
+        if(showTooltip){
+            [hoveredLink release]; hoveredLink = [inHoveredLink retain];
+            [hoveredString release]; hoveredString = [[NSString stringWithFormat:@"%@", [hoveredLink url]] retain];
+
 //        inPoint.y += [inHoveredLink trackingRect].size.height + 3; //Offset the tooltip down a bit
 //        inPoint.x -= 9; //And to the left a bit
-        [AITooltipUtilities showTooltipWithString:hoveredString onWindow:nil atPoint:inPoint orientation:TooltipAbove]; //Show tooltip
+
+            [AITooltipUtilities showTooltipWithString:hoveredString onWindow:nil atPoint:inPoint orientation:TooltipAbove]; //Show tooltip
+        }
 
     }else if(inHoveredLink == nil && mouseOverLink == YES){
         [[NSCursor arrowCursor] set]; //Restore the regular cursor
-        [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:NSMakePoint(0,0) orientation:TooltipAbove]; //Hide the tooltip
+        
+        if(showTooltip){
+            [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:NSMakePoint(0,0) orientation:TooltipAbove]; //Hide the tooltip
+    
+            [hoveredLink release]; hoveredLink = nil;
+            [hoveredString release]; hoveredString = nil;
+        }
 
-        [hoveredLink release]; hoveredLink = nil;
-        [hoveredString release]; hoveredString = nil;
         mouseOverLink = NO;
     }
 
