@@ -49,6 +49,7 @@
 
 - Initial message events
 
+- Emoticons don't display properly in status messages (away messages) inside message views.
 	
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
