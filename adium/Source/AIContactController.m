@@ -276,7 +276,11 @@
 //Finds a group with the specified name
 - (AIContactGroup *)groupWithName:(NSString *)inName
 {
-    return([self groupInGroup:contactList withName:inName]);
+    if([[contactList UID] compare:inName] == 0){
+        return(contactList); //The root group can be called by name
+    }else{
+        return([self groupInGroup:contactList withName:inName]);
+    }
 }
 
 /* Finds a handle on the contact list with the specified service and UID
