@@ -28567,7 +28567,8 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist.xml;
-			path = "Contact Status Coloring Themable Prefs.plist";
+			name = "Contact Status Coloring Themable Prefs.plist";
+			path = "Plugins/Contact Status Coloring/Contact Status Coloring Themable Prefs.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
