@@ -40,6 +40,14 @@
     return(message);
 }
 
+- (void)setMessage:(NSString *)inMessage{
+    if(message != inMessage){
+        [message release]; //we should probably hold onto the original content...
+                           //That would allow us to 'refilter' a piece of content to dynamically update the previously displayed messages as preferences are changed... which would be very cool
+        message = [inMessage retain];
+    }
+}
+
 //Return the date and time this message was sent
 - (NSDate *)date{
     return(date);
@@ -51,10 +59,13 @@
 {
     [super initWithChat:inChat source:inSource destination:inDest];
 
-	//Don't filter or track status changes
-	filterContent = NO;
+	//Filter so that triggers in messages can be resolved
+	filterContent = YES;
+	//Don't track status changes
 	trackContent = NO;
 
+	//plainText = YES;
+	
     //Store source and dest
     source = [inSource retain];
     destination = [inDest retain];
