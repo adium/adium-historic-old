@@ -6,15 +6,12 @@
             CLASS = AIPreferenceWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "tabView_accounts" = NSTabView; 
                 "tabView_category" = NSTabView; 
                 "tabView_contactList" = NSTabView; 
                 "tabView_dock" = NSTabView; 
                 "tabView_messages" = NSTabView; 
                 "tabView_status" = NSTabView; 
-                "view_Accounts_Connections" = AIFlippedCategoryView; 
-                "view_Accounts_Hosts" = AIFlippedCategoryView; 
-                "view_Accounts_Profile" = AIFlippedCategoryView; 
+                "view_Accounts" = AIFlippedCategoryView; 
                 "view_Alerts" = AIFlippedCategoryView; 
                 "view_ContactList_Contacts" = AIFlippedCategoryView; 
                 "view_ContactList_General" = AIFlippedCategoryView; 
