@@ -510,9 +510,9 @@
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
     if(item == nil){
-		return((index >= 0 && index < [contactList count]) ? [contactList objectAtIndex:index] : nil);
+		return((index >= 0 && index < [contactList visibleCount]) ? [contactList objectAtIndex:index] : nil);
     }else{
-        return((index >= 0 && index < [item count]) ? [item objectAtIndex:index] : nil);
+        return((index >= 0 && index < [item visibleCount]) ? [item objectAtIndex:index] : nil);
     }
 }
 
