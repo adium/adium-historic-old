@@ -31,6 +31,8 @@
 - (void)loadAwayMessages;
 - (NSMutableArray *)_loadAwaysFromArray:(NSArray *)array;
 - (NSMenu *)savedAwaysMenu;
+
+- (void)setTextViewAwayMessageTo:(NSAttributedString *)theString;
 @end
 
 @implementation AIEnterAwayWindowController
@@ -247,15 +249,34 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 //the combo box changed selection - set the message appropriately
 - (IBAction)loadSavedAway:(id) sender
 {
-    if (![sender representedObject]) {
-	[textView_awayMessage setString:@""];
-	loaded_message = NO;
-    } else {
-	NSAttributedString * theString = [[sender representedObject] objectForKey:@"Message"];
+	NSAttributedString	*newString;
+	NSAttributedString	*currentString;
+	NSUndoManager		*undoManager = [textView_awayMessage undoManager];
+	
+	currentString = [[[textView_awayMessage textStorage] copy] autorelease];
+	newString = ([sender representedObject] ?
+				 [[sender representedObject] objectForKey:@"Message"] :
+				 nil);
+
+	//Record how to undo this operation
+	[undoManager beginUndoGrouping];
+	[[undoManager prepareWithInvocationTarget:self] setTextViewAwayMessageTo:currentString];
+	[self setTextViewAwayMessageTo:newString];
+	[undoManager setActionName:AILocalizedString(@"Preset Away Change","Action which comes after 'Undo' or 'Redo' for preset away messages")];
+	[undoManager endUndoGrouping];
+}
+
+- (void)setTextViewAwayMessageTo:(NSAttributedString *)theString
+{
+	if(theString && [theString length]){
         [[textView_awayMessage textStorage] setAttributedString:theString];
-	[textView_awayMessage setSelectedRange:(NSMakeRange(0, [[theString string] length]))];
+		[textView_awayMessage setSelectedRange:(NSMakeRange(0, [[theString string] length]))];
         loaded_message = YES;
-    }
+		
+	}else{
+		[textView_awayMessage setString:@""];
+		loaded_message = NO;
+	}
 
     //make the text editing active
     [[self window] makeFirstResponder:textView_awayMessage];
