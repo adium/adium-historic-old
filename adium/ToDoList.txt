@@ -14,7 +14,9 @@ Contacts:
 	= Add area for typing contact notes to inspector, display notes in tooltip [Brian] 
             // core functionality is done, now I'm adding AB syncing, and possibly AIM Buddy Note sycing
 	+ Allow for users to communicate with smart philophers, such as Plato or Aristotle. A 
-		users friends may be boring, so we should enhance the current experience.
+		user's friends may be boring, so we should enhance the current experience.  Also, provide friends
+		as needed.
+
 Alerts:
 	+ Allow user to have more control over what is spoken by the announcer plugin
 	+ Display time stamps in the panel alert
@@ -37,17 +39,12 @@ Message Window:
 		<comment> Currently, tabs can be dragged to new windows but 
 			  not rearranged when name-based sorting is on, but dragging 
 			  is right out when group-based sorting is on.
-	+ Open new windows behind the frontmost window (When not opening in tabs) [Colin]
-        	<Colin> I don't know quite what to do here. I'd like some guideance. <<< I never got any guidence, 
-			dammit! :P <<< Still lacking guidence here. We need to have a group chat about this...
 	= Insert emoticon menu item, contextual menu item [Brian]
             // this can now be deemed done... although it should now be Insert Emoticon button/menu ala iChat/MSN/AIM in message view
 	+ Tab-complete usernames in messages and chat
 		<tick> Do we really need to tab complete in a message? I can see in a chat, but not in a 1-to-1 message...
 	+ Make 'save as' menu item work
 		<tick> This could just copy the log file to somewhere the user specify if logging is on.
-	+ Accept dragged items and do wonderful things on them, like if it is text append it in the input field or if it is a file send it to the contact.
-        * Push/pop indicator could use 1-2 px extra spacing from the right & left since its nearly flush with the scrollbar 
 	+ Put a delay on typing events... time out when typing stops.
 	
 Contact List Display:
@@ -62,8 +59,8 @@ Other:
 	+ Create a plugin to parse sed expressions, similar to the tex plugin.
 	+ Add export option to log viewer
 	+ Fetch yahoo profiles from http://profiles.yahoo.com/[BUDDYNAME] for the info window (libgaim doesn't do this for us?)
+		- This should be supported by libgaim already; look into tapping into it
 	+ Jabber links, support xmpp:user@host/resource or xmpp:user@host  
-	+ Don't spawn new windows when we're hidden, instead queue them and open the windows next time we're unhidden
 	+ Symlink the iChat emoticons much like we symlink the iChat sounds
 
 Contact alerts:
@@ -182,10 +179,11 @@ Activity Window
 //-------------------------------------------------------------------------------------------------------
 New State System:
     Allow users to create 'states' that describe their activity online.  States would set their status
-    across the various protocols and allow them to alert certain behavior in Adium (Window spawning, 
+    across the various protocols and allow them to alter certain behavior in Adium (Window spawning, 
     sounds, alerts, notifications, etc).  The goal is to replace the protocol specific state systems
     (idle & away) with something that better suits a user connected to multiple protocols, and allow
     Adium's behavior to be better customized to a user's diverse 'states' of IM throughout the day.
+		-Evan: The basic available, idle, away distinction isn't bad though, I don't think.
 
 
 Multi-user chat:  [Dave]
@@ -203,7 +201,10 @@ Contact status coloring:
 
 Meta Contacts:
     Provide a way for users to create and manage their own meta contacts.    
-
+		- Evan: The current AIMetaContact is a start but will need to be rethought to not be dependent upon all contained contacts
+			having the same serviceID.  Also, the contactController currently expects metacontacts to have a UID equal to
+			the UID of the contained contacts, which should all be the same UID as well.
+			
 Protocol Specific Functions:
     Provide a menu for service code to insert protocol specific options.  Things such as buddy search,
     password changing, getting info on non-listed users, etc.
@@ -214,7 +215,6 @@ File Transfer:
 
 Deferring of initial message:
    Don't pop up a message window if one doesn't already exist.  Use some kind of dock indicator / list indicator.  Double click on list or dock menu item would display the message.  If a window is already open, new messages would create a tab as normal.  We could associate this option with the state system for some pretty cool behavior.
-
 
 Importing/Exporting:
 

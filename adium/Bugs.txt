@@ -8,6 +8,8 @@
 - Incorrect resizing when switching between sort configuration types
 - Webkit performance issues related to templates
 - Message view buddy icons don't change when the user's icon changes
+- Spawning new windows unhides Adium
+- Interface feedback must be on for sounds
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
@@ -15,10 +17,6 @@
 - Adium doesn't crash enough.
 	Starting Adium is just so enjoyable we should find ways to do it more often.
 	[Dave] I can make Adium crash on EVERY startup, should I do it?
-
-- Spawning new windows unhides Adium
-	We don't want to spawn new windows while Adium is hidden.  Windows should be queued
-	and shown when Adium is unhid.
 
 - Adding contact that already exists
 	Adding an existing contact causes issues.  It may result in duplicate contacts on
@@ -80,18 +78,13 @@
 	The key equivelants for MSN's blush emoticon do not include :$.  Other emoticons
 	may be incorrect.
 
+- Push/pop indicator could use 1-2 px extra spacing from the right & left since its nearly flush with the scrollbar
 
 //------------------------------------------------------------------------------------
 // Bugs - Deferred (Awaiting a rewrite / other change)
 //------------------------------------------------------------------------------------
 - AIM chats are logging as (null)
 	Happens with both loggers.  Waiting on full multi-chat support.
-
-- Interface feedback must be on for sounds
-	If you uncheck the "play user interface feedback sounds" in System preferences,
-	and disable the "Use Custom Volume" checkbox in Adium, no sounds are played.
-	Waiting for core-audio sound rewrite.
-
 
 //------------------------------------------------------------------------------------
 // Bugs - Unconfirmed
@@ -116,7 +109,6 @@
 	.adiumEmoticonSet (call me a capitalization nut :)?
 	[Dave] Since we do case-insensitive compares, and the Finder doesn't seem to care, we COULD use AdiumEmoticonSet
 	[Adam] Need to be careful.. some users are running on case-sensitive file systems
-- New mail notification does not always display?
 - Adium will remain invisible to 2nd party after a Jabber authorization confirmation (from xtapo on IRC)
 	"Well, I hit grant to his auth request, and he still won't be able to see me." -- xtapo
 	previously authorized contacts work as expected.
