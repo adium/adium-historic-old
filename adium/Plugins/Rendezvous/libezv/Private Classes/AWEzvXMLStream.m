@@ -3,7 +3,7 @@
  * File:        AWEzvXMLStream.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvXMLStream.m,v 1.1 2004/05/15 18:47:09 evands Exp $
+ * CVS tag:     $Id: AWEzvXMLStream.m,v 1.2 2004/05/22 06:19:21 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -116,14 +116,16 @@ void xml_char_data	(void *userData,
     int	status;
     
     if ([data length] == 0) {
-        [[aNotification object] autorelease];
+        if (connection != nil)
+	    [[aNotification object] autorelease];
         connection = nil;
         [delegate XMLConnectionClosed];
     }
     
     status = XML_Parse(parser, [data bytes], [data length], [data length] == 0 ? 1 : 0);
     
-    [[aNotification object] waitForDataInBackgroundAndNotify];
+    if (connection != nil)
+	[[aNotification object] waitForDataInBackgroundAndNotify];
 }
 
 - (void)dataAvailable:(NSNotification *)aNotification {
@@ -195,7 +197,10 @@ void xml_char_data	(void *userData,
 	// Wow, end of connection!
 	[self sendString:@"</stream:stream>"];
 	[connection closeFile];
+	[connection release];
+	connection = nil;
 	[delegate XMLConnectionClosed];
+	return;
     } else {
         AWEzvLog(@"Ending node that is not at top of stack");
     }
