@@ -80,7 +80,12 @@
 // closes this window and delete the account we got here from clicking the "new" button
 - (IBAction)closeWindow:(id)sender
 {
-    if(!del)
+    if(![[sender title] isEqualToString:@"Cancel"])
+    {
+        del = NO;  // if we hit OK, we only want to close the window!
+    }
+    
+    if(del == NO)
     {
         if([self windowShouldClose:nil])
         {
