@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.36 2004/04/15 12:40:43 adamiser Exp $
+// $Id: AISoundController.m,v 1.37 2004/04/16 23:02:05 evands Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -265,7 +265,7 @@
     // to use this API, we have to work with carbon - so need to use CF's File Manager
     // to get a refrence to the file and then use that to register the event sound with the system
     // BUT, first, we see if the system sound ID we need has already been generated.
-    soundID = (SystemSoundActionID)[[systemSoundIDDict objectForKey:inPath] intValue];
+    soundID = (SystemSoundActionID)[[systemSoundIDDict objectForKey:inPath] unsignedLongValue];
     
     //if not, then we have to generate it and save it for later (for graceful removal)
     if(!soundID){
@@ -273,12 +273,12 @@
         if(noErr == err)
             err = SystemSoundGetActionID(&soundRef, &soundID);
         if(noErr == err){
-            [systemSoundIDDict setObject:[NSNumber numberWithInt:(int)soundID] forKey:inPath];
+            [systemSoundIDDict setObject:[NSNumber numberWithUnsignedLong:soundID] forKey:inPath];
         }
     }
     
     //play the sound (system takes care of cueueing and waking audio hardware)
-    AlertSoundPlayCustomSound(soundID);
+    SystemSoundPlay(soundID);
     
     [soundLock unlock];
     soundThreadActive = NO;
