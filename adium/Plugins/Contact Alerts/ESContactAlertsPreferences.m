@@ -164,9 +164,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     NSEnumerator    *enumerator = 	[contactArray objectEnumerator];
     NSString        *groupName = [[NSString alloc] init];
         
-    [prefAlertsArray release];
-    prefAlertsArray = [[NSMutableArray alloc] init];
-    [prefAlertsArray retain];
+    [prefAlertsArray release]; prefAlertsArray = [[NSMutableArray alloc] init];
 
     AIListContact * contact;
     while (contact = [enumerator nextObject]) {
