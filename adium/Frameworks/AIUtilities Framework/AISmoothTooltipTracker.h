@@ -17,6 +17,7 @@
     int 				tooltipCount;					//Used to determine how long before a tooltip appears
 }
 
++ (AISmoothTooltipTracker *)smoothTooltipTrackerForView:(NSView *)inView withDelegate:(id)inDelegate;
 - (void)installCursorRect;
 - (void)removeCursorRect;
 - (void)resetCursorTracking;

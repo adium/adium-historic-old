@@ -31,26 +31,22 @@
 	view = inView;
 	delegate = inDelegate;
 
-	
-	
 	//Reset cursor tracking when the view's frame changes
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(resetCursorTracking)
 												 name:NSViewFrameDidChangeNotification
 											   object:view];
-	
-	
-	
+
 	return(self);
 }
 
 - (void)dealloc
 {
+	[self removeCursorRect];
+	[self _stopTrackingMouse];
 	
 	[super dealloc];
 }
-
-
 
 
 //Cursor Rects ---------------------------------------------------------------------------------------------------------
@@ -163,52 +159,4 @@
 	}
 }
 
-
 @end
-
-
-
-
-
-
-//Tooltips (Cursor rects) ----------------------------------------------------------------------------------------------
-//We install a cursor rect for our enclosing scrollview.  When the cursor is within this rect, we track it's
-//movement.  If our scrollview changes, or the size of our scrollview changes, we must re-install our rect.
-//Our enclosing scrollview is going to be changed, stop all cursor tracking
-//- (void)view:(NSView *)inView willMoveToSuperview:(NSView *)newSuperview
-//{	
-//	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
-//	[self _removeCursorRect];
-//}
-//
-////We've been moved to a new scrollview, resume cursor tracking
-////View is being added to a new superview
-//- (void)view:(NSView *)inView didMoveToSuperview:(NSView *)newSuperview
-//{	
-//    if(newSuperview && [newSuperview superview]){
-//        [[NSNotificationCenter defaultCenter] addObserver:self
-//												 selector:@selector(frameDidChange:)
-//													 name:NSViewFrameDidChangeNotification 
-//												   object:[newSuperview superview]];
-//	}
-//	
-//	[self performSelector:@selector(_installCursorRect) withObject:nil afterDelay:0.0001];
-//}
-//
-//- (void)view:(NSView *)inView didMoveToWindow:(NSWindow *)window
-//{
-//	[self _configureTransparencyAndShadows];
-//	
-//	windowHidesOnDeactivate = [window hidesOnDeactivate];
-//}
-	
-//- (void)window:(NSWindow *)inWindow didBecomeMain:(NSNotification *)notification
-//{	
-//	[self _startTrackingMouse];
-//}
-//
-//- (void)window:(NSWindow *)inWindow didResignMain:(NSNotification *)notification
-//{	
-//	[self _stopTrackingMouse];
-//}
-

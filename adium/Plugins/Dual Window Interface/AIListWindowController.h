@@ -24,6 +24,8 @@
 @interface AIListWindowController : AIWindowController <AIInterfaceContainer> {
     IBOutlet	AIAutoScrollView		*scrollView_contactList;
     IBOutlet	AIListOutlineView		*contactListView;
+	
+	AISmoothTooltipTracker				*tooltipTracker;
 
 //    id <AIContactListViewController>	contactListViewController;
 

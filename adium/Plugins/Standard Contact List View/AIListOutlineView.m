@@ -254,7 +254,18 @@
 //         return( NSMakeSize(totalWidth, desiredHeight) );
 //    }
 //}
-
+//- (void)outlineViewItemDidExpand:(NSNotification *)notification
+//{
+//    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification
+//														object:contactListView];
+//}
+//
+//- (void)outlineViewItemDidCollapse:(NSNotification *)notification
+//{
+//    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification
+//														object:contactListView];
+//}
+	
 
 //Contact menu ---------------------------------------------------------------
 //Return the selected object (to auto-configure the contact menu)
