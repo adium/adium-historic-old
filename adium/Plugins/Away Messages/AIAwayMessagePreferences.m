@@ -345,10 +345,10 @@
 
         }else if([type compare:@"Away"] == 0){
             //Set the new message
-	    NSAttributedString * awayMessage = [[textView_message textStorage] copy];
+	    NSAttributedString * awayMessage = [[[textView_message textStorage] copy] autorelease];
             [displayedMessage setObject:awayMessage forKey:@"Message"];
 
-	    NSAttributedString * autoresponse = [[textView_autoresponse textStorage] copy];
+	    NSAttributedString * autoresponse = [[[textView_autoresponse textStorage] copy] autorelease];
 	    if ([autoresponse isEqualToAttributedString:awayMessage] || !([[autoresponse string] length]) ){ //same as the away message, or empty
 		[displayedMessage removeObjectForKey:@"Autoresponse"];
 	    }else{
