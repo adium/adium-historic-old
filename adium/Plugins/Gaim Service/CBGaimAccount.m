@@ -417,7 +417,7 @@
     //Now look at keys which only make sense while online
     if(areOnline){
         if ([key compare:@"IdleSince"] == 0){
-			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+            NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
             // Even if we're setting a non-zero idle time, set it to zero first.
             // Some clients ignore idle time changes unless it moves to/from 0.
             serv_set_idle(gc, 0);
@@ -425,17 +425,17 @@
                 int newIdle = -[idleSince timeIntervalSinceNow];
                 serv_set_idle(gc, newIdle);
             }
-			[self setStatusObject:idleSince forKey:@"IdleSince" notify:YES];
+            [self setStatusObject:idleSince forKey:@"IdleSince" notify:YES];
         }
         else if ([key compare:@"AwayMessage"] == 0) {
-			NSString	*awayMessage = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+	    NSAttributedString	*awayMessage = [NSAttributedString stringWithData:[self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]];
             [self setAwayMessage:awayMessage];
-			[self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
+            [self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
         }
         else if([key compare:@"TextProfile"] == 0){
-            NSString	*profile = [self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
-			[self setProfile:profile];
-			[self setStatusObject:profile forKey:@"TextProfile" notify:YES];
+            NSAttributedString	*profile = [NSAttributedString stringWithData:[self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS]];
+	    [self setProfile:profile];
+	    [self setStatusObject:profile forKey:@"TextProfile" notify:YES];
         }
     }
     
@@ -591,8 +591,8 @@
         [self removeHandleWithUID:[handle UID]];
     }
     GaimConversation *conv = (GaimConversation*) [[[inChat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
-    NSAssert(conv != nil, @"No gaim conversation associated with chat");
-    gaim_conversation_destroy(conv);
+    if (conv)
+        gaim_conversation_destroy(conv);
     [chatDict removeObjectForKey:inChat];
     return YES;
 }
@@ -914,14 +914,20 @@
     
     //Remove our chat dictionary
     [chatDict release]; chatDict = [[NSMutableDictionary alloc] init];
-        
-    gaim_account_disconnect(account); gc = NULL;
     
-    //we don't want gaim keeping tracking of our buddies between sessions - we do that.
-    //gaim_accounts_remove(account);
-    //This will remove any buddies from the buddy list that belong to this account, and will also destroy account
+    //Disconnect if gaim still considers us connected
+    if (gaim_account_is_connected(account))
+        gaim_account_disconnect(account); 
+    
+    //We don't want gaim keeping tracking of our buddies between sessions - we do that.
+    //This will remove any gaimBuddies that belong to this account, and will also destroy account
+    //Remove the service's accountDict entry first
     [(CBGaimServicePlugin *)service removeAccount:account];
     gaim_accounts_delete(account); account = NULL;
+    gc = NULL;
+    
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
     
     //create a new account for next time
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
@@ -932,22 +938,21 @@
 //Called automatically by gaimServicePlugin whenever we disconnected for any reason
 - (void)accountConnectionDisconnected
 {
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
-
     if(signonTimer != nil) {
         [signonTimer invalidate];
         [signonTimer release];
         signonTimer = nil;
     }
     
-    //If adium's status for the account was Online, we were disconnected unexpectedly
-    if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]) {
+    NSLog(@"reconnect?");
+    //If a gc object still exists, we were disconnected unexpectedly
+    if(gc != NULL) {
         //clean up
         [self disconnect];
         //reconnect
         [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
     }
+    NSLog(@"done");
 }
 
 // Auto-Reconnect -------------------------------------------------------------------------------------
@@ -1108,12 +1113,12 @@
     }
 }
 
-- (void)setAwayMessage:(id)message
+- (void)setAwayMessage:(NSAttributedString *)message
 {
     char *newValue = NULL;
     
     if (message) {
-        newValue = (char *)[[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
+        newValue = (char *)[[AIHTMLDecoder encodeHTML:message
                                               headers:YES
                                              fontTags:YES   closeFontTags:YES
                                             styleTags:YES   closeStyleTagsOnFontChange:NO
@@ -1123,12 +1128,12 @@
     
     serv_set_away(gc, GAIM_AWAY_CUSTOM, newValue);
 }
-- (void)setProfile:(id)profile
+- (void)setProfile:(NSAttributedString *)profile
 {
     char *newValue = NULL;
     
     if (profile) {
-        newValue = (char *)[[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:profile]
+        newValue = (char *)[[AIHTMLDecoder encodeHTML:profile
                                               headers:YES
                                              fontTags:YES   closeFontTags:YES
                                             styleTags:YES   closeStyleTagsOnFontChange:NO
