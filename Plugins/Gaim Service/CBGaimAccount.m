@@ -87,7 +87,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (oneway void)newContact:(AIListContact *)theContact withName:(NSString *)inName
 {
 	//If the name we were passed differs from the UID of the contact, it's a formatted UID
-	if(![inName isEqualToString:[theContact UID]]){
+	if(![inName isEqualToString:[theContact formattedUID]]){
 		[theContact setStatusObject:inName
 							 forKey:@"FormattedUID"
 							 notify:NO];
@@ -142,6 +142,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 															 withOwner:self
 														 priorityLevel:Low_Priority];
 			displayNameChanges = YES;
+		}
+	}else{
+		if(![gaimAlias isEqualToString:[theContact formattedUID]]){
+			[theContact setStatusObject:gaimAlias
+								 forKey:@"FormattedUID"
+								 notify:NO];
+			
+			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 		}
 	}
 
@@ -1377,7 +1385,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)createNewGaimAccount
 {
 	//Create a fresh version of the account
-    account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
+    account = gaim_account_new([[self formattedUID] UTF8String], [self protocolPlugin]);
 	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
 	
     gaim_accounts_add(account);

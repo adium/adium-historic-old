@@ -1169,8 +1169,11 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 		return;
 	}
 	
-	if (secondaryString && ([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound)){
-		return;
+	if (secondaryString){
+		if (([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound) ||
+			([secondaryString rangeOfString:@"Your screen name is currently formatted as follows"].location != NSNotFound)){
+			return;
+		}
 	}
 	
     if ([primaryString rangeOfString: @"Yahoo! message did not get sent."].location != NSNotFound){
@@ -1215,7 +1218,8 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 		NSString *targetUserName = [[[[secondaryString componentsSeparatedByString:@" user "] objectAtIndex:1] componentsSeparatedByString:@" has "] objectAtIndex:0];
 		
 		errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ granted authorization.",nil),targetUserName];
-	}	
+	}
+	
 	GaimDebug (@"sending %@ %@ %@ %@",[adium interfaceController],([errorMessage length] ? errorMessage : primaryString),([description length] ? description : ([secondaryString length] ? secondaryString : @"") ),titleString);
 	//If we didn't grab a translated version using AILocalizedString, at least display the English version Gaim supplied
 	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
@@ -2471,12 +2475,17 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}
 }
 
-- (oneway void)MSNRequestBuddyIconFor:(NSString *)inUID onAccount:(id)adiumAccount
+- (oneway void)OSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount
 {
 	[runLoopMessenger target:self
-			 performSelector:@selector(gaimThreadMSNRequestBuddyIconFor:onAccount:)
-				  withObject:inUID
+			 performSelector:@selector(gaimThreadOSCARSetFormatTo:onAccount:)
+				  withObject:inFormattedUID
 				  withObject:adiumAccount];
+}
+- (oneway void)gaimThreadOSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	oscar_set_format_screenname(account->gc, [inFormattedUID UTF8String]);
 }
 
 #pragma mark Request callbacks
