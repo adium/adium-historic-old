@@ -16,12 +16,8 @@
     AIAdium				*owner;
 
     IBOutlet	NSView			*view_prefView;
-    IBOutlet	NSView			*view_awayWindowPrefView;
     IBOutlet	AIFlexibleTableView	*tableView_aways;
     IBOutlet	NSButton		*button_delete;
-    IBOutlet	NSButton		*checkBox_showAway;
-    IBOutlet	NSButton		*checkBox_floatAway;
-    IBOutlet 	NSButton		*checkBox_hideInBackground;
 
     AIFlexibleTableColumn		*imageColumn;
     AIFlexibleTableColumn		*messageColumn;
@@ -35,7 +31,5 @@
 + (AIAwayMessagePreferences *)awayMessagePreferencesWithOwner:(id)inOwner;
 - (IBAction)deleteAwayMessage:(id)sender;
 - (IBAction)newAwayMessage:(id)sender;
-- (IBAction)toggleShowAway:(id)sender;
-- (IBAction)toggleHideInBackground:(id)sender;
 
 @end

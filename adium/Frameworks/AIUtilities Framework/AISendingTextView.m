@@ -39,15 +39,17 @@
 {
     [super initWithFrame:frameRect];
 
+    //
     target = nil;
     selector = nil;
-//    handle = nil;
     owner = nil;
     sendOnReturn = YES;
     sendOnEnter = YES;
     returnArray = [[NSMutableArray alloc] init];
     availableForSending = YES;
-    
+
+    [self setDrawsBackground:YES];
+
     //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:nil];
 
@@ -193,9 +195,8 @@
     backgroundColor = [attrs objectForKey:AIBodyColorAttributeName];
     if(backgroundColor){
         [self setBackgroundColor:backgroundColor];
-        [self setDrawsBackground:YES];
     }else{
-        [self setDrawsBackground:NO];
+        [self setBackgroundColor:[NSColor whiteColor]];
     }
 }
 

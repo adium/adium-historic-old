@@ -17,8 +17,11 @@
 
 
 @interface AIImageTextCell : NSCell {
-	id editor;
+    NSFont 	*font;
 
 }
+
+- (void)setFont:(NSFont *)obj;
+- (NSFont *)font;
 
 @end

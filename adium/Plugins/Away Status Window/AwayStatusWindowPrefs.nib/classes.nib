@@ -1,0 +1,18 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {toggleFloatAway = id; toggleHideInBackground = id; toggleShowAway = id; }; 
+            CLASS = AIAwayStatusWindowPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_floatAway" = NSButton; 
+                "checkBox_hideInBackground" = NSButton; 
+                "checkBox_showAway" = NSButton; 
+                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -11,7 +11,6 @@
 #import "AIAwayMessagesPlugin.h"
 #import "AIAwayMessagePreferences.h"
 #import "AIEnterAwayWindowController.h"
-#import "AIAwayStatusWindowController.h"
 
 #define AWAY_SPELLING_DEFAULT_PREFS		@"AwaySpellingDefaults"
 
@@ -49,14 +48,6 @@
     [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
-    //Open an away status window if we woke up away
-    if([[owner accountController] statusObjectForKey:@"AwayMessage" account:nil]) {
-        // Get an away status window
-        [AIAwayStatusWindowController awayStatusWindowControllerForOwner:owner];
-        // Tell it to update in case we were already away
-        [AIAwayStatusWindowController updateAwayStatusWindow];
-    }
-    
     [self accountStatusChanged:nil];
 }
 
@@ -69,25 +60,16 @@
 //Called by the away menu, sets the selected away (sender)
 - (IBAction)setAwayMessage:(id)sender
 {
-    
     NSAttributedString	*awayMessage = [sender representedObject];
+
     [[owner accountController] setStatusObject:awayMessage forKey:@"AwayMessage" account:nil];
-
-    // Get an away status window
-    [AIAwayStatusWindowController awayStatusWindowControllerForOwner:owner];
-    // Tell it to update in case we were already away
-    [AIAwayStatusWindowController updateAwayStatusWindow];
-
 }
 
 //Remove the active away message
 - (IBAction)removeAwayMessage:(id)sender
 {
-    [[owner accountController] setStatusObject:nil forKey:@"AwayMessage" account:nil];
     //Remove the away status flag	
-
-    [AIAwayStatusWindowController updateAwayStatusWindow];
-    
+    [[owner accountController] setStatusObject:nil forKey:@"AwayMessage" account:nil];
 }
 
 //Update our menu when the away status changes
@@ -186,7 +168,6 @@
 
     //Add the saved away messages
     [self rebuildSavedAways];
-
     
     //Add it to the menubar
     if([self shouldConfigureForAway]){
@@ -200,8 +181,7 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     //It would be much better to update the menu in response to option being pressed, but I do not know of an easy way to do this :(
-
-        [self updateAwayMenu]; //Update the away message menu
+    [self updateAwayMenu]; //Update the away message menu
 
     return(YES);
 }
