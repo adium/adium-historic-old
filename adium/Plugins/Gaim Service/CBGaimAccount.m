@@ -197,7 +197,7 @@ static id<GaimThread> gaimThread = nil;
 {
 	if (signonDate) {
 		//Set the signon time
-		[theContact setStatusObject:[[signonDate copy] autorelease]
+		[theContact setStatusObject:signonDate
 							 forKey:@"Signon Date"
 							 notify:NO];
 		
@@ -293,8 +293,6 @@ static id<GaimThread> gaimThread = nil;
 	if(theContact){
 		[theContact setRemoteGroupName:nil];
 		[self removeAllStatusFlagsFromContact:theContact];
-		
-		[theContact release];
 	}
 }
 
@@ -1141,7 +1139,7 @@ static id<GaimThread> gaimThread = nil;
 	
     //If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
 	//connectionIsSuicidal == TRUE when Gaim thinks we shouldn't attempt a reconnect.
-	if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue] && lastDisconnectionError){
+	if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]/* && lastDisconnectionError*/){
 		if (reconnectAttemptsRemaining && 
 			[self shouldAttemptReconnectAfterDisconnectionError:lastDisconnectionError] && !(connectionIsSuicidal)) {
 			

@@ -40,7 +40,7 @@ static SLGaimCocoaAdapter   *myself;
 
 //Dictionaries to track gaim<->adium interactions
 NSMutableDictionary *accountDict = nil;
-NSMutableDictionary *contactDict = nil;
+//NSMutableDictionary *contactDict = nil;
 NSMutableDictionary *chatDict = nil;
 
 //Event loop stsatic variables
@@ -84,7 +84,7 @@ static NDRunLoopMessenger   *runLoopMessenger = nil;
 	sourceId = 0;
     sourceInfoDict = [[NSMutableDictionary alloc] init];
     accountDict = [[NSMutableDictionary alloc] init];
-	contactDict = [[NSMutableDictionary alloc] init];
+//	contactDict = [[NSMutableDictionary alloc] init];
 	chatDict = [[NSMutableDictionary alloc] init];
 		
 	myself = self;
@@ -105,20 +105,10 @@ static NDRunLoopMessenger   *runLoopMessenger = nil;
 
 #pragma mark Gaim wrapper
 
-
 /*
  * Finds an NSConnection* for a GaimAccount*.
  */
-/*
-static NSConnection* accountLookup(GaimAccount *acct)
-{
-//    NSConnection *ret = (NSConnection*)[(NSValue *)acct->ui_data pointerValue];
-	    NSConnection *ret = (NSConnection*)acct->ui_data;
-//	NSConnection *connection = [NSConnection connectionWithReceivePort:[ret receivePort] sendPort:[NSPort port]];
-//	[connection setRootObject:[ret rootObject]];
-	NSLog(@"looked up %@ %@",acct->ui_data,ret);
-    return ret;
-}*/
+
 static NSObject<AdiumGaimDO> *accountLookup(GaimAccount *acct)
 {
 	NSObject<AdiumGaimDO> *adiumGaimAccount = (NSObject<AdiumGaimDO> *)acct->ui_data;
@@ -141,8 +131,9 @@ static AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 		theContact = [accountLookup(buddy->account) mainThreadContactWithUID:[[NSString stringWithUTF8String:buddy->name] compactedString]];
 		
 		//Associate the handle with ui_data and the buddy with our statusDictionary
-		buddy->node.ui_data = [theContact retain];
-		[contactDict setObject:[NSValue valueWithPointer:buddy] forKey:[theContact uniqueObjectID]];
+//		buddy->node.ui_data = [theContact retain];
+		buddy->node.ui_data = theContact;
+//		[contactDict setObject:[NSValue valueWithPointer:buddy] forKey:[theContact uniqueObjectID]];
 	}
 	
 	return theContact;
@@ -1295,10 +1286,13 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 {
     struct SourceInfo *info = g_new(struct SourceInfo, 1);
 
+	if (GAIM_DEBUG) NSLog(@"Adding for %i",fd);
+	
     // Build the CFSocket-style callback flags to use from the gaim ones
     CFOptionFlags callBackTypes = 0;
     if ((condition & GAIM_INPUT_READ ) != 0) callBackTypes |= kCFSocketReadCallBack;
     if ((condition & GAIM_INPUT_WRITE) != 0) callBackTypes |= kCFSocketWriteCallBack;
+//	if ((condition & GAIM_INPUT_CONNECT) != 0) callBackTypes |= kCFSocketConnectCallBack;
 	
     // And likewise the entire CFSocket
     CFSocketContext context = { 0, info, NULL, NULL, NULL };
@@ -1308,14 +1302,14 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	
     // Re-enable callbacks automatically and _don't_ close the socket on
     // invalidate
-    CFSocketSetSocketFlags(socket,   kCFSocketAutomaticallyReenableDataCallBack
-						   | kCFSocketAutomaticallyReenableWriteCallBack);
+    CFSocketSetSocketFlags(socket,   /*kCFSocketAutomaticallyReenableDataCallBack
+						   | */kCFSocketAutomaticallyReenableWriteCallBack
+						   | kCFSocketAutomaticallyReenableReadCallBack);
 	
     // Add it to our run loop
     CFRunLoopSourceRef rls = CFSocketCreateRunLoopSource(NULL, socket, 0);
 	
-	//    CFRunLoopAddSource([[NSRunLoop currentRunLoop] getCFRunLoop], rls, kCFRunLoopCommonModes);
-	CFRunLoopAddSource([[NSRunLoop currentRunLoop] getCFRunLoop], rls, kCFRunLoopCommonModes);
+	CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopCommonModes);
 	
 	sourceId++;
 	
@@ -1343,6 +1337,7 @@ guint adium_source_remove(guint tag) {
     struct SourceInfo *sourceInfo = (struct SourceInfo*)
 	[[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
 	
+	if (GAIM_DEBUG) NSLog(@"***SOURCE REMOVE : %i",tag);
     if (sourceInfo){
 		if (sourceInfo->timer != NULL) { 
 			//Got a timer; invalidate and release
@@ -1376,8 +1371,24 @@ static void socketCallback(CFSocketRef s,
     GaimInputCondition c = 0;
     if ((callbackType & kCFSocketReadCallBack) != 0)  c |= GAIM_INPUT_READ;
     if ((callbackType & kCFSocketWriteCallBack) != 0) c |= GAIM_INPUT_WRITE;
+//	if ((callbackType & kCFSocketConnectCallBack) != 0) c |= GAIM_INPUT_CONNECT;
+
+	if (GAIM_DEBUG) NSLog(@"***SOCKETCALLBACK : %i (%i)",info->fd,c);
 	
-	info->ioFunction(info->user_data, info->fd, c);
+	if ((callbackType & kCFSocketConnectCallBack) != 0) {
+		//Got a file handle; invalidate the source and the socket
+		if (GAIM_DEBUG) NSLog(@"got a connect callback %i",info->fd);
+		CFRunLoopSourceInvalidate(info->rls);
+		CFSocketInvalidate(info->socket);
+		
+		[sourceInfoDict removeObjectForKey:[NSNumber numberWithUnsignedInt:info->tag]];
+		info->ioFunction(info->user_data, info->fd, c);
+		free(info);
+		
+	}else{
+		info->ioFunction(info->user_data, info->fd, c);
+	}
+	
 }
 
 #pragma mark Libgaim Initialization & Core
