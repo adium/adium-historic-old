@@ -14,18 +14,19 @@
             SUPERCLASS = AISendingTextView; 
         }, 
         {
-            ACTIONS = {closeWindow = id; }; 
+            ACTIONS = {closeWindow = id; toggleForceTabBarVisible = id; }; 
             CLASS = AIMessageWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                interface = id; 
-                "tabView_customTabs" = AICustomTabsView; 
-                "tabView_messages" = NSTabView; 
-            }; 
-            SUPERCLASS = NSWindowController; 
+            OUTLETS = {"tabView_customTabs" = AICustomTabsView; "tabView_messages" = NSTabView; }; 
+            SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = AIMiniToolbar; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AISendingTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 
