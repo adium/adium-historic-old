@@ -241,7 +241,6 @@
 	if([[configuredForAccount statusObjectForKey:@"Connecting"] boolValue]){
 		//cancel the currently connecting account - if the user's into that sort of thing.
 		[configuredForAccount setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-		[configuredForAccount disconnect];
 		
 	}else{
 		BOOL	goOnline = (![[configuredForAccount statusObjectForKey:@"Online"] boolValue] &&
