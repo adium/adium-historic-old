@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Sun Aug 01 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIListLayoutWindowController.h"
@@ -153,6 +152,7 @@
 	[slider_windowTransparency setFloatValue:([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue] * 100.0)];
 	[slider_contactLeftIndent setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
 	[slider_contactRightIndent setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
+	[slider_horizontalWidth setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue]];
 	[self updateSliderValues];
 	
 	[checkBox_userIconVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
@@ -276,6 +276,7 @@
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE
                                               group:PREF_GROUP_LIST_LAYOUT];
+		[self configureControlDimming];
 			
     }else if(sender == slider_windowTransparency){
         [[adium preferenceController] setPreference:[NSNumber numberWithFloat:([sender floatValue] / 100.0)]
@@ -294,6 +295,17 @@
                                              forKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT
                                               group:PREF_GROUP_LIST_LAYOUT];
 		[self updateSliderValues];
+		
+	}else if(sender == slider_horizontalWidth){
+		int newValue = [sender intValue];
+		int oldValue = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH
+																group:PREF_GROUP_LIST_LAYOUT] intValue];
+		if (newValue != oldValue){ 
+			[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+												 forKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH
+												  group:PREF_GROUP_LIST_LAYOUT];
+			[self updateSliderValues];
+		}
 	}
 }
 
@@ -335,13 +347,15 @@
 	[textField_windowTransparency setStringValue:[NSString stringWithFormat:@"%i%%", (int)[slider_windowTransparency floatValue]]];
 	[textField_contactLeftIndent setStringValue:[NSString stringWithFormat:@"%ipx",[slider_contactLeftIndent intValue]]];
 	[textField_contactRightIndent setStringValue:[NSString stringWithFormat:@"%ipx",[slider_contactRightIndent intValue]]];
+	[textField_horizontalWidthIndicator setStringValue:[NSString stringWithFormat:@"%ipx",[slider_horizontalWidth intValue]]];
 }
 
 //Configure control dimming
 - (void)configureControlDimming
 {
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
-	BOOL			windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+	int				windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+	BOOL			horizontalAutosize = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
 	
 	//
 	[slider_userIconSize setEnabled:[checkBox_userIconVisible state]];
@@ -362,6 +376,21 @@
 	[[[popUp_contactCellStyle menu] itemWithTag:CELL_STYLE_BRICK] setEnabled:enableNormal];
 	[[[popUp_contactCellStyle menu] itemWithTag:CELL_STYLE_BUBBLE] setEnabled:enableBubble];
 	[[[popUp_contactCellStyle menu] itemWithTag:CELL_STYLE_BUBBLE_FIT] setEnabled:enableBubble];
+	
+	if (windowStyle == WINDOW_STYLE_STANDARD/* || windowStyle == WINDOW_STYLE_BORDERLESS*/){
+		//In standard mode, disable the horizontal autosizing slider if horiztonal autosizing is off
+		[textField_horizontalWidthText setStringValue:AILocalizedString(@"Maximum width:",nil)];
+		[slider_horizontalWidth setEnabled:horizontalAutosize];
+	}else{
+		//In all the borderless transparent modes, the horizontal autosizing slider becomes the
+		//horizontal sizing slider when autosizing is off
+		if (horizontalAutosize){
+			[textField_horizontalWidthText setStringValue:AILocalizedString(@"Maximum width:",nil)];
+		}else{
+			[textField_horizontalWidthText setStringValue:AILocalizedString(@"Width:",nil)];			
+		}
+		[slider_horizontalWidth setEnabled:YES];
+	}
 }
 
 

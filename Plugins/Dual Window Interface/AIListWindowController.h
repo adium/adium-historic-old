@@ -28,6 +28,8 @@
     NSSize								minWindowSize;
     BOOL								autoResizeVertically;
     BOOL								autoResizeHorizontally;
+	int									maxWindowWidth;
+	int									forcedWindowWidth;
 }
 
 + (AIListWindowController *)listWindowController;

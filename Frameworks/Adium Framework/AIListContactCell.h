@@ -74,7 +74,7 @@
 - (NSImage *)userIconImage;
 - (NSImage *)statusImage;
 - (NSImage *)serviceImage;
-- (BOOL)drawStatusBelowLabelInRect:(NSRect)rect;
+//- (BOOL)drawStatusBelowLabelInRect:(NSRect)rect;
 - (BOOL)drawGridBehindCell;
 - (float)imageOpacityForDrawing;
 

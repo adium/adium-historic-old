@@ -215,10 +215,27 @@
     if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_LAYOUT])){
         NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 		NSDictionary	*themeDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
+		int				windowStyle = [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 		
 		//
 		autoResizeVertically = [[layoutDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
 		autoResizeHorizontally = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
+		if (autoResizeHorizontally){
+			//If autosizing, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH determines the maximum width; no forced width.
+			maxWindowWidth = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue];
+			forcedWindowWidth = -1;
+		}else{
+			if (windowStyle == WINDOW_STYLE_STANDARD/* || windowStyle == WINDOW_STYLE_BORDERLESS*/){
+				//In the non-transparent non-autosizing modes, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH has no meaning
+				maxWindowWidth = 1000000;
+				forcedWindowWidth = -1;
+			}else{
+				//In the transparent non-autosizing modes, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH determines the width of the window
+				forcedWindowWidth = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue];
+				maxWindowWidth = forcedWindowWidth;
+			}
+		}
+		
 		[[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontally)];
 		[self contactListDesiredSizeChanged:nil];
 		
@@ -334,7 +351,7 @@
 {
     if(autoResizeVertically || autoResizeHorizontally){
 		NSRect  currentFrame = [[self window] frame];
-        NSRect	desiredFrame = [self _desiredWindowFrameUsingDesiredWidth:autoResizeHorizontally
+        NSRect	desiredFrame = [self _desiredWindowFrameUsingDesiredWidth:(autoResizeHorizontally || (forcedWindowWidth != -1))
 															desiredHeight:autoResizeVertically];
 		/*
 		NSLog(@"DesiredSizeChanged:\nWas %f %f %f %f\nNow %f %f %f %f",
@@ -379,19 +396,26 @@
 	
 	//Width
 	if(useDesiredWidth){
-		//Subtract the current size of the view from our frame
-		//newWindowSize.width -= viewFrame.size.width;
-		newWindowFrame.size.width -= viewFrame.size.width;
-		
-		//Now, figure out how big the view wants to be and add that to our frame
-		//newWindowSize.width += desiredViewSize.width;
-		newWindowFrame.size.width += [contactListView desiredWidth];
-		
-		if ((windowFrame.origin.x + windowFrame.size.width) + EDGE_CATCH_X > (visibleScreenFrame.origin.x + visibleScreenFrame.size.width)){
+		if (forcedWindowWidth != -1){
+			newWindowFrame.size.width = forcedWindowWidth;
+		}else{
+			//Subtract the current size of the view from our frame
+			//newWindowSize.width -= viewFrame.size.width;
+			newWindowFrame.size.width -= viewFrame.size.width;
 			
-			newWindowFrame.origin.x = windowFrame.origin.x + (windowFrame.size.width - newWindowFrame.size.width);
-			if((newWindowFrame.origin.x + newWindowFrame.size.width) < (visibleScreenFrame.origin.x + EDGE_CATCH_X)){
-				newWindowFrame.origin.x = visibleScreenFrame.origin.x - newWindowFrame.size.width + EDGE_CATCH_X;
+			//Now, figure out how big the view wants to be and add that to our frame
+			//newWindowSize.width += desiredViewSize.width;
+			newWindowFrame.size.width += [contactListView desiredWidth];
+			
+			//Don't get bigger than our maxWindowWidth
+			if (newWindowFrame.size.width > maxWindowWidth) newWindowFrame.size.width = maxWindowWidth;
+			
+			if ((windowFrame.origin.x + windowFrame.size.width) + EDGE_CATCH_X > (visibleScreenFrame.origin.x + visibleScreenFrame.size.width)){
+				
+				newWindowFrame.origin.x = windowFrame.origin.x + (windowFrame.size.width - newWindowFrame.size.width);
+				if((newWindowFrame.origin.x + newWindowFrame.size.width) < (visibleScreenFrame.origin.x + EDGE_CATCH_X)){
+					newWindowFrame.origin.x = visibleScreenFrame.origin.x - newWindowFrame.size.width + EDGE_CATCH_X;
+				}
 			}
 		}
 	}

@@ -40,6 +40,7 @@
 
 #define KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE		@"Vertical Autosizing"
 #define KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE		@"Horizontal Autosizing"
+#define KEY_LIST_LAYOUT_HORIZONTAL_WIDTH		@"Horizontal Width"
 #define KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY		@"Window Transparency"
 
 #define KEY_LIST_LAYOUT_CONTACT_FONT			@"Contact Font"

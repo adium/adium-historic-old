@@ -29,6 +29,7 @@
                 "slider_contactSpacing" = NSSlider; 
                 "slider_groupBottomSpacing" = NSSlider; 
                 "slider_groupTopSpacing" = NSSlider; 
+                "slider_horizontalWidth" = NSSlider; 
                 "slider_userIconSize" = NSSlider; 
                 "slider_windowTransparency" = NSSlider; 
                 "textField_contactLeftIndent" = NSTextField; 
@@ -36,6 +37,8 @@
                 "textField_contactSpacing" = NSTextField; 
                 "textField_groupBottomSpacing" = NSTextField; 
                 "textField_groupTopSpacing" = NSTextField; 
+                "textField_horizontalWidthIndicator" = NSTextField; 
+                "textField_horizontalWidthText" = NSTextField; 
                 "textField_layoutName" = NSTextField; 
                 "textField_userIconSize" = NSTextField; 
                 "textField_windowTransparency" = NSTextField; 
