@@ -83,13 +83,27 @@
 		[self savePreferences];
 	}
 	
+	[NSApp stopModal];
+	
 	[panel_options orderOut:panel_options];
+	
 }
 
 -(IBAction)openOptions:(id)sender
 {
 	[self configureControlsFromPrefs];
-	[panel_options makeKeyAndOrderFront:panel_options];
+	
+	[NSApp beginSheet:panel_options
+	   modalForWindow:[view window]
+		modalDelegate:nil
+	   didEndSelector:nil
+		  contextInfo:nil];
+	
+    [NSApp runModalForWindow:panel_options];
+	[NSApp endSheet:panel_options];
+	[panel_options orderOut:self];
+	
+	//[panel_options makeKeyAndOrderFront:panel_options];
 }
 
 
