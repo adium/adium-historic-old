@@ -10,5 +10,5 @@
 }
 
 - (void)growlLaunched:(void *)context;
-- (void)handleEvent:(NSNotification*)notification;
+
 @end
