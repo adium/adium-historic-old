@@ -195,9 +195,13 @@
     NSArray			*keys = [[notification userInfo] objectForKey:@"Keys"];
 
     //Redraw the modified object
-    int row = [contactListView rowForItem:object];
-    if(row >= 0) [contactListView setNeedsDisplayInRect:[contactListView rectOfRow:row]];
-    
+	if (object){
+		int row = [contactListView rowForItem:object];
+		if(row >= 0) [contactListView setNeedsDisplayInRect:[contactListView rectOfRow:row]];
+    }else{
+		[contactListView setNeedsDisplay:YES];
+	}
+	
     //Resize the contact list horizontally
     if(horizontalResizingEnabled){
 		if (object){
