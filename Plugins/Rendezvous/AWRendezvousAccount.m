@@ -42,6 +42,8 @@
 
 - (void)dealloc
 {
+	[super dealloc];
+	
 	[libezvContacts release];
 	[libezv release];
 }
