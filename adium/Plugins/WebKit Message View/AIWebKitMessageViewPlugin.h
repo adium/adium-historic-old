@@ -25,6 +25,8 @@
 
 #define NEW_CONTENT_RETRY_DELAY				0.01
 
+#define MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT @"Message Styles"
+
 #import "ESWebKitMessageViewPreferences.h"
 
 

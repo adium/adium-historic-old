@@ -60,7 +60,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     _emoticonIndexDict = nil;
 
     //Create the custom emoticons directory
-    [AIFileUtilities createDirectory:[[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:PATH_EMOTICONS]];
+    [[AIObject sharedAdiumInstance] createResourcePathForName:EMOTICONS_PATH_NAME];
     
     //Setup Preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"EmoticonDefaults" 

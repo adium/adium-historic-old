@@ -31,7 +31,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 - (void)installPlugin
 {
 	//User scripts
-	[AIFileUtilities createDirectory:PATH_EXTERNAL_SCRIPTS];
+	[[AIObject sharedAdiumInstance] createResourcePathForName:@"Scripts"];
 	
 	//We have an array of scripts for building the menu, and a dictionary of scripts used for the actual substition
 	scriptArray = nil;
