@@ -106,6 +106,7 @@
                 "menu_Help_Additions" = NSMenuItem; 
                 "menu_Help_Local" = NSMenuItem; 
                 "menu_Help_Web" = NSMenuItem; 
+                "menu_View_General" = NSMenuItem; 
                 "menu_Window_Auxilary" = NSMenuItem; 
                 "menu_Window_Commands" = NSMenuItem; 
                 "menu_Window_Fixed" = NSMenuItem; 

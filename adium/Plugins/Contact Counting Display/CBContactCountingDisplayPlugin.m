@@ -28,15 +28,12 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST];
     prefs = [[CBContactCountingDisplayPreferences contactCountingDisplayPreferences] retain];
     
-    /*
     //init our menu items
     visibleCountingMenuItem = [[NSMenuItem alloc] initWithTitle:VISIBLE_COUNTING_MENU_ITEM_TITLE target:self action:@selector(toggleMenuItem:) keyEquivalent:@""];
+	[[adium menuController] addMenuItem:visibleCountingMenuItem toLocation:LOC_View_General];		
+
     allCountingMenuItem     = [[NSMenuItem alloc] initWithTitle:ALL_COUNTING_MENU_ITEM_TITLE target:self action:@selector(toggleMenuItem:) keyEquivalent:@""];
-    */
-    
-    //install our menu items
-    /* there appears to be no way to install into the view menu at this time...*/
-    /* I figure it's best to talk this over with Adam before I do anything. */
+	[[adium menuController] addMenuItem:allCountingMenuItem toLocation:LOC_View_General];		
     
     //install our observers
     [[adium contactController] registerListObjectObserver:self];
@@ -49,16 +46,16 @@
     {
             allCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_ALL_CONTACTS group:PREF_GROUP_CONTACT_LIST] boolValue];
         visibleCount = [[[adium preferenceController] preferenceForKey:KEY_COUNT_VISIBLE_CONTACTS group:PREF_GROUP_CONTACT_LIST] boolValue];
-            /*
-            if(allCount != [allCountingMenuItem state])
-            {
-                [allCountingMenuItem setState:allCount];
-            }
-            if(visibleCount != [visibleCountingMenuItem state])
-            {
-                [allCountingMenuItem setState:visibleCount];
-            }
-            */
+
+		if(allCount != [allCountingMenuItem state])
+		{
+			[allCountingMenuItem setState:allCount];
+		}
+		if(visibleCount != [visibleCountingMenuItem state])
+		{
+			[allCountingMenuItem setState:visibleCount];
+		}
+		
         //Refresh all
         [[adium contactController] updateAllListObjectsForObserver:self];
     }
@@ -87,18 +84,18 @@
 	
     return(modifiedAttributes);
 }
-/*
+
 - (void)toggleMenuItem:(id)sender
 {
     if(sender == allCountingMenuItem || sender == visibleCountingMenuItem)
     {
-        [sender setState:[sender state] & NSOnState];
-        [adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                            forKey:(sender == allCountingMenuItem ? KEY_COUNT_ALL_CONTACTS : KEY_COUNT_VISIBLE_CONTACTS)
-                                             group:PREF_GROUP_CONTACT_LIST];
+        [sender setState:![sender state]];
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:(sender == allCountingMenuItem ? KEY_COUNT_ALL_CONTACTS : KEY_COUNT_VISIBLE_CONTACTS)
+											  group:PREF_GROUP_CONTACT_LIST];
     }
 }
-*/
+
 - (void)uninstallPlugin
 {
     [prefs release];

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIMenuController.m,v 1.23 2004/02/08 20:22:36 evands Exp $
+// $Id: AIMenuController.m,v 1.24 2004/02/08 21:02:46 adamiser Exp $
 
 #import "AIMenuController.h"
 
@@ -28,7 +28,7 @@
  Since the internal locations of the menu items may change in the future, those values aren't used directly.
  Instead, they're used to lookup the correct offset in locationArray of the desired menu.
  */
-static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16,  17,18,19,  20,21,22,23,24,  25};
+static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16,  17,18,19,  20,21,22,23,24,  25,  26};
 
 //init
 - (void)initController
@@ -41,6 +41,7 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16
 		menu_Window_Top, menu_Window_Commands, menu_Window_Auxilary, menu_Window_Fixed,
 		menu_Help_Local, menu_Help_Web, menu_Help_Additions,
 		menu_Contact_Editing, menu_Contact_Manage, menu_Contact_Action, menu_Contact_NegativeAction, menu_Contact_Additions,
+		menu_View_General,
 		menu_Dock_Status, nil];
 	
     //Set up our contextual menu stuff
