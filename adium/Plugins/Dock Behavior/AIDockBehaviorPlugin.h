@@ -21,6 +21,7 @@
 #define PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT		@"dock_bounce_onDidReceiveContent"
 #define PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY	@"dock_bounce_onDidReceiveContent_delay"
 #define PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM		@"dock_bounce_onDidReceiveContent_num"
+#define PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_ANIMATE	@"dock_bounce_onDidReceiveContent_animate"
 
 @class AIDockBehaviorPreferences;
 

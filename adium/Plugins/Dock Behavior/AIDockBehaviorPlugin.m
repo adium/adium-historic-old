@@ -46,21 +46,24 @@
     BOOL bounce = [[[owner preferenceController] preferenceForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT group:PREF_GROUP_DOCK_BEHAVIOR object:[notification object]] boolValue];
     int bounceNum = [[[owner preferenceController] preferenceForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM group:PREF_GROUP_DOCK_BEHAVIOR object:[notification object]] intValue];
     double bounceDelay = [[[owner preferenceController] preferenceForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_DELAY group:PREF_GROUP_DOCK_BEHAVIOR object:[notification object]] doubleValue];
+    BOOL animate = [[[owner preferenceController] preferenceForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_ANIMATE group:PREF_GROUP_DOCK_BEHAVIOR object:[notification object]] boolValue];
     
-    if(bounce) // are we bouncing at all?
+    if(bounce || animate)
     {
         if(bounceNum == 1 && bounceDelay == 0.0) //if we only bounce once, and don't have a delay, use the method with less overhead
         {
-            [[owner dockController] bounce];
+            if(bounce)
+                [[owner dockController] bounce];
+            if(animate)
+                [[owner dockController] alert];
         }
         else if(bounceNum == -1) //forever
         {
-            [[owner dockController] bounceForeverWithInterval:bounceDelay];
+                [[owner dockController] bounceForeverWithInterval:bounceDelay];
         }
         else
         {
-            [[owner dockController] 
-                bounceWithInterval:bounceDelay 
+            [[owner dockController] bounceWithInterval:bounceDelay 
                 times:bounceNum];
         }
     }

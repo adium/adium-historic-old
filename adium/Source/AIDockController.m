@@ -78,7 +78,7 @@
     [[owner notificationCenter] postNotification:[NSNotification notificationWithName:Dock_IconDidChange object:newIcon]];
 }
 
-//bouncing
+//bouncing methods
 - (void)bounce //for external use only.
 {
     [self privBounce];
