@@ -464,6 +464,7 @@ typedef enum {
 
 //Error messages
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;
+- (void)handleMessage:(NSString *)inTitle withDescription:(NSString *)inDesc withWindowTitle:(NSString *)inWindowTitle;
 
 //Flash Syncing
 - (void)registerFlashObserver:(id <AIFlashObserver>)inObserver;
