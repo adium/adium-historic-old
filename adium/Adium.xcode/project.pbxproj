@@ -576,6 +576,7 @@
 			children = (
 				340F440306D8202A0072E2FA,
 				340F440406D8202A0072E2FA,
+				4B93587906DBC6D3007977AA,
 				4BF98D5506D1485100E8781D,
 			);
 			isa = PBXGroup;
@@ -6048,6 +6049,9 @@
 				340F488406DA5E450072E2FA,
 				340F488706DA5E450072E2FA,
 				340F488906DA5E450072E2FA,
+				4B93589006DBC71B007977AA,
+				4B93589306DBC71B007977AA,
+				4B93589506DBC71B007977AA,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6193,6 +6197,9 @@
 				340F488506DA5E450072E2FA,
 				340F488606DA5E450072E2FA,
 				340F488806DA5E450072E2FA,
+				4B93589106DBC71B007977AA,
+				4B93589206DBC71B007977AA,
+				4B93589406DBC71B007977AA,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6762,8 +6769,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BD9F300531477E000AB133,
-				CA0C8AEF06DBBAC1004436BE,
-				CA0C8B0006DBBED8004436BE,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12179,6 +12184,110 @@
 			path = "Plugins/Contact Status Dock Overlays/AIStatusOverlayPreferences.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B93587906DBC6D3007977AA = {
+			children = (
+				4B93588A06DBC71B007977AA,
+				4B93588E06DBC71B007977AA,
+				4B93588F06DBC71B007977AA,
+				4B93588B06DBC71B007977AA,
+				4B93588D06DBC71B007977AA,
+				4B93588C06DBC71B007977AA,
+			);
+			isa = PBXGroup;
+			name = Icons;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B93588A06DBC71B007977AA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIUserIcons.h;
+			path = "Frameworks/Adium Framework/AIUserIcons.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B93588B06DBC71B007977AA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIStatusIcons.m;
+			path = "Frameworks/Adium Framework/AIStatusIcons.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B93588C06DBC71B007977AA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIServiceIcons.m;
+			path = "Frameworks/Adium Framework/AIServiceIcons.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B93588D06DBC71B007977AA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIServiceIcons.h;
+			path = "Frameworks/Adium Framework/AIServiceIcons.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B93588E06DBC71B007977AA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIUserIcons.m;
+			path = "Frameworks/Adium Framework/AIUserIcons.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B93588F06DBC71B007977AA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIStatusIcons.h;
+			path = "Frameworks/Adium Framework/AIStatusIcons.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B93589006DBC71B007977AA = {
+			fileRef = 4B93588A06DBC71B007977AA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B93589106DBC71B007977AA = {
+			fileRef = 4B93588B06DBC71B007977AA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B93589206DBC71B007977AA = {
+			fileRef = 4B93588C06DBC71B007977AA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B93589306DBC71B007977AA = {
+			fileRef = 4B93588D06DBC71B007977AA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B93589406DBC71B007977AA = {
+			fileRef = 4B93588E06DBC71B007977AA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B93589506DBC71B007977AA = {
+			fileRef = 4B93588F06DBC71B007977AA;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B970BE00535B6AC002F28F9 = {
 			fileEncoding = 30;
@@ -20096,11 +20205,9 @@
 		};
 		9EB3C52304F94DB7001D1F74 = {
 			children = (
-				CA0C8AEE06DBBAC1004436BE,
 				9EB3C52E04F94F24001D1F74,
 				9EB3C53304F94FAE001D1F74,
 				9EB3C53404F94FAE001D1F74,
-				CA0C8AFF06DBBED7004436BE,
 				9EB3C52C04F94E84001D1F74,
 			);
 			isa = PBXGroup;
@@ -21342,32 +21449,6 @@
 //CA2
 //CA3
 //CA4
-		CA0C8AEE06DBBAC1004436BE = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			path = pref4.tif;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		CA0C8AEF06DBBAC1004436BE = {
-			fileRef = CA0C8AEE06DBBAC1004436BE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CA0C8AFF06DBBED7004436BE = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			path = Awake.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		CA0C8B0006DBBED8004436BE = {
-			fileRef = CA0C8AFF06DBBED7004436BE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		CABFED2206DB731C00EB2EA0 = {
 			fileRef = 3448717206D1E57700DA778C;
 			isa = PBXBuildFile;
