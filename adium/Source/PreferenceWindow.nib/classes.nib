@@ -1,17 +1,27 @@
 {
     IBClasses = (
+        {
+            CLASS = AIAlternatingRowOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSOutlineView; 
+        }, 
+        {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AIFlippedCategoryView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
             ACTIONS = {closeWindow = id; }; 
             CLASS = AIPreferenceWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "coloredBox_advancedTitle" = AIColoredBoxView; 
+                "outlineView_advanced" = NSOutlineView; 
                 "tabView_category" = NSTabView; 
                 "tabView_contactList" = NSTabView; 
                 "tabView_dock" = NSTabView; 
                 "tabView_messages" = NSTabView; 
                 "tabView_status" = NSTabView; 
+                "textField_advancedTitle" = NSTextField; 
                 "view_Accounts" = AIFlippedCategoryView; 
+                "view_Advanced" = AIFlippedCategoryView; 
                 "view_Alerts" = AIFlippedCategoryView; 
                 "view_ContactList_Contacts" = AIFlippedCategoryView; 
                 "view_ContactList_General" = AIFlippedCategoryView; 

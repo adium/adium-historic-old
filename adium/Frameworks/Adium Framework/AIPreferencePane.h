@@ -37,7 +37,7 @@
     NSView			*preferenceView;    //Will be removed, transition only
     BOOL                        isUpdated;          //Will be removed, transition only
     
-    NSView                      *view;
+    IBOutlet    NSView                  *view;
 }
 
 + (AIPreferencePane *)preferencePaneWithOwner:(id)inOwner;

@@ -32,7 +32,7 @@
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AWAY_STATUS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_AWAY_STATUS_WINDOW];
 
     //Our preference view
-    preferences = [[AIAwayStatusWindowPreferences awayStatusWindowPreferencesWithOwner:owner] retain];
+    preferences = [[AIAwayStatusWindowPreferences preferencePaneWithOwner:owner] retain];
 
     //Observe
     [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
