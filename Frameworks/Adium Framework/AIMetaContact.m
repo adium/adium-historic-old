@@ -161,8 +161,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 //Object Storage -------------------------------------------------------------------------------------------------------
 #pragma mark Object Storage
-//Add an object to this meta contact (PRIVATE: For contact controller only)
-//Returns YES if the object was added (that is, was not already present)
+/*!
+ * @brief Add an object to this meta contact
+ *
+ * Should only be called by AIContactController
+ *
+ * @result YES if the object was added (that is, was not already present)
+ */
 - (BOOL)addObject:(AIListObject *)inObject
 {
 	BOOL	success = NO;
@@ -186,6 +191,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 			[self _determineIfWeShouldAppearToContainOnlyOneContact];
 		}
 		
+		//Add the object from our status cache, notifying of the changes (silently) as appropriate
 		[self _updateCachedStatusOfObject:inObject];
 		
 		success = YES;
@@ -194,14 +200,16 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return success;
 }
 
-//Remove an object from this meta contact (PRIVATE: For contact controller only)
+/*
+ * @brief Remove an object from this meta contact
+ *
+ * Should only be called by AIContactController.
+ */
 - (void)removeObject:(AIListObject *)inObject
 {
 	if([containedObjects containsObjectIdenticalTo:inObject]){
 		
 		[inObject retain];
-		
-		[self _removeCachedStatusOfObject:inObject];
 		
 		[containedObjects removeObject:inObject];
 		
@@ -221,15 +229,25 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 			[self _determineIfWeShouldAppearToContainOnlyOneContact];
 		}
 
-		[[adium contactController] _updateAllAttributesOfObject:self];
+		//Remove all references to the object from our status cache; notifying of the changes as appropriate
+		[self _removeCachedStatusOfObject:inObject];
 
 		[inObject release];
 	}
 }
 
-//Respecting the objectArray's order, find the first available contact. Failing that,
-//find the first online contact.  Failing that,
-//find the first contact.
+/*!
+ * @brief Return the preferred contact to use within this metaContact
+ *
+ * Respecting the objectArray's order, find the first available contact. Failing that,
+ * find the first online contact.  Failing that,
+ * find the first contact.
+ *
+ * Only contacts which are in the array returned by [self listContacts] are eligible.
+ * @see listContacts
+ *
+ * @result The <tt>AIListContact</tt> which is considered the best for interacting with this metaContact
+ */
 - (AIListContact *)preferredContact
 {
 	if (!_preferredContact){
@@ -270,6 +288,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return _preferredContact;
 }
 
+/*
+ * @brief The perferred contact on a given service
+ *
+ * Same as [self preferredContact] but only looks at contacts on the specified service
+ */
 - (AIListContact *)preferredContactWithService:(AIService *)inService
 {
 	AIListContact   *returnContact = nil;
@@ -318,6 +341,15 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return (returnContact);
 }
 
+/*
+ * @brief Return a flat array of contacts to be displayed to the user
+ *
+ * This only returns one of each 'unique' contact, whereas the containedObjects potentially contains multiple contacts
+ * which appear the same to the user but are unique to Adium, since each account on the proper service will have its own
+ * instance of AIListContact for a given contact.
+ *
+ * This also only returns contacts which are listed on online accounts.
+ */
 - (NSArray *)listContacts
 {
 	if (!_listContacts){
@@ -336,8 +368,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return _listContacts;
 }
 
-// Return a dictionary whose keys are serviceClass strings
-// and whose objects are arrays of contained contacts on that serviceClass
+/*
+ * @brief Dictionary of service classes and list contacts
+ *
+ * @result A dictionary whose keys are serviceClass strings and whose objects are arrays of contained contacts on that serviceClass.
+ */
 - (NSDictionary *)dictionaryOfServiceClassesAndListContacts
 {
 	NSMutableDictionary *contactsDict = [NSMutableDictionary dictionary];
@@ -475,19 +510,18 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 - (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
 {
 	//Clear our cached _preferredContact if a contained object's online, away, or idle status changed
-	{
-		//If the online status of a contained object changed, we should also check if our one-contact-only
-		//in terms of online contacts has changed
-		if ([key isEqualToString:@"Online"]){
-			[self _determineIfWeShouldAppearToContainOnlyOneContact];
-		}
-		
-		if([key isEqualToString:@"Away"] ||
-		   [key isEqualToString:@"IdleSince"]){
-			_preferredContact = nil;
-		}
-	}
 
+	//If the online status of a contained object changed, we should also check if our one-contact-only
+	//in terms of online contacts has changed
+	if ([key isEqualToString:@"Online"]){
+		[self _determineIfWeShouldAppearToContainOnlyOneContact];
+	}
+	
+	if([key isEqualToString:@"Away"] ||
+	   [key isEqualToString:@"IdleSince"]){
+		_preferredContact = nil;
+	}
+	
 	//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
 	if([self _cacheStatusValue:value forObject:inObject key:key notify:notify]){
 		[super object:self didSetStatusObject:value forKey:key notify:notify];
@@ -595,8 +629,15 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	NSString		*key;
 	
 	while(key = [enumerator nextObject]){
-		[self _cacheStatusValue:[inObject statusObjectForKey:key] forObject:inObject key:key notify:YES];
+		id value = [inObject statusObjectForKey:key];
+
+		//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
+		if([self _cacheStatusValue:value forObject:inObject key:key notify:NotifyLater]){
+			[super object:self didSetStatusObject:value forKey:key notify:NotifyLater];
+		}
 	}
+	
+	[self notifyOfChangedStatusSilently:YES];
 }
 
 //Flush all status values of the passed object from our cache
@@ -606,8 +647,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	NSString		*key;
 	
 	while(key = [enumerator nextObject]){
-		[self _cacheStatusValue:nil forObject:inObject key:key notify:YES];
+		//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
+		if([self _cacheStatusValue:nil forObject:inObject key:key notify:NotifyLater]){
+			[super object:self didSetStatusObject:[self statusObjectForKey:key] forKey:key notify:NotifyLater];
+		}
 	}
+	
+	[self notifyOfChangedStatusSilently:YES];
 }
 
 //Update a value in our status cache
@@ -904,7 +950,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	}
 }
 
-//Sort contained contacts
+/*
+ * @brief Sort contained contacts, first by order index and then by internalUniqueObjectID
+ */
 int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *context)
 {
 	float orderIndexA = [objectA orderIndex];
@@ -922,11 +970,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 //Visibility -----------------------------------------------------------------------------------------------------------
 #pragma mark Visibility
-/*
- The visible objects contained in a group are always sorted to the top.  This allows us to easily retrieve only visible
- objects without having to physically remove invisible objects from the group.
+/*!
+ * @brief Returns the number of visible objects in this metaContact, which is the same as the count of listContacts
  */
-//Returns the number of visible objects in this metaContact, which is the same as the count of listContacts
 - (unsigned)visibleCount
 {
     return([[self listContacts] count]);
