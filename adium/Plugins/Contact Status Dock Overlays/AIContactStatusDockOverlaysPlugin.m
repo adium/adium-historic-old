@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIContactStatusDockOverlaysPlugin.h"
+#import "AIStatusOverlayPreferences.h"
 #import "AIAdium.h"
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
@@ -28,6 +29,9 @@
     //init
     unviewedObjectsArray = [[NSMutableArray alloc] init];
     overlayState = nil;
+
+    //Install our preference view
+//    preferences = [[AIStatusOverlayPreferences statusOverlayPreferencesWithOwner:owner] retain];
 
     //Register as a contact observer (So we can catch the unviewed content status flag)
     [[owner contactController] registerListObjectObserver:self];

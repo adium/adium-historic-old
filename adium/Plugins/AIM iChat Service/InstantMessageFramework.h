@@ -24,6 +24,10 @@ enum {
 - (oneway void)changeMyStatus:(NSDictionary *)newStatus;//?
 - (NSDictionary *)myStatus;				//Returns a status dict for the user
 - (void)terminate;					//?Terminate the daemon
+- valueOfPersistentProperty:fp12;			//** 2.0 New **
+- (void)setValue:fp12 ofPersistentProperty:fp16;	//** 2.0 New **
+
+
 @end
 
 @interface FZMessage : NSObject <NSCoding, NSCopying>
@@ -73,6 +77,21 @@ enum {
 - blockList;								//?
 - (void)setBlockList:fp12;						//?
 - (void)blockMessages:(char)fp12 fromID:fp16;				//?
+
+- (void)sendVCOOBToPerson:fp12 action:(unsigned long)fp16 param:(unsigned long)fp20;			//** 2.0 New **
+- (void)sendCounterProposalToPerson:fp12 connectData:fp16;						//** 2.0 New **
+- (void)cancelVCRequestWithPerson:fp12;									//** 2.0 New **
+- (void)respondToVCInvitationWithPerson:fp12 response:(int)fp16 connectData:fp20;			//** 2.0 New **
+- (void)requestVCWithPerson:fp12 audioOnly:(char)fp16 extIP:fp20 extSIP:(unsigned int)fp24;		//** 2.0 New **
+- (void)setVCCapabilities:(unsigned int)fp12;								//** 2.0 New **
+- getSharedFile:fp12 ofBuddy:fp16;									//** 2.0 New **
+- (char)requestShareDirectoryListing:fp12 ofBuddy:fp16;							//** 2.0 New **
+- currentShareUploads;											//** 2.0 New **
+- (char)renameGroup:fp12 to:fp16;									//** 2.0 New **
+- groups;												//** 2.0 New **
+- (void)providePiggyback;										//** 2.0 New **
+
+
 - (char)sendFile:fp12 toPerson:fp16;					//?
 - (char)infoForChat:fp12 status:(out int *)fp16 isChatRoom:(out char *)fp20 members:(out id *)fp24;//?
 - (char)setPerson:fp12 isIgnored:(char)fp16 inChat:fp20;		//?
@@ -85,6 +104,7 @@ enum {
 - (void *)createChatForIMsWith:(NSString *)fp12 isDirect:(char)fp16;	//Create a chat for IM's with a screenname
 - (char)removeBuddies:fp12 fromGroups:fp16;				//?
 - (char)addBuddies:fp12 toGroups:fp16;					//?
+
 - (NSImage *)pictureOfBuddy:(NSString *)fp12;				//Returns the buddy icon of a buddy
 - (NSArray *)buddyPictures;						//Returns everyones buddy icons
 - (char)setValue:fp12 ofProperty:fp16 ofPerson:fp20;			//?
@@ -114,10 +134,23 @@ enum {
 - (void)removeListener:(id)fp12;					//Remove a listener
 - (void)addListener:(id)fp12 signature:(NSString *)fp16 capabilities:(int)fp20;	//Add a listener.  iChat passes a bundle ID and 15
 
+
 - (void)_setIdleTime:(unsigned int)time; //this IS NOT in the protocol.  Just here to stop compile warnings for now.
 @end
 
 @protocol FZServiceListener <NSObject>
+- (oneway void)service:fp12 handleVCOOB:fp16 action:(unsigned long)fp20 param:(unsigned long)fp24;	//** 2.0 New **
+- (oneway void)service:fp12 counterProposalFrom:fp16 connectData:fp20;					//** 2.0 New **
+- (oneway void)service:fp12 cancelVCInviteFrom:fp16;							//** 2.0 New **
+- (oneway void)service:fp12 responseToVCRequest:fp16 response:(int)fp20 connectData:fp24;		//** 2.0 New **
+- (oneway void)service:fp12 invitedToVC:fp16 audioOnly:(char)fp20 callerExtIP:fp24 callerExtSIP:(unsigned int)fp28;	//** 2.0 New **
+- (oneway void)service:fp12 buddy:fp16 shareDirectory:fp20 listing:fp24;				//** 2.0 New **
+- (oneway void)service:fp12 shareUploadStarted:fp16;							//** 2.0 New **
+- (oneway void)service:fp12 buddyGroupsChanged:fp16;							//** 2.0 New **
+- (oneway void)service:fp12 providePiggyback:(char)fp16;						//** 2.0 New **
+- (oneway void)service:fp12 capabilitiesChanged:(unsigned int)fp16;					//** 2.0 New **
+- (oneway void)service:fp12 defaultsChanged:fp16;							//** 2.0 New **
+
 - (oneway void)service:(id)service requestOutgoingFileXfer:(id)file;
 - (oneway void)service:(id)service requestIncomingFileXfer:(id)file;
 - (oneway void)service:(id)service chat:(id)chat member:(id)member statusChanged:(int)status;
@@ -130,9 +163,12 @@ enum {
 - (oneway void)service:(id)service buddyPictureChanged:(id)buddy imageData:(id)image;
 - (oneway void)service:(id)inService buddyPropertiesChanged:(NSArray *)inProperties;
 - (oneway void)service:(id)inService loginStatusChanged:(int)inStatus message:(id)inMessage reason:(int)inReason;
+
 @end
 
 @protocol FZDaemonListener <NSObject>
+- (oneway void)daemonPersistentProperty:fp12 changedTo:fp16;					//** 2.0 New **
+
 - (oneway void)openNotesChanged:(id)unknown;
 - (oneway void)myStatusChanged:(id)unknown;
 @end

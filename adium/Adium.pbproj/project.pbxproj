@@ -2357,6 +2357,9 @@
 			children = (
 				4B18A52B0459F8F200A8010A,
 				4B18A52C0459F8F200A8010A,
+				4B9267C304A7583D00A8010A,
+				4B9267C404A7583D00A8010A,
+				4B9267C104A7541200A8010A,
 			);
 			isa = PBXGroup;
 			name = "Contact Status Dock Overlays";
@@ -2367,6 +2370,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B18A52D0459F8F200A8010A,
+				4B9267C504A7583D00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2374,6 +2378,7 @@
 		4B18A5210459F8AF00A8010A = {
 			buildActionMask = 2147483647;
 			files = (
+				4B9267C204A7541200A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2382,6 +2387,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B18A52E0459F8F200A8010A,
+				4B9267C604A7583D00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5833,6 +5839,44 @@
 		};
 		4B8EFC0703E18F2D00A8010A = {
 			fileRef = 4B8EFC0503E18F2D00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B9267C104A7541200A8010A = {
+			isa = PBXFileReference;
+			name = DockStatusOverlaysPrefs.nib;
+			path = "Plugins/Contact Status Dock Overlays/DockStatusOverlaysPrefs.nib";
+			refType = 4;
+		};
+		4B9267C204A7541200A8010A = {
+			fileRef = 4B9267C104A7541200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B9267C304A7583D00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIStatusOverlayPreferences.h;
+			path = "Plugins/Contact Status Dock Overlays/AIStatusOverlayPreferences.h";
+			refType = 4;
+		};
+		4B9267C404A7583D00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIStatusOverlayPreferences.m;
+			path = "Plugins/Contact Status Dock Overlays/AIStatusOverlayPreferences.m";
+			refType = 4;
+		};
+		4B9267C504A7583D00A8010A = {
+			fileRef = 4B9267C304A7583D00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B9267C604A7583D00A8010A = {
+			fileRef = 4B9267C404A7583D00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
