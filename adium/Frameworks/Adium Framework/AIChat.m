@@ -106,6 +106,7 @@
 	if(inAccount != account){
 		[account release];
 		account = [inAccount retain];
+		[[adium notificationCenter] postNotificationName:Content_ChatAccountChanged object:self]; //Notify
 	}
 }
 
