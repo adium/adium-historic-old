@@ -319,6 +319,10 @@ void Adium_HandleSignal(int i){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Emoticons"];
 		requiresRestart = NO;
 		fileDescription = AILocalizedString(@"emoticon set",nil);
+	} else if ([extension caseInsensitiveCompare:@"AdiumMessageStyle"] == NSOrderedSame){
+		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Message Styles"];
+		requiresRestart = YES; //temporary
+		fileDescription = AILocalizedString(@"message style",nil);
 	}
 
     if (destination){
@@ -331,13 +335,16 @@ void Adium_HandleSignal(int i){
             fileDescription,
             [[filename lastPathComponent] stringByDeletingPathExtension]];
         
-        //Trash the old file if one exists AND it isn't ourself
 		if([filename isEqualToString:destinationFilePath]) {
 			// Don't copy the file if it's already in the right place!!
 			alertTitle= AILocalizedString(@"Installation Successful","Title of installation successful window");
 			alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" was successful because the file was already in the correct location.",nil)];
 		} else {
+			//Trash the old file if one exists (since we know it isn't ourself)
 			[[NSFileManager defaultManager] trashFileAtPath:destinationFilePath];
+			
+			//Ensure the directory exists
+			[[NSFileManager defaultManager] createDirectoryAtPath:destination attributes:nil];
 			
 			//Perform the copy and display an alert informing the user of its success or failure
 			if ([[NSFileManager defaultManager] copyPath:filename 
