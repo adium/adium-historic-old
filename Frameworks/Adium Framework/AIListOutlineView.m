@@ -281,27 +281,27 @@
 	[(NSClipView *)newSuperview setCopiesOnScroll:(!backgroundImage)];
 }
 
-/* ######################## Crappy code alert ########################
-Drawing the background image/color should be as simple as subclassing
-drawBackgroundInClipRect: but that method is only called in 10.3 and
-we need 10.2 compatability.
-
-We need to get called after the background draws, but before the rows
-start drawing.  A crappy solution is to draw our background right
-before the outline view tries to draw its first row.  We only need to
-do this when running in 10.2
-*/
+/*	######################## Crappy code alert ########################
+ *	Drawing the background image/color should be as simple as subclassing
+ *	drawBackgroundInClipRect: but that method is only called in 10.3 and
+ *	we need 10.2 compatibility.
+ *
+ *	We need to get called after the background draws, but before the rows
+ *	start drawing.  A crappy solution is to draw our background right
+ *	before the outline view tries to draw its first row.  We only need to
+ *	do this when running in 10.2
+ */
 - (void)drawRect:(NSRect)rect
 {	
 	if(![NSApp isOnPantherOrBetter]) _drawBackground = YES;
 	[super drawRect:rect];
 
-	/* #################### More Crappy Code ###################
-		This time for 10.3 compatability.  10.3 does NOT invalidate the shadow
-		of a transparent window correctly, forcing us to do it manually each
-		time the window content is changed.  This is absolutely horrible for
-		performance, but the only way to avoid shadow ghosting in 10.3 :(
-																		 */
+	/*	#################### More Crappy Code ###################
+	 *	This time for 10.3 compatibility.  10.3 does NOT invalidate the shadow
+	 *	of a transparent window correctly, forcing us to do it manually each
+	 *	time the window content is changed.  This is absolutely horrible for
+	 *	performance, but the only way to avoid shadow ghosting in 10.3 :(
+	 */
 	if(updateShadowsWhileDrawing) [[self window] compatibleInvalidateShadow];
 }
 - (void)drawRow:(int)row clipRect:(NSRect)rect
