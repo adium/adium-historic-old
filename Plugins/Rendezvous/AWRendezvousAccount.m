@@ -31,6 +31,11 @@
 
 @interface AWRendezvousAccount (PRIVATE)
 - (NSString *)UIDForContact:(AWEzvContact *)contact;
+
+- (void)setAccountIdleTo:(NSDate *)idle;
+- (void)setAccountAwayTo:(NSAttributedString *)awayMessage;
+- (void)setAccountUserImage:(NSImage *)image;
+- (void)updateAllStatusKeys;
 @end
 
 @implementation AWRendezvousAccount
@@ -184,15 +189,29 @@
 		[listContact setStatusObject:contactImage forKey:KEY_USER_ICON notify:NO];
 	}
 
-    //The Rendezvous UID is useless; we'll use the contact alias as the formatted UID
-#if 0 
+    //Use the contact alias as the serverside display name
 	contactName = [contact name];
-	if (![[listContact formattedUID] isEqualToString:contactName]){
+	if (![[listContact statusObjectForKey:@"Server Display Name"] isEqualToString:contactName]){
+		//This is the server display name.  Set it as such.
 		[listContact setStatusObject:contactName
-							 forKey:@"FormattedUID"
-							 notify:NO];
+							  forKey:@"Server Display Name"
+							  notify:NO];
+		
+		[[listContact displayArrayForKey:@"Display Name"] setObject:contactName
+														  withOwner:self
+													  priorityLevel:Low_Priority];
+		
+		//Notify of display name changes
+		[[adium contactController] listObjectAttributesChanged:listContact
+												  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
+		
+		//XXX - There must be a cleaner way to do this alias stuff!  This works for now
+		//Request an alias change
+		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+												  object:listContact
+												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+																					 forKey:@"Notify"]];		
 	}
-#endif
 
 	//Adding an existing object to a set has no effect, so just ensure it is added
 	[libezvContacts addObject:contact];
@@ -353,7 +372,6 @@
     
     //Now look at keys which only make sense while online
     if(areOnline){
-        NSData  *data;
         if([key isEqualToString:@"IdleSince"]){
             NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			
@@ -361,9 +379,9 @@
             [self setAccountIdleTo:idleSince];
 			
         }else if([key isEqualToString:KEY_USER_ICON]){
-			if(data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
-				[libezv setContactImage:[[[NSImage alloc] initWithData:data] autorelease]];
-			}
+			NSData  *data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
+
+			[self setAccountUserImage:(data ? [[[NSImage alloc] initWithData:data] autorelease] : nil)];
 		}
     }
 }
@@ -404,6 +422,19 @@
 		[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:YES];
 		[self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
 	}
+}
+
+/*
+ * @brief Set our user image
+ *
+ * Pass nil for no image.
+ */
+- (void)setAccountUserImage:(NSImage *)image
+{
+	[libezv setContactImage:image];	
+
+	//We now have an icon
+	[self setStatusObject:image forKey:KEY_USER_ICON notify:YES];
 }
 
 //Status keys this account supports
