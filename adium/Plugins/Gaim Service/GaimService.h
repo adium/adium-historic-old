@@ -15,9 +15,6 @@
 }
 
 - (id)initWithService:(CBGaimServicePlugin *)inService;
-- (void)addAccount:(CBGaimAccount *)anAccount forGaimAccountPointer:(GaimAccount *)gaimAcct;
-- (void)removeAccount:(GaimAccount *)gaimAcct;
-- (NSDictionary *)systemSOCKSSettingsDictionary;
 - (NSString *)gaimDescriptionSuffix;
 
 @end

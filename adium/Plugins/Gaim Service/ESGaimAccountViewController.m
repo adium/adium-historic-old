@@ -92,7 +92,8 @@
     NSMenu			*proxyMenu = [[NSMenu alloc] init];
 	
     [proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"None",nil) tag:Gaim_Proxy_None]];
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide SOCKS Settings",nil) tag:Gaim_Proxy_Default]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide SOCKS Settings",nil) tag:Gaim_Proxy_Default_SOCKS]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide HTTP Settings",nil) tag:Gaim_Proxy_Default_HTTP]];
 	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"HTTP" tag:Gaim_Proxy_HTTP]];
 	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"SOCKS4" tag:Gaim_Proxy_SOCKS4]];
 	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"SOCKS5" tag:Gaim_Proxy_SOCKS5]];
@@ -160,12 +161,12 @@
 //User icon editing support
 - (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)sender didChangeToImage:(NSImage *)image
 {
-    [account setPreference:[image TIFFRepresentation] forKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
+    [account setPreference:[image PNGRepresentation] forKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
 }
 
 - (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)sender
 {
-    // this will tell us we need to remove the user icon
+	[account setPreference:nil forKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
 }
 
 - (IBAction)changedPreference:(id)sender
@@ -238,8 +239,10 @@
 {
 	NSNumber			*proxyTypeNumber = [account preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
 
-	AdiumGaimProxyType  proxyType = (proxyTypeNumber ? [proxyTypeNumber intValue] : Gaim_Proxy_Default);
-	BOOL				editableProxySettings = ((proxyType != Gaim_Proxy_None) && (proxyType != Gaim_Proxy_Default));
+	AdiumGaimProxyType  proxyType = (proxyTypeNumber ? [proxyTypeNumber intValue] : Gaim_Proxy_Default_SOCKS);
+	BOOL				editableProxySettings = ((proxyType != Gaim_Proxy_None) &&
+												 (proxyType != Gaim_Proxy_Default_SOCKS) &&
+												 (proxyType != Gaim_Proxy_Default_HTTP));
 	BOOL				accountOffline = ![[account statusObjectForKey:@"Online"] boolValue];
 	BOOL				enableProxySettings = editableProxySettings && accountOffline;
 	

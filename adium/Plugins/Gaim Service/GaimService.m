@@ -39,25 +39,6 @@
     return(handleServiceType);
 }
 
-//pass nil for gaimAcct to retrieve the GaimAccount* from anAccount
-- (void)addAccount:(CBGaimAccount *)anAccount forGaimAccountPointer:(GaimAccount *)gaimAcct
-{
-    if (!gaimAcct)
-        gaimAcct = [anAccount gaimAccount];
-    
-    [service addAccount:anAccount forGaimAccountPointer:gaimAcct];   
-}
-
-- (void)removeAccount:(GaimAccount *)gaimAcct
-{
-    [service removeAccount:gaimAcct];
-}
-
-- (NSDictionary *)systemSOCKSSettingsDictionary
-{
-    return [service systemSOCKSSettingsDictionary];
-}
-
 - (NSString *)gaimDescriptionSuffix
 {
     return(@"");
