@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.95 2004/07/29 15:03:10 evands Exp $
+// $Id: AIInterfaceController.m,v 1.96 2004/07/30 17:26:52 evands Exp $
 
 #import "AIInterfaceController.h"
 #import "AIStandardListWindowController.h"
@@ -894,15 +894,20 @@
         toolTipsFont, NSFontAttributeName, nil];
     
     //"<DisplayName>" (or) "<DisplayName> (<UID>)"
-    if([[displayName compactedString] isEqualToString:[formattedUID compactedString]]){
+    if(!formattedUID || ([[displayName compactedString] isEqualToString:[formattedUID compactedString]])){
         [titleString appendString:[NSString stringWithFormat:@"%@", displayName] withAttributes:titleDict];
     }else{
         [titleString appendString:[NSString stringWithFormat:@"%@ (%@)", displayName, formattedUID] withAttributes:titleDict];
     }
     
-    //Add the serviceID, three spaces away
+	
     if ([object isKindOfClass:[AIListContact class]]){
-        [titleString appendString:[NSString stringWithFormat:@"   %@",[object displayServiceID]]
+		
+		//Add the serviceID, three spaces away
+		NSString	*displayServiceID = [object displayServiceID];
+		if (!displayServiceID) displayServiceID = META_SERVICE_STRING;
+		
+        [titleString appendString:[NSString stringWithFormat:@"   %@",displayServiceID]
                    withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                        [fontManager convertFont:[NSFont toolTipsFontOfSize:9] 
                                     toHaveTrait:NSBoldFontMask],NSFontAttributeName, nil]];
