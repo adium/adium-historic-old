@@ -58,12 +58,14 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 		NSString	*path = [serviceIconBasePath stringByAppendingPathComponent:[serviceIconNames[iconType] objectForKey:serviceID]];
 
 		if(path){
-			serviceIcon = [[[NSImage alloc] initWithContentsOfFile:path] autorelease];
+			serviceIcon = [[NSImage alloc] initWithContentsOfFile:path];
 
 			if(serviceIcon){
 				if(iconDirection == AIIconFlipped) [serviceIcon setFlipped:YES];
 				[serviceIcons[iconType][iconDirection] setObject:serviceIcon forKey:serviceID];
 			}
+			
+			[serviceIcon release];
 		}
 	}
 	
