@@ -19,6 +19,8 @@
 #import "AIEditorImportCollection.h"
 #import "AIEditorAllContactsCollection.h"
 
+#define EDIT_CONTACT_LIST   AILocalizedString(@"Edit Contact List…",nil)
+#define EDIT_CONTACT_LIST_TOOLBAR   AILocalizedString(@"Edit Contact List",nil)
 @interface AIContactListEditorPlugin (PRIVATE)
 - (void)_generateCollectionsArray;
 - (AIEditorListHandle *)_handleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group;
@@ -35,14 +37,14 @@
 //    collectionsArray = nil;
     
     //Install the 'edit contact list' menu item
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit Contact List…" target:self action:@selector(showContactListEditor:) keyEquivalent:@"<"] autorelease];
+    menuItem = [[[NSMenuItem alloc] initWithTitle:EDIT_CONTACT_LIST target:self action:@selector(showContactListEditor:) keyEquivalent:@"<"] autorelease];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
 
     //Edit contact list toolbar item
     NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"EditContactList"
-									   label:@"Edit Contact List"
-								    paletteLabel:@"Edit Contact List"
-									 toolTip:@"Edit Contact List"
+									   label:EDIT_CONTACT_LIST_TOOLBAR
+								    paletteLabel:EDIT_CONTACT_LIST_TOOLBAR
+									 toolTip:EDIT_CONTACT_LIST_TOOLBAR
 									  target:self
 								 settingSelector:@selector(setImage:)
 								     itemContent:[AIImageUtilities imageNamed:@"AIMsettings" forClass:[self class]]

@@ -17,7 +17,7 @@
 #import "AIContactStatusColoringPreferences.h"
 
 #define	CONTACT_STATUS_COLORING_PREF_NIB	@"ContactStatusColoringPrefs"
-#define CONTACT_STATUS_COLORING_PREF_TITLE	@"Status Coloring"
+#define CONTACT_STATUS_COLORING_PREF_TITLE	AILocalizedString(@"Status Coloring",nil)
 
 @interface AIContactStatusColoringPreferences (PRIVATE)
 - (void)configureView;

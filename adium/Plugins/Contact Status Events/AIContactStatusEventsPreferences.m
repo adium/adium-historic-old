@@ -17,7 +17,7 @@
 #import "AIContactStatusEventsPreferences.h"
 
 #define STATUS_EVENTS_PREF_NIB		@"ContactStatusEventsPrefs"	//Name of preference nib
-#define STATUS_EVENTS_PREF_TITLE	@"Status Event Lengths"		//Title of the preference view
+#define STATUS_EVENTS_PREF_TITLE	AILocalizedString(@"Status Event Lengths",nil)		//Title of the preference view
 
 @interface AIContactStatusEventsPreferences (PRIVATE)
 - (void)configureView;

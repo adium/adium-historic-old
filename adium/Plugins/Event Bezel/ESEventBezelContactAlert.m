@@ -3,17 +3,17 @@
 //  Adium XCode
 //
 //  Created by Evan Schoenberg on Thu Nov 27 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "ESEventBezelContactAlert.h"
 
+#define DISPLAY_EVENT_BEZEL AILocalizedString(@"Display the Event Bezel",nil)
 
 @implementation ESEventBezelContactAlert
 
 - (NSMenuItem *)alertMenuItem
 {
-    NSMenuItem * menuItem = [[[NSMenuItem alloc] initWithTitle:@"Display the Event Bezel"
+    NSMenuItem * menuItem = [[[NSMenuItem alloc] initWithTitle:DISPLAY_EVENT_BEZEL
                                            target:self
                                            action:@selector(selectedAlert:)
                                     keyEquivalent:@""] autorelease];

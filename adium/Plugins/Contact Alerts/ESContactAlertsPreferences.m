@@ -10,7 +10,7 @@
 #import "ESContactAlerts.h"
 
 #define	ALERTS_PREF_NIB			@"ContactAlertsPrefs"
-#define ALERTS_PREF_TITLE		@"Contact Alerts"
+#define ALERTS_PREF_TITLE		AILocalizedString(@"Contact Alerts",nil)
 
 #define TABLE_COLUMN_CONTACT		@"contact"
 #define TABLE_COLUMN_ACTION		@"action"

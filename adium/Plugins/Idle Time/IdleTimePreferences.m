@@ -16,8 +16,8 @@
 #import "IdleTimePreferences.h"
 #import "IdleTimePlugin.h"
 
-#define IDLE_TIME_PREF_NIB		@"IdleTimePrefs"	//Name of preference nib
-#define IDLE_TIME_PREF_TITLE		@"Idle"			//Title of the preference view
+#define IDLE_TIME_PREF_NIB		@"IdleTimePrefs"		//Name of preference nib
+#define IDLE_TIME_PREF_TITLE		AILocalizedString(@"Idle",nil)  //Title of the preference view
 
 @interface IdleTimePreferences (PRIVATE)
 - (void)configureView;

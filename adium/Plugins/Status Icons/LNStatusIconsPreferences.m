@@ -11,7 +11,7 @@
 
 
 #define	STATUS_ICONS_PREF_NIB		@"StatusIconsPrefs"
-#define STATUS_ICONS_PREF_TITLE		@"Status Icons Display"
+#define STATUS_ICONS_PREF_TITLE		AILocalizedString(@"Status Icons Display",nil)
 
 @interface LNStatusIconsPreferences (PRIVATE)
 - (void)configureView;

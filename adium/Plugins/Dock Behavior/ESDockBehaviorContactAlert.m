@@ -10,6 +10,7 @@
 
 
 #define CONTACT_ALERT_ACTION_NIB @"DockBehaviorContactAlert"
+#define BOUNCE_THE_DOCK AILocalizedString(@"Bounce the dock","Contact Alert: Boucne the dock icon")
 
 @interface ESDockBehaviorContactAlert (PRIVATE)
 - (NSMenu *)behaviorListMenu;
@@ -36,7 +37,7 @@
 
 - (NSMenuItem *)alertMenuItem
 {
-    NSMenuItem * menuItem = [[[NSMenuItem alloc] initWithTitle:@"Bounce the dock"
+    NSMenuItem * menuItem = [[[NSMenuItem alloc] initWithTitle:BOUNCE_THE_DOCK
                                            target:self
                                            action:@selector(selectedAlert:)
                                     keyEquivalent:@""] autorelease];

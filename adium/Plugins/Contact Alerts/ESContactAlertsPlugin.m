@@ -10,6 +10,9 @@
 #import "ESContactAlertsPreferences.h"
 #import "AIContactStatusEventsPlugin.h"
 
+#define EDIT_CONTACTS_ALERTS    AILocalizedString(@"Edit Contact's Alerts",nil)
+#define EDIT_ALERTS		AILocalizedString(@"Edit Alerts",nil)
+
 @interface ESContactAlertsPlugin(PRIVATE)
 - (void)processEventActionArray:(NSMutableArray *)eventActionArray forObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys;
 @end
@@ -21,11 +24,11 @@
     AIMiniToolbarItem *toolbarItem;
 
     //Install the 'contact alerts' menu item
-    editContactAlertsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit Contact's Alerts" target:self action:@selector(editContactAlerts:) keyEquivalent:@""] autorelease];
+    editContactAlertsMenuItem = [[[NSMenuItem alloc] initWithTitle:EDIT_CONTACTS_ALERTS target:self action:@selector(editContactAlerts:) keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:editContactAlertsMenuItem toLocation:LOC_Contact_Action];
 
     //Add our 'contact alerts' contextual menu item
-    contactAlertsContextMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit Alerts" target:self action:@selector(editContextContactAlerts:) keyEquivalent:@""] autorelease];
+    contactAlertsContextMenuItem = [[[NSMenuItem alloc] initWithTitle:EDIT_ALERTS target:self action:@selector(editContextContactAlerts:) keyEquivalent:@""] autorelease];
     [[adium menuController] addContextualMenuItem:contactAlertsContextMenuItem toLocation:Context_Contact_Action];
 
     //Add our 'contact alerts' toolbar item

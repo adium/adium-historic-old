@@ -8,8 +8,13 @@
 #import "AIAliasSupportPreferences.h"
 #import "AIAliasSupportPlugin.h"
 
-#define DISPLAYFORMAT_PREF_TITLE	@"Contact Display Formatting"
+#define DISPLAYFORMAT_PREF_TITLE	AILocalizedString(@"Contact Display Formatting",nil)
 #define DISPLAYFORMAT_PREF_NIB		@"DisplayFormatPreferences"
+
+#define ALIAS   AILocalizedString(@"Alias",nil)
+#define ALIAS_SCREENNAME   AILocalizedString(@"Alias (Screen Name)",nil)
+#define SCREENNAME_ALIAS   AILocalizedString(@"Screen Name (Alias)",nil)
+#define SCREENNAME   AILocalizedString(@"Screen Name",nil)
 
 @interface AIAliasSupportPreferences (PRIVATE)
 - (void)configureView;
@@ -61,28 +66,28 @@
     NSMenu		*choicesMenu = [[NSMenu alloc] init];
     NSMenuItem		*menuItem;
 
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Alias"
+    menuItem = [[[NSMenuItem alloc] initWithTitle:ALIAS
                                            target:self
                                            action:@selector(changeFormat:)
                                     keyEquivalent:@""] autorelease];
     [menuItem setTag:DISPLAY_NAME];
     [choicesMenu addItem:menuItem];
 
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Alias (Screen Name)"
+    menuItem = [[[NSMenuItem alloc] initWithTitle:ALIAS_SCREENNAME
                                            target:self
                                            action:@selector(changeFormat:)
                                     keyEquivalent:@""] autorelease];
     [menuItem setTag:DISPLAY_NAME_SCREEN_NAME];
     [choicesMenu addItem:menuItem];
 
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Screen Name (Alias)"
+    menuItem = [[[NSMenuItem alloc] initWithTitle:SCREENNAME_ALIAS
                                            target:self
                                            action:@selector(changeFormat:)
                                     keyEquivalent:@""] autorelease];
     [menuItem setTag:SCREEN_NAME_DISPLAY_NAME];
     [choicesMenu addItem:menuItem];
 
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Screen Name"
+    menuItem = [[[NSMenuItem alloc] initWithTitle:SCREENNAME
                                            target:self
                                            action:@selector(changeFormat:)
                                     keyEquivalent:@""] autorelease];

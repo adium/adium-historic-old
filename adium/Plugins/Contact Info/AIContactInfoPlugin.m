@@ -11,6 +11,9 @@
 
 #define ALTERNATE_GET_INFO_MASK (NSCommandKeyMask | NSShiftKeyMask | NSAlternateKeyMask)
 
+#define VIEW_CONTACTS_INFO  AILocalizedString(@"View Contact's Info",nil)
+#define VIEW_INFO	    AILocalizedString(@"View Info",nil)
+
 @interface AIContactInfoPlugin (PRIVATE)
 
 @end
@@ -20,13 +23,13 @@
 - (void)installPlugin
 {
     //Install the Get Info menu item
-    viewContactInfoMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Contact's Info" target:self action:@selector(showContactInfo:) keyEquivalent:@"i"];
+    viewContactInfoMenuItem = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO target:self action:@selector(showContactInfo:) keyEquivalent:@"i"];
     [viewContactInfoMenuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
     [[adium menuController] addMenuItem:viewContactInfoMenuItem toLocation:LOC_Contact_Manage];
     
     //Install the alternate Get Info menu item which will let us mangle the shortcut as desired
     if ([NSApp isOnPantherOrBetter]) {
-        viewContactInfoMenuItem_alternate = [[NSMenuItem alloc] initWithTitle:@"View Contact's Info" target:self action:@selector(showContactInfo:) keyEquivalent:@"i"];
+        viewContactInfoMenuItem_alternate = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO target:self action:@selector(showContactInfo:) keyEquivalent:@"i"];
         [viewContactInfoMenuItem_alternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
         [viewContactInfoMenuItem_alternate setAlternate:YES];
         [[adium menuController] addMenuItem:viewContactInfoMenuItem_alternate toLocation:LOC_Contact_Manage];      
@@ -37,7 +40,7 @@
     }
     
     //Add our get info contextual menu item
-    getInfoContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Info" target:self action:@selector(showContextContactInfo:) keyEquivalent:@""];
+    getInfoContextMenuItem = [[NSMenuItem alloc] initWithTitle:VIEW_INFO target:self action:@selector(showContextContactInfo:) keyEquivalent:@""];
     [[adium menuController] addContextualMenuItem:getInfoContextMenuItem toLocation:Context_Contact_Manage];
 
     //Add our get info toolbar item

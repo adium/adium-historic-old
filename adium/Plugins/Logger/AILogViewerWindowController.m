@@ -31,6 +31,12 @@
 #define LOG_CONTENT_SEARCH_MAX_RESULTS		10000   //Max results allowed from a search
 #define LOG_RESULT_CLUMP_SIZE			10      //Number of logs to fetch at a time
 
+#define SEARCH_MENU     AILocalizedString(@"Search Menu",nil)
+#define FROM		AILocalizedString(@"From",nil)
+#define TO		AILocalizedString(@"To",nil)
+#define DATE		AILocalizedString(@"Date",nil)
+#define CONTENT		AILocalizedString(@"Content",nil)
+
 @interface AILogViewerWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
 - (void)initLogFiltering;
@@ -558,11 +564,11 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 //Build the search mode menu
 - (void)buildSearchMenu
 {
-    NSMenu  *cellMenu = [[[NSMenu alloc] initWithTitle:@"Search Menu"] autorelease];
-    [cellMenu addItem:[self _menuItemWithTitle:@"From" forSearchMode:LOG_SEARCH_FROM]];
-    [cellMenu addItem:[self _menuItemWithTitle:@"To" forSearchMode:LOG_SEARCH_TO]];
-    [cellMenu addItem:[self _menuItemWithTitle:@"Date" forSearchMode:LOG_SEARCH_DATE]];
-    if(!popUp_jagSearchMode) [cellMenu addItem:[self _menuItemWithTitle:@"Content" forSearchMode:LOG_SEARCH_CONTENT]]; //Not in jag
+    NSMenu  *cellMenu = [[[NSMenu alloc] initWithTitle:SEARCH_MENU] autorelease];
+    [cellMenu addItem:[self _menuItemWithTitle:FROM forSearchMode:LOG_SEARCH_FROM]];
+    [cellMenu addItem:[self _menuItemWithTitle:TO forSearchMode:LOG_SEARCH_TO]];
+    [cellMenu addItem:[self _menuItemWithTitle:DATE forSearchMode:LOG_SEARCH_DATE]];
+    if(!popUp_jagSearchMode) [cellMenu addItem:[self _menuItemWithTitle:CONTENT forSearchMode:LOG_SEARCH_CONTENT]]; //Not in jag
     
     //In 10.2 we use a popup button here, later we use the search field's embedded menu
     if(popUp_jagSearchMode){

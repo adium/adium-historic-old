@@ -15,7 +15,7 @@
 
 //Strings
 #define AIM_TOC2_PREFERENCE_VIEW	@"AIMTOCPreferenceView"
-#define AIM_TOC2_PREFERENCE_TITLE	@"AIM Connection"
+#define AIM_TOC2_PREFERENCE_TITLE	AILocalizedString(@"AIM Connection",nil)
 
 //File Names
 #define AIM_TOC2_DEFAULT_PREFS 		@"Default Preferences"

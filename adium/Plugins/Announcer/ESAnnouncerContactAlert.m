@@ -11,6 +11,8 @@
 
 #define CONTACT_ALERT_ACTION_NIB @"AnnouncerContactAlert"
 
+#define SPEAK_TEXT  AILocalizedString(@"Speak text","Contact alert: Speak text aloud")
+
 @implementation ESAnnouncerContactAlert
 
 -(NSString *)nibName
@@ -20,7 +22,7 @@
 
 - (NSMenuItem *)alertMenuItem
 {
-    NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:@"Speak text"
+    NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:SPEAK_TEXT
                                                        target:self
                                                        action:@selector(selectedAlert:)
                                                 keyEquivalent:@""] autorelease];

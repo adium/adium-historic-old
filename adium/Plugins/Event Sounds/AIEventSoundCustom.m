@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Sun Oct 05 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIEventSoundCustom.h"
@@ -12,8 +11,10 @@
 #define NIB_EVENT_SOUND_CUSTOM		@"EventSoundCustomPanel"
 #define	TABLE_COLUMN_SOUND		@"sound"
 #define	TABLE_COLUMN_EVENT		@"event"
-#define ADD_EVENT_MENU_ITEM		@"Add Event…"
+#define ADD_EVENT_MENU_ITEM		AILocalizedString(@"Add Event…",nil)
 
+#define OTHER_ELLIPSIS   AILocalizedString(@"Other…",nil)
+#define OTHER		    AILocalizedString(@"Other",nil)
 
 @interface AIEventSoundCustom (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
@@ -266,7 +267,7 @@ AIEventSoundCustom	*sharedInstance = nil;
             }
         }
         //Add the Other... item
-        menuItem = [[[NSMenuItem alloc] initWithTitle:@"Other..."
+        menuItem = [[[NSMenuItem alloc] initWithTitle:OTHER_ELLIPSIS
                                                target:self
                                                action:@selector(selectSound:)
                                         keyEquivalent:@""] autorelease];            
@@ -288,9 +289,9 @@ AIEventSoundCustom	*sharedInstance = nil;
             NSMenuItem	*menuItem;
 	    
             //Add an "Other" header if necessary
-            if([soundMenu_cached indexOfItemWithTitle:@"Other"] == -1) {
+            if([soundMenu_cached indexOfItemWithTitle:OTHER] == -1) {
                 [soundMenu_cached insertItem:[NSMenuItem separatorItem] atIndex:([soundMenu_cached numberOfItems]-1)]; //Divider
-                menuItem = [[[NSMenuItem alloc] initWithTitle:@"Other"
+                menuItem = [[[NSMenuItem alloc] initWithTitle:OTHER
                                                        target:nil
                                                        action:nil
                                                 keyEquivalent:@""] autorelease];

@@ -194,18 +194,18 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
         NSMenu		*eventMenu = [[NSMenu alloc] init];
         
         //Add the static/display menu item
-        [eventMenu addItemWithTitle:@"Add Event…" target:nil action:nil keyEquivalent:@""];
+        [eventMenu addItemWithTitle:AILocalizedString(@"Add Event…",nil) target:nil action:nil keyEquivalent:@""];
         
         //Add a menu item for each event
-        [eventMenu addItem:[self eventMenuItem:@"Signed On" withDisplay:@"Signed On"]];
-        [eventMenu addItem:[self eventMenuItem:@"Signed Off" withDisplay:@"Signed Off"]];
-        [eventMenu addItem:[self eventMenuItem:@"Away" withDisplay:@"Went Away"]];
-        [eventMenu addItem:[self eventMenuItem:@"!Away" withDisplay:@"Came Back From Away"]];
-        [eventMenu addItem:[self eventMenuItem:@"Idle" withDisplay:@"Became Idle"]];
-        [eventMenu addItem:[self eventMenuItem:@"!Idle" withDisplay:@"Became Unidle"]];
-        [eventMenu addItem:[self eventMenuItem:@"Typing" withDisplay:@"Is Typing"]];
-        [eventMenu addItem:[self eventMenuItem:@"UnviewedContent" withDisplay:@"Has Unviewed Content"]];
-        [eventMenu addItem:[self eventMenuItem:@"Warning" withDisplay:@"Was Warned"]];
+        [eventMenu addItem:[self eventMenuItem:@"Signed On" withDisplay:AILocalizedString(@"Signed On",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"Signed Off" withDisplay:AILocalizedString(@"Signed Off",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"Away" withDisplay:AILocalizedString(@"Went Away",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"!Away" withDisplay:AILocalizedString(@"Came Back From Away",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"Idle" withDisplay:AILocalizedString(@"Became Idle",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"!Idle" withDisplay:AILocalizedString(@"Became Unidle",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"Typing" withDisplay:AILocalizedString(@"Is Typing",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"UnviewedContent" withDisplay:AILocalizedString(@"Has Unviewed Content",nil)]];
+        [eventMenu addItem:[self eventMenuItem:@"Warning" withDisplay:AILocalizedString(@"Was Warned",nil)]];
         eventMenu_cached = eventMenu;
     }
     return(eventMenu_cached);

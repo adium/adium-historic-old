@@ -34,6 +34,10 @@
 #define PREVIOUS_MESSAGE_MENU_TITLE		AILocalizedString(@"Previous Message",nil)
 #define NEXT_MESSAGE_MENU_TITLE			AILocalizedString(@"Next Message",nil)
 
+#define CHAT_IN_NEW_WINDOW			AILocalizedString(@"Chat in New Window",nil)
+#define CHAT_IN_PRIMARY_WINDOW			AILocalizedString(@"Chat in Primary Window",nil)
+#define CONSOLIDATE_ALL_CHATS			AILocalizedString(@"Consolidate All Chats",nil)
+#define TOGGLE_TAB_BAR				AILocalizedString(@"Toggle Tab Bar",nil)
 
 @interface AIDualWindowInterfacePlugin (PRIVATE)
 - (void)addMenuItems;
@@ -590,17 +594,17 @@
     }
 
     //Add contextual menu items
-    menuItem_openInNewWindow = [[NSMenuItem alloc] initWithTitle:@"Chat in New Window" target:self action:@selector(openChatInNewWindow:) keyEquivalent:@""];
+    menuItem_openInNewWindow = [[NSMenuItem alloc] initWithTitle:CHAT_IN_NEW_WINDOW target:self action:@selector(openChatInNewWindow:) keyEquivalent:@""];
     [[adium menuController] addContextualMenuItem:menuItem_openInNewWindow toLocation:Context_Contact_Additions];
     
-    menuItem_openInPrimaryWindow = [[NSMenuItem alloc] initWithTitle:@"Chat in Primary Window" target:self action:@selector(openChatInPrimaryWindow:) keyEquivalent:@""];
+    menuItem_openInPrimaryWindow = [[NSMenuItem alloc] initWithTitle:CHAT_IN_PRIMARY_WINDOW target:self action:@selector(openChatInPrimaryWindow:) keyEquivalent:@""];
     [[adium menuController] addContextualMenuItem:menuItem_openInPrimaryWindow toLocation:Context_Contact_Additions];
-
-    menuItem_consolidate = [[NSMenuItem alloc] initWithTitle:@"Consolidate All Chats" target:self action:@selector(consolidateAllChats:) keyEquivalent:@"O"];
+    
+    menuItem_consolidate = [[NSMenuItem alloc] initWithTitle:CONSOLIDATE_ALL_CHATS target:self action:@selector(consolidateAllChats:) keyEquivalent:@"O"];
     [[adium menuController] addMenuItem:menuItem_consolidate toLocation:LOC_Window_Commands];
-	
-	menuItem_toggleTabBar = [[NSMenuItem alloc] initWithTitle:@"Toggle Tab Bar" target:nil action:@selector(toggleForceTabBarVisible:) keyEquivalent:@""];
-	[[adium menuController] addMenuItem:menuItem_toggleTabBar toLocation:LOC_Window_Commands];
+    
+    menuItem_toggleTabBar = [[NSMenuItem alloc] initWithTitle:TOGGLE_TAB_BAR target:nil action:@selector(toggleForceTabBarVisible:) keyEquivalent:@""];
+    [[adium menuController] addMenuItem:menuItem_toggleTabBar toLocation:LOC_Window_Commands];
 }
 
 //Build the contents of the 'window' menu

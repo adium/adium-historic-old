@@ -17,7 +17,7 @@
 #import "AIIdleTimeDisplayPreferences.h"
 
 #define	IDLE_TIME_DISPLAY_PREF_NIB	@"IdleTimeDisplayPrefs"
-#define IDLE_TIME_DISPLAY_PREF_TITLE	@"Idle Time Display"
+#define IDLE_TIME_DISPLAY_PREF_TITLE	AILocalizedString(@"Idle Time Display",nil)
 
 @interface AIIdleTimeDisplayPreferences (PRIVATE)
 - (void)configureView;
