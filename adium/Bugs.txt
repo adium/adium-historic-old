@@ -29,25 +29,27 @@
 	Adding an existing contact causes issues.  It may result in duplicate contacts on the user's
 	list, and will make the contact appear offline.  Sometimes they will appear on the list 
 	twice until Adium is restarted.
-	
-- Fights for Yahoo connection
-    If Adium is knocked off yahoo by another client, it will auto-reconnect.
 
 - Auto-reconnect too aggressive
     If an AIM account fails to connect due to signing on and off too quickly, Adium will continue to
     try and reconnect, displaying the error message over and over and trying its best to get that 
     name blocked for as long as possible.
 
-
 //-------------------------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //-------------------------------------------------------------------------------------------------------
 - [ICQ] Displaying raw HTML (Messages sent from iChat)
 	Libgaim is escaping all incoming HTML characters over ICQ.
+	
+- [ICQ] Encoding problems
+	Encoding, specifically in Hebrew, is not being received properly.  Sending appears to work fine.
 
 - [MSN] Outoing chat appears twice
 	Libgaim is sending our message back to us
 
+- [Yahoo! Japan] Encoding problems
+	Japanese isn't being sent properly.  I would guess this limits the usefulness of the protocol ;)
+	
 - [ALL] File transfer limitations
     File transfers often fails to navigate firewalls and routers
 
