@@ -56,24 +56,26 @@ static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 //We will probably want to remove this method and have everyone pass us list objects instead
 + (NSImage *)statusIconForStatusID:(NSString *)statusID type:(AIStatusIconType)iconType direction:(AIIconDirection)iconDirection
 {
-	NSImage				*statusIcon;
+	NSImage				*statusIcon = nil;
 	
-	//Retrieve the service icon from our cache
-	statusIcon = [statusIcons[iconType][iconDirection] objectForKey:statusID];
-
-	//Load the status icon if necessary
-	if(!statusIcon){
-		NSString	*path = [statusIconBasePath stringByAppendingPathComponent:[statusIconNames[iconType] objectForKey:statusID]];
+	if(statusID){
+		//Retrieve the service icon from our cache
+		statusIcon = [statusIcons[iconType][iconDirection] objectForKey:statusID];
 		
-		if(path){
-			statusIcon = [[NSImage alloc] initByReferencingFile:path];
-
-			if(statusIcon){
-				if(iconDirection == AIIconFlipped) [statusIcon setFlipped:YES];
-				[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusID];
-			}
+		//Load the status icon if necessary
+		if(!statusIcon){
+			NSString	*path = [statusIconBasePath stringByAppendingPathComponent:[statusIconNames[iconType] objectForKey:statusID]];
 			
-			[statusIcon release];
+			if(path){
+				statusIcon = [[NSImage alloc] initByReferencingFile:path];
+				
+				if(statusIcon){
+					if(iconDirection == AIIconFlipped) [statusIcon setFlipped:YES];
+					[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusID];
+				}
+				
+				[statusIcon release];
+			}
 		}
 	}
 	
