@@ -144,7 +144,7 @@ typedef enum {
 - (void)updateStatusString:(NSString *)status forKey:(NSString *)key;
 - (void)setStatusString:(NSString *)inString forKey:(NSString *)key;
 
-
+- (BOOL)requiresPassword;
 - (void)connect;
 - (void)disconnect;
 
