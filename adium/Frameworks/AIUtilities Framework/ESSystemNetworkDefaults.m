@@ -18,55 +18,55 @@
 	
     Boolean             result;
     	
-	const CFStringRef*  enableKey;
+	CFStringRef			enableKey;
 	CFNumberRef         enableNum = nil;
     int                 enable;
     
-	const CFStringRef*  portKey;
+	CFStringRef			portKey;
 	CFNumberRef         portNum = nil;
     int                 portInt;
 
-	const CFStringRef*  proxyKey;
+	CFStringRef			proxyKey;
 	CFStringRef         hostStr = nil;
     char				host[300];
     size_t				hostSize;
 	
 	switch(proxyType){
 		case Proxy_HTTP: {
-			enableKey = &kSCPropNetProxiesHTTPEnable;
-			portKey = &kSCPropNetProxiesHTTPPort;
-			proxyKey = &kSCPropNetProxiesHTTPProxy;
+			enableKey = kSCPropNetProxiesHTTPEnable;
+			portKey = kSCPropNetProxiesHTTPPort;
+			proxyKey = kSCPropNetProxiesHTTPProxy;
 			break;
 		}
 		case Proxy_SOCKS4:
 		case Proxy_SOCKS5: {
-			enableKey = &kSCPropNetProxiesSOCKSEnable;
-			portKey = &kSCPropNetProxiesSOCKSPort;
-			proxyKey = &kSCPropNetProxiesSOCKSProxy;
+			enableKey = kSCPropNetProxiesSOCKSEnable;
+			portKey = kSCPropNetProxiesSOCKSPort;
+			proxyKey = kSCPropNetProxiesSOCKSProxy;
 			break;
 		}
 		case Proxy_HTTPS: {
-			enableKey = &kSCPropNetProxiesHTTPSEnable;
-			portKey = &kSCPropNetProxiesHTTPSPort;
-			proxyKey = &kSCPropNetProxiesHTTPSProxy;
+			enableKey = kSCPropNetProxiesHTTPSEnable;
+			portKey = kSCPropNetProxiesHTTPSPort;
+			proxyKey = kSCPropNetProxiesHTTPSProxy;
 			break;
 		}
 		case Proxy_FTP: {
-			enableKey = &kSCPropNetProxiesFTPEnable;
-			portKey = &kSCPropNetProxiesFTPPort;
-			proxyKey = &kSCPropNetProxiesFTPProxy;
+			enableKey = kSCPropNetProxiesFTPEnable;
+			portKey = kSCPropNetProxiesFTPPort;
+			proxyKey = kSCPropNetProxiesFTPProxy;
 			break;
 		}
 		case Proxy_RTSP: {
-			enableKey = &kSCPropNetProxiesRTSPEnable;
-			portKey = &kSCPropNetProxiesRTSPPort;
-			proxyKey = &kSCPropNetProxiesRTSPProxy;
+			enableKey = kSCPropNetProxiesRTSPEnable;
+			portKey = kSCPropNetProxiesRTSPPort;
+			proxyKey = kSCPropNetProxiesRTSPProxy;
 			break;
 		}
 		case Proxy_Gopher: {
-			enableKey = &kSCPropNetProxiesGopherEnable;
-			portKey = &kSCPropNetProxiesGopherPort;
-			proxyKey = &kSCPropNetProxiesGopherProxy;
+			enableKey = kSCPropNetProxiesGopherEnable;
+			portKey = kSCPropNetProxiesGopherPort;
+			proxyKey = kSCPropNetProxiesGopherProxy;
 			break;
 		}
 		default: {
@@ -81,7 +81,7 @@
     // Get the enable flag.  This isn't a CFBoolean, but a CFNumber.
     // Check if SOCKS is enabled
     if (result) {
-        enableNum = (CFNumberRef) CFDictionaryGetValue(proxyDict, *enableKey);
+        enableNum = (CFNumberRef) CFDictionaryGetValue(proxyDict, enableKey);
         
         result = (enableNum != NULL)
             && (CFGetTypeID(enableNum) == CFNumberGetTypeID());
@@ -96,7 +96,7 @@
     // field in the Network preferences panel, the CFStringGetCString
     // function will fail and this function will return false.
     if (result) {
-        hostStr = (CFStringRef) CFDictionaryGetValue(proxyDict, *proxyKey);
+        hostStr = (CFStringRef) CFDictionaryGetValue(proxyDict, proxyKey);
         
         result = (hostStr != NULL)
             && (CFGetTypeID(hostStr) == CFStringGetTypeID());
@@ -108,7 +108,7 @@
     
     //Get the proxy port
     if (result) {
-        portNum = (CFNumberRef) CFDictionaryGetValue(proxyDict, *portKey);
+        portNum = (CFNumberRef) CFDictionaryGetValue(proxyDict, portKey);
         
         result = (portNum != NULL)
             && (CFGetTypeID(portNum) == CFNumberGetTypeID());
