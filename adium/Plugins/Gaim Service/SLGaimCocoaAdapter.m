@@ -206,6 +206,7 @@ static void socketCallback(CFSocketRef s,
 #pragma mark Init
 - (id)init
 {
+	sourceId = 0;
     sourceInfoDict = [[NSMutableDictionary alloc] init];
     NSAssert(myself == nil, @"SLGaimCocoaAdapter is a singleton");
     myself = self;
