@@ -178,6 +178,7 @@
 		register UniChar *ch = buf;
 		while(remaining--) {
 			*ch = table[*ch];
+			++ch;
 		}
 
 		result = [NSString stringWithCharacters:buf length:length];
