@@ -137,6 +137,10 @@
         [tabView_messages removeTabViewItem:[tabView_messages tabViewItemAtIndex:0]];
     }
 
+//    [[self window] setShowsResizeIndicator:NO];
+    [[self window] setBottomCornerRounded:NO]; //Sneaky lil private method
+
+
     //observe
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabViewDidChangeOrderOfItems:) name:AITabView_DidChangeOrderOfItems object:tabView_messages];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabViewDidChangeSelectedItem:) name:AITabView_DidChangeSelectedItem object:tabView_messages];

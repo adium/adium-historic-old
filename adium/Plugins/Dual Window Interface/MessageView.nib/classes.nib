@@ -13,6 +13,7 @@
             CLASS = AIMessageViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_send" = AIPlasticButton; 
                 interface = id; 
                 "scrollView_messages" = AIAutoScrollView; 
                 "scrollView_outgoingView" = NSScrollView; 
@@ -36,6 +37,7 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = AIMiniToolbar; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {CLASS = AISendingTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 

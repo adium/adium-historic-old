@@ -67,7 +67,7 @@
 
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_SPELLING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SPELLING];
-
+    
     //Open the contact list window
     [self showContactList:nil];
 

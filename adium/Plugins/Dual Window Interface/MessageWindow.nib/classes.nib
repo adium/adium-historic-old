@@ -1,5 +1,6 @@
 {
     IBClasses = (
+        {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
             CLASS = AICustomTabsView; 
             LANGUAGE = ObjC; 
@@ -12,9 +13,10 @@
             SUPERCLASS = AISendingTextView; 
         }, 
         {
+            ACTIONS = {closeWindow = id; }; 
             CLASS = AIMessageWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"tabView_messages" = NSTabView; }; 
+            OUTLETS = {"image_test" = NSImageView; interface = id; "tabView_messages" = NSTabView; }; 
             SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = AIMiniToolbar; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 

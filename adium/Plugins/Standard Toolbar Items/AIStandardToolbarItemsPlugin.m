@@ -48,7 +48,7 @@
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
 
     //Divider
-    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Divider"];
+/*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Divider"];
     [toolbarItem setImage:[AIImageUtilities imageNamed:@"divider" forClass:[self class]]];
     [toolbarItem setTarget:nil];
     [toolbarItem setAction:nil];
@@ -57,10 +57,10 @@
     [toolbarItem setPaletteLabel:@"Separator"];
     [toolbarItem setAllowsDuplicatesInToolbar:YES];
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
-
+*/
     //New Message
     toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"NewMessage"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"mail" forClass:[self class]]];
+    [toolbarItem setImage:[AIImageUtilities imageNamed:@"message" forClass:[self class]]];
     [toolbarItem setTarget:self];
     [toolbarItem setAction:@selector(newMessage:)];
     [toolbarItem setEnabled:YES];
@@ -70,7 +70,7 @@
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
 
     //Close Message
-    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"CloseMessage"];
+/*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"CloseMessage"];
     [toolbarItem setImage:[AIImageUtilities imageNamed:@"close" forClass:[self class]]];
     [toolbarItem setTarget:self];
     [toolbarItem setAction:@selector(closeMessage:)];
@@ -79,9 +79,9 @@
     [toolbarItem setPaletteLabel:@"Close message"];
     [toolbarItem setDelegate:self];
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
-
+*/
     //Send Message
-    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"SendMessage"];
+/*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"SendMessage"];
     [toolbarItem setImage:[AIImageUtilities imageNamed:@"message" forClass:[self class]]];
     [toolbarItem setTarget:self];
     [toolbarItem setAction:@selector(sendMessage:)];
@@ -101,7 +101,7 @@
     [toolbarItem setPaletteLabel:@"Send message (button)"];
     [toolbarItem setDelegate:self];
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
-
+*/
 }
 
 - (void)uninstallPlugin

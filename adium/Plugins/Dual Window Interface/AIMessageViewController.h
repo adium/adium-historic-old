@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIMiniToolbar, AIListObject, AIAdium, AIAccount, AISendingTextView, AIAutoScrollView, AIChat;
+@class AIMiniToolbar, AIListObject, AIAdium, AIAccount, AISendingTextView, AIAutoScrollView, AIChat, AIPlasticButton;
 @protocol AIContainerInterface, AIAccountSelectionViewDelegate;
 
 @interface AIMessageViewController : NSObject <AIAccountSelectionViewDelegate> {
@@ -27,6 +27,8 @@
 
     IBOutlet	NSTableView		*tableView_userList;
     IBOutlet	AIAutoScrollView	*scrollView_userList;
+
+    IBOutlet	AIPlasticButton		*button_send;
 
     NSView				*view_messages;
     NSView				*view_accountSelection;

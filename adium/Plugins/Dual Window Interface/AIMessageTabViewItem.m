@@ -22,11 +22,14 @@
 #define LEFT_VIEW_HEIGHT 	13
 #define LEFT_MARGIN		0
 
+#define EMBOSS_OFFSET_X		0
+#define EMBOSS_OFFSET_Y		0.5
+
 @interface AIMessageTabViewItem (PRIVATE)
 - (id)initWithMessageView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect;
 - (NSSize)sizeOfLabel:(BOOL)computeMin;
-- (NSAttributedString *)attributedLabelString;
+- (NSAttributedString *)attributedLabelString:(BOOL)white;
 @end
 
 @implementation AIMessageTabViewItem
@@ -131,7 +134,7 @@
     AIMutableOwnerArray	*leftViewArray;
 
     //Draw icon
-    leftViewArray = [[messageView listObject] displayArrayForKey:@"Tab Left View"];
+/*    leftViewArray = [[messageView listObject] displayArrayForKey:@"Tab Left View"];
 
     //If a left view is present
     if(leftViewArray && [leftViewArray count]){
@@ -157,10 +160,11 @@
             labelRect.origin.x += (drawRect.size.width + LEFT_VIEW_PADDING);
             labelRect.size.width -= (drawRect.size.width + LEFT_VIEW_PADDING);
         }
-    }
+    }*/
 
-    //Draw name    
-    [[self attributedLabelString] drawInRect:labelRect];
+    //Draw name
+//    [[self attributedLabelString:YES] drawInRect:NSMakeRect(labelRect.origin.x + EMBOSS_OFFSET_X, labelRect.origin.y + EMBOSS_OFFSET_Y, labelRect.size.width, labelRect.size.height)];
+    [[self attributedLabelString:NO] drawInRect:labelRect];
 }
 
 - (NSSize)sizeOfLabel:(BOOL)computeMin
@@ -169,8 +173,8 @@
     NSSize		size;
 
     //Name width
-    size = [[self attributedLabelString] size];
-
+    size = [[self attributedLabelString:NO] size];
+/*
     //Icon widths
     leftViewArray = [[messageView listObject] displayArrayForKey:@"Tab Left View"];
     if(leftViewArray && [leftViewArray count]){ //If a left view is present
@@ -185,7 +189,7 @@
 
             size.width += [handler widthForHeight:LEFT_VIEW_HEIGHT computeMax:NO] + LEFT_VIEW_PADDING;
         }
-    }
+    }*/ 
 
     //Make sure we return an even integer width
     if(size.width != (int)size.width){
@@ -202,7 +206,7 @@
 }
 
 //
-- (NSAttributedString *)attributedLabelString
+- (NSAttributedString *)attributedLabelString:(BOOL)white
 {
     AIListObject		*object = [messageView listObject];
     NSFont			*font = [NSFont systemFontOfSize:11];
@@ -211,9 +215,13 @@
     NSMutableParagraphStyle	*paragraphStyle;
     
     //Color
-    textColor = [[object displayArrayForKey:@"Text Color"] averageColor];
-    if(!textColor){
-        textColor = [NSColor blackColor];
+    if(!white){
+        textColor = [[object displayArrayForKey:@"Text Color"] averageColor];
+        if(!textColor){
+            textColor = [NSColor blackColor];
+        }
+    }else{
+        textColor = [NSColor whiteColor];
     }
 
     //Paragraph Style (Turn off clipping by word)

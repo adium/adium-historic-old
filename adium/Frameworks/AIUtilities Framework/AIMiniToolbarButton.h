@@ -14,10 +14,11 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import "AIPlasticButton.h"
 
 @class AIMiniToolbarItem, AIMiniToolbar;
 
-@interface AIMiniToolbarButton : NSButton {
+@interface AIMiniToolbarButton : AIPlasticButton {
     AIMiniToolbarItem	*toolbarItem;
     AIMiniToolbar	*toolbar;
 }

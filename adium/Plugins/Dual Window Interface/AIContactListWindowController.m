@@ -105,6 +105,9 @@
     //Register for the selection notification
     [[owner notificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:contactListView];
 
+    //
+    //[[self window] setBottomCornerRounded:NO]; //Sneaky lil private method
+
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
 

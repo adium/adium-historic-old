@@ -113,7 +113,7 @@ extern void* objc_getClass(const char *name);
     //Add the handle
     [handleDict setObject:handle forKey:[handle UID]]; //Add it locally
     //Add it server-side
-    [AIMService addBuddies:[NSArray arrayWithObject:[handle UID]] toGroups:[NSArray arrayWithObject:@"iChat"]];
+    [AIMService addBuddies:[NSArray arrayWithObject:[handle UID]] toGroups:[NSArray arrayWithObject:inGroup]];
 
     //Update the contact list
     [[owner contactController] handle:handle addedToAccount:self];
@@ -137,6 +137,11 @@ extern void* objc_getClass(const char *name);
 
 - (BOOL)addServerGroup:(NSString *)inGroup
 {
+//    - (char)renameGroup:fp12 to:fp16;									//** 2.0 New **
+//    - groups;												//** 2.0 New
+
+//    NSLog(@"groups:%@",[AIMService groups]);
+
     return(YES);
 }
 
@@ -147,6 +152,8 @@ extern void* objc_getClass(const char *name);
 
 - (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName
 {
+    [AIMService renameGroup:inGroup to:newName];
+
     return(YES);
 }
 
@@ -696,6 +703,55 @@ extern void* objc_getClass(const char *name);
 - (oneway void)myStatusChanged:(id)unknown{
     NSLog(@"(iChat)myStatusChanged (%@)",unknown);
 }
+- (oneway void)daemonPersistentProperty:fp12 changedTo:fp16{
+    NSLog(@"(iChat)daemonPersistentProperty (%@, %@)",fp12,fp16);
+}
+
+- (oneway void)service:fp12 handleVCOOB:fp16 action:(unsigned long)fp20 param:(unsigned long)fp24{
+    NSLog(@"(iChat)handleVCOOB (%@, %i, %i)", fp16, (int)fp20, (int)fp24);    
+}
+
+- (oneway void)service:fp12 counterProposalFrom:fp16 connectData:fp20{
+    NSLog(@"(iChat)counterProposalFrom (%@, %@)", fp16, fp20);    
+}
+
+- (oneway void)service:fp12 cancelVCInviteFrom:fp16{
+    NSLog(@"(iChat)cancelVCInviteFrom (%@)", fp16);    
+}
+
+- (oneway void)service:fp12 responseToVCRequest:fp16 response:(int)fp20 connectData:fp24{
+    NSLog(@"(iChat)responseToVCRequest (%@, %i, %@)", fp16, fp20, fp24);
+}
+
+- (oneway void)service:fp12 invitedToVC:fp16 audioOnly:(char)fp20 callerExtIP:fp24 callerExtSIP:(unsigned int)fp28{
+    NSLog(@"(iChat)invitedToVC (%i, %@, %i)", fp20, fp24, fp28);
+}
+
+- (oneway void)service:fp12 buddy:fp16 shareDirectory:fp20 listing:fp24{
+    NSLog(@"(iChat)shareDirectory (%@, %@, %@)", fp16, fp20, fp24);
+}
+
+- (oneway void)service:fp12 shareUploadStarted:fp16{
+    NSLog(@"(iChat)shareUploadStarted (%@)", fp16);
+}
+
+- (oneway void)service:fp12 buddyGroupsChanged:fp16{
+    NSLog(@"(iChat)buddyGroupsChanged (%@)", fp16);
+}
+
+- (oneway void)service:fp12 providePiggyback:(char)fp16{
+    NSLog(@"(iChat)buddyGroupsChanged (%i)", fp16);
+}
+
+- (oneway void)service:fp12 capabilitiesChanged:(unsigned int)fp16{
+    NSLog(@"(iChat)capabilitiesChanged (%i)", fp16);
+}
+
+- (oneway void)service:fp12 defaultsChanged:fp16{
+    NSLog(@"(iChat)defaultsChanged (%@)", fp16);
+}
+
+
 
 //Removes all the possible status flags (that are valid on AIM/iChat) from the passed handle
 - (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle

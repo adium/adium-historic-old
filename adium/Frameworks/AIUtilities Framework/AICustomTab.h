@@ -27,12 +27,14 @@
     NSImage		*tabPushLeft;
     NSImage		*tabPushMiddle;
     NSImage		*tabPushRight;
-
+    NSImage	*tabDivider;
+    
     //Properties
     BOOL		selected;
     BOOL		depressed;
     BOOL		dragging;
-
+    BOOL	drawDivider;
+    
     NSTrackingRectTag	trackingRectTag;
 
     NSTabViewItem	*tabViewItem;
