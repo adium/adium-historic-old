@@ -83,10 +83,16 @@
     [dictionary setObject:inColor forKey:NSForegroundColorAttributeName];
 }
 
+//Sub-backround color (drawn just behind the text)
+- (void)setTextBackgroundColor:(NSColor *)inColor
+{
+    [dictionary setObject:inColor forKey:NSBackgroundColorAttributeName];
+}
+
 //Set the text background color
 - (void)setBackgroundColor:(NSColor *)inColor
 {
-    [dictionary setObject:inColor forKey:NSBackgroundColorAttributeName];
+    [dictionary setObject:inColor forKey:AIBodyColorAttributeName];
 }
 
 //Enable a masked trait (bold, italic)

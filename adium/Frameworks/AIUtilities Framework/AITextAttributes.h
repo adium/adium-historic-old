@@ -15,6 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+#define AIBodyColorAttributeName	@"AIBodyColor"
 
 @interface AITextAttributes : NSObject {
 
@@ -35,6 +36,7 @@
 - (NSDictionary *)dictionary;
 - (void)setUnderline:(BOOL)inUnderline;
 - (void)setTextColor:(NSColor *)inColor;
+- (void)setTextBackgroundColor:(NSColor *)inColor;
 - (void)setBackgroundColor:(NSColor *)inColor;
 - (void)setLinkURL:(NSString *)inURL;
 

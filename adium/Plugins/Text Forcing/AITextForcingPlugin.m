@@ -64,7 +64,11 @@
             [contentMessage setMessage:message];
         }
         if(forceBackground){
-            [message addAttribute:NSBackgroundColorAttributeName value:force_desiredBackgroundColor range:NSMakeRange(0, [message length])];
+            //Add the forced body color
+            [message addAttribute:AIBodyColorAttributeName value:force_desiredBackgroundColor range:NSMakeRange(0, [message length])];
+            //Remove any 'sub-background' colors
+            [message removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(0, [message length])];
+
             [contentMessage setMessage:message];
         }
         

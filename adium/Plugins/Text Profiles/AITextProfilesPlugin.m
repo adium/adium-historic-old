@@ -12,6 +12,10 @@
 
 #define CONTACT_PROFILE_NIB	@"ContactProfile"	//file name of the contact info profile nib
 
+@interface AITextProfilesPlugin (PRIVATE)
+- (void)displayProfile:(NSAttributedString *)profile;
+@end
+
 @implementation AITextProfilesPlugin
 
 - (void)installPlugin
@@ -53,9 +57,9 @@
         //Fill in the profile
         ownerArray = [activeContactObject statusArrayForKey:@"TextProfile"];
         if(ownerArray && [ownerArray count] != 0 && (profile = [ownerArray objectAtIndex:0])){
-            [[textView_contactProfile textStorage] setAttributedString:profile];
+            [self displayProfile:profile];
         }else{
-            [textView_contactProfile setString:@""];
+            [self displayProfile:nil];
         }
     }
 }
@@ -71,13 +75,38 @@
         //Update our display with the new profile
         ownerArray = [activeContactObject statusArrayForKey:@"TextProfile"];
         if(ownerArray && [ownerArray count] != 0 && (profile = [ownerArray objectAtIndex:0])){
-            [[textView_contactProfile textStorage] setAttributedString:profile];
+            [self displayProfile:profile];
         }else{
-            [textView_contactProfile setString:@""];
+            [self displayProfile:nil];
         }
     }
 
     return(nil); //We've modified no display attributes, return nil
+}
+
+//Displays the attributed string in the profile window.  Pass nil for no profile
+- (void)displayProfile:(NSAttributedString *)profile
+{
+    if(profile){
+        NSColor	*backgroundColor;
+        
+        //Display the string
+        [[textView_contactProfile textStorage] setAttributedString:profile];
+
+        //Set the background color
+        backgroundColor = [profile attribute:AIBodyColorAttributeName atIndex:0 longestEffectiveRange:nil inRange:NSMakeRange(0,[profile length])];
+        [textView_contactProfile setBackgroundColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])];
+
+    }else{
+        //Remove any existing profile
+        [textView_contactProfile setString:@""];
+
+        //Set background back to white
+        [textView_contactProfile setBackgroundColor:[NSColor whiteColor]];
+        
+    }
+
+    [textView_contactProfile setNeedsDisplay:YES];
 }
 
 @end
