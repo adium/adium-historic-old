@@ -32,7 +32,7 @@
 //Preference view is closing
 - (void)viewWillClose
 {
-	[listObject release];
+	[listObject release]; listObject = nil;
 }
 
 //Configure the pane for a list object

@@ -63,7 +63,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)dealloc
 {
 	[displayedObject release];
-    NSLog(@"dealloc info window");
     [super dealloc];
 }	
 
@@ -135,7 +134,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	
 	//Close down
 	[[adium notificationCenter] removeObserver:self];
-    [self autorelease]; //sharedContactInfoInstance = nil;
+    [self autorelease]; sharedContactInfoInstance = nil;
 	
     return(YES);
 }
@@ -186,6 +185,9 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		if([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]){
 			[[[self window] toolbar] setSelectedItemIdentifier:[tabViewItem identifier]];
 		}
+		
+		//Configure the loaded panes
+		[self configurePanes];
     }
 }
 
@@ -201,7 +203,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
         if([pane contactInfoCategory] == inCategory){
             [paneArray addObject:pane];
             [loadedPanes addObject:pane];
-			[pane configureForListObject:displayedObject];
         }
     }
 	
@@ -217,7 +218,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[self configureForListObject:[[adium contactController] selectedListObject]];
 }
 
-//Configure our views for the specified list object
+//Change the list object
 - (void)configureForListObject:(AIListObject *)inObject
 {
 	if(inObject == nil || displayedObject != inObject){
@@ -231,12 +232,18 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 			[[self window] setTitle:@"Contact Info"];
 		}
 		
-		//Configure our panes
-		NSEnumerator		*enumerator = [loadedPanes objectEnumerator];
-		AIContactInfoPane	*pane;
-		while(pane = [enumerator nextObject]){
-			[pane configureForListObject:displayedObject];
-		}
+		[self configurePanes];
+	}
+}
+
+//Configure our views
+- (void)configurePanes
+{
+	NSEnumerator		*enumerator = [loadedPanes objectEnumerator];
+	AIContactInfoPane	*pane;
+	
+	while(pane = [enumerator nextObject]){
+		[pane configureForListObject:displayedObject];
 	}
 }
 
