@@ -30,7 +30,7 @@ Alerts:
 
 Contact List: 
 	- Remove contact list font preference.  Hook this up to cmd-T
-	- Remove the advanced option for vertical resizing, this is already covered in the main preferences.
+	- Remove the advanced option for vertical resizing, since this is already covered in the main preferences.
 	
 Accounts:
 	+ Allow user to cancel connecting of accounts
@@ -55,7 +55,7 @@ Message Window:
 	- [Colin] Remove "per-contact" window position/size saving.  Use size/position of last window, cascade new ones 
 	
 Contact List Display:
-	+ Small contact list icon to idenfity mobile device users
+	+ Small contact list icon to identify mobile device users
 	+ With offline contacts visible, hide the group counting 'visible' value.
 
 Other:
@@ -90,20 +90,20 @@ Contact alerts:
 	- Rework context menus.. change to "Edit Alerts"
 	+ Add icons (16x16) to event types, and display them in the event list
 	+ Add toolbar to window, add, edit, delete
-	+ Add sheet for 'add', 'edit'.  Must be independant from alert window.
+	+ Add sheet for 'add', 'edit'.  Must be independent from alert window.
 	+ Sheet has event, action, and contact (submenued by group) popups.
 	+ Add source list on left of all objects with alerts
 	+ Clicking in source list changes displayed alerts
 	+ Menu has "all contacts in ___" items, and "all contacts" item
 	+ Dynamically load view into sheet depending on selected alert
 	+ Redesign views, simplify, use big controls
-	+ Add "Add alert' context menu - that opens the sheet as a panel and allows easy adding
-	+ Add "Contact Alerts" menu item to window menu.. to open alert window
+	+ Add "Add alert" context menu - that opens the sheet as a panel and allows easy adding
+	+ Add "Contact Alerts" menu item to window menu for opening alert window
 	+ Auto-fill sheet for new alert based on selection in window on clicking add
 
 
 Contact list display:
-	Add user icon and extended status display support to the contact list, and simplify it's
+	Add user icon and extended status display support to the contact list, and simplify its
 	configuration to a small subset of nice looking cell arrangements.
 
 	Details:
@@ -112,7 +112,7 @@ Contact list display:
 	 	+ User Icon - (Image) AIM Buddy Icon / MSN Avatar / Address book icon
 	 	+ Status Badge - (Image) Icon representing status, specified by user
 	 	+ Extended Status - (Text) iChat status, away message, MSN state name, MSN user name/status
-	+ User can toggle each component (Except user name) on/off with view menu items
+	+ User can toggle each component (except user name) on/off with view menu items
 	+ User can choose whether icons are on left or right.  Status Badge always goes on opposite side
 	+ If icons are visible, extended status is displayed below user name, otherwise displayed next to user name
 
