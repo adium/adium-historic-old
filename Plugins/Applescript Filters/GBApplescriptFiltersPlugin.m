@@ -12,6 +12,8 @@
 #define SCRIPT_EXTENSION		@"scpt"
 #define	SCRIPT_IDENTIFIER		@"InsertScript"
 
+//#define APPLESCRIPT_FILTER_DEBUG
+
 @interface GBApplescriptFiltersPlugin (PRIVATE)
 - (void)_appendScripts:(NSArray *)scripts toMenu:(NSMenu *)menu;
 - (void)_sortScriptsByTitle:(NSMutableArray *)sortArray;
@@ -26,6 +28,10 @@
 
 int _scriptTitleSort(id scriptA, id scriptB, void *context);
 int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
+
+#ifdef APPLESCRIPT_FILTER_DEBUG
+static int numExecuted = 0;
+#endif
 
 @implementation GBApplescriptFiltersPlugin
 
@@ -450,6 +456,8 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 				}else{
 					//Run the script.  Cache the result to speed up multiple instances of a single keyword
 					NSString	*scriptResult = nil;
+					unsigned	scriptResultLength;
+
 					if([argArray count] == 0 && arglessScriptResult) scriptResult = arglessScriptResult;
 					if(!scriptResult) scriptResult = [self _executeScript:infoDict withArguments:argArray];
 					if([argArray count] == 0 && !arglessScriptResult) arglessScriptResult = scriptResult;
@@ -462,14 +470,17 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 						NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult];
 						[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
 														withAttributedString:attributedScriptResult];
-
+						scriptResultLength = [attributedScriptResult length];
+						
 					}else{
 						[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
 														withString:scriptResult];
+						
+						scriptResultLength = [scriptResult length];
 					}
-					//Adjust for replaced text
-					offset += [scriptResult length] - (keywordEnd - keywordStart);
 					
+					//Adjust for replaced text
+					offset += scriptResultLength - (keywordEnd - keywordStart);
 				}
 			}
 		}
@@ -559,7 +570,14 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		}
 	}
 
+#ifdef APPLESCRIPT_FILTER_DEBUG
+	numExecuted++;
+	NSLog(@"%i: Executing %@",numExecuted,[infoDict objectForKey:@"Title"]);
 	[script executeSubroutineNamed:@"substitute" argumentsArray:arguments];
+	NSLog(@"%i: Finished.",numExecuted);
+#else
+	[script executeSubroutineNamed:@"substitute" argumentsArray:arguments];
+#endif
 	
 	resultDescriptor = [script resultAppleEventDescriptor];
 	
@@ -586,6 +604,10 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		We want to send certain eventClasses (those which necessitate user interaction) to the main thread
 		since the UI is not threadsafe.
 	 */
+#ifdef APPLESCRIPT_FILTER_DEBUG
+	NSLog(@"%i: appleEvent: %@",numExecuted,appleEventDescriptor);
+#endif
+	
 	if(eventClass == 'syso'){
 		AEEventID eventID = [appleEventDescriptor eventID];
 		
@@ -630,6 +652,9 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 
 - (BOOL)appleScriptActive
 {
+#ifdef APPLESCRIPT_FILTER_DEBUG
+	NSLog(@"%i: Active.",numExecuted);
+#endif
 	return(YES);
 }
 
