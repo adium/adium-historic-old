@@ -40,7 +40,9 @@
 		([theReason isEqualToString:@"Access invalid attribute location 0 (length 0)"]) || //The undo manager can throw this one when restoring a large amount of attributed text... doesn't appear avoidable
 		([theReason rangeOfString:@"-patternImage not defined"].location != NSNotFound) || //Painters Color Picker throws an exception during the normal course of operation.  Don't you hate that?
 		([theReason isEqualToString:@"Invalid parameter not satisfying: (index >= 0) && (index < (_itemArray ? CFArrayGetCount(_itemArray) : 0))"]) || //A couple AppKit methods, particularly NSSpellChecker, seem to expect this exception to be happily thrown in the normal course of operation. Lovely. Also needed for FontSight compatibility.
+		([theReason isEqualToString:@"Invalid parameter not satisfying: (index >= 0) && (index <= (_itemArray ? CFArrayGetCount(_itemArray) : 0))"]) || //Like the above, but <= instead of <
 		([theReason isEqualToString:@"Invalid parameter not satisfying: entry"]) || //NSOutlineView throws this, particularly if it gets clicked while reloading or the computer sleeps while reloading
+		([theReason isEqualToString:@"Invalid parameter not satisfying: aString != nil"]) || //The Find command can through this, as can other AppKitt methods
 		([theReason rangeOfString:@"NSRunStorage, _NSBlockNumberForIndex()"].location != NSNotFound) || //NSLayoutManager throws this for fun in a purely-AppKit stack trace
 		([theReason rangeOfString:@"Broken pipe"].location != NSNotFound) || //libezv throws broken pipes as NSFileHandleOperationException with this in the reason; I'd rather we watched for "broken pipe" than ignore all file handle errors
 		([theReason rangeOfString:@"incomprehensible archive"].location != NSNotFound)) //NSKeyedUnarchiver can get confused and throw this; it's out of our control
