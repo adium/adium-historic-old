@@ -25,11 +25,11 @@ const BOOL defaultHasAlpha = YES;
 
 - (id)initWithSize:(NSSize)size bitsPerComponent:(unsigned)bpc componentsPerPixel:(unsigned)cpp hasAlpha:(BOOL)hasAlpha
 {
-	unsigned bytesPerRow = (sizeof(unsigned char) * ((bpc / 8) * cpp)) * size.width;
+	unsigned bytesPerRow = (sizeof(unsigned char) * ((bpc / 8) * cpp)) * (unsigned)size.width;
 
 	//we use calloc because it fills the buffer with 0 - that includes the
 	//  alpha, so when calloc is done, the buffer is filled with transparent.
-	buffer = calloc(bytesPerRow * size.height, sizeof(unsigned char));
+	buffer = calloc(bytesPerRow * (unsigned)size.height, sizeof(unsigned char));
 	if(buffer == NULL) return nil;
 
 	context = CGBitmapContextCreate(buffer, size.width, size.height, bpc, bytesPerRow, CGColorSpaceCreateDeviceRGB(), hasAlpha ? kCGImageAlphaPremultipliedLast : kCGImageAlphaNone);

@@ -201,12 +201,12 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 			//  context', not 'top of the window'.)
 			if(direction == AIVertical) {
 				//draw the gradient from the top middle to the bottom middle.
-				srcPt.x = dstPt.x = width / 2.0;
+				srcPt.x = dstPt.x = width / 2.0f;
 				srcPt.y = 0.0f;
 				dstPt.y = height;
 			} else {
 				//draw the gradient from the middle left to the middle right.
-				srcPt.y = dstPt.y = height / 2.0;
+				srcPt.y = dstPt.y = height / 2.0f;
 				srcPt.x = 0.0f;
 				dstPt.x = width;
 			}
@@ -237,7 +237,10 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 
 						NSImage *image = [bridge image];
 
-						[image drawInRect:inRect fromRect:NSMakeRect(0.0,0.0, width, height) operation:NSCompositeSourceOver fraction:1.0];
+						[image drawInRect:inRect
+								 fromRect:NSMakeRect(0.0f,0.0f, width, height) 
+								operation:NSCompositeSourceOver
+								 fraction:1.0f];
 						
 						CGPathRelease(pathToAdd);
 					} /* if(pathToAdd != NULL) */
