@@ -141,7 +141,7 @@
 {
 	//User icon
 	[account setPreference:[[imageView_userIcon image] PNGRepresentation]
-					ForKey:KEY_USER_ICON 
+					forKey:KEY_USER_ICON 
 					 group:GROUP_ACCOUNT_STATUS];
 }
 
