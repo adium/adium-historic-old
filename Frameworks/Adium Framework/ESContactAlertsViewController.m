@@ -36,14 +36,39 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	[[tableView_actions tableColumnWithIdentifier:@"description"] setDataCell:actionsCell];
 	[actionsCell release];
 	
-	//This is a custom button, not one of our AILocalizationButton objects, so manually size it and position it
-	NSRect	newEditFrame, oldEditFrame = [button_edit frame];
-	[button_edit setTitle:AILocalizedString(@"Edit",nil)];
-	[button_edit sizeToFit];
-	newEditFrame = [button_edit frame];
-	newEditFrame.origin.x = oldEditFrame.origin.x;
-	if(newEditFrame.size.width < oldEditFrame.size.width) newEditFrame.size.width = oldEditFrame.size.width;
-	[button_edit setFrame:newEditFrame];
+	//Manually size and position our buttons
+	{
+		NSRect	newFrame, oldFrame;
+		float	horizontalShift = 0;
+		
+		//Add
+		oldFrame = [button_add frame];
+		[button_add setTitle:AILocalizedString(@"Add Event",nil)];
+		[button_add sizeToFit];
+		newFrame = [button_add frame];
+		if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
+		newFrame.origin.x = oldFrame.origin.x;
+		[button_add setFrame:newFrame];
+		horizontalShift += newFrame.size.width - oldFrame.size.width;
+		
+		//Remove, to the right of Add
+		oldFrame = [button_delete frame];
+		[button_delete setTitle:AILocalizedString(@"Remove Event",nil)];
+		[button_delete sizeToFit];
+		newFrame = [button_delete frame];
+		if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
+		newFrame.origin.x = oldFrame.origin.x + horizontalShift;
+		[button_delete setFrame:newFrame];
+		
+		//Edit, right justified and far enough away from Remove that it can't conceivably overlap
+		oldFrame = [button_edit frame];
+		[button_edit setTitle:AILocalizedString(@"Edit Event...",nil)];
+		[button_edit sizeToFit];
+		newFrame = [button_edit frame];
+		if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
+		newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
+		[button_edit setFrame:newFrame];
+	}
 
 	//Disable edit and delete by default; if a selection is made they will be enabled
 	[button_delete setEnabled:NO];
