@@ -16,7 +16,9 @@
 #import "AITableViewPopUpButtonCell.h"
 
 /*
-    A small, borderless pop-up button with a menu whose items contain icons will INCORRECTLY align the icon next to the text.  This custom subclass overrides the drawing method to correctly align the icon (in the case of a 16x16 icon and small 11-point menu text)
+    A small, borderless pop-up button with a menu whose items contain icons will INCORRECTLY align the icon
+ next to the text.  This custom subclass overrides the drawing method to correctly align the icon - in the
+ case of a 16x16 icon and small 11-point menu text.
  */
 
 #define POPUP_Y_OFFSET		2

@@ -1,14 +1,18 @@
 //
-//  IKTableImageCell.m
-//  Adium
+//  AIScaledImageCell.m
+//  AIUtilities.framework
 //
-//  Created by Ian Krieg on Mon Jul 28 2003.
+//  Created by Adam Iser on 8/17/04.
+//  Copyright 2004 __MyCompanyName__. All rights reserved.
 //
 
-#import "AIBezierPathAdditions.h"
-#import "IKTableImageCell.h"
+#import "AIScaledImageCell.h"
 
-@implementation IKTableImageCell
+/*
+ Used for displaying a potentially large image
+ */
+
+@implementation AIScaledImageCell
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
@@ -17,7 +21,7 @@
         [[NSColor alternateSelectedControlColor] set];
         [[NSBezierPath bezierPathWithRoundedRect:cellFrame radius:4] fill];
     }
-
+	
     //Draw our interior
     [super drawWithFrame:cellFrame inView:controlView];
 }
@@ -27,38 +31,38 @@
     NSImage	*img = [self image];
     
     if(img){
-        // Handle flipped axes
+        //Handle flipped axis
 		[img setFlipped:![img isFlipped]];
 		
-        // Size and location
-        // Get image metrics
+        //Size and location
+        //Get image metrics
         NSSize	imgSize = [img size];
         NSRect	imgRect = NSMakeRect (0, 0, imgSize.width, imgSize.height);
-
-        // Scaling
+		
+        //Scaling
         NSRect	targetRect = cellFrame;
         if ((imgSize.height > cellFrame.size.height) ||
             (imgSize.width  >  cellFrame.size.width)) {
-
+			
             if ((imgSize.height / cellFrame.size.height) >
                 (imgSize.width / cellFrame.size.width)) {
                 targetRect.size.width = imgSize.width / (imgSize.height / cellFrame.size.height);
             } else {
                 targetRect.size.height = imgSize.height / (imgSize.width / cellFrame.size.width);
             }
-
+			
         }else{
             targetRect.size.width = imgSize.width;
             targetRect.size.height = imgSize.height;
         }
-
-        // Centering
+		
+        //Centering
         targetRect = NSOffsetRect(targetRect, (cellFrame.size.width - targetRect.size.width) / 2, (cellFrame.size.height - targetRect.size.height) / 2);
         
-        // Draw	Image
+        //Draw Image
         [img drawInRect:targetRect fromRect:imgRect operation:NSCompositeSourceOver fraction:([self isEnabled] ? 1.0 : 0.5)];
-
-        // Clean-up
+		
+        //Clean-up
 		[img setFlipped:![img isFlipped]];
     }
 }

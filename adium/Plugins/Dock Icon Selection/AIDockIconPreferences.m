@@ -70,7 +70,7 @@
     //Set all column data cells to image cells
     enumerator = [[tableView_icons tableColumns] objectEnumerator];
     while((column = [enumerator nextObject])){
-        IKTableImageCell	*cell = [[[IKTableImageCell alloc] init] autorelease];
+        AIScaledImageCell	*cell = [[[AIScaledImageCell alloc] init] autorelease];
         [cell setImageScaling:NSScaleProportionally];
 
         [column setDataCell:cell];
