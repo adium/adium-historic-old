@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>AdIM</string>
 	<key>MessageViewVersion</key>
-	<integer>1</integer>
+	<integer>3</integer>
 	<key>DefaultFontFamily</key>
 	<string>Lucida Grande</string>
 	<key>DefaultFontSize</key>
