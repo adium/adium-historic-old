@@ -667,14 +667,14 @@
 //Build the contents of the 'window' menu
 - (void)buildWindowMenu
 {
-    NSMenuItem			*item;
-    AIMessageTabViewItem	*tabViewItem;
-    NSEnumerator		*enumerator;
-    NSEnumerator 		*tabViewEnumerator;
-    NSEnumerator		*windowEnumerator;
+    NSMenuItem					*item;
+    AIMessageTabViewItem		*tabViewItem;
+    NSEnumerator				*enumerator;
+    NSEnumerator				*tabViewEnumerator;
+    NSEnumerator				*windowEnumerator;
     AIMessageWindowController 	*messageWindowController;
-    int 			windowKey = 1;
-	
+    int							windowKey = 1;
+
     //Remove any existing menus
     enumerator = [windowMenuArray objectEnumerator];
     while((item = [enumerator nextObject])){
@@ -849,10 +849,10 @@
         enabled = (messageWindow && [[messageWindow messageContainerArray] count] > 1);
 		
     }else if((menuItem == menuItem_nextMessage) || (menuItem == menuItem_shiftNextMessage) ||
-			 (menuItem == menuItem_previousMessage) || (menuItem == menuItem_shiftPreviousMessage){
+			 (menuItem == menuItem_previousMessage) || (menuItem == menuItem_shiftPreviousMessage)){
         if(![messageWindowControllerArray count]) enabled = NO;
 		
-    }    }else if (menuItem == menuItem_openInNewWindow || menuItem == menuItem_openInPrimaryWindow){
+    }else if (menuItem == menuItem_openInNewWindow || menuItem == menuItem_openInPrimaryWindow){
 		AIListObject *contactualMenuContact = [[adium menuController] contactualMenuContact];
 		
 		enabled = (contactualMenuContact && [contactualMenuContact isKindOfClass:[AIListContact class]]);
