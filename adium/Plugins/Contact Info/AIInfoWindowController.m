@@ -299,6 +299,7 @@ static AIListObject				*activeListObject = nil;
 		[self configureWindow];
 		
 		//Refresh the window's content (Contacts only)
+#warning It is really easy to make AIM disconnect you by rapidly changing the selection, which will call this and in turn give you escalating rate limit warnings
 		if([object isKindOfClass:[AIListContact class]]){
 			[[[AIObject sharedAdiumInstance] contactController] updateListContactStatus:(AIListContact *)object];
 		}
@@ -316,6 +317,11 @@ static AIListObject				*activeListObject = nil;
 	if (listObject) {
 		//Remember who we're displaying info for
 		[activeListObject release]; activeListObject = [listObject retain];
+		
+		//Ask contacts to update their info
+		if([object isKindOfClass:[AIListContact class]]){
+			[[[AIObject sharedAdiumInstance] contactController] updateListContactStatus:(AIListContact *)object];
+		}
 		
 		[sharedInstance configureWindow];
 	} else {
