@@ -75,6 +75,8 @@
 	[menuItem_contactName setSubmenu:menu_contactSubmenu];
 
     activeListObject = nil;
+	
+	[self preferencesChanged:nil];
 }
 
 - (void)uninstallPlugin
@@ -103,7 +105,9 @@
 
 -(IBAction)changeFormat:(id)sender
 {
-    [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]] forKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT];
+	
+	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]] forKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT];
+	
 }
 
 #warning Evan: We are not configuring the alias field properly when the contact switches.  I am not sure why not.
@@ -147,10 +151,17 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DISPLAYFORMAT] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DISPLAYFORMAT] == 0){
+		
+		// Clear old checkmark
+		[[menu_contactSubmenu itemWithTag:displayFormat] setState:NSOffState];
+		
         //load new displayFormat
         displayFormat = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_DISPLAYFORMAT] objectForKey:@"Long Display Format"] intValue]; 
 		
+		// Set new checkmark
+		[[menu_contactSubmenu itemWithTag:displayFormat] setState:NSOnState];
+					
         //Update all existing contacts
 		[[adium contactController] updateAllListObjectsForObserver:self];
     }
