@@ -60,7 +60,7 @@
 
                 if([command isEqualToString:@"MSG"]) //this needs to be outsourced to another part of the function, because we have to read in the payload length.
                 {
-                    receivingPayload = YESYES;
+                    receivingPayload = YES;
                     [tempInfoDict setObject:[NSNumber numberWithInt:[[message lastObject] intValue]] forKey:@"LoadLength"];
                     [tempInfoDict setObject:[NSString stringWithCString:[theData bytes] length:[theData length]-2] forKey:@"CmdString"];
                 }
