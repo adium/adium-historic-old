@@ -67,3 +67,5 @@
 #import "AIBrushedPopUpButton.h"
 #import "CBEmbossedTextField.h"
 #import "AISmartStepper.h"
+#import "IKTableImageCell.h"
+
