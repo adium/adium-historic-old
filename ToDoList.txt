@@ -16,7 +16,6 @@
 - Webkit background image type selector needs to be re-implemented
 - Status window when away preference is not implemented
 - Status set state after inactivity is not implemented
-- Status delete and edit buttons don't dim correctly on panel load
 - Crash on launch in 10.2 because of AIColorAdditions use of strtof
 - Finish implementing and commit state icons on the contact list code
 - Remove fonts/colors preference from advanced, force it to YES
