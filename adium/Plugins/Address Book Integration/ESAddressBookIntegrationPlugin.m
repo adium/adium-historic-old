@@ -21,28 +21,30 @@
 
 - (void)installPlugin
 {
-    NSLog(@"ABIntegration: installPlugin");
-    //Register ourself as a handle observer
-    [[adium contactController] registerListObjectObserver:self];
+    meTag = -1;
     
     //register default preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AB_DISPLAYFORMAT_DEFAULT_PREFS forClass:[self class]]  forGroup:PREF_GROUP_ADDRESSBOOK];
-       
+
+    //load the preference view
     advancedPreferences = [[ESAddressBookIntegrationAdvancedPreferences preferencePane] retain];
           
-    propertyDict = [[NSDictionary dictionaryWithObjectsAndKeys:kABAIMInstantProperty,@"AIM",kABJabberInstantProperty,@"Jabber",kABMSNInstantProperty,@"MSN",kABYahooInstantProperty,@"Yahoo",kABICQInstantProperty,@"ICQ",nil] retain];
+    //Services dictionary
+    propertyDict = [[NSDictionary dictionaryWithObjectsAndKeys:kABAIMInstantProperty,@"AIM",kABJabberInstantProperty,@"Jabber",kABMSNInstantProperty,@"MSN",kABYahooInstantProperty,@"Yahoo!",kABICQInstantProperty,@"ICQ",nil] retain];
+    //Tracking dictionary for asynchronous image loads
     trackingDict = [[NSMutableDictionary alloc] init];
     
-    NSLog(@"ABIntegration: Retrieving sharedAddressBook");
     sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
 
     [self preferencesChanged:nil];
 
-    NSLog(@"ABIntegration: Adding observers");
     //Observe preferences changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     //Observe external address book changes
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addressBookChanged:) name:kABDatabaseChangedExternallyNotification object:nil];
+    //Register ourself as a handle observer
+    [[adium contactController] registerListObjectObserver:self];
+
     NSLog(@"ABIntegration: installPlugin done");
 }
 
@@ -79,11 +81,11 @@
                     NSString *firstName = [person valueForProperty:kABFirstNameProperty];
                     NSString *lastName = [person valueForProperty:kABLastNameProperty];
                     NSString *displayName = nil;
-                    if (!lastName || displayFormat == First) { //If no last name is available, use the first name
+                    if (!lastName || displayFormat == First) {  //If no last name is available, use the first name
                         displayName = firstName;
-                    } else if (!firstName) {        //If no first name is available, use the last name
+                    } else if (!firstName) {                    //If no first name is available, use the last name
                         displayName = lastName;
-                    } else {                        //Look to the preference setting
+                    } else {                                    //Look to the preference setting
                         if (displayFormat == FirstLast) {
                             displayName = [NSString stringWithFormat:@"%@ %@",firstName,lastName];
                         } else if (displayFormat == LastFirst) {
@@ -110,10 +112,10 @@
         
         NSArray *results = [self searchForObject:inObject];
         
-        if (results && [results count]) {
-            ABPerson * person = [results objectAtIndex:0];
+        if (results && [results count]){
+            ABPerson * person;
             
-            if (person) {
+            if (person = [results objectAtIndex:0]){
 		AIMutableOwnerArray	*statusArray = [inObject statusArrayForKey:@"UserIcon"];
 		
 		if([statusArray count]){
@@ -134,14 +136,12 @@
         displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
         enableImages = [[prefDict objectForKey:KEY_AB_ENABLE_IMAGES] boolValue];
         automaticSync = [[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue];
-        NSLog(@"ABIntegration: preferencesChanged: %@",notification);
         [self updateAllContacts];
     }
 }
 
 - (void)addressBookChanged:(NSNotification *)notification
 {
-    NSLog(@"ABIntegration: addressBookChanged: %@",notification);
     [self updateAllContacts];
 }
 
@@ -156,7 +156,6 @@
                        delayed:YES
                         silent:NO]; 
     }
-    NSLog(@"ABIntegration: updateAllContacts calling updateSelf");
     [self updateSelf];
 }
 
@@ -165,40 +164,42 @@
 {
     if (inData) {
         NSImage *image = [[[NSImage alloc] initWithData:inData] autorelease];
-        NSNumber * tagNumber = [NSNumber numberWithInt:tag];
         
-        //Get the object from our tracking dictionary
-	AIListObject		*listObject = [trackingDict objectForKey:tagNumber];
-	AIMutableOwnerArray	*statusArray = [listObject statusArrayForKey:@"UserIcon"];
-	
-        //apply the image
-	if([statusArray count] == 0) {
-	    [statusArray setObject:image withOwner:self];
-            [[adium contactController] listObjectStatusChanged:listObject
-					    modifiedStatusKeys:[NSArray arrayWithObject:@"UserIcon"]
-						       delayed:NO
-							silent:NO];
+        //Check if we retrieved data from the 'me' address book card
+        if (tag == meTag) {
+            NSLog(@"ABIntegration: myImageData found.");
+	    [[adium preferenceController] setPreference:image forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
+            meTag = -1;
+        }else{
+            //Apply the image to the appropriate listObject
+            NSNumber                *tagNumber = [NSNumber numberWithInt:tag];
+            
+            //Get the object from our tracking dictionary
+            AIListObject            *listObject = [trackingDict objectForKey:tagNumber];
+            AIMutableOwnerArray     *statusArray = [listObject statusArrayForKey:@"UserIcon"];
+            
+            //apply the image
+            if([statusArray count] == 0) {
+                [statusArray setObject:image withOwner:self];
+                [[adium contactController] listObjectStatusChanged:listObject
+                                                modifiedStatusKeys:[NSArray arrayWithObject:@"UserIcon"]
+                                                           delayed:NO
+                                                            silent:NO];
+            }
+            
+            //No further need for the dictionary entry
+            [trackingDict removeObjectForKey:tagNumber];
         }
-        
-        //No further need for the dictionary entry
-        [trackingDict removeObjectForKey:tagNumber];
     }
 }
 
 - (void)updateSelf
 {
-    NSLog(@"ABIntegration: updateSelf");
-    NSLog(@"ABIntegration: updateSelf address book %@",sharedAddressBook);
-    //Get the "me" address book entry, if one exists
-    ABPerson *me = [sharedAddressBook me];
-    NSLog(@"ABIntegration: updateSelf me? %i",(me != nil));    
-    //If one was found
-    if (me) {
-        NSData *myImage = [me imageData];
-        if (myImage) {
-            NSLog(@"ABIntegration: updateSelf myImageData found.");
-	    [[adium preferenceController] setPreference:myImage forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
-        }
+    //Begin loading image data for the "me" address book entry, if one exists
+    ABPerson *me;
+    NSLog(@"ABIntegration: updateSelf me? %i",(me != nil));
+    if (me = [sharedAddressBook me]) {
+        meTag = [me beginLoadingImageDataForClient:self];
     }
     NSLog(@"ABIntegration: updateSelf done");
 }
@@ -236,4 +237,5 @@
                                                               comparison:kABEqualCaseInsensitive];
     return [sharedAddressBook recordsMatchingSearchElement:searchElement];
 }
+
 @end
