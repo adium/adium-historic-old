@@ -104,21 +104,30 @@
 
 - (IBAction)send:(id)sender
 {
-    NSString *bugReport;
+    NSString *bugReport, *time, *buildDate, *email, *shortDesc, *longDesc, *log;
     
-    //construct the bug report via the entered fields
+    /*
+        we need to do the following here:
+        0) get the correct string for each field
+        1) change & to the correct URL escape
+        2) change space to +
+        3) url encode the rest
+        for each of the fields.
+    */
     
-    //URL encode it
+    bugReport = [NSString stringWithFormat:@"time=%@&build=%@&email=%@&short_desc=%@&desc=%@&log=%@",
+        time, buildDate, email, shortDesc, longDesc, log];
     
-    [self sendReport:bugReport];
+    [self sendReport:[bugReport retain]];
 }
 
 - (void)sendReport:(NSString *)bugReport
 {    
     while(1)
     {
-        if([self tryToSendReport:bugReport])
+        if([self tryToSendReport:[bugReport stringByEncodingURLEscapes]]])
         {
+            [bugReport release];
             [NSApp terminate:nil];
             break;
         }
@@ -154,7 +163,6 @@
 		       @"Cancel",
 		       nil) == NSAlertAlternateReturn)
     {
-        [NSApp terminate:nil];
         return YES;
     }
     
