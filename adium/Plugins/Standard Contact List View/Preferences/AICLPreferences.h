@@ -19,6 +19,10 @@
 @interface AICLPreferences : AIPlugin {
     IBOutlet	NSView		*view_prefView;
 
+
+    NSDictionary		*preferenceDict;
+    
+/*
     id	fontPopUp;
     id	facePopUp;
     id	sizePopUp;
@@ -35,11 +39,11 @@
     id	gridColorLabel;
 
     AIPreferenceController*     preferenceController;
-    AIPlugin	*parentPlugin;
+    AIPlugin	*parentPlugin;*/
 }
 
 + (AICLPreferences *)contactListPreferencesWithOwner:(id)inOwner;
-
+/*
 
 - (void) initialize: (id) foo;
 
@@ -47,5 +51,5 @@
 - (void) gridOptions: (id) sender;
 - (void) colorAndOpacity: (id) sender;
 
-- (void) setCLController: (id) foo;
+- (void) setCLController: (id) foo;*/
 @end

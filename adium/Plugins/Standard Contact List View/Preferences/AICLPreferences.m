@@ -10,7 +10,7 @@
 #import <AIUtilities/AIUtilities.h>
 #import "AIAdium.h"
 #import "AICLPreferences.h"
-
+#import "AISCLOutlineView.h"
 
 #define CL_PREF_NIB		@"AICLPrefView"		//Name of preference nib
 #define CL_PREF_TITLE		@"Contact List"		//
@@ -50,10 +50,17 @@
     preferenceViewController = [AIPreferenceViewController controllerWithName:CL_PREF_TITLE categoryName:PREFERENCE_CATEGORY_INTERFACE view:view_prefView];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
+    //Load the preferences
+    preferenceDict = [[[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST] retain];
+    
     return(self);    
 }
 
-- (void) initialize: (id) _preferenceController
+
+
+
+
+/*- (void) initialize: (id) _preferenceController
 {
     preferenceController = [_preferenceController retain];
     //initialize values
@@ -240,5 +247,5 @@
         }
     }
     [selectedFace release];
-}
+}*/
 @end

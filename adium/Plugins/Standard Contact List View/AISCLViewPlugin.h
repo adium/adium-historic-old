@@ -16,6 +16,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
+
 @class AIContactGroup, AICLPreferences;
 @protocol AIContactListViewController;
 

@@ -24,7 +24,12 @@
             OUTLETS = {"tableView_items" = AIMiniToolbarTableView; }; 
             SUPERCLASS = NSWindowController; 
         }, 
-        {CLASS = AIMiniToolbarTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
+        {
+            CLASS = AIMiniToolbarTableView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {controller = AIMiniToolbarCustomizeController; }; 
+            SUPERCLASS = NSTableView; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 
