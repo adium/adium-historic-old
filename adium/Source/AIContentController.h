@@ -110,7 +110,7 @@ typedef enum {
 - (NSArray *)chatArray;
 - (BOOL)switchToMostRecentUnviewedContent;
 - (void)switchChat:(AIChat *)chat toAccount:(AIAccount *)newAccount;
-- (void)switchChat:(AIChat *)chat toListContact:(AIListContact *)newContact;
+- (void)switchChat:(AIChat *)chat toListContact:(AIListContact *)inContact usingContactAccount:(BOOL)useContactAccount;
 
 //Status
 - (void)registerChatObserver:(id <AIChatObserver>)inObserver;

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.108 2004/08/16 23:48:37 evands Exp $
+// $Id: AIContentController.m,v 1.109 2004/08/17 03:29:09 evands Exp $
 
 #import "AIContentController.h"
 
@@ -720,11 +720,8 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 		if([[inContact containingObject] isKindOfClass:[AIMetaContact class]] && 
 		   [[chat listObject] containingObject] == [inContact containingObject]){
 
-			//If we're on a different account now, switch the chat over
-			if(![[inContact accountID] isEqualToString:[(AIListContact *)[chat listObject] accountID]]){
-				[self switchChat:chat
-					   toAccount:[[owner accountController] accountWithObjectID:[inContact accountID]]];
-			}
+			//Switch the chat to be on this contact (and its account) now
+			[self switchChat:chat toListContact:inContact usingContactAccount:YES];
 			
 			break;
 		}
@@ -886,24 +883,28 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 }
 
 //Switch the list contact of the account; this does not change the source account - use switchChat:toAccount: for that.
-- (void)switchChat:(AIChat *)chat toListContact:(AIListContact *)inContact
+- (void)switchChat:(AIChat *)chat toListContact:(AIListContact *)inContact usingContactAccount:(BOOL)useContactAccount
 {
+	AIAccount		*newAccount = (useContactAccount ? [inContact account] : [chat account]);
+	
 	//Switch the inContact over to a contact on the new account so we send messages to the right place.
 	AIListContact	*newContact = [[owner contactController] contactWithService:[inContact serviceID]
-																	  accountID:[[chat account] uniqueObjectID]
+																	  accountID:[newAccount uniqueObjectID]
 																			UID:[inContact UID]];
 	if (newContact != [chat listObject]){
 		//Hang onto stuff until we're done
 		[chat retain];
 		
 		//Close down the chat on the account, as the account may need to perform actions such as closing a connection
-		[[chat account] closeChat:chat];
+		[(AIAccount<AIAccount_Content> *)[chat account] closeChat:chat];
 		
-		//Set to the new listContact
+		//Set to the new listContact and account as needed
 		[chat setListObject:newContact];
+		if (useContactAccount) [chat setAccount:newAccount];
+		
 		
 		//Reopen the chat on the account
-		[[chat account] openChat:chat];
+		[(AIAccount<AIAccount_Content> *)[chat account] openChat:chat];
 		
 		//Clean up
 		[chat release];
