@@ -111,13 +111,13 @@
         //Get an image of the tab
         tabImage = [[[NSImage alloc] init] autorelease];
         [customTabsView lockFocus];
-        [tabImage addRepresentation:[[NSBitmapImageRep alloc] initWithFocusedViewRect:[tabCell frame]]];
+        [tabImage addRepresentation:[[[NSBitmapImageRep alloc] initWithFocusedViewRect:[tabCell frame]] autorelease]];
         [customTabsView unlockFocus];
         
         //Get an image of the tabView content view
         contentImage = [[[NSImage alloc] init] autorelease];
         [contentView lockFocus];
-        [contentImage addRepresentation:[[NSBitmapImageRep alloc] initWithFocusedViewRect:[contentView frame]]];
+        [contentImage addRepresentation:[[[NSBitmapImageRep alloc] initWithFocusedViewRect:[contentView frame]] autorelease]];
         [contentView unlockFocus];
         
         //Create a drag image the size of the window
