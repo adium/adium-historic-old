@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.102 2004/05/07 17:44:02 eevyl Exp $
+$Id: ToDoList.txt,v 1.103 2004/05/07 22:33:29 evands Exp $
 
 
 Legend
@@ -22,8 +22,6 @@ Bugs
 * Our 'new message' toolbar button is gooooone gone gone gone gone
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
-* Connection failures due to a disconnected network (at least with Airport) cause the password to be cleared and re-prompted for.
-* We are prompting for passwords on auto-reconnect like crazy.
 * Update checker reporting a new version when non exists? (possibly a caching error?)
 
 Applescripts:
@@ -322,6 +320,8 @@ ced preference panes.
 = Can "add" a contact with no accounts (the button should dim with no accounts checked)
 = Only one password request dialog is allowed at a time.  This limitation causes issues for users with multiple accounts who don't save passwords.
 = When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
+= Connection failures due to a disconnected network (at least with Airport) cause the password to be cleared and re-prompted for.
+= We are prompting for passwords on auto-reconnect like crazy.
 
 Features & Changes:
 = Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
