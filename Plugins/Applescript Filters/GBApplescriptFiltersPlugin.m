@@ -550,8 +550,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	if (result && ([result length] >= 2)){
 		result = [result substringWithRange:NSMakeRange(1, [result length]-2)];
 	}
-	
-	NSLog(@"%@",result);
+
 	return(result);
 }
 
