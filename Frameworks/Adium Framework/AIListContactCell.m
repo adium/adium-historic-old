@@ -11,13 +11,21 @@
 
 #define FONT_HEIGHT_STRING		@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-
-#define ICON_TEXT_PADDING		3
-
 #define NAME_STATUS_PAD			6
 
-#define STATUS_ICON_LEFT_PAD			2
-#define STATUS_ICON_RIGHT_PAD			3
+//User Icon
+#define USER_ICON_LEFT_PAD			3
+#define USER_ICON_RIGHT_PAD			3
+
+//Status icon
+#define STATUS_ICON_LEFT_PAD		2
+#define STATUS_ICON_RIGHT_PAD		3
+
+//Service icon
+#define SERVICE_ICON_LEFT_PAD		2
+#define SERVICE_ICON_RIGHT_PAD		3
+
+
 #define HULK_CRUSH_FACTOR 1
  
 @implementation AIListContactCell
@@ -74,7 +82,7 @@
 	//User icon
 	if(userIconVisible){
 		width += userIconSize.width;
-		if(userIconPosition == IMAGE_POSITION_LEFT) width += ICON_TEXT_PADDING;
+		width += USER_ICON_LEFT_PAD + USER_ICON_RIGHT_PAD;
 	}	
 	
 	//Status icon
@@ -89,6 +97,7 @@
 	if(serviceIconsVisible &&
 	   (serviceIconsVisible != LIST_POSITION_BADGE_LEFT && serviceIconsVisible != LIST_POSITION_BADGE_RIGHT)){
 		width += [[self serviceImage] size].width;
+		width += SERVICE_ICON_LEFT_PAD + SERVICE_ICON_RIGHT_PAD;
 	}
 	
 	return(width + 1);
@@ -308,7 +317,7 @@
 		rect = [image drawInRect:rect
 						  atSize:userIconSize
 						position:position];
-		if(position == IMAGE_POSITION_LEFT) rect.origin.x += ICON_TEXT_PADDING;
+		if(position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_LEFT_PAD;
 		
 		//Badges
 		drawRect = [image rectForDrawingInRect:inRect
@@ -323,6 +332,7 @@
 		if(serviceIconPosition == LIST_POSITION_BADGE_RIGHT)
 			[self drawServiceIconInRect:drawRect position:IMAGE_POSITION_LOWER_RIGHT];
 								
+		if(position == IMAGE_POSITION_RIGHT) rect.size.width += USER_ICON_RIGHT_PAD;
 	}
 	
 	return(rect);
@@ -358,10 +368,22 @@
 - (NSRect)drawServiceIconInRect:(NSRect)rect position:(IMAGE_POSITION)position
 {
 	if(serviceIconsVisible){
+		BOOL	isBadge = (position == IMAGE_POSITION_LOWER_LEFT || position == IMAGE_POSITION_LOWER_RIGHT);
+
+		if(!isBadge){
+			if(position == IMAGE_POSITION_LEFT) rect.origin.x += SERVICE_ICON_LEFT_PAD;
+			rect.size.width -= SERVICE_ICON_LEFT_PAD;
+		}
+		
 		NSImage *image = [self serviceImage];
 		rect = [image drawInRect:rect
 						  atSize:NSMakeSize(0, 0)
 						position:position];
+
+		if(!isBadge){
+			if(position == IMAGE_POSITION_LEFT) rect.origin.x += SERVICE_ICON_RIGHT_PAD;
+			rect.size.width -= SERVICE_ICON_RIGHT_PAD;
+		}
 	}
 	return(rect);
 }
