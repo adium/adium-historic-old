@@ -1,0 +1,19 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {preferenceChanged = id; }; 
+            CLASS = AIMTOC2Service; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_ping" = NSButton; 
+                "textField_host" = NSTextField; 
+                "textField_port" = NSTextField; 
+                "view_preferences" = NSView; 
+            }; 
+            SUPERCLASS = AIService; 
+        }, 
+        {CLASS = AIService; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -1,0 +1,126 @@
+/*-------------------------------------------------------------------------------------------------------*\
+| Adium, Copyright (C) 2001-2002, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+\---------------------------------------------------------------------------------------------------------/
+ | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ | General Public License as published by the Free Software Foundation; either version 2 of the License,
+ | or (at your option) any later version.
+ |
+ | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ | Public License for more details.
+ |
+ | You should have received a copy of the GNU General Public License along with this program; if not,
+ | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ \------------------------------------------------------------------------------------------------------ */
+
+/*
+    Holds attributes that can be applied to a block of text
+*/
+
+#import "AITextAttributes.h"
+
+@interface AITextAttributes (PRIVATE)
+- (id)initWithFontFamily:(NSString *)inFamilyName traits:(NSFontTraitMask)inTraits size:(int)inSize;
+- (void)updateFont;
+@end
+
+@implementation AITextAttributes
+
+//Creates a new instance of AITextAttributes
++ (id)textAttributesWithFontFamily:(NSString *)inFamilyName traits:(NSFontTraitMask)inTraits size:(int)inSize
+{
+    return([[[self alloc] initWithFontFamily:inFamilyName traits:inTraits size:inSize] autorelease]);
+}
+
+//init
+- (id)initWithFontFamily:(NSString *)inFamilyName traits:(NSFontTraitMask)inTraits size:(int)inSize
+{
+    [super init];
+
+    dictionary = [[NSMutableDictionary alloc] init];
+
+    fontFamilyName = [inFamilyName retain];
+    fontTraitsMask = inTraits;
+    fontSize = inSize;
+
+    [self updateFont];
+
+    return(self);
+}
+
+//dealloc
+- (void)dealloc
+{
+    [dictionary release];
+    [fontFamilyName release];
+
+    [super dealloc];
+}
+
+//Set the font family (name)
+- (void)setFontFamily:(NSString *)inName
+{
+    if(fontFamilyName != inName){
+        [fontFamilyName release];
+        fontFamilyName = [inName retain];
+    }
+
+    [self updateFont];
+}
+
+//Set the font size
+- (void)setFontSize:(int)inSize
+{
+    fontSize = inSize;
+
+    [self updateFont];
+}
+
+//Set the text foreground color
+- (void)setTextColor:(NSColor *)inColor
+{
+    [dictionary setObject:inColor forKey:NSForegroundColorAttributeName];
+}
+
+//Enable a masked trait (bold, italic)
+- (void)enableTrait:(NSFontTraitMask)inTrait
+{
+    fontTraitsMask |= inTrait;
+
+    [self updateFont];
+}
+
+//Disable a masked trait (bold, italic)
+- (void)disableTrait:(NSFontTraitMask)inTrait
+{
+    if(fontTraitsMask && inTrait){
+        fontTraitsMask ^= inTrait;
+    }
+    
+    [self updateFont];
+}
+
+//Enable/Disable underlining
+- (void)setUnderline:(BOOL)inUnderline
+{
+    if(inUnderline){
+        [dictionary setObject:[NSNumber numberWithBool:inUnderline] forKey:NSUnderlineStyleAttributeName];
+    }else{
+        [dictionary removeObjectForKey:NSUnderlineStyleAttributeName];
+    }
+}
+
+//Returns a dictinary of attributes
+- (NSDictionary *)dictionary
+{
+    return(dictionary);
+}
+
+//Updates the cached font
+- (void)updateFont
+{
+    [dictionary setObject:[[NSFontManager sharedFontManager] fontWithFamily:fontFamilyName traits:fontTraitsMask weight:5 size:fontSize] forKey:NSFontAttributeName];
+    
+}
+
+@end

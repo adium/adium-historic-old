@@ -1,0 +1,27 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIAdium; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "prefView_sample1" = NSView; 
+                "prefView_sample2" = NSView; 
+                "prefView_sample3" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            CLASS = AIPreferenceView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "textField_title" = NSTextField; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

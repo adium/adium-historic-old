@@ -1,0 +1,111 @@
+// !$*UTF8*$!
+{
+	13A9BC770119F9437F000001 = {
+		activeArgIndex = 2147483647;
+		argumentStrings = (
+		);
+		debuggerPlugin = GDBDebugging;
+		dylibVariantSuffix = "";
+		enableDebugStr = 0;
+		environmentEntries = (
+		);
+		isa = PBXExecutable;
+		sourceDirectories = (
+		);
+	};
+	29B97313FDCFA39411CA2CEA = {
+		activeBuildStyle = 4A9504CDFFE6A4B311CA0CBA;
+		activeTarget = 29B97326FDCFA39411CA2CEA;
+		addToTargets = (
+			29B97326FDCFA39411CA2CEA,
+		);
+		breakpoints = (
+		);
+		perUserDictionary = {
+			PBXWorkspaceConfiguration = {
+				ContentSize = "{1015, 648}";
+				LeftSlideOut = {
+					ActiveTab = 2;
+					Frame = "{{0, 23}, {1015, 625}}";
+					Split0 = {
+						ActiveTab = 2;
+						Frame = "{{225, 0}, {790, 625}}";
+						Split0 = {
+							Frame = "{{0, 230}, {790, 395}}";
+						};
+						SplitCount = 1;
+						Tab0 = {
+							Debugger = {
+								ActiveTab = 0;
+								Frame = "{{0, 0}, {790, 427}}";
+								Split0 = {
+									Frame = "{{0, 276}, {790, 151}}";
+									Split0 = {
+										Frame = "{{0, 0}, {325, 151}}";
+									};
+									Split1 = {
+										Frame = "{{334, 0}, {456, 151}}";
+									};
+									SplitCount = 2;
+								};
+								SplitCount = 1;
+								Tab0 = {
+									Frame = "{{0, 0}, {790, 251}}";
+								};
+								TabCount = 1;
+							};
+							Frame = "{{0, 0}, {790, 427}}";
+							LauncherConfigVersion = 4;
+						};
+						Tab1 = {
+							Frame = "{{0, 0}, {719, 267}}";
+							LauncherConfigVersion = 3;
+							Runner = {
+								Frame = "{{0, 0}, {719, 267}}";
+							};
+						};
+						Tab2 = {
+							BuildMessageFrame = "{{0, 0}, {794, 147}}";
+							BuildTranscriptFrame = "{{0, 156}, {794, 51}}";
+							Frame = "{{0, 0}, {790, 205}}";
+						};
+						Tab3 = {
+							Frame = "{{0, 0}, {990, 190}}";
+						};
+						TabCount = 4;
+					};
+					SplitCount = 1;
+					Tab0 = {
+						Frame = "{{0, 0}, {271, 625}}";
+					};
+					Tab1 = {
+						Frame = "{{0, 0}, {200, 621}}";
+					};
+					Tab2 = {
+						Frame = "{{0, 0}, {200, 625}}";
+						Split0 = {
+							Frame = "{{0, 0}, {200, 301}}";
+						};
+						Split1 = {
+							Frame = "{{0, 310}, {200, 315}}";
+						};
+						SplitCount = 2;
+					};
+					Tab3 = {
+						Frame = "{{0, 0}, {194, 625}}";
+					};
+					TabCount = 4;
+				};
+				WindowLoc = "{312, 0}";
+			};
+		};
+	};
+	29B97326FDCFA39411CA2CEA = {
+		activeExec = 0;
+		targetExecs = {
+			macosx = (
+				13A9BC770119F9437F000001,
+			);
+		};
+	};
+}

@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {closeWindow = id; }; 
+            CLASS = AIPreferenceWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"scrollView_contents" = NSScrollView; }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -1,0 +1,47 @@
+{
+    IBClasses = (
+        {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = AICompletingTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
+        {
+            CLASS = AIMessageSendingTextView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AISendingTextView; 
+        }, 
+        {
+            ACTIONS = {
+                cancel = id; 
+                selectNewAccount = id; 
+                sendMessage = id; 
+                setFocusOnEnterView = id; 
+            }; 
+            CLASS = AIMessageViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "popUp_accounts" = NSPopUpButton; 
+                "scrollView_outgoingView" = NSScrollView; 
+                "textField_handle" = AICompletingTextField; 
+                "textView_outgoing" = AISendingTextView; 
+                "view_account" = AIColoredBoxView; 
+                "view_buttons" = AIColoredBoxView; 
+                "view_contents" = NSView; 
+                "view_handle" = AIColoredBoxView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {sendMessage = id; }; 
+            CLASS = AIMessageWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "scrollView_messageView" = NSScrollView; 
+                "textView_outgoing" = AIMessageSendingTextView; 
+                toolbar = AIMiniToolbar; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = AIMiniToolbar; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = AISendingTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

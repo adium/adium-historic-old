@@ -1,0 +1,18 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {cancel = id; closeWindow = id; okay = id; }; 
+            CLASS = AIPasswordPromptController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_savePassword" = NSButton; 
+                target = id; 
+                "textField_account" = NSTextField; 
+                "textField_password" = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

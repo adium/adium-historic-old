@@ -1,0 +1,28 @@
+{
+    IBClasses = (
+        {CLASS = AICompletingTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
+        {
+            ACTIONS = {sendMessage = id; }; 
+            CLASS = AIMessageWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "scrollView_messageView" = NSScrollView; 
+                "textView_outgoing" = AISendingTextView; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {closeWindow = id; sendMessage = id; setFocusOnEnterView = id; }; 
+            CLASS = AINewMessageWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "textField_destination" = AICompletingTextField; 
+                "textView_outgoing" = AISendingTextView; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = AISendingTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

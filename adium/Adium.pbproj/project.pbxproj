@@ -1,0 +1,6529 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 38;
+	objects = {
+		01BD68FF015E255C7F000001 = {
+			isa = PBXFrameworkReference;
+			name = QuickTime.framework;
+			path = /System/Library/Frameworks/QuickTime.framework;
+			refType = 0;
+		};
+		01BD6900015E255C7F000001 = {
+			fileRef = 01BD68FF015E255C7F000001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//010
+//011
+//012
+//013
+//014
+//040
+//041
+//042
+//043
+//044
+		043355C9FE30361CC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+//040
+//041
+//042
+//043
+//044
+//100
+//101
+//102
+//103
+//104
+		1058C7A1FEA54F0111CA2CBB = {
+			isa = PBXFrameworkReference;
+			name = Cocoa.framework;
+			path = /System/Library/Frameworks/Cocoa.framework;
+			refType = 0;
+		};
+		1058C7A3FEA54F0111CA2CBB = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//100
+//101
+//102
+//103
+//104
+//170
+//171
+//172
+//173
+//174
+		17587328FF379C6511CA2CBB = {
+			isa = PBXApplicationReference;
+			path = Adium.app;
+			refType = 3;
+		};
+//170
+//171
+//172
+//173
+//174
+//190
+//191
+//192
+//193
+//194
+		19C28FACFE9D520D11CA2CBB = {
+			children = (
+				17587328FF379C6511CA2CBB,
+				F53EA2CE02C803C101A8010A,
+				F569E39202CA88C701A8010A,
+				F53B9A0702CCED6401A8010A,
+				F53B9A0F02CCED8B01A8010A,
+				F53B9ACC02CD12CB01A8010A,
+				F5BD46CF02D0789901A8010A,
+				F5370C9902D76F3B01A8010A,
+				F51DEFAF032633E301A8010A,
+				F59F9A8A032BE6B101A8010A,
+				F510B77403339F1C01A8010A,
+				F5B53FC70333AFB501A8010A,
+				F50CD62903603C7201A8010A,
+				F5A01D8C0379813301A8010A,
+				F501BB1403882A2901A8010A,
+				F5AAD090039BA10901A8010A,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+		};
+//190
+//191
+//192
+//193
+//194
+//290
+//291
+//292
+//293
+//294
+		29B97313FDCFA39411CA2CEA = {
+			buildStyles = (
+				4A9504CCFFE6A4B311CA0CBA,
+				4A9504CDFFE6A4B311CA0CBA,
+			);
+			isa = PBXProject;
+			mainGroup = 29B97314FDCFA39411CA2CEA;
+			projectDirPath = "";
+			targets = (
+				29B97326FDCFA39411CA2CEA,
+				F53B9A0E02CCED8B01A8010A,
+				F53EA2CD02C803C101A8010A,
+				F5A01D8B0379813301A8010A,
+				F53B9A0602CCED6401A8010A,
+				F569E39102CA88C701A8010A,
+				F5BD46CE02D0789901A8010A,
+				F53B9ACB02CD12CB01A8010A,
+				F5370C9802D76F3B01A8010A,
+				F51DEFAE032633E301A8010A,
+				F59F9A89032BE6B101A8010A,
+				F510B77303339F1C01A8010A,
+				F5B53FC60333AFB501A8010A,
+				F50CD62803603C7201A8010A,
+				F501BB1303882A2901A8010A,
+				F5AAD08F039BA10901A8010A,
+			);
+		};
+		29B97314FDCFA39411CA2CEA = {
+			children = (
+				F5385CF601BEB9F901A80165,
+				F5CDD1170350B92801A8010A,
+				F59DB3D6033EA9CD01A8010A,
+				F59DB3D7033EA9CD01A8010A,
+				F5741745033E731F01A8010A,
+				F5BF8A6002C7D2F401A8010A,
+				F5B53FBC0333AB6F01A8010A,
+				F53B9A1302CCEDCA01A8010A,
+				F53EA2AC02C7F2A001A8010A,
+				F5B53FBB0333AB5C01A8010A,
+				F569E38102CA876501A8010A,
+				F53B9AC502CD12AB01A8010A,
+				F59F9A7F032BE67901A8010A,
+				F51DEFA40326330101A8010A,
+				F5BD46C402D0786601A8010A,
+				F5370C9202D76F1F01A8010A,
+				F510B76D03339ED501A8010A,
+				F5B53FBF0333ABA701A8010A,
+				F50CD61C03603BE201A8010A,
+				F501BB0D03882A0201A8010A,
+				F5AAD085039BA0D301A8010A,
+				F5B53FBE0333AB9201A8010A,
+				F53EA2B502C8020E01A8010A,
+				F5A01D85037980F201A8010A,
+				F5B53FBD0333AB8801A8010A,
+				29B97323FDCFA39411CA2CEA,
+				19C28FACFE9D520D11CA2CBB,
+			);
+			isa = PBXGroup;
+			name = CocAIMe2;
+			path = "";
+			refType = 4;
+		};
+		29B97323FDCFA39411CA2CEA = {
+			children = (
+				F53B9A3602CCEF4801A8010A,
+				F53B9A3702CCEF4801A8010A,
+				1058C7A1FEA54F0111CA2CBB,
+				F531836F019E40BB01A80165,
+				01BD68FF015E255C7F000001,
+				F5819CE9032124CE01A8010A,
+			);
+			isa = PBXGroup;
+			name = Frameworks;
+			path = "";
+			refType = 4;
+		};
+		29B97326FDCFA39411CA2CEA = {
+			buildPhases = (
+				29B97327FDCFA39411CA2CEA,
+				29B97328FDCFA39411CA2CEA,
+				29B9732BFDCFA39411CA2CEA,
+				29B9732DFDCFA39411CA2CEA,
+				043355C9FE30361CC02AAC07,
+				F53EA2DC02C807EE01A8010A,
+				F53B9A2002CCEEA101A8010A,
+			);
+			buildSettings = {
+				DEBUGGING_SYMBOLS = NO;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" /Users/adamiser/Code/Adium/build /Users/adamiser/Desktop";
+				HEADER_SEARCH_PATHS = "";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "/Users/adamiser/Documents/Programming/SampleCode/gaim-0_11_0pre14_0/gaim-0.11.0pre14/libfaim";
+				OPTIMIZATION_CFLAGS = "-O3";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Adium;
+				SECTORDER_FLAGS = "";
+				USE_GCC3_PFE_SUPPORT = YES;
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = app;
+			};
+			dependencies = (
+				F5BE33D4039BE34001A8010A,
+				F5CED5F10388303901A8010A,
+				F55263BC0333CA4401A8010A,
+				F51DEFB00326341601A8010A,
+				F5370C9A02D76F5101A8010A,
+				F5BD470702D0845E01A8010A,
+				F5BD46D902D078CC01A8010A,
+				F53B9A1002CCED9601A8010A,
+				F53B9A0802CCED7701A8010A,
+				F569E39302CA88C901A8010A,
+				F568638302C8083901A8010A,
+				F5A01D8D0379813F01A8010A,
+				F510B77503339F4901A8010A,
+				F573C6230333B88401A8010A,
+				F50CD62C03603C7D01A8010A,
+			);
+			isa = PBXApplicationTarget;
+			name = Adium;
+			productInstallPath = "$(HOME)/Applications";
+			productName = CocAIMe2;
+			productReference = 17587328FF379C6511CA2CBB;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Adium</string>
+	<key>CFBundleGetInfoString</key>
+	<string>2.0, Copyright 2001-2002 Adam Iser.</string>
+	<key>CFBundleHelpBookFolder</key>
+	<string>Adium Help</string>
+	<key>CFBundleHelpBookName</key>
+	<string>Adium Help</string>
+	<key>CFBundleIconFile</key>
+	<string>Adium.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.adiumX.adium</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Adium</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>2.0</string>
+	<key>CFBundleSignature</key>
+	<string>AdIM</string>
+	<key>CFBundleVersion</key>
+	<string>2.0</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 1;
+		};
+		29B97327FDCFA39411CA2CEA = {
+			buildActionMask = 2147483647;
+			files = (
+				F57938FC033E746101A8010A,
+				F57938FD033E746201A8010A,
+				F57938FE033E746201A8010A,
+				F57938FF033E746201A8010A,
+				F5793900033E746301A8010A,
+				F5793901033E746301A8010A,
+				F5793902033E746301A8010A,
+				F5793904033E746401A8010A,
+				F5793907033E746501A8010A,
+				F5793908033E746601A8010A,
+				F5793909033E746601A8010A,
+				F59DB3D8033EA9CD01A8010A,
+				F570A59A03704B6101A8010A,
+				F570A5B703704C6101A8010A,
+				F570A60903704E9701A8010A,
+				F55B415E03AB8B5601A8010A,
+				F55B416F03AB8C3201A8010A,
+				F55B417003AB8C3201A8010A,
+				F55B417103AB8C3201A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		29B97328FDCFA39411CA2CEA = {
+			buildActionMask = 2147483647;
+			files = (
+				F5741742033E72AC01A8010A,
+				F5741743033E72AC01A8010A,
+				F5741746033E731F01A8010A,
+				F57938C1033E739101A8010A,
+				F57938C5033E73AC01A8010A,
+				F552078C033F727F01A8010A,
+				F5A137FD03421FEB01A8010A,
+				F5CDCE4C0350760A01A8010A,
+				F5CDD1180350B92801A8010A,
+				F5174D7C0376B6B101A8010A,
+				F55B416103AB8BE301A8010A,
+				F55B416903AB8C0501A8010A,
+				F55B416B03AB8C0B01A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		29B9732BFDCFA39411CA2CEA = {
+			buildActionMask = 2147483647;
+			files = (
+				F57938B1033E737001A8010A,
+				F57938B3033E737001A8010A,
+				F57938B5033E737001A8010A,
+				F57938B6033E737001A8010A,
+				F57938B7033E737001A8010A,
+				F57938BE033E739101A8010A,
+				F57938BF033E739101A8010A,
+				F57938C0033E739101A8010A,
+				F57938C4033E73AC01A8010A,
+				F59DB3D9033EA9CD01A8010A,
+				F59DB6AE033EB74801A8010A,
+				F5A025050363395F01A8010A,
+				F570A59B03704B6101A8010A,
+				F570A5B803704C6101A8010A,
+				F570A60A03704E9701A8010A,
+				F5B9714A0379874801A8010A,
+				F55B415F03AB8B5601A8010A,
+				F55B416303AB8BED01A8010A,
+				F55B416503AB8BF501A8010A,
+				F55B416703AB8BFC01A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		29B9732DFDCFA39411CA2CEA = {
+			buildActionMask = 2147483647;
+			files = (
+				1058C7A3FEA54F0111CA2CBB,
+				01BD6900015E255C7F000001,
+				F53B9A3A02CCEF4801A8010A,
+				F53B9A3B02CCEF4801A8010A,
+				F59DB3DE033EB08D01A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+//290
+//291
+//292
+//293
+//294
+//4A0
+//4A1
+//4A2
+//4A3
+//4A4
+		4A9504CCFFE6A4B311CA0CBA = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				OPTIMIZATION_CFLAGS = "-O0";
+				PRODUCT_NAME = "Adium (Debug)";
+			};
+			isa = PBXBuildStyle;
+			name = Development;
+		};
+		4A9504CDFFE6A4B311CA0CBA = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUGGING_SYMBOLS = NO;
+				OPTIMIZATION_CFLAGS = "-O3";
+				PRODUCT_NAME = Adium;
+			};
+			isa = PBXBuildStyle;
+			name = Deployment;
+		};
+//4A0
+//4A1
+//4A2
+//4A3
+//4A4
+//F50
+//F51
+//F52
+//F53
+//F54
+		F501BB0D03882A0201A8010A = {
+			children = (
+				F501BB1B03882A8B01A8010A,
+				F55B40FD03AB87CA01A8010A,
+				F55B40FF03AB87CA01A8010A,
+				F501BB1C03882ADA01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Standard Toolbar Items";
+			path = "";
+			refType = 4;
+		};
+		F501BB0E03882A2901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F55B410503AB87CA01A8010A,
+				F55B410703AB87CA01A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F501BB0F03882A2901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F55B410903AB87CA01A8010A,
+				F55B410A03AB87CA01A8010A,
+				F55B410B03AB87CA01A8010A,
+				F55B410C03AB87CA01A8010A,
+				F55B410D03AB87CA01A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F501BB1003882A2901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F55B410603AB87CA01A8010A,
+				F55B410803AB87CA01A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F501BB1103882A2901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5CED5F2038830C901A8010A,
+				F5CED5F3038830C901A8010A,
+				F5CED5F4038830CA01A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F501BB1203882A2901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F501BB1303882A2901A8010A = {
+			buildPhases = (
+				F501BB0E03882A2901A8010A,
+				F501BB0F03882A2901A8010A,
+				F501BB1003882A2901A8010A,
+				F501BB1103882A2901A8010A,
+				F501BB1203882A2901A8010A,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Standard Toolbar Items";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				F501BB1603882A3301A8010A,
+				F501BB1503882A3001A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Standard Toolbar Items";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Standard Toolbar Items";
+			productReference = F501BB1403882A2901A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIStandardToolbarItemsPlugin</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F501BB1403882A2901A8010A = {
+			isa = PBXBundleReference;
+			path = "Standard Toolbar Items.AdiumPlugin";
+			refType = 3;
+		};
+		F501BB1503882A3001A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F501BB1603882A3301A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		F501BB1B03882A8B01A8010A = {
+			children = (
+				F55B40FC03AB87CA01A8010A,
+				F55B40FE03AB87CA01A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F501BB1C03882ADA01A8010A = {
+			children = (
+				F55B410003AB87CA01A8010A,
+				F55B410103AB87CA01A8010A,
+				F55B410203AB87CA01A8010A,
+				F55B410303AB87CA01A8010A,
+				F55B410403AB87CA01A8010A,
+			);
+			isa = PBXGroup;
+			name = Images;
+			refType = 4;
+		};
+		F501BB2103882CB001A8010A = {
+			fileRef = F501BB1403882A2901A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50C5C50032BE9B301A8010A = {
+			fileRef = F59F9A8A032BE6B101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50CA5F502D0893801A8010A = {
+			fileRef = F5BD46CF02D0789901A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50CD61C03603BE201A8010A = {
+			children = (
+				F50CD62203603C3101A8010A,
+				F570A59D03704B9501A8010A,
+				F55B411303AB88D601A8010A,
+				F55B411103AB88D601A8010A,
+				F55B411603AB88D601A8010A,
+				F55B411703AB88D601A8010A,
+				F5361E3103058E2A01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Contact List Editor";
+			path = "";
+			refType = 4;
+		};
+		F50CD62203603C3101A8010A = {
+			children = (
+				F570A59C03704B9501A8010A,
+				F55B411003AB88D601A8010A,
+				F55B411203AB88D601A8010A,
+				F55B411503AB88D601A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F50CD62303603C7201A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F570A5A003704BA301A8010A,
+				F55B412503AB88D601A8010A,
+				F55B412703AB88D601A8010A,
+				F55B412A03AB88D601A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F50CD62403603C7201A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F55B412303AB88D601A8010A,
+				F55B412403AB88D601A8010A,
+				F55B412903AB88D601A8010A,
+				F55B412C03AB88D601A8010A,
+				F55B412E03AB88D601A8010A,
+				F55B412F03AB88D601A8010A,
+				F55B413003AB88D601A8010A,
+				F55B413103AB88D601A8010A,
+				F55B413203AB88D601A8010A,
+				F55B413303AB88D601A8010A,
+				F55B413403AB88D601A8010A,
+				F55B413503AB88D601A8010A,
+				F55B413603AB88D601A8010A,
+				F55B413703AB88D601A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F50CD62503603C7201A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F570A59F03704B9501A8010A,
+				F55B412603AB88D601A8010A,
+				F55B412803AB88D601A8010A,
+				F55B412B03AB88D601A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F50CD62603603C7201A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F50CD64303603E0D01A8010A,
+				F50CD64403603E0D01A8010A,
+				F50CD64503603E0F01A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F50CD62703603C7201A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F50CD62803603C7201A8010A = {
+			buildPhases = (
+				F50CD62303603C7201A8010A,
+				F50CD62403603C7201A8010A,
+				F50CD62503603C7201A8010A,
+				F50CD62603603C7201A8010A,
+				F50CD62703603C7201A8010A,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Contact List Editor";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				F50CD62A03603C7701A8010A,
+				F50CD62B03603C7C01A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Contact List Editor";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Contact List Editor";
+			productReference = F50CD62903603C7201A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIContactListEditorPlugin</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F50CD62903603C7201A8010A = {
+			isa = PBXBundleReference;
+			path = "Contact List Editor.AdiumPlugin";
+			refType = 3;
+		};
+		F50CD62A03603C7701A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F50CD62B03603C7C01A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		F50CD62C03603C7D01A8010A = {
+			isa = PBXTargetDependency;
+			target = F50CD62803603C7201A8010A;
+		};
+		F50CD62D03603CBF01A8010A = {
+			fileRef = F50CD62903603C7201A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50CD64303603E0D01A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50CD64403603E0D01A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50CD64503603E0F01A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F510B76D03339ED501A8010A = {
+			children = (
+				F510B77A0333A0A201A8010A,
+				F570A585037049D501A8010A,
+				F55B414403AB89BB01A8010A,
+				F55B414503AB89BB01A8010A,
+				F55B414603AB89BB01A8010A,
+				F55B414703AB89BB01A8010A,
+				F55B414803AB89BB01A8010A,
+				F55B414903AB89BB01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Account Menu Access";
+			path = "";
+			refType = 4;
+		};
+		F510B76E03339F1C01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F570A586037049D501A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F510B76F03339F1C01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F55B414A03AB89BB01A8010A,
+				F55B414B03AB89BB01A8010A,
+				F55B414C03AB89BB01A8010A,
+				F55B414D03AB89BB01A8010A,
+				F55B414E03AB89BB01A8010A,
+				F55B414F03AB89BB01A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F510B77003339F1C01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F570A587037049D501A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F510B77103339F1C01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F510B77B0333A51501A8010A,
+				F510B77C0333A51801A8010A,
+				F5A70E95039506C201A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F510B77203339F1C01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F510B77303339F1C01A8010A = {
+			buildPhases = (
+				F510B76E03339F1C01A8010A,
+				F510B76F03339F1C01A8010A,
+				F510B77003339F1C01A8010A,
+				F510B77103339F1C01A8010A,
+				F510B77203339F1C01A8010A,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Account Menu Access";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				F573C6240333B88901A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Account Menu Access";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Account Menu Access";
+			productReference = F510B77403339F1C01A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIAccountMenuAccessPlugin</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F510B77403339F1C01A8010A = {
+			isa = PBXBundleReference;
+			path = "Account Menu Access.AdiumPlugin";
+			refType = 3;
+		};
+		F510B77503339F4901A8010A = {
+			isa = PBXTargetDependency;
+			target = F510B77303339F1C01A8010A;
+		};
+		F510B77A0333A0A201A8010A = {
+			children = (
+				F570A584037049D501A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F510B77B0333A51501A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F510B77C0333A51801A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5174D7B0376B6B001A8010A = {
+			isa = PBXFileReference;
+			name = OutOfSync.nib;
+			path = Source/OutOfSync.nib;
+			refType = 4;
+		};
+		F5174D7C0376B6B101A8010A = {
+			fileRef = F5174D7B0376B6B001A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5174D7D0376B6D201A8010A = {
+			children = (
+				F55B416203AB8BED01A8010A,
+				F55B416403AB8BF501A8010A,
+				F5174D7B0376B6B001A8010A,
+			);
+			isa = PBXGroup;
+			name = "Out Of Sync Window";
+			refType = 4;
+		};
+		F51DEC0D03262FB501A8010A = {
+			children = (
+				F57938C2033E73AC01A8010A,
+				F57938C3033E73AC01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Login Window";
+			path = "";
+			refType = 4;
+		};
+		F51DEFA40326330101A8010A = {
+			children = (
+				F579399C033E75BC01A8010A,
+				F57939A2033E75CB01A8010A,
+				F57939A0033E75CB01A8010A,
+				F579399E033E75CB01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Standard Contact List View";
+			path = "";
+			refType = 4;
+		};
+		F51DEFA9032633E301A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F57939A3033E75CB01A8010A,
+				F57939A5033E75CB01A8010A,
+				F57939A7033E75CB01A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F51DEFAA032633E301A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F51DEFAB032633E301A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F57939A4033E75CB01A8010A,
+				F57939A6033E75CB01A8010A,
+				F57939A8033E75CB01A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F51DEFAC032633E301A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F51DEFB8032634BB01A8010A,
+				F51DEFB9032634BB01A8010A,
+				F51DEFBA032634D401A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F51DEFAD032633E301A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F51DEFAE032633E301A8010A = {
+			buildPhases = (
+				F51DEFA9032633E301A8010A,
+				F51DEFAA032633E301A8010A,
+				F51DEFAB032633E301A8010A,
+				F51DEFAC032633E301A8010A,
+				F51DEFAD032633E301A8010A,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Standard Contact List View";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				F51DEFB10326345C01A8010A,
+				F51DEFB20326345E01A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Standard Contact List View";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Standard Contact List View";
+			productReference = F51DEFAF032633E301A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AISCLViewPlugin</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F51DEFAF032633E301A8010A = {
+			isa = PBXBundleReference;
+			path = "Standard Contact List View.AdiumPlugin";
+			refType = 3;
+		};
+		F51DEFB00326341601A8010A = {
+			isa = PBXTargetDependency;
+			target = F51DEFAE032633E301A8010A;
+		};
+		F51DEFB10326345C01A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F51DEFB20326345E01A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		F51DEFB8032634BB01A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F51DEFB9032634BB01A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F51DEFBA032634D401A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5300A2B032F760B01A8010A = {
+			children = (
+				F579390E033E748F01A8010A,
+				F579390C033E748F01A8010A,
+				F579390D033E748F01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Contact Object";
+			refType = 4;
+		};
+		F5300A2C032F761101A8010A = {
+			children = (
+				F5793911033E748F01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Content Object";
+			path = "";
+			refType = 4;
+		};
+		F531836F019E40BB01A80165 = {
+			isa = PBXFrameworkReference;
+			name = Carbon.framework;
+			path = /System/Library/Frameworks/Carbon.framework;
+			refType = 0;
+		};
+		F5357E4102F8422601A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5357E4202F8422E01A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		F5361E3103058E2A01A8010A = {
+			children = (
+				F55B411403AB88D601A8010A,
+				F55B410E03AB88D601A8010A,
+				F55B410F03AB88D601A8010A,
+				F55B411903AB88D601A8010A,
+				F55B411A03AB88D601A8010A,
+				F55B412203AB88D601A8010A,
+				F55B411B03AB88D601A8010A,
+				F55B411C03AB88D601A8010A,
+				F55B411D03AB88D601A8010A,
+				F55B411E03AB88D601A8010A,
+				F55B411F03AB88D601A8010A,
+				F55B412003AB88D601A8010A,
+				F55B412103AB88D601A8010A,
+			);
+			isa = PBXGroup;
+			name = Images;
+			path = "";
+			refType = 4;
+		};
+		F5370C9202D76F1F01A8010A = {
+			children = (
+				F57939AE033E760701A8010A,
+				F59DB3AF033EA8EC01A8010A,
+				F59DB3AD033EA8EC01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Status Circles";
+			path = "";
+			refType = 4;
+		};
+		F5370C9302D76F3B01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F59DB3B0033EA8EC01A8010A,
+				F59DB3B2033EA8EC01A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5370C9402D76F3B01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5370C9502D76F3B01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F59DB3B1033EA8EC01A8010A,
+				F59DB3B3033EA8EC01A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5370C9602D76F3B01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5CBFC4702D7725501A8010A,
+				F5CBFC4802D7725601A8010A,
+				F5CBFC4902D7725601A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5370C9702D76F3B01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5370C9802D76F3B01A8010A = {
+			buildPhases = (
+				F5370C9302D76F3B01A8010A,
+				F5370C9402D76F3B01A8010A,
+				F5370C9502D76F3B01A8010A,
+				F5370C9602D76F3B01A8010A,
+				F5370C9702D76F3B01A8010A,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Status Circles";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				F5D5F61902DC53FA01A8010A,
+				F5D5F61802DC53F501A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Status Circles";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Status Circles.AdiumPlugin";
+			productReference = F5370C9902D76F3B01A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIStatusCirclesPlugin</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F5370C9902D76F3B01A8010A = {
+			isa = PBXBundleReference;
+			path = "Status Circles.AdiumPlugin";
+			refType = 3;
+		};
+		F5370C9A02D76F5101A8010A = {
+			isa = PBXTargetDependency;
+			target = F5370C9802D76F3B01A8010A;
+		};
+		F5370CA002D76F7D01A8010A = {
+			fileRef = F5370C9902D76F3B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5385CF601BEB9F901A80165 = {
+			children = (
+				F552078B033F727F01A8010A,
+				F59DB6AD033EB74801A8010A,
+				F574173F033E72AC01A8010A,
+				F5741740033E72AC01A8010A,
+			);
+			isa = PBXGroup;
+			name = Docs;
+			path = "";
+			refType = 4;
+		};
+		F53B9A0102CCED6401A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5793957033E74E401A8010A,
+				F5793959033E74E401A8010A,
+				F579395B033E74E401A8010A,
+				F579395F033E74E401A8010A,
+				F5793961033E74E401A8010A,
+				F5793963033E74E401A8010A,
+				F5793965033E74E401A8010A,
+				F5793967033E74E401A8010A,
+				F5793969033E74E401A8010A,
+				F579396B033E74E401A8010A,
+				F579396D033E74E401A8010A,
+				F579396F033E74E401A8010A,
+				F5793971033E74E401A8010A,
+				F5793973033E74E401A8010A,
+				F5793974033E74E401A8010A,
+				F5793976033E74E401A8010A,
+				F579397B033E755501A8010A,
+				F5A025060363396C01A8010A,
+				F570A58C03704A8F01A8010A,
+				F570A58E03704A8F01A8010A,
+				F570A59203704AB901A8010A,
+				F570A5A303704BCE01A8010A,
+				F570A5A903704BED01A8010A,
+				F570A5AB03704BED01A8010A,
+				F570A5AF03704C1101A8010A,
+				F570A5B303704C3701A8010A,
+				F570A5C303704CB801A8010A,
+				F570A5C503704CB801A8010A,
+				F570A5C703704CB801A8010A,
+				F570A61503704F4201A8010A,
+				F570A61903704F6601A8010A,
+				F55B415B03AB8B2601A8010A,
+				F55B417303AB8C5601A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9A0202CCED6401A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F570A5E903704DEA01A8010A,
+				F570A5EC03704DEA01A8010A,
+				F570A5EE03704E0101A8010A,
+				F570A5FA03704E4C01A8010A,
+				F570A5FB03704E4C01A8010A,
+				F570A5FC03704E4C01A8010A,
+				F570A5FD03704E4C01A8010A,
+				F570A5FE03704E4C01A8010A,
+				F570A5FF03704E4C01A8010A,
+				F570A60003704E4C01A8010A,
+				F570A60103704E4C01A8010A,
+				F570A60203704E4C01A8010A,
+				F570A60303704E4C01A8010A,
+				F570A60403704E4C01A8010A,
+				F5CC42460386D8F901A8010A,
+				F5CC42470386D8F901A8010A,
+				F5A70E7F0392657D01A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9A0302CCED6401A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5793958033E74E401A8010A,
+				F579395A033E74E401A8010A,
+				F579395C033E74E401A8010A,
+				F5793960033E74E401A8010A,
+				F5793962033E74E401A8010A,
+				F5793964033E74E401A8010A,
+				F5793966033E74E401A8010A,
+				F5793968033E74E401A8010A,
+				F579396A033E74E401A8010A,
+				F579396C033E74E401A8010A,
+				F579396E033E74E401A8010A,
+				F5793970033E74E401A8010A,
+				F5793972033E74E401A8010A,
+				F5793975033E74E401A8010A,
+				F5793977033E74E401A8010A,
+				F579397C033E755501A8010A,
+				F5A025070363396D01A8010A,
+				F570A58D03704A8F01A8010A,
+				F570A58F03704A8F01A8010A,
+				F570A59303704AB901A8010A,
+				F570A5A403704BCE01A8010A,
+				F570A5AA03704BED01A8010A,
+				F570A5AC03704BED01A8010A,
+				F570A5B003704C1101A8010A,
+				F570A5B403704C3701A8010A,
+				F570A5C403704CB801A8010A,
+				F570A5C603704CB801A8010A,
+				F570A5C803704CB801A8010A,
+				F570A61603704F4201A8010A,
+				F570A61A03704F6601A8010A,
+				F55B415503AB8AF901A8010A,
+				F55B415703AB8B0901A8010A,
+				F55B417503AB8C6201A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9A0402CCED6401A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F53B9A1902CCEDE701A8010A,
+				F53B9A2A02CCEF0D01A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9A0502CCED6401A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9A0602CCED6401A8010A = {
+			buildPhases = (
+				F53B9A0102CCED6401A8010A,
+				F53B9A0202CCED6401A8010A,
+				F53B9A0302CCED6401A8010A,
+				F53B9A0402CCED6401A8010A,
+				F53B9A0502CCED6401A8010A,
+			);
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-seg1addr 0x10100000";
+				OTHER_LIBTOOL_FLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRINCIPAL_CLASS = "";
+				PRODUCT_NAME = AIUtilities;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = framework;
+			};
+			dependencies = (
+			);
+			isa = PBXFrameworkTarget;
+			name = AIUtilities.Framework;
+			productName = AIUtilities;
+			productReference = F53B9A0702CCED6401A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>FMWK</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F53B9A0702CCED6401A8010A = {
+			isa = PBXFrameworkReference;
+			path = AIUtilities.framework;
+			refType = 3;
+		};
+		F53B9A0802CCED7701A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		F53B9A0902CCED8B01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F579392C033E74C401A8010A,
+				F579392D033E74C401A8010A,
+				F579392E033E74C401A8010A,
+				F579392F033E74C401A8010A,
+				F5793930033E74C401A8010A,
+				F5793931033E74C401A8010A,
+				F5793932033E74C401A8010A,
+				F5793935033E74C401A8010A,
+				F59DB3E8033EB4B601A8010A,
+				F570A59603704AF501A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9A0A02CCED8B01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5793920033E748F01A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9A0B02CCED8B01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5793916033E748F01A8010A,
+				F5793917033E748F01A8010A,
+				F5793918033E748F01A8010A,
+				F5793919033E748F01A8010A,
+				F579391C033E748F01A8010A,
+				F579391D033E748F01A8010A,
+				F579391E033E748F01A8010A,
+				F579391F033E748F01A8010A,
+				F570A59703704AF501A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9A0C02CCED8B01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F53B9A2902CCEEF301A8010A,
+				F567DD520306A44401A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9A0D02CCED8B01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9A0E02CCED8B01A8010A = {
+			buildPhases = (
+				F53B9A0902CCED8B01A8010A,
+				F53B9A0A02CCED8B01A8010A,
+				F53B9A0B02CCED8B01A8010A,
+				F53B9A0C02CCED8B01A8010A,
+				F53B9A0D02CCED8B01A8010A,
+			);
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_VERSION = A;
+				OTHER_LDFLAGS = "-seg1addr 0x10000000";
+				OTHER_LIBTOOL_FLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRINCIPAL_CLASS = "";
+				PRODUCT_NAME = Adium;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = framework;
+			};
+			dependencies = (
+				F567DD510306A43A01A8010A,
+			);
+			isa = PBXFrameworkTarget;
+			name = Adium.Framework;
+			productName = Adium.Framework;
+			productReference = F53B9A0F02CCED8B01A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>FMWK</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F53B9A0F02CCED8B01A8010A = {
+			isa = PBXFrameworkReference;
+			path = Adium.framework;
+			refType = 3;
+		};
+		F53B9A1002CCED9601A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F53B9A1102CCEDAA01A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53B9A1202CCEDAB01A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53B9A1302CCEDCA01A8010A = {
+			children = (
+				F5793921033E74AE01A8010A,
+				F5793912033E748F01A8010A,
+				F570A61003704EF401A8010A,
+				F579390B033E748F01A8010A,
+				F5793914033E748F01A8010A,
+				F5B89EFC033CA8CC01A8010A,
+				F5300A2B032F760B01A8010A,
+				F5300A2C032F761101A8010A,
+			);
+			isa = PBXGroup;
+			name = Adium.Framework;
+			path = "";
+			refType = 4;
+		};
+		F53B9A1902CCEDE701A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53B9A2002CCEEA101A8010A = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F53B9A1102CCEDAA01A8010A,
+				F53B9A1202CCEDAB01A8010A,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9A2902CCEEF301A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53B9A2A02CCEF0D01A8010A = {
+			fileRef = F531836F019E40BB01A80165;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53B9A3602CCEF4801A8010A = {
+			isa = PBXFrameworkReference;
+			name = Adium.framework;
+			path = build/Adium.framework;
+			refType = 4;
+		};
+		F53B9A3702CCEF4801A8010A = {
+			isa = PBXFrameworkReference;
+			name = AIUtilities.framework;
+			path = build/AIUtilities.framework;
+			refType = 4;
+		};
+		F53B9A3A02CCEF4801A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53B9A3B02CCEF4801A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53B9A3F02CCEF6601A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F53B9A4002CCEF6E01A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53B9A8A02CCF0A701A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53B9A8B02CCF0A901A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53B9AC502CD12AB01A8010A = {
+			children = (
+				F579398E033E758D01A8010A,
+				F5793990033E759C01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Offline Contact Hiding";
+			path = "";
+			refType = 4;
+		};
+		F53B9AC602CD12CB01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5793991033E759C01A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9AC702CD12CB01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9AC802CD12CB01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5793992033E759C01A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9AC902CD12CB01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F53B9AD302CD14F201A8010A,
+				F53B9AD402CD14F301A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9ACA02CD12CB01A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53B9ACB02CD12CB01A8010A = {
+			buildPhases = (
+				F53B9AC602CD12CB01A8010A,
+				F53B9AC702CD12CB01A8010A,
+				F53B9AC802CD12CB01A8010A,
+				F53B9AC902CD12CB01A8010A,
+				F53B9ACA02CD12CB01A8010A,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Offline Contact Hiding";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				F53B9ACE02CD12DB01A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Offline Contact Hiding";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Offline Contact Hiding";
+			productReference = F53B9ACC02CD12CB01A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIOfflineContactHidingPlugin</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F53B9ACC02CD12CB01A8010A = {
+			isa = PBXBundleReference;
+			path = "Offline Contact Hiding.AdiumPlugin";
+			refType = 3;
+		};
+		F53B9ACE02CD12DB01A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F53B9AD302CD14F201A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53B9AD402CD14F301A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53B9AD502CD150201A8010A = {
+			fileRef = F53B9ACC02CD12CB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53D72EF02C8FBE101A8010A = {
+			fileRef = F531836F019E40BB01A80165;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53EA2AC02C7F2A001A8010A = {
+			children = (
+				F5793978033E74F001A8010A,
+				F549EF11036B0FD401A8010A,
+				F59C470F033E545901A8010A,
+				F59C470D033E544E01A8010A,
+				F549EF15036B10F701A8010A,
+			);
+			isa = PBXGroup;
+			name = AIUtilities.Framework;
+			path = "";
+			refType = 4;
+		};
+		F53EA2B502C8020E01A8010A = {
+			children = (
+				F59DB3D5033EA90D01A8010A,
+				F570A5CA03704D1A01A8010A,
+				F59DB3B9033EA90801A8010A,
+				F59DB3BB033EA90801A8010A,
+				F59DB3BD033EA90801A8010A,
+				F59DB3BF033EA90801A8010A,
+				F59DB3DB033EABB301A8010A,
+				F5C8B7740358632101A8010A,
+				F59DB3D4033EA90B01A8010A,
+			);
+			isa = PBXGroup;
+			name = "AIM (TOC2)";
+			path = "";
+			refType = 4;
+		};
+		F53EA2C802C803C101A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F59DB3C8033EA90801A8010A,
+				F59DB3CA033EA90801A8010A,
+				F59DB3CC033EA90801A8010A,
+				F59DB3CE033EA90801A8010A,
+				F570A5CB03704D1A01A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53EA2C902C803C101A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F59DB3C4033EA90801A8010A,
+				F59DB3D0033EA90801A8010A,
+				F59DB3D1033EA90801A8010A,
+				F59DB3D3033EA90801A8010A,
+				F5C8B7730358631001A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53EA2CA02C803C101A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F59DB3C9033EA90801A8010A,
+				F59DB3CB033EA90801A8010A,
+				F59DB3CD033EA90801A8010A,
+				F59DB3CF033EA90801A8010A,
+				F570A5CC03704D1A01A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53EA2CB02C803C101A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F53EA2D402C8041701A8010A,
+				F53D72EF02C8FBE101A8010A,
+				F53B9A8A02CCF0A701A8010A,
+				F53B9A8B02CCF0A901A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53EA2CC02C803C101A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F53EA2CD02C803C101A8010A = {
+			buildPhases = (
+				F53EA2C802C803C101A8010A,
+				F53EA2C902C803C101A8010A,
+				F53EA2CA02C803C101A8010A,
+				F53EA2CB02C803C101A8010A,
+				F53EA2CC02C803C101A8010A,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "AIM (TOC2)";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXBundleTarget;
+			name = "AIM (TOC2)";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = AIMTOC2.AdiumService;
+			productReference = F53EA2CE02C803C101A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>AIM (TOC2)</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIMTOC2ServicePlugin</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F53EA2CE02C803C101A8010A = {
+			isa = PBXBundleReference;
+			path = "AIM (TOC2).AdiumPlugin";
+			refType = 3;
+		};
+		F53EA2D402C8041701A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53EA2DB02C807DC01A8010A = {
+			fileRef = F53EA2CE02C803C101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F53EA2DC02C807EE01A8010A = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				F5AAD091039BA20A01A8010A,
+				F501BB2103882CB001A8010A,
+				F5A01D98037982AE01A8010A,
+				F50C5C50032BE9B301A8010A,
+				F56781210326380E01A8010A,
+				F569E39402CA88D801A8010A,
+				F53EA2DB02C807DC01A8010A,
+				F5370CA002D76F7D01A8010A,
+				F50CA5F502D0893801A8010A,
+				F53B9AD502CD150201A8010A,
+				F5B53FBA0333A82F01A8010A,
+				F5B53FD20333B11701A8010A,
+				F50CD62D03603CBF01A8010A,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F54441AC0378A36A01A8010A = {
+			isa = PBXFrameworkReference;
+			name = InstantMessage.framework;
+			path = /System/Library/PrivateFrameworks/InstantMessage.framework;
+			refType = 0;
+		};
+		F549EF08036B0F2C01A8010A = {
+			children = (
+				F570A5C203704CB801A8010A,
+				F55B417403AB8C6201A8010A,
+				F570A5BE03704CB801A8010A,
+				F55B415403AB8AF901A8010A,
+				F570A5C003704CB801A8010A,
+				F5CC42440386D8F901A8010A,
+				F5CC42450386D8F901A8010A,
+			);
+			isa = PBXGroup;
+			name = "Mini Toolbars";
+			path = "";
+			refType = 4;
+		};
+		F549EF09036B0F3201A8010A = {
+			children = (
+				F570A5A803704BED01A8010A,
+				F570A5A603704BED01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Custom Tabs";
+			path = "";
+			refType = 4;
+		};
+		F549EF0A036B0F5B01A8010A = {
+			children = (
+				F570A58903704A8F01A8010A,
+				F570A58B03704A8F01A8010A,
+			);
+			isa = PBXGroup;
+			name = Animations;
+			path = "";
+			refType = 4;
+		};
+		F549EF0B036B0F7201A8010A = {
+			children = (
+				F579397A033E755501A8010A,
+				F5793943033E74E401A8010A,
+			);
+			isa = PBXGroup;
+			name = "Text / Strings";
+			path = "";
+			refType = 4;
+		};
+		F549EF0D036B0F7F01A8010A = {
+			children = (
+				F579394F033E74E401A8010A,
+			);
+			isa = PBXGroup;
+			name = Networking;
+			path = "";
+			refType = 4;
+		};
+		F549EF0E036B0F8D01A8010A = {
+			children = (
+				F5793947033E74E401A8010A,
+				F570A5AE03704C1101A8010A,
+			);
+			isa = PBXGroup;
+			name = "Images / Drawing";
+			path = "";
+			refType = 4;
+		};
+		F549EF11036B0FD401A8010A = {
+			children = (
+				F549EF0A036B0F5B01A8010A,
+				F549EF09036B0F3201A8010A,
+				F549EF08036B0F2C01A8010A,
+				F5793937033E74E401A8010A,
+				F570A59103704AB901A8010A,
+				F57938B8033E739101A8010A,
+				F5793945033E74E401A8010A,
+				F570A61803704F6601A8010A,
+				F5793954033E74E401A8010A,
+			);
+			isa = PBXGroup;
+			name = Interface;
+			path = "";
+			refType = 4;
+		};
+		F549EF13036B101B01A8010A = {
+			children = (
+				F5793949033E74E401A8010A,
+				F5793941033E74E401A8010A,
+				F579394B033E74E401A8010A,
+			);
+			isa = PBXGroup;
+			name = "Files / Storage / Arrays";
+			path = "";
+			refType = 4;
+		};
+		F549EF14036B104401A8010A = {
+			children = (
+				F5793951033E74E401A8010A,
+				F570A5A203704BCE01A8010A,
+			);
+			isa = PBXGroup;
+			name = Interface;
+			path = "";
+			refType = 4;
+		};
+		F549EF15036B10F701A8010A = {
+			children = (
+				F570A5E803704DEA01A8010A,
+				F570A5E503704DEA01A8010A,
+				F570A5EF03704E4C01A8010A,
+				F570A5F003704E4C01A8010A,
+				F570A5F103704E4C01A8010A,
+				F570A5F203704E4C01A8010A,
+				F570A5F303704E4C01A8010A,
+				F570A5F403704E4C01A8010A,
+				F570A5F503704E4C01A8010A,
+				F570A5F603704E4C01A8010A,
+				F570A5F703704E4C01A8010A,
+				F570A5F803704E4C01A8010A,
+				F570A5F903704E4C01A8010A,
+				F570A5ED03704E0101A8010A,
+				F5A70E7E0392657D01A8010A,
+			);
+			isa = PBXGroup;
+			name = Images;
+			path = "";
+			refType = 4;
+		};
+		F549EF1B036B1A0801A8010A = {
+			children = (
+				F579397E033E756E01A8010A,
+				F5793983033E756E01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Contact List";
+			refType = 4;
+		};
+		F549EF1C036B1A0A01A8010A = {
+			children = (
+				F5793982033E756E01A8010A,
+				F570A5CE03704D3D01A8010A,
+				F570A60503704E7201A8010A,
+				F5793984033E756E01A8010A,
+			);
+			isa = PBXGroup;
+			name = Messages;
+			path = "";
+			refType = 4;
+		};
+		F552078B033F727F01A8010A = {
+			isa = PBXFileReference;
+			name = Adium.icns;
+			path = Source/Adium.icns;
+			refType = 4;
+		};
+		F552078C033F727F01A8010A = {
+			fileRef = F552078B033F727F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55263BC0333CA4401A8010A = {
+			isa = PBXTargetDependency;
+			target = F59F9A89032BE6B101A8010A;
+		};
+		F55B40F803AB877401A8010A = {
+			isa = PBXFileReference;
+			name = AIEventSoundsPlugin.h;
+			path = "Plugins/Event Sounds/AIEventSoundsPlugin.h";
+			refType = 4;
+		};
+		F55B40F903AB877401A8010A = {
+			fileRef = F55B40F803AB877401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B40FA03AB877E01A8010A = {
+			isa = PBXFileReference;
+			name = AIEventSoundsPlugin.m;
+			path = "Plugins/Event Sounds/AIEventSoundsPlugin.m";
+			refType = 4;
+		};
+		F55B40FB03AB877E01A8010A = {
+			fileRef = F55B40FA03AB877E01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B40FC03AB87CA01A8010A = {
+			isa = PBXFileReference;
+			name = AIFramedMiniToolbarButton.h;
+			path = "Plugins/Standard Toolbar Items/AIFramedMiniToolbarButton.h";
+			refType = 4;
+		};
+		F55B40FD03AB87CA01A8010A = {
+			isa = PBXFileReference;
+			name = AIFramedMiniToolbarButton.m;
+			path = "Plugins/Standard Toolbar Items/AIFramedMiniToolbarButton.m";
+			refType = 4;
+		};
+		F55B40FE03AB87CA01A8010A = {
+			isa = PBXFileReference;
+			name = AIStandardToolbarItemsPlugin.h;
+			path = "Plugins/Standard Toolbar Items/AIStandardToolbarItemsPlugin.h";
+			refType = 4;
+		};
+		F55B40FF03AB87CA01A8010A = {
+			isa = PBXFileReference;
+			name = AIStandardToolbarItemsPlugin.m;
+			path = "Plugins/Standard Toolbar Items/AIStandardToolbarItemsPlugin.m";
+			refType = 4;
+		};
+		F55B410003AB87CA01A8010A = {
+			isa = PBXFileReference;
+			name = divider.tiff;
+			path = "Plugins/Standard Toolbar Items/divider.tiff";
+			refType = 4;
+		};
+		F55B410103AB87CA01A8010A = {
+			isa = PBXFileReference;
+			name = mail.tif;
+			path = "Plugins/Standard Toolbar Items/mail.tif";
+			refType = 4;
+		};
+		F55B410203AB87CA01A8010A = {
+			isa = PBXFileReference;
+			name = message.tif;
+			path = "Plugins/Standard Toolbar Items/message.tif";
+			refType = 4;
+		};
+		F55B410303AB87CA01A8010A = {
+			isa = PBXFileReference;
+			name = sendButton.tiff;
+			path = "Plugins/Standard Toolbar Items/sendButton.tiff";
+			refType = 4;
+		};
+		F55B410403AB87CA01A8010A = {
+			isa = PBXFileReference;
+			name = space.tiff;
+			path = "Plugins/Standard Toolbar Items/space.tiff";
+			refType = 4;
+		};
+		F55B410503AB87CA01A8010A = {
+			fileRef = F55B40FC03AB87CA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B410603AB87CA01A8010A = {
+			fileRef = F55B40FD03AB87CA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B410703AB87CA01A8010A = {
+			fileRef = F55B40FE03AB87CA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B410803AB87CA01A8010A = {
+			fileRef = F55B40FF03AB87CA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B410903AB87CA01A8010A = {
+			fileRef = F55B410003AB87CA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B410A03AB87CA01A8010A = {
+			fileRef = F55B410103AB87CA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B410B03AB87CA01A8010A = {
+			fileRef = F55B410203AB87CA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B410C03AB87CA01A8010A = {
+			fileRef = F55B410303AB87CA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B410D03AB87CA01A8010A = {
+			fileRef = F55B410403AB87CA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B410E03AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = addGroup.tiff;
+			path = "Plugins/Contact List Editor/addGroup.tiff";
+			refType = 4;
+		};
+		F55B410F03AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = addHandle.tiff;
+			path = "Plugins/Contact List Editor/addHandle.tiff";
+			refType = 4;
+		};
+		F55B411003AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = AIContactListCheckbox.h;
+			path = "Plugins/Contact List Editor/AIContactListCheckbox.h";
+			refType = 4;
+		};
+		F55B411103AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = AIContactListCheckbox.m;
+			path = "Plugins/Contact List Editor/AIContactListCheckbox.m";
+			refType = 4;
+		};
+		F55B411203AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = AIContactListEditorWindowController.h;
+			path = "Plugins/Contact List Editor/AIContactListEditorWindowController.h";
+			refType = 4;
+		};
+		F55B411303AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = AIContactListEditorWindowController.m;
+			path = "Plugins/Contact List Editor/AIContactListEditorWindowController.m";
+			refType = 4;
+		};
+		F55B411403AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = AIMsettings.tif;
+			path = "Plugins/Contact List Editor/AIMsettings.tif";
+			refType = 4;
+		};
+		F55B411503AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = AISCLEditHeaderView.h;
+			path = "Plugins/Contact List Editor/AISCLEditHeaderView.h";
+			refType = 4;
+		};
+		F55B411603AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = AISCLEditHeaderView.m;
+			path = "Plugins/Contact List Editor/AISCLEditHeaderView.m";
+			refType = 4;
+		};
+		F55B411703AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = ContactListEditorWindow.nib;
+			path = "Plugins/Contact List Editor/ContactListEditorWindow.nib";
+			refType = 4;
+		};
+		F55B411903AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = Folder.tiff;
+			path = "Plugins/Contact List Editor/Folder.tiff";
+			refType = 4;
+		};
+		F55B411A03AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = inspect.tiff;
+			path = "Plugins/Contact List Editor/inspect.tiff";
+			refType = 4;
+		};
+		F55B411B03AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = miniCheck_Disabled.tiff;
+			path = "Plugins/Contact List Editor/miniCheck_Disabled.tiff";
+			refType = 4;
+		};
+		F55B411C03AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = miniCheck_Enabled_Press.tiff;
+			path = "Plugins/Contact List Editor/miniCheck_Enabled_Press.tiff";
+			refType = 4;
+		};
+		F55B411D03AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = miniCheck_Enabled.tiff;
+			path = "Plugins/Contact List Editor/miniCheck_Enabled.tiff";
+			refType = 4;
+		};
+		F55B411E03AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = miniCheck_Mixed_Press.tiff;
+			path = "Plugins/Contact List Editor/miniCheck_Mixed_Press.tiff";
+			refType = 4;
+		};
+		F55B411F03AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = miniCheck_Mixed.tiff;
+			path = "Plugins/Contact List Editor/miniCheck_Mixed.tiff";
+			refType = 4;
+		};
+		F55B412003AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = miniCheck_Selected_Press.tiff;
+			path = "Plugins/Contact List Editor/miniCheck_Selected_Press.tiff";
+			refType = 4;
+		};
+		F55B412103AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = miniCheck_Selected.tiff;
+			path = "Plugins/Contact List Editor/miniCheck_Selected.tiff";
+			refType = 4;
+		};
+		F55B412203AB88D601A8010A = {
+			isa = PBXFileReference;
+			name = remove.tiff;
+			path = "Plugins/Contact List Editor/remove.tiff";
+			refType = 4;
+		};
+		F55B412303AB88D601A8010A = {
+			fileRef = F55B410E03AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B412403AB88D601A8010A = {
+			fileRef = F55B410F03AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B412503AB88D601A8010A = {
+			fileRef = F55B411003AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B412603AB88D601A8010A = {
+			fileRef = F55B411103AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B412703AB88D601A8010A = {
+			fileRef = F55B411203AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B412803AB88D601A8010A = {
+			fileRef = F55B411303AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B412903AB88D601A8010A = {
+			fileRef = F55B411403AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B412A03AB88D601A8010A = {
+			fileRef = F55B411503AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B412B03AB88D601A8010A = {
+			fileRef = F55B411603AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B412C03AB88D601A8010A = {
+			fileRef = F55B411703AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B412E03AB88D601A8010A = {
+			fileRef = F55B411903AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B412F03AB88D601A8010A = {
+			fileRef = F55B411A03AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B413003AB88D601A8010A = {
+			fileRef = F55B411B03AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B413103AB88D601A8010A = {
+			fileRef = F55B411C03AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B413203AB88D601A8010A = {
+			fileRef = F55B411D03AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B413303AB88D601A8010A = {
+			fileRef = F55B411E03AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B413403AB88D601A8010A = {
+			fileRef = F55B411F03AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B413503AB88D601A8010A = {
+			fileRef = F55B412003AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B413603AB88D601A8010A = {
+			fileRef = F55B412103AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B413703AB88D601A8010A = {
+			fileRef = F55B412203AB88D601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B413803AB895501A8010A = {
+			isa = PBXFileReference;
+			name = AccountPrefEditSheet.nib;
+			path = "Plugins/Account List Preferences/AccountPrefEditSheet.nib";
+			refType = 4;
+		};
+		F55B413903AB895501A8010A = {
+			isa = PBXFileReference;
+			name = AIAccountListEditSheetController.h;
+			path = "Plugins/Account List Preferences/AIAccountListEditSheetController.h";
+			refType = 4;
+		};
+		F55B413A03AB895501A8010A = {
+			isa = PBXFileReference;
+			name = AIAccountListEditSheetController.m;
+			path = "Plugins/Account List Preferences/AIAccountListEditSheetController.m";
+			refType = 4;
+		};
+		F55B413B03AB895501A8010A = {
+			isa = PBXFileReference;
+			name = AIAccountListPreferencesPlugin.h;
+			path = "Plugins/Account List Preferences/AIAccountListPreferencesPlugin.h";
+			refType = 4;
+		};
+		F55B413C03AB895501A8010A = {
+			isa = PBXFileReference;
+			name = AIAccountListPreferencesPlugin.m;
+			path = "Plugins/Account List Preferences/AIAccountListPreferencesPlugin.m";
+			refType = 4;
+		};
+		F55B413D03AB895501A8010A = {
+			fileRef = F55B413803AB895501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B413E03AB895501A8010A = {
+			fileRef = F55B413903AB895501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B413F03AB895501A8010A = {
+			fileRef = F55B413A03AB895501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B414003AB895501A8010A = {
+			fileRef = F55B413B03AB895501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B414103AB895501A8010A = {
+			fileRef = F55B413C03AB895501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B414203AB897201A8010A = {
+			isa = PBXFileReference;
+			name = AccountPrefView.nib;
+			path = "Plugins/Account List Preferences/AccountPrefView.nib";
+			refType = 4;
+		};
+		F55B414303AB897201A8010A = {
+			fileRef = F55B414203AB897201A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B414403AB89BB01A8010A = {
+			isa = PBXFileReference;
+			name = Account_Connecting_Inverted.tiff;
+			path = "Plugins/Account Menu Access/Account_Connecting_Inverted.tiff";
+			refType = 4;
+		};
+		F55B414503AB89BB01A8010A = {
+			isa = PBXFileReference;
+			name = Account_Connecting.tiff;
+			path = "Plugins/Account Menu Access/Account_Connecting.tiff";
+			refType = 4;
+		};
+		F55B414603AB89BB01A8010A = {
+			isa = PBXFileReference;
+			name = Account_Offline_Inverted.tiff;
+			path = "Plugins/Account Menu Access/Account_Offline_Inverted.tiff";
+			refType = 4;
+		};
+		F55B414703AB89BB01A8010A = {
+			isa = PBXFileReference;
+			name = Account_Offline.tiff;
+			path = "Plugins/Account Menu Access/Account_Offline.tiff";
+			refType = 4;
+		};
+		F55B414803AB89BB01A8010A = {
+			isa = PBXFileReference;
+			name = Account_Online_Inverted.tiff;
+			path = "Plugins/Account Menu Access/Account_Online_Inverted.tiff";
+			refType = 4;
+		};
+		F55B414903AB89BB01A8010A = {
+			isa = PBXFileReference;
+			name = Account_Online.tiff;
+			path = "Plugins/Account Menu Access/Account_Online.tiff";
+			refType = 4;
+		};
+		F55B414A03AB89BB01A8010A = {
+			fileRef = F55B414403AB89BB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B414B03AB89BB01A8010A = {
+			fileRef = F55B414503AB89BB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B414C03AB89BB01A8010A = {
+			fileRef = F55B414603AB89BB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B414D03AB89BB01A8010A = {
+			fileRef = F55B414703AB89BB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B414E03AB89BB01A8010A = {
+			fileRef = F55B414803AB89BB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B414F03AB89BB01A8010A = {
+			fileRef = F55B414903AB89BB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B415003AB89E301A8010A = {
+			isa = PBXFileReference;
+			name = AISMVSenderCell.h;
+			path = "Plugins/Standard Message View/AISMVSenderCell.h";
+			refType = 4;
+		};
+		F55B415103AB89E301A8010A = {
+			isa = PBXFileReference;
+			name = AISMVSenderCell.m;
+			path = "Plugins/Standard Message View/AISMVSenderCell.m";
+			refType = 4;
+		};
+		F55B415203AB89E301A8010A = {
+			fileRef = F55B415003AB89E301A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B415303AB89E301A8010A = {
+			fileRef = F55B415103AB89E301A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B415403AB8AF901A8010A = {
+			isa = PBXFileReference;
+			name = AIMiniToolbarItem.m;
+			path = "Frameworks/AIUtilities Framework/AIMiniToolbarItem.m";
+			refType = 4;
+		};
+		F55B415503AB8AF901A8010A = {
+			fileRef = F55B415403AB8AF901A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B415603AB8B0901A8010A = {
+			isa = PBXFileReference;
+			name = AITabViewAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AITabViewAdditions.m";
+			refType = 4;
+		};
+		F55B415703AB8B0901A8010A = {
+			fileRef = F55B415603AB8B0901A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B415903AB8B2601A8010A = {
+			isa = PBXFileReference;
+			name = AITabViewAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AITabViewAdditions.h";
+			refType = 4;
+		};
+		F55B415B03AB8B2601A8010A = {
+			fileRef = F55B415903AB8B2601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B415C03AB8B5601A8010A = {
+			isa = PBXFileReference;
+			name = AIContentController.h;
+			path = Source/AIContentController.h;
+			refType = 4;
+		};
+		F55B415D03AB8B5601A8010A = {
+			isa = PBXFileReference;
+			name = AIContentController.m;
+			path = Source/AIContentController.m;
+			refType = 4;
+		};
+		F55B415E03AB8B5601A8010A = {
+			fileRef = F55B415C03AB8B5601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B415F03AB8B5601A8010A = {
+			fileRef = F55B415D03AB8B5601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B416003AB8BE301A8010A = {
+			isa = PBXFileReference;
+			name = settings.tif;
+			path = Source/settings.tif;
+			refType = 4;
+		};
+		F55B416103AB8BE301A8010A = {
+			fileRef = F55B416003AB8BE301A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B416203AB8BED01A8010A = {
+			isa = PBXFileReference;
+			name = AIOutOfSyncWindowController.m;
+			path = Source/AIOutOfSyncWindowController.m;
+			refType = 4;
+		};
+		F55B416303AB8BED01A8010A = {
+			fileRef = F55B416203AB8BED01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B416403AB8BF501A8010A = {
+			isa = PBXFileReference;
+			name = AIOutOfSyncEntry.m;
+			path = Source/AIOutOfSyncEntry.m;
+			refType = 4;
+		};
+		F55B416503AB8BF501A8010A = {
+			fileRef = F55B416403AB8BF501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B416603AB8BFC01A8010A = {
+			isa = PBXFileReference;
+			name = AIPasswordPromptController.m;
+			path = Source/AIPasswordPromptController.m;
+			refType = 4;
+		};
+		F55B416703AB8BFC01A8010A = {
+			fileRef = F55B416603AB8BFC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B416803AB8C0501A8010A = {
+			isa = PBXFileReference;
+			name = PasswordPrompt.nib;
+			path = Source/PasswordPrompt.nib;
+			refType = 4;
+		};
+		F55B416903AB8C0501A8010A = {
+			fileRef = F55B416803AB8C0501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B416A03AB8C0B01A8010A = {
+			isa = PBXFileReference;
+			name = keys.tiff;
+			path = Source/keys.tiff;
+			refType = 4;
+		};
+		F55B416B03AB8C0B01A8010A = {
+			fileRef = F55B416A03AB8C0B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B416C03AB8C3201A8010A = {
+			isa = PBXFileReference;
+			name = AIOutOfSyncEntry.h;
+			path = Source/AIOutOfSyncEntry.h;
+			refType = 4;
+		};
+		F55B416D03AB8C3201A8010A = {
+			isa = PBXFileReference;
+			name = AIOutOfSyncWindowController.h;
+			path = Source/AIOutOfSyncWindowController.h;
+			refType = 4;
+		};
+		F55B416E03AB8C3201A8010A = {
+			isa = PBXFileReference;
+			name = AIPasswordPromptController.h;
+			path = Source/AIPasswordPromptController.h;
+			refType = 4;
+		};
+		F55B416F03AB8C3201A8010A = {
+			fileRef = F55B416C03AB8C3201A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B417003AB8C3201A8010A = {
+			fileRef = F55B416D03AB8C3201A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B417103AB8C3201A8010A = {
+			fileRef = F55B416E03AB8C3201A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B417203AB8C5601A8010A = {
+			isa = PBXFileReference;
+			name = AIMiniToolbarTableView.h;
+			path = "Frameworks/AIUtilities Framework/AIMiniToolbarTableView.h";
+			refType = 4;
+		};
+		F55B417303AB8C5601A8010A = {
+			fileRef = F55B417203AB8C5601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55B417403AB8C6201A8010A = {
+			isa = PBXFileReference;
+			name = AIMiniToolbarTableView.m;
+			path = "Frameworks/AIUtilities Framework/AIMiniToolbarTableView.m";
+			refType = 4;
+		};
+		F55B417503AB8C6201A8010A = {
+			fileRef = F55B417403AB8C6201A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F56781210326380E01A8010A = {
+			fileRef = F51DEFAF032633E301A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F567DD510306A43A01A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		F567DD520306A44401A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F568638302C8083901A8010A = {
+			isa = PBXTargetDependency;
+			target = F53EA2CD02C803C101A8010A;
+		};
+		F569E38102CA876501A8010A = {
+			children = (
+				F579398D033E757801A8010A,
+				F5793980033E756E01A8010A,
+				F549EF1B036B1A0801A8010A,
+				F549EF1C036B1A0A01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Dual Window Interface";
+			path = "";
+			refType = 4;
+		};
+		F569E38C02CA88C701A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5793985033E756E01A8010A,
+				F5793987033E756E01A8010A,
+				F5793989033E756E01A8010A,
+				F570A5D103704D3D01A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F569E38D02CA88C701A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F579398B033E756E01A8010A,
+				F579398C033E756E01A8010A,
+				F570A60603704E7201A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F569E38E02CA88C701A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5793986033E756E01A8010A,
+				F5793988033E756E01A8010A,
+				F579398A033E756E01A8010A,
+				F570A5D203704D3D01A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F569E38F02CA88C701A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F569E39502CA88DF01A8010A,
+				F53B9A4002CCEF6E01A8010A,
+				F5357E4102F8422601A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F569E39002CA88C701A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F569E39102CA88C701A8010A = {
+			buildPhases = (
+				F569E38C02CA88C701A8010A,
+				F569E38D02CA88C701A8010A,
+				F569E38E02CA88C701A8010A,
+				F569E38F02CA88C701A8010A,
+				F569E39002CA88C701A8010A,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Dual Window";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumInterface;
+			};
+			dependencies = (
+				F53B9A3F02CCEF6601A8010A,
+				F5357E4202F8422E01A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Dual Window.AdiumInterface";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Dual Window.AdiumInterface";
+			productReference = F569E39202CA88C701A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIDualWindowInterface</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F569E39202CA88C701A8010A = {
+			isa = PBXBundleReference;
+			path = "Dual Window.AdiumInterface";
+			refType = 3;
+		};
+		F569E39302CA88C901A8010A = {
+			isa = PBXTargetDependency;
+			target = F569E39102CA88C701A8010A;
+		};
+		F569E39402CA88D801A8010A = {
+			fileRef = F569E39202CA88C701A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F569E39502CA88DF01A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A584037049D501A8010A = {
+			isa = PBXFileReference;
+			name = AIAccountMenuAccessPlugin.h;
+			path = "Plugins/Account Menu Access/AIAccountMenuAccessPlugin.h";
+			refType = 4;
+		};
+		F570A585037049D501A8010A = {
+			isa = PBXFileReference;
+			name = AIAccountMenuAccessPlugin.m;
+			path = "Plugins/Account Menu Access/AIAccountMenuAccessPlugin.m";
+			refType = 4;
+		};
+		F570A586037049D501A8010A = {
+			fileRef = F570A584037049D501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A587037049D501A8010A = {
+			fileRef = F570A585037049D501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A58803704A8F01A8010A = {
+			isa = PBXFileReference;
+			name = AIAnimatedFloater.h;
+			path = "Frameworks/AIUtilities Framework/AIAnimatedFloater.h";
+			refType = 4;
+		};
+		F570A58903704A8F01A8010A = {
+			isa = PBXFileReference;
+			name = AIAnimatedFloater.m;
+			path = "Frameworks/AIUtilities Framework/AIAnimatedFloater.m";
+			refType = 4;
+		};
+		F570A58A03704A8F01A8010A = {
+			isa = PBXFileReference;
+			name = AIAnimatedView.h;
+			path = "Frameworks/AIUtilities Framework/AIAnimatedView.h";
+			refType = 4;
+		};
+		F570A58B03704A8F01A8010A = {
+			isa = PBXFileReference;
+			name = AIAnimatedView.m;
+			path = "Frameworks/AIUtilities Framework/AIAnimatedView.m";
+			refType = 4;
+		};
+		F570A58C03704A8F01A8010A = {
+			fileRef = F570A58803704A8F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A58D03704A8F01A8010A = {
+			fileRef = F570A58903704A8F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A58E03704A8F01A8010A = {
+			fileRef = F570A58A03704A8F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A58F03704A8F01A8010A = {
+			fileRef = F570A58B03704A8F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A59003704AB901A8010A = {
+			isa = PBXFileReference;
+			name = AICompletingTextField.h;
+			path = "Frameworks/AIUtilities Framework/AICompletingTextField.h";
+			refType = 4;
+		};
+		F570A59103704AB901A8010A = {
+			isa = PBXFileReference;
+			name = AICompletingTextField.m;
+			path = "Frameworks/AIUtilities Framework/AICompletingTextField.m";
+			refType = 4;
+		};
+		F570A59203704AB901A8010A = {
+			fileRef = F570A59003704AB901A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A59303704AB901A8010A = {
+			fileRef = F570A59103704AB901A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A59403704AF501A8010A = {
+			isa = PBXFileReference;
+			name = AIContactInfoViewController.h;
+			path = "Frameworks/Adium Framework/AIContactInfoViewController.h";
+			refType = 4;
+		};
+		F570A59503704AF501A8010A = {
+			isa = PBXFileReference;
+			name = AIContactInfoViewController.m;
+			path = "Frameworks/Adium Framework/AIContactInfoViewController.m";
+			refType = 4;
+		};
+		F570A59603704AF501A8010A = {
+			fileRef = F570A59403704AF501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A59703704AF501A8010A = {
+			fileRef = F570A59503704AF501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A59803704B6101A8010A = {
+			isa = PBXFileReference;
+			name = AIContactInfoWindowController.h;
+			path = Source/AIContactInfoWindowController.h;
+			refType = 4;
+		};
+		F570A59903704B6101A8010A = {
+			isa = PBXFileReference;
+			name = AIContactInfoWindowController.m;
+			path = Source/AIContactInfoWindowController.m;
+			refType = 4;
+		};
+		F570A59A03704B6101A8010A = {
+			fileRef = F570A59803704B6101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A59B03704B6101A8010A = {
+			fileRef = F570A59903704B6101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A59C03704B9501A8010A = {
+			isa = PBXFileReference;
+			name = AIContactListEditorPlugin.h;
+			path = "Plugins/Contact List Editor/AIContactListEditorPlugin.h";
+			refType = 4;
+		};
+		F570A59D03704B9501A8010A = {
+			isa = PBXFileReference;
+			name = AIContactListEditorPlugin.m;
+			path = "Plugins/Contact List Editor/AIContactListEditorPlugin.m";
+			refType = 4;
+		};
+		F570A59F03704B9501A8010A = {
+			fileRef = F570A59D03704B9501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5A003704BA301A8010A = {
+			fileRef = F570A59C03704B9501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5A103704BCE01A8010A = {
+			isa = PBXFileReference;
+			name = AICursorUtilities.h;
+			path = "Frameworks/AIUtilities Framework/AICursorUtilities.h";
+			refType = 4;
+		};
+		F570A5A203704BCE01A8010A = {
+			isa = PBXFileReference;
+			name = AICursorUtilities.m;
+			path = "Frameworks/AIUtilities Framework/AICursorUtilities.m";
+			refType = 4;
+		};
+		F570A5A303704BCE01A8010A = {
+			fileRef = F570A5A103704BCE01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5A403704BCE01A8010A = {
+			fileRef = F570A5A203704BCE01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5A503704BED01A8010A = {
+			isa = PBXFileReference;
+			name = AICustomTab.h;
+			path = "Frameworks/AIUtilities Framework/AICustomTab.h";
+			refType = 4;
+		};
+		F570A5A603704BED01A8010A = {
+			isa = PBXFileReference;
+			name = AICustomTab.m;
+			path = "Frameworks/AIUtilities Framework/AICustomTab.m";
+			refType = 4;
+		};
+		F570A5A703704BED01A8010A = {
+			isa = PBXFileReference;
+			name = AICustomTabsView.h;
+			path = "Frameworks/AIUtilities Framework/AICustomTabsView.h";
+			refType = 4;
+		};
+		F570A5A803704BED01A8010A = {
+			isa = PBXFileReference;
+			name = AICustomTabsView.m;
+			path = "Frameworks/AIUtilities Framework/AICustomTabsView.m";
+			refType = 4;
+		};
+		F570A5A903704BED01A8010A = {
+			fileRef = F570A5A503704BED01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5AA03704BED01A8010A = {
+			fileRef = F570A5A603704BED01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5AB03704BED01A8010A = {
+			fileRef = F570A5A703704BED01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5AC03704BED01A8010A = {
+			fileRef = F570A5A803704BED01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5AD03704C1101A8010A = {
+			isa = PBXFileReference;
+			name = AIGradient.h;
+			path = "Frameworks/AIUtilities Framework/AIGradient.h";
+			refType = 4;
+		};
+		F570A5AE03704C1101A8010A = {
+			isa = PBXFileReference;
+			name = AIGradient.m;
+			path = "Frameworks/AIUtilities Framework/AIGradient.m";
+			refType = 4;
+		};
+		F570A5AF03704C1101A8010A = {
+			fileRef = F570A5AD03704C1101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5B003704C1101A8010A = {
+			fileRef = F570A5AE03704C1101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5B103704C3701A8010A = {
+			isa = PBXFileReference;
+			name = AIMenuAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIMenuAdditions.h";
+			refType = 4;
+		};
+		F570A5B203704C3701A8010A = {
+			isa = PBXFileReference;
+			name = AIMenuAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIMenuAdditions.m";
+			refType = 4;
+		};
+		F570A5B303704C3701A8010A = {
+			fileRef = F570A5B103704C3701A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5B403704C3701A8010A = {
+			fileRef = F570A5B203704C3701A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5B503704C6101A8010A = {
+			isa = PBXFileReference;
+			name = AIMenuController.h;
+			path = Source/AIMenuController.h;
+			refType = 4;
+		};
+		F570A5B603704C6101A8010A = {
+			isa = PBXFileReference;
+			name = AIMenuController.m;
+			path = Source/AIMenuController.m;
+			refType = 4;
+		};
+		F570A5B703704C6101A8010A = {
+			fileRef = F570A5B503704C6101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5B803704C6101A8010A = {
+			fileRef = F570A5B603704C6101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5BD03704CB801A8010A = {
+			isa = PBXFileReference;
+			name = AIMiniToolbar.h;
+			path = "Frameworks/AIUtilities Framework/AIMiniToolbar.h";
+			refType = 4;
+		};
+		F570A5BE03704CB801A8010A = {
+			isa = PBXFileReference;
+			name = AIMiniToolbar.m;
+			path = "Frameworks/AIUtilities Framework/AIMiniToolbar.m";
+			refType = 4;
+		};
+		F570A5BF03704CB801A8010A = {
+			isa = PBXFileReference;
+			name = AIMiniToolbarButton.h;
+			path = "Frameworks/AIUtilities Framework/AIMiniToolbarButton.h";
+			refType = 4;
+		};
+		F570A5C003704CB801A8010A = {
+			isa = PBXFileReference;
+			name = AIMiniToolbarButton.m;
+			path = "Frameworks/AIUtilities Framework/AIMiniToolbarButton.m";
+			refType = 4;
+		};
+		F570A5C103704CB801A8010A = {
+			isa = PBXFileReference;
+			name = AIMiniToolbarCenter.h;
+			path = "Frameworks/AIUtilities Framework/AIMiniToolbarCenter.h";
+			refType = 4;
+		};
+		F570A5C203704CB801A8010A = {
+			isa = PBXFileReference;
+			name = AIMiniToolbarCenter.m;
+			path = "Frameworks/AIUtilities Framework/AIMiniToolbarCenter.m";
+			refType = 4;
+		};
+		F570A5C303704CB801A8010A = {
+			fileRef = F570A5BD03704CB801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5C403704CB801A8010A = {
+			fileRef = F570A5BE03704CB801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5C503704CB801A8010A = {
+			fileRef = F570A5BF03704CB801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5C603704CB801A8010A = {
+			fileRef = F570A5C003704CB801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5C703704CB801A8010A = {
+			fileRef = F570A5C103704CB801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5C803704CB801A8010A = {
+			fileRef = F570A5C203704CB801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5C903704D1A01A8010A = {
+			isa = PBXFileReference;
+			name = AIMTOC2ServicePlugin.h;
+			path = "Plugins/AIM TOC2 Service/AIMTOC2ServicePlugin.h";
+			refType = 4;
+		};
+		F570A5CA03704D1A01A8010A = {
+			isa = PBXFileReference;
+			name = AIMTOC2ServicePlugin.m;
+			path = "Plugins/AIM TOC2 Service/AIMTOC2ServicePlugin.m";
+			refType = 4;
+		};
+		F570A5CB03704D1A01A8010A = {
+			fileRef = F570A5C903704D1A01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5CC03704D1A01A8010A = {
+			fileRef = F570A5CA03704D1A01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5CD03704D3D01A8010A = {
+			isa = PBXFileReference;
+			name = AIMessageViewController.h;
+			path = "Plugins/Dual Window Interface/AIMessageViewController.h";
+			refType = 4;
+		};
+		F570A5CE03704D3D01A8010A = {
+			isa = PBXFileReference;
+			name = AIMessageViewController.m;
+			path = "Plugins/Dual Window Interface/AIMessageViewController.m";
+			refType = 4;
+		};
+		F570A5D103704D3D01A8010A = {
+			fileRef = F570A5CD03704D3D01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5D203704D3D01A8010A = {
+			fileRef = F570A5CE03704D3D01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5E503704DEA01A8010A = {
+			isa = PBXFileReference;
+			name = ClosedGrabHandCursor.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/ClosedGrabHandCursor.tiff";
+			refType = 4;
+		};
+		F570A5E803704DEA01A8010A = {
+			isa = PBXFileReference;
+			name = OpenGrabHandCursor.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/OpenGrabHandCursor.tiff";
+			refType = 4;
+		};
+		F570A5E903704DEA01A8010A = {
+			fileRef = F570A5E503704DEA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5EC03704DEA01A8010A = {
+			fileRef = F570A5E803704DEA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5ED03704E0101A8010A = {
+			isa = PBXFileReference;
+			name = poof.png;
+			path = "Frameworks/AIUtilities Framework/Images/poof.png";
+			refType = 4;
+		};
+		F570A5EE03704E0101A8010A = {
+			fileRef = F570A5ED03704E0101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5EF03704E4C01A8010A = {
+			isa = PBXFileReference;
+			name = tab_back_left.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/tab_back_left.tiff";
+			refType = 4;
+		};
+		F570A5F003704E4C01A8010A = {
+			isa = PBXFileReference;
+			name = tab_back_middle.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/tab_back_middle.tiff";
+			refType = 4;
+		};
+		F570A5F103704E4C01A8010A = {
+			isa = PBXFileReference;
+			name = tab_back_right.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/tab_back_right.tiff";
+			refType = 4;
+		};
+		F570A5F203704E4C01A8010A = {
+			isa = PBXFileReference;
+			name = tab_Background.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/tab_Background.tiff";
+			refType = 4;
+		};
+		F570A5F303704E4C01A8010A = {
+			isa = PBXFileReference;
+			name = tab_divider.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/tab_divider.tiff";
+			refType = 4;
+		};
+		F570A5F403704E4C01A8010A = {
+			isa = PBXFileReference;
+			name = tab_front_left.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/tab_front_left.tiff";
+			refType = 4;
+		};
+		F570A5F503704E4C01A8010A = {
+			isa = PBXFileReference;
+			name = tab_front_middle.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/tab_front_middle.tiff";
+			refType = 4;
+		};
+		F570A5F603704E4C01A8010A = {
+			isa = PBXFileReference;
+			name = tab_front_right.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/tab_front_right.tiff";
+			refType = 4;
+		};
+		F570A5F703704E4C01A8010A = {
+			isa = PBXFileReference;
+			name = tab_push_left.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/tab_push_left.tiff";
+			refType = 4;
+		};
+		F570A5F803704E4C01A8010A = {
+			isa = PBXFileReference;
+			name = tab_push_middle.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/tab_push_middle.tiff";
+			refType = 4;
+		};
+		F570A5F903704E4C01A8010A = {
+			isa = PBXFileReference;
+			name = tab_push_right.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/tab_push_right.tiff";
+			refType = 4;
+		};
+		F570A5FA03704E4C01A8010A = {
+			fileRef = F570A5EF03704E4C01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5FB03704E4C01A8010A = {
+			fileRef = F570A5F003704E4C01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5FC03704E4C01A8010A = {
+			fileRef = F570A5F103704E4C01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5FD03704E4C01A8010A = {
+			fileRef = F570A5F203704E4C01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5FE03704E4C01A8010A = {
+			fileRef = F570A5F303704E4C01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A5FF03704E4C01A8010A = {
+			fileRef = F570A5F403704E4C01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A60003704E4C01A8010A = {
+			fileRef = F570A5F503704E4C01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A60103704E4C01A8010A = {
+			fileRef = F570A5F603704E4C01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A60203704E4C01A8010A = {
+			fileRef = F570A5F703704E4C01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A60303704E4C01A8010A = {
+			fileRef = F570A5F803704E4C01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A60403704E4C01A8010A = {
+			fileRef = F570A5F903704E4C01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A60503704E7201A8010A = {
+			isa = PBXFileReference;
+			name = MessageWindow.nib;
+			path = "Plugins/Dual Window Interface/MessageWindow.nib";
+			refType = 4;
+		};
+		F570A60603704E7201A8010A = {
+			fileRef = F570A60503704E7201A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A60703704E9701A8010A = {
+			isa = PBXFileReference;
+			name = AIToolbarController.h;
+			path = Source/AIToolbarController.h;
+			refType = 4;
+		};
+		F570A60803704E9701A8010A = {
+			isa = PBXFileReference;
+			name = AIToolbarController.m;
+			path = Source/AIToolbarController.m;
+			refType = 4;
+		};
+		F570A60903704E9701A8010A = {
+			fileRef = F570A60703704E9701A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A60A03704E9701A8010A = {
+			fileRef = F570A60803704E9701A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A60B03704EBA01A8010A = {
+			isa = PBXFileReference;
+			name = AISMVMessageCell.h;
+			path = "Plugins/Standard Message View/AISMVMessageCell.h";
+			refType = 4;
+		};
+		F570A60C03704EBA01A8010A = {
+			isa = PBXFileReference;
+			name = AISMVMessageCell.m;
+			path = "Plugins/Standard Message View/AISMVMessageCell.m";
+			refType = 4;
+		};
+		F570A60D03704EBA01A8010A = {
+			fileRef = F570A60B03704EBA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A60E03704EBA01A8010A = {
+			fileRef = F570A60C03704EBA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A60F03704EF401A8010A = {
+			isa = PBXFileReference;
+			name = AIService.h;
+			path = "Frameworks/Adium Framework/AIService.h";
+			refType = 4;
+		};
+		F570A61003704EF401A8010A = {
+			isa = PBXFileReference;
+			name = AIService.m;
+			path = "Frameworks/Adium Framework/AIService.m";
+			refType = 4;
+		};
+		F570A61303704F4201A8010A = {
+			isa = PBXFileReference;
+			name = AITextFieldAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AITextFieldAdditions.h";
+			refType = 4;
+		};
+		F570A61403704F4201A8010A = {
+			isa = PBXFileReference;
+			name = AITextFieldAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AITextFieldAdditions.m";
+			refType = 4;
+		};
+		F570A61503704F4201A8010A = {
+			fileRef = F570A61303704F4201A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A61603704F4201A8010A = {
+			fileRef = F570A61403704F4201A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A61703704F6601A8010A = {
+			isa = PBXFileReference;
+			name = AISendingTextView.h;
+			path = "Frameworks/AIUtilities Framework/AISendingTextView.h";
+			refType = 4;
+		};
+		F570A61803704F6601A8010A = {
+			isa = PBXFileReference;
+			name = AISendingTextView.m;
+			path = "Frameworks/AIUtilities Framework/AISendingTextView.m";
+			refType = 4;
+		};
+		F570A61903704F6601A8010A = {
+			fileRef = F570A61703704F6601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F570A61A03704F6601A8010A = {
+			fileRef = F570A61803704F6601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F573C6230333B88401A8010A = {
+			isa = PBXTargetDependency;
+			target = F5B53FC60333AFB501A8010A;
+		};
+		F573C6240333B88901A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F573C6250333B88A01A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F574173F033E72AC01A8010A = {
+			isa = PBXFileReference;
+			name = gpl.txt;
+			path = Documentation/gpl.txt;
+			refType = 4;
+		};
+		F5741740033E72AC01A8010A = {
+			isa = PBXFileReference;
+			name = ReadMe.rtf;
+			path = Documentation/ReadMe.rtf;
+			refType = 4;
+		};
+		F5741742033E72AC01A8010A = {
+			fileRef = F574173F033E72AC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5741743033E72AC01A8010A = {
+			fileRef = F5741740033E72AC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5741745033E731F01A8010A = {
+			isa = PBXFileReference;
+			name = MainMenu.nib;
+			path = Source/MainMenu.nib;
+			refType = 4;
+		};
+		F5741746033E731F01A8010A = {
+			fileRef = F5741745033E731F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938AA033E737001A8010A = {
+			isa = PBXFileReference;
+			name = AIAccountController.m;
+			path = Source/AIAccountController.m;
+			refType = 4;
+		};
+		F57938AB033E737001A8010A = {
+			isa = PBXFileReference;
+			name = AIContactController.m;
+			path = Source/AIContactController.m;
+			refType = 4;
+		};
+		F57938AC033E737001A8010A = {
+			isa = PBXFileReference;
+			name = AIInterfaceController.m;
+			path = Source/AIInterfaceController.m;
+			refType = 4;
+		};
+		F57938AD033E737001A8010A = {
+			isa = PBXFileReference;
+			name = AILoginController.m;
+			path = Source/AILoginController.m;
+			refType = 4;
+		};
+		F57938AE033E737001A8010A = {
+			isa = PBXFileReference;
+			name = AIPluginController.m;
+			path = Source/AIPluginController.m;
+			refType = 4;
+		};
+		F57938AF033E737001A8010A = {
+			isa = PBXFileReference;
+			name = AIPreferenceController.m;
+			path = Source/AIPreferenceController.m;
+			refType = 4;
+		};
+		F57938B0033E737001A8010A = {
+			isa = PBXFileReference;
+			name = AISoundController.m;
+			path = Source/AISoundController.m;
+			refType = 4;
+		};
+		F57938B1033E737001A8010A = {
+			fileRef = F57938AA033E737001A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938B3033E737001A8010A = {
+			fileRef = F57938AC033E737001A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938B5033E737001A8010A = {
+			fileRef = F57938AE033E737001A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938B6033E737001A8010A = {
+			fileRef = F57938AF033E737001A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938B7033E737001A8010A = {
+			fileRef = F57938B0033E737001A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938B8033E739101A8010A = {
+			isa = PBXFileReference;
+			name = AIColoredBoxView.m;
+			path = Source/AIColoredBoxView.m;
+			refType = 4;
+		};
+		F57938B9033E739101A8010A = {
+			isa = PBXFileReference;
+			name = AIFlippedCategoryView.m;
+			path = Source/AIFlippedCategoryView.m;
+			refType = 4;
+		};
+		F57938BA033E739101A8010A = {
+			isa = PBXFileReference;
+			name = AIPreferenceCategory.m;
+			path = Source/AIPreferenceCategory.m;
+			refType = 4;
+		};
+		F57938BB033E739101A8010A = {
+			isa = PBXFileReference;
+			name = AIPreferenceWindowController.m;
+			path = Source/AIPreferenceWindowController.m;
+			refType = 4;
+		};
+		F57938BC033E739101A8010A = {
+			isa = PBXFileReference;
+			name = PreferenceWindow.nib;
+			path = Source/PreferenceWindow.nib;
+			refType = 4;
+		};
+		F57938BE033E739101A8010A = {
+			fileRef = F57938B9033E739101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938BF033E739101A8010A = {
+			fileRef = F57938BA033E739101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938C0033E739101A8010A = {
+			fileRef = F57938BB033E739101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938C1033E739101A8010A = {
+			fileRef = F57938BC033E739101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938C2033E73AC01A8010A = {
+			isa = PBXFileReference;
+			name = AILoginWindowController.m;
+			path = Source/AILoginWindowController.m;
+			refType = 4;
+		};
+		F57938C3033E73AC01A8010A = {
+			isa = PBXFileReference;
+			name = LoginSelect.nib;
+			path = Source/LoginSelect.nib;
+			refType = 4;
+		};
+		F57938C4033E73AC01A8010A = {
+			fileRef = F57938C2033E73AC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938C5033E73AC01A8010A = {
+			fileRef = F57938C3033E73AC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938EC033E744A01A8010A = {
+			children = (
+				F55B416C03AB8C3201A8010A,
+				F55B416D03AB8C3201A8010A,
+				F55B416E03AB8C3201A8010A,
+				F570A60703704E9701A8010A,
+				F570A59803704B6101A8010A,
+				F570A5B503704C6101A8010A,
+				F57938ED033E745F01A8010A,
+				F57938EF033E745F01A8010A,
+				F57938F0033E745F01A8010A,
+				F57938F1033E745F01A8010A,
+				F57938F2033E745F01A8010A,
+				F57938F3033E745F01A8010A,
+				F57938F4033E745F01A8010A,
+				F57938F6033E745F01A8010A,
+				F57938F9033E745F01A8010A,
+				F57938FA033E745F01A8010A,
+				F57938FB033E745F01A8010A,
+				F55B415C03AB8B5601A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F57938ED033E745F01A8010A = {
+			isa = PBXFileReference;
+			name = AIPreferenceController.h;
+			path = Source/AIPreferenceController.h;
+			refType = 4;
+		};
+		F57938EF033E745F01A8010A = {
+			isa = PBXFileReference;
+			name = AIAccountController.h;
+			path = Source/AIAccountController.h;
+			refType = 4;
+		};
+		F57938F0033E745F01A8010A = {
+			isa = PBXFileReference;
+			name = AIPreferenceWindowController.h;
+			path = Source/AIPreferenceWindowController.h;
+			refType = 4;
+		};
+		F57938F1033E745F01A8010A = {
+			isa = PBXFileReference;
+			name = AIPreferenceCategory.h;
+			path = Source/AIPreferenceCategory.h;
+			refType = 4;
+		};
+		F57938F2033E745F01A8010A = {
+			isa = PBXFileReference;
+			name = AIPluginController.h;
+			path = Source/AIPluginController.h;
+			refType = 4;
+		};
+		F57938F3033E745F01A8010A = {
+			isa = PBXFileReference;
+			name = AIInterfaceController.h;
+			path = Source/AIInterfaceController.h;
+			refType = 4;
+		};
+		F57938F4033E745F01A8010A = {
+			isa = PBXFileReference;
+			name = AIFlippedCategoryView.h;
+			path = Source/AIFlippedCategoryView.h;
+			refType = 4;
+		};
+		F57938F6033E745F01A8010A = {
+			isa = PBXFileReference;
+			name = AIContactController.h;
+			path = Source/AIContactController.h;
+			refType = 4;
+		};
+		F57938F8033E745F01A8010A = {
+			isa = PBXFileReference;
+			name = AIColoredBoxView.h;
+			path = Source/AIColoredBoxView.h;
+			refType = 4;
+		};
+		F57938F9033E745F01A8010A = {
+			isa = PBXFileReference;
+			name = AISoundController.h;
+			path = Source/AISoundController.h;
+			refType = 4;
+		};
+		F57938FA033E745F01A8010A = {
+			isa = PBXFileReference;
+			name = AILoginWindowController.h;
+			path = Source/AILoginWindowController.h;
+			refType = 4;
+		};
+		F57938FB033E745F01A8010A = {
+			isa = PBXFileReference;
+			name = AILoginController.h;
+			path = Source/AILoginController.h;
+			refType = 4;
+		};
+		F57938FC033E746101A8010A = {
+			fileRef = F57938ED033E745F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938FD033E746201A8010A = {
+			fileRef = F57938EF033E745F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938FE033E746201A8010A = {
+			fileRef = F57938F0033E745F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57938FF033E746201A8010A = {
+			fileRef = F57938F1033E745F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793900033E746301A8010A = {
+			fileRef = F57938F2033E745F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793901033E746301A8010A = {
+			fileRef = F57938F3033E745F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793902033E746301A8010A = {
+			fileRef = F57938F4033E745F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793904033E746401A8010A = {
+			fileRef = F57938F6033E745F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793907033E746501A8010A = {
+			fileRef = F57938F9033E745F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793908033E746601A8010A = {
+			fileRef = F57938FA033E745F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793909033E746601A8010A = {
+			fileRef = F57938FB033E745F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579390B033E748F01A8010A = {
+			isa = PBXFileReference;
+			name = AIAccount.m;
+			path = "Frameworks/Adium Framework/AIAccount.m";
+			refType = 4;
+		};
+		F579390C033E748F01A8010A = {
+			isa = PBXFileReference;
+			name = AIContactGroup.m;
+			path = "Frameworks/Adium Framework/AIContactGroup.m";
+			refType = 4;
+		};
+		F579390D033E748F01A8010A = {
+			isa = PBXFileReference;
+			name = AIContactHandle.m;
+			path = "Frameworks/Adium Framework/AIContactHandle.m";
+			refType = 4;
+		};
+		F579390E033E748F01A8010A = {
+			isa = PBXFileReference;
+			name = AIContactObject.m;
+			path = "Frameworks/Adium Framework/AIContactObject.m";
+			refType = 4;
+		};
+		F5793911033E748F01A8010A = {
+			isa = PBXFileReference;
+			name = AIContentMessage.m;
+			path = "Frameworks/Adium Framework/AIContentMessage.m";
+			refType = 4;
+		};
+		F5793912033E748F01A8010A = {
+			isa = PBXFileReference;
+			name = AIPlugin.m;
+			path = "Frameworks/Adium Framework/AIPlugin.m";
+			refType = 4;
+		};
+		F5793913033E748F01A8010A = {
+			isa = PBXFileReference;
+			name = AIPreferenceViewController.m;
+			path = "Frameworks/Adium Framework/AIPreferenceViewController.m";
+			refType = 4;
+		};
+		F5793914033E748F01A8010A = {
+			isa = PBXFileReference;
+			name = AIServiceType.m;
+			path = "Frameworks/Adium Framework/AIServiceType.m";
+			refType = 4;
+		};
+		F5793915033E748F01A8010A = {
+			isa = PBXFileReference;
+			name = PreferenceView.nib;
+			path = "Frameworks/Adium Framework/PreferenceView.nib";
+			refType = 4;
+		};
+		F5793916033E748F01A8010A = {
+			fileRef = F579390B033E748F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793917033E748F01A8010A = {
+			fileRef = F579390C033E748F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793918033E748F01A8010A = {
+			fileRef = F579390D033E748F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793919033E748F01A8010A = {
+			fileRef = F579390E033E748F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579391C033E748F01A8010A = {
+			fileRef = F5793911033E748F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579391D033E748F01A8010A = {
+			fileRef = F5793912033E748F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579391E033E748F01A8010A = {
+			fileRef = F5793913033E748F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579391F033E748F01A8010A = {
+			fileRef = F5793914033E748F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793920033E748F01A8010A = {
+			fileRef = F5793915033E748F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793921033E74AE01A8010A = {
+			children = (
+				F59DB3E7033EB4B601A8010A,
+				F5793922033E74C301A8010A,
+				F570A59403704AF501A8010A,
+				F5793923033E74C301A8010A,
+				F5793924033E74C301A8010A,
+				F5793925033E74C301A8010A,
+				F5793926033E74C301A8010A,
+				F5793927033E74C301A8010A,
+				F5793928033E74C301A8010A,
+				F579392B033E74C401A8010A,
+				F570A60F03704EF401A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F5793922033E74C301A8010A = {
+			isa = PBXFileReference;
+			name = AIAccount.h;
+			path = "Frameworks/Adium Framework/AIAccount.h";
+			refType = 4;
+		};
+		F5793923033E74C301A8010A = {
+			isa = PBXFileReference;
+			name = AIPreferenceViewController.h;
+			path = "Frameworks/Adium Framework/AIPreferenceViewController.h";
+			refType = 4;
+		};
+		F5793924033E74C301A8010A = {
+			isa = PBXFileReference;
+			name = AIPlugin.h;
+			path = "Frameworks/Adium Framework/AIPlugin.h";
+			refType = 4;
+		};
+		F5793925033E74C301A8010A = {
+			isa = PBXFileReference;
+			name = AIServiceType.h;
+			path = "Frameworks/Adium Framework/AIServiceType.h";
+			refType = 4;
+		};
+		F5793926033E74C301A8010A = {
+			isa = PBXFileReference;
+			name = AIContactHandle.h;
+			path = "Frameworks/Adium Framework/AIContactHandle.h";
+			refType = 4;
+		};
+		F5793927033E74C301A8010A = {
+			isa = PBXFileReference;
+			name = AIContactGroup.h;
+			path = "Frameworks/Adium Framework/AIContactGroup.h";
+			refType = 4;
+		};
+		F5793928033E74C301A8010A = {
+			isa = PBXFileReference;
+			name = AIContactObject.h;
+			path = "Frameworks/Adium Framework/AIContactObject.h";
+			refType = 4;
+		};
+		F579392B033E74C401A8010A = {
+			isa = PBXFileReference;
+			name = AIContentMessage.h;
+			path = "Frameworks/Adium Framework/AIContentMessage.h";
+			refType = 4;
+		};
+		F579392C033E74C401A8010A = {
+			fileRef = F5793922033E74C301A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579392D033E74C401A8010A = {
+			fileRef = F5793923033E74C301A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579392E033E74C401A8010A = {
+			fileRef = F5793924033E74C301A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579392F033E74C401A8010A = {
+			fileRef = F5793925033E74C301A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793930033E74C401A8010A = {
+			fileRef = F5793926033E74C301A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793931033E74C401A8010A = {
+			fileRef = F5793927033E74C301A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793932033E74C401A8010A = {
+			fileRef = F5793928033E74C301A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793935033E74C401A8010A = {
+			fileRef = F579392B033E74C401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+				);
+			};
+		};
+		F5793936033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIAlternatingRowOutlineView.h;
+			path = "Frameworks/AIUtilities Framework/AIAlternatingRowOutlineView.h";
+			refType = 4;
+		};
+		F5793937033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIAlternatingRowOutlineView.m;
+			path = "Frameworks/AIUtilities Framework/AIAlternatingRowOutlineView.m";
+			refType = 4;
+		};
+		F5793938033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIAttributedStringAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIAttributedStringAdditions.h";
+			refType = 4;
+		};
+		F5793939033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIAttributedStringAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIAttributedStringAdditions.m";
+			refType = 4;
+		};
+		F579393A033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIColorAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIColorAdditions.h";
+			refType = 4;
+		};
+		F579393B033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIColorAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIColorAdditions.m";
+			refType = 4;
+		};
+		F579393E033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIDictionaryAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIDictionaryAdditions.h";
+			refType = 4;
+		};
+		F579393F033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIDictionaryAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIDictionaryAdditions.m";
+			refType = 4;
+		};
+		F5793940033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIFileUtilities.h;
+			path = "Frameworks/AIUtilities Framework/AIFileUtilities.h";
+			refType = 4;
+		};
+		F5793941033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIFileUtilities.m;
+			path = "Frameworks/AIUtilities Framework/AIFileUtilities.m";
+			refType = 4;
+		};
+		F5793942033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIHTMLDecoder.h;
+			path = "Frameworks/AIUtilities Framework/AIHTMLDecoder.h";
+			refType = 4;
+		};
+		F5793943033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIHTMLDecoder.m;
+			path = "Frameworks/AIUtilities Framework/AIHTMLDecoder.m";
+			refType = 4;
+		};
+		F5793944033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIImageTextCell.h;
+			path = "Frameworks/AIUtilities Framework/AIImageTextCell.h";
+			refType = 4;
+		};
+		F5793945033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIImageTextCell.m;
+			path = "Frameworks/AIUtilities Framework/AIImageTextCell.m";
+			refType = 4;
+		};
+		F5793946033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIImageUtilities.h;
+			path = "Frameworks/AIUtilities Framework/AIImageUtilities.h";
+			refType = 4;
+		};
+		F5793947033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIImageUtilities.m;
+			path = "Frameworks/AIUtilities Framework/AIImageUtilities.m";
+			refType = 4;
+		};
+		F5793948033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIKeychain.h;
+			path = "Frameworks/AIUtilities Framework/AIKeychain.h";
+			refType = 4;
+		};
+		F5793949033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIKeychain.m;
+			path = "Frameworks/AIUtilities Framework/AIKeychain.m";
+			refType = 4;
+		};
+		F579394A033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIMutableOwnerArray.h;
+			path = "Frameworks/AIUtilities Framework/AIMutableOwnerArray.h";
+			refType = 4;
+		};
+		F579394B033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIMutableOwnerArray.m;
+			path = "Frameworks/AIUtilities Framework/AIMutableOwnerArray.m";
+			refType = 4;
+		};
+		F579394C033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIScrollViewAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIScrollViewAdditions.h";
+			refType = 4;
+		};
+		F579394D033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIScrollViewAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIScrollViewAdditions.m";
+			refType = 4;
+		};
+		F579394E033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AISocket.h;
+			path = "Frameworks/AIUtilities Framework/AISocket.h";
+			refType = 4;
+		};
+		F579394F033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AISocket.m;
+			path = "Frameworks/AIUtilities Framework/AISocket.m";
+			refType = 4;
+		};
+		F5793950033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIToolbarUtilities.h;
+			path = "Frameworks/AIUtilities Framework/AIToolbarUtilities.h";
+			refType = 4;
+		};
+		F5793951033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIToolbarUtilities.m;
+			path = "Frameworks/AIUtilities Framework/AIToolbarUtilities.m";
+			refType = 4;
+		};
+		F5793952033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIUtilities.h;
+			path = "Frameworks/AIUtilities Framework/AIUtilities.h";
+			refType = 4;
+		};
+		F5793953033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIVerticallyCenteredTextCell.h;
+			path = "Frameworks/AIUtilities Framework/AIVerticallyCenteredTextCell.h";
+			refType = 4;
+		};
+		F5793954033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIVerticallyCenteredTextCell.m;
+			path = "Frameworks/AIUtilities Framework/AIVerticallyCenteredTextCell.m";
+			refType = 4;
+		};
+		F5793955033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIViewAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIViewAdditions.h";
+			refType = 4;
+		};
+		F5793956033E74E401A8010A = {
+			isa = PBXFileReference;
+			name = AIViewAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIViewAdditions.m";
+			refType = 4;
+		};
+		F5793957033E74E401A8010A = {
+			fileRef = F5793936033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793958033E74E401A8010A = {
+			fileRef = F5793937033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793959033E74E401A8010A = {
+			fileRef = F5793938033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579395A033E74E401A8010A = {
+			fileRef = F5793939033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579395B033E74E401A8010A = {
+			fileRef = F579393A033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579395C033E74E401A8010A = {
+			fileRef = F579393B033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579395F033E74E401A8010A = {
+			fileRef = F579393E033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793960033E74E401A8010A = {
+			fileRef = F579393F033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793961033E74E401A8010A = {
+			fileRef = F5793940033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793962033E74E401A8010A = {
+			fileRef = F5793941033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793963033E74E401A8010A = {
+			fileRef = F5793942033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793964033E74E401A8010A = {
+			fileRef = F5793943033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793965033E74E401A8010A = {
+			fileRef = F5793944033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793966033E74E401A8010A = {
+			fileRef = F5793945033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793967033E74E401A8010A = {
+			fileRef = F5793946033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793968033E74E401A8010A = {
+			fileRef = F5793947033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793969033E74E401A8010A = {
+			fileRef = F5793948033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579396A033E74E401A8010A = {
+			fileRef = F5793949033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579396B033E74E401A8010A = {
+			fileRef = F579394A033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579396C033E74E401A8010A = {
+			fileRef = F579394B033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579396D033E74E401A8010A = {
+			fileRef = F579394C033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579396E033E74E401A8010A = {
+			fileRef = F579394D033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579396F033E74E401A8010A = {
+			fileRef = F579394E033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793970033E74E401A8010A = {
+			fileRef = F579394F033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793971033E74E401A8010A = {
+			fileRef = F5793950033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793972033E74E401A8010A = {
+			fileRef = F5793951033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793973033E74E401A8010A = {
+			fileRef = F5793952033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		F5793974033E74E401A8010A = {
+			fileRef = F5793953033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793975033E74E401A8010A = {
+			fileRef = F5793954033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793976033E74E401A8010A = {
+			fileRef = F5793955033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793977033E74E401A8010A = {
+			fileRef = F5793956033E74E401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793978033E74F001A8010A = {
+			children = (
+				F5793952033E74E401A8010A,
+				F55B415903AB8B2601A8010A,
+				F55B417203AB8C5601A8010A,
+				F570A5A103704BCE01A8010A,
+				F570A5A503704BED01A8010A,
+				F570A5A703704BED01A8010A,
+				F57938F8033E745F01A8010A,
+				F570A61703704F6601A8010A,
+				F570A61303704F4201A8010A,
+				F570A5B103704C3701A8010A,
+				F570A5AD03704C1101A8010A,
+				F5793936033E74E401A8010A,
+				F5793938033E74E401A8010A,
+				F579393A033E74E401A8010A,
+				F579393E033E74E401A8010A,
+				F5793940033E74E401A8010A,
+				F5793942033E74E401A8010A,
+				F5793944033E74E401A8010A,
+				F5793946033E74E401A8010A,
+				F5793948033E74E401A8010A,
+				F579394A033E74E401A8010A,
+				F579394C033E74E401A8010A,
+				F579394E033E74E401A8010A,
+				F5793979033E755501A8010A,
+				F5793950033E74E401A8010A,
+				F5793953033E74E401A8010A,
+				F5793955033E74E401A8010A,
+				F570A5BD03704CB801A8010A,
+				F570A5BF03704CB801A8010A,
+				F570A5C103704CB801A8010A,
+				F570A58803704A8F01A8010A,
+				F570A58A03704A8F01A8010A,
+				F570A59003704AB901A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F5793979033E755501A8010A = {
+			isa = PBXFileReference;
+			name = AITextAttributes.h;
+			path = "Frameworks/AIUtilities Framework/AITextAttributes.h";
+			refType = 4;
+		};
+		F579397A033E755501A8010A = {
+			isa = PBXFileReference;
+			name = AITextAttributes.m;
+			path = "Frameworks/AIUtilities Framework/AITextAttributes.m";
+			refType = 4;
+		};
+		F579397B033E755501A8010A = {
+			fileRef = F5793979033E755501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579397C033E755501A8010A = {
+			fileRef = F579397A033E755501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579397D033E756E01A8010A = {
+			isa = PBXFileReference;
+			name = AIContactListWindowController.h;
+			path = "Plugins/Dual Window Interface/AIContactListWindowController.h";
+			refType = 4;
+		};
+		F579397E033E756E01A8010A = {
+			isa = PBXFileReference;
+			name = AIContactListWindowController.m;
+			path = "Plugins/Dual Window Interface/AIContactListWindowController.m";
+			refType = 4;
+		};
+		F579397F033E756E01A8010A = {
+			isa = PBXFileReference;
+			name = AIDualWindowInterface.h;
+			path = "Plugins/Dual Window Interface/AIDualWindowInterface.h";
+			refType = 4;
+		};
+		F5793980033E756E01A8010A = {
+			isa = PBXFileReference;
+			name = AIDualWindowInterface.m;
+			path = "Plugins/Dual Window Interface/AIDualWindowInterface.m";
+			refType = 4;
+		};
+		F5793981033E756E01A8010A = {
+			isa = PBXFileReference;
+			name = AIMessageWindowController.h;
+			path = "Plugins/Dual Window Interface/AIMessageWindowController.h";
+			refType = 4;
+		};
+		F5793982033E756E01A8010A = {
+			isa = PBXFileReference;
+			name = AIMessageWindowController.m;
+			path = "Plugins/Dual Window Interface/AIMessageWindowController.m";
+			refType = 4;
+		};
+		F5793983033E756E01A8010A = {
+			isa = PBXFileReference;
+			name = ContactListWindow.nib;
+			path = "Plugins/Dual Window Interface/ContactListWindow.nib";
+			refType = 4;
+		};
+		F5793984033E756E01A8010A = {
+			isa = PBXFileReference;
+			name = MessageView.nib;
+			path = "Plugins/Dual Window Interface/MessageView.nib";
+			refType = 4;
+		};
+		F5793985033E756E01A8010A = {
+			fileRef = F579397D033E756E01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793986033E756E01A8010A = {
+			fileRef = F579397E033E756E01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793987033E756E01A8010A = {
+			fileRef = F579397F033E756E01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793988033E756E01A8010A = {
+			fileRef = F5793980033E756E01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793989033E756E01A8010A = {
+			fileRef = F5793981033E756E01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579398A033E756E01A8010A = {
+			fileRef = F5793982033E756E01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579398B033E756E01A8010A = {
+			fileRef = F5793983033E756E01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579398C033E756E01A8010A = {
+			fileRef = F5793984033E756E01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579398D033E757801A8010A = {
+			children = (
+				F570A5CD03704D3D01A8010A,
+				F579397D033E756E01A8010A,
+				F579397F033E756E01A8010A,
+				F5793981033E756E01A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F579398E033E758D01A8010A = {
+			children = (
+				F579398F033E759C01A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F579398F033E759C01A8010A = {
+			isa = PBXFileReference;
+			name = AIOfflineContactHidingPlugin.h;
+			path = "Plugins/Offline Contact Hiding/AIOfflineContactHidingPlugin.h";
+			refType = 4;
+		};
+		F5793990033E759C01A8010A = {
+			isa = PBXFileReference;
+			name = AIOfflineContactHidingPlugin.m;
+			path = "Plugins/Offline Contact Hiding/AIOfflineContactHidingPlugin.m";
+			refType = 4;
+		};
+		F5793991033E759C01A8010A = {
+			fileRef = F579398F033E759C01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793992033E759C01A8010A = {
+			fileRef = F5793990033E759C01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793993033E75B001A8010A = {
+			isa = PBXFileReference;
+			name = AISMTextView.h;
+			path = "Plugins/Standard Message View/AISMTextView.h";
+			refType = 4;
+		};
+		F5793994033E75B001A8010A = {
+			isa = PBXFileReference;
+			name = AISMTextView.m;
+			path = "Plugins/Standard Message View/AISMTextView.m";
+			refType = 4;
+		};
+		F5793995033E75B001A8010A = {
+			isa = PBXFileReference;
+			name = AISMViewPlugin.h;
+			path = "Plugins/Standard Message View/AISMViewPlugin.h";
+			refType = 4;
+		};
+		F5793996033E75B001A8010A = {
+			isa = PBXFileReference;
+			name = AISMViewPlugin.m;
+			path = "Plugins/Standard Message View/AISMViewPlugin.m";
+			refType = 4;
+		};
+		F5793997033E75B001A8010A = {
+			fileRef = F5793993033E75B001A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793998033E75B001A8010A = {
+			fileRef = F5793994033E75B001A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5793999033E75B001A8010A = {
+			fileRef = F5793995033E75B001A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579399A033E75B001A8010A = {
+			fileRef = F5793996033E75B001A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F579399B033E75B701A8010A = {
+			children = (
+				F55B415003AB89E301A8010A,
+				F570A60B03704EBA01A8010A,
+				F5793993033E75B001A8010A,
+				F5793995033E75B001A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F579399C033E75BC01A8010A = {
+			children = (
+				F579399D033E75CB01A8010A,
+				F579399F033E75CB01A8010A,
+				F57939A1033E75CB01A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F579399D033E75CB01A8010A = {
+			isa = PBXFileReference;
+			name = AISCLCell.h;
+			path = "Plugins/Standard Contact List View/AISCLCell.h";
+			refType = 4;
+		};
+		F579399E033E75CB01A8010A = {
+			isa = PBXFileReference;
+			name = AISCLCell.m;
+			path = "Plugins/Standard Contact List View/AISCLCell.m";
+			refType = 4;
+		};
+		F579399F033E75CB01A8010A = {
+			isa = PBXFileReference;
+			name = AISCLOutlineView.h;
+			path = "Plugins/Standard Contact List View/AISCLOutlineView.h";
+			refType = 4;
+		};
+		F57939A0033E75CB01A8010A = {
+			isa = PBXFileReference;
+			name = AISCLOutlineView.m;
+			path = "Plugins/Standard Contact List View/AISCLOutlineView.m";
+			refType = 4;
+		};
+		F57939A1033E75CB01A8010A = {
+			isa = PBXFileReference;
+			name = AISCLViewPlugin.h;
+			path = "Plugins/Standard Contact List View/AISCLViewPlugin.h";
+			refType = 4;
+		};
+		F57939A2033E75CB01A8010A = {
+			isa = PBXFileReference;
+			name = AISCLViewPlugin.m;
+			path = "Plugins/Standard Contact List View/AISCLViewPlugin.m";
+			refType = 4;
+		};
+		F57939A3033E75CB01A8010A = {
+			fileRef = F579399D033E75CB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57939A4033E75CB01A8010A = {
+			fileRef = F579399E033E75CB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57939A5033E75CB01A8010A = {
+			fileRef = F579399F033E75CB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57939A6033E75CB01A8010A = {
+			fileRef = F57939A0033E75CB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57939A7033E75CB01A8010A = {
+			fileRef = F57939A1033E75CB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57939A8033E75CB01A8010A = {
+			fileRef = F57939A2033E75CB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57939A9033E75FD01A8010A = {
+			isa = PBXFileReference;
+			name = AIContactStatusColoringPlugin.h;
+			path = "Plugins/Contact Status Coloring/AIContactStatusColoringPlugin.h";
+			refType = 4;
+		};
+		F57939AA033E75FD01A8010A = {
+			isa = PBXFileReference;
+			name = AIContactStatusColoringPlugin.m;
+			path = "Plugins/Contact Status Coloring/AIContactStatusColoringPlugin.m";
+			refType = 4;
+		};
+		F57939AB033E75FD01A8010A = {
+			fileRef = F57939A9033E75FD01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57939AC033E75FD01A8010A = {
+			fileRef = F57939AA033E75FD01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F57939AD033E75FF01A8010A = {
+			children = (
+				F57939A9033E75FD01A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F57939AE033E760701A8010A = {
+			children = (
+				F59DB3AC033EA8EC01A8010A,
+				F59DB3AE033EA8EC01A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F5819CE9032124CE01A8010A = {
+			isa = PBXFrameworkReference;
+			name = AppKit.framework;
+			path = /System/Library/Frameworks/AppKit.framework;
+			refType = 0;
+		};
+		F59C470D033E544E01A8010A = {
+			children = (
+				F5793939033E74E401A8010A,
+				F579393B033E74E401A8010A,
+				F579394D033E74E401A8010A,
+				F5793956033E74E401A8010A,
+				F579393F033E74E401A8010A,
+				F570A5B203704C3701A8010A,
+				F570A61403704F4201A8010A,
+				F55B415603AB8B0901A8010A,
+			);
+			isa = PBXGroup;
+			name = Additions;
+			refType = 4;
+		};
+		F59C470F033E545901A8010A = {
+			children = (
+				F549EF0D036B0F7F01A8010A,
+				F549EF0E036B0F8D01A8010A,
+				F549EF0B036B0F7201A8010A,
+				F549EF13036B101B01A8010A,
+				F549EF14036B104401A8010A,
+			);
+			isa = PBXGroup;
+			name = Utilities;
+			path = "";
+			refType = 4;
+		};
+		F59DB3AC033EA8EC01A8010A = {
+			isa = PBXFileReference;
+			name = AIStatusCircle.h;
+			path = "Plugins/Status Circles/AIStatusCircle.h";
+			refType = 4;
+		};
+		F59DB3AD033EA8EC01A8010A = {
+			isa = PBXFileReference;
+			name = AIStatusCircle.m;
+			path = "Plugins/Status Circles/AIStatusCircle.m";
+			refType = 4;
+		};
+		F59DB3AE033EA8EC01A8010A = {
+			isa = PBXFileReference;
+			name = AIStatusCirclesPlugin.h;
+			path = "Plugins/Status Circles/AIStatusCirclesPlugin.h";
+			refType = 4;
+		};
+		F59DB3AF033EA8EC01A8010A = {
+			isa = PBXFileReference;
+			name = AIStatusCirclesPlugin.m;
+			path = "Plugins/Status Circles/AIStatusCirclesPlugin.m";
+			refType = 4;
+		};
+		F59DB3B0033EA8EC01A8010A = {
+			fileRef = F59DB3AC033EA8EC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3B1033EA8EC01A8010A = {
+			fileRef = F59DB3AD033EA8EC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3B2033EA8EC01A8010A = {
+			fileRef = F59DB3AE033EA8EC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3B3033EA8EC01A8010A = {
+			fileRef = F59DB3AF033EA8EC01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3B4033EA90801A8010A = {
+			isa = PBXFileReference;
+			name = AIMTOCAccountView.nib;
+			path = "Plugins/AIM TOC2 Service/AIMTOCAccountView.nib";
+			refType = 4;
+		};
+		F59DB3B8033EA90801A8010A = {
+			isa = PBXFileReference;
+			name = AIMTOC2Account.h;
+			path = "Plugins/AIM TOC2 Service/AIMTOC2Account.h";
+			refType = 4;
+		};
+		F59DB3B9033EA90801A8010A = {
+			isa = PBXFileReference;
+			name = AIMTOC2Account.m;
+			path = "Plugins/AIM TOC2 Service/AIMTOC2Account.m";
+			refType = 4;
+		};
+		F59DB3BA033EA90801A8010A = {
+			isa = PBXFileReference;
+			name = AIMTOC2AccountViewController.h;
+			path = "Plugins/AIM TOC2 Service/AIMTOC2AccountViewController.h";
+			refType = 4;
+		};
+		F59DB3BB033EA90801A8010A = {
+			isa = PBXFileReference;
+			name = AIMTOC2AccountViewController.m;
+			path = "Plugins/AIM TOC2 Service/AIMTOC2AccountViewController.m";
+			refType = 4;
+		};
+		F59DB3BC033EA90801A8010A = {
+			isa = PBXFileReference;
+			name = AIMTOC2Packet.h;
+			path = "Plugins/AIM TOC2 Service/AIMTOC2Packet.h";
+			refType = 4;
+		};
+		F59DB3BD033EA90801A8010A = {
+			isa = PBXFileReference;
+			name = AIMTOC2Packet.m;
+			path = "Plugins/AIM TOC2 Service/AIMTOC2Packet.m";
+			refType = 4;
+		};
+		F59DB3BE033EA90801A8010A = {
+			isa = PBXFileReference;
+			name = AIMTOC2StringAdditions.h;
+			path = "Plugins/AIM TOC2 Service/AIMTOC2StringAdditions.h";
+			refType = 4;
+		};
+		F59DB3BF033EA90801A8010A = {
+			isa = PBXFileReference;
+			name = AIMTOC2StringAdditions.m;
+			path = "Plugins/AIM TOC2 Service/AIMTOC2StringAdditions.m";
+			refType = 4;
+		};
+		F59DB3C0033EA90801A8010A = {
+			isa = PBXFileReference;
+			name = AIMTOCPreferenceView.nib;
+			path = "Plugins/AIM TOC2 Service/AIMTOCPreferenceView.nib";
+			refType = 4;
+		};
+		F59DB3C1033EA90801A8010A = {
+			isa = PBXFileReference;
+			name = LilYellowDuck.tif;
+			path = "Plugins/AIM TOC2 Service/LilYellowDuck.tif";
+			refType = 4;
+		};
+		F59DB3C3033EA90801A8010A = {
+			isa = PBXFileReference;
+			name = Refresh.tiff;
+			path = "Plugins/AIM TOC2 Service/Refresh.tiff";
+			refType = 4;
+		};
+		F59DB3C4033EA90801A8010A = {
+			fileRef = F59DB3B4033EA90801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3C8033EA90801A8010A = {
+			fileRef = F59DB3B8033EA90801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3C9033EA90801A8010A = {
+			fileRef = F59DB3B9033EA90801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3CA033EA90801A8010A = {
+			fileRef = F59DB3BA033EA90801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3CB033EA90801A8010A = {
+			fileRef = F59DB3BB033EA90801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3CC033EA90801A8010A = {
+			fileRef = F59DB3BC033EA90801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3CD033EA90801A8010A = {
+			fileRef = F59DB3BD033EA90801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3CE033EA90801A8010A = {
+			fileRef = F59DB3BE033EA90801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3CF033EA90801A8010A = {
+			fileRef = F59DB3BF033EA90801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3D0033EA90801A8010A = {
+			fileRef = F59DB3C0033EA90801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3D1033EA90801A8010A = {
+			fileRef = F59DB3C1033EA90801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3D3033EA90801A8010A = {
+			fileRef = F59DB3C3033EA90801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3D4033EA90B01A8010A = {
+			children = (
+				F5C8B7720358631001A8010A,
+				F59DB3C1033EA90801A8010A,
+				F59DB3C3033EA90801A8010A,
+			);
+			isa = PBXGroup;
+			name = Resources;
+			refType = 4;
+		};
+		F59DB3D5033EA90D01A8010A = {
+			children = (
+				F570A5C903704D1A01A8010A,
+				F59DB3DA033EABB301A8010A,
+				F59DB3B8033EA90801A8010A,
+				F59DB3BA033EA90801A8010A,
+				F59DB3BC033EA90801A8010A,
+				F59DB3BE033EA90801A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			path = "";
+			refType = 4;
+		};
+		F59DB3D6033EA9CD01A8010A = {
+			isa = PBXFileReference;
+			name = AIAdium.h;
+			path = Source/AIAdium.h;
+			refType = 4;
+		};
+		F59DB3D7033EA9CD01A8010A = {
+			isa = PBXFileReference;
+			name = AIAdium.m;
+			path = Source/AIAdium.m;
+			refType = 4;
+		};
+		F59DB3D8033EA9CD01A8010A = {
+			fileRef = F59DB3D6033EA9CD01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3D9033EA9CD01A8010A = {
+			fileRef = F59DB3D7033EA9CD01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3DA033EABB301A8010A = {
+			isa = PBXFileReference;
+			name = AISyncWindowController.h;
+			path = "/Users/adamiser/Code/zOld Adium/AISyncWindowController.h";
+			refType = 0;
+		};
+		F59DB3DB033EABB301A8010A = {
+			isa = PBXFileReference;
+			name = AISyncWindowController.m;
+			path = "/Users/adamiser/Code/zOld Adium/AISyncWindowController.m";
+			refType = 0;
+		};
+		F59DB3DE033EB08D01A8010A = {
+			fileRef = F531836F019E40BB01A80165;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59DB3E7033EB4B601A8010A = {
+			isa = PBXFileReference;
+			path = Adium.h;
+			refType = 4;
+		};
+		F59DB3E8033EB4B601A8010A = {
+			fileRef = F59DB3E7033EB4B601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		F59DB6AD033EB74801A8010A = {
+			isa = PBXFileReference;
+			name = main.m;
+			path = Source/main.m;
+			refType = 4;
+		};
+		F59DB6AE033EB74801A8010A = {
+			fileRef = F59DB6AD033EB74801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F59F9A7F032BE67901A8010A = {
+			children = (
+				F579399B033E75B701A8010A,
+				F5793996033E75B001A8010A,
+				F5793994033E75B001A8010A,
+				F570A60C03704EBA01A8010A,
+				F55B415103AB89E301A8010A,
+			);
+			isa = PBXGroup;
+			name = "Standard Message View";
+			path = "";
+			refType = 4;
+		};
+		F59F9A84032BE6B101A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5793997033E75B001A8010A,
+				F5793999033E75B001A8010A,
+				F570A60D03704EBA01A8010A,
+				F55B415203AB89E301A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F59F9A85032BE6B101A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F59F9A86032BE6B101A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5793998033E75B001A8010A,
+				F579399A033E75B001A8010A,
+				F570A60E03704EBA01A8010A,
+				F55B415303AB89E301A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F59F9A87032BE6B101A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5DD993F032BE94801A8010A,
+				F5DD9940032BE94901A8010A,
+				F5DD9941032BE94901A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F59F9A88032BE6B101A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F59F9A89032BE6B101A8010A = {
+			buildPhases = (
+				F59F9A84032BE6B101A8010A,
+				F59F9A85032BE6B101A8010A,
+				F59F9A86032BE6B101A8010A,
+				F59F9A87032BE6B101A8010A,
+				F59F9A88032BE6B101A8010A,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Standard Message View";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				F5DD9944032BE95301A8010A,
+				F5DD9943032BE95201A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Standard Message View";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Standard Message View";
+			productReference = F59F9A8A032BE6B101A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AISMViewPlugin</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F59F9A8A032BE6B101A8010A = {
+			isa = PBXBundleReference;
+			path = "Standard Message View.AdiumPlugin";
+			refType = 3;
+		};
+		F5A01D85037980F201A8010A = {
+			children = (
+				F5AD9BAD0381EA4501A8010A,
+				F5A01D8F0379818101A8010A,
+				F5A01D930379818F01A8010A,
+				F54441AC0378A36A01A8010A,
+			);
+			isa = PBXGroup;
+			name = "AIM (iChat)";
+			path = "";
+			refType = 4;
+		};
+		F5A01D860379813301A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5A01D870379813301A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5A01D880379813301A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5A01D890379813301A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5B97144037985B901A8010A,
+				F5B97145037985BA01A8010A,
+				F5B97146037985CE01A8010A,
+				F5B97147037985CE01A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5A01D8A0379813301A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5A01D8B0379813301A8010A = {
+			buildPhases = (
+				F5A01D860379813301A8010A,
+				F5A01D870379813301A8010A,
+				F5A01D880379813301A8010A,
+				F5A01D890379813301A8010A,
+				F5A01D8A0379813301A8010A,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" /Users/adamiser/Code/Adium/build";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "AIM (iChat)";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumService;
+			};
+			dependencies = (
+			);
+			isa = PBXBundleTarget;
+			name = "AIM (iChat)";
+			productName = "AIM (iChat).AdiumService";
+			productReference = F5A01D8C0379813301A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>AIM (iChat)</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIMiChatService</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F5A01D8C0379813301A8010A = {
+			isa = PBXBundleReference;
+			path = "AIM (iChat).AdiumService";
+			refType = 3;
+		};
+		F5A01D8D0379813F01A8010A = {
+			isa = PBXTargetDependency;
+			target = F5A01D8B0379813301A8010A;
+		};
+		F5A01D8E0379818101A8010A = {
+			isa = PBXFileReference;
+			path = AIMiChatService.h;
+			refType = 4;
+		};
+		F5A01D8F0379818101A8010A = {
+			isa = PBXFileReference;
+			path = AIMiChatService.m;
+			refType = 4;
+		};
+		F5A01D920379818F01A8010A = {
+			isa = PBXFileReference;
+			path = AIMiChatAccount.h;
+			refType = 4;
+		};
+		F5A01D930379818F01A8010A = {
+			isa = PBXFileReference;
+			path = AIMiChatAccount.m;
+			refType = 4;
+		};
+		F5A01D98037982AE01A8010A = {
+			fileRef = F5A01D8C0379813301A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5A025050363395F01A8010A = {
+			fileRef = F57938AD033E737001A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5A025060363396C01A8010A = {
+			fileRef = F57938F8033E745F01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5A025070363396D01A8010A = {
+			fileRef = F57938B8033E739101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5A137FC03421FEB01A8010A = {
+			isa = PBXFileReference;
+			name = notfound.png;
+			path = Source/notfound.png;
+			refType = 4;
+		};
+		F5A137FD03421FEB01A8010A = {
+			fileRef = F5A137FC03421FEB01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5A3C2DD039A516E01A8010A = {
+			children = (
+				F55B416603AB8BFC01A8010A,
+				F55B416803AB8C0501A8010A,
+				F55B416A03AB8C0B01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Password Prompt";
+			refType = 4;
+		};
+		F5A70E7E0392657D01A8010A = {
+			isa = PBXFileReference;
+			name = toolbar_Background.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/toolbar_Background.tiff";
+			refType = 4;
+		};
+		F5A70E7F0392657D01A8010A = {
+			fileRef = F5A70E7E0392657D01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5A70E95039506C201A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5A70E9903950D7B01A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5AAD085039BA0D301A8010A = {
+			children = (
+				F5AAD097039BA24601A8010A,
+				F55B40FA03AB877E01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Event Sounds";
+			path = "";
+			refType = 4;
+		};
+		F5AAD08A039BA10901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F55B40F903AB877401A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5AAD08B039BA10901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5AAD08C039BA10901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F55B40FB03AB877E01A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5AAD08D039BA10901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5AAD094039BA22201A8010A,
+				F5AAD095039BA22301A8010A,
+				F5AAD096039BA22301A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5AAD08E039BA10901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5AAD08F039BA10901A8010A = {
+			buildPhases = (
+				F5AAD08A039BA10901A8010A,
+				F5AAD08B039BA10901A8010A,
+				F5AAD08C039BA10901A8010A,
+				F5AAD08D039BA10901A8010A,
+				F5AAD08E039BA10901A8010A,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Event Sounds";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				F5BE33D6039BE34801A8010A,
+				F5BE33D5039BE34601A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Event Sounds";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Event Sounds";
+			productReference = F5AAD090039BA10901A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIEventSoundsPlugin</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F5AAD090039BA10901A8010A = {
+			isa = PBXBundleReference;
+			path = "Event Sounds.AdiumPlugin";
+			refType = 3;
+		};
+		F5AAD091039BA20A01A8010A = {
+			fileRef = F5AAD090039BA10901A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5AAD094039BA22201A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5AAD095039BA22301A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5AAD096039BA22301A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5AAD097039BA24601A8010A = {
+			children = (
+				F55B40F803AB877401A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F5AD9BAD0381EA4501A8010A = {
+			children = (
+				F5A01D8E0379818101A8010A,
+				F5A01D920379818F01A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F5B53FBA0333A82F01A8010A = {
+			fileRef = F510B77403339F1C01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5B53FBB0333AB5C01A8010A = {
+			children = (
+			);
+			isa = PBXGroup;
+			name = "----Plugins----";
+			refType = 4;
+		};
+		F5B53FBC0333AB6F01A8010A = {
+			children = (
+			);
+			isa = PBXGroup;
+			name = "---Frameworks---";
+			path = "";
+			refType = 4;
+		};
+		F5B53FBD0333AB8801A8010A = {
+			children = (
+			);
+			isa = PBXGroup;
+			name = "----Other----";
+			refType = 4;
+		};
+		F5B53FBE0333AB9201A8010A = {
+			children = (
+			);
+			isa = PBXGroup;
+			name = "----Services----";
+			refType = 4;
+		};
+		F5B53FBF0333ABA701A8010A = {
+			children = (
+				F5B53FCC0333B01601A8010A,
+				F55B413A03AB895501A8010A,
+				F55B413C03AB895501A8010A,
+				F55B413803AB895501A8010A,
+				F55B414203AB897201A8010A,
+			);
+			isa = PBXGroup;
+			name = "Account List Preferences";
+			path = "";
+			refType = 4;
+		};
+		F5B53FC10333AFB501A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F55B413E03AB895501A8010A,
+				F55B414003AB895501A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5B53FC20333AFB501A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F55B413D03AB895501A8010A,
+				F55B414303AB897201A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5B53FC30333AFB501A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F55B413F03AB895501A8010A,
+				F55B414103AB895501A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5B53FC40333AFB501A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5B53FCD0333B04001A8010A,
+				F5B53FCE0333B04101A8010A,
+				F5A70E9903950D7B01A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5B53FC50333AFB501A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5B53FC60333AFB501A8010A = {
+			buildPhases = (
+				F5B53FC10333AFB501A8010A,
+				F5B53FC20333AFB501A8010A,
+				F5B53FC30333AFB501A8010A,
+				F5B53FC40333AFB501A8010A,
+				F5B53FC50333AFB501A8010A,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Account List Preferences";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				F573C6250333B88A01A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Account List Preferences";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Account List Preferences";
+			productReference = F5B53FC70333AFB501A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIAccountListPreferencesPlugin</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F5B53FC70333AFB501A8010A = {
+			isa = PBXBundleReference;
+			path = "Account List Preferences.AdiumPlugin";
+			refType = 3;
+		};
+		F5B53FCC0333B01601A8010A = {
+			children = (
+				F55B413903AB895501A8010A,
+				F55B413B03AB895501A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
+		};
+		F5B53FCD0333B04001A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5B53FCE0333B04101A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5B53FD20333B11701A8010A = {
+			fileRef = F5B53FC70333AFB501A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5B89EFC033CA8CC01A8010A = {
+			children = (
+				F5793913033E748F01A8010A,
+				F570A59503704AF501A8010A,
+				F5793915033E748F01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Preference Pane";
+			refType = 4;
+		};
+		F5B97144037985B901A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5B97145037985BA01A8010A = {
+			fileRef = F531836F019E40BB01A80165;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5B97146037985CE01A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5B97147037985CE01A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5B9714A0379874801A8010A = {
+			fileRef = F57938AB033E737001A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5BD46C402D0786601A8010A = {
+			children = (
+				F57939AD033E75FF01A8010A,
+				F57939AA033E75FD01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Contact Status Coloring";
+			path = "";
+			refType = 4;
+		};
+		F5BD46C902D0789901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F57939AB033E75FD01A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5BD46CA02D0789901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5BD46CB02D0789901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F57939AC033E75FD01A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5BD46CC02D0789901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				F5BD46D602D078BD01A8010A,
+				F5BD46D702D078BD01A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5BD46CD02D0789901A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5BD46CE02D0789901A8010A = {
+			buildPhases = (
+				F5BD46C902D0789901A8010A,
+				F5BD46CA02D0789901A8010A,
+				F5BD46CB02D0789901A8010A,
+				F5BD46CC02D0789901A8010A,
+				F5BD46CD02D0789901A8010A,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Contact Status Coloring";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				F5BD470602D07E9501A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Contact Status Coloring";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Contact Status Coloring.AdiumPlugin";
+			productReference = F5BD46CF02D0789901A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIContactStatusColoringPlugin</string>
+</dict>
+</plist>
+";
+			shouldUseHeadermap = 0;
+		};
+		F5BD46CF02D0789901A8010A = {
+			isa = PBXBundleReference;
+			path = "Contact Status Coloring.AdiumPlugin";
+			refType = 3;
+		};
+		F5BD46D602D078BD01A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5BD46D702D078BD01A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5BD46D902D078CC01A8010A = {
+			isa = PBXTargetDependency;
+			target = F5BD46CE02D0789901A8010A;
+		};
+		F5BD470602D07E9501A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F5BD470702D0845E01A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9ACB02CD12CB01A8010A;
+		};
+		F5BE33D4039BE34001A8010A = {
+			isa = PBXTargetDependency;
+			target = F5AAD08F039BA10901A8010A;
+		};
+		F5BE33D5039BE34601A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		F5BE33D6039BE34801A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F5BF8A6002C7D2F401A8010A = {
+			children = (
+				F57938EC033E744A01A8010A,
+				F57938AD033E737001A8010A,
+				F57938AA033E737001A8010A,
+				F57938AB033E737001A8010A,
+				F57938AC033E737001A8010A,
+				F55B415D03AB8B5601A8010A,
+				F57938AE033E737001A8010A,
+				F57938AF033E737001A8010A,
+				F570A5B603704C6101A8010A,
+				F57938B0033E737001A8010A,
+				F570A60803704E9701A8010A,
+				F55B416003AB8BE301A8010A,
+				F5A3C2DD039A516E01A8010A,
+				F5174D7D0376B6D201A8010A,
+				F5CDCE460350758501A8010A,
+				F5D746FA0338D79801A8010A,
+				F51DEC0D03262FB501A8010A,
+			);
+			isa = PBXGroup;
+			name = "Core Controllers";
+			refType = 4;
+		};
+		F5C8B7720358631001A8010A = {
+			isa = PBXFileReference;
+			name = "Default Preferences.plist";
+			path = "Plugins/AIM TOC2 Service/Default Preferences.plist";
+			refType = 4;
+		};
+		F5C8B7730358631001A8010A = {
+			fileRef = F5C8B7720358631001A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C8B7740358632101A8010A = {
+			children = (
+				F59DB3B4033EA90801A8010A,
+				F59DB3C0033EA90801A8010A,
+			);
+			isa = PBXGroup;
+			name = Interfaces;
+			path = "";
+			refType = 4;
+		};
+		F5CBFC4702D7725501A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5CBFC4802D7725601A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5CBFC4902D7725601A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5CC42440386D8F901A8010A = {
+			isa = PBXFileReference;
+			name = MiniToolbarMenu.nib;
+			path = "Frameworks/AIUtilities Framework/MiniToolbarMenu.nib";
+			refType = 4;
+		};
+		F5CC42450386D8F901A8010A = {
+			isa = PBXFileReference;
+			name = MiniToolbarCustomize.nib;
+			path = "Frameworks/AIUtilities Framework/MiniToolbarCustomize.nib";
+			refType = 4;
+		};
+		F5CC42460386D8F901A8010A = {
+			fileRef = F5CC42440386D8F901A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5CC42470386D8F901A8010A = {
+			fileRef = F5CC42450386D8F901A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5CDCE460350758501A8010A = {
+			children = (
+				F570A59903704B6101A8010A,
+				F5CDCE4B0350760A01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Contact Info Window";
+			refType = 4;
+		};
+		F5CDCE4B0350760A01A8010A = {
+			isa = PBXFileReference;
+			name = ContactInfoWindow.nib;
+			path = Source/ContactInfoWindow.nib;
+			refType = 4;
+		};
+		F5CDCE4C0350760A01A8010A = {
+			fileRef = F5CDCE4B0350760A01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5CDD1170350B92801A8010A = {
+			isa = PBXFileReference;
+			name = "Default Preferences.plist";
+			path = "Source/Default Preferences.plist";
+			refType = 4;
+		};
+		F5CDD1180350B92801A8010A = {
+			fileRef = F5CDD1170350B92801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5CED5F10388303901A8010A = {
+			isa = PBXTargetDependency;
+			target = F501BB1303882A2901A8010A;
+		};
+		F5CED5F2038830C901A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5CED5F3038830C901A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5CED5F4038830CA01A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5D5F61802DC53F501A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F5D5F61902DC53FA01A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		F5D746FA0338D79801A8010A = {
+			children = (
+				F57938BB033E739101A8010A,
+				F57938BA033E739101A8010A,
+				F57938B9033E739101A8010A,
+				F57938BC033E739101A8010A,
+				F5A137FC03421FEB01A8010A,
+			);
+			isa = PBXGroup;
+			name = "Preference Window";
+			refType = 4;
+		};
+		F5DD993F032BE94801A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5DD9940032BE94901A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5DD9941032BE94901A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5DD9943032BE95201A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		F5DD9944032BE95301A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA;
+}

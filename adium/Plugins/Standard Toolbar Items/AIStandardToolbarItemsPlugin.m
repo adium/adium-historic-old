@@ -1,0 +1,170 @@
+/*-------------------------------------------------------------------------------------------------------*\
+| Adium, Copyright (C) 2001-2002, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+\---------------------------------------------------------------------------------------------------------/
+ | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ | General Public License as published by the Free Software Foundation; either version 2 of the License,
+ | or (at your option) any later version.
+ |
+ | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ | Public License for more details.
+ |
+ | You should have received a copy of the GNU General Public License along with this program; if not,
+ | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ \------------------------------------------------------------------------------------------------------ */
+
+#import "AIStandardToolbarItemsPlugin.h"
+#import "AIAdium.h"
+#import "AIFramedMiniToolbarButton.h"
+#import <AIUtilities/AIUtilities.h>
+
+@implementation AIStandardToolbarItemsPlugin
+
+- (void)installPlugin
+{
+    AIMiniToolbarItem	*toolbarItem;
+
+    //Space
+    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Space"];
+    [toolbarItem setView:[AIFramedMiniToolbarButton framedMiniToolbarButtonWithImage:[AIImageUtilities imageNamed:@"space" forClass:[self class]] forToolbarItem:toolbarItem]];
+    [toolbarItem setTarget:nil];
+    [toolbarItem setAction:nil];
+    [toolbarItem setToolTip:@""];
+    [toolbarItem setEnabled:YES];
+    [toolbarItem setPaletteLabel:@"Space"];
+    [toolbarItem setAllowsDuplicatesInToolbar:YES];
+    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
+
+    //Flexible Space
+    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"FlexibleSpace"];
+    [toolbarItem setView:[AIFramedMiniToolbarButton framedMiniToolbarButtonWithImage:[AIImageUtilities imageNamed:@"space" forClass:[self class]] forToolbarItem:toolbarItem]];
+    [toolbarItem setTarget:nil];
+    [toolbarItem setAction:nil];
+    [toolbarItem setToolTip:@""];
+    [toolbarItem setEnabled:YES];
+    [toolbarItem setPaletteLabel:@"Flexible Space"];
+    [toolbarItem setFlexibleWidth:YES];
+    [toolbarItem setAllowsDuplicatesInToolbar:YES];
+    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
+
+    //Divider
+    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Divider"];
+    [toolbarItem setImage:[AIImageUtilities imageNamed:@"divider" forClass:[self class]]];
+    [toolbarItem setTarget:nil];
+    [toolbarItem setAction:nil];
+    [toolbarItem setToolTip:@""];
+    [toolbarItem setEnabled:YES];
+    [toolbarItem setPaletteLabel:@"Seperator"];
+    [toolbarItem setAllowsDuplicatesInToolbar:YES];
+    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
+
+    //Send Message
+    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"NewMessage"];
+    [toolbarItem setImage:[AIImageUtilities imageNamed:@"mail" forClass:[self class]]];
+    [toolbarItem setTarget:self];
+    [toolbarItem setAction:@selector(newMessage:)];
+    [toolbarItem setEnabled:YES];
+    [toolbarItem setToolTip:@"New message"];
+    [toolbarItem setPaletteLabel:@"New message"];
+    [toolbarItem setDelegate:self];
+    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
+
+    //Close Message
+    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"CloseMessage"];
+    [toolbarItem setImage:[AIImageUtilities imageNamed:@"message" forClass:[self class]]];
+    [toolbarItem setTarget:self];
+    [toolbarItem setAction:@selector(closeMessage:)];
+    [toolbarItem setEnabled:YES];
+    [toolbarItem setToolTip:@"Close message"];
+    [toolbarItem setPaletteLabel:@"Close message"];
+    [toolbarItem setDelegate:self];
+    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
+
+    //Send Message
+    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"SendMessage"];
+    [toolbarItem setImage:[AIImageUtilities imageNamed:@"message" forClass:[self class]]];
+    [toolbarItem setTarget:self];
+    [toolbarItem setAction:@selector(sendMessage:)];
+    [toolbarItem setEnabled:YES];
+    [toolbarItem setToolTip:@"Send message"];
+    [toolbarItem setPaletteLabel:@"Send message"];
+    [toolbarItem setDelegate:self];
+    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
+
+    //Send Message (button)
+    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"SendMessageButton"];
+    [toolbarItem setImage:[AIImageUtilities imageNamed:@"sendButton" forClass:[self class]]];
+    [toolbarItem setTarget:self];
+    [toolbarItem setAction:@selector(sendMessage:)];
+    [toolbarItem setEnabled:YES];
+    [toolbarItem setToolTip:@"Send message"];
+    [toolbarItem setPaletteLabel:@"Send message (button)"];
+    [toolbarItem setDelegate:self];
+    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
+
+}
+
+- (IBAction)newMessage:(AIMiniToolbarItem *)toolbarItem
+{
+    NSDictionary	*objects = [toolbarItem configurationObjects];
+    AIContactObject	*handle = [objects objectForKey:@"ContactObject"];
+
+    [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:handle,@"To",nil]];
+}
+
+- (IBAction)sendMessage:(AIMiniToolbarItem *)toolbarItem
+{
+    NSDictionary		*objects = [toolbarItem configurationObjects];
+    AIContactObject		*handle = [objects objectForKey:@"ContactObject"];
+//    NSView<AITextEntryView>	*text = [objects objectForKey:@"TextEntryView"];
+
+//    if(handle && /*[handle canReceiveContent...]*/ &&
+//       text && [[text attributedString] length]){
+        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_SendEnteredMessage object:handle userInfo:nil];
+//    }
+}
+
+- (IBAction)closeMessage:(AIMiniToolbarItem *)toolbarItem
+{
+    NSDictionary		*objects = [toolbarItem configurationObjects];
+    AIContactObject		*handle = [objects objectForKey:@"ContactObject"];
+//    NSView<AITextEntryView>	*text = [objects objectForKey:@"TextEntryView"];
+
+//    if(handle && /*[handle canReceiveContent...]*/ &&
+//       text && [[text attributedString] length]){
+        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_CloseMessage object:handle userInfo:nil];
+//    }
+}
+
+- (void)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
+{
+    NSString	*identifier = [inToolbarItem identifier];
+
+    if([identifier compare:@"NewMessage"] == 0){
+        AIContactObject		*handle = [inObjects objectForKey:@"ContactObject"];
+   
+        if(handle && [handle isKindOfClass:[AIContactHandle class]]){
+            [inToolbarItem setEnabled:YES];
+        }else{
+            [inToolbarItem setEnabled:NO];
+        }
+
+    }else if([identifier compare:@"SendMessage"] == 0 || [identifier compare:@"SendMessageButton"] == 0){
+        AIContactObject		*handle = [inObjects objectForKey:@"ContactObject"];
+        NSView<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
+    
+        if(handle && [handle isKindOfClass:[AIContactHandle class]] && text){
+            [inToolbarItem setEnabled:YES];
+        }else{
+            [inToolbarItem setEnabled:NO];
+        }
+    }
+}
+
+
+@end
+
+
+
+
+
