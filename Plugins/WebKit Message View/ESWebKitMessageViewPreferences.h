@@ -18,51 +18,29 @@
 #import <WebKit/WebKit.h>
 #import "ESWebView.h"
 
-@class JVFontPreviewField, AIContentObject, AIAutoScrollView;
-@protocol AIMessageViewController;
-
-typedef enum {
-	DefaultBackground = 0,
-	CustomBackground,
-	NoBackground
-} BackgroundOptions;
+@class JVFontPreviewField, AIContentObject, AIAutoScrollView, AIWebkitMessageViewController;
 
 @interface ESWebKitMessageViewPreferences : AIPreferencePane {
-	IBOutlet	ESWebView		*preview;
-	BOOL						webViewIsReady;
-		
-	IBOutlet	NSPopUpButton   *popUp_styles;
-	IBOutlet	NSPopUpButton   *popUp_variants;
-	
 	IBOutlet	JVFontPreviewField  *fontPreviewField_currentFont;
-	IBOutlet	NSPopUpButton   *popUp_minimumFontSize;
+	IBOutlet	NSPopUpButton   	*popUp_styles;
+	IBOutlet	NSPopUpButton   	*popUp_variants;
+	IBOutlet	NSPopUpButton   	*popUp_backgroundImageType;
+	IBOutlet	NSColorWell			*colorWell_customBackgroundColor;
+	IBOutlet	NSImageView			*imageView_backgroundImage;
+	IBOutlet    NSButton        	*checkBox_showUserIcons;
+	IBOutlet    NSButton        	*checkBox_showHeader;
+	IBOutlet	NSButton			*checkBox_showMessageColors;
+	IBOutlet	NSButton			*checkBox_showMessageFonts;
+	IBOutlet	NSButton			*checkBox_useCustomBackground;
 	
-    IBOutlet    NSPopUpButton   *popUp_timeStamps;
-	IBOutlet    NSButton        *checkBox_showUserIcons;
-	IBOutlet	NSPopUpButton   *popUp_customBackground;
-	IBOutlet	NSColorWell		*colorWell_customBackgroundColor;
-	IBOutlet	NSButton		*button_restoreDefaultBackgroundColor;
-	IBOutlet	NSPopUpButton   *popUp_backgroundImageType;
-	
-	NSMutableDictionary			*previewListObjectsDict;
-	
-	AIContentObject				*previousContent;
-	NSMutableArray				*newContent;
-	NSTimer						*newContentTimer;
-	
-	NSString					*stylePath;
-	BOOL						allowColors;
-	
-	AIChat						*previewChat;
-	
-	id<AIMessageViewController>		previewController;
-	IBOutlet	AIAutoScrollView	*scrollView_previewLocation;
-    IBOutlet	NSView				*view_previewLocation;
-	
-	BOOL						viewIsOpen;
+	//Message preview
+	IBOutlet	NSView				*view_previewLocation;
+	NSMutableDictionary				*previewListObjectsDict;
+	AIWebkitMessageViewController	*previewController;
+	ESWebView						*preview;
 }
 
-- (IBAction)changePreference:(id)sender;
 - (void)messageStyleXtrasDidChange;
+- (IBAction)resetDisplayFontToDefault:(id)sender;
 
 @end

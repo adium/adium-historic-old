@@ -28,54 +28,38 @@
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/ESBundleAdditions.h>
 #import <AIUtilities/ESDateFormatterAdditions.h>
+#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/ESImageViewWithImagePicker.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIContentStatus.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIService.h>
 #import <Adium/JVFontPreviewField.h>
 
-#define PREVIEW_FILE	@"Preview"
-
-#define NO_BACKGROUND_ITEM_TITLE		AILocalizedString(@"No Image",nil)
-#define DEFAULT_BACKGROUND_ITEM_TITLE   AILocalizedString(@"Default Image",nil)
-#define CUSTOM_BACKGROUND_ITEM_TITLE	AILocalizedString(@"Custom...",nil)
-
-#define	PREF_GROUP_DISPLAYFORMAT		@"Display Format"  //To watch when the contact name display format changes
+#define WEBKIT_PREVIEW_CONVERSATION_FILE	@"Preview"
+#define	PREF_GROUP_DISPLAYFORMAT			@"Display Format"  //To watch when the contact name display format changes
 
 @interface ESWebKitMessageViewPreferences (PRIVATE)
-- (void)updatePreview;
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime;
-- (void)_updateViewForStyle:(NSBundle *)style variant:(NSString *)variant;
-- (void) _loadPreviewFromStylePath:(NSString *)inStylePath;
-- (void)_createListObjectsFromDict:(NSDictionary *)previewDict withLoadedPreviewDirectory:(NSString *)loadedPreviewDirectory;
-- (void)processNewContent;
-
+- (void)_setBackgroundImage:(NSImage *)image;
 - (NSMenu *)_stylesMenu;
-- (NSMenu *)_customBackgroundMenu;
-- (void)_buildFontMenus;
-- (NSMenu *)_fontMenu;
-- (NSMenu *)_fontSizeMenu;
-- (NSMenu *)backgroundImageTypeMenu;
-- (void)_buildTimeStampMenu;
-- (void)_buildTimeStampMenu_AddFormat:(NSString *)format;
-- (void)_updatePopupMenuSelectionsForStyle:(NSString *)styleName;
-
+- (NSMenu *)_variantsMenu;
+- (NSMenu *)_backgroundImageTypeMenu;
+- (void)_addBackgroundImageTypeChoice:(int)tag toMenu:(NSMenu *)menu withTitle:(NSString *)title;
 - (void)_configureChatPreview;
 - (void)_fillContentOfChat:(AIChat *)inChat withDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath;
 - (NSMutableDictionary *)_addParticipants:(NSDictionary *)participants toChat:(AIChat *)inChat fromPath:(NSString *)previewPath;
 - (void)_applySettings:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
 - (void)_addContent:(NSArray *)chatArray toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
-
-- (void)updateBackgroundImageCache;
-
 @end
 
 @implementation ESWebKitMessageViewPreferences
 
-//Preference pane properties
+/*!
+ * @brief Preference pane properties
+ */
 - (PREFERENCE_CATEGORY)category{
     return(AIPref_Messages);
 }
@@ -86,64 +70,303 @@
     return(@"WebKitPreferencesView");
 }
 
-//Configure the preference view
+/*!
+ * @brief Configure the preference view
+ */
 - (void)viewDidLoad
 {	
 	previewListObjectsDict = nil;
-	newContent = [[NSMutableArray alloc] init];
+
+	//Configure our menus
+	[popUp_backgroundImageType setMenu:[self _backgroundImageTypeMenu]];
+	[popUp_styles setMenu:[self _stylesMenu]];
 	
-	//Configure our view
-	[self _buildTimeStampMenu];
+	//Other controls
 	[fontPreviewField_currentFont setShowFontFace:NO];
 	[fontPreviewField_currentFont setShowPointSize:YES];
-	[popUp_minimumFontSize setMenu:[self _fontSizeMenu]];
-	[popUp_backgroundImageType setMenu:[self backgroundImageTypeMenu]];
-	
-	[popUp_customBackground setMenu:[self _customBackgroundMenu]];
-	[popUp_styles setMenu:[self _stylesMenu]];
 
-	{
-		NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		
-		[checkBox_showUserIcons setState:[[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue]];
-		
-		[popUp_timeStamps selectItemWithRepresentedObject:[prefDict objectForKey:KEY_WEBKIT_TIME_STAMP_FORMAT]];
-		if (![popUp_timeStamps selectedItem]){
-			[popUp_timeStamps selectItem:[popUp_timeStamps lastItem]];
-		}
-		
-		[popUp_styles selectItemWithTitle:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
-	}
-	
+	//Configure the chat preview
+	[self _configureChatPreview];
+
+	//Configure our controls to represent the global preferences
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
+	[checkBox_showUserIcons setState:[[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue]];
+	[checkBox_showHeader setState:[[prefDict objectForKey:KEY_WEBKIT_SHOW_HEADER] boolValue]];
+	[checkBox_showMessageColors setState:[[prefDict objectForKey:KEY_WEBKIT_SHOW_MESSAGE_COLORS] boolValue]];	
+	[checkBox_showMessageFonts setState:[[prefDict objectForKey:KEY_WEBKIT_SHOW_MESSAGE_FONTS] boolValue]];
+
 	//Observe preference changes and set our initial preferences
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DISPLAYFORMAT];
-
-	viewIsOpen = YES;
-
-	[self updatePreview];
-	[self _configureChatPreview];
 }
 
+/*!
+ * @brief Close the preference view
+ */
+- (void)viewWillClose
+{
+	[[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[previewListObjectsDict release]; previewListObjectsDict = nil;
+}
+
+/*!
+ * @brief Rebuild our styles menu when installed message styles change
+ */
 - (void)messageStyleXtrasDidChange
 {
-	if (viewIsOpen){
-		NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		[popUp_styles setMenu:[self _stylesMenu]];
+	NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+
+	[popUp_styles setMenu:[self _stylesMenu]];
+	[popUp_styles selectItemWithTitle:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
+}
+
+
+//Preferences ----------------------------------------------------------------------------------------------------------
+#pragma mark Preferences
+/*!
+ * @brief Update our preference view to reflect changed preferences
+ */
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
+					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if([group isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]){
+		NSString	*style = [prefDict objectForKey:KEY_WEBKIT_STYLE];
+		NSString	*variant = [prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:style]];
 		
-		[popUp_styles selectItemWithTitle:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
+		//When the active style changes, rebuild our variant menu for the new style
+		if(!key || [key isEqualToString:KEY_WEBKIT_STYLE]){
+			[popUp_variants setMenu:[self _variantsMenu]];
+		}
 		
-//		[self preferencesChanged:nil];
+		//Ensure our style/variant menus are showing the correct selection
+		[popUp_styles selectItemWithRepresentedObject:style];
+		[popUp_variants selectItemWithRepresentedObject:variant];
+		
+		//Configure our style-specific controls to represent the current style
+		NSFont	*defaultFont = [NSFont cachedFontWithName:[prefDict objectForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:style]]
+													 size:[[prefDict objectForKey:[plugin styleSpecificKey:@"FontSize" forStyle:style]] intValue]];
+		[fontPreviewField_currentFont setFont:defaultFont];
+
+		//Style-specific background prefs
+		NSData	*backgroundImage = [[adium preferenceController] preferenceForKey:[plugin styleSpecificKey:@"Background" forStyle:style]
+																		   group:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES];
+		if(backgroundImage){
+			[imageView_backgroundImage setImage:[[[NSImage alloc] initWithData:backgroundImage] autorelease]];
+		}else{
+			[imageView_backgroundImage setImage:nil];
+		}
+
+		NSColor	*backgroundColor = [[prefDict objectForKey:[plugin styleSpecificKey:@"BackgroundColor" forStyle:style]] representedColor];
+		[colorWell_customBackgroundColor setColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])] ;
+
+		[checkBox_useCustomBackground setState:[[prefDict objectForKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:style]] boolValue]];
+	}
+	
+}
+
+/*!
+ * @brief Save changed preferences
+ */
+- (IBAction)changePreference:(id)sender
+{
+	NSString	*style = [[popUp_styles selectedItem] title];
+	
+    if(sender == checkBox_showUserIcons){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_WEBKIT_SHOW_USER_ICONS
+                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		
+    }else if(sender == checkBox_showHeader){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_WEBKIT_SHOW_HEADER
+                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+
+    }else if(sender == checkBox_showMessageColors){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_WEBKIT_SHOW_MESSAGE_COLORS
+                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		
+    }else if(sender == checkBox_showMessageFonts){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_WEBKIT_SHOW_MESSAGE_FONTS
+                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		
+    }else if(sender == checkBox_useCustomBackground){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:style]
+                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+
+	}else if(sender == colorWell_customBackgroundColor){
+		[[adium preferenceController] setPreference:[[colorWell_customBackgroundColor color] stringRepresentation]
+                                             forKey:[plugin styleSpecificKey:@"BackgroundColor" forStyle:style]
+                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		
+	}else if(sender == popUp_backgroundImageType){
+		NSString	*key = [NSString stringWithFormat:@"%@:Type", [plugin styleSpecificKey:@"Background" forStyle:style]];
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[popUp_backgroundImageType selectedItem] tag]]
+											 forKey:key
+											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
+		
+	}else if(sender == popUp_styles){
+		[[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
+											 forKey:KEY_WEBKIT_STYLE
+											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		
+	}else if(sender == popUp_variants){
+		NSString *activeStyle = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
+																		 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		
+		[[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
+											 forKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]
+											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	}
 }
 
+/*!
+ * @brief Save changes to the font field
+ */
+- (void)fontPreviewField:(JVFontPreviewField *)field didChangeToFont:(NSFont *)font
+{
+	[self _setDisplayFontFace:[font fontName] size:[NSNumber numberWithInt:[font pointSize]]];
+}
 
-//Configure the chat preferences preview
+/*!
+ * @brief Reset display font to the default value
+ */
+- (IBAction)resetDisplayFontToDefault:(id)sender
+{
+	[self _setDisplayFontFace:nil size:0];
+}
+
+/*!
+ * @brief Set the display font of the active style.
+ *
+ * @param face New font face, nil to remove custom font
+ * @param size New font size, nil to remove custom size
+ */
+- (void)_setDisplayFontFace:(NSString *)face size:(NSNumber *)size
+{
+	NSString *activeStyle = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
+																	 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	
+	[[adium preferenceController] setPreference:face
+										 forKey:[plugin styleSpecificKey:@"FontFamily" forStyle:activeStyle]
+										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	[[adium preferenceController] setPreference:size
+										 forKey:[plugin styleSpecificKey:@"FontSize" forStyle:activeStyle]
+										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	
+}
+
+/*!
+ * @brief Save changes to the background image
+ */
+- (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)picker didChangeToImage:(NSImage *)image
+{
+	[self _setBackgroundImage:image];
+}
+
+/*!
+ * @brief Remove the background image
+ */
+- (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)picker
+{
+	[self _setBackgroundImage:nil];
+}
+
+/*!
+ * @brief Set the background image of the active style.
+ *
+ * @param image New background image, nil to remove background image
+ */
+- (void)_setBackgroundImage:(NSImage *)image
+{
+	NSString	*style = [[popUp_styles selectedItem] title];
+
+	//Save the new image.  We store the images in a separate preference group since they may get big.
+#warning A nice thought, but the preference controller caches the plist in memory regardless... -ai
+	[[adium preferenceController] setPreference:[image PNGRepresentation]
+										 forKey:[plugin styleSpecificKey:@"Background" forStyle:style]
+										  group:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES];
+}
+
+/*!
+ * @brief Builds and returns a menu of available styles
+ */
+- (NSMenu *)_stylesMenu
+{
+	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""];
+	NSEnumerator	*enumerator = [[[[plugin availableMessageStyles] allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] objectEnumerator];
+	NSString		*style;
+	
+	while(style = [enumerator nextObject]){
+		[menu addItemWithTitle:style
+						target:nil
+						action:nil
+				 keyEquivalent:@""
+ 			 representedObject:style];
+	}
+	
+	return([menu autorelease]);
+}
+
+/*! 
+ * @brief Build & return a menu of variants for the passed style
+ */
+- (NSMenu *)_variantsMenu
+{
+	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""];
+	NSEnumerator	*enumerator = [[[previewController messageStyle] availableVariants] objectEnumerator];
+	NSString		*variant;
+	
+	//Add a menu item for each variant
+	while(variant = [enumerator nextObject]){
+		[menu addItemWithTitle:variant
+						target:nil
+						action:nil
+				 keyEquivalent:@""
+			 representedObject:variant];
+	}
+
+	return([menu autorelease]);
+}
+
+/*!
+ * @brief Build & return a menu of choices for background display
+ */
+- (NSMenu *)_backgroundImageTypeMenu
+{
+	NSMenu	*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];	
+
+	[self _addBackgroundImageTypeChoice:Fill toMenu:menu withTitle:@"Fill"];
+	[self _addBackgroundImageTypeChoice:Tile toMenu:menu withTitle:@"Tile"];
+	[self _addBackgroundImageTypeChoice:NoStretch toMenu:menu withTitle:@"Do Not Stretch"];
+	[self _addBackgroundImageTypeChoice:Center toMenu:menu withTitle:@"Center"];
+	
+	return([menu autorelease]);
+}
+- (void)_addBackgroundImageTypeChoice:(int)tag toMenu:(NSMenu *)menu withTitle:(NSString *)title
+{
+	NSMenuItem	*menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(title, nil)
+																				 action:nil
+																		  keyEquivalent:@""];
+	[menuItem setTag:NoStretch];
+	[menu addItem:menuItem];
+	[menuItem release];
+}
+
+
+//Chat Preview ---------------------------------------------------------------------------------------------------------
+#pragma mark Chat Preview
+/*!
+ * @brief Configure our chat preview
+ */
 - (void)_configureChatPreview
 {
 	NSDictionary	*previewDict;
 	NSString		*previewFilePath;
 	NSString		*previewPath;
+	AIChat			*previewChat;
 	
 	//Create our fake chat and message controller for the live preview
 	previewChat = [[AIChat chatForAccount:nil] retain];
@@ -152,21 +375,18 @@
 																		  withPlugin:plugin] retain];
 	
 	//Add fake users and content to our chat
-	//	previewPath = [[stylePath stringByAppendingPathComponent:PREVIEW_FILE] stringByAppendingPathExtension:@"plist"];
-	//	if([[NSFileManager defaultManager] fileExistsAtPath:previewPath]){
-	//		previewDict = [NSDictionary dictionaryWithContentsOfFile:previewFilePath];
-	//		previewPath = [previewFilePath retain];
-	//	}else{
-	previewFilePath = [[NSBundle bundleForClass:[self class]] pathForResource:PREVIEW_FILE ofType:@"plist"];
+	previewFilePath = [[NSBundle bundleForClass:[self class]] pathForResource:WEBKIT_PREVIEW_CONVERSATION_FILE ofType:@"plist"];
 	previewDict = [[[NSDictionary alloc] initWithContentsOfFile:previewFilePath] autorelease];
 	previewPath = [previewFilePath stringByDeletingLastPathComponent];
-	//	}
+	[self _fillContentOfChat:previewChat withDictionary:previewDict fromPath:previewPath];
 	
 	//Place the preview chat in our view
 	preview = [[previewController messageView] retain];
+	[preview setFrame:[view_previewLocation frame]];
+	[[view_previewLocation superview] replaceSubview:view_previewLocation with:preview];
 	
 	//Disable drag and drop onto the preview chat - Jeff doesn't need your porn :)
-	if ([preview respondsToSelector:@selector(setAllowsDragAndDrop:)]){
+	if([preview respondsToSelector:@selector(setAllowsDragAndDrop:)]){
 		[(ESWebView *)preview setAllowsDragAndDrop:NO];
 	}
 	
@@ -174,513 +394,15 @@
 	if([preview respondsToSelector:@selector(setShouldForwardEvents:)]){
 		[(ESWebView *)preview setShouldForwardEvents:NO];		
 	}
-		
-	[preview setFrame:[view_previewLocation frame]];
-	[[view_previewLocation superview] replaceSubview:view_previewLocation with:preview];
-	
-	[self _fillContentOfChat:previewChat withDictionary:previewDict fromPath:previewPath];
 }
 
-//Close the preference view
-- (void)viewWillClose
-{
-	viewIsOpen = NO;
-	
-	[[adium preferenceController] unregisterPreferenceObserver:self];
-	
-	[previewListObjectsDict release]; previewListObjectsDict = nil;
-	[previousContent release]; previousContent = nil;
-	[newContent release]; newContent = nil;
-	[newContentTimer invalidate]; [newContentTimer release]; newContentTimer =nil;
-}
-
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
-{
-	//XXX - Redundant?
-//	if(!firstTime){
-//		[self updatePreview];
-//	}
-}
-
-#pragma mark Changing preferences
-//Save changed preference
-- (IBAction)changePreference:(id)sender
-{
-	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
-
-    if(sender == checkBox_showUserIcons){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_WEBKIT_SHOW_USER_ICONS
-                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		
-    }else if(sender == popUp_timeStamps){
-        [[adium preferenceController] setPreference:[[popUp_timeStamps selectedItem] representedObject]
-                                             forKey:KEY_WEBKIT_TIME_STAMP_FORMAT
-                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		
-	}else if (sender == popUp_minimumFontSize){
-		[[preview preferences] setMinimumFontSize:[[popUp_minimumFontSize selectedItem] tag]];
-		[self updatePreview];	
-		
-	}else if (sender == colorWell_customBackgroundColor){
-		NSString	*key = [plugin backgroundColorKeyForStyle:[[popUp_styles selectedItem] title]];
-
-		[[adium preferenceController] setPreference:[[colorWell_customBackgroundColor color] stringRepresentation]
-                                             forKey:key
-                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		
-	}else if (sender == button_restoreDefaultBackgroundColor){
-		NSString	*key = [plugin backgroundColorKeyForStyle:[[popUp_styles selectedItem] title]];
-		
-		[[adium preferenceController] setPreference:nil
-                                             forKey:key
-                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	}else if (sender == popUp_backgroundImageType){
-		NSString	*key = [NSString stringWithFormat:@"%@:Type", [plugin backgroundKeyForStyle:[[popUp_styles selectedItem] title]]];
-		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[popUp_backgroundImageType selectedItem] tag]]
-										 forKey:key
-										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
-		[self updateBackgroundImageCache];
-		[self updatePreview];
-	}
-
-	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
-}
-
-
-- (void)fontPreviewField:(JVFontPreviewField *)field didChangeToFont:(NSFont *)font
-{
-	[preview setFontFamily:[font fontName]];
-	[[preview preferences] setDefaultFontSize:[font pointSize]];
-
-	[self updatePreview];
-}
-
-- (IBAction)changeStyle:(id)sender
-{
-	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
-	
-	NSDictionary *newStyleDict = [sender representedObject];
-	
-	NSString	*newStyleName = [newStyleDict objectForKey:@"styleName"];
-	[[adium preferenceController] setPreference:newStyleName
-										 forKey:KEY_WEBKIT_STYLE
-										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	
-	
-	[popUp_variants setMenu:[self _variantsMenuForStyle:newStyleName]];
-
-	
-	//If we were passed a variant as well, we want to change the variant preference for this style.
-	//A variant of @"" indicates the user selected the normal view.
-	//A variant of nil means that the user selected the menu item (rather than a submenu item); we should therefore
-	//leave the variant preference alone - this will let the previously selected variant be selected automatically
-	NSString	*variant = [newStyleDict objectForKey:@"variant"];	
-	NSString	*variantKey = [plugin variantKeyForStyle:newStyleName];
-	[[adium preferenceController] setPreference:([variant length] ? variant : nil)
-										 forKey:variantKey
-										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	
-	//Clicking a variant won't automatically change the popup's selected item, so manually ensure it is selected.
-	[popUp_styles selectItemWithTitle:newStyleName];
-	[popUp_variants selectItemWithTitle:variant];
-	[self updateBackgroundImageCache];
-	[self updatePreview];
-
-
-
-
-	
-	
-	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
-}
-
-- (IBAction)changeVariant:(id)sender
-{
-	NSDictionary *newStyleDict = [sender representedObject];
-	NSString	*newStyleName = [newStyleDict objectForKey:@"styleName"];
-
-	//If we were passed a variant as well, we want to change the variant preference for this style.
-	//A variant of @"" indicates the user selected the normal view.
-	//A variant of nil means that the user selected the menu item (rather than a submenu item); we should therefore
-	//leave the variant preference alone - this will let the previously selected variant be selected automatically
-	NSString	*variant = [newStyleDict objectForKey:@"variant"];	
-	NSString	*variantKey = [plugin variantKeyForStyle:newStyleName];
-	[[adium preferenceController] setPreference:([variant length] ? variant : nil)
-										 forKey:variantKey
-										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	
-}
-
-- (IBAction)changeBackground:(id)sender
-{
-	NSString	*key = [plugin backgroundKeyForStyle:[[popUp_styles selectedItem] title]];
-	NSString	*newPreference = nil;
-	
-	if ([sender tag] == CustomBackground){
-		//Prompt the user for the file
-		NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-		[openPanel setTitle:@"Select Background Image"];
-		
-		if ([openPanel runModalForTypes:[NSImage imageFileTypes]] == NSOKButton) {
-			newPreference = [openPanel filename];
-		}else{
-			//If the user canceled, we don't want to continue to show the "Custom..." item as the selection in the popUp menu
-			//if there is no custom background selected
-			if ( !([[adium preferenceController] preferenceForKey:key
-															group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]) ){
-				[popUp_customBackground selectItemAtIndex:[popUp_customBackground indexOfItemWithTag:DefaultBackground]];
-			}
-		}
-		
-	}else if ([sender tag] == NoBackground){
-		//Use @"" to override style-specified backgrounds
-		newPreference = @"";
-	}
-
-	[[adium preferenceController] setPreference:newPreference
-										 forKey:key
-										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];									
-	[self updateBackgroundImageCache];
-	[self updatePreview];
-}
-
-
-#pragma mark Preview WebView
-- (void)updatePreview
-{
-	NSString		*styleName;
-	NSString		*variant;
-	NSBundle		*style;
-	
-	//Load the style as per preferences
-	{
-		styleName = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
-															 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		style = [plugin messageStyleBundleWithName:styleName];
-
-		//If the preferred style is unavailable, load the default
-		if (!style){
-			styleName = AILocalizedString(@"Mockie","Default message style name. Make sure this matches the localized style bundle's name!");
-			style = [plugin messageStyleBundleWithName:styleName];
-		}
-	}
-
-	//Load the variant
-	variant = [[adium preferenceController] preferenceForKey:[plugin variantKeyForStyle:styleName]
-													   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	//Set up the preferences for the style
-	[self _updateViewForStyle:style variant:variant];
-	
-	[(AIWebKitMessageViewController *)previewController forceReload];
-	
-}
-	
-- (void)_updateViewForStyle:(NSBundle *)style variant:(NSString *)variant
-{
-	NSMenu		*submenu;
-	
-	//Check the proper variant, unchecking any old selection
-	NSEnumerator	*enumerator = [[[popUp_styles menu] itemArray] objectEnumerator];
-	NSMenuItem		*item;
-	while(item = [enumerator nextObject]){
-		if (submenu = [item submenu]){
-			[submenu setAllMenuItemsToState:NSOffState];
-		}
-	}
-	submenu = [[popUp_styles selectedItem] submenu];
-	if (submenu){
-		NSString	*variant = [[adium preferenceController] preferenceForKey:[plugin variantKeyForStyle:[style name]]
-																		group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		if ([variant length]){
-			[[submenu itemWithTitle:variant] setState:NSOnState];
-		}else{
-			[[submenu itemAtIndex:0] setState:NSOnState];
-		}
-	}
-
-	//Set the Show User Icons checkbox (enable/disable as needed, default to checked)
-	BOOL showsUserIcons = [plugin boolForKey:@"ShowsUserIcons" style:style variant:variant boolDefault:YES];
-
-	[checkBox_showUserIcons setState:(showsUserIcons ? 
-									  [[[adium preferenceController] preferenceForKey:KEY_WEBKIT_SHOW_USER_ICONS
-																				group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue] : NSOffState)];
-	[checkBox_showUserIcons setEnabled:showsUserIcons];
-	
-	//Setup the Custom Background dropdown (enable/disable as needed, default to "Default")
-	BOOL disableCustomBackground = [plugin boolForKey:@"DisableCustomBackground" style:style variant:variant boolDefault:NO];
-	
-	NSString	*customBackground;
-	int			tag;
-	NSString	*tempKey = [NSString stringWithFormat:@"%@:Type", [plugin backgroundKeyForStyle:[[popUp_styles selectedItem] title]]];
-	customBackground = (disableCustomBackground 
-						? nil
-						: [[adium preferenceController] preferenceForKey:[plugin backgroundKeyForStyle:[style name]]
-																   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]);
-	
-	if (customBackground) {
-		tag = (([customBackground length] > 1) ? CustomBackground : NoBackground);
-	} else {
-		tag = DefaultBackground;
-	}
-	[popUp_customBackground selectItemAtIndex:[popUp_customBackground indexOfItemWithTag:tag]];
-	[popUp_customBackground setEnabled:!disableCustomBackground];
-	[popUp_backgroundImageType selectItemAtIndex:[[popUp_backgroundImageType menu] indexOfItemWithTag:[[[adium preferenceController] preferenceForKey:tempKey
-																				group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] intValue]]];
-	
-	//Setup the Background Color colorwell (enabled/disable as needed, default to the color specified by the styl/variant or to white
-	NSColor *backgroundColor;
-	backgroundColor = [[[adium preferenceController] preferenceForKey:[plugin backgroundColorKeyForStyle:[style name]]
-																group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] representedColor];
-	if (!backgroundColor){
-		backgroundColor = [NSColor colorWithHTMLString:[style objectForInfoDictionaryKey:[@"DefaultBackgroundColor:" stringByAppendingString:variant]]];
-		if (!backgroundColor){
-			backgroundColor = [NSColor colorWithHTMLString:[style objectForInfoDictionaryKey:@"DefaultBackgroundColor"]];	
-		}
-	}
-	[colorWell_customBackgroundColor setColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])] ;
-	[colorWell_customBackgroundColor setEnabled:!disableCustomBackground];
-	[button_restoreDefaultBackgroundColor setEnabled:!disableCustomBackground];
-	[popUp_backgroundImageType setEnabled:!disableCustomBackground];
-	
-	//Font menus
-	NSFont		*font = [NSFont cachedFontWithName:[preview fontFamily]
-											  size:[[preview preferences] defaultFontSize]];
-
-	[fontPreviewField_currentFont setFont:font];
-	[popUp_minimumFontSize selectItemAtIndex:[[popUp_minimumFontSize menu] indexOfItemWithTag:[[preview preferences] minimumFontSize]]];
-}
-
-- (void)updateBackgroundImageCache
-{
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	NSFileManager	*defaultManager = [NSFileManager defaultManager];
-	NSString		*cachedBackgroundKey = [plugin cachedBackgroundKeyForStyle:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
-
-	NSString		*oldCachedBackgroundPath, *currentBackgroundPath;
-	NSString		*newCachedBackgroundPath = nil;
-	NSString		*newCachedFilename;
-	NSNumber		*oldUniqueID, *uniqueID;
-	
-	//Get the path to where we were caching for this style before
-	oldCachedBackgroundPath = [prefDict objectForKey:cachedBackgroundKey];
-	
-	//Delete the old file
-	if(oldCachedBackgroundPath) [defaultManager removeFileAtPath:oldCachedBackgroundPath handler:nil];
-	
-	//Get the path to the background the user selected
-	currentBackgroundPath = [prefDict objectForKey:[plugin backgroundKeyForStyle:[prefDict objectForKey:KEY_WEBKIT_STYLE]]];
-	
-	//Increment our uniqueID
-	if(currentBackgroundPath && [currentBackgroundPath  length]){
-		oldUniqueID = [prefDict objectForKey:@"BackgroundUniqueID"];
-		uniqueID = [NSNumber numberWithInt:([oldUniqueID intValue]+1)];
-		[[adium preferenceController] setPreference:uniqueID
-											 forKey:@"BackgroundUniqueID"
-											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		
-		//Now copy the selected file to our cache after adding the uniqueID to its file name
-		newCachedFilename = [[currentBackgroundPath lastPathComponent] stringByAppendingString:[uniqueID stringValue]];
-		newCachedBackgroundPath = [[adium cachesPath] stringByAppendingPathComponent:newCachedFilename];
-		[defaultManager copyPath:currentBackgroundPath
-						  toPath:newCachedBackgroundPath
-						 handler:nil];
-	}
-
-	[[adium preferenceController] setPreference:newCachedBackgroundPath
-										 forKey:cachedBackgroundKey
-										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-}
-
-#pragma mark Menus
--(NSMenu *)_fontSizeMenu
-{
-	NSMenu			*menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
-	NSMenuItem		*menuItem;
-	
-	int sizes[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,18,20,22,24,36,48,64,72,96};
-	int loopCounter;
-	
-	for (loopCounter = 0; loopCounter < 23; loopCounter++){
-		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[[NSNumber numberWithInt:sizes[loopCounter]] stringValue]
-																		 target:nil
-																		 action:nil
-																  keyEquivalent:@""] autorelease];
-		[menuItem setTag:sizes[loopCounter]];
-		[menu addItem:menuItem];
-	}
-	
-	return menu;
-}
-
-//Build the time stamp selection menu
-- (void)_buildTimeStampMenu
-{
-    //Empty the menu
-    [popUp_timeStamps removeAllItems];
-    
-    //Add the available time stamp formats
-    NSString    *noSecondsNoAMPM = [NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO];
-    NSString    *noSecondsAMPM = [NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES];
-    BOOL        twentyFourHourTimeIsOff = (![noSecondsNoAMPM isEqualToString:noSecondsAMPM]);
-	
-    [self _buildTimeStampMenu_AddFormat:noSecondsNoAMPM];
-    if (twentyFourHourTimeIsOff)
-        [self _buildTimeStampMenu_AddFormat:noSecondsAMPM];
-    [self _buildTimeStampMenu_AddFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:NO]];
-    if (twentyFourHourTimeIsOff)
-        [self _buildTimeStampMenu_AddFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:YES]];
-}
-
-//Add time stamp format to the menu
-- (void)_buildTimeStampMenu_AddFormat:(NSString *)format
-{
-    //Create the menu item
-    NSDateFormatter *stampFormatter = [[[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO] autorelease];
-    NSString        *dateString = [stampFormatter stringForObjectValue:[NSDate date]];
-    NSMenuItem      *menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:dateString 
-																					  target:nil
-																					  action:nil
-																			   keyEquivalent:@""] autorelease];
-    
-    [menuItem setRepresentedObject:format];
-    [[popUp_timeStamps menu] addItem:menuItem];
-}
-
-- (NSMenu *)_customBackgroundMenu
-{
-	NSMenu			*menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
-	NSMenuItem		*menuItem;
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:NO_BACKGROUND_ITEM_TITLE
-																	 target:self
-																	 action:@selector(changeBackground:)
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:NoBackground];
-	[menu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DEFAULT_BACKGROUND_ITEM_TITLE
-																	 target:self
-																	 action:@selector(changeBackground:)
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:DefaultBackground];
-	[menu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CUSTOM_BACKGROUND_ITEM_TITLE
-																	 target:self
-																	 action:@selector(changeBackground:)
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:CustomBackground];
-	[menu addItem:menuItem];
-	
-	return menu;
-}
-
-- (NSMenu *)_stylesMenu
-{
-	NSEnumerator	*enumerator = [[[[plugin availableStyleDictionary] allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] objectEnumerator];
-	NSString		*styleName;
-	
-	NSMenu			*menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
-	
-	while (styleName = [enumerator nextObject]){
-		//Create and add the menu item for this style
-		NSMenuItem		*menuItem;
-		
-		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:styleName target:self action:@selector(changeStyle:) keyEquivalent:@""] autorelease];
-		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:styleName, @"styleName", nil]];
-		[menu addItem:menuItem];
-	}
-	
-	return menu;
-}
-
-- (NSMenu *)_variantsMenuForStyle:(NSString *)styleName
-{
-	NSBundle		*style = [plugin messageStyleBundleWithName:styleName];			
-	NSArray			*variantsArray = [style pathsForResourcesOfType:@"css" inDirectory:@"Variants"];
-	NSMenu			*variantsMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
-	NSMenuItem		*menuItem;
-
-	//Add the No Variant menu item
-	//XXX - Why is this a special case?
-	NSString	*noVariantName = [style objectForInfoDictionaryKey:@"DisplayNameForNoVariant"];
-	if(!noVariantName) noVariantName = AILocalizedString(@"Normal","Normal style variant menu item");
-
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:noVariantName 
-																	 target:self
-																	 action:@selector(changeStyle:)
-															  keyEquivalent:@""] autorelease];
-	[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:styleName, @"styleName", @"", @"variant",nil]];
-	[variantsMenu addItem:menuItem];
-
-	//Add a menu item for each variant
-	if([variantsArray count]) {
-		NSEnumerator	*variantsEnumerator;
-		NSString		*variant;
-		
-		variantsEnumerator = [variantsArray objectEnumerator];
-		while(variant = [variantsEnumerator nextObject]){
-			
-			variant = [[variant lastPathComponent] stringByDeletingPathExtension];
-			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:variant
-																				target:self
-																				action:@selector(changeVariant:) 
-																		 keyEquivalent:@""] autorelease];
-			[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:styleName, @"styleName", variant, @"variant", nil]];
-			[variantsMenu addItem:menuItem];
-		}
-
-	}
-	
-	return(variantsMenu);
-}
-
-- (NSMenu *)backgroundImageTypeMenu
-{
-	NSMenu			*backgroundImageTypeMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
-	NSMenuItem		*menuItem;
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Fill",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:Fill];
-	[backgroundImageTypeMenu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Tile",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:Tile];
-	[backgroundImageTypeMenu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Do Not Stretch",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:NoStretch];
-	[backgroundImageTypeMenu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Center",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:Center];
-	[backgroundImageTypeMenu addItem:menuItem];
-	
-	return backgroundImageTypeMenu;
-}
-
-
-//Fake Conversation ----------------------------------------------------------------------------------------------------
-#pragma mark Fake Conversation
-//Fill the content of the specified chat using content archived in the dictionary
+/*!
+ * @brief Fill the content of the specified chat using content archived in the dictionary
+ */
 - (void)_fillContentOfChat:(AIChat *)inChat withDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath
 {
 	NSDictionary		*listObjects;
-	
+
 	//Process and create all participants
 	listObjects = [self _addParticipants:[previewDict objectForKey:@"Participants"]
 								  toChat:inChat fromPath:previewPath];
@@ -694,7 +416,9 @@
 			   toChat:inChat withParticipants:listObjects];
 }
 
-//Add participants
+/*!
+ * @brief Add participants
+ */
 - (NSMutableDictionary *)_addParticipants:(NSDictionary *)participants toChat:(AIChat *)inChat fromPath:(NSString *)previewPath
 {
 	NSMutableDictionary	*listObjectDict = [NSMutableDictionary dictionary];
@@ -730,7 +454,9 @@
 	return(listObjectDict);
 }
 
-//Chat settings
+/*!
+ * @brief Chat settings
+ */
 - (void)_applySettings:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants
 {
 	NSString			*dateOpened, *type, *name, *UID;
@@ -757,7 +483,9 @@
 	[inChat setIsOpen:YES];
 }
 
-//Chat content
+/*
+ * @brief Chat content
+ */
 - (void)_addContent:(NSArray *)chatArray toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants
 {
 	NSEnumerator		*enumerator;
@@ -780,11 +508,11 @@
 			AIListObject		*dest;
 			NSString			*to;
 			BOOL				outgoing;
-			
-			message = [NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
+
+			message = [AIHTMLDecoder decodeHTML:[messageDict objectForKey:@"Message"]];
 			to = [messageDict objectForKey:@"To"];
 			outgoing = [[messageDict objectForKey:@"Outgoing"] boolValue];
-			
+
 			//The other person is always the one we're chatting with right now
 			dest = [participants objectForKey:to];
 			content = [AIContentMessage messageInChat:inChat
@@ -802,8 +530,7 @@
 			//Create status content object
 			NSString			*statusMessageType;
 			
-			message = [[[NSAttributedString alloc] initWithString:[messageDict objectForKey:@"Message"]
-													   attributes:[[adium contentController] defaultFormattingAttributes]] autorelease];
+			message = [AIHTMLDecoder decodeHTML:[messageDict objectForKey:@"Message"]];
 			statusMessageType = [messageDict objectForKey:@"Status Message Type"];
 			
 			//Create our content object
@@ -823,6 +550,5 @@
 		}
 	}
 }
-
 
 @end

@@ -20,24 +20,30 @@
             }; 
             SUPERCLASS = AIModularPane; 
         }, 
+        {CLASS = AIWebkitMessageViewStyle; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {changePreference = id; }; 
+            ACTIONS = {showImagePicker = id; }; 
+            CLASS = ESImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
+        }, 
+        {
+            ACTIONS = {resetDisplayFontToDefault = id; }; 
             CLASS = ESWebKitMessageViewPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_restoreDefaultBackgroundColor" = NSButton; 
+                "checkBox_showHeader" = NSButton; 
+                "checkBox_showMessageColors" = NSButton; 
+                "checkBox_showMessageFonts" = NSButton; 
                 "checkBox_showUserIcons" = NSButton; 
+                "checkBox_useCustomBackground" = NSButton; 
                 "colorWell_customBackgroundColor" = NSColorWell; 
                 "fontPreviewField_currentFont" = JVFontPreviewField; 
+                "imageView_backgroundImage" = NSImageView; 
                 "popUp_backgroundImageType" = NSPopUpButton; 
-                "popUp_customBackground" = NSPopUpButton; 
-                "popUp_minimumFontSize" = NSPopUpButton; 
                 "popUp_styles" = NSPopUpButton; 
-                "popUp_timeStamps" = NSPopUpButton; 
                 "popUp_variants" = NSPopUpButton; 
-                preview = ESWebView; 
-                previewController = id; 
-                "scrollView_previewLocation" = AIAutoScrollView; 
                 "view_previewLocation" = NSView; 
             }; 
             SUPERCLASS = AIPreferencePane; 
