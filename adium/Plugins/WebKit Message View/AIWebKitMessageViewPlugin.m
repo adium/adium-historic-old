@@ -25,8 +25,7 @@ DeclareString(AppendNextMessage);
 
 - (void)installPlugin
 {
-	
-	if([NSApp isOnPantherOrBetter]){
+	if(USE_WEBKIT_PLUGIN && [NSApp isOnPantherOrBetter]){
 		InitString(AppendMessageWithScroll,@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();");
 		InitString(AppendNextMessageWithScroll,@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();");
 		InitString(AppendMessage,@"appendMessage(\"%@\");");
