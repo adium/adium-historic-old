@@ -10,7 +10,7 @@
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 #import "AIAdium.h"
-#import "CBGaimAccount.h"
+#import "CBGaimAIMAccount.h"
 
 #define GAIM_EVENTLOOP_INTERVAL     0.02         //Interval at which to run libgaim's main event loop
 
@@ -507,7 +507,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
         NSLog(@"Failed to initialize gaim core");
     }
     
-    //Tell libgaim to load it's plugins
+    //Tell libgaim to load its plugins
     plugin_search_paths[0] = (char *)[[[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:@"/Contents/Frameworks/Protocols/"] stringByExpandingTildeInPath] UTF8String];
     gaim_plugins_set_search_paths(sizeof(plugin_search_paths) / sizeof(*plugin_search_paths), plugin_search_paths);
     gaim_plugins_probe(NULL);
@@ -525,7 +525,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     [NSTimer scheduledTimerWithTimeInterval:GAIM_EVENTLOOP_INTERVAL target:self selector:@selector(gaimEventLoopTimer:) userInfo:nil repeats:YES];
 
     //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"GAIM"
+    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"AIM/GAIM"
                                                       description:@"LIBGAIM (Do not use)"
                                                             image:nil
                                                     caseSensitive:NO
@@ -533,6 +533,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
     //Register this service
     [[owner accountController] registerService:self];
+    
+    /* add more services here */
 }
 
 - (void)uninstallPlugin
@@ -552,9 +554,10 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     }
 }
 
+/* super gigantic hack! this should be fixed. do we have to subclass AGAIN? or do we scan inProperties */
 - (id)accountWithProperties:(NSDictionary *)inProperties owner:(id)inOwner
 {
-    CBGaimAccount *anAccount = [[[CBGaimAccount alloc] initWithProperties:inProperties service:self owner:inOwner] autorelease];
+    CBGaimAIMAccount *anAccount = [[[CBGaimAIMAccount alloc] initWithProperties:inProperties service:self owner:inOwner] autorelease];
     
     [_accountDict setObject:anAccount forKey:[anAccount UIDAndServiceID]];
     

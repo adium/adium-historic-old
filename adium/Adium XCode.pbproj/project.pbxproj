@@ -17647,6 +17647,11 @@
 			files = (
 				4B7F278B05440C8D00CDFC90,
 				4B7F278D05440C8D00CDFC90,
+				9EE05871055483DE00505F31,
+				9EE058D805548F9400505F31,
+				9EE058D905548F9400505F31,
+				9EE058DA05548F9400505F31,
+				9EE058DB05548F9400505F31,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17663,6 +17668,7 @@
 			files = (
 				4B7F278C05440C8D00CDFC90,
 				4B7F278E05440C8D00CDFC90,
+				9EE05872055483DE00505F31,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17759,6 +17765,8 @@
 				4B7F278A05440C8D00CDFC90,
 				4B7F278705440C8D00CDFC90,
 				4B7F278805440C8D00CDFC90,
+				9EE0586F055483DE00505F31,
+				9EE05870055483DE00505F31,
 				4B7F279005440CA100CDFC90,
 			);
 			isa = PBXGroup;
@@ -21746,6 +21754,7 @@
 		};
 		9E2BD89F054BE18B00558E56 = {
 			children = (
+				9EE058D105548F9300505F31,
 				9E2BD8A0054BE18B00558E56,
 				9E2BD8A1054BE18B00558E56,
 				9E2BD8A2054BE18B00558E56,
@@ -22358,6 +22367,113 @@
 			name = Interfaces;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		9EE0586F055483DE00505F31 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = CBGaimAIMAccount.h;
+			path = "Plugins/Gaim Service/CBGaimAIMAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EE05870055483DE00505F31 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = CBGaimAIMAccount.m;
+			path = "Plugins/Gaim Service/CBGaimAIMAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EE05871055483DE00505F31 = {
+			fileRef = 9EE0586F055483DE00505F31;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EE05872055483DE00505F31 = {
+			fileRef = 9EE05870055483DE00505F31;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EE058D105548F9300505F31 = {
+			children = (
+				9EE058D205548F9300505F31,
+			);
+			isa = PBXGroup;
+			path = Protocols;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EE058D205548F9300505F31 = {
+			children = (
+				9EE058D305548F9300505F31,
+				9EE058D405548F9400505F31,
+				9EE058D505548F9400505F31,
+				9EE058D605548F9400505F31,
+			);
+			isa = PBXGroup;
+			path = oscar;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EE058D305548F9300505F31 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = aim.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EE058D405548F9400505F31 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = aim_cbtypes.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EE058D505548F9400505F31 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = aim_internal.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EE058D605548F9400505F31 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = faimconfig.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EE058D805548F9400505F31 = {
+			fileRef = 9EE058D305548F9300505F31;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EE058D905548F9400505F31 = {
+			fileRef = 9EE058D405548F9400505F31;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EE058DA05548F9400505F31 = {
+			fileRef = 9EE058D505548F9400505F31;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EE058DB05548F9400505F31 = {
+			fileRef = 9EE058D605548F9400505F31;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		9EF608C404CDFF9000415B25 = {
 			expectedFileType = sourcecode.c.h;
