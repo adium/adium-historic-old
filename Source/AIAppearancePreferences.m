@@ -130,6 +130,20 @@ typedef enum {
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
 }
 
+/*!
+ * @brief View will close
+ */
+- (void)viewWillClose
+{
+	//This will set up the emoticon pack menu
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+}
+
+/*!
+ * @brief Preferences changed
+ *
+ * Update the emoticons pop up when emoticons preferences change
+ */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
 					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
