@@ -181,9 +181,10 @@
 {
     AIHandle	*handle;
 
-    if(inTemporary) inGroup = @"__Strangers";
+        if(inTemporary) inGroup = @"__Strangers";
+    if(inTemporary) inGroup = @"Strangers";
+    
     if(!inGroup) inGroup = @"Unknown";
-
     //Check to see if the handle already exists, and remove the duplicate if it does
     if(handle = [handleDict objectForKey:inUID]){
         [self removeHandleWithUID:inUID]; //Remove the handle
@@ -191,7 +192,7 @@
 
     //Create the handle
     handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier] UID:inUID serverGroup:inGroup temporary:inTemporary forAccount:self];
-
+    
     //Add the handle
     [self AIM_AddHandle:[handle UID] toGroup:[handle serverGroup]]; //Add it server-side
     [handleDict setObject:handle forKey:[handle UID]]; //Add it locally
@@ -422,6 +423,7 @@
 
         //Correctly enable/disable the chat
         handleIsOnline = [[[handle statusDictionary] objectForKey:@"Online"] boolValue];
+        NSLog(@"TOC : handleIsOnline %i",handleIsOnline);
         [[chat statusDictionary] setObject:[NSNumber numberWithBool:handleIsOnline] forKey:@"Enabled"];
 
         //
@@ -873,7 +875,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.84 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.85 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1126,17 +1128,19 @@
         handle = [self addHandleWithUID:[name compactedString] serverGroup:nil temporary:YES];
     }
 
-    //Clear the 'typing' flag
-    [self setTypingFlagOfHandle:handle to:NO];
-
-    //Open a chat for this handle
-    chat = [self _openChatWithHandle:handle];
-    
-    //Ensure this handle is 'online'.  If we receive a message from someone offline, it's best to assume that their offline status is incorrect, and flag them as online so the user can respond to their messages.
+     //Ensure this handle is 'online'.  If we receive a message from someone offline, it's best to assume that their offline status is incorrect, and flag them as online so the user can respond to their messages.
     if(![[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
         [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
         [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:NO silent:YES];
     }
+
+    //Clear the 'typing' flag
+    [self setTypingFlagOfHandle:handle to:NO];
+    
+    //Open a chat for this handle
+    chat = [self _openChatWithHandle:handle];
+    
+
     
     //Add a content object for the message
     messageObject = [AIContentMessage messageInChat:chat
