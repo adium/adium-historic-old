@@ -43,8 +43,10 @@ pascal OSErr videoCaptureDataCallback(SGChannel c, Ptr p, long len, long *offset
 	captureSize = inSize;
 	captureInterval = inInterval;
 	
-	dfssd - (void)videoCapture:(AIVideoCapture *)videoCapture frameReady:(NSImage *)frame;
-
+	//Delegate must implement frameReady
+	if(delegate){
+		NSParameterAssert([delegate respondsToSelector:@selector(videoCapture:frameReady:)]);
+	}
 	
 	//Init our video capture (Reserve the device and prepare for capture)
 	[self _initVideoCapture];
