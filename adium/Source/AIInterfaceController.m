@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.69 2004/06/07 22:49:14 evands Exp $
+// $Id: AIInterfaceController.m,v 1.70 2004/06/22 02:32:03 evands Exp $
 
 #import "AIInterfaceController.h"
 
@@ -350,7 +350,7 @@
         toolTipsFont, NSFontAttributeName, nil];
     
     //"<DisplayName>" (or) "<DisplayName> (<UID>)"
-    if([displayName isEqualToString:formattedUID]){
+    if([[displayName compactedString] isEqualToString:[formattedUID compactedString]]){
         [titleString appendString:[NSString stringWithFormat:@"%@", displayName] withAttributes:titleDict];
     }else{
         [titleString appendString:[NSString stringWithFormat:@"%@ (%@)", displayName, formattedUID] withAttributes:titleDict];
