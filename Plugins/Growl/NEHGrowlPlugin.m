@@ -225,11 +225,10 @@
 	NSArray *allNotes = [[adium contactAlertsController] allEventIDs];
 	
 	NSDictionary * growlReg = [NSDictionary dictionaryWithObjectsAndKeys:
-		@"Adium", GROWL_APP_NAME,
 		allNotes, GROWL_NOTIFICATIONS_ALL,
 		allNotes, GROWL_NOTIFICATIONS_DEFAULT,
 		nil];
-	
+
 	return(growlReg);
 }
 
