@@ -4076,6 +4076,7 @@
 				346C9D46060046AB000F5A8A,
 				4B6EA1BE058FA6900070A9A1,
 				4B215DB0059896B000305B3C,
+				4B90B54E064220B400D23731,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -5082,6 +5083,7 @@
 				B774EFC9058C4948009C7C67,
 				3419FDE40531585600C68BA3,
 				520FE47505BE2984002D063D,
+				4B90B54C064220AB00D23731,
 				346C9DBB06004765000F5A8A,
 			);
 			isa = PBXCopyFilesBuildPhase;
@@ -11131,6 +11133,24 @@
 			path = "Frameworks/AIUtilities Framework/AIPopUpButtonAdditions.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B90B54C064220AB00D23731 = {
+			fileRef = 3499F45106309AC80035B468;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B90B54D064220B400D23731 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 346C9C4806004517000F5A8A;
+			remoteInfo = "Standard Message View";
+		};
+		4B90B54E064220B400D23731 = {
+			isa = PBXTargetDependency;
+			target = 346C9C4806004517000F5A8A;
+			targetProxy = 4B90B54D064220B400D23731;
 		};
 		4B910DBF053588A900846781 = {
 			fileEncoding = 30;
