@@ -51,7 +51,8 @@ typedef enum
 	MSN_ERROR_AUTH,
 	MSN_ERROR_BAD_BLIST,
 	MSN_ERROR_SIGN_OTHER,
-	MSN_ERROR_SERV_DOWN
+	MSN_ERROR_SERV_DOWN,
+	MSN_ERROR_SERV_UNAVAILABLE
 
 } MsnErrorType;
 
@@ -154,21 +155,41 @@ gboolean msn_session_connect(MsnSession *session,
  */
 void msn_session_disconnect(MsnSession *session);
 
+ /**
+ * Finds a switchboard with the given username.
+ *
+ * @param session The MSN session.
+ * @param username The username to search for.
+ * @param flag The flag of the switchboard.
+ *
+ * @return The switchboard, if found.
+ */
+MsnSwitchBoard *msn_session_find_swboard(MsnSession *session,
+										 const char *username, MsnSBFlag flag);
+
 /**
  * Finds a switchboard with the given chat ID.
  *
  * @param session The MSN session.
  * @param chat_id The chat ID to search for.
+ * @param flag The flag of the switchboard.
  *
  * @return The switchboard, if found.
  */
-MsnSwitchBoard *msn_session_find_switch_with_id(const MsnSession *session,
-												int chat_id);
+MsnSwitchBoard *msn_session_find_swboard_with_id(const MsnSession *session,
+												 int chat_id, MsnSBFlag flag);
 
-MsnSwitchBoard *msn_session_find_swboard(MsnSession *session,
-										 const char *username);
+/**
+ * Returns a switchboard to communicate with certain username.
+ *
+ * @param session The MSN session.
+ * @param username The username to search for.
+ * @param flag The flag of the switchboard.
+ *
+ * @return The switchboard.
+ */
 MsnSwitchBoard *msn_session_get_swboard(MsnSession *session,
-										const char *username);
+										const char *username, MsnSBFlag flag);
 
 /**
  * Sets an error for the MSN session.
