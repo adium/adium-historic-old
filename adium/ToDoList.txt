@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.89 2004/05/02 23:43:34 evands Exp $
+$Id: ToDoList.txt,v 1.90 2004/05/04 02:09:53 hanji Exp $
 
 
 Legend
@@ -24,6 +24,7 @@ Bugs
 * Our 'new message' toolbar button is gooooone gone gone gone gone
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
+* Connection failures due to a disconnected network (at least with Airport) cause the password to be cleared and re-prompted for.
 
 Applescripts:
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
@@ -73,7 +74,6 @@ Contacts:
 	+ Allow specifying an image for a contact in the inspector (Independent of address book)
 	+ Add area for typing contact notes to inspector, display notes in tooltip [Brian] 
                 // notes in, tooltips spacing funky [tooltips off] Evan: tooltip indentation sucks right now.  I'll fix it next week.
-	+ Add Contact should have more intelligent defaults, and generally be less of a pain [Nelson, but if anyone has any nice ideas for ways this should work, do tell]
 
 Alerts:
 	+ Allow user to have more control over what is spoken by the announcer plugin
@@ -364,4 +364,4 @@ Features & Changes:
 = Contact list transparency is incorrect (the background is black/opaque) when the window is first opened.
 = Apple scripts will prompt for the location of itunes multiple times on launch if it's not installed.
 = Contact list flippy triangles are white behind them in 10.2
-
+= Add Contact should have more intelligent defaults, and generally be less of a pain
