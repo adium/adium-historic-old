@@ -9,13 +9,18 @@
 #import <Cocoa/Cocoa.h>
 
 @interface ESFileTransferPreferences : AIPreferencePane {
-	IBOutlet	NSPopUpButton	*popUp_downloadLocation;
-	IBOutlet	NSButton		*checkBox_autoAcceptFiles;
-	IBOutlet	NSButton		*checkBox_autoAcceptOnlyFromCLList;
+	IBOutlet	NSPopUpButton			*popUp_downloadLocation;
+	IBOutlet	AILocalizationButton	*checkBox_autoAcceptFiles;
+	IBOutlet	AILocalizationButton	*checkBox_autoAcceptOnlyFromCLList;
 
-	IBOutlet	NSButton		*checkBox_autoOpenFiles;
-	IBOutlet	NSButton		*checkBox_autoClearCompleted;
-	IBOutlet	NSButton		*checkBox_showProgress;
+	IBOutlet	AILocalizationButton	*checkBox_autoOpenFiles;
+	IBOutlet	AILocalizationButton	*checkBox_autoClearCompleted;
+	IBOutlet	AILocalizationButton	*checkBox_showProgress;
+	
+	IBOutlet	AILocalizationTextField	*label_whenReceivingFiles;
+	IBOutlet	AILocalizationTextField	*label_defaultReceivingFolder;
+	IBOutlet	AILocalizationTextField	*label_safeFilesDescription;
+	IBOutlet	AILocalizationTextField	*label_transferProgress;
 }
 
 @end

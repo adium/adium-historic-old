@@ -112,7 +112,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 	}
 
 	[[self window] setTitle:AILocalizedString(@"Join Chat",nil)];
-	[textField_accountLabel setStringValue:AILocalizedString(@"Account:",nil)];
+	[label_account setStringValue:AILocalizedString(@"Account:",nil)];
 
 	[button_joinChat setTitle:AILocalizedString(@"Join",nil)];
 	[button_cancel setTitle:AILocalizedString(@"Cancel",nil)];

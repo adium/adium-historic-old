@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Sep 08 2004.
-//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
 #import "ESPanelApplescriptDetailPane.h"
@@ -27,7 +26,12 @@
 //Configure the detail view
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+
 	scriptPath = nil;
+	
+	[label_applescript setStringValue:AILocalizedString(@"Applescript:",nil)];
+	[button_browse setTitle:AILocalizedString(@"Browse...",nil)];
 }
 
 //

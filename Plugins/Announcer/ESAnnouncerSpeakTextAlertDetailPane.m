@@ -19,6 +19,14 @@
     return(@"AnnouncerSpeakTextContactAlert");    
 }
 
+- (void)viewDidLoad
+{
+	[super viewDidLoad];
+	
+	[checkBox_speakEventTime setTitle:SPEAK_EVENT_TIME];
+	[textView_textToSpeakLabel setStringValue:AILocalizedString(@"Text To Speak:",nil)];
+}
+
 //Configure for the action
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
 {

@@ -46,9 +46,11 @@
                 "checkBox_syncAutomatic" = NSButton; 
                 "checkBox_useABImages" = NSButton; 
                 "checkBox_useNickName" = NSButton; 
-                "format_textField" = NSTextField; 
+                "label_contacts" = AILocalizationTextField; 
+                "label_formatNamesAs" = AILocalizationTextField; 
+                "label_images" = AILocalizationTextField; 
+                "label_names" = AILocalizationTextField; 
                 "popUp_formatMenu" = NSPopUpButton; 
-                "textField_formatNamesAs" = AILocalizationTextField; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 

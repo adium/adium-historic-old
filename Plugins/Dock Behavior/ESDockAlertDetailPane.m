@@ -26,6 +26,10 @@
 //Configure the detail view
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+
+	[label_behavior setStringValue:AILocalizedString(@"Behavior","Dock behavior contact alert label")];
+
     [popUp_actionDetails setMenu:[self behaviorListMenu]];
 }
 

@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on 12/21/04.
-//  Copyright 2004-2005 The Adium Team. All rights reserved.
+//  Copyright 2004 The Adium Team. All rights reserved.
 //
 
 #import "ESAnnouncerSpeakEventAlertDetailPane.h"
@@ -17,6 +17,14 @@
 }
 - (NSString *)nibName{
     return(@"AnnouncerSpeakEventContactAlert");    
+}
+
+- (void)viewDidLoad
+{
+	[super viewDidLoad];
+	
+	[checkBox_speakEventTime setTitle:SPEAK_EVENT_TIME];
+	[checkBox_speakContactName setTitle:AILocalizedString(@"Speak Name",nil)];
 }
 
 //Configure for the action

@@ -14,10 +14,24 @@
         {
             CLASS = AIContactAccountsPane; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"tableView_accounts" = AIAlternatingRowTableView; }; 
+            OUTLETS = {
+                "label_listedOnTheFollowingOfYourAccounts" = AILocalizationTextField; 
+                "tableView_accounts" = AIAlternatingRowTableView; 
+            }; 
             SUPERCLASS = AIContactInfoPane; 
         }, 
         {CLASS = AIContactInfoPane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
+        {
+            CLASS = AILocalizationTextField; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSTextField; 
+        }, 
         {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIModularPane; 

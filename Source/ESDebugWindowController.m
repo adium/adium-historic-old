@@ -85,6 +85,8 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 		}
 	}
 
+	[[self window] setTitle:AILocalizedString(@"Adium Debug Log","Debug window title")];
+
 	//On the next run loop, scroll to the bottom
 	[scrollView_debug performSelector:@selector(scrollToBottom)
 						   withObject:nil

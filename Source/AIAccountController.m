@@ -605,6 +605,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	AIAccount	*newAccount = [self createAccountWithService:[inAccount service]
 														 UID:inUID
 											   accountNumber:[inAccount accountNumber]];
+
 	[newAccount setPreference:[[inAccount service] filterUID:inUID removeIgnoredCharacters:NO]
 					   forKey:@"FormattedUID"
 						group:GROUP_ACCOUNT_STATUS];

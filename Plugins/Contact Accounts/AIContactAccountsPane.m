@@ -29,10 +29,14 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
+	[label_listedOnTheFollowingOfYourAccounts setStringValue:AILocalizedString(@"Listed on the following of your accounts:",nil)];
+
 	//Configure Table view
 	[tableView_accounts setDrawsAlternatingRows:YES];
 	[tableView_accounts setAcceptsFirstMouse:YES];
-	
+	[[[tableView_accounts tableColumnWithIdentifier:@"account"] headerCell] setStringValue:AILocalizedString(@"On Account",nil)];
+	[[[tableView_accounts tableColumnWithIdentifier:@"group"] headerCell] setStringValue:AILocalizedString(@"In Group",nil)];
+
 	//Observe contact list changes
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(updateGroupList)

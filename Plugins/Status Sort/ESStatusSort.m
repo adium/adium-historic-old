@@ -202,17 +202,33 @@ DeclareString(sOnline)
 	[checkBox_sortIdleTime setState:sortIdleTime];
 	[checkBox_alphabeticallyByLastName setState:resolveAlphabeticallyByLastName];
 	
-	[buttonCell_alphabetically  setState:(resolveAlphabetically ? NSOnState : NSOffState)];
-	[buttonCell_manually		setState:(resolveAlphabetically ? NSOffState : NSOnState)];
+	[buttonCell_alphabetically setState:(resolveAlphabetically ? NSOnState : NSOffState)];
+	[buttonCell_manually setState:(resolveAlphabetically ? NSOffState : NSOnState)];
 
-	[buttonCell_allUnavailable			setState:(groupUnavailable ? NSOnState : NSOffState)];
-	[buttonCell_separateUnavailable		setState:(groupUnavailable ? NSOffState : NSOnState)];
+	[buttonCell_allUnavailable setState:(groupUnavailable ? NSOnState : NSOffState)];
+	[buttonCell_separateUnavailable	setState:(groupUnavailable ? NSOffState : NSOnState)];
 	
 	[self configureControlDimming];
 	
 	[tableView_sortOrder setDataSource:self];
 	[tableView_sortOrder setDelegate:self];
     [tableView_sortOrder registerForDraggedTypes:[NSArray arrayWithObject:STATUS_DRAG_TYPE]];
+
+	[checkBox_groupAvailable setTitle:AILocalizedString(@"Group available contacts","Status sort configuration")];
+	[buttonCell_allUnavailable setTitle:AILocalizedString(@"Group all unavailable contacts together","Status sort configuration")];
+	[buttonCell_separateUnavailable setTitle:AILocalizedString(@"Group unavailable contact separately","Status sort configuration")];
+	[checkBox_groupAway setTitle:AILocalizedString(@"Group all away contacts","Status sort configuration")];
+	[checkBox_groupIdle setTitle:AILocalizedString(@"Group all idle contacts","Status sort configuration")];
+	[checkBox_groupIdleAndAway setTitle:AILocalizedString(@"Group all idle+away contacts","Status sort configuration")];
+	
+	[checkBox_sortIdleTime setTitle:AILocalizedString(@"Sort idle contacts by ascending idle time","Status sort configuration")];
+
+	[label_sortWithinEachStatusGrouping setStringValue:AILocalizedString(@"Sort within each status grouping:","Status sort configuration")];
+	[buttonCell_alphabetically setTitle:AILocalizedString(@"Alphabetically","Status sort configuration")];
+	[checkBox_alphabeticallyByLastName setTitle:AILocalizedString(@"...by last name","Status sort configuration: [Alphabetically]... by last name")];
+	[buttonCell_manually setTitle:AILocalizedString(@"Manually","Status sort configuration")];
+	
+	[label_statusGroupOrdering setStringValue:AILocalizedString(@"Status group ordering:","Status sort configuration")];
 }
 
 - (IBAction)changePreference:(id)sender

@@ -13,7 +13,7 @@
 #define SCRIPT_EXTENSION		@"scpt"
 #define	SCRIPT_IDENTIFIER		@"InsertScript"
 
-//#define APPLESCRIPT_FILTER_DEBUG
+#define APPLESCRIPT_FILTER_DEBUG
 
 @interface GBApplescriptFiltersPlugin (PRIVATE)
 - (void)_appendScripts:(NSArray *)scripts toMenu:(NSMenu *)menu;
@@ -614,7 +614,9 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		
 		//For most 'syso' events we want to use the main thread, as these are the UI interaction events.
 		//We can build a list of exceptions here for potentially slow 'syso' events which don't involve the UI
-		if(eventID != 'rand'){	/*random number generation */
+		if((eventID != 'rand') && /* random number generation */
+		   (eventID != 'exec')) /* execution of applications */
+		{
 			shouldHandle = YES;
 		}
 		

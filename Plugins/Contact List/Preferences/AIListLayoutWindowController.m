@@ -372,11 +372,9 @@
 		int oldValue = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE_WIDTH
 																 group:PREF_GROUP_LIST_LAYOUT] intValue];
 		if (newValue != oldValue){ 
-			
 			[[adium preferenceController] setPreference:[NSNumber numberWithInt:newValue]
 												 forKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE_WIDTH
 												  group:PREF_GROUP_LIST_LAYOUT];
-			
 			[self updateSliderValues];
 		}
 	}

@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Sun Sep 14 2003.
-//  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
 #define ANNOUNCER_DEFAULT_PREFS 	@"AnnouncerDefaults"
@@ -19,6 +18,8 @@
 
 #define SPEAK_TEXT_ALERT_IDENTIFIER		@"SpeakText"
 #define SPEAK_EVENT_ALERT_IDENTIFIER	@"SpeakEvent"
+
+#define	SPEAK_EVENT_TIME				AILocalizedString(@"Speak Event Time",nil)
 
 @interface ESAnnouncerPlugin : AIPlugin <AIActionHandler> {
     NSString					*lastSenderString;

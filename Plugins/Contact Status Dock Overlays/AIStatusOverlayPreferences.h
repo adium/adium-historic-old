@@ -9,6 +9,8 @@
 @interface AIStatusOverlayPreferences : AIPreferencePane {
     IBOutlet	NSButton	*checkBox_showStatusOverlays;
     IBOutlet	NSButton	*checkBox_showContentOverlays;
+	
+	IBOutlet	AILocalizationTextField	*label_showContacts;
 }
 
 @end

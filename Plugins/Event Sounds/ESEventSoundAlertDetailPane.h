@@ -12,6 +12,8 @@
     IBOutlet	NSPopUpButton		*popUp_actionDetails;
 
 	NSImage		*soundFileIcon;
+	
+	IBOutlet	AILocalizationTextField	*label_sound;
 }
 
 @end

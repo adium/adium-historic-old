@@ -108,6 +108,15 @@
 	[popUp_event setMenu:[[adium contactAlertsController] menuOfEventsWithTarget:self forGlobalMenu:configureForGlobal]];
 	[popUp_action setMenu:[[adium contactAlertsController] menuOfActionsWithTarget:self]];
 
+	[[self window] setTitle:AILocalizedString(@"New Alert",nil)];
+	
+	[checkbox_oneTime setTitle:AILocalizedString(@"Delete after event occurs","New contact alert pane")];
+	[button_OK setTitle:AILocalizedString(@"OK",nil)];
+	[button_cancel setTitle:AILocalizedString(@"Cancel",nil)];
+	
+	[label_Event setStringValue:AILocalizedString(@"Event:","Label for contact alert event (e.g. Contact signed on, Message received, etc.)")];
+	[label_Action setStringValue:AILocalizedString(@"Action:","Label for contact alert action (e.g. Send message, Play sound, etc.)")];	
+
 	//Set things up for the current event
 	[self configureForEvent];
 }

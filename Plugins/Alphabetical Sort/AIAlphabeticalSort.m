@@ -68,6 +68,9 @@ static  BOOL	sortByLastName;
 	return @"AlphabeticalSortConfiguration";
 }
 - (void)viewDidLoad{
+	[checkBox_sortByLastName setTitle:AILocalizedString(@"Sort contacts by last name",nil)];
+	[checkBox_sortGroups setTitle:AILocalizedString(@"Sort groups alphabetically",nil)];
+	
 	[checkBox_sortByLastName setState:sortByLastName];
 	[checkBox_sortGroups setState:sortGroups];
 }
