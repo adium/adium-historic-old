@@ -133,6 +133,12 @@ typedef enum {
 - (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector;
 - (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector context:(id)originalContext;
 
+/*
+ Return YES if the display name (in the preference key @"FullNameAttr") should be managed by AIAccount.
+ Return NO if a subclass will handle making it visible to the user (for example, if it should be filtered, first).
+ */
+- (BOOL)superclassManagesDisplayName;
+
 - (void)connect;
 - (void)disconnect;
 
