@@ -111,18 +111,18 @@
 	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
 	[button setImage:[NSImage imageNamed:@"emoticonToolbar" forClass:[self class]]];
 	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:@"InsertEmoticon"
-                                                               label:TITLE_EMOTICON
-                                                        paletteLabel:TITLE_INSERT_EMOTICON
-                                                             toolTip:TITLE_INSERT_EMOTICON
-                                                              target:self
-                                                     settingSelector:@selector(setView:)
-                                                         itemContent:button
-                                                              action:@selector(insertEmoticon:)
-                                                                menu:nil] retain];
+														   label:TITLE_EMOTICON
+													paletteLabel:TITLE_INSERT_EMOTICON
+														 toolTip:TITLE_INSERT_EMOTICON
+														  target:self
+												 settingSelector:@selector(setView:)
+													 itemContent:button
+														  action:@selector(insertEmoticon:)
+															menu:nil] retain];
 	[toolbarItem setMinSize:NSMakeSize(32,32)];
 	[toolbarItem setMaxSize:NSMakeSize(32,32)];
 	[button setToolbarItem:toolbarItem];
-        [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
 }
 
 
