@@ -174,21 +174,7 @@ struct oscar_data {
         //if anything changed
         if([modifiedKeys count] > 0)
         {
-            //NSLog(@"Changed %@", modifiedKeys);
-            
             //tell the contact controller, silencing if necessary
-            
-            /* the silencing code does -not- work. I either need to change the way gaim works, or get someone to change it. */
-            /*
-             [[owner contactController] handleStatusChanged:theHandle
-                                         modifiedStatusKeys:modifiedKeys
-                                                    delayed:NO
-                                                     silent:online
-                 ? (gaim_connection_get_state(gaim_account_get_connection(buddy->account)) == GAIM_CONNECTING)
-                 : (buddy->present != GAIM_BUDDY_SIGNING_OFF)];
-             */
-            
-            //Temporary hack
             [[owner contactController] handleStatusChanged:theHandle
                                         modifiedStatusKeys:modifiedKeys
                                                    delayed:silentAndDelayed

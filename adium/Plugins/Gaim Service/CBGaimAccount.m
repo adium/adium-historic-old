@@ -212,10 +212,7 @@
         [[owner contactController] handleStatusChanged:theHandle
                                     modifiedStatusKeys:modifiedKeys
                                                delayed:silentAndDelayed
-                                                silent:silentAndDelayed
-            ? (gaim_connection_get_state(gaim_account_get_connection(buddy->account)) == GAIM_CONNECTING)
-            : (buddy->present != GAIM_BUDDY_SIGNING_OFF)];
-        /* the silencing code does -not- work. I either need to change the way gaim works, or get someone to change it. */
+                                                silent:silentAndDelayed];
     }
 }
 
