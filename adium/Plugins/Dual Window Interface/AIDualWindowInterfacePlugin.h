@@ -48,12 +48,14 @@
     id <AIInterfaceContainer>		activeContainer;
 
     //
-    AIMessageWindowController		*messageWindowController;
 
+    NSMutableArray			*messageWindowControllerArray;
+    int					activeWindowControllerIndex;
     //
     AIDualWindowPreferences		*preferenceController;
 }
 
 - (IBAction)showContactList:(id)sender;
+
 
 @end
