@@ -20,6 +20,14 @@
 NSData * dataFromResourceHandle( Handle aResourceHandle );
 BOOL operateOnResourceUsingFunction( short int afileRef, ResType aType, NSString * aName, short int anId, BOOL (*aFunction)(Handle,ResType,NSString*,short int,void*), void * aContext );
 
+static BOOL getDataFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext);
+static BOOL	setAttributesFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
+static BOOL removeResourceFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
+static BOOL getNameFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
+static BOOL getIdFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
+static BOOL getAttributesFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
+static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext  );
+
 /*
  * resourceForkForReadingAtURL:
  */
@@ -222,9 +230,8 @@ BOOL operateOnResourceUsingFunction( short int afileRef, ResType aType, NSString
  */
 - (NSData *)dataForType:(ResType)aType Id:(short int)anId
 {
-	static BOOL getDataFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
 	NSData	* theData = nil;
-	
+
 	if( operateOnResourceUsingFunction( fileReference, aType, nil, anId, getDataFunction, (void*)&theData )  )
 		return theData;
 	else
@@ -236,7 +243,6 @@ BOOL operateOnResourceUsingFunction( short int afileRef, ResType aType, NSString
  */
 - (NSData *)dataForType:(ResType)aType named:(NSString *)aName
 {
-	static BOOL getDataFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext);
 	NSData	* theData = nil;
 
 	if( operateOnResourceUsingFunction( fileReference, aType, aName, 0, getDataFunction, (void*)&theData )  )
@@ -244,12 +250,13 @@ BOOL operateOnResourceUsingFunction( short int afileRef, ResType aType, NSString
 	else
 		return nil;
 }
-	static BOOL getDataFunction( Handle aResHandle, ResType aType, short int anId, NSString * aName, void * aContext )
-	{
-		NSData	** theData = (NSData**)aContext;
-		*theData = dataFromResourceHandle( aResHandle );
-		return *theData != nil;
-	}
+
+static BOOL getDataFunction( Handle aResHandle, ResType aType, short int anId, NSString * aName, void * aContext )
+{
+	NSData	** theData = (NSData**)aContext;
+	*theData = dataFromResourceHandle( aResHandle );
+	return *theData != nil;
+}
 
 
 /*
@@ -293,23 +300,21 @@ BOOL operateOnResourceUsingFunction( short int afileRef, ResType aType, NSString
  */
 - (BOOL)removeType:(ResType)aType Id:(short int)anId
 {
-	static BOOL removeResourceFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
-	
 	return operateOnResourceUsingFunction( fileReference, aType, nil, anId, removeResourceFunction,  NULL);
 }
-	static BOOL removeResourceFunction( Handle aResHandle, ResType aType, short int anId, NSString * aName, void * aContext )
-	{
-		if( aResHandle )
-			RemoveResource( aResHandle );		// Disposed of in current resource file
-		return !aResHandle || noErr == ResError( );
-	}
+
+static BOOL removeResourceFunction( Handle aResHandle, ResType aType, short int anId, NSString * aName, void * aContext )
+{
+	if( aResHandle )
+		RemoveResource( aResHandle );		// Disposed of in current resource file
+	return !aResHandle || noErr == ResError( );
+}
 
 /*
  * nameOfResourceType:Id:
  */
 - (NSString *)nameOfResourceType:(ResType)aType Id:(short int)anId
 {
-	static BOOL getNameFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
 	NSString		* theString = nil;
 
 	if( operateOnResourceUsingFunction( fileReference, aType, nil, anId, getNameFunction, (void*)&theString ) )
@@ -318,89 +323,90 @@ BOOL operateOnResourceUsingFunction( short int afileRef, ResType aType, NSString
 		return nil;
 
 }
-	static BOOL getNameFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext )
+
+static BOOL getNameFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext )
+{
+	Str255		thePName;
+	NSString		** theString = (NSString **)aContext;
+
+	if( aResHandle )
 	{
-		Str255		thePName;
-		NSString		** theString = (NSString **)aContext;
-	
-		if( aResHandle )
-		{
-			GetResInfo( aResHandle, &anId, &aType, thePName );
-			if( noErr ==  ResError( ) )
-				*theString = [NSString stringWithPascalString:thePName];
-		}
-	
-		return *theString != nil;
+		GetResInfo( aResHandle, &anId, &aType, thePName );
+		if( noErr ==  ResError( ) )
+			*theString = [NSString stringWithPascalString:thePName];
 	}
+
+	return *theString != nil;
+}
 
 /*
  * getId:OfResourceType:Id:
  */
 - (BOOL)getId:(short int *)anId ofResourceType:(ResType)aType named:(NSString *)aName
 {
-	static BOOL getIdFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
 	return operateOnResourceUsingFunction( fileReference, aType, aName, 0, getIdFunction, NULL );
 }
-	static BOOL getIdFunction( Handle aResHandle, ResType aType, short int anId, NSString * aName, void * aContext  )
+
+static BOOL getIdFunction( Handle aResHandle, ResType aType, short int anId, NSString * aName, void * aContext  )
+{
+	Str255		thePName;
+
+	if( aResHandle && [aName getPascalString:(StringPtr)thePName length:sizeof(thePName)] )
 	{
-		Str255		thePName;
-	
-		if( aResHandle && [aName getPascalString:(StringPtr)thePName length:sizeof(thePName)] )
-		{
-			GetResInfo( aResHandle, &anId, &aType, thePName );
-			return noErr ==  ResError( );
-		}
-		else
-			return NO;
+		GetResInfo( aResHandle, &anId, &aType, thePName );
+		return noErr ==  ResError( );
 	}
+	else
+		return NO;
+}
 
 /*
  * -attributeFlags:forResourceType:Id:
  */
 - (BOOL)getAttributeFlags:(short int*)attributes forResourceType:(ResType)aType Id:(short int)anId
 {
-	static BOOL getAttributesFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
 	return operateOnResourceUsingFunction( fileReference, aType, nil, anId, getAttributesFunction, (void*)attributes );
 }
-	static BOOL getAttributesFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext )
+
+static BOOL getAttributesFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext )
+{
+	short int		* theAttributes = (short int*)aContext;
+	if( aResHandle )
 	{
-		short int		* theAttributes = (short int*)aContext;
-		if( aResHandle )
-		{
-			*theAttributes = GetResAttrs( aResHandle );
-			return noErr ==  ResError( );
-		}
-	
-		return NO;
+		*theAttributes = GetResAttrs( aResHandle );
+		return noErr ==  ResError( );
 	}
+
+	return NO;
+}
 
 /*
  * -setAttributeFlags:forResourceType:Id:
  */
 - (BOOL)setAttributeFlags:(short int)attributes forResourceType:(ResType)aType Id:(short int)anId
 {
-	static BOOL		setAttributesFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext );
 	BOOL				theSuccess;
 
 	NSLog(@"WARRING: Currently the setAttributeFlags:forResourceType:Id: does not work");
 	theSuccess = operateOnResourceUsingFunction( fileReference, aType, nil, anId, setAttributesFunction, &attributes );
 	return theSuccess;
 }
-	static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext  )
+
+static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext  )
+{
+	short int		theAttributes = *(short int*)aContext;
+	if( aResHandle )
 	{
-		short int		theAttributes = *(short int*)aContext;
-		if( aResHandle )
+		theAttributes &= ~(resPurgeable|resChanged); // these attributes should not be changed
+		SetResAttrs( aResHandle, theAttributes);
+		if( noErr ==  ResError( ) )
 		{
-			theAttributes &= ~(resPurgeable|resChanged); // these attributes should not be changed
-			SetResAttrs( aResHandle, theAttributes);
-			if( noErr ==  ResError( ) )
-			{
-				ChangedResource(aResHandle);
-				return noErr ==  ResError( );
-			}
+			ChangedResource(aResHandle);
+			return noErr ==  ResError( );
 		}
-		return NO;
 	}
+	return NO;
+}
 
 
 /*
