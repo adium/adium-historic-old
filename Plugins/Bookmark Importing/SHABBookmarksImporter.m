@@ -53,11 +53,6 @@ static NSMenu   *abTopMenu;
     return YES;
 }
 
--(NSString *)menuTitle
-{
-    return AB_ROOT_MENU_TITLE;
-}
-
 -(BOOL)bookmarksUpdated
 {
     return YES;

@@ -64,11 +64,6 @@
     return [[NSFileManager defaultManager] fileExistsAtPath:(fox9 ? [self fox9BookmarkPath] : [self bookmarkPath])];
 }
 
--(NSString *)menuTitle
-{
-    return FIREFOX_ROOT_MENU_TITLE;
-}
-
 -(BOOL)bookmarksUpdated
 {
     NSDictionary	*fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:(fox9 ? [self fox9BookmarkPath] : [self bookmarkPath])
