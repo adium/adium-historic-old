@@ -25,7 +25,7 @@
     [[owner menuController] addMenuItem:viewContactInfoMenuItem toLocation:LOC_Contact_Action];
 
     //Add our get info contextual menu item
-    getInfoContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Info" target:self action:@selector(showContactInfo:) keyEquivalent:@""];
+    getInfoContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Info" target:self action:@selector(showContextContactInfo:) keyEquivalent:@""];
     [[owner menuController] addContextualMenuItem:getInfoContextMenuItem toLocation:Context_Contact_Manage];
 
     //Add our get info toolbar item
@@ -53,12 +53,14 @@
 
 - (IBAction)showContactInfo:(id)sender
 {
-    AIListContact	*selectedContact = [[owner contactController] selectedContact];
+    [AIInfoWindowController showInfoWindowWithOwner:owner
+                                         forContact:[[owner contactController] selectedContact]];
+}
 
-    if([selectedContact isKindOfClass:[AIListContact class]]){
-        //Show the profile window
-        [AIInfoWindowController showInfoWindowWithOwner:owner forContact:selectedContact];
-    }
+- (IBAction)showContextContactInfo:(id)sender
+{
+    [AIInfoWindowController showInfoWindowWithOwner:owner
+                                         forContact:[[owner menuController] contactualMenuContact]];
 }
 
 - (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
@@ -83,7 +85,7 @@
             valid = NO;
         }
     }else if(menuItem == getInfoContextMenuItem){
-        return([[owner contactController] selectedContact] != nil);
+        return([[owner menuController] contactualMenuContact] != nil);
     }
 
     return(valid);

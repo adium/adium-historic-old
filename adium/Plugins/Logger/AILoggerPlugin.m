@@ -38,7 +38,7 @@
     [[owner menuController] addMenuItem:viewContactLogsMenuItem toLocation:LOC_Contact_Action];
 
     //Install a 'view logs' contextual menu item
-    viewContactLogsContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Logs" target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@""];
+    viewContactLogsContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Logs" target:self action:@selector(showLogViewerToSelectedContextContact:) keyEquivalent:@""];
     [[owner menuController] addContextualMenuItem:viewContactLogsContextMenuItem toLocation:Context_Contact_Manage];
     
     //Create a logs directory
@@ -61,9 +61,8 @@
         }
         
     }else if(menuItem == viewContactLogsContextMenuItem){
-        AIListContact	*selectedContact = [[owner contactController] selectedContact];
+        valid = ([[owner menuController] contactualMenuContact] != nil);
 
-        valid = (selectedContact != nil);
     }
 
     return(valid);
@@ -127,13 +126,15 @@
 //Show the log viewer, displaying the selected contact's logs
 - (void)showLogViewerToSelectedContact:(id)sender
 {
-    AIListContact	*selectedContact = [[owner contactController] selectedContact];
-    
     [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showWindow:nil];
+    [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showLogsForContact:[[owner contactController] selectedContact]];
+}
 
-    if(selectedContact){
-        [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showLogsForContact:selectedContact];
-    }
+//Show the log viewer, displaying the selected contact's logs
+- (void)showLogViewerToSelectedContextContact:(id)sender
+{
+    [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showWindow:nil];
+    [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showLogsForContact:[[owner menuController] contactualMenuContact]];
 }
 
 //Add a message to the specified log file

@@ -536,6 +536,8 @@ typedef enum {
 
     NSMenu			*contextualMenu;
     NSMutableDictionary		*contextualMenuItemDict;
+
+    AIListContact		*contactualMenuContact;
 }
 
 //Custom menu items
@@ -544,7 +546,8 @@ typedef enum {
 
 //Contextual menu items
 - (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(CONTEXT_MENU_LOCATION)location;
-- (NSMenu *)contextualMenuWithLocations:(NSArray *)locationArray;
+- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forContact:(AIListContact *)inContact;
+- (AIListContact *)contactualMenuContact;
 
 @end
 

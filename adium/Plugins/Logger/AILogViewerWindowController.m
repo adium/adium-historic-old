@@ -143,32 +143,34 @@ static AILogViewerWindowController *sharedInstance = nil;
     NSEnumerator	*contactEnumerator;
     NSDictionary	*contactDict;
     int			selectedRow;
+
+    if(contact){
+        //Find this contact in our log list
+        groupEnumerator = [availableLogArray objectEnumerator];
+        while((groupDict = [groupEnumerator nextObject])){
     
-    //Find this contact in our log list
-    groupEnumerator = [availableLogArray objectEnumerator];
-    while((groupDict = [groupEnumerator nextObject])){
-
-        contactEnumerator = [[groupDict objectForKey:@"Contents"] objectEnumerator];
-        while((contactDict = [contactEnumerator nextObject])){
-
-            if([(NSString *)[contactDict objectForKey:@"UID"] compare:[contact UID]] == 0 &&
-               [(NSString *)[contactDict objectForKey:@"ServiceID"] compare:[contact serviceID]] == 0){
-                
-                //Expand the containing group
-                [outlineView_contacts expandItem:groupDict];
+            contactEnumerator = [[groupDict objectForKey:@"Contents"] objectEnumerator];
+            while((contactDict = [contactEnumerator nextObject])){
+    
+                if([(NSString *)[contactDict objectForKey:@"UID"] compare:[contact UID]] == 0 &&
+                [(NSString *)[contactDict objectForKey:@"ServiceID"] compare:[contact serviceID]] == 0){
                     
-                //Select the contact, and scroll it visible
-                selectedRow = [outlineView_contacts rowForItem:contactDict];
-                if(selectedRow != NSNotFound){
-                    [outlineView_contacts selectRow:selectedRow byExtendingSelection:NO];
-                    [outlineView_contacts scrollRowToVisible:selectedRow];
+                    //Expand the containing group
+                    [outlineView_contacts expandItem:groupDict];
+                        
+                    //Select the contact, and scroll it visible
+                    selectedRow = [outlineView_contacts rowForItem:contactDict];
+                    if(selectedRow != NSNotFound){
+                        [outlineView_contacts selectRow:selectedRow byExtendingSelection:NO];
+                        [outlineView_contacts scrollRowToVisible:selectedRow];
+                    }
+                    
+                    //Update the displayed logs
+                    [self outlineViewSelectionDidChange:nil];
+    
+                    //Exit early
+                    return;
                 }
-                
-                //Update the displayed logs
-                [self outlineViewSelectionDidChange:nil];
-
-                //Exit early
-                return;
             }
         }
     }

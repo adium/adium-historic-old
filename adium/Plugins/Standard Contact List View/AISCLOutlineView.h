@@ -37,5 +37,6 @@
 - (NSColor *)color;
 - (NSColor *)invertedColor;
 - (NSSize)desiredSize;
+- (AIListContact *)contact;
 
 @end

@@ -13,37 +13,29 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import "AICustomTab.h"
+#import "AICustomTabCell.h"
 #import "AICustomTabsView.h"
 #import "AIImageUtilities.h"
 #import "AICursorAdditions.h"
-#import "AISystemTabRendering.h"
 
-@interface AICustomTab (PRIVATE)
-- (id)initWithFrame:(NSRect)frameRect forTabViewItem:(NSTabViewItem *)inTabViewItem;
-- (void)mouseDown:(NSEvent *)theEvent;
-- (void)mouseDragged:(NSEvent *)theEvent;
-- (void)mouseUp:(NSEvent *)theEvent;
-- (void)drawRect:(NSRect)rect;
-- (NSRect)grippyRect;
-- (void)resetCursorRects;
+@interface AICustomTabCell (PRIVATE)
+- (id)initForTabViewItem:(NSTabViewItem *)inTabViewItem;
 @end
 
 #define TAB_LABEL_INSET		-4	//Pixels the tab's label is inset into it's endcap
-#define TAB_DRAG_DISTANCE 	4	//Distance required before a drag kicks in
 #define TAB_CLOSE_LEFTPAD	0
 #define TAB_CLOSE_RIGHTPAD	2
-#define TAB_CLOSE_Y_OFFSET	-4
+#define TAB_CLOSE_Y_OFFSET	4
 #define TAB_BADGE_PADDING	2
 #define TAB_BADGE_X_OFFSET	0
-#define TAB_BADGE_Y_OFFSET	-4
+#define TAB_BADGE_Y_OFFSET	4
 
-@implementation AICustomTab
+@implementation AICustomTabCell
 
 //Create a new custom tab
-+ (id)customTabWithFrame:(NSRect)frameRect forTabViewItem:(NSTabViewItem *)inTabViewItem
++ (id)customTabForTabViewItem:(NSTabViewItem *)inTabViewItem
 {
-    return([[[self alloc] initWithFrame:frameRect forTabViewItem:inTabViewItem] autorelease]);
+    return([[[self alloc] initForTabViewItem:inTabViewItem] autorelease]);
 }
 
 //Return the tab view item this tab is representing
@@ -56,21 +48,17 @@
 - (void)setSelected:(BOOL)inSelected
 {
     selected = inSelected;
-    [[self superview] setNeedsDisplay:YES]; //Since tabs overlap, we must redisplay them all
 }
 
-//
-- (void)setDrawDivider:(BOOL)inDrawDivider
+//Calculated frame for this cell
+- (void)setFrame:(NSRect)inFrame
 {
-    drawDivider = inDrawDivider;
-    [[self superview] setNeedsDisplay:YES]; //Since tabs overlap, we must redisplay them all
+    frame = inFrame;
 }
 
-//Set the depressed state of this tab
-- (void)setDepressed:(BOOL)inDepressed
+- (NSRect)frame
 {
-    depressed = inDepressed;
-    [[self superview] setNeedsDisplay:YES]; //Since tabs overlap, we must redisplay them all
+    return(frame);
 }
 
 //Return the desired size of this tab
@@ -79,7 +67,7 @@
     return( NSMakeSize([tabFrontLeft size].width + TAB_CLOSE_LEFTPAD + [tabCloseFront size].width + TAB_CLOSE_RIGHTPAD + [tabViewItem sizeOfLabel:NO].width + TAB_CLOSE_LEFTPAD + [tabCloseFront size].width + TAB_CLOSE_RIGHTPAD + [tabFrontRight size].width, [tabFrontLeft size].height) ); //the label is inset into each cap
 }
 
-- (NSComparisonResult)compareWidth:(AICustomTab *)tab
+- (NSComparisonResult)compareWidth:(AICustomTabCell *)tab
 {
     int	tabWidth = [tab size].width;
     int	ourWidth = [self size].width;
@@ -100,9 +88,9 @@
 
 // Private ---------------------------------------------------------------------
 //init
-- (id)initWithFrame:(NSRect)frameRect forTabViewItem:(NSTabViewItem *)inTabViewItem
+- (id)initForTabViewItem:(NSTabViewItem *)inTabViewItem
 {
-    [super initWithFrame:frameRect];
+    [super init];
 
     tabFrontLeft = [[AIImageUtilities imageNamed:@"Tab_Left" forClass:[self class]] retain];
     tabFrontMiddle = [[AIImageUtilities imageNamed:@"Tab_Middle" forClass:[self class]] retain];
@@ -111,8 +99,6 @@
     tabBackLeft = [[AIImageUtilities imageNamed:@"TabMask_Left" forClass:[self class]] retain];
     tabBackRight = [[AIImageUtilities imageNamed:@"TabMask_Right" forClass:[self class]] retain];
     tabBackMiddle = [[AIImageUtilities imageNamed:@"TabMask_Middle" forClass:[self class]] retain];
-
-    tabDivider = [[AIImageUtilities imageNamed:@"Tab_Divider" forClass:[self class]] retain];
 
     tabCloseFront = [[AIImageUtilities imageNamed:@"TabClose_Front" forClass:[self class]] retain];
     tabCloseFrontPressed = [[AIImageUtilities imageNamed:@"TabClose_Front_Pressed" forClass:[self class]] retain];
@@ -124,7 +110,7 @@
 
     //
     closeButtonRect = NSMakeRect([tabFrontLeft size].width + TAB_CLOSE_LEFTPAD,
-                                 frameRect.size.height + TAB_CLOSE_Y_OFFSET - [tabCloseFront size].height,
+                                 TAB_CLOSE_Y_OFFSET,
                                  [tabCloseFront size].width,
                                  [tabCloseFront size].height);
         
@@ -141,32 +127,21 @@
     [tabFrontLeft release];
     [tabFrontMiddle release];
     [tabFrontRight release];
-    [tabDivider release];
-
+    
     [tabCloseFront release];
     [tabCloseFrontPressed release];
 
     [super dealloc];
 }
 
-- (BOOL)isFlipped
-{
-    return(YES);
-}
-
-- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
-{
-    return(YES);
-}
-
 //Draw
-- (void)drawRect:(NSRect)rect
+- (void)drawWithFrame:(NSRect)rect inView:(NSView *)controlView
 {
     int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge, middleLeftEdge, middleWidth, tabCloseWidth, tabBadgeWidth;
     NSRect	sourceRect, destRect;
     NSPoint	destPoint;
     NSSize	labelSize;
-      
+
     //Pre-calc some dimensions
     labelSize = [tabViewItem sizeOfLabel:NO];
     leftCapWidth = [tabFrontLeft size].width;
@@ -178,16 +153,16 @@
     tabCloseWidth = [tabCloseFront size].width;
     tabBadgeWidth = tabCloseWidth;
 
-    if(selected){
+    if(selected || depressed){
         //Draw left mask
-        [tabBackLeft compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
+        [tabBackLeft compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y) operation:NSCompositeSourceOver];
 
         //Draw the left cap
-        [tabFrontLeft compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
+        [tabFrontLeft compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y) operation:NSCompositeSourceOver];
     
         //Draw the middle
         sourceRect = NSMakeRect(0, 0, [tabFrontMiddle size].width, [tabFrontMiddle size].height);
-        destRect = NSMakeRect(middleLeftEdge, rect.origin.y + rect.size.height, sourceRect.size.width, sourceRect.size.height);
+        destRect = NSMakeRect(middleLeftEdge, rect.origin.y, sourceRect.size.width, sourceRect.size.height);
     
         while(destRect.origin.x < middleRightEdge){
             //Crop
@@ -201,23 +176,16 @@
         }
 
         //Draw right mask
-        [tabBackRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
+        [tabBackRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y) operation:NSCompositeSourceOver];
 
         //Draw the right cap
-        [tabFrontRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
+        [tabFrontRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y) operation:NSCompositeSourceOver];
 
-    }else{
-        if(drawDivider){
-            //Draw the divider
-            [tabDivider compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
-            
-        }
-        
     }
     
     //Draw the close widget
     if(selected){
-        destPoint = NSMakePoint(rect.origin.x + leftCapWidth + TAB_CLOSE_LEFTPAD, rect.origin.y + rect.size.height + TAB_CLOSE_Y_OFFSET);
+        destPoint = NSMakePoint(rect.origin.x + leftCapWidth + TAB_CLOSE_LEFTPAD, rect.origin.y + TAB_CLOSE_Y_OFFSET);
 
         if(hoveringClose){
             [tabCloseFrontPressed compositeToPoint:destPoint operation:NSCompositeSourceOver];
@@ -234,109 +202,63 @@
     [tabViewItem drawLabel:YES inRect:destRect];
 
     //Draw the Badge
-    destPoint = NSMakePoint(rect.origin.x + leftCapWidth + middleWidth - TAB_CLOSE_LEFTPAD - tabBadgeWidth - TAB_CLOSE_RIGHTPAD, rect.origin.y + rect.size.height + TAB_BADGE_Y_OFFSET);
+    destPoint = NSMakePoint(rect.origin.x + leftCapWidth + middleWidth - TAB_CLOSE_LEFTPAD - tabBadgeWidth - TAB_CLOSE_RIGHTPAD, rect.origin.y + TAB_BADGE_Y_OFFSET);
 //    [tabCloseFront compositeToPoint:destPoint operation:NSCompositeSourceOver];
 }
 
-// <leftCapWidth>[<Tab close width>]<LabelWidth>[<Tab badge width>]<RightCapWidth>
-
-//Grippy Spot --------------------------------------------------------------------
-//Install cursor rects for our 'grippy' spot
-- (void)resetCursorRects
+//Mouse tracking / Clicking -------------------------------------------
+- (BOOL)willTrackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView
 {
-    NSCursor	*cursor;
+    NSPoint	clickLocation = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, cellFrame.origin.x, cellFrame.origin.y);
+    
+    if(NSPointInRect(clickLocation, offsetCloseButtonRect)){
+        //Track the close button
+        [self trackMouse:theEvent
+                  inRect:offsetCloseButtonRect
+                  ofView:controlView
+            untilMouseUp:YES];
 
-    //Discard any existing rects
-    [self discardCursorRects];
-
-    if(dragging){
-        cursor = [NSCursor closedGrabHandCursor];
-        //The closed grab cursor needs to stay on throughout the drag
-        //For some reason I was having trouble making it stick with a set
-        //command...This gets the job done good enough to excuse the nastiness
-        //of it :)
-        [self addCursorRect:[[self superview] visibleRect] cursor:cursor];
-        [cursor setOnMouseEntered:YES];
+        return(YES);
+        
+    }else{
+        return(NO);
+        
     }
 }
 
-//Mouse tracking / Clicking -------------------------------------------
-- (void)mouseDown:(NSEvent *)theEvent
+- (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView
 {
-    if(selected){
-        NSPoint	location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    hoveringClose = YES;
+    [controlView setNeedsDisplay:YES];
 
-        //Check for a hit on the close button
-        if(NSPointInRect(location, closeButtonRect)){
-            trackingClose = YES;
-            hoveringClose = YES;
-            [self setNeedsDisplay:YES];
-        }else{
-            [self setNeedsDisplay:YES];
-        }
-        
-        
-    }else{
-        //Select our tab
-        [[tabViewItem tabView] selectTabViewItem:tabViewItem];
-        
+    return(YES);
+}
+
+- (BOOL)continueTracking:(NSPoint)lastPoint at:(NSPoint)currentPoint inView:(NSView *)controlView
+{
+    NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, [self frame].origin.x, [self frame].origin.y);
+    BOOL	hovering = NSPointInRect(currentPoint, offsetCloseButtonRect);
+
+    if(hoveringClose != hovering){
+        hoveringClose = hovering;
+        [controlView setNeedsDisplay:YES];
     }
     
+    return(YES);
 }
 
-- (void)mouseDragged:(NSEvent *)theEvent
+- (void)stopTracking:(NSPoint)lastPoint at:(NSPoint)stopPoint inView:(NSView *)controlView mouseIsUp:(BOOL)flag
 {
-    NSPoint	location = [[self superview] convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, [self frame].origin.x, [self frame].origin.y);
+    BOOL	hovering = NSPointInRect(stopPoint, offsetCloseButtonRect);
 
-    if(trackingClose){
-        NSPoint	location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-        BOOL	hovering = NSPointInRect(location, closeButtonRect);
-
-        if(hoveringClose != hovering){
-            hoveringClose = hovering;
-            [self setNeedsDisplay:YES];
-        }
-        
-    }else if(dragging){
-        //Update an existing drag
-        [(AICustomTabsView *)[self superview] updateDragAtOffset:(int)location.x];
-
-    }else{
-        if( (clickLocation.x - location.x) > TAB_DRAG_DISTANCE || (clickLocation.x - location.x) < -TAB_DRAG_DISTANCE ||
-            (clickLocation.y - location.y) > TAB_DRAG_DISTANCE || (clickLocation.y - location.y) < -TAB_DRAG_DISTANCE ){
-            //if we've moved enough, initiate a drag
-            [(AICustomTabsView *)[self superview] beginDragOfTab:self fromOffset:NSMakeSize(location.x, location.y)];
-            dragging = YES;
-        }
+    if(hovering){
+        [(AICustomTabsView *)controlView removeTabViewItem:tabViewItem];
     }
-
+    
+    hoveringClose = NO;
+    [controlView setNeedsDisplay:YES];
 }
-
-- (void)mouseUp:(NSEvent *)theEvent
-{
-    if(trackingClose){
-        NSPoint	location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-
-        //End tracking
-        trackingClose = NO;
-        hoveringClose = NO;
-        [self setNeedsDisplay:YES];
-
-        //Close the tab?
-        if(NSPointInRect(location, closeButtonRect)){
-            NSBeep();
-            //[[tabViewItem tabView] selectTabViewItem:tabViewItem];
-        }        
-        
-    }else if(dragging){
-        dragging = NO; //End dragging
-        
-        [[self window] invalidateCursorRectsForView:self];
-        [(AICustomTabsView *)[self superview] concludeDrag];
-
-        [[tabViewItem tabView] selectTabViewItem:tabViewItem];
-    }
-}
-
 
 @end
