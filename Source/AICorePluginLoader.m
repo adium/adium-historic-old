@@ -17,7 +17,7 @@
 #import "AICorePluginLoader.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
-#define DIRECTORY_EXTERNAL_PLUGINS		@"/PlugIns"				//Path to the external plugins
+#define EXTERNAL_PLUGIN_FOLDER			@"PlugIns"				//Folder name of external plugins
 #define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"			//File extension of a plugin
 
 #define WEBKIT_PLUGIN					@"Webkit Message View.AdiumPlugin"
@@ -35,6 +35,7 @@
 #endif
 
 @implementation AIPluginController
+
 //init
 - (void)initController
 {
@@ -46,12 +47,20 @@
 									 object:nil];
 }
 
+//
 - (void)finishIniting
 {
+	NSEnumerator	*enumerator = [[owner resourcePathsForName:EXTERNAL_PLUGIN_FOLDER] objectEnumerator];
+	NSString		*path;
+	
+	//Load the plugins in our bundle
 	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath]
 			   confirmLoading:NO];
-	[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath] 
-			   confirmLoading:YES];
+
+	//Load any external plugins the user has installed
+	while(path = [enumerator nextObject]){
+		[self loadPluginsFromPath:path confirmLoading:YES];
+	}
 }
 
 - (void)adiumVersionWillBeUpgraded:(NSNotification *)notification
@@ -219,15 +228,15 @@
 // Returns YES if the named plugin exists. Does not imply that the plugin actually loaded or is functioning.
 - (BOOL)pluginEnabled:(NSString *)pluginName
 {
-	BOOL inBundle = NO;
-	BOOL inExternal = NO;
-	
-	inBundle = [[NSFileManager defaultManager] fileExistsAtPath:[[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByAppendingPathComponent:pluginName] stringByExpandingTildeInPath]];
-	if(!inBundle)
-		inExternal = [[NSFileManager defaultManager] fileExistsAtPath:[[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByAppendingPathComponent:pluginName] stringByExpandingTildeInPath]];
-	
-	AILog(@"#### %@ enabled: in %d, out %d",pluginName,inBundle,inExternal);
-	return(inBundle || inExternal);	
+//	BOOL inBundle = NO;
+//	BOOL inExternal = NO;
+//	
+//	inBundle = [[NSFileManager defaultManager] fileExistsAtPath:[[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByAppendingPathComponent:pluginName] stringByExpandingTildeInPath]];
+//	if(!inBundle)
+//		inExternal = [[NSFileManager defaultManager] fileExistsAtPath:[[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByAppendingPathComponent:pluginName] stringByExpandingTildeInPath]];
+//	
+//	AILog(@"#### %@ enabled: in %d, out %d",pluginName,inBundle,inExternal);
+	return(YES/*inBundle || inExternal*/);	
 }
 
 @end
