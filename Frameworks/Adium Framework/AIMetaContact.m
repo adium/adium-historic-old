@@ -211,18 +211,15 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 {
 	AIListContact   *returnContact = nil;
 	
-	if(_preferredContact && [_preferredContact service] == inService){
-		//First try to use our preferredContact
-		returnContact = _preferredContact;
-		
-	}else{
+	if (inService){
+		NSArray			*listContactsArray = [self listContacts];
 		AIListContact   *thisContact;
 		unsigned		index;
-		unsigned		count = [containedObjects count];
+		unsigned		count = [listContactsArray count];
 		
 		//Search for an available contact
 		for (index = 0; index < count; index++){
-			thisContact = [containedObjects objectAtIndex:index];
+			thisContact = [listContactsArray objectAtIndex:index];
 			if (([thisContact service] == inService) &&
 				([thisContact statusSummary] == AIAvailableStatus)){
 				returnContact = thisContact;
@@ -233,7 +230,7 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 		//If no available contacts, find the first online contact
 		if (!returnContact){
 			for (index = 0; index < count; index++){
-				thisContact = [containedObjects objectAtIndex:index];
+				thisContact = [listContactsArray objectAtIndex:index];
 				if (([thisContact online]) && 
 					([thisContact service] == inService)){
 					returnContact = thisContact;
@@ -241,18 +238,20 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 				}
 			}
 		}
-
+		
 		if (!returnContact){
 			for (index = 0; index < count; index++){
-				thisContact = [containedObjects objectAtIndex:index];
+				thisContact = [listContactsArray objectAtIndex:index];
 				if ([thisContact service] == inService){
 					returnContact = thisContact;
 					break;
 				}
 			}
 		}
+	}else{
+		returnContact = [self preferredContact];
 	}
-
+	
 	return (returnContact);
 }
 
@@ -269,34 +268,34 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 	return _listContacts;
 }
 
-
-
-// Return a dictionary whose keys are serviceID's
-// and whose objects are arrays of contained contacts with those serviceID's
-- (NSDictionary *)dictionaryOfServicesAndListContacts
+// Return a dictionary whose keys are serviceClass strings
+// and whose objects are arrays of contained contacts on that serviceClass
+- (NSDictionary *)dictionaryOfServiceClassesAndListContacts
 {
-	NSMutableDictionary *contacts = [NSMutableDictionary dictionary];
-	AIListObject		*current;
-	NSString			*serviceID;
-	NSMutableArray		*contactList;
-	int i;
+	NSMutableDictionary *contactsDict = [NSMutableDictionary dictionary];
+	NSString			*serviceClass;
+	NSMutableArray		*contactArray;
 	NSArray				*listContacts = [self listContacts];
+	AIListObject		*listContact;
+	unsigned			i, listContactsCount;
 	
-	for( i = 0; i < [listContacts count]; i++ ) {
-		current = [listContacts objectAtIndex:i];
-		serviceID = [[current service] serviceID];
+	listContactsCount = [listContacts count];
+	for(i = 0; i < listContactsCount; i++){
+
+		listContact = [listContacts objectAtIndex:i];
+		serviceClass = [[listContact service] serviceClass];
 		
 		// Is there already an entry for this service?
-		if( contactList = [contacts objectForKey:serviceID] ) {
-			[contactList addObject:current];
+		if(contactArray = [contactsDict objectForKey:serviceClass]){
+			[contactArray addObject:listContact];
 			
-		} else {
-			contactList = [NSMutableArray arrayWithObject:current];
-			[contacts setObject:contactList forKey:serviceID];
+		}else{
+			contactArray = [NSMutableArray arrayWithObject:listContact];
+			[contactsDict setObject:contactArray forKey:serviceClass];
 		}
 	}
 	
-	return contacts;
+	return contactsDict;
 }
 
 - (int)uniqueContainedObjectsCount

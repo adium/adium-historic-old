@@ -43,7 +43,7 @@
 - (AIListObject *)uniqueObjectAtIndex:(int)inIndex;
 - (NSArray *)listContacts;
 
-- (NSDictionary *)dictionaryOfServicesAndListContacts;
+- (NSDictionary *)dictionaryOfServiceClassesAndListContacts;
 
 - (void)setExpanded:(BOOL)inExpanded;
 - (BOOL)isExpanded;
