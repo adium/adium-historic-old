@@ -28,6 +28,7 @@
             SUPERCLASS = NSObject; 
         }, 
         {
+            ACTIONS = {fontPopUps = id; }; 
             CLASS = AICLPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
