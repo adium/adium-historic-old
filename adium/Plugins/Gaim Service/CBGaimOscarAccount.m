@@ -172,7 +172,9 @@ static NSString *MobileServiceID = nil;
 						statusMsgString = [self stringWithBytes:userinfo->away
 														 length:userinfo->away_len
 													   encoding:userinfo->away_encoding];
-						
+						if ([[theContact UID] isEqualToString:@"n110941"]){
+							NSLog(@"%s:\n=%s=\n=%i=\n=%s=\n(%@)",buddy->name,userinfo->away,userinfo->away_len,userinfo->away_encoding,statusMsgString);
+						}
 						//If the away message changed, make sure the contact is marked as away
 						BOOL		newAway;
 						NSNumber	*storedValue;
@@ -402,27 +404,53 @@ aim_srv_setavailmsg(od->sess, text);
 
 -(NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding
 {
-	//Default to UTF8
+	//Default to ASCII
 	NSStringEncoding	desiredEncoding = NSUTF8StringEncoding;
 
 	//Only attempt to check encoding if we were passed one
 	if (encoding && (encoding[0] != '\0')){
 		NSString			*encodingString = [NSString stringWithUTF8String:encoding];
-				
-		if ([encodingString rangeOfString:@"unicode-2-0"].location != NSNotFound){
-			desiredEncoding = NSUnicodeStringEncoding;
-		}else if ([encodingString rangeOfString:@"iso-8859-1"].location != NSNotFound){
-			desiredEncoding = NSISOLatin1StringEncoding;
+		
+		if (encodingString){
+			if ([encodingString rangeOfString:@"unicode-2-0"].location != NSNotFound){
+				desiredEncoding = NSUnicodeStringEncoding;
+			}else if ([encodingString rangeOfString:@"iso-8859-1"].location != NSNotFound){
+				desiredEncoding = NSISOLatin1StringEncoding;
+			}
 		}
+		
 	}
 	
-	//NSLog(@"[%s] [%i] [%s]",bytes,length,encoding);
-	
+	NSLog(@"[%s] [%i] [%i]",bytes,length,desiredEncoding);
+
 	return [[[NSString alloc] initWithBytes:bytes length:length encoding:desiredEncoding] autorelease];
 }
 
 @end
 #pragma mark Notes
+/*
+ //String encodings:
+ enum {    NSASCIIStringEncoding = 1,
+	 NSNEXTSTEPStringEncoding = 2,
+	 NSJapaneseEUCStringEncoding = 3,
+	 NSUTF8StringEncoding = 4,
+	 NSISOLatin1StringEncoding = 5,
+	 NSSymbolStringEncoding = 6,
+	 NSNonLossyASCIIStringEncoding = 7,
+	 NSShiftJISStringEncoding = 8,
+	 NSISOLatin2StringEncoding = 9,
+	 NSUnicodeStringEncoding = 10,
+	 NSWindowsCP1251StringEncoding = 11,
+	 NSWindowsCP1252StringEncoding = 12,
+	 NSWindowsCP1253StringEncoding = 13,
+	 NSWindowsCP1254StringEncoding = 14,
+	 NSWindowsCP1250StringEncoding = 15,
+	 NSISO2022JPStringEncoding = 21,
+	 NSMacOSRomanStringEncoding = 30,
+	 NSProprietaryStringEncoding = 65536};
+ */
+
+
 /*if (isdigit(b->name[0])) {
 char *status;
 status = gaim_icq_status((b->uc & 0xffff0000) >> 16);
