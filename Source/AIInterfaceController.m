@@ -449,6 +449,10 @@
 	[self clearUnviewedContentOfChat:inChat];
 	[self buildWindowMenu];
 	
+	if(inChat == activeChat){
+		[activeChat release]; activeChat = nil;
+	}
+	
 	if(inChat == mostRecentActiveChat){
 		[mostRecentActiveChat release]; mostRecentActiveChat = nil;
 	}
