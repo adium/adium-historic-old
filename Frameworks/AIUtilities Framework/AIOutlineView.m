@@ -37,8 +37,7 @@
 
 - (void)_initOutlineView
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:self];
+	//
 }
 
 //Allow our delegate to specify context menus
@@ -97,18 +96,41 @@
 
 //Collapse/expand memory -----------------------------------------------------------------------------------------------
 #pragma mark Collapse/expand memory
-//Inform delegate as items expand/collapse
-- (void)itemDidExpand:(NSNotification *)notification
+//The notifications NSOutlineViewItemDidExpand/Collapse are posted when the outline view is reloaded, making it 
+//impossible to tell when a user expanded/collapsed a group (since there will be tons of false notifications sent
+//out when reloading).  As a fix, we implement two new notifications that ONLY get posted when THE USER expands
+//or collapses a group.
+- (void)expandItem:(id)item expandChildren:(BOOL)expandChildren
 {
-    if([[self delegate] respondsToSelector:@selector(outlineView:setExpandState:ofItem:)]){
-        [[self delegate] outlineView:self setExpandState:YES ofItem:[[notification userInfo] objectForKey:@"NSObject"]];
-    }
+	[super expandItem:item expandChildren:expandChildren];
+	
+	if(!ignoreExpandCollapse){
+		//General expand notification
+		[[NSNotificationCenter defaultCenter] postNotificationName:AIOutlineViewUserDidExpandItemNotification
+															object:self
+														  userInfo:[NSDictionary dictionaryWithObject:item forKey:@"Object"]];
+		
+		//Inform our delegate directly
+		if([[self delegate] respondsToSelector:@selector(outlineView:setExpandState:ofItem:)]){
+			[[self delegate] outlineView:self setExpandState:YES ofItem:item];
+		}
+	}
 }
-- (void)itemDidCollapse:(NSNotification *)notification
+- (void)collapseItem:(id)item collapseChildren:(BOOL)collapseChildren
 {
-    if([[self delegate] respondsToSelector:@selector(outlineView:setExpandState:ofItem:)]){
-        [[self delegate] outlineView:self setExpandState:NO ofItem:[[notification userInfo] objectForKey:@"NSObject"]];
-    }
+	[super collapseItem:item collapseChildren:collapseChildren];
+
+	if(!ignoreExpandCollapse){
+		//General expand notification
+		[[NSNotificationCenter defaultCenter] postNotificationName:AIOutlineViewUserDidCollapseItemNotification
+															object:self
+														  userInfo:[NSDictionary dictionaryWithObject:item forKey:@"Object"]];
+		
+		//Inform our delegate directly
+		if([[self delegate] respondsToSelector:@selector(outlineView:setExpandState:ofItem:)]){
+			[[self delegate] outlineView:self setExpandState:NO ofItem:item];
+		}
+	}
 }
 
 //Preserve selection and group expansion through a reload
@@ -147,11 +169,13 @@
 				
 				//If the item is expandable, correctly expand/collapse it
 				if([delegate outlineView:self isItemExpandable:item]){
+					ignoreExpandCollapse = YES;
 					if([delegate outlineView:self expandStateOfItem:item]){
 						[self expandItem:item];
 					}else{
 						[self collapseItem:item];
 					}
+					ignoreExpandCollapse = NO;
 				}
 			}
 		}
