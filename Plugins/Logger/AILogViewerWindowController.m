@@ -1019,7 +1019,10 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     }
 	
 	//Use autorelease so activeSearchString can be passed back to here
-    [activeSearchString autorelease]; activeSearchString = [inString retain];
+	if(activeSearchString != inString){
+		[activeSearchString release];
+		activeSearchString = [inString retain];
+	}
 	
 	//Our logs are stored as HTML.  Non-ASCII characters are therefore HTML-encoded.  We need to have an
 	//encoded version of our search string with which to search when doing a content-based search, as that's
@@ -1463,15 +1466,19 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 
 - (IBAction)toggleEmoticonFiltering:(id)sender
 {
-	AIChatLog	*log = displayedLog;
+	AIChatLog	*log;
 	
 	showEmoticons = !showEmoticons;
 	[sender setLabel:(showEmoticons ? HIDE_EMOTICONS : SHOW_EMOTICONS)];
 	[sender setImage:[NSImage imageNamed:(showEmoticons ? IMAGE_EMOTICONS_ON : IMAGE_EMOTICONS_OFF) forClass:[self class]]];
 	
 	//Refresh the displayed log
-	[displayedLog autorelease]; displayedLog = nil;
+	log = [displayedLog retain];
+	[displayedLog release]; displayedLog = nil;
+
 	[self displayLog:log];
+
+	[log release];
 }
 
 
