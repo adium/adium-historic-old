@@ -11,9 +11,10 @@
 #import "NDResourceFork.h"
 #import "NDComponentInstance.h"
 #import "NSAppleEventDescriptor+NDAppleScriptObject.h"
-//#import "NSArray+NDUtilities.h"
+#import "NSArray+NDUtilities.h"
 
 static NSString		* kScriptResourceName = @"script";
+static const short	kScriptResourceID = 128;
 static const OSType	kScriptEditorCreatorCode = 'ToyS',
 							kCompiledAppleScriptTypeCode = 'osas';
 

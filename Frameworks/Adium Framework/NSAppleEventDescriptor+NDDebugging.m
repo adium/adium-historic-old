@@ -8,7 +8,7 @@
 
 #import "NSAppleEventDescriptor+NDDebugging.h"
 #import "NSAppleEventDescriptor+NDAppleScriptObject.h"
-//#import "NSString+NDUtilities.h"
+#import "NSString+NDUtilities.h"
 
 #define STRINGFORFOURCHARCODE( XXXX ) case XXXX: return [NSString stringWithCString: #XXXX]
 	//#define STRINGFORFOURCHARCODE( XXXX ) case XXXX: return @ ## #XXXX

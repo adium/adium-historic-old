@@ -18,19 +18,24 @@ extern const NSString	* NDAppleScriptOffendingObject,
 	@abstract A class to represent a component instance.
 	@discussion A component instance is a connection to a component (osa component) used to compile and execute AppleScripts. This class is to be used with <tt>NDAppleScriptObject</tt>.
  */
-@interface NDComponentInstance : NSObject <NDAppleScriptObjectSendEvent, NDAppleScriptObjectActive, NSCopying>
+@interface NDComponentInstance : NSObject <NDScriptDataSendEvent, NDScriptDataActive, NDScriptDataAppleEventResumeHandler, NSCopying>
 {
 @private
 	ComponentInstance									instanceRecord;
-	id<NDAppleScriptObjectSendEvent>				sendAppleEventTarget;
-	id<NDAppleScriptObjectActive>					activeTarget;
+	struct
+	{
+		id<NDScriptDataSendEvent>						target;
+		BOOL													currentProcessOnly;
+	}														sendAppleEvent;
+	id<NDScriptDataActive>							activeTarget;
+	id<NDScriptDataAppleEventResumeHandler>	appleEventResumeHandler;
 //	id<NDScriptDataAppleEventSpecialHandler>	appleEventSpecialHandler;
-//	id<NDScriptDataAppleEventResumeHandler>	appleEventResumeHandler;
 	OSASendUPP											defaultSendProcPtr;
 	long int												defaultSendProcRefCon;
 	OSAActiveProcPtr									defaultActiveProcPtr;
 	long int												defaultActiveProcRefCon;
-
+	AEEventHandlerUPP									defaultResumeProcPtr;
+	long int												defaultResumeProcRefCon;
 }
 
 /*!
@@ -111,35 +116,70 @@ extern const NSString	* NDAppleScriptOffendingObject,
  */
 - (void)setDefaultTargetAsCreator:(OSType)creator;
 /*!
-	@method setAppleEventSendTarget:.
+	@method setAppleEventSendTarget:currentProcessOnly:
 	@abstract  sets the object that any handles any AppleEvent the script atempts to send.
 	@discussion If the send target is set any AppleEvents are sent to the send target to be processed, otherwise <tt>NDComponentInstance</tt> will handle the event itself by utilising the OSA default send procedure. One use of this is when executing a script in thread any AppleEvents that require user interaction sent to the current procees need to be sent from the main thread.
-	@param  target An object that implements the protocol <tt>NDAppleScriptObjectSendEvent</tt>.
+	@param  target An object that implements the protocol <tt>NDScriptDataSendEvent</tt>.
+	@param flag If <tt>YES</tt> then only AppleEvents for the current process are sent to the AppleEvent send target, otherwise all AppleEvents are sent to the send target.
  */
-- (void)setAppleEventSendTarget:(id<NDAppleScriptObjectSendEvent>)target;
+- (void)setAppleEventSendTarget:(id<NDScriptDataSendEvent>)target currentProcessOnly:(BOOL)flag;
+/*!
+	@method setAppleEventSendTarget:
+	@abstract  sets the object that any handles any AppleEvent the script atempts to send.
+	@discussion If the send target is set any AppleEvents are sent to the send target to be processed, otherwise <tt>NDComponentInstance</tt> will handle the event itself by utilising the OSA default send procedure. One use of this is when executing a script in thread any AppleEvents that require user interaction sent to the current procees need to be sent from the main thread.
+	@param  target An object that implements the protocol <tt>NDScriptDataSendEvent</tt>.
+ */
+- (void)setAppleEventSendTarget:(id<NDScriptDataSendEvent>)target;
 /*!
 	@method appleEventSendTarget
 	@abstract returns the object that handles any AppleEvents
 	@discussion See the method <tt>setAppleEventSendTarget: </tt>for a discussion.
 	@result the AppleEvent send target.
  */
-- (id<NDAppleScriptObjectSendEvent>)appleEventSendTarget;
+- (id<NDScriptDataSendEvent>)appleEventSendTarget;
+
+/*!
+	@method appleEventSendCurrentProcessOnly
+	@abstract Are AppleEvents sent to the send target for the current process only.
+	@discussion As set in the method <tt>setAppleEventSendTarget:currentProcessOnly:</tt>
+	@result If <tt>YES</tt> then only AppleEvents for the current process are sent to the AppleEvent send target, otherwise all AppleEvents are sent to the send target.
+ */
+- (BOOL)appleEventSendCurrentProcessOnly;
 
 /*!
 	@method setActiveTarget:
 	@abstract sets the object which is periodicly sent the message <tt>appleScriptActive:</tt>.
 	@discussion will the script is running it will periodocly give up time for you to do some other processing.
-	@param  target An object that implements the protocol <tt>NDAppleScriptObjectActive</tt>.
+	@param  target An object that implements the protocol <tt>NDScriptDataActive</tt>.
  */
-- (void)setActiveTarget:(id<NDAppleScriptObjectActive>)target;
+- (void)setActiveTarget:(id<NDScriptDataActive>)target;
 
 /*!
 	@method activeTarget
 	@abstract returns the active target as set by the method <tt>setActiveTarget:</tt>
 	@discussion See the method <tt>setActiveTarget:</tt> for a discussion.
  */
-- (id<NDAppleScriptObjectActive>)activeTarget;
+- (id<NDScriptDataActive>)activeTarget;
 
+//- (void)setAppleEventSpecialHandler:(id<NDScriptDataAppleEventSpecialHandler>)handler;
+//- (id<NDScriptDataAppleEventSpecialHandler>)appleEventSpecialHandler;
+
+/*!
+	@method setAppleEventResumeHandler:
+	@abstract <#Abstract#>
+	@discussion <#Discussion#>
+	@param handler <#disc#>
+	@result <#result#>
+ */
+- (void)setAppleEventResumeHandler:(id<NDScriptDataAppleEventResumeHandler>)handler;
+
+/*!
+	@method appleEventResumeHandler
+	@abstract <#Abstract#>
+	@discussion <#Discussion#>
+	@result <#result#>
+ */
+- (id<NDScriptDataAppleEventResumeHandler>)appleEventResumeHandler;
 /*!
 	@method error
 	@abstract Get AppleScript Errors.
@@ -198,5 +238,4 @@ extern const NSString	* NDAppleScriptOffendingObject,
  */
 - (BOOL)isEqualToComponentInstance:(NDComponentInstance *)componentInstance;
 
-	static OSErr		AppleScriptActiveProc( long aRefCon );
 @end
