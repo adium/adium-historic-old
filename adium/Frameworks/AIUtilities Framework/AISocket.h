@@ -25,11 +25,9 @@
 }
 
 + (AISocket *)socketWithHost:(NSString *)host port:(int)port;
-- (BOOL)readyForSending;
-- (BOOL)readyForReceiving;
-- (void)sendData:(NSData *)inData;
-- (BOOL)getData:(NSData **)outData ofLength:(int)inLength;
-- (void)getDataToNewline:(NSData **)outData;
+- (BOOL)sendData:(NSData *)inData;
+- (BOOL)getData:(NSData **)outData ofLength:(int)inLength remove:(BOOL)remove;
+- (BOOL)getDataToNewline:(NSData **)outData remove:(BOOL)remove;
 - (void)removeDataBytes:(int)inLength;
 - (BOOL)isValid;
 - (NSString *)hostIP;
