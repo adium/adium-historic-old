@@ -85,7 +85,7 @@
 		//Add chat to container
 		messageTab = [AIMessageTabViewItem messageTabWithView:messageView];
 		[[chat statusDictionary] setObject:messageTab forKey:@"MessageTabViewItem"];
-		[container addTabViewItem:messageTab atIndex:index];
+		[container addTabViewItem:messageTab atIndex:index silent:NO];
 	}
 
     //Display the account selector (if multiple accounts are available for sending to the contact)
@@ -107,7 +107,7 @@
 	AIMessageWindowController	*container = [messageTab container];
 	
 	//Close the chat
-	[container removeTabViewItem:messageTab];
+	[container removeTabViewItem:messageTab silent:NO];
 	[[chat statusDictionary] removeObjectForKey:@"MessageTabViewItem"];
 }
 
@@ -127,7 +127,10 @@
 	if([messageTab container] == container){
 		[container moveTabViewItem:messageTab toIndex:index];
 	}else{
-		//ignoring cross-container moves for now
+		[messageTab retain];
+		[[messageTab container] removeTabViewItem:messageTab silent:YES];
+		[container addTabViewItem:messageTab atIndex:index silent:YES];
+		[messageTab release];
 	}
 }
 
@@ -254,7 +257,7 @@
 		//Remove the tab, which will close the containiner if it becomes empty
 		[tabViewItem retain];
 	
-		[oldMessageWindow removeTabViewItem:tabViewItem];
+		[oldMessageWindow removeTabViewItem:tabViewItem silent:YES];
 		
 		//Spawn a new window (if necessary)
 		if(!newMessageWindow){
@@ -279,7 +282,8 @@
 			
 		}
 		
-		[(AIMessageWindowController *)newMessageWindow addTabViewItem:tabViewItem atIndex:index]; 
+		[(AIMessageWindowController *)newMessageWindow addTabViewItem:tabViewItem atIndex:index silent:YES]; 
+		[[adium interfaceController] chatOrderDidChange];
 		[tabViewItem makeActive:nil];
 		[tabViewItem release];
 	}

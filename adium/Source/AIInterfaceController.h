@@ -165,8 +165,9 @@
 
 //Messaging
 - (void)openChat:(AIChat *)inChat;
-- (void)setActiveChat:(AIChat *)inChat;
 - (void)closeChat:(AIChat *)inChat;
+- (void)consolidateChats;
+- (void)setActiveChat:(AIChat *)inChat;
 - (AIChat *)activeChat;
 - (NSArray *)openChats;
 - (NSArray *)openChatsInContainerWithID:(NSString *)containerID;

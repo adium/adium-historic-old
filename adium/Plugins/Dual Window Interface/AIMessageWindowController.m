@@ -206,11 +206,12 @@
 //Add a tab view item container at the end of the tabs (without changing the current selection)
 - (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem
 {    
-    [self addTabViewItem:inTabViewItem atIndex:-1];
+    [self addTabViewItem:inTabViewItem atIndex:-1 silent:NO];
 }
 
 //Add a tab view item container (without changing the current selection)
-- (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem atIndex:(int)index
+//If silent is NO, the interface controller will be informed of the add
+- (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem atIndex:(int)index silent:(BOOL)silent
 {
 	if(index == -1){
 		[tabView_messages addTabViewItem:inTabViewItem];
@@ -222,11 +223,12 @@
 	
 	[inTabViewItem setContainer:self];
 
-	[[adium interfaceController] chatDidOpen:[inTabViewItem chat]];
+	if(!silent) [[adium interfaceController] chatDidOpen:[inTabViewItem chat]];
 }
 
 //Remove a tab view item container
-- (void)removeTabViewItem:(AIMessageTabViewItem *)inTabViewItem
+//If silent is NO, the interface controller will be informed of the remove
+- (void)removeTabViewItem:(AIMessageTabViewItem *)inTabViewItem silent:(BOOL)silent
 {
     //If the tab is selected, select the next tab before closing it (To mirror the behavior of safari)
     if(!windowIsClosing && inTabViewItem == [tabView_messages selectedTabViewItem]){
@@ -235,7 +237,7 @@
 	
     //Remove the tab and let the interface know a container closed
 	[containedChats removeObject:[inTabViewItem chat]];
-	[[adium interfaceController] chatDidClose:[inTabViewItem chat]];
+	if(!silent) [[adium interfaceController] chatDidClose:[inTabViewItem chat]];
     [tabView_messages removeTabViewItem:inTabViewItem];
 	[inTabViewItem setContainer:nil];
 	
@@ -367,6 +369,16 @@
 //Tab rearranging
 - (void)customTabViewDidChangeOrderOfTabViewItems:(AICustomTabsView *)TabView
 {
+	NSEnumerator			*enumerator;
+	AIMessageTabViewItem	*tabViewItem;
+
+	//Update our contained chats array to mirror the order of the tabs
+	[containedChats release]; containedChats = [[NSMutableArray alloc] init];
+	enumerator = [[tabView_messages tabViewItems] objectEnumerator];
+	while(tabViewItem = [enumerator nextObject]){
+		[containedChats addObject:[tabViewItem chat]];
+	}
+	
 	[[adium interfaceController] chatOrderDidChange];
 }
 

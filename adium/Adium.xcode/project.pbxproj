@@ -5013,6 +5013,7 @@
 				9E20910C06A601A500E33E27,
 				9E20910F06A601B100E33E27,
 				9E217B7906A74CA8002A3F27,
+				4B9A684206AEB44B0010BF69,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5663,6 +5664,7 @@
 				9E20910E06A601AF00E33E27,
 				9E20911006A601B200E33E27,
 				9E217B7A06A74CA8002A3F27,
+				4B9A684306AEB44B0010BF69,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11646,6 +11648,7 @@
 			children = (
 				4B60991906A447D400EC8D78,
 				4B2E560406A33D85008866CF,
+				4B9A683D06AEB41C0010BF69,
 				4BF303160687466D000DCA65,
 				9EB7C05703D52AFA00415B22,
 				4B30490B047FBD6A00A8010A,
@@ -13918,6 +13921,47 @@
 		};
 		4B97DB6706AC123A0003EE49 = {
 			fileRef = 4B97DB6606AC123A0003EE49;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B9A683D06AEB41C0010BF69 = {
+			children = (
+				4B9A684006AEB44B0010BF69,
+				4B9A684106AEB44B0010BF69,
+			);
+			isa = PBXGroup;
+			name = "Chat Consolidation";
+			path = "Plugins/Chat Cycling";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B9A684006AEB44B0010BF69 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIChatConsolidationPlugin.h;
+			path = "Plugins/Chat Consolidation/AIChatConsolidationPlugin.h";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4B9A684106AEB44B0010BF69 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIChatConsolidationPlugin.m;
+			path = "Plugins/Chat Consolidation/AIChatConsolidationPlugin.m";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4B9A684206AEB44B0010BF69 = {
+			fileRef = 4B9A684006AEB44B0010BF69;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B9A684306AEB44B0010BF69 = {
+			fileRef = 4B9A684106AEB44B0010BF69;
 			isa = PBXBuildFile;
 			settings = {
 			};
