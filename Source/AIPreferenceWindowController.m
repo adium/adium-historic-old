@@ -279,7 +279,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     }
 
     //Alphabetize them
-    [paneArray sortUsingSelector:@selector(compare:)];
+    [paneArray sortUsingSelector:@selector(caseInsensitiveCompare:)];
     
     return(paneArray);
 }
