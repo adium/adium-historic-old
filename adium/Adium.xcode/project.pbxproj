@@ -4431,6 +4431,7 @@
 				6ECFABC806223733001C7E93,
 				4BAA1B390632ED8B00D8B92C,
 				4BAA1B3B0632ED8B00D8B92C,
+				7E1E8178063A3EEC00EB00F7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4588,6 +4589,7 @@
 				6ECFABC906223733001C7E93,
 				4BAA1B3A0632ED8B00D8B92C,
 				4BAA1B3C0632ED8B00D8B92C,
+				7E1E8179063A3EEC00EB00F7,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8930,6 +8932,8 @@
 		};
 		4B4F5B2E042D647600A8010A = {
 			children = (
+				7E1E8176063A3EEC00EB00F7,
+				7E1E8177063A3EEC00EB00F7,
 				4B5827E80613CE9D0004BD25,
 				4B5827E90613CE9D0004BD25,
 				4B435D440528AEEA00A8010A,
@@ -16878,6 +16882,36 @@
 //7E2
 //7E3
 //7E4
+		7E1E8176063A3EEC00EB00F7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIContextMenuTextView.h;
+			path = "Frameworks/Adium Framework/AIContextMenuTextView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E1E8177063A3EEC00EB00F7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIContextMenuTextView.m;
+			path = "Frameworks/Adium Framework/AIContextMenuTextView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E1E8178063A3EEC00EB00F7 = {
+			fileRef = 7E1E8176063A3EEC00EB00F7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E1E8179063A3EEC00EB00F7 = {
+			fileRef = 7E1E8177063A3EEC00EB00F7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		7E824CCD06387FAF00813072 = {
 			children = (
 				7E824CCE06387FAF00813072,
