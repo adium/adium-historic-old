@@ -401,8 +401,14 @@
 	[checkbox_customAutoReply setState:![statusState autoReplyIsStatusMessage]];
 	
 	//Strings
-	[[textView_statusMessage textStorage] setAttributedString:[statusState statusMessage]];
-	[[textView_autoReply textStorage] setAttributedString:[statusState autoReply]];
+	NSString	*statusMessage = [statusState statusMessage];
+	NSString	*autoReply = [statusState autoReply];
+	NSString	*blankString;
+	
+	if(!statusMessage || !autoReply) blankString = [NSAttributedString stringWithString:@""];
+	
+	[[textView_statusMessage textStorage] setAttributedString:(statusMessage ? statusMessage : blankString)];
+	[[textView_autoReply textStorage] setAttributedString:(autoReply ? autoReply : blankString)];
 
 	//Idle start
 	double	idleStart = [statusState forcedInitialIdleTime];
