@@ -126,7 +126,7 @@ typedef enum {
 - (BOOL)disconnectOnFastUserSwitch;
 - (BOOL)shouldSendAutoresponsesWhileAway;
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
-- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
+- (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 - (BOOL)createNewGroupChatWithListObject:(AIListObject *)contact;
 - (BOOL)connectivityBasedOnNetworkReachability;
 

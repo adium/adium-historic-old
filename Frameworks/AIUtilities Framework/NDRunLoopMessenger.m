@@ -228,6 +228,25 @@ struct message
 	
 }
 
+- (void)target:(id)aTarget
+ performSelector:(SEL)aSelector
+	withObject:(id)anObject
+	withObject:(id)anotherObject
+	withObject:(id)aThirdObject
+	withObject:(id)aFourthObject
+	withObject:(id)aFifthObject;
+{
+	[self target:aTarget
+ performSelector:aSelector 
+	  withObject:anObject 
+	  withObject:anotherObject
+	  withObject:aThirdObject
+	  withObject:aFourthObject
+	  withObject:aFifthObject
+	  withResult:NO];
+	
+}
+
 /*
  * target:performSelector:withResult:
  */
@@ -306,6 +325,28 @@ struct message
 	[theInvocation setArgument:&anObject atIndex:2];
 	[theInvocation setArgument:&anotherObject atIndex:3];
 	[theInvocation setArgument:&aThirdObject atIndex:4];
+	[self messageInvocation:theInvocation withResult:aFlag];
+	
+	if( aFlag )
+		[theInvocation getReturnValue:&theResult];
+	
+	return theResult;
+}
+
+- (id)target:(id)aTarget performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject withObject:(id)aThirdObject withObject:(id)aFourthObject withObject:(id)aFifthObject withResult:(BOOL)aFlag
+{
+	NSInvocation		* theInvocation;
+	id						theResult = nil;
+	
+	theInvocation = [NSInvocation invocationWithMethodSignature:[aTarget methodSignatureForSelector:aSelector]];
+	
+	[theInvocation setSelector:aSelector];
+	[theInvocation setTarget:aTarget];
+	[theInvocation setArgument:&anObject atIndex:2];
+	[theInvocation setArgument:&anotherObject atIndex:3];
+	[theInvocation setArgument:&aThirdObject atIndex:4];
+	[theInvocation setArgument:&aFourthObject atIndex:5];
+	[theInvocation setArgument:&aFifthObject atIndex:6];
 	[self messageInvocation:theInvocation withResult:aFlag];
 	
 	if( aFlag )
