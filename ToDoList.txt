@@ -29,6 +29,8 @@
 - View menu is inconsistent with menu item grouping
 - Update included layouts, themes, and message views
 - Group spacing is incorrect for non-standard lists
+- Dock icon overlay prefs need to be events, or need to atleast go into advanced for now
+
 
 
 //-------------------------------------------------------------------------------------------------------
