@@ -14,7 +14,7 @@
 #define NO_GROUP                @"__NoGroup__"
 #define USER_ICON_CACHE_PATH    @"~/Library/Caches/Adium"
 #define USER_ICON_CACHE_NAME    @"UserIcon_%@"
-#define MESSAGE_IMAGE_CACHE_NAME	@"Image_%@_%i.tiff"
+#define MESSAGE_IMAGE_CACHE_NAME	@"Image_%@_%i"
 
 #define AUTO_RECONNECT_DELAY	2.0	//Delay in seconds
 #define RECONNECTION_ATTEMPTS   4
@@ -396,13 +396,15 @@
 			//Scan up to ">
 			[scanner scanString:@"\">" intoString:nil];
 			
+			//Get the image, then write it out as a png
 			GaimStoredImage *gaimImage = gaim_imgstore_get(imageID);
 			NSString		*imagePath = [self _messageImageCachePathForID:imageID];
 
-			[[[[[NSImage alloc] initWithData:[NSData dataWithBytes:gaimImage->data 
-															length:gaimImage->size]] autorelease] TIFFRepresentation] writeToFile:imagePath
-																													   atomically:YES];
-				
+			NSBitmapImageRep *bitmapRep = [NSBitmapImageRep imageRepWithData:[NSData dataWithBytes:gaimImage->data 
+																							length:gaimImage->size]];
+            
+            [[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES];
+
 			//Write an <IMG SRC="filepath"> tag
 			[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
 		}
@@ -974,7 +976,7 @@
 - (NSString *)_messageImageCachePathForID:(int)imageID
 {
     NSString    *messageImageCacheFilename = [NSString stringWithFormat:MESSAGE_IMAGE_CACHE_NAME, [self UIDAndServiceID], imageID];
-    return([[USER_ICON_CACHE_PATH stringByAppendingPathComponent:messageImageCacheFilename] stringByExpandingTildeInPath]);	
+    return([[[USER_ICON_CACHE_PATH stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"] stringByExpandingTildeInPath]);	
 }
 
 //Account Connectivity -------------------------------------------------------------------------------------------------
