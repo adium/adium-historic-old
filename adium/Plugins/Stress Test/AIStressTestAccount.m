@@ -31,7 +31,7 @@
     commandChat = [[self chatForHandle:commandHandle] retain];
 
     //
-    [self echo:@"Stress Test\r-------------\rYou must create handles before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\r"];
+    [self echo:@"Stress Test\r-------------\rYou must create handles before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rcrash"];
 }
 
 - (AIChat *)chatForHandle:(AIHandle *)inHandle
@@ -167,6 +167,9 @@
 
             [NSTimer scheduledTimerWithTimeInterval:0.00001 target:self selector:@selector(timer_msginout:) userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",[NSNumber numberWithInt:count],@"count",[NSNumber numberWithInt:spread],@"spread",message,@"message",[NSNumber numberWithBool:NO],@"in",nil] repeats:YES];
             
+        }else if ([type compare:@"crash"] == 0){
+            NSMutableArray *help = [[NSMutableArray alloc] init];
+            [help addObject:nil];   
         }else{
             [self echo:[NSString stringWithFormat:@"Unknown command %@",type]];
         }
