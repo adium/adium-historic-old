@@ -680,6 +680,8 @@
 		}
 	}
 
+	[super outlineView:outlineView acceptDrop:info item:item childIndex:index];
+	
     return(YES);
 }
 

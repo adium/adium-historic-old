@@ -199,6 +199,7 @@
     }
 	
     //nib
+#warning Evan: I crashed here during quit (AIViewAdditions.m:32)... and why are we releasing a view instantiated by our nib?
     [view_contents removeAllSubviews];
     [view_contents release]; view_contents = nil;
     [messageViewController release];
