@@ -295,7 +295,7 @@
 }
 - (void)removeRowAction:(id)sender
 {
-	if([inFileTransfer isStopped]){
+	if([fileTransfer isStopped]){
 		[owner _removeFileTransferRow:self];
 	}
 }
