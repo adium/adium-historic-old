@@ -675,9 +675,6 @@ DeclareString(AppendNextMessage);
 	AIContentStatus *dateSeparator = nil;
 	BOOL			contentIsSimilar = NO;
 	
-	//Should we merge consecutive messages?
-	contentIsSimilar = (previousContent && [content isSimilarToContent:previousContent]);
-	
 	/*
 	 If the day has changed since our last message (or if there was no previous message and 
 	 we are about to display context), insert a date line.
@@ -697,6 +694,9 @@ DeclareString(AppendNextMessage);
 		//Add the date header
 		[self _addContentStatus:dateSeparator similar:NO];
 	}
+	
+	//Should we merge consecutive messages?
+	contentIsSimilar = (previousContent && [content isSimilarToContent:previousContent]);
 	
 	//Add the content objects
 	if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0 || [[content type] compare:CONTENT_CONTEXT_TYPE] == 0){
