@@ -17,6 +17,7 @@
 #import "AICustomTab.h"
 #import "AIImageUtilities.h"
 #import "AIViewAdditions.h"
+#import "AISystemTabRendering.h"
 
 @interface AICustomTabsView (PRIVATE)
 - (void)awakeFromNib;
@@ -35,7 +36,11 @@
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender;
 - (void)setFocusedForDrag:(BOOL)value;
 - (void)setDragIndex:(int)inIndex;
+- (int)totalTabWidth;
 @end
+
+#define CUSTOM_TABS_FPS		30.0		//Animation speed
+#define CUSTOM_TABS_OVERLAP	7		//Overlapped pixels between tabs
 
 @implementation AICustomTabsView
 
@@ -63,9 +68,10 @@
     [super initWithFrame:frameRect];
     
     //Load our images
-    tabBackground = [[AIImageUtilities imageNamed:@"tab_Background"/*@"fur"*/ forClass:[self class]] retain];
-    tabDivider = [[AIImageUtilities imageNamed:@"tab_divider" forClass:[self class]] retain];
-
+//    tabBackground = [[AIImageUtilities imageNamed:@"tab_Background" forClass:[self class]] retain];
+//    tabDivider = [[AIImageUtilities imageNamed:@"tab_divider" forClass:[self class]] retain];
+    tabBackground = [[AISystemTabRendering tabBackground] retain];
+    
     [self rebuildViews];
     [self arrangeViewsAbsolute:YES];
     
@@ -95,14 +101,10 @@
     for(loop = 0;loop < [tabView numberOfTabViewItems];loop++){
         NSTabViewItem		*tabViewItem = [tabView tabViewItemAtIndex:loop];
         AICustomTab		*tab;
-//        NSAttributedString	*titleString;
         
         //Create a new tab
         tab = [AICustomTab customTabWithFrame:NSMakeRect(0, 0, 100, [self frame].size.height) forTabViewItem:tabViewItem]; //100 is arbitrary
         [tab setSelected:(tabViewItem == [tabView selectedTabViewItem])];
-
-//        titleString = [[NSAttributedString alloc] initWithString:[tabViewItem label] attributes:[NSDictionary dictionary]];
-//        [tab setTitle:[titleString autorelease]];
         [tab setFrameSize:[tab size]];
 
         //Add the tab to our view, and to our tab array
@@ -115,13 +117,13 @@
 - (void)smoothlyArrangeViews
 {
     BOOL finished;
-
-    finished = [self arrangeViewsAbsolute:NO];
+    
+    finished = [self arrangeViewsAbsolute:NO]; 
 
     //If all the items aren't in place, we set ourself to adjust them again
     if(!finished){
         viewsRearranging = YES;
-        [NSTimer scheduledTimerWithTimeInterval:(1.0/24.0) target:self selector:@selector(smoothlyArrangeViews) userInfo:nil repeats:NO];
+        [NSTimer scheduledTimerWithTimeInterval:(1.0/CUSTOM_TABS_FPS) target:self selector:@selector(smoothlyArrangeViews) userInfo:nil repeats:NO];
     }else{
         viewsRearranging = NO;
     }
@@ -131,11 +133,14 @@
 //returns YES is finished.  Pass NO for a partial movement
 - (BOOL)arrangeViewsAbsolute:(BOOL)absolute
 {
-    NSEnumerator	*enumerator = [tabArray objectEnumerator];
+    NSEnumerator	*enumerator;
     NSView		*object;
-    int			xLocation = 2;
+    int			xLocation;
     BOOL		finished = YES;
 
+    //Precalc the total width
+    xLocation = ([self frame].size.width - [self totalTabWidth]) / 2.0;
+    enumerator = [tabArray objectEnumerator];
     while((object = [enumerator nextObject])){
         NSSize	size;
         NSPoint	origin;
@@ -166,7 +171,7 @@
 
         [object setFrame:NSMakeRect(origin.x, origin.y, [object frame].size.width, [object frame].size.height)];
         
-        xLocation += size.width - 1;
+        xLocation += size.width - CUSTOM_TABS_OVERLAP; //overlap the tabs a bit
     }
     
     [self setNeedsDisplay:YES];
@@ -178,7 +183,7 @@
 {
     int imageWidth;
     int xOffset;
-
+    
     //Draw the background
     imageWidth = [tabBackground size].width;
     if(tabBackground && imageWidth){
@@ -190,14 +195,14 @@
     }
     
     //Draw the divider
-    imageWidth = [tabDivider size].width;
+/*    imageWidth = [tabDivider size].width;
     if(tabDivider && imageWidth){
         xOffset = 0;
         while(xOffset < rect.size.width){
             [tabDivider compositeToPoint:NSMakePoint(rect.origin.x + xOffset,0) operation:NSCompositeSourceOver];
             xOffset += imageWidth;
         }
-    }
+    }*/
 
     //Draw our subviews
     [super drawRect:rect];
@@ -228,7 +233,11 @@
     [self arrangeViewsAbsolute:YES];
 }
 
-
+- (void)setFrame:(NSRect)frameRect
+{
+    [super setFrame:frameRect];
+    [self arrangeViewsAbsolute:YES];
+}
 
 
 //Drag tracking ------------------------------------------------------------------------
@@ -264,11 +273,12 @@
 {
     NSEnumerator	*enumerator = [tabArray objectEnumerator];
     AICustomTab		*tab;
-    int			xLocation = 2;
+    int			xLocation;
     int			index = 0;
     int			dragIndex;
     
     //Figure out where the user is hovering the toolbar item
+    xLocation = ([self frame].size.width - [self totalTabWidth]) / 2.0;
     while((tab = [enumerator nextObject])){
         NSRect	 frame = [tab frame];
 
@@ -289,7 +299,7 @@
         }
 
         index++;
-        xLocation += frame.size.width - 1;
+        xLocation += frame.size.width - CUSTOM_TABS_OVERLAP;
     }
 
     //Exchange the "tabs" (actually views... we leave the origional tabs in their place)
@@ -299,10 +309,7 @@
         if(existingIndex != dragIndex){
             [tabArray removeObjectAtIndex:existingIndex];
             [tabArray insertObject:dragTab atIndex:dragIndex];
-/*            [[dragTab tabViewItem] retain];
-                [tabView removeTabViewItem:[dragTab tabViewItem]];
-                [tabView insertTabViewItem:[dragTab tabViewItem] atIndex:dragIndex];
-            [[dragTab tabViewItem] release];*/
+
         }
     }
 
@@ -312,12 +319,13 @@
     }
 }
 
-- (void)concludeDrag
+- (BOOL)concludeDrag
 {
     NSEnumerator	*enumerator;
     AICustomTab		*customTab;
     NSTabViewItem	*selectedItem = [tabView selectedTabViewItem];
     int			index = 0;
+    BOOL		tabsChanged = NO;
 
     //Rearrange the tab views
     enumerator = [tabArray objectEnumerator];
@@ -325,6 +333,7 @@
         NSTabViewItem	*customTabView = [customTab tabViewItem];
         
         if([tabView tabViewItemAtIndex:index] != customTabView){
+            tabsChanged = YES;
             [customTabView retain];
                 [tabView removeTabViewItem:customTabView];
                 [tabView insertTabViewItem:customTabView atIndex:index];
@@ -335,17 +344,35 @@
     }
 
     [tabView selectTabViewItem:selectedItem];
-    
-    //Let everyone know the tabs rearranged
-    [[NSNotificationCenter defaultCenter] postNotificationName:AITabViewDidChangeOrderOfTabViewItemsNotification object:tabView];
 
+    if(tabsChanged){
+        //Let everyone know the tabs rearranged
+        [[NSNotificationCenter defaultCenter] postNotificationName:AITabViewDidChangeOrderOfTabViewItemsNotification object:tabView];
+    }
+
+    return(tabsChanged);
 }
 
+
+//Returns the total width of our tab tops
+- (int)totalTabWidth
+{
+    NSEnumerator	*enumerator;
+    NSView		*object;
+    int			totalWidth = 0;
+
+    totalWidth = CUSTOM_TABS_OVERLAP;
+    enumerator = [tabArray objectEnumerator];
+    while((object = [enumerator nextObject])){
+        totalWidth += [object frame].size.width - CUSTOM_TABS_OVERLAP;
+    }
+
+    return(totalWidth);
+}
+
+
+
 @end
-
-
-
-
 
 
 

@@ -37,6 +37,8 @@
 
     NSTabViewItem	*tabViewItem;
     NSSize		oldSize;
+
+    NSPoint		clickLocation;
 }
 
 + (id)customTabWithFrame:(NSRect)frameRect forTabViewItem:(NSTabViewItem *)inTabViewItem;

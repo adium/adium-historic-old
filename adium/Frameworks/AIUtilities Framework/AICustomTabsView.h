@@ -38,6 +38,6 @@
 
 - (void)beginDragOfTab:(AICustomTab *)inTab fromOffset:(NSSize)inOffset;
 - (void)updateDragAtOffset:(int)inOffset;
-- (void)concludeDrag;
+- (BOOL)concludeDrag;
 
 @end
