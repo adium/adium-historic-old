@@ -14,20 +14,14 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*
-    Helpful methods to create items for a window toolbar
+    Helpful methods for creating window toolbar items
 */
 
 #import "AIToolbarUtilities.h"
 
-@interface AIToolbarUtilities (PRIVATE)
-
-@end
-
 @implementation AIToolbarUtilities
 
-//-------------------
-//  Public Methods
-//-----------------------
+//Create a toolbar item and add it to a dictionary
 + (void)addToolbarItemToDictionary:(NSMutableDictionary *)theDict withIdentifier:(NSString *)identifier label:(NSString *)label paletteLabel:(NSString *)paletteLabel toolTip:(NSString *)toolTip target:(id)target settingSelector:(SEL)settingSelector itemContent:(id)itemContent action:(SEL)action menu:(NSMenu *)menu
 {
     NSToolbarItem   *item = [self toolbarItemWithIdentifier:identifier label:label paletteLabel:paletteLabel toolTip:toolTip target:target settingSelector:settingSelector itemContent:itemContent action:action menu:menu];
@@ -35,29 +29,30 @@
     [theDict setObject:item forKey:identifier];
 }
 
+//Create a toolbar item
 + (NSToolbarItem *)toolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label paletteLabel:(NSString *)paletteLabel toolTip:(NSString *)toolTip target:(id)target settingSelector:(SEL)settingSelector itemContent:(id)itemContent action:(SEL)action menu:(NSMenu *)menu
 {
-    NSMenuItem *mItem;
-    
-    //--Create and setup an NSToolbarItem--
-    NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+    NSToolbarItem 	*item = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+    NSMenuItem 		*mItem;
+
     [item setLabel:label];
     [item setPaletteLabel:paletteLabel];
     [item setToolTip:toolTip];
     [item setTarget:target];
-    // the settingSelector parameter can either be @selector(setView:) or @selector(setImage:).  Pass in the right
-    // one depending upon whether your NSToolbarItem will have a custom view or an image, respectively
-    // (in the itemContent parameter).  Then this next line will do the right thing automatically.
+
+    //the settingSelector parameter can either be @selector(setView:) or @selector(setImage:).  Pass in the right
+    //one depending upon whether your NSToolbarItem will have a custom view or an image, respectively
+    //(in the itemContent parameter).  Then this next line will do the right thing automatically.
     if(settingSelector && itemContent){
         [item performSelector:settingSelector withObject:itemContent];
     }
     [item setAction:action];
-    // If this NSToolbarItem is supposed to have a menu "form representation" associated with it (for text-only mode),
-    // we set it up here.  Actually, you have to hand an NSMenuItem (not a complete NSMenu) to the toolbar item,
-    // so we create a dummy NSMenuItem that has our real menu as a submenu.
-    if (menu!=NULL)
-    {
-        // we actually need an NSMenuItem here, so we construct one
+	
+    //If this NSToolbarItem is supposed to have a menu "form representation" associated with it (for text-only mode),
+    //we set it up here.  Actually, you have to hand an NSMenuItem (not a complete NSMenu) to the toolbar item,
+    //so we create a dummy NSMenuItem that has our real menu as a submenu.
+    if(menu != NULL){
+        //We actually need an NSMenuItem here, so we construct one
         mItem=[[[NSMenuItem alloc] init] autorelease];
         [mItem setSubmenu: menu];
         [mItem setTitle: [menu title]];
@@ -67,46 +62,35 @@
     return(item);
 }
 
+//Retrieve a toolbar item
 + (NSToolbarItem *)toolbarItemFromDictionary:(NSDictionary *)theDict withIdentifier:(NSString *)itemIdentifier
 {
-    // We create and autorelease a new NSToolbarItem, and then go through the process of setting up its
-    // attributes from the master toolbar item matching that identifier in our dictionary of items.
+    //We create and autorelease a new NSToolbarItem, and then go through the process of setting up its
+    //attributes from the master toolbar item matching that identifier in our dictionary of items.
     NSToolbarItem *newItem = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier] autorelease];
-    NSToolbarItem *item=[theDict objectForKey:itemIdentifier];
+    NSToolbarItem *item = [theDict objectForKey:itemIdentifier];
 
     [newItem setLabel:[item label]];
     [newItem setPaletteLabel:[item paletteLabel]];
-    if ([item view]!=NULL)
-    {
+    if([item view] != NULL){
         [newItem setView:[item view]];
-    }
-    else
-    {
+    }else{
         [newItem setImage:[item image]];
     }
+	
     [newItem setToolTip:[item toolTip]];
     [newItem setTarget:[item target]];
     [newItem setAction:[item action]];
     [newItem setMenuFormRepresentation:[item menuFormRepresentation]];
-    // If we have a custom view, we *have* to set the min/max size - otherwise, it'll default to 0,0 and the custom
-    // view won't show up at all!  This doesn't affect toolbar items with images, however.
-    if ([newItem view]!=NULL)
-    {
+	
+    //If we have a custom view, we *have* to set the min/max size - otherwise, it'll default to 0,0 and the custom
+    //view won't show up at all!  This doesn't affect toolbar items with images, however.
+    if([newItem view] != NULL){
         [newItem setMinSize:[[item view] bounds].size];
         [newItem setMaxSize:[[item view] bounds].size];
     }
 
     return newItem;
 }
-
-
-//-------------------
-//  Hidden Methods
-//-----------------------
-
-//-------------------
-//  Private Methods
-//-----------------------
-
 
 @end
