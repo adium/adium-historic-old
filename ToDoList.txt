@@ -31,7 +31,6 @@
 - Wrapped messages in minimal are indenting into the margin
 - Update included layouts, themes, and message views
 - Group spacing is incorrect for non-standard lists
-- Tab typing icons are broken
 
 
 //-------------------------------------------------------------------------------------------------------
