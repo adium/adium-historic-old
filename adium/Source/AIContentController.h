@@ -110,6 +110,7 @@ typedef enum {
 - (void)receiveContentObject:(AIContentObject *)inObject;
 - (BOOL)sendContentObject:(AIContentObject *)inObject;
 - (void)displayContentObject:(AIContentObject *)inObject;
+- (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters;
 
 //Filtering / Tracking text entry
 - (void)registerTextEntryFilter:(id)inFilter;
