@@ -4,7 +4,7 @@
 //
 //  Created by Evan Schoenberg on Fri Mar 05 2004.
 //
-
+/*
 #import "ESWebFrameViewAdditions.h"
 
 @implementation WebFrameView (ESWebFrameViewAdditions)
@@ -27,3 +27,4 @@
 }
 
 @end
+*/
