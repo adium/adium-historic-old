@@ -12,7 +12,7 @@
  | You should have received a copy of the GNU General Public License along with this program; if not,
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
-
+#import <unistd.h>
 #import "AISCLViewController.h"
 #import <Adium/Adium.h>
 #import "AISCLCell.h"
@@ -456,12 +456,30 @@
                                                     forContact:[contactListView contact]]);
 }
 
-//- (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
-//{
-//	[cell setImage:[NSImage systemCloseButtonImageForState:AIButtonActive controlTint:NSDefaultControlTint]];
-//	[cell setAlternateImage:[NSImage systemCloseButtonImageForState:AIButtonPressed controlTint:NSDefaultControlTint]];
-//	[cell setImagePosition:NSImageAbove];
-//} 
+- (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+    NSImage *newImage, *newAlternateImage;
+    NSSize newSize, newAlternateSize;
+    
+    newImage = [cell image];
+    newSize = [newImage size];
+    newSize.width = newSize.width - (newSize.height - [[contactListView groupFont] capHeight]);
+    newSize.height = [[contactListView groupFont] capHeight];
+    [newImage setScalesWhenResized:YES];
+    [newImage setSize:newSize];
+        
+    newAlternateImage = [cell alternateImage];
+    newAlternateSize = [newAlternateImage size];
+    newAlternateSize.width = newAlternateSize.width - (newAlternateSize.height - [[contactListView groupFont] capHeight]);
+    newAlternateSize.height = [[contactListView groupFont] capHeight];
+    [newAlternateImage setScalesWhenResized:YES];
+    [newAlternateImage setSize:newAlternateSize];
+
+    [cell setAlternateImage:newAlternateImage];
+    [cell setImage:newImage];
+    
+    [cell setImagePosition:NSImageAbove];
+} 
 
 
 //Auto-resizing support -----------------------------------------------------------------
