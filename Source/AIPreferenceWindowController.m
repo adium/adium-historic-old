@@ -78,17 +78,15 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		case AIPref_General: tabIdentifier = 1;
 		case AIPref_ContactList: tabIdentifier = 2; break;
 		case AIPref_Messages: tabIdentifier = 3; break;
-		case AIPref_Status_Away:
-		case AIPref_Status_Idle: tabIdentifier = 4; break;
-		case AIPref_Events: tabIdentifier = 5; break;
-		case AIPref_Dock: tabIdentifier = 6; break;
-		case AIPref_Emoticons: tabIdentifier = 7; break;
-		case AIPref_FileTransfer: tabIdentifier = 8; break;
+		case AIPref_Events: tabIdentifier = 4; break;
+		case AIPref_Dock: tabIdentifier = 5; break;
+		case AIPref_Emoticons: tabIdentifier = 6; break;
+		case AIPref_FileTransfer: tabIdentifier = 7; break;
 		case AIPref_Advanced_ContactList:
 		case AIPref_Advanced_Messages:
 		case AIPref_Advanced_Status:
 		case AIPref_Advanced_Service:
-		case AIPref_Advanced_Other: tabIdentifier = 9; break;
+		case AIPref_Advanced_Other: tabIdentifier = 8; break;
 			
 		default: tabIdentifier = 1; break;
 	}
@@ -275,23 +273,19 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
             case 3:
                 [view_Messages setPanes:[self _panesInCategory:AIPref_Messages]];
             break;
-			case 4:
-				[view_Status_Away setPanes:[self _panesInCategory:AIPref_Status_Away]];
-                [view_Status_Idle setPanes:[self _panesInCategory:AIPref_Status_Idle]];
-            break;
-            case 5:
+            case 4:
 				[view_Events setPanes:[self _panesInCategory:AIPref_Events]];
             break;
-            case 6:
+            case 5:
 				[view_Dock setPanes:[self _panesInCategory:AIPref_Dock]];
             break;
-            case 7:
+            case 6:
 				[view_Emoticons setPanes:[self _panesInCategory:AIPref_Emoticons]];
 			break;
-			case 8:
+			case 7:
 				[view_FileTransfer setPanes:[self _panesInCategory:AIPref_FileTransfer]];
 				break;
-            case 9:
+            case 8:
                 [tableView_advanced reloadData];
 				
                 //Select the previously selected row
@@ -324,12 +318,11 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		case 1: return([view_General desiredHeight]); break;
 		case 2: return([view_ContactList desiredHeight]); break;
 		case 3: return([view_Messages desiredHeight]); break;
-		case 4: return([AIModularPaneCategoryView heightForTabView:tabView_status]); break;
-		case 5: return([view_Events desiredHeight]); break;
-		case 6: return([view_Dock desiredHeight]); break;
-		case 7: return([view_Emoticons desiredHeight]); break;
-		case 8: return([view_FileTransfer desiredHeight]); break;
-		case 9: return(ADVANCED_PANE_HEIGHT); break;
+		case 4: return([view_Events desiredHeight]); break;
+		case 5: return([view_Dock desiredHeight]); break;
+		case 6: return([view_Emoticons desiredHeight]); break;
+		case 7: return([view_FileTransfer desiredHeight]); break;
+		case 8: return(ADVANCED_PANE_HEIGHT); break;
 		default: return(0); break;
 	}
 }
