@@ -19,6 +19,7 @@
 
 #import "AIAttributedStringAdditions.h"
 
+NSAttributedString *_safeString(NSAttributedString *inString);
 
 @implementation NSMutableAttributedString (AIAttributedStringAdditions)
 
@@ -44,7 +45,7 @@
 
 - (NSAttributedString *)safeString
 {
-    return [[self copy] safeString];
+    return(_safeString((NSAttributedString *)self));
 }
 
 @end
@@ -85,39 +86,45 @@
 
 - (NSAttributedString *)safeString
 {
-    if([self containsAttachments]){
-	NSMutableAttributedString *safeString = [self mutableCopy];
-	int currentLocation = 0;
-	NSRange attachmentRange;
-
-	//find attachment
-	attachmentRange = [[safeString string] rangeOfString:[NSString stringWithFormat:@"%C",NSAttachmentCharacter] options:0 range:NSMakeRange(currentLocation,[safeString length] - currentLocation)];
-
-	while(attachmentRange.length != 0){ //if we found an attachment
-
-	    NSString *replacement = [[safeString attribute:NSAttachmentAttributeName atIndex:attachmentRange.location effectiveRange:nil] string];
-
-	    if(replacement == nil){
-		replacement = [NSString stringWithString:@"<<NSAttachment>>"];
-	    }
-	    
-	    //--insert the emoticon--
-	    [safeString replaceCharactersInRange:attachmentRange withString:replacement];
-
-	    attachmentRange.length = [replacement length];
-
-	    currentLocation = attachmentRange.location + attachmentRange.length;
-
-	    //find the next attachment
-	    attachmentRange = [[safeString string] rangeOfString:[NSString stringWithFormat:@"%C",NSAttachmentCharacter] options:0 range:NSMakeRange(currentLocation,[safeString length] - currentLocation)];
-	}
-	
-	return safeString;
-
-    }else{
-	return self;
-
-    }
+    return(_safeString(self));
 }
 
 @end
+
+//Separated out to avoid code duplication
+NSAttributedString *_safeString(NSAttributedString *inString)
+{
+    if([inString containsAttachments]){
+        NSMutableAttributedString *safeString = [inString mutableCopy];
+        int currentLocation = 0;
+        NSRange attachmentRange;
+
+        //find attachment
+        attachmentRange = [[safeString string] rangeOfString:[NSString stringWithFormat:@"%C",NSAttachmentCharacter] options:0 range:NSMakeRange(currentLocation,[safeString length] - currentLocation)];
+
+        while(attachmentRange.length != 0){ //if we found an attachment
+
+            NSString *replacement = [[safeString attribute:NSAttachmentAttributeName atIndex:attachmentRange.location effectiveRange:nil] string];
+
+            if(replacement == nil){
+                replacement = [NSString stringWithString:@"<<NSAttachment>>"];
+            }
+
+            //remove the attachment, replacing it with the original text
+            [safeString replaceCharactersInRange:attachmentRange withString:replacement];
+
+            attachmentRange.length = [replacement length];
+
+            currentLocation = attachmentRange.location + attachmentRange.length;
+
+            //find the next attachment
+            attachmentRange = [[safeString string] rangeOfString:[NSString stringWithFormat:@"%C",NSAttachmentCharacter] options:0 range:NSMakeRange(currentLocation,[safeString length] - currentLocation)];
+        }
+
+        return safeString;
+
+    }else{
+        return inString;
+
+    }
+}
