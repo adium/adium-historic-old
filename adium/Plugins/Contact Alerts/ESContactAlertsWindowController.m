@@ -351,7 +351,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
         NSEnumerator 	*enumerator = 	[contactArray objectEnumerator];
         AIListObject	*contact;
-        NSString 	*groupName = [[[NSString alloc] init] autorelease];
+//        NSString 	*groupName = [[[NSString alloc] init] autorelease];
         BOOL		firstOfflineSearch = NO;
 
         while (contact = [enumerator nextObject])
@@ -373,6 +373,9 @@ static ESContactAlertsWindowController *sharedInstance = nil;
                 [menuItem setIndentationLevel:1];
             #endif
 
+                    
+#warning Groups can not go into the menu this way anymore...
+            /*
             if ([groupName compare:[[contact containingGroup] displayName]] != 0)
             {
                 NSMenuItem	*groupItem;
@@ -389,7 +392,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
                 [contactMenu addItem:groupItem];
                 firstOfflineSearch = YES; //start searching for an offline contact
             }
-
+*/
             if (firstOfflineSearch)
             {
                 if ( !([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //look for the first offline contact
@@ -407,7 +410,8 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
             [contactMenu addItem:menuItem];
 
-            groupName = [[contact containingGroup] displayName];
+            //XXX EDS
+//            groupName = [[contact containingGroup] displayName];
         }
         [contactMenu setAutoenablesItems:NO];
     }
