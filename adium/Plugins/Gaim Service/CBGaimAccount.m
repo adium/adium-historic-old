@@ -942,10 +942,12 @@
 
 - (void)setBuddyImageFromFilename:(char *)imageFilename
 {
-    //Set to nil first
-    gaim_account_set_buddy_icon(account, nil);
-    //Set to new user icon
-    gaim_account_set_buddy_icon(account,imageFilename);
+    if (account != NULL) {
+        //Set to nil first
+        gaim_account_set_buddy_icon(account, nil);
+        //Set to new user icon
+        gaim_account_set_buddy_icon(account,imageFilename);
+    }
 }
 
 - (void)displayError:(NSString *)errorDesc
@@ -1177,24 +1179,5 @@
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @end
