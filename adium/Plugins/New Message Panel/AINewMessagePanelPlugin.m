@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Tue Jul 13 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AINewMessagePanelPlugin.h"
@@ -13,7 +12,7 @@
 
 - (void)installPlugin
 {
-	newMessageMenuItem = [[NSMenuItem alloc] initWithTitle:@"New Chat"
+	newMessageMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"New Chat...",nil)
 													target:self 
 													action:@selector(newMessage:)
 											 keyEquivalent:@"n"];
