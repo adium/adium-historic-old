@@ -220,8 +220,10 @@
         
         range = [inString rangeOfString:@"%message"];
         if(range.location != NSNotFound){
+            // Using a safeString so image attachments are removed
+            // while waiting for a permanent fix that would allows us to use emoticons
             [inString replaceCharactersInRange:range withString:
-              [AIHTMLDecoder encodeHTML:[(AIContentMessage *)content message] 
+              [AIHTMLDecoder encodeHTML:[[(AIContentMessage *)content message] safeString]
                   headers:NO fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES imagesPath:nil]];
         }
         
