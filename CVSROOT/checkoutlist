@@ -12,4 +12,4 @@
 #
 # comment lines begin with '#'
 syncmail
-ciabot_cvs.pl
+ciabot.pl
