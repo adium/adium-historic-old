@@ -178,6 +178,7 @@
 {
     struct sockaddr_in 		socketAddress;
     struct hostent 		*hostEnt;
+    char			*address;
 
     //resolve the host
     hostEnt = gethostbyname([host cString]);
@@ -185,7 +186,11 @@
         NSLog(@"Error finding host");
         return(nil);
     }
+    address = inet_ntoa(*((struct in_addr *)hostEnt->h_addr));
+    hostIP = [[NSString alloc] initWithCString:address]; //Remember our host IP
 
+    NSLog(@"%@",hostIP);
+    
     //Create the socket
     theSocket = socket(AF_INET, SOCK_STREAM, 0);
     if(theSocket < 0){
@@ -199,8 +204,7 @@
     //Setup the socket (destination) address
     socketAddress.sin_family = AF_INET;
     socketAddress.sin_port = htons(port);
-    inet_aton(inet_ntoa(*((struct in_addr *)hostEnt->h_addr)), &(socketAddress.sin_addr));
-//    inet_aton([host cString], &(socketAddress.sin_addr));
+    inet_aton(address, &(socketAddress.sin_addr));
     memset(&(socketAddress.sin_zero),'\0',8);
 
     //Set up the read buffer
@@ -216,11 +220,17 @@
     return(self);
 }
 
+- (NSString *)hostIP
+{
+    return(hostIP);
+}
+
 - (void)dealloc
 {
     close(theSocket);
     [readBuffer release]; readBuffer = nil;
-
+    [hostIP release]; hostIP = nil;
+    
     [super dealloc];
 }
 
