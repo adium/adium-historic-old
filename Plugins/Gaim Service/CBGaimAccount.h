@@ -157,6 +157,7 @@
 - (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact;
+- (NSString *)titleForAccountActionMenuLabel:(const char *)label;
 
 - (NSString *)_UIDForAddingObject:(AIListContact *)object;
 

@@ -362,4 +362,12 @@
 	return([super titleForContactMenuLabel:label forContact:inContact]);
 }
 
+#pragma mark Account Action Menu Items
+- (NSString *)titleForAccountActionMenuLabel:(const char *)label
+{
+	/* The Yahoo actions are "Activate ID" (or perhaps "Active ID," depending on where in the code you look)
+	 * and "Join User in Chat...".  These are dumb. Additionally, Join User in Chat doesn't work as of gaim 1.1.4. */
+	return(nil);
+}
+
 @end

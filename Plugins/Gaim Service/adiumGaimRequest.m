@@ -55,6 +55,8 @@ static void *adiumGaimRequestInput(const char *title, const char *primary, const
 	[infoDict setObject:[NSNumber numberWithBool:multiline] forKey:@"Multiline"];
 	[infoDict setObject:[NSNumber numberWithBool:masked] forKey:@"Masked"];
 	
+	GaimDebug (@"adiumGaimRequestInput: %@",infoDict);
+	
 	[ESGaimRequestWindowController performSelectorOnMainThread:@selector(showInputWindowWithDict:)
 													withObject:infoDict
 												 waitUntilDone:YES];
@@ -64,7 +66,11 @@ static void *adiumGaimRequestInput(const char *title, const char *primary, const
 
 static void *adiumGaimRequestChoice(const char *title, const char *primary, const char *secondary, unsigned int defaultValue, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData, size_t choiceCount, va_list choices)
 {
-    GaimDebug (@"adiumGaimRequestChoice");
+	GaimDebug (@"adiumGaimRequestChoice: %s\n%s\n%s ",
+			   (title ? title : ""),
+			   (primary ? primary : ""),
+			   (secondary ? secondary : ""));
+
     return(adium_gaim_get_handle());
 }
 
@@ -125,7 +131,8 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 {
 	NSString *titleString = (title ?  [[NSString stringWithUTF8String:title] lowercaseString] : nil);
 	
-    if ([titleString rangeOfString: @"new jabber"].location != NSNotFound) {
+    if (titleString && 
+		[titleString rangeOfString:@"new jabber"].location != NSNotFound) {
 		/* Jabber registration request. Instead of displaying a request dialogue, we fill in the information automatically. */
 		GList					*gl, *fl, *field_list;
 		GaimRequestField		*field;
@@ -157,6 +164,12 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 			
 		}
 		((GaimRequestFieldsCb)okCb)(userData, fields);
+		
+	}else{
+		GaimDebug (@"adiumGaimRequestFields: %s\n%s\n%s ",
+				   (title ? title : ""),
+				   (primary ? primary : ""),
+				   (secondary ? secondary : ""));
 	}
     
 	return(adium_gaim_get_handle());
@@ -164,40 +177,58 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 
 static void *adiumGaimRequestFile(const char *title, const char *filename, gboolean savedialog, GCallback ok_cb, GCallback cancel_cb,void *user_data)
 {
-	GaimXfer *xfer = (GaimXfer *)user_data;
-	GaimXferType xferType = gaim_xfer_get_type(xfer);
-	if (xfer) {
-	    if (xferType == GAIM_XFER_RECEIVE) {
-			GaimDebug (@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
-			
-			ESFileTransfer  *fileTransfer;
-			NSString		*destinationUID = [NSString stringWithUTF8String:gaim_normalize(xfer->account,xfer->who)];
-			
-			//Ask the account for an ESFileTransfer* object
-			fileTransfer = [accountLookup(xfer->account) newFileTransferObjectWith:destinationUID
-																			  size:gaim_xfer_get_size(xfer)
-																	remoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
-			
-			//Configure the new object for the transfer
-			[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
-			
-			xfer->ui_data = [fileTransfer retain];
-			
-			//Tell the account that we are ready to request the reception
-			[accountLookup(xfer->account) mainPerformSelector:@selector(requestReceiveOfFileTransfer:)
-												   withObject:fileTransfer];
-			
-	    } else if (xferType == GAIM_XFER_SEND) {
-			if (xfer->local_filename != NULL && xfer->filename != NULL){
-				gaim_xfer_choose_file_ok_cb(xfer, xfer->local_filename);
-			}else{
-				gaim_xfer_choose_file_cancel_cb(xfer, xfer->local_filename);
-				[[SLGaimCocoaAdapter sharedInstance] displayFileSendError];
-			}
-	    }
-		
-	}
-    
+	NSString	*titleString = (title ? [NSString stringWithUTF8String:title] : nil);
+	if(titleString &&
+	   ([titleString rangeOfString:@"Sametime"].location != NSNotFound)){
+		   if([titleString rangeOfString:@"Export"].location != NSNotFound){
+			   NSSavePanel *savePanel = [NSSavePanel savePanel];
+			   
+			   if([savePanel runModalForDirectory:nil file:nil] == NSOKButton){
+				   ((GaimRequestFileCb)ok_cb)(user_data, [[savePanel filename] UTF8String]);
+			   }
+		   }else if([titleString rangeOfString:@"Import"].location != NSNotFound){
+			   NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+			   
+			   if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
+				   ((GaimRequestFileCb)ok_cb)(user_data, [[openPanel filename] UTF8String]);
+			   }
+		   }		   
+		   
+	   }else{
+		   GaimXfer *xfer = (GaimXfer *)user_data;
+		   GaimXferType xferType = gaim_xfer_get_type(xfer);
+		   if (xfer) {
+			   if (xferType == GAIM_XFER_RECEIVE) {
+				   GaimDebug (@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
+				   
+				   ESFileTransfer  *fileTransfer;
+				   NSString		*destinationUID = [NSString stringWithUTF8String:gaim_normalize(xfer->account,xfer->who)];
+				   
+				   //Ask the account for an ESFileTransfer* object
+				   fileTransfer = [accountLookup(xfer->account) newFileTransferObjectWith:destinationUID
+																					 size:gaim_xfer_get_size(xfer)
+																		   remoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
+				   
+				   //Configure the new object for the transfer
+				   [fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
+				   
+				   xfer->ui_data = [fileTransfer retain];
+				   
+				   //Tell the account that we are ready to request the reception
+				   [accountLookup(xfer->account) mainPerformSelector:@selector(requestReceiveOfFileTransfer:)
+														  withObject:fileTransfer];
+				   
+			   } else if (xferType == GAIM_XFER_SEND) {
+				   if (xfer->local_filename != NULL && xfer->filename != NULL){
+					   gaim_xfer_choose_file_ok_cb(xfer, xfer->local_filename);
+				   }else{
+					   gaim_xfer_choose_file_cancel_cb(xfer, xfer->local_filename);
+					   [[SLGaimCocoaAdapter sharedInstance] displayFileSendError];
+				   }
+			   }
+		   }
+	   }
+	   
 	return(adium_gaim_get_handle());
 }
 

@@ -417,6 +417,16 @@
 	return([super titleForContactMenuLabel:label forContact:inContact]);
 }
 
+#pragma mark Account Action Menu Items
+- (NSString *)titleForAccountActionMenuLabel:(const char *)label
+{
+	if(strcmp(label, "Set Friendly Name") == 0){
+		return(nil);
+	}
+
+	return([super titleForAccountActionMenuLabel:label]);
+}
+
 /*
  //Added to msn.c
 //**ADIUM

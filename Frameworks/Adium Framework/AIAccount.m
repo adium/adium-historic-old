@@ -398,12 +398,24 @@
 /*!
  * @brief Menu items for contact
  *
- * Returns an array of menu items for a contact on this account.  This is the best place to add protocol specific
- * actions that aren't supported by Adium.
+ * Returns an array of menu items for a contact on this account.  This is the best place to add protocol-specific
+ * actions that aren't otherwise supported by Adium.
  * @param inContact AIListContact for menu items
  * @return NSArray of NSMenuItem instances for the passed contact
  */
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact
+{
+	return(nil);
+}
+
+/*!
+ * @brief Menu items for the account's actions
+ *
+ * Returns an array of menu items for account-specific actions.  This is the best place to add protocol-specific
+ * actions that aren't otherwise supported by Adium.  It will only be queried if the account is online.
+ * @return NSArray of NSMenuItem instances for this account
+ */
+- (NSArray *)accountActionMenuItems
 {
 	return(nil);
 }

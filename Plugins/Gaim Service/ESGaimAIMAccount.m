@@ -382,6 +382,22 @@
 	return([super titleForContactMenuLabel:label forContact:inContact]);
 }
 
+#pragma mark Account Action Menu Items
+- (NSString *)titleForAccountActionMenuLabel:(const char *)label
+{
+	/* Remove various actions which are either duplicates of superior Adium actions (*grin*)
+	 * or are just silly ("Confirm Account" for example). */
+	if(strcmp(label, "Set Available Message...") == 0){
+		return(nil);
+	}else if(strcmp(label, "Format Screen Name...") == 0){
+		return(nil);
+	}else if(strcmp(label, "Confirm Account") == 0){
+		return(nil);
+	}
+
+	return([super titleForAccountActionMenuLabel:label]);
+}
+
 #pragma mark DirectIM (IM Image)
 //We are now connected via DirectIM to theContact
 - (void)directIMConnected:(AIListContact *)theContact

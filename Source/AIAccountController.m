@@ -1427,31 +1427,37 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 }
 
 /*!
- * @brief Add the passed state menu items
+ * @brief Add the passed state menu items; also take this opportunity to add account-specific items for online accounts
  *
  * When given menu items, make a submenu out of them for each account with a represented object referring to that account.
- * We only add the submenu if more than one account exists, as with only one account it would be redundant.
+ * We only add the status menu items in a submenu if more than one account exists, as with only one account it would be redundant.
  */
 - (void)addStateMenuItems:(NSArray *)menuItemArray
 {
-	if([accountArray count] > 1){
-		NSArray				*originalMenuItemArray;
-		NSMutableDictionary	*temporaryMenuDict = [NSMutableDictionary dictionary];
-		NSEnumerator		*enumerator;
-		AIAccount			*account;
-		NSArray				*accountMenuItemArray;
+	NSArray				*originalMenuItemArray;
+	NSMutableDictionary	*temporaryMenuDict = [NSMutableDictionary dictionary];
+	NSEnumerator		*enumerator;
+	AIAccount			*account;
+	NSArray				*accountMenuItemArray;
+	int					accountArrayCount;
+	
+	accountArrayCount = [accountArray count];
+	
+	//Hold on to this array
+	originalMenuItemArray = [menuItemArray copy];
+	
+	//Remove the menu items which we've been passed... we'll be creating our own based off of them.
+	[[adium statusController] removeAllMenuItemsForPlugin:self];
+	
+	//Enumerate our accounts array
+	enumerator = [accountArray objectEnumerator];
+	while((account = [enumerator nextObject])){    
 		
-		//Hold on to this array
-		originalMenuItemArray = [menuItemArray copy];
+		NSMenu			*accountSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
+		BOOL			addedItems = NO;
 		
-		//Remove the menu items which we've been passed... we'll be creating our own based off of them.
-		[[adium statusController] removeAllMenuItemsForPlugin:self];
-		
-		//Enumerate our accounts array
-		enumerator = [accountArray objectEnumerator];
-		while((account = [enumerator nextObject])){    
-			
-			NSMenu			*stateMenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
+		//Add status items if we have more than one account
+		if(accountArrayCount > 1){
 			NSEnumerator	*menuItemEnumerator = [originalMenuItemArray objectEnumerator];
 			NSMenuItem		*menuItem;
 			NSMenuItem		*accountMenuItem;
@@ -1476,37 +1482,68 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 				[accountMenuItem setRepresentedObject:newRepresentedObject];
 				
 				//Add to our menu
-				[stateMenu addItem:accountMenuItem];		
-			}
-			
-			[temporaryMenuDict setObject:stateMenu
-								  forKey:[account internalObjectID]];
-		}
-		
-		//Enumerate all arrays of menu items (for all plugins)
-		enumerator = [accountMenuItemArraysDict objectEnumerator];
-		while(accountMenuItemArray = [enumerator nextObject]){
-			NSEnumerator	*menuItemEnumerator = [accountMenuItemArray objectEnumerator];
-			NSMenuItem		*menuItem;
-			
-			//Enumerate each menu item in this array (the array corresponds to one plugin's menu items; each menu item
-			//will be for a distinct AIAccount).
-			while(menuItem = [menuItemEnumerator nextObject]){
-				AIAccount	*account = [menuItem representedObject];
-				NSMenu		*menu = [[[temporaryMenuDict objectForKey:[account internalObjectID]] copy] autorelease];
-				
-				//Remove the menu items which we've been passed... we'll be creating our own based off of them.
-				[[adium statusController] plugin:self didAddMenuItems:[menu itemArray]];
-				
-				//Set the submenu
-				[menuItem setSubmenu:menu];
+				[accountSubmenu addItem:accountMenuItem];
+				addedItems = YES;
 			}
 		}
 		
-		//Clean up
-		[originalMenuItemArray release];
+		//Add account action menu items to an Actions submenuif the account is online
+		if([account online]){
+			NSArray	*accountActionMenuItems = [account accountActionMenuItems];
+			
+			//Only proceed if we got at least one menu item
+			if([accountActionMenuItems count]){
+				//Add a separator as necessary
+				if(addedItems) [accountSubmenu addItem:[NSMenuItem separatorItem]];
+				
+				NSMenu			*actionsSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
+				NSEnumerator	*enumerator;
+				NSMenuItem		*menuItem, *actionsSubmenuItem;
+				
+				enumerator = [accountActionMenuItems objectEnumerator];
+				while(menuItem = [enumerator nextObject]){
+					[actionsSubmenu addItem:menuItem];
+				}
+				
+				actionsSubmenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Actions",nil)
+																						   target:self
+																						   action:@selector(dummyAction:)
+																					keyEquivalent:@""] autorelease];
+				[actionsSubmenuItem setSubmenu:actionsSubmenu];
+				
+				[accountSubmenu addItem:actionsSubmenuItem];
+			}
+		}
+		
+		[temporaryMenuDict setObject:accountSubmenu
+							  forKey:[account internalObjectID]];
 	}
+	
+	//Enumerate all arrays of menu items (for all plugins)
+	enumerator = [accountMenuItemArraysDict objectEnumerator];
+	while(accountMenuItemArray = [enumerator nextObject]){
+		NSEnumerator	*accountMenuItemEnumerator = [accountMenuItemArray objectEnumerator];
+		NSMenuItem		*accountMenuItem;
+		
+		//Enumerate each menu item in this array (the array corresponds to one plugin's menu items; each menu item
+		//will be for a distinct AIAccount).
+		while(accountMenuItem = [accountMenuItemEnumerator nextObject]){
+			AIAccount	*account = [accountMenuItem representedObject];
+			NSMenu		*accountSubmenu = [[[temporaryMenuDict objectForKey:[account internalObjectID]] copy] autorelease];
+			
+			//Tell the status controller to update these items as necessary
+			[[adium statusController] plugin:self didAddMenuItems:[accountSubmenu itemArray]];
+			
+			//Set the submenu
+			[accountMenuItem setSubmenu:accountSubmenu];
+		}
+	}
+	
+	//Clean up
+	[originalMenuItemArray release];
 }
+
+- (void)dummyAction:(id)sender {};
 
 /*!
  * @brief Remove the passed state menu items

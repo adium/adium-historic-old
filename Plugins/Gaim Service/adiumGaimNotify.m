@@ -20,8 +20,12 @@
 
 static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, const char *primary, const char *secondary, GCallback cb,void *userData)
 {
-    //Values passed can be null
-    GaimDebug (@"adiumGaimNotifyMessage: %s: %s, %s", title, primary, secondary);
+	GaimDebug (@"adiumGaimNotifyMessage: type: %i\n%s\n%s\n%s ",
+			   type,
+			   (title ? title : ""),
+			   (primary ? primary : ""),
+			   (secondary ? secondary : ""));
+
 	return ([[SLGaimCocoaAdapter sharedInstance] handleNotifyMessageOfType:type
 																 withTitle:title
 																   primary:primary
@@ -52,15 +56,17 @@ static void *adiumGaimNotifyEmail(const char *subject, const char *from, const c
 
 static void *adiumGaimNotifyFormatted(const char *title, const char *primary, const char *secondary, const char *text, GCallback cb,void *userData)
 {
+	GaimDebug (@"adiumGaimNotifyFormatted: %s\n%s\n%s\n%s ",
+			   (title ? title : ""),
+			   (primary ? primary : ""),
+			   (secondary ? secondary : ""),
+			   (text ? text : ""));
+	
     return(adium_gaim_get_handle());
 }
 
 static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who, const char *title, const char *primary, const char *secondary, const char *text, GCallback cb,void *userData)
 {
-	//	NSLog(@"%s - %s: %s\n%s\n%s\n%s",gc->account->username,who,title,primary, secondary, text);
-	//	NSString	*titleString = [NSString stringWithUTF8String:title];
-	//	NSString	*primaryString = [NSString stringWithUTF8String:primary];
-	//	NSString	*secondaryString = [NSString stringWithUTF8String:secondary];
 	NSString	*textString = [NSString stringWithUTF8String:text];
 	
 	if (GAIM_CONNECTION_IS_VALID(gc)){

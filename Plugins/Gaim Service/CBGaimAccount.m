@@ -2091,7 +2091,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		buddy = gaim_find_buddy(account, gaim_normalize(account, [[inContact UID] UTF8String]));
 		
 		if(prpl_info && prpl_info->blist_node_menu && buddy){
-			menuItemArray = [NSMutableArray array];
 			
 			//Add a NSMenuItem for each node action specified by the prpl
 			for(l = ll = prpl_info->blist_node_menu((GaimBlistNode *)buddy); l; l = l->next) {
@@ -2115,6 +2114,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 						[NSValue valueWithPointer:buddy],@"GaimBuddy",
 						nil];
 					
+					if(!menuItemArray) menuItemArray = [NSMutableArray array];
+
 					[menuItem setRepresentedObject:dict];
 					[menuItemArray addObject:menuItem];
 				}
@@ -2130,13 +2131,100 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)performContactMenuAction:(NSMenuItem *)sender
 {
 	NSDictionary		*dict = [sender representedObject];
-
+	
 	[gaimThread performContactMenuActionFromDict:dict];
 }
 
 //Subclasses may override to provide a localized label and/or prevent a specified label from being shown
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
+	return([NSString stringWithUTF8String:label]);
+}
+
+/*!
+* @brief Menu items for the account's actions
+ *
+ * Returns an array of menu items for account-specific actions.  This is the best place to add protocol-specific
+ * actions that aren't otherwise supported by Adium.  It will only be queried if the account is online.
+ * @return NSArray of NSMenuItem instances for this account
+ */
+- (NSArray *)accountActionMenuItems
+{
+	NSMutableArray			*menuItemArray = nil;
+	
+	if (account && gaim_account_is_connected(account)){
+		GaimPlugin *plugin = account->gc->prpl;
+		
+		if(GAIM_PLUGIN_HAS_ACTIONS(plugin)){
+			GList	*l, *ll;
+			
+			//Avoid adding separators between nonexistant items (i.e. items which Gaim shows but we don't)
+			BOOL	addedAnAction = NO;
+			
+			for (l = ll = GAIM_PLUGIN_ACTIONS(plugin, account->gc); l; l = l->next) {
+				
+				if(l->data){
+					GaimPluginAction	*action;
+					NSDictionary		*dict;
+					NSMenuItem			*menuItem;
+					NSString			*title;
+					
+					action = (GaimPluginAction *) l->data;
+					action->plugin = plugin;
+					action->context = account->gc;
+					
+					//If titleForAccountActionMenuLabel: returns nil, we don't add the menuItem
+					if(title = [self titleForAccountActionMenuLabel:action->label]){ 
+						menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
+																						 target:self
+																						 action:@selector(performAccountMenuAction:)
+																				  keyEquivalent:@""] autorelease];
+						[menuItem setImage:[AIServiceIcons serviceIconForService:[self service]
+																			type:AIServiceIconSmall
+																	   direction:AIIconNormal]];
+						dict = [NSDictionary dictionaryWithObject:[NSValue valueWithPointer:action]
+														   forKey:@"GaimPluginAction"];
+						
+						[menuItem setRepresentedObject:dict];
+						
+						if(!menuItemArray) menuItemArray = [NSMutableArray array];
+						
+						[menuItemArray addObject:menuItem];
+						addedAnAction = YES;
+					}
+					
+				}else{
+					if(addedAnAction){
+						[menuItemArray addObject:[NSMenuItem separatorItem]];
+						addedAnAction = NO;
+					}
+				}
+			} /* end for */
+			
+			g_list_free(ll);
+		}
+	}
+
+	return menuItemArray;
+}
+
+//Action of a dynamically-generated contact menu item
+- (void)performAccountMenuAction:(NSMenuItem *)sender
+{
+	NSDictionary		*dict = [sender representedObject];
+	
+	[gaimThread performAccountMenuActionFromDict:dict];
+}
+
+//Subclasses may override to provide a localized label and/or prevent a specified label from being shown
+- (NSString *)titleForAccountActionMenuLabel:(const char *)label
+{
+	if((strcmp(label, "Change Password...") == 0) || (strcmp(label, "Change Password") == 0)){
+		/* XXX This depends upon an implementation of adiumGaimRequestFields in adiumGaimRequest.m.
+		* Enable once that is done. */
+		return(nil);
+	}
+
 	return([NSString stringWithUTF8String:label]);
 }
 
