@@ -36,6 +36,7 @@
 - (NSString *)_mapIncomingGroupName:(NSString *)name;
 - (NSString *)_mapOutgoingGroupName:(NSString *)name;
 - (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy;
+- (void)_sendMessage:(const char *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags time:(time_t)mtime;
 @end
 
 @implementation CBGaimAccount
@@ -52,7 +53,7 @@
 //
 - (void)_setInstantMessagesWithContact:(AIListContact *)contact enabled:(BOOL)enable
 {
-	AIChat *chat = [chatDict objectForKey:[contact UID]];
+	AIChat *chat = [chatDict objectForKey:[contact uniqueObjectID]];
 	if(chat){
 		//Enable/disable the chat
 		[[chat statusDictionary] setObject:[NSNumber numberWithBool:enable] forKey:@"Enabled"];
@@ -362,6 +363,10 @@
 
 - (void)accountConvReceivedIM:(const char*)message inConversation:(GaimConversation*)conv withFlags:(GaimMessageFlags)flags atTime: (time_t)mtime
 {
+	AIChat					*chat;
+	AIListContact			*sourceContact;
+	GaimConversationType	convType;
+	
     if (GAIM_DEBUG) {
 		NSLog(@"Received %s from %s",message,conv->name);
     }
@@ -375,82 +380,140 @@
          */
         return;
     }
-    
-    AIChat 			*chat = (AIChat*) conv->ui_data;
-    AIListContact 	*listContact = (AIListContact*) [chat listObject];
-    
-    if (chat == nil) {
-        if (listContact == nil) {
+	
+	chat = (AIChat*) conv->ui_data;
+	
+	sourceContact = (AIListContact*) [chat listObject];
+	
+	if (!chat) {
+		//No chat is associated with the IM conversation
+		
+		if (!sourceContact) {
+			//No sourceContact is available yet
+			
 			NSAssert(account != nil, @"account was nil");
 			NSAssert(conv->name != nil, @"conv->name was nil");
 			
 			NSString *assertString = [NSString stringWithFormat:@"conv->name was %s on message %s on account 0x%x",conv->name,message,account];
 			NSAssert([(NSString *)[NSString stringWithUTF8String:(conv->name)] length] != 0, assertString);
-            GaimBuddy 	*buddy = gaim_find_buddy(account, conv->name);
-            if (buddy == NULL) {
-                buddy = gaim_buddy_new(account, conv->name, NULL);  //create a GaimBuddy
-                GaimGroup *group = gaim_find_group(_("Orphans"));   //get the GaimGroup
-                if (group == NULL) {                                //if the group doesn't exist yet
-                    group = gaim_group_new(_("Orphans"));           //create the GaimGroup
-                    gaim_blist_add_group(group, NULL);              //add it gaimside
-                }
-                gaim_blist_add_buddy(buddy, NULL, group, NULL);     //add the buddy to the gaimside list
+			
+			GaimBuddy 	*buddy;
+			GaimGroup   *group;
+			
+			buddy = gaim_find_buddy(account, conv->name);
+			if (!buddy) {
+				//No gaim_buddy corresponding to the conv->name is on our list, so create one
+				
+				buddy = gaim_buddy_new(account, conv->name, NULL);  //create a GaimBuddy
+				group = gaim_find_group(_("Orphans"));				//get the GaimGroup
+				if (!group) {										//if the group doesn't exist yet
+					group = gaim_group_new(_("Orphans"));           //create the GaimGroup
+					gaim_blist_add_group(group, NULL);              //add it gaimside
+				}
+				gaim_blist_add_buddy(buddy, NULL, group, NULL);     //add the buddy to the gaimside list
 				
 #warning Must add to serverside list to get status updates.  Need to remove when the chat closes or the account disconnects. Possibly want to use some sort of hidden Adium group for this.
 				serv_add_buddy(gc, buddy->name, group);				//add it to the serverside list
 				
 				//Add it to Adium's list
 				//[object setRemoteGroupName:[inGroup UID]]; //Use the non-mapped group name locally
-            }
+			}
 			NSAssert(buddy != nil, @"buddy was nil");
-            listContact = [self contactAssociatedWithBuddy:buddy];
-			NSAssert(listContact != nil, @"listContact was nil immediately after contactAssociatedWithBuddy");
-        }
+			
+			sourceContact = [self contactAssociatedWithBuddy:buddy];
+		}
 		
 		/*
 		 Adam: I had two instances of Adium connect on the same account name, and
-		an incoming message caused the one instance to assert here, but the other instance was fine...
-		
-		If no serviceID or UID is passed up there ^^ , listContact will be nil and trigger this assertion
-		... so, if buddy is nil or buddy->name is nil or 0 length, we wont get a UID, wont get a list contact, and then will assert below
-		
-		Is this how we are supposed to handle incoming stranger messages?  By looking up a buddy from conv->name ?
-		
+		 an incoming message caused the one instance to assert here, but the other instance was fine...
+		 
+		 If no serviceID or UID is passed up there ^^ , listContact will be nil and trigger this assertion
+		 ... so, if buddy is nil or buddy->name is nil or 0 length, we wont get a UID, wont get a list contact, and then will assert below
+		 
+		 Is this how we are supposed to handle incoming stranger messages?  By looking up a buddy from conv->name ?
+		 
 		 Evan: It's the best we have to work with if conv->ui_data is nil.
 		 */
 #warning This assertion is firing almost randomly
 		
-		NSAssert(listContact != nil, @"contactAssociatedWithBuddy must have returned nil.");
-        // Need to start a new chat, associating with the gaim conv
-        chat = [[adium contentController] chatWithContact:listContact
+		NSAssert(sourceContact != nil, @"contactAssociatedWithBuddy must have returned nil.");
+		// Need to start a new chat, associating with the gaim conv
+		chat = [[adium contentController] chatWithContact:sourceContact
 											initialStatus:[NSDictionary dictionaryWithObject:[NSValue valueWithPointer:conv]
 																					  forKey:@"GaimConv"]];
-		// Associate the gaim conv with the AIChat
-		conv->ui_data = chat;
+		NSAssert(chat != nil, @"Failed to generate a chat");
 		
-		NSAssert(chat != nil, @"Failed to generate a chat");		
-    } else  {
-        NSAssert(listContact != nil, @"Existing chat yet no existing handle?");
-    }
-    
-    //clear the typing flag
-    [self setTypingFlagOfContact:listContact to:NO];
-    
-	NSString			*bodyString = [NSString stringWithUTF8String:message];
+		//Associate the gaim conv with the AIChat
+		conv->ui_data = chat;
+	}else{
+		NSAssert(sourceContact != nil, @"Existing chat yet no existing handle?");
+	}
+	
+	//Clear the typing flag of the listContact
+	[self setTypingFlagOfContact:sourceContact to:NO];
+	
+	[self _sendMessage:message inChat:chat fromListContact:sourceContact flags:flags time:mtime];
+}
 
+
+- (void)accountConvReceivedChatMessage:(const char*)message inConversation:(GaimConversation*)conv from:(const char *)source withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime
+{
+	AIChat					*chat;
+	AIListContact			*sourceContact;
+	GaimConversationType	convType;
+	
+	if (GAIM_DEBUG) {
+		NSLog(@"Chat: Received %s from %s in %s",message,source,conv->name);
+	}
+	
+	if ((flags & GAIM_MESSAGE_SEND) != 0) {
+		/*
+		 * TODO
+		 * gaim is telling us that our message was sent successfully. Some
+		 * day, we should avoid claiming it was until we get this
+		 * notification.
+		 */
+		return;
+	}
+	
+	chat = (AIChat*) conv->ui_data;
+	
+	if (!chat){
+		chat = [[adium contentController] chatWithName:[NSString stringWithUTF8String:conv->name]
+											 onAccount:self
+										 initialStatus:[NSDictionary dictionaryWithObject:[NSValue valueWithPointer:conv]
+																				   forKey:@"GaimConv"]];
+		conv->ui_data = chat;
+	}
+	
+	NSString		*sourceUID = [NSString stringWithUTF8String:source];
+	
+	//Get our contact
+	sourceContact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+														accountID:[self uniqueObjectID]
+															  UID:[sourceUID compactedString]];
+	
+	[self _sendMessage:message inChat:chat fromListContact:sourceContact flags:flags time:mtime];
+}
+
+- (void)_sendMessage:(const char *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags time:(time_t)mtime
+{
+	NSString				*bodyString;
+	
+	bodyString = [NSString stringWithUTF8String:message];
+	
 	if ((flags & GAIM_MESSAGE_IMAGES) != 0) {
 		bodyString = [self _processGaimImagesInString:bodyString];
 	}
 	
-    NSAttributedString *body = [AIHTMLDecoder decodeHTML:bodyString];
-    AIContentMessage *messageObject =
-        [AIContentMessage messageInChat:chat
-                             withSource:listContact
-                            destination:self
-                                   date:[NSDate dateWithTimeIntervalSince1970: mtime]
-                                message:body
-                              autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
-    [[adium contentController] addIncomingContentObject:messageObject];
+	AIContentMessage *messageObject =
+		[AIContentMessage messageInChat:chat
+							 withSource:sourceContact
+							destination:self
+								   date:[NSDate dateWithTimeIntervalSince1970: mtime]
+								message:[AIHTMLDecoder decodeHTML:bodyString]
+							  autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
+	[[adium contentController] addIncomingContentObject:messageObject];
 }
 
 - (NSString *)_processGaimImagesInString:(NSString *)inString
@@ -574,11 +637,12 @@
 			
 			NSString			*body = [self encodedAttributedString:[cm message] forListObject:listObject];
 			GaimConversation	*conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
-			const char			*destination = [[listObject UID] UTF8String];
 			
 			//create a new conv if necessary - this happens, for example, if an existing chat is suddenly our responsibility
 			//whereas it previously belonged to another account
 			if (conv == NULL) {
+				const char			*destination = [[listObject UID] UTF8String];
+				
 				//***NOTE: need to check if the chat is an IM or a CHAT and handle accordingly
 				conv = gaim_conversation_new(GAIM_CONV_IM, account, destination);
 				
@@ -586,13 +650,14 @@
 				conv->ui_data = chat;
 				[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
 				
-				[chatDict setObject:chat forKey:[listObject UID]];                
+				[chatDict setObject:chat forKey:[listObject uniqueObjectID]];                
 			}
 			
 			switch (gaim_conversation_get_type(conv)) {
 				case GAIM_CONV_IM:
 				{
-					//        NSLog(@"sending %s to %@",[body UTF8String],[[chat listObject] displayName]);
+					const char			*destination = [[listObject UID] UTF8String];
+					
 					serv_send_im(gc, destination, [body UTF8String], [cm autoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
 					//gaim_conv_im_send(im, [body UTF8String]);
 					sent = YES;
@@ -600,8 +665,8 @@
 				}
 				case GAIM_CONV_CHAT:
 				{
-					NSLog(@"sending to a chat");	
-					sent = NO;
+					gaim_conv_chat_send(gaim_conversation_get_chat_data(conv),[body UTF8String]);
+					sent = YES;
 					break;
 				}
 			}
@@ -642,23 +707,72 @@
 	//Correctly enable/disable the chat
 #warning All opened chats assumed valid until a better system for doing this reliably is figured out.
 	[[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
-
+	
 	//This is potentially problematic
 	AIListObject *listObject = [chat listObject];
-	NSAssert(listObject != nil, @"ListObject for the chat is nil, unfortunately.");
 	
-	//Associate our chat with the libgaim conversation
-	if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
-		GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_IM, account, [[listObject UID] UTF8String]);
-		NSAssert(conv != nil, @"gaim_conversation_new returned nil");
+	//If a listObject is set for the chat, then it is an IM; otherwise, it is a multiuser chat
+	if (listObject) {
+		//Associate our chat with the libgaim conversation
+		if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
+			GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_IM, account, [[listObject UID] UTF8String]);
+			NSAssert(conv != nil, @"gaim_conversation_new returned nil");
+			
+			conv->ui_data = chat;
+			[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
+		}
 		
-		conv->ui_data = chat;
-		[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
+		//Track
+		[chatDict setObject:chat forKey:[listObject uniqueObjectID]];
+	}else{
+		const char *name = [[chat name] UTF8String];
+		
+		//Look for an existing gaimChat (for now, it had better exist already!)
+		GaimChat *gaimChat = gaim_blist_find_chat (account, name);
+		if (!gaimChat){
+			NSLog(@"gotta create a chat");
+			GHashTable *components;
+			GList *tmp;
+			GaimGroup *group;
+			const char *group_name = _("Chats");
+			
+			
+			//The below is not even close to right.
+			components = g_hash_table_new_full(g_str_hash, g_str_equal,
+											   g_free, g_free);
+			
+			/*
+			g_hash_table_replace(components,
+								 g_strdup(g_object_get_data(tmp->data, "identifier")),
+								 g_strdup_printf("%d",
+												 gtk_spin_button_get_value_as_int(tmp->data)));
+			*/
+			
+			gaimChat = gaim_chat_new(account,
+								 name,
+								 components);
+			
+			if ((group = gaim_find_group(group_name)) == NULL)
+			{
+				group = gaim_group_new(group_name);
+				gaim_blist_add_group(group, NULL);
+			}
+			
+			if (gaimChat != NULL)
+			{
+				gaim_blist_add_chat(gaimChat, group, NULL);
+				gaim_blist_save();
+			}
+			//Associate our chat with the libgaim conversation
+			if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
+				GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
+				NSAssert(conv != nil, @"gaim_conversation_new returned nil");
+				
+				[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
+				conv->ui_data = chat;
+			}
+		}
 	}
-	
-	//Track
-	[chatDict setObject:chat forKey:[listObject UID]];
-
 	return(YES);
 }
 
@@ -669,7 +783,14 @@
         gaim_conversation_destroy(conv);
 
     [[chat statusDictionary] removeObjectForKey:@"GaimConv"];
-	[chatDict removeObjectForKey:chat];
+	
+#warning Wrong. perhaps use a chat identifier of sorts
+	AIListObject *listObject = [chat listObject];
+	if (listObject){
+		[chatDict removeObjectForKey:[listObject uniqueObjectID]];
+	}else{
+		[chatDict removeObjectForKey:[chat name]];	
+	}
 	
     return YES;
 }

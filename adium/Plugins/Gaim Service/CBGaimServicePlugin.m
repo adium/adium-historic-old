@@ -263,18 +263,18 @@ static void adiumGaimConvDestroy(GaimConversation *conv)
 
 static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-    if (GAIM_DEBUG) NSLog(@"adiumGaimConvWriteChat: %s: %s", who, message);
+	[accountLookup(conv->account) accountConvReceivedChatMessage:message inConversation:conv from:who withFlags:flags atTime:mtime];
 }
 
 static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-	//    NSLog(@"adiumGaimConvWriteIm: name=%s, who=%s: %s",conv->name, who, message);
-    [accountLookup(conv->account) accountConvReceivedIM: message inConversation: conv withFlags: flags atTime: mtime];
+    [accountLookup(conv->account) accountConvReceivedIM:message inConversation:conv withFlags:flags atTime:mtime];
 }
 
+//Never actually called as of gaim 0.75
 static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-	if (GAIM_DEBUG) NSLog(@"adiumGaimConvWriteConv: %s: %s", who, message);
+	NSLog(@"adiumGaimConvWriteConv: %s: %s", who, message);
 }
 
 static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user)
