@@ -1,13 +1,22 @@
 {
     IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
             CLASS = LNStatusIconsPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkBox_displayStatusIcons" = NSButton; "view_prefView" = NSView; }; 
-            SUPERCLASS = NSObject; 
-        }
+            OUTLETS = {"checkBox_displayStatusIcons" = NSButton; }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }
