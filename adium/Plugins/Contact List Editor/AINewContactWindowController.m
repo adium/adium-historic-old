@@ -27,6 +27,8 @@
 - (void)setContactName:(NSString *)contact;
 - (void)setServiceID:(NSString *)inServiceID;
 - (void)selectGroup:(id)sender;
+- (void)selectFirstValidServiceType;
+- (void)selectServiceType:(id)sender;
 @end
 
 @implementation AINewContactWindowController
@@ -80,9 +82,11 @@
 	[self buildGroupMenu];
 
 	[[adium notificationCenter] addObserver:self
-								   selector:@selector(updateAccountList)
+								   selector:@selector(accountListChanged:)
 									   name:Account_ListChanged
 									 object:nil];
+
+	[[adium contactController] registerListObjectObserver:self];
 
 	[self configureNameAndService];
 	
@@ -92,6 +96,7 @@
 //Window is closing
 - (BOOL)windowShouldClose:(id)sender
 {
+	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 	
     return(YES);
@@ -193,6 +198,14 @@
 		[menu addItem:menuItem];
 	}
 	[[popUp_contactType menu] update];
+
+	[self selectFirstValidServiceType];
+}
+
+- (void)selectFirstValidServiceType
+{
+	NSEnumerator		*enumerator;
+	
 	enumerator = [[popUp_contactType itemArray] objectEnumerator];
 	NSMenuItem			*menuItem;
 	while(menuItem = [enumerator nextObject]) {
@@ -202,11 +215,12 @@
 		}
 	}
 	
+	[self selectServiceType:nil];
 }
 
 //Service type selected from the menu
 - (void)selectServiceType:(id)sender
-{
+{	
 	[self updateAccountList];
 	[self validateEnteredName];
 }
@@ -355,6 +369,36 @@
 							 group:PREF_GROUP_ADD_CONTACT];
 	}
 	[tableView_accounts reloadData];
+}
+
+- (void)accountListChanged:(NSNotification *)notification
+{
+	//Attempt to retain the current contact type selection
+	id representedObject = [[popUp_contactType selectedItem] representedObject];
+	[self buildContactTypeMenu];
+	
+	int index = [popUp_contactType indexOfItemWithRepresentedObject:representedObject];
+	if (index != NSNotFound){
+		[popUp_contactType selectItemAtIndex:index];
+	}
+	
+	[self updateAccountList];
+}
+
+//Reload when an account comes on or offline
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{
+	if ([inObject isKindOfClass:[AIAccount class]] && [inModifiedKeys containsObject:@"Online"]){
+		if ([self validateMenuItem:[popUp_contactType selectedItem]]){
+			//If the current selection in the contact type menu is still valid (an account is still online), reload the accounts data
+			[tableView_accounts reloadData];
+		}else{
+			//If it is not, switch to the first valid contact type and update accordingly
+			[self selectFirstValidServiceType];
+		}
+	}
+	
+	return nil;
 }
 
 //
