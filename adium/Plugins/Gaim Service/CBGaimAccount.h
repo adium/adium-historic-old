@@ -35,7 +35,6 @@
 
 //accountXfer methods
 - (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer;
-- (void)accountXferBeginFileSendWithXfer:(GaimXfer *)xfer;
 - (void)accountXferUpdateProgress:(GaimXfer *)xfer percent:(float)percent;
 - (void)accountXferCanceledRemotely:(GaimXfer *)xfer;
 
