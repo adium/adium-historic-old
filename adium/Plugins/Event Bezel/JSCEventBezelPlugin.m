@@ -99,6 +99,7 @@
         
         [ebc setBezelDuration: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_DURATION] intValue]];
         ignoreClicks = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IGNORE_CLICKS] boolValue];
+		includeText = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_INCLUDE_TEXT] boolValue];
 		
         [eventArray removeAllObjects];
         if([[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue])
@@ -165,7 +166,7 @@
 				[NSApp unhideWithoutActivation];
 			}
 			
-			if(isFirstMessage){
+			if(isFirstMessage && includeText){
 				AIContentMessage    *contentMessage = [[notification userInfo] objectForKey:@"Object"];
 				statusMessage = [[[contentMessage message] safeString] string];
 			}else{
@@ -237,6 +238,7 @@
 			[ebc showBezelWithContact: [contact longDisplayName]
 							withImage: tempBuddyIcon
 							 forEvent: tempEvent
+						  withMessage: statusMessage
 					   ignoringClicks: ignoreClicks];
 			[tempBuddyIcon release];
 		}

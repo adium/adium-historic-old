@@ -37,7 +37,7 @@
     JSCEventBezelPreferences    *preferences;
     
     NSMutableArray              *eventArray;
-    BOOL                        showEventBezel, ignoreClicks;
+    BOOL                        showEventBezel, ignoreClicks, includeText;
     int                         prefsPosition;
     
     IBOutlet    NSView          *view_contactBezelInfoView;
