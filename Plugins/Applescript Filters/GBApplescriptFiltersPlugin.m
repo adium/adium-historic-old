@@ -13,7 +13,7 @@
 #define SCRIPT_EXTENSION		@"scpt"
 #define	SCRIPT_IDENTIFIER		@"InsertScript"
 
-#define APPLESCRIPT_FILTER_DEBUG
+//#define APPLESCRIPT_FILTER_DEBUG
 
 @interface GBApplescriptFiltersPlugin (PRIVATE)
 - (void)_appendScripts:(NSArray *)scripts toMenu:(NSMenu *)menu;
@@ -443,12 +443,9 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 
 			if(([scanner scanString:keyword intoString:nil]) &&
 			   ([attributedString attribute:NSLinkAttributeName
-									atIndex:([scanner scanLocation])
+									atIndex:([scanner scanLocation]-1) /* The scanner ends up one past the keyword */
 							 effectiveRange:nil] == nil)){
 				//Scan the keyword and ensure it was not found within a link
-				NSLog(@"%@ %@ %i",attributedString,[attributedString attributesAtIndex:([scanner scanLocation])
-																effectiveRange:nil], [scanner scanLocation]);
-				
 				int 		keywordStart, keywordEnd;
 				NSArray 	*argArray = nil;
 				NSString	*argString;
