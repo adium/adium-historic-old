@@ -28,6 +28,8 @@ Meta Contacts
   - MetaContact ordering does not always restore properly
 
 [MEDIUM]
+Contact List
+	- Extended Status to the right of names is misaligned with baseline.
 
 [LOW]
   - Adding contact that already exists
@@ -39,7 +41,9 @@ Meta Contacts
   - Double clicking two names in succession causes the first name to highlight
     the second time.
   - An incoming message which opens a new tab will also unminimize the associated window
-  
+  - Error message window doesn't wrap & resize properly for long titles (Gaim often
+	sends messages with longer titles than we expect)
+	
 //------------------------------------------------------------------------------------
 // Bugs - Libgaim
 //------------------------------------------------------------------------------------
@@ -51,6 +55,7 @@ Meta Contacts
 	but can be received - only with certain default languages. English default language
 	works fine for these charactersets... so the default C encoding must be being used
 	(incorrectly) somewhere in libgaim?
+- (ICQ) Broken ICQ clients send HTML. Should we try to correct for this by processing ICQ
 - (All) Gaim's proxy support is unreliable at best
 
 
@@ -76,7 +81,8 @@ Meta Contacts
     "Well, I hit grant to his auth request, and he still won't be able to see
     me." -- xtapo
     previously authorized contacts work as expected.
-
+  - Rendezvous contacts may not always clear typing state properly
+  
 //------------------------------------------------------------------------------------
 // Bugs - Unavoidable
 //------------------------------------------------------------------------------------
