@@ -83,6 +83,7 @@
     [SCLView setDataSource:self];
     [SCLView setDelegate:self];
     [SCLView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
+    [self expandCollapseGroup:contactList subgroups:YES outlineView:SCLView]; //Correctly expand/collapse groups
     
     //Fetch and retain the contact list
     contactList = [[[owner contactController] contactList] retain];

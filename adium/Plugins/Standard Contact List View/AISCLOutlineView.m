@@ -61,11 +61,19 @@
 //Called before we're inserted in a window
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview
 {
+    float	backgroundAlpha;
+    
     //Remove the old observer
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:[self enclosingScrollView]];
     
     //Install our scroll view frame changed notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameChanged:) name:NSViewFrameDidChangeNotification object:[newSuperview superview]];
+
+    //Turn on transparency for our destination window (if necessary)
+    //This is handled automatically by AISCLViewPlugin when the transparency preference is altered - but the first time preferences are applied our view is not yet installed.  The solution is to re-set the window transparency here, as our view is being inserted into the window.
+    //Needed for proper transparency... but not the cleanest way.
+    backgroundAlpha = [[[self backgroundColor] colorUsingColorSpaceName:NSDeviceRGBColorSpace] alphaComponent];
+    [[newSuperview window] setOpaque:(backgroundAlpha == 100.0)];
 }
 
 //Called after we're inserted into a window
