@@ -58,9 +58,7 @@
     }else{
         NSLog(@"No privacy protcol");
         NSLog(@"%@",[account class]);
-        
     }
-    
 }
 
 @end
