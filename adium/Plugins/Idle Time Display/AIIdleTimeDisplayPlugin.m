@@ -65,7 +65,7 @@
 
     if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Idle"]){
         AIMutableOwnerArray	*viewArray;
-        AIIdleView		*idleView;
+        AIIdleView		*idleView = nil;
         double			idle;
 
         //Set the correct idle time

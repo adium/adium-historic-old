@@ -185,7 +185,7 @@
     int			awayMessageIndex = 0;
     NSData		*awayMessageData;
     NSMenuItem		*menuItem;
-    NSMenuItem		*selectedMenuItem;
+    NSMenuItem		*selectedMenuItem = nil;
 
     //Get the number of accounts that are online, or connecting
     enumerator = [[[owner accountController] accountArray] objectEnumerator];
