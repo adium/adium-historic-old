@@ -256,13 +256,17 @@
 - (void)getCharacters:(out unichar *)outBuf range:(NSRange)range
 {
 	NSParameterAssert(outBuf != NULL);
-	NSParameterAssert(((range.location + range.length) - 1) <= length);
-
-	unsigned i = range.location;
-	unsigned j = 0, j_max = range.length;
-	while(j < j_max) {
-		outBuf[j] = backing[i];
-		++i; ++j;
+	if(length) {
+		//neither of these assertions is valid for empty strings.
+		NSParameterAssert(range.location < length);
+		NSParameterAssert(((range.location + range.length) - 1) <= length);
+	
+		unsigned i = range.location;
+		unsigned j = 0, j_max = range.length;
+		while(j < j_max) {
+			outBuf[j] = backing[i];
+			++i; ++j;
+		}
 	}
 }
 
