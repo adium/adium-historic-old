@@ -1,237 +1,165 @@
-The Legend Will Never Die
-+ Change or Addition
-- Removal
-# Debatable (ASK and debate before doing!)
-
-If you are working on something big and it may take a while, please tag it with your [name].
-If you want to leave a comment, please put your <name> on them too.
+//-------------------------------------------------------------------------------------------------------
+// Adium 0.8
+//-------------------------------------------------------------------------------------------------------
 
 
 //-------------------------------------------------------------------------------------------------------
-// Minor Changes
+// Possible Thoughts
 //-------------------------------------------------------------------------------------------------------
-Alerts:
-	+ Allow user to have more control over what is spoken by the announcer plugin
-	+ Display time stamps in the panel alert
-	+ Support the %escapes in alert text (such as %n to speak the contact's name)
+//Status Menu
+  Add a 'Status' menu between view and contact.  This menu would contain
+	- Selectable user-defined states (Offline, available, at school, busy, afk, ...)
+	- Account-specific connectivity & convenience (Moved from the file menu)
+  These changes allow for removal of account and status related menu items
+  from the file menu.
 
-Contact List: 
-    + Add toolbar item for setting status (goes with the state system?)
-	+ Add Action menu toolbar item, ala Xcode or Mail.
-	* Renaming doesn't work at the moment.
+//Status Window
+  The new state system should focus on ways for the user to
+	- Quickly set a specific status (quick away, idle, dnd, available message, alias)
+	- Define 'states' which apply status across services and alter adium behavior
+  The new state system should be contained within its own window, continuing
+  with the trend to move 'content' out of the preference window.
+
+//Accounts Window
+  Move account preferences to their own window
+	- Accessed via an 'Accounts...' menu item in the Adium menu
+	- Make all account related controls normal sized
+	- Move user-icon and alias into the 'personal' tab
+	- Dim service icon slightly on selection (Similar to contact list)
+	- Use status icon to show online state instead of postfixing 'online/offline'
+
+//Icon Packs
+  Provide an interface for selection the active service and status icon packs
+    - Menus items should show a preview of the most common icons
+  These preferences will go on the general pane, since they apply throughout Adium  
+
+//General Preferences
+  Create a general preferences category for several existing preferences.  If
+  more are added this pane could be split into General and Interface.
+	- Message cycling and sending keys
+	- Message logging (remove plain-text or send it to advanced)
+	- Service and status icon pack selection
+	- Message tab spawning preferences
+  These changes allow for the removal of the 'Keys' preferences, and for
+  message preferences to focus on message display over behavior.
+
+//Alternate Event Interfaces
+  Our event system interfaces (sound sets, dock behavior) need several usability
+  improvements.
+	- Custom behavior panels should be sheets
+	- Allow changing of event within the table
+	- Use standard +/- controls for adding and removing events (Not a popup)
+	- Organize and group event menu, clarify and focus events
+
+//Contact window toolbar
+  Additional contact window toolbar items
+	- Offline contacts toggle
+	- Add group (Opens add group panel)
+	- Add contact (Opens add contact panel)
+
+//Message window toolbar
+  Additional message window toolbar items
+	- Open log viewer (to logs of active contact) 
+	- Open font/color panel (standard system buttons)
+	- Send file (opens file prompt)
+	- User icon (Displays the contact's user icon)
+	- Insert script (Popup, mirroring insert script in edit menu)
+
+//Auto-completion
+  Tab auto-completion in the message window
+	- Contact names (Mainly for multi-user chat)
+	- Bookmark URLs (From bookmark integration)
+
+//Message Save and Print
+  Common mac file menu operations should work on message windows, this includes
+	- Save As
+	- Print
+  These are grouped because they are functionally similar.	
+
+//File Receive Prompt
+  The receive file prompt should be its own panel, and provide options for
+	- Save (To desktop / download folder)
+	- Save As... (Prompt for location)
+	- Ignore
+  This will solve issues with the save dialog catching keystrokes, and provides
+  an easy way to just save an incoming file to the desktop.
+
+//File Transfer window
+  The file transfer window should be simple yet functional, displaying
+	- Source/destination contact and direction
+	- Transfer progress, speed
+  Transfers should be cancelable, and stay in the window when finished.
+
+//No games
+  Remove tictactoe and the games framework.  These will be part of the adium-games
+  package and have no place in the default distribution.
+
+//Fast User Switching
+  The fast user switching plugin needs to provide advanced preferences for
+	- Enabling or disabling the feature
+	- Changing the status message used when switched
+
+//Drop 10.2 support
+  Dropping 10.2 support would provide us with the following changes
+	- Remove 10.2 message view code
+	- Remove 10.2 specific log viewer
+	- Remove all other 10.2 specific compatability code
+	- Remove preference controller, delete all our glue code and use cocoa bindings
+  The preference changes would be huge, and result in a huge reduction of code.
+
+//Kill Plugins
+  Refactoring is fun, refactoring is scary, refactoring could greatly simplify our code
+	- Remove the menu controller, hook plugins directly to their menu items
+	- Remove preference obfuscation, preferences in one nib, hooked directly to their code
+	- Remove many unneeded plugin classes, interfaces, clutter
+  Keeping the modular design, but ditching all the negative effects of it could be very beneficial
 	
-Accounts:
-	+ Auto-complete aliases in log viewer
-	+ Add 'Priority' field to jabber advanced preferences
-
-Message Window:
-	+ Tab-complete usernames in messages and chat
-		<tick> Do we really need to tab complete in a message? I can see in a chat, but not in a 1-to-1 message...
-	+ Make 'save as' menu item work
-		<tick> This could just copy the log file to somewhere the user specify if logging is on.
-	
-Contact List Display:
-	+ Small contact list icon to identify mobile device users
-
-Other:
-	+ Create a plugin to hide the AIM "Your screen name is now signed in 2 locations" messages
-	+ '--insensitive' flag in AIEmoticon (to be placed in the TextEquivalents.txt file) that allows emoticons' text equivalents to be case-insensitive (without applying this nature globally to all emoticons).
-		Colin: Didn't Mac-arena do this already?
-	+ "New message..." dialog should search for all contacts, and then after that offer the protocols from where you can talk to the buddy found. The way it works now seems a bit rare, as you have to select the protocol first, and maybe you just don't rememb
-er or something and you type the name (address book for example) of your buddy just to see it doesn't work.
-	+ Add preferences to disable 'Fast User Switching' auto-away, and to customize the message. [Colin]
-	+ Create a plugin to parse sed expressions, similar to the tex plugin.
-	+ Add export option to log viewer
-	+ Jabber links, support xmpp:user@host/resource or xmpp:user@host
-                [Steve] mostly done - xmpp:user@host works.
-                        xmpp:user@host/resource would, but it looks like we can't open a chat to an arbitrary resource on jabber quite yet.
-                        I'd be willing to tinker away with this, but I'm horribly unfamiliar with the protocol code & libgaim.  If someone wants to go through it with me at some point, that'd be awesome.
-                [/Steve]
-	+ Symlink the iChat emoticons much like we symlink the iChat sounds
-	
 
 //-------------------------------------------------------------------------------------------------------
-// Big Stuff
+// Incomplete Thoughts
 //-------------------------------------------------------------------------------------------------------
+//Message Preferences
+	- Clean up confusion with message display versus message sending
+	- Clean up variant submenus and other message preference aspects
 
-Toolbar Items:
-    Contact List:
-        + Away Messages
-        + Add Group
-        + Add Contact
-        + Delete Selection
-        + Show offline contacts
-    Message Window:
-        + Show Logs
-        + Show Font Panel
-        + Show Color Panel
-        + Send File
-        + User Icon
-        + Scripts
+//Privacy Preferences
+  Allow the user to easily block/unblock users by name, or users on their list.  Provide a way for them to see
+  all blocked names and add/remove from the list.  Ignore the AIM specific block 'modes'.
+	- Add block and unblock menu items which prompt for the service and name
+	- Add block / unblock contextual menu items
+	- Add "Block contacts not on my list" to AIM account preferences
 
-		<tick> Moved from areas that require more thought as toolbar buttons seem to cover this:
+//Announcer Improvements
+	- Allow user to have more control over what is spoken by the announcer plugin
 
-			Link Management:
-				Just throwing out a thought for discussion... how about a button like 
-				those for emoticons or push/pop with add/edit and a list of favorites 
-				to make them accessible within the message view without using contextual 
-				menus? In that same vein... what about autocompleting recognized URLs 
-				(such as www.ad completes to www.adiumx.com if its a favorite)? 
+//Alerts
+	- Display time stamps in the panel alert
+	- Support %escapes in spoken alert (such as %n to speak the contact's name)
 
-				//Steve: yeah, both of those seem to be good ideas, and the link 
-				editor window is certainly abstract enough to be called through 
-				most any mechanism, and I had always intended a button to be 
-				included for it eventually.  Auto-completing URLs is an interesting 
-				idea... and would work very well if done right.  I'd comment more, 
-				but I'm feeling a little under the weather right now. :\
+//Log viewer
+	- Make contact drawer behave as additional filter to the search field
+	- Make file menu save export the selected log
 
-Contact List:
-	+ Add option to not display groups on the contact list (Be careful with this and manual ordering)
+//Service-Specific
+	- Add 'priority' support for jabber connections
+	- Service specific functions (buddy search, password changing, etc)
 
-Status badges:
-	+ Allow user to select icon sets (packaged in a bundle) in preferences
+//Contact List
+	- Easy identification of mobile users
+	- Option to not display groups
 
-Event Notifications (the feature formerly known as Event Bezel):
-	This will be replaced with Growl.
-	+ Implement Growl App Bridge.framework
-	+ Build in a way to install plugin if user requests to use notifications
+//Messages
+	- Solution to handle display of tabs when too many are present
 
-Contact Blocking: [Colin]
-    	Allow the user to easily block/unblock users by name, or users on their list.  Provide a way for them to see
-    	all blocked names and add/remove from the list.  Ignore the AIM specific block 'modes'.
+//Emoticons
+	- Symlink in iChat emoticons
 
-    	Steps:
-	+ Add block and unblock menu items which prompt for the service and name
-	+ Add block / unblock contextual menu items
-	+ Add "Block contacts not on my list" to AIM account preferences
+//Notifications
+	- Growl Integration
+	- Remove the existing bezel/notification code
 
-Documentation
-	Documentation is considered one of the most important parts of a project. 
-	It is also the most tedious part. We need good documentation in order to 
-	assist users and developers. These should include screen shots if 
-	possible (visual aid). Documentation should not be moved to the done 
-	portion of this list until every other part is done, as things may change.
+//Documentation
+	- User documentation
 
-	+ User documentation
-		
-	+ Developer Documentation
-		+ We already have some documentation. This needs to be gone through
-		= PLace deprecated documentation in a separate folder
-		+ Creating webkit themes
-		+ Address book integration
-
-Activity Window
-	Will sort of resemble Safari's. Entries in the window only reflect progress of items; actions are performed from the toolbar.
-	= Done! [boredzo]
-		
-//-------------------------------------------------------------------------------------------------------
-// Areas that require more thought before implementing
-//-------------------------------------------------------------------------------------------------------
-New State System:
-    Allow users to create 'states' that describe their activity online.  States would set their status
-    across the various protocols and allow them to alter certain behavior in Adium (Window spawning, 
-    sounds, alerts, notifications, etc).  The goal is to replace the protocol specific state systems
-    (idle & away) with something that better suits a user connected to multiple protocols, and allow
-    Adium's behavior to be better customized to a user's diverse 'states' of IM throughout the day.
-		-Evan: The basic available, idle, away distinction isn't bad though, I don't think.
-
-
-Multi-user chat:  [Dave]
-    Powerful multi-user chat that can handle both large, moderated rooms (irc) and multi-way IMs (MSN).
-		- Tick: would we want a drawer or a list, or a collapsable list or what? Everyone seems opposed to a drawer, so a list would do better.
-		- Dave: I'm going to start making this work, but I NEED LOTS OF HELP!!
-	Thoughts:
-		- Dave: We need a tiered status system. Example: in IRC, "dchoby98 was granted ops by ChanServ"
-		  is a status message. In one-on-one chat, "dchoby98 went away: <message>" is a status
-		  message. These need to have different "classes" so that we can pay attention to, or ignore,
-		  an entire class of messages.
-		
-Contact status coloring:
-    Status coloring that is easy to configure and consistent throughout Adium.
-
-Meta Contacts: [Evan]
-    Provide a way for users to create and manage their own meta contacts.    
-
-Protocol Specific Functions:
-    Provide a menu for service code to insert protocol specific options.  Things such as buddy search,
-    password changing, getting info on non-listed users, etc.
-
-File Transfer:
-    Non-intrusive prompts, download management, drag & drop transfer, previewing, direct connect,
-    progress feedback, etc.
-
-Deferring of initial message:
-   Don't pop up a message window if one doesn't already exist.  Use some kind of dock indicator / list indicator.  Double click on list or dock menu item would display the message.  If a window is already open, new messages would create a tab as normal.  
-We could associate this option with the state system for some pretty cool behavior.
-
-Importing/Exporting: [Brandon]
-
-	<tick> If possible, we could turn the Adium 1.6 importer into a massive importer/exporter, and include it in adium/have it online for download.
-        <Brandon>Yeah, the Migration Assistant(har har)
-
-	+Contact List import/export: [Steve]
-		+ Export to plist
-			<Steve> Import/export code is not fun.
-   			<Steve> In addition to our own plist format, we should probably support importing from the official clients
-				formats.  Perhaps exporting - but why would anyone want to go back?  ;)   I might need some help 
-				with this one re: adding contacts back to the list.  We'll see.
-	+iChat import/export
-		+Log files
-		+Custom Away Messages[Done]
-		+Custom Available Messages[Done]
-			<tick> Check out ~/Library/Preferences/com.apple.iChat.plist for away/available
-			<tick> As iChat stores aliases in address book, we already have that :D
-	+Gaim
-		+Logs
-		+Aliases
-		+Emoticons
-		+Contact importation. This has issues with server side protocols
-
-	+Fire
-		+Aliases
-		+Logs
-		+Emoticons (we are possibly moving to a standardized format, so this may not be needed)
-		+Contact importation. This has issues with server side protocols
-
-	+Proteus
-		+Aliases
-		+Logs
-		+Emoticons (we are possibly moving to a standardized format, so this may not be needed)
-		+Contact importation. This has issues with server side protocols
-
-	+Trillian (dons flame proof vest :D)
-		+Aliases
-		+Logs
-		+Emoticons (we are possibly moving to a standardized format, so this may not be needed)
-		+Contact importation. This has issues with server side protocols
-
-
-Tabs Issues:
-
-	# Too many tabs issue:
-		It seems that if you have too many tabs, then the tabs come to a point 
-		of not being usable. Tabs rock, but with 15 open windows intrinsic 
-		issues with this approach start to appear. We could:
-
-			1) Offer a side list/drawer as an option.
-			2) Have the arrows thing like in gaim and other clients.
-			3) Multiple rows of tabs
-
-			This will require a great deal of thought probably, and may not be resolvable for all parties.
-        
-
-    
-//-------------------------------------------------------------------------------------------------------
-// Unfixable(?) Issues
-//-------------------------------------------------------------------------------------------------------
-* Stop contact list from auto-resizing under the dock
-	It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how
-
- wide the dock is; only how tall it is.
-
-* Don't overwrite user specified icons in the address book.  Only overwrite iChat placed icons (and store ours such that iChat will overwrite them) 
-	- (Evan: I spent an hour going through private frameworks trying to figure this out.  If you have any ideas, please let me know.)
-	- (Tick: Maybe we can use steganography, crysflame in irc brought it up, and eevyl and I have discussed it before:
-			19:45 < crysflame> http://www.mirrors.wiretapped.net/security/steganography/outguess/outguess-0.2.tar.gz and 
-http://www.mirrors.wiretapped.net/security/steganography/stegdetect/stegdetect-0.5.tar.gz
-
+//Degerring of initial messages
+	- Some system to not have messages pop up when received
