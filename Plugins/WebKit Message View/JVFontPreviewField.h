@@ -1,4 +1,4 @@
-// From Colloquy (http://colloquy.sourceforge.net/)
+// From Colloquy (http://colloquy.info/)
 
 #import <AppKit/NSTextField.h>
 
