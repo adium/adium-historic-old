@@ -35,7 +35,7 @@
 - (void)installPlugin
 {
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_PropertiesChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_PropertiesChanged object:nil];
     
     accountMenuArray = [[NSMutableArray alloc] init];
     [self buildAccountMenus];
@@ -68,7 +68,6 @@
 - (void)accountListChanged:(NSNotification *)notification
 {
     //Update the account menu
-    
     [self buildAccountMenus];
 }
 
@@ -156,18 +155,17 @@
 }
 
 //Togle the connection of the selected account (called by the connect/disconnnect menu item)
-//MUST be called by a menu item with an account as it's represented object!
+//MUST be called by a menu item with an account as its represented object!
 - (IBAction)toggleConnection:(id)sender
 {
     AIAccount			*targetAccount = [sender representedObject];
+    NSNumber                    *status = [[owner accountController] propertyForKey:@"Status" account:targetAccount];
 
     //Toggle the connection
-    if([[targetAccount supportedPropertyKeys] containsObject:@"Online"]){
-        if([[[owner accountController] propertyForKey:@"Online" account:targetAccount] boolValue]){
-            [[owner accountController] setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:targetAccount];
-        }else{
-            [[owner accountController] setProperty:[NSNumber numberWithBool:YES] forKey:@"Online" account:targetAccount];
-        }
+    if ([status intValue] == STATUS_ONLINE) {
+        [[owner accountController] setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:targetAccount];
+    } else {
+        [[owner accountController] setProperty:[NSNumber numberWithBool:YES] forKey:@"Online" account:targetAccount];
     }
 }
 

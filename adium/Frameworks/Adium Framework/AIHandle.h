@@ -68,7 +68,24 @@
 - (void)setContainingContact:(AIListContact *)inContact;
 - (AIListContact *)containingContact;
 
-//Status
+/*!
+ * @method statusDictionary
+ * These two properties are always applicable:
+ *
+ * Online          boolean
+ * Display Name    NSString
+ * BuddyImage      NSImage
+ *
+ * And these are applicable only when Online is true:
+ *
+ * Signon Date     NSDate
+ * IdleSince       NSDate
+ * StatusMessage   NSAttributedString
+ * Typing          boolean
+ * Away            boolean
+ * Client          NSString
+ * TextProfile     NSAttributedString
+ */
 - (NSMutableDictionary *)statusDictionary;
 
 @end

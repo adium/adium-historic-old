@@ -72,7 +72,6 @@
 - (NSString *)accountID;
 - (NSString *)UID;
 - (NSString *)serviceID;
-- (NSString *)UIDAndServiceID;
 - (NSString *)accountDescription;
 
 //AIAccount_Handles

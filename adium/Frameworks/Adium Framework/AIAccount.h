@@ -75,7 +75,11 @@ typedef enum {
 
 /*!
  * @class AIAccount
- * An account of ours (one we connect to and use to talk to handles)
+ * @abstract An account of ours (one we connect to and use to talk to handles)
+ * @discussion The base AIAccount class provides no practical functionality,
+ * so almost all of the AIAccounts you deal with will be subclasses.  You will
+ * almost never need to talk directly with an AIAccount.  For information on
+ * accounts, check out 'working with accounts' and 'creating service code'.
  */
 @interface AIAccount : NSObject {
     AIAdium			*owner;
@@ -88,6 +92,21 @@ typedef enum {
 - (void)setProperty:(id)inValue forKey:(NSString *)key;
 - (id)propertyForKey:(NSString *)key;
 - (NSDictionary *)defaultProperties;
+
+/*
+ * @method properties
+ * These properties are always applicable:
+ *
+ * Status          ACCOUNT_STATUS
+ * Idle Since      NSDate
+ *
+ * And these are applicable only when Status is STATUS_ONLINE:
+ *
+ * Signon Date     NSDate
+ * IdleSince       NSDate
+ * StatusMessage   NSAttributedString
+ * Away            boolean
+ */
 - (NSDictionary *)properties;
 - (id <AIServiceController>)service;
 - (NSString *)displayName;
