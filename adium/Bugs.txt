@@ -41,6 +41,8 @@
 
 - Event Notification window moves out of place between resolution changes.
 
+- Tooltips are not appearing for links in profile text.
+
 - Links with custom titles are not persistent under Jaguar.
 	If a link is added to a text field intended to keep persistent data (profiles, for example)
 	the link attributes will be stripped from the text when the view is closed.
