@@ -122,8 +122,9 @@ static AIPreferenceWindowController *sharedInstance = nil;
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
-    NSString	*savedFrame;
-    int		selectedTab;
+    NSString        *savedFrame;
+    int             selectedTab;
+    NSTabViewItem   *tabViewItem;
     
     //Remember the amount of vertical padding to our window's frame
     yPadding = [[self window] frame].size.height;
@@ -136,8 +137,15 @@ static AIPreferenceWindowController *sharedInstance = nil;
     //Select the previously selected category
     selectedTab = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_SELECTED_CATEGORY] intValue];
     if(selectedTab < 0 || selectedTab > [tabView_category numberOfTabViewItems]) selectedTab = 0;
-    [self tabView:tabView_category willSelectTabViewItem:[[tabView_category tabViewItems] objectAtIndex:selectedTab]];
-    [tabView_category selectTabViewItemAtIndex:selectedTab];    
+
+    tabViewItem = [tabView_category tabViewItemAtIndex:selectedTab];
+    [self tabView:tabView_category willSelectTabViewItem:tabViewItem];
+    [tabView_category selectTabViewItem:tabViewItem];    
+
+    //Set selected toolbar item (10.3 or higher)
+    if([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]){
+        [[[self window] toolbar] setSelectedItemIdentifier:[tabViewItem identifier]];
+    }
 
     //Restore the window position
     savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_WINDOW_FRAME];
@@ -252,7 +260,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
 
     //Take focus away from any controls to ensure that they register changes and save
     [[self window] makeFirstResponder:tabView_category];
-
+    
     if(tabView == tabView_category){
         switch(identifier){
             case 1:
@@ -456,6 +464,11 @@ static AIPreferenceWindowController *sharedInstance = nil;
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
+{
+    return([self toolbarDefaultItemIdentifiers:toolbar]);
+}
+
+- (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar
 {
     return([self toolbarDefaultItemIdentifiers:toolbar]);
 }
