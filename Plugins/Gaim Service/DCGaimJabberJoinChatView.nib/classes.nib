@@ -1,5 +1,6 @@
 {
     IBClasses = (
+        {CLASS = AICompletingTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {
             CLASS = DCGaimJabberJoinChatViewController; 
             LANGUAGE = ObjC; 

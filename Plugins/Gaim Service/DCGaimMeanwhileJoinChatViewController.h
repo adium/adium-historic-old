@@ -6,8 +6,11 @@
 //
 
 @interface DCGaimMeanwhileJoinChatViewController : DCJoinChatViewController {
-	IBOutlet		NSTextField		*textField_topic;
-	IBOutlet		NSTextField		*textField_inviteUsers;
+	IBOutlet		NSTextField					*textField_topic;
+	IBOutlet		AICompletingTextField		*textField_inviteUsers;
+	
+	AIAccount									*account;
+
 }
 
 @end

@@ -8,8 +8,10 @@
 @interface DCGaimYahooJoinChatViewController : DCJoinChatViewController {
 	IBOutlet		NSTextField		*textField_roomName;
 	
-	IBOutlet		NSTextField		*textField_inviteMessage;
-	IBOutlet		NSTextField		*textField_inviteUsers;
+	IBOutlet		NSTextField					*textField_inviteMessage;
+	IBOutlet		AICompletingTextField		*textField_inviteUsers;
+	
+	AIAccount								*account;
 }
 
 @end

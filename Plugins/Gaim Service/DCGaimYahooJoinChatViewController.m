@@ -10,12 +10,19 @@
 
 @interface DCGaimYahooJoinChatViewController (PRIVATE)
 - (void)validateEnteredText;
+- (void)_configureTextField;
 @end
 
 @implementation DCGaimYahooJoinChatViewController
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {
+	account = inAccount;
+	
+	[textField_inviteUsers setMinStringLength:2];
+	[textField_inviteUsers setCompletesOnlyAfterSeparator:YES];
+	[self _configureTextField];
+	
 	[(DCJoinChatWindowController *)delegate setJoinChatEnabled:([[textField_roomName stringValue] length] > 0)];
 	[[view window] makeFirstResponder:textField_roomName];
 	[super configureForAccount:inAccount];
@@ -60,6 +67,32 @@
 	
 	if( delegate )
 		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:enabled];
+}
+
+- (NSString *)impliedCompletion:(NSString *)aString
+{
+	return [textField_inviteUsers impliedStringValueForString:aString];
+}
+
+- (void)_configureTextField
+{
+	NSEnumerator		*enumerator;
+    AIListContact		*contact;
+	
+	//Clear the completing strings
+	[textField_inviteUsers setCompletingStrings:nil];
+	
+	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
+    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
+    while((contact = [enumerator nextObject])){
+		if([contact service] == [account service]){
+			NSString *UID = [contact UID];
+			[textField_inviteUsers addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
+			[textField_inviteUsers addCompletionString:[contact displayName] withImpliedCompletion:UID];
+			[textField_inviteUsers addCompletionString:UID];
+		}
+    }
+	
 }
 
 @end
