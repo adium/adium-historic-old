@@ -5,6 +5,15 @@ Version 0.80 (13/-3/2525)
 - Achieved world domination
 - Obtained tasty sandwiches
 
+Version 0.74 (1/5/2005)
+- Fixed issues causing newly added contacts to appear twice in certain situations
+- Fixed a rare crash when opening the Log Viewer
+- Fixed a rare issue causing blank or (null) contacts to appear
+- (MSN) Fixed several common crashes introduced in 0.73 via a mistake when updating libgaim
+- (Jabber) Fixed several issues with group chat
+- (Sametime) Fixed issues with preferences for contacts with '/' in their LDAP strings
+- Improved emoticon display in preferences and menus to sort emoticons alphabetically
+
 Version 0.73 (12/26/2004)
 - Fixed issues with leading/trailing newlines for contact list Extended Status display
 - Fixed issues with applescript filters messaging applications which have been quit and relaunched
