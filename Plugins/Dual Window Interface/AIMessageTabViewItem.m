@@ -49,7 +49,6 @@
 	container = nil;
 
     //Configure ourself for the message view
-    [messageViewController setDelegate:self];
     [[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:)
 									   name:Chat_StatusChanged
 									 object:[messageViewController chat]];
@@ -65,7 +64,7 @@
 	
     //Set our contents
     [self setView:[messageViewController view]];
-    
+	
     return(self);
 }
 

@@ -95,8 +95,8 @@
 		[container addTabViewItem:messageTab atIndex:index silent:NO];
 	}
 
-    //Display the account selector (if multiple accounts are available for sending to the contact)
-	[[messageTab messageViewController] setAccountSelectionMenuVisible:YES];
+    //Display the account selector if necessary
+	[[messageTab messageViewController] setAccountSelectionMenuVisibleIfNeeded:YES];
 	
 	//Open the container window.  We wait until after the chat has been added to the container
 	//before making it visible so window opening looks cleaner.

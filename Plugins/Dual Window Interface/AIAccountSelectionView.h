@@ -15,13 +15,6 @@
 
 @class AIAccount, AIListObject;
 
-@protocol AIAccountSelectionViewDelegate <NSObject>
-- (void)setAccount:(AIAccount *)inAccount;
-- (void)setListObject:(AIListContact *)listObject;
-- (AIAccount *)account;
-- (AIListContact *)listObject;
-@end
-
 @interface AIAccountSelectionView : NSView <AIListObjectObserver> {
     AIAdium						*adium;
 	
@@ -33,19 +26,26 @@
 	IBOutlet	NSBox			*box_contacts;
 	IBOutlet	NSPopUpButton   *popUp_contacts;
 	
-    id <AIAccountSelectionViewDelegate>	delegate;
+    id				delegate;
 }
 
 + (BOOL)optionsAvailableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inObject;
 + (BOOL)multipleAccountsForSendingContentType:(NSString *)inType toContact:(AIListContact *)inObject;
 + (BOOL)multipleContactsForContact:(AIListContact *)inContact;
 
-- (id)initWithFrame:(NSRect)frameRect delegate:(id <AIAccountSelectionViewDelegate>)inDelegate;
-- (void)setDelegate:(id <AIAccountSelectionViewDelegate>)inDelegate;
-- (id <AIAccountSelectionViewDelegate>)delegate;
+- (id)initWithFrame:(NSRect)frameRect delegate:(id)inDelegate;
+- (void)setDelegate:(id)inDelegate;
+- (id)delegate;
 - (void)configureView;
 - (void)updateMenu;
 - (void)accountListChanged:(NSNotification *)notification;
 - (IBAction)selectAccount:(id)sender;
 
+@end
+
+@interface NSObject (AIAccountSelectionViewDelegate)
+- (void)setAccount:(AIAccount *)inAccount;
+- (void)setListObject:(AIListContact *)listObject;
+- (AIAccount *)account;
+- (AIListContact *)listObject;
 @end
