@@ -97,7 +97,7 @@
     NSShadow        *tempShadow = nil;
     NSShadow        *noShadow = nil;
     NSSize          buddyNameSize;
-    float           buddyNameFontSize = 24.0;
+    float           buddyNameFontSize = 26.0;
     float           relativeX = 1.0;
     float           relativeY = 1.0;
 	NSSize			buddyIconSize;
