@@ -8,11 +8,22 @@
 #import "AIWebKitMessageViewController.h"
 //#import "ESWebFrameViewAdditions.h"
 
+#define KEY_WEBKIT_USER_ICON @"WebKitUserIconPath"
 @interface AIWebKitMessageViewController (PRIVATE)
+//Loading
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
+- (void)loadStyle:(NSBundle *)style withCSS:(NSString *)CSS;
+- (void)_completeVariantIDSet:(NSString *)setStylesheetJavaScript;
+
+//Preferences
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_flushPreferenceCache;
 - (void)_releaseCachedHTML;
+- (void)setVariantID:(NSString *)variantID;
+- (void)refreshView;
+- (void)_loadPreferencesWithStyleNamed:(NSString *)styleName;
+
+//Content
 - (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar;
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar;
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content;
@@ -21,12 +32,11 @@
 - (NSMutableString *)escapeString:(NSMutableString *)inString;
 - (void)processNewContent;
 - (void)_processContentObject:(AIContentObject *)content;
+
+//User Icons
 - (void)participatingListObjectsChanged:(NSNotification *)notification;
-- (void)loadStyle:(NSBundle *)style withCSS:(NSString *)CSS;
-- (void)_loadPreferencesWithStyleNamed:(NSString *)styleName;
-- (void)setVariantID:(NSString *)variantID;
-- (void)refreshView;
-- (void)_completeVariantIDSet:(NSString *)setStylesheetJavaScript;
+- (void)_updateUserIconForObject:(AIListObject *)inObject;
+- (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject;
 @end
 
 @implementation AIWebKitMessageViewController
@@ -63,7 +73,9 @@ DeclareString(AppendNextMessage);
 	loadedStyleID = nil;
 	loadedVariantID = nil;
 	setStylesheetTimer = nil;
-
+	objectsWithMaskedUserIconsArray = nil;
+	imageMask = nil;
+	
 	//HTML Templates
 	contentInHTML = nil;
 	nextContentInHTML = nil;
@@ -77,21 +89,20 @@ DeclareString(AppendNextMessage);
 	
 	webViewIsReady = NO;
 	newContent = [[NSMutableArray alloc] init];
-//	webUserIconArray = [[NSMutableArray alloc] init];
-		
-	//Observe list objects we need to concern ourselves with
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(participatingListObjectsChanged:)
-									   name:Content_ChatParticipatingListObjectsChanged 
-									 object:chat];
-	[self participatingListObjectsChanged:nil];
-	
+
 	//Observe content
 	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(contentObjectAdded:)
 									   name:Content_ContentObjectAdded 
 									 object:inChat];
-
+	
+	//Observe a changing participants list and apply our initial settings if needed
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(participatingListObjectsChanged:)
+									   name:Content_ChatParticipatingListObjectsChanged 
+									 object:inChat];
+	[self participatingListObjectsChanged:nil];
+	
 	//Create our webview
 	webView = [[ESWebView alloc] initWithFrame:NSMakeRect(0,0,100,100) //Arbitrary frame
 									 frameName:nil
@@ -105,7 +116,10 @@ DeclareString(AppendNextMessage);
 		
 	//Observe preference changes. Our initial preferences are also applied by refreshView, so no need for an explicit
 	//[self prefrencesChanged:nil] call here.
-	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(preferencesChanged:) 
+									   name:Preference_GroupChanged 
+									 object:nil];
 
 	[self refreshView];
 	
@@ -127,6 +141,7 @@ DeclareString(AppendNextMessage);
 	[previousContent release]; previousContent = nil;
 	[plugin release]; plugin = nil;
 	[chat release]; chat = nil;
+	[objectsWithMaskedUserIconsArray release]; objectsWithMaskedUserIconsArray = nil;
 	
 	[self _flushPreferenceCache];
 	[self _releaseCachedHTML];
@@ -156,36 +171,106 @@ DeclareString(AppendNextMessage);
 
 //User Icons
 #pragma mark Participating List Objects & User Icons
-
-//We want to observe attributedChanged: notifications for all objects which are participating in our chat.
+//We want to observe attributesChanged: notifications for all objects which are participating in our chat.
 //When the list changes, remove the observers we had in place before and add observers for each object in the list
 //so we never observe for contacts not in the chat.
+
 - (void)participatingListObjectsChanged:(NSNotification *)notification
 {
-	NSNotificationCenter	*notificationCenter = [adium notificationCenter];
-	NSString				*attributesChangedNotification = ListObject_AttributesChanged;
-	
-	[notificationCenter removeObserver:self
-								  name:attributesChangedNotification
-								object:nil];
-	
-	NSEnumerator	*enumerator = [[chat participatingListObjects] objectEnumerator];
+	NSArray			*participatingListObjects = [chat participatingListObjects];
+	NSEnumerator	*enumerator = [participatingListObjects objectEnumerator];
 	AIListObject	*object;
 	
+	[[adium notificationCenter] removeObserver:self
+										  name:ListObject_AttributesChanged
+										object:nil];
+	
 	while (object = [enumerator nextObject]){
-		[notificationCenter addObserver:self 
-							   selector:@selector(listObjectAttributesChanged:) 
-								   name:attributesChangedNotification
-								 object:object];
+		//Update the mask for any user which just entered the chat
+		if (imageMask && [objectsWithMaskedUserIconsArray indexOfObjectIdenticalTo:object] == NSNotFound){
+			[self _updateUserIconForObject:object];
+		}
+	
+		//In the future, watch for changes
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(listObjectAttributesChanged:) 
+										   name:ListObject_AttributesChanged
+										 object:object];
+	}
+	
+	//Also observe our account
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(listObjectAttributesChanged:) 
+									   name:ListObject_AttributesChanged
+									 object:[chat account]];
+	
+	//We've now masked every user currently in the pariticpating list objects
+	//Mask our account and add it to the list
+	if (imageMask){
+		[objectsWithMaskedUserIconsArray release]; 
+		objectsWithMaskedUserIconsArray = [participatingListObjects mutableCopy];
+		
+		[self _updateUserIconForObject:[chat account]];
 	}
 }
 
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
-	
-}
-//- (void)
+    AIListObject	*inObject = [notification object];
+    NSArray			*keys = [[notification userInfo] objectForKey:@"Keys"];
 
+	if(inObject &&
+	   ([keys containsObject:KEY_USER_ICON]) &&
+	   (([[chat participatingListObjects] indexOfObject:inObject] != NSNotFound) ||
+		([chat account] == inObject))){ /* The account is not on the participating list objects list */
+		
+		[self _updateUserIconForObject:inObject];
+	}
+}
+
+- (void)_updateUserIconForObject:(AIListObject *)inObject
+{
+	//We already have a userIcon waiting for us, the active display icon; use that
+	//rather than loading one from disk
+	AIMutableOwnerArray *userIconDisplayArray = [inObject displayArrayForKey:KEY_USER_ICON];
+	NSImage				*userIcon = [userIconDisplayArray objectValue];
+	NSString			*webKitUserIconPath;
+	NSImage				*webKitUserIcon;
+	
+	//Apply the mask
+	if (imageMask){
+		webKitUserIcon = [[imageMask copy] autorelease];
+		[webKitUserIcon lockFocus];
+		[userIcon drawInRect:NSMakeRect(0,0,[webKitUserIcon size].width,[webKitUserIcon size].height)
+					fromRect:NSMakeRect(0,0,[userIcon size].width,[userIcon size].height)
+				   operation:NSCompositeSourceIn
+					fraction:1.0];
+		[webKitUserIcon unlockFocus];
+	}else{
+		webKitUserIcon = userIcon;
+	}
+	
+	webKitUserIconPath = [self _webKitUserIconPathForObject:inObject];
+	if ([[webKitUserIcon TIFFRepresentation] writeToFile:webKitUserIconPath
+											  atomically:YES]){
+		
+		[inObject setStatusObject:webKitUserIconPath
+						   forKey:KEY_WEBKIT_USER_ICON
+						   notify:NO];
+		
+		if (imageMask){
+			if ([objectsWithMaskedUserIconsArray indexOfObjectIdenticalTo:inObject] == NSNotFound){
+				[objectsWithMaskedUserIconsArray addObject:inObject];
+			}
+		}
+	}
+}
+
+- (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject
+{
+	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@",[inObject uniqueObjectID],[NSString randomStringOfLength:5]];
+	return([[@"~/Library/Caches/Adium" stringByExpandingTildeInPath] stringByAppendingPathComponent:filename]);
+}	
 //WebView preferences --------------------------------------------------------------------------------------------------
 #pragma mark WebView preferences
 //The controller observes for preferences which are applied to the WebView
@@ -302,7 +387,14 @@ DeclareString(AppendNextMessage);
 									 style:style 
 								   variant:loadedVariantID
 							   boolDefault:NO];
-	
+
+	NSString	*maskPath = [plugin valueForKey:@"ImageMask" style:style variant:loadedVariantID];
+	if (maskPath){
+		//Load the image mask if one is specified
+		imageMask = [[NSImage alloc] initByReferencingFile:[[style resourcePath] stringByAppendingPathComponent:maskPath]];
+		objectsWithMaskedUserIconsArray = [[NSMutableArray alloc] init];
+	}
+
 	//Background Preferences [Style specific]
 	if(allowBackgrounds){
 		background = [[prefDict objectForKey:[plugin backgroundKeyForStyle:loadedStyleID]] retain];
@@ -323,6 +415,8 @@ DeclareString(AppendNextMessage);
 	[timeStampFormatter release]; timeStampFormatter = nil;
 	[background release]; background = nil;
 	[backgroundColor release]; backgroundColor = nil;
+	[imageMask release]; imageMask = nil;
+	[objectsWithMaskedUserIconsArray release]; objectsWithMaskedUserIconsArray = nil;
 }
 
 //Force this view to immediately switch to the current preferences and then redisplay all its content
@@ -728,7 +822,7 @@ DeclareString(AppendNextMessage);
 				NSString    *userIconPath ;
 				NSString	*replacementString;
 				
-				userIconPath = [[content source] statusObjectForKey:@"WebKitUserIconPath"];
+				userIconPath = [[content source] statusObjectForKey:KEY_WEBKIT_USER_ICON];
 				if (!userIconPath){
 					userIconPath = [[content source] statusObjectForKey:@"UserIconPath"];
 				}
@@ -856,8 +950,13 @@ DeclareString(AppendNextMessage);
 			AIListObject	*listObject = [chat listObject];
 			NSString		*iconPath = nil;
 			
-			if (listObject) iconPath = [listObject statusObjectForKey:@"UserIconPath"];
-			
+			if (listObject){
+				iconPath = [listObject statusObjectForKey:@"WebKitUserIconPath"];
+				if (!iconPath){
+					iconPath = [listObject statusObjectForKey:@"UserIconPath"];
+				}
+			}
+						
 			[inString replaceCharactersInRange:range
 									withString:(iconPath ? iconPath : @"incoming_icon.png")];
 		}
@@ -869,7 +968,12 @@ DeclareString(AppendNextMessage);
 			AIListObject	*account = [chat account];
 			NSString		*iconPath = nil;
 			
-			if (account) iconPath = [account statusObjectForKey:@"UserIconPath"];
+			if (account){
+				iconPath = [account statusObjectForKey:KEY_WEBKIT_USER_ICON];
+				if (!iconPath){
+					iconPath = [account statusObjectForKey:@"UserIconPath"];
+				}
+			}
 			
 			[inString replaceCharactersInRange:range
 									withString:(iconPath ? iconPath : @"outgoing_icon.png")];

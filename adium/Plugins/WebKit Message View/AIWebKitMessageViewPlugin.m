@@ -12,14 +12,16 @@
 
 - (void)installPlugin
 {
+	NSLog(@"Webkit: installPlugin");
 	if(USE_WEBKIT_PLUGIN && [NSApp isOnPantherOrBetter]){
 		//Init
 
 		styleDictionary = nil;
+			NSLog(@"Webkit: _scanAvailableWebkitStyles");
 		[self _scanAvailableWebkitStyles];
 		
 		//Setup our preferences
-		
+		NSLog(@"Webkit: preferences");
 		[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:WEBKIT_DEFAULT_PREFS forClass:[self class]]
 											  forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		preferences = [[ESWebKitMessageViewPreferences preferencePaneForPlugin:self] retain];
@@ -32,14 +34,16 @@
 										 object:nil];
 		
 		//Register ourself as a message view plugin
+		NSLog(@"Webkit: Register");
 		[[adium interfaceController] registerMessageViewPlugin:self];
 		
 		//Register our observers
 //		[[adium contactController] registerListObjectObserver:self];
 	}
 
+	NSLog(@"Webkit: createResourcePathForName:%@",MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT);
 	[adium createResourcePathForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT];
-	 
+	NSLog(@"Webkit: done.");
 }
 //Return a message view controller
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat
@@ -134,12 +138,16 @@
 
 - (BOOL)boolForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant boolDefault:(BOOL)defaultValue
 {
-	NSNumber	*value = [style objectForInfoDictionaryKey:[NSString stringWithFormat:@"%@:%@",key,variant]];
-	if (!value){
-		value = [style objectForInfoDictionaryKey:key];
-	}
+	NSNumber	*value = (NSNumber *)[self valueForKey:key style:style variant:variant];
 	return (value ? [value boolValue] : defaultValue);
 }
 
-
+- (id)valueForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant
+{
+	id  value = [style objectForInfoDictionaryKey:[NSString stringWithFormat:@"%@:%@",key,variant]];
+	if (!value){
+		value = [style objectForInfoDictionaryKey:key];
+	}
+	return value;
+}
 @end
