@@ -112,32 +112,7 @@
 	scrollView_messages = [messageViewController messageScrollView];
 
 	[controllerView_messages setNextResponder:textView_outgoing];
-	/*if (controllerView_messages != scrollView_messages)
-		[scrollView_messages setNextResponder:controllerView_messages];
-*/
-//	[[scrollView_messages superview] addSubview:[messageViewController messageView]];
-//	[[messageViewController messageView] setFrame:[scrollView_messages frame]];
-//	[scrollView_messages removeFromSuperview];
-//	scrollView_messages = [[messageViewController messageView] retain];
-	
-//	[scrollView_messages setAndSizeDocumentView:[messageViewController messageView]];
-//	[scrollView_messages setNextResponder:textView_outgoing];
-//	[scrollView_messages setAutoScrollToBottom:YES];
-//	[scrollView_messages setAutoHideScrollBar:NO];
-//	[scrollView_messages setHasVerticalScroller:YES];
-	
-	//User List
-	//[view_userPane retain];
 
-	//NSTableColumn *leftCol = [[tableView_userList tableColumns] objectAtIndex:0];
-	//[leftCol setDataCell:[[[NSImageCell alloc] init] autorelease]];
-
-	/*
-	 //The image column does not currently exist
-	NSTableColumn *leftCol = [[tableView_userList tableColumns] objectAtIndex:0];
-	[leftCol setDataCell:[[[NSImageCell alloc] init] autorelease]];
-	*/
-	
 	// Set up the split view
 	[splitView_messages setDelegate:self];
 	
