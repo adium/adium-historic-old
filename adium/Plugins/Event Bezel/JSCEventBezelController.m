@@ -56,6 +56,7 @@ JSCEventBezelController *sharedEventBezelInstance = nil;
 
 - (void)windowDidLoad
 {
+	NSData  *autosaveFrame;
     [[self window] setBackgroundColor: [NSColor clearColor]];
     [[self window] setLevel: NSStatusWindowLevel];
     [[self window] setIgnoresMouseEvents:NO];
@@ -63,6 +64,16 @@ JSCEventBezelController *sharedEventBezelInstance = nil;
     [[self window] setAlphaValue:1.0];
     [[self window] setOpaque:NO];
     [[self window] setHasShadow:YES];
+	autosaveFrame = [[NSUserDefaults standardUserDefaults] objectForKey: AUTOFRAME_KEY];
+	if (!autosaveFrame) {
+		NSRect  defaultFrame = [[self window] frame];
+		NSSize  mainScreenSize = [[NSScreen mainScreen] frame].size;
+		NSPoint mainScreenOrigin = [[NSScreen mainScreen] frame].origin;
+		
+		defaultFrame.origin.x = mainScreenOrigin.x + (ceil(mainScreenSize.width / 2.0) - ceil(defaultFrame.size.width / 2.0));
+		defaultFrame.origin.y = mainScreenOrigin.y + 140.0;
+		[[self window] setFrame: defaultFrame display: NO];
+	}
 	[[self window] setFrameAutosaveName:AUTOFRAME_NAME];
 }
 
