@@ -119,7 +119,9 @@
     if(targetMenuItem){
         if([[account supportedPropertyKeys] containsObject:@"Online"]){
             //Update the 'connect / disconnect' menu item
-			
+
+			[[targetMenuItem menu] setMenuChangedMessagesEnabled:NO];		
+
 			if([[account statusObjectForKey:@"Online"] boolValue]){
 				[targetMenuItem setImage:image_Online];
 				[targetMenuItem setTitle:[ACCOUNT_DISCONNECT_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
@@ -141,7 +143,8 @@
                                 [targetMenuItem setKeyEquivalent:@""];
 				[targetMenuItem setEnabled:YES];
 			}
-			
+
+			[[targetMenuItem menu] setMenuChangedMessagesEnabled:YES];
         }        
 		
     }
