@@ -239,7 +239,7 @@
 	if(fileName && [fileName length]){
 		return([NSString stringWithFormat:EVENT_SOUNDS_ALERT_LONG, fileName]);
 	}else{
-		return(EVENT_SOUNDS_ALERT_LONG);
+		return(EVENT_SOUNDS_ALERT_SHORT);
 	}
 }
 
