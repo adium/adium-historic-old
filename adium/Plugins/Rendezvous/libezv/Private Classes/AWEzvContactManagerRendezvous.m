@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.10 2004/07/16 02:16:47 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.11 2004/07/16 09:38:29 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -914,7 +914,7 @@ void browse_reply  (DNSServiceBrowserReplyResultType resultType,
 		    void *context) {
     
     AWEzvContactManager *self = context;
-    if ([[self myname] compare:[NSString stringWithCString:replyName]] != NSOrderedSame)
+    if ([[self myname] compare:[NSString stringWithUTF8String:replyName]] != NSOrderedSame)
 	[self browseResult:resultType name:replyName type:replyType domain:replyDomain flags:flags av:NO];
 }
 
@@ -927,7 +927,7 @@ void av_browse_reply  (DNSServiceBrowserReplyResultType resultType,
 		    void *context) {
     
     AWEzvContactManager *self = context;
-    if ([[self myavname] compare:[NSString stringWithCString:replyName]] != NSOrderedSame)
+    if ([[self myavname] compare:[NSString stringWithUTF8String:replyName]] != NSOrderedSame)
 	[self browseResult:resultType name:replyName type:replyType domain:replyDomain flags:flags av:YES];
 }
 
