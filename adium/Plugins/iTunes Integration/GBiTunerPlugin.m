@@ -39,6 +39,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	
 	//Start building the script menu
 	scriptMenu = nil;
+	buildingScriptMenu = YES;
 	[self buildScriptMenu];
 	//[NSThread detachNewThreadSelector:@selector(_buildScriptMenuThread) toTarget:self withObject:nil];
 	
@@ -137,9 +138,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 #pragma mark Script Menu
 //Build the script menu
 - (void)_buildScriptMenuThread
-{
-	buildingScriptMenu = YES;
-	
+{	
 	[NSThread setThreadPriority:0.0];
 	
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -147,8 +146,6 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	[self buildScriptMenu];
 	
 	[pool release];
-	
-	buildingScriptMenu = NO;
 }
 
 - (void)buildScriptMenu
@@ -162,6 +159,8 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	[scriptMenu release]; scriptMenu = [[NSMenu alloc] initWithTitle:@"Scripts"];
 	[self _appendScripts:scriptArray toMenu:scriptMenu atLevel:0];
 	[scriptMenuItem setSubmenu:scriptMenu];
+	
+	buildingScriptMenu = NO;
 }
 
 //Alphabetize scripts

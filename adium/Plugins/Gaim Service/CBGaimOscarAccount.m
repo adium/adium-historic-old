@@ -53,6 +53,7 @@ static NSString *MobileServiceID = nil;
 	return((noHTML ? [inAttributedString string] : [AIHTMLDecoder encodeHTML:inAttributedString
 																	 headers:YES
 																	fontTags:YES
+														  includingColorTags:YES
 															   closeFontTags:NO
 																   styleTags:YES
 												  closeStyleTagsOnFontChange:NO
