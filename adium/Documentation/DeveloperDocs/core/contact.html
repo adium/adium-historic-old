@@ -173,7 +173,7 @@ rename a handle
 		</p>
 		<br>
 		<p class="code">
-			- (NSMutableArray *)<b>allContactsInGroup</b>:(AIContactGroup *)inGroup <b>subgroups</b>:(BOOL)subGroups
+			- (NSMutableArray *)<b>allContactsInGroup</b>:(AIContactGroup *)inGroup <b>subgroups</b>:(BOOL)subGroups <b>ownedBy</b>:(AIAccount *)inAccount
 		</p>
 		<p class="desc">
 			Return all the contacts in a group, and (optionally) all the subgroups it contains
@@ -225,5 +225,6 @@ rename a handle
 		<p class="desc">
 			Delay updating of the contact list for a set period of time. (Call this before making massive changes to the contact list)
 		</p>
+                <br><br>
 	</body>
 </html>

@@ -21,7 +21,6 @@
 #import "AIMTOC2Packet.h"
 #import "AIMTOC2StringAdditions.h"
 #import "AIMTOC2AccountViewController.h"
-#import "AISyncWindowController.h"
 #import "AIMTOC2ServicePlugin.h"
 
 static char *hash_password(const char * const password);

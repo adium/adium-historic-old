@@ -103,7 +103,7 @@ Each entry in the array is an AIAccount (or an AIAccount subclass), representing
 			Move an account to another place in the account list. Make sure index is valid (by checking the count of the accountArray).
 		</p>
 		<br><p class="code">
-			- (AIAccount *)<b>switchAccount</b>:(AIAccount *)inAccount <b>toService</b>:(AIService *)inService
+			- (AIAccount *)<b>switchAccount</b>:(AIAccount *)inAccount <b>toService</b>:(id &lt;AIServiceController&gt;)inService
 		</p>
 		<p class="desc">
 			Switch the specified account to a different service. Although the majority of account properties will no longer apply to the new service, it is possible to switch an account from one service to another. This is especially useful when there are multiple ways onto a service (such as with seperate protocols), as it allows quick switching between the available access methods.
@@ -126,7 +126,15 @@ Each entry in the array is an AIAccount (or an AIAccount subclass), representing
 		- (NSArray *)<b>availableServiceArray</b>
 </p>
 		<p class="desc">
-	Returns an array of services (AIService)
+	Returns an array of services
+		</p>
+                
+                
+		<br><p class="code">
+                - (void)<b>registerService</b>:(id &lt;AIServiceController&gt;)inService
+</p>
+		<p class="desc">
+        Register service code.
 		</p>
 		
 		
@@ -136,7 +144,7 @@ Each entry in the array is an AIAccount (or an AIAccount subclass), representing
 		
 
 		
-		
+		<br><br>
 		
 		
 		
