@@ -23,8 +23,9 @@
 //Raise an exception.  This gets called once with no stack trace, then a second time after the stack trace is added by the ExceptionHandling framework.  We therefore just do [super raise] if there is no stack trace, awaiting its addition to write the exception log, load the crash reporter, and exit Adium
 - (void)raise
 {
+    NSString *reason = [self reason];
     //Hack for an inexplicable exception we don't seem to be able to fix
-    if ([[self reason] isEqualToString:@"_sharedInstance is invalid."]) {
+    if ((!reason) || ([reason isEqualToString:@"_sharedInstance is invalid."])) {
         [super raise];
     } else {
         NSDictionary    *dict = [self userInfo];
@@ -53,8 +54,8 @@
                 pclose( file );
             }
             
-            [[NSString stringWithFormat:@"Exception:\t%@\nReason:\t%@\nStack trace:\n%@",[self name],[self reason],processedStackTrace] writeToFile:EXCEPTIONS_PATH atomically:YES];
-            NSLog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@)",[self name],[self reason]);
+            [[NSString stringWithFormat:@"Exception:\t%@\nReason:\t%@\nStack trace:\n%@",[self name],reason,processedStackTrace] writeToFile:EXCEPTIONS_PATH atomically:YES];
+            NSLog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@)",[self name],reason);
             
             [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_CRASH_REPORTER];
             //Move along, citizen, nothing more to see here.
