@@ -200,10 +200,10 @@
             NSRect		dotRect;
             NSBezierPath 	*dotPath;
     
-            dotRect = NSMakeRect(inRect.origin.x + (circleRadius - (circleRadius*(1.0/6.0))),
+            dotRect = NSMakeRect(innerRight - (circleRadius*(1.0/6.0)),
                                     inRect.origin.y + (circleRadius),
                                     circleRadius*(1.0/3.0),		//1/3rd the width of the main circle
-                                    (circleRadius*(1.0/3.0)));		//1/3rd the width of the main circle
+                                    circleRadius*(1.0/3.0));		//1/3rd the width of the main circle
     
             dotPath = [NSBezierPath bezierPathWithOvalInRect:dotRect];
             [dotPath setLineWidth:lineWidth];
@@ -217,8 +217,8 @@
     
             //Create the circle path
             insideCircle = [NSBezierPath bezierPath];
-            [insideCircle appendBezierPathWithArcWithCenter: NSMakePoint(inRect.origin.x + circleRadius, inRect.origin.y + 1 + circleRadius) radius:(circleRadius/(2.0)) startAngle:90 endAngle:270 clockwise:YES];
-            [insideCircle appendBezierPathWithArcWithCenter: NSMakePoint(inRect.origin.x + circleRadius, inRect.origin.y + 1 + circleRadius) radius:(circleRadius/(2.0)) startAngle:270 endAngle:90 clockwise:YES];
+            [insideCircle appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, inRect.origin.y + 1 + circleRadius) radius:(circleRadius/(2.0)) startAngle:90 endAngle:270 clockwise:YES];
+            [insideCircle appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, inRect.origin.y + 1 + circleRadius) radius:(circleRadius/(2.0)) startAngle:270 endAngle:90 clockwise:YES];
     
             //Draw
             [((state == AICircleFlashA) ? color : flashColor) set];
