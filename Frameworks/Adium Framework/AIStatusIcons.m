@@ -27,10 +27,6 @@ static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 			statusIcons[i][j] = [[NSMutableDictionary alloc] init];
 		}
 	}
-	
-	//Hard coded icon pack for now
-	NSString *path = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Status Icons"] stringByExpandingTildeInPath];
-	[self setActiveStatusIconsFromPath:[path stringByAppendingPathComponent:@"Gems.AdiumStatusIcons"]];
 }
 
 //Retrieve the correct status icon for the internal status ID
