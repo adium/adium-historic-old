@@ -154,6 +154,7 @@
             [checkBox_noIdle setEnabled:showBezel];
             [checkBox_idle setEnabled:showBezel];
             [checkBox_firstMessage setEnabled:showBezel];
+            [checkBox_includeText setEnabled:showBezel];
         }
     }
 }
