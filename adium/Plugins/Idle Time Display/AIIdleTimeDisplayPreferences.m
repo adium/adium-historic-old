@@ -38,27 +38,27 @@
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_DISPLAY_IDLE_TIME
                                               group:PREF_GROUP_IDLE_TIME_DISPLAY];
-	[self configureControlDimming];
-
+		[self configureControlDimming];
+		
     }else if(sender == checkBox_displayIdleOnLeft){
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
-					     forKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT
-					      group:PREF_GROUP_IDLE_TIME_DISPLAY];
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
+											 forKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT
+											  group:PREF_GROUP_IDLE_TIME_DISPLAY];
         [checkBox_displayIdleOnRight setState:NSOffState];
-
+		
     }else if(sender == checkBox_displayIdleOnRight){
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:NO]
-					     forKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT
-					      group:PREF_GROUP_IDLE_TIME_DISPLAY];
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:NO]
+											 forKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT
+											  group:PREF_GROUP_IDLE_TIME_DISPLAY];
         [checkBox_displayIdleOnLeft setState:NSOffState];
-	
+		
     }else if(sender == colorWell_idleColor){
         [[adium preferenceController] setPreference:[[colorWell_idleColor color] stringRepresentation]
                                              forKey:KEY_IDLE_TIME_COLOR
                                               group:PREF_GROUP_IDLE_TIME_DISPLAY];
-
+		
     }
-
+	
 }
 
 //Private ---------------------------------------------------------------------------
@@ -91,8 +91,9 @@
 //Clean up our preference pane
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
+	[colorWell_idleColor deactivate];
+	
     [view_prefView release]; view_prefView = nil;
-
 }
 
 //Configures our view for the current preferences
