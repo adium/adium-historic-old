@@ -368,7 +368,7 @@ static BOOL didInitOscar = NO;
 			statusMsgString = [NSString stringWithUTF8String:(bi->availmsg)];
 			
 		} else if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away != NULL)){
-			
+//			NSLog(@"%s: %s %i %s",buddyName, userinfo->away,userinfo->away_len,userinfo->away_encoding);
 			if ((userinfo->away_len > 0) && 
 				(userinfo->away_encoding != NULL)) {
 				
@@ -558,7 +558,7 @@ static BOOL didInitOscar = NO;
 	//For ICQ contacts, however, we want to pass this data on as the profile
 	const char	firstCharacter = [[theContact UID] characterAtIndex:0];
 	
-	if(firstCharacter >= '0' && firstCharacter <= '9'){
+	if((firstCharacter >= '0' && firstCharacter <= '9') || [theContact isStranger]){
 		[super updateUserInfo:theContact withData:userInfoString];
 	}
 }

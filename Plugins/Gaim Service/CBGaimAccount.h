@@ -11,7 +11,7 @@
 
 - (GaimAccount*)gaimAccount;
 
-- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID size:(unsigned long long)inSize;
+- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID size:(unsigned long long)inSize remoteFilename:(NSString *)remoteFilename;
 
 - (AIListContact *)mainThreadContactWithUID:(NSString *)inUID;
 - (AIChat *)mainThreadChatWithContact:(AIListContact *)contact;
@@ -133,7 +133,6 @@
 - (oneway void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID;
 - (oneway void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID;
 
-- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID size:(unsigned long long)inSize;
 - (oneway void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
 - (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(NSNumber *)percent bytesSent:(NSNumber *)bytesSent;
 - (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;

@@ -64,4 +64,6 @@
 - (NSString *)_processGaimImagesInString:(NSString *)inString forAdiumAccount:(id)adiumAccount;
 
 - (oneway void)performContactMenuActionFromDict:(NSDictionary *)dict;
+
+- (void)setMainThreadMessenger:(NDRunLoopMessenger *)inMainThreadMessenger;
 @end
