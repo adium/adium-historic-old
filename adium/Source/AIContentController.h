@@ -42,6 +42,7 @@
 //Dummy protocol used in several filters
 @protocol DummyStringProtocol
 - (unsigned int)length;
+- (void)deleteCharactersInRange:(NSRange)aRange;
 - (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString*)replacement options:(unsigned)opts range:(NSRange)searchRange;
 @end
 

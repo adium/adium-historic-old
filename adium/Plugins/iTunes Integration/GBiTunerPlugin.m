@@ -236,7 +236,8 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 
 - (id)_filterString:(NSString *)inString originalObject:(id)originalObject
 {
-	id<DummyStringProtocol>   mesg = nil;
+	id<DummyStringProtocol>		mesg = nil;
+	NSRange						range;
 	
 	if (!hasGeneratedScriptMenu) {
 		[scriptMenuItem setSubmenu:[self loadScriptsAndBuildScriptMenu]];
@@ -250,13 +251,16 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
         //This loop gets run for every key in the dictionary
 		while(pattern = [enumerator nextObject]){
             //if the original string contained this pattern
-            if([inString rangeOfString:pattern].location != NSNotFound){
-				
-				if(!mesg) mesg = [[originalObject mutableCopy] autorelease];   
-                [mesg replaceOccurrencesOfString:pattern 
-                                      withString:[self hashLookup:pattern] 
-                                         options:NSLiteralSearch 
-                                           range:NSMakeRange(0,[mesg length])];
+			range = [inString rangeOfString:pattern];
+            if(range.location != NSNotFound) {
+				if(!mesg) mesg = [[originalObject mutableCopy] autorelease];
+				if(range.location > 0 && [inString characterAtIndex:range.location - 1] == '\\')
+					[mesg deleteCharactersInRange:NSMakeRange(range.location-1,1)];
+				else
+					[mesg replaceOccurrencesOfString:pattern 
+										  withString:[self hashLookup:pattern] 
+											 options:NSLiteralSearch 
+											   range:NSMakeRange(0,[mesg length])];
             }
         }
     }
