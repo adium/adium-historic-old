@@ -45,6 +45,10 @@
 	pickerController = nil;
 	title = nil;
 	delegate = nil;
+	
+	lastResp = nil;
+	shouldDrawFocusRing = NO;
+	
 	useNSImagePickerController = [NSApp isOnPantherOrBetter];
 }
 
