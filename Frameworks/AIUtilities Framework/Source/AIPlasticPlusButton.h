@@ -14,7 +14,7 @@
  * "Plastic" Aqua plus (+) button
  */
 @interface AIPlasticPlusButton : AIPlasticButton {
-
+	NSBezierPath	*arrowPath;
 }
 
 @end
