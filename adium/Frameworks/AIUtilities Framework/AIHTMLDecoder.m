@@ -54,24 +54,24 @@ int HTMLEquivalentForFontSize(int fontSize);
 + (NSString *)encodeHTML:(NSAttributedString *)inMessage headers:(BOOL)includeHeaders fontTags:(BOOL)includeFontTags closeFontTags:(BOOL)closeFontTags styleTags:(BOOL)includeStyleTags closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange encodeNonASCII:(BOOL)encodeNonASCII imagesPath:(NSString *)imagesPath
 {
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
-    NSRange		searchRange;
-    NSColor		*pageColor = nil;
-    BOOL		openFontTag = NO;
+    NSRange			searchRange;
+    NSColor			*pageColor = nil;
+    BOOL			openFontTag = NO;
 
     //Setup the destination HTML string
-    NSMutableString	*string = [NSMutableString stringWithString:(includeHeaders ? @"<HTML>" : @"")];
+    NSMutableString *string = [NSMutableString stringWithString:(includeHeaders ? @"<HTML>" : @"")];
 
-    //Setup the incoming message as a regular string, and it's length
+    //Setup the incoming message as a regular string, and get its length
     NSString		*inMessageString = [inMessage string];
-    int			messageLength = [inMessage length];
-    
+    int				messageLength = [inMessageString length];
+	
     //Setup the default attributes
     NSString		*currentFamily = [@"Helvetica" retain];
     NSString		*currentColor = [@"#000000" retain];
-    int			currentSize = 12;
-    BOOL		currentItalic = NO;
-    BOOL		currentBold = NO;
-    BOOL		currentUnderline = NO;
+    int				currentSize = 12;
+    BOOL			currentItalic = NO;
+    BOOL			currentBold = NO;
+    BOOL			currentUnderline = NO;
     
     //Append the body tag (If there is a background color)
     if(includeHeaders && messageLength > 0 && (pageColor = [inMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil])){
@@ -166,7 +166,11 @@ int HTMLEquivalentForFontSize(int fontSize);
         //Link
         if(link && [link length] != 0){
             [string appendString:@"<a href=\""];
-            [string appendString:link];
+			if ([link isKindOfClass:[NSURL class]]) {
+				[string appendString:[(NSURL *)link absoluteString]];
+			} else {
+				[string appendString:link];	
+			}
             [string appendString:@"\">"];
         }
 
