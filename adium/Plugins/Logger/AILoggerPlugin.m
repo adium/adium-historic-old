@@ -192,7 +192,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 		    ([content isOutgoing] ? @"send" : @"receive"),
 		    dateString,
 		    [source UID],
-		    [AIHTMLDecoder encodeHTML:message headers:NO fontTags:logFont closeFontTags:logFont styleTags:logStyle closeStyleTagsOnFontChange:closeStyle]];
+		    [AIHTMLDecoder encodeHTML:message headers:NO fontTags:logFont closeFontTags:logFont styleTags:logStyle closeStyleTagsOnFontChange:closeStyle encodeNonASCII:YES]];
             }else{
                 logMessage = [NSString stringWithFormat:@"(%@) %@: %@\n", dateString, [source UID], [message string]];
             }

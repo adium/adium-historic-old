@@ -5634,7 +5634,7 @@
 			};
 		};
 		3481DDE405704EEC00CD38D6 = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = folder;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Address Book Integration.AdiumPlugin";
@@ -23095,7 +23095,7 @@
 			sourceTree = "<group>";
 		};
 		9CBADC550571267C005187DA = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = folder;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "WebKit Message View.AdiumPlugin";
@@ -24264,7 +24264,7 @@
 			sourceTree = "<group>";
 		};
 		9E87CDF105748FFA001CB886 = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = folder;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Fast User Switching Support.AdiumPlugin";
@@ -24365,7 +24365,7 @@
 			productType = "com.apple.product-type.bundle";
 		};
 		9E87CF580574909B001CB886 = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = folder;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Status Menu Item.AdiumPlugin";
