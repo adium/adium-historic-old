@@ -93,9 +93,15 @@
 }
 - (int)cellWidth
 {
-	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
-																	   attributes:[self labelAttributes]];
-	return([super cellWidth] + [self flippyIndent] + [displayName size].width + 1);
+	NSAttributedString	*displayName;
+	NSSize				nameSize; 
+	
+	//Get the size of our display name
+	displayName = [[NSAttributedString alloc] initWithString:[self labelString] attributes:[self labelAttributes]];
+	nameSize = [displayName size];
+	[displayName release];
+		
+	return([super cellWidth] + [self flippyIndent] + nameSize.width + 1);
 }
 
 //Calculates the distance from left margin to our display name.  This is the indent caused by group nesting.
