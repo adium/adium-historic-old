@@ -10,6 +10,9 @@
 //------------------------------------------------------------------------------------
 // Bugs - Adium
 //------------------------------------------------------------------------------------
+- Adium doesn't crash enough.
+	Starting Adium is just so enjoyable we should find ways to do it more often.
+
 - Spawning new windows unhides Adium
 	We don't want to spawn new windows while Adium is hidden.  Windows should be queued
 	and shown when Adium is unhid.
