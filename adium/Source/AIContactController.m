@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.127 2004/04/23 02:20:49 adamiser Exp $
+// $Id: AIContactController.m,v 1.128 2004/04/23 03:03:26 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -133,8 +133,8 @@
 	//We must load all the groups before loading contacts for the ordering system to work correctly.
 	[self _loadGroupsFromArray:[[owner preferenceController] preferenceForKey:KEY_FLAT_GROUPS
 																		group:PREF_GROUP_CONTACT_LIST]];
-//	[self _loadContactsFromArray:[[owner preferenceController] preferenceForKey:KEY_FLAT_CONTACTS
-//																		  group:PREF_GROUP_CONTACT_LIST]];
+	[self _loadContactsFromArray:[[owner preferenceController] preferenceForKey:KEY_FLAT_CONTACTS
+																		  group:PREF_GROUP_CONTACT_LIST]];
 }
 
 //Save the contact list
@@ -143,9 +143,9 @@
 	[[owner preferenceController] setPreference:[self _arrayRepresentationOfListObjects:[groupDict allValues]]
 										 forKey:KEY_FLAT_GROUPS
 										  group:PREF_GROUP_CONTACT_LIST];	
-//	[[owner preferenceController] setPreference:[self _arrayRepresentationOfListObjects:[contactDict allValues]]
-//										 forKey:KEY_FLAT_CONTACTS
-//										  group:PREF_GROUP_CONTACT_LIST];
+	[[owner preferenceController] setPreference:[self _arrayRepresentationOfListObjects:[contactDict allValues]]
+										 forKey:KEY_FLAT_CONTACTS
+										  group:PREF_GROUP_CONTACT_LIST];
 }
 
 //Return the current largest order index + 1
