@@ -191,7 +191,9 @@ DeclareString(AppendNextMessage);
 		
 		// Add the date header (should be farmed out to a separate function)
 		if( shouldShowDateHeader ) {
-			dateMessage = [NSString stringWithFormat:@"%@",[[(AIContentContext *)content date] descriptionWithCalendarFormat:@"%A, %B %d, %Y" timeZone:nil locale:nil]];
+						
+			dateMessage = [NSString stringWithFormat:@"%@",[[(AIContentContext *)content date] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatString] timeZone:nil locale:nil]];
+			
 			dateSeparator = [AIContentStatus statusInChat:[content chat]
 											   withSource:[[content chat] listObject]
 											  destination:[[content chat] account]
