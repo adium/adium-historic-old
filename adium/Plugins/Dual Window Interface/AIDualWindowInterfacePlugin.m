@@ -704,11 +704,13 @@
 		
 		//Clear the group sorting cache, if necessary
 		if( arrangeByGroup ) {
-			if( [inChat listObject] )
+			if( [inChat listObject] ){
 				group = [[[inChat listObject] containingGroup] uniqueObjectID];
-			else
+				//It's possible the listObject isn't on our contact list; group it with all those cute little orphans
+				if (!group) group = @"Orphans";
+			}else{
 				group = @"Group Chats";
-			
+			}
 			groupWindowController = [arrangeByGroupWindowList objectForKey:group];
 			if( [[groupWindowController customTabsView] numberOfTabViewItems] == 0 ) {
 				[arrangeByGroupWindowList removeObjectForKey:group];
@@ -1158,6 +1160,8 @@
 			// Group chats don't have list objects
 			if( listObject ) {
 				listGroupID = [[listObject containingGroup] uniqueObjectID];
+				//It's possible the listObject isn't on our contact list; group it with all those cute little orphans
+				if (!listGroupID) listGroupID = @"Orphans";
 			} else {
 				listGroupID = @"Group Chats";
 			}
