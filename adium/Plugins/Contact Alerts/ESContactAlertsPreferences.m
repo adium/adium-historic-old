@@ -43,6 +43,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     offsetDictionary = [[NSMutableDictionary alloc] init];
     
     instance = nil;
+    ignoreSelectionChanges = NO;
     
     //Register our preference pane
     [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Alerts withDelegate:self label:ALERTS_PREF_TITLE]];
@@ -155,6 +156,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     }
 }
 
+#warning Need to access contactList directly here in order to get groups in the commented-out area below
 -(void)rebuildPrefAlertsArray
 {
     int offset = 0;
@@ -170,6 +172,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
     AIListContact * contact;
     while (contact = [enumerator nextObject]) {
+        /*
         AIListGroup * theGroup = [contact containingGroup];
         if ([[theGroup displayName] compare:groupName] != 0) {
             [instance configForObject:theGroup];
@@ -183,6 +186,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
             }
             groupName = [theGroup displayName];
         }
+        */
         
         [instance configForObject:contact];
         thisInstanceCount = [instance count];
@@ -232,22 +236,24 @@ int alphabeticalSort(id objectA, id objectB, void *context);
                                             userInfo:nil]; //notify that the change occured    
 }
 
-//doesn't work for grou pyet because of contactInGroup
+//doesn't work for group yet because of contactInGroup
 -(IBAction)addedEvent:(id)sender
 {
-    AIListObject * tempObject;
+/*    AIListObject * tempObject;
     NSString * UID = [activeContactObject UID];
     if ([activeContactObject isKindOfClass:[AIListContact class]]) {
-        tempObject = [[adium contactController] contactInGroup:nil withService:[activeContactObject serviceID] UID:UID];
+        tempObject = [[adium contactController] contactWithService:[activeContactObject serviceID] UID:UID];
     } else {
         tempObject = [[adium contactController] groupInGroup:nil withUID:UID];
     }
-    
+*/
+    ignoreSelectionChanges = YES;
     [self rebuildPrefAlertsArray];
     [tableView_actions reloadData];
+    ignoreSelectionChanges = NO;
     
-    [instance configForObject:tempObject];
-    int index = [prefAlertsArray indexOfObjectIdenticalTo:tempObject] + [instance count] - 1;
+    [instance configForObject:activeContactObject];
+    int index = [prefAlertsArray indexOfObjectIdenticalTo:activeContactObject] + [instance count] - 1;
     
     [tableView_actions scrollRowToVisible:index];
     [tableView_actions selectRow:index byExtendingSelection:NO];
@@ -410,6 +416,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     return(YES);
 }
 
+#warning Another copy of the Menu That Can Not Work
 //builds an alphabetical menu of contacts for all online accounts; online contacts are sorted to the top and seperated
 //from offline ones by a seperator reading "Offline"
 //uses alphabeticalGroupOfflineSort and calls switchToContact: when a selection is made
@@ -445,6 +452,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
             #endif
             [menuItem setRepresentedObject:contact];
 
+            /*
             if ([groupName compare:[[contact containingGroup] displayName]] != 0)
             {
                 NSMenuItem	*groupItem;
@@ -461,7 +469,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
                 [contactMenu addItem:groupItem];
                 firstOfflineSearch = YES; //start searching for an offline contact
             }
-
+*/
             if (firstOfflineSearch)
             {
                 if ( !([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //look for the first offline contact
@@ -479,7 +487,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
             [contactMenu addItem:menuItem];
 
-            groupName = [[contact containingGroup] displayName];
+   //         groupName = [[contact containingGroup] displayName];
         }
         [contactMenu setAutoenablesItems:NO];
     }

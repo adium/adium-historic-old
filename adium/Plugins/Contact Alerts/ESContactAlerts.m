@@ -384,6 +384,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     return ( [[activeContactObject UIDAndServiceID] hash] );
 }
 
+#warning This sort function no longer works properly after the group changes
 //Sorting function
 int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *context)
 {
@@ -393,15 +394,16 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
     
     
-    NSString  	*groupNameA = [[objectA containingGroup] displayName];
-    NSString  	*groupNameB = [[objectB containingGroup] displayName];
+//    NSString  	*groupNameA = [[objectA containingGroup] displayName];
+//    NSString  	*groupNameB = [[objectB containingGroup] displayName];
     if(groupA && !groupB){
         return(NSOrderedAscending);
     }else if(!groupA && groupB){
         return(NSOrderedDescending);
     }
-    else if ([groupNameA compare:groupNameB] == 0)
-    {
+//    else if ([groupNameA compare:groupNameB] == 0)
+//    {
+    else
         if(invisibleA && !invisibleB){
             return(NSOrderedDescending);
         }else if(!invisibleA && invisibleB){
@@ -409,9 +411,9 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
         }else{
             return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
         }
-    }
-    else
-        return([groupNameA caseInsensitiveCompare:groupNameB]);
+//    }
+//    else
+//        return([groupNameA caseInsensitiveCompare:groupNameB]);
 }
 
 @end

@@ -28,6 +28,7 @@
     IBOutlet NSView				*view_prefView;
 
     ESContactAlerts				*instance;
+    BOOL                                        ignoreSelectionChanges;
 }
 
 + (ESContactAlertsPreferences *)contactAlertsPreferences;
