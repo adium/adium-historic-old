@@ -8,9 +8,9 @@
 
 #import "CSDisconnectAllPlugin.h"
 
-#define CONNECT_MENU_TITLE      NSLocalizedString(@"Connect All","Connect all accounts")
-#define DISCONNECT_MENU_TITLE   NSLocalizedString(@"Disconnect All","Disconnect all accounts")
-#define CANCEL_MENU_TITLE       NSLocalizedString(@"Cancel All","Cancel all logins")
+#define CONNECT_MENU_TITLE      AILocalizedString(@"Connect All","Connect all accounts")
+#define DISCONNECT_MENU_TITLE   AILocalizedString(@"Disconnect All","Disconnect all accounts")
+#define CANCEL_MENU_TITLE       AILocalizedString(@"Cancel All","Cancel all logins")
 
 @implementation CSDisconnectAllPlugin
 

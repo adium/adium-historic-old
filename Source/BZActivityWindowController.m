@@ -409,11 +409,11 @@
 	NSAssert(index >= 0, @"No selection, and yet the delete button was enabled?");
 	BZProgressView *progressView = [progressViews objectAtIndex:index];
 	id <BZProgressTracker> tracker = [progressView tracker];
-	int returnCode = NSRunAlertPanel(NSLocalizedString(@"Activity Window deletion-confirmation title", NULL),
-		NSLocalizedString(@"Activity Window deletion-confirmation message format", NULL), 
-		NSLocalizedString(@"OK", NULL),
+	int returnCode = NSRunAlertPanel(AILocalizedString(@"Activity Window deletion-confirmation title", NULL),
+		AILocalizedString(@"Activity Window deletion-confirmation message format", NULL), 
+		AILocalizedString(@"OK", NULL),
 		nil,
-		NSLocalizedString(@"Cancel", NULL),
+		AILocalizedString(@"Cancel", NULL),
 		[tracker type], [tracker name]);
 	if(returnCode == NSAlertDefaultReturn) {
 		[self removeProgressTracker:tracker withViewIndex:index];

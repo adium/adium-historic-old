@@ -12,7 +12,7 @@
 
 - (void)installPlugin
 {
-	newMessageMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"New Chat...",nil)
+	newMessageMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"New Chat...",nil)
 													target:self 
 													action:@selector(newMessage:)
 											 keyEquivalent:@"n"];

@@ -16,9 +16,9 @@
 #import "IdleTimePreferences.h"
 #import "IdleTimePlugin.h"
 
-#define IDLE_TIME_PREF_TITLE		NSLocalizedString(@"Idle",nil)  //Title of the preference view
+#define IDLE_TIME_PREF_TITLE		AILocalizedString(@"Idle",nil)  //Title of the preference view
 #define AUTO_AWAY_QUICK_AWAY_TITLE  @"Last quick away"
-#define ELIPSIS_STRING				NSLocalizedString(@"...",nil)
+#define ELIPSIS_STRING				AILocalizedString(@"...",nil)
 
 @interface IdleTimePreferences (PRIVATE)
 - (void)configureView;

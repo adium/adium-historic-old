@@ -8,7 +8,7 @@
 
 #import "AIChatConsolidationPlugin.h"
 
-#define CONSOLIDATE_CHATS_MENU_TITLE			NSLocalizedString(@"Consolidate Chats",nil)
+#define CONSOLIDATE_CHATS_MENU_TITLE			AILocalizedString(@"Consolidate Chats",nil)
 
 @implementation AIChatConsolidationPlugin
 

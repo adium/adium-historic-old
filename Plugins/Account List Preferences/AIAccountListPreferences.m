@@ -16,10 +16,10 @@
 #import "AIAccountListPreferences.h"
 
 #define	ACCOUNT_DRAG_TYPE					@"AIAccount"	    										//ID for an account drag
-#define	ACCOUNT_CONNECT_BUTTON_TITLE		NSLocalizedString(@"Connect","Connect an account")	    	//Menu item title for the connect item
-#define	ACCOUNT_DISCONNECT_BUTTON_TITLE		NSLocalizedString(@"Disconnect","Disconnect an account")    //Menu item title
+#define	ACCOUNT_CONNECT_BUTTON_TITLE		AILocalizedString(@"Connect","Connect an account")	    	//Menu item title for the connect item
+#define	ACCOUNT_DISCONNECT_BUTTON_TITLE		AILocalizedString(@"Disconnect","Disconnect an account")    //Menu item title
 #define	ACCOUNT_CONNECTING_BUTTON_TITLE		AILocaliedString(@"Connecting...",nil)						//Menu item title
-#define	ACCOUNT_DISCONNECTING_BUTTON_TITLE	NSLocalizedString(@"Disconnecting...",nil)					//Menu item title
+#define	ACCOUNT_DISCONNECTING_BUTTON_TITLE	AILocalizedString(@"Disconnecting...",nil)					//Menu item title
 
 @interface AIAccountListPreferences (PRIVATE)
 - (void)configureViewForAccount:(AIAccount *)inAccount;
@@ -40,7 +40,7 @@
     return(AIPref_Accounts);
 }
 - (NSString *)label{
-    return(NSLocalizedString(@"Accounts",nil));
+    return(AILocalizedString(@"Accounts",nil));
 }
 - (NSString *)nibName{
     return(@"AccountPrefView");

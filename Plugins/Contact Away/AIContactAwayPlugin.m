@@ -15,11 +15,11 @@
 
 #import "AIContactAwayPlugin.h"
 
-#define	AWAY_LABEL			NSLocalizedString(@"Away",nil)
-#define	AWAY_MESSAGE_LABEL	NSLocalizedString(@"Away Message",nil)
-#define	STATUS_LABEL		NSLocalizedString(@"Status",nil)
+#define	AWAY_LABEL			AILocalizedString(@"Away",nil)
+#define	AWAY_MESSAGE_LABEL	AILocalizedString(@"Away Message",nil)
+#define	STATUS_LABEL		AILocalizedString(@"Status",nil)
 
-#define AWAY_YES			NSLocalizedString(@"Yes",nil)
+#define AWAY_YES			AILocalizedString(@"Yes",nil)
 
 @implementation AIContactAwayPlugin
 

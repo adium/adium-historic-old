@@ -7,9 +7,9 @@
 
 #import "ESFileTransferController.h"
 
-#define SEND_FILE_TO_CONTACT	NSLocalizedString(@"Send File To %@",nil)
-#define SEND_FILE				NSLocalizedString(@"Send File",nil)
-#define CONTACT					NSLocalizedString(@"Contact",nil)
+#define SEND_FILE_TO_CONTACT	AILocalizedString(@"Send File To %@",nil)
+#define SEND_FILE				AILocalizedString(@"Send File",nil)
+#define CONTACT					AILocalizedString(@"Contact",nil)
 
 @implementation ESFileTransferController
 //init and close
@@ -179,13 +179,13 @@
 	NSString	*description;
 	
 	if([eventID isEqualToString:FILE_TRANSFER_REQUEST]){
-		description = NSLocalizedString(@"File Transfer Request",nil);
+		description = AILocalizedString(@"File Transfer Request",nil);
 	}else if([eventID isEqualToString:FILE_TRANSFER_BEGAN]){
-		description = NSLocalizedString(@"File Transfer Began",nil);
+		description = AILocalizedString(@"File Transfer Began",nil);
 	}else if([eventID isEqualToString:FILE_TRANSFER_CANCELED]){
-		description = NSLocalizedString(@"File Transfer Canceled",nil);
+		description = AILocalizedString(@"File Transfer Canceled",nil);
 	}else if([eventID isEqualToString:FILE_TRANSFER_COMPLETE]){
-		description = NSLocalizedString(@"File Transfer Complete",nil);
+		description = AILocalizedString(@"File Transfer Complete",nil);
 	}else{		
 		description = @"";	
 	}

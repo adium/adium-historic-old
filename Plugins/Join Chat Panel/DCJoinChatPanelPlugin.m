@@ -9,7 +9,7 @@
 #import "DCJoinChatPanelPlugin.h"
 #import "DCJoinChatWindowController.h"
 
-#define JOIN_CHAT_MENU_ITEM		NSLocalizedString(@"Join Chat...",nil)
+#define JOIN_CHAT_MENU_ITEM		AILocalizedString(@"Join Chat...",nil)
 
 @implementation DCJoinChatPanelPlugin
 

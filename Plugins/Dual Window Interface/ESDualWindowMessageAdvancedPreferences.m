@@ -16,7 +16,7 @@
     return(AIPref_Advanced_Messages);
 }
 - (NSString *)label{
-    return(NSLocalizedString(@"Window Preferences",nil));
+    return(AILocalizedString(@"Window Preferences",nil));
 }
 - (NSString *)nibName{
     return(@"DualWindowMessageAdvanced");

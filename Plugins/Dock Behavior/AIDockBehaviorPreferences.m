@@ -33,7 +33,7 @@
     return(AIPref_Dock);
 }
 - (NSString *)label{
-    return(NSLocalizedString(@"Dock Bouncing","Dock bouncing preferences label"));
+    return(AILocalizedString(@"Dock Bouncing","Dock bouncing preferences label"));
 }
 - (NSString *)nibName{
     return(@"DockBehaviorPreferences");
@@ -130,7 +130,7 @@
 
     //Add the custom option
     [behaviorSetMenu addItem:[NSMenuItem separatorItem]];
-    [behaviorSetMenu addItemWithTitle:NSLocalizedString(@"Custom...",nil) 
+    [behaviorSetMenu addItemWithTitle:AILocalizedString(@"Custom...",nil) 
 							   target:self
 							   action:@selector(selectBehaviorSet:)
 						keyEquivalent:@""];

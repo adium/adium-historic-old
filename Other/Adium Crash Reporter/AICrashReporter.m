@@ -177,9 +177,9 @@
 {
     if([[textField_emailAddress stringValue] isEqualToString:@""] &&
 	   [[textField_accountIM stringValue] isEqualToString:@""]){
-        NSBeginCriticalAlertSheet(NSLocalizedString(@"Contact Information Required",nil),
+        NSBeginCriticalAlertSheet(AILocalizedString(@"Contact Information Required",nil),
 								  @"Okay", nil, nil, window_MainWindow, nil, nil, nil, NULL,
-								  NSLocalizedString(@"Please provide either your email address or AIM name in case we need to contact you for additional information (or to suggest a solution).",nil));
+								  AILocalizedString(@"Please provide either your email address or AIM name in case we need to contact you for additional information (or to suggest a solution).",nil));
     }else{
         NSString	*shortDescription = [textField_description stringValue];
         

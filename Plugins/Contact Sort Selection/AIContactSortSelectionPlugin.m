@@ -17,8 +17,8 @@
 #import "ESContactSortConfigurationWindowController.h"
 
 #define CONTACT_SORTING_DEFAULT_PREFS	@"SortingDefaults"
-#define CONFIGURE_SORT_MENU_TITLE		NSLocalizedString(@"Configure Sort...",nil)
-#define SORT_MENU_TITLE					NSLocalizedString(@"Sort Contacts",nil)
+#define CONFIGURE_SORT_MENU_TITLE		AILocalizedString(@"Configure Sort...",nil)
+#define SORT_MENU_TITLE					AILocalizedString(@"Sort Contacts",nil)
 
 @interface AIContactSortSelectionPlugin (PRIVATE)
 - (void)sortControllerListChanged:(NSNotification *)notification;

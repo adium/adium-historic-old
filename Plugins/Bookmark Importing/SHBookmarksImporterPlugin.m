@@ -6,8 +6,8 @@
 
 #import "SHBookmarksImporterPlugin.h"
 
-#define ROOT_MENU_TITLE     		NSLocalizedString(@"Bookmarks",nil)
-#define BOOKMARK_MENU_TITLE     	NSLocalizedString(@"Bookmark",nil)
+#define ROOT_MENU_TITLE     		AILocalizedString(@"Bookmarks",nil)
+#define BOOKMARK_MENU_TITLE     	AILocalizedString(@"Bookmark",nil)
 
 @interface SHBookmarksImporterPlugin(PRIVATE)
 - (Class)importerClassForDefaultBrowser;

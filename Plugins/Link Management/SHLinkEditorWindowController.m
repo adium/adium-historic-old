@@ -10,7 +10,7 @@
 
 #define LINK_EDITOR_NIB_NAME        @"LinkEditor"
 #define FAVS_EDITOR_NIB_NAME        @"FavsEditor"
-#define CHOOSE_URL                  NSLocalizedString(@"Select...",nil)
+#define CHOOSE_URL                  AILocalizedString(@"Select...",nil)
 
 @interface SHLinkEditorWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName forTextView:(NSTextView *)inTextView notifyingTarget:(id)inTarget;

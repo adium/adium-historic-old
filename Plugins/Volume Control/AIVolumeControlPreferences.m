@@ -107,14 +107,14 @@
 	NSMenu		*outputDeviceMenu = [[NSMenu alloc] init];
 	NSMenuItem  *menuItem;
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"System Output Device",nil)
+	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"System Output Device",nil)
 										   target:nil
 										   action:nil
 									keyEquivalent:@""] autorelease];
 	[menuItem setTag:SOUND_SYTEM_OUTPUT_DEVICE];                
 	[outputDeviceMenu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"System Alert Device",nil)
+	menuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"System Alert Device",nil)
 										   target:nil
 										   action:nil
 									keyEquivalent:@""] autorelease];

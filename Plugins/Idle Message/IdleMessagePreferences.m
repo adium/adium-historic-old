@@ -27,7 +27,7 @@
     return(AIPref_Advanced_Status);
 }
 - (NSString *)label{
-    return(NSLocalizedString(@"Idle Message",nil));
+    return(AILocalizedString(@"Idle Message",nil));
 }
 - (NSString *)nibName{
     return(@"IdleMessagePrefs");

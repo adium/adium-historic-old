@@ -16,7 +16,7 @@
 #import "AIListOutlineView.h"
 #import "AIListCell.h"
 
-#define	CONTACT_LIST_EMPTY_MESSAGE      NSLocalizedString(@"No Available Contacts","Message to display when the contact list is empty")
+#define	CONTACT_LIST_EMPTY_MESSAGE      AILocalizedString(@"No Available Contacts","Message to display when the contact list is empty")
 #define EMPTY_HEIGHT					48
 #define EMPTY_WIDTH						140
 

@@ -16,7 +16,7 @@
 //    return(AIPref_Advanced_ContactList);
 //}
 //- (NSString *)label{
-//    return(NSLocalizedString(@"Auto-resizing","Automatic size changes of the contact list"));
+//    return(AILocalizedString(@"Auto-resizing","Automatic size changes of the contact list"));
 //}
 //- (NSString *)nibName{
 //    return(@"ContactListAdvanced");

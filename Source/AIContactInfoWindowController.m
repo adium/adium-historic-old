@@ -268,9 +268,9 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		
 		//Update our window title
 		if(inObject){
-			[[self window] setTitle:[NSString stringWithFormat:NSLocalizedString(@"%@'s Info",nil),[inObject displayName]]];
+			[[self window] setTitle:[NSString stringWithFormat:AILocalizedString(@"%@'s Info",nil),[inObject displayName]]];
 		}else{
-			[[self window] setTitle:NSLocalizedString(@"Contact Info",nil)];
+			[[self window] setTitle:AILocalizedString(@"Contact Info",nil)];
 		}
 		
 		//Account name
@@ -294,8 +294,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		[imageView_userIcon setImageScaling:NSScaleProportionally];
 		[imageView_userIcon setImage:userImage];
 		[imageView_userIcon setTitle:(inObject ? 
-									  [NSString stringWithFormat:NSLocalizedString(@"%@'s Image",nil),[inObject displayName]] :
-									  NSLocalizedString(@"Image Picker",nil))];
+									  [NSString stringWithFormat:AILocalizedString(@"%@'s Image",nil),[inObject displayName]] :
+									  AILocalizedString(@"Image Picker",nil))];
 		//Configure our subpanes
 		[self configurePanes];
 		
