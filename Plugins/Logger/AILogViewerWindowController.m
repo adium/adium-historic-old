@@ -271,9 +271,13 @@ static NSString                             *filterForContactName = nil;	//Conta
 		}
 	}
 	
-	[textField_totalAccounts setIntValue:[fromArray count]];
-	[textField_totalContacts setIntValue:[toArray count]];
-	
+	[textField_totalAccounts setStringValue:[NSString stringWithFormat:
+		AILocalizedString(@"%i Accounts",nil),
+		[fromArray count]]];
+	[textField_totalContacts setStringValue:[NSString stringWithFormat:
+		AILocalizedString(@"%i Contacts",nil),
+		[toArray count]]];
+
 	[[adium notificationCenter] postNotificationName:LOG_VIEWER_DID_CREATE_LOG_ARRAYS
 											  object:nil];
 }
@@ -338,6 +342,7 @@ static NSString                             *filterForContactName = nil;	//Conta
     }
     [drawer_contacts setContentSize:NSMakeSize([[[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_DRAWER_SIZE
                                                                                          group:PREF_GROUP_LOGGING] floatValue], 0)];
+	[drawer_contacts setMinContentSize:NSMakeSize(100.0, 0)];
 }
 
 //Delete selected log
