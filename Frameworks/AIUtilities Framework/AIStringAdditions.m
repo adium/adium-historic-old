@@ -99,9 +99,7 @@
 - (NSString *)stringByExpandingBundlePath
 {
     if([self hasPrefix:BUNDLE_STRING]){
-        return([NSString stringWithFormat:@"%@%@",
-            [NSString stringWithFormat:[[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath]],
-            [self substringFromIndex:[(NSString *)BUNDLE_STRING length]]]);
+        return [[[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath] stringByAppendingString:[self substringFromIndex:[BUNDLE_STRING length]]];
     }else{
         return(self);
     }
@@ -113,7 +111,7 @@
     NSString *bundlePath = [[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath];
 
     if([self hasPrefix:bundlePath]){
-        return([NSString stringWithFormat:@"$$BundlePath$$%@",[self substringFromIndex:[bundlePath length]]]);
+        return [BUNDLE_STRING stringByAppendingString:[self substringFromIndex:[bundlePath length]]];
     }else{
         return(self);
     }
