@@ -119,13 +119,6 @@
 
     //Broadcast a finished launching notification
     [[NSNotificationCenter defaultCenter] postNotificationName:Adium_LaunchComplete object:nil];
-
-//    [interfaceController handleErrorMessage:@"Sample Error 1" withDescription:@"Error message"];
-//    [interfaceController handleErrorMessage:@"Sample Error 2" withDescription:@"This is a longer message.  Somethign confusing must have happened so Adium needs to explain it."];
-//    [interfaceController handleErrorMessage:@"Sample Error 3" withDescription:@"This is a Really confusing message.  It's so complicated that there's a list of items\r\r- Do this\r- and that\r-and these\r\rIf you do those things you should be okay."];
-//    [interfaceController handleErrorMessage:@"Sample Error 4" withDescription:@"Another simple error."];
-
-    
 }
 
 @end

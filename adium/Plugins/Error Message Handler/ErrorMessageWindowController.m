@@ -1,5 +1,16 @@
 #import "ErrorMessageWindowController.h"
 
+#define MAX_ERRORS			40		//The max # of errors to display
+#define	ERROR_WINDOW_NIB		@"ErrorWindow"	//Filename of the error window nib
+
+@interface ErrorMessageWindowController (PRIVATE)
+- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
+- (void)dealloc;
+- (void)refreshErrorDialog;
+- (BOOL)shouldCascadeWindows;
+- (void)windowDidLoad;
+- (BOOL)windowShouldClose:(id)sender;
+@end
 
 @implementation ErrorMessageWindowController
 
@@ -7,30 +18,13 @@
 *   returns the shared instance of AIErrorController
 */
 static ErrorMessageWindowController *sharedInstance = nil;
-+ (id)ErrorMessageWindowControllerWithOwner:(id)inOwner
++ (id)errorMessageWindowControllerWithOwner:(id)inOwner
 {
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:@"ErrorWindow" owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:ERROR_WINDOW_NIB owner:inOwner];
     }
 
     return(sharedInstance);
-}
-
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
-{
-    owner = [inOwner retain];
-
-    [super initWithWindowNibName:windowNibName owner:self];
-
-    return(self);
-}
-
-- (void)dealloc
-{
-    [owner release];
-    [ErrorMessageHandlerPlugin release];
-
-    [super dealloc];
 }
 
 - (void)displayError:(NSString *)inTitle withDescription:(NSString *)inDesc
@@ -39,9 +33,9 @@ static ErrorMessageWindowController *sharedInstance = nil;
     [sharedInstance window];
 
     //add the error
-    if([errorTitleArray count] < 20){ //Stop logging errors after 20
-        [errorTitleArray insertObject:inTitle atIndex:0];
-        [errorDescArray insertObject:inDesc atIndex:0];
+    if([errorTitleArray count] < MAX_ERRORS){ //Stop logging errors after too many
+        [errorTitleArray addObject:inTitle];
+        [errorDescArray addObject:inDesc];
     }
 
     [self refreshErrorDialog];
@@ -49,12 +43,10 @@ static ErrorMessageWindowController *sharedInstance = nil;
 
 - (IBAction)okay:(id)sender
 {
-    if([errorTitleArray count] == 1){
-        //--close the error dialog--
+    if([errorTitleArray count] == 1){ //close the error dialog
         [self closeWindow:nil];
 
-    }else{
-        //--remove the first error and display the next one--
+    }else{ //remove the first error and display the next one
         [errorTitleArray removeObjectAtIndex:0];
         [errorDescArray removeObjectAtIndex:0];
 
@@ -64,58 +56,11 @@ static ErrorMessageWindowController *sharedInstance = nil;
 
 - (IBAction)okayToAll:(id)sender
 {
-    //--close the error dialog--
+    //close the error dialog
     [self closeWindow:nil];
 }
 
-- (void)refreshErrorDialog
-{
-    NSRect	*oldFrame, *newFrame;
-    
-    //--Display the current error message--
-    [textField_errorTitle setStringValue:[errorTitleArray objectAtIndex:0]];
-    [textField_errorInfo setStringValue:[errorDescArray objectAtIndex:0]];
-
-    //--Display the current error cont--
-    if([errorTitleArray count] == 1){
-        //--hide the 'okay all' button and error count--
-        [tabView_multipleErrors selectTabViewItemAtIndex:0];
-
-        //--set the button to 'okay'--
-        [button_okay setTitle:@"Okay"];
-
-        [[self window] setTitle:@"Adium : Error"];
-
-    }else{
-        //--show the 'okay all' button and error count--
-        [tabView_multipleErrors selectTabViewItemAtIndex:1];
-
-        [[self window] setTitle:[NSString stringWithFormat:@"Adium : Error (x%i)",[errorTitleArray count]]];
-
-        //--set the button to 'next'--
-        [button_okay setTitle:@"Next"];
-
-    }
-
-    //Resize the window bigger (if necessary) to fit the error message
-//    oldFrame = [textField_errorInfo
-    [textField_errorInfo sizeToFit];
-
-    
-    [self showWindow:nil];
-}
-
-/* shouldCascadeWindows
-*   prevents the system from moving our window around
-*/
-- (BOOL)shouldCascadeWindows
-{
-    return(NO);
-}
-
-/* closeWindow
-*   closes this window
-*/
+// closes this window
 - (IBAction)closeWindow:(id)sender
 {
     if([self windowShouldClose:nil]){
@@ -123,24 +68,86 @@ static ErrorMessageWindowController *sharedInstance = nil;
     }
 }
 
-/* windowDidLoad
-*   called after the about window loads, so we can set up the window before it's displayed
-*/
-- (void)windowDidLoad
+
+
+// Private --------------------------------------------------------------------------------
+- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
 {
+    //init
+    owner = [inOwner retain];
+    [super initWithWindowNibName:windowNibName owner:self];
+
     errorTitleArray = [[NSMutableArray alloc] init];
     errorDescArray =  [[NSMutableArray alloc] init];
+
+    return(self);
 }
 
-/* windowShouldClose
-*   called as the window closes
-*/
-- (BOOL)windowShouldClose:(id)sender
+- (void)dealloc
 {
     [errorTitleArray release]; errorTitleArray = nil;
     [errorDescArray release]; errorDescArray = nil;
+
+    [owner release];
+
+    [super dealloc];
+}
+
+- (void)refreshErrorDialog
+{
+    NSRect	frame = [[self window] frame];
+    int		heightChange;
     
-    //--release the window controller (ourself)--
+    //Display the current error message
+    [textField_errorTitle setStringValue:[errorTitleArray objectAtIndex:0]];
+    [textView_errorInfo setString:[errorDescArray objectAtIndex:0]];
+
+    //Resize the window to fit the error message
+    [textView_errorInfo sizeToFit];
+    heightChange = [textView_errorInfo frame].size.height - [scrollView_errorInfo documentVisibleRect].size.height;
+
+    frame.size.height += heightChange;
+    frame.origin.y -= heightChange;
+    [[self window] setFrame:frame display:YES animate:YES];
+
+    
+    //Display the current error count
+    if([errorTitleArray count] == 1){
+        [tabView_multipleErrors selectTabViewItemAtIndex:0]; //hide the 'okay all' button and error count
+        [[self window] setTitle:@"Adium : Error"];
+        [button_okay setTitle:@"Okay"];
+
+    }else{
+        [tabView_multipleErrors selectTabViewItemAtIndex:1]; //show the 'okay all' button and error count
+        [[self window] setTitle:[NSString stringWithFormat:@"Adium : Error (x%i)",[errorTitleArray count]]];
+        [button_okay setTitle:@"Next"];
+
+    }
+
+    [self showWindow:nil];
+}
+
+// prevents the system from moving our window around
+- (BOOL)shouldCascadeWindows
+{
+    return(NO);
+}
+
+// called after the about window loads, so we can set up the window before it's displayed
+- (void)windowDidLoad
+{
+    //Setup the textview
+    [textView_errorInfo setHorizontallyResizable:NO];
+    [textView_errorInfo setVerticallyResizable:YES];
+    [textView_errorInfo setDrawsBackground:NO];
+
+    [scrollView_errorInfo setDrawsBackground:NO];
+}
+
+// called as the window closes
+- (BOOL)windowShouldClose:(id)sender
+{    
+    //release the window controller (ourself)
     sharedInstance = nil;
     [self autorelease];
 

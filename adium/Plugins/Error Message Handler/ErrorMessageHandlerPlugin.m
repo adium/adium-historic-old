@@ -29,7 +29,7 @@
     NSLog([NSString stringWithFormat:@"ERROR: %@ (%@)",errorTitle,errorDesc]);
 
     //Display an alert
-    [[ErrorMessageWindowController ErrorMessageWindowControllerWithOwner:owner] displayError:errorTitle withDescription:errorDesc];
+    [[ErrorMessageWindowController errorMessageWindowControllerWithOwner:owner] displayError:errorTitle withDescription:errorDesc];
 }
 
 @end
