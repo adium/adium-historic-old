@@ -1,7 +1,14 @@
 				Adium X Version History
 				-----------------------
-Version 0.54 (5/7/2004) 
-- Added bubble breaking (consecutive messages are not combined after a 5 minute period has ellapsed)
+Version 0.54
+- Consecutive messages are no longer combined after a 5 minutes of inactivity in the chat
+- Enabled user-sent colors in the Message View
+- Fixed group dragging
+- Fixed the remaining problems with tooltips
+- Fixed issues related to custom links
+- Fixed a cosmetic issue as the contact list loaded
+- Fixed a bug which caused colors in messages to be sent improperly
+- Fixed AIM file sending
 
 Version 0.53 (4/30/2004)				
 - Added Webkit Message View (6 distinct styles, or create your own!  Customizable fonts and backgrounds!) [10.3 only]
