@@ -164,35 +164,6 @@ static BOOL didInitSSL = NO;
 					[theContact setStatusObject:nil forKey:@"Signed Off" notify:NO];
 					[theContact setStatusObject:nil forKey:@"Signed On" afterDelay:15];
 				}
-				
-				/*
-				//gaimAlias - this may be either a distinct name ("Friendly Name" for example) or a formatted UID
-				{
-					NSString *gaimAlias = [NSString stringWithUTF8String:gaim_get_buddy_alias(buddy)];
-					if ([[gaimAlias compactedString] isEqualToString:[theContact UID]]) {
-						if (![[theContact statusObjectForKey:@"FormattedUID"] isEqualToString:gaimAlias]) {
-							[theContact setStatusObject:gaimAlias
-												 forKey:@"FormattedUID"
-												 notify:NO];
-						}
-					} else {
-						if (![[theContact statusObjectForKey:@"Server Display Name"] isEqualToString:gaimAlias]) {
-							//Set the server display name status object as the full display name
-							[theContact setStatusObject:gaimAlias
-												 forKey:@"Server Display Name"
-												 notify:NO];
-							
-							//Set a 20-characters-or-less version as the lowest priority display name
-							[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:20]
-																			 withOwner:self
-																		 priorityLevel:Lowest_Priority];
-							//notify
-							[[adium contactController] listObjectAttributesChanged:self
-																	  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
-						}
-					}
-				}
-				 */
 			}
 		}   break;
 		case GAIM_BUDDY_SIGNOFF: {

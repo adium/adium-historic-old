@@ -21,6 +21,8 @@
     id  YahooService;
 	id  YahooJapanService;
 	id  NovellService;
+	
+	BOOL			gaimIsReady;
 }
 
 - (void)addAccount:(id)anAccount forGaimAccountPointer:(GaimAccount *)gaimAcct;

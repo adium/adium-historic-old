@@ -901,16 +901,15 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)installPlugin
 {
-//	char *plugin_search_paths[2];
 	servicePluginInstance = self;
 
 	//Register our defaults
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS forClass:[self class]]
 										  forGroup:GROUP_ACCOUNT_STATUS];
 	
-	[self _initGaim];
-
 	_accountDict = [[NSMutableDictionary alloc] init];
+	
+	[self _initGaim];
 
     //Install the services
     OscarService	= [[[CBOscarService alloc] initWithService:self] retain];
