@@ -15,13 +15,108 @@
 
 @class AIContactHandle, AIMessageObject;
 
-@interface AIContactController (INTERNAL)
-// These methods are for internal Adium use only.  The public interface is in Adium.h.
+#define ListObject_AttributesChanged			@"ListObject_AttributesChanged"
+#define ListObject_StatusChanged				@"ListObject_StatusChanged"
+#define Contact_OrderChanged					@"Contact_OrderChanged"
+#define Contact_ListChanged						@"Contact_ListChanged"
+#define Contact_SortSelectorListChanged			@"Contact_SortSelectorListChanged"
+
+//Whenever possible, accounts should keep their contact's status up to date.  However, sometimes this ideal situation
+//cannot be achieved, and the account needs to be told when 'more expensive' status keys are required so it can fetch
+//them.  This notification instructs the accounts to do just that.  It is currently used for profiles, but may be
+//used for more information in the future.
+#define Contact_UpdateStatus					@"Contact_UpdateStatus"
+
+typedef enum {
+    AISortGroup = 0,
+    AISortGroupAndSubGroups,
+    AISortGroupAndSuperGroups
+} AISortMode;
+
+@protocol AIListObjectObserver //notified of changes
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
+@end
+
+@protocol AIListObjectLeftView //Draws to the left of a handle
+- (void)drawInRect:(NSRect)inRect;
+- (float)widthForHeight:(int)inHeight;
+@end
+
+@protocol AIListObjectRightView //Draws to the right of a handle
+
+@end
+
+
+@interface AIContactController : NSObject {
+    IBOutlet	AIAdium		*owner;
+	
+	NSMutableDictionary		*contactDict;
+	NSMutableDictionary		*groupDict;
+	
+    AIListGroup				*contactList;
+    AIListGroup				*strangerGroup;
+    NSMutableArray			*contactObserverArray;
+	
+    NSTimer					*delayedUpdateTimer;
+    int						delayedStatusChanges;
+    int						delayedAttributeChanges;
+    int						delayedContentChanges;
+	BOOL					updatesAreDelayed;
+	
+    NSMutableArray			*sortControllerArray;
+    AISortController	 	*activeSortController;
+	
+    AIPreferenceCategory	*contactInfoCategory;
+	
+    NSMenuItem				*menuItem_getInfo;
+	
+    NSMutableDictionary		*listOrderDict;
+    NSMutableDictionary		*reverseListOrderDict;
+    int						largestOrder;
+}
+
+//Contact list access
+- (AIListGroup *)contactList;
+- (AIListContact *)contactWithService:(NSString *)serviceID UID:(NSString *)UID;
+- (AIListGroup *)groupWithUID:(NSString *)groupUID createInGroup:(AIListGroup *)targetGroup;
+- (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups;
+
+//Contact status & Attributes
+- (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver;
+- (void)unregisterListObjectObserver:(id)inObserver;
+- (void)updateAllListObjectsForObserver:(id <AIListObjectObserver>)inObserver;
+
+//
+- (void)delayListObjectNotifications;
+- (void)listObjectRemoteGroupingChanged:(AIListContact *)inObject oldGroupName:(NSString *)oldGroupName;
+- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
+- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
+
+//Contact list sorting
+- (NSArray *)sortControllerArray;
+- (void)registerListSortController:(AISortController *)inController;
+- (void)setActiveSortController:(AISortController *)inController;
+- (AISortController *)activeSortController;
+- (void)sortContactList;
+- (void)sortListObject:(AIListObject *)inObject;
+
+//Editing
+- (void)removeListObject:(AIListObject *)object fromGroup:(AIListGroup *)group;
+
+
+//Contact info
+- (IBAction)showContactInfo:(id)sender;
+- (void)showInfoForContact:(AIListContact *)inContact;
+- (void)addContactInfoView:(AIPreferenceViewController *)inView;
+
+//Interface selection
+- (AIListContact *)selectedContact;
+
+//Private
 - (void)initController;
 - (void)finishIniting;
 - (void)closeController;
 - (void)addMessageObject:(AIMessageObject *)inObject toHandle:(AIContactHandle *)inHandle;
 - (IBAction)showContactListEditor:(id)sender;
-- (void)loadContactOrdering;
-- (void)saveContactOrdering;
+
 @end

@@ -16,6 +16,8 @@
 #import <Foundation/Foundation.h>
 #import "AIListObject.h"
 
+@class AISortController;
+
 @interface AIListGroup : AIListObject {
     NSMutableArray    	*objectArray;		//Manual ordered array of contents
     int					visibleCount;		//The number of visible buddies in the sorted array

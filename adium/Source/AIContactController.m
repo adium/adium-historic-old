@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.79 2004/01/14 15:42:32 adamiser Exp $
+// $Id: AIContactController.m,v 1.80 2004/01/14 19:02:30 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -564,19 +564,19 @@
 }
 
 //Contact list editing -------------------------------------------------------------------------------------------------
-- (void)removeListObject:(AIListObject *)object fromGroup:(AIListGroup *)group
+- (void)removeListObjects:(NSArray *)objectArray fromGroup:(AIListGroup *)group
 {
-	NSEnumerator	*enumerator;
-	AIAccount		*account;
-	
-	NSLog(@"removeListObject:%@ fromGroup:%@", [object displayName], [group displayName]);
-	if([object isKindOfClass:[AIListContact class]]){
-		//Tell all the accounts with this object to remove it
-		enumerator = [[object remoteGroupArray] ownerEnumerator];
-		while(account = [enumerator nextObject]){
-			[account removeListObject:object];
-		}
-	}
+//	NSEnumerator	*enumerator;
+//	AIAccount		*account;
+//	
+//	NSLog(@"removeListObject:%@ fromGroup:%@", [object displayName], [group displayName]);
+//	if([object isKindOfClass:[AIListContact class]]){
+//		//Tell all the accounts with this object to remove it
+//		enumerator = [[object remoteGroupArray] ownerEnumerator];
+//		while(account = [enumerator nextObject]){
+//			[account removeListObject:object];
+//		}
+//	}
 	
 }
 

@@ -6,7 +6,11 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+typedef enum {
+    Incoming_FileTransfer = 0,
+    Outgoing_FileTransfer,
+    Unknown_FileTransfer
+} FileTransferType;
 
 @class AIAccount;
 

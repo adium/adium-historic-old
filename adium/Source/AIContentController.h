@@ -13,8 +13,90 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface AIContentController (INTERNAL)
-// These methods are for internal Adium use only.  The public interface is in Adium.h.
+#define Chat_WillClose								@"Chat_WillClose"
+#define Content_ContentObjectAdded					@"Content_ContentObjectAdded"
+#define Content_WillSendContent						@"Content_WillSendContent"
+#define Content_DidSendContent						@"Content_DidSendContent"
+#define Content_WillReceiveContent					@"Content_WillReceiveContent"
+#define Content_DidReceiveContent					@"Content_DidReceiveContent"
+#define Content_FirstContentRecieved				@"Content_FirstContentRecieved"
+#define Content_ChatStatusChanged					@"Content_ChatStatusChanged"
+#define Content_ChatParticipatingListObjectsChanged @"Content_ChatParticipatingListObjectsChanged"
+
+//Handles the display of a content type
+@protocol AIContentHandler 
+@end
+
+@protocol AIContentFilter
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject;
+@end
+
+@interface NSObject (AITextEntryFilter)
+//required
+- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; 
+- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+//optional
+- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; //keypress
+- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
+@end
+
+@interface AIContentController : NSObject {
+    IBOutlet	AIAdium		*owner;
+	
+    NSMutableArray			*outgoingContentFilterArray;
+    NSMutableArray			*incomingContentFilterArray;
+    NSMutableArray			*displayingContentFilterArray;
+	
+    NSMutableArray			*textEntryFilterArray;
+    NSMutableArray			*textEntryContentFilterArray;
+    NSMutableArray			*textEntryViews;
+	
+    NSMutableArray			*chatArray;
+    
+    AIChat					*mostRecentChat;
+    
+    NSArray					*emoticonsArray;
+}
+
+//Chats
+- (NSArray *)allChatsWithListObject:(AIListObject *)inObject;
+- (AIChat *)openChatOnAccount:(AIAccount *)inAccount withListObject:(AIListObject *)inListObject;
+- (void)noteChat:(AIChat *)inChat forAccount:(AIAccount *)inAccount;
+- (BOOL)closeChat:(AIChat *)inChat;
+- (NSArray *)chatArray;
+- (BOOL)switchToMostRecentUnviewedContent;
+
+//Sending / Receiving content
+- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount;
+- (void)addIncomingContentObject:(AIContentObject *)inObject;
+- (BOOL)sendContentObject:(AIContentObject *)inObject;
+- (void)displayContentObject:(AIContentObject *)inObject;
+
+//Filtering / Tracking text entry
+- (void)registerTextEntryFilter:(id)inFilter;
+- (NSArray *)openTextEntryViews;
+- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+
+//Filtering content
+- (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter;
+- (void)unregisterOutgoingContentFilter:(id <AIContentFilter>)inFilter;
+- (void)registerIncomingContentFilter:(id <AIContentFilter>)inFilter;
+- (void)unregisterIncomingContentFilter:(id <AIContentFilter>)inFilter;
+- (void)registerDisplayingContentFilter:(id <AIContentFilter>)inFilter;
+- (void)unregisterDisplayingContentFilter:(id <AIContentFilter>)inFilter;
+- (void)filterObject:(AIContentObject *)inObject isOutgoing:(BOOL)isOutgoing;
+- (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString isOutgoing:(BOOL)isOutgoing;
+- (NSAttributedString *)fullyFilteredAttributedString:(NSAttributedString *)inString;
+
+//Emoticons
+- (void)setEmoticonsArray:(NSArray *)inEmoticonsArray;
+- (NSArray *)emoticonsArray;
+
+//Private
 - (void)initController;
 - (void)closeController;
+
 @end

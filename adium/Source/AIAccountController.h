@@ -14,17 +14,73 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.6 $
- * $Date: 2003/11/05 21:39:44 $
+ * $Revision: 1.7 $
+ * $Date: 2004/01/14 19:02:30 $
  * $Author: adamiser $
  **/
 
-@interface AIAccountController (INTERNAL)
-// These methods are for internal Adium use only.  The public interface is in Adium.h.
+#define Account_ListChanged 					@"Account_ListChanged"
+#define Account_HandlesChanged					@"Account_HandlesChanged"
+
+@class AIServiceType, AIAdium, AIAccount, AIListObject;
+
+@protocol AIServiceController <NSObject>
+- (NSString *)identifier;
+- (NSString *)description;
+- (AIServiceType *)handleServiceType;
+- (id)accountWithUID:(NSString *)inUID;
+@end
+
+@protocol AIAccountViewController <NSObject>
+- (NSView *)view;
+- (NSArray *)auxiliaryTabs;
+- (void)configureViewAfterLoad;
+@end
+
+@interface AIAccountController : NSObject{
+    IBOutlet	AIAdium		*owner;	
+	
+    NSMutableArray			*accountArray;			//Array of active accounts
+    NSMutableDictionary		*availableServiceDict;
+    NSMutableDictionary		*lastAccountIDToSendContent;
+    NSMutableDictionary		*accountStatusDict;
+	
+    NSMutableArray			*sleepingOnlineAccounts;
+    
+    NSImage					*defaultUserIcon;
+    NSString				*defaultUserIconFilename;
+}
+
+//Access to the account list
+- (NSArray *)accountArray;
+- (AIAccount *)accountWithID:(NSString *)inID;
+- (AIAccount *)accountForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
+- (int)numberOfAccountsAvailableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
+
+//Managing accounts
+- (AIAccount *)newAccountAtIndex:(int)index;
+- (void)deleteAccount:(AIAccount *)inAccount;
+- (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
+- (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID;
+- (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService;
+- (void)connectAllAccounts;
+- (void)disconnectAllAccounts;
+
+//Account password storage
+- (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount;
+- (NSString *)passwordForAccount:(AIAccount *)inAccount;
+- (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector;
+- (void)forgetPasswordForAccount:(AIAccount *)inAccount;
+
+//Access to services
+- (void)registerService:(id <AIServiceController>)inService;
+- (id <AIServiceController>)serviceControllerWithIdentifier:(NSString *)inType;
+- (NSDictionary *)availableServices;
+
+//Private
 - (void)initController;
 - (void)closeController;
 - (void)finishIniting;
-- (void)saveAccounts;
 - (void)disconnectAllAccounts;
 
 @end

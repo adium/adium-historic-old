@@ -13,8 +13,15 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface AIToolbarController (INTERNAL)
-// These methods are for internal Adium use only.  The public interface is in Adium.h.
+@interface AIToolbarController : NSObject {
+    IBOutlet	AIAdium		*owner;
+    NSMutableDictionary		*toolbarItems;
+}
+
+- (void)registerToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type;
+- (NSDictionary *)toolbarItemsForToolbarTypes:(NSArray *)types;
+
+//Private
 - (void)initController;
 - (void)closeController;
 
