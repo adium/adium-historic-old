@@ -2,26 +2,27 @@
 
 #import "ESBorderlessWindow.h"
 
-#define BORDERLESS_WINDOW_DOCKING_DISTANCE 	8	//Distance in pixels before the window is snapped to an edge
+#define BORDERLESS_WINDOW_DOCKING_DISTANCE 	12	//Distance in pixels before the window is snapped to an edge
 
 @interface ESBorderlessWindow (PRIVATE)
-- (BOOL)dockWindowFrame:(NSRect *)inFrame toScreenFrame:(NSRect)screenFrame movementX:(float)movementX movementY:(float)movementY;
+- (BOOL)dockWindowFrame:(NSRect *)inFrame toScreenFrame:(NSRect)screenFrame;
 @end
 
 @implementation ESBorderlessWindow
 
+static	NSRect	windowFrame;
 //In Interface Builder we set ESInvisibleWindow to be the class for our window, so our own initializer is called here.
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
 
     //Call NSWindow's version of this function, but pass in the all-important value of NSBorderlessWindowMask
     //for the styleMask so that the window doesn't have a title bar
     NSWindow *window = [super initWithContentRect:contentRect 
-                                        styleMask:NSBorderlessWindowMask /*NSTitledWindowMask*/
+                                        styleMask:NSBorderlessWindowMask
                                           backing:NSBackingStoreBuffered 
                                             defer:flag];
 
-    //Set the background color to clear so that (along with the setOpaque call below) we can see through the parts
-    //of the window that we're not drawing into
+    //Set the background color to clear so that we can see through the parts
+    //of the window into which we're not drawing 
     [window setBackgroundColor:[NSColor clearColor]];
     //[window setOpaque:NO];
 	
@@ -43,12 +44,16 @@
 - (void)performClose:(id)sender
 { 
     BOOL shouldClose = YES;
-    if ([self delegate] && [[self delegate] respondsToSelector:@selector(windowShouldClose:)])
+    
+	if ([self delegate] && [[self delegate] respondsToSelector:@selector(windowShouldClose:)]){
         shouldClose = [(id)[self delegate] windowShouldClose:nil];
-    else if ([self respondsToSelector:@selector(windowShouldClose:)])
+    } else if ([self respondsToSelector:@selector(windowShouldClose:)]){ 
         shouldClose = [(id)self windowShouldClose:nil];
-    if (shouldClose)
-        [self close];    
+	}
+	
+    if (shouldClose){
+        [self close];
+	}
 }
 
 //Once the user starts dragging the mouse with command held, we move the window with it. 
@@ -57,19 +62,14 @@
 {
     if ([theEvent cmdKey]) {
         NSPoint		currentLocation;
-
 		NSScreen	*currentScreen = [self screen];
-        NSRect		windowFrame = [self frame];
         NSPoint		newOrigin = windowFrame.origin;
-        
-        //grab the current global mouse location; we could just as easily get the mouse location 
-        //in the same way as we do in -mouseDown:
-        currentLocation = [self convertBaseToScreen:[self mouseLocationOutsideOfEventStream]];
-		float movementX = currentLocation.x - previousLocation.x;
-		float movementY = currentLocation.y - previousLocation.y;
-        newOrigin.x += movementX;
-        newOrigin.y += movementY;
-        previousLocation = currentLocation;
+        NSRect		newWindowFrame = windowFrame;
+		
+        //Grab the current mouse location to compare with the location of the mouse when the drag started (stored in mouseDown:)
+        currentLocation = [NSEvent mouseLocation];
+        newOrigin.x += (currentLocation.x - previousLocation.x);
+        newOrigin.y += currentLocation.y - previousLocation.y;
 			
 		//Keep the window from going under the menu bar (on the main screen)
 		NSRect  screenFrame = [currentScreen visibleFrame];
@@ -87,14 +87,16 @@
             newOrigin.y = 10 + screenFrame.origin.y - windowFrame.size.height;
         }
   
-		//Attempt to dock this window the the visible frame first, and then to the screen frame
-		windowFrame.origin = newOrigin;
-		
-//		[self dockWindowFrame:&windowFrame toScreenFrame:[currentScreen visibleFrame] movementX:movementX movementY:movementY];
-//		[self dockWindowFrame:&windowFrame toScreenFrame:[currentScreen frame] movementX:movementX movementY:movementY];
+		newWindowFrame.origin = newOrigin;
+
+		//If the user is not pressing shift, attempt to dock this window the the visible frame first, and then to the screen frame
+		if (![theEvent shiftKey]){
+			[self dockWindowFrame:&newWindowFrame toScreenFrame:[currentScreen visibleFrame]];
+			[self dockWindowFrame:&newWindowFrame toScreenFrame:[currentScreen frame]];
+		}
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:NSWindowWillMoveNotification object:self];
-		[self setFrameOrigin:windowFrame.origin];
+		[self setFrameOrigin:newWindowFrame.origin];
 		[[NSNotificationCenter defaultCenter] postNotificationName:NSWindowDidMoveNotification object:self];
 		
     } else {
@@ -108,7 +110,8 @@
 {    
     if ([theEvent cmdKey]) {
         //grab the mouse location in global coordinates
-        previousLocation = [self convertBaseToScreen:[self mouseLocationOutsideOfEventStream]];
+        previousLocation = [self convertBaseToScreen:[theEvent locationInWindow]];
+		windowFrame = [self frame];
 		
     } else {
         [super mouseDown:theEvent];
@@ -116,35 +119,36 @@
 }
 
 //Dock the passed window frame if it's close enough to the screen edges
-//- (BOOL)dockWindowFrame:(NSRect *)windowFrame toScreenFrame:(NSRect)screenFrame movementX:(float)movementX movementY:(float)movementY
-//{
-//	BOOL	changed = NO;
-//	//Left
-//	if((abs(NSMinX((*windowFrame)) - NSMinX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementX < 0){
-//		(*windowFrame).origin.x = screenFrame.origin.x;
-//		changed = YES;
-//	}
-//	
-//	//Bottom
-//	if((abs(NSMinY(*windowFrame) - NSMinY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementY < 0){
-//		(*windowFrame).origin.y = screenFrame.origin.y;
-//		changed = YES;
-//	}
-//	
-//	//Right
-//	if((abs(NSMaxX(*windowFrame) - NSMaxX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementX > 0){
-//		(*windowFrame).origin.x -= NSMaxX(*windowFrame) - NSMaxX(screenFrame);
-//		changed = YES;
-//	}
-//	
-//	//Top
-//	if((abs(NSMaxY(*windowFrame) - NSMaxY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementY > 0){
-//		(*windowFrame).origin.y -= NSMaxY(*windowFrame) - NSMaxY(screenFrame);
-//		changed = YES;
-//	}
-//	
-//	return(changed);
-//}
+- (BOOL)dockWindowFrame:(NSRect *)windowFrame toScreenFrame:(NSRect)screenFrame
+{
+	BOOL	changed = NO;
+	
+	//Left
+	if((abs(NSMinX((*windowFrame)) - NSMinX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)){
+		(*windowFrame).origin.x = screenFrame.origin.x;
+		changed = YES;
+	}
+	
+	//Bottom
+	if((abs(NSMinY(*windowFrame) - NSMinY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)){
+		(*windowFrame).origin.y = screenFrame.origin.y;
+		changed = YES;
+	}
+	
+	//Right
+	if((abs(NSMaxX(*windowFrame) - NSMaxX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)){
+		(*windowFrame).origin.x -= NSMaxX(*windowFrame) - NSMaxX(screenFrame);
+		changed = YES;
+	}
+	
+	//Top
+	if((abs(NSMaxY(*windowFrame) - NSMaxY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)){
+		(*windowFrame).origin.y -= NSMaxY(*windowFrame) - NSMaxY(screenFrame);
+		changed = YES;
+	}
+	
+	return(changed);
+}
 
 
 
