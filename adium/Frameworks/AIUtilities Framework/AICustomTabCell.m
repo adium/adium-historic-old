@@ -136,9 +136,9 @@ static NSImage		*tabCloseFrontRollover = nil;
 //Return the desired size of this tab
 - (NSSize)size
 {
-	float width = [tabFrontLeft size].width + [[self attributedLabel] size].width + [tabFrontRight size].width +
+	int width = [tabFrontLeft size].width + [[self attributedLabel] size].width + [tabFrontRight size].width +
 	(TAB_CLOSE_LEFTPAD + [[tabViewItem icon] size].width + TAB_CLOSE_RIGHTPAD) + TAB_RIGHT_PAD;
-    
+	
     return( NSMakeSize((width > TAB_MIN_WIDTH ? width : TAB_MIN_WIDTH), [tabFrontLeft size].height) );
 }
 
