@@ -36,32 +36,28 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
-
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SQL_LOGGING];
 }
 
 - (void)viewWillClose
 {
-	[[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 //Reflect new preferences in view
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [PREF_GROUP_SQL_LOGGING isEqualToString:[[notification userInfo] objectForKey:@"Group"]]){
-        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SQL_LOGGING];
-		id				tmp;
-
-		[checkbox_enableSQLLogging setState:[[preferenceDict objectForKey:KEY_SQL_LOGGER_ENABLE] boolValue]];
-
-		//This ugliness is because setStringValue doesn't like being passed nil
-		[text_Username setStringValue:(tmp = [preferenceDict objectForKey:KEY_SQL_USERNAME]) ? tmp : @""];
-		[text_Port setStringValue:(tmp = [preferenceDict objectForKey:KEY_SQL_PORT]) ? tmp: @""];
-		[text_database setStringValue:(tmp = [preferenceDict objectForKey:KEY_SQL_DATABASE]) ? tmp: @""];
-		[text_Password setStringValue:(tmp = [preferenceDict objectForKey:KEY_SQL_PASSWORD]) ? tmp: @""];
-		[text_URL setStringValue:(tmp = [preferenceDict objectForKey:KEY_SQL_URL]) ? tmp: @""];
-    }
+	id				tmp;
+	
+	[checkbox_enableSQLLogging setState:[[prefDict objectForKey:KEY_SQL_LOGGER_ENABLE] boolValue]];
+	
+	//This ugliness is because setStringValue doesn't like being passed nil
+	[text_Username setStringValue:(tmp = [prefDict objectForKey:KEY_SQL_USERNAME]) ? tmp : @""];
+	[text_Port setStringValue:(tmp = [prefDict objectForKey:KEY_SQL_PORT]) ? tmp: @""];
+	[text_database setStringValue:(tmp = [prefDict objectForKey:KEY_SQL_DATABASE]) ? tmp: @""];
+	[text_Password setStringValue:(tmp = [prefDict objectForKey:KEY_SQL_PASSWORD]) ? tmp: @""];
+	[text_URL setStringValue:(tmp = [prefDict objectForKey:KEY_SQL_URL]) ? tmp: @""];
 }
 
 //Save changed preference
