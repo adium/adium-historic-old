@@ -114,13 +114,17 @@
 	return(containerID);
 }
 
+//
+- (NSString *)adiumFrameAutosaveName
+{
+	return([self _frameSaveKey]);
+}
+
 //Setup our window before it is displayed
 - (void)windowDidLoad
 {
-    //Restore window position
-    NSString *savedFrame = [[adium preferenceController] preferenceForKey:[self _frameSaveKey] group:PREF_GROUP_WINDOW_POSITIONS];
-    if(savedFrame) [[self window] setFrameFromString:savedFrame];
-
+	[super windowDidLoad];
+	
     //Remember the initial tab height
     tabBarHeight = [tabView_customTabs frame].size.height;
 
@@ -178,11 +182,7 @@
     AIMessageTabViewItem	*tabViewItem;
 	
 	windowIsClosing = YES;
-
-    //Save window position
-    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
-                                         forKey:[self _frameSaveKey]
-                                          group:PREF_GROUP_WINDOW_POSITIONS];
+	[super windowShouldClose:sender];
 
     //Close all our tabs (The array will change as we remove tabs, so we must work with a copy)
     enumerator = [[[[tabView_messages tabViewItems] copy] autorelease] objectEnumerator];
