@@ -1,11 +1,34 @@
 {
     IBClasses = (
         {
+            CLASS = AIAbstractListWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                contactListView = AIMultiCellOutlineView; 
+                "scrollView_contactList" = AIAutoScrollView; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {
+            CLASS = AIAlternatingRowOutlineView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {lastSelectedRowIndexes = id; }; 
+            SUPERCLASS = AIOutlineView; 
+        }, 
+        {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {
             ACTIONS = {closeWindow = id; }; 
             CLASS = AIContactInfoWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "imageView_userIcon" = NSImageView; 
+                "drawer_metaContact" = NSDrawer; 
+                "imageView_userIcon" = ESImageViewWithImagePicker; 
+                "outlineView_contacts" = AIMultiCellOutlineView; 
                 "tabView_category" = NSTabView; 
                 "textField_accountName" = NSTextField; 
                 "textField_service" = NSTextField; 
@@ -14,9 +37,21 @@
                 "view_Profile" = AIModularPaneCategoryView; 
                 "view_Settings" = AIModularPaneCategoryView; 
             }; 
-            SUPERCLASS = AIWindowController; 
+            SUPERCLASS = AIAbstractListWindowController; 
+        }, 
+        {
+            CLASS = AIListOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIMultiCellOutlineView; 
         }, 
         {CLASS = AIModularPaneCategoryView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            CLASS = AIMultiCellOutlineView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {contentCell = id; groupCell = id; }; 
+            SUPERCLASS = AIAlternatingRowOutlineView; 
+        }, 
+        {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {CLASS = AIToolbarTabView; LANGUAGE = ObjC; SUPERCLASS = NSTabView; }, 
         {
             CLASS = AIWindowController; 

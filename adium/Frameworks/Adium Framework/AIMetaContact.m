@@ -34,6 +34,7 @@
 	objectID = [inObjectID retain];
 	statusCacheDict = [[NSMutableDictionary alloc] init];
 	_preferredContact = nil;
+	_listContacts = nil;
 	
 	[super initWithUID:[objectID stringValue] serviceID:nil];
 
@@ -109,7 +110,7 @@
 				
 				//We're no longer positive of our preferredContact, so clear the cache
 				_preferredContact = nil;
-			
+
 				if ([containingObject isKindOfClass:[AIMetaContact class]]){
 					[(AIMetaContact *)containingObject containedMetaContact:self
 									  didChangeContainsOnlyOneUniqueContact:containsOnlyOneUniqueContact];
@@ -124,6 +125,9 @@
 		
 		[inObject setContainingObject:self];
 		[containedObjects addObject:inObject];
+
+		[_listContacts release]; _listContacts = nil;
+
 		[self _updateCachedStatusOfObject:inObject];
 		
 		success = YES;
@@ -139,6 +143,8 @@
 		[self _removeCachedStatusOfObject:inObject];
 		[inObject setContainingObject:[self containingObject]];
 		[containedObjects removeObject:inObject];
+
+		[_listContacts release]; _listContacts = nil;
 		
 		//Only need to check if we are now unique if we weren't unique before, since we've either become
 		//unique are stayed the same.
@@ -241,11 +247,25 @@
 
 - (NSArray *)listContacts
 {
-	NSMutableArray	*listContacts = [NSMutableArray array];
-	NSMutableArray	*uniqueObjectIDs = [NSMutableArray array];
-	[self _addListContacts:[self containedObjects] toArray:listContacts uniqueObjectIDs:uniqueObjectIDs];
+	if (!_listContacts){
+		NSMutableArray	*listContacts = [[NSMutableArray alloc] init];
+		NSMutableArray	*uniqueObjectIDs = [NSMutableArray array];
+		[self _addListContacts:[self containedObjects] toArray:listContacts uniqueObjectIDs:uniqueObjectIDs];
 		
-	return listContacts;
+		_listContacts = listContacts;
+	}
+	
+	return _listContacts;
+}
+
+- (int)uniqueContainedObjectsCount
+{
+	return [[self listContacts] count];
+}
+
+- (AIListObject *)uniqueObjectAtIndex:(int)index
+{
+	return [[self listContacts] objectAtIndex:index];
 }
 
 - (void)_addListContacts:(NSArray *)inContacts toArray:(NSMutableArray *)listContacts uniqueObjectIDs:(NSMutableArray *)uniqueObjectIDs
@@ -431,6 +451,8 @@
 	//Clear our preferred contact so the next call to it will update the preferred contact
 	_preferredContact = nil;
 	
+	[_listContacts release]; _listContacts = nil;
+
 	if (oldOnlyOne != containsOnlyOneUniqueContact){
 		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
 												  object:self

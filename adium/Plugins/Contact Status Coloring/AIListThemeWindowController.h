@@ -5,57 +5,6 @@
 //  Created by Adam Iser on Wed Aug 04 2004.
 //
 
-#define LIST_THEME_FOLDER			@"Contact List"
-#define LIST_THEME_EXTENSION		@"ListTheme"
-#define PREF_GROUP_LIST_THEME		@"List Theme"
-
-// Contact List Colors Enabled
-#define KEY_AWAY_ENABLED			@"Away Enabled"
-#define KEY_IDLE_ENABLED			@"Idle Enabled"
-#define KEY_TYPING_ENABLED			@"Typing Enabled"
-#define KEY_SIGNED_OFF_ENABLED		@"Signed Off Enabled"
-#define KEY_SIGNED_ON_ENABLED		@"Signed On Enabled"
-#define KEY_UNVIEWED_ENABLED		@"Unviewed Content Enabled"
-#define KEY_ONLINE_ENABLED			@"Online Enabled"
-#define KEY_IDLE_AWAY_ENABLED		@"Idle And Away Enabled"
-#define KEY_OFFLINE_ENABLED			@"Offline Enabled"
-
-#define KEY_LABEL_AWAY_COLOR		@"Away Label Color"
-#define KEY_LABEL_IDLE_COLOR		@"Idle Label Color"
-#define KEY_LABEL_TYPING_COLOR		@"Typing Label Color"
-#define KEY_LABEL_SIGNED_OFF_COLOR	@"Signed Off Label Color"
-#define KEY_LABEL_SIGNED_ON_COLOR	@"Signed On Label Color"
-#define KEY_LABEL_UNVIEWED_COLOR	@"Unviewed Content Label Color"
-#define KEY_LABEL_ONLINE_COLOR		@"Online Label Color"
-#define KEY_LABEL_IDLE_AWAY_COLOR	@"Idle And Away Label Color"
-#define KEY_LABEL_OFFLINE_COLOR		@"Offline Label Color"
-
-#define KEY_AWAY_COLOR				@"Away Color"
-#define KEY_IDLE_COLOR				@"Idle Color"
-#define KEY_TYPING_COLOR			@"Typing Color"
-#define KEY_SIGNED_OFF_COLOR		@"Signed Off Color"
-#define KEY_SIGNED_ON_COLOR			@"Signed On Color"
-#define KEY_UNVIEWED_COLOR			@"Unviewed Content Color"
-#define KEY_ONLINE_COLOR			@"Online Color"
-#define KEY_IDLE_AWAY_COLOR			@"Idle And Away Color"
-#define KEY_OFFLINE_COLOR			@"Offline Color"
-
-#define KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED		@"Use Background Image"
-#define KEY_LIST_THEME_BACKGROUND_IMAGE_PATH		@"Background Image Path"
-#define KEY_LIST_THEME_BACKGROUND_FADE				@"Background Fade"
-
-#define KEY_LIST_THEME_BACKGROUND_COLOR				@"Background Color"
-#define KEY_LIST_THEME_GRID_COLOR					@"Grid Color"
-
-#define KEY_LIST_THEME_GROUP_BACKGROUND				@"Group Background"
-#define KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT	@"Group Background Gradient"
-#define KEY_LIST_THEME_GROUP_TEXT_COLOR				@"Group Text Color"
-#define KEY_LIST_THEME_GROUP_TEXT_COLOR_INVERTED	@"Group Inverted Text Color"
-#define KEY_LIST_THEME_GROUP_SHADOW_COLOR			@"Group Shadow Color"
-
-#define KEY_LIST_THEME_GRID_ENABLED					@"Grid Enabled"
-#define KEY_LIST_THEME_BACKGROUND_AS_STATUS			@"Background As Status"
-
 @class AITextColorPreviewView;
 
 @interface AIListThemeWindowController : AIWindowController {

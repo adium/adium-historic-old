@@ -19,10 +19,17 @@
 #define KEY_INFO_WINDOW_FRAME			@"Contact Info Window Frame"	//
 #define KEY_INFO_SELECTED_CATEGORY		@"Selected Info Category"		//
 
+#define	CONTACT_INFO_THEME				@"Contact Info List Theme"
+#define	CONTACT_INFO_LAYOUT				@"Contact Info List Layout"
+
 @interface AIContactInfoWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)selectionChanged:(NSNotification *)notification;
 - (NSArray *)_panesInCategory:(PREFERENCE_CATEGORY)inCategory;
+
+- (void)configureDrawer;
+- (void)setupMetaContactDrawer;
+
 @end
 
 @implementation AIContactInfoWindowController
@@ -45,13 +52,13 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	
 	//Configure and show window
 	
-#warning Metacontact
 	//Find the highest-up metaContact so our info is accurate
+	
 	AIListObject	*containingObject;
 	while ([(containingObject = [listObject containingObject]) isKindOfClass:[AIMetaContact class]]){
 		listObject = containingObject;
 	}
-		
+
 	[sharedContactInfoInstance configureForListObject:listObject];
 	[sharedContactInfoInstance showWindow:nil];
 	
@@ -85,6 +92,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {    
+	[super windowDidLoad];
+	
 	int             selectedTab;
     NSTabViewItem   *tabViewItem;
 	NSString		*savedFrame;
@@ -121,6 +130,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     }else{
         [[self window] center];
     }
+	
+	[self setupMetaContactDrawer];
 }
 
 //Close the window
@@ -172,42 +183,48 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 - (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	return([NSImage imageNamed:[NSString stringWithFormat:@"info%@",[tabViewItem identifier]] forClass:[self class]]);
+	if (tabView == tabView_category){
+		return([NSImage imageNamed:[NSString stringWithFormat:@"info%@",[tabViewItem identifier]] forClass:[self class]]);
+	}
+	
+	return nil;
 }
 
 //
 - (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    int	identifier = [[tabViewItem identifier] intValue];
-	
-    //Take focus away from any controls to ensure that they register changes and save
-//    [[self window] makeFirstResponder:tabView_category];
-    [[self window] makeFirstResponder:nil];
-    
-    if(tabView == tabView_category){
-        switch(identifier){
-            case AIInfo_Profile:
-                [view_Profile setPanes:[self _panesInCategory:AIInfo_Profile]];
-			break;
-            case AIInfo_Accounts:
-                [view_Accounts setPanes:[self _panesInCategory:AIInfo_Accounts]];
-			break;
-            case AIInfo_Alerts:
-                [view_Alerts setPanes:[self _panesInCategory:AIInfo_Alerts]];
-			break;
-            case AIInfo_Settings:
-                [view_Settings setPanes:[self _panesInCategory:AIInfo_Settings]];
-			break;
-        }
+	if (tabView == tabView_category){
+		int	identifier = [[tabViewItem identifier] intValue];
 		
-		//Update the selected toolbar item (10.3 or higher)
-		if([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]){
-			[[[self window] toolbar] setSelectedItemIdentifier:[tabViewItem identifier]];
+		//Take focus away from any controls to ensure that they register changes and save
+		//    [[self window] makeFirstResponder:tabView_category];
+		[[self window] makeFirstResponder:nil];
+		
+		if(tabView == tabView_category){
+			switch(identifier){
+				case AIInfo_Profile:
+					[view_Profile setPanes:[self _panesInCategory:AIInfo_Profile]];
+					break;
+				case AIInfo_Accounts:
+					[view_Accounts setPanes:[self _panesInCategory:AIInfo_Accounts]];
+					break;
+				case AIInfo_Alerts:
+					[view_Alerts setPanes:[self _panesInCategory:AIInfo_Alerts]];
+					break;
+				case AIInfo_Settings:
+					[view_Settings setPanes:[self _panesInCategory:AIInfo_Settings]];
+					break;
+			}
+			
+			//Update the selected toolbar item (10.3 or higher)
+			if([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]){
+				[[[self window] toolbar] setSelectedItemIdentifier:[tabViewItem identifier]];
+			}
+			
+			//Configure the loaded panes
+			[self configurePanes];
 		}
-		
-		//Configure the loaded panes
-		[self configurePanes];
-    }
+	}
 }
 
 //Loads, alphabetizes, and caches prefs for the speficied category
@@ -270,15 +287,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		}
 		
 		//User Icon
-		if(userImage = [displayedObject userIcon]){
-			/*
-			//MUST make a copy, since resizing and flipping the original image here breaks it everywhere else
-			userImage = [[userImage copy] autorelease];		
-			//Resize to a fixed size for consistency
-			[userImage setScalesWhenResized:YES];
-			[userImage setSize:NSMakeSize(48,48)];
-			 */
-		}else{
+		if(!(userImage = [displayedObject userIcon])){
 			userImage = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
 		}
 		[imageView_userIcon setImageScaling:NSScaleProportionally];
@@ -288,6 +297,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 									  AILocalizedString(@"Image Picker",nil))];
 		//Configure our subpanes
 		[self configurePanes];
+		
+		//Confiugre the drawer
+		[self configureDrawer];
+
 	}
 }
 
@@ -322,19 +335,129 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		[displayedObject setUserIconData:nil];
 	
 		//User Icon
-		if(userImage = [displayedObject userIcon]){
-			/*
-			//MUST make a copy, since resizing and flipping the original image here breaks it everywhere else
-			userImage = [[userImage copy] autorelease];		
-			//Resize to a fixed size for consistency
-			[userImage setScalesWhenResized:YES];
-			[userImage setSize:NSMakeSize(48,48)];
-			 */
-		}else{
+		if(!(userImage = [displayedObject userIcon])){
 			userImage = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
 		}
 		[imageView_userIcon setImage:userImage];
 	}
 }
 
+#pragma mark Contact List (metaContact)
+- (void)setupMetaContactDrawer
+{
+	NSDictionary	*themeDict = [NSDictionary dictionaryNamed:CONTACT_INFO_THEME forClass:[self class]];
+	NSDictionary	*layoutDict = [NSDictionary dictionaryNamed:CONTACT_INFO_LAYOUT forClass:[self class]];
+
+	[self updateLayoutFromPrefDict:layoutDict];
+	[self updateCellRelatedThemePreferencesFromDict:themeDict];
+	[self updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];	
+
+	[self setHideRoot:NO];
+}
+
+- (void)configureDrawer
+{
+	AIListObject	*listObject = displayedObject;
+	
+	//Find the highest-up metaContact
+	AIListObject	*containingObject;
+	while ([(containingObject = [listObject containingObject]) isKindOfClass:[AIMetaContact class]]){
+		listObject = containingObject;
+	}	
+	
+	if ([listObject isKindOfClass:[AIMetaContact class]] &&
+		![(AIMetaContact *)listObject containsOnlyOneUniqueContact]){
+		[self setContactListRoot:listObject];
+		[drawer_metaContact open];
+	
+	}else{
+		[drawer_metaContact close];	
+		[self setContactListRoot:nil];
+	}
+}
+
+//The superclass's implementation does not expand metaContacts
+- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+{
+    if(item == nil){
+		if (hideRoot){
+			if ([contactList isKindOfClass:[AIMetaContact class]]){
+				return((index >= 0 && index < [(AIMetaContact *)contactList uniqueContainedObjectsCount]) ?
+					   [(AIMetaContact *)contactList uniqueObjectAtIndex:index] : 
+					   nil);
+			}else{
+				return((index >= 0 && index < [contactList containedObjectsCount]) ? [contactList objectAtIndex:index] : nil);
+			}
+		}else{
+			return contactList;
+		}
+    }else{
+		if ([item isKindOfClass:[AIMetaContact class]]){
+			return((index >= 0 && index < [(AIMetaContact *)item uniqueContainedObjectsCount]) ? 
+				   [(AIMetaContact *)item uniqueObjectAtIndex:index] : 
+				   nil);
+		}else{
+			return((index >= 0 && index < [item containedObjectsCount]) ? [item objectAtIndex:index] : nil);
+		}
+    }
+}
+
+//The superclass's implementation does not expand metaContacts
+- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+{
+    if(item == nil){
+		if (hideRoot){
+			if ([contactList isKindOfClass:[AIMetaContact class]]){
+				return([(AIMetaContact *)contactList uniqueContainedObjectsCount]);
+			}else{
+				return([contactList containedObjectsCount]);
+			}
+		}else{
+			return(1);
+		}
+    }else{
+		if ([item isKindOfClass:[AIMetaContact class]]){
+			return([(AIMetaContact *)item uniqueContainedObjectsCount]);
+		}else{
+			return([item containedObjectsCount]);
+		}
+    }
+}
+
+//The superclass's implementation does not expand metaContacts
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+{
+    if([item isKindOfClass:[AIMetaContact class]] || [item isKindOfClass:[AIListGroup class]]){
+        return(YES);
+    }else{
+        return(NO);
+    }
+}
+
+//Change the info window as the selection changes
+- (void)outlineViewSelectionDidChange:(NSNotification *)aNotification
+{
+	if ([aNotification object] == contactListView){
+		[sharedContactInfoInstance configureForListObject:[contactListView itemAtRow:[contactListView selectedRow]]];
+	}
+}
+
+//Due to a bug in NSDrawer, convertPoint:fromView reports a point too low by the trailingOffset 
+//when our contact list is in a drawer.
+- (AIListObject *)contactListItemAtScreenPoint:(NSPoint)screenPoint
+{
+	NSPoint			viewPoint = [contactListView convertPoint:[[self window] convertScreenToBase:screenPoint] fromView:nil];
+	
+	viewPoint.y += [drawer_metaContact trailingOffset];
+	
+	AIListObject	*hoveredObject = [contactListView itemAtRow:[contactListView rowAtPoint:viewPoint]];
+	
+	return(hoveredObject);
+}
+
+//We want to just show UIDs whereever possible
+- (BOOL)useAliasesInContactListAsRequested
+{
+	return NO;
+}
 @end

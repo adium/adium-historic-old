@@ -19,14 +19,9 @@
 
 @interface AIListGroup : AIListObject {
     int					visibleCount;		//The number of visible buddies in the sorted array
-    BOOL				expanded;			//Exanded/Collapsed state of this group
 }
 
 - (id)initWithUID:(NSString *)inUID;
-
-//Expanded State (PRIVATE: For the contact list view to let us know our state)
-- (void)setExpanded:(BOOL)inExpanded;
-- (BOOL)isExpanded;
 
 //Sorting (PRIVATE: For contact controller only)
 - (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(AISortController *)sortController;

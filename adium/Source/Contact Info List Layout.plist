@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Contact Cell Style</key>
+	<integer>0</integer>
+	<key>Contact Left Indent</key>
+	<integer>8</integer>
+	<key>Contact Right Indent</key>
+	<integer>4</integer>
+	<key>Contact Spacing</key>
+	<integer>4</integer>
+	<key>Contact Text Alignment</key>
+	<integer>2</integer>
+	<key>Grid Enabled</key>
+	<false/>
+	<key>Group Cell Style</key>
+	<integer>1</integer>
+	<key>Group Text Alignment</key>
+	<integer>2</integer>
+	<key>Group Top Spacing</key>
+	<integer>0</integer>
+	<key>Horizontal Autosizing</key>
+	<true/>
+	<key>Service Icon Position</key>
+	<integer>0</integer>
+	<key>Show Extended Status</key>
+	<false/>
+	<key>Show Service Icons</key>
+	<true/>
+	<key>Show Status Icons</key>
+	<true/>
+	<key>Show User Icon</key>
+	<true/>
+	<key>Status Icon Position</key>
+	<integer>2</integer>
+	<key>User Icon Position</key>
+	<integer>1</integer>
+	<key>User Icon Size</key>
+	<integer>18</integer>
+	<key>Vertical Autosizing</key>
+	<true/>
+	<key>Window Shadowed</key>
+	<true/>
+	<key>Window Style</key>
+	<integer>0</integer>
+	<key>Window Transparency</key>
+	<real>1</real>
+</dict>
+</plist>

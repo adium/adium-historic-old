@@ -57,8 +57,6 @@ Other:
 	+ Add preferences to disable 'Fast User Switching' auto-away, and to customize the message. [Colin]
 	+ Create a plugin to parse sed expressions, similar to the tex plugin.
 	+ Add export option to log viewer
-	+ Fetch yahoo profiles from http://profiles.yahoo.com/[BUDDYNAME] for the info window (libgaim doesn't do this for us?)
-		- This should be supported by libgaim already; look into tapping into it
 	+ Jabber links, support xmpp:user@host/resource or xmpp:user@host
                 [Steve] mostly done - xmpp:user@host works.
                         xmpp:user@host/resource would, but it looks like we can't open a chat to an arbitrary resource on jabber quite yet.
@@ -112,26 +110,10 @@ Toolbar Items:
 				idea... and would work very well if done right.  I'd comment more, 
 				but I'm feeling a little under the weather right now. :\
 
-
-
-Contact list display:
-	Add user icon and extended status display support to the contact list, and simplify its
-	configuration to a small subset of nice looking cell arrangements.
-
-	Details:
-	+ Four components to the contact list:
-	 	+ User Name - (Text) Name / Alias
-	 	+ User Icon - (Image) AIM Buddy Icon / MSN Avatar / Address book icon
-	 	+ Status Badge - (Image) Icon representing status, specified by user
-	 	+ Extended Status - (Text) iChat status, away message, MSN state name, MSN user name/status
-	+ User can toggle each component (except user name) on/off with view menu items
-	+ User can choose whether icons are on left or right.  Status Badge always goes on opposite side
-	+ If icons are visible, extended status is displayed below user name, otherwise displayed next to user name
+Contact List:
 	+ Add option to not display groups on the contact list (Be careful with this and manual ordering)
 
 Status badges:
-	- Remove status icons plugin
-	+ Add images based status badges to the contact list
 	+ Allow user to select icon sets (packaged in a bundle) in preferences
 
 Event Notifications (the feature formerly known as Event Bezel):
