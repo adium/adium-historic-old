@@ -363,7 +363,7 @@ int HTMLEquivalentForFontSize(int fontSize)
                     }
                     else{ //Invalid
                         validTag = NO;
-                    }                    
+                    }           
                 }
 
                 

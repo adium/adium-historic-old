@@ -53,7 +53,10 @@ static char *hash_password(const char * const password);
 - (void)AIM_HandleMessageIn:(NSString *)inCommand;
 - (void)AIM_HandleGotoURL:(NSString *)message;
 - (void)AIM_HandlePing;
+- (void)AIM_HandleClientEvent:(NSString *)inCommand;
+- (void)AIM_HandleEncMessageIn:(NSString *)inCommand;
 - (void)AIM_SendMessage:(NSString *)inMessage toHandle:(NSString *)handleUID;
+- (void)AIM_SendMessageEnc:(NSString *)inMessage toHandle:(NSString *)handleUID;
 - (void)AIM_SetIdle:(double)inSeconds;
 - (void)AIM_SetProfile:(NSString *)profile;
 - (void)AIM_SetNick:(NSString *)nick;
@@ -297,7 +300,7 @@ static char *hash_password(const char * const password);
                 handle = [self addHandleWithUID:[[[object destination] UID] compactedString] serverGroup:nil temporary:YES];
             }
 
-            [self AIM_SendMessage:message toHandle:[handle UID]];
+            [self AIM_SendMessageEnc:message toHandle:[handle UID]];
             sent = YES;
 
         }else{
@@ -545,7 +548,8 @@ static char *hash_password(const char * const password);
                 d = ([password cString][0] - 96) * a; 			//pass first letter
                 o = d - a + b + 71665152;
 
-                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
+//                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
+                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.60 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
 
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 
@@ -598,14 +602,25 @@ static char *hash_password(const char * const password);
                     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
                     [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
 
+                    //Set Caps
+//                    [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_set_caps 0,748F2420-6287-11D1-8222-444553540000,1343,1345,1346" sequence:&localSequence]];
+                    
                     //Send AIM the init done message (at this point we become visible to other buddies)
                     [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_init_done" sequence:&localSequence]];
 
                     
                 }else if([command compare:@"PAUSE"] == 0){
                 }else if([command compare:@"NEW_BUDDY_REPLY2"] == 0){
+                }else if([command compare:@"BUDDY_CAPS2"] == 0){
+                }else if([command compare:@"BART2"] == 0){
                 }else if([command compare:@"IM_IN2"] == 0){
                     [self AIM_HandleMessageIn:message];
+
+                }else if([command compare:@"IM_IN_ENC2"] == 0){
+                    [self AIM_HandleEncMessageIn:message];
+
+                }else if([command compare:@"CLIENT_EVENT2"] == 0){
+                    [self AIM_HandleClientEvent:message];
 
                 }else if([command compare:@"UPDATE_BUDDY2"] == 0){
                     [self AIM_HandleUpdateBuddy:message];
@@ -823,6 +838,74 @@ static char *hash_password(const char * const password);
 
 
 //Server -> Client Command Handlers ------------------------------------------------------
+//CLIENT_EVENT2:adamiser@mac.com:2
+- (void)AIM_HandleClientEvent:(NSString *)inCommand
+{
+    AIHandle		*handle;
+    NSString		*name;
+    int			event;
+
+    //Extract the handle and event ID
+    name = [inCommand TOCStringArgumentAtIndex:1];
+    event = [[inCommand TOCStringArgumentAtIndex:2] intValue];
+
+    //Ensure a handle exists (creating a stranger if necessary)
+    handle = [handleDict objectForKey:[name compactedString]];
+    if(!handle){
+        handle = [self addHandleWithUID:[name compactedString] serverGroup:nil temporary:YES];
+    }
+
+    //Post the correct typing state
+    if(event == 0){ //Not typing
+        [[handle statusDictionary] setObject:[NSNumber numberWithInt:NO] forKey:@"Typing"];
+    }else if(event == 2){ //Typing
+        [[handle statusDictionary] setObject:[NSNumber numberWithInt:YES] forKey:@"Typing"];
+    }else{
+        NSLog(@"%@ Unknown client event %i",name,event);
+    }
+    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]];
+
+}
+
+//user:F:F:T:O,:F:U:en:message
+- (void)AIM_HandleEncMessageIn:(NSString *)inCommand
+{
+    AIHandle		*handle;
+    NSString		*name;
+    NSString		*rawMessage;
+    NSAttributedString	*messageText;
+    AIContentMessage	*messageObject;
+
+    //Extract the handle and message from the command
+    name = [inCommand TOCStringArgumentAtIndex:1];
+    rawMessage = [inCommand nonBreakingTOCStringArgumentAtIndex:9];
+
+    rawMessage = [[NSString alloc] initWithData:[NSData dataWithBytes:[rawMessage cString] length:[rawMessage length]]
+                                       encoding:NSJapaneseEUCStringEncoding/*NSUnicodeStringEncoding*/];
+    //kCFStringEncodingUnicode
+
+
+
+    //Ensure a handle exists (creating a stranger if necessary)
+    handle = [handleDict objectForKey:[name compactedString]];
+    if(!handle){
+        handle = [self addHandleWithUID:[name compactedString] serverGroup:nil temporary:YES];
+    }
+
+    //Clear typing flag
+    if([[[handle statusDictionary] objectForKey:@"Typing"] intValue]){
+        [[handle statusDictionary] setObject:[NSNumber numberWithInt:NO] forKey:@"Typing"];
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]];
+    }
+
+    //Create a content object for the message
+    messageText = [AIHTMLDecoder decodeHTML:rawMessage];
+    messageObject = [AIContentMessage messageWithSource:[handle containingContact] destination:self date:nil message:messageText];
+
+    //Add the content object
+    [[owner contentController] addIncomingContentObject:messageObject];
+}
+
 - (void)AIM_HandleMessageIn:(NSString *)inCommand
 {
     AIHandle		*handle;
@@ -841,6 +924,12 @@ static char *hash_password(const char * const password);
         handle = [self addHandleWithUID:[name compactedString] serverGroup:nil temporary:YES];
     }
 
+    //Clear typing flag
+    if([[[handle statusDictionary] objectForKey:@"Typing"] intValue]){
+        [[handle statusDictionary] setObject:[NSNumber numberWithInt:NO] forKey:@"Typing"];
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]];
+    }
+
     //Create a content object for the message
     messageText = [AIHTMLDecoder decodeHTML:rawMessage];
     messageObject = [AIContentMessage messageWithSource:[handle containingContact] destination:self date:nil message:messageText];
@@ -856,6 +945,17 @@ static char *hash_password(const char * const password);
     //Create the message string
     command = [NSString stringWithFormat:@"toc2_send_im %@ \"%@\"",handleUID,inMessage];
     
+    //Send the message
+    [outQue addObject:[AIMTOC2Packet dataPacketWithString:command sequence:&localSequence]];
+}
+
+- (void)AIM_SendMessageEnc:(NSString *)inMessage toHandle:(NSString *)handleUID
+{
+    NSString	*command;
+    
+    //Create the message string (Automatic (T,F) - Client Type (O, U, etc), language (en, ja, ...) )??
+    command = [NSString stringWithFormat:@"toc2_send_im_enc %@ F U en \"%@\"",handleUID,inMessage];
+
     //Send the message
     [outQue addObject:[AIMTOC2Packet dataPacketWithString:command sequence:&localSequence]];
 }
