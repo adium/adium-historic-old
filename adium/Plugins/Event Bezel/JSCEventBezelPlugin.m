@@ -32,7 +32,7 @@
     ebc = [JSCEventBezelController eventBezelController];
     
     eventArray = [[NSMutableArray alloc] init];
-    
+
     [[adium notificationCenter] addObserver:self
                                    selector:@selector(eventNotification:)
                                        name:CONTACT_STATUS_ONLINE_YES
