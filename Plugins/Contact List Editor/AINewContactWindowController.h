@@ -26,10 +26,10 @@
 	
 	NSArray							*accounts;
 	NSString						*contactName;
-	NSString						*serviceID;
+	AIService						*service;
 }
 
-+ (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact serviceID:(NSString *)inServiceID;
++ (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact service:(AIService *)inService;
 - (IBAction)cancel:(id)sender;
 - (IBAction)addContact:(id)sender;
 - (IBAction)closeWindow:(id)sender;
