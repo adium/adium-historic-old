@@ -236,8 +236,10 @@ static BOOL checkGenericReachability()
 }
 
 //Using the 10.2 compatible checkGenericReachability() (which is not always accurate), update all accounts
-+ (void)handleConnectivityUsingCheckGenericReachability
++ (void)handleConnectivityUsingCheckGenericReachability:(NSTimer *)timer
 {
+	[timer release];
+
 	BOOL			reachable = checkGenericReachability();
 	
 	gotNetworkChangedToReachable(reachable);
@@ -248,17 +250,18 @@ static void localIPsChangedCallback(SCDynamicStoreRef store, CFArrayRef changedK
 {
 	//The IPs changed, but DNS may not be up yet.  Delay 1 second to give the check a higher
 	//degree of accuracy.
-	[NSTimer scheduledTimerWithTimeInterval:1.0
+	[[NSTimer scheduledTimerWithTimeInterval:1.0
 									 target:[AINetworkConnectivity class]
-								   selector:@selector(handleConnectivityUsingCheckGenericReachability)
+								   selector:@selector(handleConnectivityUsingCheckGenericReachability:)
 								   userInfo:nil
-									repeats:NO];
+									repeats:NO] retain];
 }
 
 
-/* CreateIPAddressListChangeCallbackSCF() is from Apple's
-"Living in a Dynamic TCP/IP Environment, available at
-http://developer.apple.com/technotes/tn/tn1145.html */
+/*CreateIPAddressListChangeCallbackSCF() and its supporting functions are from
+ *	Apple's "Living in a Dynamic TCP/IP Environment, available at
+ *	http://developer.apple.com/technotes/tn/tn1145.html
+ */
 
 //Error Handling  ------------------------------------------------------------------------------------------------------
 #pragma mark Error Handling
@@ -425,7 +428,5 @@ static OSStatus CreateIPAddressListChangeCallbackSCF(SCDynamicStoreCallBack call
 	
     return err;
 }
-
-
 
 @end
