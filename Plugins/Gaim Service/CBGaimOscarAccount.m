@@ -538,16 +538,15 @@ static BOOL didInitOscar = NO;
 
 - (oneway void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString
 {
-	//For AIM, we get profiles by themselves and don't want this userInfo with all its fields, so
+	//For AIM contacts, we get profiles by themselves and don't want this userInfo with all its fields, so
 	//we override this method to prevent the information from reaching the rest of Adium.
-	if ([self useGaimUserInfo]){
+	
+	//For ICQ contacts, however, we want to pass this data on as the profile
+	const char	firstCharacter = [[theContact UID] characterAtIndex:0];
+	
+	if(firstCharacter >= '0' && firstCharacter <= '9'){
 		[super updateUserInfo:theContact withData:userInfoString];
 	}
-}
-
-- (BOOL)useGaimUserInfo
-{
-	return NO;
 }
 
 #pragma mark Group Chat

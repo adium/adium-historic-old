@@ -95,6 +95,4 @@ struct oscar_direct_im {
 	AIHTMLDecoder *encoderAttachmentsAsText;
 }
 
-- (BOOL)useGaimUserInfo;
-
 @end
