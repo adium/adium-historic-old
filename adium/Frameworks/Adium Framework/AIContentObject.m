@@ -55,6 +55,10 @@
 {
     return(outgoing);
 }
+- (void)_setIsOutgoing:(BOOL)inOutgoing
+{
+	outgoing = inOutgoing;
+}
 
 //Message chat
 - (AIChat *)chat

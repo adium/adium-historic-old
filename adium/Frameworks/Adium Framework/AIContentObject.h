@@ -25,6 +25,7 @@
 - (id)source;
 - (id)destination;
 - (BOOL)isOutgoing;
+- (void)_setIsOutgoing:(BOOL)inOutgoing;
 - (AIChat *)chat;
 - (void)setChat:(AIChat *)inChat;
 - (BOOL)filterContent;
