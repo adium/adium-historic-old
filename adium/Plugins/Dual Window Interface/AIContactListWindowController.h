@@ -23,7 +23,7 @@
 @interface AIContactListWindowController : AIWindowController <AIInterfaceContainer> {
     IBOutlet	AIAutoScrollView		*scrollView_contactList;
 
-    id <AIContainerInterface>			interface;
+    NSObject <AIContainerInterface>		*interface;
     id <AIContactListViewController>	contactListViewController;
     NSView								*contactListView;
 
