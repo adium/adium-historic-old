@@ -6,6 +6,7 @@
 //
 
 #import "AIWebKitMessageViewController.h"
+#import "ESWebFrameViewAdditions.h"
 
 #define NEW_CONTENT_RETRY_DELAY 0.01
 
@@ -46,7 +47,8 @@
 	[webView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 	[webView setFrameLoadDelegate:self];
 	[webView setPolicyDelegate:self];
-	
+	[[[webView mainFrame] frameView] setAllowsHorizontalScrolling:NO];
+
 	//We'd load this information from a file or plist or something
 	NSString	*stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" ofType:@"html"] stringByDeletingLastPathComponent];
 	NSString	*basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];
