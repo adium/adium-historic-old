@@ -48,7 +48,7 @@
 													   priorityLevel:Lowest_Priority];
 				[inObject setStatusObject:cachedImagePath
 								   forKey:@"UserIconPath"
-								   notify:NO];
+								   notify:YES];
 			}
 		}
 		
@@ -81,7 +81,6 @@
     NSArray			*keys = [[notification userInfo] objectForKey:@"Keys"];
 	
 	if([keys containsObject:@"UserIcon"]){
-		NSLog(@"listObjectAttributes for %@",[inObject UID]);
 		AIMutableOwnerArray *userIconDisplayArray = [inObject displayArrayForKey:@"UserIcon"];
 		NSImage *userIcon = [userIconDisplayArray objectValue];
 		NSImage *ownedUserIcon = [userIconDisplayArray objectWithOwner:self];
@@ -104,7 +103,7 @@
 	if (success)
 		[inObject setStatusObject:cachedImagePath 
 						   forKey:@"UserIconPath"
-						   notify:NO];
+						   notify:YES];
 	
 	return success;
 }
