@@ -204,9 +204,9 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 + (BOOL)createSetFromPreferenceGroup:(NSString *)preferenceGroup withName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder
 {
 	NSString		*path, *destFolder;
-	NSString		*fileName = [setName stringByAppendingPathExtension:extension];
+	NSString		*fileName = [[setName safeFilenameString] stringByAppendingPathExtension:extension];
 	AIAdium			*sharedAdiumInstance = [AIObject sharedAdiumInstance];
-	
+
 	//If we don't find one, create a path to the application support directory
 	destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
 	path = [destFolder stringByAppendingPathComponent:fileName];
