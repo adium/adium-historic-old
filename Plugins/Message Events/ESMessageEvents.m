@@ -17,9 +17,18 @@
 	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED_FIRST withHandler:self];
 	
 	//Install our observers
-    [[adium notificationCenter] addObserver:self selector:@selector(handleMessageEvent:) name:Content_DidSendContent object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(handleMessageEvent:) name:Content_DidReceiveContent object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(handleMessageEvent:) name:Content_FirstContentRecieved object:nil];
+    [[adium notificationCenter] addObserver:self 
+								   selector:@selector(handleMessageEvent:) 
+									   name:Content_DidSendContent 
+									 object:nil];
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(handleMessageEvent:) 
+									   name:Content_DidReceiveContent
+									 object:nil];
+    [[adium notificationCenter] addObserver:self 
+								   selector:@selector(handleMessageEvent:)
+									   name:Content_FirstContentRecieved 
+									 object:nil];
 
 	//Observe chat changes
 	[[adium contentController] registerChatObserver:self];
@@ -123,17 +132,33 @@
 {
 	if (inModifiedKeys == nil ||
 		[inModifiedKeys containsObject:KEY_CHAT_TIMED_OUT] ||
-		[inModifiedKeys containsObject:KEY_CHAT_CLOSED_WINDOW]){
+		[inModifiedKeys containsObject:KEY_CHAT_CLOSED_WINDOW] ||
+		[inModifiedKeys containsObject:KEY_CHAT_ERROR]){
 
 		NSString		*message = nil;
 		NSString		*type = nil;
 		AIListObject	*listObject = [inChat listObject];
 		AIContentStatus	*content;
 		
-		if ([inChat integerStatusObjectForKey:KEY_CHAT_CLOSED_WINDOW]){
+		if ([inChat statusObjectForKey:KEY_CHAT_ERROR] != nil){
+		
+			AIChatErrorType errorType = [inChat integerStatusObjectForKey:KEY_CHAT_ERROR];
+			switch(errorType){
+				case AIChatUnknownError:
+					message = [NSString stringWithFormat:AILocalizedString(@"Unknown conversation error.",nil)];
+					type = @"unknown-error";
+					break;
+					
+				case AIChatUserNotAvailable:
+					message = [NSString stringWithFormat:AILocalizedString(@"Could not send: %@ is not available.",nil),[listObject formattedUID]];
+					type = @"user-unavailable";
+					break;
+			}
+			
+		}else if ([inChat integerStatusObjectForKey:KEY_CHAT_CLOSED_WINDOW] && listObject){
 			message = [NSString stringWithFormat:AILocalizedString(@"%@ closed the conversation window.",nil),[listObject displayName]];
 			type = @"closed";
-		}else if ([inChat integerStatusObjectForKey:KEY_CHAT_TIMED_OUT]){
+		}else if ([inChat integerStatusObjectForKey:KEY_CHAT_TIMED_OUT] && listObject){
 			message = [NSString stringWithFormat:AILocalizedString(@"The conversation with %@ timed out.",nil),[listObject displayName]];			
 			type = @"timed_out";
 		}
