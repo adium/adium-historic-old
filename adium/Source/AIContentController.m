@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.97 2004/08/02 07:07:28 evands Exp $
+// $Id: AIContentController.m,v 1.98 2004/08/02 19:29:51 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -611,7 +611,7 @@
 			chat = [AIChat chatForAccount:account];
 			[chat setName:inName];
 			[chatArray addObject:chat];
-			if (infoDict) [chat setStatusObject:chatCreationInfo forKey:@"ChatCreationInfo" notify:NotifyNever];
+			if(chatCreationInfo) [chat setStatusObject:chatCreationInfo forKey:@"ChatCreationInfo" notify:NotifyNever];
 			
 			//Inform the account of its creation and post a notification if successful
 			if([(AIAccount<AIAccount_Content> *)account openChat:chat]){
