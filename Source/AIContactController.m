@@ -1322,25 +1322,25 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	contactInfoPanes = [[NSMutableArray alloc] init];
 		
 	//Add our get info contextual menu item
-	menuItem_getInfoContextualContact = [[NSMenuItem alloc] initWithTitle:VIEW_INFO
-															target:self
-															action:@selector(showContactInfo:) 
-													 keyEquivalent:@""];
+	menuItem_getInfoContextualContact = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_INFO
+																							 target:self
+																							 action:@selector(showContactInfo:) 
+																					  keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:menuItem_getInfoContextualContact
 									   toLocation:Context_Contact_Manage];
 	
-	menuItem_getInfoContextualGroup = [[NSMenuItem alloc] initWithTitle:VIEW_INFO
-																   target:self
-																   action:@selector(showContactInfo:) 
-															keyEquivalent:@""];
+	menuItem_getInfoContextualGroup = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_INFO
+																						   target:self
+																						   action:@selector(showContactInfo:) 
+																					keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:menuItem_getInfoContextualGroup
 									   toLocation:Context_Group_Manage];
 	
 	if([NSApp isOnPantherOrBetter]) {
 		//Install the alternate Get Info menu item which will let us mangle the shortcut as desired
-            menuItem_getInfoAlternate = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO															   target:self 
-															   action:@selector(showContactInfo:)
-														keyEquivalent:@"i"];
+		menuItem_getInfoAlternate = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO															   target:self 
+																						 action:@selector(showContactInfo:)
+																				  keyEquivalent:@"i"];
         [menuItem_getInfoAlternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
         [menuItem_getInfoAlternate setAlternate:YES];
         [[adium menuController] addMenuItem:menuItem_getInfoAlternate toLocation:LOC_Contact_Editing];      
@@ -1363,10 +1363,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	
 #ifdef CONTACTS_INFO_WITH_PROMPT
 	//Install the Get Info (prompting for a contact name) menu item
-	menuItem_getInfo = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO_WITH_PROMPT
-												  target:self
-												  action:@selector(showSpecifiedContactInfo:)
-										   keyEquivalent:@""];
+	menuItem_getInfo = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO_WITH_PROMPT
+																			target:self
+																			action:@selector(showSpecifiedContactInfo:)
+																	 keyEquivalent:@""];
 	[[adium menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Editing];
 #endif
 	
