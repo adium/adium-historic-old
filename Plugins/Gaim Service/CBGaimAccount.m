@@ -18,9 +18,11 @@
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
+#import "AIStatusController.h"
 #import "AIPreferenceController.h"
 #import "CBGaimAccount.h"
 #import "SLGaimCocoaAdapter.h"
+#import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
@@ -1761,6 +1763,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			@"AwayMessage",
 			@"TextProfile",
 			@"DefaultUserIconFilename",
+			KEY_ACCOUNT_CHECK_MAIL,
 			nil];
 		[supportedPropertyKeys unionSet:[super supportedPropertyKeys]];
 		
@@ -1858,6 +1861,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			break;
 		case AIAwayStatusType:
 			gaimStatusType = GAIM_AWAY_CUSTOM;
+			//If we make it here, and we don't have a status message, generate one from the status controller's description.
+			if((*statusMessage == nil) || ([*statusMessage length] == 0)){
+				*statusMessage = [NSAttributedString stringWithString:[[adium statusController] descriptionForStateOfStatus:statusState]];
+			}
 			break;		
 	}
 	
