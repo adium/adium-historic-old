@@ -312,7 +312,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
         //Create the custom menu item
         menuItem_alternate = [[NSMenuItem alloc] initWithTitle:IDLE_SET_CUSTOM_IDLE_TITLE 
                                                          target:self 
-                                                         action:@selector(selectIdleMenu:) 
+                                                         action:@selector(selectCustomIdleMenu:) 
                                                   keyEquivalent:@""];
         [menuItem_alternate setAlternate:YES];
         [menuItem_alternate setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
@@ -347,13 +347,18 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //User selected the idle menu
 - (void)selectIdleMenu:(id)sender
 {
-    if([NSEvent optionKey]){ //Set custom idle...
+    if([NSEvent optionKey]){ //Set custom idle... (JAGUAR)
         [self showManualIdleWindow:nil];
     }else if(idleState != AINotIdle){ //Remove Idle
         [self setIdleState:AINotIdle];
     }else{ //Set idle
         [self setIdleState:AIDelayedManualIdle];
     }
+}
+
+- (void)selectCustomIdleMenu:(id)sender
+{
+    [self showManualIdleWindow:nil];
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
