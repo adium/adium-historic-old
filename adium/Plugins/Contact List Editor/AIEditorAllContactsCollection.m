@@ -264,7 +264,7 @@
     }
 
     //Set the new index
-    orderIndex = [[owner contactController] setOrderIndexOfContactWithServiceID:nil UID:[handle UID] to:orderIndex];
+    orderIndex = [[owner contactController] setOrderIndexOfContactWithServiceID:[handle serviceID] UID:[handle UID] to:orderIndex];
     [handle setOrderIndex:orderIndex];
 }
 
