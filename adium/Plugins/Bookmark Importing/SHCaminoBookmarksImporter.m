@@ -86,8 +86,8 @@ static NSArray *emptyArray;
         
         while(linkDict = [enumerator nextObject]){
             if(nil == [linkDict objectForKey:caminoDictFolderKey]){
-				NSDictionary	*menuDict = [self hyperlinkForBookmark:linkDict];
-                if(menuDict) [caminoArray addObject:menuDict];
+				SHMarkedHyperlink	*menuLink = [self hyperlinkForBookmark:linkDict];
+                if(menuLink) [caminoArray addObject:menuLink];
 				
             }else{
                 NSArray 		*outArray = [linkDict objectForKey:CaminoDictChildKey];

@@ -166,7 +166,7 @@ DeclareString(bookmarkDictContent)
 
 -(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
-    NSString    *titleString = inTitle? inTitle : untitledString;
+    NSString    *titleString = inTitle ? inTitle : untitledString;
     return [NSDictionary dictionaryWithObjectsAndKeys:titleString, bookmarkDictTitle, inMenuItems, bookmarkDictContent, nil];
 }
 @end
