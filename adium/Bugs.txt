@@ -48,6 +48,9 @@
 - [MSN] Outoing chat appears twice
 	Libgaim is sending our message back to us
 
+- [ALL] File transfer limitations
+    File transfers often fails to navigate firewalls and routers
+
 
 //-------------------------------------------------------------------------------------------------------
 // Bugs - Resources
