@@ -88,10 +88,12 @@
 	}
 }
 
-//Not implemented - use setMyIdleTime and setMyStatusMessage
+//Incomplete - use setMyIdleTime and setMyStatusMessage
 - (void)setMyStatus:(AIStatusSummary)newStatus
 {
-	
+	if (newStatus == AIAvailableStatus){
+		[[adium preferenceController] setPreference:nil forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+	}
 }
 
 - (NSString *)myStatusMessage
