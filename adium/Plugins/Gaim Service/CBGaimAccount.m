@@ -304,6 +304,11 @@
             }
             break;
         default:
+        {
+            NSNumber *typing=[[handle statusDictionary] objectForKey:@"Typing"];
+            if (typing && [typing boolValue])
+                NSLog(@"handle %@ is typing and got a nontyping update of type %i",[listContact displayName],type);
+        }
             break;
     }
 }
@@ -486,7 +491,10 @@
         [signonTimer release];
         signonTimer = nil;
     }
-    gaim_accounts_delete(account); account = NULL;
+
+    //  is deleting the accoutn necessary?  this seems to throw an exception.
+    //    gaim_accounts_delete(account); account = NULL;
+    
     // TODO: remove this from the account dict that the ServicePlugin keeps
     
     [super dealloc];
@@ -755,8 +763,6 @@
 // Add a handle to this account
 - (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
 {
-    NSLog(@"****\ncalling addHandleWithUID for %@ %@ %i",inUID,inGroup,inTemporary);
-    
     AIHandle	*handle;
     
     if(inTemporary) inGroup = @"__Strangers";    
@@ -775,7 +781,6 @@
     //Add the handle
     GaimGroup *group = gaim_find_group([handleServerGroup UTF8String]); //get the GaimGroup
     if (group == NULL) {                                                //if the group doesn't exist yet
-        NSLog(@"Creating a new group");
         group = gaim_group_new([handleServerGroup UTF8String]);         //create the GaimGroup
         gaim_blist_add_group(group, NULL);                              //add it gaimside (server will add as needed)
     }
@@ -784,12 +789,10 @@
     if (buddy == NULL) {                                                //should always be null
         buddy = gaim_buddy_new(account, [handleUID UTF8String], NULL);  //create a GaimBuddy
     }
-    
-    NSLog(@"gaim adding");
+
     gaim_blist_add_buddy(buddy, NULL, group, NULL);                     //add the buddy to the gaimside list
     serv_add_buddy(gc,[handleUID UTF8String],group);                    //and add the buddy serverside
 
-    NSLog(@"adium updates");
     [handleDict setObject:handle forKey:[handle UID]];                  //Add it locally
 
     //From TOC2
@@ -798,7 +801,6 @@
     //Update the contact list
     [[owner contactController] handle:handle addedToAccount:self];
         
-    NSLog(@"done adding");
     return(handle);
 }
 
@@ -812,7 +814,6 @@
         serv_remove_buddy(gc,[inUID UTF8String],[[handle serverGroup] UTF8String]); //remove it from the list serverside
         gaim_blist_remove_buddy(buddy);                                             //remove it gaimside
         
-        NSLog(@"removed %@",inUID);
         return YES;
     } else 
         return NO;
@@ -823,7 +824,7 @@
 {
     GaimGroup *group = gaim_group_new([inGroup UTF8String]);    //create the GaimGroup
     gaim_blist_add_group(group,NULL);                           //add it gaimside (server will make it as needed)
-    NSLog(@"added group %@",inGroup);
+//    NSLog(@"added group %@",inGroup);
     return NO;
 }
 // Remove a group
@@ -833,7 +834,7 @@
     
     GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
     gaim_blist_remove_group(group);                         //remove it gaimside
-    NSLog(@"remove group %@",inGroup);
+//    NSLog(@"remove group %@",inGroup);
     return YES;
 }
 // Rename a group
@@ -855,7 +856,7 @@
         GaimGroup *oldGroup = gaim_find_group([[handle serverGroup] UTF8String]);   //get the GaimGroup        
         GaimGroup *newGroup = gaim_find_group([inGroup UTF8String]);                //get the GaimGroup
         if (newGroup == NULL) {                                                        //if the group doesn't exist yet
-            NSLog(@"Creating a new group");
+ //           NSLog(@"Creating a new group");
             newGroup = gaim_group_new([inGroup UTF8String]);                           //create the GaimGroup
         }
         
