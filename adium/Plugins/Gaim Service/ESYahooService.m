@@ -11,7 +11,7 @@
 
 - (id)initWithService:(id)inService
 {
-/*    [super initWithService:inService];
+    [super initWithService:inService];
     
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Yahoo!"
@@ -23,8 +23,8 @@
     
     //Register this service
     [[adium accountController] registerService:self];
-*/    
-    return nil;
+    
+    return self;
 }
 
 - (NSString *)identifier
