@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferenceView, AIMenuController, AILoginWindowController, AIAccountWindowController, AIContactHandle, AIAccount, AIContactGroup, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactObject, AIContactInfoViewController, AIPreferenceViewController, AISoundController;
+@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferenceView, AIMenuController, AILoginWindowController, AIAccountWindowController, AIContactHandle, AIAccount, AIContactGroup, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactObject, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIIconFamily, AIDockController;
 @protocol AIContentObject;
 
 @interface AIAdium : NSObject {
@@ -30,6 +30,7 @@
     IBOutlet	AIPreferenceController	*preferenceController;
     IBOutlet	AIToolbarController	*toolbarController;
     IBOutlet	AISoundController	*soundController;
+    IBOutlet	AIDockController	*dockController;
 }
 
 
@@ -42,6 +43,7 @@
 - (AIInterfaceController *)interfaceController;
 - (AIPreferenceController *)preferenceController;
 - (AIMenuController *)menuController;
+- (AIDockController *)dockController;
 
 @end
 
@@ -85,21 +87,21 @@ typedef enum {
 #define Contact_ListChanged					@"Contact_ListChanged"
 
 
-#define Interface_ContactSelectionChanged		@"Interface_ContactSelectionChanged"
+#define Interface_ContactSelectionChanged			@"Interface_ContactSelectionChanged"
 // Interface_ContactDefaultAction ... make double click generic?
 #define Interface_InitiateMessage				@"Interface_InitiateMessage"
 #define Interface_CloseMessage					@"Interface_CloseMessage"
-#define Interface_SendEnteredMessage			@"Interface_SendEnteredMessage"
-#define Interface_WillSendEnteredMessage 		@"Interface_WillSendEnteredMessage"
-#define Interface_DidSendEnteredMessage		@"Interface_DidSendEnteredMessage"
-#define Interface_ErrorMessageRecieved		@"Interface_ErrorMessageRecieved"
+#define Interface_SendEnteredMessage				@"Interface_SendEnteredMessage"
+#define Interface_WillSendEnteredMessage 			@"Interface_WillSendEnteredMessage"
+#define Interface_DidSendEnteredMessage				@"Interface_DidSendEnteredMessage"
+#define Interface_ErrorMessageRecieved				@"Interface_ErrorMessageRecieved"
 #define Content_ContentObjectAdded				@"Content_ContentObjectAdded"
-#define Content_WillSendContent				@"Content_WillSendContent"
+#define Content_WillSendContent					@"Content_WillSendContent"
 #define Content_DidSendContent					@"Content_DidSendContent"
 #define Content_WillReceiveContent				@"Content_WillReceiveContent"
 #define Content_DidReceiveContent				@"Content_DidReceiveContent"
 #define Preference_GroupChanged					@"Preference_GroupChanged"
-
+#define DockIconChanged						@"DockIconChanged"
 
 
 // Public core controller protocols ------------------------------------------------------------
@@ -379,6 +381,23 @@ typedef enum {
 
 @end
 
+@interface AIDockController: NSObject {
+    IBOutlet	AIAdium 	*owner;
+    
+    NSNotificationCenter	*dockNotificationCenter;
+    
+    AIIconFamily		*iconFamily;
+}
+
+- (AIIconFamily *)currentIconFamily;
+- (void)setIconFamily:(AIIconFamily *)iconFamily;
+
+- (void)bounce;
+- (void)bounceWithInterval:(float)delay;
+- (void)bounceWithInterval:(float)delay times:(int)num;
+- (void)stopBouncing;
+
+@end
 
 
 
