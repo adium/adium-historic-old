@@ -411,15 +411,16 @@
 
  A value will always be returned by these methods, so if there is no long display name present it will fall back to display name, serverDisplayName, and finally UID (which is guaranteed to be present).  Use whichever one seems best suited for what is being displayed.
  */
+
 //Server display name, specified by server
 - (NSString *)serverDisplayName
 {
-    AIMutableOwnerArray	*displayName;
-    NSString		*outName;
+    AIMutableOwnerArray	*serverDisplayName;
+    NSString			*outName;
 
-    displayName = [self statusArrayForKey:@"Display Name"];
-    if(displayName != nil && [displayName count] != 0){
-        outName = [displayName objectAtIndex:0];
+    serverDisplayName = [self statusArrayForKey:@"Display Name"];
+    if(serverDisplayName != nil && [serverDisplayName count] != 0){
+        outName = [serverDisplayName objectAtIndex:0];
     }else{
         outName = UID;
     }
