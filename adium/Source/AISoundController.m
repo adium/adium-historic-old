@@ -37,14 +37,18 @@
 {
     NSString	*path;
     
-    //Sounds stored in /library/appsupport/adium/sounds
-    //path = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_SOUNDS] stringByAppendingPathComponent:inName];
+    //Sounds stored in ~/Library/Application Support/Adium 2.0/Sounds
+    path = [[[AIAdium applicationSupportDirectory]
+			stringByAppendingPathComponent:PATH_SOUNDS]
+			stringByAppendingPathComponent:inName];
 
-    //Sounds stored within the Adium application
-    path = [[[[[NSBundle mainBundle] bundlePath]
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        //Sounds stored within the Adium application
+        path = [[[[[NSBundle mainBundle] bundlePath]
     			stringByAppendingPathComponent:PATH_INTERNAL_SOUNDS]
         		stringByAppendingPathComponent:inName]
         		stringByExpandingTildeInPath];
+    }
 
     [self playSoundAtPath:path];
 }
