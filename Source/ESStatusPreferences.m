@@ -156,6 +156,7 @@
 		[AIEditStateWindowController editCustomState:statusState
 											 forType:[statusState statusType]
 										  andAccount:nil
+									  withSaveOption:NO
 											onWindow:[[self view] window]
 									 notifyingTarget:self];
 	}
@@ -201,6 +202,7 @@
 	[AIEditStateWindowController editCustomState:nil
 										 forType:AIAwayStatusType
 									  andAccount:nil
+								  withSaveOption:NO
 										onWindow:[[self view] window]
 								 notifyingTarget:self];
 }
@@ -309,6 +311,8 @@
 	[checkBox_idle setState:[[prefDict objectForKey:KEY_STATUS_REPORT_IDLE] boolValue]];
 	[textField_idleMinutes setDoubleValue:([[prefDict objectForKey:KEY_STATUS_REPORT_IDLE_INTERVAL] doubleValue] / 60.0)];
 	
+	[popUp_autoAwayStatusState setMenu:[[adium statusController] statusStatesMenu]];
+
 	[self configureControlDimming];
 }
 
