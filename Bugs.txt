@@ -19,10 +19,13 @@
 // Adium X 0.70 remaining issues
 //------------------------------------------------------------------------------------
 [Contact List]
-- Bubble-to-fit cells don't work with any new list additions (disable when
-    bubble is selected)
-- Bubble-to-fit cells don't work when groups aren't aligned left.
+- Bubble-to-fit cells don't work with any new list additions (This includes
+	alignment, status icons, service icons, user icons).  Will disable all
+	those options when using bubble-to-fit for now (pending a real solution,
+	if somebody can think of one)
 - Metacontacts display no service icon
+- The window min/max sizes don't seem to be getting updated as auto-resizing
+	is being toggled off.. resulting in a non-resizable window until closed
 
 [Other]
 - Metacontact drawer in get info crashes upon dragging
