@@ -202,6 +202,7 @@
 		//
 		autoResizeVertically = [[layoutDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
 		autoResizeHorizontally = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
+		
 		if (autoResizeHorizontally){
 			//If autosizing, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH determines the maximum width; no forced width.
 			maxWindowWidth = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue];
@@ -209,7 +210,7 @@
 		}else{
 			if (windowStyle == WINDOW_STYLE_STANDARD/* || windowStyle == WINDOW_STYLE_BORDERLESS*/){
 				//In the non-transparent non-autosizing modes, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH has no meaning
-				maxWindowWidth = 1000000;
+				maxWindowWidth = 10000;
 				forcedWindowWidth = -1;
 			}else{
 				//In the transparent non-autosizing modes, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH determines the width of the window
@@ -218,8 +219,36 @@
 			}
 		}
 		
+		//Show the resize indicator if either or both of the autoresizing options is NO
 		[[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontally)];
+		
+		/*
+		 Reset the minimum and maximum sizes in case [self contactListDesiredSizeChanged:nil]; doesn't cause a sizing change
+		 (and therefore the min and max sizes aren't set there).
+		 */
+							  
+		[[self window] setMaxSize:NSMakeSize(maxWindowWidth, 10000)];
+
+		if (forcedWindowWidth == -1){
+			[[self window] setMinSize:minWindowSize];
+		}else{
+			[[self window] setMinSize:NSMakeSize(forcedWindowWidth,minWindowSize.height)];
+			
+			/*
+			 If we have a forced width but we are doing no autoresizing, set our frame now so we don't have t be doing checks every time
+			contactListDesiredSizeChanged is called.
+			 */
+			if(!(autoResizeVertically || autoResizeHorizontally)){
+				
+				NSRect	currentFrame = [[self window] frame];
+				[[self window] setFrame:NSMakeRect(currentFrame.origin.x,currentFrame.origin.y,forcedWindowWidth,currentFrame.size.height) 
+								display:YES
+								animate:NO];
+			}
+		}
+		
 		[self contactListDesiredSizeChanged:nil];
+			
 		
 		[self updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
 		[self updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];
