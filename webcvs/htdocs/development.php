@@ -101,7 +101,7 @@
                <h1>Libgaim Source Code</h1>
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
-                    <p>LibGaim is developed by the <a href="http://gaim.sf.net">Gaim team</a>.  For convience, we keep the source code for the version of LibGaim we are using (along with the source of it's dependencies) in our sourceforge CVS.  LibGaim is also distrubuted under the GPL, check with the <a href="http://gaim.sf.net">Gaim team</a> for more information.</p>
+                    <p>LibGaim is developed by the <a href="http://gaim.sf.net">Gaim team</a>.  You do not need the libgaim source in order to build Adium, but if you'd like to see it, we keep the source code for the version of LibGaim we are using (along with the source of it's dependencies) in our sourceforge CVS.  LibGaim is also distrubuted under the GPL, check with the <a href="http://gaim.sf.net">Gaim team</a> for more information.</p>
                     <p>Requirements</p>
                     <ul>
                         <li><a href="http://www.apple.com/xcode">XCode</a> (Available with a free account from Apple)</li>
