@@ -8,6 +8,7 @@
 
 #import "AWRendezvousService.h"
 #import "AWRendezvousAccount.h"
+#import "ESRendezvousAccountViewController.h"
 
 @implementation AWRendezvousService
 
@@ -17,7 +18,7 @@
 }
 
 - (AIAccountViewController *)accountViewController{
-    return(nil);
+    return([ESRendezvousAccountViewController accountViewController]);
 }
 
 - (DCJoinChatViewController *)joinChatView{
@@ -54,6 +55,9 @@
 }
 - (AIServiceImportance)serviceImportance{
 	return(AIServiceSecondary);
+}
+- (BOOL)supportsProxySettings{
+	return(NO);
 }
 
 @end
