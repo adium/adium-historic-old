@@ -77,7 +77,7 @@ static BOOL catchExceptions = NO;
 			[super raise];
 			
 		}else{
-			NSString	*backtrace = [self decodedExceptionBacktrace];
+			NSString	*backtrace = [self decodedExceptionStackTrace];
 			
 			//Check the stack trace for a third set of known offenders
 			if(!backtrace ||
@@ -103,8 +103,8 @@ static BOOL catchExceptions = NO;
 	}
 }
 
-//Decode the backtrace and save it to disk.  Returns YES if a (harmful) exception is found and logged.
-- (NSString *)decodedExceptionBacktrace
+//Decode the stack trace within [self userInfo] and return it
+- (NSString *)decodedExceptionStackTrace
 {
 	NSDictionary    *dict = [self userInfo];
 	NSString        *stackTrace = nil;
