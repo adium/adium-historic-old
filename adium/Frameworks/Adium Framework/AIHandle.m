@@ -68,6 +68,11 @@
 {
     return(serverGroup);
 }
+- (void)setServerGroup:(NSString *)inServerGroup
+{
+    [serverGroup release];
+    serverGroup = [inServerGroup retain];
+}
 - (BOOL)temporary
 {
     return(temporary);

@@ -84,6 +84,10 @@
     return(NO); //Not needed
 }
 
+- (AIEditorListHandle *)handleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
+{
+    return(NO); //Not needed
+}
 
 //Return our icon description
 - (NSImage *)icon

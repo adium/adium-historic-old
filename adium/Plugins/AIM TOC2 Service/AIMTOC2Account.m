@@ -234,14 +234,15 @@ static char *hash_password(const char * const password);
     enumerator = [[handleDict allValues] objectEnumerator];
     while((handle = [enumerator nextObject])){
         if([[handle serverGroup] compare:inGroup] == 0){
+            [self AIM_RemoveHandle:[handle UID] fromGroup:[handle serverGroup]]; //Remove it server-side
             [groupContents addObject:handle];
-            [self removeHandleWithUID:[handle UID]]; //Remove it
         }
     }
 
     enumerator = [groupContents objectEnumerator];
     while((handle = [enumerator nextObject])){
-        [self addHandleWithUID:[handle UID] serverGroup:newName temporary:NO]; //Add it
+        [handle setServerGroup:newName]; //Set the handle to the new server group
+        [self AIM_AddHandle:[handle UID] toGroup:newName]; //Add it server-side
     }
     
     //Update the contact list
@@ -416,7 +417,10 @@ static char *hash_password(const char * const password);
     while((handle = [enumerator nextObject])){
         [self removeAllStatusFlagsFromHandle:handle];
     }
-    [[owner contactController] setHoldContactListUpdates:NO];
+
+    //Remove all our handles
+    [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
+    [[owner contactController] handlesChangedForAccount:self];
 
     //Clean up and close down
     [socket release]; socket = nil;
@@ -534,7 +538,7 @@ static char *hash_password(const char * const password);
                 NSString		*message = [packet string];
                 NSString		*command = [message TOCStringArgumentAtIndex:0];
 
-                NSLog(@"(%@)<- %@",screenName,[packet string]);
+//                NSLog(@"(%@)<- %@",screenName,[packet string]);
 
                 if([command compare:@"SIGN_ON"] == 0){
                     [self AIM_HandleSignOn:message];
@@ -595,7 +599,7 @@ static char *hash_password(const char * const password);
     //Send any packets in the outQue
     while([outQue count] && [socket readyForSending]){
         [[outQue objectAtIndex:0] sendToSocket:socket];
-        NSLog(@"(%@)-> %@",screenName,[[outQue objectAtIndex:0] string]);
+//        NSLog(@"(%@)-> %@",screenName,[[outQue objectAtIndex:0] string]);
         [outQue removeObjectAtIndex:0];
     }
 }
@@ -1148,8 +1152,6 @@ static char *hash_password(const char * const password);
 
             //We multiply the ping interval by 2.2 to allow the ping time to arrive late (and to prevent disconnect if a single ping is lost).  The closer the scale is to 1, the more sensitive the ping will become.  The further away from 1, the longer it will take to realize a ping failure.  With a ping of 50 seconds, 2.2 would disconnect us 110 seconds after the latest ping, so anywhere between 60 and 170 seconds after the connection is lost.  This is responsive enough to prove useful, but lax enough to handle fairly extreme lag (and even the loss of a ping packet).
             pingInterval *= 2.2;
-
-            NSLog(@"Server supports ping (%i)",(int)pingInterval);
 
             //Install a timer to auto-disconnect after the ping interval
             pingTimer = [[NSTimer scheduledTimerWithTimeInterval:pingInterval target:self selector:@selector(pingFailure:) userInfo:nil repeats:NO] retain];

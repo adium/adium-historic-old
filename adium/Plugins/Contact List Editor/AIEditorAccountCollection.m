@@ -17,6 +17,7 @@
 @interface AIEditorAccountCollection (PRIVATE)
 - (id)initForAccount:(AIAccount *)inAccount withOwner:(id)inOwner;
 - (AIEditorListGroup *)generateEditorListGroup;
+- (AIEditorListHandle *)_handleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group;
 @end
 
 @implementation AIEditorAccountCollection
@@ -39,6 +40,7 @@
 
     //Observe our account's changes
     [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:account];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:account];
     [[owner notificationCenter] addObserver:self selector:@selector(accountHandlesChanged:) name:Account_HandlesChanged object:account];
     
     return(self);    
@@ -127,16 +129,19 @@
     }
 }
 
+- (AIEditorListHandle *)handleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
+{
+    return([self _handleNamed:UID inGroup:list]);
+}
+
 //Add an object to our account
 - (void)addObject:(AIEditorListObject *)inObject
 {
     controlledChanges = YES;
     
-    if([inObject isKindOfClass:[AIEditorListHandle class]]){
-        AIServiceType	*serviceType = [[account service] handleServiceType];
-        
+    if([inObject isKindOfClass:[AIEditorListHandle class]]){        
         //Add a new handle
-        [account addHandleWithUID:[serviceType filterUID:[(AIEditorListHandle *)inObject UID]]
+        [account addHandleWithUID:[(AIEditorListHandle *)inObject UID]
                       serverGroup:[[(AIEditorListHandle *)inObject containingGroup] UID]
                         temporary:NO];
 
@@ -154,9 +159,7 @@
     controlledChanges = YES;
     
     if([inObject isKindOfClass:[AIEditorListHandle class]]){
-        AIServiceType	*serviceType = [[account service] handleServiceType];
-
-        [account removeHandleWithUID:[serviceType filterUID:[(AIEditorListHandle *)inObject UID]]];
+        [account removeHandleWithUID:[(AIEditorListHandle *)inObject UID]];
         
     }else if([inObject isKindOfClass:[AIEditorListGroup class]]){
         [account removeServerGroup:[inObject UID]];
@@ -172,13 +175,11 @@
     controlledChanges = YES;
 
     if([inObject isKindOfClass:[AIEditorListHandle class]]){
-        AIServiceType	*serviceType = [[account service] handleServiceType];
-        NSString	*newUID = [serviceType filterUID:newName];
         NSString	*handleGroup = [[(AIEditorListHandle *)inObject containingGroup] UID];
-        
+
         //Remove the handle, and re-add it with the new name
         [account removeHandleWithUID:[inObject UID]];
-        [account addHandleWithUID:newUID
+        [account addHandleWithUID:newName
                       serverGroup:handleGroup
                         temporary:NO];
 
@@ -196,8 +197,7 @@
     controlledChanges = YES;
 
     if([inObject isKindOfClass:[AIEditorListHandle class]]){
-        AIServiceType	*serviceType = [[account service] handleServiceType];
-        NSString	*handleUID = [[[serviceType filterUID:[(AIEditorListHandle *)inObject UID]] retain] autorelease];
+        NSString	*handleUID = [[[(AIEditorListHandle *)inObject UID] retain] autorelease];
 
         //Remove the handle, and re-add it into the correct group
         [account removeHandleWithUID:handleUID];
@@ -254,7 +254,6 @@
 {
     //Let the contact list know our enabled state changed
     [[owner notificationCenter] postNotificationName:Editor_CollectionStatusChanged object:self];
-
 }
 
 //Our account's handles changed
@@ -275,6 +274,36 @@
     }
 }
 
+//Our account properties have changed
+- (void)accountPropertiesChanged:(NSNotification *)notification
+{
+    //Let the contact list know our name changed
+    [[owner notificationCenter] postNotificationName:Editor_CollectionStatusChanged object:self];
+}
+
+//Recursively scan for a handle on our list
+- (AIEditorListHandle *)_handleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group
+{
+    NSEnumerator	*enumerator;
+    AIEditorListObject	*object;
+
+    //Scan all objects in this group
+    enumerator = [group objectEnumerator];
+    while(object = [enumerator nextObject]){
+        if([object isKindOfClass:[AIEditorListHandle class]]){ //Compare the handle names
+            if([name compare:[object UID]] == 0){
+                return((AIEditorListHandle *)object);
+            }
+
+        }else if([object isKindOfClass:[AIEditorListGroup class]]){ //Scan the subgroup
+            if((object = [self _handleNamed:name inGroup:(AIEditorListGroup *)object])){
+                return((AIEditorListHandle *)object);
+            }
+        }
+    }
+
+    return(nil);
+}
 
 @end
 

@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferenceView, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIIconFamily, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject, AIIconState;
+@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferenceView, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIIconFamily, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject, AIIconState, AIContactListGeneration;
 @protocol AIContentObject;
 
 @interface AIAdium : NSObject {
@@ -302,14 +302,12 @@ typedef enum {
 
     AIPreferenceCategory	*contactInfoCategory;
 
-    NSMutableDictionary		*groupDict;
-    NSMutableDictionary		*abandonedContacts;
-    NSMutableDictionary		*abandonedGroups;
-
     NSMenuItem			*menuItem_getInfo;
 
     NSMutableDictionary		*listOrderDict;
     int				largestOrder;
+
+    AIContactListGeneration	*contactListGeneration;
 }
 
 - (void)handlesChangedForAccount:(AIAccount *)inAccount;

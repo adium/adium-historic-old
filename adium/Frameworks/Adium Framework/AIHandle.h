@@ -34,6 +34,7 @@
 - (NSString *)serviceID;
 - (NSString *)UIDAndServiceID;
 - (NSString *)serverGroup;
+- (void)setServerGroup:(NSString *)inServerGroup;
 - (BOOL)temporary;
 
 //Ownership
