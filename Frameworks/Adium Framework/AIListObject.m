@@ -391,48 +391,9 @@ DeclareString(FormattedUID);
 	return (idleNumber ? idleNumber : [NSNumber numberWithInt:0]);
 }
 
-- (BOOL)online
-{
-	return ([self integerStatusObjectForKey:@"Online"] ? YES : NO);
-}
-
-- (AIStatusSummary)statusSummary
-{
-	if ([self integerStatusObjectForKey:@"Online"]){
-		if ([self integerStatusObjectForKey:@"Away" fromAnyContainedObject:NO]){
-			if ([self integerStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO]){
-				return AIAwayAndIdleStatus;
-			}else{
-				return AIAwayStatus;
-			}
-
-		}else if ([self integerStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO]){
-			return AIIdleStatus;
-			
-		}else{
-			return AIAvailableStatus;
-			
-		}
-	}else{
-		//We don't know the status of an stranger who isn't showing up as online
-		if ([self isStranger]){
-			return AIUnknownStatus;
-			
-		}else{
-			return AIOfflineStatus;
-			
-		}
-	}
-}
-
 //A standard listObject is never a stranger
 - (BOOL)isStranger{
 	return NO;
-}
-
-- (NSString *)statusMessage
-{
-	return [[self statusObjectForKey:@"StatusMessage"] string];
 }
 
 /*!
@@ -541,6 +502,77 @@ DeclareString(FormattedUID);
 {
 	return ([otherObject isKindOfClass:[self class]] &&
 			[[self internalObjectID] caseInsensitiveCompare:[otherObject internalObjectID]]);
+}
+
+#pragma mark Status states
+
+/*!
+* @brief The current status state
+ */
+- (AIStatus *)statusState
+{
+	return [self statusObjectForKey:@"StatusState"];
+}
+
+/*!
+ * @brief Set the current status state
+ *
+ * @param name State name. May be nil to use the default state name for type
+ * @param type The <tt>AIStatusType</tt>
+ * @param statusMessage Status message. May be nil.
+ * @param noitfy How to notify of the change. See -[ESObjectWithStatus setStatusObject:forKey:notify:].
+ */
+- (void)setStatusWithName:(NSString *)name statusType:(AIStatusType)type statusMessage:(NSAttributedString *)statusMessage notify:(NotifyTiming)notify
+{
+	AIStatus	*statusState = [AIStatus status];
+	[statusState setStatusType:type];
+
+	if(name) [statusState setStatusName:name];
+	if(statusMessage) [statusState setStatusMessage:statusMessage];
+
+	[self setStatusObject:statusState forKey:@"StatusState" notify:notify];
+}
+
+- (void)setBaseAvailableStatusAndNotify:(NotifyTiming)notify
+{
+	[self setStatusObject:nil forKey:@"StatusState" notify:notify];
+}
+
+- (BOOL)online
+{
+	return ([self integerStatusObjectForKey:@"Online"] ? YES : NO);
+}
+
+- (AIStatusSummary)statusSummary
+{
+	if ([self integerStatusObjectForKey:@"Online"]){
+		AIStatus		*statusState = [self statusState];
+		AIStatusType	statusType = (statusState ? [statusState statusType] : AIAvailableStatusType);
+		
+		if ((statusType == AIAwayStatusType) || (statusType == AIInvisibleStatusType)){
+			if ([self integerStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO]){
+				return AIAwayAndIdleStatus;
+			}else{
+				return AIAwayStatus;
+			}
+			
+		}else if ([self integerStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO]){
+			return AIIdleStatus;
+			
+		}else{
+			return AIAvailableStatus;
+			
+		}
+	}else{
+		//We don't know the status of an stranger who isn't showing up as online
+		if ([self isStranger]){
+			return AIUnknownStatus;
+			
+		}else{
+			return AIOfflineStatus;
+			
+		}
+	}
 }
 
 #pragma mark Debugging
