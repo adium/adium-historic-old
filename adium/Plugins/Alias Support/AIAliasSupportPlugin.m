@@ -303,15 +303,15 @@
 
                     if ( [ screenName caseInsensitiveCompare:currentScreenNameForContact ] == NSOrderedSame ) {
                         if ( currentContactFirstName != nil && currentContactLastName != nil ) {
-							longDisplayName = [ NSString stringWithFormat:@"%@ %@",
-								currentContactFirstName,
-								currentContactLastName ];
-						} else if ( currentContactFirstName != nil && currentContactLastName == nil ) {
-							longDisplayName = currentContactFirstName;
-						} else if ( currentContactFirstName == nil && currentContactLastName != nil ) {
-							longDisplayName = currentContactLastName;
-						} // else handled by fallback above
-						
+                            longDisplayName = [ NSString stringWithFormat:@"%@ %@",
+                                currentContactFirstName,
+                                currentContactLastName ];
+                        } else if ( currentContactFirstName != nil && currentContactLastName == nil ) {
+                            longDisplayName = currentContactFirstName;
+                        } else if ( currentContactFirstName == nil && currentContactLastName != nil ) {
+                            longDisplayName = currentContactLastName;
+                        } // else handled by fallback above
+
                         break;
                     }
                 }
