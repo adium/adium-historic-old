@@ -47,12 +47,14 @@ static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 		NSString	*path = [statusIconBasePath stringByAppendingPathComponent:[statusIconNames[iconType] objectForKey:statusID]];
 		
 		if(path){
-			statusIcon = [[[NSImage alloc] initWithContentsOfFile:path] autorelease];
+			statusIcon = [[NSImage alloc] initWithContentsOfFile:path];
 			
 			if(statusIcon){
 				if(iconDirection == AIIconFlipped) [statusIcon setFlipped:YES];
 				[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusID];
 			}
+			
+			[statusIcon release];
 		}
 	}
 	
