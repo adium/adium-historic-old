@@ -46,6 +46,9 @@ typedef enum {
 - (float)widthForHeight:(int)inHeight;
 @end
 
+//Empty protocol to allow easy checking for if a particular object is a contact list outline view
+@protocol ContactListOutlineView
+@end
 
 @interface AIContactController : NSObject {
     IBOutlet	AIAdium		*owner;
@@ -129,6 +132,7 @@ typedef enum {
 
 //Interface selection
 - (AIListObject *)selectedListObject;
+- (AIListObject *)selectedListObjectInContactList;
 
 //Private
 - (void)initController;
