@@ -695,7 +695,7 @@
 {
     NSEnumerator		*windowEnumerator;
     AIMessageWindowController 	*messageWindow;
-    AIMessageTabViewItem	*tabViewItem;
+    AIMessageTabViewItem	*tabViewItem = nil;
 
     windowEnumerator = [messageWindowControllerArray objectEnumerator];
     while(messageWindow = [windowEnumerator nextObject]){
