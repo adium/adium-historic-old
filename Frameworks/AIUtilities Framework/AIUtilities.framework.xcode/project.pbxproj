@@ -3292,6 +3292,36 @@
 			settings = {
 			};
 		};
+		3459C58C07E291EC005F284E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIGradientImageCell.m;
+			path = Source/AIGradientImageCell.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3459C58D07E291EC005F284E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIGradientImageCell.h;
+			path = Source/AIGradientImageCell.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3459C58E07E291EC005F284E = {
+			fileRef = 3459C58C07E291EC005F284E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3459C58F07E291EC005F284E = {
+			fileRef = 3459C58D07E291EC005F284E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		348E5E1706D2F447004C051C = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -4828,6 +4858,8 @@
 		};
 		4BD1F46C06D285C500B3975E = {
 			children = (
+				3459C58D07E291EC005F284E,
+				3459C58C07E291EC005F284E,
 				4BD1F3D606D27F3100B3975E,
 				4BD1F3D706D27F3100B3975E,
 			);
@@ -5101,6 +5133,7 @@
 				34F2EA4A07C304C0007EAAAB,
 				3402D33107CB043F0044F818,
 				34D835D007CBED06006466F2,
+				3459C58F07E291EC005F284E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5243,6 +5276,7 @@
 				07BB5A0E07C48340008996A0,
 				6E03C8D407C68A5800EAA71E,
 				34D835CF07CBED06006466F2,
+				3459C58E07E291EC005F284E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
