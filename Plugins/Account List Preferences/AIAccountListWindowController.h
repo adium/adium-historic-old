@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAccountController, AIAccount, AIAutoScrollView;
+@class AIAccountController, AIAccount, AIAutoScrollView, ESImageViewWithImagePicker;
 
 @interface AIAccountListWindowController : AIWindowController <AIListObjectObserver> {
 	//Account status
@@ -29,6 +29,7 @@
 	IBOutlet		ESDelayedTextField			*textField_accountName;
 	IBOutlet		NSTextField					*textField_userNameLabel;
     IBOutlet		NSButton					*button_autoConnect;
+	IBOutlet		ESImageViewWithImagePicker  *imageView_userIcon;
 
 	//Account list
     IBOutlet		AIAutoScrollView			*scrollView_accountList;

@@ -130,6 +130,8 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 //Configure the account preferences for an account
 - (void)configureViewForAccount:(AIAccount *)inAccount
 {
+	NSData	*iconData;
+
 	//If necessary, configure for the account's service first
 	if([inAccount service] != configuredForService){
 		[self configureViewForService:[inAccount service]];
@@ -145,6 +147,13 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	NSString	*formattedUID = [inAccount preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS];
 	[textField_accountName setStringValue:(formattedUID && [formattedUID length] ? formattedUID : [inAccount UID])];
 	[button_autoConnect setState:[[inAccount preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]];
+	
+	//User icon
+	if(iconData = [inAccount preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
+		NSImage *image = [[NSImage alloc] initWithData:iconData];
+		[imageView_userIcon setImage:image];
+		[image release];
+	}        
 }
 
 //Configure the account preferences for a service.  This determines which controls are loaded and the allowed values
@@ -343,6 +352,16 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[configuredForAccount setPreference:[NSNumber numberWithBool:autoConnect]
 								 forKey:@"AutoConnect"
 								  group:GROUP_ACCOUNT_STATUS];
+}
+
+//User changed account icon
+- (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)sender didChangeToImage:(NSImage *)image
+{
+    [configuredForAccount setPreference:[image PNGRepresentation] forKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
+}
+- (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)sender
+{
+	[configuredForAccount setPreference:nil forKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
 }
 
 //Disable controls for account that are connected
