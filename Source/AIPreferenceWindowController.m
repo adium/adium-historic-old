@@ -152,10 +152,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	//Prepare our array of preference views.  We place these in an array to cut down on a ton of duplicate code.
 	viewArray = [[NSArray arrayWithObjects:
 		view_General,
-		view_ContactList,
+		view_Appearance,
 		view_Messages, 
 		view_Events,
-		view_Dock,
 		view_Emoticons,
 		view_FileTransfer,
 		view_Advanced,
@@ -224,12 +223,12 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[self window];
 	
 	index = [tabView_category indexOfTabViewItemWithIdentifier:identifier];
-	NSAssert1(index != NSNotFound, @"Could not find tab view item with identifier %@", identifier);
+	if(index != NSNotFound){
+		tabViewItem = [tabView_category tabViewItemAtIndex:index];
+		[self tabView:tabView_category willSelectTabViewItem:tabViewItem];
+		[tabView_category selectTabViewItem:tabViewItem];    
+	}
 
-	tabViewItem = [tabView_category tabViewItemAtIndex:index];
-	[self tabView:tabView_category willSelectTabViewItem:tabViewItem];
-    [tabView_category selectTabViewItem:tabViewItem];    
-	
 	shouldRestorePreviousSelectedPane = NO;
 }
 
