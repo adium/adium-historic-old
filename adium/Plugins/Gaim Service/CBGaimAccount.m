@@ -1382,7 +1382,8 @@
     if(awayMessage){
         awayHTML = (char *)[[self encodedAttributedString:awayMessage forListObject:nil] UTF8String];
     }
-    serv_set_away(gc, GAIM_AWAY_CUSTOM, awayHTML);
+	if (gc && account) 
+		serv_set_away(gc, GAIM_AWAY_CUSTOM, awayHTML);
     
     //We are now away
     [self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:NO];
@@ -1397,7 +1398,8 @@
     if(profile){
         profileHTML = (char *)[[self encodedAttributedString:profile forListObject:nil] UTF8String];
     }
-    serv_set_info(gc, profileHTML);
+	if (gc && account)
+		serv_set_info(gc, profileHTML);
     
     if (GAIM_DEBUG) NSLog(@"updating profile to %@",[profile string]);
     
@@ -1419,7 +1421,8 @@
 		NSString    *buddyImageFilename = [self _userIconCachePath];
 		
 		if([data writeToFile:buddyImageFilename atomically:YES]){
-			gaim_account_set_buddy_icon(account, [buddyImageFilename UTF8String]);
+			if (account)
+				gaim_account_set_buddy_icon(account, [buddyImageFilename UTF8String]);
 		}else{
 			NSLog(@"Error writing file %@",buddyImageFilename);   
 		}
