@@ -276,6 +276,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	BOOL			currentItalic = NO;
 	BOOL			currentBold = NO;
 	BOOL			currentUnderline = NO;
+	NSString		*link = nil;
+	NSString		*oldLink = nil;
 	
 	//Append the body tag (If there is a background color)
 	if(thingsToInclude.headers && messageLength > 0 && (pageColor = [inMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil])){
@@ -297,8 +299,19 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		BOOL			hasUnderline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
 		BOOL			isBold = (traits & NSBoldFontMask);
 		BOOL			isItalic = (traits & NSItalicFontMask);
+		
+		oldLink = link;
+		link = [attributes objectForKey:NSLinkAttributeName];
+		
+		//If we had a link on the last pass, and we don't now or we have a different one, close the link tag
+		if (oldLink &&
+			(!link || (([link length] != 0) && ![oldLink isEqualToString:link]))){
 
-		NSString		*link = [attributes objectForKey:NSLinkAttributeName];
+			//Close Link
+			[string appendString:@"</a>"];
+			oldLink = nil;
+		}
+		
 		NSMutableString	*chunk = [[inMessageString substringWithRange:searchRange] mutableCopy];
 
 		//Font (If the color, font, or size has changed)
@@ -386,7 +399,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		}
 
 		//Link
-		if(link && [link length] != 0){
+		if(!oldLink && link && [link length] != 0){
 			NSString	*linkString = ([link isKindOfClass:[NSURL class]] ? [(NSURL *)link absoluteString] : link);
 
 			[string appendString:@"<a href=\""];
@@ -568,11 +581,6 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			[chunk release];
 		}
 
-		//Close Link
-		if(link && [link length] != 0){
-			[string appendString:@"</a>"];
-		}
-
 		searchRange.location += searchRange.length;
 	}
 
@@ -585,6 +593,14 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		if(currentBold) [string appendString:@"</B>"];
 		if(currentUnderline) [string appendString:@"</U>"];
 	}
+	
+	//If we had a link on the last pass, close the link tag
+	if (oldLink){
+		//Close Link
+		[string appendString:@"</a>"];
+		oldLink = nil;
+	}
+	
 	if(thingsToInclude.fontTags && thingsToInclude.closingFontTags && openFontTag) [string appendString:CloseFontTag]; //Close any open font tag
 	if(thingsToInclude.headers && pageColor) [string appendString:@"</BODY>"]; //Close the body tag
 	if(thingsToInclude.headers) [string appendString:@"</HTML>"]; //Close the HTML
