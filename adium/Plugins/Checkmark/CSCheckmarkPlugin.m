@@ -9,8 +9,6 @@
 #import "CSCheckmarkPlugin.h"
 #import "CSCheckmarkPreferences.h"
 
-#define CHECKMARK_IMAGE @"checkmark.tiff"
-
 @interface CSCheckmarkPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
@@ -31,7 +29,7 @@
 	//Observe
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 	
-	checkmarkImage = [[AIImageUtilities imageNamed:CHECKMARK_IMAGE forClass:[self class]] retain];
+	checkmarkImage =  [[NSImage systemCheckmark] retain];
 	[checkmarkImage setScalesWhenResized:YES];
 	[checkmarkImage setFlipped:YES];
 }
@@ -87,7 +85,8 @@
 #pragma mark AIListObjectLeftView Protocol
 - (void)drawInRect:(NSRect)inRect
 {
-	[checkmarkImage setSize:inRect.size];
+	if ([checkmarkImage size].height > inRect.size.height)
+		[checkmarkImage setSize:inRect.size];
 	
 	NSPoint drawingPoint = NSMakePoint(inRect.origin.x, inRect.origin.y + ceil((inRect.size.height / 2.0)) - ceil(([checkmarkImage size].height / 2.0)));
 	[checkmarkImage drawAtPoint:drawingPoint fromRect:NSMakeRect(0, 0, [checkmarkImage size].width, [checkmarkImage size].height) operation:NSCompositeSourceOver fraction:1.0];
@@ -96,7 +95,9 @@
 
 - (float)widthForHeight:(int)inHeight
 {
-	return [checkmarkImage size].width * ((float)inHeight / [checkmarkImage size].height);
+	if ([checkmarkImage size].height > inHeight)
+		return [checkmarkImage size].width * ((float)inHeight / [checkmarkImage size].height);
+	return ([checkmarkImage size].width);
 }
 
 @end

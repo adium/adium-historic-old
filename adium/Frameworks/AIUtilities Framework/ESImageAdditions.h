@@ -18,5 +18,6 @@ typedef enum {
 - (void)tileInRect:(NSRect)rect;
 + (NSImage *)imageFromGWorld:(GWorldPtr)gWorldPtr;
 + (NSImage *)systemCloseButtonImageForState:(AICloseButtonState)state controlTint:(NSControlTint)inTint;
++ (NSImage *)systemCheckmark;
 
 @end
