@@ -55,6 +55,4 @@ Adium, Copyright 2001-2005, Adam Iser
 - (NSString *)nibName;
 - (void)saveConfiguration;
 
-- (NSMenu *)encryptionMenu;
-
 @end
