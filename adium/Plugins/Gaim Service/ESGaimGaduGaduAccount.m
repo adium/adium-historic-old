@@ -44,4 +44,15 @@ static BOOL didInitGG = NO;
 	}
 	return nil;
 }
+
+- (NSString *)hostKey
+{
+	return KEY_GADU_GADU_HOST;
+}
+
+- (NSString *)portKey
+{
+	return KEY_GADU_GADU_PORT;
+}
+
 @end

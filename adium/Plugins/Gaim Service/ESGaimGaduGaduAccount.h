@@ -7,6 +7,9 @@
 
 #import "CBGaimAccount.h"
 
+#define KEY_GADU_GADU_HOST		@"Gadu-Gadu:Host"
+#define KEY_GADU_GADU_PORT		@"Gadu-Gadu:Port"
+
 @interface ESGaimGaduGaduAccount : CBGaimAccount {
     
 }
