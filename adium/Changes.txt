@@ -1,5 +1,10 @@
 				Adium X Version History
 				-----------------------
 
-Version X.XX (X/XX/XXXX)
+Version 0.51 ()
+- Adium now works in 10.2 (Fixed crash on launch in 10.2)
+
+
+
+Version 0.50 (4/06/2004)
 - Initial Release
