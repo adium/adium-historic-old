@@ -3,11 +3,11 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
-//  $Id: ESFileTransferController.m,v 1.10 2004/04/03 00:35:18 evands Exp $
+//  $Id: ESFileTransferController.m,v 1.11 2004/04/26 03:22:09 adamiser Exp $
 
 #import "ESFileTransferController.h"
 
-#define SEND_FILE_TO_CONTACT	AILocalizedString(@"Send File To %@...",nil)
+#define SEND_FILE_TO_CONTACT	AILocalizedString(@"Send File To %@",nil)
 #define SEND_FILE				AILocalizedString(@"Send File",nil)
 #define CONTACT					AILocalizedString(@"Contact",nil)
 

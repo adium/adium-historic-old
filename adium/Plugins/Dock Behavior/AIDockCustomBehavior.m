@@ -177,7 +177,7 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
     NSMenu		*eventMenu = [[NSMenu alloc] init];
 
     //Add the static/display menu item
-    [eventMenu addItemWithTitle:AILocalizedString(@"Add Event…",nil) target:nil action:nil keyEquivalent:@""];
+    [eventMenu addItemWithTitle:AILocalizedString(@"Add Event...",nil) target:nil action:nil keyEquivalent:@""];
 
     //Add a menu item for each event
     enumerator = [[adium eventNotifications] objectEnumerator];

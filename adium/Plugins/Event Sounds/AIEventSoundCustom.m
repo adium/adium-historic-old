@@ -11,7 +11,7 @@
 #define NIB_EVENT_SOUND_CUSTOM		@"EventSoundCustomPanel"
 #define	TABLE_COLUMN_SOUND		@"sound"
 #define	TABLE_COLUMN_EVENT		@"event"
-#define ADD_EVENT_MENU_ITEM		AILocalizedString(@"Add Event…",nil)
+#define ADD_EVENT_MENU_ITEM		AILocalizedString(@"Add Event...",nil)
 
 
 @interface AIEventSoundCustom (PRIVATE)

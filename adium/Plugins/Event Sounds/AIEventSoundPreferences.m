@@ -138,7 +138,7 @@
 
     //Custom option
     [soundSetMenu addItem:[NSMenuItem separatorItem]];
-    [soundSetMenu addItemWithTitle:AILocalizedString(@"Custom…",nil) target:self action:@selector(selectSoundSet:) keyEquivalent:@""];
+    [soundSetMenu addItemWithTitle:AILocalizedString(@"Custom...",nil) target:self action:@selector(selectSoundSet:) keyEquivalent:@""];
 
     return(soundSetMenu);
 }

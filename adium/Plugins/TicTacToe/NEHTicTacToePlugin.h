@@ -32,8 +32,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define MSG_BUSY			@"Busy"
 #define MSG_TIMEOUT			@"Timeout"
 
-#define BUTTON_OK   AILocalizedString(@"OK","")
-#define BUTTON_ERR  AILocalizedString(@"OK","")
+#define BUTTON_OK   AILocalizedString(@"Okay","")
+#define BUTTON_ERR  AILocalizedString(@"Okay","")
 
 @interface NEHTicTacToePlugin : NEHGamePlugin {
 }

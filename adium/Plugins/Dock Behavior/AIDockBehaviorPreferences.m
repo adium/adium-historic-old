@@ -130,7 +130,7 @@
 
     //Add the custom option
     [behaviorSetMenu addItem:[NSMenuItem separatorItem]];
-    [behaviorSetMenu addItemWithTitle:AILocalizedString(@"Custom…",nil) 
+    [behaviorSetMenu addItemWithTitle:AILocalizedString(@"Custom...",nil) 
 							   target:self
 							   action:@selector(selectBehaviorSet:)
 						keyEquivalent:@""];
