@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.90 2004/08/12 00:56:00 evands Exp $
+//$Id: AIPluginController.m,v 1.91 2004/08/12 14:18:58 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -36,7 +36,7 @@ AIContactStatusColoringPlugin, AIContactStatusDockOverlaysPlugin, AIContactStatu
 AIContactWarningLevelPlugin, AIDefaultFormattingPlugin, AIDockAccountStatusPlugin, AIDockBehaviorPlugin,
 AIDockIconSelectionPlugin, AIDockUnviewedContentPlugin, AIDualWindowInterfacePlugin, AIEmoticonsPlugin,
 AIEventSoundsPlugin, AIGroupedAwayByIdleSortPlugin, AIGroupedIdleAwaySortPlugin, AIIdleAwayManualSortPlugin,
-AIIdleAwaySortPlugin, AIIdleSortPlugin, AIIdleTimeDisplayPlugin, AILaTeXPlugin, AILoggerPlugin,
+AIIdleAwaySortPlugin, AIIdleSortPlugin, AILaTeXPlugin, AILoggerPlugin,
 AIManualSortPlugin, AIMessageAliasPlugin, AIMessageViewSelectionPlugin, AIOfflineContactHidingPlugin, AIPlugin,
 AISCLViewPlugin, AISendingKeyPreferencesPlugin, AISpellCheckingPlugin, AITabStatusIconsPlugin, AIChatConsolidationPlugin,
 AIStandardToolbarItemsPlugin, AIStatusChangedMessagesPlugin, AIStatusCirclesPlugin, AINewMessagePanelPlugin,
@@ -93,7 +93,6 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin;
 	[self loadPluginWithClass:[AIDualWindowInterfacePlugin class]];
 	[self loadPluginWithClass:[AIEmoticonsPlugin class]];
 	[self loadPluginWithClass:[AIEventSoundsPlugin class]];
-	[self loadPluginWithClass:[AIIdleTimeDisplayPlugin class]];
 	[self loadPluginWithClass:[AIIdleTimePlugin class]];
 	[self loadPluginWithClass:[AILoggerPlugin class]];	
 	[self loadPluginWithClass:[AIManualSortPlugin class]];
