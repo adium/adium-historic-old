@@ -210,18 +210,11 @@
 		displayIdleTime			= [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue];
 		idleStringColor			= [[[prefDict objectForKey:KEY_IDLE_TIME_COLOR] representedColor] retain];
 		
-        //Update all our status circles
-		NSEnumerator		*enumerator;
-		AIListObject		*object;
-		
         [AIStatusCircle shouldDisplayIdleTime:displayIdleTime];
         [AIStatusCircle setIsOnLeft:displayStatusCircleOnLeft];
         
-		enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-		
-		while(object = [enumerator nextObject]){
-			[[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil silent:YES]];
-        }
+        //Update all our status circles
+		[[adium contactController] updateAllListObjectsForObserver:self];
     }
 }
 

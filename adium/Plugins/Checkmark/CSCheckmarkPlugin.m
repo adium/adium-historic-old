@@ -54,14 +54,7 @@
 		displayCheckmark  = [[prefDict objectForKey:KEY_DISPLAY_CHECKMARK] boolValue];
 		
         //Update all our status icons
-		NSEnumerator		*enumerator;
-		AIListObject		*object;
-		
-		enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-		
-		while(object = [enumerator nextObject]){
-            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil silent:YES]];
-        }
+		[[adium contactController] updateAllListObjectsForObserver:self];
     }
     
 }

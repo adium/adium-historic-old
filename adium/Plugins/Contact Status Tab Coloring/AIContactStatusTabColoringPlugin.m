@@ -205,11 +205,7 @@
         idleAndAwayEnabled = [[prefDict objectForKey:KEY_TAB_IDLE_AWAY_ENABLED] boolValue];
         unviewedFlashEnabled = [[prefDict objectForKey:KEY_TAB_UNVIEWED_FLASH_ENABLED] boolValue];
 		
-        //Force each contact to update (Messy)
-		enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-		while((object = [enumerator nextObject])){
-            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil silent:YES]];
-		}
+		[[adium contactController] updateAllListObjectsForObserver:self];
     }
 }
 

@@ -481,6 +481,7 @@ typedef enum {
 //Contact status & Attributes
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver;
 - (void)unregisterListObjectObserver:(id)inObserver;
+- (void)updateAllListObjectsForObserver:(id <AIListObjectObserver>)inObserver;
 
 //
 - (void)delayListObjectNotifications;
