@@ -126,4 +126,102 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void *passw
 	if (itemRef) CFRelease(itemRef);
 }
 
+//Next two functions are from the http-mail project.
+static NSData *OWKCGetItemAttribute(KCItemRef item, KCItemAttr attrTag)
+{
+    SecKeychainAttribute    attr;
+    OSStatus                keychainStatus;
+    UInt32                  actualLength;
+    void                    *freeMe = NULL;
+    
+    attr.tag = attrTag;
+    actualLength = 256;
+    attr.length = actualLength; 
+    attr.data = alloca(actualLength);
+    
+    keychainStatus = KCGetAttribute(item, &attr, &actualLength);
+    if (keychainStatus == errKCBufferTooSmall) {
+        /* the attribute length will have been placed into actualLength */
+        freeMe = NSZoneMalloc(NULL, actualLength);
+        attr.length = actualLength;
+        attr.data = freeMe;
+        keychainStatus = KCGetAttribute(item, &attr, &actualLength);
+    }
+    if (keychainStatus == noErr) {
+        NSData *retval = [NSData dataWithBytes:attr.data length:actualLength];
+        if (freeMe != NULL)
+            NSZoneFree(NULL, freeMe);
+        return retval;
+    }
+    
+    if (freeMe != NULL)
+        NSZoneFree(NULL, freeMe);
+    
+    if (keychainStatus == errKCNoSuchAttr) {
+        /* An expected error. Return nil for nonexistent attributes. */
+        return nil;
+    }
+    
+    /* We shouldn't make it here */
+    [NSException raise:@"Error Reading Keychain" format:@"Error number %d.", keychainStatus];
+    
+    return nil;  // appease the dread compiler warning gods
+}
+
++ (NSDictionary *)getDictionaryFromKeychainForKey:(NSString *)key
+{
+    NSData              *data;
+    KCSearchRef         grepstate; 
+    KCItemRef           item;
+    UInt32              length;
+    void                *itemData;
+    NSMutableDictionary *result = nil;
+    
+    SecKeychainRef      keychain;
+    SecKeychainCopyDefault(&keychain);
+    
+	if(KCFindFirstItem(keychain, NULL, &grepstate, &item)==noErr) {  
+		do {
+			NSString    *server = nil;
+			
+			data = OWKCGetItemAttribute(item, kSecLabelItemAttr);
+			if(data) {
+				server = [NSString stringWithCString:[data bytes] length:[data length]];
+			}
+			
+			if([key isEqualToString:server]) {
+				NSString    *username;
+				NSString    *password;
+				
+				data = OWKCGetItemAttribute(item, kSecAccountItemAttr);
+				if(data){
+					username = [NSString stringWithCString:[data bytes] length:[data length]];
+				}else{
+					username = @"";
+				}
+				
+				if(SecKeychainItemCopyContent(item, NULL, NULL, &length, &itemData) == noErr) {
+					password = [NSString stringWithCString:itemData length:length];
+					SecKeychainItemFreeContent(NULL, itemData);
+				} else {
+					password = @"";
+				} 
+				
+				result = [NSDictionary dictionaryWithObjectsAndKeys:username,@"username",password,@"password",nil];
+				
+				KCReleaseItem(&item);
+				
+				break;
+			}
+			
+			KCReleaseItem(&item);
+		} while( KCFindNextItem(grepstate, &item)==noErr);
+		
+		KCReleaseSearch(&grepstate);
+	}
+    
+	CFRelease(keychain);
+    return result;   
+}
+
 @end
