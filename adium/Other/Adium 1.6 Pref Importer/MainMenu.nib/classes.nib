@@ -1,0 +1,23 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {import = id; sheetButton = id; }; 
+            CLASS = CBOldPrefsImporterAppController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_Cancel" = NSButton; 
+                "button_OK" = NSButton; 
+                "button_import" = NSButton; 
+                "checkBox_aliases" = NSButton; 
+                "popUpButton_account" = NSPopUpButton; 
+                "popUpButton_user" = NSPopUpButton; 
+                progressIndicator = NSProgressIndicator; 
+                theSheet = NSWindow; 
+                "window_main" = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
