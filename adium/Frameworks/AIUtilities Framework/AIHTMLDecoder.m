@@ -88,6 +88,8 @@ int HTMLEquivalentForFontSize(int fontSize);
         BOOL		bold = (traits & NSBoldFontMask);
         BOOL		italic = (traits & NSItalicFontMask);
 
+        NSString	*link = [attributes objectForKey:NSLinkAttributeName];
+
         NSMutableString	*chunk = [NSMutableString stringWithString:
             [[inMessageString substringWithRange:searchRange] mutableCopy]];
         
@@ -147,6 +149,13 @@ int HTMLEquivalentForFontSize(int fontSize);
         if(italic){
             [string appendString:@"<I>"];
         }
+
+        //Link
+        if(link && [link length] != 0){
+            [string appendString:@"<a href=\""];
+            [string appendString:link];
+            [string appendString:@"\">"];
+        }
         
         //Escape special HTML characters.
         
@@ -169,7 +178,12 @@ int HTMLEquivalentForFontSize(int fontSize);
                 [string appendFormat:@"%c", [chunk characterAtIndex:i]];
             }
         }
-        
+
+        //Disable Link
+        if(link && [link length] != 0){
+            [string appendString:@"</a"];
+        }
+
         //Disable bold/italic/underline
         if(italic){
             [string appendString:@"</I>"];
