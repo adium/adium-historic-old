@@ -264,7 +264,7 @@ int HTMLEquivalentForFontSize(int fontSize)
 
         //Process the tag
         if([scanner scanCharactersFromSet:tagCharStart intoString:&tagOpen]){ //If a tag wasn't found, we don't process.
-            unsigned 	scanLocation = [scanner scanLocation]; //Remember our location (if this is an invalid tag we'll need to move back)
+            unsigned scanLocation = [scanner scanLocation]; //Remember our location (if this is an invalid tag we'll need to move back)
 
             if([tagOpen compare:@"<"] == 0){ // HTML <tag>
                 BOOL validTag = [scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]; //Get the tag
@@ -276,9 +276,9 @@ int HTMLEquivalentForFontSize(int fontSize)
                         //ignore
 
                     //PRE -- ignore attributes for logViewer
-                    }else if([chunkString caseInsensitiveCompare:@"PRE"] == 0 || 			     [chunkString caseInsensitiveCompare:@"/PRE"] == 0){
+                    }else if([chunkString caseInsensitiveCompare:@"PRE"] == 0 || [chunkString caseInsensitiveCompare:@"/PRE"] == 0){
 
-                        [scanner scanUpToCharactersFromSet:absoluteTagEnd 				    intoString:&chunkString];
+                        [scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
                         
                         [textAttributes setTextColor:[NSColor blackColor]];
                     //DIV
@@ -291,6 +291,8 @@ int HTMLEquivalentForFontSize(int fontSize)
                         } else if ([chunkString caseInsensitiveCompare:@" class=\"receive\""] == 0) {
                             receive = YES;
                             send = NO;
+                        } else if ([chunkString caseInsensitiveCompare:@" class=\"status\""] == 0) {
+                            [textAttributes setTextColor:[NSColor grayColor]];
                         }
                     }else if ([chunkString caseInsensitiveCompare:@"/DIV"] == 0) {
                         inDiv = NO;
@@ -321,8 +323,7 @@ int HTMLEquivalentForFontSize(int fontSize)
                         if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
 
                             //Process the font tag if it's in a log
-                            if([chunkString
-caseInsensitiveCompare:@" class=\"sender\""] == 0) {
+                            if([chunkString caseInsensitiveCompare:@" class=\"sender\""] == 0) {
                                 if(inDiv && send) {
                                     [textAttributes setTextColor:[NSColor redColor]];
                                 } else if(inDiv && receive) {
@@ -338,7 +339,23 @@ caseInsensitiveCompare:@" class=\"sender\""] == 0) {
                         
                     }else if([chunkString caseInsensitiveCompare:@"/FONT"] == 0){
                         //ignore
+                    //span
+                    }else if([chunkString caseInsensitiveCompare:@"SPAN"] == 0){
+                        if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
 
+                            //Process the span tag if it's in a log
+                            if([chunkString caseInsensitiveCompare:@" class=\"sender\""] == 0) {
+                                if(inDiv && send) {
+                                    [textAttributes setTextColor:[NSColor redColor]];
+                                } else if(inDiv && receive) {
+                                    [textAttributes setTextColor:[NSColor blueColor]];
+                                }
+                            } else {
+                                [textAttributes setTextColor:[NSColor blackColor]];
+                            }
+                        }
+                    } else if ([chunkString caseInsensitiveCompare:@"/SPAN"] == 0 ) {
+                        [textAttributes setTextColor:[NSColor blackColor]];
                     //Line Break
                     }else if([chunkString caseInsensitiveCompare:@"BR"] == 0 || [chunkString caseInsensitiveCompare:@"/BR"] == 0){
                         [attrString appendString:@"\r" withAttributes:nil];
