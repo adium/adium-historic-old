@@ -30,7 +30,6 @@ static AIListObject				*activeListObject = nil;
     NSMutableAttributedString	*infoString;
     NSDictionary				*labelAttributes, *valueAttributes, *bigValueAttributes;
     NSMutableParagraphStyle		*paragraphStyle;
-    AIMutableOwnerArray			*ownerArray;
     NSTextAttachmentCell 		*imageAttatchment;
     NSTextAttachment 			*attatchment;
     NSImage 					*buddyImage;
