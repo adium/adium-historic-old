@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.57 2004/02/27 00:20:09 evands Exp $
+// $Id: AIInterfaceController.m,v 1.58 2004/03/06 19:14:56 adamiser Exp $
 
 #import "AIInterfaceController.h"
 
@@ -566,32 +566,23 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     if(menuItem == menuItem_bold || menuItem == menuItem_italic){
-	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder]; 
-        if(![responder isKindOfClass:[NSTextView class]])
-        {
-            return NO;
-        }
-        else
-        {
-            NSFontManager   *fontManager = [NSFontManager sharedFontManager];
-            NSFont          *messageViewFont = [[[owner preferenceController] preferenceForKey:KEY_FORMATTING_FONT group:PREF_GROUP_FORMATTING] representedFont];
-                        
-            if(menuItem == menuItem_bold)
-            {
-                return !((messageViewFont == [fontManager convertFont:messageViewFont toHaveTrait:NSBoldFontMask]) && (messageViewFont == [fontManager convertFont:messageViewFont toHaveTrait:NSUnboldFontMask]));
-            }
-            else if(menuItem == menuItem_italic)
-            {
-                return !((messageViewFont == [fontManager convertFont:messageViewFont toHaveTrait:NSItalicFontMask]) && (messageViewFont == [fontManager convertFont:messageViewFont toHaveTrait:NSUnitalicFontMask]));
-            }
-            else
-            {
-                return YES;
-            }
-        }
-    }else{
-	return(YES);
-    }
+		NSResponder		*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder]; 
+		NSFont			*selectedFont = [[NSFontManager sharedFontManager] selectedFont];
+		NSFontManager	*fontManager = [NSFontManager sharedFontManager];
+		
+		//We must be in a text view, have text on the pasteboard, and have a font that supports bold or italic
+		if([responder isKindOfClass:[NSTextView class]]){
+			if(selectedFont != [fontManager convertFont:selectedFont toHaveTrait:(menuItem == menuItem_bold ? NSBoldFontMask : NSItalicFontMask)] || 
+			   selectedFont != [fontManager convertFont:selectedFont toHaveTrait:(menuItem == menuItem_bold ? NSUnboldFontMask : NSUnitalicFontMask)]){
+				return(YES);
+			}
+		}
+		return(NO);		
+	}else if(menuItem == menuItem_paste || menuItem == menuItem_pasteFormatted){
+		return([[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, nil]] != nil);
+	}else{
+		return(YES);
+	}
 }
 
 @end
