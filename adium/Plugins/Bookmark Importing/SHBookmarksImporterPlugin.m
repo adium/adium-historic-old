@@ -32,17 +32,17 @@ static NSMenuItem   *bookmarkRootContextualMenuItem;
     [self installImporterClass:[SHCaminoBookmarksImporter class]];
                                                          
     // install our menuItems
-    bookmarkRootMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
-                                                       target:self
-                                                       action:@selector(dummyTarget:)
-                                                keyEquivalent:@""] autorelease];
-    [bookmarkRootMenuItem setRepresentedObject:self];
-                                               
-    bookmarkRootContextualMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
-                                                                 target:self
-                                                                 action:@selector(dummyTarget:)
-                                                          keyEquivalent:@""] autorelease];
-    [bookmarkRootContextualMenuItem setRepresentedObject:self];
+//    bookmarkRootMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
+//                                                       target:self
+//                                                       action:@selector(dummyTarget:)
+//                                                keyEquivalent:@""] autorelease];
+//    [bookmarkRootMenuItem setRepresentedObject:self];
+//                                               
+//    bookmarkRootContextualMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
+//                                                                 target:self
+//                                                                 action:@selector(dummyTarget:)
+//                                                          keyEquivalent:@""] autorelease];
+//    [bookmarkRootContextualMenuItem setRepresentedObject:self];
     
     // initial menu configuration
     [self configureMenus];
@@ -79,9 +79,17 @@ static NSMenuItem   *bookmarkRootContextualMenuItem;
     NSEnumerator *enumerator = [importerArray objectEnumerator];
     id <SHBookmarkImporter> importer;
     
-    // clear out any subMenus before adding new ones.
-    if([bookmarkRootMenuItem submenu]) [[bookmarkRootMenuItem submenu] removeAllItems];
-    if([bookmarkRootContextualMenuItem submenu]) [[bookmarkRootContextualMenuItem submenu] removeAllItems];
+    bookmarkRootMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
+                                                       target:self
+                                                       action:@selector(dummyTarget:)
+                                                keyEquivalent:@""] autorelease];
+    [bookmarkRootMenuItem setRepresentedObject:self];
+                                               
+    bookmarkRootContextualMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
+                                                                 target:self
+                                                                 action:@selector(dummyTarget:)
+                                                          keyEquivalent:@""] autorelease];
+    [bookmarkRootContextualMenuItem setRepresentedObject:self];
     
     // create a new menu
     NSMenu  *bookmarkSets = [[[NSMenu alloc] initWithTitle:@""] autorelease];
@@ -120,32 +128,22 @@ static NSMenuItem   *bookmarkRootContextualMenuItem;
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 
         // if for each active importer (actually in the menu) update it's items if it's changed sice the last time
-        if([[[bookmarkRootMenuItem submenu] itemArray] count]){
-            NSEnumerator *enumerator = [[[bookmarkRootMenuItem submenu] itemArray] objectEnumerator];
-            NSMenuItem *object;
-            NSMenu  *newMenu = nil;
-            while(object = [enumerator nextObject]){
-                if([[object representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
-                    if([[object representedObject] bookmarksUpdated]){
-                        // the menu needs to be changed (bookmarks file mod. date changed)
-                        // so remove the items, rebuild the menu, then reinstall it
-                        [[object submenu] removeAllItems];
-                        newMenu = [self buildBookmarkMenuFor:object];
-                        [object setSubmenu:newMenu];
-                        [bookmarkRootContextualMenuItem setSubmenu:[[[bookmarkRootMenuItem submenu] copy] autorelease]];
-                    }
-                }
+        if([[menuItem representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
+            if([(id<SHBookmarkImporter>)[menuItem representedObject] bookmarksUpdated]){
+//                [menuItem setSubmenu:[self buildBookmarkMenuFor:menuItem];
+//                if([[menuItem menu] isEqualTo:[bookmarkRootMenuItem submenu]]){
+//                }
+                NSString *menuTitle = [menuItem title];
+                NSMenu  *replaceMenu = [self buildBookmarkMenuFor:menuItem];
+                [[[bookmarkRootMenuItem submenu] itemWithTitle:menuTitle] setSubmenu:replaceMenu];
+                [[[bookmarkRootContextualMenuItem submenu] itemWithTitle:menuTitle] setSubmenu:[[replaceMenu copy] autorelease]];
             }
         }
         
         if(responder && [responder isKindOfClass:[NSTextView class]]){
-            if([(NSTextView *)responder isEditable]){
-		return YES;
-            }else{
-                return NO;
-            }
+            return [(NSTextView *)responder isEditable];
 	}else{
-		return NO; //Disable the menu item if a text field is not key
+            return NO; //Disable the menu item if a text field is not key
 	}
 }
 
