@@ -157,7 +157,7 @@ DeclareString(Idle);
 		
 		[inObject setStatusObject:[NSNumber numberWithInt:idle]
 						   forKey:@"Idle"
-						   notify:(shouldNotify ? NotifyLater : NotifyNever];
+						   notify:(shouldNotify ? NotifyLater : NotifyNever)];
         
     }else{ //Remove its idle value
 		[inObject setStatusObject:nil
