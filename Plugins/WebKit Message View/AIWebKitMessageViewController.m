@@ -1125,7 +1125,7 @@ DeclareString(AppendNextMessage);
 - (NSArray *)webView:(WebView *)sender contextMenuItemsForElement:(NSDictionary *)element defaultMenuItems:(NSArray *)defaultMenuItems
 {
 	NSMutableArray *webViewMenuItems = [[defaultMenuItems mutableCopy] autorelease];
-	AIListObject	*chatListObject = [chat listObject];
+	AIListContact	*chatListObject = [chat listObject];
 	
 	NSImage *image;
 	if (webViewMenuItems && (image = [element objectForKey:WebElementImageKey])){
@@ -1149,7 +1149,7 @@ DeclareString(AppendNextMessage);
 		}
 		
 		NSArray *locations;
-		if ([chatListObject integerStatusObjectForKey:@"Stranger"]){
+		if ([chatListObject isStranger]){
 			locations = [NSArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
 				[NSNumber numberWithInt:Context_Contact_Action],
