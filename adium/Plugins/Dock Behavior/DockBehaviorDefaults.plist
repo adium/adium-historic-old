@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Active Behavior Set</key>
-	<string>Basic</string>
+	<string>None</string>
 	<key>Custom Behavior</key>
 	<array/>
 	<key>Dock Behavior Sets</key>
@@ -23,7 +23,7 @@
                                 <string>Interface_ErrorMessageRecieved</string>
                         </dict>
 		</array>
-		<key>Off</key>
+		<key>None</key>
 		<array/>
 	</dict>
 </dict>

@@ -12,7 +12,7 @@
 #import <AIUtilities/AIUtilities.h>
 #import "AIAdium.h"
 
-#define ANNOUNCER_PREF_TITLE 	@"Text-to-Speech: Announcer"
+#define ANNOUNCER_PREF_TITLE 	@"Speak Messages"
 #define ANNOUNCER_PREF_NIB 	@"AnnouncerPrefs.nib"
 @interface ESAnnouncerPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
@@ -60,7 +60,7 @@
     owner = [inOwner retain];
 
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Sound withDelegate:self label:ANNOUNCER_PREF_TITLE]];
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Receiving withDelegate:self label:ANNOUNCER_PREF_TITLE]];
 
     return(self);
 }
