@@ -212,6 +212,11 @@
 	}
 }
 
+- (BOOL)canSendImagesForChat:(AIChat *)inChat
+{
+	return /*YES*/GAIM_DEBUG;
+}
+
 -(NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding
 {
 	//Default to UTF-8
