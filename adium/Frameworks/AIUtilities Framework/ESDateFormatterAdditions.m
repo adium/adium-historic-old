@@ -21,6 +21,20 @@ typedef enum
 + (NSString *)localizedDateFormatStringShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm
 {
     static NSString 	*cache[4] = {nil,nil,nil,nil}; //Cache for the 4 combinations of date string
+    static NSString     *oldTimeFormatString = nil;
+
+    NSString            *currentTimeFormatString = [[NSUserDefaults standardUserDefaults] stringForKey:NSTimeFormatString];
+
+    //if the time format string changed, clear the cache, then save the current one
+    if ([currentTimeFormatString compare:oldTimeFormatString] != 0) {
+        int i;
+        for (i=0;i<4;i++)
+            cache[i]=nil;
+        
+        [oldTimeFormatString release];
+        oldTimeFormatString = [currentTimeFormatString retain];
+    }
+    
     StringType		type;
     
     //Determine the type of string requested
@@ -35,7 +49,7 @@ typedef enum
     }
 
     //use system-wide defaults for date format
-    NSMutableString *localizedDateFormatString = [[[NSUserDefaults standardUserDefaults] stringForKey:NSTimeFormatString] mutableCopy];
+    NSMutableString *localizedDateFormatString = [currentTimeFormatString mutableCopy];
     if(!showAmPm){ 
         //potentially could use stringForKey:NSAMPMDesignation as space isn't always the separator between time and %p
         [localizedDateFormatString replaceOccurrencesOfString:@" %p" 
