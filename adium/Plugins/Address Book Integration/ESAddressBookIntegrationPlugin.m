@@ -109,11 +109,10 @@
             ABPerson * person = [results objectAtIndex:0];
             
             if (person) {
-                AIHandle * handle = [(AIListContact *)inObject handleForAccount:nil];
-                NSMutableDictionary *statusDict = [handle statusDictionary];
-                //apply the image
-                if ([statusDict objectForKey:@"UserIcon"]) {
-                    [person setImageData: [[statusDict objectForKey:@"UserIcon"] TIFFRepresentation]];
+		AIMutableOwnerArray	*statusArray = [inObject statusArrayForKey:@"UserIcon"];
+		
+		if([statusArray count]){
+                    [person setImageData: [[statusArray firstImage] TIFFRepresentation]];
                 }
             }
         }
