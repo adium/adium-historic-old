@@ -61,6 +61,7 @@
 //Tabs
 - (void)updateTabBarVisibilityAndAnimate:(BOOL)animate;
 - (void)updateIconForTabViewItem:(AIMessageTabViewItem *)tabViewItem;
+- (void)updateTabArrangingBehavior;
 
 @end
 

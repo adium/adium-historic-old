@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.89 2004/07/21 15:23:46 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.90 2004/07/21 18:26:31 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -43,6 +43,7 @@
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object;
 - (void)_pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (void)contactOrderChanged:(NSNotification *)notification;
 @end
 
 @implementation AIInterfaceController
@@ -148,7 +149,6 @@
 		//Update prefs
 		groupChatsByContactGroup = [[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue];
 		arrangeChats = [[prefDict objectForKey:KEY_SORT_CHATS] boolValue];
-#warning these need to work for existing windows too...
 
 		//Observe contact order changes if auto-arranging is enabled
 		if(arrangeChats){
@@ -156,7 +156,9 @@
 										   selector:@selector(contactOrderChanged:)
 											   name:Contact_OrderChanged 
 											 object:nil];
+			[self contactOrderChanged:nil];
 		}
+		[[owner notificationCenter] postNotificationName:Interface_TabArrangingPreferenceChanged object:nil];
 	}
 }
 
@@ -452,11 +454,16 @@
 		[sortController sortListObjects:sortedListObjects];
 		
 		//Sync the container with the sorted chats
-		objectEnumerator = [listObjects objectEnumerator];
+		objectEnumerator = [sortedListObjects objectEnumerator];
 		while(object = [objectEnumerator nextObject]){
-			[interfacePlugin moveChat:[chatsInContainer objectAtIndex:[listObjects indexOfObject:object]]
-					toContainerWithID:containerID
-								index:index++];
+			NSEnumerator	*chatEnumerator = [chatsInContainer objectEnumerator];
+			AIChat			*chat;
+
+			//Find the chat associated with this list object
+			while((chat = [chatEnumerator nextObject]) && [chat listObject] != object);
+			
+			//Move that chat to the correct spot, and step along to the next listobject
+			if(chat) [interfacePlugin moveChat:chat toContainerWithID:containerID index:index++];
 		}
 	}
 }
@@ -507,12 +514,10 @@
 - (void)updateCloseMenuKeys
 {
 	if(activeChat && !closeMenuConfiguredForChat){
-		NSLog(@"%@ becomes W",menuItem_close);
         [menuItem_close setKeyEquivalent:@"W"];
         [menuItem_closeChat setKeyEquivalent:@"w"];
 		closeMenuConfiguredForChat = YES;
 	}else if(!activeChat && closeMenuConfiguredForChat){
-		NSLog(@"%@ becomes w",menuItem_close);
         [menuItem_close setKeyEquivalent:@"w"];
 		[menuItem_closeChat removeKeyEquivalent];		
 		closeMenuConfiguredForChat = NO;
