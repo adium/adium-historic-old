@@ -78,17 +78,42 @@ float _v(float m1, float m2, float hue);
 - (NSColor *)representedColor
 {
     unsigned int	r, g, b;
+    unsigned int	a = 255;
 
-    sscanf([self UTF8String], "%d,%d,%d", &r,&g,&b);
-    return([NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:1.0]);
+	const char *selfUTF8 = [self UTF8String];
+	
+	//format: r,g,b[,a]
+	//all components are decimal numbers 0..255.
+	r = strtoul(selfUTF8, &selfUTF8, /*base*/ 10);
+	++selfUTF8;
+	g = strtoul(selfUTF8, &selfUTF8, /*base*/ 10);
+	++selfUTF8;
+	b = strtoul(selfUTF8, &selfUTF8, /*base*/ 10);
+	if(*selfUTF8 == ',') {
+		++selfUTF8;
+		a = strtoul(selfUTF8, &selfUTF8, /*base*/ 10);
+	}
+
+    return [NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:(a/255.0)] ;
 }
 
 - (NSColor *)representedColorWithAlpha:(float)alpha
 {
+	//this is the same as above, but the alpha component is overridden.
+
     unsigned int	r, g, b;
 
-    sscanf([self UTF8String], "%d,%d,%d", &r,&g,&b);
-    return([NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:alpha]);
+	const char *selfUTF8 = [self UTF8String];
+	
+	//format: r,g,b
+	//all components are decimal numbers 0..255.
+	r = strtoul(selfUTF8, &selfUTF8, /*base*/ 10);
+	++selfUTF8;
+	g = strtoul(selfUTF8, &selfUTF8, /*base*/ 10);
+	++selfUTF8;
+	b = strtoul(selfUTF8, &selfUTF8, /*base*/ 10);
+
+    return [NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:alpha];
 }
 
 @end
