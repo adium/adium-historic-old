@@ -6321,6 +6321,7 @@
 				34BD9D64053146CC000AB133,
 				34BD9D66053146CC000AB133,
 				34BD9D6A053146CC000AB133,
+				6C1CB46905415C2100B64925,
 			);
 			buildRules = (
 			);
@@ -20198,6 +20199,44 @@
 //652
 //653
 //654
+//6C0
+//6C1
+//6C2
+//6C3
+//6C4
+		6C1CB46905415C2100B64925 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "buildnum=`./Other/buildnum`\nbuilddate=`date +%m/%d/%y`\necho $buildnum \"|\" $builddate > build/Adium.app/Contents/Resources/buildnum\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
+		};
+		6C1CC23105415D5700B64925 = {
+			expectedFileType = "compiled.mach-o.executable";
+			isa = PBXFileReference;
+			path = buildnum;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C1CC23205415D5700B64925 = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = buildnum.c;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//6C0
+//6C1
+//6C2
+//6C3
+//6C4
 //6E0
 //6E1
 //6E2
@@ -20589,6 +20628,8 @@
 		};
 		9EB3C52204F94D96001D1F74 = {
 			children = (
+				6C1CC23105415D5700B64925,
+				6C1CC23205415D5700B64925,
 				F59DB6AD033EB74801A8010A,
 				9EB3C52304F94DB7001D1F74,
 			);
