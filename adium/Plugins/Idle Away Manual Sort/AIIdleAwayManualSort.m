@@ -49,8 +49,8 @@ int idleAwayManualSort(id objectA, id objectB, BOOL groups)
 	}else{
 		//Idle and Away grouped below others
 		if(!groups){
-			BOOL idleAwayA = ([[objectA statusArrayForKey:@"Away"] intValue] || [[objectA statusArrayForKey:@"Idle"] doubleValue] != 0);
-			BOOL idleAwayB = ([[objectB statusArrayForKey:@"Away"] intValue] || [[objectB statusArrayForKey:@"Idle"] doubleValue] != 0);
+			BOOL idleAwayA = ([objectA integerStatusObjectForKey:@"Away"] || [objectA doubleStatusObjectForKey:@"Idle"] != 0);
+			BOOL idleAwayB = ([objectB integerStatusObjectForKey:@"Away"] || [objectB doubleStatusObjectForKey:@"Idle"] != 0);
 			
 			if(idleAwayA && !idleAwayB){
 				return(NSOrderedDescending);

@@ -3,8 +3,6 @@
 //  Adium XCode
 //
 //  Created by Adam Iser on Wed Jan 28 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
-//
 
 #import "AIListGroup.h"
 
@@ -19,5 +17,5 @@
 - (void)removeObject:(AIListContact *)inObject;
 - (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible;
 - (NSArray *)containedObjects;
-
+- (void)_updateStatusArrayDictionaryWithObject:(id)inObject andOwner:(id)inOwner forKey:(NSString *)key;
 @end

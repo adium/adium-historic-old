@@ -41,10 +41,10 @@ int groupedIdleAwaySortNoGroups(id objectA, id objectB, BOOL groups);
 int groupedIdleAwaySortNoGroups(id objectA, id objectB, BOOL groups)
 {    
 	if(!groups){
-		BOOL idleA = ([[objectA statusArrayForKey:@"Idle"] doubleValue] != 0);
-		BOOL idleB = ([[objectB statusArrayForKey:@"Idle"] doubleValue] != 0);
-		BOOL awayA = ([[objectA statusArrayForKey:@"Away"] intValue]);
-		BOOL awayB = ([[objectB statusArrayForKey:@"Away"] intValue]);
+		BOOL idleA = ([objectA doubleStatusObjectForKey:@"Idle"] != 0);
+		BOOL idleB = ([objectB doubleStatusObjectForKey:@"Idle"] != 0);
+		BOOL awayA = ([objectA integerStatusObjectForKey:@"Away"]);
+		BOOL awayB = ([objectB integerStatusObjectForKey:@"Away"]);
 		
 	    int countA = 0;
 	    int countB = 0;
@@ -59,11 +59,11 @@ int groupedIdleAwaySortNoGroups(id objectA, id objectB, BOOL groups)
 	    }else if(countA < countB){
 			return NSOrderedAscending;
 	    }else{
-			if([[objectA statusArrayForKey:@"Idle"] doubleValue] == [[objectB statusArrayForKey:@"Idle"] doubleValue])
+			if([objectA doubleStatusObjectForKey:@"Idle"] == [objectB doubleStatusObjectForKey:@"Idle"])
 			{//If the idle times are equal do alphabetical sort (this makes the contact list less jumpy and adds familiarity to the list)
 				return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
 			}
-			if([[objectA statusArrayForKey:@"Idle"] doubleValue] > [[objectB statusArrayForKey:@"Idle"] doubleValue]){
+			if([objectA doubleStatusObjectForKey:@"Idle"] > [objectB doubleStatusObjectForKey:@"Idle"]){
 				return NSOrderedDescending;
 			}else{
 				return NSOrderedAscending;

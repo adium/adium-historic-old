@@ -3,11 +3,9 @@
 //  Adium XCode
 //
 //  Created by Adam Iser on Wed Jan 28 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIMetaContact.h"
-
 
 @implementation AIMetaContact
 
@@ -16,7 +14,7 @@
 	[super initWithUID:inUID serviceID:inServiceID];
 	
 	objectArray = [[NSMutableArray alloc] init];
-	
+
 	return(self);
 }
 
@@ -34,6 +32,14 @@
 	if(![objectArray containsObject:inObject]){
 		[inObject setContainingGroup:(AIListGroup *)self];
 		[objectArray addObject:inObject];
+	}
+}
+//
+- (void)removeObject:(AIListContact *)inObject
+{
+	if([objectArray containsObject:inObject]){
+		[inObject setContainingGroup:nil];
+		[objectArray removeObject:inObject];
 	}
 }
 
@@ -56,15 +62,6 @@
 }
 
 //
-- (void)removeObject:(AIListContact *)inObject
-{
-	if([objectArray containsObject:inObject]){
-		[inObject setContainingGroup:nil];
-		[objectArray removeObject:inObject];
-	}
-}
-
-//
 - (unsigned)count
 {
 	return([objectArray count]);
@@ -76,7 +73,34 @@
 
 }
 
+//Observe changes in the list objects we contain
+- (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key
+{
+	//Update the status array, creating it if necessary
+	[self _updateStatusArrayDictionaryWithObject:[inObject statusObjectForKey:key] andOwner:inObject forKey:key];
+}
+
+//Quickly retrieve a status key for this object
+- (id)statusObjectForKey:(NSString *)key
+{
+	return ([[statusArrayDictionary objectForKey:key] objectValue]);
+}
+- (int)integerStatusObjectForKey:(NSString *)key
+{
+	return ([[statusArrayDictionary objectForKey:key] intValue]);
+}
+- (double)doubleStatusObjectForKey:(NSString *)key
+{
+	return ([[statusArrayDictionary objectForKey:key] doubleValue]);
+}
+- (NSDate *)earliestDateStatusObjectForKey:(NSString *)key
+{
+	return ([[statusArrayDictionary objectForKey:key] date]);	
+}
+
 //Access to the status array for this object
+
+ //Handled by AIListObject now
 - (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey
 {
     AIMutableOwnerArray	*array = [[AIMutableOwnerArray alloc] init];
@@ -90,6 +114,7 @@
 		
     return([array autorelease]);
 }
+
 
 //
 //- (NSString *)displayName
@@ -117,6 +142,18 @@
 	while(object = [enumerator nextObject]){
 		[object setOrderIndex:inIndex];
 	}
+}
+
+//Update the status array, creating it if necessary
+- (void)_updateStatusArrayDictionaryWithObject:(id)inObject andOwner:(id)inOwner forKey:(NSString *)key
+{
+	AIMutableOwnerArray *array = [statusArrayDictionary objectForKey:key];
+	if(!array){
+		array = [[AIMutableOwnerArray alloc] init];
+		[statusArrayDictionary setObject:array forKey:key];
+		[array release];
+	}
+	[array setObject:inObject withOwner:inOwner];
 }
 
 @end

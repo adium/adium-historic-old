@@ -30,6 +30,7 @@
     [super init];
 
     displayDictionary = [[NSMutableDictionary alloc] init];
+	statusArrayDictionary = [[NSMutableDictionary alloc] init];
     containingGroup = nil;
     UID = [inUID retain];
     serviceID = [inServiceID retain];
@@ -162,6 +163,11 @@
 		}else{
 			[statusDictionary removeObjectForKey:key];
 		}
+
+		//Inform our containing group about the new status object value
+		if (containingGroup)
+			[containingGroup listObject:self didSetStatusObject:value forKey:key];
+		
 		if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
 		[changedStatusKeys addObject:key];
 	}
@@ -191,10 +197,15 @@
 - (void)_applyDelayedStatus:(NSTimer *)inTimer
 {
 	NSDictionary	*infoDict = [inTimer userInfo];
+	id				object = [infoDict objectForKey:@"Value"];
+	NSString		*key = [infoDict objectForKey:@"Key"];
 	
-	[self setStatusObject:[infoDict objectForKey:@"Value"]
-				   forKey:[infoDict objectForKey:@"Key"]
-				   notify:YES];
+	[self setStatusObject:object forKey:key notify:YES];
+
+	//Inform our containing group about the new status object value
+	if (containingGroup)
+		[containingGroup listObject:self didSetStatusObject:object forKey:key];
+	
 	[delayedStatusTimers removeObject:inTimer];
 	if([delayedStatusTimers count] == 0){
 		[delayedStatusTimers release]; delayedStatusTimers = nil;
@@ -222,17 +233,20 @@
 {
     return([statusDictionary objectForKey:key]);
 }
-
-//Access to the status array for this object
-- (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey
+- (int)integerStatusObjectForKey:(NSString *)key
 {
-    AIMutableOwnerArray	*array = [[[AIMutableOwnerArray alloc] init] autorelease];
-
-	[array setObject:[statusDictionary objectForKey:inKey] withOwner:self];
-
-    return(array);
+	NSNumber *number = [statusDictionary objectForKey:key];
+    return(number ? [number intValue] : 0);
 }
-
+- (double)doubleStatusObjectForKey:(NSString *)key
+{
+	NSNumber *number = [statusDictionary objectForKey:key];
+    return(number ? [number doubleValue] : 0);
+}
+- (NSDate *)earliestDateStatusObjectForKey:(NSString *)key
+{
+   return([statusDictionary objectForKey:key]);
+}
 
 //Object specific preferences ------------------------------------------------------------------------------------------
 #pragma mark Object specific preferences
@@ -357,7 +371,7 @@
 //Server display name, specified by server
 - (NSString *)serverDisplayName
 {
-    NSString	*outName = [[self statusArrayForKey:@"Display Name"] objectValue];
+    NSString	*outName = [self statusObjectForKey:@"Display Name"];
     return(outName ? outName : UID);
 }
 
@@ -373,6 +387,12 @@
 {
     NSString	*outName = [[self displayArrayForKey:@"Long Display Name"] objectValue];
     return(outName ? outName : [self displayName]);
+}
+
+//Subclasses may choose to override these
+- (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key
+{
+
 }
 
 @end

@@ -4,10 +4,10 @@
 //  Adium
 //
 //  Created by Adam Iser on Fri Sep 26 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIStressTestAccount.h"
+#import "AIStressTestPlugin.h"
 
 @implementation AIStressTestAccount
 //
@@ -15,7 +15,9 @@
 {
     chatDict = [[NSMutableDictionary alloc] init];
 
-	commandContact = [[[adium contactController] contactWithService:@"TEMP" accountUID:[self UID] UID:@"Command"] retain];
+	commandContact = [[[adium contactController] contactWithService:STRESS_TEST_SERVICE_IDENTIFIER 
+														 accountUID:[self UID]
+																UID:@"Command"] retain];
     [commandContact setRemoteGroupName:@"Command"];
     [commandContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
     
@@ -44,7 +46,7 @@
 
 // Return a unique ID specific to THIS account plugin, and the user's account name
 - (NSString *)accountID{
-    return(@"TEST");
+    return([self UIDAndServiceID]);
 }
 
 //The user's account name
@@ -54,7 +56,7 @@
 
 //The service ID (shared by any account code accessing this service)
 - (NSString *)serviceID{
-    return(@"TEST");
+    return(STRESS_TEST_SERVICE_IDENTIFIER);
 }
 
 // Return a readable description of this account's username
@@ -239,7 +241,10 @@
 //Initiate a new chat
 - (BOOL)openChat:(AIChat *)chat
 {
+		NSLog(@"was %@",[chat statusDictionary]);
 	[[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
+	
+	NSLog(@"now is %@",[chat statusDictionary]);
 	[chatDict setObject:chat forKey:[[chat listObject] UID]];
 	
     return(YES);

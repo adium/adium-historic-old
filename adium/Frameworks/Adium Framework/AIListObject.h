@@ -23,6 +23,7 @@
 	//Status and display
     NSMutableDictionary		*displayDictionary;		//A dictionary of values affecting this object's display
     NSMutableDictionary		*statusDictionary;
+	NSMutableDictionary		*statusArrayDictionary;
     NSMutableArray			*changedStatusKeys;		//Status keys that have changed since the last notification
 	NSMutableArray			*delayedStatusTimers;
 
@@ -67,7 +68,12 @@
 - (void)setStatusObject:(id)value forKey:(NSString *)key afterDelay:(NSTimeInterval)delay;
 - (void)notifyOfChangedStatusSilently:(BOOL)silent;
 - (id)statusObjectForKey:(NSString *)key;
-- (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey;
+- (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key;
+
+- (id)statusObjectForKey:(NSString *)key;
+- (int)integerStatusObjectForKey:(NSString *)key;
+- (double)doubleStatusObjectForKey:(NSString *)key;
+- (NSDate *)earliestDateStatusObjectForKey:(NSString *)key;
 
 //Alter the placement of this object in a group (PRIVATE: These are for AIListGroup ONLY)
 - (void)setOrderIndex:(float)inIndex;

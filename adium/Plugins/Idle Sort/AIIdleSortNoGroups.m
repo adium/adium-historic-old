@@ -41,10 +41,10 @@ int idleSortNoGroups(id objectA, id objectB, BOOL groups);
 int idleSortNoGroups(id objectA, id objectB, BOOL groups)
 {
 	if(!groups){
-		BOOL idleA = ([[objectA statusArrayForKey:@"Idle"] doubleValue] != 0);
-		BOOL idleB = ([[objectB statusArrayForKey:@"Idle"] doubleValue] != 0);
-		BOOL awayA = ([[objectA statusArrayForKey:@"Away"] intValue]);
-		BOOL awayB = ([[objectB statusArrayForKey:@"Away"] intValue]);
+		BOOL idleA = ([objectA doubleStatusObjectForKey:@"Idle"] != 0);
+		BOOL idleB = ([objectB doubleStatusObjectForKey:@"Idle"] != 0);
+		BOOL awayA = ([objectA integerStatusObjectForKey:@"Away"]);
+		BOOL awayB = ([objectB integerStatusObjectForKey:@"Away"]);
 		
 		if(idleA && !idleB){
 			return(NSOrderedDescending);
@@ -59,9 +59,9 @@ int idleSortNoGroups(id objectA, id objectB, BOOL groups)
 				return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
 			}
 	    }else{
-			if ([[objectA statusArrayForKey:@"Idle"] doubleValue] < [[objectB statusArrayForKey:@"Idle"] doubleValue]){
+			if ([objectA doubleStatusObjectForKey:@"Idle"] < [objectB doubleStatusObjectForKey:@"Idle"]){
 				return(NSOrderedAscending);
-			}else if ([[objectA statusArrayForKey:@"Idle"] doubleValue] > [[objectB statusArrayForKey:@"Idle"] doubleValue]){
+			}else if ([objectA doubleStatusObjectForKey:@"Idle"] > [objectB doubleStatusObjectForKey:@"Idle"]){
 				return(NSOrderedDescending);
 			}else{
 				return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);

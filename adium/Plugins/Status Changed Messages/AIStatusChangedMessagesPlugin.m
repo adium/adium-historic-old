@@ -39,7 +39,7 @@
 {
     
     if([inModifiedKeys containsObject:@"StatusMessage"]){
-        NSString	*statusMessage = [[[inObject statusArrayForKey:@"StatusMessage"] objectValue] string];
+        NSString	*statusMessage = [inObject statusObjectForKey:@"StatusMessage"];
 
 		if(statusMessage && [statusMessage length] != 0){
 			[self statusMessage:[NSString stringWithFormat:@"Away Message: \"%@\"",statusMessage] forObject:inObject];
@@ -57,7 +57,7 @@
 - (void)Contact_StatusAwayNo:(NSNotification *)notification{
     AIListObject *object = [notification object];
     
-    if([[object statusArrayForKey:@"Online"] intValue])
+    if([object integerStatusObjectForKey:@"Online"])
 		[self statusMessage:[NSString stringWithFormat:@"%@ came back",[object displayName]] forObject:object];
 }
 - (void)Contact_StatusOnlineYes:(NSNotification *)notification{
