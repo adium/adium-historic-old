@@ -40,7 +40,6 @@
 
 - (void)dealloc
 {
-    [checkmarkPreferences release];
     [checkmarkImage release];
 }
 
