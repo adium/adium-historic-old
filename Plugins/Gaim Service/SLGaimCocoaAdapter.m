@@ -378,7 +378,7 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 								GaimDebug (@"$$$$ not int: added %s:%@ to chat info",identifier,value);
 								valueUTF8String = g_strdup([value UTF8String]);
 							}else{
-								//NSLog(@"String: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+								GaimDebug (@"String: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
 								shouldTryToJoin = NO;
 							}
 						}else{
@@ -387,7 +387,7 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 								GaimDebug (@"$$$$  is int: added %s:%@ to chat info",identifier,value);
 								valueUTF8String = g_strdup_printf("%d",[value intValue]);
 							}else{
-								//NSLog(@"Int: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+								GaimDebug (@"Int: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
 								shouldTryToJoin = NO;
 							}							
 						}
@@ -1606,7 +1606,6 @@ static void *adiumGaimRequestFile(const char *title, const char *filename, gbool
 	GaimXferType xferType = gaim_xfer_get_type(xfer);
 	if (xfer) {
 	    if (xferType == GAIM_XFER_RECEIVE) {
-			NSLog(@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
 			GaimDebug (@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
 			
 			ESFileTransfer  *fileTransfer;
@@ -1659,7 +1658,7 @@ static GaimRequestUiOps adiumGaimRequestOps = {
 
 static void adiumGaimNewXfer(GaimXfer *xfer)
 {
-	//NSLog(@"adiumGaimNewXfer");
+
 }
 
 static void adiumGaimDestroy(GaimXfer *xfer)
@@ -1681,12 +1680,11 @@ static void adiumGaimDestroy(GaimXfer *xfer)
 
 static void adiumGaimAddXfer(GaimXfer *xfer)
 {
-	//NSLog(@"adiumGaimAddXfer");
+
 }
 
 static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 {
-//	NSLog(@"Transfer update: %s is now %f%% done",(xfer->filename ? xfer->filename : ""),(percent*100));
 //	GaimDebug (@"Transfer update: %s is now %f%% done",(xfer->filename ? xfer->filename : ""),(percent*100));
 	
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
@@ -1701,7 +1699,6 @@ static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 
 static void adiumGaimCancelLocal(GaimXfer *xfer)
 {
-	NSLog(@"adiumGaimCancelLocal");
 	GaimDebug (@"adiumGaimCancelLocal");
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
     [accountLookup(xfer->account) mainPerformSelector:@selector(fileTransferCanceledLocally:)
@@ -1710,7 +1707,6 @@ static void adiumGaimCancelLocal(GaimXfer *xfer)
 
 static void adiumGaimCancelRemote(GaimXfer *xfer)
 {
-	NSLog(@"adiumGaimCancelRemote");
 	GaimDebug (@"adiumGaimCancelRemote");
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
     [accountLookup(xfer->account) mainPerformSelector:@selector(fileTransferCanceledRemotely:)
@@ -1960,7 +1956,7 @@ static void socketCallback(CFSocketRef s,
 		free(sourceInfo);
 		
 	}else{
-//		NSLog(@"%x: Socket callback: %i",[NSRunLoop currentRunLoop],sourceInfo->tag);
+//		GaimDebug (@"%x: Socket callback: %i",[NSRunLoop currentRunLoop],sourceInfo->tag);
 		sourceInfo->ioFunction(sourceInfo->user_data, sourceInfo->fd, c);
 	}
 	
