@@ -637,6 +637,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 
     [tableView_actions selectRow:(([eventActionArray count]-1)+offset) byExtendingSelection:NO]; //select the new event
 
+    
  //   if ([[tableView_actions dataSource] respondsToSelector:@selector(addedEvent:)])
         [[tableView_actions dataSource] addedEvent:self];
     
