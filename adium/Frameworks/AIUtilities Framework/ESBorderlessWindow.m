@@ -36,6 +36,11 @@
     return YES;
 }
 
+- (BOOL)canBecomeMainWindow
+{
+    return YES;
+}
+
 - (void)performClose:(id)sender
 { 
     BOOL shouldClose = YES;
@@ -61,7 +66,7 @@
         //grab the current global mouse location; we could just as easily get the mouse location 
         //in the same way as we do in -mouseDown:
         currentLocation = [self convertBaseToScreen:[self mouseLocationOutsideOfEventStream]];
-  //      NSLog(@"mouse was (%f,%f) now (%f,%f) move of (%f,%f) newOrigin will be (%f,%f)",previousLocation.x,previousLocation.y,currentLocation.x,currentLocation.y,currentLocation.x - previousLocation.x,currentLocation.y - previousLocation.y,newOrigin.x +(currentLocation.x - previousLocation.x),newOrigin.y+(currentLocation.y - previousLocation.y));
+//        NSLog(@"mouse was (%f,%f) now (%f,%f) move of (%f,%f) newOrigin will be (%f,%f)",previousLocation.x,previousLocation.y,currentLocation.x,currentLocation.y,currentLocation.x - previousLocation.x,currentLocation.y - previousLocation.y,newOrigin.x +(currentLocation.x - previousLocation.x),newOrigin.y+(currentLocation.y - previousLocation.y));
         newOrigin.x += currentLocation.x - previousLocation.x;
         newOrigin.y += currentLocation.y - previousLocation.y;
         previousLocation = currentLocation;
