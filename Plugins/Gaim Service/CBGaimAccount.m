@@ -1661,6 +1661,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			}
 			
 		}
+
+#warning Do we need to do this?  Can this be done in a better place?
+//		else if((object == self) && ([group isEqualToString:GROUP_ACCOUNT_STATUS])){
+//			//Update the mail checking setting if the account is already made (if it isn't, we'll set it when it is made)
+//			if(account){
+//				[gaimThread setCheckMail:[self shouldCheckMail]
+//							  forAccount:self];
+//			}
+//		}
+	
 	}
 }
 
@@ -1915,14 +1925,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[[NSFileManager defaultManager] createDirectoriesForPath:[ACCOUNT_IMAGE_CACHE_PATH stringByExpandingTildeInPath]];
 	
 	//Observe preferences changes
-    [[adium notificationCenter] addObserver:self 
-								   selector:@selector(preferencesChanged:) 
-									   name:Preference_GroupChanged 
-									 object:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ALIASES];
 }
 
 - (void)dealloc
 {	
+	[[adium preferenceController] unregisterPreferenceObserver:self];
     [chatDict release];
     [filesToSendArray release];
 	
@@ -1945,25 +1953,23 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return [self encodedAttributedString:inAttributedString forListObject:inListObject];
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	NSDictionary	*userInfo = [notification userInfo];
-	NSString		*prefGroup = [userInfo objectForKey:@"Group"];
-	
-	if([prefGroup isEqualToString:PREF_GROUP_ALIASES]){
-		AIListObject *listObject = [notification object];
-		
+	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict];
+
+	if([group isEqualToString:PREF_GROUP_ALIASES]){
 		//If the notification object is a listContact belonging to this account, update the serverside information
 		if ((account != nil) && 
 			([self shouldSetAliasesServerside]) &&
-			([[userInfo objectForKey:@"Key"] isEqualToString:@"Alias"])){
+			([key isEqualToString:@"Alias"])){
 
-			NSString *alias = [listObject preferenceForKey:@"Alias"
-													 group:PREF_GROUP_ALIASES 
-									 ignoreInheritedValues:YES];
+			NSString *alias = [object preferenceForKey:@"Alias"
+												 group:PREF_GROUP_ALIASES 
+								 ignoreInheritedValues:YES];
 
-			if([listObject isKindOfClass:[AIMetaContact class]]){
-				NSEnumerator	*enumerator = [[(AIMetaContact *)listObject containedObjects] objectEnumerator];
+			if([object isKindOfClass:[AIMetaContact class]]){
+				NSEnumerator	*enumerator = [[(AIMetaContact *)object containedObjects] objectEnumerator];
 				AIListContact	*containedListContact;
 				while(containedListContact = [enumerator nextObject]){
 					if([containedListContact account] == self){
@@ -1971,19 +1977,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					}
 				}
 				
-			}else if([listObject isKindOfClass:[AIListContact class]]){
-				if([(AIListContact *)listObject account] == self){
-					[gaimThread setAlias:alias forUID:[listObject UID] onAccount:self];
+			}else if([object isKindOfClass:[AIListContact class]]){
+				if([(AIListContact *)object account] == self){
+					[gaimThread setAlias:alias forUID:[object UID] onAccount:self];
 				}
 			}
 		}
 		
-	}else if (([notification object] == self) && ([prefGroup isEqualToString:GROUP_ACCOUNT_STATUS])){
-		//Update the mail checking setting if the account is already made (if it isn't, we'll set it when it is made)
-		if (account){
-			[gaimThread setCheckMail:[self shouldCheckMail]
-						  forAccount:self];
-		}
 	}
 }
 
