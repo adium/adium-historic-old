@@ -549,7 +549,7 @@ static char *hash_password(const char * const password);
                 o = d - a + b + 71665152;
 
 //                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
-                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.60 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
+                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.61 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
 
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 
@@ -603,7 +603,7 @@ static char *hash_password(const char * const password);
                     [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
 
                     //Set Caps
-//                    [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_set_caps 0,748F2420-6287-11D1-8222-444553540000,1343,1345,1346" sequence:&localSequence]];
+//                    [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_set_caps 0946134D-4C7F-11D1-8222-444553540000 09461346-4C7F-11D1-8222-444553540000 09461343-4C7F-11D1-8222-444553540000 09461348-4C7F-11D1-8222-444553540000" sequence:&localSequence]];
                     
                     //Send AIM the init done message (at this point we become visible to other buddies)
                     [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_init_done" sequence:&localSequence]];

@@ -51,6 +51,11 @@
 
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
+    //Ignored
+}
+
+- (void)initTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+{
     [self _resetFormattingInView:inTextEntryView]; //Set the formatting to default
 }
 

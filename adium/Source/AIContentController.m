@@ -88,6 +88,16 @@
     }
 }
 
+- (void)initTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+{
+    NSEnumerator		*enumerator;
+    id <AITextEntryFilter>	filter;
+
+    enumerator = [textEntryFilterArray objectEnumerator];
+    while((filter = [enumerator nextObject])){
+        [filter initTextEntryView:inTextEntryView];
+    }
+}
 
 
 

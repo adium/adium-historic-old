@@ -32,6 +32,7 @@ extern void* objc_getClass(const char *name);
 - (NSArray *)applyProperties:(NSDictionary *)inProperties toHandle:(AIHandle *)inHandle;
 - (void)firstSignOnUpdateReceived;
 - (void)waitForLastSignOnUpdate:(NSTimer *)inTimer;
+- (void)_sendTyping:(BOOL)typing to:(AIListContact *)object;
 @end
 
 @implementation AIMiChatAccount
@@ -44,6 +45,7 @@ extern void* objc_getClass(const char *name);
 
     //init
     handleDict = [[NSMutableDictionary alloc] init];
+    typingDict = [[NSMutableDictionary alloc] init];
     
     //Connect to the iChatAgent
     connection = [NSConnection connectionWithRegisteredName:@"iChat" host:nil];
@@ -57,6 +59,9 @@ extern void* objc_getClass(const char *name);
     [FZDaemon addListener:self capabilities:15];
     [AIMService addListener:self signature:@"com.apple.iChat" capabilities:15];
 
+    //Register to listen to typing
+    [[owner contentController] registerTextEntryFilter:self];
+    
     //Clear the online state flag - this account should always load as offline (online state is not restored)
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
@@ -80,6 +85,68 @@ extern void* objc_getClass(const char *name);
 - (NSString *)accountDescription{
     return([AIMService loginID]); //Readable description of this account's username
 }
+
+
+//Typing Notification (In here for now) --------------------------------------------------------------
+//This should be moved to a separate plugin later...
+- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView //keypress
+{
+    //Ignore
+}
+
+- (void)initTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+{
+    //Ignore
+}
+
+- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView //delete,copy,paste,etc
+{
+    AIListContact	*contact = [inTextEntryView contact];
+
+    if(contact){
+        if([[inTextEntryView attributedString] length] == 0){
+            [self _sendTyping:NO to:contact]; //Not typing
+        }else{
+            if(![[typingDict objectForKey:[contact UIDAndServiceID]] boolValue]){
+                [self _sendTyping:YES to:contact]; //Typing
+            }
+        }
+    }
+}
+
+- (void)_sendTyping:(BOOL)typing to:(AIListContact *)contact
+{
+    id		messageObject;
+    AIHandle	*handle;
+    id		chat;
+
+    //Get the dest handle & cached chat
+    handle = [[owner contactController] handleOfContact:contact forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:self];
+    chat = [[handle statusDictionary] objectForKey:@"iChat_Chat"];
+
+    //Send the 'typing' message
+    if(chat){
+        messageObject = [[[FZMessage alloc] initWithSender:[self accountDescription]
+                                                      time:[NSDate date]
+                                                    format:2
+                                                      body:@""
+                                                attributes:0
+                                              incomingFile:0
+                                              outgoingFile:0
+                                               inlineFiles:0
+                                                     flags:(typing ? 12 : 13)] autorelease];
+        [AIMService sendMessage:messageObject toChat:chat];
+
+    }
+
+    //Remember the state
+    if(typing){
+        [typingDict setObject:[NSNumber numberWithBool:YES] forKey:[contact UIDAndServiceID]];
+    }else{
+        [typingDict removeObjectForKey:[contact UIDAndServiceID]];
+    }
+}
+
 
 
 // AIAccount_Contacts --------------------------------------------------------------------------------
@@ -144,15 +211,24 @@ extern void* objc_getClass(const char *name);
 {
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
         NSString	*message;
+        AIHandle	*handle;
         id		chat;
         id		messageObject;
 
+        //Get the message & destination handle
         message = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message] encodeFullString:YES];
+        handle = [[owner contactController] handleOfContact:[object destination] forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:self];
 
         //Create a chat & send the message
+        chat = [[handle statusDictionary] objectForKey:@"iChat_Chat"];
+        if(chat == nil || chat != chat){
+            chat = [AIMService createChatForIMsWith:[handle UID] isDirect:NO];
+            [[handle statusDictionary] setObject:chat forKey:@"iChat_Chat"];
+            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"iChat_Chat"]];
+        }
+        
         //(I guess I could cache these chats)
-	chat = [AIMService createChatForIMsWith:[[object destination] UID] isDirect:NO];
-        messageObject = [[FZMessage alloc] initWithSender:[self accountDescription] time:[NSDate date] format:2 body:message attributes:0 incomingFile:0 outgoingFile:0 inlineFiles:0 flags:5];
+        messageObject = [[[FZMessage alloc] initWithSender:[self accountDescription] time:[NSDate date] format:2 body:message attributes:0 incomingFile:0 outgoingFile:0 inlineFiles:0 flags:5] autorelease];
         [AIMService sendMessage:messageObject toChat:chat];
 
     }else{
@@ -269,6 +345,10 @@ extern void* objc_getClass(const char *name);
             }
             [[owner contactController] setHoldContactListUpdates:NO];
 
+            //Remove all our handles
+            [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
+            [[owner contactController] handlesChangedForAccount:self];
+            
             //Clean up and close down
             [screenName release]; screenName = nil;
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
@@ -386,7 +466,6 @@ extern void* objc_getClass(const char *name);
             if(!isTyping || [isTyping boolValue] == NO){
                 [[handle statusDictionary] setObject:[NSNumber numberWithInt:YES] forKey:@"Typing"];
                 [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]];
-                NSLog(@"(iChat) %@ is typing",compactedName);
             }
         }
 
@@ -396,7 +475,6 @@ extern void* objc_getClass(const char *name);
             if(isTyping && [isTyping boolValue] == YES){
                 [[handle statusDictionary] setObject:[NSNumber numberWithInt:NO] forKey:@"Typing"];
                 [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"]];
-                NSLog(@"(iChat) %@ is not typing",compactedName);
             }
         }
 

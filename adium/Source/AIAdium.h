@@ -172,6 +172,7 @@ typedef enum {
 - (void)setAttributedString:(NSAttributedString *)inAttributedString;
 - (void)setTypingAttributes:(NSDictionary *)attrs;
 - (BOOL)availableForSending;
+- (AIListContact *)contact;
 @end
 
 @protocol AIContentHandler //Handles the display of a content type
@@ -191,6 +192,7 @@ typedef enum {
 @protocol AITextEntryFilter //Interpret text as it's entered
 - (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; //keypress
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
+- (void)initTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
 @end
 
 @protocol AIServiceController <NSObject>
@@ -303,6 +305,7 @@ typedef enum {
 - (void)registerTextEntryFilter:(id <AITextEntryFilter>)inFilter;
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
 - (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+- (void)initTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
 
 //Filtering content
 - (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter;
