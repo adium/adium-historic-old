@@ -23,7 +23,7 @@
 {
     [super initWithFrame:frameRect];
 
-    delegate = [inDelegate retain];
+    delegate = inDelegate;
     adium = [AIObject sharedAdiumInstance];
 
     [self configureView];
@@ -37,6 +37,15 @@
     [[adium contactController] registerListObjectObserver:self];
 
     return(self);
+}
+
+- (void)setDelegate:(id <AIAccountSelectionViewDelegate>)inDelegate
+{
+    delegate = inDelegate;
+}
+- (id <AIAccountSelectionViewDelegate>)delegate
+{
+    return delegate;
 }
 
 - (void)dealloc
