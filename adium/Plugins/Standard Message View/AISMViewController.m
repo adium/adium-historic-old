@@ -488,32 +488,52 @@
 //Create a bubbled message row for a content object
 - (AIFlexibleTableRow *)_messageRowForContent:(AIContentMessage *)content previousRow:(AIFlexibleTableRow *)thePreviousRow header:(BOOL)isHeader
 {
-    AIFlexibleTableCell     *leftmostCell = nil;
-    NSArray		    *cellArray;
+    AIFlexibleTableCell     *leftmostCell = nil, *messageCell = nil;
+    NSArray					*cellArray;
     AIFlexibleTableRow      *row;
-    
+	BOOL					emptyHeadIndentCell;
+	
     //Empty icon span cell
     if(showUserIcons){
-	if(isHeader){
-	    leftmostCell = [self _userIconCellForContent:content span:NO];
-	}else if(thePreviousRow){
-	    leftmostCell = [self _emptyImageSpanCellForPreviousRow:thePreviousRow];
-	}        
+		if(isHeader){
+			leftmostCell = [self _userIconCellForContent:content span:NO];
+		}else if(thePreviousRow){
+			leftmostCell = [self _emptyImageSpanCellForPreviousRow:thePreviousRow];
+		}        
     }
+	
     //Empty spacing cell
-    if(!isHeader && !inlinePrefixes && combineMessages) {
+	emptyHeadIndentCell = (!isHeader && !inlinePrefixes && combineMessages);
+    if (emptyHeadIndentCell) {
         leftmostCell = [self _emptyHeadIndentCellForPreviousRow:thePreviousRow content:content];
     }
+	
     //
     if(leftmostCell){
-        cellArray = [NSArray arrayWithObjects:leftmostCell, [self _messageCellForContent:content includingPrefixes:NO shouldPerformHeadIndent:NO], nil];
+		messageCell = [self _messageCellForContent:content includingPrefixes:NO shouldPerformHeadIndent:NO];
+		
+		if (emptyHeadIndentCell) {
+			NSColor *messageBackgroundColor = [messageCell contentBackgroundColor];
+			if (messageBackgroundColor) {
+				[leftmostCell setBackgroundColor:messageBackgroundColor];
+				
+				if ([leftmostCell isKindOfClass:[AIFlexibleTableFramedTextCell class]])
+					[(AIFlexibleTableFramedTextCell *)leftmostCell setFrameBackgroundColor:messageBackgroundColor];
+			}
+		}
+		
+        cellArray = [NSArray arrayWithObjects:leftmostCell, messageCell, nil];
     }else{
-        cellArray = [NSArray arrayWithObjects:[self _messageCellForContent:content includingPrefixes:!inlinePrefixes shouldPerformHeadIndent:(isHeader && !inlinePrefixes && combineMessages)], nil];
+		messageCell = [self _messageCellForContent:content includingPrefixes:!inlinePrefixes shouldPerformHeadIndent:(isHeader && !inlinePrefixes && combineMessages)];
+        cellArray = [NSArray arrayWithObjects:messageCell, nil];
     }
+	
     row = [AIFlexibleTableRow rowWithCells:cellArray representedObject:content];
-    //set the headIndent
+    
+	//set the headIndent
     [row setHeadIndent:headIndent];
-    return(row);
+    
+	return(row);
 }
 
 
