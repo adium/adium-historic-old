@@ -19,7 +19,7 @@
 	<key>DefaultFontSize</key>
 	<integer>11</integer>
 	<key>ShowsUserIcons</key>
-	<false/>
+	<true/>
 	<key>DisplayNameForNoVariant</key>
 	<string>Red vs Blue</string>
 </dict>

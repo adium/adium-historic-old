@@ -24,8 +24,7 @@ a { text-decoration: none; }
 
 .container
 {
-	margin-top: 5px;
-	padding-top: 5px;
+	padding-top: 2px;
 	border-top: 1px dotted #E9E9E9;
 }
 
@@ -37,8 +36,7 @@ a { text-decoration: none; }
 	padding-right: 8px;
 	padding-bottom: 0px;
 	margin-left: 8px;
-	margin-right: 8px;
-	margin-bottom: 0px;
+	margin-bottom: 5px;
 }
 
 .sender
@@ -83,12 +81,13 @@ a { text-decoration: none; }
 	float: right;
 	text-align: right;
 	padding-left: 6px;
+	font-size: 10px;
+	font-family: Helvetica;
 }
 
-.sender, .time_initial, .fromstatus
+.sender
 {
-	text-transform: uppercase;
-	font-size: 8px;
+	font-size: 11px;
 	font-family: Helvetica;
 	font-weight: bold;
 }
@@ -106,10 +105,22 @@ a { text-decoration: none; }
 
 .clear { clear: both; }
 
+.buddyicon img {
+	float: left;
+	margin-top: 2px;
+	margin-right: 8px;
+}
+
+.buddyicon img[src="Incoming/buddy_icon.png"], .buddyicon img[src="Outgoing/buddy_icon.png"] {
+	display:  none;
+}
+
 img
 {
 	vertical-align: middle;
 	top: -3px;
 }
 
-#Chat { overflow: hidden; }
+#Chat {
+	overflow: hidden;
+}
