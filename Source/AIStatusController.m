@@ -577,7 +577,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		NSEnumerator	*enumerator;
 		NSDictionary	*dict;
 		
-		builtInStateArray = [[NSMutableArray alloc] init];
+		builtInStateArray = [[NSMutableArray alloc] initWithCapacity:[savedBuiltInStateArray count]];
 		
 		enumerator = [savedBuiltInStateArray objectEnumerator];
 		while(dict = [enumerator nextObject]){
