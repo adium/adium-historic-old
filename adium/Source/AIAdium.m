@@ -217,7 +217,7 @@
 }
 
 void Adium_HandleSignal(int i){
-    [[NSApplication sharedApplication] terminate:nil];
+    exit(-1);
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
