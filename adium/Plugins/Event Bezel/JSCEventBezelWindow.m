@@ -18,6 +18,7 @@
     fadingIn = NO;
     doFadeIn = NO;
     doFadeOut = YES;
+    appWasHidden = NO;
     
     displayDuration = 3;
     
@@ -68,6 +69,9 @@
                                                            repeats:YES]];
     } else {
         [self setFadingOut:NO];
+        if (appWasHidden) {
+            [NSApp hide:self];
+        }
         [self close];
     }
 }
@@ -94,6 +98,9 @@
     if ([self alphaValue]<=0.0) {
         [self setFadeTimer:nil];
         [self setFadingOut:NO];
+        if (appWasHidden) {
+            [NSApp hide:self];
+        }
         [self close];
     }
 }
@@ -173,6 +180,16 @@
 - (void)setDoFadeIn:(BOOL)b
 {
     doFadeIn = b;
+}
+
+- (BOOL)appWasHidden
+{
+    return appWasHidden;
+}
+
+- (void)setAppWasHidden:(BOOL)b
+{
+    appWasHidden = b;
 }
 
 @end

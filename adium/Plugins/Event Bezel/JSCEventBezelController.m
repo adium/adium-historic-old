@@ -120,6 +120,12 @@ withMessage:(NSString *)message
         if (pantherOrLater) {
             [[self window] invalidateShadow];
         }
+        
+        if ([NSApp isHidden]) {
+            [bezelWindow setAppWasHidden:YES];
+            [NSApp unhideWithoutActivation];
+        }
+        
         [[self window] setFrame: bezelFrame display:NO];
         [self showWindow:nil];
         if (![bezelWindow fadingIn]) {
