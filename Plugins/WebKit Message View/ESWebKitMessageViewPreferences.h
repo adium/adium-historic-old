@@ -38,6 +38,8 @@
 	NSMutableDictionary				*previewListObjectsDict;
 	AIWebkitMessageViewController	*previewController;
 	ESWebView						*preview;
+	
+	BOOL							viewIsOpen;
 }
 
 - (void)messageStyleXtrasDidChange;
