@@ -213,7 +213,7 @@ static NSImage *pushIndicatorImage = nil;
 - (void)_sendContent
 {
     //Add to history
-    [historyArray insertObject:[[self textStorage] copy] atIndex:1];
+    [historyArray insertObject:[[[self textStorage] copy] autorelease] atIndex:1];
     if([historyArray count] > MAX_HISTORY){
         [historyArray removeLastObject];
     }

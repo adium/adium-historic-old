@@ -53,7 +53,7 @@
     [super init];
 
     //Init
-    contactListView = [[AISCLOutlineView alloc] init];
+    contactListView = [[AISCLOutlineView alloc] initWithFrame:NSMakeRect(0,0,100,100)]; //Arbitrary frame
     owner = [inOwner retain];
     tooltipTrackingTag = 0;
     trackingMouseMovedEvents = NO;
