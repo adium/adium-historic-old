@@ -14,12 +14,15 @@
 \------------------------------------------------------------------------------------------------------ */
 
 
+@class AIGradientCell, AIEmoticonPack;
+
 @interface AIEmoticonPackCell : AIGradientCell {
 	NSButtonCell	*packCheckCell;
-	
+	AIEmoticonPack	*emoticonPack;
 	id				plugin;
 }
 
 - (id)initWithPlugin:(id)inPlugin;
+- (void)setEmoticonPack:(AIEmoticonPack *)inPack;
 
 @end

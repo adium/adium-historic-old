@@ -168,13 +168,19 @@
     return([[[NSAttributedString alloc] initWithString:inString attributes:attributes] autorelease]);
 }
 
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)row
+{
+    if(tableView == table_emoticonPacks){
+		[(AIEmoticonPackCell *)aCell setEmoticonPack:[[plugin availableEmoticonPacks] objectAtIndex:row]];
+	}
+}
+
 //Emoticon table view delegates
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     if(tableView == table_emoticonPacks){
-		AIEmoticonPack *pack = [[plugin availableEmoticonPacks] objectAtIndex:row];
 		
-		return(pack);
+		return(@"");
 			
     }else{
 		NSString    *identifier = [tableColumn identifier];
@@ -213,6 +219,7 @@
 {
 	[self moveSelectedPacksToTrash]; 
 }
+
 
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {

@@ -45,6 +45,8 @@ static  float   distanceBetweenEmoticons = 0;
 		[packCheckCell setRefusesFirstResponder:YES];
 		
 		plugin = inPlugin;
+		
+		emoticonPack = nil;
 	}
 	return self;
 }
@@ -56,22 +58,26 @@ static  float   distanceBetweenEmoticons = 0;
 	AIEmoticonPackCell *newCell = [super copyWithZone:zone];
 	
 	newCell->packCheckCell = [packCheckCell retain];
-	
+	newCell->emoticonPack = [emoticonPack retain];
 	return newCell;
 }
 
 - (void)dealloc
 {
+	[emoticonPack release]; emoticonPack = nil;
 	[packCheckCell release]; packCheckCell = nil;
 	[super dealloc];
 }
 
+- (void)setEmoticonPack:(AIEmoticonPack *)inPack
+{
+	[emoticonPack release];
+	emoticonPack = [inPack retain];
+}
+
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-	//We have to work by name here since [self objectValue] gives a different object every time
-	AIEmoticonPack *pack = [(AIEmoticonsPlugin *)plugin emoticonPackWithName:[[self objectValue] name]];
-		
-    NSEnumerator    *enumerator;
+	NSEnumerator    *enumerator;
     AIEmoticon      *emoticon;
     NSColor         *textColor;
     int             x;
@@ -87,7 +93,7 @@ static  float   distanceBetweenEmoticons = 0;
 									checkSize.width,
 									checkHeight);
 
-	[packCheckCell setState:[pack isEnabled]];
+	[packCheckCell setState:[emoticonPack isEnabled]];
 	[packCheckCell drawWithFrame:checkFrame inView:controlView];
     
     //Determine the correct text color
@@ -101,13 +107,13 @@ static  float   distanceBetweenEmoticons = 0;
     NSDictionary    *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
         [NSFont boldSystemFontOfSize:12], NSFontAttributeName, 
         textColor, NSForegroundColorAttributeName, nil];
-    [[pack name] drawAtPoint:NSMakePoint(cellFrame.origin.x + [packCheckCell cellSize].width + EMOTICON_NAME_SPACING,
+    [[emoticonPack name] drawAtPoint:NSMakePoint(cellFrame.origin.x + [packCheckCell cellSize].width + EMOTICON_NAME_SPACING,
 										 cellFrame.origin.y) 
 			  withAttributes:attributes];
 	
     //Display a few preview emoticons
     x = cellFrame.origin.x + EMOTICON_ICON_INDENT;
-    enumerator = [[pack emoticons] objectEnumerator];
+    enumerator = [[emoticonPack emoticons] objectEnumerator];
     while((x < cellFrame.size.width - EMOTICON_RIGHT_MARGIN) && (emoticon = [enumerator nextObject])){
         NSImage *image = [emoticon image];
         NSSize  imageSize = [image size];
@@ -173,9 +179,7 @@ static  float   distanceBetweenEmoticons = 0;
 							  untilMouseUp:untilMouseUp];
 		[packCheckCell setHighlighted:NO];
 		
-		//We have to work by name here since [self objectValue] gives a different object every time
-		AIEmoticonPack *pack = [(AIEmoticonsPlugin *)plugin emoticonPackWithName:[[self objectValue] name]];
-		[(AIEmoticonsPlugin *)plugin setEmoticonPack:pack enabled:![pack isEnabled]];
+		[(AIEmoticonsPlugin *)plugin setEmoticonPack:emoticonPack enabled:![emoticonPack isEnabled]];
 		
 	} else {
 		
