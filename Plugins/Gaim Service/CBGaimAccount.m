@@ -172,7 +172,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	if (displayNameChanges){
 		//Notify of display name changes
 		[[adium contactController] listObjectAttributesChanged:theContact
-												  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+												  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
 		
 #warning There must be a cleaner way to do this alias stuff!  This works for now
 		//Request an alias change

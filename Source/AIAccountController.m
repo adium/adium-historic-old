@@ -1203,7 +1203,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 }
 
 //Account status changed, update our menu
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
     if([inObject isKindOfClass:[AIAccount class]] && 
 		([inModifiedKeys containsObject:@"Online"] ||

@@ -195,7 +195,7 @@
 
 #pragma mark Notifications
 //An account's status changed
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
 {
     if([inObject isKindOfClass:[AIAccount class]]){
 		[self configureContactsMenu];

@@ -270,7 +270,7 @@
 }
 
 //Update auto-resizing when object visibility changes
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if([inModifiedKeys containsObject:@"VisibleObjectCount"]){
 		//If the visible count changes, we'll need to resize our list - but we wait until the group is resorted
@@ -306,14 +306,14 @@
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
     AIListObject	*object = [notification object];
-    NSArray			*keys = [[notification userInfo] objectForKey:@"Keys"];
+    NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
 
-	//Redraw the modified object
+	//Redraw the modified object (or the whole list, if object is nil)
 	[contactListView redisplayItem:object];
 
     //Resize the contact list horizontally
     if(autoResizeHorizontally){
-		if(object && [keys containsObject:@"Display Name"]){
+		if(([keys containsObject:@"Display Name"] || [keys containsObject:@"Long Display Name"])){
 			[self contactListDesiredSizeChanged];
 		}
     }
@@ -359,7 +359,9 @@
 				if (allowContactDrop){
 					[outlineView setDropItem:item dropChildIndex:NSOutlineViewDropOnItemIndex];
 				}else{
-					[outlineView setDropItem:[item containingObject] dropChildIndex:[[item containingObject] indexOfObject:item]];
+					AIListObject	*containingObject = [item containingObject];
+					[outlineView setDropItem:((containingObject == contactList) ? nil : containingObject)
+							  dropChildIndex:[[item containingObject] indexOfObject:item]];
 				}
 			}
 			

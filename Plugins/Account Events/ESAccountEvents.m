@@ -66,10 +66,10 @@
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject { return @""; }
 
 //
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)modifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if([inObject isKindOfClass:[AIAccount class]]){ //We only care about accounts
-		if([modifiedKeys containsObject:@"Online"]){
+		if([inModifiedKeys containsObject:@"Online"]){
 			
 			if ([[inObject numberStatusObjectForKey:@"Online"] boolValue]){
 				if (accountConnectionStatusGroupingOnlineTimer){

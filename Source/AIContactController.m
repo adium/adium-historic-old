@@ -49,7 +49,7 @@
 - (void)_performDelayedUpdates:(NSTimer *)timer;
 - (void)loadContactList;
 - (void)saveContactList;
-- (NSArray *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent;
+- (NSSet *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSSet *)modifiedKeys silent:(BOOL)silent;
 - (void)_updateAllAttributesOfObject:(AIListObject *)inObject;
 - (void)prepareContactInfo;
 
@@ -351,9 +351,9 @@ DeclareString(UID);
 
 //Called after modifying a contact's status
 // Silent: Silences all events, notifications, sounds, overlays, etc. that would have been associated with this status change
-- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-    NSArray			*modifiedAttributeKeys;
+    NSSet			*modifiedAttributeKeys;
 	
     //Let all observers know the contact's status has changed before performing any sorting or further notifications
 	modifiedAttributeKeys = [self _informObserversOfObjectStatusChange:inObject withKeys:inModifiedKeys silent:silent];
@@ -361,7 +361,7 @@ DeclareString(UID);
     //Resort the contact list
 	if(updatesAreDelayed){
 		delayedStatusChanges++;
-		[delayedModifiedStatusKeys addObjectsFromArray:inModifiedKeys];
+		[delayedModifiedStatusKeys unionSet:inModifiedKeys];
 	}else{
 		//We can safely skip sorting if we know the modified attributes will invoke a resort later
 		if(![[self activeSortController] shouldSortForModifiedAttributeKeys:modifiedAttributeKeys] &&
@@ -384,11 +384,11 @@ DeclareString(UID);
 
 //Call after modifying an object's display attributes
 //(When modifying display attributes in response to a status change, this is not necessary)
-- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys
+- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSSet *)inModifiedKeys
 {	
 	if(updatesAreDelayed){
 		delayedAttributeChanges++;
-		[delayedModifiedAttributeKeys addObjectsFromArray:inModifiedKeys];
+		[delayedModifiedAttributeKeys unionSet:inModifiedKeys];
 	}else{
         //Resort the contact list if necessary
         if([[self activeSortController] shouldSortForModifiedAttributeKeys:inModifiedKeys]){
@@ -398,7 +398,10 @@ DeclareString(UID);
         //Post an attributes changed message
 		[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged
 												  object:inObject
-												userInfo:(inModifiedKeys ? [NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"] : nil)];
+												userInfo:(inModifiedKeys ?
+														  [NSDictionary dictionaryWithObject:inModifiedKeys
+																					  forKey:@"Keys"] : 
+														  nil)];
 	}
 }
 
@@ -418,17 +421,22 @@ DeclareString(UID);
 			shouldSort = YES;
 		}
 		if (delayedStatusChanges){
-			if([[self activeSortController] shouldSortForModifiedStatusKeys:[delayedModifiedStatusKeys allObjects]]){
+			if([[self activeSortController] shouldSortForModifiedStatusKeys:delayedModifiedStatusKeys]){
 				shouldSort = YES;
 			}
 			[delayedModifiedStatusKeys removeAllObjects];
 			delayedStatusChanges = 0;
 		}
 		if(delayedAttributeChanges){
-			if([[self activeSortController] shouldSortForModifiedAttributeKeys:[delayedModifiedAttributeKeys allObjects]]){
+			if([[self activeSortController] shouldSortForModifiedAttributeKeys:delayedModifiedAttributeKeys]){
 				shouldSort = YES;
 			}			
-			[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:nil];
+			[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged
+													  object:nil
+													userInfo:(delayedModifiedAttributeKeys ?
+															  [NSDictionary dictionaryWithObject:delayedModifiedAttributeKeys
+																						  forKey:@"Keys"] :
+															  nil)];
 			[delayedModifiedAttributeKeys removeAllObjects];
 			delayedAttributeChanges = 0;
 		}
@@ -1519,13 +1527,13 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
     //Reset all contacts
 	enumerator = [contactDict objectEnumerator];
 	while(listObject = [enumerator nextObject]){
-		NSArray	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
+		NSSet	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
 		if(attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
 
 		//If this contact is within a meta contact, update the meta contact too
 		AIListObject	*containingObject = [listObject containingObject];
 		if(containingObject && [containingObject isKindOfClass:[AIMetaContact class]]){
-			NSArray	*attributes = [inObserver updateListObject:containingObject
+			NSSet	*attributes = [inObserver updateListObject:containingObject
 														  keys:nil
 														silent:YES];
 			if(attributes) [self listObjectAttributesChanged:containingObject
@@ -1536,7 +1544,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
     //Reset all groups
 	enumerator = [groupDict objectEnumerator];
 	while(listObject = [enumerator nextObject]){
-		NSArray	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
+		NSSet	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
 		if(attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
 	}
 	
@@ -1545,20 +1553,20 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 }
 
 //Notify observers of a status change.  Returns the modified attribute keys
-- (NSArray *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent
+- (NSSet *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSSet *)modifiedKeys silent:(BOOL)silent
 {
-	NSMutableArray				*attrChange = nil;
+	NSMutableSet				*attrChange = nil;
 	NSEnumerator				*enumerator;
     id <AIListObjectObserver>	observer;
 	
 	//Let our observers know
 	enumerator = [contactObserverArray objectEnumerator];
 	while((observer = [enumerator nextObject])){
-		NSArray	*newKeys;
+		NSSet	*newKeys;
 		
 		if((newKeys = [observer updateListObject:inObject keys:modifiedKeys silent:silent])){
-			if (!attrChange) attrChange = [NSMutableArray array];
-			[attrChange addObjectsFromArray:newKeys];
+			if (!attrChange) attrChange = [NSMutableSet set];
+			[attrChange unionSet:newKeys];
 		}
 	}
 	

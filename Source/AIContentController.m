@@ -29,8 +29,8 @@
 - (NSAttributedString *)thread_filterAttributedString:(NSAttributedString *)attributedString contentFilter:(NSArray *)inContentFilterArray filterContext:(id)filterContext invocation:(NSInvocation *)invocation;
 - (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString contentFilter:(NSArray *)inContentFilterArray filterContext:(id)filterContext usingLock:(NSRecursiveLock *)inLock;
 
-- (NSArray *)_informObserversOfChatStatusChange:(AIChat *)inChat withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent;
-- (void)chatAttributesChanged:(AIChat *)inChat modifiedKeys:(NSArray *)inModifiedKeys;
+- (NSSet *)_informObserversOfChatStatusChange:(AIChat *)inChat withKeys:(NSSet *)modifiedKeys silent:(BOOL)silent;
+- (void)chatAttributesChanged:(AIChat *)inChat modifiedKeys:(NSSet *)inModifiedKeys;
 
 @end
 
@@ -297,6 +297,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	[invocation setArgument:&context atIndex:3]; //context, the second argument after the two hidden arguments of every NSInvocation
 	[invocation retainArguments];
 
+#if 1
 	//Now request the asynchronous filtering
 	[[self filterRunLoopMessenger] target:self 
 						  performSelector:@selector(thread_filterAttributedString:contentFilter:threadedContentFilter:filterContext:invocation:) 
@@ -305,6 +306,14 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 							   withObject:threadedContentFilter[type][direction]
 							   withObject:filterContext
 							   withObject:invocation];
+#else
+	//Synchronous filtering
+	[self thread_filterAttributedString:attributedString
+						  contentFilter:contentFilter[type][direction]
+				  threadedContentFilter:threadedContentFilter[type][direction]
+						  filterContext:filterContext
+							 invocation:invocation];
+#endif
 }
 
 - (NDRunLoopMessenger *)filterRunLoopMessenger
@@ -713,9 +722,9 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
     [chatObserverArray removeObject:inObserver];
 }
 
-- (void)chatStatusChanged:(AIChat *)inChat modifiedStatusKeys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (void)chatStatusChanged:(AIChat *)inChat modifiedStatusKeys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	NSArray			*modifiedAttributeKeys;
+	NSSet			*modifiedAttributeKeys;
 	
     //Let all observers know the contact's status has changed before performing any further notifications
 	modifiedAttributeKeys = [self _informObserversOfChatStatusChange:inChat withKeys:inModifiedKeys silent:silent];
@@ -726,7 +735,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
     }	
 }
 
-- (void)chatAttributesChanged:(AIChat *)inChat modifiedKeys:(NSArray *)inModifiedKeys
+- (void)chatAttributesChanged:(AIChat *)inChat modifiedKeys:(NSSet *)inModifiedKeys
 {
 	//Post an attributes changed message
 	[[owner notificationCenter] postNotificationName:Chat_AttributesChanged
@@ -747,20 +756,20 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 }
 
 //Notify observers of a status change.  Returns the modified attribute keys
-- (NSArray *)_informObserversOfChatStatusChange:(AIChat *)inChat withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent
+- (NSSet *)_informObserversOfChatStatusChange:(AIChat *)inChat withKeys:(NSSet *)modifiedKeys silent:(BOOL)silent
 {
-	NSMutableArray				*attrChange = nil;
+	NSMutableSet				*attrChange = nil;
 	NSEnumerator				*enumerator;
     id <AIChatObserver>	observer;
 
 	//Let our observers know
 	enumerator = [chatObserverArray objectEnumerator];
 	while((observer = [enumerator nextObject])){
-		NSArray	*newKeys;
+		NSSet	*newKeys;
 		
 		if(newKeys = [observer updateChat:inChat keys:modifiedKeys silent:silent]){
-			if (!attrChange) attrChange = [NSMutableArray array];
-			[attrChange addObjectsFromArray:newKeys];
+			if (!attrChange) attrChange = [NSMutableSet set];
+			[attrChange unionSet:newKeys];
 		}
 	}
 	

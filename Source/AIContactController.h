@@ -57,7 +57,7 @@ typedef enum {
 
 //Observer which receives notifications of changes in list object status
 @protocol AIListObjectObserver
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
 @end
 
 @protocol AIListObjectView
@@ -148,8 +148,8 @@ typedef enum {
 - (void)endListObjectNotificationsDelay;
 - (void)delayListObjectNotificationsUntilInactivity;
 - (void)listObjectRemoteGroupingChanged:(AIListContact *)inObject;
-- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
-- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
+- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
+- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSSet *)inModifiedKeys;
 
 //Contact list sorting
 - (NSArray *)sortControllerArray;

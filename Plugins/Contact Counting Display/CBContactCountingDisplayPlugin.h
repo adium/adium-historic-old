@@ -26,5 +26,4 @@
 - (void)uninstallPlugin;
 
 - (void)preferencesChanged:(NSNotification *)notification;
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
 @end

@@ -96,14 +96,14 @@ static	ABAddressBook	*sharedAddressBook = nil;
 }
 
 //Called as contacts are created, load their address book information
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	//Just stop here if we don't have an address book dict to work with
 	if (!addressBookDict){
 		return nil;
 	}
 	
-	NSArray		*modifiedAttributes = nil;
+	NSSet		*modifiedAttributes = nil;
 	
     if(inModifiedKeys == nil){ //Only perform this when updating for all list objects
         
@@ -123,13 +123,13 @@ static	ABAddressBook	*sharedAddressBook = nil;
 				NSString *oldValue = [displayNameArray objectWithOwner:self];
 				if (!oldValue || ![oldValue isEqualToString:displayName]) {
 					[displayNameArray setObject:displayName withOwner:self];
-					modifiedAttributes = [NSArray arrayWithObject:@"Display Name"];
+					modifiedAttributes = [NSSet setWithObject:@"Display Name"];
 				}
 			} else {
 				//Clear any stored value
 				if ([displayNameArray objectWithOwner:self]) {
 					[displayNameArray setObject:nil withOwner:self];
-					modifiedAttributes = [NSArray arrayWithObject:@"Display Name"];
+					modifiedAttributes = [NSSet setWithObject:@"Display Name"];
 				}
 			}
 

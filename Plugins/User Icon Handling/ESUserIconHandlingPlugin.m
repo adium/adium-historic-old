@@ -52,7 +52,7 @@
 
 //Handle object creation and changes to the userIcon status object, which should be set by account code
 //when a user icon is retrieved for the object
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {    
     if(inModifiedKeys == nil){
 		//At object creation, load the user icon.
@@ -103,7 +103,7 @@
 			[self _cacheUserIconData:(userIconData ? userIconData : [userIcon TIFFRepresentation]) forObject:inObject];
 
 			[[adium contactController] listObjectAttributesChanged:inObject
-													  modifiedKeys:[NSArray arrayWithObject:KEY_USER_ICON]];
+													  modifiedKeys:[NSSet setWithObject:KEY_USER_ICON]];
 		}
 	}
 	
@@ -114,7 +114,7 @@
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
     AIListObject	*inObject = [notification object];
-    NSArray			*keys = [[notification userInfo] objectForKey:@"Keys"];
+    NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
 	
 	if([keys containsObject:KEY_USER_ICON]){
 		AIMutableOwnerArray *userIconDisplayArray = [inObject displayArrayForKey:KEY_USER_ICON];

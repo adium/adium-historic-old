@@ -27,9 +27,9 @@
 }
 
 //Apply the correct tab icon according to status
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-    NSArray		*modifiedAttributes = nil;
+    NSSet		*modifiedAttributes = nil;
 	
 	if(inModifiedKeys == nil ||
 	   [inModifiedKeys containsObject:@"Stranger"] ||
@@ -49,15 +49,16 @@
 										  direction:AIIconNormal];
 		[[inObject displayArrayForKey:@"List Status Icon"] setObject:icon withOwner:self];
 		
-		modifiedAttributes = [NSArray arrayWithObjects:@"Tab Status Icon", @"List Status Icon", nil];
+		modifiedAttributes = [NSSet setWithObjects:@"Tab Status Icon", @"List Status Icon", nil];
 	}
 	
 	return(modifiedAttributes);
 }
 
-- (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	NSArray		*modifiedAttributes = nil;
+	NSSet		*modifiedAttributes = nil;
+	
 	if (inModifiedKeys == nil ||
 		[inModifiedKeys containsObject:KEY_TYPING] ||
 		[inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
@@ -68,7 +69,7 @@
 												   direction:AIIconNormal];
 		[[inChat displayArrayForKey:@"Tab State Icon"] setObject:icon withOwner:self];
 		
-		modifiedAttributes = [NSArray arrayWithObject:@"Tab State Icon"];
+		modifiedAttributes = [NSSet setWithObject:@"Tab State Icon"];
 	}
 	
 	return(modifiedAttributes);

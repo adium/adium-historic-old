@@ -416,7 +416,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 }
 
 //Account status changed.  Disable the service menu and user name field for connected accounts
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if([inObject isKindOfClass:[AIAccount class]]){
 		if([inModifiedKeys containsObject:@"Online"] ||

@@ -1,7 +1,11 @@
 				Adium X Version History
 				-----------------------
 
-Version 0.71 (10/29/2004)
+Version 0.72
+- Fixed issue with Jabber messages appearing gray.
+- Fixed issue with % in Jabber UIDs
+
+Version 0.71 (11/01/2004)
 - Fixed issues with "Systemwide HTTP/SOCKS4/SOCKS5" proxy settings 
 - Fixed issues with automatic reconnection of accounts after sleeping
 - Fixed issues with tooltip display after opening a message window

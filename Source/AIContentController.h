@@ -44,7 +44,7 @@ typedef enum {
 
 //Observer which receives notifications of changes in chat status
 @protocol AIChatObserver
-- (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
+- (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
 @end
 
 //Handles the display of a content type
@@ -119,7 +119,7 @@ typedef enum {
 //Status
 - (void)registerChatObserver:(id <AIChatObserver>)inObserver;
 - (void)unregisterChatObserver:(id <AIChatObserver>)inObserver;
-- (void)chatStatusChanged:(AIChat *)inChat modifiedStatusKeys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
+- (void)chatStatusChanged:(AIChat *)inChat modifiedStatusKeys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
 - (void)updateAllChatsForObserver:(id <AIChatObserver>)observer;
 
 
