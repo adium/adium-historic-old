@@ -1,32 +1,31 @@
 //
-//  AIEditorAccountCollection.h
+//  AIEditorImportCollection.h
 //  Adium
 //
-//  Created by Adam Iser on Fri Mar 28 2003.
+//  Created by Colin Barrett on Sun Apr 13 2003.
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
 #import "AIEditorCollection.h"
+#import "AIEditorListGroup.h"
+#import "AIEditorListHandle.h"
 
-@class AIAccount, AIEditorListGroup, AIEditorAccountCollection;
-@protocol AIAccount_Handles;
-
-@interface AIEditorAccountCollection : NSObject <AIEditorCollection> {
-    AIAccount<AIAccount_Handles>	*account;
+@interface AIEditorImportCollection : NSObject <AIEditorCollection>
+{
     AIEditorListGroup			*list;
-    
 }
 
-+ (AIEditorAccountCollection *)editorCollectionForAccount:(AIAccount *)inAccount;
-- (id)initForAccount:(AIAccount *)inAccount;
++ (AIEditorImportCollection *)editorCollection;
++ (AIEditorImportCollection *)editorCollectionWithPath:(NSString *)path;
 - (NSString *)name;
 - (NSImage *)icon;
 - (BOOL)enabled;
 - (AIEditorListGroup *)list;
+- (void)importAndAppendContactsFromPath:(NSString *)path;
+//these functions are ignored (they are empty)
 - (void)addObject:(AIEditorListObject *)inObject;
 - (void)deleteObject:(AIEditorListObject *)inObject;
 - (void)renameObject:(AIEditorListObject *)inObject to:(NSString *)newName;
 - (void)moveObject:(AIEditorListObject *)inObject toGroup:(AIEditorListGroup *)inGroup;
-
 @end
