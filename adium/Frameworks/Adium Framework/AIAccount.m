@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.51 2004/03/06 18:36:30 adamiser Exp $
+// $Id: AIAccount.m,v 1.52 2004/03/28 23:35:11 evands Exp $
 
 #import "AIAccount.h"
 
@@ -142,15 +142,22 @@
 
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
-//Enable and disable the refresh timers as our account goes online and offline
+//Enable and disable the refresh timers as our account goes online and offline; 
+//if we get informed that we are disconnecting, stop them sooner than later.
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
 {
-	if([key compare:@"Online"] == 0){
+	if([key isEqualToString:@"Online"]){
 		if([value boolValue]){
 			if([attributedRefreshDict count])	[self _startAttributedRefreshTimer];
 			if([stringRefreshDict count])		[self _startStringRefreshTimer];
 		}else{
 			[self _stopAttributedRefreshTimer];
+			[self _stopStringRefreshTimer];
+		}
+	}else if ([key isEqualToString:@"Disconnecting"]){
+		if ([value boolValue]){
+			[self _stopAttributedRefreshTimer];	
+			[self _stopStringRefreshTimer];
 		}
 	}
 	
