@@ -40,8 +40,6 @@
 {
     ESGaimYahooAccount *anAccount = [[[ESGaimYahooAccount alloc] initWithUID:inUID service:self] autorelease];
     
-    [super addAccount:anAccount forGaimAccountPointer:nil];
-    
     return anAccount;
 }
 

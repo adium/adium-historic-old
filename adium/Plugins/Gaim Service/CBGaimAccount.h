@@ -58,6 +58,7 @@
 
 //AIAccount sublcassed methods
 - (void)initAccount;
+- (void)createNewGaimAccount;   //This can be sublcassed to change settings for the gaim account, which is recreated with each connect cycle
 - (void)dealloc;
 - (NSArray *)supportedPropertyKeys;
 - (void)updateStatusForKey:(NSString *)key;

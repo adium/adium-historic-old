@@ -66,11 +66,14 @@
 #pragma mark GaimBuddies
 - (void)accountNewBuddy:(GaimBuddy*)buddy
 {
+	if(GAIM_DEBUG) NSLog(@"new: %s",buddy->name);
 	[self contactAssociatedWithBuddy:buddy]; //Create a contact and hook it to this buddy
 }
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
+	if(GAIM_DEBUG) NSLog(@"update: %s",buddy->name);
+    
     int                     online;
     AIListContact           *theContact;
 	
@@ -83,7 +86,7 @@
     //Online / Offline
     online = (GAIM_BUDDY_IS_ONLINE(buddy) ? 1 : 0);
     if(![[theContact statusObjectForKey:@"Online" withOwner:self] boolValue]){
-		[theContact setStatusObject:[NSNumber numberWithBool:online] withOwner:self forKey:@"Online" notify:NO];
+            [theContact setStatusObject:[NSNumber numberWithBool:online] withOwner:self forKey:@"Online" notify:NO];
 		[self _setInstantMessagesWithContact:theContact enabled:online];
 		/*           
 			//buddy->signon is always 0 - this will be fixed gaimside soon.
@@ -230,14 +233,23 @@
          */
         return;
     }
-	
+    
     AIChat 			*chat = (AIChat*) conv->ui_data;
-	AIListContact 	*listContact = (AIListContact*) [chat listObject];
+    AIListContact 	*listContact = (AIListContact*) [chat listObject];
     
     if (chat == nil) {
         if (listContact == nil) {
             GaimBuddy 	*buddy = gaim_find_buddy(account, conv->name);
-			listContact = [self contactAssociatedWithBuddy:buddy];
+            if (buddy == NULL) {
+                buddy = gaim_buddy_new(account, conv->name, NULL);  //create a GaimBuddy
+                GaimGroup *group = gaim_find_group(_("Orphans"));   //get the GaimGroup
+                if (group == NULL) {                                //if the group doesn't exist yet
+                    group = gaim_group_new(_("Orphans"));           //create the GaimGroup
+                    gaim_blist_add_group(group, NULL);              //add it gaimside
+                }
+                gaim_blist_add_buddy(buddy, NULL, group, NULL);     //add the buddy to the gaimside list
+            }
+            listContact = [self contactAssociatedWithBuddy:buddy];
         }
         // Need to start a new chat
         chat = [self _openChatWithContact:listContact andConversation:conv];
@@ -270,8 +282,7 @@
     filesToSendArray = [[NSMutableArray alloc] init];
 
     //create an initial gaim account
-    account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
-    gaim_accounts_add(account);
+    [self createNewGaimAccount];
     gc = NULL;
     NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
     
@@ -281,7 +292,6 @@
 
 - (void)dealloc
 {
-    NSLog(@"CBGaimAccount dealloc");
     [(CBGaimServicePlugin *)service removeAccount:account];
     
     [chatDict release];
@@ -544,7 +554,7 @@
 	
 	//Get our contact
 	contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-														   UID:[[NSString stringWithUTF8String:(buddy->name)] compactedString]];
+                                                            UID:[[NSString stringWithUTF8String:(buddy->name)] compactedString]];
 
     //Associate the handle with ui_data and the buddy with our statusDictionary
     buddy->node.ui_data = [contact retain];
@@ -863,14 +873,18 @@
     gaim_accounts_remove (account); account = NULL;
     gc = NULL;
 
-	//Recreate a fresh version of the account
-    account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
-    gaim_accounts_add(account);
-    [(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
+    [self createNewGaimAccount];
     
     gaim_core_mainloop_finish_events();
 }
 
+- (void)createNewGaimAccount
+{
+    //Recreate a fresh version of the account
+    account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
+    gaim_accounts_add(account);
+    [(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
+}
 
 //Account Status ------------------------------------------------------------------------------------------------------
 #pragma mark Account Status
