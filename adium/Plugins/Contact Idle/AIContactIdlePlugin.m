@@ -102,7 +102,6 @@
     NSDate	*idleSince = [inObject statusObjectForKey:@"IdleSince"];
     
     if(idleSince){ //Set the handle's 'idle' value
-		NSLog(@"%@ has an IdleSince",[inObject displayName]);
         int	idle = -[idleSince timeIntervalSinceNow] / 60.0;
 		[inObject setStatusObject:[NSNumber numberWithInt:idle]
 						   forKey:@"Idle"
