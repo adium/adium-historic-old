@@ -7,6 +7,7 @@
 //
 
 #import "CBURLHandlingPlugin.h"
+#import "../Contact List Editor/AINewContactWindowController.h"
 
 @interface CBURLHandlingPlugin(PRIVATE)
 - (void)setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
@@ -77,7 +78,9 @@
                 [self _openChatToContactWithName:[url queryArgumentForKey:@"screenname"] 
 									   onService:@"AIM" 
 									 withMessage:[[url queryArgumentForKey:@"message"] stringByDecodingURLEscapes]];
-            }
+            } else if ([[url host] caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
+				[AINewContactWindowController promptForNewContactOnWindow:nil name:[url queryArgumentForKey:@"screenname"]];
+			}
             
         }else if([[url scheme] isEqualToString:@"ymsgr"]){
             if([[url host] caseInsensitiveCompare:@"sendim"] == NSOrderedSame){
