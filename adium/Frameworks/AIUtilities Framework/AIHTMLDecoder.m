@@ -43,6 +43,7 @@ DeclareString(CloseFont);
 DeclareString(Span);
 DeclareString(CloseSpan);
 DeclareString(BR);
+DeclareString(BRSlash);
 DeclareString(CloseBR);
 DeclareString(B);
 DeclareString(CloseB);
@@ -86,6 +87,7 @@ DeclareString(TagCharStartString);
 	InitString(Span,@"SPAN");
 	InitString(CloseSpan,@"/SPAN");
 	InitString(BR,@"BR");
+	InitString(BRSlash,@"BR/");
 	InitString(CloseBR,@"/BR");
 	InitString(B,@"B");
 	InitString(CloseB,@"/B");
@@ -546,8 +548,9 @@ int HTMLEquivalentForFontSize(int fontSize)
                         [textAttributes setFontFamily:@"Helvetica"];
                         [textAttributes setFontSize:12];
 						
-                    //Line Break
+					//Line Break
                     }else if([chunkString caseInsensitiveCompare:BR] == 0 || 
+							 [chunkString caseInsensitiveCompare:BRSlash] == 0 ||
 							 [chunkString caseInsensitiveCompare:CloseBR] == 0){
 						[attrString appendString:Return withAttributes:nil];								 
 						//Make sure the tag closes, since it may have a <BR /> which stopped the scanner at the space, not the >
