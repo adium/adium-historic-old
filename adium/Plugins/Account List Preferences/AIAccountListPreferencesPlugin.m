@@ -256,7 +256,8 @@
     //Select the new account
     [tableView_accountList selectRow:index byExtendingSelection:NO];
 
-    //Put focus on the account fields
+    //Select the 'Account' tab and put focus on the account fields
+    [tabView_auxilary selectTabViewItemAtIndex:0];
     [[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
 }
 
