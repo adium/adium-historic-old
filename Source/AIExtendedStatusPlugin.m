@@ -87,14 +87,7 @@
 		int				idle;
 		
 		if (showStatus){
-			NSAttributedString	*sourceMessage;
-
-			/* Prefer the ContactListStatusMesssage status object.
-			 * If it isn't set, use the object's current statusState's statusMessage */
-			sourceMessage = [inObject statusObjectForKey:@"ContactListStatusMessage"];
-			if(!sourceMessage) sourceMessage = [[inObject statusState] statusMessage];
-			
-			statusMessage = [[[[[[adium contentController] filterAttributedString:sourceMessage
+			statusMessage = [[[[[[adium contentController] filterAttributedString:[inObject contactListStatusMessage]
 																  usingFilterType:AIFilterDisplay
 																		direction:AIFilterIncoming
 																		  context:inObject] string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
