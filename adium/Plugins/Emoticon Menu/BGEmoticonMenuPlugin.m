@@ -119,7 +119,7 @@
 {
 	if(!emoticonMenu){
 		NSArray		*emoticonPacks = [[adium contentController] emoticonPacks];
-		NSLog(@"####### Buidling emoticon menu");
+
 		if([emoticonPacks count] == 1){
 			//If there is only 1 emoticon pack loaded, do not create submenus
 			emoticonMenu = [[self flatEmoticonMenuForPack:[emoticonPacks objectAtIndex:0]] retain];
@@ -143,7 +143,6 @@
 
 		return(emoticonMenu);
 	}else{
-		NSLog(@"####### copying emoticon menu");
 		return([[emoticonMenu copy] autorelease]);
 	}
 }
