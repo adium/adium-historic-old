@@ -5,13 +5,10 @@
 //  Created by Colin Barrett on Thu Nov 27 2003.
 //
 
-//#import "CBStatusMenuItemView.h"
-
 @interface CBStatusMenuItemController : AIObject <AccountMenuPlugin, AIChatObserver>
 {
     NSStatusItem            *statusItem;
     NSMenu                  *theMenu;
-//  CBStatusMenuItemView    *statusView;
     
     NSMutableArray          *accountMenuItemsArray;
     NSMutableArray          *unviewedObjectsArray;
