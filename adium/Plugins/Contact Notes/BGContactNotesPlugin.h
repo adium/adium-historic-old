@@ -22,8 +22,6 @@
     AIPreferenceViewController			*contactView;
     AIListObject                        *activeListObject;
     BOOL noteSync;
-	
-	NSTimer		*delayedChangesTimer;
 }
 
 - (void)installPlugin;

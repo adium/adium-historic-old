@@ -62,12 +62,10 @@
                                                object:nil];    
     
     activeListObject = nil;
-    delayedChangesTimer = nil;
 }
 
 - (void)uninstallPlugin
 {
-    [delayedChangesTimer release]; delayedChangesTimer = nil;
     [[adium contactController] unregisterListObjectObserver:self];
 }
 
@@ -129,15 +127,9 @@
 
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
 {
-    //Be sure we've set the last changes and invalidated the timer
-    if(delayedChangesTimer) {
-        [self setNotes:nil];
-        if ([delayedChangesTimer isValid]) {
-            [delayedChangesTimer invalidate]; 
-        }
-        [delayedChangesTimer release]; delayedChangesTimer = nil;
-    }
-    
+    //Be sure we've set the last changes
+	[textField_notes fireImmediately];
+
     NSString	*note;
     
     //Hold onto the object
