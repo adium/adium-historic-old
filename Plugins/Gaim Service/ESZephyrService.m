@@ -10,52 +10,48 @@
 #import "ESGaimZephyrAccountViewController.h"
 #import "DCGaimZephyrJoinChatViewController.h"
 
-
 @implementation ESZephyrService
-- (id)initWithService:(id)inService
-{
-    [super initWithService:inService];
-    
-	NSImage *image = [NSImage imageNamed:@"zephyr" forClass:[self class]];
-	
-    //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Zephyr"
-                                                      description:@"Zephyr"
-                                                            image:image
-														menuImage:nil
-                                                    caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-"]
-												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
-													allowedLength:255] retain];
-    
-    //Register this service
-    [[adium accountController] registerService:self];
-    
-    return self;
+
+//Account Creation
+- (Class)accountClass{
+	return([ESGaimZephyrAccount class]);
 }
 
-- (NSString *)identifier
-{
-    return(@"Zephyr-LIBGAIM");
-}
-- (NSString *)description
-{
-    return @"Zephyr";
-}
-
-- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
-{    
-    return([[[ESGaimZephyrAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
-}
-
-- (AIAccountViewController *)accountView
-{
+- (AIAccountViewController *)accountView{
     return([ESGaimZephyrAccountViewController accountView]);
 }
 
-- (DCJoinChatViewController *)joinChatView
-{
+- (DCJoinChatViewController *)joinChatView{
 	return([DCGaimZephyrJoinChatViewController joinChatView]);
+}
+
+//Service Description
+- (NSString *)serviceCodeUniqueID{
+	return(@"libgaim-zephyr");
+}
+- (NSString *)serviceID{
+	return(@"Zephyr");
+}
+- (NSString *)serviceClass{
+	return(@"Zephyr");
+}
+- (NSString *)shortDescription{
+	return(@"Zephyr");
+}
+- (NSString *)longDescription{
+	return(@"Zephyr");
+}
+- (NSCharacterSet *)allowedCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-"]);
+}
+- (NSCharacterSet *)ignoredCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+}
+- (int)allowedLength{
+	return(255);
+}
+- (BOOL)caseSensitive{
+	return(NO);
 }
 
 @end
