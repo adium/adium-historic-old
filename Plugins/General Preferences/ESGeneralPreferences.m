@@ -17,6 +17,8 @@
 
 - (NSMenu *)statusIconsMenu;
 - (NSMenu *)serviceIconsMenu;
+
+- (NSArray *)_allPacksWithExtension:(NSString *)extension inFolder:(NSString *)inFolder;
 @end
 
 @implementation ESGeneralPreferences
@@ -244,7 +246,7 @@
 																  keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:name];
 		[menuItem setImage:[AIStatusIcons previewMenuImageForStatusIconsAtPath:packPath]];
-		[statusIconsMenu addItem:menuItem];		
+		[statusIconsMenu addItem:menuItem];
 	}
 	
 	return(statusIconsMenu);
@@ -266,7 +268,7 @@
 																  keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:name];
 		[menuItem setImage:[AIServiceIcons previewMenuImageForServiceIconsAtPath:packPath]];
-		[serviceIconsMenu addItem:menuItem];		
+		[serviceIconsMenu addItem:menuItem];
 	}
 
 	return(serviceIconsMenu);	
