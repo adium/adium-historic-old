@@ -11,7 +11,6 @@
     IBOutlet    NSButton        *checkbox_outlineGroups;
     IBOutlet    NSColorWell     *colorWell_outlineGroupsColor;
     IBOutlet    NSButton        *checkbox_tooltipsInBackground;
-    IBOutlet    NSButton        *checkbox_tooltipsInBackgroundOtherApps;
     
     //Window
     IBOutlet    NSSlider        *slider_opacity;

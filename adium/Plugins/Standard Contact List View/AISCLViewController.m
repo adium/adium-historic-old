@@ -181,7 +181,6 @@
         NSColor         *labelGroupsColor = [[prefDict objectForKey:KEY_SCL_LABEL_GROUPS_COLOR] representedColor];
         
         allowTooltipsInBackground = [[prefDict objectForKey:KEY_SCL_BACKGROUND_TOOLTIPS] boolValue];
-        allowTooltipsWhileInOtherApps = [[prefDict objectForKey:KEY_SCL_BACKGROUND_TOOLTIPS_OTHERAPPS] boolValue];
         
         //Borderless
         [contactListView setIsBorderless:isBorderless];
@@ -570,8 +569,7 @@
 - (void)_showTooltipAtPoint:(NSPoint)screenPoint
 {
     if(screenPoint.x != 0 && screenPoint.y != 0){
-        if( (allowTooltipsWhileInOtherApps) ||
-            (allowTooltipsInBackground && [NSApp isActive]) || 
+        if( (allowTooltipsInBackground && [NSApp isActive]) || 
             ([[contactListView window] isKeyWindow]) ){
             NSPoint		viewPoint;
             AIListObject	*hoveredObject;
