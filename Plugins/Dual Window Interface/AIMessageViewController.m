@@ -145,6 +145,7 @@
 	[textView_outgoing setChat:chat];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
 	[textView_outgoing setAssociatedView:scrollView_messages];
+	
     [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
     if([textView_outgoing respondsToSelector:@selector(setUsesFindPanel:)]){
 		[textView_outgoing setUsesFindPanel:YES];
@@ -216,8 +217,14 @@
 }
 
 //Return our view
-- (NSView *)view{
+- (NSView *)view
+{
     return(view_contents);
+}
+
+- (NSObject<AIMessageViewController> *)messageViewController
+{
+	return(messageViewController);
 }
 
 //

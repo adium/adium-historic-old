@@ -130,12 +130,15 @@
 {
 	[super windowDidLoad];
 	
+	NSWindow	*theWindow = [self window];
+	
     //Remember the initial tab height
     tabBarHeight = [tabView_customTabs frame].size.height;
 
     //Exclude this window from the window menu (since we add it manually)
-    [[self window] setExcludedFromWindowsMenu:YES];
-	[[self window] useOptimizedDrawing:YES];
+    [theWindow setExcludedFromWindowsMenu:YES];
+
+	[theWindow useOptimizedDrawing:YES];
 	[self _configureToolbar];
 
     //Remove any tabs from our tab view, it needs to start out empty
@@ -580,6 +583,17 @@
 	[self updateTabBarVisibilityAndAnimate:YES];
 }
 
+//Send the print message to our view
+- (void)adiumPrint:(id)sender
+{
+	NSObject<AIMessageViewController> *theMessageViewController;
+	
+	theMessageViewController = [[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] messageViewController] messageViewController];
+	
+	if([theMessageViewController respondsToSelector:@selector(adiumPrint:)]){
+		[theMessageViewController adiumPrint:sender];
+	}
+}
 
 //Toolbar --------------------------------------------------------------------------------------------------------------
 #pragma mark Toolbar
