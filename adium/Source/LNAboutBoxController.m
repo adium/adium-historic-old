@@ -44,7 +44,7 @@ LNAboutBoxController *sharedInstance = nil;
     buildDate = @"-1";
     buildNumber = @"-1";
     char *path, date[256], num[256];
-    if(path = (char *)[[[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil] cString])
+    if(path = (char *)[[[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil] fileSystemRepresentation])
     {
         FILE *f = fopen(path, "r");
         fscanf(f, "%s | %s", num, date);
