@@ -2,13 +2,14 @@
 // Adium 0.8 beta bugs
 //---------------------------------------------------------------------------------------------
 - First launch, need setup assistant or need to open account prefs
+- Account add button needs a triangle to indicate that it's a popup [Colin]
 - List toolbar needs icon for toggle groups, add group, toggle offline contacts
 - Move window shadow preference from layout to advanced
 - Move opacity preference from layout to main pane or advanced
 - Move maximum width slider from layout to main pane
 - Webkit background image type selector needs to be re-implemented
 - Status window when away preference is not implemented
-- Status set state after inactivity is not implemented
+- Status set state after inactivity is not implemented [Evan]
 - MSN display names as extended status isn't working
 - Implement 'edit menu' sheets for deleting list layouts and themes
 - Improve behavior when customizing existing layouts and themes
@@ -16,15 +17,15 @@
 - Implement emoticon menu in appearance
 - Implement emoticons customize sheet in appearance
 - Add a warning sheet about window moving/performance for non-standard styles
-- Not fetching buddy icons as well as we could be
-- Adding an invisible state makes a third section in the state menu (including another custom... item)
+- Not fetching buddy icons as well as we could be [God]
 - Contact menu is inconsistent with menu item naming, item grouping
 - View menu is inconsistent with menu item grouping
 - Update included layouts, themes, and message views
-- Dock icon overlay prefs need to be events, or need to atleast go into advanced for now
-- OTR Private key generation should be cleaner
+- OTR Private key generation should be cleaner [Evan]
 - Jabber account registration
 - The crash reporter shouldn't force people to reopen Adium after a crash.
+
+- Defaulting new accounts to online fails because the UID isn't set properly before attempting to connect.
 
 
 //-------------------------------------------------------------------------------------------------------
