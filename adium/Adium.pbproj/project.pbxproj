@@ -12945,6 +12945,7 @@
 				F527079B04E203BB0114B3C0,
 				F527079E04E203D40114B3C0,
 				F52707A304E203EA0114B3C0,
+				F5E726C204E5E2980100011E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12955,6 +12956,7 @@
 				F5148D9B04C8B4AA018B6CC7,
 				F5319C3804CF3900015DA2B6,
 				F59C2E6204DDC8C201496213,
+				F5B6215F04E2CC3F018B68D6,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12967,6 +12969,7 @@
 				F527079A04E203BB0114B3C0,
 				F527079F04E203D40114B3C0,
 				F52707A204E203EA0114B3C0,
+				F5E726C304E5E2980100011E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17257,6 +17260,9 @@
 			children = (
 				F527079C04E203D40114B3C0,
 				F527079D04E203D40114B3C0,
+				F5E726C004E5E2980100011E,
+				F5E726C104E5E2980100011E,
+				F5B6215E04E2CC3F018B68D6,
 			);
 			isa = PBXGroup;
 			name = "Preference Pane";
@@ -18308,6 +18314,18 @@
 			settings = {
 			};
 		};
+		F5B6215E04E2CC3F018B68D6 = {
+			isa = PBXFileReference;
+			name = ContactAlertsPrefs.nib;
+			path = "Plugins/Contact Alerts/ContactAlertsPrefs.nib";
+			refType = 4;
+		};
+		F5B6215F04E2CC3F018B68D6 = {
+			fileRef = F5B6215E04E2CC3F018B68D6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		F5B89EFC033CA8CC01A8010A = {
 			children = (
 				F57938F1033E745F01A8010A,
@@ -18828,6 +18846,30 @@
 			name = developer;
 			path = Documentation/developer;
 			refType = 4;
+		};
+		F5E726C004E5E2980100011E = {
+			isa = PBXFileReference;
+			name = ESContactAlertsActionColumn.h;
+			path = "Plugins/Contact Alerts/ESContactAlertsActionColumn.h";
+			refType = 4;
+		};
+		F5E726C104E5E2980100011E = {
+			isa = PBXFileReference;
+			name = ESContactAlertsActionColumn.m;
+			path = "Plugins/Contact Alerts/ESContactAlertsActionColumn.m";
+			refType = 4;
+		};
+		F5E726C204E5E2980100011E = {
+			fileRef = F5E726C004E5E2980100011E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5E726C304E5E2980100011E = {
+			fileRef = F5E726C104E5E2980100011E;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		F5F0FE9C04B12CAC01A80106 = {
 			fileEncoding = 30;
