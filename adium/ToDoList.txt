@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.24 2004/04/08 00:34:14 evands Exp $
+$Id: ToDoList.txt,v 1.25 2004/04/08 12:06:48 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -17,7 +17,7 @@ Bugs
 * Adium will unhide if hidden (via cmd-H) while a tooltip is visible
 * Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
 * Contact list flippy triangles are white behind them in 10.2 [Colin]
-* If preferences are selected to advanced on close, the window will be vertically small on re-open.
+= If preferences are selected to advanced on close, the window will be vertically small on re-open.
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * Deleting the default theme makes the prefs crash on subsequent loads: http://www.visualdistortion.org/crash/view.jsp?crash=7709
 * Is TOC2 hiding somewhere? Check out: http://www.visualdistortion.org/crash/view.jsp?crash=7680
@@ -25,6 +25,7 @@ Bugs
 * accountXferDestroy in CBGaimAccount appears to be doing.. something.. wrong, causing a lot of file transfer crashes: http://www.visualdistortion.org/crash/view.jsp?crash=7660
 * Deleting a "new account" doesn't display <New Account> as the name in  the resulting confirmation dialogue
 * Version checker reports 'up to date' when there is no net connection (and when the server cannot be reached?)
+* We aren't processing <code> tags in our HTML decoder (Jabber uses them)
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
