@@ -1,4 +1,3 @@
-/*
 create schema adium;
 
 create table adium.users (
@@ -9,7 +8,7 @@ unique(username,service)
 );
 
 create table adium.messages (
-message_id =serial primary key,
+message_id serial primary key,
 message_date timestamp default 'now',
 message varchar(8096),
 sender_id int references adium.users(user_id) not null,
@@ -33,7 +32,7 @@ from adium.messages m,
      adium.users r
 where m.sender_id = s.user_id
       and m.recipient_id = r.user_id;
-*/
+
 create or replace rule insert_message_v as
 on insert to adium.message_v
 do instead  (
