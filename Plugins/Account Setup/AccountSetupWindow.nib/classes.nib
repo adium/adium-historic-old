@@ -2,7 +2,7 @@
     IBClasses = (
         {
             ACTIONS = {toggleInactiveServices = id; }; 
-            CLASS = AIAccountSetupWindowController; 
+            CLASS = AIAccountSetupOverviewView; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "box_newUserHeader" = NSBox; 
@@ -12,6 +12,18 @@
                 "grid_inactiveServices" = AIViewGridView; 
                 "textField_inactiveServicesToggle" = NSTextField; 
             }; 
+            SUPERCLASS = AIAccountSetupView; 
+        }, 
+        {
+            CLASS = AIAccountSetupView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {controller = AIAccountSetupWindowController; }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {
+            CLASS = AIAccountSetupWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"view_overview" = NSView; }; 
             SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 

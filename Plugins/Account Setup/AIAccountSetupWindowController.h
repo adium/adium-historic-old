@@ -13,58 +13,17 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAccountController, AIAccount, AIAutoScrollView, ESImageViewWithImagePicker;
-@class AIViewGridView;
+@class AIAccountSetupView;
 
 @interface AIAccountSetupWindowController : AIWindowController {
-	IBOutlet		NSBox						*box_newUserHeader;
-	IBOutlet		NSBox						*box_serviceDivider;
-	IBOutlet		AIViewGridView				*grid_activeServices;
-	IBOutlet		AIViewGridView				*grid_inactiveServices;
+	IBOutlet		NSView		*view_overview;
 	
-	IBOutlet		NSButton					*button_inactiveServicesToggle;
-	IBOutlet		NSTextField					*textField_inactiveServicesToggle;
-	
-	//Account status
-//	IBOutlet		NSTextField					*textField_status;
-//	IBOutlet		NSProgressIndicator			*progress_status;
-//	IBOutlet		NSButton					*button_toggleConnect;
-//	IBOutlet		NSButton					*button_register;
-//	
-//	//Account preferences
-//    IBOutlet		NSTabView					*tabView_auxiliary;
-//    IBOutlet		NSView						*view_accountDetails;
-//    IBOutlet		NSPopUpButton				*popupMenu_serviceList;
-//	IBOutlet		ESDelayedTextField			*textField_accountName;
-//	IBOutlet		NSTextField					*textField_userNameLabel;
-//    IBOutlet		NSButton					*button_autoConnect;
-//	IBOutlet		ESImageViewWithImagePicker  *imageView_userIcon;
-//
-//	//Account list
-//    IBOutlet		AIAutoScrollView			*scrollView_accountList;
-//    IBOutlet		NSTableView					*tableView_accountList;
-//	IBOutlet		NSPopUpButton				*button_newAccount;
-//    IBOutlet		NSButton					*button_deleteAccount;
-//
-//	//Current configuration
-//	AIService						*configuredForService;
-//	AIAccount						*configuredForAccount;
-//    AIAccountViewController			*accountViewController;
-//	NSTimer							*responderChainTimer;
-//
-//    //Account List
-//    NSArray							*accountArray;
-//    AIAccount						*tempDragAccount;
+	AIAccountSetupView			*activeView;
 }
 
 + (AIAccountSetupWindowController *)accountSetupWindowController;
-- (IBAction)toggleInactiveServices:(id)sender;
 
-//- (IBAction)deleteAccount:(id)sender;
-//- (IBAction)selectServiceType:(id)sender;
-//- (IBAction)toggleAutoConnect:(id)sender;
-//- (IBAction)changeUIDField:(id)sender;
-//- (IBAction)toggleConnectStatus:(id)sender;
-//- (IBAction)registerAccount:(id)sender;
+- (void)setActiveSetupView:(AIAccountSetupView *)inView;
+- (void)sizeWindowForContent;
 
 @end
