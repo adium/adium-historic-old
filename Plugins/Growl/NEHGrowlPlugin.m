@@ -157,6 +157,13 @@
 				[chat uniqueChatID], @"uniqueChatID",
 				eventID, @"eventID",
 				nil];
+			
+			//If we have no listObject or we have a name, we are a group chat and
+			//should use the account's service icon
+			iconData = [[AIServiceIcons serviceIconForObject:[chat account]
+														type:AIServiceIconLarge
+												   direction:AIIconNormal] TIFFRepresentation];
+			
 		}else{
 			title = @"Adium";
 		}
