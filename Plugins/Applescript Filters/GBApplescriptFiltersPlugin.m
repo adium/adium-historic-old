@@ -522,7 +522,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 //Execute the script, returning its output
 - (NSString *)_executeScript:(NSMutableDictionary *)infoDict withArguments:(NSArray *)arguments
 {
-	NDAppleScriptObject	*script;
+	NDAppleScriptObject		*script;
 	NSString			*result;
 	
 	//Attempt to use a cached script
@@ -544,7 +544,11 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	[currentComponentInstance setAppleEventSendTarget:self];
 
 	[script executeSubroutineNamed:@"substitute" argumentsArray:arguments];
-	result = [script resultAsString];
+	
+	/* resultAsString isn't threadsafe; perform it on the main thread and use its return value */
+	result = [script mainPerformSelector:@selector(resultAsString)
+							  withObject:nil
+							 returnValue:YES];
 	
 	//Result will be enclosed in quotes; we don't want 'em
 	if (result && ([result length] >= 2)){
