@@ -86,6 +86,7 @@ JSCEventBezelController *sharedEventBezelInstance = nil;
 - (void)showBezelWithContact:(NSString *)contactName
 withImage:(NSImage *)buddyIcon
 forEvent:(NSString *)event
+withMessage:(NSString *)message
 ignoringClicks:(BOOL)ignoreClicks
 {
     if ([self window]) {
@@ -94,13 +95,21 @@ ignoringClicks:(BOOL)ignoreClicks
 		if ([bezelWindow onScreen]) {
 			[bezelDataQueue addObject: contactName];
 			[bezelDataQueue addObject: buddyIcon];
-			[bezelDataQueue addObject: event];
+			if (message) {
+				[bezelDataQueue addObject: message];
+			} else {
+				[bezelDataQueue addObject: event];
+			}
 			[bezelDataQueue addObject: [[self buddyIconLabelColor] copy]];
 			[bezelDataQueue addObject: [[self buddyNameLabelColor] copy]];
 		} else {
 			[bezelView setMainBuddyName: contactName];
 			[bezelView setBuddyIconImage: buddyIcon];
-			[bezelView setMainBuddyStatus: event];
+			if (message) {
+				[bezelView setMainBuddyStatus: message];
+			} else {
+				[bezelView setMainBuddyStatus: event];
+			}
 			[bezelView setBuddyIconLabelColor: [self buddyIconLabelColor]];
 			[bezelView setBuddyNameLabelColor: [self buddyNameLabelColor]];
 			

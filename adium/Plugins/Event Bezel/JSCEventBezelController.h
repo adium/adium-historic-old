@@ -27,6 +27,7 @@
 - (void)showBezelWithContact:(NSString *)contactName
 withImage:(NSImage *)buddyIcon
 forEvent:(NSString *)event
+withMessage:(NSString *)message
 ignoringClicks:(BOOL)ignoreClicks;
 
 - (int)bezelDuration;
