@@ -30,7 +30,9 @@ Version 0.53 (4/  /2004)
 - Fixed cosmetic issue with away message menu
 - Fixed several memory leaks
 - Fixed a bug with japanese text in the webkit message view
-- Performance and launch time improvements			
+- Performance and launch time improvements
+- Themes and sounds can be put in more places now - specifically, all three Library/Application Support folders (Home/L/AS/Adium 2.0, /L/AS/Adium 2.0, and /Network/L/AS/Adium 2.0). You can already do this with scripts.
+- Scripts (and themes and sounds) in the Adium application bundle no longer override those in the Application Support folders.
 				
 Version 0.52 (4/16/2004)
 - Message windows now display a customizable number of lines from the previous conversation when opened
