@@ -34,6 +34,7 @@ Version 0.58 (6/04/2004)
 - Fixed several issues related to reconnection
 - Fixed issues with links containing ampersands
 - Fixed pasting into message windows when the text entry field was inactive
+- Fixed date stamps in message windows to properly respect systemwide international preferences
 - Fixed multiple memory leaks
 - Many other small fixes and improvements
 

@@ -76,9 +76,6 @@
 //------------------------------------------------------------------------------------
 // Bugs - Deferred (Awaiting a rewrite / other change)
 //------------------------------------------------------------------------------------
-- Info window can be opened with no selection
-	Shows a blank window titled "window".  Waiting on info/inspector/alert merge.
-
 - AIM chats are logging as (null)
 	Happens with both loggers.  Waiting on full multi-chat support.
 
@@ -114,7 +111,6 @@
 	[Dave] Since we do case-insensitive compares, and the Finder doesn't seem to care, we COULD use AdiumEmoticonSet
 	[Adam] Need to be careful.. some users are running on case-sensitive file systems
 - Crash reporter doesn't appear for some users (snu on IRC in particular)
-- Message view time stamps not 100% localized? "den 29 May 2004" - [swedish] [29] [english] [2004]
 
 
 
