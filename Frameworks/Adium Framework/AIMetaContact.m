@@ -85,6 +85,14 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 	return([[self preferredContact] account]);
 }
 
+#warning (adam) Hey Evan, will having a non-nil service break anything dealing with meta contacts?
+//Return the service of our preferred contact, so we will display the service icon of our preferred contact on the list
+- (AIService *)service
+{
+	return([[self preferredContact] service]);
+}
+
+
 //Object Storage -------------------------------------------------------------------------------------------------------
 #pragma mark Object Storage
 //Add an object to this meta contact (PRIVATE: For contact controller only)
