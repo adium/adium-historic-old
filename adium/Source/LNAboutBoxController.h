@@ -16,21 +16,23 @@
 #import "AILinkTextView.h"
 
 @interface LNAboutBoxController : AIWindowController {
-
+	IBOutlet	NSPanel		*panel_licenseSheet;
+	IBOutlet	NSTextView	*textView_license;
+	
     IBOutlet	NSButton	*button_duckIcon;
     IBOutlet	NSButton	*button_buildButton;
     IBOutlet	NSTextField	*textField_version;
     IBOutlet	NSTextView	*textView_credits;
 
-    //NSMutableArray      *avatarArray;
-    NSString 		*buildNumber, *buildDate;
-    int			numberOfDuckClicks, numberOfBuildFieldClicks;
-    BOOL		previousKeyWasOption;
+	//Version and duck clicking
+    NSString 				*buildNumber, *buildDate;
+    int						numberOfDuckClicks, numberOfBuildFieldClicks;
     
-    NSTimer		*scrollTimer;
-    float		scrollLocation;
-    int			maxScroll;
-    float               scrollRate;
+	//Scrolling
+    NSTimer					*scrollTimer;
+    float					scrollLocation;
+    int						maxScroll;
+    float               	scrollRate;
 }
 
 + (LNAboutBoxController *)aboutBoxController;
@@ -38,5 +40,7 @@
 - (IBAction)adiumDuckClicked:(id)sender;
 - (IBAction)buildFieldClicked:(id)sender;
 - (IBAction)visitHomepage:(id)sender;
+- (IBAction)showLicense:(id)sender;
+- (IBAction)hideLicense:(id)sender;
 
 @end

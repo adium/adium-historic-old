@@ -1,12 +1,19 @@
 {
     IBClasses = (
         {CLASS = AILinkTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {
                 adiumDuckClicked = id; 
                 buildFieldClicked = id; 
                 closeWindow = id; 
+                hideLicense = id; 
+                showLicense = id; 
                 visitHomepage = id; 
             }; 
             CLASS = LNAboutBoxController; 
@@ -14,10 +21,12 @@
             OUTLETS = {
                 "button_buildButton" = NSButton; 
                 "button_duckIcon" = NSButton; 
+                "panel_licenseSheet" = NSPanel; 
                 "textField_version" = NSTextField; 
                 "textView_credits" = NSTextView; 
+                "textView_license" = NSTextView; 
             }; 
-            SUPERCLASS = NSWindowController; 
+            SUPERCLASS = AIWindowController; 
         }
     ); 
     IBVersion = 1; 

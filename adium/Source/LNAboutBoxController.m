@@ -13,21 +13,18 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//$Id: LNAboutBoxController.m,v 1.31 2004/03/24 14:06:18 adamiser Exp $
+//$Id: LNAboutBoxController.m,v 1.32 2004/03/24 22:30:26 adamiser Exp $
 
 #import "LNAboutBoxController.h"
 
-#define ABOUT_BOX_NIB			@"AboutBox"
-#define	ADIUM_SITE_LINK			@"http://www.adiumx.com/"
-#define DIRECTORY_INTERNAL_RESOURCES    @"/Contents/Resources/Avatars"
+#define ABOUT_BOX_NIB					@"AboutBox"
+#define	ADIUM_SITE_LINK					@"http://www.adiumx.com/"
 
 @interface LNAboutBoxController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (BOOL)windowShouldClose:(id)sender;
-- (void)_adiumDuckOptionClicked;
 - (NSString *)_applicationVersion;
 - (void)_loadBuildInformation;
-- (NSArray *)_availableAvatars;
 @end
 
 @implementation LNAboutBoxController
@@ -55,7 +52,6 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 //Dealloc
 - (void)dealloc
 {    
-    //[avatarArray release];
     [buildNumber release];
     [buildDate release];
     
@@ -103,21 +99,8 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 {
     [sharedAboutBoxInstance autorelease]; sharedAboutBoxInstance = nil;
     [scrollTimer invalidate]; [scrollTimer release]; scrollTimer = nil;
-
+	
     return(YES);
-}
-
-//Scroll credits
-- (void)scrollTimer:(NSTimer *)scrollTimer
-{    
-//    if([[textView_credits window] isMainWindow]){
-		scrollLocation += scrollRate;
-		
-		if(scrollLocation > maxScroll) scrollLocation = 0;    
-		if(scrollLocation < 0) scrollLocation = maxScroll;
-		
-		[textView_credits scrollPoint:NSMakePoint(0, scrollLocation)];
-//    }
 }
 
 //Visit the Adium homepage
@@ -126,69 +109,41 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://www.adiumx.com"]];
 }
 
-//Flap or transition the duck when clicked
-- (IBAction)adiumDuckClicked:(id)sender
-{
-    numberOfDuckClicks++;
 
-    if([NSEvent optionKey]){
-        [self _adiumDuckOptionClicked];
+//Scrolling Credits ----------------------------------------------------------------------------------------------------
+#pragma mark Scrolling Credits
+//Scroll the credits
+- (void)scrollTimer:(NSTimer *)scrollTimer
+{    
+	scrollLocation += scrollRate;
 	
+	if(scrollLocation > maxScroll) scrollLocation = 0;    
+	if(scrollLocation < 0) scrollLocation = maxScroll;
+	
+	[textView_credits scrollPoint:NSMakePoint(0, scrollLocation)];
+}
+
+//Receive the flags changed event for reversing the scroll direction via option
+- (void)flagsChanged:(NSEvent *)theEvent
+{
+    if([theEvent optionKey]) {
+        scrollRate = -1.0;
     }else{
-        if(previousKeyWasOption){
-            [button_duckIcon setImage:[AIImageUtilities imageNamed:@"Awake" forClass:[self class]]];
-            [button_duckIcon setAlternateImage:[AIImageUtilities imageNamed:@"Flap" forClass:[self class]]];
-            previousKeyWasOption = YES;
-        }
-        
-        if(numberOfDuckClicks == 10/*[avatarArray count]*/){
-            numberOfDuckClicks = -1;            
-            [[adium soundController] playSoundNamed:@"/Adium.AdiumSoundset/Feather Ruffle.aif"];
-        }else{
-            [[adium soundController] playSoundNamed:@"/Adium.AdiumSoundset/Quack.aif"];
-        }
+        scrollRate = 1.0;   
     }
 }
 
+
+//Build Information ----------------------------------------------------------------------------------------------------
+#pragma mark Build Information
 //Toggle build date/number display
 - (IBAction)buildFieldClicked:(id)sender
 {
     if((++numberOfBuildFieldClicks) % 2 == 0){
         [button_buildButton setTitle:buildDate];
     }else{
-	[button_buildButton setTitle:buildNumber];
+		[button_buildButton setTitle:buildNumber];
     }
-}
-
-//Receive the flags changed event for reversing the scroll direction via option
-- (void)flagsChanged:(NSEvent *)theEvent
-{
-    if ([theEvent optionKey]) {
-        scrollRate = -1.0;
-    } else {
-        scrollRate = 1.0;   
-    }
-}
-
-//Transition the duck to a new avatar
-- (void)_adiumDuckOptionClicked
-{
-/*    previousKeyWasOption = YES;
-    [button_duckIcon setAlternateImage:nil];
-    
-    if(numberOfDuckClicks == [avatarArray count]){
-        numberOfDuckClicks = -1;
-        [button_duckIcon setImage:[AIImageUtilities imageNamed:@"Awake" forClass:[self class]]];
-        [button_duckIcon setAlternateImage:nil];
-        
-        [[adium soundController] playSoundNamed:@"/Adium/Feather Ruffle.aif"];
-        
-    }else{
-
-        [button_duckIcon setImage:[[[NSImage alloc] initWithContentsOfFile:[avatarArray objectAtIndex:numberOfDuckClicks]] autorelease]];
-
-        [[adium soundController] playSoundNamed:@"/Aquatech/Ghost Hiss.aiff"];  
-    }*/
 }
 
 //Returns the current version of Adium
@@ -196,30 +151,8 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 {
     NSDictionary    *infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString	    *version = [infoDict objectForKey:@"CFBundleVersion"];
-
+	
     return([NSString stringWithFormat:@"Adium %@",(version ? version : @"")]);
-}
-
-//Returns an array of available avatar filenames
-- (NSArray *)_availableAvatars
-{
-    NSMutableArray	    *outArray = [NSMutableArray array];
-    NSString		    *avatarPath;
-    NSDirectoryEnumerator   *enumerator;
-    NSString		    *avatarName;
-    
-    //Get the directory listing
-    avatarPath = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_RESOURCES] stringByExpandingTildeInPath];
-    enumerator = [[NSFileManager defaultManager] enumeratorAtPath:avatarPath];
-
-    //Filter out any invalid
-    while(avatarName = [enumerator nextObject]){
-	if(![avatarName hasPrefix:@"."]){
-	    [outArray addObject:[avatarPath stringByAppendingPathComponent:avatarName]];
-	}
-    }
-
-    return(outArray);
 }
 
 //Load the current build date and our cryptic, non-sequential build number ;)
@@ -232,23 +165,64 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
         FILE *f = fopen(path, "r");
         fscanf(f, "%s | %s | %s", num, unixDate, whoami);
         fclose(f);
-	
+		
         if(*num){
             buildNumber = [[NSString stringWithFormat:@"%s", num] retain];
-	}
-	
-	if(*unixDate){
-	    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%B %e, %Y" allowNaturalLanguage:NO] autorelease];
+		}
+		
+		if(*unixDate){
+			NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%B %e, %Y" allowNaturalLanguage:NO] autorelease];
             NSDate	    *date;
-	    
-	    date = [NSDate dateWithTimeIntervalSince1970:[[NSString stringWithCString:unixDate] doubleValue]];
+			
+			date = [NSDate dateWithTimeIntervalSince1970:[[NSString stringWithCString:unixDate] doubleValue]];
             buildDate = [[dateFormatter stringForObjectValue:date] retain];
-	}
+		}
     }
-
+	
     //Default to empty strings if something goes wrong
     if(!buildDate) buildDate = [@"" retain];
     if(!buildNumber) buildNumber = [@"" retain];
 }
+
+
+//Software License -----------------------------------------------------------------------------------------------------
+#pragma mark Software License
+//Display the software license sheet
+- (IBAction)showLicense:(id)sender
+{
+	NSString	*licensePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"License" ofType:@"txt"];
+	[textView_license setString:[NSString stringWithContentsOfFile:licensePath]];
+	
+	[NSApp beginSheet:panel_licenseSheet
+	   modalForWindow:[self window]
+		modalDelegate:nil
+	   didEndSelector:nil
+		  contextInfo:nil];
+}
+
+//Close the software license sheet
+- (IBAction)hideLicense:(id)sender
+{
+    [panel_licenseSheet orderOut:nil];
+    [NSApp endSheet:panel_licenseSheet returnCode:0];
+}
+
+
+//Sillyness ----------------------------------------------------------------------------------------------------
+#pragma mark Sillyness
+//Flap the duck when clicked
+- (IBAction)adiumDuckClicked:(id)sender
+{
+    numberOfDuckClicks++;
+
+	if(numberOfDuckClicks == 10){
+		numberOfDuckClicks = -1;            
+		[[adium soundController] playSoundNamed:@"/Adium.AdiumSoundset/Feather Ruffle.aif"];
+	}else{
+		[[adium soundController] playSoundNamed:@"/Adium.AdiumSoundset/Quack.aif"];
+	}
+	
+}
+
 
 @end
