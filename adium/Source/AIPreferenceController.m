@@ -33,6 +33,8 @@
 
     paneArray = [[NSMutableArray alloc] init];
     groupDict = [[NSMutableDictionary alloc] init];
+    delayedNotificationGroups = [[NSMutableSet alloc] init];
+    shouldDelay = NO;
     
     [owner registerEventNotification:Preference_GroupChanged displayName:@"Preferences Changed"];
 
@@ -53,11 +55,12 @@
     [AIPreferenceWindowController closeSharedInstance]; //Close the preference window
     
     //Preferences are (always) saved as they're modified, so there's no need to save them here.
-}
+} 
 
 //dealloc
 - (void)dealloc
 {
+    [delayedNotificationGroups release]; delayedNotificationGroups = nil;
     [paneArray release]; paneArray = nil;
     [groupDict release]; groupDict = nil;
 
@@ -162,8 +165,27 @@
     [prefDict setObject:objectPrefDict forKey:prefDictKey];
     [self savePreferences:prefDict forGroup:groupName];
     
-    //Broadcast a group changed notification
-    [[owner notificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
+    if (shouldDelay) {
+        [delayedNotificationGroups addObject:groupName];
+    } else {
+        //Broadcast a group changed notification
+        [[owner notificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
+    }
+}
+
+//This should be used like [lockFocus] / [unlockFocus] around groups of preference changes
+- (void)delayPreferenceChangedNotifications:(BOOL)inDelay
+{
+    if (inDelay != shouldDelay) {
+        shouldDelay = inDelay;
+        if (!inDelay) {
+            NSEnumerator    *enumerator = [delayedNotificationGroups objectEnumerator];
+            NSString        *groupName;
+            while (groupName = [enumerator nextObject])
+                [[owner notificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",nil]];
+            [delayedNotificationGroups removeAllObjects];
+        }
+    }
 }
     
 //Using General Preferences ----------------------------------------------------------------------
