@@ -34,6 +34,7 @@
 {
     //init
     [super init];
+	chat = [inChat retain];
 	plugin = [inPlugin retain];
     previousContent = nil;
 	newContentTimer = nil;
@@ -72,6 +73,7 @@
 	[newContent release];
 	[newContentTimer invalidate]; [newContentTimer release];
 	[plugin release]; plugin = nil;
+	[chat release]; chat = nil;
 	
 	[super dealloc];
 }
@@ -135,7 +137,10 @@
 					
 				basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
 				headerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
+				headerHTML = [plugin fillKeywords:[[headerHTML mutableCopy] autorelease] forChat:chat];
+				
 				footerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];
+				footerHTML = [plugin fillKeywords:[[footerHTML mutableCopy] autorelease] forChat:chat];
 				
 				//Load the template, and fill it up
 				templateHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];

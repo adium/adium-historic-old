@@ -22,6 +22,14 @@
 		</dict>
 	</array>
 	
+	<key>Chat</key>
+	<dict>
+		<key>Type</key>
+		<string>IM</string>
+		<key>User</key>
+		<string>fetchgreebledonx</string>
+	</dict>
+	
 	<key>Preview Messages</key>
 	<dict>
 		<key>1</key>

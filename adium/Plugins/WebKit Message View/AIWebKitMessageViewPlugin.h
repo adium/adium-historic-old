@@ -40,5 +40,6 @@
 - (NSString *)keyForDesiredVariantOfStyle:(NSString *)desiredStyle;
 - (void)processContent:(AIContentObject *)content withPreviousContent:(AIContentObject *)previousContent forWebView:(WebView *)webView fromStylePath:(NSString *)stylePath;
 - (void)loadPreferencesForWebView:(ESWebView *)webView withStyleNamed:(NSString *)styleName;
+- (NSMutableString *)fillKeywords:(NSMutableString *)inString forChat:(AIChat *)chat;
 
 @end
