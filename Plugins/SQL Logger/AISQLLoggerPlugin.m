@@ -105,7 +105,7 @@
 //Content was sent or recieved
 - (void)adiumSentOrReceivedContent:(NSNotification *)notification
 {
-    AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
+    AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
     
     //Message Content
     if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]){
