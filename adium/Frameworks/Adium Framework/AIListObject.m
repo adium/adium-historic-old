@@ -218,7 +218,7 @@ DeclareString(FormattedUID);
 //Empty implementation by default - we do not need to take any action when a mutable owner array changes
 - (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(AIListObject *)anObject withOwner:(AIListObject *)inOwner
 {
-#warning Evan: We could destroy empty mutable owner arrays here... worthwhile?
+
 }
 
 //Object specific preferences ------------------------------------------------------------------------------------------
@@ -407,14 +407,14 @@ DeclareString(FormattedUID);
 - (AIStatusSummary)statusSummary
 {
 	if ([[self numberStatusObjectForKey:@"Online"] boolValue]){
-		if ([[self numberStatusObjectForKey:@"Away"] boolValue]){
-			if ([self statusObjectForKey:@"IdleSince"]){
+		if ([[self numberStatusObjectForKey:@"Away" fromAnyContainedObject:NO] boolValue]){
+			if ([self statusObjectForKey:@"IdleSince" fromAnyContainedObject:NO]){
 				return AIAwayAndIdleStatus;
 			}else{
 				return AIAwayStatus;
 			}
 			
-		}else if ([self statusObjectForKey:@"IdleSince"]){
+		}else if ([self statusObjectForKey:@"IdleSince" fromAnyContainedObject:NO]){
 			return AIIdleStatus;
 			
 		}else{
@@ -423,7 +423,7 @@ DeclareString(FormattedUID);
 		}
 	}else{
 		//We don't know the status of an stranger who isn't showing up as online
-		if ([[self numberStatusObjectForKey:@"Stranger"] boolValue]){
+		if ([[self numberStatusObjectForKey:@"Stranger" fromAnyContainedObject:NO] boolValue]){
 			return AIUnknownStatus;
 			
 		}else{

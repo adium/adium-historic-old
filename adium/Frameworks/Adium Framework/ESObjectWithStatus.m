@@ -156,6 +156,42 @@ DeclareString(Value);
 	return([[statusDictionary objectForKey:key] string]);
 }
 
+//---- fromAnyContainedObject status object behavior ----
+//If fromAnyContainedObject is YES, return the best value from any contained object if the preferred object returns nil.
+//If it is NO, only look at the preferred object.
+//For the superclass, the fromAnyContainedObject argument has no effect
+//General status object
+- (id)statusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+{
+	return([self statusObjectForKey:key]);
+}
+
+//NSDate
+- (NSDate *)earliestDateStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+{
+	return([self earliestDateStatusObjectForKey:key]);
+}
+
+//NSNumber
+- (NSNumber *)numberStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+{
+	return([self numberStatusObjectForKey:key]);
+}
+
+//Integer (uses numberStatusObjectForKey:)
+- (int)integerStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+{
+	NSNumber *returnValue = [self numberStatusObjectForKey:key];
+	
+    return(returnValue ? [returnValue intValue] : 0);
+}
+
+//String from attributed string (uses statusObjectForKey:)
+- (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+{
+	return([self stringFromAttributedStringStatusObjectForKey:key]);
+}
+
 //For Subclasses -------------------------------------------------------------------------------------------------------
 #pragma mark For Subclasses
 

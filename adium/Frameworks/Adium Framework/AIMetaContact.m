@@ -495,23 +495,23 @@
 
 - (id)statusObjectForKey:(NSString *)key
 {
-	return([self statusObjectForKey:key fromAnyContainedObject:NO]);
+	return([self statusObjectForKey:key fromAnyContainedObject:YES]);
 }
 - (int)integerStatusObjectForKey:(NSString *)key
 {
-	return([self integerStatusObjectForKey:key fromAnyContainedObject:NO]);
+	return([self integerStatusObjectForKey:key fromAnyContainedObject:YES]);
 }
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key
 {
-	return([self earliestDateStatusObjectForKey:key fromAnyContainedObject:NO]);
+	return([self earliestDateStatusObjectForKey:key fromAnyContainedObject:YES]);
 }
 - (NSNumber *)numberStatusObjectForKey:(NSString *)key
 {
-	return([self numberStatusObjectForKey:key fromAnyContainedObject:NO]);
+	return([self numberStatusObjectForKey:key fromAnyContainedObject:YES]);
 }
 - (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key
 {
-	return([self stringFromAttributedStringStatusObjectForKey:key fromAnyContainedObject:NO]);
+	return([self stringFromAttributedStringStatusObjectForKey:key fromAnyContainedObject:YES]);
 }
 
 //---- fromAnyContainedObject status object behavior ----
@@ -558,7 +558,7 @@
 	id					returnValue;
 	
 	returnValue = [keyArray objectWithOwner:[self preferredContact]];
-	
+
 	//If we got nil and we want to look at our contained objects, return the objectValue
 	if (!returnValue && containedObjectSelector){
 		returnValue = [keyArray performSelector:containedObjectSelector];
