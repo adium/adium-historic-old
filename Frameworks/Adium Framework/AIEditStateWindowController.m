@@ -112,7 +112,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 		
 		target = inTarget;
 		isOnPantherOrBetter = [NSApp isOnPantherOrBetter];
-		showSaveCheckbox = inShowSaveCheckbox;
+		allowSave = inShowSaveCheckbox;
 	}
 	
 	return(self);
@@ -198,7 +198,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[intFormatter release];
 	*/
 
-	if(!showSaveCheckbox){
+	if(!allowSave){
 		if(isOnPantherOrBetter){
 			[checkBox_save setHidden:YES];
 		}else{
@@ -543,7 +543,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 {
 	double		idleStart = [textField_idleHours intValue]*3600 + [textField_idleMinutes intValue]*60;
 	
-	[workingStatusState setMutabilityType:((!showSaveCheckbox || ([checkBox_save state] == NSOnState)) ?
+	[workingStatusState setMutabilityType:((!allowSave || ([checkBox_save state] == NSOnState)) ?
 										   AIEditableStatusState :
 										   AITemporaryEditableStatusState)];
 
