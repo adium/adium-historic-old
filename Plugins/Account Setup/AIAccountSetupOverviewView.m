@@ -54,7 +54,7 @@
 		[grid_inactiveServices addView:serviceView];
 		[serviceView release];
 	}
-	[grid_inactiveServices setHidden:([inactiveServices count] == 0)];
+	[grid_inactiveServices setHidden:([inactiveServices count] == 0 || ! [button_inactiveServicesToggle state])];
 }
 
 //View will close

@@ -14,6 +14,9 @@
 @interface AIAccountSetupNewAccountView : AIAccountSetupView {
 	IBOutlet	NSImageView			*image_serviceIcon;
 	IBOutlet	NSTextField			*textField_serviceName;
+	IBOutlet	NSTextField			*textField_serviceHelp;
+	IBOutlet	NSButtonCell		*radio_registerNew;
+	IBOutlet	NSButtonCell		*radio_useExisting;
 	
 	AIService			*service;
 }
