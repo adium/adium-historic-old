@@ -221,7 +221,8 @@ static NSData *OWKCGetItemAttribute(KCItemRef item, KCItemAttr attrTag)
 			
 			data = OWKCGetItemAttribute(item, kSecLabelItemAttr);
 			if(data) {
-				server = [NSString stringWithCString:[data bytes] length:[data length]];
+//				server = [NSString stringWithCString:[data bytes] length:[data length]];
+				server = [NSString stringWithUTF8String:[data bytes]];
 			}
 			
 			if([key isEqualToString:server]) {
@@ -230,7 +231,8 @@ static NSData *OWKCGetItemAttribute(KCItemRef item, KCItemAttr attrTag)
 				
 				data = OWKCGetItemAttribute(item, kSecAccountItemAttr);
 				if(data){
-					username = [NSString stringWithCString:[data bytes] length:[data length]];
+//					username = [NSString stringWithCString:[data bytes] length:[data length]];
+					username = [NSString stringWithUTF8String:[data bytes]];
 				}else{
 					username = @"";
 				}
