@@ -41,12 +41,6 @@
 	
 	highlightColor = [self highlightColorWithFrame:cellFrame inView:controlView];
 	highlighted = [self isHighlighted];
-	/*
-	if(highlighted){
-		[highlightColor set];
-		NSRectFill(cellFrame);
-	}
-	 */
 	
 	//Draw the cell's text
 	if(title != nil){
