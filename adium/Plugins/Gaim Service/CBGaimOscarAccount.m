@@ -95,11 +95,17 @@ static BOOL didInitOscar = NO;
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
 {
-	if (disconnectionError && ([disconnectionError rangeOfString:@"Incorrect nickname or password."].location != NSNotFound)) {
-		[[adium accountController] forgetPasswordForAccount:self];
+	BOOL shouldAttemptReconnect = YES;
+	
+	if (disconnectionError) {
+		if (([disconnectionError rangeOfString:@"Incorrect nickname or password."].location != NSNotFound)) {
+			[[adium accountController] forgetPasswordForAccount:self];
+		}else if (([disconnectionError rangeOfString:@"signed on with this screen name at another location"].location != NSNotFound)) {
+			shouldAttemptReconnect = NO;
+		}
 	}
 	
-	return YES;
+	return shouldAttemptReconnect;
 }
 
 #pragma mark Account Connection
@@ -443,7 +449,7 @@ aim_srv_setavailmsg(od->sess, text);
 		
 	}
 	
-//	NSLog(@"[%s] [%i] [%i]",bytes,length,desiredEncoding);
+	//NSLog(@"[%s] [%i] [%i - %s]",bytes,length,desiredEncoding,encoding);
 
 	return [[[NSString alloc] initWithBytes:bytes length:length encoding:desiredEncoding] autorelease];
 }
