@@ -71,24 +71,20 @@
 	return YES;
 }
 
-- (void) setFont:(NSFont *)font
+- (void) updateDisplayedFont
 {
-	if(!font) return;
-
-	[_actualFont autorelease];
-	_actualFont = [font retain];
-
-	[super setFont:[[NSFontManager sharedFontManager] convertFont:font toSize:11.]];
-
 	NSMutableAttributedString *text = nil;
+
+	[super setFont:[[NSFontManager sharedFontManager] convertFont:_actualFont toSize:11.]];
+
 	if(_showPointSize){
 		text = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %.0f", (_showFontFace ? [_actualFont displayName] : [_actualFont familyName]), [_actualFont pointSize]]] autorelease];
 	}else{
 		text = [[[NSMutableAttributedString alloc] initWithString:( _showFontFace ? [_actualFont displayName] : [_actualFont familyName] )] autorelease];
 	}
-
+	
 	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-
+	
 	[paraStyle setMinimumLineHeight:NSHeight([self bounds])];
 	[paraStyle setMaximumLineHeight:NSHeight([self bounds])];
 	[text addAttribute:NSParagraphStyleAttributeName value:paraStyle range:NSMakeRange(0, [text length])];
@@ -100,17 +96,73 @@
 {
 	[[NSFontManager sharedFontManager] setAction:@selector( selectFont: )];
 	[[self window] makeFirstResponder:self];
+	
+	[self setKeyboardFocusRingNeedsDisplayInRect:[self frame]];
+	
 	[[NSFontManager sharedFontManager] orderFrontFontPanel:nil];
+}
+
+- (void) setFont:(NSFont *)font
+{
+	if(!font) return;
+	
+	[_actualFont autorelease];
+	_actualFont = [font retain];
+	
+	[self updateDisplayedFont];
 }
 
 - (void) setShowPointSize:(BOOL) show 
 {
 	_showPointSize = show;
+	[self updateDisplayedFont];
 }
 
 - (void) setShowFontFace:(BOOL) show
 {
 	_showFontFace = show;
+	[self updateDisplayedFont];
 }
 
+
+//Drawing ------------------------------------------------------------------------
+#pragma mark Drawing
+//Focus ring drawing code by Nicholas Riley, posted on cocoadev and available at:
+//http://cocoa.mamasam.com/COCOADEV/2002/03/2/29535.php
+- (BOOL)needsDisplay
+{
+	NSResponder *resp = nil;
+	NSWindow	*window = [self window];
+	
+	if([window isKeyWindow]){
+		resp = [window firstResponder];
+		if(resp == lastResp){
+			return([super needsDisplay]);
+		}
+		
+	}else if(lastResp == nil){
+		return([super needsDisplay]);
+		
+	}
+	
+	shouldDrawFocusRing = (resp != nil &&
+						   [resp isKindOfClass:[NSView class]] &&
+						   [(NSView *)resp isDescendantOf:self]); // [sic]
+	lastResp = resp;
+	
+	[self setKeyboardFocusRingNeedsDisplayInRect:[self bounds]];
+	return(YES);
+}
+
+//Draw a focus ring around our view
+- (void)drawRect:(NSRect)rect
+{
+	[super drawRect:rect];
+	
+	if(shouldDrawFocusRing){
+		NSSetFocusRingStyle(NSFocusRingOnly);
+		NSRectFill(rect);
+	}
+} 
+	
 @end
