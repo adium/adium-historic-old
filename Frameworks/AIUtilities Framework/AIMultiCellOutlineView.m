@@ -146,15 +146,16 @@
 	id		cell = ([self isExpandable:item] ? groupCell : contentCell);
 	
 	if(row >= 0 && row < [self numberOfRows]){ //Somebody keeps calling this method with row = numberOfRows, which is wrong.
-
+		BOOL	selected = [self isRowSelected:row];
+		
 		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
-		[cell setHighlighted:[self isRowSelected:row]];
+		[cell setHighlighted:selected];
 
 		//Draw the grid
 		if([self drawsAlternatingRows] && [cell drawGridBehindCell]){
 			[self _drawRowInRect:NSIntersectionRect([self rectOfRow:row], rect)
 						 colored:!(row % 2)
-						selected:(row == [self selectedRow])];			
+						selected:selected];			
 		}
 		
 		//Draw the cell
