@@ -19,7 +19,7 @@
 }
 
 //Configure for the action
-- (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)listObject
+- (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
 {
 	NSString *textToSpeak = [inDetails objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
 	if(textToSpeak){
