@@ -41,8 +41,8 @@
                 gridColorWell = id; 
                 opacityPercentLabel = id; 
                 opacitySlider = id; 
-                prefView = id; 
                 sizePopUp = id; 
+                "view_prefView" = NSView; 
             }; 
             SUPERCLASS = AIPlugin; 
         }, 

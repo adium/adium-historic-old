@@ -21,9 +21,11 @@
 
 @interface AISCLViewPlugin : AIPlugin <AIContactListViewController> {
 
-    AIContactGroup	*contactList;
     AICLPreferences	*preferences;
+
+    AIContactGroup	*contactList;
     NSMutableArray	*SCLViewArray;
+    
 }
 
 - (IBAction)performDefaultActionOnSelectedContact:(id)sender;

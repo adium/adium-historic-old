@@ -14,11 +14,11 @@
 #define CL_ALTERNATING_GRID		@"Alternating Grid"
 #define CL_BACKGROUND_COLOR		@"Background Color"
 #define CL_GRID_COLOR			@"Grid Color"
-#define CL_OPACITY				@"Opacity"
+#define CL_OPACITY			@"Opacity"
 
 @interface AICLPreferences : AIPlugin {
-    id	prefView;
-    
+    IBOutlet	NSView		*view_prefView;
+
     id	fontPopUp;
     id	facePopUp;
     id	sizePopUp;
@@ -37,6 +37,10 @@
     AIPreferenceController*     preferenceController;
     AIPlugin	*parentPlugin;
 }
+
++ (AICLPreferences *)contactListPreferencesWithOwner:(id)inOwner;
+
+
 - (void) initialize: (id) foo;
 
 - (void) fontPopUps: (id) sender;

@@ -8,31 +8,54 @@
 
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
-
 #import "AIAdium.h"
-
-#import "AIPreferenceController.h"
-
 #import "AICLPreferences.h"
 
 
-#define CL_PREF_NIB		@"AICLPrefView"
-#define CL_PREF_TITLE	@"Contact List"
+#define CL_PREF_NIB		@"AICLPrefView"		//Name of preference nib
+#define CL_PREF_TITLE		@"Contact List"		//
 
-@interface AICLPreferences (_private)
+//Handles the interface interaction, and sets preference values
+//The outline view is responsible for reading & using it's own preferences, as well as observing changes in them
+
+@interface AICLPreferences (PRIVATE)
+- (id)initWithOwner:(id)inOwner;
+
 - (void) _prefsChangedNotify;
 - (void) _buildFontMenuFor: (NSPopUpButton*)inFontPopUp;
 - (void) _buildFontFaceMenuFor:(NSPopUpButton *)inFacePopUp using:(NSPopUpButton *)inFamilyPopUp;
 - (void) _loadPrefs;
 @end
-#pragma mark -
+
 @implementation AICLPreferences
+
++ (AICLPreferences *)contactListPreferencesWithOwner:(id)inOwner
+{
+    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+}
+
+//init
+- (id)initWithOwner:(id)inOwner
+{
+    AIPreferenceViewController	*preferenceViewController;
+    
+    [super init];
+
+    owner = [inOwner retain];
+
+    //Load the pref view nib
+    [NSBundle loadNibNamed:CL_PREF_NIB owner:self];    
+    
+    //Install our preference view
+    preferenceViewController = [AIPreferenceViewController controllerWithName:CL_PREF_TITLE categoryName:PREFERENCE_CATEGORY_INTERFACE view:view_prefView];
+    [[owner preferenceController] addPreferenceView:preferenceViewController];
+
+    return(self);    
+}
+
 - (void) initialize: (id) _preferenceController
 {
     preferenceController = [_preferenceController retain];
-    [preferenceController addPreferenceView:[[AIPreferenceViewController controllerWithName:CL_PREF_TITLE
-                                                                               categoryName:PREFERENCE_CATEGORY_INTERFACE
-                                                                                       view:prefView] retain]];
     //initialize values
     [self _buildFontMenuFor: fontPopUp];
     [self _loadPrefs];

@@ -28,13 +28,9 @@
 
     //Register ourself as an available contact list view
     [[owner interfaceController] registerContactListViewController: self];
-    preferences = [[AICLPreferences alloc] init];
-    [preferences setCLController: self];
+
     //Install the preference view
-    [NSBundle loadNibNamed: @"AICLPrefView" owner:preferences];
-
-    [preferences initialize: [owner preferenceController]];
-
+    preferences = [[AICLPreferences contactListPreferencesWithOwner:owner] retain];
 }
 
 - (void)dealloc
