@@ -358,7 +358,7 @@
 				9E87CF580574909B001CB886,
 				342DC47505783AF0000E1D83,
 				B799BB0005793A6400338E54,
-				B782F098058BB6C200AF4BBA,
+				B72537BC058C4577004BA969,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -470,7 +470,7 @@
 				3419F43D05314C4C00C68BA3,
 				3419F44E05314C5900C68BA3,
 				3419F46005314C6800C68BA3,
-				B782F097058BB6C200AF4BBA,
+				B72537BB058C4577004BA969,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -2292,6 +2292,8 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				B7F09289058C3F16000F9CBE,
+				B7F0928B058C3F1B000F9CBE,
 			);
 			isa = PBXNativeTarget;
 			name = "SQL Logger";
@@ -7732,6 +7734,7 @@
 				34BD9D07053146CC000AB133,
 				34BD9D08053146CC000AB133,
 				9C1040650571281200F3C158,
+				B774EFC4058C48F6009C7C67,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -8714,6 +8717,7 @@
 				3419FE0B0531585600C68BA3,
 				3419FE0C0531585600C68BA3,
 				3419FE0D0531585600C68BA3,
+				B774EFC9058C4948009C7C67,
 				3419FE0E0531585600C68BA3,
 				3419FE0F0531585600C68BA3,
 				3419FE100531585600C68BA3,
@@ -25918,6 +25922,206 @@
 //B72
 //B73
 //B74
+		B72537B6058C4577004BA969 = {
+			buildActionMask = 2147483647;
+			files = (
+				B72537C7058C4608004BA969,
+				B72537C8058C4608004BA969,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B72537B7058C4577004BA969 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B72537B8058C4577004BA969 = {
+			buildActionMask = 2147483647;
+			files = (
+				B72537C9058C4611004BA969,
+				B72537CA058C4611004BA969,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B72537B9058C4577004BA969 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B72537BA058C4577004BA969 = {
+			buildActionMask = 2147483647;
+			files = (
+				B72537C4058C45EF004BA969,
+				B72537C5058C45EF004BA969,
+				B72537C6058C45EF004BA969,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B72537BB058C4577004BA969 = {
+			buildPhases = (
+				B72537B6058C4577004BA969,
+				B72537B7058C4577004BA969,
+				B72537B8058C4577004BA969,
+				B72537B9058C4577004BA969,
+				B72537BA058C4577004BA969,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Plists/Latex Plugin.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Carbon";
+				OTHER_REZFLAGS = "";
+				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
+				PRODUCT_NAME = "Latex Plugin";
+				REZ_EXECUTABLE = NO;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				B72537BE058C45CF004BA969,
+				B72537C0058C45D3004BA969,
+			);
+			isa = PBXNativeTarget;
+			name = "Latex Plugin";
+			productName = "Latex Plugin";
+			productReference = B72537BC058C4577004BA969;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Latex Plugin</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Latex_Plugin</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+	<key>CSResourcesFileMapped</key>
+	<string>yes</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		B72537BC058C4577004BA969 = {
+			expectedFileType = folder;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Latex Plugin.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B72537BD058C45CF004BA969 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		B72537BE058C45CF004BA969 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = B72537BD058C45CF004BA969;
+		};
+		B72537BF058C45D3004BA969 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		B72537C0058C45D3004BA969 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = B72537BF058C45D3004BA969;
+		};
+		B72537C4058C45EF004BA969 = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B72537C5058C45EF004BA969 = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B72537C6058C45EF004BA969 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B72537C7058C4608004BA969 = {
+			fileRef = B782F08D058BB66A00AF4BBA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B72537C8058C4608004BA969 = {
+			fileRef = B782F08C058BB66A00AF4BBA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B72537C9058C4611004BA969 = {
+			fileRef = B782F08B058BB66A00AF4BBA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B72537CA058C4611004BA969 = {
+			fileRef = B782F08E058BB66B00AF4BBA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B774EFC3058C48F6009C7C67 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = B72537BB058C4577004BA969;
+			remoteInfo = "Latex Plugin";
+		};
+		B774EFC4058C48F6009C7C67 = {
+			isa = PBXTargetDependency;
+			target = B72537BB058C4577004BA969;
+			targetProxy = B774EFC3058C48F6009C7C67;
+		};
+		B774EFC9058C4948009C7C67 = {
+			fileRef = B72537BC058C4577004BA969;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		B782F088058BB60B00AF4BBA = {
 			children = (
 				B782F08B058BB66A00AF4BBA,
@@ -25966,151 +26170,6 @@
 			path = "Plugins/LaTeX Plugin/AILaTeXPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		B782F093058BB6C200AF4BBA = {
-			buildActionMask = 2147483647;
-			files = (
-				B782F0A0058BB7C400AF4BBA,
-				B782F0A1058BB7C400AF4BBA,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B782F094058BB6C200AF4BBA = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B782F095058BB6C200AF4BBA = {
-			buildActionMask = 2147483647;
-			files = (
-				B782F09E058BB7B600AF4BBA,
-				B782F09F058BB7B600AF4BBA,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B782F096058BB6C200AF4BBA = {
-			buildActionMask = 2147483647;
-			files = (
-				B782F0AC058BB8A300AF4BBA,
-				B782F0AD058BB8A300AF4BBA,
-				B782F0AE058BB8A300AF4BBA,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B782F097058BB6C200AF4BBA = {
-			buildPhases = (
-				B782F093058BB6C200AF4BBA,
-				B782F094058BB6C200AF4BBA,
-				B782F095058BB6C200AF4BBA,
-				B782F096058BB6C200AF4BBA,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INFOPLIST_FILE = "Plists/LaTeX Plugin.plist";
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
-				OTHER_REZFLAGS = "";
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = "LaTeX Plugin";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost";
-				WRAPPER_EXTENSION = adiumPlugin;
-			};
-			dependencies = (
-			);
-			isa = PBXNativeTarget;
-			name = "LaTeX Plugin";
-			productName = "LaTeX Plugin";
-			productReference = B782F098058BB6C200AF4BBA;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>LaTeX Plugin</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.LaTeX_Plugin</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-</dict>
-</plist>
-";
-			productType = "com.apple.product-type.bundle";
-		};
-		B782F098058BB6C200AF4BBA = {
-			expectedFileType = folder;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = "LaTeX Plugin.adiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B782F09E058BB7B600AF4BBA = {
-			fileRef = B782F08B058BB66A00AF4BBA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		B782F09F058BB7B600AF4BBA = {
-			fileRef = B782F08E058BB66B00AF4BBA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		B782F0A0058BB7C400AF4BBA = {
-			fileRef = B782F08C058BB66A00AF4BBA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		B782F0A1058BB7C400AF4BBA = {
-			fileRef = B782F08D058BB66A00AF4BBA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		B782F0AC058BB8A300AF4BBA = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		B782F0AD058BB8A300AF4BBA = {
-			fileRef = 34BD9E9305314755000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		B782F0AE058BB8A300AF4BBA = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		B799BB0005793A6400338E54 = {
 			expectedFileType = folder;
@@ -26204,6 +26263,30 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		B7F09288058C3F16000F9CBE = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		B7F09289058C3F16000F9CBE = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = B7F09288058C3F16000F9CBE;
+		};
+		B7F0928A058C3F1B000F9CBE = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		B7F0928B058C3F1B000F9CBE = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = B7F0928A058C3F1B000F9CBE;
 		};
 //B70
 //B71
