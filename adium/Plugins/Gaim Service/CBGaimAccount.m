@@ -687,14 +687,24 @@ static id<GaimThread> gaimThread = nil;
 			return(YES);
         }
     }else if (([inType isEqualToString:FILE_TRANSFER_TYPE]) && ([self conformsToProtocol:@protocol(AIAccount_Files)])){
-		if(weAreOnline && (inListObject == nil || [[inListObject statusObjectForKey:@"Online"] boolValue])){ 
-			return(YES);
-        }	
+		if(weAreOnline){
+			if (inListObject){
+				if ([[inListObject statusObjectForKey:@"Online"] boolValue]){
+					return ([self allowFileTransferWithListObject:inListObject]);
+				}
+			}else{
+				return(YES);
+			}
+       }	
 	}
 	
     return(NO);
 }
 
+- (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
+{
+	return YES;
+}
 
 /*********************/
 /* AIAccount_Privacy */

@@ -128,6 +128,7 @@
 - (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(NSNumber *)percent bytesSent:(NSNumber *)bytesSent;
 - (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
 - (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
+- (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject;
 
 - (AIListContact *)_contactWithUID:(NSString *)inUID;
 - (AIListContact *)mainThreadContactWithUID:(NSString *)inUID;
