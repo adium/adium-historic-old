@@ -33,16 +33,8 @@
 
 -(void)disconnectAll:(id)sender
 {
-    NSEnumerator *accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
-    AIAccount	 *account;
-
-    while (account = [accountEnumerator nextObject]) {
-        if([[account supportedPropertyKeys] containsObject:@"Online"]){
-            if([[[owner accountController] propertyForKey:@"Online" account:account] boolValue]) {
-                [[owner accountController] setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:account];
-            }
-        }
-    }
+    //calls the VERY convenient method to disconnect all the accounts
+    [[owner accountController] disconnectAllAccounts];
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem

@@ -50,6 +50,7 @@
 
 
 - (void)addRow:(AIFlexibleTableRow *)inRow;
+- (void)removeRowAtIndex:(int)rowIndex;
 - (void)resizeRow:(AIFlexibleTableRow *)inRow;
 - (void)setContentBottomAligned:(BOOL)inValue;
 - (void)setForwardsKeyEvents:(BOOL)inValue;
