@@ -4,15 +4,5 @@
 <dict>
 	<key>Enable</key>
 	<true/>
-	<key>addons_pack_Girl</key>
-	<dict>
-		<key>inUse</key>
-		<integer>0</integer>
-	</dict>
-	<key>addons_pack_Stan</key>
-	<dict>
-		<key>inUse</key>
-		<integer>1</integer>
-	</dict>
 </dict>
 </plist>
