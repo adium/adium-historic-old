@@ -196,6 +196,8 @@
 				6C5C3C2505F6532600490341,
 				6C5C3C2605F6532600490341,
 				C4382558062E7C5E00F5A31D,
+				3499F45006309AC80035B468,
+				3499F45106309AC80035B468,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -2107,7 +2109,7 @@
 			isa = PBXNativeTarget;
 			name = "Standard Message View";
 			productName = "Standard Message View";
-			productReference = 4B04B0520600A661007060DF;
+			productReference = 3499F45106309AC80035B468;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
 <plist version=\"1.0\">
@@ -2213,7 +2215,7 @@
 			isa = PBXNativeTarget;
 			name = "WebKit Message View";
 			productName = "WebKit Message View";
-			productReference = 4B04B0500600A661007060DF;
+			productReference = 3499F45006309AC80035B468;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
 <plist version=\"1.0\">
@@ -3043,6 +3045,52 @@
 		};
 		348E556B053A188C0021E541 = {
 			fileRef = 348E556A053A188C0021E541;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3499F45006309AC80035B468 = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Webkit Message View.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3499F45106309AC80035B468 = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Standard Message View.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3499F4A606309AF60035B468 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimRequestWindowController.m;
+			path = "Plugins/Gaim Service/ESGaimRequestWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3499F4A706309AF60035B468 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimRequestWindowController.h;
+			path = "Plugins/Gaim Service/ESGaimRequestWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3499F4A806309AF60035B468 = {
+			fileRef = 3499F4A606309AF60035B468;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3499F4A906309AF60035B468 = {
+			fileRef = 3499F4A706309AF60035B468;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7388,24 +7436,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B04B0500600A661007060DF = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			name = "Webkit Message View.AdiumPlugin";
-			path = "/Users/eevyl/adium/build/Webkit Message View.AdiumPlugin";
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		4B04B0520600A661007060DF = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			name = "Standard Message View.AdiumPlugin";
-			path = "/Users/eevyl/adium/build/Standard Message View.AdiumPlugin";
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
 		4B09D5C005D5265800BC00F0 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -10026,6 +10056,7 @@
 				3429280A0628BB4200BB9217,
 				34B9194D062DEC29004F1223,
 				34B919CB062DEF15004F1223,
+				3499F4A906309AF60035B468,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10072,6 +10103,7 @@
 				3429280B0628BB4200BB9217,
 				34B9194C062DEC29004F1223,
 				34B919CC062DEF15004F1223,
+				3499F4A806309AF60035B468,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10162,6 +10194,8 @@
 				340915F105C0A5DF00CDE3DD,
 				4B7F278905440C8D00CDFC90,
 				4B7F278A05440C8D00CDFC90,
+				3499F4A706309AF60035B468,
+				3499F4A606309AF60035B468,
 				34048AC50617CB4C004D0B7E,
 				34048AC60617CB4C004D0B7E,
 				4BDF2C91061E376C00EA75C5,
