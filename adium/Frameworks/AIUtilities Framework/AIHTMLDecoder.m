@@ -145,7 +145,7 @@ DeclareString(TagCharStartString);
 
 // inMessage: AttributedString to encode
 // headers: YES to include HTML and BODY tags
-// fontTags: YES to inclued FONT tags
+// fontTags: YES to include FONT tags
 // closeFontTags: YES to close the font tags
 // styleTags: YES to include B/I/U tags
 // closeStyleTagsOnFontChange: YES to close and re-insert style tags when opening a new font tag
@@ -367,9 +367,11 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 							//to always send as text.  The attachment will have an imagePath pointing to a file
 							//which we can link directly via an img tag.
 
+							NSSize imageSize = [attachment imageSize];
+
 							[string appendFormat:@"<img src=\"file://%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
 								[[attachment imagePath] stringByEscapingForHTML], [[attachment string] stringByEscapingForHTML],
-								(int)[attachment imageSize].width, (int)[attachment imageSize].height];
+								(int)imageSize.width, (int)imageSize.height];
 							
 							//Release the chunk
 							[chunk release]; chunk = nil;
