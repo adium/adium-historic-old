@@ -62,7 +62,7 @@
 		document.onclick = imageCheck;
 		function imageCheck() {
 			node = event.target;
-			if(node.tagName == 'IMG') {
+			if(node.tagName == 'img' && node.alt) {
 				a = document.createElement('a');
 				a.setAttribute('onclick', 'imageSwap(this)');
 				a.setAttribute('src', node.src);
