@@ -122,7 +122,7 @@ typedef enum {
 
 - (AIMetaContact *)groupUIDs:(NSArray *)UIDsArray forServices:(NSArray *)servicesArray;
 - (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray;
-//- (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray saving:(BOOL)shouldSave;
+- (void)removeAllListObjectsMatching:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact;
 
 - (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact forService:(AIService *)service withTarget:(id)target includeOffline:(BOOL)includeOffline;
 - (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact withTarget:(id)target;
