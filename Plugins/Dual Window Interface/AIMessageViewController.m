@@ -413,6 +413,13 @@
     }
 }
 
+//YES if the user list is visible
+- (BOOL)userListVisible
+{
+	return(showUserList);
+}
+
+
 //Our chat's account changed, re-show the from selector
 - (void)chatAccountChanged:(NSNotification *)notification
 {

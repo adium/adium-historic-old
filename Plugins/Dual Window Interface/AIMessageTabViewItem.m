@@ -233,7 +233,12 @@
 - (NSImage *)icon
 {
 	NSImage *image = [self stateIcon];
-	return(image ? image : [self statusIcon]);
+	
+	//Multi-user chats won't have status icons
+	if(!image && ![messageView userListVisible]) image = [self statusIcon];
+	if(!image) image = [AIStatusIcons statusIconForStatusID:@"unknown" type:AIStatusIconTab direction:AIIconNormal];
+
+	return(image);
 }
 
 //Status icon is the status of this contact (away, idle, online, stranger)
