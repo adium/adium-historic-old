@@ -10,7 +10,9 @@
  * buildnum - generates a unique build number *
  *	     ©2003 - Colin Barrett	      *
  **********************************************/
- 
+
+/* $Id: buildnum.c,v 1.2 2003/12/08 04:48:45 jmelloy Exp $ */
+
 /* I've included this code as reference, in case you want to know how I generate the buildnum. There's no compling done by PB, it's already done, and the executable is buildnum. -chb. */
  
 #include <stdio.h>
