@@ -1,10 +1,23 @@
 {
     IBClasses = (
         {
-            ACTIONS = {send = id; }; 
+            ACTIONS = {
+                closePrivacyDetails = id; 
+                reportCrashForLogAtPath = id; 
+                send = id; 
+                showPrivacyDetails = id; 
+            }; 
             CLASS = AICrashReporter; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"window_MainWindow" = NSWindow; }; 
+            OUTLETS = {
+                "panel_privacySheet" = NSPanel; 
+                "textField_accountIM" = NSTextField; 
+                "textField_description" = NSTextField; 
+                "textField_emailAddress" = NSTextField; 
+                "textView_crashLog" = NSTextView; 
+                "textView_details" = NSTextView; 
+                "window_MainWindow" = NSWindow; 
+            }; 
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }

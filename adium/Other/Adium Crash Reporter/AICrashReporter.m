@@ -10,12 +10,27 @@
 #import "AICrashReporter.h"
 
 #define BUG_REPORT_URL		@"http://www.penguinmilitia.com/bugs.php"
-#define EXCEPTIONS_PATH		[@"~/Desktop/accountstuff.txt" stringByExpandingTildeInPath]
+#define EXCEPTIONS_PATH		[@"~/Desktop/crashLog.txt" stringByExpandingTildeInPath]
 #define CRASHES_PATH		[@"~/NOEMPTYPATHS" stringByExpandingTildeInPath]
 
 #define KEY_CRASH_EMAIL_ADDRESS		@"AdiumCrashReporterEmailAddress"
 
 @implementation AICrashReporter
+
+- (id)init
+{
+	[super init];
+	
+	crashLog = nil;
+	
+	return(self);
+}
+
+- (void)dealloc
+{
+	[crashLog release];
+	[super dealloc];
+}
 
 - (void)awakeFromNib
 {
@@ -38,8 +53,8 @@
 	NSString	*emailAddress;
 	
 	//Fetch and delete the log
-	crashLog = [NSString stringWithContentsOfFile:inPath];
-	[[NSFileManager defaultManager] trashFileAtPath:inPath];
+	crashLog = [[NSString stringWithContentsOfFile:inPath] retain];
+	//[[NSFileManager defaultManager] trashFileAtPath:inPath];
 
 	//Restore the user's email address if they've entered it previously
 	if(emailAddress = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_EMAIL_ADDRESS]){
@@ -61,6 +76,29 @@
 	return(YES);
 }
 
+//Display privacy information sheet
+- (IBAction)showPrivacyDetails:(id)sender
+{
+	NSDictionary		*attributes = [NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:11] forKey:NSFontAttributeName];
+	NSAttributedString	*attrLogString = [[[NSAttributedString alloc] initWithString:crashLog attributes:attributes] autorelease];
+	
+	//Fill in crash log
+	[[textView_crashLog textStorage] setAttributedString:attrLogString];
+	
+	//Display the sheet
+    [NSApp beginSheet:panel_privacySheet
+	   modalForWindow:window_MainWindow
+		modalDelegate:nil//self
+	   didEndSelector:nil//@selector(sheetDidEnd:returnCode:contextInfo:)
+		  contextInfo:nil];
+}
+
+//
+- (IBAction)closePrivacyDetails:(id)sender
+{
+	[panel_privacySheet orderOut:nil];
+    [NSApp endSheet:panel_privacySheet returnCode:0];
+}
 
 
 
