@@ -411,6 +411,21 @@ DeclareString(UID);
 	[inObject setStatusObject:(remoteGroup == nil ? [NSNumber numberWithBool:YES] : nil) forKey:@"Stranger" notify:YES];
 }
 
+- (AIListGroup *)remoteGroupForContact:(AIListContact *)inContact
+{
+	AIListGroup		*group;
+	
+	if ([inContact isKindOfClass:[AIMetaContact class]]){
+		//For a metaContact, the closest we have to a remote group is the group it is within locally
+		group = [inContact parentGroup];
+		
+	}else{
+		NSString	*remoteGroup = [inContact remoteGroupName];
+		group = (remoteGroup ? [self groupWithUID:remoteGroup] : nil);
+	}
+	
+	return(group);
+}
 //Post a list grouping changed notification for the object and group
 - (void)_listChangedGroup:(AIListObject *)group object:(AIListObject *)object
 {
