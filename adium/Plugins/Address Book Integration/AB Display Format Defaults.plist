@@ -8,5 +8,7 @@
         <integer>0</integer>
         <key>AB Enable Images</key>
         <integer>1</integer>
+        <key>AB Use NickName</key>
+        <integer>0</integer>
 </dict>
 </plist>

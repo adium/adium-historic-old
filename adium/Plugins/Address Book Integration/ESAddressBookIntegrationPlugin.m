@@ -80,8 +80,11 @@
                 if (displayFormat != None) {
                     NSString *firstName = [person valueForProperty:kABFirstNameProperty];
                     NSString *lastName = [person valueForProperty:kABLastNameProperty];
+                    NSString *nickName = [person valueForProperty:kABNicknameProperty];
                     NSString *displayName = nil;
-                    if (!lastName || displayFormat == First) {  //If no last name is available, use the first name
+                    if (useNickName && nickName) {
+                        displayName = nickName;
+                    } else if (!lastName || displayFormat == First) {  //If no last name is available, use the first name
                         displayName = firstName;
                     } else if (!firstName) {                    //If no first name is available, use the last name
                         displayName = lastName;
@@ -136,6 +139,7 @@
         displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
         enableImages = [[prefDict objectForKey:KEY_AB_ENABLE_IMAGES] boolValue];
         automaticSync = [[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue];
+        useNickName = [[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue];
         [self updateAllContacts];
     }
 }

@@ -90,6 +90,8 @@
     
         [checkBox_syncAutomatic setState:[[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue]];
         [checkBox_enableImages setState:[[prefDict objectForKey:KEY_AB_ENABLE_IMAGES] boolValue]];
+        [checkBox_useNickName setState:[[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue]];
+        [checkBox_useNickName setEnabled:[[format_menu selectedItem] tag] != None];
     }
 }
 
@@ -110,6 +112,10 @@
     } else if (sender == checkBox_enableImages) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
                                              forKey:KEY_AB_ENABLE_IMAGES
+                                              group:PREF_GROUP_ADDRESSBOOK];
+    } else if (sender == checkBox_useNickName) {
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
+                                             forKey:KEY_AB_USE_NICKNAME
                                               group:PREF_GROUP_ADDRESSBOOK];
     }
 }
