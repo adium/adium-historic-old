@@ -51,29 +51,18 @@
 		//Use the supplied OK text, then shift the button left so that the right side remains in the old location in the window
 		NSString *okText = [infoDict objectForKey:@"OK Text"];
 		if ([okText isEqualToString:@"OK"]){
-			okText = AILocalizedString(@"Okay",nil);
+			okText = AILocalizedString(@"OK",nil);
+		}else{
+			okText = AILocalizedString(okText,nil);	
 		}
 		
-		float okayButtonWidthChange;
-		
-		oldFrame = [button_okay frame];
 		[button_okay setTitle:okText];
-		[button_okay sizeToFit];
-		newFrame = [button_okay frame];
-		okayButtonWidthChange = (newFrame.size.width - oldFrame.size.width);
-		newFrame.origin.x = oldFrame.origin.x - okayButtonWidthChange;	
-		[button_okay setFrame:newFrame];
 		
 		//Use the supplied Cancel text, then shift the button left
 		NSString	*cancelText = [infoDict objectForKey:@"Cancel Text"];
 		cancelText = AILocalizedString(cancelText, nil);
 		
-		oldFrame = [button_cancel frame];
 		[button_cancel setTitle:cancelText];
-		[button_cancel sizeToFit];
-		newFrame = [button_cancel frame];
-		newFrame.origin.x = oldFrame.origin.x - (newFrame.size.width - oldFrame.size.width) - okayButtonWidthChange;
-		[button_cancel setFrame:newFrame];
 	}
 	
 	//Window Title

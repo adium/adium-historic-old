@@ -101,10 +101,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 }
 
 #pragma mark Status
-- (void)performSetAccountAvailableTo:(NSString *)availableHTML
-{
-	[[self gaimThread] setAvailableMessage:availableHTML onAccount:self];	
-}
+
 
 #pragma mark Encoding
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject

@@ -113,9 +113,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 								 forKey:@"FormattedUID"
 								 notify:NotifyLater];
 		}
-		
+
 		if(groupName && [groupName isEqualToString:@GAIM_ORPHANS_GROUP_NAME]){
-			[theContact setRemoteGroupName:nil];
+			[theContact setRemoteGroupName:AILocalizedString(@"Orphans","Name for the orphans group")];
 		}else if(groupName && [groupName length] != 0){
 			[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
 		}else{
@@ -123,6 +123,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		}
 		
 		[self gotGroupForContact:theContact];
+	}else{
+		NSLog(@"Got %@ for %@ while not online",groupName,theContact);
 	}
 }
 
@@ -1718,13 +1720,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		if([key isEqualToString:@"IdleSince"]){
 			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			[self setAccountIdleSinceTo:idleSince];
-			
-		}else if([key isEqualToString:@"AwayMessage"]){
-			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountAwayTo:)];
-			
-		}else if([key isEqualToString:@"AvailableMessage"]){
-			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountAvailableMessageTo:)];
-				
+							
 		}else if([key isEqualToString:@"TextProfile"]){
 			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountProfileTo:)];
 			
@@ -1742,12 +1738,103 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			if(account){
 				[gaimThread setCheckMail:[self shouldCheckMail]
 							  forAccount:self];
-			}			
-		}else if([key isEqualToString:@"Invisible"]){
-			BOOL	isInvisible = [[self preferenceForKey:@"Invisible" group:GROUP_ACCOUNT_STATUS] boolValue];
-			[self setAccountInvisibleTo:isInvisible];
+			}
 		}
 	}
+}
+
+/*!
+* @brief Set the account to an AIStatus status state
+ *
+ * Sets the account to a passed status state.  The account should set itself to best possible status given the return
+ * values of statusState's accessors.
+ */
+#warning Evan: Support for the autorefreshing filter keywords is not in place.
+/*
+ 		}else if([key isEqualToString:@"AwayMessage"]){
+			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountAwayTo:)];			
+*/			
+
+- (void)setStatusState:(AIStatus *)statusState
+{
+	if([self online]){
+		NSAttributedString	*statusMessage;
+		char				*gaimStatusType;
+		NSString			*encodedStatusMessage;
+		
+		statusMessage = [statusState statusMessage];
+		
+		//Get the gaim status type from this class or subclasses, which may also potentially modify or nullify our statusMessage
+		gaimStatusType = [self gaimStatusTypeForStatus:statusState
+											   message:&statusMessage];
+		
+		//Encode the status message if we still have one
+		encodedStatusMessage = (statusMessage ? 
+								[self encodedAttributedString:statusMessage forListObject:nil]  :
+								nil);
+		
+		[self setStatusState:statusState withGaimStatusType:gaimStatusType andMessage:encodedStatusMessage];
+		
+		[self setStatusObject:statusState
+					   forKey:@"StatusState"
+					   notify:YES]; /* Should notify? */
+	}
+}
+
+/*
+ * @brief Return the gaim status type to be used for a status
+ *
+ * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
+ * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
+ * defined in  AIStatusController.h (which will correspond to the services handled by Adium by default).
+ * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
+ * [statusState statusType] for a general idea of the status's type.
+ *
+ * @param statusState The status for which to find the gaim status equivalent
+ * @param statusMessage A pointer to the statusMessage.  Set *statusMessage to nil if it should not be used directly for this status.
+ *
+ * @result The gaim status equivalent
+ */
+- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
+						  message:(NSAttributedString **)statusMessage
+{
+	AIStatusType	statusType = [statusState statusType];
+	char			*gaimStatusType = NULL;
+	
+	/* CBGaimAccount just handles available and away in the most simple way possible; 
+	 * we don't even care what the statusName is. */
+	switch(statusType){
+		case AIAvailableStatusType:
+			gaimStatusType = "Available";
+			break;
+		case AIAwayStatusType:
+			gaimStatusType = GAIM_AWAY_CUSTOM;
+			break;		
+	}
+	
+	return gaimStatusType;
+}
+
+/*
+ * @brief Perform the actual setting a state
+ *
+ * This is called by setStatusState.  It allows subclasses to perform any other behaviors, such as modifying a display
+ * name, which are called for by the setting of the state; most of the processing has already been done, however, so
+ * most subclasses will not need to implement this.
+ *
+ * @param statusState The AIStatus which is being set
+ * @param gaimStatusType The status type which will be passed to Gaim, or NULL if Gaim's status will not be set for this account
+ * @param statusMessage A properly encoded message which will be associated with the status if possible.
+ */
+- (void)setStatusState:(AIStatus *)statusState withGaimStatusType:(const char *)gaimStatusType andMessage:(NSString *)statusMessage
+{
+	NSLog(@"Setting %@ with %s and %@",statusState,gaimStatusType,statusMessage);
+	[gaimThread setGaimStatusType:gaimStatusType 
+					  withMessage:statusMessage
+						onAccount:self];
+
+	//Now set invisibility
+	[self setAccountInvisibleTo:[statusState invisible]];
 }
 
 //Set our idle (Pass nil for no idle)
@@ -1760,58 +1847,24 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				   forKey:@"IdleSince" notify:YES];
 }
 
-- (void)setAccountAwayTo:(NSAttributedString *)awayMessage
-{
-	if(!awayMessage || ![[awayMessage string] isEqualToString:[[self statusObjectForKey:@"StatusMessage"] string]]){
-		NSString	*awayHTML = nil;
-		
-		//Convert the away message to HTML, and pass it to libgaim
-		if(awayMessage){
-			awayHTML = [self encodedAttributedString:awayMessage forListObject:nil];
-		}
-
-		//Set the away serverside
-		[gaimThread setAway:awayHTML onAccount:self];
-
-		//We are now away
-		[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:YES];
-		[self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
-	}
-}
-
-- (void)setAccountAvailableMessageTo:(NSAttributedString *)availableMessage
-{
-#warning If the current away message and new available message are the same I think this messes up
-	if(!availableMessage || ![[availableMessage string] isEqualToString:[[self statusObjectForKey:@"StatusMessage"] string]]){
-		NSString	*availableHTML = nil;
-		
-		//Convert the available message to HTML, and pass it to libgaim
-		if(availableMessage){
-			availableHTML = [self encodedAttributedString:availableMessage forListObject:nil];
-		}
-		
-		//Set the away serverside
-		[self performSetAccountAvailableTo:availableHTML];
-		
-		//We are now away
-		//		[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:YES];
-		[self setStatusObject:availableMessage forKey:@"StatusMessage" notify:YES];
-	}
-}
-
-- (void)performSetAccountAvailableTo:(NSString *)availableHTML
-{
-
-	NSLog(@"blah, can't do it");
-}
-
-
+/*
+ * @brief Set this account to an invisibility state
+ *
+ * Supported property keys must contain "Invisible" for this code to have any effecy
+ *
+ * @param isInvisible YES if the account is now invisible, NO if it is now visible
+ */
 - (void)setAccountInvisibleTo:(BOOL)isInvisible
 {
-	if(isInvisible != [[self statusObjectForKey:@"Invisible"] boolValue]){
-		[gaimThread setInvisible:isInvisible onAccount:self];
+	if([[self supportedPropertyKeys] containsObject:@"Invisible"]){
+		if(isInvisible != [[self statusObjectForKey:@"Invisible"] boolValue]){
+			[gaimThread setInvisible:isInvisible onAccount:self];
+
+			[self setStatusObject:[NSNumber numberWithBool:isInvisible]
+						   forKey:@"Invisible"
+						   notify:NotifyNever];
+		}
 	}
-	
 #warning Evan: We lose away/available messages when going to and from invisible.  Will want to re-set these after changing I think.
 }
 

@@ -58,4 +58,28 @@
 	return(AIServiceSecondary);
 }
 
+- (void)registerStatuses{
+	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
+							 withDescription:STATUS_DESCRIPTION_AVAILABLE
+									  ofType:AIAvailableStatusType
+								  forService:self];
+	
+	[[adium statusController] registerStatus:STATUS_NAME_AWAY
+							 withDescription:STATUS_DESCRIPTION_AWAY
+									  ofType:AIAwayStatusType
+								  forService:self];
+	
+	[[adium statusController] registerStatus:STATUS_NAME_BUSY
+							 withDescription:STATUS_DESCRIPTION_BUSY
+									  ofType:AIAwayStatusType
+								  forService:self];
+	
+/*
+ m = g_list_append(m, _("Available"));
+	m = g_list_append(m, _("Away"));
+	m = g_list_append(m, _("Busy"));
+	m = g_list_append(m, _("Appear Offline"));
+	m = g_list_append(m, GAIM_AWAY_CUSTOM);
+*/ 
+}
 @end

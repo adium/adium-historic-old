@@ -265,17 +265,19 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 			GaimDebug (@"imChatLookupFromConv: Creating %s %s",account->username,name);
 			//No gaim_buddy corresponding to the conv->name is on our list, so create one
 			buddy = gaim_buddy_new(account, name, NULL);	//create a GaimBuddy
+			
+			/*
 			group = gaim_find_group(_(GAIM_ORPHANS_GROUP_NAME));		//get the GaimGroup
 			if (!group) {												//if the group doesn't exist yet
 				group = gaim_group_new(_(GAIM_ORPHANS_GROUP_NAME));		//create the GaimGroup
 				gaim_blist_add_group(group, NULL);						//add it gaimside
 			}
 			gaim_blist_add_buddy(buddy, NULL, group, NULL);     //add the buddy to the gaimside list
-			
+			*/
 //#warning Must add to serverside list to get status updates.  Need to remove when the chat closes or the account disconnects. Possibly want to use some sort of hidden Adium group for this.
 //			serv_add_buddy(account->gc, buddy);				//add it to the serverside list
 		}
-		
+
 		NSCAssert(buddy != nil, @"buddy was nil");
 		
 		sourceContact = contactLookupFromBuddy(buddy);
@@ -1151,42 +1153,31 @@ NSMutableDictionary* get_chatDict(void)
 }
 
 #pragma mark Account Status
-- (oneway void)gaimThreadSetAway:(NSString *)awayHTML onAccount:(id)adiumAccount
+- (oneway void)gaimThreadSetGaimStatusType:(const char *)gaimStatusType
+							   withMessage:(NSString *)message
+								 onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)){
 		
-		//Status Changes: We could use "Invisible" instead of GAIM_AWAY_CUSTOM for invisibility...
-		serv_set_away(account->gc, GAIM_AWAY_CUSTOM, [awayHTML UTF8String]);
+		serv_set_away(account->gc, gaimStatusType, [message UTF8String]);
 	}
-}
-- (oneway void)setAway:(NSString *)awayHTML onAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadSetAway:awayHTML
-							 onAccount:adiumAccount];
 }
 
-//Available message doesn't work on all protocols. OSCAR has its own accessor
-- (oneway void)gaimThreadSetAvailableMessage:(NSString *)availableHTML onAccount:(id)adiumAccount
+- (oneway void)setGaimStatusType:(const char *)gaimStatusType withMessage:(NSString *)message onAccount:(id)adiumAccount
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)){
-		
-		serv_set_away(account->gc, "Available", [availableHTML UTF8String]);
-	}
-}
-- (oneway void)setAvailableMessage:(NSString *)availableHTML onAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadSetAvailableMessage:availableHTML
+	[gaimThreadProxy gaimThreadSetGaimStatusType:gaimStatusType
+									 withMessage:message
 										 onAccount:adiumAccount];
 }
+
 
 //Set invisible. This will clear any other status.
 - (oneway void)gaimThreadSetInvisible:(BOOL)isInvisible onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)){
-		serv_set_away(account->gc, "Invisible", NULL);
+		serv_set_away(account->gc, (isInvisible ? "Invisible" : "Visible"), NULL);
 	}	
 }
 

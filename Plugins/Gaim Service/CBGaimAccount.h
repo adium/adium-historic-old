@@ -86,9 +86,14 @@
 - (void)updateStatusForKey:(NSString *)key;
 - (void)setAccountUserImage:(NSImage *)image;
 - (void)setAccountIdleSinceTo:(NSDate *)idleSince;
-- (void)setAccountAwayTo:(NSAttributedString *)awayMessage;
 - (void)setAccountInvisibleTo:(BOOL)isInvisible;
-- (void)performSetAccountAvailableTo:(NSString *)availableHTML;
+
+- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
+						  message:(NSAttributedString **)statusMessage;
+- (void)setStatusState:(AIStatus *)statusState
+	withGaimStatusType:(const char *)gaimStatusType 
+			andMessage:(NSString *)statusMessage;
+
 
 - (void)setAccountProfileTo:(NSAttributedString *)profile;
 

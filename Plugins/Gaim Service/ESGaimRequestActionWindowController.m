@@ -46,7 +46,6 @@
 	
 	//msg may be in HTML; decode it just in case
 	attribMsg = (msg ? [AIHTMLDecoder decodeHTML:msg] : nil);
-	GaimDebug (@"%@: msg %@ --> attribMsg is %@",self, msg, attribMsg);
 	
 	actionCount = [[theInfoDict objectForKey:@"Count"] intValue];
 	callBacks = [[theInfoDict objectForKey:@"callBacks"] retain];
@@ -96,41 +95,20 @@
 	
 	//The last object in the array is the default
 	//Size the default button, maintaining its rightmost edge's position
-	float   defaultButtonWidthChange, alternateButtonChange;
 	{		
-		oldFrame = [button_default frame];
 		[button_default setTitle:[buttonNamesArray objectAtIndex:(actionCount-1)]];
-		[button_default sizeToFit];
-		
-		newFrame = [button_default frame];
-		defaultButtonWidthChange = (newFrame.size.width - oldFrame.size.width);
-		newFrame.origin.x = oldFrame.origin.x - defaultButtonWidthChange;	
-		[button_default setFrame:newFrame];
 	}
 	
 	if (actionCount < 2) {
 		[button_alternate setFrame:zeroFrame];
 	}else{
 		//Apply the title and shift the button left to maintain distance between the alternate's right and the default's left
-		oldFrame = [button_alternate frame];
 		[button_alternate setTitle:[buttonNamesArray objectAtIndex:(actionCount-2)]];
-		[button_alternate sizeToFit];
-		
-		newFrame = [button_alternate frame];
-		alternateButtonChange = (newFrame.size.width - oldFrame.size.width) + defaultButtonWidthChange;
-		newFrame.origin.x = oldFrame.origin.x - alternateButtonChange;
-		[button_alternate setFrame:newFrame];
 		
 		if (actionCount < 3){
 			[button_other setFrame:zeroFrame];
 		}else{
-			oldFrame = [button_other frame];
 			[button_other setTitle:[buttonNamesArray objectAtIndex:(actionCount-3)]];
-			[button_other sizeToFit];
-			
-			newFrame = [button_other frame];
-			newFrame.origin.x = oldFrame.origin.x - (newFrame.size.width - oldFrame.size.width) - alternateButtonChange;
-			[button_other setFrame:newFrame];
 		}
 	}
 }
@@ -141,12 +119,16 @@
 	int callBackIndex = -1;
 	
 	if (sender == button_default){
+		NSLog(@"default");
 		callBackIndex = (actionCount - 1);
 		
 	}else if (sender == button_alternate){
+		NSLog(@"alternate");
 		callBackIndex = (actionCount - 2);
 		
 	}else if (sender == button_other){
+		NSLog(@"other");
+
 		callBackIndex = (actionCount - 3);
 	}
 

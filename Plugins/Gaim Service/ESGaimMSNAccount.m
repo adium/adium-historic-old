@@ -274,6 +274,62 @@ static BOOL didInitMSN = NO;
 }
 
 /*
+ * @brief Return the gaim status type to be used for a status
+ *
+ * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
+ * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
+ * defined in  AIStatusController.h (which will correspond to the services handled by Adium by default).
+ * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
+ * [statusState statusType] for a general idea of the status's type.
+ *
+ * @param statusState The status for which to find the gaim status equivalent
+ * @param statusMessage A pointer to the statusMessage.  Set *statusMessage to nil if it should not be used directly for this status.
+ *
+ * @result The gaim status equivalent
+ */
+#warning msn invisible = "Hidden"
+- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
+						  message:(NSAttributedString **)statusMessage
+{
+	NSString		*statusName = [statusState statusName];
+	AIStatusType	statusType = [statusState statusType];
+	char			*gaimStatusType = NULL;
+	
+	switch(statusType){
+		case AIAvailableStatusType:
+		{
+			if([statusName isEqualToString:STATUS_NAME_AVAILABLE])
+				gaimStatusType = "Available";
+			break;
+		}
+			
+		case AIAwayStatusType:
+		{
+			if([statusName isEqualToString:STATUS_NAME_AWAY])
+				gaimStatusType = "Away From Computer";
+			else if ([statusName isEqualToString:STATUS_NAME_BRB])
+				gaimStatusType = "Be Right Back";
+			else if ([statusName isEqualToString:STATUS_NAME_BUSY])
+				gaimStatusType = "Busy";
+			else if ([statusName isEqualToString:STATUS_NAME_PHONE])
+				gaimStatusType = "On The Phone";
+			else if ([statusName isEqualToString:STATUS_NAME_LUNCH])
+				gaimStatusType = "Out To Lunch";
+			
+			break;
+		}
+	}
+	
+	//If we are setting one of our custom statuses, don't use a status message
+	if(gaimStatusType != NULL) 	*statusMessage = nil;
+	
+	//If we didn't get a gaim status type, request one from super
+	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	
+	return gaimStatusType;
+}
+
+/*
  //Added to msn.c
 //**ADIUM
 void msn_set_friendly_name(GaimConnection *gc, const char *entry)

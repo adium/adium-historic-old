@@ -9,6 +9,14 @@
 #import "ESGaimGaduGaduAccountViewController.h"
 #import "ESGaimGaduGaduAccount.h"
 
+#define AGG_STATUS_AVAIL              "Available"
+#define AGG_STATUS_AVAIL_FRIENDS      "Available for friends only"
+#define AGG_STATUS_BUSY               "Away"
+#define AGG_STATUS_BUSY_FRIENDS       "Away for friends only"
+#define AGG_STATUS_INVISIBLE          "Invisible"
+#define AGG_STATUS_INVISIBLE_FRIENDS  "Invisible for friends only"
+#define AGG_STATUS_NOT_AVAIL          "Unavailable"
+
 @interface ESGaimGaduGaduAccount (PRIVATE)
 - (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact;
 @end
@@ -104,6 +112,58 @@ static BOOL didInitGG = NO;
 	}   
 	
 	return statusMessage;
+}
+
+/*
+ * @brief Return the gaim status type to be used for a status
+ *
+ * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
+ * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
+ * defined in  AIStatusController.h (which will correspond to the services handled by Adium by default).
+ * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
+ * [statusState statusType] for a general idea of the status's type.
+ *
+ * @param statusState The status for which to find the gaim status equivalent
+ * @param statusMessage A pointer to the statusMessage.  Set *statusMessage to nil if it should not be used directly for this status.
+ *
+ * @result The gaim status equivalent
+ */
+- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
+						  message:(NSAttributedString **)statusMessage
+{
+	NSString		*statusName = [statusState statusName];
+	AIStatusType	statusType = [statusState statusType];
+	char			*gaimStatusType = NULL;
+	
+	switch(statusType){
+		case AIAvailableStatusType:
+		{
+			if([statusName isEqualToString:STATUS_NAME_AVAILABLE])
+				gaimStatusType = AGG_STATUS_AVAIL;
+			else if([statusName isEqualToString:STATUS_NAME_AVAILABLE_FRIENDS_ONLY])
+				gaimStatusType = AGG_STATUS_AVAIL_FRIENDS;
+			break;
+		}
+			
+		case AIAwayStatusType:
+		{
+			if([statusName isEqualToString:STATUS_NAME_AWAY])
+				gaimStatusType = AGG_STATUS_BUSY;
+			else if ([statusName isEqualToString:STATUS_NAME_AWAY_FRIENDS_ONLY])
+				gaimStatusType = AGG_STATUS_BUSY_FRIENDS;
+			else if ([statusName isEqualToString:STATUS_NAME_NOT_AVAILABLE])
+				gaimStatusType = AGG_STATUS_NOT_AVAIL;
+			
+			break;
+		}
+	}
+
+	/* Gadu-Gadu supports status messages along with the status types, so let our message stay */
+	
+	//If we didn't get a gaim status type, request one from super
+	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	
+	return gaimStatusType;
 }
 
 @end

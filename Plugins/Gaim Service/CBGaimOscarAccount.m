@@ -317,9 +317,30 @@ static BOOL didInitOscar = NO;
 }
 
 #pragma mark Status
-- (void)performSetAccountAvailableTo:(NSString *)availableHTML
+/*
+ * @brief Perform the actual setting a state
+ *
+ * This is called by setStatusState.  It allows subclasses to perform any other behaviors, such as modifying a display
+ * name, which are called for by the setting of the state; most of the processing has already been done, however, so
+ * most subclasses will not need to implement this.
+ *
+ * @param statusState The AIStatus which is being set
+ * @param gaimStatusType The status type which will be passed to Gaim, or NULL if Gaim's status will not be set for this account
+ * @param statusMessage A properly encoded message which will be associated with the status if possible.
+ */
+- (void)setStatusState:(AIStatus *)statusState withGaimStatusType:(const char *)gaimStatusType andMessage:(NSString *)statusMessage
 {
-	[[self gaimThread] OSCARSetAvailableMessageTo:availableHTML onAccount:self];	
+	//Check against supported property keys so this isn't done for ICQ
+	if([[self supportedPropertyKeys] containsObject:@"AvailableMessage"] &&
+	   (!strcmp(gaimStatusType, "Available"))){
+	
+		[[self gaimThread] OSCARSetAvailableMessageTo:statusMessage onAccount:self];
+
+		//Now set invisibility
+		[self setAccountInvisibleTo:[statusState invisible]];
+	}else{
+		[super setStatusState:statusState withGaimStatusType:gaimStatusType andMessage:statusMessage];
+	}
 }
 
 #pragma mark Buddy updates
