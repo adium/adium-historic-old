@@ -318,7 +318,6 @@ static NSImage *pushIndicatorImage = nil;
 //Push and Pop -----------------------------------------------------------------
 
 // Pop into the message entry field
-// 
 - (void)_popContent
 {
 	if([pushArray count]){
@@ -332,6 +331,19 @@ static NSImage *pushIndicatorImage = nil;
 	
 }
 
+
+// Pop. Called by menu items. Their index into the push array is stored in the 'tag'
+- (void)_popItem:(id)sender
+{
+	[self setAttributedString:[pushArray objectAtIndex:[sender tag]]];
+	[self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
+	[pushArray removeObjectAtIndex:[sender tag]];
+	if([pushArray count] == 0){
+		[self _setPushIndicatorVisible:NO];
+	}
+}
+
+
 // Push out of the message entry field
 - (void)_pushContent
 {
@@ -342,15 +354,6 @@ static NSImage *pushIndicatorImage = nil;
 	}
 }
 
-- (void)_popItem:(id)sender
-{
-	[self setAttributedString:[pushArray objectAtIndex:[sender tag]]];
-	[self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
-	[pushArray removeObjectAtIndex:[sender tag]];
-	if([pushArray count] == 0){
-		[self _setPushIndicatorVisible:NO];
-	}
-}
 
 //Push indicator
 - (void)_setPushIndicatorVisible:(BOOL)visible
@@ -363,6 +366,7 @@ static NSImage *pushIndicatorImage = nil;
         size.width -= [pushIndicatorImage size].width;
         [self setFrameSize:size];
 		
+		// Make the indicator and set its action. It is a button with no border.
 		indicator = [[NSButton alloc] initWithFrame:
             NSMakeRect(0, 0, [pushIndicatorImage size].width, [pushIndicatorImage size].height)]; 
 		[indicator setButtonType:NSMomentaryPushButton];
@@ -406,6 +410,8 @@ static NSImage *pushIndicatorImage = nil;
     [[self enclosingScrollView] setNeedsDisplay:YES];
 }
 
+
+// Called by the Autopop menu item to change its state and the preferences
 - (void)_toggleAutopop:(id)sender
 {
 	// Flipflop the autopop
@@ -426,6 +432,7 @@ static NSImage *pushIndicatorImage = nil;
 	
 	[menu setAutoenablesItems:NO];
 	
+	// Construct a menu containing all pushed messages
 	int i;
 	for(i = 0; i < [pushArray count]; i++) {
 		NSString *temp = [[pushArray objectAtIndex:i] string];
@@ -434,6 +441,8 @@ static NSImage *pushIndicatorImage = nil;
 												   target:self
 												   action:@selector(_popItem:)
 											keyEquivalent:@""] autorelease];
+			
+			// Set the tag -- this identifies the message's index later
 			[menuItem setTag:i];
 
 			[menuItem setEnabled:YES];
@@ -441,6 +450,7 @@ static NSImage *pushIndicatorImage = nil;
 		}
 	}
 
+	// Add the Autopop item
     [menu addItem:[NSMenuItem separatorItem]];
 	menuItem = [[[NSMenuItem alloc] initWithTitle:@"Autopop Messages"
 										   target:self
@@ -465,6 +475,7 @@ static NSImage *pushIndicatorImage = nil;
 	[NSMenu popUpContextMenu:menu withEvent:newEvent forView:indicator];
 }
 
+// Always enable all of the push menu items
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	return(YES);
