@@ -214,7 +214,7 @@ static void otrg_adium_dialog_unknown_fingerprint(OtrlUserState us, const char *
 	responseInfo = [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSString stringWithUTF8String:hash], @"hash",
 		[NSString stringWithUTF8String:who], @"who",
-		[NSString stringWithUTF8String:((p && p->info->name) ? p->info->name : @"")], @"protocol",
+		((p && p->info->name) ? [NSString stringWithUTF8String:p->info->name] : @""), @"protocol",
 		[NSValue valueWithPointer:response_cb], @"response_cb",
 		[NSValue valueWithPointer:us], @"OtrlUserState",
 		[NSValue valueWithPointer:ops], @"OtrlMessageAppOps",
@@ -495,8 +495,8 @@ void initGaimOTRSupprt(void)
 	//Get the contact's preference (or its containing group, or so on)
 	prefNumber = [contact preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 								   group:GROUP_ENCRYPTION];
-	if(!prefNumber){
-		//If no contact preference, use the account preference
+	if(!prefNumber || ([prefNumber intValue] == EncryptedChat_Default)){
+		//If no contact preference or the contact is set to use the default, use the account preference
 		prefNumber = [[contact account] preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 												   group:GROUP_ENCRYPTION];		
 	}
@@ -509,6 +509,7 @@ void initGaimOTRSupprt(void)
 				policy = OTRL_POLICY_NEVER;
 				break;
 			case EncryptedChat_Manually:
+			case EncryptedChat_Default:
 				policy = OTRL_POLICY_MANUAL;
 				break;
 			case EncryptedChat_Automatically:
@@ -519,7 +520,7 @@ void initGaimOTRSupprt(void)
 				break;
 		}
 	}else{
-		policy = OTRL_POLICY_OPPORTUNISTIC;
+		policy = OTRL_POLICY_MANUAL;
 	}
 	
 	return [NSNumber numberWithInt:policy];	
