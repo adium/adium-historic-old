@@ -28,9 +28,6 @@
 - (CONTACT_INFO_CATEGORY)contactInfoCategory{
     return(AIInfo_Profile);
 }
-- (NSString *)label{
-    return(@"Profile");
-}
 - (NSString *)nibName{
     return(@"ContactProfilePane");
 }

@@ -28,9 +28,6 @@
 - (CONTACT_INFO_CATEGORY)contactInfoCategory{
     return(AIInfo_Settings);
 }
-- (NSString *)label{
-    return(@"Settings");
-}
 - (NSString *)nibName{
     return(@"ContactSettingsPane");
 }

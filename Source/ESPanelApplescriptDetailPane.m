@@ -73,9 +73,9 @@
  */
 - (NSDictionary *)actionDetails
 {
-	return((scriptPath ?
-			[NSDictionary dictionaryWithObject:scriptPath forKey:KEY_APPLESCRIPT_TO_RUN] :
-			nil);
+	return(scriptPath ?
+		   [NSDictionary dictionaryWithObject:scriptPath forKey:KEY_APPLESCRIPT_TO_RUN] :
+		   nil);
 }
 
 /*
