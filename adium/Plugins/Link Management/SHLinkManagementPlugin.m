@@ -13,6 +13,7 @@
 
 @interface SHLinkManagementPlugin (PRIVATE)
 - (BOOL)textViewSelectionIsLink:(NSTextView *)textView;
+- (void)registerToolbarItem;
 @end
 
 @implementation SHLinkManagementPlugin
@@ -34,6 +35,7 @@
 										   action:@selector(editFormattedLink:)
 									keyEquivalent:@""] autorelease];
     [[adium menuController] addContextualMenuItem:menuItem toLocation:Context_TextView_LinkAction];
+    [self registerToolbarItem];
 }
 
 - (void)uninstallPlugin
@@ -87,4 +89,34 @@
 	return(selectedLink != nil);
 }
 
+#pragma mark Toolbar Item stuff
+//- (void)toolbarWillAddItem:(NSNotification *)notification
+//{
+//    NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
+//    
+//    if([[item itemIdentifier] isEqualToString:@"linkEditor"
+//}
+
+- (void)registerToolbarItem
+{
+    MVMenuButton *button;
+
+    //Unregister the existing toolbar item first
+    if(toolbarItem){
+        [[adium toolbarController] unregisterToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+        [toolbarItem release]; toolbarItem = nil;
+    }
+    
+    toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:AILocalizedString(@"LinkEditor",nil)
+                                                           label:AILocalizedString(@"Link Editor",nil)
+                                                    paletteLabel:AILocalizedString(@"Link Editor",nil)
+                                                         toolTip:AILocalizedString(@"Add/Edit Hyperlink",nil)
+                                                          target:self
+                                                 settingSelector:@selector(setImage:)
+                                                     itemContent:[NSImage imageNamed:@"linkToolbar" forClass:[self class]]
+                                                          action:@selector(editFormattedLink:)
+                                                            menu:nil] retain];
+    
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+}
 @end
