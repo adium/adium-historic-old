@@ -238,8 +238,10 @@ static AIInfoWindowController *sharedInstance = nil;
         NSMutableAttributedString 	*textProfile = [[ownerArray objectAtIndex:0] mutableCopy];
         NSRange				firstLineRange = [[textProfile string] lineRangeForRange:NSMakeRange(0,0)];
         AIContentMessage		*message = [self contentMessageForAttributedString:textProfile];
-        //Run the profile through the filters
-        [[owner contentController] filterObject:message];
+        //Run the profile through the filters, do both incoming and outgoing filters so we get linked and emoticons
+        [[owner contentController] filterObject:message isOutgoing:YES];
+        [[owner contentController] filterObject:message isOutgoing:NO];
+        
         textProfile = [[message message] mutableCopy];
         
         //Set correct indent & tabbing on the first line of the profile

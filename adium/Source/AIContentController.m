@@ -250,13 +250,7 @@
 
     //Filter the content object
     if(filterContent){
-        NSEnumerator	*enumerator;
-        id<AIContentFilter>	filter;
-        
-        enumerator = [outgoingContentFilterArray objectEnumerator];
-        while((filter = [enumerator nextObject])){
-            [filter filterContentObject:inObject];
-        }
+        [self filterObject:inObject isOutgoing:YES];
     }
 
     //Send the object
@@ -286,7 +280,7 @@
 
     //Filter the content object
     if(filterContent){
-        [self filterObject:inObject];
+        [self filterObject:inObject isOutgoing:NO];
     }
     
     //Add the object
@@ -296,12 +290,12 @@
     [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 }
 
-- (void)filterObject:(AIContentObject *)inObject
+- (void)filterObject:(AIContentObject *)inObject isOutgoing:(BOOL)isOutgoing
 {
     NSEnumerator	*enumerator;
     id<AIContentFilter>	filter;
 
-    enumerator = [displayingContentFilterArray objectEnumerator];
+    enumerator = [(isOutgoing ? outgoingContentFilterArray : displayingContentFilterArray) objectEnumerator];
     while((filter = [enumerator nextObject])){
         [filter filterContentObject:inObject];
     }
