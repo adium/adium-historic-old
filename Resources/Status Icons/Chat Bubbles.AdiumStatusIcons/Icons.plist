@@ -8,10 +8,20 @@
 	<dict>
 		<key>Generic Available</key>
 		<string>available.png</string>
+		<key>Free for Chat</key>
+		<string>free for chat.png</string>		
 		<key>Generic Away</key>
 		<string>away.png</string>
+		<key>DND</key>
+		<string>dnd.png</string>
+		<key>Not Available</key>
+		<string>not available.png</string>
+		<key>Occupied</key>
+		<string>occupied.png</string>
 		<key>Idle</key>
 		<string>idle.png</string>
+		<key>Invisible</key>
+		<string>invisible.png</string>
 		<key>Offline</key>
 		<string>offline.png</string>
 		<key>Unknown</key>
@@ -27,12 +37,22 @@
 	<dict>
 		<key>Generic Available</key>
 		<string>available.png</string>
+		<key>Free for Chat</key>
+		<string>free for chat.png</string>		
 		<key>Generic Away</key>
 		<string>away.png</string>
+		<key>DND</key>
+		<string>dnd.png</string>
+		<key>Not Available</key>
+		<string>not available.png</string>
+		<key>Occupied</key>
+		<string>occupied.png</string>
 		<key>Idle</key>
 		<string>idle.png</string>
 		<key>Offline</key>
 		<string>offline.png</string>
+		<key>Invisible</key>
+		<string>invisible.png</string>
 		<key>Unknown</key>
 		<string>unknown.png</string>
 		<key>content</key>
