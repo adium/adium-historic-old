@@ -141,7 +141,7 @@
     AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
 
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        AIListContact	*contact = [contentObject destination];
+        AIListContact	*contact = (AIListContact *)[[contentObject chat] listObject];
         NSString 	*senderUID = [contact UIDAndServiceID];
 
         //Add the handle's UID to our 'already received away message' array, so they only receive the message once.
