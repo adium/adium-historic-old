@@ -49,6 +49,7 @@
 //Create a new away message
 - (IBAction)newAwayMessage:(id)sender
 {
+    NSString		*newAwayTitle;
     NSAttributedString	*newAwayString;
     NSMutableDictionary	*newAwayDict;
 
@@ -58,8 +59,9 @@
     //Get the selected group    
 
     //Create the new away entry
+    newAwayTitle = [[[NSString alloc] initWithString:AWAY_NEW_MESSAGE_STRING] autorelease];
     newAwayString = [[[NSAttributedString alloc] initWithString:AWAY_NEW_MESSAGE_STRING attributes:[NSDictionary dictionaryWithObjectsAndKeys:nil]] autorelease];
-    newAwayDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Away",@"Type",newAwayString,@"Message",nil];
+    newAwayDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Away",@"Type",newAwayString,@"Message",newAwayTitle,@"Title",nil];
     
     //Add the new away
     [awayMessageArray addObject:newAwayDict];
@@ -230,7 +232,7 @@
         }else if([type compare:@"Away"] == 0){
             [mutableArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
                 @"Away", @"Type",
-                [NSAttributedString stringWithData:[dict objectForKey:@"Message"]], @"Message",
+                [NSAttributedString stringWithData:[dict objectForKey:@"Message"]], @"Message",[dict objectForKey:@"Title"], @"Title",
                 nil]];
 
         }
@@ -260,7 +262,7 @@
         }else if([type compare:@"Away"] == 0){
             [saveArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                 @"Away", @"Type",
-                [[dict objectForKey:@"Message"] dataRepresentation], @"Message",
+                [[dict objectForKey:@"Message"] dataRepresentation], @"Message", [dict objectForKey:@"Title"], @"Title",
                 nil]];
 
         }
@@ -306,6 +308,11 @@
             //Nothing can be changed about groups
 
         }else if([type compare:@"Away"] == 0){
+            NSString * title = [displayedMessage objectForKey:@"Title"];
+            if ([title compare:[[displayedMessage objectForKey:@"Message"] string]] == 0){
+                //Title and Message are the same previously, they should be now, as well
+                [displayedMessage setObject:[[[textView_message textStorage] copy] string] forKey:@"Title"];
+            }
             //Set the new message
             [displayedMessage setObject:[[textView_message textStorage] copy] forKey:@"Message"];
         }
@@ -400,18 +407,32 @@
 
     //If this item is the one we're editing, make it look as if the changes are applying live by pulling the text right from our text view
     if(item == displayedMessage){
-        return([[textView_message textStorage] string]);
+        NSString * title = [displayedMessage objectForKey:@"Title"];
+        if ([title compare:[[displayedMessage objectForKey:@"Message"] string]] == 0){
+            return([[textView_message textStorage] string]);
+        }else{
+            return(title);
+        }
     }
 
     if([type compare:@"Group"] == 0){ //Group
         return([item objectForKey:@"Name"]);
 
     }else if([type compare:@"Away"] == 0){ //Away message
-        return([[item objectForKey:@"Message"] string]);
+        return([item objectForKey:@"Title"]);
 
     }else{
         return(nil);
 
+    }
+}
+
+- (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+{
+    NSString *type = [item objectForKey:@"Type"];
+    if([type compare:@"Away"] == 0){ //Away message
+        [item setObject:object forKey:@"Title"];
+        [self saveAwayMessages];
     }
 }
 
