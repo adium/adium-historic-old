@@ -53,7 +53,8 @@
     accountViewController = nil;
 	configuredForService = nil;
 	configuredForAccount = nil;
-    
+    [textField_accountName setDelayInterval:0.75];
+	
 	//
 	NSMenu	*serviceMenu = [[adium accountController] menuOfServicesWithTarget:self];
 	[serviceMenu setAutoenablesItems:YES];
@@ -447,7 +448,7 @@
     if(returnCode == NSAlertDefaultReturn){
         //Delete it
         index = [accountArray indexOfObject:targetAccount];
-        [[adium accountController] deleteAccount:targetAccount];
+        [[adium accountController] deleteAccount:targetAccount save:YES];
 		
         //If it was the last row, select the new last row (by default the selection will jump to the top, which is bad)
         if(index >= [accountArray count]){
