@@ -55,6 +55,7 @@
 	passKeysToDocumentView = NO;
 	
 	//Focus ring
+	alwaysDrawFocusRingIfFocused = NO;
 	lastResp = nil;
 	shouldDrawFocusRing = NO;
 	
@@ -280,31 +281,42 @@
 
 // Drawing ------------------------------------------------------------------------
 #pragma mark Drawing
+- (void)setAlwaysDrawFocusRingIfFocused:(BOOL)inFlag
+{
+	alwaysDrawFocusRingIfFocused = inFlag;
+	shouldDrawFocusRing = NO;
+	lastResp = nil;
+}
+
 //Focus ring drawing code by Nicholas Riley, posted on cocoadev and available at:
 //http://cocoa.mamasam.com/COCOADEV/2002/03/2/29535.php
 - (BOOL)needsDisplay
 {
-	NSResponder *resp = nil;
-	NSWindow	*window = [self window];
-	
-	if([window isKeyWindow]){
-		resp = [window firstResponder];
-		if(resp == lastResp){
+	if (alwaysDrawFocusRingIfFocused){
+		NSResponder *resp = nil;
+		NSWindow	*window = [self window];
+		
+		if([window isKeyWindow]){
+			resp = [window firstResponder];
+			if(resp == lastResp){
+				return([super needsDisplay]);
+			}
+			
+		}else if(lastResp == nil){
 			return([super needsDisplay]);
+			
 		}
 		
-	}else if(lastResp == nil){
-		return([super needsDisplay]);
+		shouldDrawFocusRing = (resp != nil &&
+							   [resp isKindOfClass:[NSView class]] &&
+							   [(NSView *)resp isDescendantOf:self]); // [sic]
+		lastResp = resp;
 		
+		[self setKeyboardFocusRingNeedsDisplayInRect:[self bounds]];
+		return(YES);
+	}else{
+		return([super needsDisplay]);
 	}
-	
-	shouldDrawFocusRing = (resp != nil &&
-						   [resp isKindOfClass:[NSView class]] &&
-						   [(NSView *)resp isDescendantOf:self]); // [sic]
-	lastResp = resp;
-	
-	[self setKeyboardFocusRingNeedsDisplayInRect:[self bounds]];
-	return(YES);
 }
 
 //Draw a focus ring around our view
