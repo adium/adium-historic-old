@@ -16,8 +16,14 @@
 
 @implementation AIWebKitMessageViewPlugin
 
+DeclareString(AppendMessage);
+DeclareString(AppendNextMessage);
+
 - (void)installPlugin
 {
+	InitString(AppendMessage,@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();");
+	InitString(AppendNextMessage,@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();");
+	
 	//Register our default preferences and install our preference view
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:WEBKIT_DEFAULT_PREFS
 																		forClass:[self class]]
@@ -78,8 +84,6 @@
 	[webView setPreferencesIdentifier:prefIdentifier];
 	[[webView preferences] setAutosaves:YES];
 
-	NSLog(@"Default: %@",[[webView preferences] defaultTextEncodingName]);
-	
 	if (![[[adium preferenceController] preferenceForKey:prefIdentifier
 												   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue]){
 		//Load defaults from the bundle or our defaults, as appropriate
@@ -120,12 +124,14 @@
 	resourcePaths = [[adium resourcePathsForName:@"Message Styles"] arrayByAddingObject:[[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:@"Styles"]];
 	enumerator = [resourcePaths objectEnumerator];
 	
+	
+	NSString	*AdiumMessageStyle = @"AdiumMessageStyle";
     while(resourcePath = [enumerator nextObject]) {
         fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:resourcePath];
         
         //Find all the .AdiumIcon's
         while((filePath = [fileEnumerator nextObject])){
-            if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumMessageStyle"] == 0){
+            if([[filePath pathExtension] caseInsensitiveCompare:AdiumMessageStyle] == 0){
                 NSString		*fullPath;
                 AIIconState		*previewState;
                 NSBundle		*style;
@@ -242,16 +248,15 @@
 	newHTML = [[template mutableCopy] autorelease];
 	newHTML = [self fillKeywords:newHTML forContent:content];
 	newHTML = [self escapeString:newHTML];
-		
+	
 	if(!contentIsSimilar){
 		[webView stringByEvaluatingJavaScriptFromString:
-			[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];
+			[NSString stringWithFormat:AppendMessage, newHTML]];
 		
 	}else{
 		[webView stringByEvaluatingJavaScriptFromString:
-			[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];								
-	}
-	
+			[NSString stringWithFormat:AppendNextMessage, newHTML]];								
+	}	
 }
 	
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath
@@ -264,7 +269,7 @@
 	newHTML = [self escapeString:newHTML];
 	
 	[webView stringByEvaluatingJavaScriptFromString:
-		[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];
+		[NSString stringWithFormat:AppendMessage, newHTML]];
 }
 
 //
