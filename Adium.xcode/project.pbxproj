@@ -4188,6 +4188,51 @@
 			settings = {
 			};
 		};
+		349C6E4507C96D44005EB896 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = ContactCountingDisplayDefaults.plist;
+			path = Source/ContactCountingDisplayDefaults.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349C6E4607C96D44005EB896 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CBContactCountingDisplayPlugin.m;
+			path = Source/CBContactCountingDisplayPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349C6E4707C96D45005EB896 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CBContactCountingDisplayPlugin.h;
+			path = Source/CBContactCountingDisplayPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349C6E4807C96D45005EB896 = {
+			fileRef = 349C6E4507C96D44005EB896;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349C6E4907C96D45005EB896 = {
+			fileRef = 349C6E4607C96D44005EB896;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349C6E4A07C96D45005EB896 = {
+			fileRef = 349C6E4707C96D45005EB896;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		349DDCF30640650B00542726 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -6137,7 +6182,6 @@
 				4BD6737E06001BF60049CAF7,
 				4BD6739906001C3F0049CAF7,
 				4BD673A206001C4D0049CAF7,
-				4BD673A406001C4E0049CAF7,
 				4BD673A706001C4F0049CAF7,
 				4BD673A906001C500049CAF7,
 				4BD673B406001C5D0049CAF7,
@@ -6305,6 +6349,7 @@
 				34E2A3E907B08CCB006735BC,
 				4BCAC70707B5A4FB006641B9,
 				4BCAC70907B5A4FB006641B9,
+				349C6E4A07C96D45005EB896,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6471,7 +6516,6 @@
 				34254F4C05EC0C4300F11AD7,
 				34BD9D29053146CC000AB133,
 				4B29094005F944BF0087D16F,
-				4BD673A606001C4E0049CAF7,
 				4BD673AC06001C510049CAF7,
 				4BD673F506001CC00049CAF7,
 				4BD673FB06001CC10049CAF7,
@@ -6686,7 +6730,6 @@
 				4BD6737D06001BF50049CAF7,
 				4BD6739B06001C410049CAF7,
 				4BD673A306001C4E0049CAF7,
-				4BD673A506001C4E0049CAF7,
 				4BD673A806001C500049CAF7,
 				4BD673AA06001C510049CAF7,
 				4BD673B506001C5E0049CAF7,
@@ -6854,6 +6897,7 @@
 				34E2A3E807B08CCB006735BC,
 				4BCAC70807B5A4FB006641B9,
 				4BCAC70A07B5A4FB006641B9,
+				349C6E4907C96D45005EB896,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7000,6 +7044,7 @@
 				3419FE230531586A00C68BA3,
 				34E9F1F20790BF5500662E8E,
 				34F2F80C07C41445007EAAAB,
+				349C6E4807C96D45005EB896,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16518,24 +16563,6 @@
 			settings = {
 			};
 		};
-		4BD673A406001C4E0049CAF7 = {
-			fileRef = 9EBAC45105B21CD200A98ADC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673A506001C4E0049CAF7 = {
-			fileRef = 9EBAC45205B21CD300A98ADC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD673A606001C4E0049CAF7 = {
-			fileRef = 9E1BE1C605B248F0009B1A21;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD673A706001C4F0049CAF7 = {
 			fileRef = 34878F7505182ACD003B2F21;
 			isa = PBXBuildFile;
@@ -20623,15 +20650,6 @@
 //9E2
 //9E3
 //9E4
-		9E1BE1C605B248F0009B1A21 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = ContactCountingDisplayDefaults.plist;
-			path = "Plugins/Contact Counting Display/ContactCountingDisplayDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		9E20910A06A601A100E33E27 = {
 			fileRef = 9E791E26057746D100547562;
 			isa = PBXBuildFile;
@@ -20782,9 +20800,9 @@
 		};
 		9E57141405B2168100283CAD = {
 			children = (
-				9EBAC45105B21CD200A98ADC,
-				9EBAC45205B21CD300A98ADC,
-				9E1BE1C605B248F0009B1A21,
+				349C6E4707C96D45005EB896,
+				349C6E4607C96D44005EB896,
+				349C6E4507C96D44005EB896,
 			);
 			isa = PBXGroup;
 			name = "Contact Counting Display";
@@ -21060,24 +21078,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIDockBehaviorPlugin.m;
 			path = "Plugins/Dock Behavior/AIDockBehaviorPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9EBAC45105B21CD200A98ADC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CBContactCountingDisplayPlugin.h;
-			path = "Plugins/Contact Counting Display/CBContactCountingDisplayPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9EBAC45205B21CD300A98ADC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CBContactCountingDisplayPlugin.m;
-			path = "Plugins/Contact Counting Display/CBContactCountingDisplayPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
