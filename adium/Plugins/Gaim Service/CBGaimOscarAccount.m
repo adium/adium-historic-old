@@ -56,6 +56,22 @@ struct oscar_data {
         guint maxawaymsglen; /* max size (bytes) of posted away message */
     } rights;
 };
+struct buddyinfo {
+	gboolean typingnot;
+	gchar *availmsg;
+	fu32_t ipaddr;
+	
+	unsigned long ico_me_len;
+	unsigned long ico_me_csum;
+	time_t ico_me_time;
+	gboolean ico_informed;
+	
+	unsigned long ico_len;
+	unsigned long ico_csum;
+	time_t ico_time;
+	gboolean ico_need;
+	gboolean ico_sent;
+};
 
 @implementation CBGaimOscarAccount
 
@@ -116,6 +132,106 @@ struct oscar_data {
 	[super accountConnectionDisconnected];
 }
 
+- (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
+{
+	[super accountUpdateBuddy:buddy forEvent:event];
+	
+	//Get the node's ui_data
+    AIListContact           *theContact = (AIListContact *)buddy->node.ui_data;
+
+	if (buddy != nil) {
+		struct oscar_data *od;
+		aim_userinfo_t *userinfo;
+		
+		if (GAIM_BUDDY_IS_ONLINE(buddy) && 
+			(od = gc->proto_data) &&
+			(userinfo = aim_locate_finduserinfo(od->sess, buddy->name))) {
+			
+			switch(event)
+			{
+				case GAIM_BUDDY_STATUS_MESSAGE:
+				{
+					NSString		*statusMsgString = nil;
+					NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString" withOwner:self];
+					
+					struct buddyinfo *bi = g_hash_table_lookup(od->buddyinfo, gaim_normalize(buddy->account, buddy->name));
+					
+					if ((bi != NULL) && (bi->availmsg != NULL) && !(buddy->uc & UC_UNAVAILABLE)) {
+						
+						//Available status message
+						statusMsgString = [NSString stringWithUTF8String:(bi->availmsg)];
+						NSLog(@"available messsage: %@",statusMsgString);
+					} else if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away_len > 0) && 
+							   (userinfo->away != NULL) && (userinfo->away_encoding != NULL)) {
+						
+						//Away message
+						gchar *away_utf8 = oscar_encoding_to_utf8(userinfo->away_encoding, userinfo->away, userinfo->away_len);
+						if (away_utf8 != NULL) {
+							statusMsgString = [NSString stringWithUTF8String:away_utf8];
+							g_free(away_utf8);
+						}
+					}
+					
+					//Update the status message if necessary
+					if (statusMsgString && [statusMsgString length]) {
+						if (![statusMsgString isEqualToString:oldStatusMsgString]) {
+							[theContact setStatusObject:statusMsgString withOwner:self forKey:@"StatusMessageString" notify:NO];
+							[theContact setStatusObject:[AIHTMLDecoder decodeHTML:statusMsgString]
+											  withOwner:self 
+												 forKey:@"StatusMessage"
+												 notify:NO];
+						}
+					} else if (oldStatusMsgString) {
+						[theContact setStatusObject:nil withOwner:self forKey:@"StatusMessageString" notify:NO];
+						[theContact setStatusObject:nil withOwner:self forKey:@"StatusMessage" notify:NO];
+					}
+				}	break;
+					
+				case GAIM_BUDDY_INFO_UPDATED:
+				{
+					//Update the profile if necessary
+					if ((userinfo->info_len > 0) && (userinfo->info != NULL) && (userinfo->info_encoding != NULL)) {
+						
+						gchar *info_utf8 = oscar_encoding_to_utf8(userinfo->info_encoding, userinfo->info, userinfo->info_len);
+						if (info_utf8) {
+							
+							NSString *profileString = [NSString stringWithUTF8String:info_utf8];
+							NSString *oldProfileString = [theContact statusObjectForKey:@"TextProfileString" 
+																			  withOwner:self];
+							
+							if (profileString && [profileString length]) {
+								if (![profileString isEqualToString:oldProfileString]) {
+									[theContact setStatusObject:profileString withOwner:self 
+														 forKey:@"TextProfileString" 
+														 notify:NO];
+									[theContact setStatusObject:[AIHTMLDecoder decodeHTML:profileString] withOwner:self 
+														 forKey:@"TextProfile" 
+														 notify:NO];
+								}
+							} else if (oldProfileString) {
+								[theContact setStatusObject:nil withOwner:self forKey:@"TextProfileString" notify:NO];
+								[theContact setStatusObject:nil withOwner:self forKey:@"TextProfile" notify:NO];	
+							}
+							g_free(info_utf8);
+						}
+					}
+				}	break;
+					
+				case GAIM_BUDDY_MISCELLANEOUS:
+				{  
+					/*
+					 userinfo->membersince;
+					 userinfo->capabilities;
+					 */
+				}	break;
+			}
+		}
+		
+		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	}
+}
+
+/*
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
 	NSTimer		*timer;
@@ -149,9 +265,9 @@ struct oscar_data {
         if (buddy != nil) {
             int online = (GAIM_BUDDY_IS_ONLINE(buddy) ? 1 : 0);
             
-//            NSMutableArray *modifiedKeys = [NSMutableArray array];
+			//            NSMutableArray *modifiedKeys = [NSMutableArray array];
             AIListContact *theContact = (AIListContact *)node->ui_data;
-//            NSMutableDictionary * statusDict = [theHandle statusDictionary];
+			//            NSMutableDictionary * statusDict = [theHandle statusDictionary];
             
             if (online) {
                 struct oscar_data *od = gc->proto_data;
@@ -177,75 +293,34 @@ struct oscar_data {
                             if ([theContact statusObjectForKey:@"StatusMessage" withOwner:self]) {
                                 [theContact setStatusObject:nil withOwner:self forKey:@"StatusMessage" notify:NO];
                                 [theContact setStatusObject:[NSNumber numberWithBool:NO]
-						  withOwner:self
-						     forKey:@"Away"
-						     notify:NO];
+												  withOwner:self
+													 forKey:@"Away"
+													 notify:NO];
                             }
                         }
                         
-                        //Update the profile if necessary
-                        if ((userinfo->info_len > 0) && (userinfo->info != NULL) && (userinfo->info_encoding != NULL)) {
-                            gchar *info_utf8 = oscar_encoding_to_utf8(userinfo->info_encoding, userinfo->info, userinfo->info_len);
-                            if (info_utf8 != NULL) {
-                                NSString *profileString = [NSString stringWithUTF8String:info_utf8];
-                                if (![profileString isEqualToString:[theContact statusObjectForKey:@"TextProfileString" 
-											 withOwner:self]]) {
-                                    NSAttributedString *profileDecoded = [AIHTMLDecoder decodeHTML:profileString];
-                                    [theContact setStatusObject:profileString 
-						      withOwner:self 
-							 forKey:@"TextProfileString" 
-							 notify:NO];
-                                    [theContact setStatusObject:profileDecoded
-						      withOwner:self 
-							 forKey:@"TextProfile" 
-							 notify:NO];
-                                }
-                                g_free(info_utf8);
-                            }
-                        }
+
                         
                         //Set the signon date if one hasn't already been set
                         if ( (![theContact statusObjectForKey:@"Signon Date" withOwner:self]) && ((userinfo->onlinesince) != 0) ) {
                             [theContact setStatusObject:[NSDate dateWithTimeIntervalSince1970:(userinfo->onlinesince)] withOwner:self forKey:@"Signon Date" notify:NO];
-//                            [modifiedKeys addObject:@"Signon Date"];
+							//                            [modifiedKeys addObject:@"Signon Date"];
                         }
-			
-			//Set the warning level or clear it if it's now 0.
-			int warningLevel = (int)((userinfo->warnlevel/10.0) + 0.5);
-			NSNumber *currentWarningLevel = [theContact statusObjectForKey:@"Warning" withOwner:self];
-			if (warningLevel > 0){
-			    if (!currentWarningLevel || ([currentWarningLevel intValue] != warningLevel)) {
-				[theContact setStatusObject:[NSNumber numberWithInt:warningLevel]
-						  withOwner:self 
-						     forKey:@"Warning"
-						     notify:NO];
-			    }
-			}else{
-			    if (currentWarningLevel) {
-				[theContact setStatusObject:nil
-						  withOwner:self
-						     forKey:@"Warning" 
-						     notify:NO];   
-			    }
+						
+
+					}
+				}
+				
+				//if anything changed
+				[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 			}
-		    }
 		}
-		
-		//if anything changed
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-		//            if([modifiedKeys count] > 0)
-		//            {
-		//                //tell the contact controller, silencing if necessary
-		//                [[adium contactController] handleStatusChanged:theHandle
-		//                                            modifiedStatusKeys:modifiedKeys
-		//                                                        silent:silentAndDelayed];
-		//            }
-	    }
-	}
     }
 }
-    //This check is against the attributed string, not the HTML it creates... so it's worthless. :)
-    /*- (void)setProfile:(NSAttributedString *)profile
+*/
+
+//This check is against the attributed string, not the HTML it creates... so it's worthless. :)
+/*- (void)setProfile:(NSAttributedString *)profile
 {
     if (profile){
         int length = [profile length];

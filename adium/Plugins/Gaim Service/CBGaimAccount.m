@@ -83,37 +83,6 @@
 	//Create the contact if necessary
     if(!theContact) theContact = [self contactAssociatedWithBuddy:buddy];
 
-    //Online / Offline
-    online = (GAIM_BUDDY_IS_ONLINE(buddy) ? 1 : 0);
-    NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online" withOwner:self];
-    if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != online)){
-		[theContact setStatusObject:[NSNumber numberWithBool:online] withOwner:self forKey:@"Online" notify:NO];
-		[self _setInstantMessagesWithContact:theContact enabled:online];
-
-		if(!silentAndDelayed){
-			if(online){
-				[theContact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Signed On" notify:NO];
-				[theContact setStatusObject:nil withOwner:self forKey:@"Signed Off" notify:NO];
-				[theContact setStatusObject:nil withOwner:self forKey:@"Signed On" afterDelay:15];
-			}else{
-				[theContact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Signed Off" notify:NO];
-				[theContact setStatusObject:nil withOwner:self forKey:@"Signed On" notify:NO];
-				[theContact setStatusObject:nil withOwner:self forKey:@"Signed Off" afterDelay:15];
-			}
-		}
-		
-		/*           
-			//buddy->signon is always 0 - this will be fixed in libgaim 0.75.
-			if (online && buddy->signon != 0) {
-				//Set the signon time
-				NSMutableDictionary * statusDict = [theHandle statusDictionary];
-				
-				[statusDict setObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->signon] forKey:@"Signon Date"];
-				[modifiedKeys addObject:@"Signon Date"];
-			}
-		*/
-    }
-	
     //Display Name - use the serverside buddy_alias if present
     {
         char *alias = (char *)gaim_get_buddy_alias(buddy);
@@ -128,21 +97,7 @@
         }
     }
 	
-    //Idletime
-	{
-		NSDate *idleDate = [theContact statusObjectForKey:@"IdleSince" withOwner:self];
-		int currentIdle = buddy->idle;
-		if(currentIdle != (int)([idleDate timeIntervalSince1970])){
-			//If there is an idle time, or if there was one before, then update
-			if ((buddy->idle > 0) || idleDate) {
-				if(GAIM_DEBUG) NSLog(@"%s is idle %i",buddy->name,(int)buddy->idle);
-				[theContact setStatusObject:((currentIdle > 0) ? [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)currentIdle] : nil)
-								  withOwner:self
-									 forKey:@"IdleSince"
-									 notify:NO];
-			}
-		}
-	}
+
     
     //Group changes - gaim buddies start off in no group, so this is an important update for us
     if(![theContact remoteGroupNameForAccount:self]){
@@ -155,33 +110,140 @@
         }
     }
     
-    //Buddy Icon
-    {
-        GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
-        if(buddyIcon && (buddyIcon != [[theContact statusObjectForKey:@"BuddyImagePointer" withOwner:self] pointerValue])) {                            
-            //save this for convenience
-			[theContact setStatusObject:[NSValue valueWithPointer:buddyIcon]
-							  withOwner:self
-								 forKey:@"BuddyImagePointer"
-								 notify:NO];
-            
-            //set the buddy image
-            NSImage *image = [[[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len))
-                                                                           length:buddyIcon->len]] autorelease];
-			[theContact setStatusObject:image withOwner:self forKey:@"UserIcon" notify:NO];
-        }
-    }     
+
     
-    //Away status
-    {
-        BOOL newAway = ((buddy->uc & UC_UNAVAILABLE) != 0);
-		NSNumber *storedValue = [theContact statusObjectForKey:@"Away" withOwner:self];
-        if((!newAway && (storedValue == nil)) || newAway != [storedValue boolValue]) {
-            [theContact setStatusObject:[NSNumber numberWithBool:newAway] withOwner:self forKey:@"Away" notify:NO];
-        }
-    }
+	
     
     //Apply any changes
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+}
+
+- (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
+{
+	if(GAIM_DEBUG) NSLog(@"update: %s forEvent: %i",buddy->name,event);
+    
+    AIListContact           *theContact;
+	
+    //Get the node's ui_data
+    theContact = (AIListContact *)buddy->node.ui_data;
+	
+	//Create the contact if necessary
+    if(!theContact) theContact = [self contactAssociatedWithBuddy:buddy];
+	
+	switch(event)
+	{
+		//Online / Offline
+		case GAIM_BUDDY_SIGNON:
+		{
+			NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online" withOwner:self];
+			if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != YES)){
+				[theContact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Online" notify:NO];
+				[self _setInstantMessagesWithContact:theContact enabled:YES];
+				
+				if(!silentAndDelayed){
+					[theContact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Signed On" notify:NO];
+					[theContact setStatusObject:nil withOwner:self forKey:@"Signed Off" notify:NO];
+					[theContact setStatusObject:nil withOwner:self forKey:@"Signed On" afterDelay:15];
+				}
+				
+			}
+		}   break;
+		case GAIM_BUDDY_SIGNOFF:
+		{
+			NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online" withOwner:self];
+			if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != NO)){
+				[theContact setStatusObject:[NSNumber numberWithBool:NO] withOwner:self forKey:@"Online" notify:NO];
+				[self _setInstantMessagesWithContact:theContact enabled:NO];
+				
+				if(!silentAndDelayed){
+					[theContact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Signed Off" notify:NO];
+					[theContact setStatusObject:nil withOwner:self forKey:@"Signed On" notify:NO];
+					[theContact setStatusObject:nil withOwner:self forKey:@"Signed Off" afterDelay:15];
+				}
+			}
+		}   break;
+		case GAIM_BUDDY_SIGNON_TIME:
+		{
+			if (buddy->signon != 0) {
+				//Set the signon time
+				[theContact setStatusObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->signon]
+										withOwner:self
+										   forKey:@"Signon Date"
+										   notify:NO];
+			}
+		}
+			
+			//Away status
+		case GAIM_BUDDY_AWAY:
+		case GAIM_BUDDY_AWAY_RETURN:
+		{
+			BOOL newAway = (event == GAIM_BUDDY_AWAY);
+			NSNumber *storedValue = [theContact statusObjectForKey:@"Away" withOwner:self];
+			if((!newAway && (storedValue == nil)) || newAway != [storedValue boolValue]) {
+				[theContact setStatusObject:[NSNumber numberWithBool:newAway] withOwner:self forKey:@"Away" notify:NO];
+			}
+		}   break;
+			
+		//Idletime
+		case GAIM_BUDDY_IDLE:
+		case GAIM_BUDDY_IDLE_RETURN:
+		{
+			NSDate *idleDate = [theContact statusObjectForKey:@"IdleSince" withOwner:self];
+			int currentIdle = buddy->idle;
+			if(currentIdle != (int)([idleDate timeIntervalSince1970])){
+				//If there is an idle time, or if there was one before, then update
+				if ((buddy->idle > 0) || idleDate) {
+					NSLog(@"%s is idle %i",buddy->name,buddy->idle);
+					[theContact setStatusObject:((currentIdle > 0) ? [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)currentIdle] : nil)
+									  withOwner:self
+										 forKey:@"IdleSince"
+										 notify:NO];
+				}
+			}
+		}   break;
+			
+		case GAIM_BUDDY_EVIL:
+		{
+			//Set the warning level or clear it if it's now 0.
+			int evil = buddy->evil;
+			NSNumber *currentWarningLevel = [theContact statusObjectForKey:@"Warning" withOwner:self];
+			if (evil > 0){
+				if (!currentWarningLevel || ([currentWarningLevel intValue] != evil)) {
+					[theContact setStatusObject:[NSNumber numberWithInt:evil]
+									  withOwner:self 
+										 forKey:@"Warning"
+										 notify:NO];
+				}
+			}else{
+				if (currentWarningLevel) {
+					[theContact setStatusObject:nil
+									  withOwner:self
+										 forKey:@"Warning" 
+										 notify:NO];   
+				}
+			}
+		}   break;
+			
+		//Buddy Icon
+		case GAIM_BUDDY_ICON:
+		{
+			GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
+			if(buddyIcon && (buddyIcon != [[theContact statusObjectForKey:@"BuddyImagePointer" withOwner:self] pointerValue])) {                            
+				//save this for convenience
+				[theContact setStatusObject:[NSValue valueWithPointer:buddyIcon]
+								  withOwner:self
+									 forKey:@"BuddyImagePointer"
+									 notify:NO];
+				
+				//set the buddy image
+				NSImage *image = [[[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len))
+																			   length:buddyIcon->len]] autorelease];
+				[theContact setStatusObject:image withOwner:self forKey:@"UserIcon" notify:NO];
+			}
+		}   break;
+	}
+	
+	//Apply any changes
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
@@ -308,7 +370,7 @@
     //create an initial gaim account
     [self createNewGaimAccount];
     gc = NULL;
-    if(GAIM_DEBUG) NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
+    NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
     
     //ensure our user icon cache path exists
     [AIFileUtilities createDirectory:[USER_ICON_CACHE_PATH stringByExpandingTildeInPath]];
@@ -459,7 +521,7 @@
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact
 {	
     //Request profile
-    if([[inContact statusObjectForKey:@"Online" withOwner:self] boolValue]){
+    if(gc && ([[inContact statusObjectForKey:@"Online" withOwner:self] boolValue])){
 		serv_get_info(gc, [[inContact UID] UTF8String]);
     }
 }
@@ -478,7 +540,7 @@
 		gaim_blist_remove_buddy(buddy);											//remove it gaimside
 	}
 }
-	
+
 - (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)inGroup
 {
 	NSEnumerator	*enumerator = [objects objectEnumerator];
@@ -513,27 +575,27 @@
     return([[self statusObjectForKey:@"Online"] boolValue]);
 }
 
+
+//{
+//    AIHandle	*handle;
+//    if(handle = [handleDict objectForKey:inUID]){
+//        GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);
+//        
+//        serv_remove_buddy(gc,[inUID UTF8String],[[handle serverGroup] UTF8String]); //remove it from the list serverside
+//        gaim_blist_remove_buddy(buddy);                                             //remove it gaimside
+//        
+//        return YES;
+//    } else 
+//        return NO;
+//}
 	
-	//{
-	//    AIHandle	*handle;
-	//    if(handle = [handleDict objectForKey:inUID]){
-	//        GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);
-	//        
-	//        serv_remove_buddy(gc,[inUID UTF8String],[[handle serverGroup] UTF8String]); //remove it from the list serverside
-	//        gaim_blist_remove_buddy(buddy);                                             //remove it gaimside
-	//        
-	//        return YES;
-	//    } else 
-	//        return NO;
-	//}
-		
-	//    serv_remove_group(gc,[inGroup UTF8String]);             //remove it from the list serverside
-	//    
-	//    GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
-	//    gaim_blist_remove_group(group);                         //remove it gaimside
-	//															
-	//        NSLog(@"remove group %@",inGroup);
-	//    return YES;
+//    serv_remove_group(gc,[inGroup UTF8String]);             //remove it from the list serverside
+//    
+//    GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
+//    gaim_blist_remove_group(group);                         //remove it gaimside
+//															
+//        NSLog(@"remove group %@",inGroup);
+//    return YES;
 
 // Returns a dictionary of AIHandles available on this account
 //- (NSDictionary *)availableHandles //return nil if no contacts/list available
@@ -544,8 +606,8 @@
 //        return(nil);
 //    }
 //}
-
-	//// Returns YES if the list is editable
+	
+//// Returns YES if the list is editable
 //- (BOOL)contactListEditable
 //{
 //    return YES;
@@ -669,15 +731,15 @@
 //    }
 //    return NO;
 //}
-
+	
 - (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy
 {
 	AIListContact	*contact;
 	
 	//Get our contact
 	contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-                                                            UID:[[NSString stringWithUTF8String:(buddy->name)] compactedString]];
-
+														UID:[[NSString stringWithUTF8String:(buddy->name)] compactedString]];
+	
     //Associate the handle with ui_data and the buddy with our statusDictionary
     buddy->node.ui_data = [contact retain];
     [contact setStatusObject:[NSValue valueWithPointer:buddy] withOwner:self forKey:@"GaimBuddy" notify:YES];
@@ -775,7 +837,7 @@
 - (void)accountXferCanceledRemotely:(GaimXfer *)xfer
 {
     [[adium fileTransferController] transferCanceled:(ESFileTransfer *)(xfer->ui_data)];
-    gaim_xfer_destroy(xfer);
+//    gaim_xfer_destroy(xfer);
 }
 
 //Accept a send or receive ESFileTransfer object, beginning the transfer.
@@ -931,7 +993,7 @@
 - (void)accountConnectionDisconnected
 {
     NSEnumerator    *enumerator;
-    	
+    
     //We are now offline
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
