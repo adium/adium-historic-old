@@ -221,8 +221,6 @@
         BOOL		labelGroups = [[prefDict objectForKey:KEY_SCL_LABEL_GROUPS] boolValue];
         NSColor		*labelGroupsColor = [[prefDict objectForKey:KEY_SCL_LABEL_GROUPS_COLOR] representedColor];
         
-        allowTooltipsInBackground = [[prefDict objectForKey:KEY_SCL_BACKGROUND_TOOLTIPS] boolValue];
-        
         float		alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
 		
 				
@@ -539,6 +537,9 @@
 {
     NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
     
+	//No longer in a drag, so allow tooltips again
+	inDrag = NO;
+	
     if([availableType compare:@"AIListObject"] == 0){
 		//The tree root is not associated with our root contact list group, so we need to make that association here
 		if(item == nil) item = contactList;
@@ -692,9 +693,7 @@
 - (void)_showTooltipAtPoint:(NSPoint)screenPoint
 {
     if(screenPoint.x != 0 && screenPoint.y != 0){
-        if( ((allowTooltipsInBackground && [NSApp isActive]) || 
-            ([[contactListView window] isKeyWindow])) &&
-			!inDrag ){
+        if([NSApp isActive] && !inDrag ){
 			
             NSPoint			viewPoint;
             AIListObject	*hoveredObject;

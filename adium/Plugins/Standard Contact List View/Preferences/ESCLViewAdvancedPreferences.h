@@ -10,7 +10,6 @@
     IBOutlet    NSSlider        *slider_rowSpacing;
     IBOutlet    NSButton        *checkbox_outlineGroups;
     IBOutlet    NSColorWell     *colorWell_outlineGroupsColor;
-    IBOutlet    NSButton        *checkbox_tooltipsInBackground;
     
     //Window
     IBOutlet    NSSlider        *slider_opacity;
