@@ -217,7 +217,7 @@
 
 - (IBAction)showDetails:(id)sender
 {
-	NSRunInformationalAlertPanel(@"Details",
+	NSRunInformationalAlertPanel(AILocalizedString(@"Details",nil),
 								 [[[[adium interfaceController] activeChat] securityDetails] objectForKey:@"Description"],
 								 AILocalizedString(@"OK",nil),
 								 nil,
@@ -231,7 +231,7 @@
 	aboutEncryption = [[[[adium interfaceController] activeChat] account] aboutEncryption];
 	
 	if(aboutEncryption){
-		NSRunInformationalAlertPanel(@"About Encryption",
+		NSRunInformationalAlertPanel(AILocalizedString(@"About Encryption",nil),
 									 aboutEncryption,
 									 AILocalizedString(@"OK",nil),
 									 nil,
