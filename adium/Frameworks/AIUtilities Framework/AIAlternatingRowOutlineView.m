@@ -109,9 +109,8 @@
 			rowRect = NSMakeRect(0,0,rect.size.width,rowHeight);
 			coloredRow = YES;        
 		}else{
-			rowRect = [self rectOfRow:numberOfRows-1];
-			rowRect.origin.y += rowHeight;
-			coloredRow = !(numberOfRows % 2);        
+			rowRect = NSMakeRect(0, NSMaxY([self rectOfRow:numberOfRows-1]) + rowHeight, rect.size.width, rowHeight);
+			coloredRow = (numberOfRows % 2);        
 		}
 		
 		//Draw the grid
