@@ -188,12 +188,20 @@
 	if (useNSImagePickerController)
 	{
 		if (!pickerController){
-			Class imagePickerClass = NSClassFromString(@"NSImagePickerController"); //HACK so we don't crash on launch in 10.2
+			Class	imagePickerClass;
+			NSPoint	pickerPoint;
+			
+			imagePickerClass = NSClassFromString(@"NSImagePickerController"); //HACK so we don't crash on launch in 10.2
 			pickerController = [[imagePickerClass sharedImagePickerControllerCreate:YES] retain];
 			[pickerController setDelegate:self];
-			[pickerController initAtPoint:[NSEvent mouseLocation] inWindow: nil];
-			[pickerController setHasChanged: NO];
+			
+			pickerPoint = [NSEvent mouseLocation];
+			pickerPoint.y -= [[pickerController window] frame].size.height;
+			
+			[pickerController initAtPoint:pickerPoint inWindow: nil];
+			[pickerController setHasChanged:NO];
 		}
+		
 		[pickerController selectionChanged];
 		[[pickerController window] makeKeyAndOrderFront: nil];
 	}
