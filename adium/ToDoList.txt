@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.136 2004/05/16 18:53:33 adamiser Exp $
+$Id: ToDoList.txt,v 1.137 2004/05/16 19:06:30 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -17,10 +17,21 @@ Bugs - LibGaim
 
 
 -------------------------------------------------------------------------------------------------------
+Bugs - Resources
+-------------------------------------------------------------------------------------------------------
+* Webkit styles rendering incorrectly in very wide windows
+	The two included styles with problems are Smooth operator and Mockie
+
+* Webkit styles are inconsistently handling long lines
+	All styles should use the overflow scrollbar if possible.  The following styles do not:
+	Elisha, Minimal, Mockie, Retro, Simple
+
+
+
+-------------------------------------------------------------------------------------------------------
 Bugs - Adium
 -------------------------------------------------------------------------------------------------------
 * "Custom..." sound option is not working.
-* We are not processing HTML that arrives over an ICQ connection.  Some clients (such as iChat) send HTML over ICQ.
 * Don't spawn new windows when we're hidden, doing so will unhide us (Show the windows next time we're unhidden)
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * User icons are still getting flipped (Icons from AIM, apparently)
@@ -40,7 +51,6 @@ Bugs - Adium
     // brian now dons his flameproof pants :)
 * Add/Edit link menu item needs to disable when unavailable
 * Short emoticons can mask longer ones ( :) masks :)) ).  Sort emoticons longest to shortest?
-* Some webkit styles (Such as smooth operator) render incorrectly in very wide windows
 * Message history should be de-colored before being passed to the message view
 
 Applescripts:
