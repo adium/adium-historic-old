@@ -17217,6 +17217,7 @@
 				6C8CCEE805C944D200B449CE,
 				6C8CCEE905C944D200B449CE,
 				6C8CCEEA05C944D200B449CE,
+				BF8F366805CC3CE90092DA7C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17335,6 +17336,7 @@
 				6C8CCEDF05C944D100B449CE,
 				6C8CCEE005C944D100B449CE,
 				6C8CCEE105C944D200B449CE,
+				BF8F366705CC3CE80092DA7C,
 			);
 			isa = PBXGroup;
 			name = "iTunes Integration";
@@ -28736,6 +28738,20 @@
 		};
 		BF818D7C05C7AD460067008D = {
 			fileRef = BF818D7A05C7AD460067008D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF8F366705CC3CE80092DA7C = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = getiTunesCurrentComment.scpt;
+			path = "Plugins/iTunes Integration/getiTunesCurrentComment.scpt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF8F366805CC3CE90092DA7C = {
+			fileRef = BF8F366705CC3CE80092DA7C;
 			isa = PBXBuildFile;
 			settings = {
 			};
