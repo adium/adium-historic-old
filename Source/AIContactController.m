@@ -453,6 +453,8 @@ DeclareString(UID);
 	NSString			*remoteGroupName = [inContact remoteGroupName];
 	AIListObject		*containingObject;
 	
+	[inContact retain];
+	
 	containingObject = [inContact containingObject];
 	
 	if ([containingObject isKindOfClass:[AIMetaContact class]]){
@@ -487,11 +489,9 @@ DeclareString(UID);
 			//If !remoteGroupName, remove the contact from any local groups
 			if(containingObject){
 				//Remove the object
-				[inContact retain];
 				[(AIListGroup *)containingObject removeObject:inContact];
 				
 				[self _listChangedGroup:(AIListGroup *)containingObject object:inContact];
-				[inContact release];
 			}
 		}
 	}
@@ -500,6 +500,8 @@ DeclareString(UID);
 					   forKey:@"Stranger"
 					   notify:NotifyLater];
 	[inContact notifyOfChangedStatusSilently:YES];
+	
+	[inContact release];
 }
 
 - (void)_moveContactLocally:(AIListContact *)listContact toGroup:(AIListGroup *)localGroup
