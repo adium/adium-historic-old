@@ -164,10 +164,24 @@ DeclareString(UID);
 - (void)adiumVersionWillBeUpgraded:(NSNotification *)notification
 {
 	//After 0.63 - metaContacts dictionary changed; old dictionary is very large and quite useless.
-	if ([[[notification userInfo] objectForKey:@"lastLaunchedVersion"] floatValue] < 0.681){
+	if ([[[notification userInfo] objectForKey:@"lastLaunchedVersion"] floatValue] < 0.682){
+		NSString	*path;
+		
 		[[owner preferenceController] setPreference:nil
 					 forKey:KEY_FLAT_METACONTACTS
 					  group:PREF_GROUP_CONTACT_LIST];
+		[[owner preferenceController] setPreference:nil
+											 forKey:KEY_METACONTACT_OWNERSHIP
+											  group:PREF_GROUP_CONTACT_LIST];
+		
+		//Clear out old metacontact files
+		path = [[[owner loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH];
+		[[NSFileManager defaultManager] removeFilesInDirectory:path
+													withPrefix:@"MetaContact"
+												 movingToTrash:NO];
+		[[NSFileManager defaultManager] removeFilesInDirectory:@"~/Library/Caches/Adium"
+													withPrefix:@"MetaContact"
+												 movingToTrash:NO];
 	}
 	
 	[[owner notificationCenter] removeObserver:self
