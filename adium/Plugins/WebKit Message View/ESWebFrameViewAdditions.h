@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Fri Mar 05 2004.
-
+/*
 #import "WebKitPrivateDefinitions.h"
 
 @interface WebFrameView (ESWebFrameViewAdditions)
@@ -13,3 +13,5 @@
 @interface WebFrameViewPrivate (ESWebFrameViewPrivateHack)
 - (WebDynamicScrollBarsView *)frameScrollView;
 @end
+
+*/

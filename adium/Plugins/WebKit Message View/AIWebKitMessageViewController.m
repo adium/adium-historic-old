@@ -58,8 +58,7 @@
 	[webView setPolicyDelegate:self];
 	[webView setUIDelegate:self];
 	[webView setMaintainsBackForwardList:NO];
-	
-	
+
 //	[[[[[webView mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
 	
 	//Observe preference changes and set our initial preferences
@@ -132,13 +131,6 @@
 	//Add
 	[newContent addObject:content];
 	[self processNewContent];
-	
-//	[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(report:) userInfo:nil repeats:YES];
-}
-
-- (void)report:(NSTimer *)timer
-{
-	NSLog(@"window is %@; FR is %@",[[[[[webView mainFrame] frameView] documentView] enclosingScrollView] window],[[[[[[webView mainFrame] frameView] documentView] enclosingScrollView] window] firstResponder]);	
 }
 
 - (void)processNewContent
@@ -266,28 +258,30 @@
         
         range = [inString rangeOfString:@"%service%"];
         if(range.location != NSNotFound){
-           [inString replaceCharactersInRange:range withString:[[content source] serviceID]];
+			[inString replaceCharactersInRange:range withString:[[content source] serviceID]];
         }
 #warning This disables any fonts in the webkit view other than what is specified by the template.
         range = [inString rangeOfString:@"%message%"];
         if(range.location != NSNotFound){
-            // Using a safeString so image attachments are removed
-            // while waiting for a permanent fix that would allows us to use emoticons
-            [inString replaceCharactersInRange:range withString:
-				[AIHTMLDecoder encodeHTML:/*[*/[(AIContentMessage *)content message] /*safeString]*/
-									   headers:NO fontTags:NO closeFontTags:NO styleTags:YES 
-					closeStyleTagsOnFontChange:NO encodeNonASCII:YES 
-									imagesPath:@"/tmp" attachmentsAsText:NO]];
+            [inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)content message]
+																				  headers:NO 
+																				 fontTags:NO
+																			closeFontTags:NO
+																				styleTags:YES   
+															   closeStyleTagsOnFontChange:NO
+																		   encodeNonASCII:YES 
+																			   imagesPath:@"/tmp"
+																		attachmentsAsText:NO]];
         }
-
-range = [inString rangeOfString:@"%time%"];
-        if(range.location != NSNotFound){
+		
+		range = [inString rangeOfString:@"%time%"];
+		if(range.location != NSNotFound){
 			[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentMessage *)content date]]];
-        }
-
+		}
+		
 		//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
 		range = [inString rangeOfString:@"%time{"];
-        if(range.location != NSNotFound) {
+		if(range.location != NSNotFound) {
 			NSRange endRange;
 			endRange = [inString rangeOfString:@"}%"];
 			if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
@@ -339,10 +333,17 @@ range = [inString rangeOfString:@"%time%"];
 - (NSMutableString *)escapeString:(NSMutableString *)inString
 {
 	//We need to escape a few things to get our string to the javascript without trouble
-	[inString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
-	[inString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
-	[inString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
-	[inString replaceOccurrencesOfString:@"\r" withString:@"<br />" options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
+	[inString replaceOccurrencesOfString:@"\\" withString:@"\\\\" 
+								 options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
+	
+	[inString replaceOccurrencesOfString:@"\"" withString:@"\\\"" 
+						  options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
+
+	[inString replaceOccurrencesOfString:@"\n" withString:@"" 
+								 options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
+
+	[inString replaceOccurrencesOfString:@"\r" withString:@"<br />" 
+								 options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
 	return(inString);
 }
 
@@ -362,7 +363,7 @@ range = [inString rangeOfString:@"%time%"];
     frame:(WebFrame *)frame
     decisionListener:(id<WebPolicyDecisionListener>)listener
 {
-	NSLog(@"decidePolicyForNavigationAction:%@ %@ %@ %@",actionInformation,request,frame,listener);
+//	NSLog(@"decidePolicyForNavigationAction:%@ %@ %@ %@",actionInformation,request,frame,listener);
 	
     int actionKey = [[actionInformation objectForKey: WebActionNavigationTypeKey] intValue];
     if (actionKey == WebNavigationTypeOther) {
