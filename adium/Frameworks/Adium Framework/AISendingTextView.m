@@ -148,8 +148,9 @@ static NSImage *pushIndicatorImage = nil;
 //Send messages on a command-return
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
 {
-    if([[theEvent charactersIgnoringModifiers] characterAtIndex:0] == '\r'){
-	    if(availableForSending) [self _sendContent];
+	NSString *charactersIgnoringModifiers = [theEvent charactersIgnoringModifiers];
+    if([charactersIgnoringModifiers length] && [charactersIgnoringModifiers characterAtIndex:0] == '\r'){
+		if(availableForSending) [self _sendContent];
 		return(YES);
 	}else{
 		return(NO);
