@@ -20,5 +20,7 @@
 	<integer>14</integer>
 	<key>DisplayNameForNoVariant</key>
 	<string>Pale Blue</string>
+	<key>ShowsUserIcons</key>
+	<false/>
 </dict>
 </plist>
