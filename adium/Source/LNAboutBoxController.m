@@ -13,12 +13,14 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//$Id: LNAboutBoxController.m,v 1.37 2004/06/22 02:33:00 evands Exp $
+//$Id: LNAboutBoxController.m,v 1.38 2004/07/05 16:59:54 adamiser Exp $
 
 #import "LNAboutBoxController.h"
 
 #define ABOUT_BOX_NIB					@"AboutBox"
 #define	ADIUM_SITE_LINK					@"http://www.adiumx.com/"
+
+#define ABOUT_SCROLL_FPS				24.0
 
 @interface LNAboutBoxController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
@@ -76,12 +78,12 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
     scrollLocation = 0; 
     scrollRate = 1.0;
     maxScroll = [[textView_credits textStorage] size].height - [[textView_credits enclosingScrollView] documentVisibleRect].size.height;
-    scrollTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/20.0)
+    scrollTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/ABOUT_SCROLL_FPS)
 													target:self
 												  selector:@selector(scrollTimer:)
 												  userInfo:nil
 												   repeats:YES] retain];
-	eventLoopScrollTimer = [[NSTimer timerWithTimeInterval:(1.0/20.0)
+	eventLoopScrollTimer = [[NSTimer timerWithTimeInterval:(1.0/ABOUT_SCROLL_FPS)
 												   target:self
 												 selector:@selector(scrollTimer:)
 												 userInfo:nil
