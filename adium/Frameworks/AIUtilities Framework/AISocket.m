@@ -157,19 +157,27 @@
     NSString *readStr;
     NSMutableData *readBuf = [[[NSMutableData alloc] init] autorelease];
 
-    while(bytesRead = recv(theSocket, &tempBuffer, sizeof(tempBuffer), 0))
+    while(bytesRead = recv(theSocket, &tempBuffer, sizeof(tempBuffer), MSG_PEEK))
     {
         if(bytesRead >= 1)
         {      
             readStr = [NSString stringWithCString:tempBuffer length:bytesRead];
-            
-            if([readStr rangeOfString:@"\r\n"].location != NSNotFound)
+            NSRange newLineRange = [readStr rangeOfString:@"\r\n"];
+                        
+            if(newLineRange.location != NSNotFound)
             {
-                [readBuf appendBytes:[readStr cString] length:[readStr cStringLength]];
+                [readBuf appendBytes: [[readStr substringToIndex:newLineRange.location +
+                        newLineRange.length] cString] 
+                    length:newLineRange.location+newLineRange.length];
+                        
+                recv(theSocket, &tempBuffer, (newLineRange.location+newLineRange.length) * sizeof(char), 0); 
                 break;
             }
             else
+            {
                 [readBuf appendBytes:[readStr cString] length:[readStr cStringLength]];
+                recv(theSocket, &tempBuffer, sizeof(tempBuffer), 0);
+            }
         }
         else if(bytesRead == 0)
         {
