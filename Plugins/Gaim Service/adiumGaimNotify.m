@@ -7,6 +7,7 @@
 //
 
 #import "adiumGaimNotify.h"
+#import "ESGaimNotifyEmailController.h"
 
 static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, const char *primary, const char *secondary, GCallback cb,void *userData)
 {
@@ -21,12 +22,12 @@ static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, c
 static void *adiumGaimNotifyEmails(size_t count, gboolean detailed, const char **subjects, const char **froms, const char **tos, const char **urls, GCallback cb,void *userData)
 {
     //Values passed can be null
-    return([[SLGaimCocoaAdapter sharedInstance] handleNotifyEmails:count 
-														  detailed:detailed
-														  subjects:subjects
-															 froms:froms
-															   tos:tos
-															  urls:urls]);
+    return([ESGaimNotifyEmailController handleNotifyEmails:count 
+												  detailed:detailed
+												  subjects:subjects
+													 froms:froms
+													   tos:tos
+													  urls:urls]);
 }
 
 static void *adiumGaimNotifyEmail(const char *subject, const char *from, const char *to, const char *url, GCallback cb,void *userData)

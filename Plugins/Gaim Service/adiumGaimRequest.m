@@ -7,7 +7,7 @@
 //
 
 #import "adiumGaimRequest.h"
-#import "ESGaimRequestActionWindowController.h"
+#import "ESGaimRequestActionController.h"
 #import "ESGaimRequestWindowController.h"
 
 //Jabber registration
@@ -97,16 +97,16 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 			[buttonNamesArray exchangeObjectAtIndex:default_action withObjectAtIndex:(actionCount-1)];
 		}
 		
-		NSDictionary	*infoDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:actionCount],@"Count",
+		NSDictionary	*infoDict = [NSDictionary dictionaryWithObjectsAndKeys:
 			buttonNamesArray,@"Button Names",
 			[NSValue valueWithPointer:callBacks],@"callBacks",
 			[NSValue valueWithPointer:userData],@"userData",
 			titleString,@"Title String",
 			msg,@"Message",nil];
 		
-		[ESGaimRequestActionWindowController performSelectorOnMainThread:@selector(showActionWindowWithDict:)
-															  withObject:infoDict
-														   waitUntilDone:YES];
+		[ESGaimRequestActionController performSelectorOnMainThread:@selector(showActionWindowWithDict:)
+														withObject:infoDict
+													 waitUntilDone:YES];
 	}
     return(adium_gaim_get_handle());
 }
