@@ -35,7 +35,7 @@ static NSSize				menuIconCacheSize;
 
 	//Render the icon if it's not cached
 	if(!userIcon){
-		userIcon = [[inContact userIcon] imageByScalingToSize:iconCacheSize fraction:1.0 flipImage:YES];
+		userIcon = [[inContact userIcon] imageByScalingToSize:size fraction:1.0 flipImage:YES];
 		if(userIcon && cache) [iconCache setObject:userIcon forKey:[inContact internalObjectID]];
 	}
 	
