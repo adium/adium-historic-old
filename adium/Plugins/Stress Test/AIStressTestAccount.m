@@ -1,4 +1,5 @@
-//
+/*
+ //
 //  AIStressTestAccount.m
 //  Adium
 //
@@ -333,3 +334,4 @@
 
 
 @end
+*/
