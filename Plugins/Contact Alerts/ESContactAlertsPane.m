@@ -23,9 +23,6 @@
 - (CONTACT_INFO_CATEGORY)contactInfoCategory{
     return(AIInfo_Alerts);
 }
-- (NSString *)label{
-    return(@"Contact Alerts");
-}
 - (NSString *)nibName{
     return(@"ContactAlerts");
 }

@@ -38,9 +38,6 @@
 - (CONTACT_INFO_CATEGORY)contactInfoCategory{
     return(AIInfo_Accounts);
 }
-- (NSString *)label{
-    return(@"Contact Accounts");
-}
 - (NSString *)nibName{
     return(@"ContactAccounts");
 }
