@@ -232,7 +232,7 @@
 /* accountConv methods */
 /***********************/
 
-- (void)accountConvReceivedIM: (const char*)message inConversation: (GaimConversation*)conv withFlags: (GaimMessageFlags)flags atTime: (time_t)mtime
+- (void)accountConvReceivedIM: (const char*)message inConversation:(GaimConversation*)conv withFlags: (GaimMessageFlags)flags atTime: (time_t)mtime
 {
     if ((flags & GAIM_MESSAGE_SEND) != 0) {
         /*
@@ -245,16 +245,18 @@
     }
     AIChat *chat = (AIChat*) conv->ui_data;
     NSString *uid = [NSString stringWithUTF8String: conv->name];
-    AIHandle *handle = [handleDict objectForKey: uid];
+//    AIChat *chat = [chatDict objectForKey:uid];
+    
+    AIHandle *handle = [handleDict objectForKey:[uid compactedString]];    
     if (chat == nil) {
-        // Need to start a new chat
         if (handle == nil) {
-            handle = [self addHandleWithUID:uid
+            handle = [self addHandleWithUID:[uid compactedString]
                                 serverGroup:nil
                                   temporary:YES];
         }
-        chat = [self _openChatWithHandle: handle andConversation: conv];
-    } else {
+        // Need to start a new chat
+        chat = [self _openChatWithHandle:handle andConversation:conv];
+    } else  {
         NSAssert(handle != nil, @"Existing chat yet no existing handle?");
     }
     NSAttributedString *body = [AIHTMLDecoder decodeHTML:[NSString stringWithUTF8String: message]];
@@ -276,7 +278,7 @@
 {
     NSLog(@"CBGaimAccount initAccount");
     handleDict = [[NSMutableDictionary alloc] init];
-    chatDict = [[NSMutableDictionary alloc] init];
+//    chatDict = [[NSMutableDictionary alloc] init];
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
     NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
@@ -285,7 +287,7 @@
 - (void)dealloc
 {
     NSLog(@"CBGaimAccount dealloc");
-    [chatDict release];
+//    [chatDict release];
     [handleDict release];
     gaim_accounts_delete(account); account = NULL;
     // TODO: remove this from the account dict that the ServicePlugin keeps
@@ -442,22 +444,29 @@
 - (AIChat*)_openChatWithHandle:(AIHandle*)handle andConversation:(GaimConversation*)conv
 {
     AIChat *chat;
-    if (!(chat = [chatDict objectForKey:[handle UID]])) {
-        AIListContact *contact = [handle containingContact];
-        NSAssert(contact != nil, @"Handle has no containing contact");
-        BOOL handleIsOnline;
+
+    //create a chat if we're passed a null conversation or the conversation we're passed doesn't have a chat associated with it
+//    if(!(chat = [chatDict objectForKey:[handle UID]])){
+    if(!conv || !(chat = conv->ui_data)){
         chat = [AIChat chatWithOwner:owner forAccount:self];
+        AIListContact   *contact = [handle containingContact];
+        
         [chat addParticipatingListObject:contact];
+
+        BOOL handleIsOnline;        
         handleIsOnline = YES; // TODO
         [[chat statusDictionary] setObject:[NSNumber numberWithBool:handleIsOnline] forKey:@"Enabled"];
+        
         if (conv == NULL) {
             conv = gaim_conversation_new(GAIM_CONV_IM, account, [[handle UID] UTF8String]);
         }
+        
+        //associate the AIChat with the gaim conv
         conv->ui_data = chat;
         [[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
-        [chatDict setObject:chat forKey:[handle UID]];
+//        [chatDict setObject:chat forKey:[handle UID]];
         [[owner contentController] noteChat:chat forAccount:self];
-    }
+    } 
     return chat;
 }
 
@@ -470,7 +479,7 @@
     GaimConversation *conv = (GaimConversation*) [[[inChat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
     NSAssert(conv != nil, @"No gaim conversation associated with chat");
     gaim_conversation_destroy(conv);
-    [chatDict removeObjectForKey: inChat];
+//    [chatDict removeObjectForKey: inChat];
     return YES;
 }
 
@@ -502,8 +511,30 @@
 // Add a handle to this account
 - (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
 {
-    return nil;
+    AIHandle	*handle;
+    
+    if(inTemporary) inGroup = @"__Strangers";    
+    if(!inGroup) inGroup = @"Unknown";
+    
+    //Check to see if the handle already exists, and remove the duplicate if it does
+    if(handle = [handleDict objectForKey:inUID]){
+        [self removeHandleWithUID:inUID]; //Remove the handle
+    }
+    
+    //Create the handle
+    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier] UID:inUID serverGroup:inGroup temporary:inTemporary forAccount:self];
+    
+    //Add the handle
+    //[self AIM_AddHandle:[handle UID] toGroup:[handle serverGroup]]; //Add it server-side
+    [handleDict setObject:handle forKey:[handle UID]]; //Add it locally
+    //[self silenceUpdateFromHandle:handle]; //Silence the server's initial update command
+    
+    //Update the contact list
+    [[owner contactController] handle:handle addedToAccount:self];
+    
+    return(handle);
 }
+
 // Remove a handle from this account
 - (BOOL)removeHandleWithUID:(NSString *)inUID
 {
