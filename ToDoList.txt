@@ -190,8 +190,17 @@
   - Allow 'save as' from within the log viewer to export logs
   - Allow 'save as' from a message window to export the current conversation
 
-
-
+//First run
+  - We need a more intuitive interface for a first-time user to get started with Adium.
+    Possibilities are:
+		- Simply a revamped Accounts window
+		- A first-run Adium setup wizard [Evan: this is my inclination]
+			* Basic account setup
+			* Initial configuration of a few key preferences
+  - The Migration Assistant, with expanded program support and a revamped UI, should 
+    automatically offer its services when Adium is first launched, ‡ la Mail.app's
+	importer.
+  
 //-------------------------------------------------------------------------------------------------------
 // Incomplete Thoughts
 //-------------------------------------------------------------------------------------------------------
@@ -219,7 +228,10 @@
 	- Easy identification of mobile users
 	- Option to not display groups
 	- Round label caps for events
-	- Improve status heir-achy 
+	- Improve status heirachy 
+	- We need to either support contacts at the root level or not suport them; we currently do a mixture
+		which is very confusing to new users.  For example, a new Jabber account has no groups, but adding
+		a contact with no groups has no visible effect.
 
 //Alerts
   - Organize event and action menus
