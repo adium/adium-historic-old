@@ -622,6 +622,21 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		340915F105C0A5DF00CDE3DD = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = GaimCommon.h;
+			path = "Plugins/Gaim Service/GaimCommon.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		340915F205C0A5DF00CDE3DD = {
+			fileRef = 340915F105C0A5DF00CDE3DD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		341591E005463DA700291275 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -20475,6 +20490,7 @@
 				34416167059FC5440019246B,
 				34416173059FC55A0019246B,
 				344161C5059FC72E0019246B,
+				340915F205C0A5DF00CDE3DD,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20614,6 +20630,7 @@
 		};
 		4B7F278605440C6200CDFC90 = {
 			children = (
+				340915F105C0A5DF00CDE3DD,
 				4B7F278905440C8D00CDFC90,
 				4B7F278A05440C8D00CDFC90,
 				34415880059F8F050019246B,
@@ -23313,14 +23330,6 @@
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		520FE3A805BE1FC6002D063D = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
-			name = "AdiumGames-Info.plist";
-			path = "/Users/nelson/Code/adium/Plists/AdiumGames-Info.plist";
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
 		520FE3A905BE2065002D063D = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -23389,7 +23398,6 @@
 		};
 		520FE3B305BE206D002D063D = {
 			children = (
-				520FE3A805BE1FC6002D063D,
 				520FE3A905BE2065002D063D,
 				520FE3AA05BE2065002D063D,
 				520FE3AB05BE2065002D063D,
