@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.56 2004/03/24 06:21:47 dchoby98 Exp $
+// $Id: AIContentController.m,v 1.57 2004/04/02 21:04:35 evands Exp $
 
 #import "AIContentController.h"
 
@@ -682,26 +682,24 @@
 	AIAccount		*account;
 	
 	while(account = [enumerator nextObject]){
-		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
-			if([[inObject serviceID] compare:[[[account service] handleServiceType] identifier]] == 0){
-				BOOL			knowsObject = NO;
-				BOOL			canFindObject = NO;
-				AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject serviceID]
-																								accountUID:[account UID]
-																									   UID:[inObject UID]];
-				//Does the account know this object?
-				if(contactForAccount){
-					knowsObject = [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE
-																							 toListObject:contactForAccount];
-				}
-				
-				//Could the account find this object?
-				canFindObject = [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE
-																						   toListObject:nil];
-
-				if((inPreferred && knowsObject) || (!inPreferred && !knowsObject && canFindObject)){
-					[sourceAccounts addObject:account];
-				}
+		if([[inObject serviceID] compare:[[[account service] handleServiceType] identifier]] == 0){
+			BOOL			knowsObject = NO;
+			BOOL			couldSendContent = NO;
+			AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject serviceID]
+																							accountUID:[account UID]
+																								   UID:[inObject UID]];
+			//Does the account know this object?
+			if(contactForAccount){
+				knowsObject = [account availableForSendingContentType:inType
+														 toListObject:contactForAccount];
+			}
+			
+			//Could the account send this
+			couldSendContent = [account availableForSendingContentType:inType
+														  toListObject:nil];
+			
+			if((inPreferred && knowsObject) || (!inPreferred && !knowsObject && couldSendContent)){
+				[sourceAccounts addObject:account];
 			}
 		}
 	}
