@@ -23,6 +23,7 @@
 - (id)initWithOwner:(id)inOwner;
 - (void)buildFontMenuFor:(NSPopUpButton *)inFontPopUp;
 - (void)configureView;
+- (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;
 
 /*
 - (void) _prefsChangedNotify;
@@ -38,30 +39,51 @@
     return([[[self alloc] initWithOwner:inOwner] autorelease]);
 }
 
-- (IBAction)setFont:(id)sender
+- (IBAction)setContactListFont:(id)sender
 {
+    NSFontManager	*fontManager = [NSFontManager sharedFontManager];
+    NSFont		*contactListFont = [NSFont labelFontOfSize:11];//[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont];
+    
+    //In order for the font panel to work, we must be set as the window's delegate
+    [[textField_fontName window] setDelegate:self]; 
+    
     //Setup and show the font panel
     [[textField_fontName window] makeFirstResponder:[textField_fontName window]];
-    [[NSFontManager sharedFontManager] setSelectedFont:[textField_fontName font] isMultiple:NO];
-    [[NSFontManager sharedFontManager] orderFrontFontPanel:self];
-
+    [fontManager setSelectedFont:contactListFont isMultiple:NO];
+    [fontManager orderFrontFontPanel:self];
 }
 
-- (void)changeFont:(id)fontManager
+//Called in response to a font panel change
+- (void)changeFont:(id)sender
 {
-//    [displayedValues setObject:[fontManager convertFont:[curValues objectForKey:RichTextFont]] forKey:RichTextFont];
-//    showFontInField([displayedValues objectForKey:RichTextFont], richTextFontNameField);
-
-    NSLog(@"change %@",fontManager);
+    NSFontManager	*fontManager = [NSFontManager sharedFontManager];
+    NSFont		*contactListFont = [fontManager convertFont:[fontManager selectedFont]];
+    
+    //Update the displayed font string & preferences
+    [self showFont:contactListFont inField:textField_fontName];
+    [[owner preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_SCL_FONT group:GROUP_CONTACT_LIST];
 }
 
-- (BOOL)fontManager:(id)sender willIncludeFont:(NSString *)fontName
-{
-    NSLog(@"willIncludeFont %@",fontName);
-}
 
 
 //Private ---------------------------------------------------------------------------
+/*NSResponder *responder = nil;
+- (NSResponder *)nextResponder
+{
+    return(responder);
+}
+
+- (void)setNextResponder:(NSResponder *)aResponder
+{
+    responder = [aResponder retain];    
+}
+
+- (BOOL)tryToPerform:(SEL)anAction with:(id)anObject
+{
+    NSLog(@"tryToPerform");
+    return([responder tryToPerform:anAction with:anObject]);
+}*/
+
 //init
 - (id)initWithOwner:(id)inOwner
 {
@@ -81,20 +103,29 @@
     //Load the preferences, and configure our view
     preferenceDict = [[[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST] retain];
     [self configureView];
-
     
     return(self);    
 }
 
-
+- (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField
+{
+    if(inFont){
+        [inTextField setStringValue:[NSString stringWithFormat:@"%@ %g", [inFont fontName], [inFont pointSize]]];
+    }else{
+        [inTextField setStringValue:@""];
+    }
+}
 
 //Configures our view for the current preferences
 - (void)configureView
 {
+    NSFont	*contactListFont = [[preferenceDict objectForKey:KEY_SCL_FONT] representedFont];
 //    NSString	*fontName;
+
+    [self showFont:contactListFont inField:textField_fontName];
     
 //    [self buildFontMenuFor:popUp_font];
-    [popUp_font selectItemWithTitle:[preferenceDict objectForKey:KEY_SCL_FONT_NAME]];
+//    [popUp_font selectItemWithTitle:[preferenceDict objectForKey:KEY_SCL_FONT_NAME]];
 
 /*    [self _buildFontFaceMenuFor: facePopUp using: fontPopUp];
 

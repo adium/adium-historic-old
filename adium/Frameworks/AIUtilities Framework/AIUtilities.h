@@ -45,4 +45,5 @@
 #import "AIAnimatedFloater.h"
 #import "AIAnimatedView.h"
 #import "AITabViewAdditions.h"
+#import "AIFontAdditions.h"
 

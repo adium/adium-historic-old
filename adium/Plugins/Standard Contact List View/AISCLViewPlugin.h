@@ -16,10 +16,10 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-#define	GROUP_CONTACT_LIST		@"Contact List"
+#define	GROUP_CONTACT_LIST		@"Contact List Display"
 
 #define SCL_DEFAULT_PREFS		@"SCL Defaults"
-#define KEY_SCL_FONT_NAME		@"Font Name"
+#define KEY_SCL_FONT			@"Font"
 
 
 @class AIContactGroup, AICLPreferences;

@@ -111,7 +111,7 @@
     NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST];
 
     while((SCLView = [enumerator nextObject])){
-        NSFont	*font = [NSFont systemFontOfSize:16];/*[prefDict objectForKey:KEY_SCL_FONT_NAME]*/
+        NSFont	*font = [[prefDict objectForKey:KEY_SCL_FONT] representedFont];
         
         [SCLView setFont:font];
         [SCLView setRowHeight:[font defaultLineHeightForFont]];
