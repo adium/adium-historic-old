@@ -19,20 +19,20 @@
 
     IBOutlet	NSMatrix		*matrix_iconPreview;
     
-    NSTimer			*animationTimer;
-	NSTimer			*stateChangeTimer;
-    int 			cycle;
-    NSMutableArray		*iconArray;
+    NSTimer                             *animationTimer;
+    NSTimer                             *stateChangeTimer;
+    int                                 cycle;
+    NSMutableArray                      *iconArray;
 	
-    NSDictionary		*selectedIcon;
+    NSDictionary                        *selectedIcon;
     int					selectedIconIndex;
-	NSString			*selectedIconPath;
-	NSImage				*activeFrameImage;
+    NSString                            *selectedIconPath;
+    NSImage                             *activeFrameImage;
 	
-	NSMutableArray		*previewStateArray;
+    NSMutableArray                      *previewStateArray;
 	
-	AIIconState		*stateToAnimate;
-	NSEnumerator	*previewToAnimateEnumerator;
+    AIIconState                         *stateToAnimate;
+    NSEnumerator                        *previewToAnimateEnumerator;
 }
 
 @end

@@ -382,6 +382,30 @@
     return(nil);
 }
 
+// delete support, via table delegate and nifty dialog + move to trash
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
+{            
+    selectedIconPath = [[iconArray objectAtIndex:selectedIconIndex] valueForKey:@"Path"];
+    [self moveSelectedIconToTrash]; 
+}
+
+-(void)moveSelectedIconToTrash
+{
+    NSBeginAlertSheet(@"Delete Dock Icon",@"Delete",@"Cancel",@"",[[self view] window], self, 
+                      @selector(trashConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
+                      @"Are you sure you want to delete the %@ Dock Icon? It will be moved to the Trash, which may take a moment, depending on its size.",[[selectedIconPath lastPathComponent] stringByDeletingPathExtension]);
+}
+
+- (void)trashConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    if(returnCode == NSOKButton)
+    {
+            [[NSFileManager defaultManager] trashFileAtPath:selectedIconPath];
+            [self _buildIconArray];
+    }
+}
+// ----- end trashiness -------
+
 //
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
