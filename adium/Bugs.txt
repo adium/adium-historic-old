@@ -16,6 +16,11 @@
 	For instance, :) prevents :)) from working.  A solution to this would be shorting
 	all the text equivelants from longest to shortest, but the way we store emoticons
 	makes this impossible.
+		-- this isn't exactly true.  It's a question of pack precedence.
+		for example, ":))" is correctly matched if the Yahoo! pack is first.
+                Yet, not if a pack with only ":)" comes before it.
+		If we could merge the active packs before searching for our replacement,
+		that should work. [Steve]
 
 - Spawning new windows unhides Adium
 	We don't want to spawn new windows while Adium is hidden.  Windows should be queued
