@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AICLPreferences.h"
+#import "AIPreferenceController.h"
 #import "AIListThemeWindowController.h"
 #import "AISCLViewPlugin.h"
 #import "AITextColorPreviewView.h"
@@ -25,7 +25,7 @@
 #import <Adium/AIListOutlineView.h>
 
 @interface AIListThemeWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName withName:(NSString *)inName;
+- (id)initWithWindowNibName:(NSString *)windowNibName name:(NSString *)inName notifyingTarget:(id)inTarget;
 - (void)configureControls;
 - (void)configureControlDimming;
 - (void)updateSliderValues;
@@ -35,10 +35,11 @@
 
 @implementation AIListThemeWindowController
 
-+ (id)listThemeOnWindow:(NSWindow *)parentWindow withName:(NSString *)inName
++ (id)editListThemeWithName:(NSString *)inName onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget
 {
 	AIListThemeWindowController	*listThemeWindow = [[self alloc] initWithWindowNibName:@"ListThemeSheet"
-																			  withName:inName];
+																				  name:inName
+																	   notifyingTarget:inTarget];
 	
 	if(parentWindow){
 		[NSApp beginSheet:[listThemeWindow window]
@@ -53,10 +54,15 @@
 	return(listThemeWindow);
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName withName:(NSString *)inName
+- (id)initWithWindowNibName:(NSString *)windowNibName name:(NSString *)inName notifyingTarget:(id)inTarget
 {
     [super initWithWindowNibName:windowNibName];	
+	
+	NSParameterAssert(inTarget && [inTarget respondsToSelector:@selector(listThemeEditorWillCloseWithChanges:forThemeNamed:)]);
+	
+	target = inTarget;
 	themeName = [inName retain];
+	
 	return(self);
 }
 
@@ -94,36 +100,15 @@
 //Cancel
 - (IBAction)cancel:(id)sender
 {
-	//Revert
-	[[adium preferenceController] setPreference:themeName
-										 forKey:KEY_LIST_THEME_NAME
-										  group:PREF_GROUP_CONTACT_LIST];
+	[target listThemeEditorWillCloseWithChanges:NO forThemeNamed:themeName];
     [self closeWindow:sender];
 }
 
 //
 - (IBAction)okay:(id)sender
 {
-	NSString	*newName = [textField_themeName stringValue];
-	
-	//If the user has renamed this theme, delete the old one
-	if(![newName isEqualTo:themeName]){
-		[AISCLViewPlugin deleteSetWithName:themeName
-								 extension:LIST_THEME_EXTENSION
-								  inFolder:LIST_THEME_FOLDER];
-	}
-	
-	//Save the theme
-	if([AISCLViewPlugin createSetFromPreferenceGroup:PREF_GROUP_LIST_THEME
-											withName:[textField_themeName stringValue]
-										   extension:LIST_THEME_EXTENSION
-											inFolder:LIST_THEME_FOLDER]){		
-		[[adium preferenceController] setPreference:newName
-											 forKey:KEY_LIST_THEME_NAME
-											  group:PREF_GROUP_CONTACT_LIST];
-		
-		[self closeWindow:sender];
-	}
+	[target listThemeEditorWillCloseWithChanges:YES forThemeNamed:themeName];
+	[self closeWindow:sender];
 }
 
 

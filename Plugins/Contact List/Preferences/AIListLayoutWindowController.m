@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AICLPreferences.h"
+#import "AIPreferenceController.h"
 #import "AIListLayoutWindowController.h"
 #import "AISCLViewPlugin.h"
 #import <AIUtilities/AIFontAdditions.h>
@@ -30,7 +30,7 @@
 #define	MAX_ALIGNMENT_CHOICES	10
 
 @interface AIListLayoutWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName withName:(NSString *)inName;
+- (id)initWithWindowNibName:(NSString *)windowNibName name:(NSString *)inName notifyingTarget:(id)inTarget;
 - (void)configureControls;
 - (void)configureControlDimming;
 - (void)updateSliderValues;
@@ -46,10 +46,11 @@
 
 @implementation AIListLayoutWindowController
 
-+ (id)listLayoutOnWindow:(NSWindow *)parentWindow withName:(NSString *)inName
++ (id)editListLayoutWithName:(NSString *)inName onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget
 {
 	AIListLayoutWindowController	*listLayoutWindow = [[self alloc] initWithWindowNibName:@"ListLayoutSheet"
-																				   withName:inName];
+																					   name:inName
+																			notifyingTarget:inTarget];
 	
 	if(parentWindow){
 		[NSApp beginSheet:[listLayoutWindow window]
@@ -64,10 +65,15 @@
 	return(listLayoutWindow);
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName withName:(NSString *)inName
+- (id)initWithWindowNibName:(NSString *)windowNibName name:(NSString *)inName notifyingTarget:(id)inTarget
 {
     [super initWithWindowNibName:windowNibName];
+	
+	NSParameterAssert(inTarget && [inTarget respondsToSelector:@selector(listLayoutEditorWillCloseWithChanges:forLayoutNamed:)]);
+	
+	target = inTarget;
 	layoutName = [inName retain];
+	
 	return(self);
 }
 
@@ -92,7 +98,6 @@
 	[fontField_status setShowFontFace:YES];
 	[fontField_group setShowPointSize:YES];
 	[fontField_group setShowFontFace:YES];
-	[textField_layoutName setStringValue:(layoutName ? layoutName : @"")];
 	
 	[self configureControls];
 }
@@ -115,36 +120,15 @@
 //Cancel
 - (IBAction)cancel:(id)sender
 {
-	//Revert
-	[[adium preferenceController] setPreference:layoutName
-										 forKey:KEY_LIST_LAYOUT_NAME
-										  group:PREF_GROUP_CONTACT_LIST];
+	[target listLayoutEditorWillCloseWithChanges:NO forLayoutNamed:layoutName];
 	[self closeWindow:sender];
 }
 
-//
+//Okay
 - (IBAction)okay:(id)sender
 {
-	NSString	*newName = [textField_layoutName stringValue];
-	
-	//If the user has renamed this layout, delete the old one
-	if(![newName isEqualTo:layoutName]){
-		[AISCLViewPlugin deleteSetWithName:layoutName
-								 extension:LIST_LAYOUT_EXTENSION
-								  inFolder:LIST_LAYOUT_FOLDER];
-	}
-	
-	//Save the layout
-	if([AISCLViewPlugin createSetFromPreferenceGroup:PREF_GROUP_LIST_LAYOUT
-											withName:[textField_layoutName stringValue]
-										   extension:LIST_LAYOUT_EXTENSION
-											inFolder:LIST_LAYOUT_FOLDER]){
-		[[adium preferenceController] setPreference:newName
-											 forKey:KEY_LIST_LAYOUT_NAME
-											  group:PREF_GROUP_CONTACT_LIST];
-		
-		[self closeWindow:sender];
-	}
+	[target listLayoutEditorWillCloseWithChanges:YES forLayoutNamed:layoutName];
+	[self closeWindow:sender];
 }
 
 
@@ -375,7 +359,6 @@
 {
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 	int				windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE group:PREF_GROUP_APPEARANCE] intValue];
-	BOOL			horizontalAutosize = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE group:PREF_GROUP_APPEARANCE] boolValue];
 	
 	//Bubble to fit limitations
 	BOOL nonFitted = (windowStyle != WINDOW_STYLE_PILLOWS_FITTED);

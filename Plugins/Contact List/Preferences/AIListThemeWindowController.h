@@ -91,13 +91,18 @@
 	IBOutlet	NSColorWell				*colorWell_groupBackgroundGradient;
 	IBOutlet	AITextColorPreviewView	*preview_group;
 	
-	NSString				*themeName;
+	id				target;
+	NSString		*themeName;
 }
 
-+ (id)listThemeOnWindow:(NSWindow *)parentWindow withName:(NSString *)inName;
++ (id)editListThemeWithName:(NSString *)inName onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
 - (void)preferenceChanged:(id)sender;
 - (IBAction)selectBackgroundImage:(id)sender;
 
+@end
+
+@interface NSObject (AIListThemeWindowTarget)
+- (void)listThemeEditorWillCloseWithChanges:(BOOL)changes forThemeNamed:(NSString *)name;
 @end
