@@ -251,10 +251,11 @@ static NSImage		*tabCloseFrontRollover = nil;
 		destPoint = NSMakePoint(frame.origin.x + [tabFrontLeft size].width + TAB_CLOSE_LEFTPAD,
 								((frame.size.height - [leftIcon size].height) / 2.0) + TAB_CLOSE_Y_OFFSET);
 	}
-	
-	//Draw our icon
-	NSSize leftIconSize = [leftIcon size];
 	[leftIcon compositeToPoint:destPoint operation:NSCompositeSourceOver];
+
+	//Move over for label drawing.  We always move based on the tab icon and not on the close button.  This prevents
+	//tab text from jumping when hovered if the tab icons are a different size from the close button
+	NSSize leftIconSize = [[tabViewItem icon] size];
 	rect.origin.x += TAB_CLOSE_LEFTPAD + leftIconSize.width + TAB_CLOSE_RIGHTPAD;
 	rect.size.width -= TAB_CLOSE_LEFTPAD + leftIconSize.width + TAB_CLOSE_RIGHTPAD + TAB_RIGHT_PAD;
 
