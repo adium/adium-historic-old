@@ -205,6 +205,28 @@ DeclareString(AppendNextMessage);
 		}
 	}
 	
+	// If there was history and we're at the end of it, add a line with the current date
+	if(previousContent && [[content type] compare:CONTENT_MESSAGE_TYPE] == 0 && [[previousContent type] compare:CONTENT_CONTEXT_TYPE] == 0) {
+		
+		NSCalendarDate *previousDate = [[(AIContentContext *)previousContent date] dateWithCalendarFormat:nil timeZone:nil];
+			
+		// Was the last history from a different day?
+		if( [previousDate dayOfCommonEra] != [[[NSDate date] dateWithCalendarFormat:nil timeZone:nil] dayOfCommonEra] ) {
+			
+			dateMessage = [NSString stringWithFormat:@"%@",[[NSDate date] descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatString] timeZone:nil locale:nil]];
+		
+			dateSeparator = [AIContentStatus statusInChat:[content chat]
+										   withSource:[[content chat] listObject]
+										  destination:[[content chat] account]
+												 date:[NSDate date]
+											  message:dateMessage
+											 withType:@"date_separator"];
+			//Add the date header
+			[self _addContentStatus:dateSeparator similar:NO toWebView:webView fromStylePath:stylePath];
+		
+		}
+	}
+		
 	if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0 || [[content type] compare:CONTENT_CONTEXT_TYPE] == 0){
 		[self _addContentMessage:(AIContentMessage *)content 
 						   similar:contentIsSimilar
