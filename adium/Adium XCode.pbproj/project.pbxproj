@@ -4823,6 +4823,76 @@
 			settings = {
 			};
 		};
+		34254F4305EC0C2700F11AD7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			name = AdiumPlugin.icns;
+			path = Source/AdiumPlugin.icns;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34254F4405EC0C2700F11AD7 = {
+			fileRef = 34254F4305EC0C2700F11AD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34254F4505EC0C2E00F11AD7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			name = AdiumEmoticons.icns;
+			path = Source/AdiumEmoticons.icns;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34254F4605EC0C2E00F11AD7 = {
+			fileRef = 34254F4505EC0C2E00F11AD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34254F4705EC0C3400F11AD7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			name = AdiumIcon.icns;
+			path = Source/AdiumIcon.icns;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34254F4805EC0C3400F11AD7 = {
+			fileRef = 34254F4705EC0C3400F11AD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34254F4905EC0C3D00F11AD7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			name = AdiumTheme.icns;
+			path = Source/AdiumTheme.icns;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34254F4A05EC0C3D00F11AD7 = {
+			fileRef = 34254F4905EC0C3D00F11AD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34254F4B05EC0C4300F11AD7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			name = AdiumSoundset.icns;
+			path = Source/AdiumSoundset.icns;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34254F4C05EC0C4300F11AD7 = {
+			fileRef = 34254F4B05EC0C4300F11AD7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		342DC47005783AF0000E1D83 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -6110,19 +6180,20 @@
 			buildRules = (
 			);
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUGGING_SYMBOLS = NO;
+				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "-DDEVELOPMENT_BUILD";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				OPTIMIZATION_CFLAGS = "-mcpu=7450 -O3 -pipe -fsigned-char -maltivec -mabi=altivec -mpowerpc-gfxopt -mtune=7450";
+				OTHER_CFLAGS = "-DCRASH_REPORTER";
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				ZERO_LINK = YES;
+				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;
-			name = evands;
+			name = RC;
 		};
 		344AB29D0579125C00384CEE = {
 			fileRef = 342DC47505783AF0000E1D83;
@@ -9265,7 +9336,6 @@
 				34BD9D2B053146CC000AB133,
 				34BD9D2C053146CC000AB133,
 				34BD9D2D053146CC000AB133,
-				34BD9D2E053146CC000AB133,
 				34BD9D2F053146CC000AB133,
 				34BD9D30053146CC000AB133,
 				34BD9D31053146CC000AB133,
@@ -9293,7 +9363,11 @@
 				4BCB9B5F0567FF5D001D3559,
 				34536751059BA8EE00A83D9E,
 				34F2BD25059CF8070005B238,
-				C4FD6E3505BA79FF00E72643,
+				34254F4405EC0C2700F11AD7,
+				34254F4605EC0C2E00F11AD7,
+				34254F4805EC0C3400F11AD7,
+				34254F4A05EC0C3D00F11AD7,
+				34254F4C05EC0C4300F11AD7,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9336,12 +9410,6 @@
 		};
 		34BD9D2D053146CC000AB133 = {
 			fileRef = F55B416A03AB8C0B01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D2E053146CC000AB133 = {
-			fileRef = 4BF1F0E803D888EB00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -23238,14 +23306,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BF1F0E803D888EB00A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.icns;
-			name = AdiumPlugin.icns;
-			path = Source/AdiumPlugin.icns;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BF2B70B048A82E900A8010A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -28647,20 +28707,6 @@
 			settings = {
 			};
 		};
-		C4FD6E3405BA79FE00E72643 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.icns;
-			name = AdiumTheme.icns;
-			path = Source/AdiumTheme.icns;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C4FD6E3505BA79FF00E72643 = {
-			fileRef = C4FD6E3405BA79FE00E72643;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 //C40
 //C41
 //C42
@@ -28963,8 +29009,11 @@
 				4BB580A803E86BF600A8010A,
 				4BF715C00503AFD200A8010A,
 				F552078B033F727F01A8010A,
-				4BF1F0E803D888EB00A8010A,
-				C4FD6E3405BA79FE00E72643,
+				34254F4305EC0C2700F11AD7,
+				34254F4505EC0C2E00F11AD7,
+				34254F4705EC0C3400F11AD7,
+				34254F4905EC0C3D00F11AD7,
+				34254F4B05EC0C4300F11AD7,
 			);
 			isa = PBXGroup;
 			name = Resources;

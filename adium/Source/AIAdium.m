@@ -293,8 +293,16 @@ void Adium_HandleSignal(int i){
         destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Dock Icons"];
         requiresRestart = NO;
         fileDescription = AILocalizedString(@"dock icon set",nil);
+	} else if ([extension caseInsensitiveCompare:@"AdiumSoundset"] == NSOrderedSame){
+		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Sounds"];
+		requiresRestart = NO;
+		fileDescription = AILocalizedString(@"sound set",nil);
+	} else if ([extension caseInsensitiveCompare:@"AdiumEmoticonset"] == NSOrderedSame){
+		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Emoticons"];
+		requiresRestart = NO;
+		fileDescription = AILocalizedString(@"emoticon set",nil);
 	}
-	
+
     if (destination){
         NSString    *destinationFilePath = [destination stringByAppendingPathComponent:[filename lastPathComponent]];
         
