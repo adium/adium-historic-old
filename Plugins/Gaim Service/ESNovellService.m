@@ -12,53 +12,46 @@
 
 @implementation ESNovellService
 
-- (id)initWithService:(id)inService
-{
-    [super initWithService:inService];
-    
-	NSImage *image = [NSImage imageNamed:@"novell" forClass:[self class]];
-	
-    //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"GroupWise"
-                                                      description:@"Novell GroupWise"
-                                                            image:image
-														menuImage:nil
-                                                    caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._ "]
-												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
-													allowedLength:40] retain];
-    
-    //Register this service
-    [[adium accountController] registerService:self];
-    
-    return self;
+//Account Creation
+- (Class)accountClass{
+	return([ESGaimNovellAccount class]);
 }
 
-- (NSString *)identifier
-{
-    return(@"Novell-LIBGAIM");
-}
-- (NSString *)description
-{
-    return @"Novell GroupWise";
-}
-
-- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
-{    
-    return([[[ESGaimNovellAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
-}
-
-- (AIAccountViewController *)accountView
-{
+- (AIAccountViewController *)accountView{
     return([ESGaimNovellAccountViewController accountView]);
 }
 
-
-
-- (DCJoinChatViewController *)joinChatView
-{
+- (DCJoinChatViewController *)joinChatView{
 	return([DCGaimNovellJoinChatViewController joinChatView]);
 }
 
+//Service Description
+- (NSString *)serviceCodeUniqueID{
+	return(@"libgaim-GroupWise");
+}
+- (NSString *)serviceID{
+	return(@"GroupWise");
+}
+- (NSString *)serviceClass{
+	return(@"GroupWise");
+}
+- (NSString *)shortDescription{
+	return(@"GroupWise");
+}
+- (NSString *)longDescription{
+	return(@"Novell GroupWise");
+}
+- (NSCharacterSet *)allowedCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._ "]);
+}
+- (NSCharacterSet *)ignoredCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+}
+- (int)allowedLength{
+	return(40);
+}
+- (BOOL)caseSensitive{
+	return(NO);
+}
 
 @end
