@@ -15,7 +15,11 @@
 
 - Tooltips are not appearing for links in profile text.
 
+- 10.2 users are losing color in their profiles & away messages (colors not saving)
 
+- Sorting issues
+	http://www.funmac.com/showthread.php?t=8295
+	
 
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
