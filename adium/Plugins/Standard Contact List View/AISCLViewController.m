@@ -667,6 +667,7 @@
 {
 	[self _showTooltipAtPoint:NSMakePoint(0,0)];
 	tooltipCount = 0;
+	[tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
 }
 
 //Called as the mouse moves across the view
