@@ -363,8 +363,8 @@ static NDComponentInstance		* sharedComponentInstance = nil;
 			NDLogOSStatus( OSAGetResumeDispatchProc ( [self instanceRecord], &defaultResumeProcPtr, &defaultResumeProcRefCon ) );
 
 		NDLogOSStatus( OSASetResumeDispatchProc( [self instanceRecord], AppleEventResumeHandler, (long int)self ) );
-		[appleEventResumeHandler release];
-		appleEventResumeHandler = [aHandler retain];
+		[(NSObject *)appleEventResumeHandler release];
+		appleEventResumeHandler = [(NSObject *)aHandler retain];
 	}
 }
 
