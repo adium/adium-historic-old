@@ -18,6 +18,8 @@
 - (NSImage *)icon;
 @end
 
+@class AICustomTabsView;
+
 @interface AICustomTabCell : NSCell {
     BOOL								selected;
     BOOL								highlighted;
@@ -34,14 +36,17 @@
 	NSAttributedString					*attributedLabel;
     NSTabViewItem<AICustomTabViewItem>	*tabViewItem;
     NSRect								frame;
+	
+	AICustomTabsView					*view;
 }
 
-+ (id)customTabForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem;
++ (id)customTabForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView;
 - (void)setAllowsInactiveTabClosing:(BOOL)inValue;
 - (BOOL)allowsInactiveTabClosing;
 - (void)setSelected:(BOOL)inSelected;
 - (BOOL)isSelected;
-- (void)setHighlighted:(BOOL)inHighlighted;
+- (void)setHoveringClose:(BOOL)hovering;
+- (void)setHighlighted:(BOOL)inHighlight;
 - (BOOL)isHighlighted;
 - (void)setFrame:(NSRect)inFrame;
 - (NSRect)frame;
@@ -50,8 +55,8 @@
 - (NSTabViewItem *)tabViewItem;
 - (void)drawWithFrame:(NSRect)rect inView:(NSView *)controlView;
 - (void)drawWithFrame:(NSRect)rect inView:(NSView *)controlView ignoreSelection:(BOOL)ignoreSelection;
-- (void)addTrackingRectsInView:(NSView *)view withFrame:(NSRect)trackRect cursorLocation:(NSPoint)cursorLocation;
-- (void)removeTrackingRectsFromView:(NSView *)view;
+- (void)addTrackingRectsWithFrame:(NSRect)trackRect cursorLocation:(NSPoint)cursorLocation;
+- (void)removeTrackingRects;
 - (void)mouseEntered:(NSEvent *)theEvent;
 - (void)mouseExited:(NSEvent *)theEvent;
 - (BOOL)willTrackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView;
