@@ -172,7 +172,6 @@
 {
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
     NSFont		*contactListFont = [fontManager convertFont:[fontManager selectedFont]];
-    BOOL                canBeBold;
     
     //Update the displayed font string & preferences
     [self showFont:contactListFont inField:textField_fontName];
