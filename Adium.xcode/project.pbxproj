@@ -6106,6 +6106,7 @@
 		};
 		34BD9CD1053146CC000AB133 = {
 			buildPhases = (
+				34E9DCF2078FC79900662E8E,
 				34BD9D10053146CC000AB133,
 				34BD9D24053146CC000AB133,
 				34BD9D42053146CC000AB133,
@@ -9065,6 +9066,19 @@
 			path = /System/Library/Frameworks/SystemConfiguration.framework;
 			refType = 0;
 			sourceTree = "<absolute>";
+		};
+		34E9DCF2078FC79900662E8E = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "## Fix Growl.framework symlinks\n\n#current\nif ([ -e \"$SRCROOT/Plugins/Growl/Growl.framework/Versions/Current\" ]); then\nrm -rf \"$SRCROOT/Plugins/Growl/Growl.framework/Versions/Current\"\nfi\n\nmkdir  \"$SRCROOT/Plugins/Growl/Growl.framework/Versions/Current\"\n\nln -sf \"$SRCROOT/Plugins/Growl/Growl.framework/Versions/A/Headers\" \"$SRCROOT/Plugins/Growl/Growl.framework/Versions/Current/Headers\"\nln -sf \"$SRCROOT/Plugins/Growl/Growl.framework/Versions/A/Growl\" \"$SRCROOT/Plugins/Growl/Growl.framework/Versions/Current/Growl\"\nln -sf \"$SRCROOT/Plugins/Growl/Growl.framework/Versions/A/Resources\" \"$SRCROOT/Plugins/Growl/Growl.framework/Versions/Current/Resources\"\n\n#Root\nif ([ -e \"$SRCROOT/Plugins/Growl/Growl.framework/Headers\" ]); then\nrm -rf \"$SRCROOT/Plugins/Growl/Growl.framework/Headers\"\nfi\nln -sf \"$SRCROOT/Plugins/Growl/Growl.framework/Versions/Current/Headers\" \"$SRCROOT/Plugins/Growl/Growl.framework/Headers\"\n\nln -sf \"$SRCROOT/Plugins/Growl/Growl.framework/Versions/Current/Growl\" \"$SRCROOT/Plugins/Growl/Growl.framework/Growl\"\n\nif ([ -e \"$SRCROOT/Plugins/Growl/Growl.framework/Resources\" ]); then\nrm -rf \"$SRCROOT/Plugins/Growl/Growl.framework/Resources\"\nfi\nln -sf \"$SRCROOT/Plugins/Growl/Growl.framework/Versions/Current/Resources\" \"$SRCROOT/Plugins/Growl/Growl.framework/Resources\"\n";
 		};
 		34F101E307342B4D00890D3B = {
 			fileEncoding = 30;
@@ -17983,7 +17997,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"Cleaning up header files...\"\nfind $BUILD_ROOT/$WRAPPER_NAME -name '.svn' -print0 | xargs -0 rm -rf\nfind $BUILD_ROOT/$WRAPPER_NAME -name '.DS_Store' -print0 | xargs -0 rm -rf\nfind $BUILD_ROOT/$WRAPPER_NAME -name '*.h' -print0 | xargs -0 rm -rf";
+			shellScript = "find $BUILD_ROOT/$WRAPPER_NAME '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' ';'\n";
 		};
 		6C1CC23105415D5700B64925 = {
 			isa = PBXFileReference;
