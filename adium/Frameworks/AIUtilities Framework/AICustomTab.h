@@ -29,7 +29,6 @@
     NSImage		*tabPushRight;
 
     //Properties
-    NSAttributedString	*title;
     BOOL		selected;
     BOOL		depressed;
     BOOL		dragging;
@@ -44,7 +43,6 @@
 - (void)setSelected:(BOOL)inSelected;
 - (void)setDepressed:(BOOL)inDepressed;
 - (NSTabViewItem *)tabViewItem;
-- (void)setTitle:(NSAttributedString *)inTitle;
 - (NSSize)size;
 
 @end

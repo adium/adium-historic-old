@@ -16,6 +16,7 @@
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
 #import "AIMessageWindowController.h"
+#import "AIMessageTabViewItem.h"
 #import "AIAdium.h"
 
 #define	MESSAGE_WINDOW_NIB		@"MessageWindow"		//Filename of the message window nib
@@ -122,14 +123,14 @@
 //add a message controller
 - (void)addMessageViewController:(id <AIMessageView>)inController
 {
-    NSTabViewItem	*tabViewItem;
-    AIContactHandle	*handle;
+    AIMessageTabViewItem	*tabViewItem;
+    AIContactHandle		*handle;
 
     //Make sure our window is loaded
     [self window];
     
     //Setup the view
-    tabViewItem = [[[NSTabViewItem alloc] initWithIdentifier:inController] autorelease];
+    tabViewItem = [[[AIMessageTabViewItem alloc] initWithIdentifier:inController] autorelease];
     [tabViewItem setView:[inController view]];
     
     handle = [inController handle];
