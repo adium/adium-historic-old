@@ -12,3 +12,9 @@ void otrg_adium_unknown_fingerprint_response(NSDictionary *responseInfo, BOOL ac
 void adium_gaim_otr_connect_conv(GaimConversation *conv);
 void adium_gaim_otr_disconnect_conv(GaimConversation *conv);
 void initGaimOTRSupprt(void);
+
+@interface ESGaimOTRAdapter : NSObject {
+	
+}
+
+@end

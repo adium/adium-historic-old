@@ -57,6 +57,7 @@
 	}	
 	
 	//Use the gaim thread to perform the response
+	NSLog(@"unknown from %x",[NSRunLoop currentRunLoop]);
 	[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
 									 performSelector:@selector(gaimThreadUnknownFingerprintResponseInfo:wasAccepted:)
 										  withObject:userInfo
@@ -71,6 +72,7 @@
  */
 + (void)gaimThreadUnknownFingerprintResponseInfo:(NSDictionary *)responseInfo wasAccepted:(NSNumber *)fingerprintAcceptedNumber
 {
+	NSLog(@"moved to %x",[NSRunLoop currentRunLoop]);
 	otrg_adium_unknown_fingerprint_response(responseInfo, [fingerprintAcceptedNumber boolValue]);
 }
 

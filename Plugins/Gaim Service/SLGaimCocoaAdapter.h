@@ -77,7 +77,7 @@
 							   inChat:(AIChat *)inChat;
 - (void)gaimConversation:(GaimConversation *)conv setSecurityDetails:(NSDictionary *)securityDetailsDict;
 - (void)refreshedSecurityOfGaimConversation:(GaimConversation *)conv;
-- (NSString *)localizedOTRMessage:(const char *)msg withUsername:(const char *)username;
+- (NSString *)localizedOTRMessage:(NSString *)msg withUsername:(const char *)username;
 
 @end
 

@@ -95,7 +95,6 @@ static void otrg_adium_dialog_notify_message(GaimNotifyMsgType type,
 {
 //	GaimAccount	*account = gaim_accounts_find(accountname, protocol);
 	
-	NSLog(@"otrg_adium_dialog_notify_message: %s ; %s",primary, secondary);
 	AILog(@"otrg_adium_dialog_notify_message: %s ; %s",primary, secondary);
 
 	//XXX todo: search on ops->notify in message.c in libotr and handle the error messages
@@ -112,28 +111,26 @@ static int otrg_adium_dialog_display_otr_message(const char *accountname, const 
 	GaimAccount			*account;
 	GaimConversation	*conv;
 	AIChat				*chat;
+	NSString			*message;
 	NSString			*localizedMessage;
 
 	//Find the GaimAccount and existing conversation which was just connected
 	account = gaim_accounts_find(accountname, protocol);
 	conv = gaim_find_conversation_with_account(username, account);
-	
-	if(conv &&
-	   (chat = existingChatLookupFromConv(conv)) &&
-	   (localizedMessage = [[SLGaimCocoaAdapter sharedInstance] localizedOTRMessage:msg
-																	   withUsername:username])){
-	
+	chat = existingChatLookupFromConv(conv);
+	message = [NSString stringWithUTF8String:msg];
+
+	if(localizedMessage = [[SLGaimCocoaAdapter sharedInstance] localizedOTRMessage:message
+																	  withUsername:username]){
+		
 		[[[AIObject sharedAdiumInstance] contentController] mainPerformSelector:@selector(displayStatusMessage:ofType:inChat:)
 																	 withObject:localizedMessage
 																	 withObject:@"encryption"
-																	 withObject:chat];
-		
+																	 withObject:chat
+																  waitUntilDone:YES];
 		return 0; /* We handled it */
 	}else{
-		NSLog(@"otrg_adium_dialog_display_otr_message: %s",msg);
-		AILog(@"otrg_adium_dialog_display_otr_message: %s",msg);
-
-		return 1; /* We didn't handle it */
+		return 1; /* Display it as a normal message */
 	}
 }
 
@@ -222,6 +219,8 @@ static void otrg_adium_dialog_unknown_fingerprint(OtrlUserState us, const char *
 		[NSValue valueWithPointer:response_data], @"OTRConfirmResponse",
 		nil];
 
+	AILog(@"start on %x",[NSRunLoop currentRunLoop]);
+
 	[ESGaimOTRUnknownFingerprintController mainPerformSelector:@selector(showUnknownFingerprintPromptForUsername:protocol:hash:responseInfo:)
 													withObject:who
 													withObject:((p && p->info->name) ? p->info->name : nil)
@@ -242,6 +241,8 @@ void otrg_adium_unknown_fingerprint_response(NSDictionary *responseInfo, BOOL ac
 	OtrlMessageAppOps *ops = [[responseInfo objectForKey:@"OtrlMessageAppOps"] pointerValue];
 	void *opdata = [[responseInfo objectForKey:@"opdata"] pointerValue];
 	OTRConfirmResponse *response_data = [[responseInfo objectForKey:@"OTRConfirmResponse"] pointerValue];
+
+	AILog(@"response_cb on %x",[NSRunLoop currentRunLoop]);
 
 	response_cb(us, ops, opdata, response_data, (accepted ? 1 : 0));
 }
@@ -428,36 +429,13 @@ static OtrlPolicy otrg_adium_ui_find_policy(GaimAccount *account, const char *na
 {
 	GaimBuddy					*buddy = gaim_find_buddy(account, name);
 	AIListContact				*contact = contactLookupFromBuddy(buddy);
-	NSNumber					*prefNumber;
-	AIEncryptedChatPreference	pref;
-	OtrlPolicy					policy;
+	NSNumber					*policyNumber;
 
-	prefNumber = [contact mainPerformSelector:@selector(preferenceForKey:group:)
-								   withObject:KEY_ENCRYPTED_CHAT_PREFERENCE
-								   withObject:GROUP_ENCRYPTION
-								  returnValue:YES];
-	if(prefNumber){
-		pref = [prefNumber intValue];
-		
-		switch(pref){
-			case EncryptedChat_Never:
-				policy = OTRL_POLICY_NEVER;
-				break;
-			case EncryptedChat_Manually:
-				policy = OTRL_POLICY_MANUAL;
-				break;
-			case EncryptedChat_Automatically:
-				policy = OTRL_POLICY_OPPORTUNISTIC;
-				break;
-			case EncryptedChat_RejectUnencryptedMessages:
-				policy = OTRL_POLICY_ALWAYS;
-				break;
-		}
-	}else{
-		policy = OTRL_POLICY_OPPORTUNISTIC;
-	}
+	policyNumber = [ESGaimOTRAdapter mainPerformSelector:@selector(policyForContact:)
+											  withObject:contact
+											 returnValue:YES];
 	
-	return policy;
+	return [policyNumber intValue];
 }
 
 static OtrgUiUiOps otrg_adium_ui_ui_ops = {
@@ -485,7 +463,7 @@ void adium_gaim_otr_connect_conv(GaimConversation *conv)
 void adium_gaim_otr_disconnect_conv(GaimConversation *conv)
 {
 	ConnContext	*context;
-	
+	AILog(@"adium_gaim_otr_disconnect_conv %x", [NSRunLoop currentRunLoop]);
 	/* Do nothing if this isn't an IM conversation */
 	if((gaim_conversation_get_type(conv) == GAIM_CONV_IM) &&
 	   (context = context_for_conv(conv))){
@@ -504,3 +482,51 @@ void initGaimOTRSupprt(void)
 
     otrg_dialog_set_ui_ops(otrg_adium_dialog_get_ui_ops());
 }
+
+@implementation ESGaimOTRAdapter
+
+/*
+ * @brief Return the OtrlPolicy for a contact as the intValue of an NSNumber
+ *
+ * Look to the contact's preference, then to its account's preference, then fall back on OPPORTUNISTIC as a default
+ */
++ (NSNumber *)policyForContact:(AIListContact *)contact
+{
+	NSNumber					*prefNumber;
+	AIEncryptedChatPreference	pref;
+	OtrlPolicy					policy;
+	
+	//Get the contact's preference (or its containing group, or so on)
+	prefNumber = [contact preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
+								   group:GROUP_ENCRYPTION];
+	if(!prefNumber){
+		//If no contact preference, use the account preference
+		prefNumber = [[contact account] preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
+												   group:GROUP_ENCRYPTION];		
+	}
+
+	if(prefNumber){
+		pref = [prefNumber intValue];
+		
+		switch(pref){
+			case EncryptedChat_Never:
+				policy = OTRL_POLICY_NEVER;
+				break;
+			case EncryptedChat_Manually:
+				policy = OTRL_POLICY_MANUAL;
+				break;
+			case EncryptedChat_Automatically:
+				policy = OTRL_POLICY_OPPORTUNISTIC;
+				break;
+			case EncryptedChat_RejectUnencryptedMessages:
+				policy = OTRL_POLICY_ALWAYS;
+				break;
+		}
+	}else{
+		policy = OTRL_POLICY_OPPORTUNISTIC;
+	}
+	
+	return [NSNumber numberWithInt:policy];	
+}
+
+@end
