@@ -162,10 +162,9 @@
 //Return the account description or image
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	AIListObject *inObject = [[[[messageViewControllerArray objectAtIndex:row] chat] participatingListObjects] objectAtIndex:0];
-	NSString *displayName = [inObject displayName];
-	AIMutableOwnerArray	*ownerArray = [inObject statusArrayForKey:@"UnviewedContent"];
-    int currentUnviewed = [[ownerArray objectWithOwner:inObject] intValue];
+	AIListObject	*inObject = [[[[messageViewControllerArray objectAtIndex:row] chat] participatingListObjects] objectAtIndex:0];
+	NSString		*displayName = [inObject displayName];
+    int currentUnviewed = [inObject integerStatusObjectForKey:@"UnviewedContent"];
 	
     return((currentUnviewed > 0) ? [NSString stringWithFormat:@"%@ (%d)",displayName,currentUnviewed] : displayName);
 }

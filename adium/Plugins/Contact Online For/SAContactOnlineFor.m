@@ -32,11 +32,11 @@
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
     NSAttributedString * entry = nil;
-    if([[inObject statusArrayForKey:@"Online"] intValue]){
+    if([inObject integerStatusObjectForKey:@"Online"]){
         NSDate	*signonDate, *currentDate;
 
         currentDate = [NSDate date];
-        signonDate = [[inObject statusArrayForKey:@"Signon Date"] objectValue];
+        signonDate = [inObject statusObjectForKey:@"Signon Date"];
         
         if(signonDate){
             entry = [[NSAttributedString alloc] initWithString:[NSDateFormatter stringForTimeIntervalSinceDate:signonDate 

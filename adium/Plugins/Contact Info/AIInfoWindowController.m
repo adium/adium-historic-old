@@ -35,7 +35,7 @@ static AIListObject				*activeListObject = nil;
     NSTextAttachmentCell 		*imageAttatchment;
     NSTextAttachment 			*attatchment;
     NSImage 					*buddyImage;
-    BOOL                        online = [[activeListObject statusArrayForKey:@"Online"] intValue];
+    BOOL                        online = [activeListObject integerStatusObjectForKey:@"Online"];
     
 	//
     [timer invalidate]; [timer release];
@@ -103,14 +103,14 @@ static AIListObject				*activeListObject = nil;
     }
     
     //Client
-    value = [[activeListObject statusArrayForKey:@"Client"] objectValue];
+    value = [activeListObject statusObjectForKey:@"Client"];
     if(value && [value length]){
         [infoString appendString:@"\r\r\tClient:\t" withAttributes:labelAttributes];
         [infoString appendString:value withAttributes:valueAttributes];
     }
     
     //Signon Date
-    NSDate *signonDate = [[activeListObject statusArrayForKey:@"Signon Date"] objectValue];
+    NSDate *signonDate = [activeListObject statusObjectForKey:@"Signon Date"];
     if(signonDate && online){
         NSString        *currentDay, *signonDay, *signonTime;
         NSDateFormatter	*dayFormatter, *timeFormatter;
@@ -141,14 +141,14 @@ static AIListObject				*activeListObject = nil;
     }
     
     //Online
-    /*    int online = [[activeListObject statusArrayForKey:@"Online"] greatestIntegerValue];
+    /*    int online = [activeListObject integerStatusObjectForKey:@"Online"];
     [infoString appendString:@"\r\tOnline:\t" withAttributes:labelAttributes];
     [infoString appendString:(online ? @"Yes" : @"No") withAttributes:valueAttributes];*/
     
     //Away & Status
     NSAttributedString *status = nil;
-    int away = [[activeListObject statusArrayForKey:@"Away"] intValue];
-	status = [[activeListObject statusArrayForKey:@"StatusMessage"] objectValue];
+    int away = [activeListObject integerStatusObjectForKey:@"Away"];
+	status = [activeListObject statusObjectForKey:@"StatusMessage"];
     
     if(status || away){ //If away or w/ status message
         if(away){
@@ -187,7 +187,7 @@ static AIListObject				*activeListObject = nil;
     }
     
     //Idle Since
-    int idle = (int)[[activeListObject statusArrayForKey:@"Idle"] doubleValue];
+    int idle = (int)[activeListObject doubleStatusObjectForKey:@"Idle"];
     if(idle != 0){
         int	hours = (int)(idle / 60);
         int	minutes = (int)(idle % 60);
@@ -209,14 +209,14 @@ static AIListObject				*activeListObject = nil;
     }
 
     //Warning
-    int warning = [[activeListObject statusArrayForKey:@"Warning"] intValue];
+    int warning = [activeListObject integerStatusObjectForKey:@"Warning"];
     if(warning > 0){
         [infoString appendString:@"\r\r\tWarning:\t" withAttributes:labelAttributes];
         [infoString appendString:[NSString stringWithFormat:@"%i%%",warning] withAttributes:valueAttributes];
     }
     
     //Text Profile
-	NSAttributedString 	*textProfile = [[activeListObject statusArrayForKey:@"TextProfile"] objectValue];
+	NSAttributedString 	*textProfile = [activeListObject statusObjectForKey:@"TextProfile"];
     if(textProfile && [textProfile length]){
 		[infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
 		NSMutableAttributedString   *textProfileString = [[[adium contentController] fullyFilteredAttributedString:textProfile listObjectContext:activeListObject] mutableCopy];

@@ -46,7 +46,7 @@
 {
     if(	inModifiedKeys == nil || [inModifiedKeys containsObject:@"IdleSince"]){
 
-        if([[inObject statusArrayForKey:@"IdleSince"] objectValue] != nil){
+        if([inObject statusObjectForKey:@"IdleSince"] != nil){
             //Track the handle
             if(!idleObjectArray){
                 idleObjectArray = [[NSMutableArray alloc] init];
@@ -96,7 +96,7 @@
 //Give a contact its correct idle value
 - (void)setIdleForObject:(AIListObject *)inObject silent:(BOOL)silent
 {
-    NSDate	*idleSince = [[inObject statusArrayForKey:@"IdleSince"] objectValue];
+    NSDate	*idleSince = [inObject statusObjectForKey:@"IdleSince"];
     
     if(idleSince){ //Set the handle's 'idle' value
         double	idle = -[idleSince timeIntervalSinceNow] / 60.0;
@@ -118,7 +118,7 @@
 //Tooltip entry ---------------------------------------------------------------------------------
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    int 	idle = (int)[[inObject statusArrayForKey:@"Idle"] doubleValue];
+    int 	idle = (int)[inObject doubleStatusObjectForKey:@"Idle"];
     NSString	*entry = nil;
 	
     if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
@@ -132,7 +132,7 @@
 
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    int 		idle = (int)[[inObject statusArrayForKey:@"Idle"] doubleValue];
+    int 		idle = (int)[inObject doubleStatusObjectForKey:@"Idle"];
     NSAttributedString	*entry = nil;
 	
     if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.51 2004/02/21 20:53:01 adamiser Exp $
+// $Id: AIContentController.m,v 1.52 2004/02/22 09:18:42 evands Exp $
 
 #import "AIContentController.h"
 
@@ -304,13 +304,15 @@
 {
     AIChat		*chat = [inObject chat];
     BOOL		sent = NO;
-    BOOL		trackContent = [inObject trackContent];	//Adium should track this content
-    BOOL		filterContent = [inObject filterContent]; //Adium should filter this content
-    BOOL		displayContent = [inObject displayContent]; //Adium should display this content
+    BOOL		trackContent = [inObject trackContent];		//Should Adium track this content?
+    BOOL		filterContent = [inObject filterContent];   //Should Adium filter this content?
+    BOOL		displayContent = [inObject displayContent]; //Should Adium display this content?
     	
     //Will send content
     if(trackContent){
-        [[owner notificationCenter] postNotificationName:Content_WillSendContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+        [[owner notificationCenter] postNotificationName:Content_WillSendContent
+												  object:chat 
+												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
 
     //Filter the content object
@@ -403,7 +405,6 @@
 		inContact = [[owner contactController] preferredContactForReceivingContentType:CONTENT_MESSAGE_TYPE
 																		 forListObject:inContact];
 	}
-	
 	//Search for an existing chat we can switch instead of replacing
 	enumerator = [chatArray objectEnumerator];
 	while(chat = [enumerator nextObject]){
@@ -424,10 +425,12 @@
 			break;
 		}
 	}
-	
 	if(!chat){
-		AIAccount *account = [[owner accountController] accountWithServiceID:[inContact serviceID] UID:[inContact accountUID]];
 		
+		//evands - this is returning nil when the stress test Command listobject gets here.
+		AIAccount *account = [[owner accountController] accountWithServiceID:[inContact serviceID] 
+																		 UID:[inContact accountUID]];
+	
 		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
 			//Create a new chat
 			chat = [AIChat chatForAccount:account];
@@ -437,7 +440,9 @@
 			if(![(AIAccount<AIAccount_Content> *)account openChat:chat]){
 				chat = nil;
 			}
-			[chatArray addObject:chat];
+			
+			if (chat)
+				[chatArray addObject:chat];
 		}
 	}
 	
@@ -454,7 +459,7 @@
 //	
 //	//Up the chat count for this contact
 //	if(listObject = [inChat listObject]){
-//        int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
+//        int currentCount = [listObject integerStatusObjectForKey:@"ChatsCount"];
 //        [listObject setStatusObject:[NSNumber numberWithInt:(currentCount + 1)]
 //                             forKey:@"ChatsCount"
 //                             notify:YES];
@@ -508,7 +513,7 @@
     
 	//Lower the chat count for this contact
 	if(listObject = [inChat listObject]){
-        int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] intValue];
+        int currentCount = [listObject integerStatusObjectForKey:@"ChatsCount"];
         if(currentCount > 0) {
 			[listObject setStatusObject:[NSNumber numberWithInt:(currentCount - 1)]
 								 forKey:@"ChatsCount"
@@ -589,7 +594,7 @@
 //Switch to a chat with the most recent unviewed content.  Returns YES if one existed
 - (BOOL)switchToMostRecentUnviewedContent
 {
-    if(mostRecentChat && [mostRecentChat listObject] && [[[mostRecentChat listObject] statusArrayForKey:@"UnviewedContent"] intValue]){
+    if(mostRecentChat && [mostRecentChat listObject] && [[mostRecentChat listObject] integerStatusObjectForKey:@"UnviewedContent"]){
 		[[owner interfaceController] setActiveChat:mostRecentChat];
 		return(YES);
     }else{

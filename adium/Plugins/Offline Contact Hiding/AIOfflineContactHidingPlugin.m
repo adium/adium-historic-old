@@ -34,8 +34,8 @@
 	   [inModifiedKeys containsObject:@"Signed Off"] ||
 	   [inModifiedKeys containsObject:@"VisibleObjectCount"]){
 		if([inObject isKindOfClass:[AIListContact class]]){
-			int		online = [[inObject statusArrayForKey:@"Online"] intValue];
-			int		justSignedOff = [[inObject statusArrayForKey:@"Signed Off"] intValue];
+			int		online = [inObject integerStatusObjectForKey:@"Online"];
+			int		justSignedOff = [inObject integerStatusObjectForKey:@"Signed Off"];
 			
 			//Insert an updated value
 			if(!online && !justSignedOff){

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.52 2004/02/21 15:18:37 adamiser Exp $
+// $Id: AIAccountController.m,v 1.53 2004/02/22 09:18:42 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -323,7 +323,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
     NSEnumerator	*enumerator = [accountArray objectEnumerator];
     AIAccount		*account;
-    
+	
+#warning accountArray is null when the Stress Test plugin creates its Command list object.  What is up with that?
+//    NSLog(@"accountArray is %@",accountArray);
     while((account = [enumerator nextObject])){
 		if([UID compare:[account UID]] == 0 && [serviceID compare:[account serviceID]] == 0) return(account);
     }

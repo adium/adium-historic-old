@@ -3,7 +3,7 @@
 //  Adium XCode
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.16 2004/02/21 20:53:01 adamiser Exp $
+//  $Id: ESContactAlertsController.m,v 1.17 2004/02/22 09:18:43 evands Exp $
 
 
 /*
@@ -241,7 +241,7 @@ Alert Execution
         //if the action isn't in the completed action types yet
         if ([completedActionTypes indexOfObject:action] == NSNotFound) {
             event = [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
-            status = [[inObject statusArrayForKey:event] intValue];
+            status = [inObject integerStatusObjectForKey:event];
             event_status = [[actionDict objectForKey:KEY_EVENT_STATUS] intValue];
             status_matches = (status && event_status) || (!status && !event_status); //XOR
             

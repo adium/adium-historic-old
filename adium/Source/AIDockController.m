@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.48 2004/01/27 17:59:52 evands Exp $
+// $Id: AIDockController.m,v 1.49 2004/02/22 09:18:43 evands Exp $
 
 #import "AIDockController.h"
 
@@ -305,7 +305,10 @@
 
     //
     if(![currentIconState animated]){ //Static icon
-        if([currentIconState image]) [[NSApplication sharedApplication] setApplicationIconImage:[currentIconState image]];
+		NSImage *image = [currentIconState image];
+        if(image) {
+			 [[NSApplication sharedApplication] setApplicationIconImage:image];
+		}
 
     }else{ //Animated icon
         //Our dock icon can run its animation at any speed, but we want to try and sync it with the global Adium flashing.  To do this, we delay starting our timer until the next flash occurs.
@@ -345,10 +348,12 @@
     if(timer){
         [currentIconState nextFrame];
     }
-
+	
     //Set the image
     image = [currentIconState image];
-    if(image) [[NSApplication sharedApplication] setApplicationIconImage:image];
+	if(image) {
+		[[NSApplication sharedApplication] setApplicationIconImage:image];
+	}
     
 }
 

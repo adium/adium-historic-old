@@ -96,7 +96,7 @@
 		
 		//Update our flash array
 		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"UnviewedContent"]){
-			int unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] intValue];
+			int unviewedContent = [inObject integerStatusObjectForKey:@"UnviewedContent"];
 			
 			if(unviewedContent && ![flashingListObjectArray containsObject:inObject]){ //Start flashing
 				[self addToFlashArray:inObject];
@@ -118,7 +118,7 @@
     double			idle;
 
     //Prefetch the value for unviewed content, we need it multiple times below
-    unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] intValue];
+    unviewedContent = [inObject integerStatusObjectForKey:@"UnviewedContent"];
 
     //Unviewed content
     if(!color && (unviewedContentEnabled && unviewedContent)){
@@ -131,18 +131,18 @@
 
     //Signed off, signed on, or typing (These do not show if there is unviewed content)
     if(!color && (!unviewedContentEnabled || !unviewedContent)){
-        if(signedOffEnabled && ([[inObject statusArrayForKey:@"Signed Off"] intValue] ||
-                                ![[inObject statusArrayForKey:@"Online"] intValue])){
+        if(signedOffEnabled && ([inObject integerStatusObjectForKey:@"Signed Off"] ||
+                                ![inObject integerStatusObjectForKey:@"Online"])){
             color = signedOffColor;
             invertedColor = signedOffInvertedColor;
             labelColor = signedOffLabelColor;
             
-        }else if(signedOnEnabled && [[inObject statusArrayForKey:@"Signed On"] intValue]){
+        }else if(signedOnEnabled && [inObject integerStatusObjectForKey:@"Signed On"]){
             color = signedOnColor;
             invertedColor = signedOnInvertedColor;
             labelColor = signedOnLabelColor;
             
-        }else if(typingEnabled && [[inObject statusArrayForKey:@"Typing"] intValue]){
+        }else if(typingEnabled && [inObject integerStatusObjectForKey:@"Typing"]){
             color = typingColor;
             invertedColor = typingInvertedColor;
             labelColor = typingLabelColor;
@@ -152,8 +152,8 @@
 
     if(!color){
         //Prefetch these values, we need them multiple times below
-        away = [[inObject statusArrayForKey:@"Away"] intValue];
-        idle = [[inObject statusArrayForKey:@"Idle"] doubleValue];
+        away = [inObject integerStatusObjectForKey:@"Away"];
+        idle = [inObject doubleStatusObjectForKey:@"Idle"];
 
         //Idle And Away, Away, or Idle
         if(idleAndAwayEnabled && away && idle != 0){

@@ -32,10 +32,10 @@
     BOOL				away;
     
     //Get the away state
-    away = [[inObject statusArrayForKey:@"Away"] intValue];
+    away = [inObject integerStatusObjectForKey:@"Away"];
     
     //Get the status message
-    statusMessage = [[inObject statusArrayForKey:@"StatusMessage"] objectValue];
+    statusMessage = [inObject statusObjectForKey:@"StatusMessage"];
     
     //Return the correct string
     if(statusMessage != nil && [statusMessage length] != 0){
@@ -58,10 +58,10 @@
     BOOL		away;
 	
     //Get the away state
-    away = [[inObject statusArrayForKey:@"Away"] intValue];
+    away = [inObject integerStatusObjectForKey:@"Away"];
 	
     //Get the status message
-    statusMessage = [[inObject statusArrayForKey:@"StatusMessage"] objectValue];
+    statusMessage = [inObject statusObjectForKey:@"StatusMessage"];
 	
     //Return the correct string
     if(statusMessage != nil && [statusMessage length] != 0){

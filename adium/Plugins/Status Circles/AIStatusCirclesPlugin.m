@@ -109,7 +109,7 @@
 //				
 //				[statusCircle setColor:circleColor];
 //				
-//				idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
+//				idle = [inObject doubleStatusObjectForKey:@"Idle"];
 //				
 //				//Embedded idle time
 //				if(displayIdleTime && idle != 0){

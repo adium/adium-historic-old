@@ -13,8 +13,8 @@
 - (void)installPlugin
 {
     //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"TEST"
-                                                      description:@"Stress Test (Do not use)"
+    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:[self identifier]
+                                                      description:[self description]
                                                             image:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]
@@ -27,13 +27,14 @@
 //Return a new account with the specified properties
 - (id)accountWithUID:(NSString *)inUID
 {
+	NSLog(@"creating %@",inUID);
     return([[[AIStressTestAccount alloc] initWithUID:inUID service:self] autorelease]);
 }
 
 // Return a Plugin-specific ID and description
 - (NSString *)identifier
 {
-    return(@"Stress Test");
+    return(STRESS_TEST_SERVICE_IDENTIFIER);
 }
 - (NSString *)description
 {

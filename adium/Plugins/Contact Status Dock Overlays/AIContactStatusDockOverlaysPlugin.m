@@ -96,9 +96,9 @@
 		   [inModifiedKeys containsObject:@"Signed On"] ||
 		   [inModifiedKeys containsObject:@"Signed Off"]){
 			
-			if((showContent && [[inObject statusArrayForKey:@"UnviewedContent"] intValue]) ||
-			   (showStatus && [[inObject statusArrayForKey:@"Signed On"] intValue]) ||
-			   (showStatus && [[inObject statusArrayForKey:@"Signed Off"] intValue])){
+			if((showContent && [inObject integerStatusObjectForKey:@"UnviewedContent"]) ||
+			   (showStatus && [inObject integerStatusObjectForKey:@"Signed On"]) ||
+			   (showStatus && [inObject integerStatusObjectForKey:@"Signed Off"])){
 				
 				//Ignore any objects within a meta contact
 				if(![[inObject containingGroup] isKindOfClass:[AIMetaContact class]]){
@@ -203,13 +203,13 @@
 		
 		/*
 		 //Get our colors
-		 if(!([[contact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue] && flash)){
+		 if(!([contact integerStatusObjectForKey:@"UnviewedContent"] && flash)){
 			 backColor = [[contact displayArrayForKey:@"Label Color"] averageColor];
 			 textColor = [[contact displayArrayForKey:@"Text Color"] averageColor];
 		 }
 		 */
 		
-        if([[contact statusArrayForKey:@"UnviewedContent"] intValue]){ //Unviewed
+        if([contact integerStatusObjectForKey:@"UnviewedContent"]){ //Unviewed
 			if(flash){
                 backColor = [NSColor whiteColor];
                 textColor = [NSColor blackColor];
@@ -217,11 +217,11 @@
                 backColor = backUnviewedContentColor;
                 textColor = unviewedContentColor;
             }
-        }else if([[contact statusArrayForKey:@"Signed On"] intValue]){ //Signed on
+        }else if([contact integerStatusObjectForKey:@"Signed On"]){ //Signed on
             backColor = backSignedOnColor;
             textColor = signedOnColor;
 			
-        }else if([[contact statusArrayForKey:@"Signed Off"] intValue]){ //Signed off
+        }else if([contact integerStatusObjectForKey:@"Signed Off"]){ //Signed off
             backColor = backSignedOffColor;
             textColor = signedOffColor;
 			

@@ -25,7 +25,7 @@
 	   [inModifiedKeys containsObject:@"UserIcon"]){
 		
 		//		if([inObject isKindOfClass:[AIListContact class]]){
-		NSImage *image = [[inObject statusArrayForKey:@"UserIcon"] objectValue];
+		NSImage *image = [inObject statusObjectForKey:@"UserIcon"];
 		
 		//Apply the image at medium priority
 		[[inObject displayArrayForKey:@"UserIcon"] setObject:image 

@@ -33,8 +33,8 @@ int groupedAwayByIdleSortNoGroups(id objectA, id objectB, BOOL groups);
 int groupedAwayByIdleSortNoGroups(id objectA, id objectB, BOOL groups)
 {    
 	if(!groups){
-		BOOL awayA = ([[objectA statusArrayForKey:@"Away"] intValue]);
-		BOOL awayB = ([[objectB statusArrayForKey:@"Away"] intValue]);
+		BOOL awayA = ([objectA integerStatusObjectForKey:@"Away"]);
+		BOOL awayB = ([objectB integerStatusObjectForKey:@"Away"]);
 		
 		if(awayA && !awayB){
 			return(NSOrderedDescending);
@@ -43,10 +43,10 @@ int groupedAwayByIdleSortNoGroups(id objectA, id objectB, BOOL groups)
 		}else{//both are away or both are not away
 			if(!awayA){//neither are away
 				return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
-			}else if([[objectA statusArrayForKey:@"Idle"] doubleValue] == [[objectB statusArrayForKey:@"Idle"] doubleValue]){//both are away and have the same idle time (probably not idle)
+			}else if([objectA doubleStatusObjectForKey:@"Idle"] == [objectB doubleStatusObjectForKey:@"Idle"]){//both are away and have the same idle time (probably not idle)
 				return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
 			}else{//both are away and have different idle times
-				if([[objectA statusArrayForKey:@"Idle"] doubleValue] > [[objectB statusArrayForKey:@"Idle"] doubleValue]){
+				if([objectA doubleStatusObjectForKey:@"Idle"] > [objectB doubleStatusObjectForKey:@"Idle"]){
 					return(NSOrderedDescending);
 				}else{
 					return(NSOrderedAscending);
