@@ -83,7 +83,6 @@
 			}
 		}
 	}
-	NSLog(@"in AIWiredData: self = %p", self);
 	return self;
 }
 
