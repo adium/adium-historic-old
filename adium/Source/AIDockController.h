@@ -13,8 +13,56 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
  
-@interface AIDockController (INTERNAL)
-// These methods are for internal Adium use only.  The public interface is in Adium.h.
+#define Dock_IconWillChange		@"Dock_IconWillChange"
+#define Dock_IconDidChange		@"Dock_IconDidChange"
+
+#define KEY_ACTIVE_DOCK_ICON	@"Dock Icon"
+#define FOLDER_DOCK_ICONS		@"Dock Icons"
+
+typedef enum {
+    BOUNCE_NONE = 0,
+    BOUNCE_ONCE,
+    BOUNCE_REPEAT,
+    BOUNCE_DELAY5,
+    BOUNCE_DELAY10,
+    BOUNCE_DELAY15,
+    BOUNCE_DELAY30,
+    BOUNCE_DELAY60
+} DOCK_BEHAVIOR;
+
+@protocol AIFlashObserver;
+
+@interface AIDockController: NSObject <AIFlashObserver> {
+    IBOutlet	AIAdium 	*owner;
+	
+    NSTimer 				*animationTimer;
+    NSTimer					*bounceTimer;
+    
+    NSMutableDictionary		*availableIconStateDict;
+    NSMutableDictionary		*availableDynamicIconStateDict;
+    NSMutableArray			*activeIconStateArray;
+    AIIconState				*currentIconState;
+    
+    int						currentAttentionRequest;
+	
+    BOOL					observingFlash;
+    BOOL					needsDisplay;
+}
+
+//Icon animation & states
+- (void)setIconStateNamed:(NSString *)inName;
+- (void)removeIconStateNamed:(NSString *)inName;
+- (void)setIconState:(AIIconState *)iconState named:(NSString *)inName;
+- (float)dockIconScale;
+
+//Special access to icon pack loading
+- (NSMutableDictionary *)iconPackAtPath:(NSString *)folderPath;
+
+//Bouncing & behavior
+- (void)performBehavior:(DOCK_BEHAVIOR)behavior;
+
+//Private
 - (void)initController;
 - (void)closeController;
+
 @end

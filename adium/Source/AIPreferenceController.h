@@ -13,12 +13,86 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.h,v 1.7 2003/12/13 16:29:29 adamiser Exp $ 
+// $Id: AIPreferenceController.h,v 1.8 2004/01/14 19:02:30 adamiser Exp $ 
 
-@interface AIPreferenceController (INTERNAL)
-// These methods are for internal Adium use only.  The public interface is in Adium.h.
+//Preference groups
+#define PREF_GROUP_GENERAL 			@"General"
+#define PREF_GROUP_ACCOUNTS	 		@"Accounts"
+#define PREF_GROUP_TOOLBARS 		@"Toolbars"
+#define PREF_GROUP_WINDOW_POSITIONS @"Window Positions"
+#define PREF_GROUP_SPELLING 		@"Spelling"
+#define OBJECT_PREFS_PATH			@"ByObject"		//Path to object specific preference folder
+#define ACCOUNT_PREFS_PATH			@"Accounts"		//Path to account specific preference folder
+#define Preference_GroupChanged		@"Preference_GroupChanged"
+#define Preference_WindowWillOpen   @"Preference_WindowWillOpen"
+#define Preference_WindowDidClose   @"Preference_WindowDidClose"
+
+//Preference Categories
+typedef enum {
+    //Temporary, for transition only
+    AIPref_Accounts = 0, 
+    AIPref_ContactList_General,
+    AIPref_ContactList_Groups,
+    AIPref_ContactList_Contacts,
+    AIPref_Messages_Display,
+    AIPref_Messages_Sending,
+    //AIPref_Messages_Receiving,
+    AIPref_Status_Away,
+    AIPref_Status_Idle,
+    AIPref_Dock,
+    AIPref_Sound,
+    AIPref_Emoticons,
+    AIPref_Alerts,
+    
+	/*    AIPref_Accounts = 0,
+    AIPref_ContactList,
+    AIPref_Messages,
+    AIPref_Sound,
+    AIPref_Alerts,*/
+    AIPref_Advanced_ContactList,
+    AIPref_Advanced_Messages,
+    AIPref_Advanced_Status,
+    AIPref_Advanced_Other
+	
+} PREFERENCE_CATEGORY;
+
+@class AIPreferencePane;
+
+@interface AIPreferenceController : NSObject {
+    IBOutlet	AIAdium		*owner;
+	
+    NSMutableArray			*paneArray;		//An array of preference panes
+    NSMutableDictionary		*groupDict;		//A dictionary of pref dictionaries
+    NSMutableDictionary		*themablePreferences;
+    
+    BOOL					shouldDelay;
+    NSMutableSet			*delayedNotificationGroups;  //Group names for delayed notifications
+}
+
+//Preference window
+- (IBAction)showPreferenceWindow:(id)sender;
+- (void)openPreferencesToPane:(AIPreferencePane *)inPane;
+
+//Preference views
+- (void)addPreferencePane:(AIPreferencePane *)inPane;
+
+//Defaults and access to preferences
+- (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)groupName;
+- (NSDictionary *)preferencesForGroup:(NSString *)groupName;
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName;
+
+//Themable preferences
+- (void)registerThemableKeys:(NSArray *)keysArray forGroup:(NSString *)groupName;
+- (NSDictionary *)themablePreferences;
+
+- (BOOL)tempImportOldPreferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;
+- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
+- (void)delayPreferenceChangedNotifications:(BOOL)inDelay;
+
+//Private
 - (void)initController;
 - (void)finishIniting;
 - (void)closeController;
 - (NSArray *)paneArray;
+
 @end

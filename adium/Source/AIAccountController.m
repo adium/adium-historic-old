@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.48 2004/01/14 00:56:24 adamiser Exp $
+// $Id: AIAccountController.m,v 1.49 2004/01/14 19:02:30 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -620,7 +620,6 @@
     [AIKeychain removePasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount UIDAndServiceID]]
 											 account:[inAccount UIDAndServiceID]];
 }
-
 
 @end
 

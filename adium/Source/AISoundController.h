@@ -13,26 +13,52 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//typedef enum {
-//    SOUND_TEST = -1, SOUND_SIGNED_OFF, SOUND_SIGNED_ON, SOUND_IM_RECEIVE, SOUND_IM_RECEIVE_FIRST, SOUND_IM_SEND, SOUND_IM_STRANGER
-//    SOUND_SIGNED_ON, SOUND_SIGNED_OFF, SOUND_IM_SEND, SOUND_IM_RECEIVE, SOUND_IM_RECEIVE_FIRST, SOUND_IM_STRANGER, SOUND_CHAT_SEND, SOUND_CHAT_RECEIVE
-//} SoundType;
+//Sound Controller
+#define	KEY_SOUND_SET					@"Set"
+#define	KEY_SOUND_SET_CONTENTS			@"Sounds"
+#define KEY_SOUND_MUTE					@"Mute Sounds"
+#define KEY_SOUND_TEMPORARY_MUTE		@"Mute Sounds Temporarily"
+#define KEY_SOUND_USE_CUSTOM_VOLUME		@"Use Custom Volume"
+#define KEY_SOUND_CUSTOM_VOLUME_LEVEL	@"Custom Volume Level"
 
-//@class AIAway;
+@interface AISoundController : NSObject {
+    IBOutlet	AIAdium		*owner;
+	
+    NSMutableDictionary	*soundCacheDict;
+    NSMutableArray		*soundCacheArray;
+    BOOL				useCustomVolume;
+    BOOL				muteSounds;
+    int					customVolume;
+	
+    int					activeSoundThreads;
+    BOOL				soundThreadActive;
+	
+    NSLock				*soundLock;
+	
+    NSMutableArray 		*speechArray;
+    NSArray				*voiceArray;
+    BOOL				resetNextTime;
+    BOOL				speaking;
+    int                 defaultRate;
+    int                 defaultPitch;
 
-@interface AISoundController (INTERNAL)
+    SUSpeaker			*speaker_variableVoice;
+    SUSpeaker			*speaker_defaultVoice;    
+}
 
+//Sounds
+- (void)playSoundNamed:(NSString *)inName;
+- (void)playSoundAtPath:(NSString *)inPath;
+- (NSArray *)soundSetArray;
+- (void)speakText:(NSString *)text;
+- (void)speakText:(NSString *)text withVoice:(NSString *)voiceString andPitch:(float)pitch andRate:(int)rate;
+- (NSArray *)voices;
+- (int)defaultRate;
+- (int)defaultPitch;
+
+//Private
 - (void)initController;
 - (void)closeController;
 
-// These methods are for internal Adium use only.  The public interface is in Adium.h.
-
-//+ (AISound *)sharedInstance;
-//- (void)soundIdle:(NSTimer *)timer;
-//- (void)playSound:(SoundType)soundID;
-//- (void)playSound:(NSString *)fileName custom:(BOOL)custom volume:(int)soundVolume;
-
-//private
-//- (id)init;
-
 @end
+

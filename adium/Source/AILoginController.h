@@ -13,12 +13,27 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#define LOGIN_PREFERENCES_FILE_NAME 	@"Login Preferences"	//Login preferences file name
-#define LOGIN_HIDE_WINDOW 		@"Hide Login Window"	//Should hide the login window 
-#define LOGIN_LAST_USER			@"Last Login Name"	//Last logged in user
+#define LOGIN_PREFERENCES_FILE_NAME @"Login Preferences"	//Login preferences file name
+#define LOGIN_HIDE_WINDOW 			@"Hide Login Window"	//Should hide the login window 
+#define LOGIN_LAST_USER				@"Last Login Name"		//Last logged in user
 
-@interface AILoginController (INTERNAL) 
-// These methods are for internal Adium use only.  The public interface is in Adium.h.
+@class AILoginWindowController;
+
+@interface AILoginController : NSObject{
+    IBOutlet	AIAdium			*owner;
+    
+    NSString					*currentUser;			//The current logged in username
+    NSString					*userDirectory;			//The current user's Adium home directory
+    AILoginWindowController		*loginWindowController;	//The login select window
+    id							target;					//Used to send our owner a 'login complete'
+    SEL							selector;				//
+}
+
+- (NSString *)userDirectory;
+- (NSString *)currentUser;
+- (void)switchUsers;
+
+//Private
 - (void)initController;
 - (void)closeController;
 - (void)requestUserNotifyingTarget:(id)inTarget selector:(SEL)inSelector;
@@ -27,4 +42,5 @@
 - (void)addUser:(NSString *)inUserName;
 - (void)renameUser:(NSString *)oldName to:(NSString *)newName;
 - (void)loginAsUser:(NSString *)userName;
+
 @end

@@ -13,10 +13,142 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface AIInterfaceController (INTERNAL)
-// These methods are for internal Adium use only.  The public interface is in Adium.h.
+#define Interface_ContactSelectionChanged			@"Interface_ContactSelectionChanged"
+#define Interface_SendEnteredMessage				@"Interface_SendEnteredMessage"
+#define Interface_WillSendEnteredMessage 			@"Interface_WillSendEnteredMessage"
+#define Interface_DidSendEnteredMessage				@"Interface_DidSendEnteredMessage"
+#define Interface_ErrorMessageReceived				@"Interface_ErrorMessageRecieved"
+#define Interface_ContactListDidBecomeMain			@"Interface_ContactListDidBecomeMain"
+#define Interface_ContactListDidResignMain			@"Interface_contactListDidResignMain"
+#define AIViewDesiredSizeDidChangeNotification		@"AIViewDesiredSizeDidChangeNotification"
+
+//Sends Interface_ViewDesiredSizeDidChange notifications
+@protocol AIAutoSizingView 
+- (NSSize)desiredSize;
+@end
+
+//Controls a contact list view
+@protocol AIContactListViewController <NSObject>	
+- (NSView *)contactListView;
+@end
+
+@protocol AIMessageViewController <NSObject>
+- (NSView *)messageView;
+@end
+
+//Manages contact list view controllers
+@protocol AIContactListViewPlugin <NSObject>	
+- (id <AIContactListViewController>)contactListViewController;
+@end
+
+//manages message view controllers
+@protocol AIMessageViewPlugin <NSObject>	
+- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
+@end
+
+
+
+@protocol AIContactListTooltipEntry <NSObject>
+- (NSString *)labelForObject:(AIListObject *)inObject;
+- (NSAttributedString *)entryForObject:(AIListObject *)inObject;
+@end
+
+@protocol AIFlashObserver <NSObject>
+- (void)flash:(int)value;
+@end
+
+//Handles any attributed text entry
+@protocol AITextEntryView 
+- (NSAttributedString *)attributedString;
+- (void)setAttributedString:(NSAttributedString *)inAttributedString;
+- (void)setTypingAttributes:(NSDictionary *)attrs;
+- (BOOL)availableForSending;
+- (AIChat *)chat;
+@end
+
+@protocol AIInterfaceController <NSObject>
+- (void)openInterface;
+- (void)closeInterface;
+- (void)initiateNewMessage;
+- (void)openChat:(AIChat *)inChat;
+- (void)closeChat:(AIChat *)inChat;
+- (void)setActiveChat:(AIChat *)inChat;
+- (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows;
+@end
+
+@interface AIInterfaceController : NSObject {
+    IBOutlet	AIAdium			*owner;
+	
+    IBOutlet	NSMenuItem		*menuItem_paste;
+    IBOutlet	NSMenuItem		*menuItem_pasteFormatted;
+    
+    IBOutlet    NSMenuItem      *menuItem_bold;
+    IBOutlet    NSMenuItem      *menuItem_italic;
+	
+    NSMutableArray				*contactListViewArray;
+    NSMutableArray				*messageViewArray;
+    NSMutableArray				*interfaceArray;
+    NSMutableArray				*contactListTooltipEntryArray;
+    NSMutableArray              *contactListTooltipSecondaryEntryArray;
+    float                       maxLabelWidth;
+    
+    NSMutableArray				*flashObserverArray;
+    NSTimer						*flashTimer;
+    int							flashState;
+    AIListObject				*tooltipListObject;
+    NSMutableAttributedString   *tooltipBody;
+    NSMutableAttributedString   *tooltipTitle;
+    NSImage                     *tooltipImage;
+	
+    NSString					*errorTitle;
+    NSString					*errorDesc;
+	
+}
+
+//Interface controllers
+- (void)registerInterfaceController:(id <AIInterfaceController>)inController;
+
+//Contact list views
+- (void)registerContactListViewPlugin:(id <AIContactListViewPlugin>)inPlugin;
+- (id <AIContactListViewController>)contactListViewController;
+
+//Message views
+- (void)registerMessageViewPlugin:(id <AIMessageViewPlugin>)inPlugin;
+- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
+
+//Messaging
+- (IBAction)initiateMessage:(id)sender;
+- (void)openChat:(AIChat *)inChat;
+- (void)closeChat:(AIChat *)inChat;
+- (void)setActiveChat:(AIChat *)inChat;
+
+//Error messages
+- (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;
+- (void)handleMessage:(NSString *)inTitle withDescription:(NSString *)inDesc withWindowTitle:(NSString *)inWindowTitle;
+
+//Flash Syncing
+- (void)registerFlashObserver:(id <AIFlashObserver>)inObserver;
+- (void)unregisterFlashObserver:(id <AIFlashObserver>)inObserver;
+- (int)flashState;
+
+//Tooltips
+- (void)showTooltipForListObject:(AIListObject *)object atPoint:(NSPoint)point;
+- (void)registerContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry secondaryEntry:(BOOL)isSecondary;
+
+//Custom pasting
+- (IBAction)paste:(id)sender;
+- (IBAction)pasteFormatted:(id)sender;
+
+//Custom font menus
+- (IBAction)toggleFontTrait:(id)sender;
+
+//Activation
+- (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows;
+
+//Private
 - (void)initController;
 - (void)closeController;
 - (void)finishIniting;
 
 @end
+

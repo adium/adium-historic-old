@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#import "AIPreferenceController.h"
+
 @class AIPreferencePane;
 
 @interface NSObject(AIPreferencePaneDelegate)   //Will be removed, transition only
@@ -28,13 +30,13 @@
     IBOutlet	NSView			*view_containerSubView; //Will be removed, transition only
     IBOutlet	NSTextField		*textField_title;       //Will be removed, transition only 
 
-    id				delegate;           //Will be removed, transition only
-    PREFERENCE_CATEGORY		category;           //Will be removed, transition only
+    id					delegate;           //Will be removed, transition only
+    PREFERENCE_CATEGORY category;           //Will be removed, transition only
     NSString			*label;             //Will be removed, transition only
-    NSView			*preferenceView;    //Will be removed, transition only
-    BOOL                        isUpdated;          //Will be removed, transition only
+    NSView				*preferenceView;    //Will be removed, transition only
+    BOOL				isUpdated;          //Will be removed, transition only
     
-    IBOutlet    NSView                  *view;
+    IBOutlet    NSView  *view;
 }
 
 + (AIPreferencePane *)preferencePane;
