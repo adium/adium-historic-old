@@ -2,7 +2,7 @@
 				-----------------------
 
 Version 0.62 (7/06/2004)
-- Added many additional custom options for status sorting
+- Added many additional options for custom status sorting
 - Added global events for file transfer (request, began, complete, canceled)
 - Added option for systemwide SOCKS4 support in the account preferences
 - Added scripts to the message window contextual menu
@@ -33,6 +33,7 @@ Version 0.62 (7/06/2004)
 - Fixed crash in the dock behavior preferences
 - Fixed open email button on MSN mail notification
 - Fixed an applescript encoding issue
+- Updated Yahoo emoticons
 - Performance improvements
 
 Version 0.61 (6/25/2004)
