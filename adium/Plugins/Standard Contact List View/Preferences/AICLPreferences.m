@@ -226,10 +226,10 @@
 {
     //Disable the Show Groups In Bold button if the font doesn't support it
     NSFontManager   *fontManager = [NSFontManager sharedFontManager];
-    NSFont          *contactListFont = [[[adium preferenceController] preferenceForKey:KEY_SCL_FONT group:PREF_GROUP_CONTACT_LIST_DISPLAY] representedFont]; 
-    BOOL            canNotBeBold = (contactListFont == [fontManager convertFont:[fontManager convertFont:contactListFont toHaveTrait:NSUnBoldFontMask] toHaveTrait:NSBoldFontMask]);
-    
-    if(contactListFont && canNotBeBold)
+    NSFont          *contactListFont = [[[adium preferenceController] preferenceForKey:KEY_SCL_FONT group:PREF_GROUP_CONTACT_LIST_DISPLAY] representedFont];
+    BOOL            canNotBeBold = ((contactListFont == [fontManager convertFont:contactListFont toHaveTrait:NSBoldFontMask]) && (contactListFont == [fontManager convertFont:contactListFont toHaveTrait:NSUnboldFontMask]));
+        
+    if(contactListFont)
     {
         [textField_noBoldWarning setStringValue:[NSString stringWithFormat:@"Warning: %@ does not have a bold variant.", [contactListFont fontName]]];
         [checkBox_boldGroups setEnabled:!canNotBeBold];
