@@ -46,7 +46,6 @@
 
 - (IBAction)changePosition:(id)sender
 {
-    //NSLog(@"%d", [popUp_position indexOfSelectedItem]);
     [[owner preferenceController] setPreference: [NSNumber numberWithInt: [popUp_position indexOfSelectedItem]]
                                          forKey: KEY_EVENT_BEZEL_POSITION
                                           group: PREF_GROUP_EVENT_BEZEL];
@@ -131,6 +130,14 @@
                                           group: PREF_GROUP_EVENT_BEZEL];
 }
 
+- (IBAction)changeSize:(id)sender
+{
+    [[owner preferenceController] setPreference: [NSNumber numberWithInt: [popUp_size indexOfSelectedItem]]
+                                         forKey: KEY_EVENT_BEZEL_SIZE
+                                          group: PREF_GROUP_EVENT_BEZEL];
+}
+
+
 //Configure the preference view
 - (void)viewDidLoad
 {
@@ -153,6 +160,8 @@
     [checkBox_imageBadges setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IMAGE_BADGES] boolValue]];
     [checkBox_colorLabels setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_COLOR_LABELS] boolValue]];
     [checkBox_nameLabels setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_NAME_LABELS] boolValue]];
+    
+    [popUp_size selectItemAtIndex: [[preferenceDict objectForKey: KEY_EVENT_BEZEL_SIZE] intValue]];
     
     // Enable or disable checkboxes based on the "show bezel" checkbox
     [checkBox_online setEnabled: [checkBox_showBezel state]];
