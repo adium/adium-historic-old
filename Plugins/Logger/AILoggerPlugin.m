@@ -292,7 +292,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 				[AIHTMLDecoder encodeHTML:message
 								  headers:NO 
 								 fontTags:NO 
-					   includingColorTags:YES
+					   includingColorTags:NO
 							closeFontTags:NO 
 								styleTags:YES
 			   closeStyleTagsOnFontChange:YES
