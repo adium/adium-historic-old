@@ -53,6 +53,12 @@
 
     //Selecting
     int					selectedRow;		//The currently selected row
+    int					selection_startIndex;
+    int					selection_startRow;
+    int					selection_startColumn;
+    int					selection_endIndex;
+    int					selection_endRow;
+    int					selection_endColumn;
     
     //Editing
     NSTextView			*editor;

@@ -120,6 +120,26 @@
     return(nil);
 }
 
+//Selecting ----------------------------------------------------------------------------
+//Returns a character index within this cell for the specified point
+- (int)characterIndexAtPoint:(NSPoint)point
+{
+    return(0); //Return 0 since we don't contain text
+}
+
+//Sets this cell's selection to the proposed index
+- (BOOL)selectFrom:(int)sourceIndex to:(int)destIndex
+{
+    //Return NO - passing the selection to the next view
+    return(NO);
+}
+
+//
+- (NSAttributedString *)stringFromIndex:(int)sourceIndex to:(int)destIndex
+{
+    return(nil);
+}
+
 
 //Sizing ------------------------------------------------------------------------------
 //Returns the size required to display this cell without wrapping

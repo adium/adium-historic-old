@@ -93,6 +93,17 @@
     return(cellArray);
 }
 
+//Return a specific cell
+- (AIFlexibleTableCell *)cellAtIndex:(int)index
+{
+    if(index >= 0 && index < [cellArray count]){
+        return([cellArray objectAtIndex:index]);
+    }else{
+        return(nil);
+    }
+}
+
+
 
 //A column with flexible width stretches to fill any available space in the view
 - (void)setFlexibleWidth:(BOOL)inFlexible

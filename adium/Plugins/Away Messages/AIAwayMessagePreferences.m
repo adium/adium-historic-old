@@ -35,7 +35,7 @@
 
 - (IBAction)newAwayMessage:(id)sender
 {
-    NSAttributedString	*newAway = [[[NSAttributedString alloc] initWithString:AWAY_NEW_MESSAGE_STRING attributes:[NSDictionary dictionaryWithObjectsAndKeys:nil]] autorelease];    
+    NSAttributedString	*newAway = [[[NSAttributedString alloc] initWithString:AWAY_NEW_MESSAGE_STRING attributes:[NSDictionary dictionaryWithObjectsAndKeys:nil]] autorelease];
 
     //Add the new away
     [awayMessageArray addObject:newAway];

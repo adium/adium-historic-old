@@ -47,6 +47,11 @@
 - (void)editAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn inView:(NSView *)controlView;
 - (id <NSCopying>)endEditing;
 
+//Selection
+- (int)characterIndexAtPoint:(NSPoint)point;
+- (BOOL)selectFrom:(int)sourceIndex to:(int)destIndex;
+- (NSAttributedString *)stringFromIndex:(int)sourceIndex to:(int)destIndex;
+
 //Sizing
 - (NSSize)cellSize;
 - (void)sizeCellForWidth:(float)inWidth;

@@ -18,6 +18,8 @@
 }
 
 - (NSArray *)cellArray;
+- (AIFlexibleTableCell *)cellAtIndex:(int)index;
+
 - (BOOL)addCell:(AIFlexibleTableCell *)inCell forRow:(int)inRow;
 - (BOOL)removeCellAtRow:(int)inRow;
 - (void)removeAllCells;
@@ -27,5 +29,6 @@
 
 - (void)setFlexibleWidth:(BOOL)inFlexible;
 - (BOOL)flexibleWidth;
+
 
 @end
