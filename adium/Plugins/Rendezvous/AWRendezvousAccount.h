@@ -30,4 +30,6 @@
     NSMutableDictionary	*libezvContacts;
 }
 
+- (void)setAccountIdleTo:(NSDate *)idle;
+
 @end

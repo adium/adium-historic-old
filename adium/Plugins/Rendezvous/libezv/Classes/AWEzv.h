@@ -3,7 +3,7 @@
  * File:        AWEzv.h
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzv.h,v 1.1 2004/05/15 18:47:08 evands Exp $
+ * CVS tag:     $Id: AWEzv.h,v 1.2 2004/05/16 16:07:01 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -45,6 +45,7 @@
     
     NSString *name;
     AWEzvStatus status;
+    NSDate *idleTime;
 }
 
 - initWithClient:(id <AWEzvClientProtocol, NSObject>)newClient;
@@ -56,6 +57,7 @@
 - (void) sendTypeAhead:(NSString *)message to:(NSString *)contact withHtml:(NSString *)html;
 - (void) setName:(NSString *)name;
 - (void) setStatus:(AWEzvStatus)status withMessage:(NSString *)message;
+- (void) setIdleTime:(NSDate *)date;
 - (void) setContactImage:(NSImage *)contactImage;
 - (AWEzvContact *)contactForIdentifier:(NSString *)uniqueID;
 
