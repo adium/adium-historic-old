@@ -21,6 +21,9 @@
 
 @implementation SHCaminoBookmarksImporter
 
+static NSMenu   *bookmarksMenu;
+static NSMenu   *bookmarksSupermenu;
+
 -(NSMenu *)parseBookmarksForOwner:(id)inObject
 {
     owner = inObject;
@@ -39,7 +42,7 @@
     bookmarksSupermenu = bookmarksMenu;
     [self drillPropertyList:bookmarkDict];
     
-    return [bookmarksMenu retain];
+    return bookmarksMenu;
 }
 
 -(BOOL)bookmarksExist
@@ -78,14 +81,14 @@
             }else{
                 // if outObject is a list, then get the array it contains, then push the menu down.
                 bookmarksSupermenu = bookmarksMenu;
-                bookmarksMenu = [[[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:CAMINO_DICT_FOLDER_KEY]] autorelease];
+                bookmarksMenu = [[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:CAMINO_DICT_TITLE_KEY]];
                 
-                NSMenuItem *caminoSubMenuItem = [[[NSMenuItem alloc] initWithTitle:[bookmarksMenu title]
+                NSMenuItem *caminoSubmenuItem = [[NSMenuItem alloc] initWithTitle:[bookmarksMenu title]
                                                                             target:owner
                                                                             action:nil
-                                                                     keyEquivalent:@""] autorelease];
-                [bookmarksSupermenu addItem:[caminoSubMenuItem retain]];
-                [bookmarksSupermenu setSubmenu:[bookmarksMenu retain] forItem:caminoSubMenuItem];
+                                                                     keyEquivalent:@""];
+                [bookmarksSupermenu addItem:[caminoSubmenuItem retain]];
+                [bookmarksSupermenu setSubmenu:[bookmarksMenu retain] forItem:caminoSubmenuItem];
                 [self drillPropertyList:outObject];
             }
         }

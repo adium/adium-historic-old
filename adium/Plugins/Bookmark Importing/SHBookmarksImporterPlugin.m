@@ -28,7 +28,7 @@ static NSMenu       *bookmarkSets;
     importerArray = [[[NSMutableArray alloc] init] autorelease];
     
     [self installImporterClass:[SHSafariBookmarksImporter class]];
-    //[self installImporterClass:[SHCaminoBookmarksImporter class]];
+    [self installImporterClass:[SHCaminoBookmarksImporter class]];
                                                          
     bookmarkRootMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
                                                        target:self
@@ -96,17 +96,11 @@ static NSMenu       *bookmarkSets;
 {
     id <SHBookmarkImporter> importer = [menuItem representedObject];
     return [[importer parseBookmarksForOwner:self] retain];
-    //[menuItem setSubmenu:importerMenu];
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-//	if([[menuItem representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
-//            if([[menuItem representedObject] bookmarksUpdated]){
-//                [self buildBookmarkMenuFor:menuItem];
-//            }
-//        }
 
         if([[[bookmarkRootMenuItem submenu] itemArray] count]){
             NSEnumerator *enumerator = [[[bookmarkRootMenuItem submenu] itemArray] objectEnumerator];
@@ -125,13 +119,6 @@ static NSMenu       *bookmarkSets;
                     }
                 }
             }
-//            if(newMenu){
-//                [[bookmarkRootMenuItem submenu] removeAllItems];
-//                [[bookmarkRootContextualMenuItem submenu] removeAllItems]; 
-//                
-//                [bookmarkRootMenuItem setSubmenu:newMenu];
-//                [bookmarkRootContextualMenuItem setSubmenu:[[newMenu copy] autorelease]];
-//            }
         }else{
             return NO;
         }

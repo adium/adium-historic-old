@@ -106,11 +106,6 @@ static NSMenu   *bookmarksSupermenu;
     }
 }
 
-//-(void)clearAllItems
-//{
-//    bookmarksMenu
-//}
-
 -(void)menuItemFromDict:(NSDictionary *)inDict
 {
     // for convienence, refer to the URIDictionary by it's own variable
