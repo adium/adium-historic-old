@@ -157,7 +157,7 @@
 {
 	if([self drawsBackground]){
 		//BG Color
-		[backgroundColor set];
+		[[self backgroundColor] set];
 		NSRectFill(clipRect);
 		
 		//Image
@@ -252,28 +252,80 @@
 	[self setNeedsDisplay:YES];
 }
 
+- (void)setBackgroundStyle:(AIBackgroundStyle)inBackgroundStyle
+{
+	backgroundStyle = inBackgroundStyle;
+	[self setNeedsDisplay:YES];
+}
+
+//
+- (void)setBackgroundOpacity:(float)opacity
+{
+	backgroundOpacity = opacity;
+	
+	//Reset all our opacity dependent values
+	[_backgroundColorWithOpacity release]; _backgroundColorWithOpacity = nil;
+	[_rowColorWithOpacity release]; _rowColorWithOpacity = nil;
+	
+	//Turn our shadow drawing hack on if they're going to be visible through the transparency
+	[self setUpdateShadowsWhileDrawing:(backgroundOpacity < 0.8)];
+	
+	[self setNeedsDisplay:YES];
+}
+
 - (void)setBackgroundFade:(float)fade
 {
 	backgroundFade = fade;
+	[self setNeedsDisplay:YES];
+}
+- (float)backgroundFade
+{
+	//Factor in opacity
+	return(backgroundFade * backgroundOpacity);
 }
 
+//Background color (Opacity is added into the return automatically)
 - (void)setBackgroundColor:(NSColor *)inColor
 {
 	if(backgroundColor != inColor){
 		[backgroundColor release];
 		backgroundColor = [inColor retain];
+		[_backgroundColorWithOpacity release];
+		_backgroundColorWithOpacity = nil;
 	}
+	[self setNeedsDisplay:YES];
 }
 - (NSColor *)backgroundColor
 {
-	return(backgroundColor);
+	//Factor in opacity
+	if(!_backgroundColorWithOpacity){ 
+		_backgroundColorWithOpacity = [[backgroundColor colorWithAlphaComponent:backgroundOpacity] retain];
+	}
+	
+	return(_backgroundColorWithOpacity);
 }
 
-- (void)setBackgroundStyle:(AIBackgroundStyle)inBackgroundStyle
+//Alternating row color (Opacity is added into the return automatically)
+- (void)setAlternatingRowColor:(NSColor *)color
 {
-	backgroundStyle = inBackgroundStyle;
+	if(rowColor != color){
+		[rowColor release];
+		rowColor = [color retain];
+		[_rowColorWithOpacity release];
+		_rowColorWithOpacity = nil;
+	}
+	
+	[self setNeedsDisplay:YES];
 }
 
+- (NSColor *)alternatingRowColor
+{
+	if(!_rowColorWithOpacity){
+		_rowColorWithOpacity = [[rowColor colorWithAlphaComponent:backgroundOpacity] retain];
+	}
+	
+	return(_rowColorWithOpacity);
+}
 
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview
 {

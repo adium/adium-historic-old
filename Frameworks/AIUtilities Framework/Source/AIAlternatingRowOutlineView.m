@@ -171,7 +171,7 @@
 		NSRectFill(segmentRect); //fillRect: doesn't work here... must behave differently w/ alpha
 		
 		//Draw our grid color
-		[alternatingRowColor set];
+		[[self alternatingRowColor] set];
 		[NSBezierPath fillRect:segmentRect];
 	}
 }
