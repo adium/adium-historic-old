@@ -97,7 +97,11 @@
 
         //Load our icons
         [self _buildIconArray];
-        
+
+        //Observe preference changes
+        [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+        [self preferencesChanged:nil];
+
         //Start animating
         [self _startAnimating];
     }
@@ -141,10 +145,6 @@
 
         [column setDataCell:cell];
     }
-
-    //Observe preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
 }
 
 //Preferences have changed
