@@ -45,7 +45,6 @@
         [self configureControlDimming];
 
     }else if(sender == textField_idleMinutes){
-        NSLog(@"textField_idleMinutes %i",[textField_idleMinutes intValue]);
         [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
                                              forKey:KEY_IDLE_TIME_IDLE_MINUTES
                                               group:PREF_GROUP_IDLE_TIME];

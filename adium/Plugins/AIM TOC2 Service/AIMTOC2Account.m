@@ -812,7 +812,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.81 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.82 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1522,7 +1522,7 @@
 - (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval
 {
     silenceAndDelayBuddyUpdates = YES;
-    NSLog(@"silenceAllBuddyUpdatesForInterval");
+
     [NSTimer scheduledTimerWithTimeInterval:interval
                                      target:self
                                    selector:@selector(_endSilenceAllUpdates)
@@ -1533,7 +1533,6 @@
 //
 - (void)_endSilenceAllUpdates
 {
-    NSLog(@"_endSilenceAllUpdates");
     silenceAndDelayBuddyUpdates = NO;
 }
 

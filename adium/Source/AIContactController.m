@@ -250,7 +250,6 @@
 
     //Handle delayed updates
     if(delayed) [self _addDelayedUpdate];
-    NSLog(@"Status: %@ %@ %i %@", (delayed ? @"(DELAYED)" : @"         "), (silent ? @"(SILENT)" : @"        "), [inModifiedKeys count], [inObject displayName]);
 
     //Let all the observers know the contact has changed
     modifiedAttributeKeys = [NSMutableArray array];
@@ -311,7 +310,6 @@
 - (void)_addDelayedUpdate
 {
     if(!delayedUpdateTimer){
-        NSLog(@"  -- Delayed Start -- ");
         delayedUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:UPDATE_CLUMP_INTERVAL target:self selector:@selector(_performDelayedUpdates:) userInfo:nil repeats:YES] retain];
     }
     delayedUpdates++;
@@ -322,8 +320,6 @@
 {
     //If updates have been delayed, we process them.  If not, we turn off the delayed update timer.
     if(delayedUpdates){
-        NSLog(@"   Flush %i delayed updates ",delayedUpdates);
-
         //Resort and redisplay the entire list at once, to cover any delayed updates
         [self sortListGroup:contactList mode:AISortGroupAndSubGroups];
         [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
@@ -334,8 +330,6 @@
     }else{
         //Disable the delayed update timer (it is no longer needed).
         [delayedUpdateTimer invalidate]; [delayedUpdateTimer release]; delayedUpdateTimer = nil;
-
-        NSLog(@"  -- Delayed End -- ");
     }
 }
 
@@ -522,8 +516,6 @@
 - (void)sortListGroup:(AIListGroup *)inGroup mode:(AISortMode)sortMode
 {
     if(inGroup == nil) inGroup = contactList; //Passing nil sorts the entire contact list
-
-    NSLog(@"**Sort %@",[inGroup displayName]);
     
     //Sort the group (and subgroups)
     [inGroup sortGroupAndSubGroups:(sortMode == AISortGroupAndSubGroups)
