@@ -4977,7 +4977,6 @@
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
 				OTHER_LDFLAGS = "-seg1addr 0x10100000";
 				PRODUCT_NAME = AIUtilities;
-				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
 			dependencies = (
