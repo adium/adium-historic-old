@@ -256,6 +256,7 @@
 		[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
 		[contactListController updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];
 
+		[contactListController contactListDesiredSizeChanged];
 	}
 	
 	//Theme
