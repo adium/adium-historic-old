@@ -125,9 +125,9 @@ int HTMLEquivalentForFontSize(int fontSize);
 
         //underline
         if(currentUnderline && !underline){
-            [string appendString:@"</I>"];
+            [string appendString:@"</U>"];
         }else if(!currentUnderline && underline){
-            [string appendString:@"<I>"];
+            [string appendString:@"<U>"];
         }
 /*                
                 currentUnderline = underline;
