@@ -71,6 +71,7 @@ typedef enum {
 @end
 
 @interface NSObject (ESTextAndButtonsTarget)
-- (void)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo;
+//Return YES to let the window close; NO not to let it close
+- (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo;
 @end
 

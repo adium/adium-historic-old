@@ -138,7 +138,7 @@
 			//Notify the target that the window closed with no response
 			[target textAndButtonsWindowDidEnd:[self window]
 									returnCode:AITextAndButtonsClosedWithoutResponse
-									  userInfo:userInfo];		
+									  userInfo:userInfo];
 		}else{
 			//Don't allow the close
 			NSBeep();
@@ -162,6 +162,9 @@
 	[super windowWillClose:sender];
 	
 	[self autorelease];
+	
+	//Release our target immediately to avoid a potential mutual retain (if the target is retaining us)
+	[target release]; target = nil;
 }
 
 /*!
@@ -237,15 +240,15 @@
 	}
 	
 	//Set the default button
-	[button_default setTitle:(defaultButton ? defaultButton : AILocalizedString(@"OK",nil))];
+	[button_default setLocalizedString:(defaultButton ? defaultButton : AILocalizedString(@"OK",nil))];
 
 	//Set the alternate button if we were provided one, otherwise hide it
 	if(alternateButton){
-		[button_alternate setTitle:alternateButton];
+		[button_alternate setLocalizedString:alternateButton];
 
 		//Set the other button if we were provided one, otherwise hide it
 		if(otherButton){
-			[button_other setTitle:otherButton];
+			[button_other setLocalizedString:otherButton];
 
 		}else{
 			if([button_other respondsToSelector:@selector(setHidden:)]){
@@ -279,12 +282,13 @@
 		returnCode = AITextAndButtonsClosedWithoutResponse;
 
 	//Notify the target
-	[target textAndButtonsWindowDidEnd:[self window]
-							returnCode:returnCode
-							  userInfo:userInfo];
-
-	//Close the window
-	[[self window] close];
+	if([target textAndButtonsWindowDidEnd:[self window]
+							   returnCode:returnCode
+								 userInfo:userInfo]){
+		
+		//Close the window if the target returns YES
+		[[self window] close];
+	}
 }
 
 
@@ -293,11 +297,11 @@
 {
 	[title release];
 	[defaultButton release];
+	[target release];
 	[alternateButton release];
 	[otherButton release];
 	[messageHeader release];
 	[message release];
-	[target release];
 	[userInfo release];
 	
 	[super dealloc];
