@@ -148,29 +148,10 @@ static AIInfoWindowController *sharedInstance = nil;
     //Signon Date
     NSDate *signonDate = [[inContact statusArrayForKey:@"Signon Date"] earliestDate];
     if(signonDate){
-        //        [infoString appendString:@"\r\r\tOnline Since:\t" withAttributes:labelAttributes];
-        //        [infoString appendString:[signonDate description] withAttributes:valueAttributes];
         [infoString appendString:@"\r\r\tOnline For:\t" withAttributes:labelAttributes];
-        double seconds = [[NSDate date] timeIntervalSinceDate:signonDate];
-        int days = 0, hours = 0, minutes = 0; 
-        days = (int)(seconds / 86400);
-        seconds -= days * 86400;
-        if (seconds) {
-            hours = (int)(seconds / 3600);
-            seconds -= hours * 3600;
-        }
-        if (seconds) {
-            minutes = (int)(seconds / 60);
-            seconds -= minutes * 60;
-        }
-        if (days)
-            [infoString appendString:[NSString stringWithFormat:@"%i day%@ ",days,days==1 ? @"":@"s"]  withAttributes:valueAttributes];
-        if (hours)
-            [infoString appendString:[NSString stringWithFormat:@"%i hour%@ ",hours,hours==1 ? @"":@"s"]  withAttributes:valueAttributes];
-        if (minutes)
-            [infoString appendString:[NSString stringWithFormat:@"%i minute%@ ",minutes,minutes==1 ? @"":@"s"]  withAttributes:valueAttributes];
-        if (seconds)
-            [infoString appendString:[NSString stringWithFormat:@"%i second%@ ",(int)seconds,seconds==1 ? @"":@"s"]  withAttributes:valueAttributes];
+        [infoString appendString:[NSDateFormatter stringForTimeIntervalSinceDate:signonDate] withAttributes:valueAttributes];
+        [infoString appendString:@"\r\tOnline Since:\t" withAttributes:labelAttributes];
+        [infoString appendString:[signonDate description] withAttributes:valueAttributes];
     }
     
     //Online
