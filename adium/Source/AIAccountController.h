@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.17 $
- * $Date: 2004/03/25 00:38:21 $
- * $Author: evands $
+ * $Revision: 1.18 $
+ * $Date: 2004/04/21 15:47:18 $
+ * $Author: adamiser $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
@@ -68,7 +68,7 @@
 //Preferred Source Accounts 
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
 - (NSMenu *)menuOfAccountsWithTarget:(id)target;
-- (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject withTarget:(id)target;	
+- (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject withTarget:(id)target includeOffline:(BOOL)includeOffline;
 
 //Connection convenience methods
 - (void)autoConnectAccounts;
