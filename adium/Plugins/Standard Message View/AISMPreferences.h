@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+@class JVFontPreviewField;
+
 @interface AISMPreferences : AIPreferencePane {
 
     IBOutlet    NSButton        *checkBox_showUserIcons;
