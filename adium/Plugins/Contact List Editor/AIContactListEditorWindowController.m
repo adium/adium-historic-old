@@ -23,10 +23,11 @@
 #import "AIEditorListGroup.h"
 #import "AIEditorListHandle.h"
 #import "AIEditorCollection.h"
+#import "AIEditorAccountCollection.h"
 
 #define CONTACT_LIST_EDITOR_NIB			@"ContactListEditorWindow"
 #define	HANDLE_DELETE_KEY			@"Handles"
-#define	PREF_GROUP_DELETE_KEY			@"Groups"
+#define	GROUP_DELETE_KEY			@"Groups"
 #define KEY_CONTACT_LIST_EDITOR_WINDOW_FRAME	@"Contact List Editor Frame"
 
 @interface AIContactListEditorWindowController (PRIVATE)
@@ -89,7 +90,6 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [super initWithWindowNibName:windowNibName owner:self];
     
     //Install observers
-    [[owner notificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_StatusChanged object:nil];
 
@@ -183,13 +183,6 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [self generateCollectionsArray];
 }
 
-//Notified when the contact list changes
-- (void)contactListChanged:(NSNotification *)notification
-{
-    //Redisplay
-    [self generateCollectionsArray];
-}
-
 
 // Collections table view
 // --------------------------------------------------
@@ -198,7 +191,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 {
     NSEnumerator	*accountEnumerator;
     AIAccount		*account;
-        
+
     //Create the array
     [collectionsArray release];
     collectionsArray = [[NSMutableArray alloc] init];
@@ -206,14 +199,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     //Add a collection for all accounts
     accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
     while((account = [accountEnumerator nextObject])){
-        AIEditorCollection	*collection = [[AIEditorCollection alloc]
-                                                    initWithName:[account accountDescription]
-                                                            icon:[AIImageUtilities imageNamed:@"AllContacts" forClass:[self class]]
-                                                            list:[self editorListGroupForAccount:account]
-                                                        enabled:[(AIAccount<AIAccount_Handles> *)account contactListEditable]
-                                                      forAccount:account];
-        
-        [collectionsArray addObject:collection];
+        [collectionsArray addObject:[AIEditorAccountCollection editorCollectionForAccount:account]];
     }
 
     //Update the selected collection
@@ -239,14 +225,14 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    AIEditorCollection	*collection = [collectionsArray objectAtIndex:row];
+    id <AIEditorCollection>	collection = [collectionsArray objectAtIndex:row];
 
     return([collection name]);
 }
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row;
 {
-    AIEditorCollection	*collection = [collectionsArray objectAtIndex:row];
+    id <AIEditorCollection>	collection = [collectionsArray objectAtIndex:row];
 
     [cell setEnabled:[collection enabled]];
     [cell setImage:[[collectionsArray objectAtIndex:row] icon]]; //Set the correct account icon
@@ -254,7 +240,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row
 {
-    AIEditorCollection	*collection = [collectionsArray objectAtIndex:row];
+    id <AIEditorCollection>	collection = [collectionsArray objectAtIndex:row];
 
     return([collection enabled]);
 }
@@ -370,19 +356,18 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
     }else{ //HANDLE
         if([identifier compare:@"handle"] == 0){
-            AIAccount		*account = [selectedCollection account];
-//            AIHandle		*handle = [item handle];
-            AIServiceType	*serviceType = [[account service] handleServiceType];
-            
-            //Remove the existing handle
-            if(![item temporary]){
-                [(AIAccount<AIAccount_Handles> *)account removeHandleWithUID:[item UID]];
+            if([item temporary]){
+                //Temporary items have not yet been added to the collection, so we can freely change its UID to the correct/new one before adding it.
+                [item setUID:object];                
+                [selectedCollection addObject:item];
+
+            }else{
+                [selectedCollection renameObject:item to:object];
+                [item setUID:object]; //Rename the object after the collection has had a chance to rename
             }
 
-            //Add a new handle
-            [(AIAccount<AIAccount_Handles> *)account addHandleWithUID:[serviceType filterUID:object]
-                                                          serverGroup:[[(AIEditorListHandle *)item containingGroup] UID]
-                                                            temporary:NO];
+            [[(AIEditorListHandle *)item containingGroup] sort]; //resort the containing group
+            [self refreshContentOutlineView]; //Refresh
 
         }else if([identifier compare:@"alias"] == 0){
             // Set Alias
@@ -449,15 +434,18 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         enumerator = [dragItems objectEnumerator];
         while((object = [enumerator nextObject])){
             if([object isKindOfClass:[AIEditorListHandle class]]){
-                NSString	*handleUID = [[object UID] retain];
-
-                [(AIAccount<AIAccount_Handles> *)[selectedCollection account] removeHandleWithUID:handleUID];
-                [(AIAccount<AIAccount_Handles> *)[selectedCollection account] addHandleWithUID:handleUID serverGroup:[item UID] temporary:NO];
+                [selectedCollection moveObject:object toGroup:item];
+                [object retain];
+                [[object containingGroup] removeObject:object];
+                [item addObject:object];
+                [object release];
             }
         }
     }
 
     [dragItems release]; dragItems = nil;
+    [self refreshContentOutlineView]; //Refresh
+
     return(YES);
 }
 
@@ -488,6 +476,25 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     
 }
 
+
+//Filter keydowns looking for the delete key (to delete the current selection)
+- (void)keyDown:(NSEvent *)theEvent
+{
+    NSString	*charString = [theEvent charactersIgnoringModifiers];
+    unichar	pressedChar = 0;
+
+    //Get the pressed character
+    if([charString length] == 1) pressedChar = [charString characterAtIndex:0];
+    
+    //Check if 'delete' was pressed
+    if(pressedChar == NSDeleteFunctionKey || pressedChar == 127){ //Delete
+        [self delete:nil]; //Delete the selection
+    }else{
+        [super keyDown:theEvent]; //Pass the key event on
+    }
+}
+
+
 //Delete the selection
 - (IBAction)delete:(id)sender
 {
@@ -515,7 +522,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
             [groups addObject:object];
         }
     }
-    contextInfo = [[NSDictionary dictionaryWithObjectsAndKeys:handles, HANDLE_DELETE_KEY, groups, PREF_GROUP_DELETE_KEY, nil] retain];
+    contextInfo = [[NSDictionary dictionaryWithObjectsAndKeys:handles, HANDLE_DELETE_KEY, groups, GROUP_DELETE_KEY, nil] retain];
   
     //confirm for mass amounts of deleting
     if(numGroups != 0 && numHandles > 1){
@@ -537,27 +544,32 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 - (void)concludeDeleteSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     NSDictionary	*targetDict = contextInfo;
-    NSEnumerator 	*enumerator;
-    id			object;
-
-    if(returnCode == NSAlertDefaultReturn){
-        NSArray		*handles = [targetDict objectForKey:HANDLE_DELETE_KEY];
-        NSArray		*groups = [targetDict objectForKey:PREF_GROUP_DELETE_KEY];
     
-        //delete the selected handles first
-        enumerator = [handles objectEnumerator];
-        while(object = [enumerator nextObject]){
-            [(AIAccount<AIAccount_Handles> *)[selectedCollection account] removeHandleWithUID:[object UID]];
+    if(returnCode == NSAlertDefaultReturn){
+        NSEnumerator		*enumerator;
+        AIEditorListObject	*object;
+
+        //Delete all the handles
+        enumerator = [[targetDict objectForKey:HANDLE_DELETE_KEY] objectEnumerator];
+        while((object = [enumerator nextObject])){
+            if(![object temporary]){ //Since temp objects aren't yet in the collecting, we skip this call
+                [selectedCollection deleteObject:object];
+            }
+            [[object containingGroup] removeObject:object];
         }
-        
-        //then delete the selected groups
-        enumerator = [groups objectEnumerator];
-        while(object = [enumerator nextObject]){
-//            [selectedCollection deleteGroup:object];
+
+        //Delete all the groups
+        enumerator = [[targetDict objectForKey:GROUP_DELETE_KEY] objectEnumerator];
+        while((object = [enumerator nextObject])){
+            if(![object temporary]){ //Since temp objects aren't yet in the collecting, we skip this call
+                [selectedCollection deleteObject:object];
+            }
+            [[object containingGroup] removeObject:object];
         }
     }
     
     [targetDict release];
+    [self refreshContentOutlineView]; //Refresh
 }
 
 //Create a new group
@@ -596,7 +608,6 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //Create a new group
 - (IBAction)handle:(id)sender
 {
-    AIAccount		*account;
     AIEditorListHandle	*newHandle;
     int			newRow;
     AIEditorListObject	*selectedItem;
@@ -614,8 +625,8 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     }
 
     //Create the new handle
-    account = [[[owner accountController] accountArray] objectAtIndex:0];
-    newHandle = [[AIEditorListHandle alloc] initWithServiceID:[[[account service] handleServiceType] identifier] UID:@"New Contact" temporary:YES];
+#warning have the collection return a service type
+    newHandle = [[AIEditorListHandle alloc] initWithServiceID:@"TEMP" UID:@"New Contact" temporary:YES];
     [selectedGroup addObject:newHandle];
     [self refreshContentOutlineView];        
 
@@ -629,46 +640,6 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 }
 
 
-// Editor Content
-// --------------------------------------------------
-//Creates and returns the editor list (editor groups and handles) for the specified account
-- (AIEditorListGroup *)editorListGroupForAccount:(AIAccount *)inAccount
-{
-    NSEnumerator	*enumerator;
-    AIHandle		*handle;
-    AIEditorListGroup	*listGroup;
-    NSMutableDictionary	*groupDict;
-
-    //Create the main list group
-    listGroup = [[[AIEditorListGroup alloc] initWithUID:@""] autorelease];
-
-    //Set up a dictionary to hold our subgroups
-    groupDict = [[[NSMutableDictionary alloc] init] autorelease];
-
-    //Process the handles
-    enumerator = [[[(AIAccount<AIAccount_Handles> *)inAccount availableHandles] allValues] objectEnumerator];
-    while((handle = [enumerator nextObject])){
-        NSString		*serverGroup = [handle serverGroup];
-        AIEditorListGroup	*editorGroup;
-        AIEditorListHandle	*editorHandle;
-
-        if(![handle temporary]){
-            //Make sure a group exists for this handle
-            editorGroup = [groupDict objectForKey:serverGroup];
-            if(!editorGroup){
-                editorGroup = [[[AIEditorListGroup alloc] initWithUID:serverGroup] autorelease];
-                [listGroup addObject:editorGroup];
-                [groupDict setObject:editorGroup forKey:serverGroup];
-            }
-    
-            //Create the handle and add it to the group
-            editorHandle = [[[AIEditorListHandle alloc] initWithServiceID:[handle serviceID] UID:[handle UID] temporary:NO] autorelease];
-            [editorGroup addObject:editorHandle];
-        }
-    }
-
-    return(listGroup);
-}
 
 
 // Window toolbar

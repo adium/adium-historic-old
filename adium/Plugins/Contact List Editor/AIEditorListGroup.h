@@ -14,8 +14,10 @@
     BOOL		expanded;
 }
 
+- (id)initWithUID:(NSString *)inUID temporary:(BOOL)inTemporary;
 - (void)addObject:(AIEditorListObject *)inObject;
 - (AIEditorListObject *)objectAtIndex:(unsigned)index;
+- (void)removeObject:(AIEditorListObject *)inObject;
 - (NSEnumerator *)objectEnumerator;
 - (unsigned)count;
 - (void)setExpanded:(BOOL)inExpanded;

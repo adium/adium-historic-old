@@ -11,10 +11,11 @@
 
 @implementation AIEditorListObject
 
-- (id)initWithUID:(NSString *)inUID
+- (id)initWithUID:(NSString *)inUID temporary:(BOOL)inTemporary
 {
     [super init];
 
+    temporary = inTemporary;
     containingGroup = nil;
     UID = [inUID retain];
     
@@ -25,6 +26,11 @@
 {
     return(UID);
 }
+- (void)setUID:(NSString *)inUID
+{
+    [UID release];
+    UID = [inUID retain];
+}
 
 - (void)setContainingGroup:(AIEditorListGroup *)inGroup
 {
@@ -34,6 +40,12 @@
 - (AIEditorListGroup *)containingGroup
 {
     return(containingGroup);
+}
+
+//Temporary = not on the account's list.. for the editor's use only (when creating new)
+- (BOOL)temporary
+{
+    return(temporary);
 }
 
 @end

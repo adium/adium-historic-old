@@ -12,22 +12,11 @@
 
 @implementation AIEditorListHandle
 
-/*- (id)initWithHandle:(AIHandle *)inHandle
-{
-    [super initWithUID:[inHandle UID]];
-
-//    handle = [inHandle retain];
-    serviceID = [[handle serviceID] retain];
-    
-    return(self);
-}*/
-
 - (id)initWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID temporary:(BOOL)inTemporary
 {
-    [super initWithUID:inUID];
+    [super initWithUID:inUID temporary:inTemporary];
 
     serviceID = [inServiceID retain];
-    temporary = inTemporary;
     
     return(self);
 }
@@ -35,12 +24,6 @@
 - (NSString *)serviceID
 {
     return(serviceID);
-}
-
-//Temporary = not on the account's list.. for the editor's use only (when creating new)
-- (BOOL)temporary
-{
-    return(temporary);
 }
 
 @end

@@ -20,6 +20,7 @@
 #define SUB_COLUMN_WIDTH	12		//Width of the account columns
 
 @class AIAdium, AIContactGroup, AIContactObject, AIAlternatingRowOutlineView, AISCLEditHeaderView, AIEditorCollection;
+@protocol AIEditorCollection;
 
 @interface AIContactListEditorWindowController : NSWindowController {
 
@@ -35,7 +36,7 @@
     NSMutableArray		*dragItems;
     
     NSMutableArray		*collectionsArray;
-    AIEditorCollection		*selectedCollection;
+    id <AIEditorCollection>	selectedCollection;
 }
 
 + (id)contactListEditorWindowControllerWithOwner:(id)inOwner;

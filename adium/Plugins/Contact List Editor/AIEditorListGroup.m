@@ -12,9 +12,9 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 @implementation AIEditorListGroup
 
-- (id)initWithUID:(NSString *)inUID
+- (id)initWithUID:(NSString *)inUID temporary:(BOOL)inTemporary
 {
-    [super initWithUID:inUID];
+    [super initWithUID:inUID temporary:inTemporary];
 
     contents = [[NSMutableArray alloc] init];
     expanded = YES;
@@ -27,8 +27,15 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [contents addObject:inObject];
     [inObject setContainingGroup:self];
 
-    //resort
-    [self sort];
+    [self sort]; //resort
+}
+
+- (void)removeObject:(AIEditorListObject *)inObject
+{
+    [contents removeObject:inObject];
+    [inObject setContainingGroup:nil];
+
+    [self sort]; //resort
 }
 
 - (AIEditorListObject *)objectAtIndex:(unsigned)index

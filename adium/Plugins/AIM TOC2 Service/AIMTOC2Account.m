@@ -906,13 +906,13 @@ static char *hash_password(const char * const password);
 - (void)AIM_HandleConfig:(NSString *)message
 {
     NSScanner		*scanner;
-    NSCharacterSet	*endlines = [NSCharacterSet characterSetWithCharactersInString:@"\r\n:"];
+    NSCharacterSet	*endlines = [NSCharacterSet characterSetWithCharactersInString:@"\r\n"];
     NSString		*configString = [message nonBreakingTOCStringArgumentAtIndex:1];
     NSString		*type;
     NSString		*value;
     NSString		*currentGroup = @"__NoGroup?";
     int			index = 0;
-
+    
     //Create a scanner
     scanner = [NSScanner scannerWithString:configString];
     [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
@@ -924,7 +924,14 @@ static char *hash_password(const char * const password);
             //scan the value (the text after the : )
             [scanner scanUpToCharactersFromSet:endlines intoString:&value];
             if([scanner scanCharactersFromSet:endlines intoString:nil]){
-
+                NSRange	invalidRange;
+                
+                //Occasionally the config will have :'s appended to the end of a contact's name.  We strip any :'s from the end of the name value here.
+                invalidRange = [value rangeOfString:@":"];
+                if(invalidRange.location != NSNotFound){
+                    value = [value substringToIndex:invalidRange.location]; //Strip any trailing :'s
+                }
+                
                 //Parse the information
                 if([type compare:@"m"] == 0){
                     NSLog(@"Privacy Mode:%@",value);
@@ -950,7 +957,7 @@ static char *hash_password(const char * const password);
                 }else if([type compare:@"m"] == 0){
                 }else if([type compare:@"done"] == 0){
                 }else{
-                    NSLog(@"Unknown Config Type '%@', value '%@'",type,value);
+                    NSLog(@"Unknown Config Type '%@', value '%@'.",type,value);
                 }
             }
         }
