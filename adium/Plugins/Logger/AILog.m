@@ -77,23 +77,51 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
     return(dateSearchString);
 }
 
-- (NSComparisonResult)compareTo:(AILog *)inLog{
-    return([to caseInsensitiveCompare:[inLog to]]);
+//Sort by To, then Date
+- (NSComparisonResult)compareTo:(AILog *)inLog
+{
+    NSComparisonResult  result = [to caseInsensitiveCompare:[inLog to]];
+    if(result == NSOrderedSame) result = [date compare:[inLog date]];
+
+    return(result);
 }
-- (NSComparisonResult)compareToReverse:(AILog *)inLog{
-    return([[inLog to] caseInsensitiveCompare:to]);
+- (NSComparisonResult)compareToReverse:(AILog *)inLog
+{
+    NSComparisonResult  result = [[inLog to] caseInsensitiveCompare:to];
+    if(result == NSOrderedSame) result = [date compare:[inLog date]];
+
+    return(result);
 }
-- (NSComparisonResult)compareFrom:(AILog *)inLog{
-    return([from caseInsensitiveCompare:[inLog from]]);
+//Sort by From, then Date
+- (NSComparisonResult)compareFrom:(AILog *)inLog
+{
+    NSComparisonResult  result = [from caseInsensitiveCompare:[inLog from]];
+    if(result == NSOrderedSame) result = [date compare:[inLog date]];
+    
+    return(result);
 }
-- (NSComparisonResult)compareFromReverse:(AILog *)inLog{
-    return([[inLog from] caseInsensitiveCompare:from]);
+- (NSComparisonResult)compareFromReverse:(AILog *)inLog
+{
+    NSComparisonResult  result = [[inLog from] caseInsensitiveCompare:from];
+    if(result == NSOrderedSame) result = [date compare:[inLog date]];
+    
+    return(result);
 }
-- (NSComparisonResult)compareDate:(AILog *)inLog{
-    return([date compare:[inLog date]]);
+
+//Sort by Date, then To
+- (NSComparisonResult)compareDate:(AILog *)inLog
+{
+    NSComparisonResult  result = [date compare:[inLog date]];
+    if(result == NSOrderedSame) result = [to caseInsensitiveCompare:[inLog to]];
+    
+    return(result);
 }
-- (NSComparisonResult)compareDateReverse:(AILog *)inLog{
-    return([[inLog date] compare:date]);
+- (NSComparisonResult)compareDateReverse:(AILog *)inLog
+{
+    NSComparisonResult  result = [[inLog date] compare:date];
+    if(result == NSOrderedSame) result = [to caseInsensitiveCompare:[inLog to]];
+    
+    return(result);
 }
 
 //Returns the date specified by a filename

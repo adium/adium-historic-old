@@ -13,11 +13,12 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.h,v 1.6 2003/12/08 05:33:33 jmelloy Exp $ 
+// $Id: AIPreferenceController.h,v 1.7 2003/12/13 16:29:29 adamiser Exp $ 
 
 @interface AIPreferenceController (INTERNAL)
 // These methods are for internal Adium use only.  The public interface is in Adium.h.
 - (void)initController;
+- (void)finishIniting;
 - (void)closeController;
 - (NSArray *)paneArray;
 @end

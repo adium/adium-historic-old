@@ -29,7 +29,7 @@
 - (void)initController
 {
     //Register Defaults
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TOOLBAR_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_TOOLBARS];
+/*    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TOOLBAR_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_TOOLBARS];
     
     NSEnumerator	*enumerator;
     NSString		*key;
@@ -45,13 +45,13 @@
 
             [[AIMiniToolbarCenter defaultCenter] setItems:items forToolbar:identifier];        
         }
-    }
+    }*/
 
     //
     toolbarItems = [[NSMutableDictionary alloc] init];
     
     //Observe
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toolbarItemsChanged:) name:AIMiniToolbar_ItemsChanged object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toolbarItemsChanged:) name:AIMiniToolbar_ItemsChanged object:nil];
     
 }
 
@@ -59,9 +59,9 @@
 - (void)closeController
 {
     //Make sure the toolbar customization palette is closed
-    if([[AIMiniToolbarCenter defaultCenter] customizing:nil]){
+/*    if([[AIMiniToolbarCenter defaultCenter] customizing:nil]){
         [[AIMiniToolbarCenter defaultCenter] endCustomization:nil];
-    }
+    }*/
     
     //Toolbar configurations are saved as changes are made, no need to save them here.
 }
@@ -106,20 +106,15 @@
     return(items);
 }
 
-
-
-
-
-
 //Private --------------------------------------------------------
 //Called when the configuration of a toolbar changes
-- (void)toolbarItemsChanged:(NSNotification *)notification
+/*- (void)toolbarItemsChanged:(NSNotification *)notification
 {
     NSString	*identifier = [notification object];
     NSArray	*toolbarItems = [[AIMiniToolbarCenter defaultCenter] itemsForToolbar:identifier];
 
     //Save the changes
     [[owner preferenceController] setPreference:toolbarItems forKey:[NSString stringWithFormat:@"ToolbarItems_%@",identifier] group:PREF_GROUP_TOOLBARS];
-}
+}*/
 
 @end
