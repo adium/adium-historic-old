@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.82 2004/06/10 22:19:24 adamiser Exp $
+// $Id: AIContentController.m,v 1.83 2004/06/13 18:55:56 evands Exp $
 
 #import "AIContentController.h"
 
@@ -410,7 +410,7 @@
 	enumerator = [chatArray objectEnumerator];
 	while(chat = [enumerator nextObject]){
 		//If a chat for this object already exists
-		if([chat listObject] == inContact) break;
+		if([[chat uniqueChatID] isEqualToString:[inContact uniqueObjectID]]) break;
 		
 		//If this object is within a meta contact, and a chat for and object in that meta contact already exists
 		if([[inContact containingGroup] isKindOfClass:[AIMetaContact class]] && 
@@ -452,23 +452,35 @@
 
 - (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account initialStatus:(NSDictionary *)initialStatus
 {
+	NSEnumerator	*enumerator;
 	AIChat			*chat = nil;
+	NSString		*uniqueChatID;
 	
-	if([account conformsToProtocol:@protocol(AIAccount_Content)]){
-		//Create a new chat
-		chat = [AIChat chatForAccount:account initialStatusDictionary:initialStatus];
-		[chat setName:inName];
-		[chatArray addObject:chat];
+	//Search for an existing chat we can use instead of creating a new one
+	enumerator = [chatArray objectEnumerator];
+	uniqueChatID = [AIChat uniqueChatIDForChatWithName:inName onAccount:account];
+	while(chat = [enumerator nextObject]){
 		
-		//Inform the account of its creation and post a notification if successful
-		if([(AIAccount<AIAccount_Content> *)account openChat:chat]){
-			[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
-		}else{
-			[chatArray removeObject:chat];
-			chat = nil;
-		}
+		//If the chat we want already exists
+		if([[chat uniqueChatID] isEqualToString:uniqueChatID]) break;
 	}
 
+	if (!chat){
+		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
+			//Create a new chat
+			chat = [AIChat chatForAccount:account initialStatusDictionary:initialStatus];
+			[chat setName:inName];
+			[chatArray addObject:chat];
+			
+			//Inform the account of its creation and post a notification if successful
+			if([(AIAccount<AIAccount_Content> *)account openChat:chat]){
+				[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
+			}else{
+				[chatArray removeObject:chat];
+				chat = nil;
+			}
+		}
+	}
 	return(chat);
 }
 
