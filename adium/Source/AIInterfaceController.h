@@ -77,15 +77,15 @@
 @protocol AIInterfaceController <NSObject>
 - (void)openInterface;
 - (void)closeInterface;
-- (id)openChat:(AIChat *)chat inContainerNamed:(NSString *)containerName atIndex:(int)index;
+- (id)openChat:(AIChat *)chat inContainerWithID:(NSString *)containerName atIndex:(int)index;
 - (void)closeChat:(AIChat *)chat;
 - (void)setActiveChat:(AIChat *)inChat;
-- (void)moveChat:(AIChat *)chat toContainerNamed:(NSString *)containerName index:(int)index;
+- (void)moveChat:(AIChat *)chat toContainerWithID:(NSString *)containerID index:(int)index;
 - (NSArray *)openContainersAndChats;
-- (NSArray *)openContainerNames;
+- (NSArray *)openContainers;
 - (NSArray *)openChats;
-- (NSArray *)openChatsInContainerNamed:(NSString *)containerName;
-- (NSString *)containerNameForChat:(AIChat *)chat;
+- (NSArray *)openChatsInContainerWithID:(NSString *)containerID;
+- (NSString *)containerIDForChat:(AIChat *)chat;
 @end
 
 @protocol AIContactListController <NSObject>
@@ -169,9 +169,9 @@
 - (void)closeChat:(AIChat *)inChat;
 - (AIChat *)activeChat;
 - (NSArray *)openChats;
-- (NSArray *)openChatsInContainerNamed:(NSString *)containerName;
+- (NSArray *)openChatsInContainerWithID:(NSString *)containerID;
 - (BOOL)allowChatOrdering;
-- (int)indexForInsertingChat:(AIChat *)chat intoContainerNamed:(NSString *)containerName;
+- (int)indexForInsertingChat:(AIChat *)chat intoContainerWithID:(NSString *)containerID;
 
 //Interface plugin callbacks
 - (void)chatDidOpen:(AIChat *)inChat;

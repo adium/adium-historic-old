@@ -24,7 +24,8 @@
     IBOutlet	NSTabView			*tabView_messages;
     IBOutlet	AICustomTabsView	*tabView_customTabs;
     AIDualWindowInterfacePlugin 	*interface;
-	NSString						*name;
+	NSString						*containerName;
+	NSString						*containerID;
 //	NSMutableArray					*listObjectArray;
 	
 	BOOL			windowIsClosing;
@@ -41,9 +42,12 @@
 	
 }
 
-+ (AIMessageWindowController *)messageWindowControllerForInterface:(AIDualWindowInterfacePlugin *)inInterface withName:(NSString *)inName;
++ (AIMessageWindowController *)messageWindowControllerForInterface:(AIDualWindowInterfacePlugin *)inInterface
+															withID:(NSString *)inContainerID
+															  name:(NSString *)inName;
 - (void)showWindowInFront:(BOOL)inFront;
 - (IBAction)closeWindow:(id)sender;
+- (NSString *)containerID;
 - (NSString *)name;
 
 //Contained Chats

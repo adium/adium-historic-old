@@ -18,7 +18,6 @@
 #define DUAL_INTERFACE_DEFAULT_PREFS		@"DualWindowDefaults"
 #define DUAL_INTERFACE_WINDOW_DEFAULT_PREFS	@"DualWindowMessageDefaults"
 
-
 #define KEY_ALWAYS_CREATE_NEW_WINDOWS 		@"Always Create New Windows"
 //#define KEY_USE_LAST_WINDOW					@"Use Last Window"
 #define KEY_AUTOHIDE_TABBAR					@"Autohide Tab Bar"
@@ -38,7 +37,7 @@
 	BOOL					applicationIsHidden;
 }
 
-- (id)openContainerNamed:(NSString *)containerName;
+- (id)openContainerWithID:(NSString *)containerID name:(NSString *)containerName;
 - (void)closeContainer:(AIMessageWindowController *)container;
 - (void)containerDidClose:(AIMessageWindowController *)container;
 - (void)transferMessageTab:(AIMessageTabViewItem *)tabViewItem toContainer:(id)newMessageWindow atIndex:(int)index withTabBarAtPoint:(NSPoint)screenPoint;
