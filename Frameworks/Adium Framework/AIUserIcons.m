@@ -29,11 +29,13 @@ static NSSize				menuIconCacheSize;
 
 + (void)initialize
 {
-	iconCache = [[NSMutableDictionary alloc] init];
-	menuIconCache = [[NSMutableDictionary alloc] init];
-	menuIconCacheSize = NSMakeSize(16,16);
-
-//	defaultUserIcon = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
+	if(self == [AIUserIcons class]){
+		iconCache = [[NSMutableDictionary alloc] init];
+		menuIconCache = [[NSMutableDictionary alloc] init];
+		menuIconCacheSize = NSMakeSize(16,16);
+		
+		//	defaultUserIcon = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
+	}
 }
 
 //Retrieve a user icon sized for the contact list
