@@ -543,6 +543,17 @@ DeclareString(FormattedUID);
 }
 
 /*!
+ * @brief Is this object connected via a mobile device?
+ *
+ * The default implementation simply returns NO.  Only an AIListContact can be mobile... but a base implementation here
+ * makes code elsewhere much simpler.
+ */
+- (BOOL)isMobile
+{
+	return NO;
+}
+
+/*!
  * @brief Set the current status message
  *
  * @param statusMessage Status message. May be nil.
