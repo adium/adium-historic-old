@@ -13,6 +13,7 @@
     saving)
 - First Message Received triggered multiple times
 - [GaduGadu] Contacts not saving to the server-list
+- [MSN] Outoing chat appears twice with a display name set
 
 //------------------------------------------------------------------------------------
 // Adium X 0.70 remaining issues
@@ -51,8 +52,6 @@
 - Tooltips are not appearing for links in profile text.
 
 - Why oh why doesn't our image picker window remember its position whatsoever?
-
-- [MSN] Outoing chat appears twice with a display name set
 
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
