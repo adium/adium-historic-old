@@ -1,0 +1,28 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIFlexibleTableView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSControl; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AITextForcingPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_setFont" = NSButton; 
+                "checkBox_forceBackgroundColor" = NSButton; 
+                "checkBox_forceFont" = NSButton; 
+                "checkBox_forceTextColor" = NSButton; 
+                "colorWell_backgroundColor" = NSColorWell; 
+                "colorWell_textColor" = NSColorWell; 
+                "textField_desiredFont" = NSTextField; 
+                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

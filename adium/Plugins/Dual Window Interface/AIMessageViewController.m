@@ -236,6 +236,7 @@
         //Create the outgoing text view
         [textView_outgoing setAutoresizingMask:(NSViewWidthSizable)];
         [textView_outgoing setDelegate:self];
+        [textView_outgoing setOwner:owner];
         [textView_outgoing setSendOnEnter:[[[owner preferenceController] preferenceForKey:@"message_send_onEnter" group:PREF_GROUP_GENERAL object:handle] boolValue]];
         [textView_outgoing setSendOnReturn:[[[owner preferenceController] preferenceForKey:@"message_send_onReturn" group:PREF_GROUP_GENERAL object:handle] boolValue]];
         [textView_outgoing setTarget:self action:@selector(sendMessage:)];

@@ -41,6 +41,14 @@
     return(message);
 }
 
+- (void)setMessage:(NSAttributedString *)inMessage{
+    if(message != inMessage){
+        [message release]; //we should probably hold onto the origional content...
+                           //That would allow us to 'refilter' a piece of content to dynamically update the previously displayed messages as preferences are changed... which would be very cool
+        message = [inMessage retain];
+    }
+}
+
 //Message source (may return a contact handle, or an account)
 - (id)source{
     return(source);

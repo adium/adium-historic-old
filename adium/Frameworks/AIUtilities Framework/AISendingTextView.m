@@ -15,6 +15,7 @@
 
 #import "AISendingTextView.h"
 #import "AIDictionaryAdditions.h"
+#import <Adium/Adium.h>
 
 @interface AISendingTextView (PRIVATE)
 - (void)dealloc;
@@ -39,12 +40,24 @@
 
     target = nil;
     selector = nil;
+    handle = nil;
+    owner = nil;
     sendOnReturn = YES;
     sendOnEnter = YES;
     returnArray = [[NSMutableArray alloc] init];
-    [self setDelegate:self];
 
+    //
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:nil];
+    
     return(self);
+}
+
+- (void)setOwner:(id)inOwner
+{
+    if(owner != inOwner){
+        [owner release];
+        owner = [inOwner retain];
+    }
 }
 
 - (void)setSendOnReturn:(BOOL)inBool
@@ -83,6 +96,10 @@
 {
     BOOL insertText = YES;
 
+    //working...
+//    NSLog(@"Insert:\"%@\"",aString);
+//    [[owner contentController] stringAdded:aString toTextEntryView:self];
+
     if([aString length] && [aString characterAtIndex:0] == 10){
         NSParameterAssert([returnArray count] != 0);
 
@@ -105,7 +122,7 @@
 {
     int 	index = 0;
     BOOL 	send;
-
+    
     while(index < [eventArray count]){
         NSEvent		*theEvent = [eventArray objectAtIndex:index];
         unsigned short 	keyCode = [theEvent keyCode];
@@ -152,6 +169,19 @@
     }
 }
 
+- (void)setHandle:(AIContactHandle *)inHandle
+{
+    if(handle != inHandle){
+        [handle release];
+        handle = [inHandle retain];
+    }
+}
+
+- (AIContactHandle *)handle
+{
+    return(handle);
+}
+
 //Handled automatically by our superclasses:
 - (void)setSelectedRange:(NSRange)inRange{
     [super setSelectedRange:inRange];
@@ -160,11 +190,21 @@
     return([super selectedRange]);
 }
 
+- (void)textDidChange:(NSNotification *)notification
+{
+//working...
+//    NSLog(@"did change");
+//    [[owner contentController] contentsChangedInTextEntryView:self];
+}
+
+
 
 
 //Private ------------------------------------------------------------------------------------
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
     [returnArray release]; returnArray = nil;
 //    [target release]; target = nil;
     [super dealloc];

@@ -28,5 +28,6 @@
 - (id)source;
 - (id)destination;
 - (NSDate *)date;
+- (void)setMessage:(NSAttributedString *)inMessage;
 
 @end

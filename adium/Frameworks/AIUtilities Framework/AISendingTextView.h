@@ -15,25 +15,30 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIContactHandle;
+@class AIContactHandle, AIAdium;
 @protocol AITextEntryView;
 
 @interface AISendingTextView : NSTextView <AITextEntryView> {
+    AIAdium		*owner;
+    AIContactHandle	*handle;
+
     BOOL		sendOnEnter;
     BOOL		sendOnReturn;
+    NSMutableArray	*returnArray;
 
     id			target;
     SEL			selector;
 
-    NSMutableArray	*returnArray;
 }
 
 - (id)initWithFrame:(NSRect)frameRect;
+- (void)setOwner:(id)inOwner;
 - (void)setSendOnReturn:(BOOL)inBool;
 - (void)setSendOnEnter:(BOOL)inBool;
 - (void)setTarget:(id)inTarget action:(SEL)inSelector;
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent;
 - (void)insertText:(NSString *)aString;
 - (void)interpretKeyEvents:(NSArray *)eventArray;
+- (void)setHandle:(AIContactHandle *)inHandle;
 
 @end
