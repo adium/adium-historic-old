@@ -10,7 +10,6 @@ Legend
 Bugs
 -------------------------------------------------------------------------------------------------------
 * Create new account, tab from username->pass->account list.  Next tab should go back to username
-* Stop contact list from auto-resizing under the dock - this is a tough area.  It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how wide the dock is; only how tall it is.
 * Don't spawn new windows when we're hidden, doing so will unhide us
 * Window content is drawing 2 pixels to the left when dragging tabs
 * Prevent cmd-delete from working in the message window
@@ -20,9 +19,8 @@ Bugs
 -------------------------------------------------------------------------------------------------------
 Minor Changes
 -------------------------------------------------------------------------------------------------------
-
 Contacts:
-	+ Allow specifying an image for a contact in the inspector (Independent of address book) - this should go with the inspector/Get Info merger...
+	+ Allow specifying an image for a contact in the inspector (Independent of address book)
 	+ Add to buddy list menu item, contextual menu item (for strangers)
 	+ Add area for typing contact notes to inspector, display notes in tooltip
 
@@ -31,11 +29,11 @@ Alerts:
 
 Preferences: 
 	- Remove contact list font preference.  Hook this up to cmd-T
-	+ Move idle time display preference to view menu
 	- Remove the advanced option for vertical resizing, this is already covered in the main preferences.
 	
 Accounts:
 	+ Allow user to cancel connecting of accounts
+	- Remove account
 	+ Auto-complete aliases and address book entries in New message prompt, log viewer
 
 Menu Bar:
@@ -71,7 +69,21 @@ Other:
 -------------------------------------------------------------------------------------------------------
 Big Stuff
 -------------------------------------------------------------------------------------------------------
+Account auto-connect:
+	Remove the 'auto-connect on launch' feature, and instead restore the accounts which were
+	connected on quit the next time Adium is launched.  Add a preference to disable this behavior.
+
+	Steps:
+	- Remove submenus from accounts in the File menu
+	- Make selecting an account in the menu connect / disconnect
+	- Remove auto-connect checkbox from account preferences
+	- Add global 'Restore previously connected accounts on launch' checkbox to account preferences
+	- Clear account's 'online' flag only if the global restore connection option is off
+
+
 Contact alerts:
+	Improve the contact alerts interface, reducing all editing to one window that is easier to use.
+
 (http://homepage.mac.com/adamiser/sortathis6.png)
 	- Remove alerts preference pane
 	- Remove contact menu from alert window
@@ -246,6 +258,14 @@ Downloads Pane
 	+ If the file is an image, show a preview if possible in the message window
 	+ Accept/decline that is not intrusive
 	
+
+
+
+-------------------------------------------------------------------------------------------------------
+Unfixable(?) Issues
+-------------------------------------------------------------------------------------------------------
+* Stop contact list from auto-resizing under the dock
+	Evan: this is a tough area.  It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how wide the dock is; only how tall it is.
 
 
 
