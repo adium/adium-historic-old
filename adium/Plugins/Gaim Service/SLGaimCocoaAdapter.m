@@ -879,12 +879,12 @@ static void *adiumGaimNotifyUri(const char *uri)
 		[[NSWorkspace sharedWorkspace] openURL:notifyURI];
 	}
 
-    return(nil);
+	return(nil);
 }
 
 static void adiumGaimNotifyClose(GaimNotifyType type,void *uiHandle)
 {
-    if (GAIM_DEBUG) NSLog(@"adiumGaimNotifyClose");
+	if (GAIM_DEBUG) NSLog(@"adiumGaimNotifyClose");
 }
 
 static GaimNotifyUiOps adiumGaimNotifyOps = {
