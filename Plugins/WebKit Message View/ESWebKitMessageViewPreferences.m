@@ -434,9 +434,9 @@
 	backgroundColor = [[[adium preferenceController] preferenceForKey:[plugin backgroundColorKeyForStyle:[style name]]
 																group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] representedColor];
 	if (!backgroundColor){
-		backgroundColor = [[style objectForInfoDictionaryKey:[NSString stringWithFormat:@"DefaultBackgroundColor:%@",variant]] hexColor];
+		backgroundColor = [NSColor colorWithHTMLString:[style objectForInfoDictionaryKey:[@"DefaultBackgroundColor:" stringByAppendingString:variant]]];
 		if (!backgroundColor){
-			backgroundColor = [[style objectForInfoDictionaryKey:@"DefaultBackgroundColor"] hexColor];	
+			backgroundColor = [NSColor colorWithHTMLString:[style objectForInfoDictionaryKey:@"DefaultBackgroundColor"]];	
 		}
 	}
 	[colorWell_customBackgroundColor setColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])] ;
