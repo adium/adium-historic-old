@@ -3,7 +3,9 @@
 
 Version 0.61 (6/25/2004)
 - Added support for MSN Buddy Icons
+- Added support for Yahoo! Buddy Icons
 - Added support for MSN File Transfer
+- Added support for idle status for MSN contacts
 - Added status icons to tabs (Replacing the text coloring used previously)
 - Added a toolbar to the message window
 - Removed the 'orphans' group (Adium no longer adds strangers to the contact list)
@@ -16,9 +18,11 @@ Version 0.61 (6/25/2004)
 - Improvements to file transfer
 - Improvements to tooltips
 - Improvements to the 'Add Contact' panel
-- Temporary fix for Yahoo connectivity issues
+- Improvements to formatted message sending via Novell GroupWise
+- Fixed Yahoo! authentication problems (care of Cerulean Studios)
 - Fixed several major connection related issues
-- Fixed issue with jabber presence not displaying on connect
+- Fixed Yahoo! Japan encoding issues
+- Fixed issue with Jabber presence not displaying on connect
 - Fixed issue with recognition of ICQ authorizations
 - Fixed issue with the announcer preferences
 - Fixed issue with encoding on Yahoo! Japan
