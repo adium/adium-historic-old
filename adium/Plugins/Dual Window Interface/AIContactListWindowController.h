@@ -33,6 +33,8 @@
     id <AIContainerInterface>		interface;
     AIAdium				*owner;
 
+    BOOL				autoResizeVertically;
+    BOOL				autoResizeHorizontal;
 }
 
 + (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContainerInterface>)inInterface owner:(id)inOwner;

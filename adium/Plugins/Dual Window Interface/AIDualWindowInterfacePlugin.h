@@ -16,7 +16,12 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@class AIAdium, AIContactListWindowController, AIMessageWindowController, AIMessageViewController;
+#define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
+
+#define KEY_DUAL_RESIZE_VERTICAL	@"Autoresize Vertical"
+#define KEY_DUAL_RESIZE_HORIZONTAL	@"Autoresize Horizontal"
+
+@class AIAdium, AIContactListWindowController, AIMessageWindowController, AIMessageViewController, AIDualWindowPreferences;
 @protocol AIMessageView, AIInterfaceController, AITabHoldingInterface, AIContactListCleanup;
 
 @protocol AIInterfaceContainer <NSObject>
@@ -45,6 +50,8 @@
     //
     AIMessageWindowController		*messageWindowController;
 
+    //
+    AIDualWindowPreferences		*preferenceController;
 }
 
 - (IBAction)showContactList:(id)sender;

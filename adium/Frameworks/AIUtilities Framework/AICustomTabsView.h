@@ -46,7 +46,7 @@
     int			tabXOrigin;
 
     NSPoint		lastClickLocation;
-
+    
     //Delegate
     id <AICustomTabsViewDelegate>	delegate;
 }

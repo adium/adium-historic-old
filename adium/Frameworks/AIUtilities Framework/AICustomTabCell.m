@@ -47,6 +47,11 @@
     selected = inSelected;
 }
 
+- (void)setHighlighted:(BOOL)inHighlighted
+{
+    highlighted = inHighlighted;
+}
+
 //Calculated frame for this cell
 - (void)setFrame:(NSRect)inFrame
 {
@@ -102,7 +107,7 @@
     tabViewItem = [inTabViewItem retain];
     selected = NO;
     dragging = NO;
-    trackingRectTag = 0;
+    trackingTag = 0;
 
     //
     closeButtonRect = NSMakeRect([tabFrontLeft size].width + TAB_CLOSE_LEFTPAD,
@@ -149,7 +154,7 @@
     tabCloseWidth = [tabCloseFront size].width;
     tabBadgeWidth = tabCloseWidth;
 
-    if(selected || depressed){
+    if(selected){
         //Draw left mask
         [tabBackLeft compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y) operation:NSCompositeSourceOver];
 
@@ -183,7 +188,10 @@
     NSColor	*tabColor = [tabViewItem color];
     if(tabColor && !selected){
         [[tabViewItem color] set];
-        [NSBezierPath fillRect:NSMakeRect(rect.origin.x + 2, rect.origin.y, rect.size.width - 3, rect.size.height)];        
+        [NSBezierPath fillRect:NSMakeRect(rect.origin.x + 2, rect.origin.y, rect.size.width - 3, rect.size.height)];
+    }else if(highlighted && !selected){
+        [[NSColor colorWithCalibratedWhite:0.0 alpha:0.08] set];
+        [NSBezierPath fillRect:NSMakeRect(rect.origin.x + 2, rect.origin.y, rect.size.width - 3, rect.size.height)];
     }
     
     //Draw the close widget
@@ -206,6 +214,14 @@
 }
 
 //Mouse tracking / Clicking -------------------------------------------
+- (void)setTrackingTag:(NSTrackingRectTag)inTag{
+    trackingTag = inTag;
+}
+- (NSTrackingRectTag)trackingTag{
+    return(trackingTag);
+}
+
+
 - (BOOL)willTrackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView
 {
     NSPoint	clickLocation = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];

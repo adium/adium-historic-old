@@ -29,6 +29,8 @@
 - (void)_updateDragAtOffset:(int)inOffset;
 - (BOOL)_concludeDrag;
 - (AICustomTabCell *)_cellAtPoint:(NSPoint)clickLocation;
+- (void)_startTrackingCursor;
+- (void)_stopTrackingCursor;
 @end
 
 #define CUSTOM_TABS_FPS		30.0		//Animation speed
@@ -235,8 +237,15 @@
 //Rebuild our tab list to match the tabView
 - (void)tabViewDidChangeNumberOfTabViewItems:(NSTabView *)TabView
 {
+    //Stop cursor tracking
+    [self _stopTrackingCursor];
+    
+    //Rebuild cells
     [self rebuildCells];
 
+    //Start cursor tracking
+    [self _startTrackingCursor];
+    
     //Inform our delegate
     if([delegate respondsToSelector:@selector(customTabViewDidChangeNumberOfTabViewItems:)]){
         [delegate customTabViewDidChangeNumberOfTabViewItems:self];
@@ -271,6 +280,62 @@
 
     return(totalWidth);
 }
+
+
+//Cursor Tracking -----------------------------------------------------------------------
+- (void)resetCursorRects
+{
+    //Reset our cursor rects
+    [self _stopTrackingCursor];
+    [self _startTrackingCursor];
+}
+
+- (void)_startTrackingCursor
+{
+    //Track only if we're within a valid window
+    if([self window]){
+        NSEnumerator		*enumerator;
+        AICustomTabCell		*tabCell;
+        NSTrackingRectTag	trackingTag;
+
+        //Install a tracking rect for each open tab
+        enumerator = [tabCellArray objectEnumerator];
+        while((tabCell = [enumerator nextObject])){
+            trackingTag = [self addTrackingRect:[tabCell frame] owner:self userData:tabCell assumeInside:NO];
+            [tabCell setTrackingTag:trackingTag];
+        }
+    }
+}
+
+- (void)_stopTrackingCursor
+{
+    NSEnumerator	*enumerator;
+    AICustomTabCell	*tabCell;
+
+    //Install a tracking rect for each open tab
+    enumerator = [tabCellArray objectEnumerator];
+    while((tabCell = [enumerator nextObject])){
+        [self removeTrackingRect:[tabCell trackingTag]];
+        [tabCell setTrackingTag:0];
+    }
+}
+
+- (void)mouseEntered:(NSEvent *)theEvent
+{
+    AICustomTabCell	*tabCell = [theEvent userData];
+    
+    [tabCell setHighlighted:YES];
+    [self setNeedsDisplay:YES];
+}
+
+- (void)mouseExited:(NSEvent *)theEvent
+{
+    AICustomTabCell	*tabCell = [theEvent userData];
+
+    [tabCell setHighlighted:NO];
+    [self setNeedsDisplay:YES];
+}
+
 
 
 //Clicking & Dragging ----------------------------------------------------------------

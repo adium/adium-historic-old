@@ -29,16 +29,17 @@
     
     //Properties
     BOOL		selected;
-    BOOL		depressed;
+    BOOL		highlighted;
     BOOL		dragging;
 
     NSRect		closeButtonRect;
     BOOL		trackingClose;
     BOOL		hoveringClose;
+    NSTrackingRectTag	trackingTag;
     
-    NSTrackingRectTag	trackingRectTag;
     NSTabViewItem	*tabViewItem;
     NSSize		oldSize;
+
 
     NSRect		frame;
 }
@@ -51,5 +52,8 @@
 - (void)setFrame:(NSRect)inFrame;
 - (NSRect)frame;
 - (BOOL)willTrackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView;
+- (void)setTrackingTag:(NSTrackingRectTag)inTag;
+- (NSTrackingRectTag)trackingTag;
+- (void)setHighlighted:(BOOL)inHighlighted;
 
 @end
