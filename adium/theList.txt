@@ -11,7 +11,6 @@ If you are working on something big and it may take a while, please tag it with 
 -------------------------------------------------------------------------------------------------------
 Bugs
 -------------------------------------------------------------------------------------------------------
-* Create new account, tab from username->pass->account list.  Next tab should go back to username
 * Don't spawn new windows when we're hidden, doing so will unhide us
 * Link tracking doesn't work if the link is the entire body of the first message received UNTIL you send a message, at which point it starts working
 * Libgaim disconnect errors are being displayed, and not ignored (since they are handled internally)
@@ -241,3 +240,4 @@ Features & Changes:
 = Make option-clicking a tab close button close all other tabs
 = WebKit: Add support for displaying buddy icons using the UserIconPath status object
 = Auto-complete aliases in New Message prompt
+= Create new account, tab from username->pass->account list.  Next tab should go back to username
