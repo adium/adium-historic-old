@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContentController.h"
+#import "AIEmoticonController.h"
 #import "AIMenuController.h"
 #import "AIPreferenceController.h"
 #import "AIToolbarController.h"
@@ -132,7 +132,7 @@
 - (NSMenu *)emoticonMenu
 {
 	if(!emoticonMenu){
-		NSArray		*emoticonPacks = [[adium contentController] emoticonPacks];
+		NSArray		*emoticonPacks = [[adium emoticonController] activeEmoticonPacks];
 
 		if([emoticonPacks count] == 1){
 			//If there is only 1 emoticon pack loaded, do not create submenus
@@ -221,12 +221,13 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	if(menuItem == quickMenuItem || menuItem == quickContextualMenuItem){
-		BOOL	haveEmoticons = ([[[adium contentController] emoticonPacks] count] != 0);
+		BOOL	haveEmoticons = ([[[adium emoticonController] activeEmoticonPacks] count] != 0);
 
 		//Build the emoticon menus if necessary
 		if(needToRebuildMenus){
-			[quickMenuItem setSubmenu:[self emoticonMenu]];
-			[quickContextualMenuItem setSubmenu:[self emoticonMenu]];
+			NSMenu	*theEmoticonMenu = [self emoticonMenu];
+			[quickMenuItem setSubmenu:theEmoticonMenu];
+			[quickContextualMenuItem setSubmenu:[[theEmoticonMenu copy] autorelease]];
 			needToRebuildMenus = NO;
 		}
 
