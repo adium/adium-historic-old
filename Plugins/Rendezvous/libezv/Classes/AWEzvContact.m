@@ -80,11 +80,25 @@
 //Note: html should actually be HTML; libezv in imservices assumes it is plaintext
 - (void) sendMessage:(NSString *)message withHtml:(NSString *)html {
     AWEzvXMLNode *messageNode, *bodyNode, *textNode, *htmlNode, *htmlBodyNode, *htmlMessageNode;
-	
+	NSMutableString *mutableString;
+	NSString *messageExtraEscapedString;
+
     if (_stream == nil) {
 	[self createConnection];
     }
-	
+
+	/* Message cleanup */
+	/* actual message */
+	mutableString = [message mutableCopy];
+	[mutableString replaceOccurrencesOfString:@"&" withString:@"&amp;"
+									  options:0 range:NSMakeRange(0, [mutableString length])];
+	[mutableString replaceOccurrencesOfString:@"<" withString:@"&lt;"
+									  options:0 range:NSMakeRange(0, [mutableString length])];
+	[mutableString replaceOccurrencesOfString:@">" withString:@"&gt;"
+									  options:0 range:NSMakeRange(0, [mutableString length])];
+	messageExtraEscapedString = [mutableString copy];
+	[mutableString release];
+
     /* setup XML tree */
     messageNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"message"];
     [messageNode addAttribute:@"to" withValue:_ipAddr];
@@ -93,7 +107,7 @@
     bodyNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"body"];
     [messageNode addChild:bodyNode];
     
-    textNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLText name:message];
+    textNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLText name:messageExtraEscapedString];
     [bodyNode addChild:textNode];
     
     htmlNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"html"];
