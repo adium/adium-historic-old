@@ -6,9 +6,14 @@
 //
 
 #import "ESDotMacService.h"
-
+#import "ESGaimDotMacAccountViewController.h"
 
 @implementation ESDotMacService
+
+//
+- (AIAccountViewController *)accountView{
+    return([ESGaimDotMacAccountViewController accountView]);
+}
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
