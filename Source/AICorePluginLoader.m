@@ -34,7 +34,7 @@ Adium, Copyright 2001-2004, Adam Iser
 
 @interface AICorePluginLoader (PRIVATE)
 - (void)loadPluginsFromPath:(NSString *)pluginPath confirmLoading:(BOOL)confirmLoading;
-- (BOOL)confirmPlugin:(NSString *)pluginName;
+- (BOOL)confirmPlugin:(NSString *)pluginName fromPath:(NSString *)pluginPath;
 - (void)disablePlugin:(NSString *)pluginPath;
 @end
 
