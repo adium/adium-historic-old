@@ -638,13 +638,13 @@ static NSLock				*filterCreationLock = nil;
 			[[owner interfaceController] openChat:chat];
 			
 			//If the chat wasn't open before, and this is received content, post the firstContentReceived notification
-			if (contentReceived){
+			if (contentReceived && [inObject trackContent]){
 				[[owner notificationCenter] postNotificationName:Content_FirstContentRecieved 
 														  object:chat
 														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 			}
 		}else{
-			if (contentReceived){
+			if (contentReceived && [inObject trackContent]){
 				[[owner notificationCenter] postNotificationName:Content_DidReceiveContent
 														  object:chat
 														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
