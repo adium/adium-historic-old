@@ -14,4 +14,8 @@
     return(@"ESGaimGaduGaduAccountView");
 }
 
+- (NSString *)userNameLabel{
+    return(@"GG Number"); //
+}
+
 @end
