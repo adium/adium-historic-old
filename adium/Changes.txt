@@ -1,7 +1,7 @@
 				Adium X Version History
 				-----------------------
-Version 0.52
-- Message history - when a chat window opens, display a specified number of lines from previous conversation(s) with that person
+Version 0.52 (4/16/2004)
+- Message windows now display several lines from the previous conversation when opened
 - Added proxy connect options to Yahoo! accounts
 - Added proxy connect, host, port, connect via, resource, and encryption options to Jabber accounts
 - Fixed Jabber message sending and receiving (formatting is not yet supported)
@@ -20,7 +20,7 @@ Version 0.52
 - Fixed a crash when going away automatically after a certain amount of time idle.
 - Fixed a crash if an invalid move was attempted in games
 - Fixed several crashes specific to running in OS X 10.2
-- Version checking improvements: Inform the user if the attempt to check for the latest version failed
+- Version checker now informs the user if the attempt to check for the latest version failed
 - No longer show a blank profile when an AIM account attempts to get the profile of an AOL account (which can not be done)
 - Speed improvements: launch time, creation of new accounts
 - Cosmetic improvements to the account preferences
