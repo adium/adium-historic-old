@@ -57,13 +57,19 @@ DeclareString(sOnline)
 @implementation ESStatusSort
 
 //Sort contacts and groups by status.
-
-- (void)didBecomeActiveFirstTime
+- (id)init
 {
 	InitString(sAway,@"Away");
 	InitString(sIdle,@"Idle");
 	InitString(sOnline,@"Online");
 	
+	[super init];
+	
+	return self;
+}
+
+- (void)didBecomeActiveFirstTime
+{
 	//Register our default preferences
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_SORT_DEFAULT_PREFS 
 																		forClass:[self class]] 
@@ -82,8 +88,6 @@ DeclareString(sOnline)
 	resolveAlphabeticallyByLastName = [[prefDict objectForKey:KEY_RESOLVE_BY_LAST_NAME] boolValue];
 	
 	[self pruneAndSetSortOrderFromArray:[prefDict objectForKey:KEY_SORT_ORDER]];
-	
-	becameActiveFirstTime = YES;
 }
 
 - (void)pruneAndSetSortOrderFromArray:(NSArray *)sortOrderArray
@@ -142,7 +146,9 @@ DeclareString(sOnline)
 	
 	[tableView_sortOrder reloadData];
 }
-
+- (NSString *)description{
+    return(@"Sort by Status.");
+}
 - (NSString *)identifier{
     return(@"by Status");
 }
