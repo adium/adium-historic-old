@@ -111,7 +111,7 @@ BOOL pantherOrLater;
     NSShadow        *noShadow = nil;
     NSSize          buddyNameSize;
     float           buddyNameFontSize = 24.0;
-    
+        
     // Clear the view and paint the backdrop image
     [[NSColor clearColor] set];
     NSRectFill([self frame]);

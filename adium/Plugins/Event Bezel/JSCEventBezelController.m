@@ -109,6 +109,7 @@ withMessage:(NSString *)message
         if (pantherOrLater) {
             [[self window] invalidateShadow];
         }
+        [[self window] setFrame: bezelFrame display:NO];
         [self showWindow:nil];
         [bezelWindow startTimer];
         
@@ -122,39 +123,39 @@ withMessage:(NSString *)message
 
 -(void)setBezelPosition:(int)newPosition
 {
+    NSSize mainScreenSize, windowSize;
+    NSPoint mainScreenOrigin, newOrigin;
+    
     bezelPosition = newPosition;
-    if ([self window]) {
-        NSSize mainScreenSize;
-        NSRect windowSize;
-        NSPoint mainScreenOrigin, newOrigin;
-        
-        mainScreenSize = [[NSScreen mainScreen] frame].size;
-        mainScreenOrigin = [[NSScreen mainScreen] frame].origin;
-        windowSize = [[self window] frame];
-        switch (bezelPosition) {
-            case 0:
-                newOrigin.x = mainScreenOrigin.x + (ceil(mainScreenSize.width / 2.0) - ceil(windowSize.size.width / 2.0));
-                newOrigin.y = mainScreenOrigin.y + 140.0;
-            break;
-            case 1:
-                newOrigin.x = mainScreenOrigin.x + mainScreenSize.width - (10 + windowSize.size.width);
-                newOrigin.y = mainScreenOrigin.y + mainScreenSize.height - (32 + windowSize.size.height);
-            break;
-            case 2:
-                newOrigin.x = mainScreenOrigin.x + mainScreenSize.width - (10 + windowSize.size.width);
-                newOrigin.y = mainScreenOrigin.y + 10;
-            break;
-            case 3:
-                newOrigin.x = mainScreenOrigin.x + 10;
-                newOrigin.y = mainScreenOrigin.y + 10;
-            break;
-            case 4:
-                newOrigin.x = mainScreenOrigin.x + 10;
-                newOrigin.y = mainScreenOrigin.y + mainScreenSize.height - (32 + windowSize.size.height);
-            break;
-        }
-        [[self window] setFrameOrigin: newOrigin];
+    mainScreenSize = [[NSScreen mainScreen] frame].size;
+    mainScreenOrigin = [[NSScreen mainScreen] frame].origin;
+    // current window size hardcoded, could be made into a preference (needs bezelview overhaul)
+    windowSize.width = 211.0;
+    windowSize.height = 206.0;
+    switch (bezelPosition) {
+        case 0: // Default system position
+            newOrigin.x = mainScreenOrigin.x + (ceil(mainScreenSize.width / 2.0) - ceil(windowSize.width / 2.0));
+            newOrigin.y = mainScreenOrigin.y + 140.0;
+        break;
+        case 1: // Top right
+            newOrigin.x = mainScreenOrigin.x + mainScreenSize.width - (10 + windowSize.width);
+            newOrigin.y = mainScreenOrigin.y + mainScreenSize.height - (32 + windowSize.height);
+        break; // Bottom right
+        case 2:
+            newOrigin.x = mainScreenOrigin.x + mainScreenSize.width - (10 + windowSize.width);
+            newOrigin.y = mainScreenOrigin.y + 10;
+        break;
+        case 3: // Bottom left
+            newOrigin.x = mainScreenOrigin.x + 10;
+            newOrigin.y = mainScreenOrigin.y + 10;
+        break;
+        case 4: // Top left
+            newOrigin.x = mainScreenOrigin.x + 10;
+            newOrigin.y = mainScreenOrigin.y + mainScreenSize.height - (32 + windowSize.height);
+        break;
     }
+    bezelFrame.origin = newOrigin;
+    bezelFrame.size = windowSize;
 }
 
 - (void)setBuddyIconLabelColor:(NSColor *)newColor
