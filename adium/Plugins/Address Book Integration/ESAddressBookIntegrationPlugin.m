@@ -67,8 +67,6 @@
 //Adium is ready to receive our glory.
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {	
-    [self preferencesChanged:nil];
-
     //Observe preferences changes
     [[adium notificationCenter] addObserver:self 
 								   selector:@selector(preferencesChanged:) 
@@ -80,15 +78,22 @@
 											 selector:@selector(addressBookChanged:)
 												 name:kABDatabaseChangedExternallyNotification
 											   object:nil];
-	//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
-	[self rebuildAddressBookDict];
-	
+
     //Observe account changes
     [[adium notificationCenter] addObserver:self
 								   selector:@selector(accountListChanged:)
 									   name:Account_ListChanged
-									 object:nil];	
+									 object:nil];
 	
+	#warning eevyl - crappy fix, but we need these preferences before metacontacts grouping and the preceferencesChanged call must be after it for the rest to work (help?)
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
+	displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
+	useNickName = [[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue];
+
+	//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
+	[self rebuildAddressBookDict];
+	
+    [self preferencesChanged:nil];
 }
 
 //Called as contacts are created, load their address book information
