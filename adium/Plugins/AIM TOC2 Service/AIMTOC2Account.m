@@ -278,14 +278,7 @@
 		
         //Get the message in a sendable format (HTML or plain text)
         if(!connectedWithICQ){
-            message = [self validCopyOfString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message]
-                                                                headers:YES
-                                                               fontTags:YES
-                                                          closeFontTags:NO
-                                                              styleTags:YES
-                                             closeStyleTagsOnFontChange:NO
-                                                         encodeNonASCII:YES
-                                                             imagesPath:nil]];
+            message = [self validCopyOfString:[self encodedStringFromAttributedString:[(AIContentMessage *)object message]]];
         }else{
             message = [self validCopyOfString:[[(AIContentMessage *)object message] string]];
         }
@@ -334,6 +327,19 @@
     }    
     return(sent);
 }
+
+//AIM doesn't require we close our tags, so don't waste the characters
+//TOC2 doesn't support non-ASCII characters, so encode them
+-(NSString *)encodedStringFromAttributedString:(NSAttributedString *)inAttributedString
+{
+    return ([AIHTMLDecoder encodeHTML:inAttributedString
+                              headers:YES
+                             fontTags:YES   closeFontTags:NO
+                            styleTags:YES   closeStyleTagsOnFontChange:NO
+                       encodeNonASCII:YES
+                           imagesPath:nil]);
+}
+
 
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
@@ -474,45 +480,31 @@
 			[self setStatusObject:newIdle forKey:@"IdleSince" notify:YES];
 			
 		}else if(key == nil || [key compare:@"TextProfile"] == 0){
-			NSData      *profileData = [self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
-			NSString	*profile = [AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:profileData]
-													 headers:YES
-													fontTags:YES
-											   closeFontTags:NO
-												   styleTags:YES
-								  closeStyleTagsOnFontChange:NO
-											  encodeNonASCII:YES
-												  imagesPath:nil];
-			
-			if([profile length] > 1024){
-				[[adium interfaceController] handleErrorMessage:@"Info Size Error"
-												withDescription:[NSString stringWithFormat:@"Your info is too large, and could not be set.\r\rThis service limits info to 1024 characters (Your current info is %i characters)",[profile length]]];
-			}else{
-				[self AIM_SetProfile:profile];
-				[self setStatusObject:profileData forKey:@"TextProfile" notify:YES];
-			}
-			
+                    NSData      *profileData = [self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
+                    NSString	*profile = [self encodedStringFromAttributedString:[NSAttributedString stringWithData:profileData]];
+                    
+                    if([profile length] > 1024){
+                        [[adium interfaceController] handleErrorMessage:@"Info Size Error"
+                                                        withDescription:[NSString stringWithFormat:@"Your info is too large, and could not be set.\r\rThis service limits info to 1024 characters (Your current info is %i characters)",[profile length]]];
+                    }else{
+                        [self AIM_SetProfile:profile];
+                        [self setStatusObject:profileData forKey:@"TextProfile" notify:YES];
+                    }
+                    
 		}else if(key == nil || [key compare:@"AwayMessage"] == 0){
-			NSData  *awayData = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
-			if(awayData){
-				NSAttributedString *statusMessageHTML = [NSAttributedString stringWithData:awayData];
-				[self AIM_SetAway:[AIHTMLDecoder encodeHTML:statusMessageHTML
-													headers:YES
-												   fontTags:YES
-											  closeFontTags:NO
-												  styleTags:YES
-								 closeStyleTagsOnFontChange:NO
-											 encodeNonASCII:YES
-                                                 imagesPath:nil]];
-				
-				[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
-				[self setStatusObject:statusMessageHTML forKey:@"StatusMessage" notify:YES];
-				
-			}else{
-				[self AIM_SetAway:nil];
-				[self setStatusObject:nil forKey:@"Away" notify:NO];
-				[self setStatusObject:nil forKey:@"StatusMessage" notify:YES];
-			}
+                    NSData  *awayData = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+                    if(awayData){
+                        NSAttributedString *statusMessageHTML = [NSAttributedString stringWithData:awayData];
+                        [self AIM_SetAway:[self encodedStringFromAttributedString:statusMessageHTML]];
+                        
+                        [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
+                        [self setStatusObject:statusMessageHTML forKey:@"StatusMessage" notify:YES];
+                        
+                    }else{
+                        [self AIM_SetAway:nil];
+                        [self setStatusObject:nil forKey:@"Away" notify:NO];
+                        [self setStatusObject:nil forKey:@"StatusMessage" notify:YES];
+                    }
 		}
     }
 }
@@ -809,7 +801,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.102 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.103 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
