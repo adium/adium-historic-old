@@ -4964,6 +4964,36 @@
 			settings = {
 			};
 		};
+		341F08E5058A97AB00A5A7AB = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESBorderlessWindow.m;
+			path = "Frameworks/AIUtilities Framework/ESBorderlessWindow.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		341F08E6058A97AB00A5A7AB = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESBorderlessWindow.h;
+			path = "Frameworks/AIUtilities Framework/ESBorderlessWindow.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		341F08E7058A97AB00A5A7AB = {
+			fileRef = 341F08E5058A97AB00A5A7AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		341F08E8058A97AB00A5A7AB = {
+			fileRef = 341F08E6058A97AB00A5A7AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		342DC47005783AF0000E1D83 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -9214,6 +9244,7 @@
 				34004D88057C7DCA0022CA56,
 				4B37AEEC058A8D0500E266A7,
 				4B37AEF0058A8D4A00E266A7,
+				341F08E8058A97AB00A5A7AB,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9957,6 +9988,7 @@
 				34004D89057C7DCA0022CA56,
 				4B37AEED058A8D0500E266A7,
 				4B37AEF1058A8D4A00E266A7,
+				341F08E7058A97AB00A5A7AB,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -26978,6 +27010,8 @@
 				4BB2C23B044605CE00A8010A,
 				34BD83DA054E530700EB2652,
 				34BD83DB054E530700EB2652,
+				341F08E6058A97AB00A5A7AB,
+				341F08E5058A97AB00A5A7AB,
 			);
 			isa = PBXGroup;
 			name = Interface;
