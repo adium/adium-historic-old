@@ -53,10 +53,10 @@
 //Toggle the display of offline contacts (call from menu)
 - (IBAction)toggleOfflineContactsMenu:(id)sender
 {
-	hideOfflineContacts = !hideOfflineContacts;
+	showOfflineContacts = !showOfflineContacts;
 	
 	//Store the preference
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:hideOfflineContacts]
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:showOfflineContacts]
 										 forKey:KEY_SHOW_OFFLINE_CONTACTS
 										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];
 
@@ -67,7 +67,7 @@
 //Set up preferences initially
 - (void)configurePreferences
 {
-	hideOfflineContacts = [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
+	showOfflineContacts = [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
 																	group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
 	[self configureOfflineContactHiding];
 }
@@ -75,7 +75,8 @@
 //Set Show/Hide Text and update the contact list
 - (void)configureOfflineContactHiding
 {
-	[showOfflineMenuItem setTitle:(hideOfflineContacts ? HIDE_OFFLINE_MENU_TITLE : SHOW_OFFLINE_MENU_TITLE)];
+	//The menu item shows the opposite of the current state, since that what happens if you toggle it
+	[showOfflineMenuItem setTitle:(showOfflineContacts ? HIDE_OFFLINE_MENU_TITLE : SHOW_OFFLINE_MENU_TITLE)];
 	
 	//Refresh visibility of all contacts
 	[[adium contactController] updateAllListObjectsForObserver:self];
