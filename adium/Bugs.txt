@@ -14,9 +14,6 @@
 	This is a potential security risk if the user has scripts that run shell commands.  We shuold
 	not be parsing script commands sent by other users (via profiles)
 
-- Customize Toolbar doesn't disable
-	This menu item should disable when there is no toolbar visible
-
 - Spawning new windows unhides Adium
 	We don't want to spawn new windows while Adium is hudden.  Windows should be qued and shown when
 	Adium is unhid.
