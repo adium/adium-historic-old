@@ -45,7 +45,6 @@ Emoticons:
 	
 WebKit Message View:
     + Add keypress forwarding
-    + Add support for the scrolling / paging keys
     + Add preference to switch active style, preview styles
     + Add support for displaying emoticon images
 	
@@ -236,7 +235,8 @@ Features & Changes:
 = iTunes %_status script should display "Not Playing" when iTunes isn't open
 = Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
 = We probably need a default priority preference.
-= Remove +/- buttons
+= Revamp emoticons preferences
 = Make source list display all available emoticon packs
 = Add checkboxes in source list to enable/disable packs
+= Add support for the scrolling / paging keys in the WebKit View
 
