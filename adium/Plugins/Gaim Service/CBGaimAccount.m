@@ -383,7 +383,7 @@
         if (listContact == nil) {
 			NSAssert(account != nil, @"account was nil");
 			NSAssert(conv->name != nil, @"conv->name was nil");
-			NSAssert([(NSString *)[NSString stringWithUTF8String:(conv->name)] length] == 0, @"conv->name length was 0");
+			NSAssert([(NSString *)[NSString stringWithUTF8String:(conv->name)] length] != 0, @"conv->name length was 0");
             GaimBuddy 	*buddy = gaim_find_buddy(account, conv->name);
             if (buddy == NULL) {
                 buddy = gaim_buddy_new(account, conv->name, NULL);  //create a GaimBuddy
@@ -407,7 +407,7 @@
 		
 #warning this assertion is firing almost randomly.  I had two instances of Adium connect on the same account name, and
 #warning an incoming message caused the one instance to assert here, but the other instance was fine...
-
+		
 #warning If no serviceID or UID is passed up there ^^ , listContact will be nil and trigger this assertion
 #warning ... so, if buddy is nil or buddy->name is nil or 0 length, we wont get a UID, wont get a list contact, and then will assert below
 		
@@ -416,7 +416,7 @@
 		
 		/*
 		 (serviceID && [serviceID length] && UID && [UID length])
-		*/
+		 */
 		
 		NSAssert(listContact != nil, @"contactAssociatedWithBuddy must have failed?");
         // Need to start a new chat, associating with the gaim conv
