@@ -89,9 +89,4 @@
     }
 }
 
-//Is there any way to squelch the 'does not fully implement protocol' warnings besided this:?
-- (id)retain{ return([super retain]); }
-- (oneway void)release{ [super release]; }
-- (id)autorelease { return([super autorelease]); }
-
 @end
