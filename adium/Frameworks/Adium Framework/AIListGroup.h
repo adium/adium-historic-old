@@ -16,32 +16,35 @@
 #import <Foundation/Foundation.h>
 #import "AIListObject.h"
 
-@protocol AIListSortController;
-
 @interface AIListGroup : AIListObject {
     NSMutableArray    	*objectArray;		//Manual ordered array of contents
-    int			visibleCount;		//The number of visible buddies in the sorted array
-    BOOL		expanded;
+    int					visibleCount;		//The number of visible buddies in the sorted array
+    BOOL				expanded;			//Exanded/Collapsed state of this group
+	int					largestIndex;		//The largest index value of an object in our group
 }
 
 - (id)initWithUID:(NSString *)inUID;
 
 //Contained Objects
+- (BOOL)containsObject:(AIListObject *)inObject;
 - (NSEnumerator *)objectEnumerator;
 - (id)objectAtIndex:(unsigned)index;
 - (unsigned)visibleCount;
 - (unsigned)count;
 
-//Expanded State
+//Visibility (PRIVATE: For list objects only)
+- (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible;
+
+//Expanded State (PRIVATE: For the contact list view to let us know our state)
 - (void)setExpanded:(BOOL)inExpanded;
 - (BOOL)isExpanded;
 
-//Sorting
-- (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(id <AIListSortController>)sortController;
+//Sorting (PRIVATE: For contact controller only)
+- (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(AISortController *)sortController;
+- (void)sortListObject:(AIListObject *)inObject sortController:(AISortController *)sortController;
 
-//Editing
+//Editing (PRIVATE: For contact controller only)
 - (void)addObject:(AIListObject *)inObject;
-- (void)replaceObject:(AIListObject *)oldObject with:(AIListObject *)newObject;
 - (void)removeObject:(AIListObject *)inObject;
 - (void)removeAllObjects;
 
