@@ -2212,9 +2212,10 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		GaimDebug (@"*** FATAL ***: Failed to initialize gaim core");
 	}
 	
-	//Setup the buddy list
+	//Setup the buddy list; then load the Adium-specific blist (see #define in blist.c)
     gaim_set_blist(gaim_blist_new());
-	
+	gaim_blist_load();
+
 	//Load gaim plugins
 #if ENABLE_WEBCAM
 	gaim_init_j2k_plugin();
@@ -2241,8 +2242,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	gaim_prefs_set_bool("/plugins/prpl/msn/conv_close_notice", TRUE);
 	gaim_prefs_set_bool("/plugins/prpl/msn/conv_timeout_notice", TRUE);
 	
-	//Without saving the gaim buddy list, gaim's caching is useless; Adium does its own caching
-	gaim_buddy_icons_set_caching(FALSE);
+	//Ensure we are using caching
+	gaim_buddy_icons_set_caching(TRUE);
 	
 	//Configure signals for receiving gaim events
 	[self configureSignals];
