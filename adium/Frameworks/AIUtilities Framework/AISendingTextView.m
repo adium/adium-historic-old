@@ -26,8 +26,10 @@
 - (void)_historyDown;
 - (void)_pushContent;
 - (void)_popContent;
+- (void)_popItem:(id)sender;
 - (void)_setPushIndicatorVisible:(BOOL)visible;
 - (void)_positionIndicator:(NSNotification *)notification;
+- (void)_pushClicked;
 @end
 
 /*
@@ -316,6 +318,7 @@ static NSImage *pushIndicatorImage = nil;
 //Push and Pop -----------------------------------------------------------------
 
 // Pop into the message entry field
+// 
 - (void)_popContent
 {
 	if([pushArray count]){
@@ -336,7 +339,17 @@ static NSImage *pushIndicatorImage = nil;
 		[pushArray addObject:[[self textStorage] copy]];
 		[self setString:@""];
 		[self _setPushIndicatorVisible:YES];
-	}	
+	}
+}
+
+- (void)_popItem:(id)sender
+{
+	[self setAttributedString:[pushArray objectAtIndex:[sender tag]]];
+	[self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
+	[pushArray removeObjectAtIndex:[sender tag]];
+	if([pushArray count] == 0){
+		[self _setPushIndicatorVisible:NO];
+	}
 }
 
 //Push indicator
@@ -349,19 +362,20 @@ static NSImage *pushIndicatorImage = nil;
         NSSize size = [self frame].size;
         size.width -= [pushIndicatorImage size].width;
         [self setFrameSize:size];
-
-        //Show indicator
-        indicator = [[NSImageView alloc] initWithFrame:
-            NSMakeRect(0, 0, [pushIndicatorImage size].width, [pushIndicatorImage size].height)];        
+		
+		indicator = [[NSButton alloc] initWithFrame:
+            NSMakeRect(0, 0, [pushIndicatorImage size].width, [pushIndicatorImage size].height)]; 
+		[indicator setButtonType:NSMomentaryPushButton];
         [indicator setAutoresizingMask:(NSViewMinXMargin)];
         [indicator setImage:[AIImageUtilities imageNamed:@"stackImage" forClass:[self class]]];
-        [indicator setImageAlignment:NSImageAlignCenter];
-        [indicator setImageScaling:NSScaleNone];
-        [indicator setImageFrameStyle:NSImageFrameNone];
-        [indicator setEditable:NO];
+        [indicator setImagePosition:NSImageOnly];
+		[indicator setBezelStyle:NSRegularSquareBezelStyle];
+		[indicator setBordered:NO];
         [[self superview] addSubview:indicator];
-
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_positionIndicator:) name:NSViewBoundsDidChangeNotification object:[self superview]];
+		[indicator setTarget:self];
+		[indicator setAction:@selector(_pushClicked)];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_positionIndicator:) name:NSViewBoundsDidChangeNotification object:[self superview]];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_positionIndicator:) name:NSViewFrameDidChangeNotification object:[self superview]];
 
         [self _positionIndicator:nil]; //Set the indicators initial position
@@ -392,7 +406,69 @@ static NSImage *pushIndicatorImage = nil;
     [[self enclosingScrollView] setNeedsDisplay:YES];
 }
 
+- (void)_toggleAutopop:(id)sender
+{
+	// Flipflop the autopop
+	[sender setState: [sender state] ? NSOffState : NSOnState];
+	
+	// Record it in prefs
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                         forKey:KEY_AUTOPOP
+                                          group:PREF_GROUP_PUSH_PREFS];
+}
 
+
+//Check for mouse down in push indicator
+- (void)_pushClicked
+{
+	NSMenu		*menu = [[NSMenu alloc] initWithTitle:@"push menu"];
+	NSMenuItem  *menuItem;
+	
+	[menu setAutoenablesItems:NO];
+	
+	int i;
+	for(i = 0; i < [pushArray count]; i++) {
+		NSString *temp = [[pushArray objectAtIndex:i] string];
+		if(temp) {
+			menuItem = [[[NSMenuItem alloc] initWithTitle:temp
+												   target:self
+												   action:@selector(_popItem:)
+											keyEquivalent:@""] autorelease];
+			[menuItem setTag:i];
+
+			[menuItem setEnabled:YES];
+			[menu addItem:menuItem];
+		}
+	}
+
+    [menu addItem:[NSMenuItem separatorItem]];
+	menuItem = [[[NSMenuItem alloc] initWithTitle:@"Autopop Messages"
+										   target:self
+										   action:@selector(_toggleAutopop:)
+									keyEquivalent:@""] autorelease];
+	int theState = ([[prefDict objectForKey:KEY_AUTOPOP] boolValue] ? NSOnState : NSOffState);
+	
+	[menuItem setState:theState];
+	[menu addItem:menuItem];
+	
+	// Generate a fake event to send to the contextual menu so it knows where to appear
+	NSEvent *newEvent = [NSEvent mouseEventWithType:NSLeftMouseDown 
+										   location:[indicator frame].origin
+									  modifierFlags:0
+										  timestamp:nil
+									   windowNumber:[[indicator window] windowNumber]
+											context:nil
+										eventNumber:0
+										 clickCount:0
+										   pressure:0.0];
+		
+	[NSMenu popUpContextMenu:menu withEvent:newEvent forView:indicator];
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	return(YES);
+}
 
 //Contact menu ---------------------------------------------------------------
 //Set and return the selected chat (to auto-configure the contact menu)

@@ -36,9 +36,10 @@
     int 		currentHistoryLocation;
 
     NSMutableArray	*pushArray;
-    BOOL		pushIndicatorVisible;
+    BOOL			pushIndicatorVisible;
 	NSDictionary	*prefDict;
-    NSImageView 	*indicator;
+    NSButton		*indicator;
+	NSMenu			*pushMenu;
         
     NSSize		lastPostedSize;
     NSSize		_desiredSizeCached;
