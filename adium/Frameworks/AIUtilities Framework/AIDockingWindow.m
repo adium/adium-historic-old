@@ -7,7 +7,7 @@
 
 #import "AIDockingWindow.h"
 
-#define WINDOW_DOCKING_DISTANCE 	1	//Distance in pixels before the window is snapped to an edge
+#define WINDOW_DOCKING_DISTANCE 	12	//Distance in pixels before the window is snapped to an edge
 #define IGNORED_X_RESISTS			3
 #define IGNORED_Y_RESISTS			3
 
