@@ -6,5 +6,7 @@
 	<false/>
         <key>Event Bezel Position</key>
         <integer>0</integer>
+        <key>Buddy Name Format</key>
+        <integer>0</integer>
 </dict>
 </plist>
