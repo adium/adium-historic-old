@@ -12,7 +12,7 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Messages_Display);
+    return(AIPref_Sound);
 }
 - (NSString *)label{
     return(@"z");
