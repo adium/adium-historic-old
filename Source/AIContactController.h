@@ -124,7 +124,7 @@ typedef enum {
 - (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray;
 //- (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray saving:(BOOL)shouldSave;
 
-- (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact forService:(NSString *)service withTarget:(id)target includeOffline:(BOOL)includeOffline;
+- (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact forService:(AIService *)service withTarget:(id)target includeOffline:(BOOL)includeOffline;
 - (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact withTarget:(id)target;
 
 //Contact status & Attributes

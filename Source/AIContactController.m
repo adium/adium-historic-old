@@ -83,7 +83,7 @@
 
 - (NSArray *)allContactsWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
 
-- (void)_addMenuItemsFromArray:(NSArray *)contactArray toMenu:(NSMenu *)contactMenu withImage:(NSImage *)serviceImage target:(id)target includeOffline:(BOOL)includeOffline;
+- (void)_addMenuItemsFromArray:(NSArray *)contactArray toMenu:(NSMenu *)contactMenu target:(id)target offlineContacts:(BOOL)offlineContacts;
 
 @end
 
@@ -900,83 +900,82 @@ DeclareString(UID);
 //	[[owner preferenceController] delayPreferenceChangedNotifications:NO];
 }
 
-- (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact forService:(NSString *)service withTarget:(id)target includeOffline:(BOOL)includeOffline
-{
-	NSMenu		*contactMenu = [[NSMenu alloc] initWithTitle:@""];
-	
-	if([inContact isKindOfClass:[AIMetaContact class]]){
-		//If service is nil, get ALL contained contacts
-		if( !service ) {
-			NSArray		*contactArray = [(AIMetaContact *)inContact listContacts];
-			[self _addMenuItemsFromArray:contactArray
-								  toMenu:contactMenu
-							   withImage:nil
-								  target:target
-						  includeOffline:includeOffline];
-			
-		}else{
-			NSDictionary	*serviceDict = [(AIMetaContact *)inContact dictionaryOfServicesAndListContacts];
-			NSArray			*contactArray = [serviceDict objectForKey:service];			
-			AIService		*theService = [[owner accountController] firstServiceWithServiceID:service];
-			NSImage			*serviceImage = [AIServiceIcons serviceIconForService:theService
-																			 type:AIServiceIconSmall
-																		direction:AIIconNormal];
-			
-			[self _addMenuItemsFromArray:contactArray
-								  toMenu:contactMenu
-							   withImage:serviceImage
-								  target:target
-						  includeOffline:includeOffline];
-		}
-	}else{
-		[self _addMenuItemsFromArray:[NSArray arrayWithObject:inContact]
-							  toMenu:contactMenu
-						   withImage:nil
-							  target:target
-					  includeOffline:includeOffline];
-	}
-	
-	// Remove the last separator
-	[contactMenu removeItemAtIndex:([contactMenu numberOfItems]-1)];
-	
-	return (contactMenu);
-}
-
 int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *context)
 {
 	return [[objectA displayName] caseInsensitiveCompare:[objectB displayName]];
 }
 
-- (void)_addMenuItemsFromArray:(NSArray *)contactArray toMenu:(NSMenu *)contactMenu withImage:(NSImage *)serviceImage target:(id)target includeOffline:(BOOL)includeOffline
+- (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact forService:(AIService *)service withTarget:(id)target includeOffline:(BOOL)includeOffline
 {
-	unsigned int	i;
-	unsigned int	count = [contactArray count];
-	NSImage			*menuServiceImage = serviceImage;
-	
-	contactArray = [contactArray sortedArrayUsingFunction:contactDisplayNameSort context:nil];
-	
-	for( i = 0; i < count; i++ ) {
-		AIListObject *contact = [contactArray objectAtIndex:i];
-		if ([contact online] || includeOffline){
-			
-			if (!serviceImage){
-				menuServiceImage = [AIServiceIcons serviceIconForObject:contact
-																   type:AIServiceIconSmall
-															  direction:AIIconNormal];
-			}
-			
-			NSMenuItem *tempItem = [[NSMenuItem alloc] initWithTitle:[contact formattedUID]
-															  target:target
-															  action:@selector(selectContainedContact:)
-													   keyEquivalent:@""];
-			[tempItem setRepresentedObject:contact];
-			[tempItem setImage:menuServiceImage];
-			[contactMenu addItem:tempItem];
-			[tempItem release];
+	NSMenu		*contactMenu = [[NSMenu alloc] initWithTitle:@""];
+	NSArray		*contactArray;
+		
+	if([inContact isKindOfClass:[AIMetaContact class]]){
+		if (service){
+			contactArray = [[(AIMetaContact *)inContact dictionaryOfServiceClassesAndListContacts] objectForKey:[service serviceClass]];
+		}else{
+			//If service is nil, get ALL contained contacts
+			contactArray = [(AIMetaContact *)inContact listContacts];
 		}
+	}else{
+		contactArray = [NSArray arrayWithObject:inContact];
+	}
+
+	//Sort the array by display name
+	contactArray = [contactArray sortedArrayUsingFunction:contactDisplayNameSort context:nil];
+
+	[self _addMenuItemsFromArray:contactArray
+						  toMenu:contactMenu
+						  target:target
+				  offlineContacts:NO];
+	
+	if (includeOffline){
+		//Separate the online from the offline
+		if ([contactMenu numberOfItems] > 0){
+			[contactMenu addItem:[NSMenuItem separatorItem]];
+		}
+		
+		[self _addMenuItemsFromArray:contactArray
+							  toMenu:contactMenu
+							  target:target
+					 offlineContacts:YES];			
 	}
 	
-	[contactMenu addItem:[NSMenuItem separatorItem]];
+	return ([contactMenu autorelease]);
+}
+
+//Add the contacts from contactArray to the specified menu.  If offlineContacts is NO, only add online ones.
+//If offlineContacts is YES, only add offline ones.
+- (void)_addMenuItemsFromArray:(NSArray *)contactArray toMenu:(NSMenu *)contactMenu target:(id)target offlineContacts:(BOOL)offlineContacts
+{
+	NSEnumerator	*enumerator;
+	AIListContact	*contact;
+	
+	enumerator = [contactArray objectEnumerator];
+	
+	while(contact = [enumerator nextObject]){
+		BOOL contactIsOnline = [contact online];
+		
+		if ((contactIsOnline && !offlineContacts) ||
+			(!contactIsOnline && offlineContacts)){
+			NSImage			*menuServiceImage;
+			NSMenuItem		*menuItem;
+
+			menuServiceImage = [AIServiceIcons serviceIconForObject:contact
+															   type:AIServiceIconSmall
+														  direction:AIIconNormal];
+
+			menuItem = [[NSMenuItem alloc] initWithTitle:[contact formattedUID]
+												  target:target
+												  action:@selector(selectContainedContact:)
+										   keyEquivalent:@""];
+			[menuItem setRepresentedObject:contact];
+			[menuItem setImage:menuServiceImage];
+			[contactMenu addItem:menuItem];
+			
+			[menuItem release];
+		}
+	}
 }
 
 - (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact withTarget:(id)target
