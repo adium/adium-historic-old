@@ -426,7 +426,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 }
 
 
-- (BOOL)mouseDown:(NSEvent *)theEvent
+- (BOOL)handleMouseDown:(NSEvent *)theEvent
 {
     BOOL		success = NO;
     NSPoint		mouseLoc;
@@ -451,80 +451,78 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
         //Check if click is in valid link attributed range, and is inside the bounds of that style range, else fall back to default handler
         linkString = [textStorage attribute:NSLinkAttributeName atIndex:charIndex effectiveRange:&linkRange];
-        if(linkString == nil || [linkString length] == 0)
-            return [super mouseDown:theEvent];
+        if(linkString != nil && [linkString length] == 0){
+            //add http:// to the link string if a protocol wasn't specified
+            if([linkString rangeOfString:@"://"].location == NSNotFound && [linkString rangeOfString:@"mailto:"].location == NSNotFound){
+                linkURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",linkString]];
+            }else{
+                linkURL = [NSURL URLWithString:linkString];
+            }
 
-        //add http:// to the link string if a protocol wasn't specified
-        if([linkString rangeOfString:@"://"].location == NSNotFound && [linkString rangeOfString:@"mailto:"].location == NSNotFound){
-            linkURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",linkString]];
-        }else{
-            linkURL = [NSURL URLWithString:linkString];
-        }
+            //bail if a link couldn't be made
+            if(linkURL){
+                unsigned int	eventMask;
+                NSDate		*distantFuture;
+                int			linkCount;
+                BOOL		done = NO;
+                BOOL		inRects = NO;
 
-        //bail if a link couldn't be made
-        if(linkURL){
-            unsigned int	eventMask;
-            NSDate		*distantFuture;
-            int			linkCount;
-            BOOL		done = NO;
-            BOOL		inRects = NO;
+                //Setup Tracking Info
+                distantFuture = [NSDate distantFuture];
+                eventMask = NSLeftMouseUpMask | NSRightMouseUpMask | NSLeftMouseDraggedMask | NSRightMouseDraggedMask;
 
-            //Setup Tracking Info
-            distantFuture = [NSDate distantFuture];
-            eventMask = NSLeftMouseUpMask | NSRightMouseUpMask | NSLeftMouseDraggedMask | NSRightMouseDraggedMask;
+                //Find region of clicked link
+                linkRects = [layoutManager rectArrayForCharacterRange:linkRange
+                                         withinSelectedCharacterRange:linkRange
+                                                      inTextContainer:textContainer
+                                                            rectCount:&linkCount];
+                linkRects = _copyRectArray(linkRects, linkCount);
 
-            //Find region of clicked link
-            linkRects = [layoutManager rectArrayForCharacterRange:linkRange
-                                     withinSelectedCharacterRange:linkRange
-                                                  inTextContainer:textContainer
-                                                        rectCount:&linkCount];
-            linkRects = _copyRectArray(linkRects, linkCount);
+                //One last check to make sure we're really in the bounds of the link. Useful when the link runs up to the end of the document and a click in the blank area below still pases the style range test above.
+                if(_mouseInRects(mouseLoc, linkRects, linkCount, NO)){
+                    //Draw ourselves as clicked and kick off tracking
+                    [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor orangeColor] range:linkRange];
+                    [tableView setNeedsDisplayInRect:[self frame]];
 
-            //One last check to make sure we're really in the bounds of the link. Useful when the link runs up to the end of the document and a click in the blank area below still pases the style range test above.
-            if(_mouseInRects(mouseLoc, linkRects, linkCount, NO)){
-                //Draw ourselves as clicked and kick off tracking
-                [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor orangeColor] range:linkRange];
-                [tableView setNeedsDisplayInRect:[self frame]];
-                
-                while(!done){
-                    NSPoint		mouseLoc;
+                    while(!done){
+                        NSPoint		mouseLoc;
 
-                    //Get the next event and mouse location
-                    theEvent = [NSApp nextEventMatchingMask:eventMask untilDate:distantFuture inMode:NSEventTrackingRunLoopMode dequeue:YES];
-                    mouseLoc = [tableView convertPoint:[theEvent locationInWindow] fromView:nil];
-                    mouseLoc.x -= [self frame].origin.x;
-                    mouseLoc.y -= [self frame].origin.y;
+                        //Get the next event and mouse location
+                        theEvent = [NSApp nextEventMatchingMask:eventMask untilDate:distantFuture inMode:NSEventTrackingRunLoopMode dequeue:YES];
+                        mouseLoc = [tableView convertPoint:[theEvent locationInWindow] fromView:nil];
+                        mouseLoc.x -= [self frame].origin.x;
+                        mouseLoc.y -= [self frame].origin.y;
 
-                    switch([theEvent type]){
-                        case NSRightMouseUp:		//Done Tracking Clickscr
-                        case NSLeftMouseUp:
-                            //If we were still inside the link, draw unclicked and open link
-                            if(_mouseInRects(mouseLoc, linkRects, linkCount, NO)){
-                                [[NSWorkspace sharedWorkspace] openURL:linkURL];
-                            }
-                            [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:linkRange];
-                            [tableView setNeedsDisplayInRect:[self frame]];
-                            done = YES;
-                        break;
-                        case NSLeftMouseDragged:	//Mouse Moved
-                        case NSRightMouseDragged:
-                            //Check if we crossed the link region edge
-                            if(_mouseInRects(mouseLoc, linkRects, linkCount, NO) && inRects == NO){
-                                [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor orangeColor] range:linkRange];
-                                [tableView setNeedsDisplayInRect:[self frame]];
-                                inRects = YES;
-                            }else if(!_mouseInRects(mouseLoc, linkRects, linkCount, NO) && inRects == YES){
+                        switch([theEvent type]){
+                            case NSRightMouseUp:		//Done Tracking Clickscr
+                            case NSLeftMouseUp:
+                                //If we were still inside the link, draw unclicked and open link
+                                if(_mouseInRects(mouseLoc, linkRects, linkCount, NO)){
+                                    [[NSWorkspace sharedWorkspace] openURL:linkURL];
+                                }
                                 [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:linkRange];
                                 [tableView setNeedsDisplayInRect:[self frame]];
-                                inRects = NO;
-                            }
-                        break;
-                        default:
-                        break;
+                                done = YES;
+                                break;
+                            case NSLeftMouseDragged:	//Mouse Moved
+                            case NSRightMouseDragged:
+                                //Check if we crossed the link region edge
+                                if(_mouseInRects(mouseLoc, linkRects, linkCount, NO) && inRects == NO){
+                                    [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor orangeColor] range:linkRange];
+                                    [tableView setNeedsDisplayInRect:[self frame]];
+                                    inRects = YES;
+                                }else if(!_mouseInRects(mouseLoc, linkRects, linkCount, NO) && inRects == YES){
+                                    [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:linkRange];
+                                    [tableView setNeedsDisplayInRect:[self frame]];
+                                    inRects = NO;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                     }
+                    success = YES;
                 }
-
-                success = YES;
             }
         }
     }
