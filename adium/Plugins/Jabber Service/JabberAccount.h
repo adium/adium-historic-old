@@ -24,7 +24,9 @@
     JabberID *myID;
     NSString *myPassword;
     NSMutableDictionary *handleDict;
+    NSMutableDictionary *chatDict;
     JabberSession *session;
+    JabberGroupTracker *groupTracker;
 }
 
 //AIAccount_Content
