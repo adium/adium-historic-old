@@ -16,19 +16,50 @@
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
 #import "AIContactStatusColoringPlugin.h"
-#import "AIAdium.h"
+#import "AIContactStatusColoringPreferences.h"
 
 @interface AIContactStatusColoringPlugin (PRIVATE)
 - (void)applyColorToContact:(AIListContact *)inContact;
 - (void)addToFlashArray:(AIListContact *)inContact;
 - (void)removeFromFlashArray:(AIListContact *)inContact;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIContactStatusColoringPlugin
 
 - (void)installPlugin
 {
+    //init
+    signedOffColor = nil;
+    signedOnColor = nil;
+    onlineColor = nil;
+    awayColor = nil;
+    idleColor = nil;
+    idleAwayColor = nil;
+    openTabColor = nil;
+    unviewedContentColor = nil;
+    warningColor = nil;
+
+    signedOffInvertedColor = nil;
+    signedOnInvertedColor = nil;
+    onlineInvertedColor = nil;
+    awayInvertedColor = nil;
+    idleInvertedColor = nil;
+    idleAwayInvertedColor = nil;
+    openTabInvertedColor = nil;
+    unviewedContentInvertedColor = nil;
+    warningInvertedColor = nil;
+
+    //Register our default preferences
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+    [self preferencesChanged:nil];
+
+    //Our preference view
+    preferences = [[AIContactStatusColoringPreferences contactStatusColoringPreferencesWithOwner:owner] retain];
     [[owner contactController] registerContactObserver:self];
+
+    //Observe
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
     flashingContactArray = [[NSMutableArray alloc] init];
 }
@@ -90,26 +121,35 @@
 
     //Determine the correct color
     if(unviewedContent && ([[owner interfaceController] flashState] % 2)){
-        color = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(127.0/255.0) blue:(0.0/255.0) alpha:1.0];
-        invertedColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(223.0/255.0) blue:(191.0/255.0) alpha:1.0];
+	color = unviewedContentColor;
+	invertedColor = unviewedContentInvertedColor;
     }else if(signedOff){
-        color = [NSColor colorWithCalibratedRed:(102.0/255.0) green:(0.0/255.0) blue:(0.0/255.0) alpha:1.0];
-        invertedColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(216.0/255.0) blue:(216.0/255.0) alpha:1.0];
+	color = signedOffColor;
+	invertedColor = signedOffInvertedColor;
     }else if(!online){
-        color = [NSColor colorWithCalibratedRed:(68.0/255.0) green:(0.0/255.0) blue:(0.0/255.0) alpha:1.0];
-        invertedColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(216.0/255.0) blue:(216.0/255.0) alpha:1.0];
+	color = signedOffColor;
+	invertedColor = signedOffInvertedColor;
     }else if(signedOn){
-        color = [NSColor colorWithCalibratedRed:(0.0/255.0) green:(0.0/255.0) blue:(102.0/255.0) alpha:1.0];
-        invertedColor = [NSColor colorWithCalibratedRed:(216.0/255.0) green:(216.0/255.0) blue:(255.0/255.0) alpha:1.0];
+	color = signedOnColor;
+	invertedColor = signedOnInvertedColor;
     }else if(idle != 0 && away){
-        color = [NSColor colorWithCalibratedRed:(89.0/255.0) green:(89.0/255.0) blue:(59.0/255.0) alpha:1.0];
-        invertedColor = [NSColor colorWithCalibratedRed:(216.0/255.0) green:(216.0/255.0) blue:(143.0/255.0) alpha:1.0];
+	color = idleAwayColor;
+	invertedColor = idleAwayInvertedColor;
     }else if(idle != 0){
-        color = [NSColor colorWithCalibratedRed:(67.0/255.0) green:(67.0/255.0) blue:(67.0/255.0) alpha:1.0];
-        invertedColor = [NSColor colorWithCalibratedRed:(216.0/255.0) green:(216.0/255.0) blue:(216.0/255.0) alpha:1.0];
+	color = idleColor;
+	invertedColor = idleInvertedColor;
     }else if(away){
-        color = [NSColor colorWithCalibratedRed:(66.0/255.0) green:(66.0/255.0) blue:(0.0/255.0) alpha:1.0];
-        invertedColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(191.0/255.0) alpha:1.0];
+	color = awayColor;
+	invertedColor = awayInvertedColor;
+    }else if(warning){
+	color = warningColor;
+	invertedColor = warningInvertedColor;
+    }else if(online){		// this should be the last 'if' before the final 'else'
+	color = onlineColor;
+	invertedColor = onlineInvertedColor;
+    }else{
+        color = [NSColor colorWithCalibratedRed:(0/255.0) green:(0/255.0) blue:(0/255.0) alpha:1.0];
+        invertedColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0];
     }
 
     //Add the new color
@@ -154,6 +194,45 @@
     //If we have no more flashing contacts, stop observing the flashes
     if([flashingContactArray count] == 0){
         [[owner interfaceController] unregisterFlashObserver:self];
+    }
+}
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    //Optimize this...
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_STATUS_COLORING] == 0){
+	NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+	//Release the old values..
+	//Cache the preference values
+	signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
+	signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
+	onlineColor = [[[prefDict objectForKey:KEY_ONLINE_COLOR] representedColor] retain];
+	awayColor = [[[prefDict objectForKey:KEY_AWAY_COLOR] representedColor] retain];
+	idleColor = [[[prefDict objectForKey:KEY_IDLE_COLOR] representedColor] retain];
+	idleAwayColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
+	openTabColor = [[[prefDict objectForKey:KEY_OPEN_TAB_COLOR] representedColor] retain];
+	unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
+	warningColor = [[[prefDict objectForKey:KEY_WARNING_COLOR] representedColor] retain];
+
+	signedOffInvertedColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_INVERTED_COLOR] representedColor] retain];
+	signedOnInvertedColor = [[[prefDict objectForKey:KEY_SIGNED_ON_INVERTED_COLOR] representedColor] retain];
+	onlineInvertedColor = [[[prefDict objectForKey:KEY_ONLINE_INVERTED_COLOR] representedColor] retain];
+	awayInvertedColor = [[[prefDict objectForKey:KEY_AWAY_INVERTED_COLOR] representedColor] retain];
+	idleInvertedColor = [[[prefDict objectForKey:KEY_IDLE_INVERTED_COLOR] representedColor] retain];
+	idleAwayInvertedColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_INVERTED_COLOR] representedColor] retain];
+	openTabInvertedColor = [[[prefDict objectForKey:KEY_OPEN_TAB_INVERTED_COLOR] representedColor] retain];
+	unviewedContentInvertedColor = [[[prefDict objectForKey:KEY_UNVIEWED_INVERTED_COLOR] representedColor] retain];
+	warningInvertedColor = [[[prefDict objectForKey:KEY_WARNING_INVERTED_COLOR] representedColor] retain];
+
+	NSEnumerator		*enumerator;
+	AIListContact		*contact;
+
+	enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+
+	while((contact = [enumerator nextObject])){
+	    [self updateContact:contact handle:nil keys:nil];
+	}
     }
 }
 

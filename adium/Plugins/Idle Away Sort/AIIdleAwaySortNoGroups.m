@@ -16,7 +16,7 @@ int idleAwaySortNoGroups(id objectA, id objectB, void *context);
 @implementation AIIdleAwaySortNoGroups
 
 - (NSString *)description{
-    return(@"Sorts idle and away to bottom.  Groups are not sorted");
+    return(@"Sorts idle and away to bottom.  Groups are not sorted.");
 }
 - (NSString *)identifier{
     return(@"IdleAway_NoGroup");

@@ -11,7 +11,7 @@
 #import "AIContactSortSelectionPlugin.h"
 
 #define CONTACT_SORT_PREF_NIB		@"SortingPrefs"
-#define CONTACT_SORT_PREF_TITLE		@"Contact List Sorting"
+#define CONTACT_SORT_PREF_TITLE		@"Sorting"
 
 @interface AIContactSortPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
@@ -52,7 +52,7 @@
     [NSBundle loadNibNamed:CONTACT_SORT_PREF_NIB owner:self];
 
     //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:CONTACT_SORT_PREF_TITLE categoryName:PREFERENCE_CATEGORY_OTHER view:view_prefView];
+    preferenceViewController = [AIPreferenceViewController controllerWithName:CONTACT_SORT_PREF_TITLE categoryName:PREFERENCE_CATEGORY_CONTACTLIST view:view_prefView];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
     //Load our preferences and configure the view

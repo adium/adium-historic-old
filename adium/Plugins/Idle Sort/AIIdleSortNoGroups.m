@@ -16,7 +16,7 @@ int idleSortNoGroups(id objectA, id objectB, void *context);
 @implementation AIIdleSortNoGroups
 
 - (NSString *)description{
-    return(@"Sorts contacts by status and then idle time.  Groups are not sorted");
+    return(@"Sorts contacts by status and then idle time.  Groups are not sorted.");
 }
 - (NSString *)identifier{
     return(@"Idle_NoGroup");

@@ -66,6 +66,82 @@
 //112
 //113
 //114
+		112F94000476EBB9001277FE = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIContactStatusColoringPreferences.h;
+			path = "Plugins/Contact Status Coloring/AIContactStatusColoringPreferences.h";
+			refType = 4;
+		};
+		112F94010476EBB9001277FE = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIContactStatusColoringPreferences.m;
+			path = "Plugins/Contact Status Coloring/AIContactStatusColoringPreferences.m";
+			refType = 4;
+		};
+		112F94020476EBB9001277FE = {
+			fileRef = 112F94000476EBB9001277FE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		112F94030476EBB9001277FE = {
+			fileRef = 112F94010476EBB9001277FE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		112F94040476EBE1001277FE = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIStatusCirclesPreferences.h;
+			path = "Plugins/Status Circles/AIStatusCirclesPreferences.h";
+			refType = 4;
+		};
+		112F94050476EBE1001277FE = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIStatusCirclesPreferences.m;
+			path = "Plugins/Status Circles/AIStatusCirclesPreferences.m";
+			refType = 4;
+		};
+		112F94060476EBE1001277FE = {
+			isa = PBXFileReference;
+			name = StatusCirclesPrefs.nib;
+			path = "Plugins/Status Circles/StatusCirclesPrefs.nib";
+			refType = 4;
+		};
+		112F94070476EBE1001277FE = {
+			fileRef = 112F94040476EBE1001277FE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		112F94080476EBE1001277FE = {
+			fileRef = 112F94050476EBE1001277FE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		112F94090476EBE1001277FE = {
+			fileRef = 112F94060476EBE1001277FE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		112F940A0476EBEF001277FE = {
+			isa = PBXFileReference;
+			name = ContactStatusColoringPrefs.nib;
+			path = "Plugins/Contact Status Coloring/ContactStatusColoringPrefs.nib";
+			refType = 4;
+		};
+		112F940B0476EBEF001277FE = {
+			fileRef = 112F940A0476EBEF001277FE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		114A79B30470C383001F3502 = {
 			fileRef = F53B9A0F02CCED8B01A8010A;
 			isa = PBXBuildFile;
@@ -268,6 +344,32 @@
 		};
 		115C72150470BF33007DDD3A = {
 			fileRef = 115C72130470BF33007DDD3A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		117ED00F0475BC1A00733160 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = StatusCirclesDefaults.plist;
+			path = "Plugins/Status Circles/StatusCirclesDefaults.plist";
+			refType = 4;
+		};
+		117ED0100475BC1A00733160 = {
+			fileRef = 117ED00F0475BC1A00733160;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		117ED0110475BCF100733160 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ContactStatusColoringDefaults.plist;
+			path = "Plugins/Contact Status Coloring/ContactStatusColoringDefaults.plist";
+			refType = 4;
+		};
+		117ED0120475BCF100733160 = {
+			fileRef = 117ED0110475BCF100733160;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -8880,10 +8982,14 @@
 		};
 		F5370C9202D76F1F01A8010A = {
 			children = (
-				F59DB3AE033EA8EC01A8010A,
-				F59DB3AF033EA8EC01A8010A,
 				F59DB3AC033EA8EC01A8010A,
 				F59DB3AD033EA8EC01A8010A,
+				F59DB3AE033EA8EC01A8010A,
+				F59DB3AF033EA8EC01A8010A,
+				112F94040476EBE1001277FE,
+				112F94050476EBE1001277FE,
+				112F94060476EBE1001277FE,
+				117ED00F0475BC1A00733160,
 			);
 			isa = PBXGroup;
 			name = "Status Circles";
@@ -8895,6 +9001,7 @@
 			files = (
 				F59DB3B0033EA8EC01A8010A,
 				F59DB3B2033EA8EC01A8010A,
+				112F94070476EBE1001277FE,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8902,6 +9009,8 @@
 		F5370C9402D76F3B01A8010A = {
 			buildActionMask = 2147483647;
 			files = (
+				117ED0100475BC1A00733160,
+				112F94090476EBE1001277FE,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8911,6 +9020,7 @@
 			files = (
 				F59DB3B1033EA8EC01A8010A,
 				F59DB3B3033EA8EC01A8010A,
+				112F94080476EBE1001277FE,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12557,13 +12667,6 @@
 			settings = {
 			};
 		};
-		F57939AD033E75FF01A8010A = {
-			children = (
-			);
-			isa = PBXGroup;
-			name = Headers;
-			refType = 4;
-		};
 		F5819CE9032124CE01A8010A = {
 			isa = PBXFrameworkReference;
 			name = AppKit.framework;
@@ -13492,9 +13595,12 @@
 		};
 		F5BD46C402D0786601A8010A = {
 			children = (
-				F57939AD033E75FF01A8010A,
 				F57939A9033E75FD01A8010A,
 				F57939AA033E75FD01A8010A,
+				112F94000476EBB9001277FE,
+				112F94010476EBB9001277FE,
+				112F940A0476EBEF001277FE,
+				117ED0110475BCF100733160,
 			);
 			isa = PBXGroup;
 			name = "Contact Status Coloring";
@@ -13505,6 +13611,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F57939AB033E75FD01A8010A,
+				112F94020476EBB9001277FE,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13512,6 +13619,8 @@
 		F5BD46CA02D0789901A8010A = {
 			buildActionMask = 2147483647;
 			files = (
+				117ED0120475BCF100733160,
+				112F940B0476EBEF001277FE,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13520,6 +13629,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F57939AC033E75FD01A8010A,
+				112F94030476EBB9001277FE,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

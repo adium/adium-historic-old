@@ -14,7 +14,7 @@
 #import "AISCLViewPlugin.h"
 
 #define CL_PREF_NIB		@"AICLPrefView"		//Name of preference nib
-#define CL_PREF_TITLE		@"Contact List"		//
+#define CL_PREF_TITLE		@"Text Settings"	//
 
 //Handles the interface interaction, and sets preference values
 //The outline view plugin is responsible for reading & setting the preferences, as well as observing changes in them
@@ -102,7 +102,7 @@
     [NSBundle loadNibNamed:CL_PREF_NIB owner:self];    
     
     //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:CL_PREF_TITLE categoryName:PREFERENCE_CATEGORY_INTERFACE view:view_prefView];
+    preferenceViewController = [AIPreferenceViewController controllerWithName:CL_PREF_TITLE categoryName:PREFERENCE_CATEGORY_CONTACTLIST view:view_prefView];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
     //Load the preferences, and configure our view
