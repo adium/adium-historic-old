@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIToolbarController.m,v 1.13 2004/05/24 06:04:20 evands Exp $
+// $Id: AIToolbarController.m,v 1.14 2004/07/07 19:13:01 adamiser Exp $
 
 #import "AIToolbarController.h"
 
@@ -89,6 +89,13 @@
 	
     [itemDict setObject:item forKey:[item itemIdentifier]];
 }
+
+- (void)unregisterToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type
+{
+    NSMutableDictionary    *itemDict = [toolbarItems objectForKey:type];
+    [itemDict removeObjectForKey:[item itemIdentifier]];
+}
+
 
 //
 - (NSDictionary *)toolbarItemsForToolbarTypes:(NSArray *)types
