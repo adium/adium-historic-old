@@ -21,6 +21,7 @@
 - (void)installCursorRect;
 - (void)removeCursorRect;
 - (void)resetCursorTracking;
+- (void)setDelegate:(id)inDelegate;
 
 @end
 
