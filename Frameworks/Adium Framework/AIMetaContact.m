@@ -523,7 +523,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		[self _determineIfWeShouldAppearToContainOnlyOneContact];
 	}
 	
-	if([key isEqualToString:@"Away"] ||
+	if([key isEqualToString:@"StatusState"] ||
 	   [key isEqualToString:@"IdleSince"]){
 		_preferredContact = nil;
 	}
