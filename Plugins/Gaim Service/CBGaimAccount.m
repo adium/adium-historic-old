@@ -267,22 +267,35 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 //Idletime
-- (void)updateIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate
+- (void)updateWentIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate
 {
-	NSDate *currentIdleDate = [theContact statusObjectForKey:@"IdleSince"];
-
-	if ((idleSinceDate && !currentIdleDate) ||
-		(!idleSinceDate && currentIdleDate) ||
-		([idleSinceDate compare:currentIdleDate] != NSOrderedSame)){
-		
+	if (idleSinceDate){
 		[theContact setStatusObject:idleSinceDate
 							 forKey:@"IdleSince"
 							 notify:NO];
-		//Apply any changes
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	}else{
+		//No idleSinceDate means we are Idle but don't know how long, so set to -1
+		[theContact setStatusObject:[NSNumber numberWithInt:-1]
+							 forKey:@"Idle"
+							 notify:NO];
 	}
+	
+	//Apply any changes
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
-
+- (void)updateIdleReturn:(AIListContact *)theContact withData:(void *)data
+{
+	[theContact setStatusObject:nil
+						 forKey:@"IdleSince"
+						 notify:NO];
+	[theContact setStatusObject:nil
+						 forKey:@"Idle"
+						 notify:NO];
+	
+	//Apply any changes
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+}
+	
 //Evil level (warning level)
 - (oneway void)updateEvil:(AIListContact *)theContact withData:(NSNumber *)evilNumber
 {
@@ -738,12 +751,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		[chat addParticipatingListObject:contact];
 		
-		//NSLog(@"added user %@ in conversation %@",contactName,[chat name]);
+		GaimDebugg (@"added user %@ in conversation %@",contactName,[chat name]);
 	}	
 }
 - (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv
 {
-	//NSLog(@"added a whole list!");
+	GaimDebugg (@"added a whole list!");
 }
 - (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
 {
@@ -752,12 +765,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		[chat removeParticipatingListObject:contact];
 		
-		NSLog(@"removed user %@ in conversation %@",contactName,[chat name]);
+		GaimDebug (@"removed user %@ in conversation %@",contactName,[chat name]);
 	}	
 }
 - (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv
 {
-	//NSLog(@"removed a whole list!");
+	GaimDebug (@"removed a whole list!");
 }
 
 /*********************/

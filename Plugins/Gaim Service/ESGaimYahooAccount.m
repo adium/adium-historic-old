@@ -155,29 +155,43 @@ static NSDictionary		*presetStatusesDictionary = nil;
 - (void)updateStatusMessage:(AIListContact *)theContact
 {
 	struct yahoo_data   *od;
-	YahooFriend *userInfo;
+	YahooFriend *f;
 
 	const char				*buddyName = [[theContact UID] UTF8String];
 	
 	if ((gaim_account_is_connected(account)) &&
 		(od = account->gc->proto_data) &&
-		(userInfo = g_hash_table_lookup(od->friends, buddyName))) {
+		(f = g_hash_table_lookup(od->friends, buddyName))) {
 		
 		NSString		*statusMsgString = nil;
 		NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
 		
-		if (userInfo != NULL){
-			if (userInfo->status == YAHOO_STATUS_IDLE){
-				//Now idle - Yahoo doesn't tell us when they became idle, so we'll fake it and pretend it was just now
-				[theContact setStatusObject:[NSDate date]
+		if (f != NULL){
+			if (f->status == YAHOO_STATUS_IDLE){
+				/*
+				//Now idle
+				int		idle = f->idle;
+				NSDate	*idleSince;
+
+				NSLog(@"%@ YAHOO_STATUS_IDLE %i (%d)",[theContact UID],idle,idle);
+
+				if (idle != -1){
+					idleSince = [NSDate dateWithTimeIntervalSinceNow:-idle];
+					NSLog(@"So that's %i minutes ago",([[NSDate date] timeIntervalSinceDate:idleSince]/60));
+				}else{
+					idleSince = [NSDate date];
+				}
+
+				[theContact setStatusObject:idleSince
 									 forKey:@"IdleSince"
 									 notify:NO];
-				
+				 */
+
 			}else{
-				if (userInfo->msg != NULL) {
-					statusMsgString = [NSString stringWithUTF8String:userInfo->msg];
-				} else if (userInfo->status != YAHOO_STATUS_AVAILABLE) {
-					statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:userInfo->status]];
+				if (f->msg != NULL) {
+					statusMsgString = [NSString stringWithUTF8String:f->msg];
+				} else if (f->status != YAHOO_STATUS_AVAILABLE) {
+					statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:f->status]];
 				}
 			}
 			
