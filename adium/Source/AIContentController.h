@@ -108,6 +108,10 @@ typedef enum {
 - (BOOL)switchToMostRecentUnviewedContent;
 - (void)switchChat:(AIChat *)chat toAccount:(AIAccount *)newAccount;
 
+//Unviewed Content
+- (void)increaseUnviewedContentOfListObject:(AIListObject *)inObject;
+- (void)clearUnviewedContentOfListObject:(AIListObject *)inObject;
+
 //Sending / Receiving content
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount;
 - (void)receiveContentObject:(AIContentObject *)inObject;

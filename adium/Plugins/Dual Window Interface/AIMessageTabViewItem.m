@@ -45,8 +45,8 @@
 
     messageView = [inMessageView retain];
     adium = [AIObject sharedAdiumInstance];
-	tabViewItemImage = nil;
-	
+	container = nil;
+
     //Configure ourself for the message view
     [messageView setDelegate:self];
     [[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:)
@@ -80,6 +80,21 @@
 {
     return(messageView);
 }
+
+//Our chat
+- (AIChat *)chat
+{
+	return([messageView chat]);
+}
+
+//Our containing window
+- (void)setContainer:(AIMessageWindowController *)inContainer{
+	container = inContainer;
+}
+- (AIMessageWindowController *)container{
+	return(container);
+}
+
 
 
 //Message View Delegate ----------------------------------------------------------------------
@@ -120,8 +135,7 @@
 	
     //If the list object's display name changed, we resize the tabs
     if(keys == nil || [keys containsObject:@"Display Name"]){
-        //This should really be looked at and possibly a better method found.  This works and causes an automatic update to each open tab.  But it feels like a hack.  There is probably a more elegant method.  Something like [[[self tabView] delegate] redraw];  I guess that's what this causes to happen, but the indirectness bugs me. - obviously not the best solution, but good enough for now.
-        [[[self tabView] delegate] resizeTabs];
+		[[[self tabView] delegate] resizeTabForTabViewItem:self];
     }
 	
 	if(keys == nil || [keys containsObject:KEY_USER_ICON]){

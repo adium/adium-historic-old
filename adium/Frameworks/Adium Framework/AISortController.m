@@ -80,12 +80,12 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 
 //Sorting -------------------------------------------------------------------------------------------------------
 #pragma mark Sorting
-- (int)indexForInserting:(AIListObject *)inObject intoObjects:(NSMutableArray *)inObjects
+- (int)indexForInserting:(AIListObject *)inObject intoObjects:(NSArray *)inObjects
 {
 	NSEnumerator 	*enumerator = [inObjects objectEnumerator];
 	AIListObject	*object;
 	int				index = 0;
-
+#warning this method must be assuming that the array is already sorted and that the object being inserted is not already in the array.... that's why it's not working
 	if(alwaysSortGroupsToTop){
 		while((object = [enumerator nextObject]) && 
 			  basicGroupVisibilitySort(inObject, object, sortFunction) == NSOrderedDescending) index++;

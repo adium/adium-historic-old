@@ -25,4 +25,23 @@
     
     return([array autorelease]);
 }
+
+@end
+
+@implementation NSMutableArray (ESArrayAdditions)
+
+- (void)moveObject:(id)object toIndex:(int)newIndex
+{
+	int	currentIndex = [self indexOfObject:object];
+	
+	//Account for shifting
+	if(currentIndex < newIndex) newIndex--;
+	
+	//Move via a remove and add :(
+	[object retain];
+	[self removeObject:object];
+	[self insertObject:object atIndex:newIndex];
+	[object release];
+}
+
 @end

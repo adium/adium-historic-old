@@ -6,7 +6,7 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
-@interface AITabSwitchingPreferences : AIPreferencePane {
+@interface AIChatCyclingPreferences : AIPreferencePane {
     IBOutlet	NSPopUpButton	*popUp_tabKeys;
 }
 

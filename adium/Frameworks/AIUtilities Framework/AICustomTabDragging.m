@@ -80,6 +80,8 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
     BOOL			sourceWindowWillHide;
     
 	if( [sourceView allowsTabDragging] ) {
+		//Post the dragging will begin notification
+		[[NSNotificationCenter defaultCenter] postNotificationName:AICustomTabDragWillBegin object:self];
 		
 		//Setup
 		[destTabBar release]; destTabBar = nil;
@@ -157,7 +159,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 			}
 			
 		}else{
-			[sourceTabBar moveTab:dragTabCell toIndex:destIndex selectTab:selectTabAfterDrag];
+			[sourceTabBar moveTab:[dragTabCell tabViewItem] toIndex:destIndex selectTab:selectTabAfterDrag];
 
 			/*
 			if( ![sourceTabBar allowsTabRearranging] && oldIndex != NSNotFound )
@@ -181,6 +183,9 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	//Remember the dest tab bar so we can reset cursor tracking (see dragTabCell:fromCustomTabsView:withEvent:)
 	_destinationOfLastDrag = [destTabBar retain];
 	[self cleanupDrag];
+
+	//Post the dragging did finish notification
+	[[NSNotificationCenter defaultCenter] postNotificationName:AICustomTabDragDidComplete object:self];
 }
 
 

@@ -37,7 +37,8 @@
 	BOOL				allowsTabRearranging;		//Allow tabs to be rearranged in the window
 	BOOL				allowsTabDragging;			//Allow tabs to be dragged out of the window
 	BOOL				trackingCursor;				//Tracking rects are installed
-
+	BOOL				ignoreTabNumberChange;		//Ignore tab count changes, used for re-arranging
+	
 	//Tab Dragging
     BOOL                removingLastTabHidesWindow;	//Removing the last tab hides our window
 	int 				tabGapWidth;				//Gap in our tabs
@@ -71,10 +72,12 @@
 - (BOOL)allowsTabDragging;
 
 //
+- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index selectTab:(BOOL)shouldSelect;
 - (void)redisplayTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
-- (void)resizeTabs;
+- (void)resizeTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
+
+//
 - (void)rebuildTabCells;
-- (void)moveTab:(AICustomTabCell *)tabCell toIndex:(int)index selectTab:(BOOL)shouldSelect;
 - (AICustomTabCell *)tabAtPoint:(NSPoint)clickLocation;
 - (int)totalWidthOfTabs;
 - (int)numberOfTabViewItems;
@@ -84,6 +87,7 @@
 - (NSTabView *)tabView;
 - (void)drawBackgroundInRect:(NSRect)rect withFrame:(NSRect)viewFrame selectedTabRect:(NSRect)tabFrame;
 - (void)resetCursorTracking;
+- (AICustomTabCell *)tabCellForTabViewItem:(NSTabViewItem *)tabViewItem;
 
 @end
 

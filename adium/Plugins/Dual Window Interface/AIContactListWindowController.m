@@ -33,7 +33,7 @@
 #define KEY_CLWH_HIDE				@"Hide While in Background"
 
 @interface AIContactListWindowController (PRIVATE)
-- (id)initWithInterface:(id <AIContainerInterface>)inInterface;
+- (id)init;
 - (void)contactSelectionChanged:(NSNotification *)notification;
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification;
 - (void)centerWindowOnMainScreenIfNeeded:(NSNotification *)notification;
@@ -48,15 +48,14 @@
 @implementation AIContactListWindowController
 
 //Return a new contact list window controller
-+ (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContainerInterface>)inInterface
++ (AIContactListWindowController *)contactListWindowController
 {
-    return([[[self alloc] initWithInterface:inInterface] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
 //Init
-- (id)initWithInterface:(id <AIContainerInterface>)inInterface
+- (id)init
 {
-    interface = [inInterface retain];
 	toolbarItems = nil;
 	borderless = [[[[AIObject sharedAdiumInstance] preferenceController] preferenceForKey:KEY_SCL_BORDERLESS
 																					group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
@@ -81,7 +80,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 	
-    [interface release];
 	[toolbarItems release];
 
     [super dealloc];
@@ -133,10 +131,6 @@
 	
     //Apply initial preference-based settings
     [self preferencesChanged:nil];
-    
-    //Tell the interface to open our window
-//	[interface performSelector:@selector(containerDidOpen:) withObject:self afterDelay:1];
-	[interface containerDidOpen:self];
 }
 
 //Close the contact list window
@@ -156,7 +150,7 @@
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 	
     //Tell the interface to unload our window
-    [interface containerDidClose:self];
+    [[adium interfaceController] contactListDidClose];
     
     return(YES);
 }
@@ -216,14 +210,14 @@
 //Contact list brought to front
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
-    [interface containerDidBecomeActive:self];
+//    [interface containerDidBecomeActive:self];
     [[adium notificationCenter] postNotificationName:Interface_ContactListDidBecomeMain object:self];
 }
 
 //Contact list sent back
 - (void)windowDidResignKey:(NSNotification *)notification
 {
-    [interface containerDidBecomeActive:nil];
+//    [interface containerDidBecomeActive:nil];
     [[adium notificationCenter] postNotificationName:Interface_ContactListDidResignMain object:self];
 }
 

@@ -18,257 +18,52 @@
 #import "AIMessageTabViewItem.h"
 #import "AIMessageViewController.h"
 
-#define AIMessageTabDragCompleteNotification    @"AIMessageTabDragCompleteNotification"
-#define	MESSAGE_WINDOW_NIB                      @"MessageWindow"		//Filename of the message window nib
+#define AIMessageTabDragBeganNotification		@"AIMessageTabDragBeganNotification"
+#define AIMessageTabDragEndedNotification    	@"AIMessageTabDragEndedNotification"
+#define	MESSAGE_WINDOW_NIB                      @"MessageWindow"			//Filename of the message window nib
 #define TAB_BAR_FPS                             20.0
 #define TAB_BAR_STEP                            0.6
-#define TOOLBAR_MESSAGE_WINDOW					@"MessageWindow"				//Toolbar identifier
-
-//The tabbed window that contains messages
-@interface NSWindow (UNDOCUMENTED) //Handy undocumented window method
-- (void)setBottomCornerRounded:(BOOL)rounded;
-@end
+#define TOOLBAR_MESSAGE_WINDOW					@"MessageWindow"			//Toolbar identifier
 
 @interface AIMessageWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContainerInterface>)inInterface;
-- (void)dealloc;
-- (BOOL)windowShouldClose:(id)sender;
-- (BOOL)shouldCascadeWindows;
-- (void)windowDidLoad;
-- (void)installToolbar;
+- (id)initWithWindowNibName:(NSString *)windowNibName interface:(AIDualWindowInterfacePlugin *)inInterface name:(NSString *)inName;
 - (void)preferencesChanged:(NSNotification *)notification;
-- (void)_updateWindowTitle;
-- (void)updateTabBarVisibilityAndAnimate:(BOOL)animate;
-- (void)_resizeTabBarTimer:(NSTimer *)inTimer;
-- (BOOL)_resizeTabBarAbsolute:(BOOL)absolute;
-- (void)_supressTabBarHiding:(BOOL)supress;
 - (void)_configureToolbar;
+- (BOOL)_resizeTabBarAbsolute:(NSNumber *)absolute;
+- (void)_suppressTabHiding:(BOOL)suppress;
 @end
 
 @implementation AIMessageWindowController
 
 //Create a new message window controller
-+ (AIMessageWindowController *)messageWindowControllerForInterface:(id <AIContainerInterface>)inInterface
++ (AIMessageWindowController *)messageWindowControllerForInterface:(AIDualWindowInterfacePlugin *)inInterface withName:(NSString *)inName
 {
-    return([[[self alloc] initWithWindowNibName:MESSAGE_WINDOW_NIB interface:inInterface] autorelease]);
+    return([[[self alloc] initWithWindowNibName:MESSAGE_WINDOW_NIB interface:inInterface name:inName] autorelease]);
 }
 
-//Close the message window
-- (IBAction)closeWindow:(id)sender
-{
-    [[self window] performClose:nil];
-}
-
-//Return the contained message tabs
-- (NSArray *)messageContainerArray
-{
-    return([tabView_messages tabViewItems]);
-}
-
-//
-- (BOOL)containsMessageContainer:(NSTabViewItem <AIInterfaceContainer> *)tabViewItem
-{
-    return([[self messageContainerArray] indexOfObjectIdenticalTo:tabViewItem] != NSNotFound);
-}
-
-//returns if we have it
-- (NSTabViewItem <AIInterfaceContainer> *)containerForListObject:(AIListObject *)inListObject
-{
-    NSEnumerator		*enumerator;
-    AIMessageTabViewItem	*container;
-
-    enumerator = [[self messageContainerArray] objectEnumerator];
-    while((container = [enumerator nextObject])){
-        if([[[container messageViewController] chat] listObject] == inListObject) break;
-    }
-
-    return(container);
-}
-
-//returns if we have it
-- (NSTabViewItem <AIInterfaceContainer> *)containerForChat:(AIChat *)inChat
-{
-    NSEnumerator		*enumerator;
-    AIMessageTabViewItem	*container;
-
-    enumerator = [[self messageContainerArray] objectEnumerator];
-    while((container = [enumerator nextObject])){
-        if([[container messageViewController] chat] == inChat) break;
-    }
-
-    return(container);
-}
-
-//Returns the selected container
-- (NSTabViewItem <AIInterfaceContainer> *)selectedTabViewItemContainer
-{
-    return([tabView_messages selectedTabViewItem]);
-}
-
-//Select a specific container
-- (void)selectTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
-{
-    [self showWindow:nil];
-
-    if(inTabViewItem){
-        [tabView_messages selectTabViewItem:inTabViewItem];
-    }
-}
-
-//Select the next container, returns YES if a new container was selected
-- (BOOL)selectNextTabViewItemContainer
-{
-    NSTabViewItem	*previousSelection = [tabView_messages selectedTabViewItem];
-
-    [self showWindow:nil];
-    [tabView_messages selectNextTabViewItem:nil];
-
-    return([tabView_messages selectedTabViewItem] != previousSelection); 
-}
-
-//Select the previous container, returns YES if a new container was selected
-- (BOOL)selectPreviousTabViewItemContainer
-{
-    NSTabViewItem	*previousSelection = [tabView_messages selectedTabViewItem];
-
-    [self showWindow:nil];
-    [tabView_messages selectPreviousTabViewItem:nil];
-
-    return([tabView_messages selectedTabViewItem] != previousSelection);
-}
-
-//Select our first container
-- (void)selectFirstTabViewItemContainer
-{
-    [self showWindow:nil];
-    [tabView_messages selectFirstTabViewItem:nil];
-}
-
-//Select our last container
-- (void)selectLastTabViewItemContainer
-{
-    [self showWindow:nil];
-    [tabView_messages selectLastTabViewItem:nil];
-}
-
-//Add a tab view item container at the end of the tabs (without changing the current selection)
-- (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
-{    
-    [self addTabViewItemContainer:inTabViewItem atIndex:-1];
-}
-
-//Add a tab view item container (without changing the current selection)
-- (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem atIndex:(int)index
-{    
-	AIListObject *newListObject = [[(AIMessageTabViewItem *)inTabViewItem messageViewController] listObject];
-	int objectIndex = 0;
-	
-    [self window]; //Ensure our window has loaded
-	
-	// Add the list object to our sorting array, and sort the result if need be
-	if (newListObject){
-		if(keepTabsArranged) {
-			objectIndex = [[[adium contactController] activeSortController] indexForInserting:newListObject
-																				  intoObjects:listObjectArray];
-			[listObjectArray insertObject:newListObject atIndex:objectIndex];		
-			[tabView_messages insertTabViewItem:inTabViewItem atIndex:objectIndex]; //Add the tab at the specified index
-		} else {
-			if (index == -1) {
-				[listObjectArray addObject:newListObject];			//Add the list object at the end
-				[tabView_messages addTabViewItem:inTabViewItem];    //Add the tab
-			} else {
-				[listObjectArray insertObject:newListObject atIndex:index];			//Add the list object
-				[tabView_messages insertTabViewItem:inTabViewItem atIndex:index];   //Add the tab at the specified index
-			}
-		}
-	}else{
-		//Always add chats at the bottom of the stack
-		[tabView_messages addTabViewItem:inTabViewItem];			//Add the tab
-	}
-
-    [interface containerDidOpen:inTabViewItem]; //Let the interface know it opened
-    
-    [self showWindow:nil]; //Show the window
-}
-
-- (void)arrangeTabs
-{
-	NSEnumerator	*enumerator;
-	AICustomTabCell *tabCell;
-	AIListObject	*listObject;
-	int				newIndex = 0;
-	
-	// Sort the list objects, so we know what order the tabs should have
-	[[[adium contactController] activeSortController] sortListObjects:listObjectArray];
-
-	//We're going to be effectively changing the tab cell array.  Using an enumerator on it directly is therefore a potentially bad idea.
-	enumerator = [[[[tabView_customTabs tabCells] copy] autorelease] objectEnumerator];
-
-	// Run through all tab cells and move them to the right place
-	while( tabCell = [enumerator nextObject] ) {
-		listObject = [[(AIMessageTabViewItem *)[tabCell tabViewItem] messageViewController] listObject];
-		
-		if(listObject) {
-			newIndex = [listObjectArray indexOfObjectIdenticalTo:listObject];
-			if( newIndex != NSNotFound )
-				[tabView_customTabs moveTab:tabCell toIndex:newIndex selectTab:NO];
-			
-		} else {
-			//Move chats to the bottom of the stack - they will be moved to the end in the order they were before since
-			//we are using a forward enumerator
-			[tabView_customTabs moveTab:tabCell toIndex:([tabView_customTabs numberOfTabViewItems]-1) selectTab:NO];			
-		}
-	}
-	
-}
-
-//Remove a tab view item container
-- (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
-{
-    //If the tab is selected, select the next tab.
-    if(inTabViewItem == [tabView_messages selectedTabViewItem]){
-		[tabView_messages selectNextTabViewItem:nil];
-    }
-
-	// Get rid of the list object from our sorting array
-	AIListObject *listObject = [[(AIMessageTabViewItem *)inTabViewItem messageViewController] listObject];
-	if (listObject){
-		[listObjectArray removeObjectIdenticalTo:listObject];
-	}
-
-    //Remove the tab and let the interface know a container closed
-    [tabView_messages removeTabViewItem:inTabViewItem];
-    [interface containerDidClose:inTabViewItem];
-	
-    //If that was our last container, save the position for its contact
-    if([tabView_messages numberOfTabViewItems] == 0 && !windowIsClosing){
-        [self closeWindow:nil];
-    }
-}
-
-//Private -----------------------------------------------------------------------------
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName interface:(AIDualWindowInterfacePlugin<AIContainerInterface> *)inInterface
+- (id)initWithWindowNibName:(NSString *)windowNibName interface:(AIDualWindowInterfacePlugin *)inInterface name:(NSString *)inName
 {
-    NSParameterAssert(windowNibName != nil && [windowNibName length] != 0);
-
     interface = [inInterface retain];
-    windowIsClosing = NO;
-    tabIsShowing = YES;
-    supressHiding = NO;
-    force_tabBar_visible = -1;
-	listObjectArray = [[NSMutableArray alloc] init];
-    [[adium notificationCenter] addObserver:self selector:@selector(messageTabDragCompleteNotification:) name:AIMessageTabDragCompleteNotification object:nil];
+	name = [inName retain];
+	containedChats = [[NSMutableArray alloc] init];
  	
     //Load our window
     [super initWithWindowNibName:windowNibName];
-    [self window];	
+    [self window];
 
+	//Tab hiding suppression (used to force tab bars visible when a drag is occuring)
+    tabBarIsVisible = YES;
+    supressHiding = NO;
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabDraggingEnded:)
+												 name:AICustomTabDragDidComplete object:nil];
+	
+	
     //Prefs
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 
-    //register as a drag observer:
+	//Register as a tab drag observer so we know when tabs are dragged over our window and can show our tab bar
     [[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
 
     //autosave
@@ -280,67 +75,55 @@
 //dealloc
 - (void)dealloc
 {
-    //During a drag, the tabs will not get deallocated on occasion, so we must make sure that we are no longer set as their delegate
+	[[adium notificationCenter] removeObserver:self];
     [tabView_customTabs setDelegate:nil];
-	[listObjectArray release];
-    [interface release];
+	[containedChats release];
+	[name release];
 
     [super dealloc];
+}
+
+- (NSString *)name
+{
+	return(name);
 }
 
 //Setup our window before it is displayed
 - (void)windowDidLoad
 {
     //Remember the initial tab height
-    tabHeight = [tabView_customTabs frame].size.height;
+    tabBarHeight = [tabView_customTabs frame].size.height;
 
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
+	[[self window] useOptimizedDrawing:YES];
 	[self _configureToolbar];
 
     //Remove any tabs from our tab view, it needs to start out empty
     while([tabView_messages numberOfTabViewItems] > 0){
         [tabView_messages removeTabViewItem:[tabView_messages tabViewItemAtIndex:0]];
     }
+}
 
-    //[[self window] setBottomCornerRounded:NO]; //Sneaky lil private method
-    [[self window] useOptimizedDrawing:YES]; //should be set to YES unless subviews overlap... we should be good to go.  check the docs on this for more info.
+//Close the message window
+- (IBAction)closeWindow:(id)sender
+{
+    [[self window] performClose:nil];
 }
 
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
-    NSArray					*viewArrayCopy = [[[tabView_messages tabViewItems] copy] autorelease]; //the array will change as we remove views, so we must work with a copy
     NSEnumerator			*enumerator;
     AIMessageTabViewItem	*tabViewItem;
-	AIChat					*chat;
 
-    //Close down
-    windowIsClosing = YES; //This is used to prevent sending more close commands than needed.
-    [[adium notificationCenter] removeObserver:self];
-    
-    //Close all our tabs
-    enumerator = [viewArrayCopy objectEnumerator];
+    //Close all our tabs (The array will change as we remove tabs, so we must work with a copy)
+    enumerator = [[[[tabView_messages tabViewItems] copy] autorelease] objectEnumerator];
     while((tabViewItem = [enumerator nextObject])){
-		chat = [[tabViewItem messageViewController] chat];
-		if (chat){
-			[[adium interfaceController] closeChat:chat];
-		}
+		[[adium interfaceController] closeChat:[tabViewItem chat]];
     }
 
     return(YES);
-}
-
-//
-- (void)windowDidBecomeKey:(NSNotification *)notification
-{
-    [interface containerDidBecomeActive:(NSTabViewItem <AIInterfaceContainer> *)[tabView_messages selectedTabViewItem]];
-}
-
-//
-- (void)windowDidResignKey:(NSNotification *)notification
-{
-    [interface containerDidBecomeActive:nil];
 }
 
 //
@@ -349,16 +132,186 @@
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]) {
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 		
-		keepTabsArranged = [[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue];
-		arrangeByGroup = [[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue];
+//		keepTabsArranged = [[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue];
+//		arrangeByGroup = [[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue];
 
-		[tabView_customTabs setAllowsInactiveTabClosing:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
-		[tabView_customTabs setAllowsTabRearranging:(![[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue])];
-		[tabView_customTabs setAllowsTabDragging:(![[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue])];
-		if (force_tabBar_visible == -1) {
-			autohide_tabBar = [[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
-			[self updateTabBarVisibilityAndAnimate:(notification != nil)];
-		}
+#warning re-hook
+//		[tabView_customTabs setAllowsInactiveTabClosing:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
+
+#warning done within here? .. seems we have to
+//		[tabView_customTabs setAllowsTabRearranging:(![[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue])];
+//		[tabView_customTabs setAllowsTabDragging:(![[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue])];
+
+		alwaysShowTabs = NO;//![[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
+		[self updateTabBarVisibilityAndAnimate:(notification != nil)];
+    }
+}
+
+
+//Contained Chats ------------------------------------------------------------------------------------------------------
+#pragma mark Contained Chats
+//Add a tab view item container at the end of the tabs (without changing the current selection)
+- (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem
+{    
+    [self addTabViewItem:inTabViewItem atIndex:-1];
+}
+
+//Add a tab view item container (without changing the current selection)
+- (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem atIndex:(int)index
+{
+	if(index == -1){
+		[tabView_messages addTabViewItem:inTabViewItem];
+		[containedChats addObject:[inTabViewItem chat]];
+	}else{
+		[tabView_messages insertTabViewItem:inTabViewItem atIndex:index];
+		[containedChats insertObject:[inTabViewItem chat] atIndex:index];
+	}
+	
+	[inTabViewItem setContainer:self];
+
+	[[adium interfaceController] chatDidOpen:[inTabViewItem chat]];
+	
+    [self showWindow:nil];
+}
+
+//Remove a tab view item container
+- (void)removeTabViewItem:(AIMessageTabViewItem *)inTabViewItem
+{
+    //If the tab is selected, select the next tab before closing it (To mirror the behavior of safari)
+    if(inTabViewItem == [tabView_messages selectedTabViewItem]){
+		[tabView_messages selectNextTabViewItem:nil];
+    }
+	
+    //Remove the tab and let the interface know a container closed
+	[containedChats removeObject:[inTabViewItem chat]];
+	[[adium interfaceController] chatDidClose:[inTabViewItem chat]];
+    [tabView_messages removeTabViewItem:inTabViewItem];
+	[inTabViewItem setContainer:nil];
+}
+
+- (void)moveTabViewItem:(AIMessageTabViewItem *)inTabViewItem toIndex:(int)index
+{
+	AIChat	*chat = [inTabViewItem chat];
+	NSLog(@"Moving %@ from %i to %i",[chat name],[containedChats indexOfObject:chat],index);
+	if([containedChats indexOfObject:chat] != index){
+//		BOOL	wasSelected = ([tabView_messages selectedTabViewItem] == inTabViewItem);
+		
+		//Move the tab & chat
+//		[inTabViewItem retain];
+//		[tabView_messages removeTabViewItem:inTabViewItem];
+//		[tabView_messages insertTabViewItem:inTabViewItem atIndex:index];
+//		[inTabViewItem release];
+		[tabView_customTabs moveTab:inTabViewItem toIndex:index selectTab:NO];
+
+		[containedChats moveObject:chat toIndex:index];
+				
+		//Preserve selection
+//		if(wasSelected) [tabView_messages selectTabViewItem:inTabViewItem];
+
+		[[adium interfaceController] chatOrderDidChange];
+	}
+}
+
+
+
+//Returns YES if we are empty (currently contain no chats)
+- (BOOL)containerIsEmpty
+{
+	return([containedChats count] == 0);
+}
+
+//Returns an array of the chats we contain
+- (NSArray *)containedChats
+{
+    return(containedChats);
+}
+
+//Build array of list objects to sort
+//We can't keep track of this easily since participating list objects may change due to multi-user chat
+//- (NSArray *)listObjectsForContainedChats
+//{
+//	NSMutableArray	*listObjects = [NSMutableArray array];
+//	NSEnumerator	*enumerator;
+//	AIChat			*chat;
+//	AIListObject	*listObject;
+//	
+//#warning would love to do away with this
+//	enumerator = [containedChats objectEnumerator];
+//	while(chat = [enumerator nextObject]){
+//		listObject = [chat listObject];
+//		if(listObject) [listObjects addObject:listObject];
+//	}
+//	
+//	return(listObjects);
+//}
+
+//
+//- (void)sortContainedChats
+//{
+//	NSMutableArray	*listObjects = [NSMutableArray array];
+//	NSEnumerator	*enumerator;
+//	AIChat			*chat;
+//	AIListObject	*listObject;
+//	
+//#warning would love to do away with this
+//	enumerator = [containedChats objectEnumerator];
+//	while(chat = [enumerator nextObject]){
+//		listObject = [chat listObject];
+//		if(listObject) [listObjects addObject:listObject];
+//	}
+//	
+//	//Sort that array
+//	[[[adium contactController] activeSortController] sortListObjects:listObjects];
+//	
+//	//Sync our tabs back up with the sorted array
+//#warning off for now
+////	enumerator = [[[[tabView_customTabs tabCells] copy] autorelease] objectEnumerator];
+////	while(tabCell = [enumerator nextObject]){
+////		listObject = [[(AIMessageTabViewItem *)[tabCell tabViewItem] messageViewController] listObject];
+////		
+////		if(listObject){
+////			newIndex = [listObjectArray indexOfObjectIdenticalTo:listObject];
+////			if(newIndex != NSNotFound)
+////				[tabView_customTabs moveTab:tabCell toIndex:newIndex selectTab:NO];
+////			
+////		}else{
+////			//Move chats to the bottom of the stack - they will be moved to the end in the order they were before since
+////			//we are using a forward enumerator
+////			[tabView_customTabs moveTab:tabCell toIndex:([tabView_customTabs numberOfTabViewItems]-1) selectTab:NO];			
+////		}
+////	}
+//}
+
+	
+	
+
+
+
+//Active Chat Tracking -------------------------------------------------------------------------------------------------
+#pragma mark Active Chat Tracking
+//Our selected tab is now the active chat
+- (void)windowDidBecomeKey:(NSNotification *)notification
+{
+	[[adium interfaceController] chatDidBecomeActive:[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat]];
+}
+
+//Our selected tab is no longer the active chat
+- (void)windowDidResignKey:(NSNotification *)notification
+{
+	[[adium interfaceController] chatDidBecomeActive:nil];
+}
+
+//Our selected tab has changed, update the active chat
+- (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
+{
+    if(tabViewItem != nil){
+        [(AIMessageTabViewItem *)tabViewItem tabViewItemWasSelected]; //Let the tab know it was selected
+		
+        if([[self window] isMainWindow]){ //If our window is main, set the newly selected container as active
+			[[adium interfaceController] chatDidBecomeActive:[(AIMessageTabViewItem *)tabViewItem chat]];
+        }
+		
+        //[self _updateWindowTitle]; //Reflect change in window title
     }
 }
 
@@ -366,22 +319,19 @@
 - (void)_updateWindowTitle
 {
     if([tabView_messages numberOfTabViewItems] == 1){
-        [[self window] setTitle:[NSString stringWithFormat:@"Adium : %@", [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label]]];
+        [[self window] setTitle:[NSString stringWithFormat:@"%@ : %@", name, [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label]]];
     }else{
-        [[self window] setTitle:@"Adium : Messages"];
+        [[self window] setTitle:name/*@"Adium : Messages"*/];
     }
 }
 
-//Return our tab bar
-- (AICustomTabsView *)customTabsView
-{
-	return( tabView_customTabs );
-}
 
-//
+//Custom Tabs Delegate -------------------------------------------------------------------------------------------------
+#pragma mark Custom Tabs Delegate
+//Contextual menu for tabs
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    AIListObject	*selectedObject = [[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject];
+    AIListObject	*selectedObject = [[(AIMessageTabViewItem *)tabViewItem chat] listObject];
     
     if(selectedObject){
 		NSArray *locations;
@@ -410,57 +360,41 @@
 	return(nil);
 }
 
-//
-- (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
-{
-    if(tabViewItem != nil){
-        [(AIMessageTabViewItem *)tabViewItem tabViewItemWasSelected]; //Let the tab know it was selected
-
-        if([[self window] isMainWindow]){ //If our window is main, set the newly selected container as active
-            [interface containerDidBecomeActive:(AIMessageTabViewItem *)tabViewItem];
-        }
-
-        //[self _updateWindowTitle]; //Reflect change in window title
-    }
-}
-
-//
+//Tab count changed
 - (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)tabView
 {       
     [self updateTabBarVisibilityAndAnimate:([[tabView window] isVisible])];
     [self _updateWindowTitle];
 }
 
-//
+//Tab rearranging
 - (void)customTabViewDidChangeOrderOfTabViewItems:(AICustomTabsView *)TabView
 {
-    //Refresh interface menus
-    [interface containerOrderDidChange];
+	[[adium interfaceController] chatOrderDidChange];
 }
 
+//Tab Dragging
 - (void)customTabView:(AICustomTabsView *)tabView didMoveTabViewItem:(NSTabViewItem *)tabViewItem toCustomTabView:(AICustomTabsView *)destTabView index:(int)index screenPoint:(NSPoint)point
 {
-    [[adium notificationCenter] postNotificationName:AIMessageTabDragCompleteNotification object:nil];
-
-    [interface transferMessageTabContainer:tabViewItem
-                                  toWindow:[[destTabView window] windowController]
-                                   atIndex:index
-                         withTabBarAtPoint:point];
+    [interface transferMessageTab:(AIMessageTabViewItem *)tabViewItem
+					  toContainer:[[destTabView window] windowController]
+						  atIndex:index
+				withTabBarAtPoint:point];
 }
 
-//Close the message tab
+//Close a message tab
 - (void)customTabView:(AICustomTabsView *)tabView closeTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    [[adium interfaceController] closeChat:[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat]];
+    [[adium interfaceController] closeChat:[(AIMessageTabViewItem *)tabViewItem chat]];
 }
 
-//
+//Allow dragging of text
 - (NSArray *)customTabViewAcceptableDragTypes:(AICustomTabsView *)tabView
 {
     return([NSArray arrayWithObject:NSRTFPboardType]);
 }
 
-//
+//Accept dragged text
 - (BOOL)customTabView:(AICustomTabsView *)tabView didAcceptDragPasteboard:(NSPasteboard *)pasteboard onTabViewItem:(NSTabViewItem *)tabViewItem
 {
     NSString    *type = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSRTFPboardType,nil]];
@@ -468,48 +402,33 @@
         [[(AIMessageTabViewItem *)tabViewItem messageViewController] addToTextEntryView:[NSAttributedString stringWithData:[pasteboard dataForType:NSRTFPboardType]]];
         return(YES);
     }
-    
     return(NO);
 }
 
 
 
 //Tab Bar Visibility --------------------------------------------------------------------------------------------------
-// Toggles whether we should hide or show the tab bar
-- (IBAction)toggleForceTabBarVisible:(id)sender
-{
-	if (force_tabBar_visible == -1) {
-		if (tabIsShowing)
-			force_tabBar_visible = 0;
-		else
-			force_tabBar_visible = 1;
-	} else if (force_tabBar_visible == 0)
-		force_tabBar_visible = 1;
-	else if (force_tabBar_visible == 1)
-		force_tabBar_visible = 0;
-	
-	[self updateTabBarVisibilityAndAnimate:YES];
-}
-
-
+#pragma mark Tab Bar Visibility
 //Update the visibility of our tab bar (Tab bar is visible if autohide is off, or if there are 2 or more tabs present)
 - (void)updateTabBarVisibilityAndAnimate:(BOOL)animate
 {
-    if(tabView_messages != nil){    //Ignore if our tabs haven't loaded yet
-        BOOL    shouldShowTabs = (supressHiding || !autohide_tabBar || ([tabView_messages numberOfTabViewItems] > 1) );
+    if(tabView_messages != nil){
+        BOOL    shouldShowTabs = (supressHiding || alwaysShowTabs || ([tabView_messages numberOfTabViewItems] > 1));
 		
-		if (force_tabBar_visible != -1) {
-			shouldShowTabs = (force_tabBar_visible || supressHiding);
-		}
-		
-        if(shouldShowTabs != tabIsShowing){
-            tabIsShowing = shouldShowTabs;
+        if(shouldShowTabs != tabBarIsVisible){
+            tabBarIsVisible = shouldShowTabs;
             
+			//We invoke both of these on a delay to prevent a display issue when dragging completes and the tab bar
+			//is momentarily told to hide and then quickly to become visible again
             if(animate){
-                [self _resizeTabBarTimer:nil];
+				[self performSelector:@selector(_resizeTabBarTimer:)
+						   withObject:nil
+						   afterDelay:0.0001];
             }else{
-                [self _resizeTabBarAbsolute:YES];
-            }
+				[self performSelector:@selector(_resizeTabBarAbsolute:)
+						   withObject:[NSNumber numberWithBool:YES]
+						   afterDelay:0.0001];
+			}
         }
     }    
 }
@@ -518,24 +437,28 @@
 - (void)_resizeTabBarTimer:(NSTimer *)inTimer
 {
     //If the tab bar isn't at the right height, we set ourself to adjust it again
-    if(inTimer == nil || ![self _resizeTabBarAbsolute:NO]){ //Do nothing when called from outside a timer.  This prevents the tabs from jumping when set from show to hide, and back rapidly.
-        [NSTimer scheduledTimerWithTimeInterval:(1.0/TAB_BAR_FPS) target:self selector:@selector(_resizeTabBarTimer:) userInfo:nil repeats:NO];
+    if(![self _resizeTabBarAbsolute:[NSNumber numberWithBool:NO]]){ 
+        [NSTimer scheduledTimerWithTimeInterval:(1.0/TAB_BAR_FPS)
+										 target:self
+									   selector:@selector(_resizeTabBarTimer:)
+									   userInfo:nil
+										repeats:NO];
     }
 }
 
 //Resize the tab bar towards it's desired height
-- (BOOL)_resizeTabBarAbsolute:(BOOL)absolute
+- (BOOL)_resizeTabBarAbsolute:(NSNumber *)absolute
 {   
     NSSize              tabSize = [tabView_customTabs frame].size;
     double              destHeight;
     NSRect              newFrame;
 
     //Determine the desired height
-    destHeight = (tabIsShowing ? tabHeight : 0);
+    destHeight = (tabBarIsVisible ? tabBarHeight : 0);
     
     //Move the tab view's height towards this desired height
     int distance = (destHeight - tabSize.height) * TAB_BAR_STEP;
-    if(absolute || (distance > -1 && distance < 1)) distance = destHeight - tabSize.height;
+    if([absolute boolValue] || (distance > -1 && distance < 1)) distance = destHeight - tabSize.height;
 
     tabSize.height += distance;
     [tabView_customTabs setFrameSize:tabSize];
@@ -555,50 +478,38 @@
 }
 
 
-//Tab Bar Hiding Suppression ----------------------------------------------------------------------------------------------------
+//Tab Bar Hiding Suppression -------------------------------------------------------------------------------------------
 //Make sure auto-hide suppression is off after a drag completes
-- (void)messageTabDragCompleteNotification:(NSNotification *)notification
+- (void)tabDraggingEnded:(NSNotification *)notification
 {
-    [self _supressTabBarHiding:NO];
+	[self _suppressTabHiding:NO];
 }
 
-//Drag entered, enable suppression
+//Bring our window to the front
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
     NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
-    NSDragOperation	operation = NSDragOperationNone;
 
     if(sender == nil || type){
-        //Show the tab bar
-        [self _supressTabBarHiding:YES];
-        
-        //Bring our window to the front
-        if(![[self window] isKeyWindow]){
-            [[self window] makeKeyAndOrderFront:nil];
-        }
-        
-        operation = NSDragOperationPrivate;
-    }
+        if(![[self window] isKeyWindow]) [[self window] makeKeyAndOrderFront:nil];
+		[self _suppressTabHiding:YES];
+        return(NSDragOperationPrivate);
+    }else{
+		return(NSDragOperationNone);
+	}
 
-    return (operation);
 }
-
-//Drag exited, disable suppression
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
-    NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
-
-    if(sender == nil || type){
-        //Hide the tab bar
-        [self _supressTabBarHiding:NO];
-    }
+	NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
+	
+    if(sender == nil || type) [self _suppressTabHiding:NO];
 }
 
-//Temporarily suppress bar hiding
-- (void)_supressTabBarHiding:(BOOL)supress
+- (void)_suppressTabHiding:(BOOL)suppress
 {
-    supressHiding = supress;
-    [self updateTabBarVisibilityAndAnimate:YES];
+	supressHiding = suppress;
+	[self updateTabBarVisibilityAndAnimate:YES];
 }
 
 
@@ -640,6 +551,236 @@
 			NSToolbarCustomizeToolbarItemIdentifier, nil]]);
 }
 
-
 @end
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Return the contained message tabs
+//- (NSArray *)messageContainerArray
+//{
+//    return([tabView_messages tabViewItems]);
+//}
+
+//
+//- (BOOL)containsMessageContainer:(NSTabViewItem <AIInterfaceContainer> *)tabViewItem
+//{
+//    return([[self messageContainerArray] indexOfObjectIdenticalTo:tabViewItem] != NSNotFound);
+//}
+
+//returns if we have it
+//- (NSTabViewItem <AIInterfaceContainer> *)containerForListObject:(AIListObject *)inListObject
+//{
+//    NSEnumerator		*enumerator;
+//    AIMessageTabViewItem	*container;
+//
+//    enumerator = [[self messageContainerArray] objectEnumerator];
+//    while((container = [enumerator nextObject])){
+//        if([[container chat] listObject] == inListObject) break;
+//    }
+//
+//    return(container);
+//}
+//
+////returns if we have it
+//- (NSTabViewItem <AIInterfaceContainer> *)containerForChat:(AIChat *)inChat
+//{
+//    NSEnumerator		*enumerator;
+//    AIMessageTabViewItem	*container;
+//
+//    enumerator = [[self messageContainerArray] objectEnumerator];
+//    while((container = [enumerator nextObject])){
+//        if([container chat] == inChat) break;
+//    }
+//
+//    return(container);
+//}
+
+
+
+
+//Returns the selected container
+//- (NSTabViewItem <AIInterfaceContainer> *)selectedTabViewItemContainer
+//{
+//    return([tabView_messages selectedTabViewItem]);
+//}
+
+//Select a specific container
+//- (void)selectTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
+//{
+//    [self showWindow:nil];
+//
+//    if(inTabViewItem){
+//        [tabView_messages selectTabViewItem:inTabViewItem];
+//    }
+//}
+
+//Select the next container, returns YES if a new container was selected
+//- (BOOL)selectNextTabViewItemContainer
+//{
+//    NSTabViewItem	*previousSelection = [tabView_messages selectedTabViewItem];
+//
+//    [self showWindow:nil];
+//    [tabView_messages selectNextTabViewItem:nil];
+//
+//    return([tabView_messages selectedTabViewItem] != previousSelection); 
+//}
+//
+////Select the previous container, returns YES if a new container was selected
+//- (BOOL)selectPreviousTabViewItemContainer
+//{
+//    NSTabViewItem	*previousSelection = [tabView_messages selectedTabViewItem];
+//
+//    [self showWindow:nil];
+//    [tabView_messages selectPreviousTabViewItem:nil];
+//
+//    return([tabView_messages selectedTabViewItem] != previousSelection);
+//}
+//
+////Select our first container
+//- (void)selectFirstTabViewItemContainer
+//{
+//    [self showWindow:nil];
+//    [tabView_messages selectFirstTabViewItem:nil];
+//}
+//
+////Select our last container
+//- (void)selectLastTabViewItemContainer
+//{
+//    [self showWindow:nil];
+//    [tabView_messages selectLastTabViewItem:nil];
+//}
+//
+//Add a tab view item container at the end of the tabs (without changing the current selection)
+//- (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem
+//{    
+//    [self addTabViewItem:inTabViewItem atIndex:-1];
+//}
+//
+////Add a tab view item container (without changing the current selection)
+//- (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem atIndex:(int)index
+//{    
+////	AIListObject *newListObject = [[(AIMessageTabViewItem *)inTabViewItem messageViewController] listObject];
+////	int objectIndex = 0;
+//	
+//    [self window]; //Ensure our window has loaded
+//#warning need this hack still?
+//	
+//	// Add the list object to our sorting array, and sort the result if need be
+//#warning sorting in here too!!!!! GAAHH!
+////	if (newListObject){
+////		if(keepTabsArranged) {
+////			objectIndex = [[[adium contactController] activeSortController] indexForInserting:newListObject
+////																				  intoObjects:listObjectArray];
+////			[listObjectArray insertObject:newListObject atIndex:objectIndex];		
+////			[tabView_messages insertTabViewItem:inTabViewItem atIndex:objectIndex]; //Add the tab at the specified index
+////		} else {
+//			if (index == -1) {
+////				[listObjectArray addObject:newListObject];			//Add the list object at the end
+//				[tabView_messages addTabViewItem:inTabViewItem];    //Add the tab
+//			} else {
+////				[listObjectArray insertObject:newListObject atIndex:index];			//Add the list object
+//				[tabView_messages insertTabViewItem:inTabViewItem atIndex:index];   //Add the tab at the specified index
+//			}
+////		}
+////	}else{
+////		//Always add chats at the bottom of the stack
+////		[tabView_messages addTabViewItem:inTabViewItem];			//Add the tab
+////	}
+//	
+//	[inTabViewItem setContainer:self];
+//	
+//	[[adium interfaceController] chatDidOpen:[inTabViewItem chat]];
+////    [interface containerDidOpen:inTabViewItem]; //Let the interface know it opened
+//    
+//    [self showWindow:nil]; //Show the window
+//}
+
+#warning GAAAAAAHH
+//- (void)arrangeTabs
+//{
+//	NSEnumerator	*enumerator;
+//	AICustomTabCell *tabCell;
+//	AIListObject	*listObject;
+//	int				newIndex = 0;
+//	
+//	// Sort the list objects, so we know what order the tabs should have
+//	[[[adium contactController] activeSortController] sortListObjects:listObjectArray];
+//
+//	//We're going to be effectively changing the tab cell array.  Using an enumerator on it directly is therefore a potentially bad idea.
+//	enumerator = [[[[tabView_customTabs tabCells] copy] autorelease] objectEnumerator];
+//
+//	// Run through all tab cells and move them to the right place
+//	while( tabCell = [enumerator nextObject] ) {
+//		listObject = [[(AIMessageTabViewItem *)[tabCell tabViewItem] messageViewController] listObject];
+//		
+//		if(listObject) {
+//			newIndex = [listObjectArray indexOfObjectIdenticalTo:listObject];
+//			if( newIndex != NSNotFound )
+//				[tabView_customTabs moveTab:tabCell toIndex:newIndex selectTab:NO];
+//			
+//		} else {
+//			//Move chats to the bottom of the stack - they will be moved to the end in the order they were before since
+//			//we are using a forward enumerator
+//			[tabView_customTabs moveTab:tabCell toIndex:([tabView_customTabs numberOfTabViewItems]-1) selectTab:NO];			
+//		}
+//	}
+//	
+//}
+
+//Remove a tab view item container
+//- (void)removeTabViewItem:(AIMessageTabViewItem *)inTabViewItem
+//{
+//	NSLog(@"remove %@",inTabViewItem);
+//	
+//    //If the tab is selected, select the next tab.
+//    if(inTabViewItem == [tabView_messages selectedTabViewItem]){
+//		[tabView_messages selectNextTabViewItem:nil];
+//    }
+//
+//	// Get rid of the list object from our sorting array
+////	AIListObject *listObject = [[(AIMessageTabViewItem *)inTabViewItem messageViewController] listObject];
+////	if (listObject){
+////		[listObjectArray removeObjectIdenticalTo:listObject];
+////	}
+//
+//    //Remove the tab and let the interface know a container closed
+//	[[adium interfaceController] chatDidClose:[inTabViewItem chat]];
+//    [tabView_messages removeTabViewItem:inTabViewItem];
+//
+////     containerDidClose:inTabViewItem];
+//	
+//    //If that was our last container, save the position for its contact
+//	NSLog(@"tabs left = %i",[tabView_messages numberOfTabViewItems]);
+////	NSLog(@" window closing? %i",windowIsClosing);
+////    if([tabView_messages numberOfTabViewItems] == 0 && !windowIsClosing){
+////		NSLog(@"closeWindow");
+////        [self closeWindow:nil];
+////    }
+//}
+
+	
+	
+	
+	
+	
+	
+	//Return our tab bar
+	//- (AICustomTabsView *)customTabsView
+	//{
+	//	return( tabView_customTabs );
+	//}
+		
+	

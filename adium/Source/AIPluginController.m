@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.79 2004/07/10 06:20:42 evands Exp $
+//$Id: AIPluginController.m,v 1.80 2004/07/12 22:24:37 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -32,7 +32,7 @@
 @class AIAccountListPreferencesPlugin, AIAccountMenuAccessPlugin, AIAliasSupportPlugin, AIAlphabeticalSortPlugin,
 AIAutoLinkingPlugin, AIAwayMessagesPlugin, AIAwayStatusWindowPlugin, AIContactAwayPlugin, AIContactIdlePlugin,
 /*AIContactInfoPlugin,*/ AIContactListEditorPlugin, AIContactOnlineSincePlugin, AIContactSortSelectionPlugin,
-AIContactStatusColoringPlugin, AIContactStatusDockOverlaysPlugin, AIContactStatusTabColoringPlugin,
+AIContactStatusColoringPlugin, AIContactStatusDockOverlaysPlugin, AIContactStatusTabColoringPlugin, AIChatCyclingPlugin,
 AIContactWarningLevelPlugin, AIDefaultFormattingPlugin, AIDockAccountStatusPlugin, AIDockBehaviorPlugin,
 AIDockIconSelectionPlugin, AIDockUnviewedContentPlugin, AIDualWindowInterfacePlugin, AIEmoticonsPlugin,
 AIEventSoundsPlugin, AIGroupedAwayByIdleSortPlugin, AIGroupedIdleAwaySortPlugin, AIIdleAwayManualSortPlugin,
@@ -71,6 +71,7 @@ ESMessageEvents, ESAccountEvents;
 	[self loadPluginWithClass:[AIAutoLinkingPlugin class]];
 	[self loadPluginWithClass:[AIAwayMessagesPlugin class]];
 	[self loadPluginWithClass:[AIAwayStatusWindowPlugin class]];
+	[self loadPluginWithClass:[AIChatCyclingPlugin class]];
 	[self loadPluginWithClass:[AIContactAwayPlugin class]];
 	[self loadPluginWithClass:[AIContactIdlePlugin class]];
 	[self loadPluginWithClass:[AIContactProfilePlugin class]];

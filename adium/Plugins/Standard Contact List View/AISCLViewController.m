@@ -182,10 +182,14 @@
 	id		object = [notification object];
 	
 	if(!object || (object == contactList)){ //Treat a nil object as equivalent to the contact list
+//		NSLog(@"reloading entire contact list");
 		[contactListView reloadData];
 		[contactListView _performFullRecalculation];
 	}else{
-		[contactListView reloadItem:object reloadChildren:YES];
+		if([object containingGroup]) [contactListView reloadItem:[object containingGroup] reloadChildren:YES];
+		
+		//		NSLog(@"reloading group %@",[[object containingGroup] displayName]);
+		;
 	}
 }
 

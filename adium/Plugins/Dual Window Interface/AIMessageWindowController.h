@@ -17,45 +17,42 @@
 #define AIMessageWindow_ControllerOrderChanged 		@"AIMessageWindow_ControllerOrderChanged"
 #define AIMessageWindow_SelectedControllerChanged 	@"AIMessageWindow_SelectedControllerChanged"
 
-@class AIMessageSendingTextView, AIMiniToolbar, AIMessageViewController, AICustomTabsView, AIDualWindowInterfacePlugin;
+@class AIMessageSendingTextView, AIMessageTabViewItem, AIMessageViewController, AICustomTabsView, AIDualWindowInterfacePlugin;
 @protocol AIContainerInterface, AIInterfaceContainer;
 
 @interface AIMessageWindowController : AIWindowController {
     IBOutlet	NSTabView			*tabView_messages;
     IBOutlet	AICustomTabsView	*tabView_customTabs;
-
-	NSMutableArray					*listObjectArray;
+    AIDualWindowInterfacePlugin 	*interface;
+	NSString						*name;
+//	NSMutableArray					*listObjectArray;
 	
-    BOOL							windowIsClosing;
-    AIDualWindowInterfacePlugin<AIContainerInterface> 	*interface;
-
+	
+//	BOOL			keepTabsArranged;
+//	BOOL			arrangeByGroup;
+    BOOL			supressHiding;		//YSE to temporarily suppress hiding of the tabs (used for dragging)
+	BOOL			alwaysShowTabs;		//YES if the tabs should always be visible, even if there is only 1
+    float			tabBarHeight;		//Height of the tab bar, used to restore their visibility
+	BOOL			tabBarIsVisible;	//YES if the tab bar is currently visible
+	
 	NSDictionary	*toolbarItems;
+	NSMutableArray	*containedChats;
 	
-	BOOL			keepTabsArranged;
-	BOOL			arrangeByGroup;
-    BOOL			supressHiding;
-    BOOL			tabIsShowing;
-    BOOL			autohide_tabBar;
-	int				force_tabBar_visible;  //-1 = Doesn't matter, 0 = NO, 1 = YES;
-    float			tabHeight;
 }
 
-+ (AIMessageWindowController *)messageWindowControllerForInterface:(id <AIContainerInterface>)inInterface;
++ (AIMessageWindowController *)messageWindowControllerForInterface:(AIDualWindowInterfacePlugin *)inInterface withName:(NSString *)inName;
 - (IBAction)closeWindow:(id)sender;
-- (IBAction)toggleForceTabBarVisible:(id)sender;
-- (NSArray *)messageContainerArray;
-- (NSTabViewItem <AIInterfaceContainer> *)selectedTabViewItemContainer;
-- (void)selectTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
-- (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
-- (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem atIndex:(int)index;
-- (void)arrangeTabs;
-- (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
-- (BOOL)containsMessageContainer:(NSTabViewItem <AIInterfaceContainer> *)tabViewItem;
-- (NSTabViewItem <AIInterfaceContainer> *)containerForListObject:(AIListObject *)inListObject;
-- (AICustomTabsView *)customTabsView;
-- (BOOL)selectNextTabViewItemContainer;
-- (BOOL)selectPreviousTabViewItemContainer;
-- (void)selectFirstTabViewItemContainer;
-- (void)selectLastTabViewItemContainer;
-- (NSTabViewItem <AIInterfaceContainer> *)containerForChat:(AIChat *)inChat;
+- (NSString *)name;
+
+//Contained Chats
+- (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem;
+- (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem atIndex:(int)index;
+- (void)removeTabViewItem:(AIMessageTabViewItem *)inTabViewItem;
+- (void)moveTabViewItem:(AIMessageTabViewItem *)inTabViewItem toIndex:(int)index;
+- (BOOL)containerIsEmpty;
+- (NSArray *)containedChats;
+
+//Tabs
+- (void)updateTabBarVisibilityAndAnimate:(BOOL)animate;
+
 @end

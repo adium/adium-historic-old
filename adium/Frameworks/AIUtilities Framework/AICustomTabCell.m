@@ -365,6 +365,7 @@ static NSImage		*tabCloseFrontRollover = nil;
 //Install tracking rects for our tab and its close button
 - (void)addTrackingRectsInView:(NSView *)view withFrame:(NSRect)trackRect cursorLocation:(NSPoint)cursorLocation
 {
+	NSLog(@"ADD TRACK RECTS");
     userData = [[NSDictionary dictionaryWithObjectsAndKeys:view, @"view", nil] retain]; //We have to retain and release the userData ourself
     trackingTag = [view addTrackingRect:trackRect
                                   owner:self
@@ -383,6 +384,7 @@ static NSImage		*tabCloseFrontRollover = nil;
 //Remove our tracking rects
 - (void)removeTrackingRectsFromView:(NSView *)view
 {
+	NSLog(@"REMOVE TRACK RECTS");
     [view removeTrackingRect:trackingTag]; trackingTag = 0;
     [userData release]; userData = nil;
     

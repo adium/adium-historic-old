@@ -71,16 +71,30 @@
 @protocol AIInterfaceController <NSObject>
 - (void)openInterface;
 - (void)closeInterface;
-- (void)initiateNewMessage;
-- (void)openChat:(AIChat *)inChat;
-- (void)closeChat:(AIChat *)inChat;
+- (id)openChat:(AIChat *)chat inContainerNamed:(NSString *)containerName atIndex:(int)index;
+- (void)closeChat:(AIChat *)chat;
 - (void)setActiveChat:(AIChat *)inChat;
-- (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows;
+- (void)moveChat:(AIChat *)chat toContainerNamed:(NSString *)containerName index:(int)index;
+
+- (NSArray *)openContainersAndChats;
+- (NSArray *)openContainerNames;
+- (NSArray *)openChats;
+- (NSArray *)openChatsInContainerNamed:(NSString *)containerName;
+
+- (NSString *)containerNameForChat:(AIChat *)chat;
+
+
+
 @end
+
+@class AIContactListWindowController;
 
 @interface AIInterfaceController : NSObject {
     IBOutlet	AIAdium			*owner;
 	
+    IBOutlet	NSMenuItem		*menuItem_close;
+    IBOutlet	NSMenuItem		*menuItem_closeChat;
+
     IBOutlet	NSMenuItem		*menuItem_paste;
     IBOutlet	NSMenuItem		*menuItem_pasteFormatted;
     
@@ -108,54 +122,97 @@
     NSString					*errorTitle;
     NSString					*errorDesc;
 	
+    AIContactListWindowController 	*contactListWindowController;
+	
+	BOOL			closeMenuConfiguredForChat;
+	
+	NSArray		*_cachedOpenChats;
+	
+	NSMutableArray	*windowMenuArray;
+	
+	AIChat	*activeChat;
+	
+	
+	
+	id <AIInterfaceController> interface;
+	
+	
+	BOOL	groupChatsByContactGroup;
+	BOOL	arrangeChats;
+	
 }
 
-//Interface controllers
 - (void)registerInterfaceController:(id <AIInterfaceController>)inController;
+- (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows;
 
-//Contact list views
+//Contact List
 - (void)registerContactListViewPlugin:(id <AIContactListViewPlugin>)inPlugin;
 - (id <AIContactListViewController>)contactListViewController;
+- (IBAction)toggleContactList:(id)sender;
+- (IBAction)showContactList:(id)sender;
+- (IBAction)showContactListAndBringToFront:(id)sender;
+- (IBAction)closeContactList:(id)sender;
+- (void)contactListDidClose;
 
-//Message views
+//Messaging
+- (void)openChat:(AIChat *)inChat;
+- (void)setActiveChat:(AIChat *)inChat;
+- (void)closeChat:(AIChat *)inChat;
+- (NSArray *)openChats;
+- (NSArray *)openChatsInContainerNamed:(NSString *)containerName;
+
+//Interface plugin callbacks
+- (void)chatDidOpen:(AIChat *)inChat;
+- (void)chatDidBecomeActive:(AIChat *)inChat;
+- (void)chatDidClose:(AIChat *)inChat;
+- (void)chatOrderDidChange;
+- (void)clearUnviewedContentOfChat:(AIChat *)inChat;
+
+//Chat close menus
+- (IBAction)closeMenu:(id)sender;
+- (IBAction)closeChatMenu:(id)sender;
+- (void)updateCloseMenuKeys;
+
+//Window Menu
+- (IBAction)showChatWindow:(id)sender;
+- (void)updateActiveWindowMenuItem;
+- (void)buildWindowMenu;
+
+//Chat Cycling
+- (IBAction)nextMessage:(id)sender;
+- (IBAction)previousMessage:(id)sender;
+
+//Message View
 - (void)registerMessageViewPlugin:(id <AIMessageViewPlugin>)inPlugin;
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
 
-//Messaging
-- (IBAction)initiateMessage:(id)sender;
-- (void)openChat:(AIChat *)inChat;
-- (void)closeChat:(AIChat *)inChat;
-- (void)setActiveChat:(AIChat *)inChat;
-
-//Error messages
+//Error Display
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;
 - (void)handleMessage:(NSString *)inTitle withDescription:(NSString *)inDesc withWindowTitle:(NSString *)inWindowTitle;
 
-//Flash Syncing
+//Synchronized Flashing
 - (void)registerFlashObserver:(id <AIFlashObserver>)inObserver;
 - (void)unregisterFlashObserver:(id <AIFlashObserver>)inObserver;
+- (void)flashTimer:(NSTimer *)inTimer;
 - (int)flashState;
 
 //Tooltips
-- (void)showTooltipForListObject:(AIListObject *)object atScreenPoint:(NSPoint)point onWindow:(NSWindow *)inWindow;
 - (void)registerContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry secondaryEntry:(BOOL)isSecondary;
+- (void)showTooltipForListObject:(AIListObject *)object atScreenPoint:(NSPoint)point onWindow:(NSWindow *)inWindow;
 
 //Custom pasting
 - (IBAction)paste:(id)sender;
 - (IBAction)pasteFormatted:(id)sender;
 
-//Custom dimming menus
+//Custom Dimming menu items
 - (IBAction)toggleFontTrait:(id)sender;
 - (void)toggleToolbarShown:(id)sender;
 - (void)runToolbarCustomizationPalette:(id)sender;
 
-//Activation
-- (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows;
-
 //Private
 - (void)initController;
-- (void)closeController;
 - (void)finishIniting;
+- (void)closeController;
 
 @end
 
