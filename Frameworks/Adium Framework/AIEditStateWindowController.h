@@ -60,8 +60,6 @@
 	
 	BOOL		isOnPantherOrBetter;
 	BOOL		showSaveCheckbox;
-	
-	BOOL		allowSave;
 }
 
 + (id)editCustomState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount withSaveOption:(BOOL)allowSave onWindow:(id)parentWindow notifyingTarget:(id)inTarget;
