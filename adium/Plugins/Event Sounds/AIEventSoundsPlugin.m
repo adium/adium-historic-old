@@ -19,6 +19,8 @@
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 
+#define EVENT_SOUNDS_DEFAULT_PREFS	@"EventSoundDefaults"
+
 @interface AIEventSoundsPlugin (PRIVATE)
 - (void)eventNotification:(NSNotification *)notification;
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -28,16 +30,16 @@
 
 - (void)installPlugin
 {
-    //Install the preference view
+    //
+    soundPathDict = nil;
+
+    //Setup our preferences
     preferences = [[AIEventSoundPreferences eventSoundPreferencesWithOwner:owner forPlugin:self] retain];
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_SOUNDS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SOUNDS];
 
     //Observer preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-
-    //
-    soundPathDict = nil;
     [self preferencesChanged:nil];
-
 }
 
 - (void)uninstallPlugin
@@ -64,9 +66,10 @@
         
         //Load the soundset
         [eventSoundArray release]; eventSoundArray = nil;
+        
         soundSetPath = [preferenceDict objectForKey:KEY_EVENT_SOUND_SET];
         if(soundSetPath && [soundSetPath length] != 0){ //Soundset
-            [self loadSoundSetAtPath:soundSetPath creator:nil description:nil sounds:&eventSoundArray]; //Load the soundset
+            [self loadSoundSetAtPath:[soundSetPath stringByExpandingBundlePath] creator:nil description:nil sounds:&eventSoundArray]; //Load the soundset
         }else{ //Custom
             eventSoundArray = [[preferenceDict objectForKey:KEY_EVENT_CUSTOM_SOUNDSET] retain]; //Load the user's custom set
         }

@@ -51,8 +51,8 @@
 //The user selected a sound set
 - (IBAction)selectSoundSet:(id)sender
 {
-    if(sender && [sender representedObject]){ //User selected a soundset        
-        [[owner preferenceController] setPreference:[sender representedObject] forKey:KEY_EVENT_SOUND_SET group:PREF_GROUP_SOUNDS];
+    if(sender && [sender representedObject]){ //User selected a soundset
+        [[owner preferenceController] setPreference:[[sender representedObject] stringByCollapsingBundlePath] forKey:KEY_EVENT_SOUND_SET group:PREF_GROUP_SOUNDS];
         
     }else{ //User selected 'Custom...'
         [[owner preferenceController] setPreference:@"" forKey:KEY_EVENT_SOUND_SET group:PREF_GROUP_SOUNDS]; //Remove the soundset preference
@@ -125,7 +125,7 @@
     soundSetPath = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_SOUND_SET];
 
     //Load the soundset
-    if([plugin loadSoundSetAtPath:soundSetPath creator:nil description:&description sounds:nil]){
+    if([plugin loadSoundSetAtPath:[soundSetPath stringByExpandingBundlePath] creator:nil description:&description sounds:nil]){
         //Display the info sheet
         NSBeginInformationalAlertSheet([soundSetPath lastPathComponent],
                                        @"Okay",
@@ -227,9 +227,9 @@
                 NSString	*creator;
 
                 //Load the soundset
-                if([plugin loadSoundSetAtPath:soundSetPath creator:&creator description:nil sounds:&eventSoundArray]){
+                if([plugin loadSoundSetAtPath:[soundSetPath stringByExpandingBundlePath] creator:&creator description:nil sounds:&eventSoundArray]){
 
-                    [popUp_soundSet selectItemWithRepresentedObject:soundSetPath];	//Update the soundset popUp
+                    [popUp_soundSet selectItemWithRepresentedObject:[soundSetPath stringByExpandingBundlePath]];	//Update the soundset popUp
                     [textField_creator setStringValue:creator];			//Update the creator string
                     [button_soundSetInfo setEnabled:YES]; 				//Enable the info button
 

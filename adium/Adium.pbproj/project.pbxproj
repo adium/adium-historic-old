@@ -7560,6 +7560,19 @@
 			settings = {
 			};
 		};
+		4BA5325D050FC5E800A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = EventSoundDefaults.plist;
+			path = "Plugins/Event Sounds/EventSoundDefaults.plist";
+			refType = 4;
+		};
+		4BA5325E050FC5E800A8010A = {
+			fileRef = 4BA5325D050FC5E800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BA59D26050D82EF00A8010A = {
 			isa = PBXFileReference;
 			name = TabClose_Back.tif;
@@ -18924,6 +18937,7 @@
 				4BB17E7103E4636400A8010A,
 				4BB17E7203E4636400A8010A,
 				4BB17E6F03E4633D00A8010A,
+				4BA5325D050FC5E800A8010A,
 			);
 			isa = PBXGroup;
 			name = "Event Sounds";
@@ -18943,6 +18957,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BB17E7003E4633D00A8010A,
+				4BA5325E050FC5E800A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
