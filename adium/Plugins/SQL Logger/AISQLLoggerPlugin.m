@@ -16,9 +16,9 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.46 $
- * $Date: 2004/06/25 01:19:46 $
- * $Author: jmelloy $
+ * $Revision: 1.47 $
+ * $Date: 2004/08/02 07:26:54 $
+ * $Author: evands $
  *
  */
 
@@ -124,20 +124,21 @@
         NSString	*srcSrv = nil;
         
         if ([[account UID] isEqual:[source UID]]) {
-            destUID  = [[chat statusDictionary] objectForKey:@"DisplayName"];
+#warning I think it would be better to use the destination of the message as a test here, but I am not sure.
+            destUID  = [chat name];
             if(!destUID) {
                 destUID = [[chat listObject] UID];
                 destDisplay = [[chat listObject] displayName];
             }
             else {
-                destDisplay = destUID;
+                destDisplay = [chat displayName];;
             }
             destSrv = [[chat account] serviceID];
             srcDisplay = [source displayName];
             srcUID = [source UID];
             srcSrv = [source serviceID];
         } else {
-            destUID = [[chat statusDictionary] objectForKey:@"DisplayName"];
+            destUID = [chat name];
             if(!destUID) {
                 srcDisplay = [[chat listObject] displayName];
                 srcUID = [[chat listObject] UID];
@@ -147,7 +148,7 @@
             else {
                 srcUID = [source UID];
                 srcDisplay = srcUID;
-                destDisplay = destUID;
+                destDisplay = [chat displayName];
             }
             srcSrv = [[chat account] serviceID];
             destSrv = srcSrv;
