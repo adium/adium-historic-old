@@ -56,6 +56,7 @@
     
     BOOL                        rebuilding;
     BOOL                        restartRebuilding;
+    BOOL                        abandonRebuilding;
     NSMutableArray              *contentQueue;
 }
 
