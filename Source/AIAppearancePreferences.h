@@ -19,6 +19,7 @@
 @interface AIAppearancePreferences : AIPreferencePane {
 	IBOutlet	NSPopUpButton	*popUp_statusIcons;
 	IBOutlet	NSPopUpButton	*popUp_serviceIcons;
+	IBOutlet	NSPopUpButton	*popUp_emoticons;
 	IBOutlet	NSPopUpButton	*popUp_dockIcon;
 	IBOutlet	NSPopUpButton	*popUp_listLayout;
 	IBOutlet	NSPopUpButton	*popUp_colorTheme;

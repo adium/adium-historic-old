@@ -17,6 +17,7 @@
                 "label_statusIcons" = NSTextField; 
                 "popUp_colorTheme" = NSPopUpButton; 
                 "popUp_dockIcon" = NSPopUpButton; 
+                "popUp_emoticons" = NSPopUpButton; 
                 "popUp_listLayout" = NSPopUpButton; 
                 "popUp_serviceIcons" = NSPopUpButton; 
                 "popUp_statusIcons" = NSPopUpButton; 

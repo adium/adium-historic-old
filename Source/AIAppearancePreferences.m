@@ -32,9 +32,15 @@
 #warning crosslink
 #import "AISCLViewPlugin.h"
 
+typedef enum {
+	AIEmoticonMenuNone = 1,
+	AIEmoticonMenuMultiple
+} AIEmoticonMenuTag;
+
 @interface AIAppearancePreferences (PRIVATE)
 - (NSMenu *)_windowStyleMenu;
 - (NSMenu *)_dockIconMenu;
+- (NSMenu *)_emoticonPackMenu;
 - (NSMenu *)_statusIconsMenu;
 - (NSMenu *)_serviceIconsMenu;
 - (NSMenu *)_listLayoutMenu;
@@ -73,6 +79,21 @@
 	[popUp_serviceIcons setMenu:[self _serviceIconsMenu]];
 	[popUp_serviceIcons selectItemWithTitle:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]];
 
+	//Emoticons
+	[popUp_emoticons setMenu:[self _emoticonPackMenu]];
+	{
+		NSArray	*activeEmoticonPacks = [[adium emoticonController] activeEmoticonPacks];
+		int		numActivePacks = [activeEmoticonPacks count];
+		
+		if(numActivePacks == 0){
+			[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuNone];
+		}else if(numActivePacks > 1){
+			[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuMultiple];
+		}else{
+			[popUp_emoticons selectItemWithRepresentedObject:[activeEmoticonPacks objectAtIndex:0]];
+		}
+	}
+	
 	//Dock icons
 	[popUp_dockIcon setMenu:[self _dockIconMenu]];
 	[popUp_dockIcon selectItemWithTitle:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
@@ -149,6 +170,21 @@
                                               group:PREF_GROUP_APPEARANCE];
 		[self _updateSliderValues];
 		
+	}else if(sender == popUp_emoticons){
+		if([sender tag] != AIEmoticonMenuMultiple){
+			//Disable all active emoticons
+			NSArray			*activePacks = [[[[adium emoticonController] activeEmoticonPacks] mutableCopy] autorelease];
+			NSEnumerator	*enumerator = [activePacks objectEnumerator];
+			AIEmoticonPack	*pack;
+			
+			while(pack = [enumerator nextObject]){
+				[[adium emoticonController] setEmoticonPack:pack enabled:NO];
+			}
+			
+			//Enable the selected pack
+			pack = [[sender selectedItem] representedObject];
+			if(pack) [[adium emoticonController] setEmoticonPack:pack enabled:YES];
+		}
 	}
 }
 
@@ -160,32 +196,9 @@
 	[textField_windowOpacity setStringValue:[NSString stringWithFormat:@"%i%%", (int)[slider_windowOpacity floatValue]]];
 }
 
-/*!
- *
- */
-- (IBAction)showAllDockIcons:(id)sender
-{
-	[AIDockIconSelectionSheet showDockIconSelectorOnWindow:[[self view] window]];
-}
 
-/*!
- *
- */
-- (IBAction)customizeListLayout:(id)sender
-{
-	[AIListLayoutWindowController listLayoutOnWindow:[[self view] window]
-											withName:[NSString stringWithFormat:@"%@ Copy",[popUp_listLayout titleOfSelectedItem]]];
-}
-
-/*!
- *
- */
-- (IBAction)customizeListTheme:(id)sender
-{
-	[AIListThemeWindowController listThemeOnWindow:[[self view] window]
-										  withName:[NSString stringWithFormat:@"%@ Copy",[popUp_colorTheme titleOfSelectedItem]]];
-}
-
+//Emoticons ------------------------------------------------------------------------------------------------------------
+#pragma mark Emoticons
 /*!
  *
  */
@@ -194,9 +207,60 @@
 	[AIEmoticonPreferences showEmoticionCustomizationOnWindow:[[self view] window]];
 }
 
+/*!
+ *
+ */
+- (NSMenu *)_emoticonPackMenu
+{
+	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	NSEnumerator	*enumerator = [[[adium emoticonController] availableEmoticonPacks] objectEnumerator];
+	AIEmoticonPack	*pack;
+	NSMenuItem		*menuItem;
+		
+	//Add the "No Emoticons" option
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"None"
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
+	[menuItem setImage:[NSImage imageNamed:@"emoticonBlank" forClass:[self class]]];
+	[menuItem setTag:AIEmoticonMenuNone];
+	[menu addItem:menuItem];
+	
+	//Add the "Multiple packs selected" option
+	if([[[adium emoticonController] activeEmoticonPacks] count] > 1){
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"Multile Packs Selected"
+																		 target:nil
+																		 action:nil
+																  keyEquivalent:@""] autorelease];
+		[menuItem setImage:[NSImage imageNamed:@"emoticonBlank" forClass:[self class]]];
+		[menuItem setTag:AIEmoticonMenuMultiple];
+		[menu addItem:menuItem];
+	}
+
+	//Divider
+	[menu addItem:[NSMenuItem separatorItem]];
+	
+	//Emoticon Packs
+	while(pack = [enumerator nextObject]){
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[pack name]
+																		 target:nil
+																		 action:nil
+																  keyEquivalent:@""] autorelease];
+		[menuItem setRepresentedObject:pack];
+		[menuItem setImage:[[[[pack emoticons] objectAtIndex:0] image] imageByScalingToSize:NSMakeSize(16,16)]];
+		[menu addItem:menuItem];
+	}
+	
+	
+	return([menu autorelease]);
+}
+
 
 //Contact list options -------------------------------------------------------------------------------------------------
 #pragma mark Contact list options
+/*!
+ *
+ */
 - (NSMenu *)_windowStyleMenu
 {
 	NSMenu	*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
@@ -232,6 +296,27 @@
 
 //Contact list layout and theme ----------------------------------------------------------------------------------------
 #pragma mark Contact list layout and theme
+/*!
+ *
+ */
+- (IBAction)customizeListLayout:(id)sender
+{
+	[AIListLayoutWindowController listLayoutOnWindow:[[self view] window]
+											withName:[NSString stringWithFormat:@"%@ Copy",[popUp_listLayout titleOfSelectedItem]]];
+}
+
+/*!
+ *
+ */
+- (IBAction)customizeListTheme:(id)sender
+{
+	[AIListThemeWindowController listThemeOnWindow:[[self view] window]
+										  withName:[NSString stringWithFormat:@"%@ Copy",[popUp_colorTheme titleOfSelectedItem]]];
+}
+
+/*!
+ *
+ */
 - (NSMenu *)_listLayoutMenu
 {
 	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
@@ -251,6 +336,9 @@
 	return(menu);	
 }
 
+/*!
+ *
+ */
 - (NSMenu *)_colorThemeMenu
 {
 	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
@@ -273,6 +361,14 @@
 
 //Dock icons -----------------------------------------------------------------------------------------------------------
 #pragma mark Dock icons
+/*!
+ *
+ */
+- (IBAction)showAllDockIcons:(id)sender
+{
+	[AIDockIconSelectionSheet showDockIconSelectorOnWindow:[[self view] window]];
+}
+
 /*!
  * @brief Returns a menu of dock icon packs
  */
