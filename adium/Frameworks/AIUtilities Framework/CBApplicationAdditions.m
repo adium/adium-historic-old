@@ -38,4 +38,9 @@
     return _webkitAvailable;	
 }
 
+- (BOOL)isURLLoadingAvailable
+{
+    return (NSFoundationVersionNumber >= 462.6);	
+}
+
 @end
