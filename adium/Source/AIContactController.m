@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.90 2004/01/18 15:17:42 adamiser Exp $
+// $Id: AIContactController.m,v 1.91 2004/01/18 17:33:32 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -590,28 +590,31 @@
 	//Remove the contacts from any online accounts
 	accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
 	while(account = [accountEnumerator nextObject]){
-		NSMutableArray	*objectsOnAccount = [NSMutableArray array];
-
-		objectEnumerator = [objectArray objectEnumerator];
-		while(listObject = [objectEnumerator nextObject]){
-			if([listObject isKindOfClass:[AIListContact class]]){
-				if([[listObject remoteGroupArray] objectWithOwner:account]){
-					[objectsOnAccount addObject:listObject];
+		if([account conformsToProtocol:@protocol(AIAccount_List)]){
+			NSMutableArray	*objectsOnAccount = [NSMutableArray array];
+			
+			objectEnumerator = [objectArray objectEnumerator];
+			while(listObject = [objectEnumerator nextObject]){
+				if([listObject isKindOfClass:[AIListContact class]]){
+					if([[(AIListContact *)listObject remoteGroupArray] objectWithOwner:account]){
+						[objectsOnAccount addObject:listObject];
+					}
 				}
 			}
-		}
-		
-		if([objectsOnAccount count]){
-			[account removeListObjects:objectsOnAccount];
+			
+			if([objectsOnAccount count]){
+				[(AIAccount<AIAccount_List> *)account removeListObjects:objectsOnAccount];
+			}
 		}
 	}
-
+	
 	//Remove the contacts and groups from our list
 	objectEnumerator = [objectArray objectEnumerator];
 	while(listObject = [objectEnumerator nextObject]){
 		//If this is a group, remove it's contents first
 		if([listObject isKindOfClass:[AIListGroup class]]){
-			[self removeListObjects:[[[listObject containedObjects] copy] autorelease] fromGroup:listObject];
+			[self removeListObjects:[[[(AIListGroup *)listObject containedObjects] copy] autorelease]
+						  fromGroup:(AIListGroup *)listObject];
 		}
 		
 		//Remove this object
@@ -633,20 +636,21 @@
 	//Add the applicable contacts to each account
 	accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
 	while(account = [accountEnumerator nextObject]){
-		NSMutableArray	*objectsOnAccount = [NSMutableArray array];
-		NSString		*accountServiceID = [[[account service] handleServiceType] identifier];
-		
-		objectEnumerator = [contactArray objectEnumerator];
-		while(listObject = [objectEnumerator nextObject]){
+		if([account conformsToProtocol:@protocol(AIAccount_List)]){
+			NSMutableArray	*objectsOnAccount = [NSMutableArray array];
+			NSString		*accountServiceID = [[[account service] handleServiceType] identifier];
 			
-			//If this account is the correct service type, add the contact
-			if([[listObject serviceID] compare:accountServiceID] == 0 && [account contactListEditable]){
-				[objectsOnAccount addObject:listObject];
+			objectEnumerator = [contactArray objectEnumerator];
+			while(listObject = [objectEnumerator nextObject]){
+				//If this account is the correct service type, add the contact
+				if([[listObject serviceID] compare:accountServiceID] == 0 && [(AIAccount<AIAccount_List> *)account contactListEditable]){
+					[objectsOnAccount addObject:listObject];
+				}
 			}
-		}
-		
-		if([objectsOnAccount count]){
-			[account addContacts:objectsOnAccount toGroup:group];
+			
+			if([objectsOnAccount count]){
+				[(AIAccount<AIAccount_List> *)account addContacts:objectsOnAccount toGroup:group];
+			}
 		}
 	}
 }
