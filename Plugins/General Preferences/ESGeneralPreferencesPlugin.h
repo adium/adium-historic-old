@@ -29,6 +29,9 @@ typedef enum {
 #define	KEY_STATUS_ICON_PACK			@"Status Icon Pack"
 #define	KEY_SERVICE_ICON_PACK			@"Service Icon Pack"
 
+#define PREF_GROUP_STATUS_MENU_ITEM     @"Status Menu Item"
+#define KEY_STATUS_MENU_ITEM_ENABLED    @"Status Menu Item Enabled"
+
 @interface ESGeneralPreferencesPlugin : AIPlugin {
 	ESGeneralPreferences	*preferences;
 }

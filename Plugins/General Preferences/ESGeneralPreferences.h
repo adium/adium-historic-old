@@ -27,6 +27,8 @@
 	
 	IBOutlet	NSPopUpButton	*popUp_statusIcons;
 	IBOutlet	NSPopUpButton	*popUp_serviceIcons;
+	
+	IBOutlet	NSButton		*checkBox_enableMenuItem;
 }
 
 - (IBAction)selectVolume:(id)sender;

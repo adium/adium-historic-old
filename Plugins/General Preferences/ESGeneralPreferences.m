@@ -75,6 +75,11 @@
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
 	[checkBox_enableLogging setState:[[prefDict objectForKey:KEY_LOGGER_ENABLE] boolValue]];
 
+
+	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STATUS_MENU_ITEM];
+		
+	[checkBox_enableMenuItem setState:[[prefDict objectForKey:KEY_STATUS_MENU_ITEM_ENABLED] boolValue]];
+		
     [self configureControlDimming];
 }
 
@@ -133,8 +138,11 @@
         [[adium preferenceController] setPreference:[[popUp_serviceIcons selectedItem] title]
                                              forKey:KEY_SERVICE_ICON_PACK
                                               group:PREF_GROUP_INTERFACE];
+	}else if(sender == checkBox_enableMenuItem){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkBox_enableMenuItem state]] 
+											 forKey:KEY_STATUS_MENU_ITEM_ENABLED
+											  group:PREF_GROUP_STATUS_MENU_ITEM];
 	}
-	
 }
 
 //Dim controls as needed
