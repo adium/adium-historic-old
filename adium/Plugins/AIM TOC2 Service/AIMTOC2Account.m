@@ -312,14 +312,15 @@
 //TOC2 doesn't support non-ASCII characters, so encode them
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-	BOOL	isICQ = NO;
+	BOOL	noHTML = NO;
 	
+	//We don't want to send HTML to ICQ users, or mobile phone users
 	if(inListObject){
 		char	firstCharacter = [[inListObject UID] characterAtIndex:0];
-		isICQ = (firstCharacter >= '0' && firstCharacter <= '9');
+		noHTML = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
 	}
 	
-    return((isICQ ? [inAttributedString string] : [AIHTMLDecoder encodeHTML:inAttributedString
+    return((noHTML ? [inAttributedString string] : [AIHTMLDecoder encodeHTML:inAttributedString
 																	headers:YES
 																   fontTags:YES
 															  closeFontTags:NO
@@ -746,7 +747,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.110 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.111 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
