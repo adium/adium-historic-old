@@ -166,6 +166,8 @@ static  float   distanceBetweenEmoticons = 0;
 	
 	//If the trackMouse: event is inside our checkFrame, pass the necessary calls to packCheckCell
 	if(NSPointInRect(locationInCell, checkFrame)) {
+		[controlView displayIfNeeded]; //Force all existing displays to occur, otherwise the other cells may try and
+									   //draw while we have higlighting on (And draw incorrectly).
 		[packCheckCell setHighlighted:YES];
 		result = [packCheckCell trackMouse:theEvent inRect:checkFrame ofView:controlView
 							  untilMouseUp:untilMouseUp];
