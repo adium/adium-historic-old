@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 485 $ $Date: 2003/11/25 22:09:43 $ -->
+<!--$Rev: 487 $ $Date: 2003/11/27 06:37:44 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -54,7 +54,8 @@ try {
     stmt = conn.createStatement();
 
     if(sender != 0) {
-        pstmt = conn.prepareStatement("select username,display_name from " +
+        pstmt = conn.prepareStatement("select scramble(username) as username, "+
+        "scramble(display_name) as display_name from " +
         " adium.users natural join adium.user_display_name udn " +
         " where user_id = ?"+
         " and not exists " +
@@ -277,7 +278,8 @@ try {
 
         /* Conversation Starters */
 
-        pstmt = conn.prepareStatement("select sender_sn, recipient_sn, "+
+        pstmt = conn.prepareStatement("select scramble(sender_sn) as sender_sn"+
+            ", scramble(recipient_sn) as recipient_sn, "+
             " message, count(*) "+
             " from simple_message_v smv "+
             " where not exists "+
@@ -323,7 +325,8 @@ try {
             out.print("</table>");
 
 
-        pstmt = conn.prepareStatement("select username, recipient_id as \"Recipient\", "+ 
+        pstmt = conn.prepareStatement("select scramble(username) as username,"+
+        " recipient_id as \"Recipient\", "+ 
         " coalesce((select num_messages "+
         " from adium.user_statistics where " +
         " sender_id = a.sender_id and recipient_id = a.recipient_id),0) " +
@@ -403,10 +406,12 @@ try {
     <font size="2">
 <%
     if(!loginUsers) {
-        rset = stmt.executeQuery("select user_id, username from adium.users" +
+        rset = stmt.executeQuery("select user_id, scramble(username) "+
+            " as username from adium.users" +
             " order by username");
     } else {
-        rset = stmt.executeQuery("select sender_id as user_id, username "+
+        rset = stmt.executeQuery("select sender_id as user_id, "+
+            " scramble(username) as username "+
             "from user_statistics, users where sender_id = user_id "+
             " group by sender_id, username "+
             " having count(*) > 1 order by username");

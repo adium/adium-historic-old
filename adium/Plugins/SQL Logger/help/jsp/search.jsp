@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/search.jsp $-->
-<!--$Rev: 483 $ $Date: 2003/11/25 22:09:43 $ -->
+<!--$Rev: 487 $ $Date: 2003/11/27 06:37:44 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -147,7 +147,8 @@ try {
             out.print("For a non-case-sensitive, faster query, "+
             "install the tsearch module.</i></div>");
             
-            String shortQuery = new String("select sender_sn, recipient_sn, " +
+            String shortQuery = new String("select scramble(sender_sn) "+
+            "as sender_sn, scramble(recipient_sn) as recipient_sn, " +
             "message, message_date, message_id from message_v where " +
             "message ~ ? ");
 
@@ -215,8 +216,8 @@ try {
             
             if(searchType.equals("tsearch1")) {
             
-                queryString = "select s.username as sender_sn, "+
-                    " r.username as recipient_sn," +
+                queryString = "select scramble(s.username) as sender_sn, "+
+                    " scramble(r.username) as recipient_sn," +
                     " message, message_date, message_id " +
                     " from adium.messages, adium.users s, adium.users r " +
                     " where " +
@@ -224,8 +225,8 @@ try {
                     " and messages.recipient_id = r.user_id " +
                     " and message_idx ## ? ";
             } else if (searchType.equals("tsearch2")) {
-                queryString = "select s.username as sender_sn, "+
-                    " r.username as recipient_sn, " +
+                queryString = "select scramble(s.username) as sender_sn, "+
+                    " scramble(r.username) as recipient_sn, " +
                     " headline(message, q) as message, message_date, " +
                     " message_id " +
                     " from adium.messages, adium.users s, adium.users r, "+

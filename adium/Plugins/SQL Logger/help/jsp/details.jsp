@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/details.jsp $-->
-<!--$Rev: 485 $ $Date: 2003/11/25 22:09:43 $ -->
+<!--$Rev: 487 $ $Date: 2003/11/27 06:37:44 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -279,7 +279,8 @@ try {
     }
     out.print("</table><br />");
 
-    pstmt = conn.prepareStatement("select username, recipient_id as \"Recipient\", "+ 
+    pstmt = conn.prepareStatement("select scramble(username) as username, "+
+    " recipient_id as \"Recipient\", "+ 
     " count(*) as \"Sent\", (select count(*)"+
     " from messages where"+
     " recipient_id = a.sender_id and sender_id = a.recipient_id " +
