@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.94 2004/01/25 02:09:58 adamiser Exp $
+// $Id: AIContactController.m,v 1.95 2004/01/28 02:02:50 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -140,7 +140,7 @@
 	
 	while(infoDict = [enumerator nextObject]){
 		NSString		*type = [infoDict objectForKey:@"Type"];
-		AIListObject	*object;
+		AIListObject	*object = nil;
 		
 		//Object
 		if([type compare:@"Contact"] == 0){
