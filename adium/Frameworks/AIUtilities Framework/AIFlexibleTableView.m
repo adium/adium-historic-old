@@ -153,7 +153,25 @@
     cell = [self cellAtPoint:clickLocation row:&row column:&column];
 
     //Give the cell a chance to process the mouse down
-    [cell handleMouseDown:theEvent];
+    if(![cell handleMouseDown:theEvent]){
+        //Text selection within the cell
+        NSPoint		localPoint;
+
+        //Deselect all text
+        [self deselectAll];
+
+        //Set the new selection start and end
+        localPoint = NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y);
+        selection_startRow = row;
+        selection_startColumn = column;
+        selection_startIndex = [cell characterIndexAtPoint:localPoint];
+        selection_endRow = selection_startRow;
+        selection_endColumn = selection_startColumn;
+        selection_endIndex = selection_startIndex;
+
+        //Redisplay
+        [self setNeedsDisplay:YES];
+    }
 }
 
 

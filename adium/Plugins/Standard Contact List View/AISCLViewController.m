@@ -153,6 +153,9 @@
         NSColor		*gridColor = [[prefDict objectForKey:KEY_SCL_GRID_COLOR] representedColorWithAlpha:alpha];
         BOOL		alternatingGrid = [[prefDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue];
 
+        //Cap the font to size 12
+        
+        
         //Display
         [contactListView setFont:font];
         [contactListView setColor:color andInvertedColor:invertedColor];
