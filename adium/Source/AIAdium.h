@@ -57,6 +57,7 @@
 - (NSDictionary *)eventNotifications;
 
 - (IBAction)showAboutBox:(id)sender;
+- (IBAction)showHelp:(id)sender;
 - (IBAction)confirmQuit:(id)sender;
 
 @end

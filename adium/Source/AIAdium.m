@@ -31,6 +31,7 @@
 #import <ExceptionHandling/NSExceptionHandler.h>
 
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"	//Path to Adium's application support preferences
+#define ADIUM_FAQ_PAGE                          @"http://adium.sourceforge.net/faq/"
 
 @interface AIAdium (PRIVATE)
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
@@ -182,13 +183,11 @@
 
 - (IBAction)showAboutBox:(id)sender
 {
-
     [[LNAboutBoxController aboutBoxController] showWindow:nil];
-
-     /*[NSApp orderFrontStandardAboutPanelWithOptions:
-        [NSDictionary dictionaryWithObject:
-            [NSString stringWithFormat:@"2.0 - %s", __DATE__] 
-        forKey:@"Version"]];*/
+}
+- (IBAction)showHelp:(id)sender
+{
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_FAQ_PAGE]];
 }
 
 
