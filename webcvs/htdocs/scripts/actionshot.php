@@ -40,7 +40,7 @@ function RandomActionShot($numberOfShots)
     //Try and choose $numberOfShots pictures
     while($numberOfShots > 0){
         $picture = array_rand($availablePics);
-        if(array_search($picture, $chosenPics) === false){ //Skip if already choosen
+        if(array_search($picture, $chosenPics) === null){ //Skip if already choosen
             $chosenPics[count($chosenPics)] = $picture;
         }
 
