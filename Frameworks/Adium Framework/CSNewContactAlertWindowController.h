@@ -5,7 +5,7 @@
 //  Created by Chris Serino on Wed Mar 31 2004.
 //
 
-@class AIImageTextView;
+@class AIImageTextCellView;
 
 @interface CSNewContactAlertWindowController : AIWindowController {
 	IBOutlet NSView					*view_auxiliary;
@@ -24,7 +24,7 @@
 	
 	BOOL							configureForGlobal;
 	
-	IBOutlet	AIImageTextView		*headerView;
+	IBOutlet	AIImageTextCellView	*headerView;
 }
 
 + (void)editAlert:(NSDictionary *)inAlert
