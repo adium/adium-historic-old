@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.132 2004/05/14 02:36:58 adamiser Exp $
+$Id: ToDoList.txt,v 1.133 2004/05/14 19:56:14 boredzo Exp $
 
 
 Legend
@@ -225,6 +225,13 @@ Documentation
 		+ We already have some documentation. This needs to be gone through
 		+ Creating webkit themes
 		+ Address book integration
+
+Activity Window [boredzo]
+Will sort of resemble Safari's. Entries in the window only reflect progress of items; actions are performed from the toolbar.
+* Toolbar items are stuck in disabled state
++ Get Show Completed working
++ Get Filter field working
+	+ ...including under Jaguar (need to create it programmatically in that event, since IB Services on Jaguar won't unarchive it)
 		
 -------------------------------------------------------------------------------------------------------
 Areas that require more thought before implementing
