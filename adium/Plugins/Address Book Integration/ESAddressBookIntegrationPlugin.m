@@ -121,13 +121,15 @@
         }
     } else if (automaticSync && [inModifiedKeys containsObject: @"UserIcon"]) {
         
+		//Find the person
         NSArray *results = [self searchForObject:inObject];
         
         if (results && [results count]){
             ABPerson * person;
             
             if (person = [results objectAtIndex:0]){
-				NSImage	*image = [[inObject displayArrayForKey:@"UserIcon"] objectValue];
+				//Set the person's image to the inObject's serverside User Icon.
+				NSImage	*image = [inObject statusObjectForKey:@"UserIcon"];
 				if(image){
                     [person setImageData:[image TIFFRepresentation]];
                 }
@@ -135,7 +137,7 @@
         }
     }
     
-    return(modifiedAttributes); //we don't change any keys
+    return(modifiedAttributes);
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
