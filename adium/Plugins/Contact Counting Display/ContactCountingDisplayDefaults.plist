@@ -3,8 +3,8 @@
 <plist version="1.0">
 <dict>
 	<key>Count All Contacts</key>
-	<true/>
+	<false/>
 	<key>Count Visible Contacts</key>
-	<true/>
+	<false/>
 </dict>
 </plist>
